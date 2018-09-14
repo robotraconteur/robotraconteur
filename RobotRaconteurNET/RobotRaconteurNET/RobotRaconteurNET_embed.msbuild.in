@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Condition="'$(Configuration)|$(PointerSize)' == 'Release|4'">
+	<EmbeddedResource Include="..\out\NET\Native\RobotRaconteurNETNative.dll" >
+		<LogicalName>RobotRaconteurNETNative_win32</LogicalName>
+	</EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)|$(PointerSize)' == 'Debug|4'">
+	<EmbeddedResource Include="..\out_debug\NET\Native\RobotRaconteurNETNative.dll" >
+		<LogicalName>RobotRaconteurNETNative_win32</LogicalName>
+	</EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)|$(PointerSize)' == 'Release|8'">
+	<EmbeddedResource Include="..\out\NET\Native\RobotRaconteurNETNative.dll" >
+		<LogicalName>RobotRaconteurNETNative_win64</LogicalName>
+	</EmbeddedResource>
+	<EmbeddedResource Include="@RR32BIN@\out\NET\Native\RobotRaconteurNETNative.dll" >
+		<LogicalName>RobotRaconteurNETNative_win32</LogicalName>
+	</EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)|$(PointerSize)' == 'Debug|8'">
+	<EmbeddedResource Include="..\out_debug\NET\Native\RobotRaconteurNETNative.dll" >
+		<LogicalName>RobotRaconteurNETNative_win64</LogicalName>
+	</EmbeddedResource>
+	<EmbeddedResource Include="@RR32BIN@\out_debug\NET\Native\RobotRaconteurNETNative.dll" >
+		<LogicalName>RobotRaconteurNETNative_win32</LogicalName>
+	</EmbeddedResource>
+  </ItemGroup>
+</Project>

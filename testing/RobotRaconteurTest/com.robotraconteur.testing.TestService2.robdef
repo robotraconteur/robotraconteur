@@ -1,0 +1,37 @@
+﻿service com.robotraconteur.testing.TestService2
+
+option version 0.8
+
+exception testexception3
+
+struct ostruct2
+	field double[] a1
+end struct
+
+
+object baseobj
+	property double d1
+	property double[] d2
+
+	function double func3(double d1, double d2)
+
+	event ev1()
+
+	objref subobj o5
+
+	pipe double[] p1
+
+	callback void cb2(double d1, double d2)
+
+	wire double[] w1
+
+	memory double[] m1
+
+
+end object
+
+object subobj
+
+	function double add_val(double v)
+
+end object

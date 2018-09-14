@@ -1,0 +1,19 @@
+service RobotRaconteurServiceIndex
+struct NodeInfo
+	field string NodeName
+	field uint8[16] NodeID
+	field string{int32} ServiceIndexConnectionURL
+end struct
+struct ServiceInfo
+	field string Name
+	field string RootObjectType
+	field string{int32} RootObjectImplements
+	field string{int32} ConnectionURL
+	field varvalue{string} Attributes
+end struct
+object ServiceIndex
+	function ServiceInfo{int32} GetLocalNodeServices()
+	function NodeInfo{int32} GetRoutedNodes()
+	function NodeInfo{int32} GetDetectedNodes()
+	event LocalNodeServicesChanged()
+end object

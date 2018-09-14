@@ -1,0 +1,22 @@
+@echo off
+
+setlocal enabledelayedexpansion
+
+@ROBOTRACONTEUR_TEST_CMD@ @ROBOTRACONTEUR_TEST_ARGS@ %*
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+set cmp_error_level=0
+
+for  %%v in (@ROBOTRACONTEUR_TEST_GEN_FILE_LIST@) do (
+ echo %%v
+ FOR /f "tokens=1,2 delims=;" %%a IN (%%v) do set first=%%a&set second=%%b
+ echo !first!
+ echo !second!
+ "@CMAKE_COMMAND@" -E compare_files "!first!" "!second!"
+ if !errorlevel! neq 0 set cmp_error_level=!errorlevel!
+)
+
+if %cmp_error_level% neq 0 exit /b %cmp_error_level%
+
+exit /b
+

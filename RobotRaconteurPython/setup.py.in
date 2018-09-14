@@ -1,0 +1,11 @@
+from distutils.core import setup
+
+setup(name='RobotRaconteur',
+      version='@RobotRaconteurVersion@',
+      description='Robot Raconteur Python Library',
+      author='John Wason',
+      author_email='wason@wasontech.com',
+      url='http://robotraconteur.com/',
+      packages=['RobotRaconteur'],
+      package_data={'RobotRaconteur': ['_RobotRaconteurPython.*']}
+     )

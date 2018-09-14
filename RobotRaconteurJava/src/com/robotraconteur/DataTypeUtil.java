@@ -1,0 +1,307 @@
+package com.robotraconteur;
+
+public class DataTypeUtil {
+	public static int size(DataTypes type)
+    {
+        switch (type)
+        {
+            case DataTypes_double_t:
+                return 8;
+
+            case DataTypes_single_t:
+                return 4;
+            case DataTypes_int8_t:
+            case DataTypes_uint8_t:
+                return 1;
+            case DataTypes_int16_t:
+            case DataTypes_uint16_t:
+                return 2;
+            case DataTypes_int32_t:
+            case DataTypes_uint32_t:
+                return 4;
+            case DataTypes_int64_t:
+            case DataTypes_uint64_t:
+                return 8;
+            case DataTypes_string_t:
+                return 1;
+            default:
+            	break;
+
+        }
+        throw new RuntimeException(new DataTypeException(""));
+       
+    }
+	
+	public static DataTypes typeIDFromString(String stype)
+	{
+		//switch (stype)
+        //{
+            if(stype.equals( "null"))
+                return DataTypes.DataTypes_void_t;
+            if (stype.equals( "class [D") || stype.equals("class java.lang.Double"))
+                return DataTypes.DataTypes_double_t;
+            if(stype.equals( "class [F") || stype.equals("class java.lang.Float"))
+                return DataTypes.DataTypes_single_t;
+            if(stype.equals( "class [B") || stype.equals("class java.lang.Byte"))
+                return DataTypes.DataTypes_int8_t;
+            if(stype.equals( "class com.robotraconteur.UnsignedByte") || stype.equals("class com.robotraconteur.UnsignedBytes"))
+                return DataTypes.DataTypes_uint8_t;
+            if(stype.equals( "class [S") || stype.equals("class java.lang.Short"))
+                return DataTypes.DataTypes_int16_t;
+            if(stype.equals( "class com.robotraconteur.UnsignedShort") || stype.equals("class com.robotraconteur.UnsignedShorts"))
+                return DataTypes.DataTypes_uint16_t;
+            if(stype.equals( "class [I") || stype.equals("class java.lang.Integer"))
+                return DataTypes.DataTypes_int32_t;
+            if(stype.equals( "class com.robotraconteur.UnsignedInteger") || stype.equals("class com.robotraconteur.UnsignedIntegers"))
+                return DataTypes.DataTypes_uint32_t;
+            if(stype.equals( "class [J") || stype.equals("class java.lang.Long"))
+                return DataTypes.DataTypes_int64_t;
+            if(stype.equals( "class com.robotraconteur.UnsignedLong") || stype.equals("class com.robotraconteur.UnsignedLongs"))
+                return DataTypes.DataTypes_uint64_t;
+            if(stype.equals( "class java.lang.String"))
+                return DataTypes.DataTypes_string_t;
+            if(stype.equals( "com.robotraconteur.MessageElementStructure"))
+                return DataTypes.DataTypes_structure_t;
+            if(stype.equals("com.robotraconteur.MessageElementMap_int32_t"))
+                return DataTypes.DataTypes_vector_t;
+            if (stype.equals( "com.robotraconteur.MessageElementMap_string"))
+                return DataTypes.DataTypes_dictionary_t;
+            if(stype.equals( "com.robotraconteur.MessageElementMultiDimArray"))
+                return DataTypes.DataTypes_multidimarray_t;
+            if(stype.equals( "class java.lang.Object"))
+                return DataTypes.DataTypes_varvalue_t;
+
+        //}
+
+
+
+        throw new RuntimeException(new DataTypeException ("Unknown data type"));
+        
+	}
+	
+	public static boolean typeIDFromString_known(String stype)
+	{
+		//switch (stype)
+        //{
+            if(stype.equals( "null")) return true;
+                
+            if(stype.equals( "class [D") || stype.equals("class java.lang.Double")) return true;
+               
+            if (stype.equals( "class [F") || stype.equals("class java.lang.Float")) return true;
+                
+            if(stype.equals( "class [B") || stype.equals("class java.lang.Byte")) return true;
+                
+            if(stype.equals( "class com.robotraconteur.UnsignedByte") || stype.equals("class com.robotraconteur.UnsignedBytes")) return true;
+               
+            if(stype.equals( "class [S") || stype.equals("class java.lang.Short")) return true;
+                
+            if(stype.equals( "class com.robotraconteur.UnsignedShort") || stype.equals("class com.robotraconteur.UnsignedShorts")) return true;
+               
+            if(stype.equals( "class [I") || stype.equals("class java.lang.Integer")) return true;
+                
+            if(stype.equals( "class com.robotraconteur.UnsignedInteger") || stype.equals("class com.robotraconteur.UnsignedIntegers")) return true;
+                
+            if (stype.equals( "class [J") || stype.equals("class java.lang.Long")) return true;
+                
+            if(stype.equals("class com.robotraconteur.UnsignedLong") || stype.equals("class com.robotraconteur.UnsignedLongs")) return true;
+                
+            if(stype.equals( "class java.lang.String")) return true;
+                
+            if(stype.equals( "com.robotraconteur.MessageElementStructure")) return true;
+                
+            if(stype.equals( "com.robotraconteur.MessageElementMap_int32_t")) return true;
+                
+            if(stype.equals( "com.robotraconteur.MessageElementMap_string")) return true;
+               
+            if(stype.equals( "com.robotraconteur.MessageElementMultiDimArray")) return true;
+                
+            if(stype.equals( "class java.lang.Object"))
+                return true;
+
+        //}
+
+        return false;
+	}
+	
+	public static boolean isNumber(DataTypes t)
+    {
+        return (t.ordinal() >= DataTypes.DataTypes_double_t.ordinal() && (DataTypes.DataTypes_uint64_t.ordinal() >= t.ordinal()));
+    }
+
+    
+    public static Object arrayFromDataType(DataTypes t, int length)
+    {
+        switch (t)
+        {
+
+            case DataTypes_double_t:
+                return new double[length];
+            case DataTypes_single_t:
+                return new float[length];
+            case DataTypes_int8_t:
+                return new byte[length];
+            case DataTypes_uint8_t:
+            	return new UnsignedBytes(length);
+            case DataTypes_int16_t:
+                return new short[length];
+            case DataTypes_uint16_t:
+            	return new UnsignedShorts(length);
+            case DataTypes_int32_t:
+                return new int[length];
+            case DataTypes_uint32_t:
+                return new UnsignedInts(length);
+            case DataTypes_int64_t:
+                return new long[length];
+            case DataTypes_uint64_t:
+            	return new UnsignedLongs(length);
+            case DataTypes_string_t:
+                return null;
+            case DataTypes_structure_t:
+                return null;
+            default:
+            	break;
+            	
+        }
+        throw new RuntimeException(new DataTypeException( "Could not create array for data type"));
+    }
+    
+    public static boolean isArray(Object o)
+    {
+    	if (o instanceof double[]) return true;
+    	if (o instanceof float[]) return true;
+    	if (o instanceof byte[]) return true;
+    	if (o instanceof short[]) return true;
+    	if (o instanceof int[]) return true;
+    	if (o instanceof long[]) return true;
+    	if (o instanceof UnsignedBytes) return true;
+    	if (o instanceof UnsignedShorts) return true;
+    	if (o instanceof UnsignedInts) return true;
+    	if (o instanceof UnsignedLongs) return true;
+    	return false;
+    	    	
+    }
+    
+    public static boolean isScalarNumber(Object o)
+    {
+    	if (o instanceof Double) return true;
+    	if (o instanceof Float) return true;
+    	if (o instanceof Byte) return true;
+    	if (o instanceof Short) return true;
+    	if (o instanceof Integer) return true;
+    	if (o instanceof Long) return true;
+    	if (o instanceof UnsignedByte) return true;
+    	if (o instanceof UnsignedShort) return true;
+    	if (o instanceof UnsignedInt) return true;
+    	if (o instanceof UnsignedLong) return true;
+    	return false;
+    	
+    	
+    }
+    
+    public static boolean isScalarNumberType(Class o)
+    {
+    	if (o == Double.class) return true;
+    	if (o == Float.class) return true;
+    	if (o == Byte.class) return true;
+    	if (o == Short.class) return true;
+    	if (o == Integer.class) return true;
+    	if (o == Long.class) return true;
+    	if (o == UnsignedByte.class) return true;
+    	if (o == UnsignedShort.class) return true;
+    	if (o == UnsignedInt.class) return true;
+    	if (o == UnsignedLong.class) return true;
+    	return false;
+    	
+    	
+    }
+    
+    public static Object scalarFromArray(Object o)
+    {
+    	if (o instanceof double[]) return new Double(((double[])o)[0]);
+    	if (o instanceof float[]) return new Float(((float[])o)[0]);
+    	if (o instanceof byte[]) return new Byte(((byte[])o)[0]);
+    	if (o instanceof short[]) return new Short(((short[])o)[0]);
+    	if (o instanceof int[]) return new Integer(((int[])o)[0]);
+    	if (o instanceof long[]) return new Long(((long[])o)[0]);
+    	if (o instanceof UnsignedBytes) return ((UnsignedBytes)o).get(0);
+    	if (o instanceof UnsignedShorts) return ((UnsignedShorts)o).get(0);
+    	if (o instanceof UnsignedInts) return ((UnsignedInts)o).get(0);
+    	if (o instanceof UnsignedLongs) return ((UnsignedLongs)o).get(0);
+    	throw new DataTypeException("Argument is not an array");
+    	    	
+    }
+    
+    public static Object arrayFromScalar(Object o)
+    {
+    	if (o instanceof Double) return new double[] {(Double)o};
+    	if (o instanceof Float) return new float[] {(Float)o};
+    	if (o instanceof Byte) return new byte[] {(Byte)o};
+    	if (o instanceof Short) return new short[] {(Short)o};
+    	if (o instanceof Integer) return new int[] {(Integer)o};
+    	if (o instanceof Long) return new long[] {(Long)o};
+    	if (o instanceof UnsignedByte) return ((UnsignedByte)o).array();
+    	if (o instanceof UnsignedShort) return ((UnsignedShort)o).array();
+    	if (o instanceof UnsignedInt) return ((UnsignedInt)o).array();
+    	if (o instanceof UnsignedLong) return ((UnsignedLong)o).array();
+    	throw new DataTypeException("Argument is not a number");
+    	
+    }
+    
+    public static int getArrayLength(Object arr)
+    {
+    	if (arr instanceof double[]) return ((double[])arr).length;
+		if (arr instanceof float[]) return ((float[])arr).length;
+		
+		if (arr instanceof byte[]) return ((byte[])arr).length;
+		if (arr instanceof UnsignedBytes) return ((UnsignedBytes)arr).value.length;
+		if (arr instanceof short[]) return ((short[])arr).length;
+		if (arr instanceof UnsignedShorts) return ((UnsignedShorts)arr).value.length;
+		if (arr instanceof int[]) return ((int[])arr).length;
+		if (arr instanceof UnsignedInts) return ((UnsignedInts)arr).value.length;
+		if (arr instanceof long[]) return ((long[])arr).length;
+		if (arr instanceof UnsignedLongs) return ((UnsignedLongs)arr).value.length;
+		
+		
+		throw new RuntimeException(new DataTypeException("Invalid memory data type"));
+		
+    	
+    }
+    
+	public static void arraycopy(Object src, int srcPos, Object dest, int destPos, int length)
+	{
+		if (src instanceof UnsignedBytes)
+		{
+			UnsignedBytes src2=(UnsignedBytes)src;
+			UnsignedBytes dest2=(UnsignedBytes)dest;
+			System.arraycopy(src2.value,srcPos,dest2.value,destPos,length);
+			return;
+		}
+		
+		if (src instanceof UnsignedShorts)
+		{
+			UnsignedShorts src2=(UnsignedShorts)src;
+			UnsignedShorts dest2=(UnsignedShorts)dest;
+			System.arraycopy(src2.value,srcPos,dest2.value,destPos,length);
+			return;
+		}
+		
+		if (src instanceof UnsignedInts)
+		{
+			UnsignedInts src2=(UnsignedInts)src;
+			UnsignedInts dest2=(UnsignedInts)dest;
+			System.arraycopy(src2.value,srcPos,dest2.value,destPos,length);
+			return;
+		}
+		
+		if (src instanceof UnsignedLongs)
+		{
+			UnsignedLongs src2=(UnsignedLongs)src;
+			UnsignedLongs dest2=(UnsignedLongs)dest;
+			System.arraycopy(src2.value,srcPos,dest2.value,destPos,length); 
+			return;
+		}
+		
+		System.arraycopy(src,srcPos,dest,destPos,length);
+	}
+	
+}

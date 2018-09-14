@@ -1,0 +1,126 @@
+service com.robotraconteur.testing.TestService3
+
+stdver 0.9.0
+#option version 0.9.0
+
+import com.robotraconteur.testing.TestService1
+using  com.robotraconteur.testing.TestService1.testroot
+using  com.robotraconteur.testing.TestService1.teststruct1
+using  com.robotraconteur.testing.TestService1.teststruct2
+using  com.robotraconteur.testing.TestService1.testexception1
+using  com.robotraconteur.testing.TestService1.sub2
+using  com.robotraconteur.testing.TestService1.sub3
+
+enum testenum1
+	value1 = 0,	value2,	value3,	anothervalue = -1,
+	anothervalue2 = -2,
+	anothervalue3 = -3,
+	hexval1 = 0x10,
+	hexval2,
+	neghexval1 = 0x80000005,
+	neghexval2,
+	more_values
+end enum
+
+constant string strconst "This is a\n \"string constant\" \\\/\b\f \r\u00FF tabme\ttabme\n smile! \ud83d\udE01"
+constant int32 int32const 3856384
+constant int32[] int32const_array {182476, 56483, -2947}
+constant double[] doubleconst_array {1.5847, 3.14, -548e3, 3452.67e2, 485e-21}
+constant struct structconst {field1: strconst, field2: int32const_array}
+constant struct structconst2 {field3: structconst, field4: int32const}    
+
+cstruct testcstruct1
+	field double d1
+	field double[6] d2
+	field double[6-] d3
+	field double[3,3] d4
+	field testcstruct2 s1
+	field testcstruct2[8] s2
+	field testcstruct2[9-] s3
+	field testcstruct2[2,4] s4
+end cstruct
+
+cstruct testcstruct2
+	field int8 i1
+	field int8[15] i2
+	field int8[17-] i3
+end cstruct
+
+struct teststruct3
+	field testcstruct1 s1
+	field testcstruct1[] s2
+	field testcstruct1[11] s3
+	field testcstruct1[16-] s4
+	field testcstruct1[3,3] s5
+	field testcstruct1[*] s6
+	field testcstruct1{list} s7
+	field testcstruct1[]{list} s8
+	field testcstruct1[*]{list} s9
+	field varvalue s10
+	field varvalue s11
+	field varvalue s12
+	field varvalue s13
+	field varvalue s14
+	field varvalue s15
+end struct
+
+object testroot3
+    property int32 readme [readonly]
+	property int32 writeme [writeonly]
+	
+	pipe int32 unreliable1 [unreliable,readonly]
+	option pipe unreliable2 unreliable
+	pipe int32 unreliable2
+
+    wire int32 peekwire [readonly]
+    wire int32 \
+	pokewire [writeonly]
+	property int32 unknown_modifier [unknown, unknown2(), unknown_3(23, 45.8e-5, hello, "world")]
+	
+	memory double[] readmem [readonly]
+	
+	objref obj4 o4
+	
+	property testenum1 testenum1_prop
+	
+	property testcstruct1 testcstruct1_prop
+	function void testcstruct1_func1(testcstruct1 s)
+	function testcstruct1 testcstruct1_func2()
+	
+	property teststruct3 teststruct3_prop
+	
+	memory testcstruct2[] cstruct_m1
+	memory testcstruct2[*] cstruct_m2
+	
+	function double{generator} gen_func1() 
+	function uint8[]{generator} gen_func2(string name) 
+	function void gen_func3(string name, uint8[]{generator} in) 
+	function uint8[]{generator} gen_func4(uint8[]{generator} in) 
+	function teststruct2{generator} gen_func5(teststruct2{generator} in)
+	
+end object
+
+object obj1
+    property double[] d1
+end object
+
+object obj2
+    implements obj1
+    property double[] d1
+end object
+
+object obj3
+    implements obj1
+    implements obj2
+	property double[] d1
+end object
+
+object obj4
+    implements sub2
+	property string s_ind
+	property int32 i_ind
+
+	property string data
+	objref sub3{string} o3_1
+end object
+

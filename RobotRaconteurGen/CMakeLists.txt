@@ -1,0 +1,69 @@
+set(RobotRaconteurGen_src
+	CPPServiceLangGen.cpp
+	CSharpServiceLangGen.cpp
+	#VBNETServiceLangGen.cpp
+	JavaServiceLangGen.cpp
+	RobotRaconteurGen.cpp
+)
+
+set(RobotRaconteurGen_header
+	CPPServiceLangGen.h	
+	CSharpServiceLangGen.h	
+	#VBNETServiceLangGen.h	
+	JavaServiceLangGen.h
+)
+
+IF(MSVC)
+add_definitions(-DROBOTRACONTEUR_USE_STDAFX)
+ADD_MSVC_PRECOMPILED_HEADER(stdafx.h stdafx.cpp RobotRaconteurGen_src)
+ENDIF()
+
+add_executable(RobotRaconteurGen ${RobotRaconteurGen_src} ${RobotRaconteurGen_header})
+
+IF(WIN32)
+IF (RobotRaconteur_USE_SHARED_CORE_LIB)
+ADD_DEFINITIONS(-DROBOTRACONTEUR_CORE_IMPORTS)
+ENDIF()
+ENDIF()
+
+RRSetTargetDirs(RobotRaconteurGen "bin" "lib")
+target_link_libraries(RobotRaconteurGen  ${RobotRaconteur_CORE_LIBRARY} ${Boost_LIBRARIES} ${ROBOTRACONTEUR_EXTRA_LIBS})
+
+if (NOT DEFINED RobotRaconteur_DIR)
+add_dependencies(RobotRaconteurGen RobotRaconteurCore)
+endif()
+
+RRConfigureTest(gen_prog "${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/bin/RobotRaconteurGen" "test_prog" NOCTEST)
+#RRConfigureTest(test_cpp_loopback "${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/bin/RobotRaconteurTest" "test_prog" ARGS "loopback")
+
+set(RR_TEST_ROBDEFS com.robotraconteur.testing.TestService1.robdef 
+	com.robotraconteur.testing.TestService2.robdef
+	com.robotraconteur.testing.TestService3.robdef
+	)
+
+function(RR_TEST_GEN lang )
+string(REPLACE ";" " " RR_TEST_ROBDEFS_1 "${RR_TEST_ROBDEFS}")
+set(RR_TEST_GEN_CMD "${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/bin/RobotRaconteurGen --thunksource --lang=${lang} -I ${CMAKE_SOURCE_DIR}/testing/RobotRaconteurTest --output-dir ${CMAKE_CURRENT_BINARY_DIR}/gen/@OUT_DIR_NAME@/${lang} ${RR_TEST_ROBDEFS_1}")
+
+file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/gen/out/${lang}")
+file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/gen/out_debug/${lang}")
+file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/gen/out_reldebug/${lang}")
+
+set(GEN_FILE_LIST "")
+
+file(GLOB_RECURSE ROBOTRACONTEUR_GEN_TEST_FILES RELATIVE "${CMAKE_SOURCE_DIR}/testing/gen/${lang}" "${CMAKE_SOURCE_DIR}/testing/gen/${lang}/*")
+foreach(F ${ROBOTRACONTEUR_GEN_TEST_FILES})
+if(WIN32)
+configure_file("${CMAKE_SOURCE_DIR}/testing/gen/${lang}/${F}" "${CMAKE_CURRENT_BINARY_DIR}/gen/test/${lang}/${F}" NEWLINE_STYLE CRLF)
+else()
+configure_file("${CMAKE_SOURCE_DIR}/testing/gen/${lang}/${F}" "${CMAKE_CURRENT_BINARY_DIR}/gen/test/${lang}/${F}" NEWLINE_STYLE LF)
+endif()
+set(GEN_FILE_LIST "${GEN_FILE_LIST}\"${CMAKE_CURRENT_BINARY_DIR}/gen/test/${lang}/${F};${CMAKE_CURRENT_BINARY_DIR}/gen/@OUT_DIR_NAME@/${lang}/${F}\",")
+endforeach()
+
+RRConfigureTest("test_gen_${lang}" "${RR_TEST_GEN_CMD}" "test_gen" FILELIST GEN_FILE_LIST)
+endfunction()
+
+RR_TEST_GEN(cpp)
+RR_TEST_GEN(csharp)
+RR_TEST_GEN(java)

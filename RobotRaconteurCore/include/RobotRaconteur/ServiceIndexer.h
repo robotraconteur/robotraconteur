@@ -1,0 +1,43 @@
+// Copyright 2011-2018 Wason Technology, LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License. 
+
+#include "RobotRaconteurServiceIndex_stubskel.h"
+
+#pragma once
+
+
+namespace RobotRaconteur
+{
+	class ServiceIndexer : public virtual RobotRaconteurServiceIndex::ServiceIndex
+	{
+		RR_WEAK_PTR<RobotRaconteurNode> node;
+
+	public:
+		
+		ServiceIndexer(RR_SHARED_PTR<RobotRaconteurNode> node);
+
+		RR_SHARED_PTR<RobotRaconteurNode> GetNode();
+
+		virtual RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteurServiceIndex::ServiceInfo> > GetLocalNodeServices();
+
+		virtual RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteurServiceIndex::NodeInfo> > GetRoutedNodes();
+
+		virtual RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteurServiceIndex::NodeInfo> > GetDetectedNodes();
+
+		virtual boost::signals2::signal<void ()>& get_LocalNodeServicesChanged();
+	private:
+		 boost::signals2::signal<void ()> ev;
+
+	};
+}

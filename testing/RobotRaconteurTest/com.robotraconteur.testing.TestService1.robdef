@@ -1,0 +1,221 @@
+﻿#This is the standard test service for RobotRaconteur
+#It is not meant to be exhaustive, rather it tests the
+#most common operations.
+
+#Each of the members defined has a specified behavior.
+#Refer to the reference implementation for details
+#on these behaviors.  New implementations of 
+#Robot Raconteur should test against the reference
+#client and server to determine compatibilty.
+
+service com.robotraconteur.testing.TestService1
+
+option version 0.8
+
+import com.robotraconteur.testing.TestService2
+
+exception testexception1
+exception testexception2
+
+struct teststruct1
+	field double[] dat1
+	field string str2
+	field string{int32} vec3
+	field string{string} dict4
+	field string{list} list5
+	field teststruct2 struct1
+	field teststruct2{string} dstruct2
+	field teststruct2{list} lstruct3
+	field double[*] multidimarray
+	
+	field varvalue var3
+	
+end struct
+
+struct teststruct2
+	field double[] mydat
+
+end struct
+
+object testroot
+	implements com.robotraconteur.testing.TestService2.baseobj
+
+	option constant double[] doubleconst {3.4, 4.8, 14372.8}
+	option constant string strconst "This is a constant"
+
+#Properties to test the serialization of different data types
+
+	#numbers
+
+	property double d1
+	property double[] d2
+	property double[16] d3
+	property double[16-] d4
+	property double[*] d5
+	property double[3,3] d6
+
+	property single s1
+	property single[] s2
+
+	property int8 i8_1
+	property int8[] i8_2
+
+	property uint8 u8_1
+	property uint8[] u8_2
+	property uint8[*] u8_3
+
+	property int16 i16_1
+	property int16[] i16_2
+
+	property uint16 u16_1
+	property uint16[] u16_2
+
+	property int32 i32_1
+	property int32[] i32_2
+	property int32[] i32_huge
+
+	property uint32 u32_1
+	property uint32[] u32_2
+
+	property int64 i64_1
+	property int64[] i64_2
+
+	property uint64 u64_1
+	property uint64[] u64_2
+
+	#strings
+	property string str1
+
+	#structs
+	property teststruct1 struct1
+	property teststruct2 struct2
+
+	#indexed sets
+	property double{int32} is_d1
+	property double{string} is_d2
+	property double[]{int32} is_d3
+	property double[]{string} is_d4
+	property double[*]{int32} is_d5
+	property double[*]{string} is_d6
+	
+	property string{int32} is_str1
+	property string{string} is_str2
+
+	property teststruct2{int32} is_struct1
+	property teststruct2{string} is_struct2
+	property com.robotraconteur.testing.TestService2.ostruct2 struct3
+
+	#lists
+	property double{list} list_d1
+	property double[]{list} list_d3
+	property double[*]{list} list_d5
+	
+	property string{list} list_str1
+	property teststruct2{list} list_struct1
+	
+	#varvalue
+	property varvalue var1
+	property varvalue{int32} var2
+	property varvalue var_num
+	property varvalue var_str
+	property varvalue var_struct
+	property varvalue var_vector
+	property varvalue var_dictionary
+	property varvalue var_list
+	property varvalue var_multidimarray
+
+	#Throw an error to test error transmission
+	property double errtest
+	property teststruct1 nulltest
+	
+	#functions
+	function void func1()
+	function void func2(double d1, double d2)
+	function double func3(double d1, double d2)
+	function int32 meaning_of_life()
+	function void func_errtest()
+	function void func_errtest1()
+	function void func_errtest2()
+	function void func_errtest3()
+	
+	#events
+
+	event ev1()
+	event ev2(double d1, teststruct2 s2 )
+
+	#objrefs
+
+	objref sub1 o1
+	objref sub1[] o2
+	objref sub1{int32} o3
+	objref sub1{string} o4
+	objref com.robotraconteur.testing.TestService2.subobj o5
+
+	objref varobject o6
+
+	function void o6_op(int32 op)
+
+	#pipes
+
+	pipe double[] p1
+
+	#option pipe p2 unreliable
+	pipe teststruct2 p2
+	function void pipe_check_error()
+	
+	pipe double broadcastpipe
+
+	#callbacks
+	callback void cb1()
+	callback void cb2(double d1, double d2)
+	callback double cb3(double d1, double d2)
+	callback int32 cb_meaning_of_life()
+	callback void cb_errtest()
+
+	function void test_callbacks()
+
+	#wires
+
+	wire double[] w1
+	wire teststruct2 w2
+	wire int32[*] w3
+	
+	wire double broadcastwire
+
+	#memory
+
+	memory double[] m1
+	memory double[*] m2
+	memory uint8[*] m3
+
+end object
+
+object sub1
+	property double[] d1
+	property double[*] d2
+
+	objref sub2 o2_1
+	objref sub2{int32} o2_2
+	objref sub2{string} o2_3	
+
+	property string s_ind
+	property int32 i_ind
+
+end object
+	
+object sub2
+
+	property string s_ind
+	property int32 i_ind
+
+	property string data
+	objref sub3{string} o3_1
+end object
+
+object sub3
+	property string ind
+	property string data2
+	property double data3
+	function double add(double d)
+end object
+

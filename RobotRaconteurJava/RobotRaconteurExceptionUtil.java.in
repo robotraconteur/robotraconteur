@@ -1,0 +1,63 @@
+package com.robotraconteur;
+
+/** 
+ Helper class for working with RobotRaconteurException
+*/
+public class RobotRaconteurExceptionUtil
+{
+	/** 
+	 Populates an entry with an exception
+	 
+	 @param exception The exception to serialize
+	 @param entry The entry to populate
+	*/
+	public static void exceptionToMessageEntry(Exception exception, MessageEntry entry)
+	{
+		String message=exception.getMessage();
+		if (message==null) message="";
+		
+		@RR_ERRORS_CATCH@
+		
+		if (exception instanceof RobotRaconteurException)
+		{
+			RobotRaconteurException r = (RobotRaconteurException)exception;
+			entry.setError(r.errorCode);
+			entry.addElement("errorname", r.error);
+			entry.addElement("errorstring", message);
+
+		}
+		else
+		{
+			entry.setError(MessageErrorType.MessageErrorType_RemoteError);
+			entry.addElement("errorname", exception.getClass().toString());
+			entry.addElement("errorstring", message);
+
+
+		}
+
+	}
+
+	/** 
+	 Converts a MessageEntry containing an error to the correct exception
+	 
+	 @param entry The entry containing an error
+	 @return An populated exception
+	*/
+	public static RuntimeException errorCodeToException(MessageErrorType errorcode, String errorname, String errorstring)
+	{
+		switch (errorcode)
+		{			
+			 case MessageErrorType_RemoteError:
+				RobotRaconteurException e1= new RobotRaconteurRemoteException(errorname, errorstring);
+				RobotRaconteurException e2=RobotRaconteurNode.s().downCastException(e1);
+				return e2;
+			@RR_ERRORS_CASE@
+			default:
+				break;
+
+		}
+
+		return new RobotRaconteurException(errorcode, errorname, errorstring);
+
+	}
+}

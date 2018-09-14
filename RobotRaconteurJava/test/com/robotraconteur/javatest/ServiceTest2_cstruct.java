@@ -1,0 +1,302 @@
+package com.robotraconteur.javatest;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import com.robotraconteur.CStructureMultiDimArray;
+import com.robotraconteur.testing.TestService3.*;
+
+class ServiceTest2_cstruct
+{
+	private static double[] create_double_array(ServiceTest2_test_sequence_gen gen, int len)
+	{
+		double[] o = new double[len];
+		for (int i=0; i<len; i++)
+		{
+			o[i] = gen.get_double();
+		}
+		return o;
+	}
+
+	private static void verify_double_array(ServiceTest2_test_sequence_gen gen, double[] v, int len)
+	{
+		if (v.length != len) throw new RuntimeException();
+		for (int i = 0; i < len; i++)
+		{
+			if (v[i] != gen.get_double()) throw new RuntimeException();
+		}            
+	}
+
+	private static long[] create_uint32_array(ServiceTest2_test_sequence_gen gen, int len)
+	{
+		long[] o = new long[len];
+		for (int i = 0; i < len; i++)
+		{
+			o[i] = gen.get_uint32();
+		}
+		return o;
+	}
+
+	private static void verify_uint32_array(ServiceTest2_test_sequence_gen gen, long[] v, int len)
+	{
+		if (v.length != len) throw new RuntimeException();
+		for (int i = 0; i < len; i++)
+		{
+			if (v[i] != gen.get_uint32()) throw new RuntimeException();
+		}
+	}
+
+
+	private static byte[] create_int8_array(ServiceTest2_test_sequence_gen gen, int len)
+	{
+		byte[] o = new byte[len];
+		for (int i = 0; i < len; i++)
+		{
+			o[i] = gen.get_int8();
+		}
+		return o;
+	}
+
+	private static void verify_int8_array(ServiceTest2_test_sequence_gen gen, byte[] v, int len)
+	{
+		if (v.length != len) throw new RuntimeException();
+		for (int i = 0; i < len; i++)
+		{
+			if (v[i] != gen.get_int8()) throw new RuntimeException();
+		}
+	}
+
+
+	public static void fill_testcstruct1(testcstruct1 s, long seed)
+	{
+		ServiceTest2_test_sequence_gen gen = new ServiceTest2_test_sequence_gen(seed);
+		s.d1 = gen.get_double();
+		s.d2 = create_double_array(gen, 6);
+		s.d3 = create_double_array(gen, (int)(gen.get_uint32() % 6));
+		s.d4 = create_double_array(gen,9);
+		
+		s.s1=new testcstruct2();
+		fill_testcstruct2(s.s1, gen.get_uint32());
+		s.s2 = create_testcstruct2_array(gen, 8);
+		s.s3 = create_testcstruct2_array(gen, (int)(gen.get_uint32() % 9));
+		s.s4 = create_testcstruct2_array(gen, 8);
+	}
+
+	public static void verify_testcstruct1(testcstruct1 s, long seed)
+	{
+		ServiceTest2_test_sequence_gen gen = new ServiceTest2_test_sequence_gen(seed);
+		if (s.d1 != gen.get_double()) throw new RuntimeException();
+		verify_double_array(gen, s.d2, 6);
+		verify_double_array(gen, s.d3, (int)(gen.get_uint32() % 6));
+
+		verify_double_array(gen, (double[])s.d4, 9);                   
+		verify_testcstruct2(s.s1, gen.get_uint32());
+		verify_testcstruct2_array(gen, s.s2, 8);
+		verify_testcstruct2_array(gen, s.s3,(int) (gen.get_uint32() % 9));
+		verify_testcstruct2_array(gen, (testcstruct2[])s.s4, 8);
+				  
+	}
+
+	public static void fill_testcstruct2(testcstruct2 s, long seed)
+	{
+		ServiceTest2_test_sequence_gen gen = new ServiceTest2_test_sequence_gen(seed);
+		s.i1 = gen.get_int8();
+		s.i2 = create_int8_array(gen, 15);
+		s.i3 = create_int8_array(gen, (int)(gen.get_uint32() % 15));
+	}
+
+	public static void verify_testcstruct2(testcstruct2 s, long seed)
+	{
+		ServiceTest2_test_sequence_gen gen = new ServiceTest2_test_sequence_gen(seed);
+		if (s.i1 != gen.get_int8()) throw new RuntimeException();
+		verify_int8_array(gen, s.i2, 15);
+		verify_int8_array(gen, s.i3, (int)(gen.get_uint32() % 15));
+	}
+
+	public static testcstruct1[] create_testcstruct1_array(int len, long seed)
+	{
+		ServiceTest2_test_sequence_gen gen = new ServiceTest2_test_sequence_gen(seed);
+		testcstruct1[] o = new testcstruct1[len];
+		for (int i = 0; i < len; i++)
+		{
+			o[i] = new testcstruct1();
+			fill_testcstruct1(o[i], gen.get_uint32());
+		}
+		return o;
+	}
+
+	public static void verify_testcstruct1_array(testcstruct1[] v, int len, long seed)
+	{
+		ServiceTest2_test_sequence_gen gen = new ServiceTest2_test_sequence_gen(seed);
+		if (v.length != len) throw new RuntimeException();
+		for (int i = 0; i < len; i++)
+		{
+			verify_testcstruct1(v[i], gen.get_uint32());
+		}
+	}
+
+	public static CStructureMultiDimArray create_testcstruct1_multidimarray(int m, int n, long seed)
+	{
+		ServiceTest2_test_sequence_gen gen = new ServiceTest2_test_sequence_gen(seed);
+		testcstruct1[] o = new testcstruct1[m*n];
+		for (int i = 0; i < m*n; i++)
+		{
+			o[i]=new testcstruct1();
+			fill_testcstruct1(o[i], gen.get_uint32());
+		}
+		return new CStructureMultiDimArray(new int[] { m, n }, o);
+	}
+
+	public static void verify_testcstruct1_multidimarray(CStructureMultiDimArray v, int m, int n, long seed)
+	{
+		if (!Arrays.equals(v.dims,new int[] { m, n })) throw new RuntimeException();
+		verify_testcstruct1_array((testcstruct1[])v.cstruct_array, m * n, seed);
+	}
+	
+	public static void verify_testcstruct1_multidimarray(Object v, int m, int n, long seed)
+	{
+		if (!(v instanceof CStructureMultiDimArray) && n == 1)
+		{
+			verify_testcstruct1_array((testcstruct1[])v, m, seed);
+		}
+		else
+		{
+			CStructureMultiDimArray v2=(CStructureMultiDimArray)v;
+			if (!Arrays.equals(v2.dims,new int[] { m, n })) throw new RuntimeException();
+			verify_testcstruct1_array((testcstruct1[])v2.cstruct_array, m * n, seed);
+		}
+	}
+
+
+	public static testcstruct2[] create_testcstruct2_array(ServiceTest2_test_sequence_gen gen, int len)
+	{
+		testcstruct2[] o = new testcstruct2[len];
+		for (int i=0; i< len; i++)
+		{
+			o[i]=new testcstruct2();
+			fill_testcstruct2( o[i], gen.get_uint32());
+		}
+		return o;
+	}
+
+	public static void verify_testcstruct2_array(ServiceTest2_test_sequence_gen gen, testcstruct2[] v, int len)
+	{
+		if (v.length != len) throw new RuntimeException();
+		for (int i = 0; i < len; i++)
+		{
+			verify_testcstruct2(v[i], gen.get_uint32());
+		}            
+	}
+
+	public static teststruct3 fill_teststruct3(long seed)
+	{
+		ServiceTest2_test_sequence_gen gen = new ServiceTest2_test_sequence_gen(seed);
+		teststruct3 o = new teststruct3();
+		o.s1=new testcstruct1();
+		fill_testcstruct1(o.s1, gen.get_uint32());
+		long s2_seed = gen.get_uint32();
+		o.s2 = create_testcstruct1_array((int)(s2_seed % 17), s2_seed);
+		o.s3 = create_testcstruct1_array(11, gen.get_uint32());
+		long s4_seed = gen.get_uint32();
+		o.s4 = create_testcstruct1_array((int)(s4_seed % 16), s4_seed);
+		o.s5 = create_testcstruct1_multidimarray(3, 3, gen.get_uint32());
+		long s6_seed = gen.get_uint32();
+		o.s6 = create_testcstruct1_multidimarray((int)(s6_seed % 6), (int)(s6_seed % 3), s6_seed);
+		o.s7 = new ArrayList<testcstruct1[]>();
+		testcstruct1 s7_1 = new testcstruct1();
+		fill_testcstruct1(s7_1, gen.get_uint32());
+		o.s7.add(new testcstruct1[] {s7_1});
+
+		o.s8 = new ArrayList<testcstruct1[]>();
+		o.s8.add(create_testcstruct1_array(2, gen.get_uint32()));
+		o.s8.add(create_testcstruct1_array(4, gen.get_uint32()));
+
+		o.s9 = new ArrayList<CStructureMultiDimArray>();
+		o.s9.add(create_testcstruct1_multidimarray(2, 3, gen.get_uint32()));
+		o.s9.add(create_testcstruct1_multidimarray(4, 5, gen.get_uint32()));
+
+		testcstruct1 s10 = new testcstruct1();
+		fill_testcstruct1(s10, gen.get_uint32());
+		o.s10 = new testcstruct1[] { s10 };
+
+		o.s11 = create_testcstruct1_array(3, gen.get_uint32());
+		o.s12 = create_testcstruct1_multidimarray(2, 2, gen.get_uint32());
+
+		testcstruct1 s13 = new testcstruct1();
+		fill_testcstruct1(s13, gen.get_uint32());
+		List<Object> s13_1 = new ArrayList<Object>();;
+		s13_1.add(new testcstruct1[] { s13 } );
+		o.s13 = s13_1;
+
+		List<Object> s14 = new ArrayList<Object>();
+		s14.add(create_testcstruct1_array(3, gen.get_uint32()));
+		s14.add(create_testcstruct1_array(5, gen.get_uint32()));
+		o.s14 = s14;
+
+		List<Object> s15 = new ArrayList<Object>();
+		s15.add(create_testcstruct1_multidimarray(7, 2, gen.get_uint32()));
+		s15.add(create_testcstruct1_multidimarray(5, 1, gen.get_uint32()));
+		o.s15 = s15;
+		
+		return o;
+	}
+
+	public static void verify_teststruct3(teststruct3 v, long seed)
+	{
+		if (v == null) throw new RuntimeException();
+		ServiceTest2_test_sequence_gen gen = new ServiceTest2_test_sequence_gen(seed);
+
+		verify_testcstruct1(v.s1, gen.get_uint32());
+		long s2_seed = gen.get_uint32();
+		verify_testcstruct1_array(v.s2, (int)(s2_seed % 17), s2_seed);
+		verify_testcstruct1_array(v.s3, 11, gen.get_uint32());
+		long s4_seed = gen.get_uint32();
+		verify_testcstruct1_array(v.s4, (int)(s4_seed % 16), s4_seed);
+		verify_testcstruct1_multidimarray(v.s5, 3, 3, gen.get_uint32());
+		long s6_seed = gen.get_uint32();
+		verify_testcstruct1_multidimarray(v.s6, (int)(s6_seed % 6), (int)(s6_seed % 3), s6_seed);
+
+		if (v.s7 == null) throw new RuntimeException();
+		if (v.s7.size() != 1) throw new RuntimeException();
+		testcstruct1 s7_0 = v.s7.get(0)[0];
+		verify_testcstruct1(s7_0, gen.get_uint32());
+
+		if (v.s8 == null) throw new RuntimeException();
+		if (v.s8.size() != 2) throw new RuntimeException();            
+		verify_testcstruct1_array(v.s8.get(0), 2, gen.get_uint32());
+		verify_testcstruct1_array(v.s8.get(1), 4, gen.get_uint32());
+
+		if (v.s9 == null) throw new RuntimeException();
+		if (v.s9.size() != 2) throw new RuntimeException();
+		verify_testcstruct1_multidimarray(v.s9.get(0), 2, 3, gen.get_uint32());
+		verify_testcstruct1_multidimarray(v.s9.get(1), 4, 5, gen.get_uint32());
+
+		testcstruct1 s10 = ((testcstruct1[])v.s10)[0];
+		verify_testcstruct1(s10, gen.get_uint32());
+
+		verify_testcstruct1_array((testcstruct1[])v.s11, 3, gen.get_uint32());
+		verify_testcstruct1_multidimarray(v.s12, 2, 2, gen.get_uint32());
+
+		if (v.s13 == null) throw new RuntimeException();
+		Object s13_1=((List<Object>)v.s13).get(0);
+		testcstruct1[] s13 = (testcstruct1[])((List<Object>)v.s13).get(0);
+		verify_testcstruct1(s13[0], gen.get_uint32());
+
+		if (v.s14 == null) throw new RuntimeException();
+		List<Object> v14 = (List<Object>)v.s14;
+		if (v14.size() != 2) throw new RuntimeException();
+		verify_testcstruct1_array((testcstruct1[])v14.get(0), 3, gen.get_uint32());
+		verify_testcstruct1_array((testcstruct1[])v14.get(1), 5, gen.get_uint32());
+
+		if (v.s15 == null) throw new RuntimeException();
+		List<Object> v15 = (List<Object>)v.s15;
+		if (v15.size() != 2) throw new RuntimeException();
+		verify_testcstruct1_multidimarray(v15.get(0), 7, 2, gen.get_uint32());
+		verify_testcstruct1_multidimarray(v15.get(1), 5, 1, gen.get_uint32());
+
+
+
+
+	}
+}

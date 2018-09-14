@@ -1,0 +1,761 @@
+// Copyright 2011-2018 Wason Technology, LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#ifdef ROBOTRACONTEUR_CORE_USE_STDAFX
+#include "stdafx.h"
+#endif
+
+#include "RobotRaconteur/MemoryMember.h"
+
+namespace RobotRaconteur
+{
+
+
+
+	namespace detail
+	{
+
+		ROBOTRACONTEUR_CORE_API void CalculateMatrixBlocks(uint32_t element_size, std::vector<uint64_t> count, uint64_t max_elems, int32_t &split_dim, uint64_t &split_dim_block, uint64_t &split_elem_count, int32_t &splits_count, int32_t &split_remainder, std::vector<uint64_t>& block_count, std::vector<uint64_t>& block_count_edge)
+		{
+
+			split_elem_count = 1;
+			split_dim = -1;
+			split_dim_block = 0;
+			bool split_dim_found = false;
+			block_count = std::vector<uint64_t>(count.size());
+			splits_count = 0;
+			split_remainder = 0;
+			for (size_t i = 0; i < count.size(); i++)
+			{
+				if (!split_dim_found)
+				{
+					uint64_t temp_elem_count1 = split_elem_count * count[i];
+					if (temp_elem_count1 > max_elems)
+					{
+						split_dim = (int32_t)i;
+						split_dim_block = max_elems / split_elem_count;
+						split_dim_found = true;
+						block_count[i] = split_dim_block;
+						splits_count = static_cast<int32_t>(count[i] / split_dim_block);
+						split_remainder = static_cast<int32_t>(count[i] % split_dim_block);
+					}
+					else
+					{
+						split_elem_count = temp_elem_count1;
+						block_count[i] = count[i];
+					}
+				}
+				else
+				{
+					block_count[i] = 1;
+				}
+			}
+
+			//block_count_edge = std::vector<uint64_t>(block_count.size());
+			//Array::Copy(block_count, block_count_edge, block_count.size());
+			block_count_edge =block_count;
+			block_count_edge[split_dim] = count[split_dim] % split_dim_block;
+
+
+
+		}
+	}
+
+	RR_SHARED_PTR<RobotRaconteurNode> ArrayMemoryServiceSkelBase::GetNode()
+	{
+		RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
+		if (!n) throw InvalidOperationException("Node has been released");
+		return n;
+	}
+
+	std::string ArrayMemoryServiceSkelBase::GetMemberName() const
+	{
+		return m_MemberName;
+	}
+
+	ArrayMemoryServiceSkelBase::ArrayMemoryServiceSkelBase(const std::string& membername, RR_SHARED_PTR<ServiceSkel> skel, DataTypes element_type, size_t element_size, MemberDefinition_Direction direction)
+	{
+		this->m_MemberName = membername;
+		this->skel = skel;
+		this->node = skel->RRGetNode();
+		this->direction = direction;
+		this->element_type = element_type;
+		this->element_size = element_size;
+	}
+
+	ArrayMemoryServiceSkelBase::~ArrayMemoryServiceSkelBase() {}
+
+	RR_SHARED_PTR<MessageEntry> ArrayMemoryServiceSkelBase::CallMemoryFunction(RR_SHARED_PTR<MessageEntry> m, RR_SHARED_PTR<Endpoint> e, RR_SHARED_PTR<ArrayMemoryBase> mem)
+	{
+
+		switch (m->EntryType)
+		{
+		case MessageEntryType_MemoryRead:
+		{
+			if (direction == MemberDefinition_Direction_writeonly)
+			{
+				throw WriteOnlyMemberException("Write only member");
+			}
+
+			uint64_t memorypos = RRArrayToScalar(m->FindElement("memorypos")->CastData<RRArray<uint64_t> >());
+			uint64_t count = RRArrayToScalar(m->FindElement("count")->CastData<RRArray<uint64_t> >());
+			RR_SHARED_PTR<MessageElementData> data = DoRead(memorypos, 0, (size_t)count, mem);
+			RR_SHARED_PTR<MessageEntry> ret = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_MemoryReadRet, GetMemberName());
+			ret->AddElement("memorypos", ScalarToRRArray(memorypos));
+			ret->AddElement("count", ScalarToRRArray(count));
+			ret->AddElement("data", data);
+			return ret;
+
+		}
+		case MessageEntryType_MemoryWrite:
+		{
+			if (direction == MemberDefinition_Direction_readonly)
+			{
+				throw ReadOnlyMemberException("Read only member");
+			}
+
+			uint64_t memorypos = RRArrayToScalar(m->FindElement("memorypos")->CastData<RRArray<uint64_t> >());
+			uint64_t count = RRArrayToScalar(m->FindElement("count")->CastData<RRArray<uint64_t> >());
+			RR_SHARED_PTR<MessageElementData> data = m->FindElement("data")->CastData<MessageElementData>();
+			DoWrite(memorypos, data, 0, (size_t)count, mem);
+			RR_SHARED_PTR<MessageEntry> ret = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_MemoryReadRet, GetMemberName());
+			ret->AddElement("memorypos", ScalarToRRArray(memorypos));
+			ret->AddElement("count", ScalarToRRArray(count));
+			return ret;
+
+		}
+		case MessageEntryType_MemoryGetParam:
+		{
+			std::string param = m->FindElement("parameter")->CastDataToString();
+			if (param == "Length")
+			{
+				RR_SHARED_PTR<MessageEntry> ret = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_MemoryGetParamRet, GetMemberName());
+				ret->AddElement("return", ScalarToRRArray(mem->Length()));
+				return ret;
+
+			}
+			else if (param == "MaxTransferSize")
+			{
+				RR_SHARED_PTR<MessageEntry> ret = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_MemoryGetParamRet, GetMemberName());
+				uint32_t MaxTransferSize = GetNode()->GetMemoryMaxTransferSize();
+				ret->AddElement("return", ScalarToRRArray(MaxTransferSize));
+				return ret;
+
+			}
+			else
+			{
+				throw InvalidOperationException("Unknown parameter");
+			}
+		}
+		default:
+			throw ProtocolException("Invalid command");
+
+		}
+	}
+
+	RR_SHARED_PTR<RobotRaconteurNode> MultiDimArrayMemoryServiceSkelBase::GetNode()
+	{
+		RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
+		if (!n) throw InvalidOperationException("Node has been released");
+		return n;
+	}
+
+	std::string MultiDimArrayMemoryServiceSkelBase::GetMemberName() const
+	{
+		return m_MemberName;
+	}
+
+	MultiDimArrayMemoryServiceSkelBase::MultiDimArrayMemoryServiceSkelBase(const std::string& membername, RR_SHARED_PTR<ServiceSkel> skel, DataTypes element_type, size_t element_size, MemberDefinition_Direction direction)
+	{
+		this->m_MemberName = membername;
+		this->skel = skel;
+		this->node = skel->RRGetNode();
+		this->direction = direction;
+		this->element_type = element_type;
+		this->element_size = element_size;
+	}
+
+	MultiDimArrayMemoryServiceSkelBase::~MultiDimArrayMemoryServiceSkelBase() {}
+
+	RR_SHARED_PTR<MessageEntry> MultiDimArrayMemoryServiceSkelBase::CallMemoryFunction(RR_SHARED_PTR<MessageEntry> m, RR_SHARED_PTR<Endpoint> e, RR_SHARED_PTR<MultiDimArrayMemoryBase > mem)
+	{
+
+		switch (m->EntryType)
+		{
+		case MessageEntryType_MemoryRead:
+		{
+			if (direction == MemberDefinition_Direction_writeonly)
+			{
+				throw WriteOnlyMemberException("Write only member");
+			}
+
+			RR_SHARED_PTR<RRArray<uint64_t> > memorypos = m->FindElement("memorypos")->CastData<RRArray<uint64_t> >();
+			RR_SHARED_PTR<RRArray<uint64_t> > count = m->FindElement("count")->CastData<RRArray<uint64_t> >();
+			int32_t elemcount = 1;
+			for (size_t i = 0; i < count->size(); i++)
+				elemcount *= static_cast<int32_t>((*count)[i]);
+
+
+			RR_SHARED_PTR<MessageElementData> data = DoRead(RRArrayToVector<uint64_t>(memorypos), std::vector<uint64_t>(count->size()), RRArrayToVector<uint64_t>(count), elemcount, mem);
+
+			RR_SHARED_PTR<MessageEntry> ret = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_MemoryReadRet, GetMemberName());
+			ret->AddElement("memorypos", memorypos);
+			ret->AddElement("count", memorypos);
+			ret->AddElement("data", data);
+			return ret;
+
+		}
+		case MessageEntryType_MemoryWrite:
+		{
+			if (direction == MemberDefinition_Direction_readonly)
+			{
+				throw ReadOnlyMemberException("Read only member");
+			}
+
+			RR_SHARED_PTR<RRArray<uint64_t> > memorypos = m->FindElement("memorypos")->CastData<RRArray<uint64_t> >();
+			RR_SHARED_PTR<RRArray<uint64_t> > count = m->FindElement("count")->CastData<RRArray<uint64_t> >();
+			int32_t elemcount = 1;
+			for (size_t i = 0; i < count->size(); i++)
+				elemcount *= static_cast<int32_t>((*count)[i]);
+
+			RR_SHARED_PTR<MessageElementData> data = m->FindElement("data")->CastData<MessageElementData>();
+
+			DoWrite(RRArrayToVector<uint64_t>(memorypos), data, std::vector<uint64_t>(count->size()), RRArrayToVector<uint64_t>(count), elemcount, mem);
+			RR_SHARED_PTR<MessageEntry> ret = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_MemoryReadRet, GetMemberName());
+			ret->AddElement("memorypos", memorypos);
+			ret->AddElement("count", count);
+
+			return ret;
+
+		}
+		case MessageEntryType_MemoryGetParam:
+		{
+			std::string param = m->FindElement("parameter")->CastDataToString();
+			
+			if (param == "Dimensions")
+			{
+				RR_SHARED_PTR<MessageEntry> ret = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_MemoryGetParamRet, GetMemberName());
+				ret->AddElement("return", VectorToRRArray<uint64_t>(mem->Dimensions()));
+				return ret;
+			}
+
+			else if (param == "DimCount")
+			{
+				RR_SHARED_PTR<MessageEntry> ret = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_MemoryGetParamRet, GetMemberName());
+				ret->AddElement("return", ScalarToRRArray(mem->DimCount()));
+				return ret;
+			}
+
+			else if (param == "Complex")
+			{
+				RR_SHARED_PTR<MessageEntry> ret = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_MemoryGetParamRet, GetMemberName());
+				int32_t complex = static_cast<int32_t>(mem->Complex() ? 1 : 0);
+				ret->AddElement("return", ScalarToRRArray((int32_t)(complex ? 1 : 0)));
+				return ret;
+			}
+
+			else if (param == "MaxTransferSize")
+			{
+				RR_SHARED_PTR<MessageEntry> ret = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_MemoryGetParamRet, GetMemberName());
+				uint32_t MaxTransferSize = GetNode()->GetMemoryMaxTransferSize();
+				ret->AddElement("return", ScalarToRRArray(MaxTransferSize));
+				return ret;
+
+			}
+			else
+			{
+				throw InvalidOperationException("Unknown parameter");
+			}
+		}
+		default:
+			throw ProtocolException("Invalid command");
+		}
+	}
+
+	const std::string ArrayMemoryClientBase::GetMemberName() const
+	{
+		return m_MemberName;
+	}
+
+	RR_SHARED_PTR<RobotRaconteurNode> ArrayMemoryClientBase::GetNode()
+	{
+		RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
+		if (!n) throw InvalidOperationException("Node has been released");
+		return n;
+	}
+
+	ArrayMemoryClientBase::ArrayMemoryClientBase(const std::string& membername, RR_SHARED_PTR<ServiceStub> stub, DataTypes element_type, size_t element_size, MemberDefinition_Direction direction)
+	{
+		this->stub = stub;
+		this->node = stub->RRGetNode();
+		m_MemberName = membername;
+		this->direction = direction;
+		this->element_type = element_type;
+		this->element_size = element_size;
+		max_size_read = false;
+		remote_max_size = 0;
+	}
+
+	ArrayMemoryClientBase::~ArrayMemoryClientBase() {}
+
+	RR_SHARED_PTR<ServiceStub> ArrayMemoryClientBase::GetStub()
+	{
+		RR_SHARED_PTR<ServiceStub> out = stub.lock();
+		if (!out) throw InvalidOperationException("Memory client has been closed");
+		return out;
+	}
+
+	uint64_t ArrayMemoryClientBase::Length()
+	{
+
+		RR_SHARED_PTR<MessageEntry> m = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_MemoryGetParam, GetMemberName());
+		m->AddElement("parameter", stringToRRArray("Length"));
+		RR_SHARED_PTR<MessageEntry> ret = GetStub()->ProcessRequest(m);
+		return RRArrayToScalar(ret->FindElement("return")->CastData<RRArray<uint64_t> >());
+	}
+
+	RobotRaconteur::MemberDefinition_Direction ArrayMemoryClientBase::Direction()
+	{
+		return direction;
+	}
+
+	uint32_t ArrayMemoryClientBase::GetMaxTransferSize()
+	{
+
+		{
+
+
+			boost::mutex::scoped_lock lock(max_size_lock);
+			if (!max_size_read)
+			{
+				RR_SHARED_PTR<MessageEntry> m = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_MemoryGetParam, GetMemberName());
+				m->AddElement("parameter", stringToRRArray("MaxTransferSize"));
+				RR_SHARED_PTR<MessageEntry> ret = GetStub()->ProcessRequest(m);
+				remote_max_size = RRArrayToScalar(ret->FindElement("return")->CastData<RRArray<uint32_t> >());
+			}
+			uint32_t my_max_size = GetNode()->GetMemoryMaxTransferSize();
+			if (remote_max_size > my_max_size)
+				return my_max_size;
+			else
+				return remote_max_size;
+		}
+
+	}
+
+	void ArrayMemoryClientBase::ReadBase(uint64_t memorypos, void* buffer, uint64_t bufferpos, uint64_t count)
+	{
+		if (direction == MemberDefinition_Direction_writeonly)
+		{
+			throw WriteOnlyMemberException("Write only member");
+		}
+
+		uint32_t max_transfer_size = GetMaxTransferSize();
+		uint32_t max_elems = static_cast<uint32_t>(max_transfer_size) / element_size;
+
+		if (count <= max_elems)
+		{
+			//Transfer all data in one block
+			RR_SHARED_PTR<MessageEntry> e = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_MemoryRead, GetMemberName());
+			e->AddElement("memorypos", ScalarToRRArray(memorypos));
+			e->AddElement("count", ScalarToRRArray(count));
+			RR_SHARED_PTR<MessageEntry> ret = GetStub()->ProcessRequest(e);
+			UnpackReadResult(ret->FindElement("data")->CastData<MessageElementData>(), buffer, bufferpos, count);
+		}
+		else
+		{
+			uint64_t blocks = count / static_cast<uint64_t>(max_elems);
+			uint64_t blockrem = count % static_cast<uint64_t>(max_elems);
+
+			for (uint64_t i = 0; i < blocks; i++)
+			{
+				uint64_t bufferpos_i = bufferpos + max_elems * i;
+				uint64_t memorypos_i = memorypos + max_elems * i;
+
+				ReadBase(memorypos_i, buffer, bufferpos_i, max_elems);
+
+			}
+
+			if (blockrem > 0)
+			{
+				uint64_t bufferpos_i = bufferpos + max_elems * blocks;
+				uint64_t memorypos_i = memorypos + max_elems * blocks;
+
+				ReadBase(memorypos_i, buffer, bufferpos_i, blockrem);
+			}
+		}
+	}
+
+	void ArrayMemoryClientBase::WriteBase(uint64_t memorypos, void* buffer, uint64_t bufferpos, uint64_t count)
+	{
+		if (direction == MemberDefinition_Direction_readonly)
+		{
+			throw ReadOnlyMemberException("Read only member");
+		}
+
+		uint32_t max_transfer_size = GetMaxTransferSize();
+
+
+		uint32_t max_elems = static_cast<uint32_t>(max_transfer_size) / element_size;
+
+
+
+		if (count <= max_elems)
+		{
+
+			//Transfer all data in one block
+			RR_SHARED_PTR<MessageEntry> e = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_MemoryWrite, GetMemberName());
+			e->AddElement("memorypos", ScalarToRRArray(memorypos));
+			e->AddElement("count", ScalarToRRArray(count));
+
+			e->AddElement("data", PackWriteRequest(buffer, bufferpos, count));
+
+			RR_SHARED_PTR<MessageEntry> ret = GetStub()->ProcessRequest(e);
+		}
+		else
+		{
+			if ((static_cast<int64_t>(GetBufferLength(buffer)) - static_cast<int64_t>(bufferpos)) < static_cast<int64_t>(count))
+				throw OutOfRangeException("");
+
+			uint64_t blocks = count / static_cast<uint64_t>(max_elems);
+			uint64_t blockrem = count % static_cast<uint64_t>(max_elems);
+
+			for (uint64_t i = 0; i < blocks; i++)
+			{
+				uint64_t bufferpos_i = bufferpos + max_elems * i;
+				uint64_t memorypos_i = memorypos + max_elems * i;
+
+				WriteBase(memorypos_i, buffer, bufferpos_i, max_elems);
+
+			}
+
+			if (blockrem > 0)
+			{
+				uint64_t  bufferpos_i = bufferpos + max_elems * blocks;
+				uint64_t  memorypos_i = memorypos + max_elems * blocks;
+
+				WriteBase(memorypos_i, buffer, bufferpos_i, blockrem);
+			}
+		}
+	}
+
+	void ArrayMemoryClientBase::Shutdown()
+	{
+	}
+
+	RR_SHARED_PTR<RobotRaconteurNode> MultiDimArrayMemoryClientBase::GetNode()
+	{
+		RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
+		if (!n) throw InvalidOperationException("Node has been released");
+		return n;
+	}
+
+	const std::string MultiDimArrayMemoryClientBase::GetMemberName() const
+	{
+		return m_MemberName;
+	}
+
+	MultiDimArrayMemoryClientBase::MultiDimArrayMemoryClientBase(const std::string &membername, RR_SHARED_PTR<ServiceStub> stub, DataTypes element_type, size_t element_size, MemberDefinition_Direction direction)
+	{
+		this->stub = stub;
+		this->node = stub->RRGetNode();
+		m_MemberName = membername;
+		this->direction = direction;
+		max_size_read = false;
+		remote_max_size = 0;
+		this->element_type = element_type;
+		this->element_size = element_size;
+	}
+
+	MultiDimArrayMemoryClientBase::~MultiDimArrayMemoryClientBase() {}
+
+	RR_SHARED_PTR<ServiceStub> MultiDimArrayMemoryClientBase::GetStub()
+	{
+		RR_SHARED_PTR<ServiceStub> out = stub.lock();
+		if (!out) throw InvalidOperationException("Memory client has been closed");
+		return out;
+	}
+
+	RobotRaconteur::MemberDefinition_Direction MultiDimArrayMemoryClientBase::Direction()
+	{
+		return direction;
+	}
+
+	std::vector<uint64_t> MultiDimArrayMemoryClientBase::Dimensions()
+	{
+
+		RR_SHARED_PTR<MessageEntry> m = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_MemoryGetParam, GetMemberName());
+		m->AddElement("parameter", stringToRRArray("Dimensions"));
+		RR_SHARED_PTR<MessageEntry> ret = GetStub()->ProcessRequest(m);
+		return RRArrayToVector<uint64_t>(ret->FindElement("return")->CastData<RRArray<uint64_t> >());
+	}
+
+	uint64_t MultiDimArrayMemoryClientBase::DimCount()
+	{
+
+		RR_SHARED_PTR<MessageEntry> m = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_MemoryGetParam, GetMemberName());
+		m->AddElement("parameter", stringToRRArray("DimCount"));
+		RR_SHARED_PTR<MessageEntry> ret = GetStub()->ProcessRequest(m);
+		return RRArrayToScalar(ret->FindElement("return")->CastData<RRArray<uint64_t> >());
+	}
+
+	bool MultiDimArrayMemoryClientBase::Complex()
+	{
+
+		RR_SHARED_PTR<MessageEntry> m = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_MemoryGetParam, GetMemberName());
+		m->AddElement("parameter", stringToRRArray("Complex"));
+		RR_SHARED_PTR<MessageEntry> ret = GetStub()->ProcessRequest(m);
+		return RRArrayToScalar(ret->FindElement("return")->CastData<RRArray<int32_t> >()) != 0;
+	}
+
+	uint32_t MultiDimArrayMemoryClientBase::GetMaxTransferSize()
+	{
+		{
+			boost::mutex::scoped_lock lock(max_size_lock);
+			if (!max_size_read)
+			{
+				RR_SHARED_PTR<MessageEntry> m = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_MemoryGetParam, GetMemberName());
+				m->AddElement("parameter", stringToRRArray("MaxTransferSize"));
+				RR_SHARED_PTR<MessageEntry> ret = GetStub()->ProcessRequest(m);
+				remote_max_size = RRArrayToScalar(ret->FindElement("return")->CastData<RRArray<uint32_t> >());
+			}
+			uint32_t my_max_size = GetNode()->GetMemoryMaxTransferSize();
+			if (remote_max_size > my_max_size)
+				return my_max_size;
+			else
+				return remote_max_size;
+		}
+
+	}
+
+	void MultiDimArrayMemoryClientBase::ReadBase(const std::vector<uint64_t>& memorypos, void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
+	{
+		if (direction == MemberDefinition_Direction_writeonly)
+		{
+			throw WriteOnlyMemberException("Write only member");
+		}
+
+		uint32_t max_transfer_size = GetMaxTransferSize();
+
+		uint64_t elemcount = 1;
+		for (size_t i = 0; i < count.size(); i++)
+			elemcount *= count[i];
+		uint32_t max_elems = static_cast<uint32_t>(max_transfer_size) / element_size;
+
+		if (elemcount <= max_elems)
+		{
+
+			//Transfer all data in one block
+			RR_SHARED_PTR<MessageEntry> e = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_MemoryRead, GetMemberName());
+			e->AddElement("memorypos", VectorToRRArray<uint64_t>(memorypos));
+			e->AddElement("count", VectorToRRArray<uint64_t>(count));
+			RR_SHARED_PTR<MessageEntry> ret = GetStub()->ProcessRequest(e);
+
+			UnpackReadResult(ret->FindElement("data")->CastData<MessageElementData>(), buffer, bufferpos, count, elemcount);
+
+		}
+		else
+		{
+			//We need to read the array in chunks.  This is a little complicated...
+
+			int32_t split_dim;
+			uint64_t split_dim_block;
+			uint64_t split_elem_count;
+			int32_t splits_count;
+			int32_t split_remainder;
+			std::vector<uint64_t> block_count;
+			std::vector<uint64_t> block_count_edge;
+
+			detail::CalculateMatrixBlocks(element_size, count, max_elems, split_dim, split_dim_block, split_elem_count, splits_count, split_remainder, block_count, block_count_edge);
+
+			bool done = false;
+			std::vector<uint64_t> current_pos = std::vector<uint64_t>(count.size());
+
+			while (!done)
+			{
+				for (int32_t i = 0; i < splits_count; i++)
+				{
+					current_pos[split_dim] = split_dim_block * static_cast<uint64_t>(i);
+
+					std::vector<uint64_t> current_buf_pos = std::vector<uint64_t>(bufferpos.size());
+					std::vector<uint64_t> current_mem_pos = std::vector<uint64_t>(bufferpos.size());
+
+					for (size_t j = 0; j < current_buf_pos.size(); j++)
+					{
+						current_buf_pos[j] = current_pos[j] + bufferpos[j];
+						current_mem_pos[j] = current_pos[j] + memorypos[j];
+					}
+
+					ReadBase(current_mem_pos, buffer, current_buf_pos, block_count);
+				}
+
+				if (split_remainder != 0)
+				{
+					current_pos[split_dim] = split_dim_block * static_cast<uint64_t>(splits_count);
+					std::vector<uint64_t> current_buf_pos = std::vector<uint64_t>(bufferpos.size());
+					std::vector<uint64_t> current_mem_pos = std::vector<uint64_t>(bufferpos.size());
+
+					for (size_t j = 0; j < current_buf_pos.size(); j++)
+					{
+						current_buf_pos[j] = current_pos[j] + bufferpos[j];
+						current_mem_pos[j] = current_pos[j] + memorypos[j];
+					}
+
+					ReadBase(current_mem_pos, buffer, current_buf_pos, block_count_edge);
+				}
+
+				if (split_dim == (int32_t)(count.size() - 1))
+				{
+					done = true;
+				}
+				else
+				{
+					current_pos[split_dim + 1]++;
+					if (current_pos[split_dim + 1] >= count[split_dim + 1])
+					{
+						if (split_dim + 1 == (int32_t)(count.size() - 1))
+						{
+							done = true;
+						}
+						else
+						{
+							current_pos[split_dim + 1] = 0;
+							for (size_t j = split_dim + 2; j < count.size(); j++)
+							{
+								if (current_pos[j - 1] >= count[j - 1])
+								{
+									current_pos[j]++;
+								}
+							}
+							if (current_pos[count.size() - 1] >= count[count.size() - 1])
+								done = true;
+						}
+					}
+				}
+			}
+		}
+	}
+		
+	void MultiDimArrayMemoryClientBase::WriteBase(const std::vector<uint64_t>& memorypos, void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
+	{
+		if (direction == MemberDefinition_Direction_readonly)
+		{
+			throw ReadOnlyMemberException("Read only member");
+		}
+
+		uint32_t max_transfer_size = GetMaxTransferSize();
+
+		uint64_t elemcount = 1;
+		for (size_t i = 0; i < count.size(); i++)
+			elemcount *= count[i];
+		uint32_t max_elems = static_cast<uint32_t>(max_transfer_size) / element_size;
+
+		if (elemcount <= max_elems)
+		{
+
+			//Transfer all data in one block
+			RR_SHARED_PTR<MessageEntry> e = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_MemoryWrite, GetMemberName());
+			e->AddElement("memorypos", VectorToRRArray<uint64_t>(memorypos));
+			e->AddElement("count", VectorToRRArray<uint64_t>(count));
+						
+			e->AddElement("data", PackWriteRequest(buffer, bufferpos, count, elemcount));
+
+			RR_SHARED_PTR<MessageEntry> ret = GetStub()->ProcessRequest(e);
+
+		}
+		else
+		{
+			int32_t split_dim;
+			uint64_t split_dim_block;
+			uint64_t split_elem_count;
+			int32_t splits_count;
+			int32_t split_remainder;
+			std::vector<uint64_t> block_count;
+			std::vector<uint64_t> block_count_edge;
+
+			detail::CalculateMatrixBlocks(element_size, count, max_elems, split_dim, split_dim_block, split_elem_count, splits_count, split_remainder, block_count, block_count_edge);
+
+			bool done = false;
+			std::vector<uint64_t> current_pos = std::vector<uint64_t>(count.size());
+
+			while (!done)
+			{
+				for (int32_t i = 0; i < splits_count; i++)
+				{
+					current_pos[split_dim] = split_dim_block * static_cast<uint64_t>(i);
+
+					std::vector<uint64_t> current_buf_pos = std::vector<uint64_t>(bufferpos.size());
+					std::vector<uint64_t> current_mem_pos = std::vector<uint64_t>(bufferpos.size());
+
+					for (size_t j = 0; j < current_buf_pos.size(); j++)
+					{
+						current_buf_pos[j] = current_pos[j] + bufferpos[j];
+						current_mem_pos[j] = current_pos[j] + memorypos[j];
+					}
+
+					WriteBase(current_mem_pos, buffer, current_buf_pos, block_count);
+				}
+
+				if (split_remainder != 0)
+				{
+					current_pos[split_dim] = split_dim_block * static_cast<uint64_t>(splits_count);
+					std::vector<uint64_t> current_buf_pos(bufferpos.size());
+					std::vector<uint64_t> current_mem_pos(bufferpos.size());
+
+					for (size_t j = 0; j < current_buf_pos.size(); j++)
+					{
+						current_buf_pos[j] = current_pos[j] + bufferpos[j];
+						current_mem_pos[j] = current_pos[j] + memorypos[j];
+					}
+
+					WriteBase(current_mem_pos, buffer, current_buf_pos, block_count_edge);
+				}
+
+				if (split_dim == (int32_t)(count.size() - 1))
+				{
+					done = true;
+				}
+				else
+				{
+					current_pos[split_dim + 1]++;
+					if (current_pos[split_dim + 1] >= count[split_dim + 1])
+					{
+						if (split_dim + 1 == (int32_t)(count.size() - 1))
+						{
+							done = true;
+						}
+						else
+						{
+							current_pos[split_dim + 1] = 0;
+							for (size_t j = split_dim + 2; j < count.size(); j++)
+							{
+								if (current_pos[j - 1] >= count[j - 1])
+								{
+									current_pos[j]++;
+								}
+							}
+							if (current_pos[count.size() - 1] >= count[count.size() - 1])
+								done = true;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	void MultiDimArrayMemoryClientBase::Shutdown()
+	{
+		
+	}
+
+}
