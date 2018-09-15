@@ -318,19 +318,21 @@ namespace RobotRaconteurTest
 			v.d2[i] = gen.get_double();
 		v.d3.clear();
 		size_t d3_len = gen.get_uint32() % 6;
+		v.d3.resize(d3_len);
 		for (size_t i = 0; i < d3_len; i++)
-			v.d3.push_back(gen.get_double());
+			v.d3.at(i) = (gen.get_double());
 		for (size_t i = 0; i < v.d4.size(); i++)
 			v.d4[i] = gen.get_double();
 		ServiceTest2_fill_testcstruct2(v.s1,gen.get_uint32());
 		for (size_t i=0; i<v.s2.size(); i++)
 			ServiceTest2_fill_testcstruct2(v.s2[i], gen.get_uint32());
 		size_t s3_len = gen.get_uint32() % 9;
+		v.s3.resize(s3_len);
 		for (size_t i = 0; i < s3_len; i++)
 		{
 			com::robotraconteur::testing::TestService3::testcstruct2 v2;
 			ServiceTest2_fill_testcstruct2(v2, gen.get_uint32());
-			v.s3.push_back(v2);
+			v.s3.at(i) = (v2);
 		}
 		for (size_t i = 0; i<v.s4.size(); i++)
 			ServiceTest2_fill_testcstruct2(v.s4[i], gen.get_uint32());
@@ -367,8 +369,9 @@ namespace RobotRaconteurTest
 			v.i2[i] = gen.get_int8();
 		v.i3.clear();
 		size_t i3_len = gen.get_uint32() % 15;
+		v.i3.resize(i3_len);
 		for (size_t i = 0; i < i3_len; i++)
-			v.i3.push_back(gen.get_int8());
+			v.i3.at(i) = (gen.get_int8());
 	}
 	void ServiceTest2_verify_testcstruct2(const com::robotraconteur::testing::TestService3::testcstruct2& v, uint32_t seed)
 	{

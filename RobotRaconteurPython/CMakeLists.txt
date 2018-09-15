@@ -57,7 +57,7 @@ INCLUDE(${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurSWIGSources.cmake)
 set(Python_SWIG_sources ClientPython.i DiscoveryPython.i HardwareTransportPython.i LocalTransportPython.i MessagePython.i NodeIDPython.i 
   PythonExceptionTypemaps.i PythonTypemaps.i PythonTypeSupport.i RobotRaconteurNodePython.i ServiceDefinitionPython.i ServicePython.i ServiceSecurityPython.i
   TcpTransportPython.i TimerPython.i TimeSpecPython.i)
-set(Python_Py_sources  __init__.py classproperty.py Client.py NamedClient.py RobotRaconteurPythonDataTypes.py RobotRaconteurPythonError.py RobotRaconteurPythonUtil.py)
+set(Python_Py_sources  __init__.py classproperty.py Client.py NamedClient.py RobotRaconteurPythonDataTypes.py ${CMAKE_CURRENT_BINARY_DIR}/RobotRaconteurPythonError.py RobotRaconteurPythonUtil.py)
 
 set(SWIG_MODULE_RobotRaconteurPython_EXTRA_DEPS ${RobotRaconteur_SWIG_sources} ${Python_SWIG_sources} ${Python_Py_sources})
 
@@ -109,7 +109,8 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/setup.py.in" "${CMAKE_BINARY_DIR}/ou
 set(PYTHON2_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 include("${CMAKE_CURRENT_SOURCE_DIR}/PythonExceptions.cmake")
 
-set(RR_PYTHON_TEST_CMD "\"${CMAKE_COMMAND}\" -E env PYTHONPATH=${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/Python ROBOTRACONTEUR_ROBDEF_PATH=${CMAKE_SOURCE_DIR}/testing/RobotRaconteurTest \"${PYTHON_EXECUTABLE}\" ${CMAKE_SOURCE_DIR}/RobotRaconteurPython/test/RobotRaconteurPythonTest.py")
-RRConfigureTest(test_prog_python "${RR_PYTHON_TEST_CMD}" "test_prog" NOCTEST NODEBUG)
-RRConfigureTest(test_python_loopback "${RR_PYTHON_TEST_CMD}" "test_prog" NODEBUG ARGS "loopback")
-RRConfigureTest(test_python_loopback2 "${RR_PYTHON_TEST_CMD}" "test_prog" NODEBUG ARGS "loopback2")
+set(RR_PYTHON_TEST_CMD "\"${CMAKE_COMMAND}\"")
+set(RR_PYTHON_TEST_CMD_ARGS "-E env PYTHONPATH=${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/Python ROBOTRACONTEUR_ROBDEF_PATH=${CMAKE_SOURCE_DIR}/testing/RobotRaconteurTest \"${PYTHON_EXECUTABLE}\" ${CMAKE_SOURCE_DIR}/RobotRaconteurPython/test/RobotRaconteurPythonTest.py")
+RRConfigureTest(test_prog_python "${RR_PYTHON_TEST_CMD}" "test_prog" NOCTEST NODEBUG ARGS "${RR_PYTHON_TEST_CMD_ARGS}")
+RRConfigureTest(test_python_loopback "${RR_PYTHON_TEST_CMD}" "test_prog" NODEBUG ARGS "${RR_PYTHON_TEST_CMD_ARGS} loopback")
+RRConfigureTest(test_python_loopback2 "${RR_PYTHON_TEST_CMD}" "test_prog" NODEBUG ARGS "${RR_PYTHON_TEST_CMD_ARGS} loopback2")

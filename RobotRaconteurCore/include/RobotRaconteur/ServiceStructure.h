@@ -46,6 +46,58 @@ namespace RobotRaconteur
 		BOOST_STATIC_ASSERT(sizeof(T) == -1);
 	};
 
+	template<typename T, size_t N, bool varlength>
+	class cstructure_field_array : public boost::array<T, N>
+	{
+	private:
+		size_t len;		
+	public:
+		cstructure_field_array() : len(0) {}
+		cstructure_field_array(size_t n) { resize(n); }
+		typename boost::array<T,N>::iterator        end() { return boost::array<T,N>::elems + len; }
+		typename boost::array<T,N>::const_iterator  end() const { return boost::array<T, N>::elems + len; }
+		typename boost::array<T,N>::const_iterator cend() const { return boost::array<T, N>::elems + len; }
+		void resize(size_t n) { if (n > N) { throw std::out_of_range("requested size exceeds array max size"); } len = n; }
+		void clear() { resize(0); }
+		size_t size() const { return len; }
+		size_t max_size() const { return N; } 
+		typename boost::array<T,N>::reference       at(size_t i) { return rangecheck(i), boost::array<T, N>::elems[i]; }
+		typename boost::array<T,N>::const_reference at(size_t i) const { return rangecheck(i), boost::array<T, N>::elems[i]; }
+		typename boost::array<T,N>::reference back() {	return at(size() - 1);	}
+		typename boost::array<T,N>::const_reference back() const { return at(size() - 1); }
+		template <typename T2>
+		cstructure_field_array<T, N, varlength>& operator= (const cstructure_field_array<T2, N, varlength>& rhs) {
+			std::copy(rhs.begin(), rhs.end(), boost::array<T, N>::begin());
+			this->len = rhs->len;
+			return *this;
+		}
+		bool rangecheck(size_t i) const {
+			return i > size() ? boost::throw_exception(std::out_of_range("array<>: index out of range")), true : true;
+		}
+	};
+
+	template<typename T, size_t N>
+	class cstructure_field_array<T, N, false> : public boost::array<T, N>
+	{
+	public:
+		void resize(size_t n) { if (n != N) throw std::out_of_range("requested size does not match fixed array size"); }
+		void max_size() { return N; }
+	};
+
+	template <typename T, size_t N, bool varlength>
+	RR_SHARED_PTR<RRArray<T> > cstructure_field_array_ToRRArray(const cstructure_field_array<T, N, varlength>& i)
+	{
+		return AttachRRArrayCopy<T>(&i[0], i.size());
+	}
+
+	template <typename T, size_t N, bool varlength>
+	void RRArrayTo_cstructure_field_array(cstructure_field_array<T, N, varlength>& v, const RR_SHARED_PTR<RRArray<T> >& i)
+	{
+		if (!i) throw NullValueException("CStructure array must not be null");
+		v.resize(i->size());
+		memcpy(&v[0], i->ptr(), sizeof(T)*i->size());		
+	}
+
 #define RRCStructureStubNumberType(type) \
 	template<> \
 	class CStructureStub<type> \
@@ -60,46 +112,28 @@ namespace RobotRaconteur
 		template<typename U> \
 		static void UnpackField(type& v, const std::string& name, U& in) \
 		{ \
-			v = RRArrayToScalar<type>(MessageElement::FindElement(in, name)->CastData<RRArray<type> >()); \
+			v = RRArrayToScalar<type>(MessageElement::FindElement(in, name)->template CastData<RRArray<type> >()); \
 		} \
 	}; \
 	\
-	template<size_t N> \
-	class CStructureStub<boost::container::static_vector<type, N> > \
+	template<size_t N, bool varlength> \
+	class CStructureStub<cstructure_field_array<type, N, varlength> > \
 	{ \
 	public: \
 		template<typename U> \
-		static void PackField(const boost::container::static_vector<type, N>& v, const std::string& name, U& out) \
+		static void PackField(const cstructure_field_array<type, N, varlength>& v, const std::string& name, U& out) \
 		{ \
-			out.push_back(RR_MAKE_SHARED<MessageElement>(name, StaticVectorToRRArray<type>(v))); \
+			out.push_back(RR_MAKE_SHARED<MessageElement>(name, cstructure_field_array_ToRRArray(v))); \
 		} \
 		\
 		template<typename U> \
-		static void UnpackField(boost::container::static_vector<type, N>& v, const std::string& name, U& in) \
+		static void UnpackField(cstructure_field_array<type, N, varlength>& v, const std::string& name, U& in) \
 		{ \
-			RR_SHARED_PTR<RRArray<type> > a=MessageElement::FindElement(in, name)->CastData<RRArray<type> >(); \
-			RRArrayToStaticVector(v, a); \
+			RR_SHARED_PTR<RRArray<type> > a = MessageElement::FindElement(in, name)->template CastData<RRArray<type> >(); \
+			RRArrayTo_cstructure_field_array(v, a); \
 		} \
 	}; \
-	\
-	template<size_t N> \
-	class CStructureStub<boost::array<type, N> > \
-	{ \
-	public: \
-		template<typename U> \
-		static void PackField(const boost::array<type, N>& v, const std::string& name, U& out) \
-		{ \
-			out.push_back(RR_MAKE_SHARED<MessageElement>(name, ArrayToRRArray<type>(v))); \
-		} \
-		\
-		template<typename U> \
-		static void UnpackField(boost::array<type, N>& v, const std::string& name, U& in) \
-		{ \
-			RR_SHARED_PTR<RRArray<type> > a = MessageElement::FindElement(in, name)->CastData<RRArray<type> >(); \
-			RRArrayToArray<type>(v, a); \
-		} \
-	}; \
-
+	
 	RRCStructureStubNumberType(double);
 	RRCStructureStubNumberType(float);
 	RRCStructureStubNumberType(int8_t);
@@ -111,12 +145,12 @@ namespace RobotRaconteur
 	RRCStructureStubNumberType(int64_t);
 	RRCStructureStubNumberType(uint64_t);
 
-	template<typename T, size_t N>
-	class CStructureStub<boost::container::static_vector<T, N> >
+	template<typename T, size_t N, bool varlength>
+	class CStructureStub<cstructure_field_array<T, N, varlength> >
 	{
 	public:
 		template<typename U>
-		static void PackField(const boost::container::static_vector<T, N>& v, const std::string& name, U& out)
+		static void PackField(const cstructure_field_array<T, N, varlength>& v, const std::string& name, U& out)
 		{
 			std::vector<RR_SHARED_PTR<MessageElement> > o;
 			for (size_t j = 0; j < v.size(); j++)
@@ -131,12 +165,12 @@ namespace RobotRaconteur
 		}
 
 		template<typename U>
-		static void UnpackField(boost::container::static_vector<T, N>& v, const std::string& name, U& in)
+		static void UnpackField(cstructure_field_array<T, N, varlength>& v, const std::string& name, U& in)
 		{		
-			RR_SHARED_PTR<MessageElementCStructureArray> a = MessageElement::FindElement(in, name)->CastData<MessageElementCStructureArray>();
+			RR_SHARED_PTR<MessageElementCStructureArray> a = MessageElement::FindElement(in, name)->template CastData<MessageElementCStructureArray>();
 			if (!a) throw NullValueException("Unexpected null array");
 			if (a->Type != RRPrimUtil<T>::GetElementTypeString()) throw DataTypeException("CStructure data type mismatch");
-			if (a->Elements.size() > N) throw OutOfRangeException("Array is too large for static vector size");
+			//if (a->Elements.size() > N) throw OutOfRangeException("Array is too large for static vector size");
 			v.resize(a->Elements.size());
 			for (int32_t i = 0; i<(int32_t)a->Elements.size(); i++)
 			{
@@ -161,57 +195,7 @@ namespace RobotRaconteur
 			}
 		}
 	};
-
-	template<typename T, size_t N>
-	class CStructureStub<boost::array<T, N> >
-	{
-	public:
-		template<typename U>
-		static void PackField(const boost::array<T, N>& v, const std::string& name, U& out)
-		{
-			std::vector<RR_SHARED_PTR<MessageElement> > o;
-			for (size_t j = 0; j < v.size(); j++)
-			{
-				RR_SHARED_PTR<MessageElement> m = RR_MAKE_SHARED<MessageElement>("", CStructureStub<T>::PackToMessageElementCStructure(v[j]));
-				m->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
-				m->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
-				m->ElementNumber = j;
-				o.push_back(m);
-			}
-			out.push_back(RR_MAKE_SHARED<MessageElement>(name, RR_MAKE_SHARED<MessageElementCStructureArray>(RRPrimUtil<T>::GetElementTypeString(), o)));
-		}
-
-		template<typename U>
-		static void UnpackField(boost::array<T, N>& v, const std::string& name, U& in)
-		{
-			RR_SHARED_PTR<MessageElementCStructureArray> a = MessageElement::FindElement(in, name)->CastData<MessageElementCStructureArray>();
-			if (!a) throw NullValueException("Unexpected null array");
-			if (a->Type != RRPrimUtil<T>::GetElementTypeString()) throw DataTypeException("CStructure data type mismatch");
-			if (a->Elements.size() != N) throw OutOfRangeException("Array size mismatch");
-			for (int32_t i = 0; i<(int32_t)a->Elements.size(); i++)
-			{
-				RR_SHARED_PTR<MessageElement> m = a->Elements.at(i);
-				int32_t key;
-				if (m->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
-				{
-					key = m->ElementNumber;
-				}
-				else if (m->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
-				{
-					key = boost::lexical_cast<int32_t>(m->ElementName);
-				}
-				else
-				{
-					throw DataTypeException("Invalid cstructure array format");
-				}
-
-				if (key != i) throw DataTypeException("Invalid cstructure array format");
-
-				CStructureStub<T>::UnpackFromMessageElementCStructure(v[i], m->CastData<MessageElementCStructure>());
-			}
-		}
-	};
-
+		
 	template<typename T, typename U>
 	void CStructureStub_PackField(const T& v, const std::string& name, U& out)
 	{
@@ -269,7 +253,7 @@ namespace RobotRaconteur
 	T CStructureStub_UnpackCStructureFromArray(RR_SHARED_PTR<MessageElementCStructureArray> a)
 	{
 		T v;
-		CStructureStub_UnpackCStructureFromArray(v, a);
+		CStructureStub_UnpackCStructureFromArray<T>(v, a);
 		return v;
 	}
 

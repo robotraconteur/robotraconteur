@@ -454,7 +454,7 @@ namespace RobotRaconteur
 		template<typename T>
 		void InvokeHandlerWithException(RR_WEAK_PTR<RobotRaconteurNode> node, typename boost::function<void(T, RR_SHARED_PTR<RobotRaconteurException>)>& handler, std::exception& exp, MessageErrorType default_err = MessageErrorType_UnknownError)
 		{
-			typename boost::initialized<boost::remove_const<boost::remove_reference<T>::type>::type> default_value;
+			typename boost::initialized<typename boost::remove_const<typename boost::remove_reference<T>::type>::type> default_value;
 			try
 			{
 				RR_SHARED_PTR<RobotRaconteurException> err = RobotRaconteurExceptionUtil::ExceptionToSharedPtr(exp, default_err);

@@ -24,6 +24,7 @@
 #include <fstream>
 #include <boost/range/numeric.hpp>
 #include <boost/range/algorithm.hpp>
+#include <boost/locale.hpp>
 
 
 using namespace std;
@@ -766,8 +767,20 @@ namespace RobotRaconteurGen
 
 		w2 << "public class " << boost::replace_all_copy(fix_name(d->Name),".","__") + "Factory : ServiceFactory" << endl << "{" << endl;
 		w2 << "    public override string DefString()" << endl << "{" << endl;
-		w2 << "    const string d=@\"" + boost::replace_all_copy(defstring,"\"","\"\"") + "\";" << endl;
-		w2 << "    return d;" << endl;
+		w2 << "    const string s=\"";
+		vector<string> lines;
+		std::string s = defstring;
+		boost::split(lines, s, boost::is_from_range('\n', '\n'));
+		for (vector<string>::iterator e = lines.begin(); e != lines.end(); ++e)
+		{
+			std::string l = boost::replace_all_copy(*e, "\\", "\\\\");
+			boost::replace_all(l, "\"", "\\\"");
+			boost::replace_all(l, "\r", "");
+			boost::trim(l);
+			w2 << l << "\\n";
+		}
+		w2 << "\";" << std::endl;
+		w2 << "    return s;" << endl;;
 		w2 << "    }" << endl;
 		w2 << "    public override string GetServiceName() {return \"" + d->Name + "\";}" << endl;
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Structures.begin(); e != d->Structures.end(); ++e)

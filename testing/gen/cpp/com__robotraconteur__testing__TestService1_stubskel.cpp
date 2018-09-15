@@ -1332,146 +1332,146 @@ return RobotRaconteur::rr_cast<RobotRaconteur::RRObject >(FindObjRef("o6"));
 RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > > testroot_stub::get_p1()
 {
 RR_SHARED_PTR<RobotRaconteur::PipeClient<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > > value=rrvar_p1;
-if (!value) throw InvalidOperationException("Stub has been closed");
+if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
 void testroot_stub::set_p1(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > > value)
 {
-throw InvalidOperationException("Not valid for client");
+throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
 
 RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<teststruct2 > > > testroot_stub::get_p2()
 {
 RR_SHARED_PTR<RobotRaconteur::PipeClient<RR_SHARED_PTR<teststruct2 > > > value=rrvar_p2;
-if (!value) throw InvalidOperationException("Stub has been closed");
+if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
 void testroot_stub::set_p2(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<teststruct2 > > > value)
 {
-throw InvalidOperationException("Not valid for client");
+throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
 
 RR_SHARED_PTR<RobotRaconteur::Pipe<double > > testroot_stub::get_broadcastpipe()
 {
 RR_SHARED_PTR<RobotRaconteur::PipeClient<double > > value=rrvar_broadcastpipe;
-if (!value) throw InvalidOperationException("Stub has been closed");
+if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
 void testroot_stub::set_broadcastpipe(RR_SHARED_PTR<RobotRaconteur::Pipe<double > > value)
 {
-throw InvalidOperationException("Not valid for client");
+throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
 
 RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void() > > > testroot_stub::get_cb1()
 {
 RR_SHARED_PTR<RobotRaconteur::CallbackClient<boost::function<void() > > > value=rrvar_cb1;
-if (!value) throw InvalidOperationException("Stub has been closed");
+if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
 void testroot_stub::set_cb1(RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > > value)
 {
-throw InvalidOperationException("Not valid for client");
+throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
 RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void(double, double) > > > testroot_stub::get_cb2()
 {
 RR_SHARED_PTR<RobotRaconteur::CallbackClient<boost::function<void(double, double) > > > value=rrvar_cb2;
-if (!value) throw InvalidOperationException("Stub has been closed");
+if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
 void testroot_stub::set_cb2(RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void(double, double)> > > value)
 {
-throw InvalidOperationException("Not valid for client");
+throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
 RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<double(double, double) > > > testroot_stub::get_cb3()
 {
 RR_SHARED_PTR<RobotRaconteur::CallbackClient<boost::function<double(double, double) > > > value=rrvar_cb3;
-if (!value) throw InvalidOperationException("Stub has been closed");
+if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
 void testroot_stub::set_cb3(RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<double(double, double)> > > value)
 {
-throw InvalidOperationException("Not valid for client");
+throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
 RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<int32_t() > > > testroot_stub::get_cb_meaning_of_life()
 {
 RR_SHARED_PTR<RobotRaconteur::CallbackClient<boost::function<int32_t() > > > value=rrvar_cb_meaning_of_life;
-if (!value) throw InvalidOperationException("Stub has been closed");
+if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
 void testroot_stub::set_cb_meaning_of_life(RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<int32_t()> > > value)
 {
-throw InvalidOperationException("Not valid for client");
+throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
 RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void() > > > testroot_stub::get_cb_errtest()
 {
 RR_SHARED_PTR<RobotRaconteur::CallbackClient<boost::function<void() > > > value=rrvar_cb_errtest;
-if (!value) throw InvalidOperationException("Stub has been closed");
+if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
 void testroot_stub::set_cb_errtest(RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > > value)
 {
-throw InvalidOperationException("Not valid for client");
+throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
 RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > > testroot_stub::get_w1()
 {
 RR_SHARED_PTR<RobotRaconteur::WireClient<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > > value=rrvar_w1;
-if (!value) throw InvalidOperationException("Stub has been closed");
+if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
 void testroot_stub::set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > > value)
 {
-throw InvalidOperationException("Not valid for client");
+throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
 
 RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<teststruct2 > > > testroot_stub::get_w2()
 {
 RR_SHARED_PTR<RobotRaconteur::WireClient<RR_SHARED_PTR<teststruct2 > > > value=rrvar_w2;
-if (!value) throw InvalidOperationException("Stub has been closed");
+if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
 void testroot_stub::set_w2(RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<teststruct2 > > > value)
 {
-throw InvalidOperationException("Not valid for client");
+throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
 
 RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > testroot_stub::get_w3()
 {
 RR_SHARED_PTR<RobotRaconteur::WireClient<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > value=rrvar_w3;
-if (!value) throw InvalidOperationException("Stub has been closed");
+if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
 void testroot_stub::set_w3(RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > value)
 {
-throw InvalidOperationException("Not valid for client");
+throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
 
 RR_SHARED_PTR<RobotRaconteur::Wire<double > > testroot_stub::get_broadcastwire()
 {
 RR_SHARED_PTR<RobotRaconteur::WireClient<double > > value=rrvar_broadcastwire;
-if (!value) throw InvalidOperationException("Stub has been closed");
+if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
 void testroot_stub::set_broadcastwire(RR_SHARED_PTR<RobotRaconteur::Wire<double > > value)
 {
-throw InvalidOperationException("Not valid for client");
+throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
 
 RR_SHARED_PTR<RobotRaconteur::ArrayMemory<double > > testroot_stub::get_m1()
 {
 RR_SHARED_PTR<RobotRaconteur::ArrayMemoryClient<double > > value=rrvar_m1;
-if (!value) throw InvalidOperationException("Stub has been closed");
+if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
 RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<double > > testroot_stub::get_m2()
 {
 RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemoryClient<double > > value=rrvar_m2;
-if (!value) throw InvalidOperationException("Stub has been closed");
+if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
 RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<uint8_t > > testroot_stub::get_m3()
 {
 RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemoryClient<uint8_t > > value=rrvar_m3;
-if (!value) throw InvalidOperationException("Stub has been closed");
+if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
 void testroot_stub::DispatchEvent(RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_m)
@@ -7250,7 +7250,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<double >(value)));
 }
 catch (std::exception& err2)
@@ -7271,7 +7271,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(value));
 }
 catch (std::exception& err2)
@@ -7292,7 +7292,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(value));
 }
 catch (std::exception& err2)
@@ -7313,7 +7313,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(value));
 }
 catch (std::exception& err2)
@@ -7334,7 +7334,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(skel1->RRGetNode()->PackMultiDimArray<double >(RobotRaconteur::rr_cast<RobotRaconteur::RRMultiDimArray<double > >(value))));
 }
 catch (std::exception& err2)
@@ -7355,7 +7355,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(skel1->RRGetNode()->PackMultiDimArray<double >(RobotRaconteur::rr_cast<RobotRaconteur::RRMultiDimArray<double > >(value))));
 }
 catch (std::exception& err2)
@@ -7376,7 +7376,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<float >(value)));
 }
 catch (std::exception& err2)
@@ -7397,7 +7397,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(value));
 }
 catch (std::exception& err2)
@@ -7418,7 +7418,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<int8_t >(value)));
 }
 catch (std::exception& err2)
@@ -7439,7 +7439,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(value));
 }
 catch (std::exception& err2)
@@ -7460,7 +7460,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<uint8_t >(value)));
 }
 catch (std::exception& err2)
@@ -7481,7 +7481,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(value));
 }
 catch (std::exception& err2)
@@ -7502,7 +7502,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(skel1->RRGetNode()->PackMultiDimArray<uint8_t >(RobotRaconteur::rr_cast<RobotRaconteur::RRMultiDimArray<uint8_t > >(value))));
 }
 catch (std::exception& err2)
@@ -7523,7 +7523,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<int16_t >(value)));
 }
 catch (std::exception& err2)
@@ -7544,7 +7544,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(value));
 }
 catch (std::exception& err2)
@@ -7565,7 +7565,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<uint16_t >(value)));
 }
 catch (std::exception& err2)
@@ -7586,7 +7586,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(value));
 }
 catch (std::exception& err2)
@@ -7607,7 +7607,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<int32_t >(value)));
 }
 catch (std::exception& err2)
@@ -7628,7 +7628,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(value));
 }
 catch (std::exception& err2)
@@ -7649,7 +7649,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(value));
 }
 catch (std::exception& err2)
@@ -7670,7 +7670,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<uint32_t >(value)));
 }
 catch (std::exception& err2)
@@ -7691,7 +7691,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(value));
 }
 catch (std::exception& err2)
@@ -7712,7 +7712,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<int64_t >(value)));
 }
 catch (std::exception& err2)
@@ -7733,7 +7733,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(value));
 }
 catch (std::exception& err2)
@@ -7754,7 +7754,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<uint64_t >(value)));
 }
 catch (std::exception& err2)
@@ -7775,7 +7775,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(value));
 }
 catch (std::exception& err2)
@@ -7796,7 +7796,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::stringToRRArray(value)));
 }
 catch (std::exception& err2)
@@ -7817,7 +7817,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(skel1->RRGetNode()->PackStructure(RobotRaconteur::rr_cast<RobotRaconteur::RRStructure>(value))));
 }
 catch (std::exception& err2)
@@ -7838,7 +7838,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(skel1->RRGetNode()->PackStructure(RobotRaconteur::rr_cast<RobotRaconteur::RRStructure>(value))));
 }
 catch (std::exception& err2)
@@ -7859,7 +7859,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(skel1->RRGetNode()->PackMapType<int32_t,RobotRaconteur::RRArray<double >  >(value)));
 }
 catch (std::exception& err2)
@@ -7880,7 +7880,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(skel1->RRGetNode()->PackMapType<std::string,RobotRaconteur::RRArray<double >  >(value)));
 }
 catch (std::exception& err2)
@@ -7901,7 +7901,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(skel1->RRGetNode()->PackMapType<int32_t,RobotRaconteur::RRArray<double >  >(value)));
 }
 catch (std::exception& err2)
@@ -7922,7 +7922,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(skel1->RRGetNode()->PackMapType<std::string,RobotRaconteur::RRArray<double >  >(value)));
 }
 catch (std::exception& err2)
@@ -7943,7 +7943,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(skel1->RRGetNode()->PackMapType<int32_t,RobotRaconteur::RRMultiDimArray<double >  >(value)));
 }
 catch (std::exception& err2)
@@ -7964,7 +7964,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(skel1->RRGetNode()->PackMapType<std::string,RobotRaconteur::RRMultiDimArray<double >  >(value)));
 }
 catch (std::exception& err2)
@@ -7985,7 +7985,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(skel1->RRGetNode()->PackMapType<int32_t,RobotRaconteur::RRArray<char>  >(value)));
 }
 catch (std::exception& err2)
@@ -8006,7 +8006,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(skel1->RRGetNode()->PackMapType<std::string,RobotRaconteur::RRArray<char>  >(value)));
 }
 catch (std::exception& err2)
@@ -8027,7 +8027,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(skel1->RRGetNode()->PackMapType<int32_t,teststruct2  >(value)));
 }
 catch (std::exception& err2)
@@ -8048,7 +8048,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(skel1->RRGetNode()->PackMapType<std::string,teststruct2  >(value)));
 }
 catch (std::exception& err2)
@@ -8069,7 +8069,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(skel1->RRGetNode()->PackStructure(RobotRaconteur::rr_cast<RobotRaconteur::RRStructure>(value))));
 }
 catch (std::exception& err2)
@@ -8090,7 +8090,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(skel1->RRGetNode()->PackListType<RobotRaconteur::RRArray<double >  >(value)));
 }
 catch (std::exception& err2)
@@ -8111,7 +8111,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(skel1->RRGetNode()->PackListType<RobotRaconteur::RRArray<double >  >(value)));
 }
 catch (std::exception& err2)
@@ -8132,7 +8132,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(skel1->RRGetNode()->PackListType<RobotRaconteur::RRMultiDimArray<double >  >(value)));
 }
 catch (std::exception& err2)
@@ -8153,7 +8153,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(skel1->RRGetNode()->PackListType<RobotRaconteur::RRArray<char>  >(value)));
 }
 catch (std::exception& err2)
@@ -8174,7 +8174,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(skel1->RRGetNode()->PackListType<teststruct2  >(value)));
 }
 catch (std::exception& err2)
@@ -8195,7 +8195,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(skel1->RRGetNode()->PackVarType(RobotRaconteur::rr_cast<RobotRaconteur::RRValue>(value))));
 }
 catch (std::exception& err2)
@@ -8216,7 +8216,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(skel1->RRGetNode()->PackMapType<int32_t,RobotRaconteur::RRValue >(value)));
 }
 catch (std::exception& err2)
@@ -8237,7 +8237,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(skel1->RRGetNode()->PackVarType(RobotRaconteur::rr_cast<RobotRaconteur::RRValue>(value))));
 }
 catch (std::exception& err2)
@@ -8258,7 +8258,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(skel1->RRGetNode()->PackVarType(RobotRaconteur::rr_cast<RobotRaconteur::RRValue>(value))));
 }
 catch (std::exception& err2)
@@ -8279,7 +8279,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(skel1->RRGetNode()->PackVarType(RobotRaconteur::rr_cast<RobotRaconteur::RRValue>(value))));
 }
 catch (std::exception& err2)
@@ -8300,7 +8300,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(skel1->RRGetNode()->PackVarType(RobotRaconteur::rr_cast<RobotRaconteur::RRValue>(value))));
 }
 catch (std::exception& err2)
@@ -8321,7 +8321,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(skel1->RRGetNode()->PackVarType(RobotRaconteur::rr_cast<RobotRaconteur::RRValue>(value))));
 }
 catch (std::exception& err2)
@@ -8342,7 +8342,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(skel1->RRGetNode()->PackVarType(RobotRaconteur::rr_cast<RobotRaconteur::RRValue>(value))));
 }
 catch (std::exception& err2)
@@ -8363,7 +8363,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(skel1->RRGetNode()->PackVarType(RobotRaconteur::rr_cast<RobotRaconteur::RRValue>(value))));
 }
 catch (std::exception& err2)
@@ -8384,7 +8384,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<double >(value)));
 }
 catch (std::exception& err2)
@@ -8405,7 +8405,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(skel1->RRGetNode()->PackStructure(RobotRaconteur::rr_cast<RobotRaconteur::RRStructure>(value))));
 }
 catch (std::exception& err2)
@@ -8641,7 +8641,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("return",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<double >(ret)));
 }
 catch (std::exception& err2)
@@ -8662,7 +8662,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("return",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<int32_t >(ret)));
 }
 catch (std::exception& err2)
@@ -8985,7 +8985,7 @@ void testroot_skel::rr_cb1_callback(uint32_t rrendpoint){
 RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_CallbackCallReq,"cb1");
 rr_req->ServicePath=GetServicePath();
 RR_SHARED_PTR<RobotRaconteur::ServerContext> rr_s=GetContext();
-if (rr_s==0) throw InvalidOperationException("Service has been closed");
+if (rr_s==0) throw RobotRaconteur::InvalidOperationException("Service has been closed");
 RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_ret=rr_s->ProcessCallbackRequest(rr_req,rrendpoint);
 }
 
@@ -8995,7 +8995,7 @@ rr_req->ServicePath=GetServicePath();
 rr_req->AddElement(RR_MAKE_SHARED<RobotRaconteur::MessageElement>("d1",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<double >(d1))));
 rr_req->AddElement(RR_MAKE_SHARED<RobotRaconteur::MessageElement>("d2",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<double >(d2))));
 RR_SHARED_PTR<RobotRaconteur::ServerContext> rr_s=GetContext();
-if (rr_s==0) throw InvalidOperationException("Service has been closed");
+if (rr_s==0) throw RobotRaconteur::InvalidOperationException("Service has been closed");
 RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_ret=rr_s->ProcessCallbackRequest(rr_req,rrendpoint);
 }
 
@@ -9005,7 +9005,7 @@ rr_req->ServicePath=GetServicePath();
 rr_req->AddElement(RR_MAKE_SHARED<RobotRaconteur::MessageElement>("d1",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<double >(d1))));
 rr_req->AddElement(RR_MAKE_SHARED<RobotRaconteur::MessageElement>("d2",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<double >(d2))));
 RR_SHARED_PTR<RobotRaconteur::ServerContext> rr_s=GetContext();
-if (rr_s==0) throw InvalidOperationException("Service has been closed");
+if (rr_s==0) throw RobotRaconteur::InvalidOperationException("Service has been closed");
 RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_ret=rr_s->ProcessCallbackRequest(rr_req,rrendpoint);
 RR_SHARED_PTR<RobotRaconteur::MessageElement> rr_me=rr_ret->FindElement("return");
 return RobotRaconteur::RRArrayToScalar<double >(rr_me->CastData<RobotRaconteur::RRArray<double > >());
@@ -9015,7 +9015,7 @@ int32_t testroot_skel::rr_cb_meaning_of_life_callback(uint32_t rrendpoint){
 RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_CallbackCallReq,"cb_meaning_of_life");
 rr_req->ServicePath=GetServicePath();
 RR_SHARED_PTR<RobotRaconteur::ServerContext> rr_s=GetContext();
-if (rr_s==0) throw InvalidOperationException("Service has been closed");
+if (rr_s==0) throw RobotRaconteur::InvalidOperationException("Service has been closed");
 RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_ret=rr_s->ProcessCallbackRequest(rr_req,rrendpoint);
 RR_SHARED_PTR<RobotRaconteur::MessageElement> rr_me=rr_ret->FindElement("return");
 return RobotRaconteur::RRArrayToScalar<int32_t >(rr_me->CastData<RobotRaconteur::RRArray<int32_t > >());
@@ -9025,7 +9025,7 @@ void testroot_skel::rr_cb_errtest_callback(uint32_t rrendpoint){
 RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_CallbackCallReq,"cb_errtest");
 rr_req->ServicePath=GetServicePath();
 RR_SHARED_PTR<RobotRaconteur::ServerContext> rr_s=GetContext();
-if (rr_s==0) throw InvalidOperationException("Service has been closed");
+if (rr_s==0) throw RobotRaconteur::InvalidOperationException("Service has been closed");
 RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_ret=rr_s->ProcessCallbackRequest(rr_req,rrendpoint);
 }
 
@@ -9240,7 +9240,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub1_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(value));
 }
 catch (std::exception& err2)
@@ -9261,7 +9261,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub1_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(skel1->RRGetNode()->PackMultiDimArray<double >(RobotRaconteur::rr_cast<RobotRaconteur::RRMultiDimArray<double > >(value))));
 }
 catch (std::exception& err2)
@@ -9282,7 +9282,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub1_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::stringToRRArray(value)));
 }
 catch (std::exception& err2)
@@ -9303,7 +9303,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub1_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<int32_t >(value)));
 }
 catch (std::exception& err2)
@@ -9532,7 +9532,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub2_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::stringToRRArray(value)));
 }
 catch (std::exception& err2)
@@ -9553,7 +9553,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub2_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<int32_t >(value)));
 }
 catch (std::exception& err2)
@@ -9574,7 +9574,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub2_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::stringToRRArray(value)));
 }
 catch (std::exception& err2)
@@ -9795,7 +9795,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub3_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::stringToRRArray(value)));
 }
 catch (std::exception& err2)
@@ -9816,7 +9816,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub3_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::stringToRRArray(value)));
 }
 catch (std::exception& err2)
@@ -9837,7 +9837,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub3_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<double >(value)));
 }
 catch (std::exception& err2)
@@ -9881,7 +9881,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub3_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("return",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<double >(ret)));
 }
 catch (std::exception& err2)

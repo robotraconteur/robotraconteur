@@ -46,14 +46,16 @@ namespace RobotRaconteur
 	void GeneratorClientBase::Abort()
 	{
 		RR_SHARED_PTR<MessageEntry> m = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_GeneratorNextReq, GetMemberName());
-		RobotRaconteurExceptionUtil::ExceptionToMessageEntry(AbortOperationException("Generator abort requested"), m);
+		AbortOperationException err("Generator abort requested");
+		RobotRaconteurExceptionUtil::ExceptionToMessageEntry(err, m);
 		m->AddElement("index", ScalarToRRArray(id));
 		GetStub()->ProcessRequest(m);
 	}
 	void GeneratorClientBase::AsyncAbort(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler, int32_t timeout)
 	{
 		RR_SHARED_PTR<MessageEntry> m = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_GeneratorNextReq, GetMemberName());
-		RobotRaconteurExceptionUtil::ExceptionToMessageEntry(AbortOperationException("Generator abort requested"), m);
+		AbortOperationException err("Generator abort requested");
+		RobotRaconteurExceptionUtil::ExceptionToMessageEntry(err, m);
 		m->AddElement("index", ScalarToRRArray(id));
 		GetStub()->AsyncProcessRequest(m, boost::bind(handler, _2), timeout);
 	}
@@ -61,14 +63,16 @@ namespace RobotRaconteur
 	void GeneratorClientBase::Close()
 	{
 		RR_SHARED_PTR<MessageEntry> m = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_GeneratorNextReq, GetMemberName());
-		RobotRaconteurExceptionUtil::ExceptionToMessageEntry(StopIterationException(""), m);
+		StopIterationException err("");
+		RobotRaconteurExceptionUtil::ExceptionToMessageEntry(err, m);
 		m->AddElement("index", ScalarToRRArray(id));
 		GetStub()->ProcessRequest(m);
 	}
 	void GeneratorClientBase::AsyncClose(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler, int32_t timeout)
 	{
 		RR_SHARED_PTR<MessageEntry> m = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_GeneratorNextReq, GetMemberName());
-		RobotRaconteurExceptionUtil::ExceptionToMessageEntry(StopIterationException(""), m);
+		StopIterationException err("");
+		RobotRaconteurExceptionUtil::ExceptionToMessageEntry(err, m);
 		m->AddElement("index", ScalarToRRArray(id));
 		GetStub()->AsyncProcessRequest(m, boost::bind(handler, _2), timeout);
 	}

@@ -308,7 +308,7 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 	public:
 		virtual ~WrappedServiceStubDirector() {}
 		virtual void DispatchEvent(const std::string& EventName, const std::vector<boost::shared_ptr<MessageElement> > args) {}
-		virtual boost::shared_ptr<MessageElement> CallbackCall(const std::string& CallbackName, const std::vector<boost::shared_ptr<MessageElement> > args) { return NULL; }
+		virtual boost::shared_ptr<MessageElement> CallbackCall(const std::string& CallbackName, const std::vector<boost::shared_ptr<MessageElement> > args) { return boost::shared_ptr<MessageElement>(); }
 
 	};
 
@@ -625,6 +625,7 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 
 	class WrappedWireConnection;
 	class WrappedWireBroadcaster;
+	class WrappedWireUnicastReceiver;
 	class WrappedWireConnectionDirector
 	{
 	public:
@@ -906,7 +907,7 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		}
 		virtual ~WrappedGeneratorServerDirector() {}
 
-		virtual RR_SHARED_PTR<MessageElement> Next(RR_SHARED_PTR<MessageElement> m) { return NULL; }
+		virtual RR_SHARED_PTR<MessageElement> Next(RR_SHARED_PTR<MessageElement> m) { return boost::shared_ptr<MessageElement>(); }
 
 		virtual void Abort() {}
 		virtual void Close() {}
@@ -1063,10 +1064,10 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 	public:
 		virtual ~WrappedServiceSkelDirector() {}
 		virtual void Init(boost::shared_ptr<WrappedServiceSkel> skel) {};
-		virtual boost::shared_ptr<MessageElement> CallGetProperty(const std::string& name) {return NULL;};
+		virtual boost::shared_ptr<MessageElement> CallGetProperty(const std::string& name) {return boost::shared_ptr<MessageElement>();};
 		virtual void CallSetProperty(const std::string& name, boost::shared_ptr<MessageElement> m) {};
-		virtual boost::shared_ptr<MessageElement> CallFunction(const std::string& name, const std::vector<boost::shared_ptr<MessageElement> >& m) {return NULL;};		
-		virtual boost::shared_ptr<WrappedRRObject> GetSubObj(const std::string& name, const std::string& index) {return NULL;};
+		virtual boost::shared_ptr<MessageElement> CallFunction(const std::string& name, const std::vector<boost::shared_ptr<MessageElement> >& m) {return boost::shared_ptr<MessageElement>();};
+		virtual boost::shared_ptr<WrappedRRObject> GetSubObj(const std::string& name, const std::string& index) {return boost::shared_ptr<WrappedRRObject>();};
 		virtual WrappedArrayMemoryDirector* GetArrayMemory(const std::string& name) {return 0;};
 		virtual WrappedMultiDimArrayMemoryDirector* GetMultiDimArrayMemory(const std::string& name) {return 0;};
 		virtual WrappedCStructureArrayMemoryDirector* GetCStructureArrayMemory(const std::string& name) { return 0; };
@@ -1356,7 +1357,7 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 
 		virtual ~WrappedCStructureArrayMemoryDirector() {}
 		virtual uint64_t Length() { return 0; }
-		virtual boost::shared_ptr<MessageElementCStructureArray> Read(uint64_t memorypos, uint64_t bufferpos, uint64_t count) { return NULL; }
+		virtual boost::shared_ptr<MessageElementCStructureArray> Read(uint64_t memorypos, uint64_t bufferpos, uint64_t count) { return boost::shared_ptr<MessageElementCStructureArray>(); }
 		virtual void Write(uint64_t memorypos, boost::shared_ptr<MessageElementCStructureArray> buffer, uint64_t bufferpos, uint64_t count) {}
 		int32_t objectheapid;
 	};
@@ -1392,7 +1393,7 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		virtual ~WrappedCStructureMultiDimArrayMemoryDirector() {}
 		virtual std::vector<uint64_t> Dimensions() { return std::vector<uint64_t>(); }
 		virtual uint64_t DimCount() { return 0; }		
-		virtual boost::shared_ptr<MessageElementCStructureMultiDimArray> Read(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) { return NULL;  }
+		virtual boost::shared_ptr<MessageElementCStructureMultiDimArray> Read(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) { return boost::shared_ptr<MessageElementCStructureMultiDimArray>();  }
 		virtual void Write(const std::vector<uint64_t>& memorypos, boost::shared_ptr<MessageElementCStructureMultiDimArray> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) {}
 
 		int32_t objectheapid;
@@ -1438,7 +1439,7 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 	class WrappedUserAuthenticatorDirector
 	{
 	public:
-		virtual boost::shared_ptr<AuthenticatedUser> AuthenticateUser(const std::string &username, boost::shared_ptr<MessageElement> credentials, boost::shared_ptr<ServerContext> context) { return NULL; }
+		virtual boost::shared_ptr<AuthenticatedUser> AuthenticateUser(const std::string &username, boost::shared_ptr<MessageElement> credentials, boost::shared_ptr<ServerContext> context) { return boost::shared_ptr<AuthenticatedUser>(); }
 
 		virtual ~WrappedUserAuthenticatorDirector() {}
 	};

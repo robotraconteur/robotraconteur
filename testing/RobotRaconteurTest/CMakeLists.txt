@@ -58,9 +58,9 @@ add_dependencies(RobotRaconteurTest RobotRaconteurCore)
 endif()
 
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/../testdata" DESTINATION "${CMAKE_BINARY_DIR}/out/")
-if (WIN32 OR (CMAKE_GENERATOR STREQUAL Xcode))
+#if (WIN32 OR (CMAKE_GENERATOR STREQUAL Xcode))
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/../testdata" DESTINATION "${CMAKE_BINARY_DIR}/out_debug/")
-ENDIF()
+#ENDIF()
 
 RRConfigureTest(test_prog_cpp "${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/bin/RobotRaconteurTest" "test_prog" NOCTEST)
 RRConfigureTest(test_cpp_loopback "${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/bin/RobotRaconteurTest" "test_prog" ARGS "loopback")

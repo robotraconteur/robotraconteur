@@ -30,6 +30,7 @@ namespace RobotRaconteur
 		virtual void AsyncAbort(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler, int32_t timeout = RR_TIMEOUT_INFINITE) = 0;
 		virtual void Close() = 0;
 		virtual void AsyncClose(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler, int32_t timeout = RR_TIMEOUT_INFINITE) = 0;
+		virtual ~Generator() {}
 	};
 
 	template <typename Return>
@@ -55,6 +56,7 @@ namespace RobotRaconteur
 			catch (StopIterationException&) {}
 			return ret;
 		}
+		virtual ~Generator() {}
 	};
 
 	template <typename Param>
@@ -67,9 +69,10 @@ namespace RobotRaconteur
 		virtual void AsyncAbort(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler, int32_t timeout = RR_TIMEOUT_INFINITE) = 0;
 		virtual void Close() = 0;
 		virtual void AsyncClose(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler, int32_t timeout = RR_TIMEOUT_INFINITE) = 0;
+		virtual ~Generator() {}
 	};
 
-	class GeneratorClientBase
+	class ROBOTRACONTEUR_CORE_API GeneratorClientBase
 	{
 	protected:
 
@@ -92,6 +95,8 @@ namespace RobotRaconteur
 		virtual void Close();
 		virtual void AsyncClose(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler, int32_t timeout = RR_TIMEOUT_INFINITE);
 		std::string GetMemberName();
+
+		virtual ~GeneratorClientBase() {}
 	};
 
 	namespace detail
@@ -107,7 +112,7 @@ namespace RobotRaconteur
 			Return ret;
 			try
 			{
-				ret = RRPrimUtil<Return>::PreUnpack(node->UnpackAnyType<RRPrimUtil<Return>::BoxedType>(v2));
+				ret = RRPrimUtil<Return>::PreUnpack(node->UnpackAnyType<typename RRPrimUtil<Return>::BoxedType>(v2));
 			}
 			catch (std::exception& e)
 			{
@@ -131,13 +136,13 @@ namespace RobotRaconteur
 
 		virtual Return Next(const Param& v)
 		{
-			RR_SHARED_PTR<MessageElement> v1 = RR_MAKE_SHARED<MessageElement>("",GetStub()->RRGetNode()->PackAnyType<RRPrimUtil<Param>::BoxedType>(RRPrimUtil<Param>::PrePack(v)));
+			RR_SHARED_PTR<MessageElement> v1 = RR_MAKE_SHARED<MessageElement>("",GetStub()->RRGetNode()->template PackAnyType<typename RRPrimUtil<Param>::BoxedType>(RRPrimUtil<Param>::PrePack(v)));
 			RR_SHARED_PTR<MessageElement> v2 = NextBase(v1);
-			return RRPrimUtil<Return>::PreUnpack(GetStub()->RRGetNode()->UnpackAnyType<RRPrimUtil<Return>::BoxedType>(v2));
+			return RRPrimUtil<Return>::PreUnpack(GetStub()->RRGetNode()->template UnpackAnyType<typename RRPrimUtil<Return>::BoxedType>(v2));
 		}
 		virtual void AsyncNext(const Param& v, boost::function<void(Return, RR_SHARED_PTR<RobotRaconteurException>)> handler, int32_t timeout = RR_TIMEOUT_INFINITE)
 		{
-			RR_SHARED_PTR<MessageElement> v1 = RR_MAKE_SHARED<MessageElement>("",GetStub()->RRGetNode()->PackAnyType<RRPrimUtil<Param>::BoxedType>(RRPrimUtil<Param>::PrePack(v)));
+			RR_SHARED_PTR<MessageElement> v1 = RR_MAKE_SHARED<MessageElement>("",GetStub()->RRGetNode()->template PackAnyType<typename RRPrimUtil<Param>::BoxedType>(RRPrimUtil<Param>::PrePack(v)));
 			AsyncNextBase(v1, boost::bind<void>(&detail::GeneratorClient_AsyncNext1<Return>, _1, _2, _3, handler),timeout);
 		}		
 		virtual void Abort()
@@ -170,7 +175,7 @@ namespace RobotRaconteur
 		virtual Return Next()
 		{			
 			RR_SHARED_PTR<MessageElement> v2 = NextBase(RR_SHARED_PTR<MessageElement>());
-			return RRPrimUtil<Return>::PreUnpack(GetStub()->RRGetNode()->UnpackAnyType<RRPrimUtil<Return>::BoxedType>(v2));
+			return RRPrimUtil<Return>::PreUnpack(GetStub()->RRGetNode()->template UnpackAnyType<typename RRPrimUtil<Return>::BoxedType>(v2));
 		}
 		virtual void AsyncNext(boost::function<void(Return, RR_SHARED_PTR<RobotRaconteurException>)> handler, int32_t timeout = RR_TIMEOUT_INFINITE)
 		{			
@@ -205,12 +210,12 @@ namespace RobotRaconteur
 
 		virtual void Next(const Param& v)
 		{
-			RR_SHARED_PTR<MessageElement> v1 = RR_MAKE_SHARED<MessageElement>("", GetStub()->RRGetNode()->PackAnyType<RRPrimUtil<Param>::BoxedType>(RRPrimUtil<Param>::PrePack(v)));
+			RR_SHARED_PTR<MessageElement> v1 = RR_MAKE_SHARED<MessageElement>("", GetStub()->RRGetNode()->template PackAnyType<typename RRPrimUtil<Param>::BoxedType>(RRPrimUtil<Param>::PrePack(v)));
 			NextBase(v1);			
 		}
 		virtual void AsyncNext(const Param& v, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> handler, int32_t timeout = RR_TIMEOUT_INFINITE)
 		{
-			RR_SHARED_PTR<MessageElement> v1 = RR_MAKE_SHARED<MessageElement>("", GetStub()->RRGetNode()->PackAnyType<RRPrimUtil<Param>::BoxedType>(RRPrimUtil<Param>::PrePack(v)));
+			RR_SHARED_PTR<MessageElement> v1 = RR_MAKE_SHARED<MessageElement>("", GetStub()->RRGetNode()->template PackAnyType<typename RRPrimUtil<Param>::BoxedType>(RRPrimUtil<Param>::PrePack(v)));
 			AsyncNextBase(v1, boost::bind<void>(&detail::GeneratorClient_AsyncNext2, _1, _2, _3, handler), timeout);
 		}
 		virtual void Abort()
@@ -233,7 +238,7 @@ namespace RobotRaconteur
 
 	class ServerEndpoint;
 
-	class GeneratorServerBase : private boost::noncopyable
+	class ROBOTRACONTEUR_CORE_API GeneratorServerBase : private boost::noncopyable
 	{
 	protected:
 
@@ -249,6 +254,8 @@ namespace RobotRaconteur
 		virtual void CallNext(RR_SHARED_PTR<MessageEntry> m) = 0;
 
 		virtual uint32_t GetEndpoint();
+
+		virtual ~GeneratorServerBase() {}
 
 	protected:
 
@@ -268,7 +275,7 @@ namespace RobotRaconteur
 				GeneratorServerBase::EndAsyncCallNext(skel, RR_SHARED_PTR<MessageElement>(), err, index, m, ep);
 			}
 
-			RR_SHARED_PTR<MessageElement> v3 = RR_MAKE_SHARED<MessageElement>("", skel1->RRGetNode()->PackAnyType<RRPrimUtil<Return>::BoxedType>(RRPrimUtil<Return>::PrePack(v2)));
+			RR_SHARED_PTR<MessageElement> v3 = RR_MAKE_SHARED<MessageElement>("", skel1->RRGetNode()->template PackAnyType<typename RRPrimUtil<Return>::BoxedType>(RRPrimUtil<Return>::PrePack(v2)));
 			GeneratorServerBase::EndAsyncCallNext(skel, v3, err, index, m, ep);
 		}	
 
@@ -328,10 +335,12 @@ namespace RobotRaconteur
 			}
 			else
 			{
-				Param v = RRPrimUtil<Param>::PreUnpack(skel1->RRGetNode()->UnpackAnyType<RRPrimUtil<Param>::BoxedType>(m->FindElement("parameter")));
+				Param v = RRPrimUtil<Param>::PreUnpack(skel1->RRGetNode()->template UnpackAnyType<typename RRPrimUtil<Param>::BoxedType>(m->FindElement("parameter")));
 				generator->AsyncNext(v, boost::bind<void>(&GeneratorServerBase::CallNext1<Return>, _1, _2, index, skel, m, ep));
 			}
 		}
+
+		virtual ~GeneratorServer() {}
 	};
 
 	template <typename Return>
@@ -373,6 +382,7 @@ namespace RobotRaconteur
 				generator->AsyncNext(boost::bind<void>(&GeneratorServerBase::CallNext1<Return>, _1, _2, index, skel, m, ep));
 			}
 		}
+		virtual ~GeneratorServer() {}
 	};
 
 	template <typename Param>
@@ -411,10 +421,11 @@ namespace RobotRaconteur
 			}
 			else
 			{
-				Param v = RRPrimUtil<Param>::PreUnpack(skel1->RRGetNode()->UnpackAnyType<RRPrimUtil<Param>::BoxedType>(m->FindElement("parameter")));
+				Param v = RRPrimUtil<Param>::PreUnpack(skel1->RRGetNode()->template UnpackAnyType<typename RRPrimUtil<Param>::BoxedType>(m->FindElement("parameter")));
 				generator->AsyncNext(v, boost::bind<void>(&GeneratorServerBase::CallNext2, _1, index, skel, m, ep));
 			}
 		}
+		virtual ~GeneratorServer() {}
 	};
 
 	template <typename Return, typename Param>
@@ -467,6 +478,7 @@ namespace RobotRaconteur
 			}
 			detail::InvokeHandler(node, handler);
 		}
+		virtual ~SyncGenerator() {}
 	};
 
 	template <typename Return>
@@ -519,6 +531,7 @@ namespace RobotRaconteur
 			}
 			detail::InvokeHandler(node, handler);
 		}
+		virtual ~SyncGenerator() {}
 	};
 
 	template <typename Param>
@@ -570,6 +583,7 @@ namespace RobotRaconteur
 			}
 			detail::InvokeHandler(node, handler);
 		}
+		virtual ~SyncGenerator() {}
 	};
 
 	template <typename T>
@@ -617,6 +631,7 @@ namespace RobotRaconteur
 			boost::mutex::scoped_lock lock(range_lock);
 			iter = range.end();			
 		}
+		virtual ~RangeGenerator() {}
 	};
 
 	template<typename T>

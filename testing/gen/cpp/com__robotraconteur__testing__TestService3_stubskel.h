@@ -698,7 +698,7 @@ public:
     template<typename U>
     static void UnpackField(com::robotraconteur::testing::TestService3::testcstruct1& v, const std::string& name, U& in)
     {
-    CStructureStub_UnpackCStructureFromArray(v, MessageElement::FindElement(in, name)->CastData<MessageElementCStructureArray>());
+    CStructureStub_UnpackCStructureFromArray(v, MessageElement::FindElement(in, name)->template CastData<MessageElementCStructureArray>());
     }
     static RR_SHARED_PTR<MessageElementCStructure> PackToMessageElementCStructure(const com::robotraconteur::testing::TestService3::testcstruct1& v)
     {
@@ -739,7 +739,7 @@ public:
     template<typename U>
     static void UnpackField(com::robotraconteur::testing::TestService3::testcstruct2& v, const std::string& name, U& in)
     {
-    CStructureStub_UnpackCStructureFromArray(v, MessageElement::FindElement(in, name)->CastData<MessageElementCStructureArray>());
+    CStructureStub_UnpackCStructureFromArray(v, MessageElement::FindElement(in, name)->template CastData<MessageElementCStructureArray>());
     }
     static RR_SHARED_PTR<MessageElementCStructure> PackToMessageElementCStructure(const com::robotraconteur::testing::TestService3::testcstruct2& v)
     {

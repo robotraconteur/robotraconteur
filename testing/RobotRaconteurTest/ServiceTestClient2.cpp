@@ -171,7 +171,7 @@ namespace RobotRaconteurTest
 			ServiceTest2_fill_testcstruct2(s->cstruct_array.at(i), 59174 + i);
 		}
 
-		if (r->get_cstruct_m1()->Length() != 1024) throw std::exception("");
+		if (r->get_cstruct_m1()->Length() != 1024) throw std::runtime_error("");
 		r->get_cstruct_m1()->Write(52, s, 3, 17);
 
 		RR_SHARED_PTR<RRCStructureArray<com::robotraconteur::testing::TestService3::testcstruct2> > s2

@@ -26,15 +26,15 @@
 #include <sstream>
 #include <RobotRaconteur.h>
 #include "CPPServiceLangGen.h" 
-/*#include "CSharpServiceLangGen.h"
-#include "VBNETServiceLangGen.h"
-#include "JavaServiceLangGen.h"*/
+#include "CSharpServiceLangGen.h"
+#include "JavaServiceLangGen.h"
 #include <boost/algorithm/string.hpp>
 #include <RobotRaconteur/RobotRaconteurServiceIndex.h>
 #include <RobotRaconteur/RobotRaconteurServiceIndex_stubskel.h>
 
 #include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/foreach.hpp>
 
 using namespace std;
 using namespace RobotRaconteur;

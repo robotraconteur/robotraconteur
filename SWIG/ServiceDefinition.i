@@ -57,21 +57,22 @@ public:
 	uint32_t patch;
 	uint32_t tweak;
 };
+}
+%rename(RobotRaconteurVersion_eq) operator == (const RobotRaconteur::RobotRaconteurVersion &v1, const RobotRaconteur::RobotRaconteurVersion &v2);
+bool operator== (const RobotRaconteur::RobotRaconteurVersion &v1, const RobotRaconteur::RobotRaconteurVersion &v2);
+%rename(RobotRaconteurVersion_ne)  operator != (const RobotRaconteur::RobotRaconteurVersion &v1, const RobotRaconteur::RobotRaconteurVersion &v2);
+bool operator!= (const RobotRaconteur::RobotRaconteurVersion &v1, const RobotRaconteur::RobotRaconteurVersion &v2);
+%rename(RobotRaconteurVersion_gt)  operator > (const RobotRaconteur::RobotRaconteurVersion &v1, const RobotRaconteur::RobotRaconteurVersion &v2);
+bool operator> (const RobotRaconteur::RobotRaconteurVersion &v1, const RobotRaconteur::RobotRaconteurVersion &v2);
+%rename(RobotRaconteurVersion_ge)  operator >= (const RobotRaconteur::RobotRaconteurVersion &v1, const RobotRaconteur::RobotRaconteurVersion &v2);
+bool operator>= (const RobotRaconteur::RobotRaconteurVersion &v1, const RobotRaconteur::RobotRaconteurVersion &v2);
+%rename(RobotRaconteurVersion_lt) operator < (const RobotRaconteur::RobotRaconteurVersion &v1, const RobotRaconteur::RobotRaconteurVersion &v2);
+bool operator< (const RobotRaconteur::RobotRaconteurVersion &v1, const RobotRaconteur::RobotRaconteurVersion &v2);
+%rename(RobotRaconteurVersion_le)  operator <= (const RobotRaconteur::RobotRaconteurVersion &v1, const RobotRaconteur::RobotRaconteurVersion &v2);
+bool operator<= (const RobotRaconteur::RobotRaconteurVersion &v1, const RobotRaconteur::RobotRaconteurVersion &v2);
 
-%rename(RobotRaconteurVersion_eq) operator == (const RobotRaconteurVersion &v1, const RobotRaconteurVersion &v2);
-bool operator == (const RobotRaconteurVersion &v1, const RobotRaconteurVersion &v2);
-%rename(RobotRaconteurVersion_ne)  operator != (const RobotRaconteurVersion &v1, const RobotRaconteurVersion &v2);
-bool operator != (const RobotRaconteurVersion &v1, const RobotRaconteurVersion &v2);
-%rename(RobotRaconteurVersion_gt)  operator > (const RobotRaconteurVersion &v1, const RobotRaconteurVersion &v2);
-bool operator > (const RobotRaconteurVersion &v1, const RobotRaconteurVersion &v2);
-%rename(RobotRaconteurVersion_ge)  operator >= (const RobotRaconteurVersion &v1, const RobotRaconteurVersion &v2);
-bool operator >= (const RobotRaconteurVersion &v1, const RobotRaconteurVersion &v2);
-%rename(RobotRaconteurVersion_lt) operator < (const RobotRaconteurVersion &v1, const RobotRaconteurVersion &v2);
-bool operator < (const RobotRaconteurVersion &v1, const RobotRaconteurVersion &v2);
-%rename(RobotRaconteurVersion_le)  operator <= (const RobotRaconteurVersion &v1, const RobotRaconteurVersion &v2);
-bool operator <= (const RobotRaconteurVersion &v1, const RobotRaconteurVersion &v2);
-
-
+namespace RobotRaconteur
+{
 class ServiceDefinition
 {
 public:

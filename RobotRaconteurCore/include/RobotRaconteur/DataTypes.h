@@ -37,6 +37,8 @@
 #include <boost/asio/buffer.hpp>
 
 #include <boost/utility/value_init.hpp>
+#include <boost/container/static_vector.hpp>
+#include <boost/array.hpp>
 
 #pragma once
 
@@ -647,11 +649,11 @@ namespace RobotRaconteur
 	class RRCStructureArray : public RRCStructureBaseArray
 	{
 	public:
-		std::vector<T> cstruct_array;
+		typename std::vector<T> cstruct_array;
 
 		RRCStructureArray() {}
 
-		RRCStructureArray(std::vector<T>& array_in)
+		RRCStructureArray(typename std::vector<T>& array_in)
 		{
 			cstruct_array = array_in;
 		}
@@ -698,7 +700,7 @@ namespace RobotRaconteur
 	{
 	public:
 		
-		RR_SHARED_PTR<RRCStructureArray<T> > CStructArray;
+		typename RR_SHARED_PTR<RRCStructureArray<T> > CStructArray;
 
 		virtual ~RRCStructureMultiDimArray() {}
 

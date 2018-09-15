@@ -369,13 +369,13 @@ namespace RobotRaconteur
 		if (err)
 		{
 
-		DIRECTOR_CALL2(handler->handler(NULL,err->ErrorCode,err->Error,err->Message));
+		DIRECTOR_CALL2(handler->handler(RR_SHARED_PTR<MessageElement>(),err->ErrorCode,err->Error,err->Message));
 		
 		return;
 		}
 		if (m->Error != RobotRaconteur::MessageErrorType_None)
 		{
-			DIRECTOR_CALL2(handler->handler(NULL,m->Error,m->FindElement("errorname")->CastDataToString(),m->FindElement("errorstring")->CastDataToString()));
+			DIRECTOR_CALL2(handler->handler(RR_SHARED_PTR<MessageElement>(),m->Error,m->FindElement("errorname")->CastDataToString(),m->FindElement("errorstring")->CastDataToString()));
 			return;
 		}
 		RR_SHARED_PTR<MessageElement> ret=m->FindElement("value");
@@ -388,17 +388,17 @@ namespace RobotRaconteur
 		if (err)
 		{
 
-		DIRECTOR_CALL2(handler->handler(NULL,err->ErrorCode,err->Error,err->Message));
+		DIRECTOR_CALL2(handler->handler(RR_SHARED_PTR<MessageElement>(),err->ErrorCode,err->Error,err->Message));
 		
 		return;
 		}
 		if (m->Error != RobotRaconteur::MessageErrorType_None)
 		{
-			DIRECTOR_CALL2(handler->handler(NULL,m->Error,m->FindElement("errorname")->CastDataToString(),m->FindElement("errorstring")->CastDataToString()));
+			DIRECTOR_CALL2(handler->handler(RR_SHARED_PTR<MessageElement>(),m->Error,m->FindElement("errorname")->CastDataToString(),m->FindElement("errorstring")->CastDataToString()));
 			return;
 		}
 
-		DIRECTOR_CALL2(handler->handler(NULL,0,"",""));
+		DIRECTOR_CALL2(handler->handler(RR_SHARED_PTR<MessageElement>(),0,"",""));
 	}
 
 	void WrappedServiceStub::async_FunctionCall_handler(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteurException> err, RR_SHARED_PTR<AsyncRequestDirector> handler)
@@ -407,13 +407,13 @@ namespace RobotRaconteur
 		if (err)
 		{
 
-		DIRECTOR_CALL2(handler->handler(NULL,err->ErrorCode,err->Error,err->Message));
+		DIRECTOR_CALL2(handler->handler(RR_SHARED_PTR<MessageElement>(),err->ErrorCode,err->Error,err->Message));
 		
 		return;
 		}
 		if (m->Error != RobotRaconteur::MessageErrorType_None)
 		{
-			DIRECTOR_CALL2(handler->handler(NULL,m->Error,m->FindElement("errorname")->CastDataToString(),m->FindElement("errorstring")->CastDataToString()));
+			DIRECTOR_CALL2(handler->handler(RR_SHARED_PTR<MessageElement>(),m->Error,m->FindElement("errorname")->CastDataToString(),m->FindElement("errorstring")->CastDataToString()));
 			return;
 		}
 
@@ -432,12 +432,12 @@ namespace RobotRaconteur
 	{
 		if (err)
 		{
-			DIRECTOR_CALL2(handler->handler(NULL, err->ErrorCode, err->Error, err->Message));
+			DIRECTOR_CALL2(handler->handler(RR_SHARED_PTR<WrappedGeneratorClient>(), err->ErrorCode, err->Error, err->Message));
 			return;
 		}
 		if (m->Error != RobotRaconteur::MessageErrorType_None)
 		{
-			DIRECTOR_CALL2(handler->handler(NULL, m->Error, m->FindElement("errorname")->CastDataToString(), m->FindElement("errorstring")->CastDataToString()));
+			DIRECTOR_CALL2(handler->handler(RR_SHARED_PTR<WrappedGeneratorClient>(), m->Error, m->FindElement("errorname")->CastDataToString(), m->FindElement("errorstring")->CastDataToString()));
 			return;
 		}
 
@@ -482,7 +482,7 @@ namespace RobotRaconteur
 	{
 		if (err)
 		{
-			DIRECTOR_CALL2(handler->handler(NULL,err->ErrorCode,err->Error,err->Message));
+			DIRECTOR_CALL2(handler->handler(RR_SHARED_PTR<WrappedServiceStub>(),err->ErrorCode,err->Error,err->Message));
 			return;
 		}
 
@@ -910,7 +910,7 @@ namespace RobotRaconteur
 	{
 		if (err)
 		{
-			DIRECTOR_CALL2(handler->handler(NULL,err->ErrorCode,err->Error,err->Message));
+			DIRECTOR_CALL2(handler->handler(RR_SHARED_PTR<WrappedPipeEndpoint>(),err->ErrorCode,err->Error,err->Message));
 			return;
 		}
 
@@ -1274,7 +1274,7 @@ namespace RobotRaconteur
 	{
 		if (err)
 		{
-			DIRECTOR_CALL2(handler->handler(NULL,err->ErrorCode,err->Error,err->Message));
+			DIRECTOR_CALL2(handler->handler(RR_SHARED_PTR<WrappedWireConnection>(),err->ErrorCode,err->Error,err->Message));
 			return;
 		}
 
@@ -1648,7 +1648,7 @@ namespace RobotRaconteur
 		if (err)
 		{
 
-			DIRECTOR_CALL2(handler->handler(NULL, err->ErrorCode, err->Error, err->Message));
+			DIRECTOR_CALL2(handler->handler(RR_SHARED_PTR<MessageElement>(), err->ErrorCode, err->Error, err->Message));
 
 			return;
 		}		
@@ -2445,34 +2445,34 @@ namespace RobotRaconteur
 				switch (m->Type->Type)
 				{
 				case DataTypes_double_t:
-					return boost::static_pointer_cast<ArrayMemoryServiceSkel<double>>(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedArrayMemory<double> >(mem));
+					return boost::static_pointer_cast<ArrayMemoryServiceSkel<double> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedArrayMemory<double> >(mem));
 					break;
 				case DataTypes_single_t:
-					return boost::static_pointer_cast<ArrayMemoryServiceSkel<float>>(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedArrayMemory<float> >(mem));
+					return boost::static_pointer_cast<ArrayMemoryServiceSkel<float> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedArrayMemory<float> >(mem));
 					break;
 				case DataTypes_int8_t:
-					return boost::static_pointer_cast<ArrayMemoryServiceSkel<int8_t>>(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedArrayMemory<int8_t> >(mem));
+					return boost::static_pointer_cast<ArrayMemoryServiceSkel<int8_t> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedArrayMemory<int8_t> >(mem));
 					break;
 				case DataTypes_uint8_t:
-					return boost::static_pointer_cast<ArrayMemoryServiceSkel<uint8_t>>(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedArrayMemory<uint8_t> >(mem));
+					return boost::static_pointer_cast<ArrayMemoryServiceSkel<uint8_t> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedArrayMemory<uint8_t> >(mem));
 					break;
 				case DataTypes_int16_t:
-					return boost::static_pointer_cast<ArrayMemoryServiceSkel<int16_t>>(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedArrayMemory<int16_t> >(mem));
+					return boost::static_pointer_cast<ArrayMemoryServiceSkel<int16_t> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedArrayMemory<int16_t> >(mem));
 					break;
 				case DataTypes_uint16_t:
-					return boost::static_pointer_cast<ArrayMemoryServiceSkel<uint16_t>>(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedArrayMemory<uint16_t> >(mem));
+					return boost::static_pointer_cast<ArrayMemoryServiceSkel<uint16_t> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedArrayMemory<uint16_t> >(mem));
 					break;
 				case DataTypes_int32_t:
-					return boost::static_pointer_cast<ArrayMemoryServiceSkel<int32_t>>(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedArrayMemory<int32_t> >(mem));
+					return boost::static_pointer_cast<ArrayMemoryServiceSkel<int32_t> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedArrayMemory<int32_t> >(mem));
 					break;
 				case DataTypes_uint32_t:
-					return boost::static_pointer_cast<ArrayMemoryServiceSkel<uint32_t>>(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedArrayMemory<uint32_t> >(mem));
+					return boost::static_pointer_cast<ArrayMemoryServiceSkel<uint32_t> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedArrayMemory<uint32_t> >(mem));
 					break;
 				case DataTypes_int64_t:
-					return boost::static_pointer_cast<ArrayMemoryServiceSkel<int64_t>>(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedArrayMemory<int64_t> >(mem));
+					return boost::static_pointer_cast<ArrayMemoryServiceSkel<int64_t> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedArrayMemory<int64_t> >(mem));
 					break;
 				case DataTypes_uint64_t:
-					return boost::static_pointer_cast<ArrayMemoryServiceSkel<uint64_t>>(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedArrayMemory<uint64_t> >(mem));
+					return boost::static_pointer_cast<ArrayMemoryServiceSkel<uint64_t> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedArrayMemory<uint64_t> >(mem));
 					break;
 				default:
 					throw DataTypeException("Invalid memory data type");
@@ -2489,34 +2489,34 @@ namespace RobotRaconteur
 				switch (m->Type->Type)
 				{
 				case DataTypes_double_t:
-					return boost::static_pointer_cast<MultiDimArrayMemoryServiceSkel<double>>(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedMultiDimArrayMemory<double> >(mem));
+					return boost::static_pointer_cast<MultiDimArrayMemoryServiceSkel<double> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedMultiDimArrayMemory<double> >(mem));
 					break;
 				case DataTypes_single_t:
-					return boost::static_pointer_cast<MultiDimArrayMemoryServiceSkel<float>>(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedMultiDimArrayMemory<float> >(mem));
+					return boost::static_pointer_cast<MultiDimArrayMemoryServiceSkel<float> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedMultiDimArrayMemory<float> >(mem));
 					break;
 				case DataTypes_int8_t:
-					return boost::static_pointer_cast<MultiDimArrayMemoryServiceSkel<int8_t>>(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedMultiDimArrayMemory<int8_t> >(mem));
+					return boost::static_pointer_cast<MultiDimArrayMemoryServiceSkel<int8_t> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedMultiDimArrayMemory<int8_t> >(mem));
 					break;
 				case DataTypes_uint8_t:
-					return boost::static_pointer_cast<MultiDimArrayMemoryServiceSkel<uint8_t>>(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedMultiDimArrayMemory<uint8_t> >(mem));
+					return boost::static_pointer_cast<MultiDimArrayMemoryServiceSkel<uint8_t> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedMultiDimArrayMemory<uint8_t> >(mem));
 					break;
 				case DataTypes_int16_t:
-					return boost::static_pointer_cast<MultiDimArrayMemoryServiceSkel<int16_t>>(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedMultiDimArrayMemory<int16_t> >(mem));
+					return boost::static_pointer_cast<MultiDimArrayMemoryServiceSkel<int16_t> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedMultiDimArrayMemory<int16_t> >(mem));
 					break;
 				case DataTypes_uint16_t:
-					return boost::static_pointer_cast<MultiDimArrayMemoryServiceSkel<uint16_t>>(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedMultiDimArrayMemory<uint16_t> >(mem));
+					return boost::static_pointer_cast<MultiDimArrayMemoryServiceSkel<uint16_t> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedMultiDimArrayMemory<uint16_t> >(mem));
 					break;
 				case DataTypes_int32_t:
-					return boost::static_pointer_cast<MultiDimArrayMemoryServiceSkel<int32_t>>(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedMultiDimArrayMemory<int32_t> >(mem));
+					return boost::static_pointer_cast<MultiDimArrayMemoryServiceSkel<int32_t> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedMultiDimArrayMemory<int32_t> >(mem));
 					break;
 				case DataTypes_uint32_t:
-					return boost::static_pointer_cast<MultiDimArrayMemoryServiceSkel<uint32_t>>(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedMultiDimArrayMemory<uint32_t> >(mem));
+					return boost::static_pointer_cast<MultiDimArrayMemoryServiceSkel<uint32_t> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedMultiDimArrayMemory<uint32_t> >(mem));
 					break;
 				case DataTypes_int64_t:
-					return boost::static_pointer_cast<MultiDimArrayMemoryServiceSkel<int64_t>>(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedMultiDimArrayMemory<int64_t> >(mem));
+					return boost::static_pointer_cast<MultiDimArrayMemoryServiceSkel<int64_t> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedMultiDimArrayMemory<int64_t> >(mem));
 					break;
 				case DataTypes_uint64_t:
-					return boost::static_pointer_cast<MultiDimArrayMemoryServiceSkel<uint64_t>>(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedMultiDimArrayMemory<uint64_t> >(mem));
+					return boost::static_pointer_cast<MultiDimArrayMemoryServiceSkel<uint64_t> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedMultiDimArrayMemory<uint64_t> >(mem));
 					break;
 				default:
 					throw DataTypeException("Invalid memory data type");
@@ -2716,7 +2716,7 @@ namespace RobotRaconteur
 	{
 		if (err)
 		{
-			DIRECTOR_CALL2(handler->handler(NULL,err->ErrorCode,err->Error,err->Message));
+			DIRECTOR_CALL2(handler->handler(RR_SHARED_PTR<WrappedServiceStub>(),err->ErrorCode,err->Error,err->Message));
 			return;
 		}
 
@@ -2734,7 +2734,8 @@ namespace RobotRaconteur
 	{
 		if (err)
 		{
-			DIRECTOR_CALL2(handler->handler(NULL,err->ErrorCode,err->Error,err->Message));
+			std::string ret = "";
+			DIRECTOR_CALL2(handler->handler(ret,err->ErrorCode,err->Error,err->Message));
 			return;
 		}
 

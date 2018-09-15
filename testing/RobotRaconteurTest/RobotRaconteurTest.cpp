@@ -55,16 +55,15 @@ using namespace com::robotraconteur::testing::TestService3;
 
 std::string ReadFile(const std::string& fname)
 {
-	ifstream file(fname.c_str(),ios_base::in);
+	ifstream file(fname.c_str(), ios_base::in);
 
-	if (!file.is_open()) 
-		throw std::runtime_error("File not found");
+	if (!file.is_open()) throw std::runtime_error("File not found");
 
 	char bom1, bom2, bom3;
 	file >> bom1 >> bom2 >> bom3;
-	if (!(bom1==-17 && bom2==-69 && bom3==-65))
+	if (!(bom1 == -17 && bom2 == -69 && bom3 == -65))
 	{
-		file.seekg(-3);
+		file.seekg(0, ifstream::beg);
 	}
 
 	stringstream buffer;

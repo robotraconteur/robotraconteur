@@ -27,23 +27,26 @@
 //#include "Error.h"
 #include "RobotRaconteur/nulldeleter.h"
 #include "RobotRaconteur/RobotRaconteurNode.h"
-
+#include "RobotRaconteur/IOUtils.h"
 
 #include <boost/range/adaptors.hpp>
 #include <boost/range/algorithm.hpp>
 #include <boost/foreach.hpp>
 #include <boost/range/combine.hpp>
 #include <boost/range/numeric.hpp>
+#include <boost/tuple/tuple_comparison.hpp>
 
 using namespace boost::algorithm;
 
 namespace RobotRaconteur
 {
 
-	RobotRaconteurVersion::RobotRaconteurVersion() :
-		major(0), minor(0), patch(0), tweak(0)
+	RobotRaconteurVersion::RobotRaconteurVersion()
 	{
-
+		major=0;
+		minor=0;
+		patch=0;
+		tweak=0;
 	}
 
 	RobotRaconteurVersion::RobotRaconteurVersion(uint32_t major, uint32_t minor, uint32_t patch, uint32_t tweak)
@@ -2079,7 +2082,7 @@ namespace RobotRaconteur
 		}
 	}
 
-	RR_SHARED_PTR<NamedTypeDefinition> TypeDefinition::ResolveNamedType(std::vector<RR_SHARED_PTR<ServiceDefinition> >& imported_defs, RR_SHARED_PTR<RobotRaconteurNode> node, RR_SHARED_PTR<RRObject> client)
+	RR_SHARED_PTR<NamedTypeDefinition> TypeDefinition::ResolveNamedType(std::vector<RR_SHARED_PTR<ServiceDefinition> > imported_defs, RR_SHARED_PTR<RobotRaconteurNode> node, RR_SHARED_PTR<RRObject> client)
 	{
 		RR_SHARED_PTR<NamedTypeDefinition> o = ResolveNamedType_cache.lock();
 		if (o)
@@ -4049,7 +4052,7 @@ namespace RobotRaconteur
 
 	}
 
-	ROBOTRACONTEUR_CORE_API size_t EstimateCStructurePackedElementSize(RR_SHARED_PTR<ServiceEntryDefinition> def, std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs, RR_SHARED_PTR<RobotRaconteurNode> node, RR_SHARED_PTR<RRObject> client)
+	ROBOTRACONTEUR_CORE_API size_t EstimateCStructurePackedElementSize(RR_SHARED_PTR<ServiceEntryDefinition> def, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, RR_SHARED_PTR<RobotRaconteurNode> node, RR_SHARED_PTR<RRObject> client)
 	{
 		size_t s = 16;
 		s += ArrayBinaryWriter::GetStringByteCount8(def->Name);

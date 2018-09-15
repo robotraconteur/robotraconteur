@@ -53,8 +53,8 @@ namespace com__robotraconteur__testing__TestService3Constants
 class testcstruct2 : public RobotRaconteur::RRCStructure {
 public:
 int8_t i1;
-boost::array<int8_t,15> i2;
-boost::container::static_vector<int8_t,17> i3;
+RobotRaconteur::cstructure_field_array<int8_t,15,false> i2;
+RobotRaconteur::cstructure_field_array<int8_t,17,true> i3;
 
 virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.testcstruct2";  }
 };
@@ -62,13 +62,13 @@ virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.te
 class testcstruct1 : public RobotRaconteur::RRCStructure {
 public:
 double d1;
-boost::array<double,6> d2;
-boost::container::static_vector<double,6> d3;
-boost::array<double,9> d4;
+RobotRaconteur::cstructure_field_array<double,6,false> d2;
+RobotRaconteur::cstructure_field_array<double,6,true> d3;
+RobotRaconteur::cstructure_field_array<double,9,false> d4;
 testcstruct2 s1;
-boost::array<testcstruct2,8> s2;
-boost::container::static_vector<testcstruct2,9> s3;
-boost::array<testcstruct2,8> s4;
+RobotRaconteur::cstructure_field_array<testcstruct2,8,false> s2;
+RobotRaconteur::cstructure_field_array<testcstruct2,9,true> s3;
+RobotRaconteur::cstructure_field_array<testcstruct2,8,false> s4;
 
 virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.testcstruct1";  }
 };

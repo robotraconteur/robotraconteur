@@ -37,11 +37,15 @@ namespace RobotRaconteur
 	}
 
 	class ROBOTRACONTEUR_CORE_API WireConnectionBase;
+	template <typename T>
+	class WireConnection;
 	class ROBOTRACONTEUR_CORE_API WireSubscriptionBase;
 	template <typename T>
 	class ROBOTRACONTEUR_CORE_API WireSubscription;
 
 	class ROBOTRACONTEUR_CORE_API PipeEndpointBase;
+	template <typename T>
+	class PipeEndpoint;
 	class ROBOTRACONTEUR_CORE_API PipeSubscriptionBase;
 	template <typename T>
 	class ROBOTRACONTEUR_CORE_API PipeSubscription;
@@ -305,7 +309,7 @@ namespace RobotRaconteur
 
 		}
 
-		T GetInValue(TimeSpec* time = NULL, RR_SHARED_PTR<WireConnection<T> >* connection = NULL)
+		T GetInValue(TimeSpec* time = NULL, typename RR_SHARED_PTR<WireConnection<T> >* connection = NULL)
 		{
 			RR_SHARED_PTR<WireConnectionBase> connection1;
 			T o =  RRPrimUtil<T>::PreUnpack(GetInValueBase(time, &connection1));
@@ -315,7 +319,7 @@ namespace RobotRaconteur
 			}
 			return o;
 		}
-		bool TryGetInValue(T& val, TimeSpec* time = NULL, RR_SHARED_PTR<WireConnection<T> >* connection = NULL)
+		bool TryGetInValue(T& val, TimeSpec* time = NULL, typename RR_SHARED_PTR<WireConnection<T> >* connection = NULL)
 		{
 			RR_SHARED_PTR<RRValue> o;
 			RR_SHARED_PTR<WireConnectionBase> connection1;

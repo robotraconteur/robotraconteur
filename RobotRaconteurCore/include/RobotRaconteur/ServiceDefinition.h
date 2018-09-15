@@ -353,7 +353,7 @@ namespace RobotRaconteur
 		void RemoveArray();
 		void QualifyTypeStringWithUsing();
 		void UnqualifyTypeStringWithUsing();
-		RR_SHARED_PTR<NamedTypeDefinition> ResolveNamedType(std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs= std::vector<RR_SHARED_PTR<ServiceDefinition> >(), RR_SHARED_PTR<RobotRaconteurNode> node = RR_SHARED_PTR<RobotRaconteurNode>(), RR_SHARED_PTR<RRObject> client=RR_SHARED_PTR<RRObject>());
+		RR_SHARED_PTR<NamedTypeDefinition> ResolveNamedType(std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs= std::vector<RR_SHARED_PTR<ServiceDefinition> >(), RR_SHARED_PTR<RobotRaconteurNode> node = RR_SHARED_PTR<RobotRaconteurNode>(), RR_SHARED_PTR<RRObject> client=RR_SHARED_PTR<RRObject>());
 			
 		//Don't modify directly, use ResolveNamedType. Left public for specalized use.
 		RR_WEAK_PTR<NamedTypeDefinition> ResolveNamedType_cache;
@@ -525,7 +525,7 @@ namespace RobotRaconteur
 	template <typename T>
 	RR_SHARED_PTR<T> TryFindByName(std::vector<RR_SHARED_PTR<T> >& v, const std::string& name)
 	{
-		for (std::vector<RR_SHARED_PTR<T> >::iterator e = v.begin(); e != v.end(); ++e)
+		for (typename std::vector<RR_SHARED_PTR<T> >::iterator e = v.begin(); e != v.end(); ++e)
 		{
 			if (*e)
 			{
@@ -539,6 +539,6 @@ namespace RobotRaconteur
 		return RR_SHARED_PTR<T>();
 	}
 
-	ROBOTRACONTEUR_CORE_API size_t EstimateCStructurePackedElementSize(RR_SHARED_PTR<ServiceEntryDefinition> def, std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs = std::vector<RR_SHARED_PTR<ServiceDefinition> >(), RR_SHARED_PTR<RobotRaconteurNode> node = RR_SHARED_PTR<RobotRaconteurNode>(), RR_SHARED_PTR<RRObject> client = RR_SHARED_PTR<RRObject>());
+	ROBOTRACONTEUR_CORE_API size_t EstimateCStructurePackedElementSize(RR_SHARED_PTR<ServiceEntryDefinition> def, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs = std::vector<RR_SHARED_PTR<ServiceDefinition> >(), RR_SHARED_PTR<RobotRaconteurNode> node = RR_SHARED_PTR<RobotRaconteurNode>(), RR_SHARED_PTR<RRObject> client = RR_SHARED_PTR<RRObject>());
 	
 }

@@ -43,7 +43,8 @@ set(RR_TEST_ROBDEFS com.robotraconteur.testing.TestService1.robdef
 
 function(RR_TEST_GEN lang )
 string(REPLACE ";" " " RR_TEST_ROBDEFS_1 "${RR_TEST_ROBDEFS}")
-set(RR_TEST_GEN_CMD "${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/bin/RobotRaconteurGen --thunksource --lang=${lang} -I ${CMAKE_SOURCE_DIR}/testing/RobotRaconteurTest --output-dir ${CMAKE_CURRENT_BINARY_DIR}/gen/@OUT_DIR_NAME@/${lang} ${RR_TEST_ROBDEFS_1}")
+set(RR_TEST_GEN_CMD "${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/bin/RobotRaconteurGen")
+set(RR_TEST_GEN_CMD_ARGS "--thunksource --lang=${lang} -I ${CMAKE_SOURCE_DIR}/testing/RobotRaconteurTest --output-dir ${CMAKE_CURRENT_BINARY_DIR}/gen/@OUT_DIR_NAME@/${lang} ${RR_TEST_ROBDEFS_1}")
 
 file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/gen/out/${lang}")
 file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/gen/out_debug/${lang}")
@@ -61,7 +62,7 @@ endif()
 set(GEN_FILE_LIST "${GEN_FILE_LIST}\"${CMAKE_CURRENT_BINARY_DIR}/gen/test/${lang}/${F};${CMAKE_CURRENT_BINARY_DIR}/gen/@OUT_DIR_NAME@/${lang}/${F}\",")
 endforeach()
 
-RRConfigureTest("test_gen_${lang}" "${RR_TEST_GEN_CMD}" "test_gen" FILELIST GEN_FILE_LIST)
+RRConfigureTest("test_gen_${lang}" "${RR_TEST_GEN_CMD}" "test_gen" ARGS "${RR_TEST_GEN_CMD_ARGS}" FILELIST GEN_FILE_LIST )
 endfunction()
 
 RR_TEST_GEN(cpp)

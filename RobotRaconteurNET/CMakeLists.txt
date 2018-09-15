@@ -114,10 +114,11 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurNET/Properties/Assembl
 endif()
 
 if(WIN32)
-set(RR_NET_TEST_CMD "\"${CMAKE_COMMAND}\" -E env PATH=\"%PATH%;${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/NET/Native\" ${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/NET/RobotRaconteurNETTest")
-RRConfigureTest(test_prog_net "${RR_NET_TEST_CMD}" "test_prog" NOCTEST)
-RRConfigureTest(test_net_loopback "${RR_NET_TEST_CMD}" "test_prog" ARGS "loopback")
-RRConfigureTest(test_net_loopback2 "${RR_NET_TEST_CMD}" "test_prog" ARGS "loopback2")
+set(RR_NET_TEST_CMD "\"${CMAKE_COMMAND}\"")
+set(RR_NET_TEST_CMD_ARGS "-E env PATH=\"%PATH%\\\;${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/NET/Native\" ${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/NET/RobotRaconteurNETTest")
+RRConfigureTest(test_prog_net "${RR_NET_TEST_CMD}" "test_prog" NOCTEST ARGS "${RR_NET_TEST_CMD_ARGS}")
+RRConfigureTest(test_net_loopback "${RR_NET_TEST_CMD}" "test_prog" ARGS "${RR_NET_TEST_CMD_ARGS} loopback")
+RRConfigureTest(test_net_loopback2 "${RR_NET_TEST_CMD}" "test_prog" ARGS "${RR_NET_TEST_CMD_ARGS} loopback2")
 endif()
 
 #endif()

@@ -246,39 +246,39 @@ return RobotRaconteur::rr_cast<subobj >(FindObjRefTyped("o5","com.robotraconteur
 RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > > baseobj_stub::get_p1()
 {
 RR_SHARED_PTR<RobotRaconteur::PipeClient<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > > value=rrvar_p1;
-if (!value) throw InvalidOperationException("Stub has been closed");
+if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
 void baseobj_stub::set_p1(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > > value)
 {
-throw InvalidOperationException("Not valid for client");
+throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
 
 RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void(double, double) > > > baseobj_stub::get_cb2()
 {
 RR_SHARED_PTR<RobotRaconteur::CallbackClient<boost::function<void(double, double) > > > value=rrvar_cb2;
-if (!value) throw InvalidOperationException("Stub has been closed");
+if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
 void baseobj_stub::set_cb2(RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void(double, double)> > > value)
 {
-throw InvalidOperationException("Not valid for client");
+throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
 RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > > baseobj_stub::get_w1()
 {
 RR_SHARED_PTR<RobotRaconteur::WireClient<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > > value=rrvar_w1;
-if (!value) throw InvalidOperationException("Stub has been closed");
+if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
 void baseobj_stub::set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > > value)
 {
-throw InvalidOperationException("Not valid for client");
+throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
 
 RR_SHARED_PTR<RobotRaconteur::ArrayMemory<double > > baseobj_stub::get_m1()
 {
 RR_SHARED_PTR<RobotRaconteur::ArrayMemoryClient<double > > value=rrvar_m1;
-if (!value) throw InvalidOperationException("Stub has been closed");
+if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
 void baseobj_stub::DispatchEvent(RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_m)
@@ -689,7 +689,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService2::baseobj_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<double >(value)));
 }
 catch (std::exception& err2)
@@ -710,7 +710,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService2::baseobj_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(value));
 }
 catch (std::exception& err2)
@@ -755,7 +755,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService2::baseobj_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("return",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<double >(ret)));
 }
 catch (std::exception& err2)
@@ -859,7 +859,7 @@ rr_req->ServicePath=GetServicePath();
 rr_req->AddElement(RR_MAKE_SHARED<RobotRaconteur::MessageElement>("d1",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<double >(d1))));
 rr_req->AddElement(RR_MAKE_SHARED<RobotRaconteur::MessageElement>("d2",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<double >(d2))));
 RR_SHARED_PTR<RobotRaconteur::ServerContext> rr_s=GetContext();
-if (rr_s==0) throw InvalidOperationException("Service has been closed");
+if (rr_s==0) throw RobotRaconteur::InvalidOperationException("Service has been closed");
 RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_ret=rr_s->ProcessCallbackRequest(rr_req,rrendpoint);
 }
 
@@ -951,7 +951,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService2::subobj_skel> skel1=skel.lock();
-if (!skel1) throw InvalidOperationException("skel release");
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
 mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("return",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<double >(ret)));
 }
 catch (std::exception& err2)

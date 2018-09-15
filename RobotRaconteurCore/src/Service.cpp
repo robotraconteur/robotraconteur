@@ -29,6 +29,7 @@
 #include "Service_lock_private.h"
 
 #include "RobotRaconteur/ErrorUtil.h"
+#include "RobotRaconteur/Generator.h"
 
 #include <boost/range/adaptors.hpp>
 #include <boost/range/algorithm.hpp>

@@ -19,7 +19,6 @@
 #include "RobotRaconteur/ServiceFactory.h"
 #include "RobotRaconteur/ServiceDefinition.h"
 #include "RobotRaconteur/ServiceStructure.h"
-#include "RobotRaconteur/Generator.h"
 #include <istream>
 #include <boost/atomic.hpp>
 
@@ -37,6 +36,8 @@ namespace RobotRaconteur
 	class ROBOTRACONTEUR_CORE_API  ServerContext_ObjectLock;
 	class ROBOTRACONTEUR_CORE_API  ServerContext_MonitorObjectSkel;
 	
+	class ROBOTRACONTEUR_CORE_API  GeneratorServerBase;
+
 
 	class ROBOTRACONTEUR_CORE_API  IRobotRaconteurMonitorObject;
 

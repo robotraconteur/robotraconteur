@@ -25,6 +25,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/range/numeric.hpp>
 #include <boost/range/algorithm.hpp>
+#include <boost/locale.hpp>
 
 using namespace std;
 using namespace RobotRaconteur;
