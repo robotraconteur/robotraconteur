@@ -1592,7 +1592,11 @@ namespace RobotRaconteur
 		boost::mutex::scoped_lock lock(this_lock);
 		if (active_connection)
 		{
-			active_connection->Close();
+			try
+			{
+				active_connection->Close();
+			}
+			catch (std::exception&) {}
 			active_connection.reset();
 		}
 		active_connection = connection1;
