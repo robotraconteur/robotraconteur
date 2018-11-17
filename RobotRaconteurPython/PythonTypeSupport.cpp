@@ -1456,7 +1456,6 @@ namespace RobotRaconteur
 					}
 					else
 					{
-						PyObject_Print(v, stdout, 0);
 						unsigned long long v2 = PyLong_AsUnsignedLongLong(v);						
 						if (PyErr_Occurred())
 						{
