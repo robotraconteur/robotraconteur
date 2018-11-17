@@ -5,7 +5,7 @@ RR_SWIG_PARSE_ERRORS(RR_ERRORS)
 #set(RR_PYTHON_ERR_OVERRIDE "MessageErrorType_NullValue,NullReferenceException;MessageErrorType_InvalidOperation,InvalidOperationException;MessageErrorType_InvalidArgument,ArgumentException")
 set(RR_PYTHON_ERR_DECL_M "
 class @RR_ERROR_TYPE@(RobotRaconteurException):
-    def __init__(self,message):
+    def __init__(self,message=\"\"):
         super(@RR_ERROR_TYPE@,self).__init__(RobotRaconteurPython.@RR_ERROR_CODE@, @RR_ERROR_TYPE_STR@,message)
 ")
 

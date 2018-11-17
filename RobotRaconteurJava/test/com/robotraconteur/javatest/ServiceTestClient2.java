@@ -241,7 +241,7 @@ public class ServiceTestClient2 {
         
         public void testGenerators()
         {
-        	/*Generator1<UnsignedBytes,UnsignedBytes> g = r.gen_func4();
+        	Generator1<UnsignedBytes,UnsignedBytes> g = r.gen_func4();
             for (int i=0; i<3; i++)
             {
                 g.next(new UnsignedBytes(new byte[] { }));
@@ -252,7 +252,7 @@ public class ServiceTestClient2 {
             {
             g.next(new UnsignedBytes(new byte[] { 2, 3, 4 }));
             }
-            catch (StopIterationException e) {}*/
+            catch (OperationAbortedException e) {}
             
             Generator2<double[]> g2 = r.gen_func1();
             List<double[]> res=g2.nextAll();

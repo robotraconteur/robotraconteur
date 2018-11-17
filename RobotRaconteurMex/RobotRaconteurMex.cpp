@@ -1802,13 +1802,7 @@ boost::shared_ptr<MessageElement> PackMxArrayToMessageElement(const mxArray* pm,
 						if (dims.at(i) != tdef->ArrayLength.at(i)) throw DataTypeException("Array " + tdef->Name + " dimension match error");
 					}
 				}
-
-				boost::shared_ptr<TypeDefinition> dims_type = boost::make_shared<TypeDefinition>();
-				dims_type->Type = DataTypes_int32_t;
-				dims_type->ArrayType = DataTypes_ArrayTypes_array;
-				dims_type->ArrayVarLength = true;
-				dims_type->ArrayLength.push_back(0);
-				
+								
 				map_vec.push_back(boost::make_shared<MessageElement>("dims", VectorToRRArray<int32_t>(dims)));
 
 				boost::shared_ptr<TypeDefinition> array_type = boost::make_shared<TypeDefinition>();
@@ -1966,21 +1960,10 @@ boost::shared_ptr<MessageElement> PackMxArrayToMessageElement(const mxArray* pm,
 }
 
 mxArray* UnpackMessageElementToMxArray_cstruct(boost::shared_ptr<MessageElement> element, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<ServiceStub> stub)
-{
-	std::string& typestr = element->ElementTypeName;
-	boost::tuple<std::string, std::string> typestr_s = SplitQualifiedName(typestr);
-	boost::shared_ptr<ServiceDefinition> def;
-	if (!stub)
-	{
-		def = RobotRaconteurNode::s()->GetServiceType(typestr_s.get<0>())->ServiceDef();;
-	}
-	else
-	{
-		def = RobotRaconteurNode::s()->GetPulledServiceType(stub, typestr_s.get<0>())->ServiceDef();
-	}
-
-	boost::shared_ptr<ServiceEntryDefinition> struct_def = TryFindByName(def->CStructures, typestr_s.get<1>());
-	if (!struct_def) throw DataTypeException("Invalid cstruct type: " + typestr_s.get<1>());
+{	
+	std::vector<boost::shared_ptr<ServiceDefinition> > other_defs;
+	boost::shared_ptr<ServiceEntryDefinition> struct_def = rr_cast<ServiceEntryDefinition>(type1->ResolveNamedType(other_defs, RobotRaconteurNode::sp(), stub));
+	if (!struct_def) throw DataTypeException("Invalid cstruct type: " + type1->TypeString);
 
 	boost::shared_ptr<MessageElementCStructureArray> l = element->CastData<MessageElementCStructureArray>();
 	
@@ -2395,14 +2378,7 @@ mxArray* UnpackMessageElementToMxArray(boost::shared_ptr<MessageElement> m, boos
 				boost::shared_ptr<MessageElementCStructureMultiDimArray> mm = m->CastData<MessageElementCStructureMultiDimArray>();
 				
 				std::vector<mwSize> dims = RRArrayToVector<mwSize>(MessageElement::FindElement(mm->Elements, "dims")->CastData<RRArray<int32_t> >());
-				
-				boost::shared_ptr<TypeDefinition> dims_type = boost::make_shared<TypeDefinition>();
-				dims_type->Type = DataTypes_int32_t;
-				dims_type->ArrayType = DataTypes_ArrayTypes_array;
-				dims_type->ArrayVarLength = true;
-				dims_type->ArrayLength.push_back(0);
-								
-				
+							
 				boost::shared_ptr<MessageElement> array = MessageElement::FindElement(mm->Elements, "array");
 				if (!array) throw DataTypeException("Invalid CStructureMultiDimArray");
 				boost::shared_ptr<TypeDefinition> type2;
@@ -4370,8 +4346,6 @@ mxArray* MexServiceStub::MemoryOp(const mxArray* member, const mxArray* command,
 			{
 				if (data==NULL) throw InvalidArgumentException("Invalid memory read/write request");
 				
-				if(!mxIsNumeric(data)) throw InvalidArgumentException("Invalid type for memory write");
-
 				if (count.size()==0)
 				{
 					if (mxGetNumberOfElements(data)==1)
@@ -4399,6 +4373,8 @@ mxArray* MexServiceStub::MemoryOp(const mxArray* member, const mxArray* command,
 					cstruct_mem->Write(start, data, std::vector<uint64_t>(count.size()), count);
 					return mxCreateNumericMatrix(1, 0, mxDOUBLE_CLASS, mxREAL);
 				}
+
+				if (!mxIsNumeric(data)) throw InvalidArgumentException("Invalid type for memory write");
 
 				if (numcount!=mxGetNumberOfElements(data) && mxGetNumberOfElements(data)==1)
 				{
@@ -7354,7 +7330,8 @@ RR_SHARED_PTR<MessageElementData> MexCStructureArrayMemoryClient::PackWriteReque
 		o.at(i) = buffer2->at(bufferpos + i);
 	}
 	
-	return RR_MAKE_SHARED<MessageElementCStructureArray>(type->TypeString, o);
+	std::vector<boost::shared_ptr<ServiceDefinition> > other_defs;
+	return RR_MAKE_SHARED<MessageElementCStructureArray>(type->ResolveNamedType(other_defs,RobotRaconteurNode::sp(),GetStub())->ResolveQualifiedName(), o);
 }
 
 size_t MexCStructureArrayMemoryClient::GetBufferLength(void* buffer)
@@ -7375,11 +7352,29 @@ MexCStructureMultiDimArrayMemoryClient::MexCStructureMultiDimArrayMemoryClient(c
 }
 mxArray* MexCStructureMultiDimArrayMemoryClient::Read(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 {
-	throw NotImplementedException("");
+	uint64_t elemcount = boost::accumulate(count, 1, std::multiplies<uint64_t>());
+	
+	std::vector<RR_SHARED_PTR<MessageElement> > buffer(elemcount);
+
+	ReadBase(memorypos, &buffer, bufferpos, count);
+
+	std::vector<mwSize> mx_dims = detail::ConvertVectorType<mwSize>(count);
+
+	RR_SHARED_PTR<MessageElement> m = RR_MAKE_SHARED<MessageElement>("array", RR_MAKE_SHARED<MessageElementCStructureArray>(type->TypeString, buffer));
+
+	mxArray* mx_buffer = UnpackMessageElementToMxArray_cstruct(m, type, GetStub());
+
+	if (mxSetDimensions(mx_buffer, &mx_dims[0], mx_dims.size()))
+	{
+		throw DataTypeException("Dimensions mismatch for cstruct multidimarray");
+	}
+
+	return mx_buffer;
 }
 void MexCStructureMultiDimArrayMemoryClient::Write(const std::vector<uint64_t>& memorypos, const mxArray* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 {
-	throw NotImplementedException("");
+	boost::shared_ptr<MessageElementCStructureArray> buffer2 = PackMxArrayToMessageElement_cstruct(buffer, type, GetStub());
+	WriteBase(memorypos, &buffer2->Elements, bufferpos, count);	
 }
 std::vector<uint64_t> MexCStructureMultiDimArrayMemoryClient::Dimensions()
 {
@@ -7399,9 +7394,64 @@ DataTypes MexCStructureMultiDimArrayMemoryClient::ElementTypeID()
 }
 void MexCStructureMultiDimArrayMemoryClient::UnpackReadResult(RR_SHARED_PTR<MessageElementData> res, void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint64_t elemcount)
 {
-	throw NotImplementedException("");
+	RR_SHARED_PTR<MessageElementCStructureMultiDimArray> res2 = rr_cast<MessageElementCStructureMultiDimArray>(res);
+	std::vector<uint64_t> dims = RRArrayToVector<uint64_t>(MessageElement::FindElement(res2->Elements, "dims")->CastData<RRArray<int32_t> >());
+
+	boost::shared_ptr<MessageElementCStructureArray> array = MessageElement::FindElement(res2->Elements, "array")->CastData<MessageElementCStructureArray>();
+	
+	if (array->Elements.size() != elemcount)
+	{
+		throw InvalidOperationException("Invalid memory read return");
+	}
+
+	if (!boost::range::equal(count, dims))
+	{
+		throw InvalidOperationException("Invalid memory read return");
+	}
+
+	if (count.size() == 0) throw InvalidOperationException("Invalid read operation");
+
+	std::vector<uint64_t> stride(count.size());
+	stride[0] = 1;
+	size_t start_ind = bufferpos.at(0);
+	for (size_t i = 1; i < stride.size(); i++)
+	{
+		stride[i] = count[i - 1] * stride[i - 1];
+		start_ind += stride[i] * bufferpos.at(i);
+	}
+
+	std::vector<RR_SHARED_PTR<MessageElement> >* buffer2 = static_cast<std::vector<RR_SHARED_PTR<MessageElement> >*>(buffer);
+
+	for (size_t i = 0; i < elemcount; i++)
+	{
+		buffer2->at(i + start_ind) = array->Elements.at(i);
+	}	
 }
 RR_SHARED_PTR<MessageElementData> MexCStructureMultiDimArrayMemoryClient::PackWriteRequest(void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint64_t elemcount)
 {
-	throw NotImplementedException("");
+	std::vector<RR_SHARED_PTR<MessageElement> >* buffer2 = static_cast<std::vector<RR_SHARED_PTR<MessageElement> >*>(buffer);
+	
+	std::vector<uint64_t> stride(count.size());
+	stride[0] = 1;
+	size_t start_ind = bufferpos.at(0);
+	for (size_t i = 1; i < stride.size(); i++)
+	{
+		stride[i] = count[i - 1] * stride[i - 1];
+		start_ind += stride[i] * bufferpos.at(i);
+	}
+
+	
+	std::vector<boost::shared_ptr<MessageElement> > buffer3(elemcount);
+	for (size_t i = 0; i < elemcount; i++)
+	{
+		buffer3.at(i + start_ind) = buffer2->at(i);
+	}
+
+	std::vector<boost::shared_ptr<ServiceDefinition> > other_defs;
+	std::string qualified_name = type->ResolveNamedType(other_defs, RobotRaconteurNode::sp(), GetStub())->ResolveQualifiedName();
+	RR_SHARED_PTR<MessageElementCStructureArray> buffer4 = RR_MAKE_SHARED<MessageElementCStructureArray>(qualified_name, buffer3);
+	std::vector<RR_SHARED_PTR<MessageElement> > buffer5;
+	buffer5.push_back(RR_MAKE_SHARED<MessageElement>("dims", VectorToRRArray<int32_t>(count)));
+	buffer5.push_back(RR_MAKE_SHARED<MessageElement>("array", buffer4));
+	return RR_MAKE_SHARED<MessageElementCStructureMultiDimArray>(qualified_name, buffer5);
 }

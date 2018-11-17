@@ -221,15 +221,18 @@ namespace RobotRaconteurNETTest
             {
                 Console.WriteLine("Stop iteration caught");
             }
-            /*var g = r.gen_func4();
-            for (int i=0; i<3; i++)
-            {
-                g.Next(new byte[] { });
-            }
-            var b = g.Next(new byte[] { 2, 3, 4 });
-            g.Abort();
-            g.Next(new byte[] { 2, 3, 4 });*/
 
+            var gen2 = r.gen_func4();
+            gen2.Next(new byte[] { 2, 3, 4 });
+            gen2.Close();
+            try
+            {
+                gen2.Next(new byte[] { 2, 3, 4 });
+            }
+            catch (StopIterationException)
+            {
+                Console.WriteLine("Stop iteration caught");
+            }
         }
 
         public void TestMemories()

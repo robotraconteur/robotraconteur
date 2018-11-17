@@ -3591,6 +3591,10 @@ namespace RobotRaconteur
         bool closed = false;
         IEnumerator<T> enumerator;
 
+        public EnumeratorGenerator(IEnumerable<T> enumerable)
+            : this(enumerable.GetEnumerator())
+        { }
+
         public EnumeratorGenerator(IEnumerator<T> enumerator)
         {
             this.enumerator = enumerator;

@@ -164,26 +164,70 @@ public class testroot3_impl implements testroot3
 	@Override
 	public Generator2<double[]> gen_func1() {
 		ArrayList<double[]> v=new ArrayList<double[]>();
-		v.add(new double[] {5});
-		v.add(new double[] {6});
-		v.add(new double[] {7});
-		v.add(new double[] {8});
+		for (double i=0; i<16; i++)
+		{
+			v.add(new double[] {i});
+		}
 		return new IteratorGenerator<double[]>(v.iterator());            
 	}
 	@Override
 	public Generator2<UnsignedBytes> gen_func2(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<UnsignedBytes> v=new ArrayList<UnsignedBytes>();
+		for (byte i=0; i<16; i++)
+		{
+			v.add(new UnsignedBytes(new byte[] {i}));
+		}
+		
+		return new IteratorGenerator<UnsignedBytes>(v.iterator());		
 	}
 	@Override
 	public Generator3<UnsignedBytes> gen_func3(String name) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	class func4_gen extends SyncGenerator1<UnsignedBytes, UnsignedBytes>
+	{
+		
+		boolean aborted=false;
+		byte j=0;
+
+		@Override
+		public void close() {
+			j=100;			
+		}
+
+		@Override
+		public void abort() {
+			aborted=true;			
+		}
+
+		@Override
+		public UnsignedBytes next(UnsignedBytes param) {
+			if (aborted)
+			{
+				throw new OperationAbortedException("");
+			}
+			
+			if (j>=8)
+			{
+				throw new StopIterationException("");
+			}
+			byte[] a=new byte[param.value.length];
+			for (int i=0; i<param.value.length; i++)
+			{
+				a[i] = (byte)(param.value[i] + j);
+			}
+			j++;
+			return new UnsignedBytes(a);
+		}		
+	}
+	
+	
 	@Override
 	public Generator1<UnsignedBytes, UnsignedBytes> gen_func4() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return new func4_gen();
 	}
 	@Override
 	public Generator1<teststruct2, teststruct2> gen_func5() {

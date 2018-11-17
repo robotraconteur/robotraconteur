@@ -1,27 +1,52 @@
 function RobotRaconteurMatlabTest2(url)
 
-    v = create_testcstruct1_array(10, 10000);
-    verify_testcstruct1_array(v, 10, 10000)
-
-    v3 = fill_teststruct3(185392);
-    verify_teststruct3(v3,185392);
+%     v = create_testcstruct1_array(10, 10000);
+%     verify_testcstruct1_array(v, 10, 10000)
+% 
+%     v3 = fill_teststruct3(185392);
+%     verify_teststruct3(v3,185392);
+%     
+      c=RobotRaconteur.ConnectService(url);
+%     verify_testcstruct1(c.testcstruct1_prop,563921043)    
+%     c.testcstruct1_prop = fill_testcstruct1(85932659);
+% 
+%     verify_teststruct3(c.teststruct3_prop, 16483675);
+%     c.teststruct3_prop = (fill_teststruct3(858362));
+%     
+%     g=c.gen_func1();
+%     g.Next();
+%     g.Next();
+%     g.async_Next(@gen_func1_handler, 15);
+%     pause(1)
+%     RobotRaconteur.ProcessRequests()
+%     g.async_Close(@gen_func1_close,15);
+%     pause(1)
+%     RobotRaconteur.ProcessRequests()
     
-    c=RobotRaconteur.ConnectService(url);
-    verify_testcstruct1(c.testcstruct1_prop,563921043)    
-    c.testcstruct1_prop = fill_testcstruct1(85932659);
+    cstruct_m1_v1=fill_testcstruct2(59174);
+    for j=2:32
+        cstruct_m1_v1(j,1) = fill_testcstruct2(59174+j-1);
+    end
 
-    verify_teststruct3(c.teststruct3_prop, 16483675);
-    c.teststruct3_prop = (fill_teststruct3(858362));
+    cstruct_m1 = c.cstruct_m1;
+    assert(all(size(cstruct_m1) == [1024 1]))    
+    cstruct_m1(53:69) = cstruct_m1_v1(4:21);
+    cstruct_m1_v2 = cstruct_m1(54:69);
     
-    g=c.gen_func1();
-    g.Next();
-    g.Next();
-    g.async_Next(@gen_func1_handler, 15);
-    pause(1)
-    RobotRaconteur.ProcessRequests()
-    g.async_Close(@gen_func1_close,15);
-    pause(1)
-    RobotRaconteur.ProcessRequests()
+    for j=1:15        
+        assert(isequal(cstruct_m1_v1(j+4),cstruct_m1_v2(j)))
+    end
+    
+    cstruct_m2_v1=fill_testcstruct2(75721);
+    for j=2:9
+        cstruct_m2_v1(j,1) = fill_testcstruct2(75721+j-1);
+    end
+    cstruct_m2_v1 = reshape(cstruct_m2_v1, [3,3]);
+        
+    cstruct_m2 = c.cstruct_m2;
+    cstruct_m2(1:3,1:3) = cstruct_m2_v1;
+    cstruct_m2_v2 = cstruct_m2(1:3,1:3);
+    assert(isequal(cstruct_m2_v1,cstruct_m2_v2))    
     disp('Done!')
 
     function gen_func1_handler(key, res, err)

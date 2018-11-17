@@ -7,6 +7,7 @@ import os
 import traceback
 import functools
 import codecs
+import copy
 
 #sys.path.append(r"C:\Users\wasonj\Documents\RobotRaconteur2\bin\out\Python")
 #sys.path.append(r"C:\Users\wasonj\Documents\RobotRaconteur2\bin\out\Python\build\lib.win32-2.7")
@@ -2850,8 +2851,8 @@ class ServiceTestClient2:
         self.AsyncTestWirePeekPoke()
         self.TestEnums()
         self.TestCStruct()
-        #self.TestGenerators()
-        #self.TestMemories()
+        self.TestGenerators()
+        self.TestMemories()
         self.DisconnectService()
     
     def ConnectService(self, url):
@@ -2963,10 +2964,13 @@ class ServiceTestClient2:
         self._r.teststruct3_prop = (ServiceTest2_fill_teststruct3(858362, self._r));
         
     def TestGenerators(self):
+        assert cmp(self._r.gen_func1().NextAll(), list(xrange(16))) == 0
+        assert cmp(list(self._r.gen_func1()), list(xrange(16))) == 0
+                
         g = self._r.gen_func4()
-        for i in xrange(3):
+        for _ in xrange(3):
             g.Next([])
-        b = g.Next([2,3,4])        
+        b = g.Next([2,3,4])
         print list(b)
         g.Abort()
         try:
@@ -2980,8 +2984,9 @@ class ServiceTestClient2:
             g2.Next([])
         except StopIterationException: pass
         
-        print self._r.gen_func1().NextAll()
+        assert cmp(list(self._r.gen_func2("gen_func2_a_param").NextAll()), [[i] for i in xrange(16)])
         
+                
     def TestMemories(self):
         self.test_m1()
         self.test_m2()
@@ -3022,6 +3027,8 @@ class testroot3_impl(object):
         self._timer=None
         
         self._const=RobotRaconteurNode.s.GetConstants("com.robotraconteur.testing.TestService3")
+        self._cstruct_m1=ArrayMemory([None]*1024)
+        self._cstruct_m2=CStructureMultiDimArrayMemory(CStructureMultiDimArray([3,3], [None]*9))
         
     @property
     def peekwire(self):
@@ -3082,6 +3089,59 @@ class testroot3_impl(object):
     def teststruct3_prop(self,value):
         ServiceTest2_verify_teststruct3(value, 858362)
         
+    def gen_func1(self):
+        return xrange(16)
+        
+    def gen_func2(self, name):
+        assert name == "gen_func2_a_param"
+        return [[i] for i in xrange(16)]
+                
+    def gen_func4(self):
+        return func4_gen()
+    
+    def get_o4(self):
+        return obj4_impl(), "com.robotraconteur.testing.TestService3.obj4"
+    
+    @property
+    def cstruct_m1(self):
+        return self._cstruct_m1
+    
+    @property
+    def cstruct_m2(self):
+        return self._cstruct_m2
+        
+class func4_gen(object):
+    def __init__(self):
+        self._j=0
+        self._aborted=False
+
+    def Next(self, v):
+        if self._aborted:
+            raise OperationAbortedException()
+        
+        if (self._j>=8):
+            raise StopIterationException()
+        
+        a = copy.copy(v)
+        for i in xrange(len(a)):
+            a[i]+=self._j
+            
+        self._j+=1
+        
+        return a
+    
+    def Abort(self):
+        self._aborted=True
+        
+    def Close(self):
+        self._j=1000
+            
+
+class obj4_impl(object):
+    def __init__(self):
+        self.s_ind = ""
+        self.i_ind=0
+        self.data=""
 
 class ServiceTest2_test_sequence_gen(object):
     

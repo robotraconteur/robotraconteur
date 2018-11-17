@@ -186,7 +186,7 @@ namespace RobotRaconteurTest
 		virtual RR_SHARED_PTR<RRArray<uint8_t > > Next(const RR_SHARED_PTR<RRArray<uint8_t > >& v)
 		{
 			if (aborted) throw OperationAbortedException("");
-			if (j > 8)
+			if (j >= 8)
 			{
 				throw StopIterationException("");
 			}
@@ -232,7 +232,7 @@ namespace RobotRaconteurTest
 		virtual double Next()
 		{
 			if (aborted) throw OperationAbortedException("");
-			if (j > 16)
+			if (j >= 16)
 			{
 				throw StopIterationException("");
 			}

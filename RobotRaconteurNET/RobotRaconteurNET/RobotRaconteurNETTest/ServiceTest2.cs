@@ -118,12 +118,18 @@ namespace RobotRaconteurNETTest
 
         public Generator2<double> gen_func1()
         {
-            return new EnumeratorGenerator<double>((new double[] { 5, 6, 7, 8 }).AsEnumerable<double>().GetEnumerator());            
+            return new EnumeratorGenerator<double>(new double[] { 5, 6, 7, 8 });            
         }
 
         public Generator2<byte[]> gen_func2(string name)
         {
-            throw new System.NotImplementedException();
+            var o = new List<byte[]>();
+            for (byte i=0; i<16; i++)
+            {
+                o.Add(new byte[] { i });
+            }
+
+            return new EnumeratorGenerator<byte[]>(o);
         }
 
         public Generator3<byte[]> gen_func3(string name)
@@ -133,7 +139,7 @@ namespace RobotRaconteurNETTest
 
         public Generator1<byte[], byte[]> gen_func4()
         {
-            throw new System.NotImplementedException();
+            return new func4_gen();
         }
 
         public Generator1<teststruct2, teststruct2> gen_func5()
@@ -182,6 +188,42 @@ namespace RobotRaconteurNETTest
             {
                 throw new InvalidOperationException("");
             }
+        }
+    }
+
+    class func4_gen : SyncGenerator1<byte[], byte[]>
+    {
+        byte j = 0;
+        bool aborted = false;
+
+        public override void Abort()
+        {
+            aborted = true;
+        }
+
+        public override void Close()
+        {
+            j = 255;
+        }
+
+        public override byte[] Next(byte[] param)
+        {
+            if (aborted)
+            {
+                throw new OperationAbortedException("");
+            }
+            if (j>=8)
+            {
+                throw new StopIterationException("");
+            }
+
+            var a = new byte[param.Length];
+            for (int i=0; i<param.Length; i++)
+            {
+                a[i] = (byte)(param[i] + j);
+            }
+            j++;
+            return a;
         }
     }
 

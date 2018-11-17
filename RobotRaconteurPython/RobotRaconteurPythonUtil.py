@@ -1253,15 +1253,28 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
     def _CallFunction(self, name, args1):
 
         type1=FindMemberByName(self.skel.Type.Members,name)
-        #type1=[e for e in self.skel.Type.Members if e.Name == name][0]
-        args=[]        
-
         type2=RobotRaconteurPython.MemberDefinitionUtil.ToFunction(type1)
+        args=[]
         for p in type2.Parameters:
+            if p.ContainerType == RobotRaconteurPython.DataTypes_ContainerTypes_generator:
+                continue
             m=FindMessageElementByName(args1,p.Name)            
             a=UnpackMessageElement(m,p,node=self.skel.RRGetNode())
             args.append(a)
         ret=getattr(self.obj,name)(*args)
+
+        if type2.IsGenerator():
+            gen_return_type = None
+            if type2.ReturnType.Type != RobotRaconteurPython.DataTypes_void_t:
+                gen_return_type = type2.ReturnType.Clone()
+                gen_return_type.RemoveContainers()
+            gen_param_type = None
+            if len(type2.Parameters) > 0 and type2.Parameters[-1].ContainerType == RobotRaconteurPython.DataTypes_ContainerTypes_generator:
+                gen_param_type = type2.Parameters[-1]
+            gen=WrappedGeneratorServerDirectorPython(ret, gen_return_type, gen_param_type, self.skel.RRGetNode())
+            ind = self.skel.RegisterGeneratorServer(type2.Name, gen)
+            gen.__disown__()
+            return PackMessageElement(ind, "int32 index", node=self.skel.RRGetNode())           
 
         if (ret is None):
             m=RobotRaconteurPython.MessageElement()
@@ -1301,6 +1314,25 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
 
         m=getattr(self.obj, name)
         d=WrappedMultiDimArrayMemoryDirectorPython(m)
+        d.__disown__()
+
+        return d
+
+    def _GetCStructureArrayMemory(self,name):
+        type1=FindMemberByName(self.skel.Type.Members,name)
+        type2=RobotRaconteurPython.MemberDefinitionUtil.ToMemory(type1)
+        m=getattr(self.obj, name)
+        d=WrappedCStructureArrayMemoryDirectorPython(m, type2.Type, self.skel.RRGetNode())
+        d.__disown__()
+        return d
+
+
+    def _GetCStructureMultiDimArrayMemory(self,name):
+        
+        type1=FindMemberByName(self.skel.Type.Members,name)
+        type2=RobotRaconteurPython.MemberDefinitionUtil.ToMemory(type1)
+        m=getattr(self.obj, name)
+        d=WrappedCStructureMultiDimArrayMemoryDirectorPython(m, type2.Type, self.skel.RRGetNode())
         d.__disown__()
 
         return d
@@ -1390,7 +1422,6 @@ class WrappedArrayMemoryDirectorPython(RobotRaconteurPython.WrappedArrayMemoryDi
                 
         buffer3=UnpackFromRRArray(buffer,None)
         self.memory.Write(memorypos,buffer3,bufferpos,count)
-
 
 class WrappedMultiDimArrayMemoryDirectorPython(RobotRaconteurPython.WrappedMultiDimArrayMemoryDirector):
     def __init__(self,memory):
@@ -1496,8 +1527,79 @@ class WrappedMultiDimArrayMemoryDirectorPython(RobotRaconteurPython.WrappedMulti
                     buffer=(md_real.reshape(count,order="F"), md_imag.reshape(count,order="F"))
                     self.memory.Write(memorypos,buffer,bufferpos,count)
 
+class WrappedCStructureArrayMemoryDirectorPython(RobotRaconteurPython.WrappedCStructureArrayMemoryDirector):
+    def __init__(self,memory,type1,node):
+        self.memory=memory
+        self.node=node
+        self.type=type1
+        super(WrappedCStructureArrayMemoryDirectorPython,self).__init__()
 
+    def Length(self):
 
+        return self.memory.Length
+
+    def Read(self,memorypos,bufferpos,count):
+
+        buffer3=[None]*count
+        self.memory.Read(memorypos,buffer3,bufferpos,count)        
+        m=PackMessageElement(buffer3,self.type,node=self.node)
+        return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementCStructureArray(m.GetData())
+    
+    def Write(self,memorypos,buffer_,bufferpos,count):        
+        m=RobotRaconteurPython.MessageElement()
+        m.SetData(buffer_)
+        m.ElementTypeName=buffer_.Type
+        m.DataCount=len(buffer_.Elements)
+        buffer3=UnpackMessageElement(m,self.type, node=self.node)
+        self.memory.Write(memorypos,buffer3,bufferpos,count)
+
+class WrappedCStructureMultiDimArrayMemoryDirectorPython(RobotRaconteurPython.WrappedCStructureMultiDimArrayMemoryDirector):
+    def __init__(self,memory,type1,node):
+        super(WrappedCStructureMultiDimArrayMemoryDirectorPython,self).__init__()
+        self.memory=memory
+        self.type=type1
+        self.node=node
+                
+    def Dimensions(self):
+
+        d=self.memory.Dimensions
+        d2=RobotRaconteurPython.vector_uint64_t()
+        for d_i in d: d2.push_back(d_i)
+        return d2
+
+    def DimCount(self):
+        return self.memory.DimCount
+
+    def Read(self,memorypos,bufferpos,count):
+
+        dims=list(count)
+        elementcount=reduce(operator.mul,dims,1)
+   
+        dat=[None]*elementcount
+        
+        readdat1=CStructureMultiDimArray(dims,dat)
+
+        self.memory.Read(list(memorypos),readdat1,list(bufferpos),dims)
+
+        m = PackMessageElement(readdat1, self.type, node=self.node)
+        return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementCStructureMultiDimArray(m.GetData())
+        
+    def Write(self,memorypos_,buffer_, bufferpos_, count_):
+        try:
+            memorypos=list(memorypos_)
+            bufferpos=list(bufferpos_)
+            count=list(count_)
+            
+            buffer1=RobotRaconteurPython.MessageElementDataUtil.ToMessageElementCStructureMultiDimArray(buffer_)
+            m=RobotRaconteurPython.MessageElement()
+            m.SetData(buffer_)
+            m.ElementTypeName=buffer1.Type
+            m.DataCount=len(buffer1.Elements)
+            buffer2=UnpackMessageElement(m,self.type, node=self.node)       
+            self.memory.Write(memorypos,buffer2,bufferpos,count)
+        except:
+            traceback.print_exc()
+            raise
 
 class WrappedClientServiceListenerDirector(RobotRaconteurPython.ClientServiceListenerDirector):
     def __init__(self,callback):
@@ -2046,7 +2148,25 @@ class GeneratorClient(object):
             while True:
                 ret.append(self.Next())
         except RobotRaconteurPythonError.StopIterationException: pass
-        return ret  
+        return ret
+    
+    #Add compatibility for iterator protocols
+    def __iter__(self):
+        if self._return_type is None or self._param_type is not None:
+            raise TypeError('Generator must be type 1 for iterable')
+        return self
+    
+    def __next__(self):
+        return self.send(None)
+    
+    def next(self):
+        return self.send(None)
+    
+    def send(self, param):
+        try:
+            return self.Next(param)
+        except RobotRaconteurPythonError.StopIterationException:
+            raise StopIteration()
 
 class AsyncGeneratorClientReturnDirectorImpl(RobotRaconteurPython.AsyncGeneratorClientReturnDirector):
     def __init__(self, handler, return_type, param_type, obj, node):
@@ -2066,6 +2186,70 @@ class AsyncGeneratorClientReturnDirectorImpl(RobotRaconteurPython.AsyncGenerator
         gen2=GeneratorClient(gen, self._return_type, self._param_type, self._obj, self._node)
         self._handler(gen2, None)
 
+class IteratorGenerator(object):
+    def __init__(self, obj):
+        self._iter=iter(obj)
+        self._lock=threading.Lock()
+        self._closed=False
+        self._aborted=False
+        
+    def Next(self):
+        with self._lock:
+            if self._aborted:
+                raise RobotRaconteurPythonError.OperationAbortedException()
+            if self._closed:
+                raise RobotRaconteurPythonError.StopIterationException()            
+            try:
+                return next(self._iter)
+            except StopIteration:
+                raise RobotRaconteurPythonError.StopIterationException()
+    
+    def Close(self):
+        with self._lock:
+            self._closed=True
+            if hasattr(self._iter, "close"):
+                self._iter.close()
+    
+    def Abort(self):
+        with self._lock:
+            self._aborted=True
+            if hasattr(self._iter, "close"):
+                self._iter.close()
+
+class WrappedGeneratorServerDirectorPython(RobotRaconteurPython.WrappedGeneratorServerDirector):
+    def __init__(self, gen, return_type, param_type, node):
+        super(WrappedGeneratorServerDirectorPython,self).__init__()        
+        self._return_type = return_type
+        self._param_type = param_type
+        self._node = node
+        if hasattr(gen, "Next"):
+            self._gen = gen
+        else:
+            if not hasattr(gen, "__iter__"):
+                raise TypeError("Invalid generator")
+            self._gen = IteratorGenerator(gen)
+        
+    def Next(self, m):
+        if self._param_type is None:
+            ret = self._gen.Next()
+        else:
+            param = UnpackMessageElement(m,self._param_type,node=self._node)
+            ret = self._gen.Next(param)
+        
+        if ret is None:
+            mret=RobotRaconteurPython.MessageElement()
+            mret.ElementName="return"
+            mret.ElementType=RobotRaconteurPython.DataTypes_void_t
+            return mret
+        
+        return PackMessageElement(ret,self._return_type,node=self._node)
+        
+    def Abort(self):
+        self._gen.Abort()
+        
+    def Close(self):
+        self._gen.Close()
+        
 _trace_hook=sys.gettrace()
 
 class ServiceSubscriptionClientID(object):

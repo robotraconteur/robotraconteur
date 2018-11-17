@@ -233,6 +233,27 @@ class CStructureMultiDimArray(object):
             if not c:
                 return            
             self.cstruct_array[indexa:(indexa+l)]=buffer.cstruct_array[indexb:(indexb+l)]
-            
+
+class CStructureMultiDimArrayMemory(object):
+    def __init__(self,memory=None):
+        self.Attach(memory)
+
+    def Attach(self,memory):
+        self.memory=memory
+        
+    @property
+    def DimCount(self):
+        return len(self.memory.Dims)
+    
+    @property
+    def Dimensions(self):
+        return self.memory.Dims
+
+    def Read(self, memorypos, buf, bufferpos, count):
+        self.memory.RetrieveSubArray(memorypos,buf,bufferpos,count)
+        
+    def Write(self,memorypos, buf, bufferpos, count):
+        self.memory.AssignSubArray(memorypos,buf,bufferpos,count)
+
 
 from . import RobotRaconteurPython
