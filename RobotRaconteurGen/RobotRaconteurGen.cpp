@@ -29,6 +29,8 @@
 #include "CSharpServiceLangGen.h"
 #include "JavaServiceLangGen.h"
 #include <boost/algorithm/string.hpp>
+#include <boost/range/algorithm.hpp>
+#include <boost/range/join.hpp>
 #include <RobotRaconteur/RobotRaconteurServiceIndex.h>
 #include <RobotRaconteur/RobotRaconteurServiceIndex_stubskel.h>
 
@@ -159,6 +161,7 @@ int main(int argc, char* argv[])
 	bool pullservicedef = false;
 	std::vector<std::string> string_vector;
 	std::vector<std::string> include_dirs;
+	std::vector<std::string> import_vector;
 
 	try
 	{
@@ -173,6 +176,7 @@ int main(int argc, char* argv[])
 			("pullservicedef", po::bool_switch(&pullservicedef), "pull a service definition from a service URL")
 			("lang", po::value(&lang), "language to generate thunk code for")
 			("include-path,I", po::value(&include_dirs)->composing(), "include path")
+			("import", po::value(&import_vector)->composing(), "input file for use in imports")
 
 			;
 
@@ -285,7 +289,8 @@ int main(int argc, char* argv[])
 		}
 
 		std::vector<std::string> sources = string_vector;
-		BOOST_FOREACH(std::string& s, sources)
+		std::vector<std::string> imports = import_vector;
+		BOOST_FOREACH(std::string& s, boost::range::join(sources,imports))
 		{
 			fs::path s2(s);
 			if (!fs::exists(s2) && s2.is_relative())
@@ -302,7 +307,7 @@ int main(int argc, char* argv[])
 			}
 		}
 
-		BOOST_FOREACH(std::string& s, sources)
+		BOOST_FOREACH(std::string& s, boost::range::join(sources, imports))
 		{
 			if (!fs::exists(s))
 			{
@@ -314,26 +319,32 @@ int main(int argc, char* argv[])
 		{
 			throw std::logic_error("output directory not found: " + output_dir);
 		}
-
+		
 		std::vector<boost::shared_ptr<ServiceDefinition> > sdefs;
 		std::vector<std::string> sdefs_str;
+		std::vector<boost::shared_ptr<ServiceDefinition> > alldefs;
 
-		for (vector<string>::iterator e = sources.begin(); e != sources.end(); ++e)
+		BOOST_FOREACH(std::string& e, boost::range::join(sources, imports))
 		{
 			try
 			{
 				boost::shared_ptr<ServiceDefinition> d = boost::make_shared<ServiceDefinition>();
-				string str = ReadFile(*e);
+				string str = ReadFile(e);
 				d->FromString(str);
 				d->CheckVersion();
 
-				sdefs.push_back(d);
-				sdefs_str.push_back(str);
+				alldefs.push_back(d);
+
+				if (boost::range::find(sources, e) != sources.end())
+				{
+					sdefs.push_back(d);
+					sdefs_str.push_back(str);
+				}
 
 			}
 			catch (std::exception& ee)
 			{
-				cout << "error: " << string(ee.what()) << " in file " << string(*e) << endl;
+				cout << "error: " << string(ee.what()) << " in file " << string(e) << endl;
 				cout << "error: Could not open service definition file" << endl;
 				return 2;
 			}
@@ -342,7 +353,7 @@ int main(int argc, char* argv[])
 
 		try
 		{
-			VerifyServiceDefinitions(sdefs);
+			VerifyServiceDefinitions(alldefs);
 		}
 		catch (std::exception& e)
 		{
@@ -410,9 +421,7 @@ int main(int argc, char* argv[])
 				}
 			}
 
-			return 0;
-
-			return 0;
+			return 0;			
 		}
 
 		throw std::runtime_error("Unknown language");
