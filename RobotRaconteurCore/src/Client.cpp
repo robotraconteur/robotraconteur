@@ -1532,7 +1532,7 @@ namespace RobotRaconteur
 				{
 					RR_SHARED_PTR<ServiceDefinition> d1 = RR_MAKE_SHARED<ServiceDefinition>();
 					std::vector<RobotRaconteurParseException> warnings;
-					d1->FromString(l1->CastDataToString(), true, warnings);
+					d1->FromString(l1->CastDataToString(), warnings);
 					pulled_service_defs.insert(std::make_pair(d1->Name, d1));
 				}
 			}
@@ -1906,7 +1906,7 @@ namespace RobotRaconteur
 
 				RR_SHARED_PTR<ServiceDefinition> d = RR_MAKE_SHARED<ServiceDefinition>();
 				std::vector<RobotRaconteurParseException> w;
-				d->FromString(def, true, w);
+				d->FromString(def, w);
 
 				if (ServiceType == "")
 				{

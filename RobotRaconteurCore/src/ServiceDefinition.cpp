@@ -399,24 +399,24 @@ namespace RobotRaconteur
 	void ServiceDefinition::FromString(const std::string &s)
 	{
 		std::vector<RobotRaconteurParseException> w;
-		FromString(s, false, w);
+		FromString(s, w);
 	}
 
 	void ServiceDefinition::FromStream(std::istream& is)
 	{
 		std::vector<RobotRaconteurParseException> w;
-		FromStream(is, false, w);
+		FromStream(is, w);
 	}
 
-	
-	void ServiceDefinition::FromString(const std::string &s1, bool ignore_invalid_members, std::vector<RobotRaconteurParseException>& warnings)
+		
+	void ServiceDefinition::FromString(const std::string &s1, std::vector<RobotRaconteurParseException>& warnings)
 	{
 		std::istringstream s(s1);
-		FromStream(s, ignore_invalid_members, warnings);
+		FromStream(s, warnings);
 	}
 
 	//TODO: Test ignore_invalid_member
-	void ServiceDefinition::FromStream(std::istream& s, bool ignore_invalid_members, std::vector<RobotRaconteurParseException>& warnings)
+	void ServiceDefinition::FromStream(std::istream& s, std::vector<RobotRaconteurParseException>& warnings)
 	{
 
 		Reset();
@@ -557,7 +557,7 @@ namespace RobotRaconteur
 					std::stringstream block;
 					ServiceDefinition_FindBlock(l, s, block, pos, init_pos);
 					RR_SHARED_PTR<ServiceEntryDefinition> struct_def = RR_MAKE_SHARED<ServiceEntryDefinition>(shared_from_this());
-					(!ignore_invalid_members) ? struct_def->FromString(block.str(), init_pos) : struct_def->FromString(block.str(), init_pos, ignore_invalid_members, warnings);
+					struct_def->FromString(block.str(), init_pos, warnings);
 					Structures.push_back(struct_def);
 					entry_key_max = 9;
 					continue;
@@ -569,7 +569,7 @@ namespace RobotRaconteur
 					std::stringstream block;
 					ServiceDefinition_FindBlock(l, s, block, pos, init_pos);
 					RR_SHARED_PTR<ServiceEntryDefinition> object_def = RR_MAKE_SHARED<ServiceEntryDefinition>(shared_from_this());
-					(!ignore_invalid_members) ? object_def->FromString(block.str(), init_pos) : object_def->FromString(block.str(), init_pos, ignore_invalid_members, warnings);
+					object_def->FromString(block.str(), init_pos, warnings);
 					Objects.push_back(object_def);
 					entry_key_max = 10;
 					continue;
@@ -581,7 +581,7 @@ namespace RobotRaconteur
 					std::stringstream block;
 					ServiceDefinition_FindBlock(l, s, block, pos, init_pos);
 					RR_SHARED_PTR<ServiceEntryDefinition> struct_def = RR_MAKE_SHARED<ServiceEntryDefinition>(shared_from_this());
-					(!ignore_invalid_members) ? struct_def->FromString(block.str(), init_pos) : struct_def->FromString(block.str(), init_pos, ignore_invalid_members, warnings);
+					struct_def->FromString(block.str(), init_pos, warnings);
 					CStructures.push_back(struct_def);
 					entry_key_max = 9;
 					continue;
@@ -750,7 +750,7 @@ namespace RobotRaconteur
 	void ServiceEntryDefinition::FromString(const std::string &s, size_t startline)
 	{
 		std::vector<RobotRaconteurParseException> w;
-		FromString(s, startline, false, w);
+		FromString(s, startline, w);
 	}
 
 	template<typename member_type>
@@ -761,10 +761,10 @@ namespace RobotRaconteur
 		entry->Members.push_back(member);
 	}
 
-	void ServiceEntryDefinition::FromString(const std::string &s, size_t startline, bool ignore_invalid_members, std::vector<RobotRaconteurParseException>& warnings)
+	void ServiceEntryDefinition::FromString(const std::string &s, size_t startline, std::vector<RobotRaconteurParseException>& warnings)
 	{
 		std::istringstream os(s);
-		FromStream(os, startline, ignore_invalid_members, warnings);
+		FromStream(os, startline, warnings);
 	}
 
 	void ServiceEntryDefinition::FromStream(std::istream &s)
@@ -775,7 +775,7 @@ namespace RobotRaconteur
 	void ServiceEntryDefinition::FromStream(std::istream &s, size_t startline)
 	{
 		std::vector<RobotRaconteurParseException> w;
-		FromStream(s, startline, false, w);
+		FromStream(s, startline, w);
 	}
 
 	static std::string ServiceEntryDefinition_QualifyTypeWithUsing(ServiceEntryDefinition& e, const std::string s)
@@ -799,7 +799,7 @@ namespace RobotRaconteur
 		return s;		
 	}
 
-	void ServiceEntryDefinition::FromStream(std::istream &s, size_t startline, bool ignore_invalid_members, std::vector<RobotRaconteurParseException>& warnings)
+	void ServiceEntryDefinition::FromStream(std::istream &s, size_t startline, std::vector<RobotRaconteurParseException>& warnings)
 	{
 		Reset();
 
@@ -1004,21 +1004,8 @@ namespace RobotRaconteur
 					}				
 				}
 				catch (RobotRaconteurParseException& exp)
-				{
-					if (ignore_invalid_members)
-					{
-						//Sanity check in case we overrun into another struct/object
-						boost::regex sanity_check("^[ \\t]*(object|struct)(?:[ \\t]+[ -~\\t]*)?$");
-						if (boost::regex_match(l, sanity_check))
-						{
-							throw;
-						}
-						warnings.push_back(exp);
-					}
-					else
-					{
-						throw;
-					}
+				{					
+					throw;					
 				}
 
 			}

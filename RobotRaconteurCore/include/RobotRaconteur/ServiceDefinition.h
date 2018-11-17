@@ -98,11 +98,11 @@ namespace RobotRaconteur
 		virtual std::string ToString();
 
 		void FromString(const std::string &s);
-		void FromString(const std::string &s, bool ignore_invalid_members, std::vector<RobotRaconteurParseException>& warnings);
+		void FromString(const std::string &s, std::vector<RobotRaconteurParseException>& warnings);
 
 		virtual void ToStream(std::ostream& os);
 		void FromStream(std::istream& is);
-		void FromStream(std::istream& is, bool ignore_invalid_members, std::vector<RobotRaconteurParseException>& warnings);
+		void FromStream(std::istream& is, std::vector<RobotRaconteurParseException>& warnings);
 
 		void CheckVersion(RobotRaconteurVersion ver=RobotRaconteurVersion(0,0));
 			
@@ -140,11 +140,11 @@ namespace RobotRaconteur
 
 		void FromString(const std::string &s);
 		void FromString(const std::string &s, size_t startline);
-		void FromString(const std::string &s, size_t startline, bool ignore_invalid_members, std::vector<RobotRaconteurParseException>& warnings);
+		void FromString(const std::string &s, size_t startline, std::vector<RobotRaconteurParseException>& warnings);
 
 		void FromStream(std::istream &is);
 		void FromStream(std::istream &is, size_t startline);
-		void FromStream(std::istream &is, size_t startline, bool ignore_invalid_members, std::vector<RobotRaconteurParseException>& warnings);
+		void FromStream(std::istream &is, size_t startline, std::vector<RobotRaconteurParseException>& warnings);
 
 		RR_WEAK_PTR<ServiceDefinition> ServiceDefinition_;
 
