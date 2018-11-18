@@ -1,4 +1,9 @@
-from distutils.core import setup
+from setuptools import setup, Distribution
+
+# Suggested at https://stackoverflow.com/questions/24071491/how-can-i-make-a-python-wheel-from-an-existing-native-library
+class BinaryDistribution(Distribution):
+    def has_ext_modules(foo):
+        return True
 
 setup(name='RobotRaconteur',
       version='@RobotRaconteurVersion@',
@@ -7,5 +12,6 @@ setup(name='RobotRaconteur',
       author_email='wason@wasontech.com',
       url='http://robotraconteur.com/',
       packages=['RobotRaconteur'],
-      package_data={'RobotRaconteur': ['_RobotRaconteurPython.*']}
+      package_data={'RobotRaconteur': ['_RobotRaconteurPython.pyd', '_RobotRaconteurPython.so']},
+	  distclass=BinaryDistribution
      )
