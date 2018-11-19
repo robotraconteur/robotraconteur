@@ -99,6 +99,7 @@ namespace RobotRaconteur
 		virtual RR_SHARED_PTR<WireClientBase> RRGetWireClient(const std::string& membername);
 
 		RR_SHARED_PTR<RobotRaconteurNode> RRGetNode();
+		RR_WEAK_PTR<RobotRaconteurNode> RRGetNodeWeak();
 	protected:
 		RR_WEAK_PTR<RobotRaconteurNode> node;
 	};

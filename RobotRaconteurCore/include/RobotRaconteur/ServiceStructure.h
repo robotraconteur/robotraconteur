@@ -32,6 +32,7 @@ namespace RobotRaconteur
 
 		RR_SHARED_PTR<RobotRaconteurNode> GetNode();
 		RR_SHARED_PTR<RobotRaconteurNode> RRGetNode() { return GetNode(); }
+		RR_WEAK_PTR<RobotRaconteurNode> RRGetNodeWeak() { return node; }
 
 		virtual ~StructureStub() {}
 	protected:
@@ -326,5 +327,50 @@ namespace RobotRaconteur
 		o->CStructArray = CStructureStub_UnpackCStructureArray<T>(MessageElement::FindElement(m->Elements, "array")->CastData<MessageElementCStructureArray>());
 		if (!o->CStructArray) throw NullValueException("Multidimarray array must not be null");
 		return o;
+	}
+
+
+	//MessageElement pack helper functions for cstruct
+	template<typename T>
+	RR_SHARED_PTR<MessageElement> MessageElement_PackCStructureToArrayElement(const std::string& elementname, const T& s)
+	{
+		return RR_MAKE_SHARED<MessageElement>(elementname, CStructureStub_PackCStructureToArray(s));
+	}
+
+	template<typename T>
+	RR_SHARED_PTR<MessageElement> MessageElement_PackCStructureArrayElement(const std::string& elementname, const RR_SHARED_PTR<RRCStructureArray<T> >& s)
+	{
+		if (!s) throw NullValueException("Arrays must not be null");
+		return RR_MAKE_SHARED<MessageElement>(elementname, CStructureStub_PackCStructureArray(s));
+	}
+
+	template<typename T>
+	RR_SHARED_PTR<MessageElement> MessageElement_PackCStructureMultiDimArrayElement(const std::string& elementname, const RR_SHARED_PTR<RRCStructureMultiDimArray<T> >& s)
+	{
+		if (!s) throw NullValueException("Arrays must not be null");
+		return RR_MAKE_SHARED<MessageElement>(elementname, CStructureStub_PackCStructureMultiDimArray(s));
+	}
+
+	//MessageElement unpack helper functions for cstruct
+	template<typename T>
+	T MessageElement_UnpackCStructureFromArray(const RR_SHARED_PTR<MessageElement>& m)
+	{
+		return RobotRaconteur::CStructureStub_UnpackCStructureFromArray<T>(m->CastData<RobotRaconteur::MessageElementCStructureArray>());
+	}
+
+	template<typename T>
+	RR_SHARED_PTR<RRCStructureArray<T> > MessageElement_UnpackCStructureArray(const RR_SHARED_PTR<MessageElement>& m)
+	{
+		RR_SHARED_PTR<RRCStructureArray<T> > a = RobotRaconteur::CStructureStub_UnpackCStructureArray<T>(m->CastData<RobotRaconteur::MessageElementCStructureArray>());
+		if (!a) throw NullValueException("Arrays must not be null");
+		return a;
+	}
+
+	template<typename T>
+	RR_SHARED_PTR<RRCStructureMultiDimArray<T> > MessageElement_UnpackCStructureMultiDimArray(const RR_SHARED_PTR<MessageElement>& m)
+	{
+		RR_SHARED_PTR<RRCStructureMultiDimArray<T> > a = RobotRaconteur::CStructureStub_UnpackCStructureMultiDimArray<T>(m->CastData<RobotRaconteur::MessageElementCStructureMultiDimArray>());
+		if (!a) throw NullValueException("Arrays must not be null");
+		return a;
 	}
 }

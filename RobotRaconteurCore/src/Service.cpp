@@ -120,6 +120,11 @@ namespace RobotRaconteur
 		return n;
 	}
 
+	RR_WEAK_PTR<RobotRaconteurNode> ServiceSkel::RRGetNodeWeak()
+	{
+		return node;
+	}
+
 	void ServiceSkel::InitCallbackServers(RR_SHARED_PTR<RRObject> o)
 	{
 	}

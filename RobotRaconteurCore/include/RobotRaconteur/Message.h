@@ -492,5 +492,192 @@ public:
 	ROBOTRACONTEUR_CORE_API RR_SHARED_PTR<MessageEntry> ShallowCopyMessageEntry(RR_SHARED_PTR<MessageEntry> mm);
 	ROBOTRACONTEUR_CORE_API RR_SHARED_PTR<MessageElement> ShallowCopyMessageElement(RR_SHARED_PTR<MessageElement> mm);
 	
+	//MessageElement packing functions
+	template<typename T>
+	RR_SHARED_PTR<MessageElementData> MessageElement_PackScalar(const T& value)
+	{
+		return RobotRaconteur::ScalarToRRArray<T>(value);
+	}
 
+	template<typename T>
+	RR_SHARED_PTR<MessageElement> MessageElement_PackScalarElement(const std::string& elementname, const T& value)
+	{
+		return RR_MAKE_SHARED<MessageElement>(elementname, MessageElement_PackScalar(value));
+	}
+
+	template<typename T>
+	RR_SHARED_PTR<MessageElementData> MessageElement_PackArray(const RR_SHARED_PTR<RRArray<T> >& value)
+	{
+		if (!value) throw NullValueException("Arrays must not be null");
+		return value;
+	}
+
+	template<typename T>
+	RR_SHARED_PTR<MessageElement> MessageElement_PackArrayElement(const std::string& elementname, const RR_SHARED_PTR<RRArray<T> >& value)
+	{
+		return RR_MAKE_SHARED<MessageElement>(elementname, MessageElement_PackArray(value));
+	}
+
+	template<typename T, typename N>
+	RR_SHARED_PTR<MessageElementData> MessageElement_PackMultiDimArray(RR_WEAK_PTR<N> node, const RR_SHARED_PTR<RRMultiDimArray<T> >& value)
+	{
+		if (!value) throw NullValueException("Arrays must not be null");
+		RR_SHARED_PTR<N> node1 = node.lock();
+		if (!node1) throw InvalidOperationException("Node has been released");
+		return node1->template PackMultiDimArray<T>(RobotRaconteur::rr_cast<RobotRaconteur::RRMultiDimArray<T> >(value));
+	}
+
+	template<typename T, typename N>
+	RR_SHARED_PTR<MessageElement> MessageElement_PackMultiDimArrayElement(RR_WEAK_PTR<N> node, const std::string& elementname, const RR_SHARED_PTR<RRMultiDimArray<T> >& value)
+	{
+		return RR_MAKE_SHARED<MessageElement>(elementname, MessageElement_PackMultiDimArray(node, value));
+	}
+
+	template<typename T>
+	RR_SHARED_PTR<MessageElementData> MessageElement_PackString(const T& str)
+	{
+		return RobotRaconteur::stringToRRArray(str);
+	}
+
+	template<typename T>
+	RR_SHARED_PTR<MessageElement> MessageElement_PackStringElement(const std::string& elementname, const T& str)
+	{
+		return RR_MAKE_SHARED<MessageElement>(elementname, MessageElement_PackString(str));
+	}
+
+	template<typename T, typename N>
+	RR_SHARED_PTR<MessageElementData> MessageElement_PackVarType(RR_WEAK_PTR<N> node, const RR_SHARED_PTR<T>& s)
+	{
+		RR_SHARED_PTR<N> node1 = node.lock();
+		if (!node1) throw InvalidOperationException("Node has been released");
+		return node1->PackVarType(s);
+	}
+
+	template<typename T, typename N>
+	RR_SHARED_PTR<MessageElement> MessageElement_PackVarTypeElement(RR_WEAK_PTR<N> node, const std::string& elementname, const RR_SHARED_PTR<T>& s)
+	{
+		return RR_MAKE_SHARED<MessageElement>(elementname, MessageElement_PackVarType(node, s));
+	}
+
+	template<typename T, typename N>
+	RR_SHARED_PTR<MessageElementData> MessageElement_PackStruct(RR_WEAK_PTR<N> node, const RR_SHARED_PTR<T>& s)
+	{
+		RR_SHARED_PTR<N> node1 = node.lock();
+		if (!node1) throw InvalidOperationException("Node has been released");
+		return node1->PackStructure(RobotRaconteur::rr_cast<RobotRaconteur::RRStructure>(s));
+	}
+
+	template<typename T, typename N>
+	RR_SHARED_PTR<MessageElement> MessageElement_PackStructElement(RR_WEAK_PTR<N> node, const std::string& elementname, const RR_SHARED_PTR<T>& s)
+	{
+		return RR_MAKE_SHARED<MessageElement>(elementname, MessageElement_PackStruct(node, s));
+	}
+
+	template<typename T>
+	RR_SHARED_PTR<MessageElementData> MessageElement_PackEnum(const T& value)
+	{
+		return RobotRaconteur::ScalarToRRArray<int32_t>((int32_t)value);
+	}
+
+	template<typename T>
+	RR_SHARED_PTR<MessageElement> MessageElement_PackEnumElement(const std::string& elementname, const T& value)
+	{
+		return RR_MAKE_SHARED<MessageElement>(elementname, MessageElement_PackEnum(value));
+	}
+		
+	template<typename K, typename T, typename N>
+	RR_SHARED_PTR<MessageElementData> MessageElement_PackMap(RR_WEAK_PTR<N> node, const RR_SHARED_PTR<RRMap<K, T> >& m)
+	{
+		RR_SHARED_PTR<N> node1 = node.lock();
+		if (!node1) throw InvalidOperationException("Node has been released");
+		return node1->template PackMapType<K, T>(m);
+	}
+
+	template<typename K, typename T, typename N>
+	RR_SHARED_PTR<MessageElement> MessageElement_PackMapElement(RR_WEAK_PTR<N> node, const std::string& elementname, const RR_SHARED_PTR<RRMap<K, T> >& m)
+	{
+		return RR_MAKE_SHARED<MessageElement>(elementname, MessageElement_PackMap(node, m));			
+	}
+
+	template<typename T, typename N>
+	RR_SHARED_PTR<MessageElementData> MessageElement_PackList(RR_WEAK_PTR<N> node, const RR_SHARED_PTR<RRList<T> >& m)
+	{
+		RR_SHARED_PTR<N> node1 = node.lock();
+		if (!node1) throw InvalidOperationException("Node has been released");
+		return node1->template PackListType<T>(m);
+	}
+
+	template<typename T, typename N>
+	RR_SHARED_PTR<MessageElement> MessageElement_PackListElement(RR_WEAK_PTR<N> node, const std::string& elementname, const RR_SHARED_PTR<RRList<T> >& m)
+	{
+		return RR_MAKE_SHARED<MessageElement>(elementname, MessageElement_PackList(node, m));
+	}
+
+	//MessageElement unpacking functions
+	template<typename T>
+	T MessageElement_UnpackScalar(const RR_SHARED_PTR<MessageElement>& m)
+	{
+		return RRArrayToScalar<T>(m->CastData<RRArray<T> >());
+	}
+
+	template<typename T>
+	RR_SHARED_PTR<RRArray<T> > MessageElement_UnpackArray(const RR_SHARED_PTR<MessageElement>& m)
+	{
+		RR_SHARED_PTR<RRArray<T> > a = (m->CastData<RRArray<T> >());
+		if (!a) throw NullValueException("Arrays must not be null");
+		return a;
+	}
+
+	template<typename T, typename N>
+	RR_SHARED_PTR<RRMultiDimArray<T> > MessageElement_UnpackMultiDimArray(RR_WEAK_PTR<N> node, const RR_SHARED_PTR<MessageElement>& m)
+	{
+		RR_SHARED_PTR<N> node1 = node.lock();
+		if (!node1) throw InvalidOperationException("Node has been released");
+		RR_SHARED_PTR<RRMultiDimArray<T> > a= RobotRaconteur::rr_cast<RRMultiDimArray<T> >(node1->template UnpackMultiDimArray<T>(m->CastData<MessageElementMultiDimArray>()));		
+		if (!a) throw NullValueException("Arrays must not be null");
+		return a;
+	}
+
+	static std::string MessageElement_UnpackString(const RR_SHARED_PTR<MessageElement>& m)
+	{
+		return RRArrayToString(m->CastData<RRArray<char> >());
+	}
+
+	template<typename T, typename N>
+	RR_SHARED_PTR<T> MessageElement_UnpackStructure(RR_WEAK_PTR<N> node, const RR_SHARED_PTR<MessageElement>& m)
+	{
+		RR_SHARED_PTR<N> node1 = node.lock();
+		if (!node1) throw InvalidOperationException("Node has been released");
+		return RobotRaconteur::rr_cast<T>(node1->UnpackStructure(m->CastData<RobotRaconteur::MessageElementStructure>()));
+	}
+
+	template<typename T>
+	T MessageElement_UnpackEnum(const RR_SHARED_PTR<MessageElement>& m)
+	{
+		return (T)RRArrayToScalar<int32_t>(m->CastData<RRArray<int32_t> >());
+	}
+		
+	template<typename N>
+	RR_SHARED_PTR<RRValue> MessageElement_UnpackVarValue(RR_WEAK_PTR<N> node, const RR_SHARED_PTR<MessageElement>& m)
+	{
+		RR_SHARED_PTR<N> node1 = node.lock();
+		if (!node1) throw InvalidOperationException("Node has been released");
+		return node1->UnpackVarType(m);
+	}
+
+	template<typename K, typename T, typename N>
+	RR_SHARED_PTR<RRMap<K, T> > MessageElement_UnpackMap(RR_WEAK_PTR<N> node, const RR_SHARED_PTR<MessageElement>& m)
+	{
+		RR_SHARED_PTR<N> node1 = node.lock();
+		if (!node1) throw InvalidOperationException("Node has been released");
+		return node1->template UnpackMapType<K,T>(m->CastData<RobotRaconteur::MessageElementMap<K> >());
+	}
+
+	template<typename T, typename N>
+	RR_SHARED_PTR<RRList<T> > MessageElement_UnpackList(RR_WEAK_PTR<N> node, const RR_SHARED_PTR<MessageElement>& m)
+	{
+		RR_SHARED_PTR<N> node1 = node.lock();
+		if (!node1) throw InvalidOperationException("Node has been released");
+		return node1->template UnpackListType<T>(m->CastData<RobotRaconteur::MessageElementList>());
+	}
 }

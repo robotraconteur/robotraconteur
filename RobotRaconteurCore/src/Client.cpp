@@ -192,6 +192,10 @@ namespace RobotRaconteur
 		return n;
 	}
 
+	RR_WEAK_PTR<RobotRaconteurNode> ServiceStub::RRGetNodeWeak()
+	{
+		return node;
+	}
 
 	RR_SHARED_PTR<ServiceFactory> ClientContext::GetServiceDef() const
 	{

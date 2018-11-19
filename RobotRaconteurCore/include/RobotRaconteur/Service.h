@@ -146,6 +146,7 @@ namespace RobotRaconteur
 		virtual std::string GetObjectType(RobotRaconteurVersion client_version);
 
 		RR_SHARED_PTR<RobotRaconteurNode> RRGetNode();
+		RR_WEAK_PTR<RobotRaconteurNode> RRGetNodeWeak();
 
 		virtual void CallGeneratorNext(RR_SHARED_PTR<MessageEntry> m, RR_SHARED_PTR<Endpoint> e);
 

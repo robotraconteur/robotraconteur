@@ -425,79 +425,7 @@ namespace RobotRaconteurGen
 	//Code to pack and unpack message elements
 
 	std::string CPPServiceLangGen::str_pack_message_element(const std::string &elementname, const std::string &varname, const RR_SHARED_PTR<TypeDefinition> &t, const std::string &packer)
-	{
-		std::string structpackstring = "";
-		if (IsTypeNumeric(t->Type))
-		{
-			switch (t->ArrayType)
-			{
-			case DataTypes_ArrayTypes_none:
-			{
-				convert_type_result ts = convert_type(*t);
-				structpackstring = "RobotRaconteur::ScalarToRRArray<" + ts.cpp_type + " >(" + varname + ")";
-				break;
-			}
-			case DataTypes_ArrayTypes_array:
-			{
-				structpackstring = varname;
-				break;
-			}
-			case DataTypes_ArrayTypes_multidimarray:
-			{
-				convert_type_result ts = convert_type(*t);
-				structpackstring = "RRGetNode()->PackMultiDimArray<" + ts.cpp_type + " >(RobotRaconteur::rr_cast<RobotRaconteur::RRMultiDimArray<" + ts.cpp_type + " > >(" + varname + "))";
-				break;
-			}
-			default:
-				throw DataTypeException("Invalid array type");
-			}			
-		}
-		else if (t->Type == DataTypes_string_t)
-		{
-			structpackstring = "RobotRaconteur::stringToRRArray(" + varname + ")";
-		}
-		else if (t->Type == DataTypes_varvalue_t)
-		{
-			structpackstring = "RRGetNode()->PackVarType(RobotRaconteur::rr_cast<RobotRaconteur::RRValue>(" + varname + "))";
-		}
-		else if (t->Type == DataTypes_namedtype_t)
-		{
-			RR_SHARED_PTR<NamedTypeDefinition> nt = t->ResolveNamedType();
-			switch (nt->RRDataType())
-			{
-			case DataTypes_structure_t:
-				structpackstring = "RRGetNode()->PackStructure(RobotRaconteur::rr_cast<RobotRaconteur::RRStructure>(" + varname + "))";
-				break;
-			case DataTypes_enum_t:
-				structpackstring = "RobotRaconteur::ScalarToRRArray<int32_t>((int32_t)" + varname + ")";
-				break;
-			case DataTypes_cstructure_t:
-			{
-				switch (t->ArrayType)
-				{
-				case DataTypes_ArrayTypes_none:
-					structpackstring = "RobotRaconteur::CStructureStub_PackCStructureToArray(" + varname + ")";
-					break;
-				case DataTypes_ArrayTypes_array:
-					structpackstring = "RobotRaconteur::CStructureStub_PackCStructureArray(" + varname + ")";
-					break;
-				case DataTypes_ArrayTypes_multidimarray:
-					structpackstring = "RobotRaconteur::CStructureStub_PackCStructureMultiDimArray(" + varname + ")";
-					break;
-				default:
-					throw InternalErrorException("Invalid cstructure type");
-				}
-				break;
-			}
-			default:
-				throw DataTypeException("Unknown named type id");
-			}
-		}
-		else
-		{
-			throw DataTypeException("Unknown type");
-		}
-
+	{		
 		TypeDefinition t1;
 		t->CopyTo(t1);
 		t1.RemoveContainers();
@@ -506,13 +434,85 @@ namespace RobotRaconteurGen
 		switch (t->ContainerType)
 		{
 		case DataTypes_ContainerTypes_none:
-			return "RR_MAKE_SHARED<RobotRaconteur::MessageElement>(\"" + elementname + "\",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(" + structpackstring + "))";
+		{
+			if (IsTypeNumeric(t->Type))
+			{
+				switch (t->ArrayType)
+				{
+				case DataTypes_ArrayTypes_none:
+				{
+					convert_type_result ts = convert_type(*t);
+					return "RobotRaconteur::MessageElement_PackScalarElement<" + ts.cpp_type + " >(\"" + elementname + "\"," + varname + ")";
+					break;
+				}
+				case DataTypes_ArrayTypes_array:
+				{
+					convert_type_result ts = convert_type(*t);
+					return "RobotRaconteur::MessageElement_PackArrayElement<" + ts.cpp_type + " >(\"" + elementname + "\"," + varname + ")";
+					break;
+				}
+				case DataTypes_ArrayTypes_multidimarray:
+				{
+					convert_type_result ts = convert_type(*t);
+					return "RobotRaconteur::MessageElement_PackMultiDimArrayElement<" + ts.cpp_type + " >(RRGetNodeWeak(),\"" + elementname + "\"," + varname + ")";
+					break;
+				}
+				default:
+					throw DataTypeException("Invalid array type");
+				}
+			}
+			else if (t->Type == DataTypes_string_t)
+			{
+				return "RobotRaconteur::MessageElement_PackStringElement(\"" + elementname + "\"," + varname + ")";
+			}
+			else if (t->Type == DataTypes_varvalue_t)
+			{
+				return "RobotRaconteur::MessageElement_PackVarTypeElement(RRGetNodeWeak(),\"" + elementname + "\"," + varname + ")";
+			}
+			else if (t->Type == DataTypes_namedtype_t)
+			{
+				RR_SHARED_PTR<NamedTypeDefinition> nt = t->ResolveNamedType();
+				switch (nt->RRDataType())
+				{
+				case DataTypes_structure_t:
+					return "RobotRaconteur::MessageElement_PackStructElement(RRGetNodeWeak(),\"" + elementname + "\"," + varname + ")";
+					break;
+				case DataTypes_enum_t:
+					return "RobotRaconteur::MessageElement_PackEnumElement(\"" + elementname + "\"," + varname + ")";
+					break;
+				case DataTypes_cstructure_t:
+				{
+					switch (t->ArrayType)
+					{
+					case DataTypes_ArrayTypes_none:
+						return "RobotRaconteur::MessageElement_PackCStructureToArrayElement(\"" + elementname + "\"," + varname + ")";
+						break;
+					case DataTypes_ArrayTypes_array:
+						return "RobotRaconteur::MessageElement_PackCStructureArrayElement(\"" + elementname + "\"," + varname + ")";
+						break;
+					case DataTypes_ArrayTypes_multidimarray:
+						return "RobotRaconteur::MessageElement_PackCStructureMultiDimArrayElement(\"" + elementname + "\"," + varname + ")";
+						break;
+					default:
+						throw InternalErrorException("Invalid cstructure type");
+					}
+					break;
+				}
+				default:
+					throw DataTypeException("Unknown named type id");
+				}
+			}
+			else
+			{
+				throw DataTypeException("Unknown type");
+			}
+		}			
 		case DataTypes_ContainerTypes_list:
-			return "RR_MAKE_SHARED<RobotRaconteur::MessageElement>(\"" + elementname + "\",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RRGetNode()->PackListType<" + remove_RR_SHARED_PTR(tt.cpp_type) + " >(" + varname + ")))";
+			return "RobotRaconteur::MessageElement_PackListElement<" + remove_RR_SHARED_PTR(tt.cpp_type) + " >(RRGetNodeWeak(),\"" + elementname + "\"," + varname + ")";
 		case DataTypes_ContainerTypes_map_int32:
-			return "RR_MAKE_SHARED<RobotRaconteur::MessageElement>(\"" + elementname + "\",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RRGetNode()->PackMapType<int32_t," + remove_RR_SHARED_PTR(tt.cpp_type) + " >(" + varname + ")))";
+			return "RobotRaconteur::MessageElement_PackMapElement<int32_t," + remove_RR_SHARED_PTR(tt.cpp_type) + " >(RRGetNodeWeak(),\"" + elementname + "\"," + varname + ")";
 		case DataTypes_ContainerTypes_map_string:
-			return "RR_MAKE_SHARED<RobotRaconteur::MessageElement>(\"" + elementname + "\",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RRGetNode()->PackMapType<std::string," + remove_RR_SHARED_PTR(tt.cpp_type) + " >(" + varname + ")))";
+			return "RobotRaconteur::MessageElement_PackMapElement<std::string," + remove_RR_SHARED_PTR(tt.cpp_type) + " >(RRGetNodeWeak(),\"" + elementname + "\"," + varname + ")";
 		default:
 			throw DataTypeException("Invalid container type");
 		}
@@ -536,17 +536,17 @@ namespace RobotRaconteurGen
 			{
 			case DataTypes_ArrayTypes_none:
 			{
-				structunpackstring = "RobotRaconteur::RRArrayToScalar<" + tt.cpp_type + " >(" + varname + "->CastData<RobotRaconteur::RRArray<" + tt.cpp_type + " > >())";
+				structunpackstring = "RobotRaconteur::MessageElement_UnpackScalar<" + tt.cpp_type + " >(" + varname + ")";
 				break;
 			}
 			case DataTypes_ArrayTypes_array:
 			{
-				structunpackstring = (varname + "->CastData<RobotRaconteur::RRArray<" + tt.cpp_type + " > >()");
+				structunpackstring = "RobotRaconteur::MessageElement_UnpackArray<" + tt.cpp_type + " >(" + varname + ")";
 				break;
 			}
 			case DataTypes_ArrayTypes_multidimarray:
 			{
-				structunpackstring = "RobotRaconteur::rr_cast<RobotRaconteur::RRMultiDimArray<" + tt.cpp_type + " > >(RRGetNode()->UnpackMultiDimArray<" + tt.cpp_type + " >(" + varname + "->CastData<RobotRaconteur::MessageElementMultiDimArray>()))";
+				structunpackstring = "RobotRaconteur::MessageElement_UnpackMultiDimArray<" + tt.cpp_type + " >(RRGetNodeWeak()," + varname + ")";
 				break;
 			}
 			default:
@@ -557,7 +557,7 @@ namespace RobotRaconteurGen
 		}
 		else if (t->Type == DataTypes_string_t)
 		{
-			structunpackstring = "RobotRaconteur::RRArrayToString(" + varname + "->CastData<RobotRaconteur::RRArray<char> >())";
+			structunpackstring = "RobotRaconteur::MessageElement_UnpackString(" + varname + ")";
 		}
 		else if (t->Type == DataTypes_namedtype_t)
 		{
@@ -565,23 +565,23 @@ namespace RobotRaconteurGen
 			switch (nt->RRDataType())
 			{
 			case DataTypes_structure_t:
-				structunpackstring = "RobotRaconteur::rr_cast<" + fix_qualified_name(tt.cpp_type) + " >(RRGetNode()->UnpackStructure(" + varname + "->CastData<RobotRaconteur::MessageElementStructure>()))";
+				structunpackstring = "RobotRaconteur::MessageElement_UnpackStructure<" + fix_qualified_name(tt.cpp_type) + " >(RRGetNodeWeak(), " + varname + ")";
 				break;
 			case DataTypes_enum_t:
-				structunpackstring = "(" + fix_qualified_name(tt1.cpp_type) + ")RobotRaconteur::RRArrayToScalar<int32_t>(" + varname + "->CastData<RobotRaconteur::RRArray<int32_t> >())";
+				structunpackstring = "RobotRaconteur::MessageElement_UnpackEnum<" + fix_qualified_name(tt1.cpp_type) + ">(" + varname + ")";
 				break;
 			case DataTypes_cstructure_t:
 			{
 				switch (t->ArrayType)
 				{
 				case DataTypes_ArrayTypes_none:
-					structunpackstring = "RobotRaconteur::CStructureStub_UnpackCStructureFromArray<" + fix_qualified_name(tt.cpp_type) + ">(" + varname + "->CastData<RobotRaconteur::MessageElementCStructureArray>())";
+					structunpackstring = "RobotRaconteur::MessageElement_UnpackCStructureFromArray<" + fix_qualified_name(tt.cpp_type) + ">(" + varname + ")";
 					break;
 				case DataTypes_ArrayTypes_array:
-					structunpackstring = "RobotRaconteur::CStructureStub_UnpackCStructureArray<" + fix_qualified_name(tt.cpp_type) + ">(" + varname + "->CastData<RobotRaconteur::MessageElementCStructureArray>())";
+					structunpackstring = "RobotRaconteur::MessageElement_UnpackCStructureArray<" + fix_qualified_name(tt.cpp_type) + ">(" + varname + ")";
 					break;
 				case DataTypes_ArrayTypes_multidimarray:
-					structunpackstring = "RobotRaconteur::CStructureStub_UnpackCStructureMultiDimArray<" + fix_qualified_name(tt.cpp_type) + ">(" + varname + "->CastData<RobotRaconteur::MessageElementCStructureMultiDimArray>())";
+					structunpackstring = "RobotRaconteur::MessageElement_UnpackCStructureMultiDimArray<" + fix_qualified_name(tt.cpp_type) + ">(" + varname + ")";
 					break;
 				default:
 					throw InternalErrorException("Invalid cstructure type");
@@ -594,7 +594,7 @@ namespace RobotRaconteurGen
 		}
 		else if (t->Type == DataTypes_varvalue_t)
 		{
-			structunpackstring = "RRGetNode()->UnpackVarType(" + varname + ")";
+			structunpackstring = "RobotRaconteur::MessageElement_UnpackVarValue(RRGetNodeWeak()," + varname + ")";
 		}
 		else
 		{
@@ -606,11 +606,11 @@ namespace RobotRaconteurGen
 		case DataTypes_ContainerTypes_none:
 			return structunpackstring;
 		case DataTypes_ContainerTypes_list:
-			return "RobotRaconteur::rr_cast<RobotRaconteur::RRList<" + remove_RR_SHARED_PTR(tt1.cpp_type) + " > >((RRGetNode()->UnpackListType<" + remove_RR_SHARED_PTR(tt1.cpp_type) + " >(" + varname + "->CastData<RobotRaconteur::MessageElementList >())))";
+			return "RobotRaconteur::MessageElement_UnpackList<" + remove_RR_SHARED_PTR(tt1.cpp_type) + " >(RRGetNodeWeak()," + varname + ")";
 		case DataTypes_ContainerTypes_map_int32:
-			return "RobotRaconteur::rr_cast<RobotRaconteur::RRMap<int32_t," + remove_RR_SHARED_PTR(tt1.cpp_type) + " > >((RRGetNode()->UnpackMapType<int32_t," + remove_RR_SHARED_PTR(tt1.cpp_type) + " >(" + varname + "->CastData<RobotRaconteur::MessageElementMap<int32_t> >())))";
+			return "RobotRaconteur::MessageElement_UnpackMap<int32_t," + remove_RR_SHARED_PTR(tt1.cpp_type) + " >(RRGetNodeWeak()," + varname + ")";
 		case DataTypes_ContainerTypes_map_string:
-			return "RobotRaconteur::rr_cast<RobotRaconteur::RRMap<std::string," + remove_RR_SHARED_PTR(tt1.cpp_type) + " > >((RRGetNode()->UnpackMapType<std::string," + remove_RR_SHARED_PTR(tt1.cpp_type) + " >(" + varname + "->CastData<RobotRaconteur::MessageElementMap<std::string> >())))";
+			return "RobotRaconteur::MessageElement_UnpackMap<std::string," + remove_RR_SHARED_PTR(tt1.cpp_type) + " >(RRGetNodeWeak()," + varname + ")";
 		default:
 			throw DataTypeException("Invalid container type");
 		}
@@ -1309,7 +1309,7 @@ namespace RobotRaconteurGen
 				w2 << "    {" << endl;
 				w2 << "    if (!m) throw NullValueException(\"Unexpected null value for cstructure unpack\");" << endl;
 				//w2 << "    if (m->Type != \"" << d->Name << "." << e->Name << "\") throw DataTypeException(\"CStructure type mismatch\");" << endl;
-				w2 << "    std::vector<RR_SHARED_PTR<MessageElement> >& i = m->Elements;" << endl;
+				w2 << "    std::vector<RR_SHARED_PTR<RobotRaconteur::MessageElement> >& i = m->Elements;" << endl;
 				BOOST_FOREACH(RR_SHARED_PTR<MemberDefinition> m, e->Members)
 				{
 					RR_SHARED_PTR<PropertyDefinition> p = rr_cast<PropertyDefinition>(m);
@@ -1987,9 +1987,10 @@ namespace RobotRaconteurGen
 			w2 << "}" << endl;
 
 			w2 << "RR_SHARED_PTR<RobotRaconteur::RRStructure> " << fix_name((*e)->Name) << "_stub::UnpackStructure(RR_SHARED_PTR<RobotRaconteur::MessageElementStructure> m)" << endl << "{" << endl;
+			w2 << "std::vector<RR_SHARED_PTR<RobotRaconteur::MessageElement> >& i = m->Elements;" << endl;
 			w2 << "RR_SHARED_PTR<" << fix_qualified_name((*e)->Name) << " > ret=RR_MAKE_SHARED<" << fix_qualified_name((*e)->Name) << " >();" << endl;
 			MEMBER_ITER(PropertyDefinition)
-				w2 << "ret->" << fix_name(m->Name) << "=" << str_unpack_message_element("RobotRaconteur::MessageElement::FindElement(m->Elements,\"" + m->Name + "\")",m->Type) << ";" << endl;
+				w2 << "ret->" << fix_name(m->Name) << "=" << str_unpack_message_element("RobotRaconteur::MessageElement::FindElement(i,\"" + m->Name + "\")",m->Type) << ";" << endl;
 			MEMBER_ITER_END()
 			w2 << "return ret;" << endl;
 			w2 << "}" << endl << endl;
@@ -2699,7 +2700,7 @@ namespace RobotRaconteurGen
 				w2 << "try" << endl << "{" << endl;
 				w2 << "RR_SHARED_PTR<" << boost::replace_all_copy(fix_name(d->Name), ".", "::") << "::" << fix_name((*e)->Name) << "_skel> skel1=skel.lock();" << endl;
 				w2 << "if (!skel1) throw RobotRaconteur::InvalidOperationException(\"skel release\");" << endl;
-				w2 << "mr=" << replace_all_copy(str_pack_message_element("value", "value", m->Type), "RRGetNode()", "skel1->RRGetNode()") << ";" << endl;
+				w2 << "mr=" << replace_all_copy(str_pack_message_element("value", "value", m->Type), "RRGetNodeWeak()", "skel1->RRGetNodeWeak()") << ";" << endl;
 				w2 << "}" << endl;
 				w2 << "catch (std::exception& err2)" << endl << "{" << endl;
 				w2 << "EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);" << endl;
@@ -2832,7 +2833,7 @@ namespace RobotRaconteurGen
 						w2 << "RR_SHARED_PTR<" << boost::replace_all_copy(fix_name(d->Name), ".", "::") << "::" << fix_name((*e)->Name) << "_skel> skel1=skel.lock();" << endl;
 						w2 << "if (!skel1) throw RobotRaconteur::InvalidOperationException(\"skel release\");" << endl;
 
-						w2 << "mr=" << boost::replace_all_copy(str_pack_message_element("return", "ret", m->ReturnType), "RRGetNode()", "skel1->RRGetNode()") << ";" << endl;
+						w2 << "mr=" << boost::replace_all_copy(str_pack_message_element("return", "ret", m->ReturnType), "RRGetNodeWeak()", "skel1->RRGetNodeWeak()") << ";" << endl;
 
 					}
 					else
