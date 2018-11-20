@@ -355,11 +355,21 @@ namespace RobotRaconteur
 
 		if (data == NULL || data == Py_None)
 		{
-			if (IsTypeNumeric(type1->Type))
+			if (type1->ContainerType == DataTypes_ContainerTypes_none)
 			{
-				if (type1->ArrayType == DataTypes_ArrayTypes_none) throw DataTypeException("Scalars must not be None");
-				if (type1->ArrayLength.size() == 1 && type1->ArrayLength[0] !=0 && !type1->ArrayVarLength) throw DataTypeException("Fixed length array must not be None");
-				if (type1->ArrayType == DataTypes_ArrayTypes_multidimarray && !type1->ArrayVarLength) throw DataTypeException("Fixed length array must not be None");
+				std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
+				if (IsTypeNumeric(type1->Type))
+				{
+					throw DataTypeException("Scalars and arrays must not be None");
+				}
+				if (type1->Type == DataTypes_string_t)
+				{
+					throw DataTypeException("Strings must not be None");
+				}
+				if (type1->ResolveNamedType(empty_defs, node, obj)->RRDataType() == DataTypes_cstructure_t)
+				{
+					throw DataTypeException("CStructures must not be None");
+				}
 			}
 			
 			element->ElementType = DataTypes_void_t;
@@ -1073,6 +1083,23 @@ namespace RobotRaconteur
 
 		if (element->ElementType == DataTypes_void_t)
 		{
+			if (type1 && (type1->ContainerType == DataTypes_ContainerTypes_none))
+			{
+				std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
+				if (IsTypeNumeric(type1->Type))
+				{
+					throw DataTypeException("Scalars and arrays must not be None");
+				}
+				if (type1->Type == DataTypes_string_t)
+				{
+					throw DataTypeException("Strings must not be None");
+				}
+				if (type1->ResolveNamedType(empty_defs, node, stub)->RRDataType() == DataTypes_cstructure_t)
+				{
+					throw DataTypeException("CStructures must not be None");
+				}
+			}
+
 			Py_RETURN_NONE;
 		}
 
