@@ -1968,7 +1968,7 @@ mxArray* UnpackMessageElementToMxArray_cstruct(boost::shared_ptr<MessageElement>
 	boost::shared_ptr<MessageElementCStructureArray> l = element->CastData<MessageElementCStructureArray>();
 	
 	if (type1)
-	{
+	{		
 		int32_t c = boost::accumulate(type1->ArrayLength, 1, std::multiplies<int32_t>());
 		if (!type1->ArrayLength.empty() && c != 0)
 		{
@@ -2082,16 +2082,25 @@ mxArray* UnpackMessageElementToMxArray_cstruct(boost::shared_ptr<MessageElement>
 
 mxArray* UnpackMessageElementToMxArray(boost::shared_ptr<MessageElement> m, boost::shared_ptr<TypeDefinition> tdef, RR_SHARED_PTR<ServiceStub> stub)
 {
-	if (!m)
+	if (!m || m->ElementType==DataTypes_void_t)
 	{
-		if ((tdef->Type >= DataTypes_double_t && tdef->Type <= DataTypes_uint64_t) && !tdef->ArrayVarLength) throw DataTypeException("Array " + tdef->Name + " must not be null");
+		if (tdef && (tdef->ContainerType == DataTypes_ContainerTypes_none))
+		{
+			std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
+			if (IsTypeNumeric(tdef->Type))
+			{
+				throw DataTypeException("Scalars and arrays must not be None");
+			}
+			if (tdef->Type == DataTypes_string_t)
+			{
+				throw DataTypeException("Strings must not be None");
+			}
+			if (tdef->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), stub)->RRDataType() == DataTypes_cstructure_t)
+			{
+				throw DataTypeException("CStructures must not be None");
+			}
+		}
 
-		mwSize empty_dims[]={1,0};
-		return mxCreateNumericArray(2,empty_dims,mxDOUBLE_CLASS,mxREAL);
-	}
-
-	if (m->ElementType==DataTypes_void_t)
-	{
 		mwSize empty_dims[]={1,0};
 		return mxCreateNumericArray(2,empty_dims,mxDOUBLE_CLASS,mxREAL);
 	}
