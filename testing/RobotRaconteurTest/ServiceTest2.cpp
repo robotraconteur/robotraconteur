@@ -559,4 +559,113 @@ namespace RobotRaconteurTest
 		}
 	}
 
+
+	RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > testroot3_impl::get_d1()
+	{
+		throw NotImplementedException("");
+	}
+	void testroot3_impl::set_d1(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value)
+	{
+		throw NotImplementedException("");
+	}
+
+	RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > testroot3_impl::get_d2()
+	{
+		throw NotImplementedException("");
+	}
+	void testroot3_impl::set_d2(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value)
+	{
+		throw NotImplementedException("");
+	}
+
+	RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<double >  > > testroot3_impl::get_d3()
+	{
+		throw NotImplementedException("");
+	}
+	void testroot3_impl::set_d3(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<double >  > > value)
+	{
+		throw NotImplementedException("");
+	}
+
+	RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<double >  > > testroot3_impl::get_d4()
+	{
+		throw NotImplementedException("");
+	}
+	void testroot3_impl::set_d4(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<double >  > > value)
+	{
+		throw NotImplementedException("");
+	}
+
+	RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > testroot3_impl::get_d5()
+	{
+		throw NotImplementedException("");
+	}
+	void testroot3_impl::set_d5(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > value)
+	{
+		throw NotImplementedException("");
+	}
+
+	RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRMultiDimArray<double >  > > testroot3_impl::get_d6()
+	{
+		throw NotImplementedException("");
+	}
+	void testroot3_impl::set_d6(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRMultiDimArray<double >  > > value)
+	{
+		throw NotImplementedException("");
+	}
+
+	RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > testroot3_impl::get_p1()
+	{
+		return p1;
+	}
+	void testroot3_impl::set_p1(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > value)
+	{
+		p1 = value;
+	}
+
+	RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > testroot3_impl::get_p2()
+	{
+		return p2;
+	}
+	void testroot3_impl::set_p2(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > value)
+	{
+		p2 = value;
+	}
+
+	RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > testroot3_impl::get_p3()
+	{
+		return p3;
+	}
+	void testroot3_impl::set_p3(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > value)
+	{
+		p3 = value;
+	}
+
+	RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > testroot3_impl::get_w1()
+	{
+		return w1;
+	}
+	void testroot3_impl::set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > value)
+	{
+		w1 = value;
+	}
+
+	RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > testroot3_impl::get_w2()
+	{
+		return w2;
+	}
+	void testroot3_impl::set_w2(RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > value)
+	{
+		w2 = value;
+	}
+
+	RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > testroot3_impl::get_w3()
+	{
+		return w3;
+	}
+	void testroot3_impl::set_w3(RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > value)
+	{
+		w3 = value;
+	}
+
 }

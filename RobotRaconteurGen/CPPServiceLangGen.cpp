@@ -26,6 +26,7 @@
 #include <boost/range/adaptor/map.hpp>
 #include <boost/range/numeric.hpp>
 #include <boost/range/algorithm.hpp>
+#include <boost/range/adaptor/transformed.hpp>
 
 using namespace std;
 using namespace RobotRaconteur;
@@ -424,6 +425,35 @@ namespace RobotRaconteurGen
 
 	//Code to pack and unpack message elements
 
+	static std::string CPPServiceLangGen_VerifyArrayLength(TypeDefinition& t, std::string varname)
+	{		
+		if (t.ArrayType == DataTypes_ArrayTypes_array && t.ArrayLength.at(0) != 0)
+		{
+			return "RobotRaconteur::VerifyRRArrayLength(" + varname + ", " + boost::lexical_cast<std::string>(t.ArrayLength.at(0)) + ", " + (t.ArrayVarLength ? "true" : "false") + ")";
+		}
+		if (t.ArrayType == DataTypes_ArrayTypes_multidimarray && t.ArrayLength.size() != 0 && !t.ArrayVarLength)
+		{
+			int32_t n_elems = boost::accumulate(t.ArrayLength, 1, std::multiplies<int32_t>());
+			return "RobotRaconteur::VerifyRRMultiDimArrayLength<" + boost::lexical_cast<std::string>(t.ArrayLength.size()) +  ">(" + varname
+				+ "," + boost::lexical_cast<std::string>(n_elems) + ",boost::assign::list_of(" + boost::join(t.ArrayLength | boost::adaptors::transformed(boost::lexical_cast<std::string, int32_t>), ")(")
+				+ "))";
+		}
+		return varname;		
+	}
+	
+	static bool CPPServiceLangGen_UseVerifyArrayLength(TypeDefinition& t)
+	{
+		if (t.ArrayType == DataTypes_ArrayTypes_array && t.ArrayLength.at(0) != 0)
+		{
+			return true;
+		}
+		if (t.ArrayType == DataTypes_ArrayTypes_multidimarray && t.ArrayLength.size() != 0 && !t.ArrayVarLength)
+		{
+			return true;
+		}
+		return false;
+	}
+
 	std::string CPPServiceLangGen::str_pack_message_element(const std::string &elementname, const std::string &varname, const RR_SHARED_PTR<TypeDefinition> &t, const std::string &packer)
 	{		
 		TypeDefinition t1;
@@ -447,14 +477,15 @@ namespace RobotRaconteurGen
 				}
 				case DataTypes_ArrayTypes_array:
 				{
-					convert_type_result ts = convert_type(*t);
-					return "RobotRaconteur::MessageElement_PackArrayElement<" + ts.cpp_type + " >(\"" + elementname + "\"," + varname + ")";
+					convert_type_result ts = convert_type(*t);					
+					return "RobotRaconteur::MessageElement_PackArrayElement<" + ts.cpp_type + " >(\"" + elementname + "\"," + CPPServiceLangGen_VerifyArrayLength(*t,varname) + ")";
+					
 					break;
 				}
 				case DataTypes_ArrayTypes_multidimarray:
 				{
 					convert_type_result ts = convert_type(*t);
-					return "RobotRaconteur::MessageElement_PackMultiDimArrayElement<" + ts.cpp_type + " >(RRGetNodeWeak(),\"" + elementname + "\"," + varname + ")";
+					return "RobotRaconteur::MessageElement_PackMultiDimArrayElement<" + ts.cpp_type + " >(RRGetNodeWeak(),\"" + elementname + "\"," + CPPServiceLangGen_VerifyArrayLength(*t,varname) + ")";
 					break;
 				}
 				default:
@@ -488,10 +519,10 @@ namespace RobotRaconteurGen
 						return "RobotRaconteur::MessageElement_PackCStructureToArrayElement(\"" + elementname + "\"," + varname + ")";
 						break;
 					case DataTypes_ArrayTypes_array:
-						return "RobotRaconteur::MessageElement_PackCStructureArrayElement(\"" + elementname + "\"," + varname + ")";
+						return "RobotRaconteur::MessageElement_PackCStructureArrayElement(\"" + elementname + "\"," + CPPServiceLangGen_VerifyArrayLength(*t, varname) + ")";
 						break;
 					case DataTypes_ArrayTypes_multidimarray:
-						return "RobotRaconteur::MessageElement_PackCStructureMultiDimArrayElement(\"" + elementname + "\"," + varname + ")";
+						return "RobotRaconteur::MessageElement_PackCStructureMultiDimArrayElement(\"" + elementname + "\"," + CPPServiceLangGen_VerifyArrayLength(*t, varname) + ")";
 						break;
 					default:
 						throw InternalErrorException("Invalid cstructure type");
@@ -508,11 +539,11 @@ namespace RobotRaconteurGen
 			}
 		}			
 		case DataTypes_ContainerTypes_list:
-			return "RobotRaconteur::MessageElement_PackListElement<" + remove_RR_SHARED_PTR(tt.cpp_type) + " >(RRGetNodeWeak(),\"" + elementname + "\"," + varname + ")";
+			return "RobotRaconteur::MessageElement_PackListElement<" + remove_RR_SHARED_PTR(tt.cpp_type) + " >(RRGetNodeWeak(),\"" + elementname + "\"," + CPPServiceLangGen_VerifyArrayLength(*t,varname) + ")";
 		case DataTypes_ContainerTypes_map_int32:
-			return "RobotRaconteur::MessageElement_PackMapElement<int32_t," + remove_RR_SHARED_PTR(tt.cpp_type) + " >(RRGetNodeWeak(),\"" + elementname + "\"," + varname + ")";
+			return "RobotRaconteur::MessageElement_PackMapElement<int32_t," + remove_RR_SHARED_PTR(tt.cpp_type) + " >(RRGetNodeWeak(),\"" + elementname + "\"," + CPPServiceLangGen_VerifyArrayLength(*t,varname) + ")";
 		case DataTypes_ContainerTypes_map_string:
-			return "RobotRaconteur::MessageElement_PackMapElement<std::string," + remove_RR_SHARED_PTR(tt.cpp_type) + " >(RRGetNodeWeak(),\"" + elementname + "\"," + varname + ")";
+			return "RobotRaconteur::MessageElement_PackMapElement<std::string," + remove_RR_SHARED_PTR(tt.cpp_type) + " >(RRGetNodeWeak(),\"" + elementname + "\"," + CPPServiceLangGen_VerifyArrayLength(*t,varname) + ")";
 		default:
 			throw DataTypeException("Invalid container type");
 		}
@@ -540,13 +571,13 @@ namespace RobotRaconteurGen
 				break;
 			}
 			case DataTypes_ArrayTypes_array:
-			{
-				structunpackstring = "RobotRaconteur::MessageElement_UnpackArray<" + tt.cpp_type + " >(" + varname + ")";
+			{				
+				structunpackstring = CPPServiceLangGen_VerifyArrayLength(*t,"RobotRaconteur::MessageElement_UnpackArray<" + tt.cpp_type + " >(" + varname + ")");
 				break;
 			}
 			case DataTypes_ArrayTypes_multidimarray:
 			{
-				structunpackstring = "RobotRaconteur::MessageElement_UnpackMultiDimArray<" + tt.cpp_type + " >(RRGetNodeWeak()," + varname + ")";
+				structunpackstring = CPPServiceLangGen_VerifyArrayLength(*t,"RobotRaconteur::MessageElement_UnpackMultiDimArray<" + tt.cpp_type + " >(RRGetNodeWeak()," + varname + ")");
 				break;
 			}
 			default:
@@ -578,10 +609,10 @@ namespace RobotRaconteurGen
 					structunpackstring = "RobotRaconteur::MessageElement_UnpackCStructureFromArray<" + fix_qualified_name(tt.cpp_type) + ">(" + varname + ")";
 					break;
 				case DataTypes_ArrayTypes_array:
-					structunpackstring = "RobotRaconteur::MessageElement_UnpackCStructureArray<" + fix_qualified_name(tt.cpp_type) + ">(" + varname + ")";
+					structunpackstring = CPPServiceLangGen_VerifyArrayLength(*t, "RobotRaconteur::MessageElement_UnpackCStructureArray<" + fix_qualified_name(tt.cpp_type) + ">(" + varname + ")");
 					break;
 				case DataTypes_ArrayTypes_multidimarray:
-					structunpackstring = "RobotRaconteur::MessageElement_UnpackCStructureMultiDimArray<" + fix_qualified_name(tt.cpp_type) + ">(" + varname + ")";
+					structunpackstring = CPPServiceLangGen_VerifyArrayLength(*t, "RobotRaconteur::MessageElement_UnpackCStructureMultiDimArray<" + fix_qualified_name(tt.cpp_type) + ">(" + varname + ")");
 					break;
 				default:
 					throw InternalErrorException("Invalid cstructure type");
@@ -606,11 +637,11 @@ namespace RobotRaconteurGen
 		case DataTypes_ContainerTypes_none:
 			return structunpackstring;
 		case DataTypes_ContainerTypes_list:
-			return "RobotRaconteur::MessageElement_UnpackList<" + remove_RR_SHARED_PTR(tt1.cpp_type) + " >(RRGetNodeWeak()," + varname + ")";
+			return CPPServiceLangGen_VerifyArrayLength(*t,"RobotRaconteur::MessageElement_UnpackList<" + remove_RR_SHARED_PTR(tt1.cpp_type) + " >(RRGetNodeWeak()," + varname + ")");
 		case DataTypes_ContainerTypes_map_int32:
-			return "RobotRaconteur::MessageElement_UnpackMap<int32_t," + remove_RR_SHARED_PTR(tt1.cpp_type) + " >(RRGetNodeWeak()," + varname + ")";
+			return CPPServiceLangGen_VerifyArrayLength(*t,"RobotRaconteur::MessageElement_UnpackMap<int32_t," + remove_RR_SHARED_PTR(tt1.cpp_type) + " >(RRGetNodeWeak()," + varname + ")");
 		case DataTypes_ContainerTypes_map_string:
-			return "RobotRaconteur::MessageElement_UnpackMap<std::string," + remove_RR_SHARED_PTR(tt1.cpp_type) + " >(RRGetNodeWeak()," + varname + ")";
+			return CPPServiceLangGen_VerifyArrayLength(*t,"RobotRaconteur::MessageElement_UnpackMap<std::string," + remove_RR_SHARED_PTR(tt1.cpp_type) + " >(RRGetNodeWeak()," + varname + ")");
 		default:
 			throw DataTypeException("Invalid container type");
 		}
@@ -1334,6 +1365,7 @@ namespace RobotRaconteurGen
 		w2 << "#include \""<< boost::replace_all_copy(fix_name(d->Name),".","__") << "_stubskel.h\"" << endl;
 		w2 << "#include <boost/algorithm/string.hpp>" << endl;
 		w2 << "#include <boost/lexical_cast.hpp>" << endl;
+		w2 << "#include <boost/assign/list_of.hpp>" << endl;
 		w2 << "#else" << endl;
 		w2 << "#include \"stdafx.h\"" << endl;
 		w2 << "#endif" << endl;		
@@ -2002,6 +2034,22 @@ namespace RobotRaconteurGen
 
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Objects.begin(); e != d->Objects.end(); ++e)
 		{
+			MEMBER_ITER(PipeDefinition)
+				if (CPPServiceLangGen_UseVerifyArrayLength(*m->Type))
+				{
+					w2 << "static void " << fix_name((*e)->Name) << "_stub_rrverify_" << m->Name << "(RR_SHARED_PTR<RobotRaconteur::RRValue>& value)" << endl << "{" << endl;
+					w2 << CPPServiceLangGen_VerifyArrayLength(*m->Type, "RobotRaconteur::rr_cast<" + remove_RR_SHARED_PTR(get_variable_type(*m->Type).cpp_type) +  " >(value)") << ";" << endl;
+					w2 << "}" << endl;
+				}
+			MEMBER_ITER_END()
+			MEMBER_ITER(WireDefinition)
+				if (CPPServiceLangGen_UseVerifyArrayLength(*m->Type))
+				{
+					w2 << "static void " << fix_name((*e)->Name) << "_stub_rrverify_" << m->Name << "(RR_SHARED_PTR<RobotRaconteur::RRValue>& value)" << endl << "{" << endl;
+					w2 << CPPServiceLangGen_VerifyArrayLength(*m->Type, "RobotRaconteur::rr_cast<" + remove_RR_SHARED_PTR(get_variable_type(*m->Type).cpp_type) + " >(value)") << ";" << endl;
+					w2 << "}" << endl;
+				}
+			MEMBER_ITER_END()
 
 			//Constructor
 			w2 << fix_name((*e)->Name) << "_stub::" << fix_name((*e)->Name) << "_stub(const std::string &path, RR_SHARED_PTR<RobotRaconteur::ClientContext> c) : RobotRaconteur::ServiceStub(path,c)"  <<"{ }" << endl;
@@ -2010,7 +2058,14 @@ namespace RobotRaconteurGen
 			MEMBER_ITER(PipeDefinition)
 				std::string unreliable_str = CPPServiceLangGen_unreliable_str(m->IsUnreliable());
 				std::string direction_str = CPPServiceLangGen_direction_str(m->Direction());
-				w2 << "rrvar_" << m->Name << "=RR_MAKE_SHARED<RobotRaconteur::PipeClient<" << get_variable_type(*m->Type).cpp_type << " > >(\"" << m->Name << "\",shared_from_this(), " << unreliable_str << "," << direction_str << ") ;" << endl;				
+				if (!CPPServiceLangGen_UseVerifyArrayLength(*m->Type))
+				{
+					w2 << "rrvar_" << m->Name << "=RR_MAKE_SHARED<RobotRaconteur::PipeClient<" << get_variable_type(*m->Type).cpp_type << " > >(\"" << m->Name << "\",shared_from_this(), " << unreliable_str << "," << direction_str << ") ;" << endl;
+				}
+				else
+				{
+					w2 << "rrvar_" << m->Name << "=RR_MAKE_SHARED<RobotRaconteur::PipeClient<" << get_variable_type(*m->Type).cpp_type << " > >(\"" << m->Name << "\",shared_from_this(), " << unreliable_str << "," << direction_str << ",&" << fix_name((*e)->Name) << "_stub_rrverify_" << m->Name <<") ;" << endl;
+				}
 			MEMBER_ITER_END()
 
 			MEMBER_ITER(CallbackDefinition)
@@ -2019,7 +2074,14 @@ namespace RobotRaconteurGen
 
 			MEMBER_ITER(WireDefinition)
 				std::string direction_str = CPPServiceLangGen_direction_str(m->Direction());
-				w2 << "rrvar_" << m->Name << "=RR_MAKE_SHARED<RobotRaconteur::WireClient<" << get_variable_type(*m->Type).cpp_type << " > >(\"" << m->Name << "\",shared_from_this()," << direction_str <<  ") ;" << endl;
+				if (!CPPServiceLangGen_UseVerifyArrayLength(*m->Type))
+				{
+					w2 << "rrvar_" << m->Name << "=RR_MAKE_SHARED<RobotRaconteur::WireClient<" << get_variable_type(*m->Type).cpp_type << " > >(\"" << m->Name << "\",shared_from_this()," << direction_str << ");" << endl;
+				}
+				else
+				{
+					w2 << "rrvar_" << m->Name << "=RR_MAKE_SHARED<RobotRaconteur::WireClient<" << get_variable_type(*m->Type).cpp_type << " > >(\"" << m->Name << "\",shared_from_this()," << direction_str << ",&" << fix_name((*e)->Name) << "_stub_rrverify_" << m->Name <<"); " << endl;
+				}
 			MEMBER_ITER_END()
 			MEMBER_ITER(MemoryDefinition)
 			std::string direction_str = CPPServiceLangGen_direction_str(m->Direction());
@@ -2941,6 +3003,16 @@ namespace RobotRaconteurGen
 			w2 << "}" << endl << endl;
 
 			//Pipes
+
+			MEMBER_ITER(PipeDefinition)
+				if (CPPServiceLangGen_UseVerifyArrayLength(*m->Type))
+				{
+					w2 << "static void " << fix_name((*e)->Name) << "_skel_rrverify_" << m->Name << "(RR_SHARED_PTR<RobotRaconteur::RRValue>& value)" << endl << "{" << endl;
+					w2 << CPPServiceLangGen_VerifyArrayLength(*m->Type, "RobotRaconteur::rr_cast<" + remove_RR_SHARED_PTR(get_variable_type(*m->Type).cpp_type) + " >(value)") << ";" << endl;
+					w2 << "}" << endl;
+				}
+			MEMBER_ITER_END()
+
 			w2 << "void " << fix_name((*e)->Name) << "_skel::InitPipeServers(RR_SHARED_PTR<RobotRaconteur::RRObject> rrobj1)" << endl << "{" << endl;
 			w2 << "if (rr_InitPipeServersRun) return;" << endl;
 			w2 << "rr_InitPipeServersRun=true;" << endl;
@@ -2948,7 +3020,14 @@ namespace RobotRaconteurGen
 			MEMBER_ITER(PipeDefinition)
 				std::string unreliable_str = CPPServiceLangGen_unreliable_str(m->IsUnreliable());
 				std::string direction_str = CPPServiceLangGen_direction_str(m->Direction());
-				w2 << "rr_" << m->Name << "_pipe=RR_MAKE_SHARED<RobotRaconteur::PipeServer<" << get_variable_type(*m->Type).cpp_type << " > >(\"" << m->Name << "\",shared_from_this()," << unreliable_str <<  "," << direction_str << ");" << endl;
+				if (!CPPServiceLangGen_UseVerifyArrayLength(*m->Type))
+				{
+					w2 << "rr_" << m->Name << "_pipe=RR_MAKE_SHARED<RobotRaconteur::PipeServer<" << get_variable_type(*m->Type).cpp_type << " > >(\"" << m->Name << "\",shared_from_this()," << unreliable_str << "," << direction_str << ");" << endl;
+				}
+				else
+				{
+					w2 << "rr_" << m->Name << "_pipe=RR_MAKE_SHARED<RobotRaconteur::PipeServer<" << get_variable_type(*m->Type).cpp_type << " > >(\"" << m->Name << "\",shared_from_this()," << unreliable_str << "," << direction_str << ",&" << fix_name((*e)->Name) << "_skel_rrverify_" << m->Name << ");" << endl;
+				}
 			MEMBER_ITER_END()
 			MEMBER_ITER(PipeDefinition)
 			w2 << "obj->set_" << fix_name(m->Name) << "(rr_" << m->Name << "_pipe);" << endl;
@@ -2975,13 +3054,30 @@ namespace RobotRaconteurGen
 			w2 << "}" << endl << endl;
 
 			//wires
+
+			MEMBER_ITER(WireDefinition)
+				if (CPPServiceLangGen_UseVerifyArrayLength(*m->Type))
+				{
+					w2 << "static void " << fix_name((*e)->Name) << "_skel_rrverify_" << m->Name << "(RR_SHARED_PTR<RobotRaconteur::RRValue>& value)" << endl << "{" << endl;
+					w2 << CPPServiceLangGen_VerifyArrayLength(*m->Type, "RobotRaconteur::rr_cast<" + remove_RR_SHARED_PTR(get_variable_type(*m->Type).cpp_type) + " >(value)") << ";" << endl;
+					w2 << "}" << endl;
+				}
+			MEMBER_ITER_END()
+
 			w2 << "void " << fix_name((*e)->Name) << "_skel::InitWireServers(RR_SHARED_PTR<RobotRaconteur::RRObject> rrobj1)" << endl << "{" << endl;
 			w2 << "if (rr_InitWireServersRun) return;" << endl;
 			w2 << "rr_InitWireServersRun=true;" << endl;
 			w2 <<"RR_SHARED_PTR<" << boost::replace_all_copy(fix_name(d->Name),".","::") << "::" << fix_name((*e)->Name) << " > obj=RobotRaconteur::rr_cast<" << boost::replace_all_copy(fix_name(d->Name),".","::") << "::" << fix_name((*e)->Name) << " >(rrobj1);" << endl;
 			MEMBER_ITER(WireDefinition)
 			std::string direction_str = CPPServiceLangGen_direction_str(m->Direction());
-			w2 << "rr_" << m->Name << "_wire=RR_MAKE_SHARED<RobotRaconteur::WireServer<" << get_variable_type(*m->Type).cpp_type << " > >(\"" << m->Name << "\",shared_from_this()," << direction_str << ");" << endl;
+			if (!CPPServiceLangGen_UseVerifyArrayLength(*m->Type))
+			{
+				w2 << "rr_" << m->Name << "_wire=RR_MAKE_SHARED<RobotRaconteur::WireServer<" << get_variable_type(*m->Type).cpp_type << " > >(\"" << m->Name << "\",shared_from_this()," << direction_str << ");" << endl;
+			}
+			else
+			{
+				w2 << "rr_" << m->Name << "_wire=RR_MAKE_SHARED<RobotRaconteur::WireServer<" << get_variable_type(*m->Type).cpp_type << " > >(\"" << m->Name << "\",shared_from_this()," << direction_str << ",&" << fix_name((*e)->Name) << "_skel_rrverify_" << m->Name << ");" << endl;
+			}
 			MEMBER_ITER_END()
 			MEMBER_ITER(WireDefinition)
 			w2 << "obj->set_" << fix_name(m->Name) << "(rr_" << m->Name << "_wire);" << endl;

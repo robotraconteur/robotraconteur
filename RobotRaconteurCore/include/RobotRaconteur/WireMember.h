@@ -324,6 +324,11 @@ namespace RobotRaconteur
 
 	public:
 
+		Wire(boost::function<void(RR_SHARED_PTR<RRValue>&)> verify)
+		{
+			this->verify = verify;
+		}
+
 		virtual ~Wire() {}
 		
 		//Client side functions
@@ -353,13 +358,28 @@ namespace RobotRaconteur
 
 		virtual RR_SHARED_PTR<MessageElementData> PackData(RR_SHARED_PTR<RRValue> data)
 		{
+			if (verify)
+			{
+				verify(data);
+			}
 			return GetNode()->template PackAnyType<typename RRPrimUtil<T>::BoxedType>(data);
 		}
 
 		virtual RR_SHARED_PTR<RRValue> UnpackData(RR_SHARED_PTR<MessageElement> mdata)
 		{
-			return GetNode()->template UnpackAnyType<typename RRPrimUtil<T>::BoxedType>(mdata);
-		}		
+			if (!verify)
+			{
+				return GetNode()->template UnpackAnyType<typename RRPrimUtil<T>::BoxedType>(mdata);
+			}
+			else
+			{
+				RR_SHARED_PTR<RRValue> ret = GetNode()->template UnpackAnyType<typename RRPrimUtil<T>::BoxedType>(mdata);
+				verify(ret);
+				return ret;
+			}
+		}
+
+		boost::function<void(RR_SHARED_PTR<RRValue>&)> verify;
 	};
 
 
@@ -424,7 +444,7 @@ namespace RobotRaconteur
 	{
 	public:
 
-		WireClient(const std::string& name, RR_SHARED_PTR<ServiceStub> stub, MemberDefinition_Direction direction = MemberDefinition_Direction_both) : WireClientBase(name, stub, direction)
+		WireClient(const std::string& name, RR_SHARED_PTR<ServiceStub> stub, MemberDefinition_Direction direction = MemberDefinition_Direction_both, boost::function<void(RR_SHARED_PTR<RRValue>&)> verify = NULL) : WireClientBase(name, stub, direction), Wire<T>(verify)
 		{
 			if (boost::is_same<T, RR_SHARED_PTR<MessageElement> >::value)
 			{
@@ -577,7 +597,7 @@ namespace RobotRaconteur
 
 	public:
 
-		WireServer(const std::string& name, RR_SHARED_PTR<ServiceSkel> skel, MemberDefinition_Direction direction = MemberDefinition_Direction_both) : WireServerBase(name, skel, direction)
+		WireServer(const std::string& name, RR_SHARED_PTR<ServiceSkel> skel, MemberDefinition_Direction direction = MemberDefinition_Direction_both, boost::function<void(RR_SHARED_PTR<RRValue>&)> verify = NULL) : WireServerBase(name, skel, direction), Wire<T>(verify)
 		{
 			if (boost::is_same<T, RR_SHARED_PTR<MessageElement> >::value)
 			{

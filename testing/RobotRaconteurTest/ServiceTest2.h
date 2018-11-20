@@ -74,6 +74,42 @@ namespace RobotRaconteurTest
 
 		virtual RR_SHARED_PTR<RobotRaconteur::Generator<RR_SHARED_PTR<com::robotraconteur::testing::TestService1::teststruct2 >, RR_SHARED_PTR<com::robotraconteur::testing::TestService1::teststruct2 > > > gen_func5();
 
+		virtual RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > get_d1() ;
+		virtual void set_d1(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value) ;
+
+		virtual RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > get_d2() ;
+		virtual void set_d2(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value) ;
+
+		virtual RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<double >  > > get_d3() ;
+		virtual void set_d3(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<double >  > > value) ;
+
+		virtual RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<double >  > > get_d4() ;
+		virtual void set_d4(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<double >  > > value) ;
+
+		virtual RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > get_d5() ;
+		virtual void set_d5(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > value) ;
+
+		virtual RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRMultiDimArray<double >  > > get_d6() ;
+		virtual void set_d6(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRMultiDimArray<double >  > > value) ;
+
+		virtual RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > get_p1();
+		virtual void set_p1(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > value);
+
+		virtual RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > get_p2();
+		virtual void set_p2(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > value);
+
+		virtual RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > get_p3();
+		virtual void set_p3(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > value);
+
+		virtual RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > get_w1();
+		virtual void set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > value);
+
+		virtual RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > get_w2();
+		virtual void set_w2(RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > value);
+
+		virtual RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > get_w3();
+		virtual void set_w3(RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > value);
+
 	protected:
 
 		RR_SHARED_PTR<Wire<int32_t> > peekwire;
@@ -91,7 +127,14 @@ namespace RobotRaconteurTest
 
 		RR_SHARED_PTR<RobotRaconteur::CStructureArrayMemory<com::robotraconteur::testing::TestService3::testcstruct2 > > cstruct_m1;
 		RR_SHARED_PTR<RobotRaconteur::CStructureMultiDimArrayMemory<com::robotraconteur::testing::TestService3::testcstruct2 > > cstruct_m2;
+		
+		RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > p1;
+		RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > p2;
+		RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > p3;
 
+		RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > w1;
+		RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > w2;
+		RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > w3;
 	};
 
 	class obj4_impl : public virtual com::robotraconteur::testing::TestService3::obj4

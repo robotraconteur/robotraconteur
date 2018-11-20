@@ -373,4 +373,48 @@ namespace RobotRaconteur
 		if (!a) throw NullValueException("Arrays must not be null");
 		return a;
 	}
+
+	template<typename T>
+	static RR_SHARED_PTR<RRCStructureArray<T> > VerifyRRArrayLength(RR_SHARED_PTR<RRCStructureArray<T> > a, size_t len, bool varlength)
+	{
+		if (!a) throw NullValueException("Arrays must not be null");
+		if (len != 0)
+		{
+			if (varlength && (a->cstruct_array.size() > len))
+			{
+				throw DataTypeException("Array dimension mismatch");
+			}
+			if (!varlength && (a->cstruct_array.size() != len))
+			{
+				throw DataTypeException("Array dimension mismatch");
+			}
+		}
+		return a;
+	}
+
+	template<size_t Ndims, typename T>
+	static RR_SHARED_PTR<RRCStructureMultiDimArray<T> > VerifyRRMultiDimArrayLength(RR_SHARED_PTR<RRCStructureMultiDimArray<T> > a, size_t n_elems, boost::array<int32_t, Ndims> dims)
+	{
+		if (!a) throw NullValueException("Arrays must not be null");
+
+		if (a->Dims->size() != Ndims)
+		{
+			throw DataTypeException("Array dimension mismatch");
+		}
+
+		if (a->CStructArray->cstruct_array.size() != n_elems)
+		{
+			throw DataTypeException("Array dimension mismatch");
+		}
+
+		for (size_t i = 0; i < Ndims; i++)
+		{
+			if ((*a->Dims)[i] != dims[i])
+			{
+				throw DataTypeException("Array dimension mismatch");
+			}
+		}
+
+		return a;
+	}
 }

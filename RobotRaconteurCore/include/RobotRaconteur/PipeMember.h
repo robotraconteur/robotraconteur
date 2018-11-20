@@ -361,6 +361,11 @@ namespace RobotRaconteur
 		
 		friend class PipeEndpointBase;
 
+		Pipe(boost::function<void(RR_SHARED_PTR<RRValue>&)> verify)
+		{
+			this->verify = verify;
+		}
+
 		virtual ~Pipe() {}
 
 		virtual boost::function<void(RR_SHARED_PTR<PipeEndpoint<T> >)> GetPipeConnectCallback()=0;
@@ -378,15 +383,29 @@ namespace RobotRaconteur
 
 		virtual RR_SHARED_PTR<MessageElementData> PackData(RR_SHARED_PTR<RRValue> data)
 		{
+			if (verify)
+			{
+				verify(data);
+			}
 			return GetNode()->template PackAnyType<typename RRPrimUtil<T>::BoxedType>(data);
 		}
 
 		virtual RR_SHARED_PTR<RRValue> UnpackData(RR_SHARED_PTR<MessageElement> mdata)
 		{
-			return GetNode()->template UnpackAnyType<typename RRPrimUtil<T>::BoxedType>(mdata);
+			if (!verify)
+			{
+				return GetNode()->template UnpackAnyType<typename RRPrimUtil<T>::BoxedType>(mdata);
+			}
+			else
+			{
+				RR_SHARED_PTR<RRValue> ret= GetNode()->template UnpackAnyType<typename RRPrimUtil<T>::BoxedType>(mdata);
+				verify(ret);
+				return ret;
+			}
 		}
 		
-		
+	protected:
+		boost::function<void(RR_SHARED_PTR<RRValue>&)> verify;
 	};
 
 	
@@ -473,7 +492,7 @@ namespace RobotRaconteur
 			return t->end();
 		}
 
-		PipeClient(const std::string& name, RR_SHARED_PTR<ServiceStub> stub, bool unreliable=false, MemberDefinition_Direction direction = MemberDefinition_Direction_both) : PipeClientBase(name,stub,unreliable,direction) 
+		PipeClient(const std::string& name, RR_SHARED_PTR<ServiceStub> stub, bool unreliable=false, MemberDefinition_Direction direction = MemberDefinition_Direction_both, boost::function<void(RR_SHARED_PTR<RRValue>&)> verify=NULL) : PipeClientBase(name,stub,unreliable,direction), Pipe<T>(verify)
 		{
 			if (boost::is_same<T,RR_SHARED_PTR<MessageElement> >::value)
 			{
@@ -607,7 +626,7 @@ namespace RobotRaconteur
 			throw InvalidOperationException("Not valid for server");
 		}
 
-		PipeServer(const std::string& name, RR_SHARED_PTR<ServiceSkel> skel, bool unreliable=false, MemberDefinition_Direction direction=MemberDefinition_Direction_both) : PipeServerBase(name,skel,unreliable,direction) 
+		PipeServer(const std::string& name, RR_SHARED_PTR<ServiceSkel> skel, bool unreliable=false, MemberDefinition_Direction direction=MemberDefinition_Direction_both, boost::function<void(RR_SHARED_PTR<RRValue>&)> verify = NULL) : PipeServerBase(name,skel,unreliable,direction), Pipe<T>(verify)
 		{
 			if (boost::is_same<T, RR_SHARED_PTR<MessageElement> >::value)
 			{
@@ -616,7 +635,7 @@ namespace RobotRaconteur
 			else
 			{
 				rawelements=false;
-			}
+			}			
 		}
 
 
@@ -633,6 +652,8 @@ namespace RobotRaconteur
 			if (!callback) return;
 			callback(RR_STATIC_POINTER_CAST<PipeEndpoint<T> >(e));
 		}
+
+		boost::function<void(RR_SHARED_PTR<RRValue>&)> verify;
 
 	public:
 

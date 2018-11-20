@@ -39,6 +39,8 @@
 #include <boost/utility/value_init.hpp>
 #include <boost/container/static_vector.hpp>
 #include <boost/array.hpp>
+#include <boost/foreach.hpp>
+#include <boost/range/adaptor/map.hpp>
 
 #pragma once
 
@@ -522,6 +524,45 @@ namespace RobotRaconteur
 		return out;
 	}
 
+	template<typename T>
+	static RR_SHARED_PTR<RRArray<T> > VerifyRRArrayLength(RR_SHARED_PTR<RRArray<T> > a, size_t len, bool varlength)
+	{
+		if (!a) throw NullValueException("Arrays must not be null");
+		if (len != 0)
+		{
+			if (varlength && (a->size() > len))
+			{
+				throw DataTypeException("Array dimension mismatch");
+			}
+			if (!varlength && (a->size() != len))
+			{
+				throw DataTypeException("Array dimension mismatch");
+			}
+		}
+		return a;
+	}
+
+	template<typename T>
+	static RR_SHARED_PTR<RRList<T> > VerifyRRArrayLength(RR_SHARED_PTR<RRList<T> > a, size_t len, bool varlength)
+	{
+		BOOST_FOREACH(RR_SHARED_PTR<T>& aa, a->list)
+		{
+			VerifyRRArrayLength(aa, len, varlength);
+		}
+		return a;
+	}
+
+	template<typename K, typename T>
+	static RR_SHARED_PTR<RRMap<K,T > > VerifyRRArrayLength(RR_SHARED_PTR<RRMap<K,T> > a, size_t len, bool varlength)
+	{
+		BOOST_FOREACH(RR_SHARED_PTR<T>& aa, a->map | boost::adaptors::map_values)
+		{
+			VerifyRRArrayLength(aa, len, varlength);
+		}
+		return a;
+	}
+
+
 	class ROBOTRACONTEUR_CORE_API RRMultiDimBaseArray : public RRValue
 	{
 	public:
@@ -632,6 +673,57 @@ namespace RobotRaconteur
 		}
 
 	};
+
+	template<size_t Ndims, typename T>
+	static RR_SHARED_PTR<RRMultiDimArray<T> > VerifyRRMultiDimArrayLength(RR_SHARED_PTR<RRMultiDimArray<T> > a, size_t n_elems, boost::array<int32_t,Ndims> dims)
+	{
+		if (!a) throw NullValueException("Arrays must not be null");
+
+		if (a->Dims->size() != Ndims)
+		{
+			throw DataTypeException("Array dimension mismatch");
+		}
+
+		if (a->Real->size() != n_elems)
+		{
+			throw DataTypeException("Array dimension mismatch");
+		}
+
+		if (a->Imag)
+		{
+			throw DataTypeException("Fixed size arrays must not be complex");
+		}
+
+		for (size_t i = 0; i < Ndims; i++)
+		{
+			if ((*a->Dims)[i] != dims[i])
+			{
+				throw DataTypeException("Array dimension mismatch");
+			}
+		}
+				
+		return a;
+	}
+
+	template<size_t Ndims, typename T>
+	static RR_SHARED_PTR<RRList<T> > VerifyRRMultiDimArrayLength(RR_SHARED_PTR<RRList<T> > a, size_t n_elems, boost::array<int32_t, Ndims> dims)
+	{
+		BOOST_FOREACH(RR_SHARED_PTR<T>& aa, a->list)
+		{
+			VerifyRRMultiDimArrayLength<Ndims>(aa, n_elems, dims);
+		}
+		return a;
+	}
+
+	template<size_t Ndims, typename K, typename T>
+	static RR_SHARED_PTR<RRMap<K,T> > VerifyRRMultiDimArrayLength(RR_SHARED_PTR<RRMap<K,T> > a, size_t n_elems, boost::array<int32_t, Ndims> dims)
+	{
+		BOOST_FOREACH(RR_SHARED_PTR<T>& aa, a->map | boost::adaptors::map_values)
+		{
+			VerifyRRMultiDimArrayLength<Ndims>(aa, n_elems, dims);
+		}
+		return a;
+	}
 
 	class ROBOTRACONTEUR_CORE_API RRCStructure
 	{

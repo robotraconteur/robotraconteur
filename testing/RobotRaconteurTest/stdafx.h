@@ -20,5 +20,6 @@
 #include <fstream>
 #include <sstream>
 #include <boost/algorithm/string.hpp>
+#include <boost/assign/list_of.hpp>
 
 #pragma once

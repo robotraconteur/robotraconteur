@@ -98,6 +98,22 @@ object testroot3
 	function uint8[]{generator} gen_func4(uint8[]{generator} in) 
 	function teststruct2{generator} gen_func5(teststruct2{generator} in)
 	
+	#extra tests for fixed length arrays
+	property double[6]{list} d1
+	property double[6-]{list} d2
+	property double[6]{int32} d3
+	property double[6-]{int32} d4
+	property double[3,3]{list} d5
+	property double[3,3]{int32} d6
+	
+	#Test pipe and wire verification
+	pipe int32[3] p1
+	pipe int32[3-] p2
+	pipe int32[2,2] p3
+	wire int32[6] w1
+	wire int32[6-] w2
+	wire int32[3,2] w3
+	
 end object
 
 object obj1
