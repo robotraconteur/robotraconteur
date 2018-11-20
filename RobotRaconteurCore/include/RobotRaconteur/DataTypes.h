@@ -545,6 +545,7 @@ namespace RobotRaconteur
 	template<typename T>
 	static RR_SHARED_PTR<RRList<T> > VerifyRRArrayLength(RR_SHARED_PTR<RRList<T> > a, size_t len, bool varlength)
 	{
+		if (!a) return a;
 		BOOST_FOREACH(RR_SHARED_PTR<T>& aa, a->list)
 		{
 			VerifyRRArrayLength(aa, len, varlength);
@@ -555,6 +556,7 @@ namespace RobotRaconteur
 	template<typename K, typename T>
 	static RR_SHARED_PTR<RRMap<K,T > > VerifyRRArrayLength(RR_SHARED_PTR<RRMap<K,T> > a, size_t len, bool varlength)
 	{
+		if (!a) return a;
 		BOOST_FOREACH(RR_SHARED_PTR<T>& aa, a->map | boost::adaptors::map_values)
 		{
 			VerifyRRArrayLength(aa, len, varlength);
