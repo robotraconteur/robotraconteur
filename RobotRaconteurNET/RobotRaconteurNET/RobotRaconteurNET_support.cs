@@ -21,10 +21,10 @@ using System.Reflection;
 
 namespace RobotRaconteur
 {
-    
+
     public class DataTypeUtil
     {
-        
+
         public static uint size(DataTypes type)
         {
             switch (type)
@@ -54,7 +54,7 @@ namespace RobotRaconteur
             //return 0;
         }
 
-       
+
         public static DataTypes TypeIDFromString(string stype)
         {
             switch (stype)
@@ -147,13 +147,13 @@ namespace RobotRaconteur
             return false;
         }
 
-        
+
         public static bool IsNumber(DataTypes t)
         {
             return ((t >= DataTypes.double_t) && (DataTypes.uint64_t >= t));
         }
 
-        
+
         public static Array ArrayFromDataType(DataTypes t, uint length)
         {
             switch (t)
@@ -188,7 +188,7 @@ namespace RobotRaconteur
             throw new DataTypeException("Could not create array for data type");
         }
 
-        
+
         public static object ArrayFromScalar(object inv)
         {
 
@@ -220,6 +220,118 @@ namespace RobotRaconteur
             }
 
             throw new DataTypeException("Could not create array for data");
+        }
+
+        public static T[] VerifyArrayLength<T>(T[] a, int len, bool varlength) where T : struct
+        {
+            if (a == null) throw new NullReferenceException();
+            if (len != 0)
+            {
+                if (varlength && a.Length > len)
+                {
+                    throw new DataTypeException("Array dimension mismatch");
+                }
+                if (!varlength && a.Length != len)
+                {
+                    throw new DataTypeException("Array dimension mismatch");
+                }
+            }
+            return a;
+        }
+
+
+        public static MultiDimArray VerifyArrayLength(MultiDimArray a, int n_elems, int[] len)
+        {
+            if (a.Dims.Length != len.Length)
+            {
+                throw new DataTypeException("Array dimension mismatch");
+            }
+
+            for (int i = 0; i < len.Length; i++)
+            {
+                if (a.Dims[i] != len[i])
+                {
+                    throw new DataTypeException("Array dimension mismatch");
+                }
+            }
+            return a;
+        }
+
+        public static CStructureMultiDimArray VerifyArrayLength(CStructureMultiDimArray a, int n_elems, int[] len)
+        {
+            if (a.Dims.Length != len.Length)
+            {
+                throw new DataTypeException("Array dimension mismatch");
+            }
+
+            for (int i = 0; i < len.Length; i++)
+            {
+                if (a.Dims[i] != len[i])
+                {
+                    throw new DataTypeException("Array dimension mismatch");
+                }
+            }
+            return a;
+        }
+
+        public static List<T[]> VerifyArrayLength<T>(List<T[]> a, int len, bool varlength) where T : struct
+        {
+            foreach (T[] aa in a)
+            {
+                VerifyArrayLength(aa, len, varlength);
+            }
+
+            return a;
+        }
+
+        public static Dictionary<K, T[]> VerifyArrayLength<K, T>(Dictionary<K, T[]> a, int len, bool varlength) where T : struct
+        {
+            foreach (T[] aa in a.Values)
+            {
+                VerifyArrayLength(aa, len, varlength);
+            }
+
+            return a;
+        }
+
+        public static List<MultiDimArray> VerifyArrayLength(List<MultiDimArray> a, int n_elems, int[] len)
+        {
+            foreach (MultiDimArray aa in a)
+            {
+                VerifyArrayLength(aa, n_elems, len);
+            }
+
+            return a;
+        }
+
+        public static Dictionary<K, MultiDimArray> VerifyArrayLength<K>(Dictionary<K, MultiDimArray> a, int n_elems, int[] len)
+        {
+            foreach (MultiDimArray aa in a.Values)
+            {
+                VerifyArrayLength(aa, n_elems, len);
+            }
+
+            return a;
+        }
+
+        public static List<CStructureMultiDimArray> VerifyArrayLength(List<CStructureMultiDimArray> a, int n_elems, int[] len)
+        {
+            foreach (CStructureMultiDimArray aa in a)
+            {
+                VerifyArrayLength(aa, n_elems, len);
+            }
+
+            return a;
+        }
+
+        public static Dictionary<K, CStructureMultiDimArray> VerifyArrayLength<K>(Dictionary<K, CStructureMultiDimArray> a, int n_elems, int[] len)
+        {
+            foreach (CStructureMultiDimArray aa in a.Values)
+            {
+                VerifyArrayLength(aa, n_elems,len);
+            }
+
+            return a;
         }
     }
 
@@ -433,7 +545,7 @@ namespace RobotRaconteur
     {
         public static MessageElement NewMessageElementDispose(string name, object data)
         {
-            MessageElement m=null;
+            MessageElement m = null;
             try
             {
                 m = new MessageElement();
@@ -456,10 +568,10 @@ namespace RobotRaconteur
 
         public static void AddMessageElementDispose(vectorptr_messageelement vct, string name, object data)
         {
-                using (MessageElement m = NewMessageElementDispose(name, data))
-                {
-                    vct.Add(m);
-                }
+            using (MessageElement m = NewMessageElementDispose(name, data))
+            {
+                vct.Add(m);
+            }
         }
 
         public static MessageElement NewMessageElementDispose(int i, object data)
@@ -518,7 +630,7 @@ namespace RobotRaconteur
 
         public static T CastDataAndDispose<T>(MessageElement m)
         {
-            object dat=null;
+            object dat = null;
             try
             {
                 dat = m.Data;
@@ -527,22 +639,22 @@ namespace RobotRaconteur
             catch
             {
                 IDisposable dat2 = dat as IDisposable;
-                if (dat2!=null)  dat2.Dispose();
+                if (dat2 != null) dat2.Dispose();
                 throw;
             }
             finally
             {
-                if (m!=null) m.Dispose();
+                if (m != null) m.Dispose();
             }
         }
 
         public static int GetMessageElementNumber(MessageElement e)
         {
-            if ((e.ElementFlags & RobotRaconteurNET.MessageElementFlags_ELEMENT_NUMBER)!=0)
+            if ((e.ElementFlags & RobotRaconteurNET.MessageElementFlags_ELEMENT_NUMBER) != 0)
             {
                 return e.ElementNumber;
             }
-            else if ((e.ElementFlags & RobotRaconteurNET.MessageElementFlags_ELEMENT_NAME_STR)!=0)
+            else if ((e.ElementFlags & RobotRaconteurNET.MessageElementFlags_ELEMENT_NAME_STR) != 0)
             {
                 return Int32.Parse(e.ElementName);
             }
@@ -550,6 +662,149 @@ namespace RobotRaconteur
             {
                 throw new InvalidDataException("Could not determine Element Number");
             }
+        }
+
+        public static MessageElement PackScalar<T>(string name, T val) where T : struct, IConvertible
+        {
+            return NewMessageElementDispose(name, new T[] { val });
+        }
+
+        public static MessageElement PackArray<T>(string name, T[] val) where T : struct, IConvertible
+        {
+            if (val == null)
+            {
+                throw new NullReferenceException();
+            }
+            return NewMessageElementDispose(name, val );
+        }
+
+        public static MessageElement PackMultiDimArray(string name, MultiDimArray val)
+        {
+            if (val == null)
+            {
+                throw new NullReferenceException();
+            }
+
+            return NewMessageElementDispose(name, RobotRaconteurNode.s.PackMultiDimArray(val));
+        }
+
+        public static MessageElement PackString(string name, string val)
+        {
+            if (val == null)
+            {
+                throw new NullReferenceException();
+            }
+            return NewMessageElementDispose(name, val);
+        }
+
+        public static MessageElement PackStructure(string name, object val)
+        {
+            return NewMessageElementDispose(name, RobotRaconteurNode.s.PackStructure(val));
+        }
+                
+        public static MessageElement PackVarType(string name, object val)
+        {
+            return NewMessageElementDispose(name, RobotRaconteurNode.s.PackVarType(val));
+        }
+
+        public static MessageElement PackMapType<K,T>(string name, Dictionary<K,T> val)
+        {
+            return NewMessageElementDispose(name, RobotRaconteurNode.s.PackMapType<K, T>(val));
+        }
+
+        public static MessageElement PackListType<T>(string name, List<T> val)
+        {
+            return NewMessageElementDispose(name, RobotRaconteurNode.s.PackListType<T>(val));
+        }
+
+        public static MessageElement PackEnum<T>(string name, T val)
+        {
+            return NewMessageElementDispose(name, new int[] { (int)(object)val });
+        }
+
+        public static MessageElement PackCStructureToArray<T>(string name, ref T val) where T : struct
+        {
+            return NewMessageElementDispose(name ,RobotRaconteurNode.s.PackCStructureToArray<T>(ref val));
+        }
+
+        public static MessageElement PackCStructureArray<T>(string name, T[] val) where T : struct
+        {
+            return NewMessageElementDispose(name, RobotRaconteurNode.s.PackCStructureArray<T>(val));
+        }
+
+        public static MessageElement PackCStructureMultiDimArray<T>(string name, CStructureMultiDimArray val) where T : struct
+        {
+            return NewMessageElementDispose(name, RobotRaconteurNode.s.PackCStructureMultiDimArray<T>(val));
+        }
+
+        public static T UnpackScalar<T>(MessageElement m) where T : struct, IConvertible
+        {
+            T[] a = CastDataAndDispose<T[]>(m);
+            if (a.Length != 1) throw new DataTypeException("Invalid scalar");
+            return a[0];
+        }
+
+        public static T[] UnpackArray<T>(MessageElement m) where T : struct, IConvertible
+        {
+            T[] a = CastDataAndDispose<T[]>(m);
+            if (a == null) throw new NullReferenceException();
+            return a;
+        }
+
+        public static MultiDimArray UnpackMultiDimArray(MessageElement m)
+        {
+            MultiDimArray a = RobotRaconteurNode.s.UnpackMultiDimArrayDispose(MessageElementUtil.CastDataAndDispose<MessageElementMultiDimArray>(m));
+            if (a == null) throw new NullReferenceException();
+            return a;
+        }
+
+        public static string UnpackString(MessageElement m)
+        {
+            string s = MessageElementUtil.CastDataAndDispose<string>(m);
+            if (s == null) throw new NullReferenceException();
+            return s;
+        }
+
+        public static T UnpackStructure<T>(MessageElement m)
+        {
+            return RobotRaconteurNode.s.UnpackStructureDispose<T>(MessageElementUtil.CastDataAndDispose<MessageElementStructure>(m));
+        }
+
+        public static object UnpackVarType(MessageElement m)
+        {
+            return RobotRaconteurNode.s.UnpackVarTypeDispose(m);
+        }
+
+        public static Dictionary<K,T> UnpackMap<K,T>(MessageElement m)
+        {
+            return (Dictionary<K, T>)RobotRaconteurNode.s.UnpackMapTypeDispose<K, T>(m.Data);
+        }
+
+        public static List<T> UnpackList<T>(MessageElement m)
+        {
+            return (List<T>)RobotRaconteurNode.s.UnpackListTypeDispose<T>(m.Data);
+        }
+
+        public static T UnpackEnum<T>(MessageElement m)
+        {
+            int[] a = CastDataAndDispose<int[]>(m);
+            if (a.Length != 1) throw new DataTypeException("Invalid enum");
+            return (T)(object)a[0];
+        }
+
+        public static T UnpackCStructureFromArray<T>(MessageElement m) where T : struct
+        {
+            return RobotRaconteurNode.s.UnpackCStructureFromArrayDispose<T>(CastDataAndDispose<MessageElementCStructureArray>(m));
+        }
+
+        public static T[] UnpackCStructureArray<T>(MessageElement m) where T : struct
+        {
+            return RobotRaconteurNode.s.UnpackCStructureArrayDispose<T>(CastDataAndDispose<MessageElementCStructureArray>(m));
+        }
+
+        public static CStructureMultiDimArray UnpackCStructureMultiDimArray<T>(MessageElement m) where T : struct
+        {
+            return RobotRaconteurNode.s.UnpackCStructureMultiDimArrayDispose<T>(MessageElementUtil.CastDataAndDispose<MessageElementCStructureMultiDimArray>(m));
         }
     }
 

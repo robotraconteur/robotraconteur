@@ -309,86 +309,24 @@ namespace RobotRaconteurGen
 
 	//Code to pack and unpack message elements
 
-	std::string CSharpServiceLangGen::str_pack_message_element(const std::string &elementname, const std::string &varname, const RR_SHARED_PTR<TypeDefinition> &t, const std::string &packer)
+	static std::string CSharpServiceLangGen_VerifyArrayLength(TypeDefinition& t, std::string varname)
 	{
-		std::string structpackstring = "";
-		if (IsTypeNumeric(t->Type))
+		if (t.ArrayType == DataTypes_ArrayTypes_array && t.ArrayLength.at(0) != 0)
 		{
-			switch (t->ArrayType)
-			{
-			case DataTypes_ArrayTypes_none:
-			{
-				convert_type_result ts = convert_type(*t);
-				structpackstring = "new " + ts.cs_type + "[] {" + varname + "}";
-				break;				
-			}
-			case DataTypes_ArrayTypes_array:
-			{
-				structpackstring = varname;
-				break;
-			}
-			case DataTypes_ArrayTypes_multidimarray:
-			{
-				convert_type_result ts = convert_type(*t);
-				structpackstring = "RobotRaconteurNode.s.PackMultiDimArray((MultiDimArray)" + varname + ")";
-				break;
-			}
-			default:
-				throw DataTypeException("Invalid array type");
-			}
-			
+			return "DataTypeUtil.VerifyArrayLength(" + varname + ", " + boost::lexical_cast<std::string>(t.ArrayLength.at(0)) + ", " + (t.ArrayVarLength ? "true" : "false") + ")";
 		}
-		else if (t->Type == DataTypes_string_t)
+		if (t.ArrayType == DataTypes_ArrayTypes_multidimarray && t.ArrayLength.size() != 0 && !t.ArrayVarLength)
 		{
-			structpackstring = varname ;
+			int32_t n_elems = boost::accumulate(t.ArrayLength, 1, std::multiplies<int32_t>());
+			return "DataTypeUtil.VerifyArrayLength(" + varname
+				+ "," + boost::lexical_cast<std::string>(n_elems) + ",new int[] {" + boost::join(t.ArrayLength | boost::adaptors::transformed(boost::lexical_cast<std::string, int32_t>), ",")
+				+ "})";
 		}
-		else if (t->Type == DataTypes_varvalue_t)
-		{
-			structpackstring = "RobotRaconteurNode.s.PackVarType(" + varname + ")";
-		}
-		else if (t->Type == DataTypes_namedtype_t)
-		{
-			RR_SHARED_PTR<NamedTypeDefinition> nt = t->ResolveNamedType();
-			switch (nt->RRDataType())
-			{
-			case DataTypes_structure_t:
-				structpackstring = "RobotRaconteurNode.s.PackStructure(" + varname + ")";
-				break;
-			case DataTypes_enum_t:
-				structpackstring = "new int[] {((int)" + varname + ")}";				
-				break;
-			case DataTypes_cstructure_t:
-				switch (t->ArrayType)
-				{
-				case DataTypes_ArrayTypes_none:
-				{
-					structpackstring = "RobotRaconteurNode.s.PackCStructureToArray<" + fix_qualified_name(t->TypeString) +  ">(ref " + varname + ")";
-					break;
-				}
-				case DataTypes_ArrayTypes_array:
-				{
-					structpackstring = "RobotRaconteurNode.s.PackCStructureArray<" + fix_qualified_name(t->TypeString) +  ">(" + varname + ")";
-					break;
-				}
-				case DataTypes_ArrayTypes_multidimarray:
-				{
-					structpackstring = "RobotRaconteurNode.s.PackCStructureMultiDimArray<" + fix_qualified_name(t->TypeString) + ">(" + varname + ")";
-					break;
-				}
-				default:
-					throw DataTypeException("Invalid array type");
-				}				
-				break;
-			default:
-				throw DataTypeException("Unknown named type id");
-			}
-			
-		}
-		else
-		{
-			throw DataTypeException("Unknown type");
-		}
+		return varname;
+	}
 
+	std::string CSharpServiceLangGen::str_pack_message_element(const std::string &elementname, const std::string &varname, const RR_SHARED_PTR<TypeDefinition> &t, const std::string &packer)
+	{		
 		TypeDefinition t1;
 		t->CopyTo(t1);
 		t1.RemoveContainers();
@@ -397,13 +335,94 @@ namespace RobotRaconteurGen
 		switch (t->ContainerType)
 		{
 		case DataTypes_ContainerTypes_none:
-			return "MessageElementUtil.NewMessageElementDispose(\"" + elementname + "\"," + structpackstring + ")";
+		{
+			if (IsTypeNumeric(t->Type))
+			{
+				switch (t->ArrayType)
+				{
+				case DataTypes_ArrayTypes_none:
+				{
+					convert_type_result ts = convert_type(*t);
+					return "MessageElementUtil.PackScalar<" + ts.cs_type + ">(\"" + elementname + "\"," + varname + ")";
+					break;
+				}
+				case DataTypes_ArrayTypes_array:
+				{
+					convert_type_result ts = convert_type(*t);
+					return "MessageElementUtil.PackArray<" + ts.cs_type + ">(\"" + elementname + "\"," + CSharpServiceLangGen_VerifyArrayLength(*t,varname) + ")";
+					break;
+				}
+				case DataTypes_ArrayTypes_multidimarray:
+				{
+					convert_type_result ts = convert_type(*t);
+					return "MessageElementUtil.PackMultiDimArray(\"" + elementname + "\",(MultiDimArray)" + CSharpServiceLangGen_VerifyArrayLength(*t,varname) + ")";
+					break;
+				}
+				default:
+					throw DataTypeException("Invalid array type");
+				}
+
+			}
+			else if (t->Type == DataTypes_string_t)
+			{
+				return "MessageElementUtil.PackString(\"" + elementname + "\"," + varname + ")";
+			}
+			else if (t->Type == DataTypes_varvalue_t)
+			{
+				return "MessageElementUtil.PackVarType(\"" + elementname + "\"," + varname + ")";
+			}
+			else if (t->Type == DataTypes_namedtype_t)
+			{
+				RR_SHARED_PTR<NamedTypeDefinition> nt = t->ResolveNamedType();
+				switch (nt->RRDataType())
+				{
+				case DataTypes_structure_t:
+					return "MessageElementUtil.PackStructure(\"" + elementname + "\"," + varname + ")";
+					break;
+				case DataTypes_enum_t:
+				{
+					convert_type_result ts = convert_type(*t);
+					return "MessageElementUtil.PackEnum<" + fix_qualified_name(t->TypeString) + ">(\"" + elementname + "\"," + varname + ")";
+					break;
+				}
+				case DataTypes_cstructure_t:
+					switch (t->ArrayType)
+					{
+					case DataTypes_ArrayTypes_none:
+					{
+						return "MessageElementUtil.PackCStructureToArray<" + fix_qualified_name(t->TypeString) + ">(\"" + elementname + "\",ref " + varname + ")";
+						break;
+					}
+					case DataTypes_ArrayTypes_array:
+					{
+						return "MessageElementUtil.PackCStructureArray<" + fix_qualified_name(t->TypeString) + ">(\"" + elementname + "\"," + CSharpServiceLangGen_VerifyArrayLength(*t,varname) + ")";
+						break;
+					}
+					case DataTypes_ArrayTypes_multidimarray:
+					{
+						return "MessageElementUtil.PackCStructureMultiDimArray<" + fix_qualified_name(t->TypeString) + ">(\"" + elementname + "\"," + CSharpServiceLangGen_VerifyArrayLength(*t,varname) + ")";
+						break;
+					}
+					default:
+						throw DataTypeException("Invalid array type");
+					}
+					break;
+				default:
+					throw DataTypeException("Unknown named type id");
+				}
+
+			}
+			else
+			{
+				throw DataTypeException("Unknown type");
+			}
+		}
 		case DataTypes_ContainerTypes_list:
-			return "MessageElementUtil.NewMessageElementDispose(\"" + elementname + "\",RobotRaconteurNode.s.PackListType<" + tt1.cs_type + tt1.cs_arr_type + ">(" + varname + "))";
+			return "MessageElementUtil.PackListType<" + tt1.cs_type + tt1.cs_arr_type + ">(\"" + elementname + "\"," + CSharpServiceLangGen_VerifyArrayLength(*t,varname) + ")";
 		case DataTypes_ContainerTypes_map_int32:
-			return "MessageElementUtil.NewMessageElementDispose(\"" + elementname + "\",RobotRaconteurNode.s.PackMapType<int," + tt1.cs_type + tt1.cs_arr_type + ">(" + varname + "))";
+			return "MessageElementUtil.PackMapType<int," + tt1.cs_type + tt1.cs_arr_type + ">(\"" + elementname + "\"," + CSharpServiceLangGen_VerifyArrayLength(*t,varname) + ")";
 		case DataTypes_ContainerTypes_map_string:
-			return "MessageElementUtil.NewMessageElementDispose(\"" + elementname + "\",RobotRaconteurNode.s.PackMapType<string," + tt1.cs_type + tt1.cs_arr_type + ">(" + varname + "))";
+			return "MessageElementUtil.PackMapType<string," + tt1.cs_type + tt1.cs_arr_type + ">(\"" + elementname + "\"," + CSharpServiceLangGen_VerifyArrayLength(*t,varname) + ")";
 		default:
 			throw DataTypeException("Invalid container type");
 
@@ -428,13 +447,13 @@ namespace RobotRaconteurGen
 			switch (t->ArrayType)
 			{
 			case DataTypes_ArrayTypes_none:
-				structunpackstring = "(MessageElementUtil.CastDataAndDispose<" + tt.cs_type + tt.cs_arr_type + "[]>(" + varname + "))[0]";
+				structunpackstring = "(MessageElementUtil.UnpackScalar<" + tt.cs_type + tt.cs_arr_type + ">(" + varname + "))";
 				break;
 			case DataTypes_ArrayTypes_array:
-				structunpackstring = ("MessageElementUtil.CastDataAndDispose<" + tt.cs_type + tt.cs_arr_type + ">(" + varname + ")");
+				structunpackstring = CSharpServiceLangGen_VerifyArrayLength(*t,"MessageElementUtil.UnpackArray<" + tt.cs_type + ">(" + varname + ")");
 				break;
 			case DataTypes_ArrayTypes_multidimarray:
-				structunpackstring = "RobotRaconteurNode.s.UnpackMultiDimArrayDispose(MessageElementUtil.CastDataAndDispose<MessageElementMultiDimArray>(" + varname + "))";
+				structunpackstring = CSharpServiceLangGen_VerifyArrayLength(*t,"MessageElementUtil.UnpackMultiDimArray(" + varname + ")");
 				break;
 			default:
 				throw DataTypeException("Invalid array type");
@@ -442,7 +461,7 @@ namespace RobotRaconteurGen
 		}
 		else if (t->Type == DataTypes_string_t)
 		{
-			structunpackstring = "MessageElementUtil.CastDataAndDispose<string>(" + varname + ")";
+			structunpackstring = "MessageElementUtil.UnpackString(" + varname + ")";
 		}
 		else if (t->Type == DataTypes_namedtype_t)
 		{
@@ -450,27 +469,27 @@ namespace RobotRaconteurGen
 			switch (nt->RRDataType())
 			{
 			case DataTypes_structure_t:
-				structunpackstring = "RobotRaconteurNode.s.UnpackStructureDispose<" + tt.cs_type + ">(MessageElementUtil.CastDataAndDispose<MessageElementStructure>(" + varname + "))";				
+				structunpackstring = "MessageElementUtil.UnpackStructure<" + tt.cs_type + ">(" + varname + ")";				
 				break;
 			case DataTypes_enum_t:
-				structunpackstring = "((" + tt.cs_type + ")(MessageElementUtil.CastDataAndDispose<int[]>(" + varname + "))[0])";
+				structunpackstring = "MessageElementUtil.UnpackEnum<" + tt.cs_type + ">(" + varname + ")";
 				break;
 			case DataTypes_cstructure_t:
 				switch (t->ArrayType)
 				{
 				case DataTypes_ArrayTypes_none:
 				{
-					structunpackstring = "RobotRaconteurNode.s.UnpackCStructureFromArrayDispose<" + fix_qualified_name(t->TypeString) + ">(MessageElementUtil.CastDataAndDispose<MessageElementCStructureArray>(" + varname + "))";
+					structunpackstring = "MessageElementUtil.UnpackCStructureFromArray<" + fix_qualified_name(t->TypeString) + ">(" + varname + ")";
 					break;
 				}
 				case DataTypes_ArrayTypes_array:
 				{
-					structunpackstring = "RobotRaconteurNode.s.UnpackCStructureArrayDispose<" + fix_qualified_name(t->TypeString) + ">(MessageElementUtil.CastDataAndDispose<MessageElementCStructureArray>(" + varname + "))";
+					structunpackstring = CSharpServiceLangGen_VerifyArrayLength(*t,"MessageElementUtil.UnpackCStructureArray<" + fix_qualified_name(t->TypeString) + ">(" + varname + ")");
 					break;
 				}
 				case DataTypes_ArrayTypes_multidimarray:
 				{
-					structunpackstring = "RobotRaconteurNode.s.UnpackCStructureMultiDimArrayDispose<" + fix_qualified_name(t->TypeString) + ">(MessageElementUtil.CastDataAndDispose<MessageElementCStructureMultiDimArray>(" + varname + "))";
+					structunpackstring = CSharpServiceLangGen_VerifyArrayLength(*t,"MessageElementUtil.UnpackCStructureMultiDimArray<" + fix_qualified_name(t->TypeString) + ">(" + varname + ")");
 					break;
 				}
 				default:
@@ -484,7 +503,7 @@ namespace RobotRaconteurGen
 
 		else if (t->Type == DataTypes_varvalue_t)
 		{
-			structunpackstring = "RobotRaconteurNode.s.UnpackVarTypeDispose(" + varname + ")";
+			structunpackstring = "MessageElementUtil.UnpackVarType(" + varname + ")";
 		}
 		else
 		{
@@ -496,11 +515,11 @@ namespace RobotRaconteurGen
 		case DataTypes_ContainerTypes_none:
 			return structunpackstring;
 		case DataTypes_ContainerTypes_list:
-			return "(List<" + tt.cs_type + tt.cs_arr_type + ">)RobotRaconteurNode.s.UnpackListTypeDispose<" + tt.cs_type + tt.cs_arr_type + ">(" + varname + ".Data)";
+			return CSharpServiceLangGen_VerifyArrayLength(*t,"MessageElementUtil.UnpackList<" + tt.cs_type + tt.cs_arr_type + ">(" + varname + ")");
 		case DataTypes_ContainerTypes_map_int32:
-			return "(Dictionary<int," + tt.cs_type + tt.cs_arr_type + ">)RobotRaconteurNode.s.UnpackMapTypeDispose<int," + tt.cs_type + tt.cs_arr_type + ">(" + varname + ".Data)";
+			return CSharpServiceLangGen_VerifyArrayLength(*t,"MessageElementUtil.UnpackMap<int," + tt.cs_type + tt.cs_arr_type + ">(" + varname + ")");
 		case DataTypes_ContainerTypes_map_string:
-			return "(Dictionary<string," + tt.cs_type + tt.cs_arr_type + ">)RobotRaconteurNode.s.UnpackMapTypeDispose<string," + tt.cs_type + tt.cs_arr_type + ">(" + varname + ".Data)";
+			return CSharpServiceLangGen_VerifyArrayLength(*t,"MessageElementUtil.UnpackMap<string," + tt.cs_type + tt.cs_arr_type + ">(" + varname + ")");
 		default:
 			throw DataTypeException("Invalid container type");
 		}

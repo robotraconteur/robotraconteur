@@ -189,6 +189,19 @@ namespace RobotRaconteurNETTest
                 throw new InvalidOperationException("");
             }
         }
+
+        public Wire<int[]> w1 { get; set; }
+        public Wire<int[]> w2 { get; set; }
+        public Wire<MultiDimArray> w3 { get; set; }
+        public Pipe<int[]> p1 { get; set; }
+        public Pipe<int[]> p2 { get; set; }
+        public Pipe<MultiDimArray> p3 { get; set; }
+        public List<double[]> d1 { get; set; }
+        public List<double[]> d2 { get; set; }
+        public Dictionary<int, double[]> d3 { get; set; }
+        public Dictionary<int, double[]> d4 { get; set; }
+        public List<MultiDimArray> d5 { get; set; }
+        public Dictionary<int, MultiDimArray> d6 { get; set; }
     }
 
     class func4_gen : SyncGenerator1<byte[], byte[]>
