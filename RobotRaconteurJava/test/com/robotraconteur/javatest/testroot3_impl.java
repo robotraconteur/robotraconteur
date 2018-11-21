@@ -247,6 +247,124 @@ public class testroot3_impl implements testroot3
 	public CStructureMultiDimArrayMemory<testcstruct2[]> get_cstruct_m2() {
 		return m_cstruct_m2;
 	}
+	@Override
+	public List<double[]> get_d1() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public void set_d1(List<double[]> value) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public List<double[]> get_d2() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public void set_d2(List<double[]> value) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public Map<Integer, double[]> get_d3() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public void set_d3(Map<Integer, double[]> value) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public Map<Integer, double[]> get_d4() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public void set_d4(Map<Integer, double[]> value) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public List<MultiDimArray> get_d5() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public void set_d5(List<MultiDimArray> value) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public Map<Integer, MultiDimArray> get_d6() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public void set_d6(Map<Integer, MultiDimArray> value) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	Pipe<int[]> p1;
+	@Override
+	public Pipe<int[]> get_p1() {		
+		return p1;
+	}
+	@Override
+	public void set_p1(Pipe<int[]> value) {
+		p1=value;
+		
+	}
+	Pipe<int[]> p2;
+	@Override
+	public Pipe<int[]> get_p2() {
+		return p2;
+	}
+	@Override
+	public void set_p2(Pipe<int[]> value) {
+		p2=value;		
+	}
+	Pipe<MultiDimArray> p3;
+	@Override
+	public Pipe<MultiDimArray> get_p3() {
+		return p3;
+	}
+	@Override
+	public void set_p3(Pipe<MultiDimArray> value) {
+		p3=value;		
+	}
+	Wire<int[]> w1;
+	@Override
+	public Wire<int[]> get_w1() {
+		return w1;
+	}
+	@Override
+	public void set_w1(Wire<int[]> value) {
+		w1=value;		
+	}
+	Wire<int[]> w2;
+	@Override
+	public Wire<int[]> get_w2() {
+		return w2;
+	}
+	@Override
+	public void set_w2(Wire<int[]> value) {
+		w2=value;
+		
+	}
+	
+	Wire<MultiDimArray> w3;
+	@Override
+	public Wire<MultiDimArray> get_w3() {
+		return w3;
+	}
+	@Override
+	public void set_w3(Wire<MultiDimArray> value) {
+		w3=value;		
+	}
 	
 	
 }

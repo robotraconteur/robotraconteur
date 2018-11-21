@@ -376,93 +376,46 @@ namespace RobotRaconteurGen
 
 	//Code to pack and unpack message elements
 
-	std::string JavaServiceLangGen::str_pack_message_element(const std::string &elementname, const std::string &varname, const RR_SHARED_PTR<TypeDefinition> &t, const std::string &packer)
+	static std::string JavaServiceLangGen_VerifyArrayLength(TypeDefinition& t, std::string varname)
 	{
-		std::string structpackstring = "";
-		if (IsTypeNumeric(t->Type))
+		std::string s = "";
+		if (t.ContainerType != DataTypes_ArrayTypes_none)
 		{
-
-			switch (t->ArrayType)
+			if (t.ArrayType == DataTypes_ArrayTypes_array)
 			{
-			case DataTypes_ArrayTypes_none:
+				s = "1";
+			}
+			else
 			{
-				convert_type_result ts = convert_type(*t);
-				if (t->Type == DataTypes_uint8_t || t->Type == DataTypes_uint16_t || t->Type == DataTypes_uint32_t || t->Type == DataTypes_uint64_t)
+				if (IsTypeNumeric(t.Type))
 				{
-					structpackstring = "" + varname + ".array()";
+					s = "2";
 				}
 				else
 				{
-					structpackstring = "new " + ts.java_type + "[] {" + varname + "}";
+					s = "3";
 				}
-				break;
-			}
-			case DataTypes_ArrayTypes_array:
-			{
-				structpackstring = varname;
-				break;
-			}
-			case DataTypes_ArrayTypes_multidimarray:
-			{
-				convert_type_result ts = convert_type(*t);
-				structpackstring = "RobotRaconteurNode.s().packMultiDimArray((MultiDimArray)" + varname + ")";
-				break;
-			}
-			default:
-				throw DataTypeException("Invalid array type");
-			}
-		}
-		else if (t->Type == DataTypes_string_t)
-		{
-			structpackstring = varname ;
-		}
-		else if (t->Type == DataTypes_varvalue_t)
-		{
-			structpackstring = "RobotRaconteurNode.s().packVarType(" + varname + ")";
-		}		
-		else if (t->Type == DataTypes_namedtype_t)
-		{
-			RR_SHARED_PTR<NamedTypeDefinition> nt = t->ResolveNamedType();
-			switch (nt->RRDataType())
-			{
-			case DataTypes_structure_t:
-				structpackstring = "RobotRaconteurNode.s().packStructure(" + varname + ")";
-				break;
-			case DataTypes_enum_t:
-				structpackstring = "new int[] {((int)" + varname + ".getValue())}";
-				break;
-			case DataTypes_cstructure_t:
-				switch (t->ArrayType)
-				{
-				case DataTypes_ArrayTypes_none:
-				{
-					structpackstring = "RobotRaconteurNode.s().packStructure( " + varname + ")";
-					break;
-				}
-				case DataTypes_ArrayTypes_array:
-				{
-					structpackstring = "RobotRaconteurNode.s().packStructure(" + varname + ")";
-					break;
-				}
-				case DataTypes_ArrayTypes_multidimarray:
-				{
-					structpackstring = "RobotRaconteurNode.s().packStructure(" + varname + ")";
-					break;
-				}
-				default:
-					throw DataTypeException("Invalid array type");
-				}
-				break;
-			default:
-				throw DataTypeException("Unknown named type id");
-			}
 
-		}
-		else
-		{
-			throw DataTypeException("Unknown type");
+			}
 		}
 
+
+		if (t.ArrayType == DataTypes_ArrayTypes_array && t.ArrayLength.at(0) != 0)
+		{
+			return "DataTypeUtil.verifyArrayLength" + s + "(" + varname + ", " + boost::lexical_cast<std::string>(t.ArrayLength.at(0)) + ", " + (t.ArrayVarLength ? "true" : "false") + ")";
+		}
+		if (t.ArrayType == DataTypes_ArrayTypes_multidimarray && t.ArrayLength.size() != 0 && !t.ArrayVarLength)
+		{
+			int32_t n_elems = boost::accumulate(t.ArrayLength, 1, std::multiplies<int32_t>());
+			return "DataTypeUtil.verifyArrayLength" + s + "(" + varname
+				+ "," + boost::lexical_cast<std::string>(n_elems) + ",new int[] {" + boost::join(t.ArrayLength | boost::adaptors::transformed(boost::lexical_cast<std::string, int32_t>), ",")
+				+ "})";
+		}
+		return varname;
+	}
+
+	std::string JavaServiceLangGen::str_pack_message_element(const std::string &elementname, const std::string &varname, const RR_SHARED_PTR<TypeDefinition> &t, const std::string &packer)
+	{		
 		TypeDefinition t1;
 		t->CopyTo(t1);
 		t1.RemoveContainers();
@@ -471,13 +424,101 @@ namespace RobotRaconteurGen
 		switch (t->ContainerType)
 		{
 		case DataTypes_ContainerTypes_none:
-			return "MessageElementUtil.newMessageElementDispose(\"" + elementname + "\"," + structpackstring + ")";
+		{
+			if (IsTypeNumeric(t->Type))
+			{
+
+				switch (t->ArrayType)
+				{
+				case DataTypes_ArrayTypes_none:
+				{
+					convert_type_result ts = convert_type(*t);
+					if (t->Type == DataTypes_uint8_t || t->Type == DataTypes_uint16_t || t->Type == DataTypes_uint32_t || t->Type == DataTypes_uint64_t)
+					{
+						return "MessageElementUtil.<" + ts.java_type + ts.java_arr_type + "s>packArray(\"" + elementname + "\"," + varname + ".array())";
+					}
+					else
+					{
+						return "MessageElementUtil.<" + ts.java_type + ts.java_arr_type + "[]>packArray(\"" + elementname + "\"," + "new " + ts.java_type + "[] {" + varname + "})";
+					}
+					break;
+				}
+				case DataTypes_ArrayTypes_array:
+				{
+					convert_type_result ts = convert_type(*t);
+					return "MessageElementUtil.<" + ts.java_type + ts.java_arr_type + ">packArray(\"" + elementname + "\"," + JavaServiceLangGen_VerifyArrayLength(*t, varname) + ")";
+					break;
+				}
+				case DataTypes_ArrayTypes_multidimarray:
+				{
+					convert_type_result ts = convert_type(*t);
+					return "MessageElementUtil.packMultiDimArray(\"" + elementname + "\",(MultiDimArray)" + JavaServiceLangGen_VerifyArrayLength(*t, varname) + ")";
+					break;
+				}
+				default:
+					throw DataTypeException("Invalid array type");
+				}
+			}
+			else if (t->Type == DataTypes_string_t)
+			{
+				return "MessageElementUtil.packString(\"" + elementname + "\"," + varname + ")";
+			}
+			else if (t->Type == DataTypes_varvalue_t)
+			{
+				return "MessageElementUtil.packVarType(\"" + elementname + "\"," + varname + ")";
+			}
+			else if (t->Type == DataTypes_namedtype_t)
+			{
+				RR_SHARED_PTR<NamedTypeDefinition> nt = t->ResolveNamedType();
+				switch (nt->RRDataType())
+				{
+				case DataTypes_structure_t:
+					return "MessageElementUtil.packStructure(\"" + elementname + "\"," + varname + ")";
+					break;
+				case DataTypes_enum_t:
+					return "MessageElementUtil.<int[]>packArray(\"" + elementname + "\", new int[] {((int)" + varname + ".getValue())})";
+					break;
+				case DataTypes_cstructure_t:
+					switch (t->ArrayType)
+					{
+					case DataTypes_ArrayTypes_none:
+					{
+						convert_type_result ts = convert_type(*t);
+						return "MessageElementUtil.<" + ts.java_type + ">packCStructureToArray(\"" + elementname + "\","  + JavaServiceLangGen_VerifyArrayLength(*t, varname) + ")";
+						break;
+					}
+					case DataTypes_ArrayTypes_array:
+					{
+						convert_type_result ts = convert_type(*t);
+						return "MessageElementUtil.<" + ts.java_type + ">packCStructureArray(\"" + elementname + "\"," + JavaServiceLangGen_VerifyArrayLength(*t, varname) + ")";
+						break;
+					}
+					case DataTypes_ArrayTypes_multidimarray:
+					{
+						convert_type_result ts = convert_type(*t);
+						return "MessageElementUtil.<" + ts.java_type + ">packCStructureMultiDimArray(\"" + elementname + "\"," + JavaServiceLangGen_VerifyArrayLength(*t, varname) + ")";
+						break;
+					}
+					default:
+						throw DataTypeException("Invalid array type");
+					}
+					break;
+				default:
+					throw DataTypeException("Unknown named type id");
+				}
+			}
+			else
+			{
+				throw DataTypeException("Unknown type");
+			}
+			break;
+		}
 		case DataTypes_ContainerTypes_list:
-			return "MessageElementUtil.newMessageElementDispose(\"" + elementname + "\",RobotRaconteurNode.s().<" + tt1.java_type + tt1.java_arr_type + ">packListType(" + varname + "," + tt1.java_type + tt1.java_arr_type + ".class))";
+			return "MessageElementUtil.<" + tt1.java_type + tt1.java_arr_type + ">packListType(\"" + elementname + "\"," + JavaServiceLangGen_VerifyArrayLength(*t,varname) + "," + tt1.java_type + tt1.java_arr_type + ".class)";
 		case DataTypes_ContainerTypes_map_int32:
-			return "MessageElementUtil.newMessageElementDispose(\"" + elementname + "\",RobotRaconteurNode.s().<Integer," + tt1.java_type + tt1.java_arr_type + ">packMapType(" + varname + ",Integer.class," + tt1.java_type + tt1.java_arr_type + ".class))";
+			return "MessageElementUtil.<Integer," + tt1.java_type + tt1.java_arr_type + ">packMapType(\"" + elementname + "\"," + JavaServiceLangGen_VerifyArrayLength(*t,varname) + ",Integer.class," + tt1.java_type + tt1.java_arr_type + ".class)";
 		case DataTypes_ContainerTypes_map_string:
-			return "MessageElementUtil.newMessageElementDispose(\"" + elementname + "\",RobotRaconteurNode.s().<String," + tt1.java_type + tt1.java_arr_type + ">packMapType(" + varname + ",String.class," + tt1.java_type + tt1.java_arr_type + ".class))";
+			return "MessageElementUtil.<String," + tt1.java_type + tt1.java_arr_type + ">packMapType(\"" + elementname + "\"," + JavaServiceLangGen_VerifyArrayLength(*t,varname) + ",String.class," + tt1.java_type + tt1.java_arr_type + ".class)";
 		default:
 			throw DataTypeException("Invalid container type");
 		}
@@ -513,12 +554,12 @@ namespace RobotRaconteurGen
 			}
 			case DataTypes_ArrayTypes_array:
 			{
-				structunpackstring = ("MessageElementUtil.<" + tt.java_type + tt.java_arr_type + ">castDataAndDispose(" + varname + ")");
+				structunpackstring = JavaServiceLangGen_VerifyArrayLength(*t, "MessageElementUtil.<" + tt.java_type + tt.java_arr_type + ">unpackArray(" + varname + ")");
 				break;
 			}
 			case DataTypes_ArrayTypes_multidimarray:
 			{
-				structunpackstring = "RobotRaconteurNode.s().unpackMultiDimArrayDispose(MessageElementUtil.<MessageElementMultiDimArray>castDataAndDispose(" + varname + "))";
+				structunpackstring = JavaServiceLangGen_VerifyArrayLength(*t, "MessageElementUtil.unpackMultiDimArray(" + varname + ")");
 				break;
 			}
 			default:
@@ -527,7 +568,7 @@ namespace RobotRaconteurGen
 		}
 		else if (t->Type == DataTypes_string_t)
 		{
-			structunpackstring = "MessageElementUtil.<String>castDataAndDispose(" + varname + ")";
+			structunpackstring = "MessageElementUtil.unpackString(" + varname + ")";
 		}		
 		else if (t->Type == DataTypes_namedtype_t)
 		{
@@ -535,7 +576,7 @@ namespace RobotRaconteurGen
 			switch (nt->RRDataType())
 			{
 			case DataTypes_structure_t:
-				structunpackstring = "RobotRaconteurNode.s().<" + tt.java_type + ">unpackStructureDispose(" + varname + ".<MessageElementStructure>castData())";
+				structunpackstring = "MessageElementUtil.<" + tt.java_type + ">unpackStructure(" + varname + ")";
 				break;
 			case DataTypes_enum_t:
 				structunpackstring = "" + tt.java_type + ".intToEnum((MessageElementUtil.<int[]>castDataAndDispose(" + varname + ")[0]))";
@@ -545,17 +586,17 @@ namespace RobotRaconteurGen
 				{
 				case DataTypes_ArrayTypes_none:
 				{
-					structunpackstring = "RobotRaconteurNode.s().<" + fix_qualified_name(t->TypeString) + "[]>unpackStructureDispose(MessageElementUtil.<MessageElementCStructureArray>castDataAndDispose(" + varname + "))[0]";
+					structunpackstring = "MessageElementUtil.<" + fix_qualified_name(t->TypeString) + ">unpackCStructureFromArray(" + varname + ")";
 					break;
 				}
 				case DataTypes_ArrayTypes_array:
 				{
-					structunpackstring = "RobotRaconteurNode.s().<" + fix_qualified_name(t->TypeString) + "[]>unpackStructureDispose(MessageElementUtil.<MessageElementCStructureArray>castDataAndDispose(" + varname + "))";
+					structunpackstring = JavaServiceLangGen_VerifyArrayLength(*t, "MessageElementUtil.<" + fix_qualified_name(t->TypeString) + ">unpackCStructureArray(" + varname + ")");
 					break;
 				}
 				case DataTypes_ArrayTypes_multidimarray:
 				{
-					structunpackstring = "RobotRaconteurNode.s().<CStructureMultiDimArray>unpackStructureDispose(MessageElementUtil.<MessageElementCStructureMultiDimArray>castDataAndDispose(" + varname + "))";
+					structunpackstring = JavaServiceLangGen_VerifyArrayLength(*t, "MessageElementUtil.unpackCStructureMultiDimArray(" + varname + ")");
 					break;
 				}
 				default:
@@ -570,7 +611,7 @@ namespace RobotRaconteurGen
 
 		else if (t->Type == DataTypes_varvalue_t)
 		{
-			structunpackstring = "RobotRaconteurNode.s().unpackVarTypeDispose(" + varname + ")";
+			structunpackstring = "MessageElementUtil.unpackVarType(" + varname + ")";
 		}
 		else
 		{
@@ -582,11 +623,11 @@ namespace RobotRaconteurGen
 		case DataTypes_ContainerTypes_none:
 			return structunpackstring;
 		case DataTypes_ContainerTypes_list:
-			return "(List<" + tt1.java_type + tt1.java_arr_type + ">)RobotRaconteurNode.s().<" + tt1.java_type + tt1.java_arr_type + ">unpackListTypeDispose(" + varname + ".getData())";
+			return JavaServiceLangGen_VerifyArrayLength(*t, "MessageElementUtil.<" + tt1.java_type + tt1.java_arr_type + ">unpackListType(" + varname + ")");
 		case DataTypes_ContainerTypes_map_int32:
-			return "(Map<Integer," + tt1.java_type + tt1.java_arr_type + ">)RobotRaconteurNode.s().<Integer," + tt1.java_type + tt1.java_arr_type + ">unpackMapTypeDispose(" + varname + ".getData())";
+			return JavaServiceLangGen_VerifyArrayLength(*t, "MessageElementUtil.<Integer," + tt1.java_type + tt1.java_arr_type + ">unpackMapType(" + varname + ")");
 		case DataTypes_ContainerTypes_map_string:
-			return "(Map<String," + tt1.java_type + tt1.java_arr_type + ">)RobotRaconteurNode.s().<String," + tt1.java_type + tt1.java_arr_type + ">unpackMapTypeDispose(" + varname + ".getData())";
+			return JavaServiceLangGen_VerifyArrayLength(*t, "MessageElementUtil.<String," + tt1.java_type + tt1.java_arr_type + ">unpackMapType(" + varname + ")");
 		default:
 			throw DataTypeException("Invalid container type");
 		}

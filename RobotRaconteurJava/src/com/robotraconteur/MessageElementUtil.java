@@ -1,5 +1,9 @@
 package com.robotraconteur;
 
+import java.lang.reflect.Array;
+import java.util.List;
+import java.util.Map;
+
 public class MessageElementUtil {
 	public static MessageElement newMessageElementDispose(String name, Object data)
 	{
@@ -161,4 +165,123 @@ public class MessageElementUtil {
             throw new RuntimeException("Could not determine Element Number");
         }
 	}
+	
+	public static <T> MessageElement packArray(String name, T val)
+    {
+        if (val == null)
+        {
+            throw new NullPointerException();
+        }
+        return newMessageElementDispose(name, val );
+    }
+
+    public static MessageElement packMultiDimArray(String name, MultiDimArray val)
+    {
+        if (val == null)
+        {
+            throw new NullPointerException();
+        }
+
+        return newMessageElementDispose(name, RobotRaconteurNode.s().packMultiDimArray(val));
+    }
+
+    public static MessageElement packString(String name, String val)
+    {
+        if (val == null)
+        {
+            throw new NullPointerException();
+        }
+        return newMessageElementDispose(name, val);
+    }
+
+    public static MessageElement packStructure(String name, Object val)
+    {
+        return newMessageElementDispose(name, RobotRaconteurNode.s().packStructure(val));
+    }
+            
+    public static MessageElement packVarType(String name, Object val)
+    {
+        return newMessageElementDispose(name, RobotRaconteurNode.s().packVarType(val));
+    }
+
+    public static <K,T> MessageElement packMapType(String name, Map<K,T> val, Class<?> Ktype, Class<?> Ttype)
+    {
+        return newMessageElementDispose(name, RobotRaconteurNode.s().<K, T>packMapType(val, Ktype, Ttype));
+    }
+
+    public static <T> MessageElement packListType(String name, List<T> val, Class<?> Ttype)
+    {
+        return newMessageElementDispose(name, RobotRaconteurNode.s().<T>packListType(val, Ttype));
+    }
+    
+    public static <T> MessageElement packCStructureToArray(String name, T val)
+    {
+        return newMessageElementDispose(name ,RobotRaconteurNode.s().packStructure(val));
+    }
+
+    public static <T> MessageElement packCStructureArray(String name, T[] val)
+    {
+        return newMessageElementDispose(name, RobotRaconteurNode.s().packStructure(val));
+    }
+
+    public static <T> MessageElement packCStructureMultiDimArray(String name, CStructureMultiDimArray val)
+    {
+        return newMessageElementDispose(name, RobotRaconteurNode.s().packStructure(val));
+    }
+
+    public static <T> T unpackArray(MessageElement m)
+    {
+        T a = MessageElementUtil.<T>castDataAndDispose(m);
+        if (a == null) throw new NullPointerException();
+        return a;
+    }
+
+    public static MultiDimArray unpackMultiDimArray(MessageElement m)
+    {
+        MultiDimArray a = RobotRaconteurNode.s().unpackMultiDimArrayDispose(MessageElementUtil.<MessageElementMultiDimArray>castDataAndDispose(m));
+        if (a == null) throw new NullPointerException();
+        return a;
+    }
+
+    public static String unpackString(MessageElement m)
+    {
+        String s = MessageElementUtil.<String>castDataAndDispose(m);
+        if (s == null) throw new NullPointerException();
+        return s;
+    }
+
+    public static <T> T unpackStructure(MessageElement m)
+    {
+        return RobotRaconteurNode.s().<T>unpackStructureDispose(MessageElementUtil.<MessageElementStructure>castDataAndDispose(m));
+    }
+
+    public static Object unpackVarType(MessageElement m)
+    {
+        return RobotRaconteurNode.s().unpackVarTypeDispose(m);
+    }
+
+    public static <K,T> Map<K,T> unpackMapType(MessageElement m)
+    {
+        return (Map<K, T>)RobotRaconteurNode.s().<K,T>unpackMapTypeDispose(m.getData());
+    }
+
+    public static <T> List<T> unpackListType(MessageElement m)
+    {
+        return (List<T>)RobotRaconteurNode.s().<T>unpackListTypeDispose(m.getData());
+    }
+   
+    public static <T> T unpackCStructureFromArray(MessageElement m)
+    {
+        return (RobotRaconteurNode.s().<T[]>unpackStructure(MessageElementUtil.<MessageElementCStructureArray>castDataAndDispose(m)))[0];
+    }
+
+    public static <T> T[] unpackCStructureArray(MessageElement m)
+    {
+        return RobotRaconteurNode.s().<T[]>unpackStructure(MessageElementUtil.<MessageElementCStructureArray>castDataAndDispose(m));
+    }
+
+    public static <T> CStructureMultiDimArray unpackCStructureMultiDimArray(MessageElement m)
+    {
+        return RobotRaconteurNode.s().unpackStructure(MessageElementUtil.<MessageElementCStructureMultiDimArray>castDataAndDispose(m));
+    }
 }
