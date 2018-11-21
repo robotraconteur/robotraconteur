@@ -10,21 +10,21 @@ public class teststruct3_stub implements IStructureStub {
     try {
     if (s1 ==null) return null;
     teststruct3 s = (teststruct3)s1;
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.newMessageElementDispose("s1",RobotRaconteurNode.s().packStructure( s.s1)));
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.newMessageElementDispose("s2",RobotRaconteurNode.s().packStructure(s.s2)));
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.newMessageElementDispose("s3",RobotRaconteurNode.s().packStructure(s.s3)));
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.newMessageElementDispose("s4",RobotRaconteurNode.s().packStructure(s.s4)));
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.newMessageElementDispose("s5",RobotRaconteurNode.s().packStructure(s.s5)));
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.newMessageElementDispose("s6",RobotRaconteurNode.s().packStructure(s.s6)));
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.newMessageElementDispose("s7",RobotRaconteurNode.s().<testcstruct1[]>packListType(s.s7,testcstruct1[].class)));
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.newMessageElementDispose("s8",RobotRaconteurNode.s().<testcstruct1[]>packListType(s.s8,testcstruct1[].class)));
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.newMessageElementDispose("s9",RobotRaconteurNode.s().<CStructureMultiDimArray>packListType(s.s9,CStructureMultiDimArray.class)));
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.newMessageElementDispose("s10",RobotRaconteurNode.s().packVarType(s.s10)));
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.newMessageElementDispose("s11",RobotRaconteurNode.s().packVarType(s.s11)));
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.newMessageElementDispose("s12",RobotRaconteurNode.s().packVarType(s.s12)));
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.newMessageElementDispose("s13",RobotRaconteurNode.s().packVarType(s.s13)));
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.newMessageElementDispose("s14",RobotRaconteurNode.s().packVarType(s.s14)));
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.newMessageElementDispose("s15",RobotRaconteurNode.s().packVarType(s.s15)));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<testcstruct1>packCStructureToArray("s1",s.s1));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<testcstruct1>packCStructureArray("s2",s.s2));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<testcstruct1>packCStructureArray("s3",DataTypeUtil.verifyArrayLength(s.s3, 11, false)));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<testcstruct1>packCStructureArray("s4",DataTypeUtil.verifyArrayLength(s.s4, 16, true)));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<CStructureMultiDimArray>packCStructureMultiDimArray("s5",DataTypeUtil.verifyArrayLength(s.s5,9,new int[] {3,3})));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<CStructureMultiDimArray>packCStructureMultiDimArray("s6",s.s6));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<testcstruct1[]>packListType("s7",s.s7,testcstruct1[].class));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<testcstruct1[]>packListType("s8",s.s8,testcstruct1[].class));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<CStructureMultiDimArray>packListType("s9",s.s9,CStructureMultiDimArray.class));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.packVarType("s10",s.s10));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.packVarType("s11",s.s11));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.packVarType("s12",s.s12));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.packVarType("s13",s.s13));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.packVarType("s14",s.s14));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.packVarType("s15",s.s15));
     return new MessageElementStructure("com.robotraconteur.testing.TestService3.teststruct3",m);
     }
     finally {
@@ -37,21 +37,21 @@ public class teststruct3_stub implements IStructureStub {
     vectorptr_messageelement mm=m2.getElements();
     try {
     teststruct3 s=new teststruct3();
-    s.s1 =RobotRaconteurNode.s().<testcstruct1[]>unpackStructureDispose(MessageElementUtil.<MessageElementCStructureArray>castDataAndDispose(MessageElement.findElement(mm,"s1")))[0];
-    s.s2 =RobotRaconteurNode.s().<testcstruct1[]>unpackStructureDispose(MessageElementUtil.<MessageElementCStructureArray>castDataAndDispose(MessageElement.findElement(mm,"s2")));
-    s.s3 =RobotRaconteurNode.s().<testcstruct1[]>unpackStructureDispose(MessageElementUtil.<MessageElementCStructureArray>castDataAndDispose(MessageElement.findElement(mm,"s3")));
-    s.s4 =RobotRaconteurNode.s().<testcstruct1[]>unpackStructureDispose(MessageElementUtil.<MessageElementCStructureArray>castDataAndDispose(MessageElement.findElement(mm,"s4")));
-    s.s5 =RobotRaconteurNode.s().<CStructureMultiDimArray>unpackStructureDispose(MessageElementUtil.<MessageElementCStructureMultiDimArray>castDataAndDispose(MessageElement.findElement(mm,"s5")));
-    s.s6 =RobotRaconteurNode.s().<CStructureMultiDimArray>unpackStructureDispose(MessageElementUtil.<MessageElementCStructureMultiDimArray>castDataAndDispose(MessageElement.findElement(mm,"s6")));
-    s.s7 =(List<testcstruct1[]>)RobotRaconteurNode.s().<testcstruct1[]>unpackListTypeDispose(MessageElement.findElement(mm,"s7").getData());
-    s.s8 =(List<testcstruct1[]>)RobotRaconteurNode.s().<testcstruct1[]>unpackListTypeDispose(MessageElement.findElement(mm,"s8").getData());
-    s.s9 =(List<CStructureMultiDimArray>)RobotRaconteurNode.s().<CStructureMultiDimArray>unpackListTypeDispose(MessageElement.findElement(mm,"s9").getData());
-    s.s10 =RobotRaconteurNode.s().unpackVarTypeDispose(MessageElement.findElement(mm,"s10"));
-    s.s11 =RobotRaconteurNode.s().unpackVarTypeDispose(MessageElement.findElement(mm,"s11"));
-    s.s12 =RobotRaconteurNode.s().unpackVarTypeDispose(MessageElement.findElement(mm,"s12"));
-    s.s13 =RobotRaconteurNode.s().unpackVarTypeDispose(MessageElement.findElement(mm,"s13"));
-    s.s14 =RobotRaconteurNode.s().unpackVarTypeDispose(MessageElement.findElement(mm,"s14"));
-    s.s15 =RobotRaconteurNode.s().unpackVarTypeDispose(MessageElement.findElement(mm,"s15"));
+    s.s1 =MessageElementUtil.<testcstruct1>unpackCStructureFromArray(MessageElement.findElement(mm,"s1"));
+    s.s2 =MessageElementUtil.<testcstruct1>unpackCStructureArray(MessageElement.findElement(mm,"s2"));
+    s.s3 =DataTypeUtil.verifyArrayLength(MessageElementUtil.<testcstruct1>unpackCStructureArray(MessageElement.findElement(mm,"s3")), 11, false);
+    s.s4 =DataTypeUtil.verifyArrayLength(MessageElementUtil.<testcstruct1>unpackCStructureArray(MessageElement.findElement(mm,"s4")), 16, true);
+    s.s5 =DataTypeUtil.verifyArrayLength(MessageElementUtil.unpackCStructureMultiDimArray(MessageElement.findElement(mm,"s5")),9,new int[] {3,3});
+    s.s6 =MessageElementUtil.unpackCStructureMultiDimArray(MessageElement.findElement(mm,"s6"));
+    s.s7 =MessageElementUtil.<testcstruct1[]>unpackListType(MessageElement.findElement(mm,"s7"));
+    s.s8 =MessageElementUtil.<testcstruct1[]>unpackListType(MessageElement.findElement(mm,"s8"));
+    s.s9 =MessageElementUtil.<CStructureMultiDimArray>unpackListType(MessageElement.findElement(mm,"s9"));
+    s.s10 =MessageElementUtil.unpackVarType(MessageElement.findElement(mm,"s10"));
+    s.s11 =MessageElementUtil.unpackVarType(MessageElement.findElement(mm,"s11"));
+    s.s12 =MessageElementUtil.unpackVarType(MessageElement.findElement(mm,"s12"));
+    s.s13 =MessageElementUtil.unpackVarType(MessageElement.findElement(mm,"s13"));
+    s.s14 =MessageElementUtil.unpackVarType(MessageElement.findElement(mm,"s14"));
+    s.s15 =MessageElementUtil.unpackVarType(MessageElement.findElement(mm,"s15"));
     T st; try {st=(T)s;} catch (Exception e) {throw new RuntimeException(new DataTypeMismatchException("Wrong structuretype"));}
     return st;
     }

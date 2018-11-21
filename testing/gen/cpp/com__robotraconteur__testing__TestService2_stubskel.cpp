@@ -4,6 +4,7 @@
 #include "com__robotraconteur__testing__TestService2_stubskel.h"
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/assign/list_of.hpp>
 #else
 #include "stdafx.h"
 #endif
@@ -176,13 +177,14 @@ RR_SHARED_PTR<RobotRaconteur::MessageElementStructure> ostruct2_stub::PackStruct
 {
 RR_SHARED_PTR<ostruct2 > s2=RobotRaconteur::rr_cast<ostruct2 >(s);
 std::vector<RR_SHARED_PTR<RobotRaconteur::MessageElement> > vret;
-vret.push_back(RR_MAKE_SHARED<RobotRaconteur::MessageElement>("a1",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(s2->a1)));
+vret.push_back(RobotRaconteur::MessageElement_PackArrayElement<double >("a1",s2->a1));
 return RR_MAKE_SHARED<RobotRaconteur::MessageElementStructure>("com.robotraconteur.testing.TestService2.ostruct2",vret);
 }
 RR_SHARED_PTR<RobotRaconteur::RRStructure> ostruct2_stub::UnpackStructure(RR_SHARED_PTR<RobotRaconteur::MessageElementStructure> m)
 {
+std::vector<RR_SHARED_PTR<RobotRaconteur::MessageElement> >& i = m->Elements;
 RR_SHARED_PTR<ostruct2 > ret=RR_MAKE_SHARED<ostruct2 >();
-ret->a1=RobotRaconteur::MessageElement::FindElement(m->Elements,"a1")->CastData<RobotRaconteur::RRArray<double > >();
+ret->a1=RobotRaconteur::MessageElement_UnpackArray<double >(RobotRaconteur::MessageElement::FindElement(i,"a1"));
 return ret;
 }
 
@@ -191,7 +193,7 @@ void baseobj_stub::RRInitStub()
 {
 rrvar_p1=RR_MAKE_SHARED<RobotRaconteur::PipeClient<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > >("p1",shared_from_this(), false,RobotRaconteur::MemberDefinition_Direction_both) ;
 rrvar_cb2=RR_MAKE_SHARED<RobotRaconteur::CallbackClient<boost::function<void(double, double) > > >("cb2") ;
-rrvar_w1=RR_MAKE_SHARED<RobotRaconteur::WireClient<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > >("w1",shared_from_this(),RobotRaconteur::MemberDefinition_Direction_both) ;
+rrvar_w1=RR_MAKE_SHARED<RobotRaconteur::WireClient<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > >("w1",shared_from_this(),RobotRaconteur::MemberDefinition_Direction_both);
 rrvar_m1=RR_MAKE_SHARED<RobotRaconteur::ArrayMemoryClient<double > >("m1",shared_from_this(),RobotRaconteur::MemberDefinition_Direction_both);
 }
 
@@ -200,12 +202,12 @@ double baseobj_stub::get_d1()
 RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"d1");
 RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
 RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
-return RobotRaconteur::RRArrayToScalar<double >(me->CastData<RobotRaconteur::RRArray<double > >());
+return RobotRaconteur::MessageElement_UnpackScalar<double >(me);
 }
 void baseobj_stub::set_d1(double value)
 {
 RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"d1");
-req->AddElement(RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<double >(value))));
+req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<double >("value",value));
 RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
@@ -214,23 +216,23 @@ RR_SHARED_PTR<RobotRaconteur::RRArray<double > > baseobj_stub::get_d2()
 RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"d2");
 RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
 RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
-return me->CastData<RobotRaconteur::RRArray<double > >();
+return RobotRaconteur::MessageElement_UnpackArray<double >(me);
 }
 void baseobj_stub::set_d2(RR_SHARED_PTR<RobotRaconteur::RRArray<double > > value)
 {
 RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"d2");
-req->AddElement(RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(value)));
+req->AddElement(RobotRaconteur::MessageElement_PackArrayElement<double >("value",value));
 RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
 double baseobj_stub::func3(double d1, double d2)
 {
 RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_FunctionCallReq,"func3");
-rr_req->AddElement(RR_MAKE_SHARED<RobotRaconteur::MessageElement>("d1",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<double >(d1))));
-rr_req->AddElement(RR_MAKE_SHARED<RobotRaconteur::MessageElement>("d2",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<double >(d2))));
+rr_req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<double >("d1",d1));
+rr_req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<double >("d2",d2));
 RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_ret=ProcessRequest(rr_req);
 RR_SHARED_PTR<RobotRaconteur::MessageElement> rr_me=rr_ret->FindElement("return");
-return RobotRaconteur::RRArrayToScalar<double >(rr_me->CastData<RobotRaconteur::RRArray<double > >());
+return RobotRaconteur::MessageElement_UnpackScalar<double >(rr_me);
 }
 
 boost::signals2::signal<void ()>& baseobj_stub::get_ev1()
@@ -316,8 +318,8 @@ rr_mr->ServicePath=rr_m->ServicePath;
 rr_mr->RequestID=rr_m->RequestID;
 if (rr_m->MemberName=="cb2")
 {
-double d1=RobotRaconteur::RRArrayToScalar<double >(rr_m->FindElement("d1")->CastData<RobotRaconteur::RRArray<double > >());
-double d2=RobotRaconteur::RRArrayToScalar<double >(rr_m->FindElement("d2")->CastData<RobotRaconteur::RRArray<double > >());
+double d1=RobotRaconteur::MessageElement_UnpackScalar<double >(rr_m->FindElement("d1"));
+double d2=RobotRaconteur::MessageElement_UnpackScalar<double >(rr_m->FindElement("d2"));
 rrvar_cb2->GetFunction()(d1, d2);
 rr_mr->AddElement("return",RobotRaconteur::ScalarToRRArray<int32_t>(0));
 return rr_mr;
@@ -378,7 +380,7 @@ double rr_ret;
 try
 {
 RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
-rr_ret=RobotRaconteur::RRArrayToScalar<double >(me->CastData<RobotRaconteur::RRArray<double > >());
+rr_ret=RobotRaconteur::MessageElement_UnpackScalar<double >(me);
 }
 catch (std::exception& err2)
 {
@@ -389,7 +391,7 @@ handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 void baseobj_stub::async_set_d1(double value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
 RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"d1");
-req->AddElement(RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<double >(value))));
+req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<double >("value",value));
 AsyncProcessRequest(req,boost::bind(&baseobj_stub::rrend_set_d1, RobotRaconteur::rr_cast<baseobj_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
 void baseobj_stub::rrend_set_d1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
@@ -427,7 +429,7 @@ RR_SHARED_PTR<RobotRaconteur::RRArray<double > > rr_ret;
 try
 {
 RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
-rr_ret=me->CastData<RobotRaconteur::RRArray<double > >();
+rr_ret=RobotRaconteur::MessageElement_UnpackArray<double >(me);
 }
 catch (std::exception& err2)
 {
@@ -438,7 +440,7 @@ handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 void baseobj_stub::async_set_d2(RR_SHARED_PTR<RobotRaconteur::RRArray<double > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
 RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"d2");
-req->AddElement(RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(value)));
+req->AddElement(RobotRaconteur::MessageElement_PackArrayElement<double >("value",value));
 AsyncProcessRequest(req,boost::bind(&baseobj_stub::rrend_set_d2, RobotRaconteur::rr_cast<baseobj_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
 void baseobj_stub::rrend_set_d2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
@@ -458,8 +460,8 @@ handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 void baseobj_stub::async_func3(double d1, double d2,boost::function<void (double, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
 RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_FunctionCallReq,"func3");
-rr_req->AddElement(RR_MAKE_SHARED<RobotRaconteur::MessageElement>("d1",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<double >(d1))));
-rr_req->AddElement(RR_MAKE_SHARED<RobotRaconteur::MessageElement>("d2",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<double >(d2))));
+rr_req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<double >("d1",d1));
+rr_req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<double >("d2",d2));
 AsyncProcessRequest(rr_req,boost::bind(&baseobj_stub::rrend_func3, RobotRaconteur::rr_cast<baseobj_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
 
@@ -479,7 +481,7 @@ double rr_ret;
 try
 {
 RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("return");
-rr_ret=RobotRaconteur::RRArrayToScalar<double >(me->CastData<RobotRaconteur::RRArray<double > >());
+rr_ret=RobotRaconteur::MessageElement_UnpackScalar<double >(me);
 }
 catch (std::exception& err2)
 {
@@ -500,10 +502,10 @@ void subobj_stub::RRInitStub()
 double subobj_stub::add_val(double v)
 {
 RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_FunctionCallReq,"add_val");
-rr_req->AddElement(RR_MAKE_SHARED<RobotRaconteur::MessageElement>("v",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<double >(v))));
+rr_req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<double >("v",v));
 RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_ret=ProcessRequest(rr_req);
 RR_SHARED_PTR<RobotRaconteur::MessageElement> rr_me=rr_ret->FindElement("return");
-return RobotRaconteur::RRArrayToScalar<double >(rr_me->CastData<RobotRaconteur::RRArray<double > >());
+return RobotRaconteur::MessageElement_UnpackScalar<double >(rr_me);
 }
 
 void subobj_stub::DispatchEvent(RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_m)
@@ -549,7 +551,7 @@ return ServiceStub::RRGetWireClient(membername);
 void subobj_stub::async_add_val(double v,boost::function<void (double, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
 RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_FunctionCallReq,"add_val");
-rr_req->AddElement(RR_MAKE_SHARED<RobotRaconteur::MessageElement>("v",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<double >(v))));
+rr_req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<double >("v",v));
 AsyncProcessRequest(rr_req,boost::bind(&subobj_stub::rrend_add_val, RobotRaconteur::rr_cast<subobj_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
 
@@ -569,7 +571,7 @@ double rr_ret;
 try
 {
 RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("return");
-rr_ret=RobotRaconteur::RRArrayToScalar<double >(me->CastData<RobotRaconteur::RRArray<double > >());
+rr_ret=RobotRaconteur::MessageElement_UnpackScalar<double >(me);
 }
 catch (std::exception& err2)
 {
@@ -619,7 +621,7 @@ return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
 else
 {
 double value=get_obj()->get_d1();
-mr->AddElement(RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<double >(value))));
+mr->AddElement(RobotRaconteur::MessageElement_PackScalarElement<double >("value",value));
 return mr;
 }
 }
@@ -634,7 +636,7 @@ return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
 else
 {
 RR_SHARED_PTR<RobotRaconteur::RRArray<double > > value=get_obj()->get_d2();
-mr->AddElement(RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(value)));
+mr->AddElement(RobotRaconteur::MessageElement_PackArrayElement<double >("value",value));
 return mr;
 }
 }
@@ -647,7 +649,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=RR_MAKE_SHARED<RobotRaconteur::Me
 RR_SHARED_PTR<com::robotraconteur::testing::TestService2::async_baseobj > async_obj=get_asyncobj();
 if (m->MemberName == "d1")
 {
-double value=RobotRaconteur::RRArrayToScalar<double >(m->FindElement("value")->CastData<RobotRaconteur::RRArray<double > >());
+double value=RobotRaconteur::MessageElement_UnpackScalar<double >(m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService2::baseobj_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService2::baseobj_skel>(shared_from_this());
@@ -662,7 +664,7 @@ return mr;
 }
 if (m->MemberName == "d2")
 {
-RR_SHARED_PTR<RobotRaconteur::RRArray<double > > value=m->FindElement("value")->CastData<RobotRaconteur::RRArray<double > >();
+RR_SHARED_PTR<RobotRaconteur::RRArray<double > > value=RobotRaconteur::MessageElement_UnpackArray<double >(m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService2::baseobj_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService2::baseobj_skel>(shared_from_this());
@@ -690,7 +692,7 @@ try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService2::baseobj_skel> skel1=skel.lock();
 if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
-mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<double >(value)));
+mr=RobotRaconteur::MessageElement_PackScalarElement<double >("value",value);
 }
 catch (std::exception& err2)
 {
@@ -711,7 +713,7 @@ try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService2::baseobj_skel> skel1=skel.lock();
 if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
-mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("value",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(value));
+mr=RobotRaconteur::MessageElement_PackArrayElement<double >("value",value);
 }
 catch (std::exception& err2)
 {
@@ -726,8 +728,8 @@ RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_mr=RR_MAKE_SHARED<RobotRaconteur:
 RR_SHARED_PTR<com::robotraconteur::testing::TestService2::async_baseobj > async_obj=get_asyncobj();
 if (rr_m->MemberName == "func3")
 {
-double d1 =RobotRaconteur::RRArrayToScalar<double >(rr_m->FindElement("d1")->CastData<RobotRaconteur::RRArray<double > >());
-double d2 =RobotRaconteur::RRArrayToScalar<double >(rr_m->FindElement("d2")->CastData<RobotRaconteur::RRArray<double > >());
+double d1 =RobotRaconteur::MessageElement_UnpackScalar<double >(rr_m->FindElement("d1"));
+double d2 =RobotRaconteur::MessageElement_UnpackScalar<double >(rr_m->FindElement("d2"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService2::baseobj_skel> rr_wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService2::baseobj_skel>(shared_from_this());
@@ -737,7 +739,7 @@ return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
 else
 {
 double rr_return=get_obj()->func3(d1, d2);
-rr_mr->AddElement(RR_MAKE_SHARED<RobotRaconteur::MessageElement>("return",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<double >(rr_return))));
+rr_mr->AddElement(RobotRaconteur::MessageElement_PackScalarElement<double >("return",rr_return));
 return rr_mr;
 }
 }
@@ -756,7 +758,7 @@ try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService2::baseobj_skel> skel1=skel.lock();
 if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
-mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("return",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<double >(ret)));
+mr=RobotRaconteur::MessageElement_PackScalarElement<double >("return",ret);
 }
 catch (std::exception& err2)
 {
@@ -856,8 +858,8 @@ obj->set_cb2(RR_MAKE_SHARED<RobotRaconteur::CallbackServer<boost::function<void(
 void baseobj_skel::rr_cb2_callback(uint32_t rrendpoint, double d1, double d2){
 RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_CallbackCallReq,"cb2");
 rr_req->ServicePath=GetServicePath();
-rr_req->AddElement(RR_MAKE_SHARED<RobotRaconteur::MessageElement>("d1",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<double >(d1))));
-rr_req->AddElement(RR_MAKE_SHARED<RobotRaconteur::MessageElement>("d2",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<double >(d2))));
+rr_req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<double >("d1",d1));
+rr_req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<double >("d2",d2));
 RR_SHARED_PTR<RobotRaconteur::ServerContext> rr_s=GetContext();
 if (rr_s==0) throw RobotRaconteur::InvalidOperationException("Service has been closed");
 RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_ret=rr_s->ProcessCallbackRequest(rr_req,rrendpoint);
@@ -923,7 +925,7 @@ RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_mr=RR_MAKE_SHARED<RobotRaconteur:
 RR_SHARED_PTR<com::robotraconteur::testing::TestService2::async_subobj > async_obj=get_asyncobj();
 if (rr_m->MemberName == "add_val")
 {
-double v =RobotRaconteur::RRArrayToScalar<double >(rr_m->FindElement("v")->CastData<RobotRaconteur::RRArray<double > >());
+double v =RobotRaconteur::MessageElement_UnpackScalar<double >(rr_m->FindElement("v"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService2::subobj_skel> rr_wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService2::subobj_skel>(shared_from_this());
@@ -933,7 +935,7 @@ return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
 else
 {
 double rr_return=get_obj()->add_val(v);
-rr_mr->AddElement(RR_MAKE_SHARED<RobotRaconteur::MessageElement>("return",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<double >(rr_return))));
+rr_mr->AddElement(RobotRaconteur::MessageElement_PackScalarElement<double >("return",rr_return));
 return rr_mr;
 }
 }
@@ -952,7 +954,7 @@ try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService2::subobj_skel> skel1=skel.lock();
 if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
-mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("return",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::ScalarToRRArray<double >(ret)));
+mr=RobotRaconteur::MessageElement_PackScalarElement<double >("return",ret);
 }
 catch (std::exception& err2)
 {

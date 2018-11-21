@@ -7,12 +7,12 @@ public class sub1_stub extends ServiceStub implements sub1, async_sub1 {
         super(innerstub); 
     }
     public double[] get_d1() {
-    return MessageElementUtil.<double[]>castDataAndDispose(rr_innerstub.propertyGet("d1"));
+    return MessageElementUtil.<double[]>unpackArray(rr_innerstub.propertyGet("d1"));
     }
     public void set_d1(double[] value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.<double[]>packArray("value",value);
     rr_innerstub.propertySet("d1", m);
     }
     finally {
@@ -20,12 +20,12 @@ public class sub1_stub extends ServiceStub implements sub1, async_sub1 {
     }
     }
     public MultiDimArray get_d2() {
-    return RobotRaconteurNode.s().unpackMultiDimArrayDispose(MessageElementUtil.<MessageElementMultiDimArray>castDataAndDispose(rr_innerstub.propertyGet("d2")));
+    return MessageElementUtil.unpackMultiDimArray(rr_innerstub.propertyGet("d2"));
     }
     public void set_d2(MultiDimArray value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().packMultiDimArray((MultiDimArray)value));
+    m=MessageElementUtil.packMultiDimArray("value",(MultiDimArray)value);
     rr_innerstub.propertySet("d2", m);
     }
     finally {
@@ -33,12 +33,12 @@ public class sub1_stub extends ServiceStub implements sub1, async_sub1 {
     }
     }
     public String get_s_ind() {
-    return MessageElementUtil.<String>castDataAndDispose(rr_innerstub.propertyGet("s_ind"));
+    return MessageElementUtil.unpackString(rr_innerstub.propertyGet("s_ind"));
     }
     public void set_s_ind(String value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.packString("value",value);
     rr_innerstub.propertySet("s_ind", m);
     }
     finally {
@@ -51,7 +51,7 @@ public class sub1_stub extends ServiceStub implements sub1, async_sub1 {
     public void set_i_ind(int value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",new int[] {value});
+    m=MessageElementUtil.<int[]>packArray("value",new int[] {value});
     rr_innerstub.propertySet("i_ind", m);
     }
     finally {
@@ -87,7 +87,7 @@ public class sub1_stub extends ServiceStub implements sub1, async_sub1 {
     }
     double[] rr_ret;
     try {
-    rr_ret=MessageElementUtil.<double[]>castDataAndDispose(value);
+    rr_ret=MessageElementUtil.<double[]>unpackArray(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -99,7 +99,7 @@ public class sub1_stub extends ServiceStub implements sub1, async_sub1 {
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.<double[]>packArray("value",value);
     rr_async_PropertySet("d1",m,new rrend_async_set_d1(),rr_handler,rr_timeout);
     }
     finally {
@@ -133,7 +133,7 @@ public class sub1_stub extends ServiceStub implements sub1, async_sub1 {
     }
     MultiDimArray rr_ret;
     try {
-    rr_ret=RobotRaconteurNode.s().unpackMultiDimArrayDispose(MessageElementUtil.<MessageElementMultiDimArray>castDataAndDispose(value));
+    rr_ret=MessageElementUtil.unpackMultiDimArray(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -145,7 +145,7 @@ public class sub1_stub extends ServiceStub implements sub1, async_sub1 {
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().packMultiDimArray((MultiDimArray)value));
+    m=MessageElementUtil.packMultiDimArray("value",(MultiDimArray)value);
     rr_async_PropertySet("d2",m,new rrend_async_set_d2(),rr_handler,rr_timeout);
     }
     finally {
@@ -179,7 +179,7 @@ public class sub1_stub extends ServiceStub implements sub1, async_sub1 {
     }
     String rr_ret;
     try {
-    rr_ret=MessageElementUtil.<String>castDataAndDispose(value);
+    rr_ret=MessageElementUtil.unpackString(value);
     } catch (RuntimeException err2) {
     rr_handler.action("",err2);
     return;
@@ -191,7 +191,7 @@ public class sub1_stub extends ServiceStub implements sub1, async_sub1 {
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.packString("value",value);
     rr_async_PropertySet("s_ind",m,new rrend_async_set_s_ind(),rr_handler,rr_timeout);
     }
     finally {
@@ -237,7 +237,7 @@ public class sub1_stub extends ServiceStub implements sub1, async_sub1 {
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",new int[] {value});
+    m=MessageElementUtil.<int[]>packArray("value",new int[] {value});
     rr_async_PropertySet("i_ind",m,new rrend_async_set_i_ind(),rr_handler,rr_timeout);
     }
     finally {

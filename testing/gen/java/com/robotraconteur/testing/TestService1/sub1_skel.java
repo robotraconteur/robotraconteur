@@ -16,39 +16,39 @@ public class sub1_skel extends ServiceSkel {
     if(membername.equals( "d1"))
     {
     double[] ret=obj.get_d1();
-    return MessageElementUtil.newMessageElementDispose("return",ret);
+    return MessageElementUtil.<double[]>packArray("return",ret);
     }
     if(membername.equals( "d2"))
     {
     MultiDimArray ret=obj.get_d2();
-    return MessageElementUtil.newMessageElementDispose("return",RobotRaconteurNode.s().packMultiDimArray((MultiDimArray)ret));
+    return MessageElementUtil.packMultiDimArray("return",(MultiDimArray)ret);
     }
     if(membername.equals( "s_ind"))
     {
     String ret=obj.get_s_ind();
-    return MessageElementUtil.newMessageElementDispose("return",ret);
+    return MessageElementUtil.packString("return",ret);
     }
     if(membername.equals( "i_ind"))
     {
     int ret=obj.get_i_ind();
-    return MessageElementUtil.newMessageElementDispose("return",new int[] {ret});
+    return MessageElementUtil.<int[]>packArray("return",new int[] {ret});
     }
     throw new MemberNotFoundException("Member not found");
     }
     public void callSetProperty(String membername, MessageElement m) {
     if(membername.equals( "d1"))
     {
-    obj.set_d1(MessageElementUtil.<double[]>castDataAndDispose(m));
+    obj.set_d1(MessageElementUtil.<double[]>unpackArray(m));
     return;
     }
     if(membername.equals( "d2"))
     {
-    obj.set_d2(RobotRaconteurNode.s().unpackMultiDimArrayDispose(MessageElementUtil.<MessageElementMultiDimArray>castDataAndDispose(m)));
+    obj.set_d2(MessageElementUtil.unpackMultiDimArray(m));
     return;
     }
     if(membername.equals( "s_ind"))
     {
-    obj.set_s_ind(MessageElementUtil.<String>castDataAndDispose(m));
+    obj.set_s_ind(MessageElementUtil.unpackString(m));
     return;
     }
     if(membername.equals( "i_ind"))

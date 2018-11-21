@@ -23,7 +23,7 @@ public class subobj_skel extends ServiceSkel {
     {
     double v=(MessageElementUtil.<double[]>castDataAndDispose(vectorptr_messageelement_util.findElement(rr_m,"v")))[0];
     double rr_ret=obj.add_val(v);
-    return MessageElementUtil.newMessageElementDispose("return",new double[] {rr_ret});
+    return MessageElementUtil.<double[]>packArray("return",new double[] {rr_ret});
     }
     throw new MemberNotFoundException("Member not found");
     }

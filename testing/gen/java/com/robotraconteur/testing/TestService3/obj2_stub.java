@@ -7,12 +7,12 @@ public class obj2_stub extends ServiceStub implements obj2, async_obj2 {
         super(innerstub); 
     }
     public double[] get_d1() {
-    return MessageElementUtil.<double[]>castDataAndDispose(rr_innerstub.propertyGet("d1"));
+    return MessageElementUtil.<double[]>unpackArray(rr_innerstub.propertyGet("d1"));
     }
     public void set_d1(double[] value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.<double[]>packArray("value",value);
     rr_innerstub.propertySet("d1", m);
     }
     finally {
@@ -39,7 +39,7 @@ public class obj2_stub extends ServiceStub implements obj2, async_obj2 {
     }
     double[] rr_ret;
     try {
-    rr_ret=MessageElementUtil.<double[]>castDataAndDispose(value);
+    rr_ret=MessageElementUtil.<double[]>unpackArray(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -51,7 +51,7 @@ public class obj2_stub extends ServiceStub implements obj2, async_obj2 {
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.<double[]>packArray("value",value);
     rr_async_PropertySet("d1",m,new rrend_async_set_d1(),rr_handler,rr_timeout);
     }
     finally {

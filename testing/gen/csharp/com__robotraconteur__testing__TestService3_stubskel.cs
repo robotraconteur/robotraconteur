@@ -12,7 +12,7 @@ public class com__robotraconteur__testing__TestService3Factory : ServiceFactory
 {
     public override string DefString()
 {
-    const string s="service com.robotraconteur.testing.TestService3\n\nstdver 0.9.0\n#option version 0.9.0\n\nimport com.robotraconteur.testing.TestService1\nusing  com.robotraconteur.testing.TestService1.testroot\nusing  com.robotraconteur.testing.TestService1.teststruct1\nusing  com.robotraconteur.testing.TestService1.teststruct2\nusing  com.robotraconteur.testing.TestService1.testexception1\nusing  com.robotraconteur.testing.TestService1.sub2\nusing  com.robotraconteur.testing.TestService1.sub3\n\nenum testenum1\nvalue1 = 0,	value2,	value3,	anothervalue = -1,\nanothervalue2 = -2,\nanothervalue3 = -3,\nhexval1 = 0x10,\nhexval2,\nneghexval1 = 0x80000005,\nneghexval2,\nmore_values\nend enum\n\nconstant string strconst \"This is a\\n \\\"string constant\\\" \\\\\\/\\b\\f \\r\\u00FF tabme\\ttabme\\n smile! \\ud83d\\udE01\"\nconstant int32 int32const 3856384\nconstant int32[] int32const_array {182476, 56483, -2947}\nconstant double[] doubleconst_array {1.5847, 3.14, -548e3, 3452.67e2, 485e-21}\nconstant struct structconst {field1: strconst, field2: int32const_array}\nconstant struct structconst2 {field3: structconst, field4: int32const}\n\ncstruct testcstruct1\nfield double d1\nfield double[6] d2\nfield double[6-] d3\nfield double[3,3] d4\nfield testcstruct2 s1\nfield testcstruct2[8] s2\nfield testcstruct2[9-] s3\nfield testcstruct2[2,4] s4\nend cstruct\n\ncstruct testcstruct2\nfield int8 i1\nfield int8[15] i2\nfield int8[17-] i3\nend cstruct\n\nstruct teststruct3\nfield testcstruct1 s1\nfield testcstruct1[] s2\nfield testcstruct1[11] s3\nfield testcstruct1[16-] s4\nfield testcstruct1[3,3] s5\nfield testcstruct1[*] s6\nfield testcstruct1{list} s7\nfield testcstruct1[]{list} s8\nfield testcstruct1[*]{list} s9\nfield varvalue s10\nfield varvalue s11\nfield varvalue s12\nfield varvalue s13\nfield varvalue s14\nfield varvalue s15\nend struct\n\nobject testroot3\nproperty int32 readme [readonly]\nproperty int32 writeme [writeonly]\n\npipe int32 unreliable1 [unreliable,readonly]\noption pipe unreliable2 unreliable\npipe int32 unreliable2\n\nwire int32 peekwire [readonly]\nwire int32 \\\npokewire [writeonly]\nproperty int32 unknown_modifier [unknown, unknown2(), unknown_3(23, 45.8e-5, hello, \"world\")]\n\nmemory double[] readmem [readonly]\n\nobjref obj4 o4\n\nproperty testenum1 testenum1_prop\n\nproperty testcstruct1 testcstruct1_prop\nfunction void testcstruct1_func1(testcstruct1 s)\nfunction testcstruct1 testcstruct1_func2()\n\nproperty teststruct3 teststruct3_prop\n\nmemory testcstruct2[] cstruct_m1\nmemory testcstruct2[*] cstruct_m2\n\nfunction double{generator} gen_func1()\nfunction uint8[]{generator} gen_func2(string name)\nfunction void gen_func3(string name, uint8[]{generator} in)\nfunction uint8[]{generator} gen_func4(uint8[]{generator} in)\nfunction teststruct2{generator} gen_func5(teststruct2{generator} in)\n\nend object\n\nobject obj1\nproperty double[] d1\nend object\n\nobject obj2\nimplements obj1\nproperty double[] d1\nend object\n\nobject obj3\nimplements obj1\nimplements obj2\nproperty double[] d1\nend object\n\nobject obj4\nimplements sub2\nproperty string s_ind\nproperty int32 i_ind\n\nproperty string data\nobjref sub3{string} o3_1\nend object\n\n\n";
+    const string s="service com.robotraconteur.testing.TestService3\n\nstdver 0.9.0\n#option version 0.9.0\n\nimport com.robotraconteur.testing.TestService1\nusing  com.robotraconteur.testing.TestService1.testroot\nusing  com.robotraconteur.testing.TestService1.teststruct1\nusing  com.robotraconteur.testing.TestService1.teststruct2\nusing  com.robotraconteur.testing.TestService1.testexception1\nusing  com.robotraconteur.testing.TestService1.sub2\nusing  com.robotraconteur.testing.TestService1.sub3\n\nenum testenum1\nvalue1 = 0,	value2,	value3,	anothervalue = -1,\nanothervalue2 = -2,\nanothervalue3 = -3,\nhexval1 = 0x10,\nhexval2,\nneghexval1 = 0x80000005,\nneghexval2,\nmore_values\nend enum\n\nconstant string strconst \"This is a\\n \\\"string constant\\\" \\\\\\/\\b\\f \\r\\u00FF tabme\\ttabme\\n smile! \\ud83d\\udE01\"\nconstant int32 int32const 3856384\nconstant int32[] int32const_array {182476, 56483, -2947}\nconstant double[] doubleconst_array {1.5847, 3.14, -548e3, 3452.67e2, 485e-21}\nconstant struct structconst {field1: strconst, field2: int32const_array}\nconstant struct structconst2 {field3: structconst, field4: int32const}\n\ncstruct testcstruct1\nfield double d1\nfield double[6] d2\nfield double[6-] d3\nfield double[3,3] d4\nfield testcstruct2 s1\nfield testcstruct2[8] s2\nfield testcstruct2[9-] s3\nfield testcstruct2[2,4] s4\nend cstruct\n\ncstruct testcstruct2\nfield int8 i1\nfield int8[15] i2\nfield int8[17-] i3\nend cstruct\n\nstruct teststruct3\nfield testcstruct1 s1\nfield testcstruct1[] s2\nfield testcstruct1[11] s3\nfield testcstruct1[16-] s4\nfield testcstruct1[3,3] s5\nfield testcstruct1[*] s6\nfield testcstruct1{list} s7\nfield testcstruct1[]{list} s8\nfield testcstruct1[*]{list} s9\nfield varvalue s10\nfield varvalue s11\nfield varvalue s12\nfield varvalue s13\nfield varvalue s14\nfield varvalue s15\nend struct\n\nobject testroot3\nproperty int32 readme [readonly]\nproperty int32 writeme [writeonly]\n\npipe int32 unreliable1 [unreliable,readonly]\noption pipe unreliable2 unreliable\npipe int32 unreliable2\n\nwire int32 peekwire [readonly]\nwire int32 \\\npokewire [writeonly]\nproperty int32 unknown_modifier [unknown, unknown2(), unknown_3(23, 45.8e-5, hello, \"world\")]\n\nmemory double[] readmem [readonly]\n\nobjref obj4 o4\n\nproperty testenum1 testenum1_prop\n\nproperty testcstruct1 testcstruct1_prop\nfunction void testcstruct1_func1(testcstruct1 s)\nfunction testcstruct1 testcstruct1_func2()\n\nproperty teststruct3 teststruct3_prop\n\nmemory testcstruct2[] cstruct_m1\nmemory testcstruct2[*] cstruct_m2\n\nfunction double{generator} gen_func1()\nfunction uint8[]{generator} gen_func2(string name)\nfunction void gen_func3(string name, uint8[]{generator} in)\nfunction uint8[]{generator} gen_func4(uint8[]{generator} in)\nfunction teststruct2{generator} gen_func5(teststruct2{generator} in)\n\n#extra tests for fixed length arrays\nproperty double[6]{list} d1\nproperty double[6-]{list} d2\nproperty double[6]{int32} d3\nproperty double[6-]{int32} d4\nproperty double[3,3]{list} d5\nproperty double[3,3]{int32} d6\n\n#Test pipe and wire verification\npipe int32[3] p1\npipe int32[3-] p2\npipe int32[2,2] p3\nwire int32[6] w1\nwire int32[6-] w2\nwire int32[3,2] w3\n\nend object\n\nobject obj1\nproperty double[] d1\nend object\n\nobject obj2\nimplements obj1\nproperty double[] d1\nend object\n\nobject obj3\nimplements obj1\nimplements obj2\nproperty double[] d1\nend object\n\nobject obj4\nimplements sub2\nproperty string s_ind\nproperty int32 i_ind\n\nproperty string data\nobjref sub3{string} o3_1\nend object\n\n\n";
     return s;
     }
     public override string GetServiceName() {return "com.robotraconteur.testing.TestService3";}
@@ -104,21 +104,21 @@ public class teststruct3_stub : IStructureStub {
     {
     if (s1 ==null) return null;
     teststruct3 s = (teststruct3)s1;
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.NewMessageElementDispose("s1",RobotRaconteurNode.s.PackCStructureToArray<testcstruct1>(ref s.s1)));
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.NewMessageElementDispose("s2",RobotRaconteurNode.s.PackCStructureArray<testcstruct1>(s.s2)));
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.NewMessageElementDispose("s3",RobotRaconteurNode.s.PackCStructureArray<testcstruct1>(s.s3)));
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.NewMessageElementDispose("s4",RobotRaconteurNode.s.PackCStructureArray<testcstruct1>(s.s4)));
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.NewMessageElementDispose("s5",RobotRaconteurNode.s.PackCStructureMultiDimArray<testcstruct1>(s.s5)));
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.NewMessageElementDispose("s6",RobotRaconteurNode.s.PackCStructureMultiDimArray<testcstruct1>(s.s6)));
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.NewMessageElementDispose("s7",RobotRaconteurNode.s.PackListType<testcstruct1>(s.s7)));
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.NewMessageElementDispose("s8",RobotRaconteurNode.s.PackListType<testcstruct1[]>(s.s8)));
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.NewMessageElementDispose("s9",RobotRaconteurNode.s.PackListType<CStructureMultiDimArray>(s.s9)));
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.NewMessageElementDispose("s10",RobotRaconteurNode.s.PackVarType(s.s10)));
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.NewMessageElementDispose("s11",RobotRaconteurNode.s.PackVarType(s.s11)));
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.NewMessageElementDispose("s12",RobotRaconteurNode.s.PackVarType(s.s12)));
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.NewMessageElementDispose("s13",RobotRaconteurNode.s.PackVarType(s.s13)));
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.NewMessageElementDispose("s14",RobotRaconteurNode.s.PackVarType(s.s14)));
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.NewMessageElementDispose("s15",RobotRaconteurNode.s.PackVarType(s.s15)));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackCStructureToArray<testcstruct1>("s1",ref s.s1));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackCStructureArray<testcstruct1>("s2",s.s2));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackCStructureArray<testcstruct1>("s3",DataTypeUtil.VerifyArrayLength(s.s3, 11, false)));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackCStructureArray<testcstruct1>("s4",DataTypeUtil.VerifyArrayLength(s.s4, 16, true)));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackCStructureMultiDimArray<testcstruct1>("s5",DataTypeUtil.VerifyArrayLength(s.s5,9,new int[] {3,3})));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackCStructureMultiDimArray<testcstruct1>("s6",s.s6));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackListType<testcstruct1>("s7",s.s7));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackListType<testcstruct1[]>("s8",s.s8));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackListType<CStructureMultiDimArray>("s9",s.s9));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackVarType("s10",s.s10));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackVarType("s11",s.s11));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackVarType("s12",s.s12));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackVarType("s13",s.s13));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackVarType("s14",s.s14));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackVarType("s15",s.s15));
     return new MessageElementStructure("com.robotraconteur.testing.TestService3.teststruct3",m);
     }
     }
@@ -127,21 +127,21 @@ public class teststruct3_stub : IStructureStub {
     teststruct3 s=new teststruct3();
     using(vectorptr_messageelement mm=m.Elements)
     {
-    s.s1 =RobotRaconteurNode.s.UnpackCStructureFromArrayDispose<testcstruct1>(MessageElementUtil.CastDataAndDispose<MessageElementCStructureArray>(MessageElement.FindElement(mm,"s1")));
-    s.s2 =RobotRaconteurNode.s.UnpackCStructureArrayDispose<testcstruct1>(MessageElementUtil.CastDataAndDispose<MessageElementCStructureArray>(MessageElement.FindElement(mm,"s2")));
-    s.s3 =RobotRaconteurNode.s.UnpackCStructureArrayDispose<testcstruct1>(MessageElementUtil.CastDataAndDispose<MessageElementCStructureArray>(MessageElement.FindElement(mm,"s3")));
-    s.s4 =RobotRaconteurNode.s.UnpackCStructureArrayDispose<testcstruct1>(MessageElementUtil.CastDataAndDispose<MessageElementCStructureArray>(MessageElement.FindElement(mm,"s4")));
-    s.s5 =RobotRaconteurNode.s.UnpackCStructureMultiDimArrayDispose<testcstruct1>(MessageElementUtil.CastDataAndDispose<MessageElementCStructureMultiDimArray>(MessageElement.FindElement(mm,"s5")));
-    s.s6 =RobotRaconteurNode.s.UnpackCStructureMultiDimArrayDispose<testcstruct1>(MessageElementUtil.CastDataAndDispose<MessageElementCStructureMultiDimArray>(MessageElement.FindElement(mm,"s6")));
-    s.s7 =(List<testcstruct1>)RobotRaconteurNode.s.UnpackListTypeDispose<testcstruct1>(MessageElement.FindElement(mm,"s7").Data);
-    s.s8 =(List<testcstruct1[]>)RobotRaconteurNode.s.UnpackListTypeDispose<testcstruct1[]>(MessageElement.FindElement(mm,"s8").Data);
-    s.s9 =(List<CStructureMultiDimArray>)RobotRaconteurNode.s.UnpackListTypeDispose<CStructureMultiDimArray>(MessageElement.FindElement(mm,"s9").Data);
-    s.s10 =RobotRaconteurNode.s.UnpackVarTypeDispose(MessageElement.FindElement(mm,"s10"));
-    s.s11 =RobotRaconteurNode.s.UnpackVarTypeDispose(MessageElement.FindElement(mm,"s11"));
-    s.s12 =RobotRaconteurNode.s.UnpackVarTypeDispose(MessageElement.FindElement(mm,"s12"));
-    s.s13 =RobotRaconteurNode.s.UnpackVarTypeDispose(MessageElement.FindElement(mm,"s13"));
-    s.s14 =RobotRaconteurNode.s.UnpackVarTypeDispose(MessageElement.FindElement(mm,"s14"));
-    s.s15 =RobotRaconteurNode.s.UnpackVarTypeDispose(MessageElement.FindElement(mm,"s15"));
+    s.s1 =MessageElementUtil.UnpackCStructureFromArray<testcstruct1>(MessageElement.FindElement(mm,"s1"));
+    s.s2 =MessageElementUtil.UnpackCStructureArray<testcstruct1>(MessageElement.FindElement(mm,"s2"));
+    s.s3 =DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackCStructureArray<testcstruct1>(MessageElement.FindElement(mm,"s3")), 11, false);
+    s.s4 =DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackCStructureArray<testcstruct1>(MessageElement.FindElement(mm,"s4")), 16, true);
+    s.s5 =DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackCStructureMultiDimArray<testcstruct1>(MessageElement.FindElement(mm,"s5")),9,new int[] {3,3});
+    s.s6 =MessageElementUtil.UnpackCStructureMultiDimArray<testcstruct1>(MessageElement.FindElement(mm,"s6"));
+    s.s7 =MessageElementUtil.UnpackList<testcstruct1>(MessageElement.FindElement(mm,"s7"));
+    s.s8 =MessageElementUtil.UnpackList<testcstruct1[]>(MessageElement.FindElement(mm,"s8"));
+    s.s9 =MessageElementUtil.UnpackList<CStructureMultiDimArray>(MessageElement.FindElement(mm,"s9"));
+    s.s10 =MessageElementUtil.UnpackVarType(MessageElement.FindElement(mm,"s10"));
+    s.s11 =MessageElementUtil.UnpackVarType(MessageElement.FindElement(mm,"s11"));
+    s.s12 =MessageElementUtil.UnpackVarType(MessageElement.FindElement(mm,"s12"));
+    s.s13 =MessageElementUtil.UnpackVarType(MessageElement.FindElement(mm,"s13"));
+    s.s14 =MessageElementUtil.UnpackVarType(MessageElement.FindElement(mm,"s14"));
+    s.s15 =MessageElementUtil.UnpackVarType(MessageElement.FindElement(mm,"s15"));
     T st; try {st=(T)((object)s);} catch (InvalidCastException) {throw new DataTypeMismatchException("Wrong structuretype");}
     return st;
     }
@@ -155,14 +155,14 @@ public class testcstruct1_stub : CStructureStub<testcstruct1> {
     using(vectorptr_messageelement m=new vectorptr_messageelement())
     {
     testcstruct1 s = (testcstruct1)s1;
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.NewMessageElementDispose("d1",new double[] {s.d1}));
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.NewMessageElementDispose("d2",s.d2));
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.NewMessageElementDispose("d3",s.d3));
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.NewMessageElementDispose("d4",s.d4));
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.NewMessageElementDispose("s1",RobotRaconteurNode.s.PackCStructureToArray<testcstruct2>(ref s.s1)));
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.NewMessageElementDispose("s2",RobotRaconteurNode.s.PackCStructureArray<testcstruct2>(s.s2)));
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.NewMessageElementDispose("s3",RobotRaconteurNode.s.PackCStructureArray<testcstruct2>(s.s3)));
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.NewMessageElementDispose("s4",RobotRaconteurNode.s.PackCStructureArray<testcstruct2>(s.s4)));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackScalar<double>("d1",s.d1));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackArray<double>("d2",DataTypeUtil.VerifyArrayLength(s.d2, 6, false)));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackArray<double>("d3",DataTypeUtil.VerifyArrayLength(s.d3, 6, true)));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackArray<double>("d4",DataTypeUtil.VerifyArrayLength(s.d4, 9, false)));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackCStructureToArray<testcstruct2>("s1",ref s.s1));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackCStructureArray<testcstruct2>("s2",DataTypeUtil.VerifyArrayLength(s.s2, 8, false)));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackCStructureArray<testcstruct2>("s3",DataTypeUtil.VerifyArrayLength(s.s3, 9, true)));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackCStructureArray<testcstruct2>("s4",DataTypeUtil.VerifyArrayLength(s.s4, 8, false)));
     return new MessageElementCStructure(m);
     }
     }
@@ -171,14 +171,14 @@ public class testcstruct1_stub : CStructureStub<testcstruct1> {
     using(vectorptr_messageelement mm=m.Elements)
     {
     testcstruct1 s = new testcstruct1();
-    s.d1 =(MessageElementUtil.CastDataAndDispose<double[]>(MessageElement.FindElement(mm,"d1")))[0];
-    s.d2 =MessageElementUtil.CastDataAndDispose<double[]>(MessageElement.FindElement(mm,"d2"));
-    s.d3 =MessageElementUtil.CastDataAndDispose<double[]>(MessageElement.FindElement(mm,"d3"));
-    s.d4 =MessageElementUtil.CastDataAndDispose<double[]>(MessageElement.FindElement(mm,"d4"));
-    s.s1 =RobotRaconteurNode.s.UnpackCStructureFromArrayDispose<testcstruct2>(MessageElementUtil.CastDataAndDispose<MessageElementCStructureArray>(MessageElement.FindElement(mm,"s1")));
-    s.s2 =RobotRaconteurNode.s.UnpackCStructureArrayDispose<testcstruct2>(MessageElementUtil.CastDataAndDispose<MessageElementCStructureArray>(MessageElement.FindElement(mm,"s2")));
-    s.s3 =RobotRaconteurNode.s.UnpackCStructureArrayDispose<testcstruct2>(MessageElementUtil.CastDataAndDispose<MessageElementCStructureArray>(MessageElement.FindElement(mm,"s3")));
-    s.s4 =RobotRaconteurNode.s.UnpackCStructureArrayDispose<testcstruct2>(MessageElementUtil.CastDataAndDispose<MessageElementCStructureArray>(MessageElement.FindElement(mm,"s4")));
+    s.d1 =(MessageElementUtil.UnpackScalar<double>(MessageElement.FindElement(mm,"d1")));
+    s.d2 =DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackArray<double>(MessageElement.FindElement(mm,"d2")), 6, false);
+    s.d3 =DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackArray<double>(MessageElement.FindElement(mm,"d3")), 6, true);
+    s.d4 =DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackArray<double>(MessageElement.FindElement(mm,"d4")), 9, false);
+    s.s1 =MessageElementUtil.UnpackCStructureFromArray<testcstruct2>(MessageElement.FindElement(mm,"s1"));
+    s.s2 =DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackCStructureArray<testcstruct2>(MessageElement.FindElement(mm,"s2")), 8, false);
+    s.s3 =DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackCStructureArray<testcstruct2>(MessageElement.FindElement(mm,"s3")), 9, true);
+    s.s4 =DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackCStructureArray<testcstruct2>(MessageElement.FindElement(mm,"s4")), 8, false);
     return s;
     }
     }
@@ -191,9 +191,9 @@ public class testcstruct2_stub : CStructureStub<testcstruct2> {
     using(vectorptr_messageelement m=new vectorptr_messageelement())
     {
     testcstruct2 s = (testcstruct2)s1;
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.NewMessageElementDispose("i1",new sbyte[] {s.i1}));
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.NewMessageElementDispose("i2",s.i2));
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.NewMessageElementDispose("i3",s.i3));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackScalar<sbyte>("i1",s.i1));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackArray<sbyte>("i2",DataTypeUtil.VerifyArrayLength(s.i2, 15, false)));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackArray<sbyte>("i3",DataTypeUtil.VerifyArrayLength(s.i3, 17, true)));
     return new MessageElementCStructure(m);
     }
     }
@@ -202,9 +202,9 @@ public class testcstruct2_stub : CStructureStub<testcstruct2> {
     using(vectorptr_messageelement mm=m.Elements)
     {
     testcstruct2 s = new testcstruct2();
-    s.i1 =(MessageElementUtil.CastDataAndDispose<sbyte[]>(MessageElement.FindElement(mm,"i1")))[0];
-    s.i2 =MessageElementUtil.CastDataAndDispose<sbyte[]>(MessageElement.FindElement(mm,"i2"));
-    s.i3 =MessageElementUtil.CastDataAndDispose<sbyte[]>(MessageElement.FindElement(mm,"i3"));
+    s.i1 =(MessageElementUtil.UnpackScalar<sbyte>(MessageElement.FindElement(mm,"i1")));
+    s.i2 =DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackArray<sbyte>(MessageElement.FindElement(mm,"i2")), 15, false);
+    s.i3 =DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackArray<sbyte>(MessageElement.FindElement(mm,"i3")), 17, true);
     return s;
     }
     }
@@ -224,6 +224,18 @@ public interface async_testroot3
     void async_set_testcstruct1_prop(testcstruct1 value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
     void async_get_teststruct3_prop(Action<teststruct3,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
     void async_set_teststruct3_prop(teststruct3 value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_get_d1(Action<List<double[]>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_set_d1(List<double[]> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_get_d2(Action<List<double[]>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_set_d2(List<double[]> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_get_d3(Action<Dictionary<int,double[]>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_set_d3(Dictionary<int,double[]> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_get_d4(Action<Dictionary<int,double[]>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_set_d4(Dictionary<int,double[]> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_get_d5(Action<List<MultiDimArray>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_set_d5(List<MultiDimArray> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_get_d6(Action<Dictionary<int,MultiDimArray>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_set_d6(Dictionary<int,MultiDimArray> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
     void async_testcstruct1_func1(testcstruct1 s,Action<Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
     void async_testcstruct1_func2(Action<testcstruct1,Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
     void async_gen_func1(Action<Generator2<double>,Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
@@ -236,26 +248,38 @@ public interface async_testroot3
 public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     private Pipe<int> rr_unreliable1;
     private Pipe<int> rr_unreliable2;
+    private Pipe<int[]> rr_p1;
+    private Pipe<int[]> rr_p2;
+    private Pipe<MultiDimArray> rr_p3;
     private Wire<int> rr_peekwire;
     private Wire<int> rr_pokewire;
+    private Wire<int[]> rr_w1;
+    private Wire<int[]> rr_w2;
+    private Wire<MultiDimArray> rr_w3;
     private ArrayMemory<double> rr_readmem;
     private CStructureArrayMemory<testcstruct2> rr_cstruct_m1;
     private CStructureMultiDimArrayMemory<testcstruct2> rr_cstruct_m2;
     public testroot3_stub(WrappedServiceStub innerstub) : base(innerstub) {
     rr_unreliable1=new Pipe<int>(innerstub.GetPipe("unreliable1"));
     rr_unreliable2=new Pipe<int>(innerstub.GetPipe("unreliable2"));
+    rr_p1=new Pipe<int[]>(innerstub.GetPipe("p1"));
+    rr_p2=new Pipe<int[]>(innerstub.GetPipe("p2"));
+    rr_p3=new Pipe<MultiDimArray>(innerstub.GetPipe("p3"));
     rr_peekwire=new Wire<int>(innerstub.GetWire("peekwire"));
     rr_pokewire=new Wire<int>(innerstub.GetWire("pokewire"));
+    rr_w1=new Wire<int[]>(innerstub.GetWire("w1"));
+    rr_w2=new Wire<int[]>(innerstub.GetWire("w2"));
+    rr_w3=new Wire<MultiDimArray>(innerstub.GetWire("w3"));
     rr_readmem=new ArrayMemoryClient<double>(innerstub.GetArrayMemory("readmem"));
     rr_cstruct_m1=new CStructureArrayMemoryClient<testcstruct2>(innerstub.GetCStructureArrayMemory("cstruct_m1"));
     rr_cstruct_m2=new CStructureMultiDimArrayMemoryClient<testcstruct2>(innerstub.GetCStructureMultiDimArrayMemory("cstruct_m2"));
     }
     public int readme {
     get {
-    return (MessageElementUtil.CastDataAndDispose<int[]>(rr_innerstub.PropertyGet("readme")))[0];
+    return (MessageElementUtil.UnpackScalar<int>(rr_innerstub.PropertyGet("readme")));
     }
     set {
-    using(MessageElement m=MessageElementUtil.NewMessageElementDispose("value",new int[] {value}))
+    using(MessageElement m=MessageElementUtil.PackScalar<int>("value",value))
     {
     rr_innerstub.PropertySet("readme", m);
     }
@@ -263,10 +287,10 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     }
     public int writeme {
     get {
-    return (MessageElementUtil.CastDataAndDispose<int[]>(rr_innerstub.PropertyGet("writeme")))[0];
+    return (MessageElementUtil.UnpackScalar<int>(rr_innerstub.PropertyGet("writeme")));
     }
     set {
-    using(MessageElement m=MessageElementUtil.NewMessageElementDispose("value",new int[] {value}))
+    using(MessageElement m=MessageElementUtil.PackScalar<int>("value",value))
     {
     rr_innerstub.PropertySet("writeme", m);
     }
@@ -274,10 +298,10 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     }
     public int unknown_modifier {
     get {
-    return (MessageElementUtil.CastDataAndDispose<int[]>(rr_innerstub.PropertyGet("unknown_modifier")))[0];
+    return (MessageElementUtil.UnpackScalar<int>(rr_innerstub.PropertyGet("unknown_modifier")));
     }
     set {
-    using(MessageElement m=MessageElementUtil.NewMessageElementDispose("value",new int[] {value}))
+    using(MessageElement m=MessageElementUtil.PackScalar<int>("value",value))
     {
     rr_innerstub.PropertySet("unknown_modifier", m);
     }
@@ -285,10 +309,10 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     }
     public testenum1 testenum1_prop {
     get {
-    return ((testenum1)(MessageElementUtil.CastDataAndDispose<int[]>(rr_innerstub.PropertyGet("testenum1_prop")))[0]);
+    return MessageElementUtil.UnpackEnum<testenum1>(rr_innerstub.PropertyGet("testenum1_prop"));
     }
     set {
-    using(MessageElement m=MessageElementUtil.NewMessageElementDispose("value",new int[] {((int)value)}))
+    using(MessageElement m=MessageElementUtil.PackEnum<testenum1>("value",value))
     {
     rr_innerstub.PropertySet("testenum1_prop", m);
     }
@@ -296,10 +320,10 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     }
     public testcstruct1 testcstruct1_prop {
     get {
-    return RobotRaconteurNode.s.UnpackCStructureFromArrayDispose<testcstruct1>(MessageElementUtil.CastDataAndDispose<MessageElementCStructureArray>(rr_innerstub.PropertyGet("testcstruct1_prop")));
+    return MessageElementUtil.UnpackCStructureFromArray<testcstruct1>(rr_innerstub.PropertyGet("testcstruct1_prop"));
     }
     set {
-    using(MessageElement m=MessageElementUtil.NewMessageElementDispose("value",RobotRaconteurNode.s.PackCStructureToArray<testcstruct1>(ref value)))
+    using(MessageElement m=MessageElementUtil.PackCStructureToArray<testcstruct1>("value",ref value))
     {
     rr_innerstub.PropertySet("testcstruct1_prop", m);
     }
@@ -307,19 +331,85 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     }
     public teststruct3 teststruct3_prop {
     get {
-    return RobotRaconteurNode.s.UnpackStructureDispose<teststruct3>(MessageElementUtil.CastDataAndDispose<MessageElementStructure>(rr_innerstub.PropertyGet("teststruct3_prop")));
+    return MessageElementUtil.UnpackStructure<teststruct3>(rr_innerstub.PropertyGet("teststruct3_prop"));
     }
     set {
-    using(MessageElement m=MessageElementUtil.NewMessageElementDispose("value",RobotRaconteurNode.s.PackStructure(value)))
+    using(MessageElement m=MessageElementUtil.PackStructure("value",value))
     {
     rr_innerstub.PropertySet("teststruct3_prop", m);
+    }
+    }
+    }
+    public List<double[]> d1 {
+    get {
+    return DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackList<double[]>(rr_innerstub.PropertyGet("d1")), 6, false);
+    }
+    set {
+    using(MessageElement m=MessageElementUtil.PackListType<double[]>("value",DataTypeUtil.VerifyArrayLength(value, 6, false)))
+    {
+    rr_innerstub.PropertySet("d1", m);
+    }
+    }
+    }
+    public List<double[]> d2 {
+    get {
+    return DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackList<double[]>(rr_innerstub.PropertyGet("d2")), 6, true);
+    }
+    set {
+    using(MessageElement m=MessageElementUtil.PackListType<double[]>("value",DataTypeUtil.VerifyArrayLength(value, 6, true)))
+    {
+    rr_innerstub.PropertySet("d2", m);
+    }
+    }
+    }
+    public Dictionary<int,double[]> d3 {
+    get {
+    return DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackMap<int,double[]>(rr_innerstub.PropertyGet("d3")), 6, false);
+    }
+    set {
+    using(MessageElement m=MessageElementUtil.PackMapType<int,double[]>("value",DataTypeUtil.VerifyArrayLength(value, 6, false)))
+    {
+    rr_innerstub.PropertySet("d3", m);
+    }
+    }
+    }
+    public Dictionary<int,double[]> d4 {
+    get {
+    return DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackMap<int,double[]>(rr_innerstub.PropertyGet("d4")), 6, true);
+    }
+    set {
+    using(MessageElement m=MessageElementUtil.PackMapType<int,double[]>("value",DataTypeUtil.VerifyArrayLength(value, 6, true)))
+    {
+    rr_innerstub.PropertySet("d4", m);
+    }
+    }
+    }
+    public List<MultiDimArray> d5 {
+    get {
+    return DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackList<MultiDimArray>(rr_innerstub.PropertyGet("d5")),9,new int[] {3,3});
+    }
+    set {
+    using(MessageElement m=MessageElementUtil.PackListType<MultiDimArray>("value",DataTypeUtil.VerifyArrayLength(value,9,new int[] {3,3})))
+    {
+    rr_innerstub.PropertySet("d5", m);
+    }
+    }
+    }
+    public Dictionary<int,MultiDimArray> d6 {
+    get {
+    return DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackMap<int,MultiDimArray>(rr_innerstub.PropertyGet("d6")),9,new int[] {3,3});
+    }
+    set {
+    using(MessageElement m=MessageElementUtil.PackMapType<int,MultiDimArray>("value",DataTypeUtil.VerifyArrayLength(value,9,new int[] {3,3})))
+    {
+    rr_innerstub.PropertySet("d6", m);
     }
     }
     }
     public void testcstruct1_func1(testcstruct1 s) {
     using(vectorptr_messageelement rr_param=new vectorptr_messageelement())
     {
-    MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.NewMessageElementDispose("s",RobotRaconteurNode.s.PackCStructureToArray<testcstruct1>(ref s)));
+    MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.PackCStructureToArray<testcstruct1>("s",ref s));
     using(MessageElement rr_me=rr_innerstub.FunctionCall("testcstruct1_func1",rr_param))
     {
     }
@@ -330,7 +420,7 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     {
     using(MessageElement rr_me=rr_innerstub.FunctionCall("testcstruct1_func2",rr_param))
     {
-    return RobotRaconteurNode.s.UnpackCStructureFromArrayDispose<testcstruct1>(MessageElementUtil.CastDataAndDispose<MessageElementCStructureArray>(rr_me));
+    return MessageElementUtil.UnpackCStructureFromArray<testcstruct1>(rr_me);
     }
     }
     }
@@ -344,7 +434,7 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     public Generator2<byte[]> gen_func2(string name) {
     using(vectorptr_messageelement rr_param=new vectorptr_messageelement())
     {
-    MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.NewMessageElementDispose("name",name));
+    MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.PackString("name",name));
     WrappedGeneratorClient generator_client = rr_innerstub.GeneratorFunctionCall("gen_func2",rr_param);
     return new Generator2Client<byte[]>(generator_client);
     }
@@ -352,7 +442,7 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     public Generator3<byte[]> gen_func3(string name) {
     using(vectorptr_messageelement rr_param=new vectorptr_messageelement())
     {
-    MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.NewMessageElementDispose("name",name));
+    MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.PackString("name",name));
     WrappedGeneratorClient generator_client = rr_innerstub.GeneratorFunctionCall("gen_func3",rr_param);
     return new Generator3Client<byte[]>(generator_client);
     }
@@ -388,12 +478,36 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     get { return rr_unreliable2;  }
     set { throw new InvalidOperationException();}
     }
+    public Pipe<int[]> p1 {
+    get { return rr_p1;  }
+    set { throw new InvalidOperationException();}
+    }
+    public Pipe<int[]> p2 {
+    get { return rr_p2;  }
+    set { throw new InvalidOperationException();}
+    }
+    public Pipe<MultiDimArray> p3 {
+    get { return rr_p3;  }
+    set { throw new InvalidOperationException();}
+    }
     public Wire<int> peekwire {
     get { return rr_peekwire;  }
     set { throw new InvalidOperationException();}
     }
     public Wire<int> pokewire {
     get { return rr_pokewire;  }
+    set { throw new InvalidOperationException();}
+    }
+    public Wire<int[]> w1 {
+    get { return rr_w1;  }
+    set { throw new InvalidOperationException();}
+    }
+    public Wire<int[]> w2 {
+    get { return rr_w2;  }
+    set { throw new InvalidOperationException();}
+    }
+    public Wire<MultiDimArray> w3 {
+    get { return rr_w3;  }
     set { throw new InvalidOperationException();}
     }
     public override MessageElement CallbackCall(string rr_membername, vectorptr_messageelement rr_m) {
@@ -429,7 +543,7 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     }
     int rr_ret;
     try {
-    rr_ret=(MessageElementUtil.CastDataAndDispose<int[]>(value))[0];
+    rr_ret=(MessageElementUtil.UnpackScalar<int>(value));
     } catch (Exception err2) {
     rr_handler(default(int),err2);
     return;
@@ -438,7 +552,7 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     }
     public virtual void async_set_readme(int value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    using(MessageElement mm=MessageElementUtil.NewMessageElementDispose("value",new int[] {value}))
+    using(MessageElement mm=MessageElementUtil.PackScalar<int>("value",value))
     {
     rr_async_PropertySet("readme",mm,rrend_async_set_readme,rr_handler,rr_timeout);
     }
@@ -467,7 +581,7 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     }
     int rr_ret;
     try {
-    rr_ret=(MessageElementUtil.CastDataAndDispose<int[]>(value))[0];
+    rr_ret=(MessageElementUtil.UnpackScalar<int>(value));
     } catch (Exception err2) {
     rr_handler(default(int),err2);
     return;
@@ -476,7 +590,7 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     }
     public virtual void async_set_writeme(int value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    using(MessageElement mm=MessageElementUtil.NewMessageElementDispose("value",new int[] {value}))
+    using(MessageElement mm=MessageElementUtil.PackScalar<int>("value",value))
     {
     rr_async_PropertySet("writeme",mm,rrend_async_set_writeme,rr_handler,rr_timeout);
     }
@@ -505,7 +619,7 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     }
     int rr_ret;
     try {
-    rr_ret=(MessageElementUtil.CastDataAndDispose<int[]>(value))[0];
+    rr_ret=(MessageElementUtil.UnpackScalar<int>(value));
     } catch (Exception err2) {
     rr_handler(default(int),err2);
     return;
@@ -514,7 +628,7 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     }
     public virtual void async_set_unknown_modifier(int value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    using(MessageElement mm=MessageElementUtil.NewMessageElementDispose("value",new int[] {value}))
+    using(MessageElement mm=MessageElementUtil.PackScalar<int>("value",value))
     {
     rr_async_PropertySet("unknown_modifier",mm,rrend_async_set_unknown_modifier,rr_handler,rr_timeout);
     }
@@ -543,7 +657,7 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     }
     testenum1 rr_ret;
     try {
-    rr_ret=((testenum1)(MessageElementUtil.CastDataAndDispose<int[]>(value))[0]);
+    rr_ret=MessageElementUtil.UnpackEnum<testenum1>(value);
     } catch (Exception err2) {
     rr_handler(default(testenum1),err2);
     return;
@@ -552,7 +666,7 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     }
     public virtual void async_set_testenum1_prop(testenum1 value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    using(MessageElement mm=MessageElementUtil.NewMessageElementDispose("value",new int[] {((int)value)}))
+    using(MessageElement mm=MessageElementUtil.PackEnum<testenum1>("value",value))
     {
     rr_async_PropertySet("testenum1_prop",mm,rrend_async_set_testenum1_prop,rr_handler,rr_timeout);
     }
@@ -581,7 +695,7 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     }
     testcstruct1 rr_ret;
     try {
-    rr_ret=RobotRaconteurNode.s.UnpackCStructureFromArrayDispose<testcstruct1>(MessageElementUtil.CastDataAndDispose<MessageElementCStructureArray>(value));
+    rr_ret=MessageElementUtil.UnpackCStructureFromArray<testcstruct1>(value);
     } catch (Exception err2) {
     rr_handler(default(testcstruct1),err2);
     return;
@@ -590,7 +704,7 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     }
     public virtual void async_set_testcstruct1_prop(testcstruct1 value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    using(MessageElement mm=MessageElementUtil.NewMessageElementDispose("value",RobotRaconteurNode.s.PackCStructureToArray<testcstruct1>(ref value)))
+    using(MessageElement mm=MessageElementUtil.PackCStructureToArray<testcstruct1>("value",ref value))
     {
     rr_async_PropertySet("testcstruct1_prop",mm,rrend_async_set_testcstruct1_prop,rr_handler,rr_timeout);
     }
@@ -619,7 +733,7 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     }
     teststruct3 rr_ret;
     try {
-    rr_ret=RobotRaconteurNode.s.UnpackStructureDispose<teststruct3>(MessageElementUtil.CastDataAndDispose<MessageElementStructure>(value));
+    rr_ret=MessageElementUtil.UnpackStructure<teststruct3>(value);
     } catch (Exception err2) {
     rr_handler(default(teststruct3),err2);
     return;
@@ -628,7 +742,7 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     }
     public virtual void async_set_teststruct3_prop(teststruct3 value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    using(MessageElement mm=MessageElementUtil.NewMessageElementDispose("value",RobotRaconteurNode.s.PackStructure(value)))
+    using(MessageElement mm=MessageElementUtil.PackStructure("value",value))
     {
     rr_async_PropertySet("teststruct3_prop",mm,rrend_async_set_teststruct3_prop,rr_handler,rr_timeout);
     }
@@ -643,11 +757,239 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     }
     rr_handler(null);
     }
+    public virtual void async_get_d1(Action<List<double[]>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    rr_async_PropertyGet("d1",rrend_async_get_d1,rr_handler,rr_timeout);
+    }
+    protected virtual void rrend_async_get_d1(MessageElement value ,Exception err,object param)
+    {
+    Action<List<double[]>,Exception> rr_handler=(Action<List<double[]>,Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(default(List<double[]>),err);
+    return;
+    }
+    List<double[]> rr_ret;
+    try {
+    rr_ret=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackList<double[]>(value), 6, false);
+    } catch (Exception err2) {
+    rr_handler(default(List<double[]>),err2);
+    return;
+    }
+    rr_handler(rr_ret,null);
+    }
+    public virtual void async_set_d1(List<double[]> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(MessageElement mm=MessageElementUtil.PackListType<double[]>("value",DataTypeUtil.VerifyArrayLength(value, 6, false)))
+    {
+    rr_async_PropertySet("d1",mm,rrend_async_set_d1,rr_handler,rr_timeout);
+    }
+    }
+    protected virtual void rrend_async_set_d1(MessageElement m ,Exception err,object param)
+    {
+    Action<Exception> rr_handler=(Action<Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(err);
+    return;
+    }
+    rr_handler(null);
+    }
+    public virtual void async_get_d2(Action<List<double[]>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    rr_async_PropertyGet("d2",rrend_async_get_d2,rr_handler,rr_timeout);
+    }
+    protected virtual void rrend_async_get_d2(MessageElement value ,Exception err,object param)
+    {
+    Action<List<double[]>,Exception> rr_handler=(Action<List<double[]>,Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(default(List<double[]>),err);
+    return;
+    }
+    List<double[]> rr_ret;
+    try {
+    rr_ret=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackList<double[]>(value), 6, true);
+    } catch (Exception err2) {
+    rr_handler(default(List<double[]>),err2);
+    return;
+    }
+    rr_handler(rr_ret,null);
+    }
+    public virtual void async_set_d2(List<double[]> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(MessageElement mm=MessageElementUtil.PackListType<double[]>("value",DataTypeUtil.VerifyArrayLength(value, 6, true)))
+    {
+    rr_async_PropertySet("d2",mm,rrend_async_set_d2,rr_handler,rr_timeout);
+    }
+    }
+    protected virtual void rrend_async_set_d2(MessageElement m ,Exception err,object param)
+    {
+    Action<Exception> rr_handler=(Action<Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(err);
+    return;
+    }
+    rr_handler(null);
+    }
+    public virtual void async_get_d3(Action<Dictionary<int,double[]>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    rr_async_PropertyGet("d3",rrend_async_get_d3,rr_handler,rr_timeout);
+    }
+    protected virtual void rrend_async_get_d3(MessageElement value ,Exception err,object param)
+    {
+    Action<Dictionary<int,double[]>,Exception> rr_handler=(Action<Dictionary<int,double[]>,Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(default(Dictionary<int,double[]>),err);
+    return;
+    }
+    Dictionary<int,double[]> rr_ret;
+    try {
+    rr_ret=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackMap<int,double[]>(value), 6, false);
+    } catch (Exception err2) {
+    rr_handler(default(Dictionary<int,double[]>),err2);
+    return;
+    }
+    rr_handler(rr_ret,null);
+    }
+    public virtual void async_set_d3(Dictionary<int,double[]> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(MessageElement mm=MessageElementUtil.PackMapType<int,double[]>("value",DataTypeUtil.VerifyArrayLength(value, 6, false)))
+    {
+    rr_async_PropertySet("d3",mm,rrend_async_set_d3,rr_handler,rr_timeout);
+    }
+    }
+    protected virtual void rrend_async_set_d3(MessageElement m ,Exception err,object param)
+    {
+    Action<Exception> rr_handler=(Action<Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(err);
+    return;
+    }
+    rr_handler(null);
+    }
+    public virtual void async_get_d4(Action<Dictionary<int,double[]>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    rr_async_PropertyGet("d4",rrend_async_get_d4,rr_handler,rr_timeout);
+    }
+    protected virtual void rrend_async_get_d4(MessageElement value ,Exception err,object param)
+    {
+    Action<Dictionary<int,double[]>,Exception> rr_handler=(Action<Dictionary<int,double[]>,Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(default(Dictionary<int,double[]>),err);
+    return;
+    }
+    Dictionary<int,double[]> rr_ret;
+    try {
+    rr_ret=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackMap<int,double[]>(value), 6, true);
+    } catch (Exception err2) {
+    rr_handler(default(Dictionary<int,double[]>),err2);
+    return;
+    }
+    rr_handler(rr_ret,null);
+    }
+    public virtual void async_set_d4(Dictionary<int,double[]> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(MessageElement mm=MessageElementUtil.PackMapType<int,double[]>("value",DataTypeUtil.VerifyArrayLength(value, 6, true)))
+    {
+    rr_async_PropertySet("d4",mm,rrend_async_set_d4,rr_handler,rr_timeout);
+    }
+    }
+    protected virtual void rrend_async_set_d4(MessageElement m ,Exception err,object param)
+    {
+    Action<Exception> rr_handler=(Action<Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(err);
+    return;
+    }
+    rr_handler(null);
+    }
+    public virtual void async_get_d5(Action<List<MultiDimArray>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    rr_async_PropertyGet("d5",rrend_async_get_d5,rr_handler,rr_timeout);
+    }
+    protected virtual void rrend_async_get_d5(MessageElement value ,Exception err,object param)
+    {
+    Action<List<MultiDimArray>,Exception> rr_handler=(Action<List<MultiDimArray>,Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(default(List<MultiDimArray>),err);
+    return;
+    }
+    List<MultiDimArray> rr_ret;
+    try {
+    rr_ret=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackList<MultiDimArray>(value),9,new int[] {3,3});
+    } catch (Exception err2) {
+    rr_handler(default(List<MultiDimArray>),err2);
+    return;
+    }
+    rr_handler(rr_ret,null);
+    }
+    public virtual void async_set_d5(List<MultiDimArray> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(MessageElement mm=MessageElementUtil.PackListType<MultiDimArray>("value",DataTypeUtil.VerifyArrayLength(value,9,new int[] {3,3})))
+    {
+    rr_async_PropertySet("d5",mm,rrend_async_set_d5,rr_handler,rr_timeout);
+    }
+    }
+    protected virtual void rrend_async_set_d5(MessageElement m ,Exception err,object param)
+    {
+    Action<Exception> rr_handler=(Action<Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(err);
+    return;
+    }
+    rr_handler(null);
+    }
+    public virtual void async_get_d6(Action<Dictionary<int,MultiDimArray>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    rr_async_PropertyGet("d6",rrend_async_get_d6,rr_handler,rr_timeout);
+    }
+    protected virtual void rrend_async_get_d6(MessageElement value ,Exception err,object param)
+    {
+    Action<Dictionary<int,MultiDimArray>,Exception> rr_handler=(Action<Dictionary<int,MultiDimArray>,Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(default(Dictionary<int,MultiDimArray>),err);
+    return;
+    }
+    Dictionary<int,MultiDimArray> rr_ret;
+    try {
+    rr_ret=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackMap<int,MultiDimArray>(value),9,new int[] {3,3});
+    } catch (Exception err2) {
+    rr_handler(default(Dictionary<int,MultiDimArray>),err2);
+    return;
+    }
+    rr_handler(rr_ret,null);
+    }
+    public virtual void async_set_d6(Dictionary<int,MultiDimArray> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(MessageElement mm=MessageElementUtil.PackMapType<int,MultiDimArray>("value",DataTypeUtil.VerifyArrayLength(value,9,new int[] {3,3})))
+    {
+    rr_async_PropertySet("d6",mm,rrend_async_set_d6,rr_handler,rr_timeout);
+    }
+    }
+    protected virtual void rrend_async_set_d6(MessageElement m ,Exception err,object param)
+    {
+    Action<Exception> rr_handler=(Action<Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(err);
+    return;
+    }
+    rr_handler(null);
+    }
     public virtual void async_testcstruct1_func1(testcstruct1 s,Action<Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(vectorptr_messageelement rr_param=new vectorptr_messageelement())
     {
-    MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.NewMessageElementDispose("s",RobotRaconteurNode.s.PackCStructureToArray<testcstruct1>(ref s)));
+    MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.PackCStructureToArray<testcstruct1>("s",ref s));
     rr_async_FunctionCall("testcstruct1_func1",rr_param,rrend_async_testcstruct1_func1,rr_handler,rr_timeout);
     }
     }
@@ -678,7 +1020,7 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     }
     testcstruct1 rr_ret;
     try {
-    rr_ret=RobotRaconteurNode.s.UnpackCStructureFromArrayDispose<testcstruct1>(MessageElementUtil.CastDataAndDispose<MessageElementCStructureArray>(ret));
+    rr_ret=MessageElementUtil.UnpackCStructureFromArray<testcstruct1>(ret);
     } catch (Exception err2) {
     rr_handler(default(testcstruct1),err2);
     return;
@@ -707,7 +1049,7 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     {
     using(vectorptr_messageelement rr_param=new vectorptr_messageelement())
     {
-    MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.NewMessageElementDispose("name",name));
+    MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.PackString("name",name));
     rr_async_GeneratorFunctionCall("gen_func2",rr_param,rrend_async_gen_func2,rr_handler,rr_timeout);
     }
     }
@@ -726,7 +1068,7 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     {
     using(vectorptr_messageelement rr_param=new vectorptr_messageelement())
     {
-    MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.NewMessageElementDispose("name",name));
+    MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.PackString("name",name));
     rr_async_GeneratorFunctionCall("gen_func3",rr_param,rrend_async_gen_func3,rr_handler,rr_timeout);
     }
     }
@@ -792,10 +1134,10 @@ public class obj1_stub : ServiceStub , obj1, async_obj1{
     }
     public double[] d1 {
     get {
-    return MessageElementUtil.CastDataAndDispose<double[]>(rr_innerstub.PropertyGet("d1"));
+    return MessageElementUtil.UnpackArray<double>(rr_innerstub.PropertyGet("d1"));
     }
     set {
-    using(MessageElement m=MessageElementUtil.NewMessageElementDispose("value",value))
+    using(MessageElement m=MessageElementUtil.PackArray<double>("value",value))
     {
     rr_innerstub.PropertySet("d1", m);
     }
@@ -828,7 +1170,7 @@ public class obj1_stub : ServiceStub , obj1, async_obj1{
     }
     double[] rr_ret;
     try {
-    rr_ret=MessageElementUtil.CastDataAndDispose<double[]>(value);
+    rr_ret=MessageElementUtil.UnpackArray<double>(value);
     } catch (Exception err2) {
     rr_handler(default(double[]),err2);
     return;
@@ -837,7 +1179,7 @@ public class obj1_stub : ServiceStub , obj1, async_obj1{
     }
     public virtual void async_set_d1(double[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    using(MessageElement mm=MessageElementUtil.NewMessageElementDispose("value",value))
+    using(MessageElement mm=MessageElementUtil.PackArray<double>("value",value))
     {
     rr_async_PropertySet("d1",mm,rrend_async_set_d1,rr_handler,rr_timeout);
     }
@@ -863,10 +1205,10 @@ public class obj2_stub : ServiceStub , obj2, async_obj2{
     }
     public double[] d1 {
     get {
-    return MessageElementUtil.CastDataAndDispose<double[]>(rr_innerstub.PropertyGet("d1"));
+    return MessageElementUtil.UnpackArray<double>(rr_innerstub.PropertyGet("d1"));
     }
     set {
-    using(MessageElement m=MessageElementUtil.NewMessageElementDispose("value",value))
+    using(MessageElement m=MessageElementUtil.PackArray<double>("value",value))
     {
     rr_innerstub.PropertySet("d1", m);
     }
@@ -899,7 +1241,7 @@ public class obj2_stub : ServiceStub , obj2, async_obj2{
     }
     double[] rr_ret;
     try {
-    rr_ret=MessageElementUtil.CastDataAndDispose<double[]>(value);
+    rr_ret=MessageElementUtil.UnpackArray<double>(value);
     } catch (Exception err2) {
     rr_handler(default(double[]),err2);
     return;
@@ -908,7 +1250,7 @@ public class obj2_stub : ServiceStub , obj2, async_obj2{
     }
     public virtual void async_set_d1(double[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    using(MessageElement mm=MessageElementUtil.NewMessageElementDispose("value",value))
+    using(MessageElement mm=MessageElementUtil.PackArray<double>("value",value))
     {
     rr_async_PropertySet("d1",mm,rrend_async_set_d1,rr_handler,rr_timeout);
     }
@@ -934,10 +1276,10 @@ public class obj3_stub : ServiceStub , obj3, async_obj3{
     }
     public double[] d1 {
     get {
-    return MessageElementUtil.CastDataAndDispose<double[]>(rr_innerstub.PropertyGet("d1"));
+    return MessageElementUtil.UnpackArray<double>(rr_innerstub.PropertyGet("d1"));
     }
     set {
-    using(MessageElement m=MessageElementUtil.NewMessageElementDispose("value",value))
+    using(MessageElement m=MessageElementUtil.PackArray<double>("value",value))
     {
     rr_innerstub.PropertySet("d1", m);
     }
@@ -970,7 +1312,7 @@ public class obj3_stub : ServiceStub , obj3, async_obj3{
     }
     double[] rr_ret;
     try {
-    rr_ret=MessageElementUtil.CastDataAndDispose<double[]>(value);
+    rr_ret=MessageElementUtil.UnpackArray<double>(value);
     } catch (Exception err2) {
     rr_handler(default(double[]),err2);
     return;
@@ -979,7 +1321,7 @@ public class obj3_stub : ServiceStub , obj3, async_obj3{
     }
     public virtual void async_set_d1(double[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    using(MessageElement mm=MessageElementUtil.NewMessageElementDispose("value",value))
+    using(MessageElement mm=MessageElementUtil.PackArray<double>("value",value))
     {
     rr_async_PropertySet("d1",mm,rrend_async_set_d1,rr_handler,rr_timeout);
     }
@@ -1010,10 +1352,10 @@ public class obj4_stub : ServiceStub , obj4, async_obj4{
     }
     public string s_ind {
     get {
-    return MessageElementUtil.CastDataAndDispose<string>(rr_innerstub.PropertyGet("s_ind"));
+    return MessageElementUtil.UnpackString(rr_innerstub.PropertyGet("s_ind"));
     }
     set {
-    using(MessageElement m=MessageElementUtil.NewMessageElementDispose("value",value))
+    using(MessageElement m=MessageElementUtil.PackString("value",value))
     {
     rr_innerstub.PropertySet("s_ind", m);
     }
@@ -1021,10 +1363,10 @@ public class obj4_stub : ServiceStub , obj4, async_obj4{
     }
     public int i_ind {
     get {
-    return (MessageElementUtil.CastDataAndDispose<int[]>(rr_innerstub.PropertyGet("i_ind")))[0];
+    return (MessageElementUtil.UnpackScalar<int>(rr_innerstub.PropertyGet("i_ind")));
     }
     set {
-    using(MessageElement m=MessageElementUtil.NewMessageElementDispose("value",new int[] {value}))
+    using(MessageElement m=MessageElementUtil.PackScalar<int>("value",value))
     {
     rr_innerstub.PropertySet("i_ind", m);
     }
@@ -1032,10 +1374,10 @@ public class obj4_stub : ServiceStub , obj4, async_obj4{
     }
     public string data {
     get {
-    return MessageElementUtil.CastDataAndDispose<string>(rr_innerstub.PropertyGet("data"));
+    return MessageElementUtil.UnpackString(rr_innerstub.PropertyGet("data"));
     }
     set {
-    using(MessageElement m=MessageElementUtil.NewMessageElementDispose("value",value))
+    using(MessageElement m=MessageElementUtil.PackString("value",value))
     {
     rr_innerstub.PropertySet("data", m);
     }
@@ -1071,7 +1413,7 @@ public class obj4_stub : ServiceStub , obj4, async_obj4{
     }
     string rr_ret;
     try {
-    rr_ret=MessageElementUtil.CastDataAndDispose<string>(value);
+    rr_ret=MessageElementUtil.UnpackString(value);
     } catch (Exception err2) {
     rr_handler(default(string),err2);
     return;
@@ -1080,7 +1422,7 @@ public class obj4_stub : ServiceStub , obj4, async_obj4{
     }
     public virtual void async_set_s_ind(string value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    using(MessageElement mm=MessageElementUtil.NewMessageElementDispose("value",value))
+    using(MessageElement mm=MessageElementUtil.PackString("value",value))
     {
     rr_async_PropertySet("s_ind",mm,rrend_async_set_s_ind,rr_handler,rr_timeout);
     }
@@ -1109,7 +1451,7 @@ public class obj4_stub : ServiceStub , obj4, async_obj4{
     }
     int rr_ret;
     try {
-    rr_ret=(MessageElementUtil.CastDataAndDispose<int[]>(value))[0];
+    rr_ret=(MessageElementUtil.UnpackScalar<int>(value));
     } catch (Exception err2) {
     rr_handler(default(int),err2);
     return;
@@ -1118,7 +1460,7 @@ public class obj4_stub : ServiceStub , obj4, async_obj4{
     }
     public virtual void async_set_i_ind(int value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    using(MessageElement mm=MessageElementUtil.NewMessageElementDispose("value",new int[] {value}))
+    using(MessageElement mm=MessageElementUtil.PackScalar<int>("value",value))
     {
     rr_async_PropertySet("i_ind",mm,rrend_async_set_i_ind,rr_handler,rr_timeout);
     }
@@ -1147,7 +1489,7 @@ public class obj4_stub : ServiceStub , obj4, async_obj4{
     }
     string rr_ret;
     try {
-    rr_ret=MessageElementUtil.CastDataAndDispose<string>(value);
+    rr_ret=MessageElementUtil.UnpackString(value);
     } catch (Exception err2) {
     rr_handler(default(string),err2);
     return;
@@ -1156,7 +1498,7 @@ public class obj4_stub : ServiceStub , obj4, async_obj4{
     }
     public virtual void async_set_data(string value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    using(MessageElement mm=MessageElementUtil.NewMessageElementDispose("value",value))
+    using(MessageElement mm=MessageElementUtil.PackString("value",value))
     {
     rr_async_PropertySet("data",mm,rrend_async_set_data,rr_handler,rr_timeout);
     }
@@ -1188,32 +1530,62 @@ public class testroot3_skel : ServiceSkel {
     case "readme":
     {
     int ret=obj.readme;
-    return MessageElementUtil.NewMessageElementDispose("return",new int[] {ret});
+    return MessageElementUtil.PackScalar<int>("return",ret);
     }
     case "writeme":
     {
     int ret=obj.writeme;
-    return MessageElementUtil.NewMessageElementDispose("return",new int[] {ret});
+    return MessageElementUtil.PackScalar<int>("return",ret);
     }
     case "unknown_modifier":
     {
     int ret=obj.unknown_modifier;
-    return MessageElementUtil.NewMessageElementDispose("return",new int[] {ret});
+    return MessageElementUtil.PackScalar<int>("return",ret);
     }
     case "testenum1_prop":
     {
     testenum1 ret=obj.testenum1_prop;
-    return MessageElementUtil.NewMessageElementDispose("return",new int[] {((int)ret)});
+    return MessageElementUtil.PackEnum<testenum1>("return",ret);
     }
     case "testcstruct1_prop":
     {
     testcstruct1 ret=obj.testcstruct1_prop;
-    return MessageElementUtil.NewMessageElementDispose("return",RobotRaconteurNode.s.PackCStructureToArray<testcstruct1>(ref ret));
+    return MessageElementUtil.PackCStructureToArray<testcstruct1>("return",ref ret);
     }
     case "teststruct3_prop":
     {
     teststruct3 ret=obj.teststruct3_prop;
-    return MessageElementUtil.NewMessageElementDispose("return",RobotRaconteurNode.s.PackStructure(ret));
+    return MessageElementUtil.PackStructure("return",ret);
+    }
+    case "d1":
+    {
+    List<double[]> ret=obj.d1;
+    return MessageElementUtil.PackListType<double[]>("return",DataTypeUtil.VerifyArrayLength(ret, 6, false));
+    }
+    case "d2":
+    {
+    List<double[]> ret=obj.d2;
+    return MessageElementUtil.PackListType<double[]>("return",DataTypeUtil.VerifyArrayLength(ret, 6, true));
+    }
+    case "d3":
+    {
+    Dictionary<int,double[]> ret=obj.d3;
+    return MessageElementUtil.PackMapType<int,double[]>("return",DataTypeUtil.VerifyArrayLength(ret, 6, false));
+    }
+    case "d4":
+    {
+    Dictionary<int,double[]> ret=obj.d4;
+    return MessageElementUtil.PackMapType<int,double[]>("return",DataTypeUtil.VerifyArrayLength(ret, 6, true));
+    }
+    case "d5":
+    {
+    List<MultiDimArray> ret=obj.d5;
+    return MessageElementUtil.PackListType<MultiDimArray>("return",DataTypeUtil.VerifyArrayLength(ret,9,new int[] {3,3}));
+    }
+    case "d6":
+    {
+    Dictionary<int,MultiDimArray> ret=obj.d6;
+    return MessageElementUtil.PackMapType<int,MultiDimArray>("return",DataTypeUtil.VerifyArrayLength(ret,9,new int[] {3,3}));
     }
     default:
     break;
@@ -1224,32 +1596,62 @@ public class testroot3_skel : ServiceSkel {
     switch (membername) {
     case "readme":
     {
-    obj.readme=(MessageElementUtil.CastDataAndDispose<int[]>(m))[0];
+    obj.readme=(MessageElementUtil.UnpackScalar<int>(m));
     return;
     }
     case "writeme":
     {
-    obj.writeme=(MessageElementUtil.CastDataAndDispose<int[]>(m))[0];
+    obj.writeme=(MessageElementUtil.UnpackScalar<int>(m));
     return;
     }
     case "unknown_modifier":
     {
-    obj.unknown_modifier=(MessageElementUtil.CastDataAndDispose<int[]>(m))[0];
+    obj.unknown_modifier=(MessageElementUtil.UnpackScalar<int>(m));
     return;
     }
     case "testenum1_prop":
     {
-    obj.testenum1_prop=((testenum1)(MessageElementUtil.CastDataAndDispose<int[]>(m))[0]);
+    obj.testenum1_prop=MessageElementUtil.UnpackEnum<testenum1>(m);
     return;
     }
     case "testcstruct1_prop":
     {
-    obj.testcstruct1_prop=RobotRaconteurNode.s.UnpackCStructureFromArrayDispose<testcstruct1>(MessageElementUtil.CastDataAndDispose<MessageElementCStructureArray>(m));
+    obj.testcstruct1_prop=MessageElementUtil.UnpackCStructureFromArray<testcstruct1>(m);
     return;
     }
     case "teststruct3_prop":
     {
-    obj.teststruct3_prop=RobotRaconteurNode.s.UnpackStructureDispose<teststruct3>(MessageElementUtil.CastDataAndDispose<MessageElementStructure>(m));
+    obj.teststruct3_prop=MessageElementUtil.UnpackStructure<teststruct3>(m);
+    return;
+    }
+    case "d1":
+    {
+    obj.d1=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackList<double[]>(m), 6, false);
+    return;
+    }
+    case "d2":
+    {
+    obj.d2=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackList<double[]>(m), 6, true);
+    return;
+    }
+    case "d3":
+    {
+    obj.d3=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackMap<int,double[]>(m), 6, false);
+    return;
+    }
+    case "d4":
+    {
+    obj.d4=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackMap<int,double[]>(m), 6, true);
+    return;
+    }
+    case "d5":
+    {
+    obj.d5=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackList<MultiDimArray>(m),9,new int[] {3,3});
+    return;
+    }
+    case "d6":
+    {
+    obj.d6=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackMap<int,MultiDimArray>(m),9,new int[] {3,3});
     return;
     }
     default:
@@ -1261,14 +1663,14 @@ public class testroot3_skel : ServiceSkel {
     switch (rr_membername) {
     case "testcstruct1_func1":
     {
-    testcstruct1 s=RobotRaconteurNode.s.UnpackCStructureFromArrayDispose<testcstruct1>(MessageElementUtil.CastDataAndDispose<MessageElementCStructureArray>(vectorptr_messageelement_util.FindElement(rr_m,"s")));
+    testcstruct1 s=MessageElementUtil.UnpackCStructureFromArray<testcstruct1>(vectorptr_messageelement_util.FindElement(rr_m,"s"));
     this.obj.testcstruct1_func1(s);
     return new MessageElement("return",(int)0);
     }
     case "testcstruct1_func2":
     {
     testcstruct1 rr_ret=this.obj.testcstruct1_func2();
-    return MessageElementUtil.NewMessageElementDispose("return",RobotRaconteurNode.s.PackCStructureToArray<testcstruct1>(ref rr_ret));
+    return MessageElementUtil.PackCStructureToArray<testcstruct1>("return",ref rr_ret);
     }
     case "gen_func1":
     {
@@ -1278,14 +1680,14 @@ public class testroot3_skel : ServiceSkel {
     }
     case "gen_func2":
     {
-    string name=MessageElementUtil.CastDataAndDispose<string>(vectorptr_messageelement_util.FindElement(rr_m,"name"));
+    string name=MessageElementUtil.UnpackString(vectorptr_messageelement_util.FindElement(rr_m,"name"));
     Generator2<byte[]> rr_ret=this.obj.gen_func2(name);
     int generator_index = innerskel.RegisterGeneratorServer("gen_func2", new WrappedGenerator2ServerDirectorNET<byte[]>(rr_ret));
     return new MessageElement("index",generator_index);
     }
     case "gen_func3":
     {
-    string name=MessageElementUtil.CastDataAndDispose<string>(vectorptr_messageelement_util.FindElement(rr_m,"name"));
+    string name=MessageElementUtil.UnpackString(vectorptr_messageelement_util.FindElement(rr_m,"name"));
     Generator3<byte[]> rr_ret=this.obj.gen_func3(name);
     int generator_index = innerskel.RegisterGeneratorServer("gen_func3", new WrappedGenerator3ServerDirectorNET<byte[]>(rr_ret));
     return new MessageElement("index",generator_index);
@@ -1334,6 +1736,9 @@ public class testroot3_skel : ServiceSkel {
     obj=(testroot3)rrobj1;
     obj.unreliable1=new Pipe<int>(innerskel.GetPipe("unreliable1"));
     obj.unreliable2=new Pipe<int>(innerskel.GetPipe("unreliable2"));
+    obj.p1=new Pipe<int[]>(innerskel.GetPipe("p1"));
+    obj.p2=new Pipe<int[]>(innerskel.GetPipe("p2"));
+    obj.p3=new Pipe<MultiDimArray>(innerskel.GetPipe("p3"));
     }
     public override void InitCallbackServers(object rrobj1) {
     obj=(testroot3)rrobj1;
@@ -1342,6 +1747,9 @@ public class testroot3_skel : ServiceSkel {
     obj=(testroot3)rrobj1;
     obj.peekwire=new Wire<int>(innerskel.GetWire("peekwire"));
     obj.pokewire=new Wire<int>(innerskel.GetWire("pokewire"));
+    obj.w1=new Wire<int[]>(innerskel.GetWire("w1"));
+    obj.w2=new Wire<int[]>(innerskel.GetWire("w2"));
+    obj.w3=new Wire<MultiDimArray>(innerskel.GetWire("w3"));
     }
     public override WrappedArrayMemoryDirector GetArrayMemory(string name) {
     switch (name) {
@@ -1397,7 +1805,7 @@ public class obj1_skel : ServiceSkel {
     case "d1":
     {
     double[] ret=obj.d1;
-    return MessageElementUtil.NewMessageElementDispose("return",ret);
+    return MessageElementUtil.PackArray<double>("return",ret);
     }
     default:
     break;
@@ -1408,7 +1816,7 @@ public class obj1_skel : ServiceSkel {
     switch (membername) {
     case "d1":
     {
-    obj.d1=MessageElementUtil.CastDataAndDispose<double[]>(m);
+    obj.d1=MessageElementUtil.UnpackArray<double>(m);
     return;
     }
     default:
@@ -1494,7 +1902,7 @@ public class obj2_skel : ServiceSkel {
     case "d1":
     {
     double[] ret=obj.d1;
-    return MessageElementUtil.NewMessageElementDispose("return",ret);
+    return MessageElementUtil.PackArray<double>("return",ret);
     }
     default:
     break;
@@ -1505,7 +1913,7 @@ public class obj2_skel : ServiceSkel {
     switch (membername) {
     case "d1":
     {
-    obj.d1=MessageElementUtil.CastDataAndDispose<double[]>(m);
+    obj.d1=MessageElementUtil.UnpackArray<double>(m);
     return;
     }
     default:
@@ -1591,7 +1999,7 @@ public class obj3_skel : ServiceSkel {
     case "d1":
     {
     double[] ret=obj.d1;
-    return MessageElementUtil.NewMessageElementDispose("return",ret);
+    return MessageElementUtil.PackArray<double>("return",ret);
     }
     default:
     break;
@@ -1602,7 +2010,7 @@ public class obj3_skel : ServiceSkel {
     switch (membername) {
     case "d1":
     {
-    obj.d1=MessageElementUtil.CastDataAndDispose<double[]>(m);
+    obj.d1=MessageElementUtil.UnpackArray<double>(m);
     return;
     }
     default:
@@ -1688,17 +2096,17 @@ public class obj4_skel : ServiceSkel {
     case "s_ind":
     {
     string ret=obj.s_ind;
-    return MessageElementUtil.NewMessageElementDispose("return",ret);
+    return MessageElementUtil.PackString("return",ret);
     }
     case "i_ind":
     {
     int ret=obj.i_ind;
-    return MessageElementUtil.NewMessageElementDispose("return",new int[] {ret});
+    return MessageElementUtil.PackScalar<int>("return",ret);
     }
     case "data":
     {
     string ret=obj.data;
-    return MessageElementUtil.NewMessageElementDispose("return",ret);
+    return MessageElementUtil.PackString("return",ret);
     }
     default:
     break;
@@ -1709,17 +2117,17 @@ public class obj4_skel : ServiceSkel {
     switch (membername) {
     case "s_ind":
     {
-    obj.s_ind=MessageElementUtil.CastDataAndDispose<string>(m);
+    obj.s_ind=MessageElementUtil.UnpackString(m);
     return;
     }
     case "i_ind":
     {
-    obj.i_ind=(MessageElementUtil.CastDataAndDispose<int[]>(m))[0];
+    obj.i_ind=(MessageElementUtil.UnpackScalar<int>(m));
     return;
     }
     case "data":
     {
-    obj.data=MessageElementUtil.CastDataAndDispose<string>(m);
+    obj.data=MessageElementUtil.UnpackString(m);
     return;
     }
     default:
@@ -1867,6 +2275,78 @@ public static class RRExtensions{
     {
     RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
     rr_obj.async_set_teststruct3_prop(value,t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task<List<double[]>> async_get_d1(this async_testroot3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurTaskCompletion<List<double[]>> t=new RobotRaconteurTaskCompletion<List<double[]>>();
+    rr_obj.async_get_d1(t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task async_set_d1(this async_testroot3 rr_obj, List<double[]> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
+    rr_obj.async_set_d1(value,t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task<List<double[]>> async_get_d2(this async_testroot3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurTaskCompletion<List<double[]>> t=new RobotRaconteurTaskCompletion<List<double[]>>();
+    rr_obj.async_get_d2(t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task async_set_d2(this async_testroot3 rr_obj, List<double[]> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
+    rr_obj.async_set_d2(value,t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task<Dictionary<int,double[]>> async_get_d3(this async_testroot3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurTaskCompletion<Dictionary<int,double[]>> t=new RobotRaconteurTaskCompletion<Dictionary<int,double[]>>();
+    rr_obj.async_get_d3(t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task async_set_d3(this async_testroot3 rr_obj, Dictionary<int,double[]> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
+    rr_obj.async_set_d3(value,t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task<Dictionary<int,double[]>> async_get_d4(this async_testroot3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurTaskCompletion<Dictionary<int,double[]>> t=new RobotRaconteurTaskCompletion<Dictionary<int,double[]>>();
+    rr_obj.async_get_d4(t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task async_set_d4(this async_testroot3 rr_obj, Dictionary<int,double[]> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
+    rr_obj.async_set_d4(value,t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task<List<MultiDimArray>> async_get_d5(this async_testroot3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurTaskCompletion<List<MultiDimArray>> t=new RobotRaconteurTaskCompletion<List<MultiDimArray>>();
+    rr_obj.async_get_d5(t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task async_set_d5(this async_testroot3 rr_obj, List<MultiDimArray> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
+    rr_obj.async_set_d5(value,t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task<Dictionary<int,MultiDimArray>> async_get_d6(this async_testroot3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurTaskCompletion<Dictionary<int,MultiDimArray>> t=new RobotRaconteurTaskCompletion<Dictionary<int,MultiDimArray>>();
+    rr_obj.async_get_d6(t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task async_set_d6(this async_testroot3 rr_obj, Dictionary<int,MultiDimArray> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
+    rr_obj.async_set_d6(value,t.handler,rr_timeout);
     return t.Task;
     }
     public static Task async_testcstruct1_func1(this async_testroot3 rr_obj,testcstruct1 s,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)

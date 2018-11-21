@@ -16,12 +16,12 @@ public class baseobj_skel extends ServiceSkel {
     if(membername.equals( "d1"))
     {
     double ret=obj.get_d1();
-    return MessageElementUtil.newMessageElementDispose("return",new double[] {ret});
+    return MessageElementUtil.<double[]>packArray("return",new double[] {ret});
     }
     if(membername.equals( "d2"))
     {
     double[] ret=obj.get_d2();
-    return MessageElementUtil.newMessageElementDispose("return",ret);
+    return MessageElementUtil.<double[]>packArray("return",ret);
     }
     throw new MemberNotFoundException("Member not found");
     }
@@ -33,7 +33,7 @@ public class baseobj_skel extends ServiceSkel {
     }
     if(membername.equals( "d2"))
     {
-    obj.set_d2(MessageElementUtil.<double[]>castDataAndDispose(m));
+    obj.set_d2(MessageElementUtil.<double[]>unpackArray(m));
     return;
     }
     throw new MemberNotFoundException("Member not found");
@@ -44,7 +44,7 @@ public class baseobj_skel extends ServiceSkel {
     double d1=(MessageElementUtil.<double[]>castDataAndDispose(vectorptr_messageelement_util.findElement(rr_m,"d1")))[0];
     double d2=(MessageElementUtil.<double[]>castDataAndDispose(vectorptr_messageelement_util.findElement(rr_m,"d2")))[0];
     double rr_ret=obj.func3(d1, d2);
-    return MessageElementUtil.newMessageElementDispose("return",new double[] {rr_ret});
+    return MessageElementUtil.<double[]>packArray("return",new double[] {rr_ret});
     }
     throw new MemberNotFoundException("Member not found");
     }
@@ -81,8 +81,8 @@ public class baseobj_skel extends ServiceSkel {
     vectorptr_messageelement rr_param=new vectorptr_messageelement();
     MessageElement rr_me=null;
     try {
-    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.newMessageElementDispose("d1",new double[] {d1}));
-    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.newMessageElementDispose("d2",new double[] {d2}));
+    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.<double[]>packArray("d1",new double[] {d1}));
+    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.<double[]>packArray("d2",new double[] {d2}));
     rr_me=baseobj_skel.this.innerskel.wrappedCallbackCall("cb2",this.endpoint,rr_param);
     }
     finally {

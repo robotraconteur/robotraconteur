@@ -16,29 +16,29 @@ public class sub3_skel extends ServiceSkel {
     if(membername.equals( "ind"))
     {
     String ret=obj.get_ind();
-    return MessageElementUtil.newMessageElementDispose("return",ret);
+    return MessageElementUtil.packString("return",ret);
     }
     if(membername.equals( "data2"))
     {
     String ret=obj.get_data2();
-    return MessageElementUtil.newMessageElementDispose("return",ret);
+    return MessageElementUtil.packString("return",ret);
     }
     if(membername.equals( "data3"))
     {
     double ret=obj.get_data3();
-    return MessageElementUtil.newMessageElementDispose("return",new double[] {ret});
+    return MessageElementUtil.<double[]>packArray("return",new double[] {ret});
     }
     throw new MemberNotFoundException("Member not found");
     }
     public void callSetProperty(String membername, MessageElement m) {
     if(membername.equals( "ind"))
     {
-    obj.set_ind(MessageElementUtil.<String>castDataAndDispose(m));
+    obj.set_ind(MessageElementUtil.unpackString(m));
     return;
     }
     if(membername.equals( "data2"))
     {
-    obj.set_data2(MessageElementUtil.<String>castDataAndDispose(m));
+    obj.set_data2(MessageElementUtil.unpackString(m));
     return;
     }
     if(membername.equals( "data3"))
@@ -53,7 +53,7 @@ public class sub3_skel extends ServiceSkel {
     {
     double d=(MessageElementUtil.<double[]>castDataAndDispose(vectorptr_messageelement_util.findElement(rr_m,"d")))[0];
     double rr_ret=obj.add(d);
-    return MessageElementUtil.newMessageElementDispose("return",new double[] {rr_ret});
+    return MessageElementUtil.<double[]>packArray("return",new double[] {rr_ret});
     }
     throw new MemberNotFoundException("Member not found");
     }

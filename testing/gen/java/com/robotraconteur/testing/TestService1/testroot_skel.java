@@ -16,282 +16,282 @@ public class testroot_skel extends ServiceSkel {
     if(membername.equals( "d1"))
     {
     double ret=obj.get_d1();
-    return MessageElementUtil.newMessageElementDispose("return",new double[] {ret});
+    return MessageElementUtil.<double[]>packArray("return",new double[] {ret});
     }
     if(membername.equals( "d2"))
     {
     double[] ret=obj.get_d2();
-    return MessageElementUtil.newMessageElementDispose("return",ret);
+    return MessageElementUtil.<double[]>packArray("return",ret);
     }
     if(membername.equals( "d3"))
     {
     double[] ret=obj.get_d3();
-    return MessageElementUtil.newMessageElementDispose("return",ret);
+    return MessageElementUtil.<double[]>packArray("return",DataTypeUtil.verifyArrayLength(ret, 16, false));
     }
     if(membername.equals( "d4"))
     {
     double[] ret=obj.get_d4();
-    return MessageElementUtil.newMessageElementDispose("return",ret);
+    return MessageElementUtil.<double[]>packArray("return",DataTypeUtil.verifyArrayLength(ret, 16, true));
     }
     if(membername.equals( "d5"))
     {
     MultiDimArray ret=obj.get_d5();
-    return MessageElementUtil.newMessageElementDispose("return",RobotRaconteurNode.s().packMultiDimArray((MultiDimArray)ret));
+    return MessageElementUtil.packMultiDimArray("return",(MultiDimArray)ret);
     }
     if(membername.equals( "d6"))
     {
     MultiDimArray ret=obj.get_d6();
-    return MessageElementUtil.newMessageElementDispose("return",RobotRaconteurNode.s().packMultiDimArray((MultiDimArray)ret));
+    return MessageElementUtil.packMultiDimArray("return",(MultiDimArray)DataTypeUtil.verifyArrayLength(ret,9,new int[] {3,3}));
     }
     if(membername.equals( "s1"))
     {
     float ret=obj.get_s1();
-    return MessageElementUtil.newMessageElementDispose("return",new float[] {ret});
+    return MessageElementUtil.<float[]>packArray("return",new float[] {ret});
     }
     if(membername.equals( "s2"))
     {
     float[] ret=obj.get_s2();
-    return MessageElementUtil.newMessageElementDispose("return",ret);
+    return MessageElementUtil.<float[]>packArray("return",ret);
     }
     if(membername.equals( "i8_1"))
     {
     byte ret=obj.get_i8_1();
-    return MessageElementUtil.newMessageElementDispose("return",new byte[] {ret});
+    return MessageElementUtil.<byte[]>packArray("return",new byte[] {ret});
     }
     if(membername.equals( "i8_2"))
     {
     byte[] ret=obj.get_i8_2();
-    return MessageElementUtil.newMessageElementDispose("return",ret);
+    return MessageElementUtil.<byte[]>packArray("return",ret);
     }
     if(membername.equals( "u8_1"))
     {
     UnsignedByte ret=obj.get_u8_1();
-    return MessageElementUtil.newMessageElementDispose("return",ret.array());
+    return MessageElementUtil.<UnsignedBytes>packArray("return",ret.array());
     }
     if(membername.equals( "u8_2"))
     {
     UnsignedBytes ret=obj.get_u8_2();
-    return MessageElementUtil.newMessageElementDispose("return",ret);
+    return MessageElementUtil.<UnsignedBytes>packArray("return",ret);
     }
     if(membername.equals( "u8_3"))
     {
     MultiDimArray ret=obj.get_u8_3();
-    return MessageElementUtil.newMessageElementDispose("return",RobotRaconteurNode.s().packMultiDimArray((MultiDimArray)ret));
+    return MessageElementUtil.packMultiDimArray("return",(MultiDimArray)ret);
     }
     if(membername.equals( "i16_1"))
     {
     short ret=obj.get_i16_1();
-    return MessageElementUtil.newMessageElementDispose("return",new short[] {ret});
+    return MessageElementUtil.<short[]>packArray("return",new short[] {ret});
     }
     if(membername.equals( "i16_2"))
     {
     short[] ret=obj.get_i16_2();
-    return MessageElementUtil.newMessageElementDispose("return",ret);
+    return MessageElementUtil.<short[]>packArray("return",ret);
     }
     if(membername.equals( "u16_1"))
     {
     UnsignedShort ret=obj.get_u16_1();
-    return MessageElementUtil.newMessageElementDispose("return",ret.array());
+    return MessageElementUtil.<UnsignedShorts>packArray("return",ret.array());
     }
     if(membername.equals( "u16_2"))
     {
     UnsignedShorts ret=obj.get_u16_2();
-    return MessageElementUtil.newMessageElementDispose("return",ret);
+    return MessageElementUtil.<UnsignedShorts>packArray("return",ret);
     }
     if(membername.equals( "i32_1"))
     {
     int ret=obj.get_i32_1();
-    return MessageElementUtil.newMessageElementDispose("return",new int[] {ret});
+    return MessageElementUtil.<int[]>packArray("return",new int[] {ret});
     }
     if(membername.equals( "i32_2"))
     {
     int[] ret=obj.get_i32_2();
-    return MessageElementUtil.newMessageElementDispose("return",ret);
+    return MessageElementUtil.<int[]>packArray("return",ret);
     }
     if(membername.equals( "i32_huge"))
     {
     int[] ret=obj.get_i32_huge();
-    return MessageElementUtil.newMessageElementDispose("return",ret);
+    return MessageElementUtil.<int[]>packArray("return",ret);
     }
     if(membername.equals( "u32_1"))
     {
     UnsignedInt ret=obj.get_u32_1();
-    return MessageElementUtil.newMessageElementDispose("return",ret.array());
+    return MessageElementUtil.<UnsignedInts>packArray("return",ret.array());
     }
     if(membername.equals( "u32_2"))
     {
     UnsignedInts ret=obj.get_u32_2();
-    return MessageElementUtil.newMessageElementDispose("return",ret);
+    return MessageElementUtil.<UnsignedInts>packArray("return",ret);
     }
     if(membername.equals( "i64_1"))
     {
     long ret=obj.get_i64_1();
-    return MessageElementUtil.newMessageElementDispose("return",new long[] {ret});
+    return MessageElementUtil.<long[]>packArray("return",new long[] {ret});
     }
     if(membername.equals( "i64_2"))
     {
     long[] ret=obj.get_i64_2();
-    return MessageElementUtil.newMessageElementDispose("return",ret);
+    return MessageElementUtil.<long[]>packArray("return",ret);
     }
     if(membername.equals( "u64_1"))
     {
     UnsignedLong ret=obj.get_u64_1();
-    return MessageElementUtil.newMessageElementDispose("return",ret.array());
+    return MessageElementUtil.<UnsignedLongs>packArray("return",ret.array());
     }
     if(membername.equals( "u64_2"))
     {
     UnsignedLongs ret=obj.get_u64_2();
-    return MessageElementUtil.newMessageElementDispose("return",ret);
+    return MessageElementUtil.<UnsignedLongs>packArray("return",ret);
     }
     if(membername.equals( "str1"))
     {
     String ret=obj.get_str1();
-    return MessageElementUtil.newMessageElementDispose("return",ret);
+    return MessageElementUtil.packString("return",ret);
     }
     if(membername.equals( "struct1"))
     {
     teststruct1 ret=obj.get_struct1();
-    return MessageElementUtil.newMessageElementDispose("return",RobotRaconteurNode.s().packStructure(ret));
+    return MessageElementUtil.packStructure("return",ret);
     }
     if(membername.equals( "struct2"))
     {
     teststruct2 ret=obj.get_struct2();
-    return MessageElementUtil.newMessageElementDispose("return",RobotRaconteurNode.s().packStructure(ret));
+    return MessageElementUtil.packStructure("return",ret);
     }
     if(membername.equals( "is_d1"))
     {
     Map<Integer,double[]> ret=obj.get_is_d1();
-    return MessageElementUtil.newMessageElementDispose("return",RobotRaconteurNode.s().<Integer,double[]>packMapType(ret,Integer.class,double[].class));
+    return MessageElementUtil.<Integer,double[]>packMapType("return",ret,Integer.class,double[].class);
     }
     if(membername.equals( "is_d2"))
     {
     Map<String,double[]> ret=obj.get_is_d2();
-    return MessageElementUtil.newMessageElementDispose("return",RobotRaconteurNode.s().<String,double[]>packMapType(ret,String.class,double[].class));
+    return MessageElementUtil.<String,double[]>packMapType("return",ret,String.class,double[].class);
     }
     if(membername.equals( "is_d3"))
     {
     Map<Integer,double[]> ret=obj.get_is_d3();
-    return MessageElementUtil.newMessageElementDispose("return",RobotRaconteurNode.s().<Integer,double[]>packMapType(ret,Integer.class,double[].class));
+    return MessageElementUtil.<Integer,double[]>packMapType("return",ret,Integer.class,double[].class);
     }
     if(membername.equals( "is_d4"))
     {
     Map<String,double[]> ret=obj.get_is_d4();
-    return MessageElementUtil.newMessageElementDispose("return",RobotRaconteurNode.s().<String,double[]>packMapType(ret,String.class,double[].class));
+    return MessageElementUtil.<String,double[]>packMapType("return",ret,String.class,double[].class);
     }
     if(membername.equals( "is_d5"))
     {
     Map<Integer,MultiDimArray> ret=obj.get_is_d5();
-    return MessageElementUtil.newMessageElementDispose("return",RobotRaconteurNode.s().<Integer,MultiDimArray>packMapType(ret,Integer.class,MultiDimArray.class));
+    return MessageElementUtil.<Integer,MultiDimArray>packMapType("return",ret,Integer.class,MultiDimArray.class);
     }
     if(membername.equals( "is_d6"))
     {
     Map<String,MultiDimArray> ret=obj.get_is_d6();
-    return MessageElementUtil.newMessageElementDispose("return",RobotRaconteurNode.s().<String,MultiDimArray>packMapType(ret,String.class,MultiDimArray.class));
+    return MessageElementUtil.<String,MultiDimArray>packMapType("return",ret,String.class,MultiDimArray.class);
     }
     if(membername.equals( "is_str1"))
     {
     Map<Integer,String> ret=obj.get_is_str1();
-    return MessageElementUtil.newMessageElementDispose("return",RobotRaconteurNode.s().<Integer,String>packMapType(ret,Integer.class,String.class));
+    return MessageElementUtil.<Integer,String>packMapType("return",ret,Integer.class,String.class);
     }
     if(membername.equals( "is_str2"))
     {
     Map<String,String> ret=obj.get_is_str2();
-    return MessageElementUtil.newMessageElementDispose("return",RobotRaconteurNode.s().<String,String>packMapType(ret,String.class,String.class));
+    return MessageElementUtil.<String,String>packMapType("return",ret,String.class,String.class);
     }
     if(membername.equals( "is_struct1"))
     {
     Map<Integer,teststruct2> ret=obj.get_is_struct1();
-    return MessageElementUtil.newMessageElementDispose("return",RobotRaconteurNode.s().<Integer,teststruct2>packMapType(ret,Integer.class,teststruct2.class));
+    return MessageElementUtil.<Integer,teststruct2>packMapType("return",ret,Integer.class,teststruct2.class);
     }
     if(membername.equals( "is_struct2"))
     {
     Map<String,teststruct2> ret=obj.get_is_struct2();
-    return MessageElementUtil.newMessageElementDispose("return",RobotRaconteurNode.s().<String,teststruct2>packMapType(ret,String.class,teststruct2.class));
+    return MessageElementUtil.<String,teststruct2>packMapType("return",ret,String.class,teststruct2.class);
     }
     if(membername.equals( "struct3"))
     {
     com.robotraconteur.testing.TestService2.ostruct2 ret=obj.get_struct3();
-    return MessageElementUtil.newMessageElementDispose("return",RobotRaconteurNode.s().packStructure(ret));
+    return MessageElementUtil.packStructure("return",ret);
     }
     if(membername.equals( "list_d1"))
     {
     List<double[]> ret=obj.get_list_d1();
-    return MessageElementUtil.newMessageElementDispose("return",RobotRaconteurNode.s().<double[]>packListType(ret,double[].class));
+    return MessageElementUtil.<double[]>packListType("return",ret,double[].class);
     }
     if(membername.equals( "list_d3"))
     {
     List<double[]> ret=obj.get_list_d3();
-    return MessageElementUtil.newMessageElementDispose("return",RobotRaconteurNode.s().<double[]>packListType(ret,double[].class));
+    return MessageElementUtil.<double[]>packListType("return",ret,double[].class);
     }
     if(membername.equals( "list_d5"))
     {
     List<MultiDimArray> ret=obj.get_list_d5();
-    return MessageElementUtil.newMessageElementDispose("return",RobotRaconteurNode.s().<MultiDimArray>packListType(ret,MultiDimArray.class));
+    return MessageElementUtil.<MultiDimArray>packListType("return",ret,MultiDimArray.class);
     }
     if(membername.equals( "list_str1"))
     {
     List<String> ret=obj.get_list_str1();
-    return MessageElementUtil.newMessageElementDispose("return",RobotRaconteurNode.s().<String>packListType(ret,String.class));
+    return MessageElementUtil.<String>packListType("return",ret,String.class);
     }
     if(membername.equals( "list_struct1"))
     {
     List<teststruct2> ret=obj.get_list_struct1();
-    return MessageElementUtil.newMessageElementDispose("return",RobotRaconteurNode.s().<teststruct2>packListType(ret,teststruct2.class));
+    return MessageElementUtil.<teststruct2>packListType("return",ret,teststruct2.class);
     }
     if(membername.equals( "var1"))
     {
     Object ret=obj.get_var1();
-    return MessageElementUtil.newMessageElementDispose("return",RobotRaconteurNode.s().packVarType(ret));
+    return MessageElementUtil.packVarType("return",ret);
     }
     if(membername.equals( "var2"))
     {
     Map<Integer,Object> ret=obj.get_var2();
-    return MessageElementUtil.newMessageElementDispose("return",RobotRaconteurNode.s().<Integer,Object>packMapType(ret,Integer.class,Object.class));
+    return MessageElementUtil.<Integer,Object>packMapType("return",ret,Integer.class,Object.class);
     }
     if(membername.equals( "var_num"))
     {
     Object ret=obj.get_var_num();
-    return MessageElementUtil.newMessageElementDispose("return",RobotRaconteurNode.s().packVarType(ret));
+    return MessageElementUtil.packVarType("return",ret);
     }
     if(membername.equals( "var_str"))
     {
     Object ret=obj.get_var_str();
-    return MessageElementUtil.newMessageElementDispose("return",RobotRaconteurNode.s().packVarType(ret));
+    return MessageElementUtil.packVarType("return",ret);
     }
     if(membername.equals( "var_struct"))
     {
     Object ret=obj.get_var_struct();
-    return MessageElementUtil.newMessageElementDispose("return",RobotRaconteurNode.s().packVarType(ret));
+    return MessageElementUtil.packVarType("return",ret);
     }
     if(membername.equals( "var_vector"))
     {
     Object ret=obj.get_var_vector();
-    return MessageElementUtil.newMessageElementDispose("return",RobotRaconteurNode.s().packVarType(ret));
+    return MessageElementUtil.packVarType("return",ret);
     }
     if(membername.equals( "var_dictionary"))
     {
     Object ret=obj.get_var_dictionary();
-    return MessageElementUtil.newMessageElementDispose("return",RobotRaconteurNode.s().packVarType(ret));
+    return MessageElementUtil.packVarType("return",ret);
     }
     if(membername.equals( "var_list"))
     {
     Object ret=obj.get_var_list();
-    return MessageElementUtil.newMessageElementDispose("return",RobotRaconteurNode.s().packVarType(ret));
+    return MessageElementUtil.packVarType("return",ret);
     }
     if(membername.equals( "var_multidimarray"))
     {
     Object ret=obj.get_var_multidimarray();
-    return MessageElementUtil.newMessageElementDispose("return",RobotRaconteurNode.s().packVarType(ret));
+    return MessageElementUtil.packVarType("return",ret);
     }
     if(membername.equals( "errtest"))
     {
     double ret=obj.get_errtest();
-    return MessageElementUtil.newMessageElementDispose("return",new double[] {ret});
+    return MessageElementUtil.<double[]>packArray("return",new double[] {ret});
     }
     if(membername.equals( "nulltest"))
     {
     teststruct1 ret=obj.get_nulltest();
-    return MessageElementUtil.newMessageElementDispose("return",RobotRaconteurNode.s().packStructure(ret));
+    return MessageElementUtil.packStructure("return",ret);
     }
     throw new MemberNotFoundException("Member not found");
     }
@@ -303,27 +303,27 @@ public class testroot_skel extends ServiceSkel {
     }
     if(membername.equals( "d2"))
     {
-    obj.set_d2(MessageElementUtil.<double[]>castDataAndDispose(m));
+    obj.set_d2(MessageElementUtil.<double[]>unpackArray(m));
     return;
     }
     if(membername.equals( "d3"))
     {
-    obj.set_d3(MessageElementUtil.<double[]>castDataAndDispose(m));
+    obj.set_d3(DataTypeUtil.verifyArrayLength(MessageElementUtil.<double[]>unpackArray(m), 16, false));
     return;
     }
     if(membername.equals( "d4"))
     {
-    obj.set_d4(MessageElementUtil.<double[]>castDataAndDispose(m));
+    obj.set_d4(DataTypeUtil.verifyArrayLength(MessageElementUtil.<double[]>unpackArray(m), 16, true));
     return;
     }
     if(membername.equals( "d5"))
     {
-    obj.set_d5(RobotRaconteurNode.s().unpackMultiDimArrayDispose(MessageElementUtil.<MessageElementMultiDimArray>castDataAndDispose(m)));
+    obj.set_d5(MessageElementUtil.unpackMultiDimArray(m));
     return;
     }
     if(membername.equals( "d6"))
     {
-    obj.set_d6(RobotRaconteurNode.s().unpackMultiDimArrayDispose(MessageElementUtil.<MessageElementMultiDimArray>castDataAndDispose(m)));
+    obj.set_d6(DataTypeUtil.verifyArrayLength(MessageElementUtil.unpackMultiDimArray(m),9,new int[] {3,3}));
     return;
     }
     if(membername.equals( "s1"))
@@ -333,7 +333,7 @@ public class testroot_skel extends ServiceSkel {
     }
     if(membername.equals( "s2"))
     {
-    obj.set_s2(MessageElementUtil.<float[]>castDataAndDispose(m));
+    obj.set_s2(MessageElementUtil.<float[]>unpackArray(m));
     return;
     }
     if(membername.equals( "i8_1"))
@@ -343,7 +343,7 @@ public class testroot_skel extends ServiceSkel {
     }
     if(membername.equals( "i8_2"))
     {
-    obj.set_i8_2(MessageElementUtil.<byte[]>castDataAndDispose(m));
+    obj.set_i8_2(MessageElementUtil.<byte[]>unpackArray(m));
     return;
     }
     if(membername.equals( "u8_1"))
@@ -353,12 +353,12 @@ public class testroot_skel extends ServiceSkel {
     }
     if(membername.equals( "u8_2"))
     {
-    obj.set_u8_2(MessageElementUtil.<UnsignedBytes>castDataAndDispose(m));
+    obj.set_u8_2(MessageElementUtil.<UnsignedBytes>unpackArray(m));
     return;
     }
     if(membername.equals( "u8_3"))
     {
-    obj.set_u8_3(RobotRaconteurNode.s().unpackMultiDimArrayDispose(MessageElementUtil.<MessageElementMultiDimArray>castDataAndDispose(m)));
+    obj.set_u8_3(MessageElementUtil.unpackMultiDimArray(m));
     return;
     }
     if(membername.equals( "i16_1"))
@@ -368,7 +368,7 @@ public class testroot_skel extends ServiceSkel {
     }
     if(membername.equals( "i16_2"))
     {
-    obj.set_i16_2(MessageElementUtil.<short[]>castDataAndDispose(m));
+    obj.set_i16_2(MessageElementUtil.<short[]>unpackArray(m));
     return;
     }
     if(membername.equals( "u16_1"))
@@ -378,7 +378,7 @@ public class testroot_skel extends ServiceSkel {
     }
     if(membername.equals( "u16_2"))
     {
-    obj.set_u16_2(MessageElementUtil.<UnsignedShorts>castDataAndDispose(m));
+    obj.set_u16_2(MessageElementUtil.<UnsignedShorts>unpackArray(m));
     return;
     }
     if(membername.equals( "i32_1"))
@@ -388,12 +388,12 @@ public class testroot_skel extends ServiceSkel {
     }
     if(membername.equals( "i32_2"))
     {
-    obj.set_i32_2(MessageElementUtil.<int[]>castDataAndDispose(m));
+    obj.set_i32_2(MessageElementUtil.<int[]>unpackArray(m));
     return;
     }
     if(membername.equals( "i32_huge"))
     {
-    obj.set_i32_huge(MessageElementUtil.<int[]>castDataAndDispose(m));
+    obj.set_i32_huge(MessageElementUtil.<int[]>unpackArray(m));
     return;
     }
     if(membername.equals( "u32_1"))
@@ -403,7 +403,7 @@ public class testroot_skel extends ServiceSkel {
     }
     if(membername.equals( "u32_2"))
     {
-    obj.set_u32_2(MessageElementUtil.<UnsignedInts>castDataAndDispose(m));
+    obj.set_u32_2(MessageElementUtil.<UnsignedInts>unpackArray(m));
     return;
     }
     if(membername.equals( "i64_1"))
@@ -413,7 +413,7 @@ public class testroot_skel extends ServiceSkel {
     }
     if(membername.equals( "i64_2"))
     {
-    obj.set_i64_2(MessageElementUtil.<long[]>castDataAndDispose(m));
+    obj.set_i64_2(MessageElementUtil.<long[]>unpackArray(m));
     return;
     }
     if(membername.equals( "u64_1"))
@@ -423,147 +423,147 @@ public class testroot_skel extends ServiceSkel {
     }
     if(membername.equals( "u64_2"))
     {
-    obj.set_u64_2(MessageElementUtil.<UnsignedLongs>castDataAndDispose(m));
+    obj.set_u64_2(MessageElementUtil.<UnsignedLongs>unpackArray(m));
     return;
     }
     if(membername.equals( "str1"))
     {
-    obj.set_str1(MessageElementUtil.<String>castDataAndDispose(m));
+    obj.set_str1(MessageElementUtil.unpackString(m));
     return;
     }
     if(membername.equals( "struct1"))
     {
-    obj.set_struct1(RobotRaconteurNode.s().<teststruct1>unpackStructureDispose(m.<MessageElementStructure>castData()));
+    obj.set_struct1(MessageElementUtil.<teststruct1>unpackStructure(m));
     return;
     }
     if(membername.equals( "struct2"))
     {
-    obj.set_struct2(RobotRaconteurNode.s().<teststruct2>unpackStructureDispose(m.<MessageElementStructure>castData()));
+    obj.set_struct2(MessageElementUtil.<teststruct2>unpackStructure(m));
     return;
     }
     if(membername.equals( "is_d1"))
     {
-    obj.set_is_d1((Map<Integer,double[]>)RobotRaconteurNode.s().<Integer,double[]>unpackMapTypeDispose(m.getData()));
+    obj.set_is_d1(MessageElementUtil.<Integer,double[]>unpackMapType(m));
     return;
     }
     if(membername.equals( "is_d2"))
     {
-    obj.set_is_d2((Map<String,double[]>)RobotRaconteurNode.s().<String,double[]>unpackMapTypeDispose(m.getData()));
+    obj.set_is_d2(MessageElementUtil.<String,double[]>unpackMapType(m));
     return;
     }
     if(membername.equals( "is_d3"))
     {
-    obj.set_is_d3((Map<Integer,double[]>)RobotRaconteurNode.s().<Integer,double[]>unpackMapTypeDispose(m.getData()));
+    obj.set_is_d3(MessageElementUtil.<Integer,double[]>unpackMapType(m));
     return;
     }
     if(membername.equals( "is_d4"))
     {
-    obj.set_is_d4((Map<String,double[]>)RobotRaconteurNode.s().<String,double[]>unpackMapTypeDispose(m.getData()));
+    obj.set_is_d4(MessageElementUtil.<String,double[]>unpackMapType(m));
     return;
     }
     if(membername.equals( "is_d5"))
     {
-    obj.set_is_d5((Map<Integer,MultiDimArray>)RobotRaconteurNode.s().<Integer,MultiDimArray>unpackMapTypeDispose(m.getData()));
+    obj.set_is_d5(MessageElementUtil.<Integer,MultiDimArray>unpackMapType(m));
     return;
     }
     if(membername.equals( "is_d6"))
     {
-    obj.set_is_d6((Map<String,MultiDimArray>)RobotRaconteurNode.s().<String,MultiDimArray>unpackMapTypeDispose(m.getData()));
+    obj.set_is_d6(MessageElementUtil.<String,MultiDimArray>unpackMapType(m));
     return;
     }
     if(membername.equals( "is_str1"))
     {
-    obj.set_is_str1((Map<Integer,String>)RobotRaconteurNode.s().<Integer,String>unpackMapTypeDispose(m.getData()));
+    obj.set_is_str1(MessageElementUtil.<Integer,String>unpackMapType(m));
     return;
     }
     if(membername.equals( "is_str2"))
     {
-    obj.set_is_str2((Map<String,String>)RobotRaconteurNode.s().<String,String>unpackMapTypeDispose(m.getData()));
+    obj.set_is_str2(MessageElementUtil.<String,String>unpackMapType(m));
     return;
     }
     if(membername.equals( "is_struct1"))
     {
-    obj.set_is_struct1((Map<Integer,teststruct2>)RobotRaconteurNode.s().<Integer,teststruct2>unpackMapTypeDispose(m.getData()));
+    obj.set_is_struct1(MessageElementUtil.<Integer,teststruct2>unpackMapType(m));
     return;
     }
     if(membername.equals( "is_struct2"))
     {
-    obj.set_is_struct2((Map<String,teststruct2>)RobotRaconteurNode.s().<String,teststruct2>unpackMapTypeDispose(m.getData()));
+    obj.set_is_struct2(MessageElementUtil.<String,teststruct2>unpackMapType(m));
     return;
     }
     if(membername.equals( "struct3"))
     {
-    obj.set_struct3(RobotRaconteurNode.s().<com.robotraconteur.testing.TestService2.ostruct2>unpackStructureDispose(m.<MessageElementStructure>castData()));
+    obj.set_struct3(MessageElementUtil.<com.robotraconteur.testing.TestService2.ostruct2>unpackStructure(m));
     return;
     }
     if(membername.equals( "list_d1"))
     {
-    obj.set_list_d1((List<double[]>)RobotRaconteurNode.s().<double[]>unpackListTypeDispose(m.getData()));
+    obj.set_list_d1(MessageElementUtil.<double[]>unpackListType(m));
     return;
     }
     if(membername.equals( "list_d3"))
     {
-    obj.set_list_d3((List<double[]>)RobotRaconteurNode.s().<double[]>unpackListTypeDispose(m.getData()));
+    obj.set_list_d3(MessageElementUtil.<double[]>unpackListType(m));
     return;
     }
     if(membername.equals( "list_d5"))
     {
-    obj.set_list_d5((List<MultiDimArray>)RobotRaconteurNode.s().<MultiDimArray>unpackListTypeDispose(m.getData()));
+    obj.set_list_d5(MessageElementUtil.<MultiDimArray>unpackListType(m));
     return;
     }
     if(membername.equals( "list_str1"))
     {
-    obj.set_list_str1((List<String>)RobotRaconteurNode.s().<String>unpackListTypeDispose(m.getData()));
+    obj.set_list_str1(MessageElementUtil.<String>unpackListType(m));
     return;
     }
     if(membername.equals( "list_struct1"))
     {
-    obj.set_list_struct1((List<teststruct2>)RobotRaconteurNode.s().<teststruct2>unpackListTypeDispose(m.getData()));
+    obj.set_list_struct1(MessageElementUtil.<teststruct2>unpackListType(m));
     return;
     }
     if(membername.equals( "var1"))
     {
-    obj.set_var1(RobotRaconteurNode.s().unpackVarTypeDispose(m));
+    obj.set_var1(MessageElementUtil.unpackVarType(m));
     return;
     }
     if(membername.equals( "var2"))
     {
-    obj.set_var2((Map<Integer,Object>)RobotRaconteurNode.s().<Integer,Object>unpackMapTypeDispose(m.getData()));
+    obj.set_var2(MessageElementUtil.<Integer,Object>unpackMapType(m));
     return;
     }
     if(membername.equals( "var_num"))
     {
-    obj.set_var_num(RobotRaconteurNode.s().unpackVarTypeDispose(m));
+    obj.set_var_num(MessageElementUtil.unpackVarType(m));
     return;
     }
     if(membername.equals( "var_str"))
     {
-    obj.set_var_str(RobotRaconteurNode.s().unpackVarTypeDispose(m));
+    obj.set_var_str(MessageElementUtil.unpackVarType(m));
     return;
     }
     if(membername.equals( "var_struct"))
     {
-    obj.set_var_struct(RobotRaconteurNode.s().unpackVarTypeDispose(m));
+    obj.set_var_struct(MessageElementUtil.unpackVarType(m));
     return;
     }
     if(membername.equals( "var_vector"))
     {
-    obj.set_var_vector(RobotRaconteurNode.s().unpackVarTypeDispose(m));
+    obj.set_var_vector(MessageElementUtil.unpackVarType(m));
     return;
     }
     if(membername.equals( "var_dictionary"))
     {
-    obj.set_var_dictionary(RobotRaconteurNode.s().unpackVarTypeDispose(m));
+    obj.set_var_dictionary(MessageElementUtil.unpackVarType(m));
     return;
     }
     if(membername.equals( "var_list"))
     {
-    obj.set_var_list(RobotRaconteurNode.s().unpackVarTypeDispose(m));
+    obj.set_var_list(MessageElementUtil.unpackVarType(m));
     return;
     }
     if(membername.equals( "var_multidimarray"))
     {
-    obj.set_var_multidimarray(RobotRaconteurNode.s().unpackVarTypeDispose(m));
+    obj.set_var_multidimarray(MessageElementUtil.unpackVarType(m));
     return;
     }
     if(membername.equals( "errtest"))
@@ -573,7 +573,7 @@ public class testroot_skel extends ServiceSkel {
     }
     if(membername.equals( "nulltest"))
     {
-    obj.set_nulltest(RobotRaconteurNode.s().<teststruct1>unpackStructureDispose(m.<MessageElementStructure>castData()));
+    obj.set_nulltest(MessageElementUtil.<teststruct1>unpackStructure(m));
     return;
     }
     throw new MemberNotFoundException("Member not found");
@@ -596,12 +596,12 @@ public class testroot_skel extends ServiceSkel {
     double d1=(MessageElementUtil.<double[]>castDataAndDispose(vectorptr_messageelement_util.findElement(rr_m,"d1")))[0];
     double d2=(MessageElementUtil.<double[]>castDataAndDispose(vectorptr_messageelement_util.findElement(rr_m,"d2")))[0];
     double rr_ret=obj.func3(d1, d2);
-    return MessageElementUtil.newMessageElementDispose("return",new double[] {rr_ret});
+    return MessageElementUtil.<double[]>packArray("return",new double[] {rr_ret});
     }
     if(rr_membername.equals( "meaning_of_life"))
     {
     int rr_ret=obj.meaning_of_life();
-    return MessageElementUtil.newMessageElementDispose("return",new int[] {rr_ret});
+    return MessageElementUtil.<int[]>packArray("return",new int[] {rr_ret});
     }
     if(rr_membername.equals( "func_errtest"))
     {
@@ -689,8 +689,8 @@ public class testroot_skel extends ServiceSkel {
     public void action(Double d1, teststruct2 s2) {
     vectorptr_messageelement rr_param=new vectorptr_messageelement();
     try {
-    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.newMessageElementDispose("d1",new double[] {d1}));
-    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.newMessageElementDispose("s2",RobotRaconteurNode.s().packStructure(s2)));
+    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.<double[]>packArray("d1",new double[] {d1}));
+    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.packStructure("s2",s2));
     testroot_skel.this.innerskel.wrappedDispatchEvent("ev2",rr_param);
     }
     finally {
@@ -720,8 +720,8 @@ public class testroot_skel extends ServiceSkel {
     vectorptr_messageelement rr_param=new vectorptr_messageelement();
     MessageElement rr_me=null;
     try {
-    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.newMessageElementDispose("d1",new double[] {d1}));
-    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.newMessageElementDispose("d2",new double[] {d2}));
+    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.<double[]>packArray("d1",new double[] {d1}));
+    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.<double[]>packArray("d2",new double[] {d2}));
     rr_me=testroot_skel.this.innerskel.wrappedCallbackCall("cb2",this.endpoint,rr_param);
     }
     finally {
@@ -737,8 +737,8 @@ public class testroot_skel extends ServiceSkel {
     vectorptr_messageelement rr_param=new vectorptr_messageelement();
     MessageElement rr_me=null;
     try {
-    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.newMessageElementDispose("d1",new double[] {d1}));
-    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.newMessageElementDispose("d2",new double[] {d2}));
+    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.<double[]>packArray("d1",new double[] {d1}));
+    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.<double[]>packArray("d2",new double[] {d2}));
     rr_me=testroot_skel.this.innerskel.wrappedCallbackCall("cb3",this.endpoint,rr_param);
     return (MessageElementUtil.<double[]>castDataAndDispose(rr_me))[0];
     }

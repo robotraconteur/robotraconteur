@@ -16,14 +16,14 @@ public class obj1_skel extends ServiceSkel {
     if(membername.equals( "d1"))
     {
     double[] ret=obj.get_d1();
-    return MessageElementUtil.newMessageElementDispose("return",ret);
+    return MessageElementUtil.<double[]>packArray("return",ret);
     }
     throw new MemberNotFoundException("Member not found");
     }
     public void callSetProperty(String membername, MessageElement m) {
     if(membername.equals( "d1"))
     {
-    obj.set_d1(MessageElementUtil.<double[]>castDataAndDispose(m));
+    obj.set_d1(MessageElementUtil.<double[]>unpackArray(m));
     return;
     }
     throw new MemberNotFoundException("Member not found");

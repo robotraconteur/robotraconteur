@@ -10,7 +10,7 @@ public class teststruct2_stub implements IStructureStub {
     try {
     if (s1 ==null) return null;
     teststruct2 s = (teststruct2)s1;
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.newMessageElementDispose("mydat",s.mydat));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<double[]>packArray("mydat",s.mydat));
     return new MessageElementStructure("com.robotraconteur.testing.TestService1.teststruct2",m);
     }
     finally {
@@ -23,7 +23,7 @@ public class teststruct2_stub implements IStructureStub {
     vectorptr_messageelement mm=m2.getElements();
     try {
     teststruct2 s=new teststruct2();
-    s.mydat =MessageElementUtil.<double[]>castDataAndDispose(MessageElement.findElement(mm,"mydat"));
+    s.mydat =MessageElementUtil.<double[]>unpackArray(MessageElement.findElement(mm,"mydat"));
     T st; try {st=(T)s;} catch (Exception e) {throw new RuntimeException(new DataTypeMismatchException("Wrong structuretype"));}
     return st;
     }

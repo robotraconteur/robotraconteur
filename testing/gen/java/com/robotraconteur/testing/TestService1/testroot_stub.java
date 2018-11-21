@@ -42,7 +42,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     public void set_d1(double value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",new double[] {value});
+    m=MessageElementUtil.<double[]>packArray("value",new double[] {value});
     rr_innerstub.propertySet("d1", m);
     }
     finally {
@@ -50,12 +50,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public double[] get_d2() {
-    return MessageElementUtil.<double[]>castDataAndDispose(rr_innerstub.propertyGet("d2"));
+    return MessageElementUtil.<double[]>unpackArray(rr_innerstub.propertyGet("d2"));
     }
     public void set_d2(double[] value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.<double[]>packArray("value",value);
     rr_innerstub.propertySet("d2", m);
     }
     finally {
@@ -63,12 +63,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public double[] get_d3() {
-    return MessageElementUtil.<double[]>castDataAndDispose(rr_innerstub.propertyGet("d3"));
+    return DataTypeUtil.verifyArrayLength(MessageElementUtil.<double[]>unpackArray(rr_innerstub.propertyGet("d3")), 16, false);
     }
     public void set_d3(double[] value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.<double[]>packArray("value",DataTypeUtil.verifyArrayLength(value, 16, false));
     rr_innerstub.propertySet("d3", m);
     }
     finally {
@@ -76,12 +76,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public double[] get_d4() {
-    return MessageElementUtil.<double[]>castDataAndDispose(rr_innerstub.propertyGet("d4"));
+    return DataTypeUtil.verifyArrayLength(MessageElementUtil.<double[]>unpackArray(rr_innerstub.propertyGet("d4")), 16, true);
     }
     public void set_d4(double[] value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.<double[]>packArray("value",DataTypeUtil.verifyArrayLength(value, 16, true));
     rr_innerstub.propertySet("d4", m);
     }
     finally {
@@ -89,12 +89,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public MultiDimArray get_d5() {
-    return RobotRaconteurNode.s().unpackMultiDimArrayDispose(MessageElementUtil.<MessageElementMultiDimArray>castDataAndDispose(rr_innerstub.propertyGet("d5")));
+    return MessageElementUtil.unpackMultiDimArray(rr_innerstub.propertyGet("d5"));
     }
     public void set_d5(MultiDimArray value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().packMultiDimArray((MultiDimArray)value));
+    m=MessageElementUtil.packMultiDimArray("value",(MultiDimArray)value);
     rr_innerstub.propertySet("d5", m);
     }
     finally {
@@ -102,12 +102,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public MultiDimArray get_d6() {
-    return RobotRaconteurNode.s().unpackMultiDimArrayDispose(MessageElementUtil.<MessageElementMultiDimArray>castDataAndDispose(rr_innerstub.propertyGet("d6")));
+    return DataTypeUtil.verifyArrayLength(MessageElementUtil.unpackMultiDimArray(rr_innerstub.propertyGet("d6")),9,new int[] {3,3});
     }
     public void set_d6(MultiDimArray value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().packMultiDimArray((MultiDimArray)value));
+    m=MessageElementUtil.packMultiDimArray("value",(MultiDimArray)DataTypeUtil.verifyArrayLength(value,9,new int[] {3,3}));
     rr_innerstub.propertySet("d6", m);
     }
     finally {
@@ -120,7 +120,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     public void set_s1(float value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",new float[] {value});
+    m=MessageElementUtil.<float[]>packArray("value",new float[] {value});
     rr_innerstub.propertySet("s1", m);
     }
     finally {
@@ -128,12 +128,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public float[] get_s2() {
-    return MessageElementUtil.<float[]>castDataAndDispose(rr_innerstub.propertyGet("s2"));
+    return MessageElementUtil.<float[]>unpackArray(rr_innerstub.propertyGet("s2"));
     }
     public void set_s2(float[] value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.<float[]>packArray("value",value);
     rr_innerstub.propertySet("s2", m);
     }
     finally {
@@ -146,7 +146,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     public void set_i8_1(byte value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",new byte[] {value});
+    m=MessageElementUtil.<byte[]>packArray("value",new byte[] {value});
     rr_innerstub.propertySet("i8_1", m);
     }
     finally {
@@ -154,12 +154,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public byte[] get_i8_2() {
-    return MessageElementUtil.<byte[]>castDataAndDispose(rr_innerstub.propertyGet("i8_2"));
+    return MessageElementUtil.<byte[]>unpackArray(rr_innerstub.propertyGet("i8_2"));
     }
     public void set_i8_2(byte[] value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.<byte[]>packArray("value",value);
     rr_innerstub.propertySet("i8_2", m);
     }
     finally {
@@ -172,7 +172,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     public void set_u8_1(UnsignedByte value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value.array());
+    m=MessageElementUtil.<UnsignedBytes>packArray("value",value.array());
     rr_innerstub.propertySet("u8_1", m);
     }
     finally {
@@ -180,12 +180,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public UnsignedBytes get_u8_2() {
-    return MessageElementUtil.<UnsignedBytes>castDataAndDispose(rr_innerstub.propertyGet("u8_2"));
+    return MessageElementUtil.<UnsignedBytes>unpackArray(rr_innerstub.propertyGet("u8_2"));
     }
     public void set_u8_2(UnsignedBytes value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.<UnsignedBytes>packArray("value",value);
     rr_innerstub.propertySet("u8_2", m);
     }
     finally {
@@ -193,12 +193,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public MultiDimArray get_u8_3() {
-    return RobotRaconteurNode.s().unpackMultiDimArrayDispose(MessageElementUtil.<MessageElementMultiDimArray>castDataAndDispose(rr_innerstub.propertyGet("u8_3")));
+    return MessageElementUtil.unpackMultiDimArray(rr_innerstub.propertyGet("u8_3"));
     }
     public void set_u8_3(MultiDimArray value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().packMultiDimArray((MultiDimArray)value));
+    m=MessageElementUtil.packMultiDimArray("value",(MultiDimArray)value);
     rr_innerstub.propertySet("u8_3", m);
     }
     finally {
@@ -211,7 +211,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     public void set_i16_1(short value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",new short[] {value});
+    m=MessageElementUtil.<short[]>packArray("value",new short[] {value});
     rr_innerstub.propertySet("i16_1", m);
     }
     finally {
@@ -219,12 +219,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public short[] get_i16_2() {
-    return MessageElementUtil.<short[]>castDataAndDispose(rr_innerstub.propertyGet("i16_2"));
+    return MessageElementUtil.<short[]>unpackArray(rr_innerstub.propertyGet("i16_2"));
     }
     public void set_i16_2(short[] value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.<short[]>packArray("value",value);
     rr_innerstub.propertySet("i16_2", m);
     }
     finally {
@@ -237,7 +237,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     public void set_u16_1(UnsignedShort value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value.array());
+    m=MessageElementUtil.<UnsignedShorts>packArray("value",value.array());
     rr_innerstub.propertySet("u16_1", m);
     }
     finally {
@@ -245,12 +245,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public UnsignedShorts get_u16_2() {
-    return MessageElementUtil.<UnsignedShorts>castDataAndDispose(rr_innerstub.propertyGet("u16_2"));
+    return MessageElementUtil.<UnsignedShorts>unpackArray(rr_innerstub.propertyGet("u16_2"));
     }
     public void set_u16_2(UnsignedShorts value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.<UnsignedShorts>packArray("value",value);
     rr_innerstub.propertySet("u16_2", m);
     }
     finally {
@@ -263,7 +263,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     public void set_i32_1(int value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",new int[] {value});
+    m=MessageElementUtil.<int[]>packArray("value",new int[] {value});
     rr_innerstub.propertySet("i32_1", m);
     }
     finally {
@@ -271,12 +271,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public int[] get_i32_2() {
-    return MessageElementUtil.<int[]>castDataAndDispose(rr_innerstub.propertyGet("i32_2"));
+    return MessageElementUtil.<int[]>unpackArray(rr_innerstub.propertyGet("i32_2"));
     }
     public void set_i32_2(int[] value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.<int[]>packArray("value",value);
     rr_innerstub.propertySet("i32_2", m);
     }
     finally {
@@ -284,12 +284,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public int[] get_i32_huge() {
-    return MessageElementUtil.<int[]>castDataAndDispose(rr_innerstub.propertyGet("i32_huge"));
+    return MessageElementUtil.<int[]>unpackArray(rr_innerstub.propertyGet("i32_huge"));
     }
     public void set_i32_huge(int[] value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.<int[]>packArray("value",value);
     rr_innerstub.propertySet("i32_huge", m);
     }
     finally {
@@ -302,7 +302,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     public void set_u32_1(UnsignedInt value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value.array());
+    m=MessageElementUtil.<UnsignedInts>packArray("value",value.array());
     rr_innerstub.propertySet("u32_1", m);
     }
     finally {
@@ -310,12 +310,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public UnsignedInts get_u32_2() {
-    return MessageElementUtil.<UnsignedInts>castDataAndDispose(rr_innerstub.propertyGet("u32_2"));
+    return MessageElementUtil.<UnsignedInts>unpackArray(rr_innerstub.propertyGet("u32_2"));
     }
     public void set_u32_2(UnsignedInts value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.<UnsignedInts>packArray("value",value);
     rr_innerstub.propertySet("u32_2", m);
     }
     finally {
@@ -328,7 +328,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     public void set_i64_1(long value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",new long[] {value});
+    m=MessageElementUtil.<long[]>packArray("value",new long[] {value});
     rr_innerstub.propertySet("i64_1", m);
     }
     finally {
@@ -336,12 +336,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public long[] get_i64_2() {
-    return MessageElementUtil.<long[]>castDataAndDispose(rr_innerstub.propertyGet("i64_2"));
+    return MessageElementUtil.<long[]>unpackArray(rr_innerstub.propertyGet("i64_2"));
     }
     public void set_i64_2(long[] value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.<long[]>packArray("value",value);
     rr_innerstub.propertySet("i64_2", m);
     }
     finally {
@@ -354,7 +354,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     public void set_u64_1(UnsignedLong value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value.array());
+    m=MessageElementUtil.<UnsignedLongs>packArray("value",value.array());
     rr_innerstub.propertySet("u64_1", m);
     }
     finally {
@@ -362,12 +362,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public UnsignedLongs get_u64_2() {
-    return MessageElementUtil.<UnsignedLongs>castDataAndDispose(rr_innerstub.propertyGet("u64_2"));
+    return MessageElementUtil.<UnsignedLongs>unpackArray(rr_innerstub.propertyGet("u64_2"));
     }
     public void set_u64_2(UnsignedLongs value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.<UnsignedLongs>packArray("value",value);
     rr_innerstub.propertySet("u64_2", m);
     }
     finally {
@@ -375,12 +375,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public String get_str1() {
-    return MessageElementUtil.<String>castDataAndDispose(rr_innerstub.propertyGet("str1"));
+    return MessageElementUtil.unpackString(rr_innerstub.propertyGet("str1"));
     }
     public void set_str1(String value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.packString("value",value);
     rr_innerstub.propertySet("str1", m);
     }
     finally {
@@ -388,12 +388,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public teststruct1 get_struct1() {
-    return RobotRaconteurNode.s().<teststruct1>unpackStructureDispose(rr_innerstub.propertyGet("struct1").<MessageElementStructure>castData());
+    return MessageElementUtil.<teststruct1>unpackStructure(rr_innerstub.propertyGet("struct1"));
     }
     public void set_struct1(teststruct1 value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().packStructure(value));
+    m=MessageElementUtil.packStructure("value",value);
     rr_innerstub.propertySet("struct1", m);
     }
     finally {
@@ -401,12 +401,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public teststruct2 get_struct2() {
-    return RobotRaconteurNode.s().<teststruct2>unpackStructureDispose(rr_innerstub.propertyGet("struct2").<MessageElementStructure>castData());
+    return MessageElementUtil.<teststruct2>unpackStructure(rr_innerstub.propertyGet("struct2"));
     }
     public void set_struct2(teststruct2 value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().packStructure(value));
+    m=MessageElementUtil.packStructure("value",value);
     rr_innerstub.propertySet("struct2", m);
     }
     finally {
@@ -414,12 +414,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public Map<Integer,double[]> get_is_d1() {
-    return (Map<Integer,double[]>)RobotRaconteurNode.s().<Integer,double[]>unpackMapTypeDispose(rr_innerstub.propertyGet("is_d1").getData());
+    return MessageElementUtil.<Integer,double[]>unpackMapType(rr_innerstub.propertyGet("is_d1"));
     }
     public void set_is_d1(Map<Integer,double[]> value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().<Integer,double[]>packMapType(value,Integer.class,double[].class));
+    m=MessageElementUtil.<Integer,double[]>packMapType("value",value,Integer.class,double[].class);
     rr_innerstub.propertySet("is_d1", m);
     }
     finally {
@@ -427,12 +427,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public Map<String,double[]> get_is_d2() {
-    return (Map<String,double[]>)RobotRaconteurNode.s().<String,double[]>unpackMapTypeDispose(rr_innerstub.propertyGet("is_d2").getData());
+    return MessageElementUtil.<String,double[]>unpackMapType(rr_innerstub.propertyGet("is_d2"));
     }
     public void set_is_d2(Map<String,double[]> value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().<String,double[]>packMapType(value,String.class,double[].class));
+    m=MessageElementUtil.<String,double[]>packMapType("value",value,String.class,double[].class);
     rr_innerstub.propertySet("is_d2", m);
     }
     finally {
@@ -440,12 +440,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public Map<Integer,double[]> get_is_d3() {
-    return (Map<Integer,double[]>)RobotRaconteurNode.s().<Integer,double[]>unpackMapTypeDispose(rr_innerstub.propertyGet("is_d3").getData());
+    return MessageElementUtil.<Integer,double[]>unpackMapType(rr_innerstub.propertyGet("is_d3"));
     }
     public void set_is_d3(Map<Integer,double[]> value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().<Integer,double[]>packMapType(value,Integer.class,double[].class));
+    m=MessageElementUtil.<Integer,double[]>packMapType("value",value,Integer.class,double[].class);
     rr_innerstub.propertySet("is_d3", m);
     }
     finally {
@@ -453,12 +453,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public Map<String,double[]> get_is_d4() {
-    return (Map<String,double[]>)RobotRaconteurNode.s().<String,double[]>unpackMapTypeDispose(rr_innerstub.propertyGet("is_d4").getData());
+    return MessageElementUtil.<String,double[]>unpackMapType(rr_innerstub.propertyGet("is_d4"));
     }
     public void set_is_d4(Map<String,double[]> value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().<String,double[]>packMapType(value,String.class,double[].class));
+    m=MessageElementUtil.<String,double[]>packMapType("value",value,String.class,double[].class);
     rr_innerstub.propertySet("is_d4", m);
     }
     finally {
@@ -466,12 +466,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public Map<Integer,MultiDimArray> get_is_d5() {
-    return (Map<Integer,MultiDimArray>)RobotRaconteurNode.s().<Integer,MultiDimArray>unpackMapTypeDispose(rr_innerstub.propertyGet("is_d5").getData());
+    return MessageElementUtil.<Integer,MultiDimArray>unpackMapType(rr_innerstub.propertyGet("is_d5"));
     }
     public void set_is_d5(Map<Integer,MultiDimArray> value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().<Integer,MultiDimArray>packMapType(value,Integer.class,MultiDimArray.class));
+    m=MessageElementUtil.<Integer,MultiDimArray>packMapType("value",value,Integer.class,MultiDimArray.class);
     rr_innerstub.propertySet("is_d5", m);
     }
     finally {
@@ -479,12 +479,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public Map<String,MultiDimArray> get_is_d6() {
-    return (Map<String,MultiDimArray>)RobotRaconteurNode.s().<String,MultiDimArray>unpackMapTypeDispose(rr_innerstub.propertyGet("is_d6").getData());
+    return MessageElementUtil.<String,MultiDimArray>unpackMapType(rr_innerstub.propertyGet("is_d6"));
     }
     public void set_is_d6(Map<String,MultiDimArray> value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().<String,MultiDimArray>packMapType(value,String.class,MultiDimArray.class));
+    m=MessageElementUtil.<String,MultiDimArray>packMapType("value",value,String.class,MultiDimArray.class);
     rr_innerstub.propertySet("is_d6", m);
     }
     finally {
@@ -492,12 +492,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public Map<Integer,String> get_is_str1() {
-    return (Map<Integer,String>)RobotRaconteurNode.s().<Integer,String>unpackMapTypeDispose(rr_innerstub.propertyGet("is_str1").getData());
+    return MessageElementUtil.<Integer,String>unpackMapType(rr_innerstub.propertyGet("is_str1"));
     }
     public void set_is_str1(Map<Integer,String> value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().<Integer,String>packMapType(value,Integer.class,String.class));
+    m=MessageElementUtil.<Integer,String>packMapType("value",value,Integer.class,String.class);
     rr_innerstub.propertySet("is_str1", m);
     }
     finally {
@@ -505,12 +505,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public Map<String,String> get_is_str2() {
-    return (Map<String,String>)RobotRaconteurNode.s().<String,String>unpackMapTypeDispose(rr_innerstub.propertyGet("is_str2").getData());
+    return MessageElementUtil.<String,String>unpackMapType(rr_innerstub.propertyGet("is_str2"));
     }
     public void set_is_str2(Map<String,String> value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().<String,String>packMapType(value,String.class,String.class));
+    m=MessageElementUtil.<String,String>packMapType("value",value,String.class,String.class);
     rr_innerstub.propertySet("is_str2", m);
     }
     finally {
@@ -518,12 +518,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public Map<Integer,teststruct2> get_is_struct1() {
-    return (Map<Integer,teststruct2>)RobotRaconteurNode.s().<Integer,teststruct2>unpackMapTypeDispose(rr_innerstub.propertyGet("is_struct1").getData());
+    return MessageElementUtil.<Integer,teststruct2>unpackMapType(rr_innerstub.propertyGet("is_struct1"));
     }
     public void set_is_struct1(Map<Integer,teststruct2> value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().<Integer,teststruct2>packMapType(value,Integer.class,teststruct2.class));
+    m=MessageElementUtil.<Integer,teststruct2>packMapType("value",value,Integer.class,teststruct2.class);
     rr_innerstub.propertySet("is_struct1", m);
     }
     finally {
@@ -531,12 +531,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public Map<String,teststruct2> get_is_struct2() {
-    return (Map<String,teststruct2>)RobotRaconteurNode.s().<String,teststruct2>unpackMapTypeDispose(rr_innerstub.propertyGet("is_struct2").getData());
+    return MessageElementUtil.<String,teststruct2>unpackMapType(rr_innerstub.propertyGet("is_struct2"));
     }
     public void set_is_struct2(Map<String,teststruct2> value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().<String,teststruct2>packMapType(value,String.class,teststruct2.class));
+    m=MessageElementUtil.<String,teststruct2>packMapType("value",value,String.class,teststruct2.class);
     rr_innerstub.propertySet("is_struct2", m);
     }
     finally {
@@ -544,12 +544,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public com.robotraconteur.testing.TestService2.ostruct2 get_struct3() {
-    return RobotRaconteurNode.s().<com.robotraconteur.testing.TestService2.ostruct2>unpackStructureDispose(rr_innerstub.propertyGet("struct3").<MessageElementStructure>castData());
+    return MessageElementUtil.<com.robotraconteur.testing.TestService2.ostruct2>unpackStructure(rr_innerstub.propertyGet("struct3"));
     }
     public void set_struct3(com.robotraconteur.testing.TestService2.ostruct2 value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().packStructure(value));
+    m=MessageElementUtil.packStructure("value",value);
     rr_innerstub.propertySet("struct3", m);
     }
     finally {
@@ -557,12 +557,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public List<double[]> get_list_d1() {
-    return (List<double[]>)RobotRaconteurNode.s().<double[]>unpackListTypeDispose(rr_innerstub.propertyGet("list_d1").getData());
+    return MessageElementUtil.<double[]>unpackListType(rr_innerstub.propertyGet("list_d1"));
     }
     public void set_list_d1(List<double[]> value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().<double[]>packListType(value,double[].class));
+    m=MessageElementUtil.<double[]>packListType("value",value,double[].class);
     rr_innerstub.propertySet("list_d1", m);
     }
     finally {
@@ -570,12 +570,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public List<double[]> get_list_d3() {
-    return (List<double[]>)RobotRaconteurNode.s().<double[]>unpackListTypeDispose(rr_innerstub.propertyGet("list_d3").getData());
+    return MessageElementUtil.<double[]>unpackListType(rr_innerstub.propertyGet("list_d3"));
     }
     public void set_list_d3(List<double[]> value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().<double[]>packListType(value,double[].class));
+    m=MessageElementUtil.<double[]>packListType("value",value,double[].class);
     rr_innerstub.propertySet("list_d3", m);
     }
     finally {
@@ -583,12 +583,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public List<MultiDimArray> get_list_d5() {
-    return (List<MultiDimArray>)RobotRaconteurNode.s().<MultiDimArray>unpackListTypeDispose(rr_innerstub.propertyGet("list_d5").getData());
+    return MessageElementUtil.<MultiDimArray>unpackListType(rr_innerstub.propertyGet("list_d5"));
     }
     public void set_list_d5(List<MultiDimArray> value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().<MultiDimArray>packListType(value,MultiDimArray.class));
+    m=MessageElementUtil.<MultiDimArray>packListType("value",value,MultiDimArray.class);
     rr_innerstub.propertySet("list_d5", m);
     }
     finally {
@@ -596,12 +596,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public List<String> get_list_str1() {
-    return (List<String>)RobotRaconteurNode.s().<String>unpackListTypeDispose(rr_innerstub.propertyGet("list_str1").getData());
+    return MessageElementUtil.<String>unpackListType(rr_innerstub.propertyGet("list_str1"));
     }
     public void set_list_str1(List<String> value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().<String>packListType(value,String.class));
+    m=MessageElementUtil.<String>packListType("value",value,String.class);
     rr_innerstub.propertySet("list_str1", m);
     }
     finally {
@@ -609,12 +609,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public List<teststruct2> get_list_struct1() {
-    return (List<teststruct2>)RobotRaconteurNode.s().<teststruct2>unpackListTypeDispose(rr_innerstub.propertyGet("list_struct1").getData());
+    return MessageElementUtil.<teststruct2>unpackListType(rr_innerstub.propertyGet("list_struct1"));
     }
     public void set_list_struct1(List<teststruct2> value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().<teststruct2>packListType(value,teststruct2.class));
+    m=MessageElementUtil.<teststruct2>packListType("value",value,teststruct2.class);
     rr_innerstub.propertySet("list_struct1", m);
     }
     finally {
@@ -622,12 +622,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public Object get_var1() {
-    return RobotRaconteurNode.s().unpackVarTypeDispose(rr_innerstub.propertyGet("var1"));
+    return MessageElementUtil.unpackVarType(rr_innerstub.propertyGet("var1"));
     }
     public void set_var1(Object value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().packVarType(value));
+    m=MessageElementUtil.packVarType("value",value);
     rr_innerstub.propertySet("var1", m);
     }
     finally {
@@ -635,12 +635,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public Map<Integer,Object> get_var2() {
-    return (Map<Integer,Object>)RobotRaconteurNode.s().<Integer,Object>unpackMapTypeDispose(rr_innerstub.propertyGet("var2").getData());
+    return MessageElementUtil.<Integer,Object>unpackMapType(rr_innerstub.propertyGet("var2"));
     }
     public void set_var2(Map<Integer,Object> value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().<Integer,Object>packMapType(value,Integer.class,Object.class));
+    m=MessageElementUtil.<Integer,Object>packMapType("value",value,Integer.class,Object.class);
     rr_innerstub.propertySet("var2", m);
     }
     finally {
@@ -648,12 +648,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public Object get_var_num() {
-    return RobotRaconteurNode.s().unpackVarTypeDispose(rr_innerstub.propertyGet("var_num"));
+    return MessageElementUtil.unpackVarType(rr_innerstub.propertyGet("var_num"));
     }
     public void set_var_num(Object value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().packVarType(value));
+    m=MessageElementUtil.packVarType("value",value);
     rr_innerstub.propertySet("var_num", m);
     }
     finally {
@@ -661,12 +661,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public Object get_var_str() {
-    return RobotRaconteurNode.s().unpackVarTypeDispose(rr_innerstub.propertyGet("var_str"));
+    return MessageElementUtil.unpackVarType(rr_innerstub.propertyGet("var_str"));
     }
     public void set_var_str(Object value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().packVarType(value));
+    m=MessageElementUtil.packVarType("value",value);
     rr_innerstub.propertySet("var_str", m);
     }
     finally {
@@ -674,12 +674,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public Object get_var_struct() {
-    return RobotRaconteurNode.s().unpackVarTypeDispose(rr_innerstub.propertyGet("var_struct"));
+    return MessageElementUtil.unpackVarType(rr_innerstub.propertyGet("var_struct"));
     }
     public void set_var_struct(Object value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().packVarType(value));
+    m=MessageElementUtil.packVarType("value",value);
     rr_innerstub.propertySet("var_struct", m);
     }
     finally {
@@ -687,12 +687,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public Object get_var_vector() {
-    return RobotRaconteurNode.s().unpackVarTypeDispose(rr_innerstub.propertyGet("var_vector"));
+    return MessageElementUtil.unpackVarType(rr_innerstub.propertyGet("var_vector"));
     }
     public void set_var_vector(Object value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().packVarType(value));
+    m=MessageElementUtil.packVarType("value",value);
     rr_innerstub.propertySet("var_vector", m);
     }
     finally {
@@ -700,12 +700,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public Object get_var_dictionary() {
-    return RobotRaconteurNode.s().unpackVarTypeDispose(rr_innerstub.propertyGet("var_dictionary"));
+    return MessageElementUtil.unpackVarType(rr_innerstub.propertyGet("var_dictionary"));
     }
     public void set_var_dictionary(Object value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().packVarType(value));
+    m=MessageElementUtil.packVarType("value",value);
     rr_innerstub.propertySet("var_dictionary", m);
     }
     finally {
@@ -713,12 +713,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public Object get_var_list() {
-    return RobotRaconteurNode.s().unpackVarTypeDispose(rr_innerstub.propertyGet("var_list"));
+    return MessageElementUtil.unpackVarType(rr_innerstub.propertyGet("var_list"));
     }
     public void set_var_list(Object value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().packVarType(value));
+    m=MessageElementUtil.packVarType("value",value);
     rr_innerstub.propertySet("var_list", m);
     }
     finally {
@@ -726,12 +726,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public Object get_var_multidimarray() {
-    return RobotRaconteurNode.s().unpackVarTypeDispose(rr_innerstub.propertyGet("var_multidimarray"));
+    return MessageElementUtil.unpackVarType(rr_innerstub.propertyGet("var_multidimarray"));
     }
     public void set_var_multidimarray(Object value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().packVarType(value));
+    m=MessageElementUtil.packVarType("value",value);
     rr_innerstub.propertySet("var_multidimarray", m);
     }
     finally {
@@ -744,7 +744,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     public void set_errtest(double value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",new double[] {value});
+    m=MessageElementUtil.<double[]>packArray("value",new double[] {value});
     rr_innerstub.propertySet("errtest", m);
     }
     finally {
@@ -752,12 +752,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     }
     public teststruct1 get_nulltest() {
-    return RobotRaconteurNode.s().<teststruct1>unpackStructureDispose(rr_innerstub.propertyGet("nulltest").<MessageElementStructure>castData());
+    return MessageElementUtil.<teststruct1>unpackStructure(rr_innerstub.propertyGet("nulltest"));
     }
     public void set_nulltest(teststruct1 value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().packStructure(value));
+    m=MessageElementUtil.packStructure("value",value);
     rr_innerstub.propertySet("nulltest", m);
     }
     finally {
@@ -779,8 +779,8 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     vectorptr_messageelement rr_param=new vectorptr_messageelement();
     MessageElement rr_me=null;
     try {
-    MessageElementUtil.addMessageElementDispose(rr_param, MessageElementUtil.newMessageElementDispose("d1",new double[] {d1}));
-    MessageElementUtil.addMessageElementDispose(rr_param, MessageElementUtil.newMessageElementDispose("d2",new double[] {d2}));
+    MessageElementUtil.addMessageElementDispose(rr_param, MessageElementUtil.<double[]>packArray("d1",new double[] {d1}));
+    MessageElementUtil.addMessageElementDispose(rr_param, MessageElementUtil.<double[]>packArray("d2",new double[] {d2}));
     rr_me=rr_innerstub.functionCall("func2",rr_param);
     }
     finally {
@@ -792,8 +792,8 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     vectorptr_messageelement rr_param=new vectorptr_messageelement();
     MessageElement rr_me=null;
     try {
-    MessageElementUtil.addMessageElementDispose(rr_param, MessageElementUtil.newMessageElementDispose("d1",new double[] {d1}));
-    MessageElementUtil.addMessageElementDispose(rr_param, MessageElementUtil.newMessageElementDispose("d2",new double[] {d2}));
+    MessageElementUtil.addMessageElementDispose(rr_param, MessageElementUtil.<double[]>packArray("d1",new double[] {d1}));
+    MessageElementUtil.addMessageElementDispose(rr_param, MessageElementUtil.<double[]>packArray("d2",new double[] {d2}));
     rr_me=rr_innerstub.functionCall("func3",rr_param);
     return (MessageElementUtil.<double[]>castDataAndDispose(rr_me))[0];
     }
@@ -862,7 +862,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     vectorptr_messageelement rr_param=new vectorptr_messageelement();
     MessageElement rr_me=null;
     try {
-    MessageElementUtil.addMessageElementDispose(rr_param, MessageElementUtil.newMessageElementDispose("op",new int[] {op}));
+    MessageElementUtil.addMessageElementDispose(rr_param, MessageElementUtil.<int[]>packArray("op",new int[] {op}));
     rr_me=rr_innerstub.functionCall("o6_op",rr_param);
     }
     finally {
@@ -925,7 +925,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     if(rr_membername.equals( "ev2"))
     {
     double d1=(MessageElementUtil.<double[]>castDataAndDispose(vectorptr_messageelement_util.findElement(rr_m,"d1")))[0];
-    teststruct2 s2=RobotRaconteurNode.s().<teststruct2>unpackStructureDispose(vectorptr_messageelement_util.findElement(rr_m,"s2").<MessageElementStructure>castData());
+    teststruct2 s2=MessageElementUtil.<teststruct2>unpackStructure(vectorptr_messageelement_util.findElement(rr_m,"s2"));
     for (Action2<Double, teststruct2> rr_e : this.rr_ev2) {
     rr_e.action(Double.valueOf(d1), s2);
     }
@@ -1016,12 +1016,12 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     double d1=(MessageElementUtil.<double[]>castDataAndDispose(vectorptr_messageelement_util.findElement(rr_m,"d1")))[0];
     double d2=(MessageElementUtil.<double[]>castDataAndDispose(vectorptr_messageelement_util.findElement(rr_m,"d2")))[0];
     double rr_ret=get_cb3().getFunction().func(Double.valueOf(d1), Double.valueOf(d2));
-    return MessageElementUtil.newMessageElementDispose("return",new double[] {rr_ret});
+    return MessageElementUtil.<double[]>packArray("return",new double[] {rr_ret});
     }
     if(rr_membername.equals( "cb_meaning_of_life"))
     {
     int rr_ret=get_cb_meaning_of_life().getFunction().func();
-    return MessageElementUtil.newMessageElementDispose("return",new int[] {rr_ret});
+    return MessageElementUtil.<int[]>packArray("return",new int[] {rr_ret});
     }
     if(rr_membername.equals( "cb_errtest"))
     {
@@ -1063,7 +1063,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",new double[] {value});
+    m=MessageElementUtil.<double[]>packArray("value",new double[] {value});
     rr_async_PropertySet("d1",m,new rrend_async_set_d1(),rr_handler,rr_timeout);
     }
     finally {
@@ -1097,7 +1097,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     double[] rr_ret;
     try {
-    rr_ret=MessageElementUtil.<double[]>castDataAndDispose(value);
+    rr_ret=MessageElementUtil.<double[]>unpackArray(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -1109,7 +1109,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.<double[]>packArray("value",value);
     rr_async_PropertySet("d2",m,new rrend_async_set_d2(),rr_handler,rr_timeout);
     }
     finally {
@@ -1143,7 +1143,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     double[] rr_ret;
     try {
-    rr_ret=MessageElementUtil.<double[]>castDataAndDispose(value);
+    rr_ret=DataTypeUtil.verifyArrayLength(MessageElementUtil.<double[]>unpackArray(value), 16, false);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -1155,7 +1155,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.<double[]>packArray("value",DataTypeUtil.verifyArrayLength(value, 16, false));
     rr_async_PropertySet("d3",m,new rrend_async_set_d3(),rr_handler,rr_timeout);
     }
     finally {
@@ -1189,7 +1189,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     double[] rr_ret;
     try {
-    rr_ret=MessageElementUtil.<double[]>castDataAndDispose(value);
+    rr_ret=DataTypeUtil.verifyArrayLength(MessageElementUtil.<double[]>unpackArray(value), 16, true);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -1201,7 +1201,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.<double[]>packArray("value",DataTypeUtil.verifyArrayLength(value, 16, true));
     rr_async_PropertySet("d4",m,new rrend_async_set_d4(),rr_handler,rr_timeout);
     }
     finally {
@@ -1235,7 +1235,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     MultiDimArray rr_ret;
     try {
-    rr_ret=RobotRaconteurNode.s().unpackMultiDimArrayDispose(MessageElementUtil.<MessageElementMultiDimArray>castDataAndDispose(value));
+    rr_ret=MessageElementUtil.unpackMultiDimArray(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -1247,7 +1247,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().packMultiDimArray((MultiDimArray)value));
+    m=MessageElementUtil.packMultiDimArray("value",(MultiDimArray)value);
     rr_async_PropertySet("d5",m,new rrend_async_set_d5(),rr_handler,rr_timeout);
     }
     finally {
@@ -1281,7 +1281,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     MultiDimArray rr_ret;
     try {
-    rr_ret=RobotRaconteurNode.s().unpackMultiDimArrayDispose(MessageElementUtil.<MessageElementMultiDimArray>castDataAndDispose(value));
+    rr_ret=DataTypeUtil.verifyArrayLength(MessageElementUtil.unpackMultiDimArray(value),9,new int[] {3,3});
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -1293,7 +1293,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().packMultiDimArray((MultiDimArray)value));
+    m=MessageElementUtil.packMultiDimArray("value",(MultiDimArray)DataTypeUtil.verifyArrayLength(value,9,new int[] {3,3}));
     rr_async_PropertySet("d6",m,new rrend_async_set_d6(),rr_handler,rr_timeout);
     }
     finally {
@@ -1339,7 +1339,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",new float[] {value});
+    m=MessageElementUtil.<float[]>packArray("value",new float[] {value});
     rr_async_PropertySet("s1",m,new rrend_async_set_s1(),rr_handler,rr_timeout);
     }
     finally {
@@ -1373,7 +1373,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     float[] rr_ret;
     try {
-    rr_ret=MessageElementUtil.<float[]>castDataAndDispose(value);
+    rr_ret=MessageElementUtil.<float[]>unpackArray(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -1385,7 +1385,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.<float[]>packArray("value",value);
     rr_async_PropertySet("s2",m,new rrend_async_set_s2(),rr_handler,rr_timeout);
     }
     finally {
@@ -1431,7 +1431,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",new byte[] {value});
+    m=MessageElementUtil.<byte[]>packArray("value",new byte[] {value});
     rr_async_PropertySet("i8_1",m,new rrend_async_set_i8_1(),rr_handler,rr_timeout);
     }
     finally {
@@ -1465,7 +1465,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     byte[] rr_ret;
     try {
-    rr_ret=MessageElementUtil.<byte[]>castDataAndDispose(value);
+    rr_ret=MessageElementUtil.<byte[]>unpackArray(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -1477,7 +1477,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.<byte[]>packArray("value",value);
     rr_async_PropertySet("i8_2",m,new rrend_async_set_i8_2(),rr_handler,rr_timeout);
     }
     finally {
@@ -1523,7 +1523,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value.array());
+    m=MessageElementUtil.<UnsignedBytes>packArray("value",value.array());
     rr_async_PropertySet("u8_1",m,new rrend_async_set_u8_1(),rr_handler,rr_timeout);
     }
     finally {
@@ -1557,7 +1557,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     UnsignedBytes rr_ret;
     try {
-    rr_ret=MessageElementUtil.<UnsignedBytes>castDataAndDispose(value);
+    rr_ret=MessageElementUtil.<UnsignedBytes>unpackArray(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -1569,7 +1569,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.<UnsignedBytes>packArray("value",value);
     rr_async_PropertySet("u8_2",m,new rrend_async_set_u8_2(),rr_handler,rr_timeout);
     }
     finally {
@@ -1603,7 +1603,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     MultiDimArray rr_ret;
     try {
-    rr_ret=RobotRaconteurNode.s().unpackMultiDimArrayDispose(MessageElementUtil.<MessageElementMultiDimArray>castDataAndDispose(value));
+    rr_ret=MessageElementUtil.unpackMultiDimArray(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -1615,7 +1615,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().packMultiDimArray((MultiDimArray)value));
+    m=MessageElementUtil.packMultiDimArray("value",(MultiDimArray)value);
     rr_async_PropertySet("u8_3",m,new rrend_async_set_u8_3(),rr_handler,rr_timeout);
     }
     finally {
@@ -1661,7 +1661,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",new short[] {value});
+    m=MessageElementUtil.<short[]>packArray("value",new short[] {value});
     rr_async_PropertySet("i16_1",m,new rrend_async_set_i16_1(),rr_handler,rr_timeout);
     }
     finally {
@@ -1695,7 +1695,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     short[] rr_ret;
     try {
-    rr_ret=MessageElementUtil.<short[]>castDataAndDispose(value);
+    rr_ret=MessageElementUtil.<short[]>unpackArray(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -1707,7 +1707,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.<short[]>packArray("value",value);
     rr_async_PropertySet("i16_2",m,new rrend_async_set_i16_2(),rr_handler,rr_timeout);
     }
     finally {
@@ -1753,7 +1753,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value.array());
+    m=MessageElementUtil.<UnsignedShorts>packArray("value",value.array());
     rr_async_PropertySet("u16_1",m,new rrend_async_set_u16_1(),rr_handler,rr_timeout);
     }
     finally {
@@ -1787,7 +1787,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     UnsignedShorts rr_ret;
     try {
-    rr_ret=MessageElementUtil.<UnsignedShorts>castDataAndDispose(value);
+    rr_ret=MessageElementUtil.<UnsignedShorts>unpackArray(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -1799,7 +1799,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.<UnsignedShorts>packArray("value",value);
     rr_async_PropertySet("u16_2",m,new rrend_async_set_u16_2(),rr_handler,rr_timeout);
     }
     finally {
@@ -1845,7 +1845,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",new int[] {value});
+    m=MessageElementUtil.<int[]>packArray("value",new int[] {value});
     rr_async_PropertySet("i32_1",m,new rrend_async_set_i32_1(),rr_handler,rr_timeout);
     }
     finally {
@@ -1879,7 +1879,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     int[] rr_ret;
     try {
-    rr_ret=MessageElementUtil.<int[]>castDataAndDispose(value);
+    rr_ret=MessageElementUtil.<int[]>unpackArray(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -1891,7 +1891,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.<int[]>packArray("value",value);
     rr_async_PropertySet("i32_2",m,new rrend_async_set_i32_2(),rr_handler,rr_timeout);
     }
     finally {
@@ -1925,7 +1925,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     int[] rr_ret;
     try {
-    rr_ret=MessageElementUtil.<int[]>castDataAndDispose(value);
+    rr_ret=MessageElementUtil.<int[]>unpackArray(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -1937,7 +1937,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.<int[]>packArray("value",value);
     rr_async_PropertySet("i32_huge",m,new rrend_async_set_i32_huge(),rr_handler,rr_timeout);
     }
     finally {
@@ -1983,7 +1983,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value.array());
+    m=MessageElementUtil.<UnsignedInts>packArray("value",value.array());
     rr_async_PropertySet("u32_1",m,new rrend_async_set_u32_1(),rr_handler,rr_timeout);
     }
     finally {
@@ -2017,7 +2017,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     UnsignedInts rr_ret;
     try {
-    rr_ret=MessageElementUtil.<UnsignedInts>castDataAndDispose(value);
+    rr_ret=MessageElementUtil.<UnsignedInts>unpackArray(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -2029,7 +2029,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.<UnsignedInts>packArray("value",value);
     rr_async_PropertySet("u32_2",m,new rrend_async_set_u32_2(),rr_handler,rr_timeout);
     }
     finally {
@@ -2075,7 +2075,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",new long[] {value});
+    m=MessageElementUtil.<long[]>packArray("value",new long[] {value});
     rr_async_PropertySet("i64_1",m,new rrend_async_set_i64_1(),rr_handler,rr_timeout);
     }
     finally {
@@ -2109,7 +2109,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     long[] rr_ret;
     try {
-    rr_ret=MessageElementUtil.<long[]>castDataAndDispose(value);
+    rr_ret=MessageElementUtil.<long[]>unpackArray(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -2121,7 +2121,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.<long[]>packArray("value",value);
     rr_async_PropertySet("i64_2",m,new rrend_async_set_i64_2(),rr_handler,rr_timeout);
     }
     finally {
@@ -2167,7 +2167,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value.array());
+    m=MessageElementUtil.<UnsignedLongs>packArray("value",value.array());
     rr_async_PropertySet("u64_1",m,new rrend_async_set_u64_1(),rr_handler,rr_timeout);
     }
     finally {
@@ -2201,7 +2201,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     UnsignedLongs rr_ret;
     try {
-    rr_ret=MessageElementUtil.<UnsignedLongs>castDataAndDispose(value);
+    rr_ret=MessageElementUtil.<UnsignedLongs>unpackArray(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -2213,7 +2213,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.<UnsignedLongs>packArray("value",value);
     rr_async_PropertySet("u64_2",m,new rrend_async_set_u64_2(),rr_handler,rr_timeout);
     }
     finally {
@@ -2247,7 +2247,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     String rr_ret;
     try {
-    rr_ret=MessageElementUtil.<String>castDataAndDispose(value);
+    rr_ret=MessageElementUtil.unpackString(value);
     } catch (RuntimeException err2) {
     rr_handler.action("",err2);
     return;
@@ -2259,7 +2259,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.packString("value",value);
     rr_async_PropertySet("str1",m,new rrend_async_set_str1(),rr_handler,rr_timeout);
     }
     finally {
@@ -2293,7 +2293,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     teststruct1 rr_ret;
     try {
-    rr_ret=RobotRaconteurNode.s().<teststruct1>unpackStructureDispose(value.<MessageElementStructure>castData());
+    rr_ret=MessageElementUtil.<teststruct1>unpackStructure(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -2305,7 +2305,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().packStructure(value));
+    m=MessageElementUtil.packStructure("value",value);
     rr_async_PropertySet("struct1",m,new rrend_async_set_struct1(),rr_handler,rr_timeout);
     }
     finally {
@@ -2339,7 +2339,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     teststruct2 rr_ret;
     try {
-    rr_ret=RobotRaconteurNode.s().<teststruct2>unpackStructureDispose(value.<MessageElementStructure>castData());
+    rr_ret=MessageElementUtil.<teststruct2>unpackStructure(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -2351,7 +2351,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().packStructure(value));
+    m=MessageElementUtil.packStructure("value",value);
     rr_async_PropertySet("struct2",m,new rrend_async_set_struct2(),rr_handler,rr_timeout);
     }
     finally {
@@ -2385,7 +2385,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     Map<Integer,double[]> rr_ret;
     try {
-    rr_ret=(Map<Integer,double[]>)RobotRaconteurNode.s().<Integer,double[]>unpackMapTypeDispose(value.getData());
+    rr_ret=MessageElementUtil.<Integer,double[]>unpackMapType(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -2397,7 +2397,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().<Integer,double[]>packMapType(value,Integer.class,double[].class));
+    m=MessageElementUtil.<Integer,double[]>packMapType("value",value,Integer.class,double[].class);
     rr_async_PropertySet("is_d1",m,new rrend_async_set_is_d1(),rr_handler,rr_timeout);
     }
     finally {
@@ -2431,7 +2431,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     Map<String,double[]> rr_ret;
     try {
-    rr_ret=(Map<String,double[]>)RobotRaconteurNode.s().<String,double[]>unpackMapTypeDispose(value.getData());
+    rr_ret=MessageElementUtil.<String,double[]>unpackMapType(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -2443,7 +2443,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().<String,double[]>packMapType(value,String.class,double[].class));
+    m=MessageElementUtil.<String,double[]>packMapType("value",value,String.class,double[].class);
     rr_async_PropertySet("is_d2",m,new rrend_async_set_is_d2(),rr_handler,rr_timeout);
     }
     finally {
@@ -2477,7 +2477,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     Map<Integer,double[]> rr_ret;
     try {
-    rr_ret=(Map<Integer,double[]>)RobotRaconteurNode.s().<Integer,double[]>unpackMapTypeDispose(value.getData());
+    rr_ret=MessageElementUtil.<Integer,double[]>unpackMapType(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -2489,7 +2489,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().<Integer,double[]>packMapType(value,Integer.class,double[].class));
+    m=MessageElementUtil.<Integer,double[]>packMapType("value",value,Integer.class,double[].class);
     rr_async_PropertySet("is_d3",m,new rrend_async_set_is_d3(),rr_handler,rr_timeout);
     }
     finally {
@@ -2523,7 +2523,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     Map<String,double[]> rr_ret;
     try {
-    rr_ret=(Map<String,double[]>)RobotRaconteurNode.s().<String,double[]>unpackMapTypeDispose(value.getData());
+    rr_ret=MessageElementUtil.<String,double[]>unpackMapType(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -2535,7 +2535,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().<String,double[]>packMapType(value,String.class,double[].class));
+    m=MessageElementUtil.<String,double[]>packMapType("value",value,String.class,double[].class);
     rr_async_PropertySet("is_d4",m,new rrend_async_set_is_d4(),rr_handler,rr_timeout);
     }
     finally {
@@ -2569,7 +2569,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     Map<Integer,MultiDimArray> rr_ret;
     try {
-    rr_ret=(Map<Integer,MultiDimArray>)RobotRaconteurNode.s().<Integer,MultiDimArray>unpackMapTypeDispose(value.getData());
+    rr_ret=MessageElementUtil.<Integer,MultiDimArray>unpackMapType(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -2581,7 +2581,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().<Integer,MultiDimArray>packMapType(value,Integer.class,MultiDimArray.class));
+    m=MessageElementUtil.<Integer,MultiDimArray>packMapType("value",value,Integer.class,MultiDimArray.class);
     rr_async_PropertySet("is_d5",m,new rrend_async_set_is_d5(),rr_handler,rr_timeout);
     }
     finally {
@@ -2615,7 +2615,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     Map<String,MultiDimArray> rr_ret;
     try {
-    rr_ret=(Map<String,MultiDimArray>)RobotRaconteurNode.s().<String,MultiDimArray>unpackMapTypeDispose(value.getData());
+    rr_ret=MessageElementUtil.<String,MultiDimArray>unpackMapType(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -2627,7 +2627,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().<String,MultiDimArray>packMapType(value,String.class,MultiDimArray.class));
+    m=MessageElementUtil.<String,MultiDimArray>packMapType("value",value,String.class,MultiDimArray.class);
     rr_async_PropertySet("is_d6",m,new rrend_async_set_is_d6(),rr_handler,rr_timeout);
     }
     finally {
@@ -2661,7 +2661,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     Map<Integer,String> rr_ret;
     try {
-    rr_ret=(Map<Integer,String>)RobotRaconteurNode.s().<Integer,String>unpackMapTypeDispose(value.getData());
+    rr_ret=MessageElementUtil.<Integer,String>unpackMapType(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -2673,7 +2673,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().<Integer,String>packMapType(value,Integer.class,String.class));
+    m=MessageElementUtil.<Integer,String>packMapType("value",value,Integer.class,String.class);
     rr_async_PropertySet("is_str1",m,new rrend_async_set_is_str1(),rr_handler,rr_timeout);
     }
     finally {
@@ -2707,7 +2707,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     Map<String,String> rr_ret;
     try {
-    rr_ret=(Map<String,String>)RobotRaconteurNode.s().<String,String>unpackMapTypeDispose(value.getData());
+    rr_ret=MessageElementUtil.<String,String>unpackMapType(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -2719,7 +2719,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().<String,String>packMapType(value,String.class,String.class));
+    m=MessageElementUtil.<String,String>packMapType("value",value,String.class,String.class);
     rr_async_PropertySet("is_str2",m,new rrend_async_set_is_str2(),rr_handler,rr_timeout);
     }
     finally {
@@ -2753,7 +2753,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     Map<Integer,teststruct2> rr_ret;
     try {
-    rr_ret=(Map<Integer,teststruct2>)RobotRaconteurNode.s().<Integer,teststruct2>unpackMapTypeDispose(value.getData());
+    rr_ret=MessageElementUtil.<Integer,teststruct2>unpackMapType(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -2765,7 +2765,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().<Integer,teststruct2>packMapType(value,Integer.class,teststruct2.class));
+    m=MessageElementUtil.<Integer,teststruct2>packMapType("value",value,Integer.class,teststruct2.class);
     rr_async_PropertySet("is_struct1",m,new rrend_async_set_is_struct1(),rr_handler,rr_timeout);
     }
     finally {
@@ -2799,7 +2799,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     Map<String,teststruct2> rr_ret;
     try {
-    rr_ret=(Map<String,teststruct2>)RobotRaconteurNode.s().<String,teststruct2>unpackMapTypeDispose(value.getData());
+    rr_ret=MessageElementUtil.<String,teststruct2>unpackMapType(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -2811,7 +2811,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().<String,teststruct2>packMapType(value,String.class,teststruct2.class));
+    m=MessageElementUtil.<String,teststruct2>packMapType("value",value,String.class,teststruct2.class);
     rr_async_PropertySet("is_struct2",m,new rrend_async_set_is_struct2(),rr_handler,rr_timeout);
     }
     finally {
@@ -2845,7 +2845,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     com.robotraconteur.testing.TestService2.ostruct2 rr_ret;
     try {
-    rr_ret=RobotRaconteurNode.s().<com.robotraconteur.testing.TestService2.ostruct2>unpackStructureDispose(value.<MessageElementStructure>castData());
+    rr_ret=MessageElementUtil.<com.robotraconteur.testing.TestService2.ostruct2>unpackStructure(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -2857,7 +2857,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().packStructure(value));
+    m=MessageElementUtil.packStructure("value",value);
     rr_async_PropertySet("struct3",m,new rrend_async_set_struct3(),rr_handler,rr_timeout);
     }
     finally {
@@ -2891,7 +2891,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     List<double[]> rr_ret;
     try {
-    rr_ret=(List<double[]>)RobotRaconteurNode.s().<double[]>unpackListTypeDispose(value.getData());
+    rr_ret=MessageElementUtil.<double[]>unpackListType(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -2903,7 +2903,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().<double[]>packListType(value,double[].class));
+    m=MessageElementUtil.<double[]>packListType("value",value,double[].class);
     rr_async_PropertySet("list_d1",m,new rrend_async_set_list_d1(),rr_handler,rr_timeout);
     }
     finally {
@@ -2937,7 +2937,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     List<double[]> rr_ret;
     try {
-    rr_ret=(List<double[]>)RobotRaconteurNode.s().<double[]>unpackListTypeDispose(value.getData());
+    rr_ret=MessageElementUtil.<double[]>unpackListType(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -2949,7 +2949,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().<double[]>packListType(value,double[].class));
+    m=MessageElementUtil.<double[]>packListType("value",value,double[].class);
     rr_async_PropertySet("list_d3",m,new rrend_async_set_list_d3(),rr_handler,rr_timeout);
     }
     finally {
@@ -2983,7 +2983,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     List<MultiDimArray> rr_ret;
     try {
-    rr_ret=(List<MultiDimArray>)RobotRaconteurNode.s().<MultiDimArray>unpackListTypeDispose(value.getData());
+    rr_ret=MessageElementUtil.<MultiDimArray>unpackListType(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -2995,7 +2995,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().<MultiDimArray>packListType(value,MultiDimArray.class));
+    m=MessageElementUtil.<MultiDimArray>packListType("value",value,MultiDimArray.class);
     rr_async_PropertySet("list_d5",m,new rrend_async_set_list_d5(),rr_handler,rr_timeout);
     }
     finally {
@@ -3029,7 +3029,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     List<String> rr_ret;
     try {
-    rr_ret=(List<String>)RobotRaconteurNode.s().<String>unpackListTypeDispose(value.getData());
+    rr_ret=MessageElementUtil.<String>unpackListType(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -3041,7 +3041,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().<String>packListType(value,String.class));
+    m=MessageElementUtil.<String>packListType("value",value,String.class);
     rr_async_PropertySet("list_str1",m,new rrend_async_set_list_str1(),rr_handler,rr_timeout);
     }
     finally {
@@ -3075,7 +3075,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     List<teststruct2> rr_ret;
     try {
-    rr_ret=(List<teststruct2>)RobotRaconteurNode.s().<teststruct2>unpackListTypeDispose(value.getData());
+    rr_ret=MessageElementUtil.<teststruct2>unpackListType(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -3087,7 +3087,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().<teststruct2>packListType(value,teststruct2.class));
+    m=MessageElementUtil.<teststruct2>packListType("value",value,teststruct2.class);
     rr_async_PropertySet("list_struct1",m,new rrend_async_set_list_struct1(),rr_handler,rr_timeout);
     }
     finally {
@@ -3121,7 +3121,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     Object rr_ret;
     try {
-    rr_ret=RobotRaconteurNode.s().unpackVarTypeDispose(value);
+    rr_ret=MessageElementUtil.unpackVarType(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -3133,7 +3133,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().packVarType(value));
+    m=MessageElementUtil.packVarType("value",value);
     rr_async_PropertySet("var1",m,new rrend_async_set_var1(),rr_handler,rr_timeout);
     }
     finally {
@@ -3167,7 +3167,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     Map<Integer,Object> rr_ret;
     try {
-    rr_ret=(Map<Integer,Object>)RobotRaconteurNode.s().<Integer,Object>unpackMapTypeDispose(value.getData());
+    rr_ret=MessageElementUtil.<Integer,Object>unpackMapType(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -3179,7 +3179,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().<Integer,Object>packMapType(value,Integer.class,Object.class));
+    m=MessageElementUtil.<Integer,Object>packMapType("value",value,Integer.class,Object.class);
     rr_async_PropertySet("var2",m,new rrend_async_set_var2(),rr_handler,rr_timeout);
     }
     finally {
@@ -3213,7 +3213,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     Object rr_ret;
     try {
-    rr_ret=RobotRaconteurNode.s().unpackVarTypeDispose(value);
+    rr_ret=MessageElementUtil.unpackVarType(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -3225,7 +3225,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().packVarType(value));
+    m=MessageElementUtil.packVarType("value",value);
     rr_async_PropertySet("var_num",m,new rrend_async_set_var_num(),rr_handler,rr_timeout);
     }
     finally {
@@ -3259,7 +3259,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     Object rr_ret;
     try {
-    rr_ret=RobotRaconteurNode.s().unpackVarTypeDispose(value);
+    rr_ret=MessageElementUtil.unpackVarType(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -3271,7 +3271,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().packVarType(value));
+    m=MessageElementUtil.packVarType("value",value);
     rr_async_PropertySet("var_str",m,new rrend_async_set_var_str(),rr_handler,rr_timeout);
     }
     finally {
@@ -3305,7 +3305,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     Object rr_ret;
     try {
-    rr_ret=RobotRaconteurNode.s().unpackVarTypeDispose(value);
+    rr_ret=MessageElementUtil.unpackVarType(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -3317,7 +3317,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().packVarType(value));
+    m=MessageElementUtil.packVarType("value",value);
     rr_async_PropertySet("var_struct",m,new rrend_async_set_var_struct(),rr_handler,rr_timeout);
     }
     finally {
@@ -3351,7 +3351,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     Object rr_ret;
     try {
-    rr_ret=RobotRaconteurNode.s().unpackVarTypeDispose(value);
+    rr_ret=MessageElementUtil.unpackVarType(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -3363,7 +3363,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().packVarType(value));
+    m=MessageElementUtil.packVarType("value",value);
     rr_async_PropertySet("var_vector",m,new rrend_async_set_var_vector(),rr_handler,rr_timeout);
     }
     finally {
@@ -3397,7 +3397,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     Object rr_ret;
     try {
-    rr_ret=RobotRaconteurNode.s().unpackVarTypeDispose(value);
+    rr_ret=MessageElementUtil.unpackVarType(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -3409,7 +3409,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().packVarType(value));
+    m=MessageElementUtil.packVarType("value",value);
     rr_async_PropertySet("var_dictionary",m,new rrend_async_set_var_dictionary(),rr_handler,rr_timeout);
     }
     finally {
@@ -3443,7 +3443,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     Object rr_ret;
     try {
-    rr_ret=RobotRaconteurNode.s().unpackVarTypeDispose(value);
+    rr_ret=MessageElementUtil.unpackVarType(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -3455,7 +3455,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().packVarType(value));
+    m=MessageElementUtil.packVarType("value",value);
     rr_async_PropertySet("var_list",m,new rrend_async_set_var_list(),rr_handler,rr_timeout);
     }
     finally {
@@ -3489,7 +3489,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     Object rr_ret;
     try {
-    rr_ret=RobotRaconteurNode.s().unpackVarTypeDispose(value);
+    rr_ret=MessageElementUtil.unpackVarType(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -3501,7 +3501,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().packVarType(value));
+    m=MessageElementUtil.packVarType("value",value);
     rr_async_PropertySet("var_multidimarray",m,new rrend_async_set_var_multidimarray(),rr_handler,rr_timeout);
     }
     finally {
@@ -3547,7 +3547,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",new double[] {value});
+    m=MessageElementUtil.<double[]>packArray("value",new double[] {value});
     rr_async_PropertySet("errtest",m,new rrend_async_set_errtest(),rr_handler,rr_timeout);
     }
     finally {
@@ -3581,7 +3581,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     }
     teststruct1 rr_ret;
     try {
-    rr_ret=RobotRaconteurNode.s().<teststruct1>unpackStructureDispose(value.<MessageElementStructure>castData());
+    rr_ret=MessageElementUtil.<teststruct1>unpackStructure(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -3593,7 +3593,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",RobotRaconteurNode.s().packStructure(value));
+    m=MessageElementUtil.packStructure("value",value);
     rr_async_PropertySet("nulltest",m,new rrend_async_set_nulltest(),rr_handler,rr_timeout);
     }
     finally {
@@ -3638,8 +3638,8 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     vectorptr_messageelement rr_param=new vectorptr_messageelement();
     try {
-    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.newMessageElementDispose("d1",new double[] {d1}));
-    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.newMessageElementDispose("d2",new double[] {d2}));
+    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.<double[]>packArray("d1",new double[] {d1}));
+    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.<double[]>packArray("d2",new double[] {d2}));
     rr_async_FunctionCall("func2",rr_param,new rrend_async_func2(),rr_handler,rr_timeout);
     }
     finally {
@@ -3662,8 +3662,8 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     vectorptr_messageelement rr_param=new vectorptr_messageelement();
     try {
-    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.newMessageElementDispose("d1",new double[] {d1}));
-    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.newMessageElementDispose("d2",new double[] {d2}));
+    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.<double[]>packArray("d1",new double[] {d1}));
+    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.<double[]>packArray("d2",new double[] {d2}));
     rr_async_FunctionCall("func3",rr_param,new rrend_async_func3(),rr_handler,rr_timeout);
     }
     finally {
@@ -3810,7 +3810,7 @@ public class testroot_stub extends ServiceStub implements testroot, async_testro
     {
     vectorptr_messageelement rr_param=new vectorptr_messageelement();
     try {
-    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.newMessageElementDispose("op",new int[] {op}));
+    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.<int[]>packArray("op",new int[] {op}));
     rr_async_FunctionCall("o6_op",rr_param,new rrend_async_o6_op(),rr_handler,rr_timeout);
     }
     finally {

@@ -7,12 +7,12 @@ public class obj4_stub extends ServiceStub implements obj4, async_obj4 {
         super(innerstub); 
     }
     public String get_s_ind() {
-    return MessageElementUtil.<String>castDataAndDispose(rr_innerstub.propertyGet("s_ind"));
+    return MessageElementUtil.unpackString(rr_innerstub.propertyGet("s_ind"));
     }
     public void set_s_ind(String value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.packString("value",value);
     rr_innerstub.propertySet("s_ind", m);
     }
     finally {
@@ -25,7 +25,7 @@ public class obj4_stub extends ServiceStub implements obj4, async_obj4 {
     public void set_i_ind(int value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",new int[] {value});
+    m=MessageElementUtil.<int[]>packArray("value",new int[] {value});
     rr_innerstub.propertySet("i_ind", m);
     }
     finally {
@@ -33,12 +33,12 @@ public class obj4_stub extends ServiceStub implements obj4, async_obj4 {
     }
     }
     public String get_data() {
-    return MessageElementUtil.<String>castDataAndDispose(rr_innerstub.propertyGet("data"));
+    return MessageElementUtil.unpackString(rr_innerstub.propertyGet("data"));
     }
     public void set_data(String value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.packString("value",value);
     rr_innerstub.propertySet("data", m);
     }
     finally {
@@ -68,7 +68,7 @@ public class obj4_stub extends ServiceStub implements obj4, async_obj4 {
     }
     String rr_ret;
     try {
-    rr_ret=MessageElementUtil.<String>castDataAndDispose(value);
+    rr_ret=MessageElementUtil.unpackString(value);
     } catch (RuntimeException err2) {
     rr_handler.action("",err2);
     return;
@@ -80,7 +80,7 @@ public class obj4_stub extends ServiceStub implements obj4, async_obj4 {
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.packString("value",value);
     rr_async_PropertySet("s_ind",m,new rrend_async_set_s_ind(),rr_handler,rr_timeout);
     }
     finally {
@@ -126,7 +126,7 @@ public class obj4_stub extends ServiceStub implements obj4, async_obj4 {
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",new int[] {value});
+    m=MessageElementUtil.<int[]>packArray("value",new int[] {value});
     rr_async_PropertySet("i_ind",m,new rrend_async_set_i_ind(),rr_handler,rr_timeout);
     }
     finally {
@@ -160,7 +160,7 @@ public class obj4_stub extends ServiceStub implements obj4, async_obj4 {
     }
     String rr_ret;
     try {
-    rr_ret=MessageElementUtil.<String>castDataAndDispose(value);
+    rr_ret=MessageElementUtil.unpackString(value);
     } catch (RuntimeException err2) {
     rr_handler.action("",err2);
     return;
@@ -172,7 +172,7 @@ public class obj4_stub extends ServiceStub implements obj4, async_obj4 {
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.packString("value",value);
     rr_async_PropertySet("data",m,new rrend_async_set_data(),rr_handler,rr_timeout);
     }
     finally {

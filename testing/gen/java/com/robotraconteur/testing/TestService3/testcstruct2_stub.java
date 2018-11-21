@@ -9,9 +9,9 @@ public class testcstruct2_stub extends CStructureStub<testcstruct2> {
     vectorptr_messageelement m=new vectorptr_messageelement();
     try {
     testcstruct2 s = (testcstruct2)s1;
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.newMessageElementDispose("i1",new byte[] {s.i1}));
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.newMessageElementDispose("i2",s.i2));
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.newMessageElementDispose("i3",s.i3));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<byte[]>packArray("i1",new byte[] {s.i1}));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<byte[]>packArray("i2",DataTypeUtil.verifyArrayLength(s.i2, 15, false)));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<byte[]>packArray("i3",DataTypeUtil.verifyArrayLength(s.i3, 17, true)));
     return new MessageElementCStructure(m);
     }
     finally {
@@ -24,8 +24,8 @@ public class testcstruct2_stub extends CStructureStub<testcstruct2> {
     try {
     testcstruct2 s = new testcstruct2();
     s.i1 =(MessageElementUtil.<byte[]>castDataAndDispose(MessageElement.findElement(mm,"i1")))[0];
-    s.i2 =MessageElementUtil.<byte[]>castDataAndDispose(MessageElement.findElement(mm,"i2"));
-    s.i3 =MessageElementUtil.<byte[]>castDataAndDispose(MessageElement.findElement(mm,"i3"));
+    s.i2 =DataTypeUtil.verifyArrayLength(MessageElementUtil.<byte[]>unpackArray(MessageElement.findElement(mm,"i2")), 15, false);
+    s.i3 =DataTypeUtil.verifyArrayLength(MessageElementUtil.<byte[]>unpackArray(MessageElement.findElement(mm,"i3")), 17, true);
     return s;
     }
     finally {

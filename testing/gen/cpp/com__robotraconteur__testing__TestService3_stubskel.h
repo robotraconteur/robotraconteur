@@ -63,6 +63,30 @@ virtual void async_get_teststruct3_prop(boost::function<void (RR_SHARED_PTR<test
 virtual void async_set_teststruct3_prop(RR_SHARED_PTR<teststruct3 > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE) = 0;
 
 
+virtual void async_get_d1(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE) = 0;
+virtual void async_set_d1(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE) = 0;
+
+
+virtual void async_get_d2(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE) = 0;
+virtual void async_set_d2(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE) = 0;
+
+
+virtual void async_get_d3(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE) = 0;
+virtual void async_set_d3(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE) = 0;
+
+
+virtual void async_get_d4(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE) = 0;
+virtual void async_set_d4(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE) = 0;
+
+
+virtual void async_get_d5(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE) = 0;
+virtual void async_set_d5(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE) = 0;
+
+
+virtual void async_get_d6(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE) = 0;
+virtual void async_set_d6(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE) = 0;
+
+
 virtual void async_testcstruct1_func1(const testcstruct1& s,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE) = 0;
 
 
@@ -150,6 +174,24 @@ virtual void set_testcstruct1_prop(const testcstruct1& value);
 virtual RR_SHARED_PTR<teststruct3 > get_teststruct3_prop();
 virtual void set_teststruct3_prop(RR_SHARED_PTR<teststruct3 > value);
 
+virtual RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > get_d1();
+virtual void set_d1(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value);
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > get_d2();
+virtual void set_d2(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value);
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > get_d3();
+virtual void set_d3(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value);
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > get_d4();
+virtual void set_d4(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value);
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > get_d5();
+virtual void set_d5(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > value);
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > get_d6();
+virtual void set_d6(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > value);
+
 virtual void testcstruct1_func1(const testcstruct1& s);
 
 virtual testcstruct1 testcstruct1_func2();
@@ -172,11 +214,29 @@ virtual void set_unreliable1(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > valu
 virtual RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > get_unreliable2();
 virtual void set_unreliable2(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value);
 
+virtual RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > get_p1();
+virtual void set_p1(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > value);
+
+virtual RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > get_p2();
+virtual void set_p2(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > value);
+
+virtual RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > get_p3();
+virtual void set_p3(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > value);
+
 virtual RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > get_peekwire();
 virtual void set_peekwire(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value);
 
 virtual RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > get_pokewire();
 virtual void set_pokewire(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value);
+
+virtual RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > get_w1();
+virtual void set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > value);
+
+virtual RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > get_w2();
+virtual void set_w2(RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > value);
+
+virtual RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > get_w3();
+virtual void set_w3(RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > value);
 
 virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<double > > get_readmem();
 
@@ -195,8 +255,14 @@ virtual RR_SHARED_PTR<RobotRaconteur::WireClientBase> RRGetWireClient(const std:
 private:
 RR_SHARED_PTR<RobotRaconteur::PipeClient<int32_t > > rrvar_unreliable1;
 RR_SHARED_PTR<RobotRaconteur::PipeClient<int32_t > > rrvar_unreliable2;
+RR_SHARED_PTR<RobotRaconteur::PipeClient<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > rrvar_p1;
+RR_SHARED_PTR<RobotRaconteur::PipeClient<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > rrvar_p2;
+RR_SHARED_PTR<RobotRaconteur::PipeClient<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > rrvar_p3;
 RR_SHARED_PTR<RobotRaconteur::WireClient<int32_t > > rrvar_peekwire;
 RR_SHARED_PTR<RobotRaconteur::WireClient<int32_t > > rrvar_pokewire;
+RR_SHARED_PTR<RobotRaconteur::WireClient<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > rrvar_w1;
+RR_SHARED_PTR<RobotRaconteur::WireClient<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > rrvar_w2;
+RR_SHARED_PTR<RobotRaconteur::WireClient<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > rrvar_w3;
 RR_SHARED_PTR<RobotRaconteur::ArrayMemoryClient<double > > rrvar_readmem;
 RR_SHARED_PTR<RobotRaconteur::CStructureArrayMemoryClient<testcstruct2 > > rrvar_cstruct_m1;
 RR_SHARED_PTR<RobotRaconteur::CStructureMultiDimArrayMemoryClient<testcstruct2 > > rrvar_cstruct_m2;
@@ -236,6 +302,48 @@ virtual void async_set_teststruct3_prop(RR_SHARED_PTR<teststruct3 > value,boost:
 protected:
 virtual void rrend_get_teststruct3_prop(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<teststruct3 > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler);
 virtual void rrend_set_teststruct3_prop(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler);
+public:
+virtual void async_get_d1(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE);
+virtual void async_set_d1(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE);
+
+protected:
+virtual void rrend_get_d1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler);
+virtual void rrend_set_d1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler);
+public:
+virtual void async_get_d2(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE);
+virtual void async_set_d2(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE);
+
+protected:
+virtual void rrend_get_d2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler);
+virtual void rrend_set_d2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler);
+public:
+virtual void async_get_d3(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE);
+virtual void async_set_d3(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE);
+
+protected:
+virtual void rrend_get_d3(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler);
+virtual void rrend_set_d3(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler);
+public:
+virtual void async_get_d4(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE);
+virtual void async_set_d4(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE);
+
+protected:
+virtual void rrend_get_d4(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler);
+virtual void rrend_set_d4(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler);
+public:
+virtual void async_get_d5(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE);
+virtual void async_set_d5(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE);
+
+protected:
+virtual void rrend_get_d5(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler);
+virtual void rrend_set_d5(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler);
+public:
+virtual void async_get_d6(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE);
+virtual void async_set_d6(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE);
+
+protected:
+virtual void rrend_get_d6(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler);
+virtual void rrend_set_d6(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler);
 public:
 virtual void async_testcstruct1_func1(const testcstruct1& s,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE);
 
@@ -451,6 +559,12 @@ static void rr_get_unknown_modifier(RR_WEAK_PTR<com::robotraconteur::testing::Te
 static void rr_get_testenum1_prop(RR_WEAK_PTR<com::robotraconteur::testing::TestService3::testroot3_skel> skel, testenum1::testenum1 value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep);
 static void rr_get_testcstruct1_prop(RR_WEAK_PTR<com::robotraconteur::testing::TestService3::testroot3_skel> skel, testcstruct1 value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep);
 static void rr_get_teststruct3_prop(RR_WEAK_PTR<com::robotraconteur::testing::TestService3::testroot3_skel> skel, RR_SHARED_PTR<teststruct3 > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep);
+static void rr_get_d1(RR_WEAK_PTR<com::robotraconteur::testing::TestService3::testroot3_skel> skel, RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep);
+static void rr_get_d2(RR_WEAK_PTR<com::robotraconteur::testing::TestService3::testroot3_skel> skel, RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep);
+static void rr_get_d3(RR_WEAK_PTR<com::robotraconteur::testing::TestService3::testroot3_skel> skel, RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep);
+static void rr_get_d4(RR_WEAK_PTR<com::robotraconteur::testing::TestService3::testroot3_skel> skel, RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep);
+static void rr_get_d5(RR_WEAK_PTR<com::robotraconteur::testing::TestService3::testroot3_skel> skel, RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep);
+static void rr_get_d6(RR_WEAK_PTR<com::robotraconteur::testing::TestService3::testroot3_skel> skel, RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep);
 static void rr_testcstruct1_func1(RR_WEAK_PTR<com::robotraconteur::testing::TestService3::testroot3_skel> skel, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep);
 static void rr_testcstruct1_func2(RR_WEAK_PTR<com::robotraconteur::testing::TestService3::testroot3_skel> skel, testcstruct1 ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep);
 static void rr_gen_func1(RR_WEAK_PTR<com::robotraconteur::testing::TestService3::testroot3_skel> skel, RR_SHARED_PTR<RobotRaconteur::Generator<double,void > > ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep);
@@ -463,8 +577,14 @@ protected:bool rr_InitPipeServersRun;
 bool rr_InitWireServersRun;
 RR_SHARED_PTR<RobotRaconteur::PipeServer<int32_t > > rr_unreliable1_pipe;
 RR_SHARED_PTR<RobotRaconteur::PipeServer<int32_t > > rr_unreliable2_pipe;
+RR_SHARED_PTR<RobotRaconteur::PipeServer<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > rr_p1_pipe;
+RR_SHARED_PTR<RobotRaconteur::PipeServer<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > rr_p2_pipe;
+RR_SHARED_PTR<RobotRaconteur::PipeServer<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > rr_p3_pipe;
 RR_SHARED_PTR<RobotRaconteur::WireServer<int32_t > > rr_peekwire_wire;
 RR_SHARED_PTR<RobotRaconteur::WireServer<int32_t > > rr_pokewire_wire;
+RR_SHARED_PTR<RobotRaconteur::WireServer<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > rr_w1_wire;
+RR_SHARED_PTR<RobotRaconteur::WireServer<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > rr_w2_wire;
+RR_SHARED_PTR<RobotRaconteur::WireServer<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > rr_w3_wire;
 public: 
 private:
 RR_SHARED_PTR<RobotRaconteur::ArrayMemoryServiceSkel<double > > rr_readmem_mem;
@@ -716,7 +836,7 @@ public:
     static void UnpackFromMessageElementCStructure(com::robotraconteur::testing::TestService3::testcstruct1& v, RR_SHARED_PTR<MessageElementCStructure> m)
     {
     if (!m) throw NullValueException("Unexpected null value for cstructure unpack");
-    std::vector<RR_SHARED_PTR<MessageElement> >& i = m->Elements;
+    std::vector<RR_SHARED_PTR<RobotRaconteur::MessageElement> >& i = m->Elements;
     CStructureStub_UnpackField(v.d1, "d1", i);
     CStructureStub_UnpackField(v.d2, "d2", i);
     CStructureStub_UnpackField(v.d3, "d3", i);
@@ -752,7 +872,7 @@ public:
     static void UnpackFromMessageElementCStructure(com::robotraconteur::testing::TestService3::testcstruct2& v, RR_SHARED_PTR<MessageElementCStructure> m)
     {
     if (!m) throw NullValueException("Unexpected null value for cstructure unpack");
-    std::vector<RR_SHARED_PTR<MessageElement> >& i = m->Elements;
+    std::vector<RR_SHARED_PTR<RobotRaconteur::MessageElement> >& i = m->Elements;
     CStructureStub_UnpackField(v.i1, "i1", i);
     CStructureStub_UnpackField(v.i2, "i2", i);
     CStructureStub_UnpackField(v.i3, "i3", i);

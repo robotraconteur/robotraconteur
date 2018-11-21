@@ -9,14 +9,14 @@ public class testcstruct1_stub extends CStructureStub<testcstruct1> {
     vectorptr_messageelement m=new vectorptr_messageelement();
     try {
     testcstruct1 s = (testcstruct1)s1;
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.newMessageElementDispose("d1",new double[] {s.d1}));
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.newMessageElementDispose("d2",s.d2));
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.newMessageElementDispose("d3",s.d3));
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.newMessageElementDispose("d4",s.d4));
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.newMessageElementDispose("s1",RobotRaconteurNode.s().packStructure( s.s1)));
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.newMessageElementDispose("s2",RobotRaconteurNode.s().packStructure(s.s2)));
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.newMessageElementDispose("s3",RobotRaconteurNode.s().packStructure(s.s3)));
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.newMessageElementDispose("s4",RobotRaconteurNode.s().packStructure(s.s4)));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<double[]>packArray("d1",new double[] {s.d1}));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<double[]>packArray("d2",DataTypeUtil.verifyArrayLength(s.d2, 6, false)));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<double[]>packArray("d3",DataTypeUtil.verifyArrayLength(s.d3, 6, true)));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<double[]>packArray("d4",DataTypeUtil.verifyArrayLength(s.d4, 9, false)));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<testcstruct2>packCStructureToArray("s1",s.s1));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<testcstruct2>packCStructureArray("s2",DataTypeUtil.verifyArrayLength(s.s2, 8, false)));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<testcstruct2>packCStructureArray("s3",DataTypeUtil.verifyArrayLength(s.s3, 9, true)));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<testcstruct2>packCStructureArray("s4",DataTypeUtil.verifyArrayLength(s.s4, 8, false)));
     return new MessageElementCStructure(m);
     }
     finally {
@@ -29,13 +29,13 @@ public class testcstruct1_stub extends CStructureStub<testcstruct1> {
     try {
     testcstruct1 s = new testcstruct1();
     s.d1 =(MessageElementUtil.<double[]>castDataAndDispose(MessageElement.findElement(mm,"d1")))[0];
-    s.d2 =MessageElementUtil.<double[]>castDataAndDispose(MessageElement.findElement(mm,"d2"));
-    s.d3 =MessageElementUtil.<double[]>castDataAndDispose(MessageElement.findElement(mm,"d3"));
-    s.d4 =MessageElementUtil.<double[]>castDataAndDispose(MessageElement.findElement(mm,"d4"));
-    s.s1 =RobotRaconteurNode.s().<testcstruct2[]>unpackStructureDispose(MessageElementUtil.<MessageElementCStructureArray>castDataAndDispose(MessageElement.findElement(mm,"s1")))[0];
-    s.s2 =RobotRaconteurNode.s().<testcstruct2[]>unpackStructureDispose(MessageElementUtil.<MessageElementCStructureArray>castDataAndDispose(MessageElement.findElement(mm,"s2")));
-    s.s3 =RobotRaconteurNode.s().<testcstruct2[]>unpackStructureDispose(MessageElementUtil.<MessageElementCStructureArray>castDataAndDispose(MessageElement.findElement(mm,"s3")));
-    s.s4 =RobotRaconteurNode.s().<testcstruct2[]>unpackStructureDispose(MessageElementUtil.<MessageElementCStructureArray>castDataAndDispose(MessageElement.findElement(mm,"s4")));
+    s.d2 =DataTypeUtil.verifyArrayLength(MessageElementUtil.<double[]>unpackArray(MessageElement.findElement(mm,"d2")), 6, false);
+    s.d3 =DataTypeUtil.verifyArrayLength(MessageElementUtil.<double[]>unpackArray(MessageElement.findElement(mm,"d3")), 6, true);
+    s.d4 =DataTypeUtil.verifyArrayLength(MessageElementUtil.<double[]>unpackArray(MessageElement.findElement(mm,"d4")), 9, false);
+    s.s1 =MessageElementUtil.<testcstruct2>unpackCStructureFromArray(MessageElement.findElement(mm,"s1"));
+    s.s2 =DataTypeUtil.verifyArrayLength(MessageElementUtil.<testcstruct2>unpackCStructureArray(MessageElement.findElement(mm,"s2")), 8, false);
+    s.s3 =DataTypeUtil.verifyArrayLength(MessageElementUtil.<testcstruct2>unpackCStructureArray(MessageElement.findElement(mm,"s3")), 9, true);
+    s.s4 =DataTypeUtil.verifyArrayLength(MessageElementUtil.<testcstruct2>unpackCStructureArray(MessageElement.findElement(mm,"s4")), 8, false);
     return s;
     }
     finally {

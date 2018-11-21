@@ -20,7 +20,7 @@ public class baseobj_stub extends ServiceStub implements baseobj, async_baseobj 
     public void set_d1(double value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",new double[] {value});
+    m=MessageElementUtil.<double[]>packArray("value",new double[] {value});
     rr_innerstub.propertySet("d1", m);
     }
     finally {
@@ -28,12 +28,12 @@ public class baseobj_stub extends ServiceStub implements baseobj, async_baseobj 
     }
     }
     public double[] get_d2() {
-    return MessageElementUtil.<double[]>castDataAndDispose(rr_innerstub.propertyGet("d2"));
+    return MessageElementUtil.<double[]>unpackArray(rr_innerstub.propertyGet("d2"));
     }
     public void set_d2(double[] value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.<double[]>packArray("value",value);
     rr_innerstub.propertySet("d2", m);
     }
     finally {
@@ -44,8 +44,8 @@ public class baseobj_stub extends ServiceStub implements baseobj, async_baseobj 
     vectorptr_messageelement rr_param=new vectorptr_messageelement();
     MessageElement rr_me=null;
     try {
-    MessageElementUtil.addMessageElementDispose(rr_param, MessageElementUtil.newMessageElementDispose("d1",new double[] {d1}));
-    MessageElementUtil.addMessageElementDispose(rr_param, MessageElementUtil.newMessageElementDispose("d2",new double[] {d2}));
+    MessageElementUtil.addMessageElementDispose(rr_param, MessageElementUtil.<double[]>packArray("d1",new double[] {d1}));
+    MessageElementUtil.addMessageElementDispose(rr_param, MessageElementUtil.<double[]>packArray("d2",new double[] {d2}));
     rr_me=rr_innerstub.functionCall("func3",rr_param);
     return (MessageElementUtil.<double[]>castDataAndDispose(rr_me))[0];
     }
@@ -128,7 +128,7 @@ public class baseobj_stub extends ServiceStub implements baseobj, async_baseobj 
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",new double[] {value});
+    m=MessageElementUtil.<double[]>packArray("value",new double[] {value});
     rr_async_PropertySet("d1",m,new rrend_async_set_d1(),rr_handler,rr_timeout);
     }
     finally {
@@ -162,7 +162,7 @@ public class baseobj_stub extends ServiceStub implements baseobj, async_baseobj 
     }
     double[] rr_ret;
     try {
-    rr_ret=MessageElementUtil.<double[]>castDataAndDispose(value);
+    rr_ret=MessageElementUtil.<double[]>unpackArray(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -174,7 +174,7 @@ public class baseobj_stub extends ServiceStub implements baseobj, async_baseobj 
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.<double[]>packArray("value",value);
     rr_async_PropertySet("d2",m,new rrend_async_set_d2(),rr_handler,rr_timeout);
     }
     finally {
@@ -197,8 +197,8 @@ public class baseobj_stub extends ServiceStub implements baseobj, async_baseobj 
     {
     vectorptr_messageelement rr_param=new vectorptr_messageelement();
     try {
-    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.newMessageElementDispose("d1",new double[] {d1}));
-    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.newMessageElementDispose("d2",new double[] {d2}));
+    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.<double[]>packArray("d1",new double[] {d1}));
+    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.<double[]>packArray("d2",new double[] {d2}));
     rr_async_FunctionCall("func3",rr_param,new rrend_async_func3(),rr_handler,rr_timeout);
     }
     finally {

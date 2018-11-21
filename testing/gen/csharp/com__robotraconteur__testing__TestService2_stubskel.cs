@@ -87,7 +87,7 @@ public class ostruct2_stub : IStructureStub {
     {
     if (s1 ==null) return null;
     ostruct2 s = (ostruct2)s1;
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.NewMessageElementDispose("a1",s.a1));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackArray<double>("a1",s.a1));
     return new MessageElementStructure("com.robotraconteur.testing.TestService2.ostruct2",m);
     }
     }
@@ -96,7 +96,7 @@ public class ostruct2_stub : IStructureStub {
     ostruct2 s=new ostruct2();
     using(vectorptr_messageelement mm=m.Elements)
     {
-    s.a1 =MessageElementUtil.CastDataAndDispose<double[]>(MessageElement.FindElement(mm,"a1"));
+    s.a1 =MessageElementUtil.UnpackArray<double>(MessageElement.FindElement(mm,"a1"));
     T st; try {st=(T)((object)s);} catch (InvalidCastException) {throw new DataTypeMismatchException("Wrong structuretype");}
     return st;
     }
@@ -125,10 +125,10 @@ public class baseobj_stub : ServiceStub , baseobj, async_baseobj{
     }
     public double d1 {
     get {
-    return (MessageElementUtil.CastDataAndDispose<double[]>(rr_innerstub.PropertyGet("d1")))[0];
+    return (MessageElementUtil.UnpackScalar<double>(rr_innerstub.PropertyGet("d1")));
     }
     set {
-    using(MessageElement m=MessageElementUtil.NewMessageElementDispose("value",new double[] {value}))
+    using(MessageElement m=MessageElementUtil.PackScalar<double>("value",value))
     {
     rr_innerstub.PropertySet("d1", m);
     }
@@ -136,10 +136,10 @@ public class baseobj_stub : ServiceStub , baseobj, async_baseobj{
     }
     public double[] d2 {
     get {
-    return MessageElementUtil.CastDataAndDispose<double[]>(rr_innerstub.PropertyGet("d2"));
+    return MessageElementUtil.UnpackArray<double>(rr_innerstub.PropertyGet("d2"));
     }
     set {
-    using(MessageElement m=MessageElementUtil.NewMessageElementDispose("value",value))
+    using(MessageElement m=MessageElementUtil.PackArray<double>("value",value))
     {
     rr_innerstub.PropertySet("d2", m);
     }
@@ -148,11 +148,11 @@ public class baseobj_stub : ServiceStub , baseobj, async_baseobj{
     public double func3(double d1, double d2) {
     using(vectorptr_messageelement rr_param=new vectorptr_messageelement())
     {
-    MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.NewMessageElementDispose("d1",new double[] {d1}));
-    MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.NewMessageElementDispose("d2",new double[] {d2}));
+    MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.PackScalar<double>("d1",d1));
+    MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.PackScalar<double>("d2",d2));
     using(MessageElement rr_me=rr_innerstub.FunctionCall("func3",rr_param))
     {
-    return (MessageElementUtil.CastDataAndDispose<double[]>(rr_me))[0];
+    return (MessageElementUtil.UnpackScalar<double>(rr_me));
     }
     }
     }
@@ -189,8 +189,8 @@ public class baseobj_stub : ServiceStub , baseobj, async_baseobj{
     switch (rr_membername) {
     case "cb2":
     {
-    double d1=(MessageElementUtil.CastDataAndDispose<double[]>(vectorptr_messageelement_util.FindElement(rr_m,"d1")))[0];
-    double d2=(MessageElementUtil.CastDataAndDispose<double[]>(vectorptr_messageelement_util.FindElement(rr_m,"d2")))[0];
+    double d1=(MessageElementUtil.UnpackScalar<double>(vectorptr_messageelement_util.FindElement(rr_m,"d1")));
+    double d2=(MessageElementUtil.UnpackScalar<double>(vectorptr_messageelement_util.FindElement(rr_m,"d2")));
     this.cb2.Function(d1, d2);
     return new MessageElement("return",(int)0);
     }
@@ -217,7 +217,7 @@ public class baseobj_stub : ServiceStub , baseobj, async_baseobj{
     }
     double rr_ret;
     try {
-    rr_ret=(MessageElementUtil.CastDataAndDispose<double[]>(value))[0];
+    rr_ret=(MessageElementUtil.UnpackScalar<double>(value));
     } catch (Exception err2) {
     rr_handler(default(double),err2);
     return;
@@ -226,7 +226,7 @@ public class baseobj_stub : ServiceStub , baseobj, async_baseobj{
     }
     public virtual void async_set_d1(double value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    using(MessageElement mm=MessageElementUtil.NewMessageElementDispose("value",new double[] {value}))
+    using(MessageElement mm=MessageElementUtil.PackScalar<double>("value",value))
     {
     rr_async_PropertySet("d1",mm,rrend_async_set_d1,rr_handler,rr_timeout);
     }
@@ -255,7 +255,7 @@ public class baseobj_stub : ServiceStub , baseobj, async_baseobj{
     }
     double[] rr_ret;
     try {
-    rr_ret=MessageElementUtil.CastDataAndDispose<double[]>(value);
+    rr_ret=MessageElementUtil.UnpackArray<double>(value);
     } catch (Exception err2) {
     rr_handler(default(double[]),err2);
     return;
@@ -264,7 +264,7 @@ public class baseobj_stub : ServiceStub , baseobj, async_baseobj{
     }
     public virtual void async_set_d2(double[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    using(MessageElement mm=MessageElementUtil.NewMessageElementDispose("value",value))
+    using(MessageElement mm=MessageElementUtil.PackArray<double>("value",value))
     {
     rr_async_PropertySet("d2",mm,rrend_async_set_d2,rr_handler,rr_timeout);
     }
@@ -283,8 +283,8 @@ public class baseobj_stub : ServiceStub , baseobj, async_baseobj{
     {
     using(vectorptr_messageelement rr_param=new vectorptr_messageelement())
     {
-    MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.NewMessageElementDispose("d1",new double[] {d1}));
-    MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.NewMessageElementDispose("d2",new double[] {d2}));
+    MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.PackScalar<double>("d1",d1));
+    MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.PackScalar<double>("d2",d2));
     rr_async_FunctionCall("func3",rr_param,rrend_async_func3,rr_handler,rr_timeout);
     }
     }
@@ -298,7 +298,7 @@ public class baseobj_stub : ServiceStub , baseobj, async_baseobj{
     }
     double rr_ret;
     try {
-    rr_ret=(MessageElementUtil.CastDataAndDispose<double[]>(ret))[0];
+    rr_ret=(MessageElementUtil.UnpackScalar<double>(ret));
     } catch (Exception err2) {
     rr_handler(default(double),err2);
     return;
@@ -320,10 +320,10 @@ public class subobj_stub : ServiceStub , subobj, async_subobj{
     public double add_val(double v) {
     using(vectorptr_messageelement rr_param=new vectorptr_messageelement())
     {
-    MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.NewMessageElementDispose("v",new double[] {v}));
+    MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.PackScalar<double>("v",v));
     using(MessageElement rr_me=rr_innerstub.FunctionCall("add_val",rr_param))
     {
-    return (MessageElementUtil.CastDataAndDispose<double[]>(rr_me))[0];
+    return (MessageElementUtil.UnpackScalar<double>(rr_me));
     }
     }
     }
@@ -344,7 +344,7 @@ public class subobj_stub : ServiceStub , subobj, async_subobj{
     {
     using(vectorptr_messageelement rr_param=new vectorptr_messageelement())
     {
-    MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.NewMessageElementDispose("v",new double[] {v}));
+    MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.PackScalar<double>("v",v));
     rr_async_FunctionCall("add_val",rr_param,rrend_async_add_val,rr_handler,rr_timeout);
     }
     }
@@ -358,7 +358,7 @@ public class subobj_stub : ServiceStub , subobj, async_subobj{
     }
     double rr_ret;
     try {
-    rr_ret=(MessageElementUtil.CastDataAndDispose<double[]>(ret))[0];
+    rr_ret=(MessageElementUtil.UnpackScalar<double>(ret));
     } catch (Exception err2) {
     rr_handler(default(double),err2);
     return;
@@ -378,12 +378,12 @@ public class baseobj_skel : ServiceSkel {
     case "d1":
     {
     double ret=obj.d1;
-    return MessageElementUtil.NewMessageElementDispose("return",new double[] {ret});
+    return MessageElementUtil.PackScalar<double>("return",ret);
     }
     case "d2":
     {
     double[] ret=obj.d2;
-    return MessageElementUtil.NewMessageElementDispose("return",ret);
+    return MessageElementUtil.PackArray<double>("return",ret);
     }
     default:
     break;
@@ -394,12 +394,12 @@ public class baseobj_skel : ServiceSkel {
     switch (membername) {
     case "d1":
     {
-    obj.d1=(MessageElementUtil.CastDataAndDispose<double[]>(m))[0];
+    obj.d1=(MessageElementUtil.UnpackScalar<double>(m));
     return;
     }
     case "d2":
     {
-    obj.d2=MessageElementUtil.CastDataAndDispose<double[]>(m);
+    obj.d2=MessageElementUtil.UnpackArray<double>(m);
     return;
     }
     default:
@@ -411,10 +411,10 @@ public class baseobj_skel : ServiceSkel {
     switch (rr_membername) {
     case "func3":
     {
-    double d1=(MessageElementUtil.CastDataAndDispose<double[]>(vectorptr_messageelement_util.FindElement(rr_m,"d1")))[0];
-    double d2=(MessageElementUtil.CastDataAndDispose<double[]>(vectorptr_messageelement_util.FindElement(rr_m,"d2")))[0];
+    double d1=(MessageElementUtil.UnpackScalar<double>(vectorptr_messageelement_util.FindElement(rr_m,"d1")));
+    double d2=(MessageElementUtil.UnpackScalar<double>(vectorptr_messageelement_util.FindElement(rr_m,"d2")));
     double rr_ret=this.obj.func3(d1, d2);
-    return MessageElementUtil.NewMessageElementDispose("return",new double[] {rr_ret});
+    return MessageElementUtil.PackScalar<double>("return",rr_ret);
     }
     default:
     break;
@@ -450,8 +450,8 @@ public class baseobj_skel : ServiceSkel {
     return new Action<double, double>( delegate(double d1, double d2) {
     using(vectorptr_messageelement rr_param=new vectorptr_messageelement())
     {
-    MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.NewMessageElementDispose("d1",new double[] {d1}));
-    MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.NewMessageElementDispose("d2",new double[] {d2}));
+    MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.PackScalar<double>("d1",d1));
+    MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.PackScalar<double>("d2",d2));
     using(MessageElement rr_me=this.innerskel.WrappedCallbackCall("cb2",rr_endpoint,rr_param))
     {
     }
@@ -534,9 +534,9 @@ public class subobj_skel : ServiceSkel {
     switch (rr_membername) {
     case "add_val":
     {
-    double v=(MessageElementUtil.CastDataAndDispose<double[]>(vectorptr_messageelement_util.FindElement(rr_m,"v")))[0];
+    double v=(MessageElementUtil.UnpackScalar<double>(vectorptr_messageelement_util.FindElement(rr_m,"v")));
     double rr_ret=this.obj.add_val(v);
-    return MessageElementUtil.NewMessageElementDispose("return",new double[] {rr_ret});
+    return MessageElementUtil.PackScalar<double>("return",rr_ret);
     }
     default:
     break;

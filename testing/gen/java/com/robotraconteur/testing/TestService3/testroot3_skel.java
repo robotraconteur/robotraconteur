@@ -16,32 +16,62 @@ public class testroot3_skel extends ServiceSkel {
     if(membername.equals( "readme"))
     {
     int ret=obj.get_readme();
-    return MessageElementUtil.newMessageElementDispose("return",new int[] {ret});
+    return MessageElementUtil.<int[]>packArray("return",new int[] {ret});
     }
     if(membername.equals( "writeme"))
     {
     int ret=obj.get_writeme();
-    return MessageElementUtil.newMessageElementDispose("return",new int[] {ret});
+    return MessageElementUtil.<int[]>packArray("return",new int[] {ret});
     }
     if(membername.equals( "unknown_modifier"))
     {
     int ret=obj.get_unknown_modifier();
-    return MessageElementUtil.newMessageElementDispose("return",new int[] {ret});
+    return MessageElementUtil.<int[]>packArray("return",new int[] {ret});
     }
     if(membername.equals( "testenum1_prop"))
     {
     testenum1 ret=obj.get_testenum1_prop();
-    return MessageElementUtil.newMessageElementDispose("return",new int[] {((int)ret.getValue())});
+    return MessageElementUtil.<int[]>packArray("return", new int[] {((int)ret.getValue())});
     }
     if(membername.equals( "testcstruct1_prop"))
     {
     testcstruct1 ret=obj.get_testcstruct1_prop();
-    return MessageElementUtil.newMessageElementDispose("return",RobotRaconteurNode.s().packStructure( ret));
+    return MessageElementUtil.<testcstruct1>packCStructureToArray("return",ret);
     }
     if(membername.equals( "teststruct3_prop"))
     {
     teststruct3 ret=obj.get_teststruct3_prop();
-    return MessageElementUtil.newMessageElementDispose("return",RobotRaconteurNode.s().packStructure(ret));
+    return MessageElementUtil.packStructure("return",ret);
+    }
+    if(membername.equals( "d1"))
+    {
+    List<double[]> ret=obj.get_d1();
+    return MessageElementUtil.<double[]>packListType("return",DataTypeUtil.verifyArrayLength1(ret, 6, false),double[].class);
+    }
+    if(membername.equals( "d2"))
+    {
+    List<double[]> ret=obj.get_d2();
+    return MessageElementUtil.<double[]>packListType("return",DataTypeUtil.verifyArrayLength1(ret, 6, true),double[].class);
+    }
+    if(membername.equals( "d3"))
+    {
+    Map<Integer,double[]> ret=obj.get_d3();
+    return MessageElementUtil.<Integer,double[]>packMapType("return",DataTypeUtil.verifyArrayLength1(ret, 6, false),Integer.class,double[].class);
+    }
+    if(membername.equals( "d4"))
+    {
+    Map<Integer,double[]> ret=obj.get_d4();
+    return MessageElementUtil.<Integer,double[]>packMapType("return",DataTypeUtil.verifyArrayLength1(ret, 6, true),Integer.class,double[].class);
+    }
+    if(membername.equals( "d5"))
+    {
+    List<MultiDimArray> ret=obj.get_d5();
+    return MessageElementUtil.<MultiDimArray>packListType("return",DataTypeUtil.verifyArrayLength2(ret,9,new int[] {3,3}),MultiDimArray.class);
+    }
+    if(membername.equals( "d6"))
+    {
+    Map<Integer,MultiDimArray> ret=obj.get_d6();
+    return MessageElementUtil.<Integer,MultiDimArray>packMapType("return",DataTypeUtil.verifyArrayLength2(ret,9,new int[] {3,3}),Integer.class,MultiDimArray.class);
     }
     throw new MemberNotFoundException("Member not found");
     }
@@ -68,12 +98,42 @@ public class testroot3_skel extends ServiceSkel {
     }
     if(membername.equals( "testcstruct1_prop"))
     {
-    obj.set_testcstruct1_prop(RobotRaconteurNode.s().<testcstruct1[]>unpackStructureDispose(MessageElementUtil.<MessageElementCStructureArray>castDataAndDispose(m))[0]);
+    obj.set_testcstruct1_prop(MessageElementUtil.<testcstruct1>unpackCStructureFromArray(m));
     return;
     }
     if(membername.equals( "teststruct3_prop"))
     {
-    obj.set_teststruct3_prop(RobotRaconteurNode.s().<teststruct3>unpackStructureDispose(m.<MessageElementStructure>castData()));
+    obj.set_teststruct3_prop(MessageElementUtil.<teststruct3>unpackStructure(m));
+    return;
+    }
+    if(membername.equals( "d1"))
+    {
+    obj.set_d1(DataTypeUtil.verifyArrayLength1(MessageElementUtil.<double[]>unpackListType(m), 6, false));
+    return;
+    }
+    if(membername.equals( "d2"))
+    {
+    obj.set_d2(DataTypeUtil.verifyArrayLength1(MessageElementUtil.<double[]>unpackListType(m), 6, true));
+    return;
+    }
+    if(membername.equals( "d3"))
+    {
+    obj.set_d3(DataTypeUtil.verifyArrayLength1(MessageElementUtil.<Integer,double[]>unpackMapType(m), 6, false));
+    return;
+    }
+    if(membername.equals( "d4"))
+    {
+    obj.set_d4(DataTypeUtil.verifyArrayLength1(MessageElementUtil.<Integer,double[]>unpackMapType(m), 6, true));
+    return;
+    }
+    if(membername.equals( "d5"))
+    {
+    obj.set_d5(DataTypeUtil.verifyArrayLength2(MessageElementUtil.<MultiDimArray>unpackListType(m),9,new int[] {3,3}));
+    return;
+    }
+    if(membername.equals( "d6"))
+    {
+    obj.set_d6(DataTypeUtil.verifyArrayLength2(MessageElementUtil.<Integer,MultiDimArray>unpackMapType(m),9,new int[] {3,3}));
     return;
     }
     throw new MemberNotFoundException("Member not found");
@@ -81,14 +141,14 @@ public class testroot3_skel extends ServiceSkel {
     public MessageElement callFunction(String rr_membername, vectorptr_messageelement rr_m) {
     if(rr_membername.equals( "testcstruct1_func1"))
     {
-    testcstruct1 s=RobotRaconteurNode.s().<testcstruct1[]>unpackStructureDispose(MessageElementUtil.<MessageElementCStructureArray>castDataAndDispose(vectorptr_messageelement_util.findElement(rr_m,"s")))[0];
+    testcstruct1 s=MessageElementUtil.<testcstruct1>unpackCStructureFromArray(vectorptr_messageelement_util.findElement(rr_m,"s"));
     this.obj.testcstruct1_func1(s);
     return new MessageElement("return",new int[] {0});
     }
     if(rr_membername.equals( "testcstruct1_func2"))
     {
     testcstruct1 rr_ret=obj.testcstruct1_func2();
-    return MessageElementUtil.newMessageElementDispose("return",RobotRaconteurNode.s().packStructure( rr_ret));
+    return MessageElementUtil.<testcstruct1>packCStructureToArray("return",rr_ret);
     }
     if(rr_membername.equals( "gen_func1"))
     {
@@ -98,14 +158,14 @@ public class testroot3_skel extends ServiceSkel {
     }
     if(rr_membername.equals( "gen_func2"))
     {
-    String name=MessageElementUtil.<String>castDataAndDispose(vectorptr_messageelement_util.findElement(rr_m,"name"));
+    String name=MessageElementUtil.unpackString(vectorptr_messageelement_util.findElement(rr_m,"name"));
     Generator2<UnsignedBytes> rr_ret=this.obj.gen_func2(name);
     int generator_index = innerskel.registerGeneratorServer("gen_func2", new WrappedGenerator2ServerDirectorJava<UnsignedBytes>(rr_ret));
     return new MessageElement("index",generator_index);
     }
     if(rr_membername.equals( "gen_func3"))
     {
-    String name=MessageElementUtil.<String>castDataAndDispose(vectorptr_messageelement_util.findElement(rr_m,"name"));
+    String name=MessageElementUtil.unpackString(vectorptr_messageelement_util.findElement(rr_m,"name"));
     Generator3<UnsignedBytes> rr_ret=this.obj.gen_func3(name);
     int generator_index = innerskel.registerGeneratorServer("gen_func3", new WrappedGenerator3ServerDirectorJava<UnsignedBytes>(rr_ret));
     return new MessageElement("index",generator_index);
@@ -143,6 +203,9 @@ public class testroot3_skel extends ServiceSkel {
     obj=(testroot3)obj1;
     obj.set_unreliable1(new Pipe<int[]>(innerskel.getPipe("unreliable1")));
     obj.set_unreliable2(new Pipe<int[]>(innerskel.getPipe("unreliable2")));
+    obj.set_p1(new Pipe<int[]>(innerskel.getPipe("p1")));
+    obj.set_p2(new Pipe<int[]>(innerskel.getPipe("p2")));
+    obj.set_p3(new Pipe<MultiDimArray>(innerskel.getPipe("p3")));
     }
     public void initCallbackServers(Object obj1) {
     obj=(testroot3)obj1;
@@ -151,6 +214,9 @@ public class testroot3_skel extends ServiceSkel {
     obj=(testroot3)obj1;
     obj.set_peekwire(new Wire<int[]>(innerskel.getWire("peekwire")));
     obj.set_pokewire(new Wire<int[]>(innerskel.getWire("pokewire")));
+    obj.set_w1(new Wire<int[]>(innerskel.getWire("w1")));
+    obj.set_w2(new Wire<int[]>(innerskel.getWire("w2")));
+    obj.set_w3(new Wire<MultiDimArray>(innerskel.getWire("w3")));
     }
     public WrappedArrayMemoryDirector getArrayMemory(String name) {
     if(name.equals( "readmem")) {

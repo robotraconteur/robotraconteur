@@ -113,6 +113,24 @@ virtual void set_testcstruct1_prop(const testcstruct1& value)=0;
 virtual RR_SHARED_PTR<teststruct3 > get_teststruct3_prop()=0;
 virtual void set_teststruct3_prop(RR_SHARED_PTR<teststruct3 > value)=0;
 
+virtual RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > get_d1()=0;
+virtual void set_d1(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > get_d2()=0;
+virtual void set_d2(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > get_d3()=0;
+virtual void set_d3(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > get_d4()=0;
+virtual void set_d4(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > get_d5()=0;
+virtual void set_d5(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > get_d6()=0;
+virtual void set_d6(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > value)=0;
+
 virtual void testcstruct1_func1(const testcstruct1& s)=0;
 
 virtual testcstruct1 testcstruct1_func2()=0;
@@ -135,11 +153,29 @@ virtual void set_unreliable1(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > valu
 virtual RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > get_unreliable2()=0;
 virtual void set_unreliable2(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value)=0;
 
+virtual RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > get_p1()=0;
+virtual void set_p1(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > get_p2()=0;
+virtual void set_p2(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > get_p3()=0;
+virtual void set_p3(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > value)=0;
+
 virtual RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > get_peekwire()=0;
 virtual void set_peekwire(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value)=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > get_pokewire()=0;
 virtual void set_pokewire(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > get_w1()=0;
+virtual void set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > get_w2()=0;
+virtual void set_w2(RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > get_w3()=0;
+virtual void set_w3(RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > value)=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<double > > get_readmem()=0;
 

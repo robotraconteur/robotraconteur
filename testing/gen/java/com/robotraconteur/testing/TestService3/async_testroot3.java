@@ -16,6 +16,18 @@ public interface async_testroot3
     void async_set_testcstruct1_prop(testcstruct1 value, Action1<RuntimeException> rr_handler, int rr_timeout);
     void async_get_teststruct3_prop(Action2<teststruct3,RuntimeException> rr_handler, int rr_timeout);
     void async_set_teststruct3_prop(teststruct3 value, Action1<RuntimeException> rr_handler, int rr_timeout);
+    void async_get_d1(Action2<List<double[]>,RuntimeException> rr_handler, int rr_timeout);
+    void async_set_d1(List<double[]> value, Action1<RuntimeException> rr_handler, int rr_timeout);
+    void async_get_d2(Action2<List<double[]>,RuntimeException> rr_handler, int rr_timeout);
+    void async_set_d2(List<double[]> value, Action1<RuntimeException> rr_handler, int rr_timeout);
+    void async_get_d3(Action2<Map<Integer,double[]>,RuntimeException> rr_handler, int rr_timeout);
+    void async_set_d3(Map<Integer,double[]> value, Action1<RuntimeException> rr_handler, int rr_timeout);
+    void async_get_d4(Action2<Map<Integer,double[]>,RuntimeException> rr_handler, int rr_timeout);
+    void async_set_d4(Map<Integer,double[]> value, Action1<RuntimeException> rr_handler, int rr_timeout);
+    void async_get_d5(Action2<List<MultiDimArray>,RuntimeException> rr_handler, int rr_timeout);
+    void async_set_d5(List<MultiDimArray> value, Action1<RuntimeException> rr_handler, int rr_timeout);
+    void async_get_d6(Action2<Map<Integer,MultiDimArray>,RuntimeException> rr_handler, int rr_timeout);
+    void async_set_d6(Map<Integer,MultiDimArray> value, Action1<RuntimeException> rr_handler, int rr_timeout);
     void async_testcstruct1_func1(testcstruct1 s,Action1<RuntimeException> rr_handler,int rr_timeout);
     void async_testcstruct1_func2(Action2<testcstruct1,RuntimeException> rr_handler,int rr_timeout);
     void async_gen_func1(Action2<Generator2<double[]>, RuntimeException> rr_handler,int rr_timeout);

@@ -10,7 +10,7 @@ public class subobj_stub extends ServiceStub implements subobj, async_subobj {
     vectorptr_messageelement rr_param=new vectorptr_messageelement();
     MessageElement rr_me=null;
     try {
-    MessageElementUtil.addMessageElementDispose(rr_param, MessageElementUtil.newMessageElementDispose("v",new double[] {v}));
+    MessageElementUtil.addMessageElementDispose(rr_param, MessageElementUtil.<double[]>packArray("v",new double[] {v}));
     rr_me=rr_innerstub.functionCall("add_val",rr_param);
     return (MessageElementUtil.<double[]>castDataAndDispose(rr_me))[0];
     }
@@ -28,7 +28,7 @@ public class subobj_stub extends ServiceStub implements subobj, async_subobj {
     {
     vectorptr_messageelement rr_param=new vectorptr_messageelement();
     try {
-    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.newMessageElementDispose("v",new double[] {v}));
+    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.<double[]>packArray("v",new double[] {v}));
     rr_async_FunctionCall("add_val",rr_param,new rrend_async_add_val(),rr_handler,rr_timeout);
     }
     finally {

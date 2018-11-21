@@ -54,6 +54,12 @@ public interface testroot3
     testenum1 testenum1_prop { get; set; }
     testcstruct1 testcstruct1_prop { get; set; }
     teststruct3 teststruct3_prop { get; set; }
+    List<double[]> d1 { get; set; }
+    List<double[]> d2 { get; set; }
+    Dictionary<int,double[]> d3 { get; set; }
+    Dictionary<int,double[]> d4 { get; set; }
+    List<MultiDimArray> d5 { get; set; }
+    Dictionary<int,MultiDimArray> d6 { get; set; }
     void testcstruct1_func1(testcstruct1 s);
     testcstruct1 testcstruct1_func2();
     Generator2<double> gen_func1();
@@ -64,8 +70,14 @@ public interface testroot3
     obj4 get_o4();
     Pipe<int> unreliable1{ get; set; }
     Pipe<int> unreliable2{ get; set; }
+    Pipe<int[]> p1{ get; set; }
+    Pipe<int[]> p2{ get; set; }
+    Pipe<MultiDimArray> p3{ get; set; }
     Wire<int> peekwire{ get; set; }
     Wire<int> pokewire{ get; set; }
+    Wire<int[]> w1{ get; set; }
+    Wire<int[]> w2{ get; set; }
+    Wire<MultiDimArray> w3{ get; set; }
     ArrayMemory<double> readmem { get; set; }
     CStructureArrayMemory<testcstruct2> cstruct_m1 { get; set; }
     CStructureMultiDimArrayMemory<testcstruct2> cstruct_m2 { get; set; }

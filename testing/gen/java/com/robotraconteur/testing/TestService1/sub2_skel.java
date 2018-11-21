@@ -16,24 +16,24 @@ public class sub2_skel extends ServiceSkel {
     if(membername.equals( "s_ind"))
     {
     String ret=obj.get_s_ind();
-    return MessageElementUtil.newMessageElementDispose("return",ret);
+    return MessageElementUtil.packString("return",ret);
     }
     if(membername.equals( "i_ind"))
     {
     int ret=obj.get_i_ind();
-    return MessageElementUtil.newMessageElementDispose("return",new int[] {ret});
+    return MessageElementUtil.<int[]>packArray("return",new int[] {ret});
     }
     if(membername.equals( "data"))
     {
     String ret=obj.get_data();
-    return MessageElementUtil.newMessageElementDispose("return",ret);
+    return MessageElementUtil.packString("return",ret);
     }
     throw new MemberNotFoundException("Member not found");
     }
     public void callSetProperty(String membername, MessageElement m) {
     if(membername.equals( "s_ind"))
     {
-    obj.set_s_ind(MessageElementUtil.<String>castDataAndDispose(m));
+    obj.set_s_ind(MessageElementUtil.unpackString(m));
     return;
     }
     if(membername.equals( "i_ind"))
@@ -43,7 +43,7 @@ public class sub2_skel extends ServiceSkel {
     }
     if(membername.equals( "data"))
     {
-    obj.set_data(MessageElementUtil.<String>castDataAndDispose(m));
+    obj.set_data(MessageElementUtil.unpackString(m));
     return;
     }
     throw new MemberNotFoundException("Member not found");

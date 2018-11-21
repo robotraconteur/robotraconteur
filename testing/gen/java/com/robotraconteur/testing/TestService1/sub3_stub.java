@@ -7,12 +7,12 @@ public class sub3_stub extends ServiceStub implements sub3, async_sub3 {
         super(innerstub); 
     }
     public String get_ind() {
-    return MessageElementUtil.<String>castDataAndDispose(rr_innerstub.propertyGet("ind"));
+    return MessageElementUtil.unpackString(rr_innerstub.propertyGet("ind"));
     }
     public void set_ind(String value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.packString("value",value);
     rr_innerstub.propertySet("ind", m);
     }
     finally {
@@ -20,12 +20,12 @@ public class sub3_stub extends ServiceStub implements sub3, async_sub3 {
     }
     }
     public String get_data2() {
-    return MessageElementUtil.<String>castDataAndDispose(rr_innerstub.propertyGet("data2"));
+    return MessageElementUtil.unpackString(rr_innerstub.propertyGet("data2"));
     }
     public void set_data2(String value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.packString("value",value);
     rr_innerstub.propertySet("data2", m);
     }
     finally {
@@ -38,7 +38,7 @@ public class sub3_stub extends ServiceStub implements sub3, async_sub3 {
     public void set_data3(double value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",new double[] {value});
+    m=MessageElementUtil.<double[]>packArray("value",new double[] {value});
     rr_innerstub.propertySet("data3", m);
     }
     finally {
@@ -49,7 +49,7 @@ public class sub3_stub extends ServiceStub implements sub3, async_sub3 {
     vectorptr_messageelement rr_param=new vectorptr_messageelement();
     MessageElement rr_me=null;
     try {
-    MessageElementUtil.addMessageElementDispose(rr_param, MessageElementUtil.newMessageElementDispose("d",new double[] {d}));
+    MessageElementUtil.addMessageElementDispose(rr_param, MessageElementUtil.<double[]>packArray("d",new double[] {d}));
     rr_me=rr_innerstub.functionCall("add",rr_param);
     return (MessageElementUtil.<double[]>castDataAndDispose(rr_me))[0];
     }
@@ -78,7 +78,7 @@ public class sub3_stub extends ServiceStub implements sub3, async_sub3 {
     }
     String rr_ret;
     try {
-    rr_ret=MessageElementUtil.<String>castDataAndDispose(value);
+    rr_ret=MessageElementUtil.unpackString(value);
     } catch (RuntimeException err2) {
     rr_handler.action("",err2);
     return;
@@ -90,7 +90,7 @@ public class sub3_stub extends ServiceStub implements sub3, async_sub3 {
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.packString("value",value);
     rr_async_PropertySet("ind",m,new rrend_async_set_ind(),rr_handler,rr_timeout);
     }
     finally {
@@ -124,7 +124,7 @@ public class sub3_stub extends ServiceStub implements sub3, async_sub3 {
     }
     String rr_ret;
     try {
-    rr_ret=MessageElementUtil.<String>castDataAndDispose(value);
+    rr_ret=MessageElementUtil.unpackString(value);
     } catch (RuntimeException err2) {
     rr_handler.action("",err2);
     return;
@@ -136,7 +136,7 @@ public class sub3_stub extends ServiceStub implements sub3, async_sub3 {
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",value);
+    m=MessageElementUtil.packString("value",value);
     rr_async_PropertySet("data2",m,new rrend_async_set_data2(),rr_handler,rr_timeout);
     }
     finally {
@@ -182,7 +182,7 @@ public class sub3_stub extends ServiceStub implements sub3, async_sub3 {
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.newMessageElementDispose("value",new double[] {value});
+    m=MessageElementUtil.<double[]>packArray("value",new double[] {value});
     rr_async_PropertySet("data3",m,new rrend_async_set_data3(),rr_handler,rr_timeout);
     }
     finally {
@@ -205,7 +205,7 @@ public class sub3_stub extends ServiceStub implements sub3, async_sub3 {
     {
     vectorptr_messageelement rr_param=new vectorptr_messageelement();
     try {
-    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.newMessageElementDispose("d",new double[] {d}));
+    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.<double[]>packArray("d",new double[] {d}));
     rr_async_FunctionCall("add",rr_param,new rrend_async_add(),rr_handler,rr_timeout);
     }
     finally {
