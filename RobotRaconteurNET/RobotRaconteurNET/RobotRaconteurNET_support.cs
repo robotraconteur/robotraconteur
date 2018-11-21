@@ -276,6 +276,7 @@ namespace RobotRaconteur
 
         public static List<T[]> VerifyArrayLength<T>(List<T[]> a, int len, bool varlength) where T : struct
         {
+            if (a == null) return a;
             foreach (T[] aa in a)
             {
                 VerifyArrayLength(aa, len, varlength);
@@ -286,6 +287,7 @@ namespace RobotRaconteur
 
         public static Dictionary<K, T[]> VerifyArrayLength<K, T>(Dictionary<K, T[]> a, int len, bool varlength) where T : struct
         {
+            if (a == null) return a;
             foreach (T[] aa in a.Values)
             {
                 VerifyArrayLength(aa, len, varlength);
@@ -296,6 +298,7 @@ namespace RobotRaconteur
 
         public static List<MultiDimArray> VerifyArrayLength(List<MultiDimArray> a, int n_elems, int[] len)
         {
+            if (a == null) return a;
             foreach (MultiDimArray aa in a)
             {
                 VerifyArrayLength(aa, n_elems, len);
@@ -306,6 +309,7 @@ namespace RobotRaconteur
 
         public static Dictionary<K, MultiDimArray> VerifyArrayLength<K>(Dictionary<K, MultiDimArray> a, int n_elems, int[] len)
         {
+            if (a == null) return a;
             foreach (MultiDimArray aa in a.Values)
             {
                 VerifyArrayLength(aa, n_elems, len);
@@ -316,6 +320,7 @@ namespace RobotRaconteur
 
         public static List<CStructureMultiDimArray> VerifyArrayLength(List<CStructureMultiDimArray> a, int n_elems, int[] len)
         {
+            if (a == null) return a;
             foreach (CStructureMultiDimArray aa in a)
             {
                 VerifyArrayLength(aa, n_elems, len);
@@ -326,6 +331,7 @@ namespace RobotRaconteur
 
         public static Dictionary<K, CStructureMultiDimArray> VerifyArrayLength<K>(Dictionary<K, CStructureMultiDimArray> a, int n_elems, int[] len)
         {
+            if (a == null) return a;
             foreach (CStructureMultiDimArray aa in a.Values)
             {
                 VerifyArrayLength(aa, n_elems,len);

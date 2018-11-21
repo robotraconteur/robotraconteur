@@ -710,9 +710,12 @@ namespace RobotRaconteur
 	template<size_t Ndims, typename T>
 	static RR_SHARED_PTR<RRList<T> > VerifyRRMultiDimArrayLength(RR_SHARED_PTR<RRList<T> > a, size_t n_elems, boost::array<int32_t, Ndims> dims)
 	{
-		BOOST_FOREACH(RR_SHARED_PTR<T>& aa, a->list)
+		if (a)
 		{
-			VerifyRRMultiDimArrayLength<Ndims>(aa, n_elems, dims);
+			BOOST_FOREACH(RR_SHARED_PTR<T>& aa, a->list)
+			{
+				VerifyRRMultiDimArrayLength<Ndims>(aa, n_elems, dims);
+			}
 		}
 		return a;
 	}
@@ -720,11 +723,14 @@ namespace RobotRaconteur
 	template<size_t Ndims, typename K, typename T>
 	static RR_SHARED_PTR<RRMap<K,T> > VerifyRRMultiDimArrayLength(RR_SHARED_PTR<RRMap<K,T> > a, size_t n_elems, boost::array<int32_t, Ndims> dims)
 	{
-		BOOST_FOREACH(RR_SHARED_PTR<T>& aa, a->map | boost::adaptors::map_values)
+		if (a)
 		{
-			VerifyRRMultiDimArrayLength<Ndims>(aa, n_elems, dims);
+			BOOST_FOREACH(RR_SHARED_PTR<T>& aa, a->map | boost::adaptors::map_values)
+			{
+				VerifyRRMultiDimArrayLength<Ndims>(aa, n_elems, dims);
+			}
+			return a;
 		}
-		return a;
 	}
 
 	class ROBOTRACONTEUR_CORE_API RRCStructure
