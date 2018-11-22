@@ -666,14 +666,14 @@ namespace detail
 
 		if (!open)
 		{
-			boost::system::error_code ec(boost::system::errc::broken_pipe,boost::system::get_generic_category());
+			boost::system::error_code ec(boost::system::errc::broken_pipe,boost::system::generic_category());
 			_io_service.post(boost::bind(handler,ec));
 			return;
 		}
 
 		if (handshaking)
 		{
-			boost::system::error_code ec(boost::system::errc::operation_not_permitted,boost::system::get_generic_category());
+			boost::system::error_code ec(boost::system::errc::operation_not_permitted,boost::system::generic_category());
 			_io_service.post(boost::bind(handler,ec));
 			return;
 		}
@@ -757,7 +757,7 @@ namespace detail
 			}
 			else
 			{
-				boost::system::error_code ec(boost::system::errc::protocol_error,boost::system::get_generic_category());
+				boost::system::error_code ec(boost::system::errc::protocol_error,boost::system::generic_category());
 				_io_service.post(boost::bind(handler,ec));
 			}
 			return;
@@ -807,7 +807,7 @@ namespace detail
 		{
 			handshaking=false;
 			
-			boost::system::error_code ec(boost::system::errc::broken_pipe,boost::system::get_generic_category());
+			boost::system::error_code ec(boost::system::errc::broken_pipe,boost::system::generic_category());
 			do_handshake6(ec,handler);
 			return;
 		}
@@ -817,7 +817,7 @@ namespace detail
 		if (!open)
 		{
 			handshaking=false;
-			boost::system::error_code ec(boost::system::errc::broken_pipe,boost::system::get_generic_category());
+			boost::system::error_code ec(boost::system::errc::broken_pipe,boost::system::generic_category());
 			do_handshake6(ec,handler);
 			return;
 		}
@@ -873,7 +873,7 @@ namespace detail
 		{
 			handshaking=false;
 			
-			boost::system::error_code ec(boost::system::errc::broken_pipe,boost::system::get_generic_category());
+			boost::system::error_code ec(boost::system::errc::broken_pipe,boost::system::generic_category());
 			do_handshake6(ec,handler);
 			return;
 		}
@@ -883,7 +883,7 @@ namespace detail
 		if (!open)
 		{
 			handshaking=false;
-			boost::system::error_code ec(boost::system::errc::broken_pipe,boost::system::get_generic_category());
+			boost::system::error_code ec(boost::system::errc::broken_pipe,boost::system::generic_category());
 			do_handshake6(ec,handler);
 			return;
 		}
@@ -1072,7 +1072,7 @@ namespace detail
 			{
 				
 				
-				boost::system::error_code ec2(boost::system::errc::io_error,boost::system::get_generic_category());
+				boost::system::error_code ec2(boost::system::errc::io_error,boost::system::generic_category());
 				do_handshake6(ec2,handler);
 				return;
 			}
@@ -1127,7 +1127,7 @@ namespace detail
 		{
 			handshaking=false;
 			
-			boost::system::error_code ec(boost::system::errc::broken_pipe,boost::system::get_generic_category());
+			boost::system::error_code ec(boost::system::errc::broken_pipe,boost::system::generic_category());
 			do_handshake6(ec,handler);
 			return;
 		}
@@ -1137,7 +1137,7 @@ namespace detail
 		if (!open)
 		{
 			handshaking=false;
-			boost::system::error_code ec(boost::system::errc::broken_pipe,boost::system::get_generic_category());
+			boost::system::error_code ec(boost::system::errc::broken_pipe,boost::system::generic_category());
 			do_handshake6(ec,handler);
 			return;
 		}
@@ -1165,7 +1165,7 @@ namespace detail
 		{
 			handshaking=false;
 			
-			boost::system::error_code ec2(boost::system::errc::io_error,boost::system::get_generic_category());
+			boost::system::error_code ec2(boost::system::errc::io_error,boost::system::generic_category());
 			do_handshake6(ec2,handler);
 			return;
 		}
@@ -1244,7 +1244,7 @@ namespace detail
 
 		if (!open)
 		{
-			boost::system::error_code ec(boost::system::errc::broken_pipe,boost::system::get_generic_category());
+			boost::system::error_code ec(boost::system::errc::broken_pipe,boost::system::generic_category());
 			async_write_some2(ec,handler);
 			return;
 		}
@@ -1253,7 +1253,7 @@ namespace detail
 		{
 			boost::function<void (const boost::system::error_code&)> async_shutdown_handler1=async_shutdown_handler_op;
 			async_shutdown_handler_op.clear();
-			boost::system::error_code ec1(boost::system::errc::broken_pipe,boost::system::get_generic_category());
+			boost::system::error_code ec1(boost::system::errc::broken_pipe,boost::system::generic_category);
 			async_write_op=(boost::bind(handler,ec1,0));
 			do_shutdown1(boost::bind(async_shutdown_handler1,_1));
 
@@ -1265,7 +1265,7 @@ namespace detail
 		{
 			if (async_write_op)
 			{
-				boost::system::error_code ec(boost::system::errc::operation_not_permitted,boost::system::get_generic_category());
+				boost::system::error_code ec(boost::system::errc::operation_not_permitted,boost::system::generic_category());
 				async_write_some2(ec,handler);
 				return;
 			}
@@ -1318,7 +1318,7 @@ namespace detail
 
 		if (FAILED(scRet))
 		{
-			boost::system::error_code ec1(boost::system::errc::protocol_error,boost::system::get_generic_category());
+			boost::system::error_code ec1(boost::system::errc::protocol_error,boost::system::generic_category());
 			async_write_some2(ec1,handler);
 			return;
 		}
@@ -1351,7 +1351,7 @@ namespace detail
 		if (!open)
 		{
 			writing=false;
-			boost::system::error_code ec(boost::system::errc::broken_pipe,boost::system::get_generic_category());
+			boost::system::error_code ec(boost::system::errc::broken_pipe,boost::system::generic_category());
 			async_write_some2(ec,handler);
 			return;
 		}
@@ -1449,7 +1449,7 @@ namespace detail
 
 		if (!open || shutingdown)
 		{
-			boost::system::error_code ec(boost::system::errc::broken_pipe,boost::system::get_generic_category());
+			boost::system::error_code ec(boost::system::errc::broken_pipe,boost::system::generic_category());
 			_io_service.post(boost::bind(handler,ec,0));
 			return;
 		}
@@ -1528,7 +1528,7 @@ namespace detail
 		if (!open)
 		{
 			reading=false;
-			boost::system::error_code ec(boost::system::errc::broken_pipe,boost::system::get_generic_category());
+			boost::system::error_code ec(boost::system::errc::broken_pipe,boost::system::generic_category());
 			_io_service.post(boost::bind(handler,ec,0));
 			return;
 		}
@@ -1618,7 +1618,7 @@ namespace detail
 			}
 
 
-			/*boost::system::error_code ec1(boost::system::errc::broken_pipe, boost::system::get_generic_category());
+			/*boost::system::error_code ec1(boost::system::errc::broken_pipe, boost::system::generic_category);
 			lock.unlock();
 			handler(ec1,0);
 			return;*/			
@@ -1650,7 +1650,7 @@ namespace detail
 		
 		if( scRet != SEC_E_OK) 
 		{
-			boost::system::error_code ec1(scRet, boost::system::get_generic_category());
+			boost::system::error_code ec1(scRet, boost::system::generic_category());
 			reading=false;
 			lock.unlock();
 			handler(ec1,0);
@@ -1751,7 +1751,7 @@ namespace detail
 
 		if (async_shutdown_handler_op)
 		{
-			boost::system::error_code ec(boost::system::errc::operation_not_permitted,boost::system::get_generic_category());
+			boost::system::error_code ec(boost::system::errc::operation_not_permitted,boost::system::generic_category());
 			_io_service.post(boost::bind(handler,ec));
 			return;				
 		}
@@ -1778,7 +1778,7 @@ namespace detail
 	{
 		if (!open)
 		{
-			boost::system::error_code ec1(boost::system::errc::protocol_error,boost::system::get_generic_category());
+			boost::system::error_code ec1(boost::system::errc::protocol_error,boost::system::generic_category());
 			do_shutdown3(ec1);
 			return;
 		}
@@ -1806,7 +1806,7 @@ namespace detail
 		Status = ApplyControlToken(hContext.get(), &OutBuffer);
 		if(FAILED(Status))
 		{
-			boost::system::error_code ec1(boost::system::errc::protocol_error,boost::system::get_generic_category());
+			boost::system::error_code ec1(boost::system::errc::protocol_error,boost::system::generic_category());
 			do_shutdown3(ec1);
 			return;
 		}
@@ -1862,7 +1862,7 @@ namespace detail
 
 		if(FAILED(Status))
 		{
-			boost::system::error_code ec1(boost::system::errc::protocol_error,boost::system::get_generic_category());
+			boost::system::error_code ec1(boost::system::errc::protocol_error,boost::system::generic_category());
 			do_shutdown3(ec1);
 			return;
 		}
@@ -1893,7 +1893,7 @@ namespace detail
 		if (!open)
 		{
 			shutingdown=false;
-			boost::system::error_code ec1(boost::system::errc::broken_pipe,boost::system::get_generic_category());
+			boost::system::error_code ec1(boost::system::errc::broken_pipe,boost::system::generic_category());
 			do_shutdown3(ec1);
 			return;
 		}
@@ -1940,7 +1940,7 @@ namespace detail
 		{
 			boost::function<void (const boost::system::error_code&)> async_handshake_handler1=async_handshake_handler_op;
 			async_handshake_handler_op.clear();
-			boost::system::error_code ec1(boost::system::errc::broken_pipe,boost::system::get_generic_category());
+			boost::system::error_code ec1(boost::system::errc::broken_pipe,boost::system::generic_category());
 			_io_service.post(boost::bind(async_handshake_handler1,ec1));
 		}		
 

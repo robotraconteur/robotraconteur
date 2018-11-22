@@ -568,7 +568,7 @@ static void WinUsbDevice_async_control_transfer(boost::asio::io_service& io_serv
 	if (!ok && last_error != ERROR_IO_PENDING
 		&& last_error != ERROR_MORE_DATA)
 	{
-		boost::system::error_code ec(last_error, boost::asio::error::get_system_category());
+		boost::system::error_code ec(last_error, boost::asio::error::system_category);
 		overlapped.complete(ec, 0);
 	}
 	else
@@ -646,7 +646,7 @@ void WinUsbDevice_Claim::AsyncReadPipeNoLock(uint8_t ep, boost::asio::mutable_bu
 	if (!ok && last_error != ERROR_IO_PENDING
 		&& last_error != ERROR_MORE_DATA)
 	{
-		boost::system::error_code ec(last_error, boost::asio::error::get_system_category());
+		boost::system::error_code ec(last_error, boost::asio::error::system_category);
 		overlapped.complete(ec, 0);
 	}
 	else
@@ -680,7 +680,7 @@ void WinUsbDevice_Claim::AsyncWritePipeNoLock(uint8_t ep, boost::asio::mutable_b
 	if (!ok && last_error != ERROR_IO_PENDING
 		&& last_error != ERROR_MORE_DATA)
 	{
-		boost::system::error_code ec(last_error, boost::asio::error::get_system_category());
+		boost::system::error_code ec(last_error, boost::asio::error::system_category);
 		overlapped.complete(ec, 0);
 	}
 	else

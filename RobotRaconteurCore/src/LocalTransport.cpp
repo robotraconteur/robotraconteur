@@ -2042,7 +2042,7 @@ namespace detail
 		HANDLE h = CreateFileW(path.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 		if (h == INVALID_HANDLE_VALUE)
 		{
-			err = boost::system::error_code(GetLastError(), boost::system::get_system_category());
+			err = boost::system::error_code(GetLastError(), boost::system::system_category());
 			return;
 		}
 
@@ -2051,7 +2051,7 @@ namespace detail
 		int fd1 = open(path.c_str(), O_CLOEXEC | O_RDONLY);
 		if (fd1 < 0)
 		{
-			err = boost::system::error_code(errno, boost::system::get_system_category());
+			err = boost::system::error_code(errno, boost::system::system_category());
 			return;
 		}
 		fd = fd1;
@@ -2068,7 +2068,7 @@ namespace detail
 		HANDLE h = CreateFileW(path.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_ALWAYS, flags, NULL);
 		if (h == INVALID_HANDLE_VALUE)
 		{
-			err = boost::system::error_code(GetLastError(), boost::system::get_system_category());
+			err = boost::system::error_code(GetLastError(), boost::system::system_category());
 			return;
 		}
 
@@ -2077,7 +2077,7 @@ namespace detail
 		int fd1 = open(path.c_str(), O_CLOEXEC | O_RDWR | O_APPEND | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP);
 		if (fd1 < 0)
 		{
-			err = boost::system::error_code(errno, boost::system::get_system_category());
+			err = boost::system::error_code(errno, boost::system::system_category());
 			return;
 		}
 
@@ -2089,7 +2089,7 @@ namespace detail
 		if (::fcntl(fd1, F_SETLK, &lock) < 0)
 		{
 			close(fd1);
-			err = boost::system::error_code(boost::system::errc::no_lock_available, boost::system::get_system_category());
+			err = boost::system::error_code(boost::system::errc::no_lock_available, boost::system::system_category());
 			return;
 		}
 
@@ -2107,7 +2107,7 @@ namespace detail
 		HANDLE h = ReOpenFile(fd, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, flags);
 		if (h == INVALID_HANDLE_VALUE)
 		{
-			err = boost::system::error_code(GetLastError(), boost::system::get_system_category());
+			err = boost::system::error_code(GetLastError(), boost::system::system_category());
 			return;
 		}
 

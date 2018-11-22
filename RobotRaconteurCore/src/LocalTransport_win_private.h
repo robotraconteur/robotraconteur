@@ -161,7 +161,7 @@ namespace RobotRaconteur
 						last_error = WSAECONNREFUSED;
 					if (result != 0 && last_error != WSA_IO_PENDING)
 					{
-						boost::system::error_code ec(last_error, boost::asio::error::get_system_category());
+						boost::system::error_code ec(last_error, boost::asio::error::system_category);
 						overlapped.complete(ec, 0);
 					}
 					else
@@ -317,7 +317,7 @@ namespace RobotRaconteur
 					{
 						try
 						{
-							boost::system::error_code ec = boost::system::windows::make_error_code(boost::system::windows::broken_pipe);
+							boost::system::error_code ec = boost::system::windows_error::make_error_code(boost::system::windows_error::broken_pipe);
 							waiting_acceptors.front()(ec, RR_SHARED_PTR<boost::asio::windows::stream_handle>());
 						}
 						catch (std::exception& e)

@@ -2002,7 +2002,7 @@ namespace RobotRaconteur
 			size_t count = (size_t)PyArray_SIZE(array1);
 			boost::shared_ptr<RRBaseArray> ret = AllocateRRArrayByType(rrtype, count);
 
-			if (count == 0) return ret;
+			if (count == 0) return boost::make_tuple(ret, boost::shared_ptr<RRBaseArray>());
 
 			if (PyArray_IS_F_CONTIGUOUS(array1))
 			{

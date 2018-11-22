@@ -595,7 +595,7 @@ namespace RobotRaconteur
 
 		this->node = n;
 
-		listener_strand = RR_MAKE_SHARED<boost::asio::strand>(boost::ref(n->GetThreadPool()->get_io_service()));
+		listener_strand = RR_MAKE_SHARED<boost::asio::io_service::strand>(boost::ref(n->GetThreadPool()->get_io_service()));
 	}
 
 	void ServiceSubscription::Init(const std::vector<std::string>& service_types, RR_SHARED_PTR<ServiceSubscriptionFilter> filter)

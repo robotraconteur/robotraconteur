@@ -3196,7 +3196,7 @@ void TcpTransportConnection::do_starttls1(std::string noden, const boost::system
 
 		starttls_timer=RR_MAKE_SHARED<boost::asio::deadline_timer>(boost::ref(_io_service),boost::posix_time::milliseconds(5000));
 		//RR_WEAK_PTR<ASIOStreamBaseTransport> t=RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this());
-		boost::system::error_code ec1(boost::system::errc::timed_out, boost::system::get_generic_category());
+		boost::system::error_code ec1(boost::system::errc::timed_out, boost::system::generic_category());
 		RobotRaconteurNode::asio_async_wait(node, starttls_timer, boost::bind(&TcpTransportConnection::do_starttls4, RR_STATIC_POINTER_CAST<TcpTransportConnection>(shared_from_this()),"",ec1));
 		streamop_waiting=true;
 		tls_handshaking = true;
