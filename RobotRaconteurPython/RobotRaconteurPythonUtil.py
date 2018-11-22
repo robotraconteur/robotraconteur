@@ -31,6 +31,7 @@ from RobotRaconteur.RobotRaconteurPython import DataTypes_ContainerTypes_generat
 
 if (sys.version_info  > (3,0)):
     from builtins import property
+    from functools import reduce
 else:
     from __builtin__ import property
 
@@ -1847,15 +1848,15 @@ def ServiceDefinitionConstants(servicedef, node, obj):
         if (len(o2)>0):
             elem_o[e.Name]=o2
     
-    for _, c_value in o.iteritems():
+    for _, c_value in o.items():
         if isinstance(c_value,dict):
-            for f_name, f_value in c_value.iteritems():                
+            for f_name, f_value in c_value.items():                
                 if not f_value in o:
                     raise Exception("Invalid struct reference type: " + f_value)
                 c_value[f_name]=o[f_value]
                 
                 
-    for n,v in elem_o.itervalues():
+    for n,v in elem_o.values():
         o[n]=v
     
     for e in servicedef.Enums:
@@ -2324,7 +2325,7 @@ class ServiceInfo2Subscription(object):
     def GetDetectedServiceInfo2(self):
         o=dict()
         c1=self._subscription.GetDetectedServiceInfo2()
-        for c2 in c1.iteritems():
+        for c2 in c1.items():
             id1=ServiceSubscriptionClientID(c2[0])
             stub=ServiceInfo2(c2[1])
             o[id1]=stub        
@@ -2397,7 +2398,7 @@ class ServiceSubscription(object):
     def GetConnectedClients(self):
         o=dict()
         c1=self._subscription.GetConnectedClients()
-        for c2 in c1.iteritems():
+        for c2 in c1.items():
             id1=ServiceSubscriptionClientID(c2[0])
             stub=self._GetClientStub(c2[1])
             o[id1]=stub        

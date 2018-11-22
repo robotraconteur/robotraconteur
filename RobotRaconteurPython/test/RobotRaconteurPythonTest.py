@@ -23,8 +23,13 @@ try:
     raw_input
 except NameError: 
     raw_input = input
+    
+try:
+    cmp
+except NameError:
+    cmp = lambda a,b: (a>b) - (a<b)
 
-print os.getpid()
+print(os.getpid())
 if '--wait-input' in sys.argv:
     raw_input()
 
@@ -2971,7 +2976,7 @@ class ServiceTestClient2:
         for _ in xrange(3):
             g.Next([])
         b = g.Next([2,3,4])
-        print list(b)
+        print (list(b))
         g.Abort()
         try:
             g.Next([])
@@ -2982,9 +2987,8 @@ class ServiceTestClient2:
         g2.Close()
         try:
             g2.Next([])
-        except StopIterationException: pass
-        
-        assert cmp(list(self._r.gen_func2("gen_func2_a_param").NextAll()), [[i] for i in xrange(16)])
+        except StopIterationException: pass        
+        assert cmp(list(self._r.gen_func2("gen_func2_a_param").NextAll()), [bytearray([i]) for i in xrange(16)]) == 0
         
                 
     def TestMemories(self):
@@ -3054,7 +3058,7 @@ class testroot3_impl(object):
         self._pokewire_r=WireUnicastReceiver(v)
         
         def in_value_changed(val, ts, ep):
-            print "In value changed: " + str(val) + " ep: " + str(ep)
+            print ("In value changed: " + str(val) + " ep: " + str(ep))
             
         self._pokewire_r.InValueChanged+=in_value_changed
     

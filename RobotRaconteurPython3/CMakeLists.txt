@@ -62,8 +62,7 @@ set(Python_SWIG_sources ${PYTHON2_SOURCE_DIR}/ClientPython.i ${PYTHON2_SOURCE_DI
   ${PYTHON2_SOURCE_DIR}/RobotRaconteurNodePython.i ${PYTHON2_SOURCE_DIR}/ServiceDefinitionPython.i ${PYTHON2_SOURCE_DIR}/ServicePython.i ${PYTHON2_SOURCE_DIR}/ServiceSecurityPython.i
   ${PYTHON2_SOURCE_DIR}/TcpTransportPython.i ${PYTHON2_SOURCE_DIR}/TimerPython.i ${PYTHON2_SOURCE_DIR}/TimeSpecPython.i)
 set(Python_Py_sources  ${PYTHON2_SOURCE_DIR}/__init__.py ${PYTHON2_SOURCE_DIR}/classproperty.py ${PYTHON2_SOURCE_DIR}/Client.py 
-  ${PYTHON2_SOURCE_DIR}/NamedClient.py ${PYTHON2_SOURCE_DIR}/RobotRaconteurPythonDataTypes.py ${PYTHON2_SOURCE_DIR}/RobotRaconteurPythonError.py 
-  ${PYTHON2_SOURCE_DIR}/RobotRaconteurPythonUtil.py)
+  ${PYTHON2_SOURCE_DIR}/NamedClient.py ${PYTHON2_SOURCE_DIR}/RobotRaconteurPythonDataTypes.py ${PYTHON2_SOURCE_DIR}/RobotRaconteurPythonUtil.py)
 
 set(SWIG_MODULE_RobotRaconteurPython3_EXTRA_DEPS ${RobotRaconteur_SWIG_sources} ${Python_SWIG_sources} ${Python_Py_sources})
 
@@ -99,3 +98,9 @@ configure_file("${PYTHON2_SOURCE_DIR}/setup.py.in" "${CMAKE_BINARY_DIR}/out/Pyth
 configure_file("${PYTHON2_SOURCE_DIR}/setup.py.in" "${CMAKE_BINARY_DIR}/out_debug/Python3/setup.py" @ONLY)
 
 include("${PYTHON2_SOURCE_DIR}/PythonExceptions.cmake")
+
+set(RR_PYTHON_TEST_CMD "\"${CMAKE_COMMAND}\"")
+set(RR_PYTHON_TEST_CMD_ARGS "-E env PYTHONPATH=${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/Python3 ROBOTRACONTEUR_ROBDEF_PATH=${CMAKE_SOURCE_DIR}/testing/RobotRaconteurTest \"${PYTHON3_EXECUTABLE}\" ${CMAKE_SOURCE_DIR}/RobotRaconteurPython/test/RobotRaconteurPythonTest.py")
+RRConfigureTest(test_prog_python3 "${RR_PYTHON_TEST_CMD}" "test_prog" NOCTEST NODEBUG ARGS "${RR_PYTHON_TEST_CMD_ARGS}")
+RRConfigureTest(test_python3_loopback "${RR_PYTHON_TEST_CMD}" "test_prog" NODEBUG ARGS "${RR_PYTHON_TEST_CMD_ARGS} loopback")
+RRConfigureTest(test_python3_loopback2 "${RR_PYTHON_TEST_CMD}" "test_prog" NODEBUG ARGS "${RR_PYTHON_TEST_CMD_ARGS} loopback2")
