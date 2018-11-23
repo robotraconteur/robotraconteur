@@ -31,4 +31,4 @@ script:
     cmake -DBUILD_GEN=ON -DBUILD_TEST=ON -DBUILD_PYTHON=ON -DBUILD_PYTHON3=ON -DBUILD_JAVA=ON -DBUILD_NET=ON
     -DBoost_USE_STATIC_LIBS=OFF -DCMAKE_BUILD_TYPE=Release ..
   - make
-  - ctest -C Release
+  - ctest -C Release -VV
