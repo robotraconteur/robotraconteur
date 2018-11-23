@@ -2,6 +2,8 @@
 
 # Robot Raconteur Core Library and Wrappers
 
+[![Build Status](https://travis-ci.org/robotraconteur/robotraconteur.svg?branch=master)](https://travis-ci.org/robotraconteur/robotraconteur)
+
 A communication framework for robotics, automation, and the Internet of Things
 
 [http://robotraconteur.com](http://robotraconteur.com)
