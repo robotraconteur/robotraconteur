@@ -37,4 +37,4 @@ set(RR_PYTHON_ERR_CATCH_M "
 
 RR_SWIG_REPLACE_ERRORS("${RR_PYTHON_ERR_CATCH_M}" "" "${RR_ERRORS}" "${RR_PYTHON_ERR_OVERRIDE}" RR_ERRORS_CATCH OVERRIDE_ONLY)
 
-configure_file("${PYTHON2_SOURCE_DIR}/RobotraconteurPythonError.py.in" "${CMAKE_CURRENT_BINARY_DIR}/RobotRaconteurPythonError.py" @ONLY)
+configure_file("${PYTHON2_SOURCE_DIR}/RobotRaconteurPythonError.py.in" "${CMAKE_CURRENT_BINARY_DIR}/RobotRaconteurPythonError.py" @ONLY)

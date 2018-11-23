@@ -214,7 +214,7 @@ namespace RobotRaconteur
 			return PackMessageElement_cstruct(data1.get(), type1, obj, node);
 		}
 				
-		if (type1->ArrayType != DataTypes_varvalue_t 
+		if (type1->Type != DataTypes_varvalue_t 
 			&& type1->ArrayType == DataTypes_ArrayTypes_none 
 			&& PySequence_Length(data) !=1 )
 		{
