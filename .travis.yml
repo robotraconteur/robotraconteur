@@ -19,9 +19,9 @@ before_install:
       git clone https://github.com/johnwason/swig.git
       cd swig
       ./autogen.sh
-      ./configure --prefix=$TRAVIS_BUILD_DIR/swig_build_dir/install
+      ./configure
       make
-      make install
+      sudo make install
       )
     
 script:
@@ -29,7 +29,6 @@ script:
   - cd build
   - >
     cmake -DBUILD_GEN=ON -DBUILD_TEST=ON -DBUILD_PYTHON=ON -DBUILD_PYTHON3=ON -DBUILD_JAVA=ON -DBUILD_NET=ON
-    -DBoost_USE_STATIC_LIBS=OFF -DSWIG_EXECUTABLE=$TRAVIS_BUILD_DIR/swig_build_dir/install/bin/swig 
-    -DSWIG_DIR=$TRAVIS_BUILD_DIR/swig_build_dir/install -DCMAKE_BUILD_TYPE=Release ..
+    -DBoost_USE_STATIC_LIBS=OFF -DCMAKE_BUILD_TYPE=Release ..
   - make
   - ctest -C Release
