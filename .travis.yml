@@ -1,0 +1,35 @@
+sudo: required
+dist: xenial
+language: cpp
+compiler:
+  - gcc
+
+before_install:
+  - >
+    sudo apt-get install default-jdk default-jdk-headless default-jre default-jre-headless 
+    python2.7-dev libpython2.7-dev libssl1.0.0 zlib1g zlib1g-dev libssl-dev libusb-1.0-0 
+    libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev 
+    python-numpy python-setuptools python-wheel git cmake-qt-gui g++ make libboost-all-dev autoconf 
+    automake libtool bison libpcre3-dev python3-dev python3-numpy python3-setuptools python3-wheel -qq
+  - | 
+      (
+      rm -rf swig_build_dir
+      mkdir -p swig_build_dir
+      cd swig_build_dir
+      git clone https://github.com/johnwason/swig.git
+      cd swig
+      ./autogen.sh
+      ./configure --prefix=$TRAVIS_BUILD_DIR/swig_build_dir/install
+      make
+      make install
+      )
+    
+script:
+  - mkdir -p build
+  - cd build
+  - >
+    cmake -DBUILD_GEN=ON -DBUILD_TEST=ON -DBUILD_PYTHON=ON -DBUILD_PYTHON3=ON -DBUILD_JAVA=ON -DBUILD_NET=ON
+    -DBoost_USE_STATIC_LIBS=OFF -DSWIG_EXECUTABLE=$TRAVIS_BUILD_DIR/swig_build_dir/install/bin/swig 
+    -DSWIG_DIR=$TRAVIS_BUILD_DIR/swig_build_dir/install -DCMAKE_BUILD_TYPE=Release ..
+  - make
+  - ctest -C Release
