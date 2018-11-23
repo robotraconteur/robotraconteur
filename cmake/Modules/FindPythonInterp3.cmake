@@ -74,6 +74,7 @@ if(NOT PYTHON3_EXECUTABLE)
         list(APPEND _Python3_NAMES python)
       endif()
       find_program(PYTHON3_EXECUTABLE
+	    NAMES ${_Python3_NAMES}
         PATHS
             [HKEY_LOCAL_MACHINE\\SOFTWARE\\Python\\PythonCore\\${_CURRENT_VERSION}\\InstallPath]
             [HKEY_LOCAL_MACHINE\\SOFTWARE\\Python\\PythonCore\\${_CURRENT_VERSION}-32\\InstallPath]
