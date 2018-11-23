@@ -1724,6 +1724,7 @@ namespace RobotRaconteur
 				return;
 			}
 			GeneratorServerBase::CallNext1<int32_t>(0, RR_SHARED_PTR<RobotRaconteurException>(), index, skel, m, ep);
+			return;
 		}
 
 		RR_SHARED_PTR<MessageElement> m2;
