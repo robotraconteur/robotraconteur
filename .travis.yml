@@ -4,6 +4,7 @@ language: cpp
 compiler:
   - gcc
 
+cache: ccache
 before_install:
   - >
     sudo apt-get install default-jdk default-jdk-headless default-jre default-jre-headless 
@@ -29,6 +30,6 @@ script:
   - cd build
   - >
     cmake -DBUILD_GEN=ON -DBUILD_TEST=ON -DBUILD_PYTHON=ON -DBUILD_PYTHON3=ON -DBUILD_JAVA=ON -DBUILD_NET=ON
-    -DBoost_USE_STATIC_LIBS=OFF -DCMAKE_BUILD_TYPE=Release $ROBOTRACONTEUR_CMAKE_ARGS ..
+    -DBoost_USE_STATIC_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DPYTHON3_EXECUTABLE=/usr/bin/python3.5 ..
   - make
   - ctest -C Release -VV
