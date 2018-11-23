@@ -98,7 +98,7 @@ ROBOTRACONTEUR_GENERATE_THUNK(RR_THUNK_SRCS
 
 add_custom_target(RobotRaconteurJavaTest_gen DEPENDS ${RR_THUNK_SRCS})
 
-add_custom_target(RobotRaconteurJavaTest ALL "${Java_JAVAC_EXECUTABLE}" -encoding UTF8 -target 1.6 -source 1.6 -Xlint:none com/robotraconteur/JavaTest/*.java ${CMAKE_CURRENT_BINARY_DIR}/test_src/com/robotraconteur/testing/TestService1/*.java ${CMAKE_CURRENT_BINARY_DIR}/test_src/com/robotraconteur/testing/TestService2/*.java ${CMAKE_CURRENT_BINARY_DIR}/test_src/com/robotraconteur/testing/TestService3/*.java  -d "${CMAKE_CURRENT_BINARY_DIR}/test" -classpath "${CMAKE_CURRENT_BINARY_DIR}/bin"  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test")
+add_custom_target(RobotRaconteurJavaTest ALL "${Java_JAVAC_EXECUTABLE}" -encoding UTF8 -target 1.6 -source 1.6 -Xlint:none com/robotraconteur/javatest/*.java ${CMAKE_CURRENT_BINARY_DIR}/test_src/com/robotraconteur/testing/TestService1/*.java ${CMAKE_CURRENT_BINARY_DIR}/test_src/com/robotraconteur/testing/TestService2/*.java ${CMAKE_CURRENT_BINARY_DIR}/test_src/com/robotraconteur/testing/TestService3/*.java  -d "${CMAKE_CURRENT_BINARY_DIR}/test" -classpath "${CMAKE_CURRENT_BINARY_DIR}/bin"  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test")
 add_dependencies(RobotRaconteurJavaTest RobotRaconteurJava RobotRaconteurJavaTest_gen)
 
 add_custom_command(TARGET RobotRaconteurJavaTest POST_BUILD COMMAND "${Java_JAR_EXECUTABLE}" cf "$<TARGET_FILE_DIR:RobotRaconteurJavaNative>/RobotRaconteurJavaTest.jar" * WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/test")
