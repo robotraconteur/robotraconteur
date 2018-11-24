@@ -208,3 +208,8 @@ configure_file("${CMAKE_SOURCE_DIR}/RobotRaconteurCore/cmake/RobotRaconteurConfi
 configure_file("${CMAKE_SOURCE_DIR}/RobotRaconteurCore/cmake/RobotRaconteurConfig-linux-devtree.cmake" "${CMAKE_BINARY_DIR}/cmake-devtree/RobotRaconteurConfig.cmake" @ONLY)
 endif()
 
+install(TARGETS RobotRaconteurCore DESTINATION "lib")
+install(
+    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
+    DESTINATION include
+    FILES_MATCHING PATTERN "*.h*")

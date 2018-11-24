@@ -68,3 +68,5 @@ endfunction()
 RR_TEST_GEN(cpp)
 RR_TEST_GEN(csharp)
 RR_TEST_GEN(java)
+
+install(TARGETS RobotRaconteurGen DESTINATION "bin")
