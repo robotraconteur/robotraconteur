@@ -99,6 +99,8 @@ if(CMAKE_GENERATOR STREQUAL Xcode)
 	set (ROBOTRACONTEUR_EXTRA_LIBS ${ROBOTRACONTEUR_EXTRA_LIBS} ${CoreFoundation_FRAMEWORKS}/CoreFoundation ${Security_FRAMEWORKS}/Security ${CoreServices_FRAMEWORKS}/CoreServices ${OPENSSL_LIBRARIES} c++)
 endif()
 
+include(GNUInstallDirs)
+
 if (NOT DEFINED RobotRaconteur_DIR)
 add_subdirectory(RobotRaconteurCore)
 set(RobotRaconteur_CORE_LIBRARY RobotRaconteurCore)
