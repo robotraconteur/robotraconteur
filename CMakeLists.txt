@@ -43,7 +43,7 @@ add_definitions(-DBOOST_ALL_NO_LIB)
 
 if(WIN32)
 	add_definitions( -D_WIN32_WINNT=0x0600 )
-	set (ROBOTRACONTEUR_EXTRA_LIBS ${ROBOTRACONTEUR_EXTRA_LIBS} Mswsock.lib ws2_32.lib IPHLPAPI.lib Crypt32.lib Secur32.lib)
+	set (ROBOTRACONTEUR_EXTRA_LIBS ${ROBOTRACONTEUR_EXTRA_LIBS} Mswsock.lib ws2_32.lib IPHLPAPI.lib Crypt32.lib Secur32.lib Bcrypt.lib)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX)
@@ -141,3 +141,10 @@ set(BUILD_MATLAB_MEX OFF CACHE BOOL OFF)
 IF (BUILD_MATLAB_MEX)
 add_subdirectory(RobotRaconteurMex)
 ENDIF()
+
+list(APPEND CPACK_SOURCE_IGNORE_FILES "/\.git/")
+list(APPEND CPACK_SOURCE_IGNORE_FILES "/\.vs/")
+list(APPEND CPACK_SOURCE_IGNORE_FILES "/build/")
+list(APPEND CPACK_SOURCE_IGNORE_FILES "/\.cache")
+
+include(CPack)
