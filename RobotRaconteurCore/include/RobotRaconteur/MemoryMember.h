@@ -192,7 +192,7 @@ namespace RobotRaconteur
 	};
 
 	
-	class ArrayMemoryServiceSkelBase : private boost::noncopyable
+	class ROBOTRACONTEUR_CORE_API ArrayMemoryServiceSkelBase : private boost::noncopyable
 	{
 
 	private:
@@ -242,7 +242,7 @@ namespace RobotRaconteur
 	};
 
 
-	class MultiDimArrayMemoryServiceSkelBase : private boost::noncopyable
+	class ROBOTRACONTEUR_CORE_API MultiDimArrayMemoryServiceSkelBase : private boost::noncopyable
 	{
 
 	private:
@@ -301,7 +301,7 @@ namespace RobotRaconteur
 		}
 	};
 	
-	class ArrayMemoryClientBase : private boost::noncopyable
+	class ROBOTRACONTEUR_CORE_API ArrayMemoryClientBase : private boost::noncopyable
 	{
 	private:
 		std::string m_MemberName;
@@ -402,7 +402,7 @@ namespace RobotRaconteur
 		}
 	};
 	
-	class MultiDimArrayMemoryClientBase : private boost::noncopyable
+	class ROBOTRACONTEUR_CORE_API MultiDimArrayMemoryClientBase : private boost::noncopyable
 	{
 	private:
 		std::string m_MemberName;

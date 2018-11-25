@@ -23,7 +23,7 @@
 
 namespace RobotRaconteur
 {
-	class AsyncMessageReaderImpl : public AsyncMessageReader
+	class ROBOTRACONTEUR_CORE_API AsyncMessageReaderImpl : public AsyncMessageReader
 	{
 	public:
 		enum state_type

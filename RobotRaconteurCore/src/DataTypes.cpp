@@ -157,7 +157,7 @@ ROBOTRACONTEUR_CORE_API std::string GetRRDataTypeString(DataTypes type)
 
 }
 
-bool IsTypeRRArray(DataTypes type)
+ROBOTRACONTEUR_CORE_API bool IsTypeRRArray(DataTypes type)
 {
 	switch (type)
 	{
@@ -179,7 +179,7 @@ bool IsTypeRRArray(DataTypes type)
 
 }
 
-bool IsTypeNumeric(DataTypes type)
+ROBOTRACONTEUR_CORE_API bool IsTypeNumeric(DataTypes type)
 {
 	switch (type)
 	{

@@ -25,7 +25,7 @@ namespace RobotRaconteur
 
 	namespace detail
 	{
-		class StringTableEntry
+		class ROBOTRACONTEUR_CORE_API StringTableEntry
 		{
 		public:
 
@@ -36,7 +36,7 @@ namespace RobotRaconteur
 			bool confirmed;			
 		};
 
-		class StringTable : private boost::noncopyable
+		class ROBOTRACONTEUR_CORE_API StringTable : private boost::noncopyable
 		{
 		public:
 

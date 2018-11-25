@@ -41,14 +41,14 @@ namespace RobotRaconteur
 	class WireConnection;
 	class ROBOTRACONTEUR_CORE_API WireSubscriptionBase;
 	template <typename T>
-	class ROBOTRACONTEUR_CORE_API WireSubscription;
+	class WireSubscription;
 
 	class ROBOTRACONTEUR_CORE_API PipeEndpointBase;
 	template <typename T>
 	class PipeEndpoint;
 	class ROBOTRACONTEUR_CORE_API PipeSubscriptionBase;
 	template <typename T>
-	class ROBOTRACONTEUR_CORE_API PipeSubscription;
+	class PipeSubscription;
 
 	class ROBOTRACONTEUR_CORE_API ServiceSubscriptionFilterNode
 	{
@@ -299,7 +299,7 @@ namespace RobotRaconteur
 	};
 
 	template <typename T>
-	class ROBOTRACONTEUR_CORE_API WireSubscription : public WireSubscriptionBase
+	class WireSubscription : public WireSubscriptionBase
 	{
 	public:
 
@@ -416,7 +416,7 @@ namespace RobotRaconteur
 	};
 
 	template <typename T>
-	class ROBOTRACONTEUR_CORE_API PipeSubscription : public PipeSubscriptionBase
+	class PipeSubscription : public PipeSubscriptionBase
 	{
 	public:
 
@@ -479,7 +479,7 @@ namespace RobotRaconteur
 
 	namespace detail
 	{
-		class WireSubscription_send_iterator
+		class ROBOTRACONTEUR_CORE_API WireSubscription_send_iterator
 		{
 		protected:
 			RR_SHARED_PTR<WireSubscriptionBase> subscription;
@@ -495,7 +495,7 @@ namespace RobotRaconteur
 
 		};
 	
-		class PipeSubscription_send_iterator
+		class ROBOTRACONTEUR_CORE_API PipeSubscription_send_iterator
 		{
 		protected:
 			RR_SHARED_PTR<PipeSubscriptionBase> subscription;
@@ -511,7 +511,7 @@ namespace RobotRaconteur
 
 		};
 
-		class ServiceSubscription_custom_member_subscribers
+		class ROBOTRACONTEUR_CORE_API ServiceSubscription_custom_member_subscribers
 		{
 		public:
 
