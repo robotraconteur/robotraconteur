@@ -698,7 +698,7 @@ namespace RobotRaconteur
 		class WireBroadcaster_connected_connection;
 	}
 
-	class WireBroadcasterBase : public RR_ENABLE_SHARED_FROM_THIS<WireBroadcasterBase>
+	class ROBOTRACONTEUR_CORE_API WireBroadcasterBase : public RR_ENABLE_SHARED_FROM_THIS<WireBroadcasterBase>
 	{
 	public:
 

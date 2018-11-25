@@ -673,7 +673,7 @@ namespace RobotRaconteur
 		struct PipeBroadcasterBase_async_send_operation;
 	}
 
-	class PipeBroadcasterBase : public RR_ENABLE_SHARED_FROM_THIS<PipeBroadcasterBase>, private boost::noncopyable
+	class ROBOTRACONTEUR_CORE_API PipeBroadcasterBase : public RR_ENABLE_SHARED_FROM_THIS<PipeBroadcasterBase>, private boost::noncopyable
 	{
 	public:
 

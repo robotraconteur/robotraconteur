@@ -55,12 +55,12 @@ namespace RobotRaconteur
 		std::string ToString() const;
 		void FromString(const std::string& v);
 
-		friend bool operator == (const RobotRaconteurVersion &v1, const RobotRaconteurVersion &v2);
-		friend bool operator != (const RobotRaconteurVersion &v1, const RobotRaconteurVersion &v2);
-		friend bool operator > (const RobotRaconteurVersion &v1, const RobotRaconteurVersion &v2);
-		friend bool operator >= (const RobotRaconteurVersion &v1, const RobotRaconteurVersion &v2);
-		friend bool operator < (const RobotRaconteurVersion &v1, const RobotRaconteurVersion &v2);
-		friend bool operator <= (const RobotRaconteurVersion &v1, const RobotRaconteurVersion &v2);
+		ROBOTRACONTEUR_CORE_API friend bool operator == (const RobotRaconteurVersion &v1, const RobotRaconteurVersion &v2);
+		ROBOTRACONTEUR_CORE_API friend bool operator != (const RobotRaconteurVersion &v1, const RobotRaconteurVersion &v2);
+		ROBOTRACONTEUR_CORE_API friend bool operator > (const RobotRaconteurVersion &v1, const RobotRaconteurVersion &v2);
+		ROBOTRACONTEUR_CORE_API friend bool operator >= (const RobotRaconteurVersion &v1, const RobotRaconteurVersion &v2);
+		ROBOTRACONTEUR_CORE_API friend bool operator < (const RobotRaconteurVersion &v1, const RobotRaconteurVersion &v2);
+		ROBOTRACONTEUR_CORE_API friend bool operator <= (const RobotRaconteurVersion &v1, const RobotRaconteurVersion &v2);
 
 		operator bool() const;
 

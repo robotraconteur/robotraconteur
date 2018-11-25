@@ -122,7 +122,7 @@ namespace RobotRaconteur
 			detail::InvokeHandler<Return>(node, handler, ret);
 		}
 
-		void GeneratorClient_AsyncNext2(RR_SHARED_PTR<MessageElement> v2, RR_SHARED_PTR<RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteurNode> node, boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler);
+		ROBOTRACONTEUR_CORE_API void GeneratorClient_AsyncNext2(RR_SHARED_PTR<MessageElement> v2, RR_SHARED_PTR<RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteurNode> node, boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler);
 	}
 
 	template <typename Return, typename Param>

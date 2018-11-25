@@ -18,7 +18,7 @@
 
 namespace RobotRaconteur
 {
-	class AsyncMessageReader : private boost::noncopyable
+	class ROBOTRACONTEUR_CORE_API AsyncMessageReader : private boost::noncopyable
 	{
 	public:
 
@@ -42,7 +42,7 @@ namespace RobotRaconteur
 
 	};
 
-	class AsyncMessageWriter : private boost::noncopyable
+	class ROBOTRACONTEUR_CORE_API AsyncMessageWriter : private boost::noncopyable
 	{
 	public:
 
