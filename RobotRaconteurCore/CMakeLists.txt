@@ -191,20 +191,10 @@ RRSetTargetDirs(RobotRaconteurCore "bin" "lib")
 
 SET_TARGET_PROPERTIES(RobotRaconteurCore PROPERTIES LINKER_LANGUAGE CXX)
 
-configure_file("${CMAKE_SOURCE_DIR}/RobotRaconteurCore/cmake/BasicConfigVersion-ExactVersion-NoPtrCheck.cmake.in" "${CMAKE_BINARY_DIR}/cmake/RobotRaconteurConfigVersion.cmake" @ONLY)
-configure_file("${CMAKE_SOURCE_DIR}/RobotRaconteurCore/cmake/BasicConfigVersion-ExactVersion-NoPtrCheck.cmake.in" "${CMAKE_BINARY_DIR}/cmake-devtree/RobotRaconteurConfigVersion.cmake" @ONLY)
-
-configure_file("${CMAKE_SOURCE_DIR}/RobotRaconteurCore/cmake/RobotRaconteurGenerateThunk.cmake" "${CMAKE_BINARY_DIR}/cmake/RobotRaconteurGenerateThunk.cmake" @ONLY)
-configure_file("${CMAKE_SOURCE_DIR}/RobotRaconteurCore/cmake/RobotRaconteurGenerateThunk.cmake" "${CMAKE_BINARY_DIR}/cmake-devtree/RobotRaconteurGenerateThunk.cmake" @ONLY)
-
-if(WIN32)
-configure_file("${CMAKE_SOURCE_DIR}/RobotRaconteurCore/cmake/RobotRaconteurConfig-win.cmake" "${CMAKE_BINARY_DIR}/cmake/RobotRaconteurConfig.cmake" @ONLY)
-configure_file("${CMAKE_SOURCE_DIR}/RobotRaconteurCore/cmake/RobotRaconteurConfig-win-devtree.cmake" "${CMAKE_BINARY_DIR}/cmake-devtree/RobotRaconteurConfig.cmake" @ONLY)
-elseif(APPLE)
-configure_file("${CMAKE_SOURCE_DIR}/RobotRaconteurCore/cmake/RobotRaconteurConfig-apple.cmake" "${CMAKE_BINARY_DIR}/cmake/RobotRaconteurConfig.cmake" @ONLY)
-configure_file("${CMAKE_SOURCE_DIR}/RobotRaconteurCore/cmake/RobotRaconteurConfig-apple-devtree.cmake" "${CMAKE_BINARY_DIR}/cmake-devtree/RobotRaconteurConfig.cmake" @ONLY)
-else()
-configure_file("${CMAKE_SOURCE_DIR}/RobotRaconteurCore/cmake/RobotRaconteurConfig-linux.cmake" "${CMAKE_BINARY_DIR}/cmake/RobotRaconteurConfig.cmake" @ONLY)
-configure_file("${CMAKE_SOURCE_DIR}/RobotRaconteurCore/cmake/RobotRaconteurConfig-linux-devtree.cmake" "${CMAKE_BINARY_DIR}/cmake-devtree/RobotRaconteurConfig.cmake" @ONLY)
-endif()
-
+export(TARGETS RobotRaconteurCore FILE ${CMAKE_BINARY_DIR}/RobotRaconteurCoreTargets.cmake)
+install(TARGETS RobotRaconteurCore EXPORT RobotRaconteurCoreTargets DESTINATION ${CMAKE_INSTALL_LIBDIR})
+install(
+    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    FILES_MATCHING PATTERN "*.h*")
+install(EXPORT RobotRaconteurCoreTargets DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${CMAKE_PROJECT_NAME})

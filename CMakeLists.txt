@@ -43,7 +43,7 @@ add_definitions(-DBOOST_ALL_NO_LIB)
 
 if(WIN32)
 	add_definitions( -D_WIN32_WINNT=0x0600 )
-	set (ROBOTRACONTEUR_EXTRA_LIBS ${ROBOTRACONTEUR_EXTRA_LIBS} Mswsock.lib ws2_32.lib IPHLPAPI.lib Crypt32.lib Secur32.lib)
+	set (ROBOTRACONTEUR_EXTRA_LIBS ${ROBOTRACONTEUR_EXTRA_LIBS} Mswsock.lib ws2_32.lib IPHLPAPI.lib Crypt32.lib Secur32.lib Bcrypt.lib)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX)
@@ -99,6 +99,8 @@ if(CMAKE_GENERATOR STREQUAL Xcode)
 	set (ROBOTRACONTEUR_EXTRA_LIBS ${ROBOTRACONTEUR_EXTRA_LIBS} ${CoreFoundation_FRAMEWORKS}/CoreFoundation ${Security_FRAMEWORKS}/Security ${CoreServices_FRAMEWORKS}/CoreServices ${OPENSSL_LIBRARIES} c++)
 endif()
 
+include(GNUInstallDirs)
+
 if (NOT DEFINED RobotRaconteur_DIR)
 add_subdirectory(RobotRaconteurCore)
 set(RobotRaconteur_CORE_LIBRARY RobotRaconteurCore)
@@ -141,3 +143,35 @@ set(BUILD_MATLAB_MEX OFF CACHE BOOL OFF)
 IF (BUILD_MATLAB_MEX)
 add_subdirectory(RobotRaconteurMex)
 ENDIF()
+
+include(CMakePackageConfigHelpers)
+configure_package_config_file(
+  "cmake/Config.cmake.in"
+  "${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake"
+  INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${CMAKE_PROJECT_NAME}"
+  PATH_VARS
+  CMAKE_INSTALL_LIBDIR
+  CMAKE_INSTALL_INCLUDEDIR
+  CMAKE_INSTALL_BINDIR  
+)
+write_basic_package_version_file("${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}Version.cmake" 
+    VERSION ${RobotRaconteurVersion} COMPATIBILITY AnyNewerVersion)
+
+install(FILES
+        ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${CMAKE_PROJECT_NAME})
+install(FILES
+        ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}Version.cmake
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${CMAKE_PROJECT_NAME})
+
+list(APPEND CPACK_SOURCE_IGNORE_FILES "/\.git/")
+list(APPEND CPACK_SOURCE_IGNORE_FILES "/\.vs/")
+list(APPEND CPACK_SOURCE_IGNORE_FILES "/build/")
+list(APPEND CPACK_SOURCE_IGNORE_FILES "/\.cache")
+
+string(REPLACE "." ";" RobotRaconteurVersionList ${RobotRaconteurVersion})
+list(GET RobotRaconteurVersionList 0 CPACK_PACKAGE_VERSION_MAJOR)
+list(GET RobotRaconteurVersionList 1 CPACK_PACKAGE_VERSION_MINOR)
+list(GET RobotRaconteurVersionList 2 CPACK_PACKAGE_VERSION_PATCH)
+
+include(CPack)

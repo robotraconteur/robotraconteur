@@ -78,7 +78,7 @@ INCLUDE_EXTERNAL_MSPROJECT(RobotRaconteurNET ${CMAKE_CURRENT_BINARY_DIR}/RobotRa
 add_dependencies(RobotRaconteurNET RobotRaconteurNETNative)
 #add_custom_target(RobotRaconteurNETTest ALL msbuild -p:Configuration=$(Configuration) /t:rebuild RobotRaconteurNETTest.csproj WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
 
-include(${CMAKE_SOURCE_DIR}/RobotRaconteurCore/cmake/RobotRaconteurGenerateThunk.cmake)
+include(${CMAKE_SOURCE_DIR}/RobotRaconteurGen/cmake/RobotRaconteurGenerateThunk.cmake)
 
 if(NOT RobotRaconteur_GEN)
 set(RobotRaconteur_GEN RobotRaconteurGen)

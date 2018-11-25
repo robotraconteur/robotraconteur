@@ -79,7 +79,7 @@ add_custom_command(TARGET RobotRaconteurJava POST_BUILD COMMAND "${Java_JAR_EXEC
 endif()
 
 
-include(${CMAKE_SOURCE_DIR}/RobotRaconteurCore/cmake/RobotRaconteurGenerateThunk.cmake)
+include(${CMAKE_SOURCE_DIR}/RobotRaconteurGen/cmake/RobotRaconteurGenerateThunk.cmake)
 
 if(NOT RobotRaconteur_GEN)
 set(RobotRaconteur_GEN RobotRaconteurGen)
