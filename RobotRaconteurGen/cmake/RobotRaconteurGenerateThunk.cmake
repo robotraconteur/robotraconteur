@@ -1,10 +1,6 @@
 function(ROBOTRACONTEUR_GENERATE_THUNK SRCS )
 	cmake_parse_arguments(RR_GEN "" "LANG;OUTDIR" "IMPORT_DIRS" ${ARGN})	
-	
-	if(NOT RobotRaconteur_GEN)
-	message(FATAL_ERROR "RobotRaconteur_GEN not specified")
-	endif()
-	
+			
 	if ("${RR_GEN_LANG}" STREQUAL "")
 		set(RR_GEN_LANG "cpp")
 	endif()
@@ -84,9 +80,9 @@ function(ROBOTRACONTEUR_GENERATE_THUNK SRCS )
 			
 	add_custom_command(
       OUTPUT ${THUNK_SRCS} ${THUNK_HDRS}
-      COMMAND  ${RobotRaconteur_GEN}
+      COMMAND RobotRaconteurGen
       ARGS "--thunksource" "--lang=${RR_GEN_LANG}" ${RR_GEN_OUTDIR} ${RR_GEN_FILES}
-      DEPENDS ${RR_GEN_FILES} ${RobotRaconteur_GEN}
+      DEPENDS ${RR_GEN_FILES} RobotRaconteurGen
       COMMENT "Running RobotRaconteurGen for ${RR_SERVICE_NAMES}"
       VERBATIM )
 	

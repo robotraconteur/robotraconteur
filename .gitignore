@@ -348,3 +348,7 @@ Temporary Items
 
 # .nfs files are created when an open file is removed but is still being accessed
 .nfs*
+
+#Extra directories to ignore
+build/
+generated_src/

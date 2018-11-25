@@ -2,7 +2,7 @@ if(NOT RobotRaconteur_GEN)
 set(RobotRaconteur_GEN RobotRaconteurGen)
 endif()
 
-include(${CMAKE_SOURCE_DIR}/RobotRaconteurCore/cmake/RobotRaconteurGenerateThunk.cmake)
+include(${CMAKE_SOURCE_DIR}/RobotRaconteurGen/cmake/RobotRaconteurGenerateThunk.cmake)
 
 ROBOTRACONTEUR_GENERATE_THUNK(RR_THUNK_SRCS RR_THUNK_HDRS 
 	com.robotraconteur.testing.TestService1.robdef 
