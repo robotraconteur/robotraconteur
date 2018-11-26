@@ -1,3 +1,5 @@
+
+#ifndef SWIG
 #include "RobotRaconteur/RobotRaconteurNode.h"
 #include "RobotRaconteur/TcpTransport.h"
 #include "RobotRaconteur/LocalTransport.h"
@@ -5,45 +7,56 @@
 
 #include <boost/assign/list_of.hpp>
 
+#endif
+
 #pragma once
 
 namespace RobotRaconteur
 {
 
-#define RobotRaconteurNodeSetupFlags_NONE 0x0
-#define RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING 0x1
-#define RobotRaconteurNodeSetupFlags_ENABLE_NODE_ANNOUNCE 0x2
-#define RobotRaconteurNodeSetupFlags_ENABLE_LOCAL_TRANSPORT 0x4
-#define RobotRaconteurNodeSetupFlags_ENABLE_TCP_TRANSPORT 0x8
-#define RobotRaconteurNodeSetupFlags_ENABLE_HARDWARE_TRANSPORT 0x10
-#define RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_SERVER 0x20
-#define RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_CLIENT 0x40
-#define RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER 0x80
-#define RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER_PORT_SHARER 0x100
-#define RobotRaconteurNodeSetupFlags_DISABLE_MESSAGE3  0x200
-#define RobotRaconteurNodeSetupFlags_DISABLE_STRINGTABLE  0x400
-#define RobotRaconteurNodeSetupFlags_DISABLE_TIMEOUTS 0x800
 
+	enum RobotRaconteurNodeSetupFlags
+	{
+		RobotRaconteurNodeSetupFlags_NONE = 0x0,
+		RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING = 0x1,
+		RobotRaconteurNodeSetupFlags_ENABLE_NODE_ANNOUNCE = 0x2,
+		RobotRaconteurNodeSetupFlags_ENABLE_LOCAL_TRANSPORT = 0x4,
+		RobotRaconteurNodeSetupFlags_ENABLE_TCP_TRANSPORT = 0x8,
+		RobotRaconteurNodeSetupFlags_ENABLE_HARDWARE_TRANSPORT = 0x10,
+		RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_SERVER = 0x20,
+		RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_CLIENT = 0x40,
+		RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER = 0x80,
+		RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER_PORT_SHARER = 0x100,
+		RobotRaconteurNodeSetupFlags_DISABLE_MESSAGE3  = 0x200,
+		RobotRaconteurNodeSetupFlags_DISABLE_STRINGTABLE = 0x400,
+		RobotRaconteurNodeSetupFlags_DISABLE_TIMEOUTS = 0x800,
 
-#define RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS   RobotRaconteurNodeSetupFlags_ENABLE_LOCAL_TRANSPORT \
-                                                              | RobotRaconteurNodeSetupFlags_ENABLE_TCP_TRANSPORT \
-                                                              | RobotRaconteurNodeSetupFlags_ENABLE_HARDWARE_TRANSPORT
-#define RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT  RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS \
-                                                      | RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING \
-                                                      | RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_CLIENT
+		RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS = 0x1C,
+		/*RobotRaconteurNodeSetupFlags_ENABLE_LOCAL_TRANSPORT 
+		| RobotRaconteurNodeSetupFlags_ENABLE_TCP_TRANSPORT 
+		| RobotRaconteurNodeSetupFlags_ENABLE_HARDWARE_TRANSPORT,*/
 
-#define RobotRaconteurNodeSetupFlags_SERVER_DEFAULT  RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS \
-                                                      | RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_SERVER \
-                                                      | RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER \
-                                                      | RobotRaconteurNodeSetupFlags_ENABLE_NODE_ANNOUNCE \
-	                                                  | RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING
+		RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT = 0x5D,
+		/*RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS 
+		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING 
+		| RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_CLIENT,*/
 
-#define RobotRaconteurNodeSetupFlags_SERVER_DEFAULT_PORT_SHARER  RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS \
-                                                      | RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_SERVER \
-                                                      | RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER_PORT_SHARER \
-                                                      | RobotRaconteurNodeSetupFlags_ENABLE_NODE_ANNOUNCE \
-	                                                  | RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING
+		RobotRaconteurNodeSetupFlags_SERVER_DEFAULT = 0xBF,
+		/*RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS 
+		| RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_SERVER 
+		| RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER 
+		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_ANNOUNCE 
+		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING,*/
 
+		RobotRaconteurNodeSetupFlags_SERVER_DEFAULT_PORT_SHARER = 0x13F,
+		/*RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS 
+		| RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_SERVER 
+		| RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER_PORT_SHARER 
+		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_ANNOUNCE 
+		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING*/
+	};
+
+#ifndef SWIG
 	class ROBOTRACONTEUR_CORE_API RobotRaconteurNodeSetup : boost::noncopyable
 	{
 		RR_SHARED_PTR<TcpTransport> tcp_transport;
@@ -81,5 +94,6 @@ namespace RobotRaconteur
 		ServerNodeSetup(std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, const std::string& node_name, uint16_t tcp_port = 0,
 			uint32_t flags = RobotRaconteurNodeSetupFlags_SERVER_DEFAULT);
 	};
+#endif
 	
 }

@@ -102,6 +102,7 @@ static void memcpy(void* destination, void* source, int64_t num)
 %include "Subscription.i"
 
 %include "RobotRaconteurNodeNET.i"
+%include "NodeSetupNET.i"
 
 namespace RobotRaconteur {
 

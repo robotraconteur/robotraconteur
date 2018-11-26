@@ -122,6 +122,8 @@
 %include "DiscoveryJava.i"
 %include "Subscription.i"
 
+%include "NodeSetup.i"
+
 
 //RRDirectorExceptionHelper
 namespace RobotRaconteur {

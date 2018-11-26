@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.IO;
 using System.Reflection;
+using System.Linq;
 
 namespace RobotRaconteur
 {
@@ -334,7 +335,7 @@ namespace RobotRaconteur
             if (a == null) return a;
             foreach (CStructureMultiDimArray aa in a.Values)
             {
-                VerifyArrayLength(aa, n_elems,len);
+                VerifyArrayLength(aa, n_elems, len);
             }
 
             return a;
@@ -358,7 +359,7 @@ namespace RobotRaconteur
             return v1.GetHashCode();
         }
 
-        public static bool operator== (RobotRaconteurVersion v1, RobotRaconteurVersion v2)
+        public static bool operator ==(RobotRaconteurVersion v1, RobotRaconteurVersion v2)
         {
             return RobotRaconteurNET.RobotRaconteurVersion_eq(v1, v2);
         }
@@ -408,7 +409,7 @@ namespace RobotRaconteur
 
         private object GetData()
         {
-           
+
             using (MessageElementData val = _GetData())
             {
                 if (val == null) return null;
@@ -443,7 +444,7 @@ namespace RobotRaconteur
                         }
                     }
                     IDisposable ad = a as IDisposable;
-                    if (ad!=null) ad.Dispose();
+                    if (ad != null) ad.Dispose();
                     throw new DataTypeException("Unknown RRArray type");
 
                 }
@@ -464,11 +465,11 @@ namespace RobotRaconteur
                 a = MessageElementDataUtil.ToMessageElementCStructureMultiDimArray(val);
                 if (a != null) return a;
                 throw new ApplicationException("Unknown data type");
-            
+
             }
 
             throw new ApplicationException("Unknown data type");
-            
+
         }
 
         private void SetData(object dat)
@@ -480,7 +481,7 @@ namespace RobotRaconteur
             }
             if (dat is Array)
             {
-                
+
                 using (RRBaseArray rb = MessageElementDataUtil.ArrayToRRBaseArray((Array)dat))
                 {
                     _SetData(rb);
@@ -496,7 +497,7 @@ namespace RobotRaconteur
                 {
                     _SetData(rb);
                 }
-               
+
                 return;
             }
 
@@ -510,13 +511,13 @@ namespace RobotRaconteur
             DataTypes elementtype = DataTypeUtil.TypeIDFromString(datatype);
             if (elementtype != DataTypes.void_t && elementtype < DataTypes.uint64_t && !(dat is Array))
             {
-                object dat2= DataTypeUtil.ArrayFromScalar(dat);
-                 
+                object dat2 = DataTypeUtil.ArrayFromScalar(dat);
+
                 using (RRBaseArray rb = MessageElementDataUtil.ArrayToRRBaseArray((Array)dat2))
                 {
                     _SetData(rb);
                 }
-                
+
                 return;
             }
 
@@ -681,7 +682,7 @@ namespace RobotRaconteur
             {
                 throw new NullReferenceException();
             }
-            return NewMessageElementDispose(name, val );
+            return NewMessageElementDispose(name, val);
         }
 
         public static MessageElement PackMultiDimArray(string name, MultiDimArray val)
@@ -707,13 +708,13 @@ namespace RobotRaconteur
         {
             return NewMessageElementDispose(name, RobotRaconteurNode.s.PackStructure(val));
         }
-                
+
         public static MessageElement PackVarType(string name, object val)
         {
             return NewMessageElementDispose(name, RobotRaconteurNode.s.PackVarType(val));
         }
 
-        public static MessageElement PackMapType<K,T>(string name, Dictionary<K,T> val)
+        public static MessageElement PackMapType<K, T>(string name, Dictionary<K, T> val)
         {
             return NewMessageElementDispose(name, RobotRaconteurNode.s.PackMapType<K, T>(val));
         }
@@ -730,7 +731,7 @@ namespace RobotRaconteur
 
         public static MessageElement PackCStructureToArray<T>(string name, ref T val) where T : struct
         {
-            return NewMessageElementDispose(name ,RobotRaconteurNode.s.PackCStructureToArray<T>(ref val));
+            return NewMessageElementDispose(name, RobotRaconteurNode.s.PackCStructureToArray<T>(ref val));
         }
 
         public static MessageElement PackCStructureArray<T>(string name, T[] val) where T : struct
@@ -781,7 +782,7 @@ namespace RobotRaconteur
             return RobotRaconteurNode.s.UnpackVarTypeDispose(m);
         }
 
-        public static Dictionary<K,T> UnpackMap<K,T>(MessageElement m)
+        public static Dictionary<K, T> UnpackMap<K, T>(MessageElement m)
         {
             return (Dictionary<K, T>)RobotRaconteurNode.s.UnpackMapTypeDispose<K, T>(m.Data);
         }
@@ -821,7 +822,7 @@ namespace RobotRaconteur
         {
             if (i == null) return null;
             DataTypes type = i.GetTypeID();
-            Array o=DataTypeUtil.ArrayFromDataType(type, i.Length());
+            Array o = DataTypeUtil.ArrayFromDataType(type, i.Length());
 
             switch (type)
             {
@@ -1056,7 +1057,7 @@ namespace RobotRaconteur
                     }
                     break;
                 case DataTypes.uint64_t:
-                unsafe
+                    unsafe
                     {
                         ulong[] i2 = (ulong[])i;
                         ulong* o2 = (ulong*)o.void_ptr();
@@ -1233,12 +1234,12 @@ namespace RobotRaconteur
         {
 
         }
-        
+
         public override void SetRobotRaconteurException(MessageErrorType errorcode, string errorname, string errorstring)
         {
             using (MessageEntry e = new MessageEntry())
             {
-                Exception ex = RobotRaconteurExceptionUtil.ErrorCodeToException(errorcode,errorname,errorstring);
+                Exception ex = RobotRaconteurExceptionUtil.ErrorCodeToException(errorcode, errorname, errorstring);
                 RobotRaconteurNETPINVOKE.SWIGPendingException.Set(ex);
             }
         }
@@ -1247,7 +1248,7 @@ namespace RobotRaconteur
 
     public partial class RobotRaconteurNode
     {
-        private static RobotRaconteurNode csharp_s=null;
+        private static RobotRaconteurNode csharp_s = null;
         static private WrappedRobotRaconteurExceptionHelper exhelp;
         public static RobotRaconteurNode s
         {
@@ -1256,10 +1257,10 @@ namespace RobotRaconteur
                 if (csharp_s == null)
                 {
                     csharp_s = _get_s();
-                     exhelp= new WrappedRobotRaconteurExceptionHelper();
+                    exhelp = new WrappedRobotRaconteurExceptionHelper();
                     RobotRaconteurNET.robotRaconteurExceptionHelper = exhelp;
                 }
-                    
+
                 return csharp_s;
             }
         }
@@ -1287,8 +1288,8 @@ namespace RobotRaconteur
                 _SetNodeName(value);
             }
         }
-		
-		public int ThreadPoolCount
+
+        public int ThreadPoolCount
         {
             get
             {
@@ -1300,7 +1301,7 @@ namespace RobotRaconteur
             }
         }
 
-        private Dictionary<string, ServiceFactory> servicetypes=new Dictionary<string,ServiceFactory>();
+        private Dictionary<string, ServiceFactory> servicetypes = new Dictionary<string, ServiceFactory>();
 
         public void RegisterServiceType(ServiceFactory servicetype)
         {
@@ -1351,14 +1352,14 @@ namespace RobotRaconteur
             return GetServiceType(servicename);
         }
 
-        
+
 
 
         public delegate void ClientServiceListenerDelegate(ServiceStub client, ClientServiceListenerEventType ev, object parameter);
 
-        public object ConnectService(string url, string username = null, Dictionary<string, object> credentials = null, ClientServiceListenerDelegate listener = null, string objecttype=null)
+        public object ConnectService(string url, string username = null, Dictionary<string, object> credentials = null, ClientServiceListenerDelegate listener = null, string objecttype = null)
         {
-            
+
             MessageElementData credentials2 = null;
             try
             {
@@ -1395,7 +1396,7 @@ namespace RobotRaconteur
 
         }
 
-        public object ConnectService(string[] url, string username = null, Dictionary<string, object> credentials = null, ClientServiceListenerDelegate listener = null, string objecttype=null)
+        public object ConnectService(string[] url, string username = null, Dictionary<string, object> credentials = null, ClientServiceListenerDelegate listener = null, string objecttype = null)
         {
             MessageElementData credentials2 = null;
 
@@ -1435,14 +1436,14 @@ namespace RobotRaconteur
             }
 
         }
-        
+
         public void DisconnectService(object obj)
         {
             ServiceStub stub = (ServiceStub)obj;
             _DisconnectService(stub.rr_innerstub);
         }
 
-        public void AsyncConnectService(string url, string username, Dictionary<string, object> credentials, ClientServiceListenerDelegate listener, string objecttype, Action<object,Exception> handler, int timeout=RR_TIMEOUT_INFINITE)
+        public void AsyncConnectService(string url, string username, Dictionary<string, object> credentials, ClientServiceListenerDelegate listener, string objecttype, Action<object, Exception> handler, int timeout = RR_TIMEOUT_INFINITE)
         {
 
             MessageElementData credentials2 = null;
@@ -1463,10 +1464,10 @@ namespace RobotRaconteur
 
                 if (objecttype == null) objecttype = "";
 
-                AsyncStubReturnDirectorImpl<object> h = new AsyncStubReturnDirectorImpl<object>(delegate(object o1, Exception e1, object o2) { handler(o1, e1); }, null);
+                AsyncStubReturnDirectorImpl<object> h = new AsyncStubReturnDirectorImpl<object>(delegate (object o1, Exception e1, object o2) { handler(o1, e1); }, null);
                 int id = RRObjectHeap.AddObject(h);
-                _AsyncConnectService(url, username, credentials2, listener2, objecttype,timeout,h,id);
-               
+                _AsyncConnectService(url, username, credentials2, listener2, objecttype, timeout, h, id);
+
             }
             finally
             {
@@ -1475,7 +1476,7 @@ namespace RobotRaconteur
 
         }
 
-        public void AsyncConnectService(string[] url, string username, Dictionary<string, object> credentials, ClientServiceListenerDelegate listener, string objecttype, Action<object,Exception> handler, int timeout=RR_TIMEOUT_INFINITE)
+        public void AsyncConnectService(string[] url, string username, Dictionary<string, object> credentials, ClientServiceListenerDelegate listener, string objecttype, Action<object, Exception> handler, int timeout = RR_TIMEOUT_INFINITE)
         {
             MessageElementData credentials2 = null;
 
@@ -1499,7 +1500,7 @@ namespace RobotRaconteur
 
                 if (objecttype == null) objecttype = "";
 
-                AsyncStubReturnDirectorImpl<object> h = new AsyncStubReturnDirectorImpl<object>(delegate(object o1, Exception e1, object o2) { handler(o1, e1); }, null);
+                AsyncStubReturnDirectorImpl<object> h = new AsyncStubReturnDirectorImpl<object>(delegate (object o1, Exception e1, object o2) { handler(o1, e1); }, null);
                 int id = RRObjectHeap.AddObject(h);
                 _AsyncConnectService(url2, username, credentials2, listener2, objecttype, timeout, h, id);
             }
@@ -1513,9 +1514,9 @@ namespace RobotRaconteur
         public void AsyncDisconnectService(object obj, Action handler)
         {
             ServiceStub stub = (ServiceStub)obj;
-            AsyncVoidNoErrReturnDirectorImpl h = new AsyncVoidNoErrReturnDirectorImpl(delegate(object o) { handler(); }, null);
+            AsyncVoidNoErrReturnDirectorImpl h = new AsyncVoidNoErrReturnDirectorImpl(delegate (object o) { handler(); }, null);
             int id = RRObjectHeap.AddObject(h);
-            _AsyncDisconnectService(stub.rr_innerstub,h,id);
+            _AsyncDisconnectService(stub.rr_innerstub, h, id);
         }
 
         public Dictionary<string, object> GetServiceAttributes(object obj)
@@ -1554,25 +1555,25 @@ namespace RobotRaconteur
 
         public T UnpackStructureDispose<T>(MessageElementStructure l)
         {
-            using (l)            
+            using (l)
             {
                 return UnpackStructure<T>(l);
-            }            
+            }
         }
 
         // CStructure Packing
 
-        public MessageElementCStructureArray PackCStructureToArray<T>(ref T s) where T: struct
-        {           
+        public MessageElementCStructureArray PackCStructureToArray<T>(ref T s) where T : struct
+        {
             return GetServiceFactoryForType(s.GetType()).PackCStructureToArray(ref s);
         }
 
-        public T UnpackCStructureFromArray<T>(MessageElementCStructureArray l) where T: struct
-        {            
+        public T UnpackCStructureFromArray<T>(MessageElementCStructureArray l) where T : struct
+        {
             return GetServiceFactoryForType(l.Type).UnpackCStructureFromArray<T>(l);
         }
 
-        public T UnpackCStructureFromArrayDispose<T>(MessageElementCStructureArray l) where T: struct
+        public T UnpackCStructureFromArrayDispose<T>(MessageElementCStructureArray l) where T : struct
         {
             using (l)
             {
@@ -1604,19 +1605,19 @@ namespace RobotRaconteur
 
         // CStructure MultiDimArray Packing
 
-        public MessageElementCStructureMultiDimArray PackCStructureMultiDimArray<T>(CStructureMultiDimArray s) where T: struct
+        public MessageElementCStructureMultiDimArray PackCStructureMultiDimArray<T>(CStructureMultiDimArray s) where T : struct
         {
             if (s == null) return null;
             return GetServiceFactoryForType(s.cstruct_array.GetType()).PackCStructureMultiDimArray<T>(s);
         }
 
-        public CStructureMultiDimArray UnpackCStructureMultiDimArray<T>(MessageElementCStructureMultiDimArray l) where T: struct
+        public CStructureMultiDimArray UnpackCStructureMultiDimArray<T>(MessageElementCStructureMultiDimArray l) where T : struct
         {
             if (l == null) return null;
             return GetServiceFactoryForType(l.Type).UnpackCStructureMultiDimArray<T>(l);
         }
 
-        public CStructureMultiDimArray UnpackCStructureMultiDimArrayDispose<T>(MessageElementCStructureMultiDimArray l) where T: struct
+        public CStructureMultiDimArray UnpackCStructureMultiDimArrayDispose<T>(MessageElementCStructureMultiDimArray l) where T : struct
         {
             using (l)
             {
@@ -1659,7 +1660,7 @@ namespace RobotRaconteur
         }
 
         private MessageElement PackContainerValue<T>(string name, ref T data)
-        {            
+        {
             Type t = typeof(T);
 
             if (t == typeof(object))
@@ -1741,14 +1742,14 @@ namespace RobotRaconteur
                     }
                     else
                     {
-                        return (typeof(T) == typeof(object)) ? (T)e.Data : ((T[])e.Data)[0];                         
+                        return (typeof(T) == typeof(object)) ? (T)e.Data : ((T[])e.Data)[0];
                     }
                 case DataTypes.string_t:
                     return (T)e.Data;
                 case DataTypes.multidimarray_t:
                     using (MessageElementMultiDimArray md = (MessageElementMultiDimArray)e.Data)
                     {
-                        return (T)(object)UnpackMultiDimArray(md);                 
+                        return (T)(object)UnpackMultiDimArray(md);
                     }
                 case DataTypes.structure_t:
                     using (MessageElementStructure md = (MessageElementStructure)e.Data)
@@ -1766,9 +1767,9 @@ namespace RobotRaconteur
                         if (typeof(T).IsValueType)
                         {
                             if (md.Elements.Count != 1) throw new DataTypeException("Invalid array size for scalar structure");
-                                                       
+
                             return ((T[])UnpackCStructure(md))[0];
-                            
+
                         }
                         else
                         {
@@ -1801,8 +1802,8 @@ namespace RobotRaconteur
 
         public object PackMapType<Tkey, Tvalue>(object data)
         {
-            if (data == null) return null;            
-                        
+            if (data == null) return null;
+
             if (typeof(Tkey) == typeof(Int32))
             {
                 using (vectorptr_messageelement m = new vectorptr_messageelement())
@@ -1812,8 +1813,8 @@ namespace RobotRaconteur
                     foreach (KeyValuePair<Tkey, Tvalue> d in ddata)
                     {
                         var v = d.Value;
-                        MessageElementUtil.AddMessageElementDispose(m, PackContainerValue(Convert.ToInt32(d.Key), ref v));  
-                    }                    
+                        MessageElementUtil.AddMessageElementDispose(m, PackContainerValue(Convert.ToInt32(d.Key), ref v));
+                    }
                     return new MessageElementMap_int32_t(m);
                 }
 
@@ -1838,7 +1839,7 @@ namespace RobotRaconteur
 
         }
 
-        
+
         public object UnpackMapType<Tkey, Tvalue>(object data)
         {
             if (data == null) return null;
@@ -1866,20 +1867,20 @@ namespace RobotRaconteur
             {
                 Dictionary<string, Tvalue> o = new Dictionary<string, Tvalue>();
 
-               MessageElementMap_string cdata = (MessageElementMap_string)data;
-               using (vectorptr_messageelement cdataElements = cdata.Elements)
-               {
-                   foreach (MessageElement e in cdataElements)
-                   {
-                       using (e)
-                       {
+                MessageElementMap_string cdata = (MessageElementMap_string)data;
+                using (vectorptr_messageelement cdataElements = cdata.Elements)
+                {
+                    foreach (MessageElement e in cdataElements)
+                    {
+                        using (e)
+                        {
                             string name;
                             var val = UnpackContainerValue<Tvalue>(e, out name);
                             o.Add(name, val);
                         }
-                   }
-                   return o;
-               }
+                    }
+                    return o;
+                }
             }
             else
             {
@@ -1930,16 +1931,16 @@ namespace RobotRaconteur
             {
                 List<Tvalue> ddata = (List<Tvalue>)data;
 
-                int count = 0;               
+                int count = 0;
                 foreach (Tvalue d in ddata)
                 {
                     var v = d;
-                    MessageElementUtil.AddMessageElementDispose(m, PackContainerValue(count, ref v));      
-                    count++;                    
+                    MessageElementUtil.AddMessageElementDispose(m, PackContainerValue(count, ref v));
+                    count++;
                 }
 
                 return new MessageElementList(m);
-            }            
+            }
         }
 
         public object UnpackListType<Tvalue>(object data)
@@ -1957,8 +1958,8 @@ namespace RobotRaconteur
                         int num;
                         var val = UnpackContainerValue<Tvalue>(e, out num);
                         if (count != num) throw new DataTypeException("Error in list format");
-                        o.Add(val);                        
-                        count++;                        
+                        o.Add(val);
+                        count++;
                     }
                 }
                 return o;
@@ -1990,7 +1991,7 @@ namespace RobotRaconteur
 
             Type t = data.GetType();
 
-            if (t == typeof(Dictionary<int,object>))
+            if (t == typeof(Dictionary<int, object>))
             {
                 return PackMapType<int, object>(data);
 
@@ -2006,7 +2007,7 @@ namespace RobotRaconteur
 
             }
 
-            bool is_array = t.IsArray;   
+            bool is_array = t.IsArray;
 
             if (t.IsPrimitive || (is_array && t.GetElementType().IsPrimitive))
             {
@@ -2041,7 +2042,7 @@ namespace RobotRaconteur
             {
                 return PackCStructure(data);
             }
-            
+
         }
 
         /// <summary>
@@ -2055,7 +2056,7 @@ namespace RobotRaconteur
 
             switch (me.ElementType)
             {
-                case DataTypes.void_t:                    
+                case DataTypes.void_t:
                     return null;
                 case DataTypes.double_t:
                 case DataTypes.single_t:
@@ -2066,7 +2067,7 @@ namespace RobotRaconteur
                 case DataTypes.int32_t:
                 case DataTypes.uint32_t:
                 case DataTypes.int64_t:
-                case DataTypes.uint64_t:                                    
+                case DataTypes.uint64_t:
                 case DataTypes.string_t:
                     return me.Data;
                 case DataTypes.multidimarray_t:
@@ -2089,7 +2090,7 @@ namespace RobotRaconteur
                 case DataTypes.vector_t:
                     using (MessageElementData md = (MessageElementData)me.Data)
                     {
-                        return UnpackMapType<int,object>(md);
+                        return UnpackMapType<int, object>(md);
                     }
                 case DataTypes.dictionary_t:
                     using (MessageElementData md = (MessageElementData)me.Data)
@@ -2131,7 +2132,7 @@ namespace RobotRaconteur
             if (array == null) return null;
             using (vectorptr_messageelement l = new vectorptr_messageelement())
             {
-                MessageElementUtil.AddMessageElementDispose(l,"dims", array.Dims);
+                MessageElementUtil.AddMessageElementDispose(l, "dims", array.Dims);
                 MessageElementUtil.AddMessageElementDispose(l, "dimcount", array.DimCount);
                 MessageElementUtil.AddMessageElementDispose(l, "real", array.Real);
                 if (array.Complex)
@@ -2186,7 +2187,7 @@ namespace RobotRaconteur
             }
             finally
             {
-                if (marray!=null)
+                if (marray != null)
                     marray.Dispose();
             }
 
@@ -2204,7 +2205,7 @@ namespace RobotRaconteur
         }
 
 
-       
+
         public string ReleaseObjectLock(object obj)
         {
             if (!(obj is ServiceStub)) throw new ArgumentException("Can only unlock object opened through Robot Raconteur");
@@ -2220,22 +2221,22 @@ namespace RobotRaconteur
             if (!(obj is ServiceStub)) throw new ArgumentException("Can only lock object opened through Robot Raconteur");
             ServiceStub s = (ServiceStub)obj;
 
-            AsyncStringReturnDirectorImpl h = new AsyncStringReturnDirectorImpl(delegate(string s1, Exception e1, object o1) { handler(s1, e1); }, null);
+            AsyncStringReturnDirectorImpl h = new AsyncStringReturnDirectorImpl(delegate (string s1, Exception e1, object o1) { handler(s1, e1); }, null);
             int id = RRObjectHeap.AddObject(h);
 
-            _AsyncRequestObjectLock(s.rr_innerstub, flags,timeout,h,id);
+            _AsyncRequestObjectLock(s.rr_innerstub, flags, timeout, h, id);
 
 
         }
 
-        public void AsyncReleaseObjectLock(object obj, Action<string,Exception> handler, int timeout=RR_TIMEOUT_INFINITE)
+        public void AsyncReleaseObjectLock(object obj, Action<string, Exception> handler, int timeout = RR_TIMEOUT_INFINITE)
         {
             if (!(obj is ServiceStub)) throw new ArgumentException("Can only unlock object opened through Robot Raconteur");
             ServiceStub s = (ServiceStub)obj;
 
-            AsyncStringReturnDirectorImpl h = new AsyncStringReturnDirectorImpl(delegate(string s1, Exception e1, object o1) { handler(s1, e1); }, null);
+            AsyncStringReturnDirectorImpl h = new AsyncStringReturnDirectorImpl(delegate (string s1, Exception e1, object o1) { handler(s1, e1); }, null);
             int id = RRObjectHeap.AddObject(h);
-            _AsyncReleaseObjectLock(s.rr_innerstub,timeout,h,id);
+            _AsyncReleaseObjectLock(s.rr_innerstub, timeout, h, id);
 
 
         }
@@ -2261,13 +2262,13 @@ namespace RobotRaconteur
             object obj;
             bool locked;
 
-            public ScopedMonitorLock(object obj, int timeout=-1)
+            public ScopedMonitorLock(object obj, int timeout = -1)
             {
                 RobotRaconteurNode.s.MonitorEnter(obj, timeout);
                 locked = true;
             }
 
-            public void lock_(Int32 timeout=-1)
+            public void lock_(Int32 timeout = -1)
             {
                 if (obj == null) return;
                 if (locked) throw new Exception("Already locked");
@@ -2308,9 +2309,9 @@ namespace RobotRaconteur
 
             List<ServiceInfo2> o = new List<ServiceInfo2>();
             foreach (ServiceInfo2Wrapped i2 in i)
-            {            
+            {
 
-                 o.Add(new ServiceInfo2(i2));
+                o.Add(new ServiceInfo2(i2));
             }
 
             return o.ToArray();
@@ -2437,19 +2438,19 @@ namespace RobotRaconteur
                 }
             }
         }
-        
-        public const int RR_TIMEOUT_INFINITE= -1;
 
-        public void AsyncFindServiceByType(string servicetype, string[] transportschemes, Action<ServiceInfo2[]> handler, int timeout=5000)
+        public const int RR_TIMEOUT_INFINITE = -1;
+
+        public void AsyncFindServiceByType(string servicetype, string[] transportschemes, Action<ServiceInfo2[]> handler, int timeout = 5000)
         {
             vectorstring s = new vectorstring();
             foreach (string s2 in transportschemes) s.Add(s2);
 
             AsyncServiceInfo2DirectorImpl h = new AsyncServiceInfo2DirectorImpl(handler);
-            int id=RRObjectHeap.AddObject(h);
-            
-            RobotRaconteurNET.AsyncWrappedFindServiceByType(this, servicetype, s, timeout, h,id);
-                        
+            int id = RRObjectHeap.AddObject(h);
+
+            RobotRaconteurNET.AsyncWrappedFindServiceByType(this, servicetype, s, timeout, h, id);
+
         }
 
         public void AsyncFindNodeByID(NodeID id, string[] transportschemes, Action<NodeInfo2[]> handler, int timeout = 5000)
@@ -2483,11 +2484,11 @@ namespace RobotRaconteur
             RobotRaconteurNET.WrappedUpdateDetectedNodes(this, schemes1);
         }
 
-        public void AsyncUpdateDetectedNodes(string[] schemes, Action handler, int timeout=5000)
+        public void AsyncUpdateDetectedNodes(string[] schemes, Action handler, int timeout = 5000)
         {
             vectorstring schemes1 = new vectorstring();
             foreach (string s in schemes) schemes1.Add(s);
-            AsyncVoidNoErrReturnDirectorImpl h = new AsyncVoidNoErrReturnDirectorImpl(delegate(object o) { handler(); }, null);
+            AsyncVoidNoErrReturnDirectorImpl h = new AsyncVoidNoErrReturnDirectorImpl(delegate (object o) { handler(); }, null);
             int id2 = RRObjectHeap.AddObject(h);
             RobotRaconteurNET.AsyncWrappedUpdateDetectedNodes(this, schemes1, timeout, h, id2);
         }
@@ -2500,7 +2501,7 @@ namespace RobotRaconteur
             {
                 o[i] = new NodeID(o1[i]);
             }
-            return o;            
+            return o;
         }
 
         public ServerContext RegisterService(string name, string servicetype, object obj, ServiceSecurityPolicy policy = null)
@@ -2509,10 +2510,10 @@ namespace RobotRaconteur
 
             int id = RRObjectHeap.AddObject(skel);
             skel.innerskelid = id;
-            WrappedRRObject o = new WrappedRRObject(skel.RRType, skel,id);
-            
-            
-            return _RegisterService(name, servicetype, o,policy);
+            WrappedRRObject o = new WrappedRRObject(skel.RRType, skel, id);
+
+
+            return _RegisterService(name, servicetype, o, policy);
         }
 
         public DateTime NowUTC
@@ -2539,7 +2540,7 @@ namespace RobotRaconteur
             return s.FindObjRefTyped(objref, index, objecttype);
         }
 
-        public void AsyncFindObjRefTyped(object obj, string objref, string objecttype, Action<object,Exception> handler, int timeout=RR_TIMEOUT_INFINITE)
+        public void AsyncFindObjRefTyped(object obj, string objref, string objecttype, Action<object, Exception> handler, int timeout = RR_TIMEOUT_INFINITE)
         {
             if (!(obj is ServiceStub)) throw new ArgumentException("Only service stubs can have objref");
             ServiceStub s = (ServiceStub)obj;
@@ -2547,12 +2548,12 @@ namespace RobotRaconteur
             s.AsyncFindObjRefTyped<object>(objref, objecttype, handler, timeout);
         }
 
-        public void AsyncFindObjRefTyped(object obj, string objref, string index, string objecttype, Action<object,Exception> handler, int timeout=RR_TIMEOUT_INFINITE)
+        public void AsyncFindObjRefTyped(object obj, string objref, string index, string objecttype, Action<object, Exception> handler, int timeout = RR_TIMEOUT_INFINITE)
         {
             if (!(obj is ServiceStub)) throw new ArgumentException("Only service stubs can have objref");
             ServiceStub s = (ServiceStub)obj;
 
-            s.AsyncFindObjRefTyped<object>(objref, index, objecttype,handler,timeout);
+            s.AsyncFindObjRefTyped<object>(objref, index, objecttype, handler, timeout);
         }
 
         public string FindObjectType(object obj, string objref)
@@ -2571,15 +2572,15 @@ namespace RobotRaconteur
             return _FindObjectType(s.rr_innerstub, objref, index);
         }
 
-        public void AsyncFindObjectType(object obj, string objref, Action<string,Exception> handler, int timeout=RR_TIMEOUT_INFINITE)
+        public void AsyncFindObjectType(object obj, string objref, Action<string, Exception> handler, int timeout = RR_TIMEOUT_INFINITE)
         {
             if (!(obj is ServiceStub)) throw new ArgumentException("Only service stubs can have objref");
             ServiceStub s = (ServiceStub)obj;
 
-            Action<string,Exception,object> h2=delegate(string s2,Exception e, object o) {handler(s2,e);};
-            AsyncStringReturnDirectorImpl h = new AsyncStringReturnDirectorImpl(h2,null);
+            Action<string, Exception, object> h2 = delegate (string s2, Exception e, object o) { handler(s2, e); };
+            AsyncStringReturnDirectorImpl h = new AsyncStringReturnDirectorImpl(h2, null);
             int id2 = RRObjectHeap.AddObject(h);
-            _AsyncFindObjectType(s.rr_innerstub, objref,timeout,h,id2);
+            _AsyncFindObjectType(s.rr_innerstub, objref, timeout, h, id2);
         }
 
         public void AsyncFindObjectType(object obj, string objref, string index, Action<string, Exception> handler, int timeout = RR_TIMEOUT_INFINITE)
@@ -2587,7 +2588,7 @@ namespace RobotRaconteur
             if (!(obj is ServiceStub)) throw new ArgumentException("Only service stubs can have objref");
             ServiceStub s = (ServiceStub)obj;
 
-            Action<string, Exception, object> h2 = delegate(string s2, Exception e, object o) { handler(s2, e); };
+            Action<string, Exception, object> h2 = delegate (string s2, Exception e, object o) { handler(s2, e); };
             AsyncStringReturnDirectorImpl h = new AsyncStringReturnDirectorImpl(h2, null);
             int id2 = RRObjectHeap.AddObject(h);
             _AsyncFindObjectType(s.rr_innerstub, objref, index, timeout, h, id2);
@@ -2660,7 +2661,7 @@ namespace RobotRaconteur
             RRNativeObjectHeapSupport.Set_Support(null);
         }
 
-        public static Tuple<string,string> SplitQualifiedName(string name)
+        public static Tuple<string, string> SplitQualifiedName(string name)
         {
             int pos = name.LastIndexOf('.');
             if (pos == -1) throw new ArgumentException("Name is not qualified");
@@ -2669,8 +2670,8 @@ namespace RobotRaconteur
         }
 
         public static string GetTypeString(Type type)
-        {            
-            return type.ToString().Replace("_.",".").TrimEnd(new char[] { '_' });
+        {
+            return type.ToString().Replace("_.", ".").TrimEnd(new char[] { '_' });
         }
 
         public void SetExceptionHandler(Action<Exception> handler)
@@ -2682,7 +2683,7 @@ namespace RobotRaconteur
             }
             AsyncExceptionDirectorImpl h = new AsyncExceptionDirectorImpl(handler);
             int id1 = RRObjectHeap.AddObject(h);
-            _SetExceptionHandler(h,id1);
+            _SetExceptionHandler(h, id1);
         }
 
         public Timer CreateTimer(int period, Action<TimerEvent> handler, bool oneshot = false)
@@ -2694,7 +2695,7 @@ namespace RobotRaconteur
 
         public RobotRaconteurException DownCastException(RobotRaconteurException exp)
         {
-            if (exp==null) return exp;
+            if (exp == null) return exp;
             string type = exp.Error;
             if (!type.Contains(".")) return exp;
             var stype = RobotRaconteurNode.SplitQualifiedName(type);
@@ -2705,7 +2706,7 @@ namespace RobotRaconteur
 
         public void PostToThreadPool(Action target)
         {
-            AsyncVoidNoErrReturnDirectorImpl h = new AsyncVoidNoErrReturnDirectorImpl(delegate(object param) { target(); }, null);
+            AsyncVoidNoErrReturnDirectorImpl h = new AsyncVoidNoErrReturnDirectorImpl(delegate (object param) { target(); }, null);
             int id = RRObjectHeap.AddObject(h);
             _PostToThreadPool(h, id);
         }
@@ -2760,7 +2761,7 @@ namespace RobotRaconteur
             foreach (string con2 in s.ConnectionURL) con.Add(con2);
             this.ConnectionURL = con.ToArray();
         }
-               
+
     }
 
     public class NodeInfo2
@@ -2796,10 +2797,10 @@ namespace RobotRaconteur
 
     public class RobotRaconteurNativeLoader
     {
-        private static bool loaded=false;
+        private static bool loaded = false;
         public static void Load()
         {
-            
+
             if (loaded) return;
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
             {
@@ -2907,15 +2908,15 @@ namespace RobotRaconteur
                     if (s != null) s.Close();
                 }
 
-                
 
-           }
-           
+
+            }
+
 
         }
 
 
-       
+
     }
 
     public partial class TimeSpec
@@ -2988,8 +2989,8 @@ namespace RobotRaconteur
         {
             get
             {
-                vectorstring s=_GetPrivileges();
-                string[] o=new string[s.Count];
+                vectorstring s = _GetPrivileges();
+                string[] o = new string[s.Count];
                 s.CopyTo(o);
                 return o;
             }
@@ -3011,7 +3012,7 @@ namespace RobotRaconteur
             get
             {
                 return _GetLoginTime();
-                
+
             }
         }
 
@@ -3020,7 +3021,7 @@ namespace RobotRaconteur
             get
             {
                 return _GetLastAccessTime();
-                
+
             }
         }
 
@@ -3055,9 +3056,9 @@ namespace RobotRaconteur
                             return;
                         }
                     }
-                    
+
                     handler_func(m, null, param);
-                    
+
                 }
                 catch (Exception e)
                 {
@@ -3079,7 +3080,7 @@ namespace RobotRaconteur
         protected object param;
         protected ServiceFactory factory;
 
-        public AsyncStubReturnDirectorImpl(Action<T, Exception, object> handler_func, object param, ServiceFactory f=null)
+        public AsyncStubReturnDirectorImpl(Action<T, Exception, object> handler_func, object param, ServiceFactory f = null)
         {
             this.handler_func = handler_func;
             this.param = param;
@@ -3090,47 +3091,47 @@ namespace RobotRaconteur
         {
             try
             {
-            if (error_code != 0)
-            {
-                using (MessageEntry merr = new MessageEntry())
+                if (error_code != 0)
                 {
+                    using (MessageEntry merr = new MessageEntry())
+                    {
 
-                    this.handler_func(default(T), RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage),param);
+                        this.handler_func(default(T), RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage), param);
+                        return;
+                    }
+                }
+
+                object s = null;
+                T s1 = default(T);
+                try
+                {
+                    int id = innerstub.GetObjectHeapID();
+                    if (id != 0)
+                    {
+                        handler_func((T)RRObjectHeap.GetObject(id), null, param);
+                        return;
+                    }
+
+                    ServiceFactory f;
+                    if (factory == null)
+                    {
+                        f = RobotRaconteurNode.s.GetServiceType(innerstub.RR_objecttype.GetServiceDefinition().Name);
+                    }
+                    else
+                    {
+                        f = factory;
+                    }
+                    s = f.CreateStub(innerstub);
+                    s1 = (T)s;
+                }
+                catch (Exception e)
+                {
+                    handler_func(default(T), e, param);
                     return;
                 }
-            }
 
-            object s = null;
-            T s1=default(T);
-            try
-            {                
-                int id = innerstub.GetObjectHeapID();
-                if (id != 0)
-                {
-                    handler_func((T)RRObjectHeap.GetObject(id), null, param);
-                    return;
-                }
 
-                ServiceFactory f;
-                if (factory == null)
-                {
-                    f = RobotRaconteurNode.s.GetServiceType(innerstub.RR_objecttype.GetServiceDefinition().Name);
-                }
-                else
-                {
-                    f = factory;
-                }
-                s = f.CreateStub(innerstub);
-                s1 = (T)s;
-            }
-            catch (Exception e)
-            {
-                handler_func(default(T),e,param);
-                return;
-            }
-            
-
-            handler_func(s1, null, param);
+                handler_func(s1, null, param);
             }
             catch (Exception e)
             {
@@ -3147,10 +3148,10 @@ namespace RobotRaconteur
 
     internal class AsyncVoidReturnDirectorImpl : AsyncVoidReturnDirector
     {
-        protected Action<Exception,object> handler_func;
+        protected Action<Exception, object> handler_func;
         protected object param;
 
-        public AsyncVoidReturnDirectorImpl(Action<Exception,object> handler_func, object param)
+        public AsyncVoidReturnDirectorImpl(Action<Exception, object> handler_func, object param)
         {
             this.handler_func = handler_func;
             this.param = param;
@@ -3160,17 +3161,17 @@ namespace RobotRaconteur
         {
             try
             {
-            if (error_code != 0)
-            {
-                using (MessageEntry merr = new MessageEntry())
+                if (error_code != 0)
                 {
-                   
-                    this.handler_func(RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage),param);
-                    return;
-                }
-            }
+                    using (MessageEntry merr = new MessageEntry())
+                    {
 
-            handler_func(null,param);
+                        this.handler_func(RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage), param);
+                        return;
+                    }
+                }
+
+                handler_func(null, param);
             }
             catch (Exception e)
             {
@@ -3200,7 +3201,7 @@ namespace RobotRaconteur
         public override void handler()
         {
             try
-            {            
+            {
                 handler_func(param);
             }
             catch (Exception e)
@@ -3219,10 +3220,10 @@ namespace RobotRaconteur
     internal class AsyncStringReturnDirectorImpl : AsyncStringReturnDirector
     {
 
-        protected Action<string,Exception,object> handler_func;
+        protected Action<string, Exception, object> handler_func;
         protected object param;
 
-        public AsyncStringReturnDirectorImpl(Action<string, Exception,object> handler_func, object param)
+        public AsyncStringReturnDirectorImpl(Action<string, Exception, object> handler_func, object param)
         {
             this.handler_func = handler_func;
             this.param = param;
@@ -3232,17 +3233,17 @@ namespace RobotRaconteur
         {
             try
             {
-            if (error_code != 0)
-            {
-                using (MessageEntry merr = new MessageEntry())
+                if (error_code != 0)
                 {
+                    using (MessageEntry merr = new MessageEntry())
+                    {
 
-                    this.handler_func(null, RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage),param);
-                    return;
+                        this.handler_func(null, RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage), param);
+                        return;
+                    }
                 }
-            }
-            
-            handler_func(s,null, param);
+
+                handler_func(s, null, param);
             }
             catch (Exception e)
             {
@@ -3276,17 +3277,17 @@ namespace RobotRaconteur
 
             try
             {
-            if (error_code != 0)
-            {
-                using (MessageEntry merr = new MessageEntry())
+                if (error_code != 0)
                 {
-                    this.handler_func(0, RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage),param);
-                    return;
+                    using (MessageEntry merr = new MessageEntry())
+                    {
+                        this.handler_func(0, RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage), param);
+                        return;
+                    }
                 }
-            }
 
-            
-            handler_func(v, null, param);
+
+                handler_func(v, null, param);
             }
             catch (Exception e)
             {
@@ -3298,35 +3299,35 @@ namespace RobotRaconteur
             }
 
         }
-        
+
     }
 
     internal class AsyncExceptionDirectorImpl : AsyncVoidReturnDirector
     {
 
         protected Action<Exception> handler_func;
-      
+
         public AsyncExceptionDirectorImpl(Action<Exception> handler_func)
         {
             this.handler_func = handler_func;
-            
+
         }
 
         public override void handler(uint error_code, string errorname, string errormessage)
         {
             try
             {
-            if (error_code != 0)
-            {
-                using (MessageEntry merr = new MessageEntry())
+                if (error_code != 0)
                 {
+                    using (MessageEntry merr = new MessageEntry())
+                    {
 
-                    this.handler_func(RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage));
-                    return;
+                        this.handler_func(RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage));
+                        return;
+                    }
                 }
-            }
 
-            handler_func(new Exception("Unknown exception"));
+                handler_func(new Exception("Unknown exception"));
             }
             catch (Exception e)
             {
@@ -3353,8 +3354,8 @@ namespace RobotRaconteur
         public override void handler(TimerEvent ev, uint error_code, string errorname, string errormessage)
         {
             try
-            {            
-            handler_func(ev);
+            {
+                handler_func(ev);
             }
             catch (Exception e)
             {
@@ -3371,11 +3372,11 @@ namespace RobotRaconteur
 
     public partial class WallTimer
     {
-        
+
 
 
         public WallTimer(int period, Action<TimerEvent> handler, bool oneshot, RobotRaconteurNode node = null)
-            : this(period,oneshot,node,AttachHandler(handler))
+            : this(period, oneshot, node, AttachHandler(handler))
         {
             if (node == null) node = RobotRaconteurNode.s;
 
@@ -3385,7 +3386,7 @@ namespace RobotRaconteur
         private static WallTimer_initstruct AttachHandler(Action<TimerEvent> handler)
         {
             WallTimer_initstruct s = new WallTimer_initstruct();
-            AsyncTimerEventReturnDirectorImpl h=new AsyncTimerEventReturnDirectorImpl(handler);
+            AsyncTimerEventReturnDirectorImpl h = new AsyncTimerEventReturnDirectorImpl(handler);
             s.handler = h;
             s.id = RRObjectHeap.AddObject(h);
             return s;
@@ -3400,7 +3401,7 @@ namespace RobotRaconteur
 
         public NodeID NodeID;
         public string ServiceName;
-        
+
         public ServiceSubscriptionClientID(NodeID node_id, string service_name)
         {
             this.NodeID = node_id;
@@ -3421,7 +3422,7 @@ namespace RobotRaconteur
         }
 
         public static bool operator !=(ServiceSubscriptionClientID a, ServiceSubscriptionClientID b)
-        {            
+        {
             return !(a == b);
         }
 
@@ -3439,7 +3440,7 @@ namespace RobotRaconteur
 
     public class ServiceSubscriptionFilterNode
     {
-        public NodeID NodeID=RobotRaconteur.NodeID.GetAny();
+        public NodeID NodeID = RobotRaconteur.NodeID.GetAny();
         public string NodeName;
         public string Username;
         public Dictionary<string, object> Credentials;
@@ -3468,7 +3469,7 @@ namespace RobotRaconteur
             public override void ServiceDetected(WrappedServiceInfo2Subscription subscription, WrappedServiceSubscriptionClientID id, ServiceInfo2Wrapped info)
             {
                 var s = (ServiceInfo2Subscription)subscription1.Target;
-                if (s==null) return;
+                if (s == null) return;
                 var info1 = new ServiceInfo2(info);
                 var id1 = new ServiceSubscriptionClientID(id);
                 if (s.ServiceDetected == null) return;
@@ -3482,7 +3483,7 @@ namespace RobotRaconteur
             public override void ServiceLost(WrappedServiceInfo2Subscription subscription, WrappedServiceSubscriptionClientID id, ServiceInfo2Wrapped info)
             {
                 var s = (ServiceInfo2Subscription)subscription1.Target;
-                if (s==null) return;
+                if (s == null) return;
                 var info1 = new ServiceInfo2(info);
                 var id1 = new ServiceSubscriptionClientID(id);
                 if (s.ServiceLost == null) return;
@@ -3546,7 +3547,7 @@ namespace RobotRaconteur
                 var s = (ServiceSubscription)subscription1.Target;
                 if (s == null) return;
                 if (s.ClientConnected == null) return;
-                                
+
                 var client2 = s.GetClientStub(client);
                 try
                 {
@@ -3560,7 +3561,7 @@ namespace RobotRaconteur
                 var s = (ServiceSubscription)subscription1.Target;
                 if (s == null) return;
                 if (s.ClientDisconnected == null) return;
-               
+
                 var client2 = s.DeleteClientStub(client);
 
                 try
@@ -3571,13 +3572,13 @@ namespace RobotRaconteur
             }
         }
 
-        Dictionary<int, object> client_stubs=new Dictionary<int, object>();
+        Dictionary<int, object> client_stubs = new Dictionary<int, object>();
 
         internal object GetClientStub(WrappedServiceStub innerstub)
         {
             if (innerstub == null) return null;
 
-            lock(this)
+            lock (this)
             {
                 int id = innerstub.GetObjectHeapID();
                 object stub;
@@ -3588,14 +3589,14 @@ namespace RobotRaconteur
                 else
                 {
                     ServiceFactory f;
-                   
+
                     f = RobotRaconteurNode.s.GetServiceType(innerstub.RR_objecttype.GetServiceDefinition().Name);
-                   
+
                     stub = f.CreateStub(innerstub);
                     int id2 = innerstub.GetObjectHeapID();
                     if (id2 == 0) return null;
                     client_stubs.Add(id2, stub);
-                    return stub;                    
+                    return stub;
                 }
             }
         }
@@ -3607,7 +3608,7 @@ namespace RobotRaconteur
             lock (this)
             {
                 int id = innerstub.GetObjectHeapID();
-                
+
                 if (id != 0)
                 {
                     object stub;
@@ -3655,7 +3656,7 @@ namespace RobotRaconteur
         {
             ServiceStub s = client as ServiceStub;
             if (s == null) throw new ArgumentException("Invalid object for ClaimClient");
-            
+
             _subscription.ClaimClient(s.rr_innerstub);
         }
 
@@ -3663,7 +3664,7 @@ namespace RobotRaconteur
         {
             ServiceStub s = client as ServiceStub;
             if (s == null) throw new ArgumentException("Invalid object for ReleaseClient");
-            
+
             _subscription.ClaimClient(s.rr_innerstub);
         }
 
@@ -3688,7 +3689,7 @@ namespace RobotRaconteur
             return new WireSubscription<T>(s);
         }
 
-        public PipeSubscription<T> SubscribePipe<T>(string pipe_name, int max_backlog=-1)
+        public PipeSubscription<T> SubscribePipe<T>(string pipe_name, int max_backlog = -1)
         {
             var s = _subscription.SubscribePipe(pipe_name);
             return new PipeSubscription<T>(s);
@@ -3725,7 +3726,7 @@ namespace RobotRaconteur
                     catch { }
                 }
             }
-            
+
         }
 
 
@@ -3814,7 +3815,7 @@ namespace RobotRaconteur
             var t = new TimeSpec();
             using (m)
             {
-                if (_subscription.TryGetInValue(m,t))
+                if (_subscription.TryGetInValue(m, t))
                 {
                     time = t;
                     using (var m1 = m.packet)
@@ -3851,7 +3852,7 @@ namespace RobotRaconteur
 
         public void SetOutValueAll(T value)
         {
-            var iter=new WrappedWireSubscription_send_iterator(_subscription);
+            var iter = new WrappedWireSubscription_send_iterator(_subscription);
 
             while (iter.Next() != null)
             {
@@ -3905,7 +3906,7 @@ namespace RobotRaconteur
                 if (s == null) return;
                 if (s.PipePacketReceived == null) return;
                 try
-                {                    
+                {
                     s.PipePacketReceived(s);
                 }
                 catch { }
@@ -3970,7 +3971,7 @@ namespace RobotRaconteur
                     packet = default(T);
                     return false;
                 }
-            }            
+            }
         }
 
         public bool TryReceivePacketWait(out T packet, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE, bool peek = false)
@@ -4130,17 +4131,91 @@ namespace RobotRaconteur
             return new ServiceInfo2Subscription(sub1);
         }
 
-        public ServiceSubscription SubscribeService(string[] service_types, ServiceSubscriptionFilter filter = null )
+        public ServiceSubscription SubscribeService(string[] service_types, ServiceSubscriptionFilter filter = null)
         {
             var filter2 = SubscribeService_LoadFilter(filter);
 
             var service_types2 = new vectorstring();
             foreach (string s in service_types) service_types2.Add(s);
-                        
+
             var sub1 = RobotRaconteurNET.WrappedSubscribeService(this, service_types2, filter2);
             return new ServiceSubscription(sub1);
         }
 
 
+    }
+
+    public class RobotRaconteurNodeSetup : IDisposable
+    {
+        public TcpTransport TcpTransport { get; }
+        public LocalTransport LocalTransport { get; }
+        public HardwareTransport HardwareTransport { get; }
+
+        protected WrappedRobotRaconteurNodeSetup setup;
+
+        public RobotRaconteurNodeSetup(string node_name, ushort tcp_port, RobotRaconteurNodeSetupFlags flags)
+        {
+            if (node_name == null) node_name = "";
+            setup = new WrappedRobotRaconteurNodeSetup(RobotRaconteurNode.s, node_name, tcp_port, (uint)flags);
+            TcpTransport = setup.GetTcpTransport();
+            LocalTransport = setup.GetLocalTransport();
+            HardwareTransport = setup.GetHardwareTransport();
+
+            LoadAllServiceTypes(RobotRaconteurNode.s);
+        }
+
+        public void Dispose()
+        {
+            WrappedRobotRaconteurNodeSetup s;
+
+            lock (this)
+            {
+                if (setup == null)
+                {
+                    return;
+                }
+                s = setup;
+                setup = null;
+            }
+
+            if (s!=null)
+            {
+                s.Dispose();
+            }
+        }
+
+        private void LoadAllServiceTypes(RobotRaconteurNode node)
+        {
+            // https://stackoverflow.com/questions/13493416/scan-assembly-for-classes-that-implement-certain-interface-and-add-them-to-a-con
+            var assignableType = typeof(ServiceFactory);
+
+            var scanners = AppDomain.CurrentDomain.GetAssemblies().ToList()
+                .SelectMany(x => x.GetTypes())
+                .Where(t => assignableType.IsAssignableFrom(t) && t.IsClass && !t.IsAbstract).ToList();
+
+            foreach (Type type in scanners)
+            {
+                var service_factory = Activator.CreateInstance(type) as ServiceFactory;
+                if (service_factory!=null)
+                {
+                    node.RegisterServiceType(service_factory);
+                }
+            }
+        }
+
+    }
+
+    public class ClientNodeSetup : RobotRaconteurNodeSetup
+    {
+        public ClientNodeSetup(string node_name = null, RobotRaconteurNodeSetupFlags flags = RobotRaconteurNodeSetupFlags.CLIENT_DEFAULT)            
+            : base(node_name, 0, flags)
+        { }
+    }
+
+    public class ServerNodeSetup : RobotRaconteurNodeSetup
+    {
+        public ServerNodeSetup(string node_name, ushort tcp_port, RobotRaconteurNodeSetupFlags flags = RobotRaconteurNodeSetupFlags.SERVER_DEFAULT)
+            : base(node_name, tcp_port, flags)
+        { }
     }
 }
