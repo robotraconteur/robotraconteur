@@ -7,7 +7,9 @@ include(${CMAKE_SOURCE_DIR}/RobotRaconteurGen/cmake/RobotRaconteurGenerateThunk.
 ROBOTRACONTEUR_GENERATE_THUNK(RR_THUNK_SRCS RR_THUNK_HDRS 
 	com.robotraconteur.testing.TestService1.robdef 
 	com.robotraconteur.testing.TestService2.robdef 
-	com.robotraconteur.testing.TestService3.robdef)
+	com.robotraconteur.testing.TestService3.robdef
+	MASTER_HEADER
+	)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 

@@ -162,6 +162,7 @@ int main(int argc, char* argv[])
 	std::vector<std::string> string_vector;
 	std::vector<std::string> include_dirs;
 	std::vector<std::string> import_vector;
+	std::string master_header;
 
 	try
 	{
@@ -177,6 +178,7 @@ int main(int argc, char* argv[])
 			("lang", po::value(&lang), "language to generate thunk code for")
 			("include-path,I", po::value(&include_dirs)->composing(), "include path")
 			("import", po::value(&import_vector)->composing(), "input file for use in imports")
+			("master-header", po::value(&master_header), "master header file for generated cpp files")
 
 			;
 
@@ -378,6 +380,14 @@ int main(int argc, char* argv[])
 					cout << "error: Could not open service definition file" << endl;
 					return 2;
 				}
+			}
+
+			if (!master_header.empty())
+			{
+				boost::filesystem::path master_file_path(boost::filesystem::path(output_dir) / master_header);
+				std::ofstream master_file_w(master_file_path.c_str());
+
+				CPPServiceLangGen::GenerateMasterHeaderFile(alldefs, &master_file_w);
 			}
 
 			return 0;

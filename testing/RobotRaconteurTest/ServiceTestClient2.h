@@ -1,6 +1,5 @@
 #include <RobotRaconteur.h>
-#include "com__robotraconteur__testing__TestService3.h"
-#include "com__robotraconteur__testing__TestService3_stubskel.h"
+#include "robotraconteur_generated.h"
 #include "ServiceTest2.h"
 
 #pragma once

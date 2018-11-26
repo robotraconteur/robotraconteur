@@ -132,6 +132,9 @@ namespace RobotRaconteurGen
 		//File generators
 		static void GenerateFiles(RR_SHARED_PTR<ServiceDefinition> d, std::string servicedef, std::string path=".");
 
+		//Master header file
+		static void GenerateMasterHeaderFile(std::vector<RR_SHARED_PTR<ServiceDefinition> > d, ostream* w);
+		
 	};
 
 

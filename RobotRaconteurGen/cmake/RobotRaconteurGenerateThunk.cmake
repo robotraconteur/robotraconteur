@@ -1,5 +1,5 @@
 function(ROBOTRACONTEUR_GENERATE_THUNK SRCS )
-	cmake_parse_arguments(RR_GEN "" "LANG;OUTDIR" "IMPORT_DIRS" ${ARGN})	
+	cmake_parse_arguments(RR_GEN "MASTER_HEADER" "LANG;OUTDIR;MASTER_HEADER_FILENAME" "IMPORT_DIRS" ${ARGN})	
 			
 	if ("${RR_GEN_LANG}" STREQUAL "")
 		set(RR_GEN_LANG "cpp")
@@ -77,11 +77,19 @@ function(ROBOTRACONTEUR_GENERATE_THUNK SRCS )
 	if(RR_GEN_OUTDIR)
 		set(RR_GEN_OUTDIR --output-dir ${RR_GEN_OUTDIR})
 	endif()
-			
+	
+	if (RR_GEN_MASTER_HEADER)
+		if (NOT RR_GEN_MASTER_HEADER_FILENAME)
+		set(RR_GEN_MASTER_HEADER_CMD --master-header "robotraconteur_generated.h")
+		else()
+		set(RR_GEN_MASTER_HEADER_CMD --master-header "${RR_GEN_MASTER_HEADER_FILENAME}")
+		endif()
+	endif()
+	
 	add_custom_command(
       OUTPUT ${THUNK_SRCS} ${THUNK_HDRS}
       COMMAND RobotRaconteurGen
-      ARGS "--thunksource" "--lang=${RR_GEN_LANG}" ${RR_GEN_OUTDIR} ${RR_GEN_FILES}
+      ARGS "--thunksource" "--lang=${RR_GEN_LANG}" ${RR_GEN_MASTER_HEADER_CMD} ${RR_GEN_OUTDIR} ${RR_GEN_FILES}
       DEPENDS ${RR_GEN_FILES} RobotRaconteurGen
       COMMENT "Running RobotRaconteurGen for ${RR_SERVICE_NAMES}"
       VERBATIM )

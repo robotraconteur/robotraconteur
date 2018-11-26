@@ -19,10 +19,11 @@
 #include "AsyncMessageTest.h"
 
 #include <RobotRaconteur.h>
-#include "com__robotraconteur__testing__TestService1.h"
+/*#include "com__robotraconteur__testing__TestService1.h"
 #include "com__robotraconteur__testing__TestService1_stubskel.h"
 #include "com__robotraconteur__testing__TestService2_stubskel.h"
-#include "com__robotraconteur__testing__TestService3_stubskel.h"
+#include "com__robotraconteur__testing__TestService3_stubskel.h"*/
+#include "robotraconteur_generated.h"
 #include "ServiceTestClient.h"
 #include "MultiDimArrayTest.h"
 #include "ServiceTest.h"
@@ -514,7 +515,7 @@ return 0;
 	{
 		RobotRaconteurNode::s()->SetExceptionHandler(myhandler);
 
-		RR_SHARED_PTR<TcpTransport> c = RR_MAKE_SHARED<TcpTransport>();
+		/*RR_SHARED_PTR<TcpTransport> c = RR_MAKE_SHARED<TcpTransport>();
 		c->StartServer(4565);
 		//c->SetDisableAsyncMessageIO(true);		
 		//c->SetDisableMessage3(true);
@@ -523,14 +524,17 @@ return 0;
 		RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<com__robotraconteur__testing__TestService1Factory>());
 		RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<com__robotraconteur__testing__TestService2Factory>());
 		RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<com__robotraconteur__testing__TestService3Factory>());
-				
-		RobotRaconteurTestService2Support s;
-		s.RegisterServices(c);
+		*/
+		{			
+			ServerNodeSetup node_setup(ROBOTRACONTEUR_SERVICE_TYPES, "com.robotraconteur.testing.TestService2", 4565, RobotRaconteurNodeSetupFlags_ENABLE_TCP_TRANSPORT | RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER);
+			RobotRaconteurTestService2Support s;
+			s.RegisterServices(node_setup.GetTcpTransport());
 
-		ServiceTestClient2 c2;
-		c2.RunFullTest("rr+tcp://localhost:4565/?service=RobotRaconteurTestService2");
-		
-		RobotRaconteurNode::s()->Shutdown();
+			ServiceTestClient2 c2;
+			c2.RunFullTest("rr+tcp://localhost:4565/?service=RobotRaconteurTestService2");
+
+		}
+		//RobotRaconteurNode::s()->Shutdown();
 
 		cout << "Test completed, no errors detected!" << endl;
 
