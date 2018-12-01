@@ -1,39 +1,33 @@
 
-INCLUDE(FindSWIG)
-FIND_PACKAGE(SWIG REQUIRED)
-INCLUDE(UseSWIG)
-
 IF(WIN32)
 IF (RobotRaconteur_USE_SHARED_CORE_LIB)
 ADD_DEFINITIONS(-DROBOTRACONTEUR_CORE_IMPORTS)
 ENDIF()
 ENDIF()
 
-include(CheckTypeSize)
+if (NOT USE_PREGENERATED_SOURCE)
 
-check_type_size("long int" SIZEOF_LONG_INT BUILTIN_TYPES_ONLY)
-if ("${SWIG_NET_EXTRA_ARGS}" STREQUAL "" AND "${SIZEOF_LONG_INT}" EQUAL 8 AND CMAKE_COMPILER_IS_GNUCXX )
-set(SWIG_NET_EXTRA_ARGS "-DSWIGWORDSIZE64" CACHE STRING "Swig extra args")
-else()
-set(SWIG_NET_EXTRA_ARGS "" CACHE STRING "Swig extra args")
-endif()
+INCLUDE(FindSWIG)
+FIND_PACKAGE(SWIG REQUIRED)
+INCLUDE(UseSWIG)
 
-INCLUDE(${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurSWIGSources.cmake)
+include(NETSwigVars.cmake)
 
-set(NET_SWIG_sources DiscoveryNET.i HardwareTransportNET.i LocalTransportNET.i
-  NETExceptionTypemaps.i NETTypemaps.i MessageNET.i NodeIDNET.i RobotRaconteurNodeNET.i 
-  ServiceSecurityNET.i TcpTransportNET.i TimerNET.i TimeSpecNET.i)
-
-set(SWIG_MODULE_RobotRaconteurNETNative_EXTRA_DEPS ${RobotRaconteur_SWIG_sources} ${NET_SWIG_sources})
-
-SET(SWIG_CXX_EXTENSION cxx)
-include_directories(${CMAKE_SOURCE_DIR}/SWIG)
-set_property(SOURCE RobotRaconteurNET.i PROPERTY CPLUSPLUS ON)
-set_property(SOURCE RobotRaconteurNET.i PROPERTY SWIG_FLAGS ${SWIG_NET_EXTRA_ARGS} -namespace RobotRaconteur -DSWIG2_CSHARP -outfile RobotRaconteurNET_SWIG.cs)
-SWIG_ADD_MODULE(RobotRaconteurNETNative csharp  ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.cpp ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.h RobotRaconteurNET.i)
+SWIG_ADD_MODULE(RobotRaconteurNETNative csharp ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.cpp ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.h RobotRaconteurNET.i)
 
 SWIG_LINK_LIBRARIES(RobotRaconteurNETNative ${RobotRaconteur_CORE_LIBRARY} ${Boost_LIBRARIES}  ${ROBOTRACONTEUR_EXTRA_LIBS})
+else()
+set(SWIG_MODULE_RobotRaconteurNETNative_REAL_NAME RobotRaconteurNETNative)
 
+if ("${SIZEOF_LONG_INT}" EQUAL 8 AND CMAKE_COMPILER_IS_GNUCXX )
+set(CMAKE_SWIG_OUTDIR ${PREGENERATED_SOURCE_DIR}/NET/swigwordsize64/)
+else()
+set(CMAKE_SWIG_OUTDIR ${PREGENERATED_SOURCE_DIR}/NET/swigwordsize32/)
+endif()
+include_directories(${CMAKE_SOURCE_DIR}/SWIG ${CMAKE_SWIG_OUTDIR})
+add_library(RobotRaconteurNETNative MODULE ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.cpp ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.h ${CMAKE_SWIG_OUTDIR}/RobotRaconteurNETCSHARP_wrap.cxx)
+target_link_libraries(RobotRaconteurNETNative ${RobotRaconteur_CORE_LIBRARY} ${Boost_LIBRARIES}  ${ROBOTRACONTEUR_EXTRA_LIBS})
+endif()
 #if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurNET_wrap.cxx")
 
 RRSetTargetDirs(${SWIG_MODULE_RobotRaconteurNETNative_REAL_NAME} "NET/Native" "NET/Native")

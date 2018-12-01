@@ -4,10 +4,6 @@ set(Python_ADDITIONAL_VERSIONS 2.7)
 find_package(PythonInterp REQUIRED)
 find_package(PythonLibs REQUIRED)
 
-INCLUDE(FindSWIG)
-FIND_PACKAGE(SWIG REQUIRED)
-INCLUDE(UseSWIG)
-
 ADD_DEFINITIONS(-DRR_PYTHON -DNPY_NO_DEPRECATED_API=NPY_1_7_API_VERSION)
 
 IF(WIN32)
@@ -16,19 +12,6 @@ ADD_DEFINITIONS(-DROBOTRACONTEUR_CORE_IMPORTS)
 ENDIF()
 ENDIF()
 
-# Fix for undefined symbols on OSX
-# https://stackoverflow.com/questions/25421479/clang-and-undefined-symbols-when-building-a-library
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
-set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -undefined dynamic_lookup")
-endif()
-
-include(CheckTypeSize)
-check_type_size("long int" SIZEOF_LONG_INT BUILTIN_TYPES_ONLY)
-if ("${SWIG_PYTHON_EXTRA_ARGS}" STREQUAL "" AND "${SIZEOF_LONG_INT}" EQUAL 8 AND CMAKE_COMPILER_IS_GNUCXX)
-set(SWIG_PYTHON_EXTRA_ARGS "-DSWIGWORDSIZE64" CACHE STRING "Swig extra args")
-else()
-set(SWIG_PYTHON_EXTRA_ARGS "" CACHE STRING "Swig extra args")
-endif()
 
 find_path(NUMPY_INCLUDE_NDARRAYOBJECT_DIR numpy/ndarrayobject.h PATHS ${PYTHON_INCLUDE_DIRS} NO_DEFAULT_PATH)
 if (NUMPY_INCLUDE_NDARRAYOBJECT_DIR)
@@ -52,20 +35,27 @@ INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/SWIG ${CMAKE_CURR
 GET_FILENAME_COMPONENT(PYTHON_LINK_DIRS "${PYTHON_LIBRARIES}" DIRECTORY)
 LINK_DIRECTORIES(${PYTHON_LINK_DIRS})
 
-INCLUDE(${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurSWIGSources.cmake)
-
-set(Python_SWIG_sources ClientPython.i DiscoveryPython.i HardwareTransportPython.i LocalTransportPython.i MessagePython.i NodeIDPython.i 
-  PythonExceptionTypemaps.i PythonTypemaps.i PythonTypeSupport.i RobotRaconteurNodePython.i ServiceDefinitionPython.i ServicePython.i ServiceSecurityPython.i
-  TcpTransportPython.i TimerPython.i TimeSpecPython.i)
-set(Python_Py_sources  __init__.py classproperty.py Client.py NamedClient.py RobotRaconteurPythonDataTypes.py ${CMAKE_CURRENT_BINARY_DIR}/RobotRaconteurPythonError.py RobotRaconteurPythonUtil.py)
-
-set(SWIG_MODULE_RobotRaconteurPython_EXTRA_DEPS ${RobotRaconteur_SWIG_sources} ${Python_SWIG_sources} ${Python_Py_sources})
-
-set_property(SOURCE RobotRaconteurPython.i PROPERTY CPLUSPLUS ON)
-set_property(SOURCE RobotRaconteurPython.i PROPERTY SWIG_FLAGS ${SWIG_PYTHON_EXTRA_ARGS} -relativeimport)
-SWIG_ADD_MODULE(RobotRaconteurPython python  RobotRaconteurPython.i ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.cpp ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.h PythonTypeSupport.cpp PythonTypeSupport.h)
-
+if (NOT USE_PREGENERATED_SOURCE)
+INCLUDE(FindSWIG)
+FIND_PACKAGE(SWIG REQUIRED)
+INCLUDE(UseSWIG)
+include(PythonSwigVars.cmake)
+set(CMAKE_SWIG_OUTDIR ${CMAKE_CURRENT_BINARY_DIR})
+SWIG_ADD_MODULE(RobotRaconteurPython python RobotRaconteurPython.i ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.cpp ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.h PythonTypeSupport.cpp PythonTypeSupport.h)
 SWIG_LINK_LIBRARIES(RobotRaconteurPython ${RobotRaconteur_CORE_LIBRARY} ${Boost_LIBRARIES}  ${ROBOTRACONTEUR_EXTRA_LIBS})
+else()
+set(SWIG_MODULE_RobotRaconteurPython_REAL_NAME _RobotRaconteurPython)
+
+if ("${SIZEOF_LONG_INT}" EQUAL 8 AND CMAKE_COMPILER_IS_GNUCXX )
+set(CMAKE_SWIG_OUTDIR ${PREGENERATED_SOURCE_DIR}/Python/swigwordsize64/)
+else()
+set(CMAKE_SWIG_OUTDIR ${PREGENERATED_SOURCE_DIR}/Python/swigwordsize32/)
+endif()
+include_directories(${CMAKE_SOURCE_DIR}/SWIG ${CMAKE_SWIG_OUTDIR})
+add_library(_RobotRaconteurPython MODULE ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.cpp ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.h PythonTypeSupport.cpp PythonTypeSupport.h ${CMAKE_SWIG_OUTDIR}/RobotRaconteurPythonPYTHON_wrap.cxx)
+target_link_libraries(_RobotRaconteurPython ${RobotRaconteur_CORE_LIBRARY} ${Boost_LIBRARIES}  ${ROBOTRACONTEUR_EXTRA_LIBS})
+set_target_properties(_RobotRaconteurPython PROPERTIES PREFIX "")
+endif()
 
 RRSetTargetDirs(${SWIG_MODULE_RobotRaconteurPython_REAL_NAME} "Python/RobotRaconteur" "Python/RobotRaconteur")
 
@@ -80,7 +70,7 @@ if (NOT DEFINED RobotRaconteur_DIR)
 add_dependencies(${SWIG_MODULE_RobotRaconteurPython_REAL_NAME} RobotRaconteurCore)
 endif()
 
-ADD_CUSTOM_COMMAND(TARGET ${SWIG_MODULE_RobotRaconteurPython_REAL_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/RobotRaconteurPython.py $<TARGET_FILE_DIR:${SWIG_MODULE_RobotRaconteurPython_REAL_NAME}>/)
+ADD_CUSTOM_COMMAND(TARGET ${SWIG_MODULE_RobotRaconteurPython_REAL_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SWIG_OUTDIR}/RobotRaconteurPython.py $<TARGET_FILE_DIR:${SWIG_MODULE_RobotRaconteurPython_REAL_NAME}>/)
 ADD_CUSTOM_COMMAND(TARGET ${SWIG_MODULE_RobotRaconteurPython_REAL_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/RobotRaconteurPythonError.py $<TARGET_FILE_DIR:${SWIG_MODULE_RobotRaconteurPython_REAL_NAME}>/)
 
 FILE(GLOB RR_PY_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/*.py)

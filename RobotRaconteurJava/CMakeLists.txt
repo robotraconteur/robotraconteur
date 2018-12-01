@@ -3,17 +3,13 @@
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/test)
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/exceptionsrc)
 
 IF(WIN32)
 IF (RobotRaconteur_USE_SHARED_CORE_LIB)
 ADD_DEFINITIONS(-DROBOTRACONTEUR_CORE_IMPORTS)
 ENDIF()
 ENDIF()
-
-INCLUDE(FindSWIG)
-FIND_PACKAGE(SWIG REQUIRED)
-INCLUDE(UseSWIG)
-
 
 if (NOT(${__ANDROID__}))
 INCLUDE(FindJava)
@@ -33,48 +29,44 @@ set(GETIFADDR_SOURCE_FILE "" CACHE FILEPATH "Path to ifaddrs.c for android")
 set(LIBUSB_INCLUDE_DIR "" CACHE PATH "Path to libusb.h for android")
 endif()
 
-if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} -Wno-unused-function)
-endif()
+if (NOT USE_PREGENERATED_SOURCE)
 
-include(CheckTypeSize)
+INCLUDE(FindSWIG)
+FIND_PACKAGE(SWIG REQUIRED)
+INCLUDE(UseSWIG)
 
-check_type_size("long int" SIZEOF_LONG_INT BUILTIN_TYPES_ONLY)
-if ("${SWIG_JAVA_EXTRA_ARGS}" STREQUAL "" AND "${SIZEOF_LONG_INT}" EQUAL 8 AND CMAKE_COMPILER_IS_GNUCXX )
-set(SWIG_JAVA_EXTRA_ARGS "-DSWIGWORDSIZE64" CACHE STRING "Swig extra args")
-else()
-set(SWIG_JAVA_EXTRA_ARGS "" CACHE STRING "Swig extra args")
-endif()
+include(JavaSwigVars.cmake)
 
-include_directories("${CMAKE_SOURCE_DIR}/SWIG" "${CMAKE_SOURCE_DIR}/RobotRaconteurCore/src")
-
-INCLUDE(${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurSWIGSources.cmake)
-
-set(Java_SWIG_sources Android.i DiscoveryJava.i HardwareTransportJava.i JavaExceptionTypemaps.i 
-  JavaTypemaps.i MessageJava.i NodeIDjava.i RobotRaconteurJavaNode.i ServiceDefinitionJava.i 
-  ServiceSecurityJava.i TcpTransportJava.i TimerJava.i TimeSpecJava.i)
-
-set(SWIG_MODULE_RobotRaconteurJava_EXTRA_DEPS ${RobotRaconteur_SWIG_sources} ${Java_SWIG_sources})
-
-SET(SWIG_CXX_EXTENSION cxx)
-include_directories(${CMAKE_SOURCE_DIR}/SWIG)
-set_property(SOURCE RobotRaconteurJava.i PROPERTY CPLUSPLUS ON)
-if (${__ANDROID__})
-set_property(SOURCE RobotRaconteurJava.i PROPERTY SWIG_FLAGS ${SWIG_JAVA_EXTRA_ARGS} -D__ANDROID__ -package com.robotraconteur )
-else()
-set_property(SOURCE RobotRaconteurJava.i PROPERTY SWIG_FLAGS ${SWIG_JAVA_EXTRA_ARGS} -package com.robotraconteur )
-endif()
 set(CMAKE_SWIG_OUTDIR ${CMAKE_CURRENT_BINARY_DIR}/swigsrc/com/robotraconteur)
 SWIG_ADD_MODULE(RobotRaconteurJavaNative java RobotRaconteurJava.i  ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.cpp ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.h ${GETIFADDR_SOURCE_FILE} )
 
 SWIG_LINK_LIBRARIES(RobotRaconteurJavaNative ${RobotRaconteur_CORE_LIBRARY} ${Boost_LIBRARIES}  ${ROBOTRACONTEUR_EXTRA_LIBS})
 
+else()
+set(SWIG_MODULE_RobotRaconteurJavaNative_REAL_NAME RobotRaconteurJavaNative)
+
+if ("${SIZEOF_LONG_INT}" EQUAL 8 AND CMAKE_COMPILER_IS_GNUCXX )
+set(CMAKE_SWIG_OUTDIR ${PREGENERATED_SOURCE_DIR}/Java/swigwordsize64/com/robotraconteur)
+else()
+set(CMAKE_SWIG_OUTDIR ${PREGENERATED_SOURCE_DIR}/Java/swigwordsize32/com/robotraconteur)
+endif()
+include_directories(${CMAKE_SOURCE_DIR}/SWIG ${CMAKE_SWIG_OUTDIR})
+add_library(RobotRaconteurJavaNative MODULE ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.cpp ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.h ${CMAKE_SWIG_OUTDIR}/RobotRaconteurJavaJAVA_wrap.cxx ${GETIFADDR_SOURCE_FILE})
+target_link_libraries(RobotRaconteurJavaNative ${RobotRaconteur_CORE_LIBRARY} ${Boost_LIBRARIES}  ${ROBOTRACONTEUR_EXTRA_LIBS})
+if (APPLE)
+    set_target_properties (RobotRaconteurJavaNative PROPERTIES SUFFIX ".jnilib")
+endif()
+if ((WIN32 AND MINGW) OR CYGWIN OR CMAKE_SYSTEM_NAME STREQUAL MSYS)
+    set_target_properties(RobotRaconteurJavaNative PROPERTIES PREFIX "")
+endif()
+endif()
+
 if (NOT(${__ANDROID__}))
-add_custom_target(RobotRaconteurJava ALL "${Java_JAVAC_EXECUTABLE}" -encoding UTF8 -g:none -target 1.6 -source 1.6 -Xlint:none com/robotraconteur/*.java ${CMAKE_CURRENT_BINARY_DIR}/swigsrc/com/robotraconteur/*.java -d "${CMAKE_CURRENT_BINARY_DIR}/bin"  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/src")
+add_custom_target(RobotRaconteurJava ALL "${Java_JAVAC_EXECUTABLE}" -encoding UTF8 -g:none -target 1.6 -source 1.6 -Xlint:none com/robotraconteur/*.java ${CMAKE_SWIG_OUTDIR}/*.java ${CMAKE_CURRENT_BINARY_DIR}/exceptionsrc/com/robotraconteur/*.java -d "${CMAKE_CURRENT_BINARY_DIR}/bin"  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/src")
 add_custom_command(TARGET RobotRaconteurJava POST_BUILD COMMAND "${Java_JAR_EXECUTABLE}" cf "$<TARGET_FILE_DIR:RobotRaconteurJavaNative>/RobotRaconteur.jar" * WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin")
 else()
 set(ANDROID_JAR "" CACHE FILEPATH "Android system Jar file")
-add_custom_target(RobotRaconteurJava ALL "${Java_JAVAC_EXECUTABLE}" -encoding UTF8 -g:none -target 1.6 -source 1.6 -Xlint:none com/robotraconteur/*.java ../androidsrc/com/robotraconteur/*.java ${CMAKE_CURRENT_BINARY_DIR}/swigsrc/com/robotraconteur/*.java -d "${CMAKE_CURRENT_BINARY_DIR}/bin" -cp "${ANDROID_JAR}"  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/src")
+add_custom_target(RobotRaconteurJava ALL "${Java_JAVAC_EXECUTABLE}" -encoding UTF8 -g:none -target 1.6 -source 1.6 -Xlint:none com/robotraconteur/*.java ../androidsrc/com/robotraconteur/*.java ${CMAKE_SWIG_OUTDIR}/*.java ${CMAKE_CURRENT_BINARY_DIR}/exceptionsrc/com/robotraconteur/*.java -d "${CMAKE_CURRENT_BINARY_DIR}/bin" -cp "${ANDROID_JAR}"  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/src")
 add_custom_command(TARGET RobotRaconteurJava POST_BUILD COMMAND "${Java_JAR_EXECUTABLE}" cf "$<TARGET_FILE_DIR:RobotRaconteurJavaNative>/RobotRaconteurAndroid.jar" * WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin")
 endif()
 
