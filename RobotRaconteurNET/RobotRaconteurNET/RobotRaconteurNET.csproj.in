@@ -44,13 +44,16 @@
   <PropertyGroup>
 	<RRSourceDir>@CMAKE_CURRENT_SOURCE_DIR@\RobotRaconteurNET\</RRSourceDir>
 	<RRBinDir>@CMAKE_CURRENT_BINARY_DIR@\RobotRaconteurNET\</RRBinDir>
+	<RRSwigDir>@CMAKE_SWIG_OUTDIR@\</RRSwigDir>
 	<PointerSize>@CMAKE_SIZEOF_VOID_P@</PointerSize>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>  
   <ItemGroup>
-    <Compile Include="RobotRaconteurNET_SWIG.cs"/>
+    <Compile Include="$(RRSwigDir)\RobotRaconteurNET_SWIG.cs">
+	    <Link>RobotRaconteurNET_SWIG.cs</Link>
+	</Compile>    
 	<Compile Include="Error.cs"/>
 	<Compile Include="AssemblyInfo.cs"/>
     <Compile Include="$(RRSourceDir)\MultiDimArray.cs" >

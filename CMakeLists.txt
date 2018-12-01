@@ -4,6 +4,9 @@ project(RobotRaconteur)
 include(cmake/CMakeMacros.cmake)
 include(CTest)
 
+include(CheckTypeSize)
+check_type_size("long int" SIZEOF_LONG_INT BUILTIN_TYPES_ONLY)
+
 CONFIGURE_FILE("${CMAKE_SOURCE_DIR}/RobotRaconteurCore/include/RobotRaconteur/RobotRaconteurConfig.h" "${CMAKE_BINARY_DIR}/RobotRaconteurConfig.h" COPYONLY)
 
 FILE (STRINGS "${CMAKE_SOURCE_DIR}/RobotRaconteurCore/include/RobotRaconteur/RobotRaconteurConfig.h" RobotRaconteurConfigVersion REGEX "#define +ROBOTRACONTEUR_VERSION +\"[0-9]+\\.[0-9]+\\.[0-9]+\"")
@@ -28,13 +31,13 @@ ENDIF()
 
 #Find boost and get it ready for use
 INCLUDE(FindBoost)
-If(NOT DEFINED Boost_USE_STATIC_LIBS)
-IF(RobotRaconteur_USE_SHARED_CORE_LIB)
-SET (Boost_USE_STATIC_LIBS OFF)
-ELSE()
-SET (Boost_USE_STATIC_LIBS ON)
-ENDIF()
-ENDIF()
+#If(NOT DEFINED Boost_USE_STATIC_LIBS)
+#IF(RobotRaconteur_USE_SHARED_CORE_LIB)
+#SET (Boost_USE_STATIC_LIBS OFF)
+#ELSE()
+#SET (Boost_USE_STATIC_LIBS ON)
+#ENDIF()
+#ENDIF()
 SET (Boost_USE_MULTITHREADED ON)
 SET (Boost_USE_STATIC_RUNTIME OFF)
 FIND_PACKAGE(Boost COMPONENTS date_time filesystem system regex chrono atomic thread random program_options REQUIRED)
@@ -144,6 +147,26 @@ IF (BUILD_MATLAB_MEX)
 add_subdirectory(RobotRaconteurMex)
 ENDIF()
 
+if (EXISTS ${CMAKE_SOURCE_DIR}/generated_src)
+set(USE_PREGENERATED_SOURCE ON CACHE BOOL ON)
+else()
+set(USE_PREGENERATED_SOURCE OFF CACHE BOOL OFF)
+endif()
+
+if(BUILD_PYTHON OR BUILD_NET OR BUILD_JAVA)
+if(USE_PREGENERATED_SOURCE)	
+set(PREGENERATED_SOURCE_DIR ${CMAKE_SOURCE_DIR}/generated_src CACHE PATH "generated_src directory location")
+if(NOT EXISTS ${PREGENERATED_SOURCE_DIR}/Python/swigwordsize32/RobotRaconteurPythonPYTHON_wrap.cxx
+   OR NOT EXISTS ${PREGENERATED_SOURCE_DIR}/Python3/swigwordsize32/RobotRaconteurPythonPYTHON_wrap.cxx
+   OR NOT EXISTS ${PREGENERATED_SOURCE_DIR}/Java/swigwordsize32/com/robotraconteur/RobotRaconteurJavaJAVA_wrap.cxx
+   OR NOT EXISTS ${PREGENERATED_SOURCE_DIR}/NET/swigwordsize32/RobotRaconteurNETCSHARP_wrap.cxx)
+   message(FATAL_ERROR "Invalid PREGENERATED_SOURCE_DIR")
+endif()
+else()
+include(${CMAKE_SOURCE_DIR}/cmake/package_source_swig.cmake)
+endif()
+endif()
+
 include(CMakePackageConfigHelpers)
 configure_package_config_file(
   "cmake/Config.cmake.in"
@@ -173,5 +196,7 @@ string(REPLACE "." ";" RobotRaconteurVersionList ${RobotRaconteurVersion})
 list(GET RobotRaconteurVersionList 0 CPACK_PACKAGE_VERSION_MAJOR)
 list(GET RobotRaconteurVersionList 1 CPACK_PACKAGE_VERSION_MINOR)
 list(GET RobotRaconteurVersionList 2 CPACK_PACKAGE_VERSION_PATCH)
+
+set(CPACK_SOURCE_INSTALLED_DIRECTORIES "${CMAKE_SOURCE_DIR};/;${CMAKE_BINARY_DIR}/generated_src;/generated_src" )
 
 include(CPack)

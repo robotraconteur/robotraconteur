@@ -22,7 +22,7 @@ endfunction()
 MACRO(ADD_MSVC_PRECOMPILED_HEADER PrecompiledHeader PrecompiledSource SourcesVar)
   IF(MSVC)
     GET_FILENAME_COMPONENT(PrecompiledBasename ${PrecompiledHeader} NAME_WE)
-    SET(PrecompiledBinary "$(IntDir)/${PrecompiledBasename}.pch")
+    SET(PrecompiledBinary "${CMAKE_CURRENT_BINARY_DIR}/${PrecompiledBasename}.pch")
     SET(Sources ${${SourcesVar}})
 
     SET_SOURCE_FILES_PROPERTIES(${PrecompiledSource}
