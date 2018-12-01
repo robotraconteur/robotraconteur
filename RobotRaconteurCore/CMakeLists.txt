@@ -58,6 +58,7 @@ set(RobotRaconteurCore_src
 	src/Subscription.cpp
 	src/Subscription_private.h
 	src/Generator.cpp
+	src/NodeSetup.cpp
 )
 
 set(RobotRaconteurCore_header
@@ -98,6 +99,7 @@ set(RobotRaconteurCore_header
 	include/RobotRaconteur/Discovery.h 
 	include/RobotRaconteur/Subscription.h
 	include/RobotRaconteur/Generator.h
+	include/RobotRaconteur/NodeSetup.h
 )
 
 if (WIN32)

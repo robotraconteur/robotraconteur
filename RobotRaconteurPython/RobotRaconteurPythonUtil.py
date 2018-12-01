@@ -2705,6 +2705,36 @@ def ReadServiceDefinitionFile(servicedef_name):
     with codecs.open(f_name, 'r', 'utf-8-sig') as f:
         return f.read()
 
+class RobotRaconteurNodeSetup(object):
+    def __init__(self, node_name, tcp_port, flags, node=None):
+        if node_name is None:
+            node_name = ""
+        if tcp_port is None:
+            tcp_port = 0
+        if flags is None:
+            flags = 0
+        if node is None:
+            node=RobotRaconteurPython.RobotRaconteurNode.s
+        self.__setup=RobotRaconteurPython.WrappedRobotRaconteurNodeSetup(node,node_name,tcp_port,flags)    
+        self.tcp_transport=self.__setup.GetTcpTransport()
+        self.local_transport=self.__setup.GetLocalTransport()
+        self.hardware_transport=self.__setup.GetHardwareTransport()
+        self.__node=node
+        
+    def __enter__(self):
+        return self
+    
+    def __exit__(self, etype, value, traceback):
+        self.__node.Shutdown()
+        
+class ClientNodeSetup(RobotRaconteurNodeSetup):
+    def __init__(self, node_name=None, flags=RobotRaconteurPython.RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT, node=None):
+        super(ClientNodeSetup,self).__init__(node_name,0,flags,node)
+            
+class ServerNodeSetup(RobotRaconteurNodeSetup):
+    def __init__(self, node_name, tcp_port, flags=RobotRaconteurPython.RobotRaconteurNodeSetupFlags_SERVER_DEFAULT, node=None):
+        super(ServerNodeSetup,self).__init__(node_name,tcp_port,flags,node)
+
 def settrace():
     #This function enables debugging for the threads started by the ThreadPool
     #You may see a warning in Eclipse; it can safely be ignored.

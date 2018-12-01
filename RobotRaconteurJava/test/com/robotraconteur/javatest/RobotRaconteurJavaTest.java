@@ -70,24 +70,30 @@ public class RobotRaconteurJavaTest {
 			if (command.equals("loopback2"))
 			{
 			
-				TcpTransport c=new TcpTransport();
-				c.enableNodeDiscoveryListening();
-				c.enableNodeAnnounce();
-				c.startServer(2323);
-				RobotRaconteurNode.s().registerServiceType(new com__robotraconteur__testing__TestService1Factory());
-				RobotRaconteurNode.s().registerServiceType(new com__robotraconteur__testing__TestService2Factory());
-				RobotRaconteurNode.s().registerServiceType(new com__robotraconteur__testing__TestService3Factory());
-				RobotRaconteurNode.s().registerTransport(c);
+				ServerNodeSetup node_setup = new ServerNodeSetup("com.robotraconteur.testing.TestService2",
+						2323, RobotRaconteurNodeSetupFlags.RobotRaconteurNodeSetupFlags_ENABLE_TCP_TRANSPORT.swigValue() 
+						| RobotRaconteurNodeSetupFlags.RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER.swigValue() );
 				
-				RobotRaconteurTestServiceSupport2 s=new RobotRaconteurTestServiceSupport2();
-				s.RegisterServices(c);
-								
-				ServiceTestClient2 stest=new ServiceTestClient2();
-				stest.RunFullTest("tcp://localhost:2323/{0}/RobotRaconteurTestService2");
-				
-				RobotRaconteurNode.s().shutdown();
-				System.out.println("Finished shutdown");
+				try
+				{
+					RobotRaconteurNode.s().registerServiceType(new com__robotraconteur__testing__TestService1Factory());
+					RobotRaconteurNode.s().registerServiceType(new com__robotraconteur__testing__TestService2Factory());
+					RobotRaconteurNode.s().registerServiceType(new com__robotraconteur__testing__TestService3Factory());
+					
+					RobotRaconteurTestServiceSupport2 s=new RobotRaconteurTestServiceSupport2();
+					s.RegisterServices(node_setup.getTcpTransport());
+									
+					ServiceTestClient2 stest=new ServiceTestClient2();
+					stest.RunFullTest("tcp://localhost:2323/{0}/RobotRaconteurTestService2");
+					
+					RobotRaconteurNode.s().shutdown();
+					System.out.println("Finished shutdown");
 				return;
+				}
+				finally
+				{
+					node_setup.finalize();
+				}
 			}
 			
 			if (command.equals("client"))

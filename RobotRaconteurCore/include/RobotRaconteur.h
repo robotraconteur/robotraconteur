@@ -40,3 +40,4 @@
 #include "RobotRaconteur/Security.h"
 #include "RobotRaconteur/Subscription.h"
 #include "RobotRaconteur/Generator.h"
+#include "RobotRaconteur/NodeSetup.h"

@@ -94,6 +94,8 @@ RobotRaconteur::RobotRaconteurNode::s()->SetThreadPoolFactory(RR_MAKE_SHARED<Rob
 
 %include "PythonTypeSupport.i"
 
+%include "NodeSetup.i"
+
 namespace RobotRaconteur
 {
 class RRNativeDirectorSupport

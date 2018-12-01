@@ -80,23 +80,18 @@ def main():
         return
 
     if (command=="loopback2"):
-        t=TcpTransport()
-        t.EnableNodeAnnounce()
-        t.EnableNodeDiscoveryListening()
-        t.StartServer(4564)
-
-        RobotRaconteurNode.s.RegisterServiceTypeFromFile("com.robotraconteur.testing.TestService2")
-        RobotRaconteurNode.s.RegisterServiceTypeFromFile("com.robotraconteur.testing.TestService1")
-        RobotRaconteurNode.s.RegisterServiceTypeFromFile("com.robotraconteur.testing.TestService3")   
-        RobotRaconteurNode.s.RegisterTransport(t)
-
-        t2=testroot3_impl()
-        RobotRaconteurNode.s.RegisterService("RobotRaconteurTestService2","com.robotraconteur.testing.TestService3.testroot3",t2)
         
-        s=ServiceTestClient2();
-        s.RunFullTest('rr+tcp://localhost:4564/?service=RobotRaconteurTestService2')
-
-        RobotRaconteurNode.s.Shutdown()
+        with ServerNodeSetup("com.robotraconteur.testing.test2", 4564, RobotRaconteurNodeSetupFlags_ENABLE_TCP_TRANSPORT | RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER):
+        
+            RobotRaconteurNode.s.RegisterServiceTypeFromFile("com.robotraconteur.testing.TestService2")
+            RobotRaconteurNode.s.RegisterServiceTypeFromFile("com.robotraconteur.testing.TestService1")
+            RobotRaconteurNode.s.RegisterServiceTypeFromFile("com.robotraconteur.testing.TestService3")   
+                
+            t2=testroot3_impl()
+            RobotRaconteurNode.s.RegisterService("RobotRaconteurTestService2","com.robotraconteur.testing.TestService3.testroot3",t2)
+            
+            s=ServiceTestClient2();
+            s.RunFullTest('rr+tcp://localhost:4564/?service=RobotRaconteurTestService2')
 
         print ("Test completed no errors detected")
         

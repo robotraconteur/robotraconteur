@@ -100,26 +100,20 @@ namespace RobotRaconteurNETTest
 
             if (command == "loopback2")
             {
-                TcpTransport t = new TcpTransport();
-                t.StartServer(2323);
-                t.EnableNodeDiscoveryListening();
-                t.EnableNodeAnnounce();
 
-                RobotRaconteurNode.s.RegisterTransport(t);
 
-                RobotRaconteurNode.s.RegisterServiceType(new com.robotraconteur.testing.TestService1.com__robotraconteur__testing__TestService1Factory());
-                RobotRaconteurNode.s.RegisterServiceType(new com.robotraconteur.testing.TestService2.com__robotraconteur__testing__TestService2Factory());
-                RobotRaconteurNode.s.RegisterServiceType(new com.robotraconteur.testing.TestService3.com__robotraconteur__testing__TestService3Factory());
-                
-                MultiDimArrayTest.Test();
+                using (var setup = new ServerNodeSetup("com.robotraconteur.testing.TestService2", 4565,
+                    RobotRaconteurNodeSetupFlags.ENABLE_TCP_TRANSPORT | RobotRaconteurNodeSetupFlags.TCP_TRANSPORT_START_SERVER))
+                {
+                    MultiDimArrayTest.Test();
 
-                RobotRaconteurTestServiceSupport2 sup = new RobotRaconteurTestServiceSupport2();
-                sup.RegisterServices(t);
-                
-                ServiceTestClient2 c = new ServiceTestClient2();
-                c.RunFullTest("tcp://localhost:2323/{0}/RobotRaconteurTestService2");
-                  
-                RobotRaconteurNode.s.Shutdown();
+                    RobotRaconteurTestServiceSupport2 sup = new RobotRaconteurTestServiceSupport2();
+                    sup.RegisterServices(setup.TcpTransport);
+
+                    ServiceTestClient2 c = new ServiceTestClient2();
+                    c.RunFullTest("rr+tcp://localhost:4565/?service=RobotRaconteurTestService2");
+
+                }
                 Console.WriteLine("Test completed");
                 return;
             }
