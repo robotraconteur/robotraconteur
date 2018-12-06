@@ -4218,4 +4218,11 @@ namespace RobotRaconteur
             : base(node_name, tcp_port, flags)
         { }
     }
+
+    public class SecureServerNodeSetup : RobotRaconteurNodeSetup
+    {
+        public SecureServerNodeSetup(string node_name, ushort tcp_port, RobotRaconteurNodeSetupFlags flags = RobotRaconteurNodeSetupFlags.SECURE_SERVER_DEFAULT)
+            : base(node_name, tcp_port, flags)
+        { }
+    }
 }

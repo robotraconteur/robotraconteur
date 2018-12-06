@@ -30,6 +30,8 @@ namespace RobotRaconteur
 		RobotRaconteurNodeSetupFlags_DISABLE_MESSAGE3  = 0x200,
 		RobotRaconteurNodeSetupFlags_DISABLE_STRINGTABLE = 0x400,
 		RobotRaconteurNodeSetupFlags_DISABLE_TIMEOUTS = 0x800,
+		RobotRaconteurNodeSetupFlags_LOAD_TLS_CERT = 0x1000,
+		RobotRaconteurNodeSetupFlags_REQUIRE_TLS = 0x2000,
 
 		RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS = 0x1C,
 		/*RobotRaconteurNodeSetupFlags_ENABLE_LOCAL_TRANSPORT 
@@ -54,6 +56,24 @@ namespace RobotRaconteur
 		| RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER_PORT_SHARER 
 		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_ANNOUNCE 
 		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING*/
+
+		RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT = 0x30BF,
+		/*RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS
+		| RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_SERVER
+		| RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER
+		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_ANNOUNCE
+		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING,
+		| RobotRaconteurNodeSetupFlags_ENABLE_LOAD_TLS,
+		| RobotRaconteurNodeSetupFlags_REQUIRE_TLS*/
+
+		RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT_PORT_SHARER = 0x313F,
+		/*RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS
+		| RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_SERVER
+		| RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER_PORT_SHARER
+		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_ANNOUNCE
+		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING
+		| RobotRaconteurNodeSetupFlags_ENABLE_LOAD_TLS,
+		| RobotRaconteurNodeSetupFlags_REQUIRE_TLS*/
 	};
 
 #ifndef SWIG
@@ -93,6 +113,16 @@ namespace RobotRaconteur
 
 		ServerNodeSetup(std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, const std::string& node_name, uint16_t tcp_port = 0,
 			uint32_t flags = RobotRaconteurNodeSetupFlags_SERVER_DEFAULT);
+	};
+
+	class ROBOTRACONTEUR_CORE_API SecureServerNodeSetup : public RobotRaconteurNodeSetup
+	{
+	public:
+		SecureServerNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node, const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types,
+			const std::string& node_name, uint16_t tcp_port = 0, uint32_t flags = RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT);
+
+		SecureServerNodeSetup(std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, const std::string& node_name, uint16_t tcp_port = 0,
+			uint32_t flags = RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT);
 	};
 #endif
 	

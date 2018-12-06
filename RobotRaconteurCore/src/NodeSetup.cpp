@@ -64,6 +64,16 @@ namespace RobotRaconteur
 				tcp_transport->EnableNodeAnnounce();
 			}
 
+			if (flags & RobotRaconteurNodeSetupFlags_LOAD_TLS_CERT)
+			{
+				tcp_transport->LoadTlsNodeCertificate();
+			}
+
+			if (flags & RobotRaconteurNodeSetupFlags_REQUIRE_TLS)
+			{
+				tcp_transport->SetRequireTls(true);
+			}
+
 			node->RegisterTransport(tcp_transport);
 		}
 
@@ -141,6 +151,20 @@ namespace RobotRaconteur
 	}
 
 	ServerNodeSetup::ServerNodeSetup(const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, const std::string& node_name, uint16_t tcp_port,
+		uint32_t flags)
+		: RobotRaconteurNodeSetup(RobotRaconteurNode::sp(), service_types, node_name, tcp_port, flags)
+	{
+
+	}
+
+	SecureServerNodeSetup::SecureServerNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node, const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, const std::string& node_name,
+		uint16_t tcp_port, uint32_t flags)
+		: RobotRaconteurNodeSetup(node, service_types, node_name, tcp_port, flags)
+	{
+
+	}
+
+	SecureServerNodeSetup::SecureServerNodeSetup(const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, const std::string& node_name, uint16_t tcp_port,
 		uint32_t flags)
 		: RobotRaconteurNodeSetup(RobotRaconteurNode::sp(), service_types, node_name, tcp_port, flags)
 	{
