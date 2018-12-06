@@ -37,6 +37,7 @@
 #include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
+#include <boost/process.hpp>
 
 using namespace std;
 using namespace RobotRaconteur;
@@ -120,7 +121,7 @@ void PullServiceDefinition(string url)
 	for(std::vector<RR_SHARED_PTR<ServiceDefinition> >::iterator e=o2.begin(); e!=o2.end(); e++)
 	{
 		std::ofstream f(((*e)->Name + ".robdef").c_str());
-		f << trim_copy((*e)->ToString()) << endl;
+		f << boost::trim_copy((*e)->ToString()) << endl;
 		f.close();
 	}
 }
@@ -267,29 +268,13 @@ int main(int argc, char* argv[])
 		if (command != "thunksource") throw std::logic_error("invalid command specified");
 		if (string_vector.empty()) throw std::logic_error("no files specified for thunksource");
 
-		char* robdef_path_c = std::getenv("ROBOTRACONTEUR_ROBDEF_PATH");
-		if (robdef_path_c)
+		boost::process::environment env = boost::this_process::environment();
+		boost::process::environment::iterator env_e = env.find("ROBOTRACONTEUR_ROBDEF_PATH");
+		if (env_e != env.end())
 		{
-			std::string robdef_path(robdef_path_c);
-			boost::trim(robdef_path);
-
-			std::vector<std::string> env_dirs;
-			if (!robdef_path.empty())
-			{
-
-#ifdef BOOST_WINDOWS
-				boost::split(env_dirs, robdef_path, boost::is_any_of(";"));
-#else
-				boost::split(env_dirs, robdef_path, boost::is_any_of(":"));
-#endif
-
-				BOOST_FOREACH(std::string& s, env_dirs)
-				{
-					include_dirs.push_back(boost::trim_copy(s));
-				}
-			}
+			boost::range::copy(env_e->to_vector(), std::back_inserter(include_dirs));
 		}
-
+		
 		std::vector<std::string> sources = string_vector;
 		std::vector<std::string> imports = import_vector;
 		BOOST_FOREACH(std::string& s, boost::range::join(sources,imports))
