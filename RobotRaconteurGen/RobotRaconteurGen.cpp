@@ -38,6 +38,10 @@
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
 
+#ifdef ROBOTRACONTEUR_ROS
+#include "ros/package.h"
+#endif
+
 using namespace std;
 using namespace RobotRaconteur;
 using namespace RobotRaconteurGen;
@@ -289,6 +293,26 @@ int main(int argc, char* argv[])
 				}
 			}
 		}
+
+#ifdef ROBOTRACONTEUR_ROS
+		std::vector<std::string> ros_pkg_names;
+		if (ros::package::getAll(ros_pkg_names))
+		{
+			BOOST_FOREACH(const std::string& ros_pkg_name, ros_pkg_names)
+			{
+				std::string ros_pkg_path_s = ros::package::getPath(ros_pkg_name);
+				if (!ros_pkg_path_s.empty())
+				{
+					boost::filesystem::path ros_pkg_path = boost::filesystem::path(ros_pkg_path_s) / "robdef";
+					include_dirs.push_back(ros_pkg_path.string());
+
+				}
+			}
+
+		}
+
+#endif
+
 
 		std::vector<std::string> sources = string_vector;
 		std::vector<std::string> imports = import_vector;
