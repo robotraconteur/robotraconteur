@@ -2735,6 +2735,11 @@ class ServerNodeSetup(RobotRaconteurNodeSetup):
     def __init__(self, node_name, tcp_port, flags=RobotRaconteurPython.RobotRaconteurNodeSetupFlags_SERVER_DEFAULT, node=None):
         super(ServerNodeSetup,self).__init__(node_name,tcp_port,flags,node)
 
+class SecureServerNodeSetup(RobotRaconteurNodeSetup):
+    def __init__(self, node_name, tcp_port, flags=RobotRaconteurPython.RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT, node=None):
+        super(SecureServerNodeSetup,self).__init__(node_name,tcp_port,flags,node)
+
+
 def settrace():
     #This function enables debugging for the threads started by the ThreadPool
     #You may see a warning in Eclipse; it can safely be ignored.
