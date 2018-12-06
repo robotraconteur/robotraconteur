@@ -21,6 +21,7 @@
 #include <ostream>
 
 using namespace std;
+using namespace boost;
 using namespace RobotRaconteur;
 
 namespace RobotRaconteurGen

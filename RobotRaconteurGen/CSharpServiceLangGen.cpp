@@ -29,7 +29,6 @@
 
 using namespace std;
 using namespace RobotRaconteur;
-using namespace boost;
 
 
 #define MEMBER_ITER(TYPE) {for (std::vector<RR_SHARED_PTR<MemberDefinition> >::const_iterator m1=(*e)->Members.begin(); m1!=(*e)->Members.end(); ++m1) if (dynamic_cast<TYPE*>(m1->get())!=0) { RR_SHARED_PTR<TYPE> m = dynamic_pointer_cast<TYPE>(*m1);   
