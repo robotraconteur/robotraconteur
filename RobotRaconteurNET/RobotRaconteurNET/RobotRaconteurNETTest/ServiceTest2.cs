@@ -28,58 +28,36 @@ namespace RobotRaconteurNETTest
     }
 
 
-    public class testroot3_impl : testroot3
+    public class testroot3_impl : testroot3_default_impl
     {
-        Wire<int> _peekwire;
-        Wire<int> _pokewire;
-
-        WireBroadcaster<int> _peekwire_b;
-        WireUnicastReceiver<int> _pokewire_r;
-
+        
         RobotRaconteur.Timer _peekwire_b_timer;
 
-        public Wire<int> peekwire
+        public override Wire<int> peekwire
         {
             get
             {
-                return _peekwire;
+                return base.peekwire;
             }
             set
             {
-                _peekwire = value;
-                _peekwire_b = new WireBroadcaster<int>(_peekwire);
-
+                base.peekwire = value;
                 _peekwire_b_timer = RobotRaconteurNode.s.CreateTimer(100, delegate (TimerEvent ev)
                   {
-                      _peekwire_b.OutValue = 56295674;
+                      rrvar_peekwire.OutValue = 56295674;
                   });
                 _peekwire_b_timer.Start();
-                _peekwire_b.OutValue = 56295674;
+                rrvar_peekwire.OutValue = 56295674;
 
             }
         }
 
-        public Wire<int> pokewire
-        {
-            get
-            {
-                return _pokewire;
-            }
-            set
-            {
-                _pokewire = value;
-                _pokewire_r = new WireUnicastReceiver<int>(_pokewire);
-            }            
-        }
+              
+        public override Pipe<int> unreliable1 { get; set; }
+        public override Pipe<int> unreliable2 { get; set; }
 
-        public int readme { get; set; }
-        public int writeme { get; set; }
-        public int unknown_modifier { get; set; }
-        public Pipe<int> unreliable1 { get; set; }
-        public Pipe<int> unreliable2 { get; set; }
-
-        public ArrayMemory<double> readmem { get; set; }
-        public testenum1 testenum1_prop { get => testenum1.anothervalue;
+        public override ArrayMemory<double> readmem { get; set; }
+        public override testenum1 testenum1_prop { get => testenum1.anothervalue;
             set
             {
                 if (value != testenum1.hexval1) throw new Exception();
@@ -87,7 +65,7 @@ namespace RobotRaconteurNETTest
                 
         }
 
-        public testcstruct1 testcstruct1_prop
+        public override testcstruct1 testcstruct1_prop
         {
             get
             {
@@ -101,7 +79,7 @@ namespace RobotRaconteurNETTest
             }        
         }
 
-        public teststruct3 teststruct3_prop
+        public override teststruct3 teststruct3_prop
         {
             get
             {
@@ -116,12 +94,12 @@ namespace RobotRaconteurNETTest
         //public CStructureArrayMemory<testcstruct2> cstruct_m1 { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
         //public CStructureMultiDimArrayMemory<testcstruct2> cstruct_m2 { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
-        public Generator2<double> gen_func1()
+        public override Generator2<double> gen_func1()
         {
             return new EnumeratorGenerator<double>(new double[] { 5, 6, 7, 8 });            
         }
 
-        public Generator2<byte[]> gen_func2(string name)
+        public override Generator2<byte[]> gen_func2(string name)
         {
             var o = new List<byte[]>();
             for (byte i=0; i<16; i++)
@@ -132,32 +110,32 @@ namespace RobotRaconteurNETTest
             return new EnumeratorGenerator<byte[]>(o);
         }
 
-        public Generator3<byte[]> gen_func3(string name)
+        public override Generator3<byte[]> gen_func3(string name)
         {
             throw new System.NotImplementedException();
         }
 
-        public Generator1<byte[], byte[]> gen_func4()
+        public override Generator1<byte[], byte[]> gen_func4()
         {
             return new func4_gen();
         }
 
-        public Generator1<teststruct2, teststruct2> gen_func5()
+        public override Generator1<teststruct2, teststruct2> gen_func5()
         {
             throw new System.NotImplementedException();
         }
 
-        public obj4 get_o4()
+        public override obj4 get_o4()
         {
             return new obj4_impl();
         }
 
-        public void testcstruct1_func1(testcstruct1 s)
+        public override void testcstruct1_func1(testcstruct1 s)
         {
             ServiceTest2_cstruct.verify_testcstruct1(ref s, 29546592);
         }
 
-        public testcstruct1 testcstruct1_func2()
+        public override testcstruct1 testcstruct1_func2()
         {
             var o = new testcstruct1();
             ServiceTest2_cstruct.fill_testcstruct1(ref o, 95836295);
@@ -165,7 +143,7 @@ namespace RobotRaconteurNETTest
         }
 
         CStructureArrayMemory<testcstruct2> m_cstruct_m1= new CStructureArrayMemory<testcstruct2>(new testcstruct2[1024]);
-        public CStructureArrayMemory<testcstruct2> cstruct_m1
+        public override CStructureArrayMemory<testcstruct2> cstruct_m1
         {
             get
             {
@@ -178,7 +156,7 @@ namespace RobotRaconteurNETTest
         }
 
         CStructureMultiDimArrayMemory<testcstruct2> m_cstruct_m2 = new CStructureMultiDimArrayMemory<testcstruct2>(new CStructureMultiDimArray(new int[] { 3, 3 }, new testcstruct2[9]));
-        public CStructureMultiDimArrayMemory<testcstruct2> cstruct_m2
+        public override CStructureMultiDimArrayMemory<testcstruct2> cstruct_m2
         {
             get
             {
@@ -190,18 +168,12 @@ namespace RobotRaconteurNETTest
             }
         }
 
-        public Wire<int[]> w1 { get; set; }
-        public Wire<int[]> w2 { get; set; }
-        public Wire<MultiDimArray> w3 { get; set; }
-        public Pipe<int[]> p1 { get; set; }
-        public Pipe<int[]> p2 { get; set; }
-        public Pipe<MultiDimArray> p3 { get; set; }
-        public List<double[]> d1 { get; set; }
-        public List<double[]> d2 { get; set; }
-        public Dictionary<int, double[]> d3 { get; set; }
-        public Dictionary<int, double[]> d4 { get; set; }
-        public List<MultiDimArray> d5 { get; set; }
-        public Dictionary<int, MultiDimArray> d6 { get; set; }
+        public override Wire<int[]> w1 { get; set; }
+        public override Wire<int[]> w2 { get; set; }
+        public override Wire<MultiDimArray> w3 { get; set; }
+        public override Pipe<int[]> p1 { get; set; }
+        public override Pipe<int[]> p2 { get; set; }
+        public override Pipe<MultiDimArray> p3 { get; set; }        
     }
 
     class func4_gen : SyncGenerator1<byte[], byte[]>

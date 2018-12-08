@@ -88,12 +88,12 @@ namespace RobotRaconteurGen
 
 		static void GenerateSkel(ServiceEntryDefinition* e, ostream * w);
 
-		
+		static void GenerateDefaultImpl(ServiceEntryDefinition* e, ostream * w);
 
 		static void GenerateConstants(ServiceDefinition*d, ostream* w);
 
 		static std::string GetDefaultValue(const TypeDefinition& tdef);
-
+		
 		//File generators
 
 		static void GenerateExceptionFile(string name, ServiceDefinition*d, ostream* w);
@@ -117,6 +117,8 @@ namespace RobotRaconteurGen
 		static void GenerateStubFile(ServiceEntryDefinition* d, ostream* w);
 
 		static void GenerateSkelFile(ServiceEntryDefinition* d, ostream* w);
+
+		static void GenerateDefaultImplFile(ServiceEntryDefinition* d, ostream* w);
 
 		static void GenerateConstantsFile(ServiceDefinition* d, ostream* w);
 

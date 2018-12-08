@@ -5367,6 +5367,216 @@ public class sub3_skel : ServiceSkel {
     }
     public override string RRType { get { return "com.robotraconteur.testing.TestService1.sub3"; } }
 }
+public class testroot_default_impl : testroot{
+    protected Callback<Action> rrvar_cb1;
+    protected Callback<Action<double, double>> rrvar_cb2;
+    protected Callback<Func<double,double,double>> rrvar_cb3;
+    protected Callback<Func<int>> rrvar_cb_meaning_of_life;
+    protected Callback<Action> rrvar_cb_errtest;
+    public virtual double d1 {get; set;} = default(double);
+    public virtual double[] d2 {get; set;} = new double[0];
+    public virtual double[] d3 {get; set;} = new double[16];
+    public virtual double[] d4 {get; set;} = new double[0];
+    public virtual MultiDimArray d5 {get; set;} = new MultiDimArray(new int[] {1,0}, new double[0]);
+    public virtual MultiDimArray d6 {get; set;} = new MultiDimArray(new int[] {3,3}, new double[9]);
+    public virtual float s1 {get; set;} = default(float);
+    public virtual float[] s2 {get; set;} = new float[0];
+    public virtual sbyte i8_1 {get; set;} = default(sbyte);
+    public virtual sbyte[] i8_2 {get; set;} = new sbyte[0];
+    public virtual byte u8_1 {get; set;} = default(byte);
+    public virtual byte[] u8_2 {get; set;} = new byte[0];
+    public virtual MultiDimArray u8_3 {get; set;} = new MultiDimArray(new int[] {1,0}, new byte[0]);
+    public virtual short i16_1 {get; set;} = default(short);
+    public virtual short[] i16_2 {get; set;} = new short[0];
+    public virtual ushort u16_1 {get; set;} = default(ushort);
+    public virtual ushort[] u16_2 {get; set;} = new ushort[0];
+    public virtual int i32_1 {get; set;} = default(int);
+    public virtual int[] i32_2 {get; set;} = new int[0];
+    public virtual int[] i32_huge {get; set;} = new int[0];
+    public virtual uint u32_1 {get; set;} = default(uint);
+    public virtual uint[] u32_2 {get; set;} = new uint[0];
+    public virtual long i64_1 {get; set;} = default(long);
+    public virtual long[] i64_2 {get; set;} = new long[0];
+    public virtual ulong u64_1 {get; set;} = default(ulong);
+    public virtual ulong[] u64_2 {get; set;} = new ulong[0];
+    public virtual string str1 {get; set;} = "";
+    public virtual teststruct1 struct1 {get; set;} = default(teststruct1);
+    public virtual teststruct2 struct2 {get; set;} = default(teststruct2);
+    public virtual Dictionary<int,double> is_d1 {get; set;} = default(Dictionary<int,double>);
+    public virtual Dictionary<string,double> is_d2 {get; set;} = default(Dictionary<string,double>);
+    public virtual Dictionary<int,double[]> is_d3 {get; set;} = default(Dictionary<int,double[]>);
+    public virtual Dictionary<string,double[]> is_d4 {get; set;} = default(Dictionary<string,double[]>);
+    public virtual Dictionary<int,MultiDimArray> is_d5 {get; set;} = default(Dictionary<int,MultiDimArray>);
+    public virtual Dictionary<string,MultiDimArray> is_d6 {get; set;} = default(Dictionary<string,MultiDimArray>);
+    public virtual Dictionary<int,string> is_str1 {get; set;} = default(Dictionary<int,string>);
+    public virtual Dictionary<string,string> is_str2 {get; set;} = default(Dictionary<string,string>);
+    public virtual Dictionary<int,teststruct2> is_struct1 {get; set;} = default(Dictionary<int,teststruct2>);
+    public virtual Dictionary<string,teststruct2> is_struct2 {get; set;} = default(Dictionary<string,teststruct2>);
+    public virtual com.robotraconteur.testing.TestService2.ostruct2 struct3 {get; set;} = default(com.robotraconteur.testing.TestService2.ostruct2);
+    public virtual List<double> list_d1 {get; set;} = default(List<double>);
+    public virtual List<double[]> list_d3 {get; set;} = default(List<double[]>);
+    public virtual List<MultiDimArray> list_d5 {get; set;} = default(List<MultiDimArray>);
+    public virtual List<string> list_str1 {get; set;} = default(List<string>);
+    public virtual List<teststruct2> list_struct1 {get; set;} = default(List<teststruct2>);
+    public virtual object var1 {get; set;} = default(object);
+    public virtual Dictionary<int,object> var2 {get; set;} = default(Dictionary<int,object>);
+    public virtual object var_num {get; set;} = default(object);
+    public virtual object var_str {get; set;} = default(object);
+    public virtual object var_struct {get; set;} = default(object);
+    public virtual object var_vector {get; set;} = default(object);
+    public virtual object var_dictionary {get; set;} = default(object);
+    public virtual object var_list {get; set;} = default(object);
+    public virtual object var_multidimarray {get; set;} = default(object);
+    public virtual double errtest {get; set;} = default(double);
+    public virtual teststruct1 nulltest {get; set;} = default(teststruct1);
+    public virtual void func1() {
+    throw new NotImplementedException();    }
+    public virtual void func2(double d1, double d2) {
+    throw new NotImplementedException();    }
+    public virtual double func3(double d1, double d2) {
+    throw new NotImplementedException();    }
+    public virtual int meaning_of_life() {
+    throw new NotImplementedException();    }
+    public virtual void func_errtest() {
+    throw new NotImplementedException();    }
+    public virtual void func_errtest1() {
+    throw new NotImplementedException();    }
+    public virtual void func_errtest2() {
+    throw new NotImplementedException();    }
+    public virtual void func_errtest3() {
+    throw new NotImplementedException();    }
+    public virtual void o6_op(int op) {
+    throw new NotImplementedException();    }
+    public virtual void pipe_check_error() {
+    throw new NotImplementedException();    }
+    public virtual void test_callbacks() {
+    throw new NotImplementedException();    }
+    public event Action ev1;
+    public event Action<double, teststruct2> ev2;
+    public virtual sub1 get_o1() {
+    throw new NotImplementedException();
+    }
+    public virtual sub1 get_o2(int ind) {
+    throw new NotImplementedException();
+    }
+    public virtual sub1 get_o3(int ind) {
+    throw new NotImplementedException();
+    }
+    public virtual sub1 get_o4(string ind) {
+    throw new NotImplementedException();
+    }
+    public virtual com.robotraconteur.testing.TestService2.subobj get_o5() {
+    throw new NotImplementedException();
+    }
+    public virtual object get_o6() {
+    throw new NotImplementedException();
+    }
+    public virtual Pipe<double[]> p1 {
+    get { throw new NotImplementedException(); }
+    set { throw new InvalidOperationException();}
+    }
+    public virtual Pipe<teststruct2> p2 {
+    get { throw new NotImplementedException(); }
+    set { throw new InvalidOperationException();}
+    }
+    public virtual Pipe<double> broadcastpipe {
+    get { throw new NotImplementedException(); }
+    set { throw new InvalidOperationException();}
+    }
+    public virtual Callback<Action> cb1 {
+    get { return rrvar_cb1;  }
+    set {
+    if (rrvar_cb1!=null) throw new InvalidOperationException("Callback already set");
+    rrvar_cb1= value;
+    }
+    }
+    public virtual Callback<Action<double, double>> cb2 {
+    get { return rrvar_cb2;  }
+    set {
+    if (rrvar_cb2!=null) throw new InvalidOperationException("Callback already set");
+    rrvar_cb2= value;
+    }
+    }
+    public virtual Callback<Func<double,double,double>> cb3 {
+    get { return rrvar_cb3;  }
+    set {
+    if (rrvar_cb3!=null) throw new InvalidOperationException("Callback already set");
+    rrvar_cb3= value;
+    }
+    }
+    public virtual Callback<Func<int>> cb_meaning_of_life {
+    get { return rrvar_cb_meaning_of_life;  }
+    set {
+    if (rrvar_cb_meaning_of_life!=null) throw new InvalidOperationException("Callback already set");
+    rrvar_cb_meaning_of_life= value;
+    }
+    }
+    public virtual Callback<Action> cb_errtest {
+    get { return rrvar_cb_errtest;  }
+    set {
+    if (rrvar_cb_errtest!=null) throw new InvalidOperationException("Callback already set");
+    rrvar_cb_errtest= value;
+    }
+    }
+    public virtual Wire<double[]> w1 {
+    get { throw new NotImplementedException(); }
+    set { throw new NotImplementedException();}
+    }
+    public virtual Wire<teststruct2> w2 {
+    get { throw new NotImplementedException(); }
+    set { throw new NotImplementedException();}
+    }
+    public virtual Wire<MultiDimArray> w3 {
+    get { throw new NotImplementedException(); }
+    set { throw new NotImplementedException();}
+    }
+    public virtual Wire<double> broadcastwire {
+    get { throw new NotImplementedException(); }
+    set { throw new NotImplementedException();}
+    }
+    public virtual ArrayMemory<double> m1 { 
+    get { throw new NotImplementedException(); }
+    set { throw new InvalidOperationException();}
+    }
+    public virtual MultiDimArrayMemory<double> m2 {
+    get { throw new NotImplementedException(); }
+    set { throw new InvalidOperationException();}
+    }
+    public virtual MultiDimArrayMemory<byte> m3 {
+    get { throw new NotImplementedException(); }
+    set { throw new InvalidOperationException();}
+    }
+}
+public class sub1_default_impl : sub1{
+    public virtual double[] d1 {get; set;} = new double[0];
+    public virtual MultiDimArray d2 {get; set;} = new MultiDimArray(new int[] {1,0}, new double[0]);
+    public virtual string s_ind {get; set;} = "";
+    public virtual int i_ind {get; set;} = default(int);
+    public virtual sub2 get_o2_1() {
+    throw new NotImplementedException();
+    }
+    public virtual sub2 get_o2_2(int ind) {
+    throw new NotImplementedException();
+    }
+    public virtual sub2 get_o2_3(string ind) {
+    throw new NotImplementedException();
+    }
+}
+public class sub2_default_impl : sub2{
+    public virtual string s_ind {get; set;} = "";
+    public virtual int i_ind {get; set;} = default(int);
+    public virtual string data {get; set;} = "";
+    public virtual sub3 get_o3_1(string ind) {
+    throw new NotImplementedException();
+    }
+}
+public class sub3_default_impl : sub3{
+    public virtual string ind {get; set;} = "";
+    public virtual string data2 {get; set;} = "";
+    public virtual double data3 {get; set;} = default(double);
+    public virtual double add(double d) {
+    throw new NotImplementedException();    }
+}
 public static class RRExtensions{
     public static Task<double> async_get_d1(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {

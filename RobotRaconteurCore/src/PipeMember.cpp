@@ -1556,5 +1556,12 @@ void PipeBroadcasterBase::SetPredicate(boost::function<bool(RR_SHARED_PTR<PipeBr
 	predicate = f;
 }
 
+RR_SHARED_PTR<PipeBase> PipeBroadcasterBase::GetPipeBase()
+{
+	RR_SHARED_PTR<PipeBase> pipe1 = pipe.lock();
+	if (!pipe1) throw InvalidOperationException("Pipe released");
+	return pipe1;
+}
+
 
 }

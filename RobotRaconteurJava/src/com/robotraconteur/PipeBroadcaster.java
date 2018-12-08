@@ -8,6 +8,7 @@ public class PipeBroadcaster<T>
 {
 	protected WrappedPipeBroadcaster innerpipe;
 	protected TypeDefinition type;
+	protected Pipe<T> pipe;
     
 	static class WrappedPipeBroadcasterPredicateDirectorJava extends WrappedPipeBroadcasterPredicateDirector
     {
@@ -32,9 +33,15 @@ public class PipeBroadcaster<T>
     
     public PipeBroadcaster(Pipe<T> pipe, int maximum_backlog)
     {
+    	this.pipe=pipe;
 		this.innerpipe=new WrappedPipeBroadcaster();
 		this.innerpipe.init((WrappedPipeServer)pipe.innerpipe, maximum_backlog);
 		this.type=((WrappedPipeServer)pipe.innerpipe).getType();
+    }
+    
+    public Pipe<T> getPipe()
+    {
+    	return pipe;
     }
 	
     public void asyncSendPacket(T packet, Action handler)

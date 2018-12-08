@@ -41,6 +41,7 @@
 #include <boost/array.hpp>
 #include <boost/foreach.hpp>
 #include <boost/range/adaptor/map.hpp>
+#include <boost/range/numeric.hpp>
 
 #pragma once
 
@@ -429,7 +430,17 @@ namespace RobotRaconteur
 
 	ROBOTRACONTEUR_CORE_API RR_SHARED_PTR<RRBaseArray> AllocateRRArrayByType(DataTypes type, size_t length);
 
-
+	template<typename T>
+	static RR_SHARED_PTR<RRArray<T> > AllocateEmptyRRArray(size_t length)
+	{
+		RR_SHARED_PTR<RRArray<T> > o = AllocateRRArray<T>(length);
+		if (length > 0)
+		{
+			memset(o->ptr(), 0, length * sizeof(T));
+		}
+		return o;
+	}
+		
 	ROBOTRACONTEUR_CORE_API size_t RRArrayElementSize(DataTypes type);
     
     template<typename T>
@@ -733,6 +744,13 @@ namespace RobotRaconteur
 		}
 	}
 
+	template<typename T>
+	static RR_SHARED_PTR<RRMultiDimArray<T> > AllocateEmptyRRMultiDimArray(std::vector<int32_t> length)
+	{
+		int32_t n_elems = boost::accumulate(length, 1, std::multiplies<int32_t>());
+		return RR_MAKE_SHARED<RRMultiDimArray<T> >(VectorToRRArray<int32_t>(length), AllocateEmptyRRArray<T>(n_elems));
+	}
+
 	class ROBOTRACONTEUR_CORE_API RRCStructure
 	{
 	public:
@@ -801,6 +819,14 @@ namespace RobotRaconteur
 	public:
 		
 		typename RR_SHARED_PTR<RRCStructureArray<T> > CStructArray;
+
+		RRCStructureMultiDimArray() {}
+
+		RRCStructureMultiDimArray(RR_SHARED_PTR<RRArray<int32_t> > dims, RR_SHARED_PTR<RRCStructureArray<T> > a)
+		{
+			this->Dims = dims;
+			this->CStructArray = a;
+		}
 
 		virtual ~RRCStructureMultiDimArray() {}
 
@@ -875,6 +901,21 @@ namespace RobotRaconteur
 
 		return value->cstruct_array.at(0);
 
+	}
+
+	template<typename T>
+	static RR_SHARED_PTR<RRCStructureArray<T> > AllocateEmptyRRCStructureArray(size_t length)
+	{
+		RR_SHARED_PTR<RRCStructureArray<T> > o = RR_MAKE_SHARED<RRCStructureArray<T> >();
+		o->cstruct_array.resize(length);
+		return o;
+	}
+
+	template<typename T>
+	static RR_SHARED_PTR<RRCStructureMultiDimArray<T> > AllocateEmptyRRCStructureMultiDimArray(std::vector<int32_t> length)
+	{
+		int32_t n_elems = boost::accumulate(length, 1, std::multiplies<int32_t>());
+		return RR_MAKE_SHARED<RRCStructureMultiDimArray<T> >(VectorToRRArray<int32_t>(length), AllocateEmptyRRCStructureArray<T>(n_elems));
 	}
 
 	class ROBOTRACONTEUR_CORE_API RobotRaconteurNode;

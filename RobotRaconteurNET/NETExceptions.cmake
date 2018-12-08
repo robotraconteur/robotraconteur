@@ -2,7 +2,7 @@ INCLUDE(${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurSWIGErrorGen.cmake)
 
 RR_SWIG_PARSE_ERRORS(RR_ERRORS)
 
-set(RR_CSHARP_ERR_OVERRIDE "MessageErrorType_NullValue,NullReferenceException;MessageErrorType_InvalidOperation,InvalidOperationException;MessageErrorType_InvalidArgument,ArgumentException")
+set(RR_CSHARP_ERR_OVERRIDE "MessageErrorType_NullValue,NullReferenceException;MessageErrorType_InvalidOperation,InvalidOperationException;MessageErrorType_InvalidArgument,ArgumentException;MessageErrorType_NotImplementedError,NotImplementedException")
 set(RR_CSHARP_ERR_DECL_M "
     public class @RR_ERROR_TYPE@ : RobotRaconteurException
     {        

@@ -706,6 +706,8 @@ namespace RobotRaconteur
 
 		virtual void AttachPipeEndpointEvents(RR_SHARED_PTR<PipeEndpointBase> p, RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint> cep);
 
+		RR_SHARED_PTR<PipeBase> GetPipeBase();
+
 		std::list<RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint> > endpoints;
 		boost::mutex endpoints_lock;
 
@@ -741,6 +743,11 @@ namespace RobotRaconteur
 		void AsyncSendPacket(T packet, RR_MOVE_ARG(boost::function<void()>) handler)
 		{
 			AsyncSendPacketBase(RRPrimUtil<T>::PrePack(packet), RR_MOVE(handler));
+		}
+
+		RR_SHARED_PTR<Pipe<T> > GetPipe()
+		{
+			return rr_cast<Pipe<T> >(GetPipeBase());
 		}
 
 	protected:

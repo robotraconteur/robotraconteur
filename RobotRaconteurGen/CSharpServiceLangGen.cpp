@@ -769,6 +769,11 @@ namespace RobotRaconteurGen
 			GenerateSkel(e->get(),w);
 		}
 
+		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Objects.begin(); e != d->Objects.end(); ++e)
+		{
+			GenerateDefaultImpl(e->get(), w);
+		}
+
 		w2 << "public static class RRExtensions" << "{" << endl;
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Objects.begin(); e != d->Objects.end(); ++e)
 		{
@@ -1992,6 +1997,183 @@ namespace RobotRaconteurGen
 		w2 << "}" << endl;
 	}
 
+	void CSharpServiceLangGen::GenerateDefaultImpl(ServiceEntryDefinition* e, ostream * w)
+	{
+		ostream& w2 = *w;
+
+		w2 << "public class " + fix_name(e->Name) + "_default_impl : " + fix_name(e->Name) + "{" << endl;
+
+		MEMBER_ITER2(CallbackDefinition)
+			w2 << "    protected Callback<" + str_pack_delegate(m->Parameters, m->ReturnType) + "> rrvar_" + fix_name(m->Name) + ";" << endl;
+		MEMBER_ITER_END()
+
+		MEMBER_ITER2(PipeDefinition)
+			if (m->Direction() == MemberDefinition_Direction_readonly)
+			{
+				convert_type_result t = convert_type(*m->Type);
+				w2 << "    protected PipeBroadcaster<" + t.cs_type + t.cs_arr_type + "> rrvar_" + fix_name(m->Name) + ";" << endl;
+			}
+		MEMBER_ITER_END()
+
+		MEMBER_ITER2(WireDefinition)
+			if (m->Direction() == MemberDefinition_Direction_readonly)
+			{
+				convert_type_result t = convert_type(*m->Type);
+				w2 << "    protected WireBroadcaster<" + t.cs_type + t.cs_arr_type + "> rrvar_" + fix_name(m->Name) + ";" << endl;
+			}
+			if (m->Direction() == MemberDefinition_Direction_writeonly)
+			{
+				convert_type_result t = convert_type(*m->Type);
+				w2 << "    protected WireUnicastReceiver<" + t.cs_type + t.cs_arr_type + "> rrvar_" + fix_name(m->Name) + ";" << endl;
+			}
+		MEMBER_ITER_END()
+			
+		MEMBER_ITER2(PropertyDefinition)
+			convert_type_result t = convert_type(*m->Type);
+			t.name = fix_name(m->Name);
+			w2 << "    public virtual " + t.cs_type + t.cs_arr_type + " " + t.name + " {get; set;} = " << GetDefaultInitializedValue(*m->Type) << ";" << endl;
+		MEMBER_ITER_END()
+
+		MEMBER_ITER2(FunctionDefinition)
+			if (!m->IsGenerator())
+			{
+				convert_type_result t = convert_type(*m->ReturnType);
+				string params = str_pack_parameters(m->Parameters, true);
+				w2 << "    public virtual " + t.cs_type + t.cs_arr_type + " " + fix_name(m->Name) + "(" + params + ") {" << endl;
+			}
+			else
+			{
+				convert_generator_result t = convert_generator(m.get());
+				string params = str_pack_parameters(t.params, true);
+				w2 << "    public virtual " + t.generator_csharp_type + " " + fix_name(m->Name) + "(" + params + ") {" << endl;
+			}
+			w2 << "    throw new NotImplementedException();";
+			w2 << "    }" << endl;
+		
+		MEMBER_ITER_END()
+
+		MEMBER_ITER2(EventDefinition)
+		string params = str_pack_parameters(m->Parameters, true);
+		w2 << "    public event " << str_pack_delegate(m->Parameters) << " " << fix_name(m->Name) << ";" << endl;
+		MEMBER_ITER_END()
+
+		
+
+		MEMBER_ITER2(ObjRefDefinition)
+		string objtype = fix_qualified_name(m->ObjectType);
+		if (objtype == "varobject") objtype = "object";
+		std::string indtype;
+		if (GetObjRefIndType(m, indtype))
+		{
+			w2 << "    public virtual " + objtype + " get_" + fix_name(m->Name) + "(" + indtype + " ind) {" << endl;
+			w2 << "    throw new NotImplementedException();" << endl;
+			w2 << "    }" << endl;
+		}
+		else
+		{
+			w2 << "    public virtual " + objtype + " get_" + fix_name(m->Name) + "() {" << endl;
+			w2 << "    throw new NotImplementedException();" << endl;
+			w2 << "    }" << endl;
+		}
+		MEMBER_ITER_END()
+
+
+		MEMBER_ITER2(PipeDefinition)
+		convert_type_result t = convert_type(*m->Type);
+		w2 << "    public virtual Pipe<" + t.cs_type + t.cs_arr_type + "> " + fix_name(m->Name) + " {" << endl;
+		if (m->Direction() == MemberDefinition_Direction_readonly)
+		{
+			w2 << "    get { return rrvar_" + fix_name(m->Name) + ".Pipe;  }" << endl;
+		}
+		else
+		{
+			w2 << "    get { throw new NotImplementedException(); }" << endl;
+		}
+		if (m->Direction() == MemberDefinition_Direction_readonly)
+		{
+			w2 << "    set {" << endl;
+			w2 << "    if (rrvar_" << fix_name(m->Name) << "!=null) throw new InvalidOperationException(\"Pipe already set\");" << endl;
+			w2 << "    rrvar_" << fix_name(m->Name) << "= new PipeBroadcaster<" << t.cs_type << t.cs_arr_type << ">(value);" << endl;
+			w2 << "    }" << endl;
+		}
+		else
+		{
+			w2 << "    set { throw new InvalidOperationException();}" << endl;
+		}
+		w2 << "    }" << endl;
+		MEMBER_ITER_END()
+
+		MEMBER_ITER2(CallbackDefinition)
+		w2 << "    public virtual Callback<" + str_pack_delegate(m->Parameters, m->ReturnType) + "> " + fix_name(m->Name) + " {" << endl;
+		w2 << "    get { return rrvar_" << fix_name(m->Name) << ";  }" << endl;
+		w2 << "    set {" << endl;
+		w2 << "    if (rrvar_" << fix_name(m->Name) << "!=null) throw new InvalidOperationException(\"Callback already set\");" << endl;
+		w2 << "    rrvar_" << fix_name(m->Name) << "= value;" << endl;
+		w2 << "    }" << endl;
+		w2 << "    }" << endl;
+		MEMBER_ITER_END()
+
+		MEMBER_ITER2(WireDefinition)
+		convert_type_result t = convert_type(*m->Type);
+		w2 << "    public virtual Wire<" + t.cs_type + t.cs_arr_type + "> " + fix_name(m->Name) + " {" << endl;
+		if (m->Direction() == MemberDefinition_Direction_readonly || m->Direction() == MemberDefinition_Direction_writeonly)
+		{
+			w2 << "    get { return rrvar_" + fix_name(m->Name) + ".Wire;  }" << endl;
+		}
+		else
+		{
+			w2 << "    get { throw new NotImplementedException(); }" << endl;			
+		}
+		if (m->Direction() == MemberDefinition_Direction_readonly)
+		{
+			w2 << "    set {" << endl;
+			w2 << "    if (rrvar_" << fix_name(m->Name) << "!=null) throw new InvalidOperationException(\"Pipe already set\");" << endl;
+			w2 << "    rrvar_" << fix_name(m->Name) << "= new WireBroadcaster<" << t.cs_type << t.cs_arr_type << ">(value);" << endl;
+			w2 << "    }" << endl;
+		}
+		else if (m->Direction() == MemberDefinition_Direction_writeonly)
+		{
+			w2 << "    set {" << endl;
+			w2 << "    if (rrvar_" << fix_name(m->Name) << "!=null) throw new InvalidOperationException(\"Pipe already set\");" << endl;
+			w2 << "    rrvar_" << fix_name(m->Name) << "= new WireUnicastReceiver<" << t.cs_type << t.cs_arr_type << ">(value);" << endl;
+			w2 << "    }" << endl;
+		}
+		else
+		{
+			w2 << "    set { throw new NotImplementedException();}" << endl;
+		}
+		w2 << "    }" << endl;
+		MEMBER_ITER_END()
+
+		
+		MEMBER_ITER2(MemoryDefinition)
+			TypeDefinition t2;
+		m->Type->CopyTo(t2);
+		t2.RemoveArray();
+		convert_type_result t = convert_type(t2);
+
+		std::string c = IsTypeNumeric(m->Type->Type) ? "" : "CStructure";
+		switch (m->Type->ArrayType)
+		{
+		case DataTypes_ArrayTypes_array:
+			w2 << "    public virtual " << c << "ArrayMemory<" + t.cs_type + "> " + fix_name(m->Name) + " { " << endl;
+			break;
+		case DataTypes_ArrayTypes_multidimarray:
+
+			w2 << "    public virtual " << c << "MultiDimArrayMemory<" + t.cs_type + "> " + fix_name(m->Name) + " {" << endl;
+			break;
+		default:
+			throw DataTypeException("Invalid memory definition");
+		}
+		w2 << "    get { throw new NotImplementedException(); }" << endl;
+		w2 << "    set { throw new InvalidOperationException();}" << endl;
+		w2 << "    }" << endl;
+		MEMBER_ITER_END()
+
+		w2 << "}" << endl;
+
+	}
+
 	template <typename T>
 	static void null_deleter(T*) {}
 
@@ -2199,8 +2381,7 @@ namespace RobotRaconteurGen
 		
 
 	}
-
-
+	
 
 	void CSharpServiceLangGen::GenerateFiles(RR_SHARED_PTR<ServiceDefinition> d, std::string servicedef,std::string path)
 	{
@@ -2229,5 +2410,109 @@ namespace RobotRaconteurGen
 		convert_type_result tt = convert_type(tdef);
 		return "default(" + tt.cs_type + tt.cs_arr_type + ")";
 	}
+
+	std::string CSharpServiceLangGen::GetDefaultInitializedValue(const TypeDefinition& tdef)
+	{
+		if (tdef.Type == DataTypes_void_t) throw InternalErrorException("Internal error");
+
+		if (tdef.ContainerType == DataTypes_ContainerTypes_none)
+		{
+			if (IsTypeNumeric(tdef.Type))
+			{
+				switch (tdef.ArrayType)
+				{
+				case DataTypes_ArrayTypes_none:
+				{
+					return GetDefaultValue(tdef);					
+				}
+				case DataTypes_ArrayTypes_array:
+				{
+					RR_SHARED_PTR<TypeDefinition> tdef2 = tdef.Clone();
+					tdef2->RemoveContainers();
+					tdef2->RemoveArray();
+					convert_type_result t = convert_type(*tdef2);
+					if (tdef.ArrayVarLength)
+					{
+						return "new " + t.cs_type + "[0]";
+					}
+					else
+					{
+						return "new " + t.cs_type + "[" + boost::lexical_cast<std::string>(tdef.ArrayLength.at(0)) + "]";
+					}
+				}
+				case DataTypes_ArrayTypes_multidimarray:
+				{
+					RR_SHARED_PTR<TypeDefinition> tdef2 = tdef.Clone();
+					tdef2->RemoveContainers();
+					tdef2->RemoveArray();
+					convert_type_result t = convert_type(*tdef2);
+					if (tdef.ArrayVarLength)
+					{
+						return "new MultiDimArray(new int[] {1,0}, new " + t.cs_type + "[0])";
+					}
+					else
+					{
+						int32_t n_elems = boost::accumulate(tdef.ArrayLength, 1, std::multiplies<int32_t>());
+						return "new MultiDimArray(new int[] {" + boost::join(tdef.ArrayLength | boost::adaptors::transformed(boost::lexical_cast<std::string, int32_t>), ",") + "}, new " + t.cs_type + "[" + boost::lexical_cast<std::string>(n_elems) + "])";
+
+					}
+				}
+				default:
+					throw InvalidArgumentException("Invalid array type");
+				}
+			}
+			if (tdef.Type == DataTypes_string_t)
+			{
+				return "\"\"";
+			}
+			if (tdef.Type == DataTypes_namedtype_t)
+			{
+				RR_SHARED_PTR<TypeDefinition> tdef2 = tdef.Clone();
+				tdef2->RemoveContainers();
+				tdef2->RemoveArray();
+
+				if (tdef2->ResolveNamedType()->RRDataType() == DataTypes_cstructure_t)
+				{
+					switch (tdef.ArrayType)
+					{
+					case DataTypes_ArrayTypes_none:
+					{
+						return GetDefaultValue(tdef);
+					}
+					case DataTypes_ArrayTypes_array:
+					{
+						convert_type_result t = convert_type(*tdef2);
+						if (tdef.ArrayVarLength)
+						{
+							return "new " + t.cs_type + "[0]";
+						}
+						else
+						{
+							return "new " + t.cs_type + "[" + boost::lexical_cast<std::string>(tdef.ArrayLength.at(0)) + "]";
+						}
+					}
+					case DataTypes_ArrayTypes_multidimarray:
+					{
+						convert_type_result t = convert_type(*tdef2);
+						if (tdef.ArrayVarLength)
+						{
+							return "new CStructureMultiDimArray(new int[] {1,0}, new " + t.cs_type + "[0])";
+						}
+						else
+						{
+							int32_t n_elems = boost::accumulate(tdef.ArrayLength, 1, std::multiplies<int32_t>());
+							return "new CStructureMultiDimArray(new int[] {" + boost::join(tdef.ArrayLength | boost::adaptors::transformed(boost::lexical_cast<std::string, int32_t>), ",") +  "}, new " + t.cs_type + "[" + boost::lexical_cast<std::string>(n_elems) + "])";
+						}
+					}
+					default:
+						throw InvalidArgumentException("Invalid array type");
+					}
+				}
+			}
+		}
+
+		return GetDefaultValue(tdef);
+	}
+
 
 }

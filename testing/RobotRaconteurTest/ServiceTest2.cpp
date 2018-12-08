@@ -36,37 +36,18 @@ namespace RobotRaconteurTest
 		cstruct_m2 = RR_MAKE_SHARED<RobotRaconteur::CStructureMultiDimArrayMemory<com::robotraconteur::testing::TestService3::testcstruct2 > >(m2);
 	}
 
-	RR_SHARED_PTR<Wire<int32_t > > testroot3_impl::get_peekwire()
-	{
-		return peekwire;
-	}
 	void testroot3_impl::set_peekwire(RR_SHARED_PTR<Wire<int32_t > > value)
 	{
-		peekwire = value;
-		peekwire_broadcaster = RR_MAKE_SHARED<WireBroadcaster<int32_t> >();
-		peekwire_broadcaster->Init(peekwire);
-
-		//RR_SHARED_PTR<RobotRaconteurNode> node = ServerContext::GetCurrentServerContext()->GetNode();
-
+		testroot3_default_impl::set_peekwire(value);
+				
 		peekwire_timer = RobotRaconteurNode::s()->CreateTimer(boost::posix_time::milliseconds(100), boost::bind(&testroot3_impl::peekwire_timer_handler, shared_from_this(), _1));
 		peekwire_timer->Start();
-		peekwire_broadcaster->SetOutValue(56295674);
+		rrvar_peekwire->SetOutValue(56295674);
 	}
 
 	void testroot3_impl::peekwire_timer_handler(const TimerEvent& e)
 	{		
-		peekwire_broadcaster->SetOutValue(56295674);
-	}
-
-	RR_SHARED_PTR<Wire<int32_t > > testroot3_impl::get_pokewire()
-	{
-		return pokewire;
-	}
-	void testroot3_impl::set_pokewire(RR_SHARED_PTR<Wire<int32_t > > value)
-	{
-		pokewire = value;
-		pokewire_receiver = RR_MAKE_SHARED<WireUnicastReceiver<int32_t> >();
-		pokewire_receiver->Init(pokewire);
+		rrvar_peekwire->SetOutValue(56295674);
 	}
 
 	int32_t testroot3_impl::get_unknown_modifier()
@@ -558,62 +539,7 @@ namespace RobotRaconteurTest
 			ServiceTest2_verify_testcstruct1_multidimarray(rr_cast<RRCStructureMultiDimArray<com::robotraconteur::testing::TestService3::testcstruct1> >(v), m, n, seed);
 		}
 	}
-
-
-	RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > testroot3_impl::get_d1()
-	{
-		throw NotImplementedException("");
-	}
-	void testroot3_impl::set_d1(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value)
-	{
-		throw NotImplementedException("");
-	}
-
-	RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > testroot3_impl::get_d2()
-	{
-		throw NotImplementedException("");
-	}
-	void testroot3_impl::set_d2(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value)
-	{
-		throw NotImplementedException("");
-	}
-
-	RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<double >  > > testroot3_impl::get_d3()
-	{
-		throw NotImplementedException("");
-	}
-	void testroot3_impl::set_d3(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<double >  > > value)
-	{
-		throw NotImplementedException("");
-	}
-
-	RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<double >  > > testroot3_impl::get_d4()
-	{
-		throw NotImplementedException("");
-	}
-	void testroot3_impl::set_d4(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<double >  > > value)
-	{
-		throw NotImplementedException("");
-	}
-
-	RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > testroot3_impl::get_d5()
-	{
-		throw NotImplementedException("");
-	}
-	void testroot3_impl::set_d5(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > value)
-	{
-		throw NotImplementedException("");
-	}
-
-	RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRMultiDimArray<double >  > > testroot3_impl::get_d6()
-	{
-		throw NotImplementedException("");
-	}
-	void testroot3_impl::set_d6(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRMultiDimArray<double >  > > value)
-	{
-		throw NotImplementedException("");
-	}
-
+			
 	RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > testroot3_impl::get_p1()
 	{
 		return p1;

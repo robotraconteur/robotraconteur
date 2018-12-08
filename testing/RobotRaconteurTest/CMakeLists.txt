@@ -2,6 +2,10 @@ if(NOT RobotRaconteur_GEN)
 set(RobotRaconteur_GEN RobotRaconteurGen)
 endif()
 
+IF (MSVC)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
+ENDIF()
+
 include(${CMAKE_SOURCE_DIR}/RobotRaconteurGen/cmake/RobotRaconteurGenerateThunk.cmake)
 
 ROBOTRACONTEUR_GENERATE_THUNK(RR_THUNK_SRCS RR_THUNK_HDRS 

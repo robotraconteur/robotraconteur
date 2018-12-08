@@ -1,4 +1,4 @@
-#include "com__robotraconteur__testing__TestService3.h"
+#include "com__robotraconteur__testing__TestService3_stubskel.h"
 
 #pragma once
 
@@ -18,19 +18,15 @@ namespace RobotRaconteurTest
 		RR_SHARED_PTR<testroot3_impl> testservice2;
 	};
 
-	class testroot3_impl : public virtual com::robotraconteur::testing::TestService3::testroot3,
+	class testroot3_impl : public virtual com::robotraconteur::testing::TestService3::testroot3_default_impl, 
 		public RR_ENABLE_SHARED_FROM_THIS<testroot3_impl>
 	{
 	public:
 
 		testroot3_impl();
-
-		virtual RR_SHARED_PTR<Wire<int32_t > > get_peekwire();
+		
 		virtual void set_peekwire(RR_SHARED_PTR<Wire<int32_t > > value);
 
-		virtual RR_SHARED_PTR<Wire<int32_t > > get_pokewire();
-		virtual void set_pokewire(RR_SHARED_PTR<Wire<int32_t > > value);
-		
 		virtual int32_t get_unknown_modifier();
 		virtual void set_unknown_modifier(int32_t value);
 
@@ -73,25 +69,7 @@ namespace RobotRaconteurTest
 		virtual RR_SHARED_PTR<RobotRaconteur::Generator<void, RR_SHARED_PTR<RobotRaconteur::RRArray<uint8_t > > > > gen_func3(const std::string& name);
 
 		virtual RR_SHARED_PTR<RobotRaconteur::Generator<RR_SHARED_PTR<com::robotraconteur::testing::TestService1::teststruct2 >, RR_SHARED_PTR<com::robotraconteur::testing::TestService1::teststruct2 > > > gen_func5();
-
-		virtual RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > get_d1() ;
-		virtual void set_d1(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value) ;
-
-		virtual RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > get_d2() ;
-		virtual void set_d2(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value) ;
-
-		virtual RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<double >  > > get_d3() ;
-		virtual void set_d3(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<double >  > > value) ;
-
-		virtual RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<double >  > > get_d4() ;
-		virtual void set_d4(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<double >  > > value) ;
-
-		virtual RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > get_d5() ;
-		virtual void set_d5(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > value) ;
-
-		virtual RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRMultiDimArray<double >  > > get_d6() ;
-		virtual void set_d6(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRMultiDimArray<double >  > > value) ;
-
+				
 		virtual RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > get_p1();
 		virtual void set_p1(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > value);
 
@@ -111,12 +89,6 @@ namespace RobotRaconteurTest
 		virtual void set_w3(RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > value);
 
 	protected:
-
-		RR_SHARED_PTR<Wire<int32_t> > peekwire;
-		RR_SHARED_PTR<Wire<int32_t> > pokewire;
-
-		RR_SHARED_PTR<WireBroadcaster<int32_t> > peekwire_broadcaster;
-		RR_SHARED_PTR<WireUnicastReceiver<int32_t> > pokewire_receiver;
 
 		void peekwire_timer_handler(const TimerEvent& e);
 
