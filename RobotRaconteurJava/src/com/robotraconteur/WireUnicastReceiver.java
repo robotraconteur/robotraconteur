@@ -7,15 +7,22 @@ public class WireUnicastReceiver<T> {
 
 	protected WrappedWireUnicastReceiver innerwire;
 	protected TypeDefinition type;
+	protected Wire<T> wire;
 		
 	public WireUnicastReceiver(Wire<T> wire)
 	{
+		this.wire=wire;
 		this.innerwire=new WrappedWireUnicastReceiver();
 		this.innerwire.init((WrappedWireServer)wire.innerwire);
 		this.type=((WrappedWireServer)wire.innerwire).getType();
 		ValueChangedDirector<T> cb=new ValueChangedDirector<T>(this);
 		int id=RRObjectHeap.addObject(cb);
 		this.innerwire.addInValueChangedListener(cb, id);
+	}
+	
+	public Wire<T> getWire()
+	{
+		return wire;
 	}
 	
 	public T getInValue()

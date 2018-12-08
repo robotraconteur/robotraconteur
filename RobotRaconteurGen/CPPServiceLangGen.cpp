@@ -1297,6 +1297,9 @@ namespace RobotRaconteurGen
 		GenerateStubHeader(d,w);
 		w2 << endl;
 		GenerateSkelHeader(d,w);
+		w2 << endl;
+		GenerateDefaultImplHeader(d, w);
+		w2 << endl;
 		
 		for (vector<string>::iterator ns_e=namespace_vec.begin(); ns_e!=namespace_vec.end(); ns_e++)
 		{
@@ -1383,7 +1386,9 @@ namespace RobotRaconteurGen
 		GenerateStubDefinition(d,w);
 		w2 << endl;
 		GenerateSkelDefinition(d,w);
-
+		w2 << endl;
+		GenerateDefaultImplDefinition(d, w);
+		w2 << endl;
 		for (vector<string>::iterator ns_e=namespace_vec.begin(); ns_e!=namespace_vec.end(); ns_e++)
 		{
 			w2 << "}" << endl;
@@ -3448,13 +3453,117 @@ namespace RobotRaconteurGen
 
 	std::string CPPServiceLangGen::GetDefaultValue(const TypeDefinition& tdef)
 	{
-		if (tdef.Type==DataTypes_void_t) throw InternalErrorException("Internal error");
+		if (tdef.Type == DataTypes_void_t) throw InternalErrorException("Internal error");
 		if (tdef.ArrayType == DataTypes_ArrayTypes_none && tdef.ContainerType == DataTypes_ContainerTypes_none)
-		{		
-			if (tdef.Type==DataTypes_double_t || tdef.Type==DataTypes_single_t) return "0.0";
-			if (tdef.Type>=DataTypes_int8_t && tdef.Type<=DataTypes_uint64_t) return "0";
-			if (tdef.Type==DataTypes_string_t) return "\"\"";
+		{
+			if (tdef.Type == DataTypes_double_t || tdef.Type == DataTypes_single_t) return "0.0";
+			if (tdef.Type >= DataTypes_int8_t && tdef.Type <= DataTypes_uint64_t) return "0";
+			if (tdef.Type == DataTypes_string_t) return "\"\"";
 		}
+
+		return get_variable_type(tdef).cpp_type + "()";
+	}
+
+	std::string CPPServiceLangGen::GetDefaultInitializedValue(const TypeDefinition& tdef)
+	{
+		if (tdef.Type==DataTypes_void_t) throw InternalErrorException("Internal error");
+
+		if (tdef.ContainerType == DataTypes_ContainerTypes_none)
+		{
+			if (IsTypeNumeric(tdef.Type))
+			{
+				switch (tdef.ArrayType)
+				{
+				case DataTypes_ArrayTypes_none:
+				{
+					if (tdef.Type == DataTypes_double_t || tdef.Type == DataTypes_single_t) return "0.0";
+					if (tdef.Type >= DataTypes_int8_t && tdef.Type <= DataTypes_uint64_t) return "0";
+					throw InvalidArgumentException("Invalid numeric type");
+				}
+				case DataTypes_ArrayTypes_array:
+				{
+					RR_SHARED_PTR<TypeDefinition> tdef2 = tdef.Clone();
+					tdef2->RemoveContainers();
+					tdef2->RemoveArray();
+					convert_type_result t = convert_type(*tdef2);
+					if (tdef.ArrayVarLength)
+					{
+						return "RobotRaconteur::AllocateEmptyRRArray<" + t.cpp_type + ">(0)";
+					}
+					else
+					{
+						return "RobotRaconteur::AllocateEmptyRRArray<" + t.cpp_type + ">(" + boost::lexical_cast<std::string>(tdef.ArrayLength.at(0)) + ")";
+					}
+				}
+				case DataTypes_ArrayTypes_multidimarray:
+				{
+					RR_SHARED_PTR<TypeDefinition> tdef2 = tdef.Clone();
+					tdef2->RemoveContainers();
+					tdef2->RemoveArray();
+					convert_type_result t = convert_type(*tdef2);
+					if (tdef.ArrayVarLength)
+					{
+						return "RobotRaconteur::AllocateEmptyRRMultiDimArray<" + t.cpp_type + ">(boost::assign::list_of(1)(0))";
+					}
+					else
+					{
+						return "RobotRaconteur::AllocateEmptyRRMultiDimArray<" + t.cpp_type + ">(boost::assign::list_of(" + boost::join(tdef.ArrayLength | boost::adaptors::transformed(boost::lexical_cast<std::string, int32_t>), ")(") + "))";
+					}
+				}
+				default:
+					throw InvalidArgumentException("Invalid array type");
+				}
+			}
+			if (tdef.Type == DataTypes_string_t)
+			{
+				return "\"\"";
+			}
+			if (tdef.Type == DataTypes_namedtype_t)
+			{
+				RR_SHARED_PTR<TypeDefinition> tdef2 = tdef.Clone();
+				tdef2->RemoveContainers();
+				tdef2->RemoveArray();
+
+				if (tdef2->ResolveNamedType()->RRDataType() == DataTypes_cstructure_t)
+				{
+					switch (tdef.ArrayType)
+					{
+					case DataTypes_ArrayTypes_none:
+					{
+						convert_type_result t = convert_type(*tdef2);
+						return t.cpp_type + "()";
+					}
+					case DataTypes_ArrayTypes_array:
+					{
+						convert_type_result t = convert_type(*tdef2);
+						if (tdef.ArrayVarLength)
+						{
+							return "RobotRaconteur::AllocateEmptyRRCStructureArray<" + t.cpp_type + ">(0)";
+						}
+						else
+						{
+							return "RobotRaconteur::AllocateEmptyRRCStructureArray<" + t.cpp_type + ">(" + boost::lexical_cast<std::string>(tdef.ArrayLength.at(0)) + ")";
+						}
+					}
+					case DataTypes_ArrayTypes_multidimarray:
+					{						
+						convert_type_result t = convert_type(*tdef2);
+						if (tdef.ArrayVarLength)
+						{
+							return "RobotRaconteur::AllocateEmptyRRCStructureMultiDimArray<" + t.cpp_type + ">(boost::assign::list_of(1)(0))";
+						}
+						else
+						{
+							return "RobotRaconteur::AllocateEmptyRRCStructureMultiDimArray<" + t.cpp_type + ">(boost::assign::list_of(" + boost::join(tdef.ArrayLength | boost::adaptors::transformed(boost::lexical_cast<std::string, int32_t>), ")(") + "))";
+						}
+					}
+					default:
+						throw InvalidArgumentException("Invalid array type");
+					}
+				}
+			}
+		}
+				
 		return get_variable_type(tdef).cpp_type + "()";
 	}
 
@@ -3484,6 +3593,240 @@ namespace RobotRaconteurGen
 		
 		w2 << "#define ROBOTRACONTEUR_SERVICE_TYPES " << type_list << endl;
 		w2 << "#pragma once" << endl << endl;
+	}
+
+	void CPPServiceLangGen::GenerateDefaultImplHeader(ServiceDefinition* d, ostream* w)
+	{
+		ostream& w2 = *w;
+	
+		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Objects.begin(); e != d->Objects.end(); ++e)
+		{
+			w2 << "class " << fix_name((*e)->Name) << "_default_impl : public virtual " << fix_name((*e)->Name) << endl;
+			w2 << "{" << endl;
+			w2 << "protected:";
+			w2 << "boost::mutex this_lock;" << endl;
+			MEMBER_ITER(PropertyDefinition)
+				get_variable_type_result t = get_variable_type(*m->Type);
+				w2 << t.cpp_type << " rrvar_" << fix_name(m->Name) << ";" << endl;
+			MEMBER_ITER_END()
+			MEMBER_ITER(EventDefinition)
+				w2 << EventDeclaration(m.get(), true, true) << ";" << endl;
+			MEMBER_ITER_END()
+			MEMBER_ITER(PipeDefinition)
+				if (m->Direction() == MemberDefinition_Direction_readonly)
+				{
+					get_variable_type_result t = get_variable_type(*m->Type);
+					w2 << "RR_SHARED_PTR<RobotRaconteur::PipeBroadcaster<" << t.cpp_type << " > > rrvar_" << fix_name(m->Name) << ";" << endl;
+				}
+			MEMBER_ITER_END()
+				MEMBER_ITER(CallbackDefinition)
+				w2 << "RR_SHARED_PTR<RobotRaconteur::Callback<" << GetCallbackDeclaration(m.get(), true, true) << " > > rrvar_" << fix_name(m->Name) << ";" << endl;
+			MEMBER_ITER_END()
+			MEMBER_ITER(WireDefinition)
+				if (m->Direction() == MemberDefinition_Direction_readonly)
+				{
+					get_variable_type_result t = get_variable_type(*m->Type);
+					w2 << "RR_SHARED_PTR<RobotRaconteur::WireBroadcaster<" << t.cpp_type << " > > rrvar_" << m->Name << ";" << endl;
+				}
+				if (m->Direction() == MemberDefinition_Direction_writeonly)
+				{
+					get_variable_type_result t = get_variable_type(*m->Type);
+					w2 << "RR_SHARED_PTR<RobotRaconteur::WireUnicastReceiver<" << t.cpp_type << " > > rrvar_" << m->Name << ";" << endl;
+				}
+			MEMBER_ITER_END()
+
+			w2 << endl;
+			w2 << "public:" << endl;
+
+			w2 << fix_name((*e)->Name) << "_default_impl();" << endl;
+			
+			MEMBER_ITER(PropertyDefinition)
+				if (m->Direction() != MemberDefinition_Direction_writeonly)
+				{
+					w2 << GetPropertyDeclaration(m.get(), true) << ";" << endl;
+				}
+				if (m->Direction() != MemberDefinition_Direction_readonly)
+				{
+					w2 << SetPropertyDeclaration(m.get(), true) << ";" << endl << endl;
+				}
+			MEMBER_ITER_END()
+
+			MEMBER_ITER(FunctionDefinition)
+				w2 << FunctionDeclaration(m.get(), true) << ";" << endl << endl;
+			MEMBER_ITER_END()
+
+			MEMBER_ITER(EventDefinition)
+				w2 << EventDeclaration(m.get(), true) << ";" << endl << endl;
+			MEMBER_ITER_END()
+
+			MEMBER_ITER(ObjRefDefinition)
+				w2 << ObjRefDeclaration(m.get(), true) << ";" << endl << endl;
+			MEMBER_ITER_END()
+
+			MEMBER_ITER(PipeDefinition)
+				w2 << GetPipeDeclaration(m.get(), true) << ";" << endl;
+				w2 << SetPipeDeclaration(m.get(), true) << ";" << endl << endl;
+			MEMBER_ITER_END()
+
+			MEMBER_ITER(CallbackDefinition)
+				w2 << GetCallbackDeclaration(m.get(), true) << ";" << endl;
+				w2 << SetCallbackDeclaration(m.get(), true) << ";" << endl << endl;
+			MEMBER_ITER_END()
+
+			MEMBER_ITER(WireDefinition)
+				w2 << GetWireDeclaration(m.get(), true) << ";" << endl;
+				w2 << SetWireDeclaration(m.get(), true) << ";" << endl << endl;
+			MEMBER_ITER_END()
+
+			MEMBER_ITER(MemoryDefinition)
+				w2 << MemoryDeclaration(m.get(), true) << ";" << endl << endl;
+			MEMBER_ITER_END()
+
+			w2 << "};" << endl << endl;
+		}
+	}
+
+	void CPPServiceLangGen::GenerateDefaultImplDefinition(ServiceDefinition* d, ostream* w)
+	{
+		ostream& w2 = *w;
+
+		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Objects.begin(); e != d->Objects.end(); ++e)
+		{
+			w2 << fix_name((*e)->Name) << "_default_impl::" <<  fix_name((*e)->Name)  << "_default_impl()" << endl;
+			w2 << "{" << endl;
+			MEMBER_ITER(PropertyDefinition)
+				w2 << "rrvar_" << fix_name(m->Name) << "=" << GetDefaultInitializedValue(*m->Type) << ";" << endl;
+			MEMBER_ITER_END()
+			w2 << "}" << endl;
+
+			MEMBER_ITER(PropertyDefinition)
+				if (m->Direction() != MemberDefinition_Direction_writeonly)
+				{
+					w2 << dforc(GetPropertyDeclaration(m.get(), true), fix_name((*e)->Name) + "_default_impl") << endl;
+					w2 << "{" << endl;
+					w2 << "boost::mutex::scoped_lock lock(this_lock);" << endl;
+					w2 << "return rrvar_" << fix_name(m->Name) << ";" << endl;
+					w2 << "}" << endl;				
+				}
+				if (m->Direction() != MemberDefinition_Direction_readonly)
+				{
+					w2 << dforc(SetPropertyDeclaration(m.get(), true), fix_name((*e)->Name) + "_default_impl") << endl;
+					w2 << "{" << endl;
+					w2 << "boost::mutex::scoped_lock lock(this_lock);" << endl;
+					w2 << "rrvar_" << fix_name(m->Name) << " = value;" << endl;
+					w2 << "}" << endl;
+				}
+			MEMBER_ITER_END()
+
+			MEMBER_ITER(FunctionDefinition)
+				w2 << dforc(FunctionDeclaration(m.get(), true), fix_name((*e)->Name) + "_default_impl") << endl;
+				w2 << "{" << endl;
+				w2 << "throw RobotRaconteur::NotImplementedException(\"\");" << endl;
+				w2 << "}" << endl;
+			MEMBER_ITER_END()
+
+			MEMBER_ITER(EventDefinition)
+				w2 << dforc(EventDeclaration(m.get(), true), fix_name((*e)->Name) + "_default_impl") << endl;
+				w2 << "{" << endl;
+				w2 << "return rrvar_" << fix_name(m->Name) << ";" << endl;
+				w2 << "}" << endl;
+			MEMBER_ITER_END()
+
+			MEMBER_ITER(ObjRefDefinition)
+				w2 << dforc(ObjRefDeclaration(m.get(), true), fix_name((*e)->Name) + "_default_impl") << endl;
+				w2 << "{" << endl;
+				w2 << "throw RobotRaconteur::NotImplementedException(\"\");" << endl;
+				w2 << "}" << endl;
+			MEMBER_ITER_END()
+
+			MEMBER_ITER(PipeDefinition)
+				w2 << dforc(GetPipeDeclaration(m.get(), true), fix_name((*e)->Name) + "_default_impl") << endl;
+				w2 << "{" << endl;
+				if (m->Direction() == MemberDefinition_Direction_readonly)
+				{
+					w2 << "boost::mutex::scoped_lock lock(this_lock);" << endl;
+					w2 << "if (!rrvar_" << fix_name(m->Name) << ") throw RobotRaconteur::InvalidOperationException(\"Pipe not set\");" << endl;
+					w2 << "return rrvar_" << fix_name(m->Name) << "->GetPipe();" << endl;
+				}
+				else
+				{
+					w2 << "throw RobotRaconteur::NotImplementedException(\"\");" << endl;
+				}
+				w2 << "}" << endl;
+				w2 << dforc(SetPipeDeclaration(m.get(), true), fix_name((*e)->Name) + "_default_impl") << endl;
+				w2 << "{" << endl;
+				if (m->Direction() == MemberDefinition_Direction_readonly)
+				{
+					w2 << "boost::mutex::scoped_lock lock(this_lock);" << endl;
+					get_variable_type_result t = get_variable_type(*m->Type);
+					w2 << "if (rrvar_" << fix_name(m->Name) << ") throw RobotRaconteur::InvalidOperationException(\"Pipe already set\");" << endl;
+					w2 << "rrvar_" << fix_name(m->Name) << " = RR_MAKE_SHARED<RobotRaconteur::PipeBroadcaster<" << t.cpp_type << "> >();" << endl;
+					w2 << "rrvar_" << fix_name(m->Name) << "->Init(value);";
+				}
+				w2 << "throw RobotRaconteur::NotImplementedException(\"\");" << endl;
+				w2 << "}" << endl;
+			MEMBER_ITER_END()
+
+			MEMBER_ITER(CallbackDefinition)
+				w2 << dforc(GetCallbackDeclaration(m.get(), true), fix_name((*e)->Name) + "_default_impl") << endl;
+				w2 << "{" << endl;
+				w2 << "boost::mutex::scoped_lock lock(this_lock);" << endl;
+				w2 << "return rrvar_" << fix_name(m->Name) << ";" << endl;
+				w2 << "}" << endl;
+				w2 << dforc(SetCallbackDeclaration(m.get(), true), fix_name((*e)->Name) + "_default_impl") << endl;
+				w2 << "{" << endl;
+				w2 << "boost::mutex::scoped_lock lock(this_lock);" << endl;
+				w2 << "if (rrvar_" << fix_name(m->Name) << ") throw RobotRaconteur::InvalidOperationException(\"Callback already set\");" << endl;
+				w2 << "rrvar_" << fix_name(m->Name) << " = value;" << endl;
+				w2 << "}" << endl;
+			MEMBER_ITER_END()
+
+			MEMBER_ITER(WireDefinition)
+				w2 << dforc(GetWireDeclaration(m.get(), true), fix_name((*e)->Name) + "_default_impl") << endl;
+				w2 << "{" << endl;
+				if (m->Direction() == MemberDefinition_Direction_readonly || m->Direction() == MemberDefinition_Direction_writeonly)
+				{
+					w2 << "boost::mutex::scoped_lock lock(this_lock);" << endl;
+					w2 << "if (!rrvar_" << fix_name(m->Name) << ") throw RobotRaconteur::InvalidOperationException(\"Wire not set\");" << endl;
+					w2 << "return rrvar_" << fix_name(m->Name) << "->GetWire();" << endl;
+				}
+				else
+				{
+					w2 << "throw RobotRaconteur::NotImplementedException(\"\");" << endl;
+				}
+				w2 << "}" << endl;
+				w2 << dforc(SetWireDeclaration(m.get(), true), fix_name((*e)->Name) + "_default_impl") << endl;
+				w2 << "{" << endl;
+				if (m->Direction() == MemberDefinition_Direction_readonly)
+				{
+					get_variable_type_result t = get_variable_type(*m->Type);
+					w2 << "if (rrvar_" << fix_name(m->Name) << ") throw RobotRaconteur::InvalidOperationException(\"Wire already set\");" << endl;
+					w2 << "rrvar_" << fix_name(m->Name) << " = RR_MAKE_SHARED<RobotRaconteur::WireBroadcaster<" << t.cpp_type << "> >();" << endl;
+					w2 << "rrvar_" << fix_name(m->Name) << "->Init(value);";
+				}
+				else if (m->Direction() == MemberDefinition_Direction_writeonly)
+				{
+					get_variable_type_result t = get_variable_type(*m->Type);
+					w2 << "if (rrvar_" << fix_name(m->Name) << ") throw RobotRaconteur::InvalidOperationException(\"Wire already set\");" << endl;
+					w2 << "rrvar_" << fix_name(m->Name) << " = RR_MAKE_SHARED<RobotRaconteur::WireUnicastReceiver<" << t.cpp_type << "> >();" << endl;
+					w2 << "rrvar_" << fix_name(m->Name) << "->Init(value);";
+				}
+				else
+				{
+					w2 << "throw RobotRaconteur::NotImplementedException(\"\");" << endl;
+				}
+				w2 << "}" << endl;
+			MEMBER_ITER_END()
+
+			MEMBER_ITER(MemoryDefinition)
+				w2 << dforc(MemoryDeclaration(m.get(), true), fix_name((*e)->Name) + "_default_impl") << endl;
+				w2 << "{" << endl;				
+				w2 << "throw RobotRaconteur::NotImplementedException(\"\");" << endl;
+				w2 << "}" << endl;
+			MEMBER_ITER_END()
+
+				
+		}
 	}
 
 }

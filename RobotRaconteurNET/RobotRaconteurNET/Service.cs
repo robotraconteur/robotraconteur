@@ -1554,7 +1554,7 @@ namespace RobotRaconteur
 
     public class PipeBroadcaster<T>
     {
-        //protected Pipe<T> pipe;
+        protected Pipe<T> pipe;
         protected WrappedPipeBroadcaster innerpipe;
         protected TypeDefinition type;
 
@@ -1576,12 +1576,17 @@ namespace RobotRaconteur
 
         public PipeBroadcaster(Pipe<T> pipe, int maximum_backlog=-1)
         {
-            //this.pipe = pipe;
+            this.pipe = pipe;
             this.innerpipe = new WrappedPipeBroadcaster();
             this.innerpipe.Init((WrappedPipeServer)pipe.innerpipe, maximum_backlog);
             this.type = ((WrappedPipeServer)pipe.innerpipe).Type;
         }        
 
+        public Pipe<T> Pipe
+        {
+            get { return pipe;  }
+        }
+        
         public void AsyncSendPacket(T packet, Action handler)
         {
             object dat = null;
@@ -2284,17 +2289,23 @@ namespace RobotRaconteur
             }
         }
 
-        //protected WeakReference wire;
+        protected Wire<T> wire;
 
         protected WrappedWireBroadcaster innerwire;
         protected TypeDefinition type;
         
         public WireBroadcaster(Wire<T> wire)
         {
+            this.wire = wire;
             this.innerwire = new WrappedWireBroadcaster();
             this.innerwire.Init((WrappedWireServer)wire.innerwire);
             this.type = ((WrappedWireServer)wire.innerwire).Type;
             
+        }
+
+        public Wire<T> Wire
+        {
+            get { return wire; }
         }
 
         public T OutValue
@@ -2340,11 +2351,13 @@ namespace RobotRaconteur
 
     public class WireUnicastReceiver<T>
     {
+        protected Wire<T> wire;
         protected WrappedWireUnicastReceiver innerwire;
         protected TypeDefinition type;
 
         public WireUnicastReceiver(Wire<T> wire)
         {
+            this.wire = wire;
             this.innerwire = new WrappedWireUnicastReceiver();
             this.innerwire.Init((WrappedWireServer)wire.innerwire);
             this.type = ((WrappedWireServer)wire.innerwire).Type;
@@ -2352,6 +2365,11 @@ namespace RobotRaconteur
             var cb = new ValueChangedDirector(this);
             var id=RRObjectHeap.AddObject(cb);
             this.innerwire.AddInValueChangedListener(cb, id);
+        }
+
+        public Wire<T> Wire
+        {
+            get { return wire; }
         }
 
         public T GetInValue(out TimeSpec ts, out uint ep)

@@ -126,8 +126,11 @@ namespace RobotRaconteurGen
 
 		static std::string GetDefaultValue(const TypeDefinition& tdef);
 
+		static std::string GetDefaultInitializedValue(const TypeDefinition& tdef);
 
+		static void GenerateDefaultImplHeader(ServiceDefinition *d, ostream* w);
 
+		static void GenerateDefaultImplDefinition(ServiceDefinition* d, ostream* w);
 
 		//File generators
 		static void GenerateFiles(RR_SHARED_PTR<ServiceDefinition> d, std::string servicedef, std::string path=".");

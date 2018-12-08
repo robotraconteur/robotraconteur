@@ -739,6 +739,8 @@ namespace RobotRaconteur
 		RR_SHARED_PTR<RRValue> out_value;
 
 		void ServiceEvent(ServerServiceListenerEventType evt);
+
+		RR_SHARED_PTR<WireBase> GetWireBase();
 	};
 
 
@@ -758,6 +760,11 @@ namespace RobotRaconteur
 		void SetOutValue(T value)
 		{
 			SetOutValueBase(RRPrimUtil<T>::PrePack(value));
+		}
+
+		RR_SHARED_PTR<Wire<T> > GetWire()
+		{
+			return rr_cast<Wire<T> >(GetWireBase());
 		}
 
 	protected:
@@ -828,6 +835,11 @@ namespace RobotRaconteur
 
 		boost::signals2::signal<void(const U&, const TimeSpec&, const uint32_t&)> InValueChanged;
 		
+		RR_SHARED_PTR<T> GetWire()
+		{
+			return wire;
+		}
+
 	protected:
 
 		void ConnectionConnected(RR_SHARED_PTR<wireconnection_type > connection)

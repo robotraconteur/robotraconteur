@@ -1140,5 +1140,12 @@ namespace RobotRaconteur
 		return out_value;
 	}
 
+	RR_SHARED_PTR<WireBase> WireBroadcasterBase::GetWireBase()
+	{
+		RR_SHARED_PTR<WireBase> wire1 = wire.lock();
+		if (!wire1) throw InvalidOperationException("Wire released");
+		return wire1;
+	}
+
 
 }

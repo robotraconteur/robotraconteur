@@ -2204,6 +2204,118 @@ public class obj4_skel : ServiceSkel {
     }
     public override string RRType { get { return "com.robotraconteur.testing.TestService3.obj4"; } }
 }
+public class testroot3_default_impl : testroot3{
+    protected PipeBroadcaster<int> rrvar_unreliable1;
+    protected WireBroadcaster<int> rrvar_peekwire;
+    protected WireUnicastReceiver<int> rrvar_pokewire;
+    public virtual int readme {get; set;} = default(int);
+    public virtual int writeme {get; set;} = default(int);
+    public virtual int unknown_modifier {get; set;} = default(int);
+    public virtual testenum1 testenum1_prop {get; set;} = default(testenum1);
+    public virtual testcstruct1 testcstruct1_prop {get; set;} = default(testcstruct1);
+    public virtual teststruct3 teststruct3_prop {get; set;} = default(teststruct3);
+    public virtual List<double[]> d1 {get; set;} = default(List<double[]>);
+    public virtual List<double[]> d2 {get; set;} = default(List<double[]>);
+    public virtual Dictionary<int,double[]> d3 {get; set;} = default(Dictionary<int,double[]>);
+    public virtual Dictionary<int,double[]> d4 {get; set;} = default(Dictionary<int,double[]>);
+    public virtual List<MultiDimArray> d5 {get; set;} = default(List<MultiDimArray>);
+    public virtual Dictionary<int,MultiDimArray> d6 {get; set;} = default(Dictionary<int,MultiDimArray>);
+    public virtual void testcstruct1_func1(testcstruct1 s) {
+    throw new NotImplementedException();    }
+    public virtual testcstruct1 testcstruct1_func2() {
+    throw new NotImplementedException();    }
+    public virtual Generator2<double> gen_func1() {
+    throw new NotImplementedException();    }
+    public virtual Generator2<byte[]> gen_func2(string name) {
+    throw new NotImplementedException();    }
+    public virtual Generator3<byte[]> gen_func3(string name) {
+    throw new NotImplementedException();    }
+    public virtual Generator1<byte[],byte[]> gen_func4() {
+    throw new NotImplementedException();    }
+    public virtual Generator1<com.robotraconteur.testing.TestService1.teststruct2,com.robotraconteur.testing.TestService1.teststruct2> gen_func5() {
+    throw new NotImplementedException();    }
+    public virtual obj4 get_o4() {
+    throw new NotImplementedException();
+    }
+    public virtual Pipe<int> unreliable1 {
+    get { return rrvar_unreliable1.Pipe;  }
+    set {
+    if (rrvar_unreliable1!=null) throw new InvalidOperationException("Pipe already set");
+    rrvar_unreliable1= new PipeBroadcaster<int>(value);
+    }
+    }
+    public virtual Pipe<int> unreliable2 {
+    get { throw new NotImplementedException(); }
+    set { throw new InvalidOperationException();}
+    }
+    public virtual Pipe<int[]> p1 {
+    get { throw new NotImplementedException(); }
+    set { throw new InvalidOperationException();}
+    }
+    public virtual Pipe<int[]> p2 {
+    get { throw new NotImplementedException(); }
+    set { throw new InvalidOperationException();}
+    }
+    public virtual Pipe<MultiDimArray> p3 {
+    get { throw new NotImplementedException(); }
+    set { throw new InvalidOperationException();}
+    }
+    public virtual Wire<int> peekwire {
+    get { return rrvar_peekwire.Wire;  }
+    set {
+    if (rrvar_peekwire!=null) throw new InvalidOperationException("Pipe already set");
+    rrvar_peekwire= new WireBroadcaster<int>(value);
+    }
+    }
+    public virtual Wire<int> pokewire {
+    get { return rrvar_pokewire.Wire;  }
+    set {
+    if (rrvar_pokewire!=null) throw new InvalidOperationException("Pipe already set");
+    rrvar_pokewire= new WireUnicastReceiver<int>(value);
+    }
+    }
+    public virtual Wire<int[]> w1 {
+    get { throw new NotImplementedException(); }
+    set { throw new NotImplementedException();}
+    }
+    public virtual Wire<int[]> w2 {
+    get { throw new NotImplementedException(); }
+    set { throw new NotImplementedException();}
+    }
+    public virtual Wire<MultiDimArray> w3 {
+    get { throw new NotImplementedException(); }
+    set { throw new NotImplementedException();}
+    }
+    public virtual ArrayMemory<double> readmem { 
+    get { throw new NotImplementedException(); }
+    set { throw new InvalidOperationException();}
+    }
+    public virtual CStructureArrayMemory<testcstruct2> cstruct_m1 { 
+    get { throw new NotImplementedException(); }
+    set { throw new InvalidOperationException();}
+    }
+    public virtual CStructureMultiDimArrayMemory<testcstruct2> cstruct_m2 {
+    get { throw new NotImplementedException(); }
+    set { throw new InvalidOperationException();}
+    }
+}
+public class obj1_default_impl : obj1{
+    public virtual double[] d1 {get; set;} = new double[0];
+}
+public class obj2_default_impl : obj2{
+    public virtual double[] d1 {get; set;} = new double[0];
+}
+public class obj3_default_impl : obj3{
+    public virtual double[] d1 {get; set;} = new double[0];
+}
+public class obj4_default_impl : obj4{
+    public virtual string s_ind {get; set;} = "";
+    public virtual int i_ind {get; set;} = default(int);
+    public virtual string data {get; set;} = "";
+    public virtual com.robotraconteur.testing.TestService1.sub3 get_o3_1(string ind) {
+    throw new NotImplementedException();
+    }
+}
 public static class RRExtensions{
     public static Task<int> async_get_readme(this async_testroot3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {

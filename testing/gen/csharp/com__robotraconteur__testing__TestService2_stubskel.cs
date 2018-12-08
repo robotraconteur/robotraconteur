@@ -602,6 +602,40 @@ public class subobj_skel : ServiceSkel {
     }
     public override string RRType { get { return "com.robotraconteur.testing.TestService2.subobj"; } }
 }
+public class baseobj_default_impl : baseobj{
+    protected Callback<Action<double, double>> rrvar_cb2;
+    public virtual double d1 {get; set;} = default(double);
+    public virtual double[] d2 {get; set;} = new double[0];
+    public virtual double func3(double d1, double d2) {
+    throw new NotImplementedException();    }
+    public event Action ev1;
+    public virtual subobj get_o5() {
+    throw new NotImplementedException();
+    }
+    public virtual Pipe<double[]> p1 {
+    get { throw new NotImplementedException(); }
+    set { throw new InvalidOperationException();}
+    }
+    public virtual Callback<Action<double, double>> cb2 {
+    get { return rrvar_cb2;  }
+    set {
+    if (rrvar_cb2!=null) throw new InvalidOperationException("Callback already set");
+    rrvar_cb2= value;
+    }
+    }
+    public virtual Wire<double[]> w1 {
+    get { throw new NotImplementedException(); }
+    set { throw new NotImplementedException();}
+    }
+    public virtual ArrayMemory<double> m1 { 
+    get { throw new NotImplementedException(); }
+    set { throw new InvalidOperationException();}
+    }
+}
+public class subobj_default_impl : subobj{
+    public virtual double add_val(double v) {
+    throw new NotImplementedException();    }
+}
 public static class RRExtensions{
     public static Task<double> async_get_d1(this async_baseobj rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {

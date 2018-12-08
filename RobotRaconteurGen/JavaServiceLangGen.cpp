@@ -2017,6 +2017,190 @@ namespace RobotRaconteurGen
 		w2 << "}" << endl;
 	}
 
+	void JavaServiceLangGen::GenerateDefaultImpl(ServiceEntryDefinition* e, ostream * w)
+	{
+		ostream& w2 = *w;
+
+		w2 << "public class " + fix_name(e->Name) + "_default_impl implements " + fix_name(e->Name) + "{" << endl;
+
+		MEMBER_ITER2(CallbackDefinition)
+			w2 << "    protected Callback<" + str_pack_delegate(m->Parameters, m->ReturnType) + "> rrvar_" + fix_name(m->Name) + ";" << endl;
+		MEMBER_ITER_END()
+
+		MEMBER_ITER2(PipeDefinition)
+			if (m->Direction() == MemberDefinition_Direction_readonly)
+			{
+				convert_type_result t = convert_type_array(*m->Type);
+				w2 << "    protected PipeBroadcaster<" + t.java_type + t.java_arr_type + "> rrvar_" + fix_name(m->Name) + ";" << endl;
+			}
+		MEMBER_ITER_END()
+
+		MEMBER_ITER2(WireDefinition)
+			if (m->Direction() == MemberDefinition_Direction_readonly)
+			{
+				convert_type_result t = convert_type_array(*m->Type);
+				w2 << "    protected WireBroadcaster<" + t.java_type + t.java_arr_type + "> rrvar_" + fix_name(m->Name) + ";" << endl;
+			}
+		if (m->Direction() == MemberDefinition_Direction_writeonly)
+		{
+			convert_type_result t = convert_type_array(*m->Type);
+			w2 << "    protected WireUnicastReceiver<" + t.java_type + t.java_arr_type + "> rrvar_" + fix_name(m->Name) + ";" << endl;
+		}
+		MEMBER_ITER_END()
+
+		MEMBER_ITER2(PropertyDefinition)
+			convert_type_result t = convert_type(*m->Type);
+		t.name = fix_name(m->Name);
+		w2 << "    protected " + t.java_type + t.java_arr_type + " rrvar_" + t.name + ";" << endl;
+		w2 << "    public " + t.java_type + t.java_arr_type + " get_" + t.name + "() { return rrvar_" << t.name << "; }" << endl;
+		w2 << "    public void set_" + t.name + "(" + t.java_type + t.java_arr_type + " value) { rrvar_" << t.name << " = value; }" << endl;
+		MEMBER_ITER_END()
+
+		MEMBER_ITER2(FunctionDefinition)
+			if (!m->IsGenerator())
+			{
+				convert_type_result t = convert_type(*m->ReturnType);
+				string params = str_pack_parameters(m->Parameters, true);
+				w2 << "    public " + t.java_type + t.java_arr_type + " " + fix_name(m->Name) + "(" + params + ") {" << endl;
+			}
+			else
+			{
+				convert_generator_result t = convert_generator(m.get());
+				string params = str_pack_parameters(t.params, true);
+				w2 << "    public " + t.generator_java_type + " " + fix_name(m->Name) + "(" + params + ") {" << endl;
+			}
+		w2 << "    throw new UnsupportedOperationException();";
+		w2 << "    }" << endl;
+
+		MEMBER_ITER_END()
+
+		MEMBER_ITER2(EventDefinition)
+		string params = str_pack_parameters(m->Parameters, true);
+		w2 << "    protected  Vector<" << str_pack_delegate(m->Parameters) << ">" << " rrvar_" << fix_name(m->Name) << "=new Vector<" << str_pack_delegate(m->Parameters) << ">();" << endl;
+		w2 << "    public void " << " add" << fix_name(m->Name) << "Listener(" << str_pack_delegate(m->Parameters) << " listener) {" << endl;
+		w2 << "    synchronized(rrvar_" << fix_name(m->Name) << ") {" << endl;
+		w2 << "    rrvar_" << fix_name(m->Name) << ".add(listener);" << endl;
+		w2 << "    }" << endl;
+		w2 << "    }" << endl;
+		w2 << "    public void " << " remove" << fix_name(m->Name) << "Listener(" << str_pack_delegate(m->Parameters) << " listener) {" << endl;
+		w2 << "    synchronized(rrvar_" << fix_name(m->Name) << ") {" << endl;
+		w2 << "    rrvar_" << fix_name(m->Name) << ".remove(listener);" << endl;
+		w2 << "    }" << endl;
+		w2 << "    }" << endl;
+		MEMBER_ITER_END()
+
+
+
+		MEMBER_ITER2(ObjRefDefinition)
+			string objtype = fix_qualified_name(m->ObjectType);
+		if (objtype == "varobject") objtype = "Object";
+		std::string indtype;
+		if (GetObjRefIndType(m, indtype))
+		{
+			w2 << "    public " + objtype + " get_" + fix_name(m->Name) + "(" + indtype + " ind) {" << endl;
+			w2 << "    throw new UnsupportedOperationException();" << endl;
+			w2 << "    }" << endl;
+		}
+		else
+		{
+			w2 << "    public " + objtype + " get_" + fix_name(m->Name) + "() {" << endl;
+			w2 << "    throw new UnsupportedOperationException();" << endl;
+			w2 << "    }" << endl;
+		}
+		MEMBER_ITER_END()
+
+		MEMBER_ITER2(PipeDefinition)
+			convert_type_result t = convert_type_array(*m->Type);
+		w2 << "    public Pipe<" + t.java_type + t.java_arr_type + "> get_" << fix_name(m->Name) << "()" << endl;
+		if (m->Direction() == MemberDefinition_Direction_readonly)
+		{
+			w2 << "    { return rrvar_" + fix_name(m->Name) + ".getPipe();  }" << endl;
+		}
+		else
+		{
+			w2 << "    { throw new UnsupportedOperationException(); }" << endl;
+		}
+		w2 << "    public void set_" << fix_name(m->Name) << "(Pipe<" + t.java_type + t.java_arr_type + "> value)" << endl;
+		if (m->Direction() == MemberDefinition_Direction_readonly)
+		{
+			w2 << "    {" << endl;
+			w2 << "    if (rrvar_" << fix_name(m->Name) << "!=null) throw new IllegalStateException(\"Pipe already set\");" << endl;
+			w2 << "    rrvar_" << fix_name(m->Name) << "= new PipeBroadcaster<" << t.java_type << t.java_arr_type << ">(value);" << endl;
+			w2 << "    }" << endl;
+		}
+		else
+		{
+			w2 << "    { throw new IllegalStateException();}" << endl;
+		}		
+		MEMBER_ITER_END()
+
+		MEMBER_ITER2(CallbackDefinition)
+		w2 << "    public Callback<" + str_pack_delegate(m->Parameters, m->ReturnType) + "> get_" + fix_name(m->Name) + "()" << endl;
+		w2 << "    { return rrvar_" << fix_name(m->Name) << ";  }" << endl;
+		w2 << "    public void set_" + fix_name(m->Name) + "(Callback<" + str_pack_delegate(m->Parameters, m->ReturnType) + "> value)" << endl;
+		w2 << "    {" << endl;
+		w2 << "    if (rrvar_" << fix_name(m->Name) << "!=null) throw new IllegalStateException(\"Callback already set\");" << endl;
+		w2 << "    rrvar_" << fix_name(m->Name) << "= value;" << endl;
+		w2 << "    }" << endl;		
+		MEMBER_ITER_END()
+
+		MEMBER_ITER2(WireDefinition)
+		convert_type_result t = convert_type_array(*m->Type);
+		w2 << "    public Wire<" + t.java_type + t.java_arr_type + "> get_" << fix_name(m->Name) << "()" << endl;
+		if (m->Direction() == MemberDefinition_Direction_readonly || m->Direction() == MemberDefinition_Direction_writeonly)
+		{
+			w2 << "    { return rrvar_" + fix_name(m->Name) + ".getWire();  }" << endl;
+		}
+		else
+		{
+			w2 << "    { throw new UnsupportedOperationException(); }" << endl;
+		}
+		w2 << "    public void set_" << fix_name(m->Name) << "(Wire<" + t.java_type + t.java_arr_type + "> value)" << endl;
+		if (m->Direction() == MemberDefinition_Direction_readonly)
+		{
+			w2 << "    {" << endl;
+			w2 << "    if (rrvar_" << fix_name(m->Name) << "!=null) throw new IllegalStateException(\"Pipe already set\");" << endl;
+			w2 << "    rrvar_" << fix_name(m->Name) << "= new WireBroadcaster<" << t.java_type << t.java_arr_type << ">(value);" << endl;
+			w2 << "    }" << endl;
+		}
+		else if (m->Direction() == MemberDefinition_Direction_writeonly)
+		{
+			w2 << "    {" << endl;
+			w2 << "    if (rrvar_" << fix_name(m->Name) << "!=null) throw new IllegalStateException(\"Pipe already set\");" << endl;
+			w2 << "    rrvar_" << fix_name(m->Name) << "= new WireUnicastReceiver<" << t.java_type << t.java_arr_type << ">(value);" << endl;
+			w2 << "    }" << endl;
+		}
+		else
+		{
+			w2 << "    { throw new UnsupportedOperationException();}" << endl;
+		}		
+		MEMBER_ITER_END()
+
+
+		MEMBER_ITER2(MemoryDefinition)
+			TypeDefinition t2;
+		m->Type->CopyTo(t2);
+		t2.RemoveArray();
+		convert_type_result t = convert_type_array(t2);
+		std::string c = IsTypeNumeric(m->Type->Type) ? "" : "CStructure";
+		switch (m->Type->ArrayType)
+		{
+		case DataTypes_ArrayTypes_array:
+			w2 << "    public " << c << "ArrayMemory<" + t.java_type + t.java_arr_type + "> get_" + fix_name(m->Name) + "()" << endl;
+			break;
+		case DataTypes_ArrayTypes_multidimarray:
+			w2 << "    public " << c << "MultiDimArrayMemory<" + t.java_type + t.java_arr_type + "> get_" + fix_name(m->Name) + "()" << endl;
+			break;
+		default:
+			throw DataTypeException("Invalid memory definition");
+		}
+		w2 << "    { throw new UnsupportedOperationException(); }" << endl;
+		MEMBER_ITER_END()
+
+		w2 << "}" << endl;
+
+	}
+
 	void JavaServiceLangGen::GenerateServiceFactoryFile(ServiceDefinition* d, std::string defstring, ostream* w)
 	{
 		ostream& w2=*w;
@@ -2443,6 +2627,19 @@ namespace RobotRaconteurGen
 		GenerateSkel(d,w);
 	}
 
+	void JavaServiceLangGen::GenerateDefaultImplFile(ServiceEntryDefinition* d, ostream* w)
+	{
+		ostream& w2 = *w;
+
+		w2 << "//This file is automatically generated. DO NOT EDIT!" << endl;
+		w2 << "package " << fix_name(d->ServiceDefinition_.lock()->Name) << ";" << endl;
+		w2 << "import java.util.*;" << endl;
+		w2 << "import com.robotraconteur.*;" << endl;
+		//w2 << "using System.Collections.Generic;" << endl << endl;
+
+		GenerateDefaultImpl(d, w);
+	}
+
 	void JavaServiceLangGen::GenerateFiles(RR_SHARED_PTR<ServiceDefinition> d, std::string servicedef,std::string path)
 	{
 #ifdef _WIN32
@@ -2541,6 +2738,13 @@ namespace RobotRaconteurGen
 			f2.close();
 		}
 
+		for (vector<boost::shared_ptr<ServiceEntryDefinition> >::iterator e = d->Objects.begin(); e != d->Objects.end(); ++e)
+		{
+			ofstream f2((p.string() + os_pathsep + fix_name((*e)->Name) + "_default_impl.java").c_str());
+			GenerateDefaultImplFile(e->get(), &f2);
+			f2.close();
+		}
+
 		ofstream f3((p.string()+os_pathsep+boost::replace_all_copy(fix_name(d->Name),".","__") + "Constants.java").c_str());
 		GenerateConstantsFile(d.get(),&f3);
 		f3.close();
@@ -2567,9 +2771,5 @@ namespace RobotRaconteurGen
 		if (tdef.Type==DataTypes_string_t) return "\"\"";
 		}
 		return "null";
-
-
-
 	}
-
 }

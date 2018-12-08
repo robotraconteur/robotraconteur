@@ -7,6 +7,7 @@ public class WireBroadcaster<T> {
 
 	protected WrappedWireBroadcaster innerwire;
 	protected TypeDefinition type;
+	protected Wire<T> wire;
 	
 	static class WrappedWireBroadcasterPredicateDirectorJava extends WrappedWireBroadcasterPredicateDirector
     {
@@ -26,9 +27,15 @@ public class WireBroadcaster<T> {
 
 	public WireBroadcaster(Wire<T> wire)
 	{
+		this.wire=wire;
 		this.innerwire=new WrappedWireBroadcaster();
 		this.innerwire.init((WrappedWireServer)wire.innerwire);
 		this.type=((WrappedWireServer)wire.innerwire).getType();
+	}
+	
+	public Wire<T> getWire()
+	{
+		return wire;
 	}
 	
 	public void setOutValue(T value)
