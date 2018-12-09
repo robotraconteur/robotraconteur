@@ -31,7 +31,7 @@ matrix:
         - >
           RR_CMAKE_EXTRA_ARGS="-DBUILD_PYTHON3=ON -DBoost_USE_STATIC_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DPYTHON3_EXECUTABLE=/usr/bin/python3.5 -DBUILD_PYTHON=ON -DBUILD_JAVA=ON"
         - RR_CMAKE_GENERATOR="Unix Makefiles"
-        - RR_CMAKE_TEST_TARGET=test
+        
     - os: windows
       before_script: 
         - curl -o boost_1_68_0.zip -L https://dl.bintray.com/boostorg/release/1.68.0/source/boost_1_68_0.zip
@@ -48,7 +48,7 @@ matrix:
         - >
           RR_CMAKE_EXTRA_ARGS="-DBUILD_NET=OFF -DBoost_USE_STATIC_LIBS=ON -DBOOST_INCLUDEDIR=$TRAVIS_BUILD_DIR/boost_1_68_0 -DBOOST_LIBRARYDIR=$TRAVIS_BUILD_DIR/boost_1_68_0/stage/lib -DPYTHON_EXECUTABLE=C:/Python27/python.exe -DBUILD_PYTHON=OFF -DBUILD_JAVA=OFF"
         - RR_CMAKE_GENERATOR="Visual Studio 15 2017"
-        - RR_CMAKE_TEST_TARGET=RUN_TESTS
+        
     - os: windows
       before_script: 
         - curl -o boost_1_68_0.zip -L https://dl.bintray.com/boostorg/release/1.68.0/source/boost_1_68_0.zip
@@ -61,7 +61,7 @@ matrix:
         - >
           RR_CMAKE_EXTRA_ARGS="-DBoost_USE_STATIC_LIBS=ON -DBOOST_INCLUDEDIR=$TRAVIS_BUILD_DIR/boost_1_68_0 -DBOOST_LIBRARYDIR=$TRAVIS_BUILD_DIR/boost_1_68_0/stage/lib"
         - RR_CMAKE_GENERATOR="Visual Studio 15 2017 Win64"
-        - RR_CMAKE_TEST_TARGET=RUN_TESTS
+        
     
     - os: osx
       before_script:
@@ -90,4 +90,4 @@ script:
   - cd build
   - cmake -G "$RR_CMAKE_GENERATOR" -DBUILD_GEN=ON -DBUILD_TEST=ON $RR_CMAKE_EXTRA_ARGS ..
   - cmake --build . --config Release
-  - cmake --build . --target $RR_CMAKE_TEST_TARGET --config Release
+  - ctest . -C Release
