@@ -1523,7 +1523,7 @@ void PipeBroadcasterBase::AsyncSendPacketBase(RR_SHARED_PTR<RRValue> packet, RR_
 
 	if (op->keys.size() == 0)
 	{
-		detail::PostHandler(node, RR_MOVE(handler), true, true);
+		detail::PostHandler(node, (handler), true, true);
 	}
 
 }

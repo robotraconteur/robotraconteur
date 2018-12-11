@@ -590,7 +590,7 @@ namespace RobotRaconteur
 
 		}
 		
-		AsyncSendMessage(m,s,RR_MOVE(callback));
+		AsyncSendMessage(m,s,(callback));
 	}
 
 	void ServerContext::AsyncSendMessage(RR_SHARED_PTR<MessageEntry> m, RR_SHARED_PTR<Endpoint> e, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& callback)
@@ -632,7 +632,7 @@ namespace RobotRaconteur
 	{		
 		if (!unreliable)
 		{
-			AsyncSendMessage(m, e, RR_MOVE(callback));
+			AsyncSendMessage(m, e, (callback));
 		}
 		else
 		{
@@ -644,7 +644,7 @@ namespace RobotRaconteur
 				s = e1->second;
 			}
 
-			AsyncSendUnreliableMessage(m, s, RR_MOVE(callback));
+			AsyncSendUnreliableMessage(m, s, (callback));
 		}
 	}
 

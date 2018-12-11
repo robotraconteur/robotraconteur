@@ -1495,7 +1495,7 @@ protected:
 		}
 
 		template <typename ConstBufferSequence, typename Handler>
-		void async_write_some(const ConstBufferSequence& buffers, const Handler& handler)
+		void async_write_some(const ConstBufferSequence& buffers, BOOST_ASIO_MOVE_ARG(Handler) handler)
 		{
 			const_buffers b;
 			boost::range::copy(buffers, std::back_inserter(b));
