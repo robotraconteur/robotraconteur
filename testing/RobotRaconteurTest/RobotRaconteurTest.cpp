@@ -417,6 +417,7 @@ int main(int argc, char* argv[])
 		{
 		ServiceTestClient cl;
 		cl.RunFullTest("tcp://localhost:4565/{0}/RobotRaconteurTestService", "rr+tcp://localhost:4565/?service=RobotRaconteurTestService_auth");
+		cl.RunFullTest("rr+ws://localhost:4565/?service=RobotRaconteurTestService", "rr+ws://localhost:4565/?service=RobotRaconteurTestService_auth");
 		
 		}
 		

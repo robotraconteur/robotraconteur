@@ -25,6 +25,7 @@
 #include <boost/foreach.hpp>
 #include <boost/range.hpp>
 #include <boost/range/algorithm.hpp>
+#include <boost/type_traits/remove_reference.hpp>
 
 #ifdef ROBOTRACONTEUR_USE_SCHANNEL
 #include <wincrypt.h>
@@ -1418,6 +1419,8 @@ protected:
 	class handler_wrapper
 	{
 	public:
+
+		typedef typename boost::remove_reference<Handler>::type HandlerValueType;
 		
 		handler_wrapper(const Handler& handler) : handler_(static_cast<const Handler&>(handler))
 		{
@@ -1432,7 +1435,7 @@ protected:
 		}
 
 	private:
-		Handler handler_;
+		HandlerValueType handler_;
 
 	};
 
