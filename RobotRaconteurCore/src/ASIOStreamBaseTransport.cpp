@@ -176,14 +176,14 @@ void ASIOStreamBaseTransport::AsyncAttachStream1(RR_SHARED_PTR<RRObject> paramet
 		
 		RobotRaconteurNode::TryPostToThreadPool(node,boost::bind(&ASIOStreamBaseTransport::Close,shared_from_this()));
 		
-		detail::PostHandlerWithException(node, RR_MOVE(callback), err, true);		
+		detail::PostHandlerWithException(node, (callback), err, true);		
 		return;
 	}
 	try
 	{
 		if (!parameter)
 		{
-			detail::PostHandlerWithException(node, RR_MOVE(callback), RR_MAKE_SHARED<ConnectionException>("IO error"), true);
+			detail::PostHandlerWithException(node, (callback), RR_MAKE_SHARED<ConnectionException>("IO error"), true);
 			return;
 		}
 
@@ -198,7 +198,7 @@ void ASIOStreamBaseTransport::AsyncAttachStream1(RR_SHARED_PTR<RRObject> paramet
 			{
 				if (RemoteNodeID != RemoteNodeID1)
 				{
-					detail::PostHandlerWithException(node, RR_MOVE(callback), RR_MAKE_SHARED<ConnectionException>("Invalid server NodeID"), true);
+					detail::PostHandlerWithException(node, (callback), RR_MAKE_SHARED<ConnectionException>("Invalid server NodeID"), true);
 					return;
 				}
 			}

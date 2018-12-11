@@ -16,6 +16,7 @@
 
 #include "RobotRaconteur/DataTypes.h"
 #include "RobotRaconteur/Endpoint.h"
+#include "RobotRaconteur/Client.h"
 #include "RobotRaconteur/Service.h"
 
 namespace RobotRaconteur
