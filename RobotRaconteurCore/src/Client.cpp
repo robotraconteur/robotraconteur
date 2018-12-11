@@ -145,7 +145,7 @@ namespace RobotRaconteur
 	{
 
 		m->ServicePath = ServicePath;
-		GetContext()->AsyncSendPipeMessage(m, unreliable, RR_MOVE(handler));
+		GetContext()->AsyncSendPipeMessage(m, unreliable, (handler));
 	}
 
 	void ServiceStub::SendWireMessage(RR_SHARED_PTR<MessageEntry> m)
@@ -305,7 +305,7 @@ namespace RobotRaconteur
 
 				}
 
-				AsyncFindObjRef2(RR_SHARED_PTR<std::vector<RR_SHARED_PTR<ServiceDefinition> > >(), RR_SHARED_PTR<RobotRaconteurException>(), objecttype, objectdef, path, objecttype2, RR_MOVE(handler), timeout);
+				AsyncFindObjRef2(RR_SHARED_PTR<std::vector<RR_SHARED_PTR<ServiceDefinition> > >(), RR_SHARED_PTR<RobotRaconteurException>(), objecttype, objectdef, path, objecttype2, (handler), timeout);
 			}			
 			catch (std::exception& err)
 			{
@@ -1327,7 +1327,7 @@ namespace RobotRaconteur
 				}
 
 				//std::cout << "AsyncConnectService3_1" << std::endl;
-				AsyncConnectService4(d, RR_SHARED_PTR<RobotRaconteurException>(), username, credentials, objecttype, type, RR_MOVE(handler));
+				AsyncConnectService4(d, RR_SHARED_PTR<RobotRaconteurException>(), username, credentials, objecttype, type, (handler));
 
 			}
 			catch (RobotRaconteurException& err)
@@ -1459,7 +1459,7 @@ namespace RobotRaconteur
 				else
 				{
 					//std::cout << "AsyncConnectService5_1" << std::endl;
-					AsyncConnectService6(RR_MAKE_SHARED<std::string>("OK"), RR_SHARED_PTR<RobotRaconteurException>(), type, d, RR_MOVE(handler));
+					AsyncConnectService6(RR_MAKE_SHARED<std::string>("OK"), RR_SHARED_PTR<RobotRaconteurException>(), type, d, (handler));
 				}
 
 
@@ -1805,7 +1805,7 @@ namespace RobotRaconteur
 	{
 		if (!unreliable)
 		{
-			AsyncSendMessage(m, RR_MOVE(handler));
+			AsyncSendMessage(m, (handler));
 		}
 		else
 		{

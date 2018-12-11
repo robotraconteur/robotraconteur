@@ -82,7 +82,7 @@ namespace RobotRaconteur
 	{
 	public:
 		void resize(size_t n) { if (n != N) throw std::out_of_range("requested size does not match fixed array size"); }
-		void max_size() { return N; }
+		size_t max_size() { return N; }
 	};
 
 	template <typename T, size_t N, bool varlength>
