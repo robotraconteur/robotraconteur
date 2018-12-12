@@ -94,6 +94,7 @@ ROBOTRACONTEUR_GENERATE_THUNK(RR_THUNK_SRCS
 	)
 
 add_custom_target(RobotRaconteurNETTest_gen DEPENDS ${RR_THUNK_SRCS})
+add_dependencies(RobotRaconteurNETNative RobotRaconteurNETTest_gen)
 INCLUDE_EXTERNAL_MSPROJECT(RobotRaconteurNETTest ${CMAKE_CURRENT_BINARY_DIR}/RobotRaconteurNETTest.csproj  RobotRaconteurNETTest_gen)
 add_dependencies(RobotRaconteurNETTest RobotRaconteurNET)
 #add_custom_target(RobotRaconteurNETTestVB ALL msbuild -p:Configuration=$(Configuration) /t:rebuild RobotRaconteurNETTestVB.vbproj WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
