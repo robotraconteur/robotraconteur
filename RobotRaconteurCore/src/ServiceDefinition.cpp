@@ -1114,7 +1114,7 @@ namespace RobotRaconteur
 
 	static bool MemberDefinition_ParseFormat_common(const std::string& s, MemberDefiniton_ParseResults& res)
 	{
-		boost::regex r("^[ \\t]*([a-zA-Z]+)[ \\t]+(?:([a-zA-Z][\\w\\{\\}\\[\\]\\*\\,\\-\\.]*)[ \\t]+)?(\\w+)(\\(([^)]*)\\))?(?:[ \\t]+\\[([^\\]]*)\\])?[ \\t]*$");
+		boost::regex r("^[ \\t]*([a-zA-Z]+)[ \\t]+(?:([a-zA-Z][\\w\\{\\}\\[\\]\\*\\,\\-\\.]*)[ \\t]+)?(\\w+)(?:[ \\t]*(\\(([^)]*)\\)))?(?:[ \\t]+\\[([^\\]]*)\\])?[ \\t]*$");
 		boost::smatch r_result;
 		if (!boost::regex_match(s, r_result, r))
 		{
