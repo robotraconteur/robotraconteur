@@ -737,6 +737,16 @@ namespace RobotRaconteur
 					state() = MessageElement_readcstructmultidimarray1;
 					continue;
 				}
+				case DataTypes_astructure_array_t:
+				{
+					state() = MessageElement_readastructarray1;
+					continue;
+				}
+				case DataTypes_astructure_multidimarray_t:
+				{
+					state() = MessageElement_readastructmultidimarray1;
+					continue;
+				}
 				default:
 					throw DataTypeException("Invalid data type");
 				}
@@ -1067,6 +1077,68 @@ namespace RobotRaconteur
 				MessageElementCStructureMultiDimArray* s = data<MessageElementCStructureMultiDimArray>();
 				s->Elements.push_back(el);
 				push_state(MessageElement_elementsize, MessageElement_readcstructmultidimarray2, limit() - message_pos, el);
+				continue;
+			}
+
+			//Read astructurearray
+			case MessageElement_readastructarray1:
+			{
+				MessageElement* el = data<MessageElement>();
+				std::vector<RR_SHARED_PTR<MessageElement> > v;
+				RR_SHARED_PTR<MessageElementAStructureArray> s = RR_MAKE_SHARED<MessageElementAStructureArray>(el->ElementTypeName, v);
+				uint32_t l = el->ElementSize;
+				el->SetData(s);
+				el->ElementSize = l;
+				push_state(MessageElement_readastructarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
+
+			}
+			case MessageElement_readastructarray2:
+			{
+				MessageElementAStructureArray* s = data<MessageElementAStructureArray>();
+				if (s->Elements.size() >= param1())
+				{
+					DO_POP_STATE();
+				}
+
+				state() = MessageElement_readastructarray3;
+			}
+			case MessageElement_readastructarray3:
+			{
+				RR_SHARED_PTR<MessageElement> el = RR_MAKE_SHARED<MessageElement>();
+				MessageElementAStructureArray* s = data<MessageElementAStructureArray>();
+				s->Elements.push_back(el);
+				push_state(MessageElement_elementsize, MessageElement_readastructarray2, limit() - message_pos, el);
+				continue;
+			}
+
+			//Read astructuremultidimarray
+			case MessageElement_readastructmultidimarray1:
+			{
+				MessageElement* el = data<MessageElement>();
+				std::vector<RR_SHARED_PTR<MessageElement> > v;
+				RR_SHARED_PTR<MessageElementAStructureMultiDimArray> s = RR_MAKE_SHARED<MessageElementAStructureMultiDimArray>(el->ElementTypeName, v);
+				uint32_t l = el->ElementSize;
+				el->SetData(s);
+				el->ElementSize = l;
+				push_state(MessageElement_readastructmultidimarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
+
+			}
+			case MessageElement_readastructmultidimarray2:
+			{
+				MessageElementAStructureMultiDimArray* s = data<MessageElementAStructureMultiDimArray>();
+				if (s->Elements.size() >= param1())
+				{
+					DO_POP_STATE();
+				}
+
+				state() = MessageElement_readastructmultidimarray3;
+			}
+			case MessageElement_readastructmultidimarray3:
+			{
+				RR_SHARED_PTR<MessageElement> el = RR_MAKE_SHARED<MessageElement>();
+				MessageElementAStructureMultiDimArray* s = data<MessageElementAStructureMultiDimArray>();
+				s->Elements.push_back(el);
+				push_state(MessageElement_elementsize, MessageElement_readastructmultidimarray2, limit() - message_pos, el);
 				continue;
 			}
 
@@ -1704,6 +1776,16 @@ namespace RobotRaconteur
 					state() = MessageElement_readcstructmultidimarray1;
 					continue;
 				}
+				case DataTypes_astructure_array_t:
+				{
+					state() = MessageElement_readastructarray1;
+					continue;
+				}
+				case DataTypes_astructure_multidimarray_t:
+				{
+					state() = MessageElement_readastructmultidimarray1;
+					continue;
+				}
 				default:
 					throw DataTypeException("Invalid data type");
 				}
@@ -2003,6 +2085,68 @@ namespace RobotRaconteur
 				MessageElementCStructureMultiDimArray* s = data<MessageElementCStructureMultiDimArray>();
 				s->Elements.push_back(el);
 				push_state(MessageElement_elementsize, MessageElement_readcstructmultidimarray2, limit() - message_pos, el);
+				continue;
+			}
+
+			//Read astructurearray
+			case MessageElement_readastructarray1:
+			{
+				MessageElement* el = data<MessageElement>();
+				std::vector<RR_SHARED_PTR<MessageElement> > v;
+				RR_SHARED_PTR<MessageElementAStructureArray> s = RR_MAKE_SHARED<MessageElementAStructureArray>(el->ElementTypeName, v);
+				uint32_t l = el->ElementSize;
+				el->SetData(s);
+				el->ElementSize = l;
+				push_state(MessageElement_readastructarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
+
+			}
+			case MessageElement_readastructarray2:
+			{
+				MessageElementAStructureArray* s = data<MessageElementAStructureArray>();
+				if (s->Elements.size() >= param1())
+				{
+					DO_POP_STATE();
+				}
+
+				state() = MessageElement_readastructarray3;
+			}
+			case MessageElement_readastructarray3:
+			{
+				RR_SHARED_PTR<MessageElement> el = RR_MAKE_SHARED<MessageElement>();
+				MessageElementAStructureArray* s = data<MessageElementAStructureArray>();
+				s->Elements.push_back(el);
+				push_state(MessageElement_elementsize, MessageElement_readastructarray2, limit() - message_pos, el);
+				continue;
+			}
+
+			//Read astructuremultidimarray
+			case MessageElement_readastructmultidimarray1:
+			{
+				MessageElement* el = data<MessageElement>();
+				std::vector<RR_SHARED_PTR<MessageElement> > v;
+				RR_SHARED_PTR<MessageElementAStructureMultiDimArray> s = RR_MAKE_SHARED<MessageElementAStructureMultiDimArray>(el->ElementTypeName, v);
+				uint32_t l = el->ElementSize;
+				el->SetData(s);
+				el->ElementSize = l;
+				push_state(MessageElement_readastructmultidimarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
+
+			}
+			case MessageElement_readastructmultidimarray2:
+			{
+				MessageElementAStructureMultiDimArray* s = data<MessageElementAStructureMultiDimArray>();
+				if (s->Elements.size() >= param1())
+				{
+					DO_POP_STATE();
+				}
+
+				state() = MessageElement_readastructmultidimarray3;
+			}
+			case MessageElement_readastructmultidimarray3:
+			{
+				RR_SHARED_PTR<MessageElement> el = RR_MAKE_SHARED<MessageElement>();
+				MessageElementAStructureMultiDimArray* s = data<MessageElementAStructureMultiDimArray>();
+				s->Elements.push_back(el);
+				push_state(MessageElement_elementsize, MessageElement_readastructmultidimarray2, limit() - message_pos, el);
 				continue;
 			}
 

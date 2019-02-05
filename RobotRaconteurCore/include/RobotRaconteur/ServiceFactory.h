@@ -59,6 +59,14 @@ namespace RobotRaconteur
 
 		virtual RR_SHARED_PTR<RRCStructureBaseMultiDimArray> UnpackCStructureMultiDimArray(RR_SHARED_PTR<MessageElementCStructureMultiDimArray> structure)=0;
 
+		virtual RR_SHARED_PTR<MessageElementAStructureArray> PackAStructureArray(RR_SHARED_PTR<RRAStructureBaseArray> structure) = 0;
+
+		virtual RR_SHARED_PTR<RRAStructureBaseArray> UnpackAStructureArray(RR_SHARED_PTR<MessageElementAStructureArray> structure) = 0;
+
+		virtual RR_SHARED_PTR<MessageElementAStructureMultiDimArray> PackAStructureMultiDimArray(RR_SHARED_PTR<RRAStructureBaseMultiDimArray> structure) = 0;
+
+		virtual RR_SHARED_PTR<RRAStructureBaseMultiDimArray> UnpackAStructureMultiDimArray(RR_SHARED_PTR<MessageElementAStructureMultiDimArray> structure) = 0;
+
 		virtual RR_SHARED_PTR<ServiceStub> CreateStub(const std::string& objecttype, const std::string& path, RR_SHARED_PTR<ClientContext> context)=0;
 
 		virtual RR_SHARED_PTR<ServiceSkel> CreateSkel(const std::string& objecttype, const std::string& path, RR_SHARED_PTR<RRObject> obj, RR_SHARED_PTR<ServerContext> context)=0;

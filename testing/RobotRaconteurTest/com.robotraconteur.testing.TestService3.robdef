@@ -29,6 +29,38 @@ constant double[] doubleconst_array {1.5847, 3.14, -548e3, 3452.67e2, 485e-21}
 constant struct structconst {field1: strconst, field2: int32const_array}
 constant struct structconst2 {field3: structconst, field4: int32const}    
 
+astruct vector3
+    field double x
+	field double y
+	field double z
+end astruct
+
+astruct quaternion
+    field double q0
+	field double q1
+	field double q2
+	field double q3
+end astruct
+
+astruct transform
+    field quaternion rotation
+    field vector3 translation	
+end astruct
+
+astruct pixel
+	field uint8 r
+	field uint8 b
+	field uint8 g
+end astruct
+
+astruct pixel2
+	field uint8 c
+	field pixel d
+	field pixel e
+	field pixel[7] f
+	field pixel g
+end astruct
+
 cstruct testcstruct1
 	field double d1
 	field double[6] d2
@@ -38,6 +70,10 @@ cstruct testcstruct1
 	field testcstruct2[8] s2
 	field testcstruct2[9-] s3
 	field testcstruct2[2,4] s4
+	field transform t1
+	field transform[4] t2
+	field transform[15-] t3
+	field transform[2,4] t4
 end cstruct
 
 cstruct testcstruct2
@@ -62,6 +98,11 @@ struct teststruct3
 	field varvalue s13
 	field varvalue s14
 	field varvalue s15
+	field transform t1
+	field transform[4] t2
+	field transform[2,4] t3
+	field varvalue t4
+	field varvalue t5	
 end struct
 
 object testroot3
@@ -113,6 +154,13 @@ object testroot3
 	wire int32[6] w1
 	wire int32[6-] w2
 	wire int32[3,2] w3
+	
+	#astruct test
+	property vector3 testastruct1
+	property transform testastruct2
+	property transform[10-] testastruct3
+	property transform[*] testastruct4
+	property transform[3,2] testastruct5
 	
 end object
 

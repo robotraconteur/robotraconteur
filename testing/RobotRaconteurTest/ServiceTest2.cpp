@@ -257,6 +257,58 @@ namespace RobotRaconteurTest
 	{
 		return RR_SHARED_PTR<Generator<RR_SHARED_PTR<com::robotraconteur::testing::TestService1::teststruct2 >, RR_SHARED_PTR<com::robotraconteur::testing::TestService1::teststruct2 > > >();
 	}
+	
+	com::robotraconteur::testing::TestService3::vector3 testroot3_impl::get_testastruct1()
+	{
+		com::robotraconteur::testing::TestService3::transform a1;
+		ServiceTest2_fill_transform(a1, 74637);
+		return a1.s.translation;
+	}
+	void testroot3_impl::set_testastruct1(const com::robotraconteur::testing::TestService3::vector3& value)
+	{
+		com::robotraconteur::testing::TestService3::transform a1;
+		ServiceTest2_fill_transform(a1, 3956378);
+		a1.s.translation = value;
+		ServiceTest2_verify_transform(a1, 3956378);
+	}
+
+	com::robotraconteur::testing::TestService3::transform testroot3_impl::get_testastruct2()
+	{
+		com::robotraconteur::testing::TestService3::transform a2;
+		ServiceTest2_fill_transform(a2, 1294);
+		return a2;
+	}
+	void testroot3_impl::set_testastruct2(const com::robotraconteur::testing::TestService3::transform& value)
+	{
+		ServiceTest2_verify_transform(value, 827635);
+	}
+
+	RR_SHARED_PTR<RobotRaconteur::RRAStructureArray<com::robotraconteur::testing::TestService3::transform> > testroot3_impl::get_testastruct3()
+	{
+		return ServiceTest2_fill_transform_array(8, 837512);
+	}
+	void testroot3_impl::set_testastruct3(RR_SHARED_PTR<RobotRaconteur::RRAStructureArray<com::robotraconteur::testing::TestService3::transform> > value)
+	{
+		ServiceTest2_verify_transform_array(value, 6, 19274);
+	}
+
+	RR_SHARED_PTR<RobotRaconteur::RRAStructureMultiDimArray<com::robotraconteur::testing::TestService3::transform> > testroot3_impl::get_testastruct4()
+	{
+		return ServiceTest2_fill_transform_multidimarray(7, 2, 66134);
+	}
+	void testroot3_impl::set_testastruct4(RR_SHARED_PTR<RobotRaconteur::RRAStructureMultiDimArray<com::robotraconteur::testing::TestService3::transform> > value)
+	{
+		ServiceTest2_verify_transform_multidimarray(value, 5, 2, 6385);
+	}
+
+	RR_SHARED_PTR<RobotRaconteur::RRAStructureMultiDimArray<com::robotraconteur::testing::TestService3::transform> > testroot3_impl::get_testastruct5()
+	{
+		return ServiceTest2_fill_transform_multidimarray(3, 2, 773142);
+	}
+	void testroot3_impl::set_testastruct5(RR_SHARED_PTR<RobotRaconteur::RRAStructureMultiDimArray<com::robotraconteur::testing::TestService3::transform> > value)
+	{
+		ServiceTest2_verify_transform_multidimarray(value, 3, 2, 7732);
+	}
 
 
 	class ServiceTest2_test_sequence_gen
@@ -289,7 +341,6 @@ namespace RobotRaconteurTest
 
 	};
 
-
 	void ServiceTest2_fill_testcstruct1(com::robotraconteur::testing::TestService3::testcstruct1& v, uint32_t seed)
 	{
 		ServiceTest2_test_sequence_gen gen(seed);
@@ -317,6 +368,19 @@ namespace RobotRaconteurTest
 		}
 		for (size_t i = 0; i<v.s4.size(); i++)
 			ServiceTest2_fill_testcstruct2(v.s4[i], gen.get_uint32());
+
+		ServiceTest2_fill_transform(v.t1, gen.get_double());
+
+		for (size_t i=0; i<4; i++)
+			ServiceTest2_fill_transform(v.t2[i], gen.get_double());
+
+		size_t t3_len = gen.get_uint32() % 15;
+		v.t3.resize(t3_len);
+		for (size_t i = 0; i < t3_len; i++)
+			ServiceTest2_fill_transform(v.t3[i], gen.get_double());
+
+		for (size_t i = 0; i < 8; i++)
+			ServiceTest2_fill_transform(v.t4[i], gen.get_double());
 	}
 	void ServiceTest2_verify_testcstruct1(const com::robotraconteur::testing::TestService3::testcstruct1& v, uint32_t seed)
 	{
@@ -340,6 +404,19 @@ namespace RobotRaconteurTest
 			ServiceTest2_verify_testcstruct2(v.s3[i], gen.get_uint32());
 		for (size_t i = 0; i < v.s4.size(); i++)
 			ServiceTest2_verify_testcstruct2(v.s4[i], gen.get_uint32());
+
+		ServiceTest2_verify_transform(v.t1, gen.get_double());
+
+		for (size_t i = 0; i < 4; i++)
+			ServiceTest2_verify_transform(v.t2[i], gen.get_double());
+
+		size_t t3_len = gen.get_uint32() % 15;
+		if (v.t3.size() != t3_len) throw std::runtime_error("");
+		for (size_t i = 0; i < t3_len; i++)
+			ServiceTest2_verify_transform(v.t3[i], gen.get_double());
+
+		for (size_t i = 0; i < 8; i++)
+			ServiceTest2_verify_transform(v.t4[i], gen.get_double());
 	}
 	void ServiceTest2_fill_testcstruct2(com::robotraconteur::testing::TestService3::testcstruct2& v, uint32_t seed)
 	{
@@ -422,6 +499,15 @@ namespace RobotRaconteurTest
 		s15->list.push_back(ServiceTest2_fill_testcstruct1_multidimarray(5, 1, gen.get_uint32()));
 		o->s15 = s15;
 
+		for (size_t i=0; i< 7; i++)
+			o->t1.a[i] = gen.get_double();
+
+		o->t2 = ServiceTest2_fill_transform_array(4,gen.get_uint32());		
+		o->t3 = ServiceTest2_fill_transform_multidimarray(2,4,gen.get_uint32());		
+
+		o->t4 = ServiceTest2_fill_transform_array(10, gen.get_uint32());
+		o->t5 = ServiceTest2_fill_transform_multidimarray(6, 5, gen.get_uint32());
+
 		return o;
 	}
 	void ServiceTest2_verify_teststruct3(RR_SHARED_PTR<com::robotraconteur::testing::TestService3::teststruct3> v, uint32_t seed)
@@ -479,6 +565,14 @@ namespace RobotRaconteurTest
 		
 		ServiceTest2_verify_testcstruct1_multidimarray(s15->list[1], 5, 1, gen.get_uint32());
 		
+		for (size_t i = 0; i < 7; i++)
+			if (v->t1.a[i] != gen.get_double()) throw std::runtime_error("");
+
+		ServiceTest2_verify_transform_array(v->t2, 4, gen.get_uint32());
+		ServiceTest2_verify_transform_multidimarray(v->t3, 2, 4, gen.get_uint32());
+
+		ServiceTest2_verify_transform_array(rr_cast<RRAStructureArray< com::robotraconteur::testing::TestService3::transform> >(v->t4), 10, gen.get_uint32());
+		ServiceTest2_verify_transform_multidimarray(rr_cast<RRAStructureMultiDimArray< com::robotraconteur::testing::TestService3::transform>>(v->t5), 6, 5, gen.get_uint32());
 	}
 
 	RR_SHARED_PTR<RRCStructureArray<com::robotraconteur::testing::TestService3::testcstruct1> > ServiceTest2_fill_testcstruct1_array(size_t s, uint32_t seed)
@@ -537,6 +631,81 @@ namespace RobotRaconteurTest
 		else
 		{
 			ServiceTest2_verify_testcstruct1_multidimarray(rr_cast<RRCStructureMultiDimArray<com::robotraconteur::testing::TestService3::testcstruct1> >(v), m, n, seed);
+		}
+	}
+
+	void ServiceTest2_fill_transform(com::robotraconteur::testing::TestService3::transform& v, uint32_t seed)
+	{
+		ServiceTest2_test_sequence_gen gen(seed);
+		for (size_t i = 0; i < 7; i++)
+			v.a[i] = gen.get_double();
+	}
+
+	void ServiceTest2_verify_transform(const com::robotraconteur::testing::TestService3::transform& v, uint32_t seed)
+	{
+		ServiceTest2_test_sequence_gen gen(seed);
+		for (size_t i = 0; i < 7; i++)
+		{
+			if (v.a[i] != gen.get_double()) throw std::runtime_error("");
+		}
+	}
+
+	RR_SHARED_PTR<RRAStructureArray<com::robotraconteur::testing::TestService3::transform> > ServiceTest2_fill_transform_array(size_t s, uint32_t seed)
+	{
+		ServiceTest2_test_sequence_gen gen(seed);
+
+		RR_SHARED_PTR<RRAStructureArray<com::robotraconteur::testing::TestService3::transform> > o = AllocateEmptyRRAStructureArray<com::robotraconteur::testing::TestService3::transform>(s);
+		for (size_t i = 0; i < s; i++)
+		{			
+			ServiceTest2_fill_transform((*o)[i], gen.get_uint32());
+			
+		}
+		return o;
+	}
+
+	void ServiceTest2_verify_transform_array(RR_SHARED_PTR<RRAStructureArray<com::robotraconteur::testing::TestService3::transform> > v, size_t s, uint32_t seed)
+	{
+		if (!v) throw std::runtime_error("");
+
+		ServiceTest2_test_sequence_gen gen(seed);
+
+		if (v->Length() != s) throw std::runtime_error("");
+
+		for (size_t i = 0; i < s; i++)
+		{
+			ServiceTest2_verify_transform((*v)[i], gen.get_uint32());
+		}
+	}
+
+	RR_SHARED_PTR<RRAStructureMultiDimArray<com::robotraconteur::testing::TestService3::transform> > ServiceTest2_fill_transform_multidimarray(size_t m, size_t n, uint32_t seed)
+	{
+		RR_SHARED_PTR<RRAStructureMultiDimArray<com::robotraconteur::testing::TestService3::transform> > o = RR_MAKE_SHARED<RRAStructureMultiDimArray<com::robotraconteur::testing::TestService3::transform> >();
+		std::vector<int32_t> dims;
+		dims.push_back(m);
+		dims.push_back(n);
+		o->Dims = VectorToRRArray<int32_t>(dims);
+		o->AStructArray = ServiceTest2_fill_transform_array(m*n, seed);
+		return o;
+	}
+
+	void ServiceTest2_verify_transform_multidimarray(RR_SHARED_PTR<RRAStructureMultiDimArray<com::robotraconteur::testing::TestService3::transform> > v, size_t m, size_t n, uint32_t seed)
+	{
+		if (!v) throw std::runtime_error("");
+		if (v->Dims->size() != 2) throw std::runtime_error("");
+		if ((*v->Dims)[0] != m || (*v->Dims)[1] != n) throw std::runtime_error("");
+		ServiceTest2_verify_transform_array(v->AStructArray, m*n, seed);
+	}
+
+	void ServiceTest2_verify_transform_multidimarray(RR_SHARED_PTR<RRValue> v, size_t m, size_t n, uint32_t seed)
+	{
+		RR_SHARED_PTR<RRAStructureArray<com::robotraconteur::testing::TestService3::transform> > v1 = RR_DYNAMIC_POINTER_CAST<RRAStructureArray<com::robotraconteur::testing::TestService3::transform> >(v);
+		if (v1 && n == 1)
+		{
+			ServiceTest2_verify_transform_array(v1, m, seed);
+		}
+		else
+		{
+			ServiceTest2_verify_transform_multidimarray(rr_cast<RRAStructureMultiDimArray<com::robotraconteur::testing::TestService3::transform> >(v), m, n, seed);
 		}
 	}
 			

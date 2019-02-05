@@ -48,7 +48,10 @@ namespace RobotRaconteur
 		DataTypes_cstructure_array_t,
 		DataTypes_cstructure_multidimarray_t,
 		DataTypes_enum_t,
-		DataTypes_namedtype_t,				
+		DataTypes_namedtype_t,
+		DataTypes_astructure_t,
+		DataTypes_astructure_array_t,
+		DataTypes_astructure_multidimarray_t
 	};
 
 	enum DataTypes_ArrayTypes

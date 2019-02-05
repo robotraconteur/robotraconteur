@@ -631,6 +631,8 @@ namespace RobotRaconteurTest
 
 		switch (m1->ElementType)
 		{
+		case DataTypes_void_t:
+			break;
 		case DataTypes_double_t:
 		case DataTypes_single_t:
 		case DataTypes_int8_t:
@@ -680,8 +682,33 @@ namespace RobotRaconteurTest
 			MessageSerializationTest_CompareSubElements<MessageElementList>(m1, m2);
 			break;
 		}
-		default:
+		case DataTypes_cstructure_t:
+		{
+			MessageSerializationTest_CompareSubElements<MessageElementCStructure>(m1, m2);
 			break;
+		}
+		case DataTypes_cstructure_array_t:
+		{
+			MessageSerializationTest_CompareSubElements<MessageElementCStructureArray>(m1, m2);
+			break;
+		}
+		case DataTypes_cstructure_multidimarray_t:
+		{
+			MessageSerializationTest_CompareSubElements<MessageElementCStructureMultiDimArray>(m1, m2);
+			break;
+		}
+		case DataTypes_astructure_array_t:
+		{
+			MessageSerializationTest_CompareSubElements<MessageElementAStructureArray>(m1, m2);
+			break;
+		}
+		case DataTypes_astructure_multidimarray_t:
+		{
+			MessageSerializationTest_CompareSubElements<MessageElementAStructureMultiDimArray>(m1, m2);
+			break;
+		}
+		default:
+			throw std::runtime_error("");
 		}
 
 

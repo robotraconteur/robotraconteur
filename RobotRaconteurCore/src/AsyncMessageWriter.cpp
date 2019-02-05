@@ -663,6 +663,16 @@ namespace RobotRaconteur
 					state() = MessageElement_writecstructmultidimarray1;
 					continue;
 				}
+				case DataTypes_astructure_array_t:
+				{
+					state() = MessageElement_writeastructarray1;
+					continue;
+				}
+				case DataTypes_astructure_multidimarray_t:
+				{
+					state() = MessageElement_writeastructmultidimarray1;
+					continue;
+				}
 				default:
 					throw DataTypeException("Invalid data type");
 				}
@@ -891,6 +901,48 @@ namespace RobotRaconteur
 				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
 				param1()++;
 				push_state(MessageElement_elementsize, MessageElement_writecstructmultidimarray2, el->ElementSize, el);
+				continue;
+			}
+
+			//Write astructurearray
+			case MessageElement_writeastructarray1:
+			{
+				MessageElement* el = data<MessageElement>();
+				RR_SHARED_PTR<MessageElementAStructureArray> s = el->CastData<MessageElementAStructureArray>();
+				push_state(MessageElement_writeastructarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
+			}
+			case MessageElement_writeastructarray2:
+			{
+				MessageElementAStructureArray* s = data<MessageElementAStructureArray>();
+				if (param1() >= s->Elements.size())
+				{
+					DO_POP_STATE();
+				}
+
+				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
+				param1()++;
+				push_state(MessageElement_elementsize, MessageElement_writeastructarray2, el->ElementSize, el);
+				continue;
+			}
+
+			//Write astructurearray
+			case MessageElement_writeastructmultidimarray1:
+			{
+				MessageElement* el = data<MessageElement>();
+				RR_SHARED_PTR<MessageElementAStructureMultiDimArray> s = el->CastData<MessageElementAStructureMultiDimArray>();
+				push_state(MessageElement_writeastructmultidimarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
+			}
+			case MessageElement_writeastructmultidimarray2:
+			{
+				MessageElementAStructureMultiDimArray* s = data<MessageElementAStructureMultiDimArray>();
+				if (param1() >= s->Elements.size())
+				{
+					DO_POP_STATE();
+				}
+
+				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
+				param1()++;
+				push_state(MessageElement_elementsize, MessageElement_writeastructmultidimarray2, el->ElementSize, el);
 				continue;
 			}
 
@@ -1506,6 +1558,16 @@ namespace RobotRaconteur
 					state() = MessageElement_writecstructmultidimarray1;
 					continue;
 				}
+				case DataTypes_astructure_array_t:
+				{
+					state() = MessageElement_writeastructarray1;
+					continue;
+				}
+				case DataTypes_astructure_multidimarray_t:
+				{
+					state() = MessageElement_writeastructmultidimarray1;
+					continue;
+				}
 				default:
 					throw DataTypeException("Invalid data type");
 				}
@@ -1749,6 +1811,48 @@ namespace RobotRaconteur
 				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
 				param1()++;
 				push_state(MessageElement_elementsize, MessageElement_writecstructmultidimarray2, el->ElementSize, el);
+				continue;
+			}
+
+			//Write astructurearray
+			case MessageElement_writeastructarray1:
+			{
+				MessageElement* el = data<MessageElement>();
+				RR_SHARED_PTR<MessageElementAStructureArray> s = el->CastData<MessageElementAStructureArray>();
+				push_state(MessageElement_writeastructarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
+			}
+			case MessageElement_writeastructarray2:
+			{
+				MessageElementAStructureArray* s = data<MessageElementAStructureArray>();
+				if (param1() >= s->Elements.size())
+				{
+					DO_POP_STATE();
+				}
+
+				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
+				param1()++;
+				push_state(MessageElement_elementsize, MessageElement_writeastructarray2, el->ElementSize, el);
+				continue;
+			}
+
+			//Write astructurearray
+			case MessageElement_writeastructmultidimarray1:
+			{
+				MessageElement* el = data<MessageElement>();
+				RR_SHARED_PTR<MessageElementAStructureMultiDimArray> s = el->CastData<MessageElementAStructureMultiDimArray>();
+				push_state(MessageElement_writeastructmultidimarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
+			}
+			case MessageElement_writeastructmultidimarray2:
+			{
+				MessageElementAStructureMultiDimArray* s = data<MessageElementAStructureMultiDimArray>();
+				if (param1() >= s->Elements.size())
+				{
+					DO_POP_STATE();
+				}
+
+				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
+				param1()++;
+				push_state(MessageElement_elementsize, MessageElement_writeastructmultidimarray2, el->ElementSize, el);
 				continue;
 			}
 

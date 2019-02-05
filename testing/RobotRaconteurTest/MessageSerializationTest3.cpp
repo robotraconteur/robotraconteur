@@ -67,7 +67,7 @@ namespace RobotRaconteurTest
 	{
 		uniform_int_distribution<uint16_t> type_switch_dist(0, 1);
 		uniform_int_distribution<uint16_t> type_dist(0, 11);
-		uniform_int_distribution<uint16_t> n_type_dist(0, 4);
+		uniform_int_distribution<uint16_t> n_type_dist(0, 9);
 		uniform_int_distribution<uint8_t>  uint8_dist;
 		uniform_int_distribution<uint32_t> uint32_dist;
 		uniform_int_distribution<int32_t> int32_dist;
@@ -98,6 +98,21 @@ namespace RobotRaconteurTest
 				break;
 			case 4:
 				e->ElementType = DataTypes_list_t;
+				break;
+			case 5:
+				e->ElementType = DataTypes_cstructure_t;
+				break;
+			case 6:
+				e->ElementType = DataTypes_cstructure_array_t;
+				break;
+			case 7:
+				e->ElementType = DataTypes_cstructure_multidimarray_t;
+				break;
+			case 8:
+				e->ElementType = DataTypes_astructure_array_t;
+				break;
+			case 9:
+				e->ElementType = DataTypes_astructure_multidimarray_t;
 				break;
 			}
 		}
@@ -222,6 +237,61 @@ namespace RobotRaconteurTest
 			return e;
 		}
 
+		case DataTypes_cstructure_t:
+		{
+			std::vector<RR_SHARED_PTR<MessageElement> > v;
+			size_t n = len_sub_dist(rng);
+			for (size_t i = 0; i < n; i++)
+			{
+				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
+			}
+			e->SetData(RR_MAKE_SHARED<MessageElementCStructure>(v));
+			return e;
+		}
+		case DataTypes_cstructure_array_t:
+		{
+			std::vector<RR_SHARED_PTR<MessageElement> > v;
+			size_t n = len_sub_dist(rng);
+			for (size_t i = 0; i < n; i++)
+			{
+				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
+			}
+			e->SetData(RR_MAKE_SHARED<MessageElementCStructureArray>(MessageSerializationTest3_NewRandomString(rng, 128),v));
+			return e;
+		}
+		case DataTypes_cstructure_multidimarray_t:
+		{
+			std::vector<RR_SHARED_PTR<MessageElement> > v;
+			size_t n = len_sub_dist(rng);
+			for (size_t i = 0; i < n; i++)
+			{
+				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
+			}
+			e->SetData(RR_MAKE_SHARED<MessageElementCStructureMultiDimArray>(MessageSerializationTest3_NewRandomString(rng, 128),v));
+			return e;
+		}
+		case DataTypes_astructure_array_t:
+		{
+			std::vector<RR_SHARED_PTR<MessageElement> > v;
+			size_t n = len_sub_dist(rng);
+			for (size_t i = 0; i < n; i++)
+			{
+				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
+			}
+			e->SetData(RR_MAKE_SHARED<MessageElementAStructureArray>(MessageSerializationTest3_NewRandomString(rng, 128), v));
+			return e;
+		}
+		case DataTypes_astructure_multidimarray_t:
+		{
+			std::vector<RR_SHARED_PTR<MessageElement> > v;
+			size_t n = len_sub_dist(rng);
+			for (size_t i = 0; i < n; i++)
+			{
+				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
+			}
+			e->SetData(RR_MAKE_SHARED<MessageElementAStructureMultiDimArray>(MessageSerializationTest3_NewRandomString(rng, 128), v));
+			return e;
+		}
 		default:
 			throw std::runtime_error("Invalid random type");
 		}

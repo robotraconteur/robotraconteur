@@ -78,6 +78,7 @@ namespace RobotRaconteur
 
 		std::vector<RR_SHARED_PTR<ServiceEntryDefinition> > Structures;
 		std::vector<RR_SHARED_PTR<ServiceEntryDefinition> > CStructures;
+		std::vector<RR_SHARED_PTR<ServiceEntryDefinition> > AStructures;
 		std::vector<RR_SHARED_PTR<ServiceEntryDefinition> > Objects;
 
 		std::vector<std::string> Options;
@@ -540,5 +541,7 @@ namespace RobotRaconteur
 	}
 
 	ROBOTRACONTEUR_CORE_API size_t EstimateCStructurePackedElementSize(RR_SHARED_PTR<ServiceEntryDefinition> def, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs = std::vector<RR_SHARED_PTR<ServiceDefinition> >(), RR_SHARED_PTR<RobotRaconteurNode> node = RR_SHARED_PTR<RobotRaconteurNode>(), RR_SHARED_PTR<RRObject> client = RR_SHARED_PTR<RRObject>());
+
+	ROBOTRACONTEUR_CORE_API boost::tuple<DataTypes, size_t> GetAStructureElementTypeAndCount(RR_SHARED_PTR<ServiceEntryDefinition> def, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs = std::vector<RR_SHARED_PTR<ServiceDefinition> >(), RR_SHARED_PTR<RobotRaconteurNode> node = RR_SHARED_PTR<RobotRaconteurNode>(), RR_SHARED_PTR<RRObject> client = RR_SHARED_PTR<RRObject>());
 	
 }

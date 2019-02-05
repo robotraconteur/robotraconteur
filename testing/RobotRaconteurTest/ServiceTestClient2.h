@@ -34,6 +34,8 @@ namespace RobotRaconteurTest
 
 		void TestGenerators();
 
+		void TestAStructs();
+
 		RR_SHARED_PTR<testroot3> r;
 
 		AutoResetEvent async_peekpoke_evt;

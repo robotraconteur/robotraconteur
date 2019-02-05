@@ -721,7 +721,8 @@ namespace RobotRaconteur
 	template<size_t Ndims, typename T>
 	static RR_SHARED_PTR<RRList<T> > VerifyRRMultiDimArrayLength(RR_SHARED_PTR<RRList<T> > a, size_t n_elems, boost::array<int32_t, Ndims> dims)
 	{
-		if (a)
+		if (!a) throw NullValueException("Arrays must not be null");
+		else
 		{
 			BOOST_FOREACH(RR_SHARED_PTR<T>& aa, a->list)
 			{
@@ -734,7 +735,8 @@ namespace RobotRaconteur
 	template<size_t Ndims, typename K, typename T>
 	static RR_SHARED_PTR<RRMap<K,T> > VerifyRRMultiDimArrayLength(RR_SHARED_PTR<RRMap<K,T> > a, size_t n_elems, boost::array<int32_t, Ndims> dims)
 	{
-		if (a)
+		if (!a) throw NullValueException("Arrays must not be null");
+		else
 		{
 			BOOST_FOREACH(RR_SHARED_PTR<T>& aa, a->map | boost::adaptors::map_values)
 			{
@@ -900,7 +902,6 @@ namespace RobotRaconteur
 		if (value->cstruct_array.size() == 0) throw OutOfRangeException("Index out of range");
 
 		return value->cstruct_array.at(0);
-
 	}
 
 	template<typename T>
@@ -916,6 +917,230 @@ namespace RobotRaconteur
 	{
 		int32_t n_elems = boost::accumulate(length, 1, std::multiplies<int32_t>());
 		return RR_MAKE_SHARED<RRCStructureMultiDimArray<T> >(VectorToRRArray<int32_t>(length), AllocateEmptyRRCStructureArray<T>(n_elems));
+	}
+
+#define RRPrimUtilAStructure(x,type_string,array_type) \
+	template<> class RRPrimUtil<x> \
+	{ \
+		public: \
+		static DataTypes GetTypeID() {return DataTypes_cstructure_t;}  \
+		static std::string GetElementTypeString() {return type_string; } \
+		static RR_SHARED_PTR<RRAStructureArray<x> > PrePack(const x& val) {return ScalarToRRAStructureArray(val);}\
+		template<typename U> \
+		static x PreUnpack(const U& val) {return RRAStructureArrayToScalar(rr_cast<RRAStructureArray<x> >(val));} \
+		typedef RR_SHARED_PTR<RRAStructureArray<x> > BoxedType; \
+		typedef array_type ElementArrayType; \
+		static const size_t ElementArrayCount = sizeof(x) / sizeof(array_type); \
+		static size_t GetElementArrayCount() {return ElementArrayCount;} \
+		static DataTypes GetElementArrayTypeID() {return RRPrimUtil<array_type>::GetTypeID();} \
+	};
+
+	class ROBOTRACONTEUR_CORE_API RRAStructureBaseArray : public RRValue
+	{
+	public:
+		virtual DataTypes ElementArrayType() = 0;
+
+		virtual size_t ElementSize() = 0;
+
+		virtual size_t ElementArrayCount() = 0;
+
+		virtual RR_SHARED_PTR<RRBaseArray> GetNumericBaseArray() = 0;
+
+		virtual std::string RRElementTypeString() = 0;
+	};
+
+	template<typename T>
+	class RRAStructureArray : public RRAStructureBaseArray
+	{	
+	protected:
+		RR_SHARED_PTR<RRArray<typename RRPrimUtil<T>::ElementArrayType> > rr_array;
+
+	public:
+
+		RRAStructureArray(RR_SHARED_PTR<RRArray<typename RRPrimUtil<T>::ElementArrayType> > rr_array)
+		{
+			if (!rr_array) throw NullValueException("Numeric array for astruct must not be null");
+			this->rr_array = rr_array;
+		}
+
+		virtual DataTypes GetTypeID()
+		{
+			return RRPrimUtil<T>::GetTypeID();
+		}
+
+		virtual size_t Length() const
+		{
+			return rr_array->Length() / (RRPrimUtil<T>::ElementArrayCount);
+		}
+
+		virtual size_t Length()
+		{
+			return rr_array->Length() / (RRPrimUtil<T>::ElementArrayCount);
+		}
+
+		virtual void* void_ptr()
+		{
+			return rr_array->void_ptr();
+		}
+
+		virtual size_t ElementSize()
+		{
+			return sizeof(T);
+		}
+
+		virtual DataTypes ElementArrayType()
+		{
+			return RRPrimUtil<T>::GetElementArrayTypeID();
+		}
+		
+		virtual size_t ElementArrayCount()
+		{
+			return RRPrimUtil<T>::ElementArrayCount;
+		}
+
+		virtual RR_SHARED_PTR<RRArray<typename RRPrimUtil<T>::ElementArrayType> > GetNumericArray()
+		{
+			return rr_array;
+		}
+
+		virtual RR_SHARED_PTR<RRBaseArray> GetNumericBaseArray()
+		{
+			return rr_array;
+		}
+
+		inline T& operator[](size_t pos) const
+		{
+			if (pos >= Length())
+			{
+				throw OutOfRangeException("Index out of range");
+			}
+
+			return ((T*)rr_array->void_ptr())[pos];
+		}
+
+		virtual std::string RRType()
+		{
+			return "RobotRaconteur.RRAStructureArray";
+		}
+		
+		virtual std::string RRElementTypeString()
+		{
+			return RRPrimUtil<T>::GetElementTypeString();
+		}
+
+	};
+
+	class RRAStructureBaseMultiDimArray : public RRValue
+	{
+	public:
+		RR_SHARED_PTR<RRArray<int32_t> > Dims;
+		virtual std::string RRElementTypeString() = 0;
+	};
+
+	template<typename T>
+	class RRAStructureMultiDimArray : public RRAStructureBaseMultiDimArray
+	{
+	public:
+
+		typename RR_SHARED_PTR<RRAStructureArray<T> > AStructArray;
+
+		RRAStructureMultiDimArray() {}
+
+		RRAStructureMultiDimArray(RR_SHARED_PTR<RRArray<int32_t> > dims, RR_SHARED_PTR<RRAStructureArray<T> > a)
+		{
+			this->Dims = dims;
+			this->AStructArray = a;
+		}
+
+		virtual ~RRAStructureMultiDimArray() {}
+
+		virtual std::string RRType()
+		{
+			return "RobotRaconteur.RRAStructureMultiDimArray";
+		}
+
+		virtual std::string RRElementTypeString()
+		{
+			return RRPrimUtil<T>::GetElementTypeString();
+		}
+
+		virtual void RetrieveSubArray(std::vector<int32_t> memorypos, RR_SHARED_PTR<RRAStructureMultiDimArray<T> > buffer, std::vector<int32_t> bufferpos, std::vector<int32_t> count)
+		{
+
+			std::vector<int32_t> mema_dims = RRArrayToVector<int32_t>(Dims);
+			std::vector<int32_t> memb_dims = RRArrayToVector<int32_t>(buffer->Dims);
+			RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter = detail::MultiDimArray_CalculateCopyIndicesBeginIter(Dims->size(), mema_dims, memorypos, buffer->Dims->size(), memb_dims, bufferpos, count);
+
+			int32_t len;
+			int32_t indexa;
+			int32_t indexb;
+
+			while (iter->Next(indexa, indexb, len))
+			{
+				for (size_t i = 0; i < len; i++)
+				{
+					(*buffer->AStructArray)[(indexb + i)] = (*AStructArray)[(indexa + i)];
+				}
+			}
+
+		}
+
+		virtual void AssignSubArray(std::vector<int32_t> memorypos, RR_SHARED_PTR<RRAStructureMultiDimArray<T> > buffer, std::vector<int32_t> bufferpos, std::vector<int32_t> count)
+		{
+
+			std::vector<int32_t> mema_dims = RRArrayToVector<int32_t>(Dims);
+			std::vector<int32_t> memb_dims = RRArrayToVector<int32_t>(buffer->Dims);
+			RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter = detail::MultiDimArray_CalculateCopyIndicesBeginIter(Dims->size(), mema_dims, memorypos, buffer->Dims->size(), memb_dims, bufferpos, count);
+
+			int32_t len;
+			int32_t indexa;
+			int32_t indexb;
+
+			while (iter->Next(indexa, indexb, len))
+			{
+				for (size_t i = 0; i < len; i++)
+				{
+					(*AStructArray)[(indexa + i)] = (*buffer->AStructArray)[(indexb + i)];
+				}
+			}
+
+		}
+	};
+		
+	template<typename T>
+	static RR_SHARED_PTR<RRAStructureArray<T> > AllocateEmptyRRAStructureArray(size_t length)
+	{
+		typedef typename RRPrimUtil<T>::ElementArrayType a_type;
+		RR_SHARED_PTR<RRArray<a_type> > a = AllocateRRArray<a_type> (length * RRPrimUtil<T>::GetElementArrayCount());
+		return RR_MAKE_SHARED<RRAStructureArray<T> >(a);		
+	}
+
+	template<typename T>
+	static RR_SHARED_PTR<RRAStructureMultiDimArray<T> > AllocateEmptyRRAStructureMultiDimArray(std::vector<int32_t> length)
+	{
+		int32_t n_elems = boost::accumulate(length, 1, std::multiplies<int32_t>());
+		return RR_MAKE_SHARED<RRAStructureMultiDimArray<T> >(VectorToRRArray<int32_t>(length), AllocateEmptyRRAStructureArray<T>(n_elems));
+	}
+
+	template<typename T>
+	static RR_SHARED_PTR<RRAStructureArray<T> > ScalarToRRAStructureArray(const T& value)
+	{
+		RR_SHARED_PTR<RRAStructureArray<T> > a = AllocateEmptyRRAStructureArray<T>(1);
+		(*a)[0] = value;
+		return a;
+	}
+
+	template<typename T>
+	static T RRAStructureArrayToScalar(RR_SHARED_PTR<RRAStructureArray<T> > value)
+	{
+		if (!value)
+		{
+			throw NullValueException("Null pointer");
+		}
+
+		if (value->Length() == 0) throw OutOfRangeException("Index out of range");
+
+		return value[0];
 	}
 
 	class ROBOTRACONTEUR_CORE_API RobotRaconteurNode;

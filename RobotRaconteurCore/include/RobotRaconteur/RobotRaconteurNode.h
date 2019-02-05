@@ -127,6 +127,15 @@ namespace RobotRaconteur
 
 		RR_SHARED_PTR<RRCStructureBaseMultiDimArray> UnpackCStructureMultiDimArray(RR_SHARED_PTR<MessageElementCStructureMultiDimArray> structure);
 
+		RR_SHARED_PTR<MessageElementAStructureArray> PackAStructureArray(RR_SHARED_PTR<RRAStructureBaseArray> structure);
+
+		RR_SHARED_PTR<RRAStructureBaseArray> UnpackAStructureArray(RR_SHARED_PTR<MessageElementAStructureArray> structure);
+
+		RR_SHARED_PTR<MessageElementAStructureMultiDimArray> PackAStructureMultiDimArray(RR_SHARED_PTR<RRAStructureBaseMultiDimArray> structure);
+
+		RR_SHARED_PTR<RRAStructureBaseMultiDimArray> UnpackAStructureMultiDimArray(RR_SHARED_PTR<MessageElementAStructureMultiDimArray> structure);
+
+
 		template <typename T>
 		RR_SHARED_PTR<MessageElementMultiDimArray> PackMultiDimArray(RR_SHARED_PTR<RRMultiDimArray<T> > arr)
 		{

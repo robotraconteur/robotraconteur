@@ -21,6 +21,8 @@ namespace RobotRaconteurTest
 
 		TestGenerators();
 
+		TestAStructs();
+
 		Disconnect();
 	}
 
@@ -256,5 +258,42 @@ namespace RobotRaconteurTest
 		}
 
 		cout << "" << endl;
+	}
+
+	void ServiceTestClient2::TestAStructs()
+	{
+		com::robotraconteur::testing::TestService3::transform a1;		
+		ServiceTest2_fill_transform(a1, 3956378);
+		r->set_testastruct1(a1.s.translation);
+
+		com::robotraconteur::testing::TestService3::transform a1_1;
+		a1_1.s.rotation = a1.s.rotation;
+		a1_1.s.translation = r->get_testastruct1();
+		com::robotraconteur::testing::TestService3::transform a1_2;
+		ServiceTest2_fill_transform(a1_2, 74637);
+		a1_1.s.rotation = a1_2.s.rotation;
+		ServiceTest2_verify_transform(a1_1, 74637);
+
+		com::robotraconteur::testing::TestService3::transform a2;
+		ServiceTest2_fill_transform(a2, 827635);
+		r->set_testastruct2(a2);
+
+		com::robotraconteur::testing::TestService3::transform a2_1
+			= r->get_testastruct2();
+		ServiceTest2_verify_transform(a2_1, 1294);
+
+		r->set_testastruct3(ServiceTest2_fill_transform_array(6, 19274));
+		ServiceTest2_verify_transform_array(r->get_testastruct3(), 8, 837512);
+
+		r->set_testastruct4(ServiceTest2_fill_transform_multidimarray(5, 2, 6385));
+		ServiceTest2_verify_transform_multidimarray(r->get_testastruct4(), 7, 2, 66134);
+
+		r->set_testastruct5(ServiceTest2_fill_transform_multidimarray(3, 2, 7732));
+		ServiceTest2_verify_transform_multidimarray(r->get_testastruct5(), 3, 2, 773142);
+
+
+	
+	
+		
 	}
 }

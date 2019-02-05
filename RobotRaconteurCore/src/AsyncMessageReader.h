@@ -124,6 +124,12 @@ namespace RobotRaconteur
 			MessageElement_readcstructmultidimarray1,
 			MessageElement_readcstructmultidimarray2,
 			MessageElement_readcstructmultidimarray3,
+			MessageElement_readastructarray1,
+			MessageElement_readastructarray2,
+			MessageElement_readastructarray3,
+			MessageElement_readastructmultidimarray1,
+			MessageElement_readastructmultidimarray2,
+			MessageElement_readastructmultidimarray3,
 			//Read header string
 			Header_readstring,
 

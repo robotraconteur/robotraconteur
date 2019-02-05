@@ -50,6 +50,39 @@ namespace com__robotraconteur__testing__TestService3Constants
     };
     }
 
+union pixel{
+uint8_t a[3];
+struct s_type {
+uint8_t r;
+uint8_t b;
+uint8_t g;
+} s;
+};
+BOOST_STATIC_ASSERT(sizeof(pixel) == 3);
+
+union pixel2{
+uint8_t a[31];
+struct s_type {
+uint8_t c;
+pixel d;
+pixel e;
+pixel f[7];
+pixel g;
+} s;
+};
+BOOST_STATIC_ASSERT(sizeof(pixel2) == 31);
+
+union quaternion{
+double a[4];
+struct s_type {
+double q0;
+double q1;
+double q2;
+double q3;
+} s;
+};
+BOOST_STATIC_ASSERT(sizeof(quaternion) == 32);
+
 class testcstruct2 : public RobotRaconteur::RRCStructure {
 public:
 int8_t i1;
@@ -58,6 +91,25 @@ RobotRaconteur::cstructure_field_array<int8_t,17,true> i3;
 
 virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.testcstruct2";  }
 };
+
+union vector3{
+double a[3];
+struct s_type {
+double x;
+double y;
+double z;
+} s;
+};
+BOOST_STATIC_ASSERT(sizeof(vector3) == 24);
+
+union transform{
+double a[7];
+struct s_type {
+quaternion rotation;
+vector3 translation;
+} s;
+};
+BOOST_STATIC_ASSERT(sizeof(transform) == 56);
 
 class testcstruct1 : public RobotRaconteur::RRCStructure {
 public:
@@ -69,6 +121,10 @@ testcstruct2 s1;
 RobotRaconteur::cstructure_field_array<testcstruct2,8,false> s2;
 RobotRaconteur::cstructure_field_array<testcstruct2,9,true> s3;
 RobotRaconteur::cstructure_field_array<testcstruct2,8,false> s4;
+transform t1;
+RobotRaconteur::cstructure_field_array<transform,4,false> t2;
+RobotRaconteur::cstructure_field_array<transform,15,true> t3;
+RobotRaconteur::cstructure_field_array<transform,8,false> t4;
 
 virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.testcstruct1";  }
 };
@@ -90,6 +146,11 @@ RR_SHARED_PTR<RobotRaconteur::RRValue> s12;
 RR_SHARED_PTR<RobotRaconteur::RRValue> s13;
 RR_SHARED_PTR<RobotRaconteur::RRValue> s14;
 RR_SHARED_PTR<RobotRaconteur::RRValue> s15;
+transform t1;
+RR_SHARED_PTR<RobotRaconteur::RRAStructureArray<transform> > t2;
+RR_SHARED_PTR<RobotRaconteur::RRAStructureMultiDimArray<transform> > t3;
+RR_SHARED_PTR<RobotRaconteur::RRValue> t4;
+RR_SHARED_PTR<RobotRaconteur::RRValue> t5;
 
 virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.teststruct3";  }
 };
@@ -130,6 +191,21 @@ virtual void set_d5(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMulti
 
 virtual RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > get_d6()=0;
 virtual void set_d6(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > value)=0;
+
+virtual vector3 get_testastruct1()=0;
+virtual void set_testastruct1(const vector3& value)=0;
+
+virtual transform get_testastruct2()=0;
+virtual void set_testastruct2(const transform& value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRAStructureArray<transform> > get_testastruct3()=0;
+virtual void set_testastruct3(RR_SHARED_PTR<RobotRaconteur::RRAStructureArray<transform> > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRAStructureMultiDimArray<transform> > get_testastruct4()=0;
+virtual void set_testastruct4(RR_SHARED_PTR<RobotRaconteur::RRAStructureMultiDimArray<transform> > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRAStructureMultiDimArray<transform> > get_testastruct5()=0;
+virtual void set_testastruct5(RR_SHARED_PTR<RobotRaconteur::RRAStructureMultiDimArray<transform> > value)=0;
 
 virtual void testcstruct1_func1(const testcstruct1& s)=0;
 
@@ -239,4 +315,14 @@ namespace RobotRaconteur
 {
 RRPrimUtilCStructure(com::robotraconteur::testing::TestService3::testcstruct1, "com.robotraconteur.testing.TestService3.testcstruct1");
 RRPrimUtilCStructure(com::robotraconteur::testing::TestService3::testcstruct2, "com.robotraconteur.testing.TestService3.testcstruct2");
+RRPrimUtilAStructure(com::robotraconteur::testing::TestService3::vector3, "com.robotraconteur.testing.TestService3.vector3",double);
+RRCStructureStubAStructureType(com::robotraconteur::testing::TestService3::vector3);
+RRPrimUtilAStructure(com::robotraconteur::testing::TestService3::quaternion, "com.robotraconteur.testing.TestService3.quaternion",double);
+RRCStructureStubAStructureType(com::robotraconteur::testing::TestService3::quaternion);
+RRPrimUtilAStructure(com::robotraconteur::testing::TestService3::transform, "com.robotraconteur.testing.TestService3.transform",double);
+RRCStructureStubAStructureType(com::robotraconteur::testing::TestService3::transform);
+RRPrimUtilAStructure(com::robotraconteur::testing::TestService3::pixel, "com.robotraconteur.testing.TestService3.pixel",uint8_t);
+RRCStructureStubAStructureType(com::robotraconteur::testing::TestService3::pixel);
+RRPrimUtilAStructure(com::robotraconteur::testing::TestService3::pixel2, "com.robotraconteur.testing.TestService3.pixel2",uint8_t);
+RRCStructureStubAStructureType(com::robotraconteur::testing::TestService3::pixel2);
 }

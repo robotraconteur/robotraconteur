@@ -488,6 +488,52 @@ public:
 		}
 	};
 
+	class ROBOTRACONTEUR_CORE_API MessageElementAStructureArray : public MessageElementData
+	{
+	public:
+
+		std::string Type;
+		std::vector<RR_SHARED_PTR<MessageElement> > Elements;
+
+		MessageElementAStructureArray(const std::string& type_, const std::vector<RR_SHARED_PTR<MessageElement> > &elements_);
+
+		virtual std::string GetTypeString()
+		{
+			return Type;
+		}
+		virtual DataTypes GetTypeID()
+		{
+			return DataTypes_astructure_array_t;
+		}
+		virtual std::string RRType()
+		{
+			return "RobotRaconteur::MessageElementAStructureArray";
+		}
+	};
+
+	class ROBOTRACONTEUR_CORE_API MessageElementAStructureMultiDimArray : public MessageElementData
+	{
+	public:
+
+		std::string Type;
+		std::vector<RR_SHARED_PTR<MessageElement> > Elements;
+
+		MessageElementAStructureMultiDimArray(const std::string& type_, const std::vector<RR_SHARED_PTR<MessageElement> > &elements_);
+
+		virtual std::string GetTypeString()
+		{
+			return Type;
+		}
+		virtual DataTypes GetTypeID()
+		{
+			return DataTypes_astructure_multidimarray_t;
+		}
+		virtual std::string RRType()
+		{
+			return "RobotRaconteur::MessageElementAStructureMultiDimArray";
+		}
+	};
+
 	ROBOTRACONTEUR_CORE_API RR_SHARED_PTR<Message> ShallowCopyMessage(RR_SHARED_PTR<Message> m);
 	ROBOTRACONTEUR_CORE_API RR_SHARED_PTR<MessageEntry> ShallowCopyMessageEntry(RR_SHARED_PTR<MessageEntry> mm);
 	ROBOTRACONTEUR_CORE_API RR_SHARED_PTR<MessageElement> ShallowCopyMessageElement(RR_SHARED_PTR<MessageElement> mm);

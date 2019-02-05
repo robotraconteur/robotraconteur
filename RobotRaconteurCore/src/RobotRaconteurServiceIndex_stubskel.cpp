@@ -101,6 +101,22 @@ RR_SHARED_PTR<RobotRaconteur::RRCStructureBaseMultiDimArray> RobotRaconteurServi
 {
 throw RobotRaconteur::ServiceException("Invalid cstructure type.");
 }
+RR_SHARED_PTR<RobotRaconteur::MessageElementAStructureArray> RobotRaconteurServiceIndexFactory::PackAStructureArray(RR_SHARED_PTR<RobotRaconteur::RRAStructureBaseArray> structure)
+{
+	throw RobotRaconteur::ServiceException("Invalid cstructure type.");
+}
+RR_SHARED_PTR<RobotRaconteur::RRAStructureBaseArray> RobotRaconteurServiceIndexFactory::UnpackAStructureArray(RR_SHARED_PTR<RobotRaconteur::MessageElementAStructureArray> structure)
+{
+	throw RobotRaconteur::ServiceException("Invalid cstructure type.");
+}
+RR_SHARED_PTR<RobotRaconteur::MessageElementAStructureMultiDimArray> RobotRaconteurServiceIndexFactory::PackAStructureMultiDimArray(RR_SHARED_PTR<RobotRaconteur::RRAStructureBaseMultiDimArray> structure)
+{
+	throw RobotRaconteur::ServiceException("Invalid cstructure type.");
+}
+RR_SHARED_PTR<RobotRaconteur::RRAStructureBaseMultiDimArray> RobotRaconteurServiceIndexFactory::UnpackAStructureMultiDimArray(RR_SHARED_PTR<RobotRaconteur::MessageElementAStructureMultiDimArray> structure)
+{
+	throw RobotRaconteur::ServiceException("Invalid cstructure type.");
+}
 RR_SHARED_PTR<RobotRaconteur::ServiceStub> RobotRaconteurServiceIndexFactory::CreateStub(const std::string& type, const std::string& path, RR_SHARED_PTR<RobotRaconteur::ClientContext> context)
 {
 std::vector<std::string> res;

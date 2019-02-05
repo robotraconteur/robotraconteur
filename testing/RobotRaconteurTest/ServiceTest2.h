@@ -88,6 +88,22 @@ namespace RobotRaconteurTest
 		virtual RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > get_w3();
 		virtual void set_w3(RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > value);
 
+		virtual com::robotraconteur::testing::TestService3::vector3 get_testastruct1();
+		virtual void set_testastruct1(const com::robotraconteur::testing::TestService3::vector3& value);
+
+		virtual com::robotraconteur::testing::TestService3::transform get_testastruct2();
+		virtual void set_testastruct2(const com::robotraconteur::testing::TestService3::transform& value);
+
+		virtual RR_SHARED_PTR<RobotRaconteur::RRAStructureArray<com::robotraconteur::testing::TestService3::transform> > get_testastruct3();
+		virtual void set_testastruct3(RR_SHARED_PTR<RobotRaconteur::RRAStructureArray<com::robotraconteur::testing::TestService3::transform> > value);
+
+		virtual RR_SHARED_PTR<RobotRaconteur::RRAStructureMultiDimArray<com::robotraconteur::testing::TestService3::transform> > get_testastruct4();
+		virtual void set_testastruct4(RR_SHARED_PTR<RobotRaconteur::RRAStructureMultiDimArray<com::robotraconteur::testing::TestService3::transform> > value);
+
+		virtual RR_SHARED_PTR<RobotRaconteur::RRAStructureMultiDimArray<com::robotraconteur::testing::TestService3::transform> > get_testastruct5();
+		virtual void set_testastruct5(RR_SHARED_PTR<RobotRaconteur::RRAStructureMultiDimArray<com::robotraconteur::testing::TestService3::transform> > value);
+
+
 	protected:
 
 		void peekwire_timer_handler(const TimerEvent& e);
@@ -107,6 +123,13 @@ namespace RobotRaconteurTest
 		RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > w1;
 		RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > > > w2;
 		RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > w3;
+
+		com::robotraconteur::testing::TestService3::vector3 testastruct1;
+		com::robotraconteur::testing::TestService3::transform testastruct2;
+		RR_SHARED_PTR<RobotRaconteur::RRAStructureArray<com::robotraconteur::testing::TestService3::transform> > testastruct3;
+		RR_SHARED_PTR<RobotRaconteur::RRAStructureMultiDimArray<com::robotraconteur::testing::TestService3::transform> > testastruct4;
+		RR_SHARED_PTR<RobotRaconteur::RRAStructureMultiDimArray<com::robotraconteur::testing::TestService3::transform> > testastruct5;
+
 	};
 
 	class obj4_impl : public virtual com::robotraconteur::testing::TestService3::obj4
@@ -142,4 +165,11 @@ namespace RobotRaconteurTest
 	void ServiceTest2_verify_testcstruct1_multidimarray(RR_SHARED_PTR<RRCStructureMultiDimArray<com::robotraconteur::testing::TestService3::testcstruct1> > v, size_t m, size_t n, uint32_t seed);
 	void ServiceTest2_verify_testcstruct1_multidimarray(RR_SHARED_PTR<RRValue> v, size_t m, size_t n, uint32_t seed);
 
+	void ServiceTest2_fill_transform(com::robotraconteur::testing::TestService3::transform& v, uint32_t seed);
+	void ServiceTest2_verify_transform(const com::robotraconteur::testing::TestService3::transform& v, uint32_t seed);
+	RR_SHARED_PTR<RRAStructureArray<com::robotraconteur::testing::TestService3::transform> > ServiceTest2_fill_transform_array(size_t s, uint32_t seed);
+	void ServiceTest2_verify_transform_array(RR_SHARED_PTR<RRAStructureArray<com::robotraconteur::testing::TestService3::transform> > v, size_t s, uint32_t seed);
+	RR_SHARED_PTR<RRAStructureMultiDimArray<com::robotraconteur::testing::TestService3::transform> > ServiceTest2_fill_transform_multidimarray(size_t m, size_t n, uint32_t seed);
+	void ServiceTest2_verify_transform_multidimarray(RR_SHARED_PTR<RRAStructureMultiDimArray<com::robotraconteur::testing::TestService3::transform> > v, size_t m, size_t n, uint32_t seed);
+	void ServiceTest2_verify_transform_multidimarray(RR_SHARED_PTR<RRValue> v, size_t m, size_t n, uint32_t seed);
 }

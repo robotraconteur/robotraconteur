@@ -21,6 +21,9 @@
 
 namespace RobotRaconteur
 {
+
+	//struct
+
 	class ROBOTRACONTEUR_CORE_API StructureStub
 	{
 	public:
@@ -40,6 +43,8 @@ namespace RobotRaconteur
 		RR_WEAK_PTR<RobotRaconteurNode> node;
 
 	};
+
+	// cstruct
 
 	template<typename T>
 	class CStructureStub
@@ -145,6 +150,71 @@ namespace RobotRaconteur
 	RRCStructureStubNumberType(uint32_t);
 	RRCStructureStubNumberType(int64_t);
 	RRCStructureStubNumberType(uint64_t);
+		
+	template <typename T, size_t N, bool varlength>
+	RR_SHARED_PTR<RRAStructureArray<T> > cstructure_field_array_ToRRAStructureArray(const cstructure_field_array<T, N, varlength>& i)
+	{
+		typedef RRPrimUtil<T>::ElementArrayType element_type;
+		RR_SHARED_PTR<RRArray<element_type> > a = AttachRRArrayCopy<element_type>((const element_type*)&i[0], i.size() * RRPrimUtil<T>::GetElementArrayCount());
+		return RR_MAKE_SHARED<RRAStructureArray<T> >(a);
+	}
+
+	template <typename T, size_t N, bool varlength>
+	void RRAStructureArrayTo_cstructure_field_array(cstructure_field_array<T, N, varlength>& v, const RR_SHARED_PTR<RRAStructureArray<T> >& i)
+	{
+		if (!i) throw NullValueException("CStructure array must not be null");
+		v.resize(i->size());
+		memcpy(&v[0], i->GetNumericArray()->ptr(), sizeof(T)*i->size());
+	}
+
+#define RRCStructureStubAStructureType(type) \
+	template<> \
+	class CStructureStub<type> \
+	{ \
+	public: \
+		template<typename U> \
+		static void PackField(const type& v, const std::string& name, U& out) \
+		{ \
+			std::vector<RR_SHARED_PTR<MessageElement> > v1; \
+			v1.push_back(RR_MAKE_SHARED<MessageElement>("array",ScalarToRRAStructureArray<type>(v)->GetNumericArray())); \
+			out.push_back(RR_MAKE_SHARED<MessageElement>(name, RR_MAKE_SHARED<MessageElementAStructureArray>(RRPrimUtil<type>::GetElementTypeString(),v1))); \
+		} \
+		\
+		template<typename U> \
+		static void UnpackField(type& v, const std::string& name, U& in) \
+		{ \
+			typedef RRPrimUtil<type>::ElementArrayType element_type; \
+			RR_SHARED_PTR<MessageElementAStructureArray> m = MessageElement::FindElement(in,name)->CastData<MessageElementAStructureArray>(); \
+			if (m->Type != RRPrimUtil<type>::GetElementTypeString()) throw DataTypeException("Invalid astruct"); \
+			RR_SHARED_PTR<RRArray<element_type> > a=MessageElement::FindElement(m->Elements, "array")->CastData<RRArray<element_type> >(); \
+			if (a->Length() != RRPrimUtil<type>::GetElementArrayCount()) throw DataTypeException("Invalid astruct"); \
+			memcpy(&v, a->void_ptr(), sizeof(v)); \
+		} \
+	}; \
+	\
+	template<size_t N, bool varlength> \
+	class CStructureStub<cstructure_field_array<type, N, varlength> > \
+	{ \
+	public: \
+		template<typename U> \
+		static void PackField(const cstructure_field_array<type, N, varlength>& v, const std::string& name, U& out) \
+		{ \
+			RR_SHARED_PTR<RRAStructureArray<type> > a = cstructure_field_array_ToRRAStructureArray(v); \
+			std::vector<RR_SHARED_PTR<MessageElement> > a1; \
+			a1.push_back(RR_MAKE_SHARED<MessageElement>("array", a->GetNumericArray())); \
+			out.push_back(RR_MAKE_SHARED<MessageElement>(name, RR_MAKE_SHARED<MessageElementAStructureArray>(RRPrimUtil<type>::GetElementTypeString(), a1))); \
+		} \
+		\
+		template<typename U> \
+		static void UnpackField(cstructure_field_array<type, N, varlength>& v, const std::string& name, U& in) \
+		{ \
+			typedef RRPrimUtil<type>::ElementArrayType element_type; \
+			RR_SHARED_PTR<MessageElementAStructureArray> a = MessageElement::FindElement(in, name)->CastData<MessageElementAStructureArray>(); \
+			RR_SHARED_PTR<RRArray<element_type> > a1 = MessageElement::FindElement(a->Elements, "array")->template CastData<RRArray<element_type> >(); \
+			v.resize(a1->size() / RRPrimUtil<type>::GetElementArrayCount()); \
+			memcpy(&v, a1->ptr(), a1->size() * sizeof(element_type)); \
+		} \
+	}; 
 
 	template<typename T, size_t N, bool varlength>
 	class CStructureStub<cstructure_field_array<T, N, varlength> >
@@ -417,4 +487,172 @@ namespace RobotRaconteur
 
 		return a;
 	}
+
+
+	// astruct
+
+	template<typename T>
+	RR_SHARED_PTR<MessageElementAStructureArray> AStructureStub_PackAStructureToArray(const T& v)
+	{
+		typedef RRPrimUtil<T>::ElementArrayType element_type;
+		RR_SHARED_PTR<RRArray<element_type> > a = AllocateRRArray<element_type>(RRPrimUtil<T>::GetElementArrayCount());
+		memcpy(a->void_ptr(), &v, sizeof(T));
+		std::vector<RR_SHARED_PTR<MessageElement> > a1;
+		a1.push_back(RR_MAKE_SHARED<MessageElement>("array", a));
+		return RR_MAKE_SHARED<MessageElementAStructureArray>(RRPrimUtil<T>::GetElementTypeString(), a1);
+
+	}
+
+	template<typename T>
+	void AStructureStub_UnpackAStructureFromArray(T& v, RR_SHARED_PTR<MessageElementAStructureArray> a)
+	{
+		typedef RRPrimUtil<T>::ElementArrayType element_type;
+		if (!a) throw DataTypeException("AStructure scalar array must not be null");
+		if (a->Type != RRPrimUtil<T>::GetElementTypeString()) throw DataTypeException("AStructure data type mismatch");
+		if (a->Elements.size() != 1) throw DataTypeException("Invalid astructure array format");
+		RR_SHARED_PTR<RRArray<element_type> > a1 = MessageElement::FindElement(a->Elements, "array")->CastData<RRArray<element_type> >();
+		if (a1->Length() != sizeof(T) / sizeof(element_type)) throw DataTypeException("Invalid scalar astructure array format");
+
+		v = *((T*)a1->void_ptr());
+	}
+
+	template<typename T>
+	T AStructureStub_UnpackAStructureFromArray(RR_SHARED_PTR<MessageElementAStructureArray> a)
+	{
+		T o;
+		AStructureStub_UnpackAStructureFromArray(o, a);
+		return o;
+	}
+
+	template<typename T>
+	RR_SHARED_PTR<MessageElementAStructureArray> AStructureStub_PackAStructureArray(RR_SHARED_PTR<RRAStructureArray<T> > a)
+	{
+		if (!a) return RR_SHARED_PTR<MessageElementAStructureArray>();
+		std::vector<RR_SHARED_PTR<MessageElement> > a1;
+		a1.push_back(RR_MAKE_SHARED<MessageElement>("array",a->GetNumericArray()));
+		return RR_MAKE_SHARED<MessageElementAStructureArray>(RRPrimUtil<T>::GetElementTypeString(), a1);
+	}
+
+	template<typename T>
+	RR_SHARED_PTR<RRAStructureArray<T> > AStructureStub_UnpackAStructureArray(RR_SHARED_PTR<MessageElementAStructureArray> a)
+	{
+		typedef RRPrimUtil<T>::ElementArrayType element_type;
+		if (!a) return RR_SHARED_PTR<RRAStructureArray<T> >();
+		if (a->Type != RRPrimUtil<T>::GetElementTypeString()) throw DataTypeException("Invalid astruct type");
+		RR_SHARED_PTR<RRArray<element_type> > a2 = MessageElement::FindElement(a->Elements, "array")->CastData<RRArray<element_type> >();
+		return RR_MAKE_SHARED<RRAStructureArray<T> >(a2);
+	}
+
+	template<typename T>
+	RR_SHARED_PTR<MessageElementAStructureMultiDimArray> AStructureStub_PackAStructureMultiDimArray(RR_SHARED_PTR<RRAStructureMultiDimArray<T> > a)
+	{
+		if (!a) return RR_SHARED_PTR<MessageElementAStructureMultiDimArray>();
+
+		std::vector<RR_SHARED_PTR<MessageElement> > m;
+		m.push_back(RR_MAKE_SHARED<MessageElement>("dims", a->Dims));
+		if (!a->AStructArray) throw NullValueException("Multidimarray array must not be null");
+		m.push_back(RR_MAKE_SHARED<MessageElement>("array", AStructureStub_PackAStructureArray(a->AStructArray)));
+		return RR_MAKE_SHARED<MessageElementAStructureMultiDimArray>(RRPrimUtil<T>::GetElementTypeString(), m);
+	}
+
+	template<typename T>
+	RR_SHARED_PTR<RRAStructureMultiDimArray<T> > AStructureStub_UnpackAStructureMultiDimArray(RR_SHARED_PTR<MessageElementAStructureMultiDimArray> m)
+	{
+		if (!m) return RR_SHARED_PTR<RRAStructureMultiDimArray<T> >();
+
+		RR_SHARED_PTR<RRAStructureMultiDimArray<T> > o = RR_MAKE_SHARED<RRAStructureMultiDimArray<T> >();
+		o->Dims = (MessageElement::FindElement(m->Elements, "dims")->CastData<RRArray<int32_t> >());
+		o->AStructArray = AStructureStub_UnpackAStructureArray<T>(MessageElement::FindElement(m->Elements, "array")->CastData<MessageElementAStructureArray>());
+		if (!o->AStructArray) throw NullValueException("Multidimarray array must not be null");
+		return o;
+	}
+
+	//MessageElement pack helper functions for astruct
+	template<typename T>
+	RR_SHARED_PTR<MessageElement> MessageElement_PackAStructureToArrayElement(const std::string& elementname, const T& s)
+	{
+		return RR_MAKE_SHARED<MessageElement>(elementname, AStructureStub_PackAStructureToArray(s));
+	}
+
+	template<typename T>
+	RR_SHARED_PTR<MessageElement> MessageElement_PackAStructureArrayElement(const std::string& elementname, const RR_SHARED_PTR<RRAStructureArray<T> >& s)
+	{
+		if (!s) throw NullValueException("Arrays must not be null");
+		return RR_MAKE_SHARED<MessageElement>(elementname, AStructureStub_PackAStructureArray(s));
+	}
+
+	template<typename T>
+	RR_SHARED_PTR<MessageElement> MessageElement_PackAStructureMultiDimArrayElement(const std::string& elementname, const RR_SHARED_PTR<RRAStructureMultiDimArray<T> >& s)
+	{
+		if (!s) throw NullValueException("Arrays must not be null");
+		return RR_MAKE_SHARED<MessageElement>(elementname, AStructureStub_PackAStructureMultiDimArray(s));
+	}
+
+	//MessageElement unpack helper functions for astruct
+	template<typename T>
+	T MessageElement_UnpackAStructureFromArray(const RR_SHARED_PTR<MessageElement>& m)
+	{
+		return RobotRaconteur::AStructureStub_UnpackAStructureFromArray<T>(m->CastData<RobotRaconteur::MessageElementAStructureArray>());
+	}
+
+	template<typename T>
+	RR_SHARED_PTR<RRAStructureArray<T> > MessageElement_UnpackAStructureArray(const RR_SHARED_PTR<MessageElement>& m)
+	{
+		RR_SHARED_PTR<RRAStructureArray<T> > a = RobotRaconteur::AStructureStub_UnpackAStructureArray<T>(m->CastData<RobotRaconteur::MessageElementAStructureArray>());
+		if (!a) throw NullValueException("Arrays must not be null");
+		return a;
+	}
+
+	template<typename T>
+	RR_SHARED_PTR<RRAStructureMultiDimArray<T> > MessageElement_UnpackAStructureMultiDimArray(const RR_SHARED_PTR<MessageElement>& m)
+	{
+		RR_SHARED_PTR<RRAStructureMultiDimArray<T> > a = RobotRaconteur::AStructureStub_UnpackAStructureMultiDimArray<T>(m->CastData<RobotRaconteur::MessageElementAStructureMultiDimArray>());
+		if (!a) throw NullValueException("Arrays must not be null");
+		return a;
+	}
+
+	template<typename T>
+	static RR_SHARED_PTR<RRAStructureArray<T> > VerifyRRArrayLength(RR_SHARED_PTR<RRAStructureArray<T> > a, size_t len, bool varlength)
+	{
+		if (!a) throw NullValueException("Arrays must not be null");
+		if (len != 0)
+		{
+			if (varlength && (a->Length() > len))
+			{
+				throw DataTypeException("Array dimension mismatch");
+			}
+			if (!varlength && (a->Length() != len))
+			{
+				throw DataTypeException("Array dimension mismatch");
+			}
+		}
+		return a;
+	}
+
+	template<size_t Ndims, typename T>
+	static RR_SHARED_PTR<RRAStructureMultiDimArray<T> > VerifyRRMultiDimArrayLength(RR_SHARED_PTR<RRAStructureMultiDimArray<T> > a, size_t n_elems, boost::array<int32_t, Ndims> dims)
+	{
+		if (!a) throw NullValueException("Arrays must not be null");
+
+		if (a->Dims->size() != Ndims)
+		{
+			throw DataTypeException("Array dimension mismatch");
+		}
+
+		if (a->AStructArray->Length() != n_elems)
+		{
+			throw DataTypeException("Array dimension mismatch");
+		}
+
+		for (size_t i = 0; i < Ndims; i++)
+		{
+			if ((*a->Dims)[i] != dims[i])
+			{
+				throw DataTypeException("Array dimension mismatch");
+			}
+		}
+
+		return a;
+	}
+
 }

@@ -119,6 +119,10 @@ namespace RobotRaconteur
 			MessageElement_writecstructarray2,
 			MessageElement_writecstructmultidimarray1,
 			MessageElement_writecstructmultidimarray2,
+			MessageElement_writeastructarray1,
+			MessageElement_writeastructarray2,
+			MessageElement_writeastructmultidimarray1,
+			MessageElement_writeastructmultidimarray2,
 
 			//String handling
 			Header_writestring,

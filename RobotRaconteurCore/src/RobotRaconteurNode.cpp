@@ -335,6 +335,67 @@ RR_SHARED_PTR<RRCStructureBaseMultiDimArray> RobotRaconteurNode::UnpackCStructur
 	return rr_cast<RRCStructureBaseMultiDimArray>(factory->UnpackCStructureMultiDimArray(a));
 }
 
+
+RR_SHARED_PTR<MessageElementAStructureArray> RobotRaconteurNode::PackAStructureArray(RR_SHARED_PTR<RRAStructureBaseArray> a)
+{
+
+	if (!a) return RR_SHARED_PTR<MessageElementAStructureArray>();
+
+	std::string type = a->RRElementTypeString();
+
+	std::string servicetype = SplitQualifiedName(type).get<0>();
+	//std::string structuretype=res[1];
+
+	RR_SHARED_PTR<ServiceFactory> factory = GetServiceType(servicetype);
+
+	return factory->PackAStructureArray(a);
+}
+
+RR_SHARED_PTR<RRAStructureBaseArray> RobotRaconteurNode::UnpackAStructureArray(RR_SHARED_PTR<MessageElementAStructureArray> a)
+{
+	if (!a) return RR_SHARED_PTR<RRAStructureBaseArray>();
+
+	std::string type = a->Type;
+
+
+	std::string servicetype = SplitQualifiedName(type).get<0>();
+	//std::string structuretype=res[1];
+
+	RR_SHARED_PTR<ServiceFactory> factory = GetServiceType(servicetype);
+
+	return rr_cast<RRAStructureBaseArray>(factory->UnpackAStructureArray(a));
+}
+
+RR_SHARED_PTR<MessageElementAStructureMultiDimArray> RobotRaconteurNode::PackAStructureMultiDimArray(RR_SHARED_PTR<RRAStructureBaseMultiDimArray> a)
+{
+
+	if (!a) return RR_SHARED_PTR<MessageElementAStructureMultiDimArray>();
+
+	std::string type = a->RRElementTypeString();
+
+	std::string servicetype = SplitQualifiedName(type).get<0>();
+	//std::string structuretype=res[1];
+
+	RR_SHARED_PTR<ServiceFactory> factory = GetServiceType(servicetype);
+
+	return factory->PackAStructureMultiDimArray(a);
+}
+
+RR_SHARED_PTR<RRAStructureBaseMultiDimArray> RobotRaconteurNode::UnpackAStructureMultiDimArray(RR_SHARED_PTR<MessageElementAStructureMultiDimArray> a)
+{
+	if (!a) return RR_SHARED_PTR<RRAStructureBaseMultiDimArray>();
+
+	std::string type = a->Type;
+
+
+	std::string servicetype = SplitQualifiedName(type).get<0>();
+	//std::string structuretype=res[1];
+
+	RR_SHARED_PTR<ServiceFactory> factory = GetServiceType(servicetype);
+
+	return rr_cast<RRAStructureBaseMultiDimArray>(factory->UnpackAStructureMultiDimArray(a));
+}
+
 RR_SHARED_PTR<MessageElementData> RobotRaconteurNode::PackVarType(RR_SHARED_PTR<RRValue> vardata)
 {
 
@@ -411,6 +472,18 @@ RR_SHARED_PTR<MessageElementData> RobotRaconteurNode::PackVarType(RR_SHARED_PTR<
 	if (type == t11)
 	{
 		return PackCStructureMultiDimArray(rr_cast<RRCStructureBaseMultiDimArray>(vardata));
+	}
+
+	std::string t12 = "RobotRaconteur.RRAStructureArray";
+	if (type == t12)
+	{
+		return PackAStructureArray(rr_cast<RRAStructureBaseArray>(vardata));
+	}
+
+	std::string t13 = "RobotRaconteur.RRAStructureMultiDimArray";
+	if (type == t13)
+	{
+		return PackAStructureMultiDimArray(rr_cast<RRAStructureBaseMultiDimArray>(vardata));
 	}
 
 	return PackStructure(rr_cast<RRStructure>(vardata));
@@ -494,6 +567,16 @@ RR_SHARED_PTR<RRValue> RobotRaconteurNode::UnpackVarType(RR_SHARED_PTR<MessageEl
 	if (type == DataTypes_cstructure_multidimarray_t)
 	{
 		return UnpackCStructureMultiDimArray(rr_cast<MessageElementCStructureMultiDimArray>(mvardata));
+	}
+
+	if (type == DataTypes_astructure_array_t)
+	{
+		return UnpackAStructureArray(rr_cast<MessageElementAStructureArray>(mvardata));
+	}
+
+	if (type == DataTypes_astructure_multidimarray_t)
+	{
+		return UnpackAStructureMultiDimArray(rr_cast<MessageElementAStructureMultiDimArray>(mvardata));
 	}
 
 	throw DataTypeException("Unknown data type");

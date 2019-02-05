@@ -373,6 +373,11 @@ namespace RobotRaconteur
 			o << d->ToString() << "\n";
 		}
 
+		BOOST_FOREACH(RR_SHARED_PTR<ServiceEntryDefinition>& d, AStructures)
+		{
+			o << d->ToString() << "\n";
+		}
+
 		BOOST_FOREACH (RR_SHARED_PTR<ServiceEntryDefinition>& d, Objects)
 		{
 			o << d->ToString() << "\n";
@@ -423,7 +428,7 @@ namespace RobotRaconteur
 		
 		boost::regex r_comment("^[ \\t]*#[ -~\\t]*$");
 		boost::regex r_empty("^[ \\t]*$");
-		boost::regex r_entry("(?:^[ \\t]*(?:(service)|(stdver)|(option)|(import)|(using)|(exception)|(constant)|(enum)|(struct)|(object)|(cstruct))[ \\t]+(\\w[^\\s]*(?:[ \\t]+[^\\s]+)*)[ \\t]*$)|(^[ \\t]*$)");
+		boost::regex r_entry("(?:^[ \\t]*(?:(service)|(stdver)|(option)|(import)|(using)|(exception)|(constant)|(enum)|(struct)|(object)|(cstruct)|(astruct))[ \\t]+(\\w[^\\s]*(?:[ \\t]+[^\\s]+)*)[ \\t]*$)|(^[ \\t]*$)");
 
 		bool service_name_found = false;
 		
@@ -451,17 +456,17 @@ namespace RobotRaconteur
 					throw RobotRaconteurParseException("Parse error near: " + l, (int32_t)pos);
 				}
 
-				const boost::smatch::value_type& r_entry_match_blank = r_entry_match[13];
+				const boost::smatch::value_type& r_entry_match_blank = r_entry_match[14];
 				if (r_entry_match_blank.matched) continue;
 
 				int32_t entry_key = 1;
-				for (; entry_key < 11; entry_key++)
+				for (; entry_key < 12; entry_key++)
 				{
 					if (r_entry_match[entry_key].matched)
 						break;
 				}
 
-				const boost::smatch::value_type& r_entry_match_remaining = r_entry_match[12];
+				const boost::smatch::value_type& r_entry_match_remaining = r_entry_match[13];
 
 				if (entry_key != 1 && !service_name_found)
 					throw RobotRaconteurParseException("service name must be first entry in service definition");
@@ -586,6 +591,18 @@ namespace RobotRaconteur
 					entry_key_max = 9;
 					continue;
 				}
+				//astruct
+				case 12:
+				{
+					size_t init_pos;
+					std::stringstream block;
+					ServiceDefinition_FindBlock(l, s, block, pos, init_pos);
+					RR_SHARED_PTR<ServiceEntryDefinition> struct_def = RR_MAKE_SHARED<ServiceEntryDefinition>(shared_from_this());
+					struct_def->FromString(block.str(), init_pos, warnings);
+					AStructures.push_back(struct_def);
+					entry_key_max = 9;
+					continue;
+				}
 				default:
 					throw RobotRaconteurParseException("Parse error near: " + l, (int32_t)pos);
 				}
@@ -693,6 +710,9 @@ namespace RobotRaconteur
 		case DataTypes_cstructure_t:
 			o << "cstruct " << Name << "\n";
 			break;
+		case DataTypes_astructure_t:
+			o << "astruct " << Name << "\n";
+			break;
 		case DataTypes_object_t:
 			o << "object " << Name << "\n";
 			break;
@@ -733,6 +753,9 @@ namespace RobotRaconteur
 			break;
 		case DataTypes_cstructure_t:
 			o << "end cstruct\n";
+			break;
+		case DataTypes_astructure_t:
+			o << "end astruct\n";
 			break;
 		case DataTypes_object_t:
 			o << "end object\n";
@@ -805,9 +828,11 @@ namespace RobotRaconteur
 
 		boost::regex start_struct_regex("^[ \\t]*struct[ \\t]+(\\w+)[ \\t]*$");
 		boost::regex start_cstruct_regex("^[ \\t]*cstruct[ \\t]+(\\w+)[ \\t]*$");
+		boost::regex start_astruct_regex("^[ \\t]*astruct[ \\t]+(\\w+)[ \\t]*$");
 		boost::regex start_object_regex("^[ \\t]*object[ \\t]+(\\w+)[ \\t]*$");
 		boost::regex end_struct_regex("^[ \\t]*end[ \\t]+struct[ \\t]*$");
 		boost::regex end_cstruct_regex("^[ \\t]*end[ \\t]+cstruct[ \\t]*$");
+		boost::regex end_astruct_regex("^[ \\t]*end[ \\t]+astruct[ \\t]*$");
 		boost::regex end_object_regex("^[ \\t]*end[ \\t]+object[ \\t]*$");
 
 		size_t pos=startline-1;
@@ -820,6 +845,7 @@ namespace RobotRaconteur
 
 		boost::smatch start_struct_cmatch;
 		boost::smatch start_cstruct_cmatch;
+		boost::smatch start_astruct_cmatch;
 		boost::smatch start_object_cmatch;
 		if (boost::regex_match(l, start_struct_cmatch, start_struct_regex))
 		{
@@ -830,6 +856,11 @@ namespace RobotRaconteur
 		{
 			EntryType = DataTypes_cstructure_t;
 			Name = start_cstruct_cmatch[1];
+		}
+		else if (boost::regex_match(l, start_astruct_cmatch, start_astruct_regex))
+		{
+			EntryType = DataTypes_astructure_t;
+			Name = start_astruct_cmatch[1];
 		}
 		else if (boost::regex_match(l, start_object_cmatch, start_object_regex))
 		{
@@ -981,6 +1012,14 @@ namespace RobotRaconteur
 								throw  RobotRaconteurParseException("Parse error", (int32_t)(pos));
 							}
 						}
+						else if (EntryType == DataTypes_astructure_t)
+						{
+							boost::smatch matches;
+							if (!boost::regex_match(l, matches, end_astruct_regex))
+							{
+								throw  RobotRaconteurParseException("Parse error", (int32_t)(pos));
+							}
+						}
 						else
 						{
 							boost::smatch matches;
@@ -1034,6 +1073,7 @@ namespace RobotRaconteur
 		{
 		case DataTypes_structure_t:
 		case DataTypes_cstructure_t:
+		case DataTypes_astructure_t:
 		case DataTypes_object_t:
 			break;
 		default:
@@ -2140,6 +2180,12 @@ namespace RobotRaconteur
 			ResolveNamedType_cache = found_cstruct;
 			return found_cstruct;
 		}
+		RR_SHARED_PTR<ServiceEntryDefinition> found_astruct = TryFindByName(def->AStructures, entry_name);
+		if (found_astruct)
+		{
+			ResolveNamedType_cache = found_astruct;
+			return found_astruct;
+		}
 		RR_SHARED_PTR<ServiceEntryDefinition> found_object = TryFindByName(def->Objects, entry_name);
 		if (found_object)
 		{
@@ -2757,7 +2803,7 @@ namespace RobotRaconteur
 		{
 			if (name=="this" || name=="self" || name =="Me") throw ServiceDefinitionException("The names \"this\", \"self\", and \"Me\" are reserved, error in service definition \"" + def->Name + "\"");
 
-			const char* res_str[]={"object","end","option","service","object","struct","import","implements","field","property","function","event","objref","pipe","callback","wire","memory","void","int8","uint8","int16","uint16","int32","uint32","int64","uint64","single","double","varvalue","varobject","exception", "using", "constant", "enum"};
+			const char* res_str[]={"object","end","option","service","object","struct","import","implements","field","property","function","event","objref","pipe","callback","wire","memory","void","int8","uint8","int16","uint16","int32","uint32","int64","uint64","single","double","varvalue","varobject","exception", "using", "constant", "enum", "cstruct", "astruct"};
 			std::vector<std::string> reserved(res_str,res_str+sizeof(res_str)/(sizeof(res_str[0])));
 
 			if (boost::range::find(reserved,name)!=reserved.end())
@@ -2883,6 +2929,10 @@ namespace RobotRaconteur
 		{
 			o.push_back(e->Name);
 		}
+		BOOST_FOREACH(RR_SHARED_PTR<ServiceEntryDefinition>& e, def->AStructures)
+		{
+			o.push_back(e->Name);
+		}
 		BOOST_FOREACH(RR_SHARED_PTR<ConstantDefinition>& e, def->Constants)
 		{
 			o.push_back(e->Name);
@@ -2965,8 +3015,8 @@ namespace RobotRaconteur
 		{
 			RR_SHARED_PTR<NamedTypeDefinition> nt = t->ResolveNamedType(defs);
 			DataTypes nt_type = nt->RRDataType();
-			if (nt_type != DataTypes_cstructure_t && t->ArrayType != DataTypes_ArrayTypes_none) throw ServiceDefinitionException("Invalid Robot Raconteur data type \"" + t->ToString() + "\" type in service \"" + def->Name + "\"");
-			if (nt_type != DataTypes_structure_t && nt_type != DataTypes_cstructure_t && nt_type != DataTypes_enum_t) throw ServiceDefinitionException("Invalid Robot Raconteur data type \"" + t->ToString() + "\" type in service \"" + def->Name + "\"");
+			if ((nt_type != DataTypes_cstructure_t && nt_type != DataTypes_astructure_t) && t->ArrayType != DataTypes_ArrayTypes_none) throw ServiceDefinitionException("Invalid Robot Raconteur data type \"" + t->ToString() + "\" type in service \"" + def->Name + "\"");
+			if (nt_type != DataTypes_structure_t && nt_type != DataTypes_cstructure_t && nt_type != DataTypes_astructure_t && nt_type != DataTypes_enum_t) throw ServiceDefinitionException("Invalid Robot Raconteur data type \"" + t->ToString() + "\" type in service \"" + def->Name + "\"");
 			if (nt_type == DataTypes_cstructure_t)
 			{
 
@@ -3222,7 +3272,7 @@ namespace RobotRaconteur
 					throw ServiceDefinitionException("Memory member must be numeric or cstructure");
 				}
 				RR_SHARED_PTR<NamedTypeDefinition> nt = m2->Type->ResolveNamedType();
-				if (nt->RRDataType() != DataTypes_cstructure_t)
+				if (nt->RRDataType() != DataTypes_cstructure_t && nt->RRDataType() != DataTypes_astructure_t)
 				{
 					throw ServiceDefinitionException("Memory member must be numeric or cstructure");
 				}
@@ -3602,9 +3652,9 @@ namespace RobotRaconteur
 
 	}
 
-	void VerifyStructure_check_recursion(RR_SHARED_PTR<ServiceEntryDefinition> strut, std::set<std::string> names)
+	void VerifyStructure_check_recursion(RR_SHARED_PTR<ServiceEntryDefinition> strut, std::set<std::string> names, DataTypes entry_type)
 	{
-		if (strut->EntryType != DataTypes_cstructure_t)
+		if (strut->EntryType != entry_type && strut->EntryType != DataTypes_astructure_t)
 		{
 			throw InternalErrorException("");
 		}
@@ -3621,29 +3671,22 @@ namespace RobotRaconteur
 				RR_SHARED_PTR<NamedTypeDefinition> nt_def = p->Type->ResolveNamedType();				
 				RR_SHARED_PTR<ServiceEntryDefinition> et_def = RR_DYNAMIC_POINTER_CAST<ServiceEntryDefinition>(nt_def);
 				if (!et_def) throw InternalErrorException("");
-				if (et_def->EntryType != DataTypes_cstructure_t) throw InternalErrorException("");
+				if (et_def->EntryType != entry_type && et_def->EntryType != DataTypes_astructure_t) throw InternalErrorException("");
 
 				if (names.find(et_def->Name) != names.end())
 				{
-					throw ServiceDefinitionException("Recursive cstruct detected in " + strut->Name);
+					throw ServiceDefinitionException("Recursive astruct/cstruct detected in " + strut->Name);
 				}
 
-				VerifyStructure_check_recursion(et_def, names);
+				VerifyStructure_check_recursion(et_def, names, entry_type);
 			}
 		}
 	}
 
-	void VerifyStructure_common(RR_SHARED_PTR<ServiceEntryDefinition> strut, RR_SHARED_PTR<ServiceDefinition> def, std::vector<RR_SHARED_PTR<ServiceDefinition> > defs, std::vector<RobotRaconteurParseException>& warnings, bool is_cstruct)
+	void VerifyStructure_common(RR_SHARED_PTR<ServiceEntryDefinition> strut, RR_SHARED_PTR<ServiceDefinition> def, std::vector<RR_SHARED_PTR<ServiceDefinition> > defs, std::vector<RobotRaconteurParseException>& warnings, DataTypes entry_type)
 	{
-		if (!is_cstruct)
-		{
-			if (strut->EntryType != DataTypes_structure_t) throw ServiceDefinitionException("Invalid EntryType in " + strut->Name);
-		}
-		else
-		{
-			if (strut->EntryType != DataTypes_cstructure_t) throw ServiceDefinitionException("Invalid EntryType in " + strut->Name);
-		}
-
+		if (strut->EntryType != entry_type) throw ServiceDefinitionException("Invalid EntryType in " + strut->Name);
+		
 		VerifyName(strut->Name,def);
 		std::vector<std::string> membernames;
 
@@ -3666,6 +3709,8 @@ namespace RobotRaconteur
 			membernames.push_back(membername);
 		}
 
+		DataTypes astruct_element_type = DataTypes_void_t;
+
 		BOOST_FOREACH(RR_SHARED_PTR<MemberDefinition>& e, strut->Members)
 		{
 			RR_SHARED_PTR<PropertyDefinition> p=RR_DYNAMIC_POINTER_CAST<PropertyDefinition>(e);
@@ -3673,20 +3718,20 @@ namespace RobotRaconteur
 
 			std::string membername = VerifyMember(p, def, defs, warnings);
 
-			if (is_cstruct)
+			if (entry_type == DataTypes_cstructure_t)
 			{
 				RR_SHARED_PTR<TypeDefinition> t = p->Type;
 				if (!IsTypeNumeric(t->Type) && t->Type != DataTypes_namedtype_t)
 				{
-					throw ServiceDefinitionException("CStructures must only contain numeric and cstruct types");
+					throw ServiceDefinitionException("CStructures must only contain numeric, cstruct, and astruct types");
 				}
 
 				if (t->Type == DataTypes_namedtype_t)
 				{
 					RR_SHARED_PTR<NamedTypeDefinition> tt = t->ResolveNamedType();
-					if (tt->RRDataType() != DataTypes_cstructure_t)
+					if (tt->RRDataType() != DataTypes_cstructure_t && tt->RRDataType() != DataTypes_astructure_t)
 					{
-						throw ServiceDefinitionException("CStructures must only contain numeric and cstruct types");
+						throw ServiceDefinitionException("CStructures must only contain numeric, custruct, cstruct types");
 					}
 				}
 
@@ -3702,8 +3747,42 @@ namespace RobotRaconteur
 				}
 
 				std::set<std::string> n;				
-				VerifyStructure_check_recursion(strut, n);
-			}			
+				VerifyStructure_check_recursion(strut, n, DataTypes_cstructure_t);
+			}
+
+			if (entry_type == DataTypes_astructure_t)
+			{
+				RR_SHARED_PTR<TypeDefinition> t = p->Type;
+				if (!IsTypeNumeric(t->Type) && t->Type != DataTypes_namedtype_t)
+				{
+					throw ServiceDefinitionException("AStructures must only contain numeric and astruct types");
+				}
+
+				if (t->Type == DataTypes_namedtype_t)
+				{
+					RR_SHARED_PTR<NamedTypeDefinition> tt = t->ResolveNamedType();
+					if (tt->RRDataType() != DataTypes_astructure_t)
+					{
+						throw ServiceDefinitionException("AStructures must only contain numeric and astruct types");
+					}
+				}
+
+				if (t->ContainerType != DataTypes_ContainerTypes_none)
+				{
+					throw ServiceDefinitionException("AStructures may not use containers");
+				}
+
+				if ((boost::range::find(t->ArrayLength, 0) != t->ArrayLength.end())
+					|| (t->ArrayType == DataTypes_ArrayTypes_multidimarray && t->ArrayLength.empty()))
+				{
+					throw ServiceDefinitionException("AStructures must have fixed or finite length arrays");
+				}
+
+				std::set<std::string> n;
+				GetAStructureElementTypeAndCount(strut, defs);
+
+
+			}
 					
 			if (boost::range::find(membernames, membername)!=membernames.end()) throw ServiceDefinitionException("Structure \"" + strut->Name + "\" in service definition \"" + def->Name + "\" contains multiple members named \"" + membername + "\"");
 			membernames.push_back(membername);
@@ -3713,12 +3792,17 @@ namespace RobotRaconteur
 
 	void VerifyStructure(RR_SHARED_PTR<ServiceEntryDefinition> strut, RR_SHARED_PTR<ServiceDefinition> def, std::vector<RR_SHARED_PTR<ServiceDefinition> > defs, std::vector<RobotRaconteurParseException>& warnings)
 	{
-		VerifyStructure_common(strut, def, defs, warnings, false);
+		VerifyStructure_common(strut, def, defs, warnings, DataTypes_structure_t);
 	}
 
 	void VerifyCStructure(RR_SHARED_PTR<ServiceEntryDefinition> strut, RR_SHARED_PTR<ServiceDefinition> def, std::vector<RR_SHARED_PTR<ServiceDefinition> > defs, std::vector<RobotRaconteurParseException>& warnings)
 	{
-		VerifyStructure_common(strut, def, defs, warnings, true);
+		VerifyStructure_common(strut, def, defs, warnings, DataTypes_cstructure_t);
+	}
+
+	void VerifyAStructure(RR_SHARED_PTR<ServiceEntryDefinition> strut, RR_SHARED_PTR<ServiceDefinition> def, std::vector<RR_SHARED_PTR<ServiceDefinition> > defs, std::vector<RobotRaconteurParseException>& warnings)
+	{
+		VerifyStructure_common(strut, def, defs, warnings, DataTypes_astructure_t);
 	}
 
 
@@ -3895,6 +3979,17 @@ namespace RobotRaconteur
 			{
 
 				VerifyCStructure(ee, e, importeddefs, warnings);
+
+				std::string name = ee->Name;
+				if (boost::range::find(names, name) != names.end()) throw ServiceDefinitionException("Service definition \"" + e->Name + "\" contains multiple high level names \"" + name + "\"");
+				names.push_back(name);
+
+			}
+
+			BOOST_FOREACH(RR_SHARED_PTR<ServiceEntryDefinition> ee, e->AStructures)
+			{
+
+				VerifyAStructure(ee, e, importeddefs, warnings);
 
 				std::string name = ee->Name;
 				if (boost::range::find(names, name) != names.end()) throw ServiceDefinitionException("Service definition \"" + e->Name + "\" contains multiple high level names \"" + name + "\"");
@@ -4080,6 +4175,100 @@ namespace RobotRaconteur
 			}
 		}
 		return s;
+	}
+
+	boost::tuple<DataTypes, size_t> GetAStructureElementTypeAndCount(RR_SHARED_PTR<ServiceEntryDefinition> def, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, RR_SHARED_PTR<RobotRaconteurNode> node, RR_SHARED_PTR<RRObject> client, std::set<std::string> n)
+	{
+		if (def->EntryType != DataTypes_astructure_t)
+		{
+			throw InvalidOperationException("Argument must be an astruct");
+		}
+
+		n.insert(def->Name);
+
+		DataTypes element_type = DataTypes_void_t;
+		size_t element_count = 0;
+
+		if (def->Members.empty())
+		{
+			throw ServiceDefinitionException("astruct must not be empty");
+		}
+
+		BOOST_FOREACH(RR_SHARED_PTR<MemberDefinition>& e, def->Members)
+		{
+			size_t field_element_count = 1;
+
+			RR_SHARED_PTR<PropertyDefinition> p = RR_DYNAMIC_POINTER_CAST<PropertyDefinition>(e);
+			if (!p) ServiceDefinitionException("Invalid member type in astruct: " + def->Name);
+
+			if (p->Type->ContainerType != DataTypes_ContainerTypes_none)
+			{
+				throw ServiceDefinitionException("astruct must not contain containers: " + def->Name);
+			}
+
+			if (p->Type->ArrayType != DataTypes_ArrayTypes_none && p->Type->ArrayVarLength)
+			{
+				throw ServiceDefinitionException("astruct must not contain variable length arrays: " + def->Name);
+			}
+
+			if (p->Type->ArrayType != DataTypes_ArrayTypes_none)
+			{
+				field_element_count = (size_t)boost::accumulate(p->Type->ArrayLength, 1, std::multiplies<int32_t>());
+			}
+
+			if (IsTypeNumeric(p->Type->Type))
+			{
+				if (element_type == DataTypes_void_t)
+				{
+					element_type = p->Type->Type;
+				}
+				else
+				{			
+					if (element_type !=p->Type->Type) throw ServiceDefinitionException("astruct must contain same numeric type: " + def->Name);
+				}
+
+				element_count += field_element_count;
+			}
+			else if (p->Type->Type == DataTypes_namedtype_t)
+			{
+				RR_SHARED_PTR<NamedTypeDefinition> nt_def = p->Type->ResolveNamedType();
+				RR_SHARED_PTR<ServiceEntryDefinition> et_def = RR_DYNAMIC_POINTER_CAST<ServiceEntryDefinition>(nt_def);
+				if (!et_def) throw InternalErrorException("");
+				if (et_def->EntryType != DataTypes_astructure_t) throw InternalErrorException("");
+
+				if (n.find(et_def->Name) != n.end())
+				{
+					throw ServiceDefinitionException("Recursive astruct detected in " + def->Name);
+				}
+
+				boost::tuple<DataTypes, size_t> v=GetAStructureElementTypeAndCount(et_def, other_defs, node, client, n);
+				if (element_type == DataTypes_void_t)
+				{
+					element_type = v.get<0>();
+				}
+				else
+				{
+					if (element_type != v.get<0>()) throw ServiceDefinitionException("astruct must contain same numeric type: " + def->Name);
+				}
+
+				element_count += field_element_count * v.get<1>();
+
+			}
+			else
+			{
+				throw ServiceDefinitionException("Invalid astruct field in " + def->Name);
+			}
+		}
+
+		return boost::make_tuple(element_type, element_count);
+
+	}
+
+
+	ROBOTRACONTEUR_CORE_API boost::tuple<DataTypes,size_t> GetAStructureElementTypeAndCount(RR_SHARED_PTR<ServiceEntryDefinition> def, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, RR_SHARED_PTR<RobotRaconteurNode> node, RR_SHARED_PTR<RRObject> client)
+	{
+		std::set<std::string> n;
+		return GetAStructureElementTypeAndCount(def, other_defs, node, client, n);
 	}
 
 }
