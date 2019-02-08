@@ -154,8 +154,8 @@ namespace RobotRaconteur
 	template <typename T, size_t N, bool varlength>
 	RR_SHARED_PTR<RRAStructureArray<T> > cstructure_field_array_ToRRAStructureArray(const cstructure_field_array<T, N, varlength>& i)
 	{
-		typedef RRPrimUtil<T>::ElementArrayType element_type;
-		RR_SHARED_PTR<RRArray<element_type> > a = AttachRRArrayCopy<element_type>((const element_type*)&i[0], i.size() * RRPrimUtil<T>::GetElementArrayCount());
+		typedef typename RRPrimUtil<T>::ElementArrayType element_type;
+		typename RR_SHARED_PTR<RRArray<element_type> > a = AttachRRArrayCopy<element_type>((const element_type*)&i[0], i.size() * RRPrimUtil<T>::GetElementArrayCount());
 		return RR_MAKE_SHARED<RRAStructureArray<T> >(a);
 	}
 
@@ -183,8 +183,8 @@ namespace RobotRaconteur
 		template<typename U> \
 		static void UnpackField(type& v, const std::string& name, U& in) \
 		{ \
-			typedef RRPrimUtil<type>::ElementArrayType element_type; \
-			RR_SHARED_PTR<MessageElementAStructureArray> m = MessageElement::FindElement(in,name)->CastData<MessageElementAStructureArray>(); \
+			typedef typename RRPrimUtil<type>::ElementArrayType element_type; \
+			RR_SHARED_PTR<MessageElementAStructureArray> m = MessageElement::FindElement(in,name)->template CastData<MessageElementAStructureArray>(); \
 			if (m->Type != RRPrimUtil<type>::GetElementTypeString()) throw DataTypeException("Invalid astruct"); \
 			RR_SHARED_PTR<RRArray<element_type> > a=MessageElement::FindElement(m->Elements, "array")->CastData<RRArray<element_type> >(); \
 			if (a->Length() != RRPrimUtil<type>::GetElementArrayCount()) throw DataTypeException("Invalid astruct"); \
@@ -209,7 +209,7 @@ namespace RobotRaconteur
 		static void UnpackField(cstructure_field_array<type, N, varlength>& v, const std::string& name, U& in) \
 		{ \
 			typedef RRPrimUtil<type>::ElementArrayType element_type; \
-			RR_SHARED_PTR<MessageElementAStructureArray> a = MessageElement::FindElement(in, name)->CastData<MessageElementAStructureArray>(); \
+			RR_SHARED_PTR<MessageElementAStructureArray> a = MessageElement::FindElement(in, name)->template CastData<MessageElementAStructureArray>(); \
 			RR_SHARED_PTR<RRArray<element_type> > a1 = MessageElement::FindElement(a->Elements, "array")->template CastData<RRArray<element_type> >(); \
 			v.resize(a1->size() / RRPrimUtil<type>::GetElementArrayCount()); \
 			memcpy(&v, a1->ptr(), a1->size() * sizeof(element_type)); \
@@ -494,7 +494,7 @@ namespace RobotRaconteur
 	template<typename T>
 	RR_SHARED_PTR<MessageElementAStructureArray> AStructureStub_PackAStructureToArray(const T& v)
 	{
-		typedef RRPrimUtil<T>::ElementArrayType element_type;
+		typedef typename RRPrimUtil<T>::ElementArrayType element_type;
 		RR_SHARED_PTR<RRArray<element_type> > a = AllocateRRArray<element_type>(RRPrimUtil<T>::GetElementArrayCount());
 		memcpy(a->void_ptr(), &v, sizeof(T));
 		std::vector<RR_SHARED_PTR<MessageElement> > a1;
@@ -506,11 +506,11 @@ namespace RobotRaconteur
 	template<typename T>
 	void AStructureStub_UnpackAStructureFromArray(T& v, RR_SHARED_PTR<MessageElementAStructureArray> a)
 	{
-		typedef RRPrimUtil<T>::ElementArrayType element_type;
+		typedef typename RRPrimUtil<T>::ElementArrayType element_type;
 		if (!a) throw DataTypeException("AStructure scalar array must not be null");
 		if (a->Type != RRPrimUtil<T>::GetElementTypeString()) throw DataTypeException("AStructure data type mismatch");
 		if (a->Elements.size() != 1) throw DataTypeException("Invalid astructure array format");
-		RR_SHARED_PTR<RRArray<element_type> > a1 = MessageElement::FindElement(a->Elements, "array")->CastData<RRArray<element_type> >();
+		typename RR_SHARED_PTR<RRArray<element_type> > a1 = MessageElement::FindElement(a->Elements, "array")->template CastData<RRArray<element_type> >();
 		if (a1->Length() != sizeof(T) / sizeof(element_type)) throw DataTypeException("Invalid scalar astructure array format");
 
 		v = *((T*)a1->void_ptr());
@@ -536,10 +536,10 @@ namespace RobotRaconteur
 	template<typename T>
 	RR_SHARED_PTR<RRAStructureArray<T> > AStructureStub_UnpackAStructureArray(RR_SHARED_PTR<MessageElementAStructureArray> a)
 	{
-		typedef RRPrimUtil<T>::ElementArrayType element_type;
+		typedef typename RRPrimUtil<T>::ElementArrayType element_type;
 		if (!a) return RR_SHARED_PTR<RRAStructureArray<T> >();
 		if (a->Type != RRPrimUtil<T>::GetElementTypeString()) throw DataTypeException("Invalid astruct type");
-		RR_SHARED_PTR<RRArray<element_type> > a2 = MessageElement::FindElement(a->Elements, "array")->CastData<RRArray<element_type> >();
+		typename RR_SHARED_PTR<RRArray<element_type> > a2 = MessageElement::FindElement(a->Elements, "array")->CastData<RRArray<element_type> >();
 		return RR_MAKE_SHARED<RRAStructureArray<T> >(a2);
 	}
 
@@ -560,7 +560,7 @@ namespace RobotRaconteur
 	{
 		if (!m) return RR_SHARED_PTR<RRAStructureMultiDimArray<T> >();
 
-		RR_SHARED_PTR<RRAStructureMultiDimArray<T> > o = RR_MAKE_SHARED<RRAStructureMultiDimArray<T> >();
+		typename RR_SHARED_PTR<RRAStructureMultiDimArray<T> > o = RR_MAKE_SHARED<RRAStructureMultiDimArray<T> >();
 		o->Dims = (MessageElement::FindElement(m->Elements, "dims")->CastData<RRArray<int32_t> >());
 		o->AStructArray = AStructureStub_UnpackAStructureArray<T>(MessageElement::FindElement(m->Elements, "array")->CastData<MessageElementAStructureArray>());
 		if (!o->AStructArray) throw NullValueException("Multidimarray array must not be null");
