@@ -19,14 +19,20 @@
 
 %shared_ptr(RobotRaconteur::WrappedCStructureArrayMemoryClient);
 %shared_ptr(RobotRaconteur::WrappedCStructureMultiDimArrayMemoryClient);
+%shared_ptr(RobotRaconteur::WrappedAStructureArrayMemoryClient);
+%shared_ptr(RobotRaconteur::WrappedAStructureMultiDimArrayMemoryClient);
 
 %feature("director") RobotRaconteur::WrappedCStructureArrayMemoryClientBuffer;
 %feature("director") RobotRaconteur::WrappedCStructureMultiDimArrayMemoryClientBuffer;
+%feature("director") RobotRaconteur::WrappedAStructureArrayMemoryClientBuffer;
+%feature("director") RobotRaconteur::WrappedAStructureMultiDimArrayMemoryClientBuffer;
 
 %feature("director") RobotRaconteur::WrappedArrayMemoryDirector;
 %feature("director") RobotRaconteur::WrappedMultiDimArrayMemoryDirector;
 %feature("director") RobotRaconteur::WrappedCStructureArrayMemoryDirector;
 %feature("director") RobotRaconteur::WrappedCStructureMultiDimArrayMemoryDirector;
+%feature("director") RobotRaconteur::WrappedAStructureArrayMemoryDirector;
+%feature("director") RobotRaconteur::WrappedAStructureMultiDimArrayMemoryDirector;
 
 namespace RobotRaconteur
 {
@@ -151,6 +157,8 @@ public:
 	int32_t objectheapid;
 };
 
+// cstruct
+
 class WrappedCStructureArrayMemoryDirector
 {
 public:
@@ -173,5 +181,74 @@ public:
 
 	int32_t objectheapid;
 };
+
+// astruct
+
+class WrappedAStructureArrayMemoryClientBuffer
+{
+public:
+	virtual void UnpackReadResult(boost::shared_ptr<RobotRaconteur::MessageElementAStructureArray> res, uint64_t bufferpos, uint64_t count) = 0;
+	virtual boost::shared_ptr<RobotRaconteur::MessageElementAStructureArray> PackWriteRequest(uint64_t bufferpos, uint64_t count) = 0;
+	virtual uint64_t GetBufferLength() = 0;
+	virtual ~WrappedAStructureArrayMemoryClientBuffer() {}
+};
+
+%nodefaultctor WrappedAStructureArrayMemoryClient;
+class WrappedAStructureArrayMemoryClient
+{
+RR_RELEASE_GIL()
+public:
+	virtual uint64_t Length();
+	MemberDefinition_Direction Direction();
+	virtual void Read(uint64_t memorypos, WrappedAStructureArrayMemoryClientBuffer* buffer, uint64_t bufferpos, uint64_t count);
+	virtual void Write(uint64_t memorypos, WrappedAStructureArrayMemoryClientBuffer* buffer, uint64_t bufferpos, uint64_t count);
+RR_KEEP_GIL()
+};
+
+class WrappedAStructureMultiDimArrayMemoryClientBuffer
+{
+public:
+	virtual void UnpackReadResult(boost::shared_ptr<RobotRaconteur::MessageElementAStructureMultiDimArray> res, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) = 0;
+	virtual boost::shared_ptr<RobotRaconteur::MessageElementAStructureMultiDimArray> PackWriteRequest(const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) = 0;
+	virtual ~WrappedAStructureMultiDimArrayMemoryClientBuffer() {}
+};
+
+%nodefaultctor WrappedAStructureMultiDimArrayMemoryClient;
+class WrappedAStructureMultiDimArrayMemoryClient
+{
+RR_RELEASE_GIL()
+public:
+	virtual std::vector<uint64_t> Dimensions() ;
+	virtual uint64_t DimCount();
+	MemberDefinition_Direction Direction();
+	virtual void Read(const std::vector<uint64_t>& memorypos, WrappedAStructureMultiDimArrayMemoryClientBuffer* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
+	virtual void Write(const std::vector<uint64_t>& memorypos, WrappedAStructureMultiDimArrayMemoryClientBuffer* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
+RR_KEEP_GIL()
+};
+
+class WrappedAStructureArrayMemoryDirector
+{
+public:
+	WrappedAStructureArrayMemoryDirector();
+	virtual ~WrappedAStructureArrayMemoryDirector();
+	virtual uint64_t Length();
+	virtual boost::shared_ptr<MessageElementAStructureArray> Read(uint64_t memorypos, uint64_t bufferpos, uint64_t count);
+	virtual void Write(uint64_t memorypos, boost::shared_ptr<MessageElementAStructureArray> buffer, uint64_t bufferpos, uint64_t count);
+	int32_t objectheapid;
+};
+
+class WrappedAStructureMultiDimArrayMemoryDirector
+{
+public:		
+	virtual ~WrappedAStructureMultiDimArrayMemoryDirector() {}
+	virtual std::vector<uint64_t> Dimensions();
+	virtual uint64_t DimCount();
+	virtual boost::shared_ptr<MessageElementAStructureMultiDimArray> Read(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
+	virtual void Write(const std::vector<uint64_t>& memorypos, boost::shared_ptr<MessageElementAStructureMultiDimArray> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
+
+	int32_t objectheapid;
+};
+
+
 
 }

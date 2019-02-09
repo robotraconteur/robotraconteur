@@ -100,7 +100,10 @@ RR_RELEASE_GIL()
 	virtual boost::shared_ptr<RobotRaconteur::MultiDimArrayMemoryBase> GetMultiDimArrayMemory(const std::string& membername);
 	virtual boost::shared_ptr<RobotRaconteur::WrappedCStructureArrayMemoryClient> GetCStructureArrayMemory(const std::string& membername);
 	virtual boost::shared_ptr<RobotRaconteur::WrappedCStructureMultiDimArrayMemoryClient> GetCStructureMultiDimArrayMemory(const std::string& membername);
+	virtual boost::shared_ptr<RobotRaconteur::WrappedAStructureArrayMemoryClient> GetAStructureArrayMemory(const std::string& membername);
+	virtual boost::shared_ptr<RobotRaconteur::WrappedAStructureMultiDimArrayMemoryClient> GetAStructureMultiDimArrayMemory(const std::string& membername);
 
+	
 	virtual void RRClose();
 	
 RR_KEEP_GIL()

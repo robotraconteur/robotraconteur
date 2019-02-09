@@ -335,6 +335,66 @@ public abstract class ServiceSkel extends WrappedServiceSkelDirector
     {
         throw new MemberNotFoundException("Member not found");
     }
+    
+    // astruct memories
+    
+    @Override
+	public WrappedAStructureArrayMemoryDirector _GetAStructureArrayMemory(String name)
+    {
+        try
+        {
+            return getAStructureArrayMemory(name);
+        }
+        catch (Exception e)
+        {
+        	MessageEntry merr = new MessageEntry();
+            try
+            {
+                RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
+                RRDirectorExceptionHelper.setError(merr);
+                return null;
+            }
+            finally
+            {
+            	merr.finalize();
+            }
+        }
+    }
+
+	@Override
+    public WrappedAStructureMultiDimArrayMemoryDirector _GetAStructureMultiDimArrayMemory(String name)
+    {
+        try
+        {
+            return getAStructureMultiDimArrayMemory(name);
+        }
+        catch (Exception e)
+        {
+        	MessageEntry merr = new MessageEntry();
+            try
+            {
+                RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
+                RRDirectorExceptionHelper.setError(merr);
+                return null;
+            }
+            finally
+            {
+            	merr.finalize();
+            }
+        }
+    }
+
+    public WrappedAStructureArrayMemoryDirector getAStructureArrayMemory(String name)
+    {
+        throw new MemberNotFoundException("Member not found");
+    }
+
+    public WrappedAStructureMultiDimArrayMemoryDirector getAStructureMultiDimArrayMemory(String name)
+    {
+        throw new MemberNotFoundException("Member not found");
+    }
+    
+    
 
 
 

@@ -866,14 +866,26 @@ namespace RobotRaconteurGen
 		m->Type->CopyTo(t2);
 		t2.RemoveArray();		
 		convert_type_result t=convert_type(t2);		
-		std::string c = IsTypeNumeric(m->Type->Type) ? "" : "CStructure";
+		std::string c = "";
+		if (!IsTypeNumeric(m->Type->Type))
+		{
+			DataTypes entry_type = m->Type->ResolveNamedType()->RRDataType();
+			if (entry_type != DataTypes_astructure_t)
+			{
+				c = "CStructure";
+			}
+			else
+			{
+				c = "AStructure";
+			}
+		}
 		switch (m->Type->ArrayType)
 		{
 		case DataTypes_ArrayTypes_array:
-			w2 << "    " << c << "ArrayMemory<" + t.cs_type + "> " + fix_name(m->Name) + " { get; set; }" << endl;
+			w2 << "    " << c << "ArrayMemory<" + t.cs_type + "> " + fix_name(m->Name) + " { get; }" << endl;
 			break;
 		case DataTypes_ArrayTypes_multidimarray:
-			w2 << "    " << c << "MultiDimArrayMemory<" + t.cs_type + "> " + fix_name(m->Name) + " { get; set; }" << endl;
+			w2 << "    " << c << "MultiDimArrayMemory<" + t.cs_type + "> " + fix_name(m->Name) + " { get; }" << endl;
 			break;
 		default:
 			throw DataTypeException("Invalid memory definition");
@@ -1369,7 +1381,19 @@ namespace RobotRaconteurGen
 		m->Type->CopyTo(t2);
 		t2.RemoveArray();
 		convert_type_result t = convert_type(t2);
-		std::string c = IsTypeNumeric(m->Type->Type) ? "" : "CStructure";		
+		std::string c = "";
+		if (!IsTypeNumeric(m->Type->Type))
+		{
+			DataTypes entry_type = m->Type->ResolveNamedType()->RRDataType();
+			if (entry_type != DataTypes_astructure_t)
+			{
+				c = "CStructure";
+			}
+			else
+			{
+				c = "AStructure";
+			}
+		}
 		switch (m->Type->ArrayType)
 		{
 		case DataTypes_ArrayTypes_array:
@@ -1403,7 +1427,19 @@ namespace RobotRaconteurGen
 		m->Type->CopyTo(t2);
 		t2.RemoveArray();
 		convert_type_result t = convert_type(t2);
-		std::string c = IsTypeNumeric(m->Type->Type) ? "" : "CStructure";
+		std::string c = "";
+		if (!IsTypeNumeric(m->Type->Type))
+		{
+			DataTypes entry_type = m->Type->ResolveNamedType()->RRDataType();
+			if (entry_type != DataTypes_astructure_t)
+			{
+				c = "CStructure";
+			}
+			else
+			{
+				c = "AStructure";
+			}
+		}
 		switch (m->Type->ArrayType)
 		{
 		case DataTypes_ArrayTypes_array:
@@ -1617,7 +1653,19 @@ namespace RobotRaconteurGen
 		t2.RemoveArray();
 		convert_type_result t = convert_type(t2);		
 		
-		std::string c = IsTypeNumeric(m->Type->Type) ? "" : "CStructure";
+		std::string c = "";
+		if (!IsTypeNumeric(m->Type->Type))
+		{
+			DataTypes entry_type = m->Type->ResolveNamedType()->RRDataType();
+			if (entry_type != DataTypes_astructure_t)
+			{
+				c = "CStructure";
+			}
+			else
+			{
+				c = "AStructure";
+			}
+		}
 		switch (m->Type->ArrayType)
 		{
 		case DataTypes_ArrayTypes_array:
@@ -1631,7 +1679,7 @@ namespace RobotRaconteurGen
 			throw DataTypeException("Invalid memory definition");
 		}
 		w2 << "    get { return rr_" + fix_name(m->Name) + "; }" << endl;
-		w2 << "    set { throw new InvalidOperationException();}" << endl;
+		
 		w2 << "    }" << endl;
 		MEMBER_ITER_END()
 
@@ -2201,6 +2249,10 @@ namespace RobotRaconteurGen
 		t2.RemoveArray();
 		convert_type_result t = convert_type(t2);
 		if (IsTypeNumeric(m->Type->Type)) continue;
+				
+		DataTypes entry_type = m->Type->ResolveNamedType()->RRDataType();
+		if (entry_type != DataTypes_cstructure_t) continue;
+				
 		if (m->Type->ArrayType == DataTypes_ArrayTypes_array)
 		{
 			w2 << "    case \"" + m->Name + "\": {" << endl;
@@ -2226,6 +2278,10 @@ namespace RobotRaconteurGen
 		t2.RemoveArray();
 		convert_type_result t = convert_type(t2);
 		if (IsTypeNumeric(m->Type->Type)) continue;
+		DataTypes entry_type = m->Type->ResolveNamedType()->RRDataType();
+		
+		if (entry_type != DataTypes_cstructure_t) continue;
+
 		if (m->Type->ArrayType == DataTypes_ArrayTypes_multidimarray)
 		{
 			w2 << "    case \"" + m->Name + "\": {" << endl;
@@ -2243,6 +2299,64 @@ namespace RobotRaconteurGen
 		w2 << "    throw new MemberNotFoundException(\"Member Not Found\");" << endl;
 		w2 << "    }" << endl;
 
+		// astruct
+		w2 << "    public override WrappedAStructureArrayMemoryDirector GetAStructureArrayMemory(string name) {" << endl;
+		w2 << "    switch (name) {" << endl;
+		MEMBER_ITER2(MemoryDefinition)
+			TypeDefinition t2;
+		m->Type->CopyTo(t2);
+		t2.RemoveArray();
+		convert_type_result t = convert_type(t2);
+		if (IsTypeNumeric(m->Type->Type)) continue;
+
+		DataTypes entry_type = m->Type->ResolveNamedType()->RRDataType();
+		if (entry_type != DataTypes_astructure_t) continue;
+
+		if (m->Type->ArrayType == DataTypes_ArrayTypes_array)
+		{
+			w2 << "    case \"" + m->Name + "\": {" << endl;
+			w2 << "    WrappedAStructureArrayMemoryDirectorNET<" + t.cs_type + "> dir=new  WrappedAStructureArrayMemoryDirectorNET<" + t.cs_type + ">(obj." + fix_name(m->Name) + ");" << endl;
+			//w2 << "    int id=RRObjectHeap.AddObject(dir); " << endl;
+			//w2 << "    dir.memoryid=id;" << endl;
+			//w2 << "    dir.Disown();" << endl;
+			w2 << "    return dir;" << endl;
+			w2 << "    }" << endl;
+		}
+		MEMBER_ITER_END()
+			w2 << "    default:" << endl;
+		w2 << "    break;" << endl;
+		w2 << "    }" << endl;
+		w2 << "    throw new MemberNotFoundException(\"Member Not Found\");" << endl;
+		w2 << "    }" << endl;
+
+		w2 << "    public override WrappedAStructureMultiDimArrayMemoryDirector GetAStructureMultiDimArrayMemory(string name) {" << endl;
+		w2 << "    switch (name) {" << endl;
+		MEMBER_ITER2(MemoryDefinition)
+			TypeDefinition t2;
+		m->Type->CopyTo(t2);
+		t2.RemoveArray();
+		convert_type_result t = convert_type(t2);
+		if (IsTypeNumeric(m->Type->Type)) continue;
+		DataTypes entry_type = m->Type->ResolveNamedType()->RRDataType();
+
+		if (entry_type != DataTypes_astructure_t) continue;
+
+		if (m->Type->ArrayType == DataTypes_ArrayTypes_multidimarray)
+		{
+			w2 << "    case \"" + m->Name + "\": {" << endl;
+			w2 << "    WrappedAStructureMultiDimArrayMemoryDirectorNET<" + t.cs_type + "> dir=new  WrappedAStructureMultiDimArrayMemoryDirectorNET<" + t.cs_type + ">(obj." + fix_name(m->Name) + ");" << endl;
+			//w2 << "    int id=RRObjectHeap.AddObject(dir); " << endl;
+			//w2 << "    dir.memoryid=id;" << endl;
+			//w2 << "    dir.Disown();" << endl;
+			w2 << "    return dir;" << endl;
+			w2 << "    }" << endl;
+		}
+		MEMBER_ITER_END()
+			w2 << "    default:" << endl;
+		w2 << "    break;" << endl;
+		w2 << "    }" << endl;
+		w2 << "    throw new MemberNotFoundException(\"Member Not Found\");" << endl;
+		w2 << "    }" << endl;
 
 		w2 << "    public override string RRType { get { return \"" + e->ServiceDefinition_.lock()->Name + "." + e->Name + "\"; } }" << endl;
 
@@ -2404,7 +2518,19 @@ namespace RobotRaconteurGen
 		t2.RemoveArray();
 		convert_type_result t = convert_type(t2);
 
-		std::string c = IsTypeNumeric(m->Type->Type) ? "" : "CStructure";
+		std::string c = "";
+		if (!IsTypeNumeric(m->Type->Type))
+		{
+			DataTypes entry_type = m->Type->ResolveNamedType()->RRDataType();
+			if (entry_type != DataTypes_astructure_t)
+			{
+				c = "CStructure";
+			}
+			else
+			{
+				c = "AStructure";
+			}
+		}
 		switch (m->Type->ArrayType)
 		{
 		case DataTypes_ArrayTypes_array:
@@ -2417,8 +2543,7 @@ namespace RobotRaconteurGen
 		default:
 			throw DataTypeException("Invalid memory definition");
 		}
-		w2 << "    get { throw new NotImplementedException(); }" << endl;
-		w2 << "    set { throw new InvalidOperationException();}" << endl;
+		w2 << "    get { throw new NotImplementedException(); }" << endl;		
 		w2 << "    }" << endl;
 		MEMBER_ITER_END()
 

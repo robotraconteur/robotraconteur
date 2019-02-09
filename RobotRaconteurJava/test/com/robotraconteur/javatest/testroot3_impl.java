@@ -416,5 +416,19 @@ public class testroot3_impl implements testroot3
 		ServiceTest2_cstruct.verify_transform_multidimarray(value, 3, 2, 7732);		
 	}
 	
+	AStructureArrayMemory<transform[]> m_astruct_m1= new AStructureArrayMemory<transform[]>(new transform[512]);
+	
+	@Override
+	public AStructureArrayMemory<transform[]> get_astruct_m1() {
+		return m_astruct_m1;
+	}
+	
+	AStructureMultiDimArrayMemory<transform[]> m_astruct_m2 = new AStructureMultiDimArrayMemory<transform[]>(new AStructureMultiDimArray(new int[] { 3, 3 }, new transform[9]));
+	
+	@Override
+	public AStructureMultiDimArrayMemory<transform[]> get_astruct_m2() {
+		return m_astruct_m2;
+	}
+	
 	
 }

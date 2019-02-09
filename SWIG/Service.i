@@ -48,7 +48,11 @@ public:
 	virtual WrappedCStructureArrayMemoryDirector* GetCStructureArrayMemory(const std::string& name);
 	%rename (_GetCStructureMultiDimArrayMemory) GetCStructureMultiDimArrayMemory;
 	virtual WrappedCStructureMultiDimArrayMemoryDirector* GetCStructureMultiDimArrayMemory(const std::string& name);
-
+	%rename (_GetAStructureArrayMemory) GetAStructureArrayMemory;
+	virtual WrappedAStructureArrayMemoryDirector* GetAStructureArrayMemory(const std::string& name);
+	%rename (_GetAStructureMultiDimArrayMemory) GetAStructureMultiDimArrayMemory;
+	virtual WrappedAStructureMultiDimArrayMemoryDirector* GetAStructureMultiDimArrayMemory(const std::string& name);
+	
 	virtual void MonitorEnter(int32_t timeout) {};
 	virtual void MonitorExit() {};
 	virtual void ReleaseCastObject();	

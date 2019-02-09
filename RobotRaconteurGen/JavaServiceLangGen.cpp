@@ -1084,7 +1084,19 @@ namespace RobotRaconteurGen
 		m->Type->CopyTo(t2);
 		t2.RemoveArray();
 		convert_type_result t = convert_type_array(t2);
-		std::string c = IsTypeNumeric(m->Type->Type) ? "" : "CStructure";
+		std::string c = "";
+		if (!IsTypeNumeric(m->Type->Type))
+		{
+			DataTypes entry_type = m->Type->ResolveNamedType()->RRDataType();
+			if (entry_type != DataTypes_astructure_t)
+			{
+				c = "CStructure";
+			}
+			else
+			{
+				c = "AStructure";
+			}
+		}
 		switch (m->Type->ArrayType)
 		{
 		case DataTypes_ArrayTypes_array:
@@ -1521,7 +1533,19 @@ namespace RobotRaconteurGen
 		m->Type->CopyTo(t2);
 		t2.RemoveArray();
 		convert_type_result t = convert_type_array(t2);
-		std::string c = IsTypeNumeric(m->Type->Type) ? "" : "CStructure";
+		std::string c = "";
+		if (!IsTypeNumeric(m->Type->Type))
+		{
+			DataTypes entry_type = m->Type->ResolveNamedType()->RRDataType();
+			if (entry_type != DataTypes_astructure_t)
+			{
+				c = "CStructure";
+			}
+			else
+			{
+				c = "AStructure";
+			}
+		}
 		switch (m->Type->ArrayType)
 		{
 		case DataTypes_ArrayTypes_array:
@@ -1556,7 +1580,19 @@ namespace RobotRaconteurGen
 		m->Type->CopyTo(t2);
 		t2.RemoveArray();
 		convert_type_result t = convert_type_array(t2);
-		std::string c = IsTypeNumeric(m->Type->Type) ? "" : "CStructure";
+		std::string c = "";
+		if (!IsTypeNumeric(m->Type->Type))
+		{
+			DataTypes entry_type = m->Type->ResolveNamedType()->RRDataType();
+			if (entry_type != DataTypes_astructure_t)
+			{
+				c = "CStructure";
+			}
+			else
+			{
+				c = "AStructure";
+			}
+		}
 		switch (m->Type->ArrayType)
 		{
 		case DataTypes_ArrayTypes_array:
@@ -1793,7 +1829,19 @@ namespace RobotRaconteurGen
 		m->Type->CopyTo(t2);
 		t2.RemoveArray();
 		convert_type_result t = convert_type_array(t2);
-		std::string c = IsTypeNumeric(m->Type->Type) ? "" : "CStructure";
+		std::string c = "";
+		if (!IsTypeNumeric(m->Type->Type))
+		{
+			DataTypes entry_type = m->Type->ResolveNamedType()->RRDataType();
+			if (entry_type != DataTypes_astructure_t)
+			{
+				c = "CStructure";
+			}
+			else
+			{
+				c = "AStructure";
+			}
+		}
 		switch (m->Type->ArrayType)
 		{
 		case DataTypes_ArrayTypes_array:
@@ -2331,6 +2379,8 @@ namespace RobotRaconteurGen
 		t2.RemoveArray();
 		convert_type_result t = convert_type_array(t2);
 		if (IsTypeNumeric(m->Type->Type)) continue;
+		DataTypes entry_type = m->Type->ResolveNamedType()->RRDataType();
+		if (entry_type != DataTypes_cstructure_t) continue;
 		if (m->Type->ArrayType == DataTypes_ArrayTypes_array)
 		{
 			w2 << "    if(name.equals( \"" + m->Name + "\")) {" << endl;
@@ -2354,6 +2404,8 @@ namespace RobotRaconteurGen
 		t2.RemoveArray();
 		convert_type_result t = convert_type_array(t2);
 		if (IsTypeNumeric(m->Type->Type)) continue;
+		DataTypes entry_type = m->Type->ResolveNamedType()->RRDataType();
+		if (entry_type != DataTypes_cstructure_t) continue;
 		if (m->Type->ArrayType == DataTypes_ArrayTypes_multidimarray)
 		{
 			w2 << "    if(name.equals( \"" + m->Name + "\")) {" << endl;
@@ -2366,6 +2418,57 @@ namespace RobotRaconteurGen
 		}
 		MEMBER_ITER_END()			
 		w2 << "    throw new MemberNotFoundException(\"Member Not Found\");" << endl;
+		w2 << "    }" << endl;
+
+		// astruct memories
+
+		w2 << "    public WrappedAStructureArrayMemoryDirector getAStructureArrayMemory(String name) {" << endl;
+
+		MEMBER_ITER2(MemoryDefinition)
+			TypeDefinition t2;
+		m->Type->CopyTo(t2);
+		t2.RemoveArray();
+		convert_type_result t = convert_type_array(t2);
+		if (IsTypeNumeric(m->Type->Type)) continue;
+		DataTypes entry_type = m->Type->ResolveNamedType()->RRDataType();
+		if (entry_type != DataTypes_astructure_t) continue;
+		if (m->Type->ArrayType == DataTypes_ArrayTypes_array)
+		{
+			w2 << "    if(name.equals( \"" + m->Name + "\")) {" << endl;
+			w2 << "    WrappedAStructureArrayMemoryDirectorJava<" + t.java_type + t.java_arr_type + "> dir=new  WrappedAStructureArrayMemoryDirectorJava<" + t.java_type + t.java_arr_type + ">(obj.get_" + fix_name(m->Name) + "(), " << t.java_type << ".class);" << endl;
+			//w2 << "    int id=RRObjectHeap.AddObject(dir); " << endl;
+			//w2 << "    dir.memoryid=id;" << endl;
+			//w2 << "    dir.Disown();" << endl;
+			w2 << "    return dir;" << endl;
+			w2 << "    }" << endl;
+		}
+		MEMBER_ITER_END()
+
+			w2 << "    throw new MemberNotFoundException(\"Member Not Found\");" << endl;
+		w2 << "    }" << endl;
+
+		w2 << "    public WrappedAStructureMultiDimArrayMemoryDirector getAStructureMultiDimArrayMemory(String name) {" << endl;
+
+		MEMBER_ITER2(MemoryDefinition)
+			TypeDefinition t2;
+		m->Type->CopyTo(t2);
+		t2.RemoveArray();
+		convert_type_result t = convert_type_array(t2);
+		if (IsTypeNumeric(m->Type->Type)) continue;
+		DataTypes entry_type = m->Type->ResolveNamedType()->RRDataType();
+		if (entry_type != DataTypes_astructure_t) continue;
+		if (m->Type->ArrayType == DataTypes_ArrayTypes_multidimarray)
+		{
+			w2 << "    if(name.equals( \"" + m->Name + "\")) {" << endl;
+			w2 << "    WrappedAStructureMultiDimArrayMemoryDirectorJava<" + t.java_type + t.java_arr_type + "> dir=new  WrappedAStructureMultiDimArrayMemoryDirectorJava<" + t.java_type + t.java_arr_type + ">(obj.get_" + fix_name(m->Name) + "(), " << t.java_type << ".class);" << endl;
+			//w2 << "    int id=RRObjectHeap.AddObject(dir); " << endl;
+			//w2 << "    dir.memoryid=id;" << endl;
+			//w2 << "    dir.Disown();" << endl;
+			w2 << "    return dir;" << endl;
+			w2 << "    }" << endl;
+		}
+		MEMBER_ITER_END()
+			w2 << "    throw new MemberNotFoundException(\"Member Not Found\");" << endl;
 		w2 << "    }" << endl;
 
 		w2 << "    public String getRRType() { return \"" + e->ServiceDefinition_.lock()->Name + "." + e->Name + "\"; }" << endl;
@@ -2538,7 +2641,19 @@ namespace RobotRaconteurGen
 		m->Type->CopyTo(t2);
 		t2.RemoveArray();
 		convert_type_result t = convert_type_array(t2);
-		std::string c = IsTypeNumeric(m->Type->Type) ? "" : "CStructure";
+		std::string c = "";
+		if (!IsTypeNumeric(m->Type->Type))
+		{
+			DataTypes entry_type = m->Type->ResolveNamedType()->RRDataType();
+			if (entry_type != DataTypes_astructure_t)
+			{
+				c = "CStructure";
+			}
+			else
+			{
+				c = "AStructure";
+			}
+		}
 		switch (m->Type->ArrayType)
 		{
 		case DataTypes_ArrayTypes_array:

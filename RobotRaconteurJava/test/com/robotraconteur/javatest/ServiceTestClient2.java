@@ -33,6 +33,8 @@ public class ServiceTestClient2 {
 		
 		testAStructs();
 		
+		testAStructMemories();
+		
 		disconnectService();		
 	}
 
@@ -368,6 +370,55 @@ public class ServiceTestClient2 {
             ServiceTest2_cstruct.verify_transform_multidimarray(r.get_testastruct5(), 3, 2, 773142);
 
         }
+        
+        public void testAStructMemories()
+        {
+        	test_astruct_m1();
+        	test_astruct_m2();
+        }
+        
+        public void test_astruct_m1()
+        {
+        	transform[] s = new transform[32];
+            for (long i=0; i< s.length; i++)
+            {
+            	s[(int)i] = new transform();
+                ServiceTest2_cstruct.fill_transform(s[(int)i], 79174 + i);
+            }
+
+            if (r.get_astruct_m1().length() != 512) throw new RuntimeException();
+            r.get_astruct_m1().write(23, s, 3, 21);
+
+            transform[] s2 = new transform[32];
+            r.get_astruct_m1().read(24, s2, 2, 18);
+
+            for (long i = 2; i<18; i++)
+            {
+                ServiceTest2_cstruct.verify_transform(s2[(int)i], 79174 + i + 2);
+            }
+        }
+        
+        public void test_astruct_m2()
+        {
+        	AStructureMultiDimArray s = new AStructureMultiDimArray(new int[] { 3, 3 }, new transform[9]);
+        	transform[] s_array = (transform[])s.astruct_array;
+            for (long i = 0; i < s_array.length; i++)
+            {
+            	s_array[(int)i]=new transform();
+                ServiceTest2_cstruct.fill_transform(s_array[(int)i], 15721 + i);
+            }
+
+            r.get_astruct_m2().write(new long[] { 0, 0 }, s, new long[] { 0, 0 }, new long[] { 3, 3 });
+
+            AStructureMultiDimArray s2 = new AStructureMultiDimArray(new int[] { 3, 3 }, new transform[9]);
+            r.get_astruct_m2().read(new long[] { 0, 0 }, s2, new long[] { 0, 0 }, new long[] { 3, 3 });
+
+            transform[] s2_array = (transform[])s2.astruct_array;
+            for (long i = 0; i < s2_array.length; i++)
+                ServiceTest2_cstruct.fill_transform(s2_array[(int)i], 15721 + i);
+
+        }
+        
         	
 	
 }

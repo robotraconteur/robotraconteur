@@ -50,6 +50,8 @@ namespace RobotRaconteurNETTest
 
             TestAStructs();
 
+            TestAStructMemories();
+
             DisconnectService();
         }
 
@@ -318,5 +320,48 @@ namespace RobotRaconteurNETTest
             ServiceTest2_cstruct.verify_transform_multidimarray(r.testastruct5, 3, 2, 773142);
 
         }
+
+        public void TestAStructMemories()
+        {
+            test_astruct_m1();
+            test_astruct_m2();
+        }
+
+        public void test_astruct_m1()
+        {
+            var s = new transform[32];
+            for (uint i=0; i< s.Length; i++)
+                ServiceTest2_cstruct.fill_transform(ref s[i], 79174 + i);
+
+            if (r.astruct_m1.Length != 512) throw new Exception();
+            r.astruct_m1.Write(23, s, 3, 21);
+
+            var s2 = new transform[32];
+            r.astruct_m1.Read(24, s2, 2, 18);
+
+            for (uint i = 2; i<18; i++)
+            {
+                ServiceTest2_cstruct.verify_transform(ref s2[i], 79174 + i + 2);
+            }
+        }
+
+        public void test_astruct_m2()
+        {
+            var s = new AStructureMultiDimArray(new int[] { 3, 3 }, new transform[9]);
+            var s_array = (transform[])s.astruct_array;
+            for (uint i = 0; i < s.astruct_array.Length; i++)
+                ServiceTest2_cstruct.fill_transform(ref s_array[i], 15721 + i);
+
+            r.astruct_m2.Write(new ulong[] { 0, 0 }, s, new ulong[] { 0, 0 }, new ulong[] { 3, 3 });
+
+            var s2 = new AStructureMultiDimArray(new int[] { 3, 3 }, new transform[9]);
+            r.astruct_m2.Read(new ulong[] { 0, 0 }, s2, new ulong[] { 0, 0 }, new ulong[] { 3, 3 });
+
+            var s2_array = (transform[])s2.astruct_array;
+            for (uint i = 0; i < s2.astruct_array.Length; i++)
+                ServiceTest2_cstruct.fill_transform(ref s2_array[i], 15721 + i);
+
+        }
     }
+    
 }

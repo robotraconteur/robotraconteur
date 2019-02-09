@@ -56,7 +56,7 @@ namespace RobotRaconteurNETTest
         public override Pipe<int> unreliable1 { get; set; }
         public override Pipe<int> unreliable2 { get; set; }
 
-        public override ArrayMemory<double> readmem { get; set; }
+        public override ArrayMemory<double> readmem { get; }
         public override testenum1 testenum1_prop { get => testenum1.anothervalue;
             set
             {
@@ -148,11 +148,7 @@ namespace RobotRaconteurNETTest
             get
             {
                 return m_cstruct_m1;
-            }
-            set
-            {
-                throw new InvalidOperationException("");
-            }
+            }            
         }
 
         CStructureMultiDimArrayMemory<testcstruct2> m_cstruct_m2 = new CStructureMultiDimArrayMemory<testcstruct2>(new CStructureMultiDimArray(new int[] { 3, 3 }, new testcstruct2[9]));
@@ -161,11 +157,7 @@ namespace RobotRaconteurNETTest
             get
             {
                 return m_cstruct_m2;
-            }
-            set
-            {
-                throw new InvalidOperationException("");
-            }
+            }            
         }
 
         public override Wire<int[]> w1 { get; set; }
@@ -231,6 +223,24 @@ namespace RobotRaconteurNETTest
             set
             {
                 ServiceTest2_cstruct.verify_transform_multidimarray(value, 3, 2, 7732);
+            }
+        }
+
+        AStructureArrayMemory<transform> m_astruct_m1 = new AStructureArrayMemory<transform>(new transform[512]);
+        public override AStructureArrayMemory<transform> astruct_m1
+        {
+            get
+            {
+                return m_astruct_m1;
+            }
+        }
+
+        AStructureMultiDimArrayMemory<transform> m_astruct_m2 = new AStructureMultiDimArrayMemory<transform>(new AStructureMultiDimArray(new int[] { 3, 3 }, new transform[9]));
+        public override AStructureMultiDimArrayMemory<transform> astruct_m2
+        {
+            get
+            {
+                return m_astruct_m2;
             }
         }
     }
