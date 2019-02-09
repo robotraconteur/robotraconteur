@@ -103,6 +103,9 @@ namespace RobotRaconteurTest
 		virtual RR_SHARED_PTR<RobotRaconteur::RRAStructureMultiDimArray<com::robotraconteur::testing::TestService3::transform> > get_testastruct5();
 		virtual void set_testastruct5(RR_SHARED_PTR<RobotRaconteur::RRAStructureMultiDimArray<com::robotraconteur::testing::TestService3::transform> > value);
 
+		virtual RR_SHARED_PTR<RobotRaconteur::AStructureArrayMemory<com::robotraconteur::testing::TestService3::transform > > get_astruct_m1();
+
+		virtual RR_SHARED_PTR<RobotRaconteur::AStructureMultiDimArrayMemory<com::robotraconteur::testing::TestService3::transform > > get_astruct_m2();
 
 	protected:
 
@@ -129,6 +132,9 @@ namespace RobotRaconteurTest
 		RR_SHARED_PTR<RobotRaconteur::RRAStructureArray<com::robotraconteur::testing::TestService3::transform> > testastruct3;
 		RR_SHARED_PTR<RobotRaconteur::RRAStructureMultiDimArray<com::robotraconteur::testing::TestService3::transform> > testastruct4;
 		RR_SHARED_PTR<RobotRaconteur::RRAStructureMultiDimArray<com::robotraconteur::testing::TestService3::transform> > testastruct5;
+
+		RR_SHARED_PTR<RobotRaconteur::AStructureArrayMemory<com::robotraconteur::testing::TestService3::transform > > astruct_m1;
+		RR_SHARED_PTR<RobotRaconteur::AStructureMultiDimArrayMemory<com::robotraconteur::testing::TestService3::transform > > astruct_m2;
 
 	};
 

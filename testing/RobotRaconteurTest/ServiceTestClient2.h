@@ -35,6 +35,9 @@ namespace RobotRaconteurTest
 		void TestGenerators();
 
 		void TestAStructs();
+		void TestAStructMemories();
+		void test_astruct_m1();
+		void test_astruct_m2();
 
 		RR_SHARED_PTR<testroot3> r;
 

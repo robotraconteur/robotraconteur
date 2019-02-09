@@ -1009,12 +1009,17 @@ namespace RobotRaconteurGen
 			}
 			else
 			{
+				std::string c = "C";
+				if (d->Type->ResolveNamedType()->RRDataType() == DataTypes_astructure_t)
+				{
+					c = "A";
+				}
 				switch (d->Type->ArrayType)
 				{
 				case DataTypes_ArrayTypes_array:
-					return "virtual RR_SHARED_PTR<RobotRaconteur::CStructureArrayMemory<" + t.cpp_type + " > > get_" + t.name + "()";
+					return "virtual RR_SHARED_PTR<RobotRaconteur::" + c +  "StructureArrayMemory<" + t.cpp_type + " > > get_" + t.name + "()";
 				case DataTypes_ArrayTypes_multidimarray:
-					return "virtual RR_SHARED_PTR<RobotRaconteur::CStructureMultiDimArrayMemory<" + t.cpp_type + " > > get_" + t.name + "()";
+					return "virtual RR_SHARED_PTR<RobotRaconteur::" + c + "StructureMultiDimArrayMemory<" + t.cpp_type + " > > get_" + t.name + "()";
 				default:
 					throw DataTypeException("Invalid memory definition");
 				}
@@ -1891,10 +1896,15 @@ namespace RobotRaconteurGen
 				}
 				else
 				{
+					std::string c = "C";
+					if (m->Type->ResolveNamedType()->RRDataType() == DataTypes_astructure_t)
+					{
+						c = "A";
+					}
 					if (m->Type->ArrayType == DataTypes_ArrayTypes_array)
-						w2 << "RR_SHARED_PTR<RobotRaconteur::CStructureArrayMemoryClient<" << convert_type(*m->Type).cpp_type << " > > rrvar_" << m->Name << ";" << endl;
+						w2 << "RR_SHARED_PTR<RobotRaconteur::" + c + "StructureArrayMemoryClient<" << convert_type(*m->Type).cpp_type << " > > rrvar_" << m->Name << ";" << endl;
 					else
-						w2 << "RR_SHARED_PTR<RobotRaconteur::CStructureMultiDimArrayMemoryClient<" << convert_type(*m->Type).cpp_type << " > > rrvar_" << m->Name << ";" << endl;
+						w2 << "RR_SHARED_PTR<RobotRaconteur::" + c + "StructureMultiDimArrayMemoryClient<" << convert_type(*m->Type).cpp_type << " > > rrvar_" << m->Name << ";" << endl;
 
 				}
 			MEMBER_ITER_END()
@@ -2061,13 +2071,18 @@ namespace RobotRaconteurGen
 			}
 			else
 			{
+				std::string c = "C";
+				if (m->Type->ResolveNamedType()->RRDataType() == DataTypes_astructure_t)
+				{
+					c = "A";
+				}
 				if (m->Type->ArrayType == DataTypes_ArrayTypes_array)
 				{
-					w2 << "RR_SHARED_PTR<RobotRaconteur::CStructureArrayMemoryServiceSkel<" + t.cpp_type + " > > rr_" + t.name + "_mem;" << endl;
+					w2 << "RR_SHARED_PTR<RobotRaconteur::" << c <<  "StructureArrayMemoryServiceSkel<" + t.cpp_type + " > > rr_" + t.name + "_mem;" << endl;
 				}
 				else
 				{
-					w2 << "RR_SHARED_PTR<RobotRaconteur::CStructureMultiDimArrayMemoryServiceSkel<" + t.cpp_type + " > > rr_" + t.name + "_mem;" << endl;
+					w2 << "RR_SHARED_PTR<RobotRaconteur::" << c << "StructureMultiDimArrayMemoryServiceSkel<" + t.cpp_type + " > > rr_" + t.name + "_mem;" << endl;
 				}
 			}
 			MEMBER_ITER_END()
@@ -2223,16 +2238,28 @@ namespace RobotRaconteurGen
 			}
 			else
 			{
-				size_t elem_size = EstimateCStructurePackedElementSize(rr_cast<ServiceEntryDefinition>(m->Type->ResolveNamedType()));
+				size_t elem_size;
+
+				std::string c = "C";
+				if (m->Type->ResolveNamedType()->RRDataType() == DataTypes_astructure_t)
+				{
+					c = "A";
+					boost::tuple<DataTypes, size_t> astruct_t = GetAStructureElementTypeAndCount(rr_cast<ServiceEntryDefinition>(m->Type->ResolveNamedType()));
+					elem_size = astruct_t.get<1>();
+				} 
+				else
+				{
+					elem_size = EstimateCStructurePackedElementSize(rr_cast<ServiceEntryDefinition>(m->Type->ResolveNamedType()));
+				}
 
 				if (m->Type->ArrayType == DataTypes_ArrayTypes_array)
 				{
-					w2 << "rrvar_" << m->Name << "=RR_MAKE_SHARED<RobotRaconteur::CStructureArrayMemoryClient<" << convert_type(*m->Type).cpp_type << " > >(\"" << m->Name << "\",shared_from_this()," << elem_size << "," << direction_str << ");" << endl;
+					w2 << "rrvar_" << m->Name << "=RR_MAKE_SHARED<RobotRaconteur::" << c << "StructureArrayMemoryClient<" << convert_type(*m->Type).cpp_type << " > >(\"" << m->Name << "\",shared_from_this()," << elem_size << "," << direction_str << ");" << endl;
 
 				}
 				else
 				{
-					w2 << "rrvar_" << m->Name << "=RR_MAKE_SHARED<RobotRaconteur::CStructureMultiDimArrayMemoryClient<" << convert_type(*m->Type).cpp_type << " > >(\"" << m->Name << "\",shared_from_this()," << elem_size <<  "," << direction_str << ");" << endl;
+					w2 << "rrvar_" << m->Name << "=RR_MAKE_SHARED<RobotRaconteur::" << c << "StructureMultiDimArrayMemoryClient<" << convert_type(*m->Type).cpp_type << " > >(\"" << m->Name << "\",shared_from_this()," << elem_size <<  "," << direction_str << ");" << endl;
 
 				}
 			}
@@ -2388,15 +2415,20 @@ namespace RobotRaconteurGen
 			}
 			else
 			{
+				std::string c = "C";
+				if (m->Type->ResolveNamedType()->RRDataType() == DataTypes_astructure_t)
+				{
+					c = "A";
+				}
 				if (m->Type->ArrayType == DataTypes_ArrayTypes_array)
 				{
-					w2 << "RR_SHARED_PTR<RobotRaconteur::CStructureArrayMemoryClient<" << convert_type(*m->Type).cpp_type << " > > value=rrvar_" << m->Name << ";" << endl;
+					w2 << "RR_SHARED_PTR<RobotRaconteur::" << c << "StructureArrayMemoryClient<" << convert_type(*m->Type).cpp_type << " > > value=rrvar_" << m->Name << ";" << endl;
 					w2 << "if (!value) throw RobotRaconteur::InvalidOperationException(\"Stub has been closed\");" << endl;
 					w2 << "return value;" << endl;
 				}
 				else
 				{
-					w2 << "RR_SHARED_PTR<RobotRaconteur::CStructureMultiDimArrayMemoryClient<" << convert_type(*m->Type).cpp_type << " > > value=rrvar_" << m->Name << ";" << endl;
+					w2 << "RR_SHARED_PTR<RobotRaconteur::" << c << "StructureMultiDimArrayMemoryClient<" << convert_type(*m->Type).cpp_type << " > > value=rrvar_" << m->Name << ";" << endl;
 					w2 << "if (!value) throw RobotRaconteur::InvalidOperationException(\"Stub has been closed\");" << endl;
 					w2 << "return value;" << endl;
 				}
@@ -3295,14 +3327,27 @@ namespace RobotRaconteurGen
 			}
 			else
 			{
-				size_t elem_size = EstimateCStructurePackedElementSize(rr_cast<ServiceEntryDefinition>(m->Type->ResolveNamedType()));
-				if (m->Type->ArrayType == DataTypes_ArrayTypes_array)
+				std::string c = "C";
+				size_t elem_size;
+				if (m->Type->ResolveNamedType()->RRDataType() == DataTypes_astructure_t)
 				{
-					w2 << "rr_" + t.name + "_mem=RR_MAKE_SHARED<RobotRaconteur::CStructureArrayMemoryServiceSkel<" + t.cpp_type + " > >(\"" << m->Name << "\",shared_from_this()," << elem_size << "," << direction_str << ");" << endl;
+					c = "A";
+
+					boost::tuple<DataTypes, size_t> astruct_t = GetAStructureElementTypeAndCount(rr_cast<ServiceEntryDefinition>(m->Type->ResolveNamedType()));
+					elem_size = astruct_t.get<1>();
 				}
 				else
 				{
-					w2 << "rr_" + t.name + "_mem=RR_MAKE_SHARED<RobotRaconteur::CStructureMultiDimArrayMemoryServiceSkel<" + t.cpp_type + " > >(\"" << m->Name << "\",shared_from_this()," << elem_size << "," << direction_str << ");" << endl;
+					elem_size = EstimateCStructurePackedElementSize(rr_cast<ServiceEntryDefinition>(m->Type->ResolveNamedType()));
+				}
+				
+				if (m->Type->ArrayType == DataTypes_ArrayTypes_array)
+				{
+					w2 << "rr_" + t.name + "_mem=RR_MAKE_SHARED<RobotRaconteur::" + c + "StructureArrayMemoryServiceSkel<" + t.cpp_type + " > >(\"" << m->Name << "\",shared_from_this()," << elem_size << "," << direction_str << ");" << endl;
+				}
+				else
+				{
+					w2 << "rr_" + t.name + "_mem=RR_MAKE_SHARED<RobotRaconteur::" + c + "StructureMultiDimArrayMemoryServiceSkel<" + t.cpp_type + " > >(\"" << m->Name << "\",shared_from_this()," << elem_size << "," << direction_str << ");" << endl;
 				}
 			}
 			w2 << "return rr_" << m->Name << "_mem->CallMemoryFunction(m,e,get_obj()->get_" << fix_name(m->Name) << "());" << endl;

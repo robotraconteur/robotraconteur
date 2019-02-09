@@ -22,6 +22,7 @@ namespace RobotRaconteurTest
 		TestGenerators();
 
 		TestAStructs();
+		TestAStructMemories();
 
 		Disconnect();
 	}
@@ -290,10 +291,63 @@ namespace RobotRaconteurTest
 
 		r->set_testastruct5(ServiceTest2_fill_transform_multidimarray(3, 2, 7732));
 		ServiceTest2_verify_transform_multidimarray(r->get_testastruct5(), 3, 2, 773142);
+				
+	}
 
+	void ServiceTestClient2::TestAStructMemories()
+	{
+		test_astruct_m1();
+		test_astruct_m2();
+	}
 
-	
-	
+	void ServiceTestClient2::test_astruct_m1()
+	{
+		RR_SHARED_PTR<RRAStructureArray<com::robotraconteur::testing::TestService3::transform> > s
+			= AllocateEmptyRRAStructureArray<com::robotraconteur::testing::TestService3::transform>(32);
 		
+		for (size_t i = 0; i < s->Length(); i++)
+		{
+			ServiceTest2_fill_transform((*s)[i], 79174 + i);
+		}
+
+		if (r->get_astruct_m1()->Length() != 512) throw std::runtime_error("");
+		r->get_astruct_m1()->Write(23, s, 3, 21);
+
+		RR_SHARED_PTR<RRAStructureArray<com::robotraconteur::testing::TestService3::transform> > s2
+			= AllocateEmptyRRAStructureArray<com::robotraconteur::testing::TestService3::transform>(32);
+		
+		r->get_astruct_m1()->Read(24, s2, 2, 18);
+
+		for (size_t i = 2; i < 18; i++)
+		{
+			ServiceTest2_verify_transform((*s2)[i], 79174 + i + 2);
+		}
+	}
+
+	void ServiceTestClient2::test_astruct_m2()
+	{
+		std::vector<int32_t> s_dims = boost::assign::list_of(3)(3);
+		RR_SHARED_PTR<RRAStructureMultiDimArray<com::robotraconteur::testing::TestService3::transform> > s
+			= AllocateEmptyRRAStructureMultiDimArray<com::robotraconteur::testing::TestService3::transform>(s_dims);
+		
+		
+		for (size_t i = 0; i < s->AStructArray->Length(); i++)
+		{
+			ServiceTest2_fill_transform((*s->AStructArray)[i], 15721 + i);
+		}
+
+		std::vector<uint64_t> z = boost::assign::list_of(0)(0);		
+		std::vector<uint64_t> c = boost::assign::list_of(3)(3);		
+		r->get_astruct_m2()->Write(z, s, z, c);
+
+		RR_SHARED_PTR<RRAStructureMultiDimArray<com::robotraconteur::testing::TestService3::transform> > s2
+			= AllocateEmptyRRAStructureMultiDimArray<com::robotraconteur::testing::TestService3::transform> (s_dims);
+		
+		r->get_astruct_m2()->Read(z, s2, z, c);
+
+		for (size_t i = 0; i < 9; i++)
+		{
+			ServiceTest2_verify_transform((*s2->AStructArray)[i], 15721 + i);
+		}
 	}
 }

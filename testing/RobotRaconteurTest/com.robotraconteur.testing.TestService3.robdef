@@ -169,6 +169,9 @@ object testroot3
 	property transform[*] testastruct4
 	property transform[3,2] testastruct5
 	
+	memory transform[] astruct_m1
+	memory transform[*] astruct_m2
+	
 end object
 
 object obj1

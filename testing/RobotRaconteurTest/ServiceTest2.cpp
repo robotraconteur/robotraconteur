@@ -34,6 +34,12 @@ namespace RobotRaconteurTest
 		m2->CStructArray = RR_MAKE_SHARED<RobotRaconteur::RRCStructureArray<com::robotraconteur::testing::TestService3::testcstruct2 > >();
 		m2->CStructArray->cstruct_array.resize(36);
 		cstruct_m2 = RR_MAKE_SHARED<RobotRaconteur::CStructureMultiDimArrayMemory<com::robotraconteur::testing::TestService3::testcstruct2 > >(m2);
+
+
+		astruct_m1 = RR_MAKE_SHARED<RobotRaconteur::AStructureArrayMemory<com::robotraconteur::testing::TestService3::transform > >(AllocateEmptyRRAStructureArray< com::robotraconteur::testing::TestService3::transform>(512));
+		std::vector<int32_t> astruct_m2_dims = boost::assign::list_of(10)(20);
+		astruct_m2 = RR_MAKE_SHARED<RobotRaconteur::AStructureMultiDimArrayMemory<com::robotraconteur::testing::TestService3::transform > >(AllocateEmptyRRAStructureMultiDimArray< com::robotraconteur::testing::TestService3::transform>(astruct_m2_dims));
+				
 	}
 
 	void testroot3_impl::set_peekwire(RR_SHARED_PTR<Wire<int32_t > > value)
@@ -310,6 +316,15 @@ namespace RobotRaconteurTest
 		ServiceTest2_verify_transform_multidimarray(value, 3, 2, 7732);
 	}
 
+
+	RR_SHARED_PTR<RobotRaconteur::AStructureArrayMemory<com::robotraconteur::testing::TestService3::transform > > testroot3_impl::get_astruct_m1()
+	{
+		return astruct_m1;
+	}
+	RR_SHARED_PTR<RobotRaconteur::AStructureMultiDimArrayMemory<com::robotraconteur::testing::TestService3::transform > > testroot3_impl::get_astruct_m2()
+	{
+		return astruct_m2;
+	}
 
 	class ServiceTest2_test_sequence_gen
 	{
