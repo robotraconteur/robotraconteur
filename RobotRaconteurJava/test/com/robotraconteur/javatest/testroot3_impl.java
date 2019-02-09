@@ -365,6 +365,56 @@ public class testroot3_impl implements testroot3
 	public void set_w3(Wire<MultiDimArray> value) {
 		w3=value;		
 	}
+	@Override
+	public vector3 get_testastruct1() {
+		transform a1 = new transform();
+        ServiceTest2_cstruct.fill_transform(a1, 74637);
+        return a1.translation;
+	}
+	@Override
+	public void set_testastruct1(vector3 value) {
+		transform a1 = new transform();
+        ServiceTest2_cstruct.fill_transform(a1, 3956378);
+        a1.translation = value;
+        ServiceTest2_cstruct.verify_transform(a1, 3956378);
+		
+	}
+	@Override
+	public transform get_testastruct2() {
+		transform a2 = new transform();
+        ServiceTest2_cstruct.fill_transform(a2, 1294);
+        return a2;		
+	}
+	@Override
+	public void set_testastruct2(transform value) {
+		ServiceTest2_cstruct.verify_transform(value, 827635);
+		
+	}
+	@Override
+	public transform[] get_testastruct3() {
+		return ServiceTest2_cstruct.fill_transform_array(8, 837512);		
+	}
+	@Override
+	public void set_testastruct3(transform[] value) {
+		ServiceTest2_cstruct.verify_transform_array(value, 6, 19274);
+		
+	}
+	@Override
+	public AStructureMultiDimArray get_testastruct4() {
+		return ServiceTest2_cstruct.fill_transform_multidimarray(7, 2, 66134);
+	}
+	@Override
+	public void set_testastruct4(AStructureMultiDimArray value) {
+		ServiceTest2_cstruct.verify_transform_multidimarray(value, 5, 2, 6385);		
+	}
+	@Override
+	public AStructureMultiDimArray get_testastruct5() {
+		return ServiceTest2_cstruct.fill_transform_multidimarray(3, 2, 773142);
+	}
+	@Override
+	public void set_testastruct5(AStructureMultiDimArray value) {
+		ServiceTest2_cstruct.verify_transform_multidimarray(value, 3, 2, 7732);		
+	}
 	
 	
 }

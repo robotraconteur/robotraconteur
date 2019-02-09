@@ -74,6 +74,8 @@ namespace RobotRaconteurGen
 
 		static void GenerateCStructure(ServiceEntryDefinition* e, ostream* w);
 
+		static void GenerateAStructure(RR_SHARED_PTR<ServiceEntryDefinition> e, ostream* w);
+
 		static void GenerateInterface(ServiceEntryDefinition* e, ostream* w);
 
 		static void GenerateAsyncInterface(ServiceEntryDefinition* e, ostream* w);
@@ -83,6 +85,8 @@ namespace RobotRaconteurGen
 		static void GenerateStructureStub(ServiceEntryDefinition* e, ostream * w);
 
 		static void GenerateCStructureStub(ServiceEntryDefinition* e, ostream * w);
+
+		static void GenerateAStructureStub(RR_SHARED_PTR<ServiceEntryDefinition> e, ostream * w);
 
 		static void GenerateStub(ServiceEntryDefinition* e, ostream * w);
 
@@ -112,7 +116,11 @@ namespace RobotRaconteurGen
 
 		static void GenerateCStructureFile(ServiceEntryDefinition* d, ostream* w);
 
+		static void GenerateAStructureFile(RR_SHARED_PTR<ServiceEntryDefinition> d, ostream* w);
+
 		static void GenerateCStructureStubFile(ServiceEntryDefinition* d, ostream* w);
+
+		static void GenerateAStructureStubFile(RR_SHARED_PTR<ServiceEntryDefinition> d, ostream* w);
 		
 		static void GenerateStubFile(ServiceEntryDefinition* d, ostream* w);
 

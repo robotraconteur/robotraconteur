@@ -283,6 +283,11 @@ import java.util.*;
 			CStructureMultiDimArray s2=(CStructureMultiDimArray)s;
 			c=s2.cstruct_array.getClass();
 		}
+		else if (s instanceof AStructureMultiDimArray)
+		{
+			AStructureMultiDimArray s2=(AStructureMultiDimArray)s;
+			c=s2.astruct_array.getClass();
+		}
 		else
 		{
 			c=s.getClass();
@@ -348,7 +353,12 @@ import java.util.*;
 		{
 			return MessageElementUtil.newMessageElementDispose(name, packStructure(data));
 		}
-				
+		
+		if (T_class == AStructureMultiDimArray.class)
+		{
+			return MessageElementUtil.newMessageElementDispose(name, packStructure(data));
+		}
+		
 		boolean is_array = T_class.isArray();
 		if (is_array)
 		{
@@ -365,7 +375,7 @@ import java.util.*;
 			return MessageElementUtil.newMessageElementDispose(name, packVarType(data));
 		}
 
-		if (RRStructure.class.isAssignableFrom(T_class) || RRCStructure.class.isAssignableFrom(T_class))
+		if (RRStructure.class.isAssignableFrom(T_class) || RRCStructure.class.isAssignableFrom(T_class) || RRAStructure.class.isAssignableFrom(T_class))
 		{
 			return MessageElementUtil.newMessageElementDispose(name, packStructure(data));
 		}
@@ -430,6 +440,8 @@ import java.util.*;
 			case DataTypes_structure_t:
 			case DataTypes_cstructure_array_t:
 			case DataTypes_cstructure_multidimarray_t:
+			case DataTypes_astructure_array_t:
+			case DataTypes_astructure_multidimarray_t:
 				return (T)unpackStructureDispose((MessageElementData)e.getData());
 			default:
                     throw new DataTypeException("Invalid container data type");
@@ -720,11 +732,21 @@ import java.util.*;
 			return packStructure(data);
 		}
 
+		if (data instanceof AStructureMultiDimArray)
+		{
+			return packStructure(data);
+		}
+		
 		if (data instanceof RRStructure || data instanceof RRCStructure || data instanceof RRCStructure[])
 		{
 			return packStructure(data);
 		}
-				
+		
+		if (data instanceof RRAStructure || data instanceof RRAStructure[])
+		{
+			return packStructure(data);
+		}
+		
 		if (data instanceof String)
 		{
 			return data;
@@ -789,6 +811,8 @@ import java.util.*;
 			case DataTypes_structure_t:
 			case DataTypes_cstructure_array_t:
 			case DataTypes_cstructure_multidimarray_t:
+			case DataTypes_astructure_array_t:
+			case DataTypes_astructure_multidimarray_t:
 				return unpackStructureDispose((MessageElementData)me.getData());
 			case DataTypes_vector_t:
 				return this.<Integer, Object>unpackMapType(me.getData());

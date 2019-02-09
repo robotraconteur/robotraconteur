@@ -31,6 +31,8 @@
 %shared_ptr(RobotRaconteur::MessageElementCStructure)
 %shared_ptr(RobotRaconteur::MessageElementCStructureArray)
 %shared_ptr(RobotRaconteur::MessageElementCStructureMultiDimArray)
+%shared_ptr(RobotRaconteur::MessageElementAStructureArray)
+%shared_ptr(RobotRaconteur::MessageElementAStructureMultiDimArray)
 
 //Message
 
@@ -229,6 +231,27 @@ public:
 	virtual DataTypes GetTypeID();	
 };
 
+class MessageElementAStructureArray : public MessageElementData
+{
+public:
+
+	std::string Type;
+	std::vector<boost::shared_ptr<MessageElement> > Elements;
+	MessageElementAStructureArray(const std::string& type_, const std::vector<boost::shared_ptr<MessageElement> > &elements_);
+	virtual std::string GetTypeString();	
+	virtual DataTypes GetTypeID();	
+};
+
+class MessageElementAStructureMultiDimArray : public MessageElementData
+{
+public:
+	std::string Type;
+	std::vector<boost::shared_ptr<MessageElement> > Elements;
+	MessageElementAStructureMultiDimArray(const std::string& type_, const std::vector<boost::shared_ptr<MessageElement> > &elements_);
+	virtual std::string GetTypeString();	
+	virtual DataTypes GetTypeID();	
+};
+
 }
 
 %template(MessageElementMap_int32_t) RobotRaconteur::MessageElementMap<int32_t>;
@@ -288,6 +311,16 @@ public:
 	static boost::shared_ptr<RobotRaconteur::MessageElementCStructureMultiDimArray> ToMessageElementCStructureMultiDimArray(boost::shared_ptr<RobotRaconteur::MessageElementData> m)
 	{
 		return boost::dynamic_pointer_cast<MessageElementCStructureMultiDimArray>(m);
+	}
+
+	static boost::shared_ptr<RobotRaconteur::MessageElementAStructureArray> ToMessageElementAStructureArray(boost::shared_ptr<RobotRaconteur::MessageElementData> m)
+	{
+		return boost::dynamic_pointer_cast<MessageElementAStructureArray>(m);
+	}
+
+	static boost::shared_ptr<RobotRaconteur::MessageElementAStructureMultiDimArray> ToMessageElementAStructureMultiDimArray(boost::shared_ptr<RobotRaconteur::MessageElementData> m)
+	{
+		return boost::dynamic_pointer_cast<MessageElementAStructureMultiDimArray>(m);
 	}
 
 #ifdef RR_MESSAEGE_ELEMENT_DATA_UTIL_EXTRAS

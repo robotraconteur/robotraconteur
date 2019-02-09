@@ -140,6 +140,8 @@ namespace RobotRaconteurGen
 				throw InvalidArgumentException("");
 		}
 
+		RR_SHARED_PTR<NamedTypeDefinition> nt = tdef.ResolveNamedType_cache.lock();
+
 		if (tdef.ArrayType == DataTypes_ArrayTypes_multidimarray)
 		{
 			if (IsTypeNumeric(tdef.Type))
@@ -149,13 +151,19 @@ namespace RobotRaconteurGen
 			}
 			else if (tdef.Type == DataTypes_namedtype_t)
 			{			
-				RR_SHARED_PTR<NamedTypeDefinition> nt = tdef.ResolveNamedType_cache.lock();
+				
 				if (!nt) throw DataTypeException("Data type not resolved");
 				switch (nt->RRDataType())
 				{
 				case DataTypes_cstructure_t:
 				{
 					o.cs_type = "CStructureMultiDimArray";
+					o.cs_arr_type = "";
+					break;
+				}
+				case DataTypes_astructure_t:
+				{
+					o.cs_type = "AStructureMultiDimArray";
 					o.cs_arr_type = "";
 					break;
 				}
@@ -407,9 +415,32 @@ namespace RobotRaconteurGen
 						throw DataTypeException("Invalid array type");
 					}
 					break;
+				case DataTypes_astructure_t:
+					switch (t->ArrayType)
+					{
+					case DataTypes_ArrayTypes_none:
+					{
+						return "MessageElementUtil.PackAStructureToArray<" + fix_qualified_name(t->TypeString) + ">(\"" + elementname + "\",ref " + varname + ")";
+						break;
+					}
+					case DataTypes_ArrayTypes_array:
+					{
+						return "MessageElementUtil.PackAStructureArray<" + fix_qualified_name(t->TypeString) + ">(\"" + elementname + "\"," + CSharpServiceLangGen_VerifyArrayLength(*t, varname) + ")";
+						break;
+					}
+					case DataTypes_ArrayTypes_multidimarray:
+					{
+						return "MessageElementUtil.PackAStructureMultiDimArray<" + fix_qualified_name(t->TypeString) + ">(\"" + elementname + "\"," + CSharpServiceLangGen_VerifyArrayLength(*t, varname) + ")";
+						break;
+					}
+					default:
+						throw DataTypeException("Invalid array type");
+					}
+					break;				
 				default:
 					throw DataTypeException("Unknown named type id");
 				}
+
 
 			}
 			else
@@ -495,6 +526,28 @@ namespace RobotRaconteurGen
 				default:
 					throw DataTypeException("Invalid array type");
 				}				
+				break;
+			case DataTypes_astructure_t:
+				switch (t->ArrayType)
+				{
+				case DataTypes_ArrayTypes_none:
+				{
+					structunpackstring = "MessageElementUtil.UnpackAStructureFromArray<" + fix_qualified_name(t->TypeString) + ">(" + varname + ")";
+					break;
+				}
+				case DataTypes_ArrayTypes_array:
+				{
+					structunpackstring = CSharpServiceLangGen_VerifyArrayLength(*t, "MessageElementUtil.UnpackAStructureArray<" + fix_qualified_name(t->TypeString) + ">(" + varname + ")");
+					break;
+				}
+				case DataTypes_ArrayTypes_multidimarray:
+				{
+					structunpackstring = CSharpServiceLangGen_VerifyArrayLength(*t, "MessageElementUtil.UnpackAStructureMultiDimArray<" + fix_qualified_name(t->TypeString) + ">(" + varname + ")");
+					break;
+				}
+				default:
+					throw DataTypeException("Invalid array type");
+				}
 				break;
 			default:
 				throw DataTypeException("Unknown named type id");
@@ -587,9 +640,18 @@ namespace RobotRaconteurGen
 		return t2;
 	}
 
-	void CSharpServiceLangGen::GenerateCStructure(ServiceEntryDefinition* e, ostream* w)
+	void CSharpServiceLangGen::GenerateCStructure(RR_SHARED_PTR<ServiceEntryDefinition> e, ostream* w)
 	{
 		ostream& w2 = *w;
+
+		if (e->EntryType == DataTypes_astructure_t)
+		{
+			boost::tuple<DataTypes, size_t> t4 = GetAStructureElementTypeAndCount(e);
+			TypeDefinition t5;
+			t5.Type = t4.get<0>();
+			convert_type_result t6 = convert_type(t5);
+			w2 << "[AStructureElementTypeAndCount(typeof(" << t6.cs_type << "), " << t4.get<1>() << ")]" << endl;
+		}
 
 		w2 << "public struct " + fix_name(e->Name) << endl << "{" << endl;
 
@@ -599,7 +661,130 @@ namespace RobotRaconteurGen
 		t.name = fix_name(m->Name);
 		w2 << "    public " + t.cs_type + t.cs_arr_type + " " + t.name + ";" << endl;
 		MEMBER_ITER_END()
+			
+			if (e->EntryType == DataTypes_astructure_t)
+			{
+				boost::tuple<DataTypes, size_t> t4 = GetAStructureElementTypeAndCount(e);
+				TypeDefinition t5;
+				t5.Type = t4.get<0>();
+				convert_type_result t6 = convert_type(t5);
+
+				w2 << "    public " + t6.cs_type + "[] GetNumericArray()" << endl << "    {" << endl;
+				w2 << "    var a=new ArraySegment<" << t6.cs_type <<  ">(new " + t6.cs_type + "[" + boost::lexical_cast<std::string>(t4.get<1>()) + "]);" << endl;
+				w2 << "    GetNumericArray(ref a);" << endl;
+				w2 << "    return a.Array;" << endl;
+				w2 << "    }" << endl;
+
+				w2 << "    public void GetNumericArray(ref ArraySegment<" + t6.cs_type + "> a)" << endl << "    {" << endl;
+				{
+					w2 << "    if(a.Count < " << t4.get<1>() << ") throw new ArgumentException(\"ArraySegment invalid length\");" << endl;
+					int i = 0;
+					MEMBER_ITER2(PropertyDefinition)
+						TypeDefinition t7 = *CSharpServiceLangGen_RemoveMultiDimArray(*m->Type);
+					convert_type_result t8 = convert_type(t7);
+					t8.name = fix_name(m->Name);
+					if (IsTypeNumeric(m->Type->Type))
+					{
+						if (m->Type->ArrayType == DataTypes_ArrayTypes_none)
+						{
+							w2 << "    a.Array[a.Offset + " << i << "] = " << t8.name << ";" << endl;
+							i++;
+						}
+						else
+						{
+							w2 << "    Array.Copy(" << t8.name << ", 0, a.Array, a.Offset + " << i << ", " << t7.ArrayLength.at(0) << ");" << endl;
+							i += t7.ArrayLength.at(0);
+						}
+					}
+					else
+					{
+						RR_SHARED_PTR<ServiceEntryDefinition> e2 = rr_cast<ServiceEntryDefinition>(m->Type->ResolveNamedType());
+						boost::tuple<DataTypes, size_t> t9 = GetAStructureElementTypeAndCount(e2);
+						size_t e2_count = m->Type->ArrayType == DataTypes_ArrayTypes_none ? 1 : t7.ArrayLength.at(0);
+
+						w2 << "    var a" << i << " = new ArraySegment<" << t6.cs_type << ">(a.Array, a.Offset + " << i << ", " << t9.get<1>()*e2_count << ");" << endl;
+						w2 << "    " << t8.name << ".GetNumericArray(ref a" << i << ");" << endl;
+						i += t9.get<1>()*e2_count;
+						
+					}
+					//w2 << "    public " + t8.cs_type + t8.cs_arr_type + " " + t8.name + ";" << endl;
+					MEMBER_ITER_END()
+				}
+				w2 << "    }" << endl;
+
+				w2 << "    public void AssignFromNumericArray(ref ArraySegment<" + t6.cs_type + "> a)" << endl << "    {" << endl;
+				{
+					w2 << "    if(a.Count < " << t4.get<1>() << ") throw new ArgumentException(\"ArraySegment invalid length\");" << endl;
+					int i = 0;
+					MEMBER_ITER2(PropertyDefinition)
+						TypeDefinition t7 = *CSharpServiceLangGen_RemoveMultiDimArray(*m->Type);
+					convert_type_result t8 = convert_type(t7);
+					t8.name = fix_name(m->Name);
+					if (IsTypeNumeric(m->Type->Type))
+					{
+						if (m->Type->ArrayType == DataTypes_ArrayTypes_none)
+						{
+							w2 << "    " << t8.name << " = a.Array[a.Offset + " << i << "]" << ";" << endl;
+							i++;
+						}
+						else
+						{
+							w2 << "    Array.Copy(a.Array, a.Offset + " << i << ", " << t8.name << ", 0, " << t7.ArrayLength.at(0) << ");" << endl;
+							i += t7.ArrayLength.at(0);
+						}
+					}
+					else
+					{
+						RR_SHARED_PTR<ServiceEntryDefinition> e2 = rr_cast<ServiceEntryDefinition>(m->Type->ResolveNamedType());
+						boost::tuple<DataTypes, size_t> t9 = GetAStructureElementTypeAndCount(e2);
+						size_t e2_count = m->Type->ArrayType == DataTypes_ArrayTypes_none ? 1 : t7.ArrayLength.at(0);
+
+						w2 << "    var a" << i << " = new ArraySegment<" << t6.cs_type << ">(a.Array, a.Offset + " << i << ", " << t9.get<1>()*e2_count << ");" << endl;
+						w2 << "    " << t8.name << ".AssignFromNumericArray(ref a" << i << ");" << endl;
+						i += t9.get<1>()*e2_count;
+
+					}
+					//w2 << "    public " + t8.cs_type + t8.cs_arr_type + " " + t8.name + ";" << endl;
+					MEMBER_ITER_END()
+						w2 << "    }" << endl;
+				}
+			}
+
 			w2 << "}" << endl << endl;
+	}
+
+	void CSharpServiceLangGen::GenerateAStructureExtensions(RR_SHARED_PTR<ServiceEntryDefinition> e, ostream* w)
+	{
+		ostream& w2 = *w;
+
+		boost::tuple<DataTypes, size_t> t1 = GetAStructureElementTypeAndCount(e);
+		TypeDefinition t2;
+		t2.Type = t1.get<0>();
+		convert_type_result t3 = convert_type(t2);
+				
+		w2 << "    public static " + t3.cs_type + "[] GetNumericArray(this " + fix_name(e->Name) + "[] s)" << endl << "    {" << endl;
+		w2 << "    var a=new ArraySegment<" << t3.cs_type << ">(new " + t3.cs_type + "[" + boost::lexical_cast<std::string>(t1.get<1>()) + " * s.Length]);" << endl;
+		w2 << "    s.GetNumericArray(ref a);" << endl;
+		w2 << "    return a.Array;" << endl;
+		w2 << "    }" << endl;
+
+		w2 << "    public static void GetNumericArray(this " + fix_name(e->Name) + "[] s, ref ArraySegment<" + t3.cs_type + "> a)" << endl << "    {" << endl;
+		w2 << "    if(a.Count < " << t1.get<1>() << " * s.Length) throw new ArgumentException(\"ArraySegment invalid length\");" << endl;
+		w2 << "    for (int i=0; i<s.Length; i++)" << endl << "    {" << endl;
+		w2 << "    var a1 = new ArraySegment<" << t3.cs_type << ">(a.Array, a.Offset + " << t1.get<1>() << "*i," << t1.get<1>() << ");" << endl;
+		w2 << "    s[i].GetNumericArray(ref a1);" << endl;
+		w2 << "    }" << endl;
+		w2 << "    }" << endl;
+
+		w2 << "    public static void AssignFromNumericArray(this " + fix_name(e->Name) + "[] s, ref ArraySegment<" + t3.cs_type + "> a)" << endl << "    {" << endl;
+		w2 << "    if(a.Count < " << t1.get<1>() << " * s.Length) throw new ArgumentException(\"ArraySegment invalid length\");" << endl;
+		
+		w2 << "    for (int i=0; i<s.Length; i++)" << endl << "    {" << endl;
+		w2 << "    var a1 = new ArraySegment<" << t3.cs_type << ">(a.Array, a.Offset + " << t1.get<1>() << "*i," << t1.get<1>() << ");" << endl;
+		w2 << "    s[i].AssignFromNumericArray(ref a1);" << endl;
+		w2 << "    }" << endl;
+
+		w2 << "    }" << endl;
 	}
 
 	void CSharpServiceLangGen::GenerateInterface(ServiceEntryDefinition* e, ostream* w)
@@ -713,9 +898,13 @@ namespace RobotRaconteurGen
 		{
 			GenerateStructure(e->get(),w);
 		}
+		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->AStructures.begin(); e != d->AStructures.end(); ++e)
+		{
+			GenerateCStructure(*e, w);
+		}
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->CStructures.begin(); e != d->CStructures.end(); ++e)
 		{
-			GenerateCStructure(e->get(), w);
+			GenerateCStructure(*e, w);
 		}
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Objects.begin(); e != d->Objects.end(); ++e)
 		{
@@ -759,6 +948,11 @@ namespace RobotRaconteurGen
 			GenerateCStructureStub(e->get(), w);
 			w2 << endl;
 		}
+		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->AStructures.begin(); e != d->AStructures.end(); ++e)
+		{
+			GenerateAStructureStub(*e, w);
+			w2 << endl;
+		}
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Objects.begin(); e != d->Objects.end(); ++e)
 		{
 			GenerateStub(e->get(),w);
@@ -775,6 +969,10 @@ namespace RobotRaconteurGen
 		}
 
 		w2 << "public static class RRExtensions" << "{" << endl;
+		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->AStructures.begin(); e != d->AStructures.end(); ++e)
+		{
+			GenerateAStructureExtensions(*e, w);
+		}
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Objects.begin(); e != d->Objects.end(); ++e)
 		{
 			GenerateStubTasks(e->get(),w);
@@ -815,6 +1013,10 @@ namespace RobotRaconteurGen
 		{
 			w2 << "    public " + fix_name((*e)->Name) + "_stub " << fix_name((*e)->Name) + "_stubentry;" << endl;
 		}
+		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->AStructures.begin(); e != d->AStructures.end(); ++e)
+		{
+			w2 << "    public " + fix_name((*e)->Name) + "_stub " << fix_name((*e)->Name) + "_stubentry;" << endl;
+		}
 		w2 << "    public " + boost::replace_all_copy(fix_name(d->Name),".","__") + "Factory()" << endl << "{" << endl;
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Structures.begin(); e != d->Structures.end(); ++e)
 		{
@@ -823,6 +1025,10 @@ namespace RobotRaconteurGen
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->CStructures.begin(); e != d->CStructures.end(); ++e)
 		{
 			w2 << "    " << fix_name((*e)->Name) + "_stubentry=new " << fix_name((*e)->Name) + "_stub(this);" << endl;
+		}
+		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->AStructures.begin(); e != d->AStructures.end(); ++e)
+		{
+			w2 << "    " << fix_name((*e)->Name) + "_stubentry=new " << fix_name((*e)->Name) + "_stub();" << endl;
 		}
 		w2 << "    }" << endl;
 
@@ -841,6 +1047,17 @@ namespace RobotRaconteurGen
 		//w2 << "    string objshort=RemovePath(objecttype);" << endl;
 
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->CStructures.begin(); e != d->CStructures.end(); ++e)
+		{
+			w2 << "    if (objecttype==\"" + (*e)->Name + "\")";
+			w2 << "    return " << fix_name((*e)->Name) + "_stubentry;" << endl;
+		}
+		w2 << "    throw new DataTypeException(\"Cannot find appropriate cstructure stub\");" << endl;
+		w2 << "    }" << endl;
+
+		w2 << "    public override IAStructureStub FindAStructureStub(string objecttype)" << endl << "    {" << endl;
+		//w2 << "    string objshort=RemovePath(objecttype);" << endl;
+
+		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->AStructures.begin(); e != d->AStructures.end(); ++e)
 		{
 			w2 << "    if (objecttype==\"" + (*e)->Name + "\")";
 			w2 << "    return " << fix_name((*e)->Name) + "_stubentry;" << endl;
@@ -995,6 +1212,41 @@ namespace RobotRaconteurGen
 		w2 << "    }" << endl;
 		w2 << "    }" << endl;
 
+		w2 << "    public override string TypeName { get { return \"" << e->ServiceDefinition_.lock()->Name << "." << e->Name << "\"; } }";
+
+		w2 << "}" << endl;
+	}
+
+	void CSharpServiceLangGen::GenerateAStructureStub(RR_SHARED_PTR<ServiceEntryDefinition> e, ostream * w)
+	{
+		ostream& w2 = *w;
+
+		boost::tuple<DataTypes, size_t> t4 = GetAStructureElementTypeAndCount(e);
+		TypeDefinition t5;
+		t5.Type = t4.get<0>();
+		convert_type_result t6 = convert_type(t5);
+
+		w2 << "public class " + fix_name(e->Name) + "_stub : AStructureStub<" << fix_name(e->Name) << "," << t6.cs_type << "> {" << endl;
+		w2 << "    public override " << t6.cs_type <<"[] GetNumericArrayFromAStructure(ref " << fix_name(e->Name) << " s) {" << endl;
+		w2 << "    return s.GetNumericArray();" << endl;
+		w2 << "    }" << endl;
+		w2 << "    public override " << fix_name(e->Name) << " GetAStructureFromNumericArray(" << t6.cs_type << "[] m) {" << endl;
+		w2 << "    if (m.Length != " << t4.get<1>() << ") throw new DataTypeException(\"Invalid astructure array\");" << endl;
+		w2 << "    var s = new " << fix_name(e->Name) << "();" << endl;
+		w2 << "    var a = new ArraySegment<" << t6.cs_type << ">(m);" << endl;
+		w2 << "    s.AssignFromNumericArray(ref a);" << endl;
+		w2 << "    return s;" << endl;
+		w2 << "    }" << endl;
+		w2 << "    public override " << t6.cs_type << "[] GetNumericArrayFromAStructureArray(" << fix_name(e->Name) << "[] s) {" << endl;
+		w2 << "    return s.GetNumericArray();" << endl;
+		w2 << "    }" << endl;
+		w2 << "    public override " << fix_name(e->Name) << "[] GetAStructureArrayFromNumericArray(" << t6.cs_type << "[] m) {" << endl;
+		w2 << "    if (m.Length % " << t4.get<1>() << " != 0) throw new DataTypeException(\"Invalid astructure array\");" << endl;
+		w2 << "    " << fix_name(e->Name) << "[] s = new " << fix_name(e->Name) << "[m.Length / " << t4.get<1>() << "];" << endl;
+		w2 << "    var a = new ArraySegment<" << t6.cs_type << ">(m);" << endl;
+		w2 << "    s.AssignFromNumericArray(ref a);" << endl;
+		w2 << "    return s;" << endl;
+		w2 << "    }" << endl;
 		w2 << "    public override string TypeName { get { return \"" << e->ServiceDefinition_.lock()->Name << "." << e->Name << "\"; } }";
 
 		w2 << "}" << endl;
@@ -2502,6 +2754,44 @@ namespace RobotRaconteurGen
 						{
 							int32_t n_elems = boost::accumulate(tdef.ArrayLength, 1, std::multiplies<int32_t>());
 							return "new CStructureMultiDimArray(new int[] {" + boost::join(tdef.ArrayLength | boost::adaptors::transformed(boost::lexical_cast<std::string, int32_t>), ",") +  "}, new " + t.cs_type + "[" + boost::lexical_cast<std::string>(n_elems) + "])";
+						}
+					}
+					default:
+						throw InvalidArgumentException("Invalid array type");
+					}
+				}
+
+				if (tdef2->ResolveNamedType()->RRDataType() == DataTypes_astructure_t)
+				{
+					switch (tdef.ArrayType)
+					{
+					case DataTypes_ArrayTypes_none:
+					{
+						return GetDefaultValue(tdef);
+					}
+					case DataTypes_ArrayTypes_array:
+					{
+						convert_type_result t = convert_type(*tdef2);
+						if (tdef.ArrayVarLength)
+						{
+							return "new " + t.cs_type + "[0]";
+						}
+						else
+						{
+							return "new " + t.cs_type + "[" + boost::lexical_cast<std::string>(tdef.ArrayLength.at(0)) + "]";
+						}
+					}
+					case DataTypes_ArrayTypes_multidimarray:
+					{
+						convert_type_result t = convert_type(*tdef2);
+						if (tdef.ArrayVarLength)
+						{
+							return "new AStructureMultiDimArray(new int[] {1,0}, new " + t.cs_type +  "[0])";
+						}
+						else
+						{
+							int32_t n_elems = boost::accumulate(tdef.ArrayLength, 1, std::multiplies<int32_t>());
+							return "new AStructureMultiDimArray(new int[] {" + boost::join(tdef.ArrayLength | boost::adaptors::transformed(boost::lexical_cast<std::string, int32_t>), ",") + "}, new " + t.cs_type + "[" + boost::lexical_cast<std::string>(n_elems) + "])";
 						}
 					}
 					default:

@@ -99,7 +99,8 @@ namespace RobotRaconteurGen
 				return o;
 			}
 
-			if (nt->RRDataType() == DataTypes_cstructure_t && tdef.ArrayType == DataTypes_ArrayTypes_none)
+			if ((nt->RRDataType() == DataTypes_cstructure_t || nt->RRDataType() == DataTypes_astructure_t)
+				&& tdef.ArrayType == DataTypes_ArrayTypes_none)
 			{
 				tdef.ArrayType = DataTypes_ArrayTypes_array;
 			}
@@ -205,6 +206,12 @@ namespace RobotRaconteurGen
 					o.java_arr_type = "";
 					break;
 				}
+				case DataTypes_astructure_t:
+				{
+					o.java_type = "AStructureMultiDimArray";
+					o.java_arr_type = "";
+					break;
+				}				
 				default:
 					throw InvalidArgumentException("Invalid multidimarray type");
 				}
@@ -236,7 +243,8 @@ namespace RobotRaconteurGen
 		RR_SHARED_PTR<NamedTypeDefinition> nt = tdef.ResolveNamedType_cache.lock();
 		if (nt)
 		{
-			if (nt->RRDataType() == DataTypes_cstructure_t && tdef.ArrayType == DataTypes_ArrayTypes_none)
+			if ((nt->RRDataType() == DataTypes_cstructure_t || nt->RRDataType() == DataTypes_astructure_t)
+				&& tdef.ArrayType == DataTypes_ArrayTypes_none)
 			{
 				o.java_arr_type = "[]";
 			}
@@ -393,7 +401,14 @@ namespace RobotRaconteurGen
 				}
 				else
 				{
-					s = "3";
+					if (t.Type == DataTypes_cstructure_t)
+					{
+						s = "3";
+					}
+					else
+					{
+						s = "4";
+					}
 				}
 
 			}
@@ -503,6 +518,31 @@ namespace RobotRaconteurGen
 						throw DataTypeException("Invalid array type");
 					}
 					break;
+				case DataTypes_astructure_t:
+					switch (t->ArrayType)
+					{
+					case DataTypes_ArrayTypes_none:
+					{
+						convert_type_result ts = convert_type(*t);
+						return "MessageElementUtil.<" + ts.java_type + ">packAStructureToArray(\"" + elementname + "\"," + JavaServiceLangGen_VerifyArrayLength(*t, varname) + ")";
+						break;
+					}
+					case DataTypes_ArrayTypes_array:
+					{
+						convert_type_result ts = convert_type(*t);
+						return "MessageElementUtil.<" + ts.java_type + ">packAStructureArray(\"" + elementname + "\"," + JavaServiceLangGen_VerifyArrayLength(*t, varname) + ")";
+						break;
+					}
+					case DataTypes_ArrayTypes_multidimarray:
+					{
+						convert_type_result ts = convert_type(*t);
+						return "MessageElementUtil.<" + ts.java_type + ">packAStructureMultiDimArray(\"" + elementname + "\"," + JavaServiceLangGen_VerifyArrayLength(*t, varname) + ")";
+						break;
+					}
+					default:
+						throw DataTypeException("Invalid array type");
+					}
+					break;
 				default:
 					throw DataTypeException("Unknown named type id");
 				}
@@ -597,6 +637,28 @@ namespace RobotRaconteurGen
 				case DataTypes_ArrayTypes_multidimarray:
 				{
 					structunpackstring = JavaServiceLangGen_VerifyArrayLength(*t, "MessageElementUtil.unpackCStructureMultiDimArray(" + varname + ")");
+					break;
+				}
+				default:
+					throw DataTypeException("Invalid array type");
+				}
+				break;
+			case DataTypes_astructure_t:
+				switch (t->ArrayType)
+				{
+				case DataTypes_ArrayTypes_none:
+				{
+					structunpackstring = "MessageElementUtil.<" + fix_qualified_name(t->TypeString) + ">unpackAStructureFromArray(" + varname + ")";
+					break;
+				}
+				case DataTypes_ArrayTypes_array:
+				{
+					structunpackstring = JavaServiceLangGen_VerifyArrayLength(*t, "MessageElementUtil.<" + fix_qualified_name(t->TypeString) + ">unpackAStructureArray(" + varname + ")");
+					break;
+				}
+				case DataTypes_ArrayTypes_multidimarray:
+				{
+					structunpackstring = JavaServiceLangGen_VerifyArrayLength(*t, "MessageElementUtil.unpackAStructureMultiDimArray(" + varname + ")");
 					break;
 				}
 				default:
@@ -708,6 +770,234 @@ namespace RobotRaconteurGen
 		w2 << "    public " + t.java_type + t.java_arr_type + " " + t.name + ";" << endl;
 		MEMBER_ITER_END()
 			w2 << "}" << endl << endl;
+	}
+
+	void JavaServiceLangGen::GenerateAStructure(RR_SHARED_PTR<ServiceEntryDefinition> e, ostream* w)
+	{
+		ostream& w2 = *w;
+
+		
+
+		w2 << "public class " + fix_name(e->Name) << " implements RRAStructure " << endl << "{" << endl;
+
+		MEMBER_ITER2(PropertyDefinition)
+			TypeDefinition t2 = *JavaServiceLangGen_RemoveMultiDimArray(*m->Type);
+		convert_type_result t = convert_type(t2);
+		t.name = fix_name(m->Name);
+		w2 << "    public " << t.java_type << t.java_arr_type << " " << t.name << ";" << endl;
+		MEMBER_ITER_END()
+
+		w2 << "    public " << fix_name(e->Name) << "()" << endl << "    {" << endl;
+		MEMBER_ITER2(PropertyDefinition)
+		TypeDefinition t2 = *JavaServiceLangGen_RemoveMultiDimArray(*m->Type);
+		convert_type_result t = convert_type(t2);
+		t.name = fix_name(m->Name);
+
+		if (IsTypeNumeric(t2.Type))
+		{
+			bool unsigned_int = (t2.Type == DataTypes_uint8_t || t2.Type == DataTypes_uint16_t
+				|| t2.Type == DataTypes_uint32_t || t2.Type == DataTypes_uint64_t);
+
+			if (t2.ArrayType == DataTypes_ArrayTypes_none)
+			{
+				w2 << "    " << t.name << " = " << GetDefaultValue(t2) << ";" << endl;
+			}
+			else
+			{
+				if (!unsigned_int)
+				{
+					w2 << "    " << t.name << " = new " << t.java_type << "[" << t2.ArrayLength.at(0) << "];" << endl;
+				}
+				else
+				{
+					w2 << "    " << t.name << " = new " << t.java_type << "s(" << t2.ArrayLength.at(0) << ");" << endl;
+				}
+			}
+		}
+		else
+		{
+			if (t2.ArrayType == DataTypes_ArrayTypes_none)
+			{
+				w2 << "    " << t.name << " = new " << t.java_type << "();" << endl;
+			}
+			else
+			{
+				w2 << "    " << t.name << " = new " << t.java_type << "[" << t2.ArrayLength.at(0) << "];" << endl;
+				w2 << "    for (int i=0; i<" << t2.ArrayLength.at(0) << "; i++) " << t.name << "[i] = new " << t.java_type << "();" << endl;
+			}
+		}
+		MEMBER_ITER_END()
+		w2 << "    }" << endl;
+
+			boost::tuple<DataTypes, size_t> t4 = GetAStructureElementTypeAndCount(e);
+		TypeDefinition t5;
+		t5.Type = t4.get<0>();
+		t5.ArrayType = DataTypes_ArrayTypes_array;
+		convert_type_result t6 = convert_type(t5);
+
+		bool unsigned_int = (t5.Type == DataTypes_uint8_t || t5.Type == DataTypes_uint16_t
+			|| t5.Type == DataTypes_uint32_t || t5.Type == DataTypes_uint64_t);
+
+		w2 << "    public " << t6.java_type << t6.java_arr_type << " getNumericArray()" << endl << "    {" << endl;
+		
+		w2 << "    " << t6.java_type << t6.java_arr_type << " a = new " << t6.java_type;
+		if (!unsigned_int)
+		{
+			w2 << "[" << t4.get<1>() << "];" << endl;
+		}
+		else
+		{
+			w2 << t6.java_arr_type << "(" << t4.get<1>() << ");" << endl;
+		}
+		w2 << "    getNumericArray(a,0);" << endl;
+		w2 << "    return a;" << endl;
+		w2 << "    }" << endl;
+
+		w2 << "    public void getNumericArray(" << t6.java_type << t6.java_arr_type << " buffer, int offset)" << endl << "    {" << endl;
+		{
+			
+			int i = 0;
+			MEMBER_ITER2(PropertyDefinition)
+				TypeDefinition t7 = *JavaServiceLangGen_RemoveMultiDimArray(*m->Type);
+			convert_type_result t8 = convert_type(t7);
+			t8.name = fix_name(m->Name);
+			if (IsTypeNumeric(m->Type->Type))
+			{
+				if (m->Type->ArrayType == DataTypes_ArrayTypes_none)
+				{
+					if (!unsigned_int)
+					{
+						w2 << "    buffer[offset + " << i << "] = " << t8.name << ";" << endl;
+					}
+					else
+					{
+						w2 << "    buffer.value[offset + " << i << "] = " << t8.name << ".value;" << endl;
+					}
+					i++;
+				}
+				else
+				{					
+					if (!unsigned_int)
+					{
+						w2 << "    System.arraycopy";
+					}
+					else
+					{
+						w2 << "    DataTypeUtil.arraycopy";
+					}
+					w2 << "(" << t8.name << ", 0, buffer, offset + " << i << ", " << t7.ArrayLength.at(0) << "); " << endl;
+					i += t7.ArrayLength.at(0);
+				}
+			}
+			else
+			{
+				RR_SHARED_PTR<ServiceEntryDefinition> e2 = rr_cast<ServiceEntryDefinition>(m->Type->ResolveNamedType());
+				boost::tuple<DataTypes, size_t> t9 = GetAStructureElementTypeAndCount(e2);
+				size_t e2_count = m->Type->ArrayType == DataTypes_ArrayTypes_none ? 1 : t7.ArrayLength.at(0);
+
+				if (m->Type->ArrayType == DataTypes_ArrayTypes_none)
+				{
+					w2 << "    " << t8.name << ".getNumericArray(buffer, offset + " << i << ");" << endl;
+				}
+				else
+				{
+					w2 << "    " << m->Type->TypeString << ".getNumericArray(" << t8.name << ", buffer, offset + " << i << ");" << endl;
+				}
+				i += t9.get<1>()*e2_count;
+
+			}
+			//w2 << "    public " + t8.cs_type + t8.cs_arr_type + " " + t8.name + ";" << endl;
+			MEMBER_ITER_END()
+		}
+		w2 << "    }" << endl;
+
+		w2 << "    public void assignFromNumericArray(" << t6.java_type << t6.java_arr_type << " buffer, int offset)" << endl << "    {" << endl;
+		{			
+			int i = 0;
+			MEMBER_ITER2(PropertyDefinition)
+			TypeDefinition t7 = *JavaServiceLangGen_RemoveMultiDimArray(*m->Type);
+			convert_type_result t8 = convert_type(t7);
+			t8.name = fix_name(m->Name);
+			if (IsTypeNumeric(m->Type->Type))
+			{
+				if (m->Type->ArrayType == DataTypes_ArrayTypes_none)
+				{
+					if (!unsigned_int)
+					{
+						w2 << "    " << t8.name << " = buffer[offset + " << i << "];" << endl;
+					}
+					else
+					{
+						w2 << "    " << t8.name << " = buffer.get(offset + " << i << ");" << endl;
+					}
+					i++;
+				}
+				else
+				{
+					if (!unsigned_int)
+					{
+						w2 << "    System.arraycopy";
+					}
+					else
+					{
+						w2 << "    DataTypeUtil.arraycopy";
+					}
+					w2 << "(buffer, offset + " << i << ", " << t8.name << ", 0, " << t7.ArrayLength.at(0) << "); " << endl;
+					i += t7.ArrayLength.at(0);
+				}
+			}
+			else
+			{
+				RR_SHARED_PTR<ServiceEntryDefinition> e2 = rr_cast<ServiceEntryDefinition>(m->Type->ResolveNamedType());
+				boost::tuple<DataTypes, size_t> t9 = GetAStructureElementTypeAndCount(e2);
+				size_t e2_count = m->Type->ArrayType == DataTypes_ArrayTypes_none ? 1 : t7.ArrayLength.at(0);
+
+				if (m->Type->ArrayType == DataTypes_ArrayTypes_none)
+				{
+					w2 << "    " << t8.name << ".assignFromNumericArray(buffer, offset + " << i << ");" << endl;
+				}
+				else
+				{
+					w2 << "    " << m->Type->TypeString << ".assignFromNumericArray(" << t8.name << ", buffer, offset + " << i << ");" << endl;
+				}
+				i += t9.get<1>()*e2_count;
+
+			}
+			//w2 << "    public " + t8.cs_type + t8.cs_arr_type + " " + t8.name + ";" << endl;
+			MEMBER_ITER_END()
+				w2 << "    }" << endl;
+
+			w2 << "    public static " << t6.java_type << t6.java_arr_type << " getNumericArray(" << fix_name(e->Name) << "[] s)" << endl << "    {" << endl;
+			w2 << "    " << t6.java_type << t6.java_arr_type << " a = new " << t6.java_type;
+			if (!unsigned_int)
+			{
+				w2 << "[" << t4.get<1>() << " * s.length];" << endl;
+			}
+			else
+			{
+				w2 << t6.java_arr_type << "(" << t4.get<1>() << " * s.length);" << endl;
+			}			
+			w2 << "    getNumericArray(s,a,0);" << endl;
+			w2 << "    return a;" << endl;
+			w2 << "    }" << endl;
+
+			w2 << "    public static void getNumericArray(" + fix_name(e->Name) + "[] s, " << t6.java_type << t6.java_arr_type << " a, int offset)" << endl << "    {" << endl;
+			//w2 << "    if(a.Count < " << t4.get<1>() << " * s.Length) throw new ArgumentException(\"ArraySegment invalid length\");" << endl;
+			w2 << "    for (int i=0; i<s.length; i++)" << endl << "    {" << endl;
+			w2 << "    s[i].getNumericArray(a, offset + " << t4.get<1>() << " * i);" << endl;
+			w2 << "    }" << endl;
+			w2 << "    }" << endl;
+
+			w2 << "    public static void assignFromNumericArray(" + fix_name(e->Name) + "[] s, " << t6.java_type << t6.java_arr_type << " a, int offset)" << endl << "    {" << endl;
+			//w2 << "    if(a.Count < " << t1.get<1>() << " * s.Length) throw new ArgumentException(\"ArraySegment invalid length\");" << endl;
+
+			w2 << "    for (int i=0; i<s.length; i++)" << endl << "    {" << endl;			
+			w2 << "    s[i].assignFromNumericArray(a, offset + " << t4.get<1>() << " * i);" << endl;
+			w2 << "    }" << endl;
+			w2 << "    }" << endl;
+		}
+
+		w2 << "}" << endl << endl;
 	}
 
 	void JavaServiceLangGen::GenerateInterface(ServiceEntryDefinition* e, ostream* w)
@@ -944,6 +1234,10 @@ namespace RobotRaconteurGen
 		{
 			w2 << "    public " + fix_name((*e)->Name) + "_stub " << fix_name((*e)->Name) + "_stubentry;" << endl;
 		}
+		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->AStructures.begin(); e != d->AStructures.end(); ++e)
+		{
+			w2 << "    public " + fix_name((*e)->Name) + "_stub " << fix_name((*e)->Name) + "_stubentry;" << endl;
+		}
 		w2 << "    public " + boost::replace_all_copy(fix_name(d->Name),".","__") + "Factory()" << endl << "{" << endl;
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Structures.begin(); e != d->Structures.end(); ++e)
 		{
@@ -952,6 +1246,10 @@ namespace RobotRaconteurGen
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->CStructures.begin(); e != d->CStructures.end(); ++e)
 		{
 			w2 << "    " << fix_name((*e)->Name) + "_stubentry=new " << fix_name((*e)->Name) + "_stub(this);" << endl;
+		}
+		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->AStructures.begin(); e != d->AStructures.end(); ++e)
+		{
+			w2 << "    " << fix_name((*e)->Name) + "_stubentry=new " << fix_name((*e)->Name) + "_stub();" << endl;
 		}
 		w2 << "    }" << endl;
 
@@ -970,6 +1268,17 @@ namespace RobotRaconteurGen
 		//w2 << "    String objshort=removePath(objecttype);" << endl;
 
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->CStructures.begin(); e != d->CStructures.end(); ++e)
+		{
+			w2 << "    if (objecttype.equals(\"" + (*e)->Name + "\"))";
+			w2 << "    return " << fix_name((*e)->Name) + "_stubentry;" << endl;
+		}
+		w2 << "    throw new DataTypeException(\"Cannot find appropriate structure stub\");" << endl;
+		w2 << "    }" << endl;
+
+		w2 << "    public IAStructureStub findAStructureStub(String objecttype)" << endl << "    {" << endl;
+		//w2 << "    String objshort=removePath(objecttype);" << endl;
+
+		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->AStructures.begin(); e != d->AStructures.end(); ++e)
 		{
 			w2 << "    if (objecttype.equals(\"" + (*e)->Name + "\"))";
 			w2 << "    return " << fix_name((*e)->Name) + "_stubentry;" << endl;
@@ -1136,6 +1445,53 @@ namespace RobotRaconteurGen
 
 		w2 << "    public String getTypeName() {return \"" << fix_qualified_name(e->ServiceDefinition_.lock()->Name) << "." << fix_name(e->Name) << "\";}" << endl;;
 		w2 << "    protected " << fix_name(e->Name) << "[] createArray(int count) { return new " << fix_name(e->Name) << "[count]; }" << endl;
+		w2 << "}" << endl;
+	}
+
+	void JavaServiceLangGen::GenerateAStructureStub(RR_SHARED_PTR<ServiceEntryDefinition> e, ostream * w)
+	{
+		ostream& w2 = *w;
+
+		boost::tuple<DataTypes, size_t> t4 = GetAStructureElementTypeAndCount(e);
+		TypeDefinition t5;
+		t5.Type = t4.get<0>();
+		t5.ArrayType = DataTypes_ArrayTypes_array;
+		convert_type_result t6 = convert_type(t5);
+
+		bool unsigned_int = (t5.Type == DataTypes_uint8_t || t5.Type == DataTypes_uint16_t
+			|| t5.Type == DataTypes_uint32_t || t5.Type == DataTypes_uint64_t);
+
+
+		w2 << "public class " + fix_name(e->Name) + "_stub extends AStructureStub<" << fix_name(e->Name) << "," << t6.java_type << t6.java_arr_type << "> {" << endl;
+		w2 << "    public " << t6.java_type << t6.java_arr_type <<" getNumericArrayFromAStructure(" << fix_name(e->Name) << " s) {" << endl;
+		w2 << "    return s.getNumericArray();" << endl;
+		w2 << "    }" << endl;
+		w2 << "    public " << fix_name(e->Name) << " getAStructureFromNumericArray(" << t6.java_type << t6.java_arr_type << " m) {" << endl;
+		//w2 << "    if (m.lengthength != " << t4.get<1>() << ") throw new DataTypeException(\"Invalid astructure array\");" << endl;
+		w2 << "    " << fix_name(e->Name) << " s = new " << fix_name(e->Name) << "();" << endl;		
+		w2 << "    s.assignFromNumericArray(m,0);" << endl;
+		w2 << "    return s;" << endl;
+		w2 << "    }" << endl;
+		w2 << "    public " << t6.java_type << t6.java_arr_type << " getNumericArrayFromAStructureArray(" << fix_name(e->Name) << "[] s) {" << endl;
+		w2 << "    return " << fix_name(e->Name) << ".getNumericArray(s);" << endl;
+		w2 << "    }" << endl;
+		w2 << "    public " << fix_name(e->Name) << "[] getAStructureArrayFromNumericArray(" << t6.java_type << t6.java_arr_type << " m) {" << endl;
+		//w2 << "    if (m.Length % " << t4.get<1>() << " != 0) throw new DataTypeException(\"Invalid astructure array\");" << endl;		
+		w2 << "    " << fix_name(e->Name) << "[] s = new " << fix_name(e->Name);
+		if (!unsigned_int)
+		{
+			w2 << "[m.length / " << t4.get<1>() << "];" << endl;
+		}
+		else
+		{
+			w2 << "[m.value.length / " << t4.get<1>() << "];" << endl;
+		}
+		w2 << "    for (int i=0; i<s.length; i++) s[i] = new " << fix_name(e->Name) << "();" << endl;
+		w2 << "    " << fix_name(e->Name) << ".assignFromNumericArray(s,m,0);" << endl;
+		w2 << "    return s;" << endl;
+		w2 << "    }" << endl;
+		w2 << "    public String getTypeName() { return \"" << e->ServiceDefinition_.lock()->Name << "." << e->Name << "\"; }";
+
 		w2 << "}" << endl;
 	}
 
@@ -2253,6 +2609,19 @@ namespace RobotRaconteurGen
 		GenerateCStructure(d, w);
 	}
 
+	void JavaServiceLangGen::GenerateAStructureFile(RR_SHARED_PTR<ServiceEntryDefinition> d, ostream* w)
+	{
+		ostream& w2 = *w;
+
+		w2 << "//This file is automatically generated. DO NOT EDIT!" << endl;
+		w2 << "package " << fix_name(d->ServiceDefinition_.lock()->Name) << ";" << endl;
+		w2 << "import java.util.*;" << endl;
+		w2 << "import com.robotraconteur.*;" << endl;
+		//w2 << "using System.Collections.Generic;" << endl << endl;
+
+		GenerateAStructure(d, w);
+	}
+
 	void JavaServiceLangGen::GenerateCStructureStubFile(ServiceEntryDefinition* d, ostream* w)
 	{
 		ostream& w2 = *w;
@@ -2264,6 +2633,19 @@ namespace RobotRaconteurGen
 		//w2 << "using System.Collections.Generic;" << endl << endl;
 
 		GenerateCStructureStub(d, w);
+	}
+
+	void JavaServiceLangGen::GenerateAStructureStubFile(RR_SHARED_PTR<ServiceEntryDefinition> d, ostream* w)
+	{
+		ostream& w2 = *w;
+
+		w2 << "//This file is automatically generated. DO NOT EDIT!" << endl;
+		w2 << "package " << fix_name(d->ServiceDefinition_.lock()->Name) << ";" << endl;
+		w2 << "import java.util.*;" << endl;
+		w2 << "import com.robotraconteur.*;" << endl;
+		//w2 << "using System.Collections.Generic;" << endl << endl;
+
+		GenerateAStructureStub(d, w);
 	}
 
 	void JavaServiceLangGen::GenerateInterfaceFile(ServiceEntryDefinition* d, ostream* w)
@@ -2707,6 +3089,20 @@ namespace RobotRaconteurGen
 		{
 			ofstream f2((p.string() + os_pathsep + fix_name((*e)->Name) + "_stub.java").c_str());
 			GenerateCStructureStubFile(e->get(), &f2);
+			f2.close();
+		}
+
+		for (vector<boost::shared_ptr<ServiceEntryDefinition> >::iterator e = d->AStructures.begin(); e != d->AStructures.end(); ++e)
+		{
+			ofstream f2((p.string() + os_pathsep + fix_name((*e)->Name) + ".java").c_str());
+			GenerateAStructureFile(*e, &f2);
+			f2.close();
+		}
+
+		for (vector<boost::shared_ptr<ServiceEntryDefinition> >::iterator e = d->AStructures.begin(); e != d->AStructures.end(); ++e)
+		{
+			ofstream f2((p.string() + os_pathsep + fix_name((*e)->Name) + "_stub.java").c_str());
+			GenerateAStructureStubFile(*e, &f2);
 			f2.close();
 		}
 

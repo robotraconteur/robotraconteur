@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.robotraconteur.AStructureMultiDimArray;
 import com.robotraconteur.CStructureMultiDimArray;
 import com.robotraconteur.testing.TestService3.*;
 
@@ -81,6 +82,31 @@ class ServiceTest2_cstruct
 		s.s2 = create_testcstruct2_array(gen, 8);
 		s.s3 = create_testcstruct2_array(gen, (int)(gen.get_uint32() % 9));
 		s.s4 = create_testcstruct2_array(gen, 8);
+		
+		s.t1 = new transform();
+		fill_transform(s.t1, gen.get_uint32());
+		
+		s.t2 = new transform[4];
+        for (int i = 0; i < 4; i++)
+        {
+        	s.t2[i] = new transform();
+            fill_transform(s.t2[i], gen.get_uint32());
+        }
+
+        int t3_len = (int)(gen.get_uint32() % 15);
+        s.t3 = new transform[(t3_len)];
+        for (int i = 0; i < t3_len; i++)
+        {
+        	s.t3[i] = new transform();
+            fill_transform(s.t3[i], gen.get_uint32());
+        }
+
+        s.t4 = new transform[8];
+        for (int i = 0; i < 8; i++)
+        {
+        	s.t4[i] = new transform();
+            fill_transform(s.t4[i], gen.get_uint32());
+        }
 	}
 
 	public static void verify_testcstruct1(testcstruct1 s, long seed)
@@ -95,7 +121,19 @@ class ServiceTest2_cstruct
 		verify_testcstruct2_array(gen, s.s2, 8);
 		verify_testcstruct2_array(gen, s.s3,(int) (gen.get_uint32() % 9));
 		verify_testcstruct2_array(gen, (testcstruct2[])s.s4, 8);
-				  
+		
+		verify_transform(s.t1, gen.get_uint32());
+
+        for (int i = 0; i < 4; i++)
+            verify_transform(s.t2[i], gen.get_uint32());
+
+        int t3_len = (int)(gen.get_uint32() % 15);
+        if (s.t3.length != t3_len) throw new RuntimeException("");
+        for (int i = 0; i < t3_len; i++)
+            verify_transform(s.t3[i], gen.get_uint32());
+
+        for (int i = 0; i < 8; i++)
+            verify_transform(s.t4[i], gen.get_uint32());
 	}
 
 	public static void fill_testcstruct2(testcstruct2 s, long seed)
@@ -239,6 +277,44 @@ class ServiceTest2_cstruct
 		s15.add(create_testcstruct1_multidimarray(5, 1, gen.get_uint32()));
 		o.s15 = s15;
 		
+		o.t1 = new transform();
+		fill_transform(o.t1, gen.get_uint32());
+
+        o.t2 = fill_transform_array(4, gen.get_uint32());
+        o.t3 = fill_transform_multidimarray(2, 4, gen.get_uint32());
+
+        o.t4 = fill_transform_array(10, gen.get_uint32());
+        o.t5 = fill_transform_multidimarray(6, 5, gen.get_uint32());		
+		
+        o.t6 = new ArrayList<transform[]>();
+        transform t6_1 = new transform();
+        fill_transform(t6_1, gen.get_uint32());
+        o.t6.add(new transform[] {t6_1});
+
+        o.t7 = new ArrayList<transform[]>();
+        o.t7.add(fill_transform_array(4, gen.get_uint32()));
+        o.t7.add(fill_transform_array(4, gen.get_uint32()));
+
+        o.t8 = new ArrayList<AStructureMultiDimArray>();
+        o.t8.add(fill_transform_multidimarray(2, 4, gen.get_uint32()));
+        o.t8.add(fill_transform_multidimarray(2, 4, gen.get_uint32()));
+
+        transform t9 = new transform();
+        fill_transform(t9, gen.get_uint32());
+        ArrayList<Object> t9_1 = new ArrayList<Object>();
+        t9_1.add(new transform[] { t9 } );
+        o.t9=t9_1;
+
+        ArrayList<Object> t10 = new ArrayList<Object>();
+        t10.add(fill_transform_array(3, gen.get_uint32()));
+        t10.add(fill_transform_array(5, gen.get_uint32()));
+        o.t10 = t10;
+
+        ArrayList<Object> t11 = new ArrayList<Object>();
+        t11.add(fill_transform_multidimarray(7, 2, gen.get_uint32()));
+        t11.add(fill_transform_multidimarray(5, 1, gen.get_uint32()));
+        o.t11 = t11;
+        
 		return o;
 	}
 
@@ -295,8 +371,90 @@ class ServiceTest2_cstruct
 		verify_testcstruct1_multidimarray(v15.get(0), 7, 2, gen.get_uint32());
 		verify_testcstruct1_multidimarray(v15.get(1), 5, 1, gen.get_uint32());
 
+		verify_transform(v.t1, gen.get_uint32());
 
+        verify_transform_array(v.t2, 4, gen.get_uint32());
+        verify_transform_multidimarray(v.t3, 2, 4, gen.get_uint32());
 
+        verify_transform_array((transform[])(v.t4), 10, gen.get_uint32());
+        verify_transform_multidimarray((AStructureMultiDimArray)(v.t5), 6, 5, gen.get_uint32());
+        
+        if (v.t6 == null) throw new RuntimeException("");
+        if (v.t6.size() != 1) throw new RuntimeException("");
+        transform[] t6_0 = v.t6.get(0);
+        verify_transform(t6_0[0], gen.get_uint32());
+
+        if (v.t7 == null) throw new RuntimeException("");
+        if (v.t7.size() != 2) throw new RuntimeException("");
+        verify_transform_array(v.t7.get(0), 4, gen.get_uint32());
+        verify_transform_array(v.t7.get(1), 4, gen.get_uint32());
+
+        if (v.t8 == null) throw new RuntimeException("");
+        if (v.t8.size() != 2) throw new RuntimeException("");
+        verify_transform_multidimarray(v.t8.get(0), 2, 4, gen.get_uint32());
+        verify_transform_multidimarray(v.t8.get(1), 2, 4, gen.get_uint32());
+
+        if (v.t9 == null) throw new RuntimeException("");
+        Object t9_1 = ((List<Object>)v.t9).get(0);
+        transform[] t9 = (transform[])t9_1;
+        verify_transform(t9[0], gen.get_uint32());
+
+        if (v.t10 == null) throw new RuntimeException("");
+        List<Object> t10 = (List<Object>)v.t10;
+        if (t10.size() != 2) throw new RuntimeException("");
+        verify_transform_array((transform[])t10.get(0), 3, gen.get_uint32());
+        verify_transform_array((transform[])t10.get(1), 5, gen.get_uint32());
+
+        if (v.t11 == null) throw new RuntimeException("");
+        List<Object> t11 = (List<Object>)v.t11;
+        if (t11.size() != 2) throw new RuntimeException("");
+        verify_transform_multidimarray((AStructureMultiDimArray)t11.get(0), 7, 2, gen.get_uint32());
+        verify_transform_multidimarray((AStructureMultiDimArray)t11.get(1), 5, 1, gen.get_uint32());
 
 	}
+	
+	public static void fill_transform(transform t, long seed)
+    {
+		ServiceTest2_test_sequence_gen gen = new ServiceTest2_test_sequence_gen(seed);
+        double[] a = new double[7];
+        for (int i = 0; i < 7; i++) a[i] = gen.get_double();
+        t.assignFromNumericArray(a,0);
+    }
+
+    public static void verify_transform(transform t, long seed)
+    {
+    	ServiceTest2_test_sequence_gen gen = new ServiceTest2_test_sequence_gen(seed);
+        double[] a = t.getNumericArray();
+        for (int i = 0; i < 7; i++) if (a[i] != gen.get_double()) throw new RuntimeException();
+    }
+
+    public static transform[] fill_transform_array(int len, long seed)
+    {
+    	ServiceTest2_test_sequence_gen gen = new ServiceTest2_test_sequence_gen(seed);
+        transform[] o = new transform[len];
+        for (int i = 0; i < len; i++)
+        {
+        	o[i] = new transform();
+        	fill_transform(o[i], gen.get_uint32());
+        }
+        return o;
+    }
+
+    public static void verify_transform_array(transform[] t, int len, long seed)
+    {
+    	ServiceTest2_test_sequence_gen gen = new ServiceTest2_test_sequence_gen(seed);
+        if (t.length != len) throw new RuntimeException("");
+        for (int i = 0; i < len; i++) verify_transform(t[i], gen.get_uint32());
+    }
+
+    public static AStructureMultiDimArray fill_transform_multidimarray(int m, int n, long seed)
+    {
+        return new AStructureMultiDimArray(new int[] { m, n }, fill_transform_array(m * n, seed));
+    }
+
+    public static void verify_transform_multidimarray(AStructureMultiDimArray a, int m, int n, long seed)
+    {
+    	if (!Arrays.equals(a.dims,new int[] { m, n })) throw new RuntimeException();
+        verify_transform_array((transform[])a.astruct_array, m * n, seed);
+    }
 }

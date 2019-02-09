@@ -93,7 +93,24 @@ namespace RobotRaconteur
 	{
 		throw ServiceException("Invalid for wrapped service type");
 	}
-
+	
+	RR_SHARED_PTR<RobotRaconteur::MessageElementAStructureArray> WrappedServiceFactory::PackAStructureArray(RR_SHARED_PTR<RobotRaconteur::RRAStructureBaseArray> structure)
+	{
+		throw ServiceException("Invalid for wrapped service type");
+	}
+	RR_SHARED_PTR<RobotRaconteur::RRAStructureBaseArray> WrappedServiceFactory::UnpackAStructureArray(RR_SHARED_PTR<RobotRaconteur::MessageElementAStructureArray> structure)
+	{
+		throw ServiceException("Invalid for wrapped service type");
+	}
+	RR_SHARED_PTR<RobotRaconteur::MessageElementAStructureMultiDimArray> WrappedServiceFactory::PackAStructureMultiDimArray(RR_SHARED_PTR<RobotRaconteur::RRAStructureBaseMultiDimArray> structure)
+	{
+		throw ServiceException("Invalid for wrapped service type");
+	}
+	RR_SHARED_PTR<RobotRaconteur::RRAStructureBaseMultiDimArray> WrappedServiceFactory::UnpackAStructureMultiDimArray(RR_SHARED_PTR<RobotRaconteur::MessageElementAStructureMultiDimArray> structure)
+	{
+		throw ServiceException("Invalid for wrapped service type");
+	}
+	
 	RR_SHARED_PTR<RobotRaconteur::ServiceStub> WrappedServiceFactory::CreateStub(const std::string& type, const std::string& path, RR_SHARED_PTR<RobotRaconteur::ClientContext> context)
 	{
 		boost::tuple<std::string,std::string> res=SplitQualifiedName(type);

@@ -360,6 +360,23 @@ public class DataTypeUtil {
         return a;
     }
 
+    public static AStructureMultiDimArray verifyArrayLength(AStructureMultiDimArray a, int n_elems, int[] len)
+    {
+        if (a.dims.length != len.length)
+        {
+            throw new DataTypeException("Array dimension mismatch");
+        }
+
+        for (int i = 0; i < len.length; i++)
+        {
+            if (a.dims[i] != len[i])
+            {
+                throw new DataTypeException("Array dimension mismatch");
+            }
+        }
+        return a;
+    }
+    
     public static <T> List<T> verifyArrayLength1(List<T> a, int len, boolean varlength)
     {
     	if (a!=null)
@@ -429,6 +446,32 @@ public class DataTypeUtil {
     	if (a!=null)
     	{
 	        for (CStructureMultiDimArray aa : a.values())
+	        {
+	            verifyArrayLength(aa, n_elems,len);
+	        }
+    	}
+
+        return a;
+    }
+    
+    public static List<AStructureMultiDimArray> verifyArrayLength4(List<AStructureMultiDimArray> a, int n_elems, int[] len)
+    {
+    	if (a!=null)
+    	{
+	        for (AStructureMultiDimArray aa : a)
+	        {
+	            verifyArrayLength(aa, n_elems, len);
+	        }
+    	}
+
+        return a;
+    }
+
+    public static <K> Map<K, AStructureMultiDimArray> verifyArrayLength4(Map<K, AStructureMultiDimArray> a, int n_elems, int[] len)
+    {
+    	if (a!=null)
+    	{
+	        for (AStructureMultiDimArray aa : a.values())
 	        {
 	            verifyArrayLength(aa, n_elems,len);
 	        }

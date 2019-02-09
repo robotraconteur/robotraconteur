@@ -48,6 +48,8 @@ namespace RobotRaconteurNETTest
 
             TestMemories();
 
+            TestAStructs();
+
             DisconnectService();
         }
 
@@ -283,6 +285,38 @@ namespace RobotRaconteurNETTest
             {
                 ServiceTest2_cstruct.verify_testcstruct2(ref ((testcstruct2[])s2.cstruct_array)[i], 75721 + i);
             }
+        }
+
+        public void TestAStructs()
+        {
+            var a1 = new transform();
+            ServiceTest2_cstruct.fill_transform(ref a1, 3956378);
+            r.testastruct1 = a1.translation;
+
+            var a1_1 = new transform();
+            a1_1.rotation = a1.rotation;
+            a1_1.translation = r.testastruct1;
+            var a1_2 = new transform();
+            ServiceTest2_cstruct.fill_transform(ref a1_2, 74637);
+            a1_1.rotation = a1_2.rotation;
+            ServiceTest2_cstruct.verify_transform(ref a1_1, 74637);
+
+            var a2 = new transform();
+            ServiceTest2_cstruct.fill_transform(ref a2, 827635);
+            r.testastruct2=a2;
+
+            transform a2_1 = r.testastruct2;
+            ServiceTest2_cstruct.verify_transform(ref a2_1, 1294);
+
+            r.testastruct3=ServiceTest2_cstruct.fill_transform_array(6, 19274);
+            ServiceTest2_cstruct.verify_transform_array(r.testastruct3, 8, 837512);
+
+            r.testastruct4 = ServiceTest2_cstruct.fill_transform_multidimarray(5, 2, 6385);
+            ServiceTest2_cstruct.verify_transform_multidimarray(r.testastruct4, 7, 2, 66134);
+
+            r.testastruct5=ServiceTest2_cstruct.fill_transform_multidimarray(3, 2, 7732);
+            ServiceTest2_cstruct.verify_transform_multidimarray(r.testastruct5, 3, 2, 773142);
+
         }
     }
 }

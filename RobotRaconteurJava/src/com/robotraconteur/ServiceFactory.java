@@ -48,14 +48,33 @@ public abstract class ServiceFactory
 			ICStructureStub stub=findCStructureStub(stub_type);
 			return stub.packStructure(s);			
 		}
-		
 		if (s instanceof CStructureMultiDimArray)
 		{
 			CStructureMultiDimArray s2=(CStructureMultiDimArray)s;
 			String stub_type=RobotRaconteurNode.splitQualifiedName(RobotRaconteurNode.getTypeString(s2.cstruct_array.getClass().getComponentType()))[1];
 			ICStructureStub stub=findCStructureStub(stub_type);
 			return stub.packStructure(s);			
+		}		
+		if (s instanceof RRAStructure)
+		{
+			String stub_type=RobotRaconteurNode.splitQualifiedName(RobotRaconteurNode.getTypeString(s.getClass()))[1];
+			IAStructureStub stub=findAStructureStub(stub_type);
+			return stub.packStructure(s);			
 		}
+		
+		if (s instanceof RRAStructure[])
+		{
+			String stub_type=RobotRaconteurNode.splitQualifiedName(RobotRaconteurNode.getTypeString(s.getClass().getComponentType()))[1];
+			IAStructureStub stub=findAStructureStub(stub_type);
+			return stub.packStructure(s);			
+		}
+		if (s instanceof AStructureMultiDimArray)
+		{
+			AStructureMultiDimArray s2=(AStructureMultiDimArray)s;
+			String stub_type=RobotRaconteurNode.splitQualifiedName(RobotRaconteurNode.getTypeString(s2.astruct_array.getClass().getComponentType()))[1];
+			IAStructureStub stub=findAStructureStub(stub_type);
+			return stub.packStructure(s);			
+		}		
 		
 		throw new DataTypeException("Invalid structure type");
 	}
@@ -78,6 +97,13 @@ public abstract class ServiceFactory
 			ICStructureStub stub=findCStructureStub(stub_type);
 			return (T)stub.unpackStructure(l);
 		}
+		case DataTypes_astructure_array_t:
+		case DataTypes_astructure_multidimarray_t:
+		{
+			String stub_type=RobotRaconteurNode.splitQualifiedName(l.getTypeString())[1];
+			IAStructureStub stub=findAStructureStub(stub_type);
+			return (T)stub.unpackStructure(l);
+		}
 		default:
 			throw new DataTypeException("Invalid structure type");
 		}
@@ -87,6 +113,8 @@ public abstract class ServiceFactory
 	public abstract IStructureStub findStructureStub(String objecttype);
 	
 	public abstract ICStructureStub findCStructureStub(String objecttype);
+	
+	public abstract IAStructureStub findAStructureStub(String objecttype);
 
 	public abstract ServiceStub createStub(WrappedServiceStub innerstub);
 

@@ -173,7 +173,66 @@ namespace RobotRaconteurNETTest
         public override Wire<MultiDimArray> w3 { get; set; }
         public override Pipe<int[]> p1 { get; set; }
         public override Pipe<int[]> p2 { get; set; }
-        public override Pipe<MultiDimArray> p3 { get; set; }        
+        public override Pipe<MultiDimArray> p3 { get; set; }
+
+        public override vector3 testastruct1 {
+            get
+            {
+                var a1 = new transform();
+                ServiceTest2_cstruct.fill_transform(ref a1, 74637);
+                return a1.translation;
+            }
+            set
+            {
+                var a1 = new transform();
+                ServiceTest2_cstruct.fill_transform(ref a1, 3956378);
+                a1.translation = value;
+                ServiceTest2_cstruct.verify_transform(ref a1, 3956378);
+            }
+        }
+        public override transform testastruct2 {
+            get
+            {
+                var a2 = new transform();
+                ServiceTest2_cstruct.fill_transform(ref a2, 1294);
+                return a2;
+            }
+            set
+            {
+                ServiceTest2_cstruct.verify_transform(ref value, 827635);
+            }
+        }
+        public override transform[] testastruct3 {
+            get
+            {
+                return ServiceTest2_cstruct.fill_transform_array(8, 837512);
+            }
+            set
+            {
+                ServiceTest2_cstruct.verify_transform_array(value, 6, 19274);
+            }
+        }
+        public override AStructureMultiDimArray testastruct4 {
+            get
+            {
+                return ServiceTest2_cstruct.fill_transform_multidimarray(7, 2, 66134);
+            }
+            set
+            {
+                ServiceTest2_cstruct.verify_transform_multidimarray(value, 5, 2, 6385);
+            }
+        }
+        public override AStructureMultiDimArray testastruct5
+        {
+            get
+            {
+                return ServiceTest2_cstruct.fill_transform_multidimarray(3, 2, 773142);
+            }
+            set
+            {
+                ServiceTest2_cstruct.verify_transform_multidimarray(value, 3, 2, 7732);
+            }
+        }
     }
 
     class func4_gen : SyncGenerator1<byte[], byte[]>
@@ -325,6 +384,21 @@ namespace RobotRaconteurNETTest
             s.s2 = create_testcstruct2_array(gen, 8);
             s.s3 = create_testcstruct2_array(gen, (int)(gen.get_uint32() % 9));
             s.s4 = create_testcstruct2_array(gen, 8);
+
+            fill_transform(ref s.t1, gen.get_uint32());
+
+            s.t2 = new transform[4];
+            for (int i = 0; i < 4; i++)
+                fill_transform(ref s.t2[i], gen.get_uint32());
+
+            int t3_len = (int)(gen.get_uint32() % 15);
+            s.t3 = new transform[(t3_len)];
+            for (int i = 0; i < t3_len; i++)
+                fill_transform(ref s.t3[i], gen.get_uint32());
+
+            s.t4 = new transform[8];
+            for (int i = 0; i < 8; i++)
+                fill_transform(ref s.t4[i], gen.get_uint32());
         }
 
         public static void verify_testcstruct1(ref testcstruct1 s, uint seed)
@@ -339,7 +413,19 @@ namespace RobotRaconteurNETTest
             verify_testcstruct2_array(gen, s.s2, 8);
             verify_testcstruct2_array(gen, s.s3,(int) (gen.get_uint32() % 9));
             verify_testcstruct2_array(gen, (testcstruct2[])s.s4, 8);
-                      
+
+            verify_transform(ref s.t1, gen.get_uint32());
+
+            for (int i = 0; i < 4; i++)
+                verify_transform(ref s.t2[i], gen.get_uint32());
+
+            int t3_len = (int)(gen.get_uint32() % 15);
+            if (s.t3.Length != t3_len) throw new Exception("");
+            for (int i = 0; i < t3_len; i++)
+                verify_transform(ref s.t3[i], gen.get_uint32());
+
+            for (int i = 0; i < 8; i++)
+                verify_transform(ref s.t4[i], gen.get_uint32());
         }
 
         public static void fill_testcstruct2(ref testcstruct2 s, uint seed)
@@ -475,7 +561,42 @@ namespace RobotRaconteurNETTest
             s15.Add(create_testcstruct1_multidimarray(7, 2, gen.get_uint32()));
             s15.Add(create_testcstruct1_multidimarray(5, 1, gen.get_uint32()));
             o.s15 = s15;
-            
+
+            fill_transform(ref o.t1, gen.get_uint32());
+
+            o.t2 = fill_transform_array(4, gen.get_uint32());
+            o.t3 = fill_transform_multidimarray(2, 4, gen.get_uint32());
+
+            o.t4 = fill_transform_array(10, gen.get_uint32());
+            o.t5 = fill_transform_multidimarray(6, 5, gen.get_uint32());
+
+            o.t6 = new List<transform>();
+            var t6_1 = new transform();
+            fill_transform(ref t6_1, gen.get_uint32());
+            o.t6.Add(t6_1);
+
+            o.t7 = new List<transform[]>();
+            o.t7.Add(fill_transform_array(4, gen.get_uint32()));
+            o.t7.Add(fill_transform_array(4, gen.get_uint32()));
+
+            o.t8 = new List<AStructureMultiDimArray>();
+            o.t8.Add(fill_transform_multidimarray(2, 4, gen.get_uint32()));
+            o.t8.Add(fill_transform_multidimarray(2, 4, gen.get_uint32()));
+
+            var t9 = new transform();
+            fill_transform(ref t9, gen.get_uint32());
+            o.t9 = new List<object>(new object[] { new transform[] { t9 } });
+
+            var t10 = new List<object>();
+            t10.Add(fill_transform_array(3, gen.get_uint32()));
+            t10.Add(fill_transform_array(5, gen.get_uint32()));
+            o.t10 = t10;
+
+            var t11 = new List<object>();
+            t11.Add(fill_transform_multidimarray(7, 2, gen.get_uint32()));
+            t11.Add(fill_transform_multidimarray(5, 1, gen.get_uint32()));
+            o.t11 = t11;
+
             return o;
         }
 
@@ -530,11 +651,91 @@ namespace RobotRaconteurNETTest
             if (v15.Count != 2) throw new Exception("");
             verify_testcstruct1_multidimarray(v15[0], 7, 2, gen.get_uint32());
             verify_testcstruct1_multidimarray(v15[1], 5, 1, gen.get_uint32());
+            
+            verify_transform(ref v.t1, gen.get_uint32());
 
+            verify_transform_array(v.t2, 4, gen.get_uint32());
+            verify_transform_multidimarray(v.t3, 2, 4, gen.get_uint32());
 
+            verify_transform_array((transform[])(v.t4), 10, gen.get_uint32());
+            verify_transform_multidimarray((AStructureMultiDimArray)(v.t5), 6, 5, gen.get_uint32());
 
+            if (v.t6 == null) throw new Exception("");
+            if (v.t6.Count != 1) throw new Exception("");
+            var t6_0 = v.t6[0];
+            verify_transform(ref t6_0, gen.get_uint32());
+
+            if (v.t7 == null) throw new Exception("");
+            if (v.t7.Count != 2) throw new Exception("");
+            verify_transform_array(v.t7[0], 4, gen.get_uint32());
+            verify_transform_array(v.t7[1], 4, gen.get_uint32());
+
+            if (v.t8 == null) throw new Exception("");
+            if (v.t8.Count != 2) throw new Exception("");
+            verify_transform_multidimarray(v.t8[0], 2, 4, gen.get_uint32());
+            verify_transform_multidimarray(v.t8[1], 2, 4, gen.get_uint32());
+
+            if (v.t9 == null) throw new Exception("");
+            var t9 = (transform[])((List<object>)v.t9)[0];
+            verify_transform(ref t9[0], gen.get_uint32());
+
+            if (v.t10 == null) throw new Exception("");
+            var t10 = (List<object>)v.t10;
+            if (t10.Count != 2) throw new Exception("");
+            verify_transform_array((transform[])t10[0], 3, gen.get_uint32());
+            verify_transform_array((transform[])t10[1], 5, gen.get_uint32());
+
+            if (v.t11 == null) throw new Exception("");
+            var t11 = (List<object>)v.t11;
+            if (t11.Count != 2) throw new Exception("");
+            verify_transform_multidimarray((AStructureMultiDimArray)t11[0], 7, 2, gen.get_uint32());
+            verify_transform_multidimarray((AStructureMultiDimArray)t11[1], 5, 1, gen.get_uint32());
 
         }
+
+        public static void fill_transform(ref transform t, uint seed)
+        {
+            var gen = new ServiceTest2_test_sequence_gen(seed);
+            var a = new double[7];
+            for (int i = 0; i < 7; i++) a[i] = gen.get_double();
+            var a2 = new ArraySegment<double>(a);
+            t.AssignFromNumericArray(ref a2);
+        }
+
+        public static void verify_transform(ref transform t, uint seed)
+        {
+            var gen = new ServiceTest2_test_sequence_gen(seed);
+            var a = t.GetNumericArray();
+            for (int i = 0; i < 7; i++) if (a[i] != gen.get_double()) throw new Exception();
+        }
+
+        public static transform[] fill_transform_array(int len, uint seed)
+        {
+            var gen = new ServiceTest2_test_sequence_gen(seed);
+            var o = new transform[len];
+            for (int i = 0; i < len; i++) fill_transform(ref o[i], gen.get_uint32());
+            return o;
+        }
+
+        public static void verify_transform_array(transform[] t, int len, uint seed)
+        {
+            var gen = new ServiceTest2_test_sequence_gen(seed);
+            if (t.Length != len) throw new Exception();
+            for (int i = 0; i < len; i++) verify_transform(ref t[i], gen.get_uint32());
+        }
+
+        public static AStructureMultiDimArray fill_transform_multidimarray(int m, int n, uint seed)
+        {
+            return new AStructureMultiDimArray(new int[] { m, n }, fill_transform_array(m * n, seed));
+        }
+
+        public static void verify_transform_multidimarray(AStructureMultiDimArray a, int m, int n, uint seed)
+        {
+            if (!a.Dims.SequenceEqual(new int[] { m, n })) throw new Exception();
+            verify_transform_array((transform[])a.astruct_array, m * n, seed);
+        }
+
+
     }
 
 }

@@ -167,4 +167,58 @@ namespace RobotRaconteur
         }
 
     }
+
+    public class AStructureMultiDimArray
+    {
+        public AStructureMultiDimArray()
+        {
+            Dims = new int[] { 0 };
+        }
+
+        public AStructureMultiDimArray(int[] dims, Array array)
+        {
+            Dims = dims;
+            astruct_array = array;
+        }
+
+        public int[] Dims;
+        public Array astruct_array;
+
+        public virtual void RetrieveSubArray(int[] memorypos, AStructureMultiDimArray buffer, int[] bufferpos, int[] count)
+        {
+
+            AStructureMultiDimArray mema = this;
+            AStructureMultiDimArray memb = buffer;
+
+            MultiDimArray_CalculateCopyIndicesIter iter = RobotRaconteurNET.MultiDimArray_CalculateCopyIndicesBeginIter(mema.Dims.Length, new vectorint32(mema.Dims), new vectorint32(memorypos), memb.Dims.Length, new vectorint32(memb.Dims), new vectorint32(bufferpos), new vectorint32(count));
+
+            int indexa;
+            int indexb;
+            int len;
+
+            while (iter.Next(out indexa, out indexb, out len))
+            {
+                Array.Copy(mema.astruct_array, (long)indexa, memb.astruct_array, (long)indexb, (long)len);
+            }
+
+        }
+
+        public virtual void AssignSubArray(int[] memorypos, AStructureMultiDimArray buffer, int[] bufferpos, int[] count)
+        {
+            AStructureMultiDimArray mema = this;
+            AStructureMultiDimArray memb = buffer;
+
+            MultiDimArray_CalculateCopyIndicesIter iter = RobotRaconteurNET.MultiDimArray_CalculateCopyIndicesBeginIter(mema.Dims.Length, new vectorint32(mema.Dims), new vectorint32(memorypos), memb.Dims.Length, new vectorint32(memb.Dims), new vectorint32(bufferpos), new vectorint32(count));
+
+            int indexa;
+            int indexb;
+            int len;
+
+            while (iter.Next(out indexa, out indexb, out len))
+            {
+                Array.Copy(memb.astruct_array, (long)indexb, mema.astruct_array, (long)indexa, (long)len);
+            }
+        }
+
+    }
 }

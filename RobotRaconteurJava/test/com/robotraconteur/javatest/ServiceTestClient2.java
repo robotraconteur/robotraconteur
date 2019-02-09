@@ -17,7 +17,7 @@ public class ServiceTestClient2 {
 	{
 		connectService(url);
 		
-		/*if (r.get_testenum1_prop() != testenum1.anothervalue)
+		if (r.get_testenum1_prop() != testenum1.anothervalue)
 			throw new RuntimeException();
 		
 		r.set_testenum1_prop(testenum1.hexval1);
@@ -26,10 +26,12 @@ public class ServiceTestClient2 {
 		asyncTestWirePeekPoke();
 
 		testEnums();
-		testCStructs();*/
+		testCStructs();
 		
 		testGenerators();
 		testMemories();
+		
+		testAStructs();
 		
 		disconnectService();		
 	}
@@ -334,6 +336,38 @@ public class ServiceTestClient2 {
                 ServiceTest2_cstruct.verify_testcstruct2(((testcstruct2[])s2.cstruct_array)[i], 75721 + i);
             }        
         }
-	
+        
+        public void testAStructs()
+        {
+        	transform a1 = new transform();
+            ServiceTest2_cstruct.fill_transform(a1, 3956378);
+            r.set_testastruct1(a1.translation);
+
+            transform a1_1 = new transform();
+            a1_1.rotation = a1.rotation;
+            a1_1.translation = r.get_testastruct1();
+            transform a1_2 = new transform();
+            ServiceTest2_cstruct.fill_transform(a1_2, 74637);
+            a1_1.rotation = a1_2.rotation;
+            ServiceTest2_cstruct.verify_transform(a1_1, 74637);
+
+            transform a2 = new transform();
+            ServiceTest2_cstruct.fill_transform(a2, 827635);
+            r.set_testastruct2(a2);
+
+            transform a2_1 = r.get_testastruct2();
+            ServiceTest2_cstruct.verify_transform(a2_1, 1294);
+
+            r.set_testastruct3(ServiceTest2_cstruct.fill_transform_array(6, 19274));
+            ServiceTest2_cstruct.verify_transform_array(r.get_testastruct3(), 8, 837512);
+
+            r.set_testastruct4(ServiceTest2_cstruct.fill_transform_multidimarray(5, 2, 6385));
+            ServiceTest2_cstruct.verify_transform_multidimarray(r.get_testastruct4(), 7, 2, 66134);
+
+            r.set_testastruct5(ServiceTest2_cstruct.fill_transform_multidimarray(3, 2, 7732));
+            ServiceTest2_cstruct.verify_transform_multidimarray(r.get_testastruct5(), 3, 2, 773142);
+
+        }
+        	
 	
 }

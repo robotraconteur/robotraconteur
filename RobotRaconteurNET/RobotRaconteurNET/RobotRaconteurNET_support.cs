@@ -275,6 +275,23 @@ namespace RobotRaconteur
             return a;
         }
 
+        public static AStructureMultiDimArray VerifyArrayLength(AStructureMultiDimArray a, int n_elems, int[] len)
+        {
+            if (a.Dims.Length != len.Length)
+            {
+                throw new DataTypeException("Array dimension mismatch");
+            }
+
+            for (int i = 0; i < len.Length; i++)
+            {
+                if (a.Dims[i] != len[i])
+                {
+                    throw new DataTypeException("Array dimension mismatch");
+                }
+            }
+            return a;
+        }
+
         public static List<T[]> VerifyArrayLength<T>(List<T[]> a, int len, bool varlength) where T : struct
         {
             if (a == null) return a;
@@ -334,6 +351,28 @@ namespace RobotRaconteur
         {
             if (a == null) return a;
             foreach (CStructureMultiDimArray aa in a.Values)
+            {
+                VerifyArrayLength(aa, n_elems, len);
+            }
+
+            return a;
+        }
+
+        public static List<AStructureMultiDimArray> VerifyArrayLength(List<AStructureMultiDimArray> a, int n_elems, int[] len)
+        {
+            if (a == null) return a;
+            foreach (AStructureMultiDimArray aa in a)
+            {
+                VerifyArrayLength(aa, n_elems, len);
+            }
+
+            return a;
+        }
+
+        public static Dictionary<K, AStructureMultiDimArray> VerifyArrayLength<K>(Dictionary<K, AStructureMultiDimArray> a, int n_elems, int[] len)
+        {
+            if (a == null) return a;
+            foreach (AStructureMultiDimArray aa in a.Values)
             {
                 VerifyArrayLength(aa, n_elems, len);
             }
@@ -463,6 +502,10 @@ namespace RobotRaconteur
                 a = MessageElementDataUtil.ToMessageElementCStructureArray(val);
                 if (a != null) return a;
                 a = MessageElementDataUtil.ToMessageElementCStructureMultiDimArray(val);
+                if (a != null) return a;
+                a = MessageElementDataUtil.ToMessageElementAStructureArray(val);
+                if (a != null) return a;
+                a = MessageElementDataUtil.ToMessageElementAStructureMultiDimArray(val);
                 if (a != null) return a;
                 throw new ApplicationException("Unknown data type");
 
@@ -744,6 +787,21 @@ namespace RobotRaconteur
             return NewMessageElementDispose(name, RobotRaconteurNode.s.PackCStructureMultiDimArray<T>(val));
         }
 
+        public static MessageElement PackAStructureToArray<T>(string name, ref T val) where T : struct
+        {
+            return NewMessageElementDispose(name, RobotRaconteurNode.s.PackAStructureToArray<T>(ref val));
+        }
+
+        public static MessageElement PackAStructureArray<T>(string name, T[] val) where T : struct
+        {
+            return NewMessageElementDispose(name, RobotRaconteurNode.s.PackAStructureArray<T>(val));
+        }
+
+        public static MessageElement PackAStructureMultiDimArray<T>(string name, AStructureMultiDimArray val) where T : struct
+        {
+            return NewMessageElementDispose(name, RobotRaconteurNode.s.PackAStructureMultiDimArray<T>(val));
+        }
+
         public static T UnpackScalar<T>(MessageElement m) where T : struct, IConvertible
         {
             T[] a = CastDataAndDispose<T[]>(m);
@@ -812,6 +870,21 @@ namespace RobotRaconteur
         public static CStructureMultiDimArray UnpackCStructureMultiDimArray<T>(MessageElement m) where T : struct
         {
             return RobotRaconteurNode.s.UnpackCStructureMultiDimArrayDispose<T>(MessageElementUtil.CastDataAndDispose<MessageElementCStructureMultiDimArray>(m));
+        }
+
+        public static T UnpackAStructureFromArray<T>(MessageElement m) where T : struct
+        {
+            return RobotRaconteurNode.s.UnpackAStructureFromArrayDispose<T>(CastDataAndDispose<MessageElementAStructureArray>(m));
+        }
+
+        public static T[] UnpackAStructureArray<T>(MessageElement m) where T : struct
+        {
+            return RobotRaconteurNode.s.UnpackAStructureArrayDispose<T>(CastDataAndDispose<MessageElementAStructureArray>(m));
+        }
+
+        public static AStructureMultiDimArray UnpackAStructureMultiDimArray<T>(MessageElement m) where T : struct
+        {
+            return RobotRaconteurNode.s.UnpackAStructureMultiDimArrayDispose<T>(MessageElementUtil.CastDataAndDispose<MessageElementAStructureMultiDimArray>(m));
         }
     }
 
@@ -1643,6 +1716,10 @@ namespace RobotRaconteur
             {
                 return GetServiceFactoryForType(((CStructureMultiDimArray)s).cstruct_array.GetType().GetElementType()).PackCStructure(s);
             }
+            else if (t == typeof(AStructureMultiDimArray))
+            {
+                return GetServiceFactoryForType(((AStructureMultiDimArray)s).astruct_array.GetType().GetElementType()).PackAStructure(s);
+            }
             throw new DataTypeException("Invalid cstructure object");
         }
 
@@ -1656,6 +1733,104 @@ namespace RobotRaconteur
             using (l)
             {
                 return UnpackCStructure(l);
+            }
+        }
+
+        // AStructure Packing
+
+        public MessageElementAStructureArray PackAStructureToArray<T>(ref T s) where T : struct
+        {
+            return GetServiceFactoryForType(s.GetType()).PackAStructureToArray(ref s);
+        }
+
+        public T UnpackAStructureFromArray<T>(MessageElementAStructureArray l) where T : struct
+        {
+            return GetServiceFactoryForType(l.Type).UnpackAStructureFromArray<T>(l);
+        }
+
+        public T UnpackAStructureFromArrayDispose<T>(MessageElementAStructureArray l) where T : struct
+        {
+            using (l)
+            {
+                return UnpackAStructureFromArray<T>(l);
+            }
+        }
+
+        // AStructure Array Packing
+
+        public MessageElementAStructureArray PackAStructureArray<T>(T[] s) where T : struct
+        {
+            if (s == null) return null;
+            return GetServiceFactoryForType(s.GetType()).PackAStructureArray(s);
+        }
+
+        public T[] UnpackAStructureArray<T>(MessageElementAStructureArray l) where T : struct
+        {
+            if (l == null) return null;
+            return GetServiceFactoryForType(l.Type).UnpackAStructureArray<T>(l);
+        }
+
+        public T[] UnpackAStructureArrayDispose<T>(MessageElementAStructureArray l) where T : struct
+        {
+            using (l)
+            {
+                return UnpackAStructureArray<T>(l);
+            }
+        }
+
+        // CStructure MultiDimArray Packing
+
+        public MessageElementAStructureMultiDimArray PackAStructureMultiDimArray<T>(AStructureMultiDimArray s) where T : struct
+        {
+            if (s == null) return null;
+            return GetServiceFactoryForType(s.astruct_array.GetType()).PackAStructureMultiDimArray<T>(s);
+        }
+
+        public AStructureMultiDimArray UnpackAStructureMultiDimArray<T>(MessageElementAStructureMultiDimArray l) where T : struct
+        {
+            if (l == null) return null;
+            return GetServiceFactoryForType(l.Type).UnpackAStructureMultiDimArray<T>(l);
+        }
+
+        public AStructureMultiDimArray UnpackAStructureMultiDimArrayDispose<T>(MessageElementAStructureMultiDimArray l) where T : struct
+        {
+            using (l)
+            {
+                return UnpackAStructureMultiDimArray<T>(l);
+            }
+        }
+
+        // CStructure boxed packing
+
+        public MessageElementData PackAStructure(object s)
+        {
+            var t = s.GetType();
+
+            if (t.IsValueType)
+            {
+                return GetServiceFactoryForType(t).PackAStructure(s);
+            }
+            else if (t.IsArray)
+            {
+                return GetServiceFactoryForType(t.GetElementType()).PackAStructure(s);
+            }
+            else if (t == typeof(AStructureMultiDimArray))
+            {
+                return GetServiceFactoryForType(((AStructureMultiDimArray)s).astruct_array.GetType().GetElementType()).PackAStructure(s);
+            }
+            throw new DataTypeException("Invalid cstructure object");
+        }
+
+        public object UnpackAStructure(MessageElementData l)
+        {
+            return GetServiceFactoryForType(l.GetTypeString()).UnpackAStructure(l);
+        }
+
+        public object UnpackAStructureDispose(MessageElementData l)
+        {
+            using (l)
+            {
+                return UnpackAStructure(l);
             }
         }
 
@@ -1694,18 +1869,32 @@ namespace RobotRaconteur
                 return MessageElementUtil.NewMessageElementDispose(name, PackCStructure((object)data));
             }
 
+            if (t == typeof(AStructureMultiDimArray))
+            {
+                return MessageElementUtil.NewMessageElementDispose(name, PackAStructure((object)data));
+            }
+
             if (t.IsGenericType)
             {
                 throw new DataTypeException("Invalid Robot Raconteur container value type");
             }
 
-            if (!t.IsValueType && !is_array && t != typeof(CStructureMultiDimArray))
+            if (!t.IsValueType && !is_array && t != typeof(CStructureMultiDimArray) && t != typeof(AStructureMultiDimArray))
             {
                 return MessageElementUtil.NewMessageElementDispose(name, PackStructure(data));
             }
             else
             {
-                return MessageElementUtil.NewMessageElementDispose(name, PackCStructure(data));
+                Type t2 = t;
+                if (t.IsArray) t2 = t.GetElementType();
+                if (Attribute.GetCustomAttribute(t2, typeof(AStructureElementTypeAndCount), false) != null)
+                {
+                    return MessageElementUtil.NewMessageElementDispose(name, PackAStructure(data));
+                }
+                else
+                {
+                    return MessageElementUtil.NewMessageElementDispose(name, PackCStructure(data));
+                }
             }
         }
 
@@ -1780,6 +1969,26 @@ namespace RobotRaconteur
                     using (MessageElementData md = (MessageElementData)e.Data)
                     {
                         return (T)UnpackCStructure(md);
+                    }
+                case DataTypes.astructure_array_t:
+                    using (MessageElementAStructureArray md = (MessageElementAStructureArray)e.Data)
+                    {
+                        if (typeof(T).IsValueType)
+                        {
+                            if (md.Elements.Count != 1) throw new DataTypeException("Invalid array size for scalar structure");
+
+                            return ((T[])UnpackAStructure(md))[0];
+
+                        }
+                        else
+                        {
+                            return (T)UnpackAStructure(md);
+                        }
+                    }
+                case DataTypes.astructure_multidimarray_t:
+                    using (MessageElementData md = (MessageElementData)e.Data)
+                    {
+                        return (T)UnpackAStructure(md);
                     }
                 default:
                     throw new DataTypeException("Invalid container data type");
@@ -2034,13 +2243,22 @@ namespace RobotRaconteur
                 throw new DataTypeException("Invalid Robot Raconteur varvalue type");
             }
 
-            if (!t.IsValueType && !is_array && t != typeof(CStructureMultiDimArray))
+            if (!t.IsValueType && !is_array && t != typeof(CStructureMultiDimArray) && t != typeof(AStructureMultiDimArray))
             {
                 return PackStructure(data);
             }
             else
             {
-                return PackCStructure(data);
+                Type t2 = t;
+                if (t.IsArray) t2 = t.GetElementType();
+                if (Attribute.GetCustomAttribute(t2, typeof(AStructureElementTypeAndCount), false) != null)
+                {
+                    return PackAStructure(data);
+                }
+                else
+                {
+                    return PackCStructure(data);
+                }
             }
 
         }
@@ -2086,6 +2304,12 @@ namespace RobotRaconteur
                     using (MessageElementData md = (MessageElementData)me.Data)
                     {
                         return UnpackCStructure(md);
+                    }
+                case DataTypes.astructure_array_t:
+                case DataTypes.astructure_multidimarray_t:
+                    using (MessageElementData md = (MessageElementData)me.Data)
+                    {
+                        return UnpackAStructure(md);
                     }
                 case DataTypes.vector_t:
                     using (MessageElementData md = (MessageElementData)me.Data)

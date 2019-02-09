@@ -71,6 +71,10 @@ public MessageElement(String name, Object data)
       if (a != null) return a;
 	  a = MessageElementDataUtil.toMessageElementCStructureMultiDimArray(val);
       if (a != null) return a;
+	  a = MessageElementDataUtil.toMessageElementAStructureArray(val);
+      if (a != null) return a;
+	  a = MessageElementDataUtil.toMessageElementAStructureMultiDimArray(val);
+      if (a != null) return a;
       throw new RuntimeException(new DataTypeException( "Unknown data type"));
 	}
 	finally
