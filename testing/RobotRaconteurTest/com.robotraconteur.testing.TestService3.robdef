@@ -102,7 +102,14 @@ struct teststruct3
 	field transform[4] t2
 	field transform[2,4] t3
 	field varvalue t4
-	field varvalue t5	
+	field varvalue t5
+	field transform{list} t6
+	field transform[4]{list} t7
+	field transform[2,4]{list} t8
+	field varvalue t9
+	field varvalue t10
+	field varvalue t11
+	
 end struct
 
 object testroot3

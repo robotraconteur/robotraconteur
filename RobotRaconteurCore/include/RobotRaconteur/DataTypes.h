@@ -1140,7 +1140,7 @@ namespace RobotRaconteur
 
 		if (value->Length() == 0) throw OutOfRangeException("Index out of range");
 
-		return value[0];
+		return (*value)[0];
 	}
 
 	class ROBOTRACONTEUR_CORE_API RobotRaconteurNode;
