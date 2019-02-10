@@ -393,7 +393,7 @@ namespace RobotRaconteur
 		if (!m) return RR_SHARED_PTR<RRCStructureMultiDimArray<T> >();
 
 		RR_SHARED_PTR<RRCStructureMultiDimArray<T> > o = RR_MAKE_SHARED<RRCStructureMultiDimArray<T> >();
-		o->Dims = (MessageElement::FindElement(m->Elements, "dims")->CastData<RRArray<int32_t> >());
+		o->Dims = (MessageElement::FindElement(m->Elements, "dims")->CastData<RRArray<uint32_t> >());
 		o->CStructArray = CStructureStub_UnpackCStructureArray<T>(MessageElement::FindElement(m->Elements, "array")->CastData<MessageElementCStructureArray>());
 		if (!o->CStructArray) throw NullValueException("Multidimarray array must not be null");
 		return o;
@@ -463,7 +463,7 @@ namespace RobotRaconteur
 	}
 
 	template<size_t Ndims, typename T>
-	static RR_SHARED_PTR<RRCStructureMultiDimArray<T> > VerifyRRMultiDimArrayLength(RR_SHARED_PTR<RRCStructureMultiDimArray<T> > a, size_t n_elems, boost::array<int32_t, Ndims> dims)
+	static RR_SHARED_PTR<RRCStructureMultiDimArray<T> > VerifyRRMultiDimArrayLength(RR_SHARED_PTR<RRCStructureMultiDimArray<T> > a, size_t n_elems, boost::array<uint32_t, Ndims> dims)
 	{
 		if (!a) throw NullValueException("Arrays must not be null");
 
@@ -561,7 +561,7 @@ namespace RobotRaconteur
 		if (!m) return RR_SHARED_PTR<RRAStructureMultiDimArray<T> >();
 
 		typename RR_SHARED_PTR<RRAStructureMultiDimArray<T> > o = RR_MAKE_SHARED<RRAStructureMultiDimArray<T> >();
-		o->Dims = (MessageElement::FindElement(m->Elements, "dims")->CastData<RRArray<int32_t> >());
+		o->Dims = (MessageElement::FindElement(m->Elements, "dims")->CastData<RRArray<uint32_t> >());
 		o->AStructArray = AStructureStub_UnpackAStructureArray<T>(MessageElement::FindElement(m->Elements, "array")->CastData<MessageElementAStructureArray>());
 		if (!o->AStructArray) throw NullValueException("Multidimarray array must not be null");
 		return o;
@@ -630,7 +630,7 @@ namespace RobotRaconteur
 	}
 
 	template<size_t Ndims, typename T>
-	static RR_SHARED_PTR<RRAStructureMultiDimArray<T> > VerifyRRMultiDimArrayLength(RR_SHARED_PTR<RRAStructureMultiDimArray<T> > a, size_t n_elems, boost::array<int32_t, Ndims> dims)
+	static RR_SHARED_PTR<RRAStructureMultiDimArray<T> > VerifyRRMultiDimArrayLength(RR_SHARED_PTR<RRAStructureMultiDimArray<T> > a, size_t n_elems, boost::array<uint32_t, Ndims> dims)
 	{
 		if (!a) throw NullValueException("Arrays must not be null");
 

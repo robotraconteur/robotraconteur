@@ -110,11 +110,11 @@ namespace RobotRaconteurTest
 		for (int32_t i = 0; i < 125; i++)
 			(*imag)[i] = (((double)rand()) / ((double)RAND_MAX) - 0.5)*1e5;
 
-		int32_t dims1[] = { 5, 5, 5 };
-		int32_t dims2[] = { 25, 5 };
+		uint32_t dims1[] = { 5, 5, 5 };
+		uint32_t dims2[] = { 25, 5 };
 
 		RR_SHARED_PTR<RRMultiDimArray<double> > a1 = RR_MAKE_SHARED<RRMultiDimArray<double> >(AttachRRArrayCopy(dims1, 3), real);
-		RR_SHARED_PTR<RRMultiDimArray<double> > a2 = RR_MAKE_SHARED<RRMultiDimArray<double> >(AttachRRArrayCopy(dims2, 2), real, imag);
+		RR_SHARED_PTR<RRMultiDimArray<double> > a2 = RR_MAKE_SHARED<RRMultiDimArray<double> >(AttachRRArrayCopy(dims2, 2), real);
 		e5->AddElement("ar1", RobotRaconteurNode::s()->PackMultiDimArray(a1));
 		e5->AddElement("ar2", RobotRaconteurNode::s()->PackMultiDimArray(a2));
 

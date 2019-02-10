@@ -520,7 +520,7 @@ RR_SHARED_PTR<RRValue> RobotRaconteurNode::UnpackVarType(RR_SHARED_PTR<MessageEl
 
 	if (type==DataTypes_multidimarray_t)
 	{
-		DataTypes type1=MessageElement::FindElement(mvardata1->CastData<MessageElementMultiDimArray>()->Elements,"real")->ElementType;
+		DataTypes type1=MessageElement::FindElement(mvardata1->CastData<MessageElementMultiDimArray>()->Elements,"array")->ElementType;
 
 		switch (type1)
 		{	

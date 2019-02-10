@@ -26,7 +26,7 @@ namespace RobotRaconteur
 	namespace detail
 	{
 
-		ROBOTRACONTEUR_CORE_API void CalculateMatrixBlocks(uint32_t element_size, std::vector<uint64_t> count, uint64_t max_elems, int32_t &split_dim, uint64_t &split_dim_block, uint64_t &split_elem_count, int32_t &splits_count, int32_t &split_remainder, std::vector<uint64_t>& block_count, std::vector<uint64_t>& block_count_edge)
+		ROBOTRACONTEUR_CORE_API void CalculateMatrixBlocks(uint32_t element_size, std::vector<uint64_t> count, uint64_t max_elems, uint32_t &split_dim, uint64_t &split_dim_block, uint64_t &split_elem_count, uint32_t &splits_count, uint32_t &split_remainder, std::vector<uint64_t>& block_count, std::vector<uint64_t>& block_count_edge)
 		{
 
 			split_elem_count = 1;
@@ -43,12 +43,12 @@ namespace RobotRaconteur
 					uint64_t temp_elem_count1 = split_elem_count * count[i];
 					if (temp_elem_count1 > max_elems)
 					{
-						split_dim = (int32_t)i;
+						split_dim = (uint32_t)i;
 						split_dim_block = max_elems / split_elem_count;
 						split_dim_found = true;
 						block_count[i] = split_dim_block;
-						splits_count = static_cast<int32_t>(count[i] / split_dim_block);
-						split_remainder = static_cast<int32_t>(count[i] % split_dim_block);
+						splits_count = static_cast<uint32_t>(count[i] / split_dim_block);
+						split_remainder = static_cast<uint32_t>(count[i] % split_dim_block);
 					}
 					else
 					{
@@ -202,9 +202,9 @@ namespace RobotRaconteur
 
 			RR_SHARED_PTR<RRArray<uint64_t> > memorypos = m->FindElement("memorypos")->CastData<RRArray<uint64_t> >();
 			RR_SHARED_PTR<RRArray<uint64_t> > count = m->FindElement("count")->CastData<RRArray<uint64_t> >();
-			int32_t elemcount = 1;
+			uint32_t elemcount = 1;
 			for (size_t i = 0; i < count->size(); i++)
-				elemcount *= static_cast<int32_t>((*count)[i]);
+				elemcount *= static_cast<uint32_t>((*count)[i]);
 
 
 			RR_SHARED_PTR<MessageElementData> data = DoRead(RRArrayToVector<uint64_t>(memorypos), std::vector<uint64_t>(count->size()), RRArrayToVector<uint64_t>(count), elemcount, mem);
@@ -225,9 +225,9 @@ namespace RobotRaconteur
 
 			RR_SHARED_PTR<RRArray<uint64_t> > memorypos = m->FindElement("memorypos")->CastData<RRArray<uint64_t> >();
 			RR_SHARED_PTR<RRArray<uint64_t> > count = m->FindElement("count")->CastData<RRArray<uint64_t> >();
-			int32_t elemcount = 1;
+			uint32_t elemcount = 1;
 			for (size_t i = 0; i < count->size(); i++)
-				elemcount *= static_cast<int32_t>((*count)[i]);
+				elemcount *= static_cast<uint32_t>((*count)[i]);
 
 			RR_SHARED_PTR<MessageElementData> data = m->FindElement("data")->CastData<MessageElementData>();
 
@@ -256,15 +256,7 @@ namespace RobotRaconteur
 				ret->AddElement("return", ScalarToRRArray(mem->DimCount()));
 				return ret;
 			}
-
-			else if (param == "Complex")
-			{
-				RR_SHARED_PTR<MessageEntry> ret = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_MemoryGetParamRet, GetMemberName());
-				int32_t complex = static_cast<int32_t>(mem->Complex() ? 1 : 0);
-				ret->AddElement("return", ScalarToRRArray((int32_t)(complex ? 1 : 0)));
-				return ret;
-			}
-
+						
 			else if (param == "MaxTransferSize")
 			{
 				RR_SHARED_PTR<MessageEntry> ret = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_MemoryGetParamRet, GetMemberName());
@@ -508,16 +500,7 @@ namespace RobotRaconteur
 		RR_SHARED_PTR<MessageEntry> ret = GetStub()->ProcessRequest(m);
 		return RRArrayToScalar(ret->FindElement("return")->CastData<RRArray<uint64_t> >());
 	}
-
-	bool MultiDimArrayMemoryClientBase::Complex()
-	{
-
-		RR_SHARED_PTR<MessageEntry> m = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_MemoryGetParam, GetMemberName());
-		m->AddElement("parameter", stringToRRArray("Complex"));
-		RR_SHARED_PTR<MessageEntry> ret = GetStub()->ProcessRequest(m);
-		return RRArrayToScalar(ret->FindElement("return")->CastData<RRArray<int32_t> >()) != 0;
-	}
-
+		
 	uint32_t MultiDimArrayMemoryClientBase::GetMaxTransferSize()
 	{
 		{
@@ -568,11 +551,11 @@ namespace RobotRaconteur
 		{
 			//We need to read the array in chunks.  This is a little complicated...
 
-			int32_t split_dim;
+			uint32_t split_dim;
 			uint64_t split_dim_block;
 			uint64_t split_elem_count;
-			int32_t splits_count;
-			int32_t split_remainder;
+			uint32_t splits_count;
+			uint32_t split_remainder;
 			std::vector<uint64_t> block_count;
 			std::vector<uint64_t> block_count_edge;
 
@@ -583,7 +566,7 @@ namespace RobotRaconteur
 
 			while (!done)
 			{
-				for (int32_t i = 0; i < splits_count; i++)
+				for (uint32_t i = 0; i < splits_count; i++)
 				{
 					current_pos[split_dim] = split_dim_block * static_cast<uint64_t>(i);
 
@@ -614,7 +597,7 @@ namespace RobotRaconteur
 					ReadBase(current_mem_pos, buffer, current_buf_pos, block_count_edge);
 				}
 
-				if (split_dim == (int32_t)(count.size() - 1))
+				if (split_dim == (uint32_t)(count.size() - 1))
 				{
 					done = true;
 				}
@@ -623,7 +606,7 @@ namespace RobotRaconteur
 					current_pos[split_dim + 1]++;
 					if (current_pos[split_dim + 1] >= count[split_dim + 1])
 					{
-						if (split_dim + 1 == (int32_t)(count.size() - 1))
+						if (split_dim + 1 == (uint32_t)(count.size() - 1))
 						{
 							done = true;
 						}
@@ -675,11 +658,11 @@ namespace RobotRaconteur
 		}
 		else
 		{
-			int32_t split_dim;
+			uint32_t split_dim;
 			uint64_t split_dim_block;
 			uint64_t split_elem_count;
-			int32_t splits_count;
-			int32_t split_remainder;
+			uint32_t splits_count;
+			uint32_t split_remainder;
 			std::vector<uint64_t> block_count;
 			std::vector<uint64_t> block_count_edge;
 
@@ -690,7 +673,7 @@ namespace RobotRaconteur
 
 			while (!done)
 			{
-				for (int32_t i = 0; i < splits_count; i++)
+				for (uint32_t i = 0; i < splits_count; i++)
 				{
 					current_pos[split_dim] = split_dim_block * static_cast<uint64_t>(i);
 
@@ -721,7 +704,7 @@ namespace RobotRaconteur
 					WriteBase(current_mem_pos, buffer, current_buf_pos, block_count_edge);
 				}
 
-				if (split_dim == (int32_t)(count.size() - 1))
+				if (split_dim == (uint32_t)(count.size() - 1))
 				{
 					done = true;
 				}
@@ -730,7 +713,7 @@ namespace RobotRaconteur
 					current_pos[split_dim + 1]++;
 					if (current_pos[split_dim + 1] >= count[split_dim + 1])
 					{
-						if (split_dim + 1 == (int32_t)(count.size() - 1))
+						if (split_dim + 1 == (uint32_t)(count.size() - 1))
 						{
 							done = true;
 						}

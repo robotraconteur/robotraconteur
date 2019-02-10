@@ -141,15 +141,9 @@ namespace RobotRaconteur
 		{
 			if (!arr) return RR_SHARED_PTR<MessageElementMultiDimArray>();
 
-			std::vector<RR_SHARED_PTR<MessageElement> > ar;
-			ar.push_back(RR_MAKE_SHARED<MessageElement>("dimcount",ScalarToRRArray(arr->DimCount)));
+			std::vector<RR_SHARED_PTR<MessageElement> > ar;			
 			ar.push_back(RR_MAKE_SHARED<MessageElement>("dims",arr->Dims));
-			ar.push_back(RR_MAKE_SHARED<MessageElement>("real",arr->Real));
-			if (arr->Complex)
-			{
-				ar.push_back(RR_MAKE_SHARED<MessageElement>("imag",arr->Imag));
-			}
-
+			ar.push_back(RR_MAKE_SHARED<MessageElement>("array",arr->Array));			
 			return RR_MAKE_SHARED<MessageElementMultiDimArray>(ar);
 		}
 
@@ -159,17 +153,8 @@ namespace RobotRaconteur
 			if (!ar) return RR_SHARED_PTR<RRMultiDimArray<T> >();
 
 			RR_SHARED_PTR<RRMultiDimArray<T> > arr=RR_MAKE_SHARED<RRMultiDimArray<T> >();
-			arr->Complex=false;
-			arr->DimCount=RRArrayToScalar(MessageElement::FindElement(ar->Elements,"dimcount")->CastData<RRArray<int32_t> >());
-			arr->Dims=MessageElement::FindElement(ar->Elements,"dims")->CastData<RRArray<int32_t> >();
-			arr->Real=MessageElement::FindElement(ar->Elements,"real")->CastData<RRArray<T> >();
-			if (MessageElement::ContainsElement(ar->Elements,"imag"))
-			{
-				arr->Complex=true;
-				arr->Imag=MessageElement::FindElement(ar->Elements,"imag")->CastData<RRArray<T> >();
-			}
-
-
+			arr->Dims=MessageElement::FindElement(ar->Elements,"dims")->CastData<RRArray<uint32_t> >();
+			arr->Array=MessageElement::FindElement(ar->Elements,"array")->CastData<RRArray<T> >();			
 			return arr;
 		}
 

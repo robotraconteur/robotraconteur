@@ -385,29 +385,27 @@ namespace detail
 	{
 	protected:
 
-		std::vector<int32_t> mema_dims;
-		std::vector<int32_t> memb_dims;
-		std::vector<int32_t> mema_pos;
-		std::vector<int32_t> memb_pos;
-		std::vector<int32_t> count;
+		std::vector<uint32_t> mema_dims;
+		std::vector<uint32_t> memb_dims;
+		std::vector<uint32_t> mema_pos;
+		std::vector<uint32_t> memb_pos;
+		std::vector<uint32_t> count;
 
-		std::vector<int32_t> stridea;
-		std::vector<int32_t> strideb;
+		std::vector<uint32_t> stridea;
+		std::vector<uint32_t> strideb;
 
-		std::vector<int32_t> current_count;
+		std::vector<uint32_t> current_count;
 
 		bool done;
 
 	public:
 
-		MultiDimArray_CalculateCopyIndicesIterImpl(int32_t mema_dimcount, const std::vector<int32_t>& mema_dims, const std::vector<int32_t>& mema_pos, int32_t memb_dimcount, const std::vector<int32_t>& memb_dims, const std::vector<int32_t>& memb_pos, const std::vector<int32_t>& count)
+		MultiDimArray_CalculateCopyIndicesIterImpl(const std::vector<uint32_t>& mema_dims, const std::vector<uint32_t>& mema_pos, const std::vector<uint32_t>& memb_dims, const std::vector<uint32_t>& memb_pos, const std::vector<uint32_t>& count)
 		{
 			//Error checking
 
 			if (count.size() == 0) throw InvalidArgumentException("MultiDimArray count invalid");
 
-			if (mema_dimcount != mema_dims.size()) throw InvalidArgumentException("MultiDimArray A invalid");
-			if (memb_dimcount != memb_dims.size()) throw InvalidArgumentException("MultiDimArray B invalid");
 			if (count.size() > mema_dims.size() || count.size() > memb_dims.size()) throw InvalidArgumentException("MultiDimArray copy count invalid");
 			if (count.size() > memb_dims.size() || count.size() > memb_dims.size()) throw InvalidArgumentException("MultiDimArray copy count invalid");
 
@@ -440,14 +438,14 @@ namespace detail
 
 			stridea.resize(count.size());
 			stridea[0] = 1;
-			for (int32_t i = 1; i < (int32_t)count.size(); i++)
+			for (uint32_t i = 1; i < (uint32_t)count.size(); i++)
 			{
 				stridea[i] = stridea[i - 1] * mema_dims[i - 1];				
 			}
 
 			strideb.resize(count.size());
 			strideb[0] = 1;
-			for (int32_t i = 1; i < (int32_t)count.size(); i++)
+			for (uint32_t i = 1; i < (uint32_t)count.size(); i++)
 			{
 				strideb[i] = strideb[i - 1] * memb_dims[i - 1];
 			}
@@ -462,7 +460,7 @@ namespace detail
 			this->done = false;
 		}
 
-		virtual bool Next(int32_t& indexa, int32_t& indexb, int32_t& len)
+		virtual bool Next(uint32_t& indexa, uint32_t& indexb, uint32_t& len)
 		{
 
 			if (done)
@@ -474,10 +472,10 @@ namespace detail
 			int b = 0;
 
 			indexa = 0;
-			for (int32_t j = 0; j < (int32_t)count.size(); j++)
+			for (uint32_t j = 0; j < (uint32_t)count.size(); j++)
 				indexa += (current_count[j] + mema_pos[j]) * stridea[j];
 			indexb = 0;
-			for (int32_t j = 0; j < (int32_t)count.size(); j++)
+			for (uint32_t j = 0; j < (uint32_t)count.size(); j++)
 				indexb += (current_count[j] + memb_pos[j]) * strideb[j];
 						
 			len = count[0];
@@ -489,12 +487,12 @@ namespace detail
 			}
 
 			current_count[1]++;
-			for (int32_t j = 1; j < (int32_t)count.size(); j++)
+			for (uint32_t j = 1; j < (uint32_t)count.size(); j++)
 			{
 				if (current_count[j] >(count[j] - 1))
 				{
 					current_count[j] = current_count[j] - count[j];
-					if (j < (int32_t)count.size() - 1)
+					if (j < (uint32_t)count.size() - 1)
 					{
 						current_count[j + 1]++;
 					}
@@ -515,9 +513,9 @@ namespace detail
 		}
 	};
 
-	RR_SHARED_PTR<MultiDimArray_CalculateCopyIndicesIter> MultiDimArray_CalculateCopyIndicesBeginIter(int32_t mema_dimcount, const std::vector<int32_t>& mema_dims, const std::vector<int32_t>& mema_pos, int32_t memb_dimcount, const std::vector<int32_t>& memb_dims, const std::vector<int32_t>& memb_pos, const std::vector<int32_t>& count)
+	RR_SHARED_PTR<MultiDimArray_CalculateCopyIndicesIter> MultiDimArray_CalculateCopyIndicesBeginIter(const std::vector<uint32_t>& mema_dims, const std::vector<uint32_t>& mema_pos, const std::vector<uint32_t>& memb_dims, const std::vector<uint32_t>& memb_pos, const std::vector<uint32_t>& count)
 	{
-		RR_SHARED_PTR<MultiDimArray_CalculateCopyIndicesIterImpl> o = RR_MAKE_SHARED<MultiDimArray_CalculateCopyIndicesIterImpl>(mema_dimcount, mema_dims, mema_pos, memb_dimcount, memb_dims, memb_pos, count);
+		RR_SHARED_PTR<MultiDimArray_CalculateCopyIndicesIterImpl> o = RR_MAKE_SHARED<MultiDimArray_CalculateCopyIndicesIterImpl>(mema_dims, mema_pos, memb_dims, memb_pos, count);
 		return o;
 	}
 }

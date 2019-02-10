@@ -587,40 +587,29 @@ namespace RobotRaconteur
 		ROBOTRACONTEUR_CORE_API class MultiDimArray_CalculateCopyIndicesIter
 		{
 		public:
-			virtual bool Next(int32_t& indexa, int32_t& indexb, int32_t& len) = 0;
+			virtual bool Next(uint32_t& indexa, uint32_t& indexb, uint32_t& len) = 0;
 
 			virtual ~MultiDimArray_CalculateCopyIndicesIter();
 		};
 
-		ROBOTRACONTEUR_CORE_API RR_SHARED_PTR<MultiDimArray_CalculateCopyIndicesIter> MultiDimArray_CalculateCopyIndicesBeginIter(int32_t mema_dimcount, const std::vector<int32_t>& mema_dims, const std::vector<int32_t>& mema_pos, int32_t memb_dimcount, const std::vector<int32_t>& memb_dims, const std::vector<int32_t>& memb_pos, const std::vector<int32_t>& count);
+		ROBOTRACONTEUR_CORE_API RR_SHARED_PTR<MultiDimArray_CalculateCopyIndicesIter> MultiDimArray_CalculateCopyIndicesBeginIter(const std::vector<uint32_t>& mema_dims, const std::vector<uint32_t>& mema_pos, const std::vector<uint32_t>& memb_dims, const std::vector<uint32_t>& memb_pos, const std::vector<uint32_t>& count);
 	}
 
 	template<typename T>
 	class RRMultiDimArray : public RRMultiDimBaseArray
 	{
 	public:
-		int32_t DimCount;
-		RR_SHARED_PTR<RRArray<int32_t> > Dims;
-
-		bool Complex;
-		RR_SHARED_PTR<RRArray<T> > Real;
-		RR_SHARED_PTR<RRArray<T> > Imag;
-
-
+		
+		RR_SHARED_PTR<RRArray<uint32_t> > Dims;
+				
+		RR_SHARED_PTR<RRArray<T> > Array;
+		
 		RRMultiDimArray() {};
 
-		RRMultiDimArray(RR_SHARED_PTR<RRArray<int32_t> > Dims, RR_SHARED_PTR<RRArray<T> > Real, RR_SHARED_PTR<RRArray<T> > Imag = RR_SHARED_PTR<RRArray<T> >())
-		{
-			this->Complex = false;
-			this->DimCount = (int32_t)Dims->Length();
+		RRMultiDimArray(RR_SHARED_PTR<RRArray<uint32_t> > Dims, RR_SHARED_PTR<RRArray<T> > Array)
+		{			
 			this->Dims = Dims;
-			this->Real = Real;
-			if (Imag)
-			{
-				this->Complex = true;
-				this->Imag = Imag;
-			}
-
+			this->Array = Array;
 		}
 
 		virtual ~RRMultiDimArray() {}
@@ -633,54 +622,39 @@ namespace RobotRaconteur
 			return "RobotRaconteur.RRMultiDimArray<" + stype + ">";
 		}
 
-		virtual void RetrieveSubArray(std::vector<int32_t> memorypos, RR_SHARED_PTR<RRMultiDimArray<T> > buffer, std::vector<int32_t> bufferpos, std::vector<int32_t> count)
+		virtual void RetrieveSubArray(std::vector<uint32_t> memorypos, RR_SHARED_PTR<RRMultiDimArray<T> > buffer, std::vector<uint32_t> bufferpos, std::vector<uint32_t> count)
 		{
+						
+			std::vector<uint32_t> mema_dims = RRArrayToVector<uint32_t>(Dims);
+			std::vector<uint32_t> memb_dims = RRArrayToVector<uint32_t>(buffer->Dims);
+			RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter = detail::MultiDimArray_CalculateCopyIndicesBeginIter(mema_dims, memorypos, memb_dims, bufferpos, count);
 
-			//TODO: put in bounds checks
-			if (Complex != buffer->Complex) throw InvalidArgumentException("Complex mismatch");
-
-
-
-			std::vector<int32_t> mema_dims = RRArrayToVector<int32_t>(Dims);
-			std::vector<int32_t> memb_dims = RRArrayToVector<int32_t>(buffer->Dims);
-			RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter = detail::MultiDimArray_CalculateCopyIndicesBeginIter(DimCount, mema_dims, memorypos, buffer->DimCount, memb_dims, bufferpos, count);
-
-			int32_t len;
-			int32_t indexa;
-			int32_t indexb;
+			uint32_t len;
+			uint32_t indexa;
+			uint32_t indexb;
 
 			while (iter->Next(indexa, indexb, len))
-			{
-				memcpy((buffer->Real->ptr() + indexb), (Real->ptr()) + indexa, len * sizeof(T));
-				if (Complex)
-				{
-					memcpy((buffer->Imag->ptr() + indexb), (Imag->ptr()) + indexa, len * sizeof(T));
-				}
+			{				
+				memcpy((buffer->Array->ptr() + indexb), (Array->ptr()) + indexa, len * sizeof(T));				
 			}
 
 		}
 
-		virtual void AssignSubArray(std::vector<int32_t> memorypos, RR_SHARED_PTR<RRMultiDimArray<T> > buffer, std::vector<int32_t> bufferpos, std::vector<int32_t> count)
+		virtual void AssignSubArray(std::vector<uint32_t> memorypos, RR_SHARED_PTR<RRMultiDimArray<T> > buffer, std::vector<uint32_t> bufferpos, std::vector<uint32_t> count)
 		{
-			//TODO: put in bounds checks
-			if (Complex != buffer->Complex) throw InvalidArgumentException("Complex mismatch");
+						
+			std::vector<uint32_t> mema_dims = RRArrayToVector<uint32_t>(Dims);
+			std::vector<uint32_t> memb_dims = RRArrayToVector<uint32_t>(buffer->Dims);
+			RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter = detail::MultiDimArray_CalculateCopyIndicesBeginIter(mema_dims, memorypos, memb_dims, bufferpos, count);
 
-			std::vector<int32_t> mema_dims = RRArrayToVector<int32_t>(Dims);
-			std::vector<int32_t> memb_dims = RRArrayToVector<int32_t>(buffer->Dims);
-			RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter = detail::MultiDimArray_CalculateCopyIndicesBeginIter(DimCount, mema_dims, memorypos, buffer->DimCount, memb_dims, bufferpos, count);
-
-			int32_t len;
-			int32_t indexa;
-			int32_t indexb;
+			uint32_t len;
+			uint32_t indexa;
+			uint32_t indexb;
 
 			while (iter->Next(indexa, indexb, len))
 			{
-				memcpy((Real->ptr() + indexa), (buffer->Real->ptr() + indexb), len * sizeof(T));
-
-				if (Complex)
-				{
-					memcpy(((Imag->ptr()) + indexa), ((buffer->Imag->ptr()) + indexb), len * sizeof(T));
-				}
+				memcpy((Array->ptr() + indexa), (buffer->Array->ptr() + indexb), len * sizeof(T));
+								
 			}
 
 		}
@@ -688,7 +662,7 @@ namespace RobotRaconteur
 	};
 
 	template<size_t Ndims, typename T>
-	static RR_SHARED_PTR<RRMultiDimArray<T> > VerifyRRMultiDimArrayLength(RR_SHARED_PTR<RRMultiDimArray<T> > a, size_t n_elems, boost::array<int32_t,Ndims> dims)
+	static RR_SHARED_PTR<RRMultiDimArray<T> > VerifyRRMultiDimArrayLength(RR_SHARED_PTR<RRMultiDimArray<T> > a, size_t n_elems, boost::array<uint32_t,Ndims> dims)
 	{
 		if (!a) throw NullValueException("Arrays must not be null");
 
@@ -697,16 +671,11 @@ namespace RobotRaconteur
 			throw DataTypeException("Array dimension mismatch");
 		}
 
-		if (a->Real->size() != n_elems)
+		if (a->Array->size() != n_elems)
 		{
 			throw DataTypeException("Array dimension mismatch");
 		}
-
-		if (a->Imag)
-		{
-			throw DataTypeException("Fixed size arrays must not be complex");
-		}
-
+				
 		for (size_t i = 0; i < Ndims; i++)
 		{
 			if ((*a->Dims)[i] != dims[i])
@@ -719,7 +688,7 @@ namespace RobotRaconteur
 	}
 
 	template<size_t Ndims, typename T>
-	static RR_SHARED_PTR<RRList<T> > VerifyRRMultiDimArrayLength(RR_SHARED_PTR<RRList<T> > a, size_t n_elems, boost::array<int32_t, Ndims> dims)
+	static RR_SHARED_PTR<RRList<T> > VerifyRRMultiDimArrayLength(RR_SHARED_PTR<RRList<T> > a, size_t n_elems, boost::array<uint32_t, Ndims> dims)
 	{
 		if (!a) throw NullValueException("Arrays must not be null");
 		else
@@ -733,7 +702,7 @@ namespace RobotRaconteur
 	}
 
 	template<size_t Ndims, typename K, typename T>
-	static RR_SHARED_PTR<RRMap<K,T> > VerifyRRMultiDimArrayLength(RR_SHARED_PTR<RRMap<K,T> > a, size_t n_elems, boost::array<int32_t, Ndims> dims)
+	static RR_SHARED_PTR<RRMap<K,T> > VerifyRRMultiDimArrayLength(RR_SHARED_PTR<RRMap<K,T> > a, size_t n_elems, boost::array<uint32_t, Ndims> dims)
 	{
 		if (!a) throw NullValueException("Arrays must not be null");
 		else
@@ -747,10 +716,10 @@ namespace RobotRaconteur
 	}
 
 	template<typename T>
-	static RR_SHARED_PTR<RRMultiDimArray<T> > AllocateEmptyRRMultiDimArray(std::vector<int32_t> length)
+	static RR_SHARED_PTR<RRMultiDimArray<T> > AllocateEmptyRRMultiDimArray(std::vector<uint32_t> length)
 	{
-		int32_t n_elems = boost::accumulate(length, 1, std::multiplies<int32_t>());
-		return RR_MAKE_SHARED<RRMultiDimArray<T> >(VectorToRRArray<int32_t>(length), AllocateEmptyRRArray<T>(n_elems));
+		uint32_t n_elems = boost::accumulate(length, 1, std::multiplies<uint32_t>());
+		return RR_MAKE_SHARED<RRMultiDimArray<T> >(VectorToRRArray<uint32_t>(length), AllocateEmptyRRArray<T>(n_elems));
 	}
 
 	class ROBOTRACONTEUR_CORE_API RRCStructure
@@ -811,7 +780,7 @@ namespace RobotRaconteur
 	class RRCStructureBaseMultiDimArray : public RRValue
 	{
 	public:
-		RR_SHARED_PTR<RRArray<int32_t> > Dims;
+		RR_SHARED_PTR<RRArray<uint32_t> > Dims;
 		virtual std::string RRElementTypeString() = 0;
 	};
 
@@ -824,7 +793,7 @@ namespace RobotRaconteur
 
 		RRCStructureMultiDimArray() {}
 
-		RRCStructureMultiDimArray(RR_SHARED_PTR<RRArray<int32_t> > dims, RR_SHARED_PTR<RRCStructureArray<T> > a)
+		RRCStructureMultiDimArray(RR_SHARED_PTR<RRArray<uint32_t> > dims, RR_SHARED_PTR<RRCStructureArray<T> > a)
 		{
 			this->Dims = dims;
 			this->CStructArray = a;
@@ -842,16 +811,16 @@ namespace RobotRaconteur
 			return RRPrimUtil<T>::GetElementTypeString();
 		}
 
-		virtual void RetrieveSubArray(std::vector<int32_t> memorypos, RR_SHARED_PTR<RRCStructureMultiDimArray<T> > buffer, std::vector<int32_t> bufferpos, std::vector<int32_t> count)
+		virtual void RetrieveSubArray(std::vector<uint32_t> memorypos, RR_SHARED_PTR<RRCStructureMultiDimArray<T> > buffer, std::vector<uint32_t> bufferpos, std::vector<uint32_t> count)
 		{
 
-			std::vector<int32_t> mema_dims = RRArrayToVector<int32_t>(Dims);
-			std::vector<int32_t> memb_dims = RRArrayToVector<int32_t>(buffer->Dims);
-			RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter = detail::MultiDimArray_CalculateCopyIndicesBeginIter(Dims->size(), mema_dims, memorypos, buffer->Dims->size(), memb_dims, bufferpos, count);
+			std::vector<uint32_t> mema_dims = RRArrayToVector<uint32_t>(Dims);
+			std::vector<uint32_t> memb_dims = RRArrayToVector<uint32_t>(buffer->Dims);
+			RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter = detail::MultiDimArray_CalculateCopyIndicesBeginIter(mema_dims, memorypos, memb_dims, bufferpos, count);
 
-			int32_t len;
-			int32_t indexa;
-			int32_t indexb;
+			uint32_t len;
+			uint32_t indexa;
+			uint32_t indexb;
 
 			while (iter->Next(indexa, indexb, len))
 			{
@@ -863,16 +832,16 @@ namespace RobotRaconteur
 
 		}
 
-		virtual void AssignSubArray(std::vector<int32_t> memorypos, RR_SHARED_PTR<RRCStructureMultiDimArray<T> > buffer, std::vector<int32_t> bufferpos, std::vector<int32_t> count)
+		virtual void AssignSubArray(std::vector<uint32_t> memorypos, RR_SHARED_PTR<RRCStructureMultiDimArray<T> > buffer, std::vector<uint32_t> bufferpos, std::vector<uint32_t> count)
 		{
 			
-			std::vector<int32_t> mema_dims = RRArrayToVector<int32_t>(Dims);
-			std::vector<int32_t> memb_dims = RRArrayToVector<int32_t>(buffer->Dims);
-			RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter = detail::MultiDimArray_CalculateCopyIndicesBeginIter(Dims->size(), mema_dims, memorypos, buffer->Dims->size(), memb_dims, bufferpos, count);
+			std::vector<uint32_t> mema_dims = RRArrayToVector<uint32_t>(Dims);
+			std::vector<uint32_t> memb_dims = RRArrayToVector<uint32_t>(buffer->Dims);
+			RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter = detail::MultiDimArray_CalculateCopyIndicesBeginIter(mema_dims, memorypos, memb_dims, bufferpos, count);
 
-			int32_t len;
-			int32_t indexa;
-			int32_t indexb;
+			uint32_t len;
+			uint32_t indexa;
+			uint32_t indexb;
 
 			while (iter->Next(indexa, indexb, len))
 			{
@@ -913,10 +882,10 @@ namespace RobotRaconteur
 	}
 
 	template<typename T>
-	static RR_SHARED_PTR<RRCStructureMultiDimArray<T> > AllocateEmptyRRCStructureMultiDimArray(std::vector<int32_t> length)
+	static RR_SHARED_PTR<RRCStructureMultiDimArray<T> > AllocateEmptyRRCStructureMultiDimArray(std::vector<uint32_t> length)
 	{
-		int32_t n_elems = boost::accumulate(length, 1, std::multiplies<int32_t>());
-		return RR_MAKE_SHARED<RRCStructureMultiDimArray<T> >(VectorToRRArray<int32_t>(length), AllocateEmptyRRCStructureArray<T>(n_elems));
+		uint32_t n_elems = boost::accumulate(length, 1, std::multiplies<uint32_t>());
+		return RR_MAKE_SHARED<RRCStructureMultiDimArray<T> >(VectorToRRArray<uint32_t>(length), AllocateEmptyRRCStructureArray<T>(n_elems));
 	}
 
 #define RRPrimUtilAStructure(x,type_string,array_type) \
@@ -1033,7 +1002,7 @@ namespace RobotRaconteur
 	class RRAStructureBaseMultiDimArray : public RRValue
 	{
 	public:
-		RR_SHARED_PTR<RRArray<int32_t> > Dims;
+		RR_SHARED_PTR<RRArray<uint32_t> > Dims;
 		virtual std::string RRElementTypeString() = 0;
 	};
 
@@ -1046,7 +1015,7 @@ namespace RobotRaconteur
 
 		RRAStructureMultiDimArray() {}
 
-		RRAStructureMultiDimArray(RR_SHARED_PTR<RRArray<int32_t> > dims, RR_SHARED_PTR<RRAStructureArray<T> > a)
+		RRAStructureMultiDimArray(RR_SHARED_PTR<RRArray<uint32_t> > dims, RR_SHARED_PTR<RRAStructureArray<T> > a)
 		{
 			this->Dims = dims;
 			this->AStructArray = a;
@@ -1064,16 +1033,16 @@ namespace RobotRaconteur
 			return RRPrimUtil<T>::GetElementTypeString();
 		}
 
-		virtual void RetrieveSubArray(std::vector<int32_t> memorypos, RR_SHARED_PTR<RRAStructureMultiDimArray<T> > buffer, std::vector<int32_t> bufferpos, std::vector<int32_t> count)
+		virtual void RetrieveSubArray(std::vector<uint32_t> memorypos, RR_SHARED_PTR<RRAStructureMultiDimArray<T> > buffer, std::vector<uint32_t> bufferpos, std::vector<uint32_t> count)
 		{
 
-			std::vector<int32_t> mema_dims = RRArrayToVector<int32_t>(Dims);
-			std::vector<int32_t> memb_dims = RRArrayToVector<int32_t>(buffer->Dims);
-			RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter = detail::MultiDimArray_CalculateCopyIndicesBeginIter(Dims->size(), mema_dims, memorypos, buffer->Dims->size(), memb_dims, bufferpos, count);
+			std::vector<uint32_t> mema_dims = RRArrayToVector<uint32_t>(Dims);
+			std::vector<uint32_t> memb_dims = RRArrayToVector<uint32_t>(buffer->Dims);
+			RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter = detail::MultiDimArray_CalculateCopyIndicesBeginIter(mema_dims, memorypos, memb_dims, bufferpos, count);
 
-			int32_t len;
-			int32_t indexa;
-			int32_t indexb;
+			uint32_t len;
+			uint32_t indexa;
+			uint32_t indexb;
 
 			while (iter->Next(indexa, indexb, len))
 			{
@@ -1085,16 +1054,16 @@ namespace RobotRaconteur
 
 		}
 
-		virtual void AssignSubArray(std::vector<int32_t> memorypos, RR_SHARED_PTR<RRAStructureMultiDimArray<T> > buffer, std::vector<int32_t> bufferpos, std::vector<int32_t> count)
+		virtual void AssignSubArray(std::vector<uint32_t> memorypos, RR_SHARED_PTR<RRAStructureMultiDimArray<T> > buffer, std::vector<uint32_t> bufferpos, std::vector<uint32_t> count)
 		{
 
-			std::vector<int32_t> mema_dims = RRArrayToVector<int32_t>(Dims);
-			std::vector<int32_t> memb_dims = RRArrayToVector<int32_t>(buffer->Dims);
-			RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter = detail::MultiDimArray_CalculateCopyIndicesBeginIter(Dims->size(), mema_dims, memorypos, buffer->Dims->size(), memb_dims, bufferpos, count);
+			std::vector<uint32_t> mema_dims = RRArrayToVector<uint32_t>(Dims);
+			std::vector<uint32_t> memb_dims = RRArrayToVector<uint32_t>(buffer->Dims);
+			RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter = detail::MultiDimArray_CalculateCopyIndicesBeginIter(mema_dims, memorypos, memb_dims, bufferpos, count);
 
-			int32_t len;
-			int32_t indexa;
-			int32_t indexb;
+			uint32_t len;
+			uint32_t indexa;
+			uint32_t indexb;
 
 			while (iter->Next(indexa, indexb, len))
 			{
@@ -1116,10 +1085,10 @@ namespace RobotRaconteur
 	}
 
 	template<typename T>
-	static RR_SHARED_PTR<RRAStructureMultiDimArray<T> > AllocateEmptyRRAStructureMultiDimArray(std::vector<int32_t> length)
+	static RR_SHARED_PTR<RRAStructureMultiDimArray<T> > AllocateEmptyRRAStructureMultiDimArray(std::vector<uint32_t> length)
 	{
-		int32_t n_elems = boost::accumulate(length, 1, std::multiplies<int32_t>());
-		return RR_MAKE_SHARED<RRAStructureMultiDimArray<T> >(VectorToRRArray<int32_t>(length), AllocateEmptyRRAStructureArray<T>(n_elems));
+		uint32_t n_elems = boost::accumulate(length, 1, std::multiplies<uint32_t>());
+		return RR_MAKE_SHARED<RRAStructureMultiDimArray<T> >(VectorToRRArray<uint32_t>(length), AllocateEmptyRRAStructureArray<T>(n_elems));
 	}
 
 	template<typename T>

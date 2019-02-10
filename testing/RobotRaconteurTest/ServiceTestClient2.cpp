@@ -192,8 +192,8 @@ namespace RobotRaconteurTest
 	{
 		RR_SHARED_PTR<RRCStructureMultiDimArray<com::robotraconteur::testing::TestService3::testcstruct2> > s
 			= RR_MAKE_SHARED<RRCStructureMultiDimArray<com::robotraconteur::testing::TestService3::testcstruct2> >();
-		int32_t s_dims[] = { 3, 3 };
-		s->Dims = AttachRRArrayCopy<int32_t>(s_dims, 2);
+		uint32_t s_dims[] = { 3, 3 };
+		s->Dims = AttachRRArrayCopy<uint32_t>(s_dims, 2);
 		s->CStructArray = RR_MAKE_SHARED<RRCStructureArray<com::robotraconteur::testing::TestService3::testcstruct2> >();
 		s->CStructArray->cstruct_array.resize(9);
 
@@ -212,7 +212,7 @@ namespace RobotRaconteurTest
 
 		RR_SHARED_PTR<RRCStructureMultiDimArray<com::robotraconteur::testing::TestService3::testcstruct2> > s2
 			= RR_MAKE_SHARED<RRCStructureMultiDimArray<com::robotraconteur::testing::TestService3::testcstruct2> >();
-		s2->Dims = AttachRRArrayCopy<int32_t>(s_dims, 2);
+		s2->Dims = AttachRRArrayCopy<uint32_t>(s_dims, 2);
 		s2->CStructArray = RR_MAKE_SHARED<RRCStructureArray<com::robotraconteur::testing::TestService3::testcstruct2> >();
 		s2->CStructArray->cstruct_array.resize(9);
 		r->get_cstruct_m2()->Read(z, s2, z, c);
@@ -326,7 +326,7 @@ namespace RobotRaconteurTest
 
 	void ServiceTestClient2::test_astruct_m2()
 	{
-		std::vector<int32_t> s_dims = boost::assign::list_of(3)(3);
+		std::vector<uint32_t> s_dims = boost::assign::list_of(3)(3);
 		RR_SHARED_PTR<RRAStructureMultiDimArray<com::robotraconteur::testing::TestService3::transform> > s
 			= AllocateEmptyRRAStructureMultiDimArray<com::robotraconteur::testing::TestService3::transform>(s_dims);
 		

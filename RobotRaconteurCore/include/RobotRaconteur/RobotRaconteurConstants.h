@@ -42,8 +42,8 @@ namespace RobotRaconteur
 		DataTypes_object_t,
 		DataTypes_varvalue_t,
 		DataTypes_varobject_t,
-		DataTypes_multidimarray_t,
-		DataTypes_list_t,
+		//DataTypes_multidimarray_t, - Deprecated!
+		DataTypes_list_t = 108,
 		DataTypes_cstructure_t,
 		DataTypes_cstructure_array_t,
 		DataTypes_cstructure_multidimarray_t,
@@ -51,7 +51,8 @@ namespace RobotRaconteur
 		DataTypes_namedtype_t,
 		DataTypes_astructure_t,
 		DataTypes_astructure_array_t,
-		DataTypes_astructure_multidimarray_t
+		DataTypes_astructure_multidimarray_t,
+		DataTypes_multidimarray_t // Use a new data type code for numeric arrays to avoid confusion
 	};
 
 	enum DataTypes_ArrayTypes

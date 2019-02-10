@@ -29,7 +29,7 @@ namespace RobotRaconteurTest
 
 		RR_SHARED_PTR<RobotRaconteur::RRCStructureMultiDimArray<com::robotraconteur::testing::TestService3::testcstruct2 > > m2
 			= RR_MAKE_SHARED<RobotRaconteur::RRCStructureMultiDimArray<com::robotraconteur::testing::TestService3::testcstruct2 > >();
-		int32_t m2_dims[] = { 6, 6 };
+		uint32_t m2_dims[] = { 6, 6 };
 		m2->Dims = AttachRRArrayCopy(m2_dims, 2);
 		m2->CStructArray = RR_MAKE_SHARED<RobotRaconteur::RRCStructureArray<com::robotraconteur::testing::TestService3::testcstruct2 > >();
 		m2->CStructArray->cstruct_array.resize(36);
@@ -37,7 +37,7 @@ namespace RobotRaconteurTest
 
 
 		astruct_m1 = RR_MAKE_SHARED<RobotRaconteur::AStructureArrayMemory<com::robotraconteur::testing::TestService3::transform > >(AllocateEmptyRRAStructureArray< com::robotraconteur::testing::TestService3::transform>(512));
-		std::vector<int32_t> astruct_m2_dims = boost::assign::list_of(10)(20);
+		std::vector<uint32_t> astruct_m2_dims = boost::assign::list_of(10)(20);
 		astruct_m2 = RR_MAKE_SHARED<RobotRaconteur::AStructureMultiDimArrayMemory<com::robotraconteur::testing::TestService3::transform > >(AllocateEmptyRRAStructureMultiDimArray< com::robotraconteur::testing::TestService3::transform>(astruct_m2_dims));
 				
 	}
@@ -680,10 +680,10 @@ namespace RobotRaconteurTest
 	RR_SHARED_PTR<RRCStructureMultiDimArray<com::robotraconteur::testing::TestService3::testcstruct1> > ServiceTest2_fill_testcstruct1_multidimarray(size_t m, size_t n, uint32_t seed)
 	{
 		RR_SHARED_PTR<RRCStructureMultiDimArray<com::robotraconteur::testing::TestService3::testcstruct1> > o = RR_MAKE_SHARED<RRCStructureMultiDimArray<com::robotraconteur::testing::TestService3::testcstruct1> >();
-		std::vector<int32_t> dims;		
+		std::vector<uint32_t> dims;		
 		dims.push_back(m);
 		dims.push_back(n);
-		o->Dims = VectorToRRArray<int32_t>(dims);
+		o->Dims = VectorToRRArray<uint32_t>(dims);
 		o->CStructArray = ServiceTest2_fill_testcstruct1_array(m*n, seed);
 		return o;
 	}
@@ -754,10 +754,10 @@ namespace RobotRaconteurTest
 	RR_SHARED_PTR<RRAStructureMultiDimArray<com::robotraconteur::testing::TestService3::transform> > ServiceTest2_fill_transform_multidimarray(size_t m, size_t n, uint32_t seed)
 	{
 		RR_SHARED_PTR<RRAStructureMultiDimArray<com::robotraconteur::testing::TestService3::transform> > o = RR_MAKE_SHARED<RRAStructureMultiDimArray<com::robotraconteur::testing::TestService3::transform> >();
-		std::vector<int32_t> dims;
+		std::vector<uint32_t> dims;
 		dims.push_back(m);
 		dims.push_back(n);
-		o->Dims = VectorToRRArray<int32_t>(dims);
+		o->Dims = VectorToRRArray<uint32_t>(dims);
 		o->AStructArray = ServiceTest2_fill_transform_array(m*n, seed);
 		return o;
 	}

@@ -44,7 +44,7 @@ namespace RobotRaconteur
 			return out;
 		}
 
-		ROBOTRACONTEUR_CORE_API void CalculateMatrixBlocks(uint32_t element_size, std::vector<uint64_t> count, uint64_t max_elems, int32_t &split_dim, uint64_t &split_dim_block, uint64_t &split_elem_count, int32_t &splits_count, int32_t &split_remainder, std::vector<uint64_t>& block_count, std::vector<uint64_t>& block_count_edge);
+		ROBOTRACONTEUR_CORE_API void CalculateMatrixBlocks(uint32_t element_size, std::vector<uint64_t> count, uint64_t max_elems, uint32_t &split_dim, uint64_t &split_dim_block, uint64_t &split_elem_count, uint32_t &splits_count, uint32_t &split_remainder, std::vector<uint64_t>& block_count, std::vector<uint64_t>& block_count_edge);
 	}
 
 
@@ -116,8 +116,7 @@ namespace RobotRaconteur
 	{
 	public:
 		virtual std::vector<uint64_t> Dimensions()=0;
-		virtual uint64_t DimCount()=0;
-		virtual bool Complex()=0;
+		virtual uint64_t DimCount()=0;		
 		virtual DataTypes ElementTypeID()=0;
 		virtual ~MultiDimArrayMemoryBase() {}
 	};
@@ -149,7 +148,7 @@ namespace RobotRaconteur
 		virtual std::vector<uint64_t> Dimensions()
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
-			RR_SHARED_PTR<RRArray<int32_t> > dims=multimemory->Dims;
+			RR_SHARED_PTR<RRArray<uint32_t> > dims=multimemory->Dims;
 			std::vector<uint64_t> s(dims->Length());
 			for (size_t i=0; i<s.size(); i++)
 			{
@@ -163,25 +162,19 @@ namespace RobotRaconteur
 		virtual uint64_t DimCount()
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
-			return multimemory->DimCount;
+			return multimemory->Dims->size();
 		}
-
-		virtual bool Complex()
-		{
-			boost::mutex::scoped_lock lock(memory_lock);
-			return multimemory->Complex;
-		}
-
+				
 		virtual void Read(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<RRMultiDimArray<T> > buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
-			multimemory->RetrieveSubArray(detail::ConvertVectorType<int32_t>(memorypos),buffer,detail::ConvertVectorType<int32_t>(bufferpos),detail::ConvertVectorType<int32_t>(count));
+			multimemory->RetrieveSubArray(detail::ConvertVectorType<uint32_t>(memorypos),buffer,detail::ConvertVectorType<uint32_t>(bufferpos),detail::ConvertVectorType<uint32_t>(count));
 		}
 
 		virtual void Write(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<RRMultiDimArray<T> > buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
-			multimemory->AssignSubArray(detail::ConvertVectorType<int32_t>(memorypos),buffer,detail::ConvertVectorType<int32_t>(bufferpos),detail::ConvertVectorType<int32_t>(count));
+			multimemory->AssignSubArray(detail::ConvertVectorType<uint32_t>(memorypos),buffer,detail::ConvertVectorType<uint32_t>(bufferpos),detail::ConvertVectorType<uint32_t>(count));
 		}
 
 		virtual DataTypes ElementTypeID()
@@ -260,8 +253,8 @@ namespace RobotRaconteur
 		MultiDimArrayMemoryServiceSkelBase(const std::string& membername, RR_SHARED_PTR<ServiceSkel> skel, DataTypes element_type, size_t element_size, MemberDefinition_Direction direction);
 		virtual ~MultiDimArrayMemoryServiceSkelBase();
 		virtual RR_SHARED_PTR<MessageEntry> CallMemoryFunction(RR_SHARED_PTR<MessageEntry> m, RR_SHARED_PTR<Endpoint> e, RR_SHARED_PTR<MultiDimArrayMemoryBase > mem);
-		virtual RR_SHARED_PTR<MessageElementData>  DoRead(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, int32_t elem_count, RR_SHARED_PTR<MultiDimArrayMemoryBase> mem) = 0;
-		virtual void DoWrite(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<MessageElementData> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, int32_t elem_count, RR_SHARED_PTR<MultiDimArrayMemoryBase> mem) = 0;
+		virtual RR_SHARED_PTR<MessageElementData>  DoRead(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint32_t elem_count, RR_SHARED_PTR<MultiDimArrayMemoryBase> mem) = 0;
+		virtual void DoWrite(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<MessageElementData> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint32_t elem_count, RR_SHARED_PTR<MultiDimArrayMemoryBase> mem) = 0;
 	};
 
 	template<typename T>
@@ -274,25 +267,19 @@ namespace RobotRaconteur
 
 		}
 
-		virtual RR_SHARED_PTR<MessageElementData>  DoRead(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, int32_t elemcount, RR_SHARED_PTR<MultiDimArrayMemoryBase> mem)
+		virtual RR_SHARED_PTR<MessageElementData>  DoRead(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint32_t elemcount, RR_SHARED_PTR<MultiDimArrayMemoryBase> mem)
 		{
 			RR_SHARED_PTR<MultiDimArrayMemory<T> > mem1 = rr_cast<MultiDimArrayMemory<T> >(mem);
 
 			RR_SHARED_PTR<RRArray<T> > real = AllocateRRArray<T>((size_t)elemcount);
 			RR_SHARED_PTR<RRMultiDimArray<T> > data;
-			if (!mem1->Complex())
-			{
-				data = RR_MAKE_SHARED<RRMultiDimArray<T> >(VectorToRRArray<int32_t>(count), real);
-			}
-			else
-			{
-				RR_SHARED_PTR<RRArray<T> > imag = AllocateRRArray<T>((size_t)elemcount);
-				data = RR_MAKE_SHARED<RRMultiDimArray<T> >(VectorToRRArray<int32_t>(count), real, imag);
-			}
+			
+			data = RR_MAKE_SHARED<RRMultiDimArray<T> >(VectorToRRArray<uint32_t>(count), real);
+			
 			mem1->Read(memorypos, data, bufferpos, count);
 			return GetNode()->PackMultiDimArray(data);
 		}
-		virtual void DoWrite(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<MessageElementData> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, int32_t elemcount, RR_SHARED_PTR<MultiDimArrayMemoryBase> mem)
+		virtual void DoWrite(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<MessageElementData> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint32_t elemcount, RR_SHARED_PTR<MultiDimArrayMemoryBase> mem)
 		{
 			RR_SHARED_PTR<MultiDimArrayMemory<T> > mem1 = rr_cast<MultiDimArrayMemory<T> >(mem);
 
@@ -421,8 +408,7 @@ namespace RobotRaconteur
 		RR_SHARED_PTR<ServiceStub> GetStub();
 		RobotRaconteur::MemberDefinition_Direction Direction();
 		virtual std::vector<uint64_t> Dimensions();
-		virtual uint64_t DimCount();
-		virtual bool Complex();
+		virtual uint64_t DimCount();		
 		
 	protected:
 		bool max_size_read;
@@ -465,12 +451,7 @@ namespace RobotRaconteur
 		{
 			return MultiDimArrayMemoryClientBase::DimCount();
 		}
-
-		virtual bool Complex()
-		{
-			return MultiDimArrayMemoryClientBase::Complex();
-		}
-
+				
 		virtual void Read(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<RRMultiDimArray<T> > buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 		{
 			if (!buffer) throw NullValueException("Buffer must not be null");
@@ -513,16 +494,10 @@ namespace RobotRaconteur
 			else
 			{
 				RR_SHARED_PTR<RRMultiDimArray<T> > data;
-				if (!buffer1->Complex)
-				{
-					data = RR_MAKE_SHARED<RRMultiDimArray<T> >(VectorToRRArray<int32_t>(count), AllocateRRArray<T>((size_t)elemcount));
-				}
-				else
-				{
-					data = RR_MAKE_SHARED<RRMultiDimArray<T> >(VectorToRRArray<int32_t>(count), AllocateRRArray<T>((size_t)elemcount), AllocateRRArray<T>((size_t)elemcount));
-				}
-
-				buffer1->RetrieveSubArray(detail::ConvertVectorType<int32_t>(bufferpos), data, std::vector<int32_t>(count.size()), detail::ConvertVectorType<int32_t>(count));
+				
+				data = RR_MAKE_SHARED<RRMultiDimArray<T> >(VectorToRRArray<uint32_t>(count), AllocateRRArray<T>((size_t)elemcount));
+				
+				buffer1->RetrieveSubArray(detail::ConvertVectorType<uint32_t>(bufferpos), data, std::vector<uint32_t>(count.size()), detail::ConvertVectorType<uint32_t>(count));
 				return GetNode()->PackMultiDimArray(data);
 			}
 		}
@@ -704,7 +679,7 @@ namespace RobotRaconteur
 		virtual std::vector<uint64_t> Dimensions()
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
-			RR_SHARED_PTR<RRArray<int32_t> > dims = multimemory->Dims;
+			RR_SHARED_PTR<RRArray<uint32_t> > dims = multimemory->Dims;
 			std::vector<uint64_t> s(dims->Length());
 			for (size_t i = 0; i<s.size(); i++)
 			{
@@ -719,22 +694,17 @@ namespace RobotRaconteur
 			boost::mutex::scoped_lock lock(memory_lock);
 			return multimemory->Dims->size();
 		}
-		
-		virtual bool Complex()
-		{
-			return false;
-		}
-
+				
 		virtual void Read(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<RRCStructureMultiDimArray<T> > buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
-			multimemory->RetrieveSubArray(detail::ConvertVectorType<int32_t>(memorypos), buffer, detail::ConvertVectorType<int32_t>(bufferpos), detail::ConvertVectorType<int32_t>(count));
+			multimemory->RetrieveSubArray(detail::ConvertVectorType<uint32_t>(memorypos), buffer, detail::ConvertVectorType<uint32_t>(bufferpos), detail::ConvertVectorType<uint32_t>(count));
 		}
 
 		virtual void Write(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<RRCStructureMultiDimArray<T> > buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
-			multimemory->AssignSubArray(detail::ConvertVectorType<int32_t>(memorypos), buffer, detail::ConvertVectorType<int32_t>(bufferpos), detail::ConvertVectorType<int32_t>(count));
+			multimemory->AssignSubArray(detail::ConvertVectorType<uint32_t>(memorypos), buffer, detail::ConvertVectorType<uint32_t>(bufferpos), detail::ConvertVectorType<uint32_t>(count));
 		}
 
 		virtual DataTypes ElementTypeID()
@@ -767,12 +737,7 @@ namespace RobotRaconteur
 		{
 			return MultiDimArrayMemoryClientBase::DimCount();
 		}
-
-		virtual bool Complex()
-		{
-			return MultiDimArrayMemoryClientBase::Complex();
-		}
-
+				
 		virtual void Read(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<RRCStructureMultiDimArray<T> > buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 		{
 			if (!buffer) throw NullValueException("Buffer must not be null");
@@ -799,11 +764,11 @@ namespace RobotRaconteur
 			RR_SHARED_PTR<RRCStructureMultiDimArray<T> >& buffer1 = *static_cast<RR_SHARED_PTR<RRCStructureMultiDimArray<T> >* >(buffer);
 
 			RR_SHARED_PTR<RRCStructureMultiDimArray<T> > data = RR_MAKE_SHARED<RRCStructureMultiDimArray<T> >();
-			data->Dims = VectorToRRArray<int32_t>(count);
+			data->Dims = VectorToRRArray<uint32_t>(count);
 			data->CStructArray = RR_MAKE_SHARED<RRCStructureArray<T> >();
 			data->CStructArray->cstruct_array.resize(elemcount);
 						
-			buffer1->RetrieveSubArray(detail::ConvertVectorType<int32_t>(bufferpos), data, std::vector<int32_t>(count.size()), detail::ConvertVectorType<int32_t>(count));
+			buffer1->RetrieveSubArray(detail::ConvertVectorType<uint32_t>(bufferpos), data, std::vector<uint32_t>(count.size()), detail::ConvertVectorType<uint32_t>(count));
 			return GetNode()->PackCStructureMultiDimArray(data);
 			
 		}
@@ -819,19 +784,19 @@ namespace RobotRaconteur
 
 		}
 
-		virtual RR_SHARED_PTR<MessageElementData>  DoRead(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, int32_t elemcount, RR_SHARED_PTR<MultiDimArrayMemoryBase> mem)
+		virtual RR_SHARED_PTR<MessageElementData>  DoRead(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint32_t elemcount, RR_SHARED_PTR<MultiDimArrayMemoryBase> mem)
 		{
 			RR_SHARED_PTR<CStructureMultiDimArrayMemory<T> > mem1 = rr_cast<CStructureMultiDimArrayMemory<T> >(mem);
 						
 			RR_SHARED_PTR<RRCStructureMultiDimArray<T> > data = RR_MAKE_SHARED<RRCStructureMultiDimArray<T> >();
-			data->Dims = VectorToRRArray<int32_t>(count);
+			data->Dims = VectorToRRArray<uint32_t>(count);
 			data->CStructArray = RR_MAKE_SHARED<RRCStructureArray<T> >();
 			data->CStructArray->cstruct_array.resize((size_t)elemcount);				
 			
 			mem1->Read(memorypos, data, bufferpos, count);
 			return GetNode()->PackCStructureMultiDimArray(data);
 		}
-		virtual void DoWrite(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<MessageElementData> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, int32_t elemcount, RR_SHARED_PTR<MultiDimArrayMemoryBase> mem)
+		virtual void DoWrite(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<MessageElementData> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint32_t elemcount, RR_SHARED_PTR<MultiDimArrayMemoryBase> mem)
 		{
 			RR_SHARED_PTR<CStructureMultiDimArrayMemory<T> > mem1 = rr_cast<CStructureMultiDimArrayMemory<T> >(mem);
 
@@ -1016,7 +981,7 @@ namespace RobotRaconteur
 		virtual std::vector<uint64_t> Dimensions()
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
-			RR_SHARED_PTR<RRArray<int32_t> > dims = multimemory->Dims;
+			RR_SHARED_PTR<RRArray<uint32_t> > dims = multimemory->Dims;
 			std::vector<uint64_t> s(dims->Length());
 			for (size_t i = 0; i < s.size(); i++)
 			{
@@ -1031,22 +996,17 @@ namespace RobotRaconteur
 			boost::mutex::scoped_lock lock(memory_lock);
 			return multimemory->Dims->size();
 		}
-
-		virtual bool Complex()
-		{
-			return false;
-		}
-
+		
 		virtual void Read(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<RRAStructureMultiDimArray<T> > buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
-			multimemory->RetrieveSubArray(detail::ConvertVectorType<int32_t>(memorypos), buffer, detail::ConvertVectorType<int32_t>(bufferpos), detail::ConvertVectorType<int32_t>(count));
+			multimemory->RetrieveSubArray(detail::ConvertVectorType<uint32_t>(memorypos), buffer, detail::ConvertVectorType<uint32_t>(bufferpos), detail::ConvertVectorType<uint32_t>(count));
 		}
 
 		virtual void Write(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<RRAStructureMultiDimArray<T> > buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
-			multimemory->AssignSubArray(detail::ConvertVectorType<int32_t>(memorypos), buffer, detail::ConvertVectorType<int32_t>(bufferpos), detail::ConvertVectorType<int32_t>(count));
+			multimemory->AssignSubArray(detail::ConvertVectorType<uint32_t>(memorypos), buffer, detail::ConvertVectorType<uint32_t>(bufferpos), detail::ConvertVectorType<uint32_t>(count));
 		}
 
 		virtual DataTypes ElementTypeID()
@@ -1079,12 +1039,7 @@ namespace RobotRaconteur
 		{
 			return MultiDimArrayMemoryClientBase::DimCount();
 		}
-
-		virtual bool Complex()
-		{
-			return MultiDimArrayMemoryClientBase::Complex();
-		}
-
+				
 		virtual void Read(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<RRAStructureMultiDimArray<T> > buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 		{
 			if (!buffer) throw NullValueException("Buffer must not be null");
@@ -1111,10 +1066,10 @@ namespace RobotRaconteur
 			RR_SHARED_PTR<RRAStructureMultiDimArray<T> >& buffer1 = *static_cast<RR_SHARED_PTR<RRAStructureMultiDimArray<T> >*>(buffer);
 
 			RR_SHARED_PTR<RRAStructureMultiDimArray<T> > data = RR_MAKE_SHARED<RRAStructureMultiDimArray<T> >();
-			data->Dims = VectorToRRArray<int32_t>(count);			
+			data->Dims = VectorToRRArray<uint32_t>(count);			
 			data->AStructArray = AllocateEmptyRRAStructureArray<T>(elemcount);
 
-			buffer1->RetrieveSubArray(detail::ConvertVectorType<int32_t>(bufferpos), data, std::vector<int32_t>(count.size()), detail::ConvertVectorType<int32_t>(count));
+			buffer1->RetrieveSubArray(detail::ConvertVectorType<uint32_t>(bufferpos), data, std::vector<uint32_t>(count.size()), detail::ConvertVectorType<uint32_t>(count));
 			return GetNode()->PackAStructureMultiDimArray(data);
 
 		}
@@ -1130,18 +1085,18 @@ namespace RobotRaconteur
 
 		}
 
-		virtual RR_SHARED_PTR<MessageElementData>  DoRead(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, int32_t elemcount, RR_SHARED_PTR<MultiDimArrayMemoryBase> mem)
+		virtual RR_SHARED_PTR<MessageElementData>  DoRead(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint32_t elemcount, RR_SHARED_PTR<MultiDimArrayMemoryBase> mem)
 		{
 			RR_SHARED_PTR<AStructureMultiDimArrayMemory<T> > mem1 = rr_cast<AStructureMultiDimArrayMemory<T>>(mem);
 
 			RR_SHARED_PTR<RRAStructureMultiDimArray<T> > data = RR_MAKE_SHARED<RRAStructureMultiDimArray<T> >();
-			data->Dims = VectorToRRArray<int32_t>(count);			
+			data->Dims = VectorToRRArray<uint32_t>(count);			
 			data->AStructArray = AllocateEmptyRRAStructureArray<T>((size_t)elemcount);
 
 			mem1->Read(memorypos, data, bufferpos, count);
 			return GetNode()->PackAStructureMultiDimArray(data);
 		}
-		virtual void DoWrite(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<MessageElementData> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, int32_t elemcount, RR_SHARED_PTR<MultiDimArrayMemoryBase> mem)
+		virtual void DoWrite(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<MessageElementData> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint32_t elemcount, RR_SHARED_PTR<MultiDimArrayMemoryBase> mem)
 		{
 			RR_SHARED_PTR<AStructureMultiDimArrayMemory<T> > mem1 = rr_cast<AStructureMultiDimArrayMemory<T>>(mem);
 
