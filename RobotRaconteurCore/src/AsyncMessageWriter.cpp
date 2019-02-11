@@ -653,29 +653,29 @@ namespace RobotRaconteur
 					state() = MessageElement_writelist1;
 					continue;
 				}
-				case DataTypes_cstructure_t:
+				case DataTypes_pod_t:
 				{
-					state() = MessageElement_writecstruct1;
+					state() = MessageElement_writepod1;
 					continue;
 				}
-				case DataTypes_cstructure_array_t:
+				case DataTypes_pod_array_t:
 				{
-					state() = MessageElement_writecstructarray1;
+					state() = MessageElement_writepodarray1;
 					continue;
 				}
-				case DataTypes_cstructure_multidimarray_t:
+				case DataTypes_pod_multidimarray_t:
 				{
-					state() = MessageElement_writecstructmultidimarray1;
+					state() = MessageElement_writepodmultidimarray1;
 					continue;
 				}
-				case DataTypes_astructure_array_t:
+				case DataTypes_namedarray_array_t:
 				{
-					state() = MessageElement_writeastructarray1;
+					state() = MessageElement_writenamedarrayarray1;
 					continue;
 				}
-				case DataTypes_astructure_multidimarray_t:
+				case DataTypes_namedarray_multidimarray_t:
 				{
-					state() = MessageElement_writeastructmultidimarray1;
+					state() = MessageElement_writenamedarraymultidimarray1;
 					continue;
 				}
 				default:
@@ -846,16 +846,16 @@ namespace RobotRaconteur
 				continue;
 			}
 
-			//Write cstructure
-			case MessageElement_writecstruct1:
+			//Write pod
+			case MessageElement_writepod1:
 			{
 				MessageElement* el = data<MessageElement>();
-				RR_SHARED_PTR<MessageElementCStructure> s = el->CastData<MessageElementCStructure>();
-				push_state(MessageElement_writecstruct2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
+				RR_SHARED_PTR<MessageElementPod> s = el->CastData<MessageElementPod>();
+				push_state(MessageElement_writepod2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
 			}
-			case MessageElement_writecstruct2:
+			case MessageElement_writepod2:
 			{
-				MessageElementCStructure* s = data<MessageElementCStructure>();
+				MessageElementPod* s = data<MessageElementPod>();
 				if (param1() >= s->Elements.size())
 				{
 					DO_POP_STATE();
@@ -863,20 +863,20 @@ namespace RobotRaconteur
 
 				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
 				param1()++;
-				push_state(MessageElement_elementsize, MessageElement_writecstruct2, el->ElementSize, el);
+				push_state(MessageElement_elementsize, MessageElement_writepod2, el->ElementSize, el);
 				continue;
 			}
 
-			//Write cstructurearray
-			case MessageElement_writecstructarray1:
+			//Write podarray
+			case MessageElement_writepodarray1:
 			{
 				MessageElement* el = data<MessageElement>();
-				RR_SHARED_PTR<MessageElementCStructureArray> s = el->CastData<MessageElementCStructureArray>();
-				push_state(MessageElement_writecstructarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
+				RR_SHARED_PTR<MessageElementPodArray> s = el->CastData<MessageElementPodArray>();
+				push_state(MessageElement_writepodarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
 			}
-			case MessageElement_writecstructarray2:
+			case MessageElement_writepodarray2:
 			{
-				MessageElementCStructureArray* s = data<MessageElementCStructureArray>();
+				MessageElementPodArray* s = data<MessageElementPodArray>();
 				if (param1() >= s->Elements.size())
 				{
 					DO_POP_STATE();
@@ -884,20 +884,20 @@ namespace RobotRaconteur
 
 				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
 				param1()++;
-				push_state(MessageElement_elementsize, MessageElement_writecstructarray2, el->ElementSize, el);
+				push_state(MessageElement_elementsize, MessageElement_writepodarray2, el->ElementSize, el);
 				continue;
 			}
 
-			//Write cstructurearray
-			case MessageElement_writecstructmultidimarray1:
+			//Write podarray
+			case MessageElement_writepodmultidimarray1:
 			{
 				MessageElement* el = data<MessageElement>();
-				RR_SHARED_PTR<MessageElementCStructureMultiDimArray> s = el->CastData<MessageElementCStructureMultiDimArray>();
-				push_state(MessageElement_writecstructmultidimarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
+				RR_SHARED_PTR<MessageElementPodMultiDimArray> s = el->CastData<MessageElementPodMultiDimArray>();
+				push_state(MessageElement_writepodmultidimarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
 			}
-			case MessageElement_writecstructmultidimarray2:
+			case MessageElement_writepodmultidimarray2:
 			{
-				MessageElementCStructureMultiDimArray* s = data<MessageElementCStructureMultiDimArray>();
+				MessageElementPodMultiDimArray* s = data<MessageElementPodMultiDimArray>();
 				if (param1() >= s->Elements.size())
 				{
 					DO_POP_STATE();
@@ -905,20 +905,20 @@ namespace RobotRaconteur
 
 				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
 				param1()++;
-				push_state(MessageElement_elementsize, MessageElement_writecstructmultidimarray2, el->ElementSize, el);
+				push_state(MessageElement_elementsize, MessageElement_writepodmultidimarray2, el->ElementSize, el);
 				continue;
 			}
 
-			//Write astructurearray
-			case MessageElement_writeastructarray1:
+			//Write namedarrayarray
+			case MessageElement_writenamedarrayarray1:
 			{
 				MessageElement* el = data<MessageElement>();
-				RR_SHARED_PTR<MessageElementAStructureArray> s = el->CastData<MessageElementAStructureArray>();
-				push_state(MessageElement_writeastructarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
+				RR_SHARED_PTR<MessageElementNamedArray> s = el->CastData<MessageElementNamedArray>();
+				push_state(MessageElement_writenamedarrayarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
 			}
-			case MessageElement_writeastructarray2:
+			case MessageElement_writenamedarrayarray2:
 			{
-				MessageElementAStructureArray* s = data<MessageElementAStructureArray>();
+				MessageElementNamedArray* s = data<MessageElementNamedArray>();
 				if (param1() >= s->Elements.size())
 				{
 					DO_POP_STATE();
@@ -926,20 +926,20 @@ namespace RobotRaconteur
 
 				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
 				param1()++;
-				push_state(MessageElement_elementsize, MessageElement_writeastructarray2, el->ElementSize, el);
+				push_state(MessageElement_elementsize, MessageElement_writenamedarrayarray2, el->ElementSize, el);
 				continue;
 			}
 
-			//Write astructurearray
-			case MessageElement_writeastructmultidimarray1:
+			//Write namedarrayarray
+			case MessageElement_writenamedarraymultidimarray1:
 			{
 				MessageElement* el = data<MessageElement>();
-				RR_SHARED_PTR<MessageElementAStructureMultiDimArray> s = el->CastData<MessageElementAStructureMultiDimArray>();
-				push_state(MessageElement_writeastructmultidimarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
+				RR_SHARED_PTR<MessageElementNamedMultiDimArray> s = el->CastData<MessageElementNamedMultiDimArray>();
+				push_state(MessageElement_writenamedarraymultidimarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
 			}
-			case MessageElement_writeastructmultidimarray2:
+			case MessageElement_writenamedarraymultidimarray2:
 			{
-				MessageElementAStructureMultiDimArray* s = data<MessageElementAStructureMultiDimArray>();
+				MessageElementNamedMultiDimArray* s = data<MessageElementNamedMultiDimArray>();
 				if (param1() >= s->Elements.size())
 				{
 					DO_POP_STATE();
@@ -947,7 +947,7 @@ namespace RobotRaconteur
 
 				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
 				param1()++;
-				push_state(MessageElement_elementsize, MessageElement_writeastructmultidimarray2, el->ElementSize, el);
+				push_state(MessageElement_elementsize, MessageElement_writenamedarraymultidimarray2, el->ElementSize, el);
 				continue;
 			}
 
@@ -1553,29 +1553,29 @@ namespace RobotRaconteur
 					state() = MessageElement_writelist1;
 					continue;
 				}
-				case DataTypes_cstructure_t:
+				case DataTypes_pod_t:
 				{
-					state() = MessageElement_writecstruct1;
+					state() = MessageElement_writepod1;
 					continue;
 				}
-				case DataTypes_cstructure_array_t:
+				case DataTypes_pod_array_t:
 				{
-					state() = MessageElement_writecstructarray1;
+					state() = MessageElement_writepodarray1;
 					continue;
 				}
-				case DataTypes_cstructure_multidimarray_t:
+				case DataTypes_pod_multidimarray_t:
 				{
-					state() = MessageElement_writecstructmultidimarray1;
+					state() = MessageElement_writepodmultidimarray1;
 					continue;
 				}
-				case DataTypes_astructure_array_t:
+				case DataTypes_namedarray_array_t:
 				{
-					state() = MessageElement_writeastructarray1;
+					state() = MessageElement_writenamedarrayarray1;
 					continue;
 				}
-				case DataTypes_astructure_multidimarray_t:
+				case DataTypes_namedarray_multidimarray_t:
 				{
-					state() = MessageElement_writeastructmultidimarray1;
+					state() = MessageElement_writenamedarraymultidimarray1;
 					continue;
 				}
 				default:
@@ -1761,16 +1761,16 @@ namespace RobotRaconteur
 				push_state(MessageElement_elementsize, MessageElement_writelist2, el->ElementSize, el);
 				continue;
 			}
-			//Write cstructure
-			case MessageElement_writecstruct1:
+			//Write pod
+			case MessageElement_writepod1:
 			{
 				MessageElement* el = data<MessageElement>();
-				RR_SHARED_PTR<MessageElementCStructure> s = el->CastData<MessageElementCStructure>();
-				push_state(MessageElement_writecstruct2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
+				RR_SHARED_PTR<MessageElementPod> s = el->CastData<MessageElementPod>();
+				push_state(MessageElement_writepod2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
 			}
-			case MessageElement_writecstruct2:
+			case MessageElement_writepod2:
 			{
-				MessageElementCStructure* s = data<MessageElementCStructure>();
+				MessageElementPod* s = data<MessageElementPod>();
 				if (param1() >= s->Elements.size())
 				{
 					DO_POP_STATE();
@@ -1778,20 +1778,20 @@ namespace RobotRaconteur
 
 				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
 				param1()++;
-				push_state(MessageElement_elementsize, MessageElement_writecstruct2, el->ElementSize, el);
+				push_state(MessageElement_elementsize, MessageElement_writepod2, el->ElementSize, el);
 				continue;
 			}
 
-			//Write cstructurearray
-			case MessageElement_writecstructarray1:
+			//Write podarray
+			case MessageElement_writepodarray1:
 			{
 				MessageElement* el = data<MessageElement>();
-				RR_SHARED_PTR<MessageElementCStructureArray> s = el->CastData<MessageElementCStructureArray>();
-				push_state(MessageElement_writecstructarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
+				RR_SHARED_PTR<MessageElementPodArray> s = el->CastData<MessageElementPodArray>();
+				push_state(MessageElement_writepodarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
 			}
-			case MessageElement_writecstructarray2:
+			case MessageElement_writepodarray2:
 			{
-				MessageElementCStructureArray* s = data<MessageElementCStructureArray>();
+				MessageElementPodArray* s = data<MessageElementPodArray>();
 				if (param1() >= s->Elements.size())
 				{
 					DO_POP_STATE();
@@ -1799,20 +1799,20 @@ namespace RobotRaconteur
 
 				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
 				param1()++;
-				push_state(MessageElement_elementsize, MessageElement_writecstructarray2, el->ElementSize, el);
+				push_state(MessageElement_elementsize, MessageElement_writepodarray2, el->ElementSize, el);
 				continue;
 			}
 
-			//Write cstructurearray
-			case MessageElement_writecstructmultidimarray1:
+			//Write podarray
+			case MessageElement_writepodmultidimarray1:
 			{
 				MessageElement* el = data<MessageElement>();
-				RR_SHARED_PTR<MessageElementCStructureMultiDimArray> s = el->CastData<MessageElementCStructureMultiDimArray>();
-				push_state(MessageElement_writecstructmultidimarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
+				RR_SHARED_PTR<MessageElementPodMultiDimArray> s = el->CastData<MessageElementPodMultiDimArray>();
+				push_state(MessageElement_writepodmultidimarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
 			}
-			case MessageElement_writecstructmultidimarray2:
+			case MessageElement_writepodmultidimarray2:
 			{
-				MessageElementCStructureMultiDimArray* s = data<MessageElementCStructureMultiDimArray>();
+				MessageElementPodMultiDimArray* s = data<MessageElementPodMultiDimArray>();
 				if (param1() >= s->Elements.size())
 				{
 					DO_POP_STATE();
@@ -1820,20 +1820,20 @@ namespace RobotRaconteur
 
 				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
 				param1()++;
-				push_state(MessageElement_elementsize, MessageElement_writecstructmultidimarray2, el->ElementSize, el);
+				push_state(MessageElement_elementsize, MessageElement_writepodmultidimarray2, el->ElementSize, el);
 				continue;
 			}
 
-			//Write astructurearray
-			case MessageElement_writeastructarray1:
+			//Write namedarrayarray
+			case MessageElement_writenamedarrayarray1:
 			{
 				MessageElement* el = data<MessageElement>();
-				RR_SHARED_PTR<MessageElementAStructureArray> s = el->CastData<MessageElementAStructureArray>();
-				push_state(MessageElement_writeastructarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
+				RR_SHARED_PTR<MessageElementNamedArray> s = el->CastData<MessageElementNamedArray>();
+				push_state(MessageElement_writenamedarrayarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
 			}
-			case MessageElement_writeastructarray2:
+			case MessageElement_writenamedarrayarray2:
 			{
-				MessageElementAStructureArray* s = data<MessageElementAStructureArray>();
+				MessageElementNamedArray* s = data<MessageElementNamedArray>();
 				if (param1() >= s->Elements.size())
 				{
 					DO_POP_STATE();
@@ -1841,20 +1841,20 @@ namespace RobotRaconteur
 
 				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
 				param1()++;
-				push_state(MessageElement_elementsize, MessageElement_writeastructarray2, el->ElementSize, el);
+				push_state(MessageElement_elementsize, MessageElement_writenamedarrayarray2, el->ElementSize, el);
 				continue;
 			}
 
-			//Write astructurearray
-			case MessageElement_writeastructmultidimarray1:
+			//Write namedarrayarray
+			case MessageElement_writenamedarraymultidimarray1:
 			{
 				MessageElement* el = data<MessageElement>();
-				RR_SHARED_PTR<MessageElementAStructureMultiDimArray> s = el->CastData<MessageElementAStructureMultiDimArray>();
-				push_state(MessageElement_writeastructmultidimarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
+				RR_SHARED_PTR<MessageElementNamedMultiDimArray> s = el->CastData<MessageElementNamedMultiDimArray>();
+				push_state(MessageElement_writenamedarraymultidimarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
 			}
-			case MessageElement_writeastructmultidimarray2:
+			case MessageElement_writenamedarraymultidimarray2:
 			{
-				MessageElementAStructureMultiDimArray* s = data<MessageElementAStructureMultiDimArray>();
+				MessageElementNamedMultiDimArray* s = data<MessageElementNamedMultiDimArray>();
 				if (param1() >= s->Elements.size())
 				{
 					DO_POP_STATE();
@@ -1862,7 +1862,7 @@ namespace RobotRaconteur
 
 				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
 				param1()++;
-				push_state(MessageElement_elementsize, MessageElement_writeastructmultidimarray2, el->ElementSize, el);
+				push_state(MessageElement_elementsize, MessageElement_writenamedarraymultidimarray2, el->ElementSize, el);
 				continue;
 			}
 

@@ -44,22 +44,22 @@ namespace RobotRaconteur
 
 	};
 
-	// cstruct
+	// pod
 
 	template<typename T>
-	class CStructureStub
+	class PodStub
 	{
 		BOOST_STATIC_ASSERT(sizeof(T) == -1);
 	};
 
 	template<typename T, size_t N, bool varlength>
-	class cstructure_field_array : public boost::array<T, N>
+	class pod_field_array : public boost::array<T, N>
 	{
 	private:
 		size_t len;		
 	public:
-		cstructure_field_array() : len(0) {}
-		cstructure_field_array(size_t n) { resize(n); }
+		pod_field_array() : len(0) {}
+		pod_field_array(size_t n) { resize(n); }
 		typename boost::array<T,N>::iterator        end() { return boost::array<T,N>::elems + len; }
 		typename boost::array<T,N>::const_iterator  end() const { return boost::array<T, N>::elems + len; }
 		typename boost::array<T,N>::const_iterator cend() const { return boost::array<T, N>::elems + len; }
@@ -72,7 +72,7 @@ namespace RobotRaconteur
 		typename boost::array<T,N>::reference back() {	return at(size() - 1);	}
 		typename boost::array<T,N>::const_reference back() const { return at(size() - 1); }
 		template <typename T2>
-		cstructure_field_array<T, N, varlength>& operator= (const cstructure_field_array<T2, N, varlength>& rhs) {
+		pod_field_array<T, N, varlength>& operator= (const pod_field_array<T2, N, varlength>& rhs) {
 			std::copy(rhs.begin(), rhs.end(), boost::array<T, N>::begin());
 			this->len = rhs->len;
 			return *this;
@@ -83,7 +83,7 @@ namespace RobotRaconteur
 	};
 
 	template<typename T, size_t N>
-	class cstructure_field_array<T, N, false> : public boost::array<T, N>
+	class pod_field_array<T, N, false> : public boost::array<T, N>
 	{
 	public:
 		void resize(size_t n) { if (n != N) throw std::out_of_range("requested size does not match fixed array size"); }
@@ -91,22 +91,22 @@ namespace RobotRaconteur
 	};
 
 	template <typename T, size_t N, bool varlength>
-	RR_SHARED_PTR<RRArray<T> > cstructure_field_array_ToRRArray(const cstructure_field_array<T, N, varlength>& i)
+	RR_SHARED_PTR<RRArray<T> > pod_field_array_ToRRArray(const pod_field_array<T, N, varlength>& i)
 	{
 		return AttachRRArrayCopy<T>(&i[0], i.size());
 	}
 
 	template <typename T, size_t N, bool varlength>
-	void RRArrayTo_cstructure_field_array(cstructure_field_array<T, N, varlength>& v, const RR_SHARED_PTR<RRArray<T> >& i)
+	void RRArrayTo_pod_field_array(pod_field_array<T, N, varlength>& v, const RR_SHARED_PTR<RRArray<T> >& i)
 	{
-		if (!i) throw NullValueException("CStructure array must not be null");
+		if (!i) throw NullValueException("Pod array must not be null");
 		v.resize(i->size());
 		memcpy(&v[0], i->ptr(), sizeof(T)*i->size());		
 	}
 
-#define RRCStructureStubNumberType(type) \
+#define RRPodStubNumberType(type) \
 	template<> \
-	class CStructureStub<type> \
+	class PodStub<type> \
 	{ \
 	public: \
 		template<typename U> \
@@ -123,93 +123,93 @@ namespace RobotRaconteur
 	}; \
 	\
 	template<size_t N, bool varlength> \
-	class CStructureStub<cstructure_field_array<type, N, varlength> > \
+	class PodStub<pod_field_array<type, N, varlength> > \
 	{ \
 	public: \
 		template<typename U> \
-		static void PackField(const cstructure_field_array<type, N, varlength>& v, const std::string& name, U& out) \
+		static void PackField(const pod_field_array<type, N, varlength>& v, const std::string& name, U& out) \
 		{ \
-			out.push_back(RR_MAKE_SHARED<MessageElement>(name, cstructure_field_array_ToRRArray(v))); \
+			out.push_back(RR_MAKE_SHARED<MessageElement>(name, pod_field_array_ToRRArray(v))); \
 		} \
 		\
 		template<typename U> \
-		static void UnpackField(cstructure_field_array<type, N, varlength>& v, const std::string& name, U& in) \
+		static void UnpackField(pod_field_array<type, N, varlength>& v, const std::string& name, U& in) \
 		{ \
 			RR_SHARED_PTR<RRArray<type> > a = MessageElement::FindElement(in, name)->template CastData<RRArray<type> >(); \
-			RRArrayTo_cstructure_field_array(v, a); \
+			RRArrayTo_pod_field_array(v, a); \
 		} \
 	}; \
 	
-	RRCStructureStubNumberType(double);
-	RRCStructureStubNumberType(float);
-	RRCStructureStubNumberType(int8_t);
-	RRCStructureStubNumberType(uint8_t);
-	RRCStructureStubNumberType(int16_t);
-	RRCStructureStubNumberType(uint16_t);
-	RRCStructureStubNumberType(int32_t);
-	RRCStructureStubNumberType(uint32_t);
-	RRCStructureStubNumberType(int64_t);
-	RRCStructureStubNumberType(uint64_t);
+	RRPodStubNumberType(double);
+	RRPodStubNumberType(float);
+	RRPodStubNumberType(int8_t);
+	RRPodStubNumberType(uint8_t);
+	RRPodStubNumberType(int16_t);
+	RRPodStubNumberType(uint16_t);
+	RRPodStubNumberType(int32_t);
+	RRPodStubNumberType(uint32_t);
+	RRPodStubNumberType(int64_t);
+	RRPodStubNumberType(uint64_t);
 		
 	template <typename T, size_t N, bool varlength>
-	RR_SHARED_PTR<RRAStructureArray<T> > cstructure_field_array_ToRRAStructureArray(const cstructure_field_array<T, N, varlength>& i)
+	RR_SHARED_PTR<RRNamedArray<T> > pod_field_array_ToRRNamedArray(const pod_field_array<T, N, varlength>& i)
 	{
 		typedef typename RRPrimUtil<T>::ElementArrayType element_type;
 		typename RR_SHARED_PTR<RRArray<element_type> > a = AttachRRArrayCopy<element_type>((const element_type*)&i[0], i.size() * RRPrimUtil<T>::GetElementArrayCount());
-		return RR_MAKE_SHARED<RRAStructureArray<T> >(a);
+		return RR_MAKE_SHARED<RRNamedArray<T> >(a);
 	}
 
 	template <typename T, size_t N, bool varlength>
-	void RRAStructureArrayTo_cstructure_field_array(cstructure_field_array<T, N, varlength>& v, const RR_SHARED_PTR<RRAStructureArray<T> >& i)
+	void RRNamedArrayTo_pod_field_array(pod_field_array<T, N, varlength>& v, const RR_SHARED_PTR<RRNamedArray<T> >& i)
 	{
-		if (!i) throw NullValueException("CStructure array must not be null");
+		if (!i) throw NullValueException("Pod array must not be null");
 		v.resize(i->size());
 		memcpy(&v[0], i->GetNumericArray()->ptr(), sizeof(T)*i->size());
 	}
 
-#define RRCStructureStubAStructureType(type) \
+#define RRPodStubNamedArrayType(type) \
 	template<> \
-	class CStructureStub<type> \
+	class PodStub<type> \
 	{ \
 	public: \
 		template<typename U> \
 		static void PackField(const type& v, const std::string& name, U& out) \
 		{ \
 			std::vector<RR_SHARED_PTR<MessageElement> > v1; \
-			v1.push_back(RR_MAKE_SHARED<MessageElement>("array",ScalarToRRAStructureArray<type>(v)->GetNumericArray())); \
-			out.push_back(RR_MAKE_SHARED<MessageElement>(name, RR_MAKE_SHARED<MessageElementAStructureArray>(RRPrimUtil<type>::GetElementTypeString(),v1))); \
+			v1.push_back(RR_MAKE_SHARED<MessageElement>("array",ScalarToRRNamedArray<type>(v)->GetNumericArray())); \
+			out.push_back(RR_MAKE_SHARED<MessageElement>(name, RR_MAKE_SHARED<MessageElementNamedArray>(RRPrimUtil<type>::GetElementTypeString(),v1))); \
 		} \
 		\
 		template<typename U> \
 		static void UnpackField(type& v, const std::string& name, U& in) \
 		{ \
 			typedef typename RRPrimUtil<type>::ElementArrayType element_type; \
-			RR_SHARED_PTR<MessageElementAStructureArray> m = MessageElement::FindElement(in,name)->template CastData<MessageElementAStructureArray>(); \
-			if (m->Type != RRPrimUtil<type>::GetElementTypeString()) throw DataTypeException("Invalid astruct"); \
+			RR_SHARED_PTR<MessageElementNamedArray> m = MessageElement::FindElement(in,name)->template CastData<MessageElementNamedArray>(); \
+			if (m->Type != RRPrimUtil<type>::GetElementTypeString()) throw DataTypeException("Invalid namedarray"); \
 			RR_SHARED_PTR<RRArray<element_type> > a=MessageElement::FindElement(m->Elements, "array")->CastData<RRArray<element_type> >(); \
-			if (a->Length() != RRPrimUtil<type>::GetElementArrayCount()) throw DataTypeException("Invalid astruct"); \
+			if (a->Length() != RRPrimUtil<type>::GetElementArrayCount()) throw DataTypeException("Invalid namedarray"); \
 			memcpy(&v, a->void_ptr(), sizeof(v)); \
 		} \
 	}; \
 	\
 	template<size_t N, bool varlength> \
-	class CStructureStub<cstructure_field_array<type, N, varlength> > \
+	class PodStub<pod_field_array<type, N, varlength> > \
 	{ \
 	public: \
 		template<typename U> \
-		static void PackField(const cstructure_field_array<type, N, varlength>& v, const std::string& name, U& out) \
+		static void PackField(const pod_field_array<type, N, varlength>& v, const std::string& name, U& out) \
 		{ \
-			RR_SHARED_PTR<RRAStructureArray<type> > a = cstructure_field_array_ToRRAStructureArray(v); \
+			RR_SHARED_PTR<RRNamedArray<type> > a = pod_field_array_ToRRNamedArray(v); \
 			std::vector<RR_SHARED_PTR<MessageElement> > a1; \
 			a1.push_back(RR_MAKE_SHARED<MessageElement>("array", a->GetNumericArray())); \
-			out.push_back(RR_MAKE_SHARED<MessageElement>(name, RR_MAKE_SHARED<MessageElementAStructureArray>(RRPrimUtil<type>::GetElementTypeString(), a1))); \
+			out.push_back(RR_MAKE_SHARED<MessageElement>(name, RR_MAKE_SHARED<MessageElementNamedArray>(RRPrimUtil<type>::GetElementTypeString(), a1))); \
 		} \
 		\
 		template<typename U> \
-		static void UnpackField(cstructure_field_array<type, N, varlength>& v, const std::string& name, U& in) \
+		static void UnpackField(pod_field_array<type, N, varlength>& v, const std::string& name, U& in) \
 		{ \
 			typedef RRPrimUtil<type>::ElementArrayType element_type; \
-			RR_SHARED_PTR<MessageElementAStructureArray> a = MessageElement::FindElement(in, name)->template CastData<MessageElementAStructureArray>(); \
+			RR_SHARED_PTR<MessageElementNamedArray> a = MessageElement::FindElement(in, name)->template CastData<MessageElementNamedArray>(); \
 			RR_SHARED_PTR<RRArray<element_type> > a1 = MessageElement::FindElement(a->Elements, "array")->template CastData<RRArray<element_type> >(); \
 			v.resize(a1->size() / RRPrimUtil<type>::GetElementArrayCount()); \
 			memcpy(&v, a1->ptr(), a1->size() * sizeof(element_type)); \
@@ -217,30 +217,30 @@ namespace RobotRaconteur
 	}; 
 
 	template<typename T, size_t N, bool varlength>
-	class CStructureStub<cstructure_field_array<T, N, varlength> >
+	class PodStub<pod_field_array<T, N, varlength> >
 	{
 	public:
 		template<typename U>
-		static void PackField(const cstructure_field_array<T, N, varlength>& v, const std::string& name, U& out)
+		static void PackField(const pod_field_array<T, N, varlength>& v, const std::string& name, U& out)
 		{
 			std::vector<RR_SHARED_PTR<MessageElement> > o;
 			for (size_t j = 0; j < v.size(); j++)
 			{
-				RR_SHARED_PTR<MessageElement> m = RR_MAKE_SHARED<MessageElement>("", CStructureStub<T>::PackToMessageElementCStructure(v[j]));
+				RR_SHARED_PTR<MessageElement> m = RR_MAKE_SHARED<MessageElement>("", PodStub<T>::PackToMessageElementPod(v[j]));
 				m->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
 				m->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
 				m->ElementNumber = j;
 				o.push_back(m);
 			}
-			out.push_back(RR_MAKE_SHARED<MessageElement>(name, RR_MAKE_SHARED<MessageElementCStructureArray>(RRPrimUtil<T>::GetElementTypeString(), o)));
+			out.push_back(RR_MAKE_SHARED<MessageElement>(name, RR_MAKE_SHARED<MessageElementPodArray>(RRPrimUtil<T>::GetElementTypeString(), o)));
 		}
 
 		template<typename U>
-		static void UnpackField(cstructure_field_array<T, N, varlength>& v, const std::string& name, U& in)
+		static void UnpackField(pod_field_array<T, N, varlength>& v, const std::string& name, U& in)
 		{		
-			RR_SHARED_PTR<MessageElementCStructureArray> a = MessageElement::FindElement(in, name)->template CastData<MessageElementCStructureArray>();
+			RR_SHARED_PTR<MessageElementPodArray> a = MessageElement::FindElement(in, name)->template CastData<MessageElementPodArray>();
 			if (!a) throw NullValueException("Unexpected null array");
-			if (a->Type != RRPrimUtil<T>::GetElementTypeString()) throw DataTypeException("CStructure data type mismatch");
+			if (a->Type != RRPrimUtil<T>::GetElementTypeString()) throw DataTypeException("Pod data type mismatch");
 			//if (a->Elements.size() > N) throw OutOfRangeException("Array is too large for static vector size");
 			v.resize(a->Elements.size());
 			for (int32_t i = 0; i<(int32_t)a->Elements.size(); i++)
@@ -257,48 +257,48 @@ namespace RobotRaconteur
 				}
 				else
 				{
-					throw DataTypeException("Invalid cstructure array format");
+					throw DataTypeException("Invalid pod array format");
 				}
 
-				if (key != i) throw DataTypeException("Invalid cstructure array format");
+				if (key != i) throw DataTypeException("Invalid pod array format");
 
-				CStructureStub<T>::UnpackFromMessageElementCStructure(v[i], m->CastData<MessageElementCStructure>());
+				PodStub<T>::UnpackFromMessageElementPod(v[i], m->CastData<MessageElementPod>());
 			}
 		}
 	};
 		
 	template<typename T, typename U>
-	void CStructureStub_PackField(const T& v, const std::string& name, U& out)
+	void PodStub_PackField(const T& v, const std::string& name, U& out)
 	{
-		CStructureStub<T>::PackField(v, name, out);
+		PodStub<T>::PackField(v, name, out);
 	}
 
 	template<typename T, typename U>
-	void CStructureStub_UnpackField(T& v, const std::string& name, U& out)
+	void PodStub_UnpackField(T& v, const std::string& name, U& out)
 	{		
-		CStructureStub<T>::UnpackField(v, name, out);
+		PodStub<T>::UnpackField(v, name, out);
 	}
 
 	template<typename T>
-	RR_SHARED_PTR<MessageElementCStructureArray> CStructureStub_PackCStructureToArray(const T& v)
+	RR_SHARED_PTR<MessageElementPodArray> PodStub_PackPodToArray(const T& v)
 	{
 		std::vector<RR_SHARED_PTR<MessageElement> > o;
 		
-		RR_SHARED_PTR<MessageElement> m = RR_MAKE_SHARED<MessageElement>("", CStructureStub<T>::PackToMessageElementCStructure(v));
+		RR_SHARED_PTR<MessageElement> m = RR_MAKE_SHARED<MessageElement>("", PodStub<T>::PackToMessageElementPod(v));
 		m->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
 		m->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
 		m->ElementNumber = 0;
 		o.push_back(m);
 		
-		return RR_MAKE_SHARED<MessageElementCStructureArray>(RRPrimUtil<T>::GetElementTypeString(), o);		
+		return RR_MAKE_SHARED<MessageElementPodArray>(RRPrimUtil<T>::GetElementTypeString(), o);		
 	}
 
 	template<typename T>
-	void CStructureStub_UnpackCStructureFromArray(T& v, RR_SHARED_PTR<MessageElementCStructureArray> a)
+	void PodStub_UnpackPodFromArray(T& v, RR_SHARED_PTR<MessageElementPodArray> a)
 	{
-		if (!a) throw DataTypeException("CStructure scalar array must not be null");
-		if (a->Type != RRPrimUtil<T>::GetElementTypeString()) throw DataTypeException("CStructure data type mismatch");
-		if (a->Elements.size() != 1) throw DataTypeException("Invalid cstructure scalar array format");
+		if (!a) throw DataTypeException("Pod scalar array must not be null");
+		if (a->Type != RRPrimUtil<T>::GetElementTypeString()) throw DataTypeException("Pod data type mismatch");
+		if (a->Elements.size() != 1) throw DataTypeException("Invalid pod scalar array format");
 
 		RR_SHARED_PTR<MessageElement> m = a->Elements.at(0);
 		int32_t key;
@@ -312,45 +312,45 @@ namespace RobotRaconteur
 		}
 		else
 		{
-			throw DataTypeException("Invalid cstructure scalar array format");
+			throw DataTypeException("Invalid pod scalar array format");
 		}
 
-		if (key != 0) throw DataTypeException("Invalid cstructure scalar array format");
+		if (key != 0) throw DataTypeException("Invalid pod scalar array format");
 
-		CStructureStub<T>::UnpackFromMessageElementCStructure(v, m->CastData<MessageElementCStructure>());
+		PodStub<T>::UnpackFromMessageElementPod(v, m->CastData<MessageElementPod>());
 	}
 
 	template<typename T>
-	T CStructureStub_UnpackCStructureFromArray(RR_SHARED_PTR<MessageElementCStructureArray> a)
+	T PodStub_UnpackPodFromArray(RR_SHARED_PTR<MessageElementPodArray> a)
 	{
 		T v;
-		CStructureStub_UnpackCStructureFromArray<T>(v, a);
+		PodStub_UnpackPodFromArray<T>(v, a);
 		return v;
 	}
 
 	template<typename T>
-	RR_SHARED_PTR<MessageElementCStructureArray> CStructureStub_PackCStructureArray(RR_SHARED_PTR<RRCStructureArray<T> > a)
+	RR_SHARED_PTR<MessageElementPodArray> PodStub_PackPodArray(RR_SHARED_PTR<RRPodArray<T> > a)
 	{
-		if (!a) return RR_SHARED_PTR<MessageElementCStructureArray>();		
+		if (!a) return RR_SHARED_PTR<MessageElementPodArray>();		
 		std::vector<RR_SHARED_PTR<MessageElement> > o;
-		for (size_t i = 0; i < a->cstruct_array.size(); i++)
+		for (size_t i = 0; i < a->pod_array.size(); i++)
 		{
-			RR_SHARED_PTR<MessageElement> m = RR_MAKE_SHARED<MessageElement>("", CStructureStub<T>::PackToMessageElementCStructure(a->cstruct_array[i]));
+			RR_SHARED_PTR<MessageElement> m = RR_MAKE_SHARED<MessageElement>("", PodStub<T>::PackToMessageElementPod(a->pod_array[i]));
 			m->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
 			m->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
 			m->ElementNumber = i;
 			o.push_back(m);
 		}
-		return RR_MAKE_SHARED<MessageElementCStructureArray>(RRPrimUtil<T>::GetElementTypeString(), o);
+		return RR_MAKE_SHARED<MessageElementPodArray>(RRPrimUtil<T>::GetElementTypeString(), o);
 	}
 
 	template<typename T>
-	RR_SHARED_PTR<RRCStructureArray<T> > CStructureStub_UnpackCStructureArray(RR_SHARED_PTR<MessageElementCStructureArray> a)
+	RR_SHARED_PTR<RRPodArray<T> > PodStub_UnpackPodArray(RR_SHARED_PTR<MessageElementPodArray> a)
 	{
-		if (!a) return RR_SHARED_PTR<RRCStructureArray<T> >();
+		if (!a) return RR_SHARED_PTR<RRPodArray<T> >();
 
-		RR_SHARED_PTR<RRCStructureArray<T> > o = RR_MAKE_SHARED<RRCStructureArray<T> >();
-		o->cstruct_array.resize(a->Elements.size());
+		RR_SHARED_PTR<RRPodArray<T> > o = RR_MAKE_SHARED<RRPodArray<T> >();
+		o->pod_array.resize(a->Elements.size());
 		for (size_t i = 0; i < a->Elements.size(); i++)
 		{
 			RR_SHARED_PTR<MessageElement> m = a->Elements.at(i);
@@ -365,96 +365,96 @@ namespace RobotRaconteur
 			}
 			else
 			{
-				throw DataTypeException("Invalid cstructure array format");
+				throw DataTypeException("Invalid pod array format");
 			}
 
-			if (key != i) throw DataTypeException("Invalid cstructure array format");
-			CStructureStub<T>::UnpackFromMessageElementCStructure(o->cstruct_array[i], m->CastData<MessageElementCStructure>());
+			if (key != i) throw DataTypeException("Invalid pod array format");
+			PodStub<T>::UnpackFromMessageElementPod(o->pod_array[i], m->CastData<MessageElementPod>());
 		}
 
 		return o;		
 	}
 
 	template<typename T>
-	RR_SHARED_PTR<MessageElementCStructureMultiDimArray> CStructureStub_PackCStructureMultiDimArray(RR_SHARED_PTR<RRCStructureMultiDimArray<T> > a)
+	RR_SHARED_PTR<MessageElementPodMultiDimArray> PodStub_PackPodMultiDimArray(RR_SHARED_PTR<RRPodMultiDimArray<T> > a)
 	{
-		if (!a) return RR_SHARED_PTR<MessageElementCStructureMultiDimArray>();
+		if (!a) return RR_SHARED_PTR<MessageElementPodMultiDimArray>();
 
 		std::vector<RR_SHARED_PTR<MessageElement> > m;
 		m.push_back(RR_MAKE_SHARED<MessageElement>("dims", a->Dims));
 		if (!a->CStructArray) throw NullValueException("Multidimarray array must not be null");
-		m.push_back(RR_MAKE_SHARED<MessageElement>("array", CStructureStub_PackCStructureArray(a->CStructArray)));
-		return RR_MAKE_SHARED<MessageElementCStructureMultiDimArray>(RRPrimUtil<T>::GetElementTypeString(), m);		
+		m.push_back(RR_MAKE_SHARED<MessageElement>("array", PodStub_PackPodArray(a->CStructArray)));
+		return RR_MAKE_SHARED<MessageElementPodMultiDimArray>(RRPrimUtil<T>::GetElementTypeString(), m);		
 	}
 
 	template<typename T>
-	RR_SHARED_PTR<RRCStructureMultiDimArray<T> > CStructureStub_UnpackCStructureMultiDimArray(RR_SHARED_PTR<MessageElementCStructureMultiDimArray> m)
+	RR_SHARED_PTR<RRPodMultiDimArray<T> > PodStub_UnpackPodMultiDimArray(RR_SHARED_PTR<MessageElementPodMultiDimArray> m)
 	{
-		if (!m) return RR_SHARED_PTR<RRCStructureMultiDimArray<T> >();
+		if (!m) return RR_SHARED_PTR<RRPodMultiDimArray<T> >();
 
-		RR_SHARED_PTR<RRCStructureMultiDimArray<T> > o = RR_MAKE_SHARED<RRCStructureMultiDimArray<T> >();
+		RR_SHARED_PTR<RRPodMultiDimArray<T> > o = RR_MAKE_SHARED<RRPodMultiDimArray<T> >();
 		o->Dims = (MessageElement::FindElement(m->Elements, "dims")->CastData<RRArray<uint32_t> >());
-		o->CStructArray = CStructureStub_UnpackCStructureArray<T>(MessageElement::FindElement(m->Elements, "array")->CastData<MessageElementCStructureArray>());
+		o->CStructArray = PodStub_UnpackPodArray<T>(MessageElement::FindElement(m->Elements, "array")->CastData<MessageElementPodArray>());
 		if (!o->CStructArray) throw NullValueException("Multidimarray array must not be null");
 		return o;
 	}
 
 
-	//MessageElement pack helper functions for cstruct
+	//MessageElement pack helper functions for pod
 	template<typename T>
-	RR_SHARED_PTR<MessageElement> MessageElement_PackCStructureToArrayElement(const std::string& elementname, const T& s)
+	RR_SHARED_PTR<MessageElement> MessageElement_PackPodToArrayElement(const std::string& elementname, const T& s)
 	{
-		return RR_MAKE_SHARED<MessageElement>(elementname, CStructureStub_PackCStructureToArray(s));
+		return RR_MAKE_SHARED<MessageElement>(elementname, PodStub_PackPodToArray(s));
 	}
 
 	template<typename T>
-	RR_SHARED_PTR<MessageElement> MessageElement_PackCStructureArrayElement(const std::string& elementname, const RR_SHARED_PTR<RRCStructureArray<T> >& s)
+	RR_SHARED_PTR<MessageElement> MessageElement_PackPodArrayElement(const std::string& elementname, const RR_SHARED_PTR<RRPodArray<T> >& s)
 	{
 		if (!s) throw NullValueException("Arrays must not be null");
-		return RR_MAKE_SHARED<MessageElement>(elementname, CStructureStub_PackCStructureArray(s));
+		return RR_MAKE_SHARED<MessageElement>(elementname, PodStub_PackPodArray(s));
 	}
 
 	template<typename T>
-	RR_SHARED_PTR<MessageElement> MessageElement_PackCStructureMultiDimArrayElement(const std::string& elementname, const RR_SHARED_PTR<RRCStructureMultiDimArray<T> >& s)
+	RR_SHARED_PTR<MessageElement> MessageElement_PackPodMultiDimArrayElement(const std::string& elementname, const RR_SHARED_PTR<RRPodMultiDimArray<T> >& s)
 	{
 		if (!s) throw NullValueException("Arrays must not be null");
-		return RR_MAKE_SHARED<MessageElement>(elementname, CStructureStub_PackCStructureMultiDimArray(s));
+		return RR_MAKE_SHARED<MessageElement>(elementname, PodStub_PackPodMultiDimArray(s));
 	}
 
-	//MessageElement unpack helper functions for cstruct
+	//MessageElement unpack helper functions for pod
 	template<typename T>
-	T MessageElement_UnpackCStructureFromArray(const RR_SHARED_PTR<MessageElement>& m)
+	T MessageElement_UnpackPodFromArray(const RR_SHARED_PTR<MessageElement>& m)
 	{
-		return RobotRaconteur::CStructureStub_UnpackCStructureFromArray<T>(m->CastData<RobotRaconteur::MessageElementCStructureArray>());
+		return RobotRaconteur::PodStub_UnpackPodFromArray<T>(m->CastData<RobotRaconteur::MessageElementPodArray>());
 	}
 
 	template<typename T>
-	RR_SHARED_PTR<RRCStructureArray<T> > MessageElement_UnpackCStructureArray(const RR_SHARED_PTR<MessageElement>& m)
+	RR_SHARED_PTR<RRPodArray<T> > MessageElement_UnpackPodArray(const RR_SHARED_PTR<MessageElement>& m)
 	{
-		RR_SHARED_PTR<RRCStructureArray<T> > a = RobotRaconteur::CStructureStub_UnpackCStructureArray<T>(m->CastData<RobotRaconteur::MessageElementCStructureArray>());
+		RR_SHARED_PTR<RRPodArray<T> > a = RobotRaconteur::PodStub_UnpackPodArray<T>(m->CastData<RobotRaconteur::MessageElementPodArray>());
 		if (!a) throw NullValueException("Arrays must not be null");
 		return a;
 	}
 
 	template<typename T>
-	RR_SHARED_PTR<RRCStructureMultiDimArray<T> > MessageElement_UnpackCStructureMultiDimArray(const RR_SHARED_PTR<MessageElement>& m)
+	RR_SHARED_PTR<RRPodMultiDimArray<T> > MessageElement_UnpackPodMultiDimArray(const RR_SHARED_PTR<MessageElement>& m)
 	{
-		RR_SHARED_PTR<RRCStructureMultiDimArray<T> > a = RobotRaconteur::CStructureStub_UnpackCStructureMultiDimArray<T>(m->CastData<RobotRaconteur::MessageElementCStructureMultiDimArray>());
+		RR_SHARED_PTR<RRPodMultiDimArray<T> > a = RobotRaconteur::PodStub_UnpackPodMultiDimArray<T>(m->CastData<RobotRaconteur::MessageElementPodMultiDimArray>());
 		if (!a) throw NullValueException("Arrays must not be null");
 		return a;
 	}
 
 	template<typename T>
-	static RR_SHARED_PTR<RRCStructureArray<T> > VerifyRRArrayLength(RR_SHARED_PTR<RRCStructureArray<T> > a, size_t len, bool varlength)
+	static RR_SHARED_PTR<RRPodArray<T> > VerifyRRArrayLength(RR_SHARED_PTR<RRPodArray<T> > a, size_t len, bool varlength)
 	{
 		if (!a) throw NullValueException("Arrays must not be null");
 		if (len != 0)
 		{
-			if (varlength && (a->cstruct_array.size() > len))
+			if (varlength && (a->pod_array.size() > len))
 			{
 				throw DataTypeException("Array dimension mismatch");
 			}
-			if (!varlength && (a->cstruct_array.size() != len))
+			if (!varlength && (a->pod_array.size() != len))
 			{
 				throw DataTypeException("Array dimension mismatch");
 			}
@@ -463,7 +463,7 @@ namespace RobotRaconteur
 	}
 
 	template<size_t Ndims, typename T>
-	static RR_SHARED_PTR<RRCStructureMultiDimArray<T> > VerifyRRMultiDimArrayLength(RR_SHARED_PTR<RRCStructureMultiDimArray<T> > a, size_t n_elems, boost::array<uint32_t, Ndims> dims)
+	static RR_SHARED_PTR<RRPodMultiDimArray<T> > VerifyRRMultiDimArrayLength(RR_SHARED_PTR<RRPodMultiDimArray<T> > a, size_t n_elems, boost::array<uint32_t, Ndims> dims)
 	{
 		if (!a) throw NullValueException("Arrays must not be null");
 
@@ -472,7 +472,7 @@ namespace RobotRaconteur
 			throw DataTypeException("Array dimension mismatch");
 		}
 
-		if (a->CStructArray->cstruct_array.size() != n_elems)
+		if (a->CStructArray->pod_array.size() != n_elems)
 		{
 			throw DataTypeException("Array dimension mismatch");
 		}
@@ -489,130 +489,130 @@ namespace RobotRaconteur
 	}
 
 
-	// astruct
+	// namedarray
 
 	template<typename T>
-	RR_SHARED_PTR<MessageElementAStructureArray> AStructureStub_PackAStructureToArray(const T& v)
+	RR_SHARED_PTR<MessageElementNamedArray> NamedArrayStub_PackNamedArrayToArray(const T& v)
 	{
 		typedef typename RRPrimUtil<T>::ElementArrayType element_type;
 		RR_SHARED_PTR<RRArray<element_type> > a = AllocateRRArray<element_type>(RRPrimUtil<T>::GetElementArrayCount());
 		memcpy(a->void_ptr(), &v, sizeof(T));
 		std::vector<RR_SHARED_PTR<MessageElement> > a1;
 		a1.push_back(RR_MAKE_SHARED<MessageElement>("array", a));
-		return RR_MAKE_SHARED<MessageElementAStructureArray>(RRPrimUtil<T>::GetElementTypeString(), a1);
+		return RR_MAKE_SHARED<MessageElementNamedArray>(RRPrimUtil<T>::GetElementTypeString(), a1);
 
 	}
 
 	template<typename T>
-	void AStructureStub_UnpackAStructureFromArray(T& v, RR_SHARED_PTR<MessageElementAStructureArray> a)
+	void NamedArrayStub_UnpackNamedArrayFromArray(T& v, RR_SHARED_PTR<MessageElementNamedArray> a)
 	{
 		typedef typename RRPrimUtil<T>::ElementArrayType element_type;
-		if (!a) throw DataTypeException("AStructure scalar array must not be null");
-		if (a->Type != RRPrimUtil<T>::GetElementTypeString()) throw DataTypeException("AStructure data type mismatch");
-		if (a->Elements.size() != 1) throw DataTypeException("Invalid astructure array format");
+		if (!a) throw DataTypeException("NamedArray scalar array must not be null");
+		if (a->Type != RRPrimUtil<T>::GetElementTypeString()) throw DataTypeException("NamedArray data type mismatch");
+		if (a->Elements.size() != 1) throw DataTypeException("Invalid namedarray array format");
 		typename RR_SHARED_PTR<RRArray<element_type> > a1 = MessageElement::FindElement(a->Elements, "array")->template CastData<RRArray<element_type> >();
-		if (a1->Length() != sizeof(T) / sizeof(element_type)) throw DataTypeException("Invalid scalar astructure array format");
+		if (a1->Length() != sizeof(T) / sizeof(element_type)) throw DataTypeException("Invalid scalar namedarray array format");
 
 		v = *((T*)a1->void_ptr());
 	}
 
 	template<typename T>
-	T AStructureStub_UnpackAStructureFromArray(RR_SHARED_PTR<MessageElementAStructureArray> a)
+	T NamedArrayStub_UnpackNamedArrayFromArray(RR_SHARED_PTR<MessageElementNamedArray> a)
 	{
 		T o;
-		AStructureStub_UnpackAStructureFromArray(o, a);
+		NamedArrayStub_UnpackNamedArrayFromArray(o, a);
 		return o;
 	}
 
 	template<typename T>
-	RR_SHARED_PTR<MessageElementAStructureArray> AStructureStub_PackAStructureArray(RR_SHARED_PTR<RRAStructureArray<T> > a)
+	RR_SHARED_PTR<MessageElementNamedArray> NamedArrayStub_PackNamedArray(RR_SHARED_PTR<RRNamedArray<T> > a)
 	{
-		if (!a) return RR_SHARED_PTR<MessageElementAStructureArray>();
+		if (!a) return RR_SHARED_PTR<MessageElementNamedArray>();
 		std::vector<RR_SHARED_PTR<MessageElement> > a1;
 		a1.push_back(RR_MAKE_SHARED<MessageElement>("array",a->GetNumericArray()));
-		return RR_MAKE_SHARED<MessageElementAStructureArray>(RRPrimUtil<T>::GetElementTypeString(), a1);
+		return RR_MAKE_SHARED<MessageElementNamedArray>(RRPrimUtil<T>::GetElementTypeString(), a1);
 	}
 
 	template<typename T>
-	RR_SHARED_PTR<RRAStructureArray<T> > AStructureStub_UnpackAStructureArray(RR_SHARED_PTR<MessageElementAStructureArray> a)
+	RR_SHARED_PTR<RRNamedArray<T> > NamedArrayStub_UnpackNamedArray(RR_SHARED_PTR<MessageElementNamedArray> a)
 	{
 		typedef typename RRPrimUtil<T>::ElementArrayType element_type;
-		if (!a) return RR_SHARED_PTR<RRAStructureArray<T> >();
-		if (a->Type != RRPrimUtil<T>::GetElementTypeString()) throw DataTypeException("Invalid astruct type");
+		if (!a) return RR_SHARED_PTR<RRNamedArray<T> >();
+		if (a->Type != RRPrimUtil<T>::GetElementTypeString()) throw DataTypeException("Invalid namedarray type");
 		typename RR_SHARED_PTR<RRArray<element_type> > a2 = MessageElement::FindElement(a->Elements, "array")->CastData<RRArray<element_type> >();
-		return RR_MAKE_SHARED<RRAStructureArray<T> >(a2);
+		return RR_MAKE_SHARED<RRNamedArray<T> >(a2);
 	}
 
 	template<typename T>
-	RR_SHARED_PTR<MessageElementAStructureMultiDimArray> AStructureStub_PackAStructureMultiDimArray(RR_SHARED_PTR<RRAStructureMultiDimArray<T> > a)
+	RR_SHARED_PTR<MessageElementNamedMultiDimArray> NamedArrayStub_PackNamedMultiDimArray(RR_SHARED_PTR<RRNamedMultiDimArray<T> > a)
 	{
-		if (!a) return RR_SHARED_PTR<MessageElementAStructureMultiDimArray>();
+		if (!a) return RR_SHARED_PTR<MessageElementNamedMultiDimArray>();
 
 		std::vector<RR_SHARED_PTR<MessageElement> > m;
 		m.push_back(RR_MAKE_SHARED<MessageElement>("dims", a->Dims));
-		if (!a->AStructArray) throw NullValueException("Multidimarray array must not be null");
-		m.push_back(RR_MAKE_SHARED<MessageElement>("array", AStructureStub_PackAStructureArray(a->AStructArray)));
-		return RR_MAKE_SHARED<MessageElementAStructureMultiDimArray>(RRPrimUtil<T>::GetElementTypeString(), m);
+		if (!a->NamedArray) throw NullValueException("Multidimarray array must not be null");
+		m.push_back(RR_MAKE_SHARED<MessageElement>("array", NamedArrayStub_PackNamedArray(a->NamedArray)));
+		return RR_MAKE_SHARED<MessageElementNamedMultiDimArray>(RRPrimUtil<T>::GetElementTypeString(), m);
 	}
 
 	template<typename T>
-	RR_SHARED_PTR<RRAStructureMultiDimArray<T> > AStructureStub_UnpackAStructureMultiDimArray(RR_SHARED_PTR<MessageElementAStructureMultiDimArray> m)
+	RR_SHARED_PTR<RRNamedMultiDimArray<T> > NamedArrayStub_UnpackNamedMultiDimArray(RR_SHARED_PTR<MessageElementNamedMultiDimArray> m)
 	{
-		if (!m) return RR_SHARED_PTR<RRAStructureMultiDimArray<T> >();
+		if (!m) return RR_SHARED_PTR<RRNamedMultiDimArray<T> >();
 
-		typename RR_SHARED_PTR<RRAStructureMultiDimArray<T> > o = RR_MAKE_SHARED<RRAStructureMultiDimArray<T> >();
+		typename RR_SHARED_PTR<RRNamedMultiDimArray<T> > o = RR_MAKE_SHARED<RRNamedMultiDimArray<T> >();
 		o->Dims = (MessageElement::FindElement(m->Elements, "dims")->CastData<RRArray<uint32_t> >());
-		o->AStructArray = AStructureStub_UnpackAStructureArray<T>(MessageElement::FindElement(m->Elements, "array")->CastData<MessageElementAStructureArray>());
-		if (!o->AStructArray) throw NullValueException("Multidimarray array must not be null");
+		o->NamedArray = NamedArrayStub_UnpackNamedArray<T>(MessageElement::FindElement(m->Elements, "array")->CastData<MessageElementNamedArray>());
+		if (!o->NamedArray) throw NullValueException("Multidimarray array must not be null");
 		return o;
 	}
 
-	//MessageElement pack helper functions for astruct
+	//MessageElement pack helper functions for namedarray
 	template<typename T>
-	RR_SHARED_PTR<MessageElement> MessageElement_PackAStructureToArrayElement(const std::string& elementname, const T& s)
+	RR_SHARED_PTR<MessageElement> MessageElement_PackNamedArrayToArrayElement(const std::string& elementname, const T& s)
 	{
-		return RR_MAKE_SHARED<MessageElement>(elementname, AStructureStub_PackAStructureToArray(s));
+		return RR_MAKE_SHARED<MessageElement>(elementname, NamedArrayStub_PackNamedArrayToArray(s));
 	}
 
 	template<typename T>
-	RR_SHARED_PTR<MessageElement> MessageElement_PackAStructureArrayElement(const std::string& elementname, const RR_SHARED_PTR<RRAStructureArray<T> >& s)
+	RR_SHARED_PTR<MessageElement> MessageElement_PackNamedArrayElement(const std::string& elementname, const RR_SHARED_PTR<RRNamedArray<T> >& s)
 	{
 		if (!s) throw NullValueException("Arrays must not be null");
-		return RR_MAKE_SHARED<MessageElement>(elementname, AStructureStub_PackAStructureArray(s));
+		return RR_MAKE_SHARED<MessageElement>(elementname, NamedArrayStub_PackNamedArray(s));
 	}
 
 	template<typename T>
-	RR_SHARED_PTR<MessageElement> MessageElement_PackAStructureMultiDimArrayElement(const std::string& elementname, const RR_SHARED_PTR<RRAStructureMultiDimArray<T> >& s)
+	RR_SHARED_PTR<MessageElement> MessageElement_PackNamedMultiDimArrayElement(const std::string& elementname, const RR_SHARED_PTR<RRNamedMultiDimArray<T> >& s)
 	{
 		if (!s) throw NullValueException("Arrays must not be null");
-		return RR_MAKE_SHARED<MessageElement>(elementname, AStructureStub_PackAStructureMultiDimArray(s));
+		return RR_MAKE_SHARED<MessageElement>(elementname, NamedArrayStub_PackNamedMultiDimArray(s));
 	}
 
-	//MessageElement unpack helper functions for astruct
+	//MessageElement unpack helper functions for namedarray
 	template<typename T>
-	T MessageElement_UnpackAStructureFromArray(const RR_SHARED_PTR<MessageElement>& m)
+	T MessageElement_UnpackNamedArrayFromArray(const RR_SHARED_PTR<MessageElement>& m)
 	{
-		return RobotRaconteur::AStructureStub_UnpackAStructureFromArray<T>(m->CastData<RobotRaconteur::MessageElementAStructureArray>());
+		return RobotRaconteur::NamedArrayStub_UnpackNamedArrayFromArray<T>(m->CastData<RobotRaconteur::MessageElementNamedArray>());
 	}
 
 	template<typename T>
-	RR_SHARED_PTR<RRAStructureArray<T> > MessageElement_UnpackAStructureArray(const RR_SHARED_PTR<MessageElement>& m)
+	RR_SHARED_PTR<RRNamedArray<T> > MessageElement_UnpackNamedArray(const RR_SHARED_PTR<MessageElement>& m)
 	{
-		RR_SHARED_PTR<RRAStructureArray<T> > a = RobotRaconteur::AStructureStub_UnpackAStructureArray<T>(m->CastData<RobotRaconteur::MessageElementAStructureArray>());
+		RR_SHARED_PTR<RRNamedArray<T> > a = RobotRaconteur::NamedArrayStub_UnpackNamedArray<T>(m->CastData<RobotRaconteur::MessageElementNamedArray>());
 		if (!a) throw NullValueException("Arrays must not be null");
 		return a;
 	}
 
 	template<typename T>
-	RR_SHARED_PTR<RRAStructureMultiDimArray<T> > MessageElement_UnpackAStructureMultiDimArray(const RR_SHARED_PTR<MessageElement>& m)
+	RR_SHARED_PTR<RRNamedMultiDimArray<T> > MessageElement_UnpackNamedMultiDimArray(const RR_SHARED_PTR<MessageElement>& m)
 	{
-		RR_SHARED_PTR<RRAStructureMultiDimArray<T> > a = RobotRaconteur::AStructureStub_UnpackAStructureMultiDimArray<T>(m->CastData<RobotRaconteur::MessageElementAStructureMultiDimArray>());
+		RR_SHARED_PTR<RRNamedMultiDimArray<T> > a = RobotRaconteur::NamedArrayStub_UnpackNamedMultiDimArray<T>(m->CastData<RobotRaconteur::MessageElementNamedMultiDimArray>());
 		if (!a) throw NullValueException("Arrays must not be null");
 		return a;
 	}
 
 	template<typename T>
-	static RR_SHARED_PTR<RRAStructureArray<T> > VerifyRRArrayLength(RR_SHARED_PTR<RRAStructureArray<T> > a, size_t len, bool varlength)
+	static RR_SHARED_PTR<RRNamedArray<T> > VerifyRRArrayLength(RR_SHARED_PTR<RRNamedArray<T> > a, size_t len, bool varlength)
 	{
 		if (!a) throw NullValueException("Arrays must not be null");
 		if (len != 0)
@@ -630,7 +630,7 @@ namespace RobotRaconteur
 	}
 
 	template<size_t Ndims, typename T>
-	static RR_SHARED_PTR<RRAStructureMultiDimArray<T> > VerifyRRMultiDimArrayLength(RR_SHARED_PTR<RRAStructureMultiDimArray<T> > a, size_t n_elems, boost::array<uint32_t, Ndims> dims)
+	static RR_SHARED_PTR<RRNamedMultiDimArray<T> > VerifyRRMultiDimArrayLength(RR_SHARED_PTR<RRNamedMultiDimArray<T> > a, size_t n_elems, boost::array<uint32_t, Ndims> dims)
 	{
 		if (!a) throw NullValueException("Arrays must not be null");
 
@@ -639,7 +639,7 @@ namespace RobotRaconteur
 			throw DataTypeException("Array dimension mismatch");
 		}
 
-		if (a->AStructArray->Length() != n_elems)
+		if (a->NamedArray->Length() != n_elems)
 		{
 			throw DataTypeException("Array dimension mismatch");
 		}

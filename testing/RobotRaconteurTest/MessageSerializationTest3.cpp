@@ -100,19 +100,19 @@ namespace RobotRaconteurTest
 				e->ElementType = DataTypes_list_t;
 				break;
 			case 5:
-				e->ElementType = DataTypes_cstructure_t;
+				e->ElementType = DataTypes_pod_t;
 				break;
 			case 6:
-				e->ElementType = DataTypes_cstructure_array_t;
+				e->ElementType = DataTypes_pod_array_t;
 				break;
 			case 7:
-				e->ElementType = DataTypes_cstructure_multidimarray_t;
+				e->ElementType = DataTypes_pod_multidimarray_t;
 				break;
 			case 8:
-				e->ElementType = DataTypes_astructure_array_t;
+				e->ElementType = DataTypes_namedarray_array_t;
 				break;
 			case 9:
-				e->ElementType = DataTypes_astructure_multidimarray_t;
+				e->ElementType = DataTypes_namedarray_multidimarray_t;
 				break;
 			}
 		}
@@ -237,7 +237,7 @@ namespace RobotRaconteurTest
 			return e;
 		}
 
-		case DataTypes_cstructure_t:
+		case DataTypes_pod_t:
 		{
 			std::vector<RR_SHARED_PTR<MessageElement> > v;
 			size_t n = len_sub_dist(rng);
@@ -245,10 +245,10 @@ namespace RobotRaconteurTest
 			{
 				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(RR_MAKE_SHARED<MessageElementCStructure>(v));
+			e->SetData(RR_MAKE_SHARED<MessageElementPod>(v));
 			return e;
 		}
-		case DataTypes_cstructure_array_t:
+		case DataTypes_pod_array_t:
 		{
 			std::vector<RR_SHARED_PTR<MessageElement> > v;
 			size_t n = len_sub_dist(rng);
@@ -256,10 +256,10 @@ namespace RobotRaconteurTest
 			{
 				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(RR_MAKE_SHARED<MessageElementCStructureArray>(MessageSerializationTest3_NewRandomString(rng, 128),v));
+			e->SetData(RR_MAKE_SHARED<MessageElementPodArray>(MessageSerializationTest3_NewRandomString(rng, 128),v));
 			return e;
 		}
-		case DataTypes_cstructure_multidimarray_t:
+		case DataTypes_pod_multidimarray_t:
 		{
 			std::vector<RR_SHARED_PTR<MessageElement> > v;
 			size_t n = len_sub_dist(rng);
@@ -267,10 +267,10 @@ namespace RobotRaconteurTest
 			{
 				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(RR_MAKE_SHARED<MessageElementCStructureMultiDimArray>(MessageSerializationTest3_NewRandomString(rng, 128),v));
+			e->SetData(RR_MAKE_SHARED<MessageElementPodMultiDimArray>(MessageSerializationTest3_NewRandomString(rng, 128),v));
 			return e;
 		}
-		case DataTypes_astructure_array_t:
+		case DataTypes_namedarray_array_t:
 		{
 			std::vector<RR_SHARED_PTR<MessageElement> > v;
 			size_t n = len_sub_dist(rng);
@@ -278,10 +278,10 @@ namespace RobotRaconteurTest
 			{
 				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(RR_MAKE_SHARED<MessageElementAStructureArray>(MessageSerializationTest3_NewRandomString(rng, 128), v));
+			e->SetData(RR_MAKE_SHARED<MessageElementNamedArray>(MessageSerializationTest3_NewRandomString(rng, 128), v));
 			return e;
 		}
-		case DataTypes_astructure_multidimarray_t:
+		case DataTypes_namedarray_multidimarray_t:
 		{
 			std::vector<RR_SHARED_PTR<MessageElement> > v;
 			size_t n = len_sub_dist(rng);
@@ -289,7 +289,7 @@ namespace RobotRaconteurTest
 			{
 				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(RR_MAKE_SHARED<MessageElementAStructureMultiDimArray>(MessageSerializationTest3_NewRandomString(rng, 128), v));
+			e->SetData(RR_MAKE_SHARED<MessageElementNamedMultiDimArray>(MessageSerializationTest3_NewRandomString(rng, 128), v));
 			return e;
 		}
 		default:

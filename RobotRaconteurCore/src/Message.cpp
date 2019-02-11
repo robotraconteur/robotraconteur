@@ -1223,9 +1223,9 @@ namespace RobotRaconteur
 			}
 			break;
 		}
-		case DataTypes_cstructure_t:
+		case DataTypes_pod_t:
 		{
-			RR_SHARED_PTR<MessageElementCStructure > d = rr_cast<MessageElementCStructure >(GetData());
+			RR_SHARED_PTR<MessageElementPod > d = rr_cast<MessageElementPod >(GetData());
 			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, d->Elements)
 			{
 				e->UpdateData();
@@ -1233,9 +1233,9 @@ namespace RobotRaconteur
 			}
 			break;
 		}
-		case DataTypes_cstructure_array_t:
+		case DataTypes_pod_array_t:
 		{
-			RR_SHARED_PTR<MessageElementCStructureArray > d = rr_cast<MessageElementCStructureArray >(GetData());
+			RR_SHARED_PTR<MessageElementPodArray > d = rr_cast<MessageElementPodArray >(GetData());
 			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, d->Elements)
 			{
 				e->UpdateData();
@@ -1243,9 +1243,9 @@ namespace RobotRaconteur
 			}
 			break;
 		}
-		case DataTypes_cstructure_multidimarray_t:
+		case DataTypes_pod_multidimarray_t:
 		{
-			RR_SHARED_PTR<MessageElementCStructureMultiDimArray > d = rr_cast<MessageElementCStructureMultiDimArray >(GetData());
+			RR_SHARED_PTR<MessageElementPodMultiDimArray > d = rr_cast<MessageElementPodMultiDimArray >(GetData());
 			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, d->Elements)
 			{
 				e->UpdateData();
@@ -1253,9 +1253,9 @@ namespace RobotRaconteur
 			}
 			break;
 		}		
-		case DataTypes_astructure_array_t:
+		case DataTypes_namedarray_array_t:
 		{
-			RR_SHARED_PTR<MessageElementAStructureArray > d = rr_cast<MessageElementAStructureArray>(GetData());
+			RR_SHARED_PTR<MessageElementNamedArray > d = rr_cast<MessageElementNamedArray>(GetData());
 			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, d->Elements)
 			{
 				e->UpdateData();
@@ -1263,9 +1263,9 @@ namespace RobotRaconteur
 			}
 			break;
 		}
-		case DataTypes_astructure_multidimarray_t:
+		case DataTypes_namedarray_multidimarray_t:
 		{
-			RR_SHARED_PTR<MessageElementAStructureMultiDimArray > d = rr_cast<MessageElementAStructureMultiDimArray>(GetData());
+			RR_SHARED_PTR<MessageElementNamedMultiDimArray > d = rr_cast<MessageElementNamedMultiDimArray>(GetData());
 			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, d->Elements)
 			{
 				e->UpdateData();
@@ -1366,41 +1366,41 @@ namespace RobotRaconteur
 				DataCount = (uint32_t)ddat->Elements.size();
 				break;
 			}
-		case DataTypes_cstructure_t:
+		case DataTypes_pod_t:
 		{
-			RR_SHARED_PTR<MessageElementCStructure> sdat = RR_STATIC_POINTER_CAST<MessageElementCStructure>(dat);
+			RR_SHARED_PTR<MessageElementPod> sdat = RR_STATIC_POINTER_CAST<MessageElementPod>(dat);
 			if (!sdat) throw DataTypeException("");
 			DataCount = (uint32_t)sdat->Elements.size();
 			ElementTypeName = sdat->GetTypeString();
 			break;
 		}
-		case DataTypes_cstructure_array_t:
+		case DataTypes_pod_array_t:
 		{
-			RR_SHARED_PTR<MessageElementCStructureArray> sdat = RR_STATIC_POINTER_CAST<MessageElementCStructureArray>(dat);
+			RR_SHARED_PTR<MessageElementPodArray> sdat = RR_STATIC_POINTER_CAST<MessageElementPodArray>(dat);
 			if (!sdat) throw DataTypeException("");
 			DataCount = (uint32_t)sdat->Elements.size();
 			ElementTypeName = sdat->GetTypeString();
 			break;
 		}
-		case DataTypes_cstructure_multidimarray_t:
+		case DataTypes_pod_multidimarray_t:
 		{
-			RR_SHARED_PTR<MessageElementCStructureMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementCStructureMultiDimArray>(dat);
+			RR_SHARED_PTR<MessageElementPodMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementPodMultiDimArray>(dat);
 			if (!sdat) throw DataTypeException("");
 			DataCount = (uint32_t)sdat->Elements.size();
 			ElementTypeName = sdat->GetTypeString();
 			break;
 		}
-		case DataTypes_astructure_array_t:
+		case DataTypes_namedarray_array_t:
 		{
-			RR_SHARED_PTR<MessageElementAStructureArray> sdat = RR_STATIC_POINTER_CAST<MessageElementAStructureArray>(dat);
+			RR_SHARED_PTR<MessageElementNamedArray> sdat = RR_STATIC_POINTER_CAST<MessageElementNamedArray>(dat);
 			if (!sdat) throw DataTypeException("");
 			DataCount = (uint32_t)sdat->Elements.size();
 			ElementTypeName = sdat->GetTypeString();
 			break;
 		}
-		case DataTypes_astructure_multidimarray_t:
+		case DataTypes_namedarray_multidimarray_t:
 		{
-			RR_SHARED_PTR<MessageElementAStructureMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementAStructureMultiDimArray>(dat);
+			RR_SHARED_PTR<MessageElementNamedMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementNamedMultiDimArray>(dat);
 			if (!sdat) throw DataTypeException("");
 			DataCount = (uint32_t)sdat->Elements.size();
 			ElementTypeName = sdat->GetTypeString();
@@ -1499,41 +1499,41 @@ namespace RobotRaconteur
 					e->Write(w);
 				break;
 			}
-		case DataTypes_cstructure_t:
+		case DataTypes_pod_t:
 		{
-			RR_SHARED_PTR<MessageElementCStructure> sdat = RR_STATIC_POINTER_CAST<MessageElementCStructure>(dat);
+			RR_SHARED_PTR<MessageElementPod> sdat = RR_STATIC_POINTER_CAST<MessageElementPod>(dat);
 			if (!sdat) throw DataTypeException("");
 			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, sdat->Elements)
 				e->Write(w);
 			break;
 		}
-		case DataTypes_cstructure_array_t:
+		case DataTypes_pod_array_t:
 		{
-			RR_SHARED_PTR<MessageElementCStructureArray> sdat = RR_STATIC_POINTER_CAST<MessageElementCStructureArray>(dat);
+			RR_SHARED_PTR<MessageElementPodArray> sdat = RR_STATIC_POINTER_CAST<MessageElementPodArray>(dat);
 			if (!sdat) throw DataTypeException("");
 			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, sdat->Elements)
 				e->Write(w);
 			break;
 		}
-		case DataTypes_cstructure_multidimarray_t:
+		case DataTypes_pod_multidimarray_t:
 		{
-			RR_SHARED_PTR<MessageElementCStructureMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementCStructureMultiDimArray>(dat);
+			RR_SHARED_PTR<MessageElementPodMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementPodMultiDimArray>(dat);
 			if (!sdat) throw DataTypeException("");
 			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, sdat->Elements)
 				e->Write(w);
 			break;
 		}
-		case DataTypes_astructure_array_t:
+		case DataTypes_namedarray_array_t:
 		{
-			RR_SHARED_PTR<MessageElementAStructureArray> sdat = RR_STATIC_POINTER_CAST<MessageElementAStructureArray>(dat);
+			RR_SHARED_PTR<MessageElementNamedArray> sdat = RR_STATIC_POINTER_CAST<MessageElementNamedArray>(dat);
 			if (!sdat) throw DataTypeException("");
 			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, sdat->Elements)
 				e->Write(w);
 			break;
 		}
-		case DataTypes_astructure_multidimarray_t:
+		case DataTypes_namedarray_multidimarray_t:
 		{
-			RR_SHARED_PTR<MessageElementAStructureMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementAStructureMultiDimArray>(dat);
+			RR_SHARED_PTR<MessageElementNamedMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementNamedMultiDimArray>(dat);
 			if (!sdat) throw DataTypeException("");
 			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, sdat->Elements)
 				e->Write(w);
@@ -1660,7 +1660,7 @@ namespace RobotRaconteur
 			dat = RR_MAKE_SHARED<MessageElementList >(l);
 			break;
 		}
-		case DataTypes_cstructure_t:
+		case DataTypes_pod_t:
 		{
 			std::vector<RR_SHARED_PTR<MessageElement> > l;
 			for (size_t i = 0; i < DataCount; i++)
@@ -1670,10 +1670,10 @@ namespace RobotRaconteur
 				l.push_back(m);
 			}
 
-			dat = RR_MAKE_SHARED<MessageElementCStructure >(l);
+			dat = RR_MAKE_SHARED<MessageElementPod >(l);
 			break;
 		}
-		case DataTypes_cstructure_array_t:
+		case DataTypes_pod_array_t:
 		{
 			std::vector<RR_SHARED_PTR<MessageElement> > l;
 			for (size_t i = 0; i < DataCount; i++)
@@ -1683,10 +1683,10 @@ namespace RobotRaconteur
 				l.push_back(m);
 			}
 
-			dat = RR_MAKE_SHARED<MessageElementCStructureArray >(ElementTypeName,l);
+			dat = RR_MAKE_SHARED<MessageElementPodArray >(ElementTypeName,l);
 			break;
 		}
-		case DataTypes_cstructure_multidimarray_t:
+		case DataTypes_pod_multidimarray_t:
 		{
 			std::vector<RR_SHARED_PTR<MessageElement> > l;
 			for (size_t i = 0; i < DataCount; i++)
@@ -1696,10 +1696,10 @@ namespace RobotRaconteur
 				l.push_back(m);
 			}
 
-			dat = RR_MAKE_SHARED<MessageElementCStructureMultiDimArray >(ElementTypeName,l);
+			dat = RR_MAKE_SHARED<MessageElementPodMultiDimArray >(ElementTypeName,l);
 			break;
 		}
-		case DataTypes_astructure_array_t:
+		case DataTypes_namedarray_array_t:
 		{
 			std::vector<RR_SHARED_PTR<MessageElement> > l;
 			for (size_t i = 0; i < DataCount; i++)
@@ -1709,10 +1709,10 @@ namespace RobotRaconteur
 				l.push_back(m);
 			}
 
-			dat = RR_MAKE_SHARED<MessageElementAStructureArray >(ElementTypeName, l);
+			dat = RR_MAKE_SHARED<MessageElementNamedArray >(ElementTypeName, l);
 			break;
 		}
-		case DataTypes_astructure_multidimarray_t:
+		case DataTypes_namedarray_multidimarray_t:
 		{
 			std::vector<RR_SHARED_PTR<MessageElement> > l;
 			for (size_t i = 0; i < DataCount; i++)
@@ -1722,7 +1722,7 @@ namespace RobotRaconteur
 				l.push_back(m);
 			}
 
-			dat = RR_MAKE_SHARED<MessageElementAStructureMultiDimArray >(ElementTypeName, l);
+			dat = RR_MAKE_SHARED<MessageElementNamedMultiDimArray >(ElementTypeName, l);
 			break;
 		}
 		default:
@@ -1844,9 +1844,9 @@ namespace RobotRaconteur
 			}
 			break;
 		}
-		case DataTypes_cstructure_t:
+		case DataTypes_pod_t:
 		{
-			RR_SHARED_PTR<MessageElementCStructure > d = rr_cast<MessageElementCStructure >(GetData());
+			RR_SHARED_PTR<MessageElementPod > d = rr_cast<MessageElementPod >(GetData());
 			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, d->Elements)
 			{
 				e->UpdateData3();
@@ -1854,9 +1854,9 @@ namespace RobotRaconteur
 			}
 			break;
 		}
-		case DataTypes_cstructure_array_t:
+		case DataTypes_pod_array_t:
 		{
-			RR_SHARED_PTR<MessageElementCStructureArray > d = rr_cast<MessageElementCStructureArray >(GetData());
+			RR_SHARED_PTR<MessageElementPodArray > d = rr_cast<MessageElementPodArray >(GetData());
 			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, d->Elements)
 			{
 				e->UpdateData3();
@@ -1864,9 +1864,9 @@ namespace RobotRaconteur
 			}
 			break;
 		}
-		case DataTypes_cstructure_multidimarray_t:
+		case DataTypes_pod_multidimarray_t:
 		{
-			RR_SHARED_PTR<MessageElementCStructureMultiDimArray > d = rr_cast<MessageElementCStructureMultiDimArray >(GetData());
+			RR_SHARED_PTR<MessageElementPodMultiDimArray > d = rr_cast<MessageElementPodMultiDimArray >(GetData());
 			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, d->Elements)
 			{
 				e->UpdateData3();
@@ -1874,9 +1874,9 @@ namespace RobotRaconteur
 			}
 			break;
 		}
-		case DataTypes_astructure_array_t:
+		case DataTypes_namedarray_array_t:
 		{
-			RR_SHARED_PTR<MessageElementAStructureArray > d = rr_cast<MessageElementAStructureArray>(GetData());
+			RR_SHARED_PTR<MessageElementNamedArray > d = rr_cast<MessageElementNamedArray>(GetData());
 			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, d->Elements)
 			{
 				e->UpdateData3();
@@ -1884,9 +1884,9 @@ namespace RobotRaconteur
 			}
 			break;
 		}
-		case DataTypes_astructure_multidimarray_t:
+		case DataTypes_namedarray_multidimarray_t:
 		{
-			RR_SHARED_PTR<MessageElementAStructureMultiDimArray > d = rr_cast<MessageElementAStructureMultiDimArray>(GetData());
+			RR_SHARED_PTR<MessageElementNamedMultiDimArray > d = rr_cast<MessageElementNamedMultiDimArray>(GetData());
 			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, d->Elements)
 			{
 				e->UpdateData3();
@@ -1985,41 +1985,41 @@ namespace RobotRaconteur
 			DataCount = (uint32_t)ddat->Elements.size();
 			break;
 		}
-		case DataTypes_cstructure_t:
+		case DataTypes_pod_t:
 		{
-			RR_SHARED_PTR<MessageElementCStructure> sdat = RR_STATIC_POINTER_CAST<MessageElementCStructure>(dat);
+			RR_SHARED_PTR<MessageElementPod> sdat = RR_STATIC_POINTER_CAST<MessageElementPod>(dat);
 			if (!sdat) throw DataTypeException("");
 			DataCount = (uint32_t)sdat->Elements.size();
 			ElementTypeName = sdat->GetTypeString();
 			break;
 		}
-		case DataTypes_cstructure_array_t:
+		case DataTypes_pod_array_t:
 		{
-			RR_SHARED_PTR<MessageElementCStructureArray> sdat = RR_STATIC_POINTER_CAST<MessageElementCStructureArray>(dat);
+			RR_SHARED_PTR<MessageElementPodArray> sdat = RR_STATIC_POINTER_CAST<MessageElementPodArray>(dat);
 			if (!sdat) throw DataTypeException("");
 			DataCount = (uint32_t)sdat->Elements.size();
 			ElementTypeName = sdat->GetTypeString();
 			break;
 		}
-		case DataTypes_cstructure_multidimarray_t:
+		case DataTypes_pod_multidimarray_t:
 		{
-			RR_SHARED_PTR<MessageElementCStructureMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementCStructureMultiDimArray>(dat);
+			RR_SHARED_PTR<MessageElementPodMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementPodMultiDimArray>(dat);
 			if (!sdat) throw DataTypeException("");
 			DataCount = (uint32_t)sdat->Elements.size();
 			ElementTypeName = sdat->GetTypeString();
 			break;
 		}
-		case DataTypes_astructure_array_t:
+		case DataTypes_namedarray_array_t:
 		{
-			RR_SHARED_PTR<MessageElementAStructureArray> sdat = RR_STATIC_POINTER_CAST<MessageElementAStructureArray>(dat);
+			RR_SHARED_PTR<MessageElementNamedArray> sdat = RR_STATIC_POINTER_CAST<MessageElementNamedArray>(dat);
 			if (!sdat) throw DataTypeException("");
 			DataCount = (uint32_t)sdat->Elements.size();
 			ElementTypeName = sdat->GetTypeString();
 			break;
 		}
-		case DataTypes_astructure_multidimarray_t:
+		case DataTypes_namedarray_multidimarray_t:
 		{
-			RR_SHARED_PTR<MessageElementAStructureMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementAStructureMultiDimArray>(dat);
+			RR_SHARED_PTR<MessageElementNamedMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementNamedMultiDimArray>(dat);
 			if (!sdat) throw DataTypeException("");
 			DataCount = (uint32_t)sdat->Elements.size();
 			ElementTypeName = sdat->GetTypeString();
@@ -2167,41 +2167,41 @@ namespace RobotRaconteur
 				e->Write3(w, version_minor);
 			break;
 		}
-		case DataTypes_cstructure_t:
+		case DataTypes_pod_t:
 		{
-			RR_SHARED_PTR<MessageElementCStructure> sdat = RR_STATIC_POINTER_CAST<MessageElementCStructure>(dat);
+			RR_SHARED_PTR<MessageElementPod> sdat = RR_STATIC_POINTER_CAST<MessageElementPod>(dat);
 			if (!sdat) throw DataTypeException("");
 			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, sdat->Elements)
 				e->Write3(w, version_minor);
 			break;
 		}
-		case DataTypes_cstructure_array_t:
+		case DataTypes_pod_array_t:
 		{
-			RR_SHARED_PTR<MessageElementCStructureArray> sdat = RR_STATIC_POINTER_CAST<MessageElementCStructureArray>(dat);
+			RR_SHARED_PTR<MessageElementPodArray> sdat = RR_STATIC_POINTER_CAST<MessageElementPodArray>(dat);
 			if (!sdat) throw DataTypeException("");
 			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, sdat->Elements)
 				e->Write3(w, version_minor);
 			break;
 		}
-		case DataTypes_cstructure_multidimarray_t:
+		case DataTypes_pod_multidimarray_t:
 		{
-			RR_SHARED_PTR<MessageElementCStructureMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementCStructureMultiDimArray>(dat);
+			RR_SHARED_PTR<MessageElementPodMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementPodMultiDimArray>(dat);
 			if (!sdat) throw DataTypeException("");
 			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, sdat->Elements)
 				e->Write3(w, version_minor);
 			break;
 		}
-		case DataTypes_astructure_array_t:
+		case DataTypes_namedarray_array_t:
 		{
-			RR_SHARED_PTR<MessageElementAStructureArray> sdat = RR_STATIC_POINTER_CAST<MessageElementAStructureArray>(dat);
+			RR_SHARED_PTR<MessageElementNamedArray> sdat = RR_STATIC_POINTER_CAST<MessageElementNamedArray>(dat);
 			if (!sdat) throw DataTypeException("");
 			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, sdat->Elements)
 				e->Write3(w, version_minor);
 			break;
 		}
-		case DataTypes_astructure_multidimarray_t:
+		case DataTypes_namedarray_multidimarray_t:
 		{
-			RR_SHARED_PTR<MessageElementAStructureMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementAStructureMultiDimArray>(dat);
+			RR_SHARED_PTR<MessageElementNamedMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementNamedMultiDimArray>(dat);
 			if (!sdat) throw DataTypeException("");
 			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, sdat->Elements)
 				e->Write3(w, version_minor);
@@ -2369,7 +2369,7 @@ namespace RobotRaconteur
 			dat = RR_MAKE_SHARED<MessageElementList >(l);
 			break;
 		}
-		case DataTypes_cstructure_t:
+		case DataTypes_pod_t:
 		{
 			std::vector<RR_SHARED_PTR<MessageElement> > l;
 			for (size_t i = 0; i < DataCount; i++)
@@ -2379,10 +2379,10 @@ namespace RobotRaconteur
 				l.push_back(m);
 
 			}
-			dat = RR_MAKE_SHARED<MessageElementCStructure>(l);
+			dat = RR_MAKE_SHARED<MessageElementPod>(l);
 			break;
 		}
-		case DataTypes_cstructure_array_t:
+		case DataTypes_pod_array_t:
 		{
 			std::vector<RR_SHARED_PTR<MessageElement> > l;
 			for (size_t i = 0; i < DataCount; i++)
@@ -2392,10 +2392,10 @@ namespace RobotRaconteur
 				l.push_back(m);
 
 			}
-			dat = RR_MAKE_SHARED<MessageElementCStructureArray>(ElementTypeName, l);
+			dat = RR_MAKE_SHARED<MessageElementPodArray>(ElementTypeName, l);
 			break;
 		}
-		case DataTypes_cstructure_multidimarray_t:
+		case DataTypes_pod_multidimarray_t:
 		{
 			std::vector<RR_SHARED_PTR<MessageElement> > l;
 			for (size_t i = 0; i < DataCount; i++)
@@ -2405,10 +2405,10 @@ namespace RobotRaconteur
 				l.push_back(m);
 
 			}
-			dat = RR_MAKE_SHARED<MessageElementCStructureMultiDimArray>(ElementTypeName, l);
+			dat = RR_MAKE_SHARED<MessageElementPodMultiDimArray>(ElementTypeName, l);
 			break;
 		}
-		case DataTypes_astructure_array_t:
+		case DataTypes_namedarray_array_t:
 		{
 			std::vector<RR_SHARED_PTR<MessageElement> > l;
 			for (size_t i = 0; i < DataCount; i++)
@@ -2418,10 +2418,10 @@ namespace RobotRaconteur
 				l.push_back(m);
 
 			}
-			dat = RR_MAKE_SHARED<MessageElementAStructureArray>(ElementTypeName, l);
+			dat = RR_MAKE_SHARED<MessageElementNamedArray>(ElementTypeName, l);
 			break;
 		}
-		case DataTypes_astructure_multidimarray_t:
+		case DataTypes_namedarray_multidimarray_t:
 		{
 			std::vector<RR_SHARED_PTR<MessageElement> > l;
 			for (size_t i = 0; i < DataCount; i++)
@@ -2431,7 +2431,7 @@ namespace RobotRaconteur
 				l.push_back(m);
 
 			}
-			dat = RR_MAKE_SHARED<MessageElementAStructureMultiDimArray>(ElementTypeName, l);
+			dat = RR_MAKE_SHARED<MessageElementNamedMultiDimArray>(ElementTypeName, l);
 			break;
 		}
 		default:
@@ -2492,30 +2492,30 @@ namespace RobotRaconteur
 	   Elements = e;
 	}
 
-	MessageElementCStructure::MessageElementCStructure(const std::vector<RR_SHARED_PTR<MessageElement> > &elements_)
+	MessageElementPod::MessageElementPod(const std::vector<RR_SHARED_PTR<MessageElement> > &elements_)
 	{
 		Elements = elements_;
 	}
 
-	MessageElementCStructureArray::MessageElementCStructureArray(const std::string& type_, const std::vector<RR_SHARED_PTR<MessageElement> > &elements_)
-	{
-		Elements = elements_;
-		Type = type_;
-	}
-
-	MessageElementAStructureMultiDimArray::MessageElementAStructureMultiDimArray(const std::string& type_, const std::vector<RR_SHARED_PTR<MessageElement> > &elements_)
+	MessageElementPodArray::MessageElementPodArray(const std::string& type_, const std::vector<RR_SHARED_PTR<MessageElement> > &elements_)
 	{
 		Elements = elements_;
 		Type = type_;
 	}
 
-	MessageElementAStructureArray::MessageElementAStructureArray(const std::string& type_, const std::vector<RR_SHARED_PTR<MessageElement> > &elements_)
+	MessageElementNamedMultiDimArray::MessageElementNamedMultiDimArray(const std::string& type_, const std::vector<RR_SHARED_PTR<MessageElement> > &elements_)
 	{
 		Elements = elements_;
 		Type = type_;
 	}
 
-	MessageElementCStructureMultiDimArray::MessageElementCStructureMultiDimArray(const std::string& type_, const std::vector<RR_SHARED_PTR<MessageElement> > &elements_)
+	MessageElementNamedArray::MessageElementNamedArray(const std::string& type_, const std::vector<RR_SHARED_PTR<MessageElement> > &elements_)
+	{
+		Elements = elements_;
+		Type = type_;
+	}
+
+	MessageElementPodMultiDimArray::MessageElementPodMultiDimArray(const std::string& type_, const std::vector<RR_SHARED_PTR<MessageElement> > &elements_)
 	{
 		Elements = elements_;
 		Type = type_;

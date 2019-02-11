@@ -85,37 +85,37 @@ RR_SHARED_PTR<RobotRaconteur::StructureStub> stub=FindStructureStub(type);
 return stub->UnpackStructure(mstructin);
 throw RobotRaconteur::ServiceException("Invalid structure stub type.");
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElementCStructureArray> RobotRaconteurServiceIndexFactory::PackCStructureArray(RR_SHARED_PTR<RobotRaconteur::RRCStructureBaseArray> structure)
+RR_SHARED_PTR<RobotRaconteur::MessageElementPodArray> RobotRaconteurServiceIndexFactory::PackPodArray(RR_SHARED_PTR<RobotRaconteur::RRPodBaseArray> structure)
 {
-throw RobotRaconteur::ServiceException("Invalid cstructure type.");
+throw RobotRaconteur::ServiceException("Invalid pod type.");
 }
-RR_SHARED_PTR<RobotRaconteur::RRCStructureBaseArray> RobotRaconteurServiceIndexFactory::UnpackCStructureArray(RR_SHARED_PTR<RobotRaconteur::MessageElementCStructureArray> structure)
+RR_SHARED_PTR<RobotRaconteur::RRPodBaseArray> RobotRaconteurServiceIndexFactory::UnpackPodArray(RR_SHARED_PTR<RobotRaconteur::MessageElementPodArray> structure)
 {
-throw RobotRaconteur::ServiceException("Invalid cstructure type.");
+throw RobotRaconteur::ServiceException("Invalid pod type.");
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElementCStructureMultiDimArray> RobotRaconteurServiceIndexFactory::PackCStructureMultiDimArray(RR_SHARED_PTR<RobotRaconteur::RRCStructureBaseMultiDimArray> structure)
+RR_SHARED_PTR<RobotRaconteur::MessageElementPodMultiDimArray> RobotRaconteurServiceIndexFactory::PackPodMultiDimArray(RR_SHARED_PTR<RobotRaconteur::RRPodBaseMultiDimArray> structure)
 {
-throw RobotRaconteur::ServiceException("Invalid cstructure type.");
+throw RobotRaconteur::ServiceException("Invalid pod type.");
 }
-RR_SHARED_PTR<RobotRaconteur::RRCStructureBaseMultiDimArray> RobotRaconteurServiceIndexFactory::UnpackCStructureMultiDimArray(RR_SHARED_PTR<RobotRaconteur::MessageElementCStructureMultiDimArray> structure)
+RR_SHARED_PTR<RobotRaconteur::RRPodBaseMultiDimArray> RobotRaconteurServiceIndexFactory::UnpackPodMultiDimArray(RR_SHARED_PTR<RobotRaconteur::MessageElementPodMultiDimArray> structure)
 {
-throw RobotRaconteur::ServiceException("Invalid cstructure type.");
+throw RobotRaconteur::ServiceException("Invalid pod type.");
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElementAStructureArray> RobotRaconteurServiceIndexFactory::PackAStructureArray(RR_SHARED_PTR<RobotRaconteur::RRAStructureBaseArray> structure)
+RR_SHARED_PTR<RobotRaconteur::MessageElementNamedArray> RobotRaconteurServiceIndexFactory::PackNamedArray(RR_SHARED_PTR<RobotRaconteur::RRNamedBaseArray> structure)
 {
-	throw RobotRaconteur::ServiceException("Invalid cstructure type.");
+	throw RobotRaconteur::ServiceException("Invalid pod type.");
 }
-RR_SHARED_PTR<RobotRaconteur::RRAStructureBaseArray> RobotRaconteurServiceIndexFactory::UnpackAStructureArray(RR_SHARED_PTR<RobotRaconteur::MessageElementAStructureArray> structure)
+RR_SHARED_PTR<RobotRaconteur::RRNamedBaseArray> RobotRaconteurServiceIndexFactory::UnpackNamedArray(RR_SHARED_PTR<RobotRaconteur::MessageElementNamedArray> structure)
 {
-	throw RobotRaconteur::ServiceException("Invalid cstructure type.");
+	throw RobotRaconteur::ServiceException("Invalid pod type.");
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElementAStructureMultiDimArray> RobotRaconteurServiceIndexFactory::PackAStructureMultiDimArray(RR_SHARED_PTR<RobotRaconteur::RRAStructureBaseMultiDimArray> structure)
+RR_SHARED_PTR<RobotRaconteur::MessageElementNamedMultiDimArray> RobotRaconteurServiceIndexFactory::PackNamedMultiDimArray(RR_SHARED_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> structure)
 {
-	throw RobotRaconteur::ServiceException("Invalid cstructure type.");
+	throw RobotRaconteur::ServiceException("Invalid pod type.");
 }
-RR_SHARED_PTR<RobotRaconteur::RRAStructureBaseMultiDimArray> RobotRaconteurServiceIndexFactory::UnpackAStructureMultiDimArray(RR_SHARED_PTR<RobotRaconteur::MessageElementAStructureMultiDimArray> structure)
+RR_SHARED_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> RobotRaconteurServiceIndexFactory::UnpackNamedMultiDimArray(RR_SHARED_PTR<RobotRaconteur::MessageElementNamedMultiDimArray> structure)
 {
-	throw RobotRaconteur::ServiceException("Invalid cstructure type.");
+	throw RobotRaconteur::ServiceException("Invalid pod type.");
 }
 RR_SHARED_PTR<RobotRaconteur::ServiceStub> RobotRaconteurServiceIndexFactory::CreateStub(const std::string& type, const std::string& path, RR_SHARED_PTR<RobotRaconteur::ClientContext> context)
 {

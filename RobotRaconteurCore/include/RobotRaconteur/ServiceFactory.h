@@ -51,21 +51,21 @@ namespace RobotRaconteur
 				
 		virtual RR_SHARED_PTR<RRValue> UnpackStructure(RR_SHARED_PTR<MessageElementStructure> mstructin)=0; 
 
-		virtual RR_SHARED_PTR<MessageElementCStructureArray> PackCStructureArray(RR_SHARED_PTR<RRCStructureBaseArray> structure)=0;
+		virtual RR_SHARED_PTR<MessageElementPodArray> PackPodArray(RR_SHARED_PTR<RRPodBaseArray> structure)=0;
 
-		virtual RR_SHARED_PTR<RRCStructureBaseArray> UnpackCStructureArray(RR_SHARED_PTR<MessageElementCStructureArray> structure)=0;
+		virtual RR_SHARED_PTR<RRPodBaseArray> UnpackPodArray(RR_SHARED_PTR<MessageElementPodArray> structure)=0;
 
-		virtual RR_SHARED_PTR<MessageElementCStructureMultiDimArray> PackCStructureMultiDimArray(RR_SHARED_PTR<RRCStructureBaseMultiDimArray> structure)=0;
+		virtual RR_SHARED_PTR<MessageElementPodMultiDimArray> PackPodMultiDimArray(RR_SHARED_PTR<RRPodBaseMultiDimArray> structure)=0;
 
-		virtual RR_SHARED_PTR<RRCStructureBaseMultiDimArray> UnpackCStructureMultiDimArray(RR_SHARED_PTR<MessageElementCStructureMultiDimArray> structure)=0;
+		virtual RR_SHARED_PTR<RRPodBaseMultiDimArray> UnpackPodMultiDimArray(RR_SHARED_PTR<MessageElementPodMultiDimArray> structure)=0;
 
-		virtual RR_SHARED_PTR<MessageElementAStructureArray> PackAStructureArray(RR_SHARED_PTR<RRAStructureBaseArray> structure) = 0;
+		virtual RR_SHARED_PTR<MessageElementNamedArray> PackNamedArray(RR_SHARED_PTR<RRNamedBaseArray> structure) = 0;
 
-		virtual RR_SHARED_PTR<RRAStructureBaseArray> UnpackAStructureArray(RR_SHARED_PTR<MessageElementAStructureArray> structure) = 0;
+		virtual RR_SHARED_PTR<RRNamedBaseArray> UnpackNamedArray(RR_SHARED_PTR<MessageElementNamedArray> structure) = 0;
 
-		virtual RR_SHARED_PTR<MessageElementAStructureMultiDimArray> PackAStructureMultiDimArray(RR_SHARED_PTR<RRAStructureBaseMultiDimArray> structure) = 0;
+		virtual RR_SHARED_PTR<MessageElementNamedMultiDimArray> PackNamedMultiDimArray(RR_SHARED_PTR<RRNamedBaseMultiDimArray> structure) = 0;
 
-		virtual RR_SHARED_PTR<RRAStructureBaseMultiDimArray> UnpackAStructureMultiDimArray(RR_SHARED_PTR<MessageElementAStructureMultiDimArray> structure) = 0;
+		virtual RR_SHARED_PTR<RRNamedBaseMultiDimArray> UnpackNamedMultiDimArray(RR_SHARED_PTR<MessageElementNamedMultiDimArray> structure) = 0;
 
 		virtual RR_SHARED_PTR<ServiceStub> CreateStub(const std::string& objecttype, const std::string& path, RR_SHARED_PTR<ClientContext> context)=0;
 

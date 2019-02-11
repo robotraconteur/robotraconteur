@@ -29,69 +29,69 @@ constant double[] doubleconst_array {1.5847, 3.14, -548e3, 3452.67e2, 485e-21}
 constant struct structconst {field1: strconst, field2: int32const_array}
 constant struct structconst2 {field3: structconst, field4: int32const}    
 
-astruct vector3
+namedarray vector3
     field double x
 	field double y
 	field double z
-end astruct
+end namedarray
 
-astruct quaternion
+namedarray quaternion
     field double q0
 	field double q1
 	field double q2
 	field double q3
-end astruct
+end namedarray
 
-astruct transform
+namedarray transform
     field quaternion rotation
     field vector3 translation	
-end astruct
+end namedarray
 
-astruct pixel
+namedarray pixel
 	field uint8 r
 	field uint8 b
 	field uint8 g
-end astruct
+end namedarray
 
-astruct pixel2
+namedarray pixel2
 	field uint8 c
 	field pixel d
 	field pixel e
 	field pixel[7] f
 	field pixel g
-end astruct
+end namedarray
 
-cstruct testcstruct1
+pod testpod1
 	field double d1
 	field double[6] d2
 	field double[6-] d3
 	field double[3,3] d4
-	field testcstruct2 s1
-	field testcstruct2[8] s2
-	field testcstruct2[9-] s3
-	field testcstruct2[2,4] s4
+	field testpod2 s1
+	field testpod2[8] s2
+	field testpod2[9-] s3
+	field testpod2[2,4] s4
 	field transform t1
 	field transform[4] t2
 	field transform[15-] t3
 	field transform[2,4] t4
-end cstruct
+end pod
 
-cstruct testcstruct2
+pod testpod2
 	field int8 i1
 	field int8[15] i2
 	field int8[17-] i3
-end cstruct
+end pod
 
 struct teststruct3
-	field testcstruct1 s1
-	field testcstruct1[] s2
-	field testcstruct1[11] s3
-	field testcstruct1[16-] s4
-	field testcstruct1[3,3] s5
-	field testcstruct1[*] s6
-	field testcstruct1{list} s7
-	field testcstruct1[]{list} s8
-	field testcstruct1[*]{list} s9
+	field testpod1 s1
+	field testpod1[] s2
+	field testpod1[11] s3
+	field testpod1[16-] s4
+	field testpod1[3,3] s5
+	field testpod1[*] s6
+	field testpod1{list} s7
+	field testpod1[]{list} s8
+	field testpod1[*]{list} s9
 	field varvalue s10
 	field varvalue s11
 	field varvalue s12
@@ -131,14 +131,14 @@ object testroot3
 	
 	property testenum1 testenum1_prop
 	
-	property testcstruct1 testcstruct1_prop
-	function void testcstruct1_func1(testcstruct1 s)
-	function testcstruct1 testcstruct1_func2()
+	property testpod1 testpod1_prop
+	function void testpod1_func1(testpod1 s)
+	function testpod1 testpod1_func2()
 	
 	property teststruct3 teststruct3_prop
 	
-	memory testcstruct2[] cstruct_m1
-	memory testcstruct2[*] cstruct_m2
+	memory testpod2[] pod_m1
+	memory testpod2[*] pod_m2
 	
 	function double{generator} gen_func1() 
 	function uint8[]{generator} gen_func2(string name) 
@@ -162,15 +162,15 @@ object testroot3
 	wire int32[6-] w2
 	wire int32[3,2] w3
 	
-	#astruct test
-	property vector3 testastruct1
-	property transform testastruct2
-	property transform[10-] testastruct3
-	property transform[*] testastruct4
-	property transform[3,2] testastruct5
+	#namedarray test
+	property vector3 testnamedarray1
+	property transform testnamedarray2
+	property transform[10-] testnamedarray3
+	property transform[*] testnamedarray4
+	property transform[3,2] testnamedarray5
 	
-	memory transform[] astruct_m1
-	memory transform[*] astruct_m2
+	memory transform[] namedarray_m1
+	memory transform[*] namedarray_m2
 	
 	#new primitive types test
 	property cdouble c1

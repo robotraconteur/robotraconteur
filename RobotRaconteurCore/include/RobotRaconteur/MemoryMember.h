@@ -503,25 +503,25 @@ namespace RobotRaconteur
 		}
 	};
 
-	// cstruct
+	// pod
 
 	template <typename T>
-	class CStructureArrayMemory : public virtual ArrayMemoryBase
+	class PodArrayMemory : public virtual ArrayMemoryBase
 	{
 	private:
-		RR_SHARED_PTR<RRCStructureArray<T> > memory;
+		RR_SHARED_PTR<RRPodArray<T> > memory;
 		boost::mutex memory_lock;
 
 	public:
 
-		CStructureArrayMemory() {};
+		PodArrayMemory() {};
 
-		CStructureArrayMemory(RR_SHARED_PTR<RRCStructureArray<T> > memory)
+		PodArrayMemory(RR_SHARED_PTR<RRPodArray<T> > memory)
 		{
 			this->memory = memory;
 		}
 
-		virtual void Attach(RR_SHARED_PTR<RRCStructureArray<T> > memory)
+		virtual void Attach(RR_SHARED_PTR<RRPodArray<T> > memory)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
 			this->memory = memory;
@@ -530,87 +530,87 @@ namespace RobotRaconteur
 		virtual uint64_t Length()
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
-			return memory->cstruct_array.size();
+			return memory->pod_array.size();
 		}
 
-		virtual void Read(uint64_t memorypos, RR_SHARED_PTR<RRCStructureArray<T> > buffer, uint64_t bufferpos, uint64_t count)
+		virtual void Read(uint64_t memorypos, RR_SHARED_PTR<RRPodArray<T> > buffer, uint64_t bufferpos, uint64_t count)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
-			if (memorypos + count > memory->cstruct_array.size()) throw OutOfRangeException("Index out of range");
-			if (bufferpos + count > buffer->cstruct_array.size()) throw OutOfRangeException("Index out of range");
+			if (memorypos + count > memory->pod_array.size()) throw OutOfRangeException("Index out of range");
+			if (bufferpos + count > buffer->pod_array.size()) throw OutOfRangeException("Index out of range");
 
 			for (size_t i = 0; i < count; i++)
 			{
-				buffer->cstruct_array.at(i + bufferpos) = memory->cstruct_array.at(i + memorypos);
+				buffer->pod_array.at(i + bufferpos) = memory->pod_array.at(i + memorypos);
 			}
 		}
 
-		virtual void Write(uint64_t memorypos, RR_SHARED_PTR<RRCStructureArray<T> > buffer, uint64_t bufferpos, uint64_t count)
+		virtual void Write(uint64_t memorypos, RR_SHARED_PTR<RRPodArray<T> > buffer, uint64_t bufferpos, uint64_t count)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
-			if (memorypos + count > memory->cstruct_array.size()) throw OutOfRangeException("Index out of range");
-			if (bufferpos + count > buffer->cstruct_array.size()) throw OutOfRangeException("Index out of range");			
+			if (memorypos + count > memory->pod_array.size()) throw OutOfRangeException("Index out of range");
+			if (bufferpos + count > buffer->pod_array.size()) throw OutOfRangeException("Index out of range");			
 			for (size_t i = 0; i < count; i++)
 			{
-				memory->cstruct_array.at(i + memorypos) = buffer->cstruct_array.at(i + bufferpos);
+				memory->pod_array.at(i + memorypos) = buffer->pod_array.at(i + bufferpos);
 			}
 		}
 
 		virtual DataTypes ElementTypeID()
 		{
-			return DataTypes_cstructure_t;
+			return DataTypes_pod_t;
 		}
 	};
 
 	template<typename T>
-	class CStructureArrayMemoryServiceSkel : public ArrayMemoryServiceSkelBase
+	class PodArrayMemoryServiceSkel : public ArrayMemoryServiceSkelBase
 	{
 	public:
-		CStructureArrayMemoryServiceSkel(const std::string& membername, RR_SHARED_PTR<ServiceSkel> skel, size_t element_size, MemberDefinition_Direction direction)
-			: ArrayMemoryServiceSkelBase(membername, skel, DataTypes_cstructure_t, element_size, direction)
+		PodArrayMemoryServiceSkel(const std::string& membername, RR_SHARED_PTR<ServiceSkel> skel, size_t element_size, MemberDefinition_Direction direction)
+			: ArrayMemoryServiceSkelBase(membername, skel, DataTypes_pod_t, element_size, direction)
 		{
 
 		}
 
 		virtual RR_SHARED_PTR<MessageElementData> DoRead(uint64_t memorypos, uint64_t bufferpos, uint64_t count, RR_SHARED_PTR<ArrayMemoryBase> mem)
 		{
-			RR_SHARED_PTR<CStructureArrayMemory<T> > mem1 = rr_cast<CStructureArrayMemory<T> >(mem);
-			RR_SHARED_PTR<RRCStructureArray<T> > buf1 = RR_MAKE_SHARED<RRCStructureArray<T> >();
-			buf1->cstruct_array.resize(count);				
+			RR_SHARED_PTR<PodArrayMemory<T> > mem1 = rr_cast<PodArrayMemory<T> >(mem);
+			RR_SHARED_PTR<RRPodArray<T> > buf1 = RR_MAKE_SHARED<RRPodArray<T> >();
+			buf1->pod_array.resize(count);				
 			mem1->Read(memorypos, buf1, 0, (size_t)count);
-			return CStructureStub_PackCStructureArray(buf1);
+			return PodStub_PackPodArray(buf1);
 		}
 
 		virtual void DoWrite(uint64_t memorypos, RR_SHARED_PTR<MessageElementData> buffer, uint64_t bufferpos, uint64_t count, RR_SHARED_PTR<ArrayMemoryBase> mem)
 		{
-			RR_SHARED_PTR<CStructureArrayMemory<T> > mem1 = rr_cast<CStructureArrayMemory<T> >(mem);
-			RR_SHARED_PTR<RRCStructureArray<T> > buf1 = CStructureStub_UnpackCStructureArray<T>(rr_cast<MessageElementCStructureArray>(buffer));
+			RR_SHARED_PTR<PodArrayMemory<T> > mem1 = rr_cast<PodArrayMemory<T> >(mem);
+			RR_SHARED_PTR<RRPodArray<T> > buf1 = PodStub_UnpackPodArray<T>(rr_cast<MessageElementPodArray>(buffer));
 			mem1->Write(memorypos, buf1, 0, (size_t)count);
 		}
 	};
 
 	template<typename T>
-	class CStructureArrayMemoryClient : public virtual ArrayMemoryClientBase, public virtual CStructureArrayMemory<T>
+	class PodArrayMemoryClient : public virtual ArrayMemoryClientBase, public virtual PodArrayMemory<T>
 	{
 	public:
 
-		CStructureArrayMemoryClient(const std::string& membername, RR_SHARED_PTR<ServiceStub> stub, size_t element_size, MemberDefinition_Direction direction)
+		PodArrayMemoryClient(const std::string& membername, RR_SHARED_PTR<ServiceStub> stub, size_t element_size, MemberDefinition_Direction direction)
 			: ArrayMemoryClientBase(membername, stub, RRPrimUtil<T>::GetTypeID(), element_size, direction)
 		{
 		}
 
-		virtual void Attach(RR_SHARED_PTR<RRCStructureArray<T> > memory)
+		virtual void Attach(RR_SHARED_PTR<RRPodArray<T> > memory)
 		{
 			throw InvalidOperationException("Invalid for client");
 		}
 
-		virtual void Read(uint64_t memorypos, RR_SHARED_PTR<RRCStructureArray<T> > buffer, uint64_t bufferpos, uint64_t count)
+		virtual void Read(uint64_t memorypos, RR_SHARED_PTR<RRPodArray<T> > buffer, uint64_t bufferpos, uint64_t count)
 		{
 			if (!buffer) throw NullValueException("Buffer must not be null");
 			ReadBase(memorypos, &buffer, bufferpos, count);
 		}
 
-		virtual void Write(uint64_t memorypos, RR_SHARED_PTR<RRCStructureArray<T> > buffer, uint64_t bufferpos, uint64_t count)
+		virtual void Write(uint64_t memorypos, RR_SHARED_PTR<RRPodArray<T> > buffer, uint64_t bufferpos, uint64_t count)
 		{
 			if (!buffer) throw NullValueException("Buffer must not be null");
 			WriteBase(memorypos, &buffer, bufferpos, count);
@@ -624,53 +624,53 @@ namespace RobotRaconteur
 	protected:
 		virtual void UnpackReadResult(RR_SHARED_PTR<MessageElementData> res,void* buffer, uint64_t bufferpos, uint64_t count)
 		{
-			RR_SHARED_PTR<RRCStructureArray<T> >& buffer1 = *static_cast<RR_SHARED_PTR<RRCStructureArray<T> >* >(buffer);
-			RR_SHARED_PTR<RRCStructureArray<T> > res1 = CStructureStub_UnpackCStructureArray<T>(rr_cast<RobotRaconteur::MessageElementCStructureArray>(res));
+			RR_SHARED_PTR<RRPodArray<T> >& buffer1 = *static_cast<RR_SHARED_PTR<RRPodArray<T> >* >(buffer);
+			RR_SHARED_PTR<RRPodArray<T> > res1 = PodStub_UnpackPodArray<T>(rr_cast<RobotRaconteur::MessageElementPodArray>(res));
 
 			for (size_t i = 0; i < count; i++)
 			{
-				buffer1->cstruct_array.at(i + bufferpos) = res1->cstruct_array.at(i);
+				buffer1->pod_array.at(i + bufferpos) = res1->pod_array.at(i);
 			}			
 		}
 
 		virtual RR_SHARED_PTR<MessageElementData> PackWriteRequest(void* buffer, uint64_t bufferpos, uint64_t count)
 		{
-			RR_SHARED_PTR<RRCStructureArray<T> >& buffer1 = *static_cast<RR_SHARED_PTR<RRCStructureArray<T> >* >(buffer);
-			RR_SHARED_PTR<RRCStructureArray<T> > o = RR_MAKE_SHARED<RRCStructureArray<T> >();
-			o->cstruct_array.resize(count);
+			RR_SHARED_PTR<RRPodArray<T> >& buffer1 = *static_cast<RR_SHARED_PTR<RRPodArray<T> >* >(buffer);
+			RR_SHARED_PTR<RRPodArray<T> > o = RR_MAKE_SHARED<RRPodArray<T> >();
+			o->pod_array.resize(count);
 
 			for (size_t i = 0; i < count; i++)
 			{
-				o->cstruct_array.at(i) = buffer1->cstruct_array.at(i + bufferpos);
+				o->pod_array.at(i) = buffer1->pod_array.at(i + bufferpos);
 			}
-			return CStructureStub_PackCStructureArray(o);
+			return PodStub_PackPodArray(o);
 		}
 
 		virtual size_t GetBufferLength(void* buffer)
 		{
-			RR_SHARED_PTR<RRCStructureArray<T> >& buffer1 = *static_cast<RR_SHARED_PTR<RRCStructureArray<T> >*>(buffer);
-			return buffer1->cstruct_array.size();
+			RR_SHARED_PTR<RRPodArray<T> >& buffer1 = *static_cast<RR_SHARED_PTR<RRPodArray<T> >*>(buffer);
+			return buffer1->pod_array.size();
 		}
 	};
 
 	template <typename T>
-	class CStructureMultiDimArrayMemory : public virtual MultiDimArrayMemoryBase
+	class PodMultiDimArrayMemory : public virtual MultiDimArrayMemoryBase
 	{
 	private:
-		RR_SHARED_PTR<RRCStructureMultiDimArray<T> > multimemory;
+		RR_SHARED_PTR<RRPodMultiDimArray<T> > multimemory;
 		boost::mutex memory_lock;
 	public:
 
-		CStructureMultiDimArrayMemory() {};
+		PodMultiDimArrayMemory() {};
 
-		CStructureMultiDimArrayMemory(RR_SHARED_PTR<RRCStructureMultiDimArray<T> > multimemory)
+		PodMultiDimArrayMemory(RR_SHARED_PTR<RRPodMultiDimArray<T> > multimemory)
 		{
 			this->multimemory = multimemory;
 		}
 
-		virtual ~CStructureMultiDimArrayMemory() {}
+		virtual ~PodMultiDimArrayMemory() {}
 
-		virtual void Attach(RR_SHARED_PTR<RRCStructureMultiDimArray<T> > multimemory)
+		virtual void Attach(RR_SHARED_PTR<RRPodMultiDimArray<T> > multimemory)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
 			this->multimemory = multimemory;
@@ -695,13 +695,13 @@ namespace RobotRaconteur
 			return multimemory->Dims->size();
 		}
 				
-		virtual void Read(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<RRCStructureMultiDimArray<T> > buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
+		virtual void Read(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<RRPodMultiDimArray<T> > buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
 			multimemory->RetrieveSubArray(detail::ConvertVectorType<uint32_t>(memorypos), buffer, detail::ConvertVectorType<uint32_t>(bufferpos), detail::ConvertVectorType<uint32_t>(count));
 		}
 
-		virtual void Write(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<RRCStructureMultiDimArray<T> > buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
+		virtual void Write(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<RRPodMultiDimArray<T> > buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
 			multimemory->AssignSubArray(detail::ConvertVectorType<uint32_t>(memorypos), buffer, detail::ConvertVectorType<uint32_t>(bufferpos), detail::ConvertVectorType<uint32_t>(count));
@@ -709,21 +709,21 @@ namespace RobotRaconteur
 
 		virtual DataTypes ElementTypeID()
 		{
-			return DataTypes_cstructure_t;
+			return DataTypes_pod_t;
 		}
 	};
 
 	template <typename T>
-	class CStructureMultiDimArrayMemoryClient : public virtual CStructureMultiDimArrayMemory<T>, public virtual MultiDimArrayMemoryClientBase
+	class PodMultiDimArrayMemoryClient : public virtual PodMultiDimArrayMemory<T>, public virtual MultiDimArrayMemoryClientBase
 	{
 	public:
 
-		CStructureMultiDimArrayMemoryClient(const std::string& membername, RR_SHARED_PTR<ServiceStub> stub, size_t element_size, MemberDefinition_Direction direction)
-			: MultiDimArrayMemoryClientBase(membername, stub, DataTypes_cstructure_t, element_size, direction)
+		PodMultiDimArrayMemoryClient(const std::string& membername, RR_SHARED_PTR<ServiceStub> stub, size_t element_size, MemberDefinition_Direction direction)
+			: MultiDimArrayMemoryClientBase(membername, stub, DataTypes_pod_t, element_size, direction)
 		{
 		}
 
-		virtual void Attach(RR_SHARED_PTR<RRCStructureMultiDimArray<T> > memory)
+		virtual void Attach(RR_SHARED_PTR<RRPodMultiDimArray<T> > memory)
 		{
 			throw InvalidOperationException("Not valid for client");
 		}
@@ -738,13 +738,13 @@ namespace RobotRaconteur
 			return MultiDimArrayMemoryClientBase::DimCount();
 		}
 				
-		virtual void Read(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<RRCStructureMultiDimArray<T> > buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
+		virtual void Read(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<RRPodMultiDimArray<T> > buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 		{
 			if (!buffer) throw NullValueException("Buffer must not be null");
 			ReadBase(memorypos, &buffer, bufferpos, count);
 		}
 
-		virtual void Write(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<RRCStructureMultiDimArray<T> > buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
+		virtual void Write(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<RRPodMultiDimArray<T> > buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 		{
 			if (!buffer) throw NullValueException("Buffer must not be null");
 			WriteBase(memorypos, &buffer, bufferpos, count);
@@ -753,32 +753,32 @@ namespace RobotRaconteur
 	protected:
 		virtual void UnpackReadResult(RR_SHARED_PTR<MessageElementData> res, void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint64_t elemcount)
 		{
-			RR_SHARED_PTR<RRCStructureMultiDimArray<T> >& buffer1 = *static_cast<RR_SHARED_PTR<RRCStructureMultiDimArray<T> >* > (buffer);
-			RR_SHARED_PTR<RRCStructureMultiDimArray<T> > data = rr_cast<RRCStructureMultiDimArray<T> >(GetNode()->UnpackCStructureMultiDimArray(rr_cast<MessageElementCStructureMultiDimArray>(res)));
+			RR_SHARED_PTR<RRPodMultiDimArray<T> >& buffer1 = *static_cast<RR_SHARED_PTR<RRPodMultiDimArray<T> >* > (buffer);
+			RR_SHARED_PTR<RRPodMultiDimArray<T> > data = rr_cast<RRPodMultiDimArray<T> >(GetNode()->UnpackPodMultiDimArray(rr_cast<MessageElementPodMultiDimArray>(res)));
 
-			RR_SHARED_PTR<CStructureMultiDimArrayMemory<T> > data2 = RR_MAKE_SHARED<CStructureMultiDimArrayMemory<T> >(data);
+			RR_SHARED_PTR<PodMultiDimArrayMemory<T> > data2 = RR_MAKE_SHARED<PodMultiDimArrayMemory<T> >(data);
 			data2->Read(std::vector<uint64_t>(count.size()), buffer1, bufferpos, count);
 		}
 		virtual RR_SHARED_PTR<MessageElementData> PackWriteRequest(void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint64_t elemcount)
 		{
-			RR_SHARED_PTR<RRCStructureMultiDimArray<T> >& buffer1 = *static_cast<RR_SHARED_PTR<RRCStructureMultiDimArray<T> >* >(buffer);
+			RR_SHARED_PTR<RRPodMultiDimArray<T> >& buffer1 = *static_cast<RR_SHARED_PTR<RRPodMultiDimArray<T> >* >(buffer);
 
-			RR_SHARED_PTR<RRCStructureMultiDimArray<T> > data = RR_MAKE_SHARED<RRCStructureMultiDimArray<T> >();
+			RR_SHARED_PTR<RRPodMultiDimArray<T> > data = RR_MAKE_SHARED<RRPodMultiDimArray<T> >();
 			data->Dims = VectorToRRArray<uint32_t>(count);
-			data->CStructArray = RR_MAKE_SHARED<RRCStructureArray<T> >();
-			data->CStructArray->cstruct_array.resize(elemcount);
+			data->CStructArray = RR_MAKE_SHARED<RRPodArray<T> >();
+			data->CStructArray->pod_array.resize(elemcount);
 						
 			buffer1->RetrieveSubArray(detail::ConvertVectorType<uint32_t>(bufferpos), data, std::vector<uint32_t>(count.size()), detail::ConvertVectorType<uint32_t>(count));
-			return GetNode()->PackCStructureMultiDimArray(data);
+			return GetNode()->PackPodMultiDimArray(data);
 			
 		}
 	};
 
 	template<typename T>
-	class CStructureMultiDimArrayMemoryServiceSkel : public MultiDimArrayMemoryServiceSkelBase
+	class PodMultiDimArrayMemoryServiceSkel : public MultiDimArrayMemoryServiceSkelBase
 	{
 	public:
-		CStructureMultiDimArrayMemoryServiceSkel(const std::string& membername, RR_SHARED_PTR<ServiceSkel> skel, size_t element_size, MemberDefinition_Direction direction)
+		PodMultiDimArrayMemoryServiceSkel(const std::string& membername, RR_SHARED_PTR<ServiceSkel> skel, size_t element_size, MemberDefinition_Direction direction)
 			: MultiDimArrayMemoryServiceSkelBase(membername, skel, DataTypes_structure_t, element_size, direction)
 		{
 
@@ -786,46 +786,46 @@ namespace RobotRaconteur
 
 		virtual RR_SHARED_PTR<MessageElementData>  DoRead(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint32_t elemcount, RR_SHARED_PTR<MultiDimArrayMemoryBase> mem)
 		{
-			RR_SHARED_PTR<CStructureMultiDimArrayMemory<T> > mem1 = rr_cast<CStructureMultiDimArrayMemory<T> >(mem);
+			RR_SHARED_PTR<PodMultiDimArrayMemory<T> > mem1 = rr_cast<PodMultiDimArrayMemory<T> >(mem);
 						
-			RR_SHARED_PTR<RRCStructureMultiDimArray<T> > data = RR_MAKE_SHARED<RRCStructureMultiDimArray<T> >();
+			RR_SHARED_PTR<RRPodMultiDimArray<T> > data = RR_MAKE_SHARED<RRPodMultiDimArray<T> >();
 			data->Dims = VectorToRRArray<uint32_t>(count);
-			data->CStructArray = RR_MAKE_SHARED<RRCStructureArray<T> >();
-			data->CStructArray->cstruct_array.resize((size_t)elemcount);				
+			data->CStructArray = RR_MAKE_SHARED<RRPodArray<T> >();
+			data->CStructArray->pod_array.resize((size_t)elemcount);				
 			
 			mem1->Read(memorypos, data, bufferpos, count);
-			return GetNode()->PackCStructureMultiDimArray(data);
+			return GetNode()->PackPodMultiDimArray(data);
 		}
 		virtual void DoWrite(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<MessageElementData> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint32_t elemcount, RR_SHARED_PTR<MultiDimArrayMemoryBase> mem)
 		{
-			RR_SHARED_PTR<CStructureMultiDimArrayMemory<T> > mem1 = rr_cast<CStructureMultiDimArrayMemory<T> >(mem);
+			RR_SHARED_PTR<PodMultiDimArrayMemory<T> > mem1 = rr_cast<PodMultiDimArrayMemory<T> >(mem);
 
-			RR_SHARED_PTR<RRCStructureMultiDimArray<T> > data = rr_cast<RRCStructureMultiDimArray<T> >(GetNode()->UnpackCStructureMultiDimArray(rr_cast<MessageElementCStructureMultiDimArray>(buffer)));
+			RR_SHARED_PTR<RRPodMultiDimArray<T> > data = rr_cast<RRPodMultiDimArray<T> >(GetNode()->UnpackPodMultiDimArray(rr_cast<MessageElementPodMultiDimArray>(buffer)));
 			mem1->Write(memorypos, data, bufferpos, count);
 		}
 	};
 
 
 
-	// astruct
+	// namedarray
 
 	template <typename T>
-	class AStructureArrayMemory : public virtual ArrayMemoryBase
+	class NamedArrayMemory : public virtual ArrayMemoryBase
 	{
 	private:
-		RR_SHARED_PTR<RRAStructureArray<T> > memory;
+		RR_SHARED_PTR<RRNamedArray<T> > memory;
 		boost::mutex memory_lock;
 
 	public:
 
-		AStructureArrayMemory() {};
+		NamedArrayMemory() {};
 
-		AStructureArrayMemory(RR_SHARED_PTR<RRAStructureArray<T> > memory)
+		NamedArrayMemory(RR_SHARED_PTR<RRNamedArray<T> > memory)
 		{
 			this->memory = memory;
 		}
 
-		virtual void Attach(RR_SHARED_PTR<RRAStructureArray<T> > memory)
+		virtual void Attach(RR_SHARED_PTR<RRNamedArray<T> > memory)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
 			this->memory = memory;
@@ -837,7 +837,7 @@ namespace RobotRaconteur
 			return memory->Length();
 		}
 
-		virtual void Read(uint64_t memorypos, RR_SHARED_PTR<RRAStructureArray<T> > buffer, uint64_t bufferpos, uint64_t count)
+		virtual void Read(uint64_t memorypos, RR_SHARED_PTR<RRNamedArray<T> > buffer, uint64_t bufferpos, uint64_t count)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
 			if (memorypos + count > memory->Length()) throw OutOfRangeException("Index out of range");
@@ -849,7 +849,7 @@ namespace RobotRaconteur
 			}
 		}
 
-		virtual void Write(uint64_t memorypos, RR_SHARED_PTR<RRAStructureArray<T> > buffer, uint64_t bufferpos, uint64_t count)
+		virtual void Write(uint64_t memorypos, RR_SHARED_PTR<RRNamedArray<T> > buffer, uint64_t bufferpos, uint64_t count)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
 			if (memorypos + count > memory->Length()) throw OutOfRangeException("Index out of range");
@@ -862,58 +862,58 @@ namespace RobotRaconteur
 
 		virtual DataTypes ElementTypeID()
 		{
-			return DataTypes_cstructure_t;
+			return DataTypes_pod_t;
 		}
 	};
 
 	template<typename T>
-	class AStructureArrayMemoryServiceSkel : public ArrayMemoryServiceSkelBase
+	class NamedArrayMemoryServiceSkel : public ArrayMemoryServiceSkelBase
 	{
 	public:
-		AStructureArrayMemoryServiceSkel(const std::string& membername, RR_SHARED_PTR<ServiceSkel> skel, size_t element_size, MemberDefinition_Direction direction)
-			: ArrayMemoryServiceSkelBase(membername, skel, DataTypes_cstructure_t, element_size, direction)
+		NamedArrayMemoryServiceSkel(const std::string& membername, RR_SHARED_PTR<ServiceSkel> skel, size_t element_size, MemberDefinition_Direction direction)
+			: ArrayMemoryServiceSkelBase(membername, skel, DataTypes_pod_t, element_size, direction)
 		{
 
 		}
 
 		virtual RR_SHARED_PTR<MessageElementData> DoRead(uint64_t memorypos, uint64_t bufferpos, uint64_t count, RR_SHARED_PTR<ArrayMemoryBase> mem)
 		{
-			RR_SHARED_PTR<AStructureArrayMemory<T> > mem1 = rr_cast<AStructureArrayMemory<T>>(mem);
-			RR_SHARED_PTR<RRAStructureArray<T> > buf1 = AllocateEmptyRRAStructureArray<T>(count);
+			RR_SHARED_PTR<NamedArrayMemory<T> > mem1 = rr_cast<NamedArrayMemory<T>>(mem);
+			RR_SHARED_PTR<RRNamedArray<T> > buf1 = AllocateEmptyRRNamedArray<T>(count);
 			mem1->Read(memorypos, buf1, 0, (size_t)count);
-			return AStructureStub_PackAStructureArray(buf1);
+			return NamedArrayStub_PackNamedArray(buf1);
 		}
 
 		virtual void DoWrite(uint64_t memorypos, RR_SHARED_PTR<MessageElementData> buffer, uint64_t bufferpos, uint64_t count, RR_SHARED_PTR<ArrayMemoryBase> mem)
 		{
-			RR_SHARED_PTR<AStructureArrayMemory<T> > mem1 = rr_cast<AStructureArrayMemory<T>>(mem);
-			RR_SHARED_PTR<RRAStructureArray<T> > buf1 = AStructureStub_UnpackAStructureArray<T>(rr_cast<MessageElementAStructureArray>(buffer));
+			RR_SHARED_PTR<NamedArrayMemory<T> > mem1 = rr_cast<NamedArrayMemory<T>>(mem);
+			RR_SHARED_PTR<RRNamedArray<T> > buf1 = NamedArrayStub_UnpackNamedArray<T>(rr_cast<MessageElementNamedArray>(buffer));
 			mem1->Write(memorypos, buf1, 0, (size_t)count);
 		}
 	};
 
 	template<typename T>
-	class AStructureArrayMemoryClient : public virtual ArrayMemoryClientBase, public virtual AStructureArrayMemory<T>
+	class NamedArrayMemoryClient : public virtual ArrayMemoryClientBase, public virtual NamedArrayMemory<T>
 	{
 	public:
 
-		AStructureArrayMemoryClient(const std::string& membername, RR_SHARED_PTR<ServiceStub> stub, size_t element_size, MemberDefinition_Direction direction)
+		NamedArrayMemoryClient(const std::string& membername, RR_SHARED_PTR<ServiceStub> stub, size_t element_size, MemberDefinition_Direction direction)
 			: ArrayMemoryClientBase(membername, stub, RRPrimUtil<T>::GetTypeID(), element_size, direction)
 		{
 		}
 
-		virtual void Attach(RR_SHARED_PTR<RRAStructureArray<T> > memory)
+		virtual void Attach(RR_SHARED_PTR<RRNamedArray<T> > memory)
 		{
 			throw InvalidOperationException("Invalid for client");
 		}
 
-		virtual void Read(uint64_t memorypos, RR_SHARED_PTR<RRAStructureArray<T> > buffer, uint64_t bufferpos, uint64_t count)
+		virtual void Read(uint64_t memorypos, RR_SHARED_PTR<RRNamedArray<T> > buffer, uint64_t bufferpos, uint64_t count)
 		{
 			if (!buffer) throw NullValueException("Buffer must not be null");
 			ReadBase(memorypos, &buffer, bufferpos, count);
 		}
 
-		virtual void Write(uint64_t memorypos, RR_SHARED_PTR<RRAStructureArray<T> > buffer, uint64_t bufferpos, uint64_t count)
+		virtual void Write(uint64_t memorypos, RR_SHARED_PTR<RRNamedArray<T> > buffer, uint64_t bufferpos, uint64_t count)
 		{
 			if (!buffer) throw NullValueException("Buffer must not be null");
 			WriteBase(memorypos, &buffer, bufferpos, count);
@@ -927,8 +927,8 @@ namespace RobotRaconteur
 	protected:
 		virtual void UnpackReadResult(RR_SHARED_PTR<MessageElementData> res, void* buffer, uint64_t bufferpos, uint64_t count)
 		{
-			RR_SHARED_PTR<RRAStructureArray<T> >& buffer1 = *static_cast<RR_SHARED_PTR<RRAStructureArray<T> >*>(buffer);
-			RR_SHARED_PTR<RRAStructureArray<T> > res1 = AStructureStub_UnpackAStructureArray<T>(rr_cast<RobotRaconteur::MessageElementAStructureArray>(res));
+			RR_SHARED_PTR<RRNamedArray<T> >& buffer1 = *static_cast<RR_SHARED_PTR<RRNamedArray<T> >*>(buffer);
+			RR_SHARED_PTR<RRNamedArray<T> > res1 = NamedArrayStub_UnpackNamedArray<T>(rr_cast<RobotRaconteur::MessageElementNamedArray>(res));
 
 			for (size_t i = 0; i < count; i++)
 			{
@@ -938,41 +938,41 @@ namespace RobotRaconteur
 
 		virtual RR_SHARED_PTR<MessageElementData> PackWriteRequest(void* buffer, uint64_t bufferpos, uint64_t count)
 		{
-			RR_SHARED_PTR<RRAStructureArray<T> >& buffer1 = *static_cast<RR_SHARED_PTR<RRAStructureArray<T> >*>(buffer);
-			RR_SHARED_PTR<RRAStructureArray<T> > o = AllocateEmptyRRAStructureArray<T>(count);
+			RR_SHARED_PTR<RRNamedArray<T> >& buffer1 = *static_cast<RR_SHARED_PTR<RRNamedArray<T> >*>(buffer);
+			RR_SHARED_PTR<RRNamedArray<T> > o = AllocateEmptyRRNamedArray<T>(count);
 
 			for (size_t i = 0; i < count; i++)
 			{
 				(*o)[i] = (*buffer1)[(i + bufferpos)];
 			}
-			return AStructureStub_PackAStructureArray(o);
+			return NamedArrayStub_PackNamedArray(o);
 		}
 
 		virtual size_t GetBufferLength(void* buffer)
 		{
-			RR_SHARED_PTR<RRAStructureArray<T> >& buffer1 = *static_cast<RR_SHARED_PTR<RRAStructureArray<T> >*>(buffer);
+			RR_SHARED_PTR<RRNamedArray<T> >& buffer1 = *static_cast<RR_SHARED_PTR<RRNamedArray<T> >*>(buffer);
 			return buffer1->Length();
 		}
 	};
 
 	template <typename T>
-	class AStructureMultiDimArrayMemory : public virtual MultiDimArrayMemoryBase
+	class NamedMultiDimArrayMemory : public virtual MultiDimArrayMemoryBase
 	{
 	private:
-		RR_SHARED_PTR<RRAStructureMultiDimArray<T> > multimemory;
+		RR_SHARED_PTR<RRNamedMultiDimArray<T> > multimemory;
 		boost::mutex memory_lock;
 	public:
 
-		AStructureMultiDimArrayMemory() {};
+		NamedMultiDimArrayMemory() {};
 
-		AStructureMultiDimArrayMemory(RR_SHARED_PTR<RRAStructureMultiDimArray<T> > multimemory)
+		NamedMultiDimArrayMemory(RR_SHARED_PTR<RRNamedMultiDimArray<T> > multimemory)
 		{
 			this->multimemory = multimemory;
 		}
 
-		virtual ~AStructureMultiDimArrayMemory() {}
+		virtual ~NamedMultiDimArrayMemory() {}
 
-		virtual void Attach(RR_SHARED_PTR<RRAStructureMultiDimArray<T> > multimemory)
+		virtual void Attach(RR_SHARED_PTR<RRNamedMultiDimArray<T> > multimemory)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
 			this->multimemory = multimemory;
@@ -997,13 +997,13 @@ namespace RobotRaconteur
 			return multimemory->Dims->size();
 		}
 		
-		virtual void Read(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<RRAStructureMultiDimArray<T> > buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
+		virtual void Read(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<RRNamedMultiDimArray<T> > buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
 			multimemory->RetrieveSubArray(detail::ConvertVectorType<uint32_t>(memorypos), buffer, detail::ConvertVectorType<uint32_t>(bufferpos), detail::ConvertVectorType<uint32_t>(count));
 		}
 
-		virtual void Write(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<RRAStructureMultiDimArray<T> > buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
+		virtual void Write(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<RRNamedMultiDimArray<T> > buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
 			multimemory->AssignSubArray(detail::ConvertVectorType<uint32_t>(memorypos), buffer, detail::ConvertVectorType<uint32_t>(bufferpos), detail::ConvertVectorType<uint32_t>(count));
@@ -1011,21 +1011,21 @@ namespace RobotRaconteur
 
 		virtual DataTypes ElementTypeID()
 		{
-			return DataTypes_cstructure_t;
+			return DataTypes_pod_t;
 		}
 	};
 
 	template <typename T>
-	class AStructureMultiDimArrayMemoryClient : public virtual AStructureMultiDimArrayMemory<T>, public virtual MultiDimArrayMemoryClientBase
+	class NamedMultiDimArrayMemoryClient : public virtual NamedMultiDimArrayMemory<T>, public virtual MultiDimArrayMemoryClientBase
 	{
 	public:
 
-		AStructureMultiDimArrayMemoryClient(const std::string& membername, RR_SHARED_PTR<ServiceStub> stub, size_t element_size, MemberDefinition_Direction direction)
-			: MultiDimArrayMemoryClientBase(membername, stub, DataTypes_cstructure_t, element_size, direction)
+		NamedMultiDimArrayMemoryClient(const std::string& membername, RR_SHARED_PTR<ServiceStub> stub, size_t element_size, MemberDefinition_Direction direction)
+			: MultiDimArrayMemoryClientBase(membername, stub, DataTypes_pod_t, element_size, direction)
 		{
 		}
 
-		virtual void Attach(RR_SHARED_PTR<RRAStructureMultiDimArray<T> > memory)
+		virtual void Attach(RR_SHARED_PTR<RRNamedMultiDimArray<T> > memory)
 		{
 			throw InvalidOperationException("Not valid for client");
 		}
@@ -1040,13 +1040,13 @@ namespace RobotRaconteur
 			return MultiDimArrayMemoryClientBase::DimCount();
 		}
 				
-		virtual void Read(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<RRAStructureMultiDimArray<T> > buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
+		virtual void Read(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<RRNamedMultiDimArray<T> > buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 		{
 			if (!buffer) throw NullValueException("Buffer must not be null");
 			ReadBase(memorypos, &buffer, bufferpos, count);
 		}
 
-		virtual void Write(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<RRAStructureMultiDimArray<T> > buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
+		virtual void Write(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<RRNamedMultiDimArray<T> > buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 		{
 			if (!buffer) throw NullValueException("Buffer must not be null");
 			WriteBase(memorypos, &buffer, bufferpos, count);
@@ -1055,31 +1055,31 @@ namespace RobotRaconteur
 	protected:
 		virtual void UnpackReadResult(RR_SHARED_PTR<MessageElementData> res, void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint64_t elemcount)
 		{
-			RR_SHARED_PTR<RRAStructureMultiDimArray<T> >& buffer1 = *static_cast<RR_SHARED_PTR<RRAStructureMultiDimArray<T> >*> (buffer);
-			RR_SHARED_PTR<RRAStructureMultiDimArray<T> > data = rr_cast<RRAStructureMultiDimArray<T>>(GetNode()->UnpackAStructureMultiDimArray(rr_cast<MessageElementAStructureMultiDimArray>(res)));
+			RR_SHARED_PTR<RRNamedMultiDimArray<T> >& buffer1 = *static_cast<RR_SHARED_PTR<RRNamedMultiDimArray<T> >*> (buffer);
+			RR_SHARED_PTR<RRNamedMultiDimArray<T> > data = rr_cast<RRNamedMultiDimArray<T>>(GetNode()->UnpackNamedMultiDimArray(rr_cast<MessageElementNamedMultiDimArray>(res)));
 
-			RR_SHARED_PTR<AStructureMultiDimArrayMemory<T> > data2 = RR_MAKE_SHARED<AStructureMultiDimArrayMemory<T> >(data);
+			RR_SHARED_PTR<NamedMultiDimArrayMemory<T> > data2 = RR_MAKE_SHARED<NamedMultiDimArrayMemory<T> >(data);
 			data2->Read(std::vector<uint64_t>(count.size()), buffer1, bufferpos, count);
 		}
 		virtual RR_SHARED_PTR<MessageElementData> PackWriteRequest(void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint64_t elemcount)
 		{
-			RR_SHARED_PTR<RRAStructureMultiDimArray<T> >& buffer1 = *static_cast<RR_SHARED_PTR<RRAStructureMultiDimArray<T> >*>(buffer);
+			RR_SHARED_PTR<RRNamedMultiDimArray<T> >& buffer1 = *static_cast<RR_SHARED_PTR<RRNamedMultiDimArray<T> >*>(buffer);
 
-			RR_SHARED_PTR<RRAStructureMultiDimArray<T> > data = RR_MAKE_SHARED<RRAStructureMultiDimArray<T> >();
+			RR_SHARED_PTR<RRNamedMultiDimArray<T> > data = RR_MAKE_SHARED<RRNamedMultiDimArray<T> >();
 			data->Dims = VectorToRRArray<uint32_t>(count);			
-			data->AStructArray = AllocateEmptyRRAStructureArray<T>(elemcount);
+			data->NamedArray = AllocateEmptyRRNamedArray<T>(elemcount);
 
 			buffer1->RetrieveSubArray(detail::ConvertVectorType<uint32_t>(bufferpos), data, std::vector<uint32_t>(count.size()), detail::ConvertVectorType<uint32_t>(count));
-			return GetNode()->PackAStructureMultiDimArray(data);
+			return GetNode()->PackNamedMultiDimArray(data);
 
 		}
 	};
 
 	template<typename T>
-	class AStructureMultiDimArrayMemoryServiceSkel : public MultiDimArrayMemoryServiceSkelBase
+	class NamedMultiDimArrayMemoryServiceSkel : public MultiDimArrayMemoryServiceSkelBase
 	{
 	public:
-		AStructureMultiDimArrayMemoryServiceSkel(const std::string& membername, RR_SHARED_PTR<ServiceSkel> skel, size_t element_size, MemberDefinition_Direction direction)
+		NamedMultiDimArrayMemoryServiceSkel(const std::string& membername, RR_SHARED_PTR<ServiceSkel> skel, size_t element_size, MemberDefinition_Direction direction)
 			: MultiDimArrayMemoryServiceSkelBase(membername, skel, DataTypes_structure_t, element_size, direction)
 		{
 
@@ -1087,20 +1087,20 @@ namespace RobotRaconteur
 
 		virtual RR_SHARED_PTR<MessageElementData>  DoRead(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint32_t elemcount, RR_SHARED_PTR<MultiDimArrayMemoryBase> mem)
 		{
-			RR_SHARED_PTR<AStructureMultiDimArrayMemory<T> > mem1 = rr_cast<AStructureMultiDimArrayMemory<T>>(mem);
+			RR_SHARED_PTR<NamedMultiDimArrayMemory<T> > mem1 = rr_cast<NamedMultiDimArrayMemory<T>>(mem);
 
-			RR_SHARED_PTR<RRAStructureMultiDimArray<T> > data = RR_MAKE_SHARED<RRAStructureMultiDimArray<T> >();
+			RR_SHARED_PTR<RRNamedMultiDimArray<T> > data = RR_MAKE_SHARED<RRNamedMultiDimArray<T> >();
 			data->Dims = VectorToRRArray<uint32_t>(count);			
-			data->AStructArray = AllocateEmptyRRAStructureArray<T>((size_t)elemcount);
+			data->NamedArray = AllocateEmptyRRNamedArray<T>((size_t)elemcount);
 
 			mem1->Read(memorypos, data, bufferpos, count);
-			return GetNode()->PackAStructureMultiDimArray(data);
+			return GetNode()->PackNamedMultiDimArray(data);
 		}
 		virtual void DoWrite(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<MessageElementData> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint32_t elemcount, RR_SHARED_PTR<MultiDimArrayMemoryBase> mem)
 		{
-			RR_SHARED_PTR<AStructureMultiDimArrayMemory<T> > mem1 = rr_cast<AStructureMultiDimArrayMemory<T>>(mem);
+			RR_SHARED_PTR<NamedMultiDimArrayMemory<T> > mem1 = rr_cast<NamedMultiDimArrayMemory<T>>(mem);
 
-			RR_SHARED_PTR<RRAStructureMultiDimArray<T> > data = rr_cast<RRAStructureMultiDimArray<T>>(GetNode()->UnpackAStructureMultiDimArray(rr_cast<MessageElementAStructureMultiDimArray>(buffer)));
+			RR_SHARED_PTR<RRNamedMultiDimArray<T> > data = rr_cast<RRNamedMultiDimArray<T>>(GetNode()->UnpackNamedMultiDimArray(rr_cast<MessageElementNamedMultiDimArray>(buffer)));
 			mem1->Write(memorypos, data, bufferpos, count);
 		}
 	};

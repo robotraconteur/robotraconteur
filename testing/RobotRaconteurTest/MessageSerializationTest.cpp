@@ -85,7 +85,7 @@ namespace RobotRaconteurTest
 		e3->AddElement("testavector", d);
 
 		//Test structure
-		RR_SHARED_PTR<MessageEntry> e4 = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_EventReq, "testastruct");
+		RR_SHARED_PTR<MessageEntry> e4 = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_EventReq, "testnamedarray");
 		e4->RequestID = 4568;
 		e4->ServicePath = "aservicepath.o4";
 
@@ -682,29 +682,29 @@ namespace RobotRaconteurTest
 			MessageSerializationTest_CompareSubElements<MessageElementList>(m1, m2);
 			break;
 		}
-		case DataTypes_cstructure_t:
+		case DataTypes_pod_t:
 		{
-			MessageSerializationTest_CompareSubElements<MessageElementCStructure>(m1, m2);
+			MessageSerializationTest_CompareSubElements<MessageElementPod>(m1, m2);
 			break;
 		}
-		case DataTypes_cstructure_array_t:
+		case DataTypes_pod_array_t:
 		{
-			MessageSerializationTest_CompareSubElements<MessageElementCStructureArray>(m1, m2);
+			MessageSerializationTest_CompareSubElements<MessageElementPodArray>(m1, m2);
 			break;
 		}
-		case DataTypes_cstructure_multidimarray_t:
+		case DataTypes_pod_multidimarray_t:
 		{
-			MessageSerializationTest_CompareSubElements<MessageElementCStructureMultiDimArray>(m1, m2);
+			MessageSerializationTest_CompareSubElements<MessageElementPodMultiDimArray>(m1, m2);
 			break;
 		}
-		case DataTypes_astructure_array_t:
+		case DataTypes_namedarray_array_t:
 		{
-			MessageSerializationTest_CompareSubElements<MessageElementAStructureArray>(m1, m2);
+			MessageSerializationTest_CompareSubElements<MessageElementNamedArray>(m1, m2);
 			break;
 		}
-		case DataTypes_astructure_multidimarray_t:
+		case DataTypes_namedarray_multidimarray_t:
 		{
-			MessageSerializationTest_CompareSubElements<MessageElementAStructureMultiDimArray>(m1, m2);
+			MessageSerializationTest_CompareSubElements<MessageElementNamedMultiDimArray>(m1, m2);
 			break;
 		}
 		default:

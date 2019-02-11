@@ -119,21 +119,21 @@ namespace RobotRaconteur
 
 		RR_SHARED_PTR<RRStructure> UnpackStructure(RR_SHARED_PTR<MessageElementStructure> structure);
 
-		RR_SHARED_PTR<MessageElementCStructureArray> PackCStructureArray(RR_SHARED_PTR<RRCStructureBaseArray> structure);
+		RR_SHARED_PTR<MessageElementPodArray> PackPodArray(RR_SHARED_PTR<RRPodBaseArray> structure);
 
-		RR_SHARED_PTR<RRCStructureBaseArray> UnpackCStructureArray(RR_SHARED_PTR<MessageElementCStructureArray> structure);
+		RR_SHARED_PTR<RRPodBaseArray> UnpackPodArray(RR_SHARED_PTR<MessageElementPodArray> structure);
 		
-		RR_SHARED_PTR<MessageElementCStructureMultiDimArray> PackCStructureMultiDimArray(RR_SHARED_PTR<RRCStructureBaseMultiDimArray> structure);
+		RR_SHARED_PTR<MessageElementPodMultiDimArray> PackPodMultiDimArray(RR_SHARED_PTR<RRPodBaseMultiDimArray> structure);
 
-		RR_SHARED_PTR<RRCStructureBaseMultiDimArray> UnpackCStructureMultiDimArray(RR_SHARED_PTR<MessageElementCStructureMultiDimArray> structure);
+		RR_SHARED_PTR<RRPodBaseMultiDimArray> UnpackPodMultiDimArray(RR_SHARED_PTR<MessageElementPodMultiDimArray> structure);
 
-		RR_SHARED_PTR<MessageElementAStructureArray> PackAStructureArray(RR_SHARED_PTR<RRAStructureBaseArray> structure);
+		RR_SHARED_PTR<MessageElementNamedArray> PackNamedArray(RR_SHARED_PTR<RRNamedBaseArray> structure);
 
-		RR_SHARED_PTR<RRAStructureBaseArray> UnpackAStructureArray(RR_SHARED_PTR<MessageElementAStructureArray> structure);
+		RR_SHARED_PTR<RRNamedBaseArray> UnpackNamedArray(RR_SHARED_PTR<MessageElementNamedArray> structure);
 
-		RR_SHARED_PTR<MessageElementAStructureMultiDimArray> PackAStructureMultiDimArray(RR_SHARED_PTR<RRAStructureBaseMultiDimArray> structure);
+		RR_SHARED_PTR<MessageElementNamedMultiDimArray> PackNamedMultiDimArray(RR_SHARED_PTR<RRNamedBaseMultiDimArray> structure);
 
-		RR_SHARED_PTR<RRAStructureBaseMultiDimArray> UnpackAStructureMultiDimArray(RR_SHARED_PTR<MessageElementAStructureMultiDimArray> structure);
+		RR_SHARED_PTR<RRNamedBaseMultiDimArray> UnpackNamedMultiDimArray(RR_SHARED_PTR<MessageElementNamedMultiDimArray> structure);
 
 
 		template <typename T>

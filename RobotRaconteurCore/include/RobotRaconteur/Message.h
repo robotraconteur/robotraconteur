@@ -420,13 +420,13 @@ public:
 		}
 	};
 
-	class ROBOTRACONTEUR_CORE_API MessageElementCStructure : public MessageElementData
+	class ROBOTRACONTEUR_CORE_API MessageElementPod : public MessageElementData
 	{
 	public:
 				
 		std::vector<RR_SHARED_PTR<MessageElement> > Elements;
 
-		MessageElementCStructure(const std::vector<RR_SHARED_PTR<MessageElement> > &elements_);
+		MessageElementPod(const std::vector<RR_SHARED_PTR<MessageElement> > &elements_);
 
 		virtual std::string GetTypeString()
 		{
@@ -434,22 +434,22 @@ public:
 		}
 		virtual DataTypes GetTypeID()
 		{
-			return DataTypes_cstructure_t;
+			return DataTypes_pod_t;
 		}
 		virtual std::string RRType()
 		{
-			return "RobotRaconteur::MessageElementCStructure";
+			return "RobotRaconteur::MessageElementPod";
 		}
 	};
 
-	class ROBOTRACONTEUR_CORE_API MessageElementCStructureArray : public MessageElementData
+	class ROBOTRACONTEUR_CORE_API MessageElementPodArray : public MessageElementData
 	{
 	public:
 
 		std::string Type;
 		std::vector<RR_SHARED_PTR<MessageElement> > Elements;
 
-		MessageElementCStructureArray(const std::string& type_, const std::vector<RR_SHARED_PTR<MessageElement> > &elements_);
+		MessageElementPodArray(const std::string& type_, const std::vector<RR_SHARED_PTR<MessageElement> > &elements_);
 
 		virtual std::string GetTypeString()
 		{
@@ -457,22 +457,22 @@ public:
 		}
 		virtual DataTypes GetTypeID()
 		{
-			return DataTypes_cstructure_array_t;
+			return DataTypes_pod_array_t;
 		}
 		virtual std::string RRType()
 		{
-			return "RobotRaconteur::MessageElementCStructureArray";
+			return "RobotRaconteur::MessageElementPodArray";
 		}
 	};
 
-	class ROBOTRACONTEUR_CORE_API MessageElementCStructureMultiDimArray : public MessageElementData
+	class ROBOTRACONTEUR_CORE_API MessageElementPodMultiDimArray : public MessageElementData
 	{
 	public:
 
 		std::string Type;
 		std::vector<RR_SHARED_PTR<MessageElement> > Elements;
 
-		MessageElementCStructureMultiDimArray(const std::string& type_, const std::vector<RR_SHARED_PTR<MessageElement> > &elements_);
+		MessageElementPodMultiDimArray(const std::string& type_, const std::vector<RR_SHARED_PTR<MessageElement> > &elements_);
 
 		virtual std::string GetTypeString()
 		{
@@ -480,22 +480,22 @@ public:
 		}
 		virtual DataTypes GetTypeID()
 		{
-			return DataTypes_cstructure_multidimarray_t;
+			return DataTypes_pod_multidimarray_t;
 		}
 		virtual std::string RRType()
 		{
-			return "RobotRaconteur::MessageElementCStructureMultiDimArray";
+			return "RobotRaconteur::MessageElementPodMultiDimArray";
 		}
 	};
 
-	class ROBOTRACONTEUR_CORE_API MessageElementAStructureArray : public MessageElementData
+	class ROBOTRACONTEUR_CORE_API MessageElementNamedArray : public MessageElementData
 	{
 	public:
 
 		std::string Type;
 		std::vector<RR_SHARED_PTR<MessageElement> > Elements;
 
-		MessageElementAStructureArray(const std::string& type_, const std::vector<RR_SHARED_PTR<MessageElement> > &elements_);
+		MessageElementNamedArray(const std::string& type_, const std::vector<RR_SHARED_PTR<MessageElement> > &elements_);
 
 		virtual std::string GetTypeString()
 		{
@@ -503,22 +503,22 @@ public:
 		}
 		virtual DataTypes GetTypeID()
 		{
-			return DataTypes_astructure_array_t;
+			return DataTypes_namedarray_array_t;
 		}
 		virtual std::string RRType()
 		{
-			return "RobotRaconteur::MessageElementAStructureArray";
+			return "RobotRaconteur::MessageElementNamedArray";
 		}
 	};
 
-	class ROBOTRACONTEUR_CORE_API MessageElementAStructureMultiDimArray : public MessageElementData
+	class ROBOTRACONTEUR_CORE_API MessageElementNamedMultiDimArray : public MessageElementData
 	{
 	public:
 
 		std::string Type;
 		std::vector<RR_SHARED_PTR<MessageElement> > Elements;
 
-		MessageElementAStructureMultiDimArray(const std::string& type_, const std::vector<RR_SHARED_PTR<MessageElement> > &elements_);
+		MessageElementNamedMultiDimArray(const std::string& type_, const std::vector<RR_SHARED_PTR<MessageElement> > &elements_);
 
 		virtual std::string GetTypeString()
 		{
@@ -526,11 +526,11 @@ public:
 		}
 		virtual DataTypes GetTypeID()
 		{
-			return DataTypes_astructure_multidimarray_t;
+			return DataTypes_namedarray_multidimarray_t;
 		}
 		virtual std::string RRType()
 		{
-			return "RobotRaconteur::MessageElementAStructureMultiDimArray";
+			return "RobotRaconteur::MessageElementNamedMultiDimArray";
 		}
 	};
 

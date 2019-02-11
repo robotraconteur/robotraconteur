@@ -34,10 +34,10 @@ namespace RobotRaconteurTest
 
 		void TestGenerators();
 
-		void TestAStructs();
-		void TestAStructMemories();
-		void test_astruct_m1();
-		void test_astruct_m2();
+		void TestNamedArrays();
+		void TestNamedArrayMemories();
+		void test_namedarray_m1();
+		void test_namedarray_m2();
 
 		void TestComplex();
 		void TestComplexMemories();

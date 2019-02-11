@@ -727,29 +727,29 @@ namespace RobotRaconteur
 					state() = MessageElement_readlist1;
 					continue;
 				}
-				case DataTypes_cstructure_t:
+				case DataTypes_pod_t:
 				{
-					state() = MessageElement_readcstruct1;
+					state() = MessageElement_readpod1;
 					continue;
 				}
-				case DataTypes_cstructure_array_t:
+				case DataTypes_pod_array_t:
 				{
-					state() = MessageElement_readcstructarray1;
+					state() = MessageElement_readpodarray1;
 					continue;
 				}
-				case DataTypes_cstructure_multidimarray_t:
+				case DataTypes_pod_multidimarray_t:
 				{
-					state() = MessageElement_readcstructmultidimarray1;
+					state() = MessageElement_readpodmultidimarray1;
 					continue;
 				}
-				case DataTypes_astructure_array_t:
+				case DataTypes_namedarray_array_t:
 				{
-					state() = MessageElement_readastructarray1;
+					state() = MessageElement_readnamedarrayarray1;
 					continue;
 				}
-				case DataTypes_astructure_multidimarray_t:
+				case DataTypes_namedarray_multidimarray_t:
 				{
-					state() = MessageElement_readastructmultidimarray1;
+					state() = MessageElement_readnamedarraymultidimarray1;
 					continue;
 				}
 				default:
@@ -992,158 +992,158 @@ namespace RobotRaconteur
 				continue;
 			}
 
-			//Read cstructure
-			case MessageElement_readcstruct1:
+			//Read pod
+			case MessageElement_readpod1:
 			{
 				MessageElement* el = data<MessageElement>();
 				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				RR_SHARED_PTR<MessageElementCStructure> s = RR_MAKE_SHARED<MessageElementCStructure>(v);
+				RR_SHARED_PTR<MessageElementPod> s = RR_MAKE_SHARED<MessageElementPod>(v);
 				uint32_t l = el->ElementSize;
 				el->SetData(s);
 				el->ElementSize = l;
-				push_state(MessageElement_readcstruct2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
+				push_state(MessageElement_readpod2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
 
 			}
-			case MessageElement_readcstruct2:
+			case MessageElement_readpod2:
 			{
-				MessageElementCStructure* s = data<MessageElementCStructure>();
+				MessageElementPod* s = data<MessageElementPod>();
 				if (s->Elements.size() >= param1())
 				{
 					DO_POP_STATE();
 				}
 
-				state() = MessageElement_readcstruct3;
+				state() = MessageElement_readpod3;
 			}
-			case MessageElement_readcstruct3:
+			case MessageElement_readpod3:
 			{
 				RR_SHARED_PTR<MessageElement> el = RR_MAKE_SHARED<MessageElement>();
-				MessageElementCStructure* s = data<MessageElementCStructure>();
+				MessageElementPod* s = data<MessageElementPod>();
 				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readcstruct2, limit() - message_pos, el);
+				push_state(MessageElement_elementsize, MessageElement_readpod2, limit() - message_pos, el);
 				continue;
 			}
 
-			//Read cstructurearray
-			case MessageElement_readcstructarray1:
+			//Read podarray
+			case MessageElement_readpodarray1:
 			{
 				MessageElement* el = data<MessageElement>();
 				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				RR_SHARED_PTR<MessageElementCStructureArray> s = RR_MAKE_SHARED<MessageElementCStructureArray>(el->ElementTypeName, v);
+				RR_SHARED_PTR<MessageElementPodArray> s = RR_MAKE_SHARED<MessageElementPodArray>(el->ElementTypeName, v);
 				uint32_t l = el->ElementSize;
 				el->SetData(s);
 				el->ElementSize = l;
-				push_state(MessageElement_readcstructarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
+				push_state(MessageElement_readpodarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
 
 			}
-			case MessageElement_readcstructarray2:
+			case MessageElement_readpodarray2:
 			{
-				MessageElementCStructureArray* s = data<MessageElementCStructureArray>();
+				MessageElementPodArray* s = data<MessageElementPodArray>();
 				if (s->Elements.size() >= param1())
 				{
 					DO_POP_STATE();
 				}
 
-				state() = MessageElement_readcstructarray3;
+				state() = MessageElement_readpodarray3;
 			}
-			case MessageElement_readcstructarray3:
+			case MessageElement_readpodarray3:
 			{
 				RR_SHARED_PTR<MessageElement> el = RR_MAKE_SHARED<MessageElement>();
-				MessageElementCStructureArray* s = data<MessageElementCStructureArray>();
+				MessageElementPodArray* s = data<MessageElementPodArray>();
 				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readcstructarray2, limit() - message_pos, el);
+				push_state(MessageElement_elementsize, MessageElement_readpodarray2, limit() - message_pos, el);
 				continue;
 			}
 
-			//Read cstructuremultidimarray
-			case MessageElement_readcstructmultidimarray1:
+			//Read podmultidimarray
+			case MessageElement_readpodmultidimarray1:
 			{
 				MessageElement* el = data<MessageElement>();
 				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				RR_SHARED_PTR<MessageElementCStructureMultiDimArray> s = RR_MAKE_SHARED<MessageElementCStructureMultiDimArray>(el->ElementTypeName, v);
+				RR_SHARED_PTR<MessageElementPodMultiDimArray> s = RR_MAKE_SHARED<MessageElementPodMultiDimArray>(el->ElementTypeName, v);
 				uint32_t l = el->ElementSize;
 				el->SetData(s);
 				el->ElementSize = l;
-				push_state(MessageElement_readcstructmultidimarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
+				push_state(MessageElement_readpodmultidimarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
 
 			}
-			case MessageElement_readcstructmultidimarray2:
+			case MessageElement_readpodmultidimarray2:
 			{
-				MessageElementCStructureMultiDimArray* s = data<MessageElementCStructureMultiDimArray>();
+				MessageElementPodMultiDimArray* s = data<MessageElementPodMultiDimArray>();
 				if (s->Elements.size() >= param1())
 				{
 					DO_POP_STATE();
 				}
 
-				state() = MessageElement_readcstructmultidimarray3;
+				state() = MessageElement_readpodmultidimarray3;
 			}
-			case MessageElement_readcstructmultidimarray3:
+			case MessageElement_readpodmultidimarray3:
 			{
 				RR_SHARED_PTR<MessageElement> el = RR_MAKE_SHARED<MessageElement>();
-				MessageElementCStructureMultiDimArray* s = data<MessageElementCStructureMultiDimArray>();
+				MessageElementPodMultiDimArray* s = data<MessageElementPodMultiDimArray>();
 				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readcstructmultidimarray2, limit() - message_pos, el);
+				push_state(MessageElement_elementsize, MessageElement_readpodmultidimarray2, limit() - message_pos, el);
 				continue;
 			}
 
-			//Read astructurearray
-			case MessageElement_readastructarray1:
+			//Read namedarrayarray
+			case MessageElement_readnamedarrayarray1:
 			{
 				MessageElement* el = data<MessageElement>();
 				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				RR_SHARED_PTR<MessageElementAStructureArray> s = RR_MAKE_SHARED<MessageElementAStructureArray>(el->ElementTypeName, v);
+				RR_SHARED_PTR<MessageElementNamedArray> s = RR_MAKE_SHARED<MessageElementNamedArray>(el->ElementTypeName, v);
 				uint32_t l = el->ElementSize;
 				el->SetData(s);
 				el->ElementSize = l;
-				push_state(MessageElement_readastructarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
+				push_state(MessageElement_readnamedarrayarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
 
 			}
-			case MessageElement_readastructarray2:
+			case MessageElement_readnamedarrayarray2:
 			{
-				MessageElementAStructureArray* s = data<MessageElementAStructureArray>();
+				MessageElementNamedArray* s = data<MessageElementNamedArray>();
 				if (s->Elements.size() >= param1())
 				{
 					DO_POP_STATE();
 				}
 
-				state() = MessageElement_readastructarray3;
+				state() = MessageElement_readnamedarrayarray3;
 			}
-			case MessageElement_readastructarray3:
+			case MessageElement_readnamedarrayarray3:
 			{
 				RR_SHARED_PTR<MessageElement> el = RR_MAKE_SHARED<MessageElement>();
-				MessageElementAStructureArray* s = data<MessageElementAStructureArray>();
+				MessageElementNamedArray* s = data<MessageElementNamedArray>();
 				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readastructarray2, limit() - message_pos, el);
+				push_state(MessageElement_elementsize, MessageElement_readnamedarrayarray2, limit() - message_pos, el);
 				continue;
 			}
 
-			//Read astructuremultidimarray
-			case MessageElement_readastructmultidimarray1:
+			//Read namedarraymultidimarray
+			case MessageElement_readnamedarraymultidimarray1:
 			{
 				MessageElement* el = data<MessageElement>();
 				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				RR_SHARED_PTR<MessageElementAStructureMultiDimArray> s = RR_MAKE_SHARED<MessageElementAStructureMultiDimArray>(el->ElementTypeName, v);
+				RR_SHARED_PTR<MessageElementNamedMultiDimArray> s = RR_MAKE_SHARED<MessageElementNamedMultiDimArray>(el->ElementTypeName, v);
 				uint32_t l = el->ElementSize;
 				el->SetData(s);
 				el->ElementSize = l;
-				push_state(MessageElement_readastructmultidimarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
+				push_state(MessageElement_readnamedarraymultidimarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
 
 			}
-			case MessageElement_readastructmultidimarray2:
+			case MessageElement_readnamedarraymultidimarray2:
 			{
-				MessageElementAStructureMultiDimArray* s = data<MessageElementAStructureMultiDimArray>();
+				MessageElementNamedMultiDimArray* s = data<MessageElementNamedMultiDimArray>();
 				if (s->Elements.size() >= param1())
 				{
 					DO_POP_STATE();
 				}
 
-				state() = MessageElement_readastructmultidimarray3;
+				state() = MessageElement_readnamedarraymultidimarray3;
 			}
-			case MessageElement_readastructmultidimarray3:
+			case MessageElement_readnamedarraymultidimarray3:
 			{
 				RR_SHARED_PTR<MessageElement> el = RR_MAKE_SHARED<MessageElement>();
-				MessageElementAStructureMultiDimArray* s = data<MessageElementAStructureMultiDimArray>();
+				MessageElementNamedMultiDimArray* s = data<MessageElementNamedMultiDimArray>();
 				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readastructmultidimarray2, limit() - message_pos, el);
+				push_state(MessageElement_elementsize, MessageElement_readnamedarraymultidimarray2, limit() - message_pos, el);
 				continue;
 			}
 
@@ -1771,29 +1771,29 @@ namespace RobotRaconteur
 					state() = MessageElement_readlist1;
 					continue;
 				}
-				case DataTypes_cstructure_t:
+				case DataTypes_pod_t:
 				{
-					state() = MessageElement_readcstruct1;
+					state() = MessageElement_readpod1;
 					continue;
 				}
-				case DataTypes_cstructure_array_t:
+				case DataTypes_pod_array_t:
 				{
-					state() = MessageElement_readcstructarray1;
+					state() = MessageElement_readpodarray1;
 					continue;
 				}
-				case DataTypes_cstructure_multidimarray_t:
+				case DataTypes_pod_multidimarray_t:
 				{
-					state() = MessageElement_readcstructmultidimarray1;
+					state() = MessageElement_readpodmultidimarray1;
 					continue;
 				}
-				case DataTypes_astructure_array_t:
+				case DataTypes_namedarray_array_t:
 				{
-					state() = MessageElement_readastructarray1;
+					state() = MessageElement_readnamedarrayarray1;
 					continue;
 				}
-				case DataTypes_astructure_multidimarray_t:
+				case DataTypes_namedarray_multidimarray_t:
 				{
-					state() = MessageElement_readastructmultidimarray1;
+					state() = MessageElement_readnamedarraymultidimarray1;
 					continue;
 				}
 				default:
@@ -2005,158 +2005,158 @@ namespace RobotRaconteur
 				push_state(MessageElement_elementsize, MessageElement_readmultiarray2, limit() - message_pos, el);
 				continue;
 			}
-			//Read cstructure
-			case MessageElement_readcstruct1:
+			//Read pod
+			case MessageElement_readpod1:
 			{
 				MessageElement* el = data<MessageElement>();
 				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				RR_SHARED_PTR<MessageElementCStructure> s = RR_MAKE_SHARED<MessageElementCStructure>(v);
+				RR_SHARED_PTR<MessageElementPod> s = RR_MAKE_SHARED<MessageElementPod>(v);
 				uint32_t l = el->ElementSize;
 				el->SetData(s);
 				el->ElementSize = l;
-				push_state(MessageElement_readcstruct2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
+				push_state(MessageElement_readpod2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
 
 			}
-			case MessageElement_readcstruct2:
+			case MessageElement_readpod2:
 			{
-				MessageElementCStructure* s = data<MessageElementCStructure>();
+				MessageElementPod* s = data<MessageElementPod>();
 				if (s->Elements.size() >= param1())
 				{
 					DO_POP_STATE();
 				}
 
-				state() = MessageElement_readcstruct3;
+				state() = MessageElement_readpod3;
 			}
-			case MessageElement_readcstruct3:
+			case MessageElement_readpod3:
 			{
 				RR_SHARED_PTR<MessageElement> el = RR_MAKE_SHARED<MessageElement>();
-				MessageElementCStructure* s = data<MessageElementCStructure>();
+				MessageElementPod* s = data<MessageElementPod>();
 				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readcstruct2, limit() - message_pos, el);
+				push_state(MessageElement_elementsize, MessageElement_readpod2, limit() - message_pos, el);
 				continue;
 			}
 
-			//Read cstructurearray
-			case MessageElement_readcstructarray1:
+			//Read podarray
+			case MessageElement_readpodarray1:
 			{
 				MessageElement* el = data<MessageElement>();
 				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				RR_SHARED_PTR<MessageElementCStructureArray> s = RR_MAKE_SHARED<MessageElementCStructureArray>(el->ElementTypeName, v);
+				RR_SHARED_PTR<MessageElementPodArray> s = RR_MAKE_SHARED<MessageElementPodArray>(el->ElementTypeName, v);
 				uint32_t l = el->ElementSize;
 				el->SetData(s);
 				el->ElementSize = l;
-				push_state(MessageElement_readcstructarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
+				push_state(MessageElement_readpodarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
 
 			}
-			case MessageElement_readcstructarray2:
+			case MessageElement_readpodarray2:
 			{
-				MessageElementCStructureArray* s = data<MessageElementCStructureArray>();
+				MessageElementPodArray* s = data<MessageElementPodArray>();
 				if (s->Elements.size() >= param1())
 				{
 					DO_POP_STATE();
 				}
 
-				state() = MessageElement_readcstructarray3;
+				state() = MessageElement_readpodarray3;
 			}
-			case MessageElement_readcstructarray3:
+			case MessageElement_readpodarray3:
 			{
 				RR_SHARED_PTR<MessageElement> el = RR_MAKE_SHARED<MessageElement>();
-				MessageElementCStructureArray* s = data<MessageElementCStructureArray>();
+				MessageElementPodArray* s = data<MessageElementPodArray>();
 				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readcstructarray2, limit() - message_pos, el);
+				push_state(MessageElement_elementsize, MessageElement_readpodarray2, limit() - message_pos, el);
 				continue;
 			}
 
-			//Read cstructuremultidimarray
-			case MessageElement_readcstructmultidimarray1:
+			//Read podmultidimarray
+			case MessageElement_readpodmultidimarray1:
 			{
 				MessageElement* el = data<MessageElement>();
 				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				RR_SHARED_PTR<MessageElementCStructureMultiDimArray> s = RR_MAKE_SHARED<MessageElementCStructureMultiDimArray>(el->ElementTypeName, v);
+				RR_SHARED_PTR<MessageElementPodMultiDimArray> s = RR_MAKE_SHARED<MessageElementPodMultiDimArray>(el->ElementTypeName, v);
 				uint32_t l = el->ElementSize;
 				el->SetData(s);
 				el->ElementSize = l;
-				push_state(MessageElement_readcstructmultidimarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
+				push_state(MessageElement_readpodmultidimarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
 
 			}
-			case MessageElement_readcstructmultidimarray2:
+			case MessageElement_readpodmultidimarray2:
 			{
-				MessageElementCStructureMultiDimArray* s = data<MessageElementCStructureMultiDimArray>();
+				MessageElementPodMultiDimArray* s = data<MessageElementPodMultiDimArray>();
 				if (s->Elements.size() >= param1())
 				{
 					DO_POP_STATE();
 				}
 
-				state() = MessageElement_readcstructmultidimarray3;
+				state() = MessageElement_readpodmultidimarray3;
 			}
-			case MessageElement_readcstructmultidimarray3:
+			case MessageElement_readpodmultidimarray3:
 			{
 				RR_SHARED_PTR<MessageElement> el = RR_MAKE_SHARED<MessageElement>();
-				MessageElementCStructureMultiDimArray* s = data<MessageElementCStructureMultiDimArray>();
+				MessageElementPodMultiDimArray* s = data<MessageElementPodMultiDimArray>();
 				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readcstructmultidimarray2, limit() - message_pos, el);
+				push_state(MessageElement_elementsize, MessageElement_readpodmultidimarray2, limit() - message_pos, el);
 				continue;
 			}
 
-			//Read astructurearray
-			case MessageElement_readastructarray1:
+			//Read namedarrayarray
+			case MessageElement_readnamedarrayarray1:
 			{
 				MessageElement* el = data<MessageElement>();
 				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				RR_SHARED_PTR<MessageElementAStructureArray> s = RR_MAKE_SHARED<MessageElementAStructureArray>(el->ElementTypeName, v);
+				RR_SHARED_PTR<MessageElementNamedArray> s = RR_MAKE_SHARED<MessageElementNamedArray>(el->ElementTypeName, v);
 				uint32_t l = el->ElementSize;
 				el->SetData(s);
 				el->ElementSize = l;
-				push_state(MessageElement_readastructarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
+				push_state(MessageElement_readnamedarrayarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
 
 			}
-			case MessageElement_readastructarray2:
+			case MessageElement_readnamedarrayarray2:
 			{
-				MessageElementAStructureArray* s = data<MessageElementAStructureArray>();
+				MessageElementNamedArray* s = data<MessageElementNamedArray>();
 				if (s->Elements.size() >= param1())
 				{
 					DO_POP_STATE();
 				}
 
-				state() = MessageElement_readastructarray3;
+				state() = MessageElement_readnamedarrayarray3;
 			}
-			case MessageElement_readastructarray3:
+			case MessageElement_readnamedarrayarray3:
 			{
 				RR_SHARED_PTR<MessageElement> el = RR_MAKE_SHARED<MessageElement>();
-				MessageElementAStructureArray* s = data<MessageElementAStructureArray>();
+				MessageElementNamedArray* s = data<MessageElementNamedArray>();
 				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readastructarray2, limit() - message_pos, el);
+				push_state(MessageElement_elementsize, MessageElement_readnamedarrayarray2, limit() - message_pos, el);
 				continue;
 			}
 
-			//Read astructuremultidimarray
-			case MessageElement_readastructmultidimarray1:
+			//Read namedarraymultidimarray
+			case MessageElement_readnamedarraymultidimarray1:
 			{
 				MessageElement* el = data<MessageElement>();
 				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				RR_SHARED_PTR<MessageElementAStructureMultiDimArray> s = RR_MAKE_SHARED<MessageElementAStructureMultiDimArray>(el->ElementTypeName, v);
+				RR_SHARED_PTR<MessageElementNamedMultiDimArray> s = RR_MAKE_SHARED<MessageElementNamedMultiDimArray>(el->ElementTypeName, v);
 				uint32_t l = el->ElementSize;
 				el->SetData(s);
 				el->ElementSize = l;
-				push_state(MessageElement_readastructmultidimarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
+				push_state(MessageElement_readnamedarraymultidimarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
 
 			}
-			case MessageElement_readastructmultidimarray2:
+			case MessageElement_readnamedarraymultidimarray2:
 			{
-				MessageElementAStructureMultiDimArray* s = data<MessageElementAStructureMultiDimArray>();
+				MessageElementNamedMultiDimArray* s = data<MessageElementNamedMultiDimArray>();
 				if (s->Elements.size() >= param1())
 				{
 					DO_POP_STATE();
 				}
 
-				state() = MessageElement_readastructmultidimarray3;
+				state() = MessageElement_readnamedarraymultidimarray3;
 			}
-			case MessageElement_readastructmultidimarray3:
+			case MessageElement_readnamedarraymultidimarray3:
 			{
 				RR_SHARED_PTR<MessageElement> el = RR_MAKE_SHARED<MessageElement>();
-				MessageElementAStructureMultiDimArray* s = data<MessageElementAStructureMultiDimArray>();
+				MessageElementNamedMultiDimArray* s = data<MessageElementNamedMultiDimArray>();
 				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readastructmultidimarray2, limit() - message_pos, el);
+				push_state(MessageElement_elementsize, MessageElement_readnamedarraymultidimarray2, limit() - message_pos, el);
 				continue;
 			}
 

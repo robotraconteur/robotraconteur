@@ -49,14 +49,14 @@ namespace RobotRaconteur
 		DataTypes_varobject_t,
 		//DataTypes_multidimarray_t, - Deprecated!
 		DataTypes_list_t = 108,
-		DataTypes_cstructure_t,
-		DataTypes_cstructure_array_t,
-		DataTypes_cstructure_multidimarray_t,
+		DataTypes_pod_t,
+		DataTypes_pod_array_t,
+		DataTypes_pod_multidimarray_t,
 		DataTypes_enum_t,
 		DataTypes_namedtype_t,
-		DataTypes_astructure_t,
-		DataTypes_astructure_array_t,
-		DataTypes_astructure_multidimarray_t,
+		DataTypes_namedarray_t,
+		DataTypes_namedarray_array_t,
+		DataTypes_namedarray_multidimarray_t,
 		DataTypes_multidimarray_t // Use a new data type code for numeric arrays to avoid confusion
 	};
 
