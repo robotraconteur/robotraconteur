@@ -49,6 +49,38 @@
 
 namespace RobotRaconteur
 {
+	struct cdouble
+	{
+		double real; double imag;
+	};
+	struct cfloat
+	{
+		float real; float imag;
+	};
+	struct rr_bool
+	{
+		uint8_t value;
+	};
+	struct datetime {
+		int64_t secs; int64_t nsecs;
+	};
+	struct duration {
+		int64_t secs; int64_t nsecs;
+	};
+
+	bool operator== (const cdouble &c1, const cdouble &c2);
+	bool operator!= (const cdouble &c1, const cdouble &c2);
+	bool operator== (const cfloat &c1, const cfloat &c2);
+	bool operator!= (const cfloat &c1, const cfloat &c2);
+	bool operator== (const rr_bool &c1, const rr_bool &c2);
+	bool operator!= (const rr_bool &c1, const rr_bool &c2);
+	bool operator== (const datetime &c1, const datetime &c2);
+	bool operator!= (const datetime &c1, const datetime &c2);
+	bool operator== (const duration &c1, const duration &c2);
+	bool operator!= (const duration &c1, const duration &c2);
+
+
+
 	template<typename T, typename U>
 	class rr_cast_support
 	{
@@ -226,6 +258,11 @@ namespace RobotRaconteur
 	RRPrimUtilNumeric(int64_t,DataTypes_int64_t);
 	RRPrimUtilNumeric(uint64_t,DataTypes_uint64_t);
 	RRPrimUtilNumeric(char,DataTypes_string_t);
+	RRPrimUtilNumeric(cdouble, DataTypes_cdouble_t);
+	RRPrimUtilNumeric(cfloat, DataTypes_csingle_t);
+	RRPrimUtilNumeric(rr_bool, DataTypes_bool_t);
+	RRPrimUtilNumeric(datetime, DataTypes_datetime_t);
+	RRPrimUtilNumeric(duration, DataTypes_duration_t);
 
 	ROBOTRACONTEUR_CORE_API std::string GetRRDataTypeString(DataTypes type);
 	ROBOTRACONTEUR_CORE_API bool IsTypeRRArray(DataTypes type);

@@ -619,6 +619,11 @@ namespace RobotRaconteur
 				case DataTypes_int64_t:
 				case DataTypes_uint64_t:
 				case DataTypes_string_t:
+				case DataTypes_cdouble_t:
+				case DataTypes_csingle_t:
+				case DataTypes_bool_t:
+				case DataTypes_datetime_t:
+				case DataTypes_duration_t:
 				{
 					state() = MessageElement_writearray1;
 					continue;
@@ -1514,6 +1519,11 @@ namespace RobotRaconteur
 				case DataTypes_int64_t:
 				case DataTypes_uint64_t:
 				case DataTypes_string_t:
+				case DataTypes_cdouble_t:
+				case DataTypes_csingle_t:
+				case DataTypes_bool_t:
+				case DataTypes_datetime_t:
+				case DataTypes_duration_t:
 				{
 					state() = MessageElement_writearray1;
 					continue;

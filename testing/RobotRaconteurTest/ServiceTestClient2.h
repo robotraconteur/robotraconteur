@@ -39,6 +39,9 @@ namespace RobotRaconteurTest
 		void test_astruct_m1();
 		void test_astruct_m2();
 
+		void TestComplex();
+		void TestComplexMemories();
+
 		RR_SHARED_PTR<testroot3> r;
 
 		AutoResetEvent async_peekpoke_evt;

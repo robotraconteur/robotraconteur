@@ -142,11 +142,42 @@ void ArrayBinaryReader::ReadArray(RR_SHARED_PTR<RRBaseArray>& arr)
 		Read((uint8_t*)o->ptr(),0,len*sizeof(char));
 		break;
 		}
+	case DataTypes_cdouble_t:
+	{
+		RR_SHARED_PTR<RRArray<cdouble> > o = rr_cast<RRArray<cdouble> >(arr);
+		Read((uint8_t*)o->ptr(), 0, len * sizeof(cdouble));
+		break;
+	}
+	case DataTypes_csingle_t:
+	{
+		RR_SHARED_PTR<RRArray<cfloat> > o = rr_cast<RRArray<cfloat> >(arr);
+		Read((uint8_t*)o->ptr(), 0, len * sizeof(cfloat));
+		break;
+	}
+	case DataTypes_bool_t:
+	{
+		RR_SHARED_PTR<RRArray<rr_bool> > o = rr_cast<RRArray<rr_bool> >(arr);
+		Read((uint8_t*)o->ptr(), 0, len * sizeof(rr_bool));
+		break;
+	}
+	case DataTypes_datetime_t:
+	{
+		RR_SHARED_PTR<RRArray<datetime> > o = rr_cast<RRArray<datetime> >(arr);
+		Read((uint8_t*)o->ptr(), 0, len * sizeof(datetime));
+		break;
+	}
+	case DataTypes_duration_t:
+	{
+		RR_SHARED_PTR<RRArray<duration> > o = rr_cast<RRArray<duration> >(arr);
+		Read((uint8_t*)o->ptr(), 0, len * sizeof(duration));
+		break;
+	}
 	default:
 		throw DataTypeException("Invalid data type");
 	}
 
 #ifdef BOOST_BIG_ENDIAN
+#error Big endian not configured
 	if (!nativeorder)
 	{
 		uint8_t* pos=(uint8_t*)arr->void_ptr();
@@ -443,6 +474,36 @@ void ArrayBinaryWriter::WriteArray(RR_SHARED_PTR<RRBaseArray>& arr)
 		Write((uint8_t*)o->ptr(),0,len*sizeof(char));
 		break;
 		}
+	case DataTypes_cdouble_t:
+	{
+		RR_SHARED_PTR<RRArray<cdouble> > o = rr_cast<RRArray<cdouble> >(arr);
+		Write((uint8_t*)o->ptr(), 0, len * sizeof(cdouble));
+		break;
+	}
+	case DataTypes_csingle_t:
+	{
+		RR_SHARED_PTR<RRArray<cfloat> > o = rr_cast<RRArray<cfloat> >(arr);
+		Write((uint8_t*)o->ptr(), 0, len * sizeof(cfloat));
+		break;
+	}
+	case DataTypes_bool_t:
+	{
+		RR_SHARED_PTR<RRArray<rr_bool> > o = rr_cast<RRArray<rr_bool> >(arr);
+		Write((uint8_t*)o->ptr(), 0, len * sizeof(rr_bool));
+		break;
+	}
+	case DataTypes_datetime_t:
+	{
+		RR_SHARED_PTR<RRArray<datetime> > o = rr_cast<RRArray<datetime> >(arr);
+		Write((uint8_t*)o->ptr(), 0, len * sizeof(datetime));
+		break;
+	}
+	case DataTypes_duration_t:
+	{
+		RR_SHARED_PTR<RRArray<duration> > o = rr_cast<RRArray<duration> >(arr);
+		Write((uint8_t*)o->ptr(), 0, len * sizeof(duration));
+		break;
+	}
 	default:
 		throw DataTypeException("Invalid data type");
 	}

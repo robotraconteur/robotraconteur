@@ -179,6 +179,21 @@ namespace RobotRaconteurGen
 			case DataTypes_string_t:
 				o.cpp_type = "char";
 				break;
+			case DataTypes_cdouble_t:
+				o.cpp_type = "RobotRaconteur::cdouble";
+				break;
+			case DataTypes_csingle_t:
+				o.cpp_type = "RobotRaconteur::cfloat";
+				break;
+			case DataTypes_bool_t:
+				o.cpp_type = "RobotRaconteur::rr_bool";
+				break;
+			case DataTypes_duration_t:
+				o.cpp_type = "RobotRaconteur::duration";
+				break;
+			case DataTypes_datetime_t:
+				o.cpp_type = "RobotRaconteur::datetime";
+				break;
 			case DataTypes_namedtype_t:
 			case DataTypes_object_t:
 				o.cpp_type = fix_qualified_name(tdef.TypeString);
@@ -3621,6 +3636,9 @@ namespace RobotRaconteurGen
 		{
 			if (tdef.Type == DataTypes_double_t || tdef.Type == DataTypes_single_t) return "0.0";
 			if (tdef.Type >= DataTypes_int8_t && tdef.Type <= DataTypes_uint64_t) return "0";
+			if (tdef.Type == DataTypes_cdouble_t || tdef.Type == DataTypes_csingle_t) return "{0.0,0.0}";
+			if (tdef.Type == DataTypes_bool_t) return "{0}";
+			if (tdef.Type == DataTypes_datetime_t || tdef.Type == DataTypes_duration_t) return "{0,0}";
 			if (tdef.Type == DataTypes_string_t) return "\"\"";
 		}
 
@@ -3641,6 +3659,9 @@ namespace RobotRaconteurGen
 				{
 					if (tdef.Type == DataTypes_double_t || tdef.Type == DataTypes_single_t) return "0.0";
 					if (tdef.Type >= DataTypes_int8_t && tdef.Type <= DataTypes_uint64_t) return "0";
+					if (tdef.Type == DataTypes_cdouble_t || tdef.Type == DataTypes_csingle_t) return "{0.0,0.0}";
+					if (tdef.Type == DataTypes_bool_t) return "{0}";
+					if (tdef.Type == DataTypes_datetime_t || tdef.Type == DataTypes_duration_t) return "{0,0}";
 					throw InvalidArgumentException("Invalid numeric type");
 				}
 				case DataTypes_ArrayTypes_array:

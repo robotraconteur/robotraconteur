@@ -147,6 +147,16 @@ ROBOTRACONTEUR_CORE_API std::string GetRRDataTypeString(DataTypes type)
 		return "uint64";
 	case DataTypes_string_t:
 		return "string";
+	case DataTypes_cdouble_t:
+		return "cdouble";
+	case DataTypes_csingle_t:
+		return "csingle";
+	case DataTypes_bool_t:
+		return "bool";
+	case DataTypes_datetime_t:
+		return "datetime";
+	case DataTypes_duration_t:
+		return "duration";
 	default:
 		throw DataTypeException("Invalid data type");
 	}
@@ -172,6 +182,11 @@ ROBOTRACONTEUR_CORE_API bool IsTypeRRArray(DataTypes type)
 	case DataTypes_int64_t:
 	case DataTypes_uint64_t:
 	case DataTypes_string_t:
+	case DataTypes_cdouble_t:		
+	case DataTypes_csingle_t:		
+	case DataTypes_bool_t:		
+	case DataTypes_datetime_t:		
+	case DataTypes_duration_t:		
 		return true;
 	default:
 		return false;
@@ -193,6 +208,11 @@ ROBOTRACONTEUR_CORE_API bool IsTypeNumeric(DataTypes type)
 	case DataTypes_uint32_t:
 	case DataTypes_int64_t:
 	case DataTypes_uint64_t:
+	case DataTypes_cdouble_t:
+	case DataTypes_csingle_t:
+	case DataTypes_bool_t:
+	case DataTypes_datetime_t:
+	case DataTypes_duration_t:
 		return true;
 	default:
 		return false;
@@ -228,6 +248,16 @@ ROBOTRACONTEUR_CORE_API RR_SHARED_PTR<RRBaseArray> AllocateRRArrayByType(DataTyp
 		return AllocateRRArray<uint64_t>(length);
 	case DataTypes_string_t:
 		return AllocateRRArray<char>(length);
+	case DataTypes_cdouble_t:
+		return AllocateRRArray<cdouble>(length);
+	case DataTypes_csingle_t:
+		return AllocateRRArray<cfloat>(length);
+	case DataTypes_bool_t:
+		return AllocateRRArray<rr_bool>(length);
+	case DataTypes_datetime_t:
+		return AllocateRRArray<datetime>(length);
+	case DataTypes_duration_t:
+		return AllocateRRArray<duration>(length);
 	default:
 		throw DataTypeException("Invalid data type");
 		
@@ -260,6 +290,16 @@ ROBOTRACONTEUR_CORE_API size_t RRArrayElementSize(DataTypes type)
 			return 8;
 		case DataTypes_string_t:
 			return 1;
+		case DataTypes_cdouble_t:
+			return 16;
+		case DataTypes_csingle_t:
+			return 8;
+		case DataTypes_bool_t:
+			return 1;
+		case DataTypes_datetime_t:
+			return 16;
+		case DataTypes_duration_t:
+			return 16;
 		default:
 			throw DataTypeException("Invalid data type");
 	}
@@ -577,5 +617,31 @@ namespace detail
 	}
 
 }
+
+bool operator== (const cdouble &c1, const cdouble &c2)
+{
+	return (c1.real == c2.real) && (c1.imag == c2.imag);
+}
+bool operator!= (const cdouble &c1, const cdouble &c2) { return !(c1 == c2); }
+bool operator== (const cfloat &c1, const cfloat &c2)
+{
+	return (c1.real == c2.real) && (c1.imag == c2.imag);
+}
+bool operator!= (const cfloat &c1, const cfloat &c2) { return !(c1 == c2); }
+bool operator== (const rr_bool &c1, const rr_bool &c2)
+{
+	return (c1.value == c2.value);
+}
+bool operator!= (const rr_bool &c1, const rr_bool &c2) { return !(c1 == c2); }
+bool operator== (const datetime &c1, const datetime &c2)
+{
+	return (c1.secs == c2.secs) && (c1.nsecs == c2.nsecs);
+}
+bool operator!= (const datetime &c1, const datetime &c2) { return !(c1 == c2); }
+bool operator== (const duration &c1, const duration &c2)
+{
+	return (c1.secs == c2.secs) && (c1.nsecs == c2.nsecs);
+}
+bool operator!= (const duration &c1, const duration &c2) { return !(c1 == c2); }
 
 }

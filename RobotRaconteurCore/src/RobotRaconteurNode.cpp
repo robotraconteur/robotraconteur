@@ -452,7 +452,17 @@ RR_SHARED_PTR<MessageElementData> RobotRaconteurNode::PackVarType(RR_SHARED_PTR<
 			return PackMultiDimArray(rr_cast<RRMultiDimArray<int64_t> >(vardata));
 		if (type=="RobotRaconteur.RRMultiDimArray<uint64>")
 			return PackMultiDimArray(rr_cast<RRMultiDimArray<uint64_t> >(vardata));
-		
+		if (type == "RobotRaconteur.RRMultiDimArray<cdouble>")
+			return PackMultiDimArray(rr_cast<RRMultiDimArray<cdouble> >(vardata));
+		if (type == "RobotRaconteur.RRMultiDimArray<csingle>")
+			return PackMultiDimArray(rr_cast<RRMultiDimArray<cfloat> >(vardata));
+		if (type == "RobotRaconteur.RRMultiDimArray<bool>")
+			return PackMultiDimArray(rr_cast<RRMultiDimArray<rr_bool> >(vardata));
+		if (type == "RobotRaconteur.RRMultiDimArray<datetime>")
+			return PackMultiDimArray(rr_cast<RRMultiDimArray<datetime> >(vardata));
+		if (type == "RobotRaconteur.RRMultiDimArray<duration>")
+			return PackMultiDimArray(rr_cast<RRMultiDimArray<duration> >(vardata));
+
 		throw DataTypeException("Invalid MultiDimArray type");
 	}
 
@@ -545,6 +555,16 @@ RR_SHARED_PTR<RRValue> RobotRaconteurNode::UnpackVarType(RR_SHARED_PTR<MessageEl
 			return rr_cast<RRValue>(UnpackMultiDimArray<int64_t>(rr_cast<MessageElementMultiDimArray>(mvardata)));
 		case DataTypes_uint64_t:
 			return rr_cast<RRValue>(UnpackMultiDimArray<uint64_t>(rr_cast<MessageElementMultiDimArray>(mvardata)));
+		case DataTypes_cdouble_t:
+			return rr_cast<RRValue>(UnpackMultiDimArray<cdouble>(rr_cast<MessageElementMultiDimArray>(mvardata)));
+		case DataTypes_csingle_t:
+			return rr_cast<RRValue>(UnpackMultiDimArray<cfloat>(rr_cast<MessageElementMultiDimArray>(mvardata)));
+		case DataTypes_bool_t:
+			return rr_cast<RRValue>(UnpackMultiDimArray<rr_bool>(rr_cast<MessageElementMultiDimArray>(mvardata)));
+		case DataTypes_datetime_t:
+			return rr_cast<RRValue>(UnpackMultiDimArray<datetime>(rr_cast<MessageElementMultiDimArray>(mvardata)));
+		case DataTypes_duration_t:
+			return rr_cast<RRValue>(UnpackMultiDimArray<duration>(rr_cast<MessageElementMultiDimArray>(mvardata)));
 		default:
 			throw DataTypeException("Invalid data type");
 			

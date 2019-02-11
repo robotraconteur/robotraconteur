@@ -10,6 +10,7 @@
 #include "ServiceTest2.h"
 #include "ServiceTestClient.h"
 #include "ServiceTestClient.h"
+#include "CompareArray.h"
 
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>

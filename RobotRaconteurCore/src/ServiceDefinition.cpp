@@ -1947,6 +1947,26 @@ namespace RobotRaconteur
 		{
 				return DataTypes_string_t;
 		}
+		else if (d == "cdouble")
+		{
+			return DataTypes_cdouble_t;
+		}
+		else if (d == "csingle")
+		{
+			return DataTypes_csingle_t;
+		}
+		else if (d == "bool")
+		{
+			return DataTypes_bool_t;
+		}
+		else if (d == "datetime")
+		{
+			return DataTypes_datetime_t;
+		}
+		else if (d == "duration")
+		{
+			return DataTypes_duration_t;
+		}
 		else if (d == "structure")
 		{
 				return DataTypes_structure_t;
@@ -1964,7 +1984,7 @@ namespace RobotRaconteur
 				return DataTypes_varobject_t;
 
 		}
-
+		
 		return DataTypes_namedtype_t;
 	}
 
@@ -1996,6 +2016,14 @@ namespace RobotRaconteur
 				return "uint64";
 			case DataTypes_string_t:
 				return "string";
+			case DataTypes_cdouble_t:
+				return "cdouble";
+			case DataTypes_csingle_t:
+				return "csingle";
+			case DataTypes_bool_t:
+				return "bool";
+			case DataTypes_datetime_t:
+				return "datetime";
 			case DataTypes_structure_t:
 				return "structure";
 			case DataTypes_object_t:
@@ -2354,6 +2382,8 @@ namespace RobotRaconteur
 		if (t.ArrayType == DataTypes_ArrayTypes_multidimarray) return false;
 		if (IsTypeNumeric(t.Type))
 		{
+			if (t.Type == DataTypes_cdouble_t || t.Type == DataTypes_csingle_t || t.Type == DataTypes_bool_t || t.Type == DataTypes_datetime_t || t.Type == DataTypes_duration_t)
+				return false;
 			if (t.ContainerType != DataTypes_ContainerTypes_none) return false;
 			if (t.ArrayType == DataTypes_ArrayTypes_none)
 			{
@@ -2803,7 +2833,7 @@ namespace RobotRaconteur
 		{
 			if (name=="this" || name=="self" || name =="Me") throw ServiceDefinitionException("The names \"this\", \"self\", and \"Me\" are reserved, error in service definition \"" + def->Name + "\"");
 
-			const char* res_str[]={"object","end","option","service","object","struct","import","implements","field","property","function","event","objref","pipe","callback","wire","memory","void","int8","uint8","int16","uint16","int32","uint32","int64","uint64","single","double","varvalue","varobject","exception", "using", "constant", "enum", "cstruct", "astruct"};
+			const char* res_str[]={"object","end","option","service","object","struct","import","implements","field","property","function","event","objref","pipe","callback","wire","memory","void","int8","uint8","int16","uint16","int32","uint32","int64","uint64","single","double","varvalue","varobject","exception", "using", "constant", "enum", "cstruct", "astruct", "cdouble", "csingle", "bool", "datetime", "duration"};
 			std::vector<std::string> reserved(res_str,res_str+sizeof(res_str)/(sizeof(res_str[0])));
 
 			if (boost::range::find(reserved,name)!=reserved.end())

@@ -172,6 +172,52 @@ object testroot3
 	memory transform[] astruct_m1
 	memory transform[*] astruct_m2
 	
+	#new primitive types test
+	property cdouble c1
+	property cdouble[] c2
+	property cdouble[*] c3
+	property cdouble{list} c4
+	property cdouble[]{list} c5
+	property cdouble[*]{list} c6
+	property csingle c7
+	property csingle[] c8
+	property csingle[*] c9
+	property csingle{list} c10
+	property csingle[]{list} c11
+	property csingle[*]{list} c12
+	
+	property bool b1
+	property bool[] b2
+	property bool[*] b3
+	property bool{list} b4
+	property bool[]{list} b5
+	property bool[*]{list} b6
+	
+	property datetime t1
+	property datetime[] t2
+	property datetime[*] t3
+	property datetime{list} t4
+	property datetime[]{list} t5
+	property datetime[*]{list} t6
+	
+	property duration t7
+	property duration[] t8
+	property duration[*] t9
+	property duration{list} t10
+	property duration[]{list} t11
+	property duration[*]{list} t12
+	
+	memory cdouble[] c_m1
+	memory cdouble[*] c_m2
+	memory cdouble[] c_m3
+	memory cdouble[*] c_m4
+	memory bool[] c_m5
+	memory bool[*] c_m6
+	memory datetime[] c_m7
+	memory datetime[*] c_m8
+	memory duration[] c_m9
+	memory duration[*] c_m10
+
 end object
 
 object obj1

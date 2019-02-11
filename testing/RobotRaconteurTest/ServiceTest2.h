@@ -107,6 +107,31 @@ namespace RobotRaconteurTest
 
 		virtual RR_SHARED_PTR<RobotRaconteur::AStructureMultiDimArrayMemory<com::robotraconteur::testing::TestService3::transform > > get_astruct_m2();
 
+		virtual RobotRaconteur::cdouble get_c1();
+		virtual void set_c1(RobotRaconteur::cdouble value);
+
+		virtual RR_SHARED_PTR<RobotRaconteur::RRArray<RobotRaconteur::cdouble > > get_c2();
+		virtual void set_c2(RR_SHARED_PTR<RobotRaconteur::RRArray<RobotRaconteur::cdouble > > value);
+
+		virtual RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cdouble > > get_c3();
+		virtual void set_c3(RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cdouble > > value);
+
+		virtual RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble >  > > get_c5();
+		virtual void set_c5(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble >  > > value);
+
+		virtual RobotRaconteur::cfloat get_c7();
+		virtual void set_c7(RobotRaconteur::cfloat value);
+
+		virtual RR_SHARED_PTR<RobotRaconteur::RRArray<RobotRaconteur::cfloat > > get_c8();
+		virtual void set_c8(RR_SHARED_PTR<RobotRaconteur::RRArray<RobotRaconteur::cfloat > > value);
+
+		virtual RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cfloat > > get_c9();
+		virtual void set_c9(RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cfloat > > value);
+
+		virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<RobotRaconteur::cdouble > > get_c_m1();
+
+		virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<RobotRaconteur::cdouble > > get_c_m2();
+
 	protected:
 
 		void peekwire_timer_handler(const TimerEvent& e);
@@ -135,6 +160,9 @@ namespace RobotRaconteurTest
 
 		RR_SHARED_PTR<RobotRaconteur::AStructureArrayMemory<com::robotraconteur::testing::TestService3::transform > > astruct_m1;
 		RR_SHARED_PTR<RobotRaconteur::AStructureMultiDimArrayMemory<com::robotraconteur::testing::TestService3::transform > > astruct_m2;
+
+		RR_SHARED_PTR<RobotRaconteur::ArrayMemory<RobotRaconteur::cdouble > > c_m1;
+		RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<RobotRaconteur::cdouble > > c_m2;
 
 	};
 
