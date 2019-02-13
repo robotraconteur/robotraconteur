@@ -65,15 +65,15 @@ public MessageElement(String name, Object data)
       if (a != null) return a;
       a = MessageElementDataUtil.toMessageElementMultiDimArray(val);
       if (a != null) return a;
-	  a = MessageElementDataUtil.toMessageElementCStructure(val);
+	  a = MessageElementDataUtil.toMessageElementPod(val);
       if (a != null) return a;
-	  a = MessageElementDataUtil.toMessageElementCStructureArray(val);
+	  a = MessageElementDataUtil.toMessageElementPodArray(val);
       if (a != null) return a;
-	  a = MessageElementDataUtil.toMessageElementCStructureMultiDimArray(val);
+	  a = MessageElementDataUtil.toMessageElementPodMultiDimArray(val);
       if (a != null) return a;
-	  a = MessageElementDataUtil.toMessageElementAStructureArray(val);
+	  a = MessageElementDataUtil.toMessageElementNamedArray(val);
       if (a != null) return a;
-	  a = MessageElementDataUtil.toMessageElementAStructureMultiDimArray(val);
+	  a = MessageElementDataUtil.toMessageElementNamedMultiDimArray(val);
       if (a != null) return a;
       throw new RuntimeException(new DataTypeException( "Unknown data type"));
 	}
@@ -251,6 +251,61 @@ public static Object rRBaseArrayToArray(RRBaseArray a)
 	        rRBaseArrayToLongs(a,r,r.length);
 	        return new UnsignedLongs(r);
 	    }
+	    case DataTypes_cdouble_t:
+	    {
+	    	double[] o2=new double[(int)a.length()*2];
+	    	rRBaseArrayComplexToDoubles(a,o2,o2.length);
+	    	CDouble[] o3=new CDouble[(int)a.length()];
+	    	for (int j=0; j<o3.length; j++)
+	    	{
+	    		o3[j] = new CDouble(o2[j *2], o2[j*2+1]);
+	    	}
+	    	return o3;
+	    }
+	    case DataTypes_csingle_t:
+	    {
+	    	float[] o2=new float[(int)a.length()*2];
+	    	rRBaseArrayComplexToFloats(a,o2,o2.length);
+	    	CSingle[] o3=new CSingle[(int)a.length()];
+	    	for (int j=0; j<o3.length; j++)
+	    	{
+	    		o3[j] = new CSingle(o2[j *2], o2[j*2+1]);
+	    	}
+	    	return o3;
+	    }
+	    case DataTypes_bool_t:
+	    {
+	    	byte[] o2=new byte[(int)a.length()];
+	    	rRBaseArrayBoolToBytes(a,o2,o2.length);
+	    	boolean[] o3=new boolean[(int)a.length()];
+	    	for (int j=0; j<o3.length; j++)
+	    	{
+	    		o3[j] = o2[j] != 0;
+	    	}
+	    	return o3;
+	    }
+	    case DataTypes_datetime_t:
+	    {
+	    	long[] o2=new long[(int)a.length()*2];
+	    	rRBaseArrayDateTimeToLongs(a,o2,o2.length);
+	    	DateTime[] o3=new DateTime[(int)a.length()];
+	    	for (int j=0; j<o3.length; j++)
+	    	{
+	    		o3[j] = new DateTime(o2[j *2], o2[j*2+1]);
+	    	}
+	    	return o3;
+	    }
+	    case DataTypes_duration_t:
+	    {
+	    	long[] o2=new long[(int)a.length()*2];
+	    	rRBaseArrayDurationToLongs(a,o2,o2.length);
+	    	Duration[] o3=new Duration[(int)a.length()];
+	    	for (int j=0; j<o3.length; j++)
+	    	{
+	    		o3[j] = new Duration(o2[j *2], o2[j*2+1]);
+	    	}
+	    	return o3;
+	    }
 	    default:
 	    	break;
 	
@@ -273,7 +328,61 @@ public static Object rRBaseArrayToArray(RRBaseArray a)
 	  if (a instanceof UnsignedInts) return intsToRRBaseArray(((UnsignedInts)a).value,((UnsignedInts)a).value.length,DataTypes.DataTypes_uint32_t);
 	  if (a instanceof long[]) return longsToRRBaseArray((long[])a,((long[])a).length,DataTypes.DataTypes_int64_t);
 	  if (a instanceof UnsignedLongs) return longsToRRBaseArray(((UnsignedLongs)a).value,((UnsignedLongs)a).value.length,DataTypes.DataTypes_uint64_t);
-	  	  
+	  if (a instanceof CDouble[])
+	  {
+		  CDouble[] a1=(CDouble[])a;
+		  double[] b1=new double[a1.length * 2];
+		  for (int j = 0; j<a1.length; j++)
+          {
+              b1[j * 2] = a1[j].real;
+              b1[j * 2 + 1] = a1[j].imag;
+          }
+		  return doublesToComplexRRBaseArray(b1,b1.length);
+	  }
+	  if (a instanceof CSingle[])
+	  {
+		  CSingle[] a1=(CSingle[])a;
+		  float[] b1=new float[a1.length * 2];
+		  for (int j = 0; j<a1.length; j++)
+          {
+              b1[j * 2] = a1[j].real;
+              b1[j * 2 + 1] = a1[j].imag;
+          }
+		  return floatsToComplexRRBaseArray(b1,b1.length);
+	  }
+	  if (a instanceof boolean[])
+	  {
+		  boolean[] a1=(boolean[])a;
+		  byte[] b1=new byte[a1.length];
+		  for (int j = 0; j<a1.length; j++)
+          {
+              b1[j] = (byte) (a1[j] ? 1 : 0);              
+          }
+		  return bytesToBoolRRBaseArray(b1,b1.length);
+	  }
+	  if (a instanceof DateTime[])
+	  {
+		  DateTime[] a1=(DateTime[])a;
+		  long[] b1=new long[a1.length * 2];
+		  for (int j = 0; j<a1.length; j++)
+          {
+              b1[j * 2] = a1[j].secs;
+              b1[j * 2 + 1] = a1[j].nsecs;
+          }
+		  return longsToDateTimeRRBaseArray(b1,b1.length);
+	  }
+	  if (a instanceof Duration[])
+	  {
+		  Duration[] a1=(Duration[])a;
+		  long[] b1=new long[a1.length * 2];
+		  for (int j = 0; j<a1.length; j++)
+          {
+              b1[j * 2] = a1[j].secs;
+              b1[j * 2 + 1] = a1[j].nsecs;
+          }
+		  return longsToDurationRRBaseArray(b1,b1.length);
+	  }
+	  
 	  throw new RuntimeException(new DataTypeException("Unknown Array type"));
 	  
   }
@@ -290,9 +399,68 @@ public static Object rRBaseArrayToArray(RRBaseArray a)
 	  if (a instanceof UnsignedInts) { intsToRRBaseArray(((UnsignedInts)a).value,((UnsignedInts)a).value.length,rra); return; }
 	  if (a instanceof long[]) { longsToRRBaseArray((long[])a,((long[])a).length,rra); return; }
 	  if (a instanceof UnsignedLongs) { longsToRRBaseArray(((UnsignedLongs)a).value,((UnsignedLongs)a).value.length,rra); return; }
-	  	  
+	  if (a instanceof CDouble[])
+	  {
+		  CDouble[] a1=(CDouble[])a;
+		  double[] b1=new double[a1.length * 2];
+		  for (int j = 0; j<a1.length; j++)
+          {
+              b1[j * 2] = a1[j].real;
+              b1[j * 2 + 1] = a1[j].imag;
+          }
+		  doublesToComplexRRBaseArray(b1,b1.length,rra);
+		  return;
+	  }
+	  if (a instanceof CSingle[])
+	  {
+		  CSingle[] a1=(CSingle[])a;
+		  float[] b1=new float[a1.length * 2];
+		  for (int j = 0; j<a1.length; j++)
+          {
+              b1[j * 2] = a1[j].real;
+              b1[j * 2 + 1] = a1[j].imag;
+          }
+		  floatsToComplexRRBaseArray(b1,b1.length,rra);
+		  return;
+	  }
+	  if (a instanceof boolean[])
+	  {
+		  boolean[] a1=(boolean[])a;
+		  byte[] b1=new byte[a1.length];
+		  for (int j = 0; j<a1.length; j++)
+          {
+              b1[j] = (byte) (a1[j] ? 1 : 0);              
+          }
+		  bytesToBoolRRBaseArray(b1,b1.length,rra);
+		  return;
+	  }
+	  if (a instanceof DateTime[])
+	  {
+		  DateTime[] a1=(DateTime[])a;
+		  long[] b1=new long[a1.length * 2];
+		  for (int j = 0; j<a1.length; j++)
+          {
+              b1[j * 2] = a1[j].secs;
+              b1[j * 2 + 1] = a1[j].nsecs;
+          }
+		  longsToDateTimeRRBaseArray(b1,b1.length,rra);
+		  return;
+	  }
+	  if (a instanceof Duration[])
+	  {
+		  Duration[] a1=(Duration[])a;
+		  long[] b1=new long[a1.length * 2];
+		  for (int j = 0; j<a1.length; j++)
+          {
+              b1[j * 2] = a1[j].secs;
+              b1[j * 2 + 1] = a1[j].nsecs;
+          }
+		  longsToDurationRRBaseArray(b1,b1.length,rra);
+		  return;
+	  }
 	  throw new RuntimeException(new DataTypeException("Unknown Array type"));
   }
+
 
 %}
 
@@ -322,5 +490,16 @@ public static MemberDefinition swigCast(MemberDefinition i)
 }
 
 %}
+
+%apply double[] {double *};
+%apply float[] {float *};
+%apply int8_t[] {int8_t *};
+%apply uint8_t[] {uint8_t *};
+%apply int16_t[] {int16_t *};
+%apply uint16_t[] {uint16_t *};
+%apply int32_t[] {int32_t *};
+%apply uint32_t[] {uint32_t *};
+%apply int64_t[] {int64_t *};
+%apply uint64_t[] {uint64_t*};
 
 %include "Message.i"

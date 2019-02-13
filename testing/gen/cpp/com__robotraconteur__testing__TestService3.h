@@ -83,13 +83,13 @@ double q3;
 };
 BOOST_STATIC_ASSERT(sizeof(quaternion) == 32);
 
-class testcstruct2 : public RobotRaconteur::RRCStructure {
+class testpod2 : public RobotRaconteur::RRPod {
 public:
 int8_t i1;
-RobotRaconteur::cstructure_field_array<int8_t,15,false> i2;
-RobotRaconteur::cstructure_field_array<int8_t,17,true> i3;
+RobotRaconteur::pod_field_array<int8_t,15,false> i2;
+RobotRaconteur::pod_field_array<int8_t,17,true> i3;
 
-virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.testcstruct2";  }
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.testpod2";  }
 };
 
 union vector3{
@@ -111,35 +111,35 @@ vector3 translation;
 };
 BOOST_STATIC_ASSERT(sizeof(transform) == 56);
 
-class testcstruct1 : public RobotRaconteur::RRCStructure {
+class testpod1 : public RobotRaconteur::RRPod {
 public:
 double d1;
-RobotRaconteur::cstructure_field_array<double,6,false> d2;
-RobotRaconteur::cstructure_field_array<double,6,true> d3;
-RobotRaconteur::cstructure_field_array<double,9,false> d4;
-testcstruct2 s1;
-RobotRaconteur::cstructure_field_array<testcstruct2,8,false> s2;
-RobotRaconteur::cstructure_field_array<testcstruct2,9,true> s3;
-RobotRaconteur::cstructure_field_array<testcstruct2,8,false> s4;
+RobotRaconteur::pod_field_array<double,6,false> d2;
+RobotRaconteur::pod_field_array<double,6,true> d3;
+RobotRaconteur::pod_field_array<double,9,false> d4;
+testpod2 s1;
+RobotRaconteur::pod_field_array<testpod2,8,false> s2;
+RobotRaconteur::pod_field_array<testpod2,9,true> s3;
+RobotRaconteur::pod_field_array<testpod2,8,false> s4;
 transform t1;
-RobotRaconteur::cstructure_field_array<transform,4,false> t2;
-RobotRaconteur::cstructure_field_array<transform,15,true> t3;
-RobotRaconteur::cstructure_field_array<transform,8,false> t4;
+RobotRaconteur::pod_field_array<transform,4,false> t2;
+RobotRaconteur::pod_field_array<transform,15,true> t3;
+RobotRaconteur::pod_field_array<transform,8,false> t4;
 
-virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.testcstruct1";  }
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.testpod1";  }
 };
 
 class teststruct3 : public RobotRaconteur::RRStructure {
 public:
-testcstruct1 s1;
-RR_SHARED_PTR<RobotRaconteur::RRCStructureArray<testcstruct1> > s2;
-RR_SHARED_PTR<RobotRaconteur::RRCStructureArray<testcstruct1> > s3;
-RR_SHARED_PTR<RobotRaconteur::RRCStructureArray<testcstruct1> > s4;
-RR_SHARED_PTR<RobotRaconteur::RRCStructureMultiDimArray<testcstruct1> > s5;
-RR_SHARED_PTR<RobotRaconteur::RRCStructureMultiDimArray<testcstruct1> > s6;
-RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRCStructureArray<testcstruct1>  > > s7;
-RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRCStructureArray<testcstruct1>  > > s8;
-RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRCStructureMultiDimArray<testcstruct1>  > > s9;
+testpod1 s1;
+RR_SHARED_PTR<RobotRaconteur::RRPodArray<testpod1> > s2;
+RR_SHARED_PTR<RobotRaconteur::RRPodArray<testpod1> > s3;
+RR_SHARED_PTR<RobotRaconteur::RRPodArray<testpod1> > s4;
+RR_SHARED_PTR<RobotRaconteur::RRPodMultiDimArray<testpod1> > s5;
+RR_SHARED_PTR<RobotRaconteur::RRPodMultiDimArray<testpod1> > s6;
+RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRPodArray<testpod1>  > > s7;
+RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRPodArray<testpod1>  > > s8;
+RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRPodMultiDimArray<testpod1>  > > s9;
 RR_SHARED_PTR<RobotRaconteur::RRValue> s10;
 RR_SHARED_PTR<RobotRaconteur::RRValue> s11;
 RR_SHARED_PTR<RobotRaconteur::RRValue> s12;
@@ -147,10 +147,16 @@ RR_SHARED_PTR<RobotRaconteur::RRValue> s13;
 RR_SHARED_PTR<RobotRaconteur::RRValue> s14;
 RR_SHARED_PTR<RobotRaconteur::RRValue> s15;
 transform t1;
-RR_SHARED_PTR<RobotRaconteur::RRAStructureArray<transform> > t2;
-RR_SHARED_PTR<RobotRaconteur::RRAStructureMultiDimArray<transform> > t3;
+RR_SHARED_PTR<RobotRaconteur::RRNamedArray<transform> > t2;
+RR_SHARED_PTR<RobotRaconteur::RRNamedMultiDimArray<transform> > t3;
 RR_SHARED_PTR<RobotRaconteur::RRValue> t4;
 RR_SHARED_PTR<RobotRaconteur::RRValue> t5;
+RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRNamedArray<transform>  > > t6;
+RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRNamedArray<transform>  > > t7;
+RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRNamedMultiDimArray<transform>  > > t8;
+RR_SHARED_PTR<RobotRaconteur::RRValue> t9;
+RR_SHARED_PTR<RobotRaconteur::RRValue> t10;
+RR_SHARED_PTR<RobotRaconteur::RRValue> t11;
 
 virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.teststruct3";  }
 };
@@ -168,8 +174,8 @@ virtual void set_unknown_modifier(int32_t value)=0;
 virtual testenum1::testenum1 get_testenum1_prop()=0;
 virtual void set_testenum1_prop(testenum1::testenum1 value)=0;
 
-virtual testcstruct1 get_testcstruct1_prop()=0;
-virtual void set_testcstruct1_prop(const testcstruct1& value)=0;
+virtual testpod1 get_testpod1_prop()=0;
+virtual void set_testpod1_prop(const testpod1& value)=0;
 
 virtual RR_SHARED_PTR<teststruct3 > get_teststruct3_prop()=0;
 virtual void set_teststruct3_prop(RR_SHARED_PTR<teststruct3 > value)=0;
@@ -192,24 +198,114 @@ virtual void set_d5(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMulti
 virtual RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > get_d6()=0;
 virtual void set_d6(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > value)=0;
 
-virtual vector3 get_testastruct1()=0;
-virtual void set_testastruct1(const vector3& value)=0;
+virtual vector3 get_testnamedarray1()=0;
+virtual void set_testnamedarray1(const vector3& value)=0;
 
-virtual transform get_testastruct2()=0;
-virtual void set_testastruct2(const transform& value)=0;
+virtual transform get_testnamedarray2()=0;
+virtual void set_testnamedarray2(const transform& value)=0;
 
-virtual RR_SHARED_PTR<RobotRaconteur::RRAStructureArray<transform> > get_testastruct3()=0;
-virtual void set_testastruct3(RR_SHARED_PTR<RobotRaconteur::RRAStructureArray<transform> > value)=0;
+virtual RR_SHARED_PTR<RobotRaconteur::RRNamedArray<transform> > get_testnamedarray3()=0;
+virtual void set_testnamedarray3(RR_SHARED_PTR<RobotRaconteur::RRNamedArray<transform> > value)=0;
 
-virtual RR_SHARED_PTR<RobotRaconteur::RRAStructureMultiDimArray<transform> > get_testastruct4()=0;
-virtual void set_testastruct4(RR_SHARED_PTR<RobotRaconteur::RRAStructureMultiDimArray<transform> > value)=0;
+virtual RR_SHARED_PTR<RobotRaconteur::RRNamedMultiDimArray<transform> > get_testnamedarray4()=0;
+virtual void set_testnamedarray4(RR_SHARED_PTR<RobotRaconteur::RRNamedMultiDimArray<transform> > value)=0;
 
-virtual RR_SHARED_PTR<RobotRaconteur::RRAStructureMultiDimArray<transform> > get_testastruct5()=0;
-virtual void set_testastruct5(RR_SHARED_PTR<RobotRaconteur::RRAStructureMultiDimArray<transform> > value)=0;
+virtual RR_SHARED_PTR<RobotRaconteur::RRNamedMultiDimArray<transform> > get_testnamedarray5()=0;
+virtual void set_testnamedarray5(RR_SHARED_PTR<RobotRaconteur::RRNamedMultiDimArray<transform> > value)=0;
 
-virtual void testcstruct1_func1(const testcstruct1& s)=0;
+virtual RobotRaconteur::cdouble get_c1()=0;
+virtual void set_c1(RobotRaconteur::cdouble value)=0;
 
-virtual testcstruct1 testcstruct1_func2()=0;
+virtual RR_SHARED_PTR<RobotRaconteur::RRArray<RobotRaconteur::cdouble > > get_c2()=0;
+virtual void set_c2(RR_SHARED_PTR<RobotRaconteur::RRArray<RobotRaconteur::cdouble > > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cdouble > > get_c3()=0;
+virtual void set_c3(RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cdouble > > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble >  > > get_c4()=0;
+virtual void set_c4(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble >  > > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble >  > > get_c5()=0;
+virtual void set_c5(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble >  > > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cdouble >  > > get_c6()=0;
+virtual void set_c6(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cdouble >  > > value)=0;
+
+virtual RobotRaconteur::cfloat get_c7()=0;
+virtual void set_c7(RobotRaconteur::cfloat value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRArray<RobotRaconteur::cfloat > > get_c8()=0;
+virtual void set_c8(RR_SHARED_PTR<RobotRaconteur::RRArray<RobotRaconteur::cfloat > > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cfloat > > get_c9()=0;
+virtual void set_c9(RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cfloat > > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cfloat >  > > get_c10()=0;
+virtual void set_c10(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cfloat >  > > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cfloat >  > > get_c11()=0;
+virtual void set_c11(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cfloat >  > > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cfloat >  > > get_c12()=0;
+virtual void set_c12(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cfloat >  > > value)=0;
+
+virtual RobotRaconteur::rr_bool get_b1()=0;
+virtual void set_b1(RobotRaconteur::rr_bool value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRArray<RobotRaconteur::rr_bool > > get_b2()=0;
+virtual void set_b2(RR_SHARED_PTR<RobotRaconteur::RRArray<RobotRaconteur::rr_bool > > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool > > get_b3()=0;
+virtual void set_b3(RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool > > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool >  > > get_b4()=0;
+virtual void set_b4(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool >  > > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool >  > > get_b5()=0;
+virtual void set_b5(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool >  > > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool >  > > get_b6()=0;
+virtual void set_b6(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool >  > > value)=0;
+
+virtual RobotRaconteur::datetime get_t1()=0;
+virtual void set_t1(RobotRaconteur::datetime value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRArray<RobotRaconteur::datetime > > get_t2()=0;
+virtual void set_t2(RR_SHARED_PTR<RobotRaconteur::RRArray<RobotRaconteur::datetime > > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::datetime > > get_t3()=0;
+virtual void set_t3(RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::datetime > > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::datetime >  > > get_t4()=0;
+virtual void set_t4(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::datetime >  > > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::datetime >  > > get_t5()=0;
+virtual void set_t5(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::datetime >  > > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::datetime >  > > get_t6()=0;
+virtual void set_t6(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::datetime >  > > value)=0;
+
+virtual RobotRaconteur::duration get_t7()=0;
+virtual void set_t7(RobotRaconteur::duration value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRArray<RobotRaconteur::duration > > get_t8()=0;
+virtual void set_t8(RR_SHARED_PTR<RobotRaconteur::RRArray<RobotRaconteur::duration > > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::duration > > get_t9()=0;
+virtual void set_t9(RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::duration > > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::duration >  > > get_t10()=0;
+virtual void set_t10(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::duration >  > > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::duration >  > > get_t11()=0;
+virtual void set_t11(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::duration >  > > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::duration >  > > get_t12()=0;
+virtual void set_t12(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::duration >  > > value)=0;
+
+virtual void testpod1_func1(const testpod1& s)=0;
+
+virtual testpod1 testpod1_func2()=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::Generator<double,void > > gen_func1()=0;
 
@@ -255,9 +351,33 @@ virtual void set_w3(RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRacont
 
 virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<double > > get_readmem()=0;
 
-virtual RR_SHARED_PTR<RobotRaconteur::CStructureArrayMemory<testcstruct2 > > get_cstruct_m1()=0;
+virtual RR_SHARED_PTR<RobotRaconteur::PodArrayMemory<testpod2 > > get_pod_m1()=0;
 
-virtual RR_SHARED_PTR<RobotRaconteur::CStructureMultiDimArrayMemory<testcstruct2 > > get_cstruct_m2()=0;
+virtual RR_SHARED_PTR<RobotRaconteur::PodMultiDimArrayMemory<testpod2 > > get_pod_m2()=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::NamedArrayMemory<transform > > get_namedarray_m1()=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::NamedMultiDimArrayMemory<transform > > get_namedarray_m2()=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<RobotRaconteur::cdouble > > get_c_m1()=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<RobotRaconteur::cdouble > > get_c_m2()=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<RobotRaconteur::cdouble > > get_c_m3()=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<RobotRaconteur::cdouble > > get_c_m4()=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<RobotRaconteur::rr_bool > > get_c_m5()=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<RobotRaconteur::rr_bool > > get_c_m6()=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<RobotRaconteur::datetime > > get_c_m7()=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<RobotRaconteur::datetime > > get_c_m8()=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<RobotRaconteur::duration > > get_c_m9()=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<RobotRaconteur::duration > > get_c_m10()=0;
 
 virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.testroot3";  }
 };
@@ -313,16 +433,16 @@ virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.ob
 
 namespace RobotRaconteur
 {
-RRPrimUtilCStructure(com::robotraconteur::testing::TestService3::testcstruct1, "com.robotraconteur.testing.TestService3.testcstruct1");
-RRPrimUtilCStructure(com::robotraconteur::testing::TestService3::testcstruct2, "com.robotraconteur.testing.TestService3.testcstruct2");
-RRPrimUtilAStructure(com::robotraconteur::testing::TestService3::vector3, "com.robotraconteur.testing.TestService3.vector3",double);
-RRCStructureStubAStructureType(com::robotraconteur::testing::TestService3::vector3);
-RRPrimUtilAStructure(com::robotraconteur::testing::TestService3::quaternion, "com.robotraconteur.testing.TestService3.quaternion",double);
-RRCStructureStubAStructureType(com::robotraconteur::testing::TestService3::quaternion);
-RRPrimUtilAStructure(com::robotraconteur::testing::TestService3::transform, "com.robotraconteur.testing.TestService3.transform",double);
-RRCStructureStubAStructureType(com::robotraconteur::testing::TestService3::transform);
-RRPrimUtilAStructure(com::robotraconteur::testing::TestService3::pixel, "com.robotraconteur.testing.TestService3.pixel",uint8_t);
-RRCStructureStubAStructureType(com::robotraconteur::testing::TestService3::pixel);
-RRPrimUtilAStructure(com::robotraconteur::testing::TestService3::pixel2, "com.robotraconteur.testing.TestService3.pixel2",uint8_t);
-RRCStructureStubAStructureType(com::robotraconteur::testing::TestService3::pixel2);
+RRPrimUtilPod(com::robotraconteur::testing::TestService3::testpod1, "com.robotraconteur.testing.TestService3.testpod1");
+RRPrimUtilPod(com::robotraconteur::testing::TestService3::testpod2, "com.robotraconteur.testing.TestService3.testpod2");
+RRPrimUtilNamedArray(com::robotraconteur::testing::TestService3::vector3, "com.robotraconteur.testing.TestService3.vector3",double);
+RRPodStubNamedArrayType(com::robotraconteur::testing::TestService3::vector3);
+RRPrimUtilNamedArray(com::robotraconteur::testing::TestService3::quaternion, "com.robotraconteur.testing.TestService3.quaternion",double);
+RRPodStubNamedArrayType(com::robotraconteur::testing::TestService3::quaternion);
+RRPrimUtilNamedArray(com::robotraconteur::testing::TestService3::transform, "com.robotraconteur.testing.TestService3.transform",double);
+RRPodStubNamedArrayType(com::robotraconteur::testing::TestService3::transform);
+RRPrimUtilNamedArray(com::robotraconteur::testing::TestService3::pixel, "com.robotraconteur.testing.TestService3.pixel",uint8_t);
+RRPodStubNamedArrayType(com::robotraconteur::testing::TestService3::pixel);
+RRPrimUtilNamedArray(com::robotraconteur::testing::TestService3::pixel2, "com.robotraconteur.testing.TestService3.pixel2",uint8_t);
+RRPodStubNamedArrayType(com::robotraconteur::testing::TestService3::pixel2);
 }

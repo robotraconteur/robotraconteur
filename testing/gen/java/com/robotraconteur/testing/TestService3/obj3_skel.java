@@ -58,10 +58,16 @@ public class obj3_skel extends ServiceSkel {
     public WrappedMultiDimArrayMemoryDirector getMultiDimArrayMemory(String name) {
     throw new MemberNotFoundException("Member Not Found");
     }
-    public WrappedCStructureArrayMemoryDirector getCStructureArrayMemory(String name) {
+    public WrappedPodArrayMemoryDirector getPodArrayMemory(String name) {
     throw new MemberNotFoundException("Member Not Found");
     }
-    public WrappedCStructureMultiDimArrayMemoryDirector getCStructureMultiDimArrayMemory(String name) {
+    public WrappedPodMultiDimArrayMemoryDirector getPodMultiDimArrayMemory(String name) {
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public WrappedNamedArrayMemoryDirector getNamedArrayMemory(String name) {
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public WrappedNamedMultiDimArrayMemoryDirector getNamedMultiDimArrayMemory(String name) {
     throw new MemberNotFoundException("Member Not Found");
     }
     public String getRRType() { return "com.robotraconteur.testing.TestService3.obj3"; }

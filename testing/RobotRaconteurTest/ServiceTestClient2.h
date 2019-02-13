@@ -8,6 +8,7 @@ using namespace std;
 using namespace RobotRaconteur;
 using namespace com::robotraconteur::testing::TestService3;
 
+#include "CompareArray.h"
 
 namespace RobotRaconteurTest
 {
@@ -27,7 +28,7 @@ namespace RobotRaconteurTest
 		void AsyncTestWirePeekPoke3(const int32_t& value, const TimeSpec& ts, RR_SHARED_PTR<RobotRaconteurException> err);
 
 		void TestEnums();
-		void TestCStructs();
+		void TestPods();
 		void TestMemories();
 		void test_m1();
 		void test_m2();

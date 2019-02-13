@@ -3650,9 +3650,11 @@ namespace RobotRaconteurGen
 		{
 			if (tdef.Type == DataTypes_double_t || tdef.Type == DataTypes_single_t) return "0.0";
 			if (tdef.Type >= DataTypes_int8_t && tdef.Type <= DataTypes_uint64_t) return "0";
-			if (tdef.Type == DataTypes_cdouble_t || tdef.Type == DataTypes_csingle_t) return "{0.0,0.0}";
-			if (tdef.Type == DataTypes_bool_t) return "{0}";
-			if (tdef.Type == DataTypes_datetime_t || tdef.Type == DataTypes_duration_t) return "{0,0}";
+			if (tdef.Type == DataTypes_cdouble_t) return "RobotRaconteur::cdouble(0.0,0.0)";
+			if (tdef.Type == DataTypes_csingle_t) return "RobotRaconteur::cfloat(0.0,0.0)";
+			if (tdef.Type == DataTypes_bool_t) return "RobotRaconteur::rr_bool(0)";
+			if (tdef.Type == DataTypes_datetime_t) return "RobotRaconteur::datetime(0,0)";
+			if (tdef.Type == DataTypes_duration_t) return "RobotRaconteur::duration(0,0)";
 			if (tdef.Type == DataTypes_string_t) return "\"\"";
 		}
 
@@ -3673,9 +3675,11 @@ namespace RobotRaconteurGen
 				{
 					if (tdef.Type == DataTypes_double_t || tdef.Type == DataTypes_single_t) return "0.0";
 					if (tdef.Type >= DataTypes_int8_t && tdef.Type <= DataTypes_uint64_t) return "0";
-					if (tdef.Type == DataTypes_cdouble_t || tdef.Type == DataTypes_csingle_t) return "{0.0,0.0}";
-					if (tdef.Type == DataTypes_bool_t) return "{0}";
-					if (tdef.Type == DataTypes_datetime_t || tdef.Type == DataTypes_duration_t) return "{0,0}";
+					if (tdef.Type == DataTypes_cdouble_t) return "RobotRaconteur::cdouble(0.0,0.0)";
+					if (tdef.Type == DataTypes_csingle_t) return "RobotRaconteur::cfloat(0.0,0.0)";
+					if (tdef.Type == DataTypes_bool_t) return "RobotRaconteur::rr_bool(0)";
+					if (tdef.Type == DataTypes_datetime_t) return "RobotRaconteur::datetime(0,0)";
+					if (tdef.Type == DataTypes_duration_t) return "RobotRaconteur::duration(0,0)";
 					throw InvalidArgumentException("Invalid numeric type");
 				}
 				case DataTypes_ArrayTypes_array:

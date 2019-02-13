@@ -44,14 +44,14 @@ public:
 	virtual WrappedArrayMemoryDirector* GetArrayMemory(const std::string& name);
 	%rename (_GetMultiDimArrayMemory) GetMultiDimArrayMemory;
 	virtual WrappedMultiDimArrayMemoryDirector* GetMultiDimArrayMemory(const std::string& name);
-	%rename (_GetCStructureArrayMemory) GetCStructureArrayMemory;
-	virtual WrappedCStructureArrayMemoryDirector* GetCStructureArrayMemory(const std::string& name);
-	%rename (_GetCStructureMultiDimArrayMemory) GetCStructureMultiDimArrayMemory;
-	virtual WrappedCStructureMultiDimArrayMemoryDirector* GetCStructureMultiDimArrayMemory(const std::string& name);
-	%rename (_GetAStructureArrayMemory) GetAStructureArrayMemory;
-	virtual WrappedAStructureArrayMemoryDirector* GetAStructureArrayMemory(const std::string& name);
-	%rename (_GetAStructureMultiDimArrayMemory) GetAStructureMultiDimArrayMemory;
-	virtual WrappedAStructureMultiDimArrayMemoryDirector* GetAStructureMultiDimArrayMemory(const std::string& name);
+	%rename (_GetPodArrayMemory) GetPodArrayMemory;
+	virtual WrappedPodArrayMemoryDirector* GetPodArrayMemory(const std::string& name);
+	%rename (_GetPodMultiDimArrayMemory) GetPodMultiDimArrayMemory;
+	virtual WrappedPodMultiDimArrayMemoryDirector* GetPodMultiDimArrayMemory(const std::string& name);
+	%rename (_GetNamedArrayMemory) GetNamedArrayMemory;
+	virtual WrappedNamedArrayMemoryDirector* GetNamedArrayMemory(const std::string& name);
+	%rename (_GetNamedMultiDimArrayMemory) GetNamedMultiDimArrayMemory;
+	virtual WrappedNamedMultiDimArrayMemoryDirector* GetNamedMultiDimArrayMemory(const std::string& name);
 	
 	virtual void MonitorEnter(int32_t timeout) {};
 	virtual void MonitorExit() {};

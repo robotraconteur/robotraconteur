@@ -71,12 +71,11 @@ boost::shared_ptr<RobotRaconteur::RRBaseArray> AllocateRRArrayByType(DataTypes t
 class RRMultiDimArrayUntyped
 {
 public:
-	int32_t DimCount;
+	
 	boost::shared_ptr<RRBaseArray > Dims;
 
-	bool Complex;
-	boost::shared_ptr<RRBaseArray> Real;
-	boost::shared_ptr<RRBaseArray> Imag;
+	boost::shared_ptr<RRBaseArray> Array;
+	
 
 };
     
@@ -87,9 +86,9 @@ public:
 %shared_ptr(RobotRaconteur::detail::MultiDimArray_CalculateCopyIndicesIter)
 
 
-%apply int32_t& OUTPUT {int32_t& indexa};
-%apply int32_t& OUTPUT {int32_t& indexb};
-%apply int32_t& OUTPUT {int32_t& len};
+%apply uint32_t& OUTPUT {uint32_t& indexa};
+%apply uint32_t& OUTPUT {uint32_t& indexb};
+%apply uint32_t& OUTPUT {uint32_t& len};
 
 namespace RobotRaconteur
 {
@@ -98,11 +97,11 @@ namespace detail
 class MultiDimArray_CalculateCopyIndicesIter
 {
 public:
-	virtual bool Next(int32_t& indexa, int32_t& indexb, int32_t& len) = 0;
+	virtual bool Next(uint32_t& indexa, uint32_t& indexb, uint32_t& len) = 0;
 
 	virtual ~MultiDimArray_CalculateCopyIndicesIter();
 };
 
-boost::shared_ptr<MultiDimArray_CalculateCopyIndicesIter> MultiDimArray_CalculateCopyIndicesBeginIter(int32_t mema_dimcount, const std::vector<int32_t>& mema_dims, const std::vector<int32_t>& mema_pos, int32_t memb_dimcount, const std::vector<int32_t>& memb_dims, const std::vector<int32_t>& memb_pos, const std::vector<int32_t>& count);
+boost::shared_ptr<MultiDimArray_CalculateCopyIndicesIter> MultiDimArray_CalculateCopyIndicesBeginIter(const std::vector<uint32_t>& mema_dims, const std::vector<uint32_t>& mema_pos, const std::vector<uint32_t>& memb_dims, const std::vector<uint32_t>& memb_pos, const std::vector<uint32_t>& count);
 }
 }

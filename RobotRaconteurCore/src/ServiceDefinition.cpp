@@ -2024,6 +2024,8 @@ namespace RobotRaconteur
 				return "bool";
 			case DataTypes_datetime_t:
 				return "datetime";
+			case DataTypes_duration_t:
+				return "duration";
 			case DataTypes_structure_t:
 				return "structure";
 			case DataTypes_object_t:

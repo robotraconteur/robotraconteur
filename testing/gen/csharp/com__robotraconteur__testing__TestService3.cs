@@ -9,36 +9,209 @@ namespace com.robotraconteur.testing.TestService3
 {
 public class teststruct3
 {
-    public testcstruct1 s1;
-    public testcstruct1[] s2;
-    public testcstruct1[] s3;
-    public testcstruct1[] s4;
-    public CStructureMultiDimArray s5;
-    public CStructureMultiDimArray s6;
-    public List<testcstruct1> s7;
-    public List<testcstruct1[]> s8;
-    public List<CStructureMultiDimArray> s9;
+    public testpod1 s1;
+    public testpod1[] s2;
+    public testpod1[] s3;
+    public testpod1[] s4;
+    public PodMultiDimArray s5;
+    public PodMultiDimArray s6;
+    public List<testpod1> s7;
+    public List<testpod1[]> s8;
+    public List<PodMultiDimArray> s9;
     public object s10;
     public object s11;
     public object s12;
     public object s13;
     public object s14;
     public object s15;
+    public transform t1;
+    public transform[] t2;
+    public NamedMultiDimArray t3;
+    public object t4;
+    public object t5;
+    public List<transform> t6;
+    public List<transform[]> t7;
+    public List<NamedMultiDimArray> t8;
+    public object t9;
+    public object t10;
+    public object t11;
 }
 
-public struct testcstruct1
+[NamedArrayElementTypeAndCount(typeof(double), 3)]
+public struct vector3
+{
+    public double x;
+    public double y;
+    public double z;
+    public double[] GetNumericArray()
+    {
+    var a=new ArraySegment<double>(new double[3]);
+    GetNumericArray(ref a);
+    return a.Array;
+    }
+    public void GetNumericArray(ref ArraySegment<double> a)
+    {
+    if(a.Count < 3) throw new ArgumentException("ArraySegment invalid length");
+    a.Array[a.Offset + 0] = x;
+    a.Array[a.Offset + 1] = y;
+    a.Array[a.Offset + 2] = z;
+    }
+    public void AssignFromNumericArray(ref ArraySegment<double> a)
+    {
+    if(a.Count < 3) throw new ArgumentException("ArraySegment invalid length");
+    x = a.Array[a.Offset + 0];
+    y = a.Array[a.Offset + 1];
+    z = a.Array[a.Offset + 2];
+    }
+}
+
+[NamedArrayElementTypeAndCount(typeof(double), 4)]
+public struct quaternion
+{
+    public double q0;
+    public double q1;
+    public double q2;
+    public double q3;
+    public double[] GetNumericArray()
+    {
+    var a=new ArraySegment<double>(new double[4]);
+    GetNumericArray(ref a);
+    return a.Array;
+    }
+    public void GetNumericArray(ref ArraySegment<double> a)
+    {
+    if(a.Count < 4) throw new ArgumentException("ArraySegment invalid length");
+    a.Array[a.Offset + 0] = q0;
+    a.Array[a.Offset + 1] = q1;
+    a.Array[a.Offset + 2] = q2;
+    a.Array[a.Offset + 3] = q3;
+    }
+    public void AssignFromNumericArray(ref ArraySegment<double> a)
+    {
+    if(a.Count < 4) throw new ArgumentException("ArraySegment invalid length");
+    q0 = a.Array[a.Offset + 0];
+    q1 = a.Array[a.Offset + 1];
+    q2 = a.Array[a.Offset + 2];
+    q3 = a.Array[a.Offset + 3];
+    }
+}
+
+[NamedArrayElementTypeAndCount(typeof(double), 7)]
+public struct transform
+{
+    public quaternion rotation;
+    public vector3 translation;
+    public double[] GetNumericArray()
+    {
+    var a=new ArraySegment<double>(new double[7]);
+    GetNumericArray(ref a);
+    return a.Array;
+    }
+    public void GetNumericArray(ref ArraySegment<double> a)
+    {
+    if(a.Count < 7) throw new ArgumentException("ArraySegment invalid length");
+    var a0 = new ArraySegment<double>(a.Array, a.Offset + 0, 4);
+    rotation.GetNumericArray(ref a0);
+    var a4 = new ArraySegment<double>(a.Array, a.Offset + 4, 3);
+    translation.GetNumericArray(ref a4);
+    }
+    public void AssignFromNumericArray(ref ArraySegment<double> a)
+    {
+    if(a.Count < 7) throw new ArgumentException("ArraySegment invalid length");
+    var a0 = new ArraySegment<double>(a.Array, a.Offset + 0, 4);
+    rotation.AssignFromNumericArray(ref a0);
+    var a4 = new ArraySegment<double>(a.Array, a.Offset + 4, 3);
+    translation.AssignFromNumericArray(ref a4);
+    }
+}
+
+[NamedArrayElementTypeAndCount(typeof(byte), 3)]
+public struct pixel
+{
+    public byte r;
+    public byte b;
+    public byte g;
+    public byte[] GetNumericArray()
+    {
+    var a=new ArraySegment<byte>(new byte[3]);
+    GetNumericArray(ref a);
+    return a.Array;
+    }
+    public void GetNumericArray(ref ArraySegment<byte> a)
+    {
+    if(a.Count < 3) throw new ArgumentException("ArraySegment invalid length");
+    a.Array[a.Offset + 0] = r;
+    a.Array[a.Offset + 1] = b;
+    a.Array[a.Offset + 2] = g;
+    }
+    public void AssignFromNumericArray(ref ArraySegment<byte> a)
+    {
+    if(a.Count < 3) throw new ArgumentException("ArraySegment invalid length");
+    r = a.Array[a.Offset + 0];
+    b = a.Array[a.Offset + 1];
+    g = a.Array[a.Offset + 2];
+    }
+}
+
+[NamedArrayElementTypeAndCount(typeof(byte), 31)]
+public struct pixel2
+{
+    public byte c;
+    public pixel d;
+    public pixel e;
+    public pixel[] f;
+    public pixel g;
+    public byte[] GetNumericArray()
+    {
+    var a=new ArraySegment<byte>(new byte[31]);
+    GetNumericArray(ref a);
+    return a.Array;
+    }
+    public void GetNumericArray(ref ArraySegment<byte> a)
+    {
+    if(a.Count < 31) throw new ArgumentException("ArraySegment invalid length");
+    a.Array[a.Offset + 0] = c;
+    var a1 = new ArraySegment<byte>(a.Array, a.Offset + 1, 3);
+    d.GetNumericArray(ref a1);
+    var a4 = new ArraySegment<byte>(a.Array, a.Offset + 4, 3);
+    e.GetNumericArray(ref a4);
+    var a7 = new ArraySegment<byte>(a.Array, a.Offset + 7, 21);
+    f.GetNumericArray(ref a7);
+    var a28 = new ArraySegment<byte>(a.Array, a.Offset + 28, 3);
+    g.GetNumericArray(ref a28);
+    }
+    public void AssignFromNumericArray(ref ArraySegment<byte> a)
+    {
+    if(a.Count < 31) throw new ArgumentException("ArraySegment invalid length");
+    c = a.Array[a.Offset + 0];
+    var a1 = new ArraySegment<byte>(a.Array, a.Offset + 1, 3);
+    d.AssignFromNumericArray(ref a1);
+    var a4 = new ArraySegment<byte>(a.Array, a.Offset + 4, 3);
+    e.AssignFromNumericArray(ref a4);
+    var a7 = new ArraySegment<byte>(a.Array, a.Offset + 7, 21);
+    f.AssignFromNumericArray(ref a7);
+    var a28 = new ArraySegment<byte>(a.Array, a.Offset + 28, 3);
+    g.AssignFromNumericArray(ref a28);
+    }
+}
+
+public struct testpod1
 {
     public double d1;
     public double[] d2;
     public double[] d3;
     public double[] d4;
-    public testcstruct2 s1;
-    public testcstruct2[] s2;
-    public testcstruct2[] s3;
-    public testcstruct2[] s4;
+    public testpod2 s1;
+    public testpod2[] s2;
+    public testpod2[] s3;
+    public testpod2[] s4;
+    public transform t1;
+    public transform[] t2;
+    public transform[] t3;
+    public transform[] t4;
 }
 
-public struct testcstruct2
+public struct testpod2
 {
     public sbyte i1;
     public sbyte[] i2;
@@ -52,7 +225,7 @@ public interface testroot3
     int writeme { get; set; }
     int unknown_modifier { get; set; }
     testenum1 testenum1_prop { get; set; }
-    testcstruct1 testcstruct1_prop { get; set; }
+    testpod1 testpod1_prop { get; set; }
     teststruct3 teststruct3_prop { get; set; }
     List<double[]> d1 { get; set; }
     List<double[]> d2 { get; set; }
@@ -60,8 +233,43 @@ public interface testroot3
     Dictionary<int,double[]> d4 { get; set; }
     List<MultiDimArray> d5 { get; set; }
     Dictionary<int,MultiDimArray> d6 { get; set; }
-    void testcstruct1_func1(testcstruct1 s);
-    testcstruct1 testcstruct1_func2();
+    vector3 testnamedarray1 { get; set; }
+    transform testnamedarray2 { get; set; }
+    transform[] testnamedarray3 { get; set; }
+    NamedMultiDimArray testnamedarray4 { get; set; }
+    NamedMultiDimArray testnamedarray5 { get; set; }
+    CDouble c1 { get; set; }
+    CDouble[] c2 { get; set; }
+    MultiDimArray c3 { get; set; }
+    List<CDouble> c4 { get; set; }
+    List<CDouble[]> c5 { get; set; }
+    List<MultiDimArray> c6 { get; set; }
+    CSingle c7 { get; set; }
+    CSingle[] c8 { get; set; }
+    MultiDimArray c9 { get; set; }
+    List<CSingle> c10 { get; set; }
+    List<CSingle[]> c11 { get; set; }
+    List<MultiDimArray> c12 { get; set; }
+    bool b1 { get; set; }
+    bool[] b2 { get; set; }
+    MultiDimArray b3 { get; set; }
+    List<bool> b4 { get; set; }
+    List<bool[]> b5 { get; set; }
+    List<MultiDimArray> b6 { get; set; }
+    RRDateTime t1 { get; set; }
+    RRDateTime[] t2 { get; set; }
+    MultiDimArray t3 { get; set; }
+    List<RRDateTime> t4 { get; set; }
+    List<RRDateTime[]> t5 { get; set; }
+    List<MultiDimArray> t6 { get; set; }
+    RRDuration t7 { get; set; }
+    RRDuration[] t8 { get; set; }
+    MultiDimArray t9 { get; set; }
+    List<RRDuration> t10 { get; set; }
+    List<RRDuration[]> t11 { get; set; }
+    List<MultiDimArray> t12 { get; set; }
+    void testpod1_func1(testpod1 s);
+    testpod1 testpod1_func2();
     Generator2<double> gen_func1();
     Generator2<byte[]> gen_func2(string name);
     Generator3<byte[]> gen_func3(string name);
@@ -78,9 +286,21 @@ public interface testroot3
     Wire<int[]> w1{ get; set; }
     Wire<int[]> w2{ get; set; }
     Wire<MultiDimArray> w3{ get; set; }
-    ArrayMemory<double> readmem { get; set; }
-    CStructureArrayMemory<testcstruct2> cstruct_m1 { get; set; }
-    CStructureMultiDimArrayMemory<testcstruct2> cstruct_m2 { get; set; }
+    ArrayMemory<double> readmem { get; }
+    PodArrayMemory<testpod2> pod_m1 { get; }
+    PodMultiDimArrayMemory<testpod2> pod_m2 { get; }
+    NamedArrayMemory<transform> namedarray_m1 { get; }
+    NamedMultiDimArrayMemory<transform> namedarray_m2 { get; }
+    ArrayMemory<CDouble> c_m1 { get; }
+    MultiDimArrayMemory<CDouble> c_m2 { get; }
+    ArrayMemory<CDouble> c_m3 { get; }
+    MultiDimArrayMemory<CDouble> c_m4 { get; }
+    ArrayMemory<bool> c_m5 { get; }
+    MultiDimArrayMemory<bool> c_m6 { get; }
+    ArrayMemory<RRDateTime> c_m7 { get; }
+    MultiDimArrayMemory<RRDateTime> c_m8 { get; }
+    ArrayMemory<RRDuration> c_m9 { get; }
+    MultiDimArrayMemory<RRDuration> c_m10 { get; }
 }
 
 [RobotRaconteurServiceObjectInterface()]

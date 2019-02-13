@@ -214,32 +214,32 @@ public class MessageElementUtil {
         return newMessageElementDispose(name, RobotRaconteurNode.s().<T>packListType(val, Ttype));
     }
     
-    public static <T> MessageElement packCStructureToArray(String name, T val)
+    public static <T> MessageElement packPodToArray(String name, T val)
     {
         return newMessageElementDispose(name ,RobotRaconteurNode.s().packStructure(val));
     }
 
-    public static <T> MessageElement packCStructureArray(String name, T[] val)
+    public static <T> MessageElement packPodArray(String name, T[] val)
     {
         return newMessageElementDispose(name, RobotRaconteurNode.s().packStructure(val));
     }
 
-    public static <T> MessageElement packCStructureMultiDimArray(String name, CStructureMultiDimArray val)
+    public static <T> MessageElement packPodMultiDimArray(String name, PodMultiDimArray val)
     {
         return newMessageElementDispose(name, RobotRaconteurNode.s().packStructure(val));
     }
 
-    public static <T> MessageElement packAStructureToArray(String name, T val)
+    public static <T> MessageElement packNamedArrayToArray(String name, T val)
     {
         return newMessageElementDispose(name ,RobotRaconteurNode.s().packStructure(val));
     }
 
-    public static <T> MessageElement packAStructureArray(String name, T[] val)
+    public static <T> MessageElement packNamedArray(String name, T[] val)
     {
         return newMessageElementDispose(name, RobotRaconteurNode.s().packStructure(val));
     }
 
-    public static <T> MessageElement packAStructureMultiDimArray(String name, AStructureMultiDimArray val)
+    public static <T> MessageElement packNamedMultiDimArray(String name, NamedMultiDimArray val)
     {
         return newMessageElementDispose(name, RobotRaconteurNode.s().packStructure(val));
     }
@@ -285,33 +285,33 @@ public class MessageElementUtil {
         return (List<T>)RobotRaconteurNode.s().<T>unpackListTypeDispose(m.getData());
     }
    
-    public static <T> T unpackCStructureFromArray(MessageElement m)
+    public static <T> T unpackPodFromArray(MessageElement m)
     {
-        return (RobotRaconteurNode.s().<T[]>unpackStructure(MessageElementUtil.<MessageElementCStructureArray>castDataAndDispose(m)))[0];
+        return (RobotRaconteurNode.s().<T[]>unpackStructure(MessageElementUtil.<MessageElementPodArray>castDataAndDispose(m)))[0];
     }
 
-    public static <T> T[] unpackCStructureArray(MessageElement m)
+    public static <T> T[] unpackPodArray(MessageElement m)
     {
-        return RobotRaconteurNode.s().<T[]>unpackStructure(MessageElementUtil.<MessageElementCStructureArray>castDataAndDispose(m));
+        return RobotRaconteurNode.s().<T[]>unpackStructure(MessageElementUtil.<MessageElementPodArray>castDataAndDispose(m));
     }
 
-    public static <T> CStructureMultiDimArray unpackCStructureMultiDimArray(MessageElement m)
+    public static <T> PodMultiDimArray unpackPodMultiDimArray(MessageElement m)
     {
-        return RobotRaconteurNode.s().unpackStructure(MessageElementUtil.<MessageElementCStructureMultiDimArray>castDataAndDispose(m));
+        return RobotRaconteurNode.s().unpackStructure(MessageElementUtil.<MessageElementPodMultiDimArray>castDataAndDispose(m));
     }
     
-    public static <T> T unpackAStructureFromArray(MessageElement m)
+    public static <T> T unpackNamedArrayFromArray(MessageElement m)
     {
-        return (RobotRaconteurNode.s().<T[]>unpackStructure(MessageElementUtil.<MessageElementAStructureArray>castDataAndDispose(m)))[0];
+        return (RobotRaconteurNode.s().<T[]>unpackStructure(MessageElementUtil.<MessageElementNamedArray>castDataAndDispose(m)))[0];
     }
 
-    public static <T> T[] unpackAStructureArray(MessageElement m)
+    public static <T> T[] unpackNamedArray(MessageElement m)
     {
-        return RobotRaconteurNode.s().<T[]>unpackStructure(MessageElementUtil.<MessageElementAStructureArray>castDataAndDispose(m));
+        return RobotRaconteurNode.s().<T[]>unpackStructure(MessageElementUtil.<MessageElementNamedArray>castDataAndDispose(m));
     }
 
-    public static <T> AStructureMultiDimArray unpackAStructureMultiDimArray(MessageElement m)
+    public static <T> NamedMultiDimArray unpackNamedMultiDimArray(MessageElement m)
     {
-        return RobotRaconteurNode.s().unpackStructure(MessageElementUtil.<MessageElementAStructureMultiDimArray>castDataAndDispose(m));
+        return RobotRaconteurNode.s().unpackStructure(MessageElementUtil.<MessageElementNamedMultiDimArray>castDataAndDispose(m));
     }
 }

@@ -98,10 +98,10 @@ RR_RELEASE_GIL()
 
 	virtual boost::shared_ptr<RobotRaconteur::ArrayMemoryBase> GetArrayMemory(const std::string& membername);
 	virtual boost::shared_ptr<RobotRaconteur::MultiDimArrayMemoryBase> GetMultiDimArrayMemory(const std::string& membername);
-	virtual boost::shared_ptr<RobotRaconteur::WrappedCStructureArrayMemoryClient> GetCStructureArrayMemory(const std::string& membername);
-	virtual boost::shared_ptr<RobotRaconteur::WrappedCStructureMultiDimArrayMemoryClient> GetCStructureMultiDimArrayMemory(const std::string& membername);
-	virtual boost::shared_ptr<RobotRaconteur::WrappedAStructureArrayMemoryClient> GetAStructureArrayMemory(const std::string& membername);
-	virtual boost::shared_ptr<RobotRaconteur::WrappedAStructureMultiDimArrayMemoryClient> GetAStructureMultiDimArrayMemory(const std::string& membername);
+	virtual boost::shared_ptr<RobotRaconteur::WrappedPodArrayMemoryClient> GetPodArrayMemory(const std::string& membername);
+	virtual boost::shared_ptr<RobotRaconteur::WrappedPodMultiDimArrayMemoryClient> GetPodMultiDimArrayMemory(const std::string& membername);
+	virtual boost::shared_ptr<RobotRaconteur::WrappedNamedArrayMemoryClient> GetNamedArrayMemory(const std::string& membername);
+	virtual boost::shared_ptr<RobotRaconteur::WrappedNamedMultiDimArrayMemoryClient> GetNamedMultiDimArrayMemory(const std::string& membername);
 
 	
 	virtual void RRClose();

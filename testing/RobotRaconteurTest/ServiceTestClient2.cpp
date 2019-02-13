@@ -16,7 +16,7 @@ namespace RobotRaconteurTest
 		AsyncTestWirePeekPoke();
 
 		TestEnums();
-		TestCStructs();
+		TestPods();
 		TestMemories();
 
 		TestGenerators();
@@ -139,7 +139,7 @@ namespace RobotRaconteurTest
 
 	}
 
-	void ServiceTestClient2::TestCStructs()
+	void ServiceTestClient2::TestPods()
 	{		
 		com::robotraconteur::testing::TestService3::testpod1 s0;
 		ServiceTest2_fill_testpod1(s0, 563921043);
@@ -356,10 +356,10 @@ namespace RobotRaconteurTest
 
 	void ServiceTestClient2::TestComplex()
 	{
-		cdouble c1_1 = { 5.708705e+01, -2.328294e-03 };
+		cdouble c1_1(5.708705e+01, -2.328294e-03 );
 		if (r->get_c1() != c1_1) throw std::runtime_error("");
 
-		cdouble c1_2 = { 5.708705e+01, -2.328294e-03 };
+		cdouble c1_2(5.708705e+01, -2.328294e-03 );
 		r->set_c1(c1_2);
 
 		RR_SHARED_PTR<RRArray<cdouble> > c2_1 = r->get_c2();
@@ -390,10 +390,10 @@ namespace RobotRaconteurTest
 		c5_2->list.push_back(AttachRRArrayCopy((cdouble*)c5_2_1, 8));
 		r->set_c5(c5_2);
 		
-		cfloat c7_1 = { -5.527021e-18, -9.848457e+03 };
+		cfloat c7_1(-5.527021e-18, -9.848457e+03 );
 		if (r->get_c7() != c7_1) throw std::runtime_error("");
 
-		cfloat c7_2 = { 9.303345e-12, -3.865684e-05 };
+		cfloat c7_2(9.303345e-12, -3.865684e-05 );
 		r->set_c7(c7_2);
 
 		RR_SHARED_PTR<RRArray<cfloat> > c8_1 = r->get_c8();

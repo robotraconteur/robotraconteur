@@ -281,11 +281,11 @@ public abstract class ServiceSkel extends WrappedServiceSkelDirector
 	}
 	
 	@Override
-	public WrappedCStructureArrayMemoryDirector _GetCStructureArrayMemory(String name)
+	public WrappedPodArrayMemoryDirector _GetPodArrayMemory(String name)
     {
         try
         {
-            return getCStructureArrayMemory(name);
+            return getPodArrayMemory(name);
         }
         catch (Exception e)
         {
@@ -304,11 +304,11 @@ public abstract class ServiceSkel extends WrappedServiceSkelDirector
     }
 
 	@Override
-    public WrappedCStructureMultiDimArrayMemoryDirector _GetCStructureMultiDimArrayMemory(String name)
+    public WrappedPodMultiDimArrayMemoryDirector _GetPodMultiDimArrayMemory(String name)
     {
         try
         {
-            return getCStructureMultiDimArrayMemory(name);
+            return getPodMultiDimArrayMemory(name);
         }
         catch (Exception e)
         {
@@ -326,24 +326,24 @@ public abstract class ServiceSkel extends WrappedServiceSkelDirector
         }
     }
 
-    public WrappedCStructureArrayMemoryDirector getCStructureArrayMemory(String name)
+    public WrappedPodArrayMemoryDirector getPodArrayMemory(String name)
     {
         throw new MemberNotFoundException("Member not found");
     }
 
-    public WrappedCStructureMultiDimArrayMemoryDirector getCStructureMultiDimArrayMemory(String name)
+    public WrappedPodMultiDimArrayMemoryDirector getPodMultiDimArrayMemory(String name)
     {
         throw new MemberNotFoundException("Member not found");
     }
     
-    // astruct memories
+    // namedarray memories
     
     @Override
-	public WrappedAStructureArrayMemoryDirector _GetAStructureArrayMemory(String name)
+	public WrappedNamedArrayMemoryDirector _GetNamedArrayMemory(String name)
     {
         try
         {
-            return getAStructureArrayMemory(name);
+            return getNamedArrayMemory(name);
         }
         catch (Exception e)
         {
@@ -362,11 +362,11 @@ public abstract class ServiceSkel extends WrappedServiceSkelDirector
     }
 
 	@Override
-    public WrappedAStructureMultiDimArrayMemoryDirector _GetAStructureMultiDimArrayMemory(String name)
+    public WrappedNamedMultiDimArrayMemoryDirector _GetNamedMultiDimArrayMemory(String name)
     {
         try
         {
-            return getAStructureMultiDimArrayMemory(name);
+            return getNamedMultiDimArrayMemory(name);
         }
         catch (Exception e)
         {
@@ -384,12 +384,12 @@ public abstract class ServiceSkel extends WrappedServiceSkelDirector
         }
     }
 
-    public WrappedAStructureArrayMemoryDirector getAStructureArrayMemory(String name)
+    public WrappedNamedArrayMemoryDirector getNamedArrayMemory(String name)
     {
         throw new MemberNotFoundException("Member not found");
     }
 
-    public WrappedAStructureMultiDimArrayMemoryDirector getAStructureMultiDimArrayMemory(String name)
+    public WrappedNamedMultiDimArrayMemoryDirector getNamedMultiDimArrayMemory(String name)
     {
         throw new MemberNotFoundException("Member not found");
     }

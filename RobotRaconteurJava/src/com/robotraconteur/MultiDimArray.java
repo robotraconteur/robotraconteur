@@ -18,72 +18,43 @@ public class MultiDimArray
 	}
 
 
-	public MultiDimArray(int[] Dims, Object Real)
-	{
-		this(Dims, Real, null);
+	
+	public MultiDimArray(int[] dims, Object array)
+	{		
+		this.dims = dims;
+		this.array = array;
 	}
 
-	public MultiDimArray(int[] Dims, Object Real, Object Imag)
-	{
-		this.dimCount = Dims.length;
-		this.dims = Dims;
-		this.real = Real;
-
-		if (Imag != null)
-		{
-			this.complex = true;
-			this.imag = Imag;
-		}
-
-	}
-
-	/** 
-	 The number of array dimensions
-	*/
-	public int dimCount;
-	/** 
-	 The dimensions of the array
-	*/
+	
 	public int[] dims;
-	/** 
-	 The column vector representation of real values
-	*/
-	public Object real;
-
-	/** 
-	 True if this array is complex, false if it is real
-	*/
-	public boolean complex = false;
-	/** 
-	 The column vector representation of the imaginary values
-	*/
-	public Object imag;
-
+	public Object array;	
 	
 	public void retrieveSubArray(int[] memorypos, MultiDimArray buffer, int[] bufferpos, int[] count)
 	{
 
 		MultiDimArray mema = this;
 		MultiDimArray memb = buffer;
+		
+		vectoruint32 mema_dims1=new vectoruint32();
+		for (int i=0; i<mema.dims.length; i++) mema_dims1.add((long)mema.dims[i]);
+		vectoruint32 memorypos1=new vectoruint32();
+		for (int i=0; i<memorypos.length; i++) memorypos1.add((long)memorypos[i]);
+		vectoruint32 memb_dims1=new vectoruint32();
+		for (int i=0; i<memb.dims.length; i++) memb_dims1.add((long)memb.dims[i]);
+		vectoruint32 bufferpos1=new vectoruint32();
+		for (int i=0; i<bufferpos.length; i++) bufferpos1.add((long)bufferpos[i]);
+		vectoruint32 count1=new vectoruint32();
+		for (int i=0; i<count.length; i++) count1.add((long)count[i]);
+		
+		MultiDimArray_CalculateCopyIndicesIter iter=RobotRaconteurJava.multiDimArray_CalculateCopyIndicesBeginIter(mema_dims1, memorypos1, memb_dims1, bufferpos1, count1);
 
-		if (mema.complex != memb.complex)
-		{
-			throw new UnsupportedOperationException("Complex mismatch");
-		}
-				
-		MultiDimArray_CalculateCopyIndicesIter iter=RobotRaconteurJava.multiDimArray_CalculateCopyIndicesBeginIter(mema.dimCount, new vectorint32(mema.dims), new vectorint32(memorypos), memb.dimCount, new vectorint32(memb.dims), new vectorint32(bufferpos), new vectorint32(count));
-
-		int[] len = new int[1];
-		int[] indexa=new int[1];
-		int[] indexb=new int[1];
+		long[] len = new long[1];
+		long[] indexa=new long[1];
+		long[] indexb=new long[1];
 				
 		while (iter.next(indexa, indexb, len))
 		{
-			DataTypeUtil.arraycopy(mema.real, (int)indexa[0], memb.real, (int)indexb[0], (int)len[0]);
-			if (mema.complex)
-			{
-				DataTypeUtil.arraycopy(mema.imag, (int)indexa[0], memb.imag, (int)indexb[0], (int)len[0]);
-			}
+			DataTypeUtil.arraycopy(mema.array, (int)indexa[0], memb.array, (int)indexb[0], (int)len[0]);			
 		}
 	}
 
@@ -93,25 +64,27 @@ public class MultiDimArray
 
 		MultiDimArray mema = this;
 		MultiDimArray memb = buffer;
+		
+		vectoruint32 mema_dims1=new vectoruint32();
+		for (int i=0; i<mema.dims.length; i++) mema_dims1.add((long)mema.dims[i]);
+		vectoruint32 memorypos1=new vectoruint32();
+		for (int i=0; i<memorypos.length; i++) memorypos1.add((long)memorypos[i]);
+		vectoruint32 memb_dims1=new vectoruint32();
+		for (int i=0; i<memb.dims.length; i++) memb_dims1.add((long)memb.dims[i]);
+		vectoruint32 bufferpos1=new vectoruint32();
+		for (int i=0; i<bufferpos.length; i++) bufferpos1.add((long)bufferpos[i]);
+		vectoruint32 count1=new vectoruint32();
+		for (int i=0; i<count.length; i++) count1.add((long)count[i]);
+		
+		MultiDimArray_CalculateCopyIndicesIter iter=RobotRaconteurJava.multiDimArray_CalculateCopyIndicesBeginIter(mema_dims1, memorypos1, memb_dims1, bufferpos1, count1);
 
-		if (mema.complex != memb.complex)
-		{
-			throw new UnsupportedOperationException("Complex mismatch");
-		}
-
-		MultiDimArray_CalculateCopyIndicesIter iter=RobotRaconteurJava.multiDimArray_CalculateCopyIndicesBeginIter(mema.dimCount, new vectorint32(mema.dims), new vectorint32(memorypos), memb.dimCount, new vectorint32(memb.dims), new vectorint32(bufferpos), new vectorint32(count));
-
-		int[] len = new int[1];
-		int[] indexa=new int[1];
-		int[] indexb=new int[1];
+		long[] len = new long[1];
+		long[] indexa=new long[1];
+		long[] indexb=new long[1];
 				
 		while (iter.next(indexa, indexb, len))
 		{
-			DataTypeUtil.arraycopy(memb.real, (int)indexb[0], mema.real, (int)indexa[0], (int)len[0]);
-			if (mema.complex)
-			{
-				DataTypeUtil.arraycopy(memb.imag, (int)indexb[0], mema.imag, (int)indexa[0], (int)len[0]);
-			}
+			DataTypeUtil.arraycopy(memb.array, (int)indexb[0], mema.array, (int)indexa[0], (int)len[0]);			
 		}
 	}
 

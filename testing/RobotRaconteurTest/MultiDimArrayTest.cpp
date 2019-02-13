@@ -4,6 +4,7 @@
 
 #include "MultiDimArrayTest.h"
 #include <boost/detail/endian.hpp>
+#include "CompareArray.h"
 
 namespace RobotRaconteurTest
 {

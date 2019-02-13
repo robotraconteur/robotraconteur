@@ -3,9 +3,9 @@ package com.robotraconteur;
 import java.lang.reflect.Array;
 import java.math.BigInteger;
 
-public class AStructureMultiDimArrayMemoryClient<T> extends AStructureMultiDimArrayMemory<T> {
+public class PodMultiDimArrayMemoryClient<T> extends PodMultiDimArrayMemory<T> {
 
-	WrappedAStructureMultiDimArrayMemoryClient innerclient;
+	WrappedPodMultiDimArrayMemoryClient innerclient;
 
 	private static int[] vector_uint64_to_int(vector_uint64_t v)
 	{
@@ -39,21 +39,21 @@ public class AStructureMultiDimArrayMemoryClient<T> extends AStructureMultiDimAr
 		return o;
 	}
 	
-    class bufferdirector extends WrappedAStructureMultiDimArrayMemoryClientBuffer
+    class bufferdirector extends WrappedPodMultiDimArrayMemoryClientBuffer
     {
-        AStructureMultiDimArray buffer;
+        PodMultiDimArray buffer;
 
-        public bufferdirector(AStructureMultiDimArray buffer)
+        public bufferdirector(PodMultiDimArray buffer)
         {
             this.buffer = buffer;
         }
 
         @Override
-        public void unpackReadResult(MessageElementAStructureMultiDimArray res, vector_uint64_t bufferpos, vector_uint64_t count)
+        public void unpackReadResult(MessageElementPodMultiDimArray res, vector_uint64_t bufferpos, vector_uint64_t count)
         {        	
             try
             {
-                AStructureMultiDimArray res1 = (AStructureMultiDimArray)RobotRaconteurNode.s().unpackStructure(res);
+                PodMultiDimArray res1 = (PodMultiDimArray)RobotRaconteurNode.s().unpackStructure(res);
                 buffer.assignSubArray(vector_uint64_to_int(bufferpos), res1, new int[buffer.dims.length], vector_uint64_to_int(count));                    
             }
         	finally
@@ -63,7 +63,7 @@ public class AStructureMultiDimArrayMemoryClient<T> extends AStructureMultiDimAr
         }
 
         @Override
-        public MessageElementAStructureMultiDimArray packWriteRequest(vector_uint64_t bufferpos, vector_uint64_t count)
+        public MessageElementPodMultiDimArray packWriteRequest(vector_uint64_t bufferpos, vector_uint64_t count)
         {            
         	int elemcount = 1;
         	for (int i=0; i<count.size(); i++)
@@ -71,19 +71,19 @@ public class AStructureMultiDimArrayMemoryClient<T> extends AStructureMultiDimAr
         		elemcount *= count.get(i).intValue();
         	}
         	
-        	T o_array=(T)Array.newInstance(buffer.astruct_array.getClass().getComponentType(),elemcount);
+        	T o_array=(T)Array.newInstance(buffer.pod_array.getClass().getComponentType(),elemcount);
         	
         	int[] bufferpos1=vector_uint64_to_int(bufferpos);
         	int[] count1=vector_uint64_to_int(count);
         	
-            AStructureMultiDimArray o = new AStructureMultiDimArray(count1, o_array);
+            PodMultiDimArray o = new PodMultiDimArray(count1, o_array);
             buffer.retrieveSubArray(bufferpos1, o, new int[buffer.dims.length], count1);
-            return (MessageElementAStructureMultiDimArray)RobotRaconteurNode.s().packStructure(o);
+            return (MessageElementPodMultiDimArray)RobotRaconteurNode.s().packStructure(o);
             
         }
     }
 
-    public AStructureMultiDimArrayMemoryClient(WrappedAStructureMultiDimArrayMemoryClient innerclient)
+    public PodMultiDimArrayMemoryClient(WrappedPodMultiDimArrayMemoryClient innerclient)
     {
         this.innerclient = innerclient;
     }
@@ -94,7 +94,7 @@ public class AStructureMultiDimArrayMemoryClient<T> extends AStructureMultiDimAr
         return innerclient.direction();        
     }
 
-    public void Attach(CStructureMultiDimArray memory)
+    public void Attach(PodMultiDimArray memory)
     {
         throw new IllegalStateException("Invalid for memory client");
     }
@@ -113,7 +113,7 @@ public class AStructureMultiDimArrayMemoryClient<T> extends AStructureMultiDimAr
     }
 
     @Override
-    public void read(long[] memorypos, AStructureMultiDimArray buffer, long[] bufferpos, long[] count)
+    public void read(long[] memorypos, PodMultiDimArray buffer, long[] bufferpos, long[] count)
     {
         bufferdirector buffer1 = new bufferdirector(buffer);
         try
@@ -127,7 +127,7 @@ public class AStructureMultiDimArrayMemoryClient<T> extends AStructureMultiDimAr
     }
 
     @Override
-    public void write(long[] memorypos, AStructureMultiDimArray buffer, long[] bufferpos, long[] count)
+    public void write(long[] memorypos, PodMultiDimArray buffer, long[] bufferpos, long[] count)
     {
         bufferdirector buffer1 = new bufferdirector(buffer);
         try

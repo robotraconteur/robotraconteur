@@ -18,9 +18,9 @@ public class testroot3_default_impl implements testroot3{
     protected testenum1 rrvar_testenum1_prop;
     public testenum1 get_testenum1_prop() { return rrvar_testenum1_prop; }
     public void set_testenum1_prop(testenum1 value) { rrvar_testenum1_prop = value; }
-    protected testcstruct1 rrvar_testcstruct1_prop;
-    public testcstruct1 get_testcstruct1_prop() { return rrvar_testcstruct1_prop; }
-    public void set_testcstruct1_prop(testcstruct1 value) { rrvar_testcstruct1_prop = value; }
+    protected testpod1 rrvar_testpod1_prop;
+    public testpod1 get_testpod1_prop() { return rrvar_testpod1_prop; }
+    public void set_testpod1_prop(testpod1 value) { rrvar_testpod1_prop = value; }
     protected teststruct3 rrvar_teststruct3_prop;
     public teststruct3 get_teststruct3_prop() { return rrvar_teststruct3_prop; }
     public void set_teststruct3_prop(teststruct3 value) { rrvar_teststruct3_prop = value; }
@@ -42,9 +42,114 @@ public class testroot3_default_impl implements testroot3{
     protected Map<Integer,MultiDimArray> rrvar_d6;
     public Map<Integer,MultiDimArray> get_d6() { return rrvar_d6; }
     public void set_d6(Map<Integer,MultiDimArray> value) { rrvar_d6 = value; }
-    public void testcstruct1_func1(testcstruct1 s) {
+    protected vector3 rrvar_testnamedarray1;
+    public vector3 get_testnamedarray1() { return rrvar_testnamedarray1; }
+    public void set_testnamedarray1(vector3 value) { rrvar_testnamedarray1 = value; }
+    protected transform rrvar_testnamedarray2;
+    public transform get_testnamedarray2() { return rrvar_testnamedarray2; }
+    public void set_testnamedarray2(transform value) { rrvar_testnamedarray2 = value; }
+    protected transform[] rrvar_testnamedarray3;
+    public transform[] get_testnamedarray3() { return rrvar_testnamedarray3; }
+    public void set_testnamedarray3(transform[] value) { rrvar_testnamedarray3 = value; }
+    protected NamedMultiDimArray rrvar_testnamedarray4;
+    public NamedMultiDimArray get_testnamedarray4() { return rrvar_testnamedarray4; }
+    public void set_testnamedarray4(NamedMultiDimArray value) { rrvar_testnamedarray4 = value; }
+    protected NamedMultiDimArray rrvar_testnamedarray5;
+    public NamedMultiDimArray get_testnamedarray5() { return rrvar_testnamedarray5; }
+    public void set_testnamedarray5(NamedMultiDimArray value) { rrvar_testnamedarray5 = value; }
+    protected CDouble rrvar_c1;
+    public CDouble get_c1() { return rrvar_c1; }
+    public void set_c1(CDouble value) { rrvar_c1 = value; }
+    protected CDouble[] rrvar_c2;
+    public CDouble[] get_c2() { return rrvar_c2; }
+    public void set_c2(CDouble[] value) { rrvar_c2 = value; }
+    protected MultiDimArray rrvar_c3;
+    public MultiDimArray get_c3() { return rrvar_c3; }
+    public void set_c3(MultiDimArray value) { rrvar_c3 = value; }
+    protected List<CDouble[]> rrvar_c4;
+    public List<CDouble[]> get_c4() { return rrvar_c4; }
+    public void set_c4(List<CDouble[]> value) { rrvar_c4 = value; }
+    protected List<CDouble[]> rrvar_c5;
+    public List<CDouble[]> get_c5() { return rrvar_c5; }
+    public void set_c5(List<CDouble[]> value) { rrvar_c5 = value; }
+    protected List<MultiDimArray> rrvar_c6;
+    public List<MultiDimArray> get_c6() { return rrvar_c6; }
+    public void set_c6(List<MultiDimArray> value) { rrvar_c6 = value; }
+    protected CSingle rrvar_c7;
+    public CSingle get_c7() { return rrvar_c7; }
+    public void set_c7(CSingle value) { rrvar_c7 = value; }
+    protected CSingle[] rrvar_c8;
+    public CSingle[] get_c8() { return rrvar_c8; }
+    public void set_c8(CSingle[] value) { rrvar_c8 = value; }
+    protected MultiDimArray rrvar_c9;
+    public MultiDimArray get_c9() { return rrvar_c9; }
+    public void set_c9(MultiDimArray value) { rrvar_c9 = value; }
+    protected List<CSingle[]> rrvar_c10;
+    public List<CSingle[]> get_c10() { return rrvar_c10; }
+    public void set_c10(List<CSingle[]> value) { rrvar_c10 = value; }
+    protected List<CSingle[]> rrvar_c11;
+    public List<CSingle[]> get_c11() { return rrvar_c11; }
+    public void set_c11(List<CSingle[]> value) { rrvar_c11 = value; }
+    protected List<MultiDimArray> rrvar_c12;
+    public List<MultiDimArray> get_c12() { return rrvar_c12; }
+    public void set_c12(List<MultiDimArray> value) { rrvar_c12 = value; }
+    protected boolean rrvar_b1;
+    public boolean get_b1() { return rrvar_b1; }
+    public void set_b1(boolean value) { rrvar_b1 = value; }
+    protected boolean[] rrvar_b2;
+    public boolean[] get_b2() { return rrvar_b2; }
+    public void set_b2(boolean[] value) { rrvar_b2 = value; }
+    protected MultiDimArray rrvar_b3;
+    public MultiDimArray get_b3() { return rrvar_b3; }
+    public void set_b3(MultiDimArray value) { rrvar_b3 = value; }
+    protected List<boolean[]> rrvar_b4;
+    public List<boolean[]> get_b4() { return rrvar_b4; }
+    public void set_b4(List<boolean[]> value) { rrvar_b4 = value; }
+    protected List<boolean[]> rrvar_b5;
+    public List<boolean[]> get_b5() { return rrvar_b5; }
+    public void set_b5(List<boolean[]> value) { rrvar_b5 = value; }
+    protected List<MultiDimArray> rrvar_b6;
+    public List<MultiDimArray> get_b6() { return rrvar_b6; }
+    public void set_b6(List<MultiDimArray> value) { rrvar_b6 = value; }
+    protected DateTime rrvar_t1;
+    public DateTime get_t1() { return rrvar_t1; }
+    public void set_t1(DateTime value) { rrvar_t1 = value; }
+    protected DateTime[] rrvar_t2;
+    public DateTime[] get_t2() { return rrvar_t2; }
+    public void set_t2(DateTime[] value) { rrvar_t2 = value; }
+    protected MultiDimArray rrvar_t3;
+    public MultiDimArray get_t3() { return rrvar_t3; }
+    public void set_t3(MultiDimArray value) { rrvar_t3 = value; }
+    protected List<DateTime[]> rrvar_t4;
+    public List<DateTime[]> get_t4() { return rrvar_t4; }
+    public void set_t4(List<DateTime[]> value) { rrvar_t4 = value; }
+    protected List<DateTime[]> rrvar_t5;
+    public List<DateTime[]> get_t5() { return rrvar_t5; }
+    public void set_t5(List<DateTime[]> value) { rrvar_t5 = value; }
+    protected List<MultiDimArray> rrvar_t6;
+    public List<MultiDimArray> get_t6() { return rrvar_t6; }
+    public void set_t6(List<MultiDimArray> value) { rrvar_t6 = value; }
+    protected Duration rrvar_t7;
+    public Duration get_t7() { return rrvar_t7; }
+    public void set_t7(Duration value) { rrvar_t7 = value; }
+    protected Duration[] rrvar_t8;
+    public Duration[] get_t8() { return rrvar_t8; }
+    public void set_t8(Duration[] value) { rrvar_t8 = value; }
+    protected MultiDimArray rrvar_t9;
+    public MultiDimArray get_t9() { return rrvar_t9; }
+    public void set_t9(MultiDimArray value) { rrvar_t9 = value; }
+    protected List<Duration[]> rrvar_t10;
+    public List<Duration[]> get_t10() { return rrvar_t10; }
+    public void set_t10(List<Duration[]> value) { rrvar_t10 = value; }
+    protected List<Duration[]> rrvar_t11;
+    public List<Duration[]> get_t11() { return rrvar_t11; }
+    public void set_t11(List<Duration[]> value) { rrvar_t11 = value; }
+    protected List<MultiDimArray> rrvar_t12;
+    public List<MultiDimArray> get_t12() { return rrvar_t12; }
+    public void set_t12(List<MultiDimArray> value) { rrvar_t12 = value; }
+    public void testpod1_func1(testpod1 s) {
     throw new UnsupportedOperationException();    }
-    public testcstruct1 testcstruct1_func2() {
+    public testpod1 testpod1_func2() {
     throw new UnsupportedOperationException();    }
     public Generator2<double[]> gen_func1() {
     throw new UnsupportedOperationException();    }
@@ -110,8 +215,32 @@ public class testroot3_default_impl implements testroot3{
     { throw new UnsupportedOperationException();}
     public ArrayMemory<double[]> get_readmem()
     { throw new UnsupportedOperationException(); }
-    public CStructureArrayMemory<testcstruct2[]> get_cstruct_m1()
+    public PodArrayMemory<testpod2[]> get_pod_m1()
     { throw new UnsupportedOperationException(); }
-    public CStructureMultiDimArrayMemory<testcstruct2[]> get_cstruct_m2()
+    public PodMultiDimArrayMemory<testpod2[]> get_pod_m2()
+    { throw new UnsupportedOperationException(); }
+    public NamedArrayMemory<transform[]> get_namedarray_m1()
+    { throw new UnsupportedOperationException(); }
+    public NamedMultiDimArrayMemory<transform[]> get_namedarray_m2()
+    { throw new UnsupportedOperationException(); }
+    public ArrayMemory<CDouble[]> get_c_m1()
+    { throw new UnsupportedOperationException(); }
+    public MultiDimArrayMemory<CDouble[]> get_c_m2()
+    { throw new UnsupportedOperationException(); }
+    public ArrayMemory<CDouble[]> get_c_m3()
+    { throw new UnsupportedOperationException(); }
+    public MultiDimArrayMemory<CDouble[]> get_c_m4()
+    { throw new UnsupportedOperationException(); }
+    public ArrayMemory<boolean[]> get_c_m5()
+    { throw new UnsupportedOperationException(); }
+    public MultiDimArrayMemory<boolean[]> get_c_m6()
+    { throw new UnsupportedOperationException(); }
+    public ArrayMemory<DateTime[]> get_c_m7()
+    { throw new UnsupportedOperationException(); }
+    public MultiDimArrayMemory<DateTime[]> get_c_m8()
+    { throw new UnsupportedOperationException(); }
+    public ArrayMemory<Duration[]> get_c_m9()
+    { throw new UnsupportedOperationException(); }
+    public MultiDimArrayMemory<Duration[]> get_c_m10()
     { throw new UnsupportedOperationException(); }
 }

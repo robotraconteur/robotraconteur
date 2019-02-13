@@ -73,92 +73,92 @@ namespace RobotRaconteur
             }
         }
 
-        public MessageElementCStructureArray PackCStructureToArray<T>(ref T s) where T : struct
+        public MessageElementPodArray PackPodToArray<T>(ref T s) where T : struct
         {
             string typename;
             if (CompareNamespace(RobotRaconteurNode.GetTypeString(s.GetType()), out typename))
             {
-                return ((CStructureStub<T>)FindCStructureStub(typename)).PackCStructureToArray(ref s);
+                return ((PodStub<T>)FindPodStub(typename)).PackPodToArray(ref s);
             }
             else
             {
-                return RobotRaconteurNode.s.PackCStructureToArray(ref s);
+                return RobotRaconteurNode.s.PackPodToArray(ref s);
             }
         }
 
-        public T UnpackCStructureFromArray<T>(MessageElementCStructureArray l) where T : struct
+        public T UnpackPodFromArray<T>(MessageElementPodArray l) where T : struct
         {
             string typename;
             if (CompareNamespace(l.GetTypeString(), out typename))
             {
-                return ((CStructureStub<T>)FindCStructureStub(typename)).UnpackCStructureFromArray(l);
+                return ((PodStub<T>)FindPodStub(typename)).UnpackPodFromArray(l);
             }
             else
             {
-                return RobotRaconteurNode.s.UnpackCStructureFromArray<T>(l);
+                return RobotRaconteurNode.s.UnpackPodFromArray<T>(l);
             }
         }
 
-        public MessageElementCStructureArray PackCStructureArray<T>(T[] s) where T : struct
+        public MessageElementPodArray PackPodArray<T>(T[] s) where T : struct
         {
             string typename;
             if (CompareNamespace(RobotRaconteurNode.GetTypeString(s.GetType().GetElementType()), out typename))
             {
-                return ((CStructureStub<T>)FindCStructureStub(typename)).PackCStructureArray(s);
+                return ((PodStub<T>)FindPodStub(typename)).PackPodArray(s);
             }
             else
             {
-                return RobotRaconteurNode.s.PackCStructureArray(s);
+                return RobotRaconteurNode.s.PackPodArray(s);
             }
         }
 
-        public T[] UnpackCStructureArray<T>(MessageElementCStructureArray l) where T : struct
+        public T[] UnpackPodArray<T>(MessageElementPodArray l) where T : struct
         {
             string typename;
             if (CompareNamespace(l.GetTypeString(), out typename))
             {
-                return ((CStructureStub<T>)FindCStructureStub(typename)).UnpackCStructureArray(l);
+                return ((PodStub<T>)FindPodStub(typename)).UnpackPodArray(l);
             }
             else
             {
-                return RobotRaconteurNode.s.UnpackCStructureArray<T>(l);
+                return RobotRaconteurNode.s.UnpackPodArray<T>(l);
             }
         }
 
-        public MessageElementCStructureMultiDimArray PackCStructureMultiDimArray<T>(CStructureMultiDimArray s) where T: struct
+        public MessageElementPodMultiDimArray PackPodMultiDimArray<T>(PodMultiDimArray s) where T: struct
         {
             string typename;
-            if (CompareNamespace(RobotRaconteurNode.GetTypeString(s.cstruct_array.GetType().GetElementType()), out typename))
+            if (CompareNamespace(RobotRaconteurNode.GetTypeString(s.pod_array.GetType().GetElementType()), out typename))
             {
-                return ((CStructureStub<T>)FindCStructureStub(typename)).PackCStructureMultiDimArray(s);
+                return ((PodStub<T>)FindPodStub(typename)).PackPodMultiDimArray(s);
             }
             else
             {
-                return RobotRaconteurNode.s.PackCStructureMultiDimArray<T>(s);
+                return RobotRaconteurNode.s.PackPodMultiDimArray<T>(s);
             }
         }
 
-        public CStructureMultiDimArray UnpackCStructureMultiDimArray<T>(MessageElementCStructureMultiDimArray l) where T: struct
+        public PodMultiDimArray UnpackPodMultiDimArray<T>(MessageElementPodMultiDimArray l) where T: struct
         {
             string typename;
             if (CompareNamespace(l.GetTypeString(), out typename))
             {
-                return ((CStructureStub<T>)FindCStructureStub(typename)).UnpackCStructureMultiDimArray(l);
+                return ((PodStub<T>)FindPodStub(typename)).UnpackPodMultiDimArray(l);
             }
             else
             {
-                return RobotRaconteurNode.s.UnpackCStructureMultiDimArray<T>(l);
+                return RobotRaconteurNode.s.UnpackPodMultiDimArray<T>(l);
             }
         }
 
-        public MessageElementData PackCStructure(object s)
+        public MessageElementData PackPod(object s)
         {
             Type t;
 
-            var s1 = s as CStructureMultiDimArray;
+            var s1 = s as PodMultiDimArray;
             if (s1 != null)
             {
-                t = s1.cstruct_array.GetType().GetElementType();
+                t = s1.pod_array.GetType().GetElementType();
             }
             else
             {
@@ -177,115 +177,115 @@ namespace RobotRaconteur
             string typename;
             if (CompareNamespace(RobotRaconteurNode.GetTypeString(t), out typename))
             {                
-                return FindCStructureStub(typename).PackCStructure(s);
+                return FindPodStub(typename).PackPod(s);
             }
             else
             {
-                return RobotRaconteurNode.s.PackCStructure(s);
+                return RobotRaconteurNode.s.PackPod(s);
             }
         }
 
-        public object UnpackCStructure(MessageElementData m)
+        public object UnpackPod(MessageElementData m)
         {
             string typename;
             if (CompareNamespace(m.GetTypeString(), out typename))
             {
-                return FindCStructureStub(typename).UnpackCStructure(m);
+                return FindPodStub(typename).UnpackPod(m);
             }
             else
             {
-                return RobotRaconteurNode.s.UnpackCStructure(m);
+                return RobotRaconteurNode.s.UnpackPod(m);
             }
         }
 
-        //astruct
+        //namedarray
 
-        public MessageElementAStructureArray PackAStructureToArray<T>(ref T s) where T : struct
+        public MessageElementNamedArray PackNamedArrayToArray<T>(ref T s) where T : struct
         {
             string typename;
             if (CompareNamespace(RobotRaconteurNode.GetTypeString(s.GetType()), out typename))
             {
-                return ((IAStructureStub<T>)FindAStructureStub(typename)).PackAStructureToArray(ref s);
+                return ((INamedArrayStub<T>)FindNamedArrayStub(typename)).PackNamedArrayStructToArray(ref s);
             }
             else
             {
-                return RobotRaconteurNode.s.PackAStructureToArray(ref s);
+                return RobotRaconteurNode.s.PackNamedArrayToArray(ref s);
             }
         }
 
-        public T UnpackAStructureFromArray<T>(MessageElementAStructureArray l) where T : struct
+        public T UnpackNamedArrayFromArray<T>(MessageElementNamedArray l) where T : struct
         {
             string typename;
             if (CompareNamespace(l.GetTypeString(), out typename))
             {
-                return ((IAStructureStub<T>)FindAStructureStub(typename)).UnpackAStructureFromArray(l);
+                return ((INamedArrayStub<T>)FindNamedArrayStub(typename)).UnpackNamedArrayStructFromArray(l);
             }
             else
             {
-                return RobotRaconteurNode.s.UnpackAStructureFromArray<T>(l);
+                return RobotRaconteurNode.s.UnpackNamedArrayFromArray<T>(l);
             }
         }
 
-        public MessageElementAStructureArray PackAStructureArray<T>(T[] s) where T : struct
+        public MessageElementNamedArray PackNamedArray<T>(T[] s) where T : struct
         {
             string typename;
             if (CompareNamespace(RobotRaconteurNode.GetTypeString(s.GetType().GetElementType()), out typename))
             {
-                return ((IAStructureStub<T>)FindAStructureStub(typename)).PackAStructureArray(s);
+                return ((INamedArrayStub<T>)FindNamedArrayStub(typename)).PackNamedArray(s);
             }
             else
             {
-                return RobotRaconteurNode.s.PackAStructureArray(s);
+                return RobotRaconteurNode.s.PackNamedArray(s);
             }
         }
 
-        public T[] UnpackAStructureArray<T>(MessageElementAStructureArray l) where T : struct
+        public T[] UnpackNamedArray<T>(MessageElementNamedArray l) where T : struct
         {
             string typename;
             if (CompareNamespace(l.GetTypeString(), out typename))
             {
-                return ((IAStructureStub<T>)FindAStructureStub(typename)).UnpackAStructureArray(l);
+                return ((INamedArrayStub<T>)FindNamedArrayStub(typename)).UnpackNamedArray(l);
             }
             else
             {
-                return RobotRaconteurNode.s.UnpackAStructureArray<T>(l);
+                return RobotRaconteurNode.s.UnpackNamedArray<T>(l);
             }
         }
 
-        public MessageElementAStructureMultiDimArray PackAStructureMultiDimArray<T>(AStructureMultiDimArray s) where T : struct
+        public MessageElementNamedMultiDimArray PackNamedMultiDimArray<T>(NamedMultiDimArray s) where T : struct
         {
             string typename;
-            if (CompareNamespace(RobotRaconteurNode.GetTypeString(s.astruct_array.GetType().GetElementType()), out typename))
+            if (CompareNamespace(RobotRaconteurNode.GetTypeString(s.namedarray_array.GetType().GetElementType()), out typename))
             {
-                return ((IAStructureStub<T>)FindAStructureStub(typename)).PackAStructureMultiDimArray(s);
+                return ((INamedArrayStub<T>)FindNamedArrayStub(typename)).PackNamedMultiDimArray(s);
             }
             else
             {
-                return RobotRaconteurNode.s.PackAStructureMultiDimArray<T>(s);
+                return RobotRaconteurNode.s.PackNamedMultiDimArray<T>(s);
             }
         }
 
-        public AStructureMultiDimArray UnpackAStructureMultiDimArray<T>(MessageElementAStructureMultiDimArray l) where T : struct
+        public NamedMultiDimArray UnpackNamedMultiDimArray<T>(MessageElementNamedMultiDimArray l) where T : struct
         {
             string typename;
             if (CompareNamespace(l.GetTypeString(), out typename))
             {
-                return ((IAStructureStub<T>)FindAStructureStub(typename)).UnpackAStructureMultiDimArray(l);
+                return ((INamedArrayStub<T>)FindNamedArrayStub(typename)).UnpackNamedMultiDimArray(l);
             }
             else
             {
-                return RobotRaconteurNode.s.UnpackAStructureMultiDimArray<T>(l);
+                return RobotRaconteurNode.s.UnpackNamedMultiDimArray<T>(l);
             }
         }
 
-        public MessageElementData PackAStructure(object s)
+        public MessageElementData PackNamedArray(object s)
         {
             Type t;
 
-            var s1 = s as AStructureMultiDimArray;
+            var s1 = s as NamedMultiDimArray;
             if (s1 != null)
             {
-                t = s1.astruct_array.GetType().GetElementType();
+                t = s1.namedarray_array.GetType().GetElementType();
             }
             else
             {
@@ -304,32 +304,32 @@ namespace RobotRaconteur
             string typename;
             if (CompareNamespace(RobotRaconteurNode.GetTypeString(t), out typename))
             {
-                return FindAStructureStub(typename).PackAStructure(s);
+                return FindNamedArrayStub(typename).PackNamedArray(s);
             }
             else
             {
-                return RobotRaconteurNode.s.PackAStructure(s);
+                return RobotRaconteurNode.s.PackNamedArray(s);
             }
         }
 
-        public object UnpackAStructure(MessageElementData m)
+        public object UnpackNamedArray(MessageElementData m)
         {
             string typename;
             if (CompareNamespace(m.GetTypeString(), out typename))
             {
-                return FindAStructureStub(typename).UnpackAStructure(m);
+                return FindNamedArrayStub(typename).UnpackNamedArray(m);
             }
             else
             {
-                return RobotRaconteurNode.s.UnpackAStructure(m);
+                return RobotRaconteurNode.s.UnpackNamedArray(m);
             }
         }
 
         public abstract IStructureStub FindStructureStub(string objecttype);
 
-        public abstract ICStructureStub FindCStructureStub(string objecttype);
+        public abstract IPodStub FindPodStub(string objecttype);
 
-        public abstract IAStructureStub FindAStructureStub(string objecttype);
+        public abstract INamedArrayStub FindNamedArrayStub(string objecttype);
 
         public abstract ServiceStub CreateStub(WrappedServiceStub innerstub);
 
@@ -347,33 +347,33 @@ namespace RobotRaconteur
         T UnpackStructure<T>(MessageElementStructure m);
     }
 
-    public interface ICStructureStub
+    public interface IPodStub
     {
-        MessageElementData PackCStructure(object s);
+        MessageElementData PackPod(object s);
 
-        object UnpackCStructure(MessageElementData m);
+        object UnpackPod(MessageElementData m);
     }
 
-    public abstract class CStructureStub<T> : ICStructureStub where T :struct
+    public abstract class PodStub<T> : IPodStub where T :struct
     {
-        public abstract MessageElementCStructure PackCStructure(ref T s);
+        public abstract MessageElementPod PackPod(ref T s);
         
-        public abstract T UnpackCStructure(MessageElementCStructure m);
+        public abstract T UnpackPod(MessageElementPod m);
 
 
-        public virtual MessageElementCStructureArray PackCStructureToArray(ref T s2)
+        public virtual MessageElementPodArray PackPodToArray(ref T s2)
         {
             using (var mm = new vectorptr_messageelement())
             {                
                 MessageElementUtil.AddMessageElementDispose(mm,
-                    MessageElementUtil.NewMessageElementDispose(0, PackCStructure(ref s2))
+                    MessageElementUtil.NewMessageElementDispose(0, PackPod(ref s2))
                     );
                 
-                return new MessageElementCStructureArray(TypeName, mm);
+                return new MessageElementPodArray(TypeName, mm);
             }
         }
 
-        public virtual MessageElementCStructureArray PackCStructureArray(T[] s2)
+        public virtual MessageElementPodArray PackPodArray(T[] s2)
         {
             if (s2 == null) return null;
 
@@ -382,49 +382,49 @@ namespace RobotRaconteur
                 for (int i = 0; i < s2.Length; i++)
                 {
                     MessageElementUtil.AddMessageElementDispose(mm,
-                        MessageElementUtil.NewMessageElementDispose(i, PackCStructure(ref s2[i]))
+                        MessageElementUtil.NewMessageElementDispose(i, PackPod(ref s2[i]))
                         );
                 }
-                return new MessageElementCStructureArray(TypeName, mm);
+                return new MessageElementPodArray(TypeName, mm);
             }
         }
 
-        public virtual MessageElementCStructureMultiDimArray PackCStructureMultiDimArray(CStructureMultiDimArray s3)
+        public virtual MessageElementPodMultiDimArray PackPodMultiDimArray(PodMultiDimArray s3)
         {
             if (s3 == null) return null;
             using (vectorptr_messageelement l = new vectorptr_messageelement())
             {
                 MessageElementUtil.AddMessageElementDispose(l, "dims", s3.Dims);
-                using (var s4 = PackCStructureArray((T[])s3.cstruct_array))
+                using (var s4 = PackPodArray((T[])s3.pod_array))
                 {
                     MessageElementUtil.AddMessageElementDispose(l, "array", s4);
-                    return new MessageElementCStructureMultiDimArray(TypeName, l);
+                    return new MessageElementPodMultiDimArray(TypeName, l);
                 }
             }
         }
 
-        public virtual T UnpackCStructureFromArray(MessageElementCStructureArray s2)
+        public virtual T UnpackPodFromArray(MessageElementPodArray s2)
         {
-            if (s2.Type != TypeName) throw new DataTypeException("cstructure type mismatch");            
+            if (s2.Type != TypeName) throw new DataTypeException("pod type mismatch");            
             using (vectorptr_messageelement cdataElements = s2.Elements)
             {
-                if (cdataElements.Count != 1) throw new DataTypeException("cstructure type mismatch");
+                if (cdataElements.Count != 1) throw new DataTypeException("pod type mismatch");
 
                 var e = cdataElements[0];                
                 using (e)
                 {
                     if (0 != MessageElementUtil.GetMessageElementNumber(e)) throw new DataTypeException("Error in list format");
-                    using (MessageElementCStructure md = (MessageElementCStructure)e.Data)
+                    using (MessageElementPod md = (MessageElementPod)e.Data)
                     {
-                        return UnpackCStructure(md);
+                        return UnpackPod(md);
                     }                        
                 }               
             }
         }
 
-        public virtual T[] UnpackCStructureArray(MessageElementCStructureArray s2)
+        public virtual T[] UnpackPodArray(MessageElementPodArray s2)
         {
-            if (s2.Type != TypeName) throw new DataTypeException("cstructure type mismatch");
+            if (s2.Type != TypeName) throw new DataTypeException("pod type mismatch");
             int count = 0;
             using (vectorptr_messageelement cdataElements = s2.Elements)
             {
@@ -434,9 +434,9 @@ namespace RobotRaconteur
                     using (e)
                     {
                         if (count != MessageElementUtil.GetMessageElementNumber(e)) throw new DataTypeException("Error in list format");
-                        using (MessageElementCStructure md = (MessageElementCStructure)e.Data)
+                        using (MessageElementPod md = (MessageElementPod)e.Data)
                         {
-                            o[count] = UnpackCStructure(md);                            
+                            o[count] = UnpackPod(md);                            
                         }                        
                         count++;
                     }
@@ -445,73 +445,73 @@ namespace RobotRaconteur
             }
         }
 
-        public virtual CStructureMultiDimArray UnpackCStructureMultiDimArray(MessageElementCStructureMultiDimArray s3)
+        public virtual PodMultiDimArray UnpackPodMultiDimArray(MessageElementPodMultiDimArray s3)
         {
-            if (s3.Type != TypeName) throw new DataTypeException("cstructure type mismatch");
-            var o = new CStructureMultiDimArray();
+            if (s3.Type != TypeName) throw new DataTypeException("pod type mismatch");
+            var o = new PodMultiDimArray();
             using (vectorptr_messageelement marrayElements = s3.Elements)
             {
-                o.Dims = (MessageElementUtil.FindElementAndCast<int[]>(marrayElements, "dims"));
-                using (var s2 = (MessageElementUtil.FindElementAndCast<MessageElementCStructureArray>(marrayElements, "array")))
+                o.Dims = (MessageElementUtil.FindElementAndCast<uint[]>(marrayElements, "dims"));
+                using (var s2 = (MessageElementUtil.FindElementAndCast<MessageElementPodArray>(marrayElements, "array")))
                 {
-                    o.cstruct_array = UnpackCStructureArray(s2);
+                    o.pod_array = UnpackPodArray(s2);
                 }
             }
             return o;
         }
 
-        public virtual MessageElementData PackCStructure(object s)
+        public virtual MessageElementData PackPod(object s)
         {
             if (s is T)
             {
                 T s2 = (T)s;
-                return PackCStructureToArray(ref s2);
+                return PackPodToArray(ref s2);
             }
 
             var s3 = s as T[];
             if (s3 != null)
             {
-                return PackCStructureArray(s3);
+                return PackPodArray(s3);
             }
 
-            var s4 = s as CStructureMultiDimArray;
+            var s4 = s as PodMultiDimArray;
             if (s4 != null)
             {
-                return PackCStructureMultiDimArray(s4);
+                return PackPodMultiDimArray(s4);
             }
 
-            throw new DataTypeException("Unexpected message element type for PackCStructure");
+            throw new DataTypeException("Unexpected message element type for PackPod");
         }
-        public virtual object UnpackCStructure(MessageElementData m)
+        public virtual object UnpackPod(MessageElementData m)
         {
-            /*var m2 = m as MessageElementCStructure;
+            /*var m2 = m as MessageElementPod;
             if (m2 != null)
             {
                 
-                return UnpackCStructure(m2);           
+                return UnpackPod(m2);           
             }*/
 
-            var m3 = m as MessageElementCStructureArray;
+            var m3 = m as MessageElementPodArray;
             if (m3 != null)
             {
-                return UnpackCStructureArray(m3);
+                return UnpackPodArray(m3);
             }
 
-            var m4 = m as MessageElementCStructureMultiDimArray;
+            var m4 = m as MessageElementPodMultiDimArray;
             if (m4 != null)
             {
-                return UnpackCStructureMultiDimArray(m4);
+                return UnpackPodMultiDimArray(m4);
             }
 
-            throw new DataTypeException("Unexpected message element type for UnpackCStructure");
+            throw new DataTypeException("Unexpected message element type for UnpackPod");
         }
 
         public abstract string TypeName { get; }
     }
             
-    public class AStructureElementTypeAndCount : System.Attribute
+    public class NamedArrayElementTypeAndCount : System.Attribute
     {
-        public AStructureElementTypeAndCount(Type element_type, int element_array_count)
+        public NamedArrayElementTypeAndCount(Type element_type, int element_array_count)
         {
             ElementArrayType = element_type;
             ElementArrayCount = element_array_count;
@@ -522,52 +522,52 @@ namespace RobotRaconteur
         
     }
 
-    public interface IAStructureStub
+    public interface INamedArrayStub
     {
-        MessageElementData PackAStructure(object s);
+        MessageElementData PackNamedArray(object s);
 
-        object UnpackAStructure(MessageElementData m);
+        object UnpackNamedArray(MessageElementData m);
     }
 
-    public interface IAStructureStub<T> : IAStructureStub
+    public interface INamedArrayStub<T> : INamedArrayStub
     {
-        MessageElementAStructureArray PackAStructureToArray(ref T s2);
+        MessageElementNamedArray PackNamedArrayStructToArray(ref T s2);
 
-        MessageElementAStructureArray PackAStructureArray(T[] s2);
+        MessageElementNamedArray PackNamedArray(T[] s2);
 
-        MessageElementAStructureMultiDimArray PackAStructureMultiDimArray(AStructureMultiDimArray s3);
+        MessageElementNamedMultiDimArray PackNamedMultiDimArray(NamedMultiDimArray s3);
 
-        T UnpackAStructureFromArray(MessageElementAStructureArray s2);
+        T UnpackNamedArrayStructFromArray(MessageElementNamedArray s2);
 
-        T[] UnpackAStructureArray(MessageElementAStructureArray s2);
+        T[] UnpackNamedArray(MessageElementNamedArray s2);
 
-        AStructureMultiDimArray UnpackAStructureMultiDimArray(MessageElementAStructureMultiDimArray s3);
+        NamedMultiDimArray UnpackNamedMultiDimArray(MessageElementNamedMultiDimArray s3);
     }
 
-    public abstract class AStructureStub<T,U> : IAStructureStub<T> where T : struct
+    public abstract class NamedArrayStub<T,U> : INamedArrayStub<T> where T : struct
     {
-        public abstract U[] GetNumericArrayFromAStructure(ref T s);
+        public abstract U[] GetNumericArrayFromNamedArrayStruct(ref T s);
 
-        public abstract T GetAStructureFromNumericArray(U[] m);
+        public abstract T GetNamedArrayStructFromNumericArray(U[] m);
 
-        public abstract U[] GetNumericArrayFromAStructureArray(T[] s);
+        public abstract U[] GetNumericArrayFromNamedArray(T[] s);
 
-        public abstract T[] GetAStructureArrayFromNumericArray(U[] m);
+        public abstract T[] GetNamedArrayFromNumericArray(U[] m);
 
 
-        public virtual MessageElementAStructureArray PackAStructureToArray(ref T s2)
+        public virtual MessageElementNamedArray PackNamedArrayStructToArray(ref T s2)
         {
             using (var mm = new vectorptr_messageelement())
             {
                 MessageElementUtil.AddMessageElementDispose(mm,
-                    MessageElementUtil.NewMessageElementDispose("array", GetNumericArrayFromAStructure(ref s2))
+                    MessageElementUtil.NewMessageElementDispose("array", GetNumericArrayFromNamedArrayStruct(ref s2))
                     );
 
-                return new MessageElementAStructureArray(TypeName, mm);
+                return new MessageElementNamedArray(TypeName, mm);
             }
         }
 
-        public virtual MessageElementAStructureArray PackAStructureArray(T[] s2)
+        public virtual MessageElementNamedArray PackNamedArray(T[] s2)
         {
             if (s2 == null) return null;
 
@@ -575,110 +575,110 @@ namespace RobotRaconteur
             {
                 
                 MessageElementUtil.AddMessageElementDispose(mm,
-                    MessageElementUtil.NewMessageElementDispose("array", GetNumericArrayFromAStructureArray(s2))
+                    MessageElementUtil.NewMessageElementDispose("array", GetNumericArrayFromNamedArray(s2))
                     );
                 
-                return new MessageElementAStructureArray(TypeName, mm);
+                return new MessageElementNamedArray(TypeName, mm);
             }
         }
 
-        public virtual MessageElementAStructureMultiDimArray PackAStructureMultiDimArray(AStructureMultiDimArray s3)
+        public virtual MessageElementNamedMultiDimArray PackNamedMultiDimArray(NamedMultiDimArray s3)
         {
             if (s3 == null) return null;
             using (vectorptr_messageelement l = new vectorptr_messageelement())
             {
                 MessageElementUtil.AddMessageElementDispose(l, "dims", s3.Dims);
-                MessageElementUtil.AddMessageElementDispose(l, "array", PackAStructureArray((T[])s3.astruct_array));
-                return new MessageElementAStructureMultiDimArray(TypeName, l);
+                MessageElementUtil.AddMessageElementDispose(l, "array", PackNamedArray((T[])s3.namedarray_array));
+                return new MessageElementNamedMultiDimArray(TypeName, l);
                 
             }
         }
 
-        public virtual T UnpackAStructureFromArray(MessageElementAStructureArray s2)
+        public virtual T UnpackNamedArrayStructFromArray(MessageElementNamedArray s2)
         {
-            if (s2.Type != TypeName) throw new DataTypeException("astructure type mismatch");
+            if (s2.Type != TypeName) throw new DataTypeException("namedarray type mismatch");
             using (vectorptr_messageelement cdataElements = s2.Elements)
             {
-                if (cdataElements.Count != 1) throw new DataTypeException("cstructure type mismatch");
+                if (cdataElements.Count != 1) throw new DataTypeException("pod type mismatch");
 
                 var a = MessageElementUtil.FindElementAndCast<U[]>(cdataElements, "array");
 
-                return GetAStructureFromNumericArray(a);                             
+                return GetNamedArrayStructFromNumericArray(a);                             
             }
         }
 
-        public virtual T[] UnpackAStructureArray(MessageElementAStructureArray s2)
+        public virtual T[] UnpackNamedArray(MessageElementNamedArray s2)
         {
-            if (s2.Type != TypeName) throw new DataTypeException("astructure type mismatch");
+            if (s2.Type != TypeName) throw new DataTypeException("namedarray type mismatch");
             using (vectorptr_messageelement cdataElements = s2.Elements)
             {
-                if (cdataElements.Count != 1) throw new DataTypeException("cstructure type mismatch");
+                if (cdataElements.Count != 1) throw new DataTypeException("pod type mismatch");
 
                 var a = MessageElementUtil.FindElementAndCast<U[]>(cdataElements, "array");
 
-                return GetAStructureArrayFromNumericArray(a);
+                return GetNamedArrayFromNumericArray(a);
             }
         }
 
-        public virtual AStructureMultiDimArray UnpackAStructureMultiDimArray(MessageElementAStructureMultiDimArray s3)
+        public virtual NamedMultiDimArray UnpackNamedMultiDimArray(MessageElementNamedMultiDimArray s3)
         {
-            if (s3.Type != TypeName) throw new DataTypeException("cstructure type mismatch");
-            var o = new AStructureMultiDimArray();
+            if (s3.Type != TypeName) throw new DataTypeException("pod type mismatch");
+            var o = new NamedMultiDimArray();
             using (vectorptr_messageelement marrayElements = s3.Elements)
             {
-                o.Dims = (MessageElementUtil.FindElementAndCast<int[]>(marrayElements, "dims"));
-                using (var s2 = (MessageElementUtil.FindElementAndCast<MessageElementAStructureArray>(marrayElements, "array")))
+                o.Dims = (MessageElementUtil.FindElementAndCast<uint[]>(marrayElements, "dims"));
+                using (var s2 = (MessageElementUtil.FindElementAndCast<MessageElementNamedArray>(marrayElements, "array")))
                 {
-                    o.astruct_array = UnpackAStructureArray(s2);
+                    o.namedarray_array = UnpackNamedArray(s2);
                 }
             }
             return o;
         }
 
-        public virtual MessageElementData PackAStructure(object s)
+        public virtual MessageElementData PackNamedArray(object s)
         {
             if (s is T)
             {
                 T s2 = (T)s;
-                return PackAStructureToArray(ref s2);
+                return PackNamedArrayStructToArray(ref s2);
             }
 
             var s3 = s as T[];
             if (s3 != null)
             {
-                return PackAStructureArray(s3);
+                return PackNamedArray(s3);
             }
 
-            var s4 = s as AStructureMultiDimArray;
+            var s4 = s as NamedMultiDimArray;
             if (s4 != null)
             {
-                return PackAStructureMultiDimArray(s4);
+                return PackNamedMultiDimArray(s4);
             }
 
-            throw new DataTypeException("Unexpected message element type for PackAStructure");
+            throw new DataTypeException("Unexpected message element type for PackNamedArray");
         }
-        public virtual object UnpackAStructure(MessageElementData m)
+        public virtual object UnpackNamedArray(MessageElementData m)
         {
-            /*var m2 = m as MessageElementCStructure;
+            /*var m2 = m as MessageElementPod;
             if (m2 != null)
             {
                 
-                return UnpackCStructure(m2);           
+                return UnpackPod(m2);           
             }*/
 
-            var m3 = m as MessageElementAStructureArray;
+            var m3 = m as MessageElementNamedArray;
             if (m3 != null)
             {
-                return UnpackAStructureArray(m3);
+                return UnpackNamedArray(m3);
             }
 
-            var m4 = m as MessageElementAStructureMultiDimArray;
+            var m4 = m as MessageElementNamedMultiDimArray;
             if (m4 != null)
             {
-                return UnpackAStructureMultiDimArray(m4);
+                return UnpackNamedMultiDimArray(m4);
             }
 
-            throw new DataTypeException("Unexpected message element type for UnpackAStructure");
+            throw new DataTypeException("Unexpected message element type for UnpackNamedArray");
         }
 
         public abstract string TypeName { get; }
@@ -1130,11 +1130,11 @@ namespace RobotRaconteur
             throw new MemberNotFoundException("Member not found");
         }
 
-        public override WrappedCStructureArrayMemoryDirector _GetCStructureArrayMemory(string name)
+        public override WrappedPodArrayMemoryDirector _GetPodArrayMemory(string name)
         {
             try
             {
-                return GetCStructureArrayMemory(name);
+                return GetPodArrayMemory(name);
             }
             catch (Exception e)
             {
@@ -1147,11 +1147,11 @@ namespace RobotRaconteur
             }
         }
 
-        public override WrappedCStructureMultiDimArrayMemoryDirector _GetCStructureMultiDimArrayMemory(string name)
+        public override WrappedPodMultiDimArrayMemoryDirector _GetPodMultiDimArrayMemory(string name)
         {
             try
             {
-                return GetCStructureMultiDimArrayMemory(name);
+                return GetPodMultiDimArrayMemory(name);
             }
             catch (Exception e)
             {
@@ -1164,21 +1164,21 @@ namespace RobotRaconteur
             }
         }
 
-        public virtual WrappedCStructureArrayMemoryDirector GetCStructureArrayMemory(string name)
+        public virtual WrappedPodArrayMemoryDirector GetPodArrayMemory(string name)
         {
             throw new MemberNotFoundException("Member not found");
         }
 
-        public virtual WrappedCStructureMultiDimArrayMemoryDirector GetCStructureMultiDimArrayMemory(string name)
+        public virtual WrappedPodMultiDimArrayMemoryDirector GetPodMultiDimArrayMemory(string name)
         {
             throw new MemberNotFoundException("Member not found");
         }
 
-        public override WrappedAStructureArrayMemoryDirector _GetAStructureArrayMemory(string name)
+        public override WrappedNamedArrayMemoryDirector _GetNamedArrayMemory(string name)
         {
             try
             {
-                return GetAStructureArrayMemory(name);
+                return GetNamedArrayMemory(name);
             }
             catch (Exception e)
             {
@@ -1191,11 +1191,11 @@ namespace RobotRaconteur
             }
         }
 
-        public override WrappedAStructureMultiDimArrayMemoryDirector _GetAStructureMultiDimArrayMemory(string name)
+        public override WrappedNamedMultiDimArrayMemoryDirector _GetNamedMultiDimArrayMemory(string name)
         {
             try
             {
-                return GetAStructureMultiDimArrayMemory(name);
+                return GetNamedMultiDimArrayMemory(name);
             }
             catch (Exception e)
             {
@@ -1208,12 +1208,12 @@ namespace RobotRaconteur
             }
         }
 
-        public virtual WrappedAStructureArrayMemoryDirector GetAStructureArrayMemory(string name)
+        public virtual WrappedNamedArrayMemoryDirector GetNamedArrayMemory(string name)
         {
             throw new MemberNotFoundException("Member not found");
         }
 
-        public virtual WrappedAStructureMultiDimArrayMemoryDirector GetAStructureMultiDimArrayMemory(string name)
+        public virtual WrappedNamedMultiDimArrayMemoryDirector GetNamedMultiDimArrayMemory(string name)
         {
             throw new MemberNotFoundException("Member not found");
         }

@@ -52,20 +52,30 @@ namespace RobotRaconteur
 	struct cdouble
 	{
 		double real; double imag;
+		cdouble() : real(0.0), imag(0.0) {}
+		cdouble(double r, double i) : real(r), imag(i) {}
 	};
 	struct cfloat
 	{
 		float real; float imag;
+		cfloat() : real(0.0), imag(0.0) {}
+		cfloat(float r, float i) : real(r), imag(i) {}
 	};
 	struct rr_bool
 	{
 		uint8_t value;
+		rr_bool() : value(0) {}
+		rr_bool(uint8_t b) : value(b) {}
 	};
 	struct datetime {
 		int64_t secs; int64_t nsecs;
+		datetime() : secs(0), nsecs(0) {}
+		datetime(int64_t s, int64_t ns) : secs(s), nsecs(ns) {}
 	};
 	struct duration {
 		int64_t secs; int64_t nsecs;
+		duration() : secs(0), nsecs(0) {}
+		duration(int64_t s, int64_t ns) : secs(s), nsecs(ns) {}
 	};
 
 	bool operator== (const cdouble &c1, const cdouble &c2);

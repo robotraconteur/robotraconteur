@@ -2,27 +2,27 @@
 package com.robotraconteur.testing.TestService3;
 import java.util.*;
 import com.robotraconteur.*;
-public class testcstruct2_stub extends CStructureStub<testcstruct2> {
-    public testcstruct2_stub(com__robotraconteur__testing__TestService3Factory d) {def=d;}
+public class testpod2_stub extends PodStub<testpod2> {
+    public testpod2_stub(com__robotraconteur__testing__TestService3Factory d) {def=d;}
     private com__robotraconteur__testing__TestService3Factory def;
-    public MessageElementCStructure packCStructure(RRCStructure s1) {
+    public MessageElementPod packPod(RRPod s1) {
     vectorptr_messageelement m=new vectorptr_messageelement();
     try {
-    testcstruct2 s = (testcstruct2)s1;
+    testpod2 s = (testpod2)s1;
     MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<byte[]>packArray("i1",new byte[] {s.i1}));
     MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<byte[]>packArray("i2",DataTypeUtil.verifyArrayLength(s.i2, 15, false)));
     MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<byte[]>packArray("i3",DataTypeUtil.verifyArrayLength(s.i3, 17, true)));
-    return new MessageElementCStructure(m);
+    return new MessageElementPod(m);
     }
     finally {
     m.delete();
     }
     }
-    public testcstruct2 unpackCStructure(MessageElementCStructure m) {
-    if (m == null ) throw new NullPointerException("CStructure must not be null");
+    public testpod2 unpackPod(MessageElementPod m) {
+    if (m == null ) throw new NullPointerException("Pod must not be null");
     vectorptr_messageelement mm=m.getElements();
     try {
-    testcstruct2 s = new testcstruct2();
+    testpod2 s = new testpod2();
     s.i1 =(MessageElementUtil.<byte[]>castDataAndDispose(MessageElement.findElement(mm,"i1")))[0];
     s.i2 =DataTypeUtil.verifyArrayLength(MessageElementUtil.<byte[]>unpackArray(MessageElement.findElement(mm,"i2")), 15, false);
     s.i3 =DataTypeUtil.verifyArrayLength(MessageElementUtil.<byte[]>unpackArray(MessageElement.findElement(mm,"i3")), 17, true);
@@ -32,6 +32,6 @@ public class testcstruct2_stub extends CStructureStub<testcstruct2> {
     mm.delete();
     }
     }
-    public String getTypeName() {return "com.robotraconteur.testing.TestService3.testcstruct2";}
-    protected testcstruct2[] createArray(int count) { return new testcstruct2[count]; }
+    public String getTypeName() {return "com.robotraconteur.testing.TestService3.testpod2";}
+    protected testpod2[] createArray(int count) { return new testpod2[count]; }
 }

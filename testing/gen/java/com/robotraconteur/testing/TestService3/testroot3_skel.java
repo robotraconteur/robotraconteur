@@ -33,10 +33,10 @@ public class testroot3_skel extends ServiceSkel {
     testenum1 ret=obj.get_testenum1_prop();
     return MessageElementUtil.<int[]>packArray("return", new int[] {((int)ret.getValue())});
     }
-    if(membername.equals( "testcstruct1_prop"))
+    if(membername.equals( "testpod1_prop"))
     {
-    testcstruct1 ret=obj.get_testcstruct1_prop();
-    return MessageElementUtil.<testcstruct1>packCStructureToArray("return",ret);
+    testpod1 ret=obj.get_testpod1_prop();
+    return MessageElementUtil.<testpod1>packPodToArray("return",ret);
     }
     if(membername.equals( "teststruct3_prop"))
     {
@@ -73,6 +73,181 @@ public class testroot3_skel extends ServiceSkel {
     Map<Integer,MultiDimArray> ret=obj.get_d6();
     return MessageElementUtil.<Integer,MultiDimArray>packMapType("return",DataTypeUtil.verifyArrayLength2(ret,9,new int[] {3,3}),Integer.class,MultiDimArray.class);
     }
+    if(membername.equals( "testnamedarray1"))
+    {
+    vector3 ret=obj.get_testnamedarray1();
+    return MessageElementUtil.<vector3>packNamedArrayToArray("return",ret);
+    }
+    if(membername.equals( "testnamedarray2"))
+    {
+    transform ret=obj.get_testnamedarray2();
+    return MessageElementUtil.<transform>packNamedArrayToArray("return",ret);
+    }
+    if(membername.equals( "testnamedarray3"))
+    {
+    transform[] ret=obj.get_testnamedarray3();
+    return MessageElementUtil.<transform>packNamedArray("return",DataTypeUtil.verifyArrayLength(ret, 10, true));
+    }
+    if(membername.equals( "testnamedarray4"))
+    {
+    NamedMultiDimArray ret=obj.get_testnamedarray4();
+    return MessageElementUtil.<NamedMultiDimArray>packNamedMultiDimArray("return",ret);
+    }
+    if(membername.equals( "testnamedarray5"))
+    {
+    NamedMultiDimArray ret=obj.get_testnamedarray5();
+    return MessageElementUtil.<NamedMultiDimArray>packNamedMultiDimArray("return",DataTypeUtil.verifyArrayLength(ret,6,new int[] {3,2}));
+    }
+    if(membername.equals( "c1"))
+    {
+    CDouble ret=obj.get_c1();
+    return MessageElementUtil.<CDouble[]>packArray("return",new CDouble[] {ret});
+    }
+    if(membername.equals( "c2"))
+    {
+    CDouble[] ret=obj.get_c2();
+    return MessageElementUtil.<CDouble[]>packArray("return",ret);
+    }
+    if(membername.equals( "c3"))
+    {
+    MultiDimArray ret=obj.get_c3();
+    return MessageElementUtil.packMultiDimArray("return",(MultiDimArray)ret);
+    }
+    if(membername.equals( "c4"))
+    {
+    List<CDouble[]> ret=obj.get_c4();
+    return MessageElementUtil.<CDouble[]>packListType("return",ret,CDouble[].class);
+    }
+    if(membername.equals( "c5"))
+    {
+    List<CDouble[]> ret=obj.get_c5();
+    return MessageElementUtil.<CDouble[]>packListType("return",ret,CDouble[].class);
+    }
+    if(membername.equals( "c6"))
+    {
+    List<MultiDimArray> ret=obj.get_c6();
+    return MessageElementUtil.<MultiDimArray>packListType("return",ret,MultiDimArray.class);
+    }
+    if(membername.equals( "c7"))
+    {
+    CSingle ret=obj.get_c7();
+    return MessageElementUtil.<CSingle[]>packArray("return",new CSingle[] {ret});
+    }
+    if(membername.equals( "c8"))
+    {
+    CSingle[] ret=obj.get_c8();
+    return MessageElementUtil.<CSingle[]>packArray("return",ret);
+    }
+    if(membername.equals( "c9"))
+    {
+    MultiDimArray ret=obj.get_c9();
+    return MessageElementUtil.packMultiDimArray("return",(MultiDimArray)ret);
+    }
+    if(membername.equals( "c10"))
+    {
+    List<CSingle[]> ret=obj.get_c10();
+    return MessageElementUtil.<CSingle[]>packListType("return",ret,CSingle[].class);
+    }
+    if(membername.equals( "c11"))
+    {
+    List<CSingle[]> ret=obj.get_c11();
+    return MessageElementUtil.<CSingle[]>packListType("return",ret,CSingle[].class);
+    }
+    if(membername.equals( "c12"))
+    {
+    List<MultiDimArray> ret=obj.get_c12();
+    return MessageElementUtil.<MultiDimArray>packListType("return",ret,MultiDimArray.class);
+    }
+    if(membername.equals( "b1"))
+    {
+    boolean ret=obj.get_b1();
+    return MessageElementUtil.<boolean[]>packArray("return",new boolean[] {ret});
+    }
+    if(membername.equals( "b2"))
+    {
+    boolean[] ret=obj.get_b2();
+    return MessageElementUtil.<boolean[]>packArray("return",ret);
+    }
+    if(membername.equals( "b3"))
+    {
+    MultiDimArray ret=obj.get_b3();
+    return MessageElementUtil.packMultiDimArray("return",(MultiDimArray)ret);
+    }
+    if(membername.equals( "b4"))
+    {
+    List<boolean[]> ret=obj.get_b4();
+    return MessageElementUtil.<boolean[]>packListType("return",ret,boolean[].class);
+    }
+    if(membername.equals( "b5"))
+    {
+    List<boolean[]> ret=obj.get_b5();
+    return MessageElementUtil.<boolean[]>packListType("return",ret,boolean[].class);
+    }
+    if(membername.equals( "b6"))
+    {
+    List<MultiDimArray> ret=obj.get_b6();
+    return MessageElementUtil.<MultiDimArray>packListType("return",ret,MultiDimArray.class);
+    }
+    if(membername.equals( "t1"))
+    {
+    DateTime ret=obj.get_t1();
+    return MessageElementUtil.<DateTime[]>packArray("return",new DateTime[] {ret});
+    }
+    if(membername.equals( "t2"))
+    {
+    DateTime[] ret=obj.get_t2();
+    return MessageElementUtil.<DateTime[]>packArray("return",ret);
+    }
+    if(membername.equals( "t3"))
+    {
+    MultiDimArray ret=obj.get_t3();
+    return MessageElementUtil.packMultiDimArray("return",(MultiDimArray)ret);
+    }
+    if(membername.equals( "t4"))
+    {
+    List<DateTime[]> ret=obj.get_t4();
+    return MessageElementUtil.<DateTime[]>packListType("return",ret,DateTime[].class);
+    }
+    if(membername.equals( "t5"))
+    {
+    List<DateTime[]> ret=obj.get_t5();
+    return MessageElementUtil.<DateTime[]>packListType("return",ret,DateTime[].class);
+    }
+    if(membername.equals( "t6"))
+    {
+    List<MultiDimArray> ret=obj.get_t6();
+    return MessageElementUtil.<MultiDimArray>packListType("return",ret,MultiDimArray.class);
+    }
+    if(membername.equals( "t7"))
+    {
+    Duration ret=obj.get_t7();
+    return MessageElementUtil.<Duration[]>packArray("return",new Duration[] {ret});
+    }
+    if(membername.equals( "t8"))
+    {
+    Duration[] ret=obj.get_t8();
+    return MessageElementUtil.<Duration[]>packArray("return",ret);
+    }
+    if(membername.equals( "t9"))
+    {
+    MultiDimArray ret=obj.get_t9();
+    return MessageElementUtil.packMultiDimArray("return",(MultiDimArray)ret);
+    }
+    if(membername.equals( "t10"))
+    {
+    List<Duration[]> ret=obj.get_t10();
+    return MessageElementUtil.<Duration[]>packListType("return",ret,Duration[].class);
+    }
+    if(membername.equals( "t11"))
+    {
+    List<Duration[]> ret=obj.get_t11();
+    return MessageElementUtil.<Duration[]>packListType("return",ret,Duration[].class);
+    }
+    if(membername.equals( "t12"))
+    {
+    List<MultiDimArray> ret=obj.get_t12();
+    return MessageElementUtil.<MultiDimArray>packListType("return",ret,MultiDimArray.class);
+    }
     throw new MemberNotFoundException("Member not found");
     }
     public void callSetProperty(String membername, MessageElement m) {
@@ -96,9 +271,9 @@ public class testroot3_skel extends ServiceSkel {
     obj.set_testenum1_prop(testenum1.intToEnum((MessageElementUtil.<int[]>castDataAndDispose(m)[0])));
     return;
     }
-    if(membername.equals( "testcstruct1_prop"))
+    if(membername.equals( "testpod1_prop"))
     {
-    obj.set_testcstruct1_prop(MessageElementUtil.<testcstruct1>unpackCStructureFromArray(m));
+    obj.set_testpod1_prop(MessageElementUtil.<testpod1>unpackPodFromArray(m));
     return;
     }
     if(membername.equals( "teststruct3_prop"))
@@ -136,19 +311,194 @@ public class testroot3_skel extends ServiceSkel {
     obj.set_d6(DataTypeUtil.verifyArrayLength2(MessageElementUtil.<Integer,MultiDimArray>unpackMapType(m),9,new int[] {3,3}));
     return;
     }
+    if(membername.equals( "testnamedarray1"))
+    {
+    obj.set_testnamedarray1(MessageElementUtil.<vector3>unpackNamedArrayFromArray(m));
+    return;
+    }
+    if(membername.equals( "testnamedarray2"))
+    {
+    obj.set_testnamedarray2(MessageElementUtil.<transform>unpackNamedArrayFromArray(m));
+    return;
+    }
+    if(membername.equals( "testnamedarray3"))
+    {
+    obj.set_testnamedarray3(DataTypeUtil.verifyArrayLength(MessageElementUtil.<transform>unpackNamedArray(m), 10, true));
+    return;
+    }
+    if(membername.equals( "testnamedarray4"))
+    {
+    obj.set_testnamedarray4(MessageElementUtil.unpackNamedMultiDimArray(m));
+    return;
+    }
+    if(membername.equals( "testnamedarray5"))
+    {
+    obj.set_testnamedarray5(DataTypeUtil.verifyArrayLength(MessageElementUtil.unpackNamedMultiDimArray(m),6,new int[] {3,2}));
+    return;
+    }
+    if(membername.equals( "c1"))
+    {
+    obj.set_c1((MessageElementUtil.<CDouble[]>castDataAndDispose(m))[0]);
+    return;
+    }
+    if(membername.equals( "c2"))
+    {
+    obj.set_c2(MessageElementUtil.<CDouble[]>unpackArray(m));
+    return;
+    }
+    if(membername.equals( "c3"))
+    {
+    obj.set_c3(MessageElementUtil.unpackMultiDimArray(m));
+    return;
+    }
+    if(membername.equals( "c4"))
+    {
+    obj.set_c4(MessageElementUtil.<CDouble[]>unpackListType(m));
+    return;
+    }
+    if(membername.equals( "c5"))
+    {
+    obj.set_c5(MessageElementUtil.<CDouble[]>unpackListType(m));
+    return;
+    }
+    if(membername.equals( "c6"))
+    {
+    obj.set_c6(MessageElementUtil.<MultiDimArray>unpackListType(m));
+    return;
+    }
+    if(membername.equals( "c7"))
+    {
+    obj.set_c7((MessageElementUtil.<CSingle[]>castDataAndDispose(m))[0]);
+    return;
+    }
+    if(membername.equals( "c8"))
+    {
+    obj.set_c8(MessageElementUtil.<CSingle[]>unpackArray(m));
+    return;
+    }
+    if(membername.equals( "c9"))
+    {
+    obj.set_c9(MessageElementUtil.unpackMultiDimArray(m));
+    return;
+    }
+    if(membername.equals( "c10"))
+    {
+    obj.set_c10(MessageElementUtil.<CSingle[]>unpackListType(m));
+    return;
+    }
+    if(membername.equals( "c11"))
+    {
+    obj.set_c11(MessageElementUtil.<CSingle[]>unpackListType(m));
+    return;
+    }
+    if(membername.equals( "c12"))
+    {
+    obj.set_c12(MessageElementUtil.<MultiDimArray>unpackListType(m));
+    return;
+    }
+    if(membername.equals( "b1"))
+    {
+    obj.set_b1((MessageElementUtil.<boolean[]>castDataAndDispose(m))[0]);
+    return;
+    }
+    if(membername.equals( "b2"))
+    {
+    obj.set_b2(MessageElementUtil.<boolean[]>unpackArray(m));
+    return;
+    }
+    if(membername.equals( "b3"))
+    {
+    obj.set_b3(MessageElementUtil.unpackMultiDimArray(m));
+    return;
+    }
+    if(membername.equals( "b4"))
+    {
+    obj.set_b4(MessageElementUtil.<boolean[]>unpackListType(m));
+    return;
+    }
+    if(membername.equals( "b5"))
+    {
+    obj.set_b5(MessageElementUtil.<boolean[]>unpackListType(m));
+    return;
+    }
+    if(membername.equals( "b6"))
+    {
+    obj.set_b6(MessageElementUtil.<MultiDimArray>unpackListType(m));
+    return;
+    }
+    if(membername.equals( "t1"))
+    {
+    obj.set_t1((MessageElementUtil.<DateTime[]>castDataAndDispose(m))[0]);
+    return;
+    }
+    if(membername.equals( "t2"))
+    {
+    obj.set_t2(MessageElementUtil.<DateTime[]>unpackArray(m));
+    return;
+    }
+    if(membername.equals( "t3"))
+    {
+    obj.set_t3(MessageElementUtil.unpackMultiDimArray(m));
+    return;
+    }
+    if(membername.equals( "t4"))
+    {
+    obj.set_t4(MessageElementUtil.<DateTime[]>unpackListType(m));
+    return;
+    }
+    if(membername.equals( "t5"))
+    {
+    obj.set_t5(MessageElementUtil.<DateTime[]>unpackListType(m));
+    return;
+    }
+    if(membername.equals( "t6"))
+    {
+    obj.set_t6(MessageElementUtil.<MultiDimArray>unpackListType(m));
+    return;
+    }
+    if(membername.equals( "t7"))
+    {
+    obj.set_t7((MessageElementUtil.<Duration[]>castDataAndDispose(m))[0]);
+    return;
+    }
+    if(membername.equals( "t8"))
+    {
+    obj.set_t8(MessageElementUtil.<Duration[]>unpackArray(m));
+    return;
+    }
+    if(membername.equals( "t9"))
+    {
+    obj.set_t9(MessageElementUtil.unpackMultiDimArray(m));
+    return;
+    }
+    if(membername.equals( "t10"))
+    {
+    obj.set_t10(MessageElementUtil.<Duration[]>unpackListType(m));
+    return;
+    }
+    if(membername.equals( "t11"))
+    {
+    obj.set_t11(MessageElementUtil.<Duration[]>unpackListType(m));
+    return;
+    }
+    if(membername.equals( "t12"))
+    {
+    obj.set_t12(MessageElementUtil.<MultiDimArray>unpackListType(m));
+    return;
+    }
     throw new MemberNotFoundException("Member not found");
     }
     public MessageElement callFunction(String rr_membername, vectorptr_messageelement rr_m) {
-    if(rr_membername.equals( "testcstruct1_func1"))
+    if(rr_membername.equals( "testpod1_func1"))
     {
-    testcstruct1 s=MessageElementUtil.<testcstruct1>unpackCStructureFromArray(vectorptr_messageelement_util.findElement(rr_m,"s"));
-    this.obj.testcstruct1_func1(s);
+    testpod1 s=MessageElementUtil.<testpod1>unpackPodFromArray(vectorptr_messageelement_util.findElement(rr_m,"s"));
+    this.obj.testpod1_func1(s);
     return new MessageElement("return",new int[] {0});
     }
-    if(rr_membername.equals( "testcstruct1_func2"))
+    if(rr_membername.equals( "testpod1_func2"))
     {
-    testcstruct1 rr_ret=obj.testcstruct1_func2();
-    return MessageElementUtil.<testcstruct1>packCStructureToArray("return",rr_ret);
+    testpod1 rr_ret=obj.testpod1_func2();
+    return MessageElementUtil.<testpod1>packPodToArray("return",rr_ret);
     }
     if(rr_membername.equals( "gen_func1"))
     {
@@ -223,21 +573,75 @@ public class testroot3_skel extends ServiceSkel {
     WrappedArrayMemoryDirectorJava<double[]> dir=new  WrappedArrayMemoryDirectorJava<double[]>(obj.get_readmem());
     return dir;
     }
-    throw new MemberNotFoundException("Member Not Found");
+    if(name.equals( "c_m1")) {
+    WrappedArrayMemoryDirectorJava<CDouble[]> dir=new  WrappedArrayMemoryDirectorJava<CDouble[]>(obj.get_c_m1());
+    return dir;
     }
-    public WrappedMultiDimArrayMemoryDirector getMultiDimArrayMemory(String name) {
-    throw new MemberNotFoundException("Member Not Found");
+    if(name.equals( "c_m3")) {
+    WrappedArrayMemoryDirectorJava<CDouble[]> dir=new  WrappedArrayMemoryDirectorJava<CDouble[]>(obj.get_c_m3());
+    return dir;
     }
-    public WrappedCStructureArrayMemoryDirector getCStructureArrayMemory(String name) {
-    if(name.equals( "cstruct_m1")) {
-    WrappedCStructureArrayMemoryDirectorJava<testcstruct2[]> dir=new  WrappedCStructureArrayMemoryDirectorJava<testcstruct2[]>(obj.get_cstruct_m1(), testcstruct2.class);
+    if(name.equals( "c_m5")) {
+    WrappedArrayMemoryDirectorJava<boolean[]> dir=new  WrappedArrayMemoryDirectorJava<boolean[]>(obj.get_c_m5());
+    return dir;
+    }
+    if(name.equals( "c_m7")) {
+    WrappedArrayMemoryDirectorJava<DateTime[]> dir=new  WrappedArrayMemoryDirectorJava<DateTime[]>(obj.get_c_m7());
+    return dir;
+    }
+    if(name.equals( "c_m9")) {
+    WrappedArrayMemoryDirectorJava<Duration[]> dir=new  WrappedArrayMemoryDirectorJava<Duration[]>(obj.get_c_m9());
     return dir;
     }
     throw new MemberNotFoundException("Member Not Found");
     }
-    public WrappedCStructureMultiDimArrayMemoryDirector getCStructureMultiDimArrayMemory(String name) {
-    if(name.equals( "cstruct_m2")) {
-    WrappedCStructureMultiDimArrayMemoryDirectorJava<testcstruct2[]> dir=new  WrappedCStructureMultiDimArrayMemoryDirectorJava<testcstruct2[]>(obj.get_cstruct_m2(), testcstruct2.class);
+    public WrappedMultiDimArrayMemoryDirector getMultiDimArrayMemory(String name) {
+    if(name.equals( "c_m2")) {
+    WrappedMultiDimArrayMemoryDirectorJava<CDouble[]> dir=new  WrappedMultiDimArrayMemoryDirectorJava<CDouble[]>(obj.get_c_m2());
+    return dir;
+    }
+    if(name.equals( "c_m4")) {
+    WrappedMultiDimArrayMemoryDirectorJava<CDouble[]> dir=new  WrappedMultiDimArrayMemoryDirectorJava<CDouble[]>(obj.get_c_m4());
+    return dir;
+    }
+    if(name.equals( "c_m6")) {
+    WrappedMultiDimArrayMemoryDirectorJava<boolean[]> dir=new  WrappedMultiDimArrayMemoryDirectorJava<boolean[]>(obj.get_c_m6());
+    return dir;
+    }
+    if(name.equals( "c_m8")) {
+    WrappedMultiDimArrayMemoryDirectorJava<DateTime[]> dir=new  WrappedMultiDimArrayMemoryDirectorJava<DateTime[]>(obj.get_c_m8());
+    return dir;
+    }
+    if(name.equals( "c_m10")) {
+    WrappedMultiDimArrayMemoryDirectorJava<Duration[]> dir=new  WrappedMultiDimArrayMemoryDirectorJava<Duration[]>(obj.get_c_m10());
+    return dir;
+    }
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public WrappedPodArrayMemoryDirector getPodArrayMemory(String name) {
+    if(name.equals( "pod_m1")) {
+    WrappedPodArrayMemoryDirectorJava<testpod2[]> dir=new  WrappedPodArrayMemoryDirectorJava<testpod2[]>(obj.get_pod_m1(), testpod2.class);
+    return dir;
+    }
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public WrappedPodMultiDimArrayMemoryDirector getPodMultiDimArrayMemory(String name) {
+    if(name.equals( "pod_m2")) {
+    WrappedPodMultiDimArrayMemoryDirectorJava<testpod2[]> dir=new  WrappedPodMultiDimArrayMemoryDirectorJava<testpod2[]>(obj.get_pod_m2(), testpod2.class);
+    return dir;
+    }
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public WrappedNamedArrayMemoryDirector getNamedArrayMemory(String name) {
+    if(name.equals( "namedarray_m1")) {
+    WrappedNamedArrayMemoryDirectorJava<transform[]> dir=new  WrappedNamedArrayMemoryDirectorJava<transform[]>(obj.get_namedarray_m1(), transform.class);
+    return dir;
+    }
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public WrappedNamedMultiDimArrayMemoryDirector getNamedMultiDimArrayMemory(String name) {
+    if(name.equals( "namedarray_m2")) {
+    WrappedNamedMultiDimArrayMemoryDirectorJava<transform[]> dir=new  WrappedNamedMultiDimArrayMemoryDirectorJava<transform[]>(obj.get_namedarray_m2(), transform.class);
     return dir;
     }
     throw new MemberNotFoundException("Member Not Found");

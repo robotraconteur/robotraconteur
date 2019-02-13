@@ -77,36 +77,36 @@ namespace RobotRaconteur
 		throw ServiceException("Invalid for wrapped service type");
 	}
 
-	RR_SHARED_PTR<RobotRaconteur::MessageElementCStructureArray> WrappedServiceFactory::PackCStructureArray(RR_SHARED_PTR<RobotRaconteur::RRCStructureBaseArray> structure)
+	RR_SHARED_PTR<RobotRaconteur::MessageElementPodArray> WrappedServiceFactory::PackPodArray(RR_SHARED_PTR<RobotRaconteur::RRPodBaseArray> structure)
 	{
 		throw ServiceException("Invalid for wrapped service type");
 	}
-	RR_SHARED_PTR<RobotRaconteur::RRCStructureBaseArray> WrappedServiceFactory::UnpackCStructureArray(RR_SHARED_PTR<RobotRaconteur::MessageElementCStructureArray> structure)
+	RR_SHARED_PTR<RobotRaconteur::RRPodBaseArray> WrappedServiceFactory::UnpackPodArray(RR_SHARED_PTR<RobotRaconteur::MessageElementPodArray> structure)
 	{
 		throw ServiceException("Invalid for wrapped service type");
 	}
-	RR_SHARED_PTR<RobotRaconteur::MessageElementCStructureMultiDimArray> WrappedServiceFactory::PackCStructureMultiDimArray(RR_SHARED_PTR<RobotRaconteur::RRCStructureBaseMultiDimArray> structure)
+	RR_SHARED_PTR<RobotRaconteur::MessageElementPodMultiDimArray> WrappedServiceFactory::PackPodMultiDimArray(RR_SHARED_PTR<RobotRaconteur::RRPodBaseMultiDimArray> structure)
 	{
 		throw ServiceException("Invalid for wrapped service type");
 	}
-	RR_SHARED_PTR<RobotRaconteur::RRCStructureBaseMultiDimArray> WrappedServiceFactory::UnpackCStructureMultiDimArray(RR_SHARED_PTR<RobotRaconteur::MessageElementCStructureMultiDimArray> structure)
+	RR_SHARED_PTR<RobotRaconteur::RRPodBaseMultiDimArray> WrappedServiceFactory::UnpackPodMultiDimArray(RR_SHARED_PTR<RobotRaconteur::MessageElementPodMultiDimArray> structure)
 	{
 		throw ServiceException("Invalid for wrapped service type");
 	}
 	
-	RR_SHARED_PTR<RobotRaconteur::MessageElementAStructureArray> WrappedServiceFactory::PackAStructureArray(RR_SHARED_PTR<RobotRaconteur::RRAStructureBaseArray> structure)
+	RR_SHARED_PTR<RobotRaconteur::MessageElementNamedArray> WrappedServiceFactory::PackNamedArray(RR_SHARED_PTR<RobotRaconteur::RRNamedBaseArray> structure)
 	{
 		throw ServiceException("Invalid for wrapped service type");
 	}
-	RR_SHARED_PTR<RobotRaconteur::RRAStructureBaseArray> WrappedServiceFactory::UnpackAStructureArray(RR_SHARED_PTR<RobotRaconteur::MessageElementAStructureArray> structure)
+	RR_SHARED_PTR<RobotRaconteur::RRNamedBaseArray> WrappedServiceFactory::UnpackNamedArray(RR_SHARED_PTR<RobotRaconteur::MessageElementNamedArray> structure)
 	{
 		throw ServiceException("Invalid for wrapped service type");
 	}
-	RR_SHARED_PTR<RobotRaconteur::MessageElementAStructureMultiDimArray> WrappedServiceFactory::PackAStructureMultiDimArray(RR_SHARED_PTR<RobotRaconteur::RRAStructureBaseMultiDimArray> structure)
+	RR_SHARED_PTR<RobotRaconteur::MessageElementNamedMultiDimArray> WrappedServiceFactory::PackNamedMultiDimArray(RR_SHARED_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> structure)
 	{
 		throw ServiceException("Invalid for wrapped service type");
 	}
-	RR_SHARED_PTR<RobotRaconteur::RRAStructureBaseMultiDimArray> WrappedServiceFactory::UnpackAStructureMultiDimArray(RR_SHARED_PTR<RobotRaconteur::MessageElementAStructureMultiDimArray> structure)
+	RR_SHARED_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> WrappedServiceFactory::UnpackNamedMultiDimArray(RR_SHARED_PTR<RobotRaconteur::MessageElementNamedMultiDimArray> structure)
 	{
 		throw ServiceException("Invalid for wrapped service type");
 	}
@@ -244,6 +244,21 @@ namespace RobotRaconteur
 						case DataTypes_uint64_t:
 							o = RR_MAKE_SHARED<ArrayMemoryClient<uint64_t> >(m->Name, shared_from_this(), direction);
 							break;
+						case DataTypes_cdouble_t:
+							o = RR_MAKE_SHARED<ArrayMemoryClient<cdouble> >(m->Name, shared_from_this(), direction);
+							break;
+						case DataTypes_csingle_t:
+							o = RR_MAKE_SHARED<ArrayMemoryClient<cfloat> >(m->Name, shared_from_this(), direction);
+							break;
+						case DataTypes_bool_t:
+							o = RR_MAKE_SHARED<ArrayMemoryClient<rr_bool> >(m->Name, shared_from_this(), direction);
+							break;
+						case DataTypes_datetime_t:
+							o = RR_MAKE_SHARED<ArrayMemoryClient<datetime> >(m->Name, shared_from_this(), direction);
+						case DataTypes_duration_t:
+							o = RR_MAKE_SHARED<ArrayMemoryClient<duration> >(m->Name, shared_from_this(), direction);
+							break;
+							break;
 						default:
 							throw InvalidArgumentException("Invalid memory data type");
 
@@ -286,6 +301,21 @@ namespace RobotRaconteur
 						case DataTypes_uint64_t:
 							o = RR_MAKE_SHARED<MultiDimArrayMemoryClient<uint64_t> >(m->Name, shared_from_this(), direction);
 							break;
+						case DataTypes_cdouble_t:
+							o = RR_MAKE_SHARED<MultiDimArrayMemoryClient<cdouble> >(m->Name, shared_from_this(), direction);
+							break;
+						case DataTypes_csingle_t:
+							o = RR_MAKE_SHARED<MultiDimArrayMemoryClient<cfloat> >(m->Name, shared_from_this(), direction);
+							break;
+						case DataTypes_bool_t:
+							o = RR_MAKE_SHARED<MultiDimArrayMemoryClient<rr_bool> >(m->Name, shared_from_this(), direction);
+							break;
+						case DataTypes_datetime_t:
+							o = RR_MAKE_SHARED<MultiDimArrayMemoryClient<datetime> >(m->Name, shared_from_this(), direction);
+							break;
+						case DataTypes_duration_t:
+							o = RR_MAKE_SHARED<MultiDimArrayMemoryClient<duration> >(m->Name, shared_from_this(), direction);
+							break;
 						default:
 							throw InvalidArgumentException("Invalid memory data type");
 
@@ -299,33 +329,33 @@ namespace RobotRaconteur
 					std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs;
 					
 					RR_SHARED_PTR<ServiceEntryDefinition> service_entry = rr_cast<ServiceEntryDefinition>(m->Type->ResolveNamedType());
-					if (service_entry->RRDataType() == DataTypes_cstructure_t)
+					if (service_entry->RRDataType() == DataTypes_pod_t)
 					{
-						size_t element_size = EstimateCStructurePackedElementSize(service_entry, other_defs, RRGetNode());
+						size_t element_size = EstimatePodPackedElementSize(service_entry, other_defs, RRGetNode());
 						if (m->Type->ArrayType == DataTypes_ArrayTypes_array)
 						{
-							RR_SHARED_PTR<WrappedCStructureArrayMemoryClient> o = RR_MAKE_SHARED<WrappedCStructureArrayMemoryClient>(m->Name, shared_from_this(), element_size, direction);
-							cstruct_arraymemories.insert(std::make_pair(m->Name, o));
+							RR_SHARED_PTR<WrappedPodArrayMemoryClient> o = RR_MAKE_SHARED<WrappedPodArrayMemoryClient>(m->Name, shared_from_this(), element_size, direction);
+							pod_arraymemories.insert(std::make_pair(m->Name, o));
 						}
 						else
 						{
-							RR_SHARED_PTR<WrappedCStructureMultiDimArrayMemoryClient> o = RR_MAKE_SHARED<WrappedCStructureMultiDimArrayMemoryClient>(m->Name, shared_from_this(), element_size, direction);
-							cstruct_multidimarraymemories.insert(std::make_pair(m->Name, o));
+							RR_SHARED_PTR<WrappedPodMultiDimArrayMemoryClient> o = RR_MAKE_SHARED<WrappedPodMultiDimArrayMemoryClient>(m->Name, shared_from_this(), element_size, direction);
+							pod_multidimarraymemories.insert(std::make_pair(m->Name, o));
 						}
 					}
 					else
 					{
-						boost::tuple<DataTypes, size_t> t4 = GetAStructureElementTypeAndCount(service_entry);
+						boost::tuple<DataTypes, size_t> t4 = GetNamedArrayElementTypeAndCount(service_entry);
 						size_t element_size = t4.get<1>();
 						if (m->Type->ArrayType == DataTypes_ArrayTypes_array)
 						{
-							RR_SHARED_PTR<WrappedAStructureArrayMemoryClient> o = RR_MAKE_SHARED<WrappedAStructureArrayMemoryClient>(m->Name, shared_from_this(), element_size, direction);
-							astruct_arraymemories.insert(std::make_pair(m->Name, o));
+							RR_SHARED_PTR<WrappedNamedArrayMemoryClient> o = RR_MAKE_SHARED<WrappedNamedArrayMemoryClient>(m->Name, shared_from_this(), element_size, direction);
+							namedarray_arraymemories.insert(std::make_pair(m->Name, o));
 						}
 						else
 						{
-							RR_SHARED_PTR<WrappedAStructureMultiDimArrayMemoryClient> o = RR_MAKE_SHARED<WrappedAStructureMultiDimArrayMemoryClient>(m->Name, shared_from_this(), element_size, direction);
-							astruct_multidimarraymemories.insert(std::make_pair(m->Name, o));
+							RR_SHARED_PTR<WrappedNamedMultiDimArrayMemoryClient> o = RR_MAKE_SHARED<WrappedNamedMultiDimArrayMemoryClient>(m->Name, shared_from_this(), element_size, direction);
+							namedarray_multidimarraymemories.insert(std::make_pair(m->Name, o));
 						}
 					}
 				}
@@ -614,17 +644,17 @@ namespace RobotRaconteur
 		return e->second;
 	}
 
-	RR_SHARED_PTR<RobotRaconteur::WrappedCStructureArrayMemoryClient> WrappedServiceStub::GetCStructureArrayMemory(const std::string& membername)
+	RR_SHARED_PTR<RobotRaconteur::WrappedPodArrayMemoryClient> WrappedServiceStub::GetPodArrayMemory(const std::string& membername)
 	{
-		std::map<std::string, RR_SHARED_PTR<WrappedCStructureArrayMemoryClient> >::iterator e = cstruct_arraymemories.find(membername);
-		if (e == cstruct_arraymemories.end()) throw MemberNotFoundException("Member Not Found");
+		std::map<std::string, RR_SHARED_PTR<WrappedPodArrayMemoryClient> >::iterator e = pod_arraymemories.find(membername);
+		if (e == pod_arraymemories.end()) throw MemberNotFoundException("Member Not Found");
 		return e->second;
 	}
 
-	RR_SHARED_PTR<RobotRaconteur::WrappedAStructureArrayMemoryClient> WrappedServiceStub::GetAStructureArrayMemory(const std::string& membername)
+	RR_SHARED_PTR<RobotRaconteur::WrappedNamedArrayMemoryClient> WrappedServiceStub::GetNamedArrayMemory(const std::string& membername)
 	{
-		std::map<std::string, RR_SHARED_PTR<WrappedAStructureArrayMemoryClient> >::iterator e = astruct_arraymemories.find(membername);
-		if (e == astruct_arraymemories.end()) throw MemberNotFoundException("Member Not Found");
+		std::map<std::string, RR_SHARED_PTR<WrappedNamedArrayMemoryClient> >::iterator e = namedarray_arraymemories.find(membername);
+		if (e == namedarray_arraymemories.end()) throw MemberNotFoundException("Member Not Found");
 		return e->second;
 	}
 
@@ -636,17 +666,17 @@ namespace RobotRaconteur
 		return e->second;
 	}
 
-	RR_SHARED_PTR<RobotRaconteur::WrappedCStructureMultiDimArrayMemoryClient> WrappedServiceStub::GetCStructureMultiDimArrayMemory(const std::string& membername)
+	RR_SHARED_PTR<RobotRaconteur::WrappedPodMultiDimArrayMemoryClient> WrappedServiceStub::GetPodMultiDimArrayMemory(const std::string& membername)
 	{
-		std::map<std::string, RR_SHARED_PTR<WrappedCStructureMultiDimArrayMemoryClient> >::iterator e = cstruct_multidimarraymemories.find(membername);
-		if (e == cstruct_multidimarraymemories.end()) throw MemberNotFoundException("Member Not Found");
+		std::map<std::string, RR_SHARED_PTR<WrappedPodMultiDimArrayMemoryClient> >::iterator e = pod_multidimarraymemories.find(membername);
+		if (e == pod_multidimarraymemories.end()) throw MemberNotFoundException("Member Not Found");
 		return e->second;
 	}
 
-	RR_SHARED_PTR<RobotRaconteur::WrappedAStructureMultiDimArrayMemoryClient> WrappedServiceStub::GetAStructureMultiDimArrayMemory(const std::string& membername)
+	RR_SHARED_PTR<RobotRaconteur::WrappedNamedMultiDimArrayMemoryClient> WrappedServiceStub::GetNamedMultiDimArrayMemory(const std::string& membername)
 	{
-		std::map<std::string, RR_SHARED_PTR<WrappedAStructureMultiDimArrayMemoryClient> >::iterator e = astruct_multidimarraymemories.find(membername);
-		if (e == astruct_multidimarraymemories.end()) throw MemberNotFoundException("Member Not Found");
+		std::map<std::string, RR_SHARED_PTR<WrappedNamedMultiDimArrayMemoryClient> >::iterator e = namedarray_multidimarraymemories.find(membername);
+		if (e == namedarray_multidimarraymemories.end()) throw MemberNotFoundException("Member Not Found");
 		return e->second;
 	}
 
@@ -1827,6 +1857,11 @@ namespace RobotRaconteur
 		RR_WAMCU_READ_TYPE(uint64_t);
 		RR_WAMCU_READ_TYPE(double);
 		RR_WAMCU_READ_TYPE(float);
+		RR_WAMCU_READ_TYPE(cdouble);
+		RR_WAMCU_READ_TYPE(cfloat);
+		RR_WAMCU_READ_TYPE(rr_bool);
+		RR_WAMCU_READ_TYPE(datetime);
+		RR_WAMCU_READ_TYPE(duration);
 
 		throw DataTypeException("Invalid memory data type");
 
@@ -1858,6 +1893,11 @@ namespace RobotRaconteur
 		RR_WAMCU_WRITE_TYPE(uint64_t);
 		RR_WAMCU_WRITE_TYPE(double);
 		RR_WAMCU_WRITE_TYPE(float);
+		RR_WAMCU_WRITE_TYPE(cdouble);
+		RR_WAMCU_WRITE_TYPE(cfloat);
+		RR_WAMCU_WRITE_TYPE(rr_bool);
+		RR_WAMCU_WRITE_TYPE(datetime);
+		RR_WAMCU_WRITE_TYPE(duration);
 
 		throw DataTypeException("Invalid memory data type");
 
@@ -1881,6 +1921,11 @@ namespace RobotRaconteur
 		RR_WAMCU_DIRECTION_TYPE(uint64_t);
 		RR_WAMCU_DIRECTION_TYPE(double);
 		RR_WAMCU_DIRECTION_TYPE(float);
+		RR_WAMCU_DIRECTION_TYPE(cdouble);
+		RR_WAMCU_DIRECTION_TYPE(cfloat);
+		RR_WAMCU_DIRECTION_TYPE(rr_bool);
+		RR_WAMCU_DIRECTION_TYPE(datetime);
+		RR_WAMCU_DIRECTION_TYPE(duration);
 
 		throw DataTypeException("Invalid memory data type");
 
@@ -1889,14 +1934,9 @@ namespace RobotRaconteur
 #define RR_WMDAMCU_READ_TYPE(type) RR_SHARED_PTR<MultiDimArrayMemory<type> > type ## _var=boost::dynamic_pointer_cast<MultiDimArrayMemory<type> >(mem); \
 	if (type ## _var) \
 	{ \
-		RR_SHARED_PTR<RRArray<type> > realdat=AllocateRRArray<type>(elems); \
-		RR_SHARED_PTR<RRArray<type> > imagdat; \
-		if (type ## _var->Complex()) \
-		{ \
-			imagdat=AllocateRRArray<type>(elems); \
-		} \
+		RR_SHARED_PTR<RRArray<type> > arraydat=AllocateRRArray<type>(elems); \
 \
-		RR_SHARED_PTR<RRMultiDimArray<type> > dat=RR_MAKE_SHARED<RRMultiDimArray<type> >(VectorToRRArray<int32_t>(count),realdat,imagdat); \
+		RR_SHARED_PTR<RRMultiDimArray<type> > dat=RR_MAKE_SHARED<RRMultiDimArray<type> >(VectorToRRArray<uint32_t>(count),arraydat); \
 \
 		std::vector<uint64_t> bufferpos(count.size()); \
 		std::fill(bufferpos.begin(),bufferpos.end(),0); \
@@ -1904,11 +1944,8 @@ namespace RobotRaconteur
 		type ## _var->Read(memorypos,dat,bufferpos,count); \
 \
 		RR_SHARED_PTR<RRMultiDimArrayUntyped> dat2=RR_MAKE_SHARED<RRMultiDimArrayUntyped>();\
-		dat2->DimCount=dat->DimCount; \
 		dat2->Dims=dat->Dims; \
-		dat2->Complex=dat->Complex; \
-		dat2->Real=dat->Real; \
-		dat2->Imag=dat->Imag; \
+		dat2->Array=dat->Array; \
 		\
 		return dat2; \
 	}
@@ -1958,6 +1995,11 @@ namespace RobotRaconteur
 		RR_WMDAMCU_READ_TYPE(uint64_t);
 		RR_WMDAMCU_READ_TYPE(double);
 		RR_WMDAMCU_READ_TYPE(float);
+		RR_WMDAMCU_READ_TYPE(cdouble);
+		RR_WMDAMCU_READ_TYPE(cfloat);
+		RR_WMDAMCU_READ_TYPE(rr_bool);
+		RR_WMDAMCU_READ_TYPE(datetime);
+		RR_WMDAMCU_READ_TYPE(duration);
 
 
 		throw DataTypeException("Invalid memory data type");
@@ -1967,7 +2009,7 @@ namespace RobotRaconteur
 #define RR_WMDAMCU_WRITE_TYPE(type) RR_SHARED_PTR<MultiDimArrayMemory<type> > type ## _var=boost::dynamic_pointer_cast<MultiDimArrayMemory<type> >(mem); \
 	if (type ## _var) \
 	{ \
-		RR_SHARED_PTR<RRMultiDimArray<type> > buffer2=RR_MAKE_SHARED<RRMultiDimArray<type> >(rr_cast<RRArray<int32_t> >(buffer->Dims),rr_cast<RRArray<type> >(buffer->Real),rr_cast<RRArray<type> >(buffer->Imag)); \
+		RR_SHARED_PTR<RRMultiDimArray<type> > buffer2=RR_MAKE_SHARED<RRMultiDimArray<type> >(rr_cast<RRArray<uint32_t> >(buffer->Dims),rr_cast<RRArray<type> >(buffer->Array)); \
 		type ## _var->Write(memorypos,buffer2,bufferpos,count); \
 		return; \
 	}
@@ -1991,6 +2033,11 @@ namespace RobotRaconteur
 		RR_WMDAMCU_WRITE_TYPE(uint64_t);
 		RR_WMDAMCU_WRITE_TYPE(double);
 		RR_WMDAMCU_WRITE_TYPE(float);
+		RR_WMDAMCU_WRITE_TYPE(cdouble);
+		RR_WMDAMCU_WRITE_TYPE(cfloat);
+		RR_WMDAMCU_WRITE_TYPE(rr_bool);
+		RR_WMDAMCU_WRITE_TYPE(datetime);
+		RR_WMDAMCU_WRITE_TYPE(duration);
 
 		throw DataTypeException("Invalid memory data type");
 	}
@@ -2012,138 +2059,143 @@ namespace RobotRaconteur
 		RR_WMDAMCU_DIRECTION_TYPE(uint64_t);
 		RR_WMDAMCU_DIRECTION_TYPE(double);
 		RR_WMDAMCU_DIRECTION_TYPE(float);
+		RR_WMDAMCU_DIRECTION_TYPE(cdouble);
+		RR_WMDAMCU_DIRECTION_TYPE(cfloat);
+		RR_WMDAMCU_DIRECTION_TYPE(rr_bool);
+		RR_WMDAMCU_DIRECTION_TYPE(datetime);
+		RR_WMDAMCU_DIRECTION_TYPE(duration);
 
 		throw DataTypeException("Invalid memory data type");
 
 	}
 
-	// CStructureArrayMemory
+	// PodArrayMemory
 
-	WrappedCStructureArrayMemoryClient::WrappedCStructureArrayMemoryClient(const std::string& membername, RR_SHARED_PTR<ServiceStub> stub, size_t element_size, MemberDefinition_Direction direction)
-		: ArrayMemoryClientBase(membername, stub, DataTypes_cstructure_t, element_size, direction)
+	WrappedPodArrayMemoryClient::WrappedPodArrayMemoryClient(const std::string& membername, RR_SHARED_PTR<ServiceStub> stub, size_t element_size, MemberDefinition_Direction direction)
+		: ArrayMemoryClientBase(membername, stub, DataTypes_pod_t, element_size, direction)
 	{
 	}
 
-	void WrappedCStructureArrayMemoryClient::Read(uint64_t memorypos, WrappedCStructureArrayMemoryClientBuffer* buffer, uint64_t bufferpos, uint64_t count)
+	void WrappedPodArrayMemoryClient::Read(uint64_t memorypos, WrappedPodArrayMemoryClientBuffer* buffer, uint64_t bufferpos, uint64_t count)
 	{
 		if (!buffer) throw NullValueException("Buffer must not be null");
 		ReadBase(memorypos, buffer, bufferpos, count);
 	}
 
-	void WrappedCStructureArrayMemoryClient::Write(uint64_t memorypos, WrappedCStructureArrayMemoryClientBuffer* buffer, uint64_t bufferpos, uint64_t count)
+	void WrappedPodArrayMemoryClient::Write(uint64_t memorypos, WrappedPodArrayMemoryClientBuffer* buffer, uint64_t bufferpos, uint64_t count)
 	{
 		if (!buffer) throw NullValueException("Buffer must not be null");
 		WriteBase(memorypos, buffer, bufferpos, count);
 	}
 		
-	void WrappedCStructureArrayMemoryClient::UnpackReadResult(RR_SHARED_PTR<MessageElementData> res, void* buffer, uint64_t bufferpos, uint64_t count)
+	void WrappedPodArrayMemoryClient::UnpackReadResult(RR_SHARED_PTR<MessageElementData> res, void* buffer, uint64_t bufferpos, uint64_t count)
 	{
-		DIRECTOR_CALL2(((WrappedCStructureArrayMemoryClientBuffer*)buffer)->UnpackReadResult(rr_cast<MessageElementCStructureArray>(res), bufferpos, count));
+		DIRECTOR_CALL2(((WrappedPodArrayMemoryClientBuffer*)buffer)->UnpackReadResult(rr_cast<MessageElementPodArray>(res), bufferpos, count));
 	}
 
-	RR_SHARED_PTR<MessageElementData> WrappedCStructureArrayMemoryClient::PackWriteRequest(void* buffer, uint64_t bufferpos, uint64_t count)
+	RR_SHARED_PTR<MessageElementData> WrappedPodArrayMemoryClient::PackWriteRequest(void* buffer, uint64_t bufferpos, uint64_t count)
 	{
 		RR_SHARED_PTR<MessageElementData> ret;
-		DIRECTOR_CALL2(ret = ((WrappedCStructureArrayMemoryClientBuffer*)buffer)->PackWriteRequest(bufferpos, count));
+		DIRECTOR_CALL2(ret = ((WrappedPodArrayMemoryClientBuffer*)buffer)->PackWriteRequest(bufferpos, count));
 		return ret;
 	}
 
-	size_t WrappedCStructureArrayMemoryClient::GetBufferLength(void* buffer)
+	size_t WrappedPodArrayMemoryClient::GetBufferLength(void* buffer)
 	{
 		uint64_t ret;
-		DIRECTOR_CALL2(ret = ((WrappedCStructureArrayMemoryClientBuffer*)buffer)->GetBufferLength());
+		DIRECTOR_CALL2(ret = ((WrappedPodArrayMemoryClientBuffer*)buffer)->GetBufferLength());
 		return ret;
 	}
 
-	WrappedCStructureMultiDimArrayMemoryClient::WrappedCStructureMultiDimArrayMemoryClient(const std::string& membername, RR_SHARED_PTR<ServiceStub> stub, size_t element_size, MemberDefinition_Direction direction)
-		: MultiDimArrayMemoryClientBase(membername, stub, DataTypes_cstructure_t, element_size, direction)
+	WrappedPodMultiDimArrayMemoryClient::WrappedPodMultiDimArrayMemoryClient(const std::string& membername, RR_SHARED_PTR<ServiceStub> stub, size_t element_size, MemberDefinition_Direction direction)
+		: MultiDimArrayMemoryClientBase(membername, stub, DataTypes_pod_t, element_size, direction)
 	{
 
 	}
-	void WrappedCStructureMultiDimArrayMemoryClient::Read(const std::vector<uint64_t>& memorypos, WrappedCStructureMultiDimArrayMemoryClientBuffer* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
+	void WrappedPodMultiDimArrayMemoryClient::Read(const std::vector<uint64_t>& memorypos, WrappedPodMultiDimArrayMemoryClientBuffer* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 	{
 		if (!buffer) throw NullValueException("Buffer must not be null");
 		ReadBase(memorypos, buffer, bufferpos, count);
 	}
-	void WrappedCStructureMultiDimArrayMemoryClient::Write(const std::vector<uint64_t>& memorypos, WrappedCStructureMultiDimArrayMemoryClientBuffer* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
+	void WrappedPodMultiDimArrayMemoryClient::Write(const std::vector<uint64_t>& memorypos, WrappedPodMultiDimArrayMemoryClientBuffer* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 	{
 		if (!buffer) throw NullValueException("Buffer must not be null");
 		WriteBase(memorypos, buffer, bufferpos, count);
 	}
-	void WrappedCStructureMultiDimArrayMemoryClient::UnpackReadResult(RR_SHARED_PTR<MessageElementData> res, void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint64_t elemcount)
+	void WrappedPodMultiDimArrayMemoryClient::UnpackReadResult(RR_SHARED_PTR<MessageElementData> res, void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint64_t elemcount)
 	{
-		DIRECTOR_CALL2(((WrappedCStructureMultiDimArrayMemoryClientBuffer*)buffer)->UnpackReadResult(rr_cast<MessageElementCStructureMultiDimArray>(res), bufferpos, count));
+		DIRECTOR_CALL2(((WrappedPodMultiDimArrayMemoryClientBuffer*)buffer)->UnpackReadResult(rr_cast<MessageElementPodMultiDimArray>(res), bufferpos, count));
 	}
 
-	RR_SHARED_PTR<MessageElementData> WrappedCStructureMultiDimArrayMemoryClient::PackWriteRequest(void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint64_t elemcount)
+	RR_SHARED_PTR<MessageElementData> WrappedPodMultiDimArrayMemoryClient::PackWriteRequest(void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint64_t elemcount)
 	{
 		RR_SHARED_PTR<MessageElementData> ret;
-		DIRECTOR_CALL2(ret = ((WrappedCStructureMultiDimArrayMemoryClientBuffer*)buffer)->PackWriteRequest(bufferpos, count));
+		DIRECTOR_CALL2(ret = ((WrappedPodMultiDimArrayMemoryClientBuffer*)buffer)->PackWriteRequest(bufferpos, count));
 		return ret;
 	}
 	
-	// AStructureArrayMemory
+	// NamedArrayMemory
 
-	WrappedAStructureArrayMemoryClient::WrappedAStructureArrayMemoryClient(const std::string& membername, RR_SHARED_PTR<ServiceStub> stub, size_t element_size, MemberDefinition_Direction direction)
-		: ArrayMemoryClientBase(membername, stub, DataTypes_cstructure_t, element_size, direction)
+	WrappedNamedArrayMemoryClient::WrappedNamedArrayMemoryClient(const std::string& membername, RR_SHARED_PTR<ServiceStub> stub, size_t element_size, MemberDefinition_Direction direction)
+		: ArrayMemoryClientBase(membername, stub, DataTypes_pod_t, element_size, direction)
 	{
 	}
 
-	void WrappedAStructureArrayMemoryClient::Read(uint64_t memorypos, WrappedAStructureArrayMemoryClientBuffer* buffer, uint64_t bufferpos, uint64_t count)
+	void WrappedNamedArrayMemoryClient::Read(uint64_t memorypos, WrappedNamedArrayMemoryClientBuffer* buffer, uint64_t bufferpos, uint64_t count)
 	{
 		if (!buffer) throw NullValueException("Buffer must not be null");
 		ReadBase(memorypos, buffer, bufferpos, count);
 	}
 
-	void WrappedAStructureArrayMemoryClient::Write(uint64_t memorypos, WrappedAStructureArrayMemoryClientBuffer* buffer, uint64_t bufferpos, uint64_t count)
+	void WrappedNamedArrayMemoryClient::Write(uint64_t memorypos, WrappedNamedArrayMemoryClientBuffer* buffer, uint64_t bufferpos, uint64_t count)
 	{
 		if (!buffer) throw NullValueException("Buffer must not be null");
 		WriteBase(memorypos, buffer, bufferpos, count);
 	}
 
-	void WrappedAStructureArrayMemoryClient::UnpackReadResult(RR_SHARED_PTR<MessageElementData> res, void* buffer, uint64_t bufferpos, uint64_t count)
+	void WrappedNamedArrayMemoryClient::UnpackReadResult(RR_SHARED_PTR<MessageElementData> res, void* buffer, uint64_t bufferpos, uint64_t count)
 	{
-		DIRECTOR_CALL2(((WrappedAStructureArrayMemoryClientBuffer*)buffer)->UnpackReadResult(rr_cast<MessageElementAStructureArray>(res), bufferpos, count));
+		DIRECTOR_CALL2(((WrappedNamedArrayMemoryClientBuffer*)buffer)->UnpackReadResult(rr_cast<MessageElementNamedArray>(res), bufferpos, count));
 	}
 
-	RR_SHARED_PTR<MessageElementData> WrappedAStructureArrayMemoryClient::PackWriteRequest(void* buffer, uint64_t bufferpos, uint64_t count)
+	RR_SHARED_PTR<MessageElementData> WrappedNamedArrayMemoryClient::PackWriteRequest(void* buffer, uint64_t bufferpos, uint64_t count)
 	{
 		RR_SHARED_PTR<MessageElementData> ret;
-		DIRECTOR_CALL2(ret = ((WrappedAStructureArrayMemoryClientBuffer*)buffer)->PackWriteRequest(bufferpos, count));
+		DIRECTOR_CALL2(ret = ((WrappedNamedArrayMemoryClientBuffer*)buffer)->PackWriteRequest(bufferpos, count));
 		return ret;
 	}
 
-	size_t WrappedAStructureArrayMemoryClient::GetBufferLength(void* buffer)
+	size_t WrappedNamedArrayMemoryClient::GetBufferLength(void* buffer)
 	{
 		uint64_t ret;
-		DIRECTOR_CALL2(ret = ((WrappedAStructureArrayMemoryClientBuffer*)buffer)->GetBufferLength());
+		DIRECTOR_CALL2(ret = ((WrappedNamedArrayMemoryClientBuffer*)buffer)->GetBufferLength());
 		return ret;
 	}
 
-	WrappedAStructureMultiDimArrayMemoryClient::WrappedAStructureMultiDimArrayMemoryClient(const std::string& membername, RR_SHARED_PTR<ServiceStub> stub, size_t element_size, MemberDefinition_Direction direction)
-		: MultiDimArrayMemoryClientBase(membername, stub, DataTypes_cstructure_t, element_size, direction)
+	WrappedNamedMultiDimArrayMemoryClient::WrappedNamedMultiDimArrayMemoryClient(const std::string& membername, RR_SHARED_PTR<ServiceStub> stub, size_t element_size, MemberDefinition_Direction direction)
+		: MultiDimArrayMemoryClientBase(membername, stub, DataTypes_pod_t, element_size, direction)
 	{
 
 	}
-	void WrappedAStructureMultiDimArrayMemoryClient::Read(const std::vector<uint64_t>& memorypos, WrappedAStructureMultiDimArrayMemoryClientBuffer* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
+	void WrappedNamedMultiDimArrayMemoryClient::Read(const std::vector<uint64_t>& memorypos, WrappedNamedMultiDimArrayMemoryClientBuffer* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 	{
 		if (!buffer) throw NullValueException("Buffer must not be null");
 		ReadBase(memorypos, buffer, bufferpos, count);
 	}
-	void WrappedAStructureMultiDimArrayMemoryClient::Write(const std::vector<uint64_t>& memorypos, WrappedAStructureMultiDimArrayMemoryClientBuffer* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
+	void WrappedNamedMultiDimArrayMemoryClient::Write(const std::vector<uint64_t>& memorypos, WrappedNamedMultiDimArrayMemoryClientBuffer* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 	{
 		if (!buffer) throw NullValueException("Buffer must not be null");
 		WriteBase(memorypos, buffer, bufferpos, count);
 	}
-	void WrappedAStructureMultiDimArrayMemoryClient::UnpackReadResult(RR_SHARED_PTR<MessageElementData> res, void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint64_t elemcount)
+	void WrappedNamedMultiDimArrayMemoryClient::UnpackReadResult(RR_SHARED_PTR<MessageElementData> res, void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint64_t elemcount)
 	{
-		DIRECTOR_CALL2(((WrappedAStructureMultiDimArrayMemoryClientBuffer*)buffer)->UnpackReadResult(rr_cast<MessageElementAStructureMultiDimArray>(res), bufferpos, count));
+		DIRECTOR_CALL2(((WrappedNamedMultiDimArrayMemoryClientBuffer*)buffer)->UnpackReadResult(rr_cast<MessageElementNamedMultiDimArray>(res), bufferpos, count));
 	}
 
-	RR_SHARED_PTR<MessageElementData> WrappedAStructureMultiDimArrayMemoryClient::PackWriteRequest(void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint64_t elemcount)
+	RR_SHARED_PTR<MessageElementData> WrappedNamedMultiDimArrayMemoryClient::PackWriteRequest(void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint64_t elemcount)
 	{
 		RR_SHARED_PTR<MessageElementData> ret;
-		DIRECTOR_CALL2(ret = ((WrappedAStructureMultiDimArrayMemoryClientBuffer*)buffer)->PackWriteRequest(bufferpos, count));
+		DIRECTOR_CALL2(ret = ((WrappedNamedMultiDimArrayMemoryClientBuffer*)buffer)->PackWriteRequest(bufferpos, count));
 		return ret;
 	}
 
@@ -2344,6 +2396,22 @@ namespace RobotRaconteur
 						case DataTypes_uint64_t:
 							o = RR_MAKE_SHARED<ArrayMemoryServiceSkel<uint64_t> >(m->Name, shared_from_this(), direction);
 							break;
+						case DataTypes_cdouble_t:
+							o = RR_MAKE_SHARED<ArrayMemoryServiceSkel<cdouble> >(m->Name, shared_from_this(), direction);
+							break;
+						case DataTypes_csingle_t:
+							o = RR_MAKE_SHARED<ArrayMemoryServiceSkel<cfloat> >(m->Name, shared_from_this(), direction);
+							break;
+						case DataTypes_bool_t:
+							o = RR_MAKE_SHARED<ArrayMemoryServiceSkel<rr_bool> >(m->Name, shared_from_this(), direction);
+							break;
+						case DataTypes_datetime_t:
+							o = RR_MAKE_SHARED<ArrayMemoryServiceSkel<datetime> >(m->Name, shared_from_this(), direction);
+							break;
+						case DataTypes_duration_t:
+							o = RR_MAKE_SHARED<ArrayMemoryServiceSkel<duration> >(m->Name, shared_from_this(), direction);
+							break;
+							
 						default:
 							throw DataTypeException("Invalid memory data type");
 
@@ -2386,6 +2454,21 @@ namespace RobotRaconteur
 						case DataTypes_uint64_t:
 							o = RR_MAKE_SHARED<MultiDimArrayMemoryServiceSkel<uint64_t> >(m->Name, shared_from_this(), direction);
 							break;
+						case DataTypes_cdouble_t:
+							o = RR_MAKE_SHARED<MultiDimArrayMemoryServiceSkel<cdouble> >(m->Name, shared_from_this(), direction);
+							break;
+						case DataTypes_csingle_t:
+							o = RR_MAKE_SHARED<MultiDimArrayMemoryServiceSkel<cfloat> >(m->Name, shared_from_this(), direction);
+							break;
+						case DataTypes_bool_t:
+							o = RR_MAKE_SHARED<MultiDimArrayMemoryServiceSkel<rr_bool> >(m->Name, shared_from_this(), direction);
+							break;
+						case DataTypes_datetime_t:
+							o = RR_MAKE_SHARED<MultiDimArrayMemoryServiceSkel<datetime> >(m->Name, shared_from_this(), direction);
+							break;
+						case DataTypes_duration_t:
+							o = RR_MAKE_SHARED<MultiDimArrayMemoryServiceSkel<duration> >(m->Name, shared_from_this(), direction);
+							break;
 						default:
 							throw DataTypeException("Invalid memory data type");
 
@@ -2396,19 +2479,19 @@ namespace RobotRaconteur
 				else
 				{
 					RR_SHARED_PTR<ServiceEntryDefinition> service_entry = rr_cast<ServiceEntryDefinition>(m->Type->ResolveNamedType());
-					if (service_entry->RRDataType() == DataTypes_cstructure_t)
+					if (service_entry->RRDataType() == DataTypes_pod_t)
 					{
 						if (m->Type->ArrayType == DataTypes_ArrayTypes_array)
 						{
 							std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs;
-							size_t element_size = EstimateCStructurePackedElementSize(rr_cast<ServiceEntryDefinition>(m->Type->ResolveNamedType()), other_defs, RRGetNode());
-							cstruct_memories.insert(std::make_pair(m->Name, RR_MAKE_SHARED<WrappedCStructureArrayMemoryServiceSkel>(m->Name, shared_from_this(), element_size, direction)));
+							size_t element_size = EstimatePodPackedElementSize(rr_cast<ServiceEntryDefinition>(m->Type->ResolveNamedType()), other_defs, RRGetNode());
+							pod_memories.insert(std::make_pair(m->Name, RR_MAKE_SHARED<WrappedPodArrayMemoryServiceSkel>(m->Name, shared_from_this(), element_size, direction)));
 						}
 						else
 						{
 							std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs;
-							size_t element_size = EstimateCStructurePackedElementSize(rr_cast<ServiceEntryDefinition>(m->Type->ResolveNamedType()), other_defs, RRGetNode());
-							cstruct_multidimmemories.insert(std::make_pair(m->Name, RR_MAKE_SHARED<WrappedCStructureMultiDimArrayMemoryServiceSkel>(m->Name, shared_from_this(), element_size, direction)));
+							size_t element_size = EstimatePodPackedElementSize(rr_cast<ServiceEntryDefinition>(m->Type->ResolveNamedType()), other_defs, RRGetNode());
+							pod_multidimmemories.insert(std::make_pair(m->Name, RR_MAKE_SHARED<WrappedPodMultiDimArrayMemoryServiceSkel>(m->Name, shared_from_this(), element_size, direction)));
 						}
 					}
 					else
@@ -2416,16 +2499,16 @@ namespace RobotRaconteur
 						if (m->Type->ArrayType == DataTypes_ArrayTypes_array)
 						{
 							std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs;
-							boost::tuple<DataTypes, size_t> t4 = GetAStructureElementTypeAndCount(service_entry);
+							boost::tuple<DataTypes, size_t> t4 = GetNamedArrayElementTypeAndCount(service_entry);
 							size_t element_size = t4.get<1>();
-							astruct_memories.insert(std::make_pair(m->Name, RR_MAKE_SHARED<WrappedAStructureArrayMemoryServiceSkel>(m->Name, shared_from_this(), element_size, direction)));
+							namedarray_memories.insert(std::make_pair(m->Name, RR_MAKE_SHARED<WrappedNamedArrayMemoryServiceSkel>(m->Name, shared_from_this(), element_size, direction)));
 						}
 						else
 						{
 							std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs;
-							boost::tuple<DataTypes, size_t> t4 = GetAStructureElementTypeAndCount(service_entry);
+							boost::tuple<DataTypes, size_t> t4 = GetNamedArrayElementTypeAndCount(service_entry);
 							size_t element_size = t4.get<1>();
-							astruct_multidimmemories.insert(std::make_pair(m->Name, RR_MAKE_SHARED<WrappedAStructureMultiDimArrayMemoryServiceSkel>(m->Name, shared_from_this(), element_size, direction)));
+							namedarray_multidimmemories.insert(std::make_pair(m->Name, RR_MAKE_SHARED<WrappedNamedMultiDimArrayMemoryServiceSkel>(m->Name, shared_from_this(), element_size, direction)));
 						}
 					}
 				}
@@ -2615,6 +2698,21 @@ namespace RobotRaconteur
 				case DataTypes_uint64_t:
 					return boost::static_pointer_cast<ArrayMemoryServiceSkel<uint64_t> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedArrayMemory<uint64_t> >(mem));
 					break;
+				case DataTypes_cdouble_t:
+					return boost::static_pointer_cast<ArrayMemoryServiceSkel<cdouble> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedArrayMemory<cdouble> >(mem));
+					break;
+				case DataTypes_csingle_t:
+					return boost::static_pointer_cast<ArrayMemoryServiceSkel<cfloat> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedArrayMemory<cfloat> >(mem));
+					break;
+				case DataTypes_bool_t:
+					return boost::static_pointer_cast<ArrayMemoryServiceSkel<rr_bool> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedArrayMemory<rr_bool> >(mem));
+					break;
+				case DataTypes_datetime_t:
+					return boost::static_pointer_cast<ArrayMemoryServiceSkel<datetime> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedArrayMemory<datetime> >(mem));
+					break;
+				case DataTypes_duration_t:
+					return boost::static_pointer_cast<ArrayMemoryServiceSkel<duration> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedArrayMemory<duration> >(mem));
+					break;
 				default:
 					throw DataTypeException("Invalid memory data type");
 
@@ -2659,6 +2757,21 @@ namespace RobotRaconteur
 				case DataTypes_uint64_t:
 					return boost::static_pointer_cast<MultiDimArrayMemoryServiceSkel<uint64_t> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedMultiDimArrayMemory<uint64_t> >(mem));
 					break;
+				case DataTypes_cdouble_t:
+					return boost::static_pointer_cast<MultiDimArrayMemoryServiceSkel<cdouble> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedMultiDimArrayMemory<cdouble> >(mem));
+					break;
+				case DataTypes_csingle_t:
+					return boost::static_pointer_cast<MultiDimArrayMemoryServiceSkel<cfloat> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedMultiDimArrayMemory<cfloat> >(mem));
+					break;
+				case DataTypes_bool_t:
+					return boost::static_pointer_cast<MultiDimArrayMemoryServiceSkel<rr_bool> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedMultiDimArrayMemory<rr_bool> >(mem));
+					break;
+				case DataTypes_datetime_t:
+					return boost::static_pointer_cast<MultiDimArrayMemoryServiceSkel<datetime> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedMultiDimArrayMemory<datetime> >(mem));
+					break;
+				case DataTypes_duration_t:
+					return boost::static_pointer_cast<MultiDimArrayMemoryServiceSkel<duration> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedMultiDimArrayMemory<duration> >(mem));
+					break;
 				default:
 					throw DataTypeException("Invalid memory data type");
 
@@ -2669,38 +2782,38 @@ namespace RobotRaconteur
 		else
 		{
 			RR_SHARED_PTR<ServiceEntryDefinition> service_entry = rr_cast<ServiceEntryDefinition>(m->Type->ResolveNamedType());
-			if (service_entry->RRDataType() == DataTypes_cstructure_t)
+			if (service_entry->RRDataType() == DataTypes_pod_t)
 			{
 				if (m->Type->ArrayType == DataTypes_ArrayTypes_array)
 				{
-					WrappedCStructureArrayMemoryDirector* mem;
-					DIRECTOR_CALL(WrappedServiceSkelDirector, mem = RR_Director2->GetCStructureArrayMemory(mm->MemberName));
+					WrappedPodArrayMemoryDirector* mem;
+					DIRECTOR_CALL(WrappedServiceSkelDirector, mem = RR_Director2->GetPodArrayMemory(mm->MemberName));
 
-					return cstruct_memories.at(mm->MemberName)->CallMemoryFunction(mm, e, boost::make_shared<WrappedCStructureArrayMemory>(mem));
+					return pod_memories.at(mm->MemberName)->CallMemoryFunction(mm, e, boost::make_shared<WrappedPodArrayMemory>(mem));
 				}
 				else
 				{
-					WrappedCStructureMultiDimArrayMemoryDirector* mem;
-					DIRECTOR_CALL(WrappedServiceSkelDirector, mem = RR_Director2->GetCStructureMultiDimArrayMemory(mm->MemberName));
+					WrappedPodMultiDimArrayMemoryDirector* mem;
+					DIRECTOR_CALL(WrappedServiceSkelDirector, mem = RR_Director2->GetPodMultiDimArrayMemory(mm->MemberName));
 
-					return cstruct_multidimmemories.at(mm->MemberName)->CallMemoryFunction(mm, e, boost::make_shared<WrappedCStructureMultiDimArrayMemory>(mem));
+					return pod_multidimmemories.at(mm->MemberName)->CallMemoryFunction(mm, e, boost::make_shared<WrappedPodMultiDimArrayMemory>(mem));
 				}
 			}
 			else
 			{
 				if (m->Type->ArrayType == DataTypes_ArrayTypes_array)
 				{
-					WrappedAStructureArrayMemoryDirector* mem;
-					DIRECTOR_CALL(WrappedServiceSkelDirector, mem = RR_Director2->GetAStructureArrayMemory(mm->MemberName));
+					WrappedNamedArrayMemoryDirector* mem;
+					DIRECTOR_CALL(WrappedServiceSkelDirector, mem = RR_Director2->GetNamedArrayMemory(mm->MemberName));
 
-					return astruct_memories.at(mm->MemberName)->CallMemoryFunction(mm, e, boost::make_shared<WrappedAStructureArrayMemory>(mem));
+					return namedarray_memories.at(mm->MemberName)->CallMemoryFunction(mm, e, boost::make_shared<WrappedNamedArrayMemory>(mem));
 				}
 				else
 				{
-					WrappedAStructureMultiDimArrayMemoryDirector* mem;
-					DIRECTOR_CALL(WrappedServiceSkelDirector, mem = RR_Director2->GetAStructureMultiDimArrayMemory(mm->MemberName));
+					WrappedNamedMultiDimArrayMemoryDirector* mem;
+					DIRECTOR_CALL(WrappedServiceSkelDirector, mem = RR_Director2->GetNamedMultiDimArrayMemory(mm->MemberName));
 
-					return astruct_multidimmemories.at(mm->MemberName)->CallMemoryFunction(mm, e, boost::make_shared<WrappedAStructureMultiDimArrayMemory>(mem));
+					return namedarray_multidimmemories.at(mm->MemberName)->CallMemoryFunction(mm, e, boost::make_shared<WrappedNamedMultiDimArrayMemory>(mem));
 				}
 			}
 		}
@@ -2726,201 +2839,201 @@ namespace RobotRaconteur
 		this->RR_Director.reset(director,boost::bind(&ReleaseDirector,_1,id));
 	}*/
 
-	// CStructure array memory skels
+	// Pod array memory skels
 
-	WrappedCStructureArrayMemory::WrappedCStructureArrayMemory(WrappedCStructureArrayMemoryDirector* RR_Director)
+	WrappedPodArrayMemory::WrappedPodArrayMemory(WrappedPodArrayMemoryDirector* RR_Director)
 	{
 		if (!RR_Director) throw InvalidArgumentException("RR_Director cannot be null");
-		this->RR_Director.reset(RR_Director, boost::bind(&ReleaseDirector<WrappedCStructureArrayMemoryDirector>, _1, RR_Director->objectheapid));
+		this->RR_Director.reset(RR_Director, boost::bind(&ReleaseDirector<WrappedPodArrayMemoryDirector>, _1, RR_Director->objectheapid));
 	}
 
-	uint64_t WrappedCStructureArrayMemory::Length()
+	uint64_t WrappedPodArrayMemory::Length()
 	{
 		uint64_t l;
-		DIRECTOR_CALL(WrappedCStructureArrayMemoryDirector, l = RR_Director2->Length());
+		DIRECTOR_CALL(WrappedPodArrayMemoryDirector, l = RR_Director2->Length());
 		return l;
 	}
-	DataTypes WrappedCStructureArrayMemory::ElementTypeID()
+	DataTypes WrappedPodArrayMemory::ElementTypeID()
 	{
-		return DataTypes_cstructure_t;
+		return DataTypes_pod_t;
 	}
 
-	boost::shared_ptr<MessageElementCStructureArray> WrappedCStructureArrayMemory::Read(uint64_t memorypos, uint64_t bufferpos, uint64_t count)
+	boost::shared_ptr<MessageElementPodArray> WrappedPodArrayMemory::Read(uint64_t memorypos, uint64_t bufferpos, uint64_t count)
 	{
-		boost::shared_ptr<MessageElementCStructureArray> o;
-		DIRECTOR_CALL(WrappedCStructureArrayMemoryDirector, o = RR_Director2->Read(memorypos, bufferpos, count));
+		boost::shared_ptr<MessageElementPodArray> o;
+		DIRECTOR_CALL(WrappedPodArrayMemoryDirector, o = RR_Director2->Read(memorypos, bufferpos, count));
 		return o;
 	}
-	void WrappedCStructureArrayMemory::Write(uint64_t memorypos, boost::shared_ptr<MessageElementCStructureArray> buffer, uint64_t bufferpos, uint64_t count)
+	void WrappedPodArrayMemory::Write(uint64_t memorypos, boost::shared_ptr<MessageElementPodArray> buffer, uint64_t bufferpos, uint64_t count)
 	{
-		DIRECTOR_CALL(WrappedCStructureArrayMemoryDirector, RR_Director2->Write(memorypos, buffer, bufferpos, count));
+		DIRECTOR_CALL(WrappedPodArrayMemoryDirector, RR_Director2->Write(memorypos, buffer, bufferpos, count));
 	}
 
 
-	WrappedCStructureArrayMemoryServiceSkel::WrappedCStructureArrayMemoryServiceSkel(const std::string& membername, RR_SHARED_PTR<ServiceSkel> skel, size_t element_size, MemberDefinition_Direction direction)
-		: ArrayMemoryServiceSkelBase(membername, skel, DataTypes_cstructure_t, element_size, direction)
+	WrappedPodArrayMemoryServiceSkel::WrappedPodArrayMemoryServiceSkel(const std::string& membername, RR_SHARED_PTR<ServiceSkel> skel, size_t element_size, MemberDefinition_Direction direction)
+		: ArrayMemoryServiceSkelBase(membername, skel, DataTypes_pod_t, element_size, direction)
 	{
 	}
 
-	RR_SHARED_PTR<MessageElementData> WrappedCStructureArrayMemoryServiceSkel::DoRead(uint64_t memorypos, uint64_t bufferpos, uint64_t count, RR_SHARED_PTR<ArrayMemoryBase> mem)
+	RR_SHARED_PTR<MessageElementData> WrappedPodArrayMemoryServiceSkel::DoRead(uint64_t memorypos, uint64_t bufferpos, uint64_t count, RR_SHARED_PTR<ArrayMemoryBase> mem)
 	{
-		RR_SHARED_PTR<WrappedCStructureArrayMemory> mem1 = rr_cast<WrappedCStructureArrayMemory>(mem);
+		RR_SHARED_PTR<WrappedPodArrayMemory> mem1 = rr_cast<WrappedPodArrayMemory>(mem);
 		return mem1->Read(memorypos, bufferpos, count);
 	}
-	void WrappedCStructureArrayMemoryServiceSkel::DoWrite(uint64_t memorypos, RR_SHARED_PTR<MessageElementData> buffer, uint64_t bufferpos, uint64_t count, RR_SHARED_PTR<ArrayMemoryBase> mem)
+	void WrappedPodArrayMemoryServiceSkel::DoWrite(uint64_t memorypos, RR_SHARED_PTR<MessageElementData> buffer, uint64_t bufferpos, uint64_t count, RR_SHARED_PTR<ArrayMemoryBase> mem)
 	{
-		RR_SHARED_PTR<WrappedCStructureArrayMemory> mem1 = rr_cast<WrappedCStructureArrayMemory>(mem);
-		mem1->Write(memorypos, rr_cast<MessageElementCStructureArray>(buffer), bufferpos, count);
+		RR_SHARED_PTR<WrappedPodArrayMemory> mem1 = rr_cast<WrappedPodArrayMemory>(mem);
+		mem1->Write(memorypos, rr_cast<MessageElementPodArray>(buffer), bufferpos, count);
 	}
 
-	WrappedCStructureMultiDimArrayMemory::WrappedCStructureMultiDimArrayMemory(WrappedCStructureMultiDimArrayMemoryDirector* RR_Director)
+	WrappedPodMultiDimArrayMemory::WrappedPodMultiDimArrayMemory(WrappedPodMultiDimArrayMemoryDirector* RR_Director)
 	{
 		if (!RR_Director) throw InvalidArgumentException("RR_Director cannot be null");
-		this->RR_Director.reset(RR_Director, boost::bind(&ReleaseDirector<WrappedCStructureMultiDimArrayMemoryDirector>, _1, RR_Director->objectheapid));
+		this->RR_Director.reset(RR_Director, boost::bind(&ReleaseDirector<WrappedPodMultiDimArrayMemoryDirector>, _1, RR_Director->objectheapid));
 	}
-	std::vector<uint64_t> WrappedCStructureMultiDimArrayMemory::Dimensions()
+	std::vector<uint64_t> WrappedPodMultiDimArrayMemory::Dimensions()
 	{
 		std::vector<uint64_t> l;
-		DIRECTOR_CALL(WrappedCStructureMultiDimArrayMemoryDirector, l = RR_Director2->Dimensions());
+		DIRECTOR_CALL(WrappedPodMultiDimArrayMemoryDirector, l = RR_Director2->Dimensions());
 		return l;
 	}
-	uint64_t WrappedCStructureMultiDimArrayMemory::DimCount()
+	uint64_t WrappedPodMultiDimArrayMemory::DimCount()
 	{
 		uint64_t l;
-		DIRECTOR_CALL(WrappedCStructureMultiDimArrayMemoryDirector, l = RR_Director2->DimCount());
+		DIRECTOR_CALL(WrappedPodMultiDimArrayMemoryDirector, l = RR_Director2->DimCount());
 		return l;
 	}
-	bool WrappedCStructureMultiDimArrayMemory::Complex()
+	bool WrappedPodMultiDimArrayMemory::Complex()
 	{
 		return false;
 	}
-	DataTypes WrappedCStructureMultiDimArrayMemory::ElementTypeID()
+	DataTypes WrappedPodMultiDimArrayMemory::ElementTypeID()
 	{
-		return DataTypes_cstructure_t;
+		return DataTypes_pod_t;
 	}
-	boost::shared_ptr<MessageElementCStructureMultiDimArray> WrappedCStructureMultiDimArrayMemory::Read(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
+	boost::shared_ptr<MessageElementPodMultiDimArray> WrappedPodMultiDimArrayMemory::Read(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 	{
-		boost::shared_ptr<MessageElementCStructureMultiDimArray> o;
-		DIRECTOR_CALL(WrappedCStructureMultiDimArrayMemoryDirector, o = RR_Director2->Read(memorypos, bufferpos, count));
+		boost::shared_ptr<MessageElementPodMultiDimArray> o;
+		DIRECTOR_CALL(WrappedPodMultiDimArrayMemoryDirector, o = RR_Director2->Read(memorypos, bufferpos, count));
 		return o;
 	}
-	void WrappedCStructureMultiDimArrayMemory::Write(const std::vector<uint64_t>& memorypos, boost::shared_ptr<MessageElementCStructureMultiDimArray> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
+	void WrappedPodMultiDimArrayMemory::Write(const std::vector<uint64_t>& memorypos, boost::shared_ptr<MessageElementPodMultiDimArray> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 	{
-		DIRECTOR_CALL(WrappedCStructureMultiDimArrayMemoryDirector, RR_Director2->Write(memorypos, buffer, bufferpos, count));
+		DIRECTOR_CALL(WrappedPodMultiDimArrayMemoryDirector, RR_Director2->Write(memorypos, buffer, bufferpos, count));
 	}
 
-	WrappedCStructureMultiDimArrayMemoryServiceSkel::WrappedCStructureMultiDimArrayMemoryServiceSkel(const std::string& membername, RR_SHARED_PTR<ServiceSkel> skel, size_t element_size, MemberDefinition_Direction direction)
-		: MultiDimArrayMemoryServiceSkelBase(membername, skel, DataTypes_cstructure_t, element_size, direction)
+	WrappedPodMultiDimArrayMemoryServiceSkel::WrappedPodMultiDimArrayMemoryServiceSkel(const std::string& membername, RR_SHARED_PTR<ServiceSkel> skel, size_t element_size, MemberDefinition_Direction direction)
+		: MultiDimArrayMemoryServiceSkelBase(membername, skel, DataTypes_pod_t, element_size, direction)
 	{
 
 	}
-	RR_SHARED_PTR<MessageElementData> WrappedCStructureMultiDimArrayMemoryServiceSkel::DoRead(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, int32_t elem_count, RR_SHARED_PTR<MultiDimArrayMemoryBase> mem)
+	RR_SHARED_PTR<MessageElementData> WrappedPodMultiDimArrayMemoryServiceSkel::DoRead(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint32_t elem_count, RR_SHARED_PTR<MultiDimArrayMemoryBase> mem)
 	{
-		RR_SHARED_PTR<WrappedCStructureMultiDimArrayMemory> mem1 = rr_cast<WrappedCStructureMultiDimArrayMemory>(mem);
+		RR_SHARED_PTR<WrappedPodMultiDimArrayMemory> mem1 = rr_cast<WrappedPodMultiDimArrayMemory>(mem);
 		return mem1->Read(memorypos, bufferpos, count);
 	}
-	void WrappedCStructureMultiDimArrayMemoryServiceSkel::DoWrite(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<MessageElementData> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, int32_t elem_count, RR_SHARED_PTR<MultiDimArrayMemoryBase> mem)
+	void WrappedPodMultiDimArrayMemoryServiceSkel::DoWrite(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<MessageElementData> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint32_t elem_count, RR_SHARED_PTR<MultiDimArrayMemoryBase> mem)
 	{
-		RR_SHARED_PTR<WrappedCStructureMultiDimArrayMemory> mem1 = rr_cast<WrappedCStructureMultiDimArrayMemory>(mem);
-		mem1->Write(memorypos, rr_cast<MessageElementCStructureMultiDimArray>(buffer), bufferpos, count);
+		RR_SHARED_PTR<WrappedPodMultiDimArrayMemory> mem1 = rr_cast<WrappedPodMultiDimArrayMemory>(mem);
+		mem1->Write(memorypos, rr_cast<MessageElementPodMultiDimArray>(buffer), bufferpos, count);
 	}
 
 
-	// WrappedAStructureArray Service Skels
-	WrappedAStructureArrayMemoryServiceSkel::WrappedAStructureArrayMemoryServiceSkel(const std::string& membername, RR_SHARED_PTR<ServiceSkel> skel, size_t element_size, MemberDefinition_Direction direction)
-		: ArrayMemoryServiceSkelBase(membername, skel, DataTypes_astructure_t, element_size, direction)
+	// WrappedNamedArray Service Skels
+	WrappedNamedArrayMemoryServiceSkel::WrappedNamedArrayMemoryServiceSkel(const std::string& membername, RR_SHARED_PTR<ServiceSkel> skel, size_t element_size, MemberDefinition_Direction direction)
+		: ArrayMemoryServiceSkelBase(membername, skel, DataTypes_namedarray_t, element_size, direction)
 	{
 	}
 
-	RR_SHARED_PTR<MessageElementData> WrappedAStructureArrayMemoryServiceSkel::DoRead(uint64_t memorypos, uint64_t bufferpos, uint64_t count, RR_SHARED_PTR<ArrayMemoryBase> mem)
+	RR_SHARED_PTR<MessageElementData> WrappedNamedArrayMemoryServiceSkel::DoRead(uint64_t memorypos, uint64_t bufferpos, uint64_t count, RR_SHARED_PTR<ArrayMemoryBase> mem)
 	{
-		RR_SHARED_PTR<WrappedAStructureArrayMemory> mem1 = rr_cast<WrappedAStructureArrayMemory>(mem);
+		RR_SHARED_PTR<WrappedNamedArrayMemory> mem1 = rr_cast<WrappedNamedArrayMemory>(mem);
 		return mem1->Read(memorypos, bufferpos, count);
 	}
-	void WrappedAStructureArrayMemoryServiceSkel::DoWrite(uint64_t memorypos, RR_SHARED_PTR<MessageElementData> buffer, uint64_t bufferpos, uint64_t count, RR_SHARED_PTR<ArrayMemoryBase> mem)
+	void WrappedNamedArrayMemoryServiceSkel::DoWrite(uint64_t memorypos, RR_SHARED_PTR<MessageElementData> buffer, uint64_t bufferpos, uint64_t count, RR_SHARED_PTR<ArrayMemoryBase> mem)
 	{
-		RR_SHARED_PTR<WrappedAStructureArrayMemory> mem1 = rr_cast<WrappedAStructureArrayMemory>(mem);
-		mem1->Write(memorypos, rr_cast<MessageElementAStructureArray>(buffer), bufferpos, count);
+		RR_SHARED_PTR<WrappedNamedArrayMemory> mem1 = rr_cast<WrappedNamedArrayMemory>(mem);
+		mem1->Write(memorypos, rr_cast<MessageElementNamedArray>(buffer), bufferpos, count);
 	}
 
-	WrappedAStructureArrayMemory::WrappedAStructureArrayMemory(WrappedAStructureArrayMemoryDirector* RR_Director)
+	WrappedNamedArrayMemory::WrappedNamedArrayMemory(WrappedNamedArrayMemoryDirector* RR_Director)
 	{
 		if (!RR_Director) throw InvalidArgumentException("RR_Director cannot be null");
-		this->RR_Director.reset(RR_Director, boost::bind(&ReleaseDirector<WrappedAStructureArrayMemoryDirector>, _1, RR_Director->objectheapid));
+		this->RR_Director.reset(RR_Director, boost::bind(&ReleaseDirector<WrappedNamedArrayMemoryDirector>, _1, RR_Director->objectheapid));
 	}
 
-	uint64_t WrappedAStructureArrayMemory::Length()
+	uint64_t WrappedNamedArrayMemory::Length()
 	{
 		uint64_t l;
-		DIRECTOR_CALL(WrappedAStructureArrayMemoryDirector, l = RR_Director2->Length());
+		DIRECTOR_CALL(WrappedNamedArrayMemoryDirector, l = RR_Director2->Length());
 		return l;
 	}
-	DataTypes WrappedAStructureArrayMemory::ElementTypeID()
+	DataTypes WrappedNamedArrayMemory::ElementTypeID()
 	{
-		return DataTypes_astructure_t;
+		return DataTypes_namedarray_t;
 	}
 
-	boost::shared_ptr<MessageElementAStructureArray> WrappedAStructureArrayMemory::Read(uint64_t memorypos, uint64_t bufferpos, uint64_t count)
+	boost::shared_ptr<MessageElementNamedArray> WrappedNamedArrayMemory::Read(uint64_t memorypos, uint64_t bufferpos, uint64_t count)
 	{
-		boost::shared_ptr<MessageElementAStructureArray> o;
-		DIRECTOR_CALL(WrappedAStructureArrayMemoryDirector, o = RR_Director2->Read(memorypos, bufferpos, count));
+		boost::shared_ptr<MessageElementNamedArray> o;
+		DIRECTOR_CALL(WrappedNamedArrayMemoryDirector, o = RR_Director2->Read(memorypos, bufferpos, count));
 		return o;
 	}
-	void WrappedAStructureArrayMemory::Write(uint64_t memorypos, boost::shared_ptr<MessageElementAStructureArray> buffer, uint64_t bufferpos, uint64_t count)
+	void WrappedNamedArrayMemory::Write(uint64_t memorypos, boost::shared_ptr<MessageElementNamedArray> buffer, uint64_t bufferpos, uint64_t count)
 	{
-		DIRECTOR_CALL(WrappedAStructureArrayMemoryDirector, RR_Director2->Write(memorypos, buffer, bufferpos, count));
+		DIRECTOR_CALL(WrappedNamedArrayMemoryDirector, RR_Director2->Write(memorypos, buffer, bufferpos, count));
 	}
 
-	WrappedAStructureMultiDimArrayMemory::WrappedAStructureMultiDimArrayMemory(WrappedAStructureMultiDimArrayMemoryDirector* RR_Director)
+	WrappedNamedMultiDimArrayMemory::WrappedNamedMultiDimArrayMemory(WrappedNamedMultiDimArrayMemoryDirector* RR_Director)
 	{
 		if (!RR_Director) throw InvalidArgumentException("RR_Director cannot be null");
-		this->RR_Director.reset(RR_Director, boost::bind(&ReleaseDirector<WrappedAStructureMultiDimArrayMemoryDirector>, _1, RR_Director->objectheapid));
+		this->RR_Director.reset(RR_Director, boost::bind(&ReleaseDirector<WrappedNamedMultiDimArrayMemoryDirector>, _1, RR_Director->objectheapid));
 	}
-	std::vector<uint64_t> WrappedAStructureMultiDimArrayMemory::Dimensions()
+	std::vector<uint64_t> WrappedNamedMultiDimArrayMemory::Dimensions()
 	{
 		std::vector<uint64_t> l;
-		DIRECTOR_CALL(WrappedAStructureMultiDimArrayMemoryDirector, l = RR_Director2->Dimensions());
+		DIRECTOR_CALL(WrappedNamedMultiDimArrayMemoryDirector, l = RR_Director2->Dimensions());
 		return l;
 	}
-	uint64_t WrappedAStructureMultiDimArrayMemory::DimCount()
+	uint64_t WrappedNamedMultiDimArrayMemory::DimCount()
 	{
 		uint64_t l;
-		DIRECTOR_CALL(WrappedAStructureMultiDimArrayMemoryDirector, l = RR_Director2->DimCount());
+		DIRECTOR_CALL(WrappedNamedMultiDimArrayMemoryDirector, l = RR_Director2->DimCount());
 		return l;
 	}
-	bool WrappedAStructureMultiDimArrayMemory::Complex()
+	bool WrappedNamedMultiDimArrayMemory::Complex()
 	{
 		return false;
 	}
-	DataTypes WrappedAStructureMultiDimArrayMemory::ElementTypeID()
+	DataTypes WrappedNamedMultiDimArrayMemory::ElementTypeID()
 	{
-		return DataTypes_cstructure_t;
+		return DataTypes_pod_t;
 	}
-	boost::shared_ptr<MessageElementAStructureMultiDimArray> WrappedAStructureMultiDimArrayMemory::Read(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
+	boost::shared_ptr<MessageElementNamedMultiDimArray> WrappedNamedMultiDimArrayMemory::Read(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 	{
-		boost::shared_ptr<MessageElementAStructureMultiDimArray> o;
-		DIRECTOR_CALL(WrappedAStructureMultiDimArrayMemoryDirector, o = RR_Director2->Read(memorypos, bufferpos, count));
+		boost::shared_ptr<MessageElementNamedMultiDimArray> o;
+		DIRECTOR_CALL(WrappedNamedMultiDimArrayMemoryDirector, o = RR_Director2->Read(memorypos, bufferpos, count));
 		return o;
 	}
-	void WrappedAStructureMultiDimArrayMemory::Write(const std::vector<uint64_t>& memorypos, boost::shared_ptr<MessageElementAStructureMultiDimArray> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
+	void WrappedNamedMultiDimArrayMemory::Write(const std::vector<uint64_t>& memorypos, boost::shared_ptr<MessageElementNamedMultiDimArray> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 	{
-		DIRECTOR_CALL(WrappedAStructureMultiDimArrayMemoryDirector, RR_Director2->Write(memorypos, buffer, bufferpos, count));
+		DIRECTOR_CALL(WrappedNamedMultiDimArrayMemoryDirector, RR_Director2->Write(memorypos, buffer, bufferpos, count));
 	}
 
-	WrappedAStructureMultiDimArrayMemoryServiceSkel::WrappedAStructureMultiDimArrayMemoryServiceSkel(const std::string& membername, RR_SHARED_PTR<ServiceSkel> skel, size_t element_size, MemberDefinition_Direction direction)
-		: MultiDimArrayMemoryServiceSkelBase(membername, skel, DataTypes_astructure_t, element_size, direction)
+	WrappedNamedMultiDimArrayMemoryServiceSkel::WrappedNamedMultiDimArrayMemoryServiceSkel(const std::string& membername, RR_SHARED_PTR<ServiceSkel> skel, size_t element_size, MemberDefinition_Direction direction)
+		: MultiDimArrayMemoryServiceSkelBase(membername, skel, DataTypes_namedarray_t, element_size, direction)
 	{
 
 	}
-	RR_SHARED_PTR<MessageElementData> WrappedAStructureMultiDimArrayMemoryServiceSkel::DoRead(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, int32_t elem_count, RR_SHARED_PTR<MultiDimArrayMemoryBase> mem)
+	RR_SHARED_PTR<MessageElementData> WrappedNamedMultiDimArrayMemoryServiceSkel::DoRead(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint32_t elem_count, RR_SHARED_PTR<MultiDimArrayMemoryBase> mem)
 	{
-		RR_SHARED_PTR<WrappedAStructureMultiDimArrayMemory> mem1 = rr_cast<WrappedAStructureMultiDimArrayMemory>(mem);
+		RR_SHARED_PTR<WrappedNamedMultiDimArrayMemory> mem1 = rr_cast<WrappedNamedMultiDimArrayMemory>(mem);
 		return mem1->Read(memorypos, bufferpos, count);
 	}
-	void WrappedAStructureMultiDimArrayMemoryServiceSkel::DoWrite(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<MessageElementData> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, int32_t elem_count, RR_SHARED_PTR<MultiDimArrayMemoryBase> mem)
+	void WrappedNamedMultiDimArrayMemoryServiceSkel::DoWrite(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<MessageElementData> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint32_t elem_count, RR_SHARED_PTR<MultiDimArrayMemoryBase> mem)
 	{
-		RR_SHARED_PTR<WrappedAStructureMultiDimArrayMemory> mem1 = rr_cast<WrappedAStructureMultiDimArrayMemory>(mem);
-		mem1->Write(memorypos, rr_cast<MessageElementAStructureMultiDimArray>(buffer), bufferpos, count);
+		RR_SHARED_PTR<WrappedNamedMultiDimArrayMemory> mem1 = rr_cast<WrappedNamedMultiDimArrayMemory>(mem);
+		mem1->Write(memorypos, rr_cast<MessageElementNamedMultiDimArray>(buffer), bufferpos, count);
 	}
 
 	//WrappedRRObject

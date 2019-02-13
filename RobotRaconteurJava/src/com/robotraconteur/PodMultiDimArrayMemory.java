@@ -1,23 +1,23 @@
 package com.robotraconteur;
 
-public class CStructureMultiDimArrayMemory<T>  {
+public class PodMultiDimArrayMemory<T>  {
 
-	private CStructureMultiDimArray multimemory;
+	private PodMultiDimArray multimemory;
 
-    public CStructureMultiDimArrayMemory()
+    public PodMultiDimArrayMemory()
     {
 
 
     }
 
-    public CStructureMultiDimArrayMemory(CStructureMultiDimArray memory)
+    public PodMultiDimArrayMemory(PodMultiDimArray memory)
     {
 
         multimemory = memory;
     }
 
     
-    public void attach(CStructureMultiDimArray memory)
+    public void attach(PodMultiDimArray memory)
     {
 
         this.multimemory = memory;
@@ -49,13 +49,13 @@ public class CStructureMultiDimArrayMemory<T>  {
     	
     }
     
-    public void read(long[] memorypos, CStructureMultiDimArray buffer, long[] bufferpos, long[] count)
+    public void read(long[] memorypos, PodMultiDimArray buffer, long[] bufferpos, long[] count)
     {    	
         multimemory.retrieveSubArray(long_to_int(memorypos), buffer, long_to_int(bufferpos), long_to_int(count));
     }
 
 
-    public void write(long[] memorypos, CStructureMultiDimArray buffer, long[] bufferpos, long[] count)
+    public void write(long[] memorypos, PodMultiDimArray buffer, long[] bufferpos, long[] count)
     {    	
         multimemory.assignSubArray(long_to_int(memorypos), buffer, long_to_int(bufferpos), long_to_int(count));
     }

@@ -28,6 +28,16 @@ public class DataTypeUtil {
                 return 8;
             case DataTypes_string_t:
                 return 1;
+            case DataTypes_cdouble_t:
+                return 16;
+            case DataTypes_csingle_t:
+                return 8;
+            case DataTypes_bool_t:
+                return 1;
+            case DataTypes_datetime_t:
+                return 16;
+            case DataTypes_duration_t:
+                return 16;
             default:
             	break;
 
@@ -64,6 +74,16 @@ public class DataTypeUtil {
                 return DataTypes.DataTypes_uint64_t;
             if(stype.equals( "class java.lang.String"))
                 return DataTypes.DataTypes_string_t;
+            if(stype.equals( "class com.robotraconteur.CDouble") || stype.equals("class [Lcom.robotraconteur.CDouble"))
+                return DataTypes.DataTypes_cdouble_t;
+            if(stype.equals( "class com.robotraconteur.CSingle") || stype.equals("class [Lcom.robotraconteur.CSingle"))
+                return DataTypes.DataTypes_csingle_t;
+            if(stype.equals( "class [java.lang.Boolean") || stype.equals("class java.lang.Boolean"))
+                return DataTypes.DataTypes_bool_t;
+            if(stype.equals( "class com.robotraconteur.DateTime") || stype.equals("class [Lcom.robotraconteur.DateTime"))
+                return DataTypes.DataTypes_datetime_t;
+            if(stype.equals( "class com.robotraconteur.Duration") || stype.equals("class [Lcom.robotraconteur.Duration"))
+                return DataTypes.DataTypes_duration_t;
             if(stype.equals( "com.robotraconteur.MessageElementStructure"))
                 return DataTypes.DataTypes_structure_t;
             if(stype.equals("com.robotraconteur.MessageElementMap_int32_t"))
@@ -110,6 +130,16 @@ public class DataTypeUtil {
             if(stype.equals("class com.robotraconteur.UnsignedLong") || stype.equals("class com.robotraconteur.UnsignedLongs")) return true;
                 
             if(stype.equals( "class java.lang.String")) return true;
+            
+            if(stype.equals( "class com.robotraconteur.CDouble") || stype.equals("class [Lcom.robotraconteur.CDouble")) return true;
+                
+            if(stype.equals( "class com.robotraconteur.CSingle") || stype.equals("class [Lcom.robotraconteur.CSingle")) return true;
+                
+            if(stype.equals( "class [java.lang.Boolean") || stype.equals("class java.lang.Boolean")) return true;
+                
+            if(stype.equals( "class com.robotraconteur.DateTime") || stype.equals("class [Lcom.robotraconteur.DateTime")) return true;
+                
+            if(stype.equals( "class com.robotraconteur.Duration") || stype.equals("class [Lcom.robotraconteur.Duration")) return true;
                 
             if(stype.equals( "com.robotraconteur.MessageElementStructure")) return true;
                 
@@ -129,10 +159,29 @@ public class DataTypeUtil {
 	
 	public static boolean isNumber(DataTypes t)
     {
-        return (t.ordinal() >= DataTypes.DataTypes_double_t.ordinal() && (DataTypes.DataTypes_uint64_t.ordinal() >= t.ordinal()));
+		switch (t)
+        {
+            case DataTypes_double_t:
+            case DataTypes_single_t:
+            case DataTypes_int8_t:
+            case DataTypes_uint8_t:
+            case DataTypes_int16_t:
+            case DataTypes_uint16_t:
+            case DataTypes_int32_t:
+            case DataTypes_uint32_t:
+            case DataTypes_int64_t:
+            case DataTypes_uint64_t:
+            case DataTypes_cdouble_t:
+            case DataTypes_csingle_t:
+            case DataTypes_bool_t:
+            case DataTypes_datetime_t:
+            case DataTypes_duration_t:
+                return true;
+            default:
+                return false;
+        }
     }
-
-    
+        
     public static Object arrayFromDataType(DataTypes t, int length)
     {
         switch (t)
@@ -158,6 +207,16 @@ public class DataTypeUtil {
                 return new long[length];
             case DataTypes_uint64_t:
             	return new UnsignedLongs(length);
+            case DataTypes_cdouble_t:
+            	return new CDouble[length];
+            case DataTypes_csingle_t:
+            	return new CSingle[length];
+            case DataTypes_bool_t:
+            	return new boolean[length];
+            case DataTypes_datetime_t:
+            	return new DateTime[length];
+            case DataTypes_duration_t:
+            	return new Duration[length];
             case DataTypes_string_t:
                 return null;
             case DataTypes_structure_t:
@@ -181,6 +240,11 @@ public class DataTypeUtil {
     	if (o instanceof UnsignedShorts) return true;
     	if (o instanceof UnsignedInts) return true;
     	if (o instanceof UnsignedLongs) return true;
+    	if (o instanceof CDouble[]) return true;
+    	if (o instanceof CSingle[]) return true;
+    	if (o instanceof boolean[]) return true;
+    	if (o instanceof DateTime[]) return true;
+    	if (o instanceof Duration[]) return true;
     	return false;
     	    	
     }
@@ -197,6 +261,11 @@ public class DataTypeUtil {
     	if (o instanceof UnsignedShort) return true;
     	if (o instanceof UnsignedInt) return true;
     	if (o instanceof UnsignedLong) return true;
+    	if (o instanceof CDouble) return true;
+    	if (o instanceof CSingle) return true;
+    	if (o instanceof Boolean) return true;
+    	if (o instanceof DateTime) return true;
+    	if (o instanceof Duration) return true;
     	return false;
     	
     	
@@ -214,6 +283,11 @@ public class DataTypeUtil {
     	if (o == UnsignedShort.class) return true;
     	if (o == UnsignedInt.class) return true;
     	if (o == UnsignedLong.class) return true;
+    	if (o == CDouble.class) return true;
+    	if (o == CSingle.class) return true;
+    	if (o == Boolean.class) return true;
+    	if (o == DateTime.class) return true;
+    	if (o == Duration.class) return true;
     	return false;
     	
     	
@@ -231,6 +305,11 @@ public class DataTypeUtil {
     	if (o instanceof UnsignedShorts) return ((UnsignedShorts)o).get(0);
     	if (o instanceof UnsignedInts) return ((UnsignedInts)o).get(0);
     	if (o instanceof UnsignedLongs) return ((UnsignedLongs)o).get(0);
+    	if (o instanceof CDouble[]) return ((CDouble[])o)[0];
+    	if (o instanceof CSingle[]) return ((CSingle[])o)[0];
+    	if (o instanceof boolean[]) return ((boolean[])o)[0];
+    	if (o instanceof DateTime[]) return ((DateTime[])o)[0];
+    	if (o instanceof Duration[]) return ((Duration[])o)[0];
     	throw new DataTypeException("Argument is not an array");
     	    	
     }
@@ -247,6 +326,11 @@ public class DataTypeUtil {
     	if (o instanceof UnsignedShort) return ((UnsignedShort)o).array();
     	if (o instanceof UnsignedInt) return ((UnsignedInt)o).array();
     	if (o instanceof UnsignedLong) return ((UnsignedLong)o).array();
+    	if (o instanceof CDouble) return new CDouble[] {(CDouble)o};
+    	if (o instanceof CSingle) return new CSingle[] {(CSingle)o};
+    	if (o instanceof Boolean) return new boolean[] {(Boolean)o};
+    	if (o instanceof DateTime) return new DateTime[] {(DateTime)o};
+    	if (o instanceof Duration) return new Duration[] {(Duration)o};
     	throw new DataTypeException("Argument is not a number");
     	
     }
@@ -264,7 +348,11 @@ public class DataTypeUtil {
 		if (arr instanceof UnsignedInts) return ((UnsignedInts)arr).value.length;
 		if (arr instanceof long[]) return ((long[])arr).length;
 		if (arr instanceof UnsignedLongs) return ((UnsignedLongs)arr).value.length;
-		
+		if (arr instanceof CDouble[]) return ((CDouble[])arr).length;
+		if (arr instanceof CSingle[]) return ((CSingle[])arr).length;
+		if (arr instanceof boolean[]) return ((boolean[])arr).length;
+		if (arr instanceof DateTime[]) return ((DateTime[])arr).length;
+		if (arr instanceof Duration[]) return ((Duration[])arr).length;
 		
 		throw new RuntimeException(new DataTypeException("Invalid memory data type"));
 		
@@ -343,7 +431,7 @@ public class DataTypeUtil {
         return a;
     }
 
-    public static CStructureMultiDimArray verifyArrayLength(CStructureMultiDimArray a, int n_elems, int[] len)
+    public static PodMultiDimArray verifyArrayLength(PodMultiDimArray a, int n_elems, int[] len)
     {
         if (a.dims.length != len.length)
         {
@@ -360,7 +448,7 @@ public class DataTypeUtil {
         return a;
     }
 
-    public static AStructureMultiDimArray verifyArrayLength(AStructureMultiDimArray a, int n_elems, int[] len)
+    public static NamedMultiDimArray verifyArrayLength(NamedMultiDimArray a, int n_elems, int[] len)
     {
         if (a.dims.length != len.length)
         {
@@ -428,11 +516,11 @@ public class DataTypeUtil {
         return a;
     }
 
-    public static List<CStructureMultiDimArray> verifyArrayLength3(List<CStructureMultiDimArray> a, int n_elems, int[] len)
+    public static List<PodMultiDimArray> verifyArrayLength3(List<PodMultiDimArray> a, int n_elems, int[] len)
     {
     	if (a!=null)
     	{
-	        for (CStructureMultiDimArray aa : a)
+	        for (PodMultiDimArray aa : a)
 	        {
 	            verifyArrayLength(aa, n_elems, len);
 	        }
@@ -441,11 +529,11 @@ public class DataTypeUtil {
         return a;
     }
 
-    public static <K> Map<K, CStructureMultiDimArray> verifyArrayLength3(Map<K, CStructureMultiDimArray> a, int n_elems, int[] len)
+    public static <K> Map<K, PodMultiDimArray> verifyArrayLength3(Map<K, PodMultiDimArray> a, int n_elems, int[] len)
     {
     	if (a!=null)
     	{
-	        for (CStructureMultiDimArray aa : a.values())
+	        for (PodMultiDimArray aa : a.values())
 	        {
 	            verifyArrayLength(aa, n_elems,len);
 	        }
@@ -454,11 +542,11 @@ public class DataTypeUtil {
         return a;
     }
     
-    public static List<AStructureMultiDimArray> verifyArrayLength4(List<AStructureMultiDimArray> a, int n_elems, int[] len)
+    public static List<NamedMultiDimArray> verifyArrayLength4(List<NamedMultiDimArray> a, int n_elems, int[] len)
     {
     	if (a!=null)
     	{
-	        for (AStructureMultiDimArray aa : a)
+	        for (NamedMultiDimArray aa : a)
 	        {
 	            verifyArrayLength(aa, n_elems, len);
 	        }
@@ -467,11 +555,11 @@ public class DataTypeUtil {
         return a;
     }
 
-    public static <K> Map<K, AStructureMultiDimArray> verifyArrayLength4(Map<K, AStructureMultiDimArray> a, int n_elems, int[] len)
+    public static <K> Map<K, NamedMultiDimArray> verifyArrayLength4(Map<K, NamedMultiDimArray> a, int n_elems, int[] len)
     {
     	if (a!=null)
     	{
-	        for (AStructureMultiDimArray aa : a.values())
+	        for (NamedMultiDimArray aa : a.values())
 	        {
 	            verifyArrayLength(aa, n_elems,len);
 	        }

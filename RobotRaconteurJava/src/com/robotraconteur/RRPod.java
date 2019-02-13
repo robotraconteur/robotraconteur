@@ -1,5 +1,5 @@
 package com.robotraconteur;
 
-public interface RRAStructure
+public interface RRPod
 {
 }

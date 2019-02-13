@@ -27,23 +27,17 @@ public class MultiDimArrayTest
 
 
 
-		ca((double[])m1.real, (double[])m3.real);
-		ca((double[])m1.imag, (double[])m3.imag);
-
-		MultiDimArray m6 = new MultiDimArray(new int[] {2, 2, 1, 1, 10}, new double[40], new double[40]);
+		ca((double[])m1.array, (double[])m3.array);
+		
+		MultiDimArray m6 = new MultiDimArray(new int[] {2, 2, 1, 1, 10}, new double[40]);
 		m1.retrieveSubArray(new int[] {4, 2, 2, 8, 0}, m6, new int[] {0, 0, 0, 0, 0}, new int[] {2, 2, 1, 1, 10});
-		ca((double[])m4.real, (double[])m6.real);
-		ca((double[])m4.imag, (double[])m6.imag);
+		ca((double[])m4.array, (double[])m6.array);
+		
 
-		MultiDimArray m7 = new MultiDimArray(new int[] {4, 4, 4, 4, 10}, new double[2560], new double[2560]);
+		MultiDimArray m7 = new MultiDimArray(new int[] {4, 4, 4, 4, 10}, new double[2560]);
 		m1.retrieveSubArray(new int[] {4, 2, 2, 8, 0}, m7, new int[] {2, 1,2, 1, 0}, new int[] {2, 2, 1, 1, 10});
-		ca((double[])m5.real, (double[])m7.real);
-		ca((double[])m5.imag, (double[])m7.imag);
-
-
-
-
-
+		ca((double[])m5.array, (double[])m7.array);
+		
 	}
 
 	public static void TestByte()
@@ -58,17 +52,17 @@ public class MultiDimArrayTest
 
 
 
-		ca(((UnsignedBytes)m1.real).value, ((UnsignedBytes)m3.real).value);
+		ca(((UnsignedBytes)m1.array).value, ((UnsignedBytes)m3.array).value);
 
 
 		MultiDimArray m6 = new MultiDimArray(new int[] {200,200}, new UnsignedBytes(new byte[40000]));
 		m1.retrieveSubArray(new int[] {65,800}, m6, new int[] {0, 0}, new int[] {200,200});
-		ca(((UnsignedBytes)m4.real).value, ((UnsignedBytes)m6.real).value);
+		ca(((UnsignedBytes)m4.array).value, ((UnsignedBytes)m6.array).value);
 
 
 		MultiDimArray m7 = new MultiDimArray(new int[] {512,512}, new UnsignedBytes(new byte[512 * 512]));
 		m1.retrieveSubArray(new int[] {65,800}, m7, new int[] {100,230}, new int[] {200,200});
-		ca(((UnsignedBytes)m5.real).value, ((UnsignedBytes)m7.real).value);
+		ca(((UnsignedBytes)m5.array).value, ((UnsignedBytes)m7.array).value);
 
 	}
 
@@ -146,26 +140,8 @@ public class MultiDimArrayTest
 
 		double[] real = new double[count];
 
-		for (int i = 0; i < count; i++)
-		{
-			real[i] = readDouble(s);
-		}
-
-		if (s.available() > 0)
-		{
-			double[] imag = new double[count];
-
-			for (int i = 0; i < count; i++)
-			{
-				imag[i] = readDouble(s);
-			}
-			return new MultiDimArray(dims, real, imag);
-		}
-		else
-		{
-
-			return new MultiDimArray(dims, real);
-		}
+		return new MultiDimArray(dims, real);
+		
 
 		}
 		catch (Exception e)
@@ -204,32 +180,14 @@ public class MultiDimArrayTest
 			count *= dims[i];
 		}
 
-//C# TO JAVA CONVERTER WARNING: Unsigned integer types have no direct equivalent in Java:
-//ORIGINAL LINE: byte[] real = new byte[count];
 		byte[] real = new byte[count];
 
 		for (int i = 0; i < count; i++)
 		{
 			real[i] = (byte)s.read();
 		}
-
-		if (s.available() > 0)
-		{
-//C# TO JAVA CONVERTER WARNING: Unsigned integer types have no direct equivalent in Java:
-//ORIGINAL LINE: byte[] imag = new byte[count];
-			byte[] imag = new byte[count];
-
-			for (int i = 0; i < count; i++)
-			{
-				imag[i] = (byte)s.read();
-			}
-			return new MultiDimArray(dims, new UnsignedBytes(real), new UnsignedBytes(imag));
-		}
-		else
-		{
-
 			return new MultiDimArray(dims, new UnsignedBytes(real));
-		}
+		
 		}
 		catch (Exception e)
 		{

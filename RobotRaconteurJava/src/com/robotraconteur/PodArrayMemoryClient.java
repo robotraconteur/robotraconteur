@@ -3,11 +3,11 @@ package com.robotraconteur;
 import java.lang.reflect.Array;
 import java.math.BigInteger;
 
-public class AStructureArrayMemoryClient<T> extends AStructureArrayMemory<T> {
+public class PodArrayMemoryClient<T> extends PodArrayMemory<T> {
 
-	WrappedAStructureArrayMemoryClient innerclient;
+	WrappedPodArrayMemoryClient innerclient;
 
-    class bufferdirector extends WrappedAStructureArrayMemoryClientBuffer
+    class bufferdirector extends WrappedPodArrayMemoryClientBuffer
     {
         T buffer;
 
@@ -17,14 +17,14 @@ public class AStructureArrayMemoryClient<T> extends AStructureArrayMemory<T> {
         }
 
         @Override
-        public void unpackReadResult(MessageElementAStructureArray res, java.math.BigInteger bufferpos, java.math.BigInteger count)
+        public void unpackReadResult(MessageElementPodArray res, java.math.BigInteger bufferpos, java.math.BigInteger count)
         {
             T res1 = (T)RobotRaconteurNode.s().unpackStructureDispose(res);
             System.arraycopy(res1, 0, buffer, bufferpos.intValue(), count.intValue());
         }
 
         @Override
-        public MessageElementAStructureArray packWriteRequest(java.math.BigInteger bufferpos, java.math.BigInteger count)
+        public MessageElementPodArray packWriteRequest(java.math.BigInteger bufferpos, java.math.BigInteger count)
         {
             T buffer3;            
             if ((long)Array.getLength(buffer) == count.longValue())
@@ -36,11 +36,11 @@ public class AStructureArrayMemoryClient<T> extends AStructureArrayMemory<T> {
             	buffer3=(T)Array.newInstance(buffer.getClass().getComponentType(),count.intValue());                
                 System.arraycopy(buffer, bufferpos.intValue(), buffer3, 0, count.intValue());
             }
-            return (MessageElementAStructureArray)RobotRaconteurNode.s().packStructure(buffer3);
+            return (MessageElementPodArray)RobotRaconteurNode.s().packStructure(buffer3);
         }
     }
 
-    public AStructureArrayMemoryClient(WrappedAStructureArrayMemoryClient innerclient)
+    public PodArrayMemoryClient(WrappedPodArrayMemoryClient innerclient)
     {
         this.innerclient = innerclient;
     }

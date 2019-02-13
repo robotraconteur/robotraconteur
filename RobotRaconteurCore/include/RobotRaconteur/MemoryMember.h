@@ -878,7 +878,7 @@ namespace RobotRaconteur
 
 		virtual RR_SHARED_PTR<MessageElementData> DoRead(uint64_t memorypos, uint64_t bufferpos, uint64_t count, RR_SHARED_PTR<ArrayMemoryBase> mem)
 		{
-			RR_SHARED_PTR<NamedArrayMemory<T> > mem1 = rr_cast<NamedArrayMemory<T>>(mem);
+			RR_SHARED_PTR<NamedArrayMemory<T> > mem1 = rr_cast<NamedArrayMemory<T> >(mem);
 			RR_SHARED_PTR<RRNamedArray<T> > buf1 = AllocateEmptyRRNamedArray<T>(count);
 			mem1->Read(memorypos, buf1, 0, (size_t)count);
 			return NamedArrayStub_PackNamedArray(buf1);
@@ -886,7 +886,7 @@ namespace RobotRaconteur
 
 		virtual void DoWrite(uint64_t memorypos, RR_SHARED_PTR<MessageElementData> buffer, uint64_t bufferpos, uint64_t count, RR_SHARED_PTR<ArrayMemoryBase> mem)
 		{
-			RR_SHARED_PTR<NamedArrayMemory<T> > mem1 = rr_cast<NamedArrayMemory<T>>(mem);
+			RR_SHARED_PTR<NamedArrayMemory<T> > mem1 = rr_cast<NamedArrayMemory<T> >(mem);
 			RR_SHARED_PTR<RRNamedArray<T> > buf1 = NamedArrayStub_UnpackNamedArray<T>(rr_cast<MessageElementNamedArray>(buffer));
 			mem1->Write(memorypos, buf1, 0, (size_t)count);
 		}
@@ -1056,7 +1056,7 @@ namespace RobotRaconteur
 		virtual void UnpackReadResult(RR_SHARED_PTR<MessageElementData> res, void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint64_t elemcount)
 		{
 			RR_SHARED_PTR<RRNamedMultiDimArray<T> >& buffer1 = *static_cast<RR_SHARED_PTR<RRNamedMultiDimArray<T> >*> (buffer);
-			RR_SHARED_PTR<RRNamedMultiDimArray<T> > data = rr_cast<RRNamedMultiDimArray<T>>(GetNode()->UnpackNamedMultiDimArray(rr_cast<MessageElementNamedMultiDimArray>(res)));
+			RR_SHARED_PTR<RRNamedMultiDimArray<T> > data = rr_cast<RRNamedMultiDimArray<T> >(GetNode()->UnpackNamedMultiDimArray(rr_cast<MessageElementNamedMultiDimArray>(res)));
 
 			RR_SHARED_PTR<NamedMultiDimArrayMemory<T> > data2 = RR_MAKE_SHARED<NamedMultiDimArrayMemory<T> >(data);
 			data2->Read(std::vector<uint64_t>(count.size()), buffer1, bufferpos, count);
@@ -1087,7 +1087,7 @@ namespace RobotRaconteur
 
 		virtual RR_SHARED_PTR<MessageElementData>  DoRead(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint32_t elemcount, RR_SHARED_PTR<MultiDimArrayMemoryBase> mem)
 		{
-			RR_SHARED_PTR<NamedMultiDimArrayMemory<T> > mem1 = rr_cast<NamedMultiDimArrayMemory<T>>(mem);
+			RR_SHARED_PTR<NamedMultiDimArrayMemory<T> > mem1 = rr_cast<NamedMultiDimArrayMemory<T> >(mem);
 
 			RR_SHARED_PTR<RRNamedMultiDimArray<T> > data = RR_MAKE_SHARED<RRNamedMultiDimArray<T> >();
 			data->Dims = VectorToRRArray<uint32_t>(count);			
@@ -1098,9 +1098,9 @@ namespace RobotRaconteur
 		}
 		virtual void DoWrite(const std::vector<uint64_t>& memorypos, RR_SHARED_PTR<MessageElementData> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint32_t elemcount, RR_SHARED_PTR<MultiDimArrayMemoryBase> mem)
 		{
-			RR_SHARED_PTR<NamedMultiDimArrayMemory<T> > mem1 = rr_cast<NamedMultiDimArrayMemory<T>>(mem);
+			RR_SHARED_PTR<NamedMultiDimArrayMemory<T> > mem1 = rr_cast<NamedMultiDimArrayMemory<T> >(mem);
 
-			RR_SHARED_PTR<RRNamedMultiDimArray<T> > data = rr_cast<RRNamedMultiDimArray<T>>(GetNode()->UnpackNamedMultiDimArray(rr_cast<MessageElementNamedMultiDimArray>(buffer)));
+			RR_SHARED_PTR<RRNamedMultiDimArray<T> > data = rr_cast<RRNamedMultiDimArray<T> >(GetNode()->UnpackNamedMultiDimArray(rr_cast<MessageElementNamedMultiDimArray>(buffer)));
 			mem1->Write(memorypos, data, bufferpos, count);
 		}
 	};

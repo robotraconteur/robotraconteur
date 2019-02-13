@@ -46,12 +46,7 @@ public class MultiDimArrayMemory<T>
 	{
 //C# TO JAVA CONVERTER WARNING: Unsigned integer types have no direct equivalent in Java:
 //ORIGINAL LINE: return (ulong)multimemory.DimCount;
-		return (long)multimemory.dimCount;
-	}
-
-	public boolean complex()
-	{
-		return multimemory.complex;
+		return (long)multimemory.dims.length;
 	}
 
 //C# TO JAVA CONVERTER WARNING: Unsigned integer types have no direct equivalent in Java:

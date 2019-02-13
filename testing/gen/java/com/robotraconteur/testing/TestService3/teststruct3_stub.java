@@ -10,21 +10,32 @@ public class teststruct3_stub implements IStructureStub {
     try {
     if (s1 ==null) return null;
     teststruct3 s = (teststruct3)s1;
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<testcstruct1>packCStructureToArray("s1",s.s1));
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<testcstruct1>packCStructureArray("s2",s.s2));
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<testcstruct1>packCStructureArray("s3",DataTypeUtil.verifyArrayLength(s.s3, 11, false)));
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<testcstruct1>packCStructureArray("s4",DataTypeUtil.verifyArrayLength(s.s4, 16, true)));
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<CStructureMultiDimArray>packCStructureMultiDimArray("s5",DataTypeUtil.verifyArrayLength(s.s5,9,new int[] {3,3})));
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<CStructureMultiDimArray>packCStructureMultiDimArray("s6",s.s6));
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<testcstruct1[]>packListType("s7",s.s7,testcstruct1[].class));
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<testcstruct1[]>packListType("s8",s.s8,testcstruct1[].class));
-    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<CStructureMultiDimArray>packListType("s9",s.s9,CStructureMultiDimArray.class));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<testpod1>packPodToArray("s1",s.s1));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<testpod1>packPodArray("s2",s.s2));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<testpod1>packPodArray("s3",DataTypeUtil.verifyArrayLength(s.s3, 11, false)));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<testpod1>packPodArray("s4",DataTypeUtil.verifyArrayLength(s.s4, 16, true)));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<PodMultiDimArray>packPodMultiDimArray("s5",DataTypeUtil.verifyArrayLength(s.s5,9,new int[] {3,3})));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<PodMultiDimArray>packPodMultiDimArray("s6",s.s6));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<testpod1[]>packListType("s7",s.s7,testpod1[].class));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<testpod1[]>packListType("s8",s.s8,testpod1[].class));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<PodMultiDimArray>packListType("s9",s.s9,PodMultiDimArray.class));
     MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.packVarType("s10",s.s10));
     MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.packVarType("s11",s.s11));
     MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.packVarType("s12",s.s12));
     MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.packVarType("s13",s.s13));
     MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.packVarType("s14",s.s14));
     MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.packVarType("s15",s.s15));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<transform>packNamedArrayToArray("t1",s.t1));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<transform>packNamedArray("t2",DataTypeUtil.verifyArrayLength(s.t2, 4, false)));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<NamedMultiDimArray>packNamedMultiDimArray("t3",DataTypeUtil.verifyArrayLength(s.t3,8,new int[] {2,4})));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.packVarType("t4",s.t4));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.packVarType("t5",s.t5));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<transform[]>packListType("t6",s.t6,transform[].class));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<transform[]>packListType("t7",DataTypeUtil.verifyArrayLength1(s.t7, 4, false),transform[].class));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<NamedMultiDimArray>packListType("t8",DataTypeUtil.verifyArrayLength4(s.t8,8,new int[] {2,4}),NamedMultiDimArray.class));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.packVarType("t9",s.t9));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.packVarType("t10",s.t10));
+    MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.packVarType("t11",s.t11));
     return new MessageElementStructure("com.robotraconteur.testing.TestService3.teststruct3",m);
     }
     finally {
@@ -37,21 +48,32 @@ public class teststruct3_stub implements IStructureStub {
     vectorptr_messageelement mm=m2.getElements();
     try {
     teststruct3 s=new teststruct3();
-    s.s1 =MessageElementUtil.<testcstruct1>unpackCStructureFromArray(MessageElement.findElement(mm,"s1"));
-    s.s2 =MessageElementUtil.<testcstruct1>unpackCStructureArray(MessageElement.findElement(mm,"s2"));
-    s.s3 =DataTypeUtil.verifyArrayLength(MessageElementUtil.<testcstruct1>unpackCStructureArray(MessageElement.findElement(mm,"s3")), 11, false);
-    s.s4 =DataTypeUtil.verifyArrayLength(MessageElementUtil.<testcstruct1>unpackCStructureArray(MessageElement.findElement(mm,"s4")), 16, true);
-    s.s5 =DataTypeUtil.verifyArrayLength(MessageElementUtil.unpackCStructureMultiDimArray(MessageElement.findElement(mm,"s5")),9,new int[] {3,3});
-    s.s6 =MessageElementUtil.unpackCStructureMultiDimArray(MessageElement.findElement(mm,"s6"));
-    s.s7 =MessageElementUtil.<testcstruct1[]>unpackListType(MessageElement.findElement(mm,"s7"));
-    s.s8 =MessageElementUtil.<testcstruct1[]>unpackListType(MessageElement.findElement(mm,"s8"));
-    s.s9 =MessageElementUtil.<CStructureMultiDimArray>unpackListType(MessageElement.findElement(mm,"s9"));
+    s.s1 =MessageElementUtil.<testpod1>unpackPodFromArray(MessageElement.findElement(mm,"s1"));
+    s.s2 =MessageElementUtil.<testpod1>unpackPodArray(MessageElement.findElement(mm,"s2"));
+    s.s3 =DataTypeUtil.verifyArrayLength(MessageElementUtil.<testpod1>unpackPodArray(MessageElement.findElement(mm,"s3")), 11, false);
+    s.s4 =DataTypeUtil.verifyArrayLength(MessageElementUtil.<testpod1>unpackPodArray(MessageElement.findElement(mm,"s4")), 16, true);
+    s.s5 =DataTypeUtil.verifyArrayLength(MessageElementUtil.unpackPodMultiDimArray(MessageElement.findElement(mm,"s5")),9,new int[] {3,3});
+    s.s6 =MessageElementUtil.unpackPodMultiDimArray(MessageElement.findElement(mm,"s6"));
+    s.s7 =MessageElementUtil.<testpod1[]>unpackListType(MessageElement.findElement(mm,"s7"));
+    s.s8 =MessageElementUtil.<testpod1[]>unpackListType(MessageElement.findElement(mm,"s8"));
+    s.s9 =MessageElementUtil.<PodMultiDimArray>unpackListType(MessageElement.findElement(mm,"s9"));
     s.s10 =MessageElementUtil.unpackVarType(MessageElement.findElement(mm,"s10"));
     s.s11 =MessageElementUtil.unpackVarType(MessageElement.findElement(mm,"s11"));
     s.s12 =MessageElementUtil.unpackVarType(MessageElement.findElement(mm,"s12"));
     s.s13 =MessageElementUtil.unpackVarType(MessageElement.findElement(mm,"s13"));
     s.s14 =MessageElementUtil.unpackVarType(MessageElement.findElement(mm,"s14"));
     s.s15 =MessageElementUtil.unpackVarType(MessageElement.findElement(mm,"s15"));
+    s.t1 =MessageElementUtil.<transform>unpackNamedArrayFromArray(MessageElement.findElement(mm,"t1"));
+    s.t2 =DataTypeUtil.verifyArrayLength(MessageElementUtil.<transform>unpackNamedArray(MessageElement.findElement(mm,"t2")), 4, false);
+    s.t3 =DataTypeUtil.verifyArrayLength(MessageElementUtil.unpackNamedMultiDimArray(MessageElement.findElement(mm,"t3")),8,new int[] {2,4});
+    s.t4 =MessageElementUtil.unpackVarType(MessageElement.findElement(mm,"t4"));
+    s.t5 =MessageElementUtil.unpackVarType(MessageElement.findElement(mm,"t5"));
+    s.t6 =MessageElementUtil.<transform[]>unpackListType(MessageElement.findElement(mm,"t6"));
+    s.t7 =DataTypeUtil.verifyArrayLength1(MessageElementUtil.<transform[]>unpackListType(MessageElement.findElement(mm,"t7")), 4, false);
+    s.t8 =DataTypeUtil.verifyArrayLength4(MessageElementUtil.<NamedMultiDimArray>unpackListType(MessageElement.findElement(mm,"t8")),8,new int[] {2,4});
+    s.t9 =MessageElementUtil.unpackVarType(MessageElement.findElement(mm,"t9"));
+    s.t10 =MessageElementUtil.unpackVarType(MessageElement.findElement(mm,"t10"));
+    s.t11 =MessageElementUtil.unpackVarType(MessageElement.findElement(mm,"t11"));
     T st; try {st=(T)s;} catch (Exception e) {throw new RuntimeException(new DataTypeMismatchException("Wrong structuretype"));}
     return st;
     }

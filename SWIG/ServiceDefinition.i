@@ -36,6 +36,7 @@
 %template(vectorptr_enumdefinition) std::vector<boost::shared_ptr<RobotRaconteur::EnumDefinition> >;
 %template(vector_constantdefinition_structfield) std::vector<RobotRaconteur::ConstantDefinition_StructField>;
 %template(vector_enumdefinitionvalues) std::vector<RobotRaconteur::EnumDefinitionValue>;
+%template(vector_usingdefinition) std::vector<boost::shared_ptr<RobotRaconteur::UsingDefinition> >;
 
 namespace RobotRaconteur
 {

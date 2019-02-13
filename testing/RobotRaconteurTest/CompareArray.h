@@ -29,7 +29,7 @@ namespace RobotRaconteurTest
 
 
 	template <class T>
-	void ca(vector<T> v1, vector<T> v2)
+	void ca(std::vector<T> v1, std::vector<T> v2)
 	{
 		if (v1.size() != v2.size()) throw std::exception();
 		for (size_t i = 0; i < v1.size(); i++)

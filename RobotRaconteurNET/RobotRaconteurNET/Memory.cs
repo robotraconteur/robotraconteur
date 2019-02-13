@@ -60,13 +60,13 @@ namespace RobotRaconteur
         }
     }
 
-    public class CStructureArrayMemory<T> : ArrayMemory<T> where T : struct
+    public class PodArrayMemory<T> : ArrayMemory<T> where T : struct
     {
-        public CStructureArrayMemory() : base()
+        public PodArrayMemory() : base()
         {
         }
 
-        public CStructureArrayMemory(T[] memory) : base(memory)
+        public PodArrayMemory(T[] memory) : base(memory)
         {
         }
     }
@@ -107,22 +107,14 @@ namespace RobotRaconteur
         {
             get
             {
-                return (ulong)multimemory.DimCount;
+                return (ulong)multimemory.Dims.Length;
             }
         }
-
-        public virtual bool Complex
-        {
-            get
-            {
-                return multimemory.Complex;
-            }
-        }
-
+                
         public virtual void Read(ulong[] memorypos, MultiDimArray buffer, ulong[] bufferpos, ulong[] count)
         {
 
-            multimemory.RetrieveSubArray(memorypos.Select(x => (int)x).ToArray(), buffer, bufferpos.Select(x => (int)x).ToArray(), count.Select(x => (int)x).ToArray());
+            multimemory.RetrieveSubArray(memorypos.Select(x => (uint)x).ToArray(), buffer, bufferpos.Select(x => (uint)x).ToArray(), count.Select(x => (uint)x).ToArray());
 
         }
 
@@ -130,28 +122,28 @@ namespace RobotRaconteur
         public virtual void Write(ulong[] memorypos, MultiDimArray buffer, ulong[] bufferpos, ulong[] count)
         {
 
-            multimemory.AssignSubArray(memorypos.Select(x => (int)x).ToArray(), buffer, bufferpos.Select(x => (int)x).ToArray(), count.Select(x => (int)x).ToArray());
+            multimemory.AssignSubArray(memorypos.Select(x => (uint)x).ToArray(), buffer, bufferpos.Select(x => (uint)x).ToArray(), count.Select(x => (uint)x).ToArray());
         }
     }
 
-    public class CStructureMultiDimArrayMemory<T> where T : struct
+    public class PodMultiDimArrayMemory<T> where T : struct
     {
 
-        private CStructureMultiDimArray multimemory;
+        private PodMultiDimArray multimemory;
 
-        public CStructureMultiDimArrayMemory()
+        public PodMultiDimArrayMemory()
         {
 
 
         }
 
-        public CStructureMultiDimArrayMemory(CStructureMultiDimArray memory)
+        public PodMultiDimArrayMemory(PodMultiDimArray memory)
         {
 
             multimemory = memory;
         }
 
-        public virtual void Attach(CStructureMultiDimArray memory)
+        public virtual void Attach(PodMultiDimArray memory)
         {
 
             this.multimemory = memory;
@@ -174,18 +166,18 @@ namespace RobotRaconteur
             }
         }
 
-        public virtual void Read(ulong[] memorypos, CStructureMultiDimArray buffer, ulong[] bufferpos, ulong[] count)
+        public virtual void Read(ulong[] memorypos, PodMultiDimArray buffer, ulong[] bufferpos, ulong[] count)
         {
 
-            multimemory.RetrieveSubArray(memorypos.Select(x => (int)x).ToArray(), buffer, bufferpos.Select(x => (int)x).ToArray(), count.Select(x => (int)x).ToArray());
+            multimemory.RetrieveSubArray(memorypos.Select(x => (uint)x).ToArray(), buffer, bufferpos.Select(x => (uint)x).ToArray(), count.Select(x => (uint)x).ToArray());
 
         }
 
 
-        public virtual void Write(ulong[] memorypos, CStructureMultiDimArray buffer, ulong[] bufferpos, ulong[] count)
+        public virtual void Write(ulong[] memorypos, PodMultiDimArray buffer, ulong[] bufferpos, ulong[] count)
         {
 
-            multimemory.AssignSubArray(memorypos.Select(x => (int)x).ToArray(), buffer, bufferpos.Select(x => (int)x).ToArray(), count.Select(x => (int)x).ToArray());
+            multimemory.AssignSubArray(memorypos.Select(x => (uint)x).ToArray(), buffer, bufferpos.Select(x => (uint)x).ToArray(), count.Select(x => (uint)x).ToArray());
         }
     }
 
@@ -290,20 +282,11 @@ namespace RobotRaconteur
             }
         }
 
-        public override bool Complex
-        {
-            get
-            {
-                return innermem.Complex();
-            }
-        }
-
         public override void Read(ulong[] memorypos, MultiDimArray buffer, ulong[] bufferpos, ulong[] count)
         {
             RRMultiDimArrayUntyped dat = null;
             RRBaseArray datDims = null;
-            RRBaseArray datReal = null;
-            RRBaseArray datImag = null;
+            RRBaseArray datArray = null;            
             try
             {
                 vector_uint64_t memorypos2 = new vector_uint64_t();
@@ -314,22 +297,19 @@ namespace RobotRaconteur
                 dat = WrappedMultiDimArrayMemoryClientUtil.Read(innermem, memorypos2, count2);
 
                 datDims = dat.Dims;
-                datReal = dat.Real;
-                datImag = dat.Imag;
-                int[] dims = (int[])MessageElementDataUtil.RRBaseArrayToArray(datDims);
-                T[] real = (T[])MessageElementDataUtil.RRBaseArrayToArray(datReal);
-                T[] imag = (T[])MessageElementDataUtil.RRBaseArrayToArray(datImag);
-
-                MultiDimArray dat2 = new MultiDimArray(dims, real, imag);
-                buffer.AssignSubArray(bufferpos.Select(x => (int)x).ToArray(), dat2, new int[count.Length], count.Select(x => (int)x).ToArray());
+                datArray = dat.Array;                
+                uint[] dims = (uint[])MessageElementDataUtil.RRBaseArrayToArray(datDims);
+                T[] array = (T[])MessageElementDataUtil.RRBaseArrayToArray(datArray);
+                
+                MultiDimArray dat2 = new MultiDimArray(dims, array);
+                buffer.AssignSubArray(bufferpos.Select(x => (uint)x).ToArray(), dat2, new uint[count.Length], count.Select(x => (uint)x).ToArray());
             }
             finally
             {
                 if (dat != null)
                 {
                     if (datDims != null) datDims.Dispose();
-                    if (datReal != null) datReal.Dispose();
-                    if (datImag != null) datImag.Dispose();
+                    if (datArray != null) datArray.Dispose();                    
                     dat.Dispose();
                 }
             }
@@ -343,33 +323,23 @@ namespace RobotRaconteur
         {
             RRMultiDimArrayUntyped dat2 = null;
             RRBaseArray dat2Dims = null;
-            RRBaseArray dat2Real = null;
-            RRBaseArray dat2Imag = null;
+            RRBaseArray dat2Array = null;            
             try
             {
                 int elemcount = 1;
                 foreach (ulong v in count) elemcount *= (int)v;
-                int[] count2 = count.Select(x => (int)x).ToArray();
-                T[] real = new T[elemcount];
-                T[] imag = null;
-                if (Complex) imag = new T[elemcount];
+                uint[] count2 = count.Select(x => (uint)x).ToArray();
+                T[] array = new T[elemcount];
+                           
 
-                MultiDimArray writedat1 = new MultiDimArray(count2, real, imag);
-                writedat1.AssignSubArray(new int[count.Length], buffer, bufferpos.Select(x => (int)x).ToArray(), count.Select(x => (int)x).ToArray());
+                MultiDimArray writedat1 = new MultiDimArray(count2, array);
+                writedat1.AssignSubArray(new uint[count.Length], buffer, bufferpos.Select(x => (uint)x).ToArray(), count.Select(x => (uint)x).ToArray());
 
-                dat2 = new RRMultiDimArrayUntyped();
-                dat2.DimCount = count2.Length;
+                dat2 = new RRMultiDimArrayUntyped();                
                 dat2Dims = MessageElementDataUtil.ArrayToRRBaseArray(count2);
                 dat2.Dims = dat2Dims;
-                dat2Real = MessageElementDataUtil.ArrayToRRBaseArray(real);
-                dat2.Real = dat2Real;
-                dat2.Complex = false;
-                if (imag != null)
-                {
-                    dat2.Complex = true;
-                    dat2Imag = MessageElementDataUtil.ArrayToRRBaseArray(imag);
-                    dat2.Imag = dat2Imag;
-                }
+                dat2Array = MessageElementDataUtil.ArrayToRRBaseArray(array);
+                dat2.Array = dat2Array;
 
                 vector_uint64_t memorypos3 = new vector_uint64_t();
                 foreach (ulong val in memorypos) memorypos3.Add(val);
@@ -384,19 +354,18 @@ namespace RobotRaconteur
                 if (dat2 != null)
                 {
                     if (dat2Dims != null) dat2Dims.Dispose();
-                    if (dat2Real != null) dat2Real.Dispose();
-                    if (dat2Imag != null) dat2Imag.Dispose();
+                    if (dat2Array != null) dat2Array.Dispose();                    
                     dat2.Dispose();
                 }
             }
         }
     }
 
-    public class CStructureArrayMemoryClient<T> : CStructureArrayMemory<T> where T : struct
+    public class PodArrayMemoryClient<T> : PodArrayMemory<T> where T : struct
     {
-        WrappedCStructureArrayMemoryClient innerclient;
+        WrappedPodArrayMemoryClient innerclient;
 
-        class bufferdirector : WrappedCStructureArrayMemoryClientBuffer
+        class bufferdirector : WrappedPodArrayMemoryClientBuffer
         {
             T[] buffer;
 
@@ -405,13 +374,13 @@ namespace RobotRaconteur
                 this.buffer = buffer;
             }
 
-            public override void UnpackReadResult(MessageElementCStructureArray res, ulong bufferpos, ulong count)
+            public override void UnpackReadResult(MessageElementPodArray res, ulong bufferpos, ulong count)
             {
-                T[] res1 = RobotRaconteurNode.s.UnpackCStructureArrayDispose<T>(res);
+                T[] res1 = RobotRaconteurNode.s.UnpackPodArrayDispose<T>(res);
                 Array.Copy(res1, 0, buffer, (long)bufferpos, (long)count);
             }
 
-            public override MessageElementCStructureArray PackWriteRequest(ulong bufferpos, ulong count)
+            public override MessageElementPodArray PackWriteRequest(ulong bufferpos, ulong count)
             {
                 T[] buffer3;
                 if ((ulong)buffer.Length == count)
@@ -423,11 +392,11 @@ namespace RobotRaconteur
                     buffer3 = new T[count];
                     Array.Copy(buffer, (long)bufferpos, buffer3, 0, (long)count);
                 }
-                return RobotRaconteurNode.s.PackCStructureArray<T>(buffer3);
+                return RobotRaconteurNode.s.PackPodArray<T>(buffer3);
             }
         }
 
-        public CStructureArrayMemoryClient(WrappedCStructureArrayMemoryClient innerclient)
+        public PodArrayMemoryClient(WrappedPodArrayMemoryClient innerclient)
         {
             this.innerclient = innerclient;
         }
@@ -470,43 +439,43 @@ namespace RobotRaconteur
         }
     }
 
-    public class CStructureMultiDimArrayMemoryClient<T> : CStructureMultiDimArrayMemory<T> where T : struct
+    public class PodMultiDimArrayMemoryClient<T> : PodMultiDimArrayMemory<T> where T : struct
     {
-        WrappedCStructureMultiDimArrayMemoryClient innerclient;
+        WrappedPodMultiDimArrayMemoryClient innerclient;
 
-        class bufferdirector : WrappedCStructureMultiDimArrayMemoryClientBuffer
+        class bufferdirector : WrappedPodMultiDimArrayMemoryClientBuffer
         {
-            CStructureMultiDimArray buffer;
+            PodMultiDimArray buffer;
 
-            public bufferdirector(CStructureMultiDimArray buffer)
+            public bufferdirector(PodMultiDimArray buffer)
             {
                 this.buffer = buffer;
             }
 
-            public override void UnpackReadResult(MessageElementCStructureMultiDimArray res, vector_uint64_t bufferpos, vector_uint64_t count)
+            public override void UnpackReadResult(MessageElementPodMultiDimArray res, vector_uint64_t bufferpos, vector_uint64_t count)
             {
                 using (res)
                 using (bufferpos)
                 using (count)
                 {
-                    CStructureMultiDimArray res1 = RobotRaconteurNode.s.UnpackCStructureMultiDimArrayDispose<T>(res);
-                    buffer.AssignSubArray(bufferpos.Select(x => (int)x).ToArray(), res1, new int[buffer.Dims.Length], count.Select(x => (int)x).ToArray());
+                    PodMultiDimArray res1 = RobotRaconteurNode.s.UnpackPodMultiDimArrayDispose<T>(res);
+                    buffer.AssignSubArray(bufferpos.Select(x => (uint)x).ToArray(), res1, new uint[buffer.Dims.Length], count.Select(x => (uint)x).ToArray());
                 }
             }
 
-            public override MessageElementCStructureMultiDimArray PackWriteRequest(vector_uint64_t bufferpos, vector_uint64_t count)
+            public override MessageElementPodMultiDimArray PackWriteRequest(vector_uint64_t bufferpos, vector_uint64_t count)
             {
                 using (bufferpos)
                 using (count)
                 {
-                    CStructureMultiDimArray o = new CStructureMultiDimArray(count.Select(x => (int)x).ToArray(), new T[count.Aggregate(1, (x, y) => (int)x * (int)y)]);
-                    buffer.RetrieveSubArray(bufferpos.Select(x => (int)x).ToArray(), o, new int[buffer.Dims.Length], count.Select(x => (int)x).ToArray());
-                    return RobotRaconteurNode.s.PackCStructureMultiDimArray<T>(o);
+                    PodMultiDimArray o = new PodMultiDimArray(count.Select(x => (uint)x).ToArray(), new T[count.Aggregate(1, (x, y) => (int)x * (int)y)]);
+                    buffer.RetrieveSubArray(bufferpos.Select(x => (uint)x).ToArray(), o, new uint[buffer.Dims.Length], count.Select(x => (uint)x).ToArray());
+                    return RobotRaconteurNode.s.PackPodMultiDimArray<T>(o);
                 }
             }
         }
 
-        public CStructureMultiDimArrayMemoryClient(WrappedCStructureMultiDimArrayMemoryClient innerclient)
+        public PodMultiDimArrayMemoryClient(WrappedPodMultiDimArrayMemoryClient innerclient)
         {
             this.innerclient = innerclient;
         }
@@ -519,7 +488,7 @@ namespace RobotRaconteur
             }
         }
 
-        public override void Attach(CStructureMultiDimArray memory)
+        public override void Attach(PodMultiDimArray memory)
         {
             throw new InvalidOperationException("Invalid for memory client");
         }
@@ -542,7 +511,7 @@ namespace RobotRaconteur
 
 
 
-        public override void Read(ulong[] memorypos, CStructureMultiDimArray buffer, ulong[] bufferpos, ulong[] count)
+        public override void Read(ulong[] memorypos, PodMultiDimArray buffer, ulong[] bufferpos, ulong[] count)
         {
             using (bufferdirector buffer1 = new bufferdirector(buffer))
             using (vector_uint64_t memorypos1 = new vector_uint64_t(memorypos))
@@ -553,7 +522,7 @@ namespace RobotRaconteur
             }
         }
 
-        public override void Write(ulong[] memorypos, CStructureMultiDimArray buffer, ulong[] bufferpos, ulong[] count)
+        public override void Write(ulong[] memorypos, PodMultiDimArray buffer, ulong[] bufferpos, ulong[] count)
         {
             using (bufferdirector buffer1 = new bufferdirector(buffer))
             using (vector_uint64_t memorypos1 = new vector_uint64_t(memorypos))
@@ -693,29 +662,11 @@ namespace RobotRaconteur
             }
         }
 
-        public override bool Complex()
-        {
-            try
-            {
-                return mem.Complex;
-            }
-            catch (Exception e)
-            {
-                using (MessageEntry merr = new MessageEntry())
-                {
-                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
-                    return false;
-                }
-            }
-        }
-
         public override void Read(WrappedMultiDimArrayMemoryParams p)
         {
             RRMultiDimArrayUntyped pbuffer = null;
             RRBaseArray pbufferDims = null;
-            RRBaseArray pbufferReal = null;
-            RRBaseArray pbufferImag = null;
+            RRBaseArray pbufferArray = null;            
 
             try
             {
@@ -728,19 +679,14 @@ namespace RobotRaconteur
 
                 pbuffer = p.buffer;
                 pbufferDims = pbuffer.Dims;
-                pbufferReal = pbuffer.Real;
-                pbufferImag = pbuffer.Imag;
-
-                if (mem.Complex != pbuffer.Complex) throw new ArgumentException("Complex mismatch");
-                T[] real = new T[elemcount];
-                T[] imag = null;
-                if (mem.Complex) imag = new T[elemcount];
-
-                MultiDimArray m = new MultiDimArray(count.Select(x => (int)x).ToArray(), real, imag);
+                pbufferArray = pbuffer.Array;
+                                
+                T[] array = new T[elemcount];
+                
+                MultiDimArray m = new MultiDimArray(count.Select(x => (uint)x).ToArray(), array);
 
                 mem.Read(memorypos, m, bufferpos, count);
-                MessageElementDataUtil.ArrayToRRBaseArray(real, pbufferReal);
-                if (imag != null) MessageElementDataUtil.ArrayToRRBaseArray(imag, pbufferImag);
+                MessageElementDataUtil.ArrayToRRBaseArray(array, pbufferArray);                
             }
             catch (Exception e)
             {
@@ -756,15 +702,12 @@ namespace RobotRaconteur
                 if (p != null && pbuffer != null)
                 {
                     if (pbufferDims != null) pbufferDims.Dispose();
-                    if (pbufferReal != null) pbufferReal.Dispose();
-                    if (pbufferImag != null) pbufferImag.Dispose();
+                    if (pbufferArray != null) pbufferArray.Dispose();
                 }
                 if (p != null)
                 {
                     p.Dispose();
                 }
-
-
             }
         }
 
@@ -772,8 +715,8 @@ namespace RobotRaconteur
         {
             RRMultiDimArrayUntyped pbuffer = null;
             RRBaseArray pbufferDims = null;
-            RRBaseArray pbufferReal = null;
-            RRBaseArray pbufferImag = null;
+            RRBaseArray pbufferArray = null;
+
             try
             {
                 ulong[] count = p.count.ToArray();
@@ -785,17 +728,12 @@ namespace RobotRaconteur
 
                 pbuffer = p.buffer;
                 pbufferDims = pbuffer.Dims;
-                pbufferReal = pbuffer.Real;
-                pbufferImag = pbuffer.Imag;
-
-                if (mem.Complex != pbuffer.Complex) throw new ArgumentException("Complex mismatch");
-
+                pbufferArray = pbuffer.Array;
+                
                 int[] dims = (int[])MessageElementDataUtil.RRBaseArrayToArray(pbufferDims);
-                T[] real = (T[])MessageElementDataUtil.RRBaseArrayToArray(pbufferReal);
-                T[] imag = null;
-                if (pbuffer.Complex) imag = (T[])MessageElementDataUtil.RRBaseArrayToArray(pbufferImag);
-
-                MultiDimArray m = new MultiDimArray(count.Select(x => (int)x).ToArray(), real, imag);
+                T[] array = (T[])MessageElementDataUtil.RRBaseArrayToArray(pbufferArray);
+               
+                MultiDimArray m = new MultiDimArray(count.Select(x => (uint)x).ToArray(), array);
 
                 mem.Write(memorypos, m, bufferpos, count);
 
@@ -815,8 +753,7 @@ namespace RobotRaconteur
                 if (p != null && pbuffer != null)
                 {
                     if (pbufferDims != null) pbufferDims.Dispose();
-                    if (pbufferReal != null) pbufferReal.Dispose();
-                    if (pbufferImag != null) pbufferImag.Dispose();
+                    if (pbufferArray != null) pbufferArray.Dispose();                    
                 }
                 if (p != null)
                 {
@@ -829,13 +766,13 @@ namespace RobotRaconteur
 
     }
 
-    public class WrappedCStructureArrayMemoryDirectorNET<T> : WrappedCStructureArrayMemoryDirector where T : struct
+    public class WrappedPodArrayMemoryDirectorNET<T> : WrappedPodArrayMemoryDirector where T : struct
     {
-        CStructureArrayMemory<T> mem;
+        PodArrayMemory<T> mem;
 
         //public int memoryid = 0;
 
-        public WrappedCStructureArrayMemoryDirectorNET(CStructureArrayMemory<T> mem)
+        public WrappedPodArrayMemoryDirectorNET(PodArrayMemory<T> mem)
         {
             this.mem = mem;
 
@@ -860,14 +797,14 @@ namespace RobotRaconteur
             }
         }
 
-        public override MessageElementCStructureArray Read(ulong memorypos, ulong bufferpos, ulong count)
+        public override MessageElementPodArray Read(ulong memorypos, ulong bufferpos, ulong count)
         {
             try
             {
                 T[] buffer3 = new T[count];
                 mem.Read(memorypos, buffer3, 0, count);
 
-                return RobotRaconteurNode.s.PackCStructureArray<T>(buffer3);
+                return RobotRaconteurNode.s.PackPodArray<T>(buffer3);
             }
             catch (Exception e)
             {
@@ -880,14 +817,14 @@ namespace RobotRaconteur
             }
         }
 
-        public override void Write(ulong memorypos, MessageElementCStructureArray buffer, ulong bufferpos, ulong count)
+        public override void Write(ulong memorypos, MessageElementPodArray buffer, ulong bufferpos, ulong count)
         {
             try
             {
                 using (buffer)
                 {
 
-                    T[] buffer2 = (T[])RobotRaconteurNode.s.UnpackCStructureArray<T>(buffer);
+                    T[] buffer2 = (T[])RobotRaconteurNode.s.UnpackPodArray<T>(buffer);
                     mem.Write(memorypos, buffer2, bufferpos, count);
                 }
             }
@@ -902,13 +839,13 @@ namespace RobotRaconteur
         }
     }
 
-    public class WrappedCStructureMultiDimArrayMemoryDirectorNET<T> : WrappedCStructureMultiDimArrayMemoryDirector where T : struct
+    public class WrappedPodMultiDimArrayMemoryDirectorNET<T> : WrappedPodMultiDimArrayMemoryDirector where T : struct
     {
-        CStructureMultiDimArrayMemory<T> mem;
+        PodMultiDimArrayMemory<T> mem;
 
         //public int memoryid = 0;
 
-        public WrappedCStructureMultiDimArrayMemoryDirectorNET(CStructureMultiDimArrayMemory<T> mem)
+        public WrappedPodMultiDimArrayMemoryDirectorNET(PodMultiDimArrayMemory<T> mem)
         {
             this.mem = mem;
 
@@ -951,7 +888,7 @@ namespace RobotRaconteur
             }
         }
 
-        public override MessageElementCStructureMultiDimArray Read(vector_uint64_t memorypos, vector_uint64_t bufferpos, vector_uint64_t count)
+        public override MessageElementPodMultiDimArray Read(vector_uint64_t memorypos, vector_uint64_t bufferpos, vector_uint64_t count)
         {
             try
             {
@@ -959,9 +896,9 @@ namespace RobotRaconteur
                 using (bufferpos)
                 using (count)
                 {
-                    CStructureMultiDimArray buffer3 = new CStructureMultiDimArray(count.Select(x => (int)x).ToArray(), new T[count.Aggregate(1, (x, y) => (int)x * (int)y)]);
+                    PodMultiDimArray buffer3 = new PodMultiDimArray(count.Select(x => (uint)x).ToArray(), new T[count.Aggregate(1, (x, y) => (int)x * (int)y)]);
                     mem.Read(memorypos.ToArray(), buffer3, new ulong[count.Count], count.ToArray());
-                    return RobotRaconteurNode.s.PackCStructureMultiDimArray<T>(buffer3);
+                    return RobotRaconteurNode.s.PackPodMultiDimArray<T>(buffer3);
                 }
             }
             catch (Exception e)
@@ -975,7 +912,7 @@ namespace RobotRaconteur
             }
         }
 
-        public override void Write(vector_uint64_t memorypos, MessageElementCStructureMultiDimArray buffer, vector_uint64_t bufferpos, vector_uint64_t count)
+        public override void Write(vector_uint64_t memorypos, MessageElementPodMultiDimArray buffer, vector_uint64_t bufferpos, vector_uint64_t count)
         {
             try
             {
@@ -984,7 +921,7 @@ namespace RobotRaconteur
                 using (bufferpos)
                 using (count)
                 {
-                    CStructureMultiDimArray buffer2 = RobotRaconteurNode.s.UnpackCStructureMultiDimArray<T>(buffer);
+                    PodMultiDimArray buffer2 = RobotRaconteurNode.s.UnpackPodMultiDimArray<T>(buffer);
                     mem.Write(memorypos.ToArray(), buffer2, bufferpos.ToArray(), count.ToArray());
                 }
             }
@@ -999,35 +936,35 @@ namespace RobotRaconteur
         }
     }
 
-    public class AStructureArrayMemory<T> : ArrayMemory<T> where T : struct
+    public class NamedArrayMemory<T> : ArrayMemory<T> where T : struct
     {
-        public AStructureArrayMemory() : base()
+        public NamedArrayMemory() : base()
         {
         }
 
-        public AStructureArrayMemory(T[] memory) : base(memory)
+        public NamedArrayMemory(T[] memory) : base(memory)
         {
         }
     }
 
-    public class AStructureMultiDimArrayMemory<T> where T : struct
+    public class NamedMultiDimArrayMemory<T> where T : struct
     {
 
-        private AStructureMultiDimArray multimemory;
+        private NamedMultiDimArray multimemory;
 
-        public AStructureMultiDimArrayMemory()
+        public NamedMultiDimArrayMemory()
         {
 
 
         }
 
-        public AStructureMultiDimArrayMemory(AStructureMultiDimArray memory)
+        public NamedMultiDimArrayMemory(NamedMultiDimArray memory)
         {
 
             multimemory = memory;
         }
 
-        public virtual void Attach(AStructureMultiDimArray memory)
+        public virtual void Attach(NamedMultiDimArray memory)
         {
 
             this.multimemory = memory;
@@ -1050,26 +987,26 @@ namespace RobotRaconteur
             }
         }
 
-        public virtual void Read(ulong[] memorypos, AStructureMultiDimArray buffer, ulong[] bufferpos, ulong[] count)
+        public virtual void Read(ulong[] memorypos, NamedMultiDimArray buffer, ulong[] bufferpos, ulong[] count)
         {
 
-            multimemory.RetrieveSubArray(memorypos.Select(x => (int)x).ToArray(), buffer, bufferpos.Select(x => (int)x).ToArray(), count.Select(x => (int)x).ToArray());
+            multimemory.RetrieveSubArray(memorypos.Select(x => (uint)x).ToArray(), buffer, bufferpos.Select(x => (uint)x).ToArray(), count.Select(x => (uint)x).ToArray());
 
         }
 
 
-        public virtual void Write(ulong[] memorypos, AStructureMultiDimArray buffer, ulong[] bufferpos, ulong[] count)
+        public virtual void Write(ulong[] memorypos, NamedMultiDimArray buffer, ulong[] bufferpos, ulong[] count)
         {
 
-            multimemory.AssignSubArray(memorypos.Select(x => (int)x).ToArray(), buffer, bufferpos.Select(x => (int)x).ToArray(), count.Select(x => (int)x).ToArray());
+            multimemory.AssignSubArray(memorypos.Select(x => (uint)x).ToArray(), buffer, bufferpos.Select(x => (uint)x).ToArray(), count.Select(x => (uint)x).ToArray());
         }
     }
 
-    public class AStructureArrayMemoryClient<T> : AStructureArrayMemory<T> where T : struct
+    public class NamedArrayMemoryClient<T> : NamedArrayMemory<T> where T : struct
     {
-        WrappedAStructureArrayMemoryClient innerclient;
+        WrappedNamedArrayMemoryClient innerclient;
 
-        class bufferdirector : WrappedAStructureArrayMemoryClientBuffer
+        class bufferdirector : WrappedNamedArrayMemoryClientBuffer
         {
             T[] buffer;
 
@@ -1078,13 +1015,13 @@ namespace RobotRaconteur
                 this.buffer = buffer;
             }
 
-            public override void UnpackReadResult(MessageElementAStructureArray res, ulong bufferpos, ulong count)
+            public override void UnpackReadResult(MessageElementNamedArray res, ulong bufferpos, ulong count)
             {
-                T[] res1 = RobotRaconteurNode.s.UnpackAStructureArrayDispose<T>(res);
+                T[] res1 = RobotRaconteurNode.s.UnpackNamedArrayDispose<T>(res);
                 Array.Copy(res1, 0, buffer, (long)bufferpos, (long)count);
             }
 
-            public override MessageElementAStructureArray PackWriteRequest(ulong bufferpos, ulong count)
+            public override MessageElementNamedArray PackWriteRequest(ulong bufferpos, ulong count)
             {
                 T[] buffer3;
                 if ((ulong)buffer.Length == count)
@@ -1096,11 +1033,11 @@ namespace RobotRaconteur
                     buffer3 = new T[count];
                     Array.Copy(buffer, (long)bufferpos, buffer3, 0, (long)count);
                 }
-                return RobotRaconteurNode.s.PackAStructureArray<T>(buffer3);
+                return RobotRaconteurNode.s.PackNamedArray<T>(buffer3);
             }
         }
 
-        public AStructureArrayMemoryClient(WrappedAStructureArrayMemoryClient innerclient)
+        public NamedArrayMemoryClient(WrappedNamedArrayMemoryClient innerclient)
         {
             this.innerclient = innerclient;
         }
@@ -1143,43 +1080,43 @@ namespace RobotRaconteur
         }
     }
 
-    public class AStructureMultiDimArrayMemoryClient<T> : AStructureMultiDimArrayMemory<T> where T : struct
+    public class NamedMultiDimArrayMemoryClient<T> : NamedMultiDimArrayMemory<T> where T : struct
     {
-        WrappedAStructureMultiDimArrayMemoryClient innerclient;
+        WrappedNamedMultiDimArrayMemoryClient innerclient;
 
-        class bufferdirector : WrappedAStructureMultiDimArrayMemoryClientBuffer
+        class bufferdirector : WrappedNamedMultiDimArrayMemoryClientBuffer
         {
-            AStructureMultiDimArray buffer;
+            NamedMultiDimArray buffer;
 
-            public bufferdirector(AStructureMultiDimArray buffer)
+            public bufferdirector(NamedMultiDimArray buffer)
             {
                 this.buffer = buffer;
             }
 
-            public override void UnpackReadResult(MessageElementAStructureMultiDimArray res, vector_uint64_t bufferpos, vector_uint64_t count)
+            public override void UnpackReadResult(MessageElementNamedMultiDimArray res, vector_uint64_t bufferpos, vector_uint64_t count)
             {
                 using (res)
                 using (bufferpos)
                 using (count)
                 {
-                    AStructureMultiDimArray res1 = RobotRaconteurNode.s.UnpackAStructureMultiDimArrayDispose<T>(res);
-                    buffer.AssignSubArray(bufferpos.Select(x => (int)x).ToArray(), res1, new int[buffer.Dims.Length], count.Select(x => (int)x).ToArray());
+                    NamedMultiDimArray res1 = RobotRaconteurNode.s.UnpackNamedMultiDimArrayDispose<T>(res);
+                    buffer.AssignSubArray(bufferpos.Select(x => (uint)x).ToArray(), res1, new uint[buffer.Dims.Length], count.Select(x => (uint)x).ToArray());
                 }
             }
 
-            public override MessageElementAStructureMultiDimArray PackWriteRequest(vector_uint64_t bufferpos, vector_uint64_t count)
+            public override MessageElementNamedMultiDimArray PackWriteRequest(vector_uint64_t bufferpos, vector_uint64_t count)
             {
                 using (bufferpos)
                 using (count)
                 {
-                    AStructureMultiDimArray o = new AStructureMultiDimArray(count.Select(x => (int)x).ToArray(), new T[count.Aggregate(1, (x, y) => (int)x * (int)y)]);
-                    buffer.RetrieveSubArray(bufferpos.Select(x => (int)x).ToArray(), o, new int[buffer.Dims.Length], count.Select(x => (int)x).ToArray());
-                    return RobotRaconteurNode.s.PackAStructureMultiDimArray<T>(o);
+                    NamedMultiDimArray o = new NamedMultiDimArray(count.Select(x => (uint)x).ToArray(), new T[count.Aggregate(1, (x, y) => (int)x * (int)y)]);
+                    buffer.RetrieveSubArray(bufferpos.Select(x => (uint)x).ToArray(), o, new uint[buffer.Dims.Length], count.Select(x => (uint)x).ToArray());
+                    return RobotRaconteurNode.s.PackNamedMultiDimArray<T>(o);
                 }
             }
         }
 
-        public AStructureMultiDimArrayMemoryClient(WrappedAStructureMultiDimArrayMemoryClient innerclient)
+        public NamedMultiDimArrayMemoryClient(WrappedNamedMultiDimArrayMemoryClient innerclient)
         {
             this.innerclient = innerclient;
         }
@@ -1192,7 +1129,7 @@ namespace RobotRaconteur
             }
         }
 
-        public override void Attach(AStructureMultiDimArray memory)
+        public override void Attach(NamedMultiDimArray memory)
         {
             throw new InvalidOperationException("Invalid for memory client");
         }
@@ -1215,7 +1152,7 @@ namespace RobotRaconteur
 
 
 
-        public override void Read(ulong[] memorypos, AStructureMultiDimArray buffer, ulong[] bufferpos, ulong[] count)
+        public override void Read(ulong[] memorypos, NamedMultiDimArray buffer, ulong[] bufferpos, ulong[] count)
         {
             using (bufferdirector buffer1 = new bufferdirector(buffer))
             using (vector_uint64_t memorypos1 = new vector_uint64_t(memorypos))
@@ -1226,7 +1163,7 @@ namespace RobotRaconteur
             }
         }
 
-        public override void Write(ulong[] memorypos, AStructureMultiDimArray buffer, ulong[] bufferpos, ulong[] count)
+        public override void Write(ulong[] memorypos, NamedMultiDimArray buffer, ulong[] bufferpos, ulong[] count)
         {
             using (bufferdirector buffer1 = new bufferdirector(buffer))
             using (vector_uint64_t memorypos1 = new vector_uint64_t(memorypos))
@@ -1238,13 +1175,13 @@ namespace RobotRaconteur
         }
     }
 
-    public class WrappedAStructureArrayMemoryDirectorNET<T> : WrappedAStructureArrayMemoryDirector where T : struct
+    public class WrappedNamedArrayMemoryDirectorNET<T> : WrappedNamedArrayMemoryDirector where T : struct
     {
-        AStructureArrayMemory<T> mem;
+        NamedArrayMemory<T> mem;
 
         //public int memoryid = 0;
 
-        public WrappedAStructureArrayMemoryDirectorNET(AStructureArrayMemory<T> mem)
+        public WrappedNamedArrayMemoryDirectorNET(NamedArrayMemory<T> mem)
         {
             this.mem = mem;
 
@@ -1269,14 +1206,14 @@ namespace RobotRaconteur
             }
         }
 
-        public override MessageElementAStructureArray Read(ulong memorypos, ulong bufferpos, ulong count)
+        public override MessageElementNamedArray Read(ulong memorypos, ulong bufferpos, ulong count)
         {
             try
             {
                 T[] buffer3 = new T[count];
                 mem.Read(memorypos, buffer3, 0, count);
 
-                return RobotRaconteurNode.s.PackAStructureArray<T>(buffer3);
+                return RobotRaconteurNode.s.PackNamedArray<T>(buffer3);
             }
             catch (Exception e)
             {
@@ -1289,14 +1226,14 @@ namespace RobotRaconteur
             }
         }
 
-        public override void Write(ulong memorypos, MessageElementAStructureArray buffer, ulong bufferpos, ulong count)
+        public override void Write(ulong memorypos, MessageElementNamedArray buffer, ulong bufferpos, ulong count)
         {
             try
             {
                 using (buffer)
                 {
 
-                    T[] buffer2 = (T[])RobotRaconteurNode.s.UnpackAStructureArray<T>(buffer);
+                    T[] buffer2 = (T[])RobotRaconteurNode.s.UnpackNamedArray<T>(buffer);
                     mem.Write(memorypos, buffer2, bufferpos, count);
                 }
             }
@@ -1311,13 +1248,13 @@ namespace RobotRaconteur
         }
     }
 
-    public class WrappedAStructureMultiDimArrayMemoryDirectorNET<T> : WrappedAStructureMultiDimArrayMemoryDirector where T : struct
+    public class WrappedNamedMultiDimArrayMemoryDirectorNET<T> : WrappedNamedMultiDimArrayMemoryDirector where T : struct
     {
-        AStructureMultiDimArrayMemory<T> mem;
+        NamedMultiDimArrayMemory<T> mem;
 
         //public int memoryid = 0;
 
-        public WrappedAStructureMultiDimArrayMemoryDirectorNET(AStructureMultiDimArrayMemory<T> mem)
+        public WrappedNamedMultiDimArrayMemoryDirectorNET(NamedMultiDimArrayMemory<T> mem)
         {
             this.mem = mem;
 
@@ -1360,7 +1297,7 @@ namespace RobotRaconteur
             }
         }
 
-        public override MessageElementAStructureMultiDimArray Read(vector_uint64_t memorypos, vector_uint64_t bufferpos, vector_uint64_t count)
+        public override MessageElementNamedMultiDimArray Read(vector_uint64_t memorypos, vector_uint64_t bufferpos, vector_uint64_t count)
         {
             try
             {
@@ -1368,9 +1305,9 @@ namespace RobotRaconteur
                 using (bufferpos)
                 using (count)
                 {
-                    AStructureMultiDimArray buffer3 = new AStructureMultiDimArray(count.Select(x => (int)x).ToArray(), new T[count.Aggregate(1, (x, y) => (int)x * (int)y)]);
+                    NamedMultiDimArray buffer3 = new NamedMultiDimArray(count.Select(x => (uint)x).ToArray(), new T[count.Aggregate(1, (x, y) => (int)x * (int)y)]);
                     mem.Read(memorypos.ToArray(), buffer3, new ulong[count.Count], count.ToArray());
-                    return RobotRaconteurNode.s.PackAStructureMultiDimArray<T>(buffer3);
+                    return RobotRaconteurNode.s.PackNamedMultiDimArray<T>(buffer3);
                 }
             }
             catch (Exception e)
@@ -1384,7 +1321,7 @@ namespace RobotRaconteur
             }
         }
 
-        public override void Write(vector_uint64_t memorypos, MessageElementAStructureMultiDimArray buffer, vector_uint64_t bufferpos, vector_uint64_t count)
+        public override void Write(vector_uint64_t memorypos, MessageElementNamedMultiDimArray buffer, vector_uint64_t bufferpos, vector_uint64_t count)
         {
             try
             {
@@ -1393,7 +1330,7 @@ namespace RobotRaconteur
                 using (bufferpos)
                 using (count)
                 {
-                    AStructureMultiDimArray buffer2 = RobotRaconteurNode.s.UnpackAStructureMultiDimArray<T>(buffer);
+                    NamedMultiDimArray buffer2 = RobotRaconteurNode.s.UnpackNamedMultiDimArray<T>(buffer);
                     mem.Write(memorypos.ToArray(), buffer2, bufferpos.ToArray(), count.ToArray());
                 }
             }

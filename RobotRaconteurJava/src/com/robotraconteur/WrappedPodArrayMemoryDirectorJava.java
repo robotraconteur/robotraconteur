@@ -3,14 +3,14 @@ package com.robotraconteur;
 import java.lang.reflect.Array;
 import java.math.BigInteger;
 
-public class WrappedCStructureArrayMemoryDirectorJava<T> extends WrappedCStructureArrayMemoryDirector {
+public class WrappedPodArrayMemoryDirectorJava<T> extends WrappedPodArrayMemoryDirector {
 
-	CStructureArrayMemory<T> mem;
+	PodArrayMemory<T> mem;
 
 	Class<?> mem_type;
     //public int memoryid = 0;
 
-    public WrappedCStructureArrayMemoryDirectorJava(CStructureArrayMemory<T> mem, Class<?> mem_type)
+    public WrappedPodArrayMemoryDirectorJava(PodArrayMemory<T> mem, Class<?> mem_type)
     {
         this.mem = mem;
 
@@ -43,14 +43,14 @@ public class WrappedCStructureArrayMemoryDirectorJava<T> extends WrappedCStructu
     }
 
     @Override
-    public MessageElementCStructureArray read(BigInteger memorypos, BigInteger bufferpos, BigInteger count)
+    public MessageElementPodArray read(BigInteger memorypos, BigInteger bufferpos, BigInteger count)
     {
         try
         {
             T buffer3 = (T)Array.newInstance(mem_type,count.intValue());
             mem.read(memorypos.longValue(), buffer3, (long)0, count.longValue());
 
-            return (MessageElementCStructureArray)RobotRaconteurNode.s().packStructure(buffer3);                
+            return (MessageElementPodArray)RobotRaconteurNode.s().packStructure(buffer3);                
         }
         catch (Exception e)
         {
@@ -69,7 +69,7 @@ public class WrappedCStructureArrayMemoryDirectorJava<T> extends WrappedCStructu
     }
 
     @Override
-    public void write(BigInteger memorypos, MessageElementCStructureArray buffer, BigInteger bufferpos, BigInteger count)
+    public void write(BigInteger memorypos, MessageElementPodArray buffer, BigInteger bufferpos, BigInteger count)
     {
         try
         {

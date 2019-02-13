@@ -26,9 +26,13 @@ public class com__robotraconteur__testing__TestService2Factory : ServiceFactory
     if (objecttype=="ostruct2")    return ostruct2_stubentry;
     throw new DataTypeException("Cannot find appropriate structure stub");
     }
-    public override ICStructureStub FindCStructureStub(string objecttype)
+    public override IPodStub FindPodStub(string objecttype)
     {
-    throw new DataTypeException("Cannot find appropriate cstructure stub");
+    throw new DataTypeException("Cannot find appropriate pod stub");
+    }
+    public override INamedArrayStub FindNamedArrayStub(string objecttype)
+    {
+    throw new DataTypeException("Cannot find appropriate pod stub");
     }
     public override ServiceStub CreateStub(WrappedServiceStub innerstub) {
     string objecttype=innerstub.RR_objecttype.GetServiceDefinition().Name + "." + innerstub.RR_objecttype.Name;    string objshort;
@@ -201,7 +205,6 @@ public class baseobj_stub : ServiceStub , baseobj, async_baseobj{
     }
     public ArrayMemory<double> m1 { 
     get { return rr_m1; }
-    set { throw new InvalidOperationException();}
     }
     public virtual void async_get_d1(Action<double,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
@@ -493,14 +496,28 @@ public class baseobj_skel : ServiceSkel {
     }
     throw new MemberNotFoundException("Member Not Found");
     }
-    public override WrappedCStructureArrayMemoryDirector GetCStructureArrayMemory(string name) {
+    public override WrappedPodArrayMemoryDirector GetPodArrayMemory(string name) {
     switch (name) {
     default:
     break;
     }
     throw new MemberNotFoundException("Member Not Found");
     }
-    public override WrappedCStructureMultiDimArrayMemoryDirector GetCStructureMultiDimArrayMemory(string name) {
+    public override WrappedPodMultiDimArrayMemoryDirector GetPodMultiDimArrayMemory(string name) {
+    switch (name) {
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public override WrappedNamedArrayMemoryDirector GetNamedArrayMemory(string name) {
+    switch (name) {
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public override WrappedNamedMultiDimArrayMemoryDirector GetNamedMultiDimArrayMemory(string name) {
     switch (name) {
     default:
     break;
@@ -586,14 +603,28 @@ public class subobj_skel : ServiceSkel {
     }
     throw new MemberNotFoundException("Member Not Found");
     }
-    public override WrappedCStructureArrayMemoryDirector GetCStructureArrayMemory(string name) {
+    public override WrappedPodArrayMemoryDirector GetPodArrayMemory(string name) {
     switch (name) {
     default:
     break;
     }
     throw new MemberNotFoundException("Member Not Found");
     }
-    public override WrappedCStructureMultiDimArrayMemoryDirector GetCStructureMultiDimArrayMemory(string name) {
+    public override WrappedPodMultiDimArrayMemoryDirector GetPodMultiDimArrayMemory(string name) {
+    switch (name) {
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public override WrappedNamedArrayMemoryDirector GetNamedArrayMemory(string name) {
+    switch (name) {
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public override WrappedNamedMultiDimArrayMemoryDirector GetNamedMultiDimArrayMemory(string name) {
     switch (name) {
     default:
     break;
@@ -629,7 +660,6 @@ public class baseobj_default_impl : baseobj{
     }
     public virtual ArrayMemory<double> m1 { 
     get { throw new NotImplementedException(); }
-    set { throw new InvalidOperationException();}
     }
 }
 public class subobj_default_impl : subobj{

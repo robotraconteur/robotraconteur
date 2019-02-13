@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.robotraconteur.AStructureMultiDimArray;
-import com.robotraconteur.CStructureMultiDimArray;
+import com.robotraconteur.NamedMultiDimArray;
+import com.robotraconteur.PodMultiDimArray;
 import com.robotraconteur.testing.TestService3.*;
 
-class ServiceTest2_cstruct
+class ServiceTest2_pod
 {
 	private static double[] create_double_array(ServiceTest2_test_sequence_gen gen, int len)
 	{
@@ -69,7 +69,7 @@ class ServiceTest2_cstruct
 	}
 
 
-	public static void fill_testcstruct1(testcstruct1 s, long seed)
+	public static void fill_testpod1(testpod1 s, long seed)
 	{
 		ServiceTest2_test_sequence_gen gen = new ServiceTest2_test_sequence_gen(seed);
 		s.d1 = gen.get_double();
@@ -77,11 +77,11 @@ class ServiceTest2_cstruct
 		s.d3 = create_double_array(gen, (int)(gen.get_uint32() % 6));
 		s.d4 = create_double_array(gen,9);
 		
-		s.s1=new testcstruct2();
-		fill_testcstruct2(s.s1, gen.get_uint32());
-		s.s2 = create_testcstruct2_array(gen, 8);
-		s.s3 = create_testcstruct2_array(gen, (int)(gen.get_uint32() % 9));
-		s.s4 = create_testcstruct2_array(gen, 8);
+		s.s1=new testpod2();
+		fill_testpod2(s.s1, gen.get_uint32());
+		s.s2 = create_testpod2_array(gen, 8);
+		s.s3 = create_testpod2_array(gen, (int)(gen.get_uint32() % 9));
+		s.s4 = create_testpod2_array(gen, 8);
 		
 		s.t1 = new transform();
 		fill_transform(s.t1, gen.get_uint32());
@@ -109,7 +109,7 @@ class ServiceTest2_cstruct
         }
 	}
 
-	public static void verify_testcstruct1(testcstruct1 s, long seed)
+	public static void verify_testpod1(testpod1 s, long seed)
 	{
 		ServiceTest2_test_sequence_gen gen = new ServiceTest2_test_sequence_gen(seed);
 		if (s.d1 != gen.get_double()) throw new RuntimeException();
@@ -117,10 +117,10 @@ class ServiceTest2_cstruct
 		verify_double_array(gen, s.d3, (int)(gen.get_uint32() % 6));
 
 		verify_double_array(gen, (double[])s.d4, 9);                   
-		verify_testcstruct2(s.s1, gen.get_uint32());
-		verify_testcstruct2_array(gen, s.s2, 8);
-		verify_testcstruct2_array(gen, s.s3,(int) (gen.get_uint32() % 9));
-		verify_testcstruct2_array(gen, (testcstruct2[])s.s4, 8);
+		verify_testpod2(s.s1, gen.get_uint32());
+		verify_testpod2_array(gen, s.s2, 8);
+		verify_testpod2_array(gen, s.s3,(int) (gen.get_uint32() % 9));
+		verify_testpod2_array(gen, (testpod2[])s.s4, 8);
 		
 		verify_transform(s.t1, gen.get_uint32());
 
@@ -136,7 +136,7 @@ class ServiceTest2_cstruct
             verify_transform(s.t4[i], gen.get_uint32());
 	}
 
-	public static void fill_testcstruct2(testcstruct2 s, long seed)
+	public static void fill_testpod2(testpod2 s, long seed)
 	{
 		ServiceTest2_test_sequence_gen gen = new ServiceTest2_test_sequence_gen(seed);
 		s.i1 = gen.get_int8();
@@ -144,7 +144,7 @@ class ServiceTest2_cstruct
 		s.i3 = create_int8_array(gen, (int)(gen.get_uint32() % 15));
 	}
 
-	public static void verify_testcstruct2(testcstruct2 s, long seed)
+	public static void verify_testpod2(testpod2 s, long seed)
 	{
 		ServiceTest2_test_sequence_gen gen = new ServiceTest2_test_sequence_gen(seed);
 		if (s.i1 != gen.get_int8()) throw new RuntimeException();
@@ -152,78 +152,78 @@ class ServiceTest2_cstruct
 		verify_int8_array(gen, s.i3, (int)(gen.get_uint32() % 15));
 	}
 
-	public static testcstruct1[] create_testcstruct1_array(int len, long seed)
+	public static testpod1[] create_testpod1_array(int len, long seed)
 	{
 		ServiceTest2_test_sequence_gen gen = new ServiceTest2_test_sequence_gen(seed);
-		testcstruct1[] o = new testcstruct1[len];
+		testpod1[] o = new testpod1[len];
 		for (int i = 0; i < len; i++)
 		{
-			o[i] = new testcstruct1();
-			fill_testcstruct1(o[i], gen.get_uint32());
+			o[i] = new testpod1();
+			fill_testpod1(o[i], gen.get_uint32());
 		}
 		return o;
 	}
 
-	public static void verify_testcstruct1_array(testcstruct1[] v, int len, long seed)
+	public static void verify_testpod1_array(testpod1[] v, int len, long seed)
 	{
 		ServiceTest2_test_sequence_gen gen = new ServiceTest2_test_sequence_gen(seed);
 		if (v.length != len) throw new RuntimeException();
 		for (int i = 0; i < len; i++)
 		{
-			verify_testcstruct1(v[i], gen.get_uint32());
+			verify_testpod1(v[i], gen.get_uint32());
 		}
 	}
 
-	public static CStructureMultiDimArray create_testcstruct1_multidimarray(int m, int n, long seed)
+	public static PodMultiDimArray create_testpod1_multidimarray(int m, int n, long seed)
 	{
 		ServiceTest2_test_sequence_gen gen = new ServiceTest2_test_sequence_gen(seed);
-		testcstruct1[] o = new testcstruct1[m*n];
+		testpod1[] o = new testpod1[m*n];
 		for (int i = 0; i < m*n; i++)
 		{
-			o[i]=new testcstruct1();
-			fill_testcstruct1(o[i], gen.get_uint32());
+			o[i]=new testpod1();
+			fill_testpod1(o[i], gen.get_uint32());
 		}
-		return new CStructureMultiDimArray(new int[] { m, n }, o);
+		return new PodMultiDimArray(new int[] { m, n }, o);
 	}
 
-	public static void verify_testcstruct1_multidimarray(CStructureMultiDimArray v, int m, int n, long seed)
+	public static void verify_testpod1_multidimarray(PodMultiDimArray v, int m, int n, long seed)
 	{
 		if (!Arrays.equals(v.dims,new int[] { m, n })) throw new RuntimeException();
-		verify_testcstruct1_array((testcstruct1[])v.cstruct_array, m * n, seed);
+		verify_testpod1_array((testpod1[])v.pod_array, m * n, seed);
 	}
 	
-	public static void verify_testcstruct1_multidimarray(Object v, int m, int n, long seed)
+	public static void verify_testpod1_multidimarray(Object v, int m, int n, long seed)
 	{
-		if (!(v instanceof CStructureMultiDimArray) && n == 1)
+		if (!(v instanceof PodMultiDimArray) && n == 1)
 		{
-			verify_testcstruct1_array((testcstruct1[])v, m, seed);
+			verify_testpod1_array((testpod1[])v, m, seed);
 		}
 		else
 		{
-			CStructureMultiDimArray v2=(CStructureMultiDimArray)v;
+			PodMultiDimArray v2=(PodMultiDimArray)v;
 			if (!Arrays.equals(v2.dims,new int[] { m, n })) throw new RuntimeException();
-			verify_testcstruct1_array((testcstruct1[])v2.cstruct_array, m * n, seed);
+			verify_testpod1_array((testpod1[])v2.pod_array, m * n, seed);
 		}
 	}
 
 
-	public static testcstruct2[] create_testcstruct2_array(ServiceTest2_test_sequence_gen gen, int len)
+	public static testpod2[] create_testpod2_array(ServiceTest2_test_sequence_gen gen, int len)
 	{
-		testcstruct2[] o = new testcstruct2[len];
+		testpod2[] o = new testpod2[len];
 		for (int i=0; i< len; i++)
 		{
-			o[i]=new testcstruct2();
-			fill_testcstruct2( o[i], gen.get_uint32());
+			o[i]=new testpod2();
+			fill_testpod2( o[i], gen.get_uint32());
 		}
 		return o;
 	}
 
-	public static void verify_testcstruct2_array(ServiceTest2_test_sequence_gen gen, testcstruct2[] v, int len)
+	public static void verify_testpod2_array(ServiceTest2_test_sequence_gen gen, testpod2[] v, int len)
 	{
 		if (v.length != len) throw new RuntimeException();
 		for (int i = 0; i < len; i++)
 		{
-			verify_testcstruct2(v[i], gen.get_uint32());
+			verify_testpod2(v[i], gen.get_uint32());
 		}            
 	}
 
@@ -231,50 +231,50 @@ class ServiceTest2_cstruct
 	{
 		ServiceTest2_test_sequence_gen gen = new ServiceTest2_test_sequence_gen(seed);
 		teststruct3 o = new teststruct3();
-		o.s1=new testcstruct1();
-		fill_testcstruct1(o.s1, gen.get_uint32());
+		o.s1=new testpod1();
+		fill_testpod1(o.s1, gen.get_uint32());
 		long s2_seed = gen.get_uint32();
-		o.s2 = create_testcstruct1_array((int)(s2_seed % 17), s2_seed);
-		o.s3 = create_testcstruct1_array(11, gen.get_uint32());
+		o.s2 = create_testpod1_array((int)(s2_seed % 17), s2_seed);
+		o.s3 = create_testpod1_array(11, gen.get_uint32());
 		long s4_seed = gen.get_uint32();
-		o.s4 = create_testcstruct1_array((int)(s4_seed % 16), s4_seed);
-		o.s5 = create_testcstruct1_multidimarray(3, 3, gen.get_uint32());
+		o.s4 = create_testpod1_array((int)(s4_seed % 16), s4_seed);
+		o.s5 = create_testpod1_multidimarray(3, 3, gen.get_uint32());
 		long s6_seed = gen.get_uint32();
-		o.s6 = create_testcstruct1_multidimarray((int)(s6_seed % 6), (int)(s6_seed % 3), s6_seed);
-		o.s7 = new ArrayList<testcstruct1[]>();
-		testcstruct1 s7_1 = new testcstruct1();
-		fill_testcstruct1(s7_1, gen.get_uint32());
-		o.s7.add(new testcstruct1[] {s7_1});
+		o.s6 = create_testpod1_multidimarray((int)(s6_seed % 6), (int)(s6_seed % 3), s6_seed);
+		o.s7 = new ArrayList<testpod1[]>();
+		testpod1 s7_1 = new testpod1();
+		fill_testpod1(s7_1, gen.get_uint32());
+		o.s7.add(new testpod1[] {s7_1});
 
-		o.s8 = new ArrayList<testcstruct1[]>();
-		o.s8.add(create_testcstruct1_array(2, gen.get_uint32()));
-		o.s8.add(create_testcstruct1_array(4, gen.get_uint32()));
+		o.s8 = new ArrayList<testpod1[]>();
+		o.s8.add(create_testpod1_array(2, gen.get_uint32()));
+		o.s8.add(create_testpod1_array(4, gen.get_uint32()));
 
-		o.s9 = new ArrayList<CStructureMultiDimArray>();
-		o.s9.add(create_testcstruct1_multidimarray(2, 3, gen.get_uint32()));
-		o.s9.add(create_testcstruct1_multidimarray(4, 5, gen.get_uint32()));
+		o.s9 = new ArrayList<PodMultiDimArray>();
+		o.s9.add(create_testpod1_multidimarray(2, 3, gen.get_uint32()));
+		o.s9.add(create_testpod1_multidimarray(4, 5, gen.get_uint32()));
 
-		testcstruct1 s10 = new testcstruct1();
-		fill_testcstruct1(s10, gen.get_uint32());
-		o.s10 = new testcstruct1[] { s10 };
+		testpod1 s10 = new testpod1();
+		fill_testpod1(s10, gen.get_uint32());
+		o.s10 = new testpod1[] { s10 };
 
-		o.s11 = create_testcstruct1_array(3, gen.get_uint32());
-		o.s12 = create_testcstruct1_multidimarray(2, 2, gen.get_uint32());
+		o.s11 = create_testpod1_array(3, gen.get_uint32());
+		o.s12 = create_testpod1_multidimarray(2, 2, gen.get_uint32());
 
-		testcstruct1 s13 = new testcstruct1();
-		fill_testcstruct1(s13, gen.get_uint32());
+		testpod1 s13 = new testpod1();
+		fill_testpod1(s13, gen.get_uint32());
 		List<Object> s13_1 = new ArrayList<Object>();;
-		s13_1.add(new testcstruct1[] { s13 } );
+		s13_1.add(new testpod1[] { s13 } );
 		o.s13 = s13_1;
 
 		List<Object> s14 = new ArrayList<Object>();
-		s14.add(create_testcstruct1_array(3, gen.get_uint32()));
-		s14.add(create_testcstruct1_array(5, gen.get_uint32()));
+		s14.add(create_testpod1_array(3, gen.get_uint32()));
+		s14.add(create_testpod1_array(5, gen.get_uint32()));
 		o.s14 = s14;
 
 		List<Object> s15 = new ArrayList<Object>();
-		s15.add(create_testcstruct1_multidimarray(7, 2, gen.get_uint32()));
-		s15.add(create_testcstruct1_multidimarray(5, 1, gen.get_uint32()));
+		s15.add(create_testpod1_multidimarray(7, 2, gen.get_uint32()));
+		s15.add(create_testpod1_multidimarray(5, 1, gen.get_uint32()));
 		o.s15 = s15;
 		
 		o.t1 = new transform();
@@ -295,7 +295,7 @@ class ServiceTest2_cstruct
         o.t7.add(fill_transform_array(4, gen.get_uint32()));
         o.t7.add(fill_transform_array(4, gen.get_uint32()));
 
-        o.t8 = new ArrayList<AStructureMultiDimArray>();
+        o.t8 = new ArrayList<NamedMultiDimArray>();
         o.t8.add(fill_transform_multidimarray(2, 4, gen.get_uint32()));
         o.t8.add(fill_transform_multidimarray(2, 4, gen.get_uint32()));
 
@@ -323,53 +323,53 @@ class ServiceTest2_cstruct
 		if (v == null) throw new RuntimeException();
 		ServiceTest2_test_sequence_gen gen = new ServiceTest2_test_sequence_gen(seed);
 
-		verify_testcstruct1(v.s1, gen.get_uint32());
+		verify_testpod1(v.s1, gen.get_uint32());
 		long s2_seed = gen.get_uint32();
-		verify_testcstruct1_array(v.s2, (int)(s2_seed % 17), s2_seed);
-		verify_testcstruct1_array(v.s3, 11, gen.get_uint32());
+		verify_testpod1_array(v.s2, (int)(s2_seed % 17), s2_seed);
+		verify_testpod1_array(v.s3, 11, gen.get_uint32());
 		long s4_seed = gen.get_uint32();
-		verify_testcstruct1_array(v.s4, (int)(s4_seed % 16), s4_seed);
-		verify_testcstruct1_multidimarray(v.s5, 3, 3, gen.get_uint32());
+		verify_testpod1_array(v.s4, (int)(s4_seed % 16), s4_seed);
+		verify_testpod1_multidimarray(v.s5, 3, 3, gen.get_uint32());
 		long s6_seed = gen.get_uint32();
-		verify_testcstruct1_multidimarray(v.s6, (int)(s6_seed % 6), (int)(s6_seed % 3), s6_seed);
+		verify_testpod1_multidimarray(v.s6, (int)(s6_seed % 6), (int)(s6_seed % 3), s6_seed);
 
 		if (v.s7 == null) throw new RuntimeException();
 		if (v.s7.size() != 1) throw new RuntimeException();
-		testcstruct1 s7_0 = v.s7.get(0)[0];
-		verify_testcstruct1(s7_0, gen.get_uint32());
+		testpod1 s7_0 = v.s7.get(0)[0];
+		verify_testpod1(s7_0, gen.get_uint32());
 
 		if (v.s8 == null) throw new RuntimeException();
 		if (v.s8.size() != 2) throw new RuntimeException();            
-		verify_testcstruct1_array(v.s8.get(0), 2, gen.get_uint32());
-		verify_testcstruct1_array(v.s8.get(1), 4, gen.get_uint32());
+		verify_testpod1_array(v.s8.get(0), 2, gen.get_uint32());
+		verify_testpod1_array(v.s8.get(1), 4, gen.get_uint32());
 
 		if (v.s9 == null) throw new RuntimeException();
 		if (v.s9.size() != 2) throw new RuntimeException();
-		verify_testcstruct1_multidimarray(v.s9.get(0), 2, 3, gen.get_uint32());
-		verify_testcstruct1_multidimarray(v.s9.get(1), 4, 5, gen.get_uint32());
+		verify_testpod1_multidimarray(v.s9.get(0), 2, 3, gen.get_uint32());
+		verify_testpod1_multidimarray(v.s9.get(1), 4, 5, gen.get_uint32());
 
-		testcstruct1 s10 = ((testcstruct1[])v.s10)[0];
-		verify_testcstruct1(s10, gen.get_uint32());
+		testpod1 s10 = ((testpod1[])v.s10)[0];
+		verify_testpod1(s10, gen.get_uint32());
 
-		verify_testcstruct1_array((testcstruct1[])v.s11, 3, gen.get_uint32());
-		verify_testcstruct1_multidimarray(v.s12, 2, 2, gen.get_uint32());
+		verify_testpod1_array((testpod1[])v.s11, 3, gen.get_uint32());
+		verify_testpod1_multidimarray(v.s12, 2, 2, gen.get_uint32());
 
 		if (v.s13 == null) throw new RuntimeException();
 		Object s13_1=((List<Object>)v.s13).get(0);
-		testcstruct1[] s13 = (testcstruct1[])((List<Object>)v.s13).get(0);
-		verify_testcstruct1(s13[0], gen.get_uint32());
+		testpod1[] s13 = (testpod1[])((List<Object>)v.s13).get(0);
+		verify_testpod1(s13[0], gen.get_uint32());
 
 		if (v.s14 == null) throw new RuntimeException();
 		List<Object> v14 = (List<Object>)v.s14;
 		if (v14.size() != 2) throw new RuntimeException();
-		verify_testcstruct1_array((testcstruct1[])v14.get(0), 3, gen.get_uint32());
-		verify_testcstruct1_array((testcstruct1[])v14.get(1), 5, gen.get_uint32());
+		verify_testpod1_array((testpod1[])v14.get(0), 3, gen.get_uint32());
+		verify_testpod1_array((testpod1[])v14.get(1), 5, gen.get_uint32());
 
 		if (v.s15 == null) throw new RuntimeException();
 		List<Object> v15 = (List<Object>)v.s15;
 		if (v15.size() != 2) throw new RuntimeException();
-		verify_testcstruct1_multidimarray(v15.get(0), 7, 2, gen.get_uint32());
-		verify_testcstruct1_multidimarray(v15.get(1), 5, 1, gen.get_uint32());
+		verify_testpod1_multidimarray(v15.get(0), 7, 2, gen.get_uint32());
+		verify_testpod1_multidimarray(v15.get(1), 5, 1, gen.get_uint32());
 
 		verify_transform(v.t1, gen.get_uint32());
 
@@ -377,7 +377,7 @@ class ServiceTest2_cstruct
         verify_transform_multidimarray(v.t3, 2, 4, gen.get_uint32());
 
         verify_transform_array((transform[])(v.t4), 10, gen.get_uint32());
-        verify_transform_multidimarray((AStructureMultiDimArray)(v.t5), 6, 5, gen.get_uint32());
+        verify_transform_multidimarray((NamedMultiDimArray)(v.t5), 6, 5, gen.get_uint32());
         
         if (v.t6 == null) throw new RuntimeException("");
         if (v.t6.size() != 1) throw new RuntimeException("");
@@ -408,8 +408,8 @@ class ServiceTest2_cstruct
         if (v.t11 == null) throw new RuntimeException("");
         List<Object> t11 = (List<Object>)v.t11;
         if (t11.size() != 2) throw new RuntimeException("");
-        verify_transform_multidimarray((AStructureMultiDimArray)t11.get(0), 7, 2, gen.get_uint32());
-        verify_transform_multidimarray((AStructureMultiDimArray)t11.get(1), 5, 1, gen.get_uint32());
+        verify_transform_multidimarray((NamedMultiDimArray)t11.get(0), 7, 2, gen.get_uint32());
+        verify_transform_multidimarray((NamedMultiDimArray)t11.get(1), 5, 1, gen.get_uint32());
 
 	}
 	
@@ -447,14 +447,14 @@ class ServiceTest2_cstruct
         for (int i = 0; i < len; i++) verify_transform(t[i], gen.get_uint32());
     }
 
-    public static AStructureMultiDimArray fill_transform_multidimarray(int m, int n, long seed)
+    public static NamedMultiDimArray fill_transform_multidimarray(int m, int n, long seed)
     {
-        return new AStructureMultiDimArray(new int[] { m, n }, fill_transform_array(m * n, seed));
+        return new NamedMultiDimArray(new int[] { m, n }, fill_transform_array(m * n, seed));
     }
 
-    public static void verify_transform_multidimarray(AStructureMultiDimArray a, int m, int n, long seed)
+    public static void verify_transform_multidimarray(NamedMultiDimArray a, int m, int n, long seed)
     {
     	if (!Arrays.equals(a.dims,new int[] { m, n })) throw new RuntimeException();
-        verify_transform_array((transform[])a.astruct_array, m * n, seed);
+        verify_transform_array((transform[])a.namedarray_array, m * n, seed);
     }
 }

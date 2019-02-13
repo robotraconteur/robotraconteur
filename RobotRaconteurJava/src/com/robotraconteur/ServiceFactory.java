@@ -35,44 +35,44 @@ public abstract class ServiceFactory
 			IStructureStub stub=findStructureStub(stub_type);
 			return stub.packStructure(s);			
 		}
-		if (s instanceof RRCStructure)
+		if (s instanceof RRPod)
 		{
 			String stub_type=RobotRaconteurNode.splitQualifiedName(RobotRaconteurNode.getTypeString(s.getClass()))[1];
-			ICStructureStub stub=findCStructureStub(stub_type);
+			IPodStub stub=findPodStub(stub_type);
 			return stub.packStructure(s);			
 		}
 		
-		if (s instanceof RRCStructure[])
+		if (s instanceof RRPod[])
 		{
 			String stub_type=RobotRaconteurNode.splitQualifiedName(RobotRaconteurNode.getTypeString(s.getClass().getComponentType()))[1];
-			ICStructureStub stub=findCStructureStub(stub_type);
+			IPodStub stub=findPodStub(stub_type);
 			return stub.packStructure(s);			
 		}
-		if (s instanceof CStructureMultiDimArray)
+		if (s instanceof PodMultiDimArray)
 		{
-			CStructureMultiDimArray s2=(CStructureMultiDimArray)s;
-			String stub_type=RobotRaconteurNode.splitQualifiedName(RobotRaconteurNode.getTypeString(s2.cstruct_array.getClass().getComponentType()))[1];
-			ICStructureStub stub=findCStructureStub(stub_type);
+			PodMultiDimArray s2=(PodMultiDimArray)s;
+			String stub_type=RobotRaconteurNode.splitQualifiedName(RobotRaconteurNode.getTypeString(s2.pod_array.getClass().getComponentType()))[1];
+			IPodStub stub=findPodStub(stub_type);
 			return stub.packStructure(s);			
 		}		
-		if (s instanceof RRAStructure)
+		if (s instanceof RRNamedArray)
 		{
 			String stub_type=RobotRaconteurNode.splitQualifiedName(RobotRaconteurNode.getTypeString(s.getClass()))[1];
-			IAStructureStub stub=findAStructureStub(stub_type);
+			INamedArrayStub stub=findNamedArrayStub(stub_type);
 			return stub.packStructure(s);			
 		}
 		
-		if (s instanceof RRAStructure[])
+		if (s instanceof RRNamedArray[])
 		{
 			String stub_type=RobotRaconteurNode.splitQualifiedName(RobotRaconteurNode.getTypeString(s.getClass().getComponentType()))[1];
-			IAStructureStub stub=findAStructureStub(stub_type);
+			INamedArrayStub stub=findNamedArrayStub(stub_type);
 			return stub.packStructure(s);			
 		}
-		if (s instanceof AStructureMultiDimArray)
+		if (s instanceof NamedMultiDimArray)
 		{
-			AStructureMultiDimArray s2=(AStructureMultiDimArray)s;
-			String stub_type=RobotRaconteurNode.splitQualifiedName(RobotRaconteurNode.getTypeString(s2.astruct_array.getClass().getComponentType()))[1];
-			IAStructureStub stub=findAStructureStub(stub_type);
+			NamedMultiDimArray s2=(NamedMultiDimArray)s;
+			String stub_type=RobotRaconteurNode.splitQualifiedName(RobotRaconteurNode.getTypeString(s2.namedarray_array.getClass().getComponentType()))[1];
+			INamedArrayStub stub=findNamedArrayStub(stub_type);
 			return stub.packStructure(s);			
 		}		
 		
@@ -89,19 +89,19 @@ public abstract class ServiceFactory
 			IStructureStub stub=findStructureStub(stub_type);
 			return stub.unpackStructure(l);
 		}
-		case DataTypes_cstructure_t:
-		case DataTypes_cstructure_array_t:
-		case DataTypes_cstructure_multidimarray_t:
+		case DataTypes_pod_t:
+		case DataTypes_pod_array_t:
+		case DataTypes_pod_multidimarray_t:
 		{
 			String stub_type=RobotRaconteurNode.splitQualifiedName(l.getTypeString())[1];
-			ICStructureStub stub=findCStructureStub(stub_type);
+			IPodStub stub=findPodStub(stub_type);
 			return (T)stub.unpackStructure(l);
 		}
-		case DataTypes_astructure_array_t:
-		case DataTypes_astructure_multidimarray_t:
+		case DataTypes_namedarray_array_t:
+		case DataTypes_namedarray_multidimarray_t:
 		{
 			String stub_type=RobotRaconteurNode.splitQualifiedName(l.getTypeString())[1];
-			IAStructureStub stub=findAStructureStub(stub_type);
+			INamedArrayStub stub=findNamedArrayStub(stub_type);
 			return (T)stub.unpackStructure(l);
 		}
 		default:
@@ -112,9 +112,9 @@ public abstract class ServiceFactory
 
 	public abstract IStructureStub findStructureStub(String objecttype);
 	
-	public abstract ICStructureStub findCStructureStub(String objecttype);
+	public abstract IPodStub findPodStub(String objecttype);
 	
-	public abstract IAStructureStub findAStructureStub(String objecttype);
+	public abstract INamedArrayStub findNamedArrayStub(String objecttype);
 
 	public abstract ServiceStub createStub(WrappedServiceStub innerstub);
 

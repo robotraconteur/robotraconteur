@@ -1,6 +1,6 @@
 package com.robotraconteur;
 
-public interface IAStructureStub {
+public interface INamedArrayStub {
 	
     public MessageElementData packStructure(Object s);
 

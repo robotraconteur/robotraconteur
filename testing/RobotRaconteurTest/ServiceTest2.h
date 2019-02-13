@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "CompareArray.h"
+
 using namespace RobotRaconteur;
 
 namespace RobotRaconteurTest

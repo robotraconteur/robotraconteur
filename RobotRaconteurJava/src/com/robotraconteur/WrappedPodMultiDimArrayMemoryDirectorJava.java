@@ -3,9 +3,9 @@ package com.robotraconteur;
 import java.lang.reflect.Array;
 import java.math.BigInteger;
 
-public class WrappedCStructureMultiDimArrayMemoryDirectorJava<T> extends WrappedCStructureMultiDimArrayMemoryDirector  {
+public class WrappedPodMultiDimArrayMemoryDirectorJava<T> extends WrappedPodMultiDimArrayMemoryDirector  {
 
-	CStructureMultiDimArrayMemory<T> mem;
+	PodMultiDimArrayMemory<T> mem;
 
     //public int memoryid = 0;
 
@@ -43,7 +43,7 @@ public class WrappedCStructureMultiDimArrayMemoryDirectorJava<T> extends Wrapped
 	
 	Class<?> mem_type;
 	
-    public WrappedCStructureMultiDimArrayMemoryDirectorJava(CStructureMultiDimArrayMemory<T> mem, Class<?> mem_type)
+    public WrappedPodMultiDimArrayMemoryDirectorJava(PodMultiDimArrayMemory<T> mem, Class<?> mem_type)
     {
         this.mem = mem;
         this.mem_type=mem_type;
@@ -99,7 +99,7 @@ public class WrappedCStructureMultiDimArrayMemoryDirectorJava<T> extends Wrapped
     }
 
     @Override
-    public MessageElementCStructureMultiDimArray read(vector_uint64_t memorypos, vector_uint64_t bufferpos, vector_uint64_t count)
+    public MessageElementPodMultiDimArray read(vector_uint64_t memorypos, vector_uint64_t bufferpos, vector_uint64_t count)
     {
     	int elemcount = 1;
     	int[] count2=new int[count.size()];
@@ -113,9 +113,9 @@ public class WrappedCStructureMultiDimArrayMemoryDirectorJava<T> extends Wrapped
         {
         	long[] memorypos1=vector_uint64_to_long(memorypos);
         	long[] count1=vector_uint64_to_long(count);
-            CStructureMultiDimArray buffer3 = new CStructureMultiDimArray(count2, Array.newInstance(mem_type, elemcount));
+            PodMultiDimArray buffer3 = new PodMultiDimArray(count2, Array.newInstance(mem_type, elemcount));
             mem.read(memorypos1, buffer3, new long[count1.length], count1);
-            return (MessageElementCStructureMultiDimArray)RobotRaconteurNode.s().packStructure(buffer3);            
+            return (MessageElementPodMultiDimArray)RobotRaconteurNode.s().packStructure(buffer3);            
         }
         catch (Exception e)
         {
@@ -134,11 +134,11 @@ public class WrappedCStructureMultiDimArrayMemoryDirectorJava<T> extends Wrapped
     }
 
     @Override
-    public void write(vector_uint64_t memorypos, MessageElementCStructureMultiDimArray buffer, vector_uint64_t bufferpos, vector_uint64_t count)
+    public void write(vector_uint64_t memorypos, MessageElementPodMultiDimArray buffer, vector_uint64_t bufferpos, vector_uint64_t count)
     {
         try
         {
-            CStructureMultiDimArray buffer2 = (CStructureMultiDimArray)RobotRaconteurNode.s().unpackStructure(buffer);
+            PodMultiDimArray buffer2 = (PodMultiDimArray)RobotRaconteurNode.s().unpackStructure(buffer);
             mem.write(vector_uint64_to_long(memorypos), buffer2, vector_uint64_to_long(bufferpos), vector_uint64_to_long(count));            
         }
         catch (Exception e)

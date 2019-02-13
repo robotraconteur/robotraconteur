@@ -335,11 +335,11 @@ namespace RobotRaconteurTest
 
 	RobotRaconteur::cdouble testroot3_impl::get_c1()
 	{
-		return { 5.708705e+01, -2.328294e-03 };
+		return cdouble( 5.708705e+01, -2.328294e-03 );
 	}
 	void testroot3_impl::set_c1(RobotRaconteur::cdouble value)
 	{
-		cdouble value1 = { 5.708705e+01, -2.328294e-03 };
+		cdouble value1( 5.708705e+01, -2.328294e-03 );
 		if (value != value1) throw std::runtime_error("");
 	}
 	RR_SHARED_PTR<RobotRaconteur::RRArray<RobotRaconteur::cdouble > > testroot3_impl::get_c2()
@@ -388,11 +388,11 @@ namespace RobotRaconteurTest
 
 	RobotRaconteur::cfloat testroot3_impl::get_c7()
 	{
-		return { -5.527021e-18, -9.848457e+03 };
+		return cfloat( -5.527021e-18, -9.848457e+03 );
 	}
 	void testroot3_impl::set_c7(RobotRaconteur::cfloat value)
 	{
-		cfloat value1 = { 9.303345e-12, -3.865684e-05 };
+		cfloat value1(9.303345e-12, -3.865684e-05 );
 		if (value != value1) throw std::runtime_error("");
 	}
 	RR_SHARED_PTR<RobotRaconteur::RRArray<RobotRaconteur::cfloat > > testroot3_impl::get_c8()

@@ -1,6 +1,8 @@
 #include "com__robotraconteur__testing__TestService1.h"
 #include "com__robotraconteur__testing__TestService1_stubskel.h"
 
+#include "CompareArray.h"
+
 using namespace RobotRaconteur;
 using namespace com::robotraconteur::testing::TestService1;
 

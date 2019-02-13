@@ -91,77 +91,77 @@ RR_SHARED_PTR<RobotRaconteur::StructureStub> stub=FindStructureStub(type);
 return stub->UnpackStructure(mstructin);
 throw RobotRaconteur::ServiceException("Invalid structure stub type.");
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElementCStructureArray> com__robotraconteur__testing__TestService2Factory::PackCStructureArray(RR_SHARED_PTR<RobotRaconteur::RRCStructureBaseArray> structin)
+RR_SHARED_PTR<RobotRaconteur::MessageElementPodArray> com__robotraconteur__testing__TestService2Factory::PackPodArray(RR_SHARED_PTR<RobotRaconteur::RRPodBaseArray> structin)
 {
 std::string type=structin->RRElementTypeString();
 boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);
 std::string servicetype=res.get<0>();
 std::string objecttype=res.get<1>();
-if (servicetype != "com.robotraconteur.testing.TestService2") return GetNode()->PackCStructureArray(structin);
-throw RobotRaconteur::ServiceException("Invalid cstructure type.");
+if (servicetype != "com.robotraconteur.testing.TestService2") return GetNode()->PackPodArray(structin);
+throw RobotRaconteur::ServiceException("Invalid pod type.");
 }
-RR_SHARED_PTR<RobotRaconteur::RRCStructureBaseArray> com__robotraconteur__testing__TestService2Factory::UnpackCStructureArray(RR_SHARED_PTR<RobotRaconteur::MessageElementCStructureArray> mstructin)
+RR_SHARED_PTR<RobotRaconteur::RRPodBaseArray> com__robotraconteur__testing__TestService2Factory::UnpackPodArray(RR_SHARED_PTR<RobotRaconteur::MessageElementPodArray> mstructin)
 {
 std::string type=mstructin->GetTypeString();
 boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);
 std::string servicetype=res.get<0>();
 std::string objecttype=res.get<1>();
-if (servicetype != "com.robotraconteur.testing.TestService2") return GetNode()->UnpackCStructureArray(mstructin);
-throw RobotRaconteur::ServiceException("Invalid cstructure type.");
+if (servicetype != "com.robotraconteur.testing.TestService2") return GetNode()->UnpackPodArray(mstructin);
+throw RobotRaconteur::ServiceException("Invalid pod type.");
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElementCStructureMultiDimArray> com__robotraconteur__testing__TestService2Factory::PackCStructureMultiDimArray(RR_SHARED_PTR<RobotRaconteur::RRCStructureBaseMultiDimArray> structin)
+RR_SHARED_PTR<RobotRaconteur::MessageElementPodMultiDimArray> com__robotraconteur__testing__TestService2Factory::PackPodMultiDimArray(RR_SHARED_PTR<RobotRaconteur::RRPodBaseMultiDimArray> structin)
 {
 std::string type=structin->RRElementTypeString();
 boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);
 std::string servicetype=res.get<0>();
 std::string objecttype=res.get<1>();
-if (servicetype != "com.robotraconteur.testing.TestService2") return GetNode()->PackCStructureMultiDimArray(structin);
-throw RobotRaconteur::ServiceException("Invalid cstructure type.");
+if (servicetype != "com.robotraconteur.testing.TestService2") return GetNode()->PackPodMultiDimArray(structin);
+throw RobotRaconteur::ServiceException("Invalid pod type.");
 }
-RR_SHARED_PTR<RobotRaconteur::RRCStructureBaseMultiDimArray> com__robotraconteur__testing__TestService2Factory::UnpackCStructureMultiDimArray(RR_SHARED_PTR<RobotRaconteur::MessageElementCStructureMultiDimArray> mstructin)
+RR_SHARED_PTR<RobotRaconteur::RRPodBaseMultiDimArray> com__robotraconteur__testing__TestService2Factory::UnpackPodMultiDimArray(RR_SHARED_PTR<RobotRaconteur::MessageElementPodMultiDimArray> mstructin)
 {
 std::string type=mstructin->GetTypeString();
 boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);
 std::string servicetype=res.get<0>();
 std::string objecttype=res.get<1>();
-if (servicetype != "com.robotraconteur.testing.TestService2") return GetNode()->UnpackCStructureMultiDimArray(mstructin);
-throw RobotRaconteur::ServiceException("Invalid cstructure type.");
+if (servicetype != "com.robotraconteur.testing.TestService2") return GetNode()->UnpackPodMultiDimArray(mstructin);
+throw RobotRaconteur::ServiceException("Invalid pod type.");
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElementAStructureArray> com__robotraconteur__testing__TestService2Factory::PackAStructureArray(RR_SHARED_PTR<RobotRaconteur::RRAStructureBaseArray> structin)
+RR_SHARED_PTR<RobotRaconteur::MessageElementNamedArray> com__robotraconteur__testing__TestService2Factory::PackNamedArray(RR_SHARED_PTR<RobotRaconteur::RRNamedBaseArray> structin)
 {
 std::string type=structin->RRElementTypeString();
 boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);
 std::string servicetype=res.get<0>();
 std::string objecttype=res.get<1>();
-if (servicetype != "com.robotraconteur.testing.TestService2") return GetNode()->PackAStructureArray(structin);
-throw RobotRaconteur::ServiceException("Invalid astructure type.");
+if (servicetype != "com.robotraconteur.testing.TestService2") return GetNode()->PackNamedArray(structin);
+throw RobotRaconteur::ServiceException("Invalid namedarray type.");
 }
-RR_SHARED_PTR<RobotRaconteur::RRAStructureBaseArray> com__robotraconteur__testing__TestService2Factory::UnpackAStructureArray(RR_SHARED_PTR<RobotRaconteur::MessageElementAStructureArray> mstructin)
+RR_SHARED_PTR<RobotRaconteur::RRNamedBaseArray> com__robotraconteur__testing__TestService2Factory::UnpackNamedArray(RR_SHARED_PTR<RobotRaconteur::MessageElementNamedArray> mstructin)
 {
 std::string type=mstructin->GetTypeString();
 boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);
 std::string servicetype=res.get<0>();
 std::string objecttype=res.get<1>();
-if (servicetype != "com.robotraconteur.testing.TestService2") return GetNode()->UnpackAStructureArray(mstructin);
-throw RobotRaconteur::ServiceException("Invalid astructure type.");
+if (servicetype != "com.robotraconteur.testing.TestService2") return GetNode()->UnpackNamedArray(mstructin);
+throw RobotRaconteur::ServiceException("Invalid namedarray type.");
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElementAStructureMultiDimArray> com__robotraconteur__testing__TestService2Factory::PackAStructureMultiDimArray(RR_SHARED_PTR<RobotRaconteur::RRAStructureBaseMultiDimArray> structin)
+RR_SHARED_PTR<RobotRaconteur::MessageElementNamedMultiDimArray> com__robotraconteur__testing__TestService2Factory::PackNamedMultiDimArray(RR_SHARED_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> structin)
 {
 std::string type=structin->RRElementTypeString();
 boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);
 std::string servicetype=res.get<0>();
 std::string objecttype=res.get<1>();
-if (servicetype != "com.robotraconteur.testing.TestService2") return GetNode()->PackAStructureMultiDimArray(structin);
-throw RobotRaconteur::ServiceException("Invalid astructure type.");
+if (servicetype != "com.robotraconteur.testing.TestService2") return GetNode()->PackNamedMultiDimArray(structin);
+throw RobotRaconteur::ServiceException("Invalid namedarray type.");
 }
-RR_SHARED_PTR<RobotRaconteur::RRAStructureBaseMultiDimArray> com__robotraconteur__testing__TestService2Factory::UnpackAStructureMultiDimArray(RR_SHARED_PTR<RobotRaconteur::MessageElementAStructureMultiDimArray> mstructin)
+RR_SHARED_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> com__robotraconteur__testing__TestService2Factory::UnpackNamedMultiDimArray(RR_SHARED_PTR<RobotRaconteur::MessageElementNamedMultiDimArray> mstructin)
 {
 std::string type=mstructin->GetTypeString();
 boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);
 std::string servicetype=res.get<0>();
 std::string objecttype=res.get<1>();
-if (servicetype != "com.robotraconteur.testing.TestService2") return GetNode()->UnpackAStructureMultiDimArray(mstructin);
-throw RobotRaconteur::ServiceException("Invalid astructure type.");
+if (servicetype != "com.robotraconteur.testing.TestService2") return GetNode()->UnpackNamedMultiDimArray(mstructin);
+throw RobotRaconteur::ServiceException("Invalid namedarray type.");
 }
 RR_SHARED_PTR<RobotRaconteur::ServiceStub> com__robotraconteur__testing__TestService2Factory::CreateStub(const std::string& type, const std::string& path, RR_SHARED_PTR<RobotRaconteur::ClientContext> context)
 {

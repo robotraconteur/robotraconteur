@@ -17,22 +17,22 @@
 %shared_ptr(RobotRaconteur::ArrayMemoryBase);
 %shared_ptr(RobotRaconteur::MultiDimArrayMemoryBase);
 
-%shared_ptr(RobotRaconteur::WrappedCStructureArrayMemoryClient);
-%shared_ptr(RobotRaconteur::WrappedCStructureMultiDimArrayMemoryClient);
-%shared_ptr(RobotRaconteur::WrappedAStructureArrayMemoryClient);
-%shared_ptr(RobotRaconteur::WrappedAStructureMultiDimArrayMemoryClient);
+%shared_ptr(RobotRaconteur::WrappedPodArrayMemoryClient);
+%shared_ptr(RobotRaconteur::WrappedPodMultiDimArrayMemoryClient);
+%shared_ptr(RobotRaconteur::WrappedNamedArrayMemoryClient);
+%shared_ptr(RobotRaconteur::WrappedNamedMultiDimArrayMemoryClient);
 
-%feature("director") RobotRaconteur::WrappedCStructureArrayMemoryClientBuffer;
-%feature("director") RobotRaconteur::WrappedCStructureMultiDimArrayMemoryClientBuffer;
-%feature("director") RobotRaconteur::WrappedAStructureArrayMemoryClientBuffer;
-%feature("director") RobotRaconteur::WrappedAStructureMultiDimArrayMemoryClientBuffer;
+%feature("director") RobotRaconteur::WrappedPodArrayMemoryClientBuffer;
+%feature("director") RobotRaconteur::WrappedPodMultiDimArrayMemoryClientBuffer;
+%feature("director") RobotRaconteur::WrappedNamedArrayMemoryClientBuffer;
+%feature("director") RobotRaconteur::WrappedNamedMultiDimArrayMemoryClientBuffer;
 
 %feature("director") RobotRaconteur::WrappedArrayMemoryDirector;
 %feature("director") RobotRaconteur::WrappedMultiDimArrayMemoryDirector;
-%feature("director") RobotRaconteur::WrappedCStructureArrayMemoryDirector;
-%feature("director") RobotRaconteur::WrappedCStructureMultiDimArrayMemoryDirector;
-%feature("director") RobotRaconteur::WrappedAStructureArrayMemoryDirector;
-%feature("director") RobotRaconteur::WrappedAStructureMultiDimArrayMemoryDirector;
+%feature("director") RobotRaconteur::WrappedPodArrayMemoryDirector;
+%feature("director") RobotRaconteur::WrappedPodMultiDimArrayMemoryDirector;
+%feature("director") RobotRaconteur::WrappedNamedArrayMemoryDirector;
+%feature("director") RobotRaconteur::WrappedNamedMultiDimArrayMemoryDirector;
 
 namespace RobotRaconteur
 {
@@ -51,8 +51,7 @@ class MultiDimArrayMemoryBase
 RR_RELEASE_GIL()
 public:
 	virtual std::vector<uint64_t> Dimensions()=0;
-	virtual uint64_t DimCount()=0;
-	virtual bool Complex()=0;
+	virtual uint64_t DimCount()=0;	
 	virtual DataTypes ElementTypeID()=0;
 RR_KEEP_GIL()
 };
@@ -84,45 +83,45 @@ public:
 RR_KEEP_GIL()
 };
 
-class WrappedCStructureArrayMemoryClientBuffer
+class WrappedPodArrayMemoryClientBuffer
 {
 public:
-	virtual void UnpackReadResult(boost::shared_ptr<RobotRaconteur::MessageElementCStructureArray> res, uint64_t bufferpos, uint64_t count) = 0;
-	virtual boost::shared_ptr<RobotRaconteur::MessageElementCStructureArray> PackWriteRequest(uint64_t bufferpos, uint64_t count) = 0;
+	virtual void UnpackReadResult(boost::shared_ptr<RobotRaconteur::MessageElementPodArray> res, uint64_t bufferpos, uint64_t count) = 0;
+	virtual boost::shared_ptr<RobotRaconteur::MessageElementPodArray> PackWriteRequest(uint64_t bufferpos, uint64_t count) = 0;
 	virtual uint64_t GetBufferLength() = 0;
-	virtual ~WrappedCStructureArrayMemoryClientBuffer() {}
+	virtual ~WrappedPodArrayMemoryClientBuffer() {}
 };
 
-%nodefaultctor WrappedCStructureArrayMemoryClient;
-class WrappedCStructureArrayMemoryClient
+%nodefaultctor WrappedPodArrayMemoryClient;
+class WrappedPodArrayMemoryClient
 {
 RR_RELEASE_GIL()
 public:
 	virtual uint64_t Length();
 	MemberDefinition_Direction Direction();
-	virtual void Read(uint64_t memorypos, WrappedCStructureArrayMemoryClientBuffer* buffer, uint64_t bufferpos, uint64_t count);
-	virtual void Write(uint64_t memorypos, WrappedCStructureArrayMemoryClientBuffer* buffer, uint64_t bufferpos, uint64_t count);
+	virtual void Read(uint64_t memorypos, WrappedPodArrayMemoryClientBuffer* buffer, uint64_t bufferpos, uint64_t count);
+	virtual void Write(uint64_t memorypos, WrappedPodArrayMemoryClientBuffer* buffer, uint64_t bufferpos, uint64_t count);
 RR_KEEP_GIL()
 };
 
-class WrappedCStructureMultiDimArrayMemoryClientBuffer
+class WrappedPodMultiDimArrayMemoryClientBuffer
 {
 public:
-	virtual void UnpackReadResult(boost::shared_ptr<RobotRaconteur::MessageElementCStructureMultiDimArray> res, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) = 0;
-	virtual boost::shared_ptr<RobotRaconteur::MessageElementCStructureMultiDimArray> PackWriteRequest(const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) = 0;
-	virtual ~WrappedCStructureMultiDimArrayMemoryClientBuffer() {}
+	virtual void UnpackReadResult(boost::shared_ptr<RobotRaconteur::MessageElementPodMultiDimArray> res, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) = 0;
+	virtual boost::shared_ptr<RobotRaconteur::MessageElementPodMultiDimArray> PackWriteRequest(const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) = 0;
+	virtual ~WrappedPodMultiDimArrayMemoryClientBuffer() {}
 };
 
-%nodefaultctor WrappedCStructureMultiDimArrayMemoryClient;
-class WrappedCStructureMultiDimArrayMemoryClient
+%nodefaultctor WrappedPodMultiDimArrayMemoryClient;
+class WrappedPodMultiDimArrayMemoryClient
 {
 RR_RELEASE_GIL()
 public:
 	virtual std::vector<uint64_t> Dimensions() ;
 	virtual uint64_t DimCount();
 	MemberDefinition_Direction Direction();
-	virtual void Read(const std::vector<uint64_t>& memorypos, WrappedCStructureMultiDimArrayMemoryClientBuffer* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
-	virtual void Write(const std::vector<uint64_t>& memorypos, WrappedCStructureMultiDimArrayMemoryClientBuffer* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
+	virtual void Read(const std::vector<uint64_t>& memorypos, WrappedPodMultiDimArrayMemoryClientBuffer* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
+	virtual void Write(const std::vector<uint64_t>& memorypos, WrappedPodMultiDimArrayMemoryClientBuffer* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
 RR_KEEP_GIL()
 };
 
@@ -151,100 +150,99 @@ public:
 	virtual ~WrappedMultiDimArrayMemoryDirector() {}
 	virtual std::vector<uint64_t> Dimensions();
 	virtual uint64_t DimCount();
-	virtual bool Complex();
 	virtual void Read(WrappedMultiDimArrayMemoryParams* p);
 	virtual void Write(WrappedMultiDimArrayMemoryParams* p);
 	int32_t objectheapid;
 };
 
-// cstruct
+// pod
 
-class WrappedCStructureArrayMemoryDirector
+class WrappedPodArrayMemoryDirector
 {
 public:
-	WrappedCStructureArrayMemoryDirector();
-	virtual ~WrappedCStructureArrayMemoryDirector();
+	WrappedPodArrayMemoryDirector();
+	virtual ~WrappedPodArrayMemoryDirector();
 	virtual uint64_t Length();
-	virtual boost::shared_ptr<MessageElementCStructureArray> Read(uint64_t memorypos, uint64_t bufferpos, uint64_t count);
-	virtual void Write(uint64_t memorypos, boost::shared_ptr<MessageElementCStructureArray> buffer, uint64_t bufferpos, uint64_t count);
+	virtual boost::shared_ptr<MessageElementPodArray> Read(uint64_t memorypos, uint64_t bufferpos, uint64_t count);
+	virtual void Write(uint64_t memorypos, boost::shared_ptr<MessageElementPodArray> buffer, uint64_t bufferpos, uint64_t count);
 	int32_t objectheapid;
 };
 
-class WrappedCStructureMultiDimArrayMemoryDirector
+class WrappedPodMultiDimArrayMemoryDirector
 {
 public:		
-	virtual ~WrappedCStructureMultiDimArrayMemoryDirector() {}
+	virtual ~WrappedPodMultiDimArrayMemoryDirector() {}
 	virtual std::vector<uint64_t> Dimensions();
 	virtual uint64_t DimCount();
-	virtual boost::shared_ptr<MessageElementCStructureMultiDimArray> Read(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
-	virtual void Write(const std::vector<uint64_t>& memorypos, boost::shared_ptr<MessageElementCStructureMultiDimArray> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
+	virtual boost::shared_ptr<MessageElementPodMultiDimArray> Read(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
+	virtual void Write(const std::vector<uint64_t>& memorypos, boost::shared_ptr<MessageElementPodMultiDimArray> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
 
 	int32_t objectheapid;
 };
 
-// astruct
+// namedarray
 
-class WrappedAStructureArrayMemoryClientBuffer
+class WrappedNamedArrayMemoryClientBuffer
 {
 public:
-	virtual void UnpackReadResult(boost::shared_ptr<RobotRaconteur::MessageElementAStructureArray> res, uint64_t bufferpos, uint64_t count) = 0;
-	virtual boost::shared_ptr<RobotRaconteur::MessageElementAStructureArray> PackWriteRequest(uint64_t bufferpos, uint64_t count) = 0;
+	virtual void UnpackReadResult(boost::shared_ptr<RobotRaconteur::MessageElementNamedArray> res, uint64_t bufferpos, uint64_t count) = 0;
+	virtual boost::shared_ptr<RobotRaconteur::MessageElementNamedArray> PackWriteRequest(uint64_t bufferpos, uint64_t count) = 0;
 	virtual uint64_t GetBufferLength() = 0;
-	virtual ~WrappedAStructureArrayMemoryClientBuffer() {}
+	virtual ~WrappedNamedArrayMemoryClientBuffer() {}
 };
 
-%nodefaultctor WrappedAStructureArrayMemoryClient;
-class WrappedAStructureArrayMemoryClient
+%nodefaultctor WrappedNamedArrayMemoryClient;
+class WrappedNamedArrayMemoryClient
 {
 RR_RELEASE_GIL()
 public:
 	virtual uint64_t Length();
 	MemberDefinition_Direction Direction();
-	virtual void Read(uint64_t memorypos, WrappedAStructureArrayMemoryClientBuffer* buffer, uint64_t bufferpos, uint64_t count);
-	virtual void Write(uint64_t memorypos, WrappedAStructureArrayMemoryClientBuffer* buffer, uint64_t bufferpos, uint64_t count);
+	virtual void Read(uint64_t memorypos, WrappedNamedArrayMemoryClientBuffer* buffer, uint64_t bufferpos, uint64_t count);
+	virtual void Write(uint64_t memorypos, WrappedNamedArrayMemoryClientBuffer* buffer, uint64_t bufferpos, uint64_t count);
 RR_KEEP_GIL()
 };
 
-class WrappedAStructureMultiDimArrayMemoryClientBuffer
+class WrappedNamedMultiDimArrayMemoryClientBuffer
 {
 public:
-	virtual void UnpackReadResult(boost::shared_ptr<RobotRaconteur::MessageElementAStructureMultiDimArray> res, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) = 0;
-	virtual boost::shared_ptr<RobotRaconteur::MessageElementAStructureMultiDimArray> PackWriteRequest(const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) = 0;
-	virtual ~WrappedAStructureMultiDimArrayMemoryClientBuffer() {}
+	virtual void UnpackReadResult(boost::shared_ptr<RobotRaconteur::MessageElementNamedMultiDimArray> res, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) = 0;
+	virtual boost::shared_ptr<RobotRaconteur::MessageElementNamedMultiDimArray> PackWriteRequest(const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) = 0;
+	virtual ~WrappedNamedMultiDimArrayMemoryClientBuffer() {}
 };
 
-%nodefaultctor WrappedAStructureMultiDimArrayMemoryClient;
-class WrappedAStructureMultiDimArrayMemoryClient
+%nodefaultctor WrappedNamedMultiDimArrayMemoryClient;
+class WrappedNamedMultiDimArrayMemoryClient
 {
 RR_RELEASE_GIL()
 public:
 	virtual std::vector<uint64_t> Dimensions() ;
 	virtual uint64_t DimCount();
 	MemberDefinition_Direction Direction();
-	virtual void Read(const std::vector<uint64_t>& memorypos, WrappedAStructureMultiDimArrayMemoryClientBuffer* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
-	virtual void Write(const std::vector<uint64_t>& memorypos, WrappedAStructureMultiDimArrayMemoryClientBuffer* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
+	virtual void Read(const std::vector<uint64_t>& memorypos, WrappedNamedMultiDimArrayMemoryClientBuffer* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
+	virtual void Write(const std::vector<uint64_t>& memorypos, WrappedNamedMultiDimArrayMemoryClientBuffer* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
 RR_KEEP_GIL()
 };
 
-class WrappedAStructureArrayMemoryDirector
+class WrappedNamedArrayMemoryDirector
 {
 public:
-	WrappedAStructureArrayMemoryDirector();
-	virtual ~WrappedAStructureArrayMemoryDirector();
+	WrappedNamedArrayMemoryDirector();
+	virtual ~WrappedNamedArrayMemoryDirector();
 	virtual uint64_t Length();
-	virtual boost::shared_ptr<MessageElementAStructureArray> Read(uint64_t memorypos, uint64_t bufferpos, uint64_t count);
-	virtual void Write(uint64_t memorypos, boost::shared_ptr<MessageElementAStructureArray> buffer, uint64_t bufferpos, uint64_t count);
+	virtual boost::shared_ptr<MessageElementNamedArray> Read(uint64_t memorypos, uint64_t bufferpos, uint64_t count);
+	virtual void Write(uint64_t memorypos, boost::shared_ptr<MessageElementNamedArray> buffer, uint64_t bufferpos, uint64_t count);
 	int32_t objectheapid;
 };
 
-class WrappedAStructureMultiDimArrayMemoryDirector
+class WrappedNamedMultiDimArrayMemoryDirector
 {
 public:		
-	virtual ~WrappedAStructureMultiDimArrayMemoryDirector() {}
+	virtual ~WrappedNamedMultiDimArrayMemoryDirector() {}
 	virtual std::vector<uint64_t> Dimensions();
 	virtual uint64_t DimCount();
-	virtual boost::shared_ptr<MessageElementAStructureMultiDimArray> Read(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
-	virtual void Write(const std::vector<uint64_t>& memorypos, boost::shared_ptr<MessageElementAStructureMultiDimArray> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
+	virtual boost::shared_ptr<MessageElementNamedMultiDimArray> Read(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
+	virtual void Write(const std::vector<uint64_t>& memorypos, boost::shared_ptr<MessageElementNamedMultiDimArray> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
 
 	int32_t objectheapid;
 };

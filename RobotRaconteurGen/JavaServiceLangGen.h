@@ -72,9 +72,9 @@ namespace RobotRaconteurGen
 
 		static void GenerateStructure(ServiceEntryDefinition* e, ostream* w);
 
-		static void GenerateCStructure(ServiceEntryDefinition* e, ostream* w);
+		static void GeneratePod(ServiceEntryDefinition* e, ostream* w);
 
-		static void GenerateAStructure(RR_SHARED_PTR<ServiceEntryDefinition> e, ostream* w);
+		static void GenerateNamedArray(RR_SHARED_PTR<ServiceEntryDefinition> e, ostream* w);
 
 		static void GenerateInterface(ServiceEntryDefinition* e, ostream* w);
 
@@ -84,9 +84,9 @@ namespace RobotRaconteurGen
 
 		static void GenerateStructureStub(ServiceEntryDefinition* e, ostream * w);
 
-		static void GenerateCStructureStub(ServiceEntryDefinition* e, ostream * w);
+		static void GeneratePodStub(ServiceEntryDefinition* e, ostream * w);
 
-		static void GenerateAStructureStub(RR_SHARED_PTR<ServiceEntryDefinition> e, ostream * w);
+		static void GenerateNamedArrayStub(RR_SHARED_PTR<ServiceEntryDefinition> e, ostream * w);
 
 		static void GenerateStub(ServiceEntryDefinition* e, ostream * w);
 
@@ -114,13 +114,13 @@ namespace RobotRaconteurGen
 
 		static void GenerateStructureStubFile(ServiceEntryDefinition* d, ostream* w);
 
-		static void GenerateCStructureFile(ServiceEntryDefinition* d, ostream* w);
+		static void GeneratePodFile(ServiceEntryDefinition* d, ostream* w);
 
-		static void GenerateAStructureFile(RR_SHARED_PTR<ServiceEntryDefinition> d, ostream* w);
+		static void GenerateNamedArrayFile(RR_SHARED_PTR<ServiceEntryDefinition> d, ostream* w);
 
-		static void GenerateCStructureStubFile(ServiceEntryDefinition* d, ostream* w);
+		static void GeneratePodStubFile(ServiceEntryDefinition* d, ostream* w);
 
-		static void GenerateAStructureStubFile(RR_SHARED_PTR<ServiceEntryDefinition> d, ostream* w);
+		static void GenerateNamedArrayStubFile(RR_SHARED_PTR<ServiceEntryDefinition> d, ostream* w);
 		
 		static void GenerateStubFile(ServiceEntryDefinition* d, ostream* w);
 

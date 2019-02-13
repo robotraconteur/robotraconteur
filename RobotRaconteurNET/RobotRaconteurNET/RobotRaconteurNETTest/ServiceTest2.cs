@@ -30,7 +30,7 @@ namespace RobotRaconteurNETTest
 
     public class testroot3_impl : testroot3_default_impl
     {
-        
+
         RobotRaconteur.Timer _peekwire_b_timer;
 
         public override Wire<int> peekwire
@@ -52,57 +52,59 @@ namespace RobotRaconteurNETTest
             }
         }
 
-              
+
         public override Pipe<int> unreliable1 { get; set; }
         public override Pipe<int> unreliable2 { get; set; }
 
         public override ArrayMemory<double> readmem { get; }
-        public override testenum1 testenum1_prop { get => testenum1.anothervalue;
+        public override testenum1 testenum1_prop
+        {
+            get => testenum1.anothervalue;
             set
             {
                 if (value != testenum1.hexval1) throw new Exception();
             }
-                
+
         }
 
-        public override testcstruct1 testcstruct1_prop
+        public override testpod1 testpod1_prop
         {
             get
             {
-                var o = new testcstruct1();
-                ServiceTest2_cstruct.fill_testcstruct1(ref o, 563921043);
+                var o = new testpod1();
+                ServiceTest2_pod.fill_testpod1(ref o, 563921043);
                 return o;
             }
             set
             {
-                ServiceTest2_cstruct.verify_testcstruct1(ref value, 85932659);
-            }        
+                ServiceTest2_pod.verify_testpod1(ref value, 85932659);
+            }
         }
 
         public override teststruct3 teststruct3_prop
         {
             get
             {
-                return ServiceTest2_cstruct.fill_teststruct3(16483675);
+                return ServiceTest2_pod.fill_teststruct3(16483675);
             }
             set
             {
-                ServiceTest2_cstruct.verify_teststruct3(value, 858362);
+                ServiceTest2_pod.verify_teststruct3(value, 858362);
             }
         }
 
-        //public CStructureArrayMemory<testcstruct2> cstruct_m1 { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-        //public CStructureMultiDimArrayMemory<testcstruct2> cstruct_m2 { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+        //public PodArrayMemory<testpod2> pod_m1 { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+        //public PodMultiDimArrayMemory<testpod2> pod_m2 { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
         public override Generator2<double> gen_func1()
         {
-            return new EnumeratorGenerator<double>(new double[] { 5, 6, 7, 8 });            
+            return new EnumeratorGenerator<double>(new double[] { 5, 6, 7, 8 });
         }
 
         public override Generator2<byte[]> gen_func2(string name)
         {
             var o = new List<byte[]>();
-            for (byte i=0; i<16; i++)
+            for (byte i = 0; i < 16; i++)
             {
                 o.Add(new byte[] { i });
             }
@@ -130,34 +132,34 @@ namespace RobotRaconteurNETTest
             return new obj4_impl();
         }
 
-        public override void testcstruct1_func1(testcstruct1 s)
+        public override void testpod1_func1(testpod1 s)
         {
-            ServiceTest2_cstruct.verify_testcstruct1(ref s, 29546592);
+            ServiceTest2_pod.verify_testpod1(ref s, 29546592);
         }
 
-        public override testcstruct1 testcstruct1_func2()
+        public override testpod1 testpod1_func2()
         {
-            var o = new testcstruct1();
-            ServiceTest2_cstruct.fill_testcstruct1(ref o, 95836295);
+            var o = new testpod1();
+            ServiceTest2_pod.fill_testpod1(ref o, 95836295);
             return o;
         }
 
-        CStructureArrayMemory<testcstruct2> m_cstruct_m1= new CStructureArrayMemory<testcstruct2>(new testcstruct2[1024]);
-        public override CStructureArrayMemory<testcstruct2> cstruct_m1
+        PodArrayMemory<testpod2> m_pod_m1 = new PodArrayMemory<testpod2>(new testpod2[1024]);
+        public override PodArrayMemory<testpod2> pod_m1
         {
             get
             {
-                return m_cstruct_m1;
-            }            
+                return m_pod_m1;
+            }
         }
 
-        CStructureMultiDimArrayMemory<testcstruct2> m_cstruct_m2 = new CStructureMultiDimArrayMemory<testcstruct2>(new CStructureMultiDimArray(new int[] { 3, 3 }, new testcstruct2[9]));
-        public override CStructureMultiDimArrayMemory<testcstruct2> cstruct_m2
+        PodMultiDimArrayMemory<testpod2> m_pod_m2 = new PodMultiDimArrayMemory<testpod2>(new PodMultiDimArray(new uint[] { 3, 3 }, new testpod2[9]));
+        public override PodMultiDimArrayMemory<testpod2> pod_m2
         {
             get
             {
-                return m_cstruct_m2;
-            }            
+                return m_pod_m2;
+            }
         }
 
         public override Wire<int[]> w1 { get; set; }
@@ -167,82 +169,216 @@ namespace RobotRaconteurNETTest
         public override Pipe<int[]> p2 { get; set; }
         public override Pipe<MultiDimArray> p3 { get; set; }
 
-        public override vector3 testastruct1 {
+        public override vector3 testnamedarray1
+        {
             get
             {
                 var a1 = new transform();
-                ServiceTest2_cstruct.fill_transform(ref a1, 74637);
+                ServiceTest2_pod.fill_transform(ref a1, 74637);
                 return a1.translation;
             }
             set
             {
                 var a1 = new transform();
-                ServiceTest2_cstruct.fill_transform(ref a1, 3956378);
+                ServiceTest2_pod.fill_transform(ref a1, 3956378);
                 a1.translation = value;
-                ServiceTest2_cstruct.verify_transform(ref a1, 3956378);
+                ServiceTest2_pod.verify_transform(ref a1, 3956378);
             }
         }
-        public override transform testastruct2 {
+        public override transform testnamedarray2
+        {
             get
             {
                 var a2 = new transform();
-                ServiceTest2_cstruct.fill_transform(ref a2, 1294);
+                ServiceTest2_pod.fill_transform(ref a2, 1294);
                 return a2;
             }
             set
             {
-                ServiceTest2_cstruct.verify_transform(ref value, 827635);
+                ServiceTest2_pod.verify_transform(ref value, 827635);
             }
         }
-        public override transform[] testastruct3 {
-            get
-            {
-                return ServiceTest2_cstruct.fill_transform_array(8, 837512);
-            }
-            set
-            {
-                ServiceTest2_cstruct.verify_transform_array(value, 6, 19274);
-            }
-        }
-        public override AStructureMultiDimArray testastruct4 {
-            get
-            {
-                return ServiceTest2_cstruct.fill_transform_multidimarray(7, 2, 66134);
-            }
-            set
-            {
-                ServiceTest2_cstruct.verify_transform_multidimarray(value, 5, 2, 6385);
-            }
-        }
-        public override AStructureMultiDimArray testastruct5
+        public override transform[] testnamedarray3
         {
             get
             {
-                return ServiceTest2_cstruct.fill_transform_multidimarray(3, 2, 773142);
+                return ServiceTest2_pod.fill_transform_array(8, 837512);
             }
             set
             {
-                ServiceTest2_cstruct.verify_transform_multidimarray(value, 3, 2, 7732);
+                ServiceTest2_pod.verify_transform_array(value, 6, 19274);
+            }
+        }
+        public override NamedMultiDimArray testnamedarray4
+        {
+            get
+            {
+                return ServiceTest2_pod.fill_transform_multidimarray(7, 2, 66134);
+            }
+            set
+            {
+                ServiceTest2_pod.verify_transform_multidimarray(value, 5, 2, 6385);
+            }
+        }
+        public override NamedMultiDimArray testnamedarray5
+        {
+            get
+            {
+                return ServiceTest2_pod.fill_transform_multidimarray(3, 2, 773142);
+            }
+            set
+            {
+                ServiceTest2_pod.verify_transform_multidimarray(value, 3, 2, 7732);
             }
         }
 
-        AStructureArrayMemory<transform> m_astruct_m1 = new AStructureArrayMemory<transform>(new transform[512]);
-        public override AStructureArrayMemory<transform> astruct_m1
+        NamedArrayMemory<transform> m_namedarray_m1 = new NamedArrayMemory<transform>(new transform[512]);
+        public override NamedArrayMemory<transform> namedarray_m1
         {
             get
             {
-                return m_astruct_m1;
+                return m_namedarray_m1;
             }
         }
 
-        AStructureMultiDimArrayMemory<transform> m_astruct_m2 = new AStructureMultiDimArrayMemory<transform>(new AStructureMultiDimArray(new int[] { 3, 3 }, new transform[9]));
-        public override AStructureMultiDimArrayMemory<transform> astruct_m2
+        NamedMultiDimArrayMemory<transform> m_namedarray_m2 = new NamedMultiDimArrayMemory<transform>(new NamedMultiDimArray(new uint[] { 3, 3 }, new transform[9]));
+        public override NamedMultiDimArrayMemory<transform> namedarray_m2
         {
             get
             {
-                return m_astruct_m2;
+                return m_namedarray_m2;
             }
         }
+
+        public void ca<T>(T[] v1, T[] v2)
+        {
+            if (v1.Length != v2.Length) throw new Exception();
+            for (int i = 0; i < v1.Length; i++)
+            {
+                if (!Object.Equals(v1[i], v2[i])) throw new Exception();
+            }
+        }
+
+        static CDouble[] ComplexFromScalars(double[] a)
+        {
+            var o = new CDouble[a.Length / 2];
+            for (int j = 0; j < o.Length; j++)
+                o[j] = new CDouble(a[j * 2], a[j * 2 + 1]);
+            return o;
+        }
+
+        static CSingle[] ComplexFromScalars(float[] a)
+        {
+            var o = new CSingle[a.Length / 2];
+            for (int j = 0; j < o.Length; j++)
+                o[j] = new CSingle(a[j * 2], a[j * 2 + 1]);
+            return o;
+        }
+
+        public override CDouble c1
+        {
+            get
+            {
+                return new CDouble(5.708705e+01, -2.328294e-03);
+            }
+            set
+            {
+                var c1_2 = new CDouble(5.708705e+01, -2.328294e-03);
+                if (value != c1_2) throw new Exception();
+            }
+        }
+        public override CDouble[] c2
+        {
+            get
+            {
+                double[] c2_1_1 = new double[] { 1.968551e+07, 2.380643e+18, 3.107374e-16, 7.249542e-16, -4.701135e-19, -6.092764e-17, 2.285854e+14, 2.776180e+05, -1.436152e-12, 3.626609e+11, 3.600952e-02, -3.118123e-16, -1.312210e-10, -1.738940e-07, -1.476586e-12, -2.899781e-20, 4.806642e+03, 4.476869e-05, -2.935084e-16, 3.114019e-20, -3.675955e+01, 3.779796e-21, 2.190594e-11, 4.251420e-06, -9.715221e+11, -3.483924e-01, 7.606428e+05, 5.418088e+15, 4.786378e+16, -1.202581e+08, -1.662061e+02, -2.392954e+03 };
+                return ComplexFromScalars(c2_1_1);
+            }
+            set
+            {
+                double[] c2_2_1 = new double[] { 4.925965e-03, 5.695254e+13, -4.576890e-14, -6.056342e-07, -4.918571e-08, -1.940684e-10, 1.549104e-02, -1.954145e+04, -2.499019e-16, 4.010614e+09, -1.906811e-08, 3.297924e-10, 2.742399e-02, -4.372839e-01, -3.093171e-10, 4.311755e-01, -2.218220e-14, 5.399758e+10, 3.360304e+17, 1.340681e-18, -4.441140e+11, -1.845055e-09, -3.074586e-10, -1.754926e+01, -2.766799e+04, -2.307577e+10, 2.754875e+14, 1.179639e+15, 6.976204e-10, 1.901856e+08, -3.824351e-02, -1.414167e+08 };
+
+                ca(ComplexFromScalars(c2_2_1), value);
+            }
+        }
+        public override MultiDimArray c3
+        {
+            get
+            {
+                uint[] c3_1_1 = new uint[] { 2, 5 };
+                double[] c3_1_2 = new double[] { 5.524802e+18, -2.443857e-05, 3.737932e-02, -4.883553e-03, -1.184347e+12, 4.537366e-08, -4.567913e-01, -1.683542e+15, -1.676517e+00, -8.911085e+12, -2.537376e-17, 1.835687e-10, -9.366069e-22, -5.426323e-12, -7.820969e-10, -1.061541e+12, -3.660854e-12, -4.969930e-03, 1.988428e+07, 1.860782e-16 };
+                return new MultiDimArray(c3_1_1, ComplexFromScalars(c3_1_2));
+            }
+            set
+            {
+                uint[] c3_2_1 = new uint[] { 3, 4 };
+                double[] c3_2_2 = new double[] { 4.435180e+04, 5.198060e-18, -1.316737e-13, -4.821771e-03, -4.077550e-19, -1.659105e-09, -6.332363e-11, -1.128999e+16, 4.869912e+16, 2.680490e-04, -8.880119e-04, 3.960452e+11, 4.427784e-09, -2.813742e-18, 7.397516e+18, 1.196394e+13, 3.236906e-14, -4.219297e-17, 1.316282e-06, -2.771084e-18, -1.239118e-09, 2.887453e-08, -1.746515e+08, -2.312264e-11 };
+                ca(value.Dims, c3_2_1);
+                ca((CDouble[])value.Array_, ComplexFromScalars(c3_2_2));
+            }
+        }
+        public override List<CDouble[]> c5
+        {
+            get
+            {
+                var c5_1 = new List<CDouble[]>();
+                double[] c5_1_1 = new double[] { 1.104801e+00, 4.871266e-10, -2.392938e-03, 4.210339e-07, 1.474114e-19, -1.147137e-01, -2.026434e+06, 4.450447e-19, 3.702953e-21, 9.722025e+12, 3.464073e-14, 4.628110e+15, 2.345453e-19, 3.730012e-04, 4.116650e+16, 4.380220e+08 };
+                c5_1.Add(ComplexFromScalars(c5_1_1));
+                return c5_1;
+
+            }
+            set
+            {
+                double[] c5_2_1 = { 2.720831e-20, 2.853037e-16, -7.982497e+16, -2.684318e-09, -2.505796e+17, -4.743970e-12, -3.657056e+11, 2.718388e+15, 1.597672e+03, 2.611859e+14, 2.224926e+06, -1.431096e-09, 3.699894e+19, -5.936706e-01, -1.385395e-09, -4.248415e-13 };
+                ca(value[0], ComplexFromScalars(c5_2_1));
+            }
+        }
+        public override CSingle c7
+        {
+            get
+            {
+                return new CSingle(-5.527021e-18f, -9.848457e+03f);
+            }
+            set
+            {
+                var c7_2 = new CSingle(9.303345e-12f, -3.865684e-05f);
+                if (value != c7_2) throw new Exception();
+            }
+        }
+        public override CSingle[] c8
+        {
+            get
+            {
+                float[] c8_1_1 = new float[] { -3.153395e-09f, 3.829492e-02f, -2.665239e+12f, 1.592927e-03f, 3.188444e+06f, -3.595015e-11f, 2.973887e-18f, -2.189921e+17f, 1.651567e+10f, 1.095838e+05f, 3.865249e-02f, 4.725510e+10f, -2.334376e+03f, 3.744977e-05f, -1.050821e+02f, 1.122660e-22f, 3.501520e-18f, -2.991601e-17f, 6.039622e-17f, 4.778095e-07f, -4.793136e-05f, 3.096513e+19f, 2.476004e+18f, 1.296297e-03f, 2.165336e-13f, 4.834427e+06f, 4.675370e-01f, -2.942290e-12f, -2.090883e-19f, 6.674942e+07f, -4.809047e-10f, -4.911772e-13f };
+                return ComplexFromScalars(c8_1_1);
+            }
+            set
+            {
+                float[] c8_2_1 = new float[] { 1.324498e+06f, 1.341746e-04f, 4.292993e-04f, -3.844509e+15f, -3.804802e+10f, 3.785305e-12f, 2.628285e-19f, -1.664089e+15f, -4.246472e-10f, -3.334943e+03f, -3.305796e-01f, 1.878648e-03f, 1.420880e-05f, -3.024657e+14f, 2.227031e-21f, 2.044653e+17f, 9.753609e-20f, -6.581817e-03f, 3.271063e-03f, -1.726081e+06f, -1.614502e-06f, -2.641638e-19f, -2.977317e+07f, -1.278224e+03f, -1.760207e-05f, -4.877944e-07f, -2.171524e+02f, 1.620645e+01f, -4.334168e-02f, 1.871011e-09f, -3.066163e+06f, -3.533662e+07f };
+                ca(value, ComplexFromScalars(c8_2_1));
+            }
+        }
+        public override MultiDimArray c9
+        {
+            get
+            {
+                uint[] c9_1_1 = new uint[] { 2, 4 };
+                float[] c9_1_2 = new float[] { 1.397743e+15f, 3.933042e+10f, -3.812329e+07f, 1.508109e+16f, -2.091397e-20f, 3.207851e+12f, -3.640702e+02f, 3.903769e+02f, -2.879727e+17f, -4.589604e-06f, 2.202769e-06f, 2.892523e+04f, -3.306489e-14f, 4.522308e-06f, 1.665807e+15f, 2.340476e+10f };
+                return new MultiDimArray(c9_1_1, ComplexFromScalars(c9_1_2));
+            }
+            set
+            {
+                uint[] c9_2_1 = new uint[] { 2, 2, 2 };
+                float[] c9_2_2 = new float[] { 2.138322e-03f, 4.036979e-21f, 1.345236e+10f, -1.348460e-12f, -3.615340e+12f, -2.911340e-21f, 3.220362e+09f, 3.459909e-04f, 4.276259e-08f, -3.199451e+18f, 3.468308e+07f, -2.928506e-09f, -3.154288e+17f, -2.352920e-02f, 6.976385e-21f, 2.435472e+12f };
+                ca(value.Dims, c9_2_1);
+                ca((CSingle[])value.Array_, ComplexFromScalars(c9_2_2));
+            }
+        }
+
+        public override ArrayMemory<CDouble> c_m1 { get; } = new ArrayMemory<CDouble>(new CDouble[512]);
+
+        public override MultiDimArrayMemory<CDouble> c_m2 { get; } = new MultiDimArrayMemory<CDouble>(new MultiDimArray(new uint[] { 10, 10 }, new CDouble[100]));
+
     }
 
     class func4_gen : SyncGenerator1<byte[], byte[]>
@@ -321,7 +457,7 @@ namespace RobotRaconteurNETTest
         }        
     }
 
-    static class ServiceTest2_cstruct
+    static class ServiceTest2_pod
     {
         private static double[] create_double_array(ServiceTest2_test_sequence_gen gen, int len)
         {
@@ -382,7 +518,7 @@ namespace RobotRaconteurNETTest
         }
 
 
-        public static void fill_testcstruct1(ref testcstruct1 s, uint seed)
+        public static void fill_testpod1(ref testpod1 s, uint seed)
         {
             var gen = new ServiceTest2_test_sequence_gen(seed);
             s.d1 = gen.get_double();
@@ -390,10 +526,10 @@ namespace RobotRaconteurNETTest
             s.d3 = create_double_array(gen, (int)(gen.get_uint32() % 6));
             s.d4 = create_double_array(gen,9);
 
-            fill_testcstruct2(ref s.s1, gen.get_uint32());
-            s.s2 = create_testcstruct2_array(gen, 8);
-            s.s3 = create_testcstruct2_array(gen, (int)(gen.get_uint32() % 9));
-            s.s4 = create_testcstruct2_array(gen, 8);
+            fill_testpod2(ref s.s1, gen.get_uint32());
+            s.s2 = create_testpod2_array(gen, 8);
+            s.s3 = create_testpod2_array(gen, (int)(gen.get_uint32() % 9));
+            s.s4 = create_testpod2_array(gen, 8);
 
             fill_transform(ref s.t1, gen.get_uint32());
 
@@ -411,7 +547,7 @@ namespace RobotRaconteurNETTest
                 fill_transform(ref s.t4[i], gen.get_uint32());
         }
 
-        public static void verify_testcstruct1(ref testcstruct1 s, uint seed)
+        public static void verify_testpod1(ref testpod1 s, uint seed)
         {
             var gen = new ServiceTest2_test_sequence_gen(seed);
             if (s.d1 != gen.get_double()) throw new Exception();
@@ -419,10 +555,10 @@ namespace RobotRaconteurNETTest
             verify_double_array(gen, s.d3, (int)(gen.get_uint32() % 6));
 
             verify_double_array(gen, (double[])s.d4, 9);                   
-            verify_testcstruct2(ref s.s1, gen.get_uint32());
-            verify_testcstruct2_array(gen, s.s2, 8);
-            verify_testcstruct2_array(gen, s.s3,(int) (gen.get_uint32() % 9));
-            verify_testcstruct2_array(gen, (testcstruct2[])s.s4, 8);
+            verify_testpod2(ref s.s1, gen.get_uint32());
+            verify_testpod2_array(gen, s.s2, 8);
+            verify_testpod2_array(gen, s.s3,(int) (gen.get_uint32() % 9));
+            verify_testpod2_array(gen, (testpod2[])s.s4, 8);
 
             verify_transform(ref s.t1, gen.get_uint32());
 
@@ -438,7 +574,7 @@ namespace RobotRaconteurNETTest
                 verify_transform(ref s.t4[i], gen.get_uint32());
         }
 
-        public static void fill_testcstruct2(ref testcstruct2 s, uint seed)
+        public static void fill_testpod2(ref testpod2 s, uint seed)
         {
             var gen = new ServiceTest2_test_sequence_gen(seed);
             s.i1 = gen.get_int8();
@@ -446,7 +582,7 @@ namespace RobotRaconteurNETTest
             s.i3 = create_int8_array(gen, (int)(gen.get_uint32() % 15));
         }
 
-        public static void verify_testcstruct2(ref testcstruct2 s, uint seed)
+        public static void verify_testpod2(ref testpod2 s, uint seed)
         {
             var gen = new ServiceTest2_test_sequence_gen(seed);
             if (s.i1 != gen.get_int8()) throw new Exception();
@@ -454,74 +590,74 @@ namespace RobotRaconteurNETTest
             verify_int8_array(gen, s.i3, (int)(gen.get_uint32() % 15));
         }
 
-        public static testcstruct1[] create_testcstruct1_array(int len, uint seed)
+        public static testpod1[] create_testpod1_array(int len, uint seed)
         {
             var gen = new ServiceTest2_test_sequence_gen(seed);
-            var o = new testcstruct1[len];
+            var o = new testpod1[len];
             for (int i = 0; i < len; i++)
             {
-                fill_testcstruct1(ref o[i], gen.get_uint32());
+                fill_testpod1(ref o[i], gen.get_uint32());
             }
             return o;
         }
 
-        public static void verify_testcstruct1_array(testcstruct1[] v, int len, uint seed)
+        public static void verify_testpod1_array(testpod1[] v, int len, uint seed)
         {
             var gen = new ServiceTest2_test_sequence_gen(seed);
             if (v.Length != len) throw new Exception();
             for (int i = 0; i < len; i++)
             {
-                verify_testcstruct1(ref v[i], gen.get_uint32());
+                verify_testpod1(ref v[i], gen.get_uint32());
             }
         }
 
-        public static CStructureMultiDimArray create_testcstruct1_multidimarray(int m, int n, uint seed)
+        public static PodMultiDimArray create_testpod1_multidimarray(uint m, uint n, uint seed)
         {
             var gen = new ServiceTest2_test_sequence_gen(seed);
-            var o = new testcstruct1[m*n];
+            var o = new testpod1[m*n];
             for (int i = 0; i < m*n; i++)
             {
-                fill_testcstruct1(ref o[i], gen.get_uint32());
+                fill_testpod1(ref o[i], gen.get_uint32());
             }
-            return new CStructureMultiDimArray(new int[] { m, n }, o);
+            return new PodMultiDimArray(new uint[] { m, n }, o);
         }
 
-        public static void verify_testcstruct1_multidimarray(CStructureMultiDimArray v, int m, int n, uint seed)
+        public static void verify_testpod1_multidimarray(PodMultiDimArray v, uint m, uint n, uint seed)
         {
-            if (!v.Dims.SequenceEqual(new int[] { m, n })) throw new Exception();
-            verify_testcstruct1_array((testcstruct1[])v.cstruct_array, m * n, seed);
+            if (!v.Dims.SequenceEqual(new uint[] { m, n })) throw new Exception();
+            verify_testpod1_array((testpod1[])v.pod_array, (int)(m * n), seed);
         }
 
-        public static void verify_testcstruct1_multidimarray(object v, int m, int n, uint seed)
+        public static void verify_testpod1_multidimarray(object v, uint m, uint n, uint seed)
         {
             if ((v is Array) && n == 1)
             {
-                verify_testcstruct1_array((testcstruct1[])(v), m, seed);
+                verify_testpod1_array((testpod1[])(v), (int)m, seed);
             }
             else
             {
-                var v2 = (CStructureMultiDimArray)v;
-                if (!v2.Dims.SequenceEqual(new int[] { m, n })) throw new Exception();
-                verify_testcstruct1_array((testcstruct1[])(v2.cstruct_array), m * n, seed);
+                var v2 = (PodMultiDimArray)v;
+                if (!v2.Dims.SequenceEqual(new uint[] { m, n })) throw new Exception();
+                verify_testpod1_array((testpod1[])(v2.pod_array),(int) (m * n), seed);
             }
         }
 
-        public static testcstruct2[] create_testcstruct2_array(ServiceTest2_test_sequence_gen gen, int len)
+        public static testpod2[] create_testpod2_array(ServiceTest2_test_sequence_gen gen, int len)
         {
-            var o = new testcstruct2[len];
+            var o = new testpod2[len];
             for (int i=0; i< len; i++)
             {
-                fill_testcstruct2(ref o[i], gen.get_uint32());
+                fill_testpod2(ref o[i], gen.get_uint32());
             }
             return o;
         }
 
-        public static void verify_testcstruct2_array(ServiceTest2_test_sequence_gen gen, testcstruct2[] v, int len)
+        public static void verify_testpod2_array(ServiceTest2_test_sequence_gen gen, testpod2[] v, int len)
         {
             if (v.Length != len) throw new Exception();
             for (int i = 0; i < len; i++)
             {
-                verify_testcstruct2(ref v[i], gen.get_uint32());
+                verify_testpod2(ref v[i], gen.get_uint32());
             }            
         }
 
@@ -529,47 +665,47 @@ namespace RobotRaconteurNETTest
         {
             var gen = new ServiceTest2_test_sequence_gen(seed);
             var o = new teststruct3();
-            fill_testcstruct1(ref o.s1, gen.get_uint32());
+            fill_testpod1(ref o.s1, gen.get_uint32());
             var s2_seed = gen.get_uint32();
-            o.s2 = create_testcstruct1_array((int)(s2_seed % 17), s2_seed);
-            o.s3 = create_testcstruct1_array(11, gen.get_uint32());
+            o.s2 = create_testpod1_array((int)(s2_seed % 17), s2_seed);
+            o.s3 = create_testpod1_array(11, gen.get_uint32());
             var s4_seed = gen.get_uint32();
-            o.s4 = create_testcstruct1_array((int)(s4_seed % 16), s4_seed);
-            o.s5 = create_testcstruct1_multidimarray(3, 3, gen.get_uint32());
+            o.s4 = create_testpod1_array((int)(s4_seed % 16), s4_seed);
+            o.s5 = create_testpod1_multidimarray(3, 3, gen.get_uint32());
             var s6_seed = gen.get_uint32();
-            o.s6 = create_testcstruct1_multidimarray((int)(s6_seed % 6), (int)(s6_seed % 3), s6_seed);
-            o.s7 = new List<testcstruct1>();
-            var s7_1 = new testcstruct1();
-            fill_testcstruct1(ref s7_1, gen.get_uint32());
+            o.s6 = create_testpod1_multidimarray((uint)(s6_seed % 6), (uint)(s6_seed % 3), s6_seed);
+            o.s7 = new List<testpod1>();
+            var s7_1 = new testpod1();
+            fill_testpod1(ref s7_1, gen.get_uint32());
             o.s7.Add(s7_1);
 
-            o.s8 = new List<testcstruct1[]>();
-            o.s8.Add(create_testcstruct1_array(2, gen.get_uint32()));
-            o.s8.Add(create_testcstruct1_array(4, gen.get_uint32()));
+            o.s8 = new List<testpod1[]>();
+            o.s8.Add(create_testpod1_array(2, gen.get_uint32()));
+            o.s8.Add(create_testpod1_array(4, gen.get_uint32()));
 
-            o.s9 = new List<CStructureMultiDimArray>();
-            o.s9.Add(create_testcstruct1_multidimarray(2, 3, gen.get_uint32()));
-            o.s9.Add(create_testcstruct1_multidimarray(4, 5, gen.get_uint32()));
+            o.s9 = new List<PodMultiDimArray>();
+            o.s9.Add(create_testpod1_multidimarray(2, 3, gen.get_uint32()));
+            o.s9.Add(create_testpod1_multidimarray(4, 5, gen.get_uint32()));
 
-            var s10 = new testcstruct1();
-            fill_testcstruct1(ref s10, gen.get_uint32());
-            o.s10 = new testcstruct1[] { s10 };
+            var s10 = new testpod1();
+            fill_testpod1(ref s10, gen.get_uint32());
+            o.s10 = new testpod1[] { s10 };
 
-            o.s11 = create_testcstruct1_array(3, gen.get_uint32());
-            o.s12 = create_testcstruct1_multidimarray(2, 2, gen.get_uint32());
+            o.s11 = create_testpod1_array(3, gen.get_uint32());
+            o.s12 = create_testpod1_multidimarray(2, 2, gen.get_uint32());
 
-            var s13 = new testcstruct1();
-            fill_testcstruct1(ref s13, gen.get_uint32());
-            o.s13 = new List<object>(new object[] { new testcstruct1[] { s13 } });
+            var s13 = new testpod1();
+            fill_testpod1(ref s13, gen.get_uint32());
+            o.s13 = new List<object>(new object[] { new testpod1[] { s13 } });
 
             var s14 = new List<object>();
-            s14.Add(create_testcstruct1_array(3, gen.get_uint32()));
-            s14.Add(create_testcstruct1_array(5, gen.get_uint32()));
+            s14.Add(create_testpod1_array(3, gen.get_uint32()));
+            s14.Add(create_testpod1_array(5, gen.get_uint32()));
             o.s14 = s14;
 
             var s15 = new List<object>();
-            s15.Add(create_testcstruct1_multidimarray(7, 2, gen.get_uint32()));
-            s15.Add(create_testcstruct1_multidimarray(5, 1, gen.get_uint32()));
+            s15.Add(create_testpod1_multidimarray(7, 2, gen.get_uint32()));
+            s15.Add(create_testpod1_multidimarray(5, 1, gen.get_uint32()));
             o.s15 = s15;
 
             fill_transform(ref o.t1, gen.get_uint32());
@@ -589,7 +725,7 @@ namespace RobotRaconteurNETTest
             o.t7.Add(fill_transform_array(4, gen.get_uint32()));
             o.t7.Add(fill_transform_array(4, gen.get_uint32()));
 
-            o.t8 = new List<AStructureMultiDimArray>();
+            o.t8 = new List<NamedMultiDimArray>();
             o.t8.Add(fill_transform_multidimarray(2, 4, gen.get_uint32()));
             o.t8.Add(fill_transform_multidimarray(2, 4, gen.get_uint32()));
 
@@ -615,52 +751,52 @@ namespace RobotRaconteurNETTest
             if (v == null) throw new Exception("");
             var gen = new ServiceTest2_test_sequence_gen(seed);
 
-            verify_testcstruct1(ref v.s1, gen.get_uint32());
+            verify_testpod1(ref v.s1, gen.get_uint32());
             var s2_seed = gen.get_uint32();
-            verify_testcstruct1_array(v.s2, (int)(s2_seed % 17), s2_seed);
-            verify_testcstruct1_array(v.s3, 11, gen.get_uint32());
+            verify_testpod1_array(v.s2, (int)(s2_seed % 17), s2_seed);
+            verify_testpod1_array(v.s3, 11, gen.get_uint32());
             var s4_seed = gen.get_uint32();
-            verify_testcstruct1_array(v.s4, (int)(s4_seed % 16), s4_seed);
-            verify_testcstruct1_multidimarray(v.s5, 3, 3, gen.get_uint32());
+            verify_testpod1_array(v.s4, (int)(s4_seed % 16), s4_seed);
+            verify_testpod1_multidimarray(v.s5, 3, 3, gen.get_uint32());
             var s6_seed = gen.get_uint32();
-            verify_testcstruct1_multidimarray(v.s6, (int)(s6_seed % 6), (int)(s6_seed % 3), s6_seed);
+            verify_testpod1_multidimarray(v.s6, (uint)(s6_seed % 6), (uint)(s6_seed % 3), s6_seed);
 
             if (v.s7 == null) throw new Exception("");
             if (v.s7.Count != 1) throw new Exception("");
             var s7_0 = v.s7[0];
-            verify_testcstruct1(ref s7_0, gen.get_uint32());
+            verify_testpod1(ref s7_0, gen.get_uint32());
 
             if (v.s8 == null) throw new Exception("");
             if (v.s8.Count != 2) throw new Exception("");            
-            verify_testcstruct1_array(v.s8[0], 2, gen.get_uint32());
-            verify_testcstruct1_array(v.s8[1], 4, gen.get_uint32());
+            verify_testpod1_array(v.s8[0], 2, gen.get_uint32());
+            verify_testpod1_array(v.s8[1], 4, gen.get_uint32());
 
             if (v.s9 == null) throw new Exception("");
             if (v.s9.Count != 2) throw new Exception("");
-            verify_testcstruct1_multidimarray(v.s9[0], 2, 3, gen.get_uint32());
-            verify_testcstruct1_multidimarray(v.s9[1], 4, 5, gen.get_uint32());
+            verify_testpod1_multidimarray(v.s9[0], 2, 3, gen.get_uint32());
+            verify_testpod1_multidimarray(v.s9[1], 4, 5, gen.get_uint32());
 
-            var s10 = ((testcstruct1[])v.s10)[0];
-            verify_testcstruct1(ref s10, gen.get_uint32());
+            var s10 = ((testpod1[])v.s10)[0];
+            verify_testpod1(ref s10, gen.get_uint32());
 
-            verify_testcstruct1_array((testcstruct1[])v.s11, 3, gen.get_uint32());
-            verify_testcstruct1_multidimarray(v.s12, 2, 2, gen.get_uint32());
+            verify_testpod1_array((testpod1[])v.s11, 3, gen.get_uint32());
+            verify_testpod1_multidimarray(v.s12, 2, 2, gen.get_uint32());
 
             if (v.s13 == null) throw new Exception("");
-            var s13 = (testcstruct1[])((List<object>)v.s13)[0];
-            verify_testcstruct1(ref s13[0], gen.get_uint32());
+            var s13 = (testpod1[])((List<object>)v.s13)[0];
+            verify_testpod1(ref s13[0], gen.get_uint32());
 
             if (v.s14 == null) throw new Exception("");
             var v14 = (List<object>)v.s14;
             if (v14.Count != 2) throw new Exception("");
-            verify_testcstruct1_array((testcstruct1[])v14[0], 3, gen.get_uint32());
-            verify_testcstruct1_array((testcstruct1[])v14[1], 5, gen.get_uint32());
+            verify_testpod1_array((testpod1[])v14[0], 3, gen.get_uint32());
+            verify_testpod1_array((testpod1[])v14[1], 5, gen.get_uint32());
 
             if (v.s15 == null) throw new Exception("");
             var v15 = (List<object>)v.s15;
             if (v15.Count != 2) throw new Exception("");
-            verify_testcstruct1_multidimarray(v15[0], 7, 2, gen.get_uint32());
-            verify_testcstruct1_multidimarray(v15[1], 5, 1, gen.get_uint32());
+            verify_testpod1_multidimarray(v15[0], 7, 2, gen.get_uint32());
+            verify_testpod1_multidimarray(v15[1], 5, 1, gen.get_uint32());
             
             verify_transform(ref v.t1, gen.get_uint32());
 
@@ -668,7 +804,7 @@ namespace RobotRaconteurNETTest
             verify_transform_multidimarray(v.t3, 2, 4, gen.get_uint32());
 
             verify_transform_array((transform[])(v.t4), 10, gen.get_uint32());
-            verify_transform_multidimarray((AStructureMultiDimArray)(v.t5), 6, 5, gen.get_uint32());
+            verify_transform_multidimarray((NamedMultiDimArray)(v.t5), 6, 5, gen.get_uint32());
 
             if (v.t6 == null) throw new Exception("");
             if (v.t6.Count != 1) throw new Exception("");
@@ -698,8 +834,8 @@ namespace RobotRaconteurNETTest
             if (v.t11 == null) throw new Exception("");
             var t11 = (List<object>)v.t11;
             if (t11.Count != 2) throw new Exception("");
-            verify_transform_multidimarray((AStructureMultiDimArray)t11[0], 7, 2, gen.get_uint32());
-            verify_transform_multidimarray((AStructureMultiDimArray)t11[1], 5, 1, gen.get_uint32());
+            verify_transform_multidimarray((NamedMultiDimArray)t11[0], 7, 2, gen.get_uint32());
+            verify_transform_multidimarray((NamedMultiDimArray)t11[1], 5, 1, gen.get_uint32());
 
         }
 
@@ -734,15 +870,15 @@ namespace RobotRaconteurNETTest
             for (int i = 0; i < len; i++) verify_transform(ref t[i], gen.get_uint32());
         }
 
-        public static AStructureMultiDimArray fill_transform_multidimarray(int m, int n, uint seed)
+        public static NamedMultiDimArray fill_transform_multidimarray(uint m, uint n, uint seed)
         {
-            return new AStructureMultiDimArray(new int[] { m, n }, fill_transform_array(m * n, seed));
+            return new NamedMultiDimArray(new uint[] { m, n }, fill_transform_array((int)(m * n), seed));
         }
 
-        public static void verify_transform_multidimarray(AStructureMultiDimArray a, int m, int n, uint seed)
+        public static void verify_transform_multidimarray(NamedMultiDimArray a, uint m, uint n, uint seed)
         {
-            if (!a.Dims.SequenceEqual(new int[] { m, n })) throw new Exception();
-            verify_transform_array((transform[])a.astruct_array, m * n, seed);
+            if (!a.Dims.SequenceEqual(new uint[] { m, n })) throw new Exception();
+            verify_transform_array((transform[])a.namedarray_array, (int)(m * n), seed);
         }
 
 
