@@ -3804,12 +3804,17 @@ namespace RobotRaconteur
 					throw ServiceDefinitionException("NamedArrays may not use containers");
 				}
 
-				if ((boost::range::find(t->ArrayLength, 0) != t->ArrayLength.end())
-					|| (t->ArrayType == DataTypes_ArrayTypes_multidimarray && t->ArrayLength.empty()))
+				switch (t->ArrayType)
 				{
-					throw ServiceDefinitionException("NamedArrays must have fixed or finite length arrays");
+				case DataTypes_ArrayTypes_none:
+					break;
+				case DataTypes_ArrayTypes_array:
+					if (t->ArrayVarLength) throw ServiceDefinitionException("NamedArray fields must be scalars or fixed arrays");
+					break;
+				default:
+					throw ServiceDefinitionException("NamedArray fields must be scalars or fixed arrays");
 				}
-
+								
 				std::set<std::string> n;
 				GetNamedArrayElementTypeAndCount(strut, defs);
 
