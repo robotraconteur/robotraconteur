@@ -37,6 +37,6 @@ PyObject* UnpackFromRRArray_numpy(boost::shared_ptr<RRBaseArray> rrarray, boost:
 */
 
 %rename(_RRTypeIdToNumPyDataType) RRTypeIdToNumPyDataType;
-int RRTypeIdToNumPyDataType(DataTypes rr_type);
+PyObject* RRTypeIdToNumPyDataType(DataTypes rr_type);
 
 }

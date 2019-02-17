@@ -1201,7 +1201,7 @@ namespace RobotRaconteur
 						
 						PyArray_Dims el4_dims;
 						el4_dims.len = 1;
-						npy_int el4_dims_ptr = p->Type->ArrayLength.at(0);
+						npy_intp el4_dims_ptr = p->Type->ArrayLength.at(0);
 						el4_dims.ptr = &el4_dims_ptr;
 
 						PyAutoPtr<PyObject> el4((PyObject*)PyArray_Resize((PyArrayObject*)el1, &el4_dims, NPY_TRUE, NPY_FORTRANORDER));
