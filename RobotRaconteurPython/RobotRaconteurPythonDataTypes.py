@@ -14,10 +14,7 @@
 
 from __future__ import absolute_import
 
-try:
-    import numpy
-except:
-    pass
+import numpy
 
 class EventHook(object):
 
@@ -55,55 +52,6 @@ class RobotRaconteurVarValue(object):
     def __repr__(self):
         return "RobotRaconteurVarValue: " + str(self.datatype) + ": " + repr(self.data)
 
-class MultiDimArray(object):
-    """ <summary>
-     Represents an unpacked MultiDimArray.  This class stores
-     the real and complex data as column vectors that is
-     reshaped based on Dims.
-     </summary>
-    """
-    def __init__(self, Dims=None, Real=None, Imag=None):
-        self.Complex = False
-        if (not Dims is  None):
-            self.DimCount = len(Dims)
-        else:
-            self.DimCount=[0]
-        self.Dims = Dims
-        self.Real = Real
-        self.Imag = None
-        if Imag != None:
-            self.Complex = True
-            self.Imag = Imag
-
-    def RetrieveSubArray(self, memorypos, buffer, bufferpos, count):
-        v=RobotRaconteurPython.vectorint32
-        if self.Complex != buffer.Complex:
-            raise Exception("Complex mismatch")       
-
-        iter=RobotRaconteurPython.MultiDimArray_CalculateCopyIndicesBeginIter(self.DimCount, v(self.Dims), v(memorypos), buffer.DimCount, v(buffer.Dims), v(bufferpos), v(count))
-        while True:
-            (c, indexa, indexb, l)=iter.Next()
-            if not c:
-                return
-            buffer.Real[indexb:(indexb+l)]=self.Real[indexa:(indexa+l)]
-            if self.Complex:         
-                buffer.Imag[indexb:(indexb+l)]=self.Imag[indexa:(indexa+l)]
-
-    def AssignSubArray(self, memorypos, buffer, bufferpos, count):
-        v=RobotRaconteurPython.vectorint32  
-        if self.Complex != buffer.Complex:
-            raise Exception("Complex mismatch")
-        iter=RobotRaconteurPython.MultiDimArray_CalculateCopyIndicesBeginIter(self.DimCount, v(self.Dims), v(memorypos), buffer.DimCount, v(buffer.Dims), v(bufferpos), v(count))
-        while True:
-            (c, indexa, indexb, l)=iter.Next()
-            if not c:
-                return
-            #Array.Copy(memb.Real, indexb[i], mema.Real, indexa[i], count[0])
-            self.Real[indexa:(indexa+l)]=buffer.Real[indexb:(indexb+l)]
-            if self.Complex:
-                #Array.Copy(memb.Imag, indexb[i], mema.Imag, indexa[i], count[0])
-                self.Imag[indexa:(indexa+l)]=buffer.Imag[indexb:(indexb+l)]
-
 class ArrayMemory(object):
     def __init__(self,memory=None):
         self.memory=memory
@@ -124,136 +72,34 @@ class ArrayMemory(object):
 class MultiDimArrayMemory(object):
     def __init__(self,memory=None):
         if (memory is None):
-            self.memory=None
-            self.__isnumpy=False
+            self.memory=None        
         else:
             self.Attach(memory)
 
     def Attach(self,memory):
-        if (isinstance(memory,MultiDimArray)):
-            self.memory=memory
-            self.__isnumpy=False
-        else:
-            if (not RobotRaconteurPython.RobotRaconteurNode.s.UseNumPy):
-                raise Exception("Invalid MultiDimArrayMemory data type, numpy not enabled")
-            if (type(memory) is list or type(memory) is set or type(memory) is tuple):
-                if (len(memory)!=2): raise Exception("Complex numpy array tuple must be length 2")
-                if (not isinstance(memory[0],numpy.ndarray) or not isinstance(memory[1],numpy.ndarray)): raise Exception("MultiDimArrayMemory memory must be MultiDimArray or numpy.ndarray type")
-                if (not numpy.array_equal(memory[0].shape,memory[1].shape)): raise Exception("Complex matrices must have same shape")
-                self.memory=memory
-                self.__isnumpy=True
-                self.__isnumpy_list=True
-            else:
-
-                if (not isinstance(memory,numpy.ndarray)): raise Exception("MultiDimArrayMemory memory must be MultiDimArray or numpy.ndarray type")
-                self.__isnumpy=True
-                self.__isnumpy_list=False
-                self.memory=memory
-    @property
-    def Dimensions(self):
-        if (not self.__isnumpy):
-            return self.memory.Dims
-        else:
-            if (self.__isnumpy_list):
-                return self.memory[0].shape
-            else:
-                return self.memory.shape
-
-    @property
-    def DimCount(self):
-        if (not self.__isnumpy):
-            return self.memory.DimCount
-        else:
-            if (self.__isnumpy_list):
-                return self.memory[0].ndim
-            else:
-                return self.memory.ndim
-
-    @property
-    def Complex(self):
-        if (not self.__isnumpy):
-            return self.memory.Complex
-        else:
-            if (self.__isnumpy_list):
-                return True
-            else:
-                return (self.memory.dtype==numpy.complex64 or self.memory.dtype==numpy.complex128)
-
-    def Read(self,memorypos,buffer,bufferpos,count):
-        if (not self.__isnumpy):
-            self.memory.RetrieveSubArray(memorypos,buffer,bufferpos,count)
-        else:
-            memind=[slice(memorypos[i], (memorypos[i]+count[i])) for i in range(len(count))]
-            bufind=[slice(bufferpos[i], (bufferpos[i]+count[i])) for i in range(len(count))]
-            if (self.__isnumpy_list):
-                realb=buffer[0]
-                imagb=buffer[1]
-                realm=self.memory[0]
-                imagm=self.memory[1]
-                realb[bufind]=realm[memind]
-                imagb[bufind]=imagm[memind]
-            else:
-                buffer[bufind]=self.memory[memind]
-
-    def Write(self,memorypos,buffer,bufferpos,count):
-        if (not self.__isnumpy):
-            self.memory.AssignSubArray(memorypos,buffer,bufferpos,count)
-        else:
-            memind=[slice(memorypos[i], (memorypos[i]+count[i])) for i in range(len(count))]
-            bufind=[slice(bufferpos[i], (bufferpos[i]+count[i])) for i in range(len(count))]
-            if (self.__isnumpy_list):
-                realb=buffer[0]
-                imagb=buffer[1]
-                realm=self.memory[0]
-                imagm=self.memory[1]
-                realm[memind]=realb[bufind]
-                imagm[memind]=imagb[bufind]
-            else:
-                self.memory[memind]=buffer[bufind]
-
-class CStructureMultiDimArray(object):
-    def __init__(self, Dims=None, cstruct_array=None):
-        self.Dims=Dims
-        self.cstruct_array=cstruct_array
-    
-    def RetrieveSubArray(self, memorypos, buffer, bufferpos, count):
-        v=RobotRaconteurPython.vectorint32
-        iter_=RobotRaconteurPython.MultiDimArray_CalculateCopyIndicesBeginIter(len(self.Dims), v(self.Dims), v(memorypos), len(buffer.Dims), v(buffer.Dims), v(bufferpos), v(count))
-        while True:
-            (c, indexa, indexb, l)=iter_.Next()
-            if not c:
-                return
-            buffer.cstruct_array[indexb:(indexb+l)]=self.cstruct_array[indexa:(indexa+l)]
-            
-    def AssignSubArray(self, memorypos, buffer, bufferpos, count):
-        v=RobotRaconteurPython.vectorint32  
-        iter_=RobotRaconteurPython.MultiDimArray_CalculateCopyIndicesBeginIter(len(self.Dims), v(self.Dims), v(memorypos), len(buffer.Dims), v(buffer.Dims), v(bufferpos), v(count))
-        while True:
-            (c, indexa, indexb, l)=iter_.Next()
-            if not c:
-                return            
-            self.cstruct_array[indexa:(indexa+l)]=buffer.cstruct_array[indexb:(indexb+l)]
-
-class CStructureMultiDimArrayMemory(object):
-    def __init__(self,memory=None):
-        self.Attach(memory)
-
-    def Attach(self,memory):
+        
+        if (not isinstance(memory,numpy.ndarray)): raise Exception("MultiDimArrayMemory memory must be MultiDimArray or numpy.ndarray type")
         self.memory=memory
-        
-    @property
-    def DimCount(self):
-        return len(self.memory.Dims)
-    
     @property
     def Dimensions(self):
-        return self.memory.Dims
+        return self.memory.shape
 
-    def Read(self, memorypos, buf, bufferpos, count):
-        self.memory.RetrieveSubArray(memorypos,buf,bufferpos,count)
-        
-    def Write(self,memorypos, buf, bufferpos, count):
-        self.memory.AssignSubArray(memorypos,buf,bufferpos,count)
+    @property
+    def DimCount(self):
+        return self.memory.ndim
+    
+    def Read(self,memorypos,buffer,bufferpos,count):
+        memind=[slice(memorypos[i], (memorypos[i]+count[i])) for i in range(len(count))]
+        bufind=[slice(bufferpos[i], (bufferpos[i]+count[i])) for i in range(len(count))]
+        buffer[bufind]=self.memory[memind]
 
+    def Write(self,memorypos,buffer,bufferpos,count):        
+            memind=[slice(memorypos[i], (memorypos[i]+count[i])) for i in range(len(count))]
+            bufind=[slice(bufferpos[i], (bufferpos[i]+count[i])) for i in range(len(count))]
+            self.memory[memind]=buffer[bufind]
+
+bool_dtype=numpy.uint8
+datetime_dtype=numpy.dtype([('secs', numpy.int64, 1), ('nsecs', numpy.int64, 1)])
+duration_dtype=numpy.dtype([('secs', numpy.int64, 1), ('nsecs', numpy.int64, 1)])
 
 from . import RobotRaconteurPython

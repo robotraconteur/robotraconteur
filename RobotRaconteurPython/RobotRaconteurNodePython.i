@@ -96,7 +96,15 @@ def GetServicePath(self,obj):
 def NewStructure(self,type,obj=None):
 	from .RobotRaconteurPythonUtil import NewStructure
 	return NewStructure(type,obj,self)
-		
+
+def GetPodDType(self,type,obj=None):
+	from .RobotRaconteurPythonUtil import GetPodDType
+	return GetPodDType(type,obj,self)
+
+def GetNamedArrayDType(self,type,obj=None):
+	from .RobotRaconteurPythonUtil import GetNamedArrayDType
+	return GetNamedArrayDType(type,obj,self)
+	
 class ScopedMonitorLock(object):
     def __init__(self,obj,timeout=-1):
     	self.obj=obj
