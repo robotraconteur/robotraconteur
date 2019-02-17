@@ -31,8 +31,8 @@ namespace RobotRaconteurTest
 			= RR_MAKE_SHARED<RobotRaconteur::RRPodMultiDimArray<com::robotraconteur::testing::TestService3::testpod2 > >();
 		uint32_t m2_dims[] = { 6, 6 };
 		m2->Dims = AttachRRArrayCopy(m2_dims, 2);
-		m2->CStructArray = RR_MAKE_SHARED<RobotRaconteur::RRPodArray<com::robotraconteur::testing::TestService3::testpod2 > >();
-		m2->CStructArray->pod_array.resize(36);
+		m2->PodArray = RR_MAKE_SHARED<RobotRaconteur::RRPodArray<com::robotraconteur::testing::TestService3::testpod2 > >();
+		m2->PodArray->pod_array.resize(36);
 		pod_m2 = RR_MAKE_SHARED<RobotRaconteur::PodMultiDimArrayMemory<com::robotraconteur::testing::TestService3::testpod2 > >(m2);
 
 
@@ -792,7 +792,7 @@ namespace RobotRaconteurTest
 		dims.push_back(m);
 		dims.push_back(n);
 		o->Dims = VectorToRRArray<uint32_t>(dims);
-		o->CStructArray = ServiceTest2_fill_testpod1_array(m*n, seed);
+		o->PodArray = ServiceTest2_fill_testpod1_array(m*n, seed);
 		return o;
 	}
 	void ServiceTest2_verify_testpod1_multidimarray(RR_SHARED_PTR<RRPodMultiDimArray<com::robotraconteur::testing::TestService3::testpod1> > v, size_t m, size_t n, uint32_t seed)
@@ -800,7 +800,7 @@ namespace RobotRaconteurTest
 		if (!v) throw std::runtime_error("");
 		if (v->Dims->size() != 2) throw std::runtime_error("");
 		if ((*v->Dims)[0] != m || (*v->Dims)[1] != n) throw std::runtime_error("");
-		ServiceTest2_verify_testpod1_array(v->CStructArray, m*n, seed);
+		ServiceTest2_verify_testpod1_array(v->PodArray, m*n, seed);
 	}
 
 	void ServiceTest2_verify_testpod1_multidimarray(RR_SHARED_PTR<RRValue> v, size_t m, size_t n, uint32_t seed)

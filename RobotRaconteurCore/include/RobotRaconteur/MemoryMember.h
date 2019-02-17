@@ -765,8 +765,8 @@ namespace RobotRaconteur
 
 			RR_SHARED_PTR<RRPodMultiDimArray<T> > data = RR_MAKE_SHARED<RRPodMultiDimArray<T> >();
 			data->Dims = VectorToRRArray<uint32_t>(count);
-			data->CStructArray = RR_MAKE_SHARED<RRPodArray<T> >();
-			data->CStructArray->pod_array.resize(elemcount);
+			data->PodArray = RR_MAKE_SHARED<RRPodArray<T> >();
+			data->PodArray->pod_array.resize(elemcount);
 						
 			buffer1->RetrieveSubArray(detail::ConvertVectorType<uint32_t>(bufferpos), data, std::vector<uint32_t>(count.size()), detail::ConvertVectorType<uint32_t>(count));
 			return GetNode()->PackPodMultiDimArray(data);
@@ -790,8 +790,8 @@ namespace RobotRaconteur
 						
 			RR_SHARED_PTR<RRPodMultiDimArray<T> > data = RR_MAKE_SHARED<RRPodMultiDimArray<T> >();
 			data->Dims = VectorToRRArray<uint32_t>(count);
-			data->CStructArray = RR_MAKE_SHARED<RRPodArray<T> >();
-			data->CStructArray->pod_array.resize((size_t)elemcount);				
+			data->PodArray = RR_MAKE_SHARED<RRPodArray<T> >();
+			data->PodArray->pod_array.resize((size_t)elemcount);				
 			
 			mem1->Read(memorypos, data, bufferpos, count);
 			return GetNode()->PackPodMultiDimArray(data);

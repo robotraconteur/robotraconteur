@@ -197,12 +197,12 @@ namespace RobotRaconteurTest
 			= RR_MAKE_SHARED<RRPodMultiDimArray<com::robotraconteur::testing::TestService3::testpod2> >();
 		uint32_t s_dims[] = { 3, 3 };
 		s->Dims = AttachRRArrayCopy<uint32_t>(s_dims, 2);
-		s->CStructArray = RR_MAKE_SHARED<RRPodArray<com::robotraconteur::testing::TestService3::testpod2> >();
-		s->CStructArray->pod_array.resize(9);
+		s->PodArray = RR_MAKE_SHARED<RRPodArray<com::robotraconteur::testing::TestService3::testpod2> >();
+		s->PodArray->pod_array.resize(9);
 
-		for (size_t i = 0; i < s->CStructArray->pod_array.size(); i++)
+		for (size_t i = 0; i < s->PodArray->pod_array.size(); i++)
 		{
-			ServiceTest2_fill_testpod2(s->CStructArray->pod_array.at(i), 75721 + i);
+			ServiceTest2_fill_testpod2(s->PodArray->pod_array.at(i), 75721 + i);
 		}
 
 		std::vector<uint64_t> z;
@@ -216,13 +216,13 @@ namespace RobotRaconteurTest
 		RR_SHARED_PTR<RRPodMultiDimArray<com::robotraconteur::testing::TestService3::testpod2> > s2
 			= RR_MAKE_SHARED<RRPodMultiDimArray<com::robotraconteur::testing::TestService3::testpod2> >();
 		s2->Dims = AttachRRArrayCopy<uint32_t>(s_dims, 2);
-		s2->CStructArray = RR_MAKE_SHARED<RRPodArray<com::robotraconteur::testing::TestService3::testpod2> >();
-		s2->CStructArray->pod_array.resize(9);
+		s2->PodArray = RR_MAKE_SHARED<RRPodArray<com::robotraconteur::testing::TestService3::testpod2> >();
+		s2->PodArray->pod_array.resize(9);
 		r->get_pod_m2()->Read(z, s2, z, c);
 
 		for (size_t i = 0; i < 9; i++)
 		{
-			ServiceTest2_verify_testpod2(s2->CStructArray->pod_array.at(i), 75721 + i);
+			ServiceTest2_verify_testpod2(s2->PodArray->pod_array.at(i), 75721 + i);
 		}
 	}
 

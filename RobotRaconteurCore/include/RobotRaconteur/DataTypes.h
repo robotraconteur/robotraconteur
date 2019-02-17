@@ -836,14 +836,14 @@ namespace RobotRaconteur
 	{
 	public:
 		
-		typename RR_SHARED_PTR<RRPodArray<T> > CStructArray;
+		typename RR_SHARED_PTR<RRPodArray<T> > PodArray;
 
 		RRPodMultiDimArray() {}
 
 		RRPodMultiDimArray(RR_SHARED_PTR<RRArray<uint32_t> > dims, RR_SHARED_PTR<RRPodArray<T> > a)
 		{
 			this->Dims = dims;
-			this->CStructArray = a;
+			this->PodArray = a;
 		}
 
 		virtual ~RRPodMultiDimArray() {}
@@ -873,7 +873,7 @@ namespace RobotRaconteur
 			{
 				for (size_t i = 0; i < len; i++)
 				{
-					buffer->CStructArray->pod_array.at(indexb + i) = CStructArray->pod_array.at(indexa + i);
+					buffer->PodArray->pod_array.at(indexb + i) = PodArray->pod_array.at(indexa + i);
 				}				
 			}
 
@@ -894,7 +894,7 @@ namespace RobotRaconteur
 			{
 				for (size_t i = 0; i < len; i++)
 				{
-					CStructArray->pod_array.at(indexa + i) = buffer->CStructArray->pod_array.at(indexb + i);
+					PodArray->pod_array.at(indexa + i) = buffer->PodArray->pod_array.at(indexb + i);
 				}
 			}
 

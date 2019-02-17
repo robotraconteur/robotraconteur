@@ -382,8 +382,8 @@ namespace RobotRaconteur
 
 		std::vector<RR_SHARED_PTR<MessageElement> > m;
 		m.push_back(RR_MAKE_SHARED<MessageElement>("dims", a->Dims));
-		if (!a->CStructArray) throw NullValueException("Multidimarray array must not be null");
-		m.push_back(RR_MAKE_SHARED<MessageElement>("array", PodStub_PackPodArray(a->CStructArray)));
+		if (!a->PodArray) throw NullValueException("Multidimarray array must not be null");
+		m.push_back(RR_MAKE_SHARED<MessageElement>("array", PodStub_PackPodArray(a->PodArray)));
 		return RR_MAKE_SHARED<MessageElementPodMultiDimArray>(RRPrimUtil<T>::GetElementTypeString(), m);		
 	}
 
@@ -394,8 +394,8 @@ namespace RobotRaconteur
 
 		RR_SHARED_PTR<RRPodMultiDimArray<T> > o = RR_MAKE_SHARED<RRPodMultiDimArray<T> >();
 		o->Dims = (MessageElement::FindElement(m->Elements, "dims")->CastData<RRArray<uint32_t> >());
-		o->CStructArray = PodStub_UnpackPodArray<T>(MessageElement::FindElement(m->Elements, "array")->CastData<MessageElementPodArray>());
-		if (!o->CStructArray) throw NullValueException("Multidimarray array must not be null");
+		o->PodArray = PodStub_UnpackPodArray<T>(MessageElement::FindElement(m->Elements, "array")->CastData<MessageElementPodArray>());
+		if (!o->PodArray) throw NullValueException("Multidimarray array must not be null");
 		return o;
 	}
 
@@ -472,7 +472,7 @@ namespace RobotRaconteur
 			throw DataTypeException("Array dimension mismatch");
 		}
 
-		if (a->CStructArray->pod_array.size() != n_elems)
+		if (a->PodArray->pod_array.size() != n_elems)
 		{
 			throw DataTypeException("Array dimension mismatch");
 		}
