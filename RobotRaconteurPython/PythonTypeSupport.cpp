@@ -265,7 +265,7 @@ namespace RobotRaconteur
 
 				PyAutoPtr<PyObject> f_decr_list(PyList_New(2));
 				PyList_SetItem(f_decr_list.get(), 0, Py_BuildValue("(s,O,i)", "len", PyArray_DescrNewFromType(NPY_INT32), 1));
-				PyTuple_SetItem(f.get(), 0, PyString_FromString("array"));
+				PyTuple_SetItem(f.get(), 0, stringToPyObject("array").detach());
 				PyList_SetItem(f_decr_list.get(), 1, f.detach());
 
 				PyArray_Descr* f_descr;
@@ -276,7 +276,7 @@ namespace RobotRaconteur
 				}
 
 				PyAutoPtr<PyObject> f2(PyTuple_New(2));
-				PyTuple_SetItem(f2.get(), 0, PyString_FromStringAndSize(f_name.c_str(), f_name.size()));
+				PyTuple_SetItem(f2.get(), 0, stringToPyObject(f_name).detach());
 				PyTuple_SetItem(f2.get(), 1, (PyObject*)f_descr);
 
 				PyList_SetItem(decr_list.get(), i, f2.detach());
@@ -284,7 +284,7 @@ namespace RobotRaconteur
 				continue;
 			}
 
-			PyTuple_SetItem(f.get(), 0, PyString_FromStringAndSize(f_name.c_str(), f_name.size()));
+			PyTuple_SetItem(f.get(), 0, stringToPyObject(f_name).detach());
 
 			PyList_SetItem(decr_list.get(), i, f.detach());
 			
@@ -449,7 +449,7 @@ namespace RobotRaconteur
 				boost::shared_ptr<PropertyDefinition> p_def = boost::dynamic_pointer_cast<PropertyDefinition>(m_def);
 				if (!p_def) throw ServiceException("Invalid structure definition: " + typestr2);
 
-				PyAutoPtr<PyObject> p_def_name(PyString_FromStringAndSize(p_def->Name.c_str(),p_def->Name.size()));
+				PyAutoPtr<PyObject> p_def_name = stringToPyObject(p_def->Name);
 				PyAutoPtr<PyObject> field_obj(PyObject_GetItem(a.get(), p_def_name.get()));
 				if (field_obj.get() == NULL)
 				{
@@ -481,7 +481,7 @@ namespace RobotRaconteur
 				if (/*IsTypeNumeric(p_def->Type->Type) &&*/ p_def->Type->ArrayType == DataTypes_ArrayTypes_array
 					&& p_def->Type->ArrayVarLength)
 				{
-					PyAutoPtr<PyObject> field_dim_str(PyString_FromString("len"));
+					PyAutoPtr<PyObject> field_dim_str = stringToPyObject("len");
 					PyAutoPtr<PyObject> field_dim(PyObject_GetItem(field_obj.get(), field_dim_str.get()));
 					int64_t n;
 					PyArray_CastScalarToCtype(field_dim.get(), &n, PyArray_DescrFromType(NPY_INT64));
@@ -490,7 +490,7 @@ namespace RobotRaconteur
 						throw DataTypeException("Invalid array length in pod");
 					}
 
-					PyAutoPtr<PyObject> field_array_str(PyString_FromString("array"));
+					PyAutoPtr<PyObject> field_array_str = stringToPyObject("array");
 					PyAutoPtr<PyObject> field_array(PyObject_GetItem(field_obj.get(), field_array_str.get()));
 					PyAutoPtr<PyObject> field_array2(PyArray_NewCopy((PyArrayObject*)field_array.get(), NPY_FORTRANORDER));
 					PyArray_Dims field_array_np_dims;
@@ -582,7 +582,7 @@ namespace RobotRaconteur
 				RR_SHARED_PTR<NamedTypeDefinition> d = type2->ResolveNamedType(empty_defs, node, obj);
 				if (d->RRDataType() == DataTypes_pod_t && type2->ArrayType == DataTypes_ArrayTypes_none)
 				{
-					type2->ArrayType == DataTypes_ArrayTypes_array;
+					type2->ArrayType = DataTypes_ArrayTypes_array;
 				}
 			}
 						
@@ -1131,7 +1131,7 @@ namespace RobotRaconteur
 				}
 
 				std::string& py_name_str = p->Name;
-				PyAutoPtr<PyObject> py_name(PyString_FromStringAndSize(py_name_str.c_str(),py_name_str.size()));
+				PyAutoPtr<PyObject> py_name = stringToPyObject(py_name_str);
 
 				PyObject* el1 = NULL;
 				
@@ -1183,9 +1183,9 @@ namespace RobotRaconteur
 				else if (p->Type->ArrayType == DataTypes_ArrayTypes_array && p->Type->ArrayVarLength)
 				{
 					PyAutoPtr<PyObject> el3(PyObject_GetItem(el2.get(), py_name.get()));
-					PyAutoPtr<PyObject> py_len_str(PyString_FromString("len"));
+					PyAutoPtr<PyObject> py_len_str = stringToPyObject("len");
 					PyAutoPtr<PyObject> py_len(PyLong_FromLong(PyArray_SIZE((PyArrayObject*)el1)));
-					PyAutoPtr<PyObject> py_array_str(PyString_FromString("array"));
+					PyAutoPtr<PyObject> py_array_str = stringToPyObject("array");
 					
 					int ret = PyObject_SetItem(el3.get(), py_len_str.get(), py_len.get());
 
@@ -2620,7 +2620,7 @@ namespace RobotRaconteur
 
 	void PythonTypeSupport_Init()
 	{
-		import_array();	
+		_import_array();	
 	}
 
 }

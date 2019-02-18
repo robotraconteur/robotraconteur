@@ -1025,8 +1025,8 @@ class MultiDimArrayMemoryClient(object):
         t.ArrayLength=RobotRaconteurPython.vectorint32([0])
         array=UnpackFromRRArray(dat.Array,t)        
         
-        memind=[(slice(memorypos[i],(memorypos[i]+count[i]))) for i in xrange(len(count))]
-        bufind=[(slice(bufferpos[i], (bufferpos[i]+count[i]))) for i in xrange(len(count))]
+        memind=[(slice(memorypos[i],(memorypos[i]+count[i]))) for i in range(len(count))]
+        bufind=[(slice(bufferpos[i], (bufferpos[i]+count[i]))) for i in range(len(count))]
                 
         buffer2=array.reshape(dims,order="F")
         buffer[bufind]=buffer2
@@ -1122,11 +1122,11 @@ class PodMultiDimArrayMemoryClient_bufferdirector(RobotRaconteurPython.WrappedPo
         m.DataCount=len(res1.Elements)
         
         res2=UnpackMessageElement(m, self._type, self._obj, self._node)
-        bufind=[(slice(bufferpos[i], (bufferpos[i]+count[i]))) for i in xrange(len(count))]
+        bufind=[(slice(bufferpos[i], (bufferpos[i]+count[i]))) for i in range(len(count))]
         self._buffer[bufind] = res2
         
     def PackWriteRequest(self, bufferpos, count):
-        bufind=[(slice(bufferpos[i], (bufferpos[i]+count[i]))) for i in xrange(len(count))]
+        bufind=[(slice(bufferpos[i], (bufferpos[i]+count[i]))) for i in range(len(count))]
         buf1=self._buffer[bufind]          
         m_data = PackMessageElement(buf1,self._type, self._obj, self._node).GetData()
         return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementPodMultiDimArray(m_data)
@@ -1214,11 +1214,11 @@ class NamedMultiDimArrayMemoryClient_bufferdirector(RobotRaconteurPython.Wrapped
         m.DataCount=len(res1.Elements)
         
         res2=UnpackMessageElement(m, self._type, self._obj, self._node)
-        bufind=[(slice(bufferpos[i], (bufferpos[i]+count[i]))) for i in xrange(len(count))]
+        bufind=[(slice(bufferpos[i], (bufferpos[i]+count[i]))) for i in range(len(count))]
         self._buffer[bufind] = res2        
         
     def PackWriteRequest(self, bufferpos, count):
-        bufind=[(slice(bufferpos[i], (bufferpos[i]+count[i]))) for i in xrange(len(count))]
+        bufind=[(slice(bufferpos[i], (bufferpos[i]+count[i]))) for i in range(len(count))]
         buf1=self._buffer[bufind]            
         m_data = PackMessageElement(buf1,self._type, self._obj, self._node).GetData()
         return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementNamedMultiDimArray(m_data)
