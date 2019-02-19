@@ -253,12 +253,6 @@ namespace RobotRaconteur
 						case DataTypes_bool_t:
 							o = RR_MAKE_SHARED<ArrayMemoryClient<rr_bool> >(m->Name, shared_from_this(), direction);
 							break;
-						case DataTypes_datetime_t:
-							o = RR_MAKE_SHARED<ArrayMemoryClient<datetime> >(m->Name, shared_from_this(), direction);
-						case DataTypes_duration_t:
-							o = RR_MAKE_SHARED<ArrayMemoryClient<duration> >(m->Name, shared_from_this(), direction);
-							break;
-							break;
 						default:
 							throw InvalidArgumentException("Invalid memory data type");
 
@@ -309,12 +303,6 @@ namespace RobotRaconteur
 							break;
 						case DataTypes_bool_t:
 							o = RR_MAKE_SHARED<MultiDimArrayMemoryClient<rr_bool> >(m->Name, shared_from_this(), direction);
-							break;
-						case DataTypes_datetime_t:
-							o = RR_MAKE_SHARED<MultiDimArrayMemoryClient<datetime> >(m->Name, shared_from_this(), direction);
-							break;
-						case DataTypes_duration_t:
-							o = RR_MAKE_SHARED<MultiDimArrayMemoryClient<duration> >(m->Name, shared_from_this(), direction);
 							break;
 						default:
 							throw InvalidArgumentException("Invalid memory data type");
@@ -1860,8 +1848,6 @@ namespace RobotRaconteur
 		RR_WAMCU_READ_TYPE(cdouble);
 		RR_WAMCU_READ_TYPE(cfloat);
 		RR_WAMCU_READ_TYPE(rr_bool);
-		RR_WAMCU_READ_TYPE(datetime);
-		RR_WAMCU_READ_TYPE(duration);
 
 		throw DataTypeException("Invalid memory data type");
 
@@ -1896,8 +1882,6 @@ namespace RobotRaconteur
 		RR_WAMCU_WRITE_TYPE(cdouble);
 		RR_WAMCU_WRITE_TYPE(cfloat);
 		RR_WAMCU_WRITE_TYPE(rr_bool);
-		RR_WAMCU_WRITE_TYPE(datetime);
-		RR_WAMCU_WRITE_TYPE(duration);
 
 		throw DataTypeException("Invalid memory data type");
 
@@ -1924,8 +1908,6 @@ namespace RobotRaconteur
 		RR_WAMCU_DIRECTION_TYPE(cdouble);
 		RR_WAMCU_DIRECTION_TYPE(cfloat);
 		RR_WAMCU_DIRECTION_TYPE(rr_bool);
-		RR_WAMCU_DIRECTION_TYPE(datetime);
-		RR_WAMCU_DIRECTION_TYPE(duration);
 
 		throw DataTypeException("Invalid memory data type");
 
@@ -1998,9 +1980,6 @@ namespace RobotRaconteur
 		RR_WMDAMCU_READ_TYPE(cdouble);
 		RR_WMDAMCU_READ_TYPE(cfloat);
 		RR_WMDAMCU_READ_TYPE(rr_bool);
-		RR_WMDAMCU_READ_TYPE(datetime);
-		RR_WMDAMCU_READ_TYPE(duration);
-
 
 		throw DataTypeException("Invalid memory data type");
 
@@ -2036,8 +2015,6 @@ namespace RobotRaconteur
 		RR_WMDAMCU_WRITE_TYPE(cdouble);
 		RR_WMDAMCU_WRITE_TYPE(cfloat);
 		RR_WMDAMCU_WRITE_TYPE(rr_bool);
-		RR_WMDAMCU_WRITE_TYPE(datetime);
-		RR_WMDAMCU_WRITE_TYPE(duration);
 
 		throw DataTypeException("Invalid memory data type");
 	}
@@ -2062,8 +2039,6 @@ namespace RobotRaconteur
 		RR_WMDAMCU_DIRECTION_TYPE(cdouble);
 		RR_WMDAMCU_DIRECTION_TYPE(cfloat);
 		RR_WMDAMCU_DIRECTION_TYPE(rr_bool);
-		RR_WMDAMCU_DIRECTION_TYPE(datetime);
-		RR_WMDAMCU_DIRECTION_TYPE(duration);
 
 		throw DataTypeException("Invalid memory data type");
 
@@ -2404,14 +2379,7 @@ namespace RobotRaconteur
 							break;
 						case DataTypes_bool_t:
 							o = RR_MAKE_SHARED<ArrayMemoryServiceSkel<rr_bool> >(m->Name, shared_from_this(), direction);
-							break;
-						case DataTypes_datetime_t:
-							o = RR_MAKE_SHARED<ArrayMemoryServiceSkel<datetime> >(m->Name, shared_from_this(), direction);
-							break;
-						case DataTypes_duration_t:
-							o = RR_MAKE_SHARED<ArrayMemoryServiceSkel<duration> >(m->Name, shared_from_this(), direction);
-							break;
-							
+							break;							
 						default:
 							throw DataTypeException("Invalid memory data type");
 
@@ -2462,12 +2430,6 @@ namespace RobotRaconteur
 							break;
 						case DataTypes_bool_t:
 							o = RR_MAKE_SHARED<MultiDimArrayMemoryServiceSkel<rr_bool> >(m->Name, shared_from_this(), direction);
-							break;
-						case DataTypes_datetime_t:
-							o = RR_MAKE_SHARED<MultiDimArrayMemoryServiceSkel<datetime> >(m->Name, shared_from_this(), direction);
-							break;
-						case DataTypes_duration_t:
-							o = RR_MAKE_SHARED<MultiDimArrayMemoryServiceSkel<duration> >(m->Name, shared_from_this(), direction);
 							break;
 						default:
 							throw DataTypeException("Invalid memory data type");
@@ -2707,12 +2669,6 @@ namespace RobotRaconteur
 				case DataTypes_bool_t:
 					return boost::static_pointer_cast<ArrayMemoryServiceSkel<rr_bool> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedArrayMemory<rr_bool> >(mem));
 					break;
-				case DataTypes_datetime_t:
-					return boost::static_pointer_cast<ArrayMemoryServiceSkel<datetime> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedArrayMemory<datetime> >(mem));
-					break;
-				case DataTypes_duration_t:
-					return boost::static_pointer_cast<ArrayMemoryServiceSkel<duration> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedArrayMemory<duration> >(mem));
-					break;
 				default:
 					throw DataTypeException("Invalid memory data type");
 
@@ -2765,12 +2721,6 @@ namespace RobotRaconteur
 					break;
 				case DataTypes_bool_t:
 					return boost::static_pointer_cast<MultiDimArrayMemoryServiceSkel<rr_bool> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedMultiDimArrayMemory<rr_bool> >(mem));
-					break;
-				case DataTypes_datetime_t:
-					return boost::static_pointer_cast<MultiDimArrayMemoryServiceSkel<datetime> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedMultiDimArrayMemory<datetime> >(mem));
-					break;
-				case DataTypes_duration_t:
-					return boost::static_pointer_cast<MultiDimArrayMemoryServiceSkel<duration> >(memories.at(mm->MemberName))->CallMemoryFunction(mm, e, boost::make_shared<WrappedMultiDimArrayMemory<duration> >(mem));
 					break;
 				default:
 					throw DataTypeException("Invalid memory data type");

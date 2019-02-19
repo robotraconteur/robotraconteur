@@ -1168,8 +1168,6 @@ namespace RobotRaconteur
 		case DataTypes_cdouble_t:
 		case DataTypes_csingle_t:
 		case DataTypes_bool_t:
-		case DataTypes_datetime_t:
-		case DataTypes_duration_t:
 			s += DataCount * RRArrayElementSize(ElementType);
 			break;		
 		case DataTypes_structure_t:
@@ -1322,8 +1320,6 @@ namespace RobotRaconteur
 		case DataTypes_cdouble_t:
 		case DataTypes_csingle_t:
 		case DataTypes_bool_t:
-		case DataTypes_datetime_t:
-		case DataTypes_duration_t:
 			{
 				RR_SHARED_PTR<RRBaseArray> rdat = RR_DYNAMIC_POINTER_CAST<RRBaseArray>(dat);
 				if (!rdat) throw DataTypeException("");
@@ -1451,8 +1447,6 @@ namespace RobotRaconteur
 		case DataTypes_cdouble_t:
 		case DataTypes_csingle_t:
 		case DataTypes_bool_t:
-		case DataTypes_datetime_t:
-		case DataTypes_duration_t:
 			{
 				RR_SHARED_PTR<RRBaseArray> rdat = RR_STATIC_POINTER_CAST<RRBaseArray>(dat);
 				if (!rdat) throw DataTypeException("");				
@@ -1582,8 +1576,6 @@ namespace RobotRaconteur
 		case DataTypes_cdouble_t:
 		case DataTypes_csingle_t:
 		case DataTypes_bool_t:
-		case DataTypes_datetime_t:
-		case DataTypes_duration_t:
 		{
 			if ((int32_t)(RRArrayElementSize(ElementType)*DataCount) > r.DistanceFromLimit())
 			{
@@ -1789,8 +1781,6 @@ namespace RobotRaconteur
 		case DataTypes_cdouble_t:
 		case DataTypes_csingle_t:
 		case DataTypes_bool_t:
-		case DataTypes_datetime_t:
-		case DataTypes_duration_t:
 			s += DataCount * RRArrayElementSize(ElementType);
 			break;
 		case DataTypes_structure_t:
@@ -1937,8 +1927,6 @@ namespace RobotRaconteur
 		case DataTypes_cdouble_t:
 		case DataTypes_csingle_t:
 		case DataTypes_bool_t:
-		case DataTypes_datetime_t:
-		case DataTypes_duration_t:
 		{
 			RR_SHARED_PTR<RRBaseArray> rdat = RR_STATIC_POINTER_CAST<RRBaseArray>(dat);
 			if (!rdat) throw DataTypeException("");
@@ -2119,8 +2107,6 @@ namespace RobotRaconteur
 		case DataTypes_cdouble_t:
 		case DataTypes_csingle_t:
 		case DataTypes_bool_t:
-		case DataTypes_datetime_t:
-		case DataTypes_duration_t:
 		{
 			RR_SHARED_PTR<RRBaseArray> rdat = RR_STATIC_POINTER_CAST<RRBaseArray>(dat);
 			if (!rdat) throw DataTypeException("");			
@@ -2286,8 +2272,6 @@ namespace RobotRaconteur
 		case DataTypes_cdouble_t:
 		case DataTypes_csingle_t:
 		case DataTypes_bool_t:
-		case DataTypes_datetime_t:
-		case DataTypes_duration_t:
 		{
 			if ((int32_t)(RRArrayElementSize(ElementType)*DataCount) > r.DistanceFromLimit())
 			{

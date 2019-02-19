@@ -75,30 +75,6 @@ public interface testroot3
     void set_b5(List<boolean[]> value);
     List<MultiDimArray> get_b6();
     void set_b6(List<MultiDimArray> value);
-    DateTime get_t1();
-    void set_t1(DateTime value);
-    DateTime[] get_t2();
-    void set_t2(DateTime[] value);
-    MultiDimArray get_t3();
-    void set_t3(MultiDimArray value);
-    List<DateTime[]> get_t4();
-    void set_t4(List<DateTime[]> value);
-    List<DateTime[]> get_t5();
-    void set_t5(List<DateTime[]> value);
-    List<MultiDimArray> get_t6();
-    void set_t6(List<MultiDimArray> value);
-    Duration get_t7();
-    void set_t7(Duration value);
-    Duration[] get_t8();
-    void set_t8(Duration[] value);
-    MultiDimArray get_t9();
-    void set_t9(MultiDimArray value);
-    List<Duration[]> get_t10();
-    void set_t10(List<Duration[]> value);
-    List<Duration[]> get_t11();
-    void set_t11(List<Duration[]> value);
-    List<MultiDimArray> get_t12();
-    void set_t12(List<MultiDimArray> value);
     void testpod1_func1(testpod1 s);
     testpod1 testpod1_func2();
     Generator2<double[]> gen_func1();
@@ -138,9 +114,5 @@ public interface testroot3
     MultiDimArrayMemory<CDouble[]> get_c_m4();
     ArrayMemory<boolean[]> get_c_m5();
     MultiDimArrayMemory<boolean[]> get_c_m6();
-    ArrayMemory<DateTime[]> get_c_m7();
-    MultiDimArrayMemory<DateTime[]> get_c_m8();
-    ArrayMemory<Duration[]> get_c_m9();
-    MultiDimArrayMemory<Duration[]> get_c_m10();
 }
 

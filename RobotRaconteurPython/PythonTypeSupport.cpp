@@ -2421,8 +2421,7 @@ namespace RobotRaconteur
 				ret_vec.push_back(boost::make_shared<MessageElement>("array", PackToMultiDimArray_numpy1(array1,type1).get<0>()));
 				return boost::make_shared<MessageElementMultiDimArray>(ret_vec);
 			}
-			//TODO: bool, datetime, and duration
-
+			
 			default:
 				throw DataTypeException("Unsupported numpy matrix type");
 			}
@@ -2489,7 +2488,7 @@ namespace RobotRaconteur
 			PyArray_Descr* npy_type = RRTypeIdToNumPyDataType(rr_type);
 			return UnpackFromRRMultiDimArray_numpy1(array, npy_type, npy_dims.size(), &npy_dims[0]);
 		}
-		//TODO: bool, datetime, and duration
+		//TODO: bool
 		default:
 			throw DataTypeException("Invalid MultiDimArray data type");
 		}
@@ -2564,20 +2563,7 @@ namespace RobotRaconteur
 		case DataTypes_cdouble_t:
 			return PyArray_DescrNewFromType(NPY_COMPLEX128);
 		case DataTypes_csingle_t:
-			return PyArray_DescrNewFromType(NPY_COMPLEX64);
-		case DataTypes_datetime_t:
-		case DataTypes_duration_t:
-		{
-			PyAutoPtr<PyObject> dtype1(PyList_New(2));
-			PyList_SetItem(dtype1.get(), 0, Py_BuildValue("(s,s,i)", "secs", "i8", 1));
-			PyList_SetItem(dtype1.get(), 1, Py_BuildValue("(s,s,i)", "nsecs", "i8", 1));
-			PyArray_Descr* descr;
-			if (!PyArray_DescrConverter(dtype1.get(), &descr))
-			{
-				throw DataTypeException("Could not create numpy dtype for datetime or duration");
-			}
-			return descr;
-		}
+			return PyArray_DescrNewFromType(NPY_COMPLEX64);		
 		default:
 			throw DataTypeException("Unknown numpy data type");
 		}

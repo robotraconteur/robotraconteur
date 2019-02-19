@@ -256,18 +256,6 @@ public interface testroot3
     List<bool> b4 { get; set; }
     List<bool[]> b5 { get; set; }
     List<MultiDimArray> b6 { get; set; }
-    RRDateTime t1 { get; set; }
-    RRDateTime[] t2 { get; set; }
-    MultiDimArray t3 { get; set; }
-    List<RRDateTime> t4 { get; set; }
-    List<RRDateTime[]> t5 { get; set; }
-    List<MultiDimArray> t6 { get; set; }
-    RRDuration t7 { get; set; }
-    RRDuration[] t8 { get; set; }
-    MultiDimArray t9 { get; set; }
-    List<RRDuration> t10 { get; set; }
-    List<RRDuration[]> t11 { get; set; }
-    List<MultiDimArray> t12 { get; set; }
     void testpod1_func1(testpod1 s);
     testpod1 testpod1_func2();
     Generator2<double> gen_func1();
@@ -297,10 +285,6 @@ public interface testroot3
     MultiDimArrayMemory<CDouble> c_m4 { get; }
     ArrayMemory<bool> c_m5 { get; }
     MultiDimArrayMemory<bool> c_m6 { get; }
-    ArrayMemory<RRDateTime> c_m7 { get; }
-    MultiDimArrayMemory<RRDateTime> c_m8 { get; }
-    ArrayMemory<RRDuration> c_m9 { get; }
-    MultiDimArrayMemory<RRDuration> c_m10 { get; }
 }
 
 [RobotRaconteurServiceObjectInterface()]

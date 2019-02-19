@@ -111,42 +111,6 @@ public class testroot3_default_impl implements testroot3{
     protected List<MultiDimArray> rrvar_b6;
     public List<MultiDimArray> get_b6() { return rrvar_b6; }
     public void set_b6(List<MultiDimArray> value) { rrvar_b6 = value; }
-    protected DateTime rrvar_t1;
-    public DateTime get_t1() { return rrvar_t1; }
-    public void set_t1(DateTime value) { rrvar_t1 = value; }
-    protected DateTime[] rrvar_t2;
-    public DateTime[] get_t2() { return rrvar_t2; }
-    public void set_t2(DateTime[] value) { rrvar_t2 = value; }
-    protected MultiDimArray rrvar_t3;
-    public MultiDimArray get_t3() { return rrvar_t3; }
-    public void set_t3(MultiDimArray value) { rrvar_t3 = value; }
-    protected List<DateTime[]> rrvar_t4;
-    public List<DateTime[]> get_t4() { return rrvar_t4; }
-    public void set_t4(List<DateTime[]> value) { rrvar_t4 = value; }
-    protected List<DateTime[]> rrvar_t5;
-    public List<DateTime[]> get_t5() { return rrvar_t5; }
-    public void set_t5(List<DateTime[]> value) { rrvar_t5 = value; }
-    protected List<MultiDimArray> rrvar_t6;
-    public List<MultiDimArray> get_t6() { return rrvar_t6; }
-    public void set_t6(List<MultiDimArray> value) { rrvar_t6 = value; }
-    protected Duration rrvar_t7;
-    public Duration get_t7() { return rrvar_t7; }
-    public void set_t7(Duration value) { rrvar_t7 = value; }
-    protected Duration[] rrvar_t8;
-    public Duration[] get_t8() { return rrvar_t8; }
-    public void set_t8(Duration[] value) { rrvar_t8 = value; }
-    protected MultiDimArray rrvar_t9;
-    public MultiDimArray get_t9() { return rrvar_t9; }
-    public void set_t9(MultiDimArray value) { rrvar_t9 = value; }
-    protected List<Duration[]> rrvar_t10;
-    public List<Duration[]> get_t10() { return rrvar_t10; }
-    public void set_t10(List<Duration[]> value) { rrvar_t10 = value; }
-    protected List<Duration[]> rrvar_t11;
-    public List<Duration[]> get_t11() { return rrvar_t11; }
-    public void set_t11(List<Duration[]> value) { rrvar_t11 = value; }
-    protected List<MultiDimArray> rrvar_t12;
-    public List<MultiDimArray> get_t12() { return rrvar_t12; }
-    public void set_t12(List<MultiDimArray> value) { rrvar_t12 = value; }
     public void testpod1_func1(testpod1 s) {
     throw new UnsupportedOperationException();    }
     public testpod1 testpod1_func2() {
@@ -234,13 +198,5 @@ public class testroot3_default_impl implements testroot3{
     public ArrayMemory<boolean[]> get_c_m5()
     { throw new UnsupportedOperationException(); }
     public MultiDimArrayMemory<boolean[]> get_c_m6()
-    { throw new UnsupportedOperationException(); }
-    public ArrayMemory<DateTime[]> get_c_m7()
-    { throw new UnsupportedOperationException(); }
-    public MultiDimArrayMemory<DateTime[]> get_c_m8()
-    { throw new UnsupportedOperationException(); }
-    public ArrayMemory<Duration[]> get_c_m9()
-    { throw new UnsupportedOperationException(); }
-    public MultiDimArrayMemory<Duration[]> get_c_m10()
     { throw new UnsupportedOperationException(); }
 }

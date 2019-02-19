@@ -283,29 +283,7 @@ public static Object rRBaseArrayToArray(RRBaseArray a)
 	    		o3[j] = o2[j] != 0;
 	    	}
 	    	return o3;
-	    }
-	    case DataTypes_datetime_t:
-	    {
-	    	long[] o2=new long[(int)a.length()*2];
-	    	rRBaseArrayDateTimeToLongs(a,o2,o2.length);
-	    	DateTime[] o3=new DateTime[(int)a.length()];
-	    	for (int j=0; j<o3.length; j++)
-	    	{
-	    		o3[j] = new DateTime(o2[j *2], o2[j*2+1]);
-	    	}
-	    	return o3;
-	    }
-	    case DataTypes_duration_t:
-	    {
-	    	long[] o2=new long[(int)a.length()*2];
-	    	rRBaseArrayDurationToLongs(a,o2,o2.length);
-	    	Duration[] o3=new Duration[(int)a.length()];
-	    	for (int j=0; j<o3.length; j++)
-	    	{
-	    		o3[j] = new Duration(o2[j *2], o2[j*2+1]);
-	    	}
-	    	return o3;
-	    }
+	    }	    
 	    default:
 	    	break;
 	
@@ -360,29 +338,7 @@ public static Object rRBaseArrayToArray(RRBaseArray a)
           }
 		  return bytesToBoolRRBaseArray(b1,b1.length);
 	  }
-	  if (a instanceof DateTime[])
-	  {
-		  DateTime[] a1=(DateTime[])a;
-		  long[] b1=new long[a1.length * 2];
-		  for (int j = 0; j<a1.length; j++)
-          {
-              b1[j * 2] = a1[j].secs;
-              b1[j * 2 + 1] = a1[j].nsecs;
-          }
-		  return longsToDateTimeRRBaseArray(b1,b1.length);
-	  }
-	  if (a instanceof Duration[])
-	  {
-		  Duration[] a1=(Duration[])a;
-		  long[] b1=new long[a1.length * 2];
-		  for (int j = 0; j<a1.length; j++)
-          {
-              b1[j * 2] = a1[j].secs;
-              b1[j * 2 + 1] = a1[j].nsecs;
-          }
-		  return longsToDurationRRBaseArray(b1,b1.length);
-	  }
-	  
+	  	  
 	  throw new RuntimeException(new DataTypeException("Unknown Array type"));
 	  
   }
@@ -433,31 +389,7 @@ public static Object rRBaseArrayToArray(RRBaseArray a)
           }
 		  bytesToBoolRRBaseArray(b1,b1.length,rra);
 		  return;
-	  }
-	  if (a instanceof DateTime[])
-	  {
-		  DateTime[] a1=(DateTime[])a;
-		  long[] b1=new long[a1.length * 2];
-		  for (int j = 0; j<a1.length; j++)
-          {
-              b1[j * 2] = a1[j].secs;
-              b1[j * 2 + 1] = a1[j].nsecs;
-          }
-		  longsToDateTimeRRBaseArray(b1,b1.length,rra);
-		  return;
-	  }
-	  if (a instanceof Duration[])
-	  {
-		  Duration[] a1=(Duration[])a;
-		  long[] b1=new long[a1.length * 2];
-		  for (int j = 0; j<a1.length; j++)
-          {
-              b1[j * 2] = a1[j].secs;
-              b1[j * 2 + 1] = a1[j].nsecs;
-          }
-		  longsToDurationRRBaseArray(b1,b1.length,rra);
-		  return;
-	  }
+	  }	  
 	  throw new RuntimeException(new DataTypeException("Unknown Array type"));
   }
 

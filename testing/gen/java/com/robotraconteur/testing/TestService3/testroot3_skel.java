@@ -188,66 +188,6 @@ public class testroot3_skel extends ServiceSkel {
     List<MultiDimArray> ret=obj.get_b6();
     return MessageElementUtil.<MultiDimArray>packListType("return",ret,MultiDimArray.class);
     }
-    if(membername.equals( "t1"))
-    {
-    DateTime ret=obj.get_t1();
-    return MessageElementUtil.<DateTime[]>packArray("return",new DateTime[] {ret});
-    }
-    if(membername.equals( "t2"))
-    {
-    DateTime[] ret=obj.get_t2();
-    return MessageElementUtil.<DateTime[]>packArray("return",ret);
-    }
-    if(membername.equals( "t3"))
-    {
-    MultiDimArray ret=obj.get_t3();
-    return MessageElementUtil.packMultiDimArray("return",(MultiDimArray)ret);
-    }
-    if(membername.equals( "t4"))
-    {
-    List<DateTime[]> ret=obj.get_t4();
-    return MessageElementUtil.<DateTime[]>packListType("return",ret,DateTime[].class);
-    }
-    if(membername.equals( "t5"))
-    {
-    List<DateTime[]> ret=obj.get_t5();
-    return MessageElementUtil.<DateTime[]>packListType("return",ret,DateTime[].class);
-    }
-    if(membername.equals( "t6"))
-    {
-    List<MultiDimArray> ret=obj.get_t6();
-    return MessageElementUtil.<MultiDimArray>packListType("return",ret,MultiDimArray.class);
-    }
-    if(membername.equals( "t7"))
-    {
-    Duration ret=obj.get_t7();
-    return MessageElementUtil.<Duration[]>packArray("return",new Duration[] {ret});
-    }
-    if(membername.equals( "t8"))
-    {
-    Duration[] ret=obj.get_t8();
-    return MessageElementUtil.<Duration[]>packArray("return",ret);
-    }
-    if(membername.equals( "t9"))
-    {
-    MultiDimArray ret=obj.get_t9();
-    return MessageElementUtil.packMultiDimArray("return",(MultiDimArray)ret);
-    }
-    if(membername.equals( "t10"))
-    {
-    List<Duration[]> ret=obj.get_t10();
-    return MessageElementUtil.<Duration[]>packListType("return",ret,Duration[].class);
-    }
-    if(membername.equals( "t11"))
-    {
-    List<Duration[]> ret=obj.get_t11();
-    return MessageElementUtil.<Duration[]>packListType("return",ret,Duration[].class);
-    }
-    if(membername.equals( "t12"))
-    {
-    List<MultiDimArray> ret=obj.get_t12();
-    return MessageElementUtil.<MultiDimArray>packListType("return",ret,MultiDimArray.class);
-    }
     throw new MemberNotFoundException("Member not found");
     }
     public void callSetProperty(String membername, MessageElement m) {
@@ -426,66 +366,6 @@ public class testroot3_skel extends ServiceSkel {
     obj.set_b6(MessageElementUtil.<MultiDimArray>unpackListType(m));
     return;
     }
-    if(membername.equals( "t1"))
-    {
-    obj.set_t1((MessageElementUtil.<DateTime[]>castDataAndDispose(m))[0]);
-    return;
-    }
-    if(membername.equals( "t2"))
-    {
-    obj.set_t2(MessageElementUtil.<DateTime[]>unpackArray(m));
-    return;
-    }
-    if(membername.equals( "t3"))
-    {
-    obj.set_t3(MessageElementUtil.unpackMultiDimArray(m));
-    return;
-    }
-    if(membername.equals( "t4"))
-    {
-    obj.set_t4(MessageElementUtil.<DateTime[]>unpackListType(m));
-    return;
-    }
-    if(membername.equals( "t5"))
-    {
-    obj.set_t5(MessageElementUtil.<DateTime[]>unpackListType(m));
-    return;
-    }
-    if(membername.equals( "t6"))
-    {
-    obj.set_t6(MessageElementUtil.<MultiDimArray>unpackListType(m));
-    return;
-    }
-    if(membername.equals( "t7"))
-    {
-    obj.set_t7((MessageElementUtil.<Duration[]>castDataAndDispose(m))[0]);
-    return;
-    }
-    if(membername.equals( "t8"))
-    {
-    obj.set_t8(MessageElementUtil.<Duration[]>unpackArray(m));
-    return;
-    }
-    if(membername.equals( "t9"))
-    {
-    obj.set_t9(MessageElementUtil.unpackMultiDimArray(m));
-    return;
-    }
-    if(membername.equals( "t10"))
-    {
-    obj.set_t10(MessageElementUtil.<Duration[]>unpackListType(m));
-    return;
-    }
-    if(membername.equals( "t11"))
-    {
-    obj.set_t11(MessageElementUtil.<Duration[]>unpackListType(m));
-    return;
-    }
-    if(membername.equals( "t12"))
-    {
-    obj.set_t12(MessageElementUtil.<MultiDimArray>unpackListType(m));
-    return;
-    }
     throw new MemberNotFoundException("Member not found");
     }
     public MessageElement callFunction(String rr_membername, vectorptr_messageelement rr_m) {
@@ -585,14 +465,6 @@ public class testroot3_skel extends ServiceSkel {
     WrappedArrayMemoryDirectorJava<boolean[]> dir=new  WrappedArrayMemoryDirectorJava<boolean[]>(obj.get_c_m5());
     return dir;
     }
-    if(name.equals( "c_m7")) {
-    WrappedArrayMemoryDirectorJava<DateTime[]> dir=new  WrappedArrayMemoryDirectorJava<DateTime[]>(obj.get_c_m7());
-    return dir;
-    }
-    if(name.equals( "c_m9")) {
-    WrappedArrayMemoryDirectorJava<Duration[]> dir=new  WrappedArrayMemoryDirectorJava<Duration[]>(obj.get_c_m9());
-    return dir;
-    }
     throw new MemberNotFoundException("Member Not Found");
     }
     public WrappedMultiDimArrayMemoryDirector getMultiDimArrayMemory(String name) {
@@ -606,14 +478,6 @@ public class testroot3_skel extends ServiceSkel {
     }
     if(name.equals( "c_m6")) {
     WrappedMultiDimArrayMemoryDirectorJava<boolean[]> dir=new  WrappedMultiDimArrayMemoryDirectorJava<boolean[]>(obj.get_c_m6());
-    return dir;
-    }
-    if(name.equals( "c_m8")) {
-    WrappedMultiDimArrayMemoryDirectorJava<DateTime[]> dir=new  WrappedMultiDimArrayMemoryDirectorJava<DateTime[]>(obj.get_c_m8());
-    return dir;
-    }
-    if(name.equals( "c_m10")) {
-    WrappedMultiDimArrayMemoryDirectorJava<Duration[]> dir=new  WrappedMultiDimArrayMemoryDirectorJava<Duration[]>(obj.get_c_m10());
     return dir;
     }
     throw new MemberNotFoundException("Member Not Found");

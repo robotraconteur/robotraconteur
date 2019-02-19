@@ -33,11 +33,7 @@ public class DataTypeUtil {
             case DataTypes_csingle_t:
                 return 8;
             case DataTypes_bool_t:
-                return 1;
-            case DataTypes_datetime_t:
-                return 16;
-            case DataTypes_duration_t:
-                return 16;
+                return 1;            
             default:
             	break;
 
@@ -79,11 +75,7 @@ public class DataTypeUtil {
             if(stype.equals( "class com.robotraconteur.CSingle") || stype.equals("class [Lcom.robotraconteur.CSingle"))
                 return DataTypes.DataTypes_csingle_t;
             if(stype.equals( "class [java.lang.Boolean") || stype.equals("class java.lang.Boolean"))
-                return DataTypes.DataTypes_bool_t;
-            if(stype.equals( "class com.robotraconteur.DateTime") || stype.equals("class [Lcom.robotraconteur.DateTime"))
-                return DataTypes.DataTypes_datetime_t;
-            if(stype.equals( "class com.robotraconteur.Duration") || stype.equals("class [Lcom.robotraconteur.Duration"))
-                return DataTypes.DataTypes_duration_t;
+                return DataTypes.DataTypes_bool_t;            
             if(stype.equals( "com.robotraconteur.MessageElementStructure"))
                 return DataTypes.DataTypes_structure_t;
             if(stype.equals("com.robotraconteur.MessageElementMap_int32_t"))
@@ -136,11 +128,7 @@ public class DataTypeUtil {
             if(stype.equals( "class com.robotraconteur.CSingle") || stype.equals("class [Lcom.robotraconteur.CSingle")) return true;
                 
             if(stype.equals( "class [java.lang.Boolean") || stype.equals("class java.lang.Boolean")) return true;
-                
-            if(stype.equals( "class com.robotraconteur.DateTime") || stype.equals("class [Lcom.robotraconteur.DateTime")) return true;
-                
-            if(stype.equals( "class com.robotraconteur.Duration") || stype.equals("class [Lcom.robotraconteur.Duration")) return true;
-                
+                         
             if(stype.equals( "com.robotraconteur.MessageElementStructure")) return true;
                 
             if(stype.equals( "com.robotraconteur.MessageElementMap_int32_t")) return true;
@@ -173,9 +161,7 @@ public class DataTypeUtil {
             case DataTypes_uint64_t:
             case DataTypes_cdouble_t:
             case DataTypes_csingle_t:
-            case DataTypes_bool_t:
-            case DataTypes_datetime_t:
-            case DataTypes_duration_t:
+            case DataTypes_bool_t:            
                 return true;
             default:
                 return false;
@@ -213,10 +199,6 @@ public class DataTypeUtil {
             	return new CSingle[length];
             case DataTypes_bool_t:
             	return new boolean[length];
-            case DataTypes_datetime_t:
-            	return new DateTime[length];
-            case DataTypes_duration_t:
-            	return new Duration[length];
             case DataTypes_string_t:
                 return null;
             case DataTypes_structure_t:
@@ -243,8 +225,6 @@ public class DataTypeUtil {
     	if (o instanceof CDouble[]) return true;
     	if (o instanceof CSingle[]) return true;
     	if (o instanceof boolean[]) return true;
-    	if (o instanceof DateTime[]) return true;
-    	if (o instanceof Duration[]) return true;
     	return false;
     	    	
     }
@@ -264,8 +244,6 @@ public class DataTypeUtil {
     	if (o instanceof CDouble) return true;
     	if (o instanceof CSingle) return true;
     	if (o instanceof Boolean) return true;
-    	if (o instanceof DateTime) return true;
-    	if (o instanceof Duration) return true;
     	return false;
     	
     	
@@ -286,8 +264,6 @@ public class DataTypeUtil {
     	if (o == CDouble.class) return true;
     	if (o == CSingle.class) return true;
     	if (o == Boolean.class) return true;
-    	if (o == DateTime.class) return true;
-    	if (o == Duration.class) return true;
     	return false;
     	
     	
@@ -308,8 +284,6 @@ public class DataTypeUtil {
     	if (o instanceof CDouble[]) return ((CDouble[])o)[0];
     	if (o instanceof CSingle[]) return ((CSingle[])o)[0];
     	if (o instanceof boolean[]) return ((boolean[])o)[0];
-    	if (o instanceof DateTime[]) return ((DateTime[])o)[0];
-    	if (o instanceof Duration[]) return ((Duration[])o)[0];
     	throw new DataTypeException("Argument is not an array");
     	    	
     }
@@ -329,8 +303,6 @@ public class DataTypeUtil {
     	if (o instanceof CDouble) return new CDouble[] {(CDouble)o};
     	if (o instanceof CSingle) return new CSingle[] {(CSingle)o};
     	if (o instanceof Boolean) return new boolean[] {(Boolean)o};
-    	if (o instanceof DateTime) return new DateTime[] {(DateTime)o};
-    	if (o instanceof Duration) return new Duration[] {(Duration)o};
     	throw new DataTypeException("Argument is not a number");
     	
     }
@@ -351,8 +323,6 @@ public class DataTypeUtil {
 		if (arr instanceof CDouble[]) return ((CDouble[])arr).length;
 		if (arr instanceof CSingle[]) return ((CSingle[])arr).length;
 		if (arr instanceof boolean[]) return ((boolean[])arr).length;
-		if (arr instanceof DateTime[]) return ((DateTime[])arr).length;
-		if (arr instanceof Duration[]) return ((Duration[])arr).length;
 		
 		throw new RuntimeException(new DataTypeException("Invalid memory data type"));
 		

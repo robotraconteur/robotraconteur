@@ -424,20 +424,6 @@ public:
 		memcpy(array_out,rrarray->void_ptr(),len*sizeof(int8_t));
 	}
 	
-	static void RRBaseArrayDateTimeToLongs(boost::shared_ptr<RobotRaconteur::RRBaseArray> rrarray, int64_t* array_out, int32_t len)
-	{
-		if (rrarray->GetTypeID()!=DataTypes_datetime_t) throw InvalidArgumentException("RRArray error");
-		if (rrarray->Length()!=len/2) throw InvalidArgumentException("RRArray error");
-		memcpy(array_out,rrarray->void_ptr(),len/2*sizeof(datetime));
-	}
-	
-	static void RRBaseArrayDurationToLongs(boost::shared_ptr<RobotRaconteur::RRBaseArray> rrarray, int64_t* array_out, int32_t len)
-	{
-		if (rrarray->GetTypeID()!=DataTypes_duration_t) throw InvalidArgumentException("RRArray error");
-		if (rrarray->Length()!=len/2) throw InvalidArgumentException("RRArray error");
-		memcpy(array_out,rrarray->void_ptr(),len/2*sizeof(duration));
-	}
-	
 	static boost::shared_ptr<RobotRaconteur::RRBaseArray> stringToRRBaseArray(const std::string& str)
 	{
 		return stringToRRArray(str);
@@ -526,19 +512,7 @@ public:
 	{
 		return AttachRRArrayCopy((rr_bool*)array_in,len);
 	}
-	
-	static boost::shared_ptr<RobotRaconteur::RRBaseArray> LongsToDateTimeRRBaseArray(int64_t* array_in, int32_t len)
-	{
-		if (len %2 != 0) throw InvalidArgumentException("Array must be even length");
-		return AttachRRArrayCopy((datetime*)array_in,len/2);
-	}
-	
-	static boost::shared_ptr<RobotRaconteur::RRBaseArray> LongsToDurationRRBaseArray(int64_t* array_in, int32_t len)
-	{
-		if (len %2 != 0) throw InvalidArgumentException("Array must be even length");
-		return AttachRRArrayCopy((duration*)array_in,len/2);
-	}
-	
+			
 	static void DoublesToRRBaseArray(double* array_in, int32_t len, boost::shared_ptr<RobotRaconteur::RRBaseArray> rrarray)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_double_t) throw InvalidArgumentException("RRArray error");
@@ -643,20 +617,6 @@ public:
 		if (rrarray->GetTypeID()!=DataTypes_bool_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->Length()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy((rr_bool*)rrarray->void_ptr(),array_in,len*sizeof(uint8_t));				
-	}
-	
-	static void LongsToDateTimeRRBaseArray(int64_t* array_in, int32_t len, boost::shared_ptr<RobotRaconteur::RRBaseArray> rrarray)
-	{
-		if (rrarray->GetTypeID()!=DataTypes_datetime_t) throw InvalidArgumentException("RRArray error");
-		if (rrarray->Length()!=len/2) throw InvalidArgumentException("RRArray error");
-		memcpy(rrarray->void_ptr(),array_in,len/2*sizeof(datetime));
-	}
-	
-	static void LongsToDurationRRBaseArray(int64_t* array_in, int32_t len, boost::shared_ptr<RobotRaconteur::RRBaseArray> rrarray)
-	{
-		if (rrarray->GetTypeID()!=DataTypes_duration_t) throw InvalidArgumentException("RRArray error");
-		if (rrarray->Length()!=len/2) throw InvalidArgumentException("RRArray error");
-		memcpy(rrarray->void_ptr(),array_in,len/2*sizeof(duration));
 	}
 	
 #endif

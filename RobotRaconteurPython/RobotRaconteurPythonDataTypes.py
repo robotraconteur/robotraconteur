@@ -99,7 +99,5 @@ class MultiDimArrayMemory(object):
             self.memory[memind]=buffer[bufind]
 
 bool_dtype=numpy.uint8
-datetime_dtype=numpy.dtype([('secs', numpy.int64, 1), ('nsecs', numpy.int64, 1)])
-duration_dtype=numpy.dtype([('secs', numpy.int64, 1), ('nsecs', numpy.int64, 1)])
 
 from . import RobotRaconteurPython

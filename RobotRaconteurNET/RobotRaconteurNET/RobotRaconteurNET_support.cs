@@ -91,31 +91,7 @@ namespace RobotRaconteur
         }
 
     }
-
-    public struct RRDateTime
-    {
-        public long Secs;
-        public long NSecs;
-
-        public RRDateTime(long secs, long nsecs)
-        {
-            Secs = secs;
-            NSecs = nsecs;
-        }
-    }
-
-    public struct RRDuration
-    {
-        public long Secs;
-        public long NSecs;
-
-        public RRDuration(long secs, long nsecs)
-        {
-            Secs = secs;
-            NSecs = nsecs;
-        }
-    }
-
+        
     public class DataTypeUtil
     {
 
@@ -147,11 +123,7 @@ namespace RobotRaconteur
                 case DataTypes.csingle_t:
                     return 8;
                 case DataTypes.bool_t:
-                    return 1;
-                case DataTypes.datetime_t:
-                    return 16;
-                case DataTypes.duration_t:
-                    return 16;
+                    return 1;                
             }
             throw new ArgumentException();
             //return 0;
@@ -202,10 +174,6 @@ namespace RobotRaconteur
                     return DataTypes.csingle_t;
                 case "System.Bool":
                     return DataTypes.bool_t;
-                case "RobotRaconteur.RRDateTime":
-                    return DataTypes.datetime_t;
-                case "RobotRaconteur.RRDuration":
-                    return DataTypes.duration_t;
                 default:
                     break;
             }
@@ -259,10 +227,6 @@ namespace RobotRaconteur
                     
                 case "System.Bool":
                     
-                case "RobotRaconteur.RRDateTime":
-                    
-                case "RobotRaconteur.RRDuration":
-                    
                     return true;
 
             }
@@ -290,8 +254,6 @@ namespace RobotRaconteur
                 case DataTypes.cdouble_t:
                 case DataTypes.csingle_t:
                 case DataTypes.bool_t:
-                case DataTypes.datetime_t:
-                case DataTypes.duration_t:
                     return true;
                 default:
                     return false;
@@ -334,10 +296,6 @@ namespace RobotRaconteur
                     return new CSingle[length];
                 case DataTypes.bool_t:
                     return new bool[length];
-                case DataTypes.datetime_t:
-                    return new RRDateTime[length];
-                case DataTypes.duration_t:
-                    return new RRDuration[length];
                 default:
                     break;
             }
@@ -380,10 +338,6 @@ namespace RobotRaconteur
                     return new CSingle[] { (CSingle)inv };
                 case "System.Bool":
                     return new bool[] { (bool)inv };
-                case "RobotRaconteur.RRDateTime":
-                    return new RRDateTime[] { (RRDateTime)inv };
-                case "RobotRaconteur.RRDuration":
-                    return new RRDuration[] { (RRDuration)inv };
                 default:
                     break;
             }
@@ -1158,29 +1112,7 @@ namespace RobotRaconteur
                             o3[j] = o2[j] != 0;
                         }
                         return o3;
-                    }
-                case DataTypes.datetime_t:
-                    {
-                        var o2 = new long[i.Length() * 2];
-                        MessageElementDataUtil.RRBaseArrayDateTimeToLongs(i, o2, o2.Length);
-                        var o3 = new RRDateTime[i.Length()];
-                        for (int j = 0; j < o3.Length; j++)
-                        {
-                            o3[j] = new RRDateTime(o2[j * 2], o2[j * 2 + 1]);
-                        }
-                        return o3;
-                    }
-                case DataTypes.duration_t:
-                    {
-                        var o2 = new long[i.Length() * 2];
-                        MessageElementDataUtil.RRBaseArrayDurationToLongs(i, o2, o2.Length);
-                        var o3 = new RRDuration[i.Length()];
-                        for (int j = 0; j < o3.Length; j++)
-                        {
-                            o3[j] = new RRDuration(o2[j * 2], o2[j * 2 + 1]);
-                        }
-                        return o3;
-                    }
+                    }              
                 default:
                     throw new DataTypeException("Invalid RRBaseArray type");
                 }            
@@ -1278,28 +1210,6 @@ namespace RobotRaconteur
                             b[j] = a[j] ? (byte)1 : (byte)0;                    
                         }
                         return MessageElementDataUtil.BytesToBoolRRBaseArray(b, b.Length);
-                    }
-                case DataTypes.datetime_t:
-                    {
-                        var a = (RRDateTime[])i;
-                        var b = new long[a.Length * 2];
-                        for (int j = 0; j < a.Length; j++)
-                        {
-                            b[j * 2] = a[j].Secs;
-                            b[j * 2 + 1] = a[j].NSecs;
-                        }
-                        return MessageElementDataUtil.LongsToDateTimeRRBaseArray(b, b.Length);
-                    }
-                case DataTypes.duration_t:
-                    {
-                        var a = (RRDuration[])i;
-                        var b = new long[a.Length * 2];
-                        for (int j = 0; j < a.Length; j++)
-                        {
-                            b[j * 2] = a[j].Secs;
-                            b[j * 2 + 1] = a[j].NSecs;
-                        }
-                        return MessageElementDataUtil.LongsToDurationRRBaseArray(b, b.Length);
                     }
                 default:                
                     throw new DataTypeException("Invalid RRBaseArray type");
@@ -1411,30 +1321,6 @@ namespace RobotRaconteur
                             b[j] = a[j] ? (byte)1 : (byte)0;
                         }
                         MessageElementDataUtil.BytesToBoolRRBaseArray(b, b.Length, o);
-                        return o;
-                    }
-                case DataTypes.datetime_t:
-                    {
-                        var a = (RRDateTime[])i;
-                        var b = new long[a.Length * 2];
-                        for (int j = 0; j < a.Length; j++)
-                        {
-                            b[j * 2] = a[j].Secs;
-                            b[j * 2 + 1] = a[j].NSecs;
-                        }
-                        MessageElementDataUtil.LongsToDateTimeRRBaseArray(b, b.Length, o);
-                        return o;
-                    }
-                case DataTypes.duration_t:
-                    {
-                        var a = (RRDuration[])i;
-                        var b = new long[a.Length * 2];
-                        for (int j = 0; j < a.Length; j++)
-                        {
-                            b[j * 2] = a[j].Secs;
-                            b[j * 2 + 1] = a[j].NSecs;
-                        }
-                        MessageElementDataUtil.LongsToDurationRRBaseArray(b, b.Length, o);
                         return o;
                     }
                 default:
@@ -2031,7 +1917,7 @@ namespace RobotRaconteur
                 return MessageElementUtil.NewMessageElementDispose(name, data);
             }
 
-            if (t == typeof(CDouble) || t == typeof(CSingle) || t==typeof(RRDuration) || t==typeof(RRDateTime))
+            if (t == typeof(CDouble) || t == typeof(CSingle))
             {
                 return MessageElementUtil.NewMessageElementDispose(name, data);
             }
@@ -2039,7 +1925,7 @@ namespace RobotRaconteur
             if (is_array)
             {
                 var t2 = t.GetElementType();
-                if (t2 == typeof(CDouble) || t2 == typeof(CSingle) || t2 == typeof(RRDuration) || t2 == typeof(RRDateTime))
+                if (t2 == typeof(CDouble) || t2 == typeof(CSingle))
                 {
                     return MessageElementUtil.NewMessageElementDispose(name, data);
                 }
@@ -2113,9 +1999,7 @@ namespace RobotRaconteur
                 case DataTypes.uint64_t:
                 case DataTypes.cdouble_t:
                 case DataTypes.csingle_t:
-                case DataTypes.bool_t:
-                case DataTypes.datetime_t:
-                case DataTypes.duration_t:
+                case DataTypes.bool_t:               
                     if (typeof(T).IsArray)
                     {
                         return (T)e.Data;

@@ -1539,7 +1539,7 @@ class WrappedMultiDimArrayMemoryDirectorPython(RobotRaconteurPython.WrappedMulti
         dims=list(p.count)
         elementcount=reduce(operator.mul,dims,1)
         
-        readdat1=numpy.zeros(dims,dtype=RRTypeIdToNumPyDataType(rrmultidim.Array.GetTypeID()))
+        readdat1=numpy.zeros(dims,dtype=RobotRaconteurPython._RRTypeIdToNumPyDataType(rrmultidim.Array.GetTypeID()))
         self.memory.Read(list(p.memorypos),readdat1,list(p.bufferpos),dims)
 
         PackToRRArray(readdat1.flatten(order="F"),rrt,rrmultidim.Array)

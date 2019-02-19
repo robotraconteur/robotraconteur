@@ -267,42 +267,6 @@ virtual void set_b5(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray
 virtual RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool >  > > get_b6()=0;
 virtual void set_b6(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool >  > > value)=0;
 
-virtual RobotRaconteur::datetime get_t1()=0;
-virtual void set_t1(RobotRaconteur::datetime value)=0;
-
-virtual RR_SHARED_PTR<RobotRaconteur::RRArray<RobotRaconteur::datetime > > get_t2()=0;
-virtual void set_t2(RR_SHARED_PTR<RobotRaconteur::RRArray<RobotRaconteur::datetime > > value)=0;
-
-virtual RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::datetime > > get_t3()=0;
-virtual void set_t3(RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::datetime > > value)=0;
-
-virtual RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::datetime >  > > get_t4()=0;
-virtual void set_t4(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::datetime >  > > value)=0;
-
-virtual RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::datetime >  > > get_t5()=0;
-virtual void set_t5(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::datetime >  > > value)=0;
-
-virtual RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::datetime >  > > get_t6()=0;
-virtual void set_t6(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::datetime >  > > value)=0;
-
-virtual RobotRaconteur::duration get_t7()=0;
-virtual void set_t7(RobotRaconteur::duration value)=0;
-
-virtual RR_SHARED_PTR<RobotRaconteur::RRArray<RobotRaconteur::duration > > get_t8()=0;
-virtual void set_t8(RR_SHARED_PTR<RobotRaconteur::RRArray<RobotRaconteur::duration > > value)=0;
-
-virtual RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::duration > > get_t9()=0;
-virtual void set_t9(RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::duration > > value)=0;
-
-virtual RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::duration >  > > get_t10()=0;
-virtual void set_t10(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::duration >  > > value)=0;
-
-virtual RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::duration >  > > get_t11()=0;
-virtual void set_t11(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::duration >  > > value)=0;
-
-virtual RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::duration >  > > get_t12()=0;
-virtual void set_t12(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::duration >  > > value)=0;
-
 virtual void testpod1_func1(const testpod1& s)=0;
 
 virtual testpod1 testpod1_func2()=0;
@@ -370,14 +334,6 @@ virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<RobotRaconteur::cdoubl
 virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<RobotRaconteur::rr_bool > > get_c_m5()=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<RobotRaconteur::rr_bool > > get_c_m6()=0;
-
-virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<RobotRaconteur::datetime > > get_c_m7()=0;
-
-virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<RobotRaconteur::datetime > > get_c_m8()=0;
-
-virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<RobotRaconteur::duration > > get_c_m9()=0;
-
-virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<RobotRaconteur::duration > > get_c_m10()=0;
 
 virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.testroot3";  }
 };

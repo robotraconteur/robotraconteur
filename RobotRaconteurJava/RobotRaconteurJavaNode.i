@@ -421,9 +421,7 @@ import java.util.*;
             case DataTypes_uint64_t:
             case DataTypes_cdouble_t:
             case DataTypes_csingle_t:
-            case DataTypes_bool_t:
-            case DataTypes_datetime_t:
-            case DataTypes_duration_t:			
+            case DataTypes_bool_t:            			
                 return (T)e.getData();                
             case DataTypes_string_t:
                 return (T)e.getData();
@@ -762,7 +760,7 @@ import java.util.*;
 		    || data instanceof UnsignedByte || data instanceof UnsignedBytes || data instanceof UnsignedInt || data instanceof UnsignedInts
 			|| data instanceof UnsignedLong || data instanceof UnsignedLongs || data instanceof CDouble || data instanceof CDouble[]
 			|| data instanceof CSingle || data instanceof CSingle[] || data instanceof Boolean || data instanceof boolean[]
-			|| data instanceof DateTime || data instanceof DateTime[] || data instanceof Duration || data instanceof Duration[] )
+			 )
 		{
 			return data;	
 		}		
@@ -799,9 +797,7 @@ import java.util.*;
             case DataTypes_uint64_t:
             case DataTypes_cdouble_t:
             case DataTypes_csingle_t:
-            case DataTypes_bool_t:
-            case DataTypes_datetime_t:
-            case DataTypes_duration_t:                
+            case DataTypes_bool_t:                           
                 return me.getData();                
             case DataTypes_string_t:
                 return me.getData();

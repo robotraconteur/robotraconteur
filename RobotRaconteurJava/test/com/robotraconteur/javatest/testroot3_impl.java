@@ -677,103 +677,7 @@ public class testroot3_impl implements testroot3
 	public void set_b6(List<MultiDimArray> value) {
 		throw new UnsupportedOperationException ();		
 	}
-	@Override
-	public DateTime get_t1() {
-		throw new UnsupportedOperationException ();
-	}
-	@Override
-	public void set_t1(DateTime value) {
-		throw new UnsupportedOperationException ();		
-	}
-	@Override
-	public DateTime[] get_t2() {
-		throw new UnsupportedOperationException ();
-	}
-	@Override
-	public void set_t2(DateTime[] value) {
-		throw new UnsupportedOperationException ();
-	}
-	@Override
-	public MultiDimArray get_t3() {
-		throw new UnsupportedOperationException ();
-	}
-	@Override
-	public void set_t3(MultiDimArray value) {
-		throw new UnsupportedOperationException ();
-	}
-	@Override
-	public List<DateTime[]> get_t4() {
-		throw new UnsupportedOperationException ();
-	}
-	@Override
-	public void set_t4(List<DateTime[]> value) {
-		throw new UnsupportedOperationException ();
-	}
-	@Override
-	public List<DateTime[]> get_t5() {
-		throw new UnsupportedOperationException ();
-	}
-	@Override
-	public void set_t5(List<DateTime[]> value) {
-		throw new UnsupportedOperationException ();
-	}
-	@Override
-	public List<MultiDimArray> get_t6() {
-		throw new UnsupportedOperationException ();
-	}
-	@Override
-	public void set_t6(List<MultiDimArray> value) {
-		throw new UnsupportedOperationException ();
-	}
-	@Override
-	public Duration get_t7() {
-		throw new UnsupportedOperationException ();
-	}
-	@Override
-	public void set_t7(Duration value) {
-		throw new UnsupportedOperationException ();
-	}
-	@Override
-	public Duration[] get_t8() {
-		throw new UnsupportedOperationException ();
-	}
-	@Override
-	public void set_t8(Duration[] value) {
-		throw new UnsupportedOperationException ();
-	}
-	@Override
-	public MultiDimArray get_t9() {
-		throw new UnsupportedOperationException ();
-	}
-	@Override
-	public void set_t9(MultiDimArray value) {
-		throw new UnsupportedOperationException ();
-	}
-	@Override
-	public List<Duration[]> get_t10() {
-		throw new UnsupportedOperationException ();
-	}
-	@Override
-	public void set_t10(List<Duration[]> value) {
-		throw new UnsupportedOperationException ();
-	}
-	@Override
-	public List<Duration[]> get_t11() {
-		throw new UnsupportedOperationException ();
-	}
-	@Override
-	public void set_t11(List<Duration[]> value) {
-		throw new UnsupportedOperationException ();
-	}
-	@Override
-	public List<MultiDimArray> get_t12() {
-		throw new UnsupportedOperationException ();
-	}
-	@Override
-	public void set_t12(List<MultiDimArray> value) {
-		throw new UnsupportedOperationException ();
-	}
-	
+		
 	ArrayMemory<CDouble[]> c_m1 = new ArrayMemory<CDouble[]>(new CDouble[512]);
 	MultiDimArrayMemory<CDouble[]> c_m2 = new MultiDimArrayMemory<CDouble[]>(new MultiDimArray(new int[] { 10, 10 }, new CDouble[100]));
 	
@@ -805,26 +709,6 @@ public class testroot3_impl implements testroot3
 		// TODO Auto-generated method stub
 		return null;
 	}
-	@Override
-	public ArrayMemory<DateTime[]> get_c_m7() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public MultiDimArrayMemory<DateTime[]> get_c_m8() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public ArrayMemory<Duration[]> get_c_m9() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public MultiDimArrayMemory<Duration[]> get_c_m10() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
+		
 	
 }

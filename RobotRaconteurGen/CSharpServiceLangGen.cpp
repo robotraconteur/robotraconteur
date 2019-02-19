@@ -137,13 +137,7 @@ namespace RobotRaconteurGen
 				break;
 			case DataTypes_bool_t:
 				o.cs_type = "bool";
-				break;
-			case DataTypes_datetime_t:
-				o.cs_type = "RRDateTime";
-				break;
-			case DataTypes_duration_t:
-				o.cs_type = "RRDuration";
-				break;
+				break;			
 			case DataTypes_namedtype_t:
 			case DataTypes_object_t:
 				o.cs_type = fix_qualified_name(tdef.TypeString);

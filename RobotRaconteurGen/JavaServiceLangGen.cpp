@@ -173,13 +173,7 @@ namespace RobotRaconteurGen
 				break;
 			case DataTypes_bool_t:
 				o.java_type = "boolean";				
-				break;
-			case DataTypes_datetime_t:
-				o.java_type = "DateTime";				
-				break;
-			case DataTypes_duration_t:
-				o.java_type = "Duration";				
-				break;
+				break;			
 			case DataTypes_namedtype_t:			
 			case DataTypes_object_t:
 				o.java_type = fix_qualified_name(tdef.TypeString);
@@ -3298,8 +3292,6 @@ namespace RobotRaconteurGen
 		if (tdef.Type == DataTypes_cdouble_t) return "new CDouble(0.0,0.0)";
 		if (tdef.Type == DataTypes_csingle_t) return "new CSingle((float)0.0,(float)0.0)";
 		if (tdef.Type == DataTypes_bool_t) return "false";
-		if (tdef.Type == DataTypes_datetime_t) return "new DateTime(0,0)";
-		if (tdef.Type == DataTypes_duration_t) return "new Duration(0,0)";
 		
 		if (tdef.Type==DataTypes_string_t) return "\"\"";
 		}

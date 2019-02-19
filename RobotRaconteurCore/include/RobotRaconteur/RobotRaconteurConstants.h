@@ -39,8 +39,6 @@ namespace RobotRaconteur
 		DataTypes_cdouble_t,
 		DataTypes_csingle_t,
 		DataTypes_bool_t,
-		DataTypes_datetime_t,
-		DataTypes_duration_t,
 		DataTypes_structure_t = 101,
 		DataTypes_vector_t,
 		DataTypes_dictionary_t,

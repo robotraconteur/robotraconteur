@@ -695,9 +695,7 @@ namespace RobotRaconteur
 				case DataTypes_string_t:
 				case DataTypes_cdouble_t:
 				case DataTypes_csingle_t:
-				case DataTypes_bool_t:
-				case DataTypes_datetime_t:
-				case DataTypes_duration_t:
+				case DataTypes_bool_t:				
 				{
 					state() = MessageElement_readarray1;
 					continue;
@@ -1739,9 +1737,7 @@ namespace RobotRaconteur
 				case DataTypes_string_t:
 				case DataTypes_cdouble_t:
 				case DataTypes_csingle_t:
-				case DataTypes_bool_t:
-				case DataTypes_datetime_t:
-				case DataTypes_duration_t:
+				case DataTypes_bool_t:				
 				{
 					state() = MessageElement_readarray1;
 					continue;

@@ -159,19 +159,7 @@ void ArrayBinaryReader::ReadArray(RR_SHARED_PTR<RRBaseArray>& arr)
 		RR_SHARED_PTR<RRArray<rr_bool> > o = rr_cast<RRArray<rr_bool> >(arr);
 		Read((uint8_t*)o->ptr(), 0, len * sizeof(rr_bool));
 		break;
-	}
-	case DataTypes_datetime_t:
-	{
-		RR_SHARED_PTR<RRArray<datetime> > o = rr_cast<RRArray<datetime> >(arr);
-		Read((uint8_t*)o->ptr(), 0, len * sizeof(datetime));
-		break;
-	}
-	case DataTypes_duration_t:
-	{
-		RR_SHARED_PTR<RRArray<duration> > o = rr_cast<RRArray<duration> >(arr);
-		Read((uint8_t*)o->ptr(), 0, len * sizeof(duration));
-		break;
-	}
+	}	
 	default:
 		throw DataTypeException("Invalid data type");
 	}
@@ -491,19 +479,7 @@ void ArrayBinaryWriter::WriteArray(RR_SHARED_PTR<RRBaseArray>& arr)
 		RR_SHARED_PTR<RRArray<rr_bool> > o = rr_cast<RRArray<rr_bool> >(arr);
 		Write((uint8_t*)o->ptr(), 0, len * sizeof(rr_bool));
 		break;
-	}
-	case DataTypes_datetime_t:
-	{
-		RR_SHARED_PTR<RRArray<datetime> > o = rr_cast<RRArray<datetime> >(arr);
-		Write((uint8_t*)o->ptr(), 0, len * sizeof(datetime));
-		break;
-	}
-	case DataTypes_duration_t:
-	{
-		RR_SHARED_PTR<RRArray<duration> > o = rr_cast<RRArray<duration> >(arr);
-		Write((uint8_t*)o->ptr(), 0, len * sizeof(duration));
-		break;
-	}
+	}	
 	default:
 		throw DataTypeException("Invalid data type");
 	}
