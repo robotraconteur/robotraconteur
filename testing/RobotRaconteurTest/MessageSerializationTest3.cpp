@@ -173,7 +173,7 @@ namespace RobotRaconteurTest
 		{
 			RR_SHARED_PTR<RRBaseArray> a = AllocateRRArrayByType(e->ElementType, len_dist(rng));
 			uint8_t* a2 = (uint8_t*)a->void_ptr();
-			for (size_t i = 0; i < a->ElementSize() * a->Length(); i++)
+			for (size_t i = 0; i < a->ElementSize() * a->size(); i++)
 			{
 				a2[i] = uint8_dist(rng);
 			}
@@ -452,7 +452,7 @@ namespace RobotRaconteurTest
 				uniform_int_distribution<size_t> large_len_dist(512 * 1024, 1024 * 1024);
 				size_t l = large_len_dist(rng);
 				RR_SHARED_PTR<RRArray<uint32_t> > a = AllocateRRArray<uint32_t>(l);
-				uint32_t* a2 = a->ptr();
+				uint32_t* a2 = a->data();
 				for (size_t j = 0; j < l; j++)
 				{
 					a2[j] = uint32_dist(rng);

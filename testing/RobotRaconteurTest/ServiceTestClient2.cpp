@@ -169,25 +169,25 @@ namespace RobotRaconteurTest
 	void ServiceTestClient2::test_m1()
 	{
 		RR_SHARED_PTR<RRPodArray<com::robotraconteur::testing::TestService3::testpod2> > s
-			= RR_MAKE_SHARED<RRPodArray<com::robotraconteur::testing::TestService3::testpod2> >();
-		s->pod_array.resize(32);
+			= RR_MAKE_SHARED<RRPodArray<com::robotraconteur::testing::TestService3::testpod2> >(32);
+		
 
-		for (size_t i = 0; i < s->pod_array.size(); i++)
+		for (size_t i = 0; i < s->size(); i++)
 		{
-			ServiceTest2_fill_testpod2(s->pod_array.at(i), 59174 + i);
+			ServiceTest2_fill_testpod2(s->at(i), 59174 + i);
 		}
 
 		if (r->get_pod_m1()->Length() != 1024) throw std::runtime_error("");
 		r->get_pod_m1()->Write(52, s, 3, 17);
 
 		RR_SHARED_PTR<RRPodArray<com::robotraconteur::testing::TestService3::testpod2> > s2
-			= RR_MAKE_SHARED<RRPodArray<com::robotraconteur::testing::TestService3::testpod2> >();
-		s2->pod_array.resize(32);
+			= RR_MAKE_SHARED<RRPodArray<com::robotraconteur::testing::TestService3::testpod2> >(32);
+		
 		r->get_pod_m1()->Read(53, s2, 2, 16);
 
 		for (size_t i = 2; i < 16; i++)
 		{
-			ServiceTest2_verify_testpod2(s2->pod_array.at(i), 59174 + i +2);
+			ServiceTest2_verify_testpod2(s2->at(i), 59174 + i +2);
 		}
 	}
 
@@ -197,12 +197,12 @@ namespace RobotRaconteurTest
 			= RR_MAKE_SHARED<RRPodMultiDimArray<com::robotraconteur::testing::TestService3::testpod2> >();
 		uint32_t s_dims[] = { 3, 3 };
 		s->Dims = AttachRRArrayCopy<uint32_t>(s_dims, 2);
-		s->PodArray = RR_MAKE_SHARED<RRPodArray<com::robotraconteur::testing::TestService3::testpod2> >();
-		s->PodArray->pod_array.resize(9);
+		s->PodArray = RR_MAKE_SHARED<RRPodArray<com::robotraconteur::testing::TestService3::testpod2> >(9);
+		
 
-		for (size_t i = 0; i < s->PodArray->pod_array.size(); i++)
+		for (size_t i = 0; i < s->PodArray->size(); i++)
 		{
-			ServiceTest2_fill_testpod2(s->PodArray->pod_array.at(i), 75721 + i);
+			ServiceTest2_fill_testpod2(s->PodArray->at(i), 75721 + i);
 		}
 
 		std::vector<uint64_t> z;
@@ -216,13 +216,13 @@ namespace RobotRaconteurTest
 		RR_SHARED_PTR<RRPodMultiDimArray<com::robotraconteur::testing::TestService3::testpod2> > s2
 			= RR_MAKE_SHARED<RRPodMultiDimArray<com::robotraconteur::testing::TestService3::testpod2> >();
 		s2->Dims = AttachRRArrayCopy<uint32_t>(s_dims, 2);
-		s2->PodArray = RR_MAKE_SHARED<RRPodArray<com::robotraconteur::testing::TestService3::testpod2> >();
-		s2->PodArray->pod_array.resize(9);
+		s2->PodArray = RR_MAKE_SHARED<RRPodArray<com::robotraconteur::testing::TestService3::testpod2> >(9);
+		
 		r->get_pod_m2()->Read(z, s2, z, c);
 
 		for (size_t i = 0; i < 9; i++)
 		{
-			ServiceTest2_verify_testpod2(s2->PodArray->pod_array.at(i), 75721 + i);
+			ServiceTest2_verify_testpod2(s2->PodArray->at(i), 75721 + i);
 		}
 	}
 
@@ -308,7 +308,7 @@ namespace RobotRaconteurTest
 		RR_SHARED_PTR<RRNamedArray<com::robotraconteur::testing::TestService3::transform> > s
 			= AllocateEmptyRRNamedArray<com::robotraconteur::testing::TestService3::transform>(32);
 		
-		for (size_t i = 0; i < s->Length(); i++)
+		for (size_t i = 0; i < s->size(); i++)
 		{
 			ServiceTest2_fill_transform((*s)[i], 79174 + i);
 		}
@@ -334,7 +334,7 @@ namespace RobotRaconteurTest
 			= AllocateEmptyRRNamedMultiDimArray<com::robotraconteur::testing::TestService3::transform>(s_dims);
 		
 		
-		for (size_t i = 0; i < s->NamedArray->Length(); i++)
+		for (size_t i = 0; i < s->NamedArray->size(); i++)
 		{
 			ServiceTest2_fill_transform((*s->NamedArray)[i], 15721 + i);
 		}
@@ -383,11 +383,11 @@ namespace RobotRaconteurTest
 		RR_SHARED_PTR<RRList<RRArray<cdouble> > > c5_1 = r->get_c5();
 		if (!c5_1) throw std::runtime_error("");
 		double c5_1_1[] = { 1.104801e+00, 4.871266e-10, -2.392938e-03, 4.210339e-07, 1.474114e-19, -1.147137e-01, -2.026434e+06, 4.450447e-19, 3.702953e-21, 9.722025e+12, 3.464073e-14, 4.628110e+15, 2.345453e-19, 3.730012e-04, 4.116650e+16, 4.380220e+08 };
-		ca(c5_1->list.at(0), AttachRRArray<cdouble>((cdouble*)c5_1_1, 8, false));
+		ca(c5_1->front(), AttachRRArray<cdouble>((cdouble*)c5_1_1, 8, false));
 		
 		RR_SHARED_PTR<RRList<RRArray<cdouble> > > c5_2 = RR_MAKE_SHARED<RRList<RRArray<cdouble> > >();
 		double c5_2_1[] = { 2.720831e-20, 2.853037e-16, -7.982497e+16, -2.684318e-09, -2.505796e+17, -4.743970e-12, -3.657056e+11, 2.718388e+15, 1.597672e+03, 2.611859e+14, 2.224926e+06, -1.431096e-09, 3.699894e+19, -5.936706e-01, -1.385395e-09, -4.248415e-13 };
-		c5_2->list.push_back(AttachRRArrayCopy((cdouble*)c5_2_1, 8));
+		c5_2->push_back(AttachRRArrayCopy((cdouble*)c5_2_1, 8));
 		r->set_c5(c5_2);
 		
 		cfloat c7_1(-5.527021e-18, -9.848457e+03 );

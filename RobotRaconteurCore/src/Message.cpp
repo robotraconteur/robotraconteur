@@ -1323,7 +1323,7 @@ namespace RobotRaconteur
 			{
 				RR_SHARED_PTR<RRBaseArray> rdat = RR_DYNAMIC_POINTER_CAST<RRBaseArray>(dat);
 				if (!rdat) throw DataTypeException("");
-				DataCount=(uint32_t)rdat->Length();
+				DataCount=(uint32_t)rdat->size();
 				break;
 			}
 		case DataTypes_structure_t:
@@ -1930,7 +1930,7 @@ namespace RobotRaconteur
 		{
 			RR_SHARED_PTR<RRBaseArray> rdat = RR_STATIC_POINTER_CAST<RRBaseArray>(dat);
 			if (!rdat) throw DataTypeException("");
-			DataCount = (uint32_t)rdat->Length();
+			DataCount = (uint32_t)rdat->size();
 			break;
 		}
 		case DataTypes_structure_t:

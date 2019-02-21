@@ -101,7 +101,7 @@ namespace RobotRaconteur
 	{
 		if (!i) throw NullValueException("Pod array must not be null");
 		v.resize(i->size());
-		memcpy(&v[0], i->ptr(), sizeof(T)*i->size());		
+		memcpy(&v[0], i->data(), sizeof(T)*i->size());		
 	}
 
 #define RRPodStubNumberType(type) \
@@ -164,7 +164,7 @@ namespace RobotRaconteur
 	{
 		if (!i) throw NullValueException("Pod array must not be null");
 		v.resize(i->size());
-		memcpy(&v[0], i->GetNumericArray()->ptr(), sizeof(T)*i->size());
+		memcpy(&v[0], i->GetNumericArray()->data(), sizeof(T)*i->size());
 	}
 
 #define RRPodStubNamedArrayType(type) \
@@ -187,7 +187,7 @@ namespace RobotRaconteur
 			RR_SHARED_PTR<MessageElementNamedArray> m = MessageElement::FindElement(in,name)->template CastData<MessageElementNamedArray>(); \
 			if (m->Type != RRPrimUtil<type>::GetElementTypeString()) throw DataTypeException("Invalid namedarray"); \
 			RR_SHARED_PTR<RRArray<element_type> > a=MessageElement::FindElement(m->Elements, "array")->CastData<RRArray<element_type> >(); \
-			if (a->Length() != RRPrimUtil<type>::GetElementArrayCount()) throw DataTypeException("Invalid namedarray"); \
+			if (a->size() != RRPrimUtil<type>::GetElementArrayCount()) throw DataTypeException("Invalid namedarray"); \
 			memcpy(&v, a->void_ptr(), sizeof(v)); \
 		} \
 	}; \
@@ -212,7 +212,7 @@ namespace RobotRaconteur
 			RR_SHARED_PTR<MessageElementNamedArray> a = MessageElement::FindElement(in, name)->template CastData<MessageElementNamedArray>(); \
 			RR_SHARED_PTR<RRArray<element_type> > a1 = MessageElement::FindElement(a->Elements, "array")->template CastData<RRArray<element_type> >(); \
 			v.resize(a1->size() / RRPrimUtil<type>::GetElementArrayCount()); \
-			memcpy(&v, a1->ptr(), a1->size() * sizeof(element_type)); \
+			memcpy(&v, a1->data(), a1->size() * sizeof(element_type)); \
 		} \
 	}; 
 
@@ -333,9 +333,9 @@ namespace RobotRaconteur
 	{
 		if (!a) return RR_SHARED_PTR<MessageElementPodArray>();		
 		std::vector<RR_SHARED_PTR<MessageElement> > o;
-		for (size_t i = 0; i < a->pod_array.size(); i++)
+		for (size_t i = 0; i < a->size(); i++)
 		{
-			RR_SHARED_PTR<MessageElement> m = RR_MAKE_SHARED<MessageElement>("", PodStub<T>::PackToMessageElementPod(a->pod_array[i]));
+			RR_SHARED_PTR<MessageElement> m = RR_MAKE_SHARED<MessageElement>("", PodStub<T>::PackToMessageElementPod(a->at(i)));
 			m->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
 			m->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
 			m->ElementNumber = i;
@@ -349,8 +349,7 @@ namespace RobotRaconteur
 	{
 		if (!a) return RR_SHARED_PTR<RRPodArray<T> >();
 
-		RR_SHARED_PTR<RRPodArray<T> > o = RR_MAKE_SHARED<RRPodArray<T> >();
-		o->pod_array.resize(a->Elements.size());
+		RR_SHARED_PTR<RRPodArray<T> > o = RR_MAKE_SHARED<RRPodArray<T> >(a->Elements.size());
 		for (size_t i = 0; i < a->Elements.size(); i++)
 		{
 			RR_SHARED_PTR<MessageElement> m = a->Elements.at(i);
@@ -369,7 +368,7 @@ namespace RobotRaconteur
 			}
 
 			if (key != i) throw DataTypeException("Invalid pod array format");
-			PodStub<T>::UnpackFromMessageElementPod(o->pod_array[i], m->CastData<MessageElementPod>());
+			PodStub<T>::UnpackFromMessageElementPod(o->at(i), m->CastData<MessageElementPod>());
 		}
 
 		return o;		
@@ -450,11 +449,11 @@ namespace RobotRaconteur
 		if (!a) throw NullValueException("Arrays must not be null");
 		if (len != 0)
 		{
-			if (varlength && (a->pod_array.size() > len))
+			if (varlength && (a->size() > len))
 			{
 				throw DataTypeException("Array dimension mismatch");
 			}
-			if (!varlength && (a->pod_array.size() != len))
+			if (!varlength && (a->size() != len))
 			{
 				throw DataTypeException("Array dimension mismatch");
 			}
@@ -472,7 +471,7 @@ namespace RobotRaconteur
 			throw DataTypeException("Array dimension mismatch");
 		}
 
-		if (a->PodArray->pod_array.size() != n_elems)
+		if (a->PodArray->size() != n_elems)
 		{
 			throw DataTypeException("Array dimension mismatch");
 		}
@@ -511,7 +510,7 @@ namespace RobotRaconteur
 		if (a->Type != RRPrimUtil<T>::GetElementTypeString()) throw DataTypeException("NamedArray data type mismatch");
 		if (a->Elements.size() != 1) throw DataTypeException("Invalid namedarray array format");
 		typename RR_SHARED_PTR<RRArray<element_type> > a1 = MessageElement::FindElement(a->Elements, "array")->template CastData<RRArray<element_type> >();
-		if (a1->Length() != sizeof(T) / sizeof(element_type)) throw DataTypeException("Invalid scalar namedarray array format");
+		if (a1->size() != sizeof(T) / sizeof(element_type)) throw DataTypeException("Invalid scalar namedarray array format");
 
 		v = *((T*)a1->void_ptr());
 	}
@@ -617,11 +616,11 @@ namespace RobotRaconteur
 		if (!a) throw NullValueException("Arrays must not be null");
 		if (len != 0)
 		{
-			if (varlength && (a->Length() > len))
+			if (varlength && (a->size() > len))
 			{
 				throw DataTypeException("Array dimension mismatch");
 			}
-			if (!varlength && (a->Length() != len))
+			if (!varlength && (a->size() != len))
 			{
 				throw DataTypeException("Array dimension mismatch");
 			}
@@ -639,7 +638,7 @@ namespace RobotRaconteur
 			throw DataTypeException("Array dimension mismatch");
 		}
 
-		if (a->NamedArray->Length() != n_elems)
+		if (a->NamedArray->size() != n_elems)
 		{
 			throw DataTypeException("Array dimension mismatch");
 		}

@@ -343,7 +343,7 @@ RR_KEEP_GIL()
 	boost::shared_ptr<MessageElement> GetServiceAttributes(boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj)
 		{
 			boost::shared_ptr<RRMap<std::string,RRValue> > map=boost::make_shared<RRMap<std::string,RRValue> >();
-			map->map=$self->GetServiceAttributes(obj);
+			map->GetStorageContainer()=$self->GetServiceAttributes(obj);
 			boost::shared_ptr<MessageElementMap<std::string> > mmap=$self->PackMapType<std::string,RRValue>(map);
 			return boost::make_shared<MessageElement>("value",mmap);
 		}

@@ -36,7 +36,7 @@ class UserAuthenticator
 		if (!context) throw InvalidArgumentException("Context cannot be null");
 		if (!credentials) throw InvalidArgumentException("Credentials cannot be null");
 		RR_SHARED_PTR<RRMap<std::string,RRValue> > r=rr_cast<RRMap<std::string,RRValue> >(context->GetNode()->UnpackMapType<std::string,RRValue>(credentials->CastData<MessageElementMap<std::string> >()));
-		return $self->AuthenticateUser(username,r->map,context);
+		return $self->AuthenticateUser(username,r->GetStorageContainer(),context);
 	}	
 	}
 		

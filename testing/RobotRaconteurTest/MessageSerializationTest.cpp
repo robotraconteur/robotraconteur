@@ -53,7 +53,7 @@ namespace RobotRaconteurTest
 		e1->AddElement("v10", AttachRRArrayCopy(v10d, 8));
 		e1->AddElement("v11", stringToRRArray("This is a test string"));
 		RR_SHARED_PTR<RRArray<uint32_t> > v12 = AllocateRRArray<uint32_t>(1024 * 1024);
-		for (size_t i = 0; i < v12->Length(); i++) (*v12)[i] = i;
+		for (size_t i = 0; i < v12->size(); i++) (*v12)[i] = i;
 		e1->AddElement("v12", v12);
 		e1->AddElement("v13", RR_SHARED_PTR<RRBaseArray>());
 
@@ -236,7 +236,7 @@ namespace RobotRaconteurTest
 		{
 			RR_SHARED_PTR<RRBaseArray> a = AllocateRRArrayByType(e->ElementType, len_dist(rng));
 			uint8_t* a2 = (uint8_t*)a->void_ptr();
-			for (size_t i = 0; i < a->ElementSize() * a->Length(); i++)
+			for (size_t i = 0; i < a->ElementSize() * a->size(); i++)
 			{
 				a2[i] = uint8_dist(rng);
 			}
@@ -357,7 +357,7 @@ namespace RobotRaconteurTest
 				uniform_int_distribution<size_t> large_len_dist(512 * 1024, 1024 * 1024);
 				size_t l = large_len_dist(rng);
 				RR_SHARED_PTR<RRArray<uint32_t> > a = AllocateRRArray<uint32_t>(l);
-				uint32_t* a2 = a->ptr();
+				uint32_t* a2 = a->data();
 				for (size_t j = 0; j < l; j++)
 				{
 					a2[j] = uint32_dist(rng);
@@ -647,11 +647,11 @@ namespace RobotRaconteurTest
 		{
 			RR_SHARED_PTR<RRBaseArray> a1 = m1->CastData<RRBaseArray>();
 			RR_SHARED_PTR<RRBaseArray> a2 = m2->CastData<RRBaseArray>();
-			if (a1->Length() != m1->DataCount) throw std::runtime_error("");
-			if (a2->Length() != m2->DataCount) throw std::runtime_error("");
+			if (a1->size() != m1->DataCount) throw std::runtime_error("");
+			if (a2->size() != m2->DataCount) throw std::runtime_error("");
 			if (a1->GetTypeID() != m1->ElementType) throw std::runtime_error("");
 			if (a2->GetTypeID() != m2->ElementType) throw std::runtime_error("");
-			if (memcmp(a1->void_ptr(), a2->void_ptr(), a1->Length() * a1->ElementSize()) != 0)
+			if (memcmp(a1->void_ptr(), a2->void_ptr(), a1->size() * a1->ElementSize()) != 0)
 			{
 				throw std::runtime_error("");
 			}

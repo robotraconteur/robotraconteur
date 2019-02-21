@@ -58,7 +58,7 @@ class RRBaseArray : public MessageElementData
 {
 public:
 	virtual std::string GetTypeString();
-	virtual size_t Length()=0;
+	virtual size_t size()=0;
 	virtual std::string RRType();
 	virtual void* void_ptr()=0;
 	virtual size_t ElementSize()=0;

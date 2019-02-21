@@ -192,70 +192,70 @@ public static Object rRBaseArrayToArray(RRBaseArray a)
 	{
 		case DataTypes_double_t:
 		{
-	        double[] r=new double[(int)a.length()];
+	        double[] r=new double[(int)a.size()];
 	        rRBaseArrayToDoubles(a,r,r.length);
 	        return r;
 		}
 	    case DataTypes_single_t:
 	    {
-	        float[] r=new float[(int)a.length()];
+	        float[] r=new float[(int)a.size()];
 	        rRBaseArrayToFloats(a,r,r.length);
 	        return r;
 		}
 	    case DataTypes_int8_t:
 	    {
-	        byte[] r=new byte[(int)a.length()];
+	        byte[] r=new byte[(int)a.size()];
 	        rRBaseArrayToBytes(a,r,r.length);
 	        return r;
 		}
 	    case DataTypes_uint8_t:
 	    
 	    {
-	        byte[] r=new byte[(int)a.length()];
+	        byte[] r=new byte[(int)a.size()];
 	        rRBaseArrayToBytes(a,r,r.length);
 	        return new UnsignedBytes(r);
 		}
 	    case DataTypes_int16_t:
 	    {
-	    	short[] r=new short[(int)a.length()];
+	    	short[] r=new short[(int)a.size()];
 	        rRBaseArrayToShorts(a,r,r.length);
 	        return r;
 	    }
 	    case DataTypes_uint16_t:
 	    {
-	    	short[] r=new short[(int)a.length()];
+	    	short[] r=new short[(int)a.size()];
 	        rRBaseArrayToShorts(a,r,r.length);
 	        return new UnsignedShorts(r);
 	    }
 	    case DataTypes_int32_t:
 	    {
-	    	int[] r=new int[(int)a.length()];
+	    	int[] r=new int[(int)a.size()];
 	        rRBaseArrayToInts(a,r,r.length);
 	        return r;
 	    }
 	    case DataTypes_uint32_t:
 	    {
-	    	int[] r=new int[(int)a.length()];
+	    	int[] r=new int[(int)a.size()];
 	        rRBaseArrayToInts(a,r,r.length);
 	        return new UnsignedInts(r);
 	    }
 	    case DataTypes_int64_t:
 	    {
-	    	long[] r=new long[(int)a.length()];
+	    	long[] r=new long[(int)a.size()];
 	        rRBaseArrayToLongs(a,r,r.length);
 	        return r;
 	    }
 	    case DataTypes_uint64_t:
 	    {
-	    	long[] r=new long[(int)a.length()];
+	    	long[] r=new long[(int)a.size()];
 	        rRBaseArrayToLongs(a,r,r.length);
 	        return new UnsignedLongs(r);
 	    }
 	    case DataTypes_cdouble_t:
 	    {
-	    	double[] o2=new double[(int)a.length()*2];
+	    	double[] o2=new double[(int)a.size()*2];
 	    	rRBaseArrayComplexToDoubles(a,o2,o2.length);
-	    	CDouble[] o3=new CDouble[(int)a.length()];
+	    	CDouble[] o3=new CDouble[(int)a.size()];
 	    	for (int j=0; j<o3.length; j++)
 	    	{
 	    		o3[j] = new CDouble(o2[j *2], o2[j*2+1]);
@@ -264,9 +264,9 @@ public static Object rRBaseArrayToArray(RRBaseArray a)
 	    }
 	    case DataTypes_csingle_t:
 	    {
-	    	float[] o2=new float[(int)a.length()*2];
+	    	float[] o2=new float[(int)a.size()*2];
 	    	rRBaseArrayComplexToFloats(a,o2,o2.length);
-	    	CSingle[] o3=new CSingle[(int)a.length()];
+	    	CSingle[] o3=new CSingle[(int)a.size()];
 	    	for (int j=0; j<o3.length; j++)
 	    	{
 	    		o3[j] = new CSingle(o2[j *2], o2[j*2+1]);
@@ -275,9 +275,9 @@ public static Object rRBaseArrayToArray(RRBaseArray a)
 	    }
 	    case DataTypes_bool_t:
 	    {
-	    	byte[] o2=new byte[(int)a.length()];
+	    	byte[] o2=new byte[(int)a.size()];
 	    	rRBaseArrayBoolToBytes(a,o2,o2.length);
-	    	boolean[] o3=new boolean[(int)a.length()];
+	    	boolean[] o3=new boolean[(int)a.size()];
 	    	for (int j=0; j<o3.length; j++)
 	    	{
 	    		o3[j] = o2[j] != 0;

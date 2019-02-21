@@ -38,20 +38,20 @@ namespace RobotRaconteur
 		RootObjectType = info.RootObjectType;
 		if (info.RootObjectImplements)
 		{
-			BOOST_FOREACH(RR_SHARED_PTR<RobotRaconteur::RRArray<char> >& e, info.RootObjectImplements->map | boost::adaptors::map_values)
+			BOOST_FOREACH(RR_SHARED_PTR<RobotRaconteur::RRArray<char> >& e, *info.RootObjectImplements | boost::adaptors::map_values)
 			{
 				RootObjectImplements.push_back(RRArrayToString(e));
 			}
 		}
 		if (info.ConnectionURL)
 		{
-			BOOST_FOREACH(RR_SHARED_PTR<RobotRaconteur::RRArray<char> >& e, info.ConnectionURL->map | boost::adaptors::map_values)
+			BOOST_FOREACH(RR_SHARED_PTR<RobotRaconteur::RRArray<char> >& e, *info.ConnectionURL | boost::adaptors::map_values)
 			{
 				ConnectionURL.push_back(RRArrayToString(e));
 			}
 		}
 
-		Attributes = info.Attributes->map;
+		Attributes = info.Attributes->GetStorageContainer();
 		NodeID = RobotRaconteur::NodeID(RRArrayToArray<uint8_t, 16>(ninfo.NodeID));
 		NodeName = ninfo.NodeName;
 	}
@@ -349,7 +349,7 @@ namespace RobotRaconteur
 
 						if (ret)
 						{
-							BOOST_FOREACH(RR_SHARED_PTR<RobotRaconteurServiceIndex::ServiceInfo>& ii, ret->map | boost::adaptors::map_values)
+							BOOST_FOREACH(RR_SHARED_PTR<RobotRaconteurServiceIndex::ServiceInfo>& ii, *ret | boost::adaptors::map_values)
 							{
 								if (!ii) continue;
 								if (ii->RootObjectType == servicetype)
@@ -378,7 +378,7 @@ namespace RobotRaconteur
 								}
 								else
 								{
-									BOOST_FOREACH(RR_SHARED_PTR<RRArray<char> >& impl, ii->RootObjectImplements->map | boost::adaptors::map_values)
+									BOOST_FOREACH(RR_SHARED_PTR<RRArray<char> >& impl, *ii->RootObjectImplements | boost::adaptors::map_values)
 									{
 										if (RRArrayToString(impl) == servicetype)
 										{
@@ -664,8 +664,8 @@ namespace RobotRaconteur
 		{			
 			RR_NULL_CHECK(d);
 			std::vector<std::string> o;
-			o.reserve(d->map.size());
-			BOOST_FOREACH(RR_SHARED_PTR<RRArray<char> > d2, d->map | boost::adaptors::map_values)
+			o.reserve(d->size());
+			BOOST_FOREACH(RR_SHARED_PTR<RRArray<char> > d2, *d | boost::adaptors::map_values)
 			{
 				o.push_back(RRArrayToString(d2));
 			}
@@ -719,7 +719,7 @@ namespace RobotRaconteur
 
 				if (ret)
 				{
-					BOOST_FOREACH(RR_SHARED_PTR<RobotRaconteurServiceIndex::ServiceInfo>& e, ret->map | boost::adaptors::map_values)
+					BOOST_FOREACH(RR_SHARED_PTR<RobotRaconteurServiceIndex::ServiceInfo>& e, *ret | boost::adaptors::map_values)
 					{
 						ServiceInfo2 o1;
 						o1.NodeID = remote_nodeid;

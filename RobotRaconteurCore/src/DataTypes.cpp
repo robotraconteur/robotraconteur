@@ -33,7 +33,7 @@ ROBOTRACONTEUR_CORE_API RR_SHARED_PTR<RRArray<char> > stringToRRArray(const std:
 {
 	size_t s=str.size();
 	RR_SHARED_PTR<RRArray<char> > ret=AllocateRRArray<char>(s);
-	memcpy(ret->ptr(),str.c_str(),s);
+	memcpy(ret->data(),str.c_str(),s);
 	return ret;
 
 
@@ -45,10 +45,10 @@ ROBOTRACONTEUR_CORE_API std::string RRArrayToString(RR_SHARED_PTR<RRArray<char> 
 	{
 		throw DataTypeException("Null pointer");
 	}
-	size_t s=arr->Length();
+	size_t s=arr->size();
 	//char* str=new char[arr->Length()+1];
 
-	return std::string(arr->ptr(),s);
+	return std::string(arr->data(),s);
 }
 
 

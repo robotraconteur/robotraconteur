@@ -22,17 +22,16 @@ namespace RobotRaconteurTest
 	testroot3_impl::testroot3_impl()
 	{
 		RR_SHARED_PTR<RobotRaconteur::RRPodArray<com::robotraconteur::testing::TestService3::testpod2 > > m1
-			= RR_MAKE_SHARED<RobotRaconteur::RRPodArray<com::robotraconteur::testing::TestService3::testpod2 > >();
-		m1->pod_array.resize(1024);
-
+			= RR_MAKE_SHARED<RobotRaconteur::RRPodArray<com::robotraconteur::testing::TestService3::testpod2 > >(1024);
+		
 		pod_m1 = RR_MAKE_SHARED<RobotRaconteur::PodArrayMemory<com::robotraconteur::testing::TestService3::testpod2 > >(m1);
 
 		RR_SHARED_PTR<RobotRaconteur::RRPodMultiDimArray<com::robotraconteur::testing::TestService3::testpod2 > > m2
 			= RR_MAKE_SHARED<RobotRaconteur::RRPodMultiDimArray<com::robotraconteur::testing::TestService3::testpod2 > >();
 		uint32_t m2_dims[] = { 6, 6 };
 		m2->Dims = AttachRRArrayCopy(m2_dims, 2);
-		m2->PodArray = RR_MAKE_SHARED<RobotRaconteur::RRPodArray<com::robotraconteur::testing::TestService3::testpod2 > >();
-		m2->PodArray->pod_array.resize(36);
+		m2->PodArray = RR_MAKE_SHARED<RobotRaconteur::RRPodArray<com::robotraconteur::testing::TestService3::testpod2 > >(36);
+		
 		pod_m2 = RR_MAKE_SHARED<RobotRaconteur::PodMultiDimArrayMemory<com::robotraconteur::testing::TestService3::testpod2 > >(m2);
 
 
@@ -376,14 +375,14 @@ namespace RobotRaconteurTest
 	{
 		RR_SHARED_PTR<RRList<RRArray<cdouble> > > c5_1 = RR_MAKE_SHARED<RRList<RRArray<cdouble> > >();
 		double c5_1_1[] = { 1.104801e+00, 4.871266e-10, -2.392938e-03, 4.210339e-07, 1.474114e-19, -1.147137e-01, -2.026434e+06, 4.450447e-19, 3.702953e-21, 9.722025e+12, 3.464073e-14, 4.628110e+15, 2.345453e-19, 3.730012e-04, 4.116650e+16, 4.380220e+08 };
-		c5_1->list.push_back(AttachRRArrayCopy((cdouble*)c5_1_1, 8));
+		c5_1->push_back(AttachRRArrayCopy((cdouble*)c5_1_1, 8));
 		return c5_1;		
 	}
 	void testroot3_impl::set_c5(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble >  > > value)
 	{
 		if (!value) throw NullValueException("");
 		double c5_2_1[] = { 2.720831e-20, 2.853037e-16, -7.982497e+16, -2.684318e-09, -2.505796e+17, -4.743970e-12, -3.657056e+11, 2.718388e+15, 1.597672e+03, 2.611859e+14, 2.224926e+06, -1.431096e-09, 3.699894e+19, -5.936706e-01, -1.385395e-09, -4.248415e-13 };
-		ca(value->list.at(0), AttachRRArray<cdouble>((cdouble*)c5_2_1, 8, false));		
+		ca(value->front(), AttachRRArray<cdouble>((cdouble*)c5_2_1, 8, false));		
 	}
 
 	RobotRaconteur::cfloat testroot3_impl::get_c7()
@@ -588,15 +587,15 @@ namespace RobotRaconteurTest
 		o->s7 = RR_MAKE_SHARED<RRList<RRPodArray<com::robotraconteur::testing::TestService3::testpod1> > >();
 		com::robotraconteur::testing::TestService3::testpod1 s7_1;
 		ServiceTest2_fill_testpod1(s7_1, gen.get_uint32());
-		o->s7->list.push_back(ScalarToRRPodArray(s7_1));
+		o->s7->push_back(ScalarToRRPodArray(s7_1));
 
 		o->s8 = RR_MAKE_SHARED<RRList<RRPodArray<com::robotraconteur::testing::TestService3::testpod1> > >();
-		o->s8->list.push_back(ServiceTest2_fill_testpod1_array(2, gen.get_uint32()));
-		o->s8->list.push_back(ServiceTest2_fill_testpod1_array(4, gen.get_uint32()));
+		o->s8->push_back(ServiceTest2_fill_testpod1_array(2, gen.get_uint32()));
+		o->s8->push_back(ServiceTest2_fill_testpod1_array(4, gen.get_uint32()));
 
 		o->s9 = RR_MAKE_SHARED<RRList<RRPodMultiDimArray<com::robotraconteur::testing::TestService3::testpod1> > >();
-		o->s9->list.push_back(ServiceTest2_fill_testpod1_multidimarray(2, 3, gen.get_uint32()));
-		o->s9->list.push_back(ServiceTest2_fill_testpod1_multidimarray(4, 5, gen.get_uint32()));
+		o->s9->push_back(ServiceTest2_fill_testpod1_multidimarray(2, 3, gen.get_uint32()));
+		o->s9->push_back(ServiceTest2_fill_testpod1_multidimarray(4, 5, gen.get_uint32()));
 
 		com::robotraconteur::testing::TestService3::testpod1 s10;
 		ServiceTest2_fill_testpod1(s10, gen.get_uint32());
@@ -609,17 +608,17 @@ namespace RobotRaconteurTest
 		RR_SHARED_PTR<RRList<RRValue> > s13 = RR_MAKE_SHARED<RRList<RRValue> >();
 		com::robotraconteur::testing::TestService3::testpod1 s13_1;
 		ServiceTest2_fill_testpod1(s13_1, gen.get_uint32());
-		s13->list.push_back(ScalarToRRPodArray(s13_1));
+		s13->push_back(ScalarToRRPodArray(s13_1));
 		o->s13 = s13;
 
 		RR_SHARED_PTR<RRList<RRValue> > s14 =RR_MAKE_SHARED<RRList<RRValue> >();
-		s14->list.push_back(ServiceTest2_fill_testpod1_array(3, gen.get_uint32()));
-		s14->list.push_back(ServiceTest2_fill_testpod1_array(5, gen.get_uint32()));
+		s14->push_back(ServiceTest2_fill_testpod1_array(3, gen.get_uint32()));
+		s14->push_back(ServiceTest2_fill_testpod1_array(5, gen.get_uint32()));
 		o->s14 = s14;
 
 		RR_SHARED_PTR<RRList<RRValue> > s15 = RR_MAKE_SHARED<RRList<RRValue> >();
-		s15->list.push_back(ServiceTest2_fill_testpod1_multidimarray(7,2, gen.get_uint32()));
-		s15->list.push_back(ServiceTest2_fill_testpod1_multidimarray(5, 1, gen.get_uint32()));
+		s15->push_back(ServiceTest2_fill_testpod1_multidimarray(7,2, gen.get_uint32()));
+		s15->push_back(ServiceTest2_fill_testpod1_multidimarray(5, 1, gen.get_uint32()));
 		o->s15 = s15;
 				
 		ServiceTest2_fill_transform(o->t1, gen.get_uint32());
@@ -633,30 +632,30 @@ namespace RobotRaconteurTest
 		o->t6 = RR_MAKE_SHARED<RRList<RRNamedArray<com::robotraconteur::testing::TestService3::transform> > >();
 		com::robotraconteur::testing::TestService3::transform t6_1;
 		ServiceTest2_fill_transform(t6_1, gen.get_uint32());
-		o->t6->list.push_back(ScalarToRRNamedArray(t6_1));
+		o->t6->push_back(ScalarToRRNamedArray(t6_1));
 
 		o->t7 = RR_MAKE_SHARED<RRList<RRNamedArray<com::robotraconteur::testing::TestService3::transform> > >();
-		o->t7->list.push_back(ServiceTest2_fill_transform_array(4, gen.get_uint32()));
-		o->t7->list.push_back(ServiceTest2_fill_transform_array(4, gen.get_uint32()));
+		o->t7->push_back(ServiceTest2_fill_transform_array(4, gen.get_uint32()));
+		o->t7->push_back(ServiceTest2_fill_transform_array(4, gen.get_uint32()));
 
 		o->t8 = RR_MAKE_SHARED<RRList<RRNamedMultiDimArray<com::robotraconteur::testing::TestService3::transform> > >();
-		o->t8->list.push_back(ServiceTest2_fill_transform_multidimarray(2, 4, gen.get_uint32()));
-		o->t8->list.push_back(ServiceTest2_fill_transform_multidimarray(2, 4, gen.get_uint32()));
+		o->t8->push_back(ServiceTest2_fill_transform_multidimarray(2, 4, gen.get_uint32()));
+		o->t8->push_back(ServiceTest2_fill_transform_multidimarray(2, 4, gen.get_uint32()));
 
 		RR_SHARED_PTR<RRList<RRValue> > t9 = RR_MAKE_SHARED<RRList<RRValue> >();
 		com::robotraconteur::testing::TestService3::transform t9_1;
 		ServiceTest2_fill_transform(t9_1, gen.get_uint32());
-		t9->list.push_back(ScalarToRRNamedArray(t9_1));
+		t9->push_back(ScalarToRRNamedArray(t9_1));
 		o->t9 = t9;
 
 		RR_SHARED_PTR<RRList<RRValue> > t10 = RR_MAKE_SHARED<RRList<RRValue> >();
-		t10->list.push_back(ServiceTest2_fill_transform_array(3, gen.get_uint32()));
-		t10->list.push_back(ServiceTest2_fill_transform_array(5, gen.get_uint32()));
+		t10->push_back(ServiceTest2_fill_transform_array(3, gen.get_uint32()));
+		t10->push_back(ServiceTest2_fill_transform_array(5, gen.get_uint32()));
 		o->t10 = t10;
 
 		RR_SHARED_PTR<RRList<RRValue> > t11 = RR_MAKE_SHARED<RRList<RRValue> >();
-		t11->list.push_back(ServiceTest2_fill_transform_multidimarray(7, 2, gen.get_uint32()));
-		t11->list.push_back(ServiceTest2_fill_transform_multidimarray(5, 1, gen.get_uint32()));
+		t11->push_back(ServiceTest2_fill_transform_multidimarray(7, 2, gen.get_uint32()));
+		t11->push_back(ServiceTest2_fill_transform_multidimarray(5, 1, gen.get_uint32()));
 		o->t11 = t11;
 
 		return o;
@@ -677,19 +676,19 @@ namespace RobotRaconteurTest
 		ServiceTest2_verify_testpod1_multidimarray(v->s6, s6_seed % 6, s6_seed % 3, s6_seed);
 
 		if (!v->s7) throw std::runtime_error("");
-		if (v->s7->list.size() != 1) throw std::runtime_error("");
-		com::robotraconteur::testing::TestService3::testpod1 s7_1=RRPodArrayToScalar(v->s7->list[0]);
+		if (v->s7->size() != 1) throw std::runtime_error("");
+		com::robotraconteur::testing::TestService3::testpod1 s7_1=RRPodArrayToScalar(v->s7->front());
 		ServiceTest2_verify_testpod1(s7_1, gen.get_uint32());
 
 		if (!v->s8) throw std::runtime_error("");
-		if (v->s8->list.size() != 2) throw std::runtime_error("");
-		ServiceTest2_verify_testpod1_array(v->s8->list[0], 2, gen.get_uint32());
-		ServiceTest2_verify_testpod1_array(v->s8->list[1], 4, gen.get_uint32());
+		if (v->s8->size() != 2) throw std::runtime_error("");
+		ServiceTest2_verify_testpod1_array(v->s8->front(), 2, gen.get_uint32());
+		ServiceTest2_verify_testpod1_array(*(++v->s8->begin()), 4, gen.get_uint32());
 
 		if (!v->s9) throw std::runtime_error("");
-		if (v->s9->list.size() != 2) throw std::runtime_error("");
-		ServiceTest2_verify_testpod1_multidimarray(v->s9->list[0], 2,3, gen.get_uint32());
-		ServiceTest2_verify_testpod1_multidimarray(v->s9->list[1], 4,5, gen.get_uint32());
+		if (v->s9->size() != 2) throw std::runtime_error("");
+		ServiceTest2_verify_testpod1_multidimarray(v->s9->front(), 2,3, gen.get_uint32());
+		ServiceTest2_verify_testpod1_multidimarray(*(++v->s9->begin()), 4,5, gen.get_uint32());
 
 		com::robotraconteur::testing::TestService3::testpod1 v10 = RRPodArrayToScalar(rr_cast<RRPodArray<com::robotraconteur::testing::TestService3::testpod1> >(v->s10));
 		ServiceTest2_verify_testpod1(v10, gen.get_uint32());
@@ -700,21 +699,21 @@ namespace RobotRaconteurTest
 
 		if (!v->s13) throw std::runtime_error("");
 		RR_SHARED_PTR<RRList<RRValue> > s13 = rr_cast<RRList<RRValue> >(v->s13);
-		if (s13->list.size() != 1) throw std::runtime_error("");
-		ServiceTest2_verify_testpod1(rr_cast<RRPodArray<com::robotraconteur::testing::TestService3::testpod1> >(s13->list[0])->pod_array.at(0), gen.get_uint32());
+		if (s13->size() != 1) throw std::runtime_error("");
+		ServiceTest2_verify_testpod1(rr_cast<RRPodArray<com::robotraconteur::testing::TestService3::testpod1> >(s13->front())->at(0), gen.get_uint32());
 		
 		if (!v->s14) throw std::runtime_error("");
 		RR_SHARED_PTR<RRList<RRValue> > s14 = rr_cast<RRList<RRValue> >(v->s14);
-		if (s14->list.size() != 2) throw std::runtime_error("");
-		ServiceTest2_verify_testpod1_array(rr_cast<RRPodArray<com::robotraconteur::testing::TestService3::testpod1> >(s14->list[0]), 3, gen.get_uint32());
-		ServiceTest2_verify_testpod1_array(rr_cast<RRPodArray<com::robotraconteur::testing::TestService3::testpod1> >(s14->list[1]), 5, gen.get_uint32());
+		if (s14->size() != 2) throw std::runtime_error("");
+		ServiceTest2_verify_testpod1_array(rr_cast<RRPodArray<com::robotraconteur::testing::TestService3::testpod1> >(s14->front()), 3, gen.get_uint32());
+		ServiceTest2_verify_testpod1_array(rr_cast<RRPodArray<com::robotraconteur::testing::TestService3::testpod1> >(*(++s14->begin())), 5, gen.get_uint32());
 
 		if (!v->s15) throw std::runtime_error("");
 		RR_SHARED_PTR<RRList<RRValue> > s15 = rr_cast<RRList<RRValue> >(v->s15);
-		if (s15->list.size() != 2) throw std::runtime_error("");
-		ServiceTest2_verify_testpod1_multidimarray(rr_cast<RRPodMultiDimArray<com::robotraconteur::testing::TestService3::testpod1> >(s15->list[0]), 7, 2, gen.get_uint32());
+		if (s15->size() != 2) throw std::runtime_error("");
+		ServiceTest2_verify_testpod1_multidimarray(rr_cast<RRPodMultiDimArray<com::robotraconteur::testing::TestService3::testpod1> >(s15->front()), 7, 2, gen.get_uint32());
 		
-		ServiceTest2_verify_testpod1_multidimarray(s15->list[1], 5, 1, gen.get_uint32());
+		ServiceTest2_verify_testpod1_multidimarray(*(++s15->begin()), 5, 1, gen.get_uint32());
 		
 		ServiceTest2_verify_transform(v->t1, gen.get_uint32());
 
@@ -729,19 +728,19 @@ namespace RobotRaconteurTest
 		gen.get_uint32();
 
 		if (!v->t6) throw std::runtime_error("");
-		if (v->t6->list.size() != 1) throw std::runtime_error("");
-		com::robotraconteur::testing::TestService3::transform t6_1 = RRNamedArrayToScalar(v->t6->list[0]);
+		if (v->t6->size() != 1) throw std::runtime_error("");
+		com::robotraconteur::testing::TestService3::transform t6_1 = RRNamedArrayToScalar(v->t6->front());
 		ServiceTest2_verify_transform(t6_1, gen.get_uint32());
 
 		if (!v->t7) throw std::runtime_error("");
-		if (v->t7->list.size() != 2) throw std::runtime_error("");
-		ServiceTest2_verify_transform_array(v->t7->list[0], 4, gen.get_uint32());
-		ServiceTest2_verify_transform_array(v->t7->list[1], 4, gen.get_uint32());
+		if (v->t7->size() != 2) throw std::runtime_error("");
+		ServiceTest2_verify_transform_array(v->t7->front(), 4, gen.get_uint32());
+		ServiceTest2_verify_transform_array(*(++v->t7->begin()), 4, gen.get_uint32());
 
 		if (!v->t8) throw std::runtime_error("");
-		if (v->t8->list.size() != 2) throw std::runtime_error("");
-		ServiceTest2_verify_transform_multidimarray(v->t8->list[0], 2, 4, gen.get_uint32());
-		ServiceTest2_verify_transform_multidimarray(v->t8->list[1], 2, 4, gen.get_uint32());
+		if (v->t8->size() != 2) throw std::runtime_error("");
+		ServiceTest2_verify_transform_multidimarray(v->t8->front(), 2, 4, gen.get_uint32());
+		ServiceTest2_verify_transform_multidimarray(*(++v->t8->begin()), 2, 4, gen.get_uint32());
 
 		/*if (!v->t9) throw std::runtime_error("");
 		RR_SHARED_PTR<RRList<RRValue> > t9 = rr_cast<RRList<RRValue> >(v->t9);
@@ -765,12 +764,12 @@ namespace RobotRaconteurTest
 	{
 		ServiceTest2_test_sequence_gen gen(seed);
 
-		RR_SHARED_PTR<RRPodArray<com::robotraconteur::testing::TestService3::testpod1> > o = RR_MAKE_SHARED<RRPodArray<com::robotraconteur::testing::TestService3::testpod1> >();
+		RR_SHARED_PTR<RRPodArray<com::robotraconteur::testing::TestService3::testpod1> > o = RR_MAKE_SHARED<RRPodArray<com::robotraconteur::testing::TestService3::testpod1> >(0);
 		for (size_t i = 0; i < s; i++)
 		{
 			com::robotraconteur::testing::TestService3::testpod1 s1;
 			ServiceTest2_fill_testpod1(s1, gen.get_uint32());
-			o->pod_array.push_back(s1);
+			o->GetStorageContainer().push_back(s1);
 		}
 		return o;
 	}
@@ -781,11 +780,11 @@ namespace RobotRaconteurTest
 
 		ServiceTest2_test_sequence_gen gen(seed);
 
-		if (v->pod_array.size() != s) throw std::runtime_error("");
+		if (v->size() != s) throw std::runtime_error("");
 
 		for (size_t i = 0; i < s; i++)
 		{			
-			ServiceTest2_verify_testpod1(v->pod_array[i], gen.get_uint32());			
+			ServiceTest2_verify_testpod1(v->at(i), gen.get_uint32());			
 		}
 	}
 
@@ -855,7 +854,7 @@ namespace RobotRaconteurTest
 
 		ServiceTest2_test_sequence_gen gen(seed);
 
-		if (v->Length() != s) throw std::runtime_error("");
+		if (v->size() != s) throw std::runtime_error("");
 
 		for (size_t i = 0; i < s; i++)
 		{

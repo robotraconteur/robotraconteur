@@ -1022,69 +1022,69 @@ namespace RobotRaconteur
             {
                 case DataTypes.double_t:
                     {
-                        var o2 = new double[i.Length()];
+                        var o2 = new double[i.size()];
                         MessageElementDataUtil.RRBaseArrayToDoubles(i, o2, o2.Length);
                         return o2;
                     }
                 case DataTypes.single_t:
                     {
-                        var o2 = new float[i.Length()];
+                        var o2 = new float[i.size()];
                         MessageElementDataUtil.RRBaseArrayToFloats(i, o2, o2.Length);
                         return o2;
                     }                    
                 case DataTypes.int8_t:
                     {
-                        var o2 = new sbyte[i.Length()];
+                        var o2 = new sbyte[i.size()];
                         MessageElementDataUtil.RRBaseArrayToBytes(i, o2, o2.Length);
                         return o2;
                     }
                 case DataTypes.uint8_t:
                     {
-                        var o2 = new byte[i.Length()];
+                        var o2 = new byte[i.size()];
                         MessageElementDataUtil.RRBaseArrayToBytes(i, o2, o2.Length);
                         return o2;
                     }
                 case DataTypes.int16_t:
                     {
-                        var o2 = new short[i.Length()];
+                        var o2 = new short[i.size()];
                         MessageElementDataUtil.RRBaseArrayToShorts(i, o2, o2.Length);
                         return o2;
                     }
                 case DataTypes.uint16_t:
                     {
-                        var o2 = new ushort[i.Length()];
+                        var o2 = new ushort[i.size()];
                         MessageElementDataUtil.RRBaseArrayToShorts(i, o2, o2.Length);
                         return o2;
                     }
                 case DataTypes.int32_t:
                     {
-                        var o2 = new int[i.Length()];
+                        var o2 = new int[i.size()];
                         MessageElementDataUtil.RRBaseArrayToInts(i, o2, o2.Length);
                         return o2;
                     }
                 case DataTypes.uint32_t:
                     {
-                        var o2 = new uint[i.Length()];
+                        var o2 = new uint[i.size()];
                         MessageElementDataUtil.RRBaseArrayToInts(i, o2, o2.Length);
                         return o2;
                     }
                 case DataTypes.int64_t:
                     {
-                        var o2 = new long[i.Length()];
+                        var o2 = new long[i.size()];
                         MessageElementDataUtil.RRBaseArrayToLongs(i, o2, o2.Length);
                         return o2;
                     }
                 case DataTypes.uint64_t:
                     {
-                        var o2 = new ulong[i.Length()];
+                        var o2 = new ulong[i.size()];
                         MessageElementDataUtil.RRBaseArrayToLongs(i, o2, o2.Length);
                         return o2;
                     }
                 case DataTypes.cdouble_t:
                     {
-                        var o2 = new double[i.Length()*2];
+                        var o2 = new double[i.size()*2];
                         MessageElementDataUtil.RRBaseArrayComplexToDoubles(i, o2, o2.Length);
-                        var o3 = new CDouble[i.Length()];
+                        var o3 = new CDouble[i.size()];
                         for (int j=0; j < o3.Length; j++)
                         {
                             o3[j] = new CDouble(o2[j * 2], o2[j * 2 + 1]);
@@ -1093,9 +1093,9 @@ namespace RobotRaconteur
                     }
                 case DataTypes.csingle_t:
                     {
-                        var o2 = new float[i.Length() * 2];
+                        var o2 = new float[i.size() * 2];
                         MessageElementDataUtil.RRBaseArrayComplexToFloats(i, o2, o2.Length);
-                        var o3 = new CSingle[i.Length()];
+                        var o3 = new CSingle[i.size()];
                         for (int j = 0; j < o3.Length; j++)
                         {
                             o3[j] = new CSingle(o2[j * 2], o2[j * 2 + 1]);
@@ -1104,7 +1104,7 @@ namespace RobotRaconteur
                     }
                 case DataTypes.bool_t:
                     {
-                        var o2 = new byte[i.Length()];
+                        var o2 = new byte[i.size()];
                         MessageElementDataUtil.RRBaseArrayBoolToBytes(i, o2, o2.Length);
                         var o3 = new bool[o2.Length];
                         for (int j = 0; j < o3.Length; j++)
@@ -1220,7 +1220,7 @@ namespace RobotRaconteur
         {
             if (i == null) return null;
             DataTypes type = DataTypeUtil.TypeIDFromString(RobotRaconteurNode.GetTypeString(i.GetType().GetElementType()));
-            if (i.Length != o.Length()) throw new Exception("Length mismatch");
+            if (i.Length != o.size()) throw new Exception("Length mismatch");
             if (o.GetTypeID() != type) throw new Exception("Type mismatch");
             /*GCHandle h = GCHandle.Alloc(i, GCHandleType.Pinned);
             rr_memcpy.memcpy(o.void_ptr(), h.AddrOfPinnedObject(), i.Length * o.ElementSize());

@@ -111,20 +111,20 @@ namespace RobotRaconteur
 	{
 		boost::shared_ptr<RRArray<uint32_t> > data_dims = MessageElement::FindElement(data->Elements, "dims")->CastData<RRArray<uint32_t> >();
 		if (!data_dims) throw DataTypeException("Invalid MultDimArray");
-		if (type1->ArrayLength.size() != data_dims->Length())
+		if (type1->ArrayLength.size() != data_dims->size())
 			throw DataTypeException("Array dimension mismatch");
 		int32_t count = 1;
 
-		for (int32_t i = 0; i < data_dims->Length(); i++)
+		for (int32_t i = 0; i < data_dims->size(); i++)
 		{
-			count *= data_dims->ptr()[i];
-			if (data_dims->ptr()[i] != type1->ArrayLength[i])
+			count *= data_dims->data()[i];
+			if (data_dims->data()[i] != type1->ArrayLength[i])
 				throw DataTypeException("Array dimension mismatch");
 		}
 
 		boost::shared_ptr<RRBaseArray> data_array = MessageElement::FindElement(data->Elements, "array")->CastData<RRBaseArray>();
 		if (!data_array) throw DataTypeException("Invalid MultDimArray");
-		if (data_array->Length() != count) throw DataTypeException("Array dimension mismatch");
+		if (data_array->size() != count) throw DataTypeException("Array dimension mismatch");
 	}
 
 
@@ -1002,7 +1002,7 @@ namespace RobotRaconteur
 
 		RR_SHARED_PTR<RRBaseArray> a = MessageElement::FindElement(l->Elements, "array")->CastData<RRBaseArray>();
 		if (!a) throw DataTypeException("NamedArray must not be null");
-		if (a->Length() % s.get<1>() != 0) throw DataTypeException("Invalid length for NamedArray");
+		if (a->size() % s.get<1>() != 0) throw DataTypeException("Invalid length for NamedArray");
 		
 		if (type1)
 		{
@@ -1014,14 +1014,14 @@ namespace RobotRaconteur
 
 				if (type1->ArrayVarLength)
 				{
-					if (a->Length() / s.get<1>() > c)
+					if (a->size() / s.get<1>() > c)
 					{
 						throw DataTypeException("Array dimension mismatch");
 					}
 				}
 				else
 				{
-					if (a->Length() / s.get<1>() != c)
+					if (a->size() / s.get<1>() != c)
 					{
 						throw DataTypeException("Array dimension mismatch");
 					}
@@ -1029,7 +1029,7 @@ namespace RobotRaconteur
 			}
 		}
 
-		npy_intp a_dims = boost::lexical_cast<npy_intp>(a->Length() / s.get<1>());
+		npy_intp a_dims = boost::lexical_cast<npy_intp>(a->size() / s.get<1>());
 		PyAutoPtr<PyObject> array2(PyArray_NewFromDescr(&PyArray_Type, (PyArray_Descr*)a_descr.get(), 1, &a_dims, NULL, a->void_ptr(),NPY_ARRAY_F_CONTIGUOUS | NPY_ARRAY_WRITEABLE, NULL));
 		
 		Py_XINCREF(a_descr.get());
@@ -1516,7 +1516,7 @@ namespace RobotRaconteur
 		if (element->ElementType == DataTypes_string_t)
 		{
 			boost::shared_ptr<RRArray<char> > s1 = element->CastData<RRArray<char> >();
-			return PyUnicode_DecodeUTF8(s1->ptr(), s1->Length(), "Invalid UTF8 String");
+			return PyUnicode_DecodeUTF8(s1->data(), s1->size(), "Invalid UTF8 String");
 		}
 
 		if (element->ElementType == DataTypes_structure_t)
@@ -1790,7 +1790,7 @@ namespace RobotRaconteur
 			array2 = AllocateRRArray<type2>(seq_len);
 		}
 
-		type2* buf = array2->ptr();
+		type2* buf = array2->data();
 
 		for (size_t i = 0; i < seq_len; i++)
 		{
@@ -1897,7 +1897,7 @@ namespace RobotRaconteur
 			array2 = AllocateRRArray<type2>(seq_len);
 		}
 
-		type2* buf = array2->ptr();
+		type2* buf = array2->data();
 
 		for (size_t i = 0; i < seq_len; i++)
 		{				
@@ -1983,7 +1983,7 @@ namespace RobotRaconteur
 			array2 = AllocateRRArray<type2>(seq_len);
 		}
 
-		type2* buf = array2->ptr();
+		type2* buf = array2->data();
 
 		for (size_t i = 0; i < seq_len; i++)
 		{
@@ -2099,7 +2099,7 @@ namespace RobotRaconteur
 			if (destrrarray)
 			{
 				if (destrrarray->GetTypeID() != DataTypes_uint8_t
-					|| bytearray_size == destrrarray->Length())
+					|| bytearray_size == destrrarray->size())
 				{
 					throw DataTypeException("Invalid destination array provided for PackToRRArray");
 				}				
@@ -2202,16 +2202,16 @@ namespace RobotRaconteur
 				{
 					if (!type1->ArrayVarLength)
 					{
-						if (rrarray->Length() != type1->ArrayLength.at(0)) throw DataTypeException("Array length mismatch");
+						if (rrarray->size() != type1->ArrayLength.at(0)) throw DataTypeException("Array length mismatch");
 					}
 					else if (type1->ArrayLength.at(0) != 0)
 					{
-						if (rrarray->Length() > type1->ArrayLength.at(0)) throw DataTypeException("Array length to long");
+						if (rrarray->size() > type1->ArrayLength.at(0)) throw DataTypeException("Array length to long");
 					}
 				}
 				else
 				{
-					if (rrarray->Length() != 1)
+					if (rrarray->size() != 1)
 						throw DataTypeException("Array length mismatch");
 				}
 			}					
@@ -2235,7 +2235,7 @@ namespace RobotRaconteur
 
 		if (destrrarray)
 		{			
-			if (destrrarray->Length() != len) throw DataTypeException("Invalid destrrarray specified for PackRRArray");
+			if (destrrarray->size() != len) throw DataTypeException("Invalid destrrarray specified for PackRRArray");
 		}
 		else
 		{
@@ -2278,7 +2278,7 @@ namespace RobotRaconteur
 		
 		if (array2.get() == NULL) throw DataTypeException("Internal error");		
 
-		if (PyArray_NBYTES(array2.get()) != destrrarray->Length()*destrrarray->ElementSize())
+		if (PyArray_NBYTES(array2.get()) != destrrarray->size()*destrrarray->ElementSize())
 			throw DataTypeException("numpy data size error in PackToRRArray");
 
 		memcpy(destrrarray->void_ptr(), PyArray_DATA(array2.get()), PyArray_NBYTES(array2.get()));
@@ -2299,18 +2299,18 @@ namespace RobotRaconteur
 			if (type1->ArrayType == DataTypes_ArrayTypes_multidimarray) throw DataTypeException("Invalid parameter for UnpackFromRRArray");
 			if (type1->ArrayType == DataTypes_ArrayTypes_none)
 			{
-				if (rrarray->Length() != 1) throw DataTypeException("Invalid length for scalar in UnpackFromRRArray");
+				if (rrarray->size() != 1) throw DataTypeException("Invalid length for scalar in UnpackFromRRArray");
 			}
 			else
 			{
 				if (!type1->ArrayVarLength)
 				{
-					if (rrarray->Length() != type1->ArrayLength.at(0)) throw DataTypeException("Invalid length for fixed length array in UnpackFromRRArray");
+					if (rrarray->size() != type1->ArrayLength.at(0)) throw DataTypeException("Invalid length for fixed length array in UnpackFromRRArray");
 				}
 			}
 		}
 
-		npy_intp dims=rrarray->Length();
+		npy_intp dims=rrarray->size();
 		PyArray_Descr* a_descr = RRTypeIdToNumPyDataType(rrarray->GetTypeID());
 		PyAutoPtr<PyObject> ret1(PyArray_NewFromDescr(&PyArray_Type, (PyArray_Descr*)a_descr, 1, &dims, NULL, rrarray->void_ptr(), NPY_ARRAY_F_CONTIGUOUS | NPY_ARRAY_WRITEABLE, NULL));
 		if (ret1.get() == NULL)

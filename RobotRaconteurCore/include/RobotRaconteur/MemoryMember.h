@@ -83,24 +83,24 @@ namespace RobotRaconteur
 		virtual uint64_t Length()
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
-			return memory->Length();
+			return memory->size();
 		}
 
 		virtual void Read(uint64_t memorypos, RR_SHARED_PTR<RRArray<T> > buffer, uint64_t bufferpos, uint64_t count)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
-			if (memorypos+count > memory->Length()) throw OutOfRangeException("Index out of range");
-			if (bufferpos+count > buffer->Length()) throw OutOfRangeException("Index out of range");
+			if (memorypos+count > memory->size()) throw OutOfRangeException("Index out of range");
+			if (bufferpos+count > buffer->size()) throw OutOfRangeException("Index out of range");
 
-			memcpy(buffer->ptr()+bufferpos,memory->ptr()+memorypos,(size_t)count*sizeof(T));
+			memcpy(buffer->data()+bufferpos,memory->data()+memorypos,(size_t)count*sizeof(T));
 		}
 
 		virtual void Write(uint64_t memorypos, RR_SHARED_PTR<RRArray<T> > buffer, uint64_t bufferpos, uint64_t count)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
-			if (memorypos+count > memory->Length()) throw OutOfRangeException("Index out of range");
-			if (bufferpos+count > buffer->Length()) throw OutOfRangeException("Index out of range");
-			memcpy(memory->ptr()+memorypos,buffer->ptr()+bufferpos,(size_t)count*sizeof(T));
+			if (memorypos+count > memory->size()) throw OutOfRangeException("Index out of range");
+			if (bufferpos+count > buffer->size()) throw OutOfRangeException("Index out of range");
+			memcpy(memory->data()+memorypos,buffer->data()+bufferpos,(size_t)count*sizeof(T));
 		}
 		
 		virtual DataTypes ElementTypeID()
@@ -149,7 +149,7 @@ namespace RobotRaconteur
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
 			RR_SHARED_PTR<RRArray<uint32_t> > dims=multimemory->Dims;
-			std::vector<uint64_t> s(dims->Length());
+			std::vector<uint64_t> s(dims->size());
 			for (size_t i=0; i<s.size(); i++)
 			{
 				s[i]=(*dims)[i];
@@ -362,7 +362,7 @@ namespace RobotRaconteur
 		{
 			RR_SHARED_PTR<RRArray<T> > data = rr_cast<RRArray<T> >(res);
 			RR_SHARED_PTR <RRArray<T> >& buffer1 = *static_cast<RR_SHARED_PTR<RRArray<T> >*>(buffer);
-			memcpy(buffer1->ptr() + bufferpos, data->ptr(), (size_t)count * sizeof(T));
+			memcpy(buffer1->data() + bufferpos, data->data(), (size_t)count * sizeof(T));
 		}
 
 		virtual RR_SHARED_PTR<MessageElementData> PackWriteRequest(void* buffer, uint64_t bufferpos, uint64_t count)
@@ -375,7 +375,7 @@ namespace RobotRaconteur
 			else if ((buffer1->size() - static_cast<size_t>(bufferpos)) >= static_cast<size_t>(count))
 			{
 				RR_SHARED_PTR<RRArray<T> > data = AllocateRRArray<T>((size_t)count);				
-				memcpy(data->ptr(), buffer1->ptr() + bufferpos, (size_t)count * sizeof(T));
+				memcpy(data->data(), buffer1->data() + bufferpos, (size_t)count * sizeof(T));
 				return data;
 			}
 			else
@@ -530,29 +530,29 @@ namespace RobotRaconteur
 		virtual uint64_t Length()
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
-			return memory->pod_array.size();
+			return memory->size();
 		}
 
 		virtual void Read(uint64_t memorypos, RR_SHARED_PTR<RRPodArray<T> > buffer, uint64_t bufferpos, uint64_t count)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
-			if (memorypos + count > memory->pod_array.size()) throw OutOfRangeException("Index out of range");
-			if (bufferpos + count > buffer->pod_array.size()) throw OutOfRangeException("Index out of range");
+			if (memorypos + count > memory->size()) throw OutOfRangeException("Index out of range");
+			if (bufferpos + count > buffer->size()) throw OutOfRangeException("Index out of range");
 
 			for (size_t i = 0; i < count; i++)
 			{
-				buffer->pod_array.at(i + bufferpos) = memory->pod_array.at(i + memorypos);
+				buffer->at(i + bufferpos) = memory->at(i + memorypos);
 			}
 		}
 
 		virtual void Write(uint64_t memorypos, RR_SHARED_PTR<RRPodArray<T> > buffer, uint64_t bufferpos, uint64_t count)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
-			if (memorypos + count > memory->pod_array.size()) throw OutOfRangeException("Index out of range");
-			if (bufferpos + count > buffer->pod_array.size()) throw OutOfRangeException("Index out of range");			
+			if (memorypos + count > memory->size()) throw OutOfRangeException("Index out of range");
+			if (bufferpos + count > buffer->size()) throw OutOfRangeException("Index out of range");			
 			for (size_t i = 0; i < count; i++)
 			{
-				memory->pod_array.at(i + memorypos) = buffer->pod_array.at(i + bufferpos);
+				memory->at(i + memorypos) = buffer->at(i + bufferpos);
 			}
 		}
 
@@ -575,8 +575,7 @@ namespace RobotRaconteur
 		virtual RR_SHARED_PTR<MessageElementData> DoRead(uint64_t memorypos, uint64_t bufferpos, uint64_t count, RR_SHARED_PTR<ArrayMemoryBase> mem)
 		{
 			RR_SHARED_PTR<PodArrayMemory<T> > mem1 = rr_cast<PodArrayMemory<T> >(mem);
-			RR_SHARED_PTR<RRPodArray<T> > buf1 = RR_MAKE_SHARED<RRPodArray<T> >();
-			buf1->pod_array.resize(count);				
+			RR_SHARED_PTR<RRPodArray<T> > buf1 = RR_MAKE_SHARED<RRPodArray<T> >(count);			
 			mem1->Read(memorypos, buf1, 0, (size_t)count);
 			return PodStub_PackPodArray(buf1);
 		}
@@ -629,19 +628,18 @@ namespace RobotRaconteur
 
 			for (size_t i = 0; i < count; i++)
 			{
-				buffer1->pod_array.at(i + bufferpos) = res1->pod_array.at(i);
+				buffer1->at(i + bufferpos) = res1->at(i);
 			}			
 		}
 
 		virtual RR_SHARED_PTR<MessageElementData> PackWriteRequest(void* buffer, uint64_t bufferpos, uint64_t count)
 		{
 			RR_SHARED_PTR<RRPodArray<T> >& buffer1 = *static_cast<RR_SHARED_PTR<RRPodArray<T> >* >(buffer);
-			RR_SHARED_PTR<RRPodArray<T> > o = RR_MAKE_SHARED<RRPodArray<T> >();
-			o->pod_array.resize(count);
-
+			RR_SHARED_PTR<RRPodArray<T> > o = RR_MAKE_SHARED<RRPodArray<T> >(count);
+			
 			for (size_t i = 0; i < count; i++)
 			{
-				o->pod_array.at(i) = buffer1->pod_array.at(i + bufferpos);
+				o->at(i) = buffer1->at(i + bufferpos);
 			}
 			return PodStub_PackPodArray(o);
 		}
@@ -649,7 +647,7 @@ namespace RobotRaconteur
 		virtual size_t GetBufferLength(void* buffer)
 		{
 			RR_SHARED_PTR<RRPodArray<T> >& buffer1 = *static_cast<RR_SHARED_PTR<RRPodArray<T> >*>(buffer);
-			return buffer1->pod_array.size();
+			return buffer1->size();
 		}
 	};
 
@@ -680,7 +678,7 @@ namespace RobotRaconteur
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
 			RR_SHARED_PTR<RRArray<uint32_t> > dims = multimemory->Dims;
-			std::vector<uint64_t> s(dims->Length());
+			std::vector<uint64_t> s(dims->size());
 			for (size_t i = 0; i<s.size(); i++)
 			{
 				s[i] = (*dims)[i];
@@ -765,9 +763,8 @@ namespace RobotRaconteur
 
 			RR_SHARED_PTR<RRPodMultiDimArray<T> > data = RR_MAKE_SHARED<RRPodMultiDimArray<T> >();
 			data->Dims = VectorToRRArray<uint32_t>(count);
-			data->PodArray = RR_MAKE_SHARED<RRPodArray<T> >();
-			data->PodArray->pod_array.resize(elemcount);
-						
+			data->PodArray = RR_MAKE_SHARED<RRPodArray<T> >(elemcount);
+									
 			buffer1->RetrieveSubArray(detail::ConvertVectorType<uint32_t>(bufferpos), data, std::vector<uint32_t>(count.size()), detail::ConvertVectorType<uint32_t>(count));
 			return GetNode()->PackPodMultiDimArray(data);
 			
@@ -790,9 +787,8 @@ namespace RobotRaconteur
 						
 			RR_SHARED_PTR<RRPodMultiDimArray<T> > data = RR_MAKE_SHARED<RRPodMultiDimArray<T> >();
 			data->Dims = VectorToRRArray<uint32_t>(count);
-			data->PodArray = RR_MAKE_SHARED<RRPodArray<T> >();
-			data->PodArray->pod_array.resize((size_t)elemcount);				
-			
+			data->PodArray = RR_MAKE_SHARED<RRPodArray<T> >((size_t)elemcount);
+						
 			mem1->Read(memorypos, data, bufferpos, count);
 			return GetNode()->PackPodMultiDimArray(data);
 		}
@@ -834,14 +830,14 @@ namespace RobotRaconteur
 		virtual uint64_t Length()
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
-			return memory->Length();
+			return memory->size();
 		}
 
 		virtual void Read(uint64_t memorypos, RR_SHARED_PTR<RRNamedArray<T> > buffer, uint64_t bufferpos, uint64_t count)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
-			if (memorypos + count > memory->Length()) throw OutOfRangeException("Index out of range");
-			if (bufferpos + count > buffer->Length()) throw OutOfRangeException("Index out of range");
+			if (memorypos + count > memory->size()) throw OutOfRangeException("Index out of range");
+			if (bufferpos + count > buffer->size()) throw OutOfRangeException("Index out of range");
 
 			for (size_t i = 0; i < count; i++)
 			{
@@ -852,8 +848,8 @@ namespace RobotRaconteur
 		virtual void Write(uint64_t memorypos, RR_SHARED_PTR<RRNamedArray<T> > buffer, uint64_t bufferpos, uint64_t count)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
-			if (memorypos + count > memory->Length()) throw OutOfRangeException("Index out of range");
-			if (bufferpos + count > buffer->Length()) throw OutOfRangeException("Index out of range");
+			if (memorypos + count > memory->size()) throw OutOfRangeException("Index out of range");
+			if (bufferpos + count > buffer->size()) throw OutOfRangeException("Index out of range");
 			for (size_t i = 0; i < count; i++)
 			{
 				(*memory)[(i + memorypos)] = (*buffer)[(i + bufferpos)];
@@ -951,7 +947,7 @@ namespace RobotRaconteur
 		virtual size_t GetBufferLength(void* buffer)
 		{
 			RR_SHARED_PTR<RRNamedArray<T> >& buffer1 = *static_cast<RR_SHARED_PTR<RRNamedArray<T> >*>(buffer);
-			return buffer1->Length();
+			return buffer1->size();
 		}
 	};
 
@@ -982,7 +978,7 @@ namespace RobotRaconteur
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
 			RR_SHARED_PTR<RRArray<uint32_t> > dims = multimemory->Dims;
-			std::vector<uint64_t> s(dims->Length());
+			std::vector<uint64_t> s(dims->size());
 			for (size_t i = 0; i < s.size(); i++)
 			{
 				s[i] = (*dims)[i];

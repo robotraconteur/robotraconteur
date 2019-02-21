@@ -109,7 +109,7 @@ void PullServiceDefinition(string url)
 
 	string type="";
 
-	for (std::map<int32_t, RR_SHARED_PTR<RobotRaconteurServiceIndex::ServiceInfo> >::const_iterator ii = ret->map.begin(); ii != ret->map.end(); ++ii)
+	for (std::map<int32_t, RR_SHARED_PTR<RobotRaconteurServiceIndex::ServiceInfo> >::const_iterator ii = ret->begin(); ii != ret->end(); ++ii)
 	{
 		if (ii->second->Name==url_res.service)
 		{

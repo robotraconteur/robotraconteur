@@ -1925,7 +1925,7 @@ namespace RobotRaconteur
 					if (attrib_found)
 					{
 						boost::mutex::scoped_lock lock(m_Attributes_lock);
-						m_Attributes = rr_cast<RRMap<std::string, RRValue> >((GetNode()->UnpackMapType<std::string, RRValue>(ret3->FindElement("attributes")->CastData<MessageElementMap<std::string> >())))->map;
+						m_Attributes = rr_cast<RRMap<std::string, RRValue> >((GetNode()->UnpackMapType<std::string, RRValue>(ret3->FindElement("attributes")->CastData<MessageElementMap<std::string> >())))->GetStorageContainer();
 
 					}
 

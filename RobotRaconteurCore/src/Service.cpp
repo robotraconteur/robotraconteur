@@ -1440,7 +1440,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 		{
 					std::string username = m->FindElement("username")->CastDataToString();
 					RR_SHARED_PTR<RRMap<std::string,RRValue> > credentials = rr_cast<RRMap<std::string,RRValue> >((GetNode()->UnpackMapType<std::string, RRValue>(m->FindElement("credentials")->CastData<MessageElementMap<std::string> >())));
-					e->AuthenticateUser(username, credentials->map);
+					e->AuthenticateUser(username, credentials->GetStorageContainer());
 					ret->AddElement("return", stringToRRArray("OK"));
 					return ret;
 		}

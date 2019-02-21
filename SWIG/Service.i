@@ -162,7 +162,7 @@ public:
 	void SetServiceAttributes(boost::shared_ptr<MessageElement> attributes)
 	{
 		boost::shared_ptr<RRMap<std::string,RRValue> > mmap=rr_cast<RRMap<std::string,RRValue> >(RobotRaconteurNode::s()->UnpackMapType<std::string,RRValue>(attributes->CastData<MessageElementMap<std::string> >()));
-		$self->SetAttributes(mmap->map);		
+		$self->SetAttributes(mmap->GetStorageContainer());		
 		
 	}	
 	}

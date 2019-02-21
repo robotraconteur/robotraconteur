@@ -273,7 +273,7 @@ namespace RobotRaconteur
 
 		virtual ~RRBaseArray() {}
 
-		virtual size_t Length()=0;
+		virtual size_t size()=0;
 		
 		virtual std::string RRType();
 
@@ -295,7 +295,7 @@ namespace RobotRaconteur
 		
 		RRArray(T* data, size_t length, bool owned)
 		{
-			this->data=data;
+			this->data_=data;
 			this->owned=owned;
 			this->element_count=length;
 		}
@@ -303,42 +303,21 @@ namespace RobotRaconteur
 		virtual ~RRArray()
 		{
 			if (owned)
-				delete[] data;
+				delete[] data_;
 		}
-
-		virtual T* ptr()
-		{
-			return data;
-		}
-
+				
 		virtual void* void_ptr()
 		{
-			return ptr();
+			return data();
 		}
 
 		T *operator->() const {
             return data;
         }
-
-		inline T& operator[](size_t pos) const
-		{
-			if (pos >= element_count)
-			{
-				throw OutOfRangeException("Index out of range");
-			}
-
-			return data[pos];
-		}
-
-		
-		virtual size_t Length()
-		{
-			return element_count;
-		}
-
+								
 		virtual size_t size()
 		{
-			return Length();
+			return element_count;
 		}
 
 		virtual size_t ElementSize()
@@ -346,8 +325,115 @@ namespace RobotRaconteur
 			return sizeof(T);
 		}
 
+		// C++ container support functions based on boost::array
+
+		// type definitions
+		typedef T              value_type;
+		typedef T*             iterator;
+		typedef const T*       const_iterator;
+		typedef T&             reference;
+		typedef const T&       const_reference;
+		typedef std::size_t    size_type;
+		typedef std::ptrdiff_t difference_type;
+
+		// iterator support
+		iterator        begin() { return data_; }
+		const_iterator  begin() const { return data_; }
+		const_iterator cbegin() const { return data_; }
+
+		iterator        end() { return data_ + element_count; }
+		const_iterator  end() const { return data_ + element_count; }
+		const_iterator cend() const { return data_ + element_count; }
+		typedef boost::reverse_iterator<iterator> reverse_iterator;
+		typedef boost::reverse_iterator<const_iterator> const_reverse_iterator;
+
+		reverse_iterator rbegin() { return reverse_iterator(end()); }
+		const_reverse_iterator rbegin() const {
+			return const_reverse_iterator(end());
+		}
+		const_reverse_iterator crbegin() const {
+			return const_reverse_iterator(end());
+		}
+
+		reverse_iterator rend() { return reverse_iterator(begin()); }
+		const_reverse_iterator rend() const {
+			return const_reverse_iterator(begin());
+		}
+		const_reverse_iterator crend() const {
+			return const_reverse_iterator(begin());
+		}
+
+		// operator[]
+		reference operator[](size_type i)
+		{
+			BOOST_ASSERT_MSG(i < element_count, "out of range");
+			return data_[i];
+		}
+
+		const_reference operator[](size_type i) const
+		{
+			BOOST_ASSERT_MSG(i < element_count, "out of range");
+			return data_[i];
+		}
+
+		// at() with range check
+		reference at(size_type i) { rangecheck(i); return data_[i]; }
+		const_reference at(size_type i) const { rangecheck(i); return data_[i]; }
+
+		// front() and back()
+		reference front()
+		{
+			return data_[0];
+		}
+
+		const_reference front() const
+		{
+			return data_[0];
+		}
+
+		reference back()
+		{
+			return data_[element_count - 1];
+		}
+
+		const_reference back() const
+		{
+			return data_[element_count - 1];
+		}
+
+		bool empty() { return false; }
+		size_type max_size() { return element_count; }
+
+		// direct access to data (read-only)
+		const T* data() const { return data_; }
+		T* data() { return data_; }
+
+		// use array as C array (direct read/write access to data)
+		T* c_array() { return data_; }
+
+		// assignment with type conversion
+		template <typename T2>
+		RRArray<T>& operator= (const RRArray<T2>& rhs) {
+			std::copy(rhs.begin(), rhs.end(), begin());
+			return *this;
+		}
+
+		// assign one value to all elements
+		void assign(const T& value) { fill(value); }    // A synonym for fill
+		void fill(const T& value)
+		{
+			std::fill_n(begin(), size(), value);
+		}
+				
+		void rangecheck(size_type i) {
+			if (i >= size()) {
+				std::out_of_range e("array<>: index out of range");
+				boost::throw_exception(e);
+			}
+		}
+
 	private:
-		T* data;
+		T* data_;
 		size_t element_count;
 		bool owned;
 	};
@@ -388,8 +474,10 @@ namespace RobotRaconteur
 	template<typename K, typename T>
 	class RRMap : public RRValue
 	{
-	public:
+	protected:
 		std::map<K,RR_SHARED_PTR<T> > map;
+
+	public:
 
 		RRMap() {}
 
@@ -406,13 +494,63 @@ namespace RobotRaconteur
 
 			return "RobotRaconteur.RRMap<" +keytype +">";
 		}
+
+		// C++ container support based on boost::container::map
+
+		typedef typename std::map<K, RR_SHARED_PTR<T> >::key_type                   key_type;
+		typedef typename std::map<K, RR_SHARED_PTR<T> >::mapped_type                mapped_type;
+		typedef typename std::map<K, RR_SHARED_PTR<T> >::value_type                 value_type;
+		typedef typename std::map<K, RR_SHARED_PTR<T> >::pointer                    pointer;
+		typedef typename std::map<K, RR_SHARED_PTR<T> >::const_pointer              const_pointer;
+		typedef typename std::map<K, RR_SHARED_PTR<T> >::reference                  reference;
+		typedef typename std::map<K, RR_SHARED_PTR<T> >::const_reference            const_reference;
+		typedef typename std::map<K, RR_SHARED_PTR<T> >::size_type                  size_type;
+		typedef typename std::map<K, RR_SHARED_PTR<T> >::iterator                   iterator;
+		typedef typename std::map<K, RR_SHARED_PTR<T> >::const_iterator             const_iterator;
+		typedef typename std::map<K, RR_SHARED_PTR<T> >::reverse_iterator           reverse_iterator;
+		typedef typename std::map<K, RR_SHARED_PTR<T> >::const_reverse_iterator     const_reverse_iterator;
+
+		iterator begin() { return map.begin(); }
+		const_iterator begin() const { return map.begin(); }
+		iterator end() { return map.end(); }
+		const_iterator end() const { return map.end(); }
+		reverse_iterator rbegin() { return map.rbegin(); };
+		const_reverse_iterator rbegin() const { return map.rbegin(); };
+		reverse_iterator rend() { return map.rend(); }
+		const_reverse_iterator rend() const { return map.rend(); }
+		bool empty() const { return map.empty(); }
+		size_type size() const { return map.size(); }
+		size_type max_size() const { return map.max_size(); };
+		mapped_type& operator[](const key_type &k) { return map[k]; }
+		mapped_type& at(const key_type& k) { return map.at(k); }
+		const mapped_type& at(const key_type& k) const { return map.at(k); }
+		std::pair<iterator, bool> insert(const value_type& x) { return map.insert(x); }
+		iterator insert(const_iterator p, const value_type& x) { return map.insert(x); }
+		template <class InputIterator>
+		void insert(InputIterator first, InputIterator last) { map.insert(first,last); }
+		void erase(iterator p) { return map.erase(p); }
+		size_type erase(const key_type& x) { return map.erase(x); }
+		void erase(iterator first, iterator last) { return map.erase(first,last); }
+		void clear() { map.clear(); }
+		iterator find(const key_type& x) { return map.find(x); }
+		const_iterator find(const key_type& x) const { return map.find(x); }
+		size_type count(const key_type& x) const { return map.count(x); }
+
+		// WARNING: this may change, use with caution!
+		typename std::map<K, RR_SHARED_PTR<T> >& GetStorageContainer()
+		{
+			return map;
+		}
 	};
 		
 	template<typename T>
 	class RRList : public RRValue
 	{
+	protected:
+
+		std::list<RR_SHARED_PTR<T> > list;
+
 	public:
-		std::vector<RR_SHARED_PTR<T> > list;
 
 		RRList() {}
 
@@ -427,6 +565,56 @@ namespace RobotRaconteur
 		{
 			return "RobotRaconteur.RRList";
 		}
+
+		// C++ container support based on boost::container::list
+
+		typedef RR_SHARED_PTR<T>                                         value_type;
+		typedef typename std::list<RR_SHARED_PTR<T> >::pointer           pointer;
+		typedef typename std::list<RR_SHARED_PTR<T> >::const_pointer     const_pointer;
+		typedef typename std::list<RR_SHARED_PTR<T> >::reference         reference;
+		typedef typename std::list<RR_SHARED_PTR<T> >::const_reference   const_reference;
+		typedef typename std::list<RR_SHARED_PTR<T> >::size_type         size_type;
+		typedef typename std::list<RR_SHARED_PTR<T> >::difference_type   difference_type;
+		typedef typename std::list<RR_SHARED_PTR<T> >::iterator                   iterator;
+		typedef typename std::list<RR_SHARED_PTR<T> >::const_iterator             const_iterator;
+		typedef typename std::list<RR_SHARED_PTR<T> >::reverse_iterator           reverse_iterator;
+		typedef typename std::list<RR_SHARED_PTR<T> >::const_reverse_iterator     const_reverse_iterator;
+
+		iterator begin() { return list.begin(); }
+		const_iterator begin() const { return list.begin(); }
+		iterator end() { return list.end(); }
+		const_iterator end() const { return list.end(); }
+		reverse_iterator rbegin() { return list.rbegin(); }
+		const_reverse_iterator rbegin() const { return list.rbegin(); }
+		reverse_iterator rend() { return list.rend(); }
+		const_reverse_iterator rend() const { return list.rend(); }
+		const_iterator cbegin() const { return list.cbegin(); }
+		const_iterator cend() const { return list.cend(); }
+		const_reverse_iterator const crbegin() { return list.crbegin(); }
+		const_reverse_iterator const crend() { return list.crend(); }
+		bool empty() const { return list.empty(); }
+		virtual size_type size() const { return list.size(); }
+		size_type max_size() const { return list.max_size(); }
+		reference front() { return list.front(); }
+		const_reference front() const { return list.front(); }
+		reference back() { return list.back(); }
+		const_reference back() const { return list.back(); }
+		void push_front(const RR_SHARED_PTR<T> &x) { list.push_front(x); }
+		void push_back(const RR_SHARED_PTR<T> &x) { list.push_back(x); }
+		void pop_front() { list.pop_front(); }
+		void pop_back() { list.pop_back(); }
+		iterator insert(const_iterator p, const RR_SHARED_PTR<T> &x) { list.insert(p, x); }
+		iterator erase(const_iterator p) { list.erase(p); }
+		iterator erase(const_iterator first, const_iterator last) { list.erase(first, last); }
+		void clear() { list.clear(); }
+		void remove(const RR_SHARED_PTR<T>& value) { list.remove(value); }
+
+		// WARNING: this may change, use with caution!
+		typename std::list<RR_SHARED_PTR<T> >& GetStorageContainer()
+		{
+			return list;
+		}
+
 	};
 		
 	class ROBOTRACONTEUR_CORE_API RRStructure : public RRValue
@@ -465,7 +653,7 @@ namespace RobotRaconteur
 		RR_SHARED_PTR<RRArray<T> > o = AllocateRRArray<T>(length);
 		if (length > 0)
 		{
-			memset(o->ptr(), 0, length * sizeof(T));
+			memset(o->data(), 0, length * sizeof(T));
 		}
 		return o;
 	}
@@ -488,7 +676,7 @@ namespace RobotRaconteur
 			throw NullValueException("Null pointer");
 		}
         
-		if (value->Length()==0) throw OutOfRangeException("Index out of range");
+		if (value->size()==0) throw OutOfRangeException("Index out of range");
         
 		return (*value)[0];
         
@@ -586,7 +774,7 @@ namespace RobotRaconteur
 	static RR_SHARED_PTR<RRList<T> > VerifyRRArrayLength(RR_SHARED_PTR<RRList<T> > a, size_t len, bool varlength)
 	{
 		if (!a) return a;
-		BOOST_FOREACH(RR_SHARED_PTR<T>& aa, a->list)
+		BOOST_FOREACH(RR_SHARED_PTR<T>& aa, (*a))
 		{
 			VerifyRRArrayLength(aa, len, varlength);
 		}
@@ -597,7 +785,7 @@ namespace RobotRaconteur
 	static RR_SHARED_PTR<RRMap<K,T > > VerifyRRArrayLength(RR_SHARED_PTR<RRMap<K,T> > a, size_t len, bool varlength)
 	{
 		if (!a) return a;
-		BOOST_FOREACH(RR_SHARED_PTR<T>& aa, a->map | boost::adaptors::map_values)
+		BOOST_FOREACH(RR_SHARED_PTR<T>& aa, *a | boost::adaptors::map_values)
 		{
 			VerifyRRArrayLength(aa, len, varlength);
 		}
@@ -664,7 +852,7 @@ namespace RobotRaconteur
 
 			while (iter->Next(indexa, indexb, len))
 			{				
-				memcpy((buffer->Array->ptr() + indexb), (Array->ptr()) + indexa, len * sizeof(T));				
+				memcpy((buffer->Array->data() + indexb), (Array->data()) + indexa, len * sizeof(T));				
 			}
 
 		}
@@ -682,7 +870,7 @@ namespace RobotRaconteur
 
 			while (iter->Next(indexa, indexb, len))
 			{
-				memcpy((Array->ptr() + indexa), (buffer->Array->ptr() + indexb), len * sizeof(T));
+				memcpy((Array->data() + indexa), (buffer->Array->data() + indexb), len * sizeof(T));
 								
 			}
 
@@ -722,7 +910,7 @@ namespace RobotRaconteur
 		if (!a) throw NullValueException("Arrays must not be null");
 		else
 		{
-			BOOST_FOREACH(RR_SHARED_PTR<T>& aa, a->list)
+			BOOST_FOREACH(RR_SHARED_PTR<T>& aa, (*a))
 			{
 				VerifyRRMultiDimArrayLength<Ndims>(aa, n_elems, dims);
 			}
@@ -736,7 +924,7 @@ namespace RobotRaconteur
 		if (!a) throw NullValueException("Arrays must not be null");
 		else
 		{
-			BOOST_FOREACH(RR_SHARED_PTR<T>& aa, a->map | boost::adaptors::map_values)
+			BOOST_FOREACH(RR_SHARED_PTR<T>& aa, *a | boost::adaptors::map_values)
 			{
 				VerifyRRMultiDimArrayLength<Ndims>(aa, n_elems, dims);
 			}
@@ -766,10 +954,15 @@ namespace RobotRaconteur
 	template<typename T>
 	class RRPodArray : public RRPodBaseArray
 	{
-	public:
+	protected:
 		typename std::vector<T> pod_array;
 
-		RRPodArray() {}
+	public:
+
+		RRPodArray(size_t n) 
+		{
+			pod_array.resize(n);
+		}
 
 		RRPodArray(typename std::vector<T>& array_in)
 		{
@@ -791,6 +984,51 @@ namespace RobotRaconteur
 		virtual std::string RRElementTypeString()
 		{
 			return RRPrimUtil<T>::GetElementTypeString();
+		}
+
+		// C++ container support based on boost::container::vector
+
+		typedef T                                                value_type;
+		typedef typename std::vector<T>::pointer                 pointer;
+		typedef typename std::vector<T>::const_pointer           const_pointer;
+		typedef typename std::vector<T>::reference               reference;
+		typedef typename std::vector<T>::const_reference         const_reference;
+		typedef typename std::vector<T>::size_type               size_type;
+		typedef typename std::vector<T>::iterator                iterator;
+		typedef typename std::vector<T>::const_iterator          const_iterator;
+		typedef typename std::vector<T>::reverse_iterator       reverse_iterator;
+		typedef typename std::vector<T>::const_reverse_iterator  const_reverse_iterator;
+
+		iterator begin() { return pod_array.begin(); }
+		const_iterator begin() const { return pod_array.begin(); }
+		iterator end() { return pod_array.end(); }
+		const_iterator end() const { return pod_array.end(); }
+		reverse_iterator rbegin() { return pod_array.rbegin(); }
+		const_reverse_iterator rbegin() const { return pod_array.rbegin(); }
+		reverse_iterator rend() { return pod_array.rend(); }
+		const_reverse_iterator rend() const { return pod_array.rend(); }
+		const_iterator cbegin() const { return pod_array.cbegin(); }
+		const_iterator cend() const { return pod_array.cend(); }
+		const_reverse_iterator const crbegin() { return pod_array.crbegin(); }
+		const_reverse_iterator const crend() { return pod_array.crend(); }
+		bool empty() const { return pod_array.empty(); }
+		virtual size_type size() const { return pod_array.size(); }
+		size_type max_size() const { return size(); }
+		reference front() { return pod_array.front(); }
+		const_reference front() const { return pod_array.front(); }
+		reference back() { return pod_array.back(); }
+		const_reference back() const { return pod_array.back(); }
+		reference operator[](size_type i) { return pod_array[i]; }
+		const_reference operator[](size_type i) const { return pod_array[i]; }
+		reference at(size_type i) { return pod_array.at(i); }
+		const_reference at(size_type i) const { return pod_array.at(i); }
+		T * data() { return pod_array.data(); }
+		const T * data() const { return pod_array.data(); }
+
+		// WARNING: this may change, use with caution!
+		typename std::vector<T>& GetStorageContainer()
+		{
+			return pod_array;
 		}
 	};
 
@@ -855,7 +1093,7 @@ namespace RobotRaconteur
 			{
 				for (size_t i = 0; i < len; i++)
 				{
-					buffer->PodArray->pod_array.at(indexb + i) = PodArray->pod_array.at(indexa + i);
+					buffer->PodArray->at(indexb + i) = PodArray->at(indexa + i);
 				}				
 			}
 
@@ -876,7 +1114,7 @@ namespace RobotRaconteur
 			{
 				for (size_t i = 0; i < len; i++)
 				{
-					PodArray->pod_array.at(indexa + i) = buffer->PodArray->pod_array.at(indexb + i);
+					PodArray->at(indexa + i) = buffer->PodArray->at(indexb + i);
 				}
 			}
 
@@ -897,16 +1135,15 @@ namespace RobotRaconteur
 			throw NullValueException("Null pointer");
 		}
 
-		if (value->pod_array.size() == 0) throw OutOfRangeException("Index out of range");
+		if (value->size() == 0) throw OutOfRangeException("Index out of range");
 
-		return value->pod_array.at(0);
+		return value->at(0);
 	}
 
 	template<typename T>
 	static RR_SHARED_PTR<RRPodArray<T> > AllocateEmptyRRPodArray(size_t length)
 	{
-		RR_SHARED_PTR<RRPodArray<T> > o = RR_MAKE_SHARED<RRPodArray<T> >();
-		o->pod_array.resize(length);
+		RR_SHARED_PTR<RRPodArray<T> > o = RR_MAKE_SHARED<RRPodArray<T> >(length);		
 		return o;
 	}
 
@@ -966,14 +1203,14 @@ namespace RobotRaconteur
 			return RRPrimUtil<T>::GetTypeID();
 		}
 
-		virtual size_t Length() const
+		virtual size_t size() const
 		{
-			return rr_array->Length() / (RRPrimUtil<T>::ElementArrayCount);
+			return rr_array->size() / (RRPrimUtil<T>::ElementArrayCount);
 		}
 
-		virtual size_t Length()
+		virtual size_t size()
 		{
-			return rr_array->Length() / (RRPrimUtil<T>::ElementArrayCount);
+			return rr_array->size() / (RRPrimUtil<T>::ElementArrayCount);
 		}
 
 		virtual void* void_ptr()
@@ -1005,17 +1242,7 @@ namespace RobotRaconteur
 		{
 			return rr_array;
 		}
-
-		inline T& operator[](size_t pos) const
-		{
-			if (pos >= Length())
-			{
-				throw OutOfRangeException("Index out of range");
-			}
-
-			return ((T*)rr_array->void_ptr())[pos];
-		}
-
+				
 		virtual std::string RRType()
 		{
 			return "RobotRaconteur.RRNamedArray";
@@ -1024,6 +1251,92 @@ namespace RobotRaconteur
 		virtual std::string RRElementTypeString()
 		{
 			return RRPrimUtil<T>::GetElementTypeString();
+		}
+
+		// C++ container support functions based on boost::array
+
+		// type definitions
+		typedef T              value_type;
+		typedef T*             iterator;
+		typedef const T*       const_iterator;
+		typedef T&             reference;
+		typedef const T&       const_reference;
+		typedef std::size_t    size_type;
+		typedef std::ptrdiff_t difference_type;
+
+		// iterator support
+		iterator        begin() { return (T*)rr_array->begin(); }
+		const_iterator  begin() const { return (const T*)rr_array->begin(); }
+		const_iterator cbegin() const { return (const T*)rr_array->begin(); }
+
+		iterator        end() { return (T*)rr_array->end(); }
+		const_iterator  end() const { return (T*)rr_array->end(); }
+		const_iterator cend() const { return (T*)rr_array->end(); }
+		typedef boost::reverse_iterator<iterator> reverse_iterator;
+		typedef boost::reverse_iterator<const_iterator> const_reverse_iterator;
+
+		reverse_iterator rbegin() { return reverse_iterator(end()); }
+		const_reverse_iterator rbegin() const {
+			return const_reverse_iterator(end());
+		}
+		const_reverse_iterator crbegin() const {
+			return const_reverse_iterator(end());
+		}
+
+		reverse_iterator rend() { return reverse_iterator(begin()); }
+		const_reverse_iterator rend() const {
+			return const_reverse_iterator(begin());
+		}
+		const_reverse_iterator crend() const {
+			return const_reverse_iterator(begin());
+		}
+
+		// operator[]
+		reference operator[](size_type i)
+		{
+			BOOST_ASSERT_MSG(i < size(), "out of range");
+			return ((T*)rr_array->void_ptr())[i];
+		}
+
+		const_reference operator[](size_type i) const
+		{
+			BOOST_ASSERT_MSG(i < size(), "out of range");
+			return ((T*)rr_array->void_ptr())[i];
+		}
+
+		// at() with range check
+		reference at(size_type i) { rangecheck(i); return ((T*)rr_array->void_ptr())[i]; }
+		const_reference at(size_type i) const { rangecheck(i); ((T*)rr_array->void_ptr())[i]; }
+
+		// front() and back()
+		reference front()
+		{
+			return this->at(0);
+		}
+
+		const_reference front() const
+		{
+			return this->at(0);
+		}
+
+		reference back()
+		{
+			return this->at(size() - 1);
+		}
+
+		const_reference back() const
+		{
+			return this->at(size() - 1);
+		}
+
+		bool empty() { return rr_array->empty(); }
+		size_type max_size() { return size(); }
+												
+		void rangecheck(size_type i) {
+			if (i >= size()) {
+				std::out_of_range e("array<>: index out of range");
+				boost::throw_exception(e);
+			}
 		}
 
 	};
@@ -1136,7 +1449,7 @@ namespace RobotRaconteur
 			throw NullValueException("Null pointer");
 		}
 
-		if (value->Length() == 0) throw OutOfRangeException("Index out of range");
+		if (value->size() == 0) throw OutOfRangeException("Index out of range");
 
 		return (*value)[0];
 	}

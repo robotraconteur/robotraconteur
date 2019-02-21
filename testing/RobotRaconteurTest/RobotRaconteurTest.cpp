@@ -1243,7 +1243,7 @@ return 0;
 
 		if (w1_value)
 		{
-			cout << "broadcastwire: len=" << w1_value->Length() << " [0]=" << (*w1_value)[0] << endl;
+			cout << "broadcastwire: len=" << w1_value->size() << " [0]=" << (*w1_value)[0] << endl;
 		}
 
 		cout << "Press enter to quit" << endl;
@@ -1333,7 +1333,7 @@ return 0;
 				n->NodeID = NodeID(std::string(argv[4]));
 				n->Username = std::string(argv[5]);
 				RR_SHARED_PTR<RRMap<std::string, RRValue > > cred = RR_MAKE_SHARED<RRMap<std::string, RRValue > >();
-				cred->map.insert(std::make_pair("password", stringToRRArray(argv[6])));
+				cred->insert(std::make_pair("password", stringToRRArray(argv[6])));
 				n->Credentials = cred;
 				f->Nodes.push_back(n);
 			}
@@ -1484,7 +1484,7 @@ return 0;
 			{
 				RR_SHARED_PTR<RRArray<double> > a = ScalarToRRArray((double)i);
 				RR_SHARED_PTR<RRMap<int32_t, RRArray<double> > > a1 = RR_MAKE_SHARED<RRMap<int32_t, RRArray<double> > >();
-				a1->map.insert(std::make_pair((int32_t)i, a));
+				a1->insert(std::make_pair((int32_t)i, a));
 				RR_SHARED_PTR<MessageElementData> a2=RobotRaconteurNode::s()->PackAnyType<RR_SHARED_PTR<RRMap<int32_t, RRArray<double> > > >(a1);
 
 				RR_SHARED_PTR<MessageElement> a3 = RR_MAKE_SHARED<MessageElement>("test", a2);

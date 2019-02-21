@@ -118,7 +118,7 @@ namespace RobotRaconteurTest
 
 		uint32_t m7a[]={ 4, 4, 4, 4, 10 };
 		RR_SHARED_PTR<RRMultiDimArray<double> > m7=RR_MAKE_SHARED<RRMultiDimArray<double> >(AttachRRArray(m7a,5,false),AllocateRRArray<double>(2560));
-		memset(m7->Array->ptr(),0,2560*sizeof(double));		
+		memset(m7->Array->data(),0,2560*sizeof(double));		
 		uint32_t m5a[]={ 4, 2, 2, 8, 0 };
 		uint32_t m5b[]={ 2, 1,2, 1, 0 };
 		uint32_t m5c[]= { 2, 2, 1, 1, 10 };
@@ -151,7 +151,7 @@ namespace RobotRaconteurTest
 
 		uint32_t m7a[]={ 512,512 };
 		RR_SHARED_PTR<RRMultiDimArray<uint8_t> > m7=RR_MAKE_SHARED<RRMultiDimArray<uint8_t> >(AttachRRArray(m7a,2,false),AllocateRRArray<uint8_t>(512*512));
-		memset(m7->Array->ptr(),0,512*512);
+		memset(m7->Array->data(),0,512*512);
 		uint32_t m5a[]={ 65,800 };
 		uint32_t m5b[]={ 100,230 };
 		uint32_t m5c[]= { 200,200 };

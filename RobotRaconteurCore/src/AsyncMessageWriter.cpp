@@ -690,7 +690,7 @@ namespace RobotRaconteur
 			{
 				MessageElement* el = data<MessageElement>();
 				RR_SHARED_PTR<RRBaseArray> a = el->CastData<RRBaseArray>();
-				size_t n = a->ElementSize() * a->Length();
+				size_t n = a->ElementSize() * a->size();
 				if (n > distance_from_limit()) throw ProtocolException("Invalid write array length");
 				if (n <= 255)
 				{
@@ -1588,7 +1588,7 @@ namespace RobotRaconteur
 			{				
 				MessageElement* el = data<MessageElement>();
 				RR_SHARED_PTR<RRBaseArray> a = el->CastData<RRBaseArray>();
-				size_t n = a->ElementSize() * a->Length();
+				size_t n = a->ElementSize() * a->size();
 				if (n > distance_from_limit()) throw ProtocolException("Invalid write array length");
 				if (n <= 255)
 				{

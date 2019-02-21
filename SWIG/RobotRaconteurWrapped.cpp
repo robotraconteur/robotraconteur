@@ -2185,7 +2185,7 @@ namespace RobotRaconteur
 		NodeName=value.NodeName;
 
 		boost::shared_ptr<RRMap<std::string,RRValue> > map=boost::make_shared<RRMap<std::string,RRValue> >();
-		map->map=value.Attributes;
+		map->GetStorageContainer()=value.Attributes;
 		boost::shared_ptr<MessageElementMap<std::string> > mmap=RobotRaconteurNode::s()->PackMapType<std::string,RRValue>(map);
 		Attributes= boost::make_shared<MessageElement>("value",mmap);
 
@@ -3100,7 +3100,7 @@ namespace RobotRaconteur
 	{
 		if (!RR_Director) throw InvalidOperationException("Director not set for authenticator");
 		RR_SHARED_PTR<RRMap<std::string,RRValue> > cred1=RR_MAKE_SHARED<RRMap<std::string,RRValue> >();
-		cred1->map=credentials;
+		cred1->GetStorageContainer() =credentials;
 		RR_SHARED_PTR<MessageElement> cred2=RR_MAKE_SHARED<MessageElement>("credentials",context->GetNode()->PackMapType<std::string,RRValue>(cred1));
 		RR_SHARED_PTR<AuthenticatedUser> ares2;
 		DIRECTOR_CALL2(ares2=RR_Director->AuthenticateUser(username,cred2,context));		

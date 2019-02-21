@@ -54,12 +54,12 @@ RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteurServiceIndex::ServiceI
 			RR_SHARED_PTR<ServiceInfo> s=RR_MAKE_SHARED<ServiceInfo>();
 			s->Attributes=RR_MAKE_SHARED<RRMap<string,RRValue> >(c->GetAttributes());
 
-			for (std::map<std::string, RR_SHARED_PTR<RRValue> >::iterator e=s->Attributes->map.begin(); e!=s->Attributes->map.end(); )
+			for (std::map<std::string, RR_SHARED_PTR<RRValue> >::iterator e=s->Attributes->begin(); e!=s->Attributes->end(); )
 			{
 				RR_SHARED_PTR<RRBaseArray> a=RR_DYNAMIC_POINTER_CAST<RRBaseArray>(e->second);
 				if (!a) 
 				{
-					s->Attributes->map.erase(e++);
+					s->Attributes->erase(e++);
 				}
 				else
 				{
@@ -70,7 +70,7 @@ RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteurServiceIndex::ServiceI
 			s->Name=c->GetServiceName();
 			s->RootObjectType=c->GetRootObjectType(RobotRaconteurVersion());
 			s->ConnectionURL=RR_MAKE_SHARED<RRMap<int32_t,RRArray<char> > >();
-			s->ConnectionURL->map.insert(make_pair(1,stringToRRArray(Transport::GetCurrentTransportConnectionURL() + "?nodeid=" + boost::replace_first_copy(boost::replace_first_copy(GetNode()->NodeID().ToString(),"{",""),"}","") + "&service=" + s->Name)));
+			s->ConnectionURL->insert(make_pair(1,stringToRRArray(Transport::GetCurrentTransportConnectionURL() + "?nodeid=" + boost::replace_first_copy(boost::replace_first_copy(GetNode()->NodeID().ToString(),"{",""),"}","") + "&service=" + s->Name)));
 			s->RootObjectImplements=RR_MAKE_SHARED<RRMap<int32_t,RRArray<char> > >();
 
 			boost::tuple<std::string,std::string> servicetype;
@@ -96,11 +96,11 @@ RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteurServiceIndex::ServiceI
 			int32_t icount=0;
 			for (vector<string>::iterator ee=obj->Implements.begin(); ee!=obj->Implements.end(); ++ee)
 			{
-				s->RootObjectImplements->map.insert(make_pair(icount,stringToRRArray(*ee)));
+				s->RootObjectImplements->insert(make_pair(icount,stringToRRArray(*ee)));
 				icount++;
 			}
 
-			o->map.insert(make_pair(count,s));
+			o->insert(make_pair(count,s));
 			count++;
 		}
 		catch (std::exception&) {}
@@ -159,11 +159,11 @@ RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteurServiceIndex::NodeInfo
 		RR_SHARED_PTR<RRMap<int32_t,RRArray<char> > > curl=RR_MAKE_SHARED<RRMap<int32_t,RRArray<char> > >();
 		for (size_t j=0; j<e->URLs.size(); j++)
 		{
-			curl->map.insert(make_pair((int32_t)j, stringToRRArray(e->URLs.at(j).URL)));
+			curl->insert(make_pair((int32_t)j, stringToRRArray(e->URLs.at(j).URL)));
 		}
 
 		ii->ServiceIndexConnectionURL=curl;
-		o->map.insert(make_pair((int32_t)count,ii));
+		o->insert(make_pair((int32_t)count,ii));
 		count++;
 
 	}

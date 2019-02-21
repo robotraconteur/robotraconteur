@@ -296,7 +296,7 @@ RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t> > RobotRaconteurTest_testroot::ge
 
 void RobotRaconteurTest_testroot::set_i32_huge(RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t> > value)
 {
-	if (value->Length() != 2621440) throw std::exception();
+	if (value->size() != 2621440) throw std::exception();
 	for (int32_t i = 0; i < 2621440; i++)
 	{
 		if ((*value)[i] != -i)
@@ -387,20 +387,20 @@ RR_SHARED_PTR<teststruct1> RobotRaconteurTest_testroot::get_struct1()
 	s1->dat1=AttachRRArrayCopy(s1_dat1a,62);
 	s1->str2 = "Hello world!";
 	s1->vec3=RR_MAKE_SHARED<RRMap<int32_t,RRArray<char> > >();
-	s1->vec3->map.clear();
-	s1->vec3->map.insert(make_pair(1, stringToRRArray("Hello Client!")));
-	s1->vec3->map.insert(make_pair(2, stringToRRArray("Hello Client, again")));
-	s1->vec3->map.insert(make_pair(4372,stringToRRArray("This is yet another test string")));
+	s1->vec3->clear();
+	s1->vec3->insert(make_pair(1, stringToRRArray("Hello Client!")));
+	s1->vec3->insert(make_pair(2, stringToRRArray("Hello Client, again")));
+	s1->vec3->insert(make_pair(4372,stringToRRArray("This is yet another test string")));
 
 	s1->dict4=RR_MAKE_SHARED<RRMap<string,RRArray<char> > >();
-	s1->dict4->map.insert(std::make_pair("teststring1",stringToRRArray("Hello Client!")));
-	s1->dict4->map.insert(std::make_pair("teststring2",stringToRRArray("Hello Client, again")));
-	s1->dict4->map.insert(std::make_pair("anotherstr",stringToRRArray("This is yet another test string")));
+	s1->dict4->insert(std::make_pair("teststring1",stringToRRArray("Hello Client!")));
+	s1->dict4->insert(std::make_pair("teststring2",stringToRRArray("Hello Client, again")));
+	s1->dict4->insert(std::make_pair("anotherstr",stringToRRArray("This is yet another test string")));
 
 	s1->list5=RR_MAKE_SHARED<RRList<RRArray<char> > >();
-	s1->list5->list.push_back(stringToRRArray("Hello Client!"));
-	s1->list5->list.push_back(stringToRRArray("Hello Client, again"));
-	s1->list5->list.push_back(stringToRRArray("This is yet another test string"));
+	s1->list5->push_back(stringToRRArray("Hello Client!"));
+	s1->list5->push_back(stringToRRArray("Hello Client, again"));
+	s1->list5->push_back(stringToRRArray("This is yet another test string"));
 
 
 	double s1_s1_mydat[]={ -2.457273e-05, -3.349504e-13, 4.139542e-09, -3.944556e+04, 2.761296e+04, 8.570027e+16, -2.472613e-03, -2.096009e+03, -4.186716e+10, 4.584716e-20, 3.951344e-03, 4.557915e+05, -7.117988e+03, -4.605957e+11, 7.353630e-10, -3.303575e-19, 6.133982e+05, 4.528668e+01, -1.427778e-11, -3.509465e+15, 1.695706e-04, 1.732872e+14, -6.370107e+01, 3.269065e-06, 4.480613e+03, 2.058970e-06, -3.748223e+05, -1.507989e-09, 1.690251e+19, -2.177567e-08, -2.391641e+16, 3.617128e+03, 2.568296e+15, -3.009031e-07, -3.754976e-09, 2.458890e-06, -3.800108e-11, 1.555663e-11, -2.085887e+18, 8.574830e-22, -7.228491e-13, -3.987643e-10, -4.777544e-02, 3.908200e+04, 4.221779e+11, -7.528852e+06, -2.077042e-19, 4.478813e-02, 3.506975e-06, 1.011231e+12, -2.181961e+17, -5.098346e+16, -3.791130e+06, -2.734203e-14, 6.340994e-13, -4.582535e+07, 3.977645e-06, -3.785260e-07, -4.102542e+06, 4.751411e-16, 4.203566e-14, -3.894958e+00, -4.585783e-14, 2.432993e+15, -3.592680e+14, -1.560186e-12 };
@@ -411,21 +411,21 @@ RR_SHARED_PTR<teststruct1> RobotRaconteurTest_testroot::get_struct1()
 	s1->dstruct2=RR_MAKE_SHARED<RRMap<string,teststruct2> >();
 	RR_SHARED_PTR<teststruct2> ts1=RR_MAKE_SHARED<teststruct2>();
 	ts1->mydat=AttachRRArrayCopy(s1_d1a,48);
-	s1->dstruct2->map.insert(make_pair("test1",ts1));
+	s1->dstruct2->insert(make_pair("test1",ts1));
 	RR_SHARED_PTR<teststruct2> ts2=RR_MAKE_SHARED<teststruct2>();
 	double s1_d1b[]={ 4.856615e+15, 5.981566e-22, 1.433616e+14, 1.747102e-09, 2.850376e+06, -3.748685e-08, -4.969544e-21, 2.530419e-01, 4.393913e-09, 3.837331e+04, -4.315065e-04, -1.073834e-17, 1.244057e-15, 3.901853e-10, -2.725237e+10, 2.896243e-18, 3.609897e-13, -1.937982e+02 };
 	ts2->mydat=AttachRRArrayCopy(s1_d1b,18);
-	s1->dstruct2->map.insert(make_pair("anothertest",ts2));
+	s1->dstruct2->insert(make_pair("anothertest",ts2));
 
 	double s1_d1a_2[]={ 3.785355e-17, -2.518001e+17, 4.016500e+08, 6.566648e-04, 1.284318e+07, -2.674821e-13, -4.955749e-14, -1.699098e+00, 2.901400e+05, 1.499143e+13, -2.252822e-05, -2.653172e-14, -2.482811e+07, 2.353638e+18, -2.177258e+17, -4.715112e+06, 4.508858e-18, 1.205611e+17, -3.469181e+00, 2.383792e-13, 4.544766e+14, -3.029250e-05, -2.545049e+05, 3.149303e+19, -3.724982e-10, 4.066723e-02, 2.809941e-08, 1.279689e-20, -3.303471e-09, 1.846558e+08, 1.311495e-06, -1.185646e+04, -2.603100e-19, -3.519314e-17, -1.595996e+04, 9.735534e-20, 1.234003e-04, -9.697458e+08, -4.895883e-02, 4.770089e-16, 3.757918e-11, 5.253446e+18, 5.071614e-13, 3.793300e-08, -1.993536e+12, -1.846007e-11, -3.458666e+03, -3.995887e-10 };
 	s1->lstruct3=RR_MAKE_SHARED<RRList<teststruct2> >();
 	RR_SHARED_PTR<teststruct2> ts1_2=RR_MAKE_SHARED<teststruct2>();
 	ts1_2->mydat=AttachRRArrayCopy(s1_d1a_2,48);
-	s1->lstruct3->list.push_back(ts1_2);
+	s1->lstruct3->push_back(ts1_2);
 	RR_SHARED_PTR<teststruct2> ts2_2=RR_MAKE_SHARED<teststruct2>();
 	double s1_d1b_2[]={ 4.856615e+15, 5.981566e-22, 1.433616e+14, 1.747102e-09, 2.850376e+06, -3.748685e-08, -4.969544e-21, 2.530419e-01, 4.393913e-09, 3.837331e+04, -4.315065e-04, -1.073834e-17, 1.244057e-15, 3.901853e-10, -2.725237e+10, 2.896243e-18, 3.609897e-13, -1.937982e+02 };
 	ts2_2->mydat=AttachRRArrayCopy(s1_d1b_2,18);
-	s1->lstruct3->list.push_back(ts2_2);
+	s1->lstruct3->push_back(ts2_2);
 
 	uint32_t s1_mul_a[]={ 10, 10 };
 	double s1_mul_b[]= { -3.949071e-09, 2.753555e+10, -2.724923e+07, -3.553170e+09, -3.674923e+08, -2.479267e-22, -4.898990e+18, -3.561455e+19, 3.890325e+13, -4.980286e+18, 1.142884e-15, 1.570587e-12, 1.398743e-14, 1.769117e+11, 2.086717e+05, 2.986916e+13, -1.204547e-17, -6.138080e-08, -1.468512e-12, 3.240537e+11, 7.476873e+15, 1.627340e+19, -2.421611e-13, 3.549785e-20, 1.469061e+05, 4.172556e-06, -3.369810e-17, -4.639587e+10, 3.776574e-13, 4.990526e-08, -1.321627e+07, 4.224942e+10, -4.515185e-03, 3.619167e-12, 3.046092e+19, 3.712879e+03, -4.019784e-13, 4.005048e+18, 2.988709e-07, -4.123078e-06, -1.064380e+09, -1.931617e-18, 4.223366e-22, 1.783661e-19, -4.153799e+16, 1.591527e-10, -3.649908e-15, 4.348772e+18, -1.470750e-14, 1.637311e+08, 3.982951e-05, -1.304963e-04, -3.522058e-06, 3.869385e+02, -4.640831e-15, 1.292954e+00, -9.474137e+13, -4.196137e-17, -1.540996e+02, -1.742881e+00, -1.597433e-02, 4.062517e-04, -2.724799e-13, -4.113398e+05, -4.704501e+02, 2.977726e+04, -2.662004e+14, -1.376497e+04, -5.993109e-22, -1.265974e-15, 6.387767e+11, -2.696841e+04, -1.983347e+11, 3.214742e-13, 1.906709e-06, -6.956937e+12, 3.637926e-07, 2.706666e-16, -9.795675e-19, 7.311871e-15, 2.343927e-09, 1.709674e+18, 2.961079e-05, 4.009574e+11, 6.468308e-18, -4.041410e+11, 2.991768e-15, 4.240906e+19, 2.260404e-12, 4.786043e-03, 2.439493e-09, 1.698043e-13, 8.655885e-18, -2.598418e-15, 6.685593e+05, 2.895287e+13, -3.098095e-05, -3.764497e-06, 3.192785e-12, 2.098857e-08};
@@ -443,33 +443,33 @@ void RobotRaconteurTest_testroot::set_struct1(RR_SHARED_PTR<teststruct1> s2)
 	double dat1a[]={ 1.139065e-13, -1.909737e+06, 2.922498e+18, -1.566896e+15, 3.962168e+17, -3.165123e+17, -1.136212e+13, 3.041245e+16, -4.181809e-18, 3.605211e-18, -3.326815e-15, -4.686443e+05, -1.412792e+02, -3.823811e-14, -6.378268e-09, 1.260742e-14, -2.136740e-16, -4.074535e-10, 2.218924e+01, -3.400058e-08, 2.272064e+02, -2.982901e-21, 4.939616e-19, -4.745500e+03, -1.985464e+16, 3.374194e-04, -8.740159e-09, 1.470782e-06, -2.053287e+06, 4.007725e-13, -1.598806e-13, 2.693773e-06, -3.538743e-08, 4.854976e-16, -4.778583e-12, 3.069631e+06, -3.749499e+03, 3.995802e+05, -2.864014e+13, 1.276877e-13, -4.479297e-02, -9.546403e-13, 8.708525e+06, 3.800176e+04, 4.147260e+10, 2.252187e-20, 9.565646e-14, 4.177809e+13, 3.032250e+01, 3.508303e+10, -4.579380e-17, 1.128779e+05, -1.064335e+11, 1.795376e-06, -1.903884e+09, 2.699039e-03, 3.658452e+15, 4.534803e+15, 1.366079e-03, -3.557323e+07, -4.920382e+18, -3.358988e-07, -4.024967e-11, -4.784915e+16, 1.490340e-18, -4.343678e+08, -1.955643e+14 };
 	ca(s2->dat1,AttachRRArray(dat1a,67,false));
 	if (s2->str2!="Hello world 2!") throw std::exception();
-	if (s2->vec3->map.size() != 4) throw std::exception();
-	if (RRArrayToString(s2->vec3->map.at(10))!="Hello Server!") throw std::exception();
-	if (RRArrayToString(s2->vec3->map.at(11))!="Hello Server, again") throw std::exception();
-	if (RRArrayToString(s2->vec3->map.at(46372))!="Test string!") throw std::exception();
-	if (RRArrayToString(s2->vec3->map.at(46373))!="Test string again") throw std::exception();
+	if (s2->vec3->size() != 4) throw std::exception();
+	if (RRArrayToString(s2->vec3->at(10))!="Hello Server!") throw std::exception();
+	if (RRArrayToString(s2->vec3->at(11))!="Hello Server, again") throw std::exception();
+	if (RRArrayToString(s2->vec3->at(46372))!="Test string!") throw std::exception();
+	if (RRArrayToString(s2->vec3->at(46373))!="Test string again") throw std::exception();
 
-	if (s2->dict4->map.size()!=2) throw std::exception();
-	if (RRArrayToString(s2->dict4->map.at("cteststring1"))!="Hello Server!") throw std::exception();
-	if (RRArrayToString(s2->dict4->map.at("cteststring2"))!="Hello Server, again") throw std::exception();
+	if (s2->dict4->size()!=2) throw std::exception();
+	if (RRArrayToString(s2->dict4->at("cteststring1"))!="Hello Server!") throw std::exception();
+	if (RRArrayToString(s2->dict4->at("cteststring2"))!="Hello Server, again") throw std::exception();
 
-	if (s2->list5->list.size()!=2) throw std::exception();
-	if (RRArrayToString(s2->list5->list.at(0))!="Hello Server!") throw std::exception();
-	if (RRArrayToString(s2->list5->list.at(1))!="Hello Server, again") throw std::exception();
+	if (s2->list5->size()!=2) throw std::exception();
+	if (RRArrayToString(s2->list5->front())!="Hello Server!") throw std::exception();
+	if (RRArrayToString(*(++s2->list5->begin()))!="Hello Server, again") throw std::exception();
 	
 
 	double s2_struct1_mydat[]={ 1.783093e+12, -2.874045e-19, -2.311319e-19, -3.099234e-12, 1.000951e+16, 3.775247e-12, -5.853550e-18, 3.175537e-10, -3.112089e+08, -1.577799e-06, -1.379590e+00, 4.777044e+13, 4.811910e+18, 4.736088e-11, 1.770572e-08, 2.713978e-22, -1.649841e-12, -2.486590e+10, 4.092716e-18, 8.724120e-03, -1.183435e+18, -3.904438e+08, -1.251365e-11, -4.007750e+19, -2.206836e-16, 4.014728e-13, -3.960975e-12, 7.192824e+05, 1.981836e+04, 1.840814e+16, 1.488579e-16, -4.862226e-06, 1.612923e-17, -4.978203e-04, -2.305889e-02, 7.627221e+13, 4.014563e-03, 2.388221e-03, -1.129986e-02, 4.055276e+10, 3.842121e-10, -8.588514e-04, 1.299077e-12, -3.331850e-12, 4.863277e-01, -2.250328e-11, -2.261245e+04, -2.770899e+09, -4.710672e-15, -2.267765e+06, 1.582168e-09, 3.664505e-06, -1.507921e+12, 5.460120e+09, -3.256706e-15, 3.012178e-12, 2.274894e+15, -9.664342e-18, -2.770443e-15, -1.955281e-06, 4.768349e+01, -7.679375e-19, 2.774544e-17, -4.928044e-17, 7.602063e-15, 2.506718e-12, -2.794058e+11, 4.329292e+03, -4.041289e-02, 4.035282e-19, 8.577361e-04, 4.197333e-18, -3.509270e-01, -1.711871e-12, 4.578825e-02, -8.783497e-13, 3.862885e+17, 4.219735e+13, 4.281035e-21, 3.323068e-03, 4.931847e-11, 4.032955e-21, -4.373013e-03, 1.592633e-16, -4.484112e-16 };
 	ca(s2->struct1->mydat,AttachRRArray(s2_struct1_mydat,85,false));
 
 	double s2_ds2_1a[]={ 4.122753e+13, -2.656829e-13, 1.813864e-04, -4.675181e-05, 1.759511e-19, 3.517805e+10, -7.912215e+01, 7.708557e-07, 2.434017e-21, -2.540544e+00, -9.412568e+15, -2.124215e-18, 2.797799e+13, -2.240464e-07, 2.780110e-12, -1.025574e-14, -3.762272e-09, -5.715981e-02, 1.839704e-21, -4.719538e-15, 3.148156e-06, 3.483886e-12, 3.484006e-02, -4.544817e-08, 3.200642e+00, 4.503141e+07, -4.077123e+04, -2.776985e+00, -2.900651e-18, -1.463711e+08, -3.460292e-03, 2.348911e-18, -3.704219e+08, -3.275364e+05, 4.613595e-01, 4.867108e+16, 4.114866e-10, 3.070767e+17, 4.662623e+01 };
-	ca(s2->dstruct2->map.at("ctest1")->mydat,AttachRRArray(s2_ds2_1a,39,false));
+	ca(s2->dstruct2->at("ctest1")->mydat,AttachRRArray(s2_ds2_1a,39,false));
 	double s2_ds2_2a[]={ -1.037656e+15, -3.782364e-06, 4.982303e+06, -5.510401e-07, 4.271118e-02, -1.718093e+11, -2.644457e+01, -2.374043e-08, 1.729038e-14, 3.370840e+10, 4.302550e-13, 2.643402e+14, 3.199649e+01, 4.620204e-08, 1.323645e+00, -4.337167e-07, -5.003428e+11, 4.176127e+13, 3.324907e-09, -4.207938e-09, -3.324360e-15, 3.317889e+00, 1.775668e+07, -1.295276e-15, -1.610388e-05, 3.417067e-02, -4.874588e+04, -2.109628e+12, 3.130648e+09, 1.898554e-13, 2.421724e-01, 4.227281e-08, 4.844407e+19, -4.490481e+10, 2.599780e+00, 4.039296e+06, -2.944167e-03, -7.388370e+08, -4.473409e-02 };
-	ca(s2->dstruct2->map.at("anothertest")->mydat,AttachRRArray(s2_ds2_2a,39,false));
+	ca(s2->dstruct2->at("anothertest")->mydat,AttachRRArray(s2_ds2_2a,39,false));
 
 	double s2_ls3_1a[]={ 4.122753e+13, -2.656829e-13, 1.813864e-04, -4.675181e-05, 1.759511e-19, 3.517805e+10, -7.912215e+01, 7.708557e-07, 2.434017e-21, -2.540544e+00, -9.412568e+15, -2.124215e-18, 2.797799e+13, -2.240464e-07, 2.780110e-12, -1.025574e-14, -3.762272e-09, -5.715981e-02, 1.839704e-21, -4.719538e-15, 3.148156e-06, 3.483886e-12, 3.484006e-02, -4.544817e-08, 3.200642e+00, 4.503141e+07, -4.077123e+04, -2.776985e+00, -2.900651e-18, -1.463711e+08, -3.460292e-03, 2.348911e-18, -3.704219e+08, -3.275364e+05, 4.613595e-01, 4.867108e+16, 4.114866e-10, 3.070767e+17, 4.662623e+01 };
-	ca(s2->lstruct3->list.at(0)->mydat,AttachRRArray(s2_ls3_1a,39,false));
+	ca(s2->lstruct3->front()->mydat,AttachRRArray(s2_ls3_1a,39,false));
 	double s2_ls3_2a[]={ -1.037656e+15, -3.782364e-06, 4.982303e+06, -5.510401e-07, 4.271118e-02, -1.718093e+11, -2.644457e+01, -2.374043e-08, 1.729038e-14, 3.370840e+10, 4.302550e-13, 2.643402e+14, 3.199649e+01, 4.620204e-08, 1.323645e+00, -4.337167e-07, -5.003428e+11, 4.176127e+13, 3.324907e-09, -4.207938e-09, -3.324360e-15, 3.317889e+00, 1.775668e+07, -1.295276e-15, -1.610388e-05, 3.417067e-02, -4.874588e+04, -2.109628e+12, 3.130648e+09, 1.898554e-13, 2.421724e-01, 4.227281e-08, 4.844407e+19, -4.490481e+10, 2.599780e+00, 4.039296e+06, -2.944167e-03, -7.388370e+08, -4.473409e-02 };
-	ca(s2->lstruct3->list.at(1)->mydat,AttachRRArray(s2_ls3_2a,39,false));
+	ca((*(++s2->lstruct3->begin()))->mydat,AttachRRArray(s2_ls3_2a,39,false));
 
 	uint32_t s2_mda[]={10,10};
 	double s2_mdb[]={2.430620e+07, -3.455593e-03, 3.902400e+12, -2.638755e-03, 3.850613e+07, 4.754008e-11, 4.661031e-06, -3.707214e-19, -7.073631e+02, 2.254953e-04, -1.575093e-16, 5.197798e-13, -9.801721e+03, -1.787872e+19, -3.366880e-19, -6.242096e-19, 4.750613e+12, 2.200462e-07, 2.175487e+10, -4.574155e+13, -2.009829e-18, 4.228100e-10, -3.002835e-06, -4.486729e+06, 5.433280e-05, -1.966891e-02, -3.934083e+11, 3.893263e-01, 2.139116e-13, 2.223028e+19, -9.567949e+17, -2.740272e+16, 1.099169e-03, -1.569567e+07, 1.960769e-10, 2.839805e-11, -4.907690e-21, 2.112493e-18, -4.618149e-10, 2.613307e+14, 2.590624e-17, 3.838474e+13, 3.249062e-08, -3.456972e-02, -5.653457e-19, -3.560782e-17, 4.205253e+10, -1.775030e-11, -2.490865e+04, -2.059649e-07, 1.126958e+00, 1.236458e+16, 4.050441e+17, 3.706921e+11, -5.893431e-13, -3.802021e-05, 4.939106e-17, -2.295579e+11, 2.784939e-18, 2.251843e+07, 4.187086e+13, -8.627249e-13, -1.636854e-09, 3.436699e+05, -1.494004e-06, 1.669621e-05, 4.224858e-11, -1.206711e-21, -4.717112e-12, 2.149234e+09, 4.829485e-12, -9.782035e-03, -4.809568e+11, -2.363817e-20, -1.774867e-19, 2.675132e-08, -3.796278e+06, 8.447614e-11, -2.926861e+01, -3.179427e+19, -2.686571e+01, 4.629595e-21, -4.785666e-19, 1.189135e+05, 3.103998e-16, 9.759246e-06, 1.974804e-15, -2.446973e-18, -2.116347e-10, 3.372892e+14, 3.756516e+18, 1.818836e-01, 5.930870e+08, -2.908608e+14, -4.900761e+01, -1.467246e+11, -2.431436e-08, -2.025905e-13, 6.246066e+01, 1.601360e+13};
@@ -500,33 +500,33 @@ void RobotRaconteurTest_testroot::set_struct2(RR_SHARED_PTR<teststruct2> value)
 RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double> > > RobotRaconteurTest_testroot::get_is_d1()
 {
 	RR_SHARED_PTR<RRMap<int32_t,RRArray<double> > > o=RR_MAKE_SHARED<RRMap<int32_t,RRArray<double> > >();
-	o->map.insert(make_pair(9285,ScalarToRRArray(1.643392e-01)));
-	o->map.insert(make_pair(74822,ScalarToRRArray(1.537133e+09)));
-	o->map.insert(make_pair(4,ScalarToRRArray(1.369505e-03)));
+	o->insert(make_pair(9285,ScalarToRRArray(1.643392e-01)));
+	o->insert(make_pair(74822,ScalarToRRArray(1.537133e+09)));
+	o->insert(make_pair(4,ScalarToRRArray(1.369505e-03)));
 	return o;
 }
 
 void RobotRaconteurTest_testroot::set_is_d1(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double> > > value)
 {
-	if (value->map.size() != 3) throw std::exception();
-    if (RRArrayToScalar(value->map.at(928)) != 4.074501e-07) throw std::exception();
-    if (RRArrayToScalar(value->map.at(394820)) != -4.535303e+05) throw std::exception();
-    if (RRArrayToScalar(value->map.at(623)) != -2.956241e-20) throw std::exception();
+	if (value->size() != 3) throw std::exception();
+    if (RRArrayToScalar(value->at(928)) != 4.074501e-07) throw std::exception();
+    if (RRArrayToScalar(value->at(394820)) != -4.535303e+05) throw std::exception();
+    if (RRArrayToScalar(value->at(623)) != -2.956241e-20) throw std::exception();
 }
 
 RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double> > > RobotRaconteurTest_testroot::get_is_d2()
 {
 	RR_SHARED_PTR<RRMap<string,RRArray<double> > > o=RR_MAKE_SHARED<RRMap<string,RRArray<double> > >();
-	o->map.insert(make_pair("testval1",ScalarToRRArray(-1.079664e+16)));
-	o->map.insert(make_pair("testval2",ScalarToRRArray(2.224846e+00)));
+	o->insert(make_pair("testval1",ScalarToRRArray(-1.079664e+16)));
+	o->insert(make_pair("testval2",ScalarToRRArray(2.224846e+00)));
 	return o;
 }
 
 void RobotRaconteurTest_testroot::set_is_d2(RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double> > > value)
 {
-	if (value->map.size() != 2) throw std::exception();
-    if (RRArrayToScalar(value->map.at("testval3")) != 5.242474e+10) throw std::exception();
-    if (RRArrayToScalar(value->map.at("testval4")) != 2.208636e+08) throw std::exception();
+	if (value->size() != 2) throw std::exception();
+    if (RRArrayToScalar(value->at("testval3")) != 5.242474e+10) throw std::exception();
+    if (RRArrayToScalar(value->at("testval4")) != 2.208636e+08) throw std::exception();
 }
 
 RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double> > > RobotRaconteurTest_testroot::get_is_d3()
@@ -535,8 +535,8 @@ RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double> > > 
 	double b[]={ 4.750899e+00, 3.924377e+18, -2.735066e+17, 4.095362e-21, -2.407932e+09, 4.059499e+10, 1.376975e-10, -8.547220e-21, -1.344568e-20, 2.809398e+03, 2.118944e-06, 2.435328e-03, -1.410999e-12, 9.907226e-04, -9.745948e-20, 1.270118e+15, -2.833333e+05, 1.032636e-10, 5.312574e+13, -2.651512e+02 };
 
 	RR_SHARED_PTR<RRMap<int32_t,RRArray<double> > > o=RR_MAKE_SHARED<RRMap<int32_t,RRArray<double> > >();
-	o->map.insert(make_pair(12,AttachRRArrayCopy(a,20)));
-	o->map.insert(make_pair(832,AttachRRArrayCopy(b,20)));
+	o->insert(make_pair(12,AttachRRArrayCopy(a,20)));
+	o->insert(make_pair(832,AttachRRArrayCopy(b,20)));
 	return o;
 }
 
@@ -546,9 +546,9 @@ void RobotRaconteurTest_testroot::set_is_d3(RR_SHARED_PTR<RobotRaconteur::RRMap<
 	double is_d3_2b[]={ 3.239279e+12, 1.047689e+17, -1.236114e+17, -4.002822e-17, 2.657374e-03, 7.383907e-19, -5.067889e-13, -4.195122e-12, 3.642885e-01, -2.946040e+14, 5.522403e-08, 6.603132e+04, 1.464154e+05, -1.851534e-08, 2.808294e-13, -2.702278e-11, 3.850704e-06, -2.453957e+02, -3.015401e-02, 1.654070e+05 };
 
 
-	if (value->map.size()!=2) throw std::exception();
-	ca(value->map.at(47),AttachRRArray(is_d3_2a,20,false));
-	ca(value->map.at(324),AttachRRArray(is_d3_2b,20,false));
+	if (value->size()!=2) throw std::exception();
+	ca(value->at(47),AttachRRArray(is_d3_2a,20,false));
+	ca(value->at(324),AttachRRArray(is_d3_2b,20,false));
     
 }
 
@@ -559,8 +559,8 @@ RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double> 
 
 	RR_SHARED_PTR<RRMap<string,RRArray<double> > > o=RR_MAKE_SHARED<RRMap<string,RRArray<double> > >();
 	
-	o->map.insert(make_pair("testval1" , AttachRRArrayCopy(is_d4_1a,20)));
-    o->map.insert(make_pair("testval2" ,AttachRRArrayCopy(is_d4_1b,20)));
+	o->insert(make_pair("testval1" , AttachRRArrayCopy(is_d4_1a,20)));
+    o->insert(make_pair("testval2" ,AttachRRArrayCopy(is_d4_1b,20)));
 	
 	return o;
 }
@@ -570,9 +570,9 @@ void RobotRaconteurTest_testroot::set_is_d4(RR_SHARED_PTR<RobotRaconteur::RRMap<
 	double is_d4_2a[]={ 1.771838e+06, 3.037284e-01, -1.739742e-02, 1.399508e-20, 3.605232e-21, 3.517522e+14, 4.887514e+14, 3.505442e-03, -3.968972e+18, 1.422037e-20, 2.596937e-21, 4.852833e-11, 6.852955e-17, 4.765526e-12, -3.445954e+16, 2.322531e-14, -1.755122e-12, 3.941875e+00, 8.877046e-13, 2.818923e-02 };
 	double is_d4_2b[]={ 4.146439e+16, 2.923439e-07, 3.549608e+16, -1.664891e-01, -4.192309e-15, 3.857317e+05, -1.101076e+00, 1.213105e+19, 3.237584e-14, -2.421219e-06, -4.603196e-05, -3.719535e-10, 1.124961e+06, 2.032849e+10, 4.639704e-22, 3.946835e+01, -9.267263e+01, -4.456188e+11, 3.470487e+08, 7.918764e+10 };
 
-	if (value->map.size() !=2 ) throw std::exception();
-	ca(value->map.at("testval3"),AttachRRArray(is_d4_2a,20,false));
-    ca(value->map.at("testval4"),AttachRRArray(is_d4_2b,20,false));
+	if (value->size() !=2 ) throw std::exception();
+	ca(value->at("testval3"),AttachRRArray(is_d4_2a,20,false));
+    ca(value->at("testval4"),AttachRRArray(is_d4_2b,20,false));
 }
 
 RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double> > > RobotRaconteurTest_testroot::get_is_d5()
@@ -582,7 +582,7 @@ RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<doub
 	
 	RR_SHARED_PTR<RRMultiDimArray<double> > a=RR_MAKE_SHARED<RRMultiDimArray<double> >(AttachRRArrayCopy(is_d5_1_1a,2),AttachRRArrayCopy(is_d5_1_1b,100));
 	RR_SHARED_PTR<RRMap<int,RRMultiDimArray<double> > > o=RR_MAKE_SHARED<RRMap<int,RRMultiDimArray<double> > >();
-	o->map.insert(make_pair(564,a));
+	o->insert(make_pair(564,a));
 	return o;
 
 }
@@ -592,8 +592,8 @@ void RobotRaconteurTest_testroot::set_is_d5(RR_SHARED_PTR<RobotRaconteur::RRMap<
 	uint32_t is_d5_2_1a[]={10,20};
 	double is_d5_2_1b[]={ 2.792909e-01, 6.554477e+16, 4.240073e-13, -4.490109e+19, 5.410527e-22, -2.244599e+17, -2.656142e-02, -3.819500e+13, -7.086082e-02, 7.790729e-13, 3.375900e-12, -6.915692e+09, -2.900437e-18, 1.257280e+05, -3.810852e+15, -4.589554e-12, 2.670612e-14, 4.725686e+06, -3.018046e+07, 2.439452e+07, 2.726039e-07, -2.805143e+02, -1.870376e+03, 4.573047e-06, 1.904868e+19, -1.966383e+00, 3.426469e-11, -1.400396e+13, -1.724273e+09, -7.347198e+10, -4.081057e-12, -3.868203e+10, -2.686071e+13, -5.289107e+01, -5.574151e-09, -2.580185e-06, -8.222097e-21, -4.957833e-12, -2.491984e+03, -7.900042e+16, -4.809370e-11, -2.048332e-19, 4.984852e-21, 1.350023e+13, -4.492022e-11, -3.255594e+10, 1.495149e-09, -7.272628e+02, -4.236196e-04, 4.736990e-02, -4.030173e-11, 1.017371e+11, 1.124559e-09, 4.177431e-21, 1.026706e+06, -4.702729e-04, -2.633498e+18, -4.689724e+08, -2.593657e+05, 3.433194e-18, -1.977738e-13, -1.163773e+03, 3.424738e-20, 7.391132e-06, 1.364867e+12, -7.155727e+16, 3.078093e-21, -3.151787e-04, -4.715633e+06, 1.017894e+19, -1.121778e+14, -3.529769e-10, 4.530606e+19, 3.988296e-17, -3.469818e+06, 1.204304e+03, -1.404314e+15, -1.369871e+04, -2.796125e-03, -4.842068e-06, -2.639632e-03, 1.324740e+08, 1.440651e+07, -4.778885e+03, -4.643859e+06, 1.726955e-09, -8.160334e+05, 3.763238e+13, 1.391028e+02, -4.269393e+04, -2.698233e+02, -3.677556e+14, 1.070699e-17, 3.949376e+19, 4.503080e-06, 4.344496e-07, 1.714091e-19, -3.436426e+01, 4.914505e+15, -1.101617e+09, -1.899511e-04, 2.195951e-06, 2.402701e-12, 1.783431e-09, -7.329137e-08, 4.423889e+16, 2.812547e-19, -7.848554e+05, -3.635151e+13, 3.128605e-09, -2.858963e+08, 2.086065e-11, -2.544450e+12, 1.450579e+19, -1.508905e+13, 4.307174e+00, 1.038108e-05, 4.313281e-05, 3.647351e+05, 1.309105e-16, 4.180469e+13, -2.701332e-07, -4.033566e+14, -3.116748e-06, 2.342296e-07, 1.870335e-19, 2.312273e+01, -4.478923e+08, -4.854324e+09, 2.681828e+03, -4.280128e-01, -4.690703e-21, 3.853815e+16, 1.366639e+02, -2.944985e-11, -4.486958e-13, 3.017750e-11, 3.551437e-13, 2.263828e-12, -6.545014e-18, -7.552023e+12, 7.595238e+14, 2.810247e+12, 6.516008e+15, -3.035786e+14, 2.523040e+11, -3.766603e+09, 7.316287e+18, -2.147132e+17, 1.972210e+10, 2.906768e-13, 4.226577e-14, -2.640568e+17, 2.181408e+10, -1.043256e-08, -3.649181e+06, -2.776638e+18, 3.660147e-07, -1.415433e-17, -4.945127e-17, 2.655050e+01, -2.269828e+04, -2.585499e-01, -3.299965e+05, 3.707494e-18, -1.257923e-19, -1.321880e+14, -1.815888e-12, 9.366926e-09, 1.024923e-14, 4.494907e+04, -2.596971e-20, -3.403446e-12, 1.537084e+17, -3.850430e-17, -4.821759e+05, 4.255435e-20, -1.016978e-16, 1.430658e-09, -3.696861e-14, -4.427905e-19, -1.999724e-09, -3.489402e-06, -4.677864e-03, 1.246884e+13, -4.458271e-19, 3.551905e-04, -4.458221e-20, -3.472033e+01, -1.745714e+08, 4.396891e+03, 4.345767e+02, -1.800116e+05, -1.217318e+00, 3.605072e-08, 1.306109e-09, -2.798295e+16, 4.387728e-13, -3.284039e+11, 3.424124e+17 };
 
-	if (value->map.size()!=1) throw std::exception();
-	RR_SHARED_PTR<RRMultiDimArray<double> > a=value->map.at(328);
+	if (value->size()!=1) throw std::exception();
+	RR_SHARED_PTR<RRMultiDimArray<double> > a=value->at(328);
 	ca(a->Dims,AttachRRArray(is_d5_2_1a,2,false));
 	ca(a->Array,AttachRRArray(is_d5_2_1b,200,false));
 
@@ -606,7 +606,7 @@ RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRMultiDimArray<
 
 	RR_SHARED_PTR<RRMultiDimArray<double> > a=RR_MAKE_SHARED<RRMultiDimArray<double> >(AttachRRArrayCopy(is_d6_1_1a,2),AttachRRArrayCopy(is_d6_1_1b,50));
 	RR_SHARED_PTR<RRMap<string,RRMultiDimArray<double> > > o=RR_MAKE_SHARED<RRMap<string,RRMultiDimArray<double> > >();
-	o->map.insert(make_pair("testval1",a));
+	o->insert(make_pair("testval1",a));
 	return o;
 }
 
@@ -616,8 +616,8 @@ void RobotRaconteurTest_testroot::set_is_d6(RR_SHARED_PTR<RobotRaconteur::RRMap<
 	double is_d6_2_1b[]={ 2.080438e+03, -2.901444e-01, 2.561452e+12, 6.760682e+14, -2.461568e-10, -4.811907e-20, 6.299564e+11, -2.660066e-19, 4.643316e+13, 3.292265e-13, 1.187460e+19, 3.054313e-07, 3.503026e-20, -1.465147e-08, 3.993039e-17, 2.469296e-10, -4.014504e+07, 1.810733e+17, -3.976509e-19, -9.166607e+15, 1.854678e+02, 2.884879e-12, -4.382521e+14, 3.064407e-05, -9.542195e+07, -3.938411e-13, -2.850416e-03, 3.042038e+14, 1.464437e-12, -1.550126e-06, 4.938341e+11, -3.517527e+19, 3.135793e+19, 1.380313e-14, -1.060961e+18, 2.833127e-10, -1.862230e+02, -2.232851e-05, 4.773548e-05, 3.746071e+13, -4.972451e+09, 4.553754e-14, -8.183438e+10, 3.739120e+18, -1.619189e+19, 4.644394e+08, -8.327578e-11, 4.080876e-02, -2.806082e-03, -1.595033e-06, 1.973067e+16, 2.989575e-07, -8.974247e+15, -4.204211e-03, 1.513025e-02, -4.604953e+03, 4.107290e+16, -3.631920e+12, -1.902472e+13, -4.186326e-14, 2.465135e+13, 5.060414e+12, 7.508582e+11, 3.233186e-14, -6.750005e+14, -9.467336e-16, 2.101440e+03, -1.162425e+08, 7.808216e+04, 4.356208e-19, -3.316834e+14, 3.299774e-19, -3.746431e-16, -3.971172e-07, 2.423744e+10, 1.542747e+17, 2.358704e-05, 4.201668e+17, -3.736856e+07, 3.585645e-07 };
 		
 
-	if (value->map.size()!=1) throw std::exception();
-	RR_SHARED_PTR<RRMultiDimArray<double> > a=value->map.at("testval2");
+	if (value->size()!=1) throw std::exception();
+	RR_SHARED_PTR<RRMultiDimArray<double> > a=value->at("testval2");
 	ca(a->Dims,AttachRRArray(is_d6_2_1a,2,false));
 	ca(a->Array,AttachRRArray(is_d6_2_1b,80,false));
 }
@@ -625,27 +625,27 @@ void RobotRaconteurTest_testroot::set_is_d6(RR_SHARED_PTR<RobotRaconteur::RRMap<
 RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char> > > RobotRaconteurTest_testroot::get_is_str1()
 {
 	RR_SHARED_PTR<RRMap<int32_t,RRArray<char> > > o=RR_MAKE_SHARED<RRMap<int32_t,RRArray<char> > >();
-	o->map.insert(make_pair(23, stringToRRArray("Hello server")));
+	o->insert(make_pair(23, stringToRRArray("Hello server")));
 	return o;
 }
 
 void RobotRaconteurTest_testroot::set_is_str1(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char> > > value)
 {
-	if (value->map.size()!=1) throw std::exception();
-	if (RRArrayToString(value->map.at(24))!= "Hello client") throw std::exception();
+	if (value->size()!=1) throw std::exception();
+	if (RRArrayToString(value->at(24))!= "Hello client") throw std::exception();
 }
 
 RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<char> > > RobotRaconteurTest_testroot::get_is_str2()
 {
 	RR_SHARED_PTR<RRMap<string,RRArray<char> > > o=RR_MAKE_SHARED<RRMap<string,RRArray<char> > >();
-	o->map.insert(make_pair("testval1", stringToRRArray("Hello server")));
+	o->insert(make_pair("testval1", stringToRRArray("Hello server")));
 	return o;
 }
 
 void RobotRaconteurTest_testroot::set_is_str2(RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<char> > > value)
 {
-	if (value->map.size()!=1) throw std::exception();
-	if (RRArrayToString(value->map.at("testval2"))!= "Hello client") throw std::exception();
+	if (value->size()!=1) throw std::exception();
+	if (RRArrayToString(value->at("testval2"))!= "Hello client") throw std::exception();
 }
 
 RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,teststruct2> > RobotRaconteurTest_testroot::get_is_struct1()
@@ -654,15 +654,15 @@ RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,teststruct2> > RobotRaconteurTest_te
 	RR_SHARED_PTR<teststruct2> s=RR_MAKE_SHARED<teststruct2>();
 	double is_struct1_1a[]={ -9.692618e+00, -1.944240e+03, -2.456327e+16, 4.673405e-20, 5.147581e-14, -3.773975e+15, 2.336430e-21, 1.597144e-18, -2.609059e-03, 3.557639e-21, -1.666575e-16, -4.242788e-07, 2.686206e+07, -3.200902e-05, -1.549754e-06, -3.010796e-12, 4.638418e+01, 2.664397e-14, -2.689174e+01, 4.564584e-21 };
 	s->mydat=AttachRRArrayCopy(is_struct1_1a,20);
-	o->map.insert(make_pair(748,s));
+	o->insert(make_pair(748,s));
 	return o;
 }
 
 void RobotRaconteurTest_testroot::set_is_struct1(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,teststruct2> > value)
 {
 	double is_struct1_2_1a[]={ -2.101948e-07, -2.594836e-08, 2.515710e+01, -3.834127e-14, -3.088095e+06, -3.256612e-02, -1.855481e-19, 3.801916e+07, 2.145894e+09, 4.487676e+12, 1.351202e-02, -1.125124e-16, 1.369826e-20, -2.290673e+00, 1.786029e-20, -4.991515e+08, 4.006107e-10, -4.947871e-11, -2.737020e-08, 4.123759e-20 };
-	if (value->map.size()!=1) throw std::exception();
-	ca(value->map.at(372)->mydat,AttachRRArray(is_struct1_2_1a,20,false));
+	if (value->size()!=1) throw std::exception();
+	ca(value->at(372)->mydat,AttachRRArray(is_struct1_2_1a,20,false));
 }
 
 RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,teststruct2> > RobotRaconteurTest_testroot::get_is_struct2()
@@ -671,15 +671,15 @@ RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,teststruct2> > RobotRaconteurTes
 	RR_SHARED_PTR<teststruct2> s=RR_MAKE_SHARED<teststruct2>();
 	double is_struct2_1a[]={ -4.489570e+13, 9.574895e-05, 4.081711e+06, 5.612839e-18, -1.078604e+05, 3.658139e+08, -4.748975e+05, -2.606481e+01, 3.016739e+15, 3.174709e+19, -4.572549e+17, 1.980389e-04, -3.551911e-10, 3.598401e-07, 2.659416e-12, -3.606157e+06, 2.059674e+17, -9.362336e-20, -3.299256e+17, -2.245745e+16 };
 	s->mydat=AttachRRArrayCopy(is_struct2_1a,20);
-	o->map.insert(make_pair("testval1",s));
+	o->insert(make_pair("testval1",s));
 	return o;
 }
 
 void RobotRaconteurTest_testroot::set_is_struct2(RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,teststruct2> > value)
 {
 	double is_struct2_2_1a[]={ 6.931327e-21, 4.527137e-02, 1.260822e-18, 3.592805e-12, 1.088317e-05, 3.305865e+03, -9.798828e-20, 1.497504e+18, -3.653592e+01, 1.473952e+10, -1.003612e-20, 1.302159e+18, -8.544326e+05, 1.038521e+16, -2.845746e-18, -3.899909e-04, 4.785560e-02, -7.203365e-12, -1.500022e-14, -1.892753e-17 };
-	if (value->map.size()!=1) throw std::exception();
-	ca(value->map.at("testval2")->mydat,AttachRRArray(is_struct2_2_1a,20,false));
+	if (value->size()!=1) throw std::exception();
+	ca(value->at("testval2")->mydat,AttachRRArray(is_struct2_2_1a,20,false));
 }
 
 //Lists
@@ -687,18 +687,18 @@ void RobotRaconteurTest_testroot::set_is_struct2(RR_SHARED_PTR<RobotRaconteur::R
 RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double> > > RobotRaconteurTest_testroot::get_list_d1()
 {
 	RR_SHARED_PTR<RRList<RRArray<double> > > o=RR_MAKE_SHARED<RRList<RRArray<double> > >();
-	o->list.push_back(ScalarToRRArray(1.643392e-01));
-	o->list.push_back(ScalarToRRArray(1.537133e+09));
-	o->list.push_back(ScalarToRRArray(1.369505e-03));
+	o->push_back(ScalarToRRArray(1.643392e-01));
+	o->push_back(ScalarToRRArray(1.537133e+09));
+	o->push_back(ScalarToRRArray(1.369505e-03));
 	return o;
 }
 
 void RobotRaconteurTest_testroot::set_list_d1(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double> > > value)
 {
-	if (value->list.size() != 3) throw std::exception();
-    if (RRArrayToScalar(value->list.at(0)) != 4.074501e-07) throw std::exception();
-    if (RRArrayToScalar(value->list.at(1)) != -4.535303e+05) throw std::exception();
-    if (RRArrayToScalar(value->list.at(2)) != -2.956241e-20) throw std::exception();
+	if (value->size() != 3) throw std::exception();
+    if (RRArrayToScalar(value->front()) != 4.074501e-07) throw std::exception();
+    if (RRArrayToScalar(*(++value->begin())) != -4.535303e+05) throw std::exception();
+    if (RRArrayToScalar(*(++(++value->begin()))) != -2.956241e-20) throw std::exception();
 }
 
 RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double> > > RobotRaconteurTest_testroot::get_list_d3()
@@ -707,8 +707,8 @@ RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double> > > RobotRa
 	double b[]={ 4.750899e+00, 3.924377e+18, -2.735066e+17, 4.095362e-21, -2.407932e+09, 4.059499e+10, 1.376975e-10, -8.547220e-21, -1.344568e-20, 2.809398e+03, 2.118944e-06, 2.435328e-03, -1.410999e-12, 9.907226e-04, -9.745948e-20, 1.270118e+15, -2.833333e+05, 1.032636e-10, 5.312574e+13, -2.651512e+02 };
 
 	RR_SHARED_PTR<RRList<RRArray<double> > > o=RR_MAKE_SHARED<RRList<RRArray<double> > >();
-	o->list.push_back(AttachRRArrayCopy(a,20));
-	o->list.push_back(AttachRRArrayCopy(b,20));
+	o->push_back(AttachRRArrayCopy(a,20));
+	o->push_back(AttachRRArrayCopy(b,20));
 	return o;
 }
 
@@ -718,9 +718,9 @@ void RobotRaconteurTest_testroot::set_list_d3(RR_SHARED_PTR<RobotRaconteur::RRLi
 	double is_d3_2b[]={ 3.239279e+12, 1.047689e+17, -1.236114e+17, -4.002822e-17, 2.657374e-03, 7.383907e-19, -5.067889e-13, -4.195122e-12, 3.642885e-01, -2.946040e+14, 5.522403e-08, 6.603132e+04, 1.464154e+05, -1.851534e-08, 2.808294e-13, -2.702278e-11, 3.850704e-06, -2.453957e+02, -3.015401e-02, 1.654070e+05 };
 
 
-	if (value->list.size()!=2) throw std::exception();
-	ca(value->list.at(0),AttachRRArray(is_d3_2a,20,false));
-	ca(value->list.at(1),AttachRRArray(is_d3_2b,20,false));
+	if (value->size()!=2) throw std::exception();
+	ca(value->front(),AttachRRArray(is_d3_2a,20,false));
+	ca(*(++value->begin()),AttachRRArray(is_d3_2b,20,false));
     
 }
 
@@ -731,7 +731,7 @@ RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double> > >
 	
 	RR_SHARED_PTR<RRMultiDimArray<double> > a=RR_MAKE_SHARED<RRMultiDimArray<double> >(AttachRRArrayCopy(is_d5_1_1a,2),AttachRRArrayCopy(is_d5_1_1b,100));
 	RR_SHARED_PTR<RRList<RRMultiDimArray<double> > > o=RR_MAKE_SHARED<RRList<RRMultiDimArray<double> > >();
-	o->list.push_back(a);
+	o->push_back(a);
 	return o;
 
 }
@@ -741,8 +741,8 @@ void RobotRaconteurTest_testroot::set_list_d5(RR_SHARED_PTR<RobotRaconteur::RRLi
 	uint32_t is_d5_2_1a[]={10,20};
 	double is_d5_2_1b[]={ 2.792909e-01, 6.554477e+16, 4.240073e-13, -4.490109e+19, 5.410527e-22, -2.244599e+17, -2.656142e-02, -3.819500e+13, -7.086082e-02, 7.790729e-13, 3.375900e-12, -6.915692e+09, -2.900437e-18, 1.257280e+05, -3.810852e+15, -4.589554e-12, 2.670612e-14, 4.725686e+06, -3.018046e+07, 2.439452e+07, 2.726039e-07, -2.805143e+02, -1.870376e+03, 4.573047e-06, 1.904868e+19, -1.966383e+00, 3.426469e-11, -1.400396e+13, -1.724273e+09, -7.347198e+10, -4.081057e-12, -3.868203e+10, -2.686071e+13, -5.289107e+01, -5.574151e-09, -2.580185e-06, -8.222097e-21, -4.957833e-12, -2.491984e+03, -7.900042e+16, -4.809370e-11, -2.048332e-19, 4.984852e-21, 1.350023e+13, -4.492022e-11, -3.255594e+10, 1.495149e-09, -7.272628e+02, -4.236196e-04, 4.736990e-02, -4.030173e-11, 1.017371e+11, 1.124559e-09, 4.177431e-21, 1.026706e+06, -4.702729e-04, -2.633498e+18, -4.689724e+08, -2.593657e+05, 3.433194e-18, -1.977738e-13, -1.163773e+03, 3.424738e-20, 7.391132e-06, 1.364867e+12, -7.155727e+16, 3.078093e-21, -3.151787e-04, -4.715633e+06, 1.017894e+19, -1.121778e+14, -3.529769e-10, 4.530606e+19, 3.988296e-17, -3.469818e+06, 1.204304e+03, -1.404314e+15, -1.369871e+04, -2.796125e-03, -4.842068e-06, -2.639632e-03, 1.324740e+08, 1.440651e+07, -4.778885e+03, -4.643859e+06, 1.726955e-09, -8.160334e+05, 3.763238e+13, 1.391028e+02, -4.269393e+04, -2.698233e+02, -3.677556e+14, 1.070699e-17, 3.949376e+19, 4.503080e-06, 4.344496e-07, 1.714091e-19, -3.436426e+01, 4.914505e+15, -1.101617e+09, -1.899511e-04, 2.195951e-06, 2.402701e-12, 1.783431e-09, -7.329137e-08, 4.423889e+16, 2.812547e-19, -7.848554e+05, -3.635151e+13, 3.128605e-09, -2.858963e+08, 2.086065e-11, -2.544450e+12, 1.450579e+19, -1.508905e+13, 4.307174e+00, 1.038108e-05, 4.313281e-05, 3.647351e+05, 1.309105e-16, 4.180469e+13, -2.701332e-07, -4.033566e+14, -3.116748e-06, 2.342296e-07, 1.870335e-19, 2.312273e+01, -4.478923e+08, -4.854324e+09, 2.681828e+03, -4.280128e-01, -4.690703e-21, 3.853815e+16, 1.366639e+02, -2.944985e-11, -4.486958e-13, 3.017750e-11, 3.551437e-13, 2.263828e-12, -6.545014e-18, -7.552023e+12, 7.595238e+14, 2.810247e+12, 6.516008e+15, -3.035786e+14, 2.523040e+11, -3.766603e+09, 7.316287e+18, -2.147132e+17, 1.972210e+10, 2.906768e-13, 4.226577e-14, -2.640568e+17, 2.181408e+10, -1.043256e-08, -3.649181e+06, -2.776638e+18, 3.660147e-07, -1.415433e-17, -4.945127e-17, 2.655050e+01, -2.269828e+04, -2.585499e-01, -3.299965e+05, 3.707494e-18, -1.257923e-19, -1.321880e+14, -1.815888e-12, 9.366926e-09, 1.024923e-14, 4.494907e+04, -2.596971e-20, -3.403446e-12, 1.537084e+17, -3.850430e-17, -4.821759e+05, 4.255435e-20, -1.016978e-16, 1.430658e-09, -3.696861e-14, -4.427905e-19, -1.999724e-09, -3.489402e-06, -4.677864e-03, 1.246884e+13, -4.458271e-19, 3.551905e-04, -4.458221e-20, -3.472033e+01, -1.745714e+08, 4.396891e+03, 4.345767e+02, -1.800116e+05, -1.217318e+00, 3.605072e-08, 1.306109e-09, -2.798295e+16, 4.387728e-13, -3.284039e+11, 3.424124e+17 };
 
-	if (value->list.size()!=1) throw std::exception();
-	RR_SHARED_PTR<RRMultiDimArray<double> > a=value->list.at(0);
+	if (value->size()!=1) throw std::exception();
+	RR_SHARED_PTR<RRMultiDimArray<double> > a=value->front();
 	ca(a->Dims,AttachRRArray(is_d5_2_1a,2,false));
 	ca(a->Array,AttachRRArray(is_d5_2_1b,200,false));
 
@@ -751,14 +751,14 @@ void RobotRaconteurTest_testroot::set_list_d5(RR_SHARED_PTR<RobotRaconteur::RRLi
 RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char> > > RobotRaconteurTest_testroot::get_list_str1()
 {
 	RR_SHARED_PTR<RRList<RRArray<char> > > o=RR_MAKE_SHARED<RRList<RRArray<char> > >();
-	o->list.push_back(stringToRRArray("Hello server"));
+	o->push_back(stringToRRArray("Hello server"));
 	return o;
 }
 
 void RobotRaconteurTest_testroot::set_list_str1(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char> > > value)
 {
-	if (value->list.size()!=1) throw std::exception();
-	if (RRArrayToString(value->list.at(0))!= "Hello client") throw std::exception();
+	if (value->size()!=1) throw std::exception();
+	if (RRArrayToString(value->front())!= "Hello client") throw std::exception();
 }
 
 RR_SHARED_PTR<RobotRaconteur::RRList<teststruct2> > RobotRaconteurTest_testroot::get_list_struct1()
@@ -767,15 +767,15 @@ RR_SHARED_PTR<RobotRaconteur::RRList<teststruct2> > RobotRaconteurTest_testroot:
 	RR_SHARED_PTR<teststruct2> s=RR_MAKE_SHARED<teststruct2>();
 	double is_struct1_1a[]={ -9.692618e+00, -1.944240e+03, -2.456327e+16, 4.673405e-20, 5.147581e-14, -3.773975e+15, 2.336430e-21, 1.597144e-18, -2.609059e-03, 3.557639e-21, -1.666575e-16, -4.242788e-07, 2.686206e+07, -3.200902e-05, -1.549754e-06, -3.010796e-12, 4.638418e+01, 2.664397e-14, -2.689174e+01, 4.564584e-21 };
 	s->mydat=AttachRRArrayCopy(is_struct1_1a,20);
-	o->list.push_back(s);
+	o->push_back(s);
 	return o;
 }
 
 void RobotRaconteurTest_testroot::set_list_struct1(RR_SHARED_PTR<RobotRaconteur::RRList<teststruct2> > value)
 {
 	double is_struct1_2_1a[]={ -2.101948e-07, -2.594836e-08, 2.515710e+01, -3.834127e-14, -3.088095e+06, -3.256612e-02, -1.855481e-19, 3.801916e+07, 2.145894e+09, 4.487676e+12, 1.351202e-02, -1.125124e-16, 1.369826e-20, -2.290673e+00, 1.786029e-20, -4.991515e+08, 4.006107e-10, -4.947871e-11, -2.737020e-08, 4.123759e-20 };
-	if (value->list.size()!=1) throw std::exception();
-	ca(value->list.at(0)->mydat,AttachRRArray(is_struct1_2_1a,20,false));
+	if (value->size()!=1) throw std::exception();
+	ca(value->front()->mydat,AttachRRArray(is_struct1_2_1a,20,false));
 }
 
 //End lists
@@ -857,7 +857,7 @@ void RobotRaconteurTest_testroot::set_var_struct(RR_SHARED_PTR<RobotRaconteur::R
 RR_SHARED_PTR<RobotRaconteur::RRValue> RobotRaconteurTest_testroot::get_var_vector()
 {
 	RR_SHARED_PTR<RRMap<int32_t,RRValue> > d=RR_MAKE_SHARED<RRMap<int32_t,RRValue> >();
-	d->map.insert(make_pair(10,stringToRRArray("Hello Client!")));
+	d->insert(make_pair(10,stringToRRArray("Hello Client!")));
 	return d;
 
 }
@@ -865,28 +865,28 @@ RR_SHARED_PTR<RobotRaconteur::RRValue> RobotRaconteurTest_testroot::get_var_vect
 void RobotRaconteurTest_testroot::set_var_vector(RR_SHARED_PTR<RobotRaconteur::RRValue> value)
 {
 	RR_SHARED_PTR<RRMap<int32_t,RRValue> > d=rr_cast<RRMap<int32_t,RRValue> >(value);
-	if (d->map.size()!=1) throw std::exception();
-	if (RRArrayToString(rr_cast<RRArray<char> >(d->map.at(11)))!="Hello Server!") throw std::exception();
+	if (d->size()!=1) throw std::exception();
+	if (RRArrayToString(rr_cast<RRArray<char> >(d->at(11)))!="Hello Server!") throw std::exception();
 }
 
 RR_SHARED_PTR<RobotRaconteur::RRValue> RobotRaconteurTest_testroot::get_var_dictionary()
 {
 	RR_SHARED_PTR<RRMap<string,RRValue> > d=RR_MAKE_SHARED<RRMap<string,RRValue> >();
-	d->map.insert(make_pair("test1",stringToRRArray("Hello Client!")));
+	d->insert(make_pair("test1",stringToRRArray("Hello Client!")));
 	return d;
 }
 
 void RobotRaconteurTest_testroot::set_var_dictionary(RR_SHARED_PTR<RobotRaconteur::RRValue> value)
 {
 	RR_SHARED_PTR<RRMap<string,RRValue> > d=rr_cast<RRMap<string,RRValue> >(value);
-	if (d->map.size()!=1) throw std::exception();
-	if (RRArrayToString(rr_cast<RRArray<char> >(d->map.at("test2")))!="Hello Server!") throw std::exception();
+	if (d->size()!=1) throw std::exception();
+	if (RRArrayToString(rr_cast<RRArray<char> >(d->at("test2")))!="Hello Server!") throw std::exception();
 }
 
 RR_SHARED_PTR<RobotRaconteur::RRValue> RobotRaconteurTest_testroot::get_var_list()
 {
 	RR_SHARED_PTR<RRList<RRValue> > d = RR_MAKE_SHARED<RRList<RRValue> >();
-	d->list.push_back(stringToRRArray("Hello Client!"));
+	d->push_back(stringToRRArray("Hello Client!"));
 	return d;
 
 }
@@ -894,8 +894,8 @@ RR_SHARED_PTR<RobotRaconteur::RRValue> RobotRaconteurTest_testroot::get_var_list
 void RobotRaconteurTest_testroot::set_var_list(RR_SHARED_PTR<RobotRaconteur::RRValue> value)
 {
 	RR_SHARED_PTR<RRList<RRValue> > d = rr_cast<RRList<RRValue> >(value);
-	if (d->list.size() != 1) throw std::exception();
-	if (RRArrayToString(rr_cast<RRArray<char> >(d->list.at(0))) != "Hello Server!") throw std::exception();
+	if (d->size() != 1) throw std::exception();
+	if (RRArrayToString(rr_cast<RRArray<char> >(d->front())) != "Hello Server!") throw std::exception();
 }
 
 RR_SHARED_PTR<RobotRaconteur::RRValue> RobotRaconteurTest_testroot::get_var_multidimarray()

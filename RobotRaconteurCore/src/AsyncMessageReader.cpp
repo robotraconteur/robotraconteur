@@ -764,7 +764,7 @@ namespace RobotRaconteur
 			{
 				MessageElement* el = data<MessageElement>();
 				RR_SHARED_PTR<RRBaseArray> a = AllocateRRArrayByType(el->ElementType, el->DataCount);
-				size_t n = a->ElementSize() * a->Length();
+				size_t n = a->ElementSize() * a->size();
 				size_t p = read_some_bytes(a->void_ptr(), n);
 				size_t l = el->ElementSize;
 				el->SetData(a);
@@ -1807,7 +1807,7 @@ namespace RobotRaconteur
 			{
 				MessageElement* el = data<MessageElement>();
 				RR_SHARED_PTR<RRBaseArray> a = AllocateRRArrayByType(el->ElementType, el->DataCount);
-				size_t n = a->ElementSize() * a->Length();
+				size_t n = a->ElementSize() * a->size();
 				size_t p = read_some_bytes(a->void_ptr(), n);
 				size_t l = el->ElementSize;
 				el->SetData(a);

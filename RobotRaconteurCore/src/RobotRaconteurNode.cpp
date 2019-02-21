@@ -1153,7 +1153,7 @@ RR_SHARED_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_SHARED_PTR<Message>
 
 							servicedef = GetService(name)->GetRootObjectServiceDef(v)->DefString();
 							RR_SHARED_PTR<RRMap<std::string,RRValue> > attr=RR_MAKE_SHARED<RRMap<std::string,RRValue> >();
-							attr->map=GetService(name)->GetAttributes();
+							attr->GetStorageContainer()=GetService(name)->GetAttributes();
 							eret->AddElement("attributes", PackMapType<std::string, RRValue>(attr));
 						}
 						eret->AddElement("servicedef", stringToRRArray(servicedef));
@@ -1262,7 +1262,7 @@ RR_SHARED_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_SHARED_PTR<Message>
 						s = GetService(s1.at(0));
 
 						RR_SHARED_PTR<RRMap<std::string, RRValue> > attr=RR_MAKE_SHARED<RRMap<std::string, RRValue> >();
-						attr->map= (s->GetAttributes());
+						attr->GetStorageContainer()= (s->GetAttributes());
 						eret->AddElement("return", PackMapType<std::string, RRValue>(attr));
 					}
 					catch (std::exception&)
@@ -1441,7 +1441,7 @@ RR_SHARED_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_SHARED_PTR<Message>
 
 						std::string username = username_el->CastDataToString();
 
-						se->AuthenticateUser(username, credentials->map);
+						se->AuthenticateUser(username, credentials->GetStorageContainer());
 					}					
 				}
 				catch (std::exception&)

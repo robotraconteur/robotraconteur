@@ -194,7 +194,7 @@ namespace RobotRaconteur
 				std::vector<RR_SHARED_PTR<MessageElement> > mret;
 
 
-				for (typename std::map<int32_t, RR_SHARED_PTR<T> >::iterator e = set2->map.begin(); e != set2->map.end(); e++)
+				for (typename std::map<int32_t, RR_SHARED_PTR<T> >::iterator e = set2->begin(); e != set2->end(); e++)
 				{
 					int32_t key = e->first;
 
@@ -234,7 +234,7 @@ namespace RobotRaconteur
 					}
 
 					RR_SHARED_PTR<T> dat = node->UnpackAnyType<RR_SHARED_PTR<T> >(m);
-					ret->map.insert(std::make_pair(key, dat));
+					ret->insert(std::make_pair(key, dat));
 				}
 
 				return ret;
@@ -254,7 +254,7 @@ namespace RobotRaconteur
 
 				std::vector<RR_SHARED_PTR<MessageElement> > mret;
 
-				for (typename std::map<std::string, RR_SHARED_PTR<T> >::iterator e = set2->map.begin(); e != set2->map.end(); e++)
+				for (typename std::map<std::string, RR_SHARED_PTR<T> >::iterator e = set2->begin(); e != set2->end(); e++)
 				{
 					RR_SHARED_PTR<MessageElementData> dat = node->PackAnyType<RR_SHARED_PTR<T> >(e->second);
 
@@ -284,7 +284,7 @@ namespace RobotRaconteur
 					std::string& key = m->ElementName;
 					
 					RR_SHARED_PTR<T> dat = node->UnpackAnyType<RR_SHARED_PTR<T> >(m);
-					ret->map.insert(std::make_pair(key, dat));
+					ret->insert(std::make_pair(key, dat));
 				}
 
 				return ret;
@@ -316,17 +316,19 @@ namespace RobotRaconteur
 			std::vector<RR_SHARED_PTR<MessageElement> > mret;
 
 			
-			for (int32_t i=0; i < (int32_t)set2->list.size(); i++)
+			typename RRList<T>::iterator set2_iter = set2->begin();
+			for (int32_t i=0; i < (int32_t)set2->size(); i++)
 			{
 				int32_t key = i;
 
-				RR_SHARED_PTR<MessageElementData> dat=PackAnyType<RR_SHARED_PTR<T> >(set2->list.at(i));
+				RR_SHARED_PTR<MessageElementData> dat=PackAnyType<RR_SHARED_PTR<T> >(*set2_iter);
 
 				RR_SHARED_PTR<MessageElement> m=RR_MAKE_SHARED<MessageElement>("",dat);
 				m->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
 				m->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
 				m->ElementNumber = key;
 				mret.push_back(m);
+				++set2_iter;
 			}
 
 			return RR_MAKE_SHARED<MessageElementList >(mret);		
@@ -359,7 +361,7 @@ namespace RobotRaconteur
 				if (key!=i) throw DataTypeException("Invalid list format");
 
 				RR_SHARED_PTR<T> dat=UnpackAnyType<RR_SHARED_PTR<T> >(m);
-				ret->list.push_back(dat);
+				ret->push_back(dat);
 			}
 
 			return ret;
