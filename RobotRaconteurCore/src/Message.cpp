@@ -2661,6 +2661,76 @@ namespace RobotRaconteur
 			}
 			break;
 		}
+		case DataTypes_pod_t:
+		{
+			RR_SHARED_PTR<MessageElementPod> ddat = mm->CastData<MessageElementPod>();
+			if (ddat)
+			{
+				std::vector<RR_SHARED_PTR<MessageElement> > v;
+				BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& ee, ddat->Elements)
+					v.push_back(ShallowCopyMessageElement(ee));
+
+				RR_SHARED_PTR<MessageElementPod> mdat2 = RR_MAKE_SHARED<MessageElementPod>(v);
+				mm2->SetData(mdat2);
+			}
+			break;
+		}
+		case DataTypes_pod_array_t:
+		{
+			RR_SHARED_PTR<MessageElementPodArray> ddat = mm->CastData<MessageElementPodArray>();
+			if (ddat)
+			{
+				std::vector<RR_SHARED_PTR<MessageElement> > v;
+				BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& ee, ddat->Elements)
+					v.push_back(ShallowCopyMessageElement(ee));
+
+				RR_SHARED_PTR<MessageElementPodArray> mdat2 = RR_MAKE_SHARED<MessageElementPodArray>(ddat->Type, v);
+				mm2->SetData(mdat2);
+			}
+			break;
+		}
+		case DataTypes_pod_multidimarray_t:
+		{
+			RR_SHARED_PTR<MessageElementPodMultiDimArray> ddat = mm->CastData<MessageElementPodMultiDimArray>();
+			if (ddat)
+			{
+				std::vector<RR_SHARED_PTR<MessageElement> > v;
+				BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& ee, ddat->Elements)
+					v.push_back(ShallowCopyMessageElement(ee));
+
+				RR_SHARED_PTR<MessageElementPodMultiDimArray> mdat2 = RR_MAKE_SHARED<MessageElementPodMultiDimArray>(ddat->Type, v);
+				mm2->SetData(mdat2);
+			}
+			break;
+		}
+		case DataTypes_namedarray_array_t:
+		{
+			RR_SHARED_PTR<MessageElementNamedArray> ddat = mm->CastData<MessageElementNamedArray>();
+			if (ddat)
+			{
+				std::vector<RR_SHARED_PTR<MessageElement> > v;
+				BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& ee, ddat->Elements)
+					v.push_back(ShallowCopyMessageElement(ee));
+
+				RR_SHARED_PTR<MessageElementNamedArray> mdat2 = RR_MAKE_SHARED<MessageElementNamedArray>(ddat->Type, v);
+				mm2->SetData(mdat2);
+			}
+			break;
+		}
+		case DataTypes_namedarray_multidimarray_t:
+		{
+			RR_SHARED_PTR<MessageElementNamedMultiDimArray> ddat = mm->CastData<MessageElementNamedMultiDimArray>();
+			if (ddat)
+			{
+				std::vector<RR_SHARED_PTR<MessageElement> > v;
+				BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& ee, ddat->Elements)
+					v.push_back(ShallowCopyMessageElement(ee));
+
+				RR_SHARED_PTR<MessageElementNamedMultiDimArray> mdat2 = RR_MAKE_SHARED<MessageElementNamedMultiDimArray>(ddat->Type, v);
+				mm2->SetData(mdat2);
+			}
+			break;
+		}
 		default:
 			mm2->SetData(mm->GetData());
 			break;
