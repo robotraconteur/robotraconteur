@@ -290,7 +290,7 @@ namespace RobotRaconteur
 	
 	class ROBOTRACONTEUR_CORE_API ArrayMemoryClientBase : private boost::noncopyable
 	{
-	private:
+	protected:
 		std::string m_MemberName;
 		RR_WEAK_PTR<ServiceStub> stub;
 		RR_WEAK_PTR<RobotRaconteurNode> node;
@@ -391,7 +391,7 @@ namespace RobotRaconteur
 	
 	class ROBOTRACONTEUR_CORE_API MultiDimArrayMemoryClientBase : private boost::noncopyable
 	{
-	private:
+	protected:
 		std::string m_MemberName;
 		RR_WEAK_PTR<ServiceStub> stub;
 		RR_WEAK_PTR<RobotRaconteurNode> node;
