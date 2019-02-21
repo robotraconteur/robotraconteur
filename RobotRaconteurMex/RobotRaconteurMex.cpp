@@ -180,7 +180,7 @@ boost::shared_ptr<RRMap<std::string, RRValue> > mxArrayToRRMap(const mxArray* in
 
 	BOOST_FOREACH(boost::shared_ptr<MessageElement>& e, elems)
 	{
-		o->map.insert(std::make_pair((e)->ElementName, RobotRaconteurNode::s()->UnpackVarType(e)));
+		o->insert(std::make_pair((e)->ElementName, RobotRaconteurNode::s()->UnpackVarType(e)));
 	}
 
 	return o;
@@ -1427,7 +1427,7 @@ mxArray* GetMxArrayFromRRArray(boost::shared_ptr<RRBaseArray> array_, std::vecto
 
 	if (dims.size()==0)
 	{
-		dims.push_back(array_->Length());
+		dims.push_back(array_->size());
 	}
 	else
 	{
@@ -1440,7 +1440,7 @@ mxArray* GetMxArrayFromRRArray(boost::shared_ptr<RRBaseArray> array_, std::vecto
 		count*=dims[i];
 	}
 
-	if (count != array_->Length()) throw InvalidArgumentException("Dimension element count mismatch");
+	if (count != array_->size()) throw InvalidArgumentException("Dimension element count mismatch");
 
 	mxClassID mxtypeid;
 	switch (array_->GetTypeID())
@@ -1518,7 +1518,7 @@ mxArray* GetMxArrayFromRRArray(boost::shared_ptr<RRBaseArray> array_, std::vecto
 
 	mxArray* pa=mxCreateNumericArray(ndims,&dims[0],mxtypeid, mxREAL);
 	void* mxreal=mxGetData(pa);
-	memcpy(mxreal,array_->void_ptr(), array_->Length()* array_->ElementSize());	
+	memcpy(mxreal,array_->void_ptr(), array_->size()* array_->ElementSize());	
 	return pa;	
 }
 
@@ -1824,12 +1824,12 @@ boost::shared_ptr<MessageElement> PackMxArrayToMessageElement(const mxArray* pm,
 			{
 				if (tdef->ArrayVarLength)
 				{
-					if (o1->Length() > tdef->ArrayLength.at(0)) throw DataTypeException("Array " + tdef->Name+ " exceeds maximum length");
+					if (o1->size() > tdef->ArrayLength.at(0)) throw DataTypeException("Array " + tdef->Name+ " exceeds maximum length");
 					
 				}
 				else
 				{
-					if (o1->Length() != tdef->ArrayLength.at(0)) throw DataTypeException("Array " + tdef->Name + " length match error");
+					if (o1->size() != tdef->ArrayLength.at(0)) throw DataTypeException("Array " + tdef->Name + " length match error");
 				}
 			}
 		return boost::make_shared<MessageElement>(tdef->Name,o1);
@@ -2032,7 +2032,7 @@ boost::shared_ptr<MessageElement> PackMxArrayToMessageElement(const mxArray* pm,
 				
 				std::vector<RR_SHARED_PTR<MessageElement> > o3;				
 				RR_SHARED_PTR<RRArray<uint32_t> > rr_dims = AllocateRRArray<uint32_t>(dims.size() - 1);
-				for (size_t i = 0; i < rr_dims->Length(); i++)
+				for (size_t i = 0; i < rr_dims->size(); i++)
 				{
 					(*rr_dims)[i] = dims.at(i + 1);
 				}				
@@ -2509,18 +2509,18 @@ mxArray* UnpackMessageElementToMxArray(boost::shared_ptr<MessageElement> m, boos
 				if (tdef->ArrayVarLength)
 				{
 					//if (data)
-					if (data->Length() > tdef->ArrayLength.at(0)) throw DataTypeException("Array " + tdef->Name+ " exceeds maximum length");
+					if (data->size() > tdef->ArrayLength.at(0)) throw DataTypeException("Array " + tdef->Name+ " exceeds maximum length");
 					
 				}
 				else
 				{
 					//if (!data) throw DataTypeException("Array " + tdef->Name + " must not be null");
-					if (data->Length() != tdef->ArrayLength.at(0)) throw DataTypeException("Array " + tdef->Name + " length match error");
+					if (data->size() != tdef->ArrayLength.at(0)) throw DataTypeException("Array " + tdef->Name + " length match error");
 				}
 			}
 			if (tdef->ArrayType == DataTypes_ArrayTypes_none)
 			{
-				if (data->Length() != 1) throw DataTypeException("Expected scalar for " + tdef->Name);
+				if (data->size() != 1) throw DataTypeException("Expected scalar for " + tdef->Name);
 			}
 			return GetMxArrayFromRRArray(data);
 		}
@@ -2546,7 +2546,7 @@ mxArray* UnpackMessageElementToMxArray(boost::shared_ptr<MessageElement> m, boos
 	if (tdef->Type== DataTypes_string_t)
 	{
 		RR_SHARED_PTR<RRArray<char> > m_str = m->CastData<RRArray<char> >();
-		std::basic_string<uint16_t> data_utf16 = boost::locale::conv::utf_to_utf<uint16_t>(m_str->ptr(), m_str->ptr()+m_str->size());
+		std::basic_string<uint16_t> data_utf16 = boost::locale::conv::utf_to_utf<uint16_t>(m_str->data(), m_str->data()+m_str->size());
 
 		mwSize data_size[2];
 		data_size[0] = 1;
@@ -2669,8 +2669,8 @@ mxArray* UnpackMessageElementToMxArray(boost::shared_ptr<MessageElement> m, boos
 				namedarray_array = MessageElement::FindElement(mm->Elements, "array")->CastData<RRBaseArray>();
 				if (!namedarray_array) throw DataTypeException("Invalid namedarray");
 				if (namedarray_array->GetTypeID() != namedarray_info.get<0>()) throw DataTypeException("Invalid namedarray type");
-				if (namedarray_array->Length() % namedarray_info.get<1>() != 0) throw DataTypeException("Invalid namedarray length");
-				size_t array_len = namedarray_array->Length() / namedarray_info.get<1>();
+				if (namedarray_array->size() % namedarray_info.get<1>() != 0) throw DataTypeException("Invalid namedarray length");
+				size_t array_len = namedarray_array->size() / namedarray_info.get<1>();
 				if ((tdef->ArrayType != DataTypes_ArrayTypes_none) && tdef->ArrayLength.at(0) != 0)
 				{
 					if (tdef->ArrayVarLength)
@@ -2712,7 +2712,7 @@ mxArray* UnpackMessageElementToMxArray(boost::shared_ptr<MessageElement> m, boos
 				namedarray_array = MessageElement::FindElement(mm->Elements, "array")->CastData<RRBaseArray>();
 				if (!namedarray_array) throw DataTypeException("Invalid namedarray");
 				if (namedarray_array->GetTypeID() != namedarray_info.get<0>()) throw DataTypeException("Invalid namedarray type");
-				if (namedarray_array->Length() != expected_n_elems) throw DataTypeException("namedarray " + tdef->Name + " dimension match error");
+				if (namedarray_array->size() != expected_n_elems) throw DataTypeException("namedarray " + tdef->Name + " dimension match error");
 
 				boost::range::copy(dims1, std::back_inserter(dims));
 				return GetMxArrayFromRRArray(namedarray_array, dims);
@@ -5916,12 +5916,12 @@ void MexMultiDimArrayMemoryClientUtil::Write(RR_SHARED_PTR<MultiDimArrayMemoryBa
 	{
 		if (i<ndims)
 		{
-		arrdims->ptr()[i]=(uint32_t)dims[i];
+		arrdims->data()[i]=(uint32_t)dims[i];
 		}
 		else
 		{
 			if (count[i]!=1) throw InvalidArgumentException("Index out of range.");
-			arrdims->ptr()[i]=1;
+			arrdims->data()[i]=1;
 		}
 	}
 
@@ -6019,7 +6019,7 @@ mxArray* ServiceInfo2ToMxArray(const ServiceInfo2& info)
 	mxSetField(serviceinfo, 0, "ConnectionURL", ConnectionURL);
 
 	boost::shared_ptr<RRMap<std::string, RRValue> > Attributes = boost::make_shared<RRMap<std::string, RRValue> >();
-	Attributes->map = info.Attributes;
+	Attributes->GetStorageContainer() = info.Attributes;
 	boost::shared_ptr<MessageElement> mattributes = boost::make_shared<MessageElement>("value", RobotRaconteurNode::s()->PackMapType<std::string, RRValue>(Attributes));
 
 	boost::shared_ptr<TypeDefinition> tdef = boost::make_shared<TypeDefinition>();
@@ -8156,7 +8156,7 @@ void MexNamedArrayMemoryClient::UnpackReadResult(RR_SHARED_PTR<MessageElementDat
 	if (res2->Type != type_string) throw DataTypeException("Data type mismatch");
 	RR_SHARED_PTR<RRBaseArray> res3 = MessageElement::FindElement(res2->Elements, "array")->CastData<RRBaseArray>();
 	if (!res3) throw DataTypeException("Data type mismatch");
-	if (res3->Length() != count * array_elementcount) throw InvalidOperationException("Invalid memory read return");
+	if (res3->size() != count * array_elementcount) throw InvalidOperationException("Invalid memory read return");
 	if (res3->GetTypeID() != array_elementtype) throw InvalidOperationException("Invalid memory read return");
 
 	RR_SHARED_PTR<RRBaseArray>* buffer2 = static_cast<RR_SHARED_PTR<RRBaseArray>*>(buffer);
