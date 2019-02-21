@@ -528,9 +528,9 @@ namespace RobotRaconteur
 		iterator insert(const_iterator p, const value_type& x) { return map.insert(x); }
 		template <class InputIterator>
 		void insert(InputIterator first, InputIterator last) { map.insert(first,last); }
-		void erase(iterator p) { return map.erase(p); }
+		void erase(iterator p) { map.erase(p); }
 		size_type erase(const key_type& x) { return map.erase(x); }
-		void erase(iterator first, iterator last) { return map.erase(first,last); }
+		void erase(iterator first, iterator last) { map.erase(first,last); }
 		void clear() { map.clear(); }
 		iterator find(const key_type& x) { return map.find(x); }
 		const_iterator find(const key_type& x) const { return map.find(x); }
