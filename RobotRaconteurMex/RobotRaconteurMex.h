@@ -38,8 +38,8 @@ enum RobotRaconteurMexObjectTypes
 DataTypes mxClassIDToRRDataType(mxClassID type);
 mxClassID rrDataTypeToMxClassID(DataTypes type);
 
-boost::shared_ptr<RRBaseArray> GetRRArrayFromMxArray(const mxArray* pa, bool imag=false);
-mxArray* GetMxArrayFromRRArray(boost::shared_ptr<RRBaseArray> real, std::vector<mwSize> dims=std::vector<mwSize>(), boost::shared_ptr<RRBaseArray> imag=boost::shared_ptr<RRBaseArray>());
+boost::shared_ptr<RRBaseArray> GetRRArrayFromMxArray(const mxArray* pa);
+mxArray* GetMxArrayFromRRArray(boost::shared_ptr<RRBaseArray> real, std::vector<mwSize> dims=std::vector<mwSize>());
 
 boost::shared_ptr<MessageElement> PackMxArrayToMessageElement(const mxArray* pm, boost::shared_ptr<TypeDefinition> tdef, RR_SHARED_PTR<ServiceStub> stub, bool allow_null=true);
 mxArray* UnpackMessageElementToMxArray(boost::shared_ptr<MessageElement> m, boost::shared_ptr<TypeDefinition> tdef, RR_SHARED_PTR<ServiceStub> stub);
@@ -59,10 +59,15 @@ public:
 	virtual RR_SHARED_PTR<RobotRaconteur::StructureStub> FindStructureStub(const std::string& s);
 	virtual RR_SHARED_PTR<RobotRaconteur::MessageElementStructure> PackStructure(RR_SHARED_PTR<RobotRaconteur::RRStructure> structin);
 	virtual RR_SHARED_PTR<RobotRaconteur::RRValue> UnpackStructure(RR_SHARED_PTR<RobotRaconteur::MessageElementStructure> mstructin);
-	virtual RR_SHARED_PTR<MessageElementCStructureArray> PackCStructureArray(RR_SHARED_PTR<RobotRaconteur::RRCStructureBaseArray> structure);
-	virtual RR_SHARED_PTR<RRCStructureBaseArray> UnpackCStructureArray(RR_SHARED_PTR<RobotRaconteur::MessageElementCStructureArray> structure);
-	virtual RR_SHARED_PTR<MessageElementCStructureMultiDimArray> PackCStructureMultiDimArray(RR_SHARED_PTR<RobotRaconteur::RRCStructureBaseMultiDimArray> structure);
-	virtual RR_SHARED_PTR<RRCStructureBaseMultiDimArray> UnpackCStructureMultiDimArray(RR_SHARED_PTR<RobotRaconteur::MessageElementCStructureMultiDimArray> structure);
+	virtual RR_SHARED_PTR<MessageElementPodArray> PackPodArray(RR_SHARED_PTR<RobotRaconteur::RRPodBaseArray> structure);
+	virtual RR_SHARED_PTR<RRPodBaseArray> UnpackPodArray(RR_SHARED_PTR<RobotRaconteur::MessageElementPodArray> structure);
+	virtual RR_SHARED_PTR<MessageElementPodMultiDimArray> PackPodMultiDimArray(RR_SHARED_PTR<RobotRaconteur::RRPodBaseMultiDimArray> structure);
+	virtual RR_SHARED_PTR<RRPodBaseMultiDimArray> UnpackPodMultiDimArray(RR_SHARED_PTR<RobotRaconteur::MessageElementPodMultiDimArray> structure);
+	virtual RR_SHARED_PTR<MessageElementNamedArray> PackNamedArray(RR_SHARED_PTR<RobotRaconteur::RRNamedBaseArray> structure);
+	virtual RR_SHARED_PTR<RRNamedBaseArray> UnpackNamedArray(RR_SHARED_PTR<RobotRaconteur::MessageElementNamedArray> structure);
+	virtual RR_SHARED_PTR<MessageElementNamedMultiDimArray> PackNamedMultiDimArray(RR_SHARED_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> structure);
+	virtual RR_SHARED_PTR<RRNamedBaseMultiDimArray> UnpackNamedMultiDimArray(RR_SHARED_PTR<RobotRaconteur::MessageElementNamedMultiDimArray> structure);
+	
 	virtual RR_SHARED_PTR<RobotRaconteur::ServiceStub> CreateStub(const std::string& objecttype, const std::string& path, RR_SHARED_PTR<RobotRaconteur::ClientContext> context);
 	virtual RR_SHARED_PTR<RobotRaconteur::ServiceSkel> CreateSkel(const std::string& objecttype, const std::string& path, RR_SHARED_PTR<RobotRaconteur::RRObject> obj, RR_SHARED_PTR<RobotRaconteur::ServerContext> context);
 
@@ -503,11 +508,11 @@ public:
 	virtual void EndAsyncClose(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>, RR_SHARED_PTR<mxArray> handler, RR_SHARED_PTR<mxArray> param);
 };
 
-class MexCStructureArrayMemoryClient : public virtual ArrayMemoryClientBase, public virtual ArrayMemoryBase
+class MexPodArrayMemoryClient : public virtual ArrayMemoryClientBase, public virtual ArrayMemoryBase
 {
 public:
 
-	MexCStructureArrayMemoryClient(const std::string& membername, RR_SHARED_PTR<ServiceStub> stub, size_t element_size, MemberDefinition_Direction direction, RR_SHARED_PTR<TypeDefinition> type);
+	MexPodArrayMemoryClient(const std::string& membername, RR_SHARED_PTR<ServiceStub> stub, size_t element_size, MemberDefinition_Direction direction, RR_SHARED_PTR<TypeDefinition> type);
 	virtual mxArray* Read(uint64_t memorypos, uint64_t bufferpos, uint64_t count);
 	virtual void Write(uint64_t memorypos, const mxArray* buffer, uint64_t bufferpos, uint64_t count);
 	virtual uint64_t Length();
@@ -520,22 +525,63 @@ protected:
 	RR_SHARED_PTR<TypeDefinition> type;
 };
 
-class MexCStructureMultiDimArrayMemoryClient : public virtual MultiDimArrayMemoryClientBase, public virtual MultiDimArrayMemoryBase
+class MexPodMultiDimArrayMemoryClient : public virtual MultiDimArrayMemoryClientBase, public virtual MultiDimArrayMemoryBase
 {
 public:
 
-	MexCStructureMultiDimArrayMemoryClient(const std::string& membername, RR_SHARED_PTR<ServiceStub> stub, size_t element_size, MemberDefinition_Direction direction, RR_SHARED_PTR<TypeDefinition> type);
+	MexPodMultiDimArrayMemoryClient(const std::string& membername, RR_SHARED_PTR<ServiceStub> stub, size_t element_size, MemberDefinition_Direction direction, RR_SHARED_PTR<TypeDefinition> type);
 	virtual mxArray* Read(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
 	virtual void Write(const std::vector<uint64_t>& memorypos, const mxArray* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
 	virtual std::vector<uint64_t> Dimensions();
-	virtual uint64_t DimCount();
-	virtual bool Complex();
+	virtual uint64_t DimCount();	
 	virtual DataTypes ElementTypeID();
 protected:
 	virtual void UnpackReadResult(RR_SHARED_PTR<MessageElementData> res, void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint64_t elemcount);
 	virtual RR_SHARED_PTR<MessageElementData> PackWriteRequest(void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint64_t elemcount);
 	
 	RR_SHARED_PTR<TypeDefinition> type;
+};
+
+class MexNamedArrayMemoryClient : public virtual ArrayMemoryClientBase, public virtual ArrayMemoryBase
+{
+public:
+
+	MexNamedArrayMemoryClient(const std::string& membername, RR_SHARED_PTR<ServiceStub> stub, boost::tuple<DataTypes,size_t> array_info, MemberDefinition_Direction direction, RR_SHARED_PTR<TypeDefinition> type);
+	virtual mxArray* Read(uint64_t memorypos, uint64_t bufferpos, uint64_t count);
+	virtual void Write(uint64_t memorypos, const mxArray* buffer, uint64_t bufferpos, uint64_t count);
+	virtual uint64_t Length();
+	virtual DataTypes ElementTypeID();
+protected:
+	virtual void UnpackReadResult(RR_SHARED_PTR<MessageElementData> res, void* buffer, uint64_t bufferpos, uint64_t count);
+	virtual RR_SHARED_PTR<MessageElementData> PackWriteRequest(void* buffer, uint64_t bufferpos, uint64_t count);
+	virtual size_t GetBufferLength(void* buffer);
+
+	RR_SHARED_PTR<TypeDefinition> type;
+
+	DataTypes array_elementtype;
+	size_t array_elementcount;
+	std::string type_string;
+};
+
+class MexNamedMultiDimArrayMemoryClient : public virtual MultiDimArrayMemoryClientBase, public virtual MultiDimArrayMemoryBase
+{
+public:
+
+	MexNamedMultiDimArrayMemoryClient(const std::string& membername, RR_SHARED_PTR<ServiceStub> stub, boost::tuple<DataTypes, size_t> array_info, MemberDefinition_Direction direction, RR_SHARED_PTR<TypeDefinition> type);
+	virtual mxArray* Read(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
+	virtual void Write(const std::vector<uint64_t>& memorypos, const mxArray* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
+	virtual std::vector<uint64_t> Dimensions();
+	virtual uint64_t DimCount();
+	virtual DataTypes ElementTypeID();
+protected:
+	virtual void UnpackReadResult(RR_SHARED_PTR<MessageElementData> res, void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint64_t elemcount);
+	virtual RR_SHARED_PTR<MessageElementData> PackWriteRequest(void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint64_t elemcount);
+
+	RR_SHARED_PTR<TypeDefinition> type;
+
+	DataTypes array_elementtype;
+	size_t array_elementcount;
+	std::string type_string;
 };
 
 boost::recursive_mutex servicesubscriptions_lock;

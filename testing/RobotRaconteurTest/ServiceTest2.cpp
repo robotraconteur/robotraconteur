@@ -721,8 +721,12 @@ namespace RobotRaconteurTest
 		ServiceTest2_verify_transform_array(v->t2, 4, gen.get_uint32());
 		ServiceTest2_verify_transform_multidimarray(v->t3, 2, 4, gen.get_uint32());
 
-		ServiceTest2_verify_transform_array(rr_cast<RRNamedArray< com::robotraconteur::testing::TestService3::transform> >(v->t4), 10, gen.get_uint32());
+		/*ServiceTest2_verify_transform_array(rr_cast<RRNamedArray< com::robotraconteur::testing::TestService3::transform> >(v->t4), 10, gen.get_uint32());
 		ServiceTest2_verify_transform_multidimarray(rr_cast<RRNamedMultiDimArray< com::robotraconteur::testing::TestService3::transform> >(v->t5), 6, 5, gen.get_uint32());
+		*/
+
+		gen.get_uint32();
+		gen.get_uint32();
 
 		if (!v->t6) throw std::runtime_error("");
 		if (v->t6->list.size() != 1) throw std::runtime_error("");
@@ -739,7 +743,7 @@ namespace RobotRaconteurTest
 		ServiceTest2_verify_transform_multidimarray(v->t8->list[0], 2, 4, gen.get_uint32());
 		ServiceTest2_verify_transform_multidimarray(v->t8->list[1], 2, 4, gen.get_uint32());
 
-		if (!v->t9) throw std::runtime_error("");
+		/*if (!v->t9) throw std::runtime_error("");
 		RR_SHARED_PTR<RRList<RRValue> > t9 = rr_cast<RRList<RRValue> >(v->t9);
 		if (t9->list.size() != 1) throw std::runtime_error("");
 		ServiceTest2_verify_transform((*rr_cast<RRNamedArray<com::robotraconteur::testing::TestService3::transform> >(t9->list[0]))[0], gen.get_uint32());
@@ -754,7 +758,7 @@ namespace RobotRaconteurTest
 		RR_SHARED_PTR<RRList<RRValue> > t11 = rr_cast<RRList<RRValue> >(v->t11);
 		if (t11->list.size() != 2) throw std::runtime_error("");
 		ServiceTest2_verify_transform_multidimarray(rr_cast<RRNamedMultiDimArray<com::robotraconteur::testing::TestService3::transform> >(t11->list[0]), 7, 2, gen.get_uint32());
-		ServiceTest2_verify_transform_multidimarray(rr_cast<RRNamedMultiDimArray<com::robotraconteur::testing::TestService3::transform> >(t11->list[1]), 5, 1, gen.get_uint32());
+		ServiceTest2_verify_transform_multidimarray(rr_cast<RRNamedMultiDimArray<com::robotraconteur::testing::TestService3::transform> >(t11->list[1]), 5, 1, gen.get_uint32());*/
 	}
 
 	RR_SHARED_PTR<RRPodArray<com::robotraconteur::testing::TestService3::testpod1> > ServiceTest2_fill_testpod1_array(size_t s, uint32_t seed)
