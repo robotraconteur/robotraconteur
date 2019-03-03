@@ -73,12 +73,26 @@ namespace RobotRaconteur
 		state_stack.back().state = s;
 	}
 
-	void AsyncMessageWriterImpl::push_state(AsyncMessageWriterImpl::state_type new_state, AsyncMessageWriterImpl::state_type pop_state, size_t relative_limit, RR_SHARED_PTR<void> data, size_t param1, size_t param2)
+	void AsyncMessageWriterImpl::push_state(AsyncMessageWriterImpl::state_type new_state, AsyncMessageWriterImpl::state_type pop_state, size_t relative_limit, RR_INTRUSIVE_PTR<RRValue> data, size_t param1, size_t param2)
 	{
 		state_data d;
 		d.state = new_state;
 		d.pop_state = pop_state;
 		d.data = data;
+		d.param1 = param1;
+		d.param2 = param2;
+		d.limit = message_pos + relative_limit;
+		if (d.limit > message_len()) throw ProtocolException("Invalid message limit");
+
+		state_stack.push_back(d);
+	}
+
+	void AsyncMessageWriterImpl::push_state(AsyncMessageWriterImpl::state_type new_state, AsyncMessageWriterImpl::state_type pop_state, size_t relative_limit, void* ptrdata, size_t param1, size_t param2)
+	{
+		state_data d;
+		d.state = new_state;
+		d.pop_state = pop_state;
+		d.ptrdata = ptrdata;
 		d.param1 = param1;
 		d.param2 = param2;
 		d.limit = message_pos + relative_limit;
@@ -273,7 +287,7 @@ namespace RobotRaconteur
 		size_t n = write_some_bytes(str.c_str(), l);
 		if (n ==l) return true;
 
-		push_state(Header_writestring, next_state, l - n, RR_SHARED_PTR<std::string>(&str, &null_str_deleter), n);
+		push_state(Header_writestring, next_state, l - n, &str, n);
 		return false;
 	}
 	bool AsyncMessageWriterImpl::write_string(std::string& str)
@@ -292,7 +306,7 @@ namespace RobotRaconteur
 		size_t n = write_some_bytes(str.c_str(), l);
 		if (n == l) return true;
 
-		push_state(Header_writestring, next_state, l - n, RR_SHARED_PTR<std::string>(&str, &null_str_deleter), n);
+		push_state(Header_writestring, next_state, l - n, &str, n);
 		return false;
 	}
 	bool AsyncMessageWriterImpl::write_string3(std::string& str)
@@ -309,7 +323,7 @@ namespace RobotRaconteur
 		quota_pos = 0;
 		state_stack.clear();
 	}
-	void AsyncMessageWriterImpl::BeginWrite(RR_SHARED_PTR<Message> m, uint16_t version)
+	void AsyncMessageWriterImpl::BeginWrite(RR_INTRUSIVE_PTR<Message> m, uint16_t version)
 	{
 		if (!state_stack.empty()) throw InvalidOperationException("AsyncMessageWriter not in reset state");
 		if (version == 2)
@@ -395,7 +409,7 @@ namespace RobotRaconteur
 			case MessageHeader_init:
 			{
 				Message* m = data<Message>();
-				RR_SHARED_PTR<MessageHeader> h = m->header;
+				RR_INTRUSIVE_PTR<MessageHeader> h = m->header;
 				if (!h) throw InvalidOperationException("MessageHeader null in AsyncMessageWriter");
 
 				push_state(MessageHeader_magic, Message_writeentries, h->HeaderSize, h);
@@ -486,7 +500,7 @@ namespace RobotRaconteur
 			}
 			case MessageEntry_init:
 			{
-				RR_SHARED_PTR<MessageEntry> ee = data<Message>()->entries.at(param1());
+				RR_INTRUSIVE_PTR<MessageEntry> ee = data<Message>()->entries.at(param1());
 				param1()++;
 				push_state(MessageEntry_entrysize, Message_writeentries, ee->EntrySize, ee);
 				continue;
@@ -561,7 +575,7 @@ namespace RobotRaconteur
 			case MessageElement_init:
 			{
 				MessageEntry* ee = data<MessageEntry>();
-				RR_SHARED_PTR<MessageElement> el = ee->elements.at(param1());
+				RR_INTRUSIVE_PTR<MessageElement> el = ee->elements.at(param1());
 				param1()++;
 				push_state(MessageElement_elementsize, MessageEntry_writeelements, el->ElementSize, el);
 			}
@@ -689,7 +703,7 @@ namespace RobotRaconteur
 			case MessageElement_writearray1:
 			{
 				MessageElement* el = data<MessageElement>();
-				RR_SHARED_PTR<RRBaseArray> a = el->CastData<RRBaseArray>();
+				RR_INTRUSIVE_PTR<RRBaseArray> a = el->CastData<RRBaseArray>();
 				size_t n = a->ElementSize() * a->size();
 				if (n > distance_from_limit()) throw ProtocolException("Invalid write array length");
 				if (n <= 255)
@@ -746,7 +760,7 @@ namespace RobotRaconteur
 			case MessageElement_writestruct1:
 			{
 				MessageElement* el = data<MessageElement>();
-				RR_SHARED_PTR<MessageElementStructure> s = el->CastData<MessageElementStructure>();
+				RR_INTRUSIVE_PTR<MessageElementStructure> s = el->CastData<MessageElementStructure>();
 				push_state(MessageElement_writestruct2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
 			}
 			case MessageElement_writestruct2:
@@ -757,7 +771,7 @@ namespace RobotRaconteur
 					DO_POP_STATE();
 				}
 
-				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
+				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
 				param1()++;
 				push_state(MessageElement_elementsize, MessageElement_writestruct2, el->ElementSize, el);
 				continue;
@@ -767,7 +781,7 @@ namespace RobotRaconteur
 			case MessageElement_writevector1:
 			{
 				MessageElement* el = data<MessageElement>();
-				RR_SHARED_PTR<MessageElementMap<int32_t> > s = el->CastData<MessageElementMap<int32_t> >();
+				RR_INTRUSIVE_PTR<MessageElementMap<int32_t> > s = el->CastData<MessageElementMap<int32_t> >();
 				push_state(MessageElement_writevector2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
 			}
 			case MessageElement_writevector2:
@@ -778,7 +792,7 @@ namespace RobotRaconteur
 					DO_POP_STATE();
 				}
 
-				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
+				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
 				param1()++;
 				push_state(MessageElement_elementsize, MessageElement_writevector2, el->ElementSize, el);
 				continue;
@@ -787,7 +801,7 @@ namespace RobotRaconteur
 			case MessageElement_writedictionary1:
 			{
 				MessageElement* el = data<MessageElement>();
-				RR_SHARED_PTR<MessageElementMap<std::string> > s = el->CastData<MessageElementMap<std::string> >();
+				RR_INTRUSIVE_PTR<MessageElementMap<std::string> > s = el->CastData<MessageElementMap<std::string> >();
 				push_state(MessageElement_writedictionary2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
 			}
 			case MessageElement_writedictionary2:
@@ -798,7 +812,7 @@ namespace RobotRaconteur
 					DO_POP_STATE();
 				}
 
-				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
+				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
 				param1()++;
 				push_state(MessageElement_elementsize, MessageElement_writedictionary2, el->ElementSize, el);
 				continue;
@@ -807,7 +821,7 @@ namespace RobotRaconteur
 			case MessageElement_writemultiarray1:
 			{
 				MessageElement* el = data<MessageElement>();
-				RR_SHARED_PTR<MessageElementMultiDimArray> s = el->CastData<MessageElementMultiDimArray>();
+				RR_INTRUSIVE_PTR<MessageElementMultiDimArray> s = el->CastData<MessageElementMultiDimArray>();
 				push_state(MessageElement_writemultiarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
 			}
 			case MessageElement_writemultiarray2:
@@ -818,7 +832,7 @@ namespace RobotRaconteur
 					DO_POP_STATE();
 				}
 
-				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
+				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
 				param1()++;
 				push_state(MessageElement_elementsize, MessageElement_writemultiarray2, el->ElementSize, el);
 				continue;
@@ -827,7 +841,7 @@ namespace RobotRaconteur
 			case MessageElement_writelist1:
 			{
 				MessageElement* el = data<MessageElement>();
-				RR_SHARED_PTR<MessageElementList> s = el->CastData<MessageElementList>();
+				RR_INTRUSIVE_PTR<MessageElementList> s = el->CastData<MessageElementList>();
 				push_state(MessageElement_writelist2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
 			}
 			case MessageElement_writelist2:
@@ -838,7 +852,7 @@ namespace RobotRaconteur
 					DO_POP_STATE();
 				}
 
-				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
+				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
 				param1()++;
 				push_state(MessageElement_elementsize, MessageElement_writelist2, el->ElementSize, el);
 				continue;
@@ -848,7 +862,7 @@ namespace RobotRaconteur
 			case MessageElement_writepod1:
 			{
 				MessageElement* el = data<MessageElement>();
-				RR_SHARED_PTR<MessageElementPod> s = el->CastData<MessageElementPod>();
+				RR_INTRUSIVE_PTR<MessageElementPod> s = el->CastData<MessageElementPod>();
 				push_state(MessageElement_writepod2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
 			}
 			case MessageElement_writepod2:
@@ -859,7 +873,7 @@ namespace RobotRaconteur
 					DO_POP_STATE();
 				}
 
-				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
+				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
 				param1()++;
 				push_state(MessageElement_elementsize, MessageElement_writepod2, el->ElementSize, el);
 				continue;
@@ -869,7 +883,7 @@ namespace RobotRaconteur
 			case MessageElement_writepodarray1:
 			{
 				MessageElement* el = data<MessageElement>();
-				RR_SHARED_PTR<MessageElementPodArray> s = el->CastData<MessageElementPodArray>();
+				RR_INTRUSIVE_PTR<MessageElementPodArray> s = el->CastData<MessageElementPodArray>();
 				push_state(MessageElement_writepodarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
 			}
 			case MessageElement_writepodarray2:
@@ -880,7 +894,7 @@ namespace RobotRaconteur
 					DO_POP_STATE();
 				}
 
-				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
+				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
 				param1()++;
 				push_state(MessageElement_elementsize, MessageElement_writepodarray2, el->ElementSize, el);
 				continue;
@@ -890,7 +904,7 @@ namespace RobotRaconteur
 			case MessageElement_writepodmultidimarray1:
 			{
 				MessageElement* el = data<MessageElement>();
-				RR_SHARED_PTR<MessageElementPodMultiDimArray> s = el->CastData<MessageElementPodMultiDimArray>();
+				RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> s = el->CastData<MessageElementPodMultiDimArray>();
 				push_state(MessageElement_writepodmultidimarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
 			}
 			case MessageElement_writepodmultidimarray2:
@@ -901,7 +915,7 @@ namespace RobotRaconteur
 					DO_POP_STATE();
 				}
 
-				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
+				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
 				param1()++;
 				push_state(MessageElement_elementsize, MessageElement_writepodmultidimarray2, el->ElementSize, el);
 				continue;
@@ -911,7 +925,7 @@ namespace RobotRaconteur
 			case MessageElement_writenamedarrayarray1:
 			{
 				MessageElement* el = data<MessageElement>();
-				RR_SHARED_PTR<MessageElementNamedArray> s = el->CastData<MessageElementNamedArray>();
+				RR_INTRUSIVE_PTR<MessageElementNamedArray> s = el->CastData<MessageElementNamedArray>();
 				push_state(MessageElement_writenamedarrayarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
 			}
 			case MessageElement_writenamedarrayarray2:
@@ -922,7 +936,7 @@ namespace RobotRaconteur
 					DO_POP_STATE();
 				}
 
-				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
+				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
 				param1()++;
 				push_state(MessageElement_elementsize, MessageElement_writenamedarrayarray2, el->ElementSize, el);
 				continue;
@@ -932,7 +946,7 @@ namespace RobotRaconteur
 			case MessageElement_writenamedarraymultidimarray1:
 			{
 				MessageElement* el = data<MessageElement>();
-				RR_SHARED_PTR<MessageElementNamedMultiDimArray> s = el->CastData<MessageElementNamedMultiDimArray>();
+				RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> s = el->CastData<MessageElementNamedMultiDimArray>();
 				push_state(MessageElement_writenamedarraymultidimarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
 			}
 			case MessageElement_writenamedarraymultidimarray2:
@@ -943,7 +957,7 @@ namespace RobotRaconteur
 					DO_POP_STATE();
 				}
 
-				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
+				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
 				param1()++;
 				push_state(MessageElement_elementsize, MessageElement_writenamedarraymultidimarray2, el->ElementSize, el);
 				continue;
@@ -953,7 +967,7 @@ namespace RobotRaconteur
 			case Header_writestring:
 			{
 				size_t& p1 = param1();
-				const std::string* s = data<const std::string>();
+				const std::string* s = ptrdata<const std::string>();
 				size_t n = write_some_bytes(&(*s).at(p1), s->size() - p1);
 				p1 += n;
 
@@ -1010,7 +1024,7 @@ namespace RobotRaconteur
 			case MessageHeader_init:
 			{
 				Message* m = data<Message>();
-				RR_SHARED_PTR<MessageHeader> h = m->header;
+				RR_INTRUSIVE_PTR<MessageHeader> h = m->header;
 				if (!h) throw InvalidOperationException("MessageHeader null in AsyncMessageWriter");
 
 				push_state(MessageHeader_magic, Message_writeentries, h->HeaderSize, h);
@@ -1268,7 +1282,7 @@ namespace RobotRaconteur
 			}
 			case MessageEntry_init:
 			{
-				RR_SHARED_PTR<MessageEntry> ee = data<Message>()->entries.at(param1());
+				RR_INTRUSIVE_PTR<MessageEntry> ee = data<Message>()->entries.at(param1());
 				param1()++;
 				push_state(MessageEntry_entrysize, Message_writeentries, ee->EntrySize, ee);
 				continue;
@@ -1408,7 +1422,7 @@ namespace RobotRaconteur
 			case MessageElement_init:
 			{
 				MessageEntry* ee = data<MessageEntry>();
-				RR_SHARED_PTR<MessageElement> el = ee->elements.at(param1());
+				RR_INTRUSIVE_PTR<MessageElement> el = ee->elements.at(param1());
 				param1()++;
 				push_state(MessageElement_elementsize, MessageEntry_writeelements, el->ElementSize, el);
 			}
@@ -1587,7 +1601,7 @@ namespace RobotRaconteur
 			case MessageElement_writearray1:
 			{				
 				MessageElement* el = data<MessageElement>();
-				RR_SHARED_PTR<RRBaseArray> a = el->CastData<RRBaseArray>();
+				RR_INTRUSIVE_PTR<RRBaseArray> a = el->CastData<RRBaseArray>();
 				size_t n = a->ElementSize() * a->size();
 				if (n > distance_from_limit()) throw ProtocolException("Invalid write array length");
 				if (n <= 255)
@@ -1642,7 +1656,7 @@ namespace RobotRaconteur
 			case Header_writestring:
 			{
 				size_t& p1 = param1();
-				const std::string* s = data<const std::string>();
+				const std::string* s = ptrdata<const std::string>();
 				size_t n = write_some_bytes(&(*s).at(p1), s->size() - p1);
 				p1 += n;
 
@@ -1660,7 +1674,7 @@ namespace RobotRaconteur
 			case MessageElement_writestruct1:
 			{
 				MessageElement* el = data<MessageElement>();
-				RR_SHARED_PTR<MessageElementStructure> s = el->CastData<MessageElementStructure>();
+				RR_INTRUSIVE_PTR<MessageElementStructure> s = el->CastData<MessageElementStructure>();
 				push_state(MessageElement_writestruct2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
 			}
 			case MessageElement_writestruct2:
@@ -1671,7 +1685,7 @@ namespace RobotRaconteur
 					DO_POP_STATE();
 				}
 
-				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
+				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
 				param1()++;
 				push_state(MessageElement_elementsize, MessageElement_writestruct2, el->ElementSize, el);
 				continue;				
@@ -1681,7 +1695,7 @@ namespace RobotRaconteur
 			case MessageElement_writevector1:
 			{
 				MessageElement* el = data<MessageElement>();
-				RR_SHARED_PTR<MessageElementMap<int32_t> > s = el->CastData<MessageElementMap<int32_t> >();
+				RR_INTRUSIVE_PTR<MessageElementMap<int32_t> > s = el->CastData<MessageElementMap<int32_t> >();
 				push_state(MessageElement_writevector2, MessageElement_finishwritedata, limit() - message_pos, s, 0);							
 			}
 			case MessageElement_writevector2:
@@ -1692,7 +1706,7 @@ namespace RobotRaconteur
 					DO_POP_STATE();
 				}
 
-				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
+				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
 				param1()++;
 				push_state(MessageElement_elementsize, MessageElement_writevector2, el->ElementSize, el);
 				continue;
@@ -1701,7 +1715,7 @@ namespace RobotRaconteur
 			case MessageElement_writedictionary1:
 			{
 				MessageElement* el = data<MessageElement>();
-				RR_SHARED_PTR<MessageElementMap<std::string> > s = el->CastData<MessageElementMap<std::string> >();
+				RR_INTRUSIVE_PTR<MessageElementMap<std::string> > s = el->CastData<MessageElementMap<std::string> >();
 				push_state(MessageElement_writedictionary2, MessageElement_finishwritedata, limit() - message_pos, s, 0);				
 			}
 			case MessageElement_writedictionary2:
@@ -1712,7 +1726,7 @@ namespace RobotRaconteur
 					DO_POP_STATE();
 				}
 
-				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
+				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
 				param1()++;
 				push_state(MessageElement_elementsize, MessageElement_writedictionary2, el->ElementSize, el);
 				continue;
@@ -1721,7 +1735,7 @@ namespace RobotRaconteur
 			case MessageElement_writemultiarray1:
 			{
 				MessageElement* el = data<MessageElement>();
-				RR_SHARED_PTR<MessageElementMultiDimArray> s = el->CastData<MessageElementMultiDimArray>();
+				RR_INTRUSIVE_PTR<MessageElementMultiDimArray> s = el->CastData<MessageElementMultiDimArray>();
 				push_state(MessageElement_writemultiarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
 			}
 			case MessageElement_writemultiarray2:
@@ -1732,7 +1746,7 @@ namespace RobotRaconteur
 					DO_POP_STATE();
 				}
 
-				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
+				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
 				param1()++;
 				push_state(MessageElement_elementsize, MessageElement_writemultiarray2, el->ElementSize, el);
 				continue;
@@ -1741,7 +1755,7 @@ namespace RobotRaconteur
 			case MessageElement_writelist1:
 			{
 				MessageElement* el = data<MessageElement>();
-				RR_SHARED_PTR<MessageElementList> s = el->CastData<MessageElementList>();
+				RR_INTRUSIVE_PTR<MessageElementList> s = el->CastData<MessageElementList>();
 				push_state(MessageElement_writelist2, MessageElement_finishwritedata, limit() - message_pos, s, 0);					
 			}
 			case MessageElement_writelist2:
@@ -1752,7 +1766,7 @@ namespace RobotRaconteur
 					DO_POP_STATE();
 				}
 
-				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
+				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
 				param1()++;
 				push_state(MessageElement_elementsize, MessageElement_writelist2, el->ElementSize, el);
 				continue;
@@ -1761,7 +1775,7 @@ namespace RobotRaconteur
 			case MessageElement_writepod1:
 			{
 				MessageElement* el = data<MessageElement>();
-				RR_SHARED_PTR<MessageElementPod> s = el->CastData<MessageElementPod>();
+				RR_INTRUSIVE_PTR<MessageElementPod> s = el->CastData<MessageElementPod>();
 				push_state(MessageElement_writepod2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
 			}
 			case MessageElement_writepod2:
@@ -1772,7 +1786,7 @@ namespace RobotRaconteur
 					DO_POP_STATE();
 				}
 
-				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
+				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
 				param1()++;
 				push_state(MessageElement_elementsize, MessageElement_writepod2, el->ElementSize, el);
 				continue;
@@ -1782,7 +1796,7 @@ namespace RobotRaconteur
 			case MessageElement_writepodarray1:
 			{
 				MessageElement* el = data<MessageElement>();
-				RR_SHARED_PTR<MessageElementPodArray> s = el->CastData<MessageElementPodArray>();
+				RR_INTRUSIVE_PTR<MessageElementPodArray> s = el->CastData<MessageElementPodArray>();
 				push_state(MessageElement_writepodarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
 			}
 			case MessageElement_writepodarray2:
@@ -1793,7 +1807,7 @@ namespace RobotRaconteur
 					DO_POP_STATE();
 				}
 
-				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
+				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
 				param1()++;
 				push_state(MessageElement_elementsize, MessageElement_writepodarray2, el->ElementSize, el);
 				continue;
@@ -1803,7 +1817,7 @@ namespace RobotRaconteur
 			case MessageElement_writepodmultidimarray1:
 			{
 				MessageElement* el = data<MessageElement>();
-				RR_SHARED_PTR<MessageElementPodMultiDimArray> s = el->CastData<MessageElementPodMultiDimArray>();
+				RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> s = el->CastData<MessageElementPodMultiDimArray>();
 				push_state(MessageElement_writepodmultidimarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
 			}
 			case MessageElement_writepodmultidimarray2:
@@ -1814,7 +1828,7 @@ namespace RobotRaconteur
 					DO_POP_STATE();
 				}
 
-				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
+				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
 				param1()++;
 				push_state(MessageElement_elementsize, MessageElement_writepodmultidimarray2, el->ElementSize, el);
 				continue;
@@ -1824,7 +1838,7 @@ namespace RobotRaconteur
 			case MessageElement_writenamedarrayarray1:
 			{
 				MessageElement* el = data<MessageElement>();
-				RR_SHARED_PTR<MessageElementNamedArray> s = el->CastData<MessageElementNamedArray>();
+				RR_INTRUSIVE_PTR<MessageElementNamedArray> s = el->CastData<MessageElementNamedArray>();
 				push_state(MessageElement_writenamedarrayarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
 			}
 			case MessageElement_writenamedarrayarray2:
@@ -1835,7 +1849,7 @@ namespace RobotRaconteur
 					DO_POP_STATE();
 				}
 
-				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
+				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
 				param1()++;
 				push_state(MessageElement_elementsize, MessageElement_writenamedarrayarray2, el->ElementSize, el);
 				continue;
@@ -1845,7 +1859,7 @@ namespace RobotRaconteur
 			case MessageElement_writenamedarraymultidimarray1:
 			{
 				MessageElement* el = data<MessageElement>();
-				RR_SHARED_PTR<MessageElementNamedMultiDimArray> s = el->CastData<MessageElementNamedMultiDimArray>();
+				RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> s = el->CastData<MessageElementNamedMultiDimArray>();
 				push_state(MessageElement_writenamedarraymultidimarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
 			}
 			case MessageElement_writenamedarraymultidimarray2:
@@ -1856,7 +1870,7 @@ namespace RobotRaconteur
 					DO_POP_STATE();
 				}
 
-				RR_SHARED_PTR<MessageElement> el = s->Elements.at(param1());
+				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
 				param1()++;
 				push_state(MessageElement_elementsize, MessageElement_writenamedarraymultidimarray2, el->ElementSize, el);
 				continue;

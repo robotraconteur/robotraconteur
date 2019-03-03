@@ -75,20 +75,20 @@ namespace RobotRaconteur
 	public:
 		RR_SHARED_PTR<RRObject> GetUncastObject() const;
 
-		virtual RR_SHARED_PTR<MessageEntry> CallGetProperty(RR_SHARED_PTR<MessageEntry> m) = 0;
+		virtual RR_INTRUSIVE_PTR<MessageEntry> CallGetProperty(RR_INTRUSIVE_PTR<MessageEntry> m) = 0;
 
 
-		virtual RR_SHARED_PTR<MessageEntry> CallSetProperty(RR_SHARED_PTR<MessageEntry> m) = 0;
+		virtual RR_INTRUSIVE_PTR<MessageEntry> CallSetProperty(RR_INTRUSIVE_PTR<MessageEntry> m) = 0;
 
-		virtual RR_SHARED_PTR<MessageEntry> CallFunction(RR_SHARED_PTR<MessageEntry> m) = 0;
+		virtual RR_INTRUSIVE_PTR<MessageEntry> CallFunction(RR_INTRUSIVE_PTR<MessageEntry> m) = 0;
 
 	protected:
 
-		static void EndAsyncCallGetProperty(RR_WEAK_PTR<ServiceSkel> skel, RR_SHARED_PTR<MessageElement> value, RR_SHARED_PTR<RobotRaconteurException> err, RR_SHARED_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> ep);
+		static void EndAsyncCallGetProperty(RR_WEAK_PTR<ServiceSkel> skel, RR_INTRUSIVE_PTR<MessageElement> value, RR_SHARED_PTR<RobotRaconteurException> err, RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> ep);
 
-		static void EndAsyncCallSetProperty(RR_WEAK_PTR<ServiceSkel> skel, RR_SHARED_PTR<RobotRaconteurException> err, RR_SHARED_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> ep);
+		static void EndAsyncCallSetProperty(RR_WEAK_PTR<ServiceSkel> skel, RR_SHARED_PTR<RobotRaconteurException> err, RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> ep);
 
-		static void EndAsyncCallFunction(RR_WEAK_PTR<ServiceSkel> skel, RR_SHARED_PTR<MessageElement> ret, RR_SHARED_PTR<RobotRaconteurException> err, RR_SHARED_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> ep);
+		static void EndAsyncCallFunction(RR_WEAK_PTR<ServiceSkel> skel, RR_INTRUSIVE_PTR<MessageElement> ret, RR_SHARED_PTR<RobotRaconteurException> err, RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> ep);
 
 	public:
 
@@ -106,28 +106,28 @@ namespace RobotRaconteur
 
 		void ObjRefChanged(const std::string &name);
 
-		void SendEvent(RR_SHARED_PTR<MessageEntry> m);
+		void SendEvent(RR_INTRUSIVE_PTR<MessageEntry> m);
 
 		void ReleaseObject();
 
 		virtual void ReleaseCastObject() = 0;
 
-		void AsyncSendPipeMessage(RR_SHARED_PTR<MessageEntry> m, uint32_t e, bool unreliable, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<RobotRaconteurException>) >) handler);
+		void AsyncSendPipeMessage(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e, bool unreliable, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<RobotRaconteurException>) >) handler);
 
-		void SendWireMessage(RR_SHARED_PTR<MessageEntry> m, uint32_t e);
+		void SendWireMessage(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e);
 
-		virtual void DispatchPipeMessage(RR_SHARED_PTR<MessageEntry> m, uint32_t e);
+		virtual void DispatchPipeMessage(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e);
 
-		virtual void DispatchWireMessage(RR_SHARED_PTR<MessageEntry> m, uint32_t e);
+		virtual void DispatchWireMessage(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e);
 
 		
-		virtual RR_SHARED_PTR<MessageEntry> CallPipeFunction(RR_SHARED_PTR<MessageEntry> m, uint32_t e);
+		virtual RR_INTRUSIVE_PTR<MessageEntry> CallPipeFunction(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e);
 
-		virtual RR_SHARED_PTR<MessageEntry> CallWireFunction(RR_SHARED_PTR<MessageEntry> m, uint32_t e);
+		virtual RR_INTRUSIVE_PTR<MessageEntry> CallWireFunction(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e);
 
 		virtual RR_SHARED_PTR<void> GetCallbackFunction(uint32_t endpoint, const std::string& membername);
 
-		virtual RR_SHARED_PTR<MessageEntry> CallMemoryFunction(RR_SHARED_PTR<MessageEntry> m, RR_SHARED_PTR<Endpoint> e);
+		virtual RR_INTRUSIVE_PTR<MessageEntry> CallMemoryFunction(RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<Endpoint> e);
 
 		RR_WEAK_PTR<ServerContext_ObjectLock> objectlock;
 		boost::mutex objectlock_lock;
@@ -148,9 +148,9 @@ namespace RobotRaconteur
 		RR_SHARED_PTR<RobotRaconteurNode> RRGetNode();
 		RR_WEAK_PTR<RobotRaconteurNode> RRGetNodeWeak();
 
-		virtual void CallGeneratorNext(RR_SHARED_PTR<MessageEntry> m, RR_SHARED_PTR<Endpoint> e);
+		virtual void CallGeneratorNext(RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<Endpoint> e);
 
-		void SendGeneratorResponse(int32_t index, RR_SHARED_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> ep);
+		void SendGeneratorResponse(int32_t index, RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> ep);
 
 	protected:
 		RR_WEAK_PTR<RobotRaconteurNode> node;
@@ -166,11 +166,11 @@ namespace RobotRaconteur
 	{		
 	public:
 
-		std::map<std::string, RR_SHARED_PTR<RRValue> > GetAttributes();
-		void SetAttributes(const std::map<std::string, RR_SHARED_PTR<RRValue> >& attr);
+		std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > GetAttributes();
+		void SetAttributes(const std::map<std::string, RR_INTRUSIVE_PTR<RRValue> >& attr);
 
 	private:
-		std::map<std::string, RR_SHARED_PTR<RRValue> > m_Attributes;
+		std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > m_Attributes;
 		boost::mutex m_Attributes_lock;
 	public:
 		RR_SHARED_PTR<ServiceFactory> GetServiceDef() const;
@@ -215,21 +215,21 @@ namespace RobotRaconteur
 
 		RR_SHARED_PTR<RobotRaconteurNode> GetNode();
 
-		virtual void SendEvent(RR_SHARED_PTR<MessageEntry> m);
+		virtual void SendEvent(RR_INTRUSIVE_PTR<MessageEntry> m);
 #undef SendMessage
-		virtual void SendMessage(RR_SHARED_PTR<MessageEntry> m, RR_SHARED_PTR<Endpoint> e);
+		virtual void SendMessage(RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<Endpoint> e);
 
-		virtual void SendMessage(RR_SHARED_PTR<MessageEntry> m, uint32_t e);
+		virtual void SendMessage(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e);
 
-		virtual void AsyncSendMessage(RR_SHARED_PTR<MessageEntry> m, uint32_t e, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& callback);
+		virtual void AsyncSendMessage(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& callback);
 
-		virtual void AsyncSendMessage(RR_SHARED_PTR<MessageEntry> m, RR_SHARED_PTR<Endpoint> e, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& callback);
+		virtual void AsyncSendMessage(RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<Endpoint> e, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& callback);
 
-		virtual void AsyncSendUnreliableMessage(RR_SHARED_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> e, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+		virtual void AsyncSendUnreliableMessage(RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> e, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
 
-		virtual void AsyncSendPipeMessage(RR_SHARED_PTR<MessageEntry> m, uint32_t e, bool unreliable, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+		virtual void AsyncSendPipeMessage(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e, bool unreliable, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
 
-		virtual void SendWireMessage(RR_SHARED_PTR<MessageEntry> m, uint32_t e);
+		virtual void SendWireMessage(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e);
 
 
 	private:
@@ -266,11 +266,11 @@ namespace RobotRaconteur
 
 
 	public:
-		virtual RR_SHARED_PTR<MessageEntry> ProcessMessageEntry(RR_SHARED_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> c);
+		virtual RR_INTRUSIVE_PTR<MessageEntry> ProcessMessageEntry(RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> c);
 
 		virtual void Close();
 
-		virtual void MessageReceived(RR_SHARED_PTR<Message> m, RR_SHARED_PTR<ServerEndpoint> e);
+		virtual void MessageReceived(RR_INTRUSIVE_PTR<Message> m, RR_SHARED_PTR<ServerEndpoint> e);
 
 		virtual void AddClient(RR_SHARED_PTR<ServerEndpoint> cendpoint);
 
@@ -288,20 +288,20 @@ namespace RobotRaconteur
 		bool m_RequireValidUser;
 		bool AllowObjectLock;
 
-		virtual RR_SHARED_PTR<MessageEntry> ClientSessionOp(RR_SHARED_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> e);
+		virtual RR_INTRUSIVE_PTR<MessageEntry> ClientSessionOp(RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> e);
 
 	public:
 
 		virtual bool RequireValidUser();
 
-		virtual RR_SHARED_PTR<AuthenticatedUser> AuthenticateUser(const std::string &username, std::map<std::string, RR_SHARED_PTR<RRValue> > &credentials);
+		virtual RR_SHARED_PTR<AuthenticatedUser> AuthenticateUser(const std::string &username, std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials);
 
 
 
 	private:
 		boost::mutex ClientLockOp_lockobj;
 
-		virtual void ClientLockOp(RR_SHARED_PTR<MessageEntry> m, RR_SHARED_PTR<MessageEntry> ret);
+		virtual void ClientLockOp(RR_INTRUSIVE_PTR<MessageEntry> m, RR_INTRUSIVE_PTR<MessageEntry> ret);
 
 	protected:
 		void check_lock(RR_SHARED_PTR<ServiceSkel> skel);
@@ -314,7 +314,7 @@ namespace RobotRaconteur
 		virtual void PeriodicCleanupTask();
 
 	protected:
-		RR_SHARED_PTR<MessageEntry> CheckServiceCapability(RR_SHARED_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> c);
+		RR_INTRUSIVE_PTR<MessageEntry> CheckServiceCapability(RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> c);
 
 	public:
 		boost::signals2::signal<void (RR_SHARED_PTR<ServerContext>, ServerServiceListenerEventType, RR_SHARED_PTR<void>)> ServerServiceListener;
@@ -326,7 +326,7 @@ namespace RobotRaconteur
 
 		void ReleaseServicePath(const std::string& path, const std::vector<uint32_t>& endpoints);
 
-		void AsyncProcessCallbackRequest(RR_SHARED_PTR<MessageEntry> m, uint32_t endpoint, RR_MOVE_ARG(boost::function<void ( RR_SHARED_PTR<MessageEntry>, RR_SHARED_PTR<RobotRaconteurException>  )>) handler, int32_t timeout=RR_TIMEOUT_INFINITE);
+		void AsyncProcessCallbackRequest(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t endpoint, RR_MOVE_ARG(boost::function<void ( RR_INTRUSIVE_PTR<MessageEntry>, RR_SHARED_PTR<RobotRaconteurException>  )>) handler, int32_t timeout=RR_TIMEOUT_INFINITE);
 
 	private:
 		
@@ -338,9 +338,9 @@ namespace RobotRaconteur
 
 		struct outstanding_request
 		{
-			RR_SHARED_PTR<MessageEntry> ret;
+			RR_INTRUSIVE_PTR<MessageEntry> ret;
 			RR_SHARED_PTR<AutoResetEvent> evt;
-			boost::function<void ( RR_SHARED_PTR<MessageEntry> ret, RR_SHARED_PTR<RobotRaconteurException> error)> handler;
+			boost::function<void ( RR_INTRUSIVE_PTR<MessageEntry> ret, RR_SHARED_PTR<RobotRaconteurException> error)> handler;
 			RR_SHARED_PTR<Timer> timer;
 		};
 		
@@ -349,7 +349,7 @@ namespace RobotRaconteur
 
 
 	public:
-		RR_SHARED_PTR<MessageEntry> ProcessCallbackRequest(RR_SHARED_PTR<MessageEntry> m, uint32_t endpointid);
+		RR_INTRUSIVE_PTR<MessageEntry> ProcessCallbackRequest(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t endpointid);
 	
 		int32_t GetMonitorThreadPoolCount();
 
@@ -399,9 +399,9 @@ namespace RobotRaconteur
 		const std::string GetAuthenticatedUsername() const;
 
 
-		virtual void MessageReceived(RR_SHARED_PTR<Message> m);
+		virtual void MessageReceived(RR_INTRUSIVE_PTR<Message> m);
 
-		void AuthenticateUser(const std::string &username, std::map<std::string, RR_SHARED_PTR<RRValue> > &credentials);
+		void AuthenticateUser(const std::string &username, std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials);
 
 		void LogoutUser();
 

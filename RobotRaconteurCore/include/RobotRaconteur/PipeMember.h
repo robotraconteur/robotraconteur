@@ -85,26 +85,26 @@ namespace RobotRaconteur
 
 		bool RequestPacketAck;
 
-		void AsyncSendPacketBase(RR_SHARED_PTR<RRValue> packet, RR_MOVE_ARG(boost::function<void(uint32_t,RR_SHARED_PTR<RobotRaconteurException>)>) handler);
+		void AsyncSendPacketBase(RR_INTRUSIVE_PTR<RRValue> packet, RR_MOVE_ARG(boost::function<void(uint32_t,RR_SHARED_PTR<RobotRaconteurException>)>) handler);
 
-		RR_SHARED_PTR<RRValue> ReceivePacketBase();
-		RR_SHARED_PTR<RRValue> PeekPacketBase();
+		RR_INTRUSIVE_PTR<RRValue> ReceivePacketBase();
+		RR_INTRUSIVE_PTR<RRValue> PeekPacketBase();
 
-		RR_SHARED_PTR<RRValue> ReceivePacketBaseWait(int32_t timeout = RR_TIMEOUT_INFINITE);
-		RR_SHARED_PTR<RRValue> PeekPacketBaseWait(int32_t timeout = RR_TIMEOUT_INFINITE);
+		RR_INTRUSIVE_PTR<RRValue> ReceivePacketBaseWait(int32_t timeout = RR_TIMEOUT_INFINITE);
+		RR_INTRUSIVE_PTR<RRValue> PeekPacketBaseWait(int32_t timeout = RR_TIMEOUT_INFINITE);
 
-		bool TryReceivePacketBaseWait(RR_SHARED_PTR<RRValue>& packet, int32_t timeout = RR_TIMEOUT_INFINITE, bool peek=false);
+		bool TryReceivePacketBaseWait(RR_INTRUSIVE_PTR<RRValue>& packet, int32_t timeout = RR_TIMEOUT_INFINITE, bool peek=false);
 		
 		boost::mutex sendlock;
 		boost::mutex recvlock;
 
-		std::deque<RR_SHARED_PTR<RRValue> > recv_packets;
+		std::deque<RR_INTRUSIVE_PTR<RRValue> > recv_packets;
 		boost::condition_variable recv_packets_wait;
 
 		uint32_t increment_packet_number(uint32_t packetnum);
 
 	
-		void PipePacketReceived(RR_SHARED_PTR<RRValue> packet, uint32_t packetnum);
+		void PipePacketReceived(RR_INTRUSIVE_PTR<RRValue> packet, uint32_t packetnum);
 
 		void PipePacketAckReceived(uint32_t packetnum);
 
@@ -130,7 +130,7 @@ namespace RobotRaconteur
 		int32_t index;
 		uint32_t endpoint;
 
-		RR_UNORDERED_MAP<uint32_t,RR_SHARED_PTR<RRValue> > out_of_order_packets;
+		RR_UNORDERED_MAP<uint32_t,RR_INTRUSIVE_PTR<RRValue> > out_of_order_packets;
 
 		bool ignore_incoming_packets;
 		bool message3;
@@ -201,7 +201,7 @@ namespace RobotRaconteur
 
 		virtual bool TryReceivePacketWait(T& val, int32_t timeout = RR_TIMEOUT_INFINITE, bool peek = false)
 		{
-			RR_SHARED_PTR<RRValue> o;
+			RR_INTRUSIVE_PTR<RRValue> o;
 			if (!TryReceivePacketBaseWait(o, timeout, peek)) return false;
 			val = RRPrimUtil<T>::PreUnpack(o);
 			return true;
@@ -306,7 +306,7 @@ namespace RobotRaconteur
 
 		virtual std::string GetMemberName()=0;
 
-		virtual void PipePacketReceived(RR_SHARED_PTR<MessageEntry> m, uint32_t e=0)=0;
+		virtual void PipePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e=0)=0;
 
 		virtual void Shutdown()=0;
 
@@ -319,24 +319,24 @@ namespace RobotRaconteur
 
 		bool unreliable;
 
-		virtual void AsyncSendPipePacket(RR_SHARED_PTR<RRValue> data, int32_t index, uint32_t packetnumber, bool requestack, uint32_t endpoint, bool unreliable, bool message3, RR_MOVE_ARG(boost::function<void(uint32_t,RR_SHARED_PTR<RobotRaconteurException>)>) handler)=0;
+		virtual void AsyncSendPipePacket(RR_INTRUSIVE_PTR<RRValue> data, int32_t index, uint32_t packetnumber, bool requestack, uint32_t endpoint, bool unreliable, bool message3, RR_MOVE_ARG(boost::function<void(uint32_t,RR_SHARED_PTR<RobotRaconteurException>)>) handler)=0;
 
 		bool rawelements;
 
-		void DispatchPacketAck (RR_SHARED_PTR<MessageElement> me, RR_SHARED_PTR<PipeEndpointBase> e);
+		void DispatchPacketAck (RR_INTRUSIVE_PTR<MessageElement> me, RR_SHARED_PTR<PipeEndpointBase> e);
 
-		bool DispatchPacket(RR_SHARED_PTR<MessageElement> me, RR_SHARED_PTR<PipeEndpointBase> e, uint32_t& packetnumber);
+		bool DispatchPacket(RR_INTRUSIVE_PTR<MessageElement> me, RR_SHARED_PTR<PipeEndpointBase> e, uint32_t& packetnumber);
 
-		RR_SHARED_PTR<MessageElement> PackPacket(RR_SHARED_PTR<RRValue> data, int32_t index, uint32_t packetnumber, bool requestack, bool message3);
+		RR_INTRUSIVE_PTR<MessageElement> PackPacket(RR_INTRUSIVE_PTR<RRValue> data, int32_t index, uint32_t packetnumber, bool requestack, bool message3);
 
 		virtual void DeleteEndpoint(RR_SHARED_PTR<PipeEndpointBase> e)=0;
 
-		virtual RR_SHARED_PTR<MessageElementData> PackData(RR_SHARED_PTR<RRValue> data)
+		virtual RR_INTRUSIVE_PTR<MessageElementData> PackData(RR_INTRUSIVE_PTR<RRValue> data)
 		{
 			return GetNode()->PackVarType(data);
 		}
 
-		virtual RR_SHARED_PTR<RRValue> UnpackData(RR_SHARED_PTR<MessageElement> mdata)
+		virtual RR_INTRUSIVE_PTR<RRValue> UnpackData(RR_INTRUSIVE_PTR<MessageElement> mdata)
 		{
 			return GetNode()->UnpackVarType(mdata);
 		}
@@ -361,7 +361,7 @@ namespace RobotRaconteur
 		
 		friend class PipeEndpointBase;
 
-		Pipe(boost::function<void(RR_SHARED_PTR<RRValue>&)> verify)
+		Pipe(boost::function<void(RR_INTRUSIVE_PTR<RRValue>&)> verify)
 		{
 			this->verify = verify;
 		}
@@ -381,7 +381,7 @@ namespace RobotRaconteur
 			AsyncConnect(-1,RR_MOVE(handler),timeout);
 		}
 
-		virtual RR_SHARED_PTR<MessageElementData> PackData(RR_SHARED_PTR<RRValue> data)
+		virtual RR_INTRUSIVE_PTR<MessageElementData> PackData(RR_INTRUSIVE_PTR<RRValue> data)
 		{
 			if (verify)
 			{
@@ -390,7 +390,7 @@ namespace RobotRaconteur
 			return GetNode()->template PackAnyType<typename RRPrimUtil<T>::BoxedType>(data);
 		}
 
-		virtual RR_SHARED_PTR<RRValue> UnpackData(RR_SHARED_PTR<MessageElement> mdata)
+		virtual RR_INTRUSIVE_PTR<RRValue> UnpackData(RR_INTRUSIVE_PTR<MessageElement> mdata)
 		{
 			if (!verify)
 			{
@@ -398,14 +398,14 @@ namespace RobotRaconteur
 			}
 			else
 			{
-				RR_SHARED_PTR<RRValue> ret= GetNode()->template UnpackAnyType<typename RRPrimUtil<T>::BoxedType>(mdata);
+				RR_INTRUSIVE_PTR<RRValue> ret= GetNode()->template UnpackAnyType<typename RRPrimUtil<T>::BoxedType>(mdata);
 				verify(ret);
 				return ret;
 			}
 		}
 		
 	protected:
-		boost::function<void(RR_SHARED_PTR<RRValue>&)> verify;
+		boost::function<void(RR_INTRUSIVE_PTR<RRValue>&)> verify;
 	};
 
 	
@@ -421,7 +421,7 @@ namespace RobotRaconteur
 
 		virtual std::string GetMemberName();
 
-		virtual void PipePacketReceived(RR_SHARED_PTR<MessageEntry> m, uint32_t e=0);
+		virtual void PipePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e=0);
 
 		virtual void Shutdown();
 		
@@ -433,7 +433,7 @@ namespace RobotRaconteur
 
 	protected:
 
-		virtual void AsyncSendPipePacket(RR_SHARED_PTR<RRValue> data, int32_t index, uint32_t packetnumber, bool requestack, uint32_t endpoint, bool unreliable, bool message3, RR_MOVE_ARG(boost::function<void(uint32_t,RR_SHARED_PTR<RobotRaconteurException>)>) handler);
+		virtual void AsyncSendPipePacket(RR_INTRUSIVE_PTR<RRValue> data, int32_t index, uint32_t packetnumber, bool requestack, uint32_t endpoint, bool unreliable, bool message3, RR_MOVE_ARG(boost::function<void(uint32_t,RR_SHARED_PTR<RobotRaconteurException>)>) handler);
 
 		
 		std::string m_MemberName;
@@ -449,7 +449,7 @@ namespace RobotRaconteur
 
 		void AsyncConnect_internal(int32_t index, RR_MOVE_ARG(boost::function<void (RR_SHARED_PTR<PipeEndpointBase>,RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout);
 
-		void AsyncConnect_internal1(RR_SHARED_PTR<MessageEntry> ret, RR_SHARED_PTR<RobotRaconteurException> err, int32_t index, int32_t key, boost::function<void (RR_SHARED_PTR<PipeEndpointBase>,RR_SHARED_PTR<RobotRaconteurException>)>& handler);
+		void AsyncConnect_internal1(RR_INTRUSIVE_PTR<MessageEntry> ret, RR_SHARED_PTR<RobotRaconteurException> err, int32_t index, int32_t key, boost::function<void (RR_SHARED_PTR<PipeEndpointBase>,RR_SHARED_PTR<RobotRaconteurException>)>& handler);
 
 		PipeClientBase(const std::string& name, RR_SHARED_PTR<ServiceStub> stub, bool unreliable, MemberDefinition_Direction direction);
 
@@ -482,7 +482,7 @@ namespace RobotRaconteur
 		virtual void AsyncConnect(int32_t index, RR_MOVE_ARG(boost::function<void (RR_SHARED_PTR<PipeEndpoint<T> >, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout=RR_TIMEOUT_INFINITE)
 		{
 			
-			AsyncConnect_internal(index,boost::bind(handler,boost::bind(&rr_cast<PipeEndpoint<T>, PipeEndpointBase >,_1),_2),timeout); 
+			AsyncConnect_internal(index,boost::bind(handler,boost::bind(&PipeClient<T>::AsyncConnect_cast,_1),_2),timeout); 
 		}
 
 		virtual RR_SHARED_PTR<PipeEndpoint<T> > Connect(int32_t index)
@@ -492,9 +492,9 @@ namespace RobotRaconteur
 			return t->end();
 		}
 
-		PipeClient(const std::string& name, RR_SHARED_PTR<ServiceStub> stub, bool unreliable=false, MemberDefinition_Direction direction = MemberDefinition_Direction_both, boost::function<void(RR_SHARED_PTR<RRValue>&)> verify=NULL) : PipeClientBase(name,stub,unreliable,direction), Pipe<T>(verify)
+		PipeClient(const std::string& name, RR_SHARED_PTR<ServiceStub> stub, bool unreliable=false, MemberDefinition_Direction direction = MemberDefinition_Direction_both, boost::function<void(RR_INTRUSIVE_PTR<RRValue>&)> verify=NULL) : PipeClientBase(name,stub,unreliable,direction), Pipe<T>(verify)
 		{
-			if (boost::is_same<T,RR_SHARED_PTR<MessageElement> >::value)
+			if (boost::is_same<T,RR_INTRUSIVE_PTR<MessageElement> >::value)
 			{
 				rawelements=true;
 			}
@@ -513,6 +513,12 @@ namespace RobotRaconteur
 		
 
 	protected:
+
+		static RR_SHARED_PTR<PipeEndpoint<T> > AsyncConnect_cast(RR_SHARED_PTR<PipeEndpointBase>& b)
+		{
+			return rr_cast<PipeEndpoint<T> >(b);
+		}
+
 		virtual RR_SHARED_PTR<PipeEndpointBase> CreateNewPipeEndpoint(int32_t index, bool unreliable, MemberDefinition_Direction direction, bool message3)
 		{
 			return RR_MAKE_SHARED<PipeEndpoint<T> >(RR_STATIC_POINTER_CAST<PipeBase>(shared_from_this()),index,0,unreliable,direction,message3);
@@ -530,15 +536,15 @@ namespace RobotRaconteur
 
 		virtual std::string GetMemberName();
 
-		virtual void PipePacketReceived(RR_SHARED_PTR<MessageEntry> m, uint32_t e=0);
+		virtual void PipePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e=0);
 
 		virtual void Shutdown();
 		
-		virtual void AsyncSendPipePacket(RR_SHARED_PTR<RRValue> data, int32_t index, uint32_t packetnumber, bool requestack, uint32_t endpoint, bool unreliable, bool message3, RR_MOVE_ARG(boost::function<void(uint32_t,RR_SHARED_PTR<RobotRaconteurException>)>) handler);
+		virtual void AsyncSendPipePacket(RR_INTRUSIVE_PTR<RRValue> data, int32_t index, uint32_t packetnumber, bool requestack, uint32_t endpoint, bool unreliable, bool message3, RR_MOVE_ARG(boost::function<void(uint32_t,RR_SHARED_PTR<RobotRaconteurException>)>) handler);
 
 		virtual void AsyncClose(RR_SHARED_PTR<PipeEndpointBase> endpoint, bool remote, uint32_t ee, RR_MOVE_ARG(boost::function<void (RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout);
 
-		virtual RR_SHARED_PTR<MessageEntry> PipeCommand(RR_SHARED_PTR<MessageEntry> m, uint32_t e);
+		virtual RR_INTRUSIVE_PTR<MessageEntry> PipeCommand(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e);
 
 		RR_SHARED_PTR<ServiceSkel> GetSkel();
 
@@ -626,9 +632,9 @@ namespace RobotRaconteur
 			throw InvalidOperationException("Not valid for server");
 		}
 
-		PipeServer(const std::string& name, RR_SHARED_PTR<ServiceSkel> skel, bool unreliable=false, MemberDefinition_Direction direction=MemberDefinition_Direction_both, boost::function<void(RR_SHARED_PTR<RRValue>&)> verify = NULL) : PipeServerBase(name,skel,unreliable,direction), Pipe<T>(verify)
+		PipeServer(const std::string& name, RR_SHARED_PTR<ServiceSkel> skel, bool unreliable=false, MemberDefinition_Direction direction=MemberDefinition_Direction_both, boost::function<void(RR_INTRUSIVE_PTR<RRValue>&)> verify = NULL) : PipeServerBase(name,skel,unreliable,direction), Pipe<T>(verify)
 		{
-			if (boost::is_same<T, RR_SHARED_PTR<MessageElement> >::value)
+			if (boost::is_same<T, RR_INTRUSIVE_PTR<MessageElement> >::value)
 			{
 				rawelements=true;
 			}
@@ -653,7 +659,7 @@ namespace RobotRaconteur
 			callback(RR_STATIC_POINTER_CAST<PipeEndpoint<T> >(e));
 		}
 
-		boost::function<void(RR_SHARED_PTR<RRValue>&)> verify;
+		boost::function<void(RR_INTRUSIVE_PTR<RRValue>&)> verify;
 
 	public:
 
@@ -698,9 +704,9 @@ namespace RobotRaconteur
 
 		void handle_send(int32_t id, RR_SHARED_PTR<RobotRaconteurException> err, RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint> ep, RR_SHARED_PTR<detail::PipeBroadcasterBase_async_send_operation> op, int32_t key, int32_t send_key, boost::function<void()>& handler);
 
-		void SendPacketBase(RR_SHARED_PTR<RRValue> packet);
+		void SendPacketBase(RR_INTRUSIVE_PTR<RRValue> packet);
 
-		void AsyncSendPacketBase(RR_SHARED_PTR<RRValue> packet, RR_MOVE_ARG(boost::function<void()>) handler);
+		void AsyncSendPacketBase(RR_INTRUSIVE_PTR<RRValue> packet, RR_MOVE_ARG(boost::function<void()>) handler);
 
 		virtual void AttachPipeServerEvents(RR_SHARED_PTR<PipeServerBase> p);
 

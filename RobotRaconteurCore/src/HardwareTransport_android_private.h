@@ -68,8 +68,8 @@ public:
 	static int32_t ConnectBluetooth_success(RR_SHARED_PTR<AndroidBluetoothConnector_params> p);
 	static void ConnectBluetooth_error(RR_SHARED_PTR<AndroidBluetoothConnector_params> p, const std::string& message);
 	static RR_SHARED_PTR<AndroidBluetoothConnector_params> VoidToAndroidBluetoothConnector_params(void* p);
-	static std::vector<int8_t> MessageToVector(RR_SHARED_PTR<Message> m);
-	static RR_SHARED_PTR<Message> VectorToMessage(std::vector<int8_t> v);
+	static std::vector<int8_t> MessageToVector(RR_INTRUSIVE_PTR<Message> m);
+	static RR_INTRUSIVE_PTR<Message> VectorToMessage(std::vector<int8_t> v);
 };
 
 }

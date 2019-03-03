@@ -38,11 +38,11 @@ namespace RobotRaconteur
 		return n;
 	}
 	
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteurServiceIndex::ServiceInfo> > ServiceIndexer::GetLocalNodeServices()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteurServiceIndex::ServiceInfo> > ServiceIndexer::GetLocalNodeServices()
 {
 	if (Transport::GetCurrentTransportConnectionURL() == "")  throw ServiceException("GetLocalNodeServices must be called through a transport that supports node discovery");
 
-	RR_SHARED_PTR<RRMap<int32_t,ServiceInfo> > o=RR_MAKE_SHARED<RRMap<int32_t,ServiceInfo> >();
+	RR_INTRUSIVE_PTR<RRMap<int32_t,ServiceInfo> > o=AllocateEmptyRRMap<int32_t,ServiceInfo>();
 	int32_t count=0;
 
 	vector<string> names=GetNode()->GetRegisteredServiceNames();
@@ -51,12 +51,12 @@ RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteurServiceIndex::ServiceI
 		try
 		{
 			RR_SHARED_PTR<ServerContext> c=GetNode()->GetService(*e);
-			RR_SHARED_PTR<ServiceInfo> s=RR_MAKE_SHARED<ServiceInfo>();
-			s->Attributes=RR_MAKE_SHARED<RRMap<string,RRValue> >(c->GetAttributes());
+			RR_INTRUSIVE_PTR<ServiceInfo> s(new ServiceInfo());
+			s->Attributes=AllocateRRMap<string,RRValue>(c->GetAttributes());
 
-			for (std::map<std::string, RR_SHARED_PTR<RRValue> >::iterator e=s->Attributes->begin(); e!=s->Attributes->end(); )
+			for (std::map<std::string, RR_INTRUSIVE_PTR<RRValue> >::iterator e=s->Attributes->begin(); e!=s->Attributes->end(); )
 			{
-				RR_SHARED_PTR<RRBaseArray> a=RR_DYNAMIC_POINTER_CAST<RRBaseArray>(e->second);
+				RR_INTRUSIVE_PTR<RRBaseArray> a=RR_DYNAMIC_POINTER_CAST<RRBaseArray>(e->second);
 				if (!a) 
 				{
 					s->Attributes->erase(e++);
@@ -69,9 +69,9 @@ RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteurServiceIndex::ServiceI
 
 			s->Name=c->GetServiceName();
 			s->RootObjectType=c->GetRootObjectType(RobotRaconteurVersion());
-			s->ConnectionURL=RR_MAKE_SHARED<RRMap<int32_t,RRArray<char> > >();
+			s->ConnectionURL=AllocateEmptyRRMap<int32_t,RRArray<char> >();
 			s->ConnectionURL->insert(make_pair(1,stringToRRArray(Transport::GetCurrentTransportConnectionURL() + "?nodeid=" + boost::replace_first_copy(boost::replace_first_copy(GetNode()->NodeID().ToString(),"{",""),"}","") + "&service=" + s->Name)));
-			s->RootObjectImplements=RR_MAKE_SHARED<RRMap<int32_t,RRArray<char> > >();
+			s->RootObjectImplements=AllocateEmptyRRMap<int32_t,RRArray<char> >();
 
 			boost::tuple<std::string,std::string> servicetype;
 			std::string roottype=c->GetRootObjectType(RobotRaconteurVersion());
@@ -110,13 +110,13 @@ RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteurServiceIndex::ServiceI
 
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteurServiceIndex::NodeInfo> > ServiceIndexer::GetRoutedNodes()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteurServiceIndex::NodeInfo> > ServiceIndexer::GetRoutedNodes()
 {
-	RR_SHARED_PTR<RRMap<int32_t,NodeInfo> > o=RR_MAKE_SHARED<RRMap<int32_t,NodeInfo> >();
+	RR_INTRUSIVE_PTR<RRMap<int32_t,NodeInfo> > o=AllocateEmptyRRMap<int32_t,NodeInfo>();
 	/*if (GetNode()->IsMessageRouterAvailable())
 	{
 
-		std::vector<RR_SHARED_PTR<MessageRouter::Route> > r=GetNode()->GetMessageRouter()->GetActiveRoutes();
+		std::vector<RR_INTRUSIVE_PTR<MessageRouter::Route> > r=GetNode()->GetMessageRouter()->GetActiveRoutes();
 
 		size_t len=r.size();
 	
@@ -128,7 +128,7 @@ RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteurServiceIndex::NodeInfo
 			ii->NodeID=VectorToRRArray<uint8_t>(r.at(i)->NodeID.ToByteArray());
 			ii->NodeName=r.at(i)->NodeName;
 
-			RR_SHARED_PTR<RRMap<int32_t,RRArray<char> > > curl=RR_MAKE_SHARED<RRMap<int32_t,RRArray<char> > >();
+			RR_INTRUSIVE_PTR<RRMap<int32_t,RRArray<char> > > curl=RR_MAKE_SHARED<RRMap<int32_t,RRArray<char> > >();
 			curl->map.insert(make_pair(0,stringToRRArray(r.at(i)->ConnectURL)));
 
 			ii->ServiceIndexConnectionURL=curl;
@@ -140,23 +140,23 @@ RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteurServiceIndex::NodeInfo
 
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteurServiceIndex::NodeInfo> > ServiceIndexer::GetDetectedNodes()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteurServiceIndex::NodeInfo> > ServiceIndexer::GetDetectedNodes()
 {
 
 	std::vector<NodeDiscoveryInfo> nodeids=GetNode()->GetDetectedNodes();
 	
 	int32_t count=0;
 
-	RR_SHARED_PTR<RRMap<int32_t,NodeInfo> > o=RR_MAKE_SHARED<RRMap<int32_t,NodeInfo> >();
+	RR_INTRUSIVE_PTR<RRMap<int32_t,NodeInfo> > o=AllocateEmptyRRMap<int32_t,NodeInfo>();
 
 	for (std::vector<NodeDiscoveryInfo>::iterator e=nodeids.begin(); e!=nodeids.end(); ++e)
 	{
 
-		RR_SHARED_PTR<NodeInfo> ii=RR_MAKE_SHARED<NodeInfo>();
+		RR_INTRUSIVE_PTR<NodeInfo> ii(new NodeInfo());
 		ii->NodeID=ArrayToRRArray<uint8_t>(e->NodeID.ToByteArray());
 		ii->NodeName=e->NodeName;
 
-		RR_SHARED_PTR<RRMap<int32_t,RRArray<char> > > curl=RR_MAKE_SHARED<RRMap<int32_t,RRArray<char> > >();
+		RR_INTRUSIVE_PTR<RRMap<int32_t,RRArray<char> > > curl=AllocateEmptyRRMap<int32_t,RRArray<char> >();
 		for (size_t j=0; j<e->URLs.size(); j++)
 		{
 			curl->insert(make_pair((int32_t)j, stringToRRArray(e->URLs.at(j).URL)));

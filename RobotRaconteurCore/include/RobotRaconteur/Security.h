@@ -69,7 +69,7 @@ namespace RobotRaconteur
 	class ROBOTRACONTEUR_CORE_API  UserAuthenticator
 	{
 	public:
-		virtual RR_SHARED_PTR<AuthenticatedUser> AuthenticateUser(const std::string &username, const std::map<std::string, RR_SHARED_PTR<RRValue> > &credentials, RR_SHARED_PTR<ServerContext> context) = 0;
+		virtual RR_SHARED_PTR<AuthenticatedUser> AuthenticateUser(const std::string &username, const std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials, RR_SHARED_PTR<ServerContext> context) = 0;
 
 		virtual ~UserAuthenticator() {}
 
@@ -102,7 +102,7 @@ namespace RobotRaconteur
 		void load(const std::string &data);
 
 	public:
-		virtual RR_SHARED_PTR<AuthenticatedUser> AuthenticateUser(const std::string &username, const std::map<std::string, RR_SHARED_PTR<RRValue> > &credentials, RR_SHARED_PTR<ServerContext> context);
+		virtual RR_SHARED_PTR<AuthenticatedUser> AuthenticateUser(const std::string &username, const std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials, RR_SHARED_PTR<ServerContext> context);
 
 
 		static std::string MD5Hash(const std::string &text);

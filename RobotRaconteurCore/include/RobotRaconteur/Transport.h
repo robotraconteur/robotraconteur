@@ -67,9 +67,9 @@ namespace RobotRaconteur
 
 		virtual ~ITransportConnection() {}
 
-		virtual void SendMessage(RR_SHARED_PTR<Message> m) = 0;
+		virtual void SendMessage(RR_INTRUSIVE_PTR<Message> m) = 0;
 
-		virtual void AsyncSendMessage(RR_SHARED_PTR<Message> m, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& handler) = 0;
+		virtual void AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& handler) = 0;
 
 		virtual void Close() = 0;
 
@@ -140,14 +140,14 @@ namespace RobotRaconteur
 		virtual void CloseTransportConnection(RR_SHARED_PTR<Endpoint> e) = 0;
 
 	
-		virtual void SendMessage(RR_SHARED_PTR<Message> m)=0;
+		virtual void SendMessage(RR_INTRUSIVE_PTR<Message> m)=0;
 
-		virtual void AsyncSendMessage(RR_SHARED_PTR<Message> m, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& handler) = 0;
+		virtual void AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& handler) = 0;
 
 	public:
-		virtual void MessageReceived(RR_SHARED_PTR<Message> m)=0;
+		virtual void MessageReceived(RR_INTRUSIVE_PTR<Message> m)=0;
 
-		RR_SHARED_PTR<Message> SpecialRequest(RR_SHARED_PTR<Message> m, RR_SHARED_PTR<ITransportConnection> tc);
+		RR_INTRUSIVE_PTR<Message> SpecialRequest(RR_INTRUSIVE_PTR<Message> m, RR_SHARED_PTR<ITransportConnection> tc);
 
 	public:
 		virtual void Close();

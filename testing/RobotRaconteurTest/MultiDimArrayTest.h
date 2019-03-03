@@ -14,13 +14,13 @@ namespace RobotRaconteurTest
 	{
 	public:
 
-		static RR_SHARED_PTR<RRMultiDimArray<double> > LoadDoubleArrayFromFile(const string& fname);
+		static RR_INTRUSIVE_PTR<RRMultiDimArray<double> > LoadDoubleArrayFromFile(const string& fname);
 
-		static RR_SHARED_PTR<RRMultiDimArray<double> > LoadDoubleArray(istream& s);
+		static RR_INTRUSIVE_PTR<RRMultiDimArray<double> > LoadDoubleArray(istream& s);
 
-		static RR_SHARED_PTR<RRMultiDimArray<uint8_t> > LoadByteArrayFromFile(const string& fname);
+		static RR_INTRUSIVE_PTR<RRMultiDimArray<uint8_t> > LoadByteArrayFromFile(const string& fname);
 
-		static RR_SHARED_PTR<RRMultiDimArray<uint8_t> > LoadByteArray(istream& s);
+		static RR_INTRUSIVE_PTR<RRMultiDimArray<uint8_t> > LoadByteArray(istream& s);
 		
 		static void TestDouble();
 

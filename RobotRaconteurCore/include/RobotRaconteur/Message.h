@@ -37,15 +37,15 @@ namespace RobotRaconteur
 	class ROBOTRACONTEUR_CORE_API Message : public RRValue
 	{
 	public:
-		RR_SHARED_PTR<MessageHeader> header;
-		std::vector<RR_SHARED_PTR<MessageEntry> > entries;
+		RR_INTRUSIVE_PTR<MessageHeader> header;
+		std::vector<RR_INTRUSIVE_PTR<MessageEntry> > entries;
 
 		Message();
 		
 
-		RR_SHARED_PTR<MessageEntry> FindEntry(const std::string& name);
+		RR_INTRUSIVE_PTR<MessageEntry> FindEntry(const std::string& name);
 
-		RR_SHARED_PTR<MessageEntry> AddEntry(MessageEntryType t, const std::string& name);
+		RR_INTRUSIVE_PTR<MessageEntry> AddEntry(MessageEntryType t, const std::string& name);
 
 		//Version 2 Message
 		uint32_t ComputeSize();
@@ -176,19 +176,19 @@ public:
 
 		TimeSpec EntryTimeSpec;
 
-		std::vector<RR_SHARED_PTR<MessageElement> > elements;
+		std::vector<RR_INTRUSIVE_PTR<MessageElement> > elements;
 
 		MessageEntry();
 
 		MessageEntry(MessageEntryType t, const std::string& n);
 
-		RR_SHARED_PTR<MessageElement> FindElement(const std::string& name);
+		RR_INTRUSIVE_PTR<MessageElement> FindElement(const std::string& name);
 
-		bool TryFindElement(const std::string& name, RR_SHARED_PTR<MessageElement>& elem);
+		bool TryFindElement(const std::string& name, RR_INTRUSIVE_PTR<MessageElement>& elem);
 
-		RR_SHARED_PTR<MessageElement> AddElement(const std::string& name, RR_SHARED_PTR<MessageElementData> data);
+		RR_INTRUSIVE_PTR<MessageElement> AddElement(const std::string& name, RR_INTRUSIVE_PTR<MessageElementData> data);
 
-		RR_SHARED_PTR<MessageElement> AddElement(RR_SHARED_PTR<MessageElement> m);
+		RR_INTRUSIVE_PTR<MessageElement> AddElement(RR_INTRUSIVE_PTR<MessageElement> m);
 
 		//Version 2 Message
 		uint32_t ComputeSize();
@@ -239,15 +239,15 @@ public:
 		uint32_t DataCount;
 
 	private:
-		RR_SHARED_PTR<MessageElementData> dat;
+		RR_INTRUSIVE_PTR<MessageElementData> dat;
 		
 	public:
 		MessageElement();
 				
-		MessageElement(const std::string& name, RR_SHARED_PTR<MessageElementData> datin);
+		MessageElement(const std::string& name, RR_INTRUSIVE_PTR<MessageElementData> datin);
 				
-		RR_SHARED_PTR<MessageElementData> GetData();
-		void SetData(RR_SHARED_PTR<MessageElementData> value);
+		RR_INTRUSIVE_PTR<MessageElementData> GetData();
+		void SetData(RR_INTRUSIVE_PTR<MessageElementData> value);
 
 		//Version 2 Message
 		uint32_t ComputeSize();
@@ -261,14 +261,14 @@ public:
 		void Write3(ArrayBinaryWriter &w, const uint16_t& version_minor);
 		void Read3(ArrayBinaryReader &r, const uint16_t& version_minor);
 
-		static RR_SHARED_PTR<MessageElement> FindElement(std::vector<RR_SHARED_PTR<MessageElement> > &m, const std::string& name);
+		static RR_INTRUSIVE_PTR<MessageElement> FindElement(std::vector<RR_INTRUSIVE_PTR<MessageElement> > &m, const std::string& name);
 
-		static bool TryFindElement(std::vector<RR_SHARED_PTR<MessageElement> > &m, const std::string& name, RR_SHARED_PTR<MessageElement>& elem);
+		static bool TryFindElement(std::vector<RR_INTRUSIVE_PTR<MessageElement> > &m, const std::string& name, RR_INTRUSIVE_PTR<MessageElement>& elem);
 
-		static bool ContainsElement(std::vector<RR_SHARED_PTR<MessageElement> > &m, const std::string& name);
+		static bool ContainsElement(std::vector<RR_INTRUSIVE_PTR<MessageElement> > &m, const std::string& name);
 
 		template<typename T>
-		RR_SHARED_PTR<T> CastData()
+		RR_INTRUSIVE_PTR<T> CastData()
 		{
 			return rr_cast<T>(dat);
 		}
@@ -276,7 +276,7 @@ public:
 		std::string CastDataToString();
 
 		template<typename T>
-		static RR_SHARED_PTR<T> CastData(RR_SHARED_PTR<MessageElementData> Data)
+		static RR_INTRUSIVE_PTR<T> CastData(RR_INTRUSIVE_PTR<MessageElementData> Data)
 		{
 			return rr_cast<T>(Data);
 		}
@@ -293,9 +293,9 @@ public:
 	public:
 
 		std::string Type;
-		std::vector<RR_SHARED_PTR<MessageElement> > Elements;
+		std::vector<RR_INTRUSIVE_PTR<MessageElement> > Elements;
 
-		MessageElementStructure(const std::string& type_, const std::vector<RR_SHARED_PTR<MessageElement> > &elements_);
+		MessageElementStructure(const std::string& type_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_);
 
 		virtual std::string GetTypeString()
 		{
@@ -317,10 +317,10 @@ public:
 	class MessageElementMap : public MessageElementData
 	{
 	public:
-		std::vector<RR_SHARED_PTR<MessageElement> > Elements;
+		std::vector<RR_INTRUSIVE_PTR<MessageElement> > Elements;
 
 
-		MessageElementMap(const std::vector<RR_SHARED_PTR<MessageElement> >& e)
+		MessageElementMap(const std::vector<RR_INTRUSIVE_PTR<MessageElement> >& e)
 		{
 			Elements=e;
 		}
@@ -364,10 +364,10 @@ public:
 	class ROBOTRACONTEUR_CORE_API MessageElementList : public MessageElementData
 	{
 	public:
-		std::vector<RR_SHARED_PTR<MessageElement> > Elements;
+		std::vector<RR_INTRUSIVE_PTR<MessageElement> > Elements;
 
 
-		MessageElementList(const std::vector<RR_SHARED_PTR<MessageElement> >& e)
+		MessageElementList(const std::vector<RR_INTRUSIVE_PTR<MessageElement> >& e)
 		{
 			Elements=e;
 		}
@@ -394,11 +394,11 @@ public:
 	public:
 
 
-		std::vector<RR_SHARED_PTR<MessageElement> > Elements;
+		std::vector<RR_INTRUSIVE_PTR<MessageElement> > Elements;
 
 		virtual ~MessageElementMultiDimArray() {}
 
-		MessageElementMultiDimArray(const std::vector<RR_SHARED_PTR<MessageElement> > &e);
+		MessageElementMultiDimArray(const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &e);
 
 		virtual std::string GetTypeString()
 		{
@@ -424,9 +424,9 @@ public:
 	{
 	public:
 				
-		std::vector<RR_SHARED_PTR<MessageElement> > Elements;
+		std::vector<RR_INTRUSIVE_PTR<MessageElement> > Elements;
 
-		MessageElementPod(const std::vector<RR_SHARED_PTR<MessageElement> > &elements_);
+		MessageElementPod(const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_);
 
 		virtual std::string GetTypeString()
 		{
@@ -447,9 +447,9 @@ public:
 	public:
 
 		std::string Type;
-		std::vector<RR_SHARED_PTR<MessageElement> > Elements;
+		std::vector<RR_INTRUSIVE_PTR<MessageElement> > Elements;
 
-		MessageElementPodArray(const std::string& type_, const std::vector<RR_SHARED_PTR<MessageElement> > &elements_);
+		MessageElementPodArray(const std::string& type_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_);
 
 		virtual std::string GetTypeString()
 		{
@@ -470,9 +470,9 @@ public:
 	public:
 
 		std::string Type;
-		std::vector<RR_SHARED_PTR<MessageElement> > Elements;
+		std::vector<RR_INTRUSIVE_PTR<MessageElement> > Elements;
 
-		MessageElementPodMultiDimArray(const std::string& type_, const std::vector<RR_SHARED_PTR<MessageElement> > &elements_);
+		MessageElementPodMultiDimArray(const std::string& type_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_);
 
 		virtual std::string GetTypeString()
 		{
@@ -493,9 +493,9 @@ public:
 	public:
 
 		std::string Type;
-		std::vector<RR_SHARED_PTR<MessageElement> > Elements;
+		std::vector<RR_INTRUSIVE_PTR<MessageElement> > Elements;
 
-		MessageElementNamedArray(const std::string& type_, const std::vector<RR_SHARED_PTR<MessageElement> > &elements_);
+		MessageElementNamedArray(const std::string& type_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_);
 
 		virtual std::string GetTypeString()
 		{
@@ -516,9 +516,9 @@ public:
 	public:
 
 		std::string Type;
-		std::vector<RR_SHARED_PTR<MessageElement> > Elements;
+		std::vector<RR_INTRUSIVE_PTR<MessageElement> > Elements;
 
-		MessageElementNamedMultiDimArray(const std::string& type_, const std::vector<RR_SHARED_PTR<MessageElement> > &elements_);
+		MessageElementNamedMultiDimArray(const std::string& type_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_);
 
 		virtual std::string GetTypeString()
 		{
@@ -534,38 +534,62 @@ public:
 		}
 	};
 
-	ROBOTRACONTEUR_CORE_API RR_SHARED_PTR<Message> ShallowCopyMessage(RR_SHARED_PTR<Message> m);
-	ROBOTRACONTEUR_CORE_API RR_SHARED_PTR<MessageEntry> ShallowCopyMessageEntry(RR_SHARED_PTR<MessageEntry> mm);
-	ROBOTRACONTEUR_CORE_API RR_SHARED_PTR<MessageElement> ShallowCopyMessageElement(RR_SHARED_PTR<MessageElement> mm);
+
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<Message> CreateMessage();
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageHeader> CreateMessageHeader();
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageEntry> CreateMessageEntry();
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageEntry> CreateMessageEntry(MessageEntryType t, const std::string& n);
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElement> CreateMessageElement();
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElement> CreateMessageElement(const std::string& name, RR_INTRUSIVE_PTR<MessageElementData> datin);
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementStructure> CreateMessageElementStructure(const std::string& type_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_);
+	template <typename T>
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementMap<T> > CreateMessageElementMap(const std::vector<RR_INTRUSIVE_PTR<MessageElement> >& e)
+	{
+		return new MessageElementMap<T>(e);
+	}
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementMultiDimArray> CreateMessageElementMultiDimArray(const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &e);
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementList> CreateMessageElementList(const std::vector<RR_INTRUSIVE_PTR<MessageElement> >& e);
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementPod> CreateMessageElementPod(const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_);
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementPodArray> CreateMessageElementPodArray(const std::string& type_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_);
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> CreateMessageElementPodMultiDimArray(const std::string& type_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_);
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNamedArray> CreateMessageElementNamedArray(const std::string& type_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_);
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> CreateMessageElementNamedMultiDimArray(const std::string& type_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_);
+
+
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<Message> ShallowCopyMessage(RR_INTRUSIVE_PTR<Message> m);
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageEntry> ShallowCopyMessageEntry(RR_INTRUSIVE_PTR<MessageEntry> mm);
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElement> ShallowCopyMessageElement(RR_INTRUSIVE_PTR<MessageElement> mm);
+	
+	
 	
 	//MessageElement packing functions
 	template<typename T>
-	RR_SHARED_PTR<MessageElementData> MessageElement_PackScalar(const T& value)
+	RR_INTRUSIVE_PTR<MessageElementData> MessageElement_PackScalar(const T& value)
 	{
 		return RobotRaconteur::ScalarToRRArray<T>(value);
 	}
 
 	template<typename T>
-	RR_SHARED_PTR<MessageElement> MessageElement_PackScalarElement(const std::string& elementname, const T& value)
+	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackScalarElement(const std::string& elementname, const T& value)
 	{
-		return RR_MAKE_SHARED<MessageElement>(elementname, MessageElement_PackScalar(value));
+		return CreateMessageElement(elementname, MessageElement_PackScalar(value));
 	}
 
 	template<typename T>
-	RR_SHARED_PTR<MessageElementData> MessageElement_PackArray(const RR_SHARED_PTR<RRArray<T> >& value)
+	RR_INTRUSIVE_PTR<MessageElementData> MessageElement_PackArray(const RR_INTRUSIVE_PTR<RRArray<T> >& value)
 	{
 		if (!value) throw NullValueException("Arrays must not be null");
 		return value;
 	}
 
 	template<typename T>
-	RR_SHARED_PTR<MessageElement> MessageElement_PackArrayElement(const std::string& elementname, const RR_SHARED_PTR<RRArray<T> >& value)
+	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackArrayElement(const std::string& elementname, const RR_INTRUSIVE_PTR<RRArray<T> >& value)
 	{
-		return RR_MAKE_SHARED<MessageElement>(elementname, MessageElement_PackArray(value));
+		return CreateMessageElement(elementname, MessageElement_PackArray(value));
 	}
 
 	template<typename T, typename N>
-	RR_SHARED_PTR<MessageElementData> MessageElement_PackMultiDimArray(RR_WEAK_PTR<N> node, const RR_SHARED_PTR<RRMultiDimArray<T> >& value)
+	RR_INTRUSIVE_PTR<MessageElementData> MessageElement_PackMultiDimArray(RR_WEAK_PTR<N> node, const RR_INTRUSIVE_PTR<RRMultiDimArray<T> >& value)
 	{
 		if (!value) throw NullValueException("Arrays must not be null");
 		RR_SHARED_PTR<N> node1 = node.lock();
@@ -574,25 +598,25 @@ public:
 	}
 
 	template<typename T, typename N>
-	RR_SHARED_PTR<MessageElement> MessageElement_PackMultiDimArrayElement(RR_WEAK_PTR<N> node, const std::string& elementname, const RR_SHARED_PTR<RRMultiDimArray<T> >& value)
+	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackMultiDimArrayElement(RR_WEAK_PTR<N> node, const std::string& elementname, const RR_INTRUSIVE_PTR<RRMultiDimArray<T> >& value)
 	{
-		return RR_MAKE_SHARED<MessageElement>(elementname, MessageElement_PackMultiDimArray(node, value));
+		return CreateMessageElement(elementname, MessageElement_PackMultiDimArray(node, value));
 	}
 
 	template<typename T>
-	RR_SHARED_PTR<MessageElementData> MessageElement_PackString(const T& str)
+	RR_INTRUSIVE_PTR<MessageElementData> MessageElement_PackString(const T& str)
 	{
 		return RobotRaconteur::stringToRRArray(str);
 	}
 
 	template<typename T>
-	RR_SHARED_PTR<MessageElement> MessageElement_PackStringElement(const std::string& elementname, const T& str)
+	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackStringElement(const std::string& elementname, const T& str)
 	{
-		return RR_MAKE_SHARED<MessageElement>(elementname, MessageElement_PackString(str));
+		return CreateMessageElement(elementname, MessageElement_PackString(str));
 	}
 
 	template<typename T, typename N>
-	RR_SHARED_PTR<MessageElementData> MessageElement_PackVarType(RR_WEAK_PTR<N> node, const RR_SHARED_PTR<T>& s)
+	RR_INTRUSIVE_PTR<MessageElementData> MessageElement_PackVarType(RR_WEAK_PTR<N> node, const RR_INTRUSIVE_PTR<T>& s)
 	{
 		RR_SHARED_PTR<N> node1 = node.lock();
 		if (!node1) throw InvalidOperationException("Node has been released");
@@ -600,13 +624,13 @@ public:
 	}
 
 	template<typename T, typename N>
-	RR_SHARED_PTR<MessageElement> MessageElement_PackVarTypeElement(RR_WEAK_PTR<N> node, const std::string& elementname, const RR_SHARED_PTR<T>& s)
+	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackVarTypeElement(RR_WEAK_PTR<N> node, const std::string& elementname, const RR_INTRUSIVE_PTR<T>& s)
 	{
-		return RR_MAKE_SHARED<MessageElement>(elementname, MessageElement_PackVarType(node, s));
+		return CreateMessageElement(elementname, MessageElement_PackVarType(node, s));
 	}
 
 	template<typename T, typename N>
-	RR_SHARED_PTR<MessageElementData> MessageElement_PackStruct(RR_WEAK_PTR<N> node, const RR_SHARED_PTR<T>& s)
+	RR_INTRUSIVE_PTR<MessageElementData> MessageElement_PackStruct(RR_WEAK_PTR<N> node, const RR_INTRUSIVE_PTR<T>& s)
 	{
 		RR_SHARED_PTR<N> node1 = node.lock();
 		if (!node1) throw InvalidOperationException("Node has been released");
@@ -614,25 +638,25 @@ public:
 	}
 
 	template<typename T, typename N>
-	RR_SHARED_PTR<MessageElement> MessageElement_PackStructElement(RR_WEAK_PTR<N> node, const std::string& elementname, const RR_SHARED_PTR<T>& s)
+	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackStructElement(RR_WEAK_PTR<N> node, const std::string& elementname, const RR_INTRUSIVE_PTR<T>& s)
 	{
-		return RR_MAKE_SHARED<MessageElement>(elementname, MessageElement_PackStruct(node, s));
+		return CreateMessageElement(elementname, MessageElement_PackStruct(node, s));
 	}
 
 	template<typename T>
-	RR_SHARED_PTR<MessageElementData> MessageElement_PackEnum(const T& value)
+	RR_INTRUSIVE_PTR<MessageElementData> MessageElement_PackEnum(const T& value)
 	{
 		return RobotRaconteur::ScalarToRRArray<int32_t>((int32_t)value);
 	}
 
 	template<typename T>
-	RR_SHARED_PTR<MessageElement> MessageElement_PackEnumElement(const std::string& elementname, const T& value)
+	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackEnumElement(const std::string& elementname, const T& value)
 	{
-		return RR_MAKE_SHARED<MessageElement>(elementname, MessageElement_PackEnum(value));
+		return CreateMessageElement(elementname, MessageElement_PackEnum(value));
 	}
 		
 	template<typename K, typename T, typename N>
-	RR_SHARED_PTR<MessageElementData> MessageElement_PackMap(RR_WEAK_PTR<N> node, const RR_SHARED_PTR<RRMap<K, T> >& m)
+	RR_INTRUSIVE_PTR<MessageElementData> MessageElement_PackMap(RR_WEAK_PTR<N> node, const RR_INTRUSIVE_PTR<RRMap<K, T> >& m)
 	{
 		RR_SHARED_PTR<N> node1 = node.lock();
 		if (!node1) throw InvalidOperationException("Node has been released");
@@ -640,13 +664,13 @@ public:
 	}
 
 	template<typename K, typename T, typename N>
-	RR_SHARED_PTR<MessageElement> MessageElement_PackMapElement(RR_WEAK_PTR<N> node, const std::string& elementname, const RR_SHARED_PTR<RRMap<K, T> >& m)
+	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackMapElement(RR_WEAK_PTR<N> node, const std::string& elementname, const RR_INTRUSIVE_PTR<RRMap<K, T> >& m)
 	{
-		return RR_MAKE_SHARED<MessageElement>(elementname, MessageElement_PackMap(node, m));			
+		return CreateMessageElement(elementname, MessageElement_PackMap(node, m));			
 	}
 
 	template<typename T, typename N>
-	RR_SHARED_PTR<MessageElementData> MessageElement_PackList(RR_WEAK_PTR<N> node, const RR_SHARED_PTR<RRList<T> >& m)
+	RR_INTRUSIVE_PTR<MessageElementData> MessageElement_PackList(RR_WEAK_PTR<N> node, const RR_INTRUSIVE_PTR<RRList<T> >& m)
 	{
 		RR_SHARED_PTR<N> node1 = node.lock();
 		if (!node1) throw InvalidOperationException("Node has been released");
@@ -654,43 +678,43 @@ public:
 	}
 
 	template<typename T, typename N>
-	RR_SHARED_PTR<MessageElement> MessageElement_PackListElement(RR_WEAK_PTR<N> node, const std::string& elementname, const RR_SHARED_PTR<RRList<T> >& m)
+	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackListElement(RR_WEAK_PTR<N> node, const std::string& elementname, const RR_INTRUSIVE_PTR<RRList<T> >& m)
 	{
-		return RR_MAKE_SHARED<MessageElement>(elementname, MessageElement_PackList(node, m));
+		return CreateMessageElement(elementname, MessageElement_PackList(node, m));
 	}
 
 	//MessageElement unpacking functions
 	template<typename T>
-	T MessageElement_UnpackScalar(const RR_SHARED_PTR<MessageElement>& m)
+	T MessageElement_UnpackScalar(const RR_INTRUSIVE_PTR<MessageElement>& m)
 	{
 		return RRArrayToScalar<T>(m->CastData<RRArray<T> >());
 	}
 
 	template<typename T>
-	RR_SHARED_PTR<RRArray<T> > MessageElement_UnpackArray(const RR_SHARED_PTR<MessageElement>& m)
+	RR_INTRUSIVE_PTR<RRArray<T> > MessageElement_UnpackArray(const RR_INTRUSIVE_PTR<MessageElement>& m)
 	{
-		RR_SHARED_PTR<RRArray<T> > a = (m->CastData<RRArray<T> >());
+		RR_INTRUSIVE_PTR<RRArray<T> > a = (m->CastData<RRArray<T> >());
 		if (!a) throw NullValueException("Arrays must not be null");
 		return a;
 	}
 
 	template<typename T, typename N>
-	RR_SHARED_PTR<RRMultiDimArray<T> > MessageElement_UnpackMultiDimArray(RR_WEAK_PTR<N> node, const RR_SHARED_PTR<MessageElement>& m)
+	RR_INTRUSIVE_PTR<RRMultiDimArray<T> > MessageElement_UnpackMultiDimArray(RR_WEAK_PTR<N> node, const RR_INTRUSIVE_PTR<MessageElement>& m)
 	{
 		RR_SHARED_PTR<N> node1 = node.lock();
 		if (!node1) throw InvalidOperationException("Node has been released");
-		RR_SHARED_PTR<RRMultiDimArray<T> > a= RobotRaconteur::rr_cast<RRMultiDimArray<T> >(node1->template UnpackMultiDimArray<T>(m->CastData<MessageElementMultiDimArray>()));		
+		RR_INTRUSIVE_PTR<RRMultiDimArray<T> > a= RobotRaconteur::rr_cast<RRMultiDimArray<T> >(node1->template UnpackMultiDimArray<T>(m->CastData<MessageElementMultiDimArray>()));		
 		if (!a) throw NullValueException("Arrays must not be null");
 		return a;
 	}
 
-	static std::string MessageElement_UnpackString(const RR_SHARED_PTR<MessageElement>& m)
+	static std::string MessageElement_UnpackString(const RR_INTRUSIVE_PTR<MessageElement>& m)
 	{
 		return RRArrayToString(m->CastData<RRArray<char> >());
 	}
 
 	template<typename T, typename N>
-	RR_SHARED_PTR<T> MessageElement_UnpackStructure(RR_WEAK_PTR<N> node, const RR_SHARED_PTR<MessageElement>& m)
+	RR_INTRUSIVE_PTR<T> MessageElement_UnpackStructure(RR_WEAK_PTR<N> node, const RR_INTRUSIVE_PTR<MessageElement>& m)
 	{
 		RR_SHARED_PTR<N> node1 = node.lock();
 		if (!node1) throw InvalidOperationException("Node has been released");
@@ -698,13 +722,13 @@ public:
 	}
 
 	template<typename T>
-	T MessageElement_UnpackEnum(const RR_SHARED_PTR<MessageElement>& m)
+	T MessageElement_UnpackEnum(const RR_INTRUSIVE_PTR<MessageElement>& m)
 	{
 		return (T)RRArrayToScalar<int32_t>(m->CastData<RRArray<int32_t> >());
 	}
 		
 	template<typename N>
-	RR_SHARED_PTR<RRValue> MessageElement_UnpackVarValue(RR_WEAK_PTR<N> node, const RR_SHARED_PTR<MessageElement>& m)
+	RR_INTRUSIVE_PTR<RRValue> MessageElement_UnpackVarValue(RR_WEAK_PTR<N> node, const RR_INTRUSIVE_PTR<MessageElement>& m)
 	{
 		RR_SHARED_PTR<N> node1 = node.lock();
 		if (!node1) throw InvalidOperationException("Node has been released");
@@ -712,7 +736,7 @@ public:
 	}
 
 	template<typename K, typename T, typename N>
-	RR_SHARED_PTR<RRMap<K, T> > MessageElement_UnpackMap(RR_WEAK_PTR<N> node, const RR_SHARED_PTR<MessageElement>& m)
+	RR_INTRUSIVE_PTR<RRMap<K, T> > MessageElement_UnpackMap(RR_WEAK_PTR<N> node, const RR_INTRUSIVE_PTR<MessageElement>& m)
 	{
 		RR_SHARED_PTR<N> node1 = node.lock();
 		if (!node1) throw InvalidOperationException("Node has been released");
@@ -720,7 +744,7 @@ public:
 	}
 
 	template<typename T, typename N>
-	RR_SHARED_PTR<RRList<T> > MessageElement_UnpackList(RR_WEAK_PTR<N> node, const RR_SHARED_PTR<MessageElement>& m)
+	RR_INTRUSIVE_PTR<RRList<T> > MessageElement_UnpackList(RR_WEAK_PTR<N> node, const RR_INTRUSIVE_PTR<MessageElement>& m)
 	{
 		RR_SHARED_PTR<N> node1 = node.lock();
 		if (!node1) throw InvalidOperationException("Node has been released");

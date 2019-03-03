@@ -104,7 +104,7 @@ RR_SHARED_PTR<AndroidBluetoothConnector_params> AndroidHardwareHelper::VoidToAnd
 	return RR_SHARED_PTR<AndroidBluetoothConnector_params>(*static_cast<RR_SHARED_PTR<AndroidBluetoothConnector_params>*>(p));
 }
 
-std::vector<int8_t> AndroidHardwareHelper::MessageToVector(RR_SHARED_PTR<Message> m)
+std::vector<int8_t> AndroidHardwareHelper::MessageToVector(RR_INTRUSIVE_PTR<Message> m)
 {
 	if (!m) throw InvalidArgumentException("");
 
@@ -115,9 +115,9 @@ std::vector<int8_t> AndroidHardwareHelper::MessageToVector(RR_SHARED_PTR<Message
 	m->Write(w);
 	return o;
 }
-RR_SHARED_PTR<Message> AndroidHardwareHelper::VectorToMessage(std::vector<int8_t> v)
+RR_INTRUSIVE_PTR<Message> AndroidHardwareHelper::VectorToMessage(std::vector<int8_t> v)
 {
-	RR_SHARED_PTR<Message> o=RR_MAKE_SHARED<Message>();
+	RR_INTRUSIVE_PTR<Message> o=CreateMessage();
 	ArrayBinaryReader r((uint8_t*)&v[0], 0, v.size());
 	o->Read(r);
 	return o;

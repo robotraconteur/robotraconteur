@@ -56,7 +56,7 @@ namespace RobotRaconteur
 		::RobotRaconteur::NodeID NodeID;
 		std::string NodeName;
 		std::string Username;
-		RR_SHARED_PTR<RRMap<std::string, RRValue> > Credentials;
+		RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > Credentials;
 	};
 
 	class ROBOTRACONTEUR_CORE_API ServiceSubscriptionFilter
@@ -249,8 +249,8 @@ namespace RobotRaconteur
 
 		typedef boost::signals2::connection event_connection;
 
-		RR_SHARED_PTR<RRValue> GetInValueBase(TimeSpec* time = NULL, RR_SHARED_PTR<WireConnectionBase>* connection = NULL);
-		bool TryGetInValueBase(RR_SHARED_PTR<RRValue>& val, TimeSpec* time = NULL, RR_SHARED_PTR<WireConnectionBase>* connection = NULL);
+		RR_INTRUSIVE_PTR<RRValue> GetInValueBase(TimeSpec* time = NULL, RR_SHARED_PTR<WireConnectionBase>* connection = NULL);
+		bool TryGetInValueBase(RR_INTRUSIVE_PTR<RRValue>& val, TimeSpec* time = NULL, RR_SHARED_PTR<WireConnectionBase>* connection = NULL);
 
 		bool WaitInValueValid(int32_t timeout = RR_TIMEOUT_INFINITE);
 
@@ -259,7 +259,7 @@ namespace RobotRaconteur
 		bool GetIgnoreInValue();
 		void SetIgnoreInValue(bool ignore);
 
-		void SetOutValueAllBase(const RR_SHARED_PTR<RRValue>& val);
+		void SetOutValueAllBase(const RR_INTRUSIVE_PTR<RRValue>& val);
 
 		size_t GetWireConnectionCount();
 
@@ -273,7 +273,7 @@ namespace RobotRaconteur
 		void ClientConnected1(RR_WEAK_PTR<RRObject> client, RR_SHARED_PTR<WireConnectionBase> connection, RR_SHARED_PTR<RobotRaconteurException> err);
 
 		void WireConnectionClosed(RR_SHARED_PTR<detail::WireSubscription_connection> wire);
-		void WireValueChanged(RR_SHARED_PTR<detail::WireSubscription_connection> wire, RR_SHARED_PTR<RRValue> value, const TimeSpec& time);
+		void WireValueChanged(RR_SHARED_PTR<detail::WireSubscription_connection> wire, RR_INTRUSIVE_PTR<RRValue> value, const TimeSpec& time);
 
 		boost::mutex this_lock;
 		boost::unordered_set<RR_SHARED_PTR<detail::WireSubscription_connection> > connections;
@@ -281,7 +281,7 @@ namespace RobotRaconteur
 		RR_WEAK_PTR<RobotRaconteurNode> node;
 		RR_WEAK_PTR<ServiceSubscription> parent;
 
-		RR_SHARED_PTR<RRValue> in_value;
+		RR_INTRUSIVE_PTR<RRValue> in_value;
 		TimeSpec in_value_time;
 		boost::initialized<bool> in_value_valid;
 		RR_SHARED_PTR<WireConnectionBase> in_value_connection;
@@ -292,7 +292,7 @@ namespace RobotRaconteur
 
 		std::string membername;
 
-		virtual void fire_WireValueChanged(RR_SHARED_PTR<RRValue> value, const TimeSpec& time, RR_SHARED_PTR<WireConnectionBase> connection);
+		virtual void fire_WireValueChanged(RR_INTRUSIVE_PTR<RRValue> value, const TimeSpec& time, RR_SHARED_PTR<WireConnectionBase> connection);
 		virtual bool isempty_WireValueChanged();
 		RR_SHARED_PTR<detail::async_signal_pool_semaphore> wire_value_changed_semaphore;
 
@@ -321,7 +321,7 @@ namespace RobotRaconteur
 		}
 		bool TryGetInValue(T& val, TimeSpec* time = NULL, typename RR_SHARED_PTR<WireConnection<T> >* connection = NULL)
 		{
-			RR_SHARED_PTR<RRValue> o;
+			RR_INTRUSIVE_PTR<RRValue> o;
 			RR_SHARED_PTR<WireConnectionBase> connection1;
 			if (!TryGetInValueBase(o, time, &connection1)) return false;
 			val = RRPrimUtil<T>::PreUnpack(o);
@@ -346,7 +346,7 @@ namespace RobotRaconteur
 
 		boost::signals2::signal<void(RR_SHARED_PTR<WireSubscription<T> >, const T&, const TimeSpec&)> wire_value_changed;
 
-		virtual void fire_WireValueChanged(RR_SHARED_PTR<RRValue> value, const TimeSpec& time, RR_SHARED_PTR<WireConnectionBase> connection)
+		virtual void fire_WireValueChanged(RR_INTRUSIVE_PTR<RRValue> value, const TimeSpec& time, RR_SHARED_PTR<WireConnectionBase> connection)
 		{
 			wire_value_changed(RR_STATIC_POINTER_CAST<WireSubscription<T> >(shared_from_this()), RRPrimUtil<T>::PreUnpack(value), time);
 		}
@@ -368,9 +368,9 @@ namespace RobotRaconteur
 
 		typedef boost::signals2::connection event_connection;
 
-		RR_SHARED_PTR<RRValue> ReceivePacketBase();
-		bool TryReceivePacketBase(RR_SHARED_PTR<RRValue>& packet);
-		bool TryReceivePacketBaseWait(RR_SHARED_PTR<RRValue>& packet, int32_t timeout = RR_TIMEOUT_INFINITE, bool peek = false, RR_SHARED_PTR<PipeEndpointBase>* ep = NULL );
+		RR_INTRUSIVE_PTR<RRValue> ReceivePacketBase();
+		bool TryReceivePacketBase(RR_INTRUSIVE_PTR<RRValue>& packet);
+		bool TryReceivePacketBaseWait(RR_INTRUSIVE_PTR<RRValue>& packet, int32_t timeout = RR_TIMEOUT_INFINITE, bool peek = false, RR_SHARED_PTR<PipeEndpointBase>* ep = NULL );
 
 		size_t Available();
 		size_t GetActivePipeEndpointCount();
@@ -378,7 +378,7 @@ namespace RobotRaconteur
 		bool GetIgnoreReceived();
 		void SetIgnoreReceived(bool ignore);
 				
-		void AsyncSendPacketAllBase(const RR_SHARED_PTR<RRValue>& packet);
+		void AsyncSendPacketAllBase(const RR_INTRUSIVE_PTR<RRValue>& packet);
 
 		size_t GetPipeEndpointCount();
 
@@ -392,14 +392,14 @@ namespace RobotRaconteur
 		void ClientConnected1(RR_WEAK_PTR<RRObject> client, RR_SHARED_PTR<PipeEndpointBase> connection, RR_SHARED_PTR<RobotRaconteurException> err);
 
 		void PipeEndpointClosed(RR_SHARED_PTR<detail::PipeSubscription_connection> pipe);
-		void PipeEndpointPacketReceived(RR_SHARED_PTR<detail::PipeSubscription_connection> pipe, RR_SHARED_PTR<RRValue> packet);
+		void PipeEndpointPacketReceived(RR_SHARED_PTR<detail::PipeSubscription_connection> pipe, RR_INTRUSIVE_PTR<RRValue> packet);
 
 		boost::mutex this_lock;
 		boost::unordered_set<RR_SHARED_PTR<detail::PipeSubscription_connection> > connections;
 		boost::initialized<bool> closed;
 		RR_WEAK_PTR<ServiceSubscription> parent;
 
-		std::deque<boost::tuple<RR_SHARED_PTR<RRValue>, RR_SHARED_PTR<PipeEndpointBase> > > recv_packets;
+		std::deque<boost::tuple<RR_INTRUSIVE_PTR<RRValue>, RR_SHARED_PTR<PipeEndpointBase> > > recv_packets;
 		boost::condition_variable recv_packets_wait;
 
 		std::string membername;
@@ -432,7 +432,7 @@ namespace RobotRaconteur
 		}
 		bool TryReceivePacket(T& packet)
 		{
-			RR_SHARED_PTR<RRValue> o;
+			RR_INTRUSIVE_PTR<RRValue> o;
 			if (!TryReceivePacketBase(o)) return false;
 			packet = RRPrimUtil<T>::PreUnpack(o);
 			return true;
@@ -440,7 +440,7 @@ namespace RobotRaconteur
 
 		bool TryReceivePacketWait(T& packet, int32_t timeout = RR_TIMEOUT_INFINITE, bool peek = false, RR_SHARED_PTR<PipeEndpoint<T> >* ep = NULL)
 		{
-			RR_SHARED_PTR<RRValue> o;
+			RR_INTRUSIVE_PTR<RRValue> o;
 			RR_SHARED_PTR<PipeEndpointBase> ep1;
 			if (!TryReceivePacketBaseWait(o, timeout, peek, &ep1)) return false;
 			packet = RRPrimUtil<T>::PreUnpack(o);
@@ -490,7 +490,7 @@ namespace RobotRaconteur
 		public:
 			WireSubscription_send_iterator(RR_SHARED_PTR<WireSubscriptionBase> subscription);
 			RR_SHARED_PTR<WireConnectionBase> Next();
-			void SetOutValue(const RR_SHARED_PTR<RRValue>& value);
+			void SetOutValue(const RR_INTRUSIVE_PTR<RRValue>& value);
 			virtual ~WireSubscription_send_iterator();
 
 		};
@@ -506,7 +506,7 @@ namespace RobotRaconteur
 		public:
 			PipeSubscription_send_iterator(RR_SHARED_PTR<PipeSubscriptionBase> subscription);
 			RR_SHARED_PTR<PipeEndpointBase> Next();			
-			void AsyncSendPacket(const RR_SHARED_PTR<RRValue>& packet);
+			void AsyncSendPacket(const RR_INTRUSIVE_PTR<RRValue>& packet);
 			virtual ~PipeSubscription_send_iterator();
 
 		};

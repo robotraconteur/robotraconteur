@@ -43,7 +43,7 @@ namespace RobotRaconteurGen
 
 		static convert_type_result convert_type(const TypeDefinition& tdef);
 
-		static string remove_RR_SHARED_PTR(const string& vartype);
+		static string remove_RR_INTRUSIVE_PTR(const string& vartype);
 
 		struct get_variable_type_result
 		{

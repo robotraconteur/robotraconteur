@@ -47,6 +47,9 @@
 
 #endif
 
+#define RR_INTRUSIVE_PTR boost::intrusive_ptr
+#define RR_INTRUSIVE_PTR boost::intrusive_ptr
+
 #define RR_UNORDERED_MAP boost::unordered_map
 
 #include <boost/thread.hpp>

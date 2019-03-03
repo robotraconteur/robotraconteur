@@ -26,7 +26,7 @@ namespace RobotRaconteur
 
 		HardwareTransportConnection(RR_SHARED_PTR<HardwareTransport> parent, bool server, uint32_t local_endpoint);
 				
-		virtual void MessageReceived(RR_SHARED_PTR<Message> m);
+		virtual void MessageReceived(RR_INTRUSIVE_PTR<Message> m);
 	protected:
 
 		void AsyncAttachSocket1(std::string noden, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);

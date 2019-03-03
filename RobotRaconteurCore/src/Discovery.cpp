@@ -38,14 +38,14 @@ namespace RobotRaconteur
 		RootObjectType = info.RootObjectType;
 		if (info.RootObjectImplements)
 		{
-			BOOST_FOREACH(RR_SHARED_PTR<RobotRaconteur::RRArray<char> >& e, *info.RootObjectImplements | boost::adaptors::map_values)
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<char> >& e, *info.RootObjectImplements | boost::adaptors::map_values)
 			{
 				RootObjectImplements.push_back(RRArrayToString(e));
 			}
 		}
 		if (info.ConnectionURL)
 		{
-			BOOST_FOREACH(RR_SHARED_PTR<RobotRaconteur::RRArray<char> >& e, *info.ConnectionURL | boost::adaptors::map_values)
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<char> >& e, *info.ConnectionURL | boost::adaptors::map_values)
 			{
 				ConnectionURL.push_back(RRArrayToString(e));
 			}
@@ -286,7 +286,7 @@ namespace RobotRaconteur
 		{
 		}
 
-		void Discovery_findservicebytype::serviceinfo_callback(RR_SHARED_PTR<MessageEntry> ret1, RR_SHARED_PTR<RobotRaconteurException> err, RR_SHARED_PTR<ServiceStub> client, std::string url, uint32_t key)
+		void Discovery_findservicebytype::serviceinfo_callback(RR_INTRUSIVE_PTR<MessageEntry> ret1, RR_SHARED_PTR<RobotRaconteurException> err, RR_SHARED_PTR<ServiceStub> client, std::string url, uint32_t key)
 		{
 			boost::recursive_mutex::scoped_lock lock2(work_lock);
 			if (err)
@@ -344,12 +344,12 @@ namespace RobotRaconteur
 
 					if (ret1->Error == RobotRaconteur::MessageErrorType_None)
 					{
-						RR_SHARED_PTR<RobotRaconteur::MessageElement> me = ret1->FindElement("return");
-						RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteurServiceIndex::ServiceInfo> > ret = RobotRaconteur::rr_cast<RobotRaconteur::RRMap<int32_t, RobotRaconteurServiceIndex::ServiceInfo  > >((node->UnpackMapType<int32_t, RobotRaconteurServiceIndex::ServiceInfo  >(me->CastData<RobotRaconteur::MessageElementMap<int32_t> >())));
+						RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me = ret1->FindElement("return");
+						RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteurServiceIndex::ServiceInfo> > ret = RobotRaconteur::rr_cast<RobotRaconteur::RRMap<int32_t, RobotRaconteurServiceIndex::ServiceInfo  > >((node->UnpackMapType<int32_t, RobotRaconteurServiceIndex::ServiceInfo  >(me->CastData<RobotRaconteur::MessageElementMap<int32_t> >())));
 
 						if (ret)
 						{
-							BOOST_FOREACH(RR_SHARED_PTR<RobotRaconteurServiceIndex::ServiceInfo>& ii, *ret | boost::adaptors::map_values)
+							BOOST_FOREACH(RR_INTRUSIVE_PTR<RobotRaconteurServiceIndex::ServiceInfo>& ii, *ret | boost::adaptors::map_values)
 							{
 								if (!ii) continue;
 								if (ii->RootObjectType == servicetype)
@@ -378,7 +378,7 @@ namespace RobotRaconteur
 								}
 								else
 								{
-									BOOST_FOREACH(RR_SHARED_PTR<RRArray<char> >& impl, *ii->RootObjectImplements | boost::adaptors::map_values)
+									BOOST_FOREACH(RR_INTRUSIVE_PTR<RRArray<char> >& impl, *ii->RootObjectImplements | boost::adaptors::map_values)
 									{
 										if (RRArrayToString(impl) == servicetype)
 										{
@@ -495,7 +495,7 @@ namespace RobotRaconteur
 
 
 						RR_SHARED_PTR<ServiceStub> client3 = rr_cast<ServiceStub>(client);
-						RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req = RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_FunctionCallReq, "GetLocalNodeServices");
+						RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req = RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallReq, "GetLocalNodeServices");
 						client3->AsyncProcessRequest(rr_req, boost::bind(&Discovery_findservicebytype::serviceinfo_callback, shared_from_this(), _1, _2, client3, url, key2), 5000);
 
 
@@ -569,7 +569,7 @@ namespace RobotRaconteur
 						active_count++;
 						key = active_count;
 
-						node->AsyncConnectService(e, "", (RR_SHARED_PTR<RRMap<std::string, RRValue> >()), NULL, "", boost::bind(&Discovery_findservicebytype::connect_callback, shared_from_this(), _1, _2, e.front(), key), timeout);
+						node->AsyncConnectService(e, "", (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()), NULL, "", boost::bind(&Discovery_findservicebytype::connect_callback, shared_from_this(), _1, _2, e.front(), key), timeout);
 
 						active.push_back(key);
 					}
@@ -660,19 +660,19 @@ namespace RobotRaconteur
 
 		}
 
-		static std::vector<std::string> Discovery_updateserviceinfo_convertmap(RR_SHARED_PTR<RRMap<int32_t, RRArray<char> > > d)
+		static std::vector<std::string> Discovery_updateserviceinfo_convertmap(RR_INTRUSIVE_PTR<RRMap<int32_t, RRArray<char> > > d)
 		{			
 			RR_NULL_CHECK(d);
 			std::vector<std::string> o;
 			o.reserve(d->size());
-			BOOST_FOREACH(RR_SHARED_PTR<RRArray<char> > d2, *d | boost::adaptors::map_values)
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<RRArray<char> > d2, *d | boost::adaptors::map_values)
 			{
 				o.push_back(RRArrayToString(d2));
 			}
 			return o;
 		}
 
-		void Discovery_updateserviceinfo::serviceinfo_handler(RR_SHARED_PTR<MessageEntry> ret1, RR_SHARED_PTR<RobotRaconteurException> err)
+		void Discovery_updateserviceinfo::serviceinfo_handler(RR_INTRUSIVE_PTR<MessageEntry> ret1, RR_SHARED_PTR<RobotRaconteurException> err)
 		{
 			boost::mutex::scoped_lock lock(this_lock);
 
@@ -714,12 +714,12 @@ namespace RobotRaconteur
 
 			try
 			{
-				RR_SHARED_PTR<RobotRaconteur::MessageElement> me = ret1->FindElement("return");
-				RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteurServiceIndex::ServiceInfo> > ret = RobotRaconteur::rr_cast<RobotRaconteur::RRMap<int32_t, RobotRaconteurServiceIndex::ServiceInfo> >((n->UnpackMapType<int32_t, RobotRaconteurServiceIndex::ServiceInfo>(me->CastData<RobotRaconteur::MessageElementMap<int32_t> >())));
+				RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me = ret1->FindElement("return");
+				RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteurServiceIndex::ServiceInfo> > ret = RobotRaconteur::rr_cast<RobotRaconteur::RRMap<int32_t, RobotRaconteurServiceIndex::ServiceInfo> >((n->UnpackMapType<int32_t, RobotRaconteurServiceIndex::ServiceInfo>(me->CastData<RobotRaconteur::MessageElementMap<int32_t> >())));
 
 				if (ret)
 				{
-					BOOST_FOREACH(RR_SHARED_PTR<RobotRaconteurServiceIndex::ServiceInfo>& e, *ret | boost::adaptors::map_values)
+					BOOST_FOREACH(RR_INTRUSIVE_PTR<RobotRaconteurServiceIndex::ServiceInfo>& e, *ret | boost::adaptors::map_values)
 					{
 						ServiceInfo2 o1;
 						o1.NodeID = remote_nodeid;
@@ -799,7 +799,7 @@ namespace RobotRaconteur
 					catch (std::exception&) {}
 				}
 
-				RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req = RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_FunctionCallReq, "GetLocalNodeServices");
+				RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req = RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallReq, "GetLocalNodeServices");
 				client3->AsyncProcessRequest(rr_req, boost::bind(&Discovery_updateserviceinfo::serviceinfo_handler, shared_from_this(), _1, _2),5000);
 			}
 			catch (RobotRaconteurException& err)
@@ -840,7 +840,7 @@ namespace RobotRaconteur
 
 			try
 			{
-				n->AsyncConnectService(urls, "", RR_SHARED_PTR<RRMap<std::string, RRValue> >(), NULL, "",
+				n->AsyncConnectService(urls, "", RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(), NULL, "",
 					boost::bind(&Discovery_updateserviceinfo::connect_handler, shared_from_this(), _1, _2), 15000);
 			}
 			catch (RobotRaconteurException& err)

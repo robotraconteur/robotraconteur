@@ -243,10 +243,10 @@ uint32_t RobotRaconteurNode::RegisterTransport(RR_SHARED_PTR<Transport> transpor
 }
 
 
-RR_SHARED_PTR<MessageElementStructure> RobotRaconteurNode::PackStructure(RR_SHARED_PTR<RRStructure> structure)
+RR_INTRUSIVE_PTR<MessageElementStructure> RobotRaconteurNode::PackStructure(RR_INTRUSIVE_PTR<RRStructure> structure)
 {
 	
-	if (!structure) return RR_SHARED_PTR<MessageElementStructure>();
+	if (!structure) return RR_INTRUSIVE_PTR<MessageElementStructure>();
 
 	std::string type=structure->RRType();
 
@@ -259,9 +259,9 @@ RR_SHARED_PTR<MessageElementStructure> RobotRaconteurNode::PackStructure(RR_SHAR
 
 }
 
-RR_SHARED_PTR<RRStructure> RobotRaconteurNode::UnpackStructure(RR_SHARED_PTR<MessageElementStructure> structure)
+RR_INTRUSIVE_PTR<RRStructure> RobotRaconteurNode::UnpackStructure(RR_INTRUSIVE_PTR<MessageElementStructure> structure)
 {
-	if (!structure) return RR_SHARED_PTR<RRStructure>();
+	if (!structure) return RR_INTRUSIVE_PTR<RRStructure>();
 
 	std::string type=structure->Type;
 
@@ -275,10 +275,10 @@ RR_SHARED_PTR<RRStructure> RobotRaconteurNode::UnpackStructure(RR_SHARED_PTR<Mes
 	
 }
 
-RR_SHARED_PTR<MessageElementPodArray> RobotRaconteurNode::PackPodArray(RR_SHARED_PTR<RRPodBaseArray> a)
+RR_INTRUSIVE_PTR<MessageElementPodArray> RobotRaconteurNode::PackPodArray(RR_INTRUSIVE_PTR<RRPodBaseArray> a)
 {
 
-	if (!a) return RR_SHARED_PTR<MessageElementPodArray>();
+	if (!a) return RR_INTRUSIVE_PTR<MessageElementPodArray>();
 
 	std::string type = a->RRElementTypeString();
 
@@ -290,9 +290,9 @@ RR_SHARED_PTR<MessageElementPodArray> RobotRaconteurNode::PackPodArray(RR_SHARED
 	return factory->PackPodArray(a);
 }
 
-RR_SHARED_PTR<RRPodBaseArray> RobotRaconteurNode::UnpackPodArray(RR_SHARED_PTR<MessageElementPodArray> a)
+RR_INTRUSIVE_PTR<RRPodBaseArray> RobotRaconteurNode::UnpackPodArray(RR_INTRUSIVE_PTR<MessageElementPodArray> a)
 {
-	if (!a) return RR_SHARED_PTR<RRPodBaseArray>();
+	if (!a) return RR_INTRUSIVE_PTR<RRPodBaseArray>();
 
 	std::string type = a->Type;
 
@@ -305,10 +305,10 @@ RR_SHARED_PTR<RRPodBaseArray> RobotRaconteurNode::UnpackPodArray(RR_SHARED_PTR<M
 	return rr_cast<RRPodBaseArray>(factory->UnpackPodArray(a));
 }
 
-RR_SHARED_PTR<MessageElementPodMultiDimArray> RobotRaconteurNode::PackPodMultiDimArray(RR_SHARED_PTR<RRPodBaseMultiDimArray> a)
+RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> RobotRaconteurNode::PackPodMultiDimArray(RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> a)
 {
 
-	if (!a) return RR_SHARED_PTR<MessageElementPodMultiDimArray>();
+	if (!a) return RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray>();
 
 	std::string type = a->RRElementTypeString();
 
@@ -320,9 +320,9 @@ RR_SHARED_PTR<MessageElementPodMultiDimArray> RobotRaconteurNode::PackPodMultiDi
 	return factory->PackPodMultiDimArray(a);
 }
 
-RR_SHARED_PTR<RRPodBaseMultiDimArray> RobotRaconteurNode::UnpackPodMultiDimArray(RR_SHARED_PTR<MessageElementPodMultiDimArray> a)
+RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> RobotRaconteurNode::UnpackPodMultiDimArray(RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> a)
 {
-	if (!a) return RR_SHARED_PTR<RRPodBaseMultiDimArray>();
+	if (!a) return RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray>();
 
 	std::string type = a->Type;
 
@@ -336,10 +336,10 @@ RR_SHARED_PTR<RRPodBaseMultiDimArray> RobotRaconteurNode::UnpackPodMultiDimArray
 }
 
 
-RR_SHARED_PTR<MessageElementNamedArray> RobotRaconteurNode::PackNamedArray(RR_SHARED_PTR<RRNamedBaseArray> a)
+RR_INTRUSIVE_PTR<MessageElementNamedArray> RobotRaconteurNode::PackNamedArray(RR_INTRUSIVE_PTR<RRNamedBaseArray> a)
 {
 
-	if (!a) return RR_SHARED_PTR<MessageElementNamedArray>();
+	if (!a) return RR_INTRUSIVE_PTR<MessageElementNamedArray>();
 
 	std::string type = a->RRElementTypeString();
 
@@ -351,9 +351,9 @@ RR_SHARED_PTR<MessageElementNamedArray> RobotRaconteurNode::PackNamedArray(RR_SH
 	return factory->PackNamedArray(a);
 }
 
-RR_SHARED_PTR<RRNamedBaseArray> RobotRaconteurNode::UnpackNamedArray(RR_SHARED_PTR<MessageElementNamedArray> a)
+RR_INTRUSIVE_PTR<RRNamedBaseArray> RobotRaconteurNode::UnpackNamedArray(RR_INTRUSIVE_PTR<MessageElementNamedArray> a)
 {
-	if (!a) return RR_SHARED_PTR<RRNamedBaseArray>();
+	if (!a) return RR_INTRUSIVE_PTR<RRNamedBaseArray>();
 
 	std::string type = a->Type;
 
@@ -366,10 +366,10 @@ RR_SHARED_PTR<RRNamedBaseArray> RobotRaconteurNode::UnpackNamedArray(RR_SHARED_P
 	return rr_cast<RRNamedBaseArray>(factory->UnpackNamedArray(a));
 }
 
-RR_SHARED_PTR<MessageElementNamedMultiDimArray> RobotRaconteurNode::PackNamedMultiDimArray(RR_SHARED_PTR<RRNamedBaseMultiDimArray> a)
+RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> RobotRaconteurNode::PackNamedMultiDimArray(RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> a)
 {
 
-	if (!a) return RR_SHARED_PTR<MessageElementNamedMultiDimArray>();
+	if (!a) return RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray>();
 
 	std::string type = a->RRElementTypeString();
 
@@ -381,9 +381,9 @@ RR_SHARED_PTR<MessageElementNamedMultiDimArray> RobotRaconteurNode::PackNamedMul
 	return factory->PackNamedMultiDimArray(a);
 }
 
-RR_SHARED_PTR<RRNamedBaseMultiDimArray> RobotRaconteurNode::UnpackNamedMultiDimArray(RR_SHARED_PTR<MessageElementNamedMultiDimArray> a)
+RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> RobotRaconteurNode::UnpackNamedMultiDimArray(RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> a)
 {
-	if (!a) return RR_SHARED_PTR<RRNamedBaseMultiDimArray>();
+	if (!a) return RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray>();
 
 	std::string type = a->Type;
 
@@ -396,10 +396,10 @@ RR_SHARED_PTR<RRNamedBaseMultiDimArray> RobotRaconteurNode::UnpackNamedMultiDimA
 	return rr_cast<RRNamedBaseMultiDimArray>(factory->UnpackNamedMultiDimArray(a));
 }
 
-RR_SHARED_PTR<MessageElementData> RobotRaconteurNode::PackVarType(RR_SHARED_PTR<RRValue> vardata)
+RR_INTRUSIVE_PTR<MessageElementData> RobotRaconteurNode::PackVarType(RR_INTRUSIVE_PTR<RRValue> vardata)
 {
 
-	if (!vardata) return RR_SHARED_PTR<MessageElementData>();
+	if (!vardata) return RR_INTRUSIVE_PTR<MessageElementData>();
 
 	std::string type=vardata->RRType();
 
@@ -494,12 +494,12 @@ RR_SHARED_PTR<MessageElementData> RobotRaconteurNode::PackVarType(RR_SHARED_PTR<
 	return PackStructure(rr_cast<RRStructure>(vardata));
 }
 
-RR_SHARED_PTR<RRValue> RobotRaconteurNode::UnpackVarType(RR_SHARED_PTR<MessageElement> mvardata1)
+RR_INTRUSIVE_PTR<RRValue> RobotRaconteurNode::UnpackVarType(RR_INTRUSIVE_PTR<MessageElement> mvardata1)
 {
-	if (!mvardata1) return RR_SHARED_PTR<RRValue>();
-	if (mvardata1->ElementType==DataTypes_void_t) return RR_SHARED_PTR<RRValue>();
+	if (!mvardata1) return RR_INTRUSIVE_PTR<RRValue>();
+	if (mvardata1->ElementType==DataTypes_void_t) return RR_INTRUSIVE_PTR<RRValue>();
 
-	RR_SHARED_PTR<MessageElementData> mvardata=mvardata1->GetData();
+	RR_INTRUSIVE_PTR<MessageElementData> mvardata=mvardata1->GetData();
 
 	DataTypes type=mvardata->GetTypeID();
 
@@ -740,7 +740,7 @@ RobotRaconteurNode::~RobotRaconteurNode()
 }
 
 
-void RobotRaconteurNode::SendMessage(RR_SHARED_PTR<Message> m)
+void RobotRaconteurNode::SendMessage(RR_INTRUSIVE_PTR<Message> m)
 {
 
 	if (m->header->SenderNodeID != NodeID())
@@ -768,7 +768,7 @@ void RobotRaconteurNode::SendMessage(RR_SHARED_PTR<Message> m)
 
 }
 
-void RobotRaconteurNode::AsyncSendMessage(RR_SHARED_PTR<Message> m, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& callback)
+void RobotRaconteurNode::AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& callback)
 {
 	if (m->header->SenderNodeID != NodeID())
 	{
@@ -798,14 +798,14 @@ void RobotRaconteurNode::AsyncSendMessage(RR_SHARED_PTR<Message> m, boost::funct
 
 }
 
-void RobotRaconteurNode::MessageReceived(RR_SHARED_PTR<Message> m)
+void RobotRaconteurNode::MessageReceived(RR_INTRUSIVE_PTR<Message> m)
 {
 	try
 		{
 		if (m->header->ReceiverNodeID != NodeID())
 		{
 
-				RR_SHARED_PTR<Message> eret = GenerateErrorReturnMessage(m, MessageErrorType_NodeNotFound, "RobotRaconteur.NodeNotFound", "Could not find route to remote node");
+				RR_INTRUSIVE_PTR<Message> eret = GenerateErrorReturnMessage(m, MessageErrorType_NodeNotFound, "RobotRaconteur.NodeNotFound", "Could not find route to remote node");
 				if (eret->entries.size() > 0)
 					SendMessage(eret);
 		}
@@ -831,7 +831,7 @@ void RobotRaconteurNode::MessageReceived(RR_SHARED_PTR<Message> m)
 			else
 			{			
 				
-			RR_SHARED_PTR<Message> eret = GenerateErrorReturnMessage(m, MessageErrorType_InvalidEndpoint, "RobotRaconteur.InvalidEndpoint", "Invalid destination endpoint");
+			RR_INTRUSIVE_PTR<Message> eret = GenerateErrorReturnMessage(m, MessageErrorType_InvalidEndpoint, "RobotRaconteur.InvalidEndpoint", "Invalid destination endpoint");
 			if (eret->entries.size() > 0)
 				SendMessage(eret);				
 			}
@@ -925,21 +925,21 @@ void RobotRaconteurNode::SetDynamicServiceFactory(RR_SHARED_PTR<RobotRaconteur::
 	this->dynamic_factory = f;
 }
 
-RR_SHARED_PTR<Message> RobotRaconteurNode::GenerateErrorReturnMessage(RR_SHARED_PTR<Message> m, MessageErrorType err, const std::string &errname, const std::string &errdesc)
+RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::GenerateErrorReturnMessage(RR_INTRUSIVE_PTR<Message> m, MessageErrorType err, const std::string &errname, const std::string &errdesc)
 {
-	RR_SHARED_PTR<Message> ret = RR_MAKE_SHARED<Message>();
-	ret->header = RR_MAKE_SHARED<MessageHeader>();
+	RR_INTRUSIVE_PTR<Message> ret = CreateMessage();
+	ret->header = CreateMessageHeader();
 	ret->header->ReceiverNodeName = m->header->SenderNodeName;
 	ret->header->SenderNodeName = m->header->ReceiverNodeName;
 	ret->header->ReceiverNodeID = m->header->SenderNodeID;
 	ret->header->ReceiverEndpoint = m->header->SenderEndpoint;
 	ret->header->SenderEndpoint = m->header->ReceiverEndpoint;
 	ret->header->SenderNodeID = m->header->ReceiverNodeID;
-	BOOST_FOREACH (RR_SHARED_PTR<MessageEntry>& me, m->entries)
+	BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageEntry>& me, m->entries)
 	{
 		if ((static_cast<int32_t>(me->EntryType)) % 2 == 1)
 		{
-			RR_SHARED_PTR<MessageEntry> eret = RR_MAKE_SHARED<MessageEntry>((MessageEntryType)(me->EntryType+1), me->MemberName);
+			RR_INTRUSIVE_PTR<MessageEntry> eret = CreateMessageEntry((MessageEntryType)(me->EntryType+1), me->MemberName);
 			eret->RequestID = me->RequestID;
 			eret->ServicePath = me->ServicePath;
 			eret->AddElement("errorname", stringToRRArray(errname));
@@ -1047,7 +1047,7 @@ RR_SHARED_PTR<ServerContext> RobotRaconteurNode::GetService(const std::string &n
 }
 
 
-RR_SHARED_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_SHARED_PTR<Message> m, uint32_t transportid, RR_SHARED_PTR<ITransportConnection> tc)
+RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_INTRUSIVE_PTR<Message> m, uint32_t transportid, RR_SHARED_PTR<ITransportConnection> tc)
 {
 
 
@@ -1061,12 +1061,12 @@ RR_SHARED_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_SHARED_PTR<Message>
 	{
 		//Workaround for security of getting object types
 		MessageReceived(m);
-		return RR_SHARED_PTR<Message>();
+		return RR_INTRUSIVE_PTR<Message>();
 
 	}
 
-	RR_SHARED_PTR<Message> ret = RR_MAKE_SHARED<Message>();
-	ret->header = RR_MAKE_SHARED<MessageHeader>();
+	RR_INTRUSIVE_PTR<Message> ret = CreateMessage();
+	ret->header = CreateMessageHeader();
 	ret->header->ReceiverNodeName = m->header->SenderNodeName;
 	ret->header->SenderNodeName = this->NodeName();
 	ret->header->ReceiverNodeID = m->header->SenderNodeID;
@@ -1074,9 +1074,9 @@ RR_SHARED_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_SHARED_PTR<Message>
 	ret->header->SenderEndpoint = m->header->ReceiverEndpoint;
 	ret->header->SenderNodeID = this->NodeID();
 
-	BOOST_FOREACH (RR_SHARED_PTR<MessageEntry>& e, m->entries)
+	BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageEntry>& e, m->entries)
 	{
-		RR_SHARED_PTR<MessageEntry> eret = ret->AddEntry((MessageEntryType)(((uint16_t)e->EntryType)+1),e->MemberName);
+		RR_INTRUSIVE_PTR<MessageEntry> eret = ret->AddEntry((MessageEntryType)(((uint16_t)e->EntryType)+1),e->MemberName);
 		eret->RequestID = e->RequestID;
 		eret->ServicePath = e->ServicePath;
 
@@ -1098,7 +1098,7 @@ RR_SHARED_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_SHARED_PTR<Message>
 						s = GetService(s1.at(0));
 
 						RobotRaconteurVersion v;
-						RR_SHARED_PTR<MessageElement> m_ver;
+						RR_INTRUSIVE_PTR<MessageElement> m_ver;
 						if (e->TryFindElement("clientversion",m_ver))
 						{
 							v.FromString(m_ver->CastDataToString());
@@ -1127,8 +1127,8 @@ RR_SHARED_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_SHARED_PTR<Message>
 						bool is_service_type=false;
 						bool is_service_type2 = false;
 
-						RR_SHARED_PTR<MessageElement> el1;
-						RR_SHARED_PTR<MessageElement> el2;
+						RR_INTRUSIVE_PTR<MessageElement> el1;
+						RR_INTRUSIVE_PTR<MessageElement> el2;
 						is_service_type=e->TryFindElement("ServiceType", el1);
 						is_service_type2=e->TryFindElement("servicetype", el2);
 
@@ -1145,14 +1145,14 @@ RR_SHARED_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_SHARED_PTR<Message>
 						else
 						{
 							RobotRaconteurVersion v;
-							RR_SHARED_PTR<MessageElement> m_ver;
+							RR_INTRUSIVE_PTR<MessageElement> m_ver;
 							if (e->TryFindElement("clientversion", m_ver))
 							{
 								v.FromString(m_ver->CastDataToString());
 							}
 
 							servicedef = GetService(name)->GetRootObjectServiceDef(v)->DefString();
-							RR_SHARED_PTR<RRMap<std::string,RRValue> > attr=RR_MAKE_SHARED<RRMap<std::string,RRValue> >();
+							RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> > attr=AllocateEmptyRRMap<std::string,RRValue>();
 							attr->GetStorageContainer()=GetService(name)->GetAttributes();
 							eret->AddElement("attributes", PackMapType<std::string, RRValue>(attr));
 						}
@@ -1261,7 +1261,7 @@ RR_SHARED_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_SHARED_PTR<Message>
 
 						s = GetService(s1.at(0));
 
-						RR_SHARED_PTR<RRMap<std::string, RRValue> > attr=RR_MAKE_SHARED<RRMap<std::string, RRValue> >();
+						RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > attr=AllocateEmptyRRMap<std::string, RRValue>();
 						attr->GetStorageContainer()= (s->GetAttributes());
 						eret->AddElement("return", PackMapType<std::string, RRValue>(attr));
 					}
@@ -1282,7 +1282,7 @@ RR_SHARED_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_SHARED_PTR<Message>
 				RR_SHARED_PTR<ServerContext> c;
 
 				RobotRaconteurVersion v;
-				RR_SHARED_PTR<MessageElement> m_ver;
+				RR_INTRUSIVE_PTR<MessageElement> m_ver;
 				if (e->TryFindElement("clientversion", m_ver))
 				{
 					v.FromString(m_ver->CastDataToString());
@@ -1309,7 +1309,7 @@ RR_SHARED_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_SHARED_PTR<Message>
 
 					try
 					{
-						RR_SHARED_PTR<MessageElement> returnservicedefs_el;
+						RR_INTRUSIVE_PTR<MessageElement> returnservicedefs_el;
 						if (e->TryFindElement("returnservicedefs", returnservicedefs_el))
 						{
 							std::string returnservicedef_str = returnservicedefs_el->CastDataToString();
@@ -1353,10 +1353,10 @@ RR_SHARED_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_SHARED_PTR<Message>
 
 						uint32_t n = 0;
 
-						std::vector<RR_SHARED_PTR<MessageElement> > servicedef_list;
+						std::vector<RR_INTRUSIVE_PTR<MessageElement> > servicedef_list;
 						BOOST_FOREACH(RR_SHARED_PTR<ServiceFactory> d1, defs | boost::adaptors::map_values)
 						{
-							RR_SHARED_PTR<MessageElement> e1 = RR_MAKE_SHARED<MessageElement>();
+							RR_INTRUSIVE_PTR<MessageElement> e1 = CreateMessageElement();
 							e1->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
 							e1->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
 							e1->ElementNumber = n;
@@ -1365,7 +1365,7 @@ RR_SHARED_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_SHARED_PTR<Message>
 							n++;
 						}
 
-						eret->AddElement("servicedefs", RR_MAKE_SHARED<MessageElementList>(servicedef_list));
+						eret->AddElement("servicedefs", CreateMessageElementList(servicedef_list));
 					}
 				}
 				catch (std::exception&)
@@ -1421,8 +1421,8 @@ RR_SHARED_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_SHARED_PTR<Message>
 				{
 					if (c->RequireValidUser())
 					{
-						RR_SHARED_PTR<MessageElement> username_el;
-						RR_SHARED_PTR<MessageElement> credentials_el;
+						RR_INTRUSIVE_PTR<MessageElement> username_el;
+						RR_INTRUSIVE_PTR<MessageElement> credentials_el;
 						if (!e->TryFindElement("username", username_el))
 						{
 							throw AuthenticationException("Username not provided");
@@ -1433,7 +1433,7 @@ RR_SHARED_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_SHARED_PTR<Message>
 							throw AuthenticationException("Credentials not provided");
 						}
 
-						RR_SHARED_PTR<RRMap<std::string, RRValue> > credentials = rr_cast<RRMap<std::string,RRValue> >(UnpackMapType<std::string, RRValue>(credentials_el->CastData<MessageElementMap<std::string> >()));
+						RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials = rr_cast<RRMap<std::string,RRValue> >(UnpackMapType<std::string, RRValue>(credentials_el->CastData<MessageElementMap<std::string> >()));
 						if (!credentials)
 						{
 							throw AuthenticationException("Credentials cannot be null");
@@ -1480,14 +1480,14 @@ RR_SHARED_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_SHARED_PTR<Message>
 
 
 
-void RobotRaconteurNode::AsyncConnectService(const std::string &url, const std::string &username, RR_SHARED_PTR<RRMap<std::string,RRValue> > credentials, boost::function<void (RR_SHARED_PTR<ClientContext>,ClientServiceListenerEventType,RR_SHARED_PTR<void>)> listener, const std::string& objecttype, boost::function<void(RR_SHARED_PTR<RRObject>,RR_SHARED_PTR<RobotRaconteurException>)> handler, int32_t timeout)
+void RobotRaconteurNode::AsyncConnectService(const std::string &url, const std::string &username, RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> > credentials, boost::function<void (RR_SHARED_PTR<ClientContext>,ClientServiceListenerEventType,RR_SHARED_PTR<void>)> listener, const std::string& objecttype, boost::function<void(RR_SHARED_PTR<RRObject>,RR_SHARED_PTR<RobotRaconteurException>)> handler, int32_t timeout)
 {
 	std::vector<std::string> urls;
 	urls.push_back(url);
 	AsyncConnectService(urls,username,credentials,listener,objecttype,handler,timeout);
 }
 
-void RobotRaconteurNode::AsyncConnectService(const std::vector<std::string> &url, const std::string &username, RR_SHARED_PTR<RRMap<std::string,RRValue> > credentials, boost::function<void (RR_SHARED_PTR<ClientContext>,ClientServiceListenerEventType,RR_SHARED_PTR<void>)> listener, const std::string& objecttype, boost::function<void(RR_SHARED_PTR<RRObject>,RR_SHARED_PTR<RobotRaconteurException>)> handler, int32_t timeout)
+void RobotRaconteurNode::AsyncConnectService(const std::vector<std::string> &url, const std::string &username, RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> > credentials, boost::function<void (RR_SHARED_PTR<ClientContext>,ClientServiceListenerEventType,RR_SHARED_PTR<void>)> listener, const std::string& objecttype, boost::function<void(RR_SHARED_PTR<RRObject>,RR_SHARED_PTR<RobotRaconteurException>)> handler, int32_t timeout)
 {
 	
 	std::vector<RR_SHARED_PTR<Transport> > atransports;
@@ -1523,14 +1523,14 @@ void RobotRaconteurNode::AsyncConnectService(const std::vector<std::string> &url
 		return;	
 }
 
-RR_SHARED_PTR<RRObject> RobotRaconteurNode::ConnectService(const std::vector<std::string>& urls, const std::string &username, RR_SHARED_PTR<RRMap<std::string,RRValue> > credentials, boost::function<void (RR_SHARED_PTR<ClientContext>,ClientServiceListenerEventType,RR_SHARED_PTR<void>)> listener, const std::string& objecttype)
+RR_SHARED_PTR<RRObject> RobotRaconteurNode::ConnectService(const std::vector<std::string>& urls, const std::string &username, RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> > credentials, boost::function<void (RR_SHARED_PTR<ClientContext>,ClientServiceListenerEventType,RR_SHARED_PTR<void>)> listener, const std::string& objecttype)
 {
 	RR_SHARED_PTR<detail::sync_async_handler<RRObject> > h=RR_MAKE_SHARED<detail::sync_async_handler<RRObject> >(RR_MAKE_SHARED<ConnectionException>("Connection timed out"));
 	AsyncConnectService(urls,username,credentials,listener,objecttype,boost::bind(&detail::sync_async_handler<RRObject>::operator(),h,_1,_2),this->GetRequestTimeout()*2);
 	return h->end();
 }
 
-RR_SHARED_PTR<RRObject> RobotRaconteurNode::ConnectService(const std::string &url, const std::string &username, RR_SHARED_PTR<RRMap<std::string,RRValue> > credentials, boost::function<void (RR_SHARED_PTR<ClientContext>,ClientServiceListenerEventType,RR_SHARED_PTR<void>)> listener, const std::string& objecttype)
+RR_SHARED_PTR<RRObject> RobotRaconteurNode::ConnectService(const std::string &url, const std::string &username, RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> > credentials, boost::function<void (RR_SHARED_PTR<ClientContext>,ClientServiceListenerEventType,RR_SHARED_PTR<void>)> listener, const std::string& objecttype)
 {
 	std::vector<std::string> urls;
 	urls.push_back(url);
@@ -1554,7 +1554,7 @@ void RobotRaconteurNode::AsyncDisconnectService(RR_SHARED_PTR<RRObject> obj, boo
 	stub->GetContext()->AsyncClose(RR_MOVE(handler));
 }
 
-std::map<std::string, RR_SHARED_PTR<RRValue> > RobotRaconteurNode::GetServiceAttributes(RR_SHARED_PTR<RRObject> obj)
+std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > RobotRaconteurNode::GetServiceAttributes(RR_SHARED_PTR<RRObject> obj)
 {
 	RR_SHARED_PTR<ServiceStub> stub = rr_cast<ServiceStub>(obj);
 	return stub->GetContext()->GetAttributes();

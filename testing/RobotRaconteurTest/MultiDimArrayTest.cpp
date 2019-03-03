@@ -9,18 +9,18 @@
 namespace RobotRaconteurTest
 {
 		
-	RR_SHARED_PTR<RRMultiDimArray<double> > MultiDimArrayTest::LoadDoubleArrayFromFile(const string& fname)
+	RR_INTRUSIVE_PTR<RRMultiDimArray<double> > MultiDimArrayTest::LoadDoubleArrayFromFile(const string& fname)
 	{
 		ifstream f;
 		f.exceptions(ifstream::failbit | ifstream::badbit);
 		f.open(fname.c_str(),fstream::in | fstream::binary);
-		RR_SHARED_PTR<RRMultiDimArray<double> > a=LoadDoubleArray(f);
+		RR_INTRUSIVE_PTR<RRMultiDimArray<double> > a=LoadDoubleArray(f);
 		
 		f.close();
 		return a;
 	}
 
-	RR_SHARED_PTR<RRMultiDimArray<double> > MultiDimArrayTest::LoadDoubleArray(istream& s)
+	RR_INTRUSIVE_PTR<RRMultiDimArray<double> > MultiDimArrayTest::LoadDoubleArray(istream& s)
 	{
 		int32_t dimcount;
 		s.read((char*)&dimcount,4);
@@ -50,21 +50,21 @@ namespace RobotRaconteurTest
 		}
 #endif
 			
-		return RR_MAKE_SHARED<RRMultiDimArray<double> >(AttachRRArray(dims,dimcount,true),AttachRRArray(real,count,true));
+		return AllocateRRMultiDimArray<double>(AttachRRArray(dims,dimcount,true),AttachRRArray(real,count,true));
 	}
 
-	RR_SHARED_PTR<RRMultiDimArray<uint8_t> > MultiDimArrayTest::LoadByteArrayFromFile(const string& fname)
+	RR_INTRUSIVE_PTR<RRMultiDimArray<uint8_t> > MultiDimArrayTest::LoadByteArrayFromFile(const string& fname)
 	{
 		ifstream f;
 		f.exceptions(ifstream::failbit | ifstream::badbit);
 		f.open(fname.c_str(),fstream::in | fstream::binary);
-		RR_SHARED_PTR<RRMultiDimArray<uint8_t> > a=LoadByteArray(f);
+		RR_INTRUSIVE_PTR<RRMultiDimArray<uint8_t> > a=LoadByteArray(f);
 		
 		f.close();
 		return a;
 	}
 
-	RR_SHARED_PTR<RRMultiDimArray<uint8_t> > MultiDimArrayTest::LoadByteArray(istream& s)
+	RR_INTRUSIVE_PTR<RRMultiDimArray<uint8_t> > MultiDimArrayTest::LoadByteArray(istream& s)
 	{
 		int32_t dimcount;
 		s.read((char*)&dimcount,4);
@@ -88,17 +88,17 @@ namespace RobotRaconteurTest
 		 
 				
 		{
-			return RR_MAKE_SHARED<RRMultiDimArray<uint8_t> >(AttachRRArray(dims,dimcount,true),AttachRRArray(real,count,true));
+			return AllocateRRMultiDimArray<uint8_t>(AttachRRArray(dims,dimcount,true),AttachRRArray(real,count,true));
 		}
 	}
 
 	void MultiDimArrayTest::TestDouble()
 	{
-		RR_SHARED_PTR<RRMultiDimArray<double> > m1=LoadDoubleArrayFromFile("../testdata/testmdarray1.bin");
-		RR_SHARED_PTR<RRMultiDimArray<double> > m2=LoadDoubleArrayFromFile("../testdata/testmdarray2.bin");
-		RR_SHARED_PTR<RRMultiDimArray<double> > m3=LoadDoubleArrayFromFile("../testdata/testmdarray3.bin");
-		RR_SHARED_PTR<RRMultiDimArray<double> > m4=LoadDoubleArrayFromFile("../testdata/testmdarray4.bin");
-		RR_SHARED_PTR<RRMultiDimArray<double> > m5=LoadDoubleArrayFromFile("../testdata/testmdarray5.bin");
+		RR_INTRUSIVE_PTR<RRMultiDimArray<double> > m1=LoadDoubleArrayFromFile("../testdata/testmdarray1.bin");
+		RR_INTRUSIVE_PTR<RRMultiDimArray<double> > m2=LoadDoubleArrayFromFile("../testdata/testmdarray2.bin");
+		RR_INTRUSIVE_PTR<RRMultiDimArray<double> > m3=LoadDoubleArrayFromFile("../testdata/testmdarray3.bin");
+		RR_INTRUSIVE_PTR<RRMultiDimArray<double> > m4=LoadDoubleArrayFromFile("../testdata/testmdarray4.bin");
+		RR_INTRUSIVE_PTR<RRMultiDimArray<double> > m5=LoadDoubleArrayFromFile("../testdata/testmdarray5.bin");
 
 		uint32_t m1a[]={ 2, 2, 3, 3, 4 };
 		uint32_t m1b[]={ 0, 2, 0, 0, 0 };
@@ -108,7 +108,7 @@ namespace RobotRaconteurTest
 		
 
 		uint32_t m6a[]={2,2,1,1,10};
-		RR_SHARED_PTR<RRMultiDimArray<double> > m6=RR_MAKE_SHARED<RRMultiDimArray<double> >(AttachRRArray(m6a,5,false),AllocateRRArray<double>(40));
+		RR_INTRUSIVE_PTR<RRMultiDimArray<double> > m6 =AllocateRRMultiDimArray<double>(AttachRRArray(m6a,5,false),AllocateRRArray<double>(40));
 		uint32_t m4a[]={ 4, 2, 2, 8, 0 };
 		uint32_t m4b[]={ 0, 0, 0, 0, 0 };
 		uint32_t m4c[]= { 2, 2, 1, 1, 10 };
@@ -117,7 +117,7 @@ namespace RobotRaconteurTest
 		
 
 		uint32_t m7a[]={ 4, 4, 4, 4, 10 };
-		RR_SHARED_PTR<RRMultiDimArray<double> > m7=RR_MAKE_SHARED<RRMultiDimArray<double> >(AttachRRArray(m7a,5,false),AllocateRRArray<double>(2560));
+		RR_INTRUSIVE_PTR<RRMultiDimArray<double> > m7=AllocateRRMultiDimArray<double>(AttachRRArray(m7a,5,false),AllocateRRArray<double>(2560));
 		memset(m7->Array->data(),0,2560*sizeof(double));		
 		uint32_t m5a[]={ 4, 2, 2, 8, 0 };
 		uint32_t m5b[]={ 2, 1,2, 1, 0 };
@@ -128,11 +128,11 @@ namespace RobotRaconteurTest
 
 	void MultiDimArrayTest::TestByte()
 	{
-		RR_SHARED_PTR<RRMultiDimArray<uint8_t> > m1=LoadByteArrayFromFile("../testdata/testmdarray_b1.bin");
-		RR_SHARED_PTR<RRMultiDimArray<uint8_t> > m2=LoadByteArrayFromFile("../testdata/testmdarray_b2.bin");
-		RR_SHARED_PTR<RRMultiDimArray<uint8_t> > m3=LoadByteArrayFromFile("../testdata/testmdarray_b3.bin");
-		RR_SHARED_PTR<RRMultiDimArray<uint8_t> > m4=LoadByteArrayFromFile("../testdata/testmdarray_b4.bin");
-		RR_SHARED_PTR<RRMultiDimArray<uint8_t> > m5=LoadByteArrayFromFile("../testdata/testmdarray_b5.bin");
+		RR_INTRUSIVE_PTR<RRMultiDimArray<uint8_t> > m1=LoadByteArrayFromFile("../testdata/testmdarray_b1.bin");
+		RR_INTRUSIVE_PTR<RRMultiDimArray<uint8_t> > m2=LoadByteArrayFromFile("../testdata/testmdarray_b2.bin");
+		RR_INTRUSIVE_PTR<RRMultiDimArray<uint8_t> > m3=LoadByteArrayFromFile("../testdata/testmdarray_b3.bin");
+		RR_INTRUSIVE_PTR<RRMultiDimArray<uint8_t> > m4=LoadByteArrayFromFile("../testdata/testmdarray_b4.bin");
+		RR_INTRUSIVE_PTR<RRMultiDimArray<uint8_t> > m5=LoadByteArrayFromFile("../testdata/testmdarray_b5.bin");
 
 		uint32_t m1a[]={ 50,100 };
 		uint32_t m1b[]={ 20,25 };
@@ -141,7 +141,7 @@ namespace RobotRaconteurTest
 		ca(m1->Array,m3->Array);
 		
 		uint32_t m6a[]={200,200};
-		RR_SHARED_PTR<RRMultiDimArray<uint8_t> > m6=RR_MAKE_SHARED<RRMultiDimArray<uint8_t> >(AttachRRArray(m6a,2,false),AllocateRRArray<uint8_t>(40000));
+		RR_INTRUSIVE_PTR<RRMultiDimArray<uint8_t> > m6=AllocateRRMultiDimArray<uint8_t>(AttachRRArray(m6a,2,false),AllocateRRArray<uint8_t>(40000));
 		uint32_t m4a[]={ 65,800 };
 		uint32_t m4b[]={ 0,0 };
 		uint32_t m4c[]= { 200,200 };
@@ -150,7 +150,7 @@ namespace RobotRaconteurTest
 		
 
 		uint32_t m7a[]={ 512,512 };
-		RR_SHARED_PTR<RRMultiDimArray<uint8_t> > m7=RR_MAKE_SHARED<RRMultiDimArray<uint8_t> >(AttachRRArray(m7a,2,false),AllocateRRArray<uint8_t>(512*512));
+		RR_INTRUSIVE_PTR<RRMultiDimArray<uint8_t> > m7=AllocateRRMultiDimArray<uint8_t>(AttachRRArray(m7a,2,false),AllocateRRArray<uint8_t>(512*512));
 		memset(m7->Array->data(),0,512*512);
 		uint32_t m5a[]={ 65,800 };
 		uint32_t m5b[]={ 100,230 };

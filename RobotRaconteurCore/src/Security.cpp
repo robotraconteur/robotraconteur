@@ -129,7 +129,7 @@ namespace RobotRaconteur
 		}
 	}
 
-	RR_SHARED_PTR<AuthenticatedUser> PasswordFileUserAuthenticator::AuthenticateUser(const std::string &username, const std::map<std::string, RR_SHARED_PTR<RRValue> > &credentials, RR_SHARED_PTR<ServerContext> context)
+	RR_SHARED_PTR<AuthenticatedUser> PasswordFileUserAuthenticator::AuthenticateUser(const std::string &username, const std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials, RR_SHARED_PTR<ServerContext> context)
 	{
 		if (validusers.count(username) == 0)
 			throw AuthenticationException("Invalid username or password");

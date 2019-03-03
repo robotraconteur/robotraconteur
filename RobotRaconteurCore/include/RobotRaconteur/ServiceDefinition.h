@@ -416,7 +416,7 @@ namespace RobotRaconteur
 		}
 
 		template<typename T>
-		RR_SHARED_PTR<RRArray<T> > ValueToArray()
+		RR_INTRUSIVE_PTR<RRArray<T> > ValueToArray()
 		{
 			boost::iterator_range<std::string::const_iterator> value1(Value);
 			value1=boost::trim_copy_if(value1, boost::is_any_of(" \t{}"));
@@ -434,7 +434,7 @@ namespace RobotRaconteur
 				n++;
 			}
 
-			RR_SHARED_PTR<RRArray<T> > o = AllocateRRArray<T>(n);
+			RR_INTRUSIVE_PTR<RRArray<T> > o = AllocateRRArray<T>(n);
 
 			size_t i = 0;
 

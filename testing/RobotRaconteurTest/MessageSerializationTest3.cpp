@@ -63,7 +63,7 @@ namespace RobotRaconteurTest
 
 	}
 
-	static RR_SHARED_PTR<MessageElement> MessageSerializationTest3_NewRandomMessageElement(mt19937& rng, size_t depth)
+	static RR_INTRUSIVE_PTR<MessageElement> MessageSerializationTest3_NewRandomMessageElement(mt19937& rng, size_t depth)
 	{
 		uniform_int_distribution<uint16_t> type_switch_dist(0, 1);
 		uniform_int_distribution<uint16_t> type_dist(0, 11);
@@ -73,7 +73,7 @@ namespace RobotRaconteurTest
 		uniform_int_distribution<int32_t> int32_dist;
 		uniform_int_distribution<size_t> len_dist(0,256);
 		uniform_int_distribution<size_t> len_sub_dist(1, 8);
-		RR_SHARED_PTR<MessageElement> e = RR_MAKE_SHARED<MessageElement>();
+		RR_INTRUSIVE_PTR<MessageElement> e = CreateMessageElement();
 		e->ElementFlags = MessageSerializationTest3_NewRandomFlags(rng);
 		if (type_switch_dist(rng) == 0 || depth > 2)
 		{
@@ -171,7 +171,7 @@ namespace RobotRaconteurTest
 		case DataTypes_uint64_t:
 		case DataTypes_string_t:
 		{
-			RR_SHARED_PTR<RRBaseArray> a = AllocateRRArrayByType(e->ElementType, len_dist(rng));
+			RR_INTRUSIVE_PTR<RRBaseArray> a = AllocateRRArrayByType(e->ElementType, len_dist(rng));
 			uint8_t* a2 = (uint8_t*)a->void_ptr();
 			for (size_t i = 0; i < a->ElementSize() * a->size(); i++)
 			{
@@ -182,114 +182,114 @@ namespace RobotRaconteurTest
 		}
 		case DataTypes_structure_t:
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > v;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
 			size_t n = len_sub_dist(rng);
 			for (size_t i = 0; i < n; i++)
 			{
 				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(RR_MAKE_SHARED<MessageElementStructure>(MessageSerializationTest3_NewRandomString(rng, 128),v));
+			e->SetData(CreateMessageElementStructure(MessageSerializationTest3_NewRandomString(rng, 128),v));
 			return e;
 		}
 		case DataTypes_vector_t:
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > v;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
 			size_t n = len_sub_dist(rng);
 			for (size_t i = 0; i < n; i++)
 			{
 				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(RR_MAKE_SHARED<MessageElementMap<int32_t> >(v));
+			e->SetData(CreateMessageElementMap<int32_t>(v));
 			return e;
 		}
 		case DataTypes_dictionary_t:
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > v;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
 			size_t n = len_sub_dist(rng);
 			for (size_t i = 0; i < n; i++)
 			{
 				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(RR_MAKE_SHARED<MessageElementMap<std::string> >(v));
+			e->SetData(CreateMessageElementMap<std::string>(v));
 			return e;
 		}
 		case DataTypes_multidimarray_t:
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > v;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
 			size_t n = len_sub_dist(rng);
 			if (n > 4) n = 4;
 			for (size_t i = 0; i < n; i++)
 			{
 				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, 10));
 			}
-			e->SetData(RR_MAKE_SHARED<MessageElementMultiDimArray>(v));
+			e->SetData(CreateMessageElementMultiDimArray(v));
 			return e;
 		}
 		case DataTypes_list_t:
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > v;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
 			size_t n = len_sub_dist(rng);
 			for (size_t i = 0; i < n; i++)
 			{
 				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(RR_MAKE_SHARED<MessageElementList>(v));
+			e->SetData(CreateMessageElementList(v));
 			return e;
 		}
 
 		case DataTypes_pod_t:
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > v;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
 			size_t n = len_sub_dist(rng);
 			for (size_t i = 0; i < n; i++)
 			{
 				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(RR_MAKE_SHARED<MessageElementPod>(v));
+			e->SetData(CreateMessageElementPod(v));
 			return e;
 		}
 		case DataTypes_pod_array_t:
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > v;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
 			size_t n = len_sub_dist(rng);
 			for (size_t i = 0; i < n; i++)
 			{
 				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(RR_MAKE_SHARED<MessageElementPodArray>(MessageSerializationTest3_NewRandomString(rng, 128),v));
+			e->SetData(CreateMessageElementPodArray(MessageSerializationTest3_NewRandomString(rng, 128),v));
 			return e;
 		}
 		case DataTypes_pod_multidimarray_t:
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > v;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
 			size_t n = len_sub_dist(rng);
 			for (size_t i = 0; i < n; i++)
 			{
 				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(RR_MAKE_SHARED<MessageElementPodMultiDimArray>(MessageSerializationTest3_NewRandomString(rng, 128),v));
+			e->SetData(CreateMessageElementPodMultiDimArray(MessageSerializationTest3_NewRandomString(rng, 128),v));
 			return e;
 		}
 		case DataTypes_namedarray_array_t:
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > v;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
 			size_t n = len_sub_dist(rng);
 			for (size_t i = 0; i < n; i++)
 			{
 				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(RR_MAKE_SHARED<MessageElementNamedArray>(MessageSerializationTest3_NewRandomString(rng, 128), v));
+			e->SetData(CreateMessageElementNamedArray(MessageSerializationTest3_NewRandomString(rng, 128), v));
 			return e;
 		}
 		case DataTypes_namedarray_multidimarray_t:
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > v;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
 			size_t n = len_sub_dist(rng);
 			for (size_t i = 0; i < n; i++)
 			{
 				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(RR_MAKE_SHARED<MessageElementNamedMultiDimArray>(MessageSerializationTest3_NewRandomString(rng, 128), v));
+			e->SetData(CreateMessageElementNamedMultiDimArray(MessageSerializationTest3_NewRandomString(rng, 128), v));
 			return e;
 		}
 		default:
@@ -297,7 +297,7 @@ namespace RobotRaconteurTest
 		}
 	}
 
-	RR_SHARED_PTR<Message> MessageSerializationTest3::NewRandomTestMessage3(boost::random::mt19937& rng)
+	RR_INTRUSIVE_PTR<Message> MessageSerializationTest3::NewRandomTestMessage3(boost::random::mt19937& rng)
 	{
 		uniform_int_distribution<uint8_t>  uint8_dist;
 		uniform_int_distribution<uint16_t> uint16_dist;
@@ -306,8 +306,8 @@ namespace RobotRaconteurTest
 		uniform_int_distribution<int32_t> int32_dist;
 		uniform_int_distribution<int64_t> int64_dist;
 
-		RR_SHARED_PTR<Message> m = RR_MAKE_SHARED<Message>();
-		RR_SHARED_PTR<MessageHeader> h = RR_MAKE_SHARED<MessageHeader>();
+		RR_INTRUSIVE_PTR<Message> m = CreateMessage();
+		RR_INTRUSIVE_PTR<MessageHeader> h = CreateMessageHeader();
 		m->header = h;
 		h->MessageFlags = MessageSerializationTest3_NewRandomMessageFlags(rng);
 		if (h->MessageFlags & MessageFlags_SUBSTREAM_ID)
@@ -397,7 +397,7 @@ namespace RobotRaconteurTest
 		{
 			if (m->ComputeSize3() > 10 * 1024 * 1024) break;
 
-			RR_SHARED_PTR<MessageEntry> ee = RR_MAKE_SHARED<MessageEntry>();
+			RR_INTRUSIVE_PTR<MessageEntry> ee = CreateMessageEntry();
 
 			ee->EntryFlags = MessageSerializationTest3_NewRandomFlags(rng);
 			uniform_int_distribution<uint16_t> entry_type_dist(101, 120);
@@ -451,14 +451,14 @@ namespace RobotRaconteurTest
 			{
 				uniform_int_distribution<size_t> large_len_dist(512 * 1024, 1024 * 1024);
 				size_t l = large_len_dist(rng);
-				RR_SHARED_PTR<RRArray<uint32_t> > a = AllocateRRArray<uint32_t>(l);
+				RR_INTRUSIVE_PTR<RRArray<uint32_t> > a = AllocateRRArray<uint32_t>(l);
 				uint32_t* a2 = a->data();
 				for (size_t j = 0; j < l; j++)
 				{
 					a2[j] = uint32_dist(rng);
 				}
 
-				RR_SHARED_PTR<MessageElement> el = MessageSerializationTest3_NewRandomMessageElement(rng, 10);
+				RR_INTRUSIVE_PTR<MessageElement> el = MessageSerializationTest3_NewRandomMessageElement(rng, 10);
 				el->SetData(a);
 				ee->elements.push_back(el);
 			}
@@ -468,7 +468,7 @@ namespace RobotRaconteurTest
 				size_t n1 = el_count_dist(rng);
 				for (size_t j = 0; j < n1; j++)
 				{
-					RR_SHARED_PTR<MessageElement> el= MessageSerializationTest3_NewRandomMessageElement(rng, 0);
+					RR_INTRUSIVE_PTR<MessageElement> el= MessageSerializationTest3_NewRandomMessageElement(rng, 0);
 					ee->elements.push_back(el);
 				}
 			}
@@ -489,7 +489,7 @@ namespace RobotRaconteurTest
 
 	void MessageSerializationTest3::Test1()
 	{
-		RR_SHARED_PTR<Message> m = MessageSerializationTest::NewTestMessage();
+		RR_INTRUSIVE_PTR<Message> m = MessageSerializationTest::NewTestMessage();
 
 		//Write to stream and read back
 		size_t message_size=m->ComputeSize3();
@@ -502,7 +502,7 @@ namespace RobotRaconteurTest
 
 		ArrayBinaryReader r(buf.get(),0,message_size);
 
-		RR_SHARED_PTR<Message> m2 = RR_MAKE_SHARED<Message>();
+		RR_INTRUSIVE_PTR<Message> m2 = CreateMessage();
 		uint16_t version_minor;
 		m2->Read3(r, version_minor);
 
@@ -511,7 +511,7 @@ namespace RobotRaconteurTest
 
 	void MessageSerializationTest3::Test2(bool use_string_table)
 	{
-		RR_SHARED_PTR<Message> m= MessageSerializationTest::NewTestMessage();
+		RR_INTRUSIVE_PTR<Message> m= MessageSerializationTest::NewTestMessage();
 
 		RR_SHARED_PTR<RobotRaconteur::detail::StringTable> string_table1 = RR_MAKE_SHARED<RobotRaconteur::detail::StringTable>(false);
 		if (use_string_table)
@@ -531,7 +531,7 @@ namespace RobotRaconteurTest
 
 		ArrayBinaryReader r(buf.get(), 0, message_size);
 
-		RR_SHARED_PTR<Message> m2 = RR_MAKE_SHARED<Message>();
+		RR_INTRUSIVE_PTR<Message> m2 = CreateMessage();
 		uint16_t version_minor;
 		m2->Read3(r, version_minor);		
 
@@ -549,21 +549,21 @@ namespace RobotRaconteurTest
 	{
 		srand((uint32_t)time(NULL));
 		
-		RR_SHARED_PTR<MessageElement> e2 = RR_MAKE_SHARED<MessageElement>();
+		RR_INTRUSIVE_PTR<MessageElement> e2 = CreateMessageElement();
 		e2->ElementFlags &= MessageElementFlags_ELEMENT_NAME_STR;
 		e2->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER | MessageElementFlags_SEQUENCE_NUMBER | MessageElementFlags_REQUEST_ACK;
 		e2->ElementNumber = 134576569;
 		e2->SequenceNumber = 9998934;
 
-		RR_SHARED_PTR<MessageEntry> e1 = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_PropertyGetReq, "testprimitives");
+		RR_INTRUSIVE_PTR<MessageEntry> e1 = CreateMessageEntry(MessageEntryType_PropertyGetReq, "testprimitives");
 		e1->EntryFlags = MessageEntryFlags_TIMESPEC;
 
 		e1->EntryTimeSpec.seconds = 100;
 		e1->EntryTimeSpec.nanoseconds = 12323;
 		e1->EntryStreamID = 557475;
 
-		RR_SHARED_PTR<Message> m = RR_MAKE_SHARED<Message>();
-		RR_SHARED_PTR<MessageHeader> h = RR_MAKE_SHARED<MessageHeader>();
+		RR_INTRUSIVE_PTR<Message> m = CreateMessage();
+		RR_INTRUSIVE_PTR<MessageHeader> h = CreateMessageHeader();
 		h->MessageFlags = 0;
 
 		m->header = h;
@@ -588,7 +588,7 @@ namespace RobotRaconteurTest
 
 		ArrayBinaryReader r(buf.get(), 0, message_size);
 
-		RR_SHARED_PTR<Message> m2 = RR_MAKE_SHARED<Message>();
+		RR_INTRUSIVE_PTR<Message> m2 = CreateMessage();
 		uint16_t version_minor;
 		m2->Read3(r, version_minor);
 
@@ -602,7 +602,7 @@ namespace RobotRaconteurTest
 
 		for (size_t i = 0; i < iterations; i++)
 		{
-			RR_SHARED_PTR<Message> m = NewRandomTestMessage3(rng);
+			RR_INTRUSIVE_PTR<Message> m = NewRandomTestMessage3(rng);
 
 			//Write to stream and read back
 			size_t message_size = m->ComputeSize3();
@@ -615,7 +615,7 @@ namespace RobotRaconteurTest
 
 			ArrayBinaryReader r(buf.get(), 0, message_size);
 
-			RR_SHARED_PTR<Message> m2 = RR_MAKE_SHARED<Message>();
+			RR_INTRUSIVE_PTR<Message> m2 = CreateMessage();
 			uint16_t version_minor;
 			m2->Read3(r, version_minor);
 

@@ -30,24 +30,24 @@ namespace RobotRaconteurTest
 		rng.seed((uint32_t)std::time(0));
 
 		{
-			RR_SHARED_PTR<Message> m1 = MessageSerializationTest::NewTestMessage();
+			RR_INTRUSIVE_PTR<Message> m1 = MessageSerializationTest::NewTestMessage();
 			m1->header->MessageID = 10322;
 			m1->header->MessageResID = 8364;
 			DoTest(m1, 2, rng);
 		}
 		{
-			RR_SHARED_PTR<Message> m2 = MessageSerializationTest::NewTestMessage();
-			m2->entries.push_back(RR_MAKE_SHARED<MessageEntry>());
+			RR_INTRUSIVE_PTR<Message> m2 = MessageSerializationTest::NewTestMessage();
+			m2->entries.push_back(CreateMessageEntry());
 			DoTest(m2, 3, rng);
 		}
 		{
-			RR_SHARED_PTR<Message> m3 = MessageSerializationTest::NewTestMessage();
+			RR_INTRUSIVE_PTR<Message> m3 = MessageSerializationTest::NewTestMessage();
 			m3->entries.resize(1);
 			m3->header->MessageFlags = MessageFlags_FRAGMENT | MessageFlags_SUBSTREAM_ID;
 			DoTest(m3, 3, rng);
 		}
 		{
-			RR_SHARED_PTR<Message> m4 = MessageSerializationTest::NewTestMessage();
+			RR_INTRUSIVE_PTR<Message> m4 = MessageSerializationTest::NewTestMessage();
 
 			m4->entries.at(1)->EntryFlags = MessageEntryFlags_ERROR;
 			m4->entries.at(1)->Error = MessageErrorType_DataSerializationError;
@@ -68,7 +68,7 @@ namespace RobotRaconteurTest
 		}
 	}
 
-	void AsyncMessageReaderTest::DoTest(RR_SHARED_PTR<Message> m, uint16_t version, boost::random::mt19937& rng)
+	void AsyncMessageReaderTest::DoTest(RR_INTRUSIVE_PTR<Message> m, uint16_t version, boost::random::mt19937& rng)
 	{
 		boost::shared_array<uint8_t> buf;
 		size_t message_size = 0;
@@ -154,7 +154,7 @@ namespace RobotRaconteurTest
 		}
 
 		if (!r->MessageReady()) throw std::runtime_error("no message");
-		RR_SHARED_PTR<Message> m2 = r->GetNextMessage();
+		RR_INTRUSIVE_PTR<Message> m2 = r->GetNextMessage();
 
 		MessageSerializationTest::CompareMessage(m, m2);
 
@@ -169,7 +169,7 @@ namespace RobotRaconteurTest
 
 		for (size_t i = 0; i < iterations; i++)
 		{
-			RR_SHARED_PTR<Message> m = MessageSerializationTest::NewRandomTestMessage(rng);
+			RR_INTRUSIVE_PTR<Message> m = MessageSerializationTest::NewRandomTestMessage(rng);
 			DoTest(m, 2, rng);
 			if (i % 10 == 0)
 			{
@@ -185,7 +185,7 @@ namespace RobotRaconteurTest
 
 		for (size_t i = 0; i < iterations; i++)
 		{
-			RR_SHARED_PTR<Message> m = MessageSerializationTest3::NewRandomTestMessage3(rng);
+			RR_INTRUSIVE_PTR<Message> m = MessageSerializationTest3::NewRandomTestMessage3(rng);
 			DoTest(m, 3, rng);
 			if (i % 10 == 0)
 			{
@@ -211,7 +211,7 @@ namespace RobotRaconteurTest
 		std::copy(std::istream_iterator<uint8_t>(f), std::istream_iterator<uint8_t>(), buf.get());
 		f.close();
 
-		RR_SHARED_PTR<Message> m = RR_MAKE_SHARED<Message>();
+		RR_INTRUSIVE_PTR<Message> m = CreateMessage();
 		ArrayBinaryReader a_reader(buf.get(), 0, message_size);
 		uint16_t version_minor;
 		m->Read3(a_reader, version_minor);
@@ -252,7 +252,7 @@ namespace RobotRaconteurTest
 		}
 
 		if (!r->MessageReady()) throw std::runtime_error("no message");
-		RR_SHARED_PTR<Message> m2 = r->GetNextMessage();
+		RR_INTRUSIVE_PTR<Message> m2 = r->GetNextMessage();
 
 		MessageSerializationTest::CompareMessage(m, m2);
 
@@ -270,24 +270,24 @@ namespace RobotRaconteurTest
 		rng.seed((uint32_t)std::time(0));
 
 		{
-			RR_SHARED_PTR<Message> m1 = MessageSerializationTest::NewTestMessage();
+			RR_INTRUSIVE_PTR<Message> m1 = MessageSerializationTest::NewTestMessage();
 			m1->header->MessageID = 10322;
 			m1->header->MessageResID = 8364;
 			DoTest(m1, 2, rng);
 		}
 		{
-			RR_SHARED_PTR<Message> m2 = MessageSerializationTest::NewTestMessage();
-			m2->entries.push_back(RR_MAKE_SHARED<MessageEntry>());
+			RR_INTRUSIVE_PTR<Message> m2 = MessageSerializationTest::NewTestMessage();
+			m2->entries.push_back(CreateMessageEntry());
 			DoTest(m2, 3, rng);
 		}
 		{
-			RR_SHARED_PTR<Message> m3 = MessageSerializationTest::NewTestMessage();
+			RR_INTRUSIVE_PTR<Message> m3 = MessageSerializationTest::NewTestMessage();
 			m3->entries.resize(1);
 			m3->header->MessageFlags = MessageFlags_FRAGMENT | MessageFlags_SUBSTREAM_ID;
 			DoTest(m3, 3, rng);
 		}
 		{
-			RR_SHARED_PTR<Message> m4 = MessageSerializationTest::NewTestMessage();
+			RR_INTRUSIVE_PTR<Message> m4 = MessageSerializationTest::NewTestMessage();
 
 			m4->entries.at(1)->EntryFlags = MessageEntryFlags_ERROR;
 			m4->entries.at(1)->Error = MessageErrorType_DataSerializationError;
@@ -308,7 +308,7 @@ namespace RobotRaconteurTest
 		}
 	}
 
-	void AsyncMessageWriterTest::DoTest(RR_SHARED_PTR<RobotRaconteur::Message> m, uint16_t version, boost::random::mt19937& rng)
+	void AsyncMessageWriterTest::DoTest(RR_INTRUSIVE_PTR<RobotRaconteur::Message> m, uint16_t version, boost::random::mt19937& rng)
 	{
 		//WriteMessage(m, version);
 
@@ -367,7 +367,7 @@ namespace RobotRaconteurTest
 		if (boost::asio::buffer_size(buf2) != 0) throw std::runtime_error("");
 
 
-		RR_SHARED_PTR<Message> m2=RR_MAKE_SHARED<Message>();
+		RR_INTRUSIVE_PTR<Message> m2=CreateMessage();
 		ArrayBinaryReader r(buf.get(), 0, message_size);
 		if (version == 2)
 		{			
@@ -397,7 +397,7 @@ namespace RobotRaconteurTest
 
 		for (size_t i = 0; i < iterations; i++)
 		{
-			RR_SHARED_PTR<Message> m = MessageSerializationTest::NewRandomTestMessage(rng);
+			RR_INTRUSIVE_PTR<Message> m = MessageSerializationTest::NewRandomTestMessage(rng);
 			DoTest(m, 2, rng);
 			if (i % 10 == 0)
 			{
@@ -413,7 +413,7 @@ namespace RobotRaconteurTest
 
 		for (size_t i = 0; i < iterations; i++)
 		{
-			RR_SHARED_PTR<Message> m = MessageSerializationTest3::NewRandomTestMessage3(rng);
+			RR_INTRUSIVE_PTR<Message> m = MessageSerializationTest3::NewRandomTestMessage3(rng);
 			
 			m->header->MessageFlags &= ~MessageFlags_PROTOCOL_VERSION_MINOR;
 
@@ -426,7 +426,7 @@ namespace RobotRaconteurTest
 		}
 	}
 
-	void AsyncMessageWriterTest::WriteMessage(RR_SHARED_PTR<Message> m, uint16_t version)
+	void AsyncMessageWriterTest::WriteMessage(RR_INTRUSIVE_PTR<Message> m, uint16_t version)
 	{
 		size_t message_size;
 		boost::shared_array<uint8_t> buf;
@@ -476,7 +476,7 @@ namespace RobotRaconteurTest
 		std::copy(std::istream_iterator<uint8_t>(f), std::istream_iterator<uint8_t>(), buf.get());
 		f.close();
 
-		RR_SHARED_PTR<Message> m = RR_MAKE_SHARED<Message>();
+		RR_INTRUSIVE_PTR<Message> m = CreateMessage();
 		ArrayBinaryReader a_reader(buf.get(), 0, message_size);
 		uint16_t version_minor;
 		m->Read3(a_reader, version_minor);

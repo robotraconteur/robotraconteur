@@ -108,7 +108,7 @@ namespace RobotRaconteur
 
 
 
-		virtual void MessageReceived(RR_SHARED_PTR<Message> m);
+		virtual void MessageReceived(RR_INTRUSIVE_PTR<Message> m);
 	protected:
 		virtual void async_write_some(const_buffers& b, boost::function<void (const boost::system::error_code& error, size_t bytes_transferred)>& handler);
 

@@ -7,7 +7,7 @@
 namespace RobotRaconteurTest
 {
 	template<>
-	void ca<double>(RR_SHARED_PTR<RRArray<double> > v1, RR_SHARED_PTR<RRArray<double> > v2)
+	void ca<double>(RR_INTRUSIVE_PTR<RRArray<double> > v1, RR_INTRUSIVE_PTR<RRArray<double> > v2)
 	{
 		RR_NULL_CHECK(v1);
 		RR_NULL_CHECK(v2);
@@ -19,7 +19,7 @@ namespace RobotRaconteurTest
 	}
 
 	template<>
-	void ca<cdouble>(RR_SHARED_PTR<RRArray<cdouble> > v1, RR_SHARED_PTR<RRArray<cdouble> > v2)
+	void ca<cdouble>(RR_INTRUSIVE_PTR<RRArray<cdouble> > v1, RR_INTRUSIVE_PTR<RRArray<cdouble> > v2)
 	{
 		RR_NULL_CHECK(v1);
 		RR_NULL_CHECK(v2);
@@ -32,7 +32,7 @@ namespace RobotRaconteurTest
 	}
 
 	template<>
-	void ca<cfloat>(RR_SHARED_PTR<RRArray<cfloat> > v1, RR_SHARED_PTR<RRArray<cfloat> > v2)
+	void ca<cfloat>(RR_INTRUSIVE_PTR<RRArray<cfloat> > v1, RR_INTRUSIVE_PTR<RRArray<cfloat> > v2)
 	{
 		RR_NULL_CHECK(v1);
 		RR_NULL_CHECK(v2);

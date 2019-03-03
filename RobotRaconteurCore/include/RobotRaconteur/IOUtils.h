@@ -49,7 +49,7 @@ namespace RobotRaconteur
 		}
 		
 		
-		void ReadArray(RR_SHARED_PTR<RRBaseArray>& arr);
+		void ReadArray(RR_INTRUSIVE_PTR<RRBaseArray>& arr);
 
 		std::string ReadString8(size_t length);
 
@@ -113,7 +113,7 @@ namespace RobotRaconteur
 		}
 
 		
-		void WriteArray(RR_SHARED_PTR<RRBaseArray>& arr);
+		void WriteArray(RR_INTRUSIVE_PTR<RRBaseArray>& arr);
 
 		void WriteString8(const std::string& str);
 		void WriteString8WithXLen(const std::string& str);

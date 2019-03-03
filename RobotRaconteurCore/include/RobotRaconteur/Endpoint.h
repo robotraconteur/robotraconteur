@@ -77,18 +77,18 @@ namespace RobotRaconteur
 		boost::posix_time::ptime GetLastMessageSentTime();
 		void SetLastMessageSentTime(boost::posix_time::ptime time);		
 	
-		virtual void SendMessage(RR_SHARED_PTR<Message> m);
+		virtual void SendMessage(RR_INTRUSIVE_PTR<Message> m);
 
-		virtual void AsyncSendMessage(RR_SHARED_PTR<Message> m, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& callback);
+		virtual void AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& callback);
 				
-		virtual void MessageReceived(RR_SHARED_PTR<Message> m) = 0;
+		virtual void MessageReceived(RR_INTRUSIVE_PTR<Message> m) = 0;
 
 		virtual void PeriodicCleanupTask();
 		
 		virtual void TransportConnectionClosed(uint32_t endpoint);
 
 	protected:
-		virtual void CheckEndpointCapabilityMessage(RR_SHARED_PTR<Message> m);
+		virtual void CheckEndpointCapabilityMessage(RR_INTRUSIVE_PTR<Message> m);
 
 	public:
 		virtual uint32_t EndpointCapability(const std::string &name);

@@ -71,17 +71,17 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
 
 		void do_starttls5_1(RR_SHARED_PTR<RRObject> parameter, RR_SHARED_PTR<RobotRaconteurException> err, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
 
-		void do_starttls6(const boost::system::error_code& error, RR_SHARED_PTR<Message> request);
+		void do_starttls6(const boost::system::error_code& error, RR_INTRUSIVE_PTR<Message> request);
 
-		void do_starttls7(const boost::system::error_code& error, RR_SHARED_PTR<Message> request);
+		void do_starttls7(const boost::system::error_code& error, RR_INTRUSIVE_PTR<Message> request);
 
-		void do_starttls8(RR_SHARED_PTR<RobotRaconteurException> error, RR_SHARED_PTR<Message> request);
+		void do_starttls8(RR_SHARED_PTR<RobotRaconteurException> error, RR_INTRUSIVE_PTR<Message> request);
 
 		void do_starttls9(const boost::system::error_code& error);
 
 	public:
 
-		virtual void MessageReceived(RR_SHARED_PTR<Message> m);
+		virtual void MessageReceived(RR_INTRUSIVE_PTR<Message> m);
 	protected:
 		virtual void async_write_some(const_buffers& b, boost::function<void (const boost::system::error_code& error, size_t bytes_transferred)>& handler);
 
@@ -133,7 +133,7 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
 		bool closing;
 		
 		
-		virtual void StreamOpMessageReceived(RR_SHARED_PTR<Message> m);
+		virtual void StreamOpMessageReceived(RR_INTRUSIVE_PTR<Message> m);
 
 		//Stuff to support TLS
 		

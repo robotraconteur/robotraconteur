@@ -49,15 +49,15 @@ namespace RobotRaconteurTest
 
 		void ev1_cb();
 
-		void ev2_cb(double d, RR_SHARED_PTR<teststruct2> s);
+		void ev2_cb(double d, RR_INTRUSIVE_PTR<teststruct2> s);
 
 
 		void TestPipes();
 
-		void ee1_cb(RR_SHARED_PTR<PipeEndpoint<RR_SHARED_PTR<RRArray<double> > > > p);
-		void ee1_ack_cb(RR_SHARED_PTR<PipeEndpoint<RR_SHARED_PTR<RRArray<double> > > > p, uint32_t packetnum);
-		void ee2_cb(RR_SHARED_PTR<PipeEndpoint<RR_SHARED_PTR<RRArray<double> > > > p);
-		void ee3_cb(RR_SHARED_PTR<PipeEndpoint<RR_SHARED_PTR<teststruct2> > > p);
+		void ee1_cb(RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > p);
+		void ee1_ack_cb(RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > p, uint32_t packetnum);
+		void ee2_cb(RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > p);
+		void ee3_cb(RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<teststruct2> > > p);
 
 		AutoResetEvent ee1;
 		AutoResetEvent ee2;
@@ -82,9 +82,9 @@ namespace RobotRaconteurTest
 
 		void TestWires();
 
-		void w1_changed(RR_SHARED_PTR<WireConnection<RR_SHARED_PTR<RRArray<double> > > > c, RR_SHARED_PTR<RRArray<double> > value, TimeSpec t);
-		void w2_changed(RR_SHARED_PTR<WireConnection<RR_SHARED_PTR<teststruct2> > > c, RR_SHARED_PTR<teststruct2> value, TimeSpec t);
-		void w3_changed(RR_SHARED_PTR<WireConnection<RR_SHARED_PTR<RRMultiDimArray<int32_t> > > > c, RR_SHARED_PTR<RRMultiDimArray<int32_t> > value, TimeSpec t);
+		void w1_changed(RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<RRArray<double> > > > c, RR_INTRUSIVE_PTR<RRArray<double> > value, TimeSpec t);
+		void w2_changed(RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<teststruct2> > > c, RR_INTRUSIVE_PTR<teststruct2> value, TimeSpec t);
+		void w3_changed(RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<RRMultiDimArray<int32_t> > > > c, RR_INTRUSIVE_PTR<RRMultiDimArray<int32_t> > value, TimeSpec t);
 
 		bool w1_called;
 		bool w2_called;
@@ -147,7 +147,7 @@ namespace RobotRaconteurTest
 		
 		void TestAsync1(RR_SHARED_PTR<RRObject> r, RR_SHARED_PTR<RobotRaconteurException> exp);
 
-		void TestAsync2(RR_SHARED_PTR<async_testroot> r, RR_SHARED_PTR<RRArray<double> > ret, RR_SHARED_PTR<RobotRaconteurException> exp);
+		void TestAsync2(RR_SHARED_PTR<async_testroot> r, RR_INTRUSIVE_PTR<RRArray<double> > ret, RR_SHARED_PTR<RobotRaconteurException> exp);
 
 		void TestAsync3(RR_SHARED_PTR<async_testroot> r, RR_SHARED_PTR<RobotRaconteurException> exp);
 
@@ -159,15 +159,15 @@ namespace RobotRaconteurTest
 
 		void TestAsync7(RR_SHARED_PTR<async_testroot> r, RR_SHARED_PTR<sub1> o1, RR_SHARED_PTR<RobotRaconteurException> exp);
 		
-		void TestAsync8(RR_SHARED_PTR<testroot> r, RR_SHARED_PTR<PipeEndpoint<RR_SHARED_PTR<RRArray<double> > > > e1, RR_SHARED_PTR<RobotRaconteurException> exp);
+		void TestAsync8(RR_SHARED_PTR<testroot> r, RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > e1, RR_SHARED_PTR<RobotRaconteurException> exp);
 
-		void TestAsync9(RR_SHARED_PTR<testroot> r, RR_SHARED_PTR<PipeEndpoint<RR_SHARED_PTR<RRArray<double> > > > e1, uint32_t pnum, RR_SHARED_PTR<RobotRaconteurException> exp);
+		void TestAsync9(RR_SHARED_PTR<testroot> r, RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > e1, uint32_t pnum, RR_SHARED_PTR<RobotRaconteurException> exp);
 
-		void TestAsync10(RR_SHARED_PTR<testroot> r, RR_SHARED_PTR<PipeEndpoint<RR_SHARED_PTR<RRArray<double> > > > e1, RR_SHARED_PTR<RobotRaconteurException> exp);
+		void TestAsync10(RR_SHARED_PTR<testroot> r, RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > e1, RR_SHARED_PTR<RobotRaconteurException> exp);
 
-		void TestAsync11(RR_SHARED_PTR<testroot> r, RR_SHARED_PTR<WireConnection<RR_SHARED_PTR<RRArray<double> > > > w1, RR_SHARED_PTR<RobotRaconteurException> exp);
+		void TestAsync11(RR_SHARED_PTR<testroot> r, RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<RRArray<double> > > > w1, RR_SHARED_PTR<RobotRaconteurException> exp);
 
-		void TestAsync12(RR_SHARED_PTR<testroot> r, RR_SHARED_PTR<WireConnection<RR_SHARED_PTR<RRArray<double> > > > w1, RR_SHARED_PTR<RobotRaconteurException> exp);
+		void TestAsync12(RR_SHARED_PTR<testroot> r, RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<RRArray<double> > > > w1, RR_SHARED_PTR<RobotRaconteurException> exp);
 
 		void TestAsync13(RR_SHARED_PTR<testroot> r, RR_SHARED_PTR<std::string> res, RR_SHARED_PTR<RobotRaconteurException> exp);
 

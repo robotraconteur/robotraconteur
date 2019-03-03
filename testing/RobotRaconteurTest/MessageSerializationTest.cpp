@@ -19,13 +19,13 @@ using namespace boost::random;
 namespace RobotRaconteurTest
 {
 
-	RR_SHARED_PTR<Message> MessageSerializationTest::NewTestMessage()
+	RR_INTRUSIVE_PTR<Message> MessageSerializationTest::NewTestMessage()
 	{
 		srand((uint32_t)time(NULL));
 
 
 
-		RR_SHARED_PTR<MessageEntry> e1 = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_PropertyGetReq, "testprimitives");
+		RR_INTRUSIVE_PTR<MessageEntry> e1 = CreateMessageEntry(MessageEntryType_PropertyGetReq, "testprimitives");
 		e1->ServicePath = "aservicepath";
 		e1->RequestID = 134576;
 		e1->MetaData = "md";
@@ -52,58 +52,58 @@ namespace RobotRaconteurTest
 		uint64_t v10d[] = { 1, 2, 3, 4, 5, 19746, 9870, 12111111222345323432u };
 		e1->AddElement("v10", AttachRRArrayCopy(v10d, 8));
 		e1->AddElement("v11", stringToRRArray("This is a test string"));
-		RR_SHARED_PTR<RRArray<uint32_t> > v12 = AllocateRRArray<uint32_t>(1024 * 1024);
+		RR_INTRUSIVE_PTR<RRArray<uint32_t> > v12 = AllocateRRArray<uint32_t>(1024 * 1024);
 		for (size_t i = 0; i < v12->size(); i++) (*v12)[i] = i;
 		e1->AddElement("v12", v12);
-		e1->AddElement("v13", RR_SHARED_PTR<RRBaseArray>());
+		e1->AddElement("v13", RR_INTRUSIVE_PTR<RRBaseArray>());
 
 		//Test vector
 
-		RR_SHARED_PTR<MessageEntry> e2 = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_FunctionCallReq, "testavector");
+		RR_INTRUSIVE_PTR<MessageEntry> e2 = CreateMessageEntry(MessageEntryType_FunctionCallReq, "testavector");
 		e2->RequestID = 4563;
 		e2->ServicePath = "aservicepath.o2";
 
-		std::vector<RR_SHARED_PTR<MessageElement> > mv = std::vector<RR_SHARED_PTR<MessageElement> >();
+		std::vector<RR_INTRUSIVE_PTR<MessageElement> > mv = std::vector<RR_INTRUSIVE_PTR<MessageElement> >();
 		double mv_d1[] = { 1, 2 };
 		double mv_d2[] = { 1000,-2000.10 };
-		mv.push_back(RR_MAKE_SHARED<MessageElement>("0", AttachRRArrayCopy(mv_d1, 2)));
-		mv.push_back(RR_MAKE_SHARED<MessageElement>("1", AttachRRArrayCopy(mv_d2, 2)));
-		RR_SHARED_PTR<MessageElementMap<int32_t> > v = RR_MAKE_SHARED<MessageElementMap<int32_t> >(mv);
+		mv.push_back(CreateMessageElement("0", AttachRRArrayCopy(mv_d1, 2)));
+		mv.push_back(CreateMessageElement("1", AttachRRArrayCopy(mv_d2, 2)));
+		RR_INTRUSIVE_PTR<MessageElementMap<int32_t> > v = CreateMessageElementMap<int32_t>(mv);
 		e2->AddElement("testavector", v);
 
 		//Test dictionary
-		RR_SHARED_PTR<MessageEntry> e3 = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_FunctionCallRes, "testadictionary");
+		RR_INTRUSIVE_PTR<MessageEntry> e3 = CreateMessageEntry(MessageEntryType_FunctionCallRes, "testadictionary");
 		e3->RequestID = 4567;
 		e3->ServicePath = "aservicepath.o3";
 
-		std::vector<RR_SHARED_PTR<MessageElement> > md = std::vector<RR_SHARED_PTR<MessageElement> >();
+		std::vector<RR_INTRUSIVE_PTR<MessageElement> > md = std::vector<RR_INTRUSIVE_PTR<MessageElement> >();
 		float md_d1[] = { 1, 2 };
 		float md_d2[] = { 1000, -2000.10f };
-		md.push_back(RR_MAKE_SHARED<MessageElement>("val1", AttachRRArrayCopy(md_d1, 2)));
-		md.push_back(RR_MAKE_SHARED<MessageElement>("val2", AttachRRArrayCopy(md_d2, 2)));
-		RR_SHARED_PTR<MessageElementMap<std::string> > d = RR_MAKE_SHARED<MessageElementMap<std::string> >(md);
+		md.push_back(CreateMessageElement("val1", AttachRRArrayCopy(md_d1, 2)));
+		md.push_back(CreateMessageElement("val2", AttachRRArrayCopy(md_d2, 2)));
+		RR_INTRUSIVE_PTR<MessageElementMap<std::string> > d = CreateMessageElementMap<std::string>(md);
 		e3->AddElement("testavector", d);
 
 		//Test structure
-		RR_SHARED_PTR<MessageEntry> e4 = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_EventReq, "testnamedarray");
+		RR_INTRUSIVE_PTR<MessageEntry> e4 = CreateMessageEntry(MessageEntryType_EventReq, "testnamedarray");
 		e4->RequestID = 4568;
 		e4->ServicePath = "aservicepath.o4";
 
-		std::vector<RR_SHARED_PTR<MessageElement> > ms = std::vector<RR_SHARED_PTR<MessageElement> >();
+		std::vector<RR_INTRUSIVE_PTR<MessageElement> > ms = std::vector<RR_INTRUSIVE_PTR<MessageElement> >();
 		int64_t ms_d1[] = { 1, 2, 3, 4, 5, -19746, 9870, 345323432 };
-		ms.push_back(RR_MAKE_SHARED<MessageElement>("field1", AttachRRArrayCopy(ms_d1, 2)));
-		ms.push_back(RR_MAKE_SHARED<MessageElement>("field2", v));
-		RR_SHARED_PTR<MessageElementStructure> s = RR_MAKE_SHARED<MessageElementStructure>("RobotRaconteurTestService.TestStruct", ms);
+		ms.push_back(CreateMessageElement("field1", AttachRRArrayCopy(ms_d1, 2)));
+		ms.push_back(CreateMessageElement("field2", v));
+		RR_INTRUSIVE_PTR<MessageElementStructure> s = CreateMessageElementStructure("RobotRaconteurTestService.TestStruct", ms);
 		e4->AddElement("teststruct", s);
 
 		//Test MultiDimArray
 
-		RR_SHARED_PTR<MessageEntry> e5 = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_PipePacket, "testamultidimarray");
+		RR_INTRUSIVE_PTR<MessageEntry> e5 = CreateMessageEntry(MessageEntryType_PipePacket, "testamultidimarray");
 		e5->RequestID = 4569;
 		e5->ServicePath = "aservicepath.o5";
 
-		RR_SHARED_PTR<RRArray<double> > real = AllocateRRArray<double>(125);
-		RR_SHARED_PTR<RRArray<double> > imag = AllocateRRArray<double>(125);
+		RR_INTRUSIVE_PTR<RRArray<double> > real = AllocateRRArray<double>(125);
+		RR_INTRUSIVE_PTR<RRArray<double> > imag = AllocateRRArray<double>(125);
 
 		for (int32_t i = 0; i < 125; i++)
 			(*real)[i] = (((double)rand()) / ((double)RAND_MAX) - 0.5)*1e5;
@@ -113,28 +113,28 @@ namespace RobotRaconteurTest
 		uint32_t dims1[] = { 5, 5, 5 };
 		uint32_t dims2[] = { 25, 5 };
 
-		RR_SHARED_PTR<RRMultiDimArray<double> > a1 = RR_MAKE_SHARED<RRMultiDimArray<double> >(AttachRRArrayCopy(dims1, 3), real);
-		RR_SHARED_PTR<RRMultiDimArray<double> > a2 = RR_MAKE_SHARED<RRMultiDimArray<double> >(AttachRRArrayCopy(dims2, 2), real);
+		RR_INTRUSIVE_PTR<RRMultiDimArray<double> > a1 = AllocateRRMultiDimArray<double>(AttachRRArrayCopy(dims1, 3), real);
+		RR_INTRUSIVE_PTR<RRMultiDimArray<double> > a2 = AllocateRRMultiDimArray<double>(AttachRRArrayCopy(dims2, 2), real);
 		e5->AddElement("ar1", RobotRaconteurNode::s()->PackMultiDimArray(a1));
 		e5->AddElement("ar2", RobotRaconteurNode::s()->PackMultiDimArray(a2));
 
 		//Test list
 
-		RR_SHARED_PTR<MessageEntry> e6 = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_PipePacket, "testalist");
+		RR_INTRUSIVE_PTR<MessageEntry> e6 = CreateMessageEntry(MessageEntryType_PipePacket, "testalist");
 		e6->RequestID = 459;
 		e6->ServicePath = "aservicepath.o6";
-		std::vector<RR_SHARED_PTR<MessageElement> > ml = std::vector<RR_SHARED_PTR<MessageElement> >();
+		std::vector<RR_INTRUSIVE_PTR<MessageElement> > ml = std::vector<RR_INTRUSIVE_PTR<MessageElement> >();
 		float md_l1[] = { 1, 3 };
 		float md_l2[] = { 1003, -2000.10f };
-		ml.push_back(RR_MAKE_SHARED<MessageElement>("val1", AttachRRArrayCopy(md_l1, 2)));
-		ml.push_back(RR_MAKE_SHARED<MessageElement>("val2", AttachRRArrayCopy(md_l2, 2)));
-		RR_SHARED_PTR<MessageElementList > l = RR_MAKE_SHARED<MessageElementList >(ml);
+		ml.push_back(CreateMessageElement("val1", AttachRRArrayCopy(md_l1, 2)));
+		ml.push_back(CreateMessageElement("val2", AttachRRArrayCopy(md_l2, 2)));
+		RR_INTRUSIVE_PTR<MessageElementList > l = CreateMessageElementList(ml);
 		e6->AddElement("testalist", l);
 
 
 		//Create a new message
-		RR_SHARED_PTR<Message> m = RR_MAKE_SHARED<Message>();
-		RR_SHARED_PTR<MessageHeader> h = RR_MAKE_SHARED<MessageHeader>();
+		RR_INTRUSIVE_PTR<Message> m = CreateMessage();
+		RR_INTRUSIVE_PTR<MessageHeader> h = CreateMessageHeader();
 		h->ReceiverEndpoint = 1023;
 		h->SenderEndpoint = 9876;
 		h->SenderNodeID = NodeID::NewUniqueID();
@@ -174,7 +174,7 @@ namespace RobotRaconteurTest
 
 	}
 
-	static RR_SHARED_PTR<MessageElement> MessageSerializationTest_NewRandomMessageElement(mt19937& rng, size_t depth)
+	static RR_INTRUSIVE_PTR<MessageElement> MessageSerializationTest_NewRandomMessageElement(mt19937& rng, size_t depth)
 	{
 		uniform_int_distribution<uint16_t> type_switch_dist(0, 1);
 		uniform_int_distribution<uint16_t> type_dist(0, 11);
@@ -184,7 +184,7 @@ namespace RobotRaconteurTest
 		uniform_int_distribution<int32_t> int32_dist;
 		uniform_int_distribution<size_t> len_dist(0, 256);
 		uniform_int_distribution<size_t> len_sub_dist(1, 8);
-		RR_SHARED_PTR<MessageElement> e = RR_MAKE_SHARED<MessageElement>();		
+		RR_INTRUSIVE_PTR<MessageElement> e = CreateMessageElement();		
 		if (type_switch_dist(rng) == 0 || depth > 2)
 		{
 			e->ElementType = (DataTypes)type_dist(rng);
@@ -234,7 +234,7 @@ namespace RobotRaconteurTest
 		case DataTypes_uint64_t:
 		case DataTypes_string_t:
 		{
-			RR_SHARED_PTR<RRBaseArray> a = AllocateRRArrayByType(e->ElementType, len_dist(rng));
+			RR_INTRUSIVE_PTR<RRBaseArray> a = AllocateRRArrayByType(e->ElementType, len_dist(rng));
 			uint8_t* a2 = (uint8_t*)a->void_ptr();
 			for (size_t i = 0; i < a->ElementSize() * a->size(); i++)
 			{
@@ -245,58 +245,58 @@ namespace RobotRaconteurTest
 		}
 		case DataTypes_structure_t:
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > v;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
 			size_t n = len_sub_dist(rng);
 			for (size_t i = 0; i < n; i++)
 			{
 				v.push_back(MessageSerializationTest_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(RR_MAKE_SHARED<MessageElementStructure>(MessageSerializationTest_NewRandomString(rng, 128), v));
+			e->SetData(CreateMessageElementStructure(MessageSerializationTest_NewRandomString(rng, 128), v));
 			return e;
 		}
 		case DataTypes_vector_t:
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > v;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
 			size_t n = len_sub_dist(rng);
 			for (size_t i = 0; i < n; i++)
 			{
 				v.push_back(MessageSerializationTest_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(RR_MAKE_SHARED<MessageElementMap<int32_t> >(v));
+			e->SetData(CreateMessageElementMap<int32_t>(v));
 			return e;
 		}
 		case DataTypes_dictionary_t:
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > v;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
 			size_t n = len_sub_dist(rng);
 			for (size_t i = 0; i < n; i++)
 			{
 				v.push_back(MessageSerializationTest_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(RR_MAKE_SHARED<MessageElementMap<std::string> >(v));
+			e->SetData(CreateMessageElementMap<std::string>(v));
 			return e;
 		}
 		case DataTypes_multidimarray_t:
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > v;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
 			size_t n = len_sub_dist(rng);
 			if (n > 4) n = 4;
 			for (size_t i = 0; i < n; i++)
 			{
 				v.push_back(MessageSerializationTest_NewRandomMessageElement(rng, 10));
 			}
-			e->SetData(RR_MAKE_SHARED<MessageElementMultiDimArray>(v));
+			e->SetData(CreateMessageElementMultiDimArray(v));
 			return e;
 		}
 		case DataTypes_list_t:
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > v;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
 			size_t n = len_sub_dist(rng);
 			for (size_t i = 0; i < n; i++)
 			{
 				v.push_back(MessageSerializationTest_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(RR_MAKE_SHARED<MessageElementList>(v));
+			e->SetData(CreateMessageElementList(v));
 			return e;
 		}
 
@@ -305,7 +305,7 @@ namespace RobotRaconteurTest
 		}
 	}
 
-	RR_SHARED_PTR<Message> MessageSerializationTest::NewRandomTestMessage(boost::random::mt19937& rng)
+	RR_INTRUSIVE_PTR<Message> MessageSerializationTest::NewRandomTestMessage(boost::random::mt19937& rng)
 	{
 		uniform_int_distribution<uint8_t>  uint8_dist;
 		uniform_int_distribution<uint16_t> uint16_dist;
@@ -314,8 +314,8 @@ namespace RobotRaconteurTest
 		uniform_int_distribution<int32_t> int32_dist;
 		uniform_int_distribution<int64_t> int64_dist;
 
-		RR_SHARED_PTR<Message> m = RR_MAKE_SHARED<Message>();
-		RR_SHARED_PTR<MessageHeader> h = RR_MAKE_SHARED<MessageHeader>();
+		RR_INTRUSIVE_PTR<Message> m = CreateMessage();
+		RR_INTRUSIVE_PTR<MessageHeader> h = CreateMessageHeader();
 		m->header = h;		
 				
 		boost::array < uint8_t, 16> b;
@@ -340,7 +340,7 @@ namespace RobotRaconteurTest
 		{
 			if (m->ComputeSize() > 10 * 1024 * 1024) break;
 
-			RR_SHARED_PTR<MessageEntry> ee = RR_MAKE_SHARED<MessageEntry>();
+			RR_INTRUSIVE_PTR<MessageEntry> ee = CreateMessageEntry();
 						
 			uniform_int_distribution<uint16_t> entry_type_dist(101, 120);
 			ee->EntryType = (MessageEntryType)entry_type_dist(rng);
@@ -356,14 +356,14 @@ namespace RobotRaconteurTest
 			{
 				uniform_int_distribution<size_t> large_len_dist(512 * 1024, 1024 * 1024);
 				size_t l = large_len_dist(rng);
-				RR_SHARED_PTR<RRArray<uint32_t> > a = AllocateRRArray<uint32_t>(l);
+				RR_INTRUSIVE_PTR<RRArray<uint32_t> > a = AllocateRRArray<uint32_t>(l);
 				uint32_t* a2 = a->data();
 				for (size_t j = 0; j < l; j++)
 				{
 					a2[j] = uint32_dist(rng);
 				}
 
-				RR_SHARED_PTR<MessageElement> el = MessageSerializationTest_NewRandomMessageElement(rng, 10);
+				RR_INTRUSIVE_PTR<MessageElement> el = MessageSerializationTest_NewRandomMessageElement(rng, 10);
 				el->SetData(a);
 				ee->elements.push_back(el);
 			}
@@ -373,7 +373,7 @@ namespace RobotRaconteurTest
 				size_t n1 = el_count_dist(rng);
 				for (size_t j = 0; j < n1; j++)
 				{
-					RR_SHARED_PTR<MessageElement> el = MessageSerializationTest_NewRandomMessageElement(rng, 0);
+					RR_INTRUSIVE_PTR<MessageElement> el = MessageSerializationTest_NewRandomMessageElement(rng, 0);
 					ee->elements.push_back(el);
 				}
 			}
@@ -391,7 +391,7 @@ namespace RobotRaconteurTest
 
 		for (size_t i = 0; i < iterations; i++)
 		{
-			RR_SHARED_PTR<Message> m = NewRandomTestMessage(rng);
+			RR_INTRUSIVE_PTR<Message> m = NewRandomTestMessage(rng);
 
 			//Write to stream and read back
 			size_t message_size = m->ComputeSize();
@@ -404,7 +404,7 @@ namespace RobotRaconteurTest
 
 			ArrayBinaryReader r(buf.get(), 0, message_size);
 
-			RR_SHARED_PTR<Message> m2 = RR_MAKE_SHARED<Message>();
+			RR_INTRUSIVE_PTR<Message> m2 = CreateMessage();
 			m2->Read(r);
 
 			MessageSerializationTest::CompareMessage(m, m2);
@@ -415,7 +415,7 @@ namespace RobotRaconteurTest
 	
 	void MessageSerializationTest::Test()
 	{
-		RR_SHARED_PTR<Message> m = NewTestMessage();
+		RR_INTRUSIVE_PTR<Message> m = NewTestMessage();
 
 		//Write to stream and read back
 		size_t message_size=m->ComputeSize();
@@ -428,17 +428,17 @@ namespace RobotRaconteurTest
 
 		ArrayBinaryReader r(buf.get(),0,message_size);
 
-		RR_SHARED_PTR<Message> m2 = RR_MAKE_SHARED<Message>();
+		RR_INTRUSIVE_PTR<Message> m2 = CreateMessage();
 		m2->Read(r);		
 
 		//Check to make sure the messages match
 		CompareMessage(m, m2);
 	}
 
-	void MessageSerializationTest::CompareMessage(RR_SHARED_PTR<Message> m1, RR_SHARED_PTR<Message> m2)
+	void MessageSerializationTest::CompareMessage(RR_INTRUSIVE_PTR<Message> m1, RR_INTRUSIVE_PTR<Message> m2)
 	{
-		RR_SHARED_PTR<MessageHeader> h1 = m1->header;
-		RR_SHARED_PTR<MessageHeader> h2 = m2->header;
+		RR_INTRUSIVE_PTR<MessageHeader> h1 = m1->header;
+		RR_INTRUSIVE_PTR<MessageHeader> h2 = m2->header;
 
 		if (h1->MessageSize != h2->MessageSize) throw std::runtime_error("");
 		if (h1->MessageFlags != h2->MessageFlags) throw std::runtime_error("");
@@ -515,7 +515,7 @@ namespace RobotRaconteurTest
 
 	}
 
-	void MessageSerializationTest::CompareMessageEntry(RR_SHARED_PTR<MessageEntry> m1, RR_SHARED_PTR<MessageEntry> m2)
+	void MessageSerializationTest::CompareMessageEntry(RR_INTRUSIVE_PTR<MessageEntry> m1, RR_INTRUSIVE_PTR<MessageEntry> m2)
 	{
 		if (m1->EntrySize != m2->EntrySize) throw std::runtime_error("");
 		if (m1->EntryFlags != m2->EntryFlags) throw std::runtime_error("");
@@ -574,10 +574,10 @@ namespace RobotRaconteurTest
 	}
 
 	template<typename T>
-	static void MessageSerializationTest_CompareSubElements(RR_SHARED_PTR<MessageElement> m1, RR_SHARED_PTR<MessageElement> m2)
+	static void MessageSerializationTest_CompareSubElements(RR_INTRUSIVE_PTR<MessageElement> m1, RR_INTRUSIVE_PTR<MessageElement> m2)
 	{
-		RR_SHARED_PTR<T> sdat1 = m1->CastData<T>();
-		RR_SHARED_PTR<T> sdat2 = m1->CastData<T>();
+		RR_INTRUSIVE_PTR<T> sdat1 = m1->CastData<T>();
+		RR_INTRUSIVE_PTR<T> sdat2 = m1->CastData<T>();
 
 		if (sdat1->Elements.size() != sdat2->Elements.size()) throw std::runtime_error("");
 		for (size_t i = 0; i < sdat1->Elements.size(); i++)
@@ -586,7 +586,7 @@ namespace RobotRaconteurTest
 		}
 	}
 
-	void MessageSerializationTest::CompareMessageElement(RR_SHARED_PTR<MessageElement> m1, RR_SHARED_PTR<MessageElement> m2)
+	void MessageSerializationTest::CompareMessageElement(RR_INTRUSIVE_PTR<MessageElement> m1, RR_INTRUSIVE_PTR<MessageElement> m2)
 	{
 		if (m1->ElementSize != m2->ElementSize) throw std::runtime_error("");
 		if (m1->ElementFlags != m2->ElementFlags) throw std::runtime_error("");
@@ -645,8 +645,8 @@ namespace RobotRaconteurTest
 		case DataTypes_uint64_t:
 		case DataTypes_string_t:
 		{
-			RR_SHARED_PTR<RRBaseArray> a1 = m1->CastData<RRBaseArray>();
-			RR_SHARED_PTR<RRBaseArray> a2 = m2->CastData<RRBaseArray>();
+			RR_INTRUSIVE_PTR<RRBaseArray> a1 = m1->CastData<RRBaseArray>();
+			RR_INTRUSIVE_PTR<RRBaseArray> a2 = m2->CastData<RRBaseArray>();
 			if (a1->size() != m1->DataCount) throw std::runtime_error("");
 			if (a2->size() != m2->DataCount) throw std::runtime_error("");
 			if (a1->GetTypeID() != m1->ElementType) throw std::runtime_error("");

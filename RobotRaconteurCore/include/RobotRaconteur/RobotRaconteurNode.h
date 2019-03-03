@@ -115,65 +115,65 @@ namespace RobotRaconteur
 
 		std::vector<std::string> GetRegisteredServiceTypes();
 
-		RR_SHARED_PTR<MessageElementStructure> PackStructure(RR_SHARED_PTR<RRStructure> structure);
+		RR_INTRUSIVE_PTR<MessageElementStructure> PackStructure(RR_INTRUSIVE_PTR<RRStructure> structure);
 
-		RR_SHARED_PTR<RRStructure> UnpackStructure(RR_SHARED_PTR<MessageElementStructure> structure);
+		RR_INTRUSIVE_PTR<RRStructure> UnpackStructure(RR_INTRUSIVE_PTR<MessageElementStructure> structure);
 
-		RR_SHARED_PTR<MessageElementPodArray> PackPodArray(RR_SHARED_PTR<RRPodBaseArray> structure);
+		RR_INTRUSIVE_PTR<MessageElementPodArray> PackPodArray(RR_INTRUSIVE_PTR<RRPodBaseArray> structure);
 
-		RR_SHARED_PTR<RRPodBaseArray> UnpackPodArray(RR_SHARED_PTR<MessageElementPodArray> structure);
+		RR_INTRUSIVE_PTR<RRPodBaseArray> UnpackPodArray(RR_INTRUSIVE_PTR<MessageElementPodArray> structure);
 		
-		RR_SHARED_PTR<MessageElementPodMultiDimArray> PackPodMultiDimArray(RR_SHARED_PTR<RRPodBaseMultiDimArray> structure);
+		RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> PackPodMultiDimArray(RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> structure);
 
-		RR_SHARED_PTR<RRPodBaseMultiDimArray> UnpackPodMultiDimArray(RR_SHARED_PTR<MessageElementPodMultiDimArray> structure);
+		RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> UnpackPodMultiDimArray(RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> structure);
 
-		RR_SHARED_PTR<MessageElementNamedArray> PackNamedArray(RR_SHARED_PTR<RRNamedBaseArray> structure);
+		RR_INTRUSIVE_PTR<MessageElementNamedArray> PackNamedArray(RR_INTRUSIVE_PTR<RRNamedBaseArray> structure);
 
-		RR_SHARED_PTR<RRNamedBaseArray> UnpackNamedArray(RR_SHARED_PTR<MessageElementNamedArray> structure);
+		RR_INTRUSIVE_PTR<RRNamedBaseArray> UnpackNamedArray(RR_INTRUSIVE_PTR<MessageElementNamedArray> structure);
 
-		RR_SHARED_PTR<MessageElementNamedMultiDimArray> PackNamedMultiDimArray(RR_SHARED_PTR<RRNamedBaseMultiDimArray> structure);
+		RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> PackNamedMultiDimArray(RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> structure);
 
-		RR_SHARED_PTR<RRNamedBaseMultiDimArray> UnpackNamedMultiDimArray(RR_SHARED_PTR<MessageElementNamedMultiDimArray> structure);
+		RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> UnpackNamedMultiDimArray(RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> structure);
 
 
 		template <typename T>
-		RR_SHARED_PTR<MessageElementMultiDimArray> PackMultiDimArray(RR_SHARED_PTR<RRMultiDimArray<T> > arr)
+		RR_INTRUSIVE_PTR<MessageElementMultiDimArray> PackMultiDimArray(RR_INTRUSIVE_PTR<RRMultiDimArray<T> > arr)
 		{
-			if (!arr) return RR_SHARED_PTR<MessageElementMultiDimArray>();
+			if (!arr) return RR_INTRUSIVE_PTR<MessageElementMultiDimArray>();
 
-			std::vector<RR_SHARED_PTR<MessageElement> > ar;			
-			ar.push_back(RR_MAKE_SHARED<MessageElement>("dims",arr->Dims));
-			ar.push_back(RR_MAKE_SHARED<MessageElement>("array",arr->Array));			
-			return RR_MAKE_SHARED<MessageElementMultiDimArray>(ar);
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > ar;			
+			ar.push_back(CreateMessageElement("dims",arr->Dims));
+			ar.push_back(CreateMessageElement("array",arr->Array));			
+			return CreateMessageElementMultiDimArray(ar);
 		}
 
 		template <typename T>
-		RR_SHARED_PTR<RRMultiDimArray<T> > UnpackMultiDimArray(RR_SHARED_PTR<MessageElementMultiDimArray> ar)
+		RR_INTRUSIVE_PTR<RRMultiDimArray<T> > UnpackMultiDimArray(RR_INTRUSIVE_PTR<MessageElementMultiDimArray> ar)
 		{
-			if (!ar) return RR_SHARED_PTR<RRMultiDimArray<T> >();
+			if (!ar) return RR_INTRUSIVE_PTR<RRMultiDimArray<T> >();
 
-			RR_SHARED_PTR<RRMultiDimArray<T> > arr=RR_MAKE_SHARED<RRMultiDimArray<T> >();
+			RR_INTRUSIVE_PTR<RRMultiDimArray<T> > arr=AllocateEmptyRRMultiDimArray<T>();
 			arr->Dims=MessageElement::FindElement(ar->Elements,"dims")->CastData<RRArray<uint32_t> >();
 			arr->Array=MessageElement::FindElement(ar->Elements,"array")->CastData<RRArray<T> >();			
 			return arr;
 		}
 
 	
-		RR_SHARED_PTR<MessageElementData> PackVarType(RR_SHARED_PTR<RRValue> vardata);
+		RR_INTRUSIVE_PTR<MessageElementData> PackVarType(RR_INTRUSIVE_PTR<RRValue> vardata);
 
-		RR_SHARED_PTR<RRValue> UnpackVarType(RR_SHARED_PTR<MessageElement> mvardata);
+		RR_INTRUSIVE_PTR<RRValue> UnpackVarType(RR_INTRUSIVE_PTR<MessageElement> mvardata);
 	
 	private:
 		template<typename K, typename T>
 		class PackMapTypeSupport
 		{
 		public:
-			static RR_SHARED_PTR<MessageElementMap<K> > PackMapType(RobotRaconteurNode* node, const RR_SHARED_PTR<RRValue> set)
+			static RR_INTRUSIVE_PTR<MessageElementMap<K> > PackMapType(RobotRaconteurNode* node, const RR_INTRUSIVE_PTR<RRValue> set)
 			{
 				BOOST_STATIC_ASSERT(sizeof(T) == 0);
 			}
 
-			static RR_SHARED_PTR<RRValue> UnpackMapType(RobotRaconteurNode* node, const RR_SHARED_PTR<MessageElementMap<K> > mset)
+			static RR_INTRUSIVE_PTR<RRValue> UnpackMapType(RobotRaconteurNode* node, const RR_INTRUSIVE_PTR<MessageElementMap<K> > mset)
 			{
 				BOOST_STATIC_ASSERT(sizeof(T) == 0);
 			}
@@ -185,40 +185,40 @@ namespace RobotRaconteur
 		{
 		public:
 			template<typename U>
-			static RR_SHARED_PTR<MessageElementMap<int32_t> > PackMapType(RobotRaconteurNode* node, const U& set)
+			static RR_INTRUSIVE_PTR<MessageElementMap<int32_t> > PackMapType(RobotRaconteurNode* node, const U& set)
 			{
-				if (!set) return RR_SHARED_PTR<MessageElementMap<int32_t> >();
+				if (!set) return RR_INTRUSIVE_PTR<MessageElementMap<int32_t> >();
 
-				RR_SHARED_PTR<RRMap<int32_t, T> > set2 = rr_cast<RRMap<int32_t, T> >(set);
+				RR_INTRUSIVE_PTR<RRMap<int32_t, T> > set2 = rr_cast<RRMap<int32_t, T> >(set);
 
-				std::vector<RR_SHARED_PTR<MessageElement> > mret;
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > mret;
 
 
-				for (typename std::map<int32_t, RR_SHARED_PTR<T> >::iterator e = set2->begin(); e != set2->end(); e++)
+				for (typename std::map<int32_t, RR_INTRUSIVE_PTR<T> >::iterator e = set2->begin(); e != set2->end(); e++)
 				{
 					int32_t key = e->first;
 
-					RR_SHARED_PTR<MessageElementData> dat = node->PackAnyType<RR_SHARED_PTR<T> >(e->second);
+					RR_INTRUSIVE_PTR<MessageElementData> dat = node->PackAnyType<RR_INTRUSIVE_PTR<T> >(e->second);
 
-					RR_SHARED_PTR<MessageElement> m = RR_MAKE_SHARED<MessageElement>("", dat);
+					RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement("", dat);
 					m->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
 					m->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
 					m->ElementNumber = key;
 					mret.push_back(m);
 				}
 
-				return RR_MAKE_SHARED<MessageElementMap<int32_t> >(mret);
+				return CreateMessageElementMap<int32_t>(mret);
 			}
 
-			static RR_SHARED_PTR<RRMap<int32_t,T> > UnpackMapType(RobotRaconteurNode* node, const RR_SHARED_PTR<MessageElementMap<int32_t> >& mset)
+			static RR_INTRUSIVE_PTR<RRMap<int32_t,T> > UnpackMapType(RobotRaconteurNode* node, const RR_INTRUSIVE_PTR<MessageElementMap<int32_t> >& mset)
 			{
-				if (!mset) return RR_SHARED_PTR<RRMap<int32_t,T> >();
+				if (!mset) return RR_INTRUSIVE_PTR<RRMap<int32_t,T> >();
 
-				RR_SHARED_PTR<RRMap<int32_t, T> > ret = RR_MAKE_SHARED<RRMap<int32_t, T> >();
+				RR_INTRUSIVE_PTR<RRMap<int32_t, T> > ret = AllocateEmptyRRMap<int32_t, T>();
 
-				for (std::vector<RR_SHARED_PTR<MessageElement> >::iterator e = mset->Elements.begin(); e != mset->Elements.end(); e++)
+				for (std::vector<RR_INTRUSIVE_PTR<MessageElement> >::iterator e = mset->Elements.begin(); e != mset->Elements.end(); e++)
 				{
-					RR_SHARED_PTR<MessageElement> m = *e;
+					RR_INTRUSIVE_PTR<MessageElement> m = *e;
 					int32_t key;
 					if (m->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
 					{
@@ -233,7 +233,7 @@ namespace RobotRaconteur
 						throw DataTypeException("Invalid map format");
 					}
 
-					RR_SHARED_PTR<T> dat = node->UnpackAnyType<RR_SHARED_PTR<T> >(m);
+					RR_INTRUSIVE_PTR<T> dat = node->UnpackAnyType<RR_INTRUSIVE_PTR<T> >(m);
 					ret->insert(std::make_pair(key, dat));
 				}
 
@@ -246,35 +246,35 @@ namespace RobotRaconteur
 		{
 		public:
 			template<typename U>
-			static RR_SHARED_PTR<MessageElementMap<std::string> > PackMapType(RobotRaconteurNode* node, const U& set)
+			static RR_INTRUSIVE_PTR<MessageElementMap<std::string> > PackMapType(RobotRaconteurNode* node, const U& set)
 			{
-				if (!set) return RR_SHARED_PTR<MessageElementMap<std::string> >();
+				if (!set) return RR_INTRUSIVE_PTR<MessageElementMap<std::string> >();
 
-				RR_SHARED_PTR<RRMap<std::string, T> > set2 = rr_cast<RRMap<std::string, T> >(set);
+				RR_INTRUSIVE_PTR<RRMap<std::string, T> > set2 = rr_cast<RRMap<std::string, T> >(set);
 
-				std::vector<RR_SHARED_PTR<MessageElement> > mret;
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > mret;
 
-				for (typename std::map<std::string, RR_SHARED_PTR<T> >::iterator e = set2->begin(); e != set2->end(); e++)
+				for (typename std::map<std::string, RR_INTRUSIVE_PTR<T> >::iterator e = set2->begin(); e != set2->end(); e++)
 				{
-					RR_SHARED_PTR<MessageElementData> dat = node->PackAnyType<RR_SHARED_PTR<T> >(e->second);
+					RR_INTRUSIVE_PTR<MessageElementData> dat = node->PackAnyType<RR_INTRUSIVE_PTR<T> >(e->second);
 
-					RR_SHARED_PTR<MessageElement> m = RR_MAKE_SHARED<MessageElement>("", dat);					
+					RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement("", dat);					
 					m->ElementName = e->first;
 					mret.push_back(m);
 				}
 
-				return RR_MAKE_SHARED<MessageElementMap<std::string> >(mret);
+				return CreateMessageElementMap<std::string>(mret);
 			}
 
-			static RR_SHARED_PTR<RRMap<std::string,T> > UnpackMapType(RobotRaconteurNode* node, const RR_SHARED_PTR<MessageElementMap<std::string> >& mset)
+			static RR_INTRUSIVE_PTR<RRMap<std::string,T> > UnpackMapType(RobotRaconteurNode* node, const RR_INTRUSIVE_PTR<MessageElementMap<std::string> >& mset)
 			{
-				if (!mset) return RR_SHARED_PTR<RRMap<std::string,T> >();
+				if (!mset) return RR_INTRUSIVE_PTR<RRMap<std::string,T> >();
 
-				RR_SHARED_PTR<RRMap<std::string, T> > ret = RR_MAKE_SHARED<RRMap<std::string, T> >();
+				RR_INTRUSIVE_PTR<RRMap<std::string, T> > ret = AllocateEmptyRRMap<std::string, T>();
 
-				for (std::vector<RR_SHARED_PTR<MessageElement> >::iterator e = mset->Elements.begin(); e != mset->Elements.end(); e++)
+				for (std::vector<RR_INTRUSIVE_PTR<MessageElement> >::iterator e = mset->Elements.begin(); e != mset->Elements.end(); e++)
 				{
-					RR_SHARED_PTR<MessageElement> m = *e;
+					RR_INTRUSIVE_PTR<MessageElement> m = *e;
 
 					if (!(m->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR))
 					{
@@ -283,7 +283,7 @@ namespace RobotRaconteur
 
 					std::string& key = m->ElementName;
 					
-					RR_SHARED_PTR<T> dat = node->UnpackAnyType<RR_SHARED_PTR<T> >(m);
+					RR_INTRUSIVE_PTR<T> dat = node->UnpackAnyType<RR_INTRUSIVE_PTR<T> >(m);
 					ret->insert(std::make_pair(key, dat));
 				}
 
@@ -294,26 +294,26 @@ namespace RobotRaconteur
 	public:
 
 		template<typename K, typename T, typename U>
-		RR_SHARED_PTR<MessageElementMap<K> > PackMapType(const U& set)
+		RR_INTRUSIVE_PTR<MessageElementMap<K> > PackMapType(const U& set)
 		{
 			return PackMapTypeSupport<K, T>::PackMapType(this, set);
 		}
 
 		template<typename K, typename T>
-		RR_SHARED_PTR<RRMap<K,T> > UnpackMapType(const RR_SHARED_PTR<MessageElementMap<K> >& mset)
+		RR_INTRUSIVE_PTR<RRMap<K,T> > UnpackMapType(const RR_INTRUSIVE_PTR<MessageElementMap<K> >& mset)
 		{
 			return PackMapTypeSupport<K, T>::UnpackMapType(this, mset);
 		}	
 
 
 		template<typename T, typename U>
-		RR_SHARED_PTR<MessageElementList > PackListType(U& set)
+		RR_INTRUSIVE_PTR<MessageElementList > PackListType(U& set)
 		{
-			if (!set) return RR_SHARED_PTR<MessageElementList >();			
+			if (!set) return RR_INTRUSIVE_PTR<MessageElementList >();			
 
-			RR_SHARED_PTR<RRList<T> > set2=rr_cast<RRList<T> >(set);			
+			RR_INTRUSIVE_PTR<RRList<T> > set2=rr_cast<RRList<T> >(set);			
 
-			std::vector<RR_SHARED_PTR<MessageElement> > mret;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > mret;
 
 			
 			typename RRList<T>::iterator set2_iter = set2->begin();
@@ -321,9 +321,9 @@ namespace RobotRaconteur
 			{
 				int32_t key = i;
 
-				RR_SHARED_PTR<MessageElementData> dat=PackAnyType<RR_SHARED_PTR<T> >(*set2_iter);
+				RR_INTRUSIVE_PTR<MessageElementData> dat=PackAnyType<RR_INTRUSIVE_PTR<T> >(*set2_iter);
 
-				RR_SHARED_PTR<MessageElement> m=RR_MAKE_SHARED<MessageElement>("",dat);
+				RR_INTRUSIVE_PTR<MessageElement> m=CreateMessageElement("",dat);
 				m->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
 				m->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
 				m->ElementNumber = key;
@@ -331,19 +331,19 @@ namespace RobotRaconteur
 				++set2_iter;
 			}
 
-			return RR_MAKE_SHARED<MessageElementList >(mret);		
+			return CreateMessageElementList(mret);		
 		}
 
 		template<typename T>
-		RR_SHARED_PTR<RRList<T> > UnpackListType(const RR_SHARED_PTR<MessageElementList >& mset)
+		RR_INTRUSIVE_PTR<RRList<T> > UnpackListType(const RR_INTRUSIVE_PTR<MessageElementList >& mset)
 		{
-			if (!mset) return RR_SHARED_PTR<RRList<T> >();			
+			if (!mset) return RR_INTRUSIVE_PTR<RRList<T> >();			
 			
-			RR_SHARED_PTR<RRList<T> > ret=RR_MAKE_SHARED<RRList<T> >();
+			RR_INTRUSIVE_PTR<RRList<T> > ret=AllocateEmptyRRList<T>();
 
 			for (int32_t i=0; i<(int32_t)mset->Elements.size(); i++)
 			{
-				RR_SHARED_PTR<MessageElement> m = mset->Elements.at(i);
+				RR_INTRUSIVE_PTR<MessageElement> m = mset->Elements.at(i);
 				int32_t key;
 				if (m->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
 				{
@@ -360,7 +360,7 @@ namespace RobotRaconteur
 				
 				if (key!=i) throw DataTypeException("Invalid list format");
 
-				RR_SHARED_PTR<T> dat=UnpackAnyType<RR_SHARED_PTR<T> >(m);
+				RR_INTRUSIVE_PTR<T> dat=UnpackAnyType<RR_INTRUSIVE_PTR<T> >(m);
 				ret->push_back(dat);
 			}
 
@@ -374,24 +374,24 @@ namespace RobotRaconteur
 		{
 		public:
 			template<typename NodeType>
-			static RR_SHARED_PTR<MessageElementData> PackAnyType(const RR_SHARED_PTR<RRValue>& data, NodeType node)
+			static RR_INTRUSIVE_PTR<MessageElementData> PackAnyType(const RR_INTRUSIVE_PTR<RRValue>& data, NodeType node)
 			{
 				return node->PackVarType(data);
 			}
 
 			template<typename NodeType>
-			static RR_SHARED_PTR<RRValue> UnpackAnyType(const RR_SHARED_PTR<MessageElement>& mdata, NodeType node)
+			static RR_INTRUSIVE_PTR<RRValue> UnpackAnyType(const RR_INTRUSIVE_PTR<MessageElement>& mdata, NodeType node)
 			{
 				return node->UnpackVarType(mdata);
 			}
 		};		
 
 		template<typename T >
-		class PackAnyTypeSupport<RR_SHARED_PTR<T> >
+		class PackAnyTypeSupport<RR_INTRUSIVE_PTR<T> >
 		{
 		public:
 			template<typename U, typename NodeType>
-			static RR_SHARED_PTR<MessageElementData> PackAnyType(const U& data, NodeType node)
+			static RR_INTRUSIVE_PTR<MessageElementData> PackAnyType(const U& data, NodeType node)
 			{
 				if (boost::is_base_of<RRStructure,T>::value)
 				{ 
@@ -401,7 +401,7 @@ namespace RobotRaconteur
 			}
 			
 			template<typename NodeType>
-			static RR_SHARED_PTR<T> UnpackAnyType(const RR_SHARED_PTR<MessageElement>& mdata, NodeType node)
+			static RR_INTRUSIVE_PTR<T> UnpackAnyType(const RR_INTRUSIVE_PTR<MessageElement>& mdata, NodeType node)
 			{
 				if (boost::is_base_of<RRStructure, T>::value)
 				{
@@ -413,68 +413,68 @@ namespace RobotRaconteur
 		};
 
 		template<typename T>
-		class PackAnyTypeSupport<RR_SHARED_PTR<RRArray<T> > >
+		class PackAnyTypeSupport<RR_INTRUSIVE_PTR<RRArray<T> > >
 		{
 		public:
 			template<typename U, typename NodeType>
-			static RR_SHARED_PTR<MessageElementData> PackAnyType(const U& data, NodeType node)
+			static RR_INTRUSIVE_PTR<MessageElementData> PackAnyType(const U& data, NodeType node)
 			{
 				return RR_STATIC_POINTER_CAST<MessageElementData>(data);
 			}
 
 			template<typename NodeType>
-			static RR_SHARED_PTR<RRArray<T> > UnpackAnyType(const RR_SHARED_PTR<MessageElement>& mdata, NodeType node)
+			static RR_INTRUSIVE_PTR<RRArray<T> > UnpackAnyType(const RR_INTRUSIVE_PTR<MessageElement>& mdata, NodeType node)
 			{
 				return mdata->CastData<RRArray<T> >();
 			}
 		};
 		
 		template<typename K, typename T>
-		class PackAnyTypeSupport<RR_SHARED_PTR<RRMap<K,T> > >
+		class PackAnyTypeSupport<RR_INTRUSIVE_PTR<RRMap<K,T> > >
 		{
 		public:
 			template<typename U, typename NodeType>
-			static RR_SHARED_PTR<MessageElementData> PackAnyType(const U& data, NodeType node)
+			static RR_INTRUSIVE_PTR<MessageElementData> PackAnyType(const U& data, NodeType node)
 			{
 				return node->template PackMapType<K,T>(data);
 			}
 
 			template<typename NodeType>
-			static RR_SHARED_PTR<RRMap<K,T> > UnpackAnyType(const RR_SHARED_PTR<MessageElement>& mdata, NodeType node)
+			static RR_INTRUSIVE_PTR<RRMap<K,T> > UnpackAnyType(const RR_INTRUSIVE_PTR<MessageElement>& mdata, NodeType node)
 			{
 				return node->template UnpackMapType<K,T>(mdata->CastData<MessageElementMap<K> >());
 			}
 		};
 		
 		template<typename T>
-		class PackAnyTypeSupport<RR_SHARED_PTR<RRList<T> > >
+		class PackAnyTypeSupport<RR_INTRUSIVE_PTR<RRList<T> > >
 		{
 		public:
 			template<typename U, typename NodeType>
-			static RR_SHARED_PTR<MessageElementData> PackAnyType(const U& data, NodeType node)
+			static RR_INTRUSIVE_PTR<MessageElementData> PackAnyType(const U& data, NodeType node)
 			{
 				return node->template PackListType<T>(data);
 			}
 
 			template<typename NodeType>
-			static RR_SHARED_PTR<RRList<T> > UnpackAnyType(const RR_SHARED_PTR<MessageElement>& mdata, NodeType node)
+			static RR_INTRUSIVE_PTR<RRList<T> > UnpackAnyType(const RR_INTRUSIVE_PTR<MessageElement>& mdata, NodeType node)
 			{
 				return node->template UnpackListType<T>(mdata->CastData<MessageElementList >());
 			}
 		};
 
 		template<typename T>
-		class PackAnyTypeSupport<RR_SHARED_PTR<RRMultiDimArray<T> > >
+		class PackAnyTypeSupport<RR_INTRUSIVE_PTR<RRMultiDimArray<T> > >
 		{
 		public:
 			template<typename U, typename NodeType>
-			static RR_SHARED_PTR<MessageElementData> PackAnyType(const U& data, NodeType node)
+			static RR_INTRUSIVE_PTR<MessageElementData> PackAnyType(const U& data, NodeType node)
 			{
 				return node->template PackMultiDimArray<T>(rr_cast<RRMultiDimArray<T> >(data));
 			}
 
 			template<typename NodeType>
-			static RR_SHARED_PTR<RRMultiDimArray<T> > UnpackAnyType(const RR_SHARED_PTR<MessageElement>& mdata, NodeType node)
+			static RR_INTRUSIVE_PTR<RRMultiDimArray<T> > UnpackAnyType(const RR_INTRUSIVE_PTR<MessageElement>& mdata, NodeType node)
 			{
 				return node->template UnpackMultiDimArray<T>(mdata->CastData<MessageElementMultiDimArray >());
 			}
@@ -482,12 +482,12 @@ namespace RobotRaconteur
 
 	public:
 		
-		template<typename T, typename U> RR_SHARED_PTR<MessageElementData> PackAnyType(const RR_SHARED_PTR<U>& data)
+		template<typename T, typename U> RR_INTRUSIVE_PTR<MessageElementData> PackAnyType(const RR_INTRUSIVE_PTR<U>& data)
 		{
 			return PackAnyTypeSupport<T>::PackAnyType(data,this);
 		}
 
-		template<typename T> T UnpackAnyType(const RR_SHARED_PTR<MessageElement>& mdata)
+		template<typename T> T UnpackAnyType(const RR_INTRUSIVE_PTR<MessageElement>& mdata)
 		{
 			return PackAnyTypeSupport<T>::UnpackAnyType(mdata,this);
 		}
@@ -504,11 +504,11 @@ namespace RobotRaconteur
 				
 		uint32_t RegisterTransport(RR_SHARED_PTR<Transport> transport);
 
-		void AsyncSendMessage(RR_SHARED_PTR<Message> m, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& callback);
+		void AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& callback);
 
-		void SendMessage(RR_SHARED_PTR<Message> m);
+		void SendMessage(RR_INTRUSIVE_PTR<Message> m);
 
-		void MessageReceived(RR_SHARED_PTR<Message> m);
+		void MessageReceived(RR_INTRUSIVE_PTR<Message> m);
 	protected:
 
 		void TransportConnectionClosed(uint32_t endpoint);
@@ -556,7 +556,7 @@ namespace RobotRaconteur
 
 		void SetDynamicServiceFactory(RR_SHARED_PTR<RobotRaconteur::DynamicServiceFactory> f);
 
-		RR_SHARED_PTR<Message> GenerateErrorReturnMessage(RR_SHARED_PTR<Message> m, MessageErrorType err, const std::string &errname, const std::string &errdesc);
+		RR_INTRUSIVE_PTR<Message> GenerateErrorReturnMessage(RR_INTRUSIVE_PTR<Message> m, MessageErrorType err, const std::string &errname, const std::string &errdesc);
 
 
 
@@ -575,22 +575,22 @@ namespace RobotRaconteur
 		public:
 			
 
-		RR_SHARED_PTR<Message> SpecialRequest(RR_SHARED_PTR<Message> m, uint32_t transportid, RR_SHARED_PTR<ITransportConnection> tc);
+		RR_INTRUSIVE_PTR<Message> SpecialRequest(RR_INTRUSIVE_PTR<Message> m, uint32_t transportid, RR_SHARED_PTR<ITransportConnection> tc);
 
-		RR_SHARED_PTR<RRObject> ConnectService(const std::string &url, const std::string &username = "", RR_SHARED_PTR<RRMap<std::string,RRValue> > credentials=(RR_SHARED_PTR<RRMap<std::string,RRValue> >()), boost::function<void (RR_SHARED_PTR<ClientContext>,ClientServiceListenerEventType,RR_SHARED_PTR<void>)> listener = 0, const std::string& objecttype="");
+		RR_SHARED_PTR<RRObject> ConnectService(const std::string &url, const std::string &username = "", RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> > credentials=(RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >()), boost::function<void (RR_SHARED_PTR<ClientContext>,ClientServiceListenerEventType,RR_SHARED_PTR<void>)> listener = 0, const std::string& objecttype="");
 
-		void AsyncConnectService(const std::string &url, const std::string &username, RR_SHARED_PTR<RRMap<std::string,RRValue> > credentials, boost::function<void (RR_SHARED_PTR<ClientContext>,ClientServiceListenerEventType,RR_SHARED_PTR<void>)> listener, const std::string& objecttype, boost::function<void(RR_SHARED_PTR<RRObject>,RR_SHARED_PTR<RobotRaconteurException>)> handler, int32_t timeout=RR_TIMEOUT_INFINITE);
+		void AsyncConnectService(const std::string &url, const std::string &username, RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> > credentials, boost::function<void (RR_SHARED_PTR<ClientContext>,ClientServiceListenerEventType,RR_SHARED_PTR<void>)> listener, const std::string& objecttype, boost::function<void(RR_SHARED_PTR<RRObject>,RR_SHARED_PTR<RobotRaconteurException>)> handler, int32_t timeout=RR_TIMEOUT_INFINITE);
 
 
-		RR_SHARED_PTR<RRObject> ConnectService(const std::vector<std::string>& urls, const std::string &username = "", RR_SHARED_PTR<RRMap<std::string,RRValue> > credentials=(RR_SHARED_PTR<RRMap<std::string,RRValue> >()), boost::function<void (RR_SHARED_PTR<ClientContext>,ClientServiceListenerEventType,RR_SHARED_PTR<void>)> listener = 0, const std::string& objecttype="");
+		RR_SHARED_PTR<RRObject> ConnectService(const std::vector<std::string>& urls, const std::string &username = "", RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> > credentials=(RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >()), boost::function<void (RR_SHARED_PTR<ClientContext>,ClientServiceListenerEventType,RR_SHARED_PTR<void>)> listener = 0, const std::string& objecttype="");
 
-		void AsyncConnectService(const std::vector<std::string> &url, const std::string &username, RR_SHARED_PTR<RRMap<std::string,RRValue> > credentials, boost::function<void (RR_SHARED_PTR<ClientContext>,ClientServiceListenerEventType,RR_SHARED_PTR<void>)> listener, const std::string& objecttype, boost::function<void(RR_SHARED_PTR<RRObject>,RR_SHARED_PTR<RobotRaconteurException>)> handler, int32_t timeout=RR_TIMEOUT_INFINITE);
+		void AsyncConnectService(const std::vector<std::string> &url, const std::string &username, RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> > credentials, boost::function<void (RR_SHARED_PTR<ClientContext>,ClientServiceListenerEventType,RR_SHARED_PTR<void>)> listener, const std::string& objecttype, boost::function<void(RR_SHARED_PTR<RRObject>,RR_SHARED_PTR<RobotRaconteurException>)> handler, int32_t timeout=RR_TIMEOUT_INFINITE);
 
 		void DisconnectService(RR_SHARED_PTR<RRObject> obj);
 
 		void AsyncDisconnectService(RR_SHARED_PTR<RRObject> obj, boost::function<void()> handler);
 
-		std::map<std::string, RR_SHARED_PTR<RRValue> > GetServiceAttributes(RR_SHARED_PTR<RRObject> obj);
+		std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > GetServiceAttributes(RR_SHARED_PTR<RRObject> obj);
 
 		uint32_t RegisterEndpoint(RR_SHARED_PTR<Endpoint> e);
 

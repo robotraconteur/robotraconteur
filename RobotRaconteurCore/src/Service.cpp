@@ -187,7 +187,7 @@ namespace RobotRaconteur
 		GetContext()->ReplaceObject(path);
 	}
 
-	void ServiceSkel::EndAsyncCallGetProperty(RR_WEAK_PTR<ServiceSkel> skel, RR_SHARED_PTR<MessageElement> value, RR_SHARED_PTR<RobotRaconteurException> err, RR_SHARED_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> ep)
+	void ServiceSkel::EndAsyncCallGetProperty(RR_WEAK_PTR<ServiceSkel> skel, RR_INTRUSIVE_PTR<MessageElement> value, RR_SHARED_PTR<RobotRaconteurException> err, RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> ep)
 	{
 		RR_SHARED_PTR<ServiceSkel> skel1=skel.lock();
 		if (!skel1) return;
@@ -195,7 +195,7 @@ namespace RobotRaconteur
 
 		try
 		{
-			RR_SHARED_PTR<MessageEntry> ret=RR_MAKE_SHARED<MessageEntry>(MessageEntryType_PropertyGetRes,m->MemberName);
+			RR_INTRUSIVE_PTR<MessageEntry> ret=CreateMessageEntry(MessageEntryType_PropertyGetRes,m->MemberName);
 			ret->RequestID = m->RequestID;
 			ret->ServicePath = m->ServicePath;
 					
@@ -219,14 +219,14 @@ namespace RobotRaconteur
 		}
 	}
 
-	void ServiceSkel::EndAsyncCallSetProperty(RR_WEAK_PTR<ServiceSkel> skel, RR_SHARED_PTR<RobotRaconteurException> err, RR_SHARED_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> ep)
+	void ServiceSkel::EndAsyncCallSetProperty(RR_WEAK_PTR<ServiceSkel> skel, RR_SHARED_PTR<RobotRaconteurException> err, RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> ep)
 	{
 		RR_SHARED_PTR<ServiceSkel> skel1=skel.lock();
 		if (!skel1) return;
 		
 		try
 		{
-			RR_SHARED_PTR<MessageEntry> ret=RR_MAKE_SHARED<MessageEntry>(MessageEntryType_PropertySetRes,m->MemberName);
+			RR_INTRUSIVE_PTR<MessageEntry> ret=CreateMessageEntry(MessageEntryType_PropertySetRes,m->MemberName);
 			ret->RequestID = m->RequestID;
 			ret->ServicePath = m->ServicePath;
 			
@@ -245,14 +245,14 @@ namespace RobotRaconteur
 
 	}
 
-	void ServiceSkel::EndAsyncCallFunction(RR_WEAK_PTR<ServiceSkel> skel, RR_SHARED_PTR<MessageElement> ret, RR_SHARED_PTR<RobotRaconteurException> err, RR_SHARED_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> ep)
+	void ServiceSkel::EndAsyncCallFunction(RR_WEAK_PTR<ServiceSkel> skel, RR_INTRUSIVE_PTR<MessageElement> ret, RR_SHARED_PTR<RobotRaconteurException> err, RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> ep)
 	{
 		RR_SHARED_PTR<ServiceSkel> skel1=skel.lock();
 		if (!skel1) return;
 
 		try
 		{
-			RR_SHARED_PTR<MessageEntry> ret1=RR_MAKE_SHARED<MessageEntry>(MessageEntryType_FunctionCallRes,m->MemberName);
+			RR_INTRUSIVE_PTR<MessageEntry> ret1=CreateMessageEntry(MessageEntryType_FunctionCallRes,m->MemberName);
 			ret1->RequestID = m->RequestID;
 			ret1->ServicePath = m->ServicePath;
 
@@ -283,7 +283,7 @@ namespace RobotRaconteur
 	}
 
 
-	void ServiceSkel::SendEvent(RR_SHARED_PTR<MessageEntry> m)
+	void ServiceSkel::SendEvent(RR_INTRUSIVE_PTR<MessageEntry> m)
 	{
 		m->ServicePath = GetServicePath();
 		GetContext()->SendEvent(m);
@@ -304,7 +304,7 @@ namespace RobotRaconteur
 		uncastobj.reset();		
 	}
 
-	void ServiceSkel::AsyncSendPipeMessage(RR_SHARED_PTR<MessageEntry> m, uint32_t e, bool unreliable,  RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<RobotRaconteurException>) >) handler)
+	void ServiceSkel::AsyncSendPipeMessage(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e, bool unreliable,  RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<RobotRaconteurException>) >) handler)
 	{
 		m->ServicePath = GetServicePath();	
 		
@@ -319,26 +319,26 @@ namespace RobotRaconteur
 		}
 	}
 
-	void ServiceSkel::SendWireMessage(RR_SHARED_PTR<MessageEntry> m, uint32_t e)
+	void ServiceSkel::SendWireMessage(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e)
 	{
 		m->ServicePath = GetServicePath();		
 		GetContext()->SendWireMessage(m, e);
 	}
 
-	void ServiceSkel::DispatchPipeMessage(RR_SHARED_PTR<MessageEntry> m, uint32_t e)
+	void ServiceSkel::DispatchPipeMessage(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e)
 	{
 	}
 
-	void ServiceSkel::DispatchWireMessage(RR_SHARED_PTR<MessageEntry> m, uint32_t e)
+	void ServiceSkel::DispatchWireMessage(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e)
 	{
 	}
 
-	RR_SHARED_PTR<MessageEntry> ServiceSkel::CallPipeFunction(RR_SHARED_PTR<MessageEntry> m, uint32_t e)
+	RR_INTRUSIVE_PTR<MessageEntry> ServiceSkel::CallPipeFunction(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e)
 	{
 		throw MemberNotFoundException("Pipe " + m->MemberName + " not found");
 	}
 
-	RR_SHARED_PTR<MessageEntry> ServiceSkel::CallWireFunction(RR_SHARED_PTR<MessageEntry> m, uint32_t e)
+	RR_INTRUSIVE_PTR<MessageEntry> ServiceSkel::CallWireFunction(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e)
 	{
 		throw MemberNotFoundException("Wire " + m->MemberName + " not found");
 	}
@@ -348,7 +348,7 @@ namespace RobotRaconteur
 		throw MemberNotFoundException("Callback " + membername + " not found");
 	}
 
-	RR_SHARED_PTR<MessageEntry> ServiceSkel::CallMemoryFunction(RR_SHARED_PTR<MessageEntry> m, RR_SHARED_PTR<Endpoint> e)
+	RR_INTRUSIVE_PTR<MessageEntry> ServiceSkel::CallMemoryFunction(RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<Endpoint> e)
 	{
 		throw MemberNotFoundException("Memory " + m->MemberName + " not found");
 	}
@@ -399,7 +399,7 @@ namespace RobotRaconteur
 
 	}
 
-	void ServiceSkel::CallGeneratorNext(RR_SHARED_PTR<MessageEntry> m, RR_SHARED_PTR<Endpoint> ep)
+	void ServiceSkel::CallGeneratorNext(RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<Endpoint> ep)
 	{
 		int32_t index = RRArrayToScalar(m->FindElement("index")->CastData<RRArray<int32_t> >());
 		RR_SHARED_PTR<GeneratorServerBase> gen;
@@ -420,7 +420,7 @@ namespace RobotRaconteur
 		gen->CallNext(m);
 	}
 
-	void ServiceSkel::SendGeneratorResponse(int32_t index, RR_SHARED_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> ep)
+	void ServiceSkel::SendGeneratorResponse(int32_t index, RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> ep)
 	{
 		if (m->Error != MessageErrorType_None)
 		{
@@ -488,11 +488,11 @@ namespace RobotRaconteur
 		return n;
 	}
 
-	void ServerContext::SendEvent(RR_SHARED_PTR<MessageEntry> m)
+	void ServerContext::SendEvent(RR_INTRUSIVE_PTR<MessageEntry> m)
 	{
 
 
-		RR_SHARED_PTR<Message> mm = RR_MAKE_SHARED<Message>();
+		RR_INTRUSIVE_PTR<Message> mm = CreateMessage();
 
 		std::vector<RR_SHARED_PTR<ServerEndpoint> > cc;
 		
@@ -518,7 +518,7 @@ namespace RobotRaconteur
 					}
 				}
 
-				RR_SHARED_PTR<MessageEntry> m2;
+				RR_INTRUSIVE_PTR<MessageEntry> m2;
 				try
 				{
 					m2 = ShallowCopyMessageEntry(m);
@@ -551,7 +551,7 @@ namespace RobotRaconteur
 	}
 #undef SendMessage
 
-	void ServerContext::SendMessage(RR_SHARED_PTR<MessageEntry> m, uint32_t e)
+	void ServerContext::SendMessage(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e)
 	{
 		
 		RR_SHARED_PTR<ServerEndpoint> s;
@@ -564,12 +564,12 @@ namespace RobotRaconteur
 		SendMessage(m,s);
 	}
 
-	void ServerContext::SendMessage(RR_SHARED_PTR<MessageEntry> m, RR_SHARED_PTR<Endpoint> e)
+	void ServerContext::SendMessage(RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<Endpoint> e)
 	{
 		//m.ServicePath = ServiceName;
 
-		RR_SHARED_PTR<Message> mm = RR_MAKE_SHARED<Message>();
-		mm->header = RR_MAKE_SHARED<MessageHeader>();
+		RR_INTRUSIVE_PTR<Message> mm = CreateMessage();
+		mm->header = CreateMessageHeader();
 		//mm.header.ReceiverEndpoint = RemoteEndpoint;
 		mm->entries.push_back(m);		
 
@@ -578,7 +578,7 @@ namespace RobotRaconteur
 
 	}
 
-	void ServerContext::AsyncSendMessage(RR_SHARED_PTR<MessageEntry> m, uint32_t e, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& callback)
+	void ServerContext::AsyncSendMessage(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& callback)
 	{
 		
 		RR_SHARED_PTR<ServerEndpoint> s;
@@ -593,25 +593,25 @@ namespace RobotRaconteur
 		AsyncSendMessage(m,s,(callback));
 	}
 
-	void ServerContext::AsyncSendMessage(RR_SHARED_PTR<MessageEntry> m, RR_SHARED_PTR<Endpoint> e, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& callback)
+	void ServerContext::AsyncSendMessage(RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<Endpoint> e, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& callback)
 	{
 
 		//m.ServicePath = ServiceName;
 
-		RR_SHARED_PTR<Message> mm = RR_MAKE_SHARED<Message>();
-		mm->header = RR_MAKE_SHARED<MessageHeader>();
+		RR_INTRUSIVE_PTR<Message> mm = CreateMessage();
+		mm->header = CreateMessageHeader();
 		//mm.header.ReceiverEndpoint = RemoteEndpoint;
 		mm->entries.push_back(m);
 
 		e->AsyncSendMessage(mm,callback);
 	}
 
-	void ServerContext::AsyncSendUnreliableMessage(RR_SHARED_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> e, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback)
+	void ServerContext::AsyncSendUnreliableMessage(RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> e, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback)
 	{
 		if (!e->UseMessage3())
 		{
-			RR_SHARED_PTR<Message> mm = RR_MAKE_SHARED<Message>();
-			mm->header = RR_MAKE_SHARED<MessageHeader>();
+			RR_INTRUSIVE_PTR<Message> mm = CreateMessage();
+			mm->header = CreateMessageHeader();
 			//mm.header.ReceiverEndpoint = RemoteEndpoint;
 			mm->entries.push_back(m);
 			mm->header->MetaData = "unreliable\n";
@@ -619,8 +619,8 @@ namespace RobotRaconteur
 		}
 		else
 		{
-			RR_SHARED_PTR<Message> mm = RR_MAKE_SHARED<Message>();
-			mm->header = RR_MAKE_SHARED<MessageHeader>();
+			RR_INTRUSIVE_PTR<Message> mm = CreateMessage();
+			mm->header = CreateMessageHeader();
 			//mm.header.ReceiverEndpoint = RemoteEndpoint;
 			mm->entries.push_back(m);
 			mm->header->MessageFlags |= MessageFlags_UNRELIABLE;
@@ -628,7 +628,7 @@ namespace RobotRaconteur
 		}
 	}
 
-	void ServerContext::AsyncSendPipeMessage(RR_SHARED_PTR<MessageEntry> m, uint32_t e, bool unreliable, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback)
+	void ServerContext::AsyncSendPipeMessage(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e, bool unreliable, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback)
 	{		
 		if (!unreliable)
 		{
@@ -648,7 +648,7 @@ namespace RobotRaconteur
 		}
 	}
 
-	void ServerContext::SendWireMessage(RR_SHARED_PTR<MessageEntry> m, uint32_t e)
+	void ServerContext::SendWireMessage(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e)
 	{		
 		RR_SHARED_PTR<ServerEndpoint> s;
 		{
@@ -832,16 +832,16 @@ boost::thread_specific_ptr<RR_SHARED_PTR<ServerContext> > ServerContext::m_Curre
 
 boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
-	RR_SHARED_PTR<MessageEntry> ServerContext::ProcessMessageEntry(RR_SHARED_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> c)
+	RR_INTRUSIVE_PTR<MessageEntry> ServerContext::ProcessMessageEntry(RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> c)
 	{
 		//lock (rec_sync)
 		//{
 		bool noreturn = false;
-			RR_SHARED_PTR<MessageEntry> ret=RR_SHARED_PTR<MessageEntry>();
+			RR_INTRUSIVE_PTR<MessageEntry> ret=RR_INTRUSIVE_PTR<MessageEntry>();
 
 
 			if (m->EntryType == MessageEntryType_ServicePathReleasedRet)
-				return RR_SHARED_PTR<MessageEntry>();
+				return RR_INTRUSIVE_PTR<MessageEntry>();
 
 			try
 			{
@@ -854,7 +854,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 				if (m->EntryType == MessageEntryType_ClientKeepAliveReq)
 				{
-					ret = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_ClientKeepAliveRet, m->MemberName);
+					ret = CreateMessageEntry(MessageEntryType_ClientKeepAliveRet, m->MemberName);
 					ret->RequestID = m->RequestID;
 					ret->ServicePath = m->ServicePath;
 					return ret;
@@ -899,13 +899,13 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 				if (m->EntryType == MessageEntryType_ObjectTypeName)
 				{
 					RobotRaconteurVersion v;
-					RR_SHARED_PTR<MessageElement> m_ver;
+					RR_INTRUSIVE_PTR<MessageElement> m_ver;
 					if (m->TryFindElement("clientversion", m_ver))
 					{
 						v.FromString(m_ver->CastDataToString());
 					}
 
-					ret = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_ObjectTypeNameRet, m->MemberName);
+					ret = CreateMessageEntry(MessageEntryType_ObjectTypeNameRet, m->MemberName);
 					std::string path = static_cast<std::string>(m->ServicePath);
 					std::string objtype = GetObjectType(path,v);
 					ret->AddElement("objecttype", stringToRRArray(objtype));
@@ -1009,11 +1009,11 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 								{
 									RR_SHARED_PTR<RobotRaconteurException> err=RobotRaconteurExceptionUtil::MessageEntryToException(m);
 									RR_SHARED_PTR<RobotRaconteurException> err2=m_ServiceDef->DownCastException(err);
-									t->handler(RR_SHARED_PTR<MessageEntry>(),err2);
+									t->handler(RR_INTRUSIVE_PTR<MessageEntry>(),err2);
 								}
 								else
 								{
-									t->handler(RR_SHARED_PTR<MessageEntry>(),RobotRaconteurExceptionUtil::MessageEntryToException(m));
+									t->handler(RR_INTRUSIVE_PTR<MessageEntry>(),RobotRaconteurExceptionUtil::MessageEntryToException(m));
 								}
 							}
 						}
@@ -1040,7 +1040,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 			{
 				if (!noreturn)
 				{
-				ret = RR_MAKE_SHARED<MessageEntry>(((MessageEntryType)(m->EntryType+1)), m->MemberName);
+				ret = CreateMessageEntry(((MessageEntryType)(m->EntryType+1)), m->MemberName);
 				RobotRaconteurExceptionUtil::ExceptionToMessageEntry(e, ret);
 				}
 
@@ -1049,7 +1049,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 			{
 				if (!noreturn)
 				{
-				ret = RR_MAKE_SHARED<MessageEntry>(((MessageEntryType)(m->EntryType+1)), m->MemberName);
+				ret = CreateMessageEntry(((MessageEntryType)(m->EntryType+1)), m->MemberName);
 				ret->Error=MessageErrorType_RemoteError;
 				ret->AddElement("errorname", stringToRRArray("std::exception"));
 				ret->AddElement("errorstring", stringToRRArray("Unknown exception occured in remote service"));
@@ -1065,7 +1065,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 			if (ret == 0 && !noreturn)
 			{
-				ret = RR_MAKE_SHARED<MessageEntry>((MessageEntryType)(m->EntryType+1), m->MemberName);
+				ret = CreateMessageEntry((MessageEntryType)(m->EntryType+1), m->MemberName);
 				ret->Error = MessageErrorType_ProtocolError;
 				ret->AddElement("errorname", stringToRRArray("RobotRaconteur.ProtocolError"));
 				ret->AddElement("errorstring", stringToRRArray("Unknown request type"));
@@ -1087,7 +1087,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 	}
 
-	void ServerContext::AsyncProcessCallbackRequest(RR_SHARED_PTR<MessageEntry> m, uint32_t endpoint, RR_MOVE_ARG(boost::function<void ( RR_SHARED_PTR<MessageEntry>, RR_SHARED_PTR<RobotRaconteurException> )>) handler, int32_t timeout)
+	void ServerContext::AsyncProcessCallbackRequest(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t endpoint, RR_MOVE_ARG(boost::function<void ( RR_INTRUSIVE_PTR<MessageEntry>, RR_SHARED_PTR<RobotRaconteurException> )>) handler, int32_t timeout)
 	{
 						
 		uint32_t mytransid;
@@ -1181,7 +1181,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 		try
 		{
-			RR_SHARED_PTR<MessageEntry> e = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_ServiceClosed, "");
+			RR_INTRUSIVE_PTR<MessageEntry> e = CreateMessageEntry(MessageEntryType_ServiceClosed, "");
 			SendEvent(e);
 		}
 		catch (std::exception&)
@@ -1260,15 +1260,15 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 		}
 	}
 
-	void ServerContext::MessageReceived(RR_SHARED_PTR<Message> m, RR_SHARED_PTR<ServerEndpoint> e)
+	void ServerContext::MessageReceived(RR_INTRUSIVE_PTR<Message> m, RR_SHARED_PTR<ServerEndpoint> e)
 	{
 
 		
 
-		RR_SHARED_PTR<Message> mret = RR_MAKE_SHARED<Message>();
-		mret->header = RR_MAKE_SHARED<MessageHeader>();
+		RR_INTRUSIVE_PTR<Message> mret = CreateMessage();
+		mret->header = CreateMessageHeader();
 
-		BOOST_FOREACH (RR_SHARED_PTR<MessageEntry>& mm, m->entries)
+		BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageEntry>& mm, m->entries)
 		{
 			if (mm->Error == MessageErrorType_InvalidEndpoint)
 			{
@@ -1276,7 +1276,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 				return;
 			}
 
-			RR_SHARED_PTR<MessageEntry> mmret = ProcessMessageEntry(mm,e);
+			RR_INTRUSIVE_PTR<MessageEntry> mmret = ProcessMessageEntry(mm,e);
 			if (mmret != 0)
 			mret->entries.push_back(mmret);
 		}
@@ -1423,12 +1423,12 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 	}
 
-	RR_SHARED_PTR<MessageEntry> ServerContext::ClientSessionOp(RR_SHARED_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> e)
+	RR_INTRUSIVE_PTR<MessageEntry> ServerContext::ClientSessionOp(RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> e)
 	{
 		if (user_authenticator == 0 && !boost::starts_with(m->MemberName,"Monitor"))
 			throw InvalidOperationException("User authentication not activated for this service");
 
-		RR_SHARED_PTR<MessageEntry> ret = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_ClientSessionOpRet, m->MemberName);
+		RR_INTRUSIVE_PTR<MessageEntry> ret = CreateMessageEntry(MessageEntryType_ClientSessionOpRet, m->MemberName);
 		ret->RequestID = m->RequestID;
 		ret->ServicePath = m->ServicePath;
 
@@ -1439,7 +1439,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 		if (command == "AuthenticateUser")
 		{
 					std::string username = m->FindElement("username")->CastDataToString();
-					RR_SHARED_PTR<RRMap<std::string,RRValue> > credentials = rr_cast<RRMap<std::string,RRValue> >((GetNode()->UnpackMapType<std::string, RRValue>(m->FindElement("credentials")->CastData<MessageElementMap<std::string> >())));
+					RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> > credentials = rr_cast<RRMap<std::string,RRValue> >((GetNode()->UnpackMapType<std::string, RRValue>(m->FindElement("credentials")->CastData<MessageElementMap<std::string> >())));
 					e->AuthenticateUser(username, credentials->GetStorageContainer());
 					ret->AddElement("return", stringToRRArray("OK"));
 					return ret;
@@ -1475,7 +1475,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 		return m_RequireValidUser;
 	}
 
-	RR_SHARED_PTR<AuthenticatedUser> ServerContext::AuthenticateUser(const std::string &username, std::map<std::string, RR_SHARED_PTR<RRValue> > &credentials)
+	RR_SHARED_PTR<AuthenticatedUser> ServerContext::AuthenticateUser(const std::string &username, std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials)
 	{
 
 		if (!user_authenticator) throw AuthenticationException("Authentication not enabled");
@@ -1484,7 +1484,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 	}
 
-	void ServerContext::ClientLockOp(RR_SHARED_PTR<MessageEntry> m, RR_SHARED_PTR<MessageEntry> ret)
+	void ServerContext::ClientLockOp(RR_INTRUSIVE_PTR<MessageEntry> m, RR_INTRUSIVE_PTR<MessageEntry> ret)
 	{
 		
 		{
@@ -1686,9 +1686,9 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 	}
 
-	RR_SHARED_PTR<MessageEntry> ServerContext::CheckServiceCapability(RR_SHARED_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> c)
+	RR_INTRUSIVE_PTR<MessageEntry> ServerContext::CheckServiceCapability(RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> c)
 	{
-		RR_SHARED_PTR<MessageEntry> ret = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_ServiceCheckCapabilityRet, m->MemberName);
+		RR_INTRUSIVE_PTR<MessageEntry> ret = CreateMessageEntry(MessageEntryType_ServiceCheckCapabilityRet, m->MemberName);
 		ret->ServicePath = m->ServicePath;
 		ret->RequestID = m->RequestID;
 		ret->AddElement("return", ScalarToRRArray(static_cast<uint32_t>(0)));
@@ -1758,7 +1758,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 		ReleaseServicePath1(path);
 
-		RR_SHARED_PTR<MessageEntry> m = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_ServicePathReleasedReq, "");
+		RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_ServicePathReleasedReq, "");
 		m->ServicePath = path;
 
 		SendEvent(m);
@@ -1769,7 +1769,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 		ReleaseServicePath1(path);
 
-		RR_SHARED_PTR<MessageEntry> m = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_ServicePathReleasedReq, "");
+		RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_ServicePathReleasedReq, "");
 		m->ServicePath = path;
 
 		std::vector<RR_SHARED_PTR<ServerEndpoint> > cc;
@@ -1824,7 +1824,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 	}
 
 
-	RR_SHARED_PTR<MessageEntry> ServerContext::ProcessCallbackRequest(RR_SHARED_PTR<MessageEntry> m, uint32_t endpointid)
+	RR_INTRUSIVE_PTR<MessageEntry> ServerContext::ProcessCallbackRequest(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t endpointid)
 	{
 		RR_SHARED_PTR<ServerEndpoint> e;
 		{
@@ -1886,7 +1886,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 		}
 
 
-		RR_SHARED_PTR<MessageEntry> rec_message;
+		RR_INTRUSIVE_PTR<MessageEntry> rec_message;
 		{
 			boost::mutex::scoped_lock lock(outstanding_requests_lock);
 			outstanding_requests.erase(mytransid);
@@ -1955,18 +1955,18 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 		request_number = 0;
 	}
 
-	std::map<std::string, RR_SHARED_PTR<RRValue> > ServerContext::GetAttributes()
+	std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > ServerContext::GetAttributes()
 	{
 		boost::mutex::scoped_lock lock(m_Attributes_lock);
 		return m_Attributes;
 	}
-	void ServerContext::SetAttributes(const std::map<std::string, RR_SHARED_PTR<RRValue> >& attr)
+	void ServerContext::SetAttributes(const std::map<std::string, RR_INTRUSIVE_PTR<RRValue> >& attr)
 	{
 		boost::mutex::scoped_lock lock(m_Attributes_lock);
 
-		BOOST_FOREACH (const RR_SHARED_PTR<RRValue>& e, attr | boost::adaptors::map_values)
+		BOOST_FOREACH (const RR_INTRUSIVE_PTR<RRValue>& e, attr | boost::adaptors::map_values)
 		{
-			RR_SHARED_PTR<RRBaseArray> a=RR_DYNAMIC_POINTER_CAST<RRBaseArray>(e);
+			RR_INTRUSIVE_PTR<RRBaseArray> a=RR_DYNAMIC_POINTER_CAST<RRBaseArray>(e);
 			if (!a) throw InvalidArgumentException("Attributes but be numbers or strings");
 		}
 
@@ -2009,7 +2009,7 @@ boost::thread_specific_ptr<RR_SHARED_PTR<AuthenticatedUser> > ServerEndpoint::m_
 		return endpoint_authenticated_user->GetUsername();
 	}
 
-	void ServerEndpoint::MessageReceived(RR_SHARED_PTR<Message> m)
+	void ServerEndpoint::MessageReceived(RR_INTRUSIVE_PTR<Message> m)
 	{
 		if (m->entries.size() > 0)
 		{
@@ -2033,7 +2033,7 @@ boost::thread_specific_ptr<RR_SHARED_PTR<AuthenticatedUser> > ServerEndpoint::m_
 		m_CurrentAuthenticatedUser.reset(0);
 	}
 
-	void ServerEndpoint::AuthenticateUser(const std::string &username, std::map<std::string, RR_SHARED_PTR<RRValue> > &credentials)
+	void ServerEndpoint::AuthenticateUser(const std::string &username, std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials)
 	{
 		
 		RR_SHARED_PTR<AuthenticatedUser> u = service->AuthenticateUser(username, credentials);

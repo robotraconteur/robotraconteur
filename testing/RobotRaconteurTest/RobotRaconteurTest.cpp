@@ -156,7 +156,7 @@ void servicetest3(std::string url1, RR_SHARED_PTR<RRObject> obj, RR_SHARED_PTR<R
 
 void servicetest4(std::string url1)
 {
-	RobotRaconteurNode::s()->AsyncConnectService(url1,"",RR_SHARED_PTR<RRMap<std::string,RRValue> >(),NULL,"",boost::bind(&servicetest3,url1,_1,_2));
+	RobotRaconteurNode::s()->AsyncConnectService(url1,"",RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >(),NULL,"",boost::bind(&servicetest3,url1,_1,_2));
 }
 
 void servicetest3(std::string url1, RR_SHARED_PTR<RRObject> obj, RR_SHARED_PTR<RobotRaconteurException> exp)
@@ -254,13 +254,13 @@ void serviceinfo2subscription_lost(RR_SHARED_PTR<ServiceInfo2Subscription> sub, 
 	cout << "ServiceInfo2 lost: " << noden.NodeID.ToString() << ", " << noden.ServiceName << endl;
 }
 
-void subscribertest_waitwire(RR_SHARED_PTR<WireSubscription<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > > w1)
+void subscribertest_waitwire(RR_SHARED_PTR<WireSubscription<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > w1)
 {
 	w1->WaitInValueValid();
 	w1->WaitInValueValid();
 }
 
-void subscribertest_wirechanged(RR_SHARED_PTR<WireSubscription<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > > w1, RR_SHARED_PTR<RobotRaconteur::RRArray<double> > val, const TimeSpec& time)
+void subscribertest_wirechanged(RR_SHARED_PTR<WireSubscription<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > w1, RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > val, const TimeSpec& time)
 {
 	//cout << "Wire value: " << RRArrayToScalar(val) << endl;	
 }
@@ -809,15 +809,15 @@ return 0;
 			cout << "ConnectionURL: " << boost::join(e->ConnectionURL,", ") << endl;
 
 			vector<string> a;
-			for (std::map<std::string,RR_SHARED_PTR<RRValue> >::iterator ee=e->Attributes.begin(); ee!=e->Attributes.end(); ee++)
+			for (std::map<std::string,RR_INTRUSIVE_PTR<RRValue> >::iterator ee=e->Attributes.begin(); ee!=e->Attributes.end(); ee++)
 			{
-				RR_SHARED_PTR<RRArray<char> > d=RR_DYNAMIC_POINTER_CAST<RRArray<char> >(ee->second);
+				RR_INTRUSIVE_PTR<RRArray<char> > d=RR_DYNAMIC_POINTER_CAST<RRArray<char> >(ee->second);
 				if (d)
 				{
 					a.push_back(ee->first + "=" + RRArrayToString(d));
 				}
 
-				RR_SHARED_PTR<RRArray<int32_t> > d2=RR_DYNAMIC_POINTER_CAST<RRArray<int32_t> >(ee->second);
+				RR_INTRUSIVE_PTR<RRArray<int32_t> > d2=RR_DYNAMIC_POINTER_CAST<RRArray<int32_t> >(ee->second);
 				if (d2)
 				{
 					if (d2->size()>0)
@@ -945,10 +945,10 @@ return 0;
 		servicetest_connectcount=0;
 		servicetest_keepgoing=true;
 
-		//RobotRaconteurNode::s()->AsyncConnectService(url1,"",RR_SHARED_PTR<RRMap<std::string,RRValue> >(),NULL,"",&servicetest1);
-		//RobotRaconteurNode::s()->AsyncConnectService(url1,"",RR_SHARED_PTR<RRMap<std::string,RRValue> >(),NULL,"",boost::bind(&servicetest3,url1,_1,_2));
+		//RobotRaconteurNode::s()->AsyncConnectService(url1,"",RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >(),NULL,"",&servicetest1);
+		//RobotRaconteurNode::s()->AsyncConnectService(url1,"",RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >(),NULL,"",boost::bind(&servicetest3,url1,_1,_2));
 
-		RR_SHARED_PTR<RRObject> obj=RobotRaconteurNode::s()->ConnectService(url1,"",RR_SHARED_PTR<RRMap<std::string,RRValue> >(),NULL,"");
+		RR_SHARED_PTR<RRObject> obj=RobotRaconteurNode::s()->ConnectService(url1,"",RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >(),NULL,"");
 		RR_SHARED_PTR<async_testroot> o=rr_cast<async_testroot>(obj);
 		RR_SHARED_PTR<testroot> o2=rr_cast<testroot>(obj);
 		o->async_func3(1,2,boost::bind(&servicetest2,o,_1,_2));
@@ -999,10 +999,10 @@ return 0;
 		servicetest_connectcount=0;
 		servicetest_keepgoing=true;
 
-		//RobotRaconteurNode::s()->AsyncConnectService(url1,"",RR_SHARED_PTR<RRMap<std::string,RRValue> >(),NULL,"",&servicetest1);
-		//RobotRaconteurNode::s()->AsyncConnectService(url1,"",RR_SHARED_PTR<RRMap<std::string,RRValue> >(),NULL,"",boost::bind(&servicetest3,url1,_1,_2));
+		//RobotRaconteurNode::s()->AsyncConnectService(url1,"",RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >(),NULL,"",&servicetest1);
+		//RobotRaconteurNode::s()->AsyncConnectService(url1,"",RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >(),NULL,"",boost::bind(&servicetest3,url1,_1,_2));
 
-		RR_SHARED_PTR<RRObject> obj=RobotRaconteurNode::s()->ConnectService(url1,"",RR_SHARED_PTR<RRMap<std::string,RRValue> >(),NULL,"");
+		RR_SHARED_PTR<RRObject> obj=RobotRaconteurNode::s()->ConnectService(url1,"",RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >(),NULL,"");
 		RR_SHARED_PTR<async_testroot> o=rr_cast<async_testroot>(obj);
 		RR_SHARED_PTR<testroot> o2=rr_cast<testroot>(obj);
 
@@ -1010,7 +1010,7 @@ return 0;
 
 		RR_SHARED_PTR<sub1> o3=o2->get_o1();
 
-		RR_SHARED_PTR<RRArray<double> > d=AllocateRRArray<double>(10);
+		RR_INTRUSIVE_PTR<RRArray<double> > d=AllocateRRArray<double>(10);
 		latencyitercount=0;
 		latency_event=RR_MAKE_SHARED<AutoResetEvent>();
 
@@ -1156,7 +1156,7 @@ return 0;
 		RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<com__robotraconteur__testing__TestService2Factory>());
 		
 		
-		RR_SHARED_PTR<RRObject> obj = RobotRaconteurNode::s()->ConnectService(url1, "", RR_SHARED_PTR<RRMap<std::string, RRValue> >(), NULL, "");
+		RR_SHARED_PTR<RRObject> obj = RobotRaconteurNode::s()->ConnectService(url1, "", RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(), NULL, "");
 		RR_SHARED_PTR<testroot> o = rr_cast<testroot>(obj);
 		o->get_d1();
 				
@@ -1212,10 +1212,10 @@ return 0;
 		subscription->AddClientConnectListener(servicesubscription_connected);
 		subscription->AddClientDisconnectListener(servicesubscription_disconnected);
 
-		RR_SHARED_PTR<WireSubscription<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > > broadcastwire=subscription->SubscribeWire<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > >("broadcastwire");
+		RR_SHARED_PTR<WireSubscription<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > broadcastwire=subscription->SubscribeWire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > >("broadcastwire");
 		broadcastwire->AddWireValueChangedListener(subscribertest_wirechanged);
 
-		RR_SHARED_PTR<WireSubscription<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > > w1 = subscription->SubscribeWire<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > >("w1");
+		RR_SHARED_PTR<WireSubscription<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > w1 = subscription->SubscribeWire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > >("w1");
 
 		RR_SHARED_PTR<PipeSubscription<double> > broadcastpipe = subscription->SubscribePipe<double>("broadcastpipe", 100);
 		broadcastpipe->AddPipePacketReceivedListener(subscribertest_pipereceived);
@@ -1231,7 +1231,7 @@ return 0;
 			cout << "Subscribed Node: " << e.first.NodeID.ToString() << " " << e.first.ServiceName << endl;
 		}
 
-		RR_SHARED_PTR<RobotRaconteur::RRArray<double > > w1_value;
+		RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > w1_value;
 		TimeSpec w1_time;
 		broadcastwire->TryGetInValue(w1_value, &w1_time);
 
@@ -1332,7 +1332,7 @@ return 0;
 				RR_SHARED_PTR<ServiceSubscriptionFilterNode> n = RR_MAKE_SHARED<ServiceSubscriptionFilterNode>();
 				n->NodeID = NodeID(std::string(argv[4]));
 				n->Username = std::string(argv[5]);
-				RR_SHARED_PTR<RRMap<std::string, RRValue > > cred = RR_MAKE_SHARED<RRMap<std::string, RRValue > >();
+				RR_INTRUSIVE_PTR<RRMap<std::string, RRValue > > cred = AllocateEmptyRRMap<std::string, RRValue >();
 				cred->insert(std::make_pair("password", stringToRRArray(argv[6])));
 				n->Credentials = cred;
 				f->Nodes.push_back(n);
@@ -1479,15 +1479,15 @@ return 0;
 
 		for (size_t j = 0; j < iters; j++)
 		{
-			std::list<RR_SHARED_PTR<RRValue> > o;
+			std::list<RR_INTRUSIVE_PTR<RRValue> > o;
 			for (size_t i = 0; i < 100; i++)
 			{
-				RR_SHARED_PTR<RRArray<double> > a = ScalarToRRArray((double)i);
-				RR_SHARED_PTR<RRMap<int32_t, RRArray<double> > > a1 = RR_MAKE_SHARED<RRMap<int32_t, RRArray<double> > >();
+				RR_INTRUSIVE_PTR<RRArray<double> > a = ScalarToRRArray((double)i);
+				RR_INTRUSIVE_PTR<RRMap<int32_t, RRArray<double> > > a1 = AllocateEmptyRRMap<int32_t, RRArray<double> >();
 				a1->insert(std::make_pair((int32_t)i, a));
-				RR_SHARED_PTR<MessageElementData> a2=RobotRaconteurNode::s()->PackAnyType<RR_SHARED_PTR<RRMap<int32_t, RRArray<double> > > >(a1);
+				RR_INTRUSIVE_PTR<MessageElementData> a2=RobotRaconteurNode::s()->PackAnyType<RR_INTRUSIVE_PTR<RRMap<int32_t, RRArray<double> > > >(a1);
 
-				RR_SHARED_PTR<MessageElement> a3 = RR_MAKE_SHARED<MessageElement>("test", a2);
+				RR_INTRUSIVE_PTR<MessageElement> a3 = CreateMessageElement("test", a2);
 				ArrayBinaryWriter w(buf.get(), 0, 10000);
 				a3->Write3(w, 0);
 
@@ -1566,13 +1566,13 @@ return 0;
 
 				if (c->Name == "int32const_array")
 				{
-					RR_SHARED_PTR<RRArray<int32_t> > a = c->ValueToArray<int32_t>();					
+					RR_INTRUSIVE_PTR<RRArray<int32_t> > a = c->ValueToArray<int32_t>();					
 					std::cout << "int32const_array: " << a->size() << std::endl;
 				}
 
 				if (c->Name == "doubleconst_array")
 				{
-					RR_SHARED_PTR<RRArray<double> > a = c->ValueToArray<double>();
+					RR_INTRUSIVE_PTR<RRArray<double> > a = c->ValueToArray<double>();
 					std::cout << "doubleconst_array: " << a->size() << std::endl;
 				}
 

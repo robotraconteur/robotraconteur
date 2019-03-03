@@ -45,7 +45,7 @@ namespace RobotRaconteur
 
 	void GeneratorClientBase::Abort()
 	{
-		RR_SHARED_PTR<MessageEntry> m = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_GeneratorNextReq, GetMemberName());
+		RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_GeneratorNextReq, GetMemberName());
 		AbortOperationException err("Generator abort requested");
 		RobotRaconteurExceptionUtil::ExceptionToMessageEntry(err, m);
 		m->AddElement("index", ScalarToRRArray(id));
@@ -53,7 +53,7 @@ namespace RobotRaconteur
 	}
 	void GeneratorClientBase::AsyncAbort(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler, int32_t timeout)
 	{
-		RR_SHARED_PTR<MessageEntry> m = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_GeneratorNextReq, GetMemberName());
+		RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_GeneratorNextReq, GetMemberName());
 		AbortOperationException err("Generator abort requested");
 		RobotRaconteurExceptionUtil::ExceptionToMessageEntry(err, m);
 		m->AddElement("index", ScalarToRRArray(id));
@@ -62,7 +62,7 @@ namespace RobotRaconteur
 
 	void GeneratorClientBase::Close()
 	{
-		RR_SHARED_PTR<MessageEntry> m = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_GeneratorNextReq, GetMemberName());
+		RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_GeneratorNextReq, GetMemberName());
 		StopIterationException err("");
 		RobotRaconteurExceptionUtil::ExceptionToMessageEntry(err, m);
 		m->AddElement("index", ScalarToRRArray(id));
@@ -70,7 +70,7 @@ namespace RobotRaconteur
 	}
 	void GeneratorClientBase::AsyncClose(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler, int32_t timeout)
 	{
-		RR_SHARED_PTR<MessageEntry> m = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_GeneratorNextReq, GetMemberName());
+		RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_GeneratorNextReq, GetMemberName());
 		StopIterationException err("");
 		RobotRaconteurExceptionUtil::ExceptionToMessageEntry(err, m);
 		m->AddElement("index", ScalarToRRArray(id));
@@ -82,23 +82,23 @@ namespace RobotRaconteur
 		return name;
 	}
 
-	RR_SHARED_PTR<MessageElement> GeneratorClientBase::NextBase(RR_SHARED_PTR<MessageElement> v)
+	RR_INTRUSIVE_PTR<MessageElement> GeneratorClientBase::NextBase(RR_INTRUSIVE_PTR<MessageElement> v)
 	{
-		RR_SHARED_PTR<MessageEntry> m = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_GeneratorNextReq, GetMemberName());		
+		RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_GeneratorNextReq, GetMemberName());		
 		m->AddElement("index", ScalarToRRArray(id));
 		if (v)
 		{
 			v->ElementName = "parameter";
 			m->elements.push_back(v);
 		}
-		RR_SHARED_PTR<MessageEntry> ret = GetStub()->ProcessRequest(m);
-		RR_SHARED_PTR<MessageElement> mret;
+		RR_INTRUSIVE_PTR<MessageEntry> ret = GetStub()->ProcessRequest(m);
+		RR_INTRUSIVE_PTR<MessageElement> mret;
 		ret->TryFindElement("return", mret);
 		return mret;
 	}
-	void GeneratorClientBase::AsyncNextBase(RR_SHARED_PTR<MessageElement> v, boost::function<void(RR_SHARED_PTR<MessageElement> m, RR_SHARED_PTR<RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteurNode>)> handler, int32_t timeout)
+	void GeneratorClientBase::AsyncNextBase(RR_INTRUSIVE_PTR<MessageElement> v, boost::function<void(RR_INTRUSIVE_PTR<MessageElement> m, RR_SHARED_PTR<RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteurNode>)> handler, int32_t timeout)
 	{
-		RR_SHARED_PTR<MessageEntry> m = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_GeneratorNextReq, GetMemberName());
+		RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_GeneratorNextReq, GetMemberName());
 		m->AddElement("index", ScalarToRRArray(id));
 		if (v)
 		{
@@ -110,17 +110,17 @@ namespace RobotRaconteur
 		
 	}
 
-	void GeneratorClientBase::AsyncNextBase1(RR_SHARED_PTR<MessageEntry> ret, RR_SHARED_PTR<RobotRaconteurException> err, boost::function<void(RR_SHARED_PTR<MessageElement>, RR_SHARED_PTR<RobotRaconteurException>, RR_SHARED_PTR<RobotRaconteurNode>)> handler, RR_WEAK_PTR<RobotRaconteurNode> node)
+	void GeneratorClientBase::AsyncNextBase1(RR_INTRUSIVE_PTR<MessageEntry> ret, RR_SHARED_PTR<RobotRaconteurException> err, boost::function<void(RR_INTRUSIVE_PTR<MessageElement>, RR_SHARED_PTR<RobotRaconteurException>, RR_SHARED_PTR<RobotRaconteurNode>)> handler, RR_WEAK_PTR<RobotRaconteurNode> node)
 	{
 		RR_SHARED_PTR<RobotRaconteurNode> node1 = node.lock();
 
 		if (!node1)
 		{
-			handler(RR_SHARED_PTR<MessageElement>(), RR_MAKE_SHARED<InvalidOperationException>("Node has been released"), node1);
+			handler(RR_INTRUSIVE_PTR<MessageElement>(), RR_MAKE_SHARED<InvalidOperationException>("Node has been released"), node1);
 			return;
 		}
 
-		RR_SHARED_PTR<MessageElement> mret;
+		RR_INTRUSIVE_PTR<MessageElement> mret;
 		if (err)
 		{
 			handler(mret, err, node1);
@@ -144,14 +144,14 @@ namespace RobotRaconteur
 		return ep->GetLocalEndpoint();
 	}
 
-	void GeneratorServerBase::EndAsyncCallNext(RR_WEAK_PTR<ServiceSkel> skel, RR_SHARED_PTR<MessageElement> ret, RR_SHARED_PTR<RobotRaconteurException> err, int32_t index, RR_SHARED_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> ep)
+	void GeneratorServerBase::EndAsyncCallNext(RR_WEAK_PTR<ServiceSkel> skel, RR_INTRUSIVE_PTR<MessageElement> ret, RR_SHARED_PTR<RobotRaconteurException> err, int32_t index, RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> ep)
 	{
 		RR_SHARED_PTR<ServiceSkel> skel1 = skel.lock();
 		if (!skel1) return;
 				
 		try
 		{
-			RR_SHARED_PTR<MessageEntry> ret1 = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_GeneratorNextRes, m->MemberName);
+			RR_INTRUSIVE_PTR<MessageEntry> ret1 = CreateMessageEntry(MessageEntryType_GeneratorNextRes, m->MemberName);
 			ret1->RequestID = m->RequestID;
 			ret1->ServicePath = m->ServicePath;
 
@@ -189,7 +189,7 @@ namespace RobotRaconteur
 
 	namespace detail
 	{
-		void GeneratorClient_AsyncNext2(RR_SHARED_PTR<MessageElement> v2, RR_SHARED_PTR<RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteurNode> node, boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler)
+		void GeneratorClient_AsyncNext2(RR_INTRUSIVE_PTR<MessageElement> v2, RR_SHARED_PTR<RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteurNode> node, boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler)
 		{
 			if (err)
 			{

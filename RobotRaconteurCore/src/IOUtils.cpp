@@ -69,7 +69,7 @@ size_t ArrayBinaryReader::Read(void* buffer, size_t index, size_t length)
 
 }
 
-void ArrayBinaryReader::ReadArray(RR_SHARED_PTR<RRBaseArray>& arr)
+void ArrayBinaryReader::ReadArray(RR_INTRUSIVE_PTR<RRBaseArray>& arr)
 {
 	DataTypes type=arr->GetTypeID();
 	size_t len=arr->size();
@@ -78,85 +78,85 @@ void ArrayBinaryReader::ReadArray(RR_SHARED_PTR<RRBaseArray>& arr)
 	{		
 	case DataTypes_double_t:
 		{
-		RR_SHARED_PTR<RRArray<double> > o=rr_cast<RRArray<double> >(arr);
+		RR_INTRUSIVE_PTR<RRArray<double> > o=rr_cast<RRArray<double> >(arr);
 		Read((uint8_t*)o->data(),0,len*sizeof(double));
 		break;	
 		}
 	case DataTypes_single_t:
 		{
-		RR_SHARED_PTR<RRArray<float> > o=rr_cast<RRArray<float> >(arr);
+		RR_INTRUSIVE_PTR<RRArray<float> > o=rr_cast<RRArray<float> >(arr);
 		Read((uint8_t*)o->data(),0,len*sizeof(float));
 		break;
 		}
 	case DataTypes_int8_t:
 		{
-		RR_SHARED_PTR<RRArray<int8_t> > o=rr_cast<RRArray<int8_t> >(arr);
+		RR_INTRUSIVE_PTR<RRArray<int8_t> > o=rr_cast<RRArray<int8_t> >(arr);
 		Read((uint8_t*)o->data(),0,len*sizeof(int8_t));
 		break;
 		}
 	case DataTypes_uint8_t:
 		{
-		RR_SHARED_PTR<RRArray<uint8_t> > o=rr_cast<RRArray<uint8_t> >(arr);
+		RR_INTRUSIVE_PTR<RRArray<uint8_t> > o=rr_cast<RRArray<uint8_t> >(arr);
 		Read((uint8_t*)o->data(),0,len*sizeof(uint8_t));
 		break;
 		}
 	case DataTypes_int16_t:
 		{
-		RR_SHARED_PTR<RRArray<int16_t> > o=rr_cast<RRArray<int16_t> >(arr);
+		RR_INTRUSIVE_PTR<RRArray<int16_t> > o=rr_cast<RRArray<int16_t> >(arr);
 		Read((uint8_t*)o->data(),0,len*sizeof(int16_t));
 		break;
 		}
 	case DataTypes_uint16_t:
 		{
-		RR_SHARED_PTR<RRArray<uint16_t> > o=rr_cast<RRArray<uint16_t> >(arr);
+		RR_INTRUSIVE_PTR<RRArray<uint16_t> > o=rr_cast<RRArray<uint16_t> >(arr);
 		Read((uint8_t*)o->data(),0,len*sizeof(uint16_t));
 		break;
 		}
 	case DataTypes_int32_t:
 		{
-		RR_SHARED_PTR<RRArray<int32_t> > o=rr_cast<RRArray<int32_t> >(arr);
+		RR_INTRUSIVE_PTR<RRArray<int32_t> > o=rr_cast<RRArray<int32_t> >(arr);
 		Read((uint8_t*)o->data(),0,len*sizeof(int32_t));
 		break;
 		}
 	case DataTypes_uint32_t:
 		{
-		RR_SHARED_PTR<RRArray<uint32_t> > o=rr_cast<RRArray<uint32_t> >(arr);
+		RR_INTRUSIVE_PTR<RRArray<uint32_t> > o=rr_cast<RRArray<uint32_t> >(arr);
 		Read((uint8_t*)o->data(),0,len*sizeof(uint32_t));
 		break;
 		}
 	case DataTypes_int64_t:
 		{
-		RR_SHARED_PTR<RRArray<int64_t> > o=rr_cast<RRArray<int64_t> >(arr);
+		RR_INTRUSIVE_PTR<RRArray<int64_t> > o=rr_cast<RRArray<int64_t> >(arr);
 		Read((uint8_t*)o->data(),0,len*sizeof(int64_t));
 		break;
 		}
 	case DataTypes_uint64_t:
 		{
-		RR_SHARED_PTR<RRArray<uint64_t> > o=rr_cast<RRArray<uint64_t> >(arr);
+		RR_INTRUSIVE_PTR<RRArray<uint64_t> > o=rr_cast<RRArray<uint64_t> >(arr);
 		Read((uint8_t*)o->data(),0,len*sizeof(uint64_t));
 		break;
 		}
 	case DataTypes_string_t:
 		{
-		RR_SHARED_PTR<RRArray<char> > o=rr_cast<RRArray<char> >(arr);
+		RR_INTRUSIVE_PTR<RRArray<char> > o=rr_cast<RRArray<char> >(arr);
 		Read((uint8_t*)o->data(),0,len*sizeof(char));
 		break;
 		}
 	case DataTypes_cdouble_t:
 	{
-		RR_SHARED_PTR<RRArray<cdouble> > o = rr_cast<RRArray<cdouble> >(arr);
+		RR_INTRUSIVE_PTR<RRArray<cdouble> > o = rr_cast<RRArray<cdouble> >(arr);
 		Read((uint8_t*)o->data(), 0, len * sizeof(cdouble));
 		break;
 	}
 	case DataTypes_csingle_t:
 	{
-		RR_SHARED_PTR<RRArray<cfloat> > o = rr_cast<RRArray<cfloat> >(arr);
+		RR_INTRUSIVE_PTR<RRArray<cfloat> > o = rr_cast<RRArray<cfloat> >(arr);
 		Read((uint8_t*)o->data(), 0, len * sizeof(cfloat));
 		break;
 	}
 	case DataTypes_bool_t:
 	{
-		RR_SHARED_PTR<RRArray<rr_bool> > o = rr_cast<RRArray<rr_bool> >(arr);
+		RR_INTRUSIVE_PTR<RRArray<rr_bool> > o = rr_cast<RRArray<rr_bool> >(arr);
 		Read((uint8_t*)o->data(), 0, len * sizeof(rr_bool));
 		break;
 	}	
@@ -353,7 +353,7 @@ size_t ArrayBinaryWriter::Write(const void* buffer, size_t index, size_t length)
 
 }
 
-void ArrayBinaryWriter::WriteArray(RR_SHARED_PTR<RRBaseArray>& arr)
+void ArrayBinaryWriter::WriteArray(RR_INTRUSIVE_PTR<RRBaseArray>& arr)
 {
 	DataTypes type=arr->GetTypeID();
 	size_t len=arr->size();
@@ -362,7 +362,7 @@ void ArrayBinaryWriter::WriteArray(RR_SHARED_PTR<RRBaseArray>& arr)
 	{		
 	case DataTypes_double_t:
 		{
-		RR_SHARED_PTR<RRArray<double> > o=rr_cast<RRArray<double> >(arr);
+		RR_INTRUSIVE_PTR<RRArray<double> > o=rr_cast<RRArray<double> >(arr);
 #ifdef BOOST_BIG_ENDIAN
 		if (!nativeorder) for (size_t i=0; i< o->Length(); i++) WriteNumber((*o)[i]);
 #else
@@ -372,7 +372,7 @@ void ArrayBinaryWriter::WriteArray(RR_SHARED_PTR<RRBaseArray>& arr)
 		}
 	case DataTypes_single_t:
 		{
-		RR_SHARED_PTR<RRArray<float> > o=rr_cast<RRArray<float> >(arr);
+		RR_INTRUSIVE_PTR<RRArray<float> > o=rr_cast<RRArray<float> >(arr);
 #ifdef BOOST_BIG_ENDIAN
 		if (!nativeorder) for (size_t i=0; i< o->Length(); i++) WriteNumber((*o)[i]);
 #else
@@ -382,7 +382,7 @@ void ArrayBinaryWriter::WriteArray(RR_SHARED_PTR<RRBaseArray>& arr)
 		}
 	case DataTypes_int8_t:
 		{
-		RR_SHARED_PTR<RRArray<int8_t> > o=rr_cast<RRArray<int8_t> >(arr);
+		RR_INTRUSIVE_PTR<RRArray<int8_t> > o=rr_cast<RRArray<int8_t> >(arr);
 
 		Write((uint8_t*)o->data(),0,len*sizeof(int8_t));
 
@@ -390,7 +390,7 @@ void ArrayBinaryWriter::WriteArray(RR_SHARED_PTR<RRBaseArray>& arr)
 		}
 	case DataTypes_uint8_t:
 		{
-		RR_SHARED_PTR<RRArray<uint8_t> > o=rr_cast<RRArray<uint8_t> >(arr);
+		RR_INTRUSIVE_PTR<RRArray<uint8_t> > o=rr_cast<RRArray<uint8_t> >(arr);
 
 		Write((uint8_t*)o->data(),0,len*sizeof(uint8_t));
 
@@ -398,7 +398,7 @@ void ArrayBinaryWriter::WriteArray(RR_SHARED_PTR<RRBaseArray>& arr)
 		}
 	case DataTypes_int16_t:
 		{
-		RR_SHARED_PTR<RRArray<int16_t> > o=rr_cast<RRArray<int16_t> >(arr);
+		RR_INTRUSIVE_PTR<RRArray<int16_t> > o=rr_cast<RRArray<int16_t> >(arr);
 #ifdef BOOST_BIG_ENDIAN
 		if (!nativeorder) for (size_t i=0; i< o->Length(); i++) WriteNumber((*o)[i]);
 #else
@@ -408,7 +408,7 @@ void ArrayBinaryWriter::WriteArray(RR_SHARED_PTR<RRBaseArray>& arr)
 		}
 	case DataTypes_uint16_t:
 		{
-		RR_SHARED_PTR<RRArray<uint16_t> > o=rr_cast<RRArray<uint16_t> >(arr);
+		RR_INTRUSIVE_PTR<RRArray<uint16_t> > o=rr_cast<RRArray<uint16_t> >(arr);
 #ifdef BOOST_BIG_ENDIAN
 		if (!nativeorder) for (size_t i=0; i< o->Length(); i++) WriteNumber((*o)[i]);
 #else
@@ -418,7 +418,7 @@ void ArrayBinaryWriter::WriteArray(RR_SHARED_PTR<RRBaseArray>& arr)
 		}
 	case DataTypes_int32_t:
 		{
-		RR_SHARED_PTR<RRArray<int32_t> > o=rr_cast<RRArray<int32_t> >(arr);
+		RR_INTRUSIVE_PTR<RRArray<int32_t> > o=rr_cast<RRArray<int32_t> >(arr);
 #ifdef BOOST_BIG_ENDIAN
 		if (!nativeorder) for (size_t i=0; i< o->Length(); i++) WriteNumber((*o)[i]);
 #else
@@ -428,7 +428,7 @@ void ArrayBinaryWriter::WriteArray(RR_SHARED_PTR<RRBaseArray>& arr)
 		}
 	case DataTypes_uint32_t:
 		{
-		RR_SHARED_PTR<RRArray<uint32_t> > o=rr_cast<RRArray<uint32_t> >(arr);
+		RR_INTRUSIVE_PTR<RRArray<uint32_t> > o=rr_cast<RRArray<uint32_t> >(arr);
 #ifdef BOOST_BIG_ENDIAN
 		if (!nativeorder) for (size_t i=0; i< o->Length(); i++) WriteNumber((*o)[i]);
 #else
@@ -438,7 +438,7 @@ void ArrayBinaryWriter::WriteArray(RR_SHARED_PTR<RRBaseArray>& arr)
 		}
 	case DataTypes_int64_t:
 		{
-		RR_SHARED_PTR<RRArray<int64_t> > o=rr_cast<RRArray<int64_t> >(arr);
+		RR_INTRUSIVE_PTR<RRArray<int64_t> > o=rr_cast<RRArray<int64_t> >(arr);
 #ifdef BOOST_BIG_ENDIAN
 		if (!nativeorder) for (size_t i=0; i< o->Length(); i++) WriteNumber((*o)[i]);
 #else
@@ -448,7 +448,7 @@ void ArrayBinaryWriter::WriteArray(RR_SHARED_PTR<RRBaseArray>& arr)
 		}
 	case DataTypes_uint64_t:
 		{
-		RR_SHARED_PTR<RRArray<uint64_t> > o=rr_cast<RRArray<uint64_t> >(arr);
+		RR_INTRUSIVE_PTR<RRArray<uint64_t> > o=rr_cast<RRArray<uint64_t> >(arr);
 #ifdef BOOST_BIG_ENDIAN
 		if (!nativeorder) for (size_t i=0; i< o->Length(); i++) WriteNumber((*o)[i]);
 #else
@@ -458,25 +458,25 @@ void ArrayBinaryWriter::WriteArray(RR_SHARED_PTR<RRBaseArray>& arr)
 		}
 	case DataTypes_string_t:
 		{
-		RR_SHARED_PTR<RRArray<char> > o=rr_cast<RRArray<char> >(arr);
+		RR_INTRUSIVE_PTR<RRArray<char> > o=rr_cast<RRArray<char> >(arr);
 		Write((uint8_t*)o->data(),0,len*sizeof(char));
 		break;
 		}
 	case DataTypes_cdouble_t:
 	{
-		RR_SHARED_PTR<RRArray<cdouble> > o = rr_cast<RRArray<cdouble> >(arr);
+		RR_INTRUSIVE_PTR<RRArray<cdouble> > o = rr_cast<RRArray<cdouble> >(arr);
 		Write((uint8_t*)o->data(), 0, len * sizeof(cdouble));
 		break;
 	}
 	case DataTypes_csingle_t:
 	{
-		RR_SHARED_PTR<RRArray<cfloat> > o = rr_cast<RRArray<cfloat> >(arr);
+		RR_INTRUSIVE_PTR<RRArray<cfloat> > o = rr_cast<RRArray<cfloat> >(arr);
 		Write((uint8_t*)o->data(), 0, len * sizeof(cfloat));
 		break;
 	}
 	case DataTypes_bool_t:
 	{
-		RR_SHARED_PTR<RRArray<rr_bool> > o = rr_cast<RRArray<rr_bool> >(arr);
+		RR_INTRUSIVE_PTR<RRArray<rr_bool> > o = rr_cast<RRArray<rr_bool> >(arr);
 		Write((uint8_t*)o->data(), 0, len * sizeof(rr_bool));
 		break;
 	}	

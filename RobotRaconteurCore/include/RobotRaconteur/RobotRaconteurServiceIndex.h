@@ -18,8 +18,8 @@ class ServiceIndex;
 class NodeInfo : public RobotRaconteur::RRStructure {
 public:
 std::string NodeName;
-RR_SHARED_PTR<RobotRaconteur::RRArray<uint8_t > > NodeID;
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > > ServiceIndexConnectionURL;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint8_t > > NodeID;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > > ServiceIndexConnectionURL;
 
 virtual std::string RRType() {return "RobotRaconteurServiceIndex.NodeInfo";  }
 };
@@ -28,9 +28,9 @@ class ServiceInfo : public RobotRaconteur::RRStructure {
 public:
 std::string Name;
 std::string RootObjectType;
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > > RootObjectImplements;
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > > ConnectionURL;
-RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRValue > > Attributes;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > > RootObjectImplements;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > > ConnectionURL;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRValue > > Attributes;
 
 virtual std::string RRType() {return "RobotRaconteurServiceIndex.ServiceInfo";  }
 };
@@ -38,11 +38,11 @@ virtual std::string RRType() {return "RobotRaconteurServiceIndex.ServiceInfo";  
 class ServiceIndex : public virtual RobotRaconteur::RRObject
 {
 public:
-virtual RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,ServiceInfo  > > GetLocalNodeServices()=0;
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,ServiceInfo  > > GetLocalNodeServices()=0;
 
-virtual RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,NodeInfo  > > GetRoutedNodes()=0;
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,NodeInfo  > > GetRoutedNodes()=0;
 
-virtual RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,NodeInfo  > > GetDetectedNodes()=0;
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,NodeInfo  > > GetDetectedNodes()=0;
 
 virtual boost::signals2::signal<void ()>& get_LocalNodeServicesChanged()=0;
 

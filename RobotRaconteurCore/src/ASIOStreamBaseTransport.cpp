@@ -226,7 +226,7 @@ void ASIOStreamBaseTransport::AsyncAttachStream1(RR_SHARED_PTR<RRObject> paramet
 
 
 
-void ASIOStreamBaseTransport::AsyncSendMessage(RR_SHARED_PTR<Message> m, boost::function<void (RR_SHARED_PTR<RobotRaconteurException>)>& callback)
+void ASIOStreamBaseTransport::AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boost::function<void (RR_SHARED_PTR<RobotRaconteurException>)>& callback)
 {
 
 	if (!connected.load())
@@ -296,8 +296,8 @@ void ASIOStreamBaseTransport::AsyncSendMessage(RR_SHARED_PTR<Message> m, boost::
 		{
 			bool remove=false;
 
-			RR_SHARED_PTR<MessageHeader> h1=m->header;
-			RR_SHARED_PTR<MessageHeader> h2=ee->message->header;
+			RR_INTRUSIVE_PTR<MessageHeader> h1=m->header;
+			RR_INTRUSIVE_PTR<MessageHeader> h2=ee->message->header;
 
 			if (h1->ReceiverNodeName==h2->ReceiverNodeName 
 				&& h1->SenderNodeName==h2->SenderNodeName
@@ -357,7 +357,7 @@ void ASIOStreamBaseTransport::AsyncSendMessage(RR_SHARED_PTR<Message> m, boost::
 	}
 }
 
-void ASIOStreamBaseTransport::SimpleAsyncSendMessage(RR_SHARED_PTR<Message> m, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback)
+void ASIOStreamBaseTransport::SimpleAsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback)
 {
 	if (!connected.load()) return;
 	try
@@ -381,7 +381,7 @@ void ASIOStreamBaseTransport::SimpleAsyncEndSendMessage(RR_SHARED_PTR<RobotRacon
 
 
 
-void ASIOStreamBaseTransport::BeginSendMessage(RR_SHARED_PTR<Message> m, boost::function<void (RR_SHARED_PTR<RobotRaconteurException>)>& callback)
+void ASIOStreamBaseTransport::BeginSendMessage(RR_INTRUSIVE_PTR<Message> m, boost::function<void (RR_SHARED_PTR<RobotRaconteurException>)>& callback)
 {
 	size_t message_size = 0;
 	bool send_3=send_version3.load();
@@ -488,7 +488,7 @@ void ASIOStreamBaseTransport::BeginSendMessage(RR_SHARED_PTR<Message> m, boost::
 	send_message_size=message_size;
 }
 
-void ASIOStreamBaseTransport::BeginSendMessage1(RR_SHARED_PTR<Message> m, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback)
+void ASIOStreamBaseTransport::BeginSendMessage1(RR_INTRUSIVE_PTR<Message> m, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback)
 {
 	
 	async_writer->Reset();
@@ -598,7 +598,7 @@ void ASIOStreamBaseTransport::EndSendMessage2(const boost::system::error_code& e
 	detail::InvokeHandler(node, callback);
 }
 
-void ASIOStreamBaseTransport::EndSendMessage(size_t startpos, const boost::system::error_code& error, size_t bytes_transferred, RR_SHARED_PTR<Message> m, size_t m_len, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback, boost::shared_array<uint8_t> buf)
+void ASIOStreamBaseTransport::EndSendMessage(size_t startpos, const boost::system::error_code& error, size_t bytes_transferred, RR_INTRUSIVE_PTR<Message> m, size_t m_len, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback, boost::shared_array<uint8_t> buf)
 {
 	
 	try
@@ -919,7 +919,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage2(size_t startpos, const boost::s
 			r.Seek(0);
 
 
-			RR_SHARED_PTR<Message> message=RR_MAKE_SHARED<Message>();
+			RR_INTRUSIVE_PTR<Message> message=CreateMessage();
 
 			if (message_version == 3)
 			{
@@ -968,7 +968,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage2(size_t startpos, const boost::s
 
 }
 
-void ASIOStreamBaseTransport::EndReceiveMessage3(RR_SHARED_PTR<Message> message)
+void ASIOStreamBaseTransport::EndReceiveMessage3(RR_INTRUSIVE_PTR<Message> message)
 {
 	
 	try
@@ -980,11 +980,11 @@ void ASIOStreamBaseTransport::EndReceiveMessage3(RR_SHARED_PTR<Message> message)
 			{
 
 				EndReceiveMessage4();	
-				RR_SHARED_PTR<Message> &m=message;
+				RR_INTRUSIVE_PTR<Message> &m=message;
 						
 
-				RR_SHARED_PTR<Message> ret = RR_MAKE_SHARED<Message>();
-				ret->header = RR_MAKE_SHARED<MessageHeader>();
+				RR_INTRUSIVE_PTR<Message> ret = CreateMessage();
+				ret->header = CreateMessageHeader();
 				ret->header->ReceiverNodeName = m->header->SenderNodeName;
 				ret->header->SenderNodeName = GetNode()->NodeName();
 				ret->header->ReceiverNodeID = m->header->SenderNodeID;
@@ -992,7 +992,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage3(RR_SHARED_PTR<Message> message)
 				ret->header->SenderEndpoint = m->header->ReceiverEndpoint;
 				ret->header->SenderNodeID = GetNode()->NodeID();
 
-				RR_SHARED_PTR<MessageEntry> eret = ret->AddEntry(MessageEntryType_ConnectionTestRet,m->entries.at(0)->MemberName);
+				RR_INTRUSIVE_PTR<MessageEntry> eret = ret->AddEntry(MessageEntryType_ConnectionTestRet,m->entries.at(0)->MemberName);
 				eret->RequestID = m->entries.at(0)->RequestID;
 				eret->ServicePath = m->entries.at(0)->ServicePath;
 
@@ -1278,7 +1278,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
 
 				if (async_reader->MessageReady())
 				{
-					RR_SHARED_PTR<Message> m = async_reader->GetNextMessage();
+					RR_INTRUSIVE_PTR<Message> m = async_reader->GetNextMessage();
 					bool string_table3 = use_string_table3.load();
 
 					if (string_table3)
@@ -1575,10 +1575,10 @@ void ASIOStreamBaseTransport::heartbeat_timer_func(const boost::system::error_co
 
 		if ((GetNode()->NowUTC() - t).total_milliseconds() > heartbeat_period2 && SendHeartbeat)
 		{
-			RR_SHARED_PTR<Message> m = RR_MAKE_SHARED<Message>();
-			m->header = RR_MAKE_SHARED<MessageHeader>();
+			RR_INTRUSIVE_PTR<Message> m = CreateMessage();
+			m->header = CreateMessageHeader();
 			m->header->SenderNodeID = GetNode()->NodeID();
-			RR_SHARED_PTR<MessageEntry> mm = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_ConnectionTest, "");
+			RR_INTRUSIVE_PTR<MessageEntry> mm = CreateMessageEntry(MessageEntryType_ConnectionTest, "");
 			m->entries.push_back(mm);
 
 			
@@ -1707,13 +1707,13 @@ void ASIOStreamBaseTransport::BeginCheckStreamCapability(const std::string &name
 
 		if (CheckStreamCapability_waiting) throw InvalidOperationException("Already checking capability");
 		CheckStreamCapability_waiting=true;
-		RR_SHARED_PTR<Message> m = RR_MAKE_SHARED<Message>();
+		RR_INTRUSIVE_PTR<Message> m = CreateMessage();
 		m->header->SenderNodeID = GetNode()->NodeID();
 		{
 			boost::shared_lock<boost::shared_mutex> lock(RemoteNodeID_lock);
 			m->header->ReceiverNodeID = RemoteNodeID;
 		}
-		RR_SHARED_PTR<MessageEntry> mm = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_StreamCheckCapability, name);
+		RR_INTRUSIVE_PTR<MessageEntry> mm = CreateMessageEntry(MessageEntryType_StreamCheckCapability, name);
 		m->entries.push_back(mm);
 			
 		if (CheckStreamCapability_timer)
@@ -1816,17 +1816,17 @@ void ASIOStreamBaseTransport::CheckStreamCapability_timercallback(RR_WEAK_PTR<AS
 }
 
 
-void ASIOStreamBaseTransport::CheckStreamCapability_MessageReceived( RR_SHARED_PTR<Message> m)
+void ASIOStreamBaseTransport::CheckStreamCapability_MessageReceived( RR_INTRUSIVE_PTR<Message> m)
 {
 	try
 	{
 		if (m->entries.at(0)->EntryType == MessageEntryType_StreamCheckCapability)
 		{
-			RR_SHARED_PTR<Message> ret = RR_MAKE_SHARED<Message>();
-			ret->header = RR_MAKE_SHARED<MessageHeader>();
+			RR_INTRUSIVE_PTR<Message> ret = CreateMessage();
+			ret->header = CreateMessageHeader();
 			ret->header->SenderNodeID = GetNode()->NodeID();
 			ret->header->ReceiverNodeID = m->header->SenderNodeID;
-			RR_SHARED_PTR<MessageEntry> mret = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_StreamCheckCapabilityRet, m->entries.at(0)->MemberName);
+			RR_INTRUSIVE_PTR<MessageEntry> mret = CreateMessageEntry(MessageEntryType_StreamCheckCapabilityRet, m->entries.at(0)->MemberName);
 			mret->ServicePath = m->entries.at(0)->ServicePath;
 			mret->AddElement("return", ScalarToRRArray(StreamCapabilities(m->entries.at(0)->MemberName)));
 			ret->entries.push_back(mret);
@@ -1901,8 +1901,8 @@ void ASIOStreamBaseTransport::BeginStreamOp(const std::string &command, RR_SHARE
 {
 	{		
 		
-		RR_SHARED_PTR<Message> m = RR_MAKE_SHARED<Message>();
-		m->header = RR_MAKE_SHARED<MessageHeader>();
+		RR_INTRUSIVE_PTR<Message> m = CreateMessage();
+		m->header = CreateMessageHeader();
 		m->header->ReceiverNodeName = "";
 		m->header->SenderNodeName = GetNode()->NodeName();
 		m->header->SenderNodeID = GetNode()->NodeID();
@@ -1916,7 +1916,7 @@ void ASIOStreamBaseTransport::BeginStreamOp(const std::string &command, RR_SHARE
 			RR_SHARED_PTR<AsyncAttachStream_args> a=RR_STATIC_POINTER_CAST<AsyncAttachStream_args>(args);
 			m->header->ReceiverNodeID=a->nodeid;
 			m->header->ReceiverNodeName=a->nodename;
-			RR_SHARED_PTR<MessageEntry> mm = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_StreamOp, command);
+			RR_INTRUSIVE_PTR<MessageEntry> mm = CreateMessageEntry(MessageEntryType_StreamOp, command);
 
 			std::vector<uint32_t> caps;
 			caps.push_back(TransportCapabilityCode_MESSAGE2_BASIC_PAGE | TransportCapabilityCode_MESSAGE2_BASIC_ENABLE 
@@ -1939,7 +1939,7 @@ void ASIOStreamBaseTransport::BeginStreamOp(const std::string &command, RR_SHARE
 		}
 		else
 		{
-			RR_SHARED_PTR<MessageEntry> mm=PackStreamOpRequest(command,args);
+			RR_INTRUSIVE_PTR<MessageEntry> mm=PackStreamOpRequest(command,args);
 			m->entries.push_back(mm);
 		}
 		if (streamop_timer)
@@ -1975,9 +1975,9 @@ void ASIOStreamBaseTransport::BeginStreamOp(const std::string &command, RR_SHARE
 }
 
 
-RR_SHARED_PTR<MessageEntry> ASIOStreamBaseTransport::PackStreamOpRequest(const std::string &command, RR_SHARED_PTR<RRObject> args)
+RR_INTRUSIVE_PTR<MessageEntry> ASIOStreamBaseTransport::PackStreamOpRequest(const std::string &command, RR_SHARED_PTR<RRObject> args)
 {
-	RR_SHARED_PTR<MessageEntry> mm = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_StreamOp, command);
+	RR_INTRUSIVE_PTR<MessageEntry> mm = CreateMessageEntry(MessageEntryType_StreamOp, command);
 
 	if (command == "GetRemoteNodeID")
 	{
@@ -2062,10 +2062,10 @@ void ASIOStreamBaseTransport::StreamOp_timercallback(RR_WEAK_PTR<ASIOStreamBaseT
 }
 
 
-RR_SHARED_PTR<MessageEntry> ASIOStreamBaseTransport::ProcessStreamOpRequest(RR_SHARED_PTR<MessageEntry> request, RR_SHARED_PTR<MessageHeader> header)
+RR_INTRUSIVE_PTR<MessageEntry> ASIOStreamBaseTransport::ProcessStreamOpRequest(RR_INTRUSIVE_PTR<MessageEntry> request, RR_INTRUSIVE_PTR<MessageHeader> header)
 {
 	std::string command=request->MemberName;
-	RR_SHARED_PTR<MessageEntry> mmret = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_StreamOpRet, command);
+	RR_INTRUSIVE_PTR<MessageEntry> mmret = CreateMessageEntry(MessageEntryType_StreamOpRet, command);
 
 	try
 	{
@@ -2074,7 +2074,7 @@ RR_SHARED_PTR<MessageEntry> ASIOStreamBaseTransport::ProcessStreamOpRequest(RR_S
 		}
 		else if (command == "CreateConnection")
 		{
-			RR_SHARED_PTR<MessageElement> elem_caps;
+			RR_INTRUSIVE_PTR<MessageElement> elem_caps;
 			if (request->TryFindElement("capabilities", elem_caps))
 			{
 				uint32_t message2_basic_caps = TransportCapabilityCode_MESSAGE2_BASIC_ENABLE;
@@ -2083,7 +2083,7 @@ RR_SHARED_PTR<MessageEntry> ASIOStreamBaseTransport::ProcessStreamOpRequest(RR_S
 
 				std::vector<uint32_t> ret_caps;
 
-				RR_SHARED_PTR<RRArray<uint32_t> > caps_array = elem_caps->CastData<RRArray<uint32_t> >();
+				RR_INTRUSIVE_PTR<RRArray<uint32_t> > caps_array = elem_caps->CastData<RRArray<uint32_t> >();
 				for (size_t i = 0; i < caps_array->size(); i++)
 				{
 					uint32_t cap = (*caps_array)[i];
@@ -2183,12 +2183,12 @@ RR_SHARED_PTR<MessageEntry> ASIOStreamBaseTransport::ProcessStreamOpRequest(RR_S
 
 }
 
-void ASIOStreamBaseTransport::StreamOpMessageReceived(RR_SHARED_PTR<Message> m)
+void ASIOStreamBaseTransport::StreamOpMessageReceived(RR_INTRUSIVE_PTR<Message> m)
 {
 
 	//std::cout << "streamop got message" << endl;
 
-	RR_SHARED_PTR<MessageEntry> mm;
+	RR_INTRUSIVE_PTR<MessageEntry> mm;
 
 	try
 	{
@@ -2204,13 +2204,13 @@ void ASIOStreamBaseTransport::StreamOpMessageReceived(RR_SHARED_PTR<Message> m)
 	if (mm->EntryType == MessageEntryType_StreamOp)
 	{
 		std::string command = mm->MemberName;
-		RR_SHARED_PTR<Message> mret = RR_MAKE_SHARED<Message>();
-		mret->header = RR_MAKE_SHARED<MessageHeader>();
+		RR_INTRUSIVE_PTR<Message> mret = CreateMessage();
+		mret->header = CreateMessageHeader();
 		mret->header->SenderNodeName = GetNode()->NodeName();
 		mret->header->ReceiverNodeName = m->header->SenderNodeName;
 		mret->header->SenderNodeID = GetNode()->NodeID();
 		mret->header->ReceiverNodeID = m->header->SenderNodeID;
-		RR_SHARED_PTR<MessageEntry> mmret = ProcessStreamOpRequest(mm,m->header);
+		RR_INTRUSIVE_PTR<MessageEntry> mmret = ProcessStreamOpRequest(mm,m->header);
 		
 		if (mmret)
 		{
@@ -2283,7 +2283,7 @@ void ASIOStreamBaseTransport::StreamOpMessageReceived(RR_SHARED_PTR<Message> m)
 
 }
 
-RR_SHARED_PTR<RRObject> ASIOStreamBaseTransport::UnpackStreamOpResponse(RR_SHARED_PTR<MessageEntry> response, RR_SHARED_PTR<MessageHeader> header)
+RR_SHARED_PTR<RRObject> ASIOStreamBaseTransport::UnpackStreamOpResponse(RR_INTRUSIVE_PTR<MessageEntry> response, RR_INTRUSIVE_PTR<MessageHeader> header)
 {
 	std::string command=response->MemberName;
 	if (command == "GetRemoteNodeID")
@@ -2321,14 +2321,14 @@ RR_SHARED_PTR<RRObject> ASIOStreamBaseTransport::UnpackStreamOpResponse(RR_SHARE
 			}
 		}
 		
-		RR_SHARED_PTR<MessageElement> elem_caps;
+		RR_INTRUSIVE_PTR<MessageElement> elem_caps;
 		if (response->TryFindElement("capabilities", elem_caps))
 		{
 			uint32_t message2_basic_caps = TransportCapabilityCode_MESSAGE2_BASIC_ENABLE;
 			uint32_t message3_basic_caps = 0;
 			uint32_t message3_string_caps = 0;
 
-			RR_SHARED_PTR<RRArray<uint32_t> > caps_array = elem_caps->CastData<RRArray<uint32_t> >();
+			RR_INTRUSIVE_PTR<RRArray<uint32_t> > caps_array = elem_caps->CastData<RRArray<uint32_t> >();
 			for (size_t i = 0; i < caps_array->size(); i++)
 			{
 				uint32_t cap = (*caps_array)[i];
@@ -2466,7 +2466,7 @@ NodeID ASIOStreamBaseTransport::GetRemoteNodeID()
 	return RemoteNodeID;
 }
 
-void ASIOStreamBaseTransport::SendMessage(RR_SHARED_PTR<Message> m)
+void ASIOStreamBaseTransport::SendMessage(RR_INTRUSIVE_PTR<Message> m)
 {
 	RR_SHARED_PTR<detail::sync_async_handler<void> > s=RR_MAKE_SHARED<detail::sync_async_handler<void> >(RR_MAKE_SHARED<ConnectionException>("Send timeout"));
 	
@@ -2511,22 +2511,22 @@ void ASIOStreamBaseTransport::UpdateStringTable()
 
 		if (a.size() > 0)
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > el;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > el;
 			std::vector<uint32_t> codes;
 			BOOST_FOREACH (RR_SHARED_PTR<const detail::StringTableEntry>& e, a)
 			{
 				if (el.size() >= 32) break;
 				codes.push_back(e->code);
 				string_table_3_confirming.push_back(e->code);
-				RR_SHARED_PTR<MessageElement> el1 = RR_MAKE_SHARED<MessageElement>("", stringToRRArray(e->value));
+				RR_INTRUSIVE_PTR<MessageElement> el1 = CreateMessageElement("", stringToRRArray(e->value));
 				el1->ElementNumber = (int32_t)e->code;
 				el1->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
 				el1->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
 				el.push_back(el1);
 			}
 
-			RR_SHARED_PTR<MessageEntry> me = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_StringTableOp, "confirmcodes");
-			me->AddElement("value", RR_MAKE_SHARED<MessageElementMap<int32_t> >(el));
+			RR_INTRUSIVE_PTR<MessageEntry> me = CreateMessageEntry(MessageEntryType_StringTableOp, "confirmcodes");
+			me->AddElement("value", CreateMessageElementMap<int32_t>(el));
 			string_table_3_requestid++;
 			me->RequestID = string_table_3_requestid;
 
@@ -2534,8 +2534,8 @@ void ASIOStreamBaseTransport::UpdateStringTable()
 
 			string_table_3_requests.insert(std::make_pair(string_table_3_requestid, boost::make_tuple(codes,n)));
 
-			RR_SHARED_PTR<Message> m = RR_MAKE_SHARED<Message>();
-			m->header = RR_MAKE_SHARED<MessageHeader>();
+			RR_INTRUSIVE_PTR<Message> m = CreateMessage();
+			m->header = CreateMessageHeader();
 			m->header->MessageFlags = 0;
 			m->entries.push_back(me);
 
@@ -2555,7 +2555,7 @@ void ASIOStreamBaseTransport::UpdateStringTable()
 	}
 }
 
-void ASIOStreamBaseTransport::UpdateStringTable1(RR_SHARED_PTR<RobotRaconteurException> ret, RR_SHARED_PTR<Message> m)
+void ASIOStreamBaseTransport::UpdateStringTable1(RR_SHARED_PTR<RobotRaconteurException> ret, RR_INTRUSIVE_PTR<Message> m)
 {
 	if (ret)
 	{
@@ -2572,14 +2572,14 @@ void ASIOStreamBaseTransport::UpdateStringTable1(RR_SHARED_PTR<RobotRaconteurExc
 	}
 }
 
-void ASIOStreamBaseTransport::UpdateStringTable2(RR_SHARED_PTR<Message> m)
+void ASIOStreamBaseTransport::UpdateStringTable2(RR_INTRUSIVE_PTR<Message> m)
 {		
 	boost::mutex::scoped_lock lock(string_table3_lock);
 
 	if (string_table_3_closed) return;
 
 	if (m->entries.size() != 1) return;
-	RR_SHARED_PTR<MessageEntry>& me = m->entries.at(0);
+	RR_INTRUSIVE_PTR<MessageEntry>& me = m->entries.at(0);
 
 	if (me->MemberName == "pause" || me->MemberName == "resume")
 	{
@@ -2594,10 +2594,10 @@ void ASIOStreamBaseTransport::UpdateStringTable2(RR_SHARED_PTR<Message> m)
 				this->string_table_3_pause_updates = false;
 			}
 
-			RR_SHARED_PTR<MessageEntry> me4 = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_StringTableOpRet, me->MemberName);
+			RR_INTRUSIVE_PTR<MessageEntry> me4 = CreateMessageEntry(MessageEntryType_StringTableOpRet, me->MemberName);
 
-			RR_SHARED_PTR<Message> m4 = RR_MAKE_SHARED<Message>();
-			m4->header = RR_MAKE_SHARED<MessageHeader>();
+			RR_INTRUSIVE_PTR<Message> m4 = CreateMessage();
+			m4->header = CreateMessageHeader();
 			m4->header->MessageFlags = 0;
 			m4->entries.push_back(me4);
 
@@ -2616,16 +2616,16 @@ void ASIOStreamBaseTransport::UpdateStringTable2(RR_SHARED_PTR<Message> m)
 		if (me->MemberName != "confirmcodes") return;
 		if (me->Error != MessageErrorType_None) return;
 		if (me->elements.size() != 1) return;
-		RR_SHARED_PTR<MessageElement> mee = me->elements.at(0);
+		RR_INTRUSIVE_PTR<MessageElement> mee = me->elements.at(0);
 		if (mee->ElementName != "value") return;
 		if (mee->ElementType != DataTypes_vector_t) return;
-		std::vector<RR_SHARED_PTR<MessageElement> > v = mee->CastData<MessageElementMap<int32_t> >()->Elements;
-		BOOST_FOREACH (RR_SHARED_PTR<MessageElement>& e, v)
+		std::vector<RR_INTRUSIVE_PTR<MessageElement> > v = mee->CastData<MessageElementMap<int32_t> >()->Elements;
+		BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& e, v)
 		{
 			if (!(e->ElementFlags & MessageElementFlags_ELEMENT_NUMBER))
 				continue;
 
-			RR_SHARED_PTR<RRArray<char> > c = RR_DYNAMIC_POINTER_CAST<RRArray<char> >(e->GetData());
+			RR_INTRUSIVE_PTR<RRArray<char> > c = RR_DYNAMIC_POINTER_CAST<RRArray<char> >(e->GetData());
 			if (!c)
 				continue;
 
@@ -2638,7 +2638,7 @@ void ASIOStreamBaseTransport::UpdateStringTable2(RR_SHARED_PTR<Message> m)
 			}
 		}
 		
-		RR_SHARED_PTR<RRArray<uint32_t> > o1;
+		RR_INTRUSIVE_PTR<RRArray<uint32_t> > o1;
 		if (o.size() > 0)
 		{
 			o1 = AttachRRArrayCopy(&o[0], o.size());
@@ -2648,13 +2648,13 @@ void ASIOStreamBaseTransport::UpdateStringTable2(RR_SHARED_PTR<Message> m)
 			o1 = AllocateRRArray<uint32_t>(0);
 		}
 
-		RR_SHARED_PTR<MessageEntry> me2 = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_StringTableOpRet, "confirmcodes");
+		RR_INTRUSIVE_PTR<MessageEntry> me2 = CreateMessageEntry(MessageEntryType_StringTableOpRet, "confirmcodes");
 		me2->AddElement("value", o1);
 		
 		me2->RequestID = me->RequestID;		
 
-		RR_SHARED_PTR<Message> m2 = RR_MAKE_SHARED<Message>();
-		m2->header = RR_MAKE_SHARED<MessageHeader>();
+		RR_INTRUSIVE_PTR<Message> m2 = CreateMessage();
+		m2->header = CreateMessageHeader();
 		m2->header->MessageFlags = 0;
 		m2->entries.push_back(me2);
 
@@ -2666,10 +2666,10 @@ void ASIOStreamBaseTransport::UpdateStringTable2(RR_SHARED_PTR<Message> m)
 
 		if (this->string_table3->IsTableFull())
 		{
-			RR_SHARED_PTR<MessageEntry> me3 = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_StringTableOp, "pause");			
+			RR_INTRUSIVE_PTR<MessageEntry> me3 = CreateMessageEntry(MessageEntryType_StringTableOp, "pause");			
 
-			RR_SHARED_PTR<Message> m3 = RR_MAKE_SHARED<Message>();
-			m3->header = RR_MAKE_SHARED<MessageHeader>();
+			RR_INTRUSIVE_PTR<Message> m3 = CreateMessage();
+			m3->header = CreateMessageHeader();
 			m3->header->MessageFlags = 0;
 			m3->entries.push_back(me3);
 
@@ -2683,15 +2683,15 @@ void ASIOStreamBaseTransport::UpdateStringTable2(RR_SHARED_PTR<Message> m)
 	{
 		std::vector<uint32_t> o;
 		if (m->entries.size() != 1) return;
-		RR_SHARED_PTR<MessageEntry>& me = m->entries.at(0);
+		RR_INTRUSIVE_PTR<MessageEntry>& me = m->entries.at(0);
 		if (me->EntryType != MessageEntryType_StringTableOpRet) return;
 		if (me->MemberName != "confirmcodes") return;
 		if (me->Error != MessageErrorType_None) return;
 		if (me->elements.size() != 1) return;
-		RR_SHARED_PTR<MessageElement> mee = me->elements.at(0);
+		RR_INTRUSIVE_PTR<MessageElement> mee = me->elements.at(0);
 		if (mee->ElementName != "value") return;
 		if (mee->ElementType != DataTypes_uint32_t) return;
-		RR_SHARED_PTR<RRArray<uint32_t> > codes = RR_DYNAMIC_POINTER_CAST<RRArray<uint32_t> >(mee->GetData());
+		RR_INTRUSIVE_PTR<RRArray<uint32_t> > codes = RR_DYNAMIC_POINTER_CAST<RRArray<uint32_t> >(mee->GetData());
 		if (!codes) return;
 		
 		std::vector<uint32_t> o1;

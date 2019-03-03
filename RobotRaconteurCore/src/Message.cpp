@@ -35,9 +35,9 @@ namespace RobotRaconteur
 		entries.clear();
 	}	
 
-	RR_SHARED_PTR<MessageEntry> Message::FindEntry(const std::string& name)
+	RR_INTRUSIVE_PTR<MessageEntry> Message::FindEntry(const std::string& name)
 	{
-		std::vector<RR_SHARED_PTR<MessageEntry> >::iterator m=boost::find_if(entries,
+		std::vector<RR_INTRUSIVE_PTR<MessageEntry> >::iterator m=boost::find_if(entries,
 				boost::bind(&MessageEntry::MemberName, _1) == name);
 
 		if (m==entries.end()) throw MessageEntryNotFoundException("Element " + name + " not found.");
@@ -45,9 +45,9 @@ namespace RobotRaconteur
 		return *m;
 	}
 
-	RR_SHARED_PTR<MessageEntry> Message::AddEntry(MessageEntryType t, const std::string& name)
+	RR_INTRUSIVE_PTR<MessageEntry> Message::AddEntry(MessageEntryType t, const std::string& name)
 	{
-		RR_SHARED_PTR<MessageEntry> m = RR_MAKE_SHARED<MessageEntry>();
+		RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry();
 		m->MemberName = name;
 		m->EntryType = t;
 		
@@ -59,7 +59,7 @@ namespace RobotRaconteur
 	uint32_t Message::ComputeSize()
 	{
 		uint64_t s = header->ComputeSize();		
-		BOOST_FOREACH (RR_SHARED_PTR<MessageEntry>& e, entries)
+		BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageEntry>& e, entries)
 		{
 			e->UpdateData();
 			s += e->EntrySize;
@@ -79,7 +79,7 @@ namespace RobotRaconteur
 
 		header->UpdateHeader(s, static_cast<uint16_t>(entries.size()));
 		header->Write(w);
-		BOOST_FOREACH (RR_SHARED_PTR<MessageEntry>& e, entries)
+		BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageEntry>& e, entries)
 		{
 			e->Write(w);
 		}
@@ -91,7 +91,7 @@ namespace RobotRaconteur
 
 	void Message::Read( ArrayBinaryReader &r)
 	{
-		header = RR_MAKE_SHARED<MessageHeader>();
+		header = CreateMessageHeader();
 		header->Read(r);
 
 		r.PushRelativeLimit(header->MessageSize-header->HeaderSize);
@@ -100,7 +100,7 @@ namespace RobotRaconteur
 		entries.clear();
 		for (int32_t i = 0; i < s; i++)
 		{
-			RR_SHARED_PTR<MessageEntry> e = RR_MAKE_SHARED<MessageEntry>();
+			RR_INTRUSIVE_PTR<MessageEntry> e = CreateMessageEntry();
 			e->Read(r);
 			entries.push_back(e);
 		}
@@ -110,7 +110,7 @@ namespace RobotRaconteur
 	{
 		header->EntryCount = (uint16_t)entries.size();
 		uint64_t s = 0;
-		BOOST_FOREACH (RR_SHARED_PTR<MessageEntry>& e, entries)
+		BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageEntry>& e, entries)
 		{
 			e->UpdateData3();
 			s += e->EntrySize;
@@ -136,7 +136,7 @@ namespace RobotRaconteur
 		w.PushRelativeLimit(s);
 				
 		header->Write3(w, version_minor);
-		BOOST_FOREACH (RR_SHARED_PTR<MessageEntry>& e, entries)
+		BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageEntry>& e, entries)
 		{
 			e->Write3(w, version_minor);
 		}
@@ -148,7 +148,7 @@ namespace RobotRaconteur
 
 	void Message::Read3(ArrayBinaryReader &r, uint16_t& version_minor)
 	{
-		header = RR_MAKE_SHARED<MessageHeader>();
+		header = CreateMessageHeader();
 		header->Read3(r, version_minor);
 
 		r.PushRelativeLimit(header->MessageSize - header->HeaderSize);
@@ -157,7 +157,7 @@ namespace RobotRaconteur
 		entries.clear();
 		for (int32_t i = 0; i < s; i++)
 		{
-			RR_SHARED_PTR<MessageEntry> e = RR_MAKE_SHARED<MessageEntry>();
+			RR_INTRUSIVE_PTR<MessageEntry> e = CreateMessageEntry();
 			e->Read3(r, version_minor);
 			entries.push_back(e);
 		}
@@ -691,7 +691,7 @@ namespace RobotRaconteur
 	uint32_t MessageEntry::ComputeSize()
 	{
 		uint64_t s = 22;
-		BOOST_FOREACH (RR_SHARED_PTR<MessageElement>& e, elements)
+		BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& e, elements)
 		{
 			e->UpdateData();
 			s += e->ElementSize;
@@ -712,9 +712,9 @@ namespace RobotRaconteur
 		return static_cast<uint32_t>(s);
 	}
 
-	RR_SHARED_PTR<MessageElement> MessageEntry::FindElement(const std::string& name)
+	RR_INTRUSIVE_PTR<MessageElement> MessageEntry::FindElement(const std::string& name)
 	{
-		std::vector<RR_SHARED_PTR<MessageElement> >::iterator m=boost::find_if(elements,
+		std::vector<RR_INTRUSIVE_PTR<MessageElement> >::iterator m=boost::find_if(elements,
 				boost::bind(&MessageElement::ElementName, _1) == name);
 
 		if (m==elements.end()) throw MessageElementNotFoundException("Element " + name + " not found.");
@@ -722,9 +722,9 @@ namespace RobotRaconteur
 		return *m;
 	}
 
-	bool MessageEntry::TryFindElement(const std::string& name, RR_SHARED_PTR<MessageElement>& elem)
+	bool MessageEntry::TryFindElement(const std::string& name, RR_INTRUSIVE_PTR<MessageElement>& elem)
 	{
-		std::vector<RR_SHARED_PTR<MessageElement> >::iterator m = boost::find_if(elements,
+		std::vector<RR_INTRUSIVE_PTR<MessageElement> >::iterator m = boost::find_if(elements,
 			boost::bind(&MessageElement::ElementName, _1) == name);
 
 		if (m == elements.end()) return false;
@@ -733,9 +733,9 @@ namespace RobotRaconteur
 		return true;
 	}
 
-	RR_SHARED_PTR<MessageElement> MessageEntry::AddElement(const std::string& name, RR_SHARED_PTR<MessageElementData> data)
+	RR_INTRUSIVE_PTR<MessageElement> MessageEntry::AddElement(const std::string& name, RR_INTRUSIVE_PTR<MessageElementData> data)
 	{
-		RR_SHARED_PTR<MessageElement> m = RR_MAKE_SHARED<MessageElement>();
+		RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement();
 		m->ElementName = name;
 		m->SetData(data);
 		
@@ -744,7 +744,7 @@ namespace RobotRaconteur
 		return m;
 	}
 
-	RR_SHARED_PTR<MessageElement> MessageEntry::AddElement(RR_SHARED_PTR<MessageElement> m)
+	RR_INTRUSIVE_PTR<MessageElement> MessageEntry::AddElement(RR_INTRUSIVE_PTR<MessageElement> m)
 	{
 		
 		elements.push_back(m);
@@ -782,7 +782,7 @@ namespace RobotRaconteur
 		w.WriteString8(MetaData);
 		w.WriteNumber((uint16_t)(elements.size()));
 
-		BOOST_FOREACH (RR_SHARED_PTR<MessageElement>& e, elements)
+		BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& e, elements)
 		{
 			e->Write(w);
 		}
@@ -815,10 +815,10 @@ namespace RobotRaconteur
 
 
 
-		elements = std::vector<RR_SHARED_PTR<MessageElement> >();
+		elements = std::vector<RR_INTRUSIVE_PTR<MessageElement> >();
 		for (int32_t i = 0; i < ecount; i++)
 		{
-			RR_SHARED_PTR<MessageElement> e = RR_MAKE_SHARED<MessageElement>();
+			RR_INTRUSIVE_PTR<MessageElement> e = CreateMessageElement();
 			e->Read(r);
 			elements.push_back(e);
 		}
@@ -832,7 +832,7 @@ namespace RobotRaconteur
 	uint32_t MessageEntry::ComputeSize3()
 	{
 		size_t s = 3;
-		BOOST_FOREACH (RR_SHARED_PTR<MessageElement>& e, elements)
+		BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& e, elements)
 		{
 			e->UpdateData3();
 			s += e->ElementSize;
@@ -993,7 +993,7 @@ namespace RobotRaconteur
 
 		w.WriteUintX((uint32_t)elements.size());
 
-		BOOST_FOREACH (RR_SHARED_PTR<MessageElement>& e, elements)
+		BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& e, elements)
 		{
 			e->Write3(w, version_minor);
 		}
@@ -1072,10 +1072,10 @@ namespace RobotRaconteur
 		uint32_t ecount = r.ReadUintX();
 
 
-		elements = std::vector<RR_SHARED_PTR<MessageElement> >();
+		elements = std::vector<RR_INTRUSIVE_PTR<MessageElement> >();
 		for (int32_t i = 0; i < ecount; i++)
 		{
-			RR_SHARED_PTR<MessageElement> e = RR_MAKE_SHARED<MessageElement>();
+			RR_INTRUSIVE_PTR<MessageElement> e = CreateMessageElement();
 			e->Read3(r, version_minor);
 			elements.push_back(e);
 		}
@@ -1098,7 +1098,7 @@ namespace RobotRaconteur
 		SequenceNumber = 0;
 	}
 
-	MessageElement::MessageElement(const std::string& name, RR_SHARED_PTR<MessageElementData> datin)
+	MessageElement::MessageElement(const std::string& name, RR_INTRUSIVE_PTR<MessageElementData> datin)
 	{
 		ElementSize = 0;
 		DataCount = 0;
@@ -1115,12 +1115,12 @@ namespace RobotRaconteur
 		//UpdateData();
 	}
 
-	RR_SHARED_PTR<MessageElementData> MessageElement::GetData() 
+	RR_INTRUSIVE_PTR<MessageElementData> MessageElement::GetData() 
 	{
 		return dat;
 	}
 
-	void MessageElement::SetData(const RR_SHARED_PTR<MessageElementData> value)
+	void MessageElement::SetData(const RR_INTRUSIVE_PTR<MessageElementData> value)
 	{
 		dat = value;
 
@@ -1172,8 +1172,8 @@ namespace RobotRaconteur
 			break;		
 		case DataTypes_structure_t:
 		{
-			RR_SHARED_PTR<MessageElementStructure> d = rr_cast<MessageElementStructure>(GetData());
-			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, d->Elements)
+			RR_INTRUSIVE_PTR<MessageElementStructure> d = rr_cast<MessageElementStructure>(GetData());
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, d->Elements)
 			{
 				e->UpdateData();
 				s += e->ElementSize;
@@ -1182,9 +1182,9 @@ namespace RobotRaconteur
 		}
 		case DataTypes_vector_t:
 		{
-			RR_SHARED_PTR<MessageElementMap<int32_t> > d = rr_cast<MessageElementMap<int32_t> >(GetData());
+			RR_INTRUSIVE_PTR<MessageElementMap<int32_t> > d = rr_cast<MessageElementMap<int32_t> >(GetData());
 
-			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, d->Elements)
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, d->Elements)
 			{
 				e->UpdateData();
 				s += e->ElementSize;
@@ -1193,8 +1193,8 @@ namespace RobotRaconteur
 		}
 		case DataTypes_dictionary_t:
 		{
-			RR_SHARED_PTR<MessageElementMap<std::string> > d = rr_cast<MessageElementMap<std::string> >(GetData());
-			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, d->Elements)
+			RR_INTRUSIVE_PTR<MessageElementMap<std::string> > d = rr_cast<MessageElementMap<std::string> >(GetData());
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, d->Elements)
 			{
 				e->UpdateData();
 				s += e->ElementSize;
@@ -1203,8 +1203,8 @@ namespace RobotRaconteur
 		}
 		case DataTypes_multidimarray_t:
 		{
-			RR_SHARED_PTR<MessageElementMultiDimArray> d = rr_cast<MessageElementMultiDimArray>(GetData());
-			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, d->Elements)
+			RR_INTRUSIVE_PTR<MessageElementMultiDimArray> d = rr_cast<MessageElementMultiDimArray>(GetData());
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, d->Elements)
 			{
 				e->UpdateData();
 				s += e->ElementSize;
@@ -1213,8 +1213,8 @@ namespace RobotRaconteur
 		}
 		case DataTypes_list_t:
 		{
-			RR_SHARED_PTR<MessageElementList > d = rr_cast<MessageElementList >(GetData());
-			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, d->Elements)
+			RR_INTRUSIVE_PTR<MessageElementList > d = rr_cast<MessageElementList >(GetData());
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, d->Elements)
 			{
 				e->UpdateData();
 				s += e->ElementSize;
@@ -1223,8 +1223,8 @@ namespace RobotRaconteur
 		}
 		case DataTypes_pod_t:
 		{
-			RR_SHARED_PTR<MessageElementPod > d = rr_cast<MessageElementPod >(GetData());
-			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, d->Elements)
+			RR_INTRUSIVE_PTR<MessageElementPod > d = rr_cast<MessageElementPod >(GetData());
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, d->Elements)
 			{
 				e->UpdateData();
 				s += e->ElementSize;
@@ -1233,8 +1233,8 @@ namespace RobotRaconteur
 		}
 		case DataTypes_pod_array_t:
 		{
-			RR_SHARED_PTR<MessageElementPodArray > d = rr_cast<MessageElementPodArray >(GetData());
-			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, d->Elements)
+			RR_INTRUSIVE_PTR<MessageElementPodArray > d = rr_cast<MessageElementPodArray >(GetData());
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, d->Elements)
 			{
 				e->UpdateData();
 				s += e->ElementSize;
@@ -1243,8 +1243,8 @@ namespace RobotRaconteur
 		}
 		case DataTypes_pod_multidimarray_t:
 		{
-			RR_SHARED_PTR<MessageElementPodMultiDimArray > d = rr_cast<MessageElementPodMultiDimArray >(GetData());
-			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, d->Elements)
+			RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray > d = rr_cast<MessageElementPodMultiDimArray >(GetData());
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, d->Elements)
 			{
 				e->UpdateData();
 				s += e->ElementSize;
@@ -1253,8 +1253,8 @@ namespace RobotRaconteur
 		}		
 		case DataTypes_namedarray_array_t:
 		{
-			RR_SHARED_PTR<MessageElementNamedArray > d = rr_cast<MessageElementNamedArray>(GetData());
-			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, d->Elements)
+			RR_INTRUSIVE_PTR<MessageElementNamedArray > d = rr_cast<MessageElementNamedArray>(GetData());
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, d->Elements)
 			{
 				e->UpdateData();
 				s += e->ElementSize;
@@ -1263,8 +1263,8 @@ namespace RobotRaconteur
 		}
 		case DataTypes_namedarray_multidimarray_t:
 		{
-			RR_SHARED_PTR<MessageElementNamedMultiDimArray > d = rr_cast<MessageElementNamedMultiDimArray>(GetData());
-			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, d->Elements)
+			RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray > d = rr_cast<MessageElementNamedMultiDimArray>(GetData());
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, d->Elements)
 			{
 				e->UpdateData();
 				s += e->ElementSize;
@@ -1321,14 +1321,14 @@ namespace RobotRaconteur
 		case DataTypes_csingle_t:
 		case DataTypes_bool_t:
 			{
-				RR_SHARED_PTR<RRBaseArray> rdat = RR_DYNAMIC_POINTER_CAST<RRBaseArray>(dat);
+				RR_INTRUSIVE_PTR<RRBaseArray> rdat = RR_DYNAMIC_POINTER_CAST<RRBaseArray>(dat);
 				if (!rdat) throw DataTypeException("");
 				DataCount=(uint32_t)rdat->size();
 				break;
 			}
 		case DataTypes_structure_t:
 			{
-				RR_SHARED_PTR<MessageElementStructure> sdat = RR_DYNAMIC_POINTER_CAST<MessageElementStructure>(dat);
+				RR_INTRUSIVE_PTR<MessageElementStructure> sdat = RR_DYNAMIC_POINTER_CAST<MessageElementStructure>(dat);
 				if (!sdat) throw DataTypeException("");
 				DataCount = (uint32_t)sdat->Elements.size();
 				ElementTypeName=sdat->GetTypeString();
@@ -1336,35 +1336,35 @@ namespace RobotRaconteur
 			}
 		case DataTypes_vector_t:
 			{
-				RR_SHARED_PTR<MessageElementMap<int32_t> > vdat = RR_DYNAMIC_POINTER_CAST<MessageElementMap<int32_t> >(dat);
+				RR_INTRUSIVE_PTR<MessageElementMap<int32_t> > vdat = RR_DYNAMIC_POINTER_CAST<MessageElementMap<int32_t> >(dat);
 				if (!vdat) throw DataTypeException("");
 				DataCount = (uint32_t)vdat->Elements.size();
 				break;
 			}
 		case DataTypes_dictionary_t:
 			{
-				RR_SHARED_PTR<MessageElementMap<std::string> > ddat = RR_STATIC_POINTER_CAST<MessageElementMap<std::string> >(dat);
+				RR_INTRUSIVE_PTR<MessageElementMap<std::string> > ddat = RR_STATIC_POINTER_CAST<MessageElementMap<std::string> >(dat);
 				if (!ddat) throw DataTypeException("");
 				DataCount = (uint32_t)ddat->Elements.size();
 				break;
 			}
 		case DataTypes_multidimarray_t:
 			{
-				RR_SHARED_PTR<MessageElementMultiDimArray> mdat = RR_STATIC_POINTER_CAST<MessageElementMultiDimArray>(dat);
+				RR_INTRUSIVE_PTR<MessageElementMultiDimArray> mdat = RR_STATIC_POINTER_CAST<MessageElementMultiDimArray>(dat);
 				if (!mdat) throw DataTypeException("");
 				DataCount = (uint32_t)mdat->Elements.size();
 				break;
 			}
 		case DataTypes_list_t:
 			{
-				RR_SHARED_PTR<MessageElementList> ddat = RR_STATIC_POINTER_CAST<MessageElementList>(dat);
+				RR_INTRUSIVE_PTR<MessageElementList> ddat = RR_STATIC_POINTER_CAST<MessageElementList>(dat);
 				if (!ddat) throw DataTypeException("");
 				DataCount = (uint32_t)ddat->Elements.size();
 				break;
 			}
 		case DataTypes_pod_t:
 		{
-			RR_SHARED_PTR<MessageElementPod> sdat = RR_STATIC_POINTER_CAST<MessageElementPod>(dat);
+			RR_INTRUSIVE_PTR<MessageElementPod> sdat = RR_STATIC_POINTER_CAST<MessageElementPod>(dat);
 			if (!sdat) throw DataTypeException("");
 			DataCount = (uint32_t)sdat->Elements.size();
 			ElementTypeName = sdat->GetTypeString();
@@ -1372,7 +1372,7 @@ namespace RobotRaconteur
 		}
 		case DataTypes_pod_array_t:
 		{
-			RR_SHARED_PTR<MessageElementPodArray> sdat = RR_STATIC_POINTER_CAST<MessageElementPodArray>(dat);
+			RR_INTRUSIVE_PTR<MessageElementPodArray> sdat = RR_STATIC_POINTER_CAST<MessageElementPodArray>(dat);
 			if (!sdat) throw DataTypeException("");
 			DataCount = (uint32_t)sdat->Elements.size();
 			ElementTypeName = sdat->GetTypeString();
@@ -1380,7 +1380,7 @@ namespace RobotRaconteur
 		}
 		case DataTypes_pod_multidimarray_t:
 		{
-			RR_SHARED_PTR<MessageElementPodMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementPodMultiDimArray>(dat);
+			RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementPodMultiDimArray>(dat);
 			if (!sdat) throw DataTypeException("");
 			DataCount = (uint32_t)sdat->Elements.size();
 			ElementTypeName = sdat->GetTypeString();
@@ -1388,7 +1388,7 @@ namespace RobotRaconteur
 		}
 		case DataTypes_namedarray_array_t:
 		{
-			RR_SHARED_PTR<MessageElementNamedArray> sdat = RR_STATIC_POINTER_CAST<MessageElementNamedArray>(dat);
+			RR_INTRUSIVE_PTR<MessageElementNamedArray> sdat = RR_STATIC_POINTER_CAST<MessageElementNamedArray>(dat);
 			if (!sdat) throw DataTypeException("");
 			DataCount = (uint32_t)sdat->Elements.size();
 			ElementTypeName = sdat->GetTypeString();
@@ -1396,7 +1396,7 @@ namespace RobotRaconteur
 		}
 		case DataTypes_namedarray_multidimarray_t:
 		{
-			RR_SHARED_PTR<MessageElementNamedMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementNamedMultiDimArray>(dat);
+			RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementNamedMultiDimArray>(dat);
 			if (!sdat) throw DataTypeException("");
 			DataCount = (uint32_t)sdat->Elements.size();
 			ElementTypeName = sdat->GetTypeString();
@@ -1448,88 +1448,88 @@ namespace RobotRaconteur
 		case DataTypes_csingle_t:
 		case DataTypes_bool_t:
 			{
-				RR_SHARED_PTR<RRBaseArray> rdat = RR_STATIC_POINTER_CAST<RRBaseArray>(dat);
+				RR_INTRUSIVE_PTR<RRBaseArray> rdat = RR_STATIC_POINTER_CAST<RRBaseArray>(dat);
 				if (!rdat) throw DataTypeException("");				
 				w.WriteArray(rdat);
 				break;
 			}
 		case DataTypes_structure_t:
 			{
-				RR_SHARED_PTR<MessageElementStructure> sdat = RR_STATIC_POINTER_CAST<MessageElementStructure>(dat);
+				RR_INTRUSIVE_PTR<MessageElementStructure> sdat = RR_STATIC_POINTER_CAST<MessageElementStructure>(dat);
 				if (!sdat) throw DataTypeException("");
-				BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, sdat->Elements)
+				BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, sdat->Elements)
 					e->Write(w);
 			break;
 			}
 		case DataTypes_vector_t:
 			{
-				RR_SHARED_PTR<MessageElementMap<int32_t> > vdat = RR_STATIC_POINTER_CAST<MessageElementMap<int32_t> >(dat);
+				RR_INTRUSIVE_PTR<MessageElementMap<int32_t> > vdat = RR_STATIC_POINTER_CAST<MessageElementMap<int32_t> >(dat);
 				if (!vdat) throw DataTypeException("");
-				BOOST_FOREACH (RR_SHARED_PTR<MessageElement>& e, vdat->Elements)
+				BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& e, vdat->Elements)
 					e->Write(w);
 				break;
 			}
 		case DataTypes_dictionary_t:
 			{
-				RR_SHARED_PTR<MessageElementMap<std::string> > ddat = RR_STATIC_POINTER_CAST<MessageElementMap<std::string> >(dat);
+				RR_INTRUSIVE_PTR<MessageElementMap<std::string> > ddat = RR_STATIC_POINTER_CAST<MessageElementMap<std::string> >(dat);
 				if (!ddat) throw DataTypeException("");
-				BOOST_FOREACH (RR_SHARED_PTR<MessageElement>& e, ddat->Elements)
+				BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& e, ddat->Elements)
 					e->Write(w);
 				break;
 			}
 		case DataTypes_multidimarray_t:
 			{
-				RR_SHARED_PTR<MessageElementMultiDimArray> mdat = RR_STATIC_POINTER_CAST<MessageElementMultiDimArray>(dat);
+				RR_INTRUSIVE_PTR<MessageElementMultiDimArray> mdat = RR_STATIC_POINTER_CAST<MessageElementMultiDimArray>(dat);
 				if (!mdat) throw DataTypeException("");
-				BOOST_FOREACH (RR_SHARED_PTR<MessageElement>& e, mdat->Elements)
+				BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& e, mdat->Elements)
 					e->Write(w);
 				break;
 			}
 		case DataTypes_list_t:
 			{
-				RR_SHARED_PTR<MessageElementList> ddat = RR_STATIC_POINTER_CAST<MessageElementList>(dat);
+				RR_INTRUSIVE_PTR<MessageElementList> ddat = RR_STATIC_POINTER_CAST<MessageElementList>(dat);
 				if (!ddat) throw DataTypeException("");
-				BOOST_FOREACH (RR_SHARED_PTR<MessageElement>& e, ddat->Elements)
+				BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& e, ddat->Elements)
 					e->Write(w);
 				break;
 			}
 		case DataTypes_pod_t:
 		{
-			RR_SHARED_PTR<MessageElementPod> sdat = RR_STATIC_POINTER_CAST<MessageElementPod>(dat);
+			RR_INTRUSIVE_PTR<MessageElementPod> sdat = RR_STATIC_POINTER_CAST<MessageElementPod>(dat);
 			if (!sdat) throw DataTypeException("");
-			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, sdat->Elements)
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, sdat->Elements)
 				e->Write(w);
 			break;
 		}
 		case DataTypes_pod_array_t:
 		{
-			RR_SHARED_PTR<MessageElementPodArray> sdat = RR_STATIC_POINTER_CAST<MessageElementPodArray>(dat);
+			RR_INTRUSIVE_PTR<MessageElementPodArray> sdat = RR_STATIC_POINTER_CAST<MessageElementPodArray>(dat);
 			if (!sdat) throw DataTypeException("");
-			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, sdat->Elements)
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, sdat->Elements)
 				e->Write(w);
 			break;
 		}
 		case DataTypes_pod_multidimarray_t:
 		{
-			RR_SHARED_PTR<MessageElementPodMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementPodMultiDimArray>(dat);
+			RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementPodMultiDimArray>(dat);
 			if (!sdat) throw DataTypeException("");
-			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, sdat->Elements)
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, sdat->Elements)
 				e->Write(w);
 			break;
 		}
 		case DataTypes_namedarray_array_t:
 		{
-			RR_SHARED_PTR<MessageElementNamedArray> sdat = RR_STATIC_POINTER_CAST<MessageElementNamedArray>(dat);
+			RR_INTRUSIVE_PTR<MessageElementNamedArray> sdat = RR_STATIC_POINTER_CAST<MessageElementNamedArray>(dat);
 			if (!sdat) throw DataTypeException("");
-			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, sdat->Elements)
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, sdat->Elements)
 				e->Write(w);
 			break;
 		}
 		case DataTypes_namedarray_multidimarray_t:
 		{
-			RR_SHARED_PTR<MessageElementNamedMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementNamedMultiDimArray>(dat);
+			RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementNamedMultiDimArray>(dat);
 			if (!sdat) throw DataTypeException("");
-			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, sdat->Elements)
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, sdat->Elements)
 				e->Write(w);
 			break;
 		}
@@ -1582,139 +1582,139 @@ namespace RobotRaconteur
 				throw DataSerializationException("Error in message format");
 			}
 
-			RR_SHARED_PTR<RRBaseArray> d = AllocateRRArrayByType(ElementType, DataCount);
+			RR_INTRUSIVE_PTR<RRBaseArray> d = AllocateRRArrayByType(ElementType, DataCount);
 			r.ReadArray(d);
 			dat = d;
 			break;
 		}
 		case DataTypes_structure_t:
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > l;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > l;
 			for (size_t i = 0; i < DataCount; i++)
 			{
-				RR_SHARED_PTR<MessageElement> m = RR_MAKE_SHARED<MessageElement>();
+				RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement();
 				m->Read(r);
 				l.push_back(m);
 			}
 
-			dat = RR_MAKE_SHARED<MessageElementStructure>(ElementTypeName, l);
+			dat = CreateMessageElementStructure(ElementTypeName, l);
 			break;
 		}
 		case DataTypes_vector_t:
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > l;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > l;
 			for (size_t i = 0; i < DataCount; i++)
 			{
-				RR_SHARED_PTR<MessageElement> m = RR_MAKE_SHARED<MessageElement>();
+				RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement();
 				m->Read(r);
 				l.push_back(m);
 			}
 
-			dat = RR_MAKE_SHARED<MessageElementMap<int32_t> >(l);
+			dat = CreateMessageElementMap<int32_t>(l);
 			break;
 		}
 		case DataTypes_dictionary_t:
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > l;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > l;
 			for (size_t i = 0; i < DataCount; i++)
 			{
-				RR_SHARED_PTR<MessageElement> m = RR_MAKE_SHARED<MessageElement>();
+				RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement();
 				m->Read(r);
 				l.push_back(m);
 			}
 
-			dat = RR_MAKE_SHARED<MessageElementMap<std::string> >(l);
+			dat = CreateMessageElementMap<std::string>(l);
 			break;
 		}
 		case DataTypes_multidimarray_t:
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > l;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > l;
 			for (size_t i = 0; i < DataCount; i++)
 			{
-				RR_SHARED_PTR<MessageElement> m = RR_MAKE_SHARED<MessageElement>();
+				RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement();
 				m->Read(r);
 				l.push_back(m);
 			}
 
-			dat = RR_MAKE_SHARED<MessageElementMultiDimArray>(l);
+			dat = CreateMessageElementMultiDimArray(l);
 			break;
 		}
 		case DataTypes_list_t:
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > l;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > l;
 			for (size_t i = 0; i < DataCount; i++)
 			{
-				RR_SHARED_PTR<MessageElement> m = RR_MAKE_SHARED<MessageElement>();
+				RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement();
 				m->Read(r);
 				l.push_back(m);
 			}
 
-			dat = RR_MAKE_SHARED<MessageElementList >(l);
+			dat = CreateMessageElementList(l);
 			break;
 		}
 		case DataTypes_pod_t:
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > l;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > l;
 			for (size_t i = 0; i < DataCount; i++)
 			{
-				RR_SHARED_PTR<MessageElement> m = RR_MAKE_SHARED<MessageElement>();
+				RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement();
 				m->Read(r);
 				l.push_back(m);
 			}
 
-			dat = RR_MAKE_SHARED<MessageElementPod >(l);
+			dat = CreateMessageElementPod(l);
 			break;
 		}
 		case DataTypes_pod_array_t:
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > l;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > l;
 			for (size_t i = 0; i < DataCount; i++)
 			{
-				RR_SHARED_PTR<MessageElement> m = RR_MAKE_SHARED<MessageElement>();
+				RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement();
 				m->Read(r);
 				l.push_back(m);
 			}
 
-			dat = RR_MAKE_SHARED<MessageElementPodArray >(ElementTypeName,l);
+			dat = CreateMessageElementPodArray(ElementTypeName,l);
 			break;
 		}
 		case DataTypes_pod_multidimarray_t:
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > l;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > l;
 			for (size_t i = 0; i < DataCount; i++)
 			{
-				RR_SHARED_PTR<MessageElement> m = RR_MAKE_SHARED<MessageElement>();
+				RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement();
 				m->Read(r);
 				l.push_back(m);
 			}
 
-			dat = RR_MAKE_SHARED<MessageElementPodMultiDimArray >(ElementTypeName,l);
+			dat = CreateMessageElementPodMultiDimArray(ElementTypeName,l);
 			break;
 		}
 		case DataTypes_namedarray_array_t:
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > l;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > l;
 			for (size_t i = 0; i < DataCount; i++)
 			{
-				RR_SHARED_PTR<MessageElement> m = RR_MAKE_SHARED<MessageElement>();
+				RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement();
 				m->Read(r);
 				l.push_back(m);
 			}
 
-			dat = RR_MAKE_SHARED<MessageElementNamedArray >(ElementTypeName, l);
+			dat = CreateMessageElementNamedArray(ElementTypeName, l);
 			break;
 		}
 		case DataTypes_namedarray_multidimarray_t:
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > l;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > l;
 			for (size_t i = 0; i < DataCount; i++)
 			{
-				RR_SHARED_PTR<MessageElement> m = RR_MAKE_SHARED<MessageElement>();
+				RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement();
 				m->Read(r);
 				l.push_back(m);
 			}
 
-			dat = RR_MAKE_SHARED<MessageElementNamedMultiDimArray >(ElementTypeName, l);
+			dat = CreateMessageElementNamedMultiDimArray(ElementTypeName, l);
 			break;
 		}
 		default:
@@ -1785,8 +1785,8 @@ namespace RobotRaconteur
 			break;
 		case DataTypes_structure_t:
 		{
-			RR_SHARED_PTR<MessageElementStructure> d = rr_cast<MessageElementStructure>(GetData());
-			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, d->Elements)
+			RR_INTRUSIVE_PTR<MessageElementStructure> d = rr_cast<MessageElementStructure>(GetData());
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, d->Elements)
 			{
 				e->UpdateData3();
 				s += e->ElementSize;
@@ -1795,9 +1795,9 @@ namespace RobotRaconteur
 		}
 		case DataTypes_vector_t:
 		{
-			RR_SHARED_PTR<MessageElementMap<int32_t> > d = rr_cast<MessageElementMap<int32_t> >(GetData());
+			RR_INTRUSIVE_PTR<MessageElementMap<int32_t> > d = rr_cast<MessageElementMap<int32_t> >(GetData());
 
-			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, d->Elements)
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, d->Elements)
 			{
 				e->UpdateData3();
 				s += e->ElementSize;
@@ -1806,8 +1806,8 @@ namespace RobotRaconteur
 		}
 		case DataTypes_dictionary_t:
 		{
-			RR_SHARED_PTR<MessageElementMap<std::string> > d = rr_cast<MessageElementMap<std::string> >(GetData());
-			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, d->Elements)
+			RR_INTRUSIVE_PTR<MessageElementMap<std::string> > d = rr_cast<MessageElementMap<std::string> >(GetData());
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, d->Elements)
 			{
 				e->UpdateData3();
 				s += e->ElementSize;
@@ -1816,8 +1816,8 @@ namespace RobotRaconteur
 		}
 		case DataTypes_multidimarray_t:
 		{
-			RR_SHARED_PTR<MessageElementMultiDimArray> d = rr_cast<MessageElementMultiDimArray>(GetData());
-			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, d->Elements)
+			RR_INTRUSIVE_PTR<MessageElementMultiDimArray> d = rr_cast<MessageElementMultiDimArray>(GetData());
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, d->Elements)
 			{
 				e->UpdateData3();
 				s += e->ElementSize;
@@ -1826,8 +1826,8 @@ namespace RobotRaconteur
 		}
 		case DataTypes_list_t:
 		{
-			RR_SHARED_PTR<MessageElementList > d = rr_cast<MessageElementList >(GetData());
-			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, d->Elements)
+			RR_INTRUSIVE_PTR<MessageElementList > d = rr_cast<MessageElementList >(GetData());
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, d->Elements)
 			{
 				e->UpdateData3();
 				s += e->ElementSize;
@@ -1836,8 +1836,8 @@ namespace RobotRaconteur
 		}
 		case DataTypes_pod_t:
 		{
-			RR_SHARED_PTR<MessageElementPod > d = rr_cast<MessageElementPod >(GetData());
-			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, d->Elements)
+			RR_INTRUSIVE_PTR<MessageElementPod > d = rr_cast<MessageElementPod >(GetData());
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, d->Elements)
 			{
 				e->UpdateData3();
 				s += e->ElementSize;
@@ -1846,8 +1846,8 @@ namespace RobotRaconteur
 		}
 		case DataTypes_pod_array_t:
 		{
-			RR_SHARED_PTR<MessageElementPodArray > d = rr_cast<MessageElementPodArray >(GetData());
-			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, d->Elements)
+			RR_INTRUSIVE_PTR<MessageElementPodArray > d = rr_cast<MessageElementPodArray >(GetData());
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, d->Elements)
 			{
 				e->UpdateData3();
 				s += e->ElementSize;
@@ -1856,8 +1856,8 @@ namespace RobotRaconteur
 		}
 		case DataTypes_pod_multidimarray_t:
 		{
-			RR_SHARED_PTR<MessageElementPodMultiDimArray > d = rr_cast<MessageElementPodMultiDimArray >(GetData());
-			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, d->Elements)
+			RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray > d = rr_cast<MessageElementPodMultiDimArray >(GetData());
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, d->Elements)
 			{
 				e->UpdateData3();
 				s += e->ElementSize;
@@ -1866,8 +1866,8 @@ namespace RobotRaconteur
 		}
 		case DataTypes_namedarray_array_t:
 		{
-			RR_SHARED_PTR<MessageElementNamedArray > d = rr_cast<MessageElementNamedArray>(GetData());
-			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, d->Elements)
+			RR_INTRUSIVE_PTR<MessageElementNamedArray > d = rr_cast<MessageElementNamedArray>(GetData());
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, d->Elements)
 			{
 				e->UpdateData3();
 				s += e->ElementSize;
@@ -1876,8 +1876,8 @@ namespace RobotRaconteur
 		}
 		case DataTypes_namedarray_multidimarray_t:
 		{
-			RR_SHARED_PTR<MessageElementNamedMultiDimArray > d = rr_cast<MessageElementNamedMultiDimArray>(GetData());
-			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, d->Elements)
+			RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray > d = rr_cast<MessageElementNamedMultiDimArray>(GetData());
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, d->Elements)
 			{
 				e->UpdateData3();
 				s += e->ElementSize;
@@ -1928,14 +1928,14 @@ namespace RobotRaconteur
 		case DataTypes_csingle_t:
 		case DataTypes_bool_t:
 		{
-			RR_SHARED_PTR<RRBaseArray> rdat = RR_STATIC_POINTER_CAST<RRBaseArray>(dat);
+			RR_INTRUSIVE_PTR<RRBaseArray> rdat = RR_STATIC_POINTER_CAST<RRBaseArray>(dat);
 			if (!rdat) throw DataTypeException("");
 			DataCount = (uint32_t)rdat->size();
 			break;
 		}
 		case DataTypes_structure_t:
 		{
-			RR_SHARED_PTR<MessageElementStructure> sdat = RR_STATIC_POINTER_CAST<MessageElementStructure>(dat);
+			RR_INTRUSIVE_PTR<MessageElementStructure> sdat = RR_STATIC_POINTER_CAST<MessageElementStructure>(dat);
 			if (!sdat) throw DataTypeException("");
 			DataCount = (uint32_t)sdat->Elements.size();
 			//If flags have ElementTypeNameCode set, assume that the ElementTypeName has already been encoded
@@ -1947,35 +1947,35 @@ namespace RobotRaconteur
 		}
 		case DataTypes_vector_t:
 		{
-			RR_SHARED_PTR<MessageElementMap<int32_t> > vdat = RR_STATIC_POINTER_CAST<MessageElementMap<int32_t> >(dat);
+			RR_INTRUSIVE_PTR<MessageElementMap<int32_t> > vdat = RR_STATIC_POINTER_CAST<MessageElementMap<int32_t> >(dat);
 			if (!vdat) throw DataTypeException("");
 			DataCount = (uint32_t)vdat->Elements.size();
 			break;
 		}
 		case DataTypes_dictionary_t:
 		{
-			RR_SHARED_PTR<MessageElementMap<std::string> > ddat = RR_STATIC_POINTER_CAST<MessageElementMap<std::string> >(dat);
+			RR_INTRUSIVE_PTR<MessageElementMap<std::string> > ddat = RR_STATIC_POINTER_CAST<MessageElementMap<std::string> >(dat);
 			if (!ddat) throw DataTypeException("");
 			DataCount = (uint32_t)ddat->Elements.size();
 			break;
 		}
 		case DataTypes_multidimarray_t:
 		{
-			RR_SHARED_PTR<MessageElementMultiDimArray> mdat = RR_STATIC_POINTER_CAST<MessageElementMultiDimArray>(dat);
+			RR_INTRUSIVE_PTR<MessageElementMultiDimArray> mdat = RR_STATIC_POINTER_CAST<MessageElementMultiDimArray>(dat);
 			if (!mdat) throw DataTypeException("");
 			DataCount = (uint32_t)mdat->Elements.size();
 			break;
 		}
 		case DataTypes_list_t:
 		{
-			RR_SHARED_PTR<MessageElementList> ddat = RR_STATIC_POINTER_CAST<MessageElementList>(dat);
+			RR_INTRUSIVE_PTR<MessageElementList> ddat = RR_STATIC_POINTER_CAST<MessageElementList>(dat);
 			if (!ddat) throw DataTypeException("");
 			DataCount = (uint32_t)ddat->Elements.size();
 			break;
 		}
 		case DataTypes_pod_t:
 		{
-			RR_SHARED_PTR<MessageElementPod> sdat = RR_STATIC_POINTER_CAST<MessageElementPod>(dat);
+			RR_INTRUSIVE_PTR<MessageElementPod> sdat = RR_STATIC_POINTER_CAST<MessageElementPod>(dat);
 			if (!sdat) throw DataTypeException("");
 			DataCount = (uint32_t)sdat->Elements.size();
 			ElementTypeName = sdat->GetTypeString();
@@ -1983,7 +1983,7 @@ namespace RobotRaconteur
 		}
 		case DataTypes_pod_array_t:
 		{
-			RR_SHARED_PTR<MessageElementPodArray> sdat = RR_STATIC_POINTER_CAST<MessageElementPodArray>(dat);
+			RR_INTRUSIVE_PTR<MessageElementPodArray> sdat = RR_STATIC_POINTER_CAST<MessageElementPodArray>(dat);
 			if (!sdat) throw DataTypeException("");
 			DataCount = (uint32_t)sdat->Elements.size();
 			ElementTypeName = sdat->GetTypeString();
@@ -1991,7 +1991,7 @@ namespace RobotRaconteur
 		}
 		case DataTypes_pod_multidimarray_t:
 		{
-			RR_SHARED_PTR<MessageElementPodMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementPodMultiDimArray>(dat);
+			RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementPodMultiDimArray>(dat);
 			if (!sdat) throw DataTypeException("");
 			DataCount = (uint32_t)sdat->Elements.size();
 			ElementTypeName = sdat->GetTypeString();
@@ -1999,7 +1999,7 @@ namespace RobotRaconteur
 		}
 		case DataTypes_namedarray_array_t:
 		{
-			RR_SHARED_PTR<MessageElementNamedArray> sdat = RR_STATIC_POINTER_CAST<MessageElementNamedArray>(dat);
+			RR_INTRUSIVE_PTR<MessageElementNamedArray> sdat = RR_STATIC_POINTER_CAST<MessageElementNamedArray>(dat);
 			if (!sdat) throw DataTypeException("");
 			DataCount = (uint32_t)sdat->Elements.size();
 			ElementTypeName = sdat->GetTypeString();
@@ -2007,7 +2007,7 @@ namespace RobotRaconteur
 		}
 		case DataTypes_namedarray_multidimarray_t:
 		{
-			RR_SHARED_PTR<MessageElementNamedMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementNamedMultiDimArray>(dat);
+			RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementNamedMultiDimArray>(dat);
 			if (!sdat) throw DataTypeException("");
 			DataCount = (uint32_t)sdat->Elements.size();
 			ElementTypeName = sdat->GetTypeString();
@@ -2108,88 +2108,88 @@ namespace RobotRaconteur
 		case DataTypes_csingle_t:
 		case DataTypes_bool_t:
 		{
-			RR_SHARED_PTR<RRBaseArray> rdat = RR_STATIC_POINTER_CAST<RRBaseArray>(dat);
+			RR_INTRUSIVE_PTR<RRBaseArray> rdat = RR_STATIC_POINTER_CAST<RRBaseArray>(dat);
 			if (!rdat) throw DataTypeException("");			
 			w.WriteArray(rdat);
 			break;
 		}
 		case DataTypes_structure_t:
 		{
-			RR_SHARED_PTR<MessageElementStructure> sdat = RR_STATIC_POINTER_CAST<MessageElementStructure>(dat);
+			RR_INTRUSIVE_PTR<MessageElementStructure> sdat = RR_STATIC_POINTER_CAST<MessageElementStructure>(dat);
 			if (!sdat) throw DataTypeException("");
-			BOOST_FOREACH (RR_SHARED_PTR<MessageElement>& e, sdat->Elements)
+			BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& e, sdat->Elements)
 				e->Write3(w, version_minor);
 			break;
 		}
 		case DataTypes_vector_t:
 		{
-			RR_SHARED_PTR<MessageElementMap<int32_t> > vdat = RR_STATIC_POINTER_CAST<MessageElementMap<int32_t> >(dat);
+			RR_INTRUSIVE_PTR<MessageElementMap<int32_t> > vdat = RR_STATIC_POINTER_CAST<MessageElementMap<int32_t> >(dat);
 			if (!vdat) throw DataTypeException("");
-			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, vdat->Elements)
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, vdat->Elements)
 				e->Write3(w, version_minor);
 			break;
 		}
 		case DataTypes_dictionary_t:
 		{
-			RR_SHARED_PTR<MessageElementMap<std::string> > ddat = RR_STATIC_POINTER_CAST<MessageElementMap<std::string> >(dat);
+			RR_INTRUSIVE_PTR<MessageElementMap<std::string> > ddat = RR_STATIC_POINTER_CAST<MessageElementMap<std::string> >(dat);
 			if (!ddat) throw DataTypeException("");
-			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, ddat->Elements)
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, ddat->Elements)
 				e->Write3(w, version_minor);
 			break;
 		}
 		case DataTypes_multidimarray_t:
 		{
-			RR_SHARED_PTR<MessageElementMultiDimArray> mdat = RR_STATIC_POINTER_CAST<MessageElementMultiDimArray>(dat);
+			RR_INTRUSIVE_PTR<MessageElementMultiDimArray> mdat = RR_STATIC_POINTER_CAST<MessageElementMultiDimArray>(dat);
 			if (!mdat) throw DataTypeException("");
-			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, mdat->Elements)
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, mdat->Elements)
 				e->Write3(w, version_minor);
 			break;
 		}
 		case DataTypes_list_t:
 		{
-			RR_SHARED_PTR<MessageElementList> ddat = RR_STATIC_POINTER_CAST<MessageElementList>(dat);
+			RR_INTRUSIVE_PTR<MessageElementList> ddat = RR_STATIC_POINTER_CAST<MessageElementList>(dat);
 			if (!ddat) throw DataTypeException("");
-			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, ddat->Elements)
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, ddat->Elements)
 				e->Write3(w, version_minor);
 			break;
 		}
 		case DataTypes_pod_t:
 		{
-			RR_SHARED_PTR<MessageElementPod> sdat = RR_STATIC_POINTER_CAST<MessageElementPod>(dat);
+			RR_INTRUSIVE_PTR<MessageElementPod> sdat = RR_STATIC_POINTER_CAST<MessageElementPod>(dat);
 			if (!sdat) throw DataTypeException("");
-			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, sdat->Elements)
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, sdat->Elements)
 				e->Write3(w, version_minor);
 			break;
 		}
 		case DataTypes_pod_array_t:
 		{
-			RR_SHARED_PTR<MessageElementPodArray> sdat = RR_STATIC_POINTER_CAST<MessageElementPodArray>(dat);
+			RR_INTRUSIVE_PTR<MessageElementPodArray> sdat = RR_STATIC_POINTER_CAST<MessageElementPodArray>(dat);
 			if (!sdat) throw DataTypeException("");
-			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, sdat->Elements)
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, sdat->Elements)
 				e->Write3(w, version_minor);
 			break;
 		}
 		case DataTypes_pod_multidimarray_t:
 		{
-			RR_SHARED_PTR<MessageElementPodMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementPodMultiDimArray>(dat);
+			RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementPodMultiDimArray>(dat);
 			if (!sdat) throw DataTypeException("");
-			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, sdat->Elements)
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, sdat->Elements)
 				e->Write3(w, version_minor);
 			break;
 		}
 		case DataTypes_namedarray_array_t:
 		{
-			RR_SHARED_PTR<MessageElementNamedArray> sdat = RR_STATIC_POINTER_CAST<MessageElementNamedArray>(dat);
+			RR_INTRUSIVE_PTR<MessageElementNamedArray> sdat = RR_STATIC_POINTER_CAST<MessageElementNamedArray>(dat);
 			if (!sdat) throw DataTypeException("");
-			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, sdat->Elements)
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, sdat->Elements)
 				e->Write3(w, version_minor);
 			break;
 		}
 		case DataTypes_namedarray_multidimarray_t:
 		{
-			RR_SHARED_PTR<MessageElementNamedMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementNamedMultiDimArray>(dat);
+			RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementNamedMultiDimArray>(dat);
 			if (!sdat) throw DataTypeException("");
-			BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, sdat->Elements)
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, sdat->Elements)
 				e->Write3(w, version_minor);
 			break;
 		}
@@ -2278,144 +2278,144 @@ namespace RobotRaconteur
 				throw DataSerializationException("Error in message format");
 			}
 
-			RR_SHARED_PTR<RRBaseArray> d = AllocateRRArrayByType(ElementType, DataCount);
+			RR_INTRUSIVE_PTR<RRBaseArray> d = AllocateRRArrayByType(ElementType, DataCount);
 			r.ReadArray(d);
 			dat = d;
 			break;
 		}
 		case DataTypes_structure_t:
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > l;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > l;
 			for (size_t i = 0; i < DataCount; i++)
 			{
-				RR_SHARED_PTR<MessageElement> m = RR_MAKE_SHARED<MessageElement>();
+				RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement();
 				m->Read3(r, version_minor);
 				l.push_back(m);
 
 			}
 
-			dat = RR_MAKE_SHARED<MessageElementStructure>(ElementTypeName, l);
+			dat = CreateMessageElementStructure(ElementTypeName, l);
 			break;
 		}
 		case DataTypes_vector_t:
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > l;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > l;
 			for (size_t i = 0; i < DataCount; i++)
 			{
-				RR_SHARED_PTR<MessageElement> m = RR_MAKE_SHARED<MessageElement>();
+				RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement();
 				m->Read3(r, version_minor);
 				l.push_back(m);
 
 			}
 
-			dat = RR_MAKE_SHARED<MessageElementMap<int32_t> >(l);
+			dat = CreateMessageElementMap<int32_t>(l);
 			break;
 		}
 		case DataTypes_dictionary_t:
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > l;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > l;
 			for (size_t i = 0; i < DataCount; i++)
 			{
-				RR_SHARED_PTR<MessageElement> m = RR_MAKE_SHARED<MessageElement>();
+				RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement();
 				m->Read3(r, version_minor);
 				l.push_back(m);
 
 			}
 
-			dat = RR_MAKE_SHARED<MessageElementMap<std::string> >(l);
+			dat = CreateMessageElementMap<std::string>(l);
 			break;
 		}
 		case DataTypes_multidimarray_t:
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > l;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > l;
 			for (size_t i = 0; i < DataCount; i++)
 			{
-				RR_SHARED_PTR<MessageElement> m = RR_MAKE_SHARED<MessageElement>();
+				RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement();
 				m->Read3(r, version_minor);
 				l.push_back(m);
 
 			}
 
-			dat = RR_MAKE_SHARED<MessageElementMultiDimArray>(l);
+			dat = CreateMessageElementMultiDimArray(l);
 			break;
 		}
 		case DataTypes_list_t:
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > l;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > l;
 			for (size_t i = 0; i < DataCount; i++)
 			{
-				RR_SHARED_PTR<MessageElement> m = RR_MAKE_SHARED<MessageElement>();
+				RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement();
 				m->Read3(r, version_minor);
 				l.push_back(m);
 
 			}
 
-			dat = RR_MAKE_SHARED<MessageElementList >(l);
+			dat = CreateMessageElementList(l);
 			break;
 		}
 		case DataTypes_pod_t:
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > l;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > l;
 			for (size_t i = 0; i < DataCount; i++)
 			{
-				RR_SHARED_PTR<MessageElement> m = RR_MAKE_SHARED<MessageElement>();
+				RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement();
 				m->Read3(r, version_minor);
 				l.push_back(m);
 
 			}
-			dat = RR_MAKE_SHARED<MessageElementPod>(l);
+			dat = CreateMessageElementPod(l);
 			break;
 		}
 		case DataTypes_pod_array_t:
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > l;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > l;
 			for (size_t i = 0; i < DataCount; i++)
 			{
-				RR_SHARED_PTR<MessageElement> m = RR_MAKE_SHARED<MessageElement>();
+				RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement();
 				m->Read3(r, version_minor);
 				l.push_back(m);
 
 			}
-			dat = RR_MAKE_SHARED<MessageElementPodArray>(ElementTypeName, l);
+			dat = CreateMessageElementPodArray(ElementTypeName, l);
 			break;
 		}
 		case DataTypes_pod_multidimarray_t:
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > l;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > l;
 			for (size_t i = 0; i < DataCount; i++)
 			{
-				RR_SHARED_PTR<MessageElement> m = RR_MAKE_SHARED<MessageElement>();
+				RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement();
 				m->Read3(r, version_minor);
 				l.push_back(m);
 
 			}
-			dat = RR_MAKE_SHARED<MessageElementPodMultiDimArray>(ElementTypeName, l);
+			dat = CreateMessageElementPodMultiDimArray(ElementTypeName, l);
 			break;
 		}
 		case DataTypes_namedarray_array_t:
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > l;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > l;
 			for (size_t i = 0; i < DataCount; i++)
 			{
-				RR_SHARED_PTR<MessageElement> m = RR_MAKE_SHARED<MessageElement>();
+				RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement();
 				m->Read3(r, version_minor);
 				l.push_back(m);
 
 			}
-			dat = RR_MAKE_SHARED<MessageElementNamedArray>(ElementTypeName, l);
+			dat = CreateMessageElementNamedArray(ElementTypeName, l);
 			break;
 		}
 		case DataTypes_namedarray_multidimarray_t:
 		{
-			std::vector<RR_SHARED_PTR<MessageElement> > l;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > l;
 			for (size_t i = 0; i < DataCount; i++)
 			{
-				RR_SHARED_PTR<MessageElement> m = RR_MAKE_SHARED<MessageElement>();
+				RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement();
 				m->Read3(r, version_minor);
 				l.push_back(m);
 
 			}
-			dat = RR_MAKE_SHARED<MessageElementNamedMultiDimArray>(ElementTypeName, l);
+			dat = CreateMessageElementNamedMultiDimArray(ElementTypeName, l);
 			break;
 		}
 		default:
@@ -2426,9 +2426,9 @@ namespace RobotRaconteur
 		r.PopLimit();
 	}	
 
-	RR_SHARED_PTR<MessageElement> MessageElement::FindElement(std::vector<RR_SHARED_PTR<MessageElement> > &m, const std::string& name)
+	RR_INTRUSIVE_PTR<MessageElement> MessageElement::FindElement(std::vector<RR_INTRUSIVE_PTR<MessageElement> > &m, const std::string& name)
 	{
-		std::vector<RR_SHARED_PTR<MessageElement> >::iterator m1 = boost::find_if(m,
+		std::vector<RR_INTRUSIVE_PTR<MessageElement> >::iterator m1 = boost::find_if(m,
 			boost::bind(&MessageElement::ElementName, _1) == name);
 
 		if (m1 == m.end()) throw MessageElementNotFoundException("Element " + name + " not found.");
@@ -2436,9 +2436,9 @@ namespace RobotRaconteur
 		return *m1;
 	}
 
-	bool MessageElement::TryFindElement(std::vector<RR_SHARED_PTR<MessageElement> > &m, const std::string& name, RR_SHARED_PTR<MessageElement>& elem)
+	bool MessageElement::TryFindElement(std::vector<RR_INTRUSIVE_PTR<MessageElement> > &m, const std::string& name, RR_INTRUSIVE_PTR<MessageElement>& elem)
 	{
-		std::vector<RR_SHARED_PTR<MessageElement> >::iterator m1 = boost::find_if(m,
+		std::vector<RR_INTRUSIVE_PTR<MessageElement> >::iterator m1 = boost::find_if(m,
 			boost::bind(&MessageElement::ElementName, _1) == name);
 
 		if (m1 == m.end()) return false;
@@ -2448,9 +2448,9 @@ namespace RobotRaconteur
 
 	}
 
-	bool MessageElement::ContainsElement(std::vector<RR_SHARED_PTR<MessageElement> > &m, const std::string& name)
+	bool MessageElement::ContainsElement(std::vector<RR_INTRUSIVE_PTR<MessageElement> > &m, const std::string& name)
 	{
-		std::vector<RR_SHARED_PTR<MessageElement> >::iterator m1 = boost::find_if(m,
+		std::vector<RR_INTRUSIVE_PTR<MessageElement> >::iterator m1 = boost::find_if(m,
 			boost::bind(&MessageElement::ElementName, _1) == name);
 
 		if (m1 == m.end()) return false;
@@ -2460,60 +2460,120 @@ namespace RobotRaconteur
 
 	std::string MessageElement::CastDataToString()
 	{
-		RR_SHARED_PTR<RRArray<char> > datarr=CastData<RRArray<char> >();
+		RR_INTRUSIVE_PTR<RRArray<char> > datarr=CastData<RRArray<char> >();
 		return RRArrayToString(datarr);
 	}
 	
 
-	MessageElementStructure::MessageElementStructure(const std::string& type_, const std::vector<RR_SHARED_PTR<MessageElement> > &elements_)
+	MessageElementStructure::MessageElementStructure(const std::string& type_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_)
 	{
 		Elements = elements_;
 		Type = type_;
 	}
 
-	MessageElementMultiDimArray::MessageElementMultiDimArray(const std::vector<RR_SHARED_PTR<MessageElement> > &e)
+	MessageElementMultiDimArray::MessageElementMultiDimArray(const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &e)
 	{
 	   Elements = e;
 	}
 
-	MessageElementPod::MessageElementPod(const std::vector<RR_SHARED_PTR<MessageElement> > &elements_)
+	MessageElementPod::MessageElementPod(const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_)
 	{
 		Elements = elements_;
 	}
 
-	MessageElementPodArray::MessageElementPodArray(const std::string& type_, const std::vector<RR_SHARED_PTR<MessageElement> > &elements_)
-	{
-		Elements = elements_;
-		Type = type_;
-	}
-
-	MessageElementNamedMultiDimArray::MessageElementNamedMultiDimArray(const std::string& type_, const std::vector<RR_SHARED_PTR<MessageElement> > &elements_)
+	MessageElementPodArray::MessageElementPodArray(const std::string& type_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_)
 	{
 		Elements = elements_;
 		Type = type_;
 	}
 
-	MessageElementNamedArray::MessageElementNamedArray(const std::string& type_, const std::vector<RR_SHARED_PTR<MessageElement> > &elements_)
+	MessageElementNamedMultiDimArray::MessageElementNamedMultiDimArray(const std::string& type_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_)
 	{
 		Elements = elements_;
 		Type = type_;
 	}
 
-	MessageElementPodMultiDimArray::MessageElementPodMultiDimArray(const std::string& type_, const std::vector<RR_SHARED_PTR<MessageElement> > &elements_)
+	MessageElementNamedArray::MessageElementNamedArray(const std::string& type_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_)
 	{
 		Elements = elements_;
 		Type = type_;
 	}
 
-	RR_SHARED_PTR<Message> ShallowCopyMessage(RR_SHARED_PTR<Message> m)
+	MessageElementPodMultiDimArray::MessageElementPodMultiDimArray(const std::string& type_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_)
 	{
-		if (!m) return RR_SHARED_PTR<Message>();
+		Elements = elements_;
+		Type = type_;
+	}
 
-		RR_SHARED_PTR<Message> m2 = RR_MAKE_SHARED<Message>();
+
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<Message> CreateMessage()
+	{
+		return new Message();
+	}
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageHeader> CreateMessageHeader()
+	{
+		return new MessageHeader();
+	}
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageEntry> CreateMessageEntry()
+	{
+		return new MessageEntry();
+	}
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageEntry> CreateMessageEntry(MessageEntryType t, const std::string& n)
+	{
+		return new MessageEntry(t, n);
+	}
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElement> CreateMessageElement()
+	{
+		return new MessageElement();
+	}
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElement> CreateMessageElement(const std::string& name, RR_INTRUSIVE_PTR<MessageElementData> datin)
+	{
+		return new MessageElement(name, datin);
+	}
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementStructure> CreateMessageElementStructure(const std::string& type_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_)
+	{
+		return new MessageElementStructure(type_, elements_);
+	}
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementMultiDimArray> CreateMessageElementMultiDimArray(const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &e)
+	{
+		return new MessageElementMultiDimArray(e);
+	}
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementList> CreateMessageElementList(const std::vector<RR_INTRUSIVE_PTR<MessageElement> >& e)
+	{
+		return new MessageElementList(e);
+	}
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementPod> CreateMessageElementPod(const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_)
+	{
+		return new MessageElementPod(elements_);
+	}
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementPodArray> CreateMessageElementPodArray(const std::string& type_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_)
+	{
+		return new MessageElementPodArray(type_, elements_);
+	}
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> CreateMessageElementPodMultiDimArray(const std::string& type_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_)
+	{
+		return new MessageElementPodMultiDimArray(type_, elements_);
+	}
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNamedArray> CreateMessageElementNamedArray(const std::string& type_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_)
+	{
+		return new MessageElementNamedArray(type_, elements_);
+	}
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> CreateMessageElementNamedMultiDimArray(const std::string& type_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_)
+	{
+		return new MessageElementNamedMultiDimArray(type_, elements_);
+	}
+
+
+
+	RR_INTRUSIVE_PTR<Message> ShallowCopyMessage(RR_INTRUSIVE_PTR<Message> m)
+	{
+		if (!m) return RR_INTRUSIVE_PTR<Message>();
+
+		RR_INTRUSIVE_PTR<Message> m2 = CreateMessage();
 		if (m->header)
 		{
-			RR_SHARED_PTR<MessageHeader>& h = m->header;
-			RR_SHARED_PTR<MessageHeader> h2 = RR_MAKE_SHARED<MessageHeader>();
+			RR_INTRUSIVE_PTR<MessageHeader>& h = m->header;
+			RR_INTRUSIVE_PTR<MessageHeader> h2 = CreateMessageHeader();
 			h2->MessageSize = h->MessageSize;
 			h2->HeaderSize = h->HeaderSize;
 			h2->MessageFlags = h->MessageFlags;
@@ -2537,7 +2597,7 @@ namespace RobotRaconteur
 
 		}
 
-		BOOST_FOREACH(RR_SHARED_PTR<MessageEntry>& e, m->entries)
+		BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageEntry>& e, m->entries)
 		{
 			m2->entries.push_back(ShallowCopyMessageEntry(e));
 		}
@@ -2545,11 +2605,11 @@ namespace RobotRaconteur
 		return m2;
 	}
 
-	RR_SHARED_PTR<MessageEntry> ShallowCopyMessageEntry(RR_SHARED_PTR<MessageEntry> mm)
+	RR_INTRUSIVE_PTR<MessageEntry> ShallowCopyMessageEntry(RR_INTRUSIVE_PTR<MessageEntry> mm)
 	{
-		if (!mm) return RR_SHARED_PTR<MessageEntry>();
+		if (!mm) return RR_INTRUSIVE_PTR<MessageEntry>();
 
-		RR_SHARED_PTR<MessageEntry> mm2 = RR_MAKE_SHARED<MessageEntry>();
+		RR_INTRUSIVE_PTR<MessageEntry> mm2 = CreateMessageEntry();
 		mm2->EntrySize = mm->EntrySize;
 		mm2->EntryFlags = mm->EntryFlags;
 		mm2->EntryType = mm->EntryType;
@@ -2563,7 +2623,7 @@ namespace RobotRaconteur
 		mm2->MetaData = mm->MetaData;
 		mm2->EntryTimeSpec = mm->EntryTimeSpec;
 		
-		BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& e, mm->elements)
+		BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, mm->elements)
 		{
 			mm2->elements.push_back(ShallowCopyMessageElement(e));
 		}
@@ -2571,11 +2631,11 @@ namespace RobotRaconteur
 		return mm2;
 	}
 
-	RR_SHARED_PTR<MessageElement> ShallowCopyMessageElement(RR_SHARED_PTR<MessageElement> mm)
+	RR_INTRUSIVE_PTR<MessageElement> ShallowCopyMessageElement(RR_INTRUSIVE_PTR<MessageElement> mm)
 	{
-		if (!mm) return RR_SHARED_PTR<MessageElement>();
+		if (!mm) return RR_INTRUSIVE_PTR<MessageElement>();
 
-		RR_SHARED_PTR<MessageElement> mm2 = RR_MAKE_SHARED<MessageElement>();
+		RR_INTRUSIVE_PTR<MessageElement> mm2 = CreateMessageElement();
 		mm2->ElementSize = mm->ElementSize;
 		mm2->ElementFlags = mm->ElementFlags;
 		mm2->ElementName = mm->ElementName;
@@ -2593,70 +2653,70 @@ namespace RobotRaconteur
 
 		case DataTypes_structure_t:
 		{
-			RR_SHARED_PTR<MessageElementStructure> sdat = mm->CastData<MessageElementStructure>();
+			RR_INTRUSIVE_PTR<MessageElementStructure> sdat = mm->CastData<MessageElementStructure>();
 			if (sdat)
 			{
-				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& ee, sdat->Elements)
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
+				BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& ee, sdat->Elements)
 					v.push_back(ShallowCopyMessageElement(ee));
 
-				RR_SHARED_PTR<MessageElementStructure> sdat2 = RR_MAKE_SHARED<MessageElementStructure>(sdat->Type, v);
+				RR_INTRUSIVE_PTR<MessageElementStructure> sdat2 = CreateMessageElementStructure(sdat->Type, v);
 				mm2->SetData(sdat2);
 			}
 			break;
 		}
 		case DataTypes_vector_t:
 		{
-			RR_SHARED_PTR<MessageElementMap<int32_t> > vdat = mm->CastData<MessageElementMap<int32_t> >();
+			RR_INTRUSIVE_PTR<MessageElementMap<int32_t> > vdat = mm->CastData<MessageElementMap<int32_t> >();
 			if (vdat)
 			{
-				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& ee, vdat->Elements)
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
+				BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& ee, vdat->Elements)
 					v.push_back(ShallowCopyMessageElement(ee));
 
-				RR_SHARED_PTR<MessageElementMap<int32_t> > vdat2 = RR_MAKE_SHARED<MessageElementMap<int32_t> >(v);
+				RR_INTRUSIVE_PTR<MessageElementMap<int32_t> > vdat2 = CreateMessageElementMap<int32_t>(v);
 				mm2->SetData(vdat2);
 			}
 			break;
 		}
 		case DataTypes_dictionary_t:
 		{
-			RR_SHARED_PTR<MessageElementMap<std::string> > ddat = mm->CastData<MessageElementMap<std::string> >();
+			RR_INTRUSIVE_PTR<MessageElementMap<std::string> > ddat = mm->CastData<MessageElementMap<std::string> >();
 			if (ddat)
 			{
-				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& ee, ddat->Elements)
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
+				BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& ee, ddat->Elements)
 					v.push_back(ShallowCopyMessageElement(ee));
 
-				RR_SHARED_PTR<MessageElementMap<std::string> > ddat2 = RR_MAKE_SHARED<MessageElementMap<std::string> >(v);
+				RR_INTRUSIVE_PTR<MessageElementMap<std::string> > ddat2 = CreateMessageElementMap<std::string>(v);
 				mm2->SetData(ddat2);
 			}
 			break;
 		}
 		case DataTypes_multidimarray_t:
 		{
-			RR_SHARED_PTR<MessageElementMultiDimArray> mdat = mm->CastData<MessageElementMultiDimArray>();
+			RR_INTRUSIVE_PTR<MessageElementMultiDimArray> mdat = mm->CastData<MessageElementMultiDimArray>();
 			if (mdat)
 			{
-				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& ee, mdat->Elements)
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
+				BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& ee, mdat->Elements)
 					v.push_back(ShallowCopyMessageElement(ee));
 
-				RR_SHARED_PTR<MessageElementMultiDimArray> mdat2 = RR_MAKE_SHARED<MessageElementMultiDimArray>(v);
+				RR_INTRUSIVE_PTR<MessageElementMultiDimArray> mdat2 = CreateMessageElementMultiDimArray(v);
 				mm2->SetData(mdat2);
 			}
 			break;
 		}
 		case DataTypes_list_t:
 		{
-			RR_SHARED_PTR<MessageElementList> ddat = mm->CastData<MessageElementList>();
+			RR_INTRUSIVE_PTR<MessageElementList> ddat = mm->CastData<MessageElementList>();
 			if (ddat)
 			{
-				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& ee, ddat->Elements)
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
+				BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& ee, ddat->Elements)
 					v.push_back(ShallowCopyMessageElement(ee));
 
-				RR_SHARED_PTR<MessageElementList> mdat2 = RR_MAKE_SHARED<MessageElementList>(v);
+				RR_INTRUSIVE_PTR<MessageElementList> mdat2 = CreateMessageElementList(v);
 				mm2->SetData(mdat2);
 			}
 			break;

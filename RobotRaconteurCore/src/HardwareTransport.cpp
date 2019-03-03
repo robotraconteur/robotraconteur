@@ -440,7 +440,7 @@ namespace RobotRaconteur
 		}
 	}
 
-	void HardwareTransport::SendMessage(RR_SHARED_PTR<Message> m)
+	void HardwareTransport::SendMessage(RR_INTRUSIVE_PTR<Message> m)
 	{
 
 		RR_SHARED_PTR<ITransportConnection> t;		
@@ -486,7 +486,7 @@ namespace RobotRaconteur
 		}
 	}
 
-	void HardwareTransport::AsyncSendMessage(RR_SHARED_PTR<Message> m, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& handler)
+	void HardwareTransport::AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& handler)
 	{
 
 		RR_SHARED_PTR<ITransportConnection> t;		
@@ -500,7 +500,7 @@ namespace RobotRaconteur
 		t->AsyncSendMessage(m, handler);
 	}
 
-	void HardwareTransport::MessageReceived(RR_SHARED_PTR<Message> m)
+	void HardwareTransport::MessageReceived(RR_INTRUSIVE_PTR<Message> m)
 	{
 		GetNode()->MessageReceived(m);
 	}
@@ -776,13 +776,13 @@ namespace RobotRaconteur
 		ASIOStreamBaseTransport::AsyncAttachStream(server, target_nodeid, target_nodename, callback);
 	}
 
-	void HardwareTransportConnection::MessageReceived(RR_SHARED_PTR<Message> m)
+	void HardwareTransportConnection::MessageReceived(RR_INTRUSIVE_PTR<Message> m)
 	{
 
 		RR_SHARED_PTR<HardwareTransport> p = parent.lock();
 		if (!p) return;
 
-		RR_SHARED_PTR<Message> ret = p->SpecialRequest(m, shared_from_this());
+		RR_INTRUSIVE_PTR<Message> ret = p->SpecialRequest(m, shared_from_this());
 		if (ret != 0)
 		{
 			try

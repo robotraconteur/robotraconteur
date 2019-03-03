@@ -41,7 +41,7 @@ namespace RobotRaconteur
 
 			struct message_queue_entry
 			{
-				RR_SHARED_PTR<Message> message;
+				RR_INTRUSIVE_PTR<Message> message;
 				boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> callback;
 			};
 
@@ -189,25 +189,25 @@ namespace RobotRaconteur
 
 			virtual void AsyncAttachStream(bool server, const NodeID& target_nodeid, const std::string& target_nodename, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
 		public:
-			virtual void AsyncSendMessage(RR_SHARED_PTR<Message> m, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
-			virtual void SendMessage(RR_SHARED_PTR<Message> m);
+			virtual void AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+			virtual void SendMessage(RR_INTRUSIVE_PTR<Message> m);
 
 
 
 		protected:
 
-			void SimpleAsyncSendMessage(RR_SHARED_PTR<Message> m, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+			void SimpleAsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
 
 			void SimpleAsyncEndSendMessage(RR_SHARED_PTR<RobotRaconteurException> err);
 
 			virtual void AsyncAttachStream1(RR_SHARED_PTR<RRObject> parameter, RR_SHARED_PTR<RobotRaconteurException> err, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
 
 
-			virtual void BeginSendMessage(RR_SHARED_PTR<Message> m, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
-			virtual void BeginSendMessage1(RR_SHARED_PTR<Message> m, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+			virtual void BeginSendMessage(RR_INTRUSIVE_PTR<Message> m, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+			virtual void BeginSendMessage1(RR_INTRUSIVE_PTR<Message> m, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
 
 
-			virtual void EndSendMessage(size_t startpos, const boost::system::error_code& error, size_t bytes_transferred, RR_SHARED_PTR<Message> m, size_t m_len, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback, boost::shared_array<uint8_t> buf);
+			virtual void EndSendMessage(size_t startpos, const boost::system::error_code& error, size_t bytes_transferred, RR_INTRUSIVE_PTR<Message> m, size_t m_len, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback, boost::shared_array<uint8_t> buf);
 			virtual void EndSendMessage1();
 
 			virtual void EndSendMessage2(const boost::system::error_code& error, size_t bytes_transferred, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
@@ -230,7 +230,7 @@ namespace RobotRaconteur
 			virtual void EndReceiveMessage2(size_t startpos, const boost::system::error_code& error,
 				size_t bytes_transferred, size_t message_len, boost::shared_array<uint8_t> buf);
 
-			virtual void EndReceiveMessage3(RR_SHARED_PTR<Message> message);
+			virtual void EndReceiveMessage3(RR_INTRUSIVE_PTR<Message> message);
 			virtual void EndReceiveMessage4();
 
 			virtual void EndReceiveMessage5(const boost::system::error_code& error, size_t bytes_transferred);
@@ -245,7 +245,7 @@ namespace RobotRaconteur
 			boost::mutex heartbeat_timer_lock;
 
 		public:
-			virtual void MessageReceived(RR_SHARED_PTR<Message> m) = 0;
+			virtual void MessageReceived(RR_INTRUSIVE_PTR<Message> m) = 0;
 
 			virtual bool IsConnected();
 
@@ -261,7 +261,7 @@ namespace RobotRaconteur
 
 			static void CheckStreamCapability_timercallback(RR_WEAK_PTR<ASIOStreamBaseTransport> t, const boost::system::error_code& e);
 
-			void CheckStreamCapability_MessageReceived(RR_SHARED_PTR<Message> m);
+			void CheckStreamCapability_MessageReceived(RR_INTRUSIVE_PTR<Message> m);
 
 		public:
 
@@ -275,17 +275,17 @@ namespace RobotRaconteur
 
 			virtual void BeginStreamOp(const std::string &command, RR_SHARED_PTR<RRObject> args, boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)>&);
 
-			virtual RR_SHARED_PTR<MessageEntry> PackStreamOpRequest(const std::string &command, RR_SHARED_PTR<RRObject> args);
+			virtual RR_INTRUSIVE_PTR<MessageEntry> PackStreamOpRequest(const std::string &command, RR_SHARED_PTR<RRObject> args);
 
 			virtual void StreamOp_EndSendMessage(RR_SHARED_PTR<RobotRaconteurException> err);
 
 			static void StreamOp_timercallback(RR_WEAK_PTR<ASIOStreamBaseTransport> t, const boost::system::error_code& e);
 
-			virtual void StreamOpMessageReceived(RR_SHARED_PTR<Message> m);
+			virtual void StreamOpMessageReceived(RR_INTRUSIVE_PTR<Message> m);
 
-			virtual RR_SHARED_PTR<MessageEntry> ProcessStreamOpRequest(RR_SHARED_PTR<MessageEntry> request, RR_SHARED_PTR<MessageHeader> header);
+			virtual RR_INTRUSIVE_PTR<MessageEntry> ProcessStreamOpRequest(RR_INTRUSIVE_PTR<MessageEntry> request, RR_INTRUSIVE_PTR<MessageHeader> header);
 
-			virtual RR_SHARED_PTR<RRObject> UnpackStreamOpResponse(RR_SHARED_PTR<MessageEntry> response, RR_SHARED_PTR<MessageHeader> header);
+			virtual RR_SHARED_PTR<RRObject> UnpackStreamOpResponse(RR_INTRUSIVE_PTR<MessageEntry> response, RR_INTRUSIVE_PTR<MessageHeader> header);
 
 			virtual void async_write_some(const_buffers& b, boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler) = 0;
 
@@ -297,9 +297,9 @@ namespace RobotRaconteur
 
 			void UpdateStringTable();
 
-			void UpdateStringTable1(RR_SHARED_PTR<RobotRaconteurException> ret, RR_SHARED_PTR<Message> m);
+			void UpdateStringTable1(RR_SHARED_PTR<RobotRaconteurException> ret, RR_INTRUSIVE_PTR<Message> m);
 
-			void UpdateStringTable2(RR_SHARED_PTR<Message> m);
+			void UpdateStringTable2(RR_INTRUSIVE_PTR<Message> m);
 
 			void UpdateStringTable3(const boost::system::error_code& ec, RR_SHARED_PTR<boost::asio::deadline_timer> t, uint32_t request_id);
 

@@ -144,7 +144,8 @@ namespace RobotRaconteur
 			state_type state;
 			state_type pop_state;
 			size_t limit;
-			RR_SHARED_PTR<void> data;
+			RR_INTRUSIVE_PTR<RRValue> data;
+			void* ptrdata;
 			size_t param1;
 			size_t param2;
 
@@ -163,7 +164,7 @@ namespace RobotRaconteur
 
 		const_buffers other_bufs;
 		
-		std::queue<RR_SHARED_PTR<Message> > read_messages;
+		std::queue<RR_INTRUSIVE_PTR<Message> > read_messages;
 
 		size_t message_pos;		
 
@@ -181,7 +182,12 @@ namespace RobotRaconteur
 		{
 			return static_cast<T*>(state_stack.back().data.get());
 		}
-		
+		template<typename T>
+		T* ptrdata()
+		{
+			return static_cast<T*>(state_stack.back().ptrdata);
+		}
+
 		size_t& param1();
 		size_t& param2();
 
@@ -189,7 +195,8 @@ namespace RobotRaconteur
 		size_t distance_from_limit();
 
 		void pop_state();
-		void push_state(state_type new_state, state_type pop_state, size_t relative_limit, RR_SHARED_PTR<void> data, size_t param1 = 0, size_t param2 = 0);
+		void push_state(state_type new_state, state_type pop_state, size_t relative_limit, RR_INTRUSIVE_PTR<RRValue> data, size_t param1 = 0, size_t param2 = 0);
+		void push_state(state_type new_state, state_type pop_state, size_t relative_limit, void *ptrdata, size_t param1 = 0, size_t param2 = 0);
 				
 		void prepare_continue(const const_buffers& other_buf, size_t& other_bufs_used);
 
@@ -212,7 +219,7 @@ namespace RobotRaconteur
 		virtual return_type Read3(const const_buffers& other_bufs, size_t& other_bufs_used, size_t continue_read_len, mutable_buffers& next_continue_read_bufs);
 
 		virtual bool MessageReady();
-		virtual RR_SHARED_PTR<Message> GetNextMessage();
+		virtual RR_INTRUSIVE_PTR<Message> GetNextMessage();
 
 	};
 }

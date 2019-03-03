@@ -43,6 +43,8 @@
 #include <boost/range/adaptor/map.hpp>
 #include <boost/range/numeric.hpp>
 
+#include <boost/smart_ptr/intrusive_ref_counter.hpp>
+
 #pragma once
 
 #define RR_NULL_CHECK(ptr) {if (!ptr) throw NullValueException("Null pointer");}
@@ -91,6 +93,19 @@ namespace RobotRaconteur
 
 			return c;
 		}
+
+		static RR_INTRUSIVE_PTR<T> rr_cast(const RR_INTRUSIVE_PTR<U>& objin)
+		{
+			if (!objin) return RR_INTRUSIVE_PTR<T>();
+
+			RR_INTRUSIVE_PTR<T> c = RR_DYNAMIC_POINTER_CAST<T>(objin);
+			if (!c)
+			{
+				throw DataTypeMismatchException("Data type cast error");
+			}
+
+			return c;
+		}
 	};
 
 	template<typename T>
@@ -101,9 +116,19 @@ namespace RobotRaconteur
 		{			
 			return objin;
 		}
+
+		static const RR_INTRUSIVE_PTR<T>& rr_cast(const RR_INTRUSIVE_PTR<T>& objin)
+		{
+			return objin;
+		}
 	};
 
 	template<typename T, typename U> static RR_SHARED_PTR<T> rr_cast(const RR_SHARED_PTR<U>& objin)
+	{
+		return rr_cast_support<T, U>::rr_cast(objin);
+	}
+
+	template<typename T, typename U> static RR_INTRUSIVE_PTR<T> rr_cast(const RR_INTRUSIVE_PTR<U>& objin)
 	{
 		return rr_cast_support<T, U>::rr_cast(objin);
 	}
@@ -118,7 +143,7 @@ namespace RobotRaconteur
 		virtual std::string RRType()=0;
 	};
 
-	class ROBOTRACONTEUR_CORE_API RRValue : boost::noncopyable
+	class ROBOTRACONTEUR_CORE_API RRValue : public boost::intrusive_ref_counter<RRValue>, boost::noncopyable
 	{
 	public:
 		RRValue();
@@ -140,23 +165,23 @@ namespace RobotRaconteur
 	class RRArray;
 
 	template<typename T>
-	static RR_SHARED_PTR<RRArray<T> > ScalarToRRArray(T value);
+	static RR_INTRUSIVE_PTR<RRArray<T> > ScalarToRRArray(T value);
 
 	template<typename T>
-	static T RRArrayToScalar(RR_SHARED_PTR<RRArray<T> > value);
+	static T RRArrayToScalar(RR_INTRUSIVE_PTR<RRArray<T> > value);
 
 
-	ROBOTRACONTEUR_CORE_API RR_SHARED_PTR<RRArray<char> > stringToRRArray(const std::string& str);
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRArray<char> > stringToRRArray(const std::string& str);
 
-	ROBOTRACONTEUR_CORE_API std::string RRArrayToString(RR_SHARED_PTR<RRArray<char> > arr);
+	ROBOTRACONTEUR_CORE_API std::string RRArrayToString(RR_INTRUSIVE_PTR<RRArray<char> > arr);
 
 
 	
 
 #ifdef ROBOTRACONTEUR_USE_WSTRING
-	ROBOTRACONTEUR_CORE_API RR_SHARED_PTR<RRArray<char> > wstringToRRArray(const std::wstring& str);
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRArray<char> > wstringToRRArray(const std::wstring& str);
 
-	ROBOTRACONTEUR_CORE_API std::wstring RRArrayToWString(RR_SHARED_PTR<RRArray<char> > arr);
+	ROBOTRACONTEUR_CORE_API std::wstring RRArrayToWString(RR_INTRUSIVE_PTR<RRArray<char> > arr);
 
 	// Convert a wide Unicode string to an UTF8 string
 	ROBOTRACONTEUR_CORE_API std::string utf8_encode(const std::wstring &wstr);
@@ -171,17 +196,17 @@ namespace RobotRaconteur
 	public:
 		static DataTypes GetTypeID() {return DataTypes_void_t;} 		
 		
-		static RR_SHARED_PTR<T> PrePack(const T& val) {return val;} 
+		static RR_INTRUSIVE_PTR<T> PrePack(const T& val) {return val;} 
 		
 		template <typename U>
 		static T PreUnpack(U& val) {return rr_cast<T>(val);} 
 
 		virtual ~RRPrimUtil() {};
 
-		typedef RR_SHARED_PTR<RRValue> BoxedType;
+		typedef RR_INTRUSIVE_PTR<RRValue> BoxedType;
 	};
 	
-	template <typename T> class RRPrimUtil<RR_SHARED_PTR<T> >
+	template <typename T> class RRPrimUtil<RR_INTRUSIVE_PTR<T> >
 	{ 
 	public:
 		static DataTypes GetTypeID() {return DataTypes_void_t;}
@@ -189,14 +214,14 @@ namespace RobotRaconteur
 			return "";
 		}
 		
-		static RR_SHARED_PTR<RRValue> PrePack(const RR_SHARED_PTR<T>& val) {return rr_cast<RRValue>(val);}
+		static RR_INTRUSIVE_PTR<RRValue> PrePack(const RR_INTRUSIVE_PTR<T>& val) {return rr_cast<RRValue>(val);}
 		
 		template<typename U>
-		static RR_SHARED_PTR<T> PreUnpack(const U& val) {return rr_cast<T>(val);} 
+		static RR_INTRUSIVE_PTR<T> PreUnpack(const U& val) {return rr_cast<T>(val);} 
 		
 		virtual ~RRPrimUtil() {};
 
-		typedef RR_SHARED_PTR<T> BoxedType;
+		typedef RR_INTRUSIVE_PTR<T> BoxedType;
 	};
 
 	template<> class RRPrimUtil<std::string>
@@ -206,12 +231,12 @@ namespace RobotRaconteur
 		static std::string GetElementTypeString() {
 			return "";
 		}
-		static RR_SHARED_PTR<RRValue> PrePack(const std::string& val) {return rr_cast<RRValue>(stringToRRArray(val));} 
-		static std::string PreUnpack(RR_SHARED_PTR<RRValue> val) {return RRArrayToString(rr_cast<RRArray<char> >(val));} 
+		static RR_INTRUSIVE_PTR<RRValue> PrePack(const std::string& val) {return rr_cast<RRValue>(stringToRRArray(val));} 
+		static std::string PreUnpack(RR_INTRUSIVE_PTR<RRValue> val) {return RRArrayToString(rr_cast<RRArray<char> >(val));} 
 
 		virtual ~RRPrimUtil() {};
 
-		typedef RR_SHARED_PTR<RRArray<char> > BoxedType;
+		typedef RR_INTRUSIVE_PTR<RRArray<char> > BoxedType;
 
 	};
 
@@ -221,8 +246,8 @@ namespace RobotRaconteur
 	{
 	public:
 		static DataTypes GetTypeID() {return DataTypes_string_t;} 
-		static RR_SHARED_PTR<RRValue> PrePack(std::wstring val) {return rr_cast<RRValue>(wstringToRRArray(val));} 
-		static std::wstring PreUnpack(RR_SHARED_PTR<RRValue> val) {return RRArrayToWString(rr_cast<RRArray<char> >(val));} 
+		static RR_INTRUSIVE_PTR<RRValue> PrePack(std::wstring val) {return rr_cast<RRValue>(wstringToRRArray(val));} 
+		static std::wstring PreUnpack(RR_INTRUSIVE_PTR<RRValue> val) {return RRArrayToWString(rr_cast<RRArray<char> >(val));} 
 
 		typedef RR_SHARED_PTR<RRArary<wchar_t> > BoxedType;
 	};
@@ -234,10 +259,10 @@ namespace RobotRaconteur
 		public: \
 		static DataTypes GetTypeID() {return code;}  \
 		static std::string GetElementTypeString() {return ""; } \
-		static RR_SHARED_PTR<RRArray<x> > PrePack(const x& val) {return ScalarToRRArray(val);}\
+		static RR_INTRUSIVE_PTR<RRArray<x> > PrePack(const x& val) {return ScalarToRRArray(val);}\
 		template<typename U> \
 		static x PreUnpack(const U& val) {return RRArrayToScalar(rr_cast<RRArray<x> >(val));} \
-		typedef RR_SHARED_PTR<RRArray<x> > BoxedType; \
+		typedef RR_INTRUSIVE_PTR<RRArray<x> > BoxedType; \
 	};
 
 	RRPrimUtilNumeric(double,DataTypes_double_t);
@@ -475,13 +500,13 @@ namespace RobotRaconteur
 	class RRMap : public RRValue
 	{
 	protected:
-		std::map<K,RR_SHARED_PTR<T> > map;
+		std::map<K,RR_INTRUSIVE_PTR<T> > map;
 
 	public:
 
 		RRMap() {}
 
-		RRMap(std::map<K,RR_SHARED_PTR<T> > mapin)
+		RRMap(std::map<K,RR_INTRUSIVE_PTR<T> > mapin)
 		{
 			map=mapin;
 		}
@@ -497,18 +522,18 @@ namespace RobotRaconteur
 
 		// C++ container support based on boost::container::map
 
-		typedef typename std::map<K, RR_SHARED_PTR<T> >::key_type                   key_type;
-		typedef typename std::map<K, RR_SHARED_PTR<T> >::mapped_type                mapped_type;
-		typedef typename std::map<K, RR_SHARED_PTR<T> >::value_type                 value_type;
-		typedef typename std::map<K, RR_SHARED_PTR<T> >::pointer                    pointer;
-		typedef typename std::map<K, RR_SHARED_PTR<T> >::const_pointer              const_pointer;
-		typedef typename std::map<K, RR_SHARED_PTR<T> >::reference                  reference;
-		typedef typename std::map<K, RR_SHARED_PTR<T> >::const_reference            const_reference;
-		typedef typename std::map<K, RR_SHARED_PTR<T> >::size_type                  size_type;
-		typedef typename std::map<K, RR_SHARED_PTR<T> >::iterator                   iterator;
-		typedef typename std::map<K, RR_SHARED_PTR<T> >::const_iterator             const_iterator;
-		typedef typename std::map<K, RR_SHARED_PTR<T> >::reverse_iterator           reverse_iterator;
-		typedef typename std::map<K, RR_SHARED_PTR<T> >::const_reverse_iterator     const_reverse_iterator;
+		typedef typename std::map<K, RR_INTRUSIVE_PTR<T> >::key_type                   key_type;
+		typedef typename std::map<K, RR_INTRUSIVE_PTR<T> >::mapped_type                mapped_type;
+		typedef typename std::map<K, RR_INTRUSIVE_PTR<T> >::value_type                 value_type;
+		typedef typename std::map<K, RR_INTRUSIVE_PTR<T> >::pointer                    pointer;
+		typedef typename std::map<K, RR_INTRUSIVE_PTR<T> >::const_pointer              const_pointer;
+		typedef typename std::map<K, RR_INTRUSIVE_PTR<T> >::reference                  reference;
+		typedef typename std::map<K, RR_INTRUSIVE_PTR<T> >::const_reference            const_reference;
+		typedef typename std::map<K, RR_INTRUSIVE_PTR<T> >::size_type                  size_type;
+		typedef typename std::map<K, RR_INTRUSIVE_PTR<T> >::iterator                   iterator;
+		typedef typename std::map<K, RR_INTRUSIVE_PTR<T> >::const_iterator             const_iterator;
+		typedef typename std::map<K, RR_INTRUSIVE_PTR<T> >::reverse_iterator           reverse_iterator;
+		typedef typename std::map<K, RR_INTRUSIVE_PTR<T> >::const_reverse_iterator     const_reverse_iterator;
 
 		iterator begin() { return map.begin(); }
 		const_iterator begin() const { return map.begin(); }
@@ -537,7 +562,7 @@ namespace RobotRaconteur
 		size_type count(const key_type& x) const { return map.count(x); }
 
 		// WARNING: this may change, use with caution!
-		typename std::map<K, RR_SHARED_PTR<T> >& GetStorageContainer()
+		typename std::map<K, RR_INTRUSIVE_PTR<T> >& GetStorageContainer()
 		{
 			return map;
 		}
@@ -548,13 +573,13 @@ namespace RobotRaconteur
 	{
 	protected:
 
-		std::list<RR_SHARED_PTR<T> > list;
+		std::list<RR_INTRUSIVE_PTR<T> > list;
 
 	public:
 
 		RRList() {}
 
-		RRList(std::list<RR_SHARED_PTR<T> > listin)
+		RRList(std::list<RR_INTRUSIVE_PTR<T> > listin)
 		{
 			list=listin;
 		}
@@ -568,17 +593,17 @@ namespace RobotRaconteur
 
 		// C++ container support based on boost::container::list
 
-		typedef RR_SHARED_PTR<T>                                         value_type;
-		typedef typename std::list<RR_SHARED_PTR<T> >::pointer           pointer;
-		typedef typename std::list<RR_SHARED_PTR<T> >::const_pointer     const_pointer;
-		typedef typename std::list<RR_SHARED_PTR<T> >::reference         reference;
-		typedef typename std::list<RR_SHARED_PTR<T> >::const_reference   const_reference;
-		typedef typename std::list<RR_SHARED_PTR<T> >::size_type         size_type;
-		typedef typename std::list<RR_SHARED_PTR<T> >::difference_type   difference_type;
-		typedef typename std::list<RR_SHARED_PTR<T> >::iterator                   iterator;
-		typedef typename std::list<RR_SHARED_PTR<T> >::const_iterator             const_iterator;
-		typedef typename std::list<RR_SHARED_PTR<T> >::reverse_iterator           reverse_iterator;
-		typedef typename std::list<RR_SHARED_PTR<T> >::const_reverse_iterator     const_reverse_iterator;
+		typedef RR_INTRUSIVE_PTR<T>                                         value_type;
+		typedef typename std::list<RR_INTRUSIVE_PTR<T> >::pointer           pointer;
+		typedef typename std::list<RR_INTRUSIVE_PTR<T> >::const_pointer     const_pointer;
+		typedef typename std::list<RR_INTRUSIVE_PTR<T> >::reference         reference;
+		typedef typename std::list<RR_INTRUSIVE_PTR<T> >::const_reference   const_reference;
+		typedef typename std::list<RR_INTRUSIVE_PTR<T> >::size_type         size_type;
+		typedef typename std::list<RR_INTRUSIVE_PTR<T> >::difference_type   difference_type;
+		typedef typename std::list<RR_INTRUSIVE_PTR<T> >::iterator                   iterator;
+		typedef typename std::list<RR_INTRUSIVE_PTR<T> >::const_iterator             const_iterator;
+		typedef typename std::list<RR_INTRUSIVE_PTR<T> >::reverse_iterator           reverse_iterator;
+		typedef typename std::list<RR_INTRUSIVE_PTR<T> >::const_reverse_iterator     const_reverse_iterator;
 
 		iterator begin() { return list.begin(); }
 		const_iterator begin() const { return list.begin(); }
@@ -599,18 +624,18 @@ namespace RobotRaconteur
 		const_reference front() const { return list.front(); }
 		reference back() { return list.back(); }
 		const_reference back() const { return list.back(); }
-		void push_front(const RR_SHARED_PTR<T> &x) { list.push_front(x); }
-		void push_back(const RR_SHARED_PTR<T> &x) { list.push_back(x); }
+		void push_front(const RR_INTRUSIVE_PTR<T> &x) { list.push_front(x); }
+		void push_back(const RR_INTRUSIVE_PTR<T> &x) { list.push_back(x); }
 		void pop_front() { list.pop_front(); }
 		void pop_back() { list.pop_back(); }
-		iterator insert(const_iterator p, const RR_SHARED_PTR<T> &x) { list.insert(p, x); }
+		iterator insert(const_iterator p, const RR_INTRUSIVE_PTR<T> &x) { list.insert(p, x); }
 		iterator erase(const_iterator p) { list.erase(p); }
 		iterator erase(const_iterator first, const_iterator last) { list.erase(first, last); }
 		void clear() { list.clear(); }
-		void remove(const RR_SHARED_PTR<T>& value) { list.remove(value); }
+		void remove(const RR_INTRUSIVE_PTR<T>& value) { list.remove(value); }
 
 		// WARNING: this may change, use with caution!
-		typename std::list<RR_SHARED_PTR<T> >& GetStorageContainer()
+		typename std::list<RR_INTRUSIVE_PTR<T> >& GetStorageContainer()
 		{
 			return list;
 		}
@@ -625,32 +650,32 @@ namespace RobotRaconteur
 	};
 
 	template<typename T>
-	static RR_SHARED_PTR<RRArray<T> > AllocateRRArray(size_t length)
+	static RR_INTRUSIVE_PTR<RRArray<T> > AllocateRRArray(size_t length)
 	{
 		T* data=new T[length];
-		return RR_MAKE_SHARED<RRArray<T> >(data,length,true);	
+		return RR_INTRUSIVE_PTR<RRArray<T> >(new RRArray<T>(data,length,true));	
 	}
 
 	template<typename T>
-	static RR_SHARED_PTR<RRArray<T> > AttachRRArray(T* data,size_t length,bool owned)
+	static RR_INTRUSIVE_PTR<RRArray<T> > AttachRRArray(T* data,size_t length,bool owned)
 	{	
-		return RR_MAKE_SHARED<RRArray<T> >(data,length,owned);		
+		return RR_INTRUSIVE_PTR<RRArray<T> >(new RRArray<T>(data,length,owned));		
 	}
 
 	template<typename T>
-	static RR_SHARED_PTR<RRArray<T> > AttachRRArrayCopy(const T* data,const size_t length)
+	static RR_INTRUSIVE_PTR<RRArray<T> > AttachRRArrayCopy(const T* data,const size_t length)
 	{
 		T* data_copy=new T[length];
 		memcpy(data_copy,data,length*sizeof(T));
-		return RR_MAKE_SHARED<RRArray<T> >(data_copy,length,true);		
+		return RR_INTRUSIVE_PTR<RRArray<T> >(new RRArray<T>(data_copy,length,true));		
 	}
 
-	ROBOTRACONTEUR_CORE_API RR_SHARED_PTR<RRBaseArray> AllocateRRArrayByType(DataTypes type, size_t length);
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRBaseArray> AllocateRRArrayByType(DataTypes type, size_t length);
 
 	template<typename T>
-	static RR_SHARED_PTR<RRArray<T> > AllocateEmptyRRArray(size_t length)
+	static RR_INTRUSIVE_PTR<RRArray<T> > AllocateEmptyRRArray(size_t length)
 	{
-		RR_SHARED_PTR<RRArray<T> > o = AllocateRRArray<T>(length);
+		RR_INTRUSIVE_PTR<RRArray<T> > o = AllocateRRArray<T>(length);
 		if (length > 0)
 		{
 			memset(o->data(), 0, length * sizeof(T));
@@ -661,7 +686,7 @@ namespace RobotRaconteur
 	ROBOTRACONTEUR_CORE_API size_t RRArrayElementSize(DataTypes type);
     
     template<typename T>
-	static RR_SHARED_PTR<RRArray<T> > ScalarToRRArray(T value)
+	static RR_INTRUSIVE_PTR<RRArray<T> > ScalarToRRArray(T value)
 	{
 		T* data=new T[1];
 		data[0]=value;
@@ -669,7 +694,7 @@ namespace RobotRaconteur
 	}
     
 	template<typename T>
-	static T RRArrayToScalar(RR_SHARED_PTR<RRArray<T> > value)
+	static T RRArrayToScalar(RR_INTRUSIVE_PTR<RRArray<T> > value)
 	{
 		if (!value)
 		{
@@ -683,7 +708,7 @@ namespace RobotRaconteur
 	}
 
 	template <typename Y,typename U>
-	static std::vector<Y> RRArrayToVector(RR_SHARED_PTR<RRArray<U> > in)
+	static std::vector<Y> RRArrayToVector(RR_INTRUSIVE_PTR<RRArray<U> > in)
 	{
 		if (!in) throw NullValueException("Unexpected null array");
 		std::vector<Y> out(in->size());
@@ -692,15 +717,15 @@ namespace RobotRaconteur
 	}
 
 	template <typename Y,typename U>
-	static RR_SHARED_PTR<RRArray<Y> > VectorToRRArray(std::vector<U> in)
+	static RR_INTRUSIVE_PTR<RRArray<Y> > VectorToRRArray(std::vector<U> in)
 	{
-		RR_SHARED_PTR<RRArray<Y> > out=AllocateRRArray<Y>(in.size());
+		RR_INTRUSIVE_PTR<RRArray<Y> > out=AllocateRRArray<Y>(in.size());
 		for (size_t i=0; i<in.size(); i++) (*out)[i]=(Y)in[i];
 		return out;
 	}
 
 	template <typename Y,std::size_t N,typename U>
-	static boost::array<Y,N> RRArrayToArray(RR_SHARED_PTR<RRArray<U> > in)
+	static boost::array<Y,N> RRArrayToArray(RR_INTRUSIVE_PTR<RRArray<U> > in)
 	{
 		if (!in) throw NullValueException("Unexpected null array");
 		if (in->size()!=N) throw OutOfRangeException("Array is incorrect size");
@@ -710,7 +735,7 @@ namespace RobotRaconteur
 	}
 
 	template <typename Y, std::size_t N, typename U>
-	static void RRArrayToArray(boost::array<Y, N>& out, RR_SHARED_PTR<RRArray<U> > in)
+	static void RRArrayToArray(boost::array<Y, N>& out, RR_INTRUSIVE_PTR<RRArray<U> > in)
 	{
 		if (!in) throw NullValueException("Unexpected null array");
 		if (in->size() != N) throw OutOfRangeException("Array is incorrect size");		
@@ -718,15 +743,15 @@ namespace RobotRaconteur
 	}
 
 	template <typename Y, typename U,std::size_t N>
-	static RR_SHARED_PTR<RRArray<Y> > ArrayToRRArray(boost::array<U,N> in)
+	static RR_INTRUSIVE_PTR<RRArray<Y> > ArrayToRRArray(boost::array<U,N> in)
 	{
-		RR_SHARED_PTR<RRArray<Y> > out=AllocateRRArray<Y>(N);
+		RR_INTRUSIVE_PTR<RRArray<Y> > out=AllocateRRArray<Y>(N);
 		for (size_t i=0; i<N; i++) (*out)[i]=(Y)in[i];
 		return out;
 	}
 
 	template <typename Y, std::size_t N, typename U>
-	static boost::container::static_vector<Y, N> RRArrayToStaticVector(RR_SHARED_PTR<RRArray<U> > in)
+	static boost::container::static_vector<Y, N> RRArrayToStaticVector(RR_INTRUSIVE_PTR<RRArray<U> > in)
 	{
 		if (!in) throw NullValueException("Unexpected null array");
 		if (in->size() > N) throw OutOfRangeException("Array is too large for static vector size");
@@ -736,7 +761,7 @@ namespace RobotRaconteur
 	}
 
 	template <typename Y, std::size_t N, typename U>
-	static void RRArrayToStaticVector(boost::container::static_vector<Y, N>& out, RR_SHARED_PTR<RRArray<U> > in)
+	static void RRArrayToStaticVector(boost::container::static_vector<Y, N>& out, RR_INTRUSIVE_PTR<RRArray<U> > in)
 	{
 		if (!in) throw NullValueException("Unexpected null array");
 		if (in->size() > N) throw OutOfRangeException("Array is too large for static vector size");		
@@ -745,15 +770,15 @@ namespace RobotRaconteur
 	}
 
 	template <typename Y, typename U, std::size_t N>
-	static RR_SHARED_PTR<RRArray<Y> > StaticVectorToRRArray(boost::container::static_vector<U, N> in)
+	static RR_INTRUSIVE_PTR<RRArray<Y> > StaticVectorToRRArray(boost::container::static_vector<U, N> in)
 	{
-		RR_SHARED_PTR<RRArray<Y> > out = AllocateRRArray<Y>(in.size());
+		RR_INTRUSIVE_PTR<RRArray<Y> > out = AllocateRRArray<Y>(in.size());
 		for (size_t i = 0; i<in.size(); i++) (*out)[i] = (Y)in[i];
 		return out;
 	}
 
 	template<typename T>
-	static RR_SHARED_PTR<RRArray<T> > VerifyRRArrayLength(RR_SHARED_PTR<RRArray<T> > a, size_t len, bool varlength)
+	static RR_INTRUSIVE_PTR<RRArray<T> > VerifyRRArrayLength(RR_INTRUSIVE_PTR<RRArray<T> > a, size_t len, bool varlength)
 	{
 		if (!a) throw NullValueException("Arrays must not be null");
 		if (len != 0)
@@ -771,10 +796,10 @@ namespace RobotRaconteur
 	}
 
 	template<typename T>
-	static RR_SHARED_PTR<RRList<T> > VerifyRRArrayLength(RR_SHARED_PTR<RRList<T> > a, size_t len, bool varlength)
+	static RR_INTRUSIVE_PTR<RRList<T> > VerifyRRArrayLength(RR_INTRUSIVE_PTR<RRList<T> > a, size_t len, bool varlength)
 	{
 		if (!a) return a;
-		BOOST_FOREACH(RR_SHARED_PTR<T>& aa, (*a))
+		BOOST_FOREACH(RR_INTRUSIVE_PTR<T>& aa, (*a))
 		{
 			VerifyRRArrayLength(aa, len, varlength);
 		}
@@ -782,10 +807,10 @@ namespace RobotRaconteur
 	}
 
 	template<typename K, typename T>
-	static RR_SHARED_PTR<RRMap<K,T > > VerifyRRArrayLength(RR_SHARED_PTR<RRMap<K,T> > a, size_t len, bool varlength)
+	static RR_INTRUSIVE_PTR<RRMap<K,T > > VerifyRRArrayLength(RR_INTRUSIVE_PTR<RRMap<K,T> > a, size_t len, bool varlength)
 	{
 		if (!a) return a;
-		BOOST_FOREACH(RR_SHARED_PTR<T>& aa, *a | boost::adaptors::map_values)
+		BOOST_FOREACH(RR_INTRUSIVE_PTR<T>& aa, *a | boost::adaptors::map_values)
 		{
 			VerifyRRArrayLength(aa, len, varlength);
 		}
@@ -817,13 +842,13 @@ namespace RobotRaconteur
 	{
 	public:
 		
-		RR_SHARED_PTR<RRArray<uint32_t> > Dims;
+		RR_INTRUSIVE_PTR<RRArray<uint32_t> > Dims;
 				
-		RR_SHARED_PTR<RRArray<T> > Array;
+		RR_INTRUSIVE_PTR<RRArray<T> > Array;
 		
 		RRMultiDimArray() {};
 
-		RRMultiDimArray(RR_SHARED_PTR<RRArray<uint32_t> > Dims, RR_SHARED_PTR<RRArray<T> > Array)
+		RRMultiDimArray(RR_INTRUSIVE_PTR<RRArray<uint32_t> > Dims, RR_INTRUSIVE_PTR<RRArray<T> > Array)
 		{			
 			this->Dims = Dims;
 			this->Array = Array;
@@ -839,7 +864,7 @@ namespace RobotRaconteur
 			return "RobotRaconteur.RRMultiDimArray<" + stype + ">";
 		}
 
-		virtual void RetrieveSubArray(std::vector<uint32_t> memorypos, RR_SHARED_PTR<RRMultiDimArray<T> > buffer, std::vector<uint32_t> bufferpos, std::vector<uint32_t> count)
+		virtual void RetrieveSubArray(std::vector<uint32_t> memorypos, RR_INTRUSIVE_PTR<RRMultiDimArray<T> > buffer, std::vector<uint32_t> bufferpos, std::vector<uint32_t> count)
 		{
 						
 			std::vector<uint32_t> mema_dims = RRArrayToVector<uint32_t>(Dims);
@@ -857,7 +882,7 @@ namespace RobotRaconteur
 
 		}
 
-		virtual void AssignSubArray(std::vector<uint32_t> memorypos, RR_SHARED_PTR<RRMultiDimArray<T> > buffer, std::vector<uint32_t> bufferpos, std::vector<uint32_t> count)
+		virtual void AssignSubArray(std::vector<uint32_t> memorypos, RR_INTRUSIVE_PTR<RRMultiDimArray<T> > buffer, std::vector<uint32_t> bufferpos, std::vector<uint32_t> count)
 		{
 						
 			std::vector<uint32_t> mema_dims = RRArrayToVector<uint32_t>(Dims);
@@ -879,7 +904,7 @@ namespace RobotRaconteur
 	};
 
 	template<size_t Ndims, typename T>
-	static RR_SHARED_PTR<RRMultiDimArray<T> > VerifyRRMultiDimArrayLength(RR_SHARED_PTR<RRMultiDimArray<T> > a, size_t n_elems, boost::array<uint32_t,Ndims> dims)
+	static RR_INTRUSIVE_PTR<RRMultiDimArray<T> > VerifyRRMultiDimArrayLength(RR_INTRUSIVE_PTR<RRMultiDimArray<T> > a, size_t n_elems, boost::array<uint32_t,Ndims> dims)
 	{
 		if (!a) throw NullValueException("Arrays must not be null");
 
@@ -905,12 +930,12 @@ namespace RobotRaconteur
 	}
 
 	template<size_t Ndims, typename T>
-	static RR_SHARED_PTR<RRList<T> > VerifyRRMultiDimArrayLength(RR_SHARED_PTR<RRList<T> > a, size_t n_elems, boost::array<uint32_t, Ndims> dims)
+	static RR_INTRUSIVE_PTR<RRList<T> > VerifyRRMultiDimArrayLength(RR_INTRUSIVE_PTR<RRList<T> > a, size_t n_elems, boost::array<uint32_t, Ndims> dims)
 	{
 		if (!a) throw NullValueException("Arrays must not be null");
 		else
 		{
-			BOOST_FOREACH(RR_SHARED_PTR<T>& aa, (*a))
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<T>& aa, (*a))
 			{
 				VerifyRRMultiDimArrayLength<Ndims>(aa, n_elems, dims);
 			}
@@ -919,12 +944,12 @@ namespace RobotRaconteur
 	}
 
 	template<size_t Ndims, typename K, typename T>
-	static RR_SHARED_PTR<RRMap<K,T> > VerifyRRMultiDimArrayLength(RR_SHARED_PTR<RRMap<K,T> > a, size_t n_elems, boost::array<uint32_t, Ndims> dims)
+	static RR_INTRUSIVE_PTR<RRMap<K,T> > VerifyRRMultiDimArrayLength(RR_INTRUSIVE_PTR<RRMap<K,T> > a, size_t n_elems, boost::array<uint32_t, Ndims> dims)
 	{
 		if (!a) throw NullValueException("Arrays must not be null");
 		else
 		{
-			BOOST_FOREACH(RR_SHARED_PTR<T>& aa, *a | boost::adaptors::map_values)
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<T>& aa, *a | boost::adaptors::map_values)
 			{
 				VerifyRRMultiDimArrayLength<Ndims>(aa, n_elems, dims);
 			}
@@ -933,10 +958,48 @@ namespace RobotRaconteur
 	}
 
 	template<typename T>
-	static RR_SHARED_PTR<RRMultiDimArray<T> > AllocateEmptyRRMultiDimArray(std::vector<uint32_t> length)
+	static RR_INTRUSIVE_PTR<RRMultiDimArray<T> > AllocateEmptyRRMultiDimArray(std::vector<uint32_t> length)
 	{
 		uint32_t n_elems = boost::accumulate(length, 1, std::multiplies<uint32_t>());
-		return RR_MAKE_SHARED<RRMultiDimArray<T> >(VectorToRRArray<uint32_t>(length), AllocateEmptyRRArray<T>(n_elems));
+		return new RRMultiDimArray<T>(VectorToRRArray<uint32_t>(length), AllocateEmptyRRArray<T>(n_elems));
+	}
+
+	template<typename T>
+	static RR_INTRUSIVE_PTR<RRMultiDimArray<T> > AllocateEmptyRRMultiDimArray()
+	{
+		std::vector<uint32_t> length;
+		length.push_back(0);
+		return new RRMultiDimArray<T>(VectorToRRArray<uint32_t>(length), AllocateEmptyRRArray<T>(0));
+	}
+
+	template<typename T>
+	static RR_INTRUSIVE_PTR<RRMultiDimArray<T> > AllocateRRMultiDimArray(RR_INTRUSIVE_PTR<RRArray<uint32_t> > dims, RR_INTRUSIVE_PTR<RRArray<T> > array_)
+	{		
+		return new RRMultiDimArray<T>(dims, array_);
+	}
+
+	template<typename T>
+	RR_INTRUSIVE_PTR<RRList<T> > AllocateEmptyRRList()
+	{
+		return new RRList<T>();
+	}
+
+	template<typename T, typename U>
+	RR_INTRUSIVE_PTR<RRList<T> > AllocateRRList(const U& c)
+	{
+		return new RRList<T>(c);
+	}
+
+	template<typename K, typename T>
+	RR_INTRUSIVE_PTR<RRMap<K,T> > AllocateEmptyRRMap()
+	{
+		return new RRMap<K,T>();
+	}
+
+	template<typename K, typename T, typename U>
+	RR_INTRUSIVE_PTR<RRMap<K, T> > AllocateRRMap(const U& c)
+	{
+		return new RRMap<K, T>(c);
 	}
 
 	class ROBOTRACONTEUR_CORE_API RRPod
@@ -1038,16 +1101,16 @@ namespace RobotRaconteur
 		public: \
 		static DataTypes GetTypeID() {return DataTypes_pod_t;}  \
 		static std::string GetElementTypeString() {return type_string; } \
-		static RR_SHARED_PTR<RRPodArray<x> > PrePack(const x& val) {return ScalarToRRPodArray(val);}\
+		static RR_INTRUSIVE_PTR<RRPodArray<x> > PrePack(const x& val) {return ScalarToRRPodArray(val);}\
 		template<typename U> \
 		static x PreUnpack(const U& val) {return RRArrayToScalar(rr_cast<RRPodArray<x> >(val));} \
-		typedef RR_SHARED_PTR<RRPodArray<x> > BoxedType; \
+		typedef RR_INTRUSIVE_PTR<RRPodArray<x> > BoxedType; \
 	};
 
 	class RRPodBaseMultiDimArray : public RRValue
 	{
 	public:
-		RR_SHARED_PTR<RRArray<uint32_t> > Dims;
+		RR_INTRUSIVE_PTR<RRArray<uint32_t> > Dims;
 		virtual std::string RRElementTypeString() = 0;
 	};
 
@@ -1056,11 +1119,11 @@ namespace RobotRaconteur
 	{
 	public:
 		
-		typename RR_SHARED_PTR<RRPodArray<T> > PodArray;
+		typename RR_INTRUSIVE_PTR<RRPodArray<T> > PodArray;
 
 		RRPodMultiDimArray() {}
 
-		RRPodMultiDimArray(RR_SHARED_PTR<RRArray<uint32_t> > dims, RR_SHARED_PTR<RRPodArray<T> > a)
+		RRPodMultiDimArray(RR_INTRUSIVE_PTR<RRArray<uint32_t> > dims, RR_INTRUSIVE_PTR<RRPodArray<T> > a)
 		{
 			this->Dims = dims;
 			this->PodArray = a;
@@ -1078,7 +1141,7 @@ namespace RobotRaconteur
 			return RRPrimUtil<T>::GetElementTypeString();
 		}
 
-		virtual void RetrieveSubArray(std::vector<uint32_t> memorypos, RR_SHARED_PTR<RRPodMultiDimArray<T> > buffer, std::vector<uint32_t> bufferpos, std::vector<uint32_t> count)
+		virtual void RetrieveSubArray(std::vector<uint32_t> memorypos, RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > buffer, std::vector<uint32_t> bufferpos, std::vector<uint32_t> count)
 		{
 
 			std::vector<uint32_t> mema_dims = RRArrayToVector<uint32_t>(Dims);
@@ -1099,7 +1162,7 @@ namespace RobotRaconteur
 
 		}
 
-		virtual void AssignSubArray(std::vector<uint32_t> memorypos, RR_SHARED_PTR<RRPodMultiDimArray<T> > buffer, std::vector<uint32_t> bufferpos, std::vector<uint32_t> count)
+		virtual void AssignSubArray(std::vector<uint32_t> memorypos, RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > buffer, std::vector<uint32_t> bufferpos, std::vector<uint32_t> count)
 		{
 			
 			std::vector<uint32_t> mema_dims = RRArrayToVector<uint32_t>(Dims);
@@ -1122,13 +1185,13 @@ namespace RobotRaconteur
 	};
 
 	template<typename T>
-	static RR_SHARED_PTR<RRPodArray<T> > ScalarToRRPodArray(const T& value)
+	static RR_INTRUSIVE_PTR<RRPodArray<T> > ScalarToRRPodArray(const T& value)
 	{
-		return RR_MAKE_SHARED<RRPodArray<T> >(value);
+		return new RRPodArray<T>(value);
 	}
 
 	template<typename T>
-	static T RRPodArrayToScalar(RR_SHARED_PTR<RRPodArray<T> > value)
+	static T RRPodArrayToScalar(RR_INTRUSIVE_PTR<RRPodArray<T> > value)
 	{
 		if (!value)
 		{
@@ -1141,17 +1204,24 @@ namespace RobotRaconteur
 	}
 
 	template<typename T>
-	static RR_SHARED_PTR<RRPodArray<T> > AllocateEmptyRRPodArray(size_t length)
+	static RR_INTRUSIVE_PTR<RRPodArray<T> > AllocateEmptyRRPodArray(size_t length)
 	{
-		RR_SHARED_PTR<RRPodArray<T> > o = RR_MAKE_SHARED<RRPodArray<T> >(length);		
-		return o;
+		return new RRPodArray<T>(length);		
 	}
 
 	template<typename T>
-	static RR_SHARED_PTR<RRPodMultiDimArray<T> > AllocateEmptyRRPodMultiDimArray(std::vector<uint32_t> length)
+	static RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > AllocateEmptyRRPodMultiDimArray(std::vector<uint32_t> length)
 	{
 		uint32_t n_elems = boost::accumulate(length, 1, std::multiplies<uint32_t>());
-		return RR_MAKE_SHARED<RRPodMultiDimArray<T> >(VectorToRRArray<uint32_t>(length), AllocateEmptyRRPodArray<T>(n_elems));
+		return new RRPodMultiDimArray<T>(VectorToRRArray<uint32_t>(length), AllocateEmptyRRPodArray<T>(n_elems));
+	}
+
+	template<typename T>
+	static RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > AllocateEmptyRRPodMultiDimArray()
+	{
+		std::vector<uint32_t> length;
+		length.push_back(0);
+		return new RRPodMultiDimArray<T>(VectorToRRArray<uint32_t>(length), AllocateEmptyRRPodArray<T>(0));
 	}
 
 #define RRPrimUtilNamedArray(x,type_string,array_type) \
@@ -1160,10 +1230,10 @@ namespace RobotRaconteur
 		public: \
 		static DataTypes GetTypeID() {return DataTypes_pod_t;}  \
 		static std::string GetElementTypeString() {return type_string; } \
-		static RR_SHARED_PTR<RRNamedArray<x> > PrePack(const x& val) {return ScalarToRRNamedArray(val);}\
+		static RR_INTRUSIVE_PTR<RRNamedArray<x> > PrePack(const x& val) {return ScalarToRRNamedArray(val);}\
 		template<typename U> \
 		static x PreUnpack(const U& val) {return RRNamedArrayToScalar(rr_cast<RRNamedArray<x> >(val));} \
-		typedef RR_SHARED_PTR<RRNamedArray<x> > BoxedType; \
+		typedef RR_INTRUSIVE_PTR<RRNamedArray<x> > BoxedType; \
 		typedef array_type ElementArrayType; \
 		static const size_t ElementArrayCount = sizeof(x) / sizeof(array_type); \
 		static size_t GetElementArrayCount() {return ElementArrayCount;} \
@@ -1179,7 +1249,7 @@ namespace RobotRaconteur
 
 		virtual size_t ElementArrayCount() = 0;
 
-		virtual RR_SHARED_PTR<RRBaseArray> GetNumericBaseArray() = 0;
+		virtual RR_INTRUSIVE_PTR<RRBaseArray> GetNumericBaseArray() = 0;
 
 		virtual std::string RRElementTypeString() = 0;
 	};
@@ -1188,11 +1258,11 @@ namespace RobotRaconteur
 	class RRNamedArray : public RRNamedBaseArray
 	{	
 	protected:
-		RR_SHARED_PTR<RRArray<typename RRPrimUtil<T>::ElementArrayType> > rr_array;
+		RR_INTRUSIVE_PTR<RRArray<typename RRPrimUtil<T>::ElementArrayType> > rr_array;
 
 	public:
 
-		RRNamedArray(RR_SHARED_PTR<RRArray<typename RRPrimUtil<T>::ElementArrayType> > rr_array)
+		RRNamedArray(RR_INTRUSIVE_PTR<RRArray<typename RRPrimUtil<T>::ElementArrayType> > rr_array)
 		{
 			if (!rr_array) throw NullValueException("Numeric array for namedarray must not be null");
 			this->rr_array = rr_array;
@@ -1233,12 +1303,12 @@ namespace RobotRaconteur
 			return RRPrimUtil<T>::ElementArrayCount;
 		}
 
-		virtual RR_SHARED_PTR<RRArray<typename RRPrimUtil<T>::ElementArrayType> > GetNumericArray()
+		virtual RR_INTRUSIVE_PTR<RRArray<typename RRPrimUtil<T>::ElementArrayType> > GetNumericArray()
 		{
 			return rr_array;
 		}
 
-		virtual RR_SHARED_PTR<RRBaseArray> GetNumericBaseArray()
+		virtual RR_INTRUSIVE_PTR<RRBaseArray> GetNumericBaseArray()
 		{
 			return rr_array;
 		}
@@ -1344,7 +1414,7 @@ namespace RobotRaconteur
 	class RRNamedBaseMultiDimArray : public RRValue
 	{
 	public:
-		RR_SHARED_PTR<RRArray<uint32_t> > Dims;
+		RR_INTRUSIVE_PTR<RRArray<uint32_t> > Dims;
 		virtual std::string RRElementTypeString() = 0;
 	};
 
@@ -1353,11 +1423,11 @@ namespace RobotRaconteur
 	{
 	public:
 
-		typename RR_SHARED_PTR<RRNamedArray<T> > NamedArray;
+		typename RR_INTRUSIVE_PTR<RRNamedArray<T> > NamedArray;
 
 		RRNamedMultiDimArray() {}
 
-		RRNamedMultiDimArray(RR_SHARED_PTR<RRArray<uint32_t> > dims, RR_SHARED_PTR<RRNamedArray<T> > a)
+		RRNamedMultiDimArray(RR_INTRUSIVE_PTR<RRArray<uint32_t> > dims, RR_INTRUSIVE_PTR<RRNamedArray<T> > a)
 		{
 			this->Dims = dims;
 			this->NamedArray = a;
@@ -1375,7 +1445,7 @@ namespace RobotRaconteur
 			return RRPrimUtil<T>::GetElementTypeString();
 		}
 
-		virtual void RetrieveSubArray(std::vector<uint32_t> memorypos, RR_SHARED_PTR<RRNamedMultiDimArray<T> > buffer, std::vector<uint32_t> bufferpos, std::vector<uint32_t> count)
+		virtual void RetrieveSubArray(std::vector<uint32_t> memorypos, RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > buffer, std::vector<uint32_t> bufferpos, std::vector<uint32_t> count)
 		{
 
 			std::vector<uint32_t> mema_dims = RRArrayToVector<uint32_t>(Dims);
@@ -1396,7 +1466,7 @@ namespace RobotRaconteur
 
 		}
 
-		virtual void AssignSubArray(std::vector<uint32_t> memorypos, RR_SHARED_PTR<RRNamedMultiDimArray<T> > buffer, std::vector<uint32_t> bufferpos, std::vector<uint32_t> count)
+		virtual void AssignSubArray(std::vector<uint32_t> memorypos, RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > buffer, std::vector<uint32_t> bufferpos, std::vector<uint32_t> count)
 		{
 
 			std::vector<uint32_t> mema_dims = RRArrayToVector<uint32_t>(Dims);
@@ -1419,30 +1489,38 @@ namespace RobotRaconteur
 	};
 		
 	template<typename T>
-	static RR_SHARED_PTR<RRNamedArray<T> > AllocateEmptyRRNamedArray(size_t length)
+	static RR_INTRUSIVE_PTR<RRNamedArray<T> > AllocateEmptyRRNamedArray(size_t length)
 	{
 		typedef typename RRPrimUtil<T>::ElementArrayType a_type;
-		RR_SHARED_PTR<RRArray<a_type> > a = AllocateRRArray<a_type> (length * RRPrimUtil<T>::GetElementArrayCount());
-		return RR_MAKE_SHARED<RRNamedArray<T> >(a);		
+		RR_INTRUSIVE_PTR<RRArray<a_type> > a = AllocateRRArray<a_type> (length * RRPrimUtil<T>::GetElementArrayCount());
+		return new RRNamedArray<T>(a);		
 	}
 
 	template<typename T>
-	static RR_SHARED_PTR<RRNamedMultiDimArray<T> > AllocateEmptyRRNamedMultiDimArray(std::vector<uint32_t> length)
+	static RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > AllocateEmptyRRNamedMultiDimArray(std::vector<uint32_t> length)
 	{
 		uint32_t n_elems = boost::accumulate(length, 1, std::multiplies<uint32_t>());
-		return RR_MAKE_SHARED<RRNamedMultiDimArray<T> >(VectorToRRArray<uint32_t>(length), AllocateEmptyRRNamedArray<T>(n_elems));
+		return new RRNamedMultiDimArray<T>(VectorToRRArray<uint32_t>(length), AllocateEmptyRRNamedArray<T>(n_elems));
 	}
 
 	template<typename T>
-	static RR_SHARED_PTR<RRNamedArray<T> > ScalarToRRNamedArray(const T& value)
+	static RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > AllocateEmptyRRNamedMultiDimArray()
+	{		
+		std::vector<uint32_t> length;
+		length.push_back(0);
+		return new RRNamedMultiDimArray<T>(VectorToRRArray<uint32_t>(length), AllocateEmptyRRNamedArray<T>(0));
+	}
+
+	template<typename T>
+	static RR_INTRUSIVE_PTR<RRNamedArray<T> > ScalarToRRNamedArray(const T& value)
 	{
-		RR_SHARED_PTR<RRNamedArray<T> > a = AllocateEmptyRRNamedArray<T>(1);
+		RR_INTRUSIVE_PTR<RRNamedArray<T> > a = AllocateEmptyRRNamedArray<T>(1);
 		(*a)[0] = value;
 		return a;
 	}
 
 	template<typename T>
-	static T RRNamedArrayToScalar(RR_SHARED_PTR<RRNamedArray<T> > value)
+	static T RRNamedArrayToScalar(RR_INTRUSIVE_PTR<RRNamedArray<T> > value)
 	{
 		if (!value)
 		{

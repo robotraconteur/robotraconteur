@@ -29,17 +29,17 @@ namespace RobotRaconteur
 
 
 
-ROBOTRACONTEUR_CORE_API RR_SHARED_PTR<RRArray<char> > stringToRRArray(const std::string& str)
+ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRArray<char> > stringToRRArray(const std::string& str)
 {
 	size_t s=str.size();
-	RR_SHARED_PTR<RRArray<char> > ret=AllocateRRArray<char>(s);
+	RR_INTRUSIVE_PTR<RRArray<char> > ret=AllocateRRArray<char>(s);
 	memcpy(ret->data(),str.c_str(),s);
 	return ret;
 
 
 }
 
-ROBOTRACONTEUR_CORE_API std::string RRArrayToString(RR_SHARED_PTR<RRArray<char> > arr)
+ROBOTRACONTEUR_CORE_API std::string RRArrayToString(RR_INTRUSIVE_PTR<RRArray<char> > arr)
 {
 	if (!arr)
 	{
@@ -93,18 +93,18 @@ ROBOTRACONTEUR_CORE_API std::wstring utf8_decode(const std::string &str)
     return wstrTo;
 }
 
-ROBOTRACONTEUR_CORE_API RR_SHARED_PTR<RRArray<char> > wstringToRRArray(const std::wstring& str)
+ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRArray<char> > wstringToRRArray(const std::wstring& str)
 {
 	std::string str2=utf8_encode(str);
 	size_t s=str2.size();
-	RR_SHARED_PTR<RRArray<char> > ret=AllocateRRArray<char>(s);
+	RR_INTRUSIVE_PTR<RRArray<char> > ret=AllocateRRArray<char>(s);
 	memcpy(ret->ptr(),str.c_str(),s);
 	return ret;
 
 
 }
 
-ROBOTRACONTEUR_CORE_API std::wstring RRArrayToWString(RR_SHARED_PTR<RRArray<char> > arr)
+ROBOTRACONTEUR_CORE_API std::wstring RRArrayToWString(RR_INTRUSIVE_PTR<RRArray<char> > arr)
 {
 	if (!arr)
 	{
@@ -212,7 +212,7 @@ ROBOTRACONTEUR_CORE_API bool IsTypeNumeric(DataTypes type)
 
 }
 
-ROBOTRACONTEUR_CORE_API RR_SHARED_PTR<RRBaseArray> AllocateRRArrayByType(DataTypes type, size_t length)
+ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRBaseArray> AllocateRRArrayByType(DataTypes type, size_t length)
 {
 	switch (type)
 	{

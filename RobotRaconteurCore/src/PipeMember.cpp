@@ -154,7 +154,7 @@ void PipeEndpointBase::RemoteClose()
 		}
 }
 
-void PipeEndpointBase::AsyncSendPacketBase(RR_SHARED_PTR<RRValue> packet, RR_MOVE_ARG(boost::function<void(uint32_t,RR_SHARED_PTR<RobotRaconteurException>)>) handler)
+void PipeEndpointBase::AsyncSendPacketBase(RR_INTRUSIVE_PTR<RRValue> packet, RR_MOVE_ARG(boost::function<void(uint32_t,RR_SHARED_PTR<RobotRaconteurException>)>) handler)
 { 
 	if (direction == MemberDefinition_Direction_readonly)
 	{
@@ -172,9 +172,9 @@ void PipeEndpointBase::AsyncSendPacketBase(RR_SHARED_PTR<RRValue> packet, RR_MOV
 
 }
 
-RR_SHARED_PTR<RRValue> PipeEndpointBase::ReceivePacketBase()
+RR_INTRUSIVE_PTR<RRValue> PipeEndpointBase::ReceivePacketBase()
 {	
-	RR_SHARED_PTR<RRValue> o;
+	RR_INTRUSIVE_PTR<RRValue> o;
 	if (!TryReceivePacketBaseWait(o, 0))
 	{
 		throw InvalidOperationException("Pipe endpoint receive queue is empty");
@@ -182,9 +182,9 @@ RR_SHARED_PTR<RRValue> PipeEndpointBase::ReceivePacketBase()
 	return o;	
 }
 
-RR_SHARED_PTR<RRValue> PipeEndpointBase::PeekPacketBase()
+RR_INTRUSIVE_PTR<RRValue> PipeEndpointBase::PeekPacketBase()
 {
-	RR_SHARED_PTR<RRValue> o;
+	RR_INTRUSIVE_PTR<RRValue> o;
 	if (!TryReceivePacketBaseWait(o, 0, true))
 	{
 		throw InvalidOperationException("Pipe endpoint receive queue is empty");
@@ -192,18 +192,18 @@ RR_SHARED_PTR<RRValue> PipeEndpointBase::PeekPacketBase()
 	return o;
 }
 
-RR_SHARED_PTR<RRValue> PipeEndpointBase::ReceivePacketBaseWait(int32_t timeout)
+RR_INTRUSIVE_PTR<RRValue> PipeEndpointBase::ReceivePacketBaseWait(int32_t timeout)
 {
-	RR_SHARED_PTR<RRValue> o;
+	RR_INTRUSIVE_PTR<RRValue> o;
 	if (!TryReceivePacketBaseWait(o, timeout))
 	{
 		throw InvalidOperationException("Pipe endpoint receive queue is empty");
 	}
 	return o;
 }
-RR_SHARED_PTR<RRValue> PipeEndpointBase::PeekPacketBaseWait(int32_t timeout)
+RR_INTRUSIVE_PTR<RRValue> PipeEndpointBase::PeekPacketBaseWait(int32_t timeout)
 {
-	RR_SHARED_PTR<RRValue> o;
+	RR_INTRUSIVE_PTR<RRValue> o;
 	if (!TryReceivePacketBaseWait(o, timeout, true))
 	{
 		throw InvalidOperationException("Pipe endpoint receive queue is empty");
@@ -211,7 +211,7 @@ RR_SHARED_PTR<RRValue> PipeEndpointBase::PeekPacketBaseWait(int32_t timeout)
 	return o;
 }
 
-bool PipeEndpointBase::TryReceivePacketBaseWait(RR_SHARED_PTR<RRValue>& packet, int32_t timeout, bool peek)
+bool PipeEndpointBase::TryReceivePacketBaseWait(RR_INTRUSIVE_PTR<RRValue>& packet, int32_t timeout, bool peek)
 {
 	if (direction == MemberDefinition_Direction_writeonly)
 	{
@@ -249,16 +249,16 @@ bool PipeEndpointBase::TryReceivePacketBaseWait(RR_SHARED_PTR<RRValue>& packet, 
 
 }
 
-static bool PipeEndpointBase_PipePacketReceived_recvpacket(std::deque<RR_SHARED_PTR<RRValue> >& q, RR_SHARED_PTR<RRValue>& packet)
+static bool PipeEndpointBase_PipePacketReceived_recvpacket(std::deque<RR_INTRUSIVE_PTR<RRValue> >& q, RR_INTRUSIVE_PTR<RRValue>& packet)
 {
-	std::deque<RR_SHARED_PTR<RRValue> >::iterator e = q.begin();
+	std::deque<RR_INTRUSIVE_PTR<RRValue> >::iterator e = q.begin();
 	if (e == q.end()) return false;
 	packet = *e;
 	q.pop_front();
 	return true;
 }
 
-void PipeEndpointBase::PipePacketReceived(RR_SHARED_PTR<RRValue> packet, uint32_t packetnum)
+void PipeEndpointBase::PipePacketReceived(RR_INTRUSIVE_PTR<RRValue> packet, uint32_t packetnum)
 {	
 	if (direction == MemberDefinition_Direction_writeonly)
 	{
@@ -307,7 +307,7 @@ void PipeEndpointBase::PipePacketReceived(RR_SHARED_PTR<RRValue> packet, uint32_
 					while (out_of_order_packets.find(increment_packet_number(recv_packet_number))!= out_of_order_packets.end())
 					{
 						recv_packet_number = increment_packet_number(recv_packet_number);
-						RR_SHARED_PTR<RRValue> opacket = out_of_order_packets[recv_packet_number];
+						RR_INTRUSIVE_PTR<RRValue> opacket = out_of_order_packets[recv_packet_number];
 						recv_packets.push_back(opacket);
 						out_of_order_packets.erase(recv_packet_number);
 
@@ -418,7 +418,7 @@ void PipeEndpointBase::Shutdown()
 	}
 }
 
-void PipeBase::DispatchPacketAck (RR_SHARED_PTR<MessageElement> me, RR_SHARED_PTR<PipeEndpointBase> e)
+void PipeBase::DispatchPacketAck (RR_INTRUSIVE_PTR<MessageElement> me, RR_SHARED_PTR<PipeEndpointBase> e)
 {
 	uint32_t pnum;
 	if (me->ElementFlags & MessageElementFlags_SEQUENCE_NUMBER)
@@ -432,14 +432,14 @@ void PipeBase::DispatchPacketAck (RR_SHARED_PTR<MessageElement> me, RR_SHARED_PT
 	e->PipePacketAckReceived(pnum);
 }
 
-bool PipeBase::DispatchPacket(RR_SHARED_PTR<MessageElement> me, RR_SHARED_PTR<PipeEndpointBase> e, uint32_t& packetnumber)
+bool PipeBase::DispatchPacket(RR_INTRUSIVE_PTR<MessageElement> me, RR_SHARED_PTR<PipeEndpointBase> e, uint32_t& packetnumber)
 {
 	//int32_t index=boost::lexical_cast<int32_t>(me->ElementName);
 	if ((me->ElementFlags & MessageElementFlags_ELEMENT_NUMBER) && (me->ElementFlags & MessageElementFlags_SEQUENCE_NUMBER))
 	{
 		//Use message 3
 		packetnumber = me->SequenceNumber;
-		RR_SHARED_PTR<RRValue> data;
+		RR_INTRUSIVE_PTR<RRValue> data;
 		if (!rawelements)
 		{
 			data = UnpackData(me);
@@ -456,10 +456,10 @@ bool PipeBase::DispatchPacket(RR_SHARED_PTR<MessageElement> me, RR_SHARED_PTR<Pi
 	else
 	{
 		//Use message 2
-		RR_SHARED_PTR<MessageElementMap<std::string> > elems1 = me->CastData<MessageElementMap<std::string> >();
+		RR_INTRUSIVE_PTR<MessageElementMap<std::string> > elems1 = me->CastData<MessageElementMap<std::string> >();
 		packetnumber = RRArrayToScalar(MessageElement::FindElement(elems1->Elements, "packetnumber")->CastData<RRArray<uint32_t> >());
 
-		RR_SHARED_PTR<RRValue> data;
+		RR_INTRUSIVE_PTR<RRValue> data;
 		if (!rawelements)
 		{
 			data = UnpackData(MessageElement::FindElement(elems1->Elements, "packet"));
@@ -471,7 +471,7 @@ bool PipeBase::DispatchPacket(RR_SHARED_PTR<MessageElement> me, RR_SHARED_PTR<Pi
 
 		e->PipePacketReceived(data, packetnumber);
 
-		RR_SHARED_PTR<MessageElement> e;
+		RR_INTRUSIVE_PTR<MessageElement> e;
 		if (MessageElement::TryFindElement(elems1->Elements, "requestack", e))
 		{
 			return true;
@@ -482,21 +482,21 @@ bool PipeBase::DispatchPacket(RR_SHARED_PTR<MessageElement> me, RR_SHARED_PTR<Pi
 
 }
 
-RR_SHARED_PTR<MessageElement> PipeBase::PackPacket(RR_SHARED_PTR<RRValue> data, int32_t index, uint32_t packetnumber, bool requestack, bool message3)
+RR_INTRUSIVE_PTR<MessageElement> PipeBase::PackPacket(RR_INTRUSIVE_PTR<RRValue> data, int32_t index, uint32_t packetnumber, bool requestack, bool message3)
 {	
 	if (message3)
 	{
 		//Use message 3		
-		RR_SHARED_PTR<MessageElement> me;
+		RR_INTRUSIVE_PTR<MessageElement> me;
 		if (!rawelements)
 		{
-			me = RR_MAKE_SHARED<MessageElement>();
+			me = CreateMessageElement();
 			me->SetData(PackData(data));
 		}
 		else
 		{
-			me = RR_MAKE_SHARED<MessageElement>();
-			RR_SHARED_PTR<MessageElement> me2 = rr_cast<MessageElement>(data);
+			me = CreateMessageElement();
+			RR_INTRUSIVE_PTR<MessageElement> me2 = rr_cast<MessageElement>(data);
 			me->SetData(me2->GetData());
 		}
 
@@ -514,28 +514,28 @@ RR_SHARED_PTR<MessageElement> PipeBase::PackPacket(RR_SHARED_PTR<RRValue> data, 
 	else
 	{
 		//Use message 2
-		std::vector<RR_SHARED_PTR<MessageElement> > elems;
-		elems.push_back(RR_MAKE_SHARED<MessageElement>("packetnumber", ScalarToRRArray(packetnumber)));
+		std::vector<RR_INTRUSIVE_PTR<MessageElement> > elems;
+		elems.push_back(CreateMessageElement("packetnumber", ScalarToRRArray(packetnumber)));
 
 		if (!rawelements)
 		{
-			RR_SHARED_PTR<MessageElementData> pdata = PackData(data);
-			elems.push_back(RR_MAKE_SHARED<MessageElement>("packet", pdata));
+			RR_INTRUSIVE_PTR<MessageElementData> pdata = PackData(data);
+			elems.push_back(CreateMessageElement("packet", pdata));
 		}
 		else
 		{
-			RR_SHARED_PTR<MessageElement> pme = rr_cast<MessageElement>(data);
+			RR_INTRUSIVE_PTR<MessageElement> pme = rr_cast<MessageElement>(data);
 			pme->ElementName = "packet";
 			elems.push_back(pme);
 		}
 
 		if (requestack)
 		{
-			elems.push_back(RR_MAKE_SHARED<MessageElement>("requestack", ScalarToRRArray((uint32_t)1)));
+			elems.push_back(CreateMessageElement("requestack", ScalarToRRArray((uint32_t)1)));
 		}
 
-		RR_SHARED_PTR<MessageElementMap<std::string> > delems = RR_MAKE_SHARED<MessageElementMap<std::string> >(elems);
-		RR_SHARED_PTR<MessageElement> me = RR_MAKE_SHARED<MessageElement>(boost::lexical_cast<std::string>(index), delems);
+		RR_INTRUSIVE_PTR<MessageElementMap<std::string> > delems = CreateMessageElementMap<std::string>(elems);
+		RR_INTRUSIVE_PTR<MessageElement> me = CreateMessageElement(boost::lexical_cast<std::string>(index), delems);
 
 		return me;
 	}
@@ -564,7 +564,7 @@ std::string PipeClientBase::GetMemberName()
 	return m_MemberName;
 }
 
-void PipeClientBase::PipePacketReceived(RR_SHARED_PTR<MessageEntry> m, uint32_t e)
+void PipeClientBase::PipePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e)
 {
 	//boost::shared_lock<boost::shared_mutex> lock(stub_lock);
 	
@@ -607,8 +607,8 @@ void PipeClientBase::PipePacketReceived(RR_SHARED_PTR<MessageEntry> m, uint32_t 
 
 	else if (m->EntryType == MessageEntryType_PipePacket)
 	{
-		std::vector<RR_SHARED_PTR<MessageElement> > ack;;
-		BOOST_FOREACH (RR_SHARED_PTR<MessageElement>& me, m->elements)
+		std::vector<RR_INTRUSIVE_PTR<MessageElement> > ack;;
+		BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& me, m->elements)
 		{
 			try
 			{				
@@ -665,7 +665,7 @@ void PipeClientBase::PipePacketReceived(RR_SHARED_PTR<MessageEntry> m, uint32_t 
 				{		
 					if (me->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
 					{
-						RR_SHARED_PTR<MessageElement> me1 = RR_MAKE_SHARED<MessageElement>();
+						RR_INTRUSIVE_PTR<MessageElement> me1 = CreateMessageElement();
 						me1->SequenceNumber=((uint32_t)pnum);
 						me1->ElementNumber = me->ElementNumber;
 						me1->ElementFlags = MessageElementFlags_ELEMENT_NUMBER | MessageElementFlags_SEQUENCE_NUMBER;
@@ -673,7 +673,7 @@ void PipeClientBase::PipePacketReceived(RR_SHARED_PTR<MessageEntry> m, uint32_t 
 					}
 					else
 					{
-						ack.push_back(RR_MAKE_SHARED<MessageElement>(me->ElementName, ScalarToRRArray((uint32_t)pnum)));
+						ack.push_back(CreateMessageElement(me->ElementName, ScalarToRRArray((uint32_t)pnum)));
 					}
 				}
 			}
@@ -688,7 +688,7 @@ void PipeClientBase::PipePacketReceived(RR_SHARED_PTR<MessageEntry> m, uint32_t 
 		{
 			if (ack.size() > 0)
 			{				
-				RR_SHARED_PTR<MessageEntry> mack = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_PipePacketRet, m->MemberName);
+				RR_INTRUSIVE_PTR<MessageEntry> mack = CreateMessageEntry(MessageEntryType_PipePacketRet, m->MemberName);
 				mack->elements = ack;
 				if (!(ack.at(0)->ElementFlags & MessageElementFlags_ELEMENT_NUMBER))
 				{
@@ -714,7 +714,7 @@ void PipeClientBase::PipePacketReceived(RR_SHARED_PTR<MessageEntry> m, uint32_t 
 		{
 			
 
-			BOOST_FOREACH (RR_SHARED_PTR<MessageElement>& me, m->elements)
+			BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& me, m->elements)
 			{
 				int32_t index;
 				if (me->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
@@ -768,10 +768,10 @@ void PipeClientBase::Shutdown()
 	//stub.reset();
 }
 		
-void PipeClientBase::AsyncSendPipePacket(RR_SHARED_PTR<RRValue> data, int32_t index, uint32_t packetnumber, bool requestack, uint32_t endpoint, bool unreliable, bool message3, RR_MOVE_ARG(boost::function<void(uint32_t,RR_SHARED_PTR<RobotRaconteurException>)>) handler)
+void PipeClientBase::AsyncSendPipePacket(RR_INTRUSIVE_PTR<RRValue> data, int32_t index, uint32_t packetnumber, bool requestack, uint32_t endpoint, bool unreliable, bool message3, RR_MOVE_ARG(boost::function<void(uint32_t,RR_SHARED_PTR<RobotRaconteurException>)>) handler)
 {	
-	RR_SHARED_PTR<MessageElement> me = PackPacket(data, index, packetnumber, requestack, message3);
-	RR_SHARED_PTR<MessageEntry> m = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_PipePacket, GetMemberName());
+	RR_INTRUSIVE_PTR<MessageElement> me = PackPacket(data, index, packetnumber, requestack, message3);
+	RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_PipePacket, GetMemberName());
 	m->AddElement(me);
 	if (!message3)
 	{
@@ -787,7 +787,7 @@ void PipeClientBase::AsyncClose(RR_SHARED_PTR<PipeEndpointBase> endpoint, bool r
 	
 	if (!remote)
 	{
-	RR_SHARED_PTR<MessageEntry> m = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_PipeDisconnectReq, GetMemberName());
+	RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_PipeDisconnectReq, GetMemberName());
 	m->AddElement("index", ScalarToRRArray(endpoint->GetIndex()));
 	GetStub()->AsyncProcessRequest(m,boost::bind(handler,_2),timeout);
 	}
@@ -804,7 +804,7 @@ void PipeClientBase::AsyncConnect_internal(int32_t index, RR_MOVE_ARG(boost::fun
 	boost::tuple<int, int> entry = boost::make_tuple(key, index);
 	connecting_endpoints.push_back(entry);
 
-	RR_SHARED_PTR<MessageEntry> m = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_PipeConnectReq, GetMemberName());
+	RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_PipeConnectReq, GetMemberName());
 	m->AddElement("index", ScalarToRRArray(index));
 
 	if (unreliable)
@@ -814,7 +814,7 @@ void PipeClientBase::AsyncConnect_internal(int32_t index, RR_MOVE_ARG(boost::fun
 	GetStub()->AsyncProcessRequest(m,boost::bind(&PipeClientBase::AsyncConnect_internal1, RR_DYNAMIC_POINTER_CAST<PipeClientBase>(shared_from_this()),_1,_2,index,key,handler),timeout);
 }
 
-void PipeClientBase::AsyncConnect_internal1(RR_SHARED_PTR<MessageEntry> ret, RR_SHARED_PTR<RobotRaconteurException> err, int32_t index, int32_t key, boost::function<void (RR_SHARED_PTR<PipeEndpointBase>,RR_SHARED_PTR<RobotRaconteurException>)>& handler)
+void PipeClientBase::AsyncConnect_internal1(RR_INTRUSIVE_PTR<MessageEntry> ret, RR_SHARED_PTR<RobotRaconteurException> err, int32_t index, int32_t key, boost::function<void (RR_SHARED_PTR<PipeEndpointBase>,RR_SHARED_PTR<RobotRaconteurException>)>& handler)
 {
 	boost::mutex::scoped_lock lock2(pipeendpoints_lock);
 
@@ -953,15 +953,15 @@ std::string PipeServerBase::GetMemberName()
 	return m_MemberName;
 }
 
-void PipeServerBase::PipePacketReceived(RR_SHARED_PTR<MessageEntry> m, uint32_t e)
+void PipeServerBase::PipePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e)
 {
 	//boost::shared_lock<boost::shared_mutex> lock2(skel_lock);
 	
 	if (m->EntryType == MessageEntryType_PipePacket)
 	{
 		
-		std::vector<RR_SHARED_PTR<MessageElement> > ack;
-		BOOST_FOREACH (RR_SHARED_PTR<MessageElement>& me, m->elements)
+		std::vector<RR_INTRUSIVE_PTR<MessageElement> > ack;
+		BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& me, m->elements)
 		{
 			try
 			{
@@ -987,7 +987,7 @@ void PipeServerBase::PipePacketReceived(RR_SHARED_PTR<MessageEntry> m, uint32_t 
 				{					
 					if (me->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
 					{
-						RR_SHARED_PTR<MessageElement> me1 = RR_MAKE_SHARED<MessageElement>();
+						RR_INTRUSIVE_PTR<MessageElement> me1 = CreateMessageElement();
 						me1->SequenceNumber = ((uint32_t)pnum);
 						me1->ElementNumber = me->ElementNumber;
 						me1->ElementFlags = MessageElementFlags_ELEMENT_NUMBER | MessageElementFlags_SEQUENCE_NUMBER;
@@ -995,7 +995,7 @@ void PipeServerBase::PipePacketReceived(RR_SHARED_PTR<MessageEntry> m, uint32_t 
 					}
 					else
 					{
-						ack.push_back(RR_MAKE_SHARED<MessageElement>(me->ElementName, ScalarToRRArray((uint32_t)pnum)));
+						ack.push_back(CreateMessageElement(me->ElementName, ScalarToRRArray((uint32_t)pnum)));
 					}
 				}
 
@@ -1011,7 +1011,7 @@ void PipeServerBase::PipePacketReceived(RR_SHARED_PTR<MessageEntry> m, uint32_t 
 		{
 			if (ack.size() > 0)
 			{				
-				RR_SHARED_PTR<MessageEntry> mack = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_PipePacketRet, m->MemberName);
+				RR_INTRUSIVE_PTR<MessageEntry> mack = CreateMessageEntry(MessageEntryType_PipePacketRet, m->MemberName);
 				mack->elements = ack;
 				if (!(ack.at(0)->ElementFlags & MessageElementFlags_ELEMENT_NUMBER))
 				{
@@ -1034,7 +1034,7 @@ void PipeServerBase::PipePacketReceived(RR_SHARED_PTR<MessageEntry> m, uint32_t 
 		
 		try
 		{
-			BOOST_FOREACH (RR_SHARED_PTR<MessageElement>& me, m->elements)
+			BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& me, m->elements)
 			{
 				int32_t index;
 				if (me->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
@@ -1083,7 +1083,7 @@ void PipeServerBase::Shutdown()
 				try
 				{
 
-					RR_SHARED_PTR<MessageEntry> m = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_PipeClosed, GetMemberName());
+					RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_PipeClosed, GetMemberName());
 					m->AddElement("index", ScalarToRRArray(e->GetIndex()));
 					GetSkel()->AsyncSendPipeMessage(m, e->GetEndpoint(), false, boost::bind(&PipeMember_empty_handler,_1));
 				}
@@ -1114,7 +1114,7 @@ void PipeServerBase::Shutdown()
 
 }
 
-void PipeServerBase::AsyncSendPipePacket(RR_SHARED_PTR<RRValue> data, int32_t index, uint32_t packetnumber, bool requestack, uint32_t e, bool unreliable, bool message3, RR_MOVE_ARG(boost::function<void(uint32_t,RR_SHARED_PTR<RobotRaconteurException>)>) handler)
+void PipeServerBase::AsyncSendPipePacket(RR_INTRUSIVE_PTR<RRValue> data, int32_t index, uint32_t packetnumber, bool requestack, uint32_t e, bool unreliable, bool message3, RR_MOVE_ARG(boost::function<void(uint32_t,RR_SHARED_PTR<RobotRaconteurException>)>) handler)
 {
 	
 	
@@ -1125,8 +1125,8 @@ void PipeServerBase::AsyncSendPipePacket(RR_SHARED_PTR<RRValue> data, int32_t in
 		throw InvalidOperationException("Pipe has been disconnect");
 	}
 
-	RR_SHARED_PTR<MessageElement> me = PackPacket(data, index, packetnumber, requestack, message3);
-	RR_SHARED_PTR<MessageEntry> m = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_PipePacket, GetMemberName());
+	RR_INTRUSIVE_PTR<MessageElement> me = PackPacket(data, index, packetnumber, requestack, message3);
+	RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_PipePacket, GetMemberName());
 	m->AddElement(me);
 
 	if (!message3)
@@ -1143,7 +1143,7 @@ void PipeServerBase::AsyncClose(RR_SHARED_PTR<PipeEndpointBase> e, bool remote, 
 	
 	if (!remote)
 	{
-	RR_SHARED_PTR<MessageEntry> m = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_PipeClosed, GetMemberName());
+	RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_PipeClosed, GetMemberName());
 	m->AddElement("index", ScalarToRRArray(e->GetIndex()));
 	GetSkel()->AsyncSendPipeMessage(m, ee, false, boost::bind(&PipeMember_empty_handler,_1));
 	}
@@ -1213,7 +1213,7 @@ void pipe_server_client_disconnected(RR_SHARED_PTR<ServerContext> context, Serve
 }
 
 
-RR_SHARED_PTR<MessageEntry> PipeServerBase::PipeCommand(RR_SHARED_PTR<MessageEntry> m, uint32_t e)
+RR_INTRUSIVE_PTR<MessageEntry> PipeServerBase::PipeCommand(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e)
 {
 	{
 		boost::mutex::scoped_lock lock(pipeendpoints_lock);
@@ -1251,7 +1251,7 @@ RR_SHARED_PTR<MessageEntry> PipeServerBase::PipeCommand(RR_SHARED_PTR<MessageEnt
 
 					bool isunreliable=false;
 
-					RR_SHARED_PTR<MessageEntry> ret = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_PipeConnectRet, GetMemberName());
+					RR_INTRUSIVE_PTR<MessageEntry> ret = CreateMessageEntry(MessageEntryType_PipeConnectRet, GetMemberName());
 					ret->AddElement("index", ScalarToRRArray(index));
 
 					if (unreliable)
@@ -1300,7 +1300,7 @@ RR_SHARED_PTR<MessageEntry> PipeServerBase::PipeCommand(RR_SHARED_PTR<MessageEnt
 					ee->RemoteClose();
 					//ep.erase(index);
 
-					return RR_MAKE_SHARED<MessageEntry>(MessageEntryType_PipeDisconnectRet, GetMemberName());
+					return CreateMessageEntry(MessageEntryType_PipeDisconnectRet, GetMemberName());
 			}
 			default:
 				throw InvalidOperationException("Invalid Command");
@@ -1454,14 +1454,14 @@ void PipeBroadcasterBase::handle_send(int32_t id, RR_SHARED_PTR<RobotRaconteurEx
 
 }
 
-void PipeBroadcasterBase::SendPacketBase(RR_SHARED_PTR<RRValue> packet)
+void PipeBroadcasterBase::SendPacketBase(RR_INTRUSIVE_PTR<RRValue> packet)
 {
 	RR_SHARED_PTR<detail::sync_async_handler<void> > t = RR_MAKE_SHARED<detail::sync_async_handler<void> >();
 	AsyncSendPacketBase(packet, boost::bind(&detail::sync_async_handler<void>::operator(), t));
 	t->end_void();
 }
 
-void PipeBroadcasterBase::AsyncSendPacketBase(RR_SHARED_PTR<RRValue> packet, RR_MOVE_ARG(boost::function<void()>) handler)
+void PipeBroadcasterBase::AsyncSendPacketBase(RR_INTRUSIVE_PTR<RRValue> packet, RR_MOVE_ARG(boost::function<void()>) handler)
 {
 
 	boost::mutex::scoped_lock lock(endpoints_lock);
@@ -1509,7 +1509,7 @@ void PipeBroadcasterBase::AsyncSendPacketBase(RR_SHARED_PTR<RRValue> packet, RR_
 			}
 			else
 			{
-				RR_SHARED_PTR<MessageElement> packet2 = ShallowCopyMessageElement(rr_cast<MessageElement>(packet));
+				RR_INTRUSIVE_PTR<MessageElement> packet2 = ShallowCopyMessageElement(rr_cast<MessageElement>(packet));
 				ep->AsyncSendPacketBase(packet2, boost::bind(&PipeBroadcasterBase::handle_send, this->shared_from_this(), _1, _2, *ee2, op, count, send_key, handler));
 			}
 			op->keys.push_back(count);

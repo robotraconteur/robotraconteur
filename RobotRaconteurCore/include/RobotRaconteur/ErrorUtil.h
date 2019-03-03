@@ -23,11 +23,11 @@ namespace RobotRaconteur
 	class ROBOTRACONTEUR_CORE_API RobotRaconteurExceptionUtil
 	{
 	public:
-		static void ExceptionToMessageEntry(std::exception &exception, RR_SHARED_PTR<MessageEntry> entry);
+		static void ExceptionToMessageEntry(std::exception &exception, RR_INTRUSIVE_PTR<MessageEntry> entry);
 
-		static RR_SHARED_PTR<RobotRaconteurException> MessageEntryToException(RR_SHARED_PTR<MessageEntry> entry);
+		static RR_SHARED_PTR<RobotRaconteurException> MessageEntryToException(RR_INTRUSIVE_PTR<MessageEntry> entry);
 
-		static void ThrowMessageEntryException(RR_SHARED_PTR<MessageEntry> entry);
+		static void ThrowMessageEntryException(RR_INTRUSIVE_PTR<MessageEntry> entry);
 
 		static RR_SHARED_PTR<RobotRaconteurException> DownCastException(RobotRaconteurException& err);
 

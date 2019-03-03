@@ -937,16 +937,16 @@ namespace RobotRaconteur
 
 	}
 
-	RR_SHARED_PTR<RRValue> WireSubscriptionBase::GetInValueBase(TimeSpec* time, RR_SHARED_PTR<WireConnectionBase>* connection)
+	RR_INTRUSIVE_PTR<RRValue> WireSubscriptionBase::GetInValueBase(TimeSpec* time, RR_SHARED_PTR<WireConnectionBase>* connection)
 	{
-		RR_SHARED_PTR<RRValue> o;
+		RR_INTRUSIVE_PTR<RRValue> o;
 		if (!TryGetInValueBase(o, time, connection))
 		{
 			throw ValueNotSetException("In value not valid");
 		}
 		return o;
 	}
-	bool WireSubscriptionBase::TryGetInValueBase(RR_SHARED_PTR<RRValue>& val, TimeSpec* time, RR_SHARED_PTR<WireConnectionBase>* connection)
+	bool WireSubscriptionBase::TryGetInValueBase(RR_INTRUSIVE_PTR<RRValue>& val, TimeSpec* time, RR_SHARED_PTR<WireConnectionBase>* connection)
 	{
 		boost::mutex::scoped_lock lock(this_lock);
 		if (!in_value_valid) return false;
@@ -1014,7 +1014,7 @@ namespace RobotRaconteur
 		}
 	}
 
-	void WireSubscriptionBase::SetOutValueAllBase(const RR_SHARED_PTR<RRValue>& val)
+	void WireSubscriptionBase::SetOutValueAllBase(const RR_INTRUSIVE_PTR<RRValue>& val)
 	{
 		boost::mutex::scoped_lock(this_lock);
 		BOOST_FOREACH(RR_SHARED_PTR<detail::WireSubscription_connection> c, connections)
@@ -1138,7 +1138,7 @@ namespace RobotRaconteur
 		boost::mutex::scoped_lock lock(this_lock);
 		connections.erase(wire);		
 	}
-	void WireSubscriptionBase::WireValueChanged(RR_SHARED_PTR<detail::WireSubscription_connection> wire, RR_SHARED_PTR<RRValue> value, const TimeSpec& time)
+	void WireSubscriptionBase::WireValueChanged(RR_SHARED_PTR<detail::WireSubscription_connection> wire, RR_INTRUSIVE_PTR<RRValue> value, const TimeSpec& time)
 	{
 		RR_SHARED_PTR<WireConnectionBase> connection = wire->connection.lock();
 		if (!connection) return;
@@ -1167,7 +1167,7 @@ namespace RobotRaconteur
 		
 	}
 
-	void WireSubscriptionBase::fire_WireValueChanged(RR_SHARED_PTR<RRValue> value, const TimeSpec& time, RR_SHARED_PTR<WireConnectionBase> connection)
+	void WireSubscriptionBase::fire_WireValueChanged(RR_INTRUSIVE_PTR<RRValue> value, const TimeSpec& time, RR_SHARED_PTR<WireConnectionBase> connection)
 	{
 
 	}
@@ -1193,7 +1193,7 @@ namespace RobotRaconteur
 			p->WireConnectionClosed(shared_from_this());
 		}
 
-		void WireSubscription_connection::WireValueChanged(RR_SHARED_PTR<WireConnectionBase> connection, RR_SHARED_PTR<RRValue> value, const TimeSpec& time)
+		void WireSubscription_connection::WireValueChanged(RR_SHARED_PTR<WireConnectionBase> connection, RR_INTRUSIVE_PTR<RRValue> value, const TimeSpec& time)
 		{
 			RR_SHARED_PTR<WireSubscriptionBase> p = parent.lock();
 			if (!p) return;
@@ -1204,7 +1204,7 @@ namespace RobotRaconteur
 		{
 		}
 
-		void WireSubscription_connection::SetOutValue(const RR_SHARED_PTR<RRValue>& value)
+		void WireSubscription_connection::SetOutValue(const RR_INTRUSIVE_PTR<RRValue>& value)
 		{
 			RR_SHARED_PTR<WireConnectionBase> c = connection.lock();
 			if (!c) return;
@@ -1245,7 +1245,7 @@ namespace RobotRaconteur
 			}			
 		}
 
-		void WireSubscription_send_iterator::SetOutValue(const RR_SHARED_PTR<RRValue>& value)
+		void WireSubscription_send_iterator::SetOutValue(const RR_INTRUSIVE_PTR<RRValue>& value)
 		{
 			if (current_connection == subscription->connections.end())
 			{
@@ -1273,9 +1273,9 @@ namespace RobotRaconteur
 
 	}
 
-	RR_SHARED_PTR<RRValue> PipeSubscriptionBase::ReceivePacketBase()
+	RR_INTRUSIVE_PTR<RRValue> PipeSubscriptionBase::ReceivePacketBase()
 	{
-		RR_SHARED_PTR<RRValue> o;
+		RR_INTRUSIVE_PTR<RRValue> o;
 		if (!TryReceivePacketBase(o))
 		{
 			throw InvalidOperationException("PipeSubscription Receive Queue Empty");
@@ -1283,12 +1283,12 @@ namespace RobotRaconteur
 		return o;
 	}
 
-	bool PipeSubscriptionBase::TryReceivePacketBase(RR_SHARED_PTR<RRValue>& packet)
+	bool PipeSubscriptionBase::TryReceivePacketBase(RR_INTRUSIVE_PTR<RRValue>& packet)
 	{
 		return TryReceivePacketBaseWait(packet, 0, false);
 	}
 
-	bool PipeSubscriptionBase::TryReceivePacketBaseWait(RR_SHARED_PTR<RRValue>& packet, int32_t timeout, bool peek, RR_SHARED_PTR<PipeEndpointBase>* ep)
+	bool PipeSubscriptionBase::TryReceivePacketBaseWait(RR_INTRUSIVE_PTR<RRValue>& packet, int32_t timeout, bool peek, RR_SHARED_PTR<PipeEndpointBase>* ep)
 	{
 		boost::mutex::scoped_lock lock(this_lock);
 		if (recv_packets.empty())
@@ -1363,7 +1363,7 @@ namespace RobotRaconteur
 
 	static void PipeSubscriptionBase_empty_send_handler(uint32_t, RR_SHARED_PTR<RobotRaconteurException>) {}
 
-	void PipeSubscriptionBase::AsyncSendPacketAllBase(const RR_SHARED_PTR<RRValue>& packet)
+	void PipeSubscriptionBase::AsyncSendPacketAllBase(const RR_INTRUSIVE_PTR<RRValue>& packet)
 	{
 		boost::mutex::scoped_lock lock(this_lock);
 		BOOST_FOREACH(RR_SHARED_PTR<detail::PipeSubscription_connection> c, connections)
@@ -1484,7 +1484,7 @@ namespace RobotRaconteur
 		connections.erase(pipe);
 				
 	}
-	void PipeSubscriptionBase::PipeEndpointPacketReceived(RR_SHARED_PTR<detail::PipeSubscription_connection> pipe, RR_SHARED_PTR<RRValue> value)
+	void PipeSubscriptionBase::PipeEndpointPacketReceived(RR_SHARED_PTR<detail::PipeSubscription_connection> pipe, RR_INTRUSIVE_PTR<RRValue> value)
 	{
 		//RR_SHARED_PTR<RRObject> client = wire->client.lock();
 		//if (!client) return;
@@ -1540,12 +1540,12 @@ namespace RobotRaconteur
 			p->PipeEndpointClosed(shared_from_this());
 		}
 
-		void PipeSubscription_connection::PipePacketReceived(RR_SHARED_PTR<PipeEndpointBase> connection, boost::function<bool(RR_SHARED_PTR<RRValue>&)> receive_packet_func)
+		void PipeSubscription_connection::PipePacketReceived(RR_SHARED_PTR<PipeEndpointBase> connection, boost::function<bool(RR_INTRUSIVE_PTR<RRValue>&)> receive_packet_func)
 		{
 			RR_SHARED_PTR<PipeSubscriptionBase> p = parent.lock();
 			if (!p) return;
 			
-			RR_SHARED_PTR<RRValue> packet;
+			RR_INTRUSIVE_PTR<RRValue> packet;
 			while (receive_packet_func(packet))
 			{
 				p->PipeEndpointPacketReceived(shared_from_this(), packet);
@@ -1589,7 +1589,7 @@ namespace RobotRaconteur
 			return true;
 		}
 
-		void PipeSubscription_connection::AsyncSendPacket(const RR_SHARED_PTR<RRValue>& packet)
+		void PipeSubscription_connection::AsyncSendPacket(const RR_INTRUSIVE_PTR<RRValue>& packet)
 		{
 			RR_SHARED_PTR<PipeEndpointBase> ep = connection.lock();;
 			if (!ep) return;
@@ -1603,7 +1603,7 @@ namespace RobotRaconteur
 			}
 			else
 			{
-				RR_SHARED_PTR<MessageElement> packet2 = ShallowCopyMessageElement(rr_cast<MessageElement>(packet));
+				RR_INTRUSIVE_PTR<MessageElement> packet2 = ShallowCopyMessageElement(rr_cast<MessageElement>(packet));
 				ep->AsyncSendPacketBase(packet2, boost::bind(&PipeSubscription_connection::pipe_packet_send_handler, this->shared_from_this(), _1, _2, send_key));
 			}
 		}
@@ -1659,7 +1659,7 @@ namespace RobotRaconteur
 			}
 		}
 
-		void PipeSubscription_send_iterator::AsyncSendPacket(const RR_SHARED_PTR<RRValue>& packet)
+		void PipeSubscription_send_iterator::AsyncSendPacket(const RR_INTRUSIVE_PTR<RRValue>& packet)
 		{
 			if (current_connection != subscription->connections.end())
 			{

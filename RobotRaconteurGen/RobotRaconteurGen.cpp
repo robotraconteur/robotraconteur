@@ -103,13 +103,13 @@ void PullServiceDefinition(string url)
 
 	RR_SHARED_PTR<RobotRaconteurServiceIndex::ServiceIndex> o=rr_cast<RobotRaconteurServiceIndex::ServiceIndex>(RobotRaconteurNode::s()->ConnectService(url2));
 
-	RR_SHARED_PTR<RRMap<int32_t, RobotRaconteurServiceIndex::ServiceInfo> > ret=o->GetLocalNodeServices();
+	RR_INTRUSIVE_PTR<RRMap<int32_t, RobotRaconteurServiceIndex::ServiceInfo> > ret=o->GetLocalNodeServices();
 
 	if (!ret) throw std::runtime_error("Error retrieving definition");
 
 	string type="";
 
-	for (std::map<int32_t, RR_SHARED_PTR<RobotRaconteurServiceIndex::ServiceInfo> >::const_iterator ii = ret->begin(); ii != ret->end(); ++ii)
+	for (std::map<int32_t, RR_INTRUSIVE_PTR<RobotRaconteurServiceIndex::ServiceInfo> >::const_iterator ii = ret->begin(); ii != ret->end(); ++ii)
 	{
 		if (ii->second->Name==url_res.service)
 		{

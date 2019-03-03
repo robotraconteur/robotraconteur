@@ -47,25 +47,25 @@ namespace RobotRaconteur
 
 		virtual RR_SHARED_PTR<StructureStub> FindStructureStub(const std::string& s)=0;
 		
-		virtual RR_SHARED_PTR<MessageElementStructure> PackStructure(RR_SHARED_PTR<RRStructure> structin)=0;
+		virtual RR_INTRUSIVE_PTR<MessageElementStructure> PackStructure(RR_INTRUSIVE_PTR<RRStructure> structin)=0;
 				
-		virtual RR_SHARED_PTR<RRValue> UnpackStructure(RR_SHARED_PTR<MessageElementStructure> mstructin)=0; 
+		virtual RR_INTRUSIVE_PTR<RRValue> UnpackStructure(RR_INTRUSIVE_PTR<MessageElementStructure> mstructin)=0; 
 
-		virtual RR_SHARED_PTR<MessageElementPodArray> PackPodArray(RR_SHARED_PTR<RRPodBaseArray> structure)=0;
+		virtual RR_INTRUSIVE_PTR<MessageElementPodArray> PackPodArray(RR_INTRUSIVE_PTR<RRPodBaseArray> structure)=0;
 
-		virtual RR_SHARED_PTR<RRPodBaseArray> UnpackPodArray(RR_SHARED_PTR<MessageElementPodArray> structure)=0;
+		virtual RR_INTRUSIVE_PTR<RRPodBaseArray> UnpackPodArray(RR_INTRUSIVE_PTR<MessageElementPodArray> structure)=0;
 
-		virtual RR_SHARED_PTR<MessageElementPodMultiDimArray> PackPodMultiDimArray(RR_SHARED_PTR<RRPodBaseMultiDimArray> structure)=0;
+		virtual RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> PackPodMultiDimArray(RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> structure)=0;
 
-		virtual RR_SHARED_PTR<RRPodBaseMultiDimArray> UnpackPodMultiDimArray(RR_SHARED_PTR<MessageElementPodMultiDimArray> structure)=0;
+		virtual RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> UnpackPodMultiDimArray(RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> structure)=0;
 
-		virtual RR_SHARED_PTR<MessageElementNamedArray> PackNamedArray(RR_SHARED_PTR<RRNamedBaseArray> structure) = 0;
+		virtual RR_INTRUSIVE_PTR<MessageElementNamedArray> PackNamedArray(RR_INTRUSIVE_PTR<RRNamedBaseArray> structure) = 0;
 
-		virtual RR_SHARED_PTR<RRNamedBaseArray> UnpackNamedArray(RR_SHARED_PTR<MessageElementNamedArray> structure) = 0;
+		virtual RR_INTRUSIVE_PTR<RRNamedBaseArray> UnpackNamedArray(RR_INTRUSIVE_PTR<MessageElementNamedArray> structure) = 0;
 
-		virtual RR_SHARED_PTR<MessageElementNamedMultiDimArray> PackNamedMultiDimArray(RR_SHARED_PTR<RRNamedBaseMultiDimArray> structure) = 0;
+		virtual RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> PackNamedMultiDimArray(RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> structure) = 0;
 
-		virtual RR_SHARED_PTR<RRNamedBaseMultiDimArray> UnpackNamedMultiDimArray(RR_SHARED_PTR<MessageElementNamedMultiDimArray> structure) = 0;
+		virtual RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> UnpackNamedMultiDimArray(RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> structure) = 0;
 
 		virtual RR_SHARED_PTR<ServiceStub> CreateStub(const std::string& objecttype, const std::string& path, RR_SHARED_PTR<ClientContext> context)=0;
 
