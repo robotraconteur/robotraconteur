@@ -62,9 +62,9 @@ class WrappedArrayMemoryClientUtil
 {
 RR_RELEASE_GIL()
 public:
-	static boost::shared_ptr<RRBaseArray> Read(boost::shared_ptr<ArrayMemoryBase> mem, uint64_t memorypos, uint64_t count);
+	static boost::intrusive_ptr<RRBaseArray> Read(boost::shared_ptr<ArrayMemoryBase> mem, uint64_t memorypos, uint64_t count);
 
-	static void Write(boost::shared_ptr<ArrayMemoryBase> mem, uint64_t memorypos, boost::shared_ptr<RRBaseArray> buffer, uint64_t bufferpos, uint64_t count);
+	static void Write(boost::shared_ptr<ArrayMemoryBase> mem, uint64_t memorypos, boost::intrusive_ptr<RRBaseArray> buffer, uint64_t bufferpos, uint64_t count);
 
 	static MemberDefinition_Direction Direction(boost::shared_ptr<ArrayMemoryBase> mem);
 RR_KEEP_GIL()
@@ -86,8 +86,8 @@ RR_KEEP_GIL()
 class WrappedPodArrayMemoryClientBuffer
 {
 public:
-	virtual void UnpackReadResult(boost::shared_ptr<RobotRaconteur::MessageElementPodArray> res, uint64_t bufferpos, uint64_t count) = 0;
-	virtual boost::shared_ptr<RobotRaconteur::MessageElementPodArray> PackWriteRequest(uint64_t bufferpos, uint64_t count) = 0;
+	virtual void UnpackReadResult(boost::intrusive_ptr<RobotRaconteur::MessageElementPodArray> res, uint64_t bufferpos, uint64_t count) = 0;
+	virtual boost::intrusive_ptr<RobotRaconteur::MessageElementPodArray> PackWriteRequest(uint64_t bufferpos, uint64_t count) = 0;
 	virtual uint64_t GetBufferLength() = 0;
 	virtual ~WrappedPodArrayMemoryClientBuffer() {}
 };
@@ -107,8 +107,8 @@ RR_KEEP_GIL()
 class WrappedPodMultiDimArrayMemoryClientBuffer
 {
 public:
-	virtual void UnpackReadResult(boost::shared_ptr<RobotRaconteur::MessageElementPodMultiDimArray> res, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) = 0;
-	virtual boost::shared_ptr<RobotRaconteur::MessageElementPodMultiDimArray> PackWriteRequest(const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) = 0;
+	virtual void UnpackReadResult(boost::intrusive_ptr<RobotRaconteur::MessageElementPodMultiDimArray> res, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) = 0;
+	virtual boost::intrusive_ptr<RobotRaconteur::MessageElementPodMultiDimArray> PackWriteRequest(const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) = 0;
 	virtual ~WrappedPodMultiDimArrayMemoryClientBuffer() {}
 };
 
@@ -130,8 +130,8 @@ class WrappedArrayMemoryDirector
 public:
 	virtual ~WrappedArrayMemoryDirector() {}
 	virtual uint64_t Length();
-	virtual void Read(uint64_t memorypos, boost::shared_ptr<RRBaseArray> buffer, uint64_t bufferpos, uint64_t count);
-	virtual void Write(uint64_t memorypos, boost::shared_ptr<RRBaseArray> buffer, uint64_t bufferpos, uint64_t count);
+	virtual void Read(uint64_t memorypos, boost::intrusive_ptr<RRBaseArray> buffer, uint64_t bufferpos, uint64_t count);
+	virtual void Write(uint64_t memorypos, boost::intrusive_ptr<RRBaseArray> buffer, uint64_t bufferpos, uint64_t count);
 	int32_t objectheapid;
 };
 
@@ -163,8 +163,8 @@ public:
 	WrappedPodArrayMemoryDirector();
 	virtual ~WrappedPodArrayMemoryDirector();
 	virtual uint64_t Length();
-	virtual boost::shared_ptr<MessageElementPodArray> Read(uint64_t memorypos, uint64_t bufferpos, uint64_t count);
-	virtual void Write(uint64_t memorypos, boost::shared_ptr<MessageElementPodArray> buffer, uint64_t bufferpos, uint64_t count);
+	virtual boost::intrusive_ptr<MessageElementPodArray> Read(uint64_t memorypos, uint64_t bufferpos, uint64_t count);
+	virtual void Write(uint64_t memorypos, boost::intrusive_ptr<MessageElementPodArray> buffer, uint64_t bufferpos, uint64_t count);
 	int32_t objectheapid;
 };
 
@@ -174,8 +174,8 @@ public:
 	virtual ~WrappedPodMultiDimArrayMemoryDirector() {}
 	virtual std::vector<uint64_t> Dimensions();
 	virtual uint64_t DimCount();
-	virtual boost::shared_ptr<MessageElementPodMultiDimArray> Read(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
-	virtual void Write(const std::vector<uint64_t>& memorypos, boost::shared_ptr<MessageElementPodMultiDimArray> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
+	virtual boost::intrusive_ptr<MessageElementPodMultiDimArray> Read(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
+	virtual void Write(const std::vector<uint64_t>& memorypos, boost::intrusive_ptr<MessageElementPodMultiDimArray> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
 
 	int32_t objectheapid;
 };
@@ -185,8 +185,8 @@ public:
 class WrappedNamedArrayMemoryClientBuffer
 {
 public:
-	virtual void UnpackReadResult(boost::shared_ptr<RobotRaconteur::MessageElementNamedArray> res, uint64_t bufferpos, uint64_t count) = 0;
-	virtual boost::shared_ptr<RobotRaconteur::MessageElementNamedArray> PackWriteRequest(uint64_t bufferpos, uint64_t count) = 0;
+	virtual void UnpackReadResult(boost::intrusive_ptr<RobotRaconteur::MessageElementNamedArray> res, uint64_t bufferpos, uint64_t count) = 0;
+	virtual boost::intrusive_ptr<RobotRaconteur::MessageElementNamedArray> PackWriteRequest(uint64_t bufferpos, uint64_t count) = 0;
 	virtual uint64_t GetBufferLength() = 0;
 	virtual ~WrappedNamedArrayMemoryClientBuffer() {}
 };
@@ -206,8 +206,8 @@ RR_KEEP_GIL()
 class WrappedNamedMultiDimArrayMemoryClientBuffer
 {
 public:
-	virtual void UnpackReadResult(boost::shared_ptr<RobotRaconteur::MessageElementNamedMultiDimArray> res, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) = 0;
-	virtual boost::shared_ptr<RobotRaconteur::MessageElementNamedMultiDimArray> PackWriteRequest(const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) = 0;
+	virtual void UnpackReadResult(boost::intrusive_ptr<RobotRaconteur::MessageElementNamedMultiDimArray> res, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) = 0;
+	virtual boost::intrusive_ptr<RobotRaconteur::MessageElementNamedMultiDimArray> PackWriteRequest(const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) = 0;
 	virtual ~WrappedNamedMultiDimArrayMemoryClientBuffer() {}
 };
 
@@ -230,8 +230,8 @@ public:
 	WrappedNamedArrayMemoryDirector();
 	virtual ~WrappedNamedArrayMemoryDirector();
 	virtual uint64_t Length();
-	virtual boost::shared_ptr<MessageElementNamedArray> Read(uint64_t memorypos, uint64_t bufferpos, uint64_t count);
-	virtual void Write(uint64_t memorypos, boost::shared_ptr<MessageElementNamedArray> buffer, uint64_t bufferpos, uint64_t count);
+	virtual boost::intrusive_ptr<MessageElementNamedArray> Read(uint64_t memorypos, uint64_t bufferpos, uint64_t count);
+	virtual void Write(uint64_t memorypos, boost::intrusive_ptr<MessageElementNamedArray> buffer, uint64_t bufferpos, uint64_t count);
 	int32_t objectheapid;
 };
 
@@ -241,8 +241,8 @@ public:
 	virtual ~WrappedNamedMultiDimArrayMemoryDirector() {}
 	virtual std::vector<uint64_t> Dimensions();
 	virtual uint64_t DimCount();
-	virtual boost::shared_ptr<MessageElementNamedMultiDimArray> Read(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
-	virtual void Write(const std::vector<uint64_t>& memorypos, boost::shared_ptr<MessageElementNamedMultiDimArray> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
+	virtual boost::intrusive_ptr<MessageElementNamedMultiDimArray> Read(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
+	virtual void Write(const std::vector<uint64_t>& memorypos, boost::intrusive_ptr<MessageElementNamedMultiDimArray> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
 
 	int32_t objectheapid;
 };

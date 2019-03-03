@@ -42,7 +42,7 @@ namespace RobotRaconteur
 		std::string RootObjectType;
 		std::vector<std::string> RootObjectImplements;
 		std::vector<std::string> ConnectionURL;
-		boost::shared_ptr<RobotRaconteur::MessageElement> Attributes;
+		boost::intrusive_ptr<RobotRaconteur::MessageElement> Attributes;
 		RobotRaconteur::NodeID NodeID;
 		std::string NodeName;
 

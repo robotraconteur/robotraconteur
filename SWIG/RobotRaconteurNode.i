@@ -88,7 +88,7 @@ RR_RELEASE_GIL()
 	RR_MAKE_METHOD_PRIVATE(ConnectService);
 	
 %extend {
-	boost::shared_ptr<RobotRaconteur::WrappedServiceStub> ConnectService(const std::string& url, const std::string& username="", boost::shared_ptr<MessageElementData> credentials=boost::shared_ptr<MessageElementData>(), ClientServiceListenerDirector* listener=0, const std::string& objecttype="")
+	boost::shared_ptr<RobotRaconteur::WrappedServiceStub> ConnectService(const std::string& url, const std::string& username="", boost::intrusive_ptr<MessageElementData> credentials=boost::intrusive_ptr<MessageElementData>(), ClientServiceListenerDirector* listener=0, const std::string& objecttype="")
 	{
 		boost::shared_ptr<ClientServiceListenerDirector> listenerptr;
 		if (listener)
@@ -96,7 +96,7 @@ RR_RELEASE_GIL()
 			listenerptr=boost::shared_ptr<ClientServiceListenerDirector>(listener,boost::bind(&ReleaseDirector<ClientServiceListenerDirector>,_1,listener->objectheapid));
 		}
 	
-		boost::shared_ptr<RRMap<std::string,RRValue> > credentials2;
+		boost::intrusive_ptr<RRMap<std::string,RRValue> > credentials2;
 		if (credentials) credentials2=rr_cast<RRMap<std::string,RRValue> >($self->UnpackMapType<std::string,RRValue>(rr_cast<MessageElementMap<std::string> >(credentials)));
 		boost::shared_ptr<WrappedServiceStub> stub;
 		if (listener==0)
@@ -113,7 +113,7 @@ RR_RELEASE_GIL()
 
 	}
 
-	boost::shared_ptr<RobotRaconteur::WrappedServiceStub> ConnectService(const std::vector<std::string>& url, const std::string& username = "", boost::shared_ptr<MessageElementData> credentials=boost::shared_ptr<MessageElementData>(), ClientServiceListenerDirector* listener=0, const std::string& objecttype="")
+	boost::shared_ptr<RobotRaconteur::WrappedServiceStub> ConnectService(const std::vector<std::string>& url, const std::string& username = "", boost::intrusive_ptr<MessageElementData> credentials=boost::intrusive_ptr<MessageElementData>(), ClientServiceListenerDirector* listener=0, const std::string& objecttype="")
 	{
 	
 		boost::shared_ptr<ClientServiceListenerDirector> listenerptr;
@@ -122,7 +122,7 @@ RR_RELEASE_GIL()
 			listenerptr=boost::shared_ptr<ClientServiceListenerDirector>(listener,boost::bind(&ReleaseDirector<ClientServiceListenerDirector>,_1,listener->objectheapid));
 		}
 	
-		boost::shared_ptr<RRMap<std::string,RRValue> > credentials2;
+		boost::intrusive_ptr<RRMap<std::string,RRValue> > credentials2;
 		if (credentials) credentials2=rr_cast<RRMap<std::string,RRValue> >($self->UnpackMapType<std::string,RRValue>(rr_cast<MessageElementMap<std::string> >(credentials)));
 		boost::shared_ptr<WrappedServiceStub> stub;
 		if (listener==0)
@@ -144,12 +144,12 @@ RR_KEEP_GIL()
 	RR_MAKE_METHOD_PRIVATE(AsyncConnectService);
 
 %extend {
-	void AsyncConnectService(const std::string& url, const std::string& username, boost::shared_ptr<MessageElementData> credentials, ClientServiceListenerDirector* listener, const std::string& objecttype, int32_t timeout, AsyncStubReturnDirector* handler, int32_t id)
+	void AsyncConnectService(const std::string& url, const std::string& username, boost::intrusive_ptr<MessageElementData> credentials, ClientServiceListenerDirector* listener, const std::string& objecttype, int32_t timeout, AsyncStubReturnDirector* handler, int32_t id)
 	{
 		
 		boost::shared_ptr<AsyncStubReturnDirector> sphandler(handler,boost::bind(&ReleaseDirector<AsyncStubReturnDirector>,_1,id));
 	
-		boost::shared_ptr<RRMap<std::string,RRValue> > credentials2;
+		boost::intrusive_ptr<RRMap<std::string,RRValue> > credentials2;
 		if (credentials) credentials2=rr_cast<RRMap<std::string,RRValue> >($self->UnpackMapType<std::string,RRValue>(rr_cast<MessageElementMap<std::string> >(credentials)));
 		
 		if (listener==0)
@@ -163,12 +163,12 @@ RR_KEEP_GIL()
 		}		
 	}
 
-	void AsyncConnectService(const std::vector<std::string>& url, const std::string& username, boost::shared_ptr<MessageElementData> credentials, ClientServiceListenerDirector* listener, const std::string& objecttype, int32_t timeout,  AsyncStubReturnDirector* handler, int32_t id)
+	void AsyncConnectService(const std::vector<std::string>& url, const std::string& username, boost::intrusive_ptr<MessageElementData> credentials, ClientServiceListenerDirector* listener, const std::string& objecttype, int32_t timeout,  AsyncStubReturnDirector* handler, int32_t id)
 	{
 	
 		boost::shared_ptr<AsyncStubReturnDirector> sphandler(handler,boost::bind(&ReleaseDirector<AsyncStubReturnDirector>,_1,id));
 	
-		boost::shared_ptr<RRMap<std::string,RRValue> > credentials2;
+		boost::intrusive_ptr<RRMap<std::string,RRValue> > credentials2;
 		if (credentials) credentials2=rr_cast<RRMap<std::string,RRValue> >($self->UnpackMapType<std::string,RRValue>(rr_cast<MessageElementMap<std::string> >(credentials)));
 		
 		if (listener==0)
@@ -340,12 +340,12 @@ RR_KEEP_GIL()
 	
 %extend
 {
-	boost::shared_ptr<MessageElement> GetServiceAttributes(boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj)
+	boost::intrusive_ptr<MessageElement> GetServiceAttributes(boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj)
 		{
-			boost::shared_ptr<RRMap<std::string,RRValue> > map=boost::make_shared<RRMap<std::string,RRValue> >();
+			boost::intrusive_ptr<RRMap<std::string,RRValue> > map=AllocateEmptyRRMap<std::string,RRValue>();
 			map->GetStorageContainer()=$self->GetServiceAttributes(obj);
-			boost::shared_ptr<MessageElementMap<std::string> > mmap=$self->PackMapType<std::string,RRValue>(map);
-			return boost::make_shared<MessageElement>("value",mmap);
+			boost::intrusive_ptr<MessageElementMap<std::string> > mmap=$self->PackMapType<std::string,RRValue>(map);
+			return CreateMessageElement("value",mmap);
 		}
 
 }

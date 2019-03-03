@@ -21,9 +21,9 @@
 %template (map_strstr) std::map<std::string,std::string>;
 
 %shared_ptr(RobotRaconteur::RRObject);
-%shared_ptr(RobotRaconteur::RRValue);
-%shared_ptr(RobotRaconteur::MessageElementData)
-%shared_ptr(RobotRaconteur::RRBaseArray)
+%rr_intrusive_ptr(RobotRaconteur::RRValue);
+%rr_intrusive_ptr(RobotRaconteur::MessageElementData)
+%rr_intrusive_ptr(RobotRaconteur::RRBaseArray)
 %shared_ptr(RobotRaconteur::RRMultiDimArrayUntyped)
 
 %shared_ptr(RobotRaconteur::RobotRaconteurNode)
@@ -66,15 +66,15 @@ public:
 };
 
 
-boost::shared_ptr<RobotRaconteur::RRBaseArray> AllocateRRArrayByType(DataTypes type, size_t length);
+boost::intrusive_ptr<RobotRaconteur::RRBaseArray> AllocateRRArrayByType(DataTypes type, size_t length);
 
 class RRMultiDimArrayUntyped
 {
 public:
 	
-	boost::shared_ptr<RRBaseArray > Dims;
+	boost::intrusive_ptr<RRBaseArray > Dims;
 
-	boost::shared_ptr<RRBaseArray> Array;
+	boost::intrusive_ptr<RRBaseArray> Array;
 	
 
 };

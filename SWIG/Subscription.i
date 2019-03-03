@@ -56,7 +56,7 @@ namespace RobotRaconteur
 		::RobotRaconteur::NodeID NodeID;
 		std::string NodeName;
 		std::string Username;
-		boost::shared_ptr<MessageElementData> Credentials;
+		boost::intrusive_ptr<MessageElementData> Credentials;
 	};
 
 	class WrappedServiceSubscriptionFilter
@@ -146,7 +146,7 @@ namespace RobotRaconteur
 	class WrappedService_typed_packet
 	{
 	public:
-		boost::shared_ptr<RobotRaconteur::MessageElement> packet;
+		boost::intrusive_ptr<RobotRaconteur::MessageElement> packet;
 		boost::shared_ptr<RobotRaconteur::TypeDefinition> type;
 		boost::shared_ptr<RobotRaconteur::WrappedServiceStub> stub;		
 	};
@@ -186,7 +186,7 @@ namespace RobotRaconteur
 	public:
 		WrappedWireSubscription_send_iterator(const boost::shared_ptr<WrappedWireSubscription>& sub);
 		boost::shared_ptr<WrappedWireConnection> Next();
-		void SetOutValue(const boost::shared_ptr<MessageElement>& value);
+		void SetOutValue(const boost::intrusive_ptr<MessageElement>& value);
 		boost::shared_ptr<TypeDefinition> GetType();
 		boost::shared_ptr<WrappedServiceStub> GetStub();
 		virtual ~WrappedWireSubscription_send_iterator();
@@ -225,7 +225,7 @@ namespace RobotRaconteur
 	public:
 		WrappedPipeSubscription_send_iterator(const boost::shared_ptr<WrappedPipeSubscription>& sub);
 		boost::shared_ptr<WrappedPipeEndpoint> Next();
-		void AsyncSendPacket(const boost::shared_ptr<MessageElement>& value);
+		void AsyncSendPacket(const boost::intrusive_ptr<MessageElement>& value);
 		boost::shared_ptr<TypeDefinition> GetType();
 		boost::shared_ptr<WrappedServiceStub> GetStub();
 		virtual ~WrappedPipeSubscription_send_iterator();
