@@ -26,6 +26,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/enable_shared_from_this.hpp>
+#include <boost/intrusive_ptr.hpp>
 
 #define RR_SHARED_PTR boost::shared_ptr
 #define RR_MAKE_SHARED boost::make_shared
