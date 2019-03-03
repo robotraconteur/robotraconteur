@@ -1,4 +1,4 @@
-%shared_ptr(RobotRaconteur::MessageElement)
+%rr_intrusive_ptr(RobotRaconteur::MessageElement)
 
 %shared_ptr(RobotRaconteur::RobotRaconteurNode);
 
