@@ -78,14 +78,14 @@
 	$1 = &tempnull;  
   }  
 %}
-%typemap(out, fragment="SWIG_intrusive_deleter") SWIG_INTRUSIVE_PTR_QNAMESPACE::intrusive_ptr< CONST TYPE > %{
+%typemap(out, fragment="SWIG_intrusive_deleter") SWIG_INTRUSIVE_PTR_QNAMESPACE::intrusive_ptr< CONST TYPE > (SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > *smartresult = 0) %{
   //if ($1) {
   //	intrusive_ptr_add_ref(result.get());
   //	*(SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > **)&$result = new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE >(result.get(), SWIG_intrusive_deleter< CONST TYPE >());
   //} else {
   // 	*(SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > **)&$result = 0;
   //}
-  SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > *smartresult = 0;
+  
   if(*(&$1)) {
 	  intrusive_ptr_add_ref((&result)->get());
 	  smartresult = new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE >((&$1)->get(),SWIG_intrusive_deleter< CONST TYPE >());
@@ -93,21 +93,21 @@
   
   %set_output(SWIG_NewPointerObj(%as_voidptr(smartresult), $descriptor(SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< TYPE > *), SWIG_POINTER_OWN));
 %}
-%typemap(out, fragment="SWIG_intrusive_deleter") SWIG_INTRUSIVE_PTR_QNAMESPACE::intrusive_ptr< CONST TYPE > & %{
+%typemap(out, fragment="SWIG_intrusive_deleter") SWIG_INTRUSIVE_PTR_QNAMESPACE::intrusive_ptr< CONST TYPE > & (SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > *smartresult = 0) %{
   //if (*$1) {
   //  intrusive_ptr_add_ref($1->get());
   //  *(SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > **)&$result = new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE >($1->get(), SWIG_intrusive_deleter< CONST TYPE >());
   //} else {
   //  *(SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > **)&$result = 0;
   //}
-  SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > *smartresult = 0;
+  
   if(*($1)) {
 	  intrusive_ptr_add_ref(result->get());
 	  smartresult = new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE >($1->get(),SWIG_intrusive_deleter< CONST TYPE >());
   } 
   %set_output(SWIG_NewPointerObj(%as_voidptr(smartresult), $descriptor(SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< TYPE > *), SWIG_POINTER_OWN));
 %}
-%typemap(out, fragment="SWIG_intrusive_deleter") SWIG_INTRUSIVE_PTR_QNAMESPACE::intrusive_ptr< CONST TYPE > * %{
+%typemap(out, fragment="SWIG_intrusive_deleter") SWIG_INTRUSIVE_PTR_QNAMESPACE::intrusive_ptr< CONST TYPE > * (SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > *smartresult = 0) %{
   //if ($1 && *$1) {
   //  intrusive_ptr_add_ref($1->get());
   //  *(SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > **)&$result = new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE >($1->get(), SWIG_intrusive_deleter< CONST TYPE >());
@@ -115,7 +115,7 @@
   //  *(SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > **)&$result = 0;
   //}
   //if ($owner) delete $1;
-  SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > *smartresult = 0;
+  
   if ($1 && *$1) {
 	  intrusive_ptr_add_ref(result->get());
 	  smartresult = new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE >($1->get(),SWIG_intrusive_deleter< CONST TYPE >());
