@@ -257,7 +257,7 @@ if (objecttype=="teststruct1") return RobotRaconteur::rr_cast<RobotRaconteur::St
 if (objecttype=="teststruct2") return RobotRaconteur::rr_cast<RobotRaconteur::StructureStub>(RR_MAKE_SHARED<teststruct2_stub>(GetNode()));
 throw RobotRaconteur::ServiceException("Invalid structure stub type.");
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElementStructure> com__robotraconteur__testing__TestService1Factory::PackStructure(RR_SHARED_PTR<RobotRaconteur::RRStructure> structin)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementStructure> com__robotraconteur__testing__TestService1Factory::PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> structin)
 {
 std::string type=structin->RRType();boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);
 std::string servicetype=res.get<0>();
@@ -267,7 +267,7 @@ RR_SHARED_PTR<RobotRaconteur::StructureStub> stub=FindStructureStub(type);
 return stub->PackStructure(structin);
 throw RobotRaconteur::ServiceException("Invalid structure stub type.");
 }
-RR_SHARED_PTR<RobotRaconteur::RRValue> com__robotraconteur__testing__TestService1Factory::UnpackStructure(RR_SHARED_PTR<RobotRaconteur::MessageElementStructure> mstructin)
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> com__robotraconteur__testing__TestService1Factory::UnpackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementStructure> mstructin)
 {
 std::string type=mstructin->GetTypeString();boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);
 std::string servicetype=res.get<0>();
@@ -277,7 +277,7 @@ RR_SHARED_PTR<RobotRaconteur::StructureStub> stub=FindStructureStub(type);
 return stub->UnpackStructure(mstructin);
 throw RobotRaconteur::ServiceException("Invalid structure stub type.");
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElementPodArray> com__robotraconteur__testing__TestService1Factory::PackPodArray(RR_SHARED_PTR<RobotRaconteur::RRPodBaseArray> structin)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementPodArray> com__robotraconteur__testing__TestService1Factory::PackPodArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> structin)
 {
 std::string type=structin->RRElementTypeString();
 boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);
@@ -286,7 +286,7 @@ std::string objecttype=res.get<1>();
 if (servicetype != "com.robotraconteur.testing.TestService1") return GetNode()->PackPodArray(structin);
 throw RobotRaconteur::ServiceException("Invalid pod type.");
 }
-RR_SHARED_PTR<RobotRaconteur::RRPodBaseArray> com__robotraconteur__testing__TestService1Factory::UnpackPodArray(RR_SHARED_PTR<RobotRaconteur::MessageElementPodArray> mstructin)
+RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> com__robotraconteur__testing__TestService1Factory::UnpackPodArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementPodArray> mstructin)
 {
 std::string type=mstructin->GetTypeString();
 boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);
@@ -295,7 +295,7 @@ std::string objecttype=res.get<1>();
 if (servicetype != "com.robotraconteur.testing.TestService1") return GetNode()->UnpackPodArray(mstructin);
 throw RobotRaconteur::ServiceException("Invalid pod type.");
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElementPodMultiDimArray> com__robotraconteur__testing__TestService1Factory::PackPodMultiDimArray(RR_SHARED_PTR<RobotRaconteur::RRPodBaseMultiDimArray> structin)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementPodMultiDimArray> com__robotraconteur__testing__TestService1Factory::PackPodMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> structin)
 {
 std::string type=structin->RRElementTypeString();
 boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);
@@ -304,7 +304,7 @@ std::string objecttype=res.get<1>();
 if (servicetype != "com.robotraconteur.testing.TestService1") return GetNode()->PackPodMultiDimArray(structin);
 throw RobotRaconteur::ServiceException("Invalid pod type.");
 }
-RR_SHARED_PTR<RobotRaconteur::RRPodBaseMultiDimArray> com__robotraconteur__testing__TestService1Factory::UnpackPodMultiDimArray(RR_SHARED_PTR<RobotRaconteur::MessageElementPodMultiDimArray> mstructin)
+RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> com__robotraconteur__testing__TestService1Factory::UnpackPodMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementPodMultiDimArray> mstructin)
 {
 std::string type=mstructin->GetTypeString();
 boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);
@@ -313,7 +313,7 @@ std::string objecttype=res.get<1>();
 if (servicetype != "com.robotraconteur.testing.TestService1") return GetNode()->UnpackPodMultiDimArray(mstructin);
 throw RobotRaconteur::ServiceException("Invalid pod type.");
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElementNamedArray> com__robotraconteur__testing__TestService1Factory::PackNamedArray(RR_SHARED_PTR<RobotRaconteur::RRNamedBaseArray> structin)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNamedArray> com__robotraconteur__testing__TestService1Factory::PackNamedArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> structin)
 {
 std::string type=structin->RRElementTypeString();
 boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);
@@ -322,7 +322,7 @@ std::string objecttype=res.get<1>();
 if (servicetype != "com.robotraconteur.testing.TestService1") return GetNode()->PackNamedArray(structin);
 throw RobotRaconteur::ServiceException("Invalid namedarray type.");
 }
-RR_SHARED_PTR<RobotRaconteur::RRNamedBaseArray> com__robotraconteur__testing__TestService1Factory::UnpackNamedArray(RR_SHARED_PTR<RobotRaconteur::MessageElementNamedArray> mstructin)
+RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> com__robotraconteur__testing__TestService1Factory::UnpackNamedArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNamedArray> mstructin)
 {
 std::string type=mstructin->GetTypeString();
 boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);
@@ -331,7 +331,7 @@ std::string objecttype=res.get<1>();
 if (servicetype != "com.robotraconteur.testing.TestService1") return GetNode()->UnpackNamedArray(mstructin);
 throw RobotRaconteur::ServiceException("Invalid namedarray type.");
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElementNamedMultiDimArray> com__robotraconteur__testing__TestService1Factory::PackNamedMultiDimArray(RR_SHARED_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> structin)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNamedMultiDimArray> com__robotraconteur__testing__TestService1Factory::PackNamedMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> structin)
 {
 std::string type=structin->RRElementTypeString();
 boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);
@@ -340,7 +340,7 @@ std::string objecttype=res.get<1>();
 if (servicetype != "com.robotraconteur.testing.TestService1") return GetNode()->PackNamedMultiDimArray(structin);
 throw RobotRaconteur::ServiceException("Invalid namedarray type.");
 }
-RR_SHARED_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> com__robotraconteur__testing__TestService1Factory::UnpackNamedMultiDimArray(RR_SHARED_PTR<RobotRaconteur::MessageElementNamedMultiDimArray> mstructin)
+RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> com__robotraconteur__testing__TestService1Factory::UnpackNamedMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNamedMultiDimArray> mstructin)
 {
 std::string type=mstructin->GetTypeString();
 boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);
@@ -401,10 +401,10 @@ if (rr_res.get<1>()=="testexception2") return RR_MAKE_SHARED<testexception2>(rr_
 return rr_exp;
 }
 
-RR_SHARED_PTR<RobotRaconteur::MessageElementStructure> teststruct1_stub::PackStructure(RR_SHARED_PTR<RobotRaconteur::RRValue> s)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementStructure> teststruct1_stub::PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> s)
 {
-RR_SHARED_PTR<teststruct1 > s2=RobotRaconteur::rr_cast<teststruct1 >(s);
-std::vector<RR_SHARED_PTR<RobotRaconteur::MessageElement> > vret;
+RR_INTRUSIVE_PTR<teststruct1 > s2=RobotRaconteur::rr_cast<teststruct1 >(s);
+std::vector<RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> > vret;
 vret.push_back(RobotRaconteur::MessageElement_PackArrayElement<double >("dat1",s2->dat1));
 vret.push_back(RobotRaconteur::MessageElement_PackStringElement("str2",s2->str2));
 vret.push_back(RobotRaconteur::MessageElement_PackMapElement<int32_t,RobotRaconteur::RRArray<char>  >(RRGetNodeWeak(),"vec3",s2->vec3));
@@ -415,12 +415,12 @@ vret.push_back(RobotRaconteur::MessageElement_PackMapElement<std::string,teststr
 vret.push_back(RobotRaconteur::MessageElement_PackListElement<teststruct2  >(RRGetNodeWeak(),"lstruct3",s2->lstruct3));
 vret.push_back(RobotRaconteur::MessageElement_PackMultiDimArrayElement<double >(RRGetNodeWeak(),"multidimarray",s2->multidimarray));
 vret.push_back(RobotRaconteur::MessageElement_PackVarTypeElement(RRGetNodeWeak(),"var3",s2->var3));
-return RR_MAKE_SHARED<RobotRaconteur::MessageElementStructure>("com.robotraconteur.testing.TestService1.teststruct1",vret);
+return RobotRaconteur::CreateMessageElementStructure("com.robotraconteur.testing.TestService1.teststruct1",vret);
 }
-RR_SHARED_PTR<RobotRaconteur::RRStructure> teststruct1_stub::UnpackStructure(RR_SHARED_PTR<RobotRaconteur::MessageElementStructure> m)
+RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> teststruct1_stub::UnpackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementStructure> m)
 {
-std::vector<RR_SHARED_PTR<RobotRaconteur::MessageElement> >& i = m->Elements;
-RR_SHARED_PTR<teststruct1 > ret=RR_MAKE_SHARED<teststruct1 >();
+std::vector<RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> >& i = m->Elements;
+RR_INTRUSIVE_PTR<teststruct1 > ret(new teststruct1());
 ret->dat1=RobotRaconteur::MessageElement_UnpackArray<double >(RobotRaconteur::MessageElement::FindElement(i,"dat1"));
 ret->str2=RobotRaconteur::MessageElement_UnpackString(RobotRaconteur::MessageElement::FindElement(i,"str2"));
 ret->vec3=RobotRaconteur::MessageElement_UnpackMap<int32_t,RobotRaconteur::RRArray<char>  >(RRGetNodeWeak(),RobotRaconteur::MessageElement::FindElement(i,"vec3"));
@@ -434,17 +434,17 @@ ret->var3=RobotRaconteur::MessageElement_UnpackVarValue(RRGetNodeWeak(),RobotRac
 return ret;
 }
 
-RR_SHARED_PTR<RobotRaconteur::MessageElementStructure> teststruct2_stub::PackStructure(RR_SHARED_PTR<RobotRaconteur::RRValue> s)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementStructure> teststruct2_stub::PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> s)
 {
-RR_SHARED_PTR<teststruct2 > s2=RobotRaconteur::rr_cast<teststruct2 >(s);
-std::vector<RR_SHARED_PTR<RobotRaconteur::MessageElement> > vret;
+RR_INTRUSIVE_PTR<teststruct2 > s2=RobotRaconteur::rr_cast<teststruct2 >(s);
+std::vector<RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> > vret;
 vret.push_back(RobotRaconteur::MessageElement_PackArrayElement<double >("mydat",s2->mydat));
-return RR_MAKE_SHARED<RobotRaconteur::MessageElementStructure>("com.robotraconteur.testing.TestService1.teststruct2",vret);
+return RobotRaconteur::CreateMessageElementStructure("com.robotraconteur.testing.TestService1.teststruct2",vret);
 }
-RR_SHARED_PTR<RobotRaconteur::RRStructure> teststruct2_stub::UnpackStructure(RR_SHARED_PTR<RobotRaconteur::MessageElementStructure> m)
+RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> teststruct2_stub::UnpackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementStructure> m)
 {
-std::vector<RR_SHARED_PTR<RobotRaconteur::MessageElement> >& i = m->Elements;
-RR_SHARED_PTR<teststruct2 > ret=RR_MAKE_SHARED<teststruct2 >();
+std::vector<RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> >& i = m->Elements;
+RR_INTRUSIVE_PTR<teststruct2 > ret(new teststruct2());
 ret->mydat=RobotRaconteur::MessageElement_UnpackArray<double >(RobotRaconteur::MessageElement::FindElement(i,"mydat"));
 return ret;
 }
@@ -452,17 +452,17 @@ return ret;
 testroot_stub::testroot_stub(const std::string &path, RR_SHARED_PTR<RobotRaconteur::ClientContext> c) : RobotRaconteur::ServiceStub(path,c){ }
 void testroot_stub::RRInitStub()
 {
-rrvar_p1=RR_MAKE_SHARED<RobotRaconteur::PipeClient<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > >("p1",shared_from_this(), false,RobotRaconteur::MemberDefinition_Direction_both) ;
-rrvar_p2=RR_MAKE_SHARED<RobotRaconteur::PipeClient<RR_SHARED_PTR<teststruct2 > > >("p2",shared_from_this(), false,RobotRaconteur::MemberDefinition_Direction_both) ;
+rrvar_p1=RR_MAKE_SHARED<RobotRaconteur::PipeClient<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > >("p1",shared_from_this(), false,RobotRaconteur::MemberDefinition_Direction_both) ;
+rrvar_p2=RR_MAKE_SHARED<RobotRaconteur::PipeClient<RR_INTRUSIVE_PTR<teststruct2 > > >("p2",shared_from_this(), false,RobotRaconteur::MemberDefinition_Direction_both) ;
 rrvar_broadcastpipe=RR_MAKE_SHARED<RobotRaconteur::PipeClient<double > >("broadcastpipe",shared_from_this(), false,RobotRaconteur::MemberDefinition_Direction_both) ;
 rrvar_cb1=RR_MAKE_SHARED<RobotRaconteur::CallbackClient<boost::function<void() > > >("cb1") ;
 rrvar_cb2=RR_MAKE_SHARED<RobotRaconteur::CallbackClient<boost::function<void(double, double) > > >("cb2") ;
 rrvar_cb3=RR_MAKE_SHARED<RobotRaconteur::CallbackClient<boost::function<double(double, double) > > >("cb3") ;
 rrvar_cb_meaning_of_life=RR_MAKE_SHARED<RobotRaconteur::CallbackClient<boost::function<int32_t() > > >("cb_meaning_of_life") ;
 rrvar_cb_errtest=RR_MAKE_SHARED<RobotRaconteur::CallbackClient<boost::function<void() > > >("cb_errtest") ;
-rrvar_w1=RR_MAKE_SHARED<RobotRaconteur::WireClient<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > >("w1",shared_from_this(),RobotRaconteur::MemberDefinition_Direction_both);
-rrvar_w2=RR_MAKE_SHARED<RobotRaconteur::WireClient<RR_SHARED_PTR<teststruct2 > > >("w2",shared_from_this(),RobotRaconteur::MemberDefinition_Direction_both);
-rrvar_w3=RR_MAKE_SHARED<RobotRaconteur::WireClient<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > >("w3",shared_from_this(),RobotRaconteur::MemberDefinition_Direction_both);
+rrvar_w1=RR_MAKE_SHARED<RobotRaconteur::WireClient<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > >("w1",shared_from_this(),RobotRaconteur::MemberDefinition_Direction_both);
+rrvar_w2=RR_MAKE_SHARED<RobotRaconteur::WireClient<RR_INTRUSIVE_PTR<teststruct2 > > >("w2",shared_from_this(),RobotRaconteur::MemberDefinition_Direction_both);
+rrvar_w3=RR_MAKE_SHARED<RobotRaconteur::WireClient<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > >("w3",shared_from_this(),RobotRaconteur::MemberDefinition_Direction_both);
 rrvar_broadcastwire=RR_MAKE_SHARED<RobotRaconteur::WireClient<double > >("broadcastwire",shared_from_this(),RobotRaconteur::MemberDefinition_Direction_both);
 rrvar_m1=RR_MAKE_SHARED<RobotRaconteur::ArrayMemoryClient<double > >("m1",shared_from_this(),RobotRaconteur::MemberDefinition_Direction_both);
 rrvar_m2=RR_MAKE_SHARED<RobotRaconteur::MultiDimArrayMemoryClient<double > >("m2",shared_from_this(),RobotRaconteur::MemberDefinition_Direction_both);
@@ -471,861 +471,861 @@ rrvar_m3=RR_MAKE_SHARED<RobotRaconteur::MultiDimArrayMemoryClient<uint8_t > >("m
 
 double testroot_stub::get_d1()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"d1");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"d1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackScalar<double >(me);
 }
 void testroot_stub::set_d1(double value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"d1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"d1");
 req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<double >("value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRArray<double > > testroot_stub::get_d2()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > testroot_stub::get_d2()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"d2");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"d2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackArray<double >(me);
 }
-void testroot_stub::set_d2(RR_SHARED_PTR<RobotRaconteur::RRArray<double > > value)
+void testroot_stub::set_d2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"d2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"d2");
 req->AddElement(RobotRaconteur::MessageElement_PackArrayElement<double >("value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRArray<double > > testroot_stub::get_d3()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > testroot_stub::get_d3()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"d3");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"d3");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::VerifyRRArrayLength(RobotRaconteur::MessageElement_UnpackArray<double >(me), 16, false);
 }
-void testroot_stub::set_d3(RR_SHARED_PTR<RobotRaconteur::RRArray<double > > value)
+void testroot_stub::set_d3(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"d3");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"d3");
 req->AddElement(RobotRaconteur::MessageElement_PackArrayElement<double >("value",RobotRaconteur::VerifyRRArrayLength(value, 16, false)));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRArray<double > > testroot_stub::get_d4()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > testroot_stub::get_d4()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"d4");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"d4");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::VerifyRRArrayLength(RobotRaconteur::MessageElement_UnpackArray<double >(me), 16, true);
 }
-void testroot_stub::set_d4(RR_SHARED_PTR<RobotRaconteur::RRArray<double > > value)
+void testroot_stub::set_d4(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"d4");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"d4");
 req->AddElement(RobotRaconteur::MessageElement_PackArrayElement<double >("value",RobotRaconteur::VerifyRRArrayLength(value, 16, true)));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > > testroot_stub::get_d5()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > > testroot_stub::get_d5()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"d5");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"d5");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackMultiDimArray<double >(RRGetNodeWeak(),me);
 }
-void testroot_stub::set_d5(RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > > value)
+void testroot_stub::set_d5(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"d5");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"d5");
 req->AddElement(RobotRaconteur::MessageElement_PackMultiDimArrayElement<double >(RRGetNodeWeak(),"value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > > testroot_stub::get_d6()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > > testroot_stub::get_d6()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"d6");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"d6");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::VerifyRRMultiDimArrayLength<2>(RobotRaconteur::MessageElement_UnpackMultiDimArray<double >(RRGetNodeWeak(),me),9,boost::assign::list_of(3)(3));
 }
-void testroot_stub::set_d6(RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > > value)
+void testroot_stub::set_d6(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"d6");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"d6");
 req->AddElement(RobotRaconteur::MessageElement_PackMultiDimArrayElement<double >(RRGetNodeWeak(),"value",RobotRaconteur::VerifyRRMultiDimArrayLength<2>(value,9,boost::assign::list_of(3)(3))));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
 float testroot_stub::get_s1()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"s1");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"s1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackScalar<float >(me);
 }
 void testroot_stub::set_s1(float value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"s1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"s1");
 req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<float >("value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRArray<float > > testroot_stub::get_s2()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<float > > testroot_stub::get_s2()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"s2");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"s2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackArray<float >(me);
 }
-void testroot_stub::set_s2(RR_SHARED_PTR<RobotRaconteur::RRArray<float > > value)
+void testroot_stub::set_s2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<float > > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"s2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"s2");
 req->AddElement(RobotRaconteur::MessageElement_PackArrayElement<float >("value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
 int8_t testroot_stub::get_i8_1()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"i8_1");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"i8_1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackScalar<int8_t >(me);
 }
 void testroot_stub::set_i8_1(int8_t value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"i8_1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"i8_1");
 req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<int8_t >("value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRArray<int8_t > > testroot_stub::get_i8_2()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int8_t > > testroot_stub::get_i8_2()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"i8_2");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"i8_2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackArray<int8_t >(me);
 }
-void testroot_stub::set_i8_2(RR_SHARED_PTR<RobotRaconteur::RRArray<int8_t > > value)
+void testroot_stub::set_i8_2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int8_t > > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"i8_2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"i8_2");
 req->AddElement(RobotRaconteur::MessageElement_PackArrayElement<int8_t >("value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
 uint8_t testroot_stub::get_u8_1()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"u8_1");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"u8_1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackScalar<uint8_t >(me);
 }
 void testroot_stub::set_u8_1(uint8_t value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"u8_1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"u8_1");
 req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<uint8_t >("value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRArray<uint8_t > > testroot_stub::get_u8_2()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint8_t > > testroot_stub::get_u8_2()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"u8_2");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"u8_2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackArray<uint8_t >(me);
 }
-void testroot_stub::set_u8_2(RR_SHARED_PTR<RobotRaconteur::RRArray<uint8_t > > value)
+void testroot_stub::set_u8_2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint8_t > > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"u8_2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"u8_2");
 req->AddElement(RobotRaconteur::MessageElement_PackArrayElement<uint8_t >("value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<uint8_t > > testroot_stub::get_u8_3()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<uint8_t > > testroot_stub::get_u8_3()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"u8_3");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"u8_3");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackMultiDimArray<uint8_t >(RRGetNodeWeak(),me);
 }
-void testroot_stub::set_u8_3(RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<uint8_t > > value)
+void testroot_stub::set_u8_3(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<uint8_t > > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"u8_3");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"u8_3");
 req->AddElement(RobotRaconteur::MessageElement_PackMultiDimArrayElement<uint8_t >(RRGetNodeWeak(),"value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
 int16_t testroot_stub::get_i16_1()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"i16_1");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"i16_1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackScalar<int16_t >(me);
 }
 void testroot_stub::set_i16_1(int16_t value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"i16_1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"i16_1");
 req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<int16_t >("value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRArray<int16_t > > testroot_stub::get_i16_2()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int16_t > > testroot_stub::get_i16_2()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"i16_2");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"i16_2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackArray<int16_t >(me);
 }
-void testroot_stub::set_i16_2(RR_SHARED_PTR<RobotRaconteur::RRArray<int16_t > > value)
+void testroot_stub::set_i16_2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int16_t > > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"i16_2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"i16_2");
 req->AddElement(RobotRaconteur::MessageElement_PackArrayElement<int16_t >("value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
 uint16_t testroot_stub::get_u16_1()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"u16_1");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"u16_1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackScalar<uint16_t >(me);
 }
 void testroot_stub::set_u16_1(uint16_t value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"u16_1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"u16_1");
 req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<uint16_t >("value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRArray<uint16_t > > testroot_stub::get_u16_2()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint16_t > > testroot_stub::get_u16_2()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"u16_2");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"u16_2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackArray<uint16_t >(me);
 }
-void testroot_stub::set_u16_2(RR_SHARED_PTR<RobotRaconteur::RRArray<uint16_t > > value)
+void testroot_stub::set_u16_2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint16_t > > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"u16_2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"u16_2");
 req->AddElement(RobotRaconteur::MessageElement_PackArrayElement<uint16_t >("value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
 int32_t testroot_stub::get_i32_1()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"i32_1");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"i32_1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackScalar<int32_t >(me);
 }
 void testroot_stub::set_i32_1(int32_t value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"i32_1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"i32_1");
 req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<int32_t >("value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > testroot_stub::get_i32_2()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > testroot_stub::get_i32_2()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"i32_2");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"i32_2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackArray<int32_t >(me);
 }
-void testroot_stub::set_i32_2(RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > value)
+void testroot_stub::set_i32_2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"i32_2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"i32_2");
 req->AddElement(RobotRaconteur::MessageElement_PackArrayElement<int32_t >("value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > testroot_stub::get_i32_huge()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > testroot_stub::get_i32_huge()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"i32_huge");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"i32_huge");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackArray<int32_t >(me);
 }
-void testroot_stub::set_i32_huge(RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > value)
+void testroot_stub::set_i32_huge(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"i32_huge");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"i32_huge");
 req->AddElement(RobotRaconteur::MessageElement_PackArrayElement<int32_t >("value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
 uint32_t testroot_stub::get_u32_1()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"u32_1");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"u32_1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackScalar<uint32_t >(me);
 }
 void testroot_stub::set_u32_1(uint32_t value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"u32_1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"u32_1");
 req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<uint32_t >("value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRArray<uint32_t > > testroot_stub::get_u32_2()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint32_t > > testroot_stub::get_u32_2()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"u32_2");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"u32_2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackArray<uint32_t >(me);
 }
-void testroot_stub::set_u32_2(RR_SHARED_PTR<RobotRaconteur::RRArray<uint32_t > > value)
+void testroot_stub::set_u32_2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint32_t > > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"u32_2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"u32_2");
 req->AddElement(RobotRaconteur::MessageElement_PackArrayElement<uint32_t >("value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
 int64_t testroot_stub::get_i64_1()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"i64_1");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"i64_1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackScalar<int64_t >(me);
 }
 void testroot_stub::set_i64_1(int64_t value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"i64_1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"i64_1");
 req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<int64_t >("value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRArray<int64_t > > testroot_stub::get_i64_2()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int64_t > > testroot_stub::get_i64_2()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"i64_2");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"i64_2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackArray<int64_t >(me);
 }
-void testroot_stub::set_i64_2(RR_SHARED_PTR<RobotRaconteur::RRArray<int64_t > > value)
+void testroot_stub::set_i64_2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int64_t > > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"i64_2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"i64_2");
 req->AddElement(RobotRaconteur::MessageElement_PackArrayElement<int64_t >("value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
 uint64_t testroot_stub::get_u64_1()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"u64_1");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"u64_1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackScalar<uint64_t >(me);
 }
 void testroot_stub::set_u64_1(uint64_t value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"u64_1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"u64_1");
 req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<uint64_t >("value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRArray<uint64_t > > testroot_stub::get_u64_2()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint64_t > > testroot_stub::get_u64_2()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"u64_2");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"u64_2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackArray<uint64_t >(me);
 }
-void testroot_stub::set_u64_2(RR_SHARED_PTR<RobotRaconteur::RRArray<uint64_t > > value)
+void testroot_stub::set_u64_2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint64_t > > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"u64_2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"u64_2");
 req->AddElement(RobotRaconteur::MessageElement_PackArrayElement<uint64_t >("value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
 std::string testroot_stub::get_str1()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"str1");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"str1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackString(me);
 }
 void testroot_stub::set_str1(const std::string& value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"str1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"str1");
 req->AddElement(RobotRaconteur::MessageElement_PackStringElement("value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<teststruct1 > testroot_stub::get_struct1()
+RR_INTRUSIVE_PTR<teststruct1 > testroot_stub::get_struct1()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"struct1");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"struct1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackStructure<teststruct1 >(RRGetNodeWeak(), me);
 }
-void testroot_stub::set_struct1(RR_SHARED_PTR<teststruct1 > value)
+void testroot_stub::set_struct1(RR_INTRUSIVE_PTR<teststruct1 > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"struct1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"struct1");
 req->AddElement(RobotRaconteur::MessageElement_PackStructElement(RRGetNodeWeak(),"value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<teststruct2 > testroot_stub::get_struct2()
+RR_INTRUSIVE_PTR<teststruct2 > testroot_stub::get_struct2()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"struct2");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"struct2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackStructure<teststruct2 >(RRGetNodeWeak(), me);
 }
-void testroot_stub::set_struct2(RR_SHARED_PTR<teststruct2 > value)
+void testroot_stub::set_struct2(RR_INTRUSIVE_PTR<teststruct2 > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"struct2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"struct2");
 req->AddElement(RobotRaconteur::MessageElement_PackStructElement(RRGetNodeWeak(),"value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > testroot_stub::get_is_d1()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > testroot_stub::get_is_d1()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_d1");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_d1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackMap<int32_t,RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),me);
 }
-void testroot_stub::set_is_d1(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value)
+void testroot_stub::set_is_d1(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"is_d1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"is_d1");
 req->AddElement(RobotRaconteur::MessageElement_PackMapElement<int32_t,RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),"value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > testroot_stub::get_is_d2()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > testroot_stub::get_is_d2()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_d2");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_d2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackMap<std::string,RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),me);
 }
-void testroot_stub::set_is_d2(RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > value)
+void testroot_stub::set_is_d2(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"is_d2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"is_d2");
 req->AddElement(RobotRaconteur::MessageElement_PackMapElement<std::string,RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),"value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > testroot_stub::get_is_d3()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > testroot_stub::get_is_d3()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_d3");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_d3");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackMap<int32_t,RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),me);
 }
-void testroot_stub::set_is_d3(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value)
+void testroot_stub::set_is_d3(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"is_d3");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"is_d3");
 req->AddElement(RobotRaconteur::MessageElement_PackMapElement<int32_t,RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),"value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > testroot_stub::get_is_d4()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > testroot_stub::get_is_d4()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_d4");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_d4");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackMap<std::string,RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),me);
 }
-void testroot_stub::set_is_d4(RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > value)
+void testroot_stub::set_is_d4(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"is_d4");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"is_d4");
 req->AddElement(RobotRaconteur::MessageElement_PackMapElement<std::string,RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),"value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > testroot_stub::get_is_d5()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > testroot_stub::get_is_d5()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_d5");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_d5");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  >(RRGetNodeWeak(),me);
 }
-void testroot_stub::set_is_d5(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > value)
+void testroot_stub::set_is_d5(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"is_d5");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"is_d5");
 req->AddElement(RobotRaconteur::MessageElement_PackMapElement<int32_t,RobotRaconteur::RRMultiDimArray<double >  >(RRGetNodeWeak(),"value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRMultiDimArray<double >  > > testroot_stub::get_is_d6()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRMultiDimArray<double >  > > testroot_stub::get_is_d6()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_d6");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_d6");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackMap<std::string,RobotRaconteur::RRMultiDimArray<double >  >(RRGetNodeWeak(),me);
 }
-void testroot_stub::set_is_d6(RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRMultiDimArray<double >  > > value)
+void testroot_stub::set_is_d6(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRMultiDimArray<double >  > > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"is_d6");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"is_d6");
 req->AddElement(RobotRaconteur::MessageElement_PackMapElement<std::string,RobotRaconteur::RRMultiDimArray<double >  >(RRGetNodeWeak(),"value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > > testroot_stub::get_is_str1()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > > testroot_stub::get_is_str1()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_str1");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_str1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackMap<int32_t,RobotRaconteur::RRArray<char>  >(RRGetNodeWeak(),me);
 }
-void testroot_stub::set_is_str1(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > > value)
+void testroot_stub::set_is_str1(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"is_str1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"is_str1");
 req->AddElement(RobotRaconteur::MessageElement_PackMapElement<int32_t,RobotRaconteur::RRArray<char>  >(RRGetNodeWeak(),"value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<char>  > > testroot_stub::get_is_str2()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<char>  > > testroot_stub::get_is_str2()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_str2");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_str2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackMap<std::string,RobotRaconteur::RRArray<char>  >(RRGetNodeWeak(),me);
 }
-void testroot_stub::set_is_str2(RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<char>  > > value)
+void testroot_stub::set_is_str2(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<char>  > > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"is_str2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"is_str2");
 req->AddElement(RobotRaconteur::MessageElement_PackMapElement<std::string,RobotRaconteur::RRArray<char>  >(RRGetNodeWeak(),"value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,teststruct2  > > testroot_stub::get_is_struct1()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,teststruct2  > > testroot_stub::get_is_struct1()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_struct1");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_struct1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackMap<int32_t,teststruct2  >(RRGetNodeWeak(),me);
 }
-void testroot_stub::set_is_struct1(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,teststruct2  > > value)
+void testroot_stub::set_is_struct1(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,teststruct2  > > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"is_struct1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"is_struct1");
 req->AddElement(RobotRaconteur::MessageElement_PackMapElement<int32_t,teststruct2  >(RRGetNodeWeak(),"value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,teststruct2  > > testroot_stub::get_is_struct2()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,teststruct2  > > testroot_stub::get_is_struct2()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_struct2");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_struct2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackMap<std::string,teststruct2  >(RRGetNodeWeak(),me);
 }
-void testroot_stub::set_is_struct2(RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,teststruct2  > > value)
+void testroot_stub::set_is_struct2(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,teststruct2  > > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"is_struct2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"is_struct2");
 req->AddElement(RobotRaconteur::MessageElement_PackMapElement<std::string,teststruct2  >(RRGetNodeWeak(),"value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<com::robotraconteur::testing::TestService2::ostruct2 > testroot_stub::get_struct3()
+RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService2::ostruct2 > testroot_stub::get_struct3()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"struct3");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"struct3");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackStructure<com::robotraconteur::testing::TestService2::ostruct2 >(RRGetNodeWeak(), me);
 }
-void testroot_stub::set_struct3(RR_SHARED_PTR<com::robotraconteur::testing::TestService2::ostruct2 > value)
+void testroot_stub::set_struct3(RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService2::ostruct2 > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"struct3");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"struct3");
 req->AddElement(RobotRaconteur::MessageElement_PackStructElement(RRGetNodeWeak(),"value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > testroot_stub::get_list_d1()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > testroot_stub::get_list_d1()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"list_d1");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"list_d1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackList<RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),me);
 }
-void testroot_stub::set_list_d1(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value)
+void testroot_stub::set_list_d1(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"list_d1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"list_d1");
 req->AddElement(RobotRaconteur::MessageElement_PackListElement<RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),"value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > testroot_stub::get_list_d3()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > testroot_stub::get_list_d3()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"list_d3");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"list_d3");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackList<RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),me);
 }
-void testroot_stub::set_list_d3(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value)
+void testroot_stub::set_list_d3(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"list_d3");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"list_d3");
 req->AddElement(RobotRaconteur::MessageElement_PackListElement<RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),"value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > testroot_stub::get_list_d5()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > testroot_stub::get_list_d5()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"list_d5");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"list_d5");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackList<RobotRaconteur::RRMultiDimArray<double >  >(RRGetNodeWeak(),me);
 }
-void testroot_stub::set_list_d5(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > value)
+void testroot_stub::set_list_d5(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"list_d5");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"list_d5");
 req->AddElement(RobotRaconteur::MessageElement_PackListElement<RobotRaconteur::RRMultiDimArray<double >  >(RRGetNodeWeak(),"value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char>  > > testroot_stub::get_list_str1()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char>  > > testroot_stub::get_list_str1()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"list_str1");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"list_str1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackList<RobotRaconteur::RRArray<char>  >(RRGetNodeWeak(),me);
 }
-void testroot_stub::set_list_str1(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char>  > > value)
+void testroot_stub::set_list_str1(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char>  > > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"list_str1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"list_str1");
 req->AddElement(RobotRaconteur::MessageElement_PackListElement<RobotRaconteur::RRArray<char>  >(RRGetNodeWeak(),"value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRList<teststruct2  > > testroot_stub::get_list_struct1()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<teststruct2  > > testroot_stub::get_list_struct1()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"list_struct1");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"list_struct1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackList<teststruct2  >(RRGetNodeWeak(),me);
 }
-void testroot_stub::set_list_struct1(RR_SHARED_PTR<RobotRaconteur::RRList<teststruct2  > > value)
+void testroot_stub::set_list_struct1(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<teststruct2  > > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"list_struct1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"list_struct1");
 req->AddElement(RobotRaconteur::MessageElement_PackListElement<teststruct2  >(RRGetNodeWeak(),"value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRValue> testroot_stub::get_var1()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> testroot_stub::get_var1()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"var1");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"var1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackVarValue(RRGetNodeWeak(),me);
 }
-void testroot_stub::set_var1(RR_SHARED_PTR<RobotRaconteur::RRValue> value)
+void testroot_stub::set_var1(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"var1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"var1");
 req->AddElement(RobotRaconteur::MessageElement_PackVarTypeElement(RRGetNodeWeak(),"value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRValue > > testroot_stub::get_var2()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRValue > > testroot_stub::get_var2()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"var2");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"var2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackMap<int32_t,RobotRaconteur::RRValue >(RRGetNodeWeak(),me);
 }
-void testroot_stub::set_var2(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRValue > > value)
+void testroot_stub::set_var2(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRValue > > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"var2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"var2");
 req->AddElement(RobotRaconteur::MessageElement_PackMapElement<int32_t,RobotRaconteur::RRValue >(RRGetNodeWeak(),"value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRValue> testroot_stub::get_var_num()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> testroot_stub::get_var_num()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"var_num");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"var_num");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackVarValue(RRGetNodeWeak(),me);
 }
-void testroot_stub::set_var_num(RR_SHARED_PTR<RobotRaconteur::RRValue> value)
+void testroot_stub::set_var_num(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"var_num");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"var_num");
 req->AddElement(RobotRaconteur::MessageElement_PackVarTypeElement(RRGetNodeWeak(),"value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRValue> testroot_stub::get_var_str()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> testroot_stub::get_var_str()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"var_str");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"var_str");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackVarValue(RRGetNodeWeak(),me);
 }
-void testroot_stub::set_var_str(RR_SHARED_PTR<RobotRaconteur::RRValue> value)
+void testroot_stub::set_var_str(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"var_str");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"var_str");
 req->AddElement(RobotRaconteur::MessageElement_PackVarTypeElement(RRGetNodeWeak(),"value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRValue> testroot_stub::get_var_struct()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> testroot_stub::get_var_struct()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"var_struct");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"var_struct");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackVarValue(RRGetNodeWeak(),me);
 }
-void testroot_stub::set_var_struct(RR_SHARED_PTR<RobotRaconteur::RRValue> value)
+void testroot_stub::set_var_struct(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"var_struct");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"var_struct");
 req->AddElement(RobotRaconteur::MessageElement_PackVarTypeElement(RRGetNodeWeak(),"value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRValue> testroot_stub::get_var_vector()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> testroot_stub::get_var_vector()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"var_vector");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"var_vector");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackVarValue(RRGetNodeWeak(),me);
 }
-void testroot_stub::set_var_vector(RR_SHARED_PTR<RobotRaconteur::RRValue> value)
+void testroot_stub::set_var_vector(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"var_vector");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"var_vector");
 req->AddElement(RobotRaconteur::MessageElement_PackVarTypeElement(RRGetNodeWeak(),"value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRValue> testroot_stub::get_var_dictionary()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> testroot_stub::get_var_dictionary()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"var_dictionary");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"var_dictionary");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackVarValue(RRGetNodeWeak(),me);
 }
-void testroot_stub::set_var_dictionary(RR_SHARED_PTR<RobotRaconteur::RRValue> value)
+void testroot_stub::set_var_dictionary(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"var_dictionary");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"var_dictionary");
 req->AddElement(RobotRaconteur::MessageElement_PackVarTypeElement(RRGetNodeWeak(),"value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRValue> testroot_stub::get_var_list()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> testroot_stub::get_var_list()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"var_list");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"var_list");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackVarValue(RRGetNodeWeak(),me);
 }
-void testroot_stub::set_var_list(RR_SHARED_PTR<RobotRaconteur::RRValue> value)
+void testroot_stub::set_var_list(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"var_list");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"var_list");
 req->AddElement(RobotRaconteur::MessageElement_PackVarTypeElement(RRGetNodeWeak(),"value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRValue> testroot_stub::get_var_multidimarray()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> testroot_stub::get_var_multidimarray()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"var_multidimarray");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"var_multidimarray");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackVarValue(RRGetNodeWeak(),me);
 }
-void testroot_stub::set_var_multidimarray(RR_SHARED_PTR<RobotRaconteur::RRValue> value)
+void testroot_stub::set_var_multidimarray(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"var_multidimarray");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"var_multidimarray");
 req->AddElement(RobotRaconteur::MessageElement_PackVarTypeElement(RRGetNodeWeak(),"value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
 double testroot_stub::get_errtest()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"errtest");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"errtest");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackScalar<double >(me);
 }
 void testroot_stub::set_errtest(double value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"errtest");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"errtest");
 req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<double >("value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<teststruct1 > testroot_stub::get_nulltest()
+RR_INTRUSIVE_PTR<teststruct1 > testroot_stub::get_nulltest()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"nulltest");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"nulltest");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackStructure<teststruct1 >(RRGetNodeWeak(), me);
 }
-void testroot_stub::set_nulltest(RR_SHARED_PTR<teststruct1 > value)
+void testroot_stub::set_nulltest(RR_INTRUSIVE_PTR<teststruct1 > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"nulltest");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"nulltest");
 req->AddElement(RobotRaconteur::MessageElement_PackStructElement(RRGetNodeWeak(),"value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
 void testroot_stub::func1()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_FunctionCallReq,"func1");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_ret=ProcessRequest(rr_req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallReq,"func1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_ret=ProcessRequest(rr_req);
 }
 
 void testroot_stub::func2(double d1, double d2)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_FunctionCallReq,"func2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallReq,"func2");
 rr_req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<double >("d1",d1));
 rr_req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<double >("d2",d2));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_ret=ProcessRequest(rr_req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_ret=ProcessRequest(rr_req);
 }
 
 double testroot_stub::func3(double d1, double d2)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_FunctionCallReq,"func3");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallReq,"func3");
 rr_req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<double >("d1",d1));
 rr_req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<double >("d2",d2));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_ret=ProcessRequest(rr_req);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> rr_me=rr_ret->FindElement("return");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_ret=ProcessRequest(rr_req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> rr_me=rr_ret->FindElement("return");
 return RobotRaconteur::MessageElement_UnpackScalar<double >(rr_me);
 }
 
 int32_t testroot_stub::meaning_of_life()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_FunctionCallReq,"meaning_of_life");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_ret=ProcessRequest(rr_req);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> rr_me=rr_ret->FindElement("return");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallReq,"meaning_of_life");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_ret=ProcessRequest(rr_req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> rr_me=rr_ret->FindElement("return");
 return RobotRaconteur::MessageElement_UnpackScalar<int32_t >(rr_me);
 }
 
 void testroot_stub::func_errtest()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_FunctionCallReq,"func_errtest");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_ret=ProcessRequest(rr_req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallReq,"func_errtest");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_ret=ProcessRequest(rr_req);
 }
 
 void testroot_stub::func_errtest1()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_FunctionCallReq,"func_errtest1");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_ret=ProcessRequest(rr_req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallReq,"func_errtest1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_ret=ProcessRequest(rr_req);
 }
 
 void testroot_stub::func_errtest2()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_FunctionCallReq,"func_errtest2");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_ret=ProcessRequest(rr_req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallReq,"func_errtest2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_ret=ProcessRequest(rr_req);
 }
 
 void testroot_stub::func_errtest3()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_FunctionCallReq,"func_errtest3");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_ret=ProcessRequest(rr_req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallReq,"func_errtest3");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_ret=ProcessRequest(rr_req);
 }
 
 void testroot_stub::o6_op(int32_t op)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_FunctionCallReq,"o6_op");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallReq,"o6_op");
 rr_req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<int32_t >("op",op));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_ret=ProcessRequest(rr_req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_ret=ProcessRequest(rr_req);
 }
 
 void testroot_stub::pipe_check_error()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_FunctionCallReq,"pipe_check_error");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_ret=ProcessRequest(rr_req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallReq,"pipe_check_error");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_ret=ProcessRequest(rr_req);
 }
 
 void testroot_stub::test_callbacks()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_FunctionCallReq,"test_callbacks");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_ret=ProcessRequest(rr_req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallReq,"test_callbacks");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_ret=ProcessRequest(rr_req);
 }
 
 boost::signals2::signal<void ()>& testroot_stub::get_ev1()
@@ -1333,7 +1333,7 @@ boost::signals2::signal<void ()>& testroot_stub::get_ev1()
 return rrvar_ev1;
 }
 
-boost::signals2::signal<void (double, RR_SHARED_PTR<teststruct2 >)>& testroot_stub::get_ev2()
+boost::signals2::signal<void (double, RR_INTRUSIVE_PTR<teststruct2 >)>& testroot_stub::get_ev2()
 {
 return rrvar_ev2;
 }
@@ -1368,24 +1368,24 @@ RR_SHARED_PTR<RobotRaconteur::RRObject > testroot_stub::get_o6()
 return RobotRaconteur::rr_cast<RobotRaconteur::RRObject >(FindObjRef("o6"));
 }
 
-RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > > testroot_stub::get_p1()
+RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > testroot_stub::get_p1()
 {
-RR_SHARED_PTR<RobotRaconteur::PipeClient<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > > value=rrvar_p1;
+RR_SHARED_PTR<RobotRaconteur::PipeClient<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > value=rrvar_p1;
 if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
-void testroot_stub::set_p1(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > > value)
+void testroot_stub::set_p1(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > value)
 {
 throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
 
-RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<teststruct2 > > > testroot_stub::get_p2()
+RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<teststruct2 > > > testroot_stub::get_p2()
 {
-RR_SHARED_PTR<RobotRaconteur::PipeClient<RR_SHARED_PTR<teststruct2 > > > value=rrvar_p2;
+RR_SHARED_PTR<RobotRaconteur::PipeClient<RR_INTRUSIVE_PTR<teststruct2 > > > value=rrvar_p2;
 if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
-void testroot_stub::set_p2(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<teststruct2 > > > value)
+void testroot_stub::set_p2(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<teststruct2 > > > value)
 {
 throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
@@ -1451,35 +1451,35 @@ void testroot_stub::set_cb_errtest(RR_SHARED_PTR<RobotRaconteur::Callback<boost:
 {
 throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
-RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > > testroot_stub::get_w1()
+RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > testroot_stub::get_w1()
 {
-RR_SHARED_PTR<RobotRaconteur::WireClient<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > > value=rrvar_w1;
+RR_SHARED_PTR<RobotRaconteur::WireClient<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > value=rrvar_w1;
 if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
-void testroot_stub::set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > > value)
+void testroot_stub::set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > value)
 {
 throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
 
-RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<teststruct2 > > > testroot_stub::get_w2()
+RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<teststruct2 > > > testroot_stub::get_w2()
 {
-RR_SHARED_PTR<RobotRaconteur::WireClient<RR_SHARED_PTR<teststruct2 > > > value=rrvar_w2;
+RR_SHARED_PTR<RobotRaconteur::WireClient<RR_INTRUSIVE_PTR<teststruct2 > > > value=rrvar_w2;
 if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
-void testroot_stub::set_w2(RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<teststruct2 > > > value)
+void testroot_stub::set_w2(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<teststruct2 > > > value)
 {
 throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
 
-RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > testroot_stub::get_w3()
+RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > testroot_stub::get_w3()
 {
-RR_SHARED_PTR<RobotRaconteur::WireClient<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > value=rrvar_w3;
+RR_SHARED_PTR<RobotRaconteur::WireClient<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > value=rrvar_w3;
 if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
-void testroot_stub::set_w3(RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > value)
+void testroot_stub::set_w3(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > value)
 {
 throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
@@ -1513,7 +1513,7 @@ RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemoryClient<uint8_t > > value=rrvar_
 if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
-void testroot_stub::DispatchEvent(RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_m)
+void testroot_stub::DispatchEvent(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_m)
 {
 if (rr_m->MemberName=="ev1")
 {
@@ -1523,13 +1523,13 @@ return;
 if (rr_m->MemberName=="ev2")
 {
 double d1=RobotRaconteur::MessageElement_UnpackScalar<double >(rr_m->FindElement("d1"));
-RR_SHARED_PTR<teststruct2 > s2=RobotRaconteur::MessageElement_UnpackStructure<teststruct2 >(RRGetNodeWeak(), rr_m->FindElement("s2"));
+RR_INTRUSIVE_PTR<teststruct2 > s2=RobotRaconteur::MessageElement_UnpackStructure<teststruct2 >(RRGetNodeWeak(), rr_m->FindElement("s2"));
 get_ev2()(d1, s2);
 return;
 }
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
-void testroot_stub::DispatchPipeMessage(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m)
+void testroot_stub::DispatchPipeMessage(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m)
 {
 if (m->MemberName=="p1")
 {
@@ -1548,7 +1548,7 @@ return;
 }
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
-void testroot_stub::DispatchWireMessage(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m)
+void testroot_stub::DispatchWireMessage(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m)
 {
 if (m->MemberName=="w1")
 {
@@ -1572,10 +1572,10 @@ return;
 }
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
-RR_SHARED_PTR<RobotRaconteur::MessageEntry>testroot_stub::CallbackCall(RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_m)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>testroot_stub::CallbackCall(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_m)
 {
 std::string ename=rr_m->MemberName;
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_mr=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_CallbackCallRet, ename);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_mr=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_CallbackCallRet, ename);
 rr_mr->ServicePath=rr_m->ServicePath;
 rr_mr->RequestID=rr_m->RequestID;
 if (rr_m->MemberName=="cb1")
@@ -1684,10 +1684,10 @@ return ServiceStub::RRGetWireClient(membername);
 
 void testroot_stub::async_get_d1(boost::function<void (double,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"d1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"d1");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_d1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_d1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (double ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_d1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (double ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -1702,7 +1702,7 @@ return;
 double rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackScalar<double >(me);
 }
 catch (std::exception& err2)
@@ -1713,11 +1713,11 @@ handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void testroot_stub::async_set_d1(double value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"d1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"d1");
 req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<double >("value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_d1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_d1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_d1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -1731,27 +1731,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_d2(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRArray<double > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_d2(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"d2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"d2");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_d2, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_d2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRArray<double > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_d2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRArray<double > >(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRArray<double > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRArray<double > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackArray<double >(me);
 }
 catch (std::exception& err2)
@@ -1760,13 +1760,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_d2(RR_SHARED_PTR<RobotRaconteur::RRArray<double > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_d2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"d2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"d2");
 req->AddElement(RobotRaconteur::MessageElement_PackArrayElement<double >("value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_d2, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_d2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_d2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -1780,27 +1780,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_d3(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRArray<double > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_d3(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"d3");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"d3");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_d3, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_d3(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRArray<double > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_d3(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRArray<double > >(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRArray<double > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRArray<double > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::VerifyRRArrayLength(RobotRaconteur::MessageElement_UnpackArray<double >(me), 16, false);
 }
 catch (std::exception& err2)
@@ -1809,13 +1809,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_d3(RR_SHARED_PTR<RobotRaconteur::RRArray<double > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_d3(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"d3");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"d3");
 req->AddElement(RobotRaconteur::MessageElement_PackArrayElement<double >("value",RobotRaconteur::VerifyRRArrayLength(value, 16, false)));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_d3, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_d3(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_d3(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -1829,27 +1829,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_d4(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRArray<double > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_d4(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"d4");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"d4");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_d4, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_d4(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRArray<double > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_d4(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRArray<double > >(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRArray<double > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRArray<double > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::VerifyRRArrayLength(RobotRaconteur::MessageElement_UnpackArray<double >(me), 16, true);
 }
 catch (std::exception& err2)
@@ -1858,13 +1858,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_d4(RR_SHARED_PTR<RobotRaconteur::RRArray<double > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_d4(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"d4");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"d4");
 req->AddElement(RobotRaconteur::MessageElement_PackArrayElement<double >("value",RobotRaconteur::VerifyRRArrayLength(value, 16, true)));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_d4, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_d4(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_d4(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -1878,27 +1878,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_d5(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_d5(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"d5");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"d5");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_d5, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_d5(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_d5(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > >(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackMultiDimArray<double >(RRGetNodeWeak(),me);
 }
 catch (std::exception& err2)
@@ -1907,13 +1907,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_d5(RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_d5(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"d5");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"d5");
 req->AddElement(RobotRaconteur::MessageElement_PackMultiDimArrayElement<double >(RRGetNodeWeak(),"value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_d5, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_d5(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_d5(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -1927,27 +1927,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_d6(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_d6(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"d6");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"d6");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_d6, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_d6(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_d6(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > >(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::VerifyRRMultiDimArrayLength<2>(RobotRaconteur::MessageElement_UnpackMultiDimArray<double >(RRGetNodeWeak(),me),9,boost::assign::list_of(3)(3));
 }
 catch (std::exception& err2)
@@ -1956,13 +1956,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_d6(RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_d6(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"d6");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"d6");
 req->AddElement(RobotRaconteur::MessageElement_PackMultiDimArrayElement<double >(RRGetNodeWeak(),"value",RobotRaconteur::VerifyRRMultiDimArrayLength<2>(value,9,boost::assign::list_of(3)(3))));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_d6, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_d6(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_d6(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -1978,10 +1978,10 @@ handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void testroot_stub::async_get_s1(boost::function<void (float,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"s1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"s1");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_s1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_s1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (float ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_s1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (float ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -1996,7 +1996,7 @@ return;
 float rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackScalar<float >(me);
 }
 catch (std::exception& err2)
@@ -2007,11 +2007,11 @@ handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void testroot_stub::async_set_s1(float value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"s1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"s1");
 req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<float >("value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_s1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_s1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_s1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -2025,27 +2025,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_s2(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRArray<float > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_s2(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<float > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"s2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"s2");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_s2, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_s2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRArray<float > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_s2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<float > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRArray<float > >(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<float > >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRArray<float > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<float > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRArray<float > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<float > > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackArray<float >(me);
 }
 catch (std::exception& err2)
@@ -2054,13 +2054,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_s2(RR_SHARED_PTR<RobotRaconteur::RRArray<float > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_s2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<float > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"s2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"s2");
 req->AddElement(RobotRaconteur::MessageElement_PackArrayElement<float >("value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_s2, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_s2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_s2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -2076,10 +2076,10 @@ handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void testroot_stub::async_get_i8_1(boost::function<void (int8_t,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"i8_1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"i8_1");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_i8_1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_i8_1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (int8_t ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_i8_1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (int8_t ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -2094,7 +2094,7 @@ return;
 int8_t rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackScalar<int8_t >(me);
 }
 catch (std::exception& err2)
@@ -2105,11 +2105,11 @@ handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void testroot_stub::async_set_i8_1(int8_t value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"i8_1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"i8_1");
 req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<int8_t >("value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_i8_1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_i8_1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_i8_1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -2123,27 +2123,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_i8_2(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRArray<int8_t > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_i8_2(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int8_t > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"i8_2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"i8_2");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_i8_2, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_i8_2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRArray<int8_t > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_i8_2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int8_t > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRArray<int8_t > >(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int8_t > >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRArray<int8_t > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int8_t > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRArray<int8_t > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int8_t > > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackArray<int8_t >(me);
 }
 catch (std::exception& err2)
@@ -2152,13 +2152,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_i8_2(RR_SHARED_PTR<RobotRaconteur::RRArray<int8_t > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_i8_2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int8_t > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"i8_2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"i8_2");
 req->AddElement(RobotRaconteur::MessageElement_PackArrayElement<int8_t >("value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_i8_2, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_i8_2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_i8_2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -2174,10 +2174,10 @@ handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void testroot_stub::async_get_u8_1(boost::function<void (uint8_t,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"u8_1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"u8_1");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_u8_1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_u8_1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (uint8_t ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_u8_1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (uint8_t ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -2192,7 +2192,7 @@ return;
 uint8_t rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackScalar<uint8_t >(me);
 }
 catch (std::exception& err2)
@@ -2203,11 +2203,11 @@ handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void testroot_stub::async_set_u8_1(uint8_t value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"u8_1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"u8_1");
 req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<uint8_t >("value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_u8_1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_u8_1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_u8_1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -2221,27 +2221,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_u8_2(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRArray<uint8_t > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_u8_2(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint8_t > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"u8_2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"u8_2");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_u8_2, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_u8_2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRArray<uint8_t > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_u8_2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint8_t > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRArray<uint8_t > >(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint8_t > >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRArray<uint8_t > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint8_t > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRArray<uint8_t > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint8_t > > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackArray<uint8_t >(me);
 }
 catch (std::exception& err2)
@@ -2250,13 +2250,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_u8_2(RR_SHARED_PTR<RobotRaconteur::RRArray<uint8_t > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_u8_2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint8_t > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"u8_2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"u8_2");
 req->AddElement(RobotRaconteur::MessageElement_PackArrayElement<uint8_t >("value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_u8_2, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_u8_2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_u8_2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -2270,27 +2270,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_u8_3(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<uint8_t > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_u8_3(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<uint8_t > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"u8_3");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"u8_3");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_u8_3, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_u8_3(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<uint8_t > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_u8_3(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<uint8_t > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<uint8_t > >(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<uint8_t > >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<uint8_t > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<uint8_t > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<uint8_t > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<uint8_t > > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackMultiDimArray<uint8_t >(RRGetNodeWeak(),me);
 }
 catch (std::exception& err2)
@@ -2299,13 +2299,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_u8_3(RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<uint8_t > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_u8_3(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<uint8_t > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"u8_3");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"u8_3");
 req->AddElement(RobotRaconteur::MessageElement_PackMultiDimArrayElement<uint8_t >(RRGetNodeWeak(),"value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_u8_3, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_u8_3(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_u8_3(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -2321,10 +2321,10 @@ handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void testroot_stub::async_get_i16_1(boost::function<void (int16_t,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"i16_1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"i16_1");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_i16_1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_i16_1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (int16_t ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_i16_1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (int16_t ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -2339,7 +2339,7 @@ return;
 int16_t rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackScalar<int16_t >(me);
 }
 catch (std::exception& err2)
@@ -2350,11 +2350,11 @@ handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void testroot_stub::async_set_i16_1(int16_t value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"i16_1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"i16_1");
 req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<int16_t >("value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_i16_1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_i16_1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_i16_1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -2368,27 +2368,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_i16_2(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRArray<int16_t > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_i16_2(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int16_t > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"i16_2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"i16_2");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_i16_2, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_i16_2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRArray<int16_t > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_i16_2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int16_t > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRArray<int16_t > >(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int16_t > >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRArray<int16_t > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int16_t > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRArray<int16_t > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int16_t > > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackArray<int16_t >(me);
 }
 catch (std::exception& err2)
@@ -2397,13 +2397,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_i16_2(RR_SHARED_PTR<RobotRaconteur::RRArray<int16_t > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_i16_2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int16_t > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"i16_2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"i16_2");
 req->AddElement(RobotRaconteur::MessageElement_PackArrayElement<int16_t >("value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_i16_2, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_i16_2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_i16_2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -2419,10 +2419,10 @@ handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void testroot_stub::async_get_u16_1(boost::function<void (uint16_t,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"u16_1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"u16_1");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_u16_1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_u16_1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (uint16_t ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_u16_1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (uint16_t ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -2437,7 +2437,7 @@ return;
 uint16_t rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackScalar<uint16_t >(me);
 }
 catch (std::exception& err2)
@@ -2448,11 +2448,11 @@ handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void testroot_stub::async_set_u16_1(uint16_t value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"u16_1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"u16_1");
 req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<uint16_t >("value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_u16_1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_u16_1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_u16_1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -2466,27 +2466,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_u16_2(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRArray<uint16_t > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_u16_2(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint16_t > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"u16_2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"u16_2");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_u16_2, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_u16_2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRArray<uint16_t > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_u16_2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint16_t > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRArray<uint16_t > >(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint16_t > >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRArray<uint16_t > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint16_t > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRArray<uint16_t > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint16_t > > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackArray<uint16_t >(me);
 }
 catch (std::exception& err2)
@@ -2495,13 +2495,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_u16_2(RR_SHARED_PTR<RobotRaconteur::RRArray<uint16_t > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_u16_2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint16_t > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"u16_2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"u16_2");
 req->AddElement(RobotRaconteur::MessageElement_PackArrayElement<uint16_t >("value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_u16_2, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_u16_2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_u16_2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -2517,10 +2517,10 @@ handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void testroot_stub::async_get_i32_1(boost::function<void (int32_t,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"i32_1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"i32_1");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_i32_1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_i32_1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (int32_t ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_i32_1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (int32_t ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -2535,7 +2535,7 @@ return;
 int32_t rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackScalar<int32_t >(me);
 }
 catch (std::exception& err2)
@@ -2546,11 +2546,11 @@ handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void testroot_stub::async_set_i32_1(int32_t value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"i32_1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"i32_1");
 req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<int32_t >("value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_i32_1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_i32_1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_i32_1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -2564,27 +2564,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_i32_2(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_i32_2(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"i32_2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"i32_2");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_i32_2, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_i32_2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_i32_2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > >(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackArray<int32_t >(me);
 }
 catch (std::exception& err2)
@@ -2593,13 +2593,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_i32_2(RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_i32_2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"i32_2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"i32_2");
 req->AddElement(RobotRaconteur::MessageElement_PackArrayElement<int32_t >("value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_i32_2, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_i32_2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_i32_2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -2613,27 +2613,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_i32_huge(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_i32_huge(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"i32_huge");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"i32_huge");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_i32_huge, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_i32_huge(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_i32_huge(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > >(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackArray<int32_t >(me);
 }
 catch (std::exception& err2)
@@ -2642,13 +2642,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_i32_huge(RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_i32_huge(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"i32_huge");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"i32_huge");
 req->AddElement(RobotRaconteur::MessageElement_PackArrayElement<int32_t >("value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_i32_huge, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_i32_huge(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_i32_huge(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -2664,10 +2664,10 @@ handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void testroot_stub::async_get_u32_1(boost::function<void (uint32_t,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"u32_1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"u32_1");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_u32_1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_u32_1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (uint32_t ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_u32_1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (uint32_t ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -2682,7 +2682,7 @@ return;
 uint32_t rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackScalar<uint32_t >(me);
 }
 catch (std::exception& err2)
@@ -2693,11 +2693,11 @@ handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void testroot_stub::async_set_u32_1(uint32_t value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"u32_1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"u32_1");
 req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<uint32_t >("value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_u32_1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_u32_1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_u32_1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -2711,27 +2711,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_u32_2(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRArray<uint32_t > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_u32_2(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint32_t > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"u32_2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"u32_2");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_u32_2, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_u32_2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRArray<uint32_t > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_u32_2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint32_t > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRArray<uint32_t > >(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint32_t > >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRArray<uint32_t > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint32_t > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRArray<uint32_t > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint32_t > > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackArray<uint32_t >(me);
 }
 catch (std::exception& err2)
@@ -2740,13 +2740,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_u32_2(RR_SHARED_PTR<RobotRaconteur::RRArray<uint32_t > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_u32_2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint32_t > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"u32_2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"u32_2");
 req->AddElement(RobotRaconteur::MessageElement_PackArrayElement<uint32_t >("value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_u32_2, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_u32_2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_u32_2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -2762,10 +2762,10 @@ handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void testroot_stub::async_get_i64_1(boost::function<void (int64_t,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"i64_1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"i64_1");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_i64_1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_i64_1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (int64_t ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_i64_1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (int64_t ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -2780,7 +2780,7 @@ return;
 int64_t rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackScalar<int64_t >(me);
 }
 catch (std::exception& err2)
@@ -2791,11 +2791,11 @@ handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void testroot_stub::async_set_i64_1(int64_t value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"i64_1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"i64_1");
 req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<int64_t >("value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_i64_1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_i64_1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_i64_1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -2809,27 +2809,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_i64_2(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRArray<int64_t > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_i64_2(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int64_t > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"i64_2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"i64_2");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_i64_2, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_i64_2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRArray<int64_t > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_i64_2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int64_t > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRArray<int64_t > >(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int64_t > >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRArray<int64_t > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int64_t > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRArray<int64_t > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int64_t > > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackArray<int64_t >(me);
 }
 catch (std::exception& err2)
@@ -2838,13 +2838,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_i64_2(RR_SHARED_PTR<RobotRaconteur::RRArray<int64_t > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_i64_2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int64_t > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"i64_2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"i64_2");
 req->AddElement(RobotRaconteur::MessageElement_PackArrayElement<int64_t >("value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_i64_2, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_i64_2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_i64_2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -2860,10 +2860,10 @@ handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void testroot_stub::async_get_u64_1(boost::function<void (uint64_t,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"u64_1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"u64_1");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_u64_1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_u64_1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (uint64_t ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_u64_1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (uint64_t ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -2878,7 +2878,7 @@ return;
 uint64_t rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackScalar<uint64_t >(me);
 }
 catch (std::exception& err2)
@@ -2889,11 +2889,11 @@ handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void testroot_stub::async_set_u64_1(uint64_t value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"u64_1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"u64_1");
 req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<uint64_t >("value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_u64_1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_u64_1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_u64_1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -2907,27 +2907,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_u64_2(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRArray<uint64_t > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_u64_2(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint64_t > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"u64_2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"u64_2");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_u64_2, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_u64_2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRArray<uint64_t > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_u64_2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint64_t > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRArray<uint64_t > >(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint64_t > >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRArray<uint64_t > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint64_t > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRArray<uint64_t > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint64_t > > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackArray<uint64_t >(me);
 }
 catch (std::exception& err2)
@@ -2936,13 +2936,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_u64_2(RR_SHARED_PTR<RobotRaconteur::RRArray<uint64_t > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_u64_2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint64_t > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"u64_2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"u64_2");
 req->AddElement(RobotRaconteur::MessageElement_PackArrayElement<uint64_t >("value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_u64_2, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_u64_2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_u64_2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -2958,10 +2958,10 @@ handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void testroot_stub::async_get_str1(boost::function<void (const std::string&,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"str1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"str1");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_str1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_str1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (const std::string& ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_str1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (const std::string& ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -2976,7 +2976,7 @@ return;
 std::string rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackString(me);
 }
 catch (std::exception& err2)
@@ -2987,11 +2987,11 @@ handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void testroot_stub::async_set_str1(const std::string& value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"str1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"str1");
 req->AddElement(RobotRaconteur::MessageElement_PackStringElement("value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_str1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_str1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_str1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -3005,27 +3005,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_struct1(boost::function<void (RR_SHARED_PTR<teststruct1 >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_struct1(boost::function<void (RR_INTRUSIVE_PTR<teststruct1 >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"struct1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"struct1");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_struct1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_struct1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<teststruct1 > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_struct1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<teststruct1 > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<teststruct1 >(),err);
+handler(RR_INTRUSIVE_PTR<teststruct1 >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<teststruct1 >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<teststruct1 >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<teststruct1 > rr_ret;
+RR_INTRUSIVE_PTR<teststruct1 > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackStructure<teststruct1 >(RRGetNodeWeak(), me);
 }
 catch (std::exception& err2)
@@ -3034,13 +3034,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_struct1(RR_SHARED_PTR<teststruct1 > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_struct1(RR_INTRUSIVE_PTR<teststruct1 > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"struct1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"struct1");
 req->AddElement(RobotRaconteur::MessageElement_PackStructElement(RRGetNodeWeak(),"value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_struct1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_struct1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_struct1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -3054,27 +3054,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_struct2(boost::function<void (RR_SHARED_PTR<teststruct2 >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_struct2(boost::function<void (RR_INTRUSIVE_PTR<teststruct2 >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"struct2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"struct2");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_struct2, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_struct2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<teststruct2 > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_struct2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<teststruct2 > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<teststruct2 >(),err);
+handler(RR_INTRUSIVE_PTR<teststruct2 >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<teststruct2 >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<teststruct2 >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<teststruct2 > rr_ret;
+RR_INTRUSIVE_PTR<teststruct2 > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackStructure<teststruct2 >(RRGetNodeWeak(), me);
 }
 catch (std::exception& err2)
@@ -3083,13 +3083,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_struct2(RR_SHARED_PTR<teststruct2 > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_struct2(RR_INTRUSIVE_PTR<teststruct2 > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"struct2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"struct2");
 req->AddElement(RobotRaconteur::MessageElement_PackStructElement(RRGetNodeWeak(),"value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_struct2, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_struct2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_struct2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -3103,27 +3103,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_is_d1(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_is_d1(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_d1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_d1");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_is_d1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_is_d1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_is_d1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > >(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackMap<int32_t,RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),me);
 }
 catch (std::exception& err2)
@@ -3132,13 +3132,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_is_d1(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_is_d1(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"is_d1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"is_d1");
 req->AddElement(RobotRaconteur::MessageElement_PackMapElement<int32_t,RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),"value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_is_d1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_is_d1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_is_d1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -3152,27 +3152,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_is_d2(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_is_d2(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_d2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_d2");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_is_d2, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_is_d2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_is_d2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > >(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackMap<std::string,RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),me);
 }
 catch (std::exception& err2)
@@ -3181,13 +3181,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_is_d2(RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_is_d2(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"is_d2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"is_d2");
 req->AddElement(RobotRaconteur::MessageElement_PackMapElement<std::string,RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),"value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_is_d2, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_is_d2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_is_d2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -3201,27 +3201,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_is_d3(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_is_d3(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_d3");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_d3");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_is_d3, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_is_d3(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_is_d3(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > >(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackMap<int32_t,RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),me);
 }
 catch (std::exception& err2)
@@ -3230,13 +3230,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_is_d3(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_is_d3(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"is_d3");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"is_d3");
 req->AddElement(RobotRaconteur::MessageElement_PackMapElement<int32_t,RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),"value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_is_d3, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_is_d3(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_is_d3(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -3250,27 +3250,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_is_d4(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_is_d4(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_d4");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_d4");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_is_d4, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_is_d4(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_is_d4(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > >(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackMap<std::string,RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),me);
 }
 catch (std::exception& err2)
@@ -3279,13 +3279,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_is_d4(RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_is_d4(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"is_d4");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"is_d4");
 req->AddElement(RobotRaconteur::MessageElement_PackMapElement<std::string,RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),"value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_is_d4, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_is_d4(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_is_d4(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -3299,27 +3299,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_is_d5(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_is_d5(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_d5");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_d5");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_is_d5, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_is_d5(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_is_d5(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > >(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  >(RRGetNodeWeak(),me);
 }
 catch (std::exception& err2)
@@ -3328,13 +3328,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_is_d5(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_is_d5(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"is_d5");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"is_d5");
 req->AddElement(RobotRaconteur::MessageElement_PackMapElement<int32_t,RobotRaconteur::RRMultiDimArray<double >  >(RRGetNodeWeak(),"value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_is_d5, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_is_d5(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_is_d5(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -3348,27 +3348,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_is_d6(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRMultiDimArray<double >  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_is_d6(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRMultiDimArray<double >  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_d6");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_d6");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_is_d6, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_is_d6(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRMultiDimArray<double >  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_is_d6(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRMultiDimArray<double >  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRMultiDimArray<double >  > >(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRMultiDimArray<double >  > >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRMultiDimArray<double >  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRMultiDimArray<double >  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRMultiDimArray<double >  > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRMultiDimArray<double >  > > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackMap<std::string,RobotRaconteur::RRMultiDimArray<double >  >(RRGetNodeWeak(),me);
 }
 catch (std::exception& err2)
@@ -3377,13 +3377,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_is_d6(RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRMultiDimArray<double >  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_is_d6(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRMultiDimArray<double >  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"is_d6");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"is_d6");
 req->AddElement(RobotRaconteur::MessageElement_PackMapElement<std::string,RobotRaconteur::RRMultiDimArray<double >  >(RRGetNodeWeak(),"value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_is_d6, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_is_d6(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_is_d6(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -3397,27 +3397,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_is_str1(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_is_str1(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_str1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_str1");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_is_str1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_is_str1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_is_str1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > >(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackMap<int32_t,RobotRaconteur::RRArray<char>  >(RRGetNodeWeak(),me);
 }
 catch (std::exception& err2)
@@ -3426,13 +3426,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_is_str1(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_is_str1(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"is_str1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"is_str1");
 req->AddElement(RobotRaconteur::MessageElement_PackMapElement<int32_t,RobotRaconteur::RRArray<char>  >(RRGetNodeWeak(),"value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_is_str1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_is_str1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_is_str1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -3446,27 +3446,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_is_str2(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<char>  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_is_str2(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<char>  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_str2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_str2");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_is_str2, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_is_str2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<char>  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_is_str2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<char>  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<char>  > >(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<char>  > >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<char>  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<char>  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<char>  > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<char>  > > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackMap<std::string,RobotRaconteur::RRArray<char>  >(RRGetNodeWeak(),me);
 }
 catch (std::exception& err2)
@@ -3475,13 +3475,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_is_str2(RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<char>  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_is_str2(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<char>  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"is_str2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"is_str2");
 req->AddElement(RobotRaconteur::MessageElement_PackMapElement<std::string,RobotRaconteur::RRArray<char>  >(RRGetNodeWeak(),"value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_is_str2, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_is_str2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_is_str2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -3495,27 +3495,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_is_struct1(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,teststruct2  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_is_struct1(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,teststruct2  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_struct1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_struct1");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_is_struct1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_is_struct1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,teststruct2  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_is_struct1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,teststruct2  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,teststruct2  > >(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,teststruct2  > >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,teststruct2  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,teststruct2  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,teststruct2  > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,teststruct2  > > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackMap<int32_t,teststruct2  >(RRGetNodeWeak(),me);
 }
 catch (std::exception& err2)
@@ -3524,13 +3524,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_is_struct1(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,teststruct2  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_is_struct1(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,teststruct2  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"is_struct1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"is_struct1");
 req->AddElement(RobotRaconteur::MessageElement_PackMapElement<int32_t,teststruct2  >(RRGetNodeWeak(),"value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_is_struct1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_is_struct1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_is_struct1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -3544,27 +3544,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_is_struct2(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,teststruct2  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_is_struct2(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,teststruct2  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_struct2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"is_struct2");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_is_struct2, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_is_struct2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,teststruct2  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_is_struct2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,teststruct2  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,teststruct2  > >(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,teststruct2  > >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,teststruct2  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,teststruct2  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,teststruct2  > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,teststruct2  > > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackMap<std::string,teststruct2  >(RRGetNodeWeak(),me);
 }
 catch (std::exception& err2)
@@ -3573,13 +3573,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_is_struct2(RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,teststruct2  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_is_struct2(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,teststruct2  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"is_struct2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"is_struct2");
 req->AddElement(RobotRaconteur::MessageElement_PackMapElement<std::string,teststruct2  >(RRGetNodeWeak(),"value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_is_struct2, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_is_struct2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_is_struct2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -3593,27 +3593,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_struct3(boost::function<void (RR_SHARED_PTR<com::robotraconteur::testing::TestService2::ostruct2 >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_struct3(boost::function<void (RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService2::ostruct2 >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"struct3");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"struct3");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_struct3, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_struct3(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<com::robotraconteur::testing::TestService2::ostruct2 > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_struct3(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService2::ostruct2 > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<com::robotraconteur::testing::TestService2::ostruct2 >(),err);
+handler(RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService2::ostruct2 >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<com::robotraconteur::testing::TestService2::ostruct2 >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService2::ostruct2 >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<com::robotraconteur::testing::TestService2::ostruct2 > rr_ret;
+RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService2::ostruct2 > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackStructure<com::robotraconteur::testing::TestService2::ostruct2 >(RRGetNodeWeak(), me);
 }
 catch (std::exception& err2)
@@ -3622,13 +3622,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_struct3(RR_SHARED_PTR<com::robotraconteur::testing::TestService2::ostruct2 > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_struct3(RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService2::ostruct2 > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"struct3");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"struct3");
 req->AddElement(RobotRaconteur::MessageElement_PackStructElement(RRGetNodeWeak(),"value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_struct3, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_struct3(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_struct3(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -3642,27 +3642,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_list_d1(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_list_d1(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"list_d1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"list_d1");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_list_d1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_list_d1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_list_d1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > >(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackList<RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),me);
 }
 catch (std::exception& err2)
@@ -3671,13 +3671,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_list_d1(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_list_d1(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"list_d1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"list_d1");
 req->AddElement(RobotRaconteur::MessageElement_PackListElement<RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),"value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_list_d1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_list_d1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_list_d1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -3691,27 +3691,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_list_d3(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_list_d3(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"list_d3");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"list_d3");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_list_d3, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_list_d3(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_list_d3(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > >(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackList<RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),me);
 }
 catch (std::exception& err2)
@@ -3720,13 +3720,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_list_d3(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_list_d3(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"list_d3");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"list_d3");
 req->AddElement(RobotRaconteur::MessageElement_PackListElement<RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),"value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_list_d3, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_list_d3(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_list_d3(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -3740,27 +3740,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_list_d5(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_list_d5(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"list_d5");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"list_d5");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_list_d5, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_list_d5(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_list_d5(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > >(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackList<RobotRaconteur::RRMultiDimArray<double >  >(RRGetNodeWeak(),me);
 }
 catch (std::exception& err2)
@@ -3769,13 +3769,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_list_d5(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_list_d5(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"list_d5");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"list_d5");
 req->AddElement(RobotRaconteur::MessageElement_PackListElement<RobotRaconteur::RRMultiDimArray<double >  >(RRGetNodeWeak(),"value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_list_d5, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_list_d5(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_list_d5(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -3789,27 +3789,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_list_str1(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char>  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_list_str1(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char>  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"list_str1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"list_str1");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_list_str1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_list_str1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char>  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_list_str1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char>  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char>  > >(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char>  > >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char>  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char>  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char>  > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char>  > > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackList<RobotRaconteur::RRArray<char>  >(RRGetNodeWeak(),me);
 }
 catch (std::exception& err2)
@@ -3818,13 +3818,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_list_str1(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char>  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_list_str1(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char>  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"list_str1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"list_str1");
 req->AddElement(RobotRaconteur::MessageElement_PackListElement<RobotRaconteur::RRArray<char>  >(RRGetNodeWeak(),"value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_list_str1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_list_str1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_list_str1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -3838,27 +3838,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_list_struct1(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRList<teststruct2  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_list_struct1(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRList<teststruct2  > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"list_struct1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"list_struct1");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_list_struct1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_list_struct1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRList<teststruct2  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_list_struct1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRList<teststruct2  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRList<teststruct2  > >(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<teststruct2  > >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRList<teststruct2  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<teststruct2  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRList<teststruct2  > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<teststruct2  > > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackList<teststruct2  >(RRGetNodeWeak(),me);
 }
 catch (std::exception& err2)
@@ -3867,13 +3867,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_list_struct1(RR_SHARED_PTR<RobotRaconteur::RRList<teststruct2  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_list_struct1(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<teststruct2  > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"list_struct1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"list_struct1");
 req->AddElement(RobotRaconteur::MessageElement_PackListElement<teststruct2  >(RRGetNodeWeak(),"value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_list_struct1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_list_struct1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_list_struct1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -3887,27 +3887,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_var1(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRValue>,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_var1(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"var1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"var1");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_var1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_var1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRValue> ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_var1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRValue>(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRValue>(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRValue> rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackVarValue(RRGetNodeWeak(),me);
 }
 catch (std::exception& err2)
@@ -3916,13 +3916,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_var1(RR_SHARED_PTR<RobotRaconteur::RRValue> value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_var1(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"var1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"var1");
 req->AddElement(RobotRaconteur::MessageElement_PackVarTypeElement(RRGetNodeWeak(),"value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_var1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_var1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_var1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -3936,27 +3936,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_var2(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRValue > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_var2(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRValue > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"var2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"var2");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_var2, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_var2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRValue > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_var2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRValue > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRValue > >(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRValue > >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRValue > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRValue > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRValue > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRValue > > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackMap<int32_t,RobotRaconteur::RRValue >(RRGetNodeWeak(),me);
 }
 catch (std::exception& err2)
@@ -3965,13 +3965,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_var2(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRValue > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_var2(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRValue > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"var2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"var2");
 req->AddElement(RobotRaconteur::MessageElement_PackMapElement<int32_t,RobotRaconteur::RRValue >(RRGetNodeWeak(),"value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_var2, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_var2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_var2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -3985,27 +3985,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_var_num(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRValue>,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_var_num(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"var_num");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"var_num");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_var_num, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_var_num(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRValue> ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_var_num(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRValue>(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRValue>(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRValue> rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackVarValue(RRGetNodeWeak(),me);
 }
 catch (std::exception& err2)
@@ -4014,13 +4014,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_var_num(RR_SHARED_PTR<RobotRaconteur::RRValue> value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_var_num(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"var_num");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"var_num");
 req->AddElement(RobotRaconteur::MessageElement_PackVarTypeElement(RRGetNodeWeak(),"value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_var_num, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_var_num(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_var_num(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -4034,27 +4034,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_var_str(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRValue>,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_var_str(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"var_str");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"var_str");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_var_str, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_var_str(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRValue> ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_var_str(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRValue>(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRValue>(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRValue> rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackVarValue(RRGetNodeWeak(),me);
 }
 catch (std::exception& err2)
@@ -4063,13 +4063,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_var_str(RR_SHARED_PTR<RobotRaconteur::RRValue> value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_var_str(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"var_str");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"var_str");
 req->AddElement(RobotRaconteur::MessageElement_PackVarTypeElement(RRGetNodeWeak(),"value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_var_str, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_var_str(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_var_str(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -4083,27 +4083,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_var_struct(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRValue>,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_var_struct(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"var_struct");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"var_struct");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_var_struct, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_var_struct(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRValue> ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_var_struct(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRValue>(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRValue>(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRValue> rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackVarValue(RRGetNodeWeak(),me);
 }
 catch (std::exception& err2)
@@ -4112,13 +4112,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_var_struct(RR_SHARED_PTR<RobotRaconteur::RRValue> value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_var_struct(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"var_struct");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"var_struct");
 req->AddElement(RobotRaconteur::MessageElement_PackVarTypeElement(RRGetNodeWeak(),"value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_var_struct, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_var_struct(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_var_struct(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -4132,27 +4132,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_var_vector(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRValue>,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_var_vector(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"var_vector");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"var_vector");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_var_vector, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_var_vector(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRValue> ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_var_vector(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRValue>(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRValue>(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRValue> rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackVarValue(RRGetNodeWeak(),me);
 }
 catch (std::exception& err2)
@@ -4161,13 +4161,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_var_vector(RR_SHARED_PTR<RobotRaconteur::RRValue> value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_var_vector(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"var_vector");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"var_vector");
 req->AddElement(RobotRaconteur::MessageElement_PackVarTypeElement(RRGetNodeWeak(),"value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_var_vector, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_var_vector(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_var_vector(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -4181,27 +4181,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_var_dictionary(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRValue>,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_var_dictionary(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"var_dictionary");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"var_dictionary");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_var_dictionary, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_var_dictionary(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRValue> ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_var_dictionary(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRValue>(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRValue>(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRValue> rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackVarValue(RRGetNodeWeak(),me);
 }
 catch (std::exception& err2)
@@ -4210,13 +4210,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_var_dictionary(RR_SHARED_PTR<RobotRaconteur::RRValue> value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_var_dictionary(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"var_dictionary");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"var_dictionary");
 req->AddElement(RobotRaconteur::MessageElement_PackVarTypeElement(RRGetNodeWeak(),"value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_var_dictionary, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_var_dictionary(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_var_dictionary(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -4230,27 +4230,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_var_list(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRValue>,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_var_list(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"var_list");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"var_list");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_var_list, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_var_list(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRValue> ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_var_list(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRValue>(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRValue>(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRValue> rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackVarValue(RRGetNodeWeak(),me);
 }
 catch (std::exception& err2)
@@ -4259,13 +4259,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_var_list(RR_SHARED_PTR<RobotRaconteur::RRValue> value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_var_list(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"var_list");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"var_list");
 req->AddElement(RobotRaconteur::MessageElement_PackVarTypeElement(RRGetNodeWeak(),"value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_var_list, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_var_list(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_var_list(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -4279,27 +4279,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_var_multidimarray(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRValue>,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_var_multidimarray(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"var_multidimarray");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"var_multidimarray");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_var_multidimarray, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_var_multidimarray(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRValue> ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_var_multidimarray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRValue>(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRValue>(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRValue> rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackVarValue(RRGetNodeWeak(),me);
 }
 catch (std::exception& err2)
@@ -4308,13 +4308,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_var_multidimarray(RR_SHARED_PTR<RobotRaconteur::RRValue> value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_var_multidimarray(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"var_multidimarray");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"var_multidimarray");
 req->AddElement(RobotRaconteur::MessageElement_PackVarTypeElement(RRGetNodeWeak(),"value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_var_multidimarray, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_var_multidimarray(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_var_multidimarray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -4330,10 +4330,10 @@ handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void testroot_stub::async_get_errtest(boost::function<void (double,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"errtest");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"errtest");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_errtest, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_errtest(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (double ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_errtest(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (double ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -4348,7 +4348,7 @@ return;
 double rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackScalar<double >(me);
 }
 catch (std::exception& err2)
@@ -4359,11 +4359,11 @@ handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void testroot_stub::async_set_errtest(double value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"errtest");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"errtest");
 req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<double >("value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_errtest, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_errtest(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_errtest(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -4377,27 +4377,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_get_nulltest(boost::function<void (RR_SHARED_PTR<teststruct1 >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_get_nulltest(boost::function<void (RR_INTRUSIVE_PTR<teststruct1 >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"nulltest");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"nulltest");
 AsyncProcessRequest(m,boost::bind(&testroot_stub::rrend_get_nulltest, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_get_nulltest(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<teststruct1 > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_get_nulltest(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<teststruct1 > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<teststruct1 >(),err);
+handler(RR_INTRUSIVE_PTR<teststruct1 >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<teststruct1 >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<teststruct1 >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<teststruct1 > rr_ret;
+RR_INTRUSIVE_PTR<teststruct1 > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackStructure<teststruct1 >(RRGetNodeWeak(), me);
 }
 catch (std::exception& err2)
@@ -4406,13 +4406,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void testroot_stub::async_set_nulltest(RR_SHARED_PTR<teststruct1 > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void testroot_stub::async_set_nulltest(RR_INTRUSIVE_PTR<teststruct1 > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"nulltest");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"nulltest");
 req->AddElement(RobotRaconteur::MessageElement_PackStructElement(RRGetNodeWeak(),"value",value));
 AsyncProcessRequest(req,boost::bind(&testroot_stub::rrend_set_nulltest, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void testroot_stub::rrend_set_nulltest(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_set_nulltest(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -4428,11 +4428,11 @@ handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void testroot_stub::async_func1(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_FunctionCallReq,"func1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallReq,"func1");
 AsyncProcessRequest(rr_req,boost::bind(&testroot_stub::rrend_func1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
 
-void testroot_stub::rrend_func1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_func1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -4448,13 +4448,13 @@ handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void testroot_stub::async_func2(double d1, double d2,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_FunctionCallReq,"func2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallReq,"func2");
 rr_req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<double >("d1",d1));
 rr_req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<double >("d2",d2));
 AsyncProcessRequest(rr_req,boost::bind(&testroot_stub::rrend_func2, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
 
-void testroot_stub::rrend_func2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_func2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -4470,13 +4470,13 @@ handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void testroot_stub::async_func3(double d1, double d2,boost::function<void (double, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_FunctionCallReq,"func3");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallReq,"func3");
 rr_req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<double >("d1",d1));
 rr_req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<double >("d2",d2));
 AsyncProcessRequest(rr_req,boost::bind(&testroot_stub::rrend_func3, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
 
-void testroot_stub::rrend_func3(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (double ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_func3(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (double ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -4491,7 +4491,7 @@ return;
 double rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("return");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("return");
 rr_ret=RobotRaconteur::MessageElement_UnpackScalar<double >(me);
 }
 catch (std::exception& err2)
@@ -4502,11 +4502,11 @@ handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void testroot_stub::async_meaning_of_life(boost::function<void (int32_t, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_FunctionCallReq,"meaning_of_life");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallReq,"meaning_of_life");
 AsyncProcessRequest(rr_req,boost::bind(&testroot_stub::rrend_meaning_of_life, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
 
-void testroot_stub::rrend_meaning_of_life(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (int32_t ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_meaning_of_life(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (int32_t ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -4521,7 +4521,7 @@ return;
 int32_t rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("return");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("return");
 rr_ret=RobotRaconteur::MessageElement_UnpackScalar<int32_t >(me);
 }
 catch (std::exception& err2)
@@ -4532,11 +4532,11 @@ handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void testroot_stub::async_func_errtest(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_FunctionCallReq,"func_errtest");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallReq,"func_errtest");
 AsyncProcessRequest(rr_req,boost::bind(&testroot_stub::rrend_func_errtest, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
 
-void testroot_stub::rrend_func_errtest(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_func_errtest(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -4552,11 +4552,11 @@ handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void testroot_stub::async_func_errtest1(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_FunctionCallReq,"func_errtest1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallReq,"func_errtest1");
 AsyncProcessRequest(rr_req,boost::bind(&testroot_stub::rrend_func_errtest1, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
 
-void testroot_stub::rrend_func_errtest1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_func_errtest1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -4572,11 +4572,11 @@ handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void testroot_stub::async_func_errtest2(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_FunctionCallReq,"func_errtest2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallReq,"func_errtest2");
 AsyncProcessRequest(rr_req,boost::bind(&testroot_stub::rrend_func_errtest2, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
 
-void testroot_stub::rrend_func_errtest2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_func_errtest2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -4592,11 +4592,11 @@ handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void testroot_stub::async_func_errtest3(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_FunctionCallReq,"func_errtest3");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallReq,"func_errtest3");
 AsyncProcessRequest(rr_req,boost::bind(&testroot_stub::rrend_func_errtest3, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
 
-void testroot_stub::rrend_func_errtest3(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_func_errtest3(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -4612,12 +4612,12 @@ handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void testroot_stub::async_o6_op(int32_t op,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_FunctionCallReq,"o6_op");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallReq,"o6_op");
 rr_req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<int32_t >("op",op));
 AsyncProcessRequest(rr_req,boost::bind(&testroot_stub::rrend_o6_op, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
 
-void testroot_stub::rrend_o6_op(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_o6_op(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -4633,11 +4633,11 @@ handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void testroot_stub::async_pipe_check_error(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_FunctionCallReq,"pipe_check_error");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallReq,"pipe_check_error");
 AsyncProcessRequest(rr_req,boost::bind(&testroot_stub::rrend_pipe_check_error, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
 
-void testroot_stub::rrend_pipe_check_error(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_pipe_check_error(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -4653,11 +4653,11 @@ handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void testroot_stub::async_test_callbacks(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_FunctionCallReq,"test_callbacks");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallReq,"test_callbacks");
 AsyncProcessRequest(rr_req,boost::bind(&testroot_stub::rrend_test_callbacks, RobotRaconteur::rr_cast<testroot_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
 
-void testroot_stub::rrend_test_callbacks(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void testroot_stub::rrend_test_callbacks(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -4706,60 +4706,60 @@ void sub1_stub::RRInitStub()
 {
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRArray<double > > sub1_stub::get_d1()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > sub1_stub::get_d1()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"d1");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"d1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackArray<double >(me);
 }
-void sub1_stub::set_d1(RR_SHARED_PTR<RobotRaconteur::RRArray<double > > value)
+void sub1_stub::set_d1(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"d1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"d1");
 req->AddElement(RobotRaconteur::MessageElement_PackArrayElement<double >("value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
-RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > > sub1_stub::get_d2()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > > sub1_stub::get_d2()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"d2");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"d2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackMultiDimArray<double >(RRGetNodeWeak(),me);
 }
-void sub1_stub::set_d2(RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > > value)
+void sub1_stub::set_d2(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > > value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"d2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"d2");
 req->AddElement(RobotRaconteur::MessageElement_PackMultiDimArrayElement<double >(RRGetNodeWeak(),"value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
 std::string sub1_stub::get_s_ind()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"s_ind");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"s_ind");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackString(me);
 }
 void sub1_stub::set_s_ind(const std::string& value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"s_ind");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"s_ind");
 req->AddElement(RobotRaconteur::MessageElement_PackStringElement("value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
 int32_t sub1_stub::get_i_ind()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"i_ind");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"i_ind");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackScalar<int32_t >(me);
 }
 void sub1_stub::set_i_ind(int32_t value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"i_ind");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"i_ind");
 req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<int32_t >("value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
 RR_SHARED_PTR<sub2 > sub1_stub::get_o2_1()
@@ -4777,22 +4777,22 @@ RR_SHARED_PTR<sub2 > sub1_stub::get_o2_3(const std::string& ind)
 return RobotRaconteur::rr_cast<sub2 >(FindObjRefTyped("o2_3", ind,"com.robotraconteur.testing.TestService1.sub2"));
 }
 
-void sub1_stub::DispatchEvent(RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_m)
+void sub1_stub::DispatchEvent(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_m)
 {
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
-void sub1_stub::DispatchPipeMessage(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m)
+void sub1_stub::DispatchPipeMessage(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m)
 {
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
-void sub1_stub::DispatchWireMessage(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m)
+void sub1_stub::DispatchWireMessage(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m)
 {
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
-RR_SHARED_PTR<RobotRaconteur::MessageEntry>sub1_stub::CallbackCall(RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_m)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>sub1_stub::CallbackCall(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_m)
 {
 std::string ename=rr_m->MemberName;
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_mr=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_CallbackCallRet, ename);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_mr=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_CallbackCallRet, ename);
 rr_mr->ServicePath=rr_m->ServicePath;
 rr_mr->RequestID=rr_m->RequestID;
 throw RobotRaconteur::MemberNotFoundException("Member not found");
@@ -4817,27 +4817,27 @@ RR_SHARED_PTR<RobotRaconteur::WireClientBase> sub1_stub::RRGetWireClient(const s
 return ServiceStub::RRGetWireClient(membername);
 }
 
-void sub1_stub::async_get_d1(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRArray<double > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void sub1_stub::async_get_d1(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"d1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"d1");
 AsyncProcessRequest(m,boost::bind(&sub1_stub::rrend_get_d1, RobotRaconteur::rr_cast<sub1_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void sub1_stub::rrend_get_d1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRArray<double > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void sub1_stub::rrend_get_d1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRArray<double > >(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRArray<double > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRArray<double > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackArray<double >(me);
 }
 catch (std::exception& err2)
@@ -4846,13 +4846,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void sub1_stub::async_set_d1(RR_SHARED_PTR<RobotRaconteur::RRArray<double > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void sub1_stub::async_set_d1(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"d1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"d1");
 req->AddElement(RobotRaconteur::MessageElement_PackArrayElement<double >("value",value));
 AsyncProcessRequest(req,boost::bind(&sub1_stub::rrend_set_d1, RobotRaconteur::rr_cast<sub1_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void sub1_stub::rrend_set_d1(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void sub1_stub::rrend_set_d1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -4866,27 +4866,27 @@ return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void sub1_stub::async_get_d2(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void sub1_stub::async_get_d2(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > >,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"d2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"d2");
 AsyncProcessRequest(m,boost::bind(&sub1_stub::rrend_get_d2, RobotRaconteur::rr_cast<sub1_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void sub1_stub::rrend_get_d2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void sub1_stub::rrend_get_d2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > >(),err);
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > >(),err);
 return;
 }
 if (m->Error != RobotRaconteur::MessageErrorType_None)
 {
-handler(RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > > rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackMultiDimArray<double >(RRGetNodeWeak(),me);
 }
 catch (std::exception& err2)
@@ -4895,13 +4895,13 @@ RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRac
 }
 handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
-void sub1_stub::async_set_d2(RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+void sub1_stub::async_set_d2(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > > value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"d2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"d2");
 req->AddElement(RobotRaconteur::MessageElement_PackMultiDimArrayElement<double >(RRGetNodeWeak(),"value",value));
 AsyncProcessRequest(req,boost::bind(&sub1_stub::rrend_set_d2, RobotRaconteur::rr_cast<sub1_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void sub1_stub::rrend_set_d2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void sub1_stub::rrend_set_d2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -4917,10 +4917,10 @@ handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void sub1_stub::async_get_s_ind(boost::function<void (const std::string&,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"s_ind");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"s_ind");
 AsyncProcessRequest(m,boost::bind(&sub1_stub::rrend_get_s_ind, RobotRaconteur::rr_cast<sub1_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void sub1_stub::rrend_get_s_ind(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (const std::string& ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void sub1_stub::rrend_get_s_ind(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (const std::string& ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -4935,7 +4935,7 @@ return;
 std::string rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackString(me);
 }
 catch (std::exception& err2)
@@ -4946,11 +4946,11 @@ handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void sub1_stub::async_set_s_ind(const std::string& value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"s_ind");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"s_ind");
 req->AddElement(RobotRaconteur::MessageElement_PackStringElement("value",value));
 AsyncProcessRequest(req,boost::bind(&sub1_stub::rrend_set_s_ind, RobotRaconteur::rr_cast<sub1_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void sub1_stub::rrend_set_s_ind(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void sub1_stub::rrend_set_s_ind(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -4966,10 +4966,10 @@ handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void sub1_stub::async_get_i_ind(boost::function<void (int32_t,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"i_ind");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"i_ind");
 AsyncProcessRequest(m,boost::bind(&sub1_stub::rrend_get_i_ind, RobotRaconteur::rr_cast<sub1_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void sub1_stub::rrend_get_i_ind(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (int32_t ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void sub1_stub::rrend_get_i_ind(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (int32_t ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -4984,7 +4984,7 @@ return;
 int32_t rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackScalar<int32_t >(me);
 }
 catch (std::exception& err2)
@@ -4995,11 +4995,11 @@ handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void sub1_stub::async_set_i_ind(int32_t value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"i_ind");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"i_ind");
 req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<int32_t >("value",value));
 AsyncProcessRequest(req,boost::bind(&sub1_stub::rrend_set_i_ind, RobotRaconteur::rr_cast<sub1_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void sub1_stub::rrend_set_i_ind(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void sub1_stub::rrend_set_i_ind(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -5035,44 +5035,44 @@ void sub2_stub::RRInitStub()
 
 std::string sub2_stub::get_s_ind()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"s_ind");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"s_ind");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackString(me);
 }
 void sub2_stub::set_s_ind(const std::string& value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"s_ind");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"s_ind");
 req->AddElement(RobotRaconteur::MessageElement_PackStringElement("value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
 int32_t sub2_stub::get_i_ind()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"i_ind");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"i_ind");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackScalar<int32_t >(me);
 }
 void sub2_stub::set_i_ind(int32_t value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"i_ind");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"i_ind");
 req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<int32_t >("value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
 std::string sub2_stub::get_data()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"data");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"data");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackString(me);
 }
 void sub2_stub::set_data(const std::string& value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"data");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"data");
 req->AddElement(RobotRaconteur::MessageElement_PackStringElement("value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
 RR_SHARED_PTR<sub3 > sub2_stub::get_o3_1(const std::string& ind)
@@ -5080,22 +5080,22 @@ RR_SHARED_PTR<sub3 > sub2_stub::get_o3_1(const std::string& ind)
 return RobotRaconteur::rr_cast<sub3 >(FindObjRefTyped("o3_1", ind,"com.robotraconteur.testing.TestService1.sub3"));
 }
 
-void sub2_stub::DispatchEvent(RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_m)
+void sub2_stub::DispatchEvent(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_m)
 {
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
-void sub2_stub::DispatchPipeMessage(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m)
+void sub2_stub::DispatchPipeMessage(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m)
 {
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
-void sub2_stub::DispatchWireMessage(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m)
+void sub2_stub::DispatchWireMessage(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m)
 {
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
-RR_SHARED_PTR<RobotRaconteur::MessageEntry>sub2_stub::CallbackCall(RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_m)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>sub2_stub::CallbackCall(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_m)
 {
 std::string ename=rr_m->MemberName;
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_mr=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_CallbackCallRet, ename);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_mr=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_CallbackCallRet, ename);
 rr_mr->ServicePath=rr_m->ServicePath;
 rr_mr->RequestID=rr_m->RequestID;
 throw RobotRaconteur::MemberNotFoundException("Member not found");
@@ -5122,10 +5122,10 @@ return ServiceStub::RRGetWireClient(membername);
 
 void sub2_stub::async_get_s_ind(boost::function<void (const std::string&,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"s_ind");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"s_ind");
 AsyncProcessRequest(m,boost::bind(&sub2_stub::rrend_get_s_ind, RobotRaconteur::rr_cast<sub2_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void sub2_stub::rrend_get_s_ind(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (const std::string& ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void sub2_stub::rrend_get_s_ind(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (const std::string& ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -5140,7 +5140,7 @@ return;
 std::string rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackString(me);
 }
 catch (std::exception& err2)
@@ -5151,11 +5151,11 @@ handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void sub2_stub::async_set_s_ind(const std::string& value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"s_ind");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"s_ind");
 req->AddElement(RobotRaconteur::MessageElement_PackStringElement("value",value));
 AsyncProcessRequest(req,boost::bind(&sub2_stub::rrend_set_s_ind, RobotRaconteur::rr_cast<sub2_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void sub2_stub::rrend_set_s_ind(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void sub2_stub::rrend_set_s_ind(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -5171,10 +5171,10 @@ handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void sub2_stub::async_get_i_ind(boost::function<void (int32_t,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"i_ind");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"i_ind");
 AsyncProcessRequest(m,boost::bind(&sub2_stub::rrend_get_i_ind, RobotRaconteur::rr_cast<sub2_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void sub2_stub::rrend_get_i_ind(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (int32_t ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void sub2_stub::rrend_get_i_ind(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (int32_t ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -5189,7 +5189,7 @@ return;
 int32_t rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackScalar<int32_t >(me);
 }
 catch (std::exception& err2)
@@ -5200,11 +5200,11 @@ handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void sub2_stub::async_set_i_ind(int32_t value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"i_ind");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"i_ind");
 req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<int32_t >("value",value));
 AsyncProcessRequest(req,boost::bind(&sub2_stub::rrend_set_i_ind, RobotRaconteur::rr_cast<sub2_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void sub2_stub::rrend_set_i_ind(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void sub2_stub::rrend_set_i_ind(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -5220,10 +5220,10 @@ handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void sub2_stub::async_get_data(boost::function<void (const std::string&,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"data");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"data");
 AsyncProcessRequest(m,boost::bind(&sub2_stub::rrend_get_data, RobotRaconteur::rr_cast<sub2_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void sub2_stub::rrend_get_data(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (const std::string& ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void sub2_stub::rrend_get_data(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (const std::string& ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -5238,7 +5238,7 @@ return;
 std::string rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackString(me);
 }
 catch (std::exception& err2)
@@ -5249,11 +5249,11 @@ handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void sub2_stub::async_set_data(const std::string& value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"data");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"data");
 req->AddElement(RobotRaconteur::MessageElement_PackStringElement("value",value));
 AsyncProcessRequest(req,boost::bind(&sub2_stub::rrend_set_data, RobotRaconteur::rr_cast<sub2_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void sub2_stub::rrend_set_data(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void sub2_stub::rrend_set_data(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -5279,71 +5279,71 @@ void sub3_stub::RRInitStub()
 
 std::string sub3_stub::get_ind()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"ind");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"ind");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackString(me);
 }
 void sub3_stub::set_ind(const std::string& value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"ind");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"ind");
 req->AddElement(RobotRaconteur::MessageElement_PackStringElement("value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
 std::string sub3_stub::get_data2()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"data2");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"data2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackString(me);
 }
 void sub3_stub::set_data2(const std::string& value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"data2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"data2");
 req->AddElement(RobotRaconteur::MessageElement_PackStringElement("value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
 double sub3_stub::get_data3()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"data3");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"data3");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(m);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=mr->FindElement("value");
 return RobotRaconteur::MessageElement_UnpackScalar<double >(me);
 }
 void sub3_stub::set_data3(double value)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"data3");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"data3");
 req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<double >("value",value));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=ProcessRequest(req);
 }
 
 double sub3_stub::add(double d)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_FunctionCallReq,"add");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallReq,"add");
 rr_req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<double >("d",d));
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_ret=ProcessRequest(rr_req);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> rr_me=rr_ret->FindElement("return");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_ret=ProcessRequest(rr_req);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> rr_me=rr_ret->FindElement("return");
 return RobotRaconteur::MessageElement_UnpackScalar<double >(rr_me);
 }
 
-void sub3_stub::DispatchEvent(RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_m)
+void sub3_stub::DispatchEvent(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_m)
 {
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
-void sub3_stub::DispatchPipeMessage(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m)
+void sub3_stub::DispatchPipeMessage(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m)
 {
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
-void sub3_stub::DispatchWireMessage(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m)
+void sub3_stub::DispatchWireMessage(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m)
 {
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
-RR_SHARED_PTR<RobotRaconteur::MessageEntry>sub3_stub::CallbackCall(RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_m)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>sub3_stub::CallbackCall(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_m)
 {
 std::string ename=rr_m->MemberName;
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_mr=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_CallbackCallRet, ename);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_mr=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_CallbackCallRet, ename);
 rr_mr->ServicePath=rr_m->ServicePath;
 rr_mr->RequestID=rr_m->RequestID;
 throw RobotRaconteur::MemberNotFoundException("Member not found");
@@ -5370,10 +5370,10 @@ return ServiceStub::RRGetWireClient(membername);
 
 void sub3_stub::async_get_ind(boost::function<void (const std::string&,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"ind");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"ind");
 AsyncProcessRequest(m,boost::bind(&sub3_stub::rrend_get_ind, RobotRaconteur::rr_cast<sub3_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void sub3_stub::rrend_get_ind(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (const std::string& ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void sub3_stub::rrend_get_ind(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (const std::string& ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -5388,7 +5388,7 @@ return;
 std::string rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackString(me);
 }
 catch (std::exception& err2)
@@ -5399,11 +5399,11 @@ handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void sub3_stub::async_set_ind(const std::string& value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"ind");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"ind");
 req->AddElement(RobotRaconteur::MessageElement_PackStringElement("value",value));
 AsyncProcessRequest(req,boost::bind(&sub3_stub::rrend_set_ind, RobotRaconteur::rr_cast<sub3_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void sub3_stub::rrend_set_ind(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void sub3_stub::rrend_set_ind(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -5419,10 +5419,10 @@ handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void sub3_stub::async_get_data2(boost::function<void (const std::string&,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"data2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"data2");
 AsyncProcessRequest(m,boost::bind(&sub3_stub::rrend_get_data2, RobotRaconteur::rr_cast<sub3_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void sub3_stub::rrend_get_data2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (const std::string& ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void sub3_stub::rrend_get_data2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (const std::string& ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -5437,7 +5437,7 @@ return;
 std::string rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackString(me);
 }
 catch (std::exception& err2)
@@ -5448,11 +5448,11 @@ handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void sub3_stub::async_set_data2(const std::string& value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"data2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"data2");
 req->AddElement(RobotRaconteur::MessageElement_PackStringElement("value",value));
 AsyncProcessRequest(req,boost::bind(&sub3_stub::rrend_set_data2, RobotRaconteur::rr_cast<sub3_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void sub3_stub::rrend_set_data2(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void sub3_stub::rrend_set_data2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -5468,10 +5468,10 @@ handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void sub3_stub::async_get_data3(boost::function<void (double,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> m=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetReq,"data3");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,"data3");
 AsyncProcessRequest(m,boost::bind(&sub3_stub::rrend_get_data3, RobotRaconteur::rr_cast<sub3_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void sub3_stub::rrend_get_data3(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (double ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void sub3_stub::rrend_get_data3(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (double ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -5486,7 +5486,7 @@ return;
 double rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
 rr_ret=RobotRaconteur::MessageElement_UnpackScalar<double >(me);
 }
 catch (std::exception& err2)
@@ -5497,11 +5497,11 @@ handler(rr_ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void sub3_stub::async_set_data3(double value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetReq,"data3");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,"data3");
 req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<double >("value",value));
 AsyncProcessRequest(req,boost::bind(&sub3_stub::rrend_set_data3, RobotRaconteur::rr_cast<sub3_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
-void sub3_stub::rrend_set_data3(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void sub3_stub::rrend_set_data3(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -5517,12 +5517,12 @@ handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void sub3_stub::async_add(double d,boost::function<void (double, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_FunctionCallReq,"add");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallReq,"add");
 rr_req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<double >("d",d));
 AsyncProcessRequest(rr_req,boost::bind(&sub3_stub::rrend_add, RobotRaconteur::rr_cast<sub3_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
 }
 
-void sub3_stub::rrend_add(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (double ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+void sub3_stub::rrend_add(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (double ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
 {
 if (err)
 {
@@ -5537,7 +5537,7 @@ return;
 double rr_ret;
 try
 {
-RR_SHARED_PTR<RobotRaconteur::MessageElement> me=m->FindElement("return");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("return");
 rr_ret=RobotRaconteur::MessageElement_UnpackScalar<double >(me);
 }
 catch (std::exception& err2)
@@ -5584,9 +5584,9 @@ std::string testroot_skel::GetObjectType()
 {
 return "com.robotraconteur.testing.TestService1.testroot";
 }
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> testroot_skel::CallGetProperty(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> testroot_skel::CallGetProperty(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetRes,m->MemberName);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetRes,m->MemberName);
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::async_testroot > async_obj=get_asyncobj();
 if (m->MemberName == "d1")
 {
@@ -5594,7 +5594,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_d1(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_d1,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -5609,11 +5609,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_d2(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_d2,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRArray<double > > value=get_obj()->get_d2();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value=get_obj()->get_d2();
 mr->AddElement(RobotRaconteur::MessageElement_PackArrayElement<double >("value",value));
 return mr;
 }
@@ -5624,11 +5624,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_d3(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_d3,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRArray<double > > value=get_obj()->get_d3();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value=get_obj()->get_d3();
 mr->AddElement(RobotRaconteur::MessageElement_PackArrayElement<double >("value",RobotRaconteur::VerifyRRArrayLength(value, 16, false)));
 return mr;
 }
@@ -5639,11 +5639,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_d4(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_d4,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRArray<double > > value=get_obj()->get_d4();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value=get_obj()->get_d4();
 mr->AddElement(RobotRaconteur::MessageElement_PackArrayElement<double >("value",RobotRaconteur::VerifyRRArrayLength(value, 16, true)));
 return mr;
 }
@@ -5654,11 +5654,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_d5(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_d5,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > > value=get_obj()->get_d5();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > > value=get_obj()->get_d5();
 mr->AddElement(RobotRaconteur::MessageElement_PackMultiDimArrayElement<double >(RRGetNodeWeak(),"value",value));
 return mr;
 }
@@ -5669,11 +5669,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_d6(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_d6,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > > value=get_obj()->get_d6();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > > value=get_obj()->get_d6();
 mr->AddElement(RobotRaconteur::MessageElement_PackMultiDimArrayElement<double >(RRGetNodeWeak(),"value",RobotRaconteur::VerifyRRMultiDimArrayLength<2>(value,9,boost::assign::list_of(3)(3))));
 return mr;
 }
@@ -5684,7 +5684,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_s1(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_s1,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -5699,11 +5699,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_s2(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_s2,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRArray<float > > value=get_obj()->get_s2();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<float > > value=get_obj()->get_s2();
 mr->AddElement(RobotRaconteur::MessageElement_PackArrayElement<float >("value",value));
 return mr;
 }
@@ -5714,7 +5714,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_i8_1(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_i8_1,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -5729,11 +5729,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_i8_2(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_i8_2,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRArray<int8_t > > value=get_obj()->get_i8_2();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int8_t > > value=get_obj()->get_i8_2();
 mr->AddElement(RobotRaconteur::MessageElement_PackArrayElement<int8_t >("value",value));
 return mr;
 }
@@ -5744,7 +5744,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_u8_1(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_u8_1,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -5759,11 +5759,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_u8_2(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_u8_2,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRArray<uint8_t > > value=get_obj()->get_u8_2();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint8_t > > value=get_obj()->get_u8_2();
 mr->AddElement(RobotRaconteur::MessageElement_PackArrayElement<uint8_t >("value",value));
 return mr;
 }
@@ -5774,11 +5774,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_u8_3(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_u8_3,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<uint8_t > > value=get_obj()->get_u8_3();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<uint8_t > > value=get_obj()->get_u8_3();
 mr->AddElement(RobotRaconteur::MessageElement_PackMultiDimArrayElement<uint8_t >(RRGetNodeWeak(),"value",value));
 return mr;
 }
@@ -5789,7 +5789,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_i16_1(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_i16_1,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -5804,11 +5804,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_i16_2(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_i16_2,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRArray<int16_t > > value=get_obj()->get_i16_2();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int16_t > > value=get_obj()->get_i16_2();
 mr->AddElement(RobotRaconteur::MessageElement_PackArrayElement<int16_t >("value",value));
 return mr;
 }
@@ -5819,7 +5819,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_u16_1(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_u16_1,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -5834,11 +5834,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_u16_2(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_u16_2,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRArray<uint16_t > > value=get_obj()->get_u16_2();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint16_t > > value=get_obj()->get_u16_2();
 mr->AddElement(RobotRaconteur::MessageElement_PackArrayElement<uint16_t >("value",value));
 return mr;
 }
@@ -5849,7 +5849,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_i32_1(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_i32_1,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -5864,11 +5864,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_i32_2(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_i32_2,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > value=get_obj()->get_i32_2();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > value=get_obj()->get_i32_2();
 mr->AddElement(RobotRaconteur::MessageElement_PackArrayElement<int32_t >("value",value));
 return mr;
 }
@@ -5879,11 +5879,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_i32_huge(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_i32_huge,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > value=get_obj()->get_i32_huge();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > value=get_obj()->get_i32_huge();
 mr->AddElement(RobotRaconteur::MessageElement_PackArrayElement<int32_t >("value",value));
 return mr;
 }
@@ -5894,7 +5894,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_u32_1(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_u32_1,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -5909,11 +5909,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_u32_2(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_u32_2,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRArray<uint32_t > > value=get_obj()->get_u32_2();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint32_t > > value=get_obj()->get_u32_2();
 mr->AddElement(RobotRaconteur::MessageElement_PackArrayElement<uint32_t >("value",value));
 return mr;
 }
@@ -5924,7 +5924,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_i64_1(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_i64_1,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -5939,11 +5939,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_i64_2(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_i64_2,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRArray<int64_t > > value=get_obj()->get_i64_2();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int64_t > > value=get_obj()->get_i64_2();
 mr->AddElement(RobotRaconteur::MessageElement_PackArrayElement<int64_t >("value",value));
 return mr;
 }
@@ -5954,7 +5954,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_u64_1(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_u64_1,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -5969,11 +5969,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_u64_2(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_u64_2,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRArray<uint64_t > > value=get_obj()->get_u64_2();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint64_t > > value=get_obj()->get_u64_2();
 mr->AddElement(RobotRaconteur::MessageElement_PackArrayElement<uint64_t >("value",value));
 return mr;
 }
@@ -5984,7 +5984,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_str1(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_str1,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -5999,11 +5999,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_struct1(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_struct1,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<teststruct1 > value=get_obj()->get_struct1();
+RR_INTRUSIVE_PTR<teststruct1 > value=get_obj()->get_struct1();
 mr->AddElement(RobotRaconteur::MessageElement_PackStructElement(RRGetNodeWeak(),"value",value));
 return mr;
 }
@@ -6014,11 +6014,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_struct2(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_struct2,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<teststruct2 > value=get_obj()->get_struct2();
+RR_INTRUSIVE_PTR<teststruct2 > value=get_obj()->get_struct2();
 mr->AddElement(RobotRaconteur::MessageElement_PackStructElement(RRGetNodeWeak(),"value",value));
 return mr;
 }
@@ -6029,11 +6029,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_is_d1(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_is_d1,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value=get_obj()->get_is_d1();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value=get_obj()->get_is_d1();
 mr->AddElement(RobotRaconteur::MessageElement_PackMapElement<int32_t,RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),"value",value));
 return mr;
 }
@@ -6044,11 +6044,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_is_d2(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_is_d2,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > value=get_obj()->get_is_d2();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > value=get_obj()->get_is_d2();
 mr->AddElement(RobotRaconteur::MessageElement_PackMapElement<std::string,RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),"value",value));
 return mr;
 }
@@ -6059,11 +6059,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_is_d3(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_is_d3,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value=get_obj()->get_is_d3();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value=get_obj()->get_is_d3();
 mr->AddElement(RobotRaconteur::MessageElement_PackMapElement<int32_t,RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),"value",value));
 return mr;
 }
@@ -6074,11 +6074,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_is_d4(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_is_d4,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > value=get_obj()->get_is_d4();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > value=get_obj()->get_is_d4();
 mr->AddElement(RobotRaconteur::MessageElement_PackMapElement<std::string,RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),"value",value));
 return mr;
 }
@@ -6089,11 +6089,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_is_d5(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_is_d5,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > value=get_obj()->get_is_d5();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > value=get_obj()->get_is_d5();
 mr->AddElement(RobotRaconteur::MessageElement_PackMapElement<int32_t,RobotRaconteur::RRMultiDimArray<double >  >(RRGetNodeWeak(),"value",value));
 return mr;
 }
@@ -6104,11 +6104,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_is_d6(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_is_d6,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRMultiDimArray<double >  > > value=get_obj()->get_is_d6();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRMultiDimArray<double >  > > value=get_obj()->get_is_d6();
 mr->AddElement(RobotRaconteur::MessageElement_PackMapElement<std::string,RobotRaconteur::RRMultiDimArray<double >  >(RRGetNodeWeak(),"value",value));
 return mr;
 }
@@ -6119,11 +6119,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_is_str1(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_is_str1,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > > value=get_obj()->get_is_str1();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > > value=get_obj()->get_is_str1();
 mr->AddElement(RobotRaconteur::MessageElement_PackMapElement<int32_t,RobotRaconteur::RRArray<char>  >(RRGetNodeWeak(),"value",value));
 return mr;
 }
@@ -6134,11 +6134,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_is_str2(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_is_str2,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<char>  > > value=get_obj()->get_is_str2();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<char>  > > value=get_obj()->get_is_str2();
 mr->AddElement(RobotRaconteur::MessageElement_PackMapElement<std::string,RobotRaconteur::RRArray<char>  >(RRGetNodeWeak(),"value",value));
 return mr;
 }
@@ -6149,11 +6149,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_is_struct1(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_is_struct1,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,teststruct2  > > value=get_obj()->get_is_struct1();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,teststruct2  > > value=get_obj()->get_is_struct1();
 mr->AddElement(RobotRaconteur::MessageElement_PackMapElement<int32_t,teststruct2  >(RRGetNodeWeak(),"value",value));
 return mr;
 }
@@ -6164,11 +6164,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_is_struct2(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_is_struct2,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,teststruct2  > > value=get_obj()->get_is_struct2();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,teststruct2  > > value=get_obj()->get_is_struct2();
 mr->AddElement(RobotRaconteur::MessageElement_PackMapElement<std::string,teststruct2  >(RRGetNodeWeak(),"value",value));
 return mr;
 }
@@ -6179,11 +6179,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_struct3(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_struct3,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<com::robotraconteur::testing::TestService2::ostruct2 > value=get_obj()->get_struct3();
+RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService2::ostruct2 > value=get_obj()->get_struct3();
 mr->AddElement(RobotRaconteur::MessageElement_PackStructElement(RRGetNodeWeak(),"value",value));
 return mr;
 }
@@ -6194,11 +6194,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_list_d1(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_list_d1,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value=get_obj()->get_list_d1();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value=get_obj()->get_list_d1();
 mr->AddElement(RobotRaconteur::MessageElement_PackListElement<RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),"value",value));
 return mr;
 }
@@ -6209,11 +6209,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_list_d3(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_list_d3,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value=get_obj()->get_list_d3();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value=get_obj()->get_list_d3();
 mr->AddElement(RobotRaconteur::MessageElement_PackListElement<RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),"value",value));
 return mr;
 }
@@ -6224,11 +6224,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_list_d5(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_list_d5,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > value=get_obj()->get_list_d5();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > value=get_obj()->get_list_d5();
 mr->AddElement(RobotRaconteur::MessageElement_PackListElement<RobotRaconteur::RRMultiDimArray<double >  >(RRGetNodeWeak(),"value",value));
 return mr;
 }
@@ -6239,11 +6239,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_list_str1(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_list_str1,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char>  > > value=get_obj()->get_list_str1();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char>  > > value=get_obj()->get_list_str1();
 mr->AddElement(RobotRaconteur::MessageElement_PackListElement<RobotRaconteur::RRArray<char>  >(RRGetNodeWeak(),"value",value));
 return mr;
 }
@@ -6254,11 +6254,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_list_struct1(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_list_struct1,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRList<teststruct2  > > value=get_obj()->get_list_struct1();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<teststruct2  > > value=get_obj()->get_list_struct1();
 mr->AddElement(RobotRaconteur::MessageElement_PackListElement<teststruct2  >(RRGetNodeWeak(),"value",value));
 return mr;
 }
@@ -6269,11 +6269,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_var1(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_var1,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRValue> value=get_obj()->get_var1();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value=get_obj()->get_var1();
 mr->AddElement(RobotRaconteur::MessageElement_PackVarTypeElement(RRGetNodeWeak(),"value",value));
 return mr;
 }
@@ -6284,11 +6284,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_var2(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_var2,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRValue > > value=get_obj()->get_var2();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRValue > > value=get_obj()->get_var2();
 mr->AddElement(RobotRaconteur::MessageElement_PackMapElement<int32_t,RobotRaconteur::RRValue >(RRGetNodeWeak(),"value",value));
 return mr;
 }
@@ -6299,11 +6299,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_var_num(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_var_num,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRValue> value=get_obj()->get_var_num();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value=get_obj()->get_var_num();
 mr->AddElement(RobotRaconteur::MessageElement_PackVarTypeElement(RRGetNodeWeak(),"value",value));
 return mr;
 }
@@ -6314,11 +6314,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_var_str(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_var_str,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRValue> value=get_obj()->get_var_str();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value=get_obj()->get_var_str();
 mr->AddElement(RobotRaconteur::MessageElement_PackVarTypeElement(RRGetNodeWeak(),"value",value));
 return mr;
 }
@@ -6329,11 +6329,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_var_struct(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_var_struct,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRValue> value=get_obj()->get_var_struct();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value=get_obj()->get_var_struct();
 mr->AddElement(RobotRaconteur::MessageElement_PackVarTypeElement(RRGetNodeWeak(),"value",value));
 return mr;
 }
@@ -6344,11 +6344,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_var_vector(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_var_vector,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRValue> value=get_obj()->get_var_vector();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value=get_obj()->get_var_vector();
 mr->AddElement(RobotRaconteur::MessageElement_PackVarTypeElement(RRGetNodeWeak(),"value",value));
 return mr;
 }
@@ -6359,11 +6359,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_var_dictionary(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_var_dictionary,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRValue> value=get_obj()->get_var_dictionary();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value=get_obj()->get_var_dictionary();
 mr->AddElement(RobotRaconteur::MessageElement_PackVarTypeElement(RRGetNodeWeak(),"value",value));
 return mr;
 }
@@ -6374,11 +6374,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_var_list(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_var_list,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRValue> value=get_obj()->get_var_list();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value=get_obj()->get_var_list();
 mr->AddElement(RobotRaconteur::MessageElement_PackVarTypeElement(RRGetNodeWeak(),"value",value));
 return mr;
 }
@@ -6389,11 +6389,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_var_multidimarray(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_var_multidimarray,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRValue> value=get_obj()->get_var_multidimarray();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value=get_obj()->get_var_multidimarray();
 mr->AddElement(RobotRaconteur::MessageElement_PackVarTypeElement(RRGetNodeWeak(),"value",value));
 return mr;
 }
@@ -6404,7 +6404,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_errtest(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_errtest,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6419,11 +6419,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_get_nulltest(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_get_nulltest,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<teststruct1 > value=get_obj()->get_nulltest();
+RR_INTRUSIVE_PTR<teststruct1 > value=get_obj()->get_nulltest();
 mr->AddElement(RobotRaconteur::MessageElement_PackStructElement(RRGetNodeWeak(),"value",value));
 return mr;
 }
@@ -6431,9 +6431,9 @@ return mr;
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
 
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> testroot_skel::CallSetProperty(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> testroot_skel::CallSetProperty(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetRes,m->MemberName);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetRes,m->MemberName);
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::async_testroot > async_obj=get_asyncobj();
 if (m->MemberName == "d1")
 {
@@ -6442,7 +6442,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_d1(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6452,12 +6452,12 @@ return mr;
 }
 if (m->MemberName == "d2")
 {
-RR_SHARED_PTR<RobotRaconteur::RRArray<double > > value=RobotRaconteur::MessageElement_UnpackArray<double >(m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value=RobotRaconteur::MessageElement_UnpackArray<double >(m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_d2(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6467,12 +6467,12 @@ return mr;
 }
 if (m->MemberName == "d3")
 {
-RR_SHARED_PTR<RobotRaconteur::RRArray<double > > value=RobotRaconteur::VerifyRRArrayLength(RobotRaconteur::MessageElement_UnpackArray<double >(m->FindElement("value")), 16, false);
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value=RobotRaconteur::VerifyRRArrayLength(RobotRaconteur::MessageElement_UnpackArray<double >(m->FindElement("value")), 16, false);
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_d3(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6482,12 +6482,12 @@ return mr;
 }
 if (m->MemberName == "d4")
 {
-RR_SHARED_PTR<RobotRaconteur::RRArray<double > > value=RobotRaconteur::VerifyRRArrayLength(RobotRaconteur::MessageElement_UnpackArray<double >(m->FindElement("value")), 16, true);
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value=RobotRaconteur::VerifyRRArrayLength(RobotRaconteur::MessageElement_UnpackArray<double >(m->FindElement("value")), 16, true);
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_d4(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6497,12 +6497,12 @@ return mr;
 }
 if (m->MemberName == "d5")
 {
-RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > > value=RobotRaconteur::MessageElement_UnpackMultiDimArray<double >(RRGetNodeWeak(),m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > > value=RobotRaconteur::MessageElement_UnpackMultiDimArray<double >(RRGetNodeWeak(),m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_d5(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6512,12 +6512,12 @@ return mr;
 }
 if (m->MemberName == "d6")
 {
-RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > > value=RobotRaconteur::VerifyRRMultiDimArrayLength<2>(RobotRaconteur::MessageElement_UnpackMultiDimArray<double >(RRGetNodeWeak(),m->FindElement("value")),9,boost::assign::list_of(3)(3));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > > value=RobotRaconteur::VerifyRRMultiDimArrayLength<2>(RobotRaconteur::MessageElement_UnpackMultiDimArray<double >(RRGetNodeWeak(),m->FindElement("value")),9,boost::assign::list_of(3)(3));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_d6(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6532,7 +6532,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_s1(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6542,12 +6542,12 @@ return mr;
 }
 if (m->MemberName == "s2")
 {
-RR_SHARED_PTR<RobotRaconteur::RRArray<float > > value=RobotRaconteur::MessageElement_UnpackArray<float >(m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<float > > value=RobotRaconteur::MessageElement_UnpackArray<float >(m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_s2(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6562,7 +6562,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_i8_1(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6572,12 +6572,12 @@ return mr;
 }
 if (m->MemberName == "i8_2")
 {
-RR_SHARED_PTR<RobotRaconteur::RRArray<int8_t > > value=RobotRaconteur::MessageElement_UnpackArray<int8_t >(m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int8_t > > value=RobotRaconteur::MessageElement_UnpackArray<int8_t >(m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_i8_2(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6592,7 +6592,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_u8_1(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6602,12 +6602,12 @@ return mr;
 }
 if (m->MemberName == "u8_2")
 {
-RR_SHARED_PTR<RobotRaconteur::RRArray<uint8_t > > value=RobotRaconteur::MessageElement_UnpackArray<uint8_t >(m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint8_t > > value=RobotRaconteur::MessageElement_UnpackArray<uint8_t >(m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_u8_2(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6617,12 +6617,12 @@ return mr;
 }
 if (m->MemberName == "u8_3")
 {
-RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<uint8_t > > value=RobotRaconteur::MessageElement_UnpackMultiDimArray<uint8_t >(RRGetNodeWeak(),m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<uint8_t > > value=RobotRaconteur::MessageElement_UnpackMultiDimArray<uint8_t >(RRGetNodeWeak(),m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_u8_3(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6637,7 +6637,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_i16_1(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6647,12 +6647,12 @@ return mr;
 }
 if (m->MemberName == "i16_2")
 {
-RR_SHARED_PTR<RobotRaconteur::RRArray<int16_t > > value=RobotRaconteur::MessageElement_UnpackArray<int16_t >(m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int16_t > > value=RobotRaconteur::MessageElement_UnpackArray<int16_t >(m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_i16_2(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6667,7 +6667,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_u16_1(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6677,12 +6677,12 @@ return mr;
 }
 if (m->MemberName == "u16_2")
 {
-RR_SHARED_PTR<RobotRaconteur::RRArray<uint16_t > > value=RobotRaconteur::MessageElement_UnpackArray<uint16_t >(m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint16_t > > value=RobotRaconteur::MessageElement_UnpackArray<uint16_t >(m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_u16_2(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6697,7 +6697,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_i32_1(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6707,12 +6707,12 @@ return mr;
 }
 if (m->MemberName == "i32_2")
 {
-RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > value=RobotRaconteur::MessageElement_UnpackArray<int32_t >(m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > value=RobotRaconteur::MessageElement_UnpackArray<int32_t >(m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_i32_2(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6722,12 +6722,12 @@ return mr;
 }
 if (m->MemberName == "i32_huge")
 {
-RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > value=RobotRaconteur::MessageElement_UnpackArray<int32_t >(m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > value=RobotRaconteur::MessageElement_UnpackArray<int32_t >(m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_i32_huge(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6742,7 +6742,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_u32_1(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6752,12 +6752,12 @@ return mr;
 }
 if (m->MemberName == "u32_2")
 {
-RR_SHARED_PTR<RobotRaconteur::RRArray<uint32_t > > value=RobotRaconteur::MessageElement_UnpackArray<uint32_t >(m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint32_t > > value=RobotRaconteur::MessageElement_UnpackArray<uint32_t >(m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_u32_2(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6772,7 +6772,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_i64_1(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6782,12 +6782,12 @@ return mr;
 }
 if (m->MemberName == "i64_2")
 {
-RR_SHARED_PTR<RobotRaconteur::RRArray<int64_t > > value=RobotRaconteur::MessageElement_UnpackArray<int64_t >(m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int64_t > > value=RobotRaconteur::MessageElement_UnpackArray<int64_t >(m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_i64_2(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6802,7 +6802,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_u64_1(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6812,12 +6812,12 @@ return mr;
 }
 if (m->MemberName == "u64_2")
 {
-RR_SHARED_PTR<RobotRaconteur::RRArray<uint64_t > > value=RobotRaconteur::MessageElement_UnpackArray<uint64_t >(m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint64_t > > value=RobotRaconteur::MessageElement_UnpackArray<uint64_t >(m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_u64_2(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6832,7 +6832,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_str1(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6842,12 +6842,12 @@ return mr;
 }
 if (m->MemberName == "struct1")
 {
-RR_SHARED_PTR<teststruct1 > value=RobotRaconteur::MessageElement_UnpackStructure<teststruct1 >(RRGetNodeWeak(), m->FindElement("value"));
+RR_INTRUSIVE_PTR<teststruct1 > value=RobotRaconteur::MessageElement_UnpackStructure<teststruct1 >(RRGetNodeWeak(), m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_struct1(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6857,12 +6857,12 @@ return mr;
 }
 if (m->MemberName == "struct2")
 {
-RR_SHARED_PTR<teststruct2 > value=RobotRaconteur::MessageElement_UnpackStructure<teststruct2 >(RRGetNodeWeak(), m->FindElement("value"));
+RR_INTRUSIVE_PTR<teststruct2 > value=RobotRaconteur::MessageElement_UnpackStructure<teststruct2 >(RRGetNodeWeak(), m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_struct2(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6872,12 +6872,12 @@ return mr;
 }
 if (m->MemberName == "is_d1")
 {
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value=RobotRaconteur::MessageElement_UnpackMap<int32_t,RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value=RobotRaconteur::MessageElement_UnpackMap<int32_t,RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_is_d1(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6887,12 +6887,12 @@ return mr;
 }
 if (m->MemberName == "is_d2")
 {
-RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > value=RobotRaconteur::MessageElement_UnpackMap<std::string,RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > value=RobotRaconteur::MessageElement_UnpackMap<std::string,RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_is_d2(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6902,12 +6902,12 @@ return mr;
 }
 if (m->MemberName == "is_d3")
 {
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value=RobotRaconteur::MessageElement_UnpackMap<int32_t,RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value=RobotRaconteur::MessageElement_UnpackMap<int32_t,RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_is_d3(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6917,12 +6917,12 @@ return mr;
 }
 if (m->MemberName == "is_d4")
 {
-RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > value=RobotRaconteur::MessageElement_UnpackMap<std::string,RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > value=RobotRaconteur::MessageElement_UnpackMap<std::string,RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_is_d4(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6932,12 +6932,12 @@ return mr;
 }
 if (m->MemberName == "is_d5")
 {
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > value=RobotRaconteur::MessageElement_UnpackMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  >(RRGetNodeWeak(),m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > value=RobotRaconteur::MessageElement_UnpackMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  >(RRGetNodeWeak(),m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_is_d5(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6947,12 +6947,12 @@ return mr;
 }
 if (m->MemberName == "is_d6")
 {
-RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRMultiDimArray<double >  > > value=RobotRaconteur::MessageElement_UnpackMap<std::string,RobotRaconteur::RRMultiDimArray<double >  >(RRGetNodeWeak(),m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRMultiDimArray<double >  > > value=RobotRaconteur::MessageElement_UnpackMap<std::string,RobotRaconteur::RRMultiDimArray<double >  >(RRGetNodeWeak(),m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_is_d6(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6962,12 +6962,12 @@ return mr;
 }
 if (m->MemberName == "is_str1")
 {
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > > value=RobotRaconteur::MessageElement_UnpackMap<int32_t,RobotRaconteur::RRArray<char>  >(RRGetNodeWeak(),m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > > value=RobotRaconteur::MessageElement_UnpackMap<int32_t,RobotRaconteur::RRArray<char>  >(RRGetNodeWeak(),m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_is_str1(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6977,12 +6977,12 @@ return mr;
 }
 if (m->MemberName == "is_str2")
 {
-RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<char>  > > value=RobotRaconteur::MessageElement_UnpackMap<std::string,RobotRaconteur::RRArray<char>  >(RRGetNodeWeak(),m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<char>  > > value=RobotRaconteur::MessageElement_UnpackMap<std::string,RobotRaconteur::RRArray<char>  >(RRGetNodeWeak(),m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_is_str2(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -6992,12 +6992,12 @@ return mr;
 }
 if (m->MemberName == "is_struct1")
 {
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,teststruct2  > > value=RobotRaconteur::MessageElement_UnpackMap<int32_t,teststruct2  >(RRGetNodeWeak(),m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,teststruct2  > > value=RobotRaconteur::MessageElement_UnpackMap<int32_t,teststruct2  >(RRGetNodeWeak(),m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_is_struct1(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -7007,12 +7007,12 @@ return mr;
 }
 if (m->MemberName == "is_struct2")
 {
-RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,teststruct2  > > value=RobotRaconteur::MessageElement_UnpackMap<std::string,teststruct2  >(RRGetNodeWeak(),m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,teststruct2  > > value=RobotRaconteur::MessageElement_UnpackMap<std::string,teststruct2  >(RRGetNodeWeak(),m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_is_struct2(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -7022,12 +7022,12 @@ return mr;
 }
 if (m->MemberName == "struct3")
 {
-RR_SHARED_PTR<com::robotraconteur::testing::TestService2::ostruct2 > value=RobotRaconteur::MessageElement_UnpackStructure<com::robotraconteur::testing::TestService2::ostruct2 >(RRGetNodeWeak(), m->FindElement("value"));
+RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService2::ostruct2 > value=RobotRaconteur::MessageElement_UnpackStructure<com::robotraconteur::testing::TestService2::ostruct2 >(RRGetNodeWeak(), m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_struct3(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -7037,12 +7037,12 @@ return mr;
 }
 if (m->MemberName == "list_d1")
 {
-RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value=RobotRaconteur::MessageElement_UnpackList<RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value=RobotRaconteur::MessageElement_UnpackList<RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_list_d1(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -7052,12 +7052,12 @@ return mr;
 }
 if (m->MemberName == "list_d3")
 {
-RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value=RobotRaconteur::MessageElement_UnpackList<RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value=RobotRaconteur::MessageElement_UnpackList<RobotRaconteur::RRArray<double >  >(RRGetNodeWeak(),m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_list_d3(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -7067,12 +7067,12 @@ return mr;
 }
 if (m->MemberName == "list_d5")
 {
-RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > value=RobotRaconteur::MessageElement_UnpackList<RobotRaconteur::RRMultiDimArray<double >  >(RRGetNodeWeak(),m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > value=RobotRaconteur::MessageElement_UnpackList<RobotRaconteur::RRMultiDimArray<double >  >(RRGetNodeWeak(),m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_list_d5(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -7082,12 +7082,12 @@ return mr;
 }
 if (m->MemberName == "list_str1")
 {
-RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char>  > > value=RobotRaconteur::MessageElement_UnpackList<RobotRaconteur::RRArray<char>  >(RRGetNodeWeak(),m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char>  > > value=RobotRaconteur::MessageElement_UnpackList<RobotRaconteur::RRArray<char>  >(RRGetNodeWeak(),m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_list_str1(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -7097,12 +7097,12 @@ return mr;
 }
 if (m->MemberName == "list_struct1")
 {
-RR_SHARED_PTR<RobotRaconteur::RRList<teststruct2  > > value=RobotRaconteur::MessageElement_UnpackList<teststruct2  >(RRGetNodeWeak(),m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<teststruct2  > > value=RobotRaconteur::MessageElement_UnpackList<teststruct2  >(RRGetNodeWeak(),m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_list_struct1(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -7112,12 +7112,12 @@ return mr;
 }
 if (m->MemberName == "var1")
 {
-RR_SHARED_PTR<RobotRaconteur::RRValue> value=RobotRaconteur::MessageElement_UnpackVarValue(RRGetNodeWeak(),m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value=RobotRaconteur::MessageElement_UnpackVarValue(RRGetNodeWeak(),m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_var1(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -7127,12 +7127,12 @@ return mr;
 }
 if (m->MemberName == "var2")
 {
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRValue > > value=RobotRaconteur::MessageElement_UnpackMap<int32_t,RobotRaconteur::RRValue >(RRGetNodeWeak(),m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRValue > > value=RobotRaconteur::MessageElement_UnpackMap<int32_t,RobotRaconteur::RRValue >(RRGetNodeWeak(),m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_var2(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -7142,12 +7142,12 @@ return mr;
 }
 if (m->MemberName == "var_num")
 {
-RR_SHARED_PTR<RobotRaconteur::RRValue> value=RobotRaconteur::MessageElement_UnpackVarValue(RRGetNodeWeak(),m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value=RobotRaconteur::MessageElement_UnpackVarValue(RRGetNodeWeak(),m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_var_num(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -7157,12 +7157,12 @@ return mr;
 }
 if (m->MemberName == "var_str")
 {
-RR_SHARED_PTR<RobotRaconteur::RRValue> value=RobotRaconteur::MessageElement_UnpackVarValue(RRGetNodeWeak(),m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value=RobotRaconteur::MessageElement_UnpackVarValue(RRGetNodeWeak(),m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_var_str(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -7172,12 +7172,12 @@ return mr;
 }
 if (m->MemberName == "var_struct")
 {
-RR_SHARED_PTR<RobotRaconteur::RRValue> value=RobotRaconteur::MessageElement_UnpackVarValue(RRGetNodeWeak(),m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value=RobotRaconteur::MessageElement_UnpackVarValue(RRGetNodeWeak(),m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_var_struct(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -7187,12 +7187,12 @@ return mr;
 }
 if (m->MemberName == "var_vector")
 {
-RR_SHARED_PTR<RobotRaconteur::RRValue> value=RobotRaconteur::MessageElement_UnpackVarValue(RRGetNodeWeak(),m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value=RobotRaconteur::MessageElement_UnpackVarValue(RRGetNodeWeak(),m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_var_vector(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -7202,12 +7202,12 @@ return mr;
 }
 if (m->MemberName == "var_dictionary")
 {
-RR_SHARED_PTR<RobotRaconteur::RRValue> value=RobotRaconteur::MessageElement_UnpackVarValue(RRGetNodeWeak(),m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value=RobotRaconteur::MessageElement_UnpackVarValue(RRGetNodeWeak(),m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_var_dictionary(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -7217,12 +7217,12 @@ return mr;
 }
 if (m->MemberName == "var_list")
 {
-RR_SHARED_PTR<RobotRaconteur::RRValue> value=RobotRaconteur::MessageElement_UnpackVarValue(RRGetNodeWeak(),m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value=RobotRaconteur::MessageElement_UnpackVarValue(RRGetNodeWeak(),m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_var_list(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -7232,12 +7232,12 @@ return mr;
 }
 if (m->MemberName == "var_multidimarray")
 {
-RR_SHARED_PTR<RobotRaconteur::RRValue> value=RobotRaconteur::MessageElement_UnpackVarValue(RRGetNodeWeak(),m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value=RobotRaconteur::MessageElement_UnpackVarValue(RRGetNodeWeak(),m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_var_multidimarray(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -7252,7 +7252,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_errtest(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -7262,12 +7262,12 @@ return mr;
 }
 if (m->MemberName == "nulltest")
 {
-RR_SHARED_PTR<teststruct1 > value=RobotRaconteur::MessageElement_UnpackStructure<teststruct1 >(RRGetNodeWeak(), m->FindElement("value"));
+RR_INTRUSIVE_PTR<teststruct1 > value=RobotRaconteur::MessageElement_UnpackStructure<teststruct1 >(RRGetNodeWeak(), m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_set_nulltest(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -7278,14 +7278,14 @@ return mr;
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
 
-void testroot_skel::rr_get_d1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,double value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_d1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,double value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -7294,19 +7294,19 @@ mr=RobotRaconteur::MessageElement_PackScalarElement<double >("value",value);
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_d2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRArray<double > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_d2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -7315,19 +7315,19 @@ mr=RobotRaconteur::MessageElement_PackArrayElement<double >("value",value);
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_d3(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRArray<double > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_d3(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -7336,19 +7336,19 @@ mr=RobotRaconteur::MessageElement_PackArrayElement<double >("value",RobotRaconte
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_d4(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRArray<double > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_d4(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -7357,19 +7357,19 @@ mr=RobotRaconteur::MessageElement_PackArrayElement<double >("value",RobotRaconte
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_d5(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_d5(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -7378,19 +7378,19 @@ mr=RobotRaconteur::MessageElement_PackMultiDimArrayElement<double >(skel1->RRGet
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_d6(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_d6(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -7399,19 +7399,19 @@ mr=RobotRaconteur::MessageElement_PackMultiDimArrayElement<double >(skel1->RRGet
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_s1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,float value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_s1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,float value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -7420,19 +7420,19 @@ mr=RobotRaconteur::MessageElement_PackScalarElement<float >("value",value);
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_s2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRArray<float > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_s2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<float > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -7441,19 +7441,19 @@ mr=RobotRaconteur::MessageElement_PackArrayElement<float >("value",value);
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_i8_1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,int8_t value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_i8_1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,int8_t value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -7462,19 +7462,19 @@ mr=RobotRaconteur::MessageElement_PackScalarElement<int8_t >("value",value);
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_i8_2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRArray<int8_t > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_i8_2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int8_t > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -7483,19 +7483,19 @@ mr=RobotRaconteur::MessageElement_PackArrayElement<int8_t >("value",value);
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_u8_1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,uint8_t value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_u8_1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,uint8_t value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -7504,19 +7504,19 @@ mr=RobotRaconteur::MessageElement_PackScalarElement<uint8_t >("value",value);
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_u8_2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRArray<uint8_t > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_u8_2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint8_t > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -7525,19 +7525,19 @@ mr=RobotRaconteur::MessageElement_PackArrayElement<uint8_t >("value",value);
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_u8_3(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<uint8_t > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_u8_3(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<uint8_t > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -7546,19 +7546,19 @@ mr=RobotRaconteur::MessageElement_PackMultiDimArrayElement<uint8_t >(skel1->RRGe
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_i16_1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,int16_t value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_i16_1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,int16_t value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -7567,19 +7567,19 @@ mr=RobotRaconteur::MessageElement_PackScalarElement<int16_t >("value",value);
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_i16_2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRArray<int16_t > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_i16_2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int16_t > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -7588,19 +7588,19 @@ mr=RobotRaconteur::MessageElement_PackArrayElement<int16_t >("value",value);
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_u16_1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,uint16_t value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_u16_1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,uint16_t value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -7609,19 +7609,19 @@ mr=RobotRaconteur::MessageElement_PackScalarElement<uint16_t >("value",value);
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_u16_2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRArray<uint16_t > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_u16_2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint16_t > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -7630,19 +7630,19 @@ mr=RobotRaconteur::MessageElement_PackArrayElement<uint16_t >("value",value);
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_i32_1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,int32_t value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_i32_1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,int32_t value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -7651,19 +7651,19 @@ mr=RobotRaconteur::MessageElement_PackScalarElement<int32_t >("value",value);
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_i32_2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_i32_2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -7672,19 +7672,19 @@ mr=RobotRaconteur::MessageElement_PackArrayElement<int32_t >("value",value);
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_i32_huge(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_i32_huge(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -7693,19 +7693,19 @@ mr=RobotRaconteur::MessageElement_PackArrayElement<int32_t >("value",value);
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_u32_1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,uint32_t value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_u32_1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,uint32_t value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -7714,19 +7714,19 @@ mr=RobotRaconteur::MessageElement_PackScalarElement<uint32_t >("value",value);
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_u32_2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRArray<uint32_t > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_u32_2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint32_t > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -7735,19 +7735,19 @@ mr=RobotRaconteur::MessageElement_PackArrayElement<uint32_t >("value",value);
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_i64_1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,int64_t value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_i64_1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,int64_t value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -7756,19 +7756,19 @@ mr=RobotRaconteur::MessageElement_PackScalarElement<int64_t >("value",value);
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_i64_2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRArray<int64_t > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_i64_2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int64_t > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -7777,19 +7777,19 @@ mr=RobotRaconteur::MessageElement_PackArrayElement<int64_t >("value",value);
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_u64_1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,uint64_t value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_u64_1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,uint64_t value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -7798,19 +7798,19 @@ mr=RobotRaconteur::MessageElement_PackScalarElement<uint64_t >("value",value);
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_u64_2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRArray<uint64_t > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_u64_2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint64_t > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -7819,19 +7819,19 @@ mr=RobotRaconteur::MessageElement_PackArrayElement<uint64_t >("value",value);
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_str1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,std::string value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_str1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,std::string value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -7840,19 +7840,19 @@ mr=RobotRaconteur::MessageElement_PackStringElement("value",value);
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_struct1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<teststruct1 > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_struct1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<teststruct1 > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -7861,19 +7861,19 @@ mr=RobotRaconteur::MessageElement_PackStructElement(skel1->RRGetNodeWeak(),"valu
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_struct2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<teststruct2 > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_struct2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<teststruct2 > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -7882,19 +7882,19 @@ mr=RobotRaconteur::MessageElement_PackStructElement(skel1->RRGetNodeWeak(),"valu
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_is_d1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_is_d1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -7903,19 +7903,19 @@ mr=RobotRaconteur::MessageElement_PackMapElement<int32_t,RobotRaconteur::RRArray
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_is_d2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_is_d2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -7924,19 +7924,19 @@ mr=RobotRaconteur::MessageElement_PackMapElement<std::string,RobotRaconteur::RRA
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_is_d3(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_is_d3(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -7945,19 +7945,19 @@ mr=RobotRaconteur::MessageElement_PackMapElement<int32_t,RobotRaconteur::RRArray
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_is_d4(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_is_d4(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -7966,19 +7966,19 @@ mr=RobotRaconteur::MessageElement_PackMapElement<std::string,RobotRaconteur::RRA
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_is_d5(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_is_d5(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -7987,19 +7987,19 @@ mr=RobotRaconteur::MessageElement_PackMapElement<int32_t,RobotRaconteur::RRMulti
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_is_d6(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRMultiDimArray<double >  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_is_d6(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRMultiDimArray<double >  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -8008,19 +8008,19 @@ mr=RobotRaconteur::MessageElement_PackMapElement<std::string,RobotRaconteur::RRM
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_is_str1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_is_str1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -8029,19 +8029,19 @@ mr=RobotRaconteur::MessageElement_PackMapElement<int32_t,RobotRaconteur::RRArray
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_is_str2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<char>  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_is_str2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<char>  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -8050,19 +8050,19 @@ mr=RobotRaconteur::MessageElement_PackMapElement<std::string,RobotRaconteur::RRA
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_is_struct1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,teststruct2  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_is_struct1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,teststruct2  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -8071,19 +8071,19 @@ mr=RobotRaconteur::MessageElement_PackMapElement<int32_t,teststruct2  >(skel1->R
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_is_struct2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,teststruct2  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_is_struct2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,teststruct2  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -8092,19 +8092,19 @@ mr=RobotRaconteur::MessageElement_PackMapElement<std::string,teststruct2  >(skel
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_struct3(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<com::robotraconteur::testing::TestService2::ostruct2 > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_struct3(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService2::ostruct2 > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -8113,19 +8113,19 @@ mr=RobotRaconteur::MessageElement_PackStructElement(skel1->RRGetNodeWeak(),"valu
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_list_d1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_list_d1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -8134,19 +8134,19 @@ mr=RobotRaconteur::MessageElement_PackListElement<RobotRaconteur::RRArray<double
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_list_d3(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_list_d3(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -8155,19 +8155,19 @@ mr=RobotRaconteur::MessageElement_PackListElement<RobotRaconteur::RRArray<double
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_list_d5(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_list_d5(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -8176,19 +8176,19 @@ mr=RobotRaconteur::MessageElement_PackListElement<RobotRaconteur::RRMultiDimArra
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_list_str1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char>  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_list_str1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char>  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -8197,19 +8197,19 @@ mr=RobotRaconteur::MessageElement_PackListElement<RobotRaconteur::RRArray<char> 
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_list_struct1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRList<teststruct2  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_list_struct1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRList<teststruct2  > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -8218,19 +8218,19 @@ mr=RobotRaconteur::MessageElement_PackListElement<teststruct2  >(skel1->RRGetNod
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_var1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRValue> value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_var1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -8239,19 +8239,19 @@ mr=RobotRaconteur::MessageElement_PackVarTypeElement(skel1->RRGetNodeWeak(),"val
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_var2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRValue > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_var2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRValue > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -8260,19 +8260,19 @@ mr=RobotRaconteur::MessageElement_PackMapElement<int32_t,RobotRaconteur::RRValue
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_var_num(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRValue> value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_var_num(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -8281,19 +8281,19 @@ mr=RobotRaconteur::MessageElement_PackVarTypeElement(skel1->RRGetNodeWeak(),"val
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_var_str(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRValue> value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_var_str(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -8302,19 +8302,19 @@ mr=RobotRaconteur::MessageElement_PackVarTypeElement(skel1->RRGetNodeWeak(),"val
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_var_struct(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRValue> value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_var_struct(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -8323,19 +8323,19 @@ mr=RobotRaconteur::MessageElement_PackVarTypeElement(skel1->RRGetNodeWeak(),"val
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_var_vector(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRValue> value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_var_vector(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -8344,19 +8344,19 @@ mr=RobotRaconteur::MessageElement_PackVarTypeElement(skel1->RRGetNodeWeak(),"val
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_var_dictionary(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRValue> value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_var_dictionary(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -8365,19 +8365,19 @@ mr=RobotRaconteur::MessageElement_PackVarTypeElement(skel1->RRGetNodeWeak(),"val
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_var_list(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRValue> value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_var_list(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -8386,19 +8386,19 @@ mr=RobotRaconteur::MessageElement_PackVarTypeElement(skel1->RRGetNodeWeak(),"val
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_var_multidimarray(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRValue> value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_var_multidimarray(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -8407,19 +8407,19 @@ mr=RobotRaconteur::MessageElement_PackVarTypeElement(skel1->RRGetNodeWeak(),"val
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_errtest(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,double value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_errtest(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,double value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -8428,19 +8428,19 @@ mr=RobotRaconteur::MessageElement_PackScalarElement<double >("value",value);
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_get_nulltest(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_SHARED_PTR<teststruct1 > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_get_nulltest(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel,RR_INTRUSIVE_PTR<teststruct1 > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -8449,14 +8449,14 @@ mr=RobotRaconteur::MessageElement_PackStructElement(skel1->RRGetNodeWeak(),"valu
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> testroot_skel::CallFunction(RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_m)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> testroot_skel::CallFunction(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_m)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_mr=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_FunctionCallRes,rr_m->MemberName);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_mr=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallRes,rr_m->MemberName);
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::async_testroot > async_obj=get_asyncobj();
 if (rr_m->MemberName == "func1")
 {
@@ -8464,7 +8464,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> rr_wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_func1(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_func1,rr_wp, _1, rr_m, RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -8481,7 +8481,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> rr_wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_func2(d1, d2, boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_func2,rr_wp, _1, rr_m, RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -8498,7 +8498,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> rr_wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_func3(d1, d2, boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_func3, rr_wp, _1, _2, rr_m, RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -8513,7 +8513,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> rr_wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_meaning_of_life(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_meaning_of_life, rr_wp, _1, _2, rr_m, RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -8528,7 +8528,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> rr_wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_func_errtest(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_func_errtest,rr_wp, _1, rr_m, RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -8543,7 +8543,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> rr_wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_func_errtest1(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_func_errtest1,rr_wp, _1, rr_m, RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -8558,7 +8558,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> rr_wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_func_errtest2(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_func_errtest2,rr_wp, _1, rr_m, RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -8573,7 +8573,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> rr_wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_func_errtest3(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_func_errtest3,rr_wp, _1, rr_m, RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -8589,7 +8589,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> rr_wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_o6_op(op, boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_o6_op,rr_wp, _1, rr_m, RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -8604,7 +8604,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> rr_wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_pipe_check_error(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_pipe_check_error,rr_wp, _1, rr_m, RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -8619,7 +8619,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> rr_wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot_skel>(shared_from_this());
 async_obj->async_test_callbacks(boost::bind(&com::robotraconteur::testing::TestService1::testroot_skel::rr_test_callbacks,rr_wp, _1, rr_m, RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -8631,52 +8631,52 @@ return rr_mr;
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
 
-void testroot_skel::rr_func1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_func1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallFunction(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallFunction(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
-mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("return",RobotRaconteur::ScalarToRRArray<int32_t>(0));
+mr=RobotRaconteur::CreateMessageElement("return",RobotRaconteur::ScalarToRRArray<int32_t>(0));
 }
 catch (std::exception& err2)
 {
-EndAsyncCallFunction(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallFunction(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallFunction(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_func2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_func2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallFunction(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallFunction(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
-mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("return",RobotRaconteur::ScalarToRRArray<int32_t>(0));
+mr=RobotRaconteur::CreateMessageElement("return",RobotRaconteur::ScalarToRRArray<int32_t>(0));
 }
 catch (std::exception& err2)
 {
-EndAsyncCallFunction(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallFunction(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallFunction(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_func3(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel, double ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_func3(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel, double ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallFunction(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallFunction(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -8685,19 +8685,19 @@ mr=RobotRaconteur::MessageElement_PackScalarElement<double >("return",ret);
 }
 catch (std::exception& err2)
 {
-EndAsyncCallFunction(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallFunction(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallFunction(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_meaning_of_life(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel, int32_t ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_meaning_of_life(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel, int32_t ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallFunction(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallFunction(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel1=skel.lock();
@@ -8706,152 +8706,152 @@ mr=RobotRaconteur::MessageElement_PackScalarElement<int32_t >("return",ret);
 }
 catch (std::exception& err2)
 {
-EndAsyncCallFunction(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallFunction(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallFunction(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_func_errtest(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_func_errtest(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallFunction(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallFunction(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
-mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("return",RobotRaconteur::ScalarToRRArray<int32_t>(0));
+mr=RobotRaconteur::CreateMessageElement("return",RobotRaconteur::ScalarToRRArray<int32_t>(0));
 }
 catch (std::exception& err2)
 {
-EndAsyncCallFunction(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallFunction(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallFunction(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_func_errtest1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_func_errtest1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallFunction(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallFunction(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
-mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("return",RobotRaconteur::ScalarToRRArray<int32_t>(0));
+mr=RobotRaconteur::CreateMessageElement("return",RobotRaconteur::ScalarToRRArray<int32_t>(0));
 }
 catch (std::exception& err2)
 {
-EndAsyncCallFunction(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallFunction(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallFunction(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_func_errtest2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_func_errtest2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallFunction(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallFunction(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
-mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("return",RobotRaconteur::ScalarToRRArray<int32_t>(0));
+mr=RobotRaconteur::CreateMessageElement("return",RobotRaconteur::ScalarToRRArray<int32_t>(0));
 }
 catch (std::exception& err2)
 {
-EndAsyncCallFunction(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallFunction(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallFunction(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_func_errtest3(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_func_errtest3(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallFunction(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallFunction(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
-mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("return",RobotRaconteur::ScalarToRRArray<int32_t>(0));
+mr=RobotRaconteur::CreateMessageElement("return",RobotRaconteur::ScalarToRRArray<int32_t>(0));
 }
 catch (std::exception& err2)
 {
-EndAsyncCallFunction(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallFunction(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallFunction(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_o6_op(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_o6_op(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallFunction(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallFunction(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
-mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("return",RobotRaconteur::ScalarToRRArray<int32_t>(0));
+mr=RobotRaconteur::CreateMessageElement("return",RobotRaconteur::ScalarToRRArray<int32_t>(0));
 }
 catch (std::exception& err2)
 {
-EndAsyncCallFunction(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallFunction(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallFunction(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_pipe_check_error(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_pipe_check_error(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallFunction(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallFunction(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
-mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("return",RobotRaconteur::ScalarToRRArray<int32_t>(0));
+mr=RobotRaconteur::CreateMessageElement("return",RobotRaconteur::ScalarToRRArray<int32_t>(0));
 }
 catch (std::exception& err2)
 {
-EndAsyncCallFunction(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallFunction(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallFunction(skel, mr, err, m,ep);
 }
-void testroot_skel::rr_test_callbacks(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void testroot_skel::rr_test_callbacks(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::testroot_skel> skel, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallFunction(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallFunction(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
-mr=RR_MAKE_SHARED<RobotRaconteur::MessageElement>("return",RobotRaconteur::ScalarToRRArray<int32_t>(0));
+mr=RobotRaconteur::CreateMessageElement("return",RobotRaconteur::ScalarToRRArray<int32_t>(0));
 }
 catch (std::exception& err2)
 {
-EndAsyncCallFunction(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallFunction(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallFunction(skel, mr, err, m,ep);
 }
 void testroot_skel::rr_ev1_Handler()
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_mm=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_EventReq,"ev1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_mm=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_EventReq,"ev1");
 SendEvent(rr_mm);
 }
-void testroot_skel::rr_ev2_Handler(double d1, RR_SHARED_PTR<teststruct2 > s2)
+void testroot_skel::rr_ev2_Handler(double d1, RR_INTRUSIVE_PTR<teststruct2 > s2)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_mm=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_EventReq,"ev2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_mm=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_EventReq,"ev2");
 rr_mm->AddElement(RobotRaconteur::MessageElement_PackScalarElement<double >("d1",d1));
 rr_mm->AddElement(RobotRaconteur::MessageElement_PackStructElement(RRGetNodeWeak(),"s2",s2));
 SendEvent(rr_mm);
@@ -8905,15 +8905,15 @@ void testroot_skel::InitPipeServers(RR_SHARED_PTR<RobotRaconteur::RRObject> rrob
 if (rr_InitPipeServersRun) return;
 rr_InitPipeServersRun=true;
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot > obj=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot >(rrobj1);
-rr_p1_pipe=RR_MAKE_SHARED<RobotRaconteur::PipeServer<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > >("p1",shared_from_this(),false,RobotRaconteur::MemberDefinition_Direction_both);
-rr_p2_pipe=RR_MAKE_SHARED<RobotRaconteur::PipeServer<RR_SHARED_PTR<teststruct2 > > >("p2",shared_from_this(),false,RobotRaconteur::MemberDefinition_Direction_both);
+rr_p1_pipe=RR_MAKE_SHARED<RobotRaconteur::PipeServer<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > >("p1",shared_from_this(),false,RobotRaconteur::MemberDefinition_Direction_both);
+rr_p2_pipe=RR_MAKE_SHARED<RobotRaconteur::PipeServer<RR_INTRUSIVE_PTR<teststruct2 > > >("p2",shared_from_this(),false,RobotRaconteur::MemberDefinition_Direction_both);
 rr_broadcastpipe_pipe=RR_MAKE_SHARED<RobotRaconteur::PipeServer<double > >("broadcastpipe",shared_from_this(),false,RobotRaconteur::MemberDefinition_Direction_both);
 obj->set_p1(rr_p1_pipe);
 obj->set_p2(rr_p2_pipe);
 obj->set_broadcastpipe(rr_broadcastpipe_pipe);
 }
 
-void testroot_skel::DispatchPipeMessage(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, uint32_t e)
+void testroot_skel::DispatchPipeMessage(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, uint32_t e)
 {
 if (m->MemberName=="p1")
 {
@@ -8933,7 +8933,7 @@ return;
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
 
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> testroot_skel::CallPipeFunction(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, uint32_t e)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> testroot_skel::CallPipeFunction(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, uint32_t e)
 {
 if (m->MemberName=="p1")
 {
@@ -8955,9 +8955,9 @@ void testroot_skel::InitWireServers(RR_SHARED_PTR<RobotRaconteur::RRObject> rrob
 if (rr_InitWireServersRun) return;
 rr_InitWireServersRun=true;
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot > obj=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::testroot >(rrobj1);
-rr_w1_wire=RR_MAKE_SHARED<RobotRaconteur::WireServer<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > >("w1",shared_from_this(),RobotRaconteur::MemberDefinition_Direction_both);
-rr_w2_wire=RR_MAKE_SHARED<RobotRaconteur::WireServer<RR_SHARED_PTR<teststruct2 > > >("w2",shared_from_this(),RobotRaconteur::MemberDefinition_Direction_both);
-rr_w3_wire=RR_MAKE_SHARED<RobotRaconteur::WireServer<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > >("w3",shared_from_this(),RobotRaconteur::MemberDefinition_Direction_both);
+rr_w1_wire=RR_MAKE_SHARED<RobotRaconteur::WireServer<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > >("w1",shared_from_this(),RobotRaconteur::MemberDefinition_Direction_both);
+rr_w2_wire=RR_MAKE_SHARED<RobotRaconteur::WireServer<RR_INTRUSIVE_PTR<teststruct2 > > >("w2",shared_from_this(),RobotRaconteur::MemberDefinition_Direction_both);
+rr_w3_wire=RR_MAKE_SHARED<RobotRaconteur::WireServer<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > >("w3",shared_from_this(),RobotRaconteur::MemberDefinition_Direction_both);
 rr_broadcastwire_wire=RR_MAKE_SHARED<RobotRaconteur::WireServer<double > >("broadcastwire",shared_from_this(),RobotRaconteur::MemberDefinition_Direction_both);
 obj->set_w1(rr_w1_wire);
 obj->set_w2(rr_w2_wire);
@@ -8965,7 +8965,7 @@ obj->set_w3(rr_w3_wire);
 obj->set_broadcastwire(rr_broadcastwire_wire);
 }
 
-void testroot_skel::DispatchWireMessage(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, uint32_t e)
+void testroot_skel::DispatchWireMessage(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, uint32_t e)
 {
 if (m->MemberName=="w1")
 {
@@ -8990,7 +8990,7 @@ return;
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
 
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> testroot_skel::CallWireFunction(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, uint32_t e)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> testroot_skel::CallWireFunction(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, uint32_t e)
 {
 if (m->MemberName=="w1")
 {
@@ -9021,51 +9021,51 @@ obj->set_cb_meaning_of_life(RR_MAKE_SHARED<RobotRaconteur::CallbackServer<boost:
 obj->set_cb_errtest(RR_MAKE_SHARED<RobotRaconteur::CallbackServer<boost::function<void() > > >("cb_errtest",shared_from_this()));
 }
 void testroot_skel::rr_cb1_callback(uint32_t rrendpoint){
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_CallbackCallReq,"cb1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_CallbackCallReq,"cb1");
 rr_req->ServicePath=GetServicePath();
 RR_SHARED_PTR<RobotRaconteur::ServerContext> rr_s=GetContext();
 if (rr_s==0) throw RobotRaconteur::InvalidOperationException("Service has been closed");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_ret=rr_s->ProcessCallbackRequest(rr_req,rrendpoint);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_ret=rr_s->ProcessCallbackRequest(rr_req,rrendpoint);
 }
 
 void testroot_skel::rr_cb2_callback(uint32_t rrendpoint, double d1, double d2){
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_CallbackCallReq,"cb2");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_CallbackCallReq,"cb2");
 rr_req->ServicePath=GetServicePath();
 rr_req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<double >("d1",d1));
 rr_req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<double >("d2",d2));
 RR_SHARED_PTR<RobotRaconteur::ServerContext> rr_s=GetContext();
 if (rr_s==0) throw RobotRaconteur::InvalidOperationException("Service has been closed");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_ret=rr_s->ProcessCallbackRequest(rr_req,rrendpoint);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_ret=rr_s->ProcessCallbackRequest(rr_req,rrendpoint);
 }
 
 double testroot_skel::rr_cb3_callback(uint32_t rrendpoint, double d1, double d2){
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_CallbackCallReq,"cb3");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_CallbackCallReq,"cb3");
 rr_req->ServicePath=GetServicePath();
 rr_req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<double >("d1",d1));
 rr_req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<double >("d2",d2));
 RR_SHARED_PTR<RobotRaconteur::ServerContext> rr_s=GetContext();
 if (rr_s==0) throw RobotRaconteur::InvalidOperationException("Service has been closed");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_ret=rr_s->ProcessCallbackRequest(rr_req,rrendpoint);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> rr_me=rr_ret->FindElement("return");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_ret=rr_s->ProcessCallbackRequest(rr_req,rrendpoint);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> rr_me=rr_ret->FindElement("return");
 return RobotRaconteur::MessageElement_UnpackScalar<double >(rr_me);
 }
 
 int32_t testroot_skel::rr_cb_meaning_of_life_callback(uint32_t rrendpoint){
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_CallbackCallReq,"cb_meaning_of_life");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_CallbackCallReq,"cb_meaning_of_life");
 rr_req->ServicePath=GetServicePath();
 RR_SHARED_PTR<RobotRaconteur::ServerContext> rr_s=GetContext();
 if (rr_s==0) throw RobotRaconteur::InvalidOperationException("Service has been closed");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_ret=rr_s->ProcessCallbackRequest(rr_req,rrendpoint);
-RR_SHARED_PTR<RobotRaconteur::MessageElement> rr_me=rr_ret->FindElement("return");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_ret=rr_s->ProcessCallbackRequest(rr_req,rrendpoint);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> rr_me=rr_ret->FindElement("return");
 return RobotRaconteur::MessageElement_UnpackScalar<int32_t >(rr_me);
 }
 
 void testroot_skel::rr_cb_errtest_callback(uint32_t rrendpoint){
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_req=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_CallbackCallReq,"cb_errtest");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_CallbackCallReq,"cb_errtest");
 rr_req->ServicePath=GetServicePath();
 RR_SHARED_PTR<RobotRaconteur::ServerContext> rr_s=GetContext();
 if (rr_s==0) throw RobotRaconteur::InvalidOperationException("Service has been closed");
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_ret=rr_s->ProcessCallbackRequest(rr_req,rrendpoint);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_ret=rr_s->ProcessCallbackRequest(rr_req,rrendpoint);
 }
 
 RR_SHARED_PTR<void> testroot_skel::GetCallbackFunction(uint32_t endpoint, const std::string& membername)
@@ -9093,7 +9093,7 @@ return RR_MAKE_SHARED<boost::function<void() > >(boost::bind(&testroot_skel::rr_
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
 
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> testroot_skel::CallMemoryFunction(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::Endpoint> e)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> testroot_skel::CallMemoryFunction(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::Endpoint> e)
 {
 if (m->MemberName=="m1")
 {
@@ -9134,9 +9134,9 @@ std::string sub1_skel::GetObjectType()
 {
 return "com.robotraconteur.testing.TestService1.sub1";
 }
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> sub1_skel::CallGetProperty(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> sub1_skel::CallGetProperty(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetRes,m->MemberName);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetRes,m->MemberName);
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::async_sub1 > async_obj=get_asyncobj();
 if (m->MemberName == "d1")
 {
@@ -9144,11 +9144,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub1_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::sub1_skel>(shared_from_this());
 async_obj->async_get_d1(boost::bind(&com::robotraconteur::testing::TestService1::sub1_skel::rr_get_d1,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRArray<double > > value=get_obj()->get_d1();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value=get_obj()->get_d1();
 mr->AddElement(RobotRaconteur::MessageElement_PackArrayElement<double >("value",value));
 return mr;
 }
@@ -9159,11 +9159,11 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub1_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::sub1_skel>(shared_from_this());
 async_obj->async_get_d2(boost::bind(&com::robotraconteur::testing::TestService1::sub1_skel::rr_get_d2,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
-RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > > value=get_obj()->get_d2();
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > > value=get_obj()->get_d2();
 mr->AddElement(RobotRaconteur::MessageElement_PackMultiDimArrayElement<double >(RRGetNodeWeak(),"value",value));
 return mr;
 }
@@ -9174,7 +9174,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub1_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::sub1_skel>(shared_from_this());
 async_obj->async_get_s_ind(boost::bind(&com::robotraconteur::testing::TestService1::sub1_skel::rr_get_s_ind,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -9189,7 +9189,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub1_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::sub1_skel>(shared_from_this());
 async_obj->async_get_i_ind(boost::bind(&com::robotraconteur::testing::TestService1::sub1_skel::rr_get_i_ind,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -9201,18 +9201,18 @@ return mr;
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
 
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> sub1_skel::CallSetProperty(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> sub1_skel::CallSetProperty(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetRes,m->MemberName);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetRes,m->MemberName);
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::async_sub1 > async_obj=get_asyncobj();
 if (m->MemberName == "d1")
 {
-RR_SHARED_PTR<RobotRaconteur::RRArray<double > > value=RobotRaconteur::MessageElement_UnpackArray<double >(m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value=RobotRaconteur::MessageElement_UnpackArray<double >(m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub1_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::sub1_skel>(shared_from_this());
 async_obj->async_set_d1(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -9222,12 +9222,12 @@ return mr;
 }
 if (m->MemberName == "d2")
 {
-RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > > value=RobotRaconteur::MessageElement_UnpackMultiDimArray<double >(RRGetNodeWeak(),m->FindElement("value"));
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > > value=RobotRaconteur::MessageElement_UnpackMultiDimArray<double >(RRGetNodeWeak(),m->FindElement("value"));
 if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub1_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::sub1_skel>(shared_from_this());
 async_obj->async_set_d2(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -9242,7 +9242,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub1_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::sub1_skel>(shared_from_this());
 async_obj->async_set_s_ind(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -9257,7 +9257,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub1_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::sub1_skel>(shared_from_this());
 async_obj->async_set_i_ind(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -9268,14 +9268,14 @@ return mr;
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
 
-void sub1_skel::rr_get_d1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub1_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRArray<double > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void sub1_skel::rr_get_d1(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub1_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub1_skel> skel1=skel.lock();
@@ -9284,19 +9284,19 @@ mr=RobotRaconteur::MessageElement_PackArrayElement<double >("value",value);
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void sub1_skel::rr_get_d2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub1_skel> skel,RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void sub1_skel::rr_get_d2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub1_skel> skel,RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > > value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub1_skel> skel1=skel.lock();
@@ -9305,19 +9305,19 @@ mr=RobotRaconteur::MessageElement_PackMultiDimArrayElement<double >(skel1->RRGet
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void sub1_skel::rr_get_s_ind(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub1_skel> skel,std::string value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void sub1_skel::rr_get_s_ind(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub1_skel> skel,std::string value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub1_skel> skel1=skel.lock();
@@ -9326,19 +9326,19 @@ mr=RobotRaconteur::MessageElement_PackStringElement("value",value);
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void sub1_skel::rr_get_i_ind(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub1_skel> skel,int32_t value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void sub1_skel::rr_get_i_ind(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub1_skel> skel,int32_t value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub1_skel> skel1=skel.lock();
@@ -9347,14 +9347,14 @@ mr=RobotRaconteur::MessageElement_PackScalarElement<int32_t >("value",value);
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> sub1_skel::CallFunction(RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_m)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> sub1_skel::CallFunction(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_m)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_mr=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_FunctionCallRes,rr_m->MemberName);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_mr=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallRes,rr_m->MemberName);
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::async_sub1 > async_obj=get_asyncobj();
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
@@ -9394,12 +9394,12 @@ rr_InitPipeServersRun=true;
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub1 > obj=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::sub1 >(rrobj1);
 }
 
-void sub1_skel::DispatchPipeMessage(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, uint32_t e)
+void sub1_skel::DispatchPipeMessage(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, uint32_t e)
 {
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
 
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> sub1_skel::CallPipeFunction(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, uint32_t e)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> sub1_skel::CallPipeFunction(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, uint32_t e)
 {
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
@@ -9411,12 +9411,12 @@ rr_InitWireServersRun=true;
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub1 > obj=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::sub1 >(rrobj1);
 }
 
-void sub1_skel::DispatchWireMessage(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, uint32_t e)
+void sub1_skel::DispatchWireMessage(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, uint32_t e)
 {
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
 
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> sub1_skel::CallWireFunction(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, uint32_t e)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> sub1_skel::CallWireFunction(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, uint32_t e)
 {
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
@@ -9430,7 +9430,7 @@ RR_SHARED_PTR<void> sub1_skel::GetCallbackFunction(uint32_t endpoint, const std:
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
 
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> sub1_skel::CallMemoryFunction(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::Endpoint> e)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> sub1_skel::CallMemoryFunction(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::Endpoint> e)
 {
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
@@ -9456,9 +9456,9 @@ std::string sub2_skel::GetObjectType()
 {
 return "com.robotraconteur.testing.TestService1.sub2";
 }
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> sub2_skel::CallGetProperty(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> sub2_skel::CallGetProperty(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetRes,m->MemberName);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetRes,m->MemberName);
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::async_sub2 > async_obj=get_asyncobj();
 if (m->MemberName == "s_ind")
 {
@@ -9466,7 +9466,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub2_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::sub2_skel>(shared_from_this());
 async_obj->async_get_s_ind(boost::bind(&com::robotraconteur::testing::TestService1::sub2_skel::rr_get_s_ind,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -9481,7 +9481,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub2_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::sub2_skel>(shared_from_this());
 async_obj->async_get_i_ind(boost::bind(&com::robotraconteur::testing::TestService1::sub2_skel::rr_get_i_ind,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -9496,7 +9496,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub2_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::sub2_skel>(shared_from_this());
 async_obj->async_get_data(boost::bind(&com::robotraconteur::testing::TestService1::sub2_skel::rr_get_data,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -9508,9 +9508,9 @@ return mr;
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
 
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> sub2_skel::CallSetProperty(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> sub2_skel::CallSetProperty(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetRes,m->MemberName);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetRes,m->MemberName);
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::async_sub2 > async_obj=get_asyncobj();
 if (m->MemberName == "s_ind")
 {
@@ -9519,7 +9519,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub2_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::sub2_skel>(shared_from_this());
 async_obj->async_set_s_ind(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -9534,7 +9534,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub2_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::sub2_skel>(shared_from_this());
 async_obj->async_set_i_ind(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -9549,7 +9549,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub2_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::sub2_skel>(shared_from_this());
 async_obj->async_set_data(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -9560,14 +9560,14 @@ return mr;
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
 
-void sub2_skel::rr_get_s_ind(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub2_skel> skel,std::string value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void sub2_skel::rr_get_s_ind(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub2_skel> skel,std::string value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub2_skel> skel1=skel.lock();
@@ -9576,19 +9576,19 @@ mr=RobotRaconteur::MessageElement_PackStringElement("value",value);
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void sub2_skel::rr_get_i_ind(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub2_skel> skel,int32_t value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void sub2_skel::rr_get_i_ind(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub2_skel> skel,int32_t value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub2_skel> skel1=skel.lock();
@@ -9597,19 +9597,19 @@ mr=RobotRaconteur::MessageElement_PackScalarElement<int32_t >("value",value);
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void sub2_skel::rr_get_data(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub2_skel> skel,std::string value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void sub2_skel::rr_get_data(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub2_skel> skel,std::string value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub2_skel> skel1=skel.lock();
@@ -9618,14 +9618,14 @@ mr=RobotRaconteur::MessageElement_PackStringElement("value",value);
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> sub2_skel::CallFunction(RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_m)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> sub2_skel::CallFunction(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_m)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_mr=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_FunctionCallRes,rr_m->MemberName);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_mr=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallRes,rr_m->MemberName);
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::async_sub2 > async_obj=get_asyncobj();
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
@@ -9657,12 +9657,12 @@ rr_InitPipeServersRun=true;
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub2 > obj=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::sub2 >(rrobj1);
 }
 
-void sub2_skel::DispatchPipeMessage(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, uint32_t e)
+void sub2_skel::DispatchPipeMessage(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, uint32_t e)
 {
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
 
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> sub2_skel::CallPipeFunction(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, uint32_t e)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> sub2_skel::CallPipeFunction(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, uint32_t e)
 {
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
@@ -9674,12 +9674,12 @@ rr_InitWireServersRun=true;
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub2 > obj=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::sub2 >(rrobj1);
 }
 
-void sub2_skel::DispatchWireMessage(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, uint32_t e)
+void sub2_skel::DispatchWireMessage(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, uint32_t e)
 {
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
 
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> sub2_skel::CallWireFunction(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, uint32_t e)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> sub2_skel::CallWireFunction(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, uint32_t e)
 {
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
@@ -9693,7 +9693,7 @@ RR_SHARED_PTR<void> sub2_skel::GetCallbackFunction(uint32_t endpoint, const std:
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
 
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> sub2_skel::CallMemoryFunction(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::Endpoint> e)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> sub2_skel::CallMemoryFunction(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::Endpoint> e)
 {
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
@@ -9719,9 +9719,9 @@ std::string sub3_skel::GetObjectType()
 {
 return "com.robotraconteur.testing.TestService1.sub3";
 }
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> sub3_skel::CallGetProperty(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> sub3_skel::CallGetProperty(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertyGetRes,m->MemberName);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetRes,m->MemberName);
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::async_sub3 > async_obj=get_asyncobj();
 if (m->MemberName == "ind")
 {
@@ -9729,7 +9729,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub3_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::sub3_skel>(shared_from_this());
 async_obj->async_get_ind(boost::bind(&com::robotraconteur::testing::TestService1::sub3_skel::rr_get_ind,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -9744,7 +9744,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub3_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::sub3_skel>(shared_from_this());
 async_obj->async_get_data2(boost::bind(&com::robotraconteur::testing::TestService1::sub3_skel::rr_get_data2,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -9759,7 +9759,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub3_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::sub3_skel>(shared_from_this());
 async_obj->async_get_data3(boost::bind(&com::robotraconteur::testing::TestService1::sub3_skel::rr_get_data3,wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -9771,9 +9771,9 @@ return mr;
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
 
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> sub3_skel::CallSetProperty(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> sub3_skel::CallSetProperty(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> mr=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_PropertySetRes,m->MemberName);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetRes,m->MemberName);
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::async_sub3 > async_obj=get_asyncobj();
 if (m->MemberName == "ind")
 {
@@ -9782,7 +9782,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub3_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::sub3_skel>(shared_from_this());
 async_obj->async_set_ind(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -9797,7 +9797,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub3_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::sub3_skel>(shared_from_this());
 async_obj->async_set_data2(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -9812,7 +9812,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub3_skel> wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::sub3_skel>(shared_from_this());
 async_obj->async_set_data3(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -9823,14 +9823,14 @@ return mr;
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
 
-void sub3_skel::rr_get_ind(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub3_skel> skel,std::string value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void sub3_skel::rr_get_ind(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub3_skel> skel,std::string value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub3_skel> skel1=skel.lock();
@@ -9839,19 +9839,19 @@ mr=RobotRaconteur::MessageElement_PackStringElement("value",value);
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void sub3_skel::rr_get_data2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub3_skel> skel,std::string value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void sub3_skel::rr_get_data2(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub3_skel> skel,std::string value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub3_skel> skel1=skel.lock();
@@ -9860,19 +9860,19 @@ mr=RobotRaconteur::MessageElement_PackStringElement("value",value);
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-void sub3_skel::rr_get_data3(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub3_skel> skel,double value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void sub3_skel::rr_get_data3(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub3_skel> skel,double value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub3_skel> skel1=skel.lock();
@@ -9881,14 +9881,14 @@ mr=RobotRaconteur::MessageElement_PackScalarElement<double >("value",value);
 }
 catch (std::exception& err2)
 {
-EndAsyncCallGetProperty(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallGetProperty(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallGetProperty(skel, mr, err, m,ep);
 }
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> sub3_skel::CallFunction(RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_m)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> sub3_skel::CallFunction(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_m)
 {
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> rr_mr=RR_MAKE_SHARED<RobotRaconteur::MessageEntry>(RobotRaconteur::MessageEntryType_FunctionCallRes,rr_m->MemberName);
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_mr=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallRes,rr_m->MemberName);
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::async_sub3 > async_obj=get_asyncobj();
 if (rr_m->MemberName == "add")
 {
@@ -9897,7 +9897,7 @@ if (async_obj)
 {
 RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub3_skel> rr_wp=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::sub3_skel>(shared_from_this());
 async_obj->async_add(d, boost::bind(&com::robotraconteur::testing::TestService1::sub3_skel::rr_add, rr_wp, _1, _2, rr_m, RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
-return RR_SHARED_PTR<RobotRaconteur::MessageEntry>();
+return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();
 }
 else
 {
@@ -9909,14 +9909,14 @@ return rr_mr;
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
 
-void sub3_skel::rr_add(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub3_skel> skel, double ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+void sub3_skel::rr_add(RR_WEAK_PTR<com::robotraconteur::testing::TestService1::sub3_skel> skel, double ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
 {
 if(err)
 {
-EndAsyncCallFunction(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+EndAsyncCallFunction(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
 return;
 }
-RR_SHARED_PTR<RobotRaconteur::MessageElement> mr;
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub3_skel> skel1=skel.lock();
@@ -9925,7 +9925,7 @@ mr=RobotRaconteur::MessageElement_PackScalarElement<double >("return",ret);
 }
 catch (std::exception& err2)
 {
-EndAsyncCallFunction(skel,RR_SHARED_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+EndAsyncCallFunction(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
 return;
 }
 EndAsyncCallFunction(skel, mr, err, m,ep);
@@ -9953,12 +9953,12 @@ rr_InitPipeServersRun=true;
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub3 > obj=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::sub3 >(rrobj1);
 }
 
-void sub3_skel::DispatchPipeMessage(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, uint32_t e)
+void sub3_skel::DispatchPipeMessage(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, uint32_t e)
 {
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
 
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> sub3_skel::CallPipeFunction(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, uint32_t e)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> sub3_skel::CallPipeFunction(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, uint32_t e)
 {
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
@@ -9970,12 +9970,12 @@ rr_InitWireServersRun=true;
 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub3 > obj=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService1::sub3 >(rrobj1);
 }
 
-void sub3_skel::DispatchWireMessage(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, uint32_t e)
+void sub3_skel::DispatchWireMessage(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, uint32_t e)
 {
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
 
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> sub3_skel::CallWireFunction(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, uint32_t e)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> sub3_skel::CallWireFunction(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, uint32_t e)
 {
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
@@ -9989,7 +9989,7 @@ RR_SHARED_PTR<void> sub3_skel::GetCallbackFunction(uint32_t endpoint, const std:
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
 
-RR_SHARED_PTR<RobotRaconteur::MessageEntry> sub3_skel::CallMemoryFunction(RR_SHARED_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::Endpoint> e)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> sub3_skel::CallMemoryFunction(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::Endpoint> e)
 {
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
@@ -10023,35 +10023,35 @@ rrvar_i64_2=RobotRaconteur::AllocateEmptyRRArray<int64_t>(0);
 rrvar_u64_1=0;
 rrvar_u64_2=RobotRaconteur::AllocateEmptyRRArray<uint64_t>(0);
 rrvar_str1="";
-rrvar_struct1=RR_SHARED_PTR<teststruct1 >();
-rrvar_struct2=RR_SHARED_PTR<teststruct2 >();
-rrvar_is_d1=RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > >();
-rrvar_is_d2=RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > >();
-rrvar_is_d3=RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > >();
-rrvar_is_d4=RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > >();
-rrvar_is_d5=RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > >();
-rrvar_is_d6=RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRMultiDimArray<double >  > >();
-rrvar_is_str1=RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > >();
-rrvar_is_str2=RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<char>  > >();
-rrvar_is_struct1=RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,teststruct2  > >();
-rrvar_is_struct2=RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,teststruct2  > >();
-rrvar_struct3=RR_SHARED_PTR<com::robotraconteur::testing::TestService2::ostruct2 >();
-rrvar_list_d1=RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > >();
-rrvar_list_d3=RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > >();
-rrvar_list_d5=RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > >();
-rrvar_list_str1=RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char>  > >();
-rrvar_list_struct1=RR_SHARED_PTR<RobotRaconteur::RRList<teststruct2  > >();
-rrvar_var1=RR_SHARED_PTR<RobotRaconteur::RRValue>();
-rrvar_var2=RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRValue > >();
-rrvar_var_num=RR_SHARED_PTR<RobotRaconteur::RRValue>();
-rrvar_var_str=RR_SHARED_PTR<RobotRaconteur::RRValue>();
-rrvar_var_struct=RR_SHARED_PTR<RobotRaconteur::RRValue>();
-rrvar_var_vector=RR_SHARED_PTR<RobotRaconteur::RRValue>();
-rrvar_var_dictionary=RR_SHARED_PTR<RobotRaconteur::RRValue>();
-rrvar_var_list=RR_SHARED_PTR<RobotRaconteur::RRValue>();
-rrvar_var_multidimarray=RR_SHARED_PTR<RobotRaconteur::RRValue>();
+rrvar_struct1=RR_INTRUSIVE_PTR<teststruct1 >();
+rrvar_struct2=RR_INTRUSIVE_PTR<teststruct2 >();
+rrvar_is_d1=RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > >();
+rrvar_is_d2=RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > >();
+rrvar_is_d3=RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > >();
+rrvar_is_d4=RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > >();
+rrvar_is_d5=RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > >();
+rrvar_is_d6=RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRMultiDimArray<double >  > >();
+rrvar_is_str1=RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > >();
+rrvar_is_str2=RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<char>  > >();
+rrvar_is_struct1=RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,teststruct2  > >();
+rrvar_is_struct2=RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,teststruct2  > >();
+rrvar_struct3=RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService2::ostruct2 >();
+rrvar_list_d1=RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > >();
+rrvar_list_d3=RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > >();
+rrvar_list_d5=RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > >();
+rrvar_list_str1=RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char>  > >();
+rrvar_list_struct1=RR_INTRUSIVE_PTR<RobotRaconteur::RRList<teststruct2  > >();
+rrvar_var1=RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>();
+rrvar_var2=RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRValue > >();
+rrvar_var_num=RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>();
+rrvar_var_str=RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>();
+rrvar_var_struct=RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>();
+rrvar_var_vector=RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>();
+rrvar_var_dictionary=RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>();
+rrvar_var_list=RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>();
+rrvar_var_multidimarray=RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>();
 rrvar_errtest=0.0;
-rrvar_nulltest=RR_SHARED_PTR<teststruct1 >();
+rrvar_nulltest=RR_INTRUSIVE_PTR<teststruct1 >();
 }
 double testroot_default_impl::get_d1()
 {
@@ -10063,52 +10063,52 @@ void testroot_default_impl::set_d1(double value)
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_d1 = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRArray<double > > testroot_default_impl::get_d2()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > testroot_default_impl::get_d2()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_d2;
 }
-void testroot_default_impl::set_d2(RR_SHARED_PTR<RobotRaconteur::RRArray<double > > value)
+void testroot_default_impl::set_d2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_d2 = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRArray<double > > testroot_default_impl::get_d3()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > testroot_default_impl::get_d3()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_d3;
 }
-void testroot_default_impl::set_d3(RR_SHARED_PTR<RobotRaconteur::RRArray<double > > value)
+void testroot_default_impl::set_d3(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_d3 = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRArray<double > > testroot_default_impl::get_d4()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > testroot_default_impl::get_d4()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_d4;
 }
-void testroot_default_impl::set_d4(RR_SHARED_PTR<RobotRaconteur::RRArray<double > > value)
+void testroot_default_impl::set_d4(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_d4 = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > > testroot_default_impl::get_d5()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > > testroot_default_impl::get_d5()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_d5;
 }
-void testroot_default_impl::set_d5(RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > > value)
+void testroot_default_impl::set_d5(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_d5 = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > > testroot_default_impl::get_d6()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > > testroot_default_impl::get_d6()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_d6;
 }
-void testroot_default_impl::set_d6(RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > > value)
+void testroot_default_impl::set_d6(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_d6 = value;
@@ -10123,12 +10123,12 @@ void testroot_default_impl::set_s1(float value)
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_s1 = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRArray<float > > testroot_default_impl::get_s2()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<float > > testroot_default_impl::get_s2()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_s2;
 }
-void testroot_default_impl::set_s2(RR_SHARED_PTR<RobotRaconteur::RRArray<float > > value)
+void testroot_default_impl::set_s2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<float > > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_s2 = value;
@@ -10143,12 +10143,12 @@ void testroot_default_impl::set_i8_1(int8_t value)
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_i8_1 = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRArray<int8_t > > testroot_default_impl::get_i8_2()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int8_t > > testroot_default_impl::get_i8_2()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_i8_2;
 }
-void testroot_default_impl::set_i8_2(RR_SHARED_PTR<RobotRaconteur::RRArray<int8_t > > value)
+void testroot_default_impl::set_i8_2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int8_t > > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_i8_2 = value;
@@ -10163,22 +10163,22 @@ void testroot_default_impl::set_u8_1(uint8_t value)
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_u8_1 = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRArray<uint8_t > > testroot_default_impl::get_u8_2()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint8_t > > testroot_default_impl::get_u8_2()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_u8_2;
 }
-void testroot_default_impl::set_u8_2(RR_SHARED_PTR<RobotRaconteur::RRArray<uint8_t > > value)
+void testroot_default_impl::set_u8_2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint8_t > > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_u8_2 = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<uint8_t > > testroot_default_impl::get_u8_3()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<uint8_t > > testroot_default_impl::get_u8_3()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_u8_3;
 }
-void testroot_default_impl::set_u8_3(RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<uint8_t > > value)
+void testroot_default_impl::set_u8_3(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<uint8_t > > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_u8_3 = value;
@@ -10193,12 +10193,12 @@ void testroot_default_impl::set_i16_1(int16_t value)
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_i16_1 = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRArray<int16_t > > testroot_default_impl::get_i16_2()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int16_t > > testroot_default_impl::get_i16_2()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_i16_2;
 }
-void testroot_default_impl::set_i16_2(RR_SHARED_PTR<RobotRaconteur::RRArray<int16_t > > value)
+void testroot_default_impl::set_i16_2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int16_t > > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_i16_2 = value;
@@ -10213,12 +10213,12 @@ void testroot_default_impl::set_u16_1(uint16_t value)
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_u16_1 = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRArray<uint16_t > > testroot_default_impl::get_u16_2()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint16_t > > testroot_default_impl::get_u16_2()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_u16_2;
 }
-void testroot_default_impl::set_u16_2(RR_SHARED_PTR<RobotRaconteur::RRArray<uint16_t > > value)
+void testroot_default_impl::set_u16_2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint16_t > > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_u16_2 = value;
@@ -10233,22 +10233,22 @@ void testroot_default_impl::set_i32_1(int32_t value)
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_i32_1 = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > testroot_default_impl::get_i32_2()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > testroot_default_impl::get_i32_2()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_i32_2;
 }
-void testroot_default_impl::set_i32_2(RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > value)
+void testroot_default_impl::set_i32_2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_i32_2 = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > testroot_default_impl::get_i32_huge()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > testroot_default_impl::get_i32_huge()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_i32_huge;
 }
-void testroot_default_impl::set_i32_huge(RR_SHARED_PTR<RobotRaconteur::RRArray<int32_t > > value)
+void testroot_default_impl::set_i32_huge(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_i32_huge = value;
@@ -10263,12 +10263,12 @@ void testroot_default_impl::set_u32_1(uint32_t value)
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_u32_1 = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRArray<uint32_t > > testroot_default_impl::get_u32_2()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint32_t > > testroot_default_impl::get_u32_2()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_u32_2;
 }
-void testroot_default_impl::set_u32_2(RR_SHARED_PTR<RobotRaconteur::RRArray<uint32_t > > value)
+void testroot_default_impl::set_u32_2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint32_t > > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_u32_2 = value;
@@ -10283,12 +10283,12 @@ void testroot_default_impl::set_i64_1(int64_t value)
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_i64_1 = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRArray<int64_t > > testroot_default_impl::get_i64_2()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int64_t > > testroot_default_impl::get_i64_2()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_i64_2;
 }
-void testroot_default_impl::set_i64_2(RR_SHARED_PTR<RobotRaconteur::RRArray<int64_t > > value)
+void testroot_default_impl::set_i64_2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int64_t > > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_i64_2 = value;
@@ -10303,12 +10303,12 @@ void testroot_default_impl::set_u64_1(uint64_t value)
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_u64_1 = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRArray<uint64_t > > testroot_default_impl::get_u64_2()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint64_t > > testroot_default_impl::get_u64_2()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_u64_2;
 }
-void testroot_default_impl::set_u64_2(RR_SHARED_PTR<RobotRaconteur::RRArray<uint64_t > > value)
+void testroot_default_impl::set_u64_2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint64_t > > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_u64_2 = value;
@@ -10323,272 +10323,272 @@ void testroot_default_impl::set_str1(const std::string& value)
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_str1 = value;
 }
-RR_SHARED_PTR<teststruct1 > testroot_default_impl::get_struct1()
+RR_INTRUSIVE_PTR<teststruct1 > testroot_default_impl::get_struct1()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_struct1;
 }
-void testroot_default_impl::set_struct1(RR_SHARED_PTR<teststruct1 > value)
+void testroot_default_impl::set_struct1(RR_INTRUSIVE_PTR<teststruct1 > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_struct1 = value;
 }
-RR_SHARED_PTR<teststruct2 > testroot_default_impl::get_struct2()
+RR_INTRUSIVE_PTR<teststruct2 > testroot_default_impl::get_struct2()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_struct2;
 }
-void testroot_default_impl::set_struct2(RR_SHARED_PTR<teststruct2 > value)
+void testroot_default_impl::set_struct2(RR_INTRUSIVE_PTR<teststruct2 > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_struct2 = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > testroot_default_impl::get_is_d1()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > testroot_default_impl::get_is_d1()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_is_d1;
 }
-void testroot_default_impl::set_is_d1(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value)
+void testroot_default_impl::set_is_d1(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_is_d1 = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > testroot_default_impl::get_is_d2()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > testroot_default_impl::get_is_d2()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_is_d2;
 }
-void testroot_default_impl::set_is_d2(RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > value)
+void testroot_default_impl::set_is_d2(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_is_d2 = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > testroot_default_impl::get_is_d3()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > testroot_default_impl::get_is_d3()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_is_d3;
 }
-void testroot_default_impl::set_is_d3(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value)
+void testroot_default_impl::set_is_d3(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_is_d3 = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > testroot_default_impl::get_is_d4()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > testroot_default_impl::get_is_d4()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_is_d4;
 }
-void testroot_default_impl::set_is_d4(RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > value)
+void testroot_default_impl::set_is_d4(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<double >  > > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_is_d4 = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > testroot_default_impl::get_is_d5()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > testroot_default_impl::get_is_d5()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_is_d5;
 }
-void testroot_default_impl::set_is_d5(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > value)
+void testroot_default_impl::set_is_d5(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_is_d5 = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRMultiDimArray<double >  > > testroot_default_impl::get_is_d6()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRMultiDimArray<double >  > > testroot_default_impl::get_is_d6()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_is_d6;
 }
-void testroot_default_impl::set_is_d6(RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRMultiDimArray<double >  > > value)
+void testroot_default_impl::set_is_d6(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRMultiDimArray<double >  > > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_is_d6 = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > > testroot_default_impl::get_is_str1()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > > testroot_default_impl::get_is_str1()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_is_str1;
 }
-void testroot_default_impl::set_is_str1(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > > value)
+void testroot_default_impl::set_is_str1(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_is_str1 = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<char>  > > testroot_default_impl::get_is_str2()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<char>  > > testroot_default_impl::get_is_str2()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_is_str2;
 }
-void testroot_default_impl::set_is_str2(RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<char>  > > value)
+void testroot_default_impl::set_is_str2(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,RobotRaconteur::RRArray<char>  > > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_is_str2 = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,teststruct2  > > testroot_default_impl::get_is_struct1()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,teststruct2  > > testroot_default_impl::get_is_struct1()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_is_struct1;
 }
-void testroot_default_impl::set_is_struct1(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,teststruct2  > > value)
+void testroot_default_impl::set_is_struct1(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,teststruct2  > > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_is_struct1 = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,teststruct2  > > testroot_default_impl::get_is_struct2()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,teststruct2  > > testroot_default_impl::get_is_struct2()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_is_struct2;
 }
-void testroot_default_impl::set_is_struct2(RR_SHARED_PTR<RobotRaconteur::RRMap<std::string,teststruct2  > > value)
+void testroot_default_impl::set_is_struct2(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string,teststruct2  > > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_is_struct2 = value;
 }
-RR_SHARED_PTR<com::robotraconteur::testing::TestService2::ostruct2 > testroot_default_impl::get_struct3()
+RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService2::ostruct2 > testroot_default_impl::get_struct3()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_struct3;
 }
-void testroot_default_impl::set_struct3(RR_SHARED_PTR<com::robotraconteur::testing::TestService2::ostruct2 > value)
+void testroot_default_impl::set_struct3(RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService2::ostruct2 > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_struct3 = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > testroot_default_impl::get_list_d1()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > testroot_default_impl::get_list_d1()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_list_d1;
 }
-void testroot_default_impl::set_list_d1(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value)
+void testroot_default_impl::set_list_d1(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_list_d1 = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > testroot_default_impl::get_list_d3()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > testroot_default_impl::get_list_d3()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_list_d3;
 }
-void testroot_default_impl::set_list_d3(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value)
+void testroot_default_impl::set_list_d3(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_list_d3 = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > testroot_default_impl::get_list_d5()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > testroot_default_impl::get_list_d5()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_list_d5;
 }
-void testroot_default_impl::set_list_d5(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > value)
+void testroot_default_impl::set_list_d5(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_list_d5 = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char>  > > testroot_default_impl::get_list_str1()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char>  > > testroot_default_impl::get_list_str1()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_list_str1;
 }
-void testroot_default_impl::set_list_str1(RR_SHARED_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char>  > > value)
+void testroot_default_impl::set_list_str1(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char>  > > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_list_str1 = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRList<teststruct2  > > testroot_default_impl::get_list_struct1()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<teststruct2  > > testroot_default_impl::get_list_struct1()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_list_struct1;
 }
-void testroot_default_impl::set_list_struct1(RR_SHARED_PTR<RobotRaconteur::RRList<teststruct2  > > value)
+void testroot_default_impl::set_list_struct1(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<teststruct2  > > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_list_struct1 = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRValue> testroot_default_impl::get_var1()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> testroot_default_impl::get_var1()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_var1;
 }
-void testroot_default_impl::set_var1(RR_SHARED_PTR<RobotRaconteur::RRValue> value)
+void testroot_default_impl::set_var1(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_var1 = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRValue > > testroot_default_impl::get_var2()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRValue > > testroot_default_impl::get_var2()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_var2;
 }
-void testroot_default_impl::set_var2(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRValue > > value)
+void testroot_default_impl::set_var2(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRValue > > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_var2 = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRValue> testroot_default_impl::get_var_num()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> testroot_default_impl::get_var_num()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_var_num;
 }
-void testroot_default_impl::set_var_num(RR_SHARED_PTR<RobotRaconteur::RRValue> value)
+void testroot_default_impl::set_var_num(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_var_num = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRValue> testroot_default_impl::get_var_str()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> testroot_default_impl::get_var_str()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_var_str;
 }
-void testroot_default_impl::set_var_str(RR_SHARED_PTR<RobotRaconteur::RRValue> value)
+void testroot_default_impl::set_var_str(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_var_str = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRValue> testroot_default_impl::get_var_struct()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> testroot_default_impl::get_var_struct()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_var_struct;
 }
-void testroot_default_impl::set_var_struct(RR_SHARED_PTR<RobotRaconteur::RRValue> value)
+void testroot_default_impl::set_var_struct(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_var_struct = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRValue> testroot_default_impl::get_var_vector()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> testroot_default_impl::get_var_vector()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_var_vector;
 }
-void testroot_default_impl::set_var_vector(RR_SHARED_PTR<RobotRaconteur::RRValue> value)
+void testroot_default_impl::set_var_vector(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_var_vector = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRValue> testroot_default_impl::get_var_dictionary()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> testroot_default_impl::get_var_dictionary()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_var_dictionary;
 }
-void testroot_default_impl::set_var_dictionary(RR_SHARED_PTR<RobotRaconteur::RRValue> value)
+void testroot_default_impl::set_var_dictionary(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_var_dictionary = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRValue> testroot_default_impl::get_var_list()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> testroot_default_impl::get_var_list()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_var_list;
 }
-void testroot_default_impl::set_var_list(RR_SHARED_PTR<RobotRaconteur::RRValue> value)
+void testroot_default_impl::set_var_list(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_var_list = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRValue> testroot_default_impl::get_var_multidimarray()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> testroot_default_impl::get_var_multidimarray()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_var_multidimarray;
 }
-void testroot_default_impl::set_var_multidimarray(RR_SHARED_PTR<RobotRaconteur::RRValue> value)
+void testroot_default_impl::set_var_multidimarray(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_var_multidimarray = value;
@@ -10603,12 +10603,12 @@ void testroot_default_impl::set_errtest(double value)
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_errtest = value;
 }
-RR_SHARED_PTR<teststruct1 > testroot_default_impl::get_nulltest()
+RR_INTRUSIVE_PTR<teststruct1 > testroot_default_impl::get_nulltest()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_nulltest;
 }
-void testroot_default_impl::set_nulltest(RR_SHARED_PTR<teststruct1 > value)
+void testroot_default_impl::set_nulltest(RR_INTRUSIVE_PTR<teststruct1 > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_nulltest = value;
@@ -10661,7 +10661,7 @@ boost::signals2::signal<void ()>& testroot_default_impl::get_ev1()
 {
 return rrvar_ev1;
 }
-boost::signals2::signal<void (double, RR_SHARED_PTR<teststruct2 >)>& testroot_default_impl::get_ev2()
+boost::signals2::signal<void (double, RR_INTRUSIVE_PTR<teststruct2 >)>& testroot_default_impl::get_ev2()
 {
 return rrvar_ev2;
 }
@@ -10689,19 +10689,19 @@ RR_SHARED_PTR<RobotRaconteur::RRObject > testroot_default_impl::get_o6()
 {
 throw RobotRaconteur::NotImplementedException("");
 }
-RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > > testroot_default_impl::get_p1()
+RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > testroot_default_impl::get_p1()
 {
 throw RobotRaconteur::NotImplementedException("");
 }
-void testroot_default_impl::set_p1(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > > value)
+void testroot_default_impl::set_p1(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > value)
 {
 throw RobotRaconteur::NotImplementedException("");
 }
-RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<teststruct2 > > > testroot_default_impl::get_p2()
+RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<teststruct2 > > > testroot_default_impl::get_p2()
 {
 throw RobotRaconteur::NotImplementedException("");
 }
-void testroot_default_impl::set_p2(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<teststruct2 > > > value)
+void testroot_default_impl::set_p2(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<teststruct2 > > > value)
 {
 throw RobotRaconteur::NotImplementedException("");
 }
@@ -10768,27 +10768,27 @@ boost::mutex::scoped_lock lock(this_lock);
 if (rrvar_cb_errtest) throw RobotRaconteur::InvalidOperationException("Callback already set");
 rrvar_cb_errtest = value;
 }
-RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > > testroot_default_impl::get_w1()
+RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > testroot_default_impl::get_w1()
 {
 throw RobotRaconteur::NotImplementedException("");
 }
-void testroot_default_impl::set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > > value)
+void testroot_default_impl::set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > value)
 {
 throw RobotRaconteur::NotImplementedException("");
 }
-RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<teststruct2 > > > testroot_default_impl::get_w2()
+RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<teststruct2 > > > testroot_default_impl::get_w2()
 {
 throw RobotRaconteur::NotImplementedException("");
 }
-void testroot_default_impl::set_w2(RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<teststruct2 > > > value)
+void testroot_default_impl::set_w2(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<teststruct2 > > > value)
 {
 throw RobotRaconteur::NotImplementedException("");
 }
-RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > testroot_default_impl::get_w3()
+RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > testroot_default_impl::get_w3()
 {
 throw RobotRaconteur::NotImplementedException("");
 }
-void testroot_default_impl::set_w3(RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > value)
+void testroot_default_impl::set_w3(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > value)
 {
 throw RobotRaconteur::NotImplementedException("");
 }
@@ -10819,22 +10819,22 @@ rrvar_d2=RobotRaconteur::AllocateEmptyRRMultiDimArray<double>(boost::assign::lis
 rrvar_s_ind="";
 rrvar_i_ind=0;
 }
-RR_SHARED_PTR<RobotRaconteur::RRArray<double > > sub1_default_impl::get_d1()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > sub1_default_impl::get_d1()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_d1;
 }
-void sub1_default_impl::set_d1(RR_SHARED_PTR<RobotRaconteur::RRArray<double > > value)
+void sub1_default_impl::set_d1(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_d1 = value;
 }
-RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > > sub1_default_impl::get_d2()
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > > sub1_default_impl::get_d2()
 {
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_d2;
 }
-void sub1_default_impl::set_d2(RR_SHARED_PTR<RobotRaconteur::RRMultiDimArray<double > > value)
+void sub1_default_impl::set_d2(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > > value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 rrvar_d2 = value;

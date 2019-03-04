@@ -22,7 +22,7 @@ class subobj;
 
 class ostruct2 : public RobotRaconteur::RRStructure {
 public:
-RR_SHARED_PTR<RobotRaconteur::RRArray<double > > a1;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > a1;
 
 virtual std::string RRType() {return "com.robotraconteur.testing.TestService2.ostruct2";  }
 };
@@ -33,8 +33,8 @@ public:
 virtual double get_d1()=0;
 virtual void set_d1(double value)=0;
 
-virtual RR_SHARED_PTR<RobotRaconteur::RRArray<double > > get_d2()=0;
-virtual void set_d2(RR_SHARED_PTR<RobotRaconteur::RRArray<double > > value)=0;
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > get_d2()=0;
+virtual void set_d2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value)=0;
 
 virtual double func3(double d1, double d2)=0;
 
@@ -42,14 +42,14 @@ virtual boost::signals2::signal<void ()>& get_ev1()=0;
 
 virtual RR_SHARED_PTR<subobj > get_o5()=0;
 
-virtual RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > > get_p1()=0;
-virtual void set_p1(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > > value)=0;
+virtual RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > get_p1()=0;
+virtual void set_p1(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > value)=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void(double, double) > > > get_cb2()=0;
 virtual void set_cb2(RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void(double, double)> > > value)=0;
 
-virtual RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > > get_w1()=0;
-virtual void set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<RR_SHARED_PTR<RobotRaconteur::RRArray<double > > > > value)=0;
+virtual RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > get_w1()=0;
+virtual void set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > value)=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<double > > get_m1()=0;
 
