@@ -20,7 +20,7 @@ enum testenum1
 	neghexval1 = 0x80000005,
 	neghexval2,
 	more_values
-end enum
+end
 
 constant string strconst "This is a\n \"string constant\" \\\/\b\f \r\u00FF tabme\ttabme\n smile! \ud83d\udE01"
 constant int32 int32const 3856384
@@ -40,18 +40,18 @@ namedarray quaternion
 	field double q1
 	field double q2
 	field double q3
-end namedarray
+end
 
 namedarray transform
     field quaternion rotation
     field vector3 translation	
-end namedarray
+end
 
 namedarray pixel
 	field uint8 r
 	field uint8 b
 	field uint8 g
-end namedarray
+end
 
 namedarray pixel2
 	field uint8 c
@@ -59,7 +59,7 @@ namedarray pixel2
 	field pixel e
 	field pixel[7] f
 	field pixel g
-end namedarray
+end
 
 pod testpod1
 	field double d1
@@ -74,13 +74,13 @@ pod testpod1
 	field transform[4] t2
 	field transform[15-] t3
 	field transform[2,4] t4
-end pod
+end
 
 pod testpod2
 	field int8 i1
 	field int8[15] i2
 	field int8[17-] i3
-end pod
+end
 
 struct teststruct3
 	field testpod1 s1
@@ -110,7 +110,7 @@ struct teststruct3
 	field varvalue t10
 	field varvalue t11
 	
-end struct
+end
 
 object testroot3
     property int32 readme [readonly]
@@ -200,22 +200,22 @@ object testroot3
 	memory bool[] c_m5
 	memory bool[*] c_m6
 	
-end object
+end
 
 object obj1
     property double[] d1
-end object
+end
 
 object obj2
     implements obj1
     property double[] d1
-end object
+end
 
 object obj3
     implements obj1
     implements obj2
 	property double[] d1
-end object
+end
 
 object obj4
     implements sub2
@@ -224,5 +224,5 @@ object obj4
 
 	property string data
 	objref sub3{string} o3_1
-end object
+end
 

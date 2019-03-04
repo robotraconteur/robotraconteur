@@ -231,7 +231,7 @@ namespace RobotRaconteur
 	static void ServiceDefinition_FindBlock(const std::string& current_line, std::istream& is, std::ostream& os, size_t& pos, size_t& init_pos)
 	{
 		boost::regex r_start("^[ \\t]*(\\w{1,16})[ \\t]+(" RR_NAME_REGEX ")[ \\t]*$");
-		boost::regex r_end("^[ \\t]*end[ \\t]+(\\w{1,16})[ \\t]*$");
+		boost::regex r_end("^[ \\t]*end(?:[ \\t]+(\\w{1,16}))?[ \\t]*$");
 
 		init_pos = pos;
 
@@ -261,10 +261,13 @@ namespace RobotRaconteur
 			boost::smatch r_end_match;
 			if (boost::regex_match(l, r_end_match, r_end))
 			{
-				if (r_end_match[1] != block_type)
+				if (r_end_match[1].matched)
 				{
-					throw RobotRaconteurParseException("Block end does not match start: " + l, (int32_t)pos);
-				}				
+					if (r_end_match[1] != block_type)
+					{
+						throw RobotRaconteurParseException("Block end does not match start: " + l, (int32_t)pos);
+					}
+				}
 				
 				return;
 			}
@@ -746,7 +749,9 @@ namespace RobotRaconteur
 			o << "    " << d1 << "\n";
 		}
 
-		switch (EntryType)
+		o << "end\n";
+
+		/*switch (EntryType)
 		{
 		case DataTypes_structure_t:
 			o << "end struct\n";
@@ -762,7 +767,7 @@ namespace RobotRaconteur
 			break;
 		default:
 			throw ServiceDefinitionException("Invalid ServiceEntryDefinition type in " + Name);
-		}
+		}*/
 	}
 
 	void ServiceEntryDefinition::FromString(const std::string &s)
@@ -888,6 +893,14 @@ namespace RobotRaconteur
 					boost::smatch r_member_match;
 					if (!boost::regex_match(l, r_member_match, r_member))
 					{
+						if (boost::trim_copy(l) == "end")
+						{
+							if (ServiceDefinition_GetLine(s, l, pos))
+							{
+								throw  RobotRaconteurParseException("Parse error", (int32_t)(pos));
+							}
+							return;
+						}
 						throw RobotRaconteurParseException("Parse error near: " + l, (int32_t)pos);
 					}
 
@@ -2645,7 +2658,7 @@ namespace RobotRaconteur
 			throw RobotRaconteurParseException("Invalid enum", startline);
 
 		boost::regex r_start("^[ \\t]*enum[ \\t]+([a-zA-Z]\\w*)[ \\t]*$");
-		boost::regex r_end("^[ \\t]*end[ \\t]+enum[ \\t]*$");
+		boost::regex r_end("^[ \\t]*end(?:[ \\t]+enum)?[ \\t]*$");
 
 		
 		boost::smatch r_start_match;			
