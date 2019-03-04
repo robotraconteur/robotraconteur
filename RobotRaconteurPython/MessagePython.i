@@ -31,3 +31,15 @@
 }
 
 %include "Message.i"
+
+%typemap(directorin) std::vector<boost::intrusive_ptr<RobotRaconteur::MessageElement> > %{
+  //std::vector<boost::intrusive_ptr<T> > workaround
+  
+  $input = SWIG_NewPointerObj((void*)(new $1_ltype((const $1_ltype &)$1)), $&descriptor, SWIG_POINTER_OWN | 0);
+%}
+
+%typemap(directorin) std::vector<boost::intrusive_ptr<RobotRaconteur::MessageElement> > const& %{
+  //std::vector<boost::intrusive_ptr<T> > workaround
+  
+  $input = SWIG_NewPointerObj((void*)(new $1_basetype(*(const $1_ltype)&$1)), $descriptor, SWIG_POINTER_OWN | 0);
+%}

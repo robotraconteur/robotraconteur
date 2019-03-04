@@ -91,12 +91,12 @@ class MultiDimArrayMemory(object):
     def Read(self,memorypos,buffer,bufferpos,count):
         memind=[slice(memorypos[i], (memorypos[i]+count[i])) for i in range(len(count))]
         bufind=[slice(bufferpos[i], (bufferpos[i]+count[i])) for i in range(len(count))]
-        buffer[bufind]=self.memory[memind]
+        buffer[tuple(bufind)]=self.memory[tuple(memind)]
 
     def Write(self,memorypos,buffer,bufferpos,count):        
             memind=[slice(memorypos[i], (memorypos[i]+count[i])) for i in range(len(count))]
             bufind=[slice(bufferpos[i], (bufferpos[i]+count[i])) for i in range(len(count))]
-            self.memory[memind]=buffer[bufind]
+            self.memory[tuple(memind)]=buffer[tuple(bufind)]
 
 bool_dtype=numpy.uint8
 

@@ -55,10 +55,7 @@ def FindMemberByName(l,name):
     raise RobotRaconteurPythonError.MemberNotFoundException("Member " + name + " not found")
 
 def FindMessageElementByName(l,name):
-    for i in l:
-        if (i.ElementName==name):
-            return i
-    raise RobotRaconteurPythonError.MessageElementNotFoundException("Element " + name + " not found")
+    return RobotRaconteurPython.MessageElement.FindElement(l,name)
 
 def PackMessageElement(data,type1,obj=None,node=None):
 
@@ -443,40 +440,43 @@ class WrappedServiceStubDirectorPython(RobotRaconteurPython.WrappedServiceStubDi
         super(WrappedServiceStubDirectorPython, self).__init__()
 
     def DispatchEvent(self, name, args1):
-
-        type1=FindMemberByName(self.innerstub.RR_objecttype.Members,name)
-        #type1=[e for e in self.innerstub.RR_objecttype.Members if e.Name == name][0]
-        args=[]        
-        type2=RobotRaconteurPython.MemberDefinitionUtil.ToEvent(type1)
-        for p in type2.Parameters:
-            m=FindMessageElementByName(args1,p.Name)            
-            a=UnpackMessageElement(m,p,self.stub,node=self.innerstub.RRGetNode())
-            args.append(a)
-        getattr(self.stub,name).fire(*args)
+        try:
+            type1=FindMemberByName(self.innerstub.RR_objecttype.Members,name)
+            #type1=[e for e in self.innerstub.RR_objecttype.Members if e.Name == name][0]
+            args=[]        
+            type2=RobotRaconteurPython.MemberDefinitionUtil.ToEvent(type1)
+            for p in type2.Parameters:
+                m=FindMessageElementByName(args1,p.Name)            
+                a=UnpackMessageElement(m,p,self.stub,node=self.innerstub.RRGetNode())
+                args.append(a)
+            getattr(self.stub,name).fire(*args)
+        except:
+            traceback.print_exc()
 
 
 
     def CallbackCall(self, name, args1):
-
-        type1=FindMemberByName(self.innerstub.RR_objecttype.Members,name)
-        #type1=[e for e in self.innerstub.RR_objecttype.Members if e.Name == name][0]
-        args=[]        
-
-        type2=RobotRaconteurPython.MemberDefinitionUtil.ToCallback(type1)
-        for p in type2.Parameters:
-            m=FindMessageElementByName(args1,p.Name)
-            
-            a=UnpackMessageElement(m,p,self.stub,self.innerstub.RRGetNode())
-            args.append(a)
-        ret=getattr(self.stub,name).Function(*args)
-
-        if (ret is None):
-            m=RobotRaconteurPython.MessageElement()
-            m.ElementName="return"
-            m.ElementType=RobotRaconteurPython.DataTypes_void_t
-            return m
-        return PackMessageElement(ret,type2.ReturnType,self.stub,self.innerstub.RRGetNode())
-
+        try:
+            type1=FindMemberByName(self.innerstub.RR_objecttype.Members,name)
+            #type1=[e for e in self.innerstub.RR_objecttype.Members if e.Name == name][0]
+            args=[]        
+    
+            type2=RobotRaconteurPython.MemberDefinitionUtil.ToCallback(type1)
+            for p in type2.Parameters:
+                m=FindMessageElementByName(args1,p.Name)
+                
+                a=UnpackMessageElement(m,p,self.stub,self.innerstub.RRGetNode())
+                args.append(a)
+            ret=getattr(self.stub,name).Function(*args)
+    
+            if (ret is None):
+                m=RobotRaconteurPython.MessageElement()
+                m.ElementName="return"
+                m.ElementType=RobotRaconteurPython.DataTypes_void_t
+                return m
+            return PackMessageElement(ret,type2.ReturnType,self.stub,self.innerstub.RRGetNode())
+        except:
+            traceback.print_exc()
 
 class ServiceStub(object):
     pass
@@ -1123,11 +1123,11 @@ class PodMultiDimArrayMemoryClient_bufferdirector(RobotRaconteurPython.WrappedPo
         
         res2=UnpackMessageElement(m, self._type, self._obj, self._node)
         bufind=[(slice(bufferpos[i], (bufferpos[i]+count[i]))) for i in range(len(count))]
-        self._buffer[bufind] = res2
+        self._buffer[tuple(bufind)] = res2
         
     def PackWriteRequest(self, bufferpos, count):
         bufind=[(slice(bufferpos[i], (bufferpos[i]+count[i]))) for i in range(len(count))]
-        buf1=self._buffer[bufind]          
+        buf1=self._buffer[tuple(bufind)]          
         m_data = PackMessageElement(buf1,self._type, self._obj, self._node).GetData()
         return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementPodMultiDimArray(m_data)
 
@@ -1215,11 +1215,11 @@ class NamedMultiDimArrayMemoryClient_bufferdirector(RobotRaconteurPython.Wrapped
         
         res2=UnpackMessageElement(m, self._type, self._obj, self._node)
         bufind=[(slice(bufferpos[i], (bufferpos[i]+count[i]))) for i in range(len(count))]
-        self._buffer[bufind] = res2        
+        self._buffer[tuple(bufind)] = res2        
         
     def PackWriteRequest(self, bufferpos, count):
         bufind=[(slice(bufferpos[i], (bufferpos[i]+count[i]))) for i in range(len(count))]
-        buf1=self._buffer[bufind]            
+        buf1=self._buffer[tuple(bufind)]            
         m_data = PackMessageElement(buf1,self._type, self._obj, self._node).GetData()
         return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementNamedMultiDimArray(m_data)
 

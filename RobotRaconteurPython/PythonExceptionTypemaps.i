@@ -149,7 +149,7 @@ RR_Py_Exception()
         	long errorcode2=PyLong_AsLong(errorcode);
         	if (errorcode2 > 65535 || errorcode2 < 0) errorcode2=MessageErrorType_UnknownError;
         	
-        	boost::shared_ptr<MessageEntry> m=boost::make_shared<MessageEntry>();
+        	boost::intrusive_ptr<MessageEntry> m=CreateMessageEntry();
         	m->Error=(MessageErrorType)(uint16_t)errorcode2;
         	m->AddElement("errorname",stringToRRArray(errorname2));
         	m->AddElement("errorstring", stringToRRArray(message2));			

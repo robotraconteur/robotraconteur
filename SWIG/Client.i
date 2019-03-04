@@ -30,8 +30,8 @@ class WrappedServiceStubDirector
 {
 public:
 	virtual ~WrappedServiceStubDirector() {}
-	virtual void DispatchEvent(const std::string& EventName, const std::vector<boost::intrusive_ptr<RobotRaconteur::MessageElement> > args);
-	virtual boost::intrusive_ptr<RobotRaconteur::MessageElement> CallbackCall(const std::string& CallbackName, const std::vector<boost::intrusive_ptr<RobotRaconteur::MessageElement> > args);
+	virtual void DispatchEvent(const std::string& EventName, std::vector<boost::intrusive_ptr<RobotRaconteur::MessageElement> > args);
+	virtual boost::intrusive_ptr<RobotRaconteur::MessageElement> CallbackCall(const std::string& CallbackName, std::vector<boost::intrusive_ptr<RobotRaconteur::MessageElement> > args);
 };
 RR_DIRECTOR_SHARED_PTR_RETURN_DEFAULT(RobotRaconteur::MessageElement)
 

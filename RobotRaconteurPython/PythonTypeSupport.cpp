@@ -107,9 +107,9 @@ namespace RobotRaconteur
 #endif
 	}
 
-	void VerifyMultiDimArrayLength(boost::shared_ptr<MessageElementMultiDimArray> data, boost::shared_ptr<TypeDefinition> type1)
+	void VerifyMultiDimArrayLength(boost::intrusive_ptr<MessageElementMultiDimArray> data, boost::shared_ptr<TypeDefinition> type1)
 	{
-		boost::shared_ptr<RRArray<uint32_t> > data_dims = MessageElement::FindElement(data->Elements, "dims")->CastData<RRArray<uint32_t> >();
+		boost::intrusive_ptr<RRArray<uint32_t> > data_dims = MessageElement::FindElement(data->Elements, "dims")->CastData<RRArray<uint32_t> >();
 		if (!data_dims) throw DataTypeException("Invalid MultDimArray");
 		if (type1->ArrayLength.size() != data_dims->size())
 			throw DataTypeException("Array dimension mismatch");
@@ -122,7 +122,7 @@ namespace RobotRaconteur
 				throw DataTypeException("Array dimension mismatch");
 		}
 
-		boost::shared_ptr<RRBaseArray> data_array = MessageElement::FindElement(data->Elements, "array")->CastData<RRBaseArray>();
+		boost::intrusive_ptr<RRBaseArray> data_array = MessageElement::FindElement(data->Elements, "array")->CastData<RRBaseArray>();
 		if (!data_array) throw DataTypeException("Invalid MultDimArray");
 		if (data_array->size() != count) throw DataTypeException("Array dimension mismatch");
 	}
@@ -300,7 +300,7 @@ namespace RobotRaconteur
 	}
 
 
-	boost::shared_ptr<MessageElementNamedArray>  PackMessageElement_namedarray(PyObject* data, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<WrappedServiceStub> obj, boost::shared_ptr<RobotRaconteurNode> node)
+	boost::intrusive_ptr<MessageElementNamedArray>  PackMessageElement_namedarray(PyObject* data, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<WrappedServiceStub> obj, boost::shared_ptr<RobotRaconteurNode> node)
 	{
 		if (!PyArray_Check(data))
 		{
@@ -367,16 +367,16 @@ namespace RobotRaconteur
 		if (data2.get() == NULL) throw DataTypeException("Internal error");
 
 		
-		RR_SHARED_PTR<RRBaseArray> data3 = AllocateRRArrayByType(s.get<0>(), (size_t)(PyArray_SIZE(data1)*s.get<1>()));
+		RR_INTRUSIVE_PTR<RRBaseArray> data3 = AllocateRRArrayByType(s.get<0>(), (size_t)(PyArray_SIZE(data1)*s.get<1>()));
 		memcpy(data3->void_ptr(), PyArray_DATA(data2.get()), PyArray_NBYTES(data2.get()));
 
-		std::vector<RR_SHARED_PTR<MessageElement> > ret1;
-		ret1.push_back(RR_MAKE_SHARED<MessageElement>("array", data3));
-		RR_SHARED_PTR<MessageElementNamedArray> ret = RR_MAKE_SHARED<MessageElementNamedArray>(typestr2, ret1);
+		std::vector<RR_INTRUSIVE_PTR<MessageElement> > ret1;
+		ret1.push_back(CreateMessageElement("array", data3));
+		RR_INTRUSIVE_PTR<MessageElementNamedArray> ret = CreateMessageElementNamedArray(typestr2, ret1);
 		return ret;
 	}
 
-	boost::shared_ptr<MessageElementPodArray>  PackMessageElement_pod(PyObject* data, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<WrappedServiceStub> obj, boost::shared_ptr<RobotRaconteurNode> node)
+	boost::intrusive_ptr<MessageElementPodArray>  PackMessageElement_pod(PyObject* data, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<WrappedServiceStub> obj, boost::shared_ptr<RobotRaconteurNode> node)
 	{		
 		if (!PyArray_Check(data))
 		{
@@ -434,7 +434,7 @@ namespace RobotRaconteur
 
 		std::string typestr2 = struct_def->ResolveQualifiedName();
 		
-		std::vector<RR_SHARED_PTR<MessageElement> > ret;
+		std::vector<RR_INTRUSIVE_PTR<MessageElement> > ret;
 
 		PyAutoPtr<PyObject> data2(PyArray_Flatten((PyArrayObject*)data, NPY_FORTRANORDER));
 
@@ -443,7 +443,7 @@ namespace RobotRaconteur
 
 			PyAutoPtr<PyObject> a(PySequence_GetItem(data2.get(), i));
 						
-			std::vector<boost::shared_ptr<MessageElement> > m_struct;
+			std::vector<boost::intrusive_ptr<MessageElement> > m_struct;
 			BOOST_FOREACH(boost::shared_ptr<MemberDefinition> m_def, struct_def->Members)
 			{
 				boost::shared_ptr<PropertyDefinition> p_def = boost::dynamic_pointer_cast<PropertyDefinition>(m_def);
@@ -471,7 +471,7 @@ namespace RobotRaconteur
 					{
 						PyAutoPtr<PyObject> field_obj2(PyArray_Flatten((PyArrayObject*)field_obj.get(), NPY_FORTRANORDER));
 
-						boost::shared_ptr<MessageElement> el1 = PackMessageElement(field_obj2.get(), p_def2_type, obj, node);
+						boost::intrusive_ptr<MessageElement> el1 = PackMessageElement(field_obj2.get(), p_def2_type, obj, node);
 						el1->ElementName = p_def->Name;
 						m_struct.push_back(el1);
 						continue;
@@ -503,7 +503,7 @@ namespace RobotRaconteur
 						throw InternalErrorException("Internal error");
 					}
 
-					boost::shared_ptr<MessageElement> el1 = PackMessageElement(field_array2.get(), p_def2_type, obj, node);
+					boost::intrusive_ptr<MessageElement> el1 = PackMessageElement(field_array2.get(), p_def2_type, obj, node);
 					el1->ElementName = p_def->Name;
 					m_struct.push_back(el1);
 					continue;
@@ -521,18 +521,18 @@ namespace RobotRaconteur
 						PyErr_Print();
 						throw DataTypeException("Internal error setting scalar pod value");
 					}
-					boost::shared_ptr<MessageElement> el2 = PackMessageElement(field_obj_array.get(), p_def2_type, obj, node);
+					boost::intrusive_ptr<MessageElement> el2 = PackMessageElement(field_obj_array.get(), p_def2_type, obj, node);
 					el2->ElementName = p_def->Name;
 					m_struct.push_back(el2);
 					continue;
 				}
 
-				boost::shared_ptr<MessageElement> el = PackMessageElement(field_obj.get(), p_def2_type, obj, node);
+				boost::intrusive_ptr<MessageElement> el = PackMessageElement(field_obj.get(), p_def2_type, obj, node);
 				el->ElementName = p_def->Name;
 				m_struct.push_back(el);
 			}
 
-			boost::shared_ptr<MessageElement> el2 = boost::make_shared<MessageElement>("", boost::make_shared<MessageElementPod>(m_struct));
+			boost::intrusive_ptr<MessageElement> el2 = CreateMessageElement("", CreateMessageElementPod(m_struct));
 			el2->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
 			el2->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
 			el2->ElementNumber = i;
@@ -540,10 +540,10 @@ namespace RobotRaconteur
 			ret.push_back(el2);
 		}
 
-		return boost::make_shared<MessageElementPodArray>(typestr2, ret);
+		return CreateMessageElementPodArray(typestr2, ret);
 	}
 
-	boost::shared_ptr<MessageElement>  PackMessageElement(PyObject* data, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<WrappedServiceStub> obj, boost::shared_ptr<RobotRaconteurNode> node)
+	boost::intrusive_ptr<MessageElement>  PackMessageElement(PyObject* data, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<WrappedServiceStub> obj, boost::shared_ptr<RobotRaconteurNode> node)
 	{
 		if (!type1) throw InvalidArgumentException("Invalid parameters for PackMessageElement");
 
@@ -592,7 +592,7 @@ namespace RobotRaconteur
 			return PackMessageElement(data2.get(), type2, obj, node);
 		}
 
-		boost::shared_ptr<MessageElement> element = boost::make_shared<MessageElement>();
+		boost::intrusive_ptr<MessageElement> element = CreateMessageElement();
 		element->ElementName = type1->Name;
 
 		if (data == NULL || data == Py_None)
@@ -618,7 +618,7 @@ namespace RobotRaconteur
 			
 			element->ElementType = DataTypes_void_t;
 			element->DataCount = 0;
-			element->SetData(RR_SHARED_PTR<MessageElementData>());
+			element->SetData(RR_INTRUSIVE_PTR<MessageElementData>());
 			return element;
 		}
 		else if (type1->ContainerType == DataTypes_ContainerTypes_list)
@@ -629,19 +629,19 @@ namespace RobotRaconteur
 			type2->RemoveContainers();
 			
 			element->ElementType = DataTypes_list_t;
-			std::vector<boost::shared_ptr<MessageElement> > mret;
+			std::vector<boost::intrusive_ptr<MessageElement> > mret;
 						
 			for (int32_t i = 0; i < (int32_t)PySequence_Size(data); i++)
 			{
 				PyAutoPtr<PyObject> dat1( PySequence_GetItem(data, (Py_ssize_t)i));
-				boost::shared_ptr<MessageElement> el = PackMessageElement(dat1.get(), type2, obj, node);
+				boost::intrusive_ptr<MessageElement> el = PackMessageElement(dat1.get(), type2, obj, node);
 				el->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
 				el->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
 				el->ElementNumber = i;
 				mret.push_back(el);
 			}
 			element->DataCount = mret.size();
-			element->SetData(boost::make_shared<MessageElementList>(mret));
+			element->SetData(CreateMessageElementList(mret));
 			return element;
 		}
 					
@@ -651,21 +651,21 @@ namespace RobotRaconteur
 			type2->RemoveContainers();
 
 			element->ElementType = DataTypes_vector_t;
-			std::vector<boost::shared_ptr<MessageElement> > mret;
+			std::vector<boost::intrusive_ptr<MessageElement> > mret;
 
 			if (PySequence_Check(data))
 			{
 				for (int32_t i = 0; i < (int32_t)PySequence_Size(data); i++)
 				{
 					PyAutoPtr<PyObject> dat1(PySequence_GetItem(data, (Py_ssize_t)i));
-					boost::shared_ptr<MessageElement> el = PackMessageElement(dat1.get(), type2, obj, node);
+					boost::intrusive_ptr<MessageElement> el = PackMessageElement(dat1.get(), type2, obj, node);
 					el->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
 					el->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
 					el->ElementNumber = i;
 					mret.push_back(el);
 				}
 				element->DataCount = mret.size();
-				element->SetData(boost::make_shared<MessageElementMap<int32_t> >(mret));
+				element->SetData(CreateMessageElementMap<int32_t>(mret));
 				return element;
 			}
 			else if (PyMapping_Check(data))
@@ -699,7 +699,7 @@ namespace RobotRaconteur
 						throw DataTypeException("Invalid Map for field " + type1->Name);
 					}
 
-					boost::shared_ptr<MessageElement> el = PackMessageElement(val.get(), type2, obj, node);
+					boost::intrusive_ptr<MessageElement> el = PackMessageElement(val.get(), type2, obj, node);
 					el->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
 					el->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
 					el->ElementNumber = (int32_t)key_l;
@@ -707,7 +707,7 @@ namespace RobotRaconteur
 				}
 
 				element->DataCount = mret.size();
-				element->SetData(boost::make_shared<MessageElementMap<int32_t> >(mret));
+				element->SetData(CreateMessageElementMap<int32_t>(mret));
 				return element;
 			}
 			else
@@ -723,7 +723,7 @@ namespace RobotRaconteur
 
 			if (!PyMapping_Check(data)) throw DataTypeException("Map type expected for field " + type1->Name);
 
-			std::vector<boost::shared_ptr<MessageElement> > mret;
+			std::vector<boost::intrusive_ptr<MessageElement> > mret;
 			PyAutoPtr<PyObject> data_list(PyMapping_Items(data));
 			if (!data_list.get()) throw DataTypeException("Invalid Map type for field " + type1->Name);
 
@@ -745,14 +745,14 @@ namespace RobotRaconteur
 					throw DataTypeException("Invalid Key in Map for field " + type1->Name);
 				}					
 					
-				boost::shared_ptr<MessageElement> el = PackMessageElement(val.get(), type2, obj, node);
+				boost::intrusive_ptr<MessageElement> el = PackMessageElement(val.get(), type2, obj, node);
 					
 				el->ElementName = key_s;
 				mret.push_back(el);
 			}
 
 			element->DataCount = mret.size();
-			element->SetData(boost::make_shared<MessageElementMap<std::string> >(mret));
+			element->SetData(CreateMessageElementMap<std::string>(mret));
 			return element;
 
 		}		
@@ -761,7 +761,7 @@ namespace RobotRaconteur
 		{			
 			if (PyArray_Check(data) || PySequence_Check(data))
 			{
-				boost::shared_ptr<MessageElementMultiDimArray> mm = PackToRRMultiDimArray_numpy(data, type1);
+				boost::intrusive_ptr<MessageElementMultiDimArray> mm = PackToRRMultiDimArray_numpy(data, type1);
 				element->SetData(mm);
 				if (type1)
 				{
@@ -803,7 +803,7 @@ namespace RobotRaconteur
 				element->ElementType = DataTypes_structure_t;
 				element->ElementTypeName = typestr;
 																
-				std::vector<boost::shared_ptr<MessageElement> > mret;
+				std::vector<boost::intrusive_ptr<MessageElement> > mret;
 				BOOST_FOREACH(boost::shared_ptr<MemberDefinition> m_def, struct_def->Members)
 				{
 					boost::shared_ptr<PropertyDefinition> p_def = boost::dynamic_pointer_cast<PropertyDefinition>(m_def);
@@ -815,13 +815,13 @@ namespace RobotRaconteur
 						throw DataTypeException("Field " + p_def->Name + " not found in structure of type " + typestr);
 					}
 
-					boost::shared_ptr<MessageElement> el = PackMessageElement(field_obj.get(), p_def->Type, obj, node);
+					boost::intrusive_ptr<MessageElement> el = PackMessageElement(field_obj.get(), p_def->Type, obj, node);
 					el->ElementName = p_def->Name;
 					mret.push_back(el);
 				}
 
 				element->DataCount = mret.size();
-				element->SetData(boost::make_shared<MessageElementStructure>(typestr, mret));
+				element->SetData(CreateMessageElementStructure(typestr, mret));
 				return element;
 			}
 			case DataTypes_enum_t:
@@ -829,7 +829,7 @@ namespace RobotRaconteur
 				RR_SHARED_PTR<TypeDefinition> enum_type=RR_MAKE_SHARED<TypeDefinition>();
 				enum_type->Type = DataTypes_int32_t;
 				enum_type->Name = "value";
-				element->SetData(PackToRRArray(data, enum_type, boost::shared_ptr<RRBaseArray>()));
+				element->SetData(PackToRRArray(data, enum_type, boost::intrusive_ptr<RRBaseArray>()));
 				return element;
 			}
 			case DataTypes_pod_t:
@@ -838,14 +838,14 @@ namespace RobotRaconteur
 
 				if (type1->ArrayType == DataTypes_ArrayTypes_multidimarray)
 				{
-					std::vector<boost::shared_ptr<MessageElement> > map_vec;
+					std::vector<boost::intrusive_ptr<MessageElement> > map_vec;
 					if (!PyArray_Check((PyArrayObject*)data))
 					{
 						throw new DataTypeException("Expected numpy.ndarray for pods and namedarrays");
 					}
 
 					int npy_dimcount = PyArray_NDIM((PyArrayObject*)data);
-					RR_SHARED_PTR<RRArray<uint32_t> > dims = AllocateRRArray<uint32_t>((size_t)npy_dimcount);
+					RR_INTRUSIVE_PTR<RRArray<uint32_t> > dims = AllocateRRArray<uint32_t>((size_t)npy_dimcount);
 					for (size_t i = 0; i < (size_t)npy_dimcount; i++)
 					{
 						npy_intp s;
@@ -859,7 +859,7 @@ namespace RobotRaconteur
 					dims_type->ArrayVarLength = true;
 					dims_type->ArrayLength.push_back(0);
 
-					map_vec.push_back(boost::make_shared<MessageElement>("dims", dims));
+					map_vec.push_back(CreateMessageElement("dims", dims));
 
 					boost::shared_ptr<TypeDefinition> array_type = boost::make_shared<TypeDefinition>();
 					type1->CopyTo(*array_type);
@@ -874,13 +874,13 @@ namespace RobotRaconteur
 					{
 					case DataTypes_pod_t:
 					{
-						boost::shared_ptr<MessageElementPodMultiDimArray> mm = boost::make_shared<MessageElementPodMultiDimArray>(type1->ResolveNamedType()->ResolveQualifiedName(), map_vec);
+						boost::intrusive_ptr<MessageElementPodMultiDimArray> mm = CreateMessageElementPodMultiDimArray(type1->ResolveNamedType()->ResolveQualifiedName(), map_vec);
 						element->SetData(mm);
 						return element;
 					}
 					case DataTypes_namedarray_t:
 					{
-						boost::shared_ptr<MessageElementNamedMultiDimArray> mm = boost::make_shared<MessageElementNamedMultiDimArray>(type1->ResolveNamedType()->ResolveQualifiedName(), map_vec);
+						boost::intrusive_ptr<MessageElementNamedMultiDimArray> mm = CreateMessageElementNamedMultiDimArray(type1->ResolveNamedType()->ResolveQualifiedName(), map_vec);
 						element->SetData(mm);
 						return element;
 					}
@@ -964,14 +964,14 @@ namespace RobotRaconteur
 
 		if (IsTypeNumeric(type1->Type))
 		{
-			element->SetData(PackToRRArray(data, type1, boost::shared_ptr<RRBaseArray>()));
+			element->SetData(PackToRRArray(data, type1, boost::intrusive_ptr<RRBaseArray>()));
 			return element;
 		}
 		
 		throw DataTypeException("Could not pack message element " + type1->Name);
 	}
 
-	boost::shared_ptr<MessageElement>  PackMessageElement(PyObject* data, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<ServerContext> obj, boost::shared_ptr<RobotRaconteurNode> node)
+	boost::intrusive_ptr<MessageElement>  PackMessageElement(PyObject* data, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<ServerContext> obj, boost::shared_ptr<RobotRaconteurNode> node)
 	{
 		if (!node && obj)
 		{
@@ -983,12 +983,12 @@ namespace RobotRaconteur
 	}
 
 	
-	PyObject* UnpackMessageElement_namedarray(boost::shared_ptr<MessageElement> element, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<WrappedServiceStub> stub, boost::shared_ptr<RobotRaconteurNode> node)
+	PyObject* UnpackMessageElement_namedarray(boost::intrusive_ptr<MessageElement> element, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<WrappedServiceStub> stub, boost::shared_ptr<RobotRaconteurNode> node)
 	{
 		std::string& typestr = element->ElementTypeName;
 		
 		
-		boost::shared_ptr<MessageElementNamedArray> l = element->CastData<MessageElementNamedArray>();
+		boost::intrusive_ptr<MessageElementNamedArray> l = element->CastData<MessageElementNamedArray>();
 
 		RR_SHARED_PTR<TypeDefinition> type2 = RR_MAKE_SHARED<TypeDefinition>();
 		type2->Type = DataTypes_namedtype_t;
@@ -1000,7 +1000,7 @@ namespace RobotRaconteur
 				
 		boost::tuple<DataTypes, size_t>  s = GetNamedArrayElementTypeAndCount(n, other_defs, node, stub);
 
-		RR_SHARED_PTR<RRBaseArray> a = MessageElement::FindElement(l->Elements, "array")->CastData<RRBaseArray>();
+		RR_INTRUSIVE_PTR<RRBaseArray> a = MessageElement::FindElement(l->Elements, "array")->CastData<RRBaseArray>();
 		if (!a) throw DataTypeException("NamedArray must not be null");
 		if (a->size() % s.get<1>() != 0) throw DataTypeException("Invalid length for NamedArray");
 		
@@ -1043,7 +1043,7 @@ namespace RobotRaconteur
 		return ret.detach();
 	}
 
-	PyObject* UnpackMessageElement_pod(boost::shared_ptr<MessageElement> element, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<WrappedServiceStub> stub, boost::shared_ptr<RobotRaconteurNode> node)
+	PyObject* UnpackMessageElement_pod(boost::intrusive_ptr<MessageElement> element, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<WrappedServiceStub> stub, boost::shared_ptr<RobotRaconteurNode> node)
 	{
 		std::string& typestr = element->ElementTypeName;
 		boost::tuple<std::string, std::string> typestr_s = SplitQualifiedName(typestr);
@@ -1059,7 +1059,7 @@ namespace RobotRaconteur
 
 		boost::shared_ptr<ServiceEntryDefinition> struct_def = find_by_name(def->Pods, typestr_s.get<1>());
 
-		boost::shared_ptr<MessageElementPodArray> l = element->CastData<MessageElementPodArray>();
+		boost::intrusive_ptr<MessageElementPodArray> l = element->CastData<MessageElementPodArray>();
 
 		PyAutoPtr<PyObject> a_descr(GetNumPyDescrForType(typestr, stub, node));
 
@@ -1093,7 +1093,7 @@ namespace RobotRaconteur
 
 		for (uint32_t i = 0; i < (uint32_t)l->Elements.size(); i++)
 		{
-			boost::shared_ptr<MessageElement>& el1 = l->Elements[i];
+			boost::intrusive_ptr<MessageElement>& el1 = l->Elements[i];
 
 			if (el1->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
 			{
@@ -1111,12 +1111,12 @@ namespace RobotRaconteur
 			PyAutoPtr<PyObject> el2_ind(PyLong_FromLong(i));
 			PyAutoPtr<PyObject> el2(PyObject_GetItem(a.get(),el2_ind.get()));
 
-			boost::shared_ptr<MessageElementPod> s = el1->CastData<MessageElementPod>();
+			boost::intrusive_ptr<MessageElementPod> s = el1->CastData<MessageElementPod>();
 
 			BOOST_FOREACH(boost::shared_ptr<MemberDefinition> m, struct_def->Members)
 			{
 				boost::shared_ptr<PropertyDefinition> p = rr_cast<PropertyDefinition>(m);
-				boost::shared_ptr<MessageElement> el = MessageElement::FindElement(s->Elements, p->Name);
+				boost::intrusive_ptr<MessageElement> el = MessageElement::FindElement(s->Elements, p->Name);
 
 				RR_SHARED_PTR<TypeDefinition> p1 = p->Type;
 				if (p->Type->ArrayType == DataTypes_ArrayTypes_multidimarray)
@@ -1248,7 +1248,7 @@ namespace RobotRaconteur
 
 	}
 
-	PyObject* UnpackMessageElement(boost::shared_ptr<MessageElement> element, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<WrappedServiceStub> stub, boost::shared_ptr<RobotRaconteurNode> node)
+	PyObject* UnpackMessageElement(boost::intrusive_ptr<MessageElement> element, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<WrappedServiceStub> stub, boost::shared_ptr<RobotRaconteurNode> node)
 	{
 		if (!element) throw NullValueException("element must not be null for UnpackMessageElement");
 
@@ -1380,12 +1380,12 @@ namespace RobotRaconteur
 						type2->Type = DataTypes_varvalue_t;
 						type2->Name = "value";
 
-						boost::shared_ptr<MessageElementList> l = element->CastData<MessageElementList>();
+						boost::intrusive_ptr<MessageElementList> l = element->CastData<MessageElementList>();
 						PyAutoPtr<PyObject> ret(PyList_New(l->Elements.size()));
 
 						for (uint32_t i = 0; i < (uint32_t)l->Elements.size(); i++)
 						{
-							boost::shared_ptr<MessageElement>& el1 = l->Elements[i];
+							boost::intrusive_ptr<MessageElement>& el1 = l->Elements[i];
 
 							if (el1->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
 							{
@@ -1414,12 +1414,12 @@ namespace RobotRaconteur
 						type2->Type = DataTypes_varvalue_t;
 						type2->Name = "value";
 
-						boost::shared_ptr<MessageElementMap<int32_t> > l = element->CastData<MessageElementMap<int32_t> >();
+						boost::intrusive_ptr<MessageElementMap<int32_t> > l = element->CastData<MessageElementMap<int32_t> >();
 						PyAutoPtr<PyObject> ret(PyDict_New());
 
 						for (int32_t i = 0; i < (int32_t)l->Elements.size(); i++)
 						{
-							boost::shared_ptr<MessageElement>& el1 = l->Elements[i];
+							boost::intrusive_ptr<MessageElement>& el1 = l->Elements[i];
 							
 							int32_t i2;
 							if (el1->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
@@ -1448,12 +1448,12 @@ namespace RobotRaconteur
 						type2->Type = DataTypes_varvalue_t;
 						type2->Name = "value";
 
-						boost::shared_ptr<MessageElementMap<std::string> > l = element->CastData<MessageElementMap<std::string> >();
+						boost::intrusive_ptr<MessageElementMap<std::string> > l = element->CastData<MessageElementMap<std::string> >();
 						PyAutoPtr<PyObject> ret(PyDict_New());
 
 						for (int32_t i = 0; i < (int32_t)l->Elements.size(); i++)
 						{
-							boost::shared_ptr<MessageElement>& el1 = l->Elements[i];
+							boost::intrusive_ptr<MessageElement>& el1 = l->Elements[i];
 							
 							PyAutoPtr<PyObject> el2(UnpackMessageElement(el1, type2, stub, node));
 							PyDict_SetItem(ret.get(), stringToPyObject(el1->ElementName).get(), el2.get());
@@ -1515,7 +1515,7 @@ namespace RobotRaconteur
 
 		if (element->ElementType == DataTypes_string_t)
 		{
-			boost::shared_ptr<RRArray<char> > s1 = element->CastData<RRArray<char> >();
+			boost::intrusive_ptr<RRArray<char> > s1 = element->CastData<RRArray<char> >();
 			return PyUnicode_DecodeUTF8(s1->data(), s1->size(), "Invalid UTF8 String");
 		}
 
@@ -1538,12 +1538,12 @@ namespace RobotRaconteur
 
 				PyAutoPtr<PyObject> ret(NewStructure(typestr, stub, node));
 
-				boost::shared_ptr<MessageElementStructure> s = element->CastData<MessageElementStructure>();
+				boost::intrusive_ptr<MessageElementStructure> s = element->CastData<MessageElementStructure>();
 
 				BOOST_FOREACH(boost::shared_ptr<MemberDefinition> m, struct_def->Members)
 				{
 					boost::shared_ptr<PropertyDefinition> p = rr_cast<PropertyDefinition>(m);
-					boost::shared_ptr<MessageElement> el = MessageElement::FindElement(s->Elements, p->Name);
+					boost::intrusive_ptr<MessageElement> el = MessageElement::FindElement(s->Elements, p->Name);
 					PyAutoPtr<PyObject> el1 = UnpackMessageElement(el, p->Type, stub, node);
 					PyObject_SetAttrString(ret.get(), p->Name.c_str(), el1.get());
 				}
@@ -1561,12 +1561,12 @@ namespace RobotRaconteur
 				type2->RemoveContainers();
 			}
 
-			boost::shared_ptr<MessageElementList> l = element->CastData<MessageElementList>();
+			boost::intrusive_ptr<MessageElementList> l = element->CastData<MessageElementList>();
 			PyAutoPtr<PyObject> ret(PyList_New(l->Elements.size()));
 
 			for (uint32_t i = 0; i < (uint32_t)l->Elements.size(); i++)
 			{
-				boost::shared_ptr<MessageElement>& el1 = l->Elements[i];
+				boost::intrusive_ptr<MessageElement>& el1 = l->Elements[i];
 
 				if (el1->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
 				{
@@ -1597,12 +1597,12 @@ namespace RobotRaconteur
 				type2 = type1->Clone();				
 			}
 
-			boost::shared_ptr<MessageElementMap<int32_t> > l = element->CastData<MessageElementMap<int32_t> >();
+			boost::intrusive_ptr<MessageElementMap<int32_t> > l = element->CastData<MessageElementMap<int32_t> >();
 			PyAutoPtr<PyObject> ret(PyDict_New());
 
 			for (int32_t i = 0; i < (int32_t)l->Elements.size(); i++)
 			{
-				boost::shared_ptr<MessageElement>& el1 = l->Elements[i];
+				boost::intrusive_ptr<MessageElement>& el1 = l->Elements[i];
 
 				int32_t i2;
 				if (el1->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
@@ -1640,12 +1640,12 @@ namespace RobotRaconteur
 				type2->RemoveContainers();
 			}
 
-			boost::shared_ptr<MessageElementMap<std::string> > l = element->CastData<MessageElementMap<std::string> >();
+			boost::intrusive_ptr<MessageElementMap<std::string> > l = element->CastData<MessageElementMap<std::string> >();
 			PyAutoPtr<PyObject> ret(PyDict_New());
 
 			for (int32_t i = 0; i < (int32_t)l->Elements.size(); i++)
 			{
-				boost::shared_ptr<MessageElement>& el1 = l->Elements[i];
+				boost::intrusive_ptr<MessageElement>& el1 = l->Elements[i];
 
 				PyAutoPtr<PyObject> el2(UnpackMessageElement(el1, type2, stub, node));
 				PyDict_SetItem(ret.get(), stringToPyObject(el1->ElementName).get(), el2.get());
@@ -1656,7 +1656,7 @@ namespace RobotRaconteur
 
 		if (element->ElementType == DataTypes_multidimarray_t)
 		{			
-			boost::shared_ptr<MessageElementMultiDimArray> mm = element->CastData<MessageElementMultiDimArray>();
+			boost::intrusive_ptr<MessageElementMultiDimArray> mm = element->CastData<MessageElementMultiDimArray>();
 
 			if (type1)
 			{
@@ -1672,12 +1672,12 @@ namespace RobotRaconteur
 
 		if (element->ElementType == DataTypes_pod_multidimarray_t)			
 		{
-			boost::shared_ptr<MessageElementPodMultiDimArray> mm = element->CastData<MessageElementPodMultiDimArray>();
+			boost::intrusive_ptr<MessageElementPodMultiDimArray> mm = element->CastData<MessageElementPodMultiDimArray>();
 						
-			boost::shared_ptr<RRArray<uint32_t> > dims_rr = MessageElement::FindElement(mm->Elements, "dims")->CastData<RRArray<uint32_t> >();
+			boost::intrusive_ptr<RRArray<uint32_t> > dims_rr = MessageElement::FindElement(mm->Elements, "dims")->CastData<RRArray<uint32_t> >();
 			if (!dims_rr) throw DataTypeException("Invalid PodMultiDimArray");			
 						
-			boost::shared_ptr<MessageElement> array = MessageElement::FindElement(mm->Elements, "array");
+			boost::intrusive_ptr<MessageElement> array = MessageElement::FindElement(mm->Elements, "array");
 			if (!array) throw DataTypeException("Invalid PodMultiDimArray");
 			boost::shared_ptr<TypeDefinition> type2;
 			if (type1)
@@ -1713,12 +1713,12 @@ namespace RobotRaconteur
 
 		if (element->ElementType == DataTypes_namedarray_multidimarray_t)
 		{
-			boost::shared_ptr<MessageElementNamedMultiDimArray> mm = element->CastData<MessageElementNamedMultiDimArray>();
+			boost::intrusive_ptr<MessageElementNamedMultiDimArray> mm = element->CastData<MessageElementNamedMultiDimArray>();
 
-			boost::shared_ptr<RRArray<uint32_t> > dims_rr = MessageElement::FindElement(mm->Elements, "dims")->CastData<RRArray<uint32_t> >();
+			boost::intrusive_ptr<RRArray<uint32_t> > dims_rr = MessageElement::FindElement(mm->Elements, "dims")->CastData<RRArray<uint32_t> >();
 			if (!dims_rr) throw DataTypeException("Invalid PodMultiDimArray");
 
-			boost::shared_ptr<MessageElement> array = MessageElement::FindElement(mm->Elements, "array");
+			boost::intrusive_ptr<MessageElement> array = MessageElement::FindElement(mm->Elements, "array");
 			if (!array) throw DataTypeException("Invalid PodMultiDimArray");
 			boost::shared_ptr<TypeDefinition> type2;
 			if (type1)
@@ -1755,7 +1755,7 @@ namespace RobotRaconteur
 		throw DataTypeException("Invalid data type");
 	}
 
-	PyObject* UnpackMessageElement(boost::shared_ptr<MessageElement> element, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<ServerContext> obj, boost::shared_ptr<RobotRaconteurNode> node)
+	PyObject* UnpackMessageElement(boost::intrusive_ptr<MessageElement> element, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<ServerContext> obj, boost::shared_ptr<RobotRaconteurNode> node)
 	{
 		if (!node && obj)
 		{
@@ -1766,7 +1766,7 @@ namespace RobotRaconteur
 	}
 
 	template<typename type2>
-	boost::shared_ptr<RRBaseArray> PackToRRArray1_int(PyObject* array_, boost::shared_ptr<RRBaseArray> destrrarray)
+	boost::intrusive_ptr<RRBaseArray> PackToRRArray1_int(PyObject* array_, boost::intrusive_ptr<RRBaseArray> destrrarray)
 	{
 		PyAutoPtr<PyObject> array_fast(PySequence_Fast(array_, "Internal error"));
 		if (array_fast.get() == NULL)
@@ -1776,7 +1776,7 @@ namespace RobotRaconteur
 
 		size_t seq_len = (size_t)PySequence_Fast_GET_SIZE(array_fast.get());
 
-		RR_SHARED_PTR<RRArray<type2> > array2;
+		RR_INTRUSIVE_PTR<RRArray<type2> > array2;
 		if (destrrarray)
 		{
 			array2 = RR_DYNAMIC_POINTER_CAST<RRArray<type2> >(destrrarray);
@@ -1873,7 +1873,7 @@ namespace RobotRaconteur
 	}
 
 	template<typename type2>
-	boost::shared_ptr<RRBaseArray> PackToRRArray1_float(PyObject* array_, boost::shared_ptr<RRBaseArray> destrrarray)
+	boost::intrusive_ptr<RRBaseArray> PackToRRArray1_float(PyObject* array_, boost::intrusive_ptr<RRBaseArray> destrrarray)
 	{
 		PyAutoPtr<PyObject> array_fast(PySequence_Fast(array_,"Internal error"));
 		if (array_fast.get() == NULL)
@@ -1883,7 +1883,7 @@ namespace RobotRaconteur
 
 		size_t seq_len = (size_t)PySequence_Fast_GET_SIZE(array_fast.get());
 
-		RR_SHARED_PTR<RRArray<type2> > array2;
+		RR_INTRUSIVE_PTR<RRArray<type2> > array2;
 		if (destrrarray)
 		{
 			array2 = RR_DYNAMIC_POINTER_CAST<RRArray<type2> >(destrrarray);
@@ -1959,7 +1959,7 @@ namespace RobotRaconteur
 	};
 
 	template<typename type2>
-	boost::shared_ptr<RRBaseArray> PackToRRArray1_complex(PyObject* array_, boost::shared_ptr<RRBaseArray> destrrarray)
+	boost::intrusive_ptr<RRBaseArray> PackToRRArray1_complex(PyObject* array_, boost::intrusive_ptr<RRBaseArray> destrrarray)
 	{
 		PyAutoPtr<PyObject> array_fast(PySequence_Fast(array_, "Internal error"));
 		if (array_fast.get() == NULL)
@@ -1969,7 +1969,7 @@ namespace RobotRaconteur
 
 		size_t seq_len = (size_t)PySequence_Fast_GET_SIZE(array_fast.get());
 
-		RR_SHARED_PTR<RRArray<type2> > array2;
+		RR_INTRUSIVE_PTR<RRArray<type2> > array2;
 		if (destrrarray)
 		{
 			array2 = RR_DYNAMIC_POINTER_CAST<RRArray<type2> >(destrrarray);
@@ -2028,14 +2028,14 @@ namespace RobotRaconteur
 		return array2;
 	}
 
-	boost::shared_ptr<RRBaseArray> PackToRRArray(PyObject* array_, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<RRBaseArray> destrrarray)
+	boost::intrusive_ptr<RRBaseArray> PackToRRArray(PyObject* array_, boost::shared_ptr<TypeDefinition> type1, boost::intrusive_ptr<RRBaseArray> destrrarray)
 	{
 		if (!type1) throw NullValueException("PackToRRArray type must not be None");
 
 		if (array_ == Py_None)
 		{
 			if (type1->ArrayType = DataTypes_ArrayTypes_none) throw DataTypeException("Scalar values must not be none");
-			return boost::shared_ptr<RRBaseArray>();
+			return boost::intrusive_ptr<RRBaseArray>();
 		}
 		
 		if (PyArray_Check(array_))
@@ -2185,7 +2185,7 @@ namespace RobotRaconteur
 	}
 
 
-	PyObject* UnpackFromRRArray(boost::shared_ptr<RRBaseArray> rrarray, boost::shared_ptr<TypeDefinition> type1)
+	PyObject* UnpackFromRRArray(boost::intrusive_ptr<RRBaseArray> rrarray, boost::shared_ptr<TypeDefinition> type1)
 	{
 
 		if (type1)
@@ -2225,7 +2225,7 @@ namespace RobotRaconteur
 		return UnpackFromRRArray_numpy(rrarray, type1);		
 	}
 
-	boost::shared_ptr<RRBaseArray> PackToRRArray_numpy(PyObject* array_, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<RRBaseArray> destrrarray)
+	boost::intrusive_ptr<RRBaseArray> PackToRRArray_numpy(PyObject* array_, boost::shared_ptr<TypeDefinition> type1, boost::intrusive_ptr<RRBaseArray> destrrarray)
 	{
 		if (!PyArray_Check(array_)) throw DataTypeException("numpy array expected");
 
@@ -2286,7 +2286,7 @@ namespace RobotRaconteur
 		return destrrarray;
 	}
 
-	PyObject* UnpackFromRRArray_numpy(boost::shared_ptr<RRBaseArray> rrarray, boost::shared_ptr<TypeDefinition> type1)
+	PyObject* UnpackFromRRArray_numpy(boost::intrusive_ptr<RRBaseArray> rrarray, boost::shared_ptr<TypeDefinition> type1)
 	{
 		if (!rrarray)
 		{
@@ -2334,7 +2334,7 @@ namespace RobotRaconteur
 		return ret.detach();
 	}
 		
-	boost::tuple<boost::shared_ptr<RRBaseArray>, boost::shared_ptr<RRBaseArray> > PackToMultiDimArray_numpy1(PyArrayObject* array1, RR_SHARED_PTR<TypeDefinition> type1)
+	boost::tuple<boost::intrusive_ptr<RRBaseArray>, boost::intrusive_ptr<RRBaseArray> > PackToMultiDimArray_numpy1(PyArrayObject* array1, RR_SHARED_PTR<TypeDefinition> type1)
 	{
 		int npy_type = PyArray_TYPE(array1);
 		switch (npy_type)
@@ -2354,17 +2354,17 @@ namespace RobotRaconteur
 		{
 			DataTypes rrtype = type1->Type;
 			size_t count = (size_t)PyArray_SIZE(array1);
-			boost::shared_ptr<RRBaseArray> ret = AllocateRRArrayByType(rrtype, count);
+			boost::intrusive_ptr<RRBaseArray> ret = AllocateRRArrayByType(rrtype, count);
 
 			if (!VerifyNumPyDataType(PyArray_DESCR(array1), ret->GetTypeID())) throw DataTypeException("Invalid destrrarray specified for PackRRArray");
 
-			if (count == 0) return boost::make_tuple(ret, boost::shared_ptr<RRBaseArray>());
+			if (count == 0) return boost::make_tuple(ret, boost::intrusive_ptr<RRBaseArray>());
 
 			if (PyArray_IS_F_CONTIGUOUS(array1))
 			{
 				if (PyArray_NBYTES(array1) != ret->ElementSize() * count) throw DataTypeException("MultiDimArray type mismatch");
 				memcpy(ret->void_ptr(), PyArray_BYTES(array1), PyArray_NBYTES(array1));
-				return boost::make_tuple(ret, boost::shared_ptr<RRBaseArray>());
+				return boost::make_tuple(ret, boost::intrusive_ptr<RRBaseArray>());
 			}
 			else
 			{
@@ -2378,7 +2378,7 @@ namespace RobotRaconteur
 					PyErr_Print();
 					throw InternalErrorException("internal error: Could not copy array1 to array2 in PackToMultiDimArray_numpy1");
 				}
-				return boost::make_tuple(ret, boost::shared_ptr<RRBaseArray>());
+				return boost::make_tuple(ret, boost::intrusive_ptr<RRBaseArray>());
 			}
 		}		
 		default:
@@ -2386,7 +2386,7 @@ namespace RobotRaconteur
 		}
 	}
 
-	boost::shared_ptr<MessageElementMultiDimArray> PackToRRMultiDimArray_numpy(PyObject* array_, boost::shared_ptr<TypeDefinition> type1)
+	boost::intrusive_ptr<MessageElementMultiDimArray> PackToRRMultiDimArray_numpy(PyObject* array_, boost::shared_ptr<TypeDefinition> type1)
 	{
 		//if (!_NumPyAvailable) throw InvalidOperationException("NumPy is not available");
 
@@ -2395,11 +2395,11 @@ namespace RobotRaconteur
 			PyArrayObject* array1 = (PyArrayObject*)array_;
 			int ndim = PyArray_NDIM(array1);			
 			npy_intp* dims1 = PyArray_SHAPE(array1);
-			boost::shared_ptr<RRArray<uint32_t> > dims = AllocateRRArray<uint32_t>(ndim);
+			boost::intrusive_ptr<RRArray<uint32_t> > dims = AllocateRRArray<uint32_t>(ndim);
 			for (int i = 0; i < ndim; i++) { (*dims)[i] = (uint32_t)dims1[i]; }
 
-			std::vector<boost::shared_ptr<MessageElement> > ret_vec;
-			ret_vec.push_back(boost::make_shared<MessageElement>("dims", dims));
+			std::vector<boost::intrusive_ptr<MessageElement> > ret_vec;
+			ret_vec.push_back(CreateMessageElement("dims", dims));
 
 			int npy_type = PyArray_TYPE(array1);
 
@@ -2418,8 +2418,8 @@ namespace RobotRaconteur
 			case NPY_COMPLEX64:
 			case NPY_COMPLEX128:			
 			{
-				ret_vec.push_back(boost::make_shared<MessageElement>("array", PackToMultiDimArray_numpy1(array1,type1).get<0>()));
-				return boost::make_shared<MessageElementMultiDimArray>(ret_vec);
+				ret_vec.push_back(CreateMessageElement("array", PackToMultiDimArray_numpy1(array1,type1).get<0>()));
+				return CreateMessageElementMultiDimArray(ret_vec);
 			}
 			
 			default:
@@ -2435,7 +2435,7 @@ namespace RobotRaconteur
 	}
 
 	//NO ERROR CHECKING! USE WITH CAUTION!
-	static PyObject* UnpackFromRRMultiDimArray_numpy1(boost::shared_ptr<RRBaseArray>& rrarray, PyArray_Descr* npy_type, int npy_dimcount, npy_intp* npy_dims)
+	static PyObject* UnpackFromRRMultiDimArray_numpy1(boost::intrusive_ptr<RRBaseArray>& rrarray, PyArray_Descr* npy_type, int npy_dimcount, npy_intp* npy_dims)
 	{
 		PyAutoPtr<PyObject> array_a(PyArray_NewFromDescr(&PyArray_Type, npy_type, npy_dimcount, npy_dims, NULL, rrarray->void_ptr(), NPY_ARRAY_F_CONTIGUOUS, NULL));
 		if (!array_a.get()) throw InternalErrorException("internal error: Could not create array_a in UnpackFromRRMultiDimArray_numpy");		
@@ -2450,16 +2450,16 @@ namespace RobotRaconteur
 		return array_b.detach();
 	}
 		
-	PyObject* UnpackFromRRMultiDimArray_numpy(boost::shared_ptr<MessageElementMultiDimArray> rrarray, boost::shared_ptr<TypeDefinition> type1)
+	PyObject* UnpackFromRRMultiDimArray_numpy(boost::intrusive_ptr<MessageElementMultiDimArray> rrarray, boost::shared_ptr<TypeDefinition> type1)
 	{
 		if (!rrarray)
 		{
 			Py_RETURN_NONE;
 		}
 
-		boost::shared_ptr<RRArray<uint32_t> > dims = MessageElement::FindElement(rrarray->Elements, "dims")->CastData<RRArray<uint32_t> >();
+		boost::intrusive_ptr<RRArray<uint32_t> > dims = MessageElement::FindElement(rrarray->Elements, "dims")->CastData<RRArray<uint32_t> >();
 		if (!dims) throw DataTypeException("Invalid MultiDimArray");
-		boost::shared_ptr<RRBaseArray> array = MessageElement::FindElement(rrarray->Elements, "array")->CastData<RRBaseArray>();
+		boost::intrusive_ptr<RRBaseArray> array = MessageElement::FindElement(rrarray->Elements, "array")->CastData<RRBaseArray>();
 		if (!array) throw DataTypeException("Invalid MultiDimArray");
 		
 		DataTypes rr_type = array->GetTypeID();		

@@ -1353,13 +1353,13 @@ class ServiceTestClient:
         if not self._w1_called or not self._w2_called or not self._w3_called:
             raise Exception()
 
-        (res,in1_2, in1_2_ts) = w1.TryGetInValue()
-        if not res: raise Exception()
-        ca(in1_2, [-2.377683e+02, -6.760080e-08, 4.191315e-18, -4.621977e+07, -1.570323e+03, -4.163378e+03, -2.506701e+13, -4.755701e+18, -1.972380e-19, 1.791593e-11])
+        #(res,in1_2, in1_2_ts) = w1.TryGetInValue()
+        #if not res: raise Exception()
+        #ca(in1_2, [-2.377683e+02, -6.760080e-08, 4.191315e-18, -4.621977e+07, -1.570323e+03, -4.163378e+03, -2.506701e+13, -4.755701e+18, -1.972380e-19, 1.791593e-11])
         
-        (res,out1_2, out1_2_ts) = w1.TryGetOutValue()
-        if not res: raise Exception()
-        ca(out1_2, [-2.377683e+02, -6.760080e-08, 4.191315e-18, -4.621977e+07, -1.570323e+03, -4.163378e+03, -2.506701e+13, -4.755701e+18, -1.972380e-19, 1.791593e-11])
+        #(res,out1_2, out1_2_ts) = w1.TryGetOutValue()
+        #if not res: raise Exception()
+        #ca(out1_2, [-2.377683e+02, -6.760080e-08, 4.191315e-18, -4.621977e+07, -1.570323e+03, -4.163378e+03, -2.506701e+13, -4.755701e+18, -1.972380e-19, 1.791593e-11])
 
         if not self._r.w1.Direction == MemberDefinition_Direction_both:
             raise Exception()
