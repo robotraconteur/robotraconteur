@@ -2723,70 +2723,70 @@ namespace RobotRaconteur
 		}
 		case DataTypes_pod_t:
 		{
-			RR_SHARED_PTR<MessageElementPod> ddat = mm->CastData<MessageElementPod>();
+			RR_INTRUSIVE_PTR<MessageElementPod> ddat = mm->CastData<MessageElementPod>();
 			if (ddat)
 			{
-				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& ee, ddat->Elements)
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
+				BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& ee, ddat->Elements)
 					v.push_back(ShallowCopyMessageElement(ee));
 
-				RR_SHARED_PTR<MessageElementPod> mdat2 = RR_MAKE_SHARED<MessageElementPod>(v);
+				RR_INTRUSIVE_PTR<MessageElementPod> mdat2 = CreateMessageElementPod(v);
 				mm2->SetData(mdat2);
 			}
 			break;
 		}
 		case DataTypes_pod_array_t:
 		{
-			RR_SHARED_PTR<MessageElementPodArray> ddat = mm->CastData<MessageElementPodArray>();
+			RR_INTRUSIVE_PTR<MessageElementPodArray> ddat = mm->CastData<MessageElementPodArray>();
 			if (ddat)
 			{
-				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& ee, ddat->Elements)
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
+				BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& ee, ddat->Elements)
 					v.push_back(ShallowCopyMessageElement(ee));
 
-				RR_SHARED_PTR<MessageElementPodArray> mdat2 = RR_MAKE_SHARED<MessageElementPodArray>(ddat->Type, v);
+				RR_INTRUSIVE_PTR<MessageElementPodArray> mdat2 = CreateMessageElementPodArray(ddat->Type, v);
 				mm2->SetData(mdat2);
 			}
 			break;
 		}
 		case DataTypes_pod_multidimarray_t:
 		{
-			RR_SHARED_PTR<MessageElementPodMultiDimArray> ddat = mm->CastData<MessageElementPodMultiDimArray>();
+			RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> ddat = mm->CastData<MessageElementPodMultiDimArray>();
 			if (ddat)
 			{
-				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& ee, ddat->Elements)
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
+				BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& ee, ddat->Elements)
 					v.push_back(ShallowCopyMessageElement(ee));
 
-				RR_SHARED_PTR<MessageElementPodMultiDimArray> mdat2 = RR_MAKE_SHARED<MessageElementPodMultiDimArray>(ddat->Type, v);
+				RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> mdat2 = CreateMessageElementPodMultiDimArray(ddat->Type, v);
 				mm2->SetData(mdat2);
 			}
 			break;
 		}
 		case DataTypes_namedarray_array_t:
 		{
-			RR_SHARED_PTR<MessageElementNamedArray> ddat = mm->CastData<MessageElementNamedArray>();
+			RR_INTRUSIVE_PTR<MessageElementNamedArray> ddat = mm->CastData<MessageElementNamedArray>();
 			if (ddat)
 			{
-				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& ee, ddat->Elements)
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
+				BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& ee, ddat->Elements)
 					v.push_back(ShallowCopyMessageElement(ee));
 
-				RR_SHARED_PTR<MessageElementNamedArray> mdat2 = RR_MAKE_SHARED<MessageElementNamedArray>(ddat->Type, v);
+				RR_INTRUSIVE_PTR<MessageElementNamedArray> mdat2 = CreateMessageElementNamedArray(ddat->Type, v);
 				mm2->SetData(mdat2);
 			}
 			break;
 		}
 		case DataTypes_namedarray_multidimarray_t:
 		{
-			RR_SHARED_PTR<MessageElementNamedMultiDimArray> ddat = mm->CastData<MessageElementNamedMultiDimArray>();
+			RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> ddat = mm->CastData<MessageElementNamedMultiDimArray>();
 			if (ddat)
 			{
-				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				BOOST_FOREACH(RR_SHARED_PTR<MessageElement>& ee, ddat->Elements)
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
+				BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& ee, ddat->Elements)
 					v.push_back(ShallowCopyMessageElement(ee));
 
-				RR_SHARED_PTR<MessageElementNamedMultiDimArray> mdat2 = RR_MAKE_SHARED<MessageElementNamedMultiDimArray>(ddat->Type, v);
+				RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> mdat2 = CreateMessageElementNamedMultiDimArray(ddat->Type, v);
 				mm2->SetData(mdat2);
 			}
 			break;
