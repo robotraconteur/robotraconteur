@@ -48,12 +48,20 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> var3;
 virtual std::string RRType() {return "com.robotraconteur.testing.TestService1.teststruct1";  }
 };
 
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+using teststruct1Ptr = RR_SHARED_PTR<teststruct1>;
+#endif
+
 class teststruct2 : public RobotRaconteur::RRStructure {
 public:
 RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > mydat;
 
 virtual std::string RRType() {return "com.robotraconteur.testing.TestService1.teststruct2";  }
 };
+
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+using teststruct2Ptr = RR_SHARED_PTR<teststruct2>;
+#endif
 
 class testroot : public virtual com::robotraconteur::testing::TestService2::baseobj
 {
@@ -309,6 +317,10 @@ virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<uint8_t > > get_m3()=0
 virtual std::string RRType() {return "com.robotraconteur.testing.TestService1.testroot";  }
 };
 
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+using testrootPtr = RR_SHARED_PTR<testroot>;
+#endif
+
 class sub1 : public virtual RobotRaconteur::RRObject
 {
 public:
@@ -333,6 +345,10 @@ virtual RR_SHARED_PTR<sub2 > get_o2_3(const std::string& ind)=0;
 virtual std::string RRType() {return "com.robotraconteur.testing.TestService1.sub1";  }
 };
 
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+using sub1Ptr = RR_SHARED_PTR<sub1>;
+#endif
+
 class sub2 : public virtual RobotRaconteur::RRObject
 {
 public:
@@ -349,6 +365,10 @@ virtual RR_SHARED_PTR<sub3 > get_o3_1(const std::string& ind)=0;
 
 virtual std::string RRType() {return "com.robotraconteur.testing.TestService1.sub2";  }
 };
+
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+using sub2Ptr = RR_SHARED_PTR<sub2>;
+#endif
 
 class sub3 : public virtual RobotRaconteur::RRObject
 {
@@ -367,16 +387,26 @@ virtual double add(double d)=0;
 virtual std::string RRType() {return "com.robotraconteur.testing.TestService1.sub3";  }
 };
 
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+using sub3Ptr = RR_SHARED_PTR<sub3>;
+#endif
+
 class testexception1 : public RobotRaconteur::RobotRaconteurRemoteException
 {
     public:
     testexception1(std::string message) : RobotRaconteur::RobotRaconteurRemoteException("com.robotraconteur.testing.TestService1.testexception1",message) {}
 };
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+using testexception1Ptr = RR_SHARED_PTR<testexception1>;
+#endif
 class testexception2 : public RobotRaconteur::RobotRaconteurRemoteException
 {
     public:
     testexception2(std::string message) : RobotRaconteur::RobotRaconteurRemoteException("com.robotraconteur.testing.TestService1.testexception2",message) {}
 };
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+using testexception2Ptr = RR_SHARED_PTR<testexception2>;
+#endif
 }
 }
 }

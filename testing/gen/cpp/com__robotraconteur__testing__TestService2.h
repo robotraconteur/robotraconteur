@@ -27,6 +27,10 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > a1;
 virtual std::string RRType() {return "com.robotraconteur.testing.TestService2.ostruct2";  }
 };
 
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+using ostruct2Ptr = RR_SHARED_PTR<ostruct2>;
+#endif
+
 class baseobj : public virtual RobotRaconteur::RRObject
 {
 public:
@@ -56,6 +60,10 @@ virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<double > > get_m1()=0;
 virtual std::string RRType() {return "com.robotraconteur.testing.TestService2.baseobj";  }
 };
 
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+using baseobjPtr = RR_SHARED_PTR<baseobj>;
+#endif
+
 class subobj : public virtual RobotRaconteur::RRObject
 {
 public:
@@ -64,11 +72,18 @@ virtual double add_val(double v)=0;
 virtual std::string RRType() {return "com.robotraconteur.testing.TestService2.subobj";  }
 };
 
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+using subobjPtr = RR_SHARED_PTR<subobj>;
+#endif
+
 class testexception3 : public RobotRaconteur::RobotRaconteurRemoteException
 {
     public:
     testexception3(std::string message) : RobotRaconteur::RobotRaconteurRemoteException("com.robotraconteur.testing.TestService2.testexception3",message) {}
 };
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+using testexception3Ptr = RR_SHARED_PTR<testexception3>;
+#endif
 }
 }
 }

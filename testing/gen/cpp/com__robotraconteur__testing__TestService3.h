@@ -161,6 +161,10 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> t11;
 virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.teststruct3";  }
 };
 
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+using teststruct3Ptr = RR_SHARED_PTR<teststruct3>;
+#endif
+
 class testroot3 : public virtual RobotRaconteur::RRObject
 {
 public:
@@ -338,6 +342,10 @@ virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<RobotRaconteur::rr_boo
 virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.testroot3";  }
 };
 
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+using testroot3Ptr = RR_SHARED_PTR<testroot3>;
+#endif
+
 class obj1 : public virtual RobotRaconteur::RRObject
 {
 public:
@@ -346,6 +354,10 @@ virtual void set_d1(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value)=0
 
 virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.obj1";  }
 };
+
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+using obj1Ptr = RR_SHARED_PTR<obj1>;
+#endif
 
 class obj2 : public virtual obj1
 {
@@ -356,6 +368,10 @@ virtual void set_d1(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value)=0
 virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.obj2";  }
 };
 
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+using obj2Ptr = RR_SHARED_PTR<obj2>;
+#endif
+
 class obj3 : public virtual obj1, public virtual obj2
 {
 public:
@@ -364,6 +380,10 @@ virtual void set_d1(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value)=0
 
 virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.obj3";  }
 };
+
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+using obj3Ptr = RR_SHARED_PTR<obj3>;
+#endif
 
 class obj4 : public virtual com::robotraconteur::testing::TestService1::sub2
 {
@@ -381,6 +401,10 @@ virtual RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub3 > get_o3_
 
 virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.obj4";  }
 };
+
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+using obj4Ptr = RR_SHARED_PTR<obj4>;
+#endif
 
 }
 }
