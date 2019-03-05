@@ -184,4 +184,8 @@ namespace RobotRaconteur
 	public:
 		NodeIDAlreadyInUse() : runtime_error("Could not start server: NodeID already in use") {};
 	};
+
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+	using LocalTransportPtr = RR_SHARED_PTR<LocalTransport>;
+#endif
 }

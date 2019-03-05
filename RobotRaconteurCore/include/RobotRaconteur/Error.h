@@ -395,7 +395,22 @@ namespace RobotRaconteur
 
 	};*/
 	
-	
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+using RobotRaconteurExceptionPtr = RR_SHARED_PTR<RobotRaconteurException>;
+using RobotRaconteurExceptionConstPtr = RR_SHARED_PTR<const RobotRaconteurException>;
 
+#define RR_EXCEPTION_DECL_1_PTR(exp_cpp_type, exp_code, exp_type_str) \
+using exp_cpp_type ## Ptr = RR_SHARED_PTR<exp_cpp_type>; \
+using exp_cpp_type ## ConstPtr = RR_SHARED_PTR<const exp_cpp_type>;
+
+#define RR_EXCEPTION_DECL_2_PTR(exp_cpp_type, exp_code) \
+using exp_cpp_type ## Ptr = RR_SHARED_PTR<exp_cpp_type>; \
+using exp_cpp_type ## ConstPtr = RR_SHARED_PTR<const exp_cpp_type>;
+
+RR_EXCEPTION_TYPES_INIT(RR_EXCEPTION_DECL_1_PTR, RR_EXCEPTION_DECL_2_PTR)
+
+#undef RR_EXCEPTION_DECL_1_PTR
+#undef RR_EXCEPTION_DECL_2_PTR
+#endif
 
 }

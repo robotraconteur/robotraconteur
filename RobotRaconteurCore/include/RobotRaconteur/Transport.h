@@ -193,6 +193,11 @@ namespace RobotRaconteur
 
 	ROBOTRACONTEUR_CORE_API ParseConnectionURLResult ParseConnectionURL(const std::string& url);
 
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+	using TransportPtr = RR_SHARED_PTR<Transport>;
+	using ITransportConnectionPtr = RR_SHARED_PTR<ITransportConnection>;
+#endif
+
 }
 
 #pragma warning(pop)

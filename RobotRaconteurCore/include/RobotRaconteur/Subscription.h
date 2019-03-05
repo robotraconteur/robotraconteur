@@ -520,4 +520,15 @@ namespace RobotRaconteur
 
 		};
 	}
+
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+	using ServiceSubscriptionFilterNodePtr = RR_SHARED_PTR<ServiceSubscriptionFilterNode>;
+	using ServiceSubscriptionFilterPtr = RR_SHARED_PTR<ServiceSubscriptionFilter>;
+	using ServiceInfo2SubscriptionPtr = RR_SHARED_PTR<ServiceInfo2Subscription>;
+	using ServiceSubscriptionPtr = RR_SHARED_PTR<ServiceSubscription>;
+	template<typename T> using PipeSubscriptionPtr = RR_SHARED_PTR<PipeSubscription<T> >;
+	template<typename T> using WireSubscriptionPtr = RR_SHARED_PTR<WireSubscription<T> >;
+
+#endif
+
 }

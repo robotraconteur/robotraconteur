@@ -134,5 +134,7 @@ namespace RobotRaconteur
 		boost::signals2::signal<void()> close_signal;
 
 	};
-	
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+	using HardwareTransportPtr = RR_SHARED_PTR<HardwareTransport>;	
+#endif
 }

@@ -1242,6 +1242,10 @@ namespace RobotRaconteurGen
 			w2 << endl << "virtual std::string RRType() {return \"" << d->Name + "." << (*e)->Name <<"\";  }"<< endl;
 
 			w2 << "};" << endl << endl;
+			w2 << "#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES" << endl;
+			w2 << "using " << fix_name((*e)->Name) << "Ptr = RR_SHARED_PTR<" << fix_name((*e)->Name) << ">;" << endl;
+			w2 << "#endif" << endl << endl;
+
 		}
 
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Objects.begin(); e != d->Objects.end(); ++e)
@@ -1306,6 +1310,9 @@ namespace RobotRaconteurGen
 			w2 << "virtual std::string RRType() {return \"" << d->Name + "." << (*e)->Name <<"\";  }" << endl;
 
 			w2 << "};" << endl << endl;
+			w2 << "#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES" << endl;
+			w2 << "using " << fix_name((*e)->Name) << "Ptr = RR_SHARED_PTR<" << fix_name((*e)->Name) << ">;" << endl;
+			w2 << "#endif" << endl << endl;
 		}
 		
 		for (vector<string>::iterator e=d->Exceptions.begin(); e!=d->Exceptions.end(); e++)
@@ -1314,6 +1321,9 @@ namespace RobotRaconteurGen
 			w2 << "    public:" << endl;
 			w2 << "    " << fix_name(*e) << "(std::string message) : RobotRaconteur::RobotRaconteurRemoteException(\"" << d->Name << "." << *e << "\",message) {}" << endl;
 			w2 << "};" << endl;
+			w2 << "#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES" << endl;
+			w2 << "using " << fix_name((*e)) << "Ptr = RR_SHARED_PTR<" << fix_name((*e)) << ">;" << endl;
+			w2 << "#endif" << endl;
 		}
 
 		for (vector<string>::iterator ns_e=namespace_vec.begin(); ns_e!=namespace_vec.end(); ns_e++)

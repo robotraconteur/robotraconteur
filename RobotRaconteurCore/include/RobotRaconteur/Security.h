@@ -111,4 +111,12 @@ namespace RobotRaconteur
 	private:
 		void InitializeInstanceFields();
 	};
+
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+	using ServiceSecurityPolicyPtr = RR_SHARED_PTR<ServiceSecurityPolicy>;
+	using AuthenticatedUserPtr = RR_SHARED_PTR<AuthenticatedUser>;
+	using UserAuthenticatorPtr = RR_SHARED_PTR<UserAuthenticator>;
+	using PasswordFileUserAuthenticatorPtr = RR_SHARED_PTR<PasswordFileUserAuthenticator>;
+#endif	
+
 }

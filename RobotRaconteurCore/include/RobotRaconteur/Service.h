@@ -441,6 +441,11 @@ public:
 
 	};
 
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+	using ServiceSkelPtr = RR_SHARED_PTR<ServiceSkel>;
+	using ServerContextPtr = RR_SHARED_PTR<ServerContext>;
+	using ServerEndpointPtr = RR_SHARED_PTR<ServerEndpoint>;
+#endif
 
 }
 

@@ -750,4 +750,20 @@ public:
 		if (!node1) throw InvalidOperationException("Node has been released");
 		return node1->template UnpackListType<T>(m->CastData<RobotRaconteur::MessageElementList>());
 	}
+
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+	using MessagePtr = RR_INTRUSIVE_PTR<Message>;
+	using MessageHeaderPtr = RR_INTRUSIVE_PTR<MessageHeader>;
+	using MessageEntryPtr = RR_INTRUSIVE_PTR<MessageEntry>;
+	using MessageElementPtr = RR_INTRUSIVE_PTR<MessageElement>;
+	using MessageElementStructurePtr = RR_INTRUSIVE_PTR<MessageElementStructure>;
+	template <typename T> using MessageElementMapPtr = RR_INTRUSIVE_PTR<MessageElementMap<T> >;
+	using MessageElementListPtr = RR_INTRUSIVE_PTR<MessageElementList>;
+	using MessageElementMultiDimArrayPtr = RR_INTRUSIVE_PTR<MessageElementMultiDimArray>;
+	using MessageElementPodPtr = RR_INTRUSIVE_PTR<MessageElementPod>;
+	using MessageElementPodArrayPtr = RR_INTRUSIVE_PTR<MessageElementPodArray>;
+	using MessageElementPodMultiDimArrayPtr = RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray>;
+	using MessageElementNamedArrayPtr = RR_INTRUSIVE_PTR<MessageElementNamedArray>;
+	using MessageElementNamedMultiDimArrayPtr = RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray>;
+#endif
 }

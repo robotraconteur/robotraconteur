@@ -107,7 +107,10 @@ namespace RobotRaconteur
 	};
 
 
-	
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+	using EndpointPtr = RR_SHARED_PTR<Endpoint>;
+	using EndpointConstPtr = RR_SHARED_PTR<const Endpoint>;
+#endif
 	
 
 }

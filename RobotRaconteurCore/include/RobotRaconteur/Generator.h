@@ -641,4 +641,11 @@ namespace RobotRaconteur
 		return RR_MAKE_SHARED<RangeGenerator<T> >(range);
 	}
 
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+	template <typename Return, typename Param> using GeneratorPtr = RR_SHARED_PTR<Generator<Return, Param> >;
+	template <typename Return, typename Param> using GeneratorConstPtr = RR_SHARED_PTR<const Generator<Return, Param> >;
+	template <typename T> using RangeGeneratorPtr = RR_SHARED_PTR<RangeGenerator<T> >;
+	template <typename T> using RangeGeneratorConstPtr = RR_SHARED_PTR<const RangeGenerator<T> >;
+#endif
+
 }

@@ -389,4 +389,12 @@ namespace RobotRaconteur
 		ClientContext::EndAsyncFindObjRef(obj, err, handler);
 	}
 
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+	using ServiceStubPtr = RR_SHARED_PTR<ServiceStub>;
+	using ServiceStubConstPtr = RR_SHARED_PTR<const ServiceStub>;
+#endif
+
 }
+
+
+

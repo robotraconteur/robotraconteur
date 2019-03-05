@@ -247,7 +247,9 @@ namespace RobotRaconteur
 		boost::mutex closed_lock;
 	};
 
-
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+	using TcpTransportPtr = RR_SHARED_PTR<TcpTransport>;
+#endif
 
 	
 }

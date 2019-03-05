@@ -1051,5 +1051,8 @@ namespace RobotRaconteur
 
 	};
 
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+	using RobotRaconteurNodePtr = RR_SHARED_PTR<RobotRaconteurNode>;
+#endif
 
 }

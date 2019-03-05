@@ -1720,4 +1720,43 @@ namespace RobotRaconteur
 
 		ROBOTRACONTEUR_CORE_API std::string decode_index(const std::string& index);
 	}
+
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+	using RRObjectPtr = RR_SHARED_PTR<RRObject>;
+	using RRObjectConstPtr = RR_SHARED_PTR<const RRObject>;
+	using RRValuePtr = RR_INTRUSIVE_PTR<RRValue>;
+	using RRValueConstPtr = RR_INTRUSIVE_PTR<const RRValue>;
+	using MessageElementDataPtr = RR_INTRUSIVE_PTR<MessageElementData>;
+	using MessageElementDataConstPtr = RR_INTRUSIVE_PTR<const MessageElementData>;
+	using RRBaseArrayPtr = RR_INTRUSIVE_PTR<RRBaseArray>;
+	using RRBaseArrayConstPtr = RR_INTRUSIVE_PTR<const RRBaseArray>;
+	template<typename T> using RRArrayPtr = RR_INTRUSIVE_PTR<RRArray<T> >;
+	template<typename T> using RRArrayConstPtr = RR_INTRUSIVE_PTR<const RRArray<T> >;
+	template<typename K, typename T> using RRMapPtr = RR_INTRUSIVE_PTR<RRMap<K,T> >;
+	template<typename K, typename T> using RRMapConstPtr = RR_INTRUSIVE_PTR<const RRMap<K, T> >;
+	template<typename T> using RRListPtr = RR_INTRUSIVE_PTR<RRList<T> >;
+	template<typename T> using RRListConstPtr = RR_INTRUSIVE_PTR<const RRList<T> >;
+	using RRStructurePtr = RR_INTRUSIVE_PTR<RRStructure>;
+	using RRStructureConstPtr = RR_INTRUSIVE_PTR<const RRStructure>;
+	using RRMultiDimBaseArrayPtr = RR_INTRUSIVE_PTR<RRMultiDimBaseArray>;
+	using RRMultiDimBaseArrayConstPtr = RR_INTRUSIVE_PTR<const RRMultiDimBaseArray>;
+	template <typename T> using RRMultiDimArrayPtr = RR_INTRUSIVE_PTR<RRMultiDimArray<T> >;
+	template <typename T> using RRMultiDimArrayConstPtr = RR_INTRUSIVE_PTR<const RRMultiDimArray<T> >;
+	using RRPodBaseArrayPtr = RR_INTRUSIVE_PTR<RRPodBaseArray>;
+	using RRPodBaseArrayConstPtr = RR_INTRUSIVE_PTR<const RRPodBaseArray>;
+	template<typename T> using RRPodArrayPtr = RR_INTRUSIVE_PTR<RRPodArray<T> >;
+	template<typename T> using RRPodArrayConstPtr = RR_INTRUSIVE_PTR<const RRPodArray<T> >;
+	using RRPodBaseMultiDimArrayPtr = RR_INTRUSIVE_PTR <RRPodBaseMultiDimArray>;
+	using RRPodBaseMultiDimBaseArrayConstPtr = RR_INTRUSIVE_PTR<const RRPodBaseMultiDimArray>;
+	template <typename T> using RRPodMultiDimArrayPtr = RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> >;
+	template <typename T> using RRPodMultiDimArrayConstPtr = RR_INTRUSIVE_PTR<const RRPodMultiDimArray<T> >;
+	using RRNamedBaseArrayPtr = RR_INTRUSIVE_PTR<RRNamedBaseArray>;
+	using RRNamedBaseArrayConstPtr = RR_INTRUSIVE_PTR<const RRNamedBaseArray>;
+	template<typename T> using RRNamedArrayPtr = RR_INTRUSIVE_PTR<RRNamedArray<T> >;
+	template<typename T> using RRNamedArrayConstPtr = RR_INTRUSIVE_PTR<const RRNamedArray<T> >;
+	using RRNamedBaseMultiDimArrayPtr = RR_INTRUSIVE_PTR <RRNamedBaseMultiDimArray>;
+	using RRNamedBaseMultiDimBaseArrayConstPtr = RR_INTRUSIVE_PTR<const RRNamedBaseMultiDimArray>;
+	template <typename T> using RRNamedMultiDimArrayPtr = RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> >;
+	template <typename T> using RRNamedMultiDimArrayConstPtr = RR_INTRUSIVE_PTR<const RRNamedMultiDimArray<T> >;
+#endif
 }

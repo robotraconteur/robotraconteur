@@ -170,4 +170,9 @@ namespace RobotRaconteur
 		}	
 
 	};
+
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+	template<typename T> using CallbackPtr = RR_SHARED_PTR<Callback<T> >;
+	template<typename T> using CallbackConstPtr = RR_SHARED_PTR<const Callback<T> >;
+#endif
 }

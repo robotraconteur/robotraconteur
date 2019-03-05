@@ -77,4 +77,8 @@ namespace RobotRaconteur
 		}
         virtual ~ThreadPoolFactory();
 	};
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+	using ThreadPoolPtr = RR_SHARED_PTR<ThreadPool>;
+	using ThreadPoolFactoryPtr = RR_SHARED_PTR<ThreadPoolFactory>;
+#endif
 }

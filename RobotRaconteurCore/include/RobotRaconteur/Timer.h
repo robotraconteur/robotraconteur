@@ -127,5 +127,9 @@ public:
 
 };
 
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+using TimerPtr = RR_SHARED_PTR<Timer>;
+using RatePtr = RR_SHARED_PTR<Rate>;
+#endif
 
 }

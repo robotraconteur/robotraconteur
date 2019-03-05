@@ -1100,4 +1100,15 @@ namespace RobotRaconteur
 			mem1->Write(memorypos, data, bufferpos, count);
 		}
 	};
+
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+	using ArrayMemoryBasePtr = RR_SHARED_PTR<ArrayMemoryBase>;
+	template <typename T> using ArrayMemoryPtr = RR_SHARED_PTR<ArrayMemory<T> >;
+	using ArrayMultiDimMemoryBasePtr = RR_SHARED_PTR<MultiDimArrayMemoryBase>;
+	template <typename T> using MultiDimArrayMemoryPtr = RR_SHARED_PTR<MultiDimArrayMemory<T> >;
+	template <typename T> using PodArrayMemoryPtr = RR_SHARED_PTR<PodArrayMemory<T> >;
+	template <typename T> using PodMultiDimArrayMemoryPtr = RR_SHARED_PTR<PodMultiDimArrayMemory<T> >;
+	template <typename T> using NamedArrayMemoryPtr = RR_SHARED_PTR<NamedArrayMemory<T> >;
+	template <typename T> using NamedMultiDimArrayMemoryPtr = RR_SHARED_PTR<NamedMultiDimArrayMemory<T> >;
+#endif
 }

@@ -923,7 +923,14 @@ namespace RobotRaconteur
 	{
 
 	};
-
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+	using WireConnectionBasePtr = RR_SHARED_PTR<WireConnectionBase>;
+	template <typename T> using WireConnectionPtr = RR_SHARED_PTR<WireConnection<T> >;
+	using WireBasePtr = RR_SHARED_PTR<WireBase>;
+	template <typename T> using WirePtr = RR_SHARED_PTR<Wire<T> >;
+	template <typename T> using WireBroadcasterPtr = RR_SHARED_PTR<WireBroadcaster<T> >;
+	template <typename T> using WireUnicastReceiverPtr = RR_SHARED_PTR<WireUnicastReceiver<T> >;
+#endif
 
 }
 

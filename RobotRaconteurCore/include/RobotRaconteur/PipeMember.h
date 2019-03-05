@@ -773,7 +773,13 @@ namespace RobotRaconteur
 		}
 
 	};
-
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+	using PipeEndpointBasePtr = RR_SHARED_PTR<PipeEndpointBase>;
+	template <typename T> using PipeEndpointPtr = RR_SHARED_PTR<PipeEndpoint<T> >;
+	using PipeBasePtr = RR_SHARED_PTR<PipeBase>;
+	template <typename T> using PipePtr = RR_SHARED_PTR<Pipe<T> >;
+	template <typename T> using PipeBroadcasterPtr = RR_SHARED_PTR<PipeBroadcaster<T> >;
+#endif
 }
 
 #pragma warning(pop)
