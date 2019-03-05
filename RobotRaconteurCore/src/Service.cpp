@@ -411,6 +411,7 @@ namespace RobotRaconteur
 				throw InvalidOperationException("Invalid generator");
 			}
 			gen = e->second;
+			gen->last_access_time = boost::posix_time::second_clock::universal_time();
 		}
 
 		if (gen->GetEndpoint() != ep->GetLocalEndpoint())
@@ -449,6 +450,23 @@ namespace RobotRaconteur
 			index = node->GetRandomInt<int32_t>(0,std::numeric_limits<int32_t>::max());
 		} while (generators.find(index) != generators.end());
 		return index;
+	}
+
+	void ServiceSkel::CleanupGenerators()
+	{
+		boost::posix_time::ptime destroy_time = boost::posix_time::second_clock::universal_time() - boost::posix_time::minutes(10);
+		boost::mutex::scoped_lock lock(generators_lock);
+		for (boost::unordered_map<int32_t, RR_SHARED_PTR<GeneratorServerBase> >::iterator e = generators.begin(); e != generators.end(); )
+		{
+			if (e->second->last_access_time < destroy_time)
+			{
+				e = generators.erase(e);
+			}
+			else
+			{
+				++e;
+			}
+		}
 	}
 
 	RR_SHARED_PTR<ServiceFactory> ServerContext::GetServiceDef() const
@@ -1683,7 +1701,11 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 	void ServerContext::PeriodicCleanupTask()
 	{
-
+		boost::mutex::scoped_lock lock(skels_lock);
+		BOOST_FOREACH(RR_SHARED_PTR<ServiceSkel> s, skels | boost::adaptors::map_values)
+		{
+			s->CleanupGenerators();
+		}
 	}
 
 	RR_INTRUSIVE_PTR<MessageEntry> ServerContext::CheckServiceCapability(RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> c)

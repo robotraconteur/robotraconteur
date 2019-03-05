@@ -137,6 +137,7 @@ namespace RobotRaconteur
 		this->index = index;
 		this->skel = skel;
 		this->ep = ep;
+		this->last_access_time = boost::posix_time::second_clock::universal_time();
 	}
 
 	uint32_t GeneratorServerBase::GetEndpoint()

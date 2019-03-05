@@ -152,6 +152,8 @@ namespace RobotRaconteur
 
 		void SendGeneratorResponse(int32_t index, RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> ep);
 
+		void CleanupGenerators();
+
 	protected:
 		RR_WEAK_PTR<RobotRaconteurNode> node;
 

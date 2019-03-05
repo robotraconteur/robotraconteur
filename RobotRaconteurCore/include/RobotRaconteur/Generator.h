@@ -249,9 +249,14 @@ namespace RobotRaconteur
 		RR_INTRUSIVE_PTR<MessageElement> m;
 		RR_SHARED_PTR<ServerEndpoint> ep;
 
+		boost::posix_time::ptime last_access_time;
+
 		GeneratorServerBase(const std::string& name, int32_t index, RR_SHARED_PTR<ServiceSkel> skel, RR_SHARED_PTR<ServerEndpoint> ep);
 		
 	public:
+
+		friend class ServiceSkel;
+
 		virtual void CallNext(RR_INTRUSIVE_PTR<MessageEntry> m) = 0;
 
 		virtual uint32_t GetEndpoint();
