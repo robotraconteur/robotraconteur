@@ -497,7 +497,7 @@ namespace RobotRaconteur
 						throw RobotRaconteurParseException("service name must be first after service name");
 					stdver_version.FromString(r_entry_match_remaining);
 					stdver_found = true;
-					if (stdver_found < RobotRaconteurVersion(0, 9))
+					if (stdver_version < RobotRaconteurVersion(0, 9))
 					{
 						throw ServiceDefinitionException("Service definition standard version 0.9 or greater required for \"stdver\" keyword");
 					}
@@ -655,6 +655,8 @@ namespace RobotRaconteur
 		Exceptions.clear();
 		Constants.clear();
 		Enums.clear();
+		Pods.clear();
+		NamedArrays.clear();
 	}
 
 	ServiceDefinition::ServiceDefinition()
@@ -744,7 +746,7 @@ namespace RobotRaconteur
 			std::string d1 = d->ToString();
 			if (EntryType != DataTypes_object_t)
 			{
-				replace_all(d1, "property", "field");
+				boost::replace_first(d1, "property", "field");
 			}
 			o << "    " << d1 << "\n";
 		}
@@ -1548,10 +1550,10 @@ namespace RobotRaconteur
 			{
 				throw RobotRaconteurParseException("Invalid objref definition \"" + s + "\"");
 			}
-			break;
-		default:
-			throw RobotRaconteurParseException("Invalid objref definition \"" + s + "\"");			
+			break;		
 		}
+		default:
+			throw RobotRaconteurParseException("Invalid objref definition \"" + s + "\"");
 		}
 
 		if (!((!t->TypeString.empty() && t->Type == DataTypes_namedtype_t)
@@ -2040,7 +2042,6 @@ namespace RobotRaconteur
 		}
 
 		return 0;
-		;
 	}
 
 	void TypeDefinition::Reset()
@@ -2051,6 +2052,7 @@ namespace RobotRaconteur
 		ArrayVarLength=false;
 		Type=DataTypes_void_t;
 		ArrayLength.clear();
+		TypeString.clear();
 	}
 
 	void TypeDefinition::CopyTo(TypeDefinition& def) const
@@ -3697,7 +3699,7 @@ namespace RobotRaconteur
 		BOOST_FOREACH(RR_SHARED_PTR<MemberDefinition>& e, strut->Members)
 		{
 			RR_SHARED_PTR<PropertyDefinition> p = RR_DYNAMIC_POINTER_CAST<PropertyDefinition>(e);
-			if (!p) InternalErrorException("");
+			if (!p) throw InternalErrorException("");
 
 			if (p->Type->Type == DataTypes_namedtype_t)
 			{
@@ -4053,7 +4055,7 @@ namespace RobotRaconteur
 	ROBOTRACONTEUR_CORE_API void VerifyServiceDefinitions(std::vector<RR_SHARED_PTR<ServiceDefinition> > def)
 	{
 		std::vector<RobotRaconteurParseException> warnings;
-		return VerifyServiceDefinitions(def, warnings);
+		VerifyServiceDefinitions(def, warnings);
 
 	}
 
@@ -4110,7 +4112,7 @@ namespace RobotRaconteur
 
 	ROBOTRACONTEUR_CORE_API bool CompareServiceDefinitions(RR_SHARED_PTR<ServiceDefinition> service1, RR_SHARED_PTR<ServiceDefinition> service2)
 	{
-		if (service1->Name != service1->Name) return false;
+		if (service1->Name != service2->Name) return false;
 		if (!boost::range::equal(service1->Imports, service2->Imports)) return false;
 		if (!boost::range::equal(service1->Options, service2->Options)) return false;
 		
@@ -4237,7 +4239,7 @@ namespace RobotRaconteur
 			size_t field_element_count = 1;
 
 			RR_SHARED_PTR<PropertyDefinition> p = RR_DYNAMIC_POINTER_CAST<PropertyDefinition>(e);
-			if (!p) ServiceDefinitionException("Invalid member type in namedarray: " + def->Name);
+			if (!p) throw ServiceDefinitionException("Invalid member type in namedarray: " + def->Name);
 
 			if (p->Type->ContainerType != DataTypes_ContainerTypes_none)
 			{
