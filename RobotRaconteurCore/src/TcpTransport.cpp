@@ -1715,7 +1715,7 @@ void TcpTransport::CloseTransportConnection_timed(const boost::system::error_cod
 
 }
 
-void TcpTransport::SendMessage(RR_SHARED_PTR<Message> m)
+void TcpTransport::SendMessage(RR_INTRUSIVE_PTR<Message> m)
 {
 	
 
@@ -1789,7 +1789,7 @@ void TcpTransport::PeriodicCleanupTask()
 	}
 }
 
-void TcpTransport::AsyncSendMessage(RR_SHARED_PTR<Message> m, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& handler)
+void TcpTransport::AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& handler)
 {	
 
 	RR_SHARED_PTR<ITransportConnection> t;
@@ -2528,7 +2528,7 @@ void TcpTransport::erase_transport(RR_SHARED_PTR<ITransportConnection> connectio
 }
 
 
-void TcpTransport::MessageReceived(RR_SHARED_PTR<Message> m)
+void TcpTransport::MessageReceived(RR_INTRUSIVE_PTR<Message> m)
 {
 	GetNode()->MessageReceived(m);
 }
@@ -3155,14 +3155,14 @@ void TcpTransportConnection::do_starttls1(std::string noden, const boost::system
 			target_nodename=noden;
 		}
 
-		RR_SHARED_PTR<Message> m = RR_MAKE_SHARED<Message>();
-		m->header = RR_MAKE_SHARED<MessageHeader>();
+		RR_INTRUSIVE_PTR<Message> m = CreateMessage();
+		m->header = CreateMessageHeader();
 		m->header->ReceiverNodeName = target_nodename;
 		//m->header->SenderNodeName = GetNode()->NodeName();
 		//m->header->SenderNodeID = GetNode()->NodeID();
 		m->header->ReceiverNodeID = target_nodeid;
 		
-		RR_SHARED_PTR<MessageEntry> mm=RR_MAKE_SHARED<MessageEntry>(MessageEntryType_StreamOp,"STARTTLS");
+		RR_INTRUSIVE_PTR<MessageEntry> mm=CreateMessageEntry(MessageEntryType_StreamOp,"STARTTLS");
 		
 		RR_SHARED_PTR<TcpTransport> p = parent.lock();
 		if (!p) throw InvalidOperationException("Transport shutdown");
@@ -3540,7 +3540,7 @@ void TcpTransportConnection::do_starttls5_1(RR_SHARED_PTR<RRObject> parameter, R
 
 }
 
-void TcpTransportConnection::do_starttls6(const boost::system::error_code& error, RR_SHARED_PTR<Message> request)
+void TcpTransportConnection::do_starttls6(const boost::system::error_code& error, RR_INTRUSIVE_PTR<Message> request)
 {
 	if(error)
 	{
@@ -3552,7 +3552,7 @@ void TcpTransportConnection::do_starttls6(const boost::system::error_code& error
 	AsyncPauseSend(h);
 }
 
-void TcpTransportConnection::do_starttls7(const boost::system::error_code& error, RR_SHARED_PTR<Message> request)
+void TcpTransportConnection::do_starttls7(const boost::system::error_code& error, RR_INTRUSIVE_PTR<Message> request)
 {
 	if(error)
 	{
@@ -3568,13 +3568,13 @@ void TcpTransportConnection::do_starttls7(const boost::system::error_code& error
 	}*/
 
 	
-	RR_SHARED_PTR<Message> mret = RR_MAKE_SHARED<Message>();
-	mret->header = RR_MAKE_SHARED<MessageHeader>();
+	RR_INTRUSIVE_PTR<Message> mret = CreateMessage();
+	mret->header = CreateMessageHeader();
 	mret->header->SenderNodeName = GetNode()->NodeName();
 	mret->header->ReceiverNodeName = request->header->SenderNodeName;
 	mret->header->SenderNodeID = GetNode()->NodeID();
 	mret->header->ReceiverNodeID = request->header->SenderNodeID;
-	RR_SHARED_PTR<MessageEntry> mmret = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_StreamOpRet,"STARTTLS");
+	RR_INTRUSIVE_PTR<MessageEntry> mmret = CreateMessageEntry(MessageEntryType_StreamOpRet,"STARTTLS");
 	RR_SHARED_PTR<TcpTransport> p = parent.lock();
 	if (!p)
 	{
@@ -3602,7 +3602,7 @@ void TcpTransportConnection::do_starttls7(const boost::system::error_code& error
 	BeginSendMessage(mret, h);
 }
 
-void TcpTransportConnection::do_starttls8(RR_SHARED_PTR<RobotRaconteurException> error, RR_SHARED_PTR<Message> request)
+void TcpTransportConnection::do_starttls8(RR_SHARED_PTR<RobotRaconteurException> error, RR_INTRUSIVE_PTR<Message> request)
 {
 	if(error)
 	{
@@ -3730,7 +3730,7 @@ void TcpTransportConnection::do_starttls9(const boost::system::error_code& error
 
 }
 
-void TcpTransportConnection::MessageReceived(RR_SHARED_PTR<Message> m)
+void TcpTransportConnection::MessageReceived(RR_INTRUSIVE_PTR<Message> m)
 {
 	NodeID RemoteNodeID1;
 	uint32_t local_ep;
@@ -3772,7 +3772,7 @@ void TcpTransportConnection::MessageReceived(RR_SHARED_PTR<Message> m)
 		{
 			if (RemoteNodeID1 != m->header->SenderNodeID)
 			{
-				RR_SHARED_PTR<Message> ret1=GetNode()->GenerateErrorReturnMessage(m,MessageErrorType_NodeNotFound,"RobotRaconteur.NodeNotFound","Invalid sender node");
+				RR_INTRUSIVE_PTR<Message> ret1=GetNode()->GenerateErrorReturnMessage(m,MessageErrorType_NodeNotFound,"RobotRaconteur.NodeNotFound","Invalid sender node");
 				if (ret1->entries.size() >0)
 				{
 					boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&TcpTransportConnection::SimpleAsyncEndSendMessage, RR_STATIC_POINTER_CAST<TcpTransportConnection>(shared_from_this()), _1);
@@ -3788,7 +3788,7 @@ void TcpTransportConnection::MessageReceived(RR_SHARED_PTR<Message> m)
 		{
 			if (local_ep!=m->header->ReceiverEndpoint || remote_ep!=m->header->SenderEndpoint)
 			{
-				RR_SHARED_PTR<Message> ret1=GetNode()->GenerateErrorReturnMessage(m,MessageErrorType_InvalidEndpoint,"RobotRaconteur.InvalidEndpoint","Invalid sender endpoint");
+				RR_INTRUSIVE_PTR<Message> ret1=GetNode()->GenerateErrorReturnMessage(m,MessageErrorType_InvalidEndpoint,"RobotRaconteur.InvalidEndpoint","Invalid sender endpoint");
 				if (ret1->entries.size() >0)
 				{
 					boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h =  boost::bind(&TcpTransportConnection::SimpleAsyncEndSendMessage, RR_STATIC_POINTER_CAST<TcpTransportConnection>(shared_from_this()), _1);
@@ -3803,7 +3803,7 @@ void TcpTransportConnection::MessageReceived(RR_SHARED_PTR<Message> m)
 	RR_SHARED_PTR<TcpTransport> p=parent.lock();
 	if (!p) return;
 
-	RR_SHARED_PTR<Message> ret = p->SpecialRequest(m, shared_from_this());
+	RR_INTRUSIVE_PTR<Message> ret = p->SpecialRequest(m, shared_from_this());
 	if (ret != 0)
 	{
 		try
@@ -3963,11 +3963,11 @@ void TcpTransportConnection::MessageReceived(RR_SHARED_PTR<Message> m)
 }
 
 
-void TcpTransportConnection::StreamOpMessageReceived(RR_SHARED_PTR<Message> m)
+void TcpTransportConnection::StreamOpMessageReceived(RR_INTRUSIVE_PTR<Message> m)
 {
 	if (m->entries.size()==1)
 	{
-		RR_SHARED_PTR<MessageEntry> mm=m->entries.at(0);
+		RR_INTRUSIVE_PTR<MessageEntry> mm=m->entries.at(0);
 		if (mm->MemberName == "STARTTLS")
 		{
 			if (mm->EntryType==MessageEntryType_StreamOp)
@@ -3982,7 +3982,7 @@ void TcpTransportConnection::StreamOpMessageReceived(RR_SHARED_PTR<Message> m)
 						RemoteNodeID=m->header->SenderNodeID;
 					}
 
-					RR_SHARED_PTR<MessageElement> e;
+					RR_INTRUSIVE_PTR<MessageElement> e;
 					if(mm->TryFindElement("mutualauth", e))
 					{
 						std::string dat = e->CastDataToString();
@@ -4002,14 +4002,14 @@ void TcpTransportConnection::StreamOpMessageReceived(RR_SHARED_PTR<Message> m)
 					//Oops, requesting a bad nodeid/nodename query
 
 					
-					RR_SHARED_PTR<Message> mret = RR_MAKE_SHARED<Message>();
-					mret->header = RR_MAKE_SHARED<MessageHeader>();
+					RR_INTRUSIVE_PTR<Message> mret = CreateMessage();
+					mret->header = CreateMessageHeader();
 					mret->header->SenderNodeName = GetNode()->NodeName();
 					mret->header->ReceiverNodeName = m->header->SenderNodeName;
 					mret->header->SenderNodeID = GetNode()->NodeID();
 					mret->header->ReceiverNodeID = m->header->SenderNodeID;
 
-					RR_SHARED_PTR<MessageEntry> mmret = RR_MAKE_SHARED<MessageEntry>(MessageEntryType_StreamOpRet,  mm->MemberName);
+					RR_INTRUSIVE_PTR<MessageEntry> mmret = CreateMessageEntry(MessageEntryType_StreamOpRet,  mm->MemberName);
 					mmret->Error = MessageErrorType_NodeNotFound;
 					mmret->AddElement("errorname", stringToRRArray("RobotRaconteur.NodeNotFound"));
 					mmret->AddElement("errorstring", stringToRRArray("Node not found"));
@@ -4063,7 +4063,7 @@ void TcpTransportConnection::StreamOpMessageReceived(RR_SHARED_PTR<Message> m)
 					return;
 				}
 
-				RR_SHARED_PTR<MessageElement> e;
+				RR_INTRUSIVE_PTR<MessageElement> e;
 				if (mm->TryFindElement("mutualauth", e))
 				{
 					std::string dat = e->CastDataToString();
@@ -4873,16 +4873,16 @@ namespace detail
 			
 			/*Transport::m_CurrentThreadTransportConnectionURL.reset(new std::string("tcp://localhost:0/"));
 			RR_SHARED_PTR<ServiceIndexer> indexer=RR_MAKE_SHARED<ServiceIndexer>();
-			RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteurServiceIndex::ServiceInfo> > services=indexer->GetLocalNodeServices();
+			RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteurServiceIndex::ServiceInfo> > services=indexer->GetLocalNodeServices();
 			Transport::m_CurrentThreadTransportConnectionURL.reset(0);
 
 			std::vector<std::string> service_data2;
-			for (std::map<int32_t,RR_SHARED_PTR<RobotRaconteurServiceIndex::ServiceInfo> >::iterator e=services->map.begin(); e!=services->map.end(); e++)
+			for (std::map<int32_t,RR_INTRUSIVE_PTR<RobotRaconteurServiceIndex::ServiceInfo> >::iterator e=services->map.begin(); e!=services->map.end(); e++)
 			{
 			std::vector<std::string> implements;
 			implements.push_back(e->second->RootObjectType);
-			RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char> > > impl= e->second->RootObjectImplements;
-			for (std::map<int32_t,RR_SHARED_PTR<RRArray<char> > >::iterator e2=impl->map.begin(); e2!=impl->map.end(); e2++)
+			RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char> > > impl= e->second->RootObjectImplements;
+			for (std::map<int32_t,RR_INTRUSIVE_PTR<RRArray<char> > >::iterator e2=impl->map.begin(); e2!=impl->map.end(); e2++)
 			{
 			implements.push_back(RRArrayToString(e2->second));
 			}

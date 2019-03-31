@@ -177,7 +177,7 @@ namespace detail
 
 		static void rr_empty_handler();
 
-		void serviceinfo_callback(RR_SHARED_PTR<MessageEntry> ret1, RR_SHARED_PTR<RobotRaconteurException> err, RR_SHARED_PTR<ServiceStub> client, std::string url, uint32_t key);
+		void serviceinfo_callback(RR_INTRUSIVE_PTR<MessageEntry> ret1, RR_SHARED_PTR<RobotRaconteurException> err, RR_SHARED_PTR<ServiceStub> client, std::string url, uint32_t key);
 
 		void connect_callback(RR_SHARED_PTR<RRObject> client, RR_SHARED_PTR<RobotRaconteurException> err, std::string url, uint32_t key);
 
@@ -211,7 +211,7 @@ namespace detail
 
 		void handle_error(RR_SHARED_PTR<RobotRaconteurException> err);
 
-		void serviceinfo_handler(RR_SHARED_PTR<MessageEntry> ret1, RR_SHARED_PTR<RobotRaconteurException> err);
+		void serviceinfo_handler(RR_INTRUSIVE_PTR<MessageEntry> ret1, RR_SHARED_PTR<RobotRaconteurException> err);
 
 		void connect_handler(RR_SHARED_PTR<RRObject> client, RR_SHARED_PTR<RobotRaconteurException> err);
 				

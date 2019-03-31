@@ -74,9 +74,9 @@ namespace RobotRaconteur
 								
 		virtual std::string GetUrlSchemeString() const;
 
-		virtual void SendMessage(RR_SHARED_PTR<Message> m);
+		virtual void SendMessage(RR_INTRUSIVE_PTR<Message> m);
 
-		virtual void AsyncSendMessage(RR_SHARED_PTR<Message> m, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& callback);
+		virtual void AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& callback);
 
 		virtual void AsyncCreateTransportConnection(const std::string& url, RR_SHARED_PTR<Endpoint> e, boost::function<void (RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException> ) >& callback);
 
@@ -109,7 +109,7 @@ namespace RobotRaconteur
 						
 		uint32_t TransportCapability(const std::string& name);
 		
-		virtual void MessageReceived(RR_SHARED_PTR<Message> m);
+		virtual void MessageReceived(RR_INTRUSIVE_PTR<Message> m);
 
 		virtual void AsyncGetDetectedNodes(const std::vector<std::string>& schemes, boost::function<void(RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >)>& handler, int32_t timeout=RR_TIMEOUT_INFINITE);
 
@@ -184,4 +184,8 @@ namespace RobotRaconteur
 	public:
 		NodeIDAlreadyInUse() : runtime_error("Could not start server: NodeID already in use") {};
 	};
+
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+	using LocalTransportPtr = RR_SHARED_PTR<LocalTransport>;
+#endif
 }

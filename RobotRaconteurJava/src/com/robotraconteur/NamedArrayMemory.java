@@ -2,14 +2,14 @@ package com.robotraconteur;
 
 import java.lang.reflect.Array;
 
-public class CStructureArrayMemory<T> extends ArrayMemory<T> {
+public class NamedArrayMemory<T> extends ArrayMemory<T> {
 
-	public CStructureArrayMemory()
+	public NamedArrayMemory()
     {
 		super();
     }
 
-    public CStructureArrayMemory(T memory)
+    public NamedArrayMemory(T memory)
     {
     	 super(memory);
     }

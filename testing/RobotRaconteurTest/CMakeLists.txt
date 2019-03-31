@@ -27,6 +27,7 @@ set(RobotRaconteurTest_src
 	ServiceTest2.cpp
 	ServiceTestClient2.cpp
 	AsyncMessageTest.cpp
+	CompareArray.cpp
 	${RR_THUNK_SRCS}
 )
 
@@ -39,6 +40,7 @@ set(RobotRaconteurTest_header
 	ServiceTest2.h
 	ServiceTestClient2.h
 	AsyncMessageTest.h
+	CompareArray.h
 	${RR_THUNK_HDRS}
 )
 

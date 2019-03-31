@@ -231,7 +231,7 @@ namespace RobotRaconteur
 	static void ServiceDefinition_FindBlock(const std::string& current_line, std::istream& is, std::ostream& os, size_t& pos, size_t& init_pos)
 	{
 		boost::regex r_start("^[ \\t]*(\\w{1,16})[ \\t]+(" RR_NAME_REGEX ")[ \\t]*$");
-		boost::regex r_end("^[ \\t]*end[ \\t]+(\\w{1,16})[ \\t]*$");
+		boost::regex r_end("^[ \\t]*end(?:[ \\t]+(\\w{1,16}))?[ \\t]*$");
 
 		init_pos = pos;
 
@@ -261,10 +261,13 @@ namespace RobotRaconteur
 			boost::smatch r_end_match;
 			if (boost::regex_match(l, r_end_match, r_end))
 			{
-				if (r_end_match[1] != block_type)
+				if (r_end_match[1].matched)
 				{
-					throw RobotRaconteurParseException("Block end does not match start: " + l, (int32_t)pos);
-				}				
+					if (r_end_match[1] != block_type)
+					{
+						throw RobotRaconteurParseException("Block end does not match start: " + l, (int32_t)pos);
+					}
+				}
 				
 				return;
 			}
@@ -368,7 +371,12 @@ namespace RobotRaconteur
 			o << d->ToString() << "\n";
 		}
 
-		BOOST_FOREACH(RR_SHARED_PTR<ServiceEntryDefinition>& d, CStructures)
+		BOOST_FOREACH(RR_SHARED_PTR<ServiceEntryDefinition>& d, Pods)
+		{
+			o << d->ToString() << "\n";
+		}
+
+		BOOST_FOREACH(RR_SHARED_PTR<ServiceEntryDefinition>& d, NamedArrays)
 		{
 			o << d->ToString() << "\n";
 		}
@@ -423,7 +431,7 @@ namespace RobotRaconteur
 		
 		boost::regex r_comment("^[ \\t]*#[ -~\\t]*$");
 		boost::regex r_empty("^[ \\t]*$");
-		boost::regex r_entry("(?:^[ \\t]*(?:(service)|(stdver)|(option)|(import)|(using)|(exception)|(constant)|(enum)|(struct)|(object)|(cstruct))[ \\t]+(\\w[^\\s]*(?:[ \\t]+[^\\s]+)*)[ \\t]*$)|(^[ \\t]*$)");
+		boost::regex r_entry("(?:^[ \\t]*(?:(service)|(stdver)|(option)|(import)|(using)|(exception)|(constant)|(enum)|(struct)|(object)|(pod)|(namedarray))[ \\t]+(\\w[^\\s]*(?:[ \\t]+[^\\s]+)*)[ \\t]*$)|(^[ \\t]*$)");
 
 		bool service_name_found = false;
 		
@@ -451,17 +459,17 @@ namespace RobotRaconteur
 					throw RobotRaconteurParseException("Parse error near: " + l, (int32_t)pos);
 				}
 
-				const boost::smatch::value_type& r_entry_match_blank = r_entry_match[13];
+				const boost::smatch::value_type& r_entry_match_blank = r_entry_match[14];
 				if (r_entry_match_blank.matched) continue;
 
 				int32_t entry_key = 1;
-				for (; entry_key < 11; entry_key++)
+				for (; entry_key < 12; entry_key++)
 				{
 					if (r_entry_match[entry_key].matched)
 						break;
 				}
 
-				const boost::smatch::value_type& r_entry_match_remaining = r_entry_match[12];
+				const boost::smatch::value_type& r_entry_match_remaining = r_entry_match[13];
 
 				if (entry_key != 1 && !service_name_found)
 					throw RobotRaconteurParseException("service name must be first entry in service definition");
@@ -489,7 +497,7 @@ namespace RobotRaconteur
 						throw RobotRaconteurParseException("service name must be first after service name");
 					stdver_version.FromString(r_entry_match_remaining);
 					stdver_found = true;
-					if (stdver_found < RobotRaconteurVersion(0, 9))
+					if (stdver_version < RobotRaconteurVersion(0, 9))
 					{
 						throw ServiceDefinitionException("Service definition standard version 0.9 or greater required for \"stdver\" keyword");
 					}
@@ -574,7 +582,7 @@ namespace RobotRaconteur
 					entry_key_max = 10;
 					continue;
 				}
-				//cstruct
+				//pod
 				case 11:
 				{
 					size_t init_pos;
@@ -582,7 +590,19 @@ namespace RobotRaconteur
 					ServiceDefinition_FindBlock(l, s, block, pos, init_pos);
 					RR_SHARED_PTR<ServiceEntryDefinition> struct_def = RR_MAKE_SHARED<ServiceEntryDefinition>(shared_from_this());
 					struct_def->FromString(block.str(), init_pos, warnings);
-					CStructures.push_back(struct_def);
+					Pods.push_back(struct_def);
+					entry_key_max = 9;
+					continue;
+				}
+				//namedarray
+				case 12:
+				{
+					size_t init_pos;
+					std::stringstream block;
+					ServiceDefinition_FindBlock(l, s, block, pos, init_pos);
+					RR_SHARED_PTR<ServiceEntryDefinition> struct_def = RR_MAKE_SHARED<ServiceEntryDefinition>(shared_from_this());
+					struct_def->FromString(block.str(), init_pos, warnings);
+					NamedArrays.push_back(struct_def);
 					entry_key_max = 9;
 					continue;
 				}
@@ -635,6 +655,8 @@ namespace RobotRaconteur
 		Exceptions.clear();
 		Constants.clear();
 		Enums.clear();
+		Pods.clear();
+		NamedArrays.clear();
 	}
 
 	ServiceDefinition::ServiceDefinition()
@@ -690,8 +712,11 @@ namespace RobotRaconteur
 		case DataTypes_structure_t:
 			o << "struct " << Name << "\n";
 			break;
-		case DataTypes_cstructure_t:
-			o << "cstruct " << Name << "\n";
+		case DataTypes_pod_t:
+			o << "pod " << Name << "\n";
+			break;
+		case DataTypes_namedarray_t:
+			o << "namedarray " << Name << "\n";
 			break;
 		case DataTypes_object_t:
 			o << "object " << Name << "\n";
@@ -721,25 +746,30 @@ namespace RobotRaconteur
 			std::string d1 = d->ToString();
 			if (EntryType != DataTypes_object_t)
 			{
-				replace_all(d1, "property", "field");
+				boost::replace_first(d1, "property", "field");
 			}
 			o << "    " << d1 << "\n";
 		}
 
-		switch (EntryType)
+		o << "end\n";
+
+		/*switch (EntryType)
 		{
 		case DataTypes_structure_t:
 			o << "end struct\n";
 			break;
-		case DataTypes_cstructure_t:
-			o << "end cstruct\n";
+		case DataTypes_pod_t:
+			o << "end pod\n";
+			break;
+		case DataTypes_namedarray_t:
+			o << "end namedarray\n";
 			break;
 		case DataTypes_object_t:
 			o << "end object\n";
 			break;
 		default:
 			throw ServiceDefinitionException("Invalid ServiceEntryDefinition type in " + Name);
-		}
+		}*/
 	}
 
 	void ServiceEntryDefinition::FromString(const std::string &s)
@@ -804,10 +834,12 @@ namespace RobotRaconteur
 		Reset();
 
 		boost::regex start_struct_regex("^[ \\t]*struct[ \\t]+(\\w+)[ \\t]*$");
-		boost::regex start_cstruct_regex("^[ \\t]*cstruct[ \\t]+(\\w+)[ \\t]*$");
+		boost::regex start_pod_regex("^[ \\t]*pod[ \\t]+(\\w+)[ \\t]*$");
+		boost::regex start_namedarray_regex("^[ \\t]*namedarray[ \\t]+(\\w+)[ \\t]*$");
 		boost::regex start_object_regex("^[ \\t]*object[ \\t]+(\\w+)[ \\t]*$");
 		boost::regex end_struct_regex("^[ \\t]*end[ \\t]+struct[ \\t]*$");
-		boost::regex end_cstruct_regex("^[ \\t]*end[ \\t]+cstruct[ \\t]*$");
+		boost::regex end_pod_regex("^[ \\t]*end[ \\t]+pod[ \\t]*$");
+		boost::regex end_namedarray_regex("^[ \\t]*end[ \\t]+namedarray[ \\t]*$");
 		boost::regex end_object_regex("^[ \\t]*end[ \\t]+object[ \\t]*$");
 
 		size_t pos=startline-1;
@@ -819,17 +851,23 @@ namespace RobotRaconteur
 		}
 
 		boost::smatch start_struct_cmatch;
-		boost::smatch start_cstruct_cmatch;
+		boost::smatch start_pod_cmatch;
+		boost::smatch start_namedarray_cmatch;
 		boost::smatch start_object_cmatch;
 		if (boost::regex_match(l, start_struct_cmatch, start_struct_regex))
 		{
 			EntryType = DataTypes_structure_t;
 			Name = start_struct_cmatch[1];
 		}
-		else if (boost::regex_match(l, start_cstruct_cmatch, start_cstruct_regex))
+		else if (boost::regex_match(l, start_pod_cmatch, start_pod_regex))
 		{
-			EntryType = DataTypes_cstructure_t;
-			Name = start_cstruct_cmatch[1];
+			EntryType = DataTypes_pod_t;
+			Name = start_pod_cmatch[1];
+		}
+		else if (boost::regex_match(l, start_namedarray_cmatch, start_namedarray_regex))
+		{
+			EntryType = DataTypes_namedarray_t;
+			Name = start_namedarray_cmatch[1];
 		}
 		else if (boost::regex_match(l, start_object_cmatch, start_object_regex))
 		{
@@ -857,6 +895,14 @@ namespace RobotRaconteur
 					boost::smatch r_member_match;
 					if (!boost::regex_match(l, r_member_match, r_member))
 					{
+						if (boost::trim_copy(l) == "end")
+						{
+							if (ServiceDefinition_GetLine(s, l, pos))
+							{
+								throw  RobotRaconteurParseException("Parse error", (int32_t)(pos));
+							}
+							return;
+						}
 						throw RobotRaconteurParseException("Parse error near: " + l, (int32_t)pos);
 					}
 
@@ -973,10 +1019,18 @@ namespace RobotRaconteur
 								throw  RobotRaconteurParseException("Parse error", (int32_t)(pos));
 							}
 						}
-						else if (EntryType == DataTypes_cstructure_t)
+						else if (EntryType == DataTypes_pod_t)
 						{
 							boost::smatch matches;
-							if (!boost::regex_match(l, matches, end_cstruct_regex))
+							if (!boost::regex_match(l, matches, end_pod_regex))
+							{
+								throw  RobotRaconteurParseException("Parse error", (int32_t)(pos));
+							}
+						}
+						else if (EntryType == DataTypes_namedarray_t)
+						{
+							boost::smatch matches;
+							if (!boost::regex_match(l, matches, end_namedarray_regex))
 							{
 								throw  RobotRaconteurParseException("Parse error", (int32_t)(pos));
 							}
@@ -1033,7 +1087,8 @@ namespace RobotRaconteur
 		switch (EntryType)
 		{
 		case DataTypes_structure_t:
-		case DataTypes_cstructure_t:
+		case DataTypes_pod_t:
+		case DataTypes_namedarray_t:
 		case DataTypes_object_t:
 			break;
 		default:
@@ -1495,10 +1550,10 @@ namespace RobotRaconteur
 			{
 				throw RobotRaconteurParseException("Invalid objref definition \"" + s + "\"");
 			}
-			break;
-		default:
-			throw RobotRaconteurParseException("Invalid objref definition \"" + s + "\"");			
+			break;		
 		}
+		default:
+			throw RobotRaconteurParseException("Invalid objref definition \"" + s + "\"");
 		}
 
 		if (!((!t->TypeString.empty() && t->Type == DataTypes_namedtype_t)
@@ -1907,6 +1962,18 @@ namespace RobotRaconteur
 		{
 				return DataTypes_string_t;
 		}
+		else if (d == "cdouble")
+		{
+			return DataTypes_cdouble_t;
+		}
+		else if (d == "csingle")
+		{
+			return DataTypes_csingle_t;
+		}
+		else if (d == "bool")
+		{
+			return DataTypes_bool_t;
+		}		
 		else if (d == "structure")
 		{
 				return DataTypes_structure_t;
@@ -1924,7 +1991,7 @@ namespace RobotRaconteur
 				return DataTypes_varobject_t;
 
 		}
-
+		
 		return DataTypes_namedtype_t;
 	}
 
@@ -1956,6 +2023,12 @@ namespace RobotRaconteur
 				return "uint64";
 			case DataTypes_string_t:
 				return "string";
+			case DataTypes_cdouble_t:
+				return "cdouble";
+			case DataTypes_csingle_t:
+				return "csingle";
+			case DataTypes_bool_t:
+				return "bool";			
 			case DataTypes_structure_t:
 				return "structure";
 			case DataTypes_object_t:
@@ -1969,7 +2042,6 @@ namespace RobotRaconteur
 		}
 
 		return 0;
-		;
 	}
 
 	void TypeDefinition::Reset()
@@ -1980,6 +2052,7 @@ namespace RobotRaconteur
 		ArrayVarLength=false;
 		Type=DataTypes_void_t;
 		ArrayLength.clear();
+		TypeString.clear();
 	}
 
 	void TypeDefinition::CopyTo(TypeDefinition& def) const
@@ -2134,11 +2207,17 @@ namespace RobotRaconteur
 			ResolveNamedType_cache = found_struct;
 			return found_struct;
 		}
-		RR_SHARED_PTR<ServiceEntryDefinition> found_cstruct = TryFindByName(def->CStructures, entry_name);
-		if (found_cstruct)
+		RR_SHARED_PTR<ServiceEntryDefinition> found_pod = TryFindByName(def->Pods, entry_name);
+		if (found_pod)
 		{
-			ResolveNamedType_cache = found_cstruct;
-			return found_cstruct;
+			ResolveNamedType_cache = found_pod;
+			return found_pod;
+		}
+		RR_SHARED_PTR<ServiceEntryDefinition> found_namedarray = TryFindByName(def->NamedArrays, entry_name);
+		if (found_namedarray)
+		{
+			ResolveNamedType_cache = found_namedarray;
+			return found_namedarray;
 		}
 		RR_SHARED_PTR<ServiceEntryDefinition> found_object = TryFindByName(def->Objects, entry_name);
 		if (found_object)
@@ -2308,6 +2387,8 @@ namespace RobotRaconteur
 		if (t.ArrayType == DataTypes_ArrayTypes_multidimarray) return false;
 		if (IsTypeNumeric(t.Type))
 		{
+			if (t.Type == DataTypes_cdouble_t || t.Type == DataTypes_csingle_t || t.Type == DataTypes_bool_t)
+				return false;
 			if (t.ContainerType != DataTypes_ContainerTypes_none) return false;
 			if (t.ArrayType == DataTypes_ArrayTypes_none)
 			{
@@ -2579,7 +2660,7 @@ namespace RobotRaconteur
 			throw RobotRaconteurParseException("Invalid enum", startline);
 
 		boost::regex r_start("^[ \\t]*enum[ \\t]+([a-zA-Z]\\w*)[ \\t]*$");
-		boost::regex r_end("^[ \\t]*end[ \\t]+enum[ \\t]*$");
+		boost::regex r_end("^[ \\t]*end(?:[ \\t]+enum)?[ \\t]*$");
 
 		
 		boost::smatch r_start_match;			
@@ -2757,7 +2838,7 @@ namespace RobotRaconteur
 		{
 			if (name=="this" || name=="self" || name =="Me") throw ServiceDefinitionException("The names \"this\", \"self\", and \"Me\" are reserved, error in service definition \"" + def->Name + "\"");
 
-			const char* res_str[]={"object","end","option","service","object","struct","import","implements","field","property","function","event","objref","pipe","callback","wire","memory","void","int8","uint8","int16","uint16","int32","uint32","int64","uint64","single","double","varvalue","varobject","exception", "using", "constant", "enum"};
+			const char* res_str[]={"object","end","option","service","object","struct","import","implements","field","property","function","event","objref","pipe","callback","wire","memory","void","int8","uint8","int16","uint16","int32","uint32","int64","uint64","single","double","varvalue","varobject","exception", "using", "constant", "enum", "pod", "namedarray", "cdouble", "csingle", "bool"};
 			std::vector<std::string> reserved(res_str,res_str+sizeof(res_str)/(sizeof(res_str[0])));
 
 			if (boost::range::find(reserved,name)!=reserved.end())
@@ -2879,7 +2960,11 @@ namespace RobotRaconteur
 		{
 			o.push_back(e->Name);
 		}
-		BOOST_FOREACH(RR_SHARED_PTR<ServiceEntryDefinition>& e, def->CStructures)
+		BOOST_FOREACH(RR_SHARED_PTR<ServiceEntryDefinition>& e, def->Pods)
+		{
+			o.push_back(e->Name);
+		}
+		BOOST_FOREACH(RR_SHARED_PTR<ServiceEntryDefinition>& e, def->NamedArrays)
 		{
 			o.push_back(e->Name);
 		}
@@ -2965,9 +3050,9 @@ namespace RobotRaconteur
 		{
 			RR_SHARED_PTR<NamedTypeDefinition> nt = t->ResolveNamedType(defs);
 			DataTypes nt_type = nt->RRDataType();
-			if (nt_type != DataTypes_cstructure_t && t->ArrayType != DataTypes_ArrayTypes_none) throw ServiceDefinitionException("Invalid Robot Raconteur data type \"" + t->ToString() + "\" type in service \"" + def->Name + "\"");
-			if (nt_type != DataTypes_structure_t && nt_type != DataTypes_cstructure_t && nt_type != DataTypes_enum_t) throw ServiceDefinitionException("Invalid Robot Raconteur data type \"" + t->ToString() + "\" type in service \"" + def->Name + "\"");
-			if (nt_type == DataTypes_cstructure_t)
+			if ((nt_type != DataTypes_pod_t && nt_type != DataTypes_namedarray_t) && t->ArrayType != DataTypes_ArrayTypes_none) throw ServiceDefinitionException("Invalid Robot Raconteur data type \"" + t->ToString() + "\" type in service \"" + def->Name + "\"");
+			if (nt_type != DataTypes_structure_t && nt_type != DataTypes_pod_t && nt_type != DataTypes_namedarray_t && nt_type != DataTypes_enum_t) throw ServiceDefinitionException("Invalid Robot Raconteur data type \"" + t->ToString() + "\" type in service \"" + def->Name + "\"");
+			if (nt_type == DataTypes_pod_t)
 			{
 
 			}
@@ -3219,12 +3304,12 @@ namespace RobotRaconteur
 			{
 				if (m2->Type->Type != DataTypes_namedtype_t)
 				{ 
-					throw ServiceDefinitionException("Memory member must be numeric or cstructure");
+					throw ServiceDefinitionException("Memory member must be numeric or pod");
 				}
 				RR_SHARED_PTR<NamedTypeDefinition> nt = m2->Type->ResolveNamedType();
-				if (nt->RRDataType() != DataTypes_cstructure_t)
+				if (nt->RRDataType() != DataTypes_pod_t && nt->RRDataType() != DataTypes_namedarray_t)
 				{
-					throw ServiceDefinitionException("Memory member must be numeric or cstructure");
+					throw ServiceDefinitionException("Memory member must be numeric or pod");
 				}
 			}
 			switch (m2->Type->ArrayType)
@@ -3233,7 +3318,7 @@ namespace RobotRaconteur
 			case DataTypes_ArrayTypes_multidimarray:
 				break;
 			default:
-				throw ServiceDefinitionException("Memory member must be numeric or cstructure");
+				throw ServiceDefinitionException("Memory member must be numeric or pod");
 			}
 			
 			if (!m2->Type->ArrayVarLength)
@@ -3602,9 +3687,9 @@ namespace RobotRaconteur
 
 	}
 
-	void VerifyStructure_check_recursion(RR_SHARED_PTR<ServiceEntryDefinition> strut, std::set<std::string> names)
+	void VerifyStructure_check_recursion(RR_SHARED_PTR<ServiceEntryDefinition> strut, std::set<std::string> names, DataTypes entry_type)
 	{
-		if (strut->EntryType != DataTypes_cstructure_t)
+		if (strut->EntryType != entry_type && strut->EntryType != DataTypes_namedarray_t)
 		{
 			throw InternalErrorException("");
 		}
@@ -3614,36 +3699,29 @@ namespace RobotRaconteur
 		BOOST_FOREACH(RR_SHARED_PTR<MemberDefinition>& e, strut->Members)
 		{
 			RR_SHARED_PTR<PropertyDefinition> p = RR_DYNAMIC_POINTER_CAST<PropertyDefinition>(e);
-			if (!p) InternalErrorException("");
+			if (!p) throw InternalErrorException("");
 
 			if (p->Type->Type == DataTypes_namedtype_t)
 			{
 				RR_SHARED_PTR<NamedTypeDefinition> nt_def = p->Type->ResolveNamedType();				
 				RR_SHARED_PTR<ServiceEntryDefinition> et_def = RR_DYNAMIC_POINTER_CAST<ServiceEntryDefinition>(nt_def);
 				if (!et_def) throw InternalErrorException("");
-				if (et_def->EntryType != DataTypes_cstructure_t) throw InternalErrorException("");
+				if (et_def->EntryType != entry_type && et_def->EntryType != DataTypes_namedarray_t) throw InternalErrorException("");
 
 				if (names.find(et_def->Name) != names.end())
 				{
-					throw ServiceDefinitionException("Recursive cstruct detected in " + strut->Name);
+					throw ServiceDefinitionException("Recursive namedarray/pod detected in " + strut->Name);
 				}
 
-				VerifyStructure_check_recursion(et_def, names);
+				VerifyStructure_check_recursion(et_def, names, entry_type);
 			}
 		}
 	}
 
-	void VerifyStructure_common(RR_SHARED_PTR<ServiceEntryDefinition> strut, RR_SHARED_PTR<ServiceDefinition> def, std::vector<RR_SHARED_PTR<ServiceDefinition> > defs, std::vector<RobotRaconteurParseException>& warnings, bool is_cstruct)
+	void VerifyStructure_common(RR_SHARED_PTR<ServiceEntryDefinition> strut, RR_SHARED_PTR<ServiceDefinition> def, std::vector<RR_SHARED_PTR<ServiceDefinition> > defs, std::vector<RobotRaconteurParseException>& warnings, DataTypes entry_type)
 	{
-		if (!is_cstruct)
-		{
-			if (strut->EntryType != DataTypes_structure_t) throw ServiceDefinitionException("Invalid EntryType in " + strut->Name);
-		}
-		else
-		{
-			if (strut->EntryType != DataTypes_cstructure_t) throw ServiceDefinitionException("Invalid EntryType in " + strut->Name);
-		}
-
+		if (strut->EntryType != entry_type) throw ServiceDefinitionException("Invalid EntryType in " + strut->Name);
+		
 		VerifyName(strut->Name,def);
 		std::vector<std::string> membernames;
 
@@ -3666,6 +3744,8 @@ namespace RobotRaconteur
 			membernames.push_back(membername);
 		}
 
+		DataTypes namedarray_element_type = DataTypes_void_t;
+
 		BOOST_FOREACH(RR_SHARED_PTR<MemberDefinition>& e, strut->Members)
 		{
 			RR_SHARED_PTR<PropertyDefinition> p=RR_DYNAMIC_POINTER_CAST<PropertyDefinition>(e);
@@ -3673,37 +3753,76 @@ namespace RobotRaconteur
 
 			std::string membername = VerifyMember(p, def, defs, warnings);
 
-			if (is_cstruct)
+			if (entry_type == DataTypes_pod_t)
 			{
 				RR_SHARED_PTR<TypeDefinition> t = p->Type;
 				if (!IsTypeNumeric(t->Type) && t->Type != DataTypes_namedtype_t)
 				{
-					throw ServiceDefinitionException("CStructures must only contain numeric and cstruct types");
+					throw ServiceDefinitionException("Pods must only contain numeric, pod, and namedarray types");
 				}
 
 				if (t->Type == DataTypes_namedtype_t)
 				{
 					RR_SHARED_PTR<NamedTypeDefinition> tt = t->ResolveNamedType();
-					if (tt->RRDataType() != DataTypes_cstructure_t)
+					if (tt->RRDataType() != DataTypes_pod_t && tt->RRDataType() != DataTypes_namedarray_t)
 					{
-						throw ServiceDefinitionException("CStructures must only contain numeric and cstruct types");
+						throw ServiceDefinitionException("Pods must only contain numeric, custruct, pod types");
 					}
 				}
 
 				if (t->ContainerType != DataTypes_ContainerTypes_none)
 				{
-					throw ServiceDefinitionException("CStructures may not use containers");
+					throw ServiceDefinitionException("Pods may not use containers");
 				}
 
 				if ((boost::range::find(t->ArrayLength, 0) != t->ArrayLength.end()) 
 					|| (t->ArrayType == DataTypes_ArrayTypes_multidimarray && t->ArrayLength.empty()))
 				{
-					throw ServiceDefinitionException("CStructures must have fixed or finite length arrays");
+					throw ServiceDefinitionException("Pods must have fixed or finite length arrays");
 				}
 
 				std::set<std::string> n;				
-				VerifyStructure_check_recursion(strut, n);
-			}			
+				VerifyStructure_check_recursion(strut, n, DataTypes_pod_t);
+			}
+
+			if (entry_type == DataTypes_namedarray_t)
+			{
+				RR_SHARED_PTR<TypeDefinition> t = p->Type;
+				if (!IsTypeNumeric(t->Type) && t->Type != DataTypes_namedtype_t)
+				{
+					throw ServiceDefinitionException("NamedArrays must only contain numeric and namedarray types");
+				}
+
+				if (t->Type == DataTypes_namedtype_t)
+				{
+					RR_SHARED_PTR<NamedTypeDefinition> tt = t->ResolveNamedType();
+					if (tt->RRDataType() != DataTypes_namedarray_t)
+					{
+						throw ServiceDefinitionException("NamedArrays must only contain numeric and namedarray types");
+					}
+				}
+
+				if (t->ContainerType != DataTypes_ContainerTypes_none)
+				{
+					throw ServiceDefinitionException("NamedArrays may not use containers");
+				}
+
+				switch (t->ArrayType)
+				{
+				case DataTypes_ArrayTypes_none:
+					break;
+				case DataTypes_ArrayTypes_array:
+					if (t->ArrayVarLength) throw ServiceDefinitionException("NamedArray fields must be scalars or fixed arrays");
+					break;
+				default:
+					throw ServiceDefinitionException("NamedArray fields must be scalars or fixed arrays");
+				}
+								
+				std::set<std::string> n;
+				GetNamedArrayElementTypeAndCount(strut, defs);
+
+
+			}
 					
 			if (boost::range::find(membernames, membername)!=membernames.end()) throw ServiceDefinitionException("Structure \"" + strut->Name + "\" in service definition \"" + def->Name + "\" contains multiple members named \"" + membername + "\"");
 			membernames.push_back(membername);
@@ -3713,12 +3832,17 @@ namespace RobotRaconteur
 
 	void VerifyStructure(RR_SHARED_PTR<ServiceEntryDefinition> strut, RR_SHARED_PTR<ServiceDefinition> def, std::vector<RR_SHARED_PTR<ServiceDefinition> > defs, std::vector<RobotRaconteurParseException>& warnings)
 	{
-		VerifyStructure_common(strut, def, defs, warnings, false);
+		VerifyStructure_common(strut, def, defs, warnings, DataTypes_structure_t);
 	}
 
-	void VerifyCStructure(RR_SHARED_PTR<ServiceEntryDefinition> strut, RR_SHARED_PTR<ServiceDefinition> def, std::vector<RR_SHARED_PTR<ServiceDefinition> > defs, std::vector<RobotRaconteurParseException>& warnings)
+	void VerifyPod(RR_SHARED_PTR<ServiceEntryDefinition> strut, RR_SHARED_PTR<ServiceDefinition> def, std::vector<RR_SHARED_PTR<ServiceDefinition> > defs, std::vector<RobotRaconteurParseException>& warnings)
 	{
-		VerifyStructure_common(strut, def, defs, warnings, true);
+		VerifyStructure_common(strut, def, defs, warnings, DataTypes_pod_t);
+	}
+
+	void VerifyNamedArray(RR_SHARED_PTR<ServiceEntryDefinition> strut, RR_SHARED_PTR<ServiceDefinition> def, std::vector<RR_SHARED_PTR<ServiceDefinition> > defs, std::vector<RobotRaconteurParseException>& warnings)
+	{
+		VerifyStructure_common(strut, def, defs, warnings, DataTypes_namedarray_t);
 	}
 
 
@@ -3891,10 +4015,21 @@ namespace RobotRaconteur
 				
 			}
 
-			BOOST_FOREACH(RR_SHARED_PTR<ServiceEntryDefinition> ee, e->CStructures)
+			BOOST_FOREACH(RR_SHARED_PTR<ServiceEntryDefinition> ee, e->Pods)
 			{
 
-				VerifyCStructure(ee, e, importeddefs, warnings);
+				VerifyPod(ee, e, importeddefs, warnings);
+
+				std::string name = ee->Name;
+				if (boost::range::find(names, name) != names.end()) throw ServiceDefinitionException("Service definition \"" + e->Name + "\" contains multiple high level names \"" + name + "\"");
+				names.push_back(name);
+
+			}
+
+			BOOST_FOREACH(RR_SHARED_PTR<ServiceEntryDefinition> ee, e->NamedArrays)
+			{
+
+				VerifyNamedArray(ee, e, importeddefs, warnings);
 
 				std::string name = ee->Name;
 				if (boost::range::find(names, name) != names.end()) throw ServiceDefinitionException("Service definition \"" + e->Name + "\" contains multiple high level names \"" + name + "\"");
@@ -3920,7 +4055,7 @@ namespace RobotRaconteur
 	ROBOTRACONTEUR_CORE_API void VerifyServiceDefinitions(std::vector<RR_SHARED_PTR<ServiceDefinition> > def)
 	{
 		std::vector<RobotRaconteurParseException> warnings;
-		return VerifyServiceDefinitions(def, warnings);
+		VerifyServiceDefinitions(def, warnings);
 
 	}
 
@@ -3977,7 +4112,7 @@ namespace RobotRaconteur
 
 	ROBOTRACONTEUR_CORE_API bool CompareServiceDefinitions(RR_SHARED_PTR<ServiceDefinition> service1, RR_SHARED_PTR<ServiceDefinition> service2)
 	{
-		if (service1->Name != service1->Name) return false;
+		if (service1->Name != service2->Name) return false;
 		if (!boost::range::equal(service1->Imports, service2->Imports)) return false;
 		if (!boost::range::equal(service1->Options, service2->Options)) return false;
 		
@@ -4018,10 +4153,10 @@ namespace RobotRaconteur
 				return false;
 		}
 
-		if (service1->CStructures.size() != service2->CStructures.size()) return false;
-		for (size_t i = 0; i < service1->CStructures.size(); i++)
+		if (service1->Pods.size() != service2->Pods.size()) return false;
+		for (size_t i = 0; i < service1->Pods.size(); i++)
 		{
-			if (!CompareServiceEntryDefinition(service1, service1->CStructures[i], service2, service2->CStructures[i]))
+			if (!CompareServiceEntryDefinition(service1, service1->Pods[i], service2, service2->Pods[i]))
 				return false;
 		}
 
@@ -4039,7 +4174,7 @@ namespace RobotRaconteur
 
 	}
 
-	ROBOTRACONTEUR_CORE_API size_t EstimateCStructurePackedElementSize(RR_SHARED_PTR<ServiceEntryDefinition> def, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, RR_SHARED_PTR<RobotRaconteurNode> node, RR_SHARED_PTR<RRObject> client)
+	ROBOTRACONTEUR_CORE_API size_t EstimatePodPackedElementSize(RR_SHARED_PTR<ServiceEntryDefinition> def, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, RR_SHARED_PTR<RobotRaconteurNode> node, RR_SHARED_PTR<RRObject> client)
 	{
 		size_t s = 16;
 		s += ArrayBinaryWriter::GetStringByteCount8(def->Name);
@@ -4076,10 +4211,104 @@ namespace RobotRaconteur
 				{
 					array_count = (size_t)boost::accumulate(p->Type->ArrayLength, 1, std::multiplies<int32_t>());
 				}
-				s += EstimateCStructurePackedElementSize(nt,other_defs,node,client) * array_count;
+				s += EstimatePodPackedElementSize(nt,other_defs,node,client) * array_count;
 			}
 		}
 		return s;
+	}
+
+	boost::tuple<DataTypes, size_t> GetNamedArrayElementTypeAndCount(RR_SHARED_PTR<ServiceEntryDefinition> def, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, RR_SHARED_PTR<RobotRaconteurNode> node, RR_SHARED_PTR<RRObject> client, std::set<std::string> n)
+	{
+		if (def->EntryType != DataTypes_namedarray_t)
+		{
+			throw InvalidOperationException("Argument must be an namedarray");
+		}
+
+		n.insert(def->Name);
+
+		DataTypes element_type = DataTypes_void_t;
+		size_t element_count = 0;
+
+		if (def->Members.empty())
+		{
+			throw ServiceDefinitionException("namedarray must not be empty");
+		}
+
+		BOOST_FOREACH(RR_SHARED_PTR<MemberDefinition>& e, def->Members)
+		{
+			size_t field_element_count = 1;
+
+			RR_SHARED_PTR<PropertyDefinition> p = RR_DYNAMIC_POINTER_CAST<PropertyDefinition>(e);
+			if (!p) throw ServiceDefinitionException("Invalid member type in namedarray: " + def->Name);
+
+			if (p->Type->ContainerType != DataTypes_ContainerTypes_none)
+			{
+				throw ServiceDefinitionException("namedarray must not contain containers: " + def->Name);
+			}
+
+			if (p->Type->ArrayType != DataTypes_ArrayTypes_none && p->Type->ArrayVarLength)
+			{
+				throw ServiceDefinitionException("namedarray must not contain variable length arrays: " + def->Name);
+			}
+
+			if (p->Type->ArrayType != DataTypes_ArrayTypes_none)
+			{
+				field_element_count = (size_t)boost::accumulate(p->Type->ArrayLength, 1, std::multiplies<int32_t>());
+			}
+
+			if (IsTypeNumeric(p->Type->Type))
+			{
+				if (element_type == DataTypes_void_t)
+				{
+					element_type = p->Type->Type;
+				}
+				else
+				{			
+					if (element_type !=p->Type->Type) throw ServiceDefinitionException("namedarray must contain same numeric type: " + def->Name);
+				}
+
+				element_count += field_element_count;
+			}
+			else if (p->Type->Type == DataTypes_namedtype_t)
+			{
+				RR_SHARED_PTR<NamedTypeDefinition> nt_def = p->Type->ResolveNamedType();
+				RR_SHARED_PTR<ServiceEntryDefinition> et_def = RR_DYNAMIC_POINTER_CAST<ServiceEntryDefinition>(nt_def);
+				if (!et_def) throw InternalErrorException("");
+				if (et_def->EntryType != DataTypes_namedarray_t) throw InternalErrorException("");
+
+				if (n.find(et_def->Name) != n.end())
+				{
+					throw ServiceDefinitionException("Recursive namedarray detected in " + def->Name);
+				}
+
+				boost::tuple<DataTypes, size_t> v=GetNamedArrayElementTypeAndCount(et_def, other_defs, node, client, n);
+				if (element_type == DataTypes_void_t)
+				{
+					element_type = v.get<0>();
+				}
+				else
+				{
+					if (element_type != v.get<0>()) throw ServiceDefinitionException("namedarray must contain same numeric type: " + def->Name);
+				}
+
+				element_count += field_element_count * v.get<1>();
+
+			}
+			else
+			{
+				throw ServiceDefinitionException("Invalid namedarray field in " + def->Name);
+			}
+		}
+
+		return boost::make_tuple(element_type, element_count);
+
+	}
+
+
+	ROBOTRACONTEUR_CORE_API boost::tuple<DataTypes,size_t> GetNamedArrayElementTypeAndCount(RR_SHARED_PTR<ServiceEntryDefinition> def, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, RR_SHARED_PTR<RobotRaconteurNode> node, RR_SHARED_PTR<RRObject> client)
+	{
+		std::set<std::string> n;
+		return GetNamedArrayElementTypeAndCount(def, other_defs, node, client, n);
 	}
 
 }

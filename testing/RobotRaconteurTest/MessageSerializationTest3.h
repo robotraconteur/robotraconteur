@@ -14,7 +14,7 @@ namespace RobotRaconteurTest
 	class MessageSerializationTest3
 	{
 	public:
-		static RR_SHARED_PTR<Message> NewRandomTestMessage3(boost::random::mt19937& rng);
+		static RR_INTRUSIVE_PTR<Message> NewRandomTestMessage3(boost::random::mt19937& rng);
 
 		static void Test();
 		static void Test1();

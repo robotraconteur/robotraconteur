@@ -12,29 +12,48 @@ public class com__robotraconteur__testing__TestService3Factory : ServiceFactory
 {
     public override string DefString()
 {
-    const string s="service com.robotraconteur.testing.TestService3\n\nstdver 0.9.0\n#option version 0.9.0\n\nimport com.robotraconteur.testing.TestService1\nusing  com.robotraconteur.testing.TestService1.testroot\nusing  com.robotraconteur.testing.TestService1.teststruct1\nusing  com.robotraconteur.testing.TestService1.teststruct2\nusing  com.robotraconteur.testing.TestService1.testexception1\nusing  com.robotraconteur.testing.TestService1.sub2\nusing  com.robotraconteur.testing.TestService1.sub3\n\nenum testenum1\nvalue1 = 0,	value2,	value3,	anothervalue = -1,\nanothervalue2 = -2,\nanothervalue3 = -3,\nhexval1 = 0x10,\nhexval2,\nneghexval1 = 0x80000005,\nneghexval2,\nmore_values\nend enum\n\nconstant string strconst \"This is a\\n \\\"string constant\\\" \\\\\\/\\b\\f \\r\\u00FF tabme\\ttabme\\n smile! \\ud83d\\udE01\"\nconstant int32 int32const 3856384\nconstant int32[] int32const_array {182476, 56483, -2947}\nconstant double[] doubleconst_array {1.5847, 3.14, -548e3, 3452.67e2, 485e-21}\nconstant struct structconst {field1: strconst, field2: int32const_array}\nconstant struct structconst2 {field3: structconst, field4: int32const}\n\ncstruct testcstruct1\nfield double d1\nfield double[6] d2\nfield double[6-] d3\nfield double[3,3] d4\nfield testcstruct2 s1\nfield testcstruct2[8] s2\nfield testcstruct2[9-] s3\nfield testcstruct2[2,4] s4\nend cstruct\n\ncstruct testcstruct2\nfield int8 i1\nfield int8[15] i2\nfield int8[17-] i3\nend cstruct\n\nstruct teststruct3\nfield testcstruct1 s1\nfield testcstruct1[] s2\nfield testcstruct1[11] s3\nfield testcstruct1[16-] s4\nfield testcstruct1[3,3] s5\nfield testcstruct1[*] s6\nfield testcstruct1{list} s7\nfield testcstruct1[]{list} s8\nfield testcstruct1[*]{list} s9\nfield varvalue s10\nfield varvalue s11\nfield varvalue s12\nfield varvalue s13\nfield varvalue s14\nfield varvalue s15\nend struct\n\nobject testroot3\nproperty int32 readme [readonly]\nproperty int32 writeme [writeonly]\n\npipe int32 unreliable1 [unreliable,readonly]\noption pipe unreliable2 unreliable\npipe int32 unreliable2\n\nwire int32 peekwire [readonly]\nwire int32 \\\npokewire [writeonly]\nproperty int32 unknown_modifier [unknown, unknown2(), unknown_3(23, 45.8e-5, hello, \"world\")]\n\nmemory double[] readmem [readonly]\n\nobjref obj4 o4\n\nproperty testenum1 testenum1_prop\n\nproperty testcstruct1 testcstruct1_prop\nfunction void testcstruct1_func1(testcstruct1 s)\nfunction testcstruct1 testcstruct1_func2()\n\nproperty teststruct3 teststruct3_prop\n\nmemory testcstruct2[] cstruct_m1\nmemory testcstruct2[*] cstruct_m2\n\nfunction double{generator} gen_func1()\nfunction uint8[]{generator} gen_func2(string name)\nfunction void gen_func3(string name, uint8[]{generator} in)\nfunction uint8[]{generator} gen_func4(uint8[]{generator} in)\nfunction teststruct2{generator} gen_func5(teststruct2{generator} in)\n\n#extra tests for fixed length arrays\nproperty double[6]{list} d1\nproperty double[6-]{list} d2\nproperty double[6]{int32} d3\nproperty double[6-]{int32} d4\nproperty double[3,3]{list} d5\nproperty double[3,3]{int32} d6\n\n#Test pipe and wire verification\npipe int32[3] p1\npipe int32[3-] p2\npipe int32[2,2] p3\nwire int32[6] w1\nwire int32[6-] w2\nwire int32[3,2] w3\n\nend object\n\nobject obj1\nproperty double[] d1\nend object\n\nobject obj2\nimplements obj1\nproperty double[] d1\nend object\n\nobject obj3\nimplements obj1\nimplements obj2\nproperty double[] d1\nend object\n\nobject obj4\nimplements sub2\nproperty string s_ind\nproperty int32 i_ind\n\nproperty string data\nobjref sub3{string} o3_1\nend object\n\n\n";
+    const string s="service com.robotraconteur.testing.TestService3\n\nstdver 0.9.0\n#option version 0.9.0\n\nimport com.robotraconteur.testing.TestService1\nusing  com.robotraconteur.testing.TestService1.testroot\nusing  com.robotraconteur.testing.TestService1.teststruct1\nusing  com.robotraconteur.testing.TestService1.teststruct2\nusing  com.robotraconteur.testing.TestService1.testexception1\nusing  com.robotraconteur.testing.TestService1.sub2\nusing  com.robotraconteur.testing.TestService1.sub3\n\nenum testenum1\nvalue1 = 0,	value2,	value3,	anothervalue = -1,\nanothervalue2 = -2,\nanothervalue3 = -3,\nhexval1 = 0x10,\nhexval2,\nneghexval1 = 0x80000005,\nneghexval2,\nmore_values\nend\n\nconstant string strconst \"This is a\\n \\\"string constant\\\" \\\\\\/\\b\\f \\r\\u00FF tabme\\ttabme\\n smile! \\ud83d\\udE01\"\nconstant int32 int32const 3856384\nconstant int32[] int32const_array {182476, 56483, -2947}\nconstant double[] doubleconst_array {1.5847, 3.14, -548e3, 3452.67e2, 485e-21}\nconstant struct structconst {field1: strconst, field2: int32const_array}\nconstant struct structconst2 {field3: structconst, field4: int32const}\n\nnamedarray vector3\nfield double x\nfield double y\nfield double z\nend namedarray\n\nnamedarray quaternion\nfield double q0\nfield double q1\nfield double q2\nfield double q3\nend\n\nnamedarray transform\nfield quaternion rotation\nfield vector3 translation\nend\n\nnamedarray pixel\nfield uint8 r\nfield uint8 b\nfield uint8 g\nend\n\nnamedarray pixel2\nfield uint8 c\nfield pixel d\nfield pixel e\nfield pixel[7] f\nfield pixel g\nend\n\npod testpod1\nfield double d1\nfield double[6] d2\nfield double[6-] d3\nfield double[3,3] d4\nfield testpod2 s1\nfield testpod2[8] s2\nfield testpod2[9-] s3\nfield testpod2[2,4] s4\nfield transform t1\nfield transform[4] t2\nfield transform[15-] t3\nfield transform[2,4] t4\nend\n\npod testpod2\nfield int8 i1\nfield int8[15] i2\nfield int8[17-] i3\nend\n\nstruct teststruct3\nfield testpod1 s1\nfield testpod1[] s2\nfield testpod1[11] s3\nfield testpod1[16-] s4\nfield testpod1[3,3] s5\nfield testpod1[*] s6\nfield testpod1{list} s7\nfield testpod1[]{list} s8\nfield testpod1[*]{list} s9\nfield varvalue s10\nfield varvalue s11\nfield varvalue s12\nfield varvalue s13\nfield varvalue s14\nfield varvalue s15\nfield transform t1\nfield transform[4] t2\nfield transform[2,4] t3\nfield varvalue t4\nfield varvalue t5\nfield transform{list} t6\nfield transform[4]{list} t7\nfield transform[2,4]{list} t8\nfield varvalue t9\nfield varvalue t10\nfield varvalue t11\n\nend\n\nobject testroot3\nproperty int32 readme [readonly]\nproperty int32 writeme [writeonly]\n\npipe int32 unreliable1 [unreliable,readonly]\noption pipe unreliable2 unreliable\npipe int32 unreliable2\n\nwire int32 peekwire [readonly]\nwire int32 \\\npokewire [writeonly]\nproperty int32 unknown_modifier [unknown, unknown2(), unknown_3(23, 45.8e-5, hello, \"world\")]\n\nmemory double[] readmem [readonly]\n\nobjref obj4 o4\n\nproperty testenum1 testenum1_prop\n\nproperty testpod1 testpod1_prop\nfunction void testpod1_func1(testpod1 s)\nfunction testpod1 testpod1_func2()\n\nproperty teststruct3 teststruct3_prop\n\nmemory testpod2[] pod_m1\nmemory testpod2[*] pod_m2\n\nfunction double{generator} gen_func1()\nfunction uint8[]{generator} gen_func2(string name)\nfunction void gen_func3(string name, uint8[]{generator} in)\nfunction uint8[]{generator} gen_func4(uint8[]{generator} in)\nfunction teststruct2{generator} gen_func5(teststruct2{generator} in)\n\n#extra tests for fixed length arrays\nproperty double[6]{list} d1\nproperty double[6-]{list} d2\nproperty double[6]{int32} d3\nproperty double[6-]{int32} d4\nproperty double[3,3]{list} d5\nproperty double[3,3]{int32} d6\n\n#Test pipe and wire verification\npipe int32[3] p1\npipe int32[3-] p2\npipe int32[2,2] p3\nwire int32[6] w1\nwire int32[6-] w2\nwire int32[3,2] w3\n\n#namedarray test\nproperty vector3 testnamedarray1\nproperty transform testnamedarray2\nproperty transform[10-] testnamedarray3\nproperty transform[*] testnamedarray4\nproperty transform[3,2] testnamedarray5\n\nmemory transform[] namedarray_m1\nmemory transform[*] namedarray_m2\n\n#new primitive types test\nproperty cdouble c1\nproperty cdouble[] c2\nproperty cdouble[*] c3\nproperty cdouble{list} c4\nproperty cdouble[]{list} c5\nproperty cdouble[*]{list} c6\nproperty csingle c7\nproperty csingle[] c8\nproperty csingle[*] c9\nproperty csingle{list} c10\nproperty csingle[]{list} c11\nproperty csingle[*]{list} c12\n\nproperty bool b1\nproperty bool[] b2\nproperty bool[*] b3\nproperty bool{list} b4\nproperty bool[]{list} b5\nproperty bool[*]{list} b6\n\nmemory cdouble[] c_m1\nmemory cdouble[*] c_m2\nmemory cdouble[] c_m3\nmemory cdouble[*] c_m4\nmemory bool[] c_m5\nmemory bool[*] c_m6\n\nend\n\nobject obj1\nproperty double[] d1\nend\n\nobject obj2\nimplements obj1\nproperty double[] d1\nend\n\nobject obj3\nimplements obj1\nimplements obj2\nproperty double[] d1\nend\n\nobject obj4\nimplements sub2\nproperty string s_ind\nproperty int32 i_ind\n\nproperty string data\nobjref sub3{string} o3_1\nend\n\n\n";
     return s;
     }
     public override string GetServiceName() {return "com.robotraconteur.testing.TestService3";}
     public teststruct3_stub teststruct3_stubentry;
-    public testcstruct1_stub testcstruct1_stubentry;
-    public testcstruct2_stub testcstruct2_stubentry;
+    public testpod1_stub testpod1_stubentry;
+    public testpod2_stub testpod2_stubentry;
+    public vector3_stub vector3_stubentry;
+    public quaternion_stub quaternion_stubentry;
+    public transform_stub transform_stubentry;
+    public pixel_stub pixel_stubentry;
+    public pixel2_stub pixel2_stubentry;
     public com__robotraconteur__testing__TestService3Factory()
 {
     teststruct3_stubentry=new teststruct3_stub(this);
-    testcstruct1_stubentry=new testcstruct1_stub(this);
-    testcstruct2_stubentry=new testcstruct2_stub(this);
+    testpod1_stubentry=new testpod1_stub(this);
+    testpod2_stubentry=new testpod2_stub(this);
+    vector3_stubentry=new vector3_stub();
+    quaternion_stubentry=new quaternion_stub();
+    transform_stubentry=new transform_stub();
+    pixel_stubentry=new pixel_stub();
+    pixel2_stubentry=new pixel2_stub();
     }
     public override IStructureStub FindStructureStub(string objecttype)
     {
     if (objecttype=="teststruct3")    return teststruct3_stubentry;
     throw new DataTypeException("Cannot find appropriate structure stub");
     }
-    public override ICStructureStub FindCStructureStub(string objecttype)
+    public override IPodStub FindPodStub(string objecttype)
     {
-    if (objecttype=="testcstruct1")    return testcstruct1_stubentry;
-    if (objecttype=="testcstruct2")    return testcstruct2_stubentry;
-    throw new DataTypeException("Cannot find appropriate cstructure stub");
+    if (objecttype=="testpod1")    return testpod1_stubentry;
+    if (objecttype=="testpod2")    return testpod2_stubentry;
+    throw new DataTypeException("Cannot find appropriate pod stub");
+    }
+    public override INamedArrayStub FindNamedArrayStub(string objecttype)
+    {
+    if (objecttype=="vector3")    return vector3_stubentry;
+    if (objecttype=="quaternion")    return quaternion_stubentry;
+    if (objecttype=="transform")    return transform_stubentry;
+    if (objecttype=="pixel")    return pixel_stubentry;
+    if (objecttype=="pixel2")    return pixel2_stubentry;
+    throw new DataTypeException("Cannot find appropriate pod stub");
     }
     public override ServiceStub CreateStub(WrappedServiceStub innerstub) {
     string objecttype=innerstub.RR_objecttype.GetServiceDefinition().Name + "." + innerstub.RR_objecttype.Name;    string objshort;
@@ -104,21 +123,32 @@ public class teststruct3_stub : IStructureStub {
     {
     if (s1 ==null) return null;
     teststruct3 s = (teststruct3)s1;
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackCStructureToArray<testcstruct1>("s1",ref s.s1));
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackCStructureArray<testcstruct1>("s2",s.s2));
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackCStructureArray<testcstruct1>("s3",DataTypeUtil.VerifyArrayLength(s.s3, 11, false)));
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackCStructureArray<testcstruct1>("s4",DataTypeUtil.VerifyArrayLength(s.s4, 16, true)));
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackCStructureMultiDimArray<testcstruct1>("s5",DataTypeUtil.VerifyArrayLength(s.s5,9,new int[] {3,3})));
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackCStructureMultiDimArray<testcstruct1>("s6",s.s6));
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackListType<testcstruct1>("s7",s.s7));
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackListType<testcstruct1[]>("s8",s.s8));
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackListType<CStructureMultiDimArray>("s9",s.s9));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackPodToArray<testpod1>("s1",ref s.s1));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackPodArray<testpod1>("s2",s.s2));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackPodArray<testpod1>("s3",DataTypeUtil.VerifyArrayLength(s.s3, 11, false)));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackPodArray<testpod1>("s4",DataTypeUtil.VerifyArrayLength(s.s4, 16, true)));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackPodMultiDimArray<testpod1>("s5",DataTypeUtil.VerifyArrayLength(s.s5,9,new uint[] {3,3})));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackPodMultiDimArray<testpod1>("s6",s.s6));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackListType<testpod1>("s7",s.s7));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackListType<testpod1[]>("s8",s.s8));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackListType<PodMultiDimArray>("s9",s.s9));
     MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackVarType("s10",s.s10));
     MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackVarType("s11",s.s11));
     MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackVarType("s12",s.s12));
     MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackVarType("s13",s.s13));
     MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackVarType("s14",s.s14));
     MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackVarType("s15",s.s15));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackNamedArrayToArray<transform>("t1",ref s.t1));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackNamedArray<transform>("t2",DataTypeUtil.VerifyArrayLength(s.t2, 4, false)));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackNamedMultiDimArray<transform>("t3",DataTypeUtil.VerifyArrayLength(s.t3,8,new uint[] {2,4})));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackVarType("t4",s.t4));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackVarType("t5",s.t5));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackListType<transform>("t6",s.t6));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackListType<transform[]>("t7",DataTypeUtil.VerifyArrayLength(s.t7, 4, false)));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackListType<NamedMultiDimArray>("t8",DataTypeUtil.VerifyArrayLength(s.t8,8,new uint[] {2,4})));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackVarType("t9",s.t9));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackVarType("t10",s.t10));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackVarType("t11",s.t11));
     return new MessageElementStructure("com.robotraconteur.testing.TestService3.teststruct3",m);
     }
     }
@@ -127,88 +157,222 @@ public class teststruct3_stub : IStructureStub {
     teststruct3 s=new teststruct3();
     using(vectorptr_messageelement mm=m.Elements)
     {
-    s.s1 =MessageElementUtil.UnpackCStructureFromArray<testcstruct1>(MessageElement.FindElement(mm,"s1"));
-    s.s2 =MessageElementUtil.UnpackCStructureArray<testcstruct1>(MessageElement.FindElement(mm,"s2"));
-    s.s3 =DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackCStructureArray<testcstruct1>(MessageElement.FindElement(mm,"s3")), 11, false);
-    s.s4 =DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackCStructureArray<testcstruct1>(MessageElement.FindElement(mm,"s4")), 16, true);
-    s.s5 =DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackCStructureMultiDimArray<testcstruct1>(MessageElement.FindElement(mm,"s5")),9,new int[] {3,3});
-    s.s6 =MessageElementUtil.UnpackCStructureMultiDimArray<testcstruct1>(MessageElement.FindElement(mm,"s6"));
-    s.s7 =MessageElementUtil.UnpackList<testcstruct1>(MessageElement.FindElement(mm,"s7"));
-    s.s8 =MessageElementUtil.UnpackList<testcstruct1[]>(MessageElement.FindElement(mm,"s8"));
-    s.s9 =MessageElementUtil.UnpackList<CStructureMultiDimArray>(MessageElement.FindElement(mm,"s9"));
+    s.s1 =MessageElementUtil.UnpackPodFromArray<testpod1>(MessageElement.FindElement(mm,"s1"));
+    s.s2 =MessageElementUtil.UnpackPodArray<testpod1>(MessageElement.FindElement(mm,"s2"));
+    s.s3 =DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackPodArray<testpod1>(MessageElement.FindElement(mm,"s3")), 11, false);
+    s.s4 =DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackPodArray<testpod1>(MessageElement.FindElement(mm,"s4")), 16, true);
+    s.s5 =DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackPodMultiDimArray<testpod1>(MessageElement.FindElement(mm,"s5")),9,new uint[] {3,3});
+    s.s6 =MessageElementUtil.UnpackPodMultiDimArray<testpod1>(MessageElement.FindElement(mm,"s6"));
+    s.s7 =MessageElementUtil.UnpackList<testpod1>(MessageElement.FindElement(mm,"s7"));
+    s.s8 =MessageElementUtil.UnpackList<testpod1[]>(MessageElement.FindElement(mm,"s8"));
+    s.s9 =MessageElementUtil.UnpackList<PodMultiDimArray>(MessageElement.FindElement(mm,"s9"));
     s.s10 =MessageElementUtil.UnpackVarType(MessageElement.FindElement(mm,"s10"));
     s.s11 =MessageElementUtil.UnpackVarType(MessageElement.FindElement(mm,"s11"));
     s.s12 =MessageElementUtil.UnpackVarType(MessageElement.FindElement(mm,"s12"));
     s.s13 =MessageElementUtil.UnpackVarType(MessageElement.FindElement(mm,"s13"));
     s.s14 =MessageElementUtil.UnpackVarType(MessageElement.FindElement(mm,"s14"));
     s.s15 =MessageElementUtil.UnpackVarType(MessageElement.FindElement(mm,"s15"));
+    s.t1 =MessageElementUtil.UnpackNamedArrayFromArray<transform>(MessageElement.FindElement(mm,"t1"));
+    s.t2 =DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackNamedArray<transform>(MessageElement.FindElement(mm,"t2")), 4, false);
+    s.t3 =DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackNamedMultiDimArray<transform>(MessageElement.FindElement(mm,"t3")),8,new uint[] {2,4});
+    s.t4 =MessageElementUtil.UnpackVarType(MessageElement.FindElement(mm,"t4"));
+    s.t5 =MessageElementUtil.UnpackVarType(MessageElement.FindElement(mm,"t5"));
+    s.t6 =MessageElementUtil.UnpackList<transform>(MessageElement.FindElement(mm,"t6"));
+    s.t7 =DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackList<transform[]>(MessageElement.FindElement(mm,"t7")), 4, false);
+    s.t8 =DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackList<NamedMultiDimArray>(MessageElement.FindElement(mm,"t8")),8,new uint[] {2,4});
+    s.t9 =MessageElementUtil.UnpackVarType(MessageElement.FindElement(mm,"t9"));
+    s.t10 =MessageElementUtil.UnpackVarType(MessageElement.FindElement(mm,"t10"));
+    s.t11 =MessageElementUtil.UnpackVarType(MessageElement.FindElement(mm,"t11"));
     T st; try {st=(T)((object)s);} catch (InvalidCastException) {throw new DataTypeMismatchException("Wrong structuretype");}
     return st;
     }
     }
 }
 
-public class testcstruct1_stub : CStructureStub<testcstruct1> {
-    public testcstruct1_stub(com__robotraconteur__testing__TestService3Factory d) {def=d;}
+public class testpod1_stub : PodStub<testpod1> {
+    public testpod1_stub(com__robotraconteur__testing__TestService3Factory d) {def=d;}
     private com__robotraconteur__testing__TestService3Factory def;
-    public override MessageElementCStructure PackCStructure(ref testcstruct1 s1) {
+    public override MessageElementPod PackPod(ref testpod1 s1) {
     using(vectorptr_messageelement m=new vectorptr_messageelement())
     {
-    testcstruct1 s = (testcstruct1)s1;
+    testpod1 s = (testpod1)s1;
     MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackScalar<double>("d1",s.d1));
     MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackArray<double>("d2",DataTypeUtil.VerifyArrayLength(s.d2, 6, false)));
     MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackArray<double>("d3",DataTypeUtil.VerifyArrayLength(s.d3, 6, true)));
     MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackArray<double>("d4",DataTypeUtil.VerifyArrayLength(s.d4, 9, false)));
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackCStructureToArray<testcstruct2>("s1",ref s.s1));
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackCStructureArray<testcstruct2>("s2",DataTypeUtil.VerifyArrayLength(s.s2, 8, false)));
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackCStructureArray<testcstruct2>("s3",DataTypeUtil.VerifyArrayLength(s.s3, 9, true)));
-    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackCStructureArray<testcstruct2>("s4",DataTypeUtil.VerifyArrayLength(s.s4, 8, false)));
-    return new MessageElementCStructure(m);
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackPodToArray<testpod2>("s1",ref s.s1));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackPodArray<testpod2>("s2",DataTypeUtil.VerifyArrayLength(s.s2, 8, false)));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackPodArray<testpod2>("s3",DataTypeUtil.VerifyArrayLength(s.s3, 9, true)));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackPodArray<testpod2>("s4",DataTypeUtil.VerifyArrayLength(s.s4, 8, false)));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackNamedArrayToArray<transform>("t1",ref s.t1));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackNamedArray<transform>("t2",DataTypeUtil.VerifyArrayLength(s.t2, 4, false)));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackNamedArray<transform>("t3",DataTypeUtil.VerifyArrayLength(s.t3, 15, true)));
+    MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackNamedArray<transform>("t4",DataTypeUtil.VerifyArrayLength(s.t4, 8, false)));
+    return new MessageElementPod(m);
     }
     }
-    public override testcstruct1 UnpackCStructure(MessageElementCStructure m) {
-    if (m == null ) throw new NullReferenceException("CStructure must not be null");
+    public override testpod1 UnpackPod(MessageElementPod m) {
+    if (m == null ) throw new NullReferenceException("Pod must not be null");
     using(vectorptr_messageelement mm=m.Elements)
     {
-    testcstruct1 s = new testcstruct1();
+    testpod1 s = new testpod1();
     s.d1 =(MessageElementUtil.UnpackScalar<double>(MessageElement.FindElement(mm,"d1")));
     s.d2 =DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackArray<double>(MessageElement.FindElement(mm,"d2")), 6, false);
     s.d3 =DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackArray<double>(MessageElement.FindElement(mm,"d3")), 6, true);
     s.d4 =DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackArray<double>(MessageElement.FindElement(mm,"d4")), 9, false);
-    s.s1 =MessageElementUtil.UnpackCStructureFromArray<testcstruct2>(MessageElement.FindElement(mm,"s1"));
-    s.s2 =DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackCStructureArray<testcstruct2>(MessageElement.FindElement(mm,"s2")), 8, false);
-    s.s3 =DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackCStructureArray<testcstruct2>(MessageElement.FindElement(mm,"s3")), 9, true);
-    s.s4 =DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackCStructureArray<testcstruct2>(MessageElement.FindElement(mm,"s4")), 8, false);
+    s.s1 =MessageElementUtil.UnpackPodFromArray<testpod2>(MessageElement.FindElement(mm,"s1"));
+    s.s2 =DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackPodArray<testpod2>(MessageElement.FindElement(mm,"s2")), 8, false);
+    s.s3 =DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackPodArray<testpod2>(MessageElement.FindElement(mm,"s3")), 9, true);
+    s.s4 =DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackPodArray<testpod2>(MessageElement.FindElement(mm,"s4")), 8, false);
+    s.t1 =MessageElementUtil.UnpackNamedArrayFromArray<transform>(MessageElement.FindElement(mm,"t1"));
+    s.t2 =DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackNamedArray<transform>(MessageElement.FindElement(mm,"t2")), 4, false);
+    s.t3 =DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackNamedArray<transform>(MessageElement.FindElement(mm,"t3")), 15, true);
+    s.t4 =DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackNamedArray<transform>(MessageElement.FindElement(mm,"t4")), 8, false);
     return s;
     }
     }
-    public override string TypeName { get { return "com.robotraconteur.testing.TestService3.testcstruct1"; } }}
+    public override string TypeName { get { return "com.robotraconteur.testing.TestService3.testpod1"; } }}
 
-public class testcstruct2_stub : CStructureStub<testcstruct2> {
-    public testcstruct2_stub(com__robotraconteur__testing__TestService3Factory d) {def=d;}
+public class testpod2_stub : PodStub<testpod2> {
+    public testpod2_stub(com__robotraconteur__testing__TestService3Factory d) {def=d;}
     private com__robotraconteur__testing__TestService3Factory def;
-    public override MessageElementCStructure PackCStructure(ref testcstruct2 s1) {
+    public override MessageElementPod PackPod(ref testpod2 s1) {
     using(vectorptr_messageelement m=new vectorptr_messageelement())
     {
-    testcstruct2 s = (testcstruct2)s1;
+    testpod2 s = (testpod2)s1;
     MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackScalar<sbyte>("i1",s.i1));
     MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackArray<sbyte>("i2",DataTypeUtil.VerifyArrayLength(s.i2, 15, false)));
     MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackArray<sbyte>("i3",DataTypeUtil.VerifyArrayLength(s.i3, 17, true)));
-    return new MessageElementCStructure(m);
+    return new MessageElementPod(m);
     }
     }
-    public override testcstruct2 UnpackCStructure(MessageElementCStructure m) {
-    if (m == null ) throw new NullReferenceException("CStructure must not be null");
+    public override testpod2 UnpackPod(MessageElementPod m) {
+    if (m == null ) throw new NullReferenceException("Pod must not be null");
     using(vectorptr_messageelement mm=m.Elements)
     {
-    testcstruct2 s = new testcstruct2();
+    testpod2 s = new testpod2();
     s.i1 =(MessageElementUtil.UnpackScalar<sbyte>(MessageElement.FindElement(mm,"i1")));
     s.i2 =DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackArray<sbyte>(MessageElement.FindElement(mm,"i2")), 15, false);
     s.i3 =DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackArray<sbyte>(MessageElement.FindElement(mm,"i3")), 17, true);
     return s;
     }
     }
-    public override string TypeName { get { return "com.robotraconteur.testing.TestService3.testcstruct2"; } }}
+    public override string TypeName { get { return "com.robotraconteur.testing.TestService3.testpod2"; } }}
+
+public class vector3_stub : NamedArrayStub<vector3,double> {
+    public override double[] GetNumericArrayFromNamedArrayStruct(ref vector3 s) {
+    return s.GetNumericArray();
+    }
+    public override vector3 GetNamedArrayStructFromNumericArray(double[] m) {
+    if (m.Length != 3) throw new DataTypeException("Invalid namedarray array");
+    var s = new vector3();
+    var a = new ArraySegment<double>(m);
+    s.AssignFromNumericArray(ref a);
+    return s;
+    }
+    public override double[] GetNumericArrayFromNamedArray(vector3[] s) {
+    return s.GetNumericArray();
+    }
+    public override vector3[] GetNamedArrayFromNumericArray(double[] m) {
+    if (m.Length % 3 != 0) throw new DataTypeException("Invalid namedarray array");
+    vector3[] s = new vector3[m.Length / 3];
+    var a = new ArraySegment<double>(m);
+    s.AssignFromNumericArray(ref a);
+    return s;
+    }
+    public override string TypeName { get { return "com.robotraconteur.testing.TestService3.vector3"; } }}
+
+public class quaternion_stub : NamedArrayStub<quaternion,double> {
+    public override double[] GetNumericArrayFromNamedArrayStruct(ref quaternion s) {
+    return s.GetNumericArray();
+    }
+    public override quaternion GetNamedArrayStructFromNumericArray(double[] m) {
+    if (m.Length != 4) throw new DataTypeException("Invalid namedarray array");
+    var s = new quaternion();
+    var a = new ArraySegment<double>(m);
+    s.AssignFromNumericArray(ref a);
+    return s;
+    }
+    public override double[] GetNumericArrayFromNamedArray(quaternion[] s) {
+    return s.GetNumericArray();
+    }
+    public override quaternion[] GetNamedArrayFromNumericArray(double[] m) {
+    if (m.Length % 4 != 0) throw new DataTypeException("Invalid namedarray array");
+    quaternion[] s = new quaternion[m.Length / 4];
+    var a = new ArraySegment<double>(m);
+    s.AssignFromNumericArray(ref a);
+    return s;
+    }
+    public override string TypeName { get { return "com.robotraconteur.testing.TestService3.quaternion"; } }}
+
+public class transform_stub : NamedArrayStub<transform,double> {
+    public override double[] GetNumericArrayFromNamedArrayStruct(ref transform s) {
+    return s.GetNumericArray();
+    }
+    public override transform GetNamedArrayStructFromNumericArray(double[] m) {
+    if (m.Length != 7) throw new DataTypeException("Invalid namedarray array");
+    var s = new transform();
+    var a = new ArraySegment<double>(m);
+    s.AssignFromNumericArray(ref a);
+    return s;
+    }
+    public override double[] GetNumericArrayFromNamedArray(transform[] s) {
+    return s.GetNumericArray();
+    }
+    public override transform[] GetNamedArrayFromNumericArray(double[] m) {
+    if (m.Length % 7 != 0) throw new DataTypeException("Invalid namedarray array");
+    transform[] s = new transform[m.Length / 7];
+    var a = new ArraySegment<double>(m);
+    s.AssignFromNumericArray(ref a);
+    return s;
+    }
+    public override string TypeName { get { return "com.robotraconteur.testing.TestService3.transform"; } }}
+
+public class pixel_stub : NamedArrayStub<pixel,byte> {
+    public override byte[] GetNumericArrayFromNamedArrayStruct(ref pixel s) {
+    return s.GetNumericArray();
+    }
+    public override pixel GetNamedArrayStructFromNumericArray(byte[] m) {
+    if (m.Length != 3) throw new DataTypeException("Invalid namedarray array");
+    var s = new pixel();
+    var a = new ArraySegment<byte>(m);
+    s.AssignFromNumericArray(ref a);
+    return s;
+    }
+    public override byte[] GetNumericArrayFromNamedArray(pixel[] s) {
+    return s.GetNumericArray();
+    }
+    public override pixel[] GetNamedArrayFromNumericArray(byte[] m) {
+    if (m.Length % 3 != 0) throw new DataTypeException("Invalid namedarray array");
+    pixel[] s = new pixel[m.Length / 3];
+    var a = new ArraySegment<byte>(m);
+    s.AssignFromNumericArray(ref a);
+    return s;
+    }
+    public override string TypeName { get { return "com.robotraconteur.testing.TestService3.pixel"; } }}
+
+public class pixel2_stub : NamedArrayStub<pixel2,byte> {
+    public override byte[] GetNumericArrayFromNamedArrayStruct(ref pixel2 s) {
+    return s.GetNumericArray();
+    }
+    public override pixel2 GetNamedArrayStructFromNumericArray(byte[] m) {
+    if (m.Length != 31) throw new DataTypeException("Invalid namedarray array");
+    var s = new pixel2();
+    var a = new ArraySegment<byte>(m);
+    s.AssignFromNumericArray(ref a);
+    return s;
+    }
+    public override byte[] GetNumericArrayFromNamedArray(pixel2[] s) {
+    return s.GetNumericArray();
+    }
+    public override pixel2[] GetNamedArrayFromNumericArray(byte[] m) {
+    if (m.Length % 31 != 0) throw new DataTypeException("Invalid namedarray array");
+    pixel2[] s = new pixel2[m.Length / 31];
+    var a = new ArraySegment<byte>(m);
+    s.AssignFromNumericArray(ref a);
+    return s;
+    }
+    public override string TypeName { get { return "com.robotraconteur.testing.TestService3.pixel2"; } }}
 
 public interface async_testroot3
 {
@@ -220,8 +384,8 @@ public interface async_testroot3
     void async_set_unknown_modifier(int value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
     void async_get_testenum1_prop(Action<testenum1,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
     void async_set_testenum1_prop(testenum1 value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_testcstruct1_prop(Action<testcstruct1,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_testcstruct1_prop(testcstruct1 value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_get_testpod1_prop(Action<testpod1,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_set_testpod1_prop(testpod1 value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
     void async_get_teststruct3_prop(Action<teststruct3,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
     void async_set_teststruct3_prop(teststruct3 value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
     void async_get_d1(Action<List<double[]>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
@@ -236,8 +400,54 @@ public interface async_testroot3
     void async_set_d5(List<MultiDimArray> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
     void async_get_d6(Action<Dictionary<int,MultiDimArray>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
     void async_set_d6(Dictionary<int,MultiDimArray> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_testcstruct1_func1(testcstruct1 s,Action<Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_testcstruct1_func2(Action<testcstruct1,Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_get_testnamedarray1(Action<vector3,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_set_testnamedarray1(vector3 value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_get_testnamedarray2(Action<transform,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_set_testnamedarray2(transform value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_get_testnamedarray3(Action<transform[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_set_testnamedarray3(transform[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_get_testnamedarray4(Action<NamedMultiDimArray,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_set_testnamedarray4(NamedMultiDimArray value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_get_testnamedarray5(Action<NamedMultiDimArray,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_set_testnamedarray5(NamedMultiDimArray value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_get_c1(Action<CDouble,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_set_c1(CDouble value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_get_c2(Action<CDouble[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_set_c2(CDouble[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_get_c3(Action<MultiDimArray,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_set_c3(MultiDimArray value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_get_c4(Action<List<CDouble>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_set_c4(List<CDouble> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_get_c5(Action<List<CDouble[]>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_set_c5(List<CDouble[]> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_get_c6(Action<List<MultiDimArray>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_set_c6(List<MultiDimArray> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_get_c7(Action<CSingle,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_set_c7(CSingle value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_get_c8(Action<CSingle[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_set_c8(CSingle[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_get_c9(Action<MultiDimArray,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_set_c9(MultiDimArray value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_get_c10(Action<List<CSingle>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_set_c10(List<CSingle> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_get_c11(Action<List<CSingle[]>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_set_c11(List<CSingle[]> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_get_c12(Action<List<MultiDimArray>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_set_c12(List<MultiDimArray> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_get_b1(Action<bool,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_set_b1(bool value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_get_b2(Action<bool[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_set_b2(bool[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_get_b3(Action<MultiDimArray,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_set_b3(MultiDimArray value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_get_b4(Action<List<bool>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_set_b4(List<bool> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_get_b5(Action<List<bool[]>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_set_b5(List<bool[]> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_get_b6(Action<List<MultiDimArray>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_set_b6(List<MultiDimArray> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_testpod1_func1(testpod1 s,Action<Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void async_testpod1_func2(Action<testpod1,Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
     void async_gen_func1(Action<Generator2<double>,Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
     void async_gen_func2(string name,Action<Generator2<byte[]>,Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
     void async_gen_func3(string name,Action<Generator3<byte[]>,Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
@@ -257,8 +467,16 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     private Wire<int[]> rr_w2;
     private Wire<MultiDimArray> rr_w3;
     private ArrayMemory<double> rr_readmem;
-    private CStructureArrayMemory<testcstruct2> rr_cstruct_m1;
-    private CStructureMultiDimArrayMemory<testcstruct2> rr_cstruct_m2;
+    private PodArrayMemory<testpod2> rr_pod_m1;
+    private PodMultiDimArrayMemory<testpod2> rr_pod_m2;
+    private NamedArrayMemory<transform> rr_namedarray_m1;
+    private NamedMultiDimArrayMemory<transform> rr_namedarray_m2;
+    private ArrayMemory<CDouble> rr_c_m1;
+    private MultiDimArrayMemory<CDouble> rr_c_m2;
+    private ArrayMemory<CDouble> rr_c_m3;
+    private MultiDimArrayMemory<CDouble> rr_c_m4;
+    private ArrayMemory<bool> rr_c_m5;
+    private MultiDimArrayMemory<bool> rr_c_m6;
     public testroot3_stub(WrappedServiceStub innerstub) : base(innerstub) {
     rr_unreliable1=new Pipe<int>(innerstub.GetPipe("unreliable1"));
     rr_unreliable2=new Pipe<int>(innerstub.GetPipe("unreliable2"));
@@ -271,8 +489,16 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     rr_w2=new Wire<int[]>(innerstub.GetWire("w2"));
     rr_w3=new Wire<MultiDimArray>(innerstub.GetWire("w3"));
     rr_readmem=new ArrayMemoryClient<double>(innerstub.GetArrayMemory("readmem"));
-    rr_cstruct_m1=new CStructureArrayMemoryClient<testcstruct2>(innerstub.GetCStructureArrayMemory("cstruct_m1"));
-    rr_cstruct_m2=new CStructureMultiDimArrayMemoryClient<testcstruct2>(innerstub.GetCStructureMultiDimArrayMemory("cstruct_m2"));
+    rr_pod_m1=new PodArrayMemoryClient<testpod2>(innerstub.GetPodArrayMemory("pod_m1"));
+    rr_pod_m2=new PodMultiDimArrayMemoryClient<testpod2>(innerstub.GetPodMultiDimArrayMemory("pod_m2"));
+    rr_namedarray_m1=new NamedArrayMemoryClient<transform>(innerstub.GetNamedArrayMemory("namedarray_m1"));
+    rr_namedarray_m2=new NamedMultiDimArrayMemoryClient<transform>(innerstub.GetNamedMultiDimArrayMemory("namedarray_m2"));
+    rr_c_m1=new ArrayMemoryClient<CDouble>(innerstub.GetArrayMemory("c_m1"));
+    rr_c_m2=new MultiDimArrayMemoryClient<CDouble>(innerstub.GetMultiDimArrayMemory("c_m2"));
+    rr_c_m3=new ArrayMemoryClient<CDouble>(innerstub.GetArrayMemory("c_m3"));
+    rr_c_m4=new MultiDimArrayMemoryClient<CDouble>(innerstub.GetMultiDimArrayMemory("c_m4"));
+    rr_c_m5=new ArrayMemoryClient<bool>(innerstub.GetArrayMemory("c_m5"));
+    rr_c_m6=new MultiDimArrayMemoryClient<bool>(innerstub.GetMultiDimArrayMemory("c_m6"));
     }
     public int readme {
     get {
@@ -318,14 +544,14 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     }
     }
     }
-    public testcstruct1 testcstruct1_prop {
+    public testpod1 testpod1_prop {
     get {
-    return MessageElementUtil.UnpackCStructureFromArray<testcstruct1>(rr_innerstub.PropertyGet("testcstruct1_prop"));
+    return MessageElementUtil.UnpackPodFromArray<testpod1>(rr_innerstub.PropertyGet("testpod1_prop"));
     }
     set {
-    using(MessageElement m=MessageElementUtil.PackCStructureToArray<testcstruct1>("value",ref value))
+    using(MessageElement m=MessageElementUtil.PackPodToArray<testpod1>("value",ref value))
     {
-    rr_innerstub.PropertySet("testcstruct1_prop", m);
+    rr_innerstub.PropertySet("testpod1_prop", m);
     }
     }
     }
@@ -386,10 +612,10 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     }
     public List<MultiDimArray> d5 {
     get {
-    return DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackList<MultiDimArray>(rr_innerstub.PropertyGet("d5")),9,new int[] {3,3});
+    return DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackList<MultiDimArray>(rr_innerstub.PropertyGet("d5")),9,new uint[] {3,3});
     }
     set {
-    using(MessageElement m=MessageElementUtil.PackListType<MultiDimArray>("value",DataTypeUtil.VerifyArrayLength(value,9,new int[] {3,3})))
+    using(MessageElement m=MessageElementUtil.PackListType<MultiDimArray>("value",DataTypeUtil.VerifyArrayLength(value,9,new uint[] {3,3})))
     {
     rr_innerstub.PropertySet("d5", m);
     }
@@ -397,30 +623,283 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     }
     public Dictionary<int,MultiDimArray> d6 {
     get {
-    return DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackMap<int,MultiDimArray>(rr_innerstub.PropertyGet("d6")),9,new int[] {3,3});
+    return DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackMap<int,MultiDimArray>(rr_innerstub.PropertyGet("d6")),9,new uint[] {3,3});
     }
     set {
-    using(MessageElement m=MessageElementUtil.PackMapType<int,MultiDimArray>("value",DataTypeUtil.VerifyArrayLength(value,9,new int[] {3,3})))
+    using(MessageElement m=MessageElementUtil.PackMapType<int,MultiDimArray>("value",DataTypeUtil.VerifyArrayLength(value,9,new uint[] {3,3})))
     {
     rr_innerstub.PropertySet("d6", m);
     }
     }
     }
-    public void testcstruct1_func1(testcstruct1 s) {
+    public vector3 testnamedarray1 {
+    get {
+    return MessageElementUtil.UnpackNamedArrayFromArray<vector3>(rr_innerstub.PropertyGet("testnamedarray1"));
+    }
+    set {
+    using(MessageElement m=MessageElementUtil.PackNamedArrayToArray<vector3>("value",ref value))
+    {
+    rr_innerstub.PropertySet("testnamedarray1", m);
+    }
+    }
+    }
+    public transform testnamedarray2 {
+    get {
+    return MessageElementUtil.UnpackNamedArrayFromArray<transform>(rr_innerstub.PropertyGet("testnamedarray2"));
+    }
+    set {
+    using(MessageElement m=MessageElementUtil.PackNamedArrayToArray<transform>("value",ref value))
+    {
+    rr_innerstub.PropertySet("testnamedarray2", m);
+    }
+    }
+    }
+    public transform[] testnamedarray3 {
+    get {
+    return DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackNamedArray<transform>(rr_innerstub.PropertyGet("testnamedarray3")), 10, true);
+    }
+    set {
+    using(MessageElement m=MessageElementUtil.PackNamedArray<transform>("value",DataTypeUtil.VerifyArrayLength(value, 10, true)))
+    {
+    rr_innerstub.PropertySet("testnamedarray3", m);
+    }
+    }
+    }
+    public NamedMultiDimArray testnamedarray4 {
+    get {
+    return MessageElementUtil.UnpackNamedMultiDimArray<transform>(rr_innerstub.PropertyGet("testnamedarray4"));
+    }
+    set {
+    using(MessageElement m=MessageElementUtil.PackNamedMultiDimArray<transform>("value",value))
+    {
+    rr_innerstub.PropertySet("testnamedarray4", m);
+    }
+    }
+    }
+    public NamedMultiDimArray testnamedarray5 {
+    get {
+    return DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackNamedMultiDimArray<transform>(rr_innerstub.PropertyGet("testnamedarray5")),6,new uint[] {3,2});
+    }
+    set {
+    using(MessageElement m=MessageElementUtil.PackNamedMultiDimArray<transform>("value",DataTypeUtil.VerifyArrayLength(value,6,new uint[] {3,2})))
+    {
+    rr_innerstub.PropertySet("testnamedarray5", m);
+    }
+    }
+    }
+    public CDouble c1 {
+    get {
+    return (MessageElementUtil.UnpackScalar<CDouble>(rr_innerstub.PropertyGet("c1")));
+    }
+    set {
+    using(MessageElement m=MessageElementUtil.PackScalar<CDouble>("value",value))
+    {
+    rr_innerstub.PropertySet("c1", m);
+    }
+    }
+    }
+    public CDouble[] c2 {
+    get {
+    return MessageElementUtil.UnpackArray<CDouble>(rr_innerstub.PropertyGet("c2"));
+    }
+    set {
+    using(MessageElement m=MessageElementUtil.PackArray<CDouble>("value",value))
+    {
+    rr_innerstub.PropertySet("c2", m);
+    }
+    }
+    }
+    public MultiDimArray c3 {
+    get {
+    return MessageElementUtil.UnpackMultiDimArray(rr_innerstub.PropertyGet("c3"));
+    }
+    set {
+    using(MessageElement m=MessageElementUtil.PackMultiDimArray("value",(MultiDimArray)value))
+    {
+    rr_innerstub.PropertySet("c3", m);
+    }
+    }
+    }
+    public List<CDouble> c4 {
+    get {
+    return MessageElementUtil.UnpackList<CDouble>(rr_innerstub.PropertyGet("c4"));
+    }
+    set {
+    using(MessageElement m=MessageElementUtil.PackListType<CDouble>("value",value))
+    {
+    rr_innerstub.PropertySet("c4", m);
+    }
+    }
+    }
+    public List<CDouble[]> c5 {
+    get {
+    return MessageElementUtil.UnpackList<CDouble[]>(rr_innerstub.PropertyGet("c5"));
+    }
+    set {
+    using(MessageElement m=MessageElementUtil.PackListType<CDouble[]>("value",value))
+    {
+    rr_innerstub.PropertySet("c5", m);
+    }
+    }
+    }
+    public List<MultiDimArray> c6 {
+    get {
+    return MessageElementUtil.UnpackList<MultiDimArray>(rr_innerstub.PropertyGet("c6"));
+    }
+    set {
+    using(MessageElement m=MessageElementUtil.PackListType<MultiDimArray>("value",value))
+    {
+    rr_innerstub.PropertySet("c6", m);
+    }
+    }
+    }
+    public CSingle c7 {
+    get {
+    return (MessageElementUtil.UnpackScalar<CSingle>(rr_innerstub.PropertyGet("c7")));
+    }
+    set {
+    using(MessageElement m=MessageElementUtil.PackScalar<CSingle>("value",value))
+    {
+    rr_innerstub.PropertySet("c7", m);
+    }
+    }
+    }
+    public CSingle[] c8 {
+    get {
+    return MessageElementUtil.UnpackArray<CSingle>(rr_innerstub.PropertyGet("c8"));
+    }
+    set {
+    using(MessageElement m=MessageElementUtil.PackArray<CSingle>("value",value))
+    {
+    rr_innerstub.PropertySet("c8", m);
+    }
+    }
+    }
+    public MultiDimArray c9 {
+    get {
+    return MessageElementUtil.UnpackMultiDimArray(rr_innerstub.PropertyGet("c9"));
+    }
+    set {
+    using(MessageElement m=MessageElementUtil.PackMultiDimArray("value",(MultiDimArray)value))
+    {
+    rr_innerstub.PropertySet("c9", m);
+    }
+    }
+    }
+    public List<CSingle> c10 {
+    get {
+    return MessageElementUtil.UnpackList<CSingle>(rr_innerstub.PropertyGet("c10"));
+    }
+    set {
+    using(MessageElement m=MessageElementUtil.PackListType<CSingle>("value",value))
+    {
+    rr_innerstub.PropertySet("c10", m);
+    }
+    }
+    }
+    public List<CSingle[]> c11 {
+    get {
+    return MessageElementUtil.UnpackList<CSingle[]>(rr_innerstub.PropertyGet("c11"));
+    }
+    set {
+    using(MessageElement m=MessageElementUtil.PackListType<CSingle[]>("value",value))
+    {
+    rr_innerstub.PropertySet("c11", m);
+    }
+    }
+    }
+    public List<MultiDimArray> c12 {
+    get {
+    return MessageElementUtil.UnpackList<MultiDimArray>(rr_innerstub.PropertyGet("c12"));
+    }
+    set {
+    using(MessageElement m=MessageElementUtil.PackListType<MultiDimArray>("value",value))
+    {
+    rr_innerstub.PropertySet("c12", m);
+    }
+    }
+    }
+    public bool b1 {
+    get {
+    return (MessageElementUtil.UnpackScalar<bool>(rr_innerstub.PropertyGet("b1")));
+    }
+    set {
+    using(MessageElement m=MessageElementUtil.PackScalar<bool>("value",value))
+    {
+    rr_innerstub.PropertySet("b1", m);
+    }
+    }
+    }
+    public bool[] b2 {
+    get {
+    return MessageElementUtil.UnpackArray<bool>(rr_innerstub.PropertyGet("b2"));
+    }
+    set {
+    using(MessageElement m=MessageElementUtil.PackArray<bool>("value",value))
+    {
+    rr_innerstub.PropertySet("b2", m);
+    }
+    }
+    }
+    public MultiDimArray b3 {
+    get {
+    return MessageElementUtil.UnpackMultiDimArray(rr_innerstub.PropertyGet("b3"));
+    }
+    set {
+    using(MessageElement m=MessageElementUtil.PackMultiDimArray("value",(MultiDimArray)value))
+    {
+    rr_innerstub.PropertySet("b3", m);
+    }
+    }
+    }
+    public List<bool> b4 {
+    get {
+    return MessageElementUtil.UnpackList<bool>(rr_innerstub.PropertyGet("b4"));
+    }
+    set {
+    using(MessageElement m=MessageElementUtil.PackListType<bool>("value",value))
+    {
+    rr_innerstub.PropertySet("b4", m);
+    }
+    }
+    }
+    public List<bool[]> b5 {
+    get {
+    return MessageElementUtil.UnpackList<bool[]>(rr_innerstub.PropertyGet("b5"));
+    }
+    set {
+    using(MessageElement m=MessageElementUtil.PackListType<bool[]>("value",value))
+    {
+    rr_innerstub.PropertySet("b5", m);
+    }
+    }
+    }
+    public List<MultiDimArray> b6 {
+    get {
+    return MessageElementUtil.UnpackList<MultiDimArray>(rr_innerstub.PropertyGet("b6"));
+    }
+    set {
+    using(MessageElement m=MessageElementUtil.PackListType<MultiDimArray>("value",value))
+    {
+    rr_innerstub.PropertySet("b6", m);
+    }
+    }
+    }
+    public void testpod1_func1(testpod1 s) {
     using(vectorptr_messageelement rr_param=new vectorptr_messageelement())
     {
-    MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.PackCStructureToArray<testcstruct1>("s",ref s));
-    using(MessageElement rr_me=rr_innerstub.FunctionCall("testcstruct1_func1",rr_param))
+    MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.PackPodToArray<testpod1>("s",ref s));
+    using(MessageElement rr_me=rr_innerstub.FunctionCall("testpod1_func1",rr_param))
     {
     }
     }
     }
-    public testcstruct1 testcstruct1_func2() {
+    public testpod1 testpod1_func2() {
     using(vectorptr_messageelement rr_param=new vectorptr_messageelement())
     {
-    using(MessageElement rr_me=rr_innerstub.FunctionCall("testcstruct1_func2",rr_param))
+    using(MessageElement rr_me=rr_innerstub.FunctionCall("testpod1_func2",rr_param))
     {
-    return MessageElementUtil.UnpackCStructureFromArray<testcstruct1>(rr_me);
+    return MessageElementUtil.UnpackPodFromArray<testpod1>(rr_me);
     }
     }
     }
@@ -519,15 +998,36 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     }
     public ArrayMemory<double> readmem { 
     get { return rr_readmem; }
-    set { throw new InvalidOperationException();}
     }
-    public CStructureArrayMemory<testcstruct2> cstruct_m1 { 
-    get { return rr_cstruct_m1; }
-    set { throw new InvalidOperationException();}
+    public PodArrayMemory<testpod2> pod_m1 { 
+    get { return rr_pod_m1; }
     }
-    public CStructureMultiDimArrayMemory<testcstruct2> cstruct_m2 {
-    get { return rr_cstruct_m2; }
-    set { throw new InvalidOperationException();}
+    public PodMultiDimArrayMemory<testpod2> pod_m2 {
+    get { return rr_pod_m2; }
+    }
+    public NamedArrayMemory<transform> namedarray_m1 { 
+    get { return rr_namedarray_m1; }
+    }
+    public NamedMultiDimArrayMemory<transform> namedarray_m2 {
+    get { return rr_namedarray_m2; }
+    }
+    public ArrayMemory<CDouble> c_m1 { 
+    get { return rr_c_m1; }
+    }
+    public MultiDimArrayMemory<CDouble> c_m2 {
+    get { return rr_c_m2; }
+    }
+    public ArrayMemory<CDouble> c_m3 { 
+    get { return rr_c_m3; }
+    }
+    public MultiDimArrayMemory<CDouble> c_m4 {
+    get { return rr_c_m4; }
+    }
+    public ArrayMemory<bool> c_m5 { 
+    get { return rr_c_m5; }
+    }
+    public MultiDimArrayMemory<bool> c_m6 {
+    get { return rr_c_m6; }
     }
     public virtual void async_get_readme(Action<int,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
@@ -681,35 +1181,35 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     }
     rr_handler(null);
     }
-    public virtual void async_get_testcstruct1_prop(Action<testcstruct1,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    public virtual void async_get_testpod1_prop(Action<testpod1,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    rr_async_PropertyGet("testcstruct1_prop",rrend_async_get_testcstruct1_prop,rr_handler,rr_timeout);
+    rr_async_PropertyGet("testpod1_prop",rrend_async_get_testpod1_prop,rr_handler,rr_timeout);
     }
-    protected virtual void rrend_async_get_testcstruct1_prop(MessageElement value ,Exception err,object param)
+    protected virtual void rrend_async_get_testpod1_prop(MessageElement value ,Exception err,object param)
     {
-    Action<testcstruct1,Exception> rr_handler=(Action<testcstruct1,Exception>)param;
+    Action<testpod1,Exception> rr_handler=(Action<testpod1,Exception>)param;
     if (err!=null)
     {
-    rr_handler(default(testcstruct1),err);
+    rr_handler(default(testpod1),err);
     return;
     }
-    testcstruct1 rr_ret;
+    testpod1 rr_ret;
     try {
-    rr_ret=MessageElementUtil.UnpackCStructureFromArray<testcstruct1>(value);
+    rr_ret=MessageElementUtil.UnpackPodFromArray<testpod1>(value);
     } catch (Exception err2) {
-    rr_handler(default(testcstruct1),err2);
+    rr_handler(default(testpod1),err2);
     return;
     }
     rr_handler(rr_ret,null);
     }
-    public virtual void async_set_testcstruct1_prop(testcstruct1 value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    public virtual void async_set_testpod1_prop(testpod1 value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    using(MessageElement mm=MessageElementUtil.PackCStructureToArray<testcstruct1>("value",ref value))
+    using(MessageElement mm=MessageElementUtil.PackPodToArray<testpod1>("value",ref value))
     {
-    rr_async_PropertySet("testcstruct1_prop",mm,rrend_async_set_testcstruct1_prop,rr_handler,rr_timeout);
+    rr_async_PropertySet("testpod1_prop",mm,rrend_async_set_testpod1_prop,rr_handler,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_testcstruct1_prop(MessageElement m ,Exception err,object param)
+    protected virtual void rrend_async_set_testpod1_prop(MessageElement m ,Exception err,object param)
     {
     Action<Exception> rr_handler=(Action<Exception>)param;
     if (err!=null)
@@ -923,7 +1423,7 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     }
     List<MultiDimArray> rr_ret;
     try {
-    rr_ret=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackList<MultiDimArray>(value),9,new int[] {3,3});
+    rr_ret=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackList<MultiDimArray>(value),9,new uint[] {3,3});
     } catch (Exception err2) {
     rr_handler(default(List<MultiDimArray>),err2);
     return;
@@ -932,7 +1432,7 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     }
     public virtual void async_set_d5(List<MultiDimArray> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    using(MessageElement mm=MessageElementUtil.PackListType<MultiDimArray>("value",DataTypeUtil.VerifyArrayLength(value,9,new int[] {3,3})))
+    using(MessageElement mm=MessageElementUtil.PackListType<MultiDimArray>("value",DataTypeUtil.VerifyArrayLength(value,9,new uint[] {3,3})))
     {
     rr_async_PropertySet("d5",mm,rrend_async_set_d5,rr_handler,rr_timeout);
     }
@@ -961,7 +1461,7 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     }
     Dictionary<int,MultiDimArray> rr_ret;
     try {
-    rr_ret=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackMap<int,MultiDimArray>(value),9,new int[] {3,3});
+    rr_ret=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackMap<int,MultiDimArray>(value),9,new uint[] {3,3});
     } catch (Exception err2) {
     rr_handler(default(Dictionary<int,MultiDimArray>),err2);
     return;
@@ -970,7 +1470,7 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     }
     public virtual void async_set_d6(Dictionary<int,MultiDimArray> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    using(MessageElement mm=MessageElementUtil.PackMapType<int,MultiDimArray>("value",DataTypeUtil.VerifyArrayLength(value,9,new int[] {3,3})))
+    using(MessageElement mm=MessageElementUtil.PackMapType<int,MultiDimArray>("value",DataTypeUtil.VerifyArrayLength(value,9,new uint[] {3,3})))
     {
     rr_async_PropertySet("d6",mm,rrend_async_set_d6,rr_handler,rr_timeout);
     }
@@ -985,15 +1485,35 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     }
     rr_handler(null);
     }
-    public virtual void async_testcstruct1_func1(testcstruct1 s,Action<Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    public virtual void async_get_testnamedarray1(Action<vector3,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    using(vectorptr_messageelement rr_param=new vectorptr_messageelement())
+    rr_async_PropertyGet("testnamedarray1",rrend_async_get_testnamedarray1,rr_handler,rr_timeout);
+    }
+    protected virtual void rrend_async_get_testnamedarray1(MessageElement value ,Exception err,object param)
     {
-    MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.PackCStructureToArray<testcstruct1>("s",ref s));
-    rr_async_FunctionCall("testcstruct1_func1",rr_param,rrend_async_testcstruct1_func1,rr_handler,rr_timeout);
+    Action<vector3,Exception> rr_handler=(Action<vector3,Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(default(vector3),err);
+    return;
+    }
+    vector3 rr_ret;
+    try {
+    rr_ret=MessageElementUtil.UnpackNamedArrayFromArray<vector3>(value);
+    } catch (Exception err2) {
+    rr_handler(default(vector3),err2);
+    return;
+    }
+    rr_handler(rr_ret,null);
+    }
+    public virtual void async_set_testnamedarray1(vector3 value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(MessageElement mm=MessageElementUtil.PackNamedArrayToArray<vector3>("value",ref value))
+    {
+    rr_async_PropertySet("testnamedarray1",mm,rrend_async_set_testnamedarray1,rr_handler,rr_timeout);
     }
     }
-    protected virtual void rrend_async_testcstruct1_func1(MessageElement ret ,Exception err,object param)
+    protected virtual void rrend_async_set_testnamedarray1(MessageElement m ,Exception err,object param)
     {
     Action<Exception> rr_handler=(Action<Exception>)param;
     if (err!=null)
@@ -1003,26 +1523,880 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     }
     rr_handler(null);
     }
-    public virtual void async_testcstruct1_func2(Action<testcstruct1,Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    public virtual void async_get_testnamedarray2(Action<transform,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    rr_async_PropertyGet("testnamedarray2",rrend_async_get_testnamedarray2,rr_handler,rr_timeout);
+    }
+    protected virtual void rrend_async_get_testnamedarray2(MessageElement value ,Exception err,object param)
+    {
+    Action<transform,Exception> rr_handler=(Action<transform,Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(default(transform),err);
+    return;
+    }
+    transform rr_ret;
+    try {
+    rr_ret=MessageElementUtil.UnpackNamedArrayFromArray<transform>(value);
+    } catch (Exception err2) {
+    rr_handler(default(transform),err2);
+    return;
+    }
+    rr_handler(rr_ret,null);
+    }
+    public virtual void async_set_testnamedarray2(transform value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(MessageElement mm=MessageElementUtil.PackNamedArrayToArray<transform>("value",ref value))
+    {
+    rr_async_PropertySet("testnamedarray2",mm,rrend_async_set_testnamedarray2,rr_handler,rr_timeout);
+    }
+    }
+    protected virtual void rrend_async_set_testnamedarray2(MessageElement m ,Exception err,object param)
+    {
+    Action<Exception> rr_handler=(Action<Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(err);
+    return;
+    }
+    rr_handler(null);
+    }
+    public virtual void async_get_testnamedarray3(Action<transform[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    rr_async_PropertyGet("testnamedarray3",rrend_async_get_testnamedarray3,rr_handler,rr_timeout);
+    }
+    protected virtual void rrend_async_get_testnamedarray3(MessageElement value ,Exception err,object param)
+    {
+    Action<transform[],Exception> rr_handler=(Action<transform[],Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(default(transform[]),err);
+    return;
+    }
+    transform[] rr_ret;
+    try {
+    rr_ret=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackNamedArray<transform>(value), 10, true);
+    } catch (Exception err2) {
+    rr_handler(default(transform[]),err2);
+    return;
+    }
+    rr_handler(rr_ret,null);
+    }
+    public virtual void async_set_testnamedarray3(transform[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(MessageElement mm=MessageElementUtil.PackNamedArray<transform>("value",DataTypeUtil.VerifyArrayLength(value, 10, true)))
+    {
+    rr_async_PropertySet("testnamedarray3",mm,rrend_async_set_testnamedarray3,rr_handler,rr_timeout);
+    }
+    }
+    protected virtual void rrend_async_set_testnamedarray3(MessageElement m ,Exception err,object param)
+    {
+    Action<Exception> rr_handler=(Action<Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(err);
+    return;
+    }
+    rr_handler(null);
+    }
+    public virtual void async_get_testnamedarray4(Action<NamedMultiDimArray,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    rr_async_PropertyGet("testnamedarray4",rrend_async_get_testnamedarray4,rr_handler,rr_timeout);
+    }
+    protected virtual void rrend_async_get_testnamedarray4(MessageElement value ,Exception err,object param)
+    {
+    Action<NamedMultiDimArray,Exception> rr_handler=(Action<NamedMultiDimArray,Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(default(NamedMultiDimArray),err);
+    return;
+    }
+    NamedMultiDimArray rr_ret;
+    try {
+    rr_ret=MessageElementUtil.UnpackNamedMultiDimArray<transform>(value);
+    } catch (Exception err2) {
+    rr_handler(default(NamedMultiDimArray),err2);
+    return;
+    }
+    rr_handler(rr_ret,null);
+    }
+    public virtual void async_set_testnamedarray4(NamedMultiDimArray value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(MessageElement mm=MessageElementUtil.PackNamedMultiDimArray<transform>("value",value))
+    {
+    rr_async_PropertySet("testnamedarray4",mm,rrend_async_set_testnamedarray4,rr_handler,rr_timeout);
+    }
+    }
+    protected virtual void rrend_async_set_testnamedarray4(MessageElement m ,Exception err,object param)
+    {
+    Action<Exception> rr_handler=(Action<Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(err);
+    return;
+    }
+    rr_handler(null);
+    }
+    public virtual void async_get_testnamedarray5(Action<NamedMultiDimArray,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    rr_async_PropertyGet("testnamedarray5",rrend_async_get_testnamedarray5,rr_handler,rr_timeout);
+    }
+    protected virtual void rrend_async_get_testnamedarray5(MessageElement value ,Exception err,object param)
+    {
+    Action<NamedMultiDimArray,Exception> rr_handler=(Action<NamedMultiDimArray,Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(default(NamedMultiDimArray),err);
+    return;
+    }
+    NamedMultiDimArray rr_ret;
+    try {
+    rr_ret=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackNamedMultiDimArray<transform>(value),6,new uint[] {3,2});
+    } catch (Exception err2) {
+    rr_handler(default(NamedMultiDimArray),err2);
+    return;
+    }
+    rr_handler(rr_ret,null);
+    }
+    public virtual void async_set_testnamedarray5(NamedMultiDimArray value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(MessageElement mm=MessageElementUtil.PackNamedMultiDimArray<transform>("value",DataTypeUtil.VerifyArrayLength(value,6,new uint[] {3,2})))
+    {
+    rr_async_PropertySet("testnamedarray5",mm,rrend_async_set_testnamedarray5,rr_handler,rr_timeout);
+    }
+    }
+    protected virtual void rrend_async_set_testnamedarray5(MessageElement m ,Exception err,object param)
+    {
+    Action<Exception> rr_handler=(Action<Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(err);
+    return;
+    }
+    rr_handler(null);
+    }
+    public virtual void async_get_c1(Action<CDouble,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    rr_async_PropertyGet("c1",rrend_async_get_c1,rr_handler,rr_timeout);
+    }
+    protected virtual void rrend_async_get_c1(MessageElement value ,Exception err,object param)
+    {
+    Action<CDouble,Exception> rr_handler=(Action<CDouble,Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(default(CDouble),err);
+    return;
+    }
+    CDouble rr_ret;
+    try {
+    rr_ret=(MessageElementUtil.UnpackScalar<CDouble>(value));
+    } catch (Exception err2) {
+    rr_handler(default(CDouble),err2);
+    return;
+    }
+    rr_handler(rr_ret,null);
+    }
+    public virtual void async_set_c1(CDouble value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(MessageElement mm=MessageElementUtil.PackScalar<CDouble>("value",value))
+    {
+    rr_async_PropertySet("c1",mm,rrend_async_set_c1,rr_handler,rr_timeout);
+    }
+    }
+    protected virtual void rrend_async_set_c1(MessageElement m ,Exception err,object param)
+    {
+    Action<Exception> rr_handler=(Action<Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(err);
+    return;
+    }
+    rr_handler(null);
+    }
+    public virtual void async_get_c2(Action<CDouble[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    rr_async_PropertyGet("c2",rrend_async_get_c2,rr_handler,rr_timeout);
+    }
+    protected virtual void rrend_async_get_c2(MessageElement value ,Exception err,object param)
+    {
+    Action<CDouble[],Exception> rr_handler=(Action<CDouble[],Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(default(CDouble[]),err);
+    return;
+    }
+    CDouble[] rr_ret;
+    try {
+    rr_ret=MessageElementUtil.UnpackArray<CDouble>(value);
+    } catch (Exception err2) {
+    rr_handler(default(CDouble[]),err2);
+    return;
+    }
+    rr_handler(rr_ret,null);
+    }
+    public virtual void async_set_c2(CDouble[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(MessageElement mm=MessageElementUtil.PackArray<CDouble>("value",value))
+    {
+    rr_async_PropertySet("c2",mm,rrend_async_set_c2,rr_handler,rr_timeout);
+    }
+    }
+    protected virtual void rrend_async_set_c2(MessageElement m ,Exception err,object param)
+    {
+    Action<Exception> rr_handler=(Action<Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(err);
+    return;
+    }
+    rr_handler(null);
+    }
+    public virtual void async_get_c3(Action<MultiDimArray,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    rr_async_PropertyGet("c3",rrend_async_get_c3,rr_handler,rr_timeout);
+    }
+    protected virtual void rrend_async_get_c3(MessageElement value ,Exception err,object param)
+    {
+    Action<MultiDimArray,Exception> rr_handler=(Action<MultiDimArray,Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(default(MultiDimArray),err);
+    return;
+    }
+    MultiDimArray rr_ret;
+    try {
+    rr_ret=MessageElementUtil.UnpackMultiDimArray(value);
+    } catch (Exception err2) {
+    rr_handler(default(MultiDimArray),err2);
+    return;
+    }
+    rr_handler(rr_ret,null);
+    }
+    public virtual void async_set_c3(MultiDimArray value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(MessageElement mm=MessageElementUtil.PackMultiDimArray("value",(MultiDimArray)value))
+    {
+    rr_async_PropertySet("c3",mm,rrend_async_set_c3,rr_handler,rr_timeout);
+    }
+    }
+    protected virtual void rrend_async_set_c3(MessageElement m ,Exception err,object param)
+    {
+    Action<Exception> rr_handler=(Action<Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(err);
+    return;
+    }
+    rr_handler(null);
+    }
+    public virtual void async_get_c4(Action<List<CDouble>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    rr_async_PropertyGet("c4",rrend_async_get_c4,rr_handler,rr_timeout);
+    }
+    protected virtual void rrend_async_get_c4(MessageElement value ,Exception err,object param)
+    {
+    Action<List<CDouble>,Exception> rr_handler=(Action<List<CDouble>,Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(default(List<CDouble>),err);
+    return;
+    }
+    List<CDouble> rr_ret;
+    try {
+    rr_ret=MessageElementUtil.UnpackList<CDouble>(value);
+    } catch (Exception err2) {
+    rr_handler(default(List<CDouble>),err2);
+    return;
+    }
+    rr_handler(rr_ret,null);
+    }
+    public virtual void async_set_c4(List<CDouble> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(MessageElement mm=MessageElementUtil.PackListType<CDouble>("value",value))
+    {
+    rr_async_PropertySet("c4",mm,rrend_async_set_c4,rr_handler,rr_timeout);
+    }
+    }
+    protected virtual void rrend_async_set_c4(MessageElement m ,Exception err,object param)
+    {
+    Action<Exception> rr_handler=(Action<Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(err);
+    return;
+    }
+    rr_handler(null);
+    }
+    public virtual void async_get_c5(Action<List<CDouble[]>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    rr_async_PropertyGet("c5",rrend_async_get_c5,rr_handler,rr_timeout);
+    }
+    protected virtual void rrend_async_get_c5(MessageElement value ,Exception err,object param)
+    {
+    Action<List<CDouble[]>,Exception> rr_handler=(Action<List<CDouble[]>,Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(default(List<CDouble[]>),err);
+    return;
+    }
+    List<CDouble[]> rr_ret;
+    try {
+    rr_ret=MessageElementUtil.UnpackList<CDouble[]>(value);
+    } catch (Exception err2) {
+    rr_handler(default(List<CDouble[]>),err2);
+    return;
+    }
+    rr_handler(rr_ret,null);
+    }
+    public virtual void async_set_c5(List<CDouble[]> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(MessageElement mm=MessageElementUtil.PackListType<CDouble[]>("value",value))
+    {
+    rr_async_PropertySet("c5",mm,rrend_async_set_c5,rr_handler,rr_timeout);
+    }
+    }
+    protected virtual void rrend_async_set_c5(MessageElement m ,Exception err,object param)
+    {
+    Action<Exception> rr_handler=(Action<Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(err);
+    return;
+    }
+    rr_handler(null);
+    }
+    public virtual void async_get_c6(Action<List<MultiDimArray>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    rr_async_PropertyGet("c6",rrend_async_get_c6,rr_handler,rr_timeout);
+    }
+    protected virtual void rrend_async_get_c6(MessageElement value ,Exception err,object param)
+    {
+    Action<List<MultiDimArray>,Exception> rr_handler=(Action<List<MultiDimArray>,Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(default(List<MultiDimArray>),err);
+    return;
+    }
+    List<MultiDimArray> rr_ret;
+    try {
+    rr_ret=MessageElementUtil.UnpackList<MultiDimArray>(value);
+    } catch (Exception err2) {
+    rr_handler(default(List<MultiDimArray>),err2);
+    return;
+    }
+    rr_handler(rr_ret,null);
+    }
+    public virtual void async_set_c6(List<MultiDimArray> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(MessageElement mm=MessageElementUtil.PackListType<MultiDimArray>("value",value))
+    {
+    rr_async_PropertySet("c6",mm,rrend_async_set_c6,rr_handler,rr_timeout);
+    }
+    }
+    protected virtual void rrend_async_set_c6(MessageElement m ,Exception err,object param)
+    {
+    Action<Exception> rr_handler=(Action<Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(err);
+    return;
+    }
+    rr_handler(null);
+    }
+    public virtual void async_get_c7(Action<CSingle,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    rr_async_PropertyGet("c7",rrend_async_get_c7,rr_handler,rr_timeout);
+    }
+    protected virtual void rrend_async_get_c7(MessageElement value ,Exception err,object param)
+    {
+    Action<CSingle,Exception> rr_handler=(Action<CSingle,Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(default(CSingle),err);
+    return;
+    }
+    CSingle rr_ret;
+    try {
+    rr_ret=(MessageElementUtil.UnpackScalar<CSingle>(value));
+    } catch (Exception err2) {
+    rr_handler(default(CSingle),err2);
+    return;
+    }
+    rr_handler(rr_ret,null);
+    }
+    public virtual void async_set_c7(CSingle value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(MessageElement mm=MessageElementUtil.PackScalar<CSingle>("value",value))
+    {
+    rr_async_PropertySet("c7",mm,rrend_async_set_c7,rr_handler,rr_timeout);
+    }
+    }
+    protected virtual void rrend_async_set_c7(MessageElement m ,Exception err,object param)
+    {
+    Action<Exception> rr_handler=(Action<Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(err);
+    return;
+    }
+    rr_handler(null);
+    }
+    public virtual void async_get_c8(Action<CSingle[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    rr_async_PropertyGet("c8",rrend_async_get_c8,rr_handler,rr_timeout);
+    }
+    protected virtual void rrend_async_get_c8(MessageElement value ,Exception err,object param)
+    {
+    Action<CSingle[],Exception> rr_handler=(Action<CSingle[],Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(default(CSingle[]),err);
+    return;
+    }
+    CSingle[] rr_ret;
+    try {
+    rr_ret=MessageElementUtil.UnpackArray<CSingle>(value);
+    } catch (Exception err2) {
+    rr_handler(default(CSingle[]),err2);
+    return;
+    }
+    rr_handler(rr_ret,null);
+    }
+    public virtual void async_set_c8(CSingle[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(MessageElement mm=MessageElementUtil.PackArray<CSingle>("value",value))
+    {
+    rr_async_PropertySet("c8",mm,rrend_async_set_c8,rr_handler,rr_timeout);
+    }
+    }
+    protected virtual void rrend_async_set_c8(MessageElement m ,Exception err,object param)
+    {
+    Action<Exception> rr_handler=(Action<Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(err);
+    return;
+    }
+    rr_handler(null);
+    }
+    public virtual void async_get_c9(Action<MultiDimArray,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    rr_async_PropertyGet("c9",rrend_async_get_c9,rr_handler,rr_timeout);
+    }
+    protected virtual void rrend_async_get_c9(MessageElement value ,Exception err,object param)
+    {
+    Action<MultiDimArray,Exception> rr_handler=(Action<MultiDimArray,Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(default(MultiDimArray),err);
+    return;
+    }
+    MultiDimArray rr_ret;
+    try {
+    rr_ret=MessageElementUtil.UnpackMultiDimArray(value);
+    } catch (Exception err2) {
+    rr_handler(default(MultiDimArray),err2);
+    return;
+    }
+    rr_handler(rr_ret,null);
+    }
+    public virtual void async_set_c9(MultiDimArray value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(MessageElement mm=MessageElementUtil.PackMultiDimArray("value",(MultiDimArray)value))
+    {
+    rr_async_PropertySet("c9",mm,rrend_async_set_c9,rr_handler,rr_timeout);
+    }
+    }
+    protected virtual void rrend_async_set_c9(MessageElement m ,Exception err,object param)
+    {
+    Action<Exception> rr_handler=(Action<Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(err);
+    return;
+    }
+    rr_handler(null);
+    }
+    public virtual void async_get_c10(Action<List<CSingle>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    rr_async_PropertyGet("c10",rrend_async_get_c10,rr_handler,rr_timeout);
+    }
+    protected virtual void rrend_async_get_c10(MessageElement value ,Exception err,object param)
+    {
+    Action<List<CSingle>,Exception> rr_handler=(Action<List<CSingle>,Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(default(List<CSingle>),err);
+    return;
+    }
+    List<CSingle> rr_ret;
+    try {
+    rr_ret=MessageElementUtil.UnpackList<CSingle>(value);
+    } catch (Exception err2) {
+    rr_handler(default(List<CSingle>),err2);
+    return;
+    }
+    rr_handler(rr_ret,null);
+    }
+    public virtual void async_set_c10(List<CSingle> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(MessageElement mm=MessageElementUtil.PackListType<CSingle>("value",value))
+    {
+    rr_async_PropertySet("c10",mm,rrend_async_set_c10,rr_handler,rr_timeout);
+    }
+    }
+    protected virtual void rrend_async_set_c10(MessageElement m ,Exception err,object param)
+    {
+    Action<Exception> rr_handler=(Action<Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(err);
+    return;
+    }
+    rr_handler(null);
+    }
+    public virtual void async_get_c11(Action<List<CSingle[]>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    rr_async_PropertyGet("c11",rrend_async_get_c11,rr_handler,rr_timeout);
+    }
+    protected virtual void rrend_async_get_c11(MessageElement value ,Exception err,object param)
+    {
+    Action<List<CSingle[]>,Exception> rr_handler=(Action<List<CSingle[]>,Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(default(List<CSingle[]>),err);
+    return;
+    }
+    List<CSingle[]> rr_ret;
+    try {
+    rr_ret=MessageElementUtil.UnpackList<CSingle[]>(value);
+    } catch (Exception err2) {
+    rr_handler(default(List<CSingle[]>),err2);
+    return;
+    }
+    rr_handler(rr_ret,null);
+    }
+    public virtual void async_set_c11(List<CSingle[]> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(MessageElement mm=MessageElementUtil.PackListType<CSingle[]>("value",value))
+    {
+    rr_async_PropertySet("c11",mm,rrend_async_set_c11,rr_handler,rr_timeout);
+    }
+    }
+    protected virtual void rrend_async_set_c11(MessageElement m ,Exception err,object param)
+    {
+    Action<Exception> rr_handler=(Action<Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(err);
+    return;
+    }
+    rr_handler(null);
+    }
+    public virtual void async_get_c12(Action<List<MultiDimArray>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    rr_async_PropertyGet("c12",rrend_async_get_c12,rr_handler,rr_timeout);
+    }
+    protected virtual void rrend_async_get_c12(MessageElement value ,Exception err,object param)
+    {
+    Action<List<MultiDimArray>,Exception> rr_handler=(Action<List<MultiDimArray>,Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(default(List<MultiDimArray>),err);
+    return;
+    }
+    List<MultiDimArray> rr_ret;
+    try {
+    rr_ret=MessageElementUtil.UnpackList<MultiDimArray>(value);
+    } catch (Exception err2) {
+    rr_handler(default(List<MultiDimArray>),err2);
+    return;
+    }
+    rr_handler(rr_ret,null);
+    }
+    public virtual void async_set_c12(List<MultiDimArray> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(MessageElement mm=MessageElementUtil.PackListType<MultiDimArray>("value",value))
+    {
+    rr_async_PropertySet("c12",mm,rrend_async_set_c12,rr_handler,rr_timeout);
+    }
+    }
+    protected virtual void rrend_async_set_c12(MessageElement m ,Exception err,object param)
+    {
+    Action<Exception> rr_handler=(Action<Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(err);
+    return;
+    }
+    rr_handler(null);
+    }
+    public virtual void async_get_b1(Action<bool,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    rr_async_PropertyGet("b1",rrend_async_get_b1,rr_handler,rr_timeout);
+    }
+    protected virtual void rrend_async_get_b1(MessageElement value ,Exception err,object param)
+    {
+    Action<bool,Exception> rr_handler=(Action<bool,Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(default(bool),err);
+    return;
+    }
+    bool rr_ret;
+    try {
+    rr_ret=(MessageElementUtil.UnpackScalar<bool>(value));
+    } catch (Exception err2) {
+    rr_handler(default(bool),err2);
+    return;
+    }
+    rr_handler(rr_ret,null);
+    }
+    public virtual void async_set_b1(bool value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(MessageElement mm=MessageElementUtil.PackScalar<bool>("value",value))
+    {
+    rr_async_PropertySet("b1",mm,rrend_async_set_b1,rr_handler,rr_timeout);
+    }
+    }
+    protected virtual void rrend_async_set_b1(MessageElement m ,Exception err,object param)
+    {
+    Action<Exception> rr_handler=(Action<Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(err);
+    return;
+    }
+    rr_handler(null);
+    }
+    public virtual void async_get_b2(Action<bool[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    rr_async_PropertyGet("b2",rrend_async_get_b2,rr_handler,rr_timeout);
+    }
+    protected virtual void rrend_async_get_b2(MessageElement value ,Exception err,object param)
+    {
+    Action<bool[],Exception> rr_handler=(Action<bool[],Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(default(bool[]),err);
+    return;
+    }
+    bool[] rr_ret;
+    try {
+    rr_ret=MessageElementUtil.UnpackArray<bool>(value);
+    } catch (Exception err2) {
+    rr_handler(default(bool[]),err2);
+    return;
+    }
+    rr_handler(rr_ret,null);
+    }
+    public virtual void async_set_b2(bool[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(MessageElement mm=MessageElementUtil.PackArray<bool>("value",value))
+    {
+    rr_async_PropertySet("b2",mm,rrend_async_set_b2,rr_handler,rr_timeout);
+    }
+    }
+    protected virtual void rrend_async_set_b2(MessageElement m ,Exception err,object param)
+    {
+    Action<Exception> rr_handler=(Action<Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(err);
+    return;
+    }
+    rr_handler(null);
+    }
+    public virtual void async_get_b3(Action<MultiDimArray,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    rr_async_PropertyGet("b3",rrend_async_get_b3,rr_handler,rr_timeout);
+    }
+    protected virtual void rrend_async_get_b3(MessageElement value ,Exception err,object param)
+    {
+    Action<MultiDimArray,Exception> rr_handler=(Action<MultiDimArray,Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(default(MultiDimArray),err);
+    return;
+    }
+    MultiDimArray rr_ret;
+    try {
+    rr_ret=MessageElementUtil.UnpackMultiDimArray(value);
+    } catch (Exception err2) {
+    rr_handler(default(MultiDimArray),err2);
+    return;
+    }
+    rr_handler(rr_ret,null);
+    }
+    public virtual void async_set_b3(MultiDimArray value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(MessageElement mm=MessageElementUtil.PackMultiDimArray("value",(MultiDimArray)value))
+    {
+    rr_async_PropertySet("b3",mm,rrend_async_set_b3,rr_handler,rr_timeout);
+    }
+    }
+    protected virtual void rrend_async_set_b3(MessageElement m ,Exception err,object param)
+    {
+    Action<Exception> rr_handler=(Action<Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(err);
+    return;
+    }
+    rr_handler(null);
+    }
+    public virtual void async_get_b4(Action<List<bool>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    rr_async_PropertyGet("b4",rrend_async_get_b4,rr_handler,rr_timeout);
+    }
+    protected virtual void rrend_async_get_b4(MessageElement value ,Exception err,object param)
+    {
+    Action<List<bool>,Exception> rr_handler=(Action<List<bool>,Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(default(List<bool>),err);
+    return;
+    }
+    List<bool> rr_ret;
+    try {
+    rr_ret=MessageElementUtil.UnpackList<bool>(value);
+    } catch (Exception err2) {
+    rr_handler(default(List<bool>),err2);
+    return;
+    }
+    rr_handler(rr_ret,null);
+    }
+    public virtual void async_set_b4(List<bool> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(MessageElement mm=MessageElementUtil.PackListType<bool>("value",value))
+    {
+    rr_async_PropertySet("b4",mm,rrend_async_set_b4,rr_handler,rr_timeout);
+    }
+    }
+    protected virtual void rrend_async_set_b4(MessageElement m ,Exception err,object param)
+    {
+    Action<Exception> rr_handler=(Action<Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(err);
+    return;
+    }
+    rr_handler(null);
+    }
+    public virtual void async_get_b5(Action<List<bool[]>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    rr_async_PropertyGet("b5",rrend_async_get_b5,rr_handler,rr_timeout);
+    }
+    protected virtual void rrend_async_get_b5(MessageElement value ,Exception err,object param)
+    {
+    Action<List<bool[]>,Exception> rr_handler=(Action<List<bool[]>,Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(default(List<bool[]>),err);
+    return;
+    }
+    List<bool[]> rr_ret;
+    try {
+    rr_ret=MessageElementUtil.UnpackList<bool[]>(value);
+    } catch (Exception err2) {
+    rr_handler(default(List<bool[]>),err2);
+    return;
+    }
+    rr_handler(rr_ret,null);
+    }
+    public virtual void async_set_b5(List<bool[]> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(MessageElement mm=MessageElementUtil.PackListType<bool[]>("value",value))
+    {
+    rr_async_PropertySet("b5",mm,rrend_async_set_b5,rr_handler,rr_timeout);
+    }
+    }
+    protected virtual void rrend_async_set_b5(MessageElement m ,Exception err,object param)
+    {
+    Action<Exception> rr_handler=(Action<Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(err);
+    return;
+    }
+    rr_handler(null);
+    }
+    public virtual void async_get_b6(Action<List<MultiDimArray>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    rr_async_PropertyGet("b6",rrend_async_get_b6,rr_handler,rr_timeout);
+    }
+    protected virtual void rrend_async_get_b6(MessageElement value ,Exception err,object param)
+    {
+    Action<List<MultiDimArray>,Exception> rr_handler=(Action<List<MultiDimArray>,Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(default(List<MultiDimArray>),err);
+    return;
+    }
+    List<MultiDimArray> rr_ret;
+    try {
+    rr_ret=MessageElementUtil.UnpackList<MultiDimArray>(value);
+    } catch (Exception err2) {
+    rr_handler(default(List<MultiDimArray>),err2);
+    return;
+    }
+    rr_handler(rr_ret,null);
+    }
+    public virtual void async_set_b6(List<MultiDimArray> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(MessageElement mm=MessageElementUtil.PackListType<MultiDimArray>("value",value))
+    {
+    rr_async_PropertySet("b6",mm,rrend_async_set_b6,rr_handler,rr_timeout);
+    }
+    }
+    protected virtual void rrend_async_set_b6(MessageElement m ,Exception err,object param)
+    {
+    Action<Exception> rr_handler=(Action<Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(err);
+    return;
+    }
+    rr_handler(null);
+    }
+    public virtual void async_testpod1_func1(testpod1 s,Action<Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(vectorptr_messageelement rr_param=new vectorptr_messageelement())
     {
-    rr_async_FunctionCall("testcstruct1_func2",rr_param,rrend_async_testcstruct1_func2,rr_handler,rr_timeout);
+    MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.PackPodToArray<testpod1>("s",ref s));
+    rr_async_FunctionCall("testpod1_func1",rr_param,rrend_async_testpod1_func1,rr_handler,rr_timeout);
     }
     }
-    protected virtual void rrend_async_testcstruct1_func2(MessageElement ret ,Exception err,object param)
+    protected virtual void rrend_async_testpod1_func1(MessageElement ret ,Exception err,object param)
     {
-    Action<testcstruct1,Exception> rr_handler=(Action<testcstruct1,Exception>)param;
+    Action<Exception> rr_handler=(Action<Exception>)param;
     if (err!=null)
     {
-    rr_handler(default(testcstruct1),err);
+    rr_handler(err);
     return;
     }
-    testcstruct1 rr_ret;
+    rr_handler(null);
+    }
+    public virtual void async_testpod1_func2(Action<testpod1,Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(vectorptr_messageelement rr_param=new vectorptr_messageelement())
+    {
+    rr_async_FunctionCall("testpod1_func2",rr_param,rrend_async_testpod1_func2,rr_handler,rr_timeout);
+    }
+    }
+    protected virtual void rrend_async_testpod1_func2(MessageElement ret ,Exception err,object param)
+    {
+    Action<testpod1,Exception> rr_handler=(Action<testpod1,Exception>)param;
+    if (err!=null)
+    {
+    rr_handler(default(testpod1),err);
+    return;
+    }
+    testpod1 rr_ret;
     try {
-    rr_ret=MessageElementUtil.UnpackCStructureFromArray<testcstruct1>(ret);
+    rr_ret=MessageElementUtil.UnpackPodFromArray<testpod1>(ret);
     } catch (Exception err2) {
-    rr_handler(default(testcstruct1),err2);
+    rr_handler(default(testpod1),err2);
     return;
     }
     rr_handler(rr_ret,null);
@@ -1547,10 +2921,10 @@ public class testroot3_skel : ServiceSkel {
     testenum1 ret=obj.testenum1_prop;
     return MessageElementUtil.PackEnum<testenum1>("return",ret);
     }
-    case "testcstruct1_prop":
+    case "testpod1_prop":
     {
-    testcstruct1 ret=obj.testcstruct1_prop;
-    return MessageElementUtil.PackCStructureToArray<testcstruct1>("return",ref ret);
+    testpod1 ret=obj.testpod1_prop;
+    return MessageElementUtil.PackPodToArray<testpod1>("return",ref ret);
     }
     case "teststruct3_prop":
     {
@@ -1580,12 +2954,127 @@ public class testroot3_skel : ServiceSkel {
     case "d5":
     {
     List<MultiDimArray> ret=obj.d5;
-    return MessageElementUtil.PackListType<MultiDimArray>("return",DataTypeUtil.VerifyArrayLength(ret,9,new int[] {3,3}));
+    return MessageElementUtil.PackListType<MultiDimArray>("return",DataTypeUtil.VerifyArrayLength(ret,9,new uint[] {3,3}));
     }
     case "d6":
     {
     Dictionary<int,MultiDimArray> ret=obj.d6;
-    return MessageElementUtil.PackMapType<int,MultiDimArray>("return",DataTypeUtil.VerifyArrayLength(ret,9,new int[] {3,3}));
+    return MessageElementUtil.PackMapType<int,MultiDimArray>("return",DataTypeUtil.VerifyArrayLength(ret,9,new uint[] {3,3}));
+    }
+    case "testnamedarray1":
+    {
+    vector3 ret=obj.testnamedarray1;
+    return MessageElementUtil.PackNamedArrayToArray<vector3>("return",ref ret);
+    }
+    case "testnamedarray2":
+    {
+    transform ret=obj.testnamedarray2;
+    return MessageElementUtil.PackNamedArrayToArray<transform>("return",ref ret);
+    }
+    case "testnamedarray3":
+    {
+    transform[] ret=obj.testnamedarray3;
+    return MessageElementUtil.PackNamedArray<transform>("return",DataTypeUtil.VerifyArrayLength(ret, 10, true));
+    }
+    case "testnamedarray4":
+    {
+    NamedMultiDimArray ret=obj.testnamedarray4;
+    return MessageElementUtil.PackNamedMultiDimArray<transform>("return",ret);
+    }
+    case "testnamedarray5":
+    {
+    NamedMultiDimArray ret=obj.testnamedarray5;
+    return MessageElementUtil.PackNamedMultiDimArray<transform>("return",DataTypeUtil.VerifyArrayLength(ret,6,new uint[] {3,2}));
+    }
+    case "c1":
+    {
+    CDouble ret=obj.c1;
+    return MessageElementUtil.PackScalar<CDouble>("return",ret);
+    }
+    case "c2":
+    {
+    CDouble[] ret=obj.c2;
+    return MessageElementUtil.PackArray<CDouble>("return",ret);
+    }
+    case "c3":
+    {
+    MultiDimArray ret=obj.c3;
+    return MessageElementUtil.PackMultiDimArray("return",(MultiDimArray)ret);
+    }
+    case "c4":
+    {
+    List<CDouble> ret=obj.c4;
+    return MessageElementUtil.PackListType<CDouble>("return",ret);
+    }
+    case "c5":
+    {
+    List<CDouble[]> ret=obj.c5;
+    return MessageElementUtil.PackListType<CDouble[]>("return",ret);
+    }
+    case "c6":
+    {
+    List<MultiDimArray> ret=obj.c6;
+    return MessageElementUtil.PackListType<MultiDimArray>("return",ret);
+    }
+    case "c7":
+    {
+    CSingle ret=obj.c7;
+    return MessageElementUtil.PackScalar<CSingle>("return",ret);
+    }
+    case "c8":
+    {
+    CSingle[] ret=obj.c8;
+    return MessageElementUtil.PackArray<CSingle>("return",ret);
+    }
+    case "c9":
+    {
+    MultiDimArray ret=obj.c9;
+    return MessageElementUtil.PackMultiDimArray("return",(MultiDimArray)ret);
+    }
+    case "c10":
+    {
+    List<CSingle> ret=obj.c10;
+    return MessageElementUtil.PackListType<CSingle>("return",ret);
+    }
+    case "c11":
+    {
+    List<CSingle[]> ret=obj.c11;
+    return MessageElementUtil.PackListType<CSingle[]>("return",ret);
+    }
+    case "c12":
+    {
+    List<MultiDimArray> ret=obj.c12;
+    return MessageElementUtil.PackListType<MultiDimArray>("return",ret);
+    }
+    case "b1":
+    {
+    bool ret=obj.b1;
+    return MessageElementUtil.PackScalar<bool>("return",ret);
+    }
+    case "b2":
+    {
+    bool[] ret=obj.b2;
+    return MessageElementUtil.PackArray<bool>("return",ret);
+    }
+    case "b3":
+    {
+    MultiDimArray ret=obj.b3;
+    return MessageElementUtil.PackMultiDimArray("return",(MultiDimArray)ret);
+    }
+    case "b4":
+    {
+    List<bool> ret=obj.b4;
+    return MessageElementUtil.PackListType<bool>("return",ret);
+    }
+    case "b5":
+    {
+    List<bool[]> ret=obj.b5;
+    return MessageElementUtil.PackListType<bool[]>("return",ret);
+    }
+    case "b6":
+    {
+    List<MultiDimArray> ret=obj.b6;
+    return MessageElementUtil.PackListType<MultiDimArray>("return",ret);
     }
     default:
     break;
@@ -1614,9 +3103,9 @@ public class testroot3_skel : ServiceSkel {
     obj.testenum1_prop=MessageElementUtil.UnpackEnum<testenum1>(m);
     return;
     }
-    case "testcstruct1_prop":
+    case "testpod1_prop":
     {
-    obj.testcstruct1_prop=MessageElementUtil.UnpackCStructureFromArray<testcstruct1>(m);
+    obj.testpod1_prop=MessageElementUtil.UnpackPodFromArray<testpod1>(m);
     return;
     }
     case "teststruct3_prop":
@@ -1646,12 +3135,127 @@ public class testroot3_skel : ServiceSkel {
     }
     case "d5":
     {
-    obj.d5=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackList<MultiDimArray>(m),9,new int[] {3,3});
+    obj.d5=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackList<MultiDimArray>(m),9,new uint[] {3,3});
     return;
     }
     case "d6":
     {
-    obj.d6=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackMap<int,MultiDimArray>(m),9,new int[] {3,3});
+    obj.d6=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackMap<int,MultiDimArray>(m),9,new uint[] {3,3});
+    return;
+    }
+    case "testnamedarray1":
+    {
+    obj.testnamedarray1=MessageElementUtil.UnpackNamedArrayFromArray<vector3>(m);
+    return;
+    }
+    case "testnamedarray2":
+    {
+    obj.testnamedarray2=MessageElementUtil.UnpackNamedArrayFromArray<transform>(m);
+    return;
+    }
+    case "testnamedarray3":
+    {
+    obj.testnamedarray3=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackNamedArray<transform>(m), 10, true);
+    return;
+    }
+    case "testnamedarray4":
+    {
+    obj.testnamedarray4=MessageElementUtil.UnpackNamedMultiDimArray<transform>(m);
+    return;
+    }
+    case "testnamedarray5":
+    {
+    obj.testnamedarray5=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackNamedMultiDimArray<transform>(m),6,new uint[] {3,2});
+    return;
+    }
+    case "c1":
+    {
+    obj.c1=(MessageElementUtil.UnpackScalar<CDouble>(m));
+    return;
+    }
+    case "c2":
+    {
+    obj.c2=MessageElementUtil.UnpackArray<CDouble>(m);
+    return;
+    }
+    case "c3":
+    {
+    obj.c3=MessageElementUtil.UnpackMultiDimArray(m);
+    return;
+    }
+    case "c4":
+    {
+    obj.c4=MessageElementUtil.UnpackList<CDouble>(m);
+    return;
+    }
+    case "c5":
+    {
+    obj.c5=MessageElementUtil.UnpackList<CDouble[]>(m);
+    return;
+    }
+    case "c6":
+    {
+    obj.c6=MessageElementUtil.UnpackList<MultiDimArray>(m);
+    return;
+    }
+    case "c7":
+    {
+    obj.c7=(MessageElementUtil.UnpackScalar<CSingle>(m));
+    return;
+    }
+    case "c8":
+    {
+    obj.c8=MessageElementUtil.UnpackArray<CSingle>(m);
+    return;
+    }
+    case "c9":
+    {
+    obj.c9=MessageElementUtil.UnpackMultiDimArray(m);
+    return;
+    }
+    case "c10":
+    {
+    obj.c10=MessageElementUtil.UnpackList<CSingle>(m);
+    return;
+    }
+    case "c11":
+    {
+    obj.c11=MessageElementUtil.UnpackList<CSingle[]>(m);
+    return;
+    }
+    case "c12":
+    {
+    obj.c12=MessageElementUtil.UnpackList<MultiDimArray>(m);
+    return;
+    }
+    case "b1":
+    {
+    obj.b1=(MessageElementUtil.UnpackScalar<bool>(m));
+    return;
+    }
+    case "b2":
+    {
+    obj.b2=MessageElementUtil.UnpackArray<bool>(m);
+    return;
+    }
+    case "b3":
+    {
+    obj.b3=MessageElementUtil.UnpackMultiDimArray(m);
+    return;
+    }
+    case "b4":
+    {
+    obj.b4=MessageElementUtil.UnpackList<bool>(m);
+    return;
+    }
+    case "b5":
+    {
+    obj.b5=MessageElementUtil.UnpackList<bool[]>(m);
+    return;
+    }
+    case "b6":
+    {
+    obj.b6=MessageElementUtil.UnpackList<MultiDimArray>(m);
     return;
     }
     default:
@@ -1661,16 +3265,16 @@ public class testroot3_skel : ServiceSkel {
     }
     public override MessageElement CallFunction(string rr_membername, vectorptr_messageelement rr_m) {
     switch (rr_membername) {
-    case "testcstruct1_func1":
+    case "testpod1_func1":
     {
-    testcstruct1 s=MessageElementUtil.UnpackCStructureFromArray<testcstruct1>(vectorptr_messageelement_util.FindElement(rr_m,"s"));
-    this.obj.testcstruct1_func1(s);
+    testpod1 s=MessageElementUtil.UnpackPodFromArray<testpod1>(vectorptr_messageelement_util.FindElement(rr_m,"s"));
+    this.obj.testpod1_func1(s);
     return new MessageElement("return",(int)0);
     }
-    case "testcstruct1_func2":
+    case "testpod1_func2":
     {
-    testcstruct1 rr_ret=this.obj.testcstruct1_func2();
-    return MessageElementUtil.PackCStructureToArray<testcstruct1>("return",ref rr_ret);
+    testpod1 rr_ret=this.obj.testpod1_func2();
+    return MessageElementUtil.PackPodToArray<testpod1>("return",ref rr_ret);
     }
     case "gen_func1":
     {
@@ -1757,22 +3361,16 @@ public class testroot3_skel : ServiceSkel {
     WrappedArrayMemoryDirectorNET<double> dir=new  WrappedArrayMemoryDirectorNET<double>(obj.readmem);
     return dir;
     }
-    default:
-    break;
+    case "c_m1": {
+    WrappedArrayMemoryDirectorNET<CDouble> dir=new  WrappedArrayMemoryDirectorNET<CDouble>(obj.c_m1);
+    return dir;
     }
-    throw new MemberNotFoundException("Member Not Found");
+    case "c_m3": {
+    WrappedArrayMemoryDirectorNET<CDouble> dir=new  WrappedArrayMemoryDirectorNET<CDouble>(obj.c_m3);
+    return dir;
     }
-    public override WrappedMultiDimArrayMemoryDirector GetMultiDimArrayMemory(string name) {
-    switch (name) {
-    default:
-    break;
-    }
-    throw new MemberNotFoundException("Member Not Found");
-    }
-    public override WrappedCStructureArrayMemoryDirector GetCStructureArrayMemory(string name) {
-    switch (name) {
-    case "cstruct_m1": {
-    WrappedCStructureArrayMemoryDirectorNET<testcstruct2> dir=new  WrappedCStructureArrayMemoryDirectorNET<testcstruct2>(obj.cstruct_m1);
+    case "c_m5": {
+    WrappedArrayMemoryDirectorNET<bool> dir=new  WrappedArrayMemoryDirectorNET<bool>(obj.c_m5);
     return dir;
     }
     default:
@@ -1780,10 +3378,62 @@ public class testroot3_skel : ServiceSkel {
     }
     throw new MemberNotFoundException("Member Not Found");
     }
-    public override WrappedCStructureMultiDimArrayMemoryDirector GetCStructureMultiDimArrayMemory(string name) {
+    public override WrappedMultiDimArrayMemoryDirector GetMultiDimArrayMemory(string name) {
     switch (name) {
-    case "cstruct_m2": {
-    WrappedCStructureMultiDimArrayMemoryDirectorNET<testcstruct2> dir=new  WrappedCStructureMultiDimArrayMemoryDirectorNET<testcstruct2>(obj.cstruct_m2);
+    case "c_m2": {
+    WrappedMultiDimArrayMemoryDirectorNET<CDouble> dir=new  WrappedMultiDimArrayMemoryDirectorNET<CDouble>(obj.c_m2);
+    return dir;
+    }
+    case "c_m4": {
+    WrappedMultiDimArrayMemoryDirectorNET<CDouble> dir=new  WrappedMultiDimArrayMemoryDirectorNET<CDouble>(obj.c_m4);
+    return dir;
+    }
+    case "c_m6": {
+    WrappedMultiDimArrayMemoryDirectorNET<bool> dir=new  WrappedMultiDimArrayMemoryDirectorNET<bool>(obj.c_m6);
+    return dir;
+    }
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public override WrappedPodArrayMemoryDirector GetPodArrayMemory(string name) {
+    switch (name) {
+    case "pod_m1": {
+    WrappedPodArrayMemoryDirectorNET<testpod2> dir=new  WrappedPodArrayMemoryDirectorNET<testpod2>(obj.pod_m1);
+    return dir;
+    }
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public override WrappedPodMultiDimArrayMemoryDirector GetPodMultiDimArrayMemory(string name) {
+    switch (name) {
+    case "pod_m2": {
+    WrappedPodMultiDimArrayMemoryDirectorNET<testpod2> dir=new  WrappedPodMultiDimArrayMemoryDirectorNET<testpod2>(obj.pod_m2);
+    return dir;
+    }
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public override WrappedNamedArrayMemoryDirector GetNamedArrayMemory(string name) {
+    switch (name) {
+    case "namedarray_m1": {
+    WrappedNamedArrayMemoryDirectorNET<transform> dir=new  WrappedNamedArrayMemoryDirectorNET<transform>(obj.namedarray_m1);
+    return dir;
+    }
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public override WrappedNamedMultiDimArrayMemoryDirector GetNamedMultiDimArrayMemory(string name) {
+    switch (name) {
+    case "namedarray_m2": {
+    WrappedNamedMultiDimArrayMemoryDirectorNET<transform> dir=new  WrappedNamedMultiDimArrayMemoryDirectorNET<transform>(obj.namedarray_m2);
     return dir;
     }
     default:
@@ -1874,14 +3524,28 @@ public class obj1_skel : ServiceSkel {
     }
     throw new MemberNotFoundException("Member Not Found");
     }
-    public override WrappedCStructureArrayMemoryDirector GetCStructureArrayMemory(string name) {
+    public override WrappedPodArrayMemoryDirector GetPodArrayMemory(string name) {
     switch (name) {
     default:
     break;
     }
     throw new MemberNotFoundException("Member Not Found");
     }
-    public override WrappedCStructureMultiDimArrayMemoryDirector GetCStructureMultiDimArrayMemory(string name) {
+    public override WrappedPodMultiDimArrayMemoryDirector GetPodMultiDimArrayMemory(string name) {
+    switch (name) {
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public override WrappedNamedArrayMemoryDirector GetNamedArrayMemory(string name) {
+    switch (name) {
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public override WrappedNamedMultiDimArrayMemoryDirector GetNamedMultiDimArrayMemory(string name) {
     switch (name) {
     default:
     break;
@@ -1971,14 +3635,28 @@ public class obj2_skel : ServiceSkel {
     }
     throw new MemberNotFoundException("Member Not Found");
     }
-    public override WrappedCStructureArrayMemoryDirector GetCStructureArrayMemory(string name) {
+    public override WrappedPodArrayMemoryDirector GetPodArrayMemory(string name) {
     switch (name) {
     default:
     break;
     }
     throw new MemberNotFoundException("Member Not Found");
     }
-    public override WrappedCStructureMultiDimArrayMemoryDirector GetCStructureMultiDimArrayMemory(string name) {
+    public override WrappedPodMultiDimArrayMemoryDirector GetPodMultiDimArrayMemory(string name) {
+    switch (name) {
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public override WrappedNamedArrayMemoryDirector GetNamedArrayMemory(string name) {
+    switch (name) {
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public override WrappedNamedMultiDimArrayMemoryDirector GetNamedMultiDimArrayMemory(string name) {
     switch (name) {
     default:
     break;
@@ -2068,14 +3746,28 @@ public class obj3_skel : ServiceSkel {
     }
     throw new MemberNotFoundException("Member Not Found");
     }
-    public override WrappedCStructureArrayMemoryDirector GetCStructureArrayMemory(string name) {
+    public override WrappedPodArrayMemoryDirector GetPodArrayMemory(string name) {
     switch (name) {
     default:
     break;
     }
     throw new MemberNotFoundException("Member Not Found");
     }
-    public override WrappedCStructureMultiDimArrayMemoryDirector GetCStructureMultiDimArrayMemory(string name) {
+    public override WrappedPodMultiDimArrayMemoryDirector GetPodMultiDimArrayMemory(string name) {
+    switch (name) {
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public override WrappedNamedArrayMemoryDirector GetNamedArrayMemory(string name) {
+    switch (name) {
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public override WrappedNamedMultiDimArrayMemoryDirector GetNamedMultiDimArrayMemory(string name) {
     switch (name) {
     default:
     break;
@@ -2188,14 +3880,28 @@ public class obj4_skel : ServiceSkel {
     }
     throw new MemberNotFoundException("Member Not Found");
     }
-    public override WrappedCStructureArrayMemoryDirector GetCStructureArrayMemory(string name) {
+    public override WrappedPodArrayMemoryDirector GetPodArrayMemory(string name) {
     switch (name) {
     default:
     break;
     }
     throw new MemberNotFoundException("Member Not Found");
     }
-    public override WrappedCStructureMultiDimArrayMemoryDirector GetCStructureMultiDimArrayMemory(string name) {
+    public override WrappedPodMultiDimArrayMemoryDirector GetPodMultiDimArrayMemory(string name) {
+    switch (name) {
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public override WrappedNamedArrayMemoryDirector GetNamedArrayMemory(string name) {
+    switch (name) {
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public override WrappedNamedMultiDimArrayMemoryDirector GetNamedMultiDimArrayMemory(string name) {
     switch (name) {
     default:
     break;
@@ -2212,7 +3918,7 @@ public class testroot3_default_impl : testroot3{
     public virtual int writeme {get; set;} = default(int);
     public virtual int unknown_modifier {get; set;} = default(int);
     public virtual testenum1 testenum1_prop {get; set;} = default(testenum1);
-    public virtual testcstruct1 testcstruct1_prop {get; set;} = default(testcstruct1);
+    public virtual testpod1 testpod1_prop {get; set;} = default(testpod1);
     public virtual teststruct3 teststruct3_prop {get; set;} = default(teststruct3);
     public virtual List<double[]> d1 {get; set;} = default(List<double[]>);
     public virtual List<double[]> d2 {get; set;} = default(List<double[]>);
@@ -2220,9 +3926,32 @@ public class testroot3_default_impl : testroot3{
     public virtual Dictionary<int,double[]> d4 {get; set;} = default(Dictionary<int,double[]>);
     public virtual List<MultiDimArray> d5 {get; set;} = default(List<MultiDimArray>);
     public virtual Dictionary<int,MultiDimArray> d6 {get; set;} = default(Dictionary<int,MultiDimArray>);
-    public virtual void testcstruct1_func1(testcstruct1 s) {
+    public virtual vector3 testnamedarray1 {get; set;} = default(vector3);
+    public virtual transform testnamedarray2 {get; set;} = default(transform);
+    public virtual transform[] testnamedarray3 {get; set;} = new transform[0];
+    public virtual NamedMultiDimArray testnamedarray4 {get; set;} = new NamedMultiDimArray(new uint[] {1,0}, new transform[0]);
+    public virtual NamedMultiDimArray testnamedarray5 {get; set;} = new NamedMultiDimArray(new uint[] {3,2}, new transform[6]);
+    public virtual CDouble c1 {get; set;} = default(CDouble);
+    public virtual CDouble[] c2 {get; set;} = new CDouble[0];
+    public virtual MultiDimArray c3 {get; set;} = new MultiDimArray(new uint[] {1,0}, new CDouble[0]);
+    public virtual List<CDouble> c4 {get; set;} = default(List<CDouble>);
+    public virtual List<CDouble[]> c5 {get; set;} = default(List<CDouble[]>);
+    public virtual List<MultiDimArray> c6 {get; set;} = default(List<MultiDimArray>);
+    public virtual CSingle c7 {get; set;} = default(CSingle);
+    public virtual CSingle[] c8 {get; set;} = new CSingle[0];
+    public virtual MultiDimArray c9 {get; set;} = new MultiDimArray(new uint[] {1,0}, new CSingle[0]);
+    public virtual List<CSingle> c10 {get; set;} = default(List<CSingle>);
+    public virtual List<CSingle[]> c11 {get; set;} = default(List<CSingle[]>);
+    public virtual List<MultiDimArray> c12 {get; set;} = default(List<MultiDimArray>);
+    public virtual bool b1 {get; set;} = default(bool);
+    public virtual bool[] b2 {get; set;} = new bool[0];
+    public virtual MultiDimArray b3 {get; set;} = new MultiDimArray(new uint[] {1,0}, new bool[0]);
+    public virtual List<bool> b4 {get; set;} = default(List<bool>);
+    public virtual List<bool[]> b5 {get; set;} = default(List<bool[]>);
+    public virtual List<MultiDimArray> b6 {get; set;} = default(List<MultiDimArray>);
+    public virtual void testpod1_func1(testpod1 s) {
     throw new NotImplementedException();    }
-    public virtual testcstruct1 testcstruct1_func2() {
+    public virtual testpod1 testpod1_func2() {
     throw new NotImplementedException();    }
     public virtual Generator2<double> gen_func1() {
     throw new NotImplementedException();    }
@@ -2288,15 +4017,36 @@ public class testroot3_default_impl : testroot3{
     }
     public virtual ArrayMemory<double> readmem { 
     get { throw new NotImplementedException(); }
-    set { throw new InvalidOperationException();}
     }
-    public virtual CStructureArrayMemory<testcstruct2> cstruct_m1 { 
+    public virtual PodArrayMemory<testpod2> pod_m1 { 
     get { throw new NotImplementedException(); }
-    set { throw new InvalidOperationException();}
     }
-    public virtual CStructureMultiDimArrayMemory<testcstruct2> cstruct_m2 {
+    public virtual PodMultiDimArrayMemory<testpod2> pod_m2 {
     get { throw new NotImplementedException(); }
-    set { throw new InvalidOperationException();}
+    }
+    public virtual NamedArrayMemory<transform> namedarray_m1 { 
+    get { throw new NotImplementedException(); }
+    }
+    public virtual NamedMultiDimArrayMemory<transform> namedarray_m2 {
+    get { throw new NotImplementedException(); }
+    }
+    public virtual ArrayMemory<CDouble> c_m1 { 
+    get { throw new NotImplementedException(); }
+    }
+    public virtual MultiDimArrayMemory<CDouble> c_m2 {
+    get { throw new NotImplementedException(); }
+    }
+    public virtual ArrayMemory<CDouble> c_m3 { 
+    get { throw new NotImplementedException(); }
+    }
+    public virtual MultiDimArrayMemory<CDouble> c_m4 {
+    get { throw new NotImplementedException(); }
+    }
+    public virtual ArrayMemory<bool> c_m5 { 
+    get { throw new NotImplementedException(); }
+    }
+    public virtual MultiDimArrayMemory<bool> c_m6 {
+    get { throw new NotImplementedException(); }
     }
 }
 public class obj1_default_impl : obj1{
@@ -2317,6 +4067,126 @@ public class obj4_default_impl : obj4{
     }
 }
 public static class RRExtensions{
+    public static double[] GetNumericArray(this vector3[] s)
+    {
+    var a=new ArraySegment<double>(new double[3 * s.Length]);
+    s.GetNumericArray(ref a);
+    return a.Array;
+    }
+    public static void GetNumericArray(this vector3[] s, ref ArraySegment<double> a)
+    {
+    if(a.Count < 3 * s.Length) throw new ArgumentException("ArraySegment invalid length");
+    for (int i=0; i<s.Length; i++)
+    {
+    var a1 = new ArraySegment<double>(a.Array, a.Offset + 3*i,3);
+    s[i].GetNumericArray(ref a1);
+    }
+    }
+    public static void AssignFromNumericArray(this vector3[] s, ref ArraySegment<double> a)
+    {
+    if(a.Count < 3 * s.Length) throw new ArgumentException("ArraySegment invalid length");
+    for (int i=0; i<s.Length; i++)
+    {
+    var a1 = new ArraySegment<double>(a.Array, a.Offset + 3*i,3);
+    s[i].AssignFromNumericArray(ref a1);
+    }
+    }
+    public static double[] GetNumericArray(this quaternion[] s)
+    {
+    var a=new ArraySegment<double>(new double[4 * s.Length]);
+    s.GetNumericArray(ref a);
+    return a.Array;
+    }
+    public static void GetNumericArray(this quaternion[] s, ref ArraySegment<double> a)
+    {
+    if(a.Count < 4 * s.Length) throw new ArgumentException("ArraySegment invalid length");
+    for (int i=0; i<s.Length; i++)
+    {
+    var a1 = new ArraySegment<double>(a.Array, a.Offset + 4*i,4);
+    s[i].GetNumericArray(ref a1);
+    }
+    }
+    public static void AssignFromNumericArray(this quaternion[] s, ref ArraySegment<double> a)
+    {
+    if(a.Count < 4 * s.Length) throw new ArgumentException("ArraySegment invalid length");
+    for (int i=0; i<s.Length; i++)
+    {
+    var a1 = new ArraySegment<double>(a.Array, a.Offset + 4*i,4);
+    s[i].AssignFromNumericArray(ref a1);
+    }
+    }
+    public static double[] GetNumericArray(this transform[] s)
+    {
+    var a=new ArraySegment<double>(new double[7 * s.Length]);
+    s.GetNumericArray(ref a);
+    return a.Array;
+    }
+    public static void GetNumericArray(this transform[] s, ref ArraySegment<double> a)
+    {
+    if(a.Count < 7 * s.Length) throw new ArgumentException("ArraySegment invalid length");
+    for (int i=0; i<s.Length; i++)
+    {
+    var a1 = new ArraySegment<double>(a.Array, a.Offset + 7*i,7);
+    s[i].GetNumericArray(ref a1);
+    }
+    }
+    public static void AssignFromNumericArray(this transform[] s, ref ArraySegment<double> a)
+    {
+    if(a.Count < 7 * s.Length) throw new ArgumentException("ArraySegment invalid length");
+    for (int i=0; i<s.Length; i++)
+    {
+    var a1 = new ArraySegment<double>(a.Array, a.Offset + 7*i,7);
+    s[i].AssignFromNumericArray(ref a1);
+    }
+    }
+    public static byte[] GetNumericArray(this pixel[] s)
+    {
+    var a=new ArraySegment<byte>(new byte[3 * s.Length]);
+    s.GetNumericArray(ref a);
+    return a.Array;
+    }
+    public static void GetNumericArray(this pixel[] s, ref ArraySegment<byte> a)
+    {
+    if(a.Count < 3 * s.Length) throw new ArgumentException("ArraySegment invalid length");
+    for (int i=0; i<s.Length; i++)
+    {
+    var a1 = new ArraySegment<byte>(a.Array, a.Offset + 3*i,3);
+    s[i].GetNumericArray(ref a1);
+    }
+    }
+    public static void AssignFromNumericArray(this pixel[] s, ref ArraySegment<byte> a)
+    {
+    if(a.Count < 3 * s.Length) throw new ArgumentException("ArraySegment invalid length");
+    for (int i=0; i<s.Length; i++)
+    {
+    var a1 = new ArraySegment<byte>(a.Array, a.Offset + 3*i,3);
+    s[i].AssignFromNumericArray(ref a1);
+    }
+    }
+    public static byte[] GetNumericArray(this pixel2[] s)
+    {
+    var a=new ArraySegment<byte>(new byte[31 * s.Length]);
+    s.GetNumericArray(ref a);
+    return a.Array;
+    }
+    public static void GetNumericArray(this pixel2[] s, ref ArraySegment<byte> a)
+    {
+    if(a.Count < 31 * s.Length) throw new ArgumentException("ArraySegment invalid length");
+    for (int i=0; i<s.Length; i++)
+    {
+    var a1 = new ArraySegment<byte>(a.Array, a.Offset + 31*i,31);
+    s[i].GetNumericArray(ref a1);
+    }
+    }
+    public static void AssignFromNumericArray(this pixel2[] s, ref ArraySegment<byte> a)
+    {
+    if(a.Count < 31 * s.Length) throw new ArgumentException("ArraySegment invalid length");
+    for (int i=0; i<s.Length; i++)
+    {
+    var a1 = new ArraySegment<byte>(a.Array, a.Offset + 31*i,31);
+    s[i].AssignFromNumericArray(ref a1);
+    }
+    }
     public static Task<int> async_get_readme(this async_testroot3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     RobotRaconteurTaskCompletion<int> t=new RobotRaconteurTaskCompletion<int>();
@@ -2365,16 +4235,16 @@ public static class RRExtensions{
     rr_obj.async_set_testenum1_prop(value,t.handler,rr_timeout);
     return t.Task;
     }
-    public static Task<testcstruct1> async_get_testcstruct1_prop(this async_testroot3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    public static Task<testpod1> async_get_testpod1_prop(this async_testroot3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    RobotRaconteurTaskCompletion<testcstruct1> t=new RobotRaconteurTaskCompletion<testcstruct1>();
-    rr_obj.async_get_testcstruct1_prop(t.handler,rr_timeout);
+    RobotRaconteurTaskCompletion<testpod1> t=new RobotRaconteurTaskCompletion<testpod1>();
+    rr_obj.async_get_testpod1_prop(t.handler,rr_timeout);
     return t.Task;
     }
-    public static Task async_set_testcstruct1_prop(this async_testroot3 rr_obj, testcstruct1 value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    public static Task async_set_testpod1_prop(this async_testroot3 rr_obj, testpod1 value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_testcstruct1_prop(value,t.handler,rr_timeout);
+    rr_obj.async_set_testpod1_prop(value,t.handler,rr_timeout);
     return t.Task;
     }
     public static Task<teststruct3> async_get_teststruct3_prop(this async_testroot3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
@@ -2461,16 +4331,292 @@ public static class RRExtensions{
     rr_obj.async_set_d6(value,t.handler,rr_timeout);
     return t.Task;
     }
-    public static Task async_testcstruct1_func1(this async_testroot3 rr_obj,testcstruct1 s,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    public static Task<vector3> async_get_testnamedarray1(this async_testroot3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurTaskCompletion<vector3> t=new RobotRaconteurTaskCompletion<vector3>();
+    rr_obj.async_get_testnamedarray1(t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task async_set_testnamedarray1(this async_testroot3 rr_obj, vector3 value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
+    rr_obj.async_set_testnamedarray1(value,t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task<transform> async_get_testnamedarray2(this async_testroot3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurTaskCompletion<transform> t=new RobotRaconteurTaskCompletion<transform>();
+    rr_obj.async_get_testnamedarray2(t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task async_set_testnamedarray2(this async_testroot3 rr_obj, transform value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
+    rr_obj.async_set_testnamedarray2(value,t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task<transform[]> async_get_testnamedarray3(this async_testroot3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurTaskCompletion<transform[]> t=new RobotRaconteurTaskCompletion<transform[]>();
+    rr_obj.async_get_testnamedarray3(t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task async_set_testnamedarray3(this async_testroot3 rr_obj, transform[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
+    rr_obj.async_set_testnamedarray3(value,t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task<NamedMultiDimArray> async_get_testnamedarray4(this async_testroot3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurTaskCompletion<NamedMultiDimArray> t=new RobotRaconteurTaskCompletion<NamedMultiDimArray>();
+    rr_obj.async_get_testnamedarray4(t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task async_set_testnamedarray4(this async_testroot3 rr_obj, NamedMultiDimArray value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
+    rr_obj.async_set_testnamedarray4(value,t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task<NamedMultiDimArray> async_get_testnamedarray5(this async_testroot3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurTaskCompletion<NamedMultiDimArray> t=new RobotRaconteurTaskCompletion<NamedMultiDimArray>();
+    rr_obj.async_get_testnamedarray5(t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task async_set_testnamedarray5(this async_testroot3 rr_obj, NamedMultiDimArray value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
+    rr_obj.async_set_testnamedarray5(value,t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task<CDouble> async_get_c1(this async_testroot3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurTaskCompletion<CDouble> t=new RobotRaconteurTaskCompletion<CDouble>();
+    rr_obj.async_get_c1(t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task async_set_c1(this async_testroot3 rr_obj, CDouble value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
+    rr_obj.async_set_c1(value,t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task<CDouble[]> async_get_c2(this async_testroot3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurTaskCompletion<CDouble[]> t=new RobotRaconteurTaskCompletion<CDouble[]>();
+    rr_obj.async_get_c2(t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task async_set_c2(this async_testroot3 rr_obj, CDouble[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
+    rr_obj.async_set_c2(value,t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task<MultiDimArray> async_get_c3(this async_testroot3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurTaskCompletion<MultiDimArray> t=new RobotRaconteurTaskCompletion<MultiDimArray>();
+    rr_obj.async_get_c3(t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task async_set_c3(this async_testroot3 rr_obj, MultiDimArray value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
+    rr_obj.async_set_c3(value,t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task<List<CDouble>> async_get_c4(this async_testroot3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurTaskCompletion<List<CDouble>> t=new RobotRaconteurTaskCompletion<List<CDouble>>();
+    rr_obj.async_get_c4(t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task async_set_c4(this async_testroot3 rr_obj, List<CDouble> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
+    rr_obj.async_set_c4(value,t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task<List<CDouble[]>> async_get_c5(this async_testroot3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurTaskCompletion<List<CDouble[]>> t=new RobotRaconteurTaskCompletion<List<CDouble[]>>();
+    rr_obj.async_get_c5(t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task async_set_c5(this async_testroot3 rr_obj, List<CDouble[]> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
+    rr_obj.async_set_c5(value,t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task<List<MultiDimArray>> async_get_c6(this async_testroot3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurTaskCompletion<List<MultiDimArray>> t=new RobotRaconteurTaskCompletion<List<MultiDimArray>>();
+    rr_obj.async_get_c6(t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task async_set_c6(this async_testroot3 rr_obj, List<MultiDimArray> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
+    rr_obj.async_set_c6(value,t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task<CSingle> async_get_c7(this async_testroot3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurTaskCompletion<CSingle> t=new RobotRaconteurTaskCompletion<CSingle>();
+    rr_obj.async_get_c7(t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task async_set_c7(this async_testroot3 rr_obj, CSingle value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
+    rr_obj.async_set_c7(value,t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task<CSingle[]> async_get_c8(this async_testroot3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurTaskCompletion<CSingle[]> t=new RobotRaconteurTaskCompletion<CSingle[]>();
+    rr_obj.async_get_c8(t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task async_set_c8(this async_testroot3 rr_obj, CSingle[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
+    rr_obj.async_set_c8(value,t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task<MultiDimArray> async_get_c9(this async_testroot3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurTaskCompletion<MultiDimArray> t=new RobotRaconteurTaskCompletion<MultiDimArray>();
+    rr_obj.async_get_c9(t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task async_set_c9(this async_testroot3 rr_obj, MultiDimArray value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
+    rr_obj.async_set_c9(value,t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task<List<CSingle>> async_get_c10(this async_testroot3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurTaskCompletion<List<CSingle>> t=new RobotRaconteurTaskCompletion<List<CSingle>>();
+    rr_obj.async_get_c10(t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task async_set_c10(this async_testroot3 rr_obj, List<CSingle> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
+    rr_obj.async_set_c10(value,t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task<List<CSingle[]>> async_get_c11(this async_testroot3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurTaskCompletion<List<CSingle[]>> t=new RobotRaconteurTaskCompletion<List<CSingle[]>>();
+    rr_obj.async_get_c11(t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task async_set_c11(this async_testroot3 rr_obj, List<CSingle[]> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
+    rr_obj.async_set_c11(value,t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task<List<MultiDimArray>> async_get_c12(this async_testroot3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurTaskCompletion<List<MultiDimArray>> t=new RobotRaconteurTaskCompletion<List<MultiDimArray>>();
+    rr_obj.async_get_c12(t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task async_set_c12(this async_testroot3 rr_obj, List<MultiDimArray> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
+    rr_obj.async_set_c12(value,t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task<bool> async_get_b1(this async_testroot3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurTaskCompletion<bool> t=new RobotRaconteurTaskCompletion<bool>();
+    rr_obj.async_get_b1(t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task async_set_b1(this async_testroot3 rr_obj, bool value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
+    rr_obj.async_set_b1(value,t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task<bool[]> async_get_b2(this async_testroot3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurTaskCompletion<bool[]> t=new RobotRaconteurTaskCompletion<bool[]>();
+    rr_obj.async_get_b2(t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task async_set_b2(this async_testroot3 rr_obj, bool[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
+    rr_obj.async_set_b2(value,t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task<MultiDimArray> async_get_b3(this async_testroot3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurTaskCompletion<MultiDimArray> t=new RobotRaconteurTaskCompletion<MultiDimArray>();
+    rr_obj.async_get_b3(t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task async_set_b3(this async_testroot3 rr_obj, MultiDimArray value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
+    rr_obj.async_set_b3(value,t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task<List<bool>> async_get_b4(this async_testroot3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurTaskCompletion<List<bool>> t=new RobotRaconteurTaskCompletion<List<bool>>();
+    rr_obj.async_get_b4(t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task async_set_b4(this async_testroot3 rr_obj, List<bool> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
+    rr_obj.async_set_b4(value,t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task<List<bool[]>> async_get_b5(this async_testroot3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurTaskCompletion<List<bool[]>> t=new RobotRaconteurTaskCompletion<List<bool[]>>();
+    rr_obj.async_get_b5(t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task async_set_b5(this async_testroot3 rr_obj, List<bool[]> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
+    rr_obj.async_set_b5(value,t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task<List<MultiDimArray>> async_get_b6(this async_testroot3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurTaskCompletion<List<MultiDimArray>> t=new RobotRaconteurTaskCompletion<List<MultiDimArray>>();
+    rr_obj.async_get_b6(t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task async_set_b6(this async_testroot3 rr_obj, List<MultiDimArray> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
+    rr_obj.async_set_b6(value,t.handler,rr_timeout);
+    return t.Task;
+    }
+    public static Task async_testpod1_func1(this async_testroot3 rr_obj,testpod1 s,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     RobotRaconteurVoidTaskCompletion rr_t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_testcstruct1_func1(s,rr_t.handler,rr_timeout);
+    rr_obj.async_testpod1_func1(s,rr_t.handler,rr_timeout);
     return rr_t.Task;
     }
-    public static Task<testcstruct1> async_testcstruct1_func2(this async_testroot3 rr_obj,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    public static Task<testpod1> async_testpod1_func2(this async_testroot3 rr_obj,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    RobotRaconteurTaskCompletion<testcstruct1> rr_t=new RobotRaconteurTaskCompletion<testcstruct1>();
-    rr_obj.async_testcstruct1_func2(rr_t.handler,rr_timeout);
+    RobotRaconteurTaskCompletion<testpod1> rr_t=new RobotRaconteurTaskCompletion<testpod1>();
+    rr_obj.async_testpod1_func2(rr_t.handler,rr_timeout);
     return rr_t.Task;
     }
     public static Task<Generator2<double>> async_gen_func1(this async_testroot3 rr_obj,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)

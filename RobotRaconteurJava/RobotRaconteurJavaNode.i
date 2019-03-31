@@ -1,4 +1,4 @@
-%shared_ptr(RobotRaconteur::MessageElement)
+%rr_intrusive_ptr(RobotRaconteur::MessageElement)
 
 %shared_ptr(RobotRaconteur::RobotRaconteurNode);
 
@@ -278,10 +278,15 @@ import java.util.*;
 
 		Class c;
 
-		if (s instanceof CStructureMultiDimArray)
+		if (s instanceof PodMultiDimArray)
 		{
-			CStructureMultiDimArray s2=(CStructureMultiDimArray)s;
-			c=s2.cstruct_array.getClass();
+			PodMultiDimArray s2=(PodMultiDimArray)s;
+			c=s2.pod_array.getClass();
+		}
+		else if (s instanceof NamedMultiDimArray)
+		{
+			NamedMultiDimArray s2=(NamedMultiDimArray)s;
+			c=s2.namedarray_array.getClass();
 		}
 		else
 		{
@@ -344,11 +349,16 @@ import java.util.*;
 			return MessageElementUtil.newMessageElementDispose(name, packMultiDimArray((MultiDimArray)data));
 		}
 
-		if (T_class == CStructureMultiDimArray.class)
+		if (T_class == PodMultiDimArray.class)
 		{
 			return MessageElementUtil.newMessageElementDispose(name, packStructure(data));
 		}
-				
+		
+		if (T_class == NamedMultiDimArray.class)
+		{
+			return MessageElementUtil.newMessageElementDispose(name, packStructure(data));
+		}
+		
 		boolean is_array = T_class.isArray();
 		if (is_array)
 		{
@@ -357,7 +367,7 @@ import java.util.*;
 				return MessageElementUtil.newMessageElementDispose(name, data);
 			}
 
-			if (RRCStructure.class.isAssignableFrom(T_class.getComponentType()))
+			if (RRPod.class.isAssignableFrom(T_class.getComponentType()))
 			{
 				return MessageElementUtil.newMessageElementDispose(name, packStructure(data));
 			}
@@ -365,7 +375,7 @@ import java.util.*;
 			return MessageElementUtil.newMessageElementDispose(name, packVarType(data));
 		}
 
-		if (RRStructure.class.isAssignableFrom(T_class) || RRCStructure.class.isAssignableFrom(T_class))
+		if (RRStructure.class.isAssignableFrom(T_class) || RRPod.class.isAssignableFrom(T_class) || RRNamedArray.class.isAssignableFrom(T_class))
 		{
 			return MessageElementUtil.newMessageElementDispose(name, packStructure(data));
 		}
@@ -408,19 +418,22 @@ import java.util.*;
             case DataTypes_int32_t:
             case DataTypes_uint32_t:
             case DataTypes_int64_t:
-            case DataTypes_uint64_t:                
+            case DataTypes_uint64_t:
+            case DataTypes_cdouble_t:
+            case DataTypes_csingle_t:
+            case DataTypes_bool_t:            			
                 return (T)e.getData();                
             case DataTypes_string_t:
                 return (T)e.getData();
 			case DataTypes_multidimarray_t:                
 				return (T)unpackMultiDimArrayDispose((MessageElementMultiDimArray)e.getData());
-			case DataTypes_cstructure_t:
+			case DataTypes_pod_t:
 			{
 				vectorptr_messageelement m = new vectorptr_messageelement();
 				try
 				{			
 					m.add(e);
-					return (T)unpackStructureDispose(new MessageElementCStructureArray(e.getElementTypeName(),m));
+					return (T)unpackStructureDispose(new MessageElementPodArray(e.getElementTypeName(),m));
 				}
 				finally
 				{
@@ -428,8 +441,10 @@ import java.util.*;
 				}
 			}
 			case DataTypes_structure_t:
-			case DataTypes_cstructure_array_t:
-			case DataTypes_cstructure_multidimarray_t:
+			case DataTypes_pod_array_t:
+			case DataTypes_pod_multidimarray_t:
+			case DataTypes_namedarray_array_t:
+			case DataTypes_namedarray_multidimarray_t:
 				return (T)unpackStructureDispose((MessageElementData)e.getData());
 			default:
                     throw new DataTypeException("Invalid container data type");
@@ -715,16 +730,26 @@ import java.util.*;
 			return packMultiDimArray((MultiDimArray)data);
 		}
 
-		if (data instanceof CStructureMultiDimArray)
+		if (data instanceof PodMultiDimArray)
 		{
 			return packStructure(data);
 		}
 
-		if (data instanceof RRStructure || data instanceof RRCStructure || data instanceof RRCStructure[])
+		if (data instanceof NamedMultiDimArray)
 		{
 			return packStructure(data);
 		}
-				
+		
+		if (data instanceof RRStructure || data instanceof RRPod || data instanceof RRPod[])
+		{
+			return packStructure(data);
+		}
+		
+		if (data instanceof RRNamedArray || data instanceof RRNamedArray[])
+		{
+			return packStructure(data);
+		}
+		
 		if (data instanceof String)
 		{
 			return data;
@@ -733,10 +758,12 @@ import java.util.*;
 		if (data instanceof Number || data instanceof byte[] || data instanceof short[] || data instanceof int[] || data instanceof long[]
 			|| data instanceof double[] || data instanceof float[]
 		    || data instanceof UnsignedByte || data instanceof UnsignedBytes || data instanceof UnsignedInt || data instanceof UnsignedInts
-			|| data instanceof UnsignedLong || data instanceof UnsignedLongs )
+			|| data instanceof UnsignedLong || data instanceof UnsignedLongs || data instanceof CDouble || data instanceof CDouble[]
+			|| data instanceof CSingle || data instanceof CSingle[] || data instanceof Boolean || data instanceof boolean[]
+			 )
 		{
 			return data;	
-		}
+		}		
 		
 		throw new DataTypeException("Could not pack varvalue");
 	}
@@ -767,19 +794,22 @@ import java.util.*;
             case DataTypes_int32_t:
             case DataTypes_uint32_t:
             case DataTypes_int64_t:
-            case DataTypes_uint64_t:                
+            case DataTypes_uint64_t:
+            case DataTypes_cdouble_t:
+            case DataTypes_csingle_t:
+            case DataTypes_bool_t:                           
                 return me.getData();                
             case DataTypes_string_t:
                 return me.getData();
 			case DataTypes_multidimarray_t:                
 				return unpackMultiDimArrayDispose((MessageElementMultiDimArray)me.getData());            
-			case DataTypes_cstructure_t:
+			case DataTypes_pod_t:
 			{
 				vectorptr_messageelement m = new vectorptr_messageelement();
 				try
 				{			
 					m.add(me);
-					return (Object)unpackStructureDispose(new MessageElementCStructureArray(me.getElementTypeName(),m));
+					return (Object)unpackStructureDispose(new MessageElementPodArray(me.getElementTypeName(),m));
 				}
 				finally
 				{
@@ -787,8 +817,10 @@ import java.util.*;
 				}
 			}
 			case DataTypes_structure_t:
-			case DataTypes_cstructure_array_t:
-			case DataTypes_cstructure_multidimarray_t:
+			case DataTypes_pod_array_t:
+			case DataTypes_pod_multidimarray_t:
+			case DataTypes_namedarray_array_t:
+			case DataTypes_namedarray_multidimarray_t:
 				return unpackStructureDispose((MessageElementData)me.getData());
 			case DataTypes_vector_t:
 				return this.<Integer, Object>unpackMapType(me.getData());
@@ -836,14 +868,9 @@ import java.util.*;
 		vectorptr_messageelement l = new vectorptr_messageelement();
 		try
 		{
-		MessageElementUtil.addMessageElementDispose(l,"dims", array.dims);
-		MessageElementUtil.addMessageElementDispose(l,"dimcount", new int[] {array.dimCount});
-		MessageElementUtil.addMessageElementDispose(l,"real", array.real);
-		if (array.complex)
-		{
-			MessageElementUtil.addMessageElementDispose(l,"imag", array.imag);
-		}
-
+		MessageElementUtil.addMessageElementDispose(l,"dims", new UnsignedInts(array.dims));		
+		MessageElementUtil.addMessageElementDispose(l,"array", array.array);
+		
 		return new MessageElementMultiDimArray(l);
 		}
 		finally
@@ -870,29 +897,9 @@ import java.util.*;
 		vectorptr_messageelement marrayElements=marray.getElements();
 		try
 		{
-		MultiDimArray m = new MultiDimArray();
-		m.dimCount = (MessageElementUtil.<int[]>findElementAndCast(marrayElements, "dimcount"))[0];
-		m.dims = (MessageElementUtil.<int[]>findElementAndCast(marrayElements, "dims"));
-		m.real = (MessageElementUtil.<Object>findElementAndCast(marrayElements, "real"));
-		for (int i=0; i< marrayElements.size(); i++)
-		{
-			
-			MessageElement m2=marrayElements.get(i);
-			try
-			{
-			if (m2.getElementName().equals("imag"))
-			{
-				m.complex = true;
-				m.imag = (m2.<Object>castData());
-				break;
-			}
-			}
-			finally
-			{
-				if (m2!=null) m2.delete();
-			}
-
-		}
+		MultiDimArray m = new MultiDimArray();		
+		m.dims = (MessageElementUtil.<UnsignedInts>findElementAndCast(marrayElements, "dims")).value;
+		m.array = (MessageElementUtil.<Object>findElementAndCast(marrayElements, "array"));
 		return m;
 		}
 		finally

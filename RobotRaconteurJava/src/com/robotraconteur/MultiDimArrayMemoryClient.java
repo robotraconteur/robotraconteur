@@ -20,8 +20,6 @@ public class MultiDimArrayMemoryClient<T> extends MultiDimArrayMemory<T>
 	@Override
 	public long[] dimensions()
 	{
-//C# TO JAVA CONVERTER WARNING: Unsigned integer types have no direct equivalent in Java:
-//ORIGINAL LINE: return innermem.Dimensions().Select(x=>(ulong)x).ToArray();
 		vector_uint64_t i1=innermem.dimensions();
 		int dimcount=(int)i1.size();
 		long[] o=new long[dimcount];
@@ -32,34 +30,24 @@ public class MultiDimArrayMemoryClient<T> extends MultiDimArrayMemory<T>
 		}
 		return o;
 	}
-
-	@Override
-	public boolean complex()
-	{
-		return innermem.complex();
-	}
-
-//C# TO JAVA CONVERTER WARNING: Unsigned integer types have no direct equivalent in Java:
-//ORIGINAL LINE: public override void Read(ulong[] memorypos, MultiDimArray buffer, ulong[] bufferpos, ulong[] count)
+	
 	@Override
 	public void read(long[] memorypos, MultiDimArray buffer, long[] bufferpos, long[] count)
 	{
 		RRMultiDimArrayUntyped dat=null;
 		RRBaseArray datDims=null;
-		RRBaseArray datReal=null;
-		RRBaseArray datImag=null;
+		RRBaseArray datArray=null;
+		
 		try
 		{
 		vector_uint64_t memorypos2 = new vector_uint64_t();
-//C# TO JAVA CONVERTER WARNING: Unsigned integer types have no direct equivalent in Java:
-//ORIGINAL LINE: foreach (ulong val in memorypos)
+
 		for (long val : memorypos)
 		{
 			memorypos2.add(BigInteger.valueOf(val));
 		}
 		vector_uint64_t count2 = new vector_uint64_t();
-//C# TO JAVA CONVERTER WARNING: Unsigned integer types have no direct equivalent in Java:
-//ORIGINAL LINE: foreach (ulong val in count)
+
 		for (long val : count)
 		{
 			count2.add(BigInteger.valueOf(val));
@@ -67,13 +55,10 @@ public class MultiDimArrayMemoryClient<T> extends MultiDimArrayMemory<T>
 
 		dat = WrappedMultiDimArrayMemoryClientUtil.read(innermem, memorypos2, count2);
 		datDims=dat.getDims();
-		int[] dims = (int[])MessageElementDataUtil.rRBaseArrayToArray(datDims);
-		datReal=dat.getReal();
-		T real = (T)MessageElementDataUtil.rRBaseArrayToArray(datReal);
-		datImag=dat.getImag();
-		T imag = (T)MessageElementDataUtil.rRBaseArrayToArray(datImag);
-
-		
+		int[] dims = ((UnsignedInts)MessageElementDataUtil.rRBaseArrayToArray(datDims)).value;
+		datArray=dat.getArray();
+		T array = (T)MessageElementDataUtil.rRBaseArrayToArray(datArray);
+				
 		int dimcount=bufferpos.length;
 		
 		int[] bufferpos3=new int[dimcount];
@@ -87,7 +72,7 @@ public class MultiDimArrayMemoryClient<T> extends MultiDimArrayMemory<T>
 		
 		}
 		
-		MultiDimArray dat2 = new MultiDimArray(dims, real, imag);
+		MultiDimArray dat2 = new MultiDimArray(dims, array);
 		buffer.assignSubArray(bufferpos3, dat2, new int[count.length], count3);
 
 		}
@@ -96,8 +81,7 @@ public class MultiDimArrayMemoryClient<T> extends MultiDimArrayMemory<T>
 			if (dat != null)
             {
                 if (datDims != null) datDims.delete();
-                if (datReal != null) datReal.delete();
-                if (datImag != null) datImag.delete();
+                if (datArray != null) datArray.delete();                
                 dat.delete();
             }
 			
@@ -114,9 +98,8 @@ public class MultiDimArrayMemoryClient<T> extends MultiDimArrayMemory<T>
 	{
 		RRMultiDimArrayUntyped dat2=null;
 		RRBaseArray dat2Dims=null;
-		RRBaseArray dat2Real=null;
-		RRBaseArray dat2Imag=null;
-		
+		RRBaseArray dat2Array=null;
+				
 		try
 		{
 		int elemcount = 1;
@@ -139,30 +122,18 @@ public class MultiDimArrayMemoryClient<T> extends MultiDimArrayMemory<T>
 		
 		}
 		
-		T real = (T)DataTypeUtil.arrayFromDataType(innermem.elementTypeID(),elemcount);
+		T array = (T)DataTypeUtil.arrayFromDataType(innermem.elementTypeID(),elemcount);
 		T imag = null;
-		if (complex())
-		{
-			imag = (T)DataTypeUtil.arrayFromDataType(innermem.elementTypeID(),elemcount);
-		}
-
-		MultiDimArray writedat1 = new MultiDimArray(count2, real, imag);
+		
+		MultiDimArray writedat1 = new MultiDimArray(count2, array);
 		writedat1.assignSubArray(new int[count.length], buffer, bufferpos2, count2);
 
 		dat2 = new RRMultiDimArrayUntyped();
-		dat2.setDimCount(count2.length);
-		dat2Dims=MessageElementDataUtil.arrayToRRBaseArray(count2);
+		dat2Dims=MessageElementDataUtil.arrayToRRBaseArray(new UnsignedInts(count2));
 		dat2.setDims(dat2Dims);
-		dat2Real=MessageElementDataUtil.arrayToRRBaseArray(real);
-		dat2.setReal(dat2Real);
-		dat2.setComplex(false);
-		if (imag != null)
-		{
-			dat2.setComplex(true);
-			dat2Imag=MessageElementDataUtil.arrayToRRBaseArray(imag);
-			dat2.setImag(dat2Imag);
-		}
-
+		dat2Array=MessageElementDataUtil.arrayToRRBaseArray(array);
+		dat2.setArray(dat2Array);
+		
 		vector_uint64_t memorypos3 = new vector_uint64_t();
 
 
@@ -191,8 +162,7 @@ public class MultiDimArrayMemoryClient<T> extends MultiDimArrayMemory<T>
 			if (dat2 != null)
             {
                 if (dat2Dims != null) dat2Dims.delete();
-                if (dat2Real != null) dat2Real.delete();
-                if (dat2Imag != null) dat2Imag.delete();
+                if (dat2Array != null) dat2Array.delete();                
                 dat2.delete();
             }
 		

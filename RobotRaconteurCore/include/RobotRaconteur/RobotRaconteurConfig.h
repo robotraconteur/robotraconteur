@@ -26,6 +26,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/enable_shared_from_this.hpp>
+#include <boost/intrusive_ptr.hpp>
 
 #define RR_SHARED_PTR boost::shared_ptr
 #define RR_MAKE_SHARED boost::make_shared
@@ -46,6 +47,9 @@
 #define RR_STATIC_POINTER_CAST std::static_pointer_cast
 
 #endif
+
+#define RR_INTRUSIVE_PTR boost::intrusive_ptr
+#define RR_INTRUSIVE_PTR boost::intrusive_ptr
 
 #define RR_UNORDERED_MAP boost::unordered_map
 

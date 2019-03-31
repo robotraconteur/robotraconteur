@@ -19,7 +19,11 @@ public class com__robotraconteur__testing__TestService2Factory extends ServiceFa
     if (objecttype.equals("ostruct2"))    return ostruct2_stubentry;
     throw new DataTypeException("Cannot find appropriate structure stub");
     }
-    public ICStructureStub findCStructureStub(String objecttype)
+    public IPodStub findPodStub(String objecttype)
+    {
+    throw new DataTypeException("Cannot find appropriate structure stub");
+    }
+    public INamedArrayStub findNamedArrayStub(String objecttype)
     {
     throw new DataTypeException("Cannot find appropriate structure stub");
     }

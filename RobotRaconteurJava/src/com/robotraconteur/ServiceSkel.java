@@ -281,11 +281,11 @@ public abstract class ServiceSkel extends WrappedServiceSkelDirector
 	}
 	
 	@Override
-	public WrappedCStructureArrayMemoryDirector _GetCStructureArrayMemory(String name)
+	public WrappedPodArrayMemoryDirector _GetPodArrayMemory(String name)
     {
         try
         {
-            return getCStructureArrayMemory(name);
+            return getPodArrayMemory(name);
         }
         catch (Exception e)
         {
@@ -304,11 +304,11 @@ public abstract class ServiceSkel extends WrappedServiceSkelDirector
     }
 
 	@Override
-    public WrappedCStructureMultiDimArrayMemoryDirector _GetCStructureMultiDimArrayMemory(String name)
+    public WrappedPodMultiDimArrayMemoryDirector _GetPodMultiDimArrayMemory(String name)
     {
         try
         {
-            return getCStructureMultiDimArrayMemory(name);
+            return getPodMultiDimArrayMemory(name);
         }
         catch (Exception e)
         {
@@ -326,15 +326,75 @@ public abstract class ServiceSkel extends WrappedServiceSkelDirector
         }
     }
 
-    public WrappedCStructureArrayMemoryDirector getCStructureArrayMemory(String name)
+    public WrappedPodArrayMemoryDirector getPodArrayMemory(String name)
     {
         throw new MemberNotFoundException("Member not found");
     }
 
-    public WrappedCStructureMultiDimArrayMemoryDirector getCStructureMultiDimArrayMemory(String name)
+    public WrappedPodMultiDimArrayMemoryDirector getPodMultiDimArrayMemory(String name)
     {
         throw new MemberNotFoundException("Member not found");
     }
+    
+    // namedarray memories
+    
+    @Override
+	public WrappedNamedArrayMemoryDirector _GetNamedArrayMemory(String name)
+    {
+        try
+        {
+            return getNamedArrayMemory(name);
+        }
+        catch (Exception e)
+        {
+        	MessageEntry merr = new MessageEntry();
+            try
+            {
+                RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
+                RRDirectorExceptionHelper.setError(merr);
+                return null;
+            }
+            finally
+            {
+            	merr.finalize();
+            }
+        }
+    }
+
+	@Override
+    public WrappedNamedMultiDimArrayMemoryDirector _GetNamedMultiDimArrayMemory(String name)
+    {
+        try
+        {
+            return getNamedMultiDimArrayMemory(name);
+        }
+        catch (Exception e)
+        {
+        	MessageEntry merr = new MessageEntry();
+            try
+            {
+                RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
+                RRDirectorExceptionHelper.setError(merr);
+                return null;
+            }
+            finally
+            {
+            	merr.finalize();
+            }
+        }
+    }
+
+    public WrappedNamedArrayMemoryDirector getNamedArrayMemory(String name)
+    {
+        throw new MemberNotFoundException("Member not found");
+    }
+
+    public WrappedNamedMultiDimArrayMemoryDirector getNamedMultiDimArrayMemory(String name)
+    {
+        throw new MemberNotFoundException("Member not found");
+    }
+    
+    
 
 
 

@@ -28,7 +28,7 @@ namespace RobotRaconteur
 			int32_t active_count;
 			std::map<std::string, RR_WEAK_PTR<Transport> > connectors;
 			std::string username;
-			RR_SHARED_PTR<RRMap<std::string, RRValue> > credentials;
+			RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials;
 			boost::function<void(RR_SHARED_PTR<ClientContext>, ClientServiceListenerEventType, RR_SHARED_PTR<void>)> listener;
 			std::string objecttype;
 			boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)> handler;
@@ -78,7 +78,7 @@ namespace RobotRaconteur
 
 		public:
 
-			void connect(const std::map<std::string, RR_WEAK_PTR<Transport> >& connectors, const std::string &username, RR_SHARED_PTR<RRMap<std::string, RRValue> > credentials, boost::function<void(RR_SHARED_PTR<ClientContext>, ClientServiceListenerEventType, RR_SHARED_PTR<void>)> listener, const std::string& objecttype, boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)> handler, int32_t timeout);
+			void connect(const std::map<std::string, RR_WEAK_PTR<Transport> >& connectors, const std::string &username, RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials, boost::function<void(RR_SHARED_PTR<ClientContext>, ClientServiceListenerEventType, RR_SHARED_PTR<void>)> listener, const std::string& objecttype, boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)> handler, int32_t timeout);
 
 		};
 

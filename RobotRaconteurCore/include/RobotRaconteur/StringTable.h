@@ -60,18 +60,18 @@ namespace RobotRaconteur
 
 		public:
 
-			void MessageReplaceStringsWithCodes(RR_SHARED_PTR<Message> m);
-			void MessageReplaceCodesWithStrings(RR_SHARED_PTR<Message> m);
+			void MessageReplaceStringsWithCodes(RR_INTRUSIVE_PTR<Message> m);
+			void MessageReplaceCodesWithStrings(RR_INTRUSIVE_PTR<Message> m);
 
 			std::vector<uint32_t> GetTableFlags();
 			void SetTableFlags(std::vector<uint32_t> flags);
 
 		protected:
 
-			void MessageEntryReplaceStringsWithCodes(RR_SHARED_PTR<MessageEntry> e, boost::unordered_map<std::string, uint32_t>& local_table, uint32_t& next_local_code, uint32_t& table_size);
-			void MessageElementReplaceStringsWithCodes(RR_SHARED_PTR<MessageElement> e, boost::unordered_map<std::string, uint32_t>& local_table, uint32_t& next_local_code, uint32_t& table_size);
-			void MessageEntryReplaceCodesWithStrings(RR_SHARED_PTR<MessageEntry> e, boost::unordered_map<uint32_t, std::string>& local_table);
-			void MessageElementReplaceCodesWithStrings(RR_SHARED_PTR<MessageElement> e, boost::unordered_map<uint32_t, std::string>& local_table);
+			void MessageEntryReplaceStringsWithCodes(RR_INTRUSIVE_PTR<MessageEntry> e, boost::unordered_map<std::string, uint32_t>& local_table, uint32_t& next_local_code, uint32_t& table_size);
+			void MessageElementReplaceStringsWithCodes(RR_INTRUSIVE_PTR<MessageElement> e, boost::unordered_map<std::string, uint32_t>& local_table, uint32_t& next_local_code, uint32_t& table_size);
+			void MessageEntryReplaceCodesWithStrings(RR_INTRUSIVE_PTR<MessageEntry> e, boost::unordered_map<uint32_t, std::string>& local_table);
+			void MessageElementReplaceCodesWithStrings(RR_INTRUSIVE_PTR<MessageElement> e, boost::unordered_map<uint32_t, std::string>& local_table);
 
 			void DoReplaceString(std::string& str, uint32_t& code, uint8_t& flags, uint32_t flag_str, uint32_t flag_code, boost::unordered_map<std::string, uint32_t>& local_table, uint32_t& next_local_code, uint32_t& table_size);
 			void DoReplaceCode(std::string& str, uint32_t& code, uint8_t& flags, uint32_t flag_str, uint32_t flag_code, boost::unordered_map<uint32_t, std::string>& local_table);

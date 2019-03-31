@@ -53,19 +53,21 @@ RobotRaconteur::RobotRaconteurNode::s()->SetThreadPoolFactory(RR_MAKE_SHARED<Rob
 	from . import classproperty
 %}
 
+%include "rr_intrusive_ptr.i"
+%define %rr_intrusive_ptr( TYPE )
+%intrusive_ptr( TYPE )
+%enddef
 %include "PythonTypemaps.i"
 %include "PythonExceptionTypemaps.i"
 %include "RobotRaconteurConstants.i"
 %include "DataTypes.i"
-%include "AsyncHandlerDirector.i"
-
-%include "ServiceDefinitionPython.i"
-
 
 %include "NodeIDPython.i"
 
 %include "MessagePython.i" 
 
+%include "AsyncHandlerDirector.i"
+%include "ServiceDefinitionPython.i"
 
 %include "Transport.i"
 %include "TcpTransportPython.i"

@@ -74,12 +74,26 @@ namespace RobotRaconteur
 		state_stack.pop_back();
 		state_stack.back().state = s;
 	}
-	void AsyncMessageReaderImpl::push_state(AsyncMessageReaderImpl::state_type new_state, AsyncMessageReaderImpl::state_type pop_state, size_t relative_limit, RR_SHARED_PTR<void> data, size_t param1, size_t param2)
+	void AsyncMessageReaderImpl::push_state(AsyncMessageReaderImpl::state_type new_state, AsyncMessageReaderImpl::state_type pop_state, size_t relative_limit, RR_INTRUSIVE_PTR<RRValue> data, size_t param1, size_t param2)
 	{
 		state_data d;
 		d.state = new_state;
 		d.pop_state = pop_state;
 		d.data = data;
+		d.param1 = param1;
+		d.param2 = param2;
+		d.limit = message_pos + relative_limit;
+		if (d.limit > message_len()) throw ProtocolException("Invalid message limit");
+
+		state_stack.push_back(d);
+	}
+
+	void AsyncMessageReaderImpl::push_state(AsyncMessageReaderImpl::state_type new_state, AsyncMessageReaderImpl::state_type pop_state, size_t relative_limit, void* ptrdata, size_t param1, size_t param2)
+	{
+		state_data d;
+		d.state = new_state;
+		d.pop_state = pop_state;
+		d.ptrdata = ptrdata;
 		d.param1 = param1;
 		d.param2 = param2;
 		d.limit = message_pos + relative_limit;
@@ -373,7 +387,7 @@ namespace RobotRaconteur
 		size_t n = read_some_bytes(&str[0], l);
 		if (n == l) return true;
 
-		push_state(Header_readstring, next_state, l - n, RR_SHARED_PTR<std::string>(&str, &null_str_deleter), n);
+		push_state(Header_readstring, next_state, l - n, &str, n);
 		return false;
 
 	}
@@ -394,7 +408,7 @@ namespace RobotRaconteur
 		size_t n = read_some_bytes(&str[0], l);
 		if (n == l) return true;
 		
-		push_state(Header_readstring, next_state, l-n, RR_SHARED_PTR<std::string>(&str, &null_str_deleter), n);
+		push_state(Header_readstring, next_state, l-n, &str, n);
 		return false;
 		
 	}
@@ -416,7 +430,7 @@ namespace RobotRaconteur
 		state_stack.clear();
 
 		state_data s;
-		RR_SHARED_PTR<Message> m = RR_MAKE_SHARED<Message>();		
+		RR_INTRUSIVE_PTR<Message> m = CreateMessage();		
 		s.data = m;
 		s.state = Message_init;
 		s.limit = 12;
@@ -445,7 +459,7 @@ namespace RobotRaconteur
 			{
 			case Message_init:
 			{
-				RR_SHARED_PTR<Message> m = RR_MAKE_SHARED<Message>();				
+				RR_INTRUSIVE_PTR<Message> m = CreateMessage();				
 				state_stack[0].data = m;
 				state() = MessageHeader_init;
 				continue;
@@ -469,7 +483,7 @@ namespace RobotRaconteur
 				{
 					throw ProtocolException("Invalid message magic");
 				}
-				RR_SHARED_PTR<MessageHeader> h = RR_MAKE_SHARED<MessageHeader>();
+				RR_INTRUSIVE_PTR<MessageHeader> h = CreateMessageHeader();
 				read_number(h->MessageSize);
 				read_number(version);
 				uint16_t header_size = 0;
@@ -548,7 +562,7 @@ namespace RobotRaconteur
 			}
 			case MessageEntry_init:
 			{
-				RR_SHARED_PTR<MessageEntry> ee = RR_MAKE_SHARED<MessageEntry>();
+				RR_INTRUSIVE_PTR<MessageEntry> ee = CreateMessageEntry();
 				data<Message>()->entries.push_back(ee);
 				push_state(MessageEntry_entrysize, Message_readentries, limit() - message_pos, ee);
 				continue;
@@ -629,7 +643,7 @@ namespace RobotRaconteur
 			}
 			case MessageElement_init:
 			{
-				RR_SHARED_PTR<MessageElement> el = RR_MAKE_SHARED<MessageElement>();
+				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
 				MessageEntry* ee = data<MessageEntry>();
 				ee->elements.push_back(el);
 				push_state(MessageElement_elementsize, MessageEntry_readelements, limit() - message_pos, el);
@@ -693,6 +707,9 @@ namespace RobotRaconteur
 				case DataTypes_int64_t:
 				case DataTypes_uint64_t:
 				case DataTypes_string_t:
+				case DataTypes_cdouble_t:
+				case DataTypes_csingle_t:
+				case DataTypes_bool_t:				
 				{
 					state() = MessageElement_readarray1;
 					continue;
@@ -722,19 +739,29 @@ namespace RobotRaconteur
 					state() = MessageElement_readlist1;
 					continue;
 				}
-				case DataTypes_cstructure_t:
+				case DataTypes_pod_t:
 				{
-					state() = MessageElement_readcstruct1;
+					state() = MessageElement_readpod1;
 					continue;
 				}
-				case DataTypes_cstructure_array_t:
+				case DataTypes_pod_array_t:
 				{
-					state() = MessageElement_readcstructarray1;
+					state() = MessageElement_readpodarray1;
 					continue;
 				}
-				case DataTypes_cstructure_multidimarray_t:
+				case DataTypes_pod_multidimarray_t:
 				{
-					state() = MessageElement_readcstructmultidimarray1;
+					state() = MessageElement_readpodmultidimarray1;
+					continue;
+				}
+				case DataTypes_namedarray_array_t:
+				{
+					state() = MessageElement_readnamedarrayarray1;
+					continue;
+				}
+				case DataTypes_namedarray_multidimarray_t:
+				{
+					state() = MessageElement_readnamedarraymultidimarray1;
 					continue;
 				}
 				default:
@@ -750,8 +777,8 @@ namespace RobotRaconteur
 			case MessageElement_readarray1:
 			{
 				MessageElement* el = data<MessageElement>();
-				RR_SHARED_PTR<RRBaseArray> a = AllocateRRArrayByType(el->ElementType, el->DataCount);
-				size_t n = a->ElementSize() * a->Length();
+				RR_INTRUSIVE_PTR<RRBaseArray> a = AllocateRRArrayByType(el->ElementType, el->DataCount);
+				size_t n = a->ElementSize() * a->size();
 				size_t p = read_some_bytes(a->void_ptr(), n);
 				size_t l = el->ElementSize;
 				el->SetData(a);
@@ -827,8 +854,8 @@ namespace RobotRaconteur
 			case MessageElement_readstruct1:
 			{
 				MessageElement* el = data<MessageElement>();
-				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				RR_SHARED_PTR<MessageElementStructure> s = RR_MAKE_SHARED<MessageElementStructure>(el->ElementTypeName, v);
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
+				RR_INTRUSIVE_PTR<MessageElementStructure> s = CreateMessageElementStructure(el->ElementTypeName, v);
 				uint32_t l = el->ElementSize;
 				el->SetData(s);
 				el->ElementSize = l;
@@ -847,7 +874,7 @@ namespace RobotRaconteur
 			}
 			case MessageElement_readstruct3:
 			{
-				RR_SHARED_PTR<MessageElement> el = RR_MAKE_SHARED<MessageElement>();
+				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
 				MessageElementStructure* s = data<MessageElementStructure>();
 				s->Elements.push_back(el);
 				push_state(MessageElement_elementsize, MessageElement_readstruct2, limit() - message_pos, el);
@@ -858,8 +885,8 @@ namespace RobotRaconteur
 			case MessageElement_readvector1:
 			{
 				MessageElement* el = data<MessageElement>();
-				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				RR_SHARED_PTR<MessageElementMap<int32_t> > s = RR_MAKE_SHARED<MessageElementMap<int32_t> >(v);
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
+				RR_INTRUSIVE_PTR<MessageElementMap<int32_t> > s = CreateMessageElementMap<int32_t>(v);
 				uint32_t l = el->ElementSize;
 				el->SetData(s);
 				el->ElementSize = l;
@@ -878,7 +905,7 @@ namespace RobotRaconteur
 			}
 			case MessageElement_readvector3:
 			{
-				RR_SHARED_PTR<MessageElement> el = RR_MAKE_SHARED<MessageElement>();
+				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
 				MessageElementMap<int32_t>* s = data<MessageElementMap<int32_t> >();
 				s->Elements.push_back(el);
 				push_state(MessageElement_elementsize, MessageElement_readvector2, limit() - message_pos, el);
@@ -888,8 +915,8 @@ namespace RobotRaconteur
 			case MessageElement_readdictionary1:
 			{
 				MessageElement* el = data<MessageElement>();
-				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				RR_SHARED_PTR<MessageElementMap<std::string> > s = RR_MAKE_SHARED<MessageElementMap<std::string> >(v);
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
+				RR_INTRUSIVE_PTR<MessageElementMap<std::string> > s = CreateMessageElementMap<std::string>(v);
 				uint32_t l = el->ElementSize;
 				el->SetData(s);
 				el->ElementSize = l;
@@ -908,7 +935,7 @@ namespace RobotRaconteur
 			}
 			case MessageElement_readdictionary3:
 			{
-				RR_SHARED_PTR<MessageElement> el = RR_MAKE_SHARED<MessageElement>();
+				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
 				MessageElementMap<std::string>* s = data<MessageElementMap<std::string> >();
 				s->Elements.push_back(el);
 				push_state(MessageElement_elementsize, MessageElement_readdictionary2, limit() - message_pos, el);
@@ -919,8 +946,8 @@ namespace RobotRaconteur
 			case MessageElement_readmultiarray1:
 			{
 				MessageElement* el = data<MessageElement>();
-				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				RR_SHARED_PTR<MessageElementMultiDimArray> s = RR_MAKE_SHARED<MessageElementMultiDimArray>(v);
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
+				RR_INTRUSIVE_PTR<MessageElementMultiDimArray> s = CreateMessageElementMultiDimArray(v);
 				uint32_t l = el->ElementSize;
 				el->SetData(s);
 				el->ElementSize = l;
@@ -939,7 +966,7 @@ namespace RobotRaconteur
 			}
 			case MessageElement_readmultiarray3:
 			{
-				RR_SHARED_PTR<MessageElement> el = RR_MAKE_SHARED<MessageElement>();
+				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
 				MessageElementMultiDimArray* s = data<MessageElementMultiDimArray>();
 				s->Elements.push_back(el);
 				push_state(MessageElement_elementsize, MessageElement_readmultiarray2, limit() - message_pos, el);
@@ -950,8 +977,8 @@ namespace RobotRaconteur
 			case MessageElement_readlist1:
 			{
 				MessageElement* el = data<MessageElement>();
-				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				RR_SHARED_PTR<MessageElementList> s = RR_MAKE_SHARED<MessageElementList>(v);
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
+				RR_INTRUSIVE_PTR<MessageElementList> s = CreateMessageElementList(v);
 				uint32_t l = el->ElementSize;
 				el->SetData(s);
 				el->ElementSize = l;
@@ -970,103 +997,165 @@ namespace RobotRaconteur
 			}
 			case MessageElement_readlist3:
 			{
-				RR_SHARED_PTR<MessageElement> el = RR_MAKE_SHARED<MessageElement>();
+				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
 				MessageElementList* s = data<MessageElementList>();
 				s->Elements.push_back(el);
 				push_state(MessageElement_elementsize, MessageElement_readlist2, limit() - message_pos, el);
 				continue;
 			}
 
-			//Read cstructure
-			case MessageElement_readcstruct1:
+			//Read pod
+			case MessageElement_readpod1:
 			{
 				MessageElement* el = data<MessageElement>();
-				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				RR_SHARED_PTR<MessageElementCStructure> s = RR_MAKE_SHARED<MessageElementCStructure>(v);
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
+				RR_INTRUSIVE_PTR<MessageElementPod> s = CreateMessageElementPod(v);
 				uint32_t l = el->ElementSize;
 				el->SetData(s);
 				el->ElementSize = l;
-				push_state(MessageElement_readcstruct2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
+				push_state(MessageElement_readpod2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
 
 			}
-			case MessageElement_readcstruct2:
+			case MessageElement_readpod2:
 			{
-				MessageElementCStructure* s = data<MessageElementCStructure>();
+				MessageElementPod* s = data<MessageElementPod>();
 				if (s->Elements.size() >= param1())
 				{
 					DO_POP_STATE();
 				}
 
-				state() = MessageElement_readcstruct3;
+				state() = MessageElement_readpod3;
 			}
-			case MessageElement_readcstruct3:
+			case MessageElement_readpod3:
 			{
-				RR_SHARED_PTR<MessageElement> el = RR_MAKE_SHARED<MessageElement>();
-				MessageElementCStructure* s = data<MessageElementCStructure>();
+				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
+				MessageElementPod* s = data<MessageElementPod>();
 				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readcstruct2, limit() - message_pos, el);
+				push_state(MessageElement_elementsize, MessageElement_readpod2, limit() - message_pos, el);
 				continue;
 			}
 
-			//Read cstructurearray
-			case MessageElement_readcstructarray1:
+			//Read podarray
+			case MessageElement_readpodarray1:
 			{
 				MessageElement* el = data<MessageElement>();
-				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				RR_SHARED_PTR<MessageElementCStructureArray> s = RR_MAKE_SHARED<MessageElementCStructureArray>(el->ElementTypeName, v);
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
+				RR_INTRUSIVE_PTR<MessageElementPodArray> s = CreateMessageElementPodArray(el->ElementTypeName, v);
 				uint32_t l = el->ElementSize;
 				el->SetData(s);
 				el->ElementSize = l;
-				push_state(MessageElement_readcstructarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
+				push_state(MessageElement_readpodarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
 
 			}
-			case MessageElement_readcstructarray2:
+			case MessageElement_readpodarray2:
 			{
-				MessageElementCStructureArray* s = data<MessageElementCStructureArray>();
+				MessageElementPodArray* s = data<MessageElementPodArray>();
 				if (s->Elements.size() >= param1())
 				{
 					DO_POP_STATE();
 				}
 
-				state() = MessageElement_readcstructarray3;
+				state() = MessageElement_readpodarray3;
 			}
-			case MessageElement_readcstructarray3:
+			case MessageElement_readpodarray3:
 			{
-				RR_SHARED_PTR<MessageElement> el = RR_MAKE_SHARED<MessageElement>();
-				MessageElementCStructureArray* s = data<MessageElementCStructureArray>();
+				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
+				MessageElementPodArray* s = data<MessageElementPodArray>();
 				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readcstructarray2, limit() - message_pos, el);
+				push_state(MessageElement_elementsize, MessageElement_readpodarray2, limit() - message_pos, el);
 				continue;
 			}
 
-			//Read cstructuremultidimarray
-			case MessageElement_readcstructmultidimarray1:
+			//Read podmultidimarray
+			case MessageElement_readpodmultidimarray1:
 			{
 				MessageElement* el = data<MessageElement>();
-				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				RR_SHARED_PTR<MessageElementCStructureMultiDimArray> s = RR_MAKE_SHARED<MessageElementCStructureMultiDimArray>(el->ElementTypeName, v);
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
+				RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> s = CreateMessageElementPodMultiDimArray(el->ElementTypeName, v);
 				uint32_t l = el->ElementSize;
 				el->SetData(s);
 				el->ElementSize = l;
-				push_state(MessageElement_readcstructmultidimarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
+				push_state(MessageElement_readpodmultidimarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
 
 			}
-			case MessageElement_readcstructmultidimarray2:
+			case MessageElement_readpodmultidimarray2:
 			{
-				MessageElementCStructureMultiDimArray* s = data<MessageElementCStructureMultiDimArray>();
+				MessageElementPodMultiDimArray* s = data<MessageElementPodMultiDimArray>();
 				if (s->Elements.size() >= param1())
 				{
 					DO_POP_STATE();
 				}
 
-				state() = MessageElement_readcstructmultidimarray3;
+				state() = MessageElement_readpodmultidimarray3;
 			}
-			case MessageElement_readcstructmultidimarray3:
+			case MessageElement_readpodmultidimarray3:
 			{
-				RR_SHARED_PTR<MessageElement> el = RR_MAKE_SHARED<MessageElement>();
-				MessageElementCStructureMultiDimArray* s = data<MessageElementCStructureMultiDimArray>();
+				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
+				MessageElementPodMultiDimArray* s = data<MessageElementPodMultiDimArray>();
 				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readcstructmultidimarray2, limit() - message_pos, el);
+				push_state(MessageElement_elementsize, MessageElement_readpodmultidimarray2, limit() - message_pos, el);
+				continue;
+			}
+
+			//Read namedarrayarray
+			case MessageElement_readnamedarrayarray1:
+			{
+				MessageElement* el = data<MessageElement>();
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
+				RR_INTRUSIVE_PTR<MessageElementNamedArray> s = CreateMessageElementNamedArray(el->ElementTypeName, v);
+				uint32_t l = el->ElementSize;
+				el->SetData(s);
+				el->ElementSize = l;
+				push_state(MessageElement_readnamedarrayarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
+
+			}
+			case MessageElement_readnamedarrayarray2:
+			{
+				MessageElementNamedArray* s = data<MessageElementNamedArray>();
+				if (s->Elements.size() >= param1())
+				{
+					DO_POP_STATE();
+				}
+
+				state() = MessageElement_readnamedarrayarray3;
+			}
+			case MessageElement_readnamedarrayarray3:
+			{
+				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
+				MessageElementNamedArray* s = data<MessageElementNamedArray>();
+				s->Elements.push_back(el);
+				push_state(MessageElement_elementsize, MessageElement_readnamedarrayarray2, limit() - message_pos, el);
+				continue;
+			}
+
+			//Read namedarraymultidimarray
+			case MessageElement_readnamedarraymultidimarray1:
+			{
+				MessageElement* el = data<MessageElement>();
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
+				RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> s = CreateMessageElementNamedMultiDimArray(el->ElementTypeName, v);
+				uint32_t l = el->ElementSize;
+				el->SetData(s);
+				el->ElementSize = l;
+				push_state(MessageElement_readnamedarraymultidimarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
+
+			}
+			case MessageElement_readnamedarraymultidimarray2:
+			{
+				MessageElementNamedMultiDimArray* s = data<MessageElementNamedMultiDimArray>();
+				if (s->Elements.size() >= param1())
+				{
+					DO_POP_STATE();
+				}
+
+				state() = MessageElement_readnamedarraymultidimarray3;
+			}
+			case MessageElement_readnamedarraymultidimarray3:
+			{
+				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
+				MessageElementNamedMultiDimArray* s = data<MessageElementNamedMultiDimArray>();
+				s->Elements.push_back(el);
+				push_state(MessageElement_elementsize, MessageElement_readnamedarraymultidimarray2, limit() - message_pos, el);
 				continue;
 			}
 
@@ -1074,7 +1163,7 @@ namespace RobotRaconteur
 			case Header_readstring:
 			{
 				size_t& p1 = param1();
-				std::string* s = data<std::string>();
+				std::string* s = ptrdata<std::string>();
 				size_t n = read_some_bytes(&(*s).at(p1), s->size() - p1);
 				p1 += n;
 
@@ -1105,7 +1194,7 @@ namespace RobotRaconteur
 			{
 			case Message_init:
 			{
-				RR_SHARED_PTR<Message> m = RR_MAKE_SHARED<Message>();				
+				RR_INTRUSIVE_PTR<Message> m = CreateMessage();				
 				state_stack[0].data = m;
 				state() = MessageHeader_init;
 				continue;
@@ -1129,7 +1218,7 @@ namespace RobotRaconteur
 				{
 					throw ProtocolException("Invalid message magic");
 				}				
-				RR_SHARED_PTR<MessageHeader> h = RR_MAKE_SHARED<MessageHeader>();
+				RR_INTRUSIVE_PTR<MessageHeader> h = CreateMessageHeader();
 				read_number(h->MessageSize);
 				read_number(version);				
 				message_len() = h->MessageSize;
@@ -1398,7 +1487,7 @@ namespace RobotRaconteur
 			}
 			case MessageEntry_init:
 			{
-				RR_SHARED_PTR<MessageEntry> ee = RR_MAKE_SHARED<MessageEntry>();
+				RR_INTRUSIVE_PTR<MessageEntry> ee = CreateMessageEntry();
 				data<Message>()->entries.push_back(ee);
 				push_state(MessageEntry_entrysize, Message_readentries, limit() - message_pos, ee);				
 				continue;
@@ -1543,7 +1632,7 @@ namespace RobotRaconteur
 			}
 			case MessageElement_init:
 			{
-				RR_SHARED_PTR<MessageElement> el = RR_MAKE_SHARED<MessageElement>();
+				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
 				MessageEntry* ee = data<MessageEntry>();
 				ee->elements.push_back(el);
 				push_state(MessageElement_elementsize, MessageEntry_readelements, limit() - message_pos, el);
@@ -1660,6 +1749,9 @@ namespace RobotRaconteur
 				case DataTypes_int64_t:
 				case DataTypes_uint64_t:
 				case DataTypes_string_t:
+				case DataTypes_cdouble_t:
+				case DataTypes_csingle_t:
+				case DataTypes_bool_t:				
 				{
 					state() = MessageElement_readarray1;
 					continue;
@@ -1689,19 +1781,29 @@ namespace RobotRaconteur
 					state() = MessageElement_readlist1;
 					continue;
 				}
-				case DataTypes_cstructure_t:
+				case DataTypes_pod_t:
 				{
-					state() = MessageElement_readcstruct1;
+					state() = MessageElement_readpod1;
 					continue;
 				}
-				case DataTypes_cstructure_array_t:
+				case DataTypes_pod_array_t:
 				{
-					state() = MessageElement_readcstructarray1;
+					state() = MessageElement_readpodarray1;
 					continue;
 				}
-				case DataTypes_cstructure_multidimarray_t:
+				case DataTypes_pod_multidimarray_t:
 				{
-					state() = MessageElement_readcstructmultidimarray1;
+					state() = MessageElement_readpodmultidimarray1;
+					continue;
+				}
+				case DataTypes_namedarray_array_t:
+				{
+					state() = MessageElement_readnamedarrayarray1;
+					continue;
+				}
+				case DataTypes_namedarray_multidimarray_t:
+				{
+					state() = MessageElement_readnamedarraymultidimarray1;
 					continue;
 				}
 				default:
@@ -1718,8 +1820,8 @@ namespace RobotRaconteur
 			case MessageElement_readarray1:
 			{
 				MessageElement* el = data<MessageElement>();
-				RR_SHARED_PTR<RRBaseArray> a = AllocateRRArrayByType(el->ElementType, el->DataCount);
-				size_t n = a->ElementSize() * a->Length();
+				RR_INTRUSIVE_PTR<RRBaseArray> a = AllocateRRArrayByType(el->ElementType, el->DataCount);
+				size_t n = a->ElementSize() * a->size();
 				size_t p = read_some_bytes(a->void_ptr(), n);
 				size_t l = el->ElementSize;
 				el->SetData(a);
@@ -1795,8 +1897,8 @@ namespace RobotRaconteur
 			case MessageElement_readstruct1:
 			{
 				MessageElement* el = data<MessageElement>();
-				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				RR_SHARED_PTR<MessageElementStructure> s = RR_MAKE_SHARED<MessageElementStructure>(el->ElementTypeName, v);
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
+				RR_INTRUSIVE_PTR<MessageElementStructure> s = CreateMessageElementStructure(el->ElementTypeName, v);
 				uint32_t l = el->ElementSize;
 				el->SetData(s);
 				el->ElementSize = l;
@@ -1815,7 +1917,7 @@ namespace RobotRaconteur
 			}
 			case MessageElement_readstruct3:
 			{
-				RR_SHARED_PTR<MessageElement> el = RR_MAKE_SHARED<MessageElement>();
+				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
 				MessageElementStructure* s = data<MessageElementStructure>();
 				s->Elements.push_back(el);
 				push_state(MessageElement_elementsize, MessageElement_readstruct2, limit() - message_pos, el);
@@ -1826,8 +1928,8 @@ namespace RobotRaconteur
 			case MessageElement_readvector1:
 			{
 				MessageElement* el = data<MessageElement>();
-				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				RR_SHARED_PTR<MessageElementMap<int32_t> > s = RR_MAKE_SHARED<MessageElementMap<int32_t> >(v);
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
+				RR_INTRUSIVE_PTR<MessageElementMap<int32_t> > s = CreateMessageElementMap<int32_t>(v);
 				uint32_t l = el->ElementSize;
 				el->SetData(s);
 				el->ElementSize = l;
@@ -1846,7 +1948,7 @@ namespace RobotRaconteur
 			}
 			case MessageElement_readvector3:
 			{
-				RR_SHARED_PTR<MessageElement> el = RR_MAKE_SHARED<MessageElement>();
+				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
 				MessageElementMap<int32_t>* s = data<MessageElementMap<int32_t> >();
 				s->Elements.push_back(el);
 				push_state(MessageElement_elementsize, MessageElement_readvector2, limit() - message_pos, el);
@@ -1856,8 +1958,8 @@ namespace RobotRaconteur
 			case MessageElement_readdictionary1:
 			{
 				MessageElement* el = data<MessageElement>();
-				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				RR_SHARED_PTR<MessageElementMap<std::string> > s = RR_MAKE_SHARED<MessageElementMap<std::string> >(v);
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
+				RR_INTRUSIVE_PTR<MessageElementMap<std::string> > s = CreateMessageElementMap<std::string>(v);
 				uint32_t l = el->ElementSize;
 				el->SetData(s);
 				el->ElementSize = l;
@@ -1876,7 +1978,7 @@ namespace RobotRaconteur
 			}
 			case MessageElement_readdictionary3:
 			{
-				RR_SHARED_PTR<MessageElement> el = RR_MAKE_SHARED<MessageElement>();
+				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
 				MessageElementMap<std::string>* s = data<MessageElementMap<std::string> >();
 				s->Elements.push_back(el);
 				push_state(MessageElement_elementsize, MessageElement_readdictionary2, limit() - message_pos, el);
@@ -1887,8 +1989,8 @@ namespace RobotRaconteur
 			case MessageElement_readmultiarray1:
 			{
 				MessageElement* el = data<MessageElement>();
-				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				RR_SHARED_PTR<MessageElementMultiDimArray> s = RR_MAKE_SHARED<MessageElementMultiDimArray>(v);
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
+				RR_INTRUSIVE_PTR<MessageElementMultiDimArray> s = CreateMessageElementMultiDimArray(v);
 				uint32_t l = el->ElementSize;
 				el->SetData(s);
 				el->ElementSize = l;
@@ -1907,102 +2009,164 @@ namespace RobotRaconteur
 			}
 			case MessageElement_readmultiarray3:
 			{
-				RR_SHARED_PTR<MessageElement> el = RR_MAKE_SHARED<MessageElement>();
+				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
 				MessageElementMultiDimArray* s = data<MessageElementMultiDimArray>();
 				s->Elements.push_back(el);
 				push_state(MessageElement_elementsize, MessageElement_readmultiarray2, limit() - message_pos, el);
 				continue;
 			}
-			//Read cstructure
-			case MessageElement_readcstruct1:
+			//Read pod
+			case MessageElement_readpod1:
 			{
 				MessageElement* el = data<MessageElement>();
-				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				RR_SHARED_PTR<MessageElementCStructure> s = RR_MAKE_SHARED<MessageElementCStructure>(v);
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
+				RR_INTRUSIVE_PTR<MessageElementPod> s = CreateMessageElementPod(v);
 				uint32_t l = el->ElementSize;
 				el->SetData(s);
 				el->ElementSize = l;
-				push_state(MessageElement_readcstruct2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
+				push_state(MessageElement_readpod2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
 
 			}
-			case MessageElement_readcstruct2:
+			case MessageElement_readpod2:
 			{
-				MessageElementCStructure* s = data<MessageElementCStructure>();
+				MessageElementPod* s = data<MessageElementPod>();
 				if (s->Elements.size() >= param1())
 				{
 					DO_POP_STATE();
 				}
 
-				state() = MessageElement_readcstruct3;
+				state() = MessageElement_readpod3;
 			}
-			case MessageElement_readcstruct3:
+			case MessageElement_readpod3:
 			{
-				RR_SHARED_PTR<MessageElement> el = RR_MAKE_SHARED<MessageElement>();
-				MessageElementCStructure* s = data<MessageElementCStructure>();
+				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
+				MessageElementPod* s = data<MessageElementPod>();
 				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readcstruct2, limit() - message_pos, el);
+				push_state(MessageElement_elementsize, MessageElement_readpod2, limit() - message_pos, el);
 				continue;
 			}
 
-			//Read cstructurearray
-			case MessageElement_readcstructarray1:
+			//Read podarray
+			case MessageElement_readpodarray1:
 			{
 				MessageElement* el = data<MessageElement>();
-				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				RR_SHARED_PTR<MessageElementCStructureArray> s = RR_MAKE_SHARED<MessageElementCStructureArray>(el->ElementTypeName, v);
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
+				RR_INTRUSIVE_PTR<MessageElementPodArray> s = CreateMessageElementPodArray(el->ElementTypeName, v);
 				uint32_t l = el->ElementSize;
 				el->SetData(s);
 				el->ElementSize = l;
-				push_state(MessageElement_readcstructarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
+				push_state(MessageElement_readpodarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
 
 			}
-			case MessageElement_readcstructarray2:
+			case MessageElement_readpodarray2:
 			{
-				MessageElementCStructureArray* s = data<MessageElementCStructureArray>();
+				MessageElementPodArray* s = data<MessageElementPodArray>();
 				if (s->Elements.size() >= param1())
 				{
 					DO_POP_STATE();
 				}
 
-				state() = MessageElement_readcstructarray3;
+				state() = MessageElement_readpodarray3;
 			}
-			case MessageElement_readcstructarray3:
+			case MessageElement_readpodarray3:
 			{
-				RR_SHARED_PTR<MessageElement> el = RR_MAKE_SHARED<MessageElement>();
-				MessageElementCStructureArray* s = data<MessageElementCStructureArray>();
+				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
+				MessageElementPodArray* s = data<MessageElementPodArray>();
 				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readcstructarray2, limit() - message_pos, el);
+				push_state(MessageElement_elementsize, MessageElement_readpodarray2, limit() - message_pos, el);
 				continue;
 			}
 
-			//Read cstructuremultidimarray
-			case MessageElement_readcstructmultidimarray1:
+			//Read podmultidimarray
+			case MessageElement_readpodmultidimarray1:
 			{
 				MessageElement* el = data<MessageElement>();
-				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				RR_SHARED_PTR<MessageElementCStructureMultiDimArray> s = RR_MAKE_SHARED<MessageElementCStructureMultiDimArray>(el->ElementTypeName, v);
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
+				RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> s = CreateMessageElementPodMultiDimArray(el->ElementTypeName, v);
 				uint32_t l = el->ElementSize;
 				el->SetData(s);
 				el->ElementSize = l;
-				push_state(MessageElement_readcstructmultidimarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
+				push_state(MessageElement_readpodmultidimarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
 
 			}
-			case MessageElement_readcstructmultidimarray2:
+			case MessageElement_readpodmultidimarray2:
 			{
-				MessageElementCStructureMultiDimArray* s = data<MessageElementCStructureMultiDimArray>();
+				MessageElementPodMultiDimArray* s = data<MessageElementPodMultiDimArray>();
 				if (s->Elements.size() >= param1())
 				{
 					DO_POP_STATE();
 				}
 
-				state() = MessageElement_readcstructmultidimarray3;
+				state() = MessageElement_readpodmultidimarray3;
 			}
-			case MessageElement_readcstructmultidimarray3:
+			case MessageElement_readpodmultidimarray3:
 			{
-				RR_SHARED_PTR<MessageElement> el = RR_MAKE_SHARED<MessageElement>();
-				MessageElementCStructureMultiDimArray* s = data<MessageElementCStructureMultiDimArray>();
+				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
+				MessageElementPodMultiDimArray* s = data<MessageElementPodMultiDimArray>();
 				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readcstructmultidimarray2, limit() - message_pos, el);
+				push_state(MessageElement_elementsize, MessageElement_readpodmultidimarray2, limit() - message_pos, el);
+				continue;
+			}
+
+			//Read namedarrayarray
+			case MessageElement_readnamedarrayarray1:
+			{
+				MessageElement* el = data<MessageElement>();
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
+				RR_INTRUSIVE_PTR<MessageElementNamedArray> s = CreateMessageElementNamedArray(el->ElementTypeName, v);
+				uint32_t l = el->ElementSize;
+				el->SetData(s);
+				el->ElementSize = l;
+				push_state(MessageElement_readnamedarrayarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
+
+			}
+			case MessageElement_readnamedarrayarray2:
+			{
+				MessageElementNamedArray* s = data<MessageElementNamedArray>();
+				if (s->Elements.size() >= param1())
+				{
+					DO_POP_STATE();
+				}
+
+				state() = MessageElement_readnamedarrayarray3;
+			}
+			case MessageElement_readnamedarrayarray3:
+			{
+				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
+				MessageElementNamedArray* s = data<MessageElementNamedArray>();
+				s->Elements.push_back(el);
+				push_state(MessageElement_elementsize, MessageElement_readnamedarrayarray2, limit() - message_pos, el);
+				continue;
+			}
+
+			//Read namedarraymultidimarray
+			case MessageElement_readnamedarraymultidimarray1:
+			{
+				MessageElement* el = data<MessageElement>();
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
+				RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> s = CreateMessageElementNamedMultiDimArray(el->ElementTypeName, v);
+				uint32_t l = el->ElementSize;
+				el->SetData(s);
+				el->ElementSize = l;
+				push_state(MessageElement_readnamedarraymultidimarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
+
+			}
+			case MessageElement_readnamedarraymultidimarray2:
+			{
+				MessageElementNamedMultiDimArray* s = data<MessageElementNamedMultiDimArray>();
+				if (s->Elements.size() >= param1())
+				{
+					DO_POP_STATE();
+				}
+
+				state() = MessageElement_readnamedarraymultidimarray3;
+			}
+			case MessageElement_readnamedarraymultidimarray3:
+			{
+				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
+				MessageElementNamedMultiDimArray* s = data<MessageElementNamedMultiDimArray>();
+				s->Elements.push_back(el);
+				push_state(MessageElement_elementsize, MessageElement_readnamedarraymultidimarray2, limit() - message_pos, el);
 				continue;
 			}
 
@@ -2010,8 +2174,8 @@ namespace RobotRaconteur
 			case MessageElement_readlist1:
 			{
 				MessageElement* el = data<MessageElement>();
-				std::vector<RR_SHARED_PTR<MessageElement> > v;
-				RR_SHARED_PTR<MessageElementList> s = RR_MAKE_SHARED<MessageElementList>(v);
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
+				RR_INTRUSIVE_PTR<MessageElementList> s = CreateMessageElementList(v);
 				uint32_t l = el->ElementSize;
 				el->SetData(s);
 				el->ElementSize = l;
@@ -2030,7 +2194,7 @@ namespace RobotRaconteur
 			}
 			case MessageElement_readlist3:
 			{
-				RR_SHARED_PTR<MessageElement> el = RR_MAKE_SHARED<MessageElement>();
+				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
 				MessageElementList* s = data<MessageElementList>();
 				s->Elements.push_back(el);
 				push_state(MessageElement_elementsize, MessageElement_readlist2, limit() - message_pos, el);
@@ -2041,7 +2205,7 @@ namespace RobotRaconteur
 			case Header_readstring:
 			{
 				size_t& p1 = param1();
-				std::string* s = data<std::string>();
+				std::string* s = ptrdata<std::string>();
 				size_t n = read_some_bytes(&(*s).at(p1), s->size() - p1);
 				p1 += n;
 
@@ -2067,11 +2231,11 @@ namespace RobotRaconteur
 		return !read_messages.empty();
 	}
 
-	RR_SHARED_PTR<Message> AsyncMessageReaderImpl::GetNextMessage()
+	RR_INTRUSIVE_PTR<Message> AsyncMessageReaderImpl::GetNextMessage()
 	{
 		if (read_messages.empty()) throw InvalidOperationException("Message not ready");
 
-		RR_SHARED_PTR<Message> m=read_messages.front();
+		RR_INTRUSIVE_PTR<Message> m=read_messages.front();
 		read_messages.pop();
 		return m;
 	}

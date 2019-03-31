@@ -3,11 +3,11 @@ package com.robotraconteur;
 import java.lang.reflect.Array;
 import java.math.BigInteger;
 
-public class CStructureArrayMemoryClient<T> extends CStructureArrayMemory<T> {
+public class NamedArrayMemoryClient<T> extends NamedArrayMemory<T> {
 
-	WrappedCStructureArrayMemoryClient innerclient;
+	WrappedNamedArrayMemoryClient innerclient;
 
-    class bufferdirector extends WrappedCStructureArrayMemoryClientBuffer
+    class bufferdirector extends WrappedNamedArrayMemoryClientBuffer
     {
         T buffer;
 
@@ -17,14 +17,14 @@ public class CStructureArrayMemoryClient<T> extends CStructureArrayMemory<T> {
         }
 
         @Override
-        public void unpackReadResult(MessageElementCStructureArray res, java.math.BigInteger bufferpos, java.math.BigInteger count)
+        public void unpackReadResult(MessageElementNamedArray res, java.math.BigInteger bufferpos, java.math.BigInteger count)
         {
             T res1 = (T)RobotRaconteurNode.s().unpackStructureDispose(res);
             System.arraycopy(res1, 0, buffer, bufferpos.intValue(), count.intValue());
         }
 
         @Override
-        public MessageElementCStructureArray packWriteRequest(java.math.BigInteger bufferpos, java.math.BigInteger count)
+        public MessageElementNamedArray packWriteRequest(java.math.BigInteger bufferpos, java.math.BigInteger count)
         {
             T buffer3;            
             if ((long)Array.getLength(buffer) == count.longValue())
@@ -36,11 +36,11 @@ public class CStructureArrayMemoryClient<T> extends CStructureArrayMemory<T> {
             	buffer3=(T)Array.newInstance(buffer.getClass().getComponentType(),count.intValue());                
                 System.arraycopy(buffer, bufferpos.intValue(), buffer3, 0, count.intValue());
             }
-            return (MessageElementCStructureArray)RobotRaconteurNode.s().packStructure(buffer3);
+            return (MessageElementNamedArray)RobotRaconteurNode.s().packStructure(buffer3);
         }
     }
 
-    public CStructureArrayMemoryClient(WrappedCStructureArrayMemoryClient innerclient)
+    public NamedArrayMemoryClient(WrappedNamedArrayMemoryClient innerclient)
     {
         this.innerclient = innerclient;
     }

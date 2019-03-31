@@ -41,8 +41,7 @@ public class WrappedMultiDimArrayMemoryDirectorJava<T> extends WrappedMultiDimAr
 		try
 		{
 			vector_uint64_t o = new vector_uint64_t();
-//C# TO JAVA CONVERTER WARNING: Unsigned integer types have no direct equivalent in Java:
-//ORIGINAL LINE: foreach (ulong i in mem.Dimensions)
+
 			for (long i : mem.dimensions())
 			{
 				o.add(BigInteger.valueOf(i));
@@ -58,24 +57,7 @@ public class WrappedMultiDimArrayMemoryDirectorJava<T> extends WrappedMultiDimAr
 			return new vector_uint64_t();
 		}
 	}
-
-	@Override
-	public boolean complex()
-	{
-		try
-		{
-			return mem.complex();
-		}
-		catch (Exception e)
-		{
-			MessageEntry merr = new MessageEntry();
-			RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-			RRDirectorExceptionHelper.setError(merr);
-			merr.delete();
-			return false;
-		}
-	}
-
+	
 	@Override
 	public void read(WrappedMultiDimArrayMemoryParams p)
 	{
@@ -115,28 +97,15 @@ public class WrappedMultiDimArrayMemoryDirectorJava<T> extends WrappedMultiDimAr
 			
 			 pbuffer = p.getBuffer();
              pbufferDims = pbuffer.getDims();
-             pbufferReal = pbuffer.getReal();
-             pbufferImag = pbuffer.getImag();
-
-			if (mem.complex() != p.getBuffer().getComplex())
-			{
-				throw new UnsupportedOperationException("Complex mismatch");
-			}
+             pbufferReal = pbuffer.getArray();
+			
 			T real = (T)DataTypeUtil.arrayFromDataType(pbufferReal.getTypeID(), (int)elemcount);
-			T imag = null;
-			if (mem.complex())
-			{
-				imag = (T)DataTypeUtil.arrayFromDataType(pbufferImag.getTypeID(), (int)elemcount);
-			}
+			
 
-			MultiDimArray m = new MultiDimArray(count2, real, imag);
+			MultiDimArray m = new MultiDimArray(count2, real);
 
 			mem.read(memorypos, m, bufferpos, count);
-			MessageElementDataUtil.arrayToRRBaseArray(real, pbufferReal);
-			if (imag != null)
-			{
-				MessageElementDataUtil.arrayToRRBaseArray(imag, pbufferImag);
-			}
+			MessageElementDataUtil.arrayToRRBaseArray(real, pbufferReal);			
 		}
 		catch (Exception e)
 		{
@@ -200,23 +169,14 @@ public class WrappedMultiDimArrayMemoryDirectorJava<T> extends WrappedMultiDimAr
 
 			pbuffer = p.getBuffer();
             pbufferDims = pbuffer.getDims();
-            pbufferReal = pbuffer.getReal();
-            pbufferImag = pbuffer.getImag();
+            pbufferReal = pbuffer.getArray();            
 			
-			if (mem.complex() != pbuffer.getComplex())
-			{
-				throw new UnsupportedOperationException("Complex mismatch");
-			}
-
-			int[] dims = (int[])MessageElementDataUtil.rRBaseArrayToArray(pbufferDims);
+			
+			int[] dims = ((UnsignedInts)MessageElementDataUtil.rRBaseArrayToArray(pbufferDims)).value;
 			T real = (T)MessageElementDataUtil.rRBaseArrayToArray(pbufferReal);
 			T imag = null;
-			if (p.getBuffer().getComplex())
-			{
-				imag = (T)MessageElementDataUtil.rRBaseArrayToArray(pbufferImag);
-			}
-
-			MultiDimArray m = new MultiDimArray(count2, real, imag);
+			
+			MultiDimArray m = new MultiDimArray(count2, real);
 
 			mem.write(memorypos, m, bufferpos, count);
 

@@ -37,7 +37,7 @@ namespace RobotRaconteur
 		std::string RootObjectType;
 		std::vector<std::string> RootObjectImplements;
 		std::vector<std::string> ConnectionURL;
-		std::map<std::string, RR_SHARED_PTR<RRValue> > Attributes;
+		std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > Attributes;
 		RobotRaconteur::NodeID NodeID;
 		std::string NodeName;
 

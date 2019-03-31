@@ -73,92 +73,219 @@ namespace RobotRaconteur
             }
         }
 
-        public MessageElementCStructureArray PackCStructureToArray<T>(ref T s) where T : struct
+        public MessageElementPodArray PackPodToArray<T>(ref T s) where T : struct
         {
             string typename;
             if (CompareNamespace(RobotRaconteurNode.GetTypeString(s.GetType()), out typename))
             {
-                return ((CStructureStub<T>)FindCStructureStub(typename)).PackCStructureToArray(ref s);
+                return ((PodStub<T>)FindPodStub(typename)).PackPodToArray(ref s);
             }
             else
             {
-                return RobotRaconteurNode.s.PackCStructureToArray(ref s);
+                return RobotRaconteurNode.s.PackPodToArray(ref s);
             }
         }
 
-        public T UnpackCStructureFromArray<T>(MessageElementCStructureArray l) where T : struct
+        public T UnpackPodFromArray<T>(MessageElementPodArray l) where T : struct
         {
             string typename;
             if (CompareNamespace(l.GetTypeString(), out typename))
             {
-                return ((CStructureStub<T>)FindCStructureStub(typename)).UnpackCStructureFromArray(l);
+                return ((PodStub<T>)FindPodStub(typename)).UnpackPodFromArray(l);
             }
             else
             {
-                return RobotRaconteurNode.s.UnpackCStructureFromArray<T>(l);
+                return RobotRaconteurNode.s.UnpackPodFromArray<T>(l);
             }
         }
 
-        public MessageElementCStructureArray PackCStructureArray<T>(T[] s) where T : struct
+        public MessageElementPodArray PackPodArray<T>(T[] s) where T : struct
         {
             string typename;
             if (CompareNamespace(RobotRaconteurNode.GetTypeString(s.GetType().GetElementType()), out typename))
             {
-                return ((CStructureStub<T>)FindCStructureStub(typename)).PackCStructureArray(s);
+                return ((PodStub<T>)FindPodStub(typename)).PackPodArray(s);
             }
             else
             {
-                return RobotRaconteurNode.s.PackCStructureArray(s);
+                return RobotRaconteurNode.s.PackPodArray(s);
             }
         }
 
-        public T[] UnpackCStructureArray<T>(MessageElementCStructureArray l) where T : struct
+        public T[] UnpackPodArray<T>(MessageElementPodArray l) where T : struct
         {
             string typename;
             if (CompareNamespace(l.GetTypeString(), out typename))
             {
-                return ((CStructureStub<T>)FindCStructureStub(typename)).UnpackCStructureArray(l);
+                return ((PodStub<T>)FindPodStub(typename)).UnpackPodArray(l);
             }
             else
             {
-                return RobotRaconteurNode.s.UnpackCStructureArray<T>(l);
+                return RobotRaconteurNode.s.UnpackPodArray<T>(l);
             }
         }
 
-        public MessageElementCStructureMultiDimArray PackCStructureMultiDimArray<T>(CStructureMultiDimArray s) where T: struct
+        public MessageElementPodMultiDimArray PackPodMultiDimArray<T>(PodMultiDimArray s) where T: struct
         {
             string typename;
-            if (CompareNamespace(RobotRaconteurNode.GetTypeString(s.cstruct_array.GetType().GetElementType()), out typename))
+            if (CompareNamespace(RobotRaconteurNode.GetTypeString(s.pod_array.GetType().GetElementType()), out typename))
             {
-                return ((CStructureStub<T>)FindCStructureStub(typename)).PackCStructureMultiDimArray(s);
+                return ((PodStub<T>)FindPodStub(typename)).PackPodMultiDimArray(s);
             }
             else
             {
-                return RobotRaconteurNode.s.PackCStructureMultiDimArray<T>(s);
+                return RobotRaconteurNode.s.PackPodMultiDimArray<T>(s);
             }
         }
 
-        public CStructureMultiDimArray UnpackCStructureMultiDimArray<T>(MessageElementCStructureMultiDimArray l) where T: struct
+        public PodMultiDimArray UnpackPodMultiDimArray<T>(MessageElementPodMultiDimArray l) where T: struct
         {
             string typename;
             if (CompareNamespace(l.GetTypeString(), out typename))
             {
-                return ((CStructureStub<T>)FindCStructureStub(typename)).UnpackCStructureMultiDimArray(l);
+                return ((PodStub<T>)FindPodStub(typename)).UnpackPodMultiDimArray(l);
             }
             else
             {
-                return RobotRaconteurNode.s.UnpackCStructureMultiDimArray<T>(l);
+                return RobotRaconteurNode.s.UnpackPodMultiDimArray<T>(l);
             }
         }
 
-        public MessageElementData PackCStructure(object s)
+        public MessageElementData PackPod(object s)
         {
             Type t;
 
-            var s1 = s as CStructureMultiDimArray;
+            var s1 = s as PodMultiDimArray;
             if (s1 != null)
             {
-                t = s1.cstruct_array.GetType().GetElementType();
+                t = s1.pod_array.GetType().GetElementType();
+            }
+            else
+            {
+                var s2 = s as Array;
+                if (s2 != null)
+                {
+                    t = s2.GetType().GetElementType();
+                }
+                else
+                {
+                    t = s.GetType();
+                }
+            }
+
+
+            string typename;
+            if (CompareNamespace(RobotRaconteurNode.GetTypeString(t), out typename))
+            {                
+                return FindPodStub(typename).PackPod(s);
+            }
+            else
+            {
+                return RobotRaconteurNode.s.PackPod(s);
+            }
+        }
+
+        public object UnpackPod(MessageElementData m)
+        {
+            string typename;
+            if (CompareNamespace(m.GetTypeString(), out typename))
+            {
+                return FindPodStub(typename).UnpackPod(m);
+            }
+            else
+            {
+                return RobotRaconteurNode.s.UnpackPod(m);
+            }
+        }
+
+        //namedarray
+
+        public MessageElementNamedArray PackNamedArrayToArray<T>(ref T s) where T : struct
+        {
+            string typename;
+            if (CompareNamespace(RobotRaconteurNode.GetTypeString(s.GetType()), out typename))
+            {
+                return ((INamedArrayStub<T>)FindNamedArrayStub(typename)).PackNamedArrayStructToArray(ref s);
+            }
+            else
+            {
+                return RobotRaconteurNode.s.PackNamedArrayToArray(ref s);
+            }
+        }
+
+        public T UnpackNamedArrayFromArray<T>(MessageElementNamedArray l) where T : struct
+        {
+            string typename;
+            if (CompareNamespace(l.GetTypeString(), out typename))
+            {
+                return ((INamedArrayStub<T>)FindNamedArrayStub(typename)).UnpackNamedArrayStructFromArray(l);
+            }
+            else
+            {
+                return RobotRaconteurNode.s.UnpackNamedArrayFromArray<T>(l);
+            }
+        }
+
+        public MessageElementNamedArray PackNamedArray<T>(T[] s) where T : struct
+        {
+            string typename;
+            if (CompareNamespace(RobotRaconteurNode.GetTypeString(s.GetType().GetElementType()), out typename))
+            {
+                return ((INamedArrayStub<T>)FindNamedArrayStub(typename)).PackNamedArray(s);
+            }
+            else
+            {
+                return RobotRaconteurNode.s.PackNamedArray(s);
+            }
+        }
+
+        public T[] UnpackNamedArray<T>(MessageElementNamedArray l) where T : struct
+        {
+            string typename;
+            if (CompareNamespace(l.GetTypeString(), out typename))
+            {
+                return ((INamedArrayStub<T>)FindNamedArrayStub(typename)).UnpackNamedArray(l);
+            }
+            else
+            {
+                return RobotRaconteurNode.s.UnpackNamedArray<T>(l);
+            }
+        }
+
+        public MessageElementNamedMultiDimArray PackNamedMultiDimArray<T>(NamedMultiDimArray s) where T : struct
+        {
+            string typename;
+            if (CompareNamespace(RobotRaconteurNode.GetTypeString(s.namedarray_array.GetType().GetElementType()), out typename))
+            {
+                return ((INamedArrayStub<T>)FindNamedArrayStub(typename)).PackNamedMultiDimArray(s);
+            }
+            else
+            {
+                return RobotRaconteurNode.s.PackNamedMultiDimArray<T>(s);
+            }
+        }
+
+        public NamedMultiDimArray UnpackNamedMultiDimArray<T>(MessageElementNamedMultiDimArray l) where T : struct
+        {
+            string typename;
+            if (CompareNamespace(l.GetTypeString(), out typename))
+            {
+                return ((INamedArrayStub<T>)FindNamedArrayStub(typename)).UnpackNamedMultiDimArray(l);
+            }
+            else
+            {
+                return RobotRaconteurNode.s.UnpackNamedMultiDimArray<T>(l);
+            }
+        }
+
+        public MessageElementData PackNamedArray(object s)
+        {
+            Type t;
+
+            var s1 = s as NamedMultiDimArray;
+            if (s1 != null)
+            {
+                t = s1.namedarray_array.GetType().GetElementType();
             }
             else
             {
@@ -177,30 +304,32 @@ namespace RobotRaconteur
             string typename;
             if (CompareNamespace(RobotRaconteurNode.GetTypeString(t), out typename))
             {
-                return FindCStructureStub(typename).PackCStructure(s);
+                return FindNamedArrayStub(typename).PackNamedArray(s);
             }
             else
             {
-                return RobotRaconteurNode.s.PackCStructure(s);
+                return RobotRaconteurNode.s.PackNamedArray(s);
             }
         }
 
-        public object UnpackCStructure(MessageElementData m)
+        public object UnpackNamedArray(MessageElementData m)
         {
             string typename;
             if (CompareNamespace(m.GetTypeString(), out typename))
             {
-                return FindCStructureStub(typename).UnpackCStructure(m);
+                return FindNamedArrayStub(typename).UnpackNamedArray(m);
             }
             else
             {
-                return RobotRaconteurNode.s.UnpackCStructure(m);
+                return RobotRaconteurNode.s.UnpackNamedArray(m);
             }
         }
 
         public abstract IStructureStub FindStructureStub(string objecttype);
 
-        public abstract ICStructureStub FindCStructureStub(string objecttype);
+        public abstract IPodStub FindPodStub(string objecttype);
+
+        public abstract INamedArrayStub FindNamedArrayStub(string objecttype);
 
         public abstract ServiceStub CreateStub(WrappedServiceStub innerstub);
 
@@ -218,33 +347,33 @@ namespace RobotRaconteur
         T UnpackStructure<T>(MessageElementStructure m);
     }
 
-    public interface ICStructureStub
+    public interface IPodStub
     {
-        MessageElementData PackCStructure(object s);
+        MessageElementData PackPod(object s);
 
-        object UnpackCStructure(MessageElementData m);
+        object UnpackPod(MessageElementData m);
     }
 
-    public abstract class CStructureStub<T> : ICStructureStub where T :struct
+    public abstract class PodStub<T> : IPodStub where T :struct
     {
-        public abstract MessageElementCStructure PackCStructure(ref T s);
+        public abstract MessageElementPod PackPod(ref T s);
         
-        public abstract T UnpackCStructure(MessageElementCStructure m);
+        public abstract T UnpackPod(MessageElementPod m);
 
 
-        public virtual MessageElementCStructureArray PackCStructureToArray(ref T s2)
+        public virtual MessageElementPodArray PackPodToArray(ref T s2)
         {
             using (var mm = new vectorptr_messageelement())
             {                
                 MessageElementUtil.AddMessageElementDispose(mm,
-                    MessageElementUtil.NewMessageElementDispose(0, PackCStructure(ref s2))
+                    MessageElementUtil.NewMessageElementDispose(0, PackPod(ref s2))
                     );
                 
-                return new MessageElementCStructureArray(TypeName, mm);
+                return new MessageElementPodArray(TypeName, mm);
             }
         }
 
-        public virtual MessageElementCStructureArray PackCStructureArray(T[] s2)
+        public virtual MessageElementPodArray PackPodArray(T[] s2)
         {
             if (s2 == null) return null;
 
@@ -253,49 +382,49 @@ namespace RobotRaconteur
                 for (int i = 0; i < s2.Length; i++)
                 {
                     MessageElementUtil.AddMessageElementDispose(mm,
-                        MessageElementUtil.NewMessageElementDispose(i, PackCStructure(ref s2[i]))
+                        MessageElementUtil.NewMessageElementDispose(i, PackPod(ref s2[i]))
                         );
                 }
-                return new MessageElementCStructureArray(TypeName, mm);
+                return new MessageElementPodArray(TypeName, mm);
             }
         }
 
-        public virtual MessageElementCStructureMultiDimArray PackCStructureMultiDimArray(CStructureMultiDimArray s3)
+        public virtual MessageElementPodMultiDimArray PackPodMultiDimArray(PodMultiDimArray s3)
         {
             if (s3 == null) return null;
             using (vectorptr_messageelement l = new vectorptr_messageelement())
             {
                 MessageElementUtil.AddMessageElementDispose(l, "dims", s3.Dims);
-                using (var s4 = PackCStructureArray((T[])s3.cstruct_array))
+                using (var s4 = PackPodArray((T[])s3.pod_array))
                 {
                     MessageElementUtil.AddMessageElementDispose(l, "array", s4);
-                    return new MessageElementCStructureMultiDimArray(TypeName, l);
+                    return new MessageElementPodMultiDimArray(TypeName, l);
                 }
             }
         }
 
-        public virtual T UnpackCStructureFromArray(MessageElementCStructureArray s2)
+        public virtual T UnpackPodFromArray(MessageElementPodArray s2)
         {
-            if (s2.Type != TypeName) throw new DataTypeException("cstructure type mismatch");            
+            if (s2.Type != TypeName) throw new DataTypeException("pod type mismatch");            
             using (vectorptr_messageelement cdataElements = s2.Elements)
             {
-                if (cdataElements.Count != 1) throw new DataTypeException("cstructure type mismatch");
+                if (cdataElements.Count != 1) throw new DataTypeException("pod type mismatch");
 
                 var e = cdataElements[0];                
                 using (e)
                 {
                     if (0 != MessageElementUtil.GetMessageElementNumber(e)) throw new DataTypeException("Error in list format");
-                    using (MessageElementCStructure md = (MessageElementCStructure)e.Data)
+                    using (MessageElementPod md = (MessageElementPod)e.Data)
                     {
-                        return UnpackCStructure(md);
+                        return UnpackPod(md);
                     }                        
                 }               
             }
         }
 
-        public virtual T[] UnpackCStructureArray(MessageElementCStructureArray s2)
+        public virtual T[] UnpackPodArray(MessageElementPodArray s2)
         {
-            if (s2.Type != TypeName) throw new DataTypeException("cstructure type mismatch");
+            if (s2.Type != TypeName) throw new DataTypeException("pod type mismatch");
             int count = 0;
             using (vectorptr_messageelement cdataElements = s2.Elements)
             {
@@ -305,9 +434,9 @@ namespace RobotRaconteur
                     using (e)
                     {
                         if (count != MessageElementUtil.GetMessageElementNumber(e)) throw new DataTypeException("Error in list format");
-                        using (MessageElementCStructure md = (MessageElementCStructure)e.Data)
+                        using (MessageElementPod md = (MessageElementPod)e.Data)
                         {
-                            o[count] = UnpackCStructure(md);                            
+                            o[count] = UnpackPod(md);                            
                         }                        
                         count++;
                     }
@@ -316,71 +445,246 @@ namespace RobotRaconteur
             }
         }
 
-        public virtual CStructureMultiDimArray UnpackCStructureMultiDimArray(MessageElementCStructureMultiDimArray s3)
+        public virtual PodMultiDimArray UnpackPodMultiDimArray(MessageElementPodMultiDimArray s3)
         {
-            if (s3.Type != TypeName) throw new DataTypeException("cstructure type mismatch");
-            var o = new CStructureMultiDimArray();
+            if (s3.Type != TypeName) throw new DataTypeException("pod type mismatch");
+            var o = new PodMultiDimArray();
             using (vectorptr_messageelement marrayElements = s3.Elements)
             {
-                o.Dims = (MessageElementUtil.FindElementAndCast<int[]>(marrayElements, "dims"));
-                using (var s2 = (MessageElementUtil.FindElementAndCast<MessageElementCStructureArray>(marrayElements, "array")))
+                o.Dims = (MessageElementUtil.FindElementAndCast<uint[]>(marrayElements, "dims"));
+                using (var s2 = (MessageElementUtil.FindElementAndCast<MessageElementPodArray>(marrayElements, "array")))
                 {
-                    o.cstruct_array = UnpackCStructureArray(s2);
+                    o.pod_array = UnpackPodArray(s2);
                 }
             }
             return o;
         }
 
-        public virtual MessageElementData PackCStructure(object s)
+        public virtual MessageElementData PackPod(object s)
         {
             if (s is T)
             {
                 T s2 = (T)s;
-                return PackCStructureToArray(ref s2);
+                return PackPodToArray(ref s2);
             }
 
             var s3 = s as T[];
             if (s3 != null)
             {
-                return PackCStructureArray(s3);
+                return PackPodArray(s3);
             }
 
-            var s4 = s as CStructureMultiDimArray;
+            var s4 = s as PodMultiDimArray;
             if (s4 != null)
             {
-                return PackCStructureMultiDimArray(s4);
+                return PackPodMultiDimArray(s4);
             }
 
-            throw new DataTypeException("Unexpected message element type for PackCStructure");
+            throw new DataTypeException("Unexpected message element type for PackPod");
         }
-        public virtual object UnpackCStructure(MessageElementData m)
+        public virtual object UnpackPod(MessageElementData m)
         {
-            /*var m2 = m as MessageElementCStructure;
+            /*var m2 = m as MessageElementPod;
             if (m2 != null)
             {
                 
-                return UnpackCStructure(m2);           
+                return UnpackPod(m2);           
             }*/
 
-            var m3 = m as MessageElementCStructureArray;
+            var m3 = m as MessageElementPodArray;
             if (m3 != null)
             {
-                return UnpackCStructureArray(m3);
+                return UnpackPodArray(m3);
             }
 
-            var m4 = m as MessageElementCStructureMultiDimArray;
+            var m4 = m as MessageElementPodMultiDimArray;
             if (m4 != null)
             {
-                return UnpackCStructureMultiDimArray(m4);
+                return UnpackPodMultiDimArray(m4);
             }
 
-            throw new DataTypeException("Unexpected message element type for UnpackCStructure");
+            throw new DataTypeException("Unexpected message element type for UnpackPod");
+        }
+
+        public abstract string TypeName { get; }
+    }
+            
+    public class NamedArrayElementTypeAndCount : System.Attribute
+    {
+        public NamedArrayElementTypeAndCount(Type element_type, int element_array_count)
+        {
+            ElementArrayType = element_type;
+            ElementArrayCount = element_array_count;
+        }
+
+        public Type ElementArrayType { get; }
+        public int ElementArrayCount { get; }
+        
+    }
+
+    public interface INamedArrayStub
+    {
+        MessageElementData PackNamedArray(object s);
+
+        object UnpackNamedArray(MessageElementData m);
+    }
+
+    public interface INamedArrayStub<T> : INamedArrayStub
+    {
+        MessageElementNamedArray PackNamedArrayStructToArray(ref T s2);
+
+        MessageElementNamedArray PackNamedArray(T[] s2);
+
+        MessageElementNamedMultiDimArray PackNamedMultiDimArray(NamedMultiDimArray s3);
+
+        T UnpackNamedArrayStructFromArray(MessageElementNamedArray s2);
+
+        T[] UnpackNamedArray(MessageElementNamedArray s2);
+
+        NamedMultiDimArray UnpackNamedMultiDimArray(MessageElementNamedMultiDimArray s3);
+    }
+
+    public abstract class NamedArrayStub<T,U> : INamedArrayStub<T> where T : struct
+    {
+        public abstract U[] GetNumericArrayFromNamedArrayStruct(ref T s);
+
+        public abstract T GetNamedArrayStructFromNumericArray(U[] m);
+
+        public abstract U[] GetNumericArrayFromNamedArray(T[] s);
+
+        public abstract T[] GetNamedArrayFromNumericArray(U[] m);
+
+
+        public virtual MessageElementNamedArray PackNamedArrayStructToArray(ref T s2)
+        {
+            using (var mm = new vectorptr_messageelement())
+            {
+                MessageElementUtil.AddMessageElementDispose(mm,
+                    MessageElementUtil.NewMessageElementDispose("array", GetNumericArrayFromNamedArrayStruct(ref s2))
+                    );
+
+                return new MessageElementNamedArray(TypeName, mm);
+            }
+        }
+
+        public virtual MessageElementNamedArray PackNamedArray(T[] s2)
+        {
+            if (s2 == null) return null;
+
+            using (var mm = new vectorptr_messageelement())
+            {
+                
+                MessageElementUtil.AddMessageElementDispose(mm,
+                    MessageElementUtil.NewMessageElementDispose("array", GetNumericArrayFromNamedArray(s2))
+                    );
+                
+                return new MessageElementNamedArray(TypeName, mm);
+            }
+        }
+
+        public virtual MessageElementNamedMultiDimArray PackNamedMultiDimArray(NamedMultiDimArray s3)
+        {
+            if (s3 == null) return null;
+            using (vectorptr_messageelement l = new vectorptr_messageelement())
+            {
+                MessageElementUtil.AddMessageElementDispose(l, "dims", s3.Dims);
+                MessageElementUtil.AddMessageElementDispose(l, "array", PackNamedArray((T[])s3.namedarray_array));
+                return new MessageElementNamedMultiDimArray(TypeName, l);
+                
+            }
+        }
+
+        public virtual T UnpackNamedArrayStructFromArray(MessageElementNamedArray s2)
+        {
+            if (s2.Type != TypeName) throw new DataTypeException("namedarray type mismatch");
+            using (vectorptr_messageelement cdataElements = s2.Elements)
+            {
+                if (cdataElements.Count != 1) throw new DataTypeException("pod type mismatch");
+
+                var a = MessageElementUtil.FindElementAndCast<U[]>(cdataElements, "array");
+
+                return GetNamedArrayStructFromNumericArray(a);                             
+            }
+        }
+
+        public virtual T[] UnpackNamedArray(MessageElementNamedArray s2)
+        {
+            if (s2.Type != TypeName) throw new DataTypeException("namedarray type mismatch");
+            using (vectorptr_messageelement cdataElements = s2.Elements)
+            {
+                if (cdataElements.Count != 1) throw new DataTypeException("pod type mismatch");
+
+                var a = MessageElementUtil.FindElementAndCast<U[]>(cdataElements, "array");
+
+                return GetNamedArrayFromNumericArray(a);
+            }
+        }
+
+        public virtual NamedMultiDimArray UnpackNamedMultiDimArray(MessageElementNamedMultiDimArray s3)
+        {
+            if (s3.Type != TypeName) throw new DataTypeException("pod type mismatch");
+            var o = new NamedMultiDimArray();
+            using (vectorptr_messageelement marrayElements = s3.Elements)
+            {
+                o.Dims = (MessageElementUtil.FindElementAndCast<uint[]>(marrayElements, "dims"));
+                using (var s2 = (MessageElementUtil.FindElementAndCast<MessageElementNamedArray>(marrayElements, "array")))
+                {
+                    o.namedarray_array = UnpackNamedArray(s2);
+                }
+            }
+            return o;
+        }
+
+        public virtual MessageElementData PackNamedArray(object s)
+        {
+            if (s is T)
+            {
+                T s2 = (T)s;
+                return PackNamedArrayStructToArray(ref s2);
+            }
+
+            var s3 = s as T[];
+            if (s3 != null)
+            {
+                return PackNamedArray(s3);
+            }
+
+            var s4 = s as NamedMultiDimArray;
+            if (s4 != null)
+            {
+                return PackNamedMultiDimArray(s4);
+            }
+
+            throw new DataTypeException("Unexpected message element type for PackNamedArray");
+        }
+        public virtual object UnpackNamedArray(MessageElementData m)
+        {
+            /*var m2 = m as MessageElementPod;
+            if (m2 != null)
+            {
+                
+                return UnpackPod(m2);           
+            }*/
+
+            var m3 = m as MessageElementNamedArray;
+            if (m3 != null)
+            {
+                return UnpackNamedArray(m3);
+            }
+
+            var m4 = m as MessageElementNamedMultiDimArray;
+            if (m4 != null)
+            {
+                return UnpackNamedMultiDimArray(m4);
+            }
+
+            throw new DataTypeException("Unexpected message element type for UnpackNamedArray");
         }
 
         public abstract string TypeName { get; }
     }
 
-    
+
     public abstract class ServiceStub
     {
        
@@ -826,11 +1130,11 @@ namespace RobotRaconteur
             throw new MemberNotFoundException("Member not found");
         }
 
-        public override WrappedCStructureArrayMemoryDirector _GetCStructureArrayMemory(string name)
+        public override WrappedPodArrayMemoryDirector _GetPodArrayMemory(string name)
         {
             try
             {
-                return GetCStructureArrayMemory(name);
+                return GetPodArrayMemory(name);
             }
             catch (Exception e)
             {
@@ -843,11 +1147,11 @@ namespace RobotRaconteur
             }
         }
 
-        public override WrappedCStructureMultiDimArrayMemoryDirector _GetCStructureMultiDimArrayMemory(string name)
+        public override WrappedPodMultiDimArrayMemoryDirector _GetPodMultiDimArrayMemory(string name)
         {
             try
             {
-                return GetCStructureMultiDimArrayMemory(name);
+                return GetPodMultiDimArrayMemory(name);
             }
             catch (Exception e)
             {
@@ -860,17 +1164,59 @@ namespace RobotRaconteur
             }
         }
 
-        public virtual WrappedCStructureArrayMemoryDirector GetCStructureArrayMemory(string name)
+        public virtual WrappedPodArrayMemoryDirector GetPodArrayMemory(string name)
         {
             throw new MemberNotFoundException("Member not found");
         }
 
-        public virtual WrappedCStructureMultiDimArrayMemoryDirector GetCStructureMultiDimArrayMemory(string name)
+        public virtual WrappedPodMultiDimArrayMemoryDirector GetPodMultiDimArrayMemory(string name)
         {
             throw new MemberNotFoundException("Member not found");
         }
 
+        public override WrappedNamedArrayMemoryDirector _GetNamedArrayMemory(string name)
+        {
+            try
+            {
+                return GetNamedArrayMemory(name);
+            }
+            catch (Exception e)
+            {
+                using (MessageEntry merr = new MessageEntry())
+                {
+                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
+                    RRDirectorExceptionHelper.SetError(merr);
+                    return null;
+                }
+            }
+        }
 
+        public override WrappedNamedMultiDimArrayMemoryDirector _GetNamedMultiDimArrayMemory(string name)
+        {
+            try
+            {
+                return GetNamedMultiDimArrayMemory(name);
+            }
+            catch (Exception e)
+            {
+                using (MessageEntry merr = new MessageEntry())
+                {
+                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
+                    RRDirectorExceptionHelper.SetError(merr);
+                    return null;
+                }
+            }
+        }
+
+        public virtual WrappedNamedArrayMemoryDirector GetNamedArrayMemory(string name)
+        {
+            throw new MemberNotFoundException("Member not found");
+        }
+
+        public virtual WrappedNamedMultiDimArrayMemoryDirector GetNamedMultiDimArrayMemory(string name)
+        {
+            throw new MemberNotFoundException("Member not found");
+        }
     }
 
 
@@ -2410,552 +2756,7 @@ namespace RobotRaconteur
 
     }
 
-    public class ArrayMemory<T>
-    {
-        private T[] memory;
-
-        public ArrayMemory()
-        {
-
-        }
-
-        public ArrayMemory(T[] memory)
-        {
-            this.memory = memory;
-
-        }
-
-        public virtual void Attach(T[] memory)
-        {
-            this.memory = memory;
-
-        }
-
-        public virtual ulong Length
-        {
-            get
-            {
-                return (ulong)memory.LongLength;
-            }
-        }
-
-        public virtual void Read(ulong memorypos, T[] buffer, ulong bufferpos, ulong count)
-        {
-
-            Array.Copy(memory, (long)memorypos, buffer, (long)bufferpos, (long)count);
-        }
-        
-        public virtual void Write(ulong memorypos, T[] buffer, ulong bufferpos, ulong count)
-        {
-
-            Array.Copy(buffer, (long)bufferpos, memory, (long)memorypos, (long)count);
-        }
-    }
-
-    public class CStructureArrayMemory<T> : ArrayMemory<T> where T : struct
-    {
-        public CStructureArrayMemory() : base()
-        {
-        }
-
-        public CStructureArrayMemory(T[] memory) : base(memory)
-        {            
-        }
-    }
-
-    public class MultiDimArrayMemory<T>
-    {
-
-        private MultiDimArray multimemory;
-        
-        public MultiDimArrayMemory()
-        {
-
-
-        }
-        
-        public MultiDimArrayMemory(MultiDimArray memory)
-        {
-
-            multimemory = memory;
-        }
-                
-        public virtual void Attach(MultiDimArray memory)
-        {
-
-            this.multimemory = memory;
-
-        }
-        
-        public virtual ulong[] Dimensions
-        {
-            get
-            {
-                return multimemory.Dims.Select(x => (ulong)x).ToArray();
-            }
-        }
-
-        public virtual ulong DimCount
-        {
-            get
-            {
-                return (ulong)multimemory.DimCount;
-            }
-        }
-
-        public virtual bool Complex
-        {
-            get
-            {
-                return multimemory.Complex;
-            }
-        }
-        
-        public virtual void Read(ulong[] memorypos, MultiDimArray buffer, ulong[] bufferpos, ulong[] count)
-        {
-
-            multimemory.RetrieveSubArray(memorypos.Select(x => (int)x).ToArray(), buffer, bufferpos.Select(x => (int)x).ToArray(), count.Select(x => (int)x).ToArray());
-
-        }
-
-        
-        public virtual void Write(ulong[] memorypos, MultiDimArray buffer, ulong[] bufferpos, ulong[] count)
-        {
-
-            multimemory.AssignSubArray(memorypos.Select(x => (int)x).ToArray(), buffer, bufferpos.Select(x => (int)x).ToArray(), count.Select(x => (int)x).ToArray());
-        }
-    }
-
-    public class CStructureMultiDimArrayMemory<T> where T : struct
-    {
-
-        private CStructureMultiDimArray multimemory;
-
-        public CStructureMultiDimArrayMemory()
-        {
-
-
-        }
-
-        public CStructureMultiDimArrayMemory(CStructureMultiDimArray memory)
-        {
-
-            multimemory = memory;
-        }
-
-        public virtual void Attach(CStructureMultiDimArray memory)
-        {
-
-            this.multimemory = memory;
-
-        }
-
-        public virtual ulong[] Dimensions
-        {
-            get
-            {
-                return multimemory.Dims.Select(x => (ulong)x).ToArray();
-            }
-        }
-
-        public virtual ulong DimCount
-        {
-            get
-            {
-                return (ulong)multimemory.Dims.Length;
-            }
-        }
-                
-        public virtual void Read(ulong[] memorypos, CStructureMultiDimArray buffer, ulong[] bufferpos, ulong[] count)
-        {
-
-            multimemory.RetrieveSubArray(memorypos.Select(x => (int)x).ToArray(), buffer, bufferpos.Select(x => (int)x).ToArray(), count.Select(x => (int)x).ToArray());
-
-        }
-
-
-        public virtual void Write(ulong[] memorypos, CStructureMultiDimArray buffer, ulong[] bufferpos, ulong[] count)
-        {
-
-            multimemory.AssignSubArray(memorypos.Select(x => (int)x).ToArray(), buffer, bufferpos.Select(x => (int)x).ToArray(), count.Select(x => (int)x).ToArray());
-        }
-    }
-
-    public class ArrayMemoryClient<T> : ArrayMemory<T>
-    {
-        ArrayMemoryBase innerarray;
-
-        public ArrayMemoryClient(ArrayMemoryBase innerarray)
-        {
-            this.innerarray = innerarray;
-        }
-
-        MemberDefinition_Direction Direction
-        {
-            get
-            {
-                return WrappedArrayMemoryClientUtil.Direction(innerarray);
-            }
-        }
-
-        public override ulong Length
-        {
-            get
-            {
-                return innerarray.Length();
-            }
-         }
-
-        public override void Read(ulong memorypos, T[] buffer, ulong bufferpos, ulong count)
-        {
-            RRBaseArray dat=null;
-            try
-            {
-                dat = WrappedArrayMemoryClientUtil.Read(innerarray, memorypos, count);
-                T[] dat2 = (T[])MessageElementDataUtil.RRBaseArrayToArray(dat);
-                Array.Copy(dat2, 0, buffer, (long)bufferpos, (long)count);
-            }
-            finally
-            {
-                if (dat != null) dat.Dispose();
-            }
-        }
-
-        public override void Write(ulong memorypos, T[] buffer, ulong bufferpos, ulong count)
-        {
-            T[] buffer3;
-            if ((ulong)buffer.Length == count)
-            {
-                buffer3 = buffer;
-            }
-            else
-            {
-                buffer3 = new T[count];
-                Array.Copy(buffer, (long)bufferpos, buffer3, 0, (long)count);
-            }
-                        
-            RRBaseArray buffer2=null;
-            try
-            {
-                buffer2 = MessageElementDataUtil.ArrayToRRBaseArray(buffer3);
-                WrappedArrayMemoryClientUtil.Write(innerarray, memorypos, buffer2, 0, count);
-            }
-            finally
-            {
-                if (buffer2!=null)
-                    buffer2.Dispose();
-            }
-        }
-
-    }
-
-
-    public class MultiDimArrayMemoryClient<T> : MultiDimArrayMemory<T>
-    {
-        MultiDimArrayMemoryBase innermem;
-        public MultiDimArrayMemoryClient(MultiDimArrayMemoryBase innermem)
-        {
-            this.innermem = innermem;
-        }
-
-        MemberDefinition_Direction Direction
-        {
-            get
-            {
-                return WrappedMultiDimArrayMemoryClientUtil.Direction(innermem);
-            }
-        }
-
-        public override ulong DimCount
-        {
-            get
-            {
-                return innermem.DimCount();
-            }
-        }
-
-        public override ulong[] Dimensions
-        {
-            get
-            {
-                return innermem.Dimensions().Select(x=>(ulong)x).ToArray();
-            }
-        }
-
-        public override bool Complex
-        {
-            get
-            {
-                return innermem.Complex();
-            }
-        }
-
-        public override void Read(ulong[] memorypos, MultiDimArray buffer, ulong[] bufferpos, ulong[] count)
-        {
-            RRMultiDimArrayUntyped dat = null;
-            RRBaseArray datDims=null;
-            RRBaseArray datReal=null;
-            RRBaseArray datImag=null;
-            try
-            {
-                vector_uint64_t memorypos2 = new vector_uint64_t();
-                foreach (ulong val in memorypos) memorypos2.Add(val);
-                vector_uint64_t count2 = new vector_uint64_t();
-                foreach (ulong val in count) count2.Add(val);
-
-                dat = WrappedMultiDimArrayMemoryClientUtil.Read(innermem, memorypos2, count2);
-
-                datDims = dat.Dims;
-                datReal = dat.Real;
-                datImag = dat.Imag;
-                int[] dims = (int[])MessageElementDataUtil.RRBaseArrayToArray(datDims);
-                T[] real = (T[])MessageElementDataUtil.RRBaseArrayToArray(datReal);
-                T[] imag = (T[])MessageElementDataUtil.RRBaseArrayToArray(datImag);
-
-                MultiDimArray dat2 = new MultiDimArray(dims, real, imag);
-                buffer.AssignSubArray(bufferpos.Select(x => (int)x).ToArray(), dat2, new int[count.Length], count.Select(x => (int)x).ToArray());
-            }
-            finally
-            {
-                if (dat != null)
-                {
-                    if (datDims != null) datDims.Dispose();
-                    if (datReal != null) datReal.Dispose();
-                    if (datImag != null) datImag.Dispose();
-                    dat.Dispose();
-                }
-            }
-            
-            
-
-            
-        }
-
-        public override void Write(ulong[] memorypos, MultiDimArray buffer, ulong[] bufferpos, ulong[] count)
-        {
-            RRMultiDimArrayUntyped dat2 = null;
-            RRBaseArray dat2Dims = null;
-            RRBaseArray dat2Real = null;
-            RRBaseArray dat2Imag = null;
-            try
-            {
-                int elemcount = 1;
-                foreach (ulong v in count) elemcount *= (int)v;
-                int[] count2 = count.Select(x => (int)x).ToArray();
-                T[] real = new T[elemcount];
-                T[] imag = null;
-                if (Complex) imag = new T[elemcount];
-
-                MultiDimArray writedat1 = new MultiDimArray(count2, real, imag);
-                writedat1.AssignSubArray(new int[count.Length], buffer, bufferpos.Select(x => (int)x).ToArray(), count.Select(x => (int)x).ToArray());
-
-                dat2 = new RRMultiDimArrayUntyped();
-                dat2.DimCount = count2.Length;
-                dat2Dims=MessageElementDataUtil.ArrayToRRBaseArray(count2);
-                dat2.Dims = dat2Dims;
-                dat2Real = MessageElementDataUtil.ArrayToRRBaseArray(real);
-                dat2.Real = dat2Real;
-                dat2.Complex = false;
-                if (imag != null)
-                {
-                    dat2.Complex = true;
-                    dat2Imag=MessageElementDataUtil.ArrayToRRBaseArray(imag);
-                    dat2.Imag = dat2Imag;
-                }
-
-                vector_uint64_t memorypos3 = new vector_uint64_t();
-                foreach (ulong val in memorypos) memorypos3.Add(val);
-                vector_uint64_t count3 = new vector_uint64_t();
-                foreach (ulong val in count) count3.Add(val);
-                vector_uint64_t bufferpos3 = new vector_uint64_t();
-                for (int i = 0; i < count.Length; i++) bufferpos3.Add(0);
-                WrappedMultiDimArrayMemoryClientUtil.Write(innermem, memorypos3, dat2, bufferpos3, count3);
-            }
-            finally
-            {
-                if (dat2 != null)
-                {
-                    if (dat2Dims!=null) dat2Dims.Dispose();
-                    if (dat2Real!=null) dat2Real.Dispose();
-                    if (dat2Imag != null) dat2Imag.Dispose();
-                    dat2.Dispose();
-                }
-            }
-        }
-    }
-
-    public class CStructureArrayMemoryClient<T> : CStructureArrayMemory<T> where T: struct
-    {
-        WrappedCStructureArrayMemoryClient innerclient;
-
-        class bufferdirector : WrappedCStructureArrayMemoryClientBuffer
-        {
-            T[] buffer;
-
-            public bufferdirector(T[] buffer)
-            {
-                this.buffer = buffer;
-            }
-
-            public override void UnpackReadResult(MessageElementCStructureArray res, ulong bufferpos, ulong count)
-            {
-                T[] res1 = RobotRaconteurNode.s.UnpackCStructureArrayDispose<T>(res);
-                Array.Copy(res1, 0, buffer, (long)bufferpos, (long)count);
-            }
-
-            public override MessageElementCStructureArray PackWriteRequest(ulong bufferpos, ulong count)
-            {
-                T[] buffer3;
-                if ((ulong)buffer.Length == count)
-                {
-                    buffer3 = buffer;
-                }
-                else
-                {
-                    buffer3 = new T[count];
-                    Array.Copy(buffer, (long)bufferpos, buffer3, 0, (long)count);
-                }
-                return RobotRaconteurNode.s.PackCStructureArray<T>(buffer3);
-            }
-        }
-
-        public CStructureArrayMemoryClient(WrappedCStructureArrayMemoryClient innerclient)
-        {
-            this.innerclient = innerclient;
-        }
-
-        public override void Attach(T[] memory)
-        {
-            throw new InvalidOperationException("Invalid for memory client");
-        }
-
-        MemberDefinition_Direction Direction
-        {
-            get
-            {
-                return innerclient.Direction();
-            }
-        }
-
-        public override ulong Length
-        {
-            get
-            {
-                return innerclient.Length();
-            }
-        }
-
-        public override void Read(ulong memorypos, T[] buffer, ulong bufferpos, ulong count)
-        {
-            using (bufferdirector buffer1 = new bufferdirector(buffer))
-            {
-                innerclient.Read(memorypos, buffer1, bufferpos, count);
-            }
-        }
-
-        public override void Write(ulong memorypos, T[] buffer, ulong bufferpos, ulong count)
-        {
-            using (bufferdirector buffer1 = new bufferdirector(buffer))
-            {
-                innerclient.Write(memorypos, buffer1, bufferpos, count);
-            }
-        }
-    }
-
-    public class CStructureMultiDimArrayMemoryClient<T> : CStructureMultiDimArrayMemory<T> where T : struct
-    {
-        WrappedCStructureMultiDimArrayMemoryClient innerclient;
-
-        class bufferdirector : WrappedCStructureMultiDimArrayMemoryClientBuffer
-        {
-            CStructureMultiDimArray buffer;
-
-            public bufferdirector(CStructureMultiDimArray buffer)
-            {
-                this.buffer = buffer;
-            }
-
-            public override void UnpackReadResult(MessageElementCStructureMultiDimArray res, vector_uint64_t bufferpos, vector_uint64_t count)
-            {
-                using (res)
-                using (bufferpos)
-                using (count)
-                {
-                    CStructureMultiDimArray res1 = RobotRaconteurNode.s.UnpackCStructureMultiDimArrayDispose<T>(res);
-                    buffer.AssignSubArray(bufferpos.Select(x => (int)x).ToArray(), res1, new int[buffer.Dims.Length], count.Select(x=>(int)x).ToArray());                    
-                }
-            }
-
-            public override MessageElementCStructureMultiDimArray PackWriteRequest(vector_uint64_t bufferpos, vector_uint64_t count)
-            {
-                using (bufferpos)
-                using (count)
-                {
-                    CStructureMultiDimArray o = new CStructureMultiDimArray(count.Select(x => (int)x).ToArray(), new T[count.Aggregate(1, (x, y) => (int)x * (int)y)]);
-                    buffer.RetrieveSubArray(bufferpos.Select(x => (int)x).ToArray(), o, new int[buffer.Dims.Length], count.Select(x => (int)x).ToArray());
-                    return RobotRaconteurNode.s.PackCStructureMultiDimArray<T>(o);
-                }
-            }
-        }
-
-        public CStructureMultiDimArrayMemoryClient(WrappedCStructureMultiDimArrayMemoryClient innerclient)
-        {
-            this.innerclient = innerclient;
-        }
-
-        public virtual MemberDefinition_Direction Direction
-        {
-            get
-            {
-                return innerclient.Direction();
-            }
-        }
-
-        public override void Attach(CStructureMultiDimArray memory)
-        {
-            throw new InvalidOperationException("Invalid for memory client");
-        }
-
-        public override ulong DimCount
-        {
-            get
-            {
-                return innerclient.DimCount();
-            }
-        }
-
-        public override ulong[] Dimensions
-        {
-            get
-            {
-                return innerclient.Dimensions().ToArray();
-            }
-        }
-
-
-
-        public override void Read(ulong[] memorypos, CStructureMultiDimArray buffer, ulong[] bufferpos, ulong[] count)
-        {
-            using (bufferdirector buffer1 = new bufferdirector(buffer))
-            using (vector_uint64_t memorypos1 = new vector_uint64_t(memorypos))
-            using (vector_uint64_t bufferpos1 = new vector_uint64_t(bufferpos))
-            using (vector_uint64_t count1 = new vector_uint64_t(count))
-            {
-                innerclient.Read(memorypos1, buffer1, bufferpos1, count1);
-            }
-        }
-
-        public override void Write(ulong[] memorypos, CStructureMultiDimArray buffer, ulong[] bufferpos, ulong[] count)
-        {
-            using (bufferdirector buffer1 = new bufferdirector(buffer))
-            using (vector_uint64_t memorypos1 = new vector_uint64_t(memorypos))
-            using (vector_uint64_t bufferpos1 = new vector_uint64_t(bufferpos))
-            using (vector_uint64_t count1 = new vector_uint64_t(count))
-            {
-                innerclient.Write(memorypos1, buffer1, bufferpos1, count1);
-            }
-        }
-    }
+    
 
     public interface IRobotRaconteurMonitorObject
     {
@@ -2968,1180 +2769,9 @@ namespace RobotRaconteur
 
     }
 
-    public class WrappedArrayMemoryDirectorNET<T> : WrappedArrayMemoryDirector
-    {
-        ArrayMemory<T> mem;
+    
 
-        //public int memoryid = 0;
-
-        public WrappedArrayMemoryDirectorNET(ArrayMemory<T> mem)
-        {
-            this.mem = mem;
-
-            this.objectheapid=RRObjectHeap.AddObject(this);
-        }
-
-        public override ulong Length()
-        {
-            try
-            {
-                return mem.Length;
-            }
-            catch (Exception e)
-            {
-                using (MessageEntry merr = new MessageEntry())
-                {
-                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
-                    return 0;
-                }
-                
-            }
-        }
-
-        public override void Read(ulong memorypos, RRBaseArray buffer, ulong bufferpos, ulong count)
-        {
-            try
-            {
-                using (buffer)
-                {
-                    T[] buffer3 = new T[count];
-                    mem.Read(memorypos, buffer3, 0, count);
-
-                    MessageElementDataUtil.ArrayToRRBaseArray(buffer3, buffer);
-                }
-            }
-            catch (Exception e)
-            {
-                using (MessageEntry merr = new MessageEntry())
-                {
-                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
-                }
-                
-            }
-        }
-
-        public override void Write(ulong memorypos, RRBaseArray buffer, ulong bufferpos, ulong count)
-        {
-            try
-            {
-                using (buffer)
-                {
-
-                    T[] buffer2 = (T[])MessageElementDataUtil.RRBaseArrayToArray(buffer);
-                    mem.Write(memorypos, buffer2, bufferpos, count);
-                }           
-                
-            }
-            catch (Exception e)
-            {
-                using (MessageEntry merr = new MessageEntry())
-                {
-                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
-                }
-                
-            }
-        }
-    }
-
-    public class WrappedMultiDimArrayMemoryDirectorNET<T> : WrappedMultiDimArrayMemoryDirector
-    {
-        MultiDimArrayMemory<T> mem;
-
-        //public int memoryid = 0;
-
-        public WrappedMultiDimArrayMemoryDirectorNET(MultiDimArrayMemory<T> mem)
-        {
-            this.mem = mem;
-            this.objectheapid = RRObjectHeap.AddObject(this);
-        }
-
-        
-
-        public override ulong DimCount()
-        {
-            try
-            {
-                return mem.DimCount;
-            }
-            catch (Exception e)
-            {
-                using (MessageEntry merr = new MessageEntry())
-                {
-                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
-                    return 0;
-                }
-            }
-        }
-
-        public override vector_uint64_t Dimensions()
-        {
-            try
-            {
-                vector_uint64_t o = new vector_uint64_t();
-                foreach (ulong i in mem.Dimensions) o.Add(i);
-                return o;
-            }
-            catch (Exception e)
-            {
-                using (MessageEntry merr = new MessageEntry())
-                {
-                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
-                    return new vector_uint64_t();
-                }
-            }
-        }
-
-        public override bool Complex()
-        {
-            try
-            {
-                return mem.Complex;
-            }
-            catch (Exception e)
-            {
-                using (MessageEntry merr = new MessageEntry())
-                {
-                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
-                    return false;
-                }
-            }
-        }
-
-        public override void Read(WrappedMultiDimArrayMemoryParams p)
-        {
-            RRMultiDimArrayUntyped pbuffer=null;
-            RRBaseArray pbufferDims = null;
-            RRBaseArray pbufferReal = null;
-            RRBaseArray pbufferImag = null;
-
-            try
-            {
-                ulong[] count = p.count.ToArray();
-                ulong[] bufferpos = p.bufferpos.ToArray();
-                ulong[] memorypos = p.memorypos.ToArray();
-
-                ulong elemcount = 1;
-                foreach (ulong e in count) elemcount *= e;
-
-                pbuffer = p.buffer;
-                pbufferDims = pbuffer.Dims;
-                pbufferReal = pbuffer.Real;
-                pbufferImag = pbuffer.Imag;
-
-                if (mem.Complex != pbuffer.Complex) throw new ArgumentException("Complex mismatch");
-                T[] real = new T[elemcount];
-                T[] imag = null;
-                if (mem.Complex) imag = new T[elemcount];
-
-                MultiDimArray m = new MultiDimArray(count.Select(x => (int)x).ToArray(), real, imag);
-
-                mem.Read(memorypos, m, bufferpos, count);
-                MessageElementDataUtil.ArrayToRRBaseArray(real, pbufferReal);
-                if (imag != null) MessageElementDataUtil.ArrayToRRBaseArray(imag, pbufferImag);
-            }
-            catch (Exception e)
-            {
-                using (MessageEntry merr = new MessageEntry())
-                {
-                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
-                }
-
-            }
-            finally
-            {
-                if (p!=null && pbuffer!=null)
-                {
-                    if (pbufferDims != null) pbufferDims.Dispose();
-                    if (pbufferReal != null) pbufferReal.Dispose();
-                    if (pbufferImag != null) pbufferImag.Dispose();
-                }
-                if (p!=null)
-                {
-                    p.Dispose();
-                }
-                
-       
-            }
-        }
-
-        public override void Write(WrappedMultiDimArrayMemoryParams p)
-        {
-            RRMultiDimArrayUntyped pbuffer = null;
-            RRBaseArray pbufferDims = null;
-            RRBaseArray pbufferReal = null;
-            RRBaseArray pbufferImag = null;
-            try
-            {
-                ulong[] count = p.count.ToArray();
-                ulong[] bufferpos = p.bufferpos.ToArray();
-                ulong[] memorypos = p.memorypos.ToArray();
-
-                ulong elemcount = 1;
-                foreach (ulong e in count) elemcount *= e;
-
-                pbuffer = p.buffer;
-                pbufferDims = pbuffer.Dims;
-                pbufferReal = pbuffer.Real;
-                pbufferImag = pbuffer.Imag;
-
-                if (mem.Complex != pbuffer.Complex) throw new ArgumentException("Complex mismatch");
-
-                int[] dims = (int[])MessageElementDataUtil.RRBaseArrayToArray(pbufferDims);
-                T[] real = (T[])MessageElementDataUtil.RRBaseArrayToArray(pbufferReal);
-                T[] imag = null;
-                if (pbuffer.Complex) imag=(T[])MessageElementDataUtil.RRBaseArrayToArray(pbufferImag);
-
-                MultiDimArray m = new MultiDimArray(count.Select(x => (int)x).ToArray(), real, imag);
-
-                mem.Write(memorypos, m, bufferpos, count);
-
-
-            }
-            catch (Exception e)
-            {
-                using (MessageEntry merr = new MessageEntry())
-                {
-                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
-                }
-
-            }
-            finally
-            {
-                if (p != null && pbuffer != null)
-                {
-                    if (pbufferDims != null) pbufferDims.Dispose();
-                    if (pbufferReal != null) pbufferReal.Dispose();
-                    if (pbufferImag != null) pbufferImag.Dispose();
-                }
-                if (p != null)
-                {
-                    p.Dispose();
-                }
-
-
-            }
-        }
-
-    }
-
-    public class WrappedCStructureArrayMemoryDirectorNET<T> : WrappedCStructureArrayMemoryDirector where T : struct
-    {
-        CStructureArrayMemory<T> mem;
-
-        //public int memoryid = 0;
-
-        public WrappedCStructureArrayMemoryDirectorNET(CStructureArrayMemory<T> mem)
-        {
-            this.mem = mem;
-
-            this.objectheapid = RRObjectHeap.AddObject(this);
-        }
-
-        public override ulong Length()
-        {
-            try
-            {
-                return mem.Length;
-            }
-            catch (Exception e)
-            {
-                using (MessageEntry merr = new MessageEntry())
-                {
-                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
-                    return 0;
-                }
-
-            }
-        }
-
-        public override MessageElementCStructureArray Read(ulong memorypos, ulong bufferpos, ulong count)
-        {
-            try
-            {
-                T[] buffer3 = new T[count];
-                mem.Read(memorypos, buffer3, 0, count);
-
-                return RobotRaconteurNode.s.PackCStructureArray<T>(buffer3);                
-            }
-            catch (Exception e)
-            {
-                using (MessageEntry merr = new MessageEntry())
-                {
-                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
-                }
-                return null;
-            }
-        }
-
-        public override void Write(ulong memorypos, MessageElementCStructureArray buffer, ulong bufferpos, ulong count)
-        {
-            try
-            {
-                using (buffer)
-                {
-
-                    T[] buffer2 = (T[])RobotRaconteurNode.s.UnpackCStructureArray<T>(buffer);
-                    mem.Write(memorypos, buffer2, bufferpos, count);
-                }
-            }
-            catch (Exception e)
-            {
-                using (MessageEntry merr = new MessageEntry())
-                {
-                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
-                }
-            }
-        }
-    }
-
-    public class WrappedCStructureMultiDimArrayMemoryDirectorNET<T> : WrappedCStructureMultiDimArrayMemoryDirector where T : struct
-    {
-        CStructureMultiDimArrayMemory<T> mem;
-
-        //public int memoryid = 0;
-
-        public WrappedCStructureMultiDimArrayMemoryDirectorNET(CStructureMultiDimArrayMemory<T> mem)
-        {
-            this.mem = mem;
-
-            this.objectheapid = RRObjectHeap.AddObject(this);
-        }
-
-        public override ulong DimCount()
-        {
-            try
-            {
-                return mem.DimCount;
-            }
-            catch (Exception e)
-            {
-                using (MessageEntry merr = new MessageEntry())
-                {
-                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
-                    return 0;
-                }
-
-            }
-        }
-
-        public override vector_uint64_t Dimensions()
-        {
-            try
-            {
-                return new vector_uint64_t(mem.Dimensions);
-            }
-            catch (Exception e)
-            {
-                using (MessageEntry merr = new MessageEntry())
-                {
-                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
-                    return new vector_uint64_t();
-                }
-
-            }
-        }
-
-        public override MessageElementCStructureMultiDimArray Read(vector_uint64_t memorypos, vector_uint64_t bufferpos, vector_uint64_t count)
-        {
-            try
-            {
-                using (memorypos)
-                using (bufferpos)
-                using (count)
-                {
-                    CStructureMultiDimArray buffer3 = new CStructureMultiDimArray(count.Select(x => (int)x).ToArray(), new T[count.Aggregate(1, (x, y) => (int)x * (int)y)]);
-                    mem.Read(memorypos.ToArray(), buffer3, new ulong[count.Count], count.ToArray());
-                    return RobotRaconteurNode.s.PackCStructureMultiDimArray<T>(buffer3);
-                }
-            }
-            catch (Exception e)
-            {
-                using (MessageEntry merr = new MessageEntry())
-                {
-                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
-                }
-                return null;
-            }
-        }
-
-        public override void Write(vector_uint64_t memorypos, MessageElementCStructureMultiDimArray buffer, vector_uint64_t bufferpos, vector_uint64_t count)
-        {
-            try
-            {
-                using (buffer)
-                using (memorypos)
-                using (bufferpos)
-                using (count)
-                {
-                    CStructureMultiDimArray buffer2 = RobotRaconteurNode.s.UnpackCStructureMultiDimArray<T>(buffer);
-                    mem.Write(memorypos.ToArray(), buffer2, bufferpos.ToArray(), count.ToArray());
-                }
-            }
-            catch (Exception e)
-            {
-                using (MessageEntry merr = new MessageEntry())
-                {
-                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
-                }
-            }
-        }
-    }
-
-    public interface Generator1<ReturnType, ParamType>
-    {
-        ReturnType Next(ParamType param);
-        void AsyncNext(ParamType param, Action<ReturnType, Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-        void Abort();
-        void AsyncAbort(Action<Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-        void Close();
-        void AsyncClose(Action<Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    }
-
-    public interface Generator2<ReturnType>
-    {
-        ReturnType Next();
-        void AsyncNext(Action<ReturnType, Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-        void Abort();
-        void AsyncAbort(Action<Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-        void Close();
-        void AsyncClose(Action<Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-        ReturnType[] NextAll();
-    }
-
-    public interface Generator3<ParamType>
-    {
-        void Next(ParamType param);
-        void AsyncNext(ParamType param, Action<Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-        void Abort();
-        void AsyncAbort(Action<Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-        void Close();
-        void AsyncClose(Action<Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    }
-
-    public abstract class SyncGenerator1<ReturnType, ParamType> : Generator1<ReturnType, ParamType>
-    {
-        public abstract void Abort();
-        public abstract void Close();
-        public abstract ReturnType Next(ParamType param);
-
-        public void AsyncAbort(Action<Exception> handler, int timeout = -1)
-        {
-            try
-            {
-                Abort();
-                handler(null);
-            }
-            catch (Exception e)
-            {
-                handler(e);
-                return;
-            }
-            return;
-        }
-
-        public void AsyncClose(Action<Exception> handler, int timeout = -1)
-        {
-            try
-            {
-                Close();
-                handler(null);
-            }
-            catch (Exception e)
-            {
-                handler(e);
-                return;
-            }
-            return;
-        }
-
-        public void AsyncNext(ParamType param, Action<ReturnType, Exception> handler, int timeout = -1)
-        {
-            try
-            {
-                ReturnType r = Next(param);
-                handler(r, null);
-            }
-            catch (Exception e)
-            {
-                handler(default(ReturnType),e);
-                return;
-            }
-            return;
-        }
-    }
-
-    public abstract class SyncGenerator2<ReturnType> : Generator2<ReturnType>
-    {
-        public abstract void Abort();
-        public abstract void Close();
-        public abstract ReturnType Next();
-
-        public void AsyncAbort(Action<Exception> handler, int timeout = -1)
-        {
-            try
-            {
-                Abort();
-                handler(null);
-            }
-            catch (Exception e)
-            {
-                handler(e);
-                return;
-            }
-            return;
-        }
-
-        public void AsyncClose(Action<Exception> handler, int timeout = -1)
-        {
-            try
-            {
-                Close();
-                handler(null);
-            }
-            catch (Exception e)
-            {
-                handler(e);
-                return;
-            }
-            return;
-        }
-
-        public void AsyncNext(Action<ReturnType, Exception> handler, int timeout = -1)
-        {
-            try
-            {
-                ReturnType r = Next();
-                handler(r, null);
-            }
-            catch (Exception e)
-            {
-                handler(default(ReturnType), e);
-                return;
-            }
-            return;
-        }
-
-        public ReturnType[] NextAll()
-        {
-            List<ReturnType> o = new List<ReturnType>();
-            try
-            {
-                while (true)
-                {
-                    o.Add(Next());
-                }
-            }
-            catch (StopIterationException) { }
-            return o.ToArray();
-        }
-    }
-
-    public abstract class SyncGenerator3<ParamType> : Generator3<ParamType>
-    {
-        public abstract void Abort();
-        public abstract void Close();
-        public abstract void Next(ParamType param);
-
-        public void AsyncAbort(Action<Exception> handler, int timeout = -1)
-        {
-            try
-            {
-                Abort();
-                handler(null);
-            }
-            catch (Exception e)
-            {
-                handler(e);
-                return;
-            }
-            return;
-        }
-
-        public void AsyncClose(Action<Exception> handler, int timeout = -1)
-        {
-            try
-            {
-                Close();
-                handler(null);
-            }
-            catch (Exception e)
-            {
-                handler(e);
-                return;
-            }
-            return;
-        }
-
-        public void AsyncNext(ParamType param, Action<Exception> handler, int timeout = -1)
-        {
-            try
-            {
-                 Next(param);
-                handler(null);
-            }
-            catch (Exception e)
-            {
-                handler(e);
-                return;
-            }
-            return;
-        }
-    }
-
-    public class EnumeratorGenerator<T> : SyncGenerator2<T>
-    {
-        bool aborted = false;
-        bool closed = false;
-        IEnumerator<T> enumerator;
-
-        public EnumeratorGenerator(IEnumerable<T> enumerable)
-            : this(enumerable.GetEnumerator())
-        { }
-
-        public EnumeratorGenerator(IEnumerator<T> enumerator)
-        {
-            this.enumerator = enumerator;
-        }
-
-        public override void Abort()
-        {
-            lock (this)
-            {
-                aborted = true;
-            }
-            
-        }
-
-        public override void Close()
-        {
-            lock (this)
-            {
-                closed = true;
-            }
-
-        }
-
-        public override T Next()
-        {
-            lock (this)
-            {
-                if (aborted) throw new OperationAbortedException("Generator aborted");
-                if (closed) throw new StopIterationException("");
-                if (!enumerator.MoveNext()) throw new StopIterationException("");
-                return enumerator.Current;
-            }
-        }
-    }
-
-    public class Generator1Client<ReturnType, ParamType> : Generator1<ReturnType, ParamType>
-    {
-        protected WrappedGeneratorClient inner_gen;
-
-        public Generator1Client(WrappedGeneratorClient inner_gen)
-        {
-            this.inner_gen = inner_gen;
-        }
-
-        public ReturnType Next(ParamType param)
-        {
-            object param1 = RobotRaconteurNode.s.PackVarType(param);
-            try
-            {
-                using (MessageElement m = new MessageElement("parameter", param1))
-                {
-                    using (MessageElement m2 = inner_gen.Next(m))
-                    {
-                        return Wire<ReturnType>.UnpackData(m2);
-                    }
-                }
-            }
-            finally
-            {
-                IDisposable d = param1 as IDisposable;
-                if (d != null) d.Dispose();
-            }
-        }
-        public void AsyncNext(ParamType param, Action<ReturnType, Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-        {
-            object param1 = RobotRaconteurNode.s.PackVarType(param);
-            try
-            {
-                using (MessageElement m = new MessageElement("parameter", param1))
-                {
-                    AsyncRequestDirectorImpl d = new AsyncRequestDirectorImpl(EndAsyncNext, handler);
-                    int id = RRObjectHeap.AddObject(d);
-                    inner_gen.AsyncNext(m, timeout, d, id);          
-                }
-            }
-            finally
-            {
-                IDisposable d = param1 as IDisposable;
-                if (d != null) d.Dispose();
-            }            
-        }
-
-        private static void EndAsyncNext(MessageElement m, Exception err, object p)
-        {
-            Action<ReturnType, Exception> h = (Action<ReturnType, Exception>)p;
-            if (err!=null)
-            {
-                h(default(ReturnType), err);
-                return;
-            }
-            
-            h(Wire<ReturnType>.UnpackData(m),null);   
-        }
-
-        public void Abort()
-        {
-            inner_gen.Abort();
-        }
-        public void AsyncAbort(Action<Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-        {
-            AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl(delegate (Exception e1, object o1) { handler(e1); }, null);
-            int id = RRObjectHeap.AddObject(h);
-            inner_gen.AsyncAbort(timeout, h, id);
-        }
-
-        public void Close()
-        {
-            inner_gen.Close();
-        }
-        public void AsyncClose(Action<Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-        {
-            AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl(delegate (Exception e1, object o1) { handler(e1); }, null);
-            int id = RRObjectHeap.AddObject(h);
-            inner_gen.AsyncClose(timeout, h, id);
-        }
-    }
-
-    public class Generator2Client<ReturnType> : Generator2<ReturnType>
-    {
-        protected WrappedGeneratorClient inner_gen;
-
-        public Generator2Client(WrappedGeneratorClient inner_gen)
-        {
-            this.inner_gen = inner_gen;
-        }
-
-        public ReturnType Next()
-        {            
-            using (MessageElement m2 = inner_gen.Next(null))
-            {
-                return Wire<ReturnType>.UnpackData(m2);
-            }            
-        }
-        public void AsyncNext(Action<ReturnType, Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-        {            
-            AsyncRequestDirectorImpl d = new AsyncRequestDirectorImpl(EndAsyncNext, handler);
-            int id = RRObjectHeap.AddObject(d);
-            inner_gen.AsyncNext(null, timeout, d, id);                
-        }
-
-        private static void EndAsyncNext(MessageElement m, Exception err, object p)
-        {
-            Action<ReturnType, Exception> h = (Action<ReturnType, Exception>)p;
-            if (err != null)
-            {
-                h(default(ReturnType), err);
-                return;
-            }
-
-            h(Wire<ReturnType>.UnpackData(m), null);
-        }
-
-        public void Abort()
-        {
-            inner_gen.Abort();
-        }
-        public void AsyncAbort(Action<Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-        {
-            AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl(delegate (Exception e1, object o1) { handler(e1); }, null);
-            int id = RRObjectHeap.AddObject(h);
-            inner_gen.AsyncAbort(timeout, h, id);
-        }
-
-        public void Close()
-        {
-            inner_gen.Close();
-        }
-        public void AsyncClose(Action<Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-        {
-            AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl(delegate (Exception e1, object o1) { handler(e1); }, null);
-            int id = RRObjectHeap.AddObject(h);
-            inner_gen.AsyncClose(timeout, h, id);
-        }
-
-        public ReturnType[] NextAll()
-        {
-            List<ReturnType> o=new List<ReturnType>();
-            try
-            {
-                while (true)
-                {
-                    o.Add(Next());
-                }
-            }
-            catch (StopIterationException) { }
-            return o.ToArray();
-        }
-    }
-
-    public class Generator3Client<ParamType> : Generator3<ParamType>
-    {
-        protected WrappedGeneratorClient inner_gen;
-
-        public Generator3Client(WrappedGeneratorClient inner_gen)
-        {
-            this.inner_gen = inner_gen;
-        }
-
-        public void Next(ParamType param)
-        {
-            object param1 = RobotRaconteurNode.s.PackVarType(param);
-            try
-            {
-                using (MessageElement m = new MessageElement("parameter", param1))
-                {
-                    inner_gen.Next(m);           
-                }
-            }
-            finally
-            {
-                IDisposable d = param1 as IDisposable;
-                if (d != null) d.Dispose();
-            }
-        }
-        public void AsyncNext(ParamType param, Action<Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-        {
-            object param1 = RobotRaconteurNode.s.PackVarType(param);
-            try
-            {
-                using (MessageElement m = new MessageElement("parameter", param1))
-                {
-                    AsyncRequestDirectorImpl d = new AsyncRequestDirectorImpl(EndAsyncNext, handler);
-                    int id = RRObjectHeap.AddObject(d);
-                    inner_gen.AsyncNext(m, timeout, d, id);
-                }
-            }
-            finally
-            {
-                IDisposable d = param1 as IDisposable;
-                if (d != null) d.Dispose();
-            }
-        }
-
-        private static void EndAsyncNext(MessageElement m, Exception err, object p)
-        {
-            Action<Exception> h = (Action<Exception>)p;
-            h(err);
-        }
-
-        public void Abort()
-        {
-            inner_gen.Abort();
-        }
-        public void AsyncAbort(Action<Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-        {
-            AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl(delegate (Exception e1, object o1) { handler(e1); }, null);
-            int id = RRObjectHeap.AddObject(h);
-            inner_gen.AsyncAbort(timeout, h, id);
-        }
-
-        public void Close()
-        {
-            inner_gen.Close();
-        }
-        public void AsyncClose(Action<Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-        {
-            AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl(delegate (Exception e1, object o1) { handler(e1); }, null);
-            int id = RRObjectHeap.AddObject(h);
-            inner_gen.AsyncClose(timeout, h, id);
-        }
-    }
-
-    public class WrappedGenerator1ServerDirectorNET<ReturnType,ParamType> : WrappedGeneratorServerDirector
-    {
-        Generator1<ReturnType, ParamType> generator;
-        public WrappedGenerator1ServerDirectorNET(Generator1<ReturnType, ParamType> generator)
-        {
-            if (generator == null) throw new NullReferenceException("Generator must not be null");
-            this.generator = generator;
-            this.objectheapid = RRObjectHeap.AddObject(this);
-        }
-        
-        public override MessageElement Next(MessageElement m)
-        {
-            using (m)
-            {
-                try
-                {
-                    ParamType p = Wire<ParamType>.UnpackData(m);
-                    ReturnType r = generator.Next(p);
-                    object r1 = RobotRaconteurNode.s.PackVarType(r);
-                    try
-                    {
-                        MessageElement m_r = new MessageElement("return", r1);
-                        return m_r;
-                    }
-                    finally
-                    {
-                        IDisposable d = r1 as IDisposable;
-                        if (d != null) d.Dispose();
-                    }
-                }
-                catch (Exception e)
-                {
-                    using (MessageEntry merr = new MessageEntry())
-                    {
-                        RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                        RRDirectorExceptionHelper.SetError(merr);
-                        return null;
-                    }
-                }
-            }
-        }
-
-        public override void Abort()
-        {
-            try
-            {
-                generator.Abort();
-            }
-            catch (Exception e)
-            {
-                using (MessageEntry merr = new MessageEntry())
-                {
-                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
-                    return;
-                }
-            }
-        }
-
-        public override void Close()
-        {
-            try
-            {
-                generator.Close();
-            }
-            catch (Exception e)
-            {
-                using (MessageEntry merr = new MessageEntry())
-                {
-                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
-                    return;
-                }
-            }
-        }
-    }
-
-    public class WrappedGenerator2ServerDirectorNET<ReturnType> : WrappedGeneratorServerDirector
-    {
-        Generator2<ReturnType> generator;
-        public WrappedGenerator2ServerDirectorNET(Generator2<ReturnType> generator)
-        {
-            if (generator == null) throw new NullReferenceException("Generator must not be null");
-            this.generator = generator;
-            this.objectheapid = RRObjectHeap.AddObject(this);
-        }
-
-        public override MessageElement Next(MessageElement m)
-        {
-            using (m)
-            {
-                try
-                {
-                    ReturnType r = generator.Next();
-                    object r1 = RobotRaconteurNode.s.PackVarType(r);
-                    try
-                    {
-                        MessageElement m_r = new MessageElement("return", r1);
-                        {
-                            return m_r;
-                        }
-                    }
-                    finally
-                    {
-                        IDisposable d = r1 as IDisposable;
-                        if (d != null) d.Dispose();
-                    }
-                }
-                catch (Exception e)
-                {
-                    using (MessageEntry merr = new MessageEntry())
-                    {
-                        RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                        RRDirectorExceptionHelper.SetError(merr);
-                        return null;
-                    }
-                }
-            }
-        }
-
-        public override void Abort()
-        {
-            try
-            {
-                generator.Abort();
-            }
-            catch (Exception e)
-            {
-                using (MessageEntry merr = new MessageEntry())
-                {
-                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
-                    return;
-                }
-            }
-        }
-
-        public override void Close()
-        {
-            try
-            {
-                generator.Close();
-            }
-            catch (Exception e)
-            {
-                using (MessageEntry merr = new MessageEntry())
-                {
-                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
-                    return;
-                }
-            }
-        }
-    }
-
-    public class WrappedGenerator3ServerDirectorNET<ParamType> : WrappedGeneratorServerDirector
-    {
-        Generator3<ParamType> generator;
-        public WrappedGenerator3ServerDirectorNET(Generator3<ParamType> generator)
-        {
-            if (generator == null) throw new NullReferenceException("Generator must not be null");
-            this.generator = generator;
-            this.objectheapid = RRObjectHeap.AddObject(this);
-        }
-
-        public override MessageElement Next(MessageElement m)
-        {
-            using (m)
-            {
-                try
-                {
-                    ParamType p = Wire<ParamType>.UnpackData(m);
-                    generator.Next(p);
-                    return null;
-                }
-                catch (Exception e)
-                {
-                    using (MessageEntry merr = new MessageEntry())
-                    {
-                        RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                        RRDirectorExceptionHelper.SetError(merr);
-                        return null;
-                    }
-                }
-            }
-        }
-
-        public override void Abort()
-        {
-            try
-            {
-                generator.Abort();
-            }
-            catch (Exception e)
-            {
-                using (MessageEntry merr = new MessageEntry())
-                {
-                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
-                    return;
-                }
-            }
-        }
-
-        public override void Close()
-        {
-            try
-            {
-                generator.Close();
-            }
-            catch (Exception e)
-            {
-                using (MessageEntry merr = new MessageEntry())
-                {
-                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
-                    return;
-                }
-            }
-        }
-    }
-
-    internal class AsyncGeneratorClientReturnDirectorImpl : AsyncGeneratorClientReturnDirector
-    {
-
-        protected Action<WrappedGeneratorClient, Exception, object> handler_func;
-        protected object param;
-
-        public AsyncGeneratorClientReturnDirectorImpl(Action<WrappedGeneratorClient, Exception, object> handler_func, object param)
-        {
-            this.handler_func = handler_func;
-            this.param = param;
-        }
-
-        public override void handler(WrappedGeneratorClient m, uint error_code, string errorname, string errormessage)
-        {
-            using (m)
-            {
-                try
-                {
-                    this.Dispose();
-
-                    if (error_code != 0)
-                    {
-                        using (MessageEntry merr = new MessageEntry())
-                        {
-
-                            this.handler_func(null, RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage), param);
-                            return;
-                        }
-                    }
-
-                    handler_func(m, null, param);
-
-                }
-                catch (Exception e)
-                {
-                    using (MessageEntry merr = new MessageEntry())
-                    {
-                        RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                        RRDirectorExceptionHelper.SetError(merr);
-                    }
-                }
-            }
-
-        }
-    }
+    
 
     public class ClientServiceListenerDirectorNET : ClientServiceListenerDirector
     {

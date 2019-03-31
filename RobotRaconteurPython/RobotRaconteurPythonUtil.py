@@ -35,10 +35,7 @@ if (sys.version_info  > (3,0)):
 else:
     from __builtin__ import property
 
-try:
-    import numpy
-except:
-    pass
+import numpy
 
 def SplitQualifiedName(name):
     pos=name.rfind('.')
@@ -58,10 +55,7 @@ def FindMemberByName(l,name):
     raise RobotRaconteurPythonError.MemberNotFoundException("Member " + name + " not found")
 
 def FindMessageElementByName(l,name):
-    for i in l:
-        if (i.ElementName==name):
-            return i
-    raise RobotRaconteurPythonError.MessageElementNotFoundException("Element " + name + " not found")
+    return RobotRaconteurPython.MessageElement.FindElement(l,name)
 
 def PackMessageElement(data,type1,obj=None,node=None):
 
@@ -105,6 +99,16 @@ def NewStructure(StructType,obj=None,node=None):
     if (hasattr(obj,'rrinnerstub')):
         obj=obj.rrinnerstub
     return RobotRaconteurPython._NewStructure(StructType, obj, node)
+
+def GetPodDType(pod_type,obj=None,node=None):
+    if (hasattr(obj,'rrinnerstub')):
+        obj=obj.rrinnerstub
+    return RobotRaconteurPython._GetNumPyDescrForType(pod_type, obj, node)
+
+def GetNamedArrayDType(namedarray_type,obj=None,node=None):
+    if (hasattr(obj,'rrinnerstub')):
+        obj=obj.rrinnerstub
+    return RobotRaconteurPython._GetNumPyDescrForType(namedarray_type, obj, node)
 
 def InitStub(stub):
     odef=stub.RR_objecttype
@@ -223,16 +227,33 @@ def InitStub(stub):
                 mem=inner_memory(m)
                 mdict[m.Name]=mem
             else:
-                def inner_memory(m1):                
-                    if (m.Type.ArrayType == RobotRaconteurPython.DataTypes_ArrayTypes_array):
-                        outerm=CStructureArrayMemoryClient(stub.GetCStructureArrayMemory(m1.Name),m.Type,stub,stub.RRGetNode())
-                    else:
-                        outerm=CStructureMultiDimArrayMemoryClient(stub.GetCStructureMultiDimArrayMemory(m1.Name),m.Type,stub,stub.RRGetNode())
-                        pass
-                    fget=lambda self: outerm
-                    return property(fget)
-                mem=inner_memory(m)
-                mdict[m.Name]=mem
+                memory_rr_type=RobotRaconteurPython._GetNamedTypeEntryType(m.Type,stub,stub.RRGetNode())
+                if (memory_rr_type == RobotRaconteurPython.DataTypes_pod_t):
+                    def inner_memory(m1):                
+                        if (m.Type.ArrayType == RobotRaconteurPython.DataTypes_ArrayTypes_array):
+                            pass
+                            outerm=PodArrayMemoryClient(stub.GetPodArrayMemory(m1.Name),m.Type,stub,stub.RRGetNode())
+                        else:
+                            outerm=PodMultiDimArrayMemoryClient(stub.GetPodMultiDimArrayMemory(m1.Name),m.Type,stub,stub.RRGetNode())
+                            pass
+                        fget=lambda self: outerm
+                        return property(fget)
+                    mem=inner_memory(m)
+                    mdict[m.Name]=mem
+                elif (memory_rr_type == RobotRaconteurPython.DataTypes_namedarray_t):
+                    def inner_memory(m1):                
+                        if (m.Type.ArrayType == RobotRaconteurPython.DataTypes_ArrayTypes_array):
+                            pass
+                            outerm=NamedArrayMemoryClient(stub.GetNamedArrayMemory(m1.Name),m.Type,stub,stub.RRGetNode())
+                        else:
+                            outerm=NamedMultiDimArrayMemoryClient(stub.GetNamedMultiDimArrayMemory(m1.Name),m.Type,stub,stub.RRGetNode())
+                            pass
+                        fget=lambda self: outerm
+                        return property(fget)
+                    mem=inner_memory(m)
+                    mdict[m.Name]=mem
+                else:
+                    assert False
 
 
     outerstub_type=type(str(odef.Name),(ServiceStub,),mdict)
@@ -419,40 +440,43 @@ class WrappedServiceStubDirectorPython(RobotRaconteurPython.WrappedServiceStubDi
         super(WrappedServiceStubDirectorPython, self).__init__()
 
     def DispatchEvent(self, name, args1):
-
-        type1=FindMemberByName(self.innerstub.RR_objecttype.Members,name)
-        #type1=[e for e in self.innerstub.RR_objecttype.Members if e.Name == name][0]
-        args=[]        
-        type2=RobotRaconteurPython.MemberDefinitionUtil.ToEvent(type1)
-        for p in type2.Parameters:
-            m=FindMessageElementByName(args1,p.Name)            
-            a=UnpackMessageElement(m,p,self.stub,node=self.innerstub.RRGetNode())
-            args.append(a)
-        getattr(self.stub,name).fire(*args)
+        try:
+            type1=FindMemberByName(self.innerstub.RR_objecttype.Members,name)
+            #type1=[e for e in self.innerstub.RR_objecttype.Members if e.Name == name][0]
+            args=[]        
+            type2=RobotRaconteurPython.MemberDefinitionUtil.ToEvent(type1)
+            for p in type2.Parameters:
+                m=FindMessageElementByName(args1,p.Name)            
+                a=UnpackMessageElement(m,p,self.stub,node=self.innerstub.RRGetNode())
+                args.append(a)
+            getattr(self.stub,name).fire(*args)
+        except:
+            traceback.print_exc()
 
 
 
     def CallbackCall(self, name, args1):
-
-        type1=FindMemberByName(self.innerstub.RR_objecttype.Members,name)
-        #type1=[e for e in self.innerstub.RR_objecttype.Members if e.Name == name][0]
-        args=[]        
-
-        type2=RobotRaconteurPython.MemberDefinitionUtil.ToCallback(type1)
-        for p in type2.Parameters:
-            m=FindMessageElementByName(args1,p.Name)
-            
-            a=UnpackMessageElement(m,p,self.stub,self.innerstub.RRGetNode())
-            args.append(a)
-        ret=getattr(self.stub,name).Function(*args)
-
-        if (ret is None):
-            m=RobotRaconteurPython.MessageElement()
-            m.ElementName="return"
-            m.ElementType=RobotRaconteurPython.DataTypes_void_t
-            return m
-        return PackMessageElement(ret,type2.ReturnType,self.stub,self.innerstub.RRGetNode())
-
+        try:
+            type1=FindMemberByName(self.innerstub.RR_objecttype.Members,name)
+            #type1=[e for e in self.innerstub.RR_objecttype.Members if e.Name == name][0]
+            args=[]        
+    
+            type2=RobotRaconteurPython.MemberDefinitionUtil.ToCallback(type1)
+            for p in type2.Parameters:
+                m=FindMessageElementByName(args1,p.Name)
+                
+                a=UnpackMessageElement(m,p,self.stub,self.innerstub.RRGetNode())
+                args.append(a)
+            ret=getattr(self.stub,name).Function(*args)
+    
+            if (ret is None):
+                m=RobotRaconteurPython.MessageElement()
+                m.ElementName="return"
+                m.ElementType=RobotRaconteurPython.DataTypes_void_t
+                return m
+            return PackMessageElement(ret,type2.ReturnType,self.stub,self.innerstub.RRGetNode())
+        except:
+            traceback.print_exc()
 
 class ServiceStub(object):
     pass
@@ -974,8 +998,7 @@ class ArrayMemoryClient(object):
 class MultiDimArrayMemoryClient(object):
     def __init__(self,innermemory):
         self.__innermemory=innermemory
-        import RobotRaconteur
-        self.__UseNumPy=RobotRaconteur.UseNumPy
+        import RobotRaconteur        
 
     @property
     def DimCount(self):
@@ -984,11 +1007,7 @@ class MultiDimArrayMemoryClient(object):
     @property
     def Dimensions(self):
         return list(self.__innermemory.Dimensions())
-
-    @property
-    def Complex(self):
-        return self.__innermemory.Complex()
-
+   
     def Read(self, memorypos, buffer, bufferpos, count):
 
         dat=RobotRaconteurPython.WrappedMultiDimArrayMemoryClientUtil.Read(self.__innermemory,memorypos,count)
@@ -1004,28 +1023,13 @@ class MultiDimArrayMemoryClient(object):
         t.ArrayType=RobotRaconteurPython.DataTypes_ArrayTypes_array
         t.ArrayVarLength=True
         t.ArrayLength=RobotRaconteurPython.vectorint32([0])
-        real=UnpackFromRRArray(dat.Real,t)
-        imag=UnpackFromRRArray(dat.Imag,t)
-        if (not self.__UseNumPy):
-            dat2=MultiDimArray(dims,real,imag)
-
-            buffer.AssignSubArray(bufferpos,dat2,[0]*len(count),count)
-        else:
-            memind=[(slice(memorypos[i],(memorypos[i]+count[i]))) for i in xrange(len(count))]
-            bufind=[(slice(bufferpos[i], (bufferpos[i]+count[i]))) for i in xrange(len(count))]
-            if (type(buffer) is list or type(buffer) is set or type(buffer) is tuple):
-                realb=buffer[0]
-                imagb=buffer[1]
-                realm=real.reshape(dims,order="F")
-                imagm=imag.reshape(dims,order="F")
-                realb[bufind]=realm
-                imagb[bufind]=imagm
-            else:
-                if (imag is None):
-                    buffer2=real.reshape(dims,order="F")
-                else:
-                    buffer2=real.reshape(dims,order="F") + 1j*imag.reshape(dims)
-                buffer[bufind]=buffer2
+        array=UnpackFromRRArray(dat.Array,t)        
+        
+        memind=[(slice(memorypos[i],(memorypos[i]+count[i]))) for i in range(len(count))]
+        bufind=[(slice(bufferpos[i], (bufferpos[i]+count[i]))) for i in range(len(count))]
+                
+        buffer2=array.reshape(dims,order="F")
+        buffer[bufind]=buffer2
 
 
     def Write(self, memorypos, buffer, bufferpos, count):
@@ -1043,54 +1047,32 @@ class MultiDimArrayMemoryClient(object):
         t.ArrayLength=RobotRaconteurPython.vectorint32([0])
         elementcount=reduce(operator.mul,count,1)
         dims=count
-        if (not self.__UseNumPy):
-
-            real=[0]*elementcount
-            imag=None
-            if (buffer.Complex):
-                imag=[0]*elementcount
-
-            writedat1=MultiDimArray(dims,real,imag)
-            writedat1.AssignSubArray([0]*len(count),buffer,bufferpos,count)
-        else:
-            memind=[slice(memorypos[i],(memorypos[i]+count[i])) for i in range(len(count))]
-            bufind=[slice(bufferpos[i],(bufferpos[i]+count[i])) for i in range(len(count))]
-            if (type(buffer) is list or type(buffer) is set or type(buffer) is tuple):
-                real=(buffer[0])[bufind].flatten(order="F" )
-                imag=(buffer[1])[bufind].flatten(order="F" )
-            else:
-                if (buffer.dtype==numpy.complex64 or buffer.dtype==numpy.complex128):
-                    real=buffer[bufind].real.flatten(order="F")
-                    imag=buffer[bufind].imag.flatten(order="F")
-                else:
-                    real=buffer[bufind].real.flatten(order="F")
-                    imag=None
-
+        
+        memind=[slice(memorypos[i],(memorypos[i]+count[i])) for i in range(len(count))]
+        bufind=[slice(bufferpos[i],(bufferpos[i]+count[i])) for i in range(len(count))]
+                    
+        array=buffer[bufind].flatten(order="F")
+        
         dims2=PackToRRArray(count,tdims)
-        real2=PackToRRArray(real,t)
-        imag2=PackToRRArray(imag,t)
-
+        array2=PackToRRArray(array,t)
+        
         writedat2=RobotRaconteurPython.RRMultiDimArrayUntyped()
-        writedat2.DimCount=len(dims)
         writedat2.Dims=dims2
-        writedat2.Complex=False
-        writedat2.Real=real2
-        if (not imag is None):
-            writedat2.Complex=True
-            writedat2.Imag=imag2
-
+        
+        writedat2.Array=array2
+        
         RobotRaconteurPython.WrappedMultiDimArrayMemoryClientUtil.Write(self.__innermemory,memorypos,writedat2,[0]*len(count),count)
 
-class CStructureArrayMemoryClient_bufferdirector(RobotRaconteurPython.WrappedCStructureArrayMemoryClientBuffer):
+class PodArrayMemoryClient_bufferdirector(RobotRaconteurPython.WrappedPodArrayMemoryClientBuffer):
     def __init__(self, buf, type1, obj, node):
-        super(CStructureArrayMemoryClient_bufferdirector,self).__init__()
+        super(PodArrayMemoryClient_bufferdirector,self).__init__()
         self._buffer=buf
         self._obj=obj
         self._node=node
         self._type=type1
         
     def UnpackReadResult(self, res, bufferpos, count):
-        res1=RobotRaconteurPython.MessageElementDataUtil.ToMessageElementCStructureArray(res)
+        res1=RobotRaconteurPython.MessageElementDataUtil.ToMessageElementPodArray(res)
         m=RobotRaconteurPython.MessageElement()
         m.SetData(res)
         m.ElementTypeName=res1.Type
@@ -1102,9 +1084,9 @@ class CStructureArrayMemoryClient_bufferdirector(RobotRaconteurPython.WrappedCSt
     def PackWriteRequest(self, bufferpos, count):
         buf1=self._buffer[bufferpos:(bufferpos+count)]
         m_data = PackMessageElement(buf1,self._type, self._obj, self._node).GetData()
-        return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementCStructureArray(m_data)
+        return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementPodArray(m_data)
 
-class CStructureArrayMemoryClient(object):
+class PodArrayMemoryClient(object):
         
     def __init__(self,innermemory,type1,obj,node):
         self.__innermemory=innermemory
@@ -1117,38 +1099,39 @@ class CStructureArrayMemoryClient(object):
         return self.__innermemory.Length()
 
     def Read(self, memorypos, buf, bufferpos, count):
-        b=CStructureArrayMemoryClient_bufferdirector(buf, self._type, self._obj, self._node)
+        b=PodArrayMemoryClient_bufferdirector(buf, self._type, self._obj, self._node)
         self.__innermemory.Read(memorypos, b, bufferpos, count)
         
     def Write(self,memorypos, buf, bufferpos, count):
-        b=CStructureArrayMemoryClient_bufferdirector(buf, self._type, self._obj, self._node)
+        b=PodArrayMemoryClient_bufferdirector(buf, self._type, self._obj, self._node)
         self.__innermemory.Write(memorypos, b, bufferpos, count)
 
-class CStructureMultiDimArrayMemoryClient_bufferdirector(RobotRaconteurPython.WrappedCStructureMultiDimArrayMemoryClientBuffer):
+class PodMultiDimArrayMemoryClient_bufferdirector(RobotRaconteurPython.WrappedPodMultiDimArrayMemoryClientBuffer):
     def __init__(self, buf, type1, obj, node):
-        super(CStructureMultiDimArrayMemoryClient_bufferdirector,self).__init__()
+        super(PodMultiDimArrayMemoryClient_bufferdirector,self).__init__()
         self._buffer=buf
         self._obj=obj
         self._node=node
         self._type=type1
         
     def UnpackReadResult(self, res, bufferpos, count):
-        res1=RobotRaconteurPython.MessageElementDataUtil.ToMessageElementCStructureMultiDimArray(res)
+        res1=RobotRaconteurPython.MessageElementDataUtil.ToMessageElementPodMultiDimArray(res)
         m=RobotRaconteurPython.MessageElement()
         m.SetData(res)
         m.ElementTypeName=res1.Type
         m.DataCount=len(res1.Elements)
         
         res2=UnpackMessageElement(m, self._type, self._obj, self._node)
-        self._buffer.AssignSubArray(len(bufferpos), res2, [0]*len(count), list(count))
+        bufind=[(slice(bufferpos[i], (bufferpos[i]+count[i]))) for i in range(len(count))]
+        self._buffer[tuple(bufind)] = res2
         
     def PackWriteRequest(self, bufferpos, count):
-        buf1=CStructureMultiDimArray(list(count),[None]*reduce(lambda x, y: x*y, list(count)))
-        self._buffer.RetrieveSubArray(list(bufferpos), buf1, [0]*len(count), list(count))      
+        bufind=[(slice(bufferpos[i], (bufferpos[i]+count[i]))) for i in range(len(count))]
+        buf1=self._buffer[tuple(bufind)]          
         m_data = PackMessageElement(buf1,self._type, self._obj, self._node).GetData()
-        return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementCStructureMultiDimArray(m_data)
+        return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementPodMultiDimArray(m_data)
 
-class CStructureMultiDimArrayMemoryClient(object):
+class PodMultiDimArrayMemoryClient(object):
         
     def __init__(self,innermemory,type1,obj,node):
         self.__innermemory=innermemory
@@ -1165,11 +1148,103 @@ class CStructureMultiDimArrayMemoryClient(object):
         return list(self.__innermemory.Dimensions())
 
     def Read(self, memorypos, buf, bufferpos, count):
-        b=CStructureMultiDimArrayMemoryClient_bufferdirector(buf, self._type, self._obj, self._node)
+        b=PodMultiDimArrayMemoryClient_bufferdirector(buf, self._type, self._obj, self._node)
         self.__innermemory.Read(memorypos, b, bufferpos, count)
         
     def Write(self,memorypos, buf, bufferpos, count):
-        b=CStructureMultiDimArrayMemoryClient_bufferdirector(buf, self._type, self._obj, self._node)
+        b=PodMultiDimArrayMemoryClient_bufferdirector(buf, self._type, self._obj, self._node)
+        self.__innermemory.Write(memorypos, b, bufferpos, count)
+
+class NamedArrayMemoryClient_bufferdirector(RobotRaconteurPython.WrappedNamedArrayMemoryClientBuffer):
+    def __init__(self, buf, type1, obj, node):
+        super(NamedArrayMemoryClient_bufferdirector,self).__init__()
+        self._buffer=buf
+        self._obj=obj
+        self._node=node
+        self._type=type1
+        
+    def UnpackReadResult(self, res, bufferpos, count):
+        res1=RobotRaconteurPython.MessageElementDataUtil.ToMessageElementNamedArray(res)
+        m=RobotRaconteurPython.MessageElement()
+        m.SetData(res)
+        m.ElementTypeName=res1.Type
+        m.DataCount=len(res1.Elements)
+        
+        res1=UnpackMessageElement(m, self._type, self._obj, self._node)
+        self._buffer[bufferpos:(bufferpos+count)] = res1
+        
+    def PackWriteRequest(self, bufferpos, count):
+        buf1=self._buffer[bufferpos:(bufferpos+count)]
+        m_data = PackMessageElement(buf1,self._type, self._obj, self._node).GetData()
+        return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementNamedArray(m_data)
+
+class NamedArrayMemoryClient(object):
+        
+    def __init__(self,innermemory,type1,obj,node):
+        self.__innermemory=innermemory
+        self._type=type1
+        self._obj=obj
+        self._node=node
+
+    @property
+    def Length(self):
+        return self.__innermemory.Length()
+
+    def Read(self, memorypos, buf, bufferpos, count):
+        b=NamedArrayMemoryClient_bufferdirector(buf, self._type, self._obj, self._node)
+        self.__innermemory.Read(memorypos, b, bufferpos, count)
+        
+    def Write(self,memorypos, buf, bufferpos, count):
+        b=NamedArrayMemoryClient_bufferdirector(buf, self._type, self._obj, self._node)
+        self.__innermemory.Write(memorypos, b, bufferpos, count)
+
+class NamedMultiDimArrayMemoryClient_bufferdirector(RobotRaconteurPython.WrappedNamedMultiDimArrayMemoryClientBuffer):
+    def __init__(self, buf, type1, obj, node):
+        super(NamedMultiDimArrayMemoryClient_bufferdirector,self).__init__()
+        self._buffer=buf
+        self._obj=obj
+        self._node=node
+        self._type=type1
+        
+    def UnpackReadResult(self, res, bufferpos, count):
+        res1=RobotRaconteurPython.MessageElementDataUtil.ToMessageElementNamedMultiDimArray(res)
+        m=RobotRaconteurPython.MessageElement()
+        m.SetData(res)
+        m.ElementTypeName=res1.Type
+        m.DataCount=len(res1.Elements)
+        
+        res2=UnpackMessageElement(m, self._type, self._obj, self._node)
+        bufind=[(slice(bufferpos[i], (bufferpos[i]+count[i]))) for i in range(len(count))]
+        self._buffer[tuple(bufind)] = res2        
+        
+    def PackWriteRequest(self, bufferpos, count):
+        bufind=[(slice(bufferpos[i], (bufferpos[i]+count[i]))) for i in range(len(count))]
+        buf1=self._buffer[tuple(bufind)]            
+        m_data = PackMessageElement(buf1,self._type, self._obj, self._node).GetData()
+        return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementNamedMultiDimArray(m_data)
+
+class NamedMultiDimArrayMemoryClient(object):
+        
+    def __init__(self,innermemory,type1,obj,node):
+        self.__innermemory=innermemory
+        self._type=type1
+        self._obj=obj
+        self._node=node
+
+    @property
+    def DimCount(self):
+        return self.__innermemory.DimCount()
+    
+    @property
+    def Dimensions(self):
+        return list(self.__innermemory.Dimensions())
+
+    def Read(self, memorypos, buf, bufferpos, count):
+        b=NamedMultiDimArrayMemoryClient_bufferdirector(buf, self._type, self._obj, self._node)
+        self.__innermemory.Read(memorypos, b, bufferpos, count)
+        
+    def Write(self,memorypos, buf, bufferpos, count):
+        b=NamedMultiDimArrayMemoryClient_bufferdirector(buf, self._type, self._obj, self._node)
         self.__innermemory.Write(memorypos, b, bufferpos, count)
 
 class ServiceInfo2(object):
@@ -1312,32 +1387,43 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
 
 
     def _GetMultiDimArrayMemory(self,name):
-
         m=getattr(self.obj, name)
         d=WrappedMultiDimArrayMemoryDirectorPython(m)
         d.__disown__()
-
         return d
 
-    def _GetCStructureArrayMemory(self,name):
+    def _GetPodArrayMemory(self,name):
         type1=FindMemberByName(self.skel.Type.Members,name)
         type2=RobotRaconteurPython.MemberDefinitionUtil.ToMemory(type1)
         m=getattr(self.obj, name)
-        d=WrappedCStructureArrayMemoryDirectorPython(m, type2.Type, self.skel.RRGetNode())
+        d=WrappedPodArrayMemoryDirectorPython(m, type2.Type, self.skel.RRGetNode())
         d.__disown__()
         return d
 
 
-    def _GetCStructureMultiDimArrayMemory(self,name):
-        
+    def _GetPodMultiDimArrayMemory(self,name):        
         type1=FindMemberByName(self.skel.Type.Members,name)
         type2=RobotRaconteurPython.MemberDefinitionUtil.ToMemory(type1)
         m=getattr(self.obj, name)
-        d=WrappedCStructureMultiDimArrayMemoryDirectorPython(m, type2.Type, self.skel.RRGetNode())
+        d=WrappedPodMultiDimArrayMemoryDirectorPython(m, type2.Type, self.skel.RRGetNode())
         d.__disown__()
-
         return d
 
+    def _GetNamedArrayMemory(self,name):
+        type1=FindMemberByName(self.skel.Type.Members,name)
+        type2=RobotRaconteurPython.MemberDefinitionUtil.ToMemory(type1)
+        m=getattr(self.obj, name)
+        d=WrappedNamedArrayMemoryDirectorPython(m, type2.Type, self.skel.RRGetNode())
+        d.__disown__()
+        return d
+    
+    def _GetNamedMultiDimArrayMemory(self,name):        
+        type1=FindMemberByName(self.skel.Type.Members,name)
+        type2=RobotRaconteurPython.MemberDefinitionUtil.ToMemory(type1)
+        m=getattr(self.obj, name)
+        d=WrappedNamedMultiDimArrayMemoryDirectorPython(m, type2.Type, self.skel.RRGetNode())
+        d.__disown__()
+        return d
 
     def MonitorEnter(self,timeout):
 
@@ -1428,8 +1514,7 @@ class WrappedMultiDimArrayMemoryDirectorPython(RobotRaconteurPython.WrappedMulti
     def __init__(self,memory):
         self.memory=memory
         super(WrappedMultiDimArrayMemoryDirectorPython,self).__init__()
-        import RobotRaconteur
-        self.__UseNumPy=RobotRaconteur.UseNumPy
+        import RobotRaconteur        
 
     def Dimensions(self):
 
@@ -1443,66 +1528,22 @@ class WrappedMultiDimArrayMemoryDirectorPython(RobotRaconteurPython.WrappedMulti
 
         return self.memory.DimCount
 
-
-    def Complex(self):
-
-        return self.memory.Complex
-
-
     def Read(self,p):
 
         rrmultidim=p.buffer
         rrt=RobotRaconteurPython.TypeDefinition()
-        rrt.Type=rrmultidim.Real.GetTypeID()
+        rrt.Type=rrmultidim.Array.GetTypeID()
         rrt.ArrayType=RobotRaconteurPython.DataTypes_ArrayTypes_array
         rrt.ArrayVarLength=True
         rrt.ArrayLength=RobotRaconteurPython.vectorint32([0])
         dims=list(p.count)
         elementcount=reduce(operator.mul,dims,1)
-        if (not self.__UseNumPy):
+        
+        readdat1=numpy.zeros(dims,dtype=RobotRaconteurPython._RRTypeIdToNumPyDataType(rrmultidim.Array.GetTypeID()))
+        self.memory.Read(list(p.memorypos),readdat1,list(p.bufferpos),dims)
 
-            real=[0]*elementcount
-            imag=None
-            if (self.Complex()):
-                imag=[0]*elementcount
-
-            readdat1=MultiDimArray(dims,real,imag)
-
-            self.memory.Read(list(p.memorypos),readdat1,list(p.bufferpos),dims)
-
-
-
-            PackToRRArray(real,rrt,rrmultidim.Real)
-            if (not imag is None):
-                if (rrmultidim.Imag is None): raise Exception("Complex mismatch")
-                PackToRRArray(imag,rrt,rrmultidim.Imag)
-        else:
-
-            if (not self.Complex()):
-                readdat1=numpy.zeros(dims,dtype=RRTypeIdToNumPyDataType(rrmultidim.Real.GetTypeID()))
-                self.memory.Read(list(p.memorypos),readdat1,list(p.bufferpos),dims)
-
-                PackToRRArray(readdat1.flatten(order="F"),rrt,rrmultidim.Real)
-            else:
-                if (rrmultidim.Real.GetTypeID()==RobotRaconteurPython.DataTypes_double_t or rrmultidim.Real.GetType()==RobotRaconteurPython.DataTypes_single_t):
-                    if (rrmultidim.Real.GetTypeID()==RobotRaconteurPython.DataTypes_double_t):
-                        readdat1=numpy.zeros(dims,dtype=numpy.complex128)
-                    else:
-                        readdat1=numpy.zeros(dims,dtype=numpy.complex64)
-                    self.memory.Read(list(p.memorypos),readdat1,list(p.bufferpos),dims)
-
-                    PackToRRArray(readdat1.real.flatten(order="F"),rrt,rrmultidim.Real)
-                    if (rrmultidim.Imag is None): raise Exception("Complex mismatch")
-                    PackToRRArray(readdat1.imag.flatten(order="F"),rrt,rrmultidim.Imag)
-                else:
-                    readdat1=(numpy.zeros(dims,dtype=RRTypeIdToNumPyDataType(rrmultidim.Real.GetTypeID())),numpy.zeros(dims,dtype=RRTypeIdToNumPyDataType(rrmultidim.Real.GetTypeID())))
-                    self.memory.Read(list(p.memorypos),readdat1,list(p.bufferpos),dims)
-
-                    PackToRRArray(readdat1[0].flatten(order="F"),rrt,rrmultidim.Real)
-                    if (rrmultidim.Imag is None): raise Exception("Complex mismatch")
-                    PackToRRArray(readdat1[1].flatten(order="F"),rrt,rrmultidim.Imag)
-
-
+        PackToRRArray(readdat1.flatten(order="F"),rrt,rrmultidim.Array)
+        
     def Write(self,p):
 
         memorypos=list(p.memorypos)
@@ -1511,40 +1552,29 @@ class WrappedMultiDimArrayMemoryDirectorPython(RobotRaconteurPython.WrappedMulti
 
         rrmultidim=p.buffer
         md_dims=UnpackFromRRArray(rrmultidim.Dims)
-        md_real=UnpackFromRRArray(rrmultidim.Real)
-        md_imag=UnpackFromRRArray(rrmultidim.Imag)
-        if (not self.__UseNumPy):
-            buffer=MultiDimArray(md_dims,md_real,md_imag)
-            self.memory.Write(memorypos,buffer,bufferpos,count)
-        else:
-            if (md_imag is None):
-                buffer=md_real.reshape(count,order="F")
-                self.memory.Write(memorypos,buffer,bufferpos,count)
-            else:
-                if (md_imag.dtype==numpy.float64 or md_imag.dtype==numpy.float32):
-                    buffer=md_real.reshape(count,order="F") + 1j*md_imag.reshape(count,order="F")
-                    self.memory.Write(memorypos,buffer,bufferpos,count)
-                else:
-                    buffer=(md_real.reshape(count,order="F"), md_imag.reshape(count,order="F"))
-                    self.memory.Write(memorypos,buffer,bufferpos,count)
+        md_array=UnpackFromRRArray(rrmultidim.Array)        
+        
+        buffer=md_array.reshape(count,order="F")
+        self.memory.Write(memorypos,buffer,bufferpos,count)
+        
 
-class WrappedCStructureArrayMemoryDirectorPython(RobotRaconteurPython.WrappedCStructureArrayMemoryDirector):
+class WrappedPodArrayMemoryDirectorPython(RobotRaconteurPython.WrappedPodArrayMemoryDirector):
     def __init__(self,memory,type1,node):
         self.memory=memory
         self.node=node
         self.type=type1
-        super(WrappedCStructureArrayMemoryDirectorPython,self).__init__()
+        super(WrappedPodArrayMemoryDirectorPython,self).__init__()
 
     def Length(self):
 
         return self.memory.Length
 
     def Read(self,memorypos,bufferpos,count):
-
-        buffer3=[None]*count
+        dt=GetPodDType(self.type)
+        buffer3=numpy.zeros((count,),dtype=dt)
         self.memory.Read(memorypos,buffer3,bufferpos,count)        
         m=PackMessageElement(buffer3,self.type,node=self.node)
-        return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementCStructureArray(m.GetData())
+        return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementPodArray(m.GetData())
     
     def Write(self,memorypos,buffer_,bufferpos,count):        
         m=RobotRaconteurPython.MessageElement()
@@ -1554,9 +1584,9 @@ class WrappedCStructureArrayMemoryDirectorPython(RobotRaconteurPython.WrappedCSt
         buffer3=UnpackMessageElement(m,self.type, node=self.node)
         self.memory.Write(memorypos,buffer3,bufferpos,count)
 
-class WrappedCStructureMultiDimArrayMemoryDirectorPython(RobotRaconteurPython.WrappedCStructureMultiDimArrayMemoryDirector):
+class WrappedPodMultiDimArrayMemoryDirectorPython(RobotRaconteurPython.WrappedPodMultiDimArrayMemoryDirector):
     def __init__(self,memory,type1,node):
-        super(WrappedCStructureMultiDimArrayMemoryDirectorPython,self).__init__()
+        super(WrappedPodMultiDimArrayMemoryDirectorPython,self).__init__()
         self.memory=memory
         self.type=type1
         self.node=node
@@ -1573,17 +1603,15 @@ class WrappedCStructureMultiDimArrayMemoryDirectorPython(RobotRaconteurPython.Wr
 
     def Read(self,memorypos,bufferpos,count):
 
-        dims=list(count)
-        elementcount=reduce(operator.mul,dims,1)
-   
-        dat=[None]*elementcount
-        
-        readdat1=CStructureMultiDimArray(dims,dat)
+        dims=list(count)        
+        dt=GetPodDType(self.type)
+                
+        readdat1=numpy.zeros(dims,dtype=dt)
 
         self.memory.Read(list(memorypos),readdat1,list(bufferpos),dims)
 
         m = PackMessageElement(readdat1, self.type, node=self.node)
-        return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementCStructureMultiDimArray(m.GetData())
+        return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementPodMultiDimArray(m.GetData())
         
     def Write(self,memorypos_,buffer_, bufferpos_, count_):
         try:
@@ -1591,7 +1619,75 @@ class WrappedCStructureMultiDimArrayMemoryDirectorPython(RobotRaconteurPython.Wr
             bufferpos=list(bufferpos_)
             count=list(count_)
             
-            buffer1=RobotRaconteurPython.MessageElementDataUtil.ToMessageElementCStructureMultiDimArray(buffer_)
+            buffer1=RobotRaconteurPython.MessageElementDataUtil.ToMessageElementPodMultiDimArray(buffer_)
+            m=RobotRaconteurPython.MessageElement()
+            m.SetData(buffer_)
+            m.ElementTypeName=buffer1.Type
+            m.DataCount=len(buffer1.Elements)
+            buffer2=UnpackMessageElement(m,self.type, node=self.node)       
+            self.memory.Write(memorypos,buffer2,bufferpos,count)
+        except:
+            traceback.print_exc()
+            raise
+
+class WrappedNamedArrayMemoryDirectorPython(RobotRaconteurPython.WrappedNamedArrayMemoryDirector):
+    def __init__(self,memory,type1,node):
+        self.memory=memory
+        self.node=node
+        self.type=type1
+        super(WrappedNamedArrayMemoryDirectorPython,self).__init__()
+
+    def Length(self):
+
+        return self.memory.Length
+
+    def Read(self,memorypos,bufferpos,count):
+        dt=GetNamedArrayDType(self.type)
+        buffer3=numpy.zeros((count,),dtype=dt)
+        self.memory.Read(memorypos,buffer3,bufferpos,count)        
+        m=PackMessageElement(buffer3,self.type,node=self.node)
+        return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementNamedArray(m.GetData())
+    
+    def Write(self,memorypos,buffer_,bufferpos,count):        
+        m=RobotRaconteurPython.MessageElement()
+        m.SetData(buffer_)
+        m.ElementTypeName=buffer_.Type
+        m.DataCount=len(buffer_.Elements)
+        buffer3=UnpackMessageElement(m,self.type, node=self.node)
+        self.memory.Write(memorypos,buffer3,bufferpos,count)
+
+class WrappedNamedMultiDimArrayMemoryDirectorPython(RobotRaconteurPython.WrappedNamedMultiDimArrayMemoryDirector):
+    def __init__(self,memory,type1,node):
+        super(WrappedNamedMultiDimArrayMemoryDirectorPython,self).__init__()
+        self.memory=memory
+        self.type=type1
+        self.node=node
+                
+    def Dimensions(self):
+
+        d=self.memory.Dimensions
+        d2=RobotRaconteurPython.vector_uint64_t()
+        for d_i in d: d2.push_back(d_i)
+        return d2
+
+    def DimCount(self):
+        return self.memory.DimCount
+
+    def Read(self,memorypos,bufferpos,count):
+        dims=list(count)
+        dt=GetNamedArrayDType(self.type)
+        readdat1=numpy.zeros(dims,dtype=dt)
+        self.memory.Read(list(memorypos),readdat1,list(bufferpos),dims)
+        m = PackMessageElement(readdat1, self.type, node=self.node)
+        return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementNamedMultiDimArray(m.GetData())
+        
+    def Write(self,memorypos_,buffer_, bufferpos_, count_):
+        try:
+            memorypos=list(memorypos_)
+            bufferpos=list(bufferpos_)
+            count=list(count_)
+            
+            buffer1=RobotRaconteurPython.MessageElementDataUtil.ToMessageElementNamedMultiDimArray(buffer_)
             m=RobotRaconteurPython.MessageElement()
             m.SetData(buffer_)
             m.ElementTypeName=buffer1.Type
@@ -1623,161 +1719,6 @@ class WrappedServerServiceListenerDirector(RobotRaconteurPython.ServerServiceLis
     def Callback(self,code,endpoint):
 
         self.callback(self.context,code,endpoint)
-
-
-def NumPyDataTypeToRRTypeId(id):
-    if (id==numpy.float64 ):
-        return RobotRaconteurPython.DataTypes_double_t
-    elif (id==numpy.float32):
-        return RobotRaconteurPython.DataTypes_single_t
-    elif (id==numpy.int8):
-        return RobotRaconteurPython.DataTypes_int8_t
-    elif (id==numpy.uint8):
-        return RobotRaconteurPython.DataTypes_uint8_t
-    elif (id==numpy.int16):
-        return RobotRaconteurPython.DataTypes_int8_t
-    elif (id==numpy.uint16):
-        return RobotRaconteurPython.DataTypes_uint8_t
-    elif (id==numpy.int32):
-        return RobotRaconteurPython.DataTypes_int8_t
-    elif (id==numpy.uint32):
-        return RobotRaconteurPython.DataTypes_uint8_t
-    elif (id==numpy.int64):
-        return RobotRaconteurPython.DataTypes_int8_t
-    elif (id==numpy.uint64):
-        return RobotRaconteurPython.DataTypes_uint8_t
-    raise Exception("Unknown numpy data type")
-
-def RRTypeIdToNumPyDataType(id):
-    if (id==RobotRaconteurPython.DataTypes_double_t):
-        return numpy.float64
-    elif (id==RobotRaconteurPython.DataTypes_single_t):
-        return numpy.float32
-    elif (id==RobotRaconteurPython.DataTypes_int8_t):
-        return numpy.int8
-    elif (id==RobotRaconteurPython.DataTypes_uint8_t):
-        return numpy.uint8
-    elif (id==RobotRaconteurPython.DataTypes_int16_t):
-        return numpy.int16
-    elif (id==RobotRaconteurPython.DataTypes_uint16_t):
-        return numpy.uint16
-    elif (id==RobotRaconteurPython.DataTypes_int32_t):
-        return numpy.int32
-    elif (id==RobotRaconteurPython.DataTypes_uint32_t):
-        return numpy.uint32
-    elif (id==RobotRaconteurPython.DataTypes_int64_t):
-        return numpy.int64
-    elif (id==RobotRaconteurPython.DataTypes_uint64_t):
-        return numpy.uint64
-    raise Exception("Unknown Robot Raconteur data type")
-
-def PackToRRMultiDimArray_numpy(element, data, type1):
-    element.ElementType=RobotRaconteurPython.DataTypes_multidimarray_t
-    iset=RobotRaconteurPython.vectorptr_messageelement()
-    type1_r=RobotRaconteurPython.TypeDefinition()
-    type1_r.FromString(type1.ToString())
-    type1_r.Name="real"
-    type1_r.IsMultidimArray=False
-    type1_i=RobotRaconteurPython.TypeDefinition()
-    type1_i.FromString(type1.ToString())
-    type1_i.Name="imag"
-    type1_i.IsMultidimArray=False
-    typeid=type1.Type
-    if(typeid>=RobotRaconteurPython.DataTypes_int8_t and typeid <= RobotRaconteurPython.DataTypes_uint64_t):
-        if ((type(data) is list) or (type(data) is set) or (type(data) is tuple)):
-            real=data[0]
-            imag=data[1]
-            if (real.size != imag.size): raise Exception("real and imag must have same size")
-            iset.append(PackMessageElement(real.ndim, "int32 dimcount"))
-            iset.append(PackMessageElement(real.shape, "int32[] dims"))
-            iset.append(PackMessageElement(real.flatten(order="F"),type1_r))
-            iset.append(PackMessageElement(imag.flatten(order="F"),type1_i))
-            element.DataCount=4
-        else:
-            iset.append(PackMessageElement(data.ndim, "int32 dimcount"))
-            iset.append(PackMessageElement(data.shape, "int32[] dims"))
-            iset.append(PackMessageElement(data.flatten(order="F"),type1_r))
-            element.DataCount=3
-        element.SetData(RobotRaconteurPython.MessageElementMultiDimArray(iset))
-        return
-    if(typeid>=RobotRaconteurPython.DataTypes_double_t and typeid <= RobotRaconteurPython.DataTypes_single_t):
-        iset.append(PackMessageElement(data.ndim, "int32 dimcount"))
-        iset.append(PackMessageElement(data.shape, "int32[] dims"))
-        if (typeid==RobotRaconteurPython.DataTypes_double_t):
-            if (data.dtype==numpy.complex128):
-                real=data.real
-                imag=data.imag
-                iset.append(PackMessageElement(real.flatten(order="F"),type1_r))
-                iset.append(PackMessageElement(imag.flatten(order="F"),type1_i))
-            else:
-                iset.append(PackMessageElement(data.flatten(order="F"),type1_r))
-            element.SetData(RobotRaconteurPython.MessageElementMultiDimArray(iset))
-            return
-        if (typeid==RobotRaconteurPython.DataTypes_single_t):
-            if (data.dtype==numpy.complex64):
-                real=data.real
-                imag=data.imag
-                iset.append(PackMessageElement(real.flatten(order="F"),type1_r))
-                iset.append(PackMessageElement(imag.flatten(order="F"),type1_i))
-            else:
-                iset.append(PackMessageElement(data.flatten(order="F"),type1_r))
-            element.SetData(RobotRaconteurPython.MessageElementMultiDimArray(iset))
-            return
-    raise Exception("Could not pack numpy ndarray")
-
-def UnpackFromRRMultiDimArray(element):
-    Dims=UnpackMessageElement(FindMessageElementByName(element.GetData().Elements,'dims'),'int32[] dims')
-    #Dims=UnpackMessageElement([e for e in element.GetData().Elements if e.ElementName=='dims'][0],'int32[] dims')
-    DimCount=UnpackMessageElement(FindMessageElementByName(element.GetData().Elements,'dimcount'),'int32 dimcount')
-    #DimCount=UnpackMessageElement([e for e in element.GetData().Elements if e.ElementName=='dimcount'][0],'int32 dimcount')
-    if (len(Dims) !=DimCount): raise Exception('MultiDimArray mismatch')
-    Real=UnpackMessageElement(FindMessageElementByName(element.GetData().Elements,'real'))
-    #Real=UnpackMessageElement([e for e in element.GetData().Elements if e.ElementName=='real'][0])
-    imag_search=[e for e in element.GetData().Elements if e.ElementName=='imag']
-    if (len(imag_search)>0):
-
-        Imag=UnpackMessageElement(imag_search[0])
-        if (Real.dtype==numpy.float64 or Real.dtype==numpy.float32):
-            return Real.reshape(Dims,order="F") + (Imag.reshape(Dims,order="F")*1j)
-        else:
-            return (Real.reshape(Dims,order="F"),Imag.reshape(Dims,order="F"))
-
-    else:
-
-        return Real.reshape(Dims,order="F")
-
-def VerifyMultiDimArrayLength(data,type1):
-    if (len(type1.MultiDimLength)!=data.DimCount or data.DimCount != len(data.Dims)):
-        raise Exception("Array dimension mismatch")
-    count=1
-    for i in xrange(data.DimCount):
-        count*=data.Dims[i]
-        if (data.Dims[i] !=type1.MultiDimLength[i]):
-            raise Exception("Array dimension mismatch")
-
-    if (len(data.Real)!=count): raise Exception("Array dimension mismatch")
-    if (data.Complex): raise Exception("Fixed dimension arrays must not be complex")
-    if (data.Imag is not None): raise Exception("Fixed dimension arrays must not be complex")
-
-def VerifyMultiDimArrayLength_numpy(data,type1):
-
-    if ((type(data) is list) or (type(data) is set) or (type(data) is tuple)):
-        raise Exception("Fixed dimension arrays must not be complex")
-
-    if (len(type1.MultiDimLength)!=data.ndim):
-        raise Exception("Array dimension mismatch")
-    count=1
-    for i in xrange(data.ndim):
-        count*=data.shape[i]
-        if (data.shape[i] !=type1.MultiDimLength[i]):
-            raise Exception("Array dimension mismatch")
-
-
-
-    if (data.dtype==numpy.complex64 or data.dtype==numpy.complex128):
-        raise Exception("Fixed dimension arrays must not be complex")
-
-
 
 class RRConstants(object):
     pass

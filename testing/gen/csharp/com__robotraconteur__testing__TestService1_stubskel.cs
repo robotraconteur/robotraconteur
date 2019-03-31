@@ -29,9 +29,13 @@ public class com__robotraconteur__testing__TestService1Factory : ServiceFactory
     if (objecttype=="teststruct2")    return teststruct2_stubentry;
     throw new DataTypeException("Cannot find appropriate structure stub");
     }
-    public override ICStructureStub FindCStructureStub(string objecttype)
+    public override IPodStub FindPodStub(string objecttype)
     {
-    throw new DataTypeException("Cannot find appropriate cstructure stub");
+    throw new DataTypeException("Cannot find appropriate pod stub");
+    }
+    public override INamedArrayStub FindNamedArrayStub(string objecttype)
+    {
+    throw new DataTypeException("Cannot find appropriate pod stub");
     }
     public override ServiceStub CreateStub(WrappedServiceStub innerstub) {
     string objecttype=innerstub.RR_objecttype.GetServiceDefinition().Name + "." + innerstub.RR_objecttype.Name;    string objshort;
@@ -379,10 +383,10 @@ public class testroot_stub : ServiceStub , testroot, async_testroot{
     }
     public MultiDimArray d6 {
     get {
-    return DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackMultiDimArray(rr_innerstub.PropertyGet("d6")),9,new int[] {3,3});
+    return DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackMultiDimArray(rr_innerstub.PropertyGet("d6")),9,new uint[] {3,3});
     }
     set {
-    using(MessageElement m=MessageElementUtil.PackMultiDimArray("value",(MultiDimArray)DataTypeUtil.VerifyArrayLength(value,9,new int[] {3,3})))
+    using(MessageElement m=MessageElementUtil.PackMultiDimArray("value",(MultiDimArray)DataTypeUtil.VerifyArrayLength(value,9,new uint[] {3,3})))
     {
     rr_innerstub.PropertySet("d6", m);
     }
@@ -1161,15 +1165,12 @@ public class testroot_stub : ServiceStub , testroot, async_testroot{
     }
     public ArrayMemory<double> m1 { 
     get { return rr_m1; }
-    set { throw new InvalidOperationException();}
     }
     public MultiDimArrayMemory<double> m2 {
     get { return rr_m2; }
-    set { throw new InvalidOperationException();}
     }
     public MultiDimArrayMemory<byte> m3 {
     get { return rr_m3; }
-    set { throw new InvalidOperationException();}
     }
     public virtual void async_get_d1(Action<double,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
@@ -1375,7 +1376,7 @@ public class testroot_stub : ServiceStub , testroot, async_testroot{
     }
     MultiDimArray rr_ret;
     try {
-    rr_ret=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackMultiDimArray(value),9,new int[] {3,3});
+    rr_ret=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackMultiDimArray(value),9,new uint[] {3,3});
     } catch (Exception err2) {
     rr_handler(default(MultiDimArray),err2);
     return;
@@ -1384,7 +1385,7 @@ public class testroot_stub : ServiceStub , testroot, async_testroot{
     }
     public virtual void async_set_d6(MultiDimArray value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    using(MessageElement mm=MessageElementUtil.PackMultiDimArray("value",(MultiDimArray)DataTypeUtil.VerifyArrayLength(value,9,new int[] {3,3})))
+    using(MessageElement mm=MessageElementUtil.PackMultiDimArray("value",(MultiDimArray)DataTypeUtil.VerifyArrayLength(value,9,new uint[] {3,3})))
     {
     rr_async_PropertySet("d6",mm,rrend_async_set_d6,rr_handler,rr_timeout);
     }
@@ -4204,7 +4205,7 @@ public class testroot_skel : ServiceSkel {
     case "d6":
     {
     MultiDimArray ret=obj.d6;
-    return MessageElementUtil.PackMultiDimArray("return",(MultiDimArray)DataTypeUtil.VerifyArrayLength(ret,9,new int[] {3,3}));
+    return MessageElementUtil.PackMultiDimArray("return",(MultiDimArray)DataTypeUtil.VerifyArrayLength(ret,9,new uint[] {3,3}));
     }
     case "s1":
     {
@@ -4490,7 +4491,7 @@ public class testroot_skel : ServiceSkel {
     }
     case "d6":
     {
-    obj.d6=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackMultiDimArray(m),9,new int[] {3,3});
+    obj.d6=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackMultiDimArray(m),9,new uint[] {3,3});
     return;
     }
     case "s1":
@@ -4972,14 +4973,28 @@ public class testroot_skel : ServiceSkel {
     }
     throw new MemberNotFoundException("Member Not Found");
     }
-    public override WrappedCStructureArrayMemoryDirector GetCStructureArrayMemory(string name) {
+    public override WrappedPodArrayMemoryDirector GetPodArrayMemory(string name) {
     switch (name) {
     default:
     break;
     }
     throw new MemberNotFoundException("Member Not Found");
     }
-    public override WrappedCStructureMultiDimArrayMemoryDirector GetCStructureMultiDimArrayMemory(string name) {
+    public override WrappedPodMultiDimArrayMemoryDirector GetPodMultiDimArrayMemory(string name) {
+    switch (name) {
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public override WrappedNamedArrayMemoryDirector GetNamedArrayMemory(string name) {
+    switch (name) {
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public override WrappedNamedMultiDimArrayMemoryDirector GetNamedMultiDimArrayMemory(string name) {
     switch (name) {
     default:
     break;
@@ -5108,14 +5123,28 @@ public class sub1_skel : ServiceSkel {
     }
     throw new MemberNotFoundException("Member Not Found");
     }
-    public override WrappedCStructureArrayMemoryDirector GetCStructureArrayMemory(string name) {
+    public override WrappedPodArrayMemoryDirector GetPodArrayMemory(string name) {
     switch (name) {
     default:
     break;
     }
     throw new MemberNotFoundException("Member Not Found");
     }
-    public override WrappedCStructureMultiDimArrayMemoryDirector GetCStructureMultiDimArrayMemory(string name) {
+    public override WrappedPodMultiDimArrayMemoryDirector GetPodMultiDimArrayMemory(string name) {
+    switch (name) {
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public override WrappedNamedArrayMemoryDirector GetNamedArrayMemory(string name) {
+    switch (name) {
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public override WrappedNamedMultiDimArrayMemoryDirector GetNamedMultiDimArrayMemory(string name) {
     switch (name) {
     default:
     break;
@@ -5228,14 +5257,28 @@ public class sub2_skel : ServiceSkel {
     }
     throw new MemberNotFoundException("Member Not Found");
     }
-    public override WrappedCStructureArrayMemoryDirector GetCStructureArrayMemory(string name) {
+    public override WrappedPodArrayMemoryDirector GetPodArrayMemory(string name) {
     switch (name) {
     default:
     break;
     }
     throw new MemberNotFoundException("Member Not Found");
     }
-    public override WrappedCStructureMultiDimArrayMemoryDirector GetCStructureMultiDimArrayMemory(string name) {
+    public override WrappedPodMultiDimArrayMemoryDirector GetPodMultiDimArrayMemory(string name) {
+    switch (name) {
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public override WrappedNamedArrayMemoryDirector GetNamedArrayMemory(string name) {
+    switch (name) {
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public override WrappedNamedMultiDimArrayMemoryDirector GetNamedMultiDimArrayMemory(string name) {
     switch (name) {
     default:
     break;
@@ -5351,14 +5394,28 @@ public class sub3_skel : ServiceSkel {
     }
     throw new MemberNotFoundException("Member Not Found");
     }
-    public override WrappedCStructureArrayMemoryDirector GetCStructureArrayMemory(string name) {
+    public override WrappedPodArrayMemoryDirector GetPodArrayMemory(string name) {
     switch (name) {
     default:
     break;
     }
     throw new MemberNotFoundException("Member Not Found");
     }
-    public override WrappedCStructureMultiDimArrayMemoryDirector GetCStructureMultiDimArrayMemory(string name) {
+    public override WrappedPodMultiDimArrayMemoryDirector GetPodMultiDimArrayMemory(string name) {
+    switch (name) {
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public override WrappedNamedArrayMemoryDirector GetNamedArrayMemory(string name) {
+    switch (name) {
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public override WrappedNamedMultiDimArrayMemoryDirector GetNamedMultiDimArrayMemory(string name) {
     switch (name) {
     default:
     break;
@@ -5377,15 +5434,15 @@ public class testroot_default_impl : testroot{
     public virtual double[] d2 {get; set;} = new double[0];
     public virtual double[] d3 {get; set;} = new double[16];
     public virtual double[] d4 {get; set;} = new double[0];
-    public virtual MultiDimArray d5 {get; set;} = new MultiDimArray(new int[] {1,0}, new double[0]);
-    public virtual MultiDimArray d6 {get; set;} = new MultiDimArray(new int[] {3,3}, new double[9]);
+    public virtual MultiDimArray d5 {get; set;} = new MultiDimArray(new uint[] {1,0}, new double[0]);
+    public virtual MultiDimArray d6 {get; set;} = new MultiDimArray(new uint[] {3,3}, new double[9]);
     public virtual float s1 {get; set;} = default(float);
     public virtual float[] s2 {get; set;} = new float[0];
     public virtual sbyte i8_1 {get; set;} = default(sbyte);
     public virtual sbyte[] i8_2 {get; set;} = new sbyte[0];
     public virtual byte u8_1 {get; set;} = default(byte);
     public virtual byte[] u8_2 {get; set;} = new byte[0];
-    public virtual MultiDimArray u8_3 {get; set;} = new MultiDimArray(new int[] {1,0}, new byte[0]);
+    public virtual MultiDimArray u8_3 {get; set;} = new MultiDimArray(new uint[] {1,0}, new byte[0]);
     public virtual short i16_1 {get; set;} = default(short);
     public virtual short[] i16_2 {get; set;} = new short[0];
     public virtual ushort u16_1 {get; set;} = default(ushort);
@@ -5536,20 +5593,17 @@ public class testroot_default_impl : testroot{
     }
     public virtual ArrayMemory<double> m1 { 
     get { throw new NotImplementedException(); }
-    set { throw new InvalidOperationException();}
     }
     public virtual MultiDimArrayMemory<double> m2 {
     get { throw new NotImplementedException(); }
-    set { throw new InvalidOperationException();}
     }
     public virtual MultiDimArrayMemory<byte> m3 {
     get { throw new NotImplementedException(); }
-    set { throw new InvalidOperationException();}
     }
 }
 public class sub1_default_impl : sub1{
     public virtual double[] d1 {get; set;} = new double[0];
-    public virtual MultiDimArray d2 {get; set;} = new MultiDimArray(new int[] {1,0}, new double[0]);
+    public virtual MultiDimArray d2 {get; set;} = new MultiDimArray(new uint[] {1,0}, new double[0]);
     public virtual string s_ind {get; set;} = "";
     public virtual int i_ind {get; set;} = default(int);
     public virtual sub2 get_o2_1() {

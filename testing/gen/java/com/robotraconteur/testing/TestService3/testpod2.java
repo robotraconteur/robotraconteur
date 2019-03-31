@@ -2,7 +2,7 @@
 package com.robotraconteur.testing.TestService3;
 import java.util.*;
 import com.robotraconteur.*;
-public class testcstruct2 implements RRCStructure 
+public class testpod2 implements RRPod 
 {
     public byte i1;
     public byte[] i2;

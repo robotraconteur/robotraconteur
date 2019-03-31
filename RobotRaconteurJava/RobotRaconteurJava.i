@@ -18,6 +18,8 @@
 %include "typemaps.i"
 %include "arrays_java.i"
 
+%include "boost_intrusive_ptr.i"
+
 #if defined(SWIGWORDSIZE64)
 %apply unsigned int { size_t };
 %apply const unsigned int & { const size_t & };
@@ -133,9 +135,9 @@ class RRDirectorExceptionHelper
 
 	public:
 		static void Reset();
-		static void SetError(boost::shared_ptr<MessageEntry> err);
+		static void SetError(boost::intrusive_ptr<MessageEntry> err);
 		static bool IsErrorPending();
-		static boost::shared_ptr<MessageEntry> GetError();
+		static boost::intrusive_ptr<MessageEntry> GetError();
 
 	};
 	

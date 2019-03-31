@@ -23,7 +23,7 @@ public interface baseobj
     Pipe<double[]> p1{ get; set; }
     Callback<Action<double, double>> cb2 {get; set;}
     Wire<double[]> w1{ get; set; }
-    ArrayMemory<double> m1 { get; set; }
+    ArrayMemory<double> m1 { get; }
 }
 
 [RobotRaconteurServiceObjectInterface()]

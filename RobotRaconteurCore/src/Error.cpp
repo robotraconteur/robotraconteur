@@ -79,7 +79,7 @@ namespace RobotRaconteur
 #undef RR_EXCEPTION_DEF_1
 #undef RR_EXCEPTION_DEF_2
 		
-	void RobotRaconteurExceptionUtil::ExceptionToMessageEntry(std::exception &exception, RR_SHARED_PTR<MessageEntry> entry)
+	void RobotRaconteurExceptionUtil::ExceptionToMessageEntry(std::exception &exception, RR_INTRUSIVE_PTR<MessageEntry> entry)
 	{
 		if (dynamic_cast<RobotRaconteurException*>(&exception) != 0)
 		{
@@ -108,7 +108,7 @@ namespace RobotRaconteur
 	case exp_code : \
 		return RR_MAKE_SHARED<exp_cpp_type>(entry->FindElement("errorname")->CastDataToString(), entry->FindElement("errorstring")->CastDataToString()); \
 
-	RR_SHARED_PTR<RobotRaconteurException> RobotRaconteurExceptionUtil::MessageEntryToException(RR_SHARED_PTR<MessageEntry> entry)
+	RR_SHARED_PTR<RobotRaconteurException> RobotRaconteurExceptionUtil::MessageEntryToException(RR_INTRUSIVE_PTR<MessageEntry> entry)
 	{
 		switch (entry->Error)
 		{
@@ -130,7 +130,7 @@ namespace RobotRaconteur
 		throw exp_cpp_type(entry->FindElement("errorname")->CastDataToString(), entry->FindElement("errorstring")->CastDataToString()); \
 
 
-	void RobotRaconteurExceptionUtil::ThrowMessageEntryException(RR_SHARED_PTR<MessageEntry> entry)
+	void RobotRaconteurExceptionUtil::ThrowMessageEntryException(RR_INTRUSIVE_PTR<MessageEntry> entry)
 	{
 		switch (entry->Error)
 		{

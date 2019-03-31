@@ -129,6 +129,15 @@ namespace RobotRaconteurGen
 			case DataTypes_string_t:
 				o.cs_type = "string";
 				break;
+			case DataTypes_cdouble_t:
+				o.cs_type = "CDouble";
+				break;
+			case DataTypes_csingle_t:
+				o.cs_type = "CSingle";
+				break;
+			case DataTypes_bool_t:
+				o.cs_type = "bool";
+				break;			
 			case DataTypes_namedtype_t:
 			case DataTypes_object_t:
 				o.cs_type = fix_qualified_name(tdef.TypeString);
@@ -140,6 +149,8 @@ namespace RobotRaconteurGen
 				throw InvalidArgumentException("");
 		}
 
+		RR_SHARED_PTR<NamedTypeDefinition> nt = tdef.ResolveNamedType_cache.lock();
+
 		if (tdef.ArrayType == DataTypes_ArrayTypes_multidimarray)
 		{
 			if (IsTypeNumeric(tdef.Type))
@@ -149,13 +160,19 @@ namespace RobotRaconteurGen
 			}
 			else if (tdef.Type == DataTypes_namedtype_t)
 			{			
-				RR_SHARED_PTR<NamedTypeDefinition> nt = tdef.ResolveNamedType_cache.lock();
+				
 				if (!nt) throw DataTypeException("Data type not resolved");
 				switch (nt->RRDataType())
 				{
-				case DataTypes_cstructure_t:
+				case DataTypes_pod_t:
 				{
-					o.cs_type = "CStructureMultiDimArray";
+					o.cs_type = "PodMultiDimArray";
+					o.cs_arr_type = "";
+					break;
+				}
+				case DataTypes_namedarray_t:
+				{
+					o.cs_type = "NamedMultiDimArray";
 					o.cs_arr_type = "";
 					break;
 				}
@@ -319,7 +336,7 @@ namespace RobotRaconteurGen
 		{
 			int32_t n_elems = boost::accumulate(t.ArrayLength, 1, std::multiplies<int32_t>());
 			return "DataTypeUtil.VerifyArrayLength(" + varname
-				+ "," + boost::lexical_cast<std::string>(n_elems) + ",new int[] {" + boost::join(t.ArrayLength | boost::adaptors::transformed(boost::lexical_cast<std::string, int32_t>), ",")
+				+ "," + boost::lexical_cast<std::string>(n_elems) + ",new uint[] {" + boost::join(t.ArrayLength | boost::adaptors::transformed(boost::lexical_cast<std::string, int32_t>), ",")
 				+ "})";
 		}
 		return varname;
@@ -385,31 +402,54 @@ namespace RobotRaconteurGen
 					return "MessageElementUtil.PackEnum<" + fix_qualified_name(t->TypeString) + ">(\"" + elementname + "\"," + varname + ")";
 					break;
 				}
-				case DataTypes_cstructure_t:
+				case DataTypes_pod_t:
 					switch (t->ArrayType)
 					{
 					case DataTypes_ArrayTypes_none:
 					{
-						return "MessageElementUtil.PackCStructureToArray<" + fix_qualified_name(t->TypeString) + ">(\"" + elementname + "\",ref " + varname + ")";
+						return "MessageElementUtil.PackPodToArray<" + fix_qualified_name(t->TypeString) + ">(\"" + elementname + "\",ref " + varname + ")";
 						break;
 					}
 					case DataTypes_ArrayTypes_array:
 					{
-						return "MessageElementUtil.PackCStructureArray<" + fix_qualified_name(t->TypeString) + ">(\"" + elementname + "\"," + CSharpServiceLangGen_VerifyArrayLength(*t,varname) + ")";
+						return "MessageElementUtil.PackPodArray<" + fix_qualified_name(t->TypeString) + ">(\"" + elementname + "\"," + CSharpServiceLangGen_VerifyArrayLength(*t,varname) + ")";
 						break;
 					}
 					case DataTypes_ArrayTypes_multidimarray:
 					{
-						return "MessageElementUtil.PackCStructureMultiDimArray<" + fix_qualified_name(t->TypeString) + ">(\"" + elementname + "\"," + CSharpServiceLangGen_VerifyArrayLength(*t,varname) + ")";
+						return "MessageElementUtil.PackPodMultiDimArray<" + fix_qualified_name(t->TypeString) + ">(\"" + elementname + "\"," + CSharpServiceLangGen_VerifyArrayLength(*t,varname) + ")";
 						break;
 					}
 					default:
 						throw DataTypeException("Invalid array type");
 					}
 					break;
+				case DataTypes_namedarray_t:
+					switch (t->ArrayType)
+					{
+					case DataTypes_ArrayTypes_none:
+					{
+						return "MessageElementUtil.PackNamedArrayToArray<" + fix_qualified_name(t->TypeString) + ">(\"" + elementname + "\",ref " + varname + ")";
+						break;
+					}
+					case DataTypes_ArrayTypes_array:
+					{
+						return "MessageElementUtil.PackNamedArray<" + fix_qualified_name(t->TypeString) + ">(\"" + elementname + "\"," + CSharpServiceLangGen_VerifyArrayLength(*t, varname) + ")";
+						break;
+					}
+					case DataTypes_ArrayTypes_multidimarray:
+					{
+						return "MessageElementUtil.PackNamedMultiDimArray<" + fix_qualified_name(t->TypeString) + ">(\"" + elementname + "\"," + CSharpServiceLangGen_VerifyArrayLength(*t, varname) + ")";
+						break;
+					}
+					default:
+						throw DataTypeException("Invalid array type");
+					}
+					break;				
 				default:
 					throw DataTypeException("Unknown named type id");
 				}
+
 
 			}
 			else
@@ -474,27 +514,49 @@ namespace RobotRaconteurGen
 			case DataTypes_enum_t:
 				structunpackstring = "MessageElementUtil.UnpackEnum<" + tt.cs_type + ">(" + varname + ")";
 				break;
-			case DataTypes_cstructure_t:
+			case DataTypes_pod_t:
 				switch (t->ArrayType)
 				{
 				case DataTypes_ArrayTypes_none:
 				{
-					structunpackstring = "MessageElementUtil.UnpackCStructureFromArray<" + fix_qualified_name(t->TypeString) + ">(" + varname + ")";
+					structunpackstring = "MessageElementUtil.UnpackPodFromArray<" + fix_qualified_name(t->TypeString) + ">(" + varname + ")";
 					break;
 				}
 				case DataTypes_ArrayTypes_array:
 				{
-					structunpackstring = CSharpServiceLangGen_VerifyArrayLength(*t,"MessageElementUtil.UnpackCStructureArray<" + fix_qualified_name(t->TypeString) + ">(" + varname + ")");
+					structunpackstring = CSharpServiceLangGen_VerifyArrayLength(*t,"MessageElementUtil.UnpackPodArray<" + fix_qualified_name(t->TypeString) + ">(" + varname + ")");
 					break;
 				}
 				case DataTypes_ArrayTypes_multidimarray:
 				{
-					structunpackstring = CSharpServiceLangGen_VerifyArrayLength(*t,"MessageElementUtil.UnpackCStructureMultiDimArray<" + fix_qualified_name(t->TypeString) + ">(" + varname + ")");
+					structunpackstring = CSharpServiceLangGen_VerifyArrayLength(*t,"MessageElementUtil.UnpackPodMultiDimArray<" + fix_qualified_name(t->TypeString) + ">(" + varname + ")");
 					break;
 				}
 				default:
 					throw DataTypeException("Invalid array type");
 				}				
+				break;
+			case DataTypes_namedarray_t:
+				switch (t->ArrayType)
+				{
+				case DataTypes_ArrayTypes_none:
+				{
+					structunpackstring = "MessageElementUtil.UnpackNamedArrayFromArray<" + fix_qualified_name(t->TypeString) + ">(" + varname + ")";
+					break;
+				}
+				case DataTypes_ArrayTypes_array:
+				{
+					structunpackstring = CSharpServiceLangGen_VerifyArrayLength(*t, "MessageElementUtil.UnpackNamedArray<" + fix_qualified_name(t->TypeString) + ">(" + varname + ")");
+					break;
+				}
+				case DataTypes_ArrayTypes_multidimarray:
+				{
+					structunpackstring = CSharpServiceLangGen_VerifyArrayLength(*t, "MessageElementUtil.UnpackNamedMultiDimArray<" + fix_qualified_name(t->TypeString) + ">(" + varname + ")");
+					break;
+				}
+				default:
+					throw DataTypeException("Invalid array type");
+				}
 				break;
 			default:
 				throw DataTypeException("Unknown named type id");
@@ -587,9 +649,18 @@ namespace RobotRaconteurGen
 		return t2;
 	}
 
-	void CSharpServiceLangGen::GenerateCStructure(ServiceEntryDefinition* e, ostream* w)
+	void CSharpServiceLangGen::GeneratePod(RR_SHARED_PTR<ServiceEntryDefinition> e, ostream* w)
 	{
 		ostream& w2 = *w;
+
+		if (e->EntryType == DataTypes_namedarray_t)
+		{
+			boost::tuple<DataTypes, size_t> t4 = GetNamedArrayElementTypeAndCount(e);
+			TypeDefinition t5;
+			t5.Type = t4.get<0>();
+			convert_type_result t6 = convert_type(t5);
+			w2 << "[NamedArrayElementTypeAndCount(typeof(" << t6.cs_type << "), " << t4.get<1>() << ")]" << endl;
+		}
 
 		w2 << "public struct " + fix_name(e->Name) << endl << "{" << endl;
 
@@ -599,7 +670,130 @@ namespace RobotRaconteurGen
 		t.name = fix_name(m->Name);
 		w2 << "    public " + t.cs_type + t.cs_arr_type + " " + t.name + ";" << endl;
 		MEMBER_ITER_END()
+			
+			if (e->EntryType == DataTypes_namedarray_t)
+			{
+				boost::tuple<DataTypes, size_t> t4 = GetNamedArrayElementTypeAndCount(e);
+				TypeDefinition t5;
+				t5.Type = t4.get<0>();
+				convert_type_result t6 = convert_type(t5);
+
+				w2 << "    public " + t6.cs_type + "[] GetNumericArray()" << endl << "    {" << endl;
+				w2 << "    var a=new ArraySegment<" << t6.cs_type <<  ">(new " + t6.cs_type + "[" + boost::lexical_cast<std::string>(t4.get<1>()) + "]);" << endl;
+				w2 << "    GetNumericArray(ref a);" << endl;
+				w2 << "    return a.Array;" << endl;
+				w2 << "    }" << endl;
+
+				w2 << "    public void GetNumericArray(ref ArraySegment<" + t6.cs_type + "> a)" << endl << "    {" << endl;
+				{
+					w2 << "    if(a.Count < " << t4.get<1>() << ") throw new ArgumentException(\"ArraySegment invalid length\");" << endl;
+					int i = 0;
+					MEMBER_ITER2(PropertyDefinition)
+						TypeDefinition t7 = *CSharpServiceLangGen_RemoveMultiDimArray(*m->Type);
+					convert_type_result t8 = convert_type(t7);
+					t8.name = fix_name(m->Name);
+					if (IsTypeNumeric(m->Type->Type))
+					{
+						if (m->Type->ArrayType == DataTypes_ArrayTypes_none)
+						{
+							w2 << "    a.Array[a.Offset + " << i << "] = " << t8.name << ";" << endl;
+							i++;
+						}
+						else
+						{
+							w2 << "    Array.Copy(" << t8.name << ", 0, a.Array, a.Offset + " << i << ", " << t7.ArrayLength.at(0) << ");" << endl;
+							i += t7.ArrayLength.at(0);
+						}
+					}
+					else
+					{
+						RR_SHARED_PTR<ServiceEntryDefinition> e2 = rr_cast<ServiceEntryDefinition>(m->Type->ResolveNamedType());
+						boost::tuple<DataTypes, size_t> t9 = GetNamedArrayElementTypeAndCount(e2);
+						size_t e2_count = m->Type->ArrayType == DataTypes_ArrayTypes_none ? 1 : t7.ArrayLength.at(0);
+
+						w2 << "    var a" << i << " = new ArraySegment<" << t6.cs_type << ">(a.Array, a.Offset + " << i << ", " << t9.get<1>()*e2_count << ");" << endl;
+						w2 << "    " << t8.name << ".GetNumericArray(ref a" << i << ");" << endl;
+						i += t9.get<1>()*e2_count;
+						
+					}
+					//w2 << "    public " + t8.cs_type + t8.cs_arr_type + " " + t8.name + ";" << endl;
+					MEMBER_ITER_END()
+				}
+				w2 << "    }" << endl;
+
+				w2 << "    public void AssignFromNumericArray(ref ArraySegment<" + t6.cs_type + "> a)" << endl << "    {" << endl;
+				{
+					w2 << "    if(a.Count < " << t4.get<1>() << ") throw new ArgumentException(\"ArraySegment invalid length\");" << endl;
+					int i = 0;
+					MEMBER_ITER2(PropertyDefinition)
+						TypeDefinition t7 = *CSharpServiceLangGen_RemoveMultiDimArray(*m->Type);
+					convert_type_result t8 = convert_type(t7);
+					t8.name = fix_name(m->Name);
+					if (IsTypeNumeric(m->Type->Type))
+					{
+						if (m->Type->ArrayType == DataTypes_ArrayTypes_none)
+						{
+							w2 << "    " << t8.name << " = a.Array[a.Offset + " << i << "]" << ";" << endl;
+							i++;
+						}
+						else
+						{
+							w2 << "    Array.Copy(a.Array, a.Offset + " << i << ", " << t8.name << ", 0, " << t7.ArrayLength.at(0) << ");" << endl;
+							i += t7.ArrayLength.at(0);
+						}
+					}
+					else
+					{
+						RR_SHARED_PTR<ServiceEntryDefinition> e2 = rr_cast<ServiceEntryDefinition>(m->Type->ResolveNamedType());
+						boost::tuple<DataTypes, size_t> t9 = GetNamedArrayElementTypeAndCount(e2);
+						size_t e2_count = m->Type->ArrayType == DataTypes_ArrayTypes_none ? 1 : t7.ArrayLength.at(0);
+
+						w2 << "    var a" << i << " = new ArraySegment<" << t6.cs_type << ">(a.Array, a.Offset + " << i << ", " << t9.get<1>()*e2_count << ");" << endl;
+						w2 << "    " << t8.name << ".AssignFromNumericArray(ref a" << i << ");" << endl;
+						i += t9.get<1>()*e2_count;
+
+					}
+					//w2 << "    public " + t8.cs_type + t8.cs_arr_type + " " + t8.name + ";" << endl;
+					MEMBER_ITER_END()
+						w2 << "    }" << endl;
+				}
+			}
+
 			w2 << "}" << endl << endl;
+	}
+
+	void CSharpServiceLangGen::GenerateNamedArrayExtensions(RR_SHARED_PTR<ServiceEntryDefinition> e, ostream* w)
+	{
+		ostream& w2 = *w;
+
+		boost::tuple<DataTypes, size_t> t1 = GetNamedArrayElementTypeAndCount(e);
+		TypeDefinition t2;
+		t2.Type = t1.get<0>();
+		convert_type_result t3 = convert_type(t2);
+				
+		w2 << "    public static " + t3.cs_type + "[] GetNumericArray(this " + fix_name(e->Name) + "[] s)" << endl << "    {" << endl;
+		w2 << "    var a=new ArraySegment<" << t3.cs_type << ">(new " + t3.cs_type + "[" + boost::lexical_cast<std::string>(t1.get<1>()) + " * s.Length]);" << endl;
+		w2 << "    s.GetNumericArray(ref a);" << endl;
+		w2 << "    return a.Array;" << endl;
+		w2 << "    }" << endl;
+
+		w2 << "    public static void GetNumericArray(this " + fix_name(e->Name) + "[] s, ref ArraySegment<" + t3.cs_type + "> a)" << endl << "    {" << endl;
+		w2 << "    if(a.Count < " << t1.get<1>() << " * s.Length) throw new ArgumentException(\"ArraySegment invalid length\");" << endl;
+		w2 << "    for (int i=0; i<s.Length; i++)" << endl << "    {" << endl;
+		w2 << "    var a1 = new ArraySegment<" << t3.cs_type << ">(a.Array, a.Offset + " << t1.get<1>() << "*i," << t1.get<1>() << ");" << endl;
+		w2 << "    s[i].GetNumericArray(ref a1);" << endl;
+		w2 << "    }" << endl;
+		w2 << "    }" << endl;
+
+		w2 << "    public static void AssignFromNumericArray(this " + fix_name(e->Name) + "[] s, ref ArraySegment<" + t3.cs_type + "> a)" << endl << "    {" << endl;
+		w2 << "    if(a.Count < " << t1.get<1>() << " * s.Length) throw new ArgumentException(\"ArraySegment invalid length\");" << endl;
+		
+		w2 << "    for (int i=0; i<s.Length; i++)" << endl << "    {" << endl;
+		w2 << "    var a1 = new ArraySegment<" << t3.cs_type << ">(a.Array, a.Offset + " << t1.get<1>() << "*i," << t1.get<1>() << ");" << endl;
+		w2 << "    s[i].AssignFromNumericArray(ref a1);" << endl;
+		w2 << "    }" << endl;
+
+		w2 << "    }" << endl;
 	}
 
 	void CSharpServiceLangGen::GenerateInterface(ServiceEntryDefinition* e, ostream* w)
@@ -681,14 +875,26 @@ namespace RobotRaconteurGen
 		m->Type->CopyTo(t2);
 		t2.RemoveArray();		
 		convert_type_result t=convert_type(t2);		
-		std::string c = IsTypeNumeric(m->Type->Type) ? "" : "CStructure";
+		std::string c = "";
+		if (!IsTypeNumeric(m->Type->Type))
+		{
+			DataTypes entry_type = m->Type->ResolveNamedType()->RRDataType();
+			if (entry_type != DataTypes_namedarray_t)
+			{
+				c = "Pod";
+			}
+			else
+			{
+				c = "Named";
+			}
+		}
 		switch (m->Type->ArrayType)
 		{
 		case DataTypes_ArrayTypes_array:
-			w2 << "    " << c << "ArrayMemory<" + t.cs_type + "> " + fix_name(m->Name) + " { get; set; }" << endl;
+			w2 << "    " << c << "ArrayMemory<" + t.cs_type + "> " + fix_name(m->Name) + " { get; }" << endl;
 			break;
 		case DataTypes_ArrayTypes_multidimarray:
-			w2 << "    " << c << "MultiDimArrayMemory<" + t.cs_type + "> " + fix_name(m->Name) + " { get; set; }" << endl;
+			w2 << "    " << c << "MultiDimArrayMemory<" + t.cs_type + "> " + fix_name(m->Name) + " { get; }" << endl;
 			break;
 		default:
 			throw DataTypeException("Invalid memory definition");
@@ -713,9 +919,13 @@ namespace RobotRaconteurGen
 		{
 			GenerateStructure(e->get(),w);
 		}
-		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->CStructures.begin(); e != d->CStructures.end(); ++e)
+		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->NamedArrays.begin(); e != d->NamedArrays.end(); ++e)
 		{
-			GenerateCStructure(e->get(), w);
+			GeneratePod(*e, w);
+		}
+		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Pods.begin(); e != d->Pods.end(); ++e)
+		{
+			GeneratePod(*e, w);
 		}
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Objects.begin(); e != d->Objects.end(); ++e)
 		{
@@ -754,9 +964,14 @@ namespace RobotRaconteurGen
 			GenerateStructureStub(e->get(),w);
 			w2 << endl;
 		}
-		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->CStructures.begin(); e != d->CStructures.end(); ++e)
+		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Pods.begin(); e != d->Pods.end(); ++e)
 		{
-			GenerateCStructureStub(e->get(), w);
+			GeneratePodStub(e->get(), w);
+			w2 << endl;
+		}
+		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->NamedArrays.begin(); e != d->NamedArrays.end(); ++e)
+		{
+			GenerateNamedArrayStub(*e, w);
 			w2 << endl;
 		}
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Objects.begin(); e != d->Objects.end(); ++e)
@@ -775,6 +990,10 @@ namespace RobotRaconteurGen
 		}
 
 		w2 << "public static class RRExtensions" << "{" << endl;
+		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->NamedArrays.begin(); e != d->NamedArrays.end(); ++e)
+		{
+			GenerateNamedArrayExtensions(*e, w);
+		}
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Objects.begin(); e != d->Objects.end(); ++e)
 		{
 			GenerateStubTasks(e->get(),w);
@@ -811,7 +1030,11 @@ namespace RobotRaconteurGen
 		{
 			w2 << "    public " + fix_name((*e)->Name) + "_stub " << fix_name((*e)->Name) + "_stubentry;" << endl;
 		}
-		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->CStructures.begin(); e != d->CStructures.end(); ++e)
+		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Pods.begin(); e != d->Pods.end(); ++e)
+		{
+			w2 << "    public " + fix_name((*e)->Name) + "_stub " << fix_name((*e)->Name) + "_stubentry;" << endl;
+		}
+		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->NamedArrays.begin(); e != d->NamedArrays.end(); ++e)
 		{
 			w2 << "    public " + fix_name((*e)->Name) + "_stub " << fix_name((*e)->Name) + "_stubentry;" << endl;
 		}
@@ -820,9 +1043,13 @@ namespace RobotRaconteurGen
 		{
 			w2 << "    " << fix_name((*e)->Name) + "_stubentry=new " << fix_name((*e)->Name) + "_stub(this);" << endl;
 		}
-		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->CStructures.begin(); e != d->CStructures.end(); ++e)
+		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Pods.begin(); e != d->Pods.end(); ++e)
 		{
 			w2 << "    " << fix_name((*e)->Name) + "_stubentry=new " << fix_name((*e)->Name) + "_stub(this);" << endl;
+		}
+		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->NamedArrays.begin(); e != d->NamedArrays.end(); ++e)
+		{
+			w2 << "    " << fix_name((*e)->Name) + "_stubentry=new " << fix_name((*e)->Name) + "_stub();" << endl;
 		}
 		w2 << "    }" << endl;
 
@@ -837,15 +1064,26 @@ namespace RobotRaconteurGen
 		w2 << "    throw new DataTypeException(\"Cannot find appropriate structure stub\");" << endl;
 		w2 << "    }" << endl;
 
-		w2 << "    public override ICStructureStub FindCStructureStub(string objecttype)" << endl << "    {" << endl;
+		w2 << "    public override IPodStub FindPodStub(string objecttype)" << endl << "    {" << endl;
 		//w2 << "    string objshort=RemovePath(objecttype);" << endl;
 
-		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->CStructures.begin(); e != d->CStructures.end(); ++e)
+		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Pods.begin(); e != d->Pods.end(); ++e)
 		{
 			w2 << "    if (objecttype==\"" + (*e)->Name + "\")";
 			w2 << "    return " << fix_name((*e)->Name) + "_stubentry;" << endl;
 		}
-		w2 << "    throw new DataTypeException(\"Cannot find appropriate cstructure stub\");" << endl;
+		w2 << "    throw new DataTypeException(\"Cannot find appropriate pod stub\");" << endl;
+		w2 << "    }" << endl;
+
+		w2 << "    public override INamedArrayStub FindNamedArrayStub(string objecttype)" << endl << "    {" << endl;
+		//w2 << "    string objshort=RemovePath(objecttype);" << endl;
+
+		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->NamedArrays.begin(); e != d->NamedArrays.end(); ++e)
+		{
+			w2 << "    if (objecttype==\"" + (*e)->Name + "\")";
+			w2 << "    return " << fix_name((*e)->Name) + "_stubentry;" << endl;
+		}
+		w2 << "    throw new DataTypeException(\"Cannot find appropriate pod stub\");" << endl;
 		w2 << "    }" << endl;
 				
 		w2 << "    public override ServiceStub CreateStub(WrappedServiceStub innerstub) {" << endl;
@@ -958,29 +1196,29 @@ namespace RobotRaconteurGen
 		
 	}
 
-	void CSharpServiceLangGen::GenerateCStructureStub(ServiceEntryDefinition* e, ostream * w)
+	void CSharpServiceLangGen::GeneratePodStub(ServiceEntryDefinition* e, ostream * w)
 	{
 		ostream& w2 = *w;
 
-		w2 << "public class " + fix_name(e->Name) + "_stub : CStructureStub<" << fix_name(e->Name) << "> {" << endl;
+		w2 << "public class " + fix_name(e->Name) + "_stub : PodStub<" << fix_name(e->Name) << "> {" << endl;
 		w2 << "    public " + fix_name(e->Name) + "_stub(" + boost::replace_all_copy(fix_name(e->ServiceDefinition_.lock()->Name), ".", "__") + "Factory d) {def=d;}" << endl;
 		w2 << "    private " + boost::replace_all_copy(fix_name(e->ServiceDefinition_.lock()->Name), ".", "__") + "Factory def;" << endl;
-		w2 << "    public override MessageElementCStructure PackCStructure(ref " << fix_name(e->Name) << " s1) {" << endl;
+		w2 << "    public override MessageElementPod PackPod(ref " << fix_name(e->Name) << " s1) {" << endl;
 		w2 << "    using(vectorptr_messageelement m=new vectorptr_messageelement())" << endl << "    {" << endl;		
 		w2 << "    " + fix_qualified_name(e->Name) + " s = (" + fix_qualified_name(e->Name) + ")s1;" << endl;
 		MEMBER_ITER2(PropertyDefinition)
 			RR_SHARED_PTR<TypeDefinition> t2 = CSharpServiceLangGen_RemoveMultiDimArray(*m->Type);
 			w2 << "    MessageElementUtil.AddMessageElementDispose(m," + str_pack_message_element(m->Name, "s." + fix_name(m->Name), t2, "def") + ");" << endl;
 		MEMBER_ITER_END()
-			w2 << "    return new MessageElementCStructure(m);" << endl;
+			w2 << "    return new MessageElementPod(m);" << endl;
 		w2 << "    }" << endl;
 		w2 << "    }" << endl;
 
 
 		//Write Read
-		w2 << "    public override " << fix_name(e->Name) << " UnpackCStructure(MessageElementCStructure m) {" << endl;
+		w2 << "    public override " << fix_name(e->Name) << " UnpackPod(MessageElementPod m) {" << endl;
 
-		w2 << "    if (m == null ) throw new NullReferenceException(\"CStructure must not be null\");" << endl;
+		w2 << "    if (m == null ) throw new NullReferenceException(\"Pod must not be null\");" << endl;
 		w2 << "    using(vectorptr_messageelement mm=m.Elements)" << endl << "    {" << endl;
 		w2 << "    " << fix_name(e->Name) << " s = new " << fix_name(e->Name) << "();" << endl;
 		MEMBER_ITER2(PropertyDefinition)
@@ -995,6 +1233,41 @@ namespace RobotRaconteurGen
 		w2 << "    }" << endl;
 		w2 << "    }" << endl;
 
+		w2 << "    public override string TypeName { get { return \"" << e->ServiceDefinition_.lock()->Name << "." << e->Name << "\"; } }";
+
+		w2 << "}" << endl;
+	}
+
+	void CSharpServiceLangGen::GenerateNamedArrayStub(RR_SHARED_PTR<ServiceEntryDefinition> e, ostream * w)
+	{
+		ostream& w2 = *w;
+
+		boost::tuple<DataTypes, size_t> t4 = GetNamedArrayElementTypeAndCount(e);
+		TypeDefinition t5;
+		t5.Type = t4.get<0>();
+		convert_type_result t6 = convert_type(t5);
+
+		w2 << "public class " + fix_name(e->Name) + "_stub : NamedArrayStub<" << fix_name(e->Name) << "," << t6.cs_type << "> {" << endl;
+		w2 << "    public override " << t6.cs_type <<"[] GetNumericArrayFromNamedArrayStruct(ref " << fix_name(e->Name) << " s) {" << endl;
+		w2 << "    return s.GetNumericArray();" << endl;
+		w2 << "    }" << endl;
+		w2 << "    public override " << fix_name(e->Name) << " GetNamedArrayStructFromNumericArray(" << t6.cs_type << "[] m) {" << endl;
+		w2 << "    if (m.Length != " << t4.get<1>() << ") throw new DataTypeException(\"Invalid namedarray array\");" << endl;
+		w2 << "    var s = new " << fix_name(e->Name) << "();" << endl;
+		w2 << "    var a = new ArraySegment<" << t6.cs_type << ">(m);" << endl;
+		w2 << "    s.AssignFromNumericArray(ref a);" << endl;
+		w2 << "    return s;" << endl;
+		w2 << "    }" << endl;
+		w2 << "    public override " << t6.cs_type << "[] GetNumericArrayFromNamedArray(" << fix_name(e->Name) << "[] s) {" << endl;
+		w2 << "    return s.GetNumericArray();" << endl;
+		w2 << "    }" << endl;
+		w2 << "    public override " << fix_name(e->Name) << "[] GetNamedArrayFromNumericArray(" << t6.cs_type << "[] m) {" << endl;
+		w2 << "    if (m.Length % " << t4.get<1>() << " != 0) throw new DataTypeException(\"Invalid namedarray array\");" << endl;
+		w2 << "    " << fix_name(e->Name) << "[] s = new " << fix_name(e->Name) << "[m.Length / " << t4.get<1>() << "];" << endl;
+		w2 << "    var a = new ArraySegment<" << t6.cs_type << ">(m);" << endl;
+		w2 << "    s.AssignFromNumericArray(ref a);" << endl;
+		w2 << "    return s;" << endl;
+		w2 << "    }" << endl;
 		w2 << "    public override string TypeName { get { return \"" << e->ServiceDefinition_.lock()->Name << "." << e->Name << "\"; } }";
 
 		w2 << "}" << endl;
@@ -1117,7 +1390,19 @@ namespace RobotRaconteurGen
 		m->Type->CopyTo(t2);
 		t2.RemoveArray();
 		convert_type_result t = convert_type(t2);
-		std::string c = IsTypeNumeric(m->Type->Type) ? "" : "CStructure";		
+		std::string c = "";
+		if (!IsTypeNumeric(m->Type->Type))
+		{
+			DataTypes entry_type = m->Type->ResolveNamedType()->RRDataType();
+			if (entry_type != DataTypes_namedarray_t)
+			{
+				c = "Pod";
+			}
+			else
+			{
+				c = "Named";
+			}
+		}
 		switch (m->Type->ArrayType)
 		{
 		case DataTypes_ArrayTypes_array:
@@ -1151,7 +1436,19 @@ namespace RobotRaconteurGen
 		m->Type->CopyTo(t2);
 		t2.RemoveArray();
 		convert_type_result t = convert_type(t2);
-		std::string c = IsTypeNumeric(m->Type->Type) ? "" : "CStructure";
+		std::string c = "";
+		if (!IsTypeNumeric(m->Type->Type))
+		{
+			DataTypes entry_type = m->Type->ResolveNamedType()->RRDataType();
+			if (entry_type != DataTypes_namedarray_t)
+			{
+				c = "Pod";
+			}
+			else
+			{
+				c = "Named";
+			}
+		}
 		switch (m->Type->ArrayType)
 		{
 		case DataTypes_ArrayTypes_array:
@@ -1365,7 +1662,19 @@ namespace RobotRaconteurGen
 		t2.RemoveArray();
 		convert_type_result t = convert_type(t2);		
 		
-		std::string c = IsTypeNumeric(m->Type->Type) ? "" : "CStructure";
+		std::string c = "";
+		if (!IsTypeNumeric(m->Type->Type))
+		{
+			DataTypes entry_type = m->Type->ResolveNamedType()->RRDataType();
+			if (entry_type != DataTypes_namedarray_t)
+			{
+				c = "Pod";
+			}
+			else
+			{
+				c = "Named";
+			}
+		}
 		switch (m->Type->ArrayType)
 		{
 		case DataTypes_ArrayTypes_array:
@@ -1379,7 +1688,7 @@ namespace RobotRaconteurGen
 			throw DataTypeException("Invalid memory definition");
 		}
 		w2 << "    get { return rr_" + fix_name(m->Name) + "; }" << endl;
-		w2 << "    set { throw new InvalidOperationException();}" << endl;
+		
 		w2 << "    }" << endl;
 		MEMBER_ITER_END()
 
@@ -1941,7 +2250,7 @@ namespace RobotRaconteurGen
 		w2 << "    throw new MemberNotFoundException(\"Member Not Found\");" << endl;
 		w2 << "    }" << endl;
 
-		w2 << "    public override WrappedCStructureArrayMemoryDirector GetCStructureArrayMemory(string name) {" << endl;
+		w2 << "    public override WrappedPodArrayMemoryDirector GetPodArrayMemory(string name) {" << endl;
 		w2 << "    switch (name) {" << endl;
 		MEMBER_ITER2(MemoryDefinition)
 			TypeDefinition t2;
@@ -1949,10 +2258,14 @@ namespace RobotRaconteurGen
 		t2.RemoveArray();
 		convert_type_result t = convert_type(t2);
 		if (IsTypeNumeric(m->Type->Type)) continue;
+				
+		DataTypes entry_type = m->Type->ResolveNamedType()->RRDataType();
+		if (entry_type != DataTypes_pod_t) continue;
+				
 		if (m->Type->ArrayType == DataTypes_ArrayTypes_array)
 		{
 			w2 << "    case \"" + m->Name + "\": {" << endl;
-			w2 << "    WrappedCStructureArrayMemoryDirectorNET<" + t.cs_type + "> dir=new  WrappedCStructureArrayMemoryDirectorNET<" + t.cs_type + ">(obj." + fix_name(m->Name) + ");" << endl;
+			w2 << "    WrappedPodArrayMemoryDirectorNET<" + t.cs_type + "> dir=new  WrappedPodArrayMemoryDirectorNET<" + t.cs_type + ">(obj." + fix_name(m->Name) + ");" << endl;
 			//w2 << "    int id=RRObjectHeap.AddObject(dir); " << endl;
 			//w2 << "    dir.memoryid=id;" << endl;
 			//w2 << "    dir.Disown();" << endl;
@@ -1966,7 +2279,7 @@ namespace RobotRaconteurGen
 		w2 << "    throw new MemberNotFoundException(\"Member Not Found\");" << endl;
 		w2 << "    }" << endl;
 
-		w2 << "    public override WrappedCStructureMultiDimArrayMemoryDirector GetCStructureMultiDimArrayMemory(string name) {" << endl;
+		w2 << "    public override WrappedPodMultiDimArrayMemoryDirector GetPodMultiDimArrayMemory(string name) {" << endl;
 		w2 << "    switch (name) {" << endl;
 		MEMBER_ITER2(MemoryDefinition)
 			TypeDefinition t2;
@@ -1974,10 +2287,14 @@ namespace RobotRaconteurGen
 		t2.RemoveArray();
 		convert_type_result t = convert_type(t2);
 		if (IsTypeNumeric(m->Type->Type)) continue;
+		DataTypes entry_type = m->Type->ResolveNamedType()->RRDataType();
+		
+		if (entry_type != DataTypes_pod_t) continue;
+
 		if (m->Type->ArrayType == DataTypes_ArrayTypes_multidimarray)
 		{
 			w2 << "    case \"" + m->Name + "\": {" << endl;
-			w2 << "    WrappedCStructureMultiDimArrayMemoryDirectorNET<" + t.cs_type + "> dir=new  WrappedCStructureMultiDimArrayMemoryDirectorNET<" + t.cs_type + ">(obj." + fix_name(m->Name) + ");" << endl;
+			w2 << "    WrappedPodMultiDimArrayMemoryDirectorNET<" + t.cs_type + "> dir=new  WrappedPodMultiDimArrayMemoryDirectorNET<" + t.cs_type + ">(obj." + fix_name(m->Name) + ");" << endl;
 			//w2 << "    int id=RRObjectHeap.AddObject(dir); " << endl;
 			//w2 << "    dir.memoryid=id;" << endl;
 			//w2 << "    dir.Disown();" << endl;
@@ -1991,6 +2308,64 @@ namespace RobotRaconteurGen
 		w2 << "    throw new MemberNotFoundException(\"Member Not Found\");" << endl;
 		w2 << "    }" << endl;
 
+		// namedarray
+		w2 << "    public override WrappedNamedArrayMemoryDirector GetNamedArrayMemory(string name) {" << endl;
+		w2 << "    switch (name) {" << endl;
+		MEMBER_ITER2(MemoryDefinition)
+			TypeDefinition t2;
+		m->Type->CopyTo(t2);
+		t2.RemoveArray();
+		convert_type_result t = convert_type(t2);
+		if (IsTypeNumeric(m->Type->Type)) continue;
+
+		DataTypes entry_type = m->Type->ResolveNamedType()->RRDataType();
+		if (entry_type != DataTypes_namedarray_t) continue;
+
+		if (m->Type->ArrayType == DataTypes_ArrayTypes_array)
+		{
+			w2 << "    case \"" + m->Name + "\": {" << endl;
+			w2 << "    WrappedNamedArrayMemoryDirectorNET<" + t.cs_type + "> dir=new  WrappedNamedArrayMemoryDirectorNET<" + t.cs_type + ">(obj." + fix_name(m->Name) + ");" << endl;
+			//w2 << "    int id=RRObjectHeap.AddObject(dir); " << endl;
+			//w2 << "    dir.memoryid=id;" << endl;
+			//w2 << "    dir.Disown();" << endl;
+			w2 << "    return dir;" << endl;
+			w2 << "    }" << endl;
+		}
+		MEMBER_ITER_END()
+			w2 << "    default:" << endl;
+		w2 << "    break;" << endl;
+		w2 << "    }" << endl;
+		w2 << "    throw new MemberNotFoundException(\"Member Not Found\");" << endl;
+		w2 << "    }" << endl;
+
+		w2 << "    public override WrappedNamedMultiDimArrayMemoryDirector GetNamedMultiDimArrayMemory(string name) {" << endl;
+		w2 << "    switch (name) {" << endl;
+		MEMBER_ITER2(MemoryDefinition)
+			TypeDefinition t2;
+		m->Type->CopyTo(t2);
+		t2.RemoveArray();
+		convert_type_result t = convert_type(t2);
+		if (IsTypeNumeric(m->Type->Type)) continue;
+		DataTypes entry_type = m->Type->ResolveNamedType()->RRDataType();
+
+		if (entry_type != DataTypes_namedarray_t) continue;
+
+		if (m->Type->ArrayType == DataTypes_ArrayTypes_multidimarray)
+		{
+			w2 << "    case \"" + m->Name + "\": {" << endl;
+			w2 << "    WrappedNamedMultiDimArrayMemoryDirectorNET<" + t.cs_type + "> dir=new  WrappedNamedMultiDimArrayMemoryDirectorNET<" + t.cs_type + ">(obj." + fix_name(m->Name) + ");" << endl;
+			//w2 << "    int id=RRObjectHeap.AddObject(dir); " << endl;
+			//w2 << "    dir.memoryid=id;" << endl;
+			//w2 << "    dir.Disown();" << endl;
+			w2 << "    return dir;" << endl;
+			w2 << "    }" << endl;
+		}
+		MEMBER_ITER_END()
+			w2 << "    default:" << endl;
+		w2 << "    break;" << endl;
+		w2 << "    }" << endl;
+		w2 << "    throw new MemberNotFoundException(\"Member Not Found\");" << endl;
+		w2 << "    }" << endl;
 
 		w2 << "    public override string RRType { get { return \"" + e->ServiceDefinition_.lock()->Name + "." + e->Name + "\"; } }" << endl;
 
@@ -2152,7 +2527,19 @@ namespace RobotRaconteurGen
 		t2.RemoveArray();
 		convert_type_result t = convert_type(t2);
 
-		std::string c = IsTypeNumeric(m->Type->Type) ? "" : "CStructure";
+		std::string c = "";
+		if (!IsTypeNumeric(m->Type->Type))
+		{
+			DataTypes entry_type = m->Type->ResolveNamedType()->RRDataType();
+			if (entry_type != DataTypes_namedarray_t)
+			{
+				c = "Pod";
+			}
+			else
+			{
+				c = "Named";
+			}
+		}
 		switch (m->Type->ArrayType)
 		{
 		case DataTypes_ArrayTypes_array:
@@ -2165,8 +2552,7 @@ namespace RobotRaconteurGen
 		default:
 			throw DataTypeException("Invalid memory definition");
 		}
-		w2 << "    get { throw new NotImplementedException(); }" << endl;
-		w2 << "    set { throw new InvalidOperationException();}" << endl;
+		w2 << "    get { throw new NotImplementedException(); }" << endl;		
 		w2 << "    }" << endl;
 		MEMBER_ITER_END()
 
@@ -2448,12 +2834,12 @@ namespace RobotRaconteurGen
 					convert_type_result t = convert_type(*tdef2);
 					if (tdef.ArrayVarLength)
 					{
-						return "new MultiDimArray(new int[] {1,0}, new " + t.cs_type + "[0])";
+						return "new MultiDimArray(new uint[] {1,0}, new " + t.cs_type + "[0])";
 					}
 					else
 					{
 						int32_t n_elems = boost::accumulate(tdef.ArrayLength, 1, std::multiplies<int32_t>());
-						return "new MultiDimArray(new int[] {" + boost::join(tdef.ArrayLength | boost::adaptors::transformed(boost::lexical_cast<std::string, int32_t>), ",") + "}, new " + t.cs_type + "[" + boost::lexical_cast<std::string>(n_elems) + "])";
+						return "new MultiDimArray(new uint[] {" + boost::join(tdef.ArrayLength | boost::adaptors::transformed(boost::lexical_cast<std::string, int32_t>), ",") + "}, new " + t.cs_type + "[" + boost::lexical_cast<std::string>(n_elems) + "])";
 
 					}
 				}
@@ -2471,7 +2857,7 @@ namespace RobotRaconteurGen
 				tdef2->RemoveContainers();
 				tdef2->RemoveArray();
 
-				if (tdef2->ResolveNamedType()->RRDataType() == DataTypes_cstructure_t)
+				if (tdef2->ResolveNamedType()->RRDataType() == DataTypes_pod_t)
 				{
 					switch (tdef.ArrayType)
 					{
@@ -2496,12 +2882,50 @@ namespace RobotRaconteurGen
 						convert_type_result t = convert_type(*tdef2);
 						if (tdef.ArrayVarLength)
 						{
-							return "new CStructureMultiDimArray(new int[] {1,0}, new " + t.cs_type + "[0])";
+							return "new PodMultiDimArray(new uint[] {1,0}, new " + t.cs_type + "[0])";
 						}
 						else
 						{
 							int32_t n_elems = boost::accumulate(tdef.ArrayLength, 1, std::multiplies<int32_t>());
-							return "new CStructureMultiDimArray(new int[] {" + boost::join(tdef.ArrayLength | boost::adaptors::transformed(boost::lexical_cast<std::string, int32_t>), ",") +  "}, new " + t.cs_type + "[" + boost::lexical_cast<std::string>(n_elems) + "])";
+							return "new PodMultiDimArray(new uint[] {" + boost::join(tdef.ArrayLength | boost::adaptors::transformed(boost::lexical_cast<std::string, int32_t>), ",") +  "}, new " + t.cs_type + "[" + boost::lexical_cast<std::string>(n_elems) + "])";
+						}
+					}
+					default:
+						throw InvalidArgumentException("Invalid array type");
+					}
+				}
+
+				if (tdef2->ResolveNamedType()->RRDataType() == DataTypes_namedarray_t)
+				{
+					switch (tdef.ArrayType)
+					{
+					case DataTypes_ArrayTypes_none:
+					{
+						return GetDefaultValue(tdef);
+					}
+					case DataTypes_ArrayTypes_array:
+					{
+						convert_type_result t = convert_type(*tdef2);
+						if (tdef.ArrayVarLength)
+						{
+							return "new " + t.cs_type + "[0]";
+						}
+						else
+						{
+							return "new " + t.cs_type + "[" + boost::lexical_cast<std::string>(tdef.ArrayLength.at(0)) + "]";
+						}
+					}
+					case DataTypes_ArrayTypes_multidimarray:
+					{
+						convert_type_result t = convert_type(*tdef2);
+						if (tdef.ArrayVarLength)
+						{
+							return "new NamedMultiDimArray(new uint[] {1,0}, new " + t.cs_type +  "[0])";
+						}
+						else
+						{
+							int32_t n_elems = boost::accumulate(tdef.ArrayLength, 1, std::multiplies<int32_t>());
+							return "new NamedMultiDimArray(new uint[] {" + boost::join(tdef.ArrayLength | boost::adaptors::transformed(boost::lexical_cast<std::string, int32_t>), ",") + "}, new " + t.cs_type + "[" + boost::lexical_cast<std::string>(n_elems) + "])";
 						}
 					}
 					default:

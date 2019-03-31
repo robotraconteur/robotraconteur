@@ -30,139 +30,160 @@ namespace RobotRaconteur
 
         public MultiDimArray() { }
 
-        public MultiDimArray(int[] Dims, Array Real, Array Imag = null)
+        public MultiDimArray(uint[] Dims, Array Array_)
         {
-            this.DimCount = Dims.Length;
+            
             this.Dims = Dims;
-            this.Real = Real;
-
-            if (Imag != null)
-            {
-                this.Complex = true;
-                this.Imag = Imag;
-            }
-
+            this.Array_ = Array_;
         }
-
-        /// <summary>
-        /// The number of array dimensions
-        /// </summary>
-        public int DimCount;
-        /// <summary>
-        /// The dimensions of the array
-        /// </summary>
-        public int[] Dims;
-        /// <summary>
-        /// The column vector representation of real values
-        /// </summary>
-        public Array Real;
-
-        /// <summary>
-        /// True if this array is complex, false if it is real
-        /// </summary>
-        public bool Complex = false;
-        /// <summary>
-        /// The column vector representation of the imaginary values
-        /// </summary>
-        public Array Imag;
-
-        public virtual void RetrieveSubArray(int[] memorypos, MultiDimArray buffer, int[] bufferpos, int[] count)
+                
+        public uint[] Dims;        
+        public Array Array_;
+       
+        public virtual void RetrieveSubArray(uint[] memorypos, MultiDimArray buffer, uint[] bufferpos, uint[] count)
         {
 
             MultiDimArray mema = this;
             MultiDimArray memb = buffer;
+                        
+            MultiDimArray_CalculateCopyIndicesIter iter=RobotRaconteurNET.MultiDimArray_CalculateCopyIndicesBeginIter(new vectoruint32(mema.Dims), new vectoruint32(memorypos),  new vectoruint32(memb.Dims), new vectoruint32(bufferpos), new vectoruint32(count));
 
-            if (mema.Complex != memb.Complex) throw new ArgumentException("Complex mismatch");
-
-            MultiDimArray_CalculateCopyIndicesIter iter=RobotRaconteurNET.MultiDimArray_CalculateCopyIndicesBeginIter(mema.DimCount, new vectorint32(mema.Dims), new vectorint32(memorypos), memb.DimCount, new vectorint32(memb.Dims), new vectorint32(bufferpos), new vectorint32(count));
-
-            int indexa;
-            int indexb;
-            int len;
+            uint indexa;
+            uint indexb;
+            uint len;
 
             while (iter.Next(out indexa, out indexb, out len))
             {
-                Array.Copy(mema.Real, (long)indexa, memb.Real, (long)indexb, (long)len);
-                if (mema.Complex)
-                    Array.Copy(mema.Imag, (long)indexa, memb.Imag, (long)indexb, (long)len);
+                Array.Copy(mema.Array_, (long)indexa, memb.Array_, (long)indexb, (long)len);                
             }
 
         }
 
-        public virtual void AssignSubArray(int[] memorypos, MultiDimArray buffer, int[] bufferpos, int[] count)
+        public virtual void AssignSubArray(uint[] memorypos, MultiDimArray buffer, uint[] bufferpos, uint[] count)
         {
 
 
             MultiDimArray mema = this;
             MultiDimArray memb = buffer;
+                        
+            MultiDimArray_CalculateCopyIndicesIter iter = RobotRaconteurNET.MultiDimArray_CalculateCopyIndicesBeginIter(new vectoruint32(mema.Dims), new vectoruint32(memorypos), new vectoruint32(memb.Dims), new vectoruint32(bufferpos), new vectoruint32(count));
 
-            if (mema.Complex != memb.Complex) throw new ArgumentException("Complex mismatch");
-
-            MultiDimArray_CalculateCopyIndicesIter iter = RobotRaconteurNET.MultiDimArray_CalculateCopyIndicesBeginIter(mema.DimCount, new vectorint32(mema.Dims), new vectorint32(memorypos), memb.DimCount, new vectorint32(memb.Dims), new vectorint32(bufferpos), new vectorint32(count));
-
-            int indexa;
-            int indexb;
-            int len;
+            uint indexa;
+            uint indexb;
+            uint len;
 
             while (iter.Next(out indexa, out indexb, out len))
             {
-                Array.Copy(memb.Real, (long)indexb, mema.Real, (long)indexa, (long)len);
-                if (mema.Complex)
-                    Array.Copy(memb.Imag, (long)indexb, mema.Imag, (long)indexa, (long)len);
+                Array.Copy(memb.Array_, (long)indexb, mema.Array_, (long)indexa, (long)len);
+                
             }
         }
 
     }
 
-    public class CStructureMultiDimArray
+    public class PodMultiDimArray
     {
-        public CStructureMultiDimArray()
+        public PodMultiDimArray()
         {
-            Dims = new int[] { 0 };
+            Dims = new uint[] { 0 };
         }
 
-        public CStructureMultiDimArray(int[] dims, Array array)
+        public PodMultiDimArray(uint[] dims, Array array)
         {
             Dims = dims;
-            cstruct_array = array;
+            pod_array = array;
         }
         
-        public int[] Dims;
-        public Array cstruct_array;
+        public uint[] Dims;
+        public Array pod_array;
 
-        public virtual void RetrieveSubArray(int[] memorypos, CStructureMultiDimArray buffer, int[] bufferpos, int[] count)
+        public virtual void RetrieveSubArray(uint[] memorypos, PodMultiDimArray buffer, uint[] bufferpos, uint[] count)
         {
 
-            CStructureMultiDimArray mema = this;
-            CStructureMultiDimArray memb = buffer;
+            PodMultiDimArray mema = this;
+            PodMultiDimArray memb = buffer;
            
-            MultiDimArray_CalculateCopyIndicesIter iter = RobotRaconteurNET.MultiDimArray_CalculateCopyIndicesBeginIter(mema.Dims.Length, new vectorint32(mema.Dims), new vectorint32(memorypos), memb.Dims.Length, new vectorint32(memb.Dims), new vectorint32(bufferpos), new vectorint32(count));
+            MultiDimArray_CalculateCopyIndicesIter iter = RobotRaconteurNET.MultiDimArray_CalculateCopyIndicesBeginIter(new vectoruint32(mema.Dims), new vectoruint32(memorypos), new vectoruint32(memb.Dims), new vectoruint32(bufferpos), new vectoruint32(count));
 
-            int indexa;
-            int indexb;
-            int len;
+            uint indexa;
+            uint indexb;
+            uint len;
 
             while (iter.Next(out indexa, out indexb, out len))
             {
-                Array.Copy(mema.cstruct_array, (long)indexa, memb.cstruct_array, (long)indexb, (long)len);                
+                Array.Copy(mema.pod_array, (long)indexa, memb.pod_array, (long)indexb, (long)len);                
             }
 
         }
 
-        public virtual void AssignSubArray(int[] memorypos, CStructureMultiDimArray buffer, int[] bufferpos, int[] count)
+        public virtual void AssignSubArray(uint[] memorypos, PodMultiDimArray buffer, uint[] bufferpos, uint[] count)
         {
-            CStructureMultiDimArray mema = this;
-            CStructureMultiDimArray memb = buffer;
+            PodMultiDimArray mema = this;
+            PodMultiDimArray memb = buffer;
 
-            MultiDimArray_CalculateCopyIndicesIter iter = RobotRaconteurNET.MultiDimArray_CalculateCopyIndicesBeginIter(mema.Dims.Length, new vectorint32(mema.Dims), new vectorint32(memorypos), memb.Dims.Length, new vectorint32(memb.Dims), new vectorint32(bufferpos), new vectorint32(count));
+            MultiDimArray_CalculateCopyIndicesIter iter = RobotRaconteurNET.MultiDimArray_CalculateCopyIndicesBeginIter(new vectoruint32(mema.Dims), new vectoruint32(memorypos), new vectoruint32(memb.Dims), new vectoruint32(bufferpos), new vectoruint32(count));
 
-            int indexa;
-            int indexb;
-            int len;
+            uint indexa;
+            uint indexb;
+            uint len;
 
             while (iter.Next(out indexa, out indexb, out len))
             {
-                Array.Copy(memb.cstruct_array, (long)indexb, mema.cstruct_array, (long)indexa, (long)len);                
+                Array.Copy(memb.pod_array, (long)indexb, mema.pod_array, (long)indexa, (long)len);                
+            }
+        }
+
+    }
+
+    public class NamedMultiDimArray
+    {
+        public NamedMultiDimArray()
+        {
+            Dims = new uint[] { 0 };
+        }
+
+        public NamedMultiDimArray(uint[] dims, Array array)
+        {
+            Dims = dims;
+            namedarray_array = array;
+        }
+
+        public uint[] Dims;
+        public Array namedarray_array;
+
+        public virtual void RetrieveSubArray(uint[] memorypos, NamedMultiDimArray buffer, uint[] bufferpos, uint[] count)
+        {
+
+            NamedMultiDimArray mema = this;
+            NamedMultiDimArray memb = buffer;
+
+            MultiDimArray_CalculateCopyIndicesIter iter = RobotRaconteurNET.MultiDimArray_CalculateCopyIndicesBeginIter(new vectoruint32(mema.Dims), new vectoruint32(memorypos), new vectoruint32(memb.Dims), new vectoruint32(bufferpos), new vectoruint32(count));
+
+            uint indexa;
+            uint indexb;
+            uint len;
+
+            while (iter.Next(out indexa, out indexb, out len))
+            {
+                Array.Copy(mema.namedarray_array, (long)indexa, memb.namedarray_array, (long)indexb, (long)len);
+            }
+
+        }
+
+        public virtual void AssignSubArray(uint[] memorypos, NamedMultiDimArray buffer, uint[] bufferpos, uint[] count)
+        {
+            NamedMultiDimArray mema = this;
+            NamedMultiDimArray memb = buffer;
+
+            MultiDimArray_CalculateCopyIndicesIter iter = RobotRaconteurNET.MultiDimArray_CalculateCopyIndicesBeginIter( new vectoruint32(mema.Dims), new vectoruint32(memorypos), new vectoruint32(memb.Dims), new vectoruint32(bufferpos), new vectoruint32(count));
+
+            uint indexa;
+            uint indexb;
+            uint len;
+
+            while (iter.Next(out indexa, out indexb, out len))
+            {
+                Array.Copy(memb.namedarray_array, (long)indexb, mema.namedarray_array, (long)indexa, (long)len);
             }
         }
 

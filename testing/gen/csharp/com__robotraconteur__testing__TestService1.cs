@@ -116,9 +116,9 @@ public interface testroot : com.robotraconteur.testing.TestService2.baseobj
     Wire<teststruct2> w2{ get; set; }
     Wire<MultiDimArray> w3{ get; set; }
     Wire<double> broadcastwire{ get; set; }
-    ArrayMemory<double> m1 { get; set; }
-    MultiDimArrayMemory<double> m2 { get; set; }
-    MultiDimArrayMemory<byte> m3 { get; set; }
+    ArrayMemory<double> m1 { get; }
+    MultiDimArrayMemory<double> m2 { get; }
+    MultiDimArrayMemory<byte> m3 { get; }
 }
 
 [RobotRaconteurServiceObjectInterface()]

@@ -2,15 +2,19 @@
 package com.robotraconteur.testing.TestService3;
 import java.util.*;
 import com.robotraconteur.*;
-public class testcstruct1 implements RRCStructure 
+public class testpod1 implements RRPod 
 {
     public double d1;
     public double[] d2;
     public double[] d3;
     public double[] d4;
-    public testcstruct2 s1;
-    public testcstruct2[] s2;
-    public testcstruct2[] s3;
-    public testcstruct2[] s4;
+    public testpod2 s1;
+    public testpod2[] s2;
+    public testpod2[] s3;
+    public testpod2[] s4;
+    public transform t1;
+    public transform[] t2;
+    public transform[] t3;
+    public transform[] t4;
 }
 

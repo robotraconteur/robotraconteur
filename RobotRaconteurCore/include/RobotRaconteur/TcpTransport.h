@@ -73,9 +73,9 @@ namespace RobotRaconteur
 
 		virtual int32_t GetListenPort();
 
-		virtual void SendMessage(RR_SHARED_PTR<Message> m);
+		virtual void SendMessage(RR_INTRUSIVE_PTR<Message> m);
 
-		virtual void AsyncSendMessage(RR_SHARED_PTR<Message> m, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& callback);
+		virtual void AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& callback);
 
 		virtual void AsyncCreateTransportConnection(const std::string& url, RR_SHARED_PTR<Endpoint> e, boost::function<void (RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException> ) >& callback);
 
@@ -131,7 +131,7 @@ namespace RobotRaconteur
 
 		static void GetLocalAdapterIPAddresses(std::vector<boost::asio::ip::address>& addresses);
 
-		virtual void MessageReceived(RR_SHARED_PTR<Message> m);
+		virtual void MessageReceived(RR_INTRUSIVE_PTR<Message> m);
 
 		virtual int32_t GetDefaultHeartbeatPeriod();
 		virtual void SetDefaultHeartbeatPeriod(int32_t milliseconds);
@@ -247,7 +247,9 @@ namespace RobotRaconteur
 		boost::mutex closed_lock;
 	};
 
-
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+	using TcpTransportPtr = RR_SHARED_PTR<TcpTransport>;
+#endif
 
 	
 }

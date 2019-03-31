@@ -20,7 +20,7 @@ enum testenum1
 	neghexval1 = 0x80000005,
 	neghexval2,
 	more_values
-end enum
+end
 
 constant string strconst "This is a\n \"string constant\" \\\/\b\f \r\u00FF tabme\ttabme\n smile! \ud83d\udE01"
 constant int32 int32const 3856384
@@ -29,40 +29,88 @@ constant double[] doubleconst_array {1.5847, 3.14, -548e3, 3452.67e2, 485e-21}
 constant struct structconst {field1: strconst, field2: int32const_array}
 constant struct structconst2 {field3: structconst, field4: int32const}    
 
-cstruct testcstruct1
+namedarray vector3
+    field double x
+	field double y
+	field double z
+end namedarray
+
+namedarray quaternion
+    field double q0
+	field double q1
+	field double q2
+	field double q3
+end
+
+namedarray transform
+    field quaternion rotation
+    field vector3 translation	
+end
+
+namedarray pixel
+	field uint8 r
+	field uint8 b
+	field uint8 g
+end
+
+namedarray pixel2
+	field uint8 c
+	field pixel d
+	field pixel e
+	field pixel[7] f
+	field pixel g
+end
+
+pod testpod1
 	field double d1
 	field double[6] d2
 	field double[6-] d3
 	field double[3,3] d4
-	field testcstruct2 s1
-	field testcstruct2[8] s2
-	field testcstruct2[9-] s3
-	field testcstruct2[2,4] s4
-end cstruct
+	field testpod2 s1
+	field testpod2[8] s2
+	field testpod2[9-] s3
+	field testpod2[2,4] s4
+	field transform t1
+	field transform[4] t2
+	field transform[15-] t3
+	field transform[2,4] t4
+end
 
-cstruct testcstruct2
+pod testpod2
 	field int8 i1
 	field int8[15] i2
 	field int8[17-] i3
-end cstruct
+end
 
 struct teststruct3
-	field testcstruct1 s1
-	field testcstruct1[] s2
-	field testcstruct1[11] s3
-	field testcstruct1[16-] s4
-	field testcstruct1[3,3] s5
-	field testcstruct1[*] s6
-	field testcstruct1{list} s7
-	field testcstruct1[]{list} s8
-	field testcstruct1[*]{list} s9
+	field testpod1 s1
+	field testpod1[] s2
+	field testpod1[11] s3
+	field testpod1[16-] s4
+	field testpod1[3,3] s5
+	field testpod1[*] s6
+	field testpod1{list} s7
+	field testpod1[]{list} s8
+	field testpod1[*]{list} s9
 	field varvalue s10
 	field varvalue s11
 	field varvalue s12
 	field varvalue s13
 	field varvalue s14
 	field varvalue s15
-end struct
+	field transform t1
+	field transform[4] t2
+	field transform[2,4] t3
+	field varvalue t4
+	field varvalue t5
+	field transform{list} t6
+	field transform[4]{list} t7
+	field transform[2,4]{list} t8
+	field varvalue t9
+	field varvalue t10
+	field varvalue t11
+	
+end
 
 object testroot3
     property int32 readme [readonly]
@@ -83,14 +131,14 @@ object testroot3
 	
 	property testenum1 testenum1_prop
 	
-	property testcstruct1 testcstruct1_prop
-	function void testcstruct1_func1(testcstruct1 s)
-	function testcstruct1 testcstruct1_func2()
+	property testpod1 testpod1_prop
+	function void testpod1_func1(testpod1 s)
+	function testpod1 testpod1_func2()
 	
 	property teststruct3 teststruct3_prop
 	
-	memory testcstruct2[] cstruct_m1
-	memory testcstruct2[*] cstruct_m2
+	memory testpod2[] pod_m1
+	memory testpod2[*] pod_m2
 	
 	function double{generator} gen_func1() 
 	function uint8[]{generator} gen_func2(string name) 
@@ -114,22 +162,60 @@ object testroot3
 	wire int32[6-] w2
 	wire int32[3,2] w3
 	
-end object
+	#namedarray test
+	property vector3 testnamedarray1
+	property transform testnamedarray2
+	property transform[10-] testnamedarray3
+	property transform[*] testnamedarray4
+	property transform[3,2] testnamedarray5
+	
+	memory transform[] namedarray_m1
+	memory transform[*] namedarray_m2
+	
+	#new primitive types test
+	property cdouble c1
+	property cdouble[] c2
+	property cdouble[*] c3
+	property cdouble{list} c4
+	property cdouble[]{list} c5
+	property cdouble[*]{list} c6
+	property csingle c7
+	property csingle[] c8
+	property csingle[*] c9
+	property csingle{list} c10
+	property csingle[]{list} c11
+	property csingle[*]{list} c12
+	
+	property bool b1
+	property bool[] b2
+	property bool[*] b3
+	property bool{list} b4
+	property bool[]{list} b5
+	property bool[*]{list} b6
+			
+	memory cdouble[] c_m1
+	memory cdouble[*] c_m2
+	memory cdouble[] c_m3
+	memory cdouble[*] c_m4
+	memory bool[] c_m5
+	memory bool[*] c_m6
+	
+end
 
 object obj1
     property double[] d1
-end object
+end
 
 object obj2
     implements obj1
     property double[] d1
-end object
+end
 
 object obj3
     implements obj1
     implements obj2
 	property double[] d1
-end object
+end
 
 object obj4
     implements sub2
@@ -138,5 +224,5 @@ object obj4
 
 	property string data
 	objref sub3{string} o3_1
-end object
+end
 

@@ -23,6 +23,75 @@ using System.Linq;
 namespace RobotRaconteur
 {
 
+    public struct CDouble
+    {
+        public double Real;
+        public double Imag;
+
+        public CDouble (double real, double imag)
+        {
+            Real = real;
+            Imag = imag;
+        }
+
+        public static bool operator== (CDouble a, CDouble b)
+        {
+            return (a.Real == b.Real) && (a.Imag == b.Imag);
+        }
+
+        public static bool operator !=(CDouble a, CDouble b)
+        {
+            return !((a.Real == b.Real) && (a.Imag == b.Imag));
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null) return false;
+            if (!(obj is CDouble)) return false;
+            return ((CDouble)obj) == this;
+        }
+
+        public override int GetHashCode()
+        {
+            return (int)(Real % 1e7 + Imag % 1e7);
+        }
+    }
+
+    public struct CSingle
+    {
+        public float Real;
+        public float Imag;
+
+        public CSingle(float real, float imag)
+        {
+            Real = real;
+            Imag = imag;
+        }
+
+        public static bool operator ==(CSingle a, CSingle b)
+        {
+            return (a.Real == b.Real) && (a.Imag == b.Imag);
+        }
+
+        public static bool operator !=(CSingle a, CSingle b)
+        {
+            return !((a.Real == b.Real) && (a.Imag == b.Imag));
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null) return false;
+            if (!(obj is CSingle)) return false;
+            return ((CSingle)obj) == this;
+        }
+
+        public override int GetHashCode()
+        {
+            return (int)(Real % 1e7 + Imag % 1e7);
+        }
+
+    }
+        
     public class DataTypeUtil
     {
 
@@ -49,7 +118,12 @@ namespace RobotRaconteur
                     return 8;
                 case DataTypes.string_t:
                     return 1;
-
+                case DataTypes.cdouble_t:
+                    return 16;
+                case DataTypes.csingle_t:
+                    return 8;
+                case DataTypes.bool_t:
+                    return 1;                
             }
             throw new ArgumentException();
             //return 0;
@@ -94,7 +168,14 @@ namespace RobotRaconteur
                     return DataTypes.multidimarray_t;
                 case "System.Object":
                     return DataTypes.varvalue_t;
-
+                case "RobotRaconteur.CDouble":
+                    return DataTypes.cdouble_t;
+                case "RobotRaconteur.CSingle":
+                    return DataTypes.csingle_t;
+                case "System.Bool":
+                    return DataTypes.bool_t;
+                default:
+                    break;
             }
 
 
@@ -139,6 +220,13 @@ namespace RobotRaconteur
                 case "RobotRaconteur.MessageElementMultiDimArray":
 
                 case "System.Object":
+
+                case "RobotRaconteur.CDouble":
+                    
+                case "RobotRaconteur.CSingle":
+                    
+                case "System.Bool":
+                    
                     return true;
 
             }
@@ -149,9 +237,27 @@ namespace RobotRaconteur
         }
 
 
-        public static bool IsNumber(DataTypes t)
+        public static bool IsNumber(DataTypes type)
         {
-            return ((t >= DataTypes.double_t) && (DataTypes.uint64_t >= t));
+            switch (type)
+            {
+                case DataTypes.double_t:
+                case DataTypes.single_t:
+                case DataTypes.int8_t:
+                case DataTypes.uint8_t:
+                case DataTypes.int16_t:
+                case DataTypes.uint16_t:
+                case DataTypes.int32_t:
+                case DataTypes.uint32_t:
+                case DataTypes.int64_t:
+                case DataTypes.uint64_t:
+                case DataTypes.cdouble_t:
+                case DataTypes.csingle_t:
+                case DataTypes.bool_t:
+                    return true;
+                default:
+                    return false;
+            }
         }
 
 
@@ -184,6 +290,14 @@ namespace RobotRaconteur
                     return null;
                 case DataTypes.structure_t:
                     return null;
+                case DataTypes.cdouble_t:
+                    return new CDouble[length];
+                case DataTypes.csingle_t:
+                    return new CSingle[length];
+                case DataTypes.bool_t:
+                    return new bool[length];
+                default:
+                    break;
             }
 
             throw new DataTypeException("Could not create array for data type");
@@ -218,6 +332,14 @@ namespace RobotRaconteur
                     return new long[] { ((long)inv) };
                 case "System.UInt64":
                     return new ulong[] { ((ulong)inv) };
+                case "RobotRaconteur.CDouble":
+                    return new CDouble[] { (CDouble)inv };
+                case "RobotRaconteur.CSingle":
+                    return new CSingle[] { (CSingle)inv };
+                case "System.Bool":
+                    return new bool[] { (bool)inv };
+                default:
+                    break;
             }
 
             throw new DataTypeException("Could not create array for data");
@@ -241,7 +363,7 @@ namespace RobotRaconteur
         }
 
 
-        public static MultiDimArray VerifyArrayLength(MultiDimArray a, int n_elems, int[] len)
+        public static MultiDimArray VerifyArrayLength(MultiDimArray a, int n_elems, uint[] len)
         {
             if (a.Dims.Length != len.Length)
             {
@@ -258,7 +380,24 @@ namespace RobotRaconteur
             return a;
         }
 
-        public static CStructureMultiDimArray VerifyArrayLength(CStructureMultiDimArray a, int n_elems, int[] len)
+        public static PodMultiDimArray VerifyArrayLength(PodMultiDimArray a, int n_elems, uint[] len)
+        {
+            if (a.Dims.Length != len.Length)
+            {
+                throw new DataTypeException("Array dimension mismatch");
+            }
+
+            for (int i = 0; i < len.Length; i++)
+            {
+                if (a.Dims[i] != len[i])
+                {
+                    throw new DataTypeException("Array dimension mismatch");
+                }
+            }
+            return a;
+        }
+
+        public static NamedMultiDimArray VerifyArrayLength(NamedMultiDimArray a, int n_elems, uint[] len)
         {
             if (a.Dims.Length != len.Length)
             {
@@ -297,7 +436,7 @@ namespace RobotRaconteur
             return a;
         }
 
-        public static List<MultiDimArray> VerifyArrayLength(List<MultiDimArray> a, int n_elems, int[] len)
+        public static List<MultiDimArray> VerifyArrayLength(List<MultiDimArray> a, int n_elems, uint[] len)
         {
             if (a == null) return a;
             foreach (MultiDimArray aa in a)
@@ -308,7 +447,7 @@ namespace RobotRaconteur
             return a;
         }
 
-        public static Dictionary<K, MultiDimArray> VerifyArrayLength<K>(Dictionary<K, MultiDimArray> a, int n_elems, int[] len)
+        public static Dictionary<K, MultiDimArray> VerifyArrayLength<K>(Dictionary<K, MultiDimArray> a, int n_elems, uint[] len)
         {
             if (a == null) return a;
             foreach (MultiDimArray aa in a.Values)
@@ -319,10 +458,10 @@ namespace RobotRaconteur
             return a;
         }
 
-        public static List<CStructureMultiDimArray> VerifyArrayLength(List<CStructureMultiDimArray> a, int n_elems, int[] len)
+        public static List<PodMultiDimArray> VerifyArrayLength(List<PodMultiDimArray> a, int n_elems, uint[] len)
         {
             if (a == null) return a;
-            foreach (CStructureMultiDimArray aa in a)
+            foreach (PodMultiDimArray aa in a)
             {
                 VerifyArrayLength(aa, n_elems, len);
             }
@@ -330,10 +469,32 @@ namespace RobotRaconteur
             return a;
         }
 
-        public static Dictionary<K, CStructureMultiDimArray> VerifyArrayLength<K>(Dictionary<K, CStructureMultiDimArray> a, int n_elems, int[] len)
+        public static Dictionary<K, PodMultiDimArray> VerifyArrayLength<K>(Dictionary<K, PodMultiDimArray> a, int n_elems, uint[] len)
         {
             if (a == null) return a;
-            foreach (CStructureMultiDimArray aa in a.Values)
+            foreach (PodMultiDimArray aa in a.Values)
+            {
+                VerifyArrayLength(aa, n_elems, len);
+            }
+
+            return a;
+        }
+
+        public static List<NamedMultiDimArray> VerifyArrayLength(List<NamedMultiDimArray> a, int n_elems, uint[] len)
+        {
+            if (a == null) return a;
+            foreach (NamedMultiDimArray aa in a)
+            {
+                VerifyArrayLength(aa, n_elems, len);
+            }
+
+            return a;
+        }
+
+        public static Dictionary<K, NamedMultiDimArray> VerifyArrayLength<K>(Dictionary<K, NamedMultiDimArray> a, int n_elems, uint[] len)
+        {
+            if (a == null) return a;
+            foreach (NamedMultiDimArray aa in a.Values)
             {
                 VerifyArrayLength(aa, n_elems, len);
             }
@@ -458,11 +619,15 @@ namespace RobotRaconteur
                 if (a != null) return a;
                 a = MessageElementDataUtil.ToMessageElementMultiDimArray(val);
                 if (a != null) return a;
-                a = MessageElementDataUtil.ToMessageElementCStructure(val);
+                a = MessageElementDataUtil.ToMessageElementPod(val);
                 if (a != null) return a;
-                a = MessageElementDataUtil.ToMessageElementCStructureArray(val);
+                a = MessageElementDataUtil.ToMessageElementPodArray(val);
                 if (a != null) return a;
-                a = MessageElementDataUtil.ToMessageElementCStructureMultiDimArray(val);
+                a = MessageElementDataUtil.ToMessageElementPodMultiDimArray(val);
+                if (a != null) return a;
+                a = MessageElementDataUtil.ToMessageElementNamedArray(val);
+                if (a != null) return a;
+                a = MessageElementDataUtil.ToMessageElementNamedMultiDimArray(val);
                 if (a != null) return a;
                 throw new ApplicationException("Unknown data type");
 
@@ -493,7 +658,7 @@ namespace RobotRaconteur
             {
 
 
-                using (RRBaseArray rb = MessageElementDataUtil.StringToRRBaseArray((string)dat))
+                using (RRBaseArray rb = MessageElementDataUtil.stringToRRBaseArray((string)dat))
                 {
                     _SetData(rb);
                 }
@@ -671,12 +836,12 @@ namespace RobotRaconteur
             }
         }
 
-        public static MessageElement PackScalar<T>(string name, T val) where T : struct, IConvertible
+        public static MessageElement PackScalar<T>(string name, T val) where T : struct
         {
             return NewMessageElementDispose(name, new T[] { val });
         }
 
-        public static MessageElement PackArray<T>(string name, T[] val) where T : struct, IConvertible
+        public static MessageElement PackArray<T>(string name, T[] val) where T : struct
         {
             if (val == null)
             {
@@ -729,29 +894,44 @@ namespace RobotRaconteur
             return NewMessageElementDispose(name, new int[] { (int)(object)val });
         }
 
-        public static MessageElement PackCStructureToArray<T>(string name, ref T val) where T : struct
+        public static MessageElement PackPodToArray<T>(string name, ref T val) where T : struct
         {
-            return NewMessageElementDispose(name, RobotRaconteurNode.s.PackCStructureToArray<T>(ref val));
+            return NewMessageElementDispose(name, RobotRaconteurNode.s.PackPodToArray<T>(ref val));
         }
 
-        public static MessageElement PackCStructureArray<T>(string name, T[] val) where T : struct
+        public static MessageElement PackPodArray<T>(string name, T[] val) where T : struct
         {
-            return NewMessageElementDispose(name, RobotRaconteurNode.s.PackCStructureArray<T>(val));
+            return NewMessageElementDispose(name, RobotRaconteurNode.s.PackPodArray<T>(val));
         }
 
-        public static MessageElement PackCStructureMultiDimArray<T>(string name, CStructureMultiDimArray val) where T : struct
+        public static MessageElement PackPodMultiDimArray<T>(string name, PodMultiDimArray val) where T : struct
         {
-            return NewMessageElementDispose(name, RobotRaconteurNode.s.PackCStructureMultiDimArray<T>(val));
+            return NewMessageElementDispose(name, RobotRaconteurNode.s.PackPodMultiDimArray<T>(val));
         }
 
-        public static T UnpackScalar<T>(MessageElement m) where T : struct, IConvertible
+        public static MessageElement PackNamedArrayToArray<T>(string name, ref T val) where T : struct
+        {
+            return NewMessageElementDispose(name, RobotRaconteurNode.s.PackNamedArrayToArray<T>(ref val));
+        }
+
+        public static MessageElement PackNamedArray<T>(string name, T[] val) where T : struct
+        {
+            return NewMessageElementDispose(name, RobotRaconteurNode.s.PackNamedArray<T>(val));
+        }
+
+        public static MessageElement PackNamedMultiDimArray<T>(string name, NamedMultiDimArray val) where T : struct
+        {
+            return NewMessageElementDispose(name, RobotRaconteurNode.s.PackNamedMultiDimArray<T>(val));
+        }
+
+        public static T UnpackScalar<T>(MessageElement m) where T : struct
         {
             T[] a = CastDataAndDispose<T[]>(m);
             if (a.Length != 1) throw new DataTypeException("Invalid scalar");
             return a[0];
         }
 
-        public static T[] UnpackArray<T>(MessageElement m) where T : struct, IConvertible
+        public static T[] UnpackArray<T>(MessageElement m) where T : struct
         {
             T[] a = CastDataAndDispose<T[]>(m);
             if (a == null) throw new NullReferenceException();
@@ -799,19 +979,34 @@ namespace RobotRaconteur
             return (T)(object)a[0];
         }
 
-        public static T UnpackCStructureFromArray<T>(MessageElement m) where T : struct
+        public static T UnpackPodFromArray<T>(MessageElement m) where T : struct
         {
-            return RobotRaconteurNode.s.UnpackCStructureFromArrayDispose<T>(CastDataAndDispose<MessageElementCStructureArray>(m));
+            return RobotRaconteurNode.s.UnpackPodFromArrayDispose<T>(CastDataAndDispose<MessageElementPodArray>(m));
         }
 
-        public static T[] UnpackCStructureArray<T>(MessageElement m) where T : struct
+        public static T[] UnpackPodArray<T>(MessageElement m) where T : struct
         {
-            return RobotRaconteurNode.s.UnpackCStructureArrayDispose<T>(CastDataAndDispose<MessageElementCStructureArray>(m));
+            return RobotRaconteurNode.s.UnpackPodArrayDispose<T>(CastDataAndDispose<MessageElementPodArray>(m));
         }
 
-        public static CStructureMultiDimArray UnpackCStructureMultiDimArray<T>(MessageElement m) where T : struct
+        public static PodMultiDimArray UnpackPodMultiDimArray<T>(MessageElement m) where T : struct
         {
-            return RobotRaconteurNode.s.UnpackCStructureMultiDimArrayDispose<T>(MessageElementUtil.CastDataAndDispose<MessageElementCStructureMultiDimArray>(m));
+            return RobotRaconteurNode.s.UnpackPodMultiDimArrayDispose<T>(MessageElementUtil.CastDataAndDispose<MessageElementPodMultiDimArray>(m));
+        }
+
+        public static T UnpackNamedArrayFromArray<T>(MessageElement m) where T : struct
+        {
+            return RobotRaconteurNode.s.UnpackNamedArrayFromArrayDispose<T>(CastDataAndDispose<MessageElementNamedArray>(m));
+        }
+
+        public static T[] UnpackNamedArray<T>(MessageElement m) where T : struct
+        {
+            return RobotRaconteurNode.s.UnpackNamedArrayDispose<T>(CastDataAndDispose<MessageElementNamedArray>(m));
+        }
+
+        public static NamedMultiDimArray UnpackNamedMultiDimArray<T>(MessageElement m) where T : struct
+        {
+            return RobotRaconteurNode.s.UnpackNamedMultiDimArrayDispose<T>(MessageElementUtil.CastDataAndDispose<MessageElementNamedMultiDimArray>(m));
         }
     }
 
@@ -822,135 +1017,112 @@ namespace RobotRaconteur
         {
             if (i == null) return null;
             DataTypes type = i.GetTypeID();
-            Array o = DataTypeUtil.ArrayFromDataType(type, i.Length());
-
+            Array o = null;
             switch (type)
             {
                 case DataTypes.double_t:
-                    unsafe {
-                        double[] o2 = (double[])o;
-                        double* i2 = (double*)i.void_ptr();
-                        for (uint j = 0; j < i.Length(); j++)
-                        {
-                            o2[j] = i2[j];
-                        }
+                    {
+                        var o2 = new double[i.size()];
+                        MessageElementDataUtil.RRBaseArrayToDoubles(i, o2, o2.Length);
+                        return o2;
                     }
-                    break;
                 case DataTypes.single_t:
-                    unsafe
                     {
-                        float[] o2 = (float[])o;
-                        float* i2 = (float*)i.void_ptr();
-                        for (uint j = 0; j < i.Length(); j++)
-                        {
-                            o2[j] = i2[j];
-                        }
-                    }
-                    break;
+                        var o2 = new float[i.size()];
+                        MessageElementDataUtil.RRBaseArrayToFloats(i, o2, o2.Length);
+                        return o2;
+                    }                    
                 case DataTypes.int8_t:
-                    unsafe
                     {
-                        sbyte[] o2 = (sbyte[])o;
-                        sbyte* i2 = (sbyte*)i.void_ptr();
-                        for (uint j = 0; j < i.Length(); j++)
-                        {
-                            o2[j] = i2[j];
-                        }
+                        var o2 = new sbyte[i.size()];
+                        MessageElementDataUtil.RRBaseArrayToBytes(i, o2, o2.Length);
+                        return o2;
                     }
-                    break;
                 case DataTypes.uint8_t:
-                    unsafe
                     {
-                        byte[] o2 = (byte[])o;
-                        byte* i2 = (byte*)i.void_ptr();
-                        for (uint j = 0; j < i.Length(); j++)
-                        {
-                            o2[j] = i2[j];
-                        }
+                        var o2 = new byte[i.size()];
+                        MessageElementDataUtil.RRBaseArrayToBytes(i, o2, o2.Length);
+                        return o2;
                     }
-                    break;
                 case DataTypes.int16_t:
-                    unsafe
                     {
-                        short[] o2 = (short[])o;
-                        short* i2 = (short*)i.void_ptr();
-                        for (uint j = 0; j < i.Length(); j++)
-                        {
-                            o2[j] = i2[j];
-                        }
+                        var o2 = new short[i.size()];
+                        MessageElementDataUtil.RRBaseArrayToShorts(i, o2, o2.Length);
+                        return o2;
                     }
-                    break;
                 case DataTypes.uint16_t:
-                    unsafe
                     {
-                        ushort[] o2 = (ushort[])o;
-                        ushort* i2 = (ushort*)i.void_ptr();
-                        for (uint j = 0; j < i.Length(); j++)
-                        {
-                            o2[j] = i2[j];
-                        }
+                        var o2 = new ushort[i.size()];
+                        MessageElementDataUtil.RRBaseArrayToShorts(i, o2, o2.Length);
+                        return o2;
                     }
-                    break;
                 case DataTypes.int32_t:
-                    unsafe
                     {
-                        int[] o2 = (int[])o;
-                        int* i2 = (int*)i.void_ptr();
-                        for (uint j = 0; j < i.Length(); j++)
-                        {
-                            o2[j] = i2[j];
-                        }
+                        var o2 = new int[i.size()];
+                        MessageElementDataUtil.RRBaseArrayToInts(i, o2, o2.Length);
+                        return o2;
                     }
-                    break;
                 case DataTypes.uint32_t:
-                    unsafe
                     {
-                        uint[] o2 = (uint[])o;
-                        uint* i2 = (uint*)i.void_ptr();
-                        for (uint j = 0; j < i.Length(); j++)
-                        {
-                            o2[j] = i2[j];
-                        }
+                        var o2 = new uint[i.size()];
+                        MessageElementDataUtil.RRBaseArrayToInts(i, o2, o2.Length);
+                        return o2;
                     }
-                    break;
                 case DataTypes.int64_t:
-                    unsafe
                     {
-                        long[] o2 = (long[])o;
-                        long* i2 = (long*)i.void_ptr();
-                        for (uint j = 0; j < i.Length(); j++)
-                        {
-                            o2[j] = i2[j];
-                        }
+                        var o2 = new long[i.size()];
+                        MessageElementDataUtil.RRBaseArrayToLongs(i, o2, o2.Length);
+                        return o2;
                     }
-                    break;
                 case DataTypes.uint64_t:
-                    unsafe
                     {
-                        ulong[] o2 = (ulong[])o;
-                        ulong* i2 = (ulong*)i.void_ptr();
-                        for (uint j = 0; j < i.Length(); j++)
-                        {
-                            o2[j] = i2[j];
-                        }
+                        var o2 = new ulong[i.size()];
+                        MessageElementDataUtil.RRBaseArrayToLongs(i, o2, o2.Length);
+                        return o2;
                     }
-                    break;
-
-
-            }
-
-
-            /*GCHandle h = GCHandle.Alloc(o, GCHandleType.Pinned);
-            rr_memcpy.memcpy(h.AddrOfPinnedObject(), i.void_ptr(), i.Length() * i.ElementSize());
-            h.Free();*/
-            return o;
+                case DataTypes.cdouble_t:
+                    {
+                        var o2 = new double[i.size()*2];
+                        MessageElementDataUtil.RRBaseArrayComplexToDoubles(i, o2, o2.Length);
+                        var o3 = new CDouble[i.size()];
+                        for (int j=0; j < o3.Length; j++)
+                        {
+                            o3[j] = new CDouble(o2[j * 2], o2[j * 2 + 1]);
+                        }
+                        return o3;
+                    }
+                case DataTypes.csingle_t:
+                    {
+                        var o2 = new float[i.size() * 2];
+                        MessageElementDataUtil.RRBaseArrayComplexToFloats(i, o2, o2.Length);
+                        var o3 = new CSingle[i.size()];
+                        for (int j = 0; j < o3.Length; j++)
+                        {
+                            o3[j] = new CSingle(o2[j * 2], o2[j * 2 + 1]);
+                        }
+                        return o3;
+                    }
+                case DataTypes.bool_t:
+                    {
+                        var o2 = new byte[i.size()];
+                        MessageElementDataUtil.RRBaseArrayBoolToBytes(i, o2, o2.Length);
+                        var o3 = new bool[o2.Length];
+                        for (int j = 0; j < o3.Length; j++)
+                        {
+                            o3[j] = o2[j] != 0;
+                        }
+                        return o3;
+                    }              
+                default:
+                    throw new DataTypeException("Invalid RRBaseArray type");
+                }            
         }
 
         public static RRBaseArray ArrayToRRBaseArray(Array i)
         {
             if (i == null) return null;
             DataTypes type = DataTypeUtil.TypeIDFromString(RobotRaconteurNode.GetTypeString(i.GetType().GetElementType()));
-            RRBaseArray o = RobotRaconteurNET.AllocateRRArrayByType(type, (uint)i.Length);
+            
             /*GCHandle h = GCHandle.Alloc(i, GCHandleType.Pinned);
             rr_memcpy.memcpy(o.void_ptr(), h.AddrOfPinnedObject(), i.Length * o.ElementSize());
             h.Free();*/
@@ -958,125 +1130,97 @@ namespace RobotRaconteur
             switch (type)
             {
                 case DataTypes.double_t:
-                    unsafe
                     {
-                        double[] i2 = (double[])i;
-                        double* o2 = (double*)o.void_ptr();
-                        for (uint j = 0; j < i.Length; j++)
-                        {
-                            o2[j] = i2[j];
-                        }
+                        var a = (double[])i;
+                        return MessageElementDataUtil.DoublesToRRBaseArray(a, a.Length);
                     }
-                    break;
                 case DataTypes.single_t:
-                    unsafe
                     {
-                        float[] i2 = (float[])i;
-                        float* o2 = (float*)o.void_ptr();
-                        for (uint j = 0; j < i.Length; j++)
-                        {
-                            o2[j] = i2[j];
-                        }
+                        var a = (float[])i;
+                        return MessageElementDataUtil.FloatsToRRBaseArray(a, a.Length);
                     }
-                    break;
                 case DataTypes.int8_t:
-                    unsafe
                     {
-                        sbyte[] i2 = (sbyte[])i;
-                        sbyte* o2 = (sbyte*)o.void_ptr();
-                        for (uint j = 0; j < i.Length; j++)
-                        {
-                            o2[j] = i2[j];
-                        }
+                        var a = (sbyte[])i;
+                        return MessageElementDataUtil.BytesToRRBaseArray(a, a.Length, DataTypes.int8_t);
                     }
-                    break;
                 case DataTypes.uint8_t:
-                    unsafe
                     {
-                        byte[] i2 = (byte[])i;
-                        byte* o2 = (byte*)o.void_ptr();
-                        for (uint j = 0; j < i.Length; j++)
-                        {
-                            o2[j] = i2[j];
-                        }
+                        var a = (byte[])i;
+                        return MessageElementDataUtil.BytesToRRBaseArray(a, a.Length);
                     }
-                    break;
                 case DataTypes.int16_t:
-                    unsafe
                     {
-                        short[] i2 = (short[])i;
-                        short* o2 = (short*)o.void_ptr();
-                        for (uint j = 0; j < i.Length; j++)
-                        {
-                            o2[j] = i2[j];
-                        }
+                        var a = (short[])i;
+                        return MessageElementDataUtil.ShortsToRRBaseArray(a, a.Length, DataTypes.int16_t);
                     }
-                    break;
                 case DataTypes.uint16_t:
-                    unsafe
                     {
-                        ushort[] i2 = (ushort[])i;
-                        ushort* o2 = (ushort*)o.void_ptr();
-                        for (uint j = 0; j < i.Length; j++)
-                        {
-                            o2[j] = i2[j];
-                        }
+                        var a = (ushort[])i;
+                        return MessageElementDataUtil.ShortsToRRBaseArray(a, a.Length);
                     }
-                    break;
                 case DataTypes.int32_t:
-                    unsafe
                     {
-                        int[] i2 = (int[])i;
-                        int* o2 = (int*)o.void_ptr();
-                        for (uint j = 0; j < i.Length; j++)
-                        {
-                            o2[j] = i2[j];
-                        }
+                        var a = (int[])i;
+                        return MessageElementDataUtil.IntsToRRBaseArray(a, a.Length, DataTypes.int32_t);
                     }
-                    break;
                 case DataTypes.uint32_t:
-                    unsafe
                     {
-                        uint[] i2 = (uint[])i;
-                        uint* o2 = (uint*)o.void_ptr();
-                        for (uint j = 0; j < i.Length; j++)
-                        {
-                            o2[j] = i2[j];
-                        }
+                        var a = (uint[])i;
+                        return MessageElementDataUtil.IntsToRRBaseArray(a, a.Length);
                     }
-                    break;
                 case DataTypes.int64_t:
-                    unsafe
                     {
-                        long[] i2 = (long[])i;
-                        long* o2 = (long*)o.void_ptr();
-                        for (uint j = 0; j < i.Length; j++)
-                        {
-                            o2[j] = i2[j];
-                        }
+                        var a = (long[])i;
+                        return MessageElementDataUtil.LongsToRRBaseArray(a, a.Length, DataTypes.int64_t);
                     }
-                    break;
                 case DataTypes.uint64_t:
-                    unsafe
                     {
-                        ulong[] i2 = (ulong[])i;
-                        ulong* o2 = (ulong*)o.void_ptr();
-                        for (uint j = 0; j < i.Length; j++)
-                        {
-                            o2[j] = i2[j];
-                        }
+                        var a = (ulong[])i;
+                        return MessageElementDataUtil.LongsToRRBaseArray(a, a.Length);
                     }
-                    break;
-            }
-
-            return o;
+                case DataTypes.cdouble_t:
+                    {
+                        var a = (CDouble[])i;
+                        var b = new double[a.Length * 2];
+                        for (int j = 0; j<a.Length; j++)
+                        {
+                            b[j * 2] = a[j].Real;
+                            b[j * 2 + 1] = a[j].Imag;
+                        }
+                        return MessageElementDataUtil.DoublesToComplexRRBaseArray(b, b.Length);
+                    }
+                case DataTypes.csingle_t:
+                    {
+                        var a = (CSingle[])i;
+                        var b = new float[a.Length * 2];
+                        for (int j = 0; j < a.Length; j++)
+                        {
+                            b[j * 2] = a[j].Real;
+                            b[j * 2 + 1] = a[j].Imag;
+                        }
+                        return MessageElementDataUtil.FloatsToComplexRRBaseArray(b, b.Length);
+                    }
+                case DataTypes.bool_t:
+                    {
+                        var a = (bool[])i;
+                        var b = new byte[a.Length];
+                        for (int j = 0; j < a.Length; j++)
+                        {
+                            b[j] = a[j] ? (byte)1 : (byte)0;                    
+                        }
+                        return MessageElementDataUtil.BytesToBoolRRBaseArray(b, b.Length);
+                    }
+                default:                
+                    throw new DataTypeException("Invalid RRBaseArray type");
+            }           
         }
 
         public static RRBaseArray ArrayToRRBaseArray(Array i, RRBaseArray o)
         {
             if (i == null) return null;
             DataTypes type = DataTypeUtil.TypeIDFromString(RobotRaconteurNode.GetTypeString(i.GetType().GetElementType()));
-            if (i.Length != o.Length()) throw new Exception("Length mismatch");
+            if (i.Length != o.size()) throw new Exception("Length mismatch");
             if (o.GetTypeID() != type) throw new Exception("Type mismatch");
             /*GCHandle h = GCHandle.Alloc(i, GCHandleType.Pinned);
             rr_memcpy.memcpy(o.void_ptr(), h.AddrOfPinnedObject(), i.Length * o.ElementSize());
@@ -1085,121 +1229,108 @@ namespace RobotRaconteur
             switch (type)
             {
                 case DataTypes.double_t:
-                    unsafe
                     {
-                        double[] i2 = (double[])i;
-                        double* o2 = (double*)o.void_ptr();
-                        for (uint j = 0; j < i.Length; j++)
-                        {
-                            o2[j] = i2[j];
-                        }
-                    }
-                    break;
+                        var a = (double[])i;
+                        MessageElementDataUtil.DoublesToRRBaseArray(a, a.Length, o);
+                        return o;
+                    }                    
                 case DataTypes.single_t:
-                    unsafe
                     {
-                        float[] i2 = (float[])i;
-                        float* o2 = (float*)o.void_ptr();
-                        for (uint j = 0; j < i.Length; j++)
-                        {
-                            o2[j] = i2[j];
-                        }
+                        var a = (float[])i;
+                        MessageElementDataUtil.FloatsToRRBaseArray(a, a.Length, o);
+                        return o;
                     }
-                    break;
                 case DataTypes.int8_t:
-                    unsafe
                     {
-                        sbyte[] i2 = (sbyte[])i;
-                        sbyte* o2 = (sbyte*)o.void_ptr();
-                        for (uint j = 0; j < i.Length; j++)
-                        {
-                            o2[j] = i2[j];
-                        }
+                        var a = (sbyte[])i;
+                        MessageElementDataUtil.BytesToRRBaseArray(a, a.Length, o);
+                        return o;
                     }
-                    break;
                 case DataTypes.uint8_t:
-                    unsafe
                     {
-                        byte[] i2 = (byte[])i;
-                        byte* o2 = (byte*)o.void_ptr();
-                        for (uint j = 0; j < i.Length; j++)
-                        {
-                            o2[j] = i2[j];
-                        }
+                        var a = (byte[])i;
+                        MessageElementDataUtil.BytesToRRBaseArray(a, a.Length, o);
+                        return o;
                     }
-                    break;
                 case DataTypes.int16_t:
-                    unsafe
                     {
-                        short[] i2 = (short[])i;
-                        short* o2 = (short*)o.void_ptr();
-                        for (uint j = 0; j < i.Length; j++)
-                        {
-                            o2[j] = i2[j];
-                        }
+                        var a = (short[])i;
+                        MessageElementDataUtil.ShortsToRRBaseArray(a, a.Length, o);
+                        return o;
                     }
-                    break;
                 case DataTypes.uint16_t:
-                    unsafe
                     {
-                        ushort[] i2 = (ushort[])i;
-                        ushort* o2 = (ushort*)o.void_ptr();
-                        for (uint j = 0; j < i.Length; j++)
-                        {
-                            o2[j] = i2[j];
-                        }
+                        var a = (ushort[])i;
+                        MessageElementDataUtil.ShortsToRRBaseArray(a, a.Length, o);
+                        return o;
                     }
-                    break;
                 case DataTypes.int32_t:
-                    unsafe
                     {
-                        int[] i2 = (int[])i;
-                        int* o2 = (int*)o.void_ptr();
-                        for (uint j = 0; j < i.Length; j++)
-                        {
-                            o2[j] = i2[j];
-                        }
+                        var a = (int[])i;
+                        MessageElementDataUtil.IntsToRRBaseArray(a, a.Length, o);
+                        return o;
                     }
-                    break;
                 case DataTypes.uint32_t:
-                    unsafe
                     {
-                        uint[] i2 = (uint[])i;
-                        uint* o2 = (uint*)o.void_ptr();
-                        for (uint j = 0; j < i.Length; j++)
-                        {
-                            o2[j] = i2[j];
-                        }
+                        var a = (uint[])i;
+                        MessageElementDataUtil.IntsToRRBaseArray(a, a.Length, o);
+                        return o;
                     }
-                    break;
                 case DataTypes.int64_t:
-                    unsafe
                     {
-                        long[] i2 = (long[])i;
-                        long* o2 = (long*)o.void_ptr();
-                        for (uint j = 0; j < i.Length; j++)
-                        {
-                            o2[j] = i2[j];
-                        }
+                        var a = (long[])i;
+                        MessageElementDataUtil.LongsToRRBaseArray(a, a.Length, o);
+                        return o;
                     }
-                    break;
                 case DataTypes.uint64_t:
-                    unsafe
                     {
-                        ulong[] i2 = (ulong[])i;
-                        ulong* o2 = (ulong*)o.void_ptr();
-                        for (uint j = 0; j < i.Length; j++)
-                        {
-                            o2[j] = i2[j];
-                        }
+                        var a = (ulong[])i;
+                        MessageElementDataUtil.LongsToRRBaseArray(a, a.Length, o);
+                        return o;
                     }
-                    break;
+                case DataTypes.cdouble_t:
+                    {
+                        var a = (CDouble[])i;
+                        var b = new double[a.Length * 2];
+                        for (int j = 0; j < a.Length; j++)
+                        {
+                            b[j * 2] = a[j].Real;
+                            b[j * 2 + 1] = a[j].Imag;
+                        }
+                        MessageElementDataUtil.DoublesToComplexRRBaseArray(b, b.Length, o);
+                        return o;
+                    }
+                case DataTypes.csingle_t:
+                    {
+                        var a = (CSingle[])i;
+                        var b = new float[a.Length * 2];
+                        for (int j = 0; j < a.Length; j++)
+                        {
+                            b[j * 2] = a[j].Real;
+                            b[j * 2 + 1] = a[j].Imag;
+                        }
+                        MessageElementDataUtil.FloatsToComplexRRBaseArray(b, b.Length, o);
+                        return o;
+                    }
+                case DataTypes.bool_t:
+                    {
+                        var a = (bool[])i;
+                        var b = new byte[a.Length];
+                        for (int j = 0; j < a.Length; j++)
+                        {
+                            b[j] = a[j] ? (byte)1 : (byte)0;
+                        }
+                        MessageElementDataUtil.BytesToBoolRRBaseArray(b, b.Length, o);
+                        return o;
+                    }
+                default:
+                    throw new DataTypeException("Invalid RRBaseArray type");
             }
 
             return o;
         }
 
-        public static string RRBaseArrayToString(RRBaseArray i)
+        /*public static string RRBaseArrayToString(RRBaseArray i)
         {
             DataTypes type = i.GetTypeID();
             byte[] o1 = new byte[i.Length()];
@@ -1207,11 +1338,11 @@ namespace RobotRaconteur
             /*GCHandle h = GCHandle.Alloc(o1, GCHandleType.Pinned);
             rr_memcpy.memcpy(h.AddrOfPinnedObject(), i.void_ptr(), i.Length() * i.ElementSize());
             h.Free();*/
-            Marshal.Copy(i.void_ptr(), o1, 0, o1.Length);
+            /*Marshal.Copy(i.void_ptr(), o1, 0, o1.Length);
             return System.Text.UTF8Encoding.UTF8.GetString(o1);
-        }
+        }*/
 
-        public static RRBaseArray StringToRRBaseArray(string i)
+        /*public static RRBaseArray stringToRRBaseArray(string i)
         {
             byte[] i1 = System.Text.UTF8Encoding.UTF8.GetBytes(i);
             DataTypes type = DataTypes.string_t;
@@ -1219,9 +1350,9 @@ namespace RobotRaconteur
             /*GCHandle h = GCHandle.Alloc(i1, GCHandleType.Pinned);
             rr_memcpy.memcpy(o.void_ptr(), h.AddrOfPinnedObject(), i1.Length * o.ElementSize());
             h.Free();*/
-            Marshal.Copy(i1, 0, o.void_ptr(), i1.Length);
+            /*Marshal.Copy(i1, 0, o.void_ptr(), i1.Length);
             return o;
-        }
+        }*/
 
 
     }
@@ -1561,101 +1692,203 @@ namespace RobotRaconteur
             }
         }
 
-        // CStructure Packing
+        // Pod Packing
 
-        public MessageElementCStructureArray PackCStructureToArray<T>(ref T s) where T : struct
+        public MessageElementPodArray PackPodToArray<T>(ref T s) where T : struct
         {
-            return GetServiceFactoryForType(s.GetType()).PackCStructureToArray(ref s);
+            return GetServiceFactoryForType(s.GetType()).PackPodToArray(ref s);
         }
 
-        public T UnpackCStructureFromArray<T>(MessageElementCStructureArray l) where T : struct
+        public T UnpackPodFromArray<T>(MessageElementPodArray l) where T : struct
         {
-            return GetServiceFactoryForType(l.Type).UnpackCStructureFromArray<T>(l);
+            return GetServiceFactoryForType(l.Type).UnpackPodFromArray<T>(l);
         }
 
-        public T UnpackCStructureFromArrayDispose<T>(MessageElementCStructureArray l) where T : struct
+        public T UnpackPodFromArrayDispose<T>(MessageElementPodArray l) where T : struct
         {
             using (l)
             {
-                return UnpackCStructureFromArray<T>(l);
+                return UnpackPodFromArray<T>(l);
             }
         }
 
-        // CStructure Array Packing
+        // Pod Array Packing
 
-        public MessageElementCStructureArray PackCStructureArray<T>(T[] s) where T : struct
+        public MessageElementPodArray PackPodArray<T>(T[] s) where T : struct
         {
             if (s == null) return null;
-            return GetServiceFactoryForType(s.GetType()).PackCStructureArray(s);
+            return GetServiceFactoryForType(s.GetType()).PackPodArray(s);
         }
 
-        public T[] UnpackCStructureArray<T>(MessageElementCStructureArray l) where T : struct
+        public T[] UnpackPodArray<T>(MessageElementPodArray l) where T : struct
         {
             if (l == null) return null;
-            return GetServiceFactoryForType(l.Type).UnpackCStructureArray<T>(l);
+            return GetServiceFactoryForType(l.Type).UnpackPodArray<T>(l);
         }
 
-        public T[] UnpackCStructureArrayDispose<T>(MessageElementCStructureArray l) where T : struct
+        public T[] UnpackPodArrayDispose<T>(MessageElementPodArray l) where T : struct
         {
             using (l)
             {
-                return UnpackCStructureArray<T>(l);
+                return UnpackPodArray<T>(l);
             }
         }
 
-        // CStructure MultiDimArray Packing
+        // Pod MultiDimArray Packing
 
-        public MessageElementCStructureMultiDimArray PackCStructureMultiDimArray<T>(CStructureMultiDimArray s) where T : struct
+        public MessageElementPodMultiDimArray PackPodMultiDimArray<T>(PodMultiDimArray s) where T : struct
         {
             if (s == null) return null;
-            return GetServiceFactoryForType(s.cstruct_array.GetType()).PackCStructureMultiDimArray<T>(s);
+            return GetServiceFactoryForType(s.pod_array.GetType()).PackPodMultiDimArray<T>(s);
         }
 
-        public CStructureMultiDimArray UnpackCStructureMultiDimArray<T>(MessageElementCStructureMultiDimArray l) where T : struct
+        public PodMultiDimArray UnpackPodMultiDimArray<T>(MessageElementPodMultiDimArray l) where T : struct
         {
             if (l == null) return null;
-            return GetServiceFactoryForType(l.Type).UnpackCStructureMultiDimArray<T>(l);
+            return GetServiceFactoryForType(l.Type).UnpackPodMultiDimArray<T>(l);
         }
 
-        public CStructureMultiDimArray UnpackCStructureMultiDimArrayDispose<T>(MessageElementCStructureMultiDimArray l) where T : struct
+        public PodMultiDimArray UnpackPodMultiDimArrayDispose<T>(MessageElementPodMultiDimArray l) where T : struct
         {
             using (l)
             {
-                return UnpackCStructureMultiDimArray<T>(l);
+                return UnpackPodMultiDimArray<T>(l);
             }
         }
 
-        // CStructure boxed packing
+        // Pod boxed packing
 
-        public MessageElementData PackCStructure(object s)
+        public MessageElementData PackPod(object s)
         {
             var t = s.GetType();
 
             if (t.IsValueType)
             {
-                return GetServiceFactoryForType(t).PackCStructure(s);
+                return GetServiceFactoryForType(t).PackPod(s);
             }
             else if (t.IsArray)
             {
-                return GetServiceFactoryForType(t.GetElementType()).PackCStructure(s);
+                return GetServiceFactoryForType(t.GetElementType()).PackPod(s);
             }
-            else if (t == typeof(CStructureMultiDimArray))
+            else if (t == typeof(PodMultiDimArray))
             {
-                return GetServiceFactoryForType(((CStructureMultiDimArray)s).cstruct_array.GetType().GetElementType()).PackCStructure(s);
+                return GetServiceFactoryForType(((PodMultiDimArray)s).pod_array.GetType().GetElementType()).PackPod(s);
             }
-            throw new DataTypeException("Invalid cstructure object");
+            else if (t == typeof(NamedMultiDimArray))
+            {
+                return GetServiceFactoryForType(((NamedMultiDimArray)s).namedarray_array.GetType().GetElementType()).PackNamedArray(s);
+            }
+            throw new DataTypeException("Invalid pod object");
         }
 
-        public object UnpackCStructure(MessageElementData l)
+        public object UnpackPod(MessageElementData l)
         {
-            return GetServiceFactoryForType(l.GetTypeString()).UnpackCStructure(l);
+            return GetServiceFactoryForType(l.GetTypeString()).UnpackPod(l);
         }
 
-        public object UnpackCStructureDispose(MessageElementData l)
+        public object UnpackPodDispose(MessageElementData l)
         {
             using (l)
             {
-                return UnpackCStructure(l);
+                return UnpackPod(l);
+            }
+        }
+
+        // NamedArray Packing
+
+        public MessageElementNamedArray PackNamedArrayToArray<T>(ref T s) where T : struct
+        {
+            return GetServiceFactoryForType(s.GetType()).PackNamedArrayToArray(ref s);
+        }
+
+        public T UnpackNamedArrayFromArray<T>(MessageElementNamedArray l) where T : struct
+        {
+            return GetServiceFactoryForType(l.Type).UnpackNamedArrayFromArray<T>(l);
+        }
+
+        public T UnpackNamedArrayFromArrayDispose<T>(MessageElementNamedArray l) where T : struct
+        {
+            using (l)
+            {
+                return UnpackNamedArrayFromArray<T>(l);
+            }
+        }
+
+        // NamedArray Array Packing
+
+        public MessageElementNamedArray PackNamedArray<T>(T[] s) where T : struct
+        {
+            if (s == null) return null;
+            return GetServiceFactoryForType(s.GetType()).PackNamedArray(s);
+        }
+
+        public T[] UnpackNamedArray<T>(MessageElementNamedArray l) where T : struct
+        {
+            if (l == null) return null;
+            return GetServiceFactoryForType(l.Type).UnpackNamedArray<T>(l);
+        }
+
+        public T[] UnpackNamedArrayDispose<T>(MessageElementNamedArray l) where T : struct
+        {
+            using (l)
+            {
+                return UnpackNamedArray<T>(l);
+            }
+        }
+
+        // Pod MultiDimArray Packing
+
+        public MessageElementNamedMultiDimArray PackNamedMultiDimArray<T>(NamedMultiDimArray s) where T : struct
+        {
+            if (s == null) return null;
+            return GetServiceFactoryForType(s.namedarray_array.GetType()).PackNamedMultiDimArray<T>(s);
+        }
+
+        public NamedMultiDimArray UnpackNamedMultiDimArray<T>(MessageElementNamedMultiDimArray l) where T : struct
+        {
+            if (l == null) return null;
+            return GetServiceFactoryForType(l.Type).UnpackNamedMultiDimArray<T>(l);
+        }
+
+        public NamedMultiDimArray UnpackNamedMultiDimArrayDispose<T>(MessageElementNamedMultiDimArray l) where T : struct
+        {
+            using (l)
+            {
+                return UnpackNamedMultiDimArray<T>(l);
+            }
+        }
+
+        // Pod boxed packing
+
+        public MessageElementData PackNamedArray(object s)
+        {
+            var t = s.GetType();
+
+            if (t.IsValueType)
+            {
+                return GetServiceFactoryForType(t).PackNamedArray(s);
+            }
+            else if (t.IsArray)
+            {
+                return GetServiceFactoryForType(t.GetElementType()).PackNamedArray(s);
+            }
+            else if (t == typeof(NamedMultiDimArray))
+            {
+                return GetServiceFactoryForType(((NamedMultiDimArray)s).namedarray_array.GetType().GetElementType()).PackNamedArray(s);
+            }
+            throw new DataTypeException("Invalid pod object");
+        }
+
+        public object UnpackNamedArray(MessageElementData l)
+        {
+            return GetServiceFactoryForType(l.GetTypeString()).UnpackNamedArray(l);
+        }
+
+        public object UnpackNamedArrayDispose(MessageElementData l)
+        {
+            using (l)
+            {
+                return UnpackNamedArray(l);
             }
         }
 
@@ -1684,14 +1917,33 @@ namespace RobotRaconteur
                 return MessageElementUtil.NewMessageElementDispose(name, data);
             }
 
+            if (t == typeof(CDouble) || t == typeof(CSingle))
+            {
+                return MessageElementUtil.NewMessageElementDispose(name, data);
+            }
+
+            if (is_array)
+            {
+                var t2 = t.GetElementType();
+                if (t2 == typeof(CDouble) || t2 == typeof(CSingle))
+                {
+                    return MessageElementUtil.NewMessageElementDispose(name, data);
+                }
+            }
+
             if (t == typeof(MultiDimArray))
             {
                 return MessageElementUtil.NewMessageElementDispose(name, PackMultiDimArray((MultiDimArray)(object)data));
             }
 
-            if (t == typeof(CStructureMultiDimArray))
+            if (t == typeof(PodMultiDimArray))
             {
-                return MessageElementUtil.NewMessageElementDispose(name, PackCStructure((object)data));
+                return MessageElementUtil.NewMessageElementDispose(name, PackPod((object)data));
+            }
+
+            if (t == typeof(NamedMultiDimArray))
+            {
+                return MessageElementUtil.NewMessageElementDispose(name, PackNamedArray((object)data));
             }
 
             if (t.IsGenericType)
@@ -1699,13 +1951,22 @@ namespace RobotRaconteur
                 throw new DataTypeException("Invalid Robot Raconteur container value type");
             }
 
-            if (!t.IsValueType && !is_array && t != typeof(CStructureMultiDimArray))
+            if (!t.IsValueType && !is_array && t != typeof(PodMultiDimArray) && t != typeof(NamedMultiDimArray))
             {
                 return MessageElementUtil.NewMessageElementDispose(name, PackStructure(data));
             }
             else
             {
-                return MessageElementUtil.NewMessageElementDispose(name, PackCStructure(data));
+                Type t2 = t;
+                if (t.IsArray) t2 = t.GetElementType();
+                if (Attribute.GetCustomAttribute(t2, typeof(NamedArrayElementTypeAndCount), false) != null)
+                {
+                    return MessageElementUtil.NewMessageElementDispose(name, PackNamedArray(data));
+                }
+                else
+                {
+                    return MessageElementUtil.NewMessageElementDispose(name, PackPod(data));
+                }
             }
         }
 
@@ -1736,6 +1997,9 @@ namespace RobotRaconteur
                 case DataTypes.uint32_t:
                 case DataTypes.int64_t:
                 case DataTypes.uint64_t:
+                case DataTypes.cdouble_t:
+                case DataTypes.csingle_t:
+                case DataTypes.bool_t:               
                     if (typeof(T).IsArray)
                     {
                         return (T)e.Data;
@@ -1756,30 +2020,50 @@ namespace RobotRaconteur
                     {
                         return UnpackStructure<T>(md);
                     }
-                /*case DataTypes.cstructure_t:
+                /*case DataTypes.pod_t:
                     using (MessageElementData md = (MessageElementData)e.Data)
                     {
-                        return (T)UnpackCStructure(md);
+                        return (T)UnpackPod(md);
                     }*/
-                case DataTypes.cstructure_array_t:
-                    using (MessageElementCStructureArray md = (MessageElementCStructureArray)e.Data)
+                case DataTypes.pod_array_t:
+                    using (MessageElementPodArray md = (MessageElementPodArray)e.Data)
                     {
                         if (typeof(T).IsValueType)
                         {
                             if (md.Elements.Count != 1) throw new DataTypeException("Invalid array size for scalar structure");
 
-                            return ((T[])UnpackCStructure(md))[0];
+                            return ((T[])UnpackPod(md))[0];
 
                         }
                         else
                         {
-                            return (T)UnpackCStructure(md);
+                            return (T)UnpackPod(md);
                         }
                     }
-                case DataTypes.cstructure_multidimarray_t:
+                case DataTypes.pod_multidimarray_t:
                     using (MessageElementData md = (MessageElementData)e.Data)
                     {
-                        return (T)UnpackCStructure(md);
+                        return (T)UnpackPod(md);
+                    }
+                case DataTypes.namedarray_array_t:
+                    using (MessageElementNamedArray md = (MessageElementNamedArray)e.Data)
+                    {
+                        if (typeof(T).IsValueType)
+                        {
+                            if (md.Elements.Count != 1) throw new DataTypeException("Invalid array size for scalar structure");
+
+                            return ((T[])UnpackNamedArray(md))[0];
+
+                        }
+                        else
+                        {
+                            return (T)UnpackNamedArray(md);
+                        }
+                    }
+                case DataTypes.namedarray_multidimarray_t:
+                    using (MessageElementData md = (MessageElementData)e.Data)
+                    {
+                        return (T)UnpackNamedArray(md);
                     }
                 default:
                     throw new DataTypeException("Invalid container data type");
@@ -1906,27 +2190,7 @@ namespace RobotRaconteur
         public object PackListType<Tvalue>(object data)
         {
             if (data == null) return null;
-            DataTypes stype;
-
-            if (typeof(Tvalue) == typeof(MultiDimArray))
-            {
-                stype = DataTypes.multidimarray_t;
-            }
-            else
-            {
-
-                string stype1 = typeof(Tvalue).ToString().Replace("[]", "");
-
-                if (DataTypeUtil.TypeIDFromString_known(stype1))
-                {
-                    stype = DataTypeUtil.TypeIDFromString(stype1);
-                }
-                else
-                {
-                    stype = DataTypes.structure_t;
-                }
-            }
-
+           
             using (vectorptr_messageelement m = new vectorptr_messageelement())
             {
                 List<Tvalue> ddata = (List<Tvalue>)data;
@@ -2024,9 +2288,9 @@ namespace RobotRaconteur
                 return PackMultiDimArray((MultiDimArray)data);
             }
 
-            if (t == typeof(CStructureMultiDimArray))
+            if (t == typeof(PodMultiDimArray))
             {
-                return PackCStructure(data);
+                return PackPod(data);
             }
 
             if (t.IsGenericType)
@@ -2034,13 +2298,22 @@ namespace RobotRaconteur
                 throw new DataTypeException("Invalid Robot Raconteur varvalue type");
             }
 
-            if (!t.IsValueType && !is_array && t != typeof(CStructureMultiDimArray))
+            if (!t.IsValueType && !is_array && t != typeof(PodMultiDimArray) && t != typeof(NamedMultiDimArray))
             {
                 return PackStructure(data);
             }
             else
             {
-                return PackCStructure(data);
+                Type t2 = t;
+                if (t.IsArray) t2 = t.GetElementType();
+                if (Attribute.GetCustomAttribute(t2, typeof(NamedArrayElementTypeAndCount), false) != null)
+                {
+                    return PackNamedArray(data);
+                }
+                else
+                {
+                    return PackPod(data);
+                }
             }
 
         }
@@ -2080,12 +2353,18 @@ namespace RobotRaconteur
                     {
                         return UnpackStructure<object>(md);
                     }
-                //case DataTypes.cstructure_t:
-                case DataTypes.cstructure_array_t:
-                case DataTypes.cstructure_multidimarray_t:
+                //case DataTypes.pod_t:
+                case DataTypes.pod_array_t:
+                case DataTypes.pod_multidimarray_t:
                     using (MessageElementData md = (MessageElementData)me.Data)
                     {
-                        return UnpackCStructure(md);
+                        return UnpackPod(md);
+                    }
+                case DataTypes.namedarray_array_t:
+                case DataTypes.namedarray_multidimarray_t:
+                    using (MessageElementData md = (MessageElementData)me.Data)
+                    {
+                        return UnpackNamedArray(md);
                     }
                 case DataTypes.vector_t:
                     using (MessageElementData md = (MessageElementData)me.Data)
@@ -2132,12 +2411,9 @@ namespace RobotRaconteur
             if (array == null) return null;
             using (vectorptr_messageelement l = new vectorptr_messageelement())
             {
-                MessageElementUtil.AddMessageElementDispose(l, "dims", array.Dims);
-                MessageElementUtil.AddMessageElementDispose(l, "dimcount", array.DimCount);
-                MessageElementUtil.AddMessageElementDispose(l, "real", array.Real);
-                if (array.Complex)
-                    MessageElementUtil.AddMessageElementDispose(l, "imag", array.Imag);
-
+                MessageElementUtil.AddMessageElementDispose(l, "dims", array.Dims);                
+                MessageElementUtil.AddMessageElementDispose(l, "array", array.Array_);
+                
                 return new MessageElementMultiDimArray(l);
             }
 
@@ -2155,24 +2431,9 @@ namespace RobotRaconteur
 
             MultiDimArray m = new MultiDimArray();
             using (vectorptr_messageelement marrayElements = marray.Elements)
-            {
-                m.DimCount = (MessageElementUtil.FindElementAndCast<int[]>(marrayElements, "dimcount"))[0];
-                m.Dims = (MessageElementUtil.FindElementAndCast<int[]>(marrayElements, "dims"));
-                m.Real = (MessageElementUtil.FindElementAndCast<Array>(marrayElements, "real"));
-                foreach (MessageElement m2 in marrayElements)
-                {
-                    using (m2)
-                    {
-                        if (m2.ElementName == "imag")
-                        {
-                            m.Complex = true;
-                            m.Imag = (m2.CastData<Array>());
-                            break;
-                        }
-
-                    }
-
-                }
+            {                
+                m.Dims = (MessageElementUtil.FindElementAndCast<uint[]>(marrayElements, "dims"));
+                m.Array_ = (MessageElementUtil.FindElementAndCast<Array>(marrayElements, "array"));
                 return m;
             }
 

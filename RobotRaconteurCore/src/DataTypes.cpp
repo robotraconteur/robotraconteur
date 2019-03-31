@@ -29,26 +29,26 @@ namespace RobotRaconteur
 
 
 
-ROBOTRACONTEUR_CORE_API RR_SHARED_PTR<RRArray<char> > stringToRRArray(const std::string& str)
+ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRArray<char> > stringToRRArray(const std::string& str)
 {
 	size_t s=str.size();
-	RR_SHARED_PTR<RRArray<char> > ret=AllocateRRArray<char>(s);
-	memcpy(ret->ptr(),str.c_str(),s);
+	RR_INTRUSIVE_PTR<RRArray<char> > ret=AllocateRRArray<char>(s);
+	memcpy(ret->data(),str.c_str(),s);
 	return ret;
 
 
 }
 
-ROBOTRACONTEUR_CORE_API std::string RRArrayToString(RR_SHARED_PTR<RRArray<char> > arr)
+ROBOTRACONTEUR_CORE_API std::string RRArrayToString(RR_INTRUSIVE_PTR<RRArray<char> > arr)
 {
 	if (!arr)
 	{
 		throw DataTypeException("Null pointer");
 	}
-	size_t s=arr->Length();
+	size_t s=arr->size();
 	//char* str=new char[arr->Length()+1];
 
-	return std::string(arr->ptr(),s);
+	return std::string(arr->data(),s);
 }
 
 
@@ -93,18 +93,18 @@ ROBOTRACONTEUR_CORE_API std::wstring utf8_decode(const std::string &str)
     return wstrTo;
 }
 
-ROBOTRACONTEUR_CORE_API RR_SHARED_PTR<RRArray<char> > wstringToRRArray(const std::wstring& str)
+ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRArray<char> > wstringToRRArray(const std::wstring& str)
 {
 	std::string str2=utf8_encode(str);
 	size_t s=str2.size();
-	RR_SHARED_PTR<RRArray<char> > ret=AllocateRRArray<char>(s);
+	RR_INTRUSIVE_PTR<RRArray<char> > ret=AllocateRRArray<char>(s);
 	memcpy(ret->ptr(),str.c_str(),s);
 	return ret;
 
 
 }
 
-ROBOTRACONTEUR_CORE_API std::wstring RRArrayToWString(RR_SHARED_PTR<RRArray<char> > arr)
+ROBOTRACONTEUR_CORE_API std::wstring RRArrayToWString(RR_INTRUSIVE_PTR<RRArray<char> > arr)
 {
 	if (!arr)
 	{
@@ -147,6 +147,12 @@ ROBOTRACONTEUR_CORE_API std::string GetRRDataTypeString(DataTypes type)
 		return "uint64";
 	case DataTypes_string_t:
 		return "string";
+	case DataTypes_cdouble_t:
+		return "cdouble";
+	case DataTypes_csingle_t:
+		return "csingle";
+	case DataTypes_bool_t:
+		return "bool";
 	default:
 		throw DataTypeException("Invalid data type");
 	}
@@ -172,6 +178,9 @@ ROBOTRACONTEUR_CORE_API bool IsTypeRRArray(DataTypes type)
 	case DataTypes_int64_t:
 	case DataTypes_uint64_t:
 	case DataTypes_string_t:
+	case DataTypes_cdouble_t:		
+	case DataTypes_csingle_t:		
+	case DataTypes_bool_t:		
 		return true;
 	default:
 		return false;
@@ -193,6 +202,9 @@ ROBOTRACONTEUR_CORE_API bool IsTypeNumeric(DataTypes type)
 	case DataTypes_uint32_t:
 	case DataTypes_int64_t:
 	case DataTypes_uint64_t:
+	case DataTypes_cdouble_t:
+	case DataTypes_csingle_t:
+	case DataTypes_bool_t:
 		return true;
 	default:
 		return false;
@@ -200,7 +212,7 @@ ROBOTRACONTEUR_CORE_API bool IsTypeNumeric(DataTypes type)
 
 }
 
-ROBOTRACONTEUR_CORE_API RR_SHARED_PTR<RRBaseArray> AllocateRRArrayByType(DataTypes type, size_t length)
+ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRBaseArray> AllocateRRArrayByType(DataTypes type, size_t length)
 {
 	switch (type)
 	{
@@ -228,6 +240,12 @@ ROBOTRACONTEUR_CORE_API RR_SHARED_PTR<RRBaseArray> AllocateRRArrayByType(DataTyp
 		return AllocateRRArray<uint64_t>(length);
 	case DataTypes_string_t:
 		return AllocateRRArray<char>(length);
+	case DataTypes_cdouble_t:
+		return AllocateRRArray<cdouble>(length);
+	case DataTypes_csingle_t:
+		return AllocateRRArray<cfloat>(length);
+	case DataTypes_bool_t:
+		return AllocateRRArray<rr_bool>(length);	
 	default:
 		throw DataTypeException("Invalid data type");
 		
@@ -259,6 +277,12 @@ ROBOTRACONTEUR_CORE_API size_t RRArrayElementSize(DataTypes type)
 		case DataTypes_uint64_t:
 			return 8;
 		case DataTypes_string_t:
+			return 1;
+		case DataTypes_cdouble_t:
+			return 16;
+		case DataTypes_csingle_t:
+			return 8;
+		case DataTypes_bool_t:
 			return 1;
 		default:
 			throw DataTypeException("Invalid data type");
@@ -385,29 +409,27 @@ namespace detail
 	{
 	protected:
 
-		std::vector<int32_t> mema_dims;
-		std::vector<int32_t> memb_dims;
-		std::vector<int32_t> mema_pos;
-		std::vector<int32_t> memb_pos;
-		std::vector<int32_t> count;
+		std::vector<uint32_t> mema_dims;
+		std::vector<uint32_t> memb_dims;
+		std::vector<uint32_t> mema_pos;
+		std::vector<uint32_t> memb_pos;
+		std::vector<uint32_t> count;
 
-		std::vector<int32_t> stridea;
-		std::vector<int32_t> strideb;
+		std::vector<uint32_t> stridea;
+		std::vector<uint32_t> strideb;
 
-		std::vector<int32_t> current_count;
+		std::vector<uint32_t> current_count;
 
 		bool done;
 
 	public:
 
-		MultiDimArray_CalculateCopyIndicesIterImpl(int32_t mema_dimcount, const std::vector<int32_t>& mema_dims, const std::vector<int32_t>& mema_pos, int32_t memb_dimcount, const std::vector<int32_t>& memb_dims, const std::vector<int32_t>& memb_pos, const std::vector<int32_t>& count)
+		MultiDimArray_CalculateCopyIndicesIterImpl(const std::vector<uint32_t>& mema_dims, const std::vector<uint32_t>& mema_pos, const std::vector<uint32_t>& memb_dims, const std::vector<uint32_t>& memb_pos, const std::vector<uint32_t>& count)
 		{
 			//Error checking
 
 			if (count.size() == 0) throw InvalidArgumentException("MultiDimArray count invalid");
 
-			if (mema_dimcount != mema_dims.size()) throw InvalidArgumentException("MultiDimArray A invalid");
-			if (memb_dimcount != memb_dims.size()) throw InvalidArgumentException("MultiDimArray B invalid");
 			if (count.size() > mema_dims.size() || count.size() > memb_dims.size()) throw InvalidArgumentException("MultiDimArray copy count invalid");
 			if (count.size() > memb_dims.size() || count.size() > memb_dims.size()) throw InvalidArgumentException("MultiDimArray copy count invalid");
 
@@ -440,14 +462,14 @@ namespace detail
 
 			stridea.resize(count.size());
 			stridea[0] = 1;
-			for (int32_t i = 1; i < (int32_t)count.size(); i++)
+			for (uint32_t i = 1; i < (uint32_t)count.size(); i++)
 			{
 				stridea[i] = stridea[i - 1] * mema_dims[i - 1];				
 			}
 
 			strideb.resize(count.size());
 			strideb[0] = 1;
-			for (int32_t i = 1; i < (int32_t)count.size(); i++)
+			for (uint32_t i = 1; i < (uint32_t)count.size(); i++)
 			{
 				strideb[i] = strideb[i - 1] * memb_dims[i - 1];
 			}
@@ -462,7 +484,7 @@ namespace detail
 			this->done = false;
 		}
 
-		virtual bool Next(int32_t& indexa, int32_t& indexb, int32_t& len)
+		virtual bool Next(uint32_t& indexa, uint32_t& indexb, uint32_t& len)
 		{
 
 			if (done)
@@ -474,10 +496,10 @@ namespace detail
 			int b = 0;
 
 			indexa = 0;
-			for (int32_t j = 0; j < (int32_t)count.size(); j++)
+			for (uint32_t j = 0; j < (uint32_t)count.size(); j++)
 				indexa += (current_count[j] + mema_pos[j]) * stridea[j];
 			indexb = 0;
-			for (int32_t j = 0; j < (int32_t)count.size(); j++)
+			for (uint32_t j = 0; j < (uint32_t)count.size(); j++)
 				indexb += (current_count[j] + memb_pos[j]) * strideb[j];
 						
 			len = count[0];
@@ -489,12 +511,12 @@ namespace detail
 			}
 
 			current_count[1]++;
-			for (int32_t j = 1; j < (int32_t)count.size(); j++)
+			for (uint32_t j = 1; j < (uint32_t)count.size(); j++)
 			{
 				if (current_count[j] >(count[j] - 1))
 				{
 					current_count[j] = current_count[j] - count[j];
-					if (j < (int32_t)count.size() - 1)
+					if (j < (uint32_t)count.size() - 1)
 					{
 						current_count[j + 1]++;
 					}
@@ -515,9 +537,9 @@ namespace detail
 		}
 	};
 
-	RR_SHARED_PTR<MultiDimArray_CalculateCopyIndicesIter> MultiDimArray_CalculateCopyIndicesBeginIter(int32_t mema_dimcount, const std::vector<int32_t>& mema_dims, const std::vector<int32_t>& mema_pos, int32_t memb_dimcount, const std::vector<int32_t>& memb_dims, const std::vector<int32_t>& memb_pos, const std::vector<int32_t>& count)
+	RR_SHARED_PTR<MultiDimArray_CalculateCopyIndicesIter> MultiDimArray_CalculateCopyIndicesBeginIter(const std::vector<uint32_t>& mema_dims, const std::vector<uint32_t>& mema_pos, const std::vector<uint32_t>& memb_dims, const std::vector<uint32_t>& memb_pos, const std::vector<uint32_t>& count)
 	{
-		RR_SHARED_PTR<MultiDimArray_CalculateCopyIndicesIterImpl> o = RR_MAKE_SHARED<MultiDimArray_CalculateCopyIndicesIterImpl>(mema_dimcount, mema_dims, mema_pos, memb_dimcount, memb_dims, memb_pos, count);
+		RR_SHARED_PTR<MultiDimArray_CalculateCopyIndicesIterImpl> o = RR_MAKE_SHARED<MultiDimArray_CalculateCopyIndicesIterImpl>(mema_dims, mema_pos, memb_dims, memb_pos, count);
 		return o;
 	}
 }
@@ -579,5 +601,21 @@ namespace detail
 	}
 
 }
+
+bool operator== (const cdouble &c1, const cdouble &c2)
+{
+	return (c1.real == c2.real) && (c1.imag == c2.imag);
+}
+bool operator!= (const cdouble &c1, const cdouble &c2) { return !(c1 == c2); }
+bool operator== (const cfloat &c1, const cfloat &c2)
+{
+	return (c1.real == c2.real) && (c1.imag == c2.imag);
+}
+bool operator!= (const cfloat &c1, const cfloat &c2) { return !(c1 == c2); }
+bool operator== (const rr_bool &c1, const rr_bool &c2)
+{
+	return (c1.value == c2.value);
+}
+bool operator!= (const rr_bool &c1, const rr_bool &c2) { return !(c1 == c2); }
 
 }

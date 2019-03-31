@@ -113,12 +113,16 @@ namespace RobotRaconteur
 			MessageElement_writemultiarray2,			
 			MessageElement_writelist1,
 			MessageElement_writelist2,		
-			MessageElement_writecstruct1,
-			MessageElement_writecstruct2,
-			MessageElement_writecstructarray1,
-			MessageElement_writecstructarray2,
-			MessageElement_writecstructmultidimarray1,
-			MessageElement_writecstructmultidimarray2,
+			MessageElement_writepod1,
+			MessageElement_writepod2,
+			MessageElement_writepodarray1,
+			MessageElement_writepodarray2,
+			MessageElement_writepodmultidimarray1,
+			MessageElement_writepodmultidimarray2,
+			MessageElement_writenamedarrayarray1,
+			MessageElement_writenamedarrayarray2,
+			MessageElement_writenamedarraymultidimarray1,
+			MessageElement_writenamedarraymultidimarray2,
 
 			//String handling
 			Header_writestring,
@@ -133,7 +137,8 @@ namespace RobotRaconteur
 			state_type state;
 			state_type pop_state;
 			size_t limit;
-			RR_SHARED_PTR<void> data;
+			RR_INTRUSIVE_PTR<RRValue> data;
+			void* ptrdata;
 			size_t param1;
 			size_t param2;
 
@@ -165,6 +170,12 @@ namespace RobotRaconteur
 			return static_cast<T*>(state_stack.back().data.get());
 		}
 
+		template<typename T>
+		T* ptrdata()
+		{
+			return static_cast<T*>(state_stack.back().ptrdata);
+		}
+
 		size_t& param1();
 		size_t& param2();
 
@@ -174,7 +185,8 @@ namespace RobotRaconteur
 		void pop_state();
 		
 		//TODO: use const data
-		void push_state(state_type new_state, state_type pop_state, size_t relative_limit, RR_SHARED_PTR<void> data, size_t param1 = 0, size_t param2 = 0);
+		void push_state(state_type new_state, state_type pop_state, size_t relative_limit, RR_INTRUSIVE_PTR<RRValue> data, size_t param1 = 0, size_t param2 = 0);
+		void push_state(state_type new_state, state_type pop_state, size_t relative_limit, void* ptrdata, size_t param1 = 0, size_t param2 = 0);
 
 		void prepare_continue(mutable_buffers& work_bufs, size_t& work_bufs_used, const_buffers& write_bufs);
 
@@ -198,7 +210,7 @@ namespace RobotRaconteur
 		bool write_string3(std::string& str); //next_state=state()++
 
 		virtual void Reset();
-		virtual void BeginWrite(RR_SHARED_PTR<Message> m, uint16_t version);
+		virtual void BeginWrite(RR_INTRUSIVE_PTR<Message> m, uint16_t version);
 
 		virtual return_type Write(size_t write_quota, mutable_buffers& work_bufs, size_t& work_bufs_used, const_buffers& write_bufs);
 		virtual return_type Write3(size_t write_quota, mutable_buffers& work_bufs, size_t& work_bufs_used, const_buffers& write_bufs);

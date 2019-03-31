@@ -25,8 +25,8 @@ namespace RobotRaconteur
 	public:		
 
 	RR_RELEASE_GIL()
-		virtual boost::shared_ptr<MessageElement> Next(boost::shared_ptr<MessageElement> v);
-		virtual void AsyncNext(boost::shared_ptr<MessageElement> v, int32_t timeout, AsyncRequestDirector* handler, int32_t id);
+		virtual boost::intrusive_ptr<MessageElement> Next(boost::intrusive_ptr<MessageElement> v);
+		virtual void AsyncNext(boost::intrusive_ptr<MessageElement> v, int32_t timeout, AsyncRequestDirector* handler, int32_t id);
 
 		virtual void Abort();
 		virtual void AsyncAbort(int32_t timeout, AsyncVoidReturnDirector* handler, int32_t id);
@@ -35,7 +35,7 @@ namespace RobotRaconteur
 		virtual void AsyncClose(int32_t timeout, AsyncVoidReturnDirector* handler, int32_t id);
 
 		
-		virtual std::vector<boost::shared_ptr<MessageElement> > NextAll();	
+		virtual std::vector<boost::intrusive_ptr<MessageElement> > NextAll();	
 	RR_KEEP_GIL()
 	};
 
@@ -52,7 +52,7 @@ namespace RobotRaconteur
 		WrappedGeneratorServerDirector();
 		virtual ~WrappedGeneratorServerDirector() {}
 
-		virtual boost::shared_ptr<MessageElement> Next(boost::shared_ptr<MessageElement> m);
+		virtual boost::intrusive_ptr<MessageElement> Next(boost::intrusive_ptr<MessageElement> m);
 
 		virtual void Abort();
 		virtual void Close();

@@ -1,6 +1,6 @@
 package com.robotraconteur;
 
-public interface ICStructureStub
+public interface IPodStub
 {
 	MessageElementData packStructure(Object s);
 

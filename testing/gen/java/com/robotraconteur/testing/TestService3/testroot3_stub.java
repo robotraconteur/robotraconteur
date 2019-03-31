@@ -14,8 +14,16 @@ public class testroot3_stub extends ServiceStub implements testroot3, async_test
     private Wire<int[]> rr_w2;
     private Wire<MultiDimArray> rr_w3;
     private ArrayMemory<double[]> rr_readmem;
-    private CStructureArrayMemory<testcstruct2[]> rr_cstruct_m1;
-    private CStructureMultiDimArrayMemory<testcstruct2[]> rr_cstruct_m2;
+    private PodArrayMemory<testpod2[]> rr_pod_m1;
+    private PodMultiDimArrayMemory<testpod2[]> rr_pod_m2;
+    private NamedArrayMemory<transform[]> rr_namedarray_m1;
+    private NamedMultiDimArrayMemory<transform[]> rr_namedarray_m2;
+    private ArrayMemory<CDouble[]> rr_c_m1;
+    private MultiDimArrayMemory<CDouble[]> rr_c_m2;
+    private ArrayMemory<CDouble[]> rr_c_m3;
+    private MultiDimArrayMemory<CDouble[]> rr_c_m4;
+    private ArrayMemory<boolean[]> rr_c_m5;
+    private MultiDimArrayMemory<boolean[]> rr_c_m6;
     public testroot3_stub(WrappedServiceStub innerstub) {
         super(innerstub); 
     rr_unreliable1=new Pipe<int[]>(innerstub.getPipe("unreliable1"));
@@ -29,8 +37,16 @@ public class testroot3_stub extends ServiceStub implements testroot3, async_test
     rr_w2=new Wire<int[]>(innerstub.getWire("w2"));
     rr_w3=new Wire<MultiDimArray>(innerstub.getWire("w3"));
     rr_readmem=new ArrayMemoryClient<double[]>(innerstub.getArrayMemory("readmem"));
-    rr_cstruct_m1=new CStructureArrayMemoryClient<testcstruct2[]>(innerstub.getCStructureArrayMemory("cstruct_m1"));
-    rr_cstruct_m2=new CStructureMultiDimArrayMemoryClient<testcstruct2[]>(innerstub.getCStructureMultiDimArrayMemory("cstruct_m2"));
+    rr_pod_m1=new PodArrayMemoryClient<testpod2[]>(innerstub.getPodArrayMemory("pod_m1"));
+    rr_pod_m2=new PodMultiDimArrayMemoryClient<testpod2[]>(innerstub.getPodMultiDimArrayMemory("pod_m2"));
+    rr_namedarray_m1=new NamedArrayMemoryClient<transform[]>(innerstub.getNamedArrayMemory("namedarray_m1"));
+    rr_namedarray_m2=new NamedMultiDimArrayMemoryClient<transform[]>(innerstub.getNamedMultiDimArrayMemory("namedarray_m2"));
+    rr_c_m1=new ArrayMemoryClient<CDouble[]>(innerstub.getArrayMemory("c_m1"));
+    rr_c_m2=new MultiDimArrayMemoryClient<CDouble[]>(innerstub.getMultiDimArrayMemory("c_m2"));
+    rr_c_m3=new ArrayMemoryClient<CDouble[]>(innerstub.getArrayMemory("c_m3"));
+    rr_c_m4=new MultiDimArrayMemoryClient<CDouble[]>(innerstub.getMultiDimArrayMemory("c_m4"));
+    rr_c_m5=new ArrayMemoryClient<boolean[]>(innerstub.getArrayMemory("c_m5"));
+    rr_c_m6=new MultiDimArrayMemoryClient<boolean[]>(innerstub.getMultiDimArrayMemory("c_m6"));
     }
     public int get_readme() {
     return (MessageElementUtil.<int[]>castDataAndDispose(rr_innerstub.propertyGet("readme")))[0];
@@ -84,14 +100,14 @@ public class testroot3_stub extends ServiceStub implements testroot3, async_test
     if (m!=null) m.delete();
     }
     }
-    public testcstruct1 get_testcstruct1_prop() {
-    return MessageElementUtil.<testcstruct1>unpackCStructureFromArray(rr_innerstub.propertyGet("testcstruct1_prop"));
+    public testpod1 get_testpod1_prop() {
+    return MessageElementUtil.<testpod1>unpackPodFromArray(rr_innerstub.propertyGet("testpod1_prop"));
     }
-    public void set_testcstruct1_prop(testcstruct1 value) {
+    public void set_testpod1_prop(testpod1 value) {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.<testcstruct1>packCStructureToArray("value",value);
-    rr_innerstub.propertySet("testcstruct1_prop", m);
+    m=MessageElementUtil.<testpod1>packPodToArray("value",value);
+    rr_innerstub.propertySet("testpod1_prop", m);
     }
     finally {
     if (m!=null) m.delete();
@@ -188,24 +204,323 @@ public class testroot3_stub extends ServiceStub implements testroot3, async_test
     if (m!=null) m.delete();
     }
     }
-    public void testcstruct1_func1(testcstruct1 s) {
+    public vector3 get_testnamedarray1() {
+    return MessageElementUtil.<vector3>unpackNamedArrayFromArray(rr_innerstub.propertyGet("testnamedarray1"));
+    }
+    public void set_testnamedarray1(vector3 value) {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<vector3>packNamedArrayToArray("value",value);
+    rr_innerstub.propertySet("testnamedarray1", m);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    public transform get_testnamedarray2() {
+    return MessageElementUtil.<transform>unpackNamedArrayFromArray(rr_innerstub.propertyGet("testnamedarray2"));
+    }
+    public void set_testnamedarray2(transform value) {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<transform>packNamedArrayToArray("value",value);
+    rr_innerstub.propertySet("testnamedarray2", m);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    public transform[] get_testnamedarray3() {
+    return DataTypeUtil.verifyArrayLength(MessageElementUtil.<transform>unpackNamedArray(rr_innerstub.propertyGet("testnamedarray3")), 10, true);
+    }
+    public void set_testnamedarray3(transform[] value) {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<transform>packNamedArray("value",DataTypeUtil.verifyArrayLength(value, 10, true));
+    rr_innerstub.propertySet("testnamedarray3", m);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    public NamedMultiDimArray get_testnamedarray4() {
+    return MessageElementUtil.unpackNamedMultiDimArray(rr_innerstub.propertyGet("testnamedarray4"));
+    }
+    public void set_testnamedarray4(NamedMultiDimArray value) {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<NamedMultiDimArray>packNamedMultiDimArray("value",value);
+    rr_innerstub.propertySet("testnamedarray4", m);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    public NamedMultiDimArray get_testnamedarray5() {
+    return DataTypeUtil.verifyArrayLength(MessageElementUtil.unpackNamedMultiDimArray(rr_innerstub.propertyGet("testnamedarray5")),6,new int[] {3,2});
+    }
+    public void set_testnamedarray5(NamedMultiDimArray value) {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<NamedMultiDimArray>packNamedMultiDimArray("value",DataTypeUtil.verifyArrayLength(value,6,new int[] {3,2}));
+    rr_innerstub.propertySet("testnamedarray5", m);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    public CDouble get_c1() {
+    return (MessageElementUtil.<CDouble[]>castDataAndDispose(rr_innerstub.propertyGet("c1")))[0];
+    }
+    public void set_c1(CDouble value) {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<CDouble[]>packArray("value",new CDouble[] {value});
+    rr_innerstub.propertySet("c1", m);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    public CDouble[] get_c2() {
+    return MessageElementUtil.<CDouble[]>unpackArray(rr_innerstub.propertyGet("c2"));
+    }
+    public void set_c2(CDouble[] value) {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<CDouble[]>packArray("value",value);
+    rr_innerstub.propertySet("c2", m);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    public MultiDimArray get_c3() {
+    return MessageElementUtil.unpackMultiDimArray(rr_innerstub.propertyGet("c3"));
+    }
+    public void set_c3(MultiDimArray value) {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.packMultiDimArray("value",(MultiDimArray)value);
+    rr_innerstub.propertySet("c3", m);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    public List<CDouble[]> get_c4() {
+    return MessageElementUtil.<CDouble[]>unpackListType(rr_innerstub.propertyGet("c4"));
+    }
+    public void set_c4(List<CDouble[]> value) {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<CDouble[]>packListType("value",value,CDouble[].class);
+    rr_innerstub.propertySet("c4", m);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    public List<CDouble[]> get_c5() {
+    return MessageElementUtil.<CDouble[]>unpackListType(rr_innerstub.propertyGet("c5"));
+    }
+    public void set_c5(List<CDouble[]> value) {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<CDouble[]>packListType("value",value,CDouble[].class);
+    rr_innerstub.propertySet("c5", m);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    public List<MultiDimArray> get_c6() {
+    return MessageElementUtil.<MultiDimArray>unpackListType(rr_innerstub.propertyGet("c6"));
+    }
+    public void set_c6(List<MultiDimArray> value) {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<MultiDimArray>packListType("value",value,MultiDimArray.class);
+    rr_innerstub.propertySet("c6", m);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    public CSingle get_c7() {
+    return (MessageElementUtil.<CSingle[]>castDataAndDispose(rr_innerstub.propertyGet("c7")))[0];
+    }
+    public void set_c7(CSingle value) {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<CSingle[]>packArray("value",new CSingle[] {value});
+    rr_innerstub.propertySet("c7", m);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    public CSingle[] get_c8() {
+    return MessageElementUtil.<CSingle[]>unpackArray(rr_innerstub.propertyGet("c8"));
+    }
+    public void set_c8(CSingle[] value) {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<CSingle[]>packArray("value",value);
+    rr_innerstub.propertySet("c8", m);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    public MultiDimArray get_c9() {
+    return MessageElementUtil.unpackMultiDimArray(rr_innerstub.propertyGet("c9"));
+    }
+    public void set_c9(MultiDimArray value) {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.packMultiDimArray("value",(MultiDimArray)value);
+    rr_innerstub.propertySet("c9", m);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    public List<CSingle[]> get_c10() {
+    return MessageElementUtil.<CSingle[]>unpackListType(rr_innerstub.propertyGet("c10"));
+    }
+    public void set_c10(List<CSingle[]> value) {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<CSingle[]>packListType("value",value,CSingle[].class);
+    rr_innerstub.propertySet("c10", m);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    public List<CSingle[]> get_c11() {
+    return MessageElementUtil.<CSingle[]>unpackListType(rr_innerstub.propertyGet("c11"));
+    }
+    public void set_c11(List<CSingle[]> value) {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<CSingle[]>packListType("value",value,CSingle[].class);
+    rr_innerstub.propertySet("c11", m);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    public List<MultiDimArray> get_c12() {
+    return MessageElementUtil.<MultiDimArray>unpackListType(rr_innerstub.propertyGet("c12"));
+    }
+    public void set_c12(List<MultiDimArray> value) {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<MultiDimArray>packListType("value",value,MultiDimArray.class);
+    rr_innerstub.propertySet("c12", m);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    public boolean get_b1() {
+    return (MessageElementUtil.<boolean[]>castDataAndDispose(rr_innerstub.propertyGet("b1")))[0];
+    }
+    public void set_b1(boolean value) {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<boolean[]>packArray("value",new boolean[] {value});
+    rr_innerstub.propertySet("b1", m);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    public boolean[] get_b2() {
+    return MessageElementUtil.<boolean[]>unpackArray(rr_innerstub.propertyGet("b2"));
+    }
+    public void set_b2(boolean[] value) {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<boolean[]>packArray("value",value);
+    rr_innerstub.propertySet("b2", m);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    public MultiDimArray get_b3() {
+    return MessageElementUtil.unpackMultiDimArray(rr_innerstub.propertyGet("b3"));
+    }
+    public void set_b3(MultiDimArray value) {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.packMultiDimArray("value",(MultiDimArray)value);
+    rr_innerstub.propertySet("b3", m);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    public List<boolean[]> get_b4() {
+    return MessageElementUtil.<boolean[]>unpackListType(rr_innerstub.propertyGet("b4"));
+    }
+    public void set_b4(List<boolean[]> value) {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<boolean[]>packListType("value",value,boolean[].class);
+    rr_innerstub.propertySet("b4", m);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    public List<boolean[]> get_b5() {
+    return MessageElementUtil.<boolean[]>unpackListType(rr_innerstub.propertyGet("b5"));
+    }
+    public void set_b5(List<boolean[]> value) {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<boolean[]>packListType("value",value,boolean[].class);
+    rr_innerstub.propertySet("b5", m);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    public List<MultiDimArray> get_b6() {
+    return MessageElementUtil.<MultiDimArray>unpackListType(rr_innerstub.propertyGet("b6"));
+    }
+    public void set_b6(List<MultiDimArray> value) {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<MultiDimArray>packListType("value",value,MultiDimArray.class);
+    rr_innerstub.propertySet("b6", m);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    public void testpod1_func1(testpod1 s) {
     vectorptr_messageelement rr_param=new vectorptr_messageelement();
     MessageElement rr_me=null;
     try {
-    MessageElementUtil.addMessageElementDispose(rr_param, MessageElementUtil.<testcstruct1>packCStructureToArray("s",s));
-    rr_me=rr_innerstub.functionCall("testcstruct1_func1",rr_param);
+    MessageElementUtil.addMessageElementDispose(rr_param, MessageElementUtil.<testpod1>packPodToArray("s",s));
+    rr_me=rr_innerstub.functionCall("testpod1_func1",rr_param);
     }
     finally {
     rr_param.delete();
     if (rr_me!=null) rr_me.delete();
     }
     }
-    public testcstruct1 testcstruct1_func2() {
+    public testpod1 testpod1_func2() {
     vectorptr_messageelement rr_param=new vectorptr_messageelement();
     MessageElement rr_me=null;
     try {
-    rr_me=rr_innerstub.functionCall("testcstruct1_func2",rr_param);
-    return MessageElementUtil.<testcstruct1>unpackCStructureFromArray(rr_me);
+    rr_me=rr_innerstub.functionCall("testpod1_func2",rr_param);
+    return MessageElementUtil.<testpod1>unpackPodFromArray(rr_me);
     }
     finally {
     rr_param.delete();
@@ -314,10 +629,26 @@ public class testroot3_stub extends ServiceStub implements testroot3, async_test
     }
     public ArrayMemory<double[]> get_readmem()
     { return rr_readmem; }
-    public CStructureArrayMemory<testcstruct2[]> get_cstruct_m1()
-    { return rr_cstruct_m1; }
-    public CStructureMultiDimArrayMemory<testcstruct2[]> get_cstruct_m2()
-    { return rr_cstruct_m2; }
+    public PodArrayMemory<testpod2[]> get_pod_m1()
+    { return rr_pod_m1; }
+    public PodMultiDimArrayMemory<testpod2[]> get_pod_m2()
+    { return rr_pod_m2; }
+    public NamedArrayMemory<transform[]> get_namedarray_m1()
+    { return rr_namedarray_m1; }
+    public NamedMultiDimArrayMemory<transform[]> get_namedarray_m2()
+    { return rr_namedarray_m2; }
+    public ArrayMemory<CDouble[]> get_c_m1()
+    { return rr_c_m1; }
+    public MultiDimArrayMemory<CDouble[]> get_c_m2()
+    { return rr_c_m2; }
+    public ArrayMemory<CDouble[]> get_c_m3()
+    { return rr_c_m3; }
+    public MultiDimArrayMemory<CDouble[]> get_c_m4()
+    { return rr_c_m4; }
+    public ArrayMemory<boolean[]> get_c_m5()
+    { return rr_c_m5; }
+    public MultiDimArrayMemory<boolean[]> get_c_m6()
+    { return rr_c_m6; }
     public void async_get_readme(Action2<Integer,RuntimeException> rr_handler, int rr_timeout)
     {
     rr_async_PropertyGet("readme",new rrend_async_get_readme(),rr_handler,rr_timeout);
@@ -502,22 +833,22 @@ public class testroot3_stub extends ServiceStub implements testroot3, async_test
     rr_handler.action(null);
     }
     }
-    public void async_get_testcstruct1_prop(Action2<testcstruct1,RuntimeException> rr_handler, int rr_timeout)
+    public void async_get_testpod1_prop(Action2<testpod1,RuntimeException> rr_handler, int rr_timeout)
     {
-    rr_async_PropertyGet("testcstruct1_prop",new rrend_async_get_testcstruct1_prop(),rr_handler,rr_timeout);
+    rr_async_PropertyGet("testpod1_prop",new rrend_async_get_testpod1_prop(),rr_handler,rr_timeout);
     }
-    protected class rrend_async_get_testcstruct1_prop implements Action3<MessageElement,RuntimeException,Object> {
+    protected class rrend_async_get_testpod1_prop implements Action3<MessageElement,RuntimeException,Object> {
     public void action(MessageElement value ,RuntimeException err,Object param)
     {
-    Action2<testcstruct1,RuntimeException> rr_handler=(Action2<testcstruct1,RuntimeException>)param;
+    Action2<testpod1,RuntimeException> rr_handler=(Action2<testpod1,RuntimeException>)param;
     if (err!=null)
     {
     rr_handler.action(null,err);
     return;
     }
-    testcstruct1 rr_ret;
+    testpod1 rr_ret;
     try {
-    rr_ret=MessageElementUtil.<testcstruct1>unpackCStructureFromArray(value);
+    rr_ret=MessageElementUtil.<testpod1>unpackPodFromArray(value);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;
@@ -525,18 +856,18 @@ public class testroot3_stub extends ServiceStub implements testroot3, async_test
     rr_handler.action(rr_ret,null);
     }
     }
-    public void async_set_testcstruct1_prop(testcstruct1 value, Action1<RuntimeException> rr_handler, int rr_timeout)
+    public void async_set_testpod1_prop(testpod1 value, Action1<RuntimeException> rr_handler, int rr_timeout)
     {
     MessageElement m=null;
     try {
-    m=MessageElementUtil.<testcstruct1>packCStructureToArray("value",value);
-    rr_async_PropertySet("testcstruct1_prop",m,new rrend_async_set_testcstruct1_prop(),rr_handler,rr_timeout);
+    m=MessageElementUtil.<testpod1>packPodToArray("value",value);
+    rr_async_PropertySet("testpod1_prop",m,new rrend_async_set_testpod1_prop(),rr_handler,rr_timeout);
     }
     finally {
     if (m!=null) m.delete();
     }
     }
-    protected class rrend_async_set_testcstruct1_prop implements Action3<MessageElement,RuntimeException,Object> {
+    protected class rrend_async_set_testpod1_prop implements Action3<MessageElement,RuntimeException,Object> {
     public void action(MessageElement m ,RuntimeException err,Object param)
     {
     Action1<RuntimeException> rr_handler=(Action1<RuntimeException>)param;
@@ -870,18 +1201,1076 @@ public class testroot3_stub extends ServiceStub implements testroot3, async_test
     rr_handler.action(null);
     }
     }
-    public void async_testcstruct1_func1(testcstruct1 s,Action1<RuntimeException> rr_handler,int rr_timeout)
+    public void async_get_testnamedarray1(Action2<vector3,RuntimeException> rr_handler, int rr_timeout)
+    {
+    rr_async_PropertyGet("testnamedarray1",new rrend_async_get_testnamedarray1(),rr_handler,rr_timeout);
+    }
+    protected class rrend_async_get_testnamedarray1 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement value ,RuntimeException err,Object param)
+    {
+    Action2<vector3,RuntimeException> rr_handler=(Action2<vector3,RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(null,err);
+    return;
+    }
+    vector3 rr_ret;
+    try {
+    rr_ret=MessageElementUtil.<vector3>unpackNamedArrayFromArray(value);
+    } catch (RuntimeException err2) {
+    rr_handler.action(null,err2);
+    return;
+    }
+    rr_handler.action(rr_ret,null);
+    }
+    }
+    public void async_set_testnamedarray1(vector3 value, Action1<RuntimeException> rr_handler, int rr_timeout)
+    {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<vector3>packNamedArrayToArray("value",value);
+    rr_async_PropertySet("testnamedarray1",m,new rrend_async_set_testnamedarray1(),rr_handler,rr_timeout);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    protected class rrend_async_set_testnamedarray1 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement m ,RuntimeException err,Object param)
+    {
+    Action1<RuntimeException> rr_handler=(Action1<RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(err);
+    return;
+    }
+    rr_handler.action(null);
+    }
+    }
+    public void async_get_testnamedarray2(Action2<transform,RuntimeException> rr_handler, int rr_timeout)
+    {
+    rr_async_PropertyGet("testnamedarray2",new rrend_async_get_testnamedarray2(),rr_handler,rr_timeout);
+    }
+    protected class rrend_async_get_testnamedarray2 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement value ,RuntimeException err,Object param)
+    {
+    Action2<transform,RuntimeException> rr_handler=(Action2<transform,RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(null,err);
+    return;
+    }
+    transform rr_ret;
+    try {
+    rr_ret=MessageElementUtil.<transform>unpackNamedArrayFromArray(value);
+    } catch (RuntimeException err2) {
+    rr_handler.action(null,err2);
+    return;
+    }
+    rr_handler.action(rr_ret,null);
+    }
+    }
+    public void async_set_testnamedarray2(transform value, Action1<RuntimeException> rr_handler, int rr_timeout)
+    {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<transform>packNamedArrayToArray("value",value);
+    rr_async_PropertySet("testnamedarray2",m,new rrend_async_set_testnamedarray2(),rr_handler,rr_timeout);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    protected class rrend_async_set_testnamedarray2 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement m ,RuntimeException err,Object param)
+    {
+    Action1<RuntimeException> rr_handler=(Action1<RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(err);
+    return;
+    }
+    rr_handler.action(null);
+    }
+    }
+    public void async_get_testnamedarray3(Action2<transform[],RuntimeException> rr_handler, int rr_timeout)
+    {
+    rr_async_PropertyGet("testnamedarray3",new rrend_async_get_testnamedarray3(),rr_handler,rr_timeout);
+    }
+    protected class rrend_async_get_testnamedarray3 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement value ,RuntimeException err,Object param)
+    {
+    Action2<transform[],RuntimeException> rr_handler=(Action2<transform[],RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(null,err);
+    return;
+    }
+    transform[] rr_ret;
+    try {
+    rr_ret=DataTypeUtil.verifyArrayLength(MessageElementUtil.<transform>unpackNamedArray(value), 10, true);
+    } catch (RuntimeException err2) {
+    rr_handler.action(null,err2);
+    return;
+    }
+    rr_handler.action(rr_ret,null);
+    }
+    }
+    public void async_set_testnamedarray3(transform[] value, Action1<RuntimeException> rr_handler, int rr_timeout)
+    {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<transform>packNamedArray("value",DataTypeUtil.verifyArrayLength(value, 10, true));
+    rr_async_PropertySet("testnamedarray3",m,new rrend_async_set_testnamedarray3(),rr_handler,rr_timeout);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    protected class rrend_async_set_testnamedarray3 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement m ,RuntimeException err,Object param)
+    {
+    Action1<RuntimeException> rr_handler=(Action1<RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(err);
+    return;
+    }
+    rr_handler.action(null);
+    }
+    }
+    public void async_get_testnamedarray4(Action2<NamedMultiDimArray,RuntimeException> rr_handler, int rr_timeout)
+    {
+    rr_async_PropertyGet("testnamedarray4",new rrend_async_get_testnamedarray4(),rr_handler,rr_timeout);
+    }
+    protected class rrend_async_get_testnamedarray4 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement value ,RuntimeException err,Object param)
+    {
+    Action2<NamedMultiDimArray,RuntimeException> rr_handler=(Action2<NamedMultiDimArray,RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(null,err);
+    return;
+    }
+    NamedMultiDimArray rr_ret;
+    try {
+    rr_ret=MessageElementUtil.unpackNamedMultiDimArray(value);
+    } catch (RuntimeException err2) {
+    rr_handler.action(null,err2);
+    return;
+    }
+    rr_handler.action(rr_ret,null);
+    }
+    }
+    public void async_set_testnamedarray4(NamedMultiDimArray value, Action1<RuntimeException> rr_handler, int rr_timeout)
+    {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<NamedMultiDimArray>packNamedMultiDimArray("value",value);
+    rr_async_PropertySet("testnamedarray4",m,new rrend_async_set_testnamedarray4(),rr_handler,rr_timeout);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    protected class rrend_async_set_testnamedarray4 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement m ,RuntimeException err,Object param)
+    {
+    Action1<RuntimeException> rr_handler=(Action1<RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(err);
+    return;
+    }
+    rr_handler.action(null);
+    }
+    }
+    public void async_get_testnamedarray5(Action2<NamedMultiDimArray,RuntimeException> rr_handler, int rr_timeout)
+    {
+    rr_async_PropertyGet("testnamedarray5",new rrend_async_get_testnamedarray5(),rr_handler,rr_timeout);
+    }
+    protected class rrend_async_get_testnamedarray5 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement value ,RuntimeException err,Object param)
+    {
+    Action2<NamedMultiDimArray,RuntimeException> rr_handler=(Action2<NamedMultiDimArray,RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(null,err);
+    return;
+    }
+    NamedMultiDimArray rr_ret;
+    try {
+    rr_ret=DataTypeUtil.verifyArrayLength(MessageElementUtil.unpackNamedMultiDimArray(value),6,new int[] {3,2});
+    } catch (RuntimeException err2) {
+    rr_handler.action(null,err2);
+    return;
+    }
+    rr_handler.action(rr_ret,null);
+    }
+    }
+    public void async_set_testnamedarray5(NamedMultiDimArray value, Action1<RuntimeException> rr_handler, int rr_timeout)
+    {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<NamedMultiDimArray>packNamedMultiDimArray("value",DataTypeUtil.verifyArrayLength(value,6,new int[] {3,2}));
+    rr_async_PropertySet("testnamedarray5",m,new rrend_async_set_testnamedarray5(),rr_handler,rr_timeout);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    protected class rrend_async_set_testnamedarray5 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement m ,RuntimeException err,Object param)
+    {
+    Action1<RuntimeException> rr_handler=(Action1<RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(err);
+    return;
+    }
+    rr_handler.action(null);
+    }
+    }
+    public void async_get_c1(Action2<CDouble,RuntimeException> rr_handler, int rr_timeout)
+    {
+    rr_async_PropertyGet("c1",new rrend_async_get_c1(),rr_handler,rr_timeout);
+    }
+    protected class rrend_async_get_c1 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement value ,RuntimeException err,Object param)
+    {
+    Action2<CDouble,RuntimeException> rr_handler=(Action2<CDouble,RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(new CDouble(0.0,0.0),err);
+    return;
+    }
+    CDouble rr_ret;
+    try {
+    rr_ret=(MessageElementUtil.<CDouble[]>castDataAndDispose(value))[0];
+    } catch (RuntimeException err2) {
+    rr_handler.action(new CDouble(0.0,0.0),err2);
+    return;
+    }
+    rr_handler.action(rr_ret,null);
+    }
+    }
+    public void async_set_c1(CDouble value, Action1<RuntimeException> rr_handler, int rr_timeout)
+    {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<CDouble[]>packArray("value",new CDouble[] {value});
+    rr_async_PropertySet("c1",m,new rrend_async_set_c1(),rr_handler,rr_timeout);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    protected class rrend_async_set_c1 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement m ,RuntimeException err,Object param)
+    {
+    Action1<RuntimeException> rr_handler=(Action1<RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(err);
+    return;
+    }
+    rr_handler.action(null);
+    }
+    }
+    public void async_get_c2(Action2<CDouble[],RuntimeException> rr_handler, int rr_timeout)
+    {
+    rr_async_PropertyGet("c2",new rrend_async_get_c2(),rr_handler,rr_timeout);
+    }
+    protected class rrend_async_get_c2 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement value ,RuntimeException err,Object param)
+    {
+    Action2<CDouble[],RuntimeException> rr_handler=(Action2<CDouble[],RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(null,err);
+    return;
+    }
+    CDouble[] rr_ret;
+    try {
+    rr_ret=MessageElementUtil.<CDouble[]>unpackArray(value);
+    } catch (RuntimeException err2) {
+    rr_handler.action(null,err2);
+    return;
+    }
+    rr_handler.action(rr_ret,null);
+    }
+    }
+    public void async_set_c2(CDouble[] value, Action1<RuntimeException> rr_handler, int rr_timeout)
+    {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<CDouble[]>packArray("value",value);
+    rr_async_PropertySet("c2",m,new rrend_async_set_c2(),rr_handler,rr_timeout);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    protected class rrend_async_set_c2 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement m ,RuntimeException err,Object param)
+    {
+    Action1<RuntimeException> rr_handler=(Action1<RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(err);
+    return;
+    }
+    rr_handler.action(null);
+    }
+    }
+    public void async_get_c3(Action2<MultiDimArray,RuntimeException> rr_handler, int rr_timeout)
+    {
+    rr_async_PropertyGet("c3",new rrend_async_get_c3(),rr_handler,rr_timeout);
+    }
+    protected class rrend_async_get_c3 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement value ,RuntimeException err,Object param)
+    {
+    Action2<MultiDimArray,RuntimeException> rr_handler=(Action2<MultiDimArray,RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(null,err);
+    return;
+    }
+    MultiDimArray rr_ret;
+    try {
+    rr_ret=MessageElementUtil.unpackMultiDimArray(value);
+    } catch (RuntimeException err2) {
+    rr_handler.action(null,err2);
+    return;
+    }
+    rr_handler.action(rr_ret,null);
+    }
+    }
+    public void async_set_c3(MultiDimArray value, Action1<RuntimeException> rr_handler, int rr_timeout)
+    {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.packMultiDimArray("value",(MultiDimArray)value);
+    rr_async_PropertySet("c3",m,new rrend_async_set_c3(),rr_handler,rr_timeout);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    protected class rrend_async_set_c3 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement m ,RuntimeException err,Object param)
+    {
+    Action1<RuntimeException> rr_handler=(Action1<RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(err);
+    return;
+    }
+    rr_handler.action(null);
+    }
+    }
+    public void async_get_c4(Action2<List<CDouble[]>,RuntimeException> rr_handler, int rr_timeout)
+    {
+    rr_async_PropertyGet("c4",new rrend_async_get_c4(),rr_handler,rr_timeout);
+    }
+    protected class rrend_async_get_c4 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement value ,RuntimeException err,Object param)
+    {
+    Action2<List<CDouble[]>,RuntimeException> rr_handler=(Action2<List<CDouble[]>,RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(null,err);
+    return;
+    }
+    List<CDouble[]> rr_ret;
+    try {
+    rr_ret=MessageElementUtil.<CDouble[]>unpackListType(value);
+    } catch (RuntimeException err2) {
+    rr_handler.action(null,err2);
+    return;
+    }
+    rr_handler.action(rr_ret,null);
+    }
+    }
+    public void async_set_c4(List<CDouble[]> value, Action1<RuntimeException> rr_handler, int rr_timeout)
+    {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<CDouble[]>packListType("value",value,CDouble[].class);
+    rr_async_PropertySet("c4",m,new rrend_async_set_c4(),rr_handler,rr_timeout);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    protected class rrend_async_set_c4 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement m ,RuntimeException err,Object param)
+    {
+    Action1<RuntimeException> rr_handler=(Action1<RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(err);
+    return;
+    }
+    rr_handler.action(null);
+    }
+    }
+    public void async_get_c5(Action2<List<CDouble[]>,RuntimeException> rr_handler, int rr_timeout)
+    {
+    rr_async_PropertyGet("c5",new rrend_async_get_c5(),rr_handler,rr_timeout);
+    }
+    protected class rrend_async_get_c5 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement value ,RuntimeException err,Object param)
+    {
+    Action2<List<CDouble[]>,RuntimeException> rr_handler=(Action2<List<CDouble[]>,RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(null,err);
+    return;
+    }
+    List<CDouble[]> rr_ret;
+    try {
+    rr_ret=MessageElementUtil.<CDouble[]>unpackListType(value);
+    } catch (RuntimeException err2) {
+    rr_handler.action(null,err2);
+    return;
+    }
+    rr_handler.action(rr_ret,null);
+    }
+    }
+    public void async_set_c5(List<CDouble[]> value, Action1<RuntimeException> rr_handler, int rr_timeout)
+    {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<CDouble[]>packListType("value",value,CDouble[].class);
+    rr_async_PropertySet("c5",m,new rrend_async_set_c5(),rr_handler,rr_timeout);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    protected class rrend_async_set_c5 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement m ,RuntimeException err,Object param)
+    {
+    Action1<RuntimeException> rr_handler=(Action1<RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(err);
+    return;
+    }
+    rr_handler.action(null);
+    }
+    }
+    public void async_get_c6(Action2<List<MultiDimArray>,RuntimeException> rr_handler, int rr_timeout)
+    {
+    rr_async_PropertyGet("c6",new rrend_async_get_c6(),rr_handler,rr_timeout);
+    }
+    protected class rrend_async_get_c6 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement value ,RuntimeException err,Object param)
+    {
+    Action2<List<MultiDimArray>,RuntimeException> rr_handler=(Action2<List<MultiDimArray>,RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(null,err);
+    return;
+    }
+    List<MultiDimArray> rr_ret;
+    try {
+    rr_ret=MessageElementUtil.<MultiDimArray>unpackListType(value);
+    } catch (RuntimeException err2) {
+    rr_handler.action(null,err2);
+    return;
+    }
+    rr_handler.action(rr_ret,null);
+    }
+    }
+    public void async_set_c6(List<MultiDimArray> value, Action1<RuntimeException> rr_handler, int rr_timeout)
+    {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<MultiDimArray>packListType("value",value,MultiDimArray.class);
+    rr_async_PropertySet("c6",m,new rrend_async_set_c6(),rr_handler,rr_timeout);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    protected class rrend_async_set_c6 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement m ,RuntimeException err,Object param)
+    {
+    Action1<RuntimeException> rr_handler=(Action1<RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(err);
+    return;
+    }
+    rr_handler.action(null);
+    }
+    }
+    public void async_get_c7(Action2<CSingle,RuntimeException> rr_handler, int rr_timeout)
+    {
+    rr_async_PropertyGet("c7",new rrend_async_get_c7(),rr_handler,rr_timeout);
+    }
+    protected class rrend_async_get_c7 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement value ,RuntimeException err,Object param)
+    {
+    Action2<CSingle,RuntimeException> rr_handler=(Action2<CSingle,RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(new CSingle((float)0.0,(float)0.0),err);
+    return;
+    }
+    CSingle rr_ret;
+    try {
+    rr_ret=(MessageElementUtil.<CSingle[]>castDataAndDispose(value))[0];
+    } catch (RuntimeException err2) {
+    rr_handler.action(new CSingle((float)0.0,(float)0.0),err2);
+    return;
+    }
+    rr_handler.action(rr_ret,null);
+    }
+    }
+    public void async_set_c7(CSingle value, Action1<RuntimeException> rr_handler, int rr_timeout)
+    {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<CSingle[]>packArray("value",new CSingle[] {value});
+    rr_async_PropertySet("c7",m,new rrend_async_set_c7(),rr_handler,rr_timeout);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    protected class rrend_async_set_c7 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement m ,RuntimeException err,Object param)
+    {
+    Action1<RuntimeException> rr_handler=(Action1<RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(err);
+    return;
+    }
+    rr_handler.action(null);
+    }
+    }
+    public void async_get_c8(Action2<CSingle[],RuntimeException> rr_handler, int rr_timeout)
+    {
+    rr_async_PropertyGet("c8",new rrend_async_get_c8(),rr_handler,rr_timeout);
+    }
+    protected class rrend_async_get_c8 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement value ,RuntimeException err,Object param)
+    {
+    Action2<CSingle[],RuntimeException> rr_handler=(Action2<CSingle[],RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(null,err);
+    return;
+    }
+    CSingle[] rr_ret;
+    try {
+    rr_ret=MessageElementUtil.<CSingle[]>unpackArray(value);
+    } catch (RuntimeException err2) {
+    rr_handler.action(null,err2);
+    return;
+    }
+    rr_handler.action(rr_ret,null);
+    }
+    }
+    public void async_set_c8(CSingle[] value, Action1<RuntimeException> rr_handler, int rr_timeout)
+    {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<CSingle[]>packArray("value",value);
+    rr_async_PropertySet("c8",m,new rrend_async_set_c8(),rr_handler,rr_timeout);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    protected class rrend_async_set_c8 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement m ,RuntimeException err,Object param)
+    {
+    Action1<RuntimeException> rr_handler=(Action1<RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(err);
+    return;
+    }
+    rr_handler.action(null);
+    }
+    }
+    public void async_get_c9(Action2<MultiDimArray,RuntimeException> rr_handler, int rr_timeout)
+    {
+    rr_async_PropertyGet("c9",new rrend_async_get_c9(),rr_handler,rr_timeout);
+    }
+    protected class rrend_async_get_c9 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement value ,RuntimeException err,Object param)
+    {
+    Action2<MultiDimArray,RuntimeException> rr_handler=(Action2<MultiDimArray,RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(null,err);
+    return;
+    }
+    MultiDimArray rr_ret;
+    try {
+    rr_ret=MessageElementUtil.unpackMultiDimArray(value);
+    } catch (RuntimeException err2) {
+    rr_handler.action(null,err2);
+    return;
+    }
+    rr_handler.action(rr_ret,null);
+    }
+    }
+    public void async_set_c9(MultiDimArray value, Action1<RuntimeException> rr_handler, int rr_timeout)
+    {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.packMultiDimArray("value",(MultiDimArray)value);
+    rr_async_PropertySet("c9",m,new rrend_async_set_c9(),rr_handler,rr_timeout);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    protected class rrend_async_set_c9 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement m ,RuntimeException err,Object param)
+    {
+    Action1<RuntimeException> rr_handler=(Action1<RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(err);
+    return;
+    }
+    rr_handler.action(null);
+    }
+    }
+    public void async_get_c10(Action2<List<CSingle[]>,RuntimeException> rr_handler, int rr_timeout)
+    {
+    rr_async_PropertyGet("c10",new rrend_async_get_c10(),rr_handler,rr_timeout);
+    }
+    protected class rrend_async_get_c10 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement value ,RuntimeException err,Object param)
+    {
+    Action2<List<CSingle[]>,RuntimeException> rr_handler=(Action2<List<CSingle[]>,RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(null,err);
+    return;
+    }
+    List<CSingle[]> rr_ret;
+    try {
+    rr_ret=MessageElementUtil.<CSingle[]>unpackListType(value);
+    } catch (RuntimeException err2) {
+    rr_handler.action(null,err2);
+    return;
+    }
+    rr_handler.action(rr_ret,null);
+    }
+    }
+    public void async_set_c10(List<CSingle[]> value, Action1<RuntimeException> rr_handler, int rr_timeout)
+    {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<CSingle[]>packListType("value",value,CSingle[].class);
+    rr_async_PropertySet("c10",m,new rrend_async_set_c10(),rr_handler,rr_timeout);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    protected class rrend_async_set_c10 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement m ,RuntimeException err,Object param)
+    {
+    Action1<RuntimeException> rr_handler=(Action1<RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(err);
+    return;
+    }
+    rr_handler.action(null);
+    }
+    }
+    public void async_get_c11(Action2<List<CSingle[]>,RuntimeException> rr_handler, int rr_timeout)
+    {
+    rr_async_PropertyGet("c11",new rrend_async_get_c11(),rr_handler,rr_timeout);
+    }
+    protected class rrend_async_get_c11 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement value ,RuntimeException err,Object param)
+    {
+    Action2<List<CSingle[]>,RuntimeException> rr_handler=(Action2<List<CSingle[]>,RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(null,err);
+    return;
+    }
+    List<CSingle[]> rr_ret;
+    try {
+    rr_ret=MessageElementUtil.<CSingle[]>unpackListType(value);
+    } catch (RuntimeException err2) {
+    rr_handler.action(null,err2);
+    return;
+    }
+    rr_handler.action(rr_ret,null);
+    }
+    }
+    public void async_set_c11(List<CSingle[]> value, Action1<RuntimeException> rr_handler, int rr_timeout)
+    {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<CSingle[]>packListType("value",value,CSingle[].class);
+    rr_async_PropertySet("c11",m,new rrend_async_set_c11(),rr_handler,rr_timeout);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    protected class rrend_async_set_c11 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement m ,RuntimeException err,Object param)
+    {
+    Action1<RuntimeException> rr_handler=(Action1<RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(err);
+    return;
+    }
+    rr_handler.action(null);
+    }
+    }
+    public void async_get_c12(Action2<List<MultiDimArray>,RuntimeException> rr_handler, int rr_timeout)
+    {
+    rr_async_PropertyGet("c12",new rrend_async_get_c12(),rr_handler,rr_timeout);
+    }
+    protected class rrend_async_get_c12 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement value ,RuntimeException err,Object param)
+    {
+    Action2<List<MultiDimArray>,RuntimeException> rr_handler=(Action2<List<MultiDimArray>,RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(null,err);
+    return;
+    }
+    List<MultiDimArray> rr_ret;
+    try {
+    rr_ret=MessageElementUtil.<MultiDimArray>unpackListType(value);
+    } catch (RuntimeException err2) {
+    rr_handler.action(null,err2);
+    return;
+    }
+    rr_handler.action(rr_ret,null);
+    }
+    }
+    public void async_set_c12(List<MultiDimArray> value, Action1<RuntimeException> rr_handler, int rr_timeout)
+    {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<MultiDimArray>packListType("value",value,MultiDimArray.class);
+    rr_async_PropertySet("c12",m,new rrend_async_set_c12(),rr_handler,rr_timeout);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    protected class rrend_async_set_c12 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement m ,RuntimeException err,Object param)
+    {
+    Action1<RuntimeException> rr_handler=(Action1<RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(err);
+    return;
+    }
+    rr_handler.action(null);
+    }
+    }
+    public void async_get_b1(Action2<Boolean,RuntimeException> rr_handler, int rr_timeout)
+    {
+    rr_async_PropertyGet("b1",new rrend_async_get_b1(),rr_handler,rr_timeout);
+    }
+    protected class rrend_async_get_b1 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement value ,RuntimeException err,Object param)
+    {
+    Action2<Boolean,RuntimeException> rr_handler=(Action2<Boolean,RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(false,err);
+    return;
+    }
+    Boolean rr_ret;
+    try {
+    rr_ret=(MessageElementUtil.<boolean[]>castDataAndDispose(value))[0];
+    } catch (RuntimeException err2) {
+    rr_handler.action(false,err2);
+    return;
+    }
+    rr_handler.action(rr_ret,null);
+    }
+    }
+    public void async_set_b1(boolean value, Action1<RuntimeException> rr_handler, int rr_timeout)
+    {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<boolean[]>packArray("value",new boolean[] {value});
+    rr_async_PropertySet("b1",m,new rrend_async_set_b1(),rr_handler,rr_timeout);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    protected class rrend_async_set_b1 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement m ,RuntimeException err,Object param)
+    {
+    Action1<RuntimeException> rr_handler=(Action1<RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(err);
+    return;
+    }
+    rr_handler.action(null);
+    }
+    }
+    public void async_get_b2(Action2<boolean[],RuntimeException> rr_handler, int rr_timeout)
+    {
+    rr_async_PropertyGet("b2",new rrend_async_get_b2(),rr_handler,rr_timeout);
+    }
+    protected class rrend_async_get_b2 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement value ,RuntimeException err,Object param)
+    {
+    Action2<boolean[],RuntimeException> rr_handler=(Action2<boolean[],RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(null,err);
+    return;
+    }
+    boolean[] rr_ret;
+    try {
+    rr_ret=MessageElementUtil.<boolean[]>unpackArray(value);
+    } catch (RuntimeException err2) {
+    rr_handler.action(null,err2);
+    return;
+    }
+    rr_handler.action(rr_ret,null);
+    }
+    }
+    public void async_set_b2(boolean[] value, Action1<RuntimeException> rr_handler, int rr_timeout)
+    {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<boolean[]>packArray("value",value);
+    rr_async_PropertySet("b2",m,new rrend_async_set_b2(),rr_handler,rr_timeout);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    protected class rrend_async_set_b2 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement m ,RuntimeException err,Object param)
+    {
+    Action1<RuntimeException> rr_handler=(Action1<RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(err);
+    return;
+    }
+    rr_handler.action(null);
+    }
+    }
+    public void async_get_b3(Action2<MultiDimArray,RuntimeException> rr_handler, int rr_timeout)
+    {
+    rr_async_PropertyGet("b3",new rrend_async_get_b3(),rr_handler,rr_timeout);
+    }
+    protected class rrend_async_get_b3 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement value ,RuntimeException err,Object param)
+    {
+    Action2<MultiDimArray,RuntimeException> rr_handler=(Action2<MultiDimArray,RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(null,err);
+    return;
+    }
+    MultiDimArray rr_ret;
+    try {
+    rr_ret=MessageElementUtil.unpackMultiDimArray(value);
+    } catch (RuntimeException err2) {
+    rr_handler.action(null,err2);
+    return;
+    }
+    rr_handler.action(rr_ret,null);
+    }
+    }
+    public void async_set_b3(MultiDimArray value, Action1<RuntimeException> rr_handler, int rr_timeout)
+    {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.packMultiDimArray("value",(MultiDimArray)value);
+    rr_async_PropertySet("b3",m,new rrend_async_set_b3(),rr_handler,rr_timeout);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    protected class rrend_async_set_b3 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement m ,RuntimeException err,Object param)
+    {
+    Action1<RuntimeException> rr_handler=(Action1<RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(err);
+    return;
+    }
+    rr_handler.action(null);
+    }
+    }
+    public void async_get_b4(Action2<List<boolean[]>,RuntimeException> rr_handler, int rr_timeout)
+    {
+    rr_async_PropertyGet("b4",new rrend_async_get_b4(),rr_handler,rr_timeout);
+    }
+    protected class rrend_async_get_b4 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement value ,RuntimeException err,Object param)
+    {
+    Action2<List<boolean[]>,RuntimeException> rr_handler=(Action2<List<boolean[]>,RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(null,err);
+    return;
+    }
+    List<boolean[]> rr_ret;
+    try {
+    rr_ret=MessageElementUtil.<boolean[]>unpackListType(value);
+    } catch (RuntimeException err2) {
+    rr_handler.action(null,err2);
+    return;
+    }
+    rr_handler.action(rr_ret,null);
+    }
+    }
+    public void async_set_b4(List<boolean[]> value, Action1<RuntimeException> rr_handler, int rr_timeout)
+    {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<boolean[]>packListType("value",value,boolean[].class);
+    rr_async_PropertySet("b4",m,new rrend_async_set_b4(),rr_handler,rr_timeout);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    protected class rrend_async_set_b4 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement m ,RuntimeException err,Object param)
+    {
+    Action1<RuntimeException> rr_handler=(Action1<RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(err);
+    return;
+    }
+    rr_handler.action(null);
+    }
+    }
+    public void async_get_b5(Action2<List<boolean[]>,RuntimeException> rr_handler, int rr_timeout)
+    {
+    rr_async_PropertyGet("b5",new rrend_async_get_b5(),rr_handler,rr_timeout);
+    }
+    protected class rrend_async_get_b5 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement value ,RuntimeException err,Object param)
+    {
+    Action2<List<boolean[]>,RuntimeException> rr_handler=(Action2<List<boolean[]>,RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(null,err);
+    return;
+    }
+    List<boolean[]> rr_ret;
+    try {
+    rr_ret=MessageElementUtil.<boolean[]>unpackListType(value);
+    } catch (RuntimeException err2) {
+    rr_handler.action(null,err2);
+    return;
+    }
+    rr_handler.action(rr_ret,null);
+    }
+    }
+    public void async_set_b5(List<boolean[]> value, Action1<RuntimeException> rr_handler, int rr_timeout)
+    {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<boolean[]>packListType("value",value,boolean[].class);
+    rr_async_PropertySet("b5",m,new rrend_async_set_b5(),rr_handler,rr_timeout);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    protected class rrend_async_set_b5 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement m ,RuntimeException err,Object param)
+    {
+    Action1<RuntimeException> rr_handler=(Action1<RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(err);
+    return;
+    }
+    rr_handler.action(null);
+    }
+    }
+    public void async_get_b6(Action2<List<MultiDimArray>,RuntimeException> rr_handler, int rr_timeout)
+    {
+    rr_async_PropertyGet("b6",new rrend_async_get_b6(),rr_handler,rr_timeout);
+    }
+    protected class rrend_async_get_b6 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement value ,RuntimeException err,Object param)
+    {
+    Action2<List<MultiDimArray>,RuntimeException> rr_handler=(Action2<List<MultiDimArray>,RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(null,err);
+    return;
+    }
+    List<MultiDimArray> rr_ret;
+    try {
+    rr_ret=MessageElementUtil.<MultiDimArray>unpackListType(value);
+    } catch (RuntimeException err2) {
+    rr_handler.action(null,err2);
+    return;
+    }
+    rr_handler.action(rr_ret,null);
+    }
+    }
+    public void async_set_b6(List<MultiDimArray> value, Action1<RuntimeException> rr_handler, int rr_timeout)
+    {
+    MessageElement m=null;
+    try {
+    m=MessageElementUtil.<MultiDimArray>packListType("value",value,MultiDimArray.class);
+    rr_async_PropertySet("b6",m,new rrend_async_set_b6(),rr_handler,rr_timeout);
+    }
+    finally {
+    if (m!=null) m.delete();
+    }
+    }
+    protected class rrend_async_set_b6 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement m ,RuntimeException err,Object param)
+    {
+    Action1<RuntimeException> rr_handler=(Action1<RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(err);
+    return;
+    }
+    rr_handler.action(null);
+    }
+    }
+    public void async_testpod1_func1(testpod1 s,Action1<RuntimeException> rr_handler,int rr_timeout)
     {
     vectorptr_messageelement rr_param=new vectorptr_messageelement();
     try {
-    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.<testcstruct1>packCStructureToArray("s",s));
-    rr_async_FunctionCall("testcstruct1_func1",rr_param,new rrend_async_testcstruct1_func1(),rr_handler,rr_timeout);
+    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.<testpod1>packPodToArray("s",s));
+    rr_async_FunctionCall("testpod1_func1",rr_param,new rrend_async_testpod1_func1(),rr_handler,rr_timeout);
     }
     finally {
     rr_param.delete();
     }
     }
-    protected class rrend_async_testcstruct1_func1 implements Action3<MessageElement,RuntimeException,Object> {
+    protected class rrend_async_testpod1_func1 implements Action3<MessageElement,RuntimeException,Object> {
     public void action(MessageElement ret ,RuntimeException err,Object param)
     {
     Action1<RuntimeException> rr_handler=(Action1<RuntimeException>)param;
@@ -893,28 +2282,28 @@ public class testroot3_stub extends ServiceStub implements testroot3, async_test
     rr_handler.action(null);
     }
     }
-    public void async_testcstruct1_func2(Action2<testcstruct1,RuntimeException> rr_handler,int rr_timeout)
+    public void async_testpod1_func2(Action2<testpod1,RuntimeException> rr_handler,int rr_timeout)
     {
     vectorptr_messageelement rr_param=new vectorptr_messageelement();
     try {
-    rr_async_FunctionCall("testcstruct1_func2",rr_param,new rrend_async_testcstruct1_func2(),rr_handler,rr_timeout);
+    rr_async_FunctionCall("testpod1_func2",rr_param,new rrend_async_testpod1_func2(),rr_handler,rr_timeout);
     }
     finally {
     rr_param.delete();
     }
     }
-    protected class rrend_async_testcstruct1_func2 implements Action3<MessageElement,RuntimeException,Object> {
+    protected class rrend_async_testpod1_func2 implements Action3<MessageElement,RuntimeException,Object> {
     public void action(MessageElement ret ,RuntimeException err,Object param)
     {
-    Action2<testcstruct1,RuntimeException> rr_handler=(Action2<testcstruct1,RuntimeException>)param;
+    Action2<testpod1,RuntimeException> rr_handler=(Action2<testpod1,RuntimeException>)param;
     if (err!=null)
     {
     rr_handler.action(null,err);
     return;
     }
-    testcstruct1 rr_ret;
+    testpod1 rr_ret;
     try {
-    rr_ret=MessageElementUtil.<testcstruct1>unpackCStructureFromArray(ret);
+    rr_ret=MessageElementUtil.<testpod1>unpackPodFromArray(ret);
     } catch (RuntimeException err2) {
     rr_handler.action(null,err2);
     return;

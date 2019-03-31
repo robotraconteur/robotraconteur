@@ -41,7 +41,7 @@ namespace RobotRaconteur
 			boost::initialized<uint32_t> error_count;
 
 			std::string username;
-			RR_SHARED_PTR<RRMap<std::string, RRValue> > credentials;
+			RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials;
 
 			boost::initialized<bool> claimed;
 
@@ -92,10 +92,10 @@ namespace RobotRaconteur
 			WireSubscription_connection(RR_SHARED_PTR<WireSubscriptionBase> parent, RR_SHARED_PTR<WireConnectionBase> connection, RR_SHARED_PTR<RRObject> client);
 
 			void WireConnectionClosed(RR_SHARED_PTR<WireConnectionBase> connection);
-			void WireValueChanged(RR_SHARED_PTR<WireConnectionBase> connection, RR_SHARED_PTR<RRValue> value, const TimeSpec& time);
+			void WireValueChanged(RR_SHARED_PTR<WireConnectionBase> connection, RR_INTRUSIVE_PTR<RRValue> value, const TimeSpec& time);
 			~WireSubscription_connection();
 
-			void SetOutValue(const RR_SHARED_PTR<RRValue>& value);
+			void SetOutValue(const RR_INTRUSIVE_PTR<RRValue>& value);
 
 		protected:
 			RR_WEAK_PTR<WireSubscriptionBase> parent;
@@ -114,13 +114,13 @@ namespace RobotRaconteur
 			PipeSubscription_connection(RR_SHARED_PTR<PipeSubscriptionBase> parent, RR_SHARED_PTR<PipeEndpointBase> connection, RR_SHARED_PTR<RRObject> client);
 
 			virtual void PipeEndpointClosed(RR_SHARED_PTR<PipeEndpointBase> endpoint);
-			virtual void PipePacketReceived(RR_SHARED_PTR<PipeEndpointBase> endpoint, boost::function<bool(RR_SHARED_PTR<RRValue>&)> receive_packet_func);
+			virtual void PipePacketReceived(RR_SHARED_PTR<PipeEndpointBase> endpoint, boost::function<bool(RR_INTRUSIVE_PTR<RRValue>&)> receive_packet_func);
 			virtual void PipePacketAckReceived(RR_SHARED_PTR<PipeEndpointBase> endpoint, uint32_t pnum);
 			
 			//Call with PipeSubscription::this_lock locked
 			bool DoSendPacket();
 			//Call with PipeSubscription::this_lock locked
-			void AsyncSendPacket(const RR_SHARED_PTR<RRValue>& packet);
+			void AsyncSendPacket(const RR_INTRUSIVE_PTR<RRValue>& packet);
 
 			~PipeSubscription_connection();
 

@@ -22,7 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-	<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -67,7 +67,13 @@
 	</Compile>
 	<Compile Include="$(RRSourceDir)\RobotRaconteurTasks.cs" >
 		<Link>RobotRaconteurTasks.cs</Link>
-	</Compile>	
+	</Compile>
+	<Compile Include="$(RRSourceDir)\Generator.cs" >
+		<Link>Generator.cs</Link>
+	</Compile>
+	<Compile Include="$(RRSourceDir)\Memory.cs" >
+		<Link>Memory.cs</Link>
+	</Compile>
   </ItemGroup>
   @NET_SN_KEY_XML@  
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

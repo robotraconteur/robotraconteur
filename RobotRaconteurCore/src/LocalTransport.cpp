@@ -639,7 +639,7 @@ void LocalTransport::StartServerAsNodeID(const NodeID& nodeid1, bool public_)
 	socket_file_name=pipename;
 }
 
-void LocalTransport::SendMessage(RR_SHARED_PTR<Message> m)
+void LocalTransport::SendMessage(RR_INTRUSIVE_PTR<Message> m)
 {
 	
 
@@ -679,7 +679,7 @@ void LocalTransport::PeriodicCleanupTask()
 	}
 }
 
-void LocalTransport::AsyncSendMessage(RR_SHARED_PTR<Message> m, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& handler)
+void LocalTransport::AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& handler)
 {
 	RR_SHARED_PTR<ITransportConnection> t;
 	{
@@ -745,7 +745,7 @@ void LocalTransport::erase_transport(RR_SHARED_PTR<ITransportConnection> connect
 }
 
 
-void LocalTransport::MessageReceived(RR_SHARED_PTR<Message> m)
+void LocalTransport::MessageReceived(RR_INTRUSIVE_PTR<Message> m)
 {
 	GetNode()->MessageReceived(m);
 }
@@ -925,13 +925,13 @@ void LocalTransportConnection::AsyncAttachSocket(RR_SHARED_PTR<LocalTransport::s
 	ASIOStreamBaseTransport::AsyncAttachStream(server,target_nodeid, target_nodename, callback);
 }
 
-void LocalTransportConnection::MessageReceived(RR_SHARED_PTR<Message> m)
+void LocalTransportConnection::MessageReceived(RR_INTRUSIVE_PTR<Message> m)
 {
 
 	RR_SHARED_PTR<LocalTransport> p=parent.lock();
 	if (!p) return;
 
-	RR_SHARED_PTR<Message> ret = p->SpecialRequest(m, shared_from_this());
+	RR_INTRUSIVE_PTR<Message> ret = p->SpecialRequest(m, shared_from_this());
 	if (ret != 0)
 	{
 		try

@@ -78,19 +78,19 @@ namespace RobotRaconteur
 		TransportListeners(shared_this, ev, parameter);
 	}
 
-	RR_SHARED_PTR<Message> Transport::SpecialRequest(RR_SHARED_PTR<Message> m, RR_SHARED_PTR<ITransportConnection> tc)
+	RR_INTRUSIVE_PTR<Message> Transport::SpecialRequest(RR_INTRUSIVE_PTR<Message> m, RR_SHARED_PTR<ITransportConnection> tc)
 	{
 		if (m->entries.size() >= 1)
 		{
 			uint32_t type = (static_cast<uint32_t>(m->entries[0]->EntryType));
 			if (type < 500 && (type % 2 == 1))
 			{
-				RR_SHARED_PTR<Message> r = GetNode()->SpecialRequest(m,TransportID,tc);
+				RR_INTRUSIVE_PTR<Message> r = GetNode()->SpecialRequest(m,TransportID,tc);
 				return r;
 			}
 		}
 
-		return RR_SHARED_PTR<Message>();
+		return RR_INTRUSIVE_PTR<Message>();
 	}
 
 	void Transport::Close()

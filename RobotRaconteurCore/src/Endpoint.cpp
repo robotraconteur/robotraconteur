@@ -113,10 +113,10 @@ void Endpoint::SetLastMessageSentTime(boost::posix_time::ptime time)
 	m_LastMessageSentTime.store(time);
 }
 
-void Endpoint::AsyncSendMessage(RR_SHARED_PTR<Message> m, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& callback)
+void Endpoint::AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& callback)
 {
 	if (!m->header)
-		m->header = RR_MAKE_SHARED<MessageHeader>();
+		m->header = CreateMessageHeader();
 
 	if (m->entries.size()==1 && m->entries.at(0)->EntryType <=500)
 	{
@@ -142,10 +142,10 @@ void Endpoint::AsyncSendMessage(RR_SHARED_PTR<Message> m, boost::function<void (
 	GetNode()->AsyncSendMessage(m,callback);
 }
 
-void Endpoint::SendMessage(RR_SHARED_PTR<Message> m)
+void Endpoint::SendMessage(RR_INTRUSIVE_PTR<Message> m)
 	{
 		if (!m->header)
-			m->header = RR_MAKE_SHARED<MessageHeader>();
+			m->header = CreateMessageHeader();
 		if (m->entries.size()==1 && m->entries.at(0)->EntryType <=500)
 		{
 			m->header->ReceiverNodeName = GetRemoteNodeName();
@@ -178,13 +178,13 @@ void Endpoint::SendMessage(RR_SHARED_PTR<Message> m)
 
 	}
 
-	void Endpoint::CheckEndpointCapabilityMessage(RR_SHARED_PTR<Message> m)
+	void Endpoint::CheckEndpointCapabilityMessage(RR_INTRUSIVE_PTR<Message> m)
 	{
 		uint32_t capability = 0;
-		RR_SHARED_PTR<MessageEntry> e;
+		RR_INTRUSIVE_PTR<MessageEntry> e;
 
-		RR_SHARED_PTR<Message> ret = RR_MAKE_SHARED<Message>();
-		ret->header = RR_MAKE_SHARED<MessageHeader>();
+		RR_INTRUSIVE_PTR<Message> ret = CreateMessage();
+		ret->header = CreateMessageHeader();
 		ret->header->ReceiverNodeName = m->header->SenderNodeName;
 		ret->header->SenderNodeName = GetNode()->NodeName();
 		ret->header->ReceiverNodeID = m->header->SenderNodeID;
@@ -192,7 +192,7 @@ void Endpoint::SendMessage(RR_SHARED_PTR<Message> m)
 		ret->header->SenderEndpoint = m->header->ReceiverEndpoint;
 		ret->header->SenderNodeID = GetNode()->NodeID();
 
-		RR_SHARED_PTR<MessageEntry> eret; 
+		RR_INTRUSIVE_PTR<MessageEntry> eret; 
 
 		try
 		{

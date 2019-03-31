@@ -30,8 +30,8 @@ class WrappedServiceStubDirector
 {
 public:
 	virtual ~WrappedServiceStubDirector() {}
-	virtual void DispatchEvent(const std::string& EventName, const std::vector<boost::shared_ptr<RobotRaconteur::MessageElement> > args);
-	virtual boost::shared_ptr<RobotRaconteur::MessageElement> CallbackCall(const std::string& CallbackName, const std::vector<boost::shared_ptr<RobotRaconteur::MessageElement> > args);
+	virtual void DispatchEvent(const std::string& EventName, std::vector<boost::intrusive_ptr<RobotRaconteur::MessageElement> > args);
+	virtual boost::intrusive_ptr<RobotRaconteur::MessageElement> CallbackCall(const std::string& CallbackName, std::vector<boost::intrusive_ptr<RobotRaconteur::MessageElement> > args);
 };
 RR_DIRECTOR_SHARED_PTR_RETURN_DEFAULT(RobotRaconteur::MessageElement)
 
@@ -49,17 +49,17 @@ public:
 
 RR_RELEASE_GIL()
 
-	virtual boost::shared_ptr<RobotRaconteur::MessageElement> PropertyGet(const std::string& PropertyName);
-	virtual void PropertySet(const std::string& PropertyName, boost::shared_ptr<RobotRaconteur::MessageElement> value);
-	virtual boost::shared_ptr<RobotRaconteur::MessageElement> FunctionCall(const std::string& FunctionName, const std::vector<boost::shared_ptr<RobotRaconteur::MessageElement> >& args);
-	virtual boost::shared_ptr<RobotRaconteur::WrappedGeneratorClient> GeneratorFunctionCall(const std::string& FunctionName, const std::vector<boost::shared_ptr<RobotRaconteur::MessageElement> >& args);
+	virtual boost::intrusive_ptr<RobotRaconteur::MessageElement> PropertyGet(const std::string& PropertyName);
+	virtual void PropertySet(const std::string& PropertyName, boost::intrusive_ptr<RobotRaconteur::MessageElement> value);
+	virtual boost::intrusive_ptr<RobotRaconteur::MessageElement> FunctionCall(const std::string& FunctionName, const std::vector<boost::intrusive_ptr<RobotRaconteur::MessageElement> >& args);
+	virtual boost::shared_ptr<RobotRaconteur::WrappedGeneratorClient> GeneratorFunctionCall(const std::string& FunctionName, const std::vector<boost::intrusive_ptr<RobotRaconteur::MessageElement> >& args);
 	
 RR_KEEP_GIL()
 	
 	virtual void async_PropertyGet(const std::string& PropertyName, int32_t timeout, AsyncRequestDirector* handler,int32_t id);
-	virtual void async_PropertySet(const std::string& PropertyName, boost::shared_ptr<RobotRaconteur::MessageElement> value, int32_t timeout, AsyncRequestDirector* handler,int32_t id);
-	virtual void async_FunctionCall(const std::string& FunctionName, const std::vector<boost::shared_ptr<RobotRaconteur::MessageElement> >& args, int32_t timeout, AsyncRequestDirector* handler, int32_t id);
-	virtual void async_GeneratorFunctionCall(const std::string& FunctionName, const std::vector<boost::shared_ptr<RobotRaconteur::MessageElement> >& args, int32_t timeout, AsyncGeneratorClientReturnDirector* handler, int32_t id);
+	virtual void async_PropertySet(const std::string& PropertyName, boost::intrusive_ptr<RobotRaconteur::MessageElement> value, int32_t timeout, AsyncRequestDirector* handler,int32_t id);
+	virtual void async_FunctionCall(const std::string& FunctionName, const std::vector<boost::intrusive_ptr<RobotRaconteur::MessageElement> >& args, int32_t timeout, AsyncRequestDirector* handler, int32_t id);
+	virtual void async_GeneratorFunctionCall(const std::string& FunctionName, const std::vector<boost::intrusive_ptr<RobotRaconteur::MessageElement> >& args, int32_t timeout, AsyncGeneratorClientReturnDirector* handler, int32_t id);
 	
 	virtual void async_FindObjRef(const std::string& path, int32_t timeout, AsyncStubReturnDirector* handler, int32_t id);
 	virtual void async_FindObjRef(const std::string& path, const std::string& ind, int32_t timeout, AsyncStubReturnDirector* handler, int32_t id);
@@ -98,9 +98,12 @@ RR_RELEASE_GIL()
 
 	virtual boost::shared_ptr<RobotRaconteur::ArrayMemoryBase> GetArrayMemory(const std::string& membername);
 	virtual boost::shared_ptr<RobotRaconteur::MultiDimArrayMemoryBase> GetMultiDimArrayMemory(const std::string& membername);
-	virtual boost::shared_ptr<RobotRaconteur::WrappedCStructureArrayMemoryClient> GetCStructureArrayMemory(const std::string& membername);
-	virtual boost::shared_ptr<RobotRaconteur::WrappedCStructureMultiDimArrayMemoryClient> GetCStructureMultiDimArrayMemory(const std::string& membername);
+	virtual boost::shared_ptr<RobotRaconteur::WrappedPodArrayMemoryClient> GetPodArrayMemory(const std::string& membername);
+	virtual boost::shared_ptr<RobotRaconteur::WrappedPodMultiDimArrayMemoryClient> GetPodMultiDimArrayMemory(const std::string& membername);
+	virtual boost::shared_ptr<RobotRaconteur::WrappedNamedArrayMemoryClient> GetNamedArrayMemory(const std::string& membername);
+	virtual boost::shared_ptr<RobotRaconteur::WrappedNamedMultiDimArrayMemoryClient> GetNamedMultiDimArrayMemory(const std::string& membername);
 
+	
 	virtual void RRClose();
 	
 RR_KEEP_GIL()

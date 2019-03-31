@@ -187,7 +187,7 @@ namespace RobotRaconteur
 			return !(unconfirmed_code_table.size() + code_table.size() < max_entry_count);
 		}
 
-		void StringTable::MessageReplaceStringsWithCodes(RR_SHARED_PTR<Message> m)
+		void StringTable::MessageReplaceStringsWithCodes(RR_INTRUSIVE_PTR<Message> m)
 		{
 			if (m->header->MessageFlags & MessageFlags_STRING_TABLE || m->header->StringTable.size() > 0)
 			{
@@ -198,7 +198,7 @@ namespace RobotRaconteur
 			uint32_t next_local_code = 1;
 			uint32_t table_size = 0;
 
-			BOOST_FOREACH (RR_SHARED_PTR<MessageEntry>& e, m->entries)
+			BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageEntry>& e, m->entries)
 			{
 				MessageEntryReplaceStringsWithCodes(e, local_table, next_local_code, table_size);
 			}
@@ -214,7 +214,7 @@ namespace RobotRaconteur
 			}
 		}
 
-		void StringTable::MessageReplaceCodesWithStrings(RR_SHARED_PTR<Message> m)
+		void StringTable::MessageReplaceCodesWithStrings(RR_INTRUSIVE_PTR<Message> m)
 		{
 			boost::unordered_map<uint32_t,std::string> local_table;
 			
@@ -227,13 +227,13 @@ namespace RobotRaconteur
 				}
 			}
 
-			BOOST_FOREACH (RR_SHARED_PTR<MessageEntry>& e, m->entries)
+			BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageEntry>& e, m->entries)
 			{
 				MessageEntryReplaceCodesWithStrings(e, local_table);
 			}
 		}
 		
-		void StringTable::MessageEntryReplaceStringsWithCodes(RR_SHARED_PTR<MessageEntry> e, boost::unordered_map<std::string, uint32_t>& local_table, uint32_t& next_local_code, uint32_t& table_size)
+		void StringTable::MessageEntryReplaceStringsWithCodes(RR_INTRUSIVE_PTR<MessageEntry> e, boost::unordered_map<std::string, uint32_t>& local_table, uint32_t& next_local_code, uint32_t& table_size)
 		{
 			DoReplaceString(e->MemberName, e->MemberNameCode, e->EntryFlags,
 				MessageEntryFlags_MEMBER_NAME_STR, MessageEntryFlags_MEMBER_NAME_CODE,
@@ -243,14 +243,14 @@ namespace RobotRaconteur
 				MessageEntryFlags_SERVICE_PATH_STR, MessageEntryFlags_SERVICE_PATH_CODE,
 				local_table, next_local_code, table_size);
 
-			BOOST_FOREACH (RR_SHARED_PTR<MessageElement>& ee, e->elements)
+			BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& ee, e->elements)
 			{
 				MessageElementReplaceStringsWithCodes(ee, local_table, next_local_code, table_size);
 			}
 			
 		}
 
-		void StringTable::MessageElementReplaceStringsWithCodes(RR_SHARED_PTR<MessageElement> e, boost::unordered_map<std::string, uint32_t>& local_table, uint32_t& next_local_code, uint32_t& table_size)
+		void StringTable::MessageElementReplaceStringsWithCodes(RR_INTRUSIVE_PTR<MessageElement> e, boost::unordered_map<std::string, uint32_t>& local_table, uint32_t& next_local_code, uint32_t& table_size)
 		{
 			DoReplaceString(e->ElementName, e->ElementNameCode, e->ElementFlags,
 				MessageElementFlags_ELEMENT_NAME_STR, MessageElementFlags_ELEMENT_NAME_CODE,
@@ -265,50 +265,50 @@ namespace RobotRaconteur
 			
 			case DataTypes_structure_t:
 			{
-				RR_SHARED_PTR<MessageElementStructure> sdat = e->CastData<MessageElementStructure>();
+				RR_INTRUSIVE_PTR<MessageElementStructure> sdat = e->CastData<MessageElementStructure>();
 				if (sdat)
 				{
-					BOOST_FOREACH (RR_SHARED_PTR<MessageElement>& ee, sdat->Elements)
+					BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& ee, sdat->Elements)
 						MessageElementReplaceStringsWithCodes(ee, local_table, next_local_code, table_size);
 				}
 				break;
 			}
 			case DataTypes_vector_t:
 			{
-				RR_SHARED_PTR<MessageElementMap<int32_t> > vdat = e->CastData<MessageElementMap<int32_t> >();
+				RR_INTRUSIVE_PTR<MessageElementMap<int32_t> > vdat = e->CastData<MessageElementMap<int32_t> >();
 				if (vdat)
 				{
-					BOOST_FOREACH (RR_SHARED_PTR<MessageElement>& ee, vdat->Elements)
+					BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& ee, vdat->Elements)
 						MessageElementReplaceStringsWithCodes(ee, local_table, next_local_code, table_size);
 				}
 				break;
 			}
 			case DataTypes_dictionary_t:
 			{
-				RR_SHARED_PTR<MessageElementMap<std::string> > ddat = e->CastData<MessageElementMap<std::string> >();
+				RR_INTRUSIVE_PTR<MessageElementMap<std::string> > ddat = e->CastData<MessageElementMap<std::string> >();
 				if (ddat)
 				{
-					BOOST_FOREACH (RR_SHARED_PTR<MessageElement>& ee, ddat->Elements)
+					BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& ee, ddat->Elements)
 						MessageElementReplaceStringsWithCodes(ee, local_table, next_local_code, table_size);
 				}
 				break;
 			}
 			case DataTypes_multidimarray_t:
 			{
-				RR_SHARED_PTR<MessageElementMultiDimArray> mdat = e->CastData<MessageElementMultiDimArray>();
+				RR_INTRUSIVE_PTR<MessageElementMultiDimArray> mdat = e->CastData<MessageElementMultiDimArray>();
 				if (mdat)
 				{
-					BOOST_FOREACH (RR_SHARED_PTR<MessageElement>& ee, mdat->Elements)
+					BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& ee, mdat->Elements)
 						MessageElementReplaceStringsWithCodes(ee, local_table, next_local_code, table_size);
 				}
 				break;
 			}
 			case DataTypes_list_t:
 			{
-				RR_SHARED_PTR<MessageElementList> ddat = e->CastData<MessageElementList>();
+				RR_INTRUSIVE_PTR<MessageElementList> ddat = e->CastData<MessageElementList>();
 				if (ddat)
 				{
-					BOOST_FOREACH (RR_SHARED_PTR<MessageElement>& ee, ddat->Elements)
+					BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& ee, ddat->Elements)
 						MessageElementReplaceStringsWithCodes(ee, local_table, next_local_code, table_size);					
 				}
 				break;
@@ -319,7 +319,7 @@ namespace RobotRaconteur
 
 		}
 
-		void StringTable::MessageEntryReplaceCodesWithStrings(RR_SHARED_PTR<MessageEntry> e, boost::unordered_map<uint32_t, std::string>& local_table)
+		void StringTable::MessageEntryReplaceCodesWithStrings(RR_INTRUSIVE_PTR<MessageEntry> e, boost::unordered_map<uint32_t, std::string>& local_table)
 		{
 			DoReplaceCode(e->MemberName, e->MemberNameCode, e->EntryFlags,
 				MessageEntryFlags_MEMBER_NAME_STR, MessageEntryFlags_MEMBER_NAME_CODE,
@@ -329,13 +329,13 @@ namespace RobotRaconteur
 				MessageEntryFlags_SERVICE_PATH_STR, MessageEntryFlags_SERVICE_PATH_CODE,
 				local_table);
 
-			BOOST_FOREACH (RR_SHARED_PTR<MessageElement>& ee, e->elements)
+			BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& ee, e->elements)
 			{
 				MessageElementReplaceCodesWithStrings(ee, local_table);
 			}
 		}
 
-		void StringTable::MessageElementReplaceCodesWithStrings(RR_SHARED_PTR<MessageElement> e, boost::unordered_map<uint32_t, std::string>& local_table)
+		void StringTable::MessageElementReplaceCodesWithStrings(RR_INTRUSIVE_PTR<MessageElement> e, boost::unordered_map<uint32_t, std::string>& local_table)
 		{
 			DoReplaceCode(e->ElementName, e->ElementNameCode, e->ElementFlags,
 				MessageElementFlags_ELEMENT_NAME_STR, MessageElementFlags_ELEMENT_NAME_CODE,
@@ -350,10 +350,10 @@ namespace RobotRaconteur
 
 			case DataTypes_structure_t:
 			{
-				RR_SHARED_PTR<MessageElementStructure> sdat = e->CastData<MessageElementStructure>();
+				RR_INTRUSIVE_PTR<MessageElementStructure> sdat = e->CastData<MessageElementStructure>();
 				if (sdat)
 				{
-					BOOST_FOREACH (RR_SHARED_PTR<MessageElement>& ee, sdat->Elements)
+					BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& ee, sdat->Elements)
 						MessageElementReplaceCodesWithStrings(ee, local_table);
 				}
 				sdat->Type = e->ElementTypeName;
@@ -361,40 +361,40 @@ namespace RobotRaconteur
 			}
 			case DataTypes_vector_t:
 			{
-				RR_SHARED_PTR<MessageElementMap<int32_t> > vdat = e->CastData<MessageElementMap<int32_t> >();
+				RR_INTRUSIVE_PTR<MessageElementMap<int32_t> > vdat = e->CastData<MessageElementMap<int32_t> >();
 				if (vdat)
 				{
-					BOOST_FOREACH (RR_SHARED_PTR<MessageElement>& ee, vdat->Elements)
+					BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& ee, vdat->Elements)
 						MessageElementReplaceCodesWithStrings(ee, local_table);
 				}
 				break;
 			}
 			case DataTypes_dictionary_t:
 			{
-				RR_SHARED_PTR<MessageElementMap<std::string> > ddat = e->CastData<MessageElementMap<std::string> >();
+				RR_INTRUSIVE_PTR<MessageElementMap<std::string> > ddat = e->CastData<MessageElementMap<std::string> >();
 				if (ddat)
 				{
-					BOOST_FOREACH (RR_SHARED_PTR<MessageElement>& ee, ddat->Elements)
+					BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& ee, ddat->Elements)
 						MessageElementReplaceCodesWithStrings(ee, local_table);
 				}
 				break;
 			}
 			case DataTypes_multidimarray_t:
 			{
-				RR_SHARED_PTR<MessageElementMultiDimArray> mdat = e->CastData<MessageElementMultiDimArray>();
+				RR_INTRUSIVE_PTR<MessageElementMultiDimArray> mdat = e->CastData<MessageElementMultiDimArray>();
 				if (mdat)
 				{
-					BOOST_FOREACH (RR_SHARED_PTR<MessageElement>& ee, mdat->Elements)
+					BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& ee, mdat->Elements)
 						MessageElementReplaceCodesWithStrings(ee, local_table);
 				}
 				break;
 			}
 			case DataTypes_list_t:
 			{
-				RR_SHARED_PTR<MessageElementList> ddat = e->CastData<MessageElementList>();
+				RR_INTRUSIVE_PTR<MessageElementList> ddat = e->CastData<MessageElementList>();
 				if (ddat)
 				{
-					BOOST_FOREACH (RR_SHARED_PTR<MessageElement>& ee, ddat->Elements)
+					BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& ee, ddat->Elements)
 						MessageElementReplaceCodesWithStrings(ee, local_table);
 				}
 				break;

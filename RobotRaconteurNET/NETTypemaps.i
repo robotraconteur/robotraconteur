@@ -1,3 +1,5 @@
+%include "boost_intrusive_ptr.i"
+
 %typemap(cstype) void* "IntPtr"
 %typemap(csin) void* "new HandleRef(null, $csinput)"
 %typemap(csout, excode=SWIGEXCODE) void* "{IntPtr res = $imcall; $excode; return res;}"
@@ -174,3 +176,39 @@
 %typemap(in) RobotRaconteurObjectLockFlags {
 	$1=(RobotRaconteurObjectLockFlags)$input;
 }
+
+
+%define %rr_intrusive_ptr( TYPE )
+%intrusive_ptr( TYPE );
+
+%typemap(directorin) SWIG_SHARED_PTR_QNAMESPACE::intrusive_ptr< TYPE > 
+%{ 
+//$input = $1 ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< TYPE >($1) : 0; 
+  if ($1) {
+    intrusive_ptr_add_ref($1.get());
+    *(SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< TYPE > **)&$input = new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< TYPE >($1.get(), SWIG_intrusive_deleter< TYPE >());
+  } else {
+    *(SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< TYPE > **)&$input = 0;
+  }
+%}
+
+%typemap(directorout) SWIG_SHARED_PTR_QNAMESPACE::intrusive_ptr< TYPE > (SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< TYPE > * smartarg)
+%{ 
+//if ($input) {
+//    SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > *smartarg = (SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > *)$input;
+//    $result = *smartarg;
+//  }
+  smartarg = *(SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< TYPE >**)&$input;
+  if (smartarg) {
+    $result = SWIG_INTRUSIVE_PTR_QNAMESPACE::intrusive_ptr< TYPE >(smartarg->get(), true);
+  }
+
+%}
+
+%typemap(csdirectorout) SWIG_SHARED_PTR_QNAMESPACE::intrusive_ptr< TYPE > "$typemap(cstype, TYPE).getCPtr($cscall).Handle"
+%typemap(csdirectorin) SWIG_SHARED_PTR_QNAMESPACE::intrusive_ptr<  TYPE > "($iminput == global::System.IntPtr.Zero) ? null : new $typemap(cstype, TYPE)($iminput, true)"
+
+
+
+%enddef
+

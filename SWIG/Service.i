@@ -33,22 +33,26 @@ public:
 	virtual ~WrappedServiceSkelDirector() {}
 	virtual void Init(boost::shared_ptr<RobotRaconteur::WrappedServiceSkel> skel);
 	%rename (_CallGetProperty) CallGetProperty;
-	virtual boost::shared_ptr<RobotRaconteur::MessageElement> CallGetProperty(const std::string& name);
+	virtual boost::intrusive_ptr<RobotRaconteur::MessageElement> CallGetProperty(const std::string& name);
 	%rename (_CallSetProperty) CallSetProperty;
-	virtual void CallSetProperty(const std::string& name, boost::shared_ptr<RobotRaconteur::MessageElement> m);
+	virtual void CallSetProperty(const std::string& name, boost::intrusive_ptr<RobotRaconteur::MessageElement> m);
 	%rename (_CallFunction) CallFunction;
-	virtual boost::shared_ptr<RobotRaconteur::MessageElement> CallFunction(const std::string& name, const std::vector<boost::shared_ptr<RobotRaconteur::MessageElement> >& m);
+	virtual boost::intrusive_ptr<RobotRaconteur::MessageElement> CallFunction(const std::string& name, const std::vector<boost::intrusive_ptr<RobotRaconteur::MessageElement> >& m);
 	%rename (_GetSubObj) GetSubObj;
 	virtual boost::shared_ptr<RobotRaconteur::WrappedRRObject> GetSubObj(const std::string& name, const std::string& index);
 	%rename (_GetArrayMemory) GetArrayMemory;
 	virtual WrappedArrayMemoryDirector* GetArrayMemory(const std::string& name);
 	%rename (_GetMultiDimArrayMemory) GetMultiDimArrayMemory;
 	virtual WrappedMultiDimArrayMemoryDirector* GetMultiDimArrayMemory(const std::string& name);
-	%rename (_GetCStructureArrayMemory) GetCStructureArrayMemory;
-	virtual WrappedCStructureArrayMemoryDirector* GetCStructureArrayMemory(const std::string& name);
-	%rename (_GetCStructureMultiDimArrayMemory) GetCStructureMultiDimArrayMemory;
-	virtual WrappedCStructureMultiDimArrayMemoryDirector* GetCStructureMultiDimArrayMemory(const std::string& name);
-
+	%rename (_GetPodArrayMemory) GetPodArrayMemory;
+	virtual WrappedPodArrayMemoryDirector* GetPodArrayMemory(const std::string& name);
+	%rename (_GetPodMultiDimArrayMemory) GetPodMultiDimArrayMemory;
+	virtual WrappedPodMultiDimArrayMemoryDirector* GetPodMultiDimArrayMemory(const std::string& name);
+	%rename (_GetNamedArrayMemory) GetNamedArrayMemory;
+	virtual WrappedNamedArrayMemoryDirector* GetNamedArrayMemory(const std::string& name);
+	%rename (_GetNamedMultiDimArrayMemory) GetNamedMultiDimArrayMemory;
+	virtual WrappedNamedMultiDimArrayMemoryDirector* GetNamedMultiDimArrayMemory(const std::string& name);
+	
 	virtual void MonitorEnter(int32_t timeout) {};
 	virtual void MonitorExit() {};
 	virtual void ReleaseCastObject();	
@@ -76,10 +80,10 @@ public:
 	virtual boost::shared_ptr<RobotRaconteur::WrappedPipeServer> GetPipe(const std::string& membername);
 	virtual boost::shared_ptr<RobotRaconteur::WrappedWireServer> GetWire(const std::string& membername);
 	
-	virtual void WrappedDispatchEvent(const std::string& name, const std::vector<boost::shared_ptr<RobotRaconteur::MessageElement> >& m);
+	virtual void WrappedDispatchEvent(const std::string& name, const std::vector<boost::intrusive_ptr<RobotRaconteur::MessageElement> >& m);
 
 RR_RELEASE_GIL()
-	virtual boost::shared_ptr<RobotRaconteur::MessageElement> WrappedCallbackCall(const std::string& name, uint32_t endpoint, const std::vector<boost::shared_ptr<RobotRaconteur::MessageElement> >& m);
+	virtual boost::intrusive_ptr<RobotRaconteur::MessageElement> WrappedCallbackCall(const std::string& name, uint32_t endpoint, const std::vector<boost::intrusive_ptr<RobotRaconteur::MessageElement> >& m);
 RR_KEEP_GIL()
 
 	boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> RRGetNode();
@@ -155,10 +159,10 @@ public:
 		
 	}
 	
-	void SetServiceAttributes(boost::shared_ptr<MessageElement> attributes)
+	void SetServiceAttributes(boost::intrusive_ptr<MessageElement> attributes)
 	{
-		boost::shared_ptr<RRMap<std::string,RRValue> > mmap=rr_cast<RRMap<std::string,RRValue> >(RobotRaconteurNode::s()->UnpackMapType<std::string,RRValue>(attributes->CastData<MessageElementMap<std::string> >()));
-		$self->SetAttributes(mmap->map);		
+		boost::intrusive_ptr<RRMap<std::string,RRValue> > mmap=rr_cast<RRMap<std::string,RRValue> >(RobotRaconteurNode::s()->UnpackMapType<std::string,RRValue>(attributes->CastData<MessageElementMap<std::string> >()));
+		$self->SetAttributes(mmap->GetStorageContainer());		
 		
 	}	
 	}

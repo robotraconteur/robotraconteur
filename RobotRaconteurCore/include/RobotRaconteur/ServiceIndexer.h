@@ -29,11 +29,11 @@ namespace RobotRaconteur
 
 		RR_SHARED_PTR<RobotRaconteurNode> GetNode();
 
-		virtual RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteurServiceIndex::ServiceInfo> > GetLocalNodeServices();
+		virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteurServiceIndex::ServiceInfo> > GetLocalNodeServices();
 
-		virtual RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteurServiceIndex::NodeInfo> > GetRoutedNodes();
+		virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteurServiceIndex::NodeInfo> > GetRoutedNodes();
 
-		virtual RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteurServiceIndex::NodeInfo> > GetDetectedNodes();
+		virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteurServiceIndex::NodeInfo> > GetDetectedNodes();
 
 		virtual boost::signals2::signal<void ()>& get_LocalNodeServicesChanged();
 	private:

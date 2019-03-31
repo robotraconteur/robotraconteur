@@ -38,7 +38,7 @@ RobotRaconteurExceptionHelper* robotRaconteurExceptionHelper=NULL;
 }
 
 //Forward declarations of MessageElement
-%shared_ptr(RobotRaconteur::MessageEntry)
+%rr_intrusive_ptr(RobotRaconteur::MessageEntry)
 
 //RRDirectorExceptionHelper
 namespace RobotRaconteur {
@@ -50,9 +50,9 @@ class RRDirectorExceptionHelper
 
 public:
 	static void Reset();
-	static void SetError(boost::shared_ptr<MessageEntry> err);
+	static void SetError(boost::intrusive_ptr<RobotRaconteur::MessageEntry> err);
 	static bool IsErrorPending();
-	static boost::shared_ptr<MessageEntry> GetError();
+	static boost::intrusive_ptr<MessageEntry> GetError();
 
 };
 	

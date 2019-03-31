@@ -36,7 +36,7 @@ class AsyncRequestDirector
 {
 public:
 	virtual ~AsyncRequestDirector() {}
-	virtual void handler(boost::shared_ptr<RobotRaconteur::MessageElement> ret, uint32_t error_code, const std::string& errorname, const std::string& errormessage);
+	virtual void handler(boost::intrusive_ptr<RobotRaconteur::MessageElement> ret, uint32_t error_code, const std::string& errorname, const std::string& errormessage);
 
 };
 
