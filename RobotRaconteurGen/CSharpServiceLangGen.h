@@ -87,9 +87,7 @@ namespace RobotRaconteurGen
 		static void GeneratePodStub(ServiceEntryDefinition* e, ostream * w);		
 		
 		static void GenerateStub(ServiceEntryDefinition* e, ostream * w);
-
-		static void GenerateStubTasks(ServiceEntryDefinition* e, ostream * w);
-
+		
 		static void GenerateSkel(ServiceEntryDefinition* e, ostream * w);
 
 		static void GenerateDefaultImpl(ServiceEntryDefinition* e, ostream * w);

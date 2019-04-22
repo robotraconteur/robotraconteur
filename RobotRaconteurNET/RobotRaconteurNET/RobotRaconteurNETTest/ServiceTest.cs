@@ -1257,7 +1257,7 @@ namespace RobotRaconteurNETTest
                 {
                     for (double i=0; i<10; i++)
                     {
-                        m_broadcastpipe_broadcaster.AsyncSendPacket(20, delegate() { });
+                        m_broadcastpipe_broadcaster.AsyncSendPacket(20);
                   }
                 });
                 

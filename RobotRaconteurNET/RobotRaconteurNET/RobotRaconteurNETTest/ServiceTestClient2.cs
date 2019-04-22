@@ -8,6 +8,7 @@ using com.robotraconteur.testing.TestService3;
 using RobotRaconteur;
 using System.Threading;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace RobotRaconteurNETTest
 {
@@ -83,81 +84,33 @@ namespace RobotRaconteurNETTest
             if (v3 != 8638356) throw new Exception();
 
         }
-
-        void TestAsync_err(Exception exp)
-        {
-            lock (async_err_lock)
-            {
-                async_err = exp;
-                async_wait.Set();
-            }
-        }
-
-        System.Threading.AutoResetEvent async_wait = new System.Threading.AutoResetEvent(false);
-        object async_err_lock = new object();
-        Exception async_err = null;
-
+                                
         public void AsyncTestWirePeekPoke()
         {
-            r.peekwire.AsyncPeekInValue(AsyncTestWirePeekPoke1);
 
-            async_wait.WaitOne();
-
-            lock (async_err_lock)
-            {
-                if (async_err != null)
-                    throw async_err;
-            }
+            AsyncTestWirePeekPoke1().Wait();
+            
         }
 
-        public void AsyncTestWirePeekPoke1(int value, TimeSpec ts, Exception err)
+        public async Task AsyncTestWirePeekPoke1()
         {
-            if (err != null)
+            var v1 = await r.peekwire.AsyncPeekInValue();            
+
+            if (v1.Item1 != 56295674)
             {
-                TestAsync_err(err);
-                return;
+                throw new Exception();
             }
 
-            if (value != 56295674)
+            await r.pokewire.AsyncPokeOutValue(75738261);
+
+            var v3 = await r.pokewire.AsyncPeekOutValue();
+
+            if (v3.Item1 != 75738261)
             {
-                TestAsync_err(new Exception());
-                return;
+                throw new Exception();
             }
-
-            r.pokewire.AsyncPokeOutValue(75738261, AsyncTestWirePeekPoke2);
-
         }
-
-        public void AsyncTestWirePeekPoke2(Exception err)
-        {
-            if (err != null)
-            {
-                TestAsync_err(err);
-                return;
-            }
-
-            r.pokewire.AsyncPeekOutValue(AsyncTestWirePeekPoke3);
-
-        }
-
-        public void AsyncTestWirePeekPoke3(int value, TimeSpec ts, Exception err)
-        {
-            if (err != null)
-            {
-                TestAsync_err(err);
-                return;
-            }
-
-            if (value != 75738261)
-            {
-                TestAsync_err(new Exception());
-                return;
-            }
-
-            async_wait.Set();
-
-        }
-
+                
         public void TestEnums()
         {
             if (r.testenum1_prop != testenum1.anothervalue)

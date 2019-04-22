@@ -15,38 +15,39 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RobotRaconteur
 {
     public interface Generator1<ReturnType, ParamType>
     {
         ReturnType Next(ParamType param);
-        void AsyncNext(ParamType param, Action<ReturnType, Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+        Task<ReturnType> AsyncNext(ParamType param, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
         void Abort();
-        void AsyncAbort(Action<Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+        Task AsyncAbort(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
         void Close();
-        void AsyncClose(Action<Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+        Task AsyncClose(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
     }
 
     public interface Generator2<ReturnType>
     {
         ReturnType Next();
-        void AsyncNext(Action<ReturnType, Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+        Task<ReturnType> AsyncNext(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
         void Abort();
-        void AsyncAbort(Action<Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+        Task AsyncAbort(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
         void Close();
-        void AsyncClose(Action<Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+        Task AsyncClose(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
         ReturnType[] NextAll();
     }
 
     public interface Generator3<ParamType>
     {
         void Next(ParamType param);
-        void AsyncNext(ParamType param, Action<Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+        Task AsyncNext(ParamType param, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
         void Abort();
-        void AsyncAbort(Action<Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+        Task AsyncAbort(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
         void Close();
-        void AsyncClose(Action<Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+        Task AsyncClose(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
     }
 
     public abstract class SyncGenerator1<ReturnType, ParamType> : Generator1<ReturnType, ParamType>
@@ -55,49 +56,43 @@ namespace RobotRaconteur
         public abstract void Close();
         public abstract ReturnType Next(ParamType param);
 
-        public void AsyncAbort(Action<Exception> handler, int timeout = -1)
+        public Task AsyncAbort(int timeout = -1)
         {
             try
             {
                 Abort();
-                handler(null);
+                return Task.FromResult(0);
             }
             catch (Exception e)
             {
-                handler(e);
-                return;
-            }
-            return;
+                return Task.FromException(e);               
+            }            
         }
 
-        public void AsyncClose(Action<Exception> handler, int timeout = -1)
+        public Task AsyncClose(int timeout = -1)
         {
             try
             {
                 Close();
-                handler(null);
+                return Task.FromResult(0);
             }
             catch (Exception e)
             {
-                handler(e);
-                return;
-            }
-            return;
+                return Task.FromException(e);                
+            }            
         }
 
-        public void AsyncNext(ParamType param, Action<ReturnType, Exception> handler, int timeout = -1)
+        public Task<ReturnType> AsyncNext(ParamType param, int timeout = -1)
         {
             try
             {
                 ReturnType r = Next(param);
-                handler(r, null);
+                return Task.FromResult(r);
             }
             catch (Exception e)
             {
-                handler(default(ReturnType), e);
-                return;
-            }
-            return;
+                return Task.FromException<ReturnType>(e);
+            }            
         }
     }
 
@@ -107,49 +102,43 @@ namespace RobotRaconteur
         public abstract void Close();
         public abstract ReturnType Next();
 
-        public void AsyncAbort(Action<Exception> handler, int timeout = -1)
+        public Task AsyncAbort(int timeout = -1)
         {
             try
             {
                 Abort();
-                handler(null);
+                return Task.FromResult(0);
             }
             catch (Exception e)
-            {
-                handler(e);
-                return;
-            }
-            return;
+            {                
+                return Task.FromException(e);
+            }            
         }
 
-        public void AsyncClose(Action<Exception> handler, int timeout = -1)
+        public Task AsyncClose(int timeout = -1)
         {
             try
             {
                 Close();
-                handler(null);
+                return Task.FromResult(0);
             }
             catch (Exception e)
             {
-                handler(e);
-                return;
-            }
-            return;
+                return Task.FromException(e);
+            }            
         }
 
-        public void AsyncNext(Action<ReturnType, Exception> handler, int timeout = -1)
+        public Task<ReturnType> AsyncNext(int timeout = -1)
         {
             try
             {
                 ReturnType r = Next();
-                handler(r, null);
+                return Task.FromResult(r);
             }
             catch (Exception e)
-            {
-                handler(default(ReturnType), e);
-                return;
-            }
-            return;
+            {                
+                return Task.FromException<ReturnType>(e);
+            }            
         }
 
         public ReturnType[] NextAll()
@@ -173,49 +162,43 @@ namespace RobotRaconteur
         public abstract void Close();
         public abstract void Next(ParamType param);
 
-        public void AsyncAbort(Action<Exception> handler, int timeout = -1)
+        public Task AsyncAbort(int timeout = -1)
         {
             try
             {
                 Abort();
-                handler(null);
+                return Task.FromResult(0);
             }
             catch (Exception e)
-            {
-                handler(e);
-                return;
-            }
-            return;
+            {                
+                return Task.FromException(e);
+            }            
         }
 
-        public void AsyncClose(Action<Exception> handler, int timeout = -1)
+        public Task AsyncClose(int timeout = -1)
         {
             try
             {
                 Close();
-                handler(null);
+                return Task.FromResult(0);
             }
             catch (Exception e)
             {
-                handler(e);
-                return;
-            }
-            return;
+                return Task.FromException(e);
+            }            
         }
 
-        public void AsyncNext(ParamType param, Action<Exception> handler, int timeout = -1)
+        public Task AsyncNext(ParamType param, int timeout = -1)
         {
             try
             {
                 Next(param);
-                handler(null);
+                return Task.FromResult(0);
             }
             catch (Exception e)
-            {
-                handler(e);
-                return;
-            }
-            return;
+            {                
+                return Task.FromException(e);
+            }            
         }
     }
 
@@ -292,16 +275,18 @@ namespace RobotRaconteur
                 if (d != null) d.Dispose();
             }
         }
-        public void AsyncNext(ParamType param, Action<ReturnType, Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+        public async Task<ReturnType> AsyncNext(ParamType param, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
         {
             object param1 = RobotRaconteurNode.s.PackVarType(param);
             try
             {
                 using (MessageElement m = new MessageElement("parameter", param1))
                 {
-                    AsyncRequestDirectorImpl d = new AsyncRequestDirectorImpl(EndAsyncNext, handler);
+                    AsyncRequestDirectorImpl d = new AsyncRequestDirectorImpl();
                     int id = RRObjectHeap.AddObject(d);
                     inner_gen.AsyncNext(m, timeout, d, id);
+                    var mret = await d.Task;
+                    return Wire<ReturnType>.UnpackData(mret);
                 }
             }
             finally
@@ -311,38 +296,28 @@ namespace RobotRaconteur
             }
         }
 
-        private static void EndAsyncNext(MessageElement m, Exception err, object p)
-        {
-            Action<ReturnType, Exception> h = (Action<ReturnType, Exception>)p;
-            if (err != null)
-            {
-                h(default(ReturnType), err);
-                return;
-            }
-
-            h(Wire<ReturnType>.UnpackData(m), null);
-        }
-
-        public void Abort()
+                public void Abort()
         {
             inner_gen.Abort();
         }
-        public void AsyncAbort(Action<Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+        public async Task AsyncAbort(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
         {
-            AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl(delegate (Exception e1, object o1) { handler(e1); }, null);
+            AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl();
             int id = RRObjectHeap.AddObject(h);
             inner_gen.AsyncAbort(timeout, h, id);
+            await h.Task;
         }
 
         public void Close()
         {
             inner_gen.Close();
         }
-        public void AsyncClose(Action<Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+        public async Task AsyncClose(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
         {
-            AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl(delegate (Exception e1, object o1) { handler(e1); }, null);
+            AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl();
             int id = RRObjectHeap.AddObject(h);
             inner_gen.AsyncClose(timeout, h, id);
+            await h.Task;
         }
     }
 
@@ -362,45 +337,38 @@ namespace RobotRaconteur
                 return Wire<ReturnType>.UnpackData(m2);
             }
         }
-        public void AsyncNext(Action<ReturnType, Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+        public async Task<ReturnType> AsyncNext(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
         {
-            AsyncRequestDirectorImpl d = new AsyncRequestDirectorImpl(EndAsyncNext, handler);
+            AsyncRequestDirectorImpl d = new AsyncRequestDirectorImpl();
             int id = RRObjectHeap.AddObject(d);
             inner_gen.AsyncNext(null, timeout, d, id);
+            var mret = await d.Task;
+            return Wire<ReturnType>.UnpackData(mret);
         }
 
-        private static void EndAsyncNext(MessageElement m, Exception err, object p)
-        {
-            Action<ReturnType, Exception> h = (Action<ReturnType, Exception>)p;
-            if (err != null)
-            {
-                h(default(ReturnType), err);
-                return;
-            }
-
-            h(Wire<ReturnType>.UnpackData(m), null);
-        }
-
+        
         public void Abort()
         {
             inner_gen.Abort();
         }
-        public void AsyncAbort(Action<Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+        public async Task AsyncAbort(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
         {
-            AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl(delegate (Exception e1, object o1) { handler(e1); }, null);
+            AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl();
             int id = RRObjectHeap.AddObject(h);
             inner_gen.AsyncAbort(timeout, h, id);
+            await h.Task;
         }
 
         public void Close()
         {
             inner_gen.Close();
         }
-        public void AsyncClose(Action<Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+        public async Task AsyncClose(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
         {
-            AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl(delegate (Exception e1, object o1) { handler(e1); }, null);
+            AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl();
             int id = RRObjectHeap.AddObject(h);
             inner_gen.AsyncClose(timeout, h, id);
+            await h.Task;
         }
 
         public ReturnType[] NextAll()
@@ -443,16 +411,17 @@ namespace RobotRaconteur
                 if (d != null) d.Dispose();
             }
         }
-        public void AsyncNext(ParamType param, Action<Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+        public async Task AsyncNext(ParamType param, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
         {
             object param1 = RobotRaconteurNode.s.PackVarType(param);
             try
             {
                 using (MessageElement m = new MessageElement("parameter", param1))
                 {
-                    AsyncRequestDirectorImpl d = new AsyncRequestDirectorImpl(EndAsyncNext, handler);
+                    AsyncRequestDirectorImpl d = new AsyncRequestDirectorImpl();
                     int id = RRObjectHeap.AddObject(d);
                     inner_gen.AsyncNext(m, timeout, d, id);
+                    var mret = await d.Task;                    
                 }
             }
             finally
@@ -472,22 +441,24 @@ namespace RobotRaconteur
         {
             inner_gen.Abort();
         }
-        public void AsyncAbort(Action<Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+        public async Task AsyncAbort(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
         {
-            AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl(delegate (Exception e1, object o1) { handler(e1); }, null);
+            AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl();
             int id = RRObjectHeap.AddObject(h);
             inner_gen.AsyncAbort(timeout, h, id);
+            await h.Task;
         }
 
         public void Close()
         {
             inner_gen.Close();
         }
-        public void AsyncClose(Action<Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+        public async Task AsyncClose(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
         {
-            AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl(delegate (Exception e1, object o1) { handler(e1); }, null);
+            AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl();
             int id = RRObjectHeap.AddObject(h);
             inner_gen.AsyncClose(timeout, h, id);
+            await h.Task;
         }
     }
 
@@ -714,15 +685,14 @@ namespace RobotRaconteur
     }
 
     internal class AsyncGeneratorClientReturnDirectorImpl : AsyncGeneratorClientReturnDirector
-    {
+    {        
+        protected TaskCompletionSource<WrappedGeneratorClient> handler_task = new TaskCompletionSource<WrappedGeneratorClient>();
 
-        protected Action<WrappedGeneratorClient, Exception, object> handler_func;
-        protected object param;
+        public Task<WrappedGeneratorClient> Task { get => handler_task.Task; }
 
-        public AsyncGeneratorClientReturnDirectorImpl(Action<WrappedGeneratorClient, Exception, object> handler_func, object param)
+        public AsyncGeneratorClientReturnDirectorImpl()
         {
-            this.handler_func = handler_func;
-            this.param = param;
+            
         }
 
         public override void handler(WrappedGeneratorClient m, uint error_code, string errorname, string errormessage)
@@ -738,12 +708,12 @@ namespace RobotRaconteur
                         using (MessageEntry merr = new MessageEntry())
                         {
 
-                            this.handler_func(null, RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage), param);
+                            handler_task.SetException(RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage));
                             return;
                         }
                     }
 
-                    handler_func(m, null, param);
+                    handler_task.SetResult(m);
 
                 }
                 catch (Exception e)
