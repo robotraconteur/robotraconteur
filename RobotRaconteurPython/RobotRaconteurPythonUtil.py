@@ -37,6 +37,9 @@ else:
 
 import numpy
 
+if (sys.version_info > (3,5)):
+    import asyncio
+
 def SplitQualifiedName(name):
     pos=name.rfind('.')
     if (pos==-1): raise Exception("Name is not qualified")
@@ -1891,7 +1894,27 @@ class AsyncTimerEventReturnDirectorImpl(RobotRaconteurPython.AsyncTimerEventRetu
 def async_call(func, args, directorclass, handler, noerror=False, directorargs=()):
     d=None
     if (handler is None):
-        raise Exception("handler must not be None")
+        if (sys.version_info > (3,5)):
+            loop = asyncio.get_event_loop()
+            d = asyncio.Future()
+                                    
+            def handler3(*args):
+                if noerror:
+                    if len(args) == 0:
+                        loop.call_soon_threadsafe(d.set_result,None)
+                    else:
+                        loop.call_soon_threadsafe(d.set_result,args[0])
+                else:
+                    ret = None
+                    if len(args) == 2:
+                        ret = args[0]
+                    if args[-1] is None:
+                        loop.call_soon_threadsafe(d.set_result,ret)
+                    else:
+                        loop.call_soon_threadsafe(d.set_exception,args[-1])
+            handler = lambda *args1: handler3(*args1)            
+        else:
+            raise Exception("handler must not be None")
             
     handler2=directorclass(handler,*directorargs)
     args2=list(args)
