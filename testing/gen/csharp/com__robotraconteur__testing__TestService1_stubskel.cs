@@ -163,135 +163,135 @@ public class teststruct2_stub : IStructureStub {
 
 public interface async_testroot : com.robotraconteur.testing.TestService2.async_baseobj
 {
-    void async_get_d1(Action<double,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_d1(double value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_d2(Action<double[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_d2(double[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_d3(Action<double[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_d3(double[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_d4(Action<double[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_d4(double[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_d5(Action<MultiDimArray,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_d5(MultiDimArray value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_d6(Action<MultiDimArray,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_d6(MultiDimArray value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_s1(Action<float,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_s1(float value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_s2(Action<float[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_s2(float[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_i8_1(Action<sbyte,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_i8_1(sbyte value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_i8_2(Action<sbyte[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_i8_2(sbyte[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_u8_1(Action<byte,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_u8_1(byte value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_u8_2(Action<byte[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_u8_2(byte[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_u8_3(Action<MultiDimArray,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_u8_3(MultiDimArray value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_i16_1(Action<short,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_i16_1(short value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_i16_2(Action<short[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_i16_2(short[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_u16_1(Action<ushort,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_u16_1(ushort value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_u16_2(Action<ushort[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_u16_2(ushort[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_i32_1(Action<int,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_i32_1(int value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_i32_2(Action<int[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_i32_2(int[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_i32_huge(Action<int[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_i32_huge(int[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_u32_1(Action<uint,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_u32_1(uint value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_u32_2(Action<uint[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_u32_2(uint[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_i64_1(Action<long,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_i64_1(long value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_i64_2(Action<long[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_i64_2(long[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_u64_1(Action<ulong,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_u64_1(ulong value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_u64_2(Action<ulong[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_u64_2(ulong[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_str1(Action<string,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_str1(string value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_struct1(Action<teststruct1,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_struct1(teststruct1 value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_struct2(Action<teststruct2,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_struct2(teststruct2 value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_is_d1(Action<Dictionary<int,double>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_is_d1(Dictionary<int,double> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_is_d2(Action<Dictionary<string,double>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_is_d2(Dictionary<string,double> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_is_d3(Action<Dictionary<int,double[]>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_is_d3(Dictionary<int,double[]> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_is_d4(Action<Dictionary<string,double[]>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_is_d4(Dictionary<string,double[]> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_is_d5(Action<Dictionary<int,MultiDimArray>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_is_d5(Dictionary<int,MultiDimArray> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_is_d6(Action<Dictionary<string,MultiDimArray>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_is_d6(Dictionary<string,MultiDimArray> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_is_str1(Action<Dictionary<int,string>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_is_str1(Dictionary<int,string> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_is_str2(Action<Dictionary<string,string>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_is_str2(Dictionary<string,string> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_is_struct1(Action<Dictionary<int,teststruct2>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_is_struct1(Dictionary<int,teststruct2> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_is_struct2(Action<Dictionary<string,teststruct2>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_is_struct2(Dictionary<string,teststruct2> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_struct3(Action<com.robotraconteur.testing.TestService2.ostruct2,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_struct3(com.robotraconteur.testing.TestService2.ostruct2 value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_list_d1(Action<List<double>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_list_d1(List<double> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_list_d3(Action<List<double[]>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_list_d3(List<double[]> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_list_d5(Action<List<MultiDimArray>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_list_d5(List<MultiDimArray> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_list_str1(Action<List<string>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_list_str1(List<string> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_list_struct1(Action<List<teststruct2>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_list_struct1(List<teststruct2> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_var1(Action<object,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_var1(object value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_var2(Action<Dictionary<int,object>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_var2(Dictionary<int,object> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_var_num(Action<object,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_var_num(object value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_var_str(Action<object,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_var_str(object value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_var_struct(Action<object,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_var_struct(object value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_var_vector(Action<object,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_var_vector(object value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_var_dictionary(Action<object,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_var_dictionary(object value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_var_list(Action<object,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_var_list(object value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_var_multidimarray(Action<object,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_var_multidimarray(object value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_errtest(Action<double,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_errtest(double value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_nulltest(Action<teststruct1,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_nulltest(teststruct1 value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_func1(Action<Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_func2(double d1, double d2,Action<Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_func3(double d1, double d2,Action<double,Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_meaning_of_life(Action<int,Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_func_errtest(Action<Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_func_errtest1(Action<Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_func_errtest2(Action<Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_func_errtest3(Action<Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_o6_op(int op,Action<Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_pipe_check_error(Action<Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_test_callbacks(Action<Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_o1(Action<sub1,Exception> handler, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_o2(int ind, Action<sub1,Exception> handler, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_o3(int ind, Action<sub1,Exception> handler, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_o4(string ind, Action<sub1,Exception> handler, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_o5(Action<com.robotraconteur.testing.TestService2.subobj,Exception> handler, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_o6(Action<object,Exception> handler, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<double> async_get_d1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_d1(double value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<double[]> async_get_d2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_d2(double[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<double[]> async_get_d3(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_d3(double[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<double[]> async_get_d4(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_d4(double[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<MultiDimArray> async_get_d5(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_d5(MultiDimArray value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<MultiDimArray> async_get_d6(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_d6(MultiDimArray value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<float> async_get_s1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_s1(float value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<float[]> async_get_s2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_s2(float[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<sbyte> async_get_i8_1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_i8_1(sbyte value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<sbyte[]> async_get_i8_2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_i8_2(sbyte[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<byte> async_get_u8_1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_u8_1(byte value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<byte[]> async_get_u8_2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_u8_2(byte[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<MultiDimArray> async_get_u8_3(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_u8_3(MultiDimArray value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<short> async_get_i16_1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_i16_1(short value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<short[]> async_get_i16_2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_i16_2(short[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<ushort> async_get_u16_1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_u16_1(ushort value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<ushort[]> async_get_u16_2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_u16_2(ushort[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<int> async_get_i32_1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_i32_1(int value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<int[]> async_get_i32_2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_i32_2(int[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<int[]> async_get_i32_huge(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_i32_huge(int[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<uint> async_get_u32_1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_u32_1(uint value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<uint[]> async_get_u32_2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_u32_2(uint[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<long> async_get_i64_1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_i64_1(long value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<long[]> async_get_i64_2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_i64_2(long[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<ulong> async_get_u64_1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_u64_1(ulong value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<ulong[]> async_get_u64_2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_u64_2(ulong[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<string> async_get_str1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_str1(string value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<teststruct1> async_get_struct1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_struct1(teststruct1 value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<teststruct2> async_get_struct2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_struct2(teststruct2 value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<Dictionary<int,double>> async_get_is_d1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_is_d1(Dictionary<int,double> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<Dictionary<string,double>> async_get_is_d2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_is_d2(Dictionary<string,double> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<Dictionary<int,double[]>> async_get_is_d3(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_is_d3(Dictionary<int,double[]> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<Dictionary<string,double[]>> async_get_is_d4(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_is_d4(Dictionary<string,double[]> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<Dictionary<int,MultiDimArray>> async_get_is_d5(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_is_d5(Dictionary<int,MultiDimArray> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<Dictionary<string,MultiDimArray>> async_get_is_d6(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_is_d6(Dictionary<string,MultiDimArray> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<Dictionary<int,string>> async_get_is_str1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_is_str1(Dictionary<int,string> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<Dictionary<string,string>> async_get_is_str2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_is_str2(Dictionary<string,string> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<Dictionary<int,teststruct2>> async_get_is_struct1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_is_struct1(Dictionary<int,teststruct2> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<Dictionary<string,teststruct2>> async_get_is_struct2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_is_struct2(Dictionary<string,teststruct2> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<com.robotraconteur.testing.TestService2.ostruct2> async_get_struct3(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_struct3(com.robotraconteur.testing.TestService2.ostruct2 value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<List<double>> async_get_list_d1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_list_d1(List<double> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<List<double[]>> async_get_list_d3(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_list_d3(List<double[]> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<List<MultiDimArray>> async_get_list_d5(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_list_d5(List<MultiDimArray> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<List<string>> async_get_list_str1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_list_str1(List<string> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<List<teststruct2>> async_get_list_struct1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_list_struct1(List<teststruct2> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<object> async_get_var1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_var1(object value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<Dictionary<int,object>> async_get_var2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_var2(Dictionary<int,object> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<object> async_get_var_num(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_var_num(object value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<object> async_get_var_str(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_var_str(object value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<object> async_get_var_struct(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_var_struct(object value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<object> async_get_var_vector(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_var_vector(object value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<object> async_get_var_dictionary(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_var_dictionary(object value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<object> async_get_var_list(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_var_list(object value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<object> async_get_var_multidimarray(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_var_multidimarray(object value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<double> async_get_errtest(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_errtest(double value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<teststruct1> async_get_nulltest(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_nulltest(teststruct1 value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_func1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_func2(double d1, double d2,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<double> async_func3(double d1, double d2,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<int> async_meaning_of_life(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_func_errtest(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_func_errtest1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_func_errtest2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_func_errtest3(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_o6_op(int op,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_pipe_check_error(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_test_callbacks(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<sub1> async_get_o1(int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<sub1> async_get_o2(int ind, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<sub1> async_get_o3(int ind, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<sub1> async_get_o4(string ind, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<com.robotraconteur.testing.TestService2.subobj> async_get_o5(int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<object> async_get_o6(int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
 }
 public class testroot_stub : ServiceStub , testroot, async_testroot{
     private CallbackClient<Action> rr_cb1;
@@ -1172,2377 +1172,846 @@ public class testroot_stub : ServiceStub , testroot, async_testroot{
     public MultiDimArrayMemory<byte> m3 {
     get { return rr_m3; }
     }
-    public virtual void async_get_d1(Action<double,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    public virtual async Task<double> async_get_d1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    rr_async_PropertyGet("d1",rrend_async_get_d1,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_d1(MessageElement value ,Exception err,object param)
-    {
-    Action<double,Exception> rr_handler=(Action<double,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(double),err);
-    return;
-    }
-    double rr_ret;
-    try {
-    rr_ret=(MessageElementUtil.UnpackScalar<double>(value));
-    } catch (Exception err2) {
-    rr_handler(default(double),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_d1(double value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("d1",rr_timeout)) {
+    var rr_ret=(MessageElementUtil.UnpackScalar<double>(rr_value));
+    return rr_ret;
+    } }
+    public virtual async Task async_set_d1(double value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackScalar<double>("value",value))
     {
-    rr_async_PropertySet("d1",mm,rrend_async_set_d1,rr_handler,rr_timeout);
+    await rr_async_PropertySet("d1",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_d1(MessageElement m ,Exception err,object param)
+    public virtual async Task<double[]> async_get_d2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_d2(Action<double[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("d2",rrend_async_get_d2,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_d2(MessageElement value ,Exception err,object param)
-    {
-    Action<double[],Exception> rr_handler=(Action<double[],Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(double[]),err);
-    return;
-    }
-    double[] rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackArray<double>(value);
-    } catch (Exception err2) {
-    rr_handler(default(double[]),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_d2(double[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("d2",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackArray<double>(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_d2(double[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackArray<double>("value",value))
     {
-    rr_async_PropertySet("d2",mm,rrend_async_set_d2,rr_handler,rr_timeout);
+    await rr_async_PropertySet("d2",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_d2(MessageElement m ,Exception err,object param)
+    public virtual async Task<double[]> async_get_d3(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_d3(Action<double[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("d3",rrend_async_get_d3,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_d3(MessageElement value ,Exception err,object param)
-    {
-    Action<double[],Exception> rr_handler=(Action<double[],Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(double[]),err);
-    return;
-    }
-    double[] rr_ret;
-    try {
-    rr_ret=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackArray<double>(value), 16, false);
-    } catch (Exception err2) {
-    rr_handler(default(double[]),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_d3(double[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("d3",rr_timeout)) {
+    var rr_ret=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackArray<double>(rr_value), 16, false);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_d3(double[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackArray<double>("value",DataTypeUtil.VerifyArrayLength(value, 16, false)))
     {
-    rr_async_PropertySet("d3",mm,rrend_async_set_d3,rr_handler,rr_timeout);
+    await rr_async_PropertySet("d3",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_d3(MessageElement m ,Exception err,object param)
+    public virtual async Task<double[]> async_get_d4(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_d4(Action<double[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("d4",rrend_async_get_d4,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_d4(MessageElement value ,Exception err,object param)
-    {
-    Action<double[],Exception> rr_handler=(Action<double[],Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(double[]),err);
-    return;
-    }
-    double[] rr_ret;
-    try {
-    rr_ret=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackArray<double>(value), 16, true);
-    } catch (Exception err2) {
-    rr_handler(default(double[]),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_d4(double[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("d4",rr_timeout)) {
+    var rr_ret=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackArray<double>(rr_value), 16, true);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_d4(double[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackArray<double>("value",DataTypeUtil.VerifyArrayLength(value, 16, true)))
     {
-    rr_async_PropertySet("d4",mm,rrend_async_set_d4,rr_handler,rr_timeout);
+    await rr_async_PropertySet("d4",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_d4(MessageElement m ,Exception err,object param)
+    public virtual async Task<MultiDimArray> async_get_d5(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_d5(Action<MultiDimArray,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("d5",rrend_async_get_d5,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_d5(MessageElement value ,Exception err,object param)
-    {
-    Action<MultiDimArray,Exception> rr_handler=(Action<MultiDimArray,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(MultiDimArray),err);
-    return;
-    }
-    MultiDimArray rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackMultiDimArray(value);
-    } catch (Exception err2) {
-    rr_handler(default(MultiDimArray),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_d5(MultiDimArray value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("d5",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackMultiDimArray(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_d5(MultiDimArray value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackMultiDimArray("value",(MultiDimArray)value))
     {
-    rr_async_PropertySet("d5",mm,rrend_async_set_d5,rr_handler,rr_timeout);
+    await rr_async_PropertySet("d5",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_d5(MessageElement m ,Exception err,object param)
+    public virtual async Task<MultiDimArray> async_get_d6(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_d6(Action<MultiDimArray,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("d6",rrend_async_get_d6,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_d6(MessageElement value ,Exception err,object param)
-    {
-    Action<MultiDimArray,Exception> rr_handler=(Action<MultiDimArray,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(MultiDimArray),err);
-    return;
-    }
-    MultiDimArray rr_ret;
-    try {
-    rr_ret=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackMultiDimArray(value),9,new uint[] {3,3});
-    } catch (Exception err2) {
-    rr_handler(default(MultiDimArray),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_d6(MultiDimArray value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("d6",rr_timeout)) {
+    var rr_ret=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackMultiDimArray(rr_value),9,new uint[] {3,3});
+    return rr_ret;
+    } }
+    public virtual async Task async_set_d6(MultiDimArray value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackMultiDimArray("value",(MultiDimArray)DataTypeUtil.VerifyArrayLength(value,9,new uint[] {3,3})))
     {
-    rr_async_PropertySet("d6",mm,rrend_async_set_d6,rr_handler,rr_timeout);
+    await rr_async_PropertySet("d6",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_d6(MessageElement m ,Exception err,object param)
+    public virtual async Task<float> async_get_s1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_s1(Action<float,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("s1",rrend_async_get_s1,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_s1(MessageElement value ,Exception err,object param)
-    {
-    Action<float,Exception> rr_handler=(Action<float,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(float),err);
-    return;
-    }
-    float rr_ret;
-    try {
-    rr_ret=(MessageElementUtil.UnpackScalar<float>(value));
-    } catch (Exception err2) {
-    rr_handler(default(float),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_s1(float value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("s1",rr_timeout)) {
+    var rr_ret=(MessageElementUtil.UnpackScalar<float>(rr_value));
+    return rr_ret;
+    } }
+    public virtual async Task async_set_s1(float value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackScalar<float>("value",value))
     {
-    rr_async_PropertySet("s1",mm,rrend_async_set_s1,rr_handler,rr_timeout);
+    await rr_async_PropertySet("s1",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_s1(MessageElement m ,Exception err,object param)
+    public virtual async Task<float[]> async_get_s2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_s2(Action<float[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("s2",rrend_async_get_s2,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_s2(MessageElement value ,Exception err,object param)
-    {
-    Action<float[],Exception> rr_handler=(Action<float[],Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(float[]),err);
-    return;
-    }
-    float[] rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackArray<float>(value);
-    } catch (Exception err2) {
-    rr_handler(default(float[]),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_s2(float[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("s2",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackArray<float>(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_s2(float[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackArray<float>("value",value))
     {
-    rr_async_PropertySet("s2",mm,rrend_async_set_s2,rr_handler,rr_timeout);
+    await rr_async_PropertySet("s2",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_s2(MessageElement m ,Exception err,object param)
+    public virtual async Task<sbyte> async_get_i8_1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_i8_1(Action<sbyte,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("i8_1",rrend_async_get_i8_1,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_i8_1(MessageElement value ,Exception err,object param)
-    {
-    Action<sbyte,Exception> rr_handler=(Action<sbyte,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(sbyte),err);
-    return;
-    }
-    sbyte rr_ret;
-    try {
-    rr_ret=(MessageElementUtil.UnpackScalar<sbyte>(value));
-    } catch (Exception err2) {
-    rr_handler(default(sbyte),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_i8_1(sbyte value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("i8_1",rr_timeout)) {
+    var rr_ret=(MessageElementUtil.UnpackScalar<sbyte>(rr_value));
+    return rr_ret;
+    } }
+    public virtual async Task async_set_i8_1(sbyte value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackScalar<sbyte>("value",value))
     {
-    rr_async_PropertySet("i8_1",mm,rrend_async_set_i8_1,rr_handler,rr_timeout);
+    await rr_async_PropertySet("i8_1",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_i8_1(MessageElement m ,Exception err,object param)
+    public virtual async Task<sbyte[]> async_get_i8_2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_i8_2(Action<sbyte[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("i8_2",rrend_async_get_i8_2,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_i8_2(MessageElement value ,Exception err,object param)
-    {
-    Action<sbyte[],Exception> rr_handler=(Action<sbyte[],Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(sbyte[]),err);
-    return;
-    }
-    sbyte[] rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackArray<sbyte>(value);
-    } catch (Exception err2) {
-    rr_handler(default(sbyte[]),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_i8_2(sbyte[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("i8_2",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackArray<sbyte>(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_i8_2(sbyte[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackArray<sbyte>("value",value))
     {
-    rr_async_PropertySet("i8_2",mm,rrend_async_set_i8_2,rr_handler,rr_timeout);
+    await rr_async_PropertySet("i8_2",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_i8_2(MessageElement m ,Exception err,object param)
+    public virtual async Task<byte> async_get_u8_1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_u8_1(Action<byte,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("u8_1",rrend_async_get_u8_1,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_u8_1(MessageElement value ,Exception err,object param)
-    {
-    Action<byte,Exception> rr_handler=(Action<byte,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(byte),err);
-    return;
-    }
-    byte rr_ret;
-    try {
-    rr_ret=(MessageElementUtil.UnpackScalar<byte>(value));
-    } catch (Exception err2) {
-    rr_handler(default(byte),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_u8_1(byte value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("u8_1",rr_timeout)) {
+    var rr_ret=(MessageElementUtil.UnpackScalar<byte>(rr_value));
+    return rr_ret;
+    } }
+    public virtual async Task async_set_u8_1(byte value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackScalar<byte>("value",value))
     {
-    rr_async_PropertySet("u8_1",mm,rrend_async_set_u8_1,rr_handler,rr_timeout);
+    await rr_async_PropertySet("u8_1",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_u8_1(MessageElement m ,Exception err,object param)
+    public virtual async Task<byte[]> async_get_u8_2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_u8_2(Action<byte[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("u8_2",rrend_async_get_u8_2,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_u8_2(MessageElement value ,Exception err,object param)
-    {
-    Action<byte[],Exception> rr_handler=(Action<byte[],Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(byte[]),err);
-    return;
-    }
-    byte[] rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackArray<byte>(value);
-    } catch (Exception err2) {
-    rr_handler(default(byte[]),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_u8_2(byte[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("u8_2",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackArray<byte>(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_u8_2(byte[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackArray<byte>("value",value))
     {
-    rr_async_PropertySet("u8_2",mm,rrend_async_set_u8_2,rr_handler,rr_timeout);
+    await rr_async_PropertySet("u8_2",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_u8_2(MessageElement m ,Exception err,object param)
+    public virtual async Task<MultiDimArray> async_get_u8_3(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_u8_3(Action<MultiDimArray,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("u8_3",rrend_async_get_u8_3,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_u8_3(MessageElement value ,Exception err,object param)
-    {
-    Action<MultiDimArray,Exception> rr_handler=(Action<MultiDimArray,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(MultiDimArray),err);
-    return;
-    }
-    MultiDimArray rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackMultiDimArray(value);
-    } catch (Exception err2) {
-    rr_handler(default(MultiDimArray),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_u8_3(MultiDimArray value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("u8_3",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackMultiDimArray(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_u8_3(MultiDimArray value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackMultiDimArray("value",(MultiDimArray)value))
     {
-    rr_async_PropertySet("u8_3",mm,rrend_async_set_u8_3,rr_handler,rr_timeout);
+    await rr_async_PropertySet("u8_3",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_u8_3(MessageElement m ,Exception err,object param)
+    public virtual async Task<short> async_get_i16_1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_i16_1(Action<short,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("i16_1",rrend_async_get_i16_1,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_i16_1(MessageElement value ,Exception err,object param)
-    {
-    Action<short,Exception> rr_handler=(Action<short,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(short),err);
-    return;
-    }
-    short rr_ret;
-    try {
-    rr_ret=(MessageElementUtil.UnpackScalar<short>(value));
-    } catch (Exception err2) {
-    rr_handler(default(short),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_i16_1(short value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("i16_1",rr_timeout)) {
+    var rr_ret=(MessageElementUtil.UnpackScalar<short>(rr_value));
+    return rr_ret;
+    } }
+    public virtual async Task async_set_i16_1(short value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackScalar<short>("value",value))
     {
-    rr_async_PropertySet("i16_1",mm,rrend_async_set_i16_1,rr_handler,rr_timeout);
+    await rr_async_PropertySet("i16_1",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_i16_1(MessageElement m ,Exception err,object param)
+    public virtual async Task<short[]> async_get_i16_2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_i16_2(Action<short[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("i16_2",rrend_async_get_i16_2,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_i16_2(MessageElement value ,Exception err,object param)
-    {
-    Action<short[],Exception> rr_handler=(Action<short[],Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(short[]),err);
-    return;
-    }
-    short[] rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackArray<short>(value);
-    } catch (Exception err2) {
-    rr_handler(default(short[]),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_i16_2(short[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("i16_2",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackArray<short>(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_i16_2(short[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackArray<short>("value",value))
     {
-    rr_async_PropertySet("i16_2",mm,rrend_async_set_i16_2,rr_handler,rr_timeout);
+    await rr_async_PropertySet("i16_2",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_i16_2(MessageElement m ,Exception err,object param)
+    public virtual async Task<ushort> async_get_u16_1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_u16_1(Action<ushort,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("u16_1",rrend_async_get_u16_1,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_u16_1(MessageElement value ,Exception err,object param)
-    {
-    Action<ushort,Exception> rr_handler=(Action<ushort,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(ushort),err);
-    return;
-    }
-    ushort rr_ret;
-    try {
-    rr_ret=(MessageElementUtil.UnpackScalar<ushort>(value));
-    } catch (Exception err2) {
-    rr_handler(default(ushort),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_u16_1(ushort value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("u16_1",rr_timeout)) {
+    var rr_ret=(MessageElementUtil.UnpackScalar<ushort>(rr_value));
+    return rr_ret;
+    } }
+    public virtual async Task async_set_u16_1(ushort value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackScalar<ushort>("value",value))
     {
-    rr_async_PropertySet("u16_1",mm,rrend_async_set_u16_1,rr_handler,rr_timeout);
+    await rr_async_PropertySet("u16_1",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_u16_1(MessageElement m ,Exception err,object param)
+    public virtual async Task<ushort[]> async_get_u16_2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_u16_2(Action<ushort[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("u16_2",rrend_async_get_u16_2,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_u16_2(MessageElement value ,Exception err,object param)
-    {
-    Action<ushort[],Exception> rr_handler=(Action<ushort[],Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(ushort[]),err);
-    return;
-    }
-    ushort[] rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackArray<ushort>(value);
-    } catch (Exception err2) {
-    rr_handler(default(ushort[]),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_u16_2(ushort[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("u16_2",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackArray<ushort>(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_u16_2(ushort[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackArray<ushort>("value",value))
     {
-    rr_async_PropertySet("u16_2",mm,rrend_async_set_u16_2,rr_handler,rr_timeout);
+    await rr_async_PropertySet("u16_2",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_u16_2(MessageElement m ,Exception err,object param)
+    public virtual async Task<int> async_get_i32_1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_i32_1(Action<int,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("i32_1",rrend_async_get_i32_1,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_i32_1(MessageElement value ,Exception err,object param)
-    {
-    Action<int,Exception> rr_handler=(Action<int,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(int),err);
-    return;
-    }
-    int rr_ret;
-    try {
-    rr_ret=(MessageElementUtil.UnpackScalar<int>(value));
-    } catch (Exception err2) {
-    rr_handler(default(int),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_i32_1(int value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("i32_1",rr_timeout)) {
+    var rr_ret=(MessageElementUtil.UnpackScalar<int>(rr_value));
+    return rr_ret;
+    } }
+    public virtual async Task async_set_i32_1(int value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackScalar<int>("value",value))
     {
-    rr_async_PropertySet("i32_1",mm,rrend_async_set_i32_1,rr_handler,rr_timeout);
+    await rr_async_PropertySet("i32_1",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_i32_1(MessageElement m ,Exception err,object param)
+    public virtual async Task<int[]> async_get_i32_2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_i32_2(Action<int[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("i32_2",rrend_async_get_i32_2,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_i32_2(MessageElement value ,Exception err,object param)
-    {
-    Action<int[],Exception> rr_handler=(Action<int[],Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(int[]),err);
-    return;
-    }
-    int[] rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackArray<int>(value);
-    } catch (Exception err2) {
-    rr_handler(default(int[]),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_i32_2(int[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("i32_2",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackArray<int>(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_i32_2(int[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackArray<int>("value",value))
     {
-    rr_async_PropertySet("i32_2",mm,rrend_async_set_i32_2,rr_handler,rr_timeout);
+    await rr_async_PropertySet("i32_2",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_i32_2(MessageElement m ,Exception err,object param)
+    public virtual async Task<int[]> async_get_i32_huge(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_i32_huge(Action<int[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("i32_huge",rrend_async_get_i32_huge,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_i32_huge(MessageElement value ,Exception err,object param)
-    {
-    Action<int[],Exception> rr_handler=(Action<int[],Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(int[]),err);
-    return;
-    }
-    int[] rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackArray<int>(value);
-    } catch (Exception err2) {
-    rr_handler(default(int[]),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_i32_huge(int[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("i32_huge",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackArray<int>(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_i32_huge(int[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackArray<int>("value",value))
     {
-    rr_async_PropertySet("i32_huge",mm,rrend_async_set_i32_huge,rr_handler,rr_timeout);
+    await rr_async_PropertySet("i32_huge",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_i32_huge(MessageElement m ,Exception err,object param)
+    public virtual async Task<uint> async_get_u32_1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_u32_1(Action<uint,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("u32_1",rrend_async_get_u32_1,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_u32_1(MessageElement value ,Exception err,object param)
-    {
-    Action<uint,Exception> rr_handler=(Action<uint,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(uint),err);
-    return;
-    }
-    uint rr_ret;
-    try {
-    rr_ret=(MessageElementUtil.UnpackScalar<uint>(value));
-    } catch (Exception err2) {
-    rr_handler(default(uint),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_u32_1(uint value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("u32_1",rr_timeout)) {
+    var rr_ret=(MessageElementUtil.UnpackScalar<uint>(rr_value));
+    return rr_ret;
+    } }
+    public virtual async Task async_set_u32_1(uint value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackScalar<uint>("value",value))
     {
-    rr_async_PropertySet("u32_1",mm,rrend_async_set_u32_1,rr_handler,rr_timeout);
+    await rr_async_PropertySet("u32_1",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_u32_1(MessageElement m ,Exception err,object param)
+    public virtual async Task<uint[]> async_get_u32_2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_u32_2(Action<uint[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("u32_2",rrend_async_get_u32_2,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_u32_2(MessageElement value ,Exception err,object param)
-    {
-    Action<uint[],Exception> rr_handler=(Action<uint[],Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(uint[]),err);
-    return;
-    }
-    uint[] rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackArray<uint>(value);
-    } catch (Exception err2) {
-    rr_handler(default(uint[]),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_u32_2(uint[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("u32_2",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackArray<uint>(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_u32_2(uint[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackArray<uint>("value",value))
     {
-    rr_async_PropertySet("u32_2",mm,rrend_async_set_u32_2,rr_handler,rr_timeout);
+    await rr_async_PropertySet("u32_2",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_u32_2(MessageElement m ,Exception err,object param)
+    public virtual async Task<long> async_get_i64_1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_i64_1(Action<long,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("i64_1",rrend_async_get_i64_1,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_i64_1(MessageElement value ,Exception err,object param)
-    {
-    Action<long,Exception> rr_handler=(Action<long,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(long),err);
-    return;
-    }
-    long rr_ret;
-    try {
-    rr_ret=(MessageElementUtil.UnpackScalar<long>(value));
-    } catch (Exception err2) {
-    rr_handler(default(long),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_i64_1(long value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("i64_1",rr_timeout)) {
+    var rr_ret=(MessageElementUtil.UnpackScalar<long>(rr_value));
+    return rr_ret;
+    } }
+    public virtual async Task async_set_i64_1(long value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackScalar<long>("value",value))
     {
-    rr_async_PropertySet("i64_1",mm,rrend_async_set_i64_1,rr_handler,rr_timeout);
+    await rr_async_PropertySet("i64_1",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_i64_1(MessageElement m ,Exception err,object param)
+    public virtual async Task<long[]> async_get_i64_2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_i64_2(Action<long[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("i64_2",rrend_async_get_i64_2,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_i64_2(MessageElement value ,Exception err,object param)
-    {
-    Action<long[],Exception> rr_handler=(Action<long[],Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(long[]),err);
-    return;
-    }
-    long[] rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackArray<long>(value);
-    } catch (Exception err2) {
-    rr_handler(default(long[]),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_i64_2(long[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("i64_2",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackArray<long>(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_i64_2(long[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackArray<long>("value",value))
     {
-    rr_async_PropertySet("i64_2",mm,rrend_async_set_i64_2,rr_handler,rr_timeout);
+    await rr_async_PropertySet("i64_2",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_i64_2(MessageElement m ,Exception err,object param)
+    public virtual async Task<ulong> async_get_u64_1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_u64_1(Action<ulong,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("u64_1",rrend_async_get_u64_1,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_u64_1(MessageElement value ,Exception err,object param)
-    {
-    Action<ulong,Exception> rr_handler=(Action<ulong,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(ulong),err);
-    return;
-    }
-    ulong rr_ret;
-    try {
-    rr_ret=(MessageElementUtil.UnpackScalar<ulong>(value));
-    } catch (Exception err2) {
-    rr_handler(default(ulong),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_u64_1(ulong value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("u64_1",rr_timeout)) {
+    var rr_ret=(MessageElementUtil.UnpackScalar<ulong>(rr_value));
+    return rr_ret;
+    } }
+    public virtual async Task async_set_u64_1(ulong value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackScalar<ulong>("value",value))
     {
-    rr_async_PropertySet("u64_1",mm,rrend_async_set_u64_1,rr_handler,rr_timeout);
+    await rr_async_PropertySet("u64_1",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_u64_1(MessageElement m ,Exception err,object param)
+    public virtual async Task<ulong[]> async_get_u64_2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_u64_2(Action<ulong[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("u64_2",rrend_async_get_u64_2,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_u64_2(MessageElement value ,Exception err,object param)
-    {
-    Action<ulong[],Exception> rr_handler=(Action<ulong[],Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(ulong[]),err);
-    return;
-    }
-    ulong[] rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackArray<ulong>(value);
-    } catch (Exception err2) {
-    rr_handler(default(ulong[]),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_u64_2(ulong[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("u64_2",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackArray<ulong>(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_u64_2(ulong[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackArray<ulong>("value",value))
     {
-    rr_async_PropertySet("u64_2",mm,rrend_async_set_u64_2,rr_handler,rr_timeout);
+    await rr_async_PropertySet("u64_2",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_u64_2(MessageElement m ,Exception err,object param)
+    public virtual async Task<string> async_get_str1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_str1(Action<string,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("str1",rrend_async_get_str1,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_str1(MessageElement value ,Exception err,object param)
-    {
-    Action<string,Exception> rr_handler=(Action<string,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(string),err);
-    return;
-    }
-    string rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackString(value);
-    } catch (Exception err2) {
-    rr_handler(default(string),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_str1(string value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("str1",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackString(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_str1(string value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackString("value",value))
     {
-    rr_async_PropertySet("str1",mm,rrend_async_set_str1,rr_handler,rr_timeout);
+    await rr_async_PropertySet("str1",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_str1(MessageElement m ,Exception err,object param)
+    public virtual async Task<teststruct1> async_get_struct1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_struct1(Action<teststruct1,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("struct1",rrend_async_get_struct1,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_struct1(MessageElement value ,Exception err,object param)
-    {
-    Action<teststruct1,Exception> rr_handler=(Action<teststruct1,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(teststruct1),err);
-    return;
-    }
-    teststruct1 rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackStructure<teststruct1>(value);
-    } catch (Exception err2) {
-    rr_handler(default(teststruct1),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_struct1(teststruct1 value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("struct1",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackStructure<teststruct1>(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_struct1(teststruct1 value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackStructure("value",value))
     {
-    rr_async_PropertySet("struct1",mm,rrend_async_set_struct1,rr_handler,rr_timeout);
+    await rr_async_PropertySet("struct1",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_struct1(MessageElement m ,Exception err,object param)
+    public virtual async Task<teststruct2> async_get_struct2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_struct2(Action<teststruct2,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("struct2",rrend_async_get_struct2,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_struct2(MessageElement value ,Exception err,object param)
-    {
-    Action<teststruct2,Exception> rr_handler=(Action<teststruct2,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(teststruct2),err);
-    return;
-    }
-    teststruct2 rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackStructure<teststruct2>(value);
-    } catch (Exception err2) {
-    rr_handler(default(teststruct2),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_struct2(teststruct2 value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("struct2",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackStructure<teststruct2>(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_struct2(teststruct2 value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackStructure("value",value))
     {
-    rr_async_PropertySet("struct2",mm,rrend_async_set_struct2,rr_handler,rr_timeout);
+    await rr_async_PropertySet("struct2",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_struct2(MessageElement m ,Exception err,object param)
+    public virtual async Task<Dictionary<int,double>> async_get_is_d1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_is_d1(Action<Dictionary<int,double>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("is_d1",rrend_async_get_is_d1,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_is_d1(MessageElement value ,Exception err,object param)
-    {
-    Action<Dictionary<int,double>,Exception> rr_handler=(Action<Dictionary<int,double>,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(Dictionary<int,double>),err);
-    return;
-    }
-    Dictionary<int,double> rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackMap<int,double>(value);
-    } catch (Exception err2) {
-    rr_handler(default(Dictionary<int,double>),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_is_d1(Dictionary<int,double> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("is_d1",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackMap<int,double>(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_is_d1(Dictionary<int,double> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackMapType<int,double>("value",value))
     {
-    rr_async_PropertySet("is_d1",mm,rrend_async_set_is_d1,rr_handler,rr_timeout);
+    await rr_async_PropertySet("is_d1",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_is_d1(MessageElement m ,Exception err,object param)
+    public virtual async Task<Dictionary<string,double>> async_get_is_d2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_is_d2(Action<Dictionary<string,double>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("is_d2",rrend_async_get_is_d2,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_is_d2(MessageElement value ,Exception err,object param)
-    {
-    Action<Dictionary<string,double>,Exception> rr_handler=(Action<Dictionary<string,double>,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(Dictionary<string,double>),err);
-    return;
-    }
-    Dictionary<string,double> rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackMap<string,double>(value);
-    } catch (Exception err2) {
-    rr_handler(default(Dictionary<string,double>),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_is_d2(Dictionary<string,double> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("is_d2",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackMap<string,double>(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_is_d2(Dictionary<string,double> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackMapType<string,double>("value",value))
     {
-    rr_async_PropertySet("is_d2",mm,rrend_async_set_is_d2,rr_handler,rr_timeout);
+    await rr_async_PropertySet("is_d2",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_is_d2(MessageElement m ,Exception err,object param)
+    public virtual async Task<Dictionary<int,double[]>> async_get_is_d3(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_is_d3(Action<Dictionary<int,double[]>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("is_d3",rrend_async_get_is_d3,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_is_d3(MessageElement value ,Exception err,object param)
-    {
-    Action<Dictionary<int,double[]>,Exception> rr_handler=(Action<Dictionary<int,double[]>,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(Dictionary<int,double[]>),err);
-    return;
-    }
-    Dictionary<int,double[]> rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackMap<int,double[]>(value);
-    } catch (Exception err2) {
-    rr_handler(default(Dictionary<int,double[]>),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_is_d3(Dictionary<int,double[]> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("is_d3",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackMap<int,double[]>(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_is_d3(Dictionary<int,double[]> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackMapType<int,double[]>("value",value))
     {
-    rr_async_PropertySet("is_d3",mm,rrend_async_set_is_d3,rr_handler,rr_timeout);
+    await rr_async_PropertySet("is_d3",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_is_d3(MessageElement m ,Exception err,object param)
+    public virtual async Task<Dictionary<string,double[]>> async_get_is_d4(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_is_d4(Action<Dictionary<string,double[]>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("is_d4",rrend_async_get_is_d4,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_is_d4(MessageElement value ,Exception err,object param)
-    {
-    Action<Dictionary<string,double[]>,Exception> rr_handler=(Action<Dictionary<string,double[]>,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(Dictionary<string,double[]>),err);
-    return;
-    }
-    Dictionary<string,double[]> rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackMap<string,double[]>(value);
-    } catch (Exception err2) {
-    rr_handler(default(Dictionary<string,double[]>),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_is_d4(Dictionary<string,double[]> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("is_d4",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackMap<string,double[]>(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_is_d4(Dictionary<string,double[]> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackMapType<string,double[]>("value",value))
     {
-    rr_async_PropertySet("is_d4",mm,rrend_async_set_is_d4,rr_handler,rr_timeout);
+    await rr_async_PropertySet("is_d4",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_is_d4(MessageElement m ,Exception err,object param)
+    public virtual async Task<Dictionary<int,MultiDimArray>> async_get_is_d5(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_is_d5(Action<Dictionary<int,MultiDimArray>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("is_d5",rrend_async_get_is_d5,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_is_d5(MessageElement value ,Exception err,object param)
-    {
-    Action<Dictionary<int,MultiDimArray>,Exception> rr_handler=(Action<Dictionary<int,MultiDimArray>,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(Dictionary<int,MultiDimArray>),err);
-    return;
-    }
-    Dictionary<int,MultiDimArray> rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackMap<int,MultiDimArray>(value);
-    } catch (Exception err2) {
-    rr_handler(default(Dictionary<int,MultiDimArray>),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_is_d5(Dictionary<int,MultiDimArray> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("is_d5",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackMap<int,MultiDimArray>(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_is_d5(Dictionary<int,MultiDimArray> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackMapType<int,MultiDimArray>("value",value))
     {
-    rr_async_PropertySet("is_d5",mm,rrend_async_set_is_d5,rr_handler,rr_timeout);
+    await rr_async_PropertySet("is_d5",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_is_d5(MessageElement m ,Exception err,object param)
+    public virtual async Task<Dictionary<string,MultiDimArray>> async_get_is_d6(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_is_d6(Action<Dictionary<string,MultiDimArray>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("is_d6",rrend_async_get_is_d6,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_is_d6(MessageElement value ,Exception err,object param)
-    {
-    Action<Dictionary<string,MultiDimArray>,Exception> rr_handler=(Action<Dictionary<string,MultiDimArray>,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(Dictionary<string,MultiDimArray>),err);
-    return;
-    }
-    Dictionary<string,MultiDimArray> rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackMap<string,MultiDimArray>(value);
-    } catch (Exception err2) {
-    rr_handler(default(Dictionary<string,MultiDimArray>),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_is_d6(Dictionary<string,MultiDimArray> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("is_d6",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackMap<string,MultiDimArray>(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_is_d6(Dictionary<string,MultiDimArray> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackMapType<string,MultiDimArray>("value",value))
     {
-    rr_async_PropertySet("is_d6",mm,rrend_async_set_is_d6,rr_handler,rr_timeout);
+    await rr_async_PropertySet("is_d6",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_is_d6(MessageElement m ,Exception err,object param)
+    public virtual async Task<Dictionary<int,string>> async_get_is_str1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_is_str1(Action<Dictionary<int,string>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("is_str1",rrend_async_get_is_str1,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_is_str1(MessageElement value ,Exception err,object param)
-    {
-    Action<Dictionary<int,string>,Exception> rr_handler=(Action<Dictionary<int,string>,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(Dictionary<int,string>),err);
-    return;
-    }
-    Dictionary<int,string> rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackMap<int,string>(value);
-    } catch (Exception err2) {
-    rr_handler(default(Dictionary<int,string>),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_is_str1(Dictionary<int,string> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("is_str1",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackMap<int,string>(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_is_str1(Dictionary<int,string> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackMapType<int,string>("value",value))
     {
-    rr_async_PropertySet("is_str1",mm,rrend_async_set_is_str1,rr_handler,rr_timeout);
+    await rr_async_PropertySet("is_str1",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_is_str1(MessageElement m ,Exception err,object param)
+    public virtual async Task<Dictionary<string,string>> async_get_is_str2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_is_str2(Action<Dictionary<string,string>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("is_str2",rrend_async_get_is_str2,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_is_str2(MessageElement value ,Exception err,object param)
-    {
-    Action<Dictionary<string,string>,Exception> rr_handler=(Action<Dictionary<string,string>,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(Dictionary<string,string>),err);
-    return;
-    }
-    Dictionary<string,string> rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackMap<string,string>(value);
-    } catch (Exception err2) {
-    rr_handler(default(Dictionary<string,string>),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_is_str2(Dictionary<string,string> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("is_str2",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackMap<string,string>(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_is_str2(Dictionary<string,string> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackMapType<string,string>("value",value))
     {
-    rr_async_PropertySet("is_str2",mm,rrend_async_set_is_str2,rr_handler,rr_timeout);
+    await rr_async_PropertySet("is_str2",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_is_str2(MessageElement m ,Exception err,object param)
+    public virtual async Task<Dictionary<int,teststruct2>> async_get_is_struct1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_is_struct1(Action<Dictionary<int,teststruct2>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("is_struct1",rrend_async_get_is_struct1,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_is_struct1(MessageElement value ,Exception err,object param)
-    {
-    Action<Dictionary<int,teststruct2>,Exception> rr_handler=(Action<Dictionary<int,teststruct2>,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(Dictionary<int,teststruct2>),err);
-    return;
-    }
-    Dictionary<int,teststruct2> rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackMap<int,teststruct2>(value);
-    } catch (Exception err2) {
-    rr_handler(default(Dictionary<int,teststruct2>),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_is_struct1(Dictionary<int,teststruct2> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("is_struct1",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackMap<int,teststruct2>(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_is_struct1(Dictionary<int,teststruct2> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackMapType<int,teststruct2>("value",value))
     {
-    rr_async_PropertySet("is_struct1",mm,rrend_async_set_is_struct1,rr_handler,rr_timeout);
+    await rr_async_PropertySet("is_struct1",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_is_struct1(MessageElement m ,Exception err,object param)
+    public virtual async Task<Dictionary<string,teststruct2>> async_get_is_struct2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_is_struct2(Action<Dictionary<string,teststruct2>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("is_struct2",rrend_async_get_is_struct2,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_is_struct2(MessageElement value ,Exception err,object param)
-    {
-    Action<Dictionary<string,teststruct2>,Exception> rr_handler=(Action<Dictionary<string,teststruct2>,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(Dictionary<string,teststruct2>),err);
-    return;
-    }
-    Dictionary<string,teststruct2> rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackMap<string,teststruct2>(value);
-    } catch (Exception err2) {
-    rr_handler(default(Dictionary<string,teststruct2>),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_is_struct2(Dictionary<string,teststruct2> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("is_struct2",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackMap<string,teststruct2>(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_is_struct2(Dictionary<string,teststruct2> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackMapType<string,teststruct2>("value",value))
     {
-    rr_async_PropertySet("is_struct2",mm,rrend_async_set_is_struct2,rr_handler,rr_timeout);
+    await rr_async_PropertySet("is_struct2",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_is_struct2(MessageElement m ,Exception err,object param)
+    public virtual async Task<com.robotraconteur.testing.TestService2.ostruct2> async_get_struct3(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_struct3(Action<com.robotraconteur.testing.TestService2.ostruct2,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("struct3",rrend_async_get_struct3,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_struct3(MessageElement value ,Exception err,object param)
-    {
-    Action<com.robotraconteur.testing.TestService2.ostruct2,Exception> rr_handler=(Action<com.robotraconteur.testing.TestService2.ostruct2,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(com.robotraconteur.testing.TestService2.ostruct2),err);
-    return;
-    }
-    com.robotraconteur.testing.TestService2.ostruct2 rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackStructure<com.robotraconteur.testing.TestService2.ostruct2>(value);
-    } catch (Exception err2) {
-    rr_handler(default(com.robotraconteur.testing.TestService2.ostruct2),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_struct3(com.robotraconteur.testing.TestService2.ostruct2 value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("struct3",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackStructure<com.robotraconteur.testing.TestService2.ostruct2>(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_struct3(com.robotraconteur.testing.TestService2.ostruct2 value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackStructure("value",value))
     {
-    rr_async_PropertySet("struct3",mm,rrend_async_set_struct3,rr_handler,rr_timeout);
+    await rr_async_PropertySet("struct3",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_struct3(MessageElement m ,Exception err,object param)
+    public virtual async Task<List<double>> async_get_list_d1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_list_d1(Action<List<double>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("list_d1",rrend_async_get_list_d1,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_list_d1(MessageElement value ,Exception err,object param)
-    {
-    Action<List<double>,Exception> rr_handler=(Action<List<double>,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(List<double>),err);
-    return;
-    }
-    List<double> rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackList<double>(value);
-    } catch (Exception err2) {
-    rr_handler(default(List<double>),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_list_d1(List<double> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("list_d1",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackList<double>(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_list_d1(List<double> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackListType<double>("value",value))
     {
-    rr_async_PropertySet("list_d1",mm,rrend_async_set_list_d1,rr_handler,rr_timeout);
+    await rr_async_PropertySet("list_d1",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_list_d1(MessageElement m ,Exception err,object param)
+    public virtual async Task<List<double[]>> async_get_list_d3(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_list_d3(Action<List<double[]>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("list_d3",rrend_async_get_list_d3,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_list_d3(MessageElement value ,Exception err,object param)
-    {
-    Action<List<double[]>,Exception> rr_handler=(Action<List<double[]>,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(List<double[]>),err);
-    return;
-    }
-    List<double[]> rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackList<double[]>(value);
-    } catch (Exception err2) {
-    rr_handler(default(List<double[]>),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_list_d3(List<double[]> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("list_d3",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackList<double[]>(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_list_d3(List<double[]> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackListType<double[]>("value",value))
     {
-    rr_async_PropertySet("list_d3",mm,rrend_async_set_list_d3,rr_handler,rr_timeout);
+    await rr_async_PropertySet("list_d3",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_list_d3(MessageElement m ,Exception err,object param)
+    public virtual async Task<List<MultiDimArray>> async_get_list_d5(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_list_d5(Action<List<MultiDimArray>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("list_d5",rrend_async_get_list_d5,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_list_d5(MessageElement value ,Exception err,object param)
-    {
-    Action<List<MultiDimArray>,Exception> rr_handler=(Action<List<MultiDimArray>,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(List<MultiDimArray>),err);
-    return;
-    }
-    List<MultiDimArray> rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackList<MultiDimArray>(value);
-    } catch (Exception err2) {
-    rr_handler(default(List<MultiDimArray>),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_list_d5(List<MultiDimArray> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("list_d5",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackList<MultiDimArray>(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_list_d5(List<MultiDimArray> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackListType<MultiDimArray>("value",value))
     {
-    rr_async_PropertySet("list_d5",mm,rrend_async_set_list_d5,rr_handler,rr_timeout);
+    await rr_async_PropertySet("list_d5",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_list_d5(MessageElement m ,Exception err,object param)
+    public virtual async Task<List<string>> async_get_list_str1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_list_str1(Action<List<string>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("list_str1",rrend_async_get_list_str1,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_list_str1(MessageElement value ,Exception err,object param)
-    {
-    Action<List<string>,Exception> rr_handler=(Action<List<string>,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(List<string>),err);
-    return;
-    }
-    List<string> rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackList<string>(value);
-    } catch (Exception err2) {
-    rr_handler(default(List<string>),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_list_str1(List<string> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("list_str1",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackList<string>(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_list_str1(List<string> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackListType<string>("value",value))
     {
-    rr_async_PropertySet("list_str1",mm,rrend_async_set_list_str1,rr_handler,rr_timeout);
+    await rr_async_PropertySet("list_str1",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_list_str1(MessageElement m ,Exception err,object param)
+    public virtual async Task<List<teststruct2>> async_get_list_struct1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_list_struct1(Action<List<teststruct2>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("list_struct1",rrend_async_get_list_struct1,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_list_struct1(MessageElement value ,Exception err,object param)
-    {
-    Action<List<teststruct2>,Exception> rr_handler=(Action<List<teststruct2>,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(List<teststruct2>),err);
-    return;
-    }
-    List<teststruct2> rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackList<teststruct2>(value);
-    } catch (Exception err2) {
-    rr_handler(default(List<teststruct2>),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_list_struct1(List<teststruct2> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("list_struct1",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackList<teststruct2>(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_list_struct1(List<teststruct2> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackListType<teststruct2>("value",value))
     {
-    rr_async_PropertySet("list_struct1",mm,rrend_async_set_list_struct1,rr_handler,rr_timeout);
+    await rr_async_PropertySet("list_struct1",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_list_struct1(MessageElement m ,Exception err,object param)
+    public virtual async Task<object> async_get_var1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_var1(Action<object,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("var1",rrend_async_get_var1,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_var1(MessageElement value ,Exception err,object param)
-    {
-    Action<object,Exception> rr_handler=(Action<object,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(object),err);
-    return;
-    }
-    object rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackVarType(value);
-    } catch (Exception err2) {
-    rr_handler(default(object),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_var1(object value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("var1",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackVarType(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_var1(object value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackVarType("value",value))
     {
-    rr_async_PropertySet("var1",mm,rrend_async_set_var1,rr_handler,rr_timeout);
+    await rr_async_PropertySet("var1",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_var1(MessageElement m ,Exception err,object param)
+    public virtual async Task<Dictionary<int,object>> async_get_var2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_var2(Action<Dictionary<int,object>,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("var2",rrend_async_get_var2,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_var2(MessageElement value ,Exception err,object param)
-    {
-    Action<Dictionary<int,object>,Exception> rr_handler=(Action<Dictionary<int,object>,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(Dictionary<int,object>),err);
-    return;
-    }
-    Dictionary<int,object> rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackMap<int,object>(value);
-    } catch (Exception err2) {
-    rr_handler(default(Dictionary<int,object>),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_var2(Dictionary<int,object> value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("var2",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackMap<int,object>(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_var2(Dictionary<int,object> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackMapType<int,object>("value",value))
     {
-    rr_async_PropertySet("var2",mm,rrend_async_set_var2,rr_handler,rr_timeout);
+    await rr_async_PropertySet("var2",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_var2(MessageElement m ,Exception err,object param)
+    public virtual async Task<object> async_get_var_num(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_var_num(Action<object,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("var_num",rrend_async_get_var_num,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_var_num(MessageElement value ,Exception err,object param)
-    {
-    Action<object,Exception> rr_handler=(Action<object,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(object),err);
-    return;
-    }
-    object rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackVarType(value);
-    } catch (Exception err2) {
-    rr_handler(default(object),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_var_num(object value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("var_num",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackVarType(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_var_num(object value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackVarType("value",value))
     {
-    rr_async_PropertySet("var_num",mm,rrend_async_set_var_num,rr_handler,rr_timeout);
+    await rr_async_PropertySet("var_num",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_var_num(MessageElement m ,Exception err,object param)
+    public virtual async Task<object> async_get_var_str(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_var_str(Action<object,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("var_str",rrend_async_get_var_str,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_var_str(MessageElement value ,Exception err,object param)
-    {
-    Action<object,Exception> rr_handler=(Action<object,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(object),err);
-    return;
-    }
-    object rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackVarType(value);
-    } catch (Exception err2) {
-    rr_handler(default(object),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_var_str(object value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("var_str",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackVarType(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_var_str(object value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackVarType("value",value))
     {
-    rr_async_PropertySet("var_str",mm,rrend_async_set_var_str,rr_handler,rr_timeout);
+    await rr_async_PropertySet("var_str",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_var_str(MessageElement m ,Exception err,object param)
+    public virtual async Task<object> async_get_var_struct(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_var_struct(Action<object,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("var_struct",rrend_async_get_var_struct,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_var_struct(MessageElement value ,Exception err,object param)
-    {
-    Action<object,Exception> rr_handler=(Action<object,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(object),err);
-    return;
-    }
-    object rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackVarType(value);
-    } catch (Exception err2) {
-    rr_handler(default(object),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_var_struct(object value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("var_struct",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackVarType(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_var_struct(object value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackVarType("value",value))
     {
-    rr_async_PropertySet("var_struct",mm,rrend_async_set_var_struct,rr_handler,rr_timeout);
+    await rr_async_PropertySet("var_struct",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_var_struct(MessageElement m ,Exception err,object param)
+    public virtual async Task<object> async_get_var_vector(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_var_vector(Action<object,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("var_vector",rrend_async_get_var_vector,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_var_vector(MessageElement value ,Exception err,object param)
-    {
-    Action<object,Exception> rr_handler=(Action<object,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(object),err);
-    return;
-    }
-    object rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackVarType(value);
-    } catch (Exception err2) {
-    rr_handler(default(object),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_var_vector(object value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("var_vector",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackVarType(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_var_vector(object value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackVarType("value",value))
     {
-    rr_async_PropertySet("var_vector",mm,rrend_async_set_var_vector,rr_handler,rr_timeout);
+    await rr_async_PropertySet("var_vector",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_var_vector(MessageElement m ,Exception err,object param)
+    public virtual async Task<object> async_get_var_dictionary(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_var_dictionary(Action<object,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("var_dictionary",rrend_async_get_var_dictionary,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_var_dictionary(MessageElement value ,Exception err,object param)
-    {
-    Action<object,Exception> rr_handler=(Action<object,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(object),err);
-    return;
-    }
-    object rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackVarType(value);
-    } catch (Exception err2) {
-    rr_handler(default(object),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_var_dictionary(object value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("var_dictionary",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackVarType(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_var_dictionary(object value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackVarType("value",value))
     {
-    rr_async_PropertySet("var_dictionary",mm,rrend_async_set_var_dictionary,rr_handler,rr_timeout);
+    await rr_async_PropertySet("var_dictionary",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_var_dictionary(MessageElement m ,Exception err,object param)
+    public virtual async Task<object> async_get_var_list(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_var_list(Action<object,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("var_list",rrend_async_get_var_list,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_var_list(MessageElement value ,Exception err,object param)
-    {
-    Action<object,Exception> rr_handler=(Action<object,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(object),err);
-    return;
-    }
-    object rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackVarType(value);
-    } catch (Exception err2) {
-    rr_handler(default(object),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_var_list(object value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("var_list",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackVarType(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_var_list(object value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackVarType("value",value))
     {
-    rr_async_PropertySet("var_list",mm,rrend_async_set_var_list,rr_handler,rr_timeout);
+    await rr_async_PropertySet("var_list",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_var_list(MessageElement m ,Exception err,object param)
+    public virtual async Task<object> async_get_var_multidimarray(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_var_multidimarray(Action<object,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("var_multidimarray",rrend_async_get_var_multidimarray,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_var_multidimarray(MessageElement value ,Exception err,object param)
-    {
-    Action<object,Exception> rr_handler=(Action<object,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(object),err);
-    return;
-    }
-    object rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackVarType(value);
-    } catch (Exception err2) {
-    rr_handler(default(object),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_var_multidimarray(object value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("var_multidimarray",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackVarType(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_var_multidimarray(object value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackVarType("value",value))
     {
-    rr_async_PropertySet("var_multidimarray",mm,rrend_async_set_var_multidimarray,rr_handler,rr_timeout);
+    await rr_async_PropertySet("var_multidimarray",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_var_multidimarray(MessageElement m ,Exception err,object param)
+    public virtual async Task<double> async_get_errtest(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_errtest(Action<double,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("errtest",rrend_async_get_errtest,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_errtest(MessageElement value ,Exception err,object param)
-    {
-    Action<double,Exception> rr_handler=(Action<double,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(double),err);
-    return;
-    }
-    double rr_ret;
-    try {
-    rr_ret=(MessageElementUtil.UnpackScalar<double>(value));
-    } catch (Exception err2) {
-    rr_handler(default(double),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_errtest(double value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("errtest",rr_timeout)) {
+    var rr_ret=(MessageElementUtil.UnpackScalar<double>(rr_value));
+    return rr_ret;
+    } }
+    public virtual async Task async_set_errtest(double value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackScalar<double>("value",value))
     {
-    rr_async_PropertySet("errtest",mm,rrend_async_set_errtest,rr_handler,rr_timeout);
+    await rr_async_PropertySet("errtest",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_errtest(MessageElement m ,Exception err,object param)
+    public virtual async Task<teststruct1> async_get_nulltest(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_nulltest(Action<teststruct1,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("nulltest",rrend_async_get_nulltest,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_nulltest(MessageElement value ,Exception err,object param)
-    {
-    Action<teststruct1,Exception> rr_handler=(Action<teststruct1,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(teststruct1),err);
-    return;
-    }
-    teststruct1 rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackStructure<teststruct1>(value);
-    } catch (Exception err2) {
-    rr_handler(default(teststruct1),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_nulltest(teststruct1 value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("nulltest",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackStructure<teststruct1>(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_nulltest(teststruct1 value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackStructure("value",value))
     {
-    rr_async_PropertySet("nulltest",mm,rrend_async_set_nulltest,rr_handler,rr_timeout);
+    await rr_async_PropertySet("nulltest",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_nulltest(MessageElement m ,Exception err,object param)
-    {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_func1(Action<Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    public virtual async Task async_func1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(vectorptr_messageelement rr_param=new vectorptr_messageelement())
     {
-    rr_async_FunctionCall("func1",rr_param,rrend_async_func1,rr_handler,rr_timeout);
-    }
-    }
-    protected virtual void rrend_async_func1(MessageElement ret ,Exception err,object param)
-    {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_func2(double d1, double d2,Action<Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_return = await rr_async_FunctionCall("func1",rr_param,rr_timeout)) {
+    } } }
+    public virtual async Task async_func2(double d1, double d2,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(vectorptr_messageelement rr_param=new vectorptr_messageelement())
     {
     MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.PackScalar<double>("d1",d1));
     MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.PackScalar<double>("d2",d2));
-    rr_async_FunctionCall("func2",rr_param,rrend_async_func2,rr_handler,rr_timeout);
-    }
-    }
-    protected virtual void rrend_async_func2(MessageElement ret ,Exception err,object param)
-    {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_func3(double d1, double d2,Action<double,Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_return = await rr_async_FunctionCall("func2",rr_param,rr_timeout)) {
+    } } }
+    public virtual async Task<double> async_func3(double d1, double d2,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(vectorptr_messageelement rr_param=new vectorptr_messageelement())
     {
     MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.PackScalar<double>("d1",d1));
     MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.PackScalar<double>("d2",d2));
-    rr_async_FunctionCall("func3",rr_param,rrend_async_func3,rr_handler,rr_timeout);
-    }
-    }
-    protected virtual void rrend_async_func3(MessageElement ret ,Exception err,object param)
-    {
-    Action<double,Exception> rr_handler=(Action<double,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(double),err);
-    return;
-    }
-    double rr_ret;
-    try {
-    rr_ret=(MessageElementUtil.UnpackScalar<double>(ret));
-    } catch (Exception err2) {
-    rr_handler(default(double),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_meaning_of_life(Action<int,Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_return = await rr_async_FunctionCall("func3",rr_param,rr_timeout)) {
+    var rr_ret=(MessageElementUtil.UnpackScalar<double>(rr_return));
+    return rr_ret;
+    } } }
+    public virtual async Task<int> async_meaning_of_life(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(vectorptr_messageelement rr_param=new vectorptr_messageelement())
     {
-    rr_async_FunctionCall("meaning_of_life",rr_param,rrend_async_meaning_of_life,rr_handler,rr_timeout);
-    }
-    }
-    protected virtual void rrend_async_meaning_of_life(MessageElement ret ,Exception err,object param)
-    {
-    Action<int,Exception> rr_handler=(Action<int,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(int),err);
-    return;
-    }
-    int rr_ret;
-    try {
-    rr_ret=(MessageElementUtil.UnpackScalar<int>(ret));
-    } catch (Exception err2) {
-    rr_handler(default(int),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_func_errtest(Action<Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_return = await rr_async_FunctionCall("meaning_of_life",rr_param,rr_timeout)) {
+    var rr_ret=(MessageElementUtil.UnpackScalar<int>(rr_return));
+    return rr_ret;
+    } } }
+    public virtual async Task async_func_errtest(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(vectorptr_messageelement rr_param=new vectorptr_messageelement())
     {
-    rr_async_FunctionCall("func_errtest",rr_param,rrend_async_func_errtest,rr_handler,rr_timeout);
-    }
-    }
-    protected virtual void rrend_async_func_errtest(MessageElement ret ,Exception err,object param)
-    {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_func_errtest1(Action<Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_return = await rr_async_FunctionCall("func_errtest",rr_param,rr_timeout)) {
+    } } }
+    public virtual async Task async_func_errtest1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(vectorptr_messageelement rr_param=new vectorptr_messageelement())
     {
-    rr_async_FunctionCall("func_errtest1",rr_param,rrend_async_func_errtest1,rr_handler,rr_timeout);
-    }
-    }
-    protected virtual void rrend_async_func_errtest1(MessageElement ret ,Exception err,object param)
-    {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_func_errtest2(Action<Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_return = await rr_async_FunctionCall("func_errtest1",rr_param,rr_timeout)) {
+    } } }
+    public virtual async Task async_func_errtest2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(vectorptr_messageelement rr_param=new vectorptr_messageelement())
     {
-    rr_async_FunctionCall("func_errtest2",rr_param,rrend_async_func_errtest2,rr_handler,rr_timeout);
-    }
-    }
-    protected virtual void rrend_async_func_errtest2(MessageElement ret ,Exception err,object param)
-    {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_func_errtest3(Action<Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_return = await rr_async_FunctionCall("func_errtest2",rr_param,rr_timeout)) {
+    } } }
+    public virtual async Task async_func_errtest3(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(vectorptr_messageelement rr_param=new vectorptr_messageelement())
     {
-    rr_async_FunctionCall("func_errtest3",rr_param,rrend_async_func_errtest3,rr_handler,rr_timeout);
-    }
-    }
-    protected virtual void rrend_async_func_errtest3(MessageElement ret ,Exception err,object param)
-    {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_o6_op(int op,Action<Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_return = await rr_async_FunctionCall("func_errtest3",rr_param,rr_timeout)) {
+    } } }
+    public virtual async Task async_o6_op(int op,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(vectorptr_messageelement rr_param=new vectorptr_messageelement())
     {
     MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.PackScalar<int>("op",op));
-    rr_async_FunctionCall("o6_op",rr_param,rrend_async_o6_op,rr_handler,rr_timeout);
-    }
-    }
-    protected virtual void rrend_async_o6_op(MessageElement ret ,Exception err,object param)
-    {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_pipe_check_error(Action<Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_return = await rr_async_FunctionCall("o6_op",rr_param,rr_timeout)) {
+    } } }
+    public virtual async Task async_pipe_check_error(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(vectorptr_messageelement rr_param=new vectorptr_messageelement())
     {
-    rr_async_FunctionCall("pipe_check_error",rr_param,rrend_async_pipe_check_error,rr_handler,rr_timeout);
-    }
-    }
-    protected virtual void rrend_async_pipe_check_error(MessageElement ret ,Exception err,object param)
-    {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_test_callbacks(Action<Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_return = await rr_async_FunctionCall("pipe_check_error",rr_param,rr_timeout)) {
+    } } }
+    public virtual async Task async_test_callbacks(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(vectorptr_messageelement rr_param=new vectorptr_messageelement())
     {
-    rr_async_FunctionCall("test_callbacks",rr_param,rrend_async_test_callbacks,rr_handler,rr_timeout);
-    }
-    }
-    protected virtual void rrend_async_test_callbacks(MessageElement ret ,Exception err,object param)
+    using(var rr_return = await rr_async_FunctionCall("test_callbacks",rr_param,rr_timeout)) {
+    } } }
+    public Task<sub1> async_get_o1(int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
+    return AsyncFindObjRefTyped<sub1>("o1","com.robotraconteur.testing.TestService1.sub1",timeout);
+    }
+    public Task<sub1>  async_get_o2(int ind, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    rr_handler(err);
-    return;
+    return AsyncFindObjRefTyped<sub1>("o2",ind.ToString(),"com.robotraconteur.testing.TestService1.sub1",timeout);
     }
-    rr_handler(null);
-    }
-    public void async_get_o1(Action<sub1,Exception> handler, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    public Task<sub1>  async_get_o3(int ind, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    AsyncFindObjRefTyped("o1","com.robotraconteur.testing.TestService1.sub1",handler,timeout);
+    return AsyncFindObjRefTyped<sub1>("o3",ind.ToString(),"com.robotraconteur.testing.TestService1.sub1",timeout);
     }
-    public void async_get_o2(int ind, Action<sub1,Exception> handler, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    public Task<sub1>  async_get_o4(string ind, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    AsyncFindObjRefTyped("o2",ind.ToString(),"com.robotraconteur.testing.TestService1.sub1",handler,timeout);
+    return AsyncFindObjRefTyped<sub1>("o4",ind.ToString(),"com.robotraconteur.testing.TestService1.sub1",timeout);
     }
-    public void async_get_o3(int ind, Action<sub1,Exception> handler, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    public Task<com.robotraconteur.testing.TestService2.subobj> async_get_o5(int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    AsyncFindObjRefTyped("o3",ind.ToString(),"com.robotraconteur.testing.TestService1.sub1",handler,timeout);
+    return AsyncFindObjRefTyped<com.robotraconteur.testing.TestService2.subobj>("o5","com.robotraconteur.testing.TestService2.subobj",timeout);
     }
-    public void async_get_o4(string ind, Action<sub1,Exception> handler, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    AsyncFindObjRefTyped("o4",ind.ToString(),"com.robotraconteur.testing.TestService1.sub1",handler,timeout);
-    }
-    public void async_get_o5(Action<com.robotraconteur.testing.TestService2.subobj,Exception> handler, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    AsyncFindObjRefTyped("o5","com.robotraconteur.testing.TestService2.subobj",handler,timeout);
-    }
-    public void async_get_o6(Action<object,Exception> handler, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE) {
-    AsyncFindObjRef("o6",handler,timeout);
+    public Task<object> async_get_o6(int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE) {
+    return AsyncFindObjRef("o6",timeout);
     }
 }
 public interface async_sub1
 {
-    void async_get_d1(Action<double[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_d1(double[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_d2(Action<MultiDimArray,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_d2(MultiDimArray value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_s_ind(Action<string,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_s_ind(string value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_i_ind(Action<int,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_i_ind(int value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_o2_1(Action<sub2,Exception> handler, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_o2_2(int ind, Action<sub2,Exception> handler, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_o2_3(string ind, Action<sub2,Exception> handler, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<double[]> async_get_d1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_d1(double[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<MultiDimArray> async_get_d2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_d2(MultiDimArray value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<string> async_get_s_ind(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_s_ind(string value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<int> async_get_i_ind(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_i_ind(int value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<sub2> async_get_o2_1(int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<sub2> async_get_o2_2(int ind, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<sub2> async_get_o2_3(string ind, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
 }
 public class sub1_stub : ServiceStub , sub1, async_sub1{
     public sub1_stub(WrappedServiceStub innerstub) : base(innerstub) {
@@ -3613,180 +2082,80 @@ public class sub1_stub : ServiceStub , sub1, async_sub1{
     }
     throw new MemberNotFoundException("Member not found");
     }
-    public virtual void async_get_d1(Action<double[],Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    public virtual async Task<double[]> async_get_d1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    rr_async_PropertyGet("d1",rrend_async_get_d1,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_d1(MessageElement value ,Exception err,object param)
-    {
-    Action<double[],Exception> rr_handler=(Action<double[],Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(double[]),err);
-    return;
-    }
-    double[] rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackArray<double>(value);
-    } catch (Exception err2) {
-    rr_handler(default(double[]),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_d1(double[] value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("d1",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackArray<double>(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_d1(double[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackArray<double>("value",value))
     {
-    rr_async_PropertySet("d1",mm,rrend_async_set_d1,rr_handler,rr_timeout);
+    await rr_async_PropertySet("d1",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_d1(MessageElement m ,Exception err,object param)
+    public virtual async Task<MultiDimArray> async_get_d2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_d2(Action<MultiDimArray,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("d2",rrend_async_get_d2,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_d2(MessageElement value ,Exception err,object param)
-    {
-    Action<MultiDimArray,Exception> rr_handler=(Action<MultiDimArray,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(MultiDimArray),err);
-    return;
-    }
-    MultiDimArray rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackMultiDimArray(value);
-    } catch (Exception err2) {
-    rr_handler(default(MultiDimArray),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_d2(MultiDimArray value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("d2",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackMultiDimArray(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_d2(MultiDimArray value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackMultiDimArray("value",(MultiDimArray)value))
     {
-    rr_async_PropertySet("d2",mm,rrend_async_set_d2,rr_handler,rr_timeout);
+    await rr_async_PropertySet("d2",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_d2(MessageElement m ,Exception err,object param)
+    public virtual async Task<string> async_get_s_ind(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_s_ind(Action<string,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("s_ind",rrend_async_get_s_ind,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_s_ind(MessageElement value ,Exception err,object param)
-    {
-    Action<string,Exception> rr_handler=(Action<string,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(string),err);
-    return;
-    }
-    string rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackString(value);
-    } catch (Exception err2) {
-    rr_handler(default(string),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_s_ind(string value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("s_ind",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackString(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_s_ind(string value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackString("value",value))
     {
-    rr_async_PropertySet("s_ind",mm,rrend_async_set_s_ind,rr_handler,rr_timeout);
+    await rr_async_PropertySet("s_ind",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_s_ind(MessageElement m ,Exception err,object param)
+    public virtual async Task<int> async_get_i_ind(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_i_ind(Action<int,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("i_ind",rrend_async_get_i_ind,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_i_ind(MessageElement value ,Exception err,object param)
-    {
-    Action<int,Exception> rr_handler=(Action<int,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(int),err);
-    return;
-    }
-    int rr_ret;
-    try {
-    rr_ret=(MessageElementUtil.UnpackScalar<int>(value));
-    } catch (Exception err2) {
-    rr_handler(default(int),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_i_ind(int value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("i_ind",rr_timeout)) {
+    var rr_ret=(MessageElementUtil.UnpackScalar<int>(rr_value));
+    return rr_ret;
+    } }
+    public virtual async Task async_set_i_ind(int value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackScalar<int>("value",value))
     {
-    rr_async_PropertySet("i_ind",mm,rrend_async_set_i_ind,rr_handler,rr_timeout);
+    await rr_async_PropertySet("i_ind",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_i_ind(MessageElement m ,Exception err,object param)
+    public Task<sub2> async_get_o2_1(int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
+    return AsyncFindObjRefTyped<sub2>("o2_1","com.robotraconteur.testing.TestService1.sub2",timeout);
     }
-    rr_handler(null);
-    }
-    public void async_get_o2_1(Action<sub2,Exception> handler, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    public Task<sub2>  async_get_o2_2(int ind, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    AsyncFindObjRefTyped("o2_1","com.robotraconteur.testing.TestService1.sub2",handler,timeout);
+    return AsyncFindObjRefTyped<sub2>("o2_2",ind.ToString(),"com.robotraconteur.testing.TestService1.sub2",timeout);
     }
-    public void async_get_o2_2(int ind, Action<sub2,Exception> handler, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    public Task<sub2>  async_get_o2_3(string ind, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    AsyncFindObjRefTyped("o2_2",ind.ToString(),"com.robotraconteur.testing.TestService1.sub2",handler,timeout);
-    }
-    public void async_get_o2_3(string ind, Action<sub2,Exception> handler, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    AsyncFindObjRefTyped("o2_3",ind.ToString(),"com.robotraconteur.testing.TestService1.sub2",handler,timeout);
+    return AsyncFindObjRefTyped<sub2>("o2_3",ind.ToString(),"com.robotraconteur.testing.TestService1.sub2",timeout);
     }
 }
 public interface async_sub2
 {
-    void async_get_s_ind(Action<string,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_s_ind(string value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_i_ind(Action<int,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_i_ind(int value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_data(Action<string,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_data(string value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_o3_1(string ind, Action<sub3,Exception> handler, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<string> async_get_s_ind(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_s_ind(string value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<int> async_get_i_ind(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_i_ind(int value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<string> async_get_data(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_data(string value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<sub3> async_get_o3_1(string ind, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
 }
 public class sub2_stub : ServiceStub , sub2, async_sub2{
     public sub2_stub(WrappedServiceStub innerstub) : base(innerstub) {
@@ -3840,134 +2209,59 @@ public class sub2_stub : ServiceStub , sub2, async_sub2{
     }
     throw new MemberNotFoundException("Member not found");
     }
-    public virtual void async_get_s_ind(Action<string,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    public virtual async Task<string> async_get_s_ind(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    rr_async_PropertyGet("s_ind",rrend_async_get_s_ind,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_s_ind(MessageElement value ,Exception err,object param)
-    {
-    Action<string,Exception> rr_handler=(Action<string,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(string),err);
-    return;
-    }
-    string rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackString(value);
-    } catch (Exception err2) {
-    rr_handler(default(string),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_s_ind(string value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("s_ind",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackString(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_s_ind(string value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackString("value",value))
     {
-    rr_async_PropertySet("s_ind",mm,rrend_async_set_s_ind,rr_handler,rr_timeout);
+    await rr_async_PropertySet("s_ind",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_s_ind(MessageElement m ,Exception err,object param)
+    public virtual async Task<int> async_get_i_ind(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_i_ind(Action<int,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("i_ind",rrend_async_get_i_ind,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_i_ind(MessageElement value ,Exception err,object param)
-    {
-    Action<int,Exception> rr_handler=(Action<int,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(int),err);
-    return;
-    }
-    int rr_ret;
-    try {
-    rr_ret=(MessageElementUtil.UnpackScalar<int>(value));
-    } catch (Exception err2) {
-    rr_handler(default(int),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_i_ind(int value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("i_ind",rr_timeout)) {
+    var rr_ret=(MessageElementUtil.UnpackScalar<int>(rr_value));
+    return rr_ret;
+    } }
+    public virtual async Task async_set_i_ind(int value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackScalar<int>("value",value))
     {
-    rr_async_PropertySet("i_ind",mm,rrend_async_set_i_ind,rr_handler,rr_timeout);
+    await rr_async_PropertySet("i_ind",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_i_ind(MessageElement m ,Exception err,object param)
+    public virtual async Task<string> async_get_data(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_data(Action<string,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("data",rrend_async_get_data,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_data(MessageElement value ,Exception err,object param)
-    {
-    Action<string,Exception> rr_handler=(Action<string,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(string),err);
-    return;
-    }
-    string rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackString(value);
-    } catch (Exception err2) {
-    rr_handler(default(string),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_data(string value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("data",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackString(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_data(string value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackString("value",value))
     {
-    rr_async_PropertySet("data",mm,rrend_async_set_data,rr_handler,rr_timeout);
+    await rr_async_PropertySet("data",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_data(MessageElement m ,Exception err,object param)
+    public Task<sub3>  async_get_o3_1(string ind, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public void async_get_o3_1(string ind, Action<sub3,Exception> handler, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    AsyncFindObjRefTyped("o3_1",ind.ToString(),"com.robotraconteur.testing.TestService1.sub3",handler,timeout);
+    return AsyncFindObjRefTyped<sub3>("o3_1",ind.ToString(),"com.robotraconteur.testing.TestService1.sub3",timeout);
     }
 }
 public interface async_sub3
 {
-    void async_get_ind(Action<string,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_ind(string value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_data2(Action<string,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_data2(string value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_get_data3(Action<double,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_set_data3(double value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    void async_add(double d,Action<double,Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<string> async_get_ind(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_ind(string value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<string> async_get_data2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_data2(string value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<double> async_get_data3(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_data3(double value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<double> async_add(double d,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
 }
 public class sub3_stub : ServiceStub , sub3, async_sub3{
     public sub3_stub(WrappedServiceStub innerstub) : base(innerstub) {
@@ -4028,145 +2322,54 @@ public class sub3_stub : ServiceStub , sub3, async_sub3{
     }
     throw new MemberNotFoundException("Member not found");
     }
-    public virtual void async_get_ind(Action<string,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    public virtual async Task<string> async_get_ind(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    rr_async_PropertyGet("ind",rrend_async_get_ind,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_ind(MessageElement value ,Exception err,object param)
-    {
-    Action<string,Exception> rr_handler=(Action<string,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(string),err);
-    return;
-    }
-    string rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackString(value);
-    } catch (Exception err2) {
-    rr_handler(default(string),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_ind(string value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("ind",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackString(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_ind(string value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackString("value",value))
     {
-    rr_async_PropertySet("ind",mm,rrend_async_set_ind,rr_handler,rr_timeout);
+    await rr_async_PropertySet("ind",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_ind(MessageElement m ,Exception err,object param)
+    public virtual async Task<string> async_get_data2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_data2(Action<string,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("data2",rrend_async_get_data2,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_data2(MessageElement value ,Exception err,object param)
-    {
-    Action<string,Exception> rr_handler=(Action<string,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(string),err);
-    return;
-    }
-    string rr_ret;
-    try {
-    rr_ret=MessageElementUtil.UnpackString(value);
-    } catch (Exception err2) {
-    rr_handler(default(string),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_data2(string value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("data2",rr_timeout)) {
+    var rr_ret=MessageElementUtil.UnpackString(rr_value);
+    return rr_ret;
+    } }
+    public virtual async Task async_set_data2(string value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackString("value",value))
     {
-    rr_async_PropertySet("data2",mm,rrend_async_set_data2,rr_handler,rr_timeout);
+    await rr_async_PropertySet("data2",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_data2(MessageElement m ,Exception err,object param)
+    public virtual async Task<double> async_get_data3(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_get_data3(Action<double,Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    rr_async_PropertyGet("data3",rrend_async_get_data3,rr_handler,rr_timeout);
-    }
-    protected virtual void rrend_async_get_data3(MessageElement value ,Exception err,object param)
-    {
-    Action<double,Exception> rr_handler=(Action<double,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(double),err);
-    return;
-    }
-    double rr_ret;
-    try {
-    rr_ret=(MessageElementUtil.UnpackScalar<double>(value));
-    } catch (Exception err2) {
-    rr_handler(default(double),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
-    public virtual void async_set_data3(double value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    using(var rr_value = await rr_async_PropertyGet("data3",rr_timeout)) {
+    var rr_ret=(MessageElementUtil.UnpackScalar<double>(rr_value));
+    return rr_ret;
+    } }
+    public virtual async Task async_set_data3(double value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(MessageElement mm=MessageElementUtil.PackScalar<double>("value",value))
     {
-    rr_async_PropertySet("data3",mm,rrend_async_set_data3,rr_handler,rr_timeout);
+    await rr_async_PropertySet("data3",mm,rr_timeout);
     }
     }
-    protected virtual void rrend_async_set_data3(MessageElement m ,Exception err,object param)
-    {
-    Action<Exception> rr_handler=(Action<Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(err);
-    return;
-    }
-    rr_handler(null);
-    }
-    public virtual void async_add(double d,Action<double,Exception> rr_handler,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    public virtual async Task<double> async_add(double d,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(vectorptr_messageelement rr_param=new vectorptr_messageelement())
     {
     MessageElementUtil.AddMessageElementDispose(rr_param,MessageElementUtil.PackScalar<double>("d",d));
-    rr_async_FunctionCall("add",rr_param,rrend_async_add,rr_handler,rr_timeout);
-    }
-    }
-    protected virtual void rrend_async_add(MessageElement ret ,Exception err,object param)
-    {
-    Action<double,Exception> rr_handler=(Action<double,Exception>)param;
-    if (err!=null)
-    {
-    rr_handler(default(double),err);
-    return;
-    }
-    double rr_ret;
-    try {
-    rr_ret=(MessageElementUtil.UnpackScalar<double>(ret));
-    } catch (Exception err2) {
-    rr_handler(default(double),err2);
-    return;
-    }
-    rr_handler(rr_ret,null);
-    }
+    using(var rr_return = await rr_async_FunctionCall("add",rr_param,rr_timeout)) {
+    var rr_ret=(MessageElementUtil.UnpackScalar<double>(rr_return));
+    return rr_ret;
+    } } }
 }
 public class testroot_skel : ServiceSkel {
     protected testroot obj;
@@ -5632,929 +3835,5 @@ public class sub3_default_impl : sub3{
     throw new NotImplementedException();    }
 }
 public static class RRExtensions{
-    public static Task<double> async_get_d1(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<double> t=new RobotRaconteurTaskCompletion<double>();
-    rr_obj.async_get_d1(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_d1(this async_testroot rr_obj, double value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_d1(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<double[]> async_get_d2(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<double[]> t=new RobotRaconteurTaskCompletion<double[]>();
-    rr_obj.async_get_d2(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_d2(this async_testroot rr_obj, double[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_d2(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<double[]> async_get_d3(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<double[]> t=new RobotRaconteurTaskCompletion<double[]>();
-    rr_obj.async_get_d3(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_d3(this async_testroot rr_obj, double[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_d3(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<double[]> async_get_d4(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<double[]> t=new RobotRaconteurTaskCompletion<double[]>();
-    rr_obj.async_get_d4(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_d4(this async_testroot rr_obj, double[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_d4(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<MultiDimArray> async_get_d5(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<MultiDimArray> t=new RobotRaconteurTaskCompletion<MultiDimArray>();
-    rr_obj.async_get_d5(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_d5(this async_testroot rr_obj, MultiDimArray value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_d5(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<MultiDimArray> async_get_d6(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<MultiDimArray> t=new RobotRaconteurTaskCompletion<MultiDimArray>();
-    rr_obj.async_get_d6(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_d6(this async_testroot rr_obj, MultiDimArray value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_d6(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<float> async_get_s1(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<float> t=new RobotRaconteurTaskCompletion<float>();
-    rr_obj.async_get_s1(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_s1(this async_testroot rr_obj, float value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_s1(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<float[]> async_get_s2(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<float[]> t=new RobotRaconteurTaskCompletion<float[]>();
-    rr_obj.async_get_s2(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_s2(this async_testroot rr_obj, float[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_s2(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<sbyte> async_get_i8_1(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<sbyte> t=new RobotRaconteurTaskCompletion<sbyte>();
-    rr_obj.async_get_i8_1(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_i8_1(this async_testroot rr_obj, sbyte value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_i8_1(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<sbyte[]> async_get_i8_2(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<sbyte[]> t=new RobotRaconteurTaskCompletion<sbyte[]>();
-    rr_obj.async_get_i8_2(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_i8_2(this async_testroot rr_obj, sbyte[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_i8_2(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<byte> async_get_u8_1(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<byte> t=new RobotRaconteurTaskCompletion<byte>();
-    rr_obj.async_get_u8_1(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_u8_1(this async_testroot rr_obj, byte value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_u8_1(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<byte[]> async_get_u8_2(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<byte[]> t=new RobotRaconteurTaskCompletion<byte[]>();
-    rr_obj.async_get_u8_2(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_u8_2(this async_testroot rr_obj, byte[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_u8_2(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<MultiDimArray> async_get_u8_3(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<MultiDimArray> t=new RobotRaconteurTaskCompletion<MultiDimArray>();
-    rr_obj.async_get_u8_3(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_u8_3(this async_testroot rr_obj, MultiDimArray value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_u8_3(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<short> async_get_i16_1(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<short> t=new RobotRaconteurTaskCompletion<short>();
-    rr_obj.async_get_i16_1(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_i16_1(this async_testroot rr_obj, short value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_i16_1(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<short[]> async_get_i16_2(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<short[]> t=new RobotRaconteurTaskCompletion<short[]>();
-    rr_obj.async_get_i16_2(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_i16_2(this async_testroot rr_obj, short[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_i16_2(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<ushort> async_get_u16_1(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<ushort> t=new RobotRaconteurTaskCompletion<ushort>();
-    rr_obj.async_get_u16_1(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_u16_1(this async_testroot rr_obj, ushort value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_u16_1(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<ushort[]> async_get_u16_2(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<ushort[]> t=new RobotRaconteurTaskCompletion<ushort[]>();
-    rr_obj.async_get_u16_2(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_u16_2(this async_testroot rr_obj, ushort[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_u16_2(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<int> async_get_i32_1(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<int> t=new RobotRaconteurTaskCompletion<int>();
-    rr_obj.async_get_i32_1(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_i32_1(this async_testroot rr_obj, int value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_i32_1(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<int[]> async_get_i32_2(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<int[]> t=new RobotRaconteurTaskCompletion<int[]>();
-    rr_obj.async_get_i32_2(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_i32_2(this async_testroot rr_obj, int[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_i32_2(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<int[]> async_get_i32_huge(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<int[]> t=new RobotRaconteurTaskCompletion<int[]>();
-    rr_obj.async_get_i32_huge(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_i32_huge(this async_testroot rr_obj, int[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_i32_huge(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<uint> async_get_u32_1(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<uint> t=new RobotRaconteurTaskCompletion<uint>();
-    rr_obj.async_get_u32_1(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_u32_1(this async_testroot rr_obj, uint value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_u32_1(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<uint[]> async_get_u32_2(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<uint[]> t=new RobotRaconteurTaskCompletion<uint[]>();
-    rr_obj.async_get_u32_2(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_u32_2(this async_testroot rr_obj, uint[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_u32_2(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<long> async_get_i64_1(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<long> t=new RobotRaconteurTaskCompletion<long>();
-    rr_obj.async_get_i64_1(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_i64_1(this async_testroot rr_obj, long value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_i64_1(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<long[]> async_get_i64_2(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<long[]> t=new RobotRaconteurTaskCompletion<long[]>();
-    rr_obj.async_get_i64_2(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_i64_2(this async_testroot rr_obj, long[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_i64_2(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<ulong> async_get_u64_1(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<ulong> t=new RobotRaconteurTaskCompletion<ulong>();
-    rr_obj.async_get_u64_1(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_u64_1(this async_testroot rr_obj, ulong value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_u64_1(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<ulong[]> async_get_u64_2(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<ulong[]> t=new RobotRaconteurTaskCompletion<ulong[]>();
-    rr_obj.async_get_u64_2(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_u64_2(this async_testroot rr_obj, ulong[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_u64_2(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<string> async_get_str1(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<string> t=new RobotRaconteurTaskCompletion<string>();
-    rr_obj.async_get_str1(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_str1(this async_testroot rr_obj, string value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_str1(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<teststruct1> async_get_struct1(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<teststruct1> t=new RobotRaconteurTaskCompletion<teststruct1>();
-    rr_obj.async_get_struct1(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_struct1(this async_testroot rr_obj, teststruct1 value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_struct1(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<teststruct2> async_get_struct2(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<teststruct2> t=new RobotRaconteurTaskCompletion<teststruct2>();
-    rr_obj.async_get_struct2(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_struct2(this async_testroot rr_obj, teststruct2 value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_struct2(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<Dictionary<int,double>> async_get_is_d1(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<Dictionary<int,double>> t=new RobotRaconteurTaskCompletion<Dictionary<int,double>>();
-    rr_obj.async_get_is_d1(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_is_d1(this async_testroot rr_obj, Dictionary<int,double> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_is_d1(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<Dictionary<string,double>> async_get_is_d2(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<Dictionary<string,double>> t=new RobotRaconteurTaskCompletion<Dictionary<string,double>>();
-    rr_obj.async_get_is_d2(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_is_d2(this async_testroot rr_obj, Dictionary<string,double> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_is_d2(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<Dictionary<int,double[]>> async_get_is_d3(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<Dictionary<int,double[]>> t=new RobotRaconteurTaskCompletion<Dictionary<int,double[]>>();
-    rr_obj.async_get_is_d3(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_is_d3(this async_testroot rr_obj, Dictionary<int,double[]> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_is_d3(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<Dictionary<string,double[]>> async_get_is_d4(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<Dictionary<string,double[]>> t=new RobotRaconteurTaskCompletion<Dictionary<string,double[]>>();
-    rr_obj.async_get_is_d4(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_is_d4(this async_testroot rr_obj, Dictionary<string,double[]> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_is_d4(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<Dictionary<int,MultiDimArray>> async_get_is_d5(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<Dictionary<int,MultiDimArray>> t=new RobotRaconteurTaskCompletion<Dictionary<int,MultiDimArray>>();
-    rr_obj.async_get_is_d5(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_is_d5(this async_testroot rr_obj, Dictionary<int,MultiDimArray> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_is_d5(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<Dictionary<string,MultiDimArray>> async_get_is_d6(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<Dictionary<string,MultiDimArray>> t=new RobotRaconteurTaskCompletion<Dictionary<string,MultiDimArray>>();
-    rr_obj.async_get_is_d6(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_is_d6(this async_testroot rr_obj, Dictionary<string,MultiDimArray> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_is_d6(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<Dictionary<int,string>> async_get_is_str1(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<Dictionary<int,string>> t=new RobotRaconteurTaskCompletion<Dictionary<int,string>>();
-    rr_obj.async_get_is_str1(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_is_str1(this async_testroot rr_obj, Dictionary<int,string> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_is_str1(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<Dictionary<string,string>> async_get_is_str2(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<Dictionary<string,string>> t=new RobotRaconteurTaskCompletion<Dictionary<string,string>>();
-    rr_obj.async_get_is_str2(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_is_str2(this async_testroot rr_obj, Dictionary<string,string> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_is_str2(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<Dictionary<int,teststruct2>> async_get_is_struct1(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<Dictionary<int,teststruct2>> t=new RobotRaconteurTaskCompletion<Dictionary<int,teststruct2>>();
-    rr_obj.async_get_is_struct1(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_is_struct1(this async_testroot rr_obj, Dictionary<int,teststruct2> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_is_struct1(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<Dictionary<string,teststruct2>> async_get_is_struct2(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<Dictionary<string,teststruct2>> t=new RobotRaconteurTaskCompletion<Dictionary<string,teststruct2>>();
-    rr_obj.async_get_is_struct2(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_is_struct2(this async_testroot rr_obj, Dictionary<string,teststruct2> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_is_struct2(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<com.robotraconteur.testing.TestService2.ostruct2> async_get_struct3(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<com.robotraconteur.testing.TestService2.ostruct2> t=new RobotRaconteurTaskCompletion<com.robotraconteur.testing.TestService2.ostruct2>();
-    rr_obj.async_get_struct3(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_struct3(this async_testroot rr_obj, com.robotraconteur.testing.TestService2.ostruct2 value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_struct3(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<List<double>> async_get_list_d1(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<List<double>> t=new RobotRaconteurTaskCompletion<List<double>>();
-    rr_obj.async_get_list_d1(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_list_d1(this async_testroot rr_obj, List<double> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_list_d1(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<List<double[]>> async_get_list_d3(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<List<double[]>> t=new RobotRaconteurTaskCompletion<List<double[]>>();
-    rr_obj.async_get_list_d3(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_list_d3(this async_testroot rr_obj, List<double[]> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_list_d3(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<List<MultiDimArray>> async_get_list_d5(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<List<MultiDimArray>> t=new RobotRaconteurTaskCompletion<List<MultiDimArray>>();
-    rr_obj.async_get_list_d5(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_list_d5(this async_testroot rr_obj, List<MultiDimArray> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_list_d5(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<List<string>> async_get_list_str1(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<List<string>> t=new RobotRaconteurTaskCompletion<List<string>>();
-    rr_obj.async_get_list_str1(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_list_str1(this async_testroot rr_obj, List<string> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_list_str1(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<List<teststruct2>> async_get_list_struct1(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<List<teststruct2>> t=new RobotRaconteurTaskCompletion<List<teststruct2>>();
-    rr_obj.async_get_list_struct1(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_list_struct1(this async_testroot rr_obj, List<teststruct2> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_list_struct1(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<object> async_get_var1(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<object> t=new RobotRaconteurTaskCompletion<object>();
-    rr_obj.async_get_var1(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_var1(this async_testroot rr_obj, object value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_var1(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<Dictionary<int,object>> async_get_var2(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<Dictionary<int,object>> t=new RobotRaconteurTaskCompletion<Dictionary<int,object>>();
-    rr_obj.async_get_var2(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_var2(this async_testroot rr_obj, Dictionary<int,object> value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_var2(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<object> async_get_var_num(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<object> t=new RobotRaconteurTaskCompletion<object>();
-    rr_obj.async_get_var_num(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_var_num(this async_testroot rr_obj, object value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_var_num(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<object> async_get_var_str(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<object> t=new RobotRaconteurTaskCompletion<object>();
-    rr_obj.async_get_var_str(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_var_str(this async_testroot rr_obj, object value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_var_str(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<object> async_get_var_struct(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<object> t=new RobotRaconteurTaskCompletion<object>();
-    rr_obj.async_get_var_struct(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_var_struct(this async_testroot rr_obj, object value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_var_struct(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<object> async_get_var_vector(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<object> t=new RobotRaconteurTaskCompletion<object>();
-    rr_obj.async_get_var_vector(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_var_vector(this async_testroot rr_obj, object value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_var_vector(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<object> async_get_var_dictionary(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<object> t=new RobotRaconteurTaskCompletion<object>();
-    rr_obj.async_get_var_dictionary(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_var_dictionary(this async_testroot rr_obj, object value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_var_dictionary(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<object> async_get_var_list(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<object> t=new RobotRaconteurTaskCompletion<object>();
-    rr_obj.async_get_var_list(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_var_list(this async_testroot rr_obj, object value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_var_list(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<object> async_get_var_multidimarray(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<object> t=new RobotRaconteurTaskCompletion<object>();
-    rr_obj.async_get_var_multidimarray(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_var_multidimarray(this async_testroot rr_obj, object value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_var_multidimarray(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<double> async_get_errtest(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<double> t=new RobotRaconteurTaskCompletion<double>();
-    rr_obj.async_get_errtest(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_errtest(this async_testroot rr_obj, double value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_errtest(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<teststruct1> async_get_nulltest(this async_testroot rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<teststruct1> t=new RobotRaconteurTaskCompletion<teststruct1>();
-    rr_obj.async_get_nulltest(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_nulltest(this async_testroot rr_obj, teststruct1 value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_nulltest(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_func1(this async_testroot rr_obj,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion rr_t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_func1(rr_t.handler,rr_timeout);
-    return rr_t.Task;
-    }
-    public static Task async_func2(this async_testroot rr_obj,double d1, double d2,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion rr_t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_func2(d1, d2,rr_t.handler,rr_timeout);
-    return rr_t.Task;
-    }
-    public static Task<double> async_func3(this async_testroot rr_obj,double d1, double d2,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<double> rr_t=new RobotRaconteurTaskCompletion<double>();
-    rr_obj.async_func3(d1, d2,rr_t.handler,rr_timeout);
-    return rr_t.Task;
-    }
-    public static Task<int> async_meaning_of_life(this async_testroot rr_obj,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<int> rr_t=new RobotRaconteurTaskCompletion<int>();
-    rr_obj.async_meaning_of_life(rr_t.handler,rr_timeout);
-    return rr_t.Task;
-    }
-    public static Task async_func_errtest(this async_testroot rr_obj,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion rr_t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_func_errtest(rr_t.handler,rr_timeout);
-    return rr_t.Task;
-    }
-    public static Task async_func_errtest1(this async_testroot rr_obj,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion rr_t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_func_errtest1(rr_t.handler,rr_timeout);
-    return rr_t.Task;
-    }
-    public static Task async_func_errtest2(this async_testroot rr_obj,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion rr_t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_func_errtest2(rr_t.handler,rr_timeout);
-    return rr_t.Task;
-    }
-    public static Task async_func_errtest3(this async_testroot rr_obj,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion rr_t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_func_errtest3(rr_t.handler,rr_timeout);
-    return rr_t.Task;
-    }
-    public static Task async_o6_op(this async_testroot rr_obj,int op,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion rr_t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_o6_op(op,rr_t.handler,rr_timeout);
-    return rr_t.Task;
-    }
-    public static Task async_pipe_check_error(this async_testroot rr_obj,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion rr_t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_pipe_check_error(rr_t.handler,rr_timeout);
-    return rr_t.Task;
-    }
-    public static Task async_test_callbacks(this async_testroot rr_obj,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion rr_t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_test_callbacks(rr_t.handler,rr_timeout);
-    return rr_t.Task;
-    }
-    public static Task<sub1> async_get_o1(this async_testroot rr_obj, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<sub1> t=new RobotRaconteurTaskCompletion<sub1>();
-    rr_obj.async_get_o1(t.handler,timeout);
-    return t.Task;
-    }
-    public static Task<sub1> async_get_o2(this async_testroot rr_obj, int ind, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<sub1> t=new RobotRaconteurTaskCompletion<sub1>();
-    rr_obj.async_get_o2(ind,t.handler,timeout);
-    return t.Task;
-    }
-    public static Task<sub1> async_get_o3(this async_testroot rr_obj, int ind, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<sub1> t=new RobotRaconteurTaskCompletion<sub1>();
-    rr_obj.async_get_o3(ind,t.handler,timeout);
-    return t.Task;
-    }
-    public static Task<sub1> async_get_o4(this async_testroot rr_obj, string ind, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<sub1> t=new RobotRaconteurTaskCompletion<sub1>();
-    rr_obj.async_get_o4(ind,t.handler,timeout);
-    return t.Task;
-    }
-    public static Task<com.robotraconteur.testing.TestService2.subobj> async_get_o5(this async_testroot rr_obj, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<com.robotraconteur.testing.TestService2.subobj> t=new RobotRaconteurTaskCompletion<com.robotraconteur.testing.TestService2.subobj>();
-    rr_obj.async_get_o5(t.handler,timeout);
-    return t.Task;
-    }
-    public static Task<object> async_get_o6(this async_testroot rr_obj, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<object> t=new RobotRaconteurTaskCompletion<object>();
-    rr_obj.async_get_o6(t.handler,timeout);
-    return t.Task;
-    }
-    public static Task<double[]> async_get_d1(this async_sub1 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<double[]> t=new RobotRaconteurTaskCompletion<double[]>();
-    rr_obj.async_get_d1(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_d1(this async_sub1 rr_obj, double[] value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_d1(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<MultiDimArray> async_get_d2(this async_sub1 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<MultiDimArray> t=new RobotRaconteurTaskCompletion<MultiDimArray>();
-    rr_obj.async_get_d2(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_d2(this async_sub1 rr_obj, MultiDimArray value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_d2(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<string> async_get_s_ind(this async_sub1 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<string> t=new RobotRaconteurTaskCompletion<string>();
-    rr_obj.async_get_s_ind(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_s_ind(this async_sub1 rr_obj, string value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_s_ind(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<int> async_get_i_ind(this async_sub1 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<int> t=new RobotRaconteurTaskCompletion<int>();
-    rr_obj.async_get_i_ind(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_i_ind(this async_sub1 rr_obj, int value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_i_ind(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<sub2> async_get_o2_1(this async_sub1 rr_obj, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<sub2> t=new RobotRaconteurTaskCompletion<sub2>();
-    rr_obj.async_get_o2_1(t.handler,timeout);
-    return t.Task;
-    }
-    public static Task<sub2> async_get_o2_2(this async_sub1 rr_obj, int ind, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<sub2> t=new RobotRaconteurTaskCompletion<sub2>();
-    rr_obj.async_get_o2_2(ind,t.handler,timeout);
-    return t.Task;
-    }
-    public static Task<sub2> async_get_o2_3(this async_sub1 rr_obj, string ind, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<sub2> t=new RobotRaconteurTaskCompletion<sub2>();
-    rr_obj.async_get_o2_3(ind,t.handler,timeout);
-    return t.Task;
-    }
-    public static Task<string> async_get_s_ind(this async_sub2 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<string> t=new RobotRaconteurTaskCompletion<string>();
-    rr_obj.async_get_s_ind(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_s_ind(this async_sub2 rr_obj, string value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_s_ind(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<int> async_get_i_ind(this async_sub2 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<int> t=new RobotRaconteurTaskCompletion<int>();
-    rr_obj.async_get_i_ind(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_i_ind(this async_sub2 rr_obj, int value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_i_ind(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<string> async_get_data(this async_sub2 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<string> t=new RobotRaconteurTaskCompletion<string>();
-    rr_obj.async_get_data(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_data(this async_sub2 rr_obj, string value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_data(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<sub3> async_get_o3_1(this async_sub2 rr_obj, string ind, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<sub3> t=new RobotRaconteurTaskCompletion<sub3>();
-    rr_obj.async_get_o3_1(ind,t.handler,timeout);
-    return t.Task;
-    }
-    public static Task<string> async_get_ind(this async_sub3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<string> t=new RobotRaconteurTaskCompletion<string>();
-    rr_obj.async_get_ind(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_ind(this async_sub3 rr_obj, string value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_ind(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<string> async_get_data2(this async_sub3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<string> t=new RobotRaconteurTaskCompletion<string>();
-    rr_obj.async_get_data2(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_data2(this async_sub3 rr_obj, string value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_data2(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<double> async_get_data3(this async_sub3 rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<double> t=new RobotRaconteurTaskCompletion<double>();
-    rr_obj.async_get_data3(t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task async_set_data3(this async_sub3 rr_obj, double value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();
-    rr_obj.async_set_data3(value,t.handler,rr_timeout);
-    return t.Task;
-    }
-    public static Task<double> async_add(this async_sub3 rr_obj,double d,int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    RobotRaconteurTaskCompletion<double> rr_t=new RobotRaconteurTaskCompletion<double>();
-    rr_obj.async_add(d,rr_t.handler,rr_timeout);
-    return rr_t.Task;
-    }
 }
 }
