@@ -10,9 +10,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RobotRaconteurNET</RootNamespace>
     <AssemblyName>RobotRaconteurNET</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile></TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -64,10 +64,7 @@
 	</Compile>
     <Compile Include="$(RRSourceDir)\Service.cs" >
 		<Link>Service.cs</Link>
-	</Compile>
-	<Compile Include="$(RRSourceDir)\RobotRaconteurTasks.cs" >
-		<Link>RobotRaconteurTasks.cs</Link>
-	</Compile>
+	</Compile>	
 	<Compile Include="$(RRSourceDir)\Generator.cs" >
 		<Link>Generator.cs</Link>
 	</Compile>

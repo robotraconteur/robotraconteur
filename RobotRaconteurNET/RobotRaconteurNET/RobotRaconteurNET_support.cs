@@ -19,6 +19,7 @@ using System.Runtime.InteropServices;
 using System.IO;
 using System.Reflection;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RobotRaconteur
 {
@@ -1574,7 +1575,7 @@ namespace RobotRaconteur
             _DisconnectService(stub.rr_innerstub);
         }
 
-        public void AsyncConnectService(string url, string username, Dictionary<string, object> credentials, ClientServiceListenerDelegate listener, string objecttype, Action<object, Exception> handler, int timeout = RR_TIMEOUT_INFINITE)
+        public async Task<object> AsyncConnectService(string url, string username, Dictionary<string, object> credentials, ClientServiceListenerDelegate listener, string objecttype, int timeout = RR_TIMEOUT_INFINITE)
         {
 
             MessageElementData credentials2 = null;
@@ -1595,9 +1596,10 @@ namespace RobotRaconteur
 
                 if (objecttype == null) objecttype = "";
 
-                AsyncStubReturnDirectorImpl<object> h = new AsyncStubReturnDirectorImpl<object>(delegate (object o1, Exception e1, object o2) { handler(o1, e1); }, null);
+                AsyncStubReturnDirectorImpl<object> h = new AsyncStubReturnDirectorImpl<object>(null);
                 int id = RRObjectHeap.AddObject(h);
                 _AsyncConnectService(url, username, credentials2, listener2, objecttype, timeout, h, id);
+                return await h.Task;
 
             }
             finally
@@ -1607,7 +1609,7 @@ namespace RobotRaconteur
 
         }
 
-        public void AsyncConnectService(string[] url, string username, Dictionary<string, object> credentials, ClientServiceListenerDelegate listener, string objecttype, Action<object, Exception> handler, int timeout = RR_TIMEOUT_INFINITE)
+        public async Task<object> AsyncConnectService(string[] url, string username, Dictionary<string, object> credentials, ClientServiceListenerDelegate listener, string objecttype, int timeout = RR_TIMEOUT_INFINITE)
         {
             MessageElementData credentials2 = null;
 
@@ -1631,9 +1633,10 @@ namespace RobotRaconteur
 
                 if (objecttype == null) objecttype = "";
 
-                AsyncStubReturnDirectorImpl<object> h = new AsyncStubReturnDirectorImpl<object>(delegate (object o1, Exception e1, object o2) { handler(o1, e1); }, null);
+                AsyncStubReturnDirectorImpl<object> h = new AsyncStubReturnDirectorImpl<object>();
                 int id = RRObjectHeap.AddObject(h);
                 _AsyncConnectService(url2, username, credentials2, listener2, objecttype, timeout, h, id);
+                return await h.Task;
             }
             finally
             {
@@ -1642,12 +1645,14 @@ namespace RobotRaconteur
 
         }
 
-        public void AsyncDisconnectService(object obj, Action handler)
+        public async Task AsyncDisconnectService(object obj)
         {
             ServiceStub stub = (ServiceStub)obj;
-            AsyncVoidNoErrReturnDirectorImpl h = new AsyncVoidNoErrReturnDirectorImpl(delegate (object o) { handler(); }, null);
+            AsyncVoidNoErrReturnDirectorImpl h = new AsyncVoidNoErrReturnDirectorImpl();
             int id = RRObjectHeap.AddObject(h);
             _AsyncDisconnectService(stub.rr_innerstub, h, id);
+            await h.Task;
+
         }
 
         public Dictionary<string, object> GetServiceAttributes(object obj)
@@ -2477,29 +2482,27 @@ namespace RobotRaconteur
 
         }
 
-        public void AsyncRequestObjectLock(object obj, RobotRaconteurObjectLockFlags flags, Action<string, Exception> handler, int timeout = RR_TIMEOUT_INFINITE)
+        public async Task AsyncRequestObjectLock(object obj, RobotRaconteurObjectLockFlags flags, int timeout = RR_TIMEOUT_INFINITE)
         {
             if (!(obj is ServiceStub)) throw new ArgumentException("Can only lock object opened through Robot Raconteur");
             ServiceStub s = (ServiceStub)obj;
 
-            AsyncStringReturnDirectorImpl h = new AsyncStringReturnDirectorImpl(delegate (string s1, Exception e1, object o1) { handler(s1, e1); }, null);
+            AsyncStringReturnDirectorImpl h = new AsyncStringReturnDirectorImpl();
             int id = RRObjectHeap.AddObject(h);
 
             _AsyncRequestObjectLock(s.rr_innerstub, flags, timeout, h, id);
-
-
+            await h.Task;
         }
 
-        public void AsyncReleaseObjectLock(object obj, Action<string, Exception> handler, int timeout = RR_TIMEOUT_INFINITE)
+        public async Task AsyncReleaseObjectLock(object obj, int timeout = RR_TIMEOUT_INFINITE)
         {
             if (!(obj is ServiceStub)) throw new ArgumentException("Can only unlock object opened through Robot Raconteur");
             ServiceStub s = (ServiceStub)obj;
 
-            AsyncStringReturnDirectorImpl h = new AsyncStringReturnDirectorImpl(delegate (string s1, Exception e1, object o1) { handler(s1, e1); }, null);
+            AsyncStringReturnDirectorImpl h = new AsyncStringReturnDirectorImpl();
             int id = RRObjectHeap.AddObject(h);
             _AsyncReleaseObjectLock(s.rr_innerstub, timeout, h, id);
-
-
+            await h.Task;
         }
 
         public void MonitorEnter(object obj, int timeout = -1)
@@ -2611,11 +2614,15 @@ namespace RobotRaconteur
 
         private class AsyncServiceInfo2DirectorImpl : AsyncServiceInfo2VectorReturnDirector
         {
-            protected Action<ServiceInfo2[]> handler_func;
+            
+            protected TaskCompletionSource<ServiceInfo2[]> handler_task = new TaskCompletionSource<ServiceInfo2[]>();
 
-            public AsyncServiceInfo2DirectorImpl(Action<ServiceInfo2[]> handler_func)
+            public Task<ServiceInfo2[]> Task { get => handler_task.Task; }
+
+
+            public AsyncServiceInfo2DirectorImpl()
             {
-                this.handler_func = handler_func;
+                
             }
 
             public override void handler(vectorserviceinfo2wrapped i)
@@ -2638,11 +2645,11 @@ namespace RobotRaconteur
                     }
                     catch (Exception)
                     {
-                        handler_func(new ServiceInfo2[0]);
+                        this.handler_task.SetResult(new ServiceInfo2[0]);
                         return;
                     }
 
-                    handler_func(o.ToArray());
+                    this.handler_task.SetResult(o.ToArray());
                 }
                 catch (Exception e)
                 {
@@ -2657,11 +2664,13 @@ namespace RobotRaconteur
 
         private class AsyncNodeInfo2DirectorImpl : AsyncNodeInfo2VectorReturnDirector
         {
-            protected Action<NodeInfo2[]> handler_func;
+            protected TaskCompletionSource<NodeInfo2[]> handler_task = new TaskCompletionSource<NodeInfo2[]>();
 
-            public AsyncNodeInfo2DirectorImpl(Action<NodeInfo2[]> handler_func)
+            public Task<NodeInfo2[]> Task { get => handler_task.Task; }
+
+            public AsyncNodeInfo2DirectorImpl()
             {
-                this.handler_func = handler_func;
+                
             }
 
             public override void handler(vectornodeinfo2 i)
@@ -2683,11 +2692,11 @@ namespace RobotRaconteur
                     }
                     catch (Exception)
                     {
-                        handler_func(new NodeInfo2[0]);
+                        handler_task.SetResult(new NodeInfo2[0]);
                         return;
                     }
 
-                    handler_func(o.ToArray());
+                    handler_task.SetResult(o.ToArray());
                 }
                 catch (Exception e)
                 {
@@ -2702,39 +2711,41 @@ namespace RobotRaconteur
 
         public const int RR_TIMEOUT_INFINITE = -1;
 
-        public void AsyncFindServiceByType(string servicetype, string[] transportschemes, Action<ServiceInfo2[]> handler, int timeout = 5000)
+        public async Task<ServiceInfo2[]> AsyncFindServiceByType(string servicetype, string[] transportschemes, int timeout = 5000)
         {
             vectorstring s = new vectorstring();
             foreach (string s2 in transportschemes) s.Add(s2);
 
-            AsyncServiceInfo2DirectorImpl h = new AsyncServiceInfo2DirectorImpl(handler);
+            AsyncServiceInfo2DirectorImpl h = new AsyncServiceInfo2DirectorImpl();
             int id = RRObjectHeap.AddObject(h);
 
             RobotRaconteurNET.AsyncWrappedFindServiceByType(this, servicetype, s, timeout, h, id);
+            return await h.Task;
 
         }
 
-        public void AsyncFindNodeByID(NodeID id, string[] transportschemes, Action<NodeInfo2[]> handler, int timeout = 5000)
+        public async Task<NodeInfo2[]> AsyncFindNodeByID(NodeID id, string[] transportschemes, int timeout = 5000)
         {
             vectorstring s = new vectorstring();
             foreach (string s2 in transportschemes) s.Add(s2);
 
-            AsyncNodeInfo2DirectorImpl h = new AsyncNodeInfo2DirectorImpl(handler);
+            AsyncNodeInfo2DirectorImpl h = new AsyncNodeInfo2DirectorImpl();
             int id2 = RRObjectHeap.AddObject(h);
 
             RobotRaconteurNET.AsyncWrappedFindNodeByID(this, id, s, timeout, h, id2);
-
+            return await h.Task;
         }
 
-        public void AsyncFindNodeByName(string name, string[] transportschemes, Action<NodeInfo2[]> handler, int timeout = 5000)
+        public async Task<NodeInfo2[]> AsyncFindNodeByName(string name, string[] transportschemes, int timeout = 5000)
         {
             vectorstring s = new vectorstring();
             foreach (string s2 in transportschemes) s.Add(s2);
 
-            AsyncNodeInfo2DirectorImpl h = new AsyncNodeInfo2DirectorImpl(handler);
+            AsyncNodeInfo2DirectorImpl h = new AsyncNodeInfo2DirectorImpl();
             int id2 = RRObjectHeap.AddObject(h);
 
             RobotRaconteurNET.AsyncWrappedFindNodeByName(this, name, s, timeout, h, id2);
+            return await h.Task;
 
         }
 
@@ -2745,13 +2756,14 @@ namespace RobotRaconteur
             RobotRaconteurNET.WrappedUpdateDetectedNodes(this, schemes1);
         }
 
-        public void AsyncUpdateDetectedNodes(string[] schemes, Action handler, int timeout = 5000)
+        public async Task AsyncUpdateDetectedNodes(string[] schemes, int timeout = 5000)
         {
             vectorstring schemes1 = new vectorstring();
             foreach (string s in schemes) schemes1.Add(s);
-            AsyncVoidNoErrReturnDirectorImpl h = new AsyncVoidNoErrReturnDirectorImpl(delegate (object o) { handler(); }, null);
+            AsyncVoidNoErrReturnDirectorImpl h = new AsyncVoidNoErrReturnDirectorImpl();
             int id2 = RRObjectHeap.AddObject(h);
             RobotRaconteurNET.AsyncWrappedUpdateDetectedNodes(this, schemes1, timeout, h, id2);
+            await h.Task;
         }
 
         public NodeID[] GetDetectedNodes()
@@ -2801,20 +2813,20 @@ namespace RobotRaconteur
             return s.FindObjRefTyped(objref, index, objecttype);
         }
 
-        public void AsyncFindObjRefTyped(object obj, string objref, string objecttype, Action<object, Exception> handler, int timeout = RR_TIMEOUT_INFINITE)
+        public Task<object> AsyncFindObjRefTyped(object obj, string objref, string objecttype, int timeout = RR_TIMEOUT_INFINITE)
         {
             if (!(obj is ServiceStub)) throw new ArgumentException("Only service stubs can have objref");
             ServiceStub s = (ServiceStub)obj;
 
-            s.AsyncFindObjRefTyped<object>(objref, objecttype, handler, timeout);
+            return s.AsyncFindObjRefTyped<object>(objref, objecttype, timeout);
         }
 
-        public void AsyncFindObjRefTyped(object obj, string objref, string index, string objecttype, Action<object, Exception> handler, int timeout = RR_TIMEOUT_INFINITE)
+        public Task<object> AsyncFindObjRefTyped(object obj, string objref, string index, string objecttype, int timeout = RR_TIMEOUT_INFINITE)
         {
             if (!(obj is ServiceStub)) throw new ArgumentException("Only service stubs can have objref");
             ServiceStub s = (ServiceStub)obj;
 
-            s.AsyncFindObjRefTyped<object>(objref, index, objecttype, handler, timeout);
+            return s.AsyncFindObjRefTyped<object>(objref, index, objecttype, timeout);
         }
 
         public string FindObjectType(object obj, string objref)
@@ -2833,26 +2845,26 @@ namespace RobotRaconteur
             return _FindObjectType(s.rr_innerstub, objref, index);
         }
 
-        public void AsyncFindObjectType(object obj, string objref, Action<string, Exception> handler, int timeout = RR_TIMEOUT_INFINITE)
+        public async Task<string> AsyncFindObjectType(object obj, string objref, int timeout = RR_TIMEOUT_INFINITE)
         {
             if (!(obj is ServiceStub)) throw new ArgumentException("Only service stubs can have objref");
             ServiceStub s = (ServiceStub)obj;
-
-            Action<string, Exception, object> h2 = delegate (string s2, Exception e, object o) { handler(s2, e); };
-            AsyncStringReturnDirectorImpl h = new AsyncStringReturnDirectorImpl(h2, null);
+                        
+            AsyncStringReturnDirectorImpl h = new AsyncStringReturnDirectorImpl();
             int id2 = RRObjectHeap.AddObject(h);
             _AsyncFindObjectType(s.rr_innerstub, objref, timeout, h, id2);
+            return await h.Task;
         }
 
-        public void AsyncFindObjectType(object obj, string objref, string index, Action<string, Exception> handler, int timeout = RR_TIMEOUT_INFINITE)
+        public async Task<string> AsyncFindObjectType(object obj, string objref, string index, int timeout = RR_TIMEOUT_INFINITE)
         {
             if (!(obj is ServiceStub)) throw new ArgumentException("Only service stubs can have objref");
             ServiceStub s = (ServiceStub)obj;
-
-            Action<string, Exception, object> h2 = delegate (string s2, Exception e, object o) { handler(s2, e); };
-            AsyncStringReturnDirectorImpl h = new AsyncStringReturnDirectorImpl(h2, null);
+                        
+            AsyncStringReturnDirectorImpl h = new AsyncStringReturnDirectorImpl();
             int id2 = RRObjectHeap.AddObject(h);
             _AsyncFindObjectType(s.rr_innerstub, objref, index, timeout, h, id2);
+            return await h.Task;
         }
 
         public uint RequestTimeout
@@ -2967,9 +2979,10 @@ namespace RobotRaconteur
 
         public void PostToThreadPool(Action target)
         {
-            AsyncVoidNoErrReturnDirectorImpl h = new AsyncVoidNoErrReturnDirectorImpl(delegate (object param) { target(); }, null);
+            AsyncVoidNoErrReturnDirectorImpl h = new AsyncVoidNoErrReturnDirectorImpl();
             int id = RRObjectHeap.AddObject(h);
             _PostToThreadPool(h, id);
+            h.Task.ContinueWith(_ => target());
         }
 
         public string RobotRaconteurVersion
@@ -3291,13 +3304,13 @@ namespace RobotRaconteur
     internal class AsyncRequestDirectorImpl : AsyncRequestDirector
     {
 
-        protected Action<MessageElement, Exception, object> handler_func;
-        protected object param;
+        protected TaskCompletionSource<MessageElement> handler_task = new TaskCompletionSource<MessageElement>();
+        
+        public Task<MessageElement> Task { get => handler_task.Task; }
 
-        public AsyncRequestDirectorImpl(Action<MessageElement, Exception, object> handler_func, object param)
+        public AsyncRequestDirectorImpl()
         {
-            this.handler_func = handler_func;
-            this.param = param;
+            
         }
 
         public override void handler(MessageElement m, uint error_code, string errorname, string errormessage)
@@ -3313,13 +3326,12 @@ namespace RobotRaconteur
                         using (MessageEntry merr = new MessageEntry())
                         {
 
-                            this.handler_func(null, RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage), param);
+                            this.handler_task.SetException(RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage));
                             return;
                         }
                     }
 
-                    handler_func(m, null, param);
-
+                    this.handler_task.SetResult(m);
                 }
                 catch (Exception e)
                 {
@@ -3336,15 +3348,15 @@ namespace RobotRaconteur
 
     internal class AsyncStubReturnDirectorImpl<T> : AsyncStubReturnDirector
     {
+        protected TaskCompletionSource<T> handler_task = new TaskCompletionSource<T>();
 
-        protected Action<T, Exception, object> handler_func;
-        protected object param;
+        public Task<T> Task { get => handler_task.Task; }
+
         protected ServiceFactory factory;
 
-        public AsyncStubReturnDirectorImpl(Action<T, Exception, object> handler_func, object param, ServiceFactory f = null)
+        public AsyncStubReturnDirectorImpl(ServiceFactory f = null)
         {
-            this.handler_func = handler_func;
-            this.param = param;
+            
             this.factory = f;
         }
 
@@ -3357,7 +3369,7 @@ namespace RobotRaconteur
                     using (MessageEntry merr = new MessageEntry())
                     {
 
-                        this.handler_func(default(T), RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage), param);
+                        this.handler_task.SetException(RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage));
                         return;
                     }
                 }
@@ -3369,7 +3381,7 @@ namespace RobotRaconteur
                     int id = innerstub.GetObjectHeapID();
                     if (id != 0)
                     {
-                        handler_func((T)RRObjectHeap.GetObject(id), null, param);
+                        handler_task.SetResult((T)RRObjectHeap.GetObject(id));
                         return;
                     }
 
@@ -3387,12 +3399,12 @@ namespace RobotRaconteur
                 }
                 catch (Exception e)
                 {
-                    handler_func(default(T), e, param);
+                    handler_task.SetException(e);
                     return;
                 }
 
 
-                handler_func(s1, null, param);
+                handler_task.SetResult(s1);
             }
             catch (Exception e)
             {
@@ -3409,13 +3421,12 @@ namespace RobotRaconteur
 
     internal class AsyncVoidReturnDirectorImpl : AsyncVoidReturnDirector
     {
-        protected Action<Exception, object> handler_func;
-        protected object param;
+        protected TaskCompletionSource<int> handler_task = new TaskCompletionSource<int>();
+        public Task Task { get => handler_task.Task; }
 
-        public AsyncVoidReturnDirectorImpl(Action<Exception, object> handler_func, object param)
+        public AsyncVoidReturnDirectorImpl()
         {
-            this.handler_func = handler_func;
-            this.param = param;
+            
         }
 
         public override void handler(uint error_code, string errorname, string errormessage)
@@ -3427,12 +3438,12 @@ namespace RobotRaconteur
                     using (MessageEntry merr = new MessageEntry())
                     {
 
-                        this.handler_func(RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage), param);
+                        handler_task.SetException(RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage));
                         return;
                     }
                 }
 
-                handler_func(null, param);
+                handler_task.SetResult(0);
             }
             catch (Exception e)
             {
@@ -3450,20 +3461,21 @@ namespace RobotRaconteur
 
     internal class AsyncVoidNoErrReturnDirectorImpl : AsyncVoidNoErrReturnDirector
     {
-        protected Action<object> handler_func;
-        protected object param;
+        protected TaskCompletionSource<int> handler_task = new TaskCompletionSource<int>();
 
-        public AsyncVoidNoErrReturnDirectorImpl(Action<object> handler_func, object param)
+        public Task Task { get => handler_task.Task; }
+
+
+        public AsyncVoidNoErrReturnDirectorImpl()
         {
-            this.handler_func = handler_func;
-            this.param = param;
+            
         }
 
         public override void handler()
         {
             try
             {
-                handler_func(param);
+                handler_task.SetResult(0);
             }
             catch (Exception e)
             {
@@ -3481,13 +3493,14 @@ namespace RobotRaconteur
     internal class AsyncStringReturnDirectorImpl : AsyncStringReturnDirector
     {
 
-        protected Action<string, Exception, object> handler_func;
-        protected object param;
+        protected TaskCompletionSource<string> handler_task = new TaskCompletionSource<string>();
 
-        public AsyncStringReturnDirectorImpl(Action<string, Exception, object> handler_func, object param)
+        public Task<string> Task { get => handler_task.Task; }
+
+
+        public AsyncStringReturnDirectorImpl()
         {
-            this.handler_func = handler_func;
-            this.param = param;
+            
         }
 
         public override void handler(string s, uint error_code, string errorname, string errormessage)
@@ -3499,12 +3512,12 @@ namespace RobotRaconteur
                     using (MessageEntry merr = new MessageEntry())
                     {
 
-                        this.handler_func(null, RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage), param);
+                        handler_task.SetException(RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage));
                         return;
                     }
                 }
 
-                handler_func(s, null, param);
+                handler_task.SetResult(s);
             }
             catch (Exception e)
             {
@@ -3524,13 +3537,14 @@ namespace RobotRaconteur
     internal class AsyncUInt32ReturnDirectorImpl : AsyncUInt32ReturnDirector
     {
 
-        protected Action<uint, Exception, object> handler_func;
-        protected object param;
+        protected TaskCompletionSource<uint> handler_task = new TaskCompletionSource<uint>();
 
-        public AsyncUInt32ReturnDirectorImpl(Action<uint, Exception, object> handler_func, object param)
+        public Task<uint> Task { get => handler_task.Task; }
+
+
+        public AsyncUInt32ReturnDirectorImpl()
         {
-            this.handler_func = handler_func;
-            this.param = param;
+            
         }
 
         public override void handler(uint v, uint error_code, string errorname, string errormessage)
@@ -3542,13 +3556,13 @@ namespace RobotRaconteur
                 {
                     using (MessageEntry merr = new MessageEntry())
                     {
-                        this.handler_func(0, RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage), param);
+                        this.handler_task.SetException(RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage));
                         return;
                     }
                 }
 
 
-                handler_func(v, null, param);
+                this.handler_task.SetResult(v);
             }
             catch (Exception e)
             {

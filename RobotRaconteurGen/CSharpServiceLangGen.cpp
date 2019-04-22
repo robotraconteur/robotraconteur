@@ -994,10 +994,7 @@ namespace RobotRaconteurGen
 		{
 			GenerateNamedArrayExtensions(*e, w);
 		}
-		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Objects.begin(); e != d->Objects.end(); ++e)
-		{
-			GenerateStubTasks(e->get(),w);
-		}
+		
 		w2 << "}" << endl;
 
 		w2 << "}" << endl;
@@ -1304,8 +1301,8 @@ namespace RobotRaconteurGen
 		MEMBER_ITER2(PropertyDefinition)
 		convert_type_result t=convert_type(*m->Type);
 		t.name=fix_name(m->Name);
-		w2 << "    void async_get_" << t.name << "(Action<" << t.cs_type + t.cs_arr_type << ",Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);" << endl;
-		w2 << "    void async_set_" << t.name << "(" << t.cs_type + t.cs_arr_type <<" value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);" << endl;
+		w2 << "    Task<" << t.cs_type + t.cs_arr_type << "> async_get_" << t.name << "(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);" << endl;
+		w2 << "    Task async_set_" << t.name << "(" << t.cs_type + t.cs_arr_type <<" value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);" << endl;
 		//w2 << "    " + t[1] + t[2] + " " + t[0] + " { get; set; }" << endl; 
 		MEMBER_ITER_END()
 
@@ -1320,17 +1317,20 @@ namespace RobotRaconteurGen
 			{
 				t2.push_back(params);
 			}
+			std::string task_type;
 			if (m->ReturnType->Type == DataTypes_void_t)
 			{
-				t2.push_back("Action<Exception> rr_handler");
+				//t2.push_back("Action<Exception> rr_handler");
+				task_type = "Task";
 			}
 			else
 			{
-				t2.push_back("Action<" + t.cs_type + t.cs_arr_type + ",Exception> rr_handler");
+				//t2.push_back("Action<" + t.cs_type + t.cs_arr_type + ",Exception> rr_handler");
+				task_type = "Task<" + t.cs_type + t.cs_arr_type + ">";
 			}
 			t2.push_back("int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE");
 
-			w2 << "    void async_" + fix_name(m->Name) + "(" + boost::join(t2, ",") + ");" << endl;
+			w2 << "    " << task_type << " async_" + fix_name(m->Name) + "(" + boost::join(t2, ",") + ");" << endl;
 		}
 		else
 		{
@@ -1344,11 +1344,11 @@ namespace RobotRaconteurGen
 			}
 			
 			
-			t2.push_back("Action<" + t.generator_csharp_type + ",Exception> rr_handler");
+			//t2.push_back("Action<" + t.generator_csharp_type + ",Exception> rr_handler");
 			
 			t2.push_back("int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE");
 
-			w2 << "    void async_" + fix_name(m->Name) + "(" + boost::join(t2, ",") + ");" << endl;
+			w2 << "    Task<" + t.generator_csharp_type + "> async_" + fix_name(m->Name) + "(" + boost::join(t2, ",") + ");" << endl;
 		}
 		MEMBER_ITER_END()
 
@@ -1358,11 +1358,11 @@ namespace RobotRaconteurGen
 		std::string indtype;
 		if (GetObjRefIndType(m, indtype))
 		{
-			w2 << "    void async_get_" + fix_name(m->Name) + "(" + indtype + " ind, Action<" + objtype + ",Exception> handler, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);" << endl;
+			w2 << "    Task<" + objtype + "> async_get_" + fix_name(m->Name) + "(" + indtype + " ind, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);" << endl;
 		}
 		else
 		{
-			w2 << "    void async_get_" + fix_name(m->Name) + "(Action<" + objtype + ",Exception> handler, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);" << endl;
+			w2 << "    Task<" + objtype + "> async_get_" + fix_name(m->Name) + "(int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);" << endl;
 		}
 		MEMBER_ITER_END()
 
@@ -1697,31 +1697,17 @@ namespace RobotRaconteurGen
 		MEMBER_ITER2(PropertyDefinition)
 		convert_type_result t=convert_type(*m->Type);
 		t.name=fix_name(m->Name);
-		w2 << "    public virtual void async_get_" << t.name << "(Action<" << t.cs_type + t.cs_arr_type << ",Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)" << endl << "    {" << endl;
-		w2 << "    rr_async_PropertyGet(\"" + m->Name + "\",rrend_async_get_" << t.name << ",rr_handler,rr_timeout);" << endl;
-		w2 << "    }" <<endl;
-		w2 << "    protected virtual void rrend_async_get_" << t.name << "(MessageElement value ,Exception err,object param)" << endl << "    {" << endl;
-		w2 << "    Action<" << t.cs_type + t.cs_arr_type << ",Exception> rr_handler=(Action<" << t.cs_type + t.cs_arr_type << ",Exception>)param;" << endl;
-		w2 << "    if (err!=null)" << endl << "    {" << endl << "    rr_handler(" << GetDefaultValue(*m->Type) <<  ",err);" << endl << "    return;" << endl << "    }" << endl;
-		w2 << "    " << t.cs_type + t.cs_arr_type << " rr_ret;" << endl;
-		w2 << "    try {" << endl;
-		w2 << "    rr_ret=" << str_unpack_message_element("value", m->Type) << ";" << endl;
-		w2 << "    } catch (Exception err2) {" << endl;
-		w2 << "    rr_handler(" << GetDefaultValue(*m->Type) <<  ",err2);" << endl;
-		w2 << "    return;" << endl;
-		w2 << "    }" << endl;
-		w2 << "    rr_handler(rr_ret,null);" << endl;
-		w2 << "    }" <<endl;
-		w2 << "    public virtual void async_set_" << t.name << "(" << t.cs_type + t.cs_arr_type << " value, Action<Exception> rr_handler, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)" << endl << "    {" << endl;
+		w2 << "    public virtual async Task<" << t.cs_type + t.cs_arr_type << "> async_get_" << t.name << "(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)" << endl << "    {" << endl;
+		w2 << "    using(var rr_value = await rr_async_PropertyGet(\"" + m->Name + "\",rr_timeout)) {" << endl;
+		w2 << "    var rr_ret=" << str_unpack_message_element("rr_value", m->Type) << ";" << endl;
+		w2 << "    return rr_ret;" << endl;
+		w2 << "    } }" <<endl;
+		w2 << "    public virtual async Task async_set_" << t.name << "(" << t.cs_type + t.cs_arr_type << " value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)" << endl << "    {" << endl;
 		w2 << "    using(MessageElement mm=" << str_pack_message_element("value","value",m->Type) << ")" << endl <<  "    {" << endl;
-		w2 << "    rr_async_PropertySet(\"" + m->Name + "\",mm,rrend_async_set_" << t.name << ",rr_handler,rr_timeout);" << endl;
+		w2 << "    await rr_async_PropertySet(\"" + m->Name + "\",mm,rr_timeout);" << endl;
 		w2 << "    }" << endl;
 		w2 << "    }" <<endl;
-		w2 << "    protected virtual void rrend_async_set_" << t.name << "(MessageElement m ,Exception err,object param)" << endl << "    {" << endl;
-		w2 << "    Action<Exception> rr_handler=(Action<Exception>)param;" << endl;
-		w2 << "    if (err!=null)" << endl << "    {" << endl << "    rr_handler(err);" << endl << "    return;" << endl << "    }" << endl;
-		w2 << "    rr_handler(null);" << endl;
-		w2 << "    }" <<endl;
+		
 		//w2 << "    " + t[1] + t[2] + " " + t[0] + " { get; set; }" << endl; 
 		MEMBER_ITER_END()
 
@@ -1736,48 +1722,39 @@ namespace RobotRaconteurGen
 			{
 				t2.push_back(params);
 			}
+			std::string task_type;
 			if (m->ReturnType->Type == DataTypes_void_t)
 			{
-				t2.push_back("Action<Exception> rr_handler");
+				//t2.push_back("Action<Exception> rr_handler");
+				task_type = "Task";
 			}
 			else
 			{
-				t2.push_back("Action<" + t.cs_type + t.cs_arr_type + ",Exception> rr_handler");
+				//t2.push_back("Action<" + t.cs_type + t.cs_arr_type + ",Exception> rr_handler");
+				task_type = "Task<" + t.cs_type + t.cs_arr_type + ">";
 			}
 			t2.push_back("int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE");
 
-			w2 << "    public virtual void async_" + fix_name(m->Name) + "(" + boost::join(t2, ",") + ")" << endl << "    {" << endl;
+			w2 << "    public virtual async " << task_type <<  " async_" + fix_name(m->Name) + "(" + boost::join(t2, ",") + ")" << endl << "    {" << endl;
 			w2 << "    using(vectorptr_messageelement rr_param=new vectorptr_messageelement())" << endl << "    {" << endl;
 			for (vector<RR_SHARED_PTR<TypeDefinition> >::const_iterator p = m->Parameters.begin(); p != m->Parameters.end(); ++p)
 			{
 				w2 << "    MessageElementUtil.AddMessageElementDispose(rr_param," << str_pack_message_element((*p)->Name, fix_name((*p)->Name), *p) << ");" << endl;
 			}
 
-			w2 << "    rr_async_FunctionCall(\"" + m->Name + "\",rr_param,rrend_async_" << fix_name(m->Name) << ",rr_handler,rr_timeout);" << endl;
-			w2 << "    }" << endl;
-			w2 << "    }" << endl;
-			w2 << "    protected virtual void rrend_async_" << fix_name(m->Name) << "(MessageElement ret ,Exception err,object param)" << endl << "    {" << endl;
+			
+			w2 << "    using(var rr_return = await rr_async_FunctionCall(\"" + m->Name + "\",rr_param,rr_timeout)) {" << endl;
 			if (m->ReturnType->Type == DataTypes_void_t)
 			{
-				w2 << "    Action<Exception> rr_handler=(Action<Exception>)param;" << endl;
-				w2 << "    if (err!=null)" << endl << "    {" << endl << "    rr_handler(err);" << endl << "    return;" << endl << "    }" << endl;
-				w2 << "    rr_handler(null);" << endl;
+				
 			}
 			else
-			{
-				w2 << "    Action<" << t.cs_type + t.cs_arr_type << ",Exception> rr_handler=(Action<" << t.cs_type + t.cs_arr_type << ",Exception>)param;" << endl;
-				w2 << "    if (err!=null)" << endl << "    {" << endl << "    rr_handler(" << GetDefaultValue(*m->ReturnType) << ",err);" << endl << "    return;" << endl << "    }" << endl;
-				w2 << "    " << t.cs_type + t.cs_arr_type << " rr_ret;" << endl;
-				w2 << "    try {" << endl;
-				w2 << "    rr_ret=" << str_unpack_message_element("ret", m->ReturnType) << ";" << endl;
-				w2 << "    } catch (Exception err2) {" << endl;
-				w2 << "    rr_handler(" << GetDefaultValue(*m->ReturnType) << ",err2);" << endl;
-				w2 << "    return;" << endl;
-				w2 << "    }" << endl;
-
-				w2 << "    rr_handler(rr_ret,null);" << endl;
+			{				
+				w2 << "    var rr_ret=" << str_unpack_message_element("rr_return", m->ReturnType) << ";" << endl;				
+				w2 << "    return rr_ret;" << endl;
+							
 			}
-			w2 << "    }" << endl;
+			w2 << "    } } }" << endl;
 		}
 		else
 		{
@@ -1790,27 +1767,23 @@ namespace RobotRaconteurGen
 				t2.push_back(params);
 			}
 			
-			t2.push_back("Action<" + t.generator_csharp_type + ",Exception> rr_handler");
+			//t2.push_back("Action<" + t.generator_csharp_type + ",Exception> rr_handler");
 			
 			t2.push_back("int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE");
 
-			w2 << "    public virtual void async_" + fix_name(m->Name) + "(" + boost::join(t2, ",") + ")" << endl << "    {" << endl;
+			w2 << "    public virtual async Task<" + t.generator_csharp_type + "> async_" + fix_name(m->Name) + "(" + boost::join(t2, ",") + ")" << endl << "    {" << endl;
 			w2 << "    using(vectorptr_messageelement rr_param=new vectorptr_messageelement())" << endl << "    {" << endl;
 			for (vector<RR_SHARED_PTR<TypeDefinition> >::const_iterator p = t.params.begin(); p != t.params.end(); ++p)
 			{
 				w2 << "    MessageElementUtil.AddMessageElementDispose(rr_param," << str_pack_message_element((*p)->Name, fix_name((*p)->Name), *p) << ");" << endl;
 			}
 
-			w2 << "    rr_async_GeneratorFunctionCall(\"" + m->Name + "\",rr_param,rrend_async_" << fix_name(m->Name) << ",rr_handler,rr_timeout);" << endl;
-			w2 << "    }" << endl;
-			w2 << "    }" << endl;
-			w2 << "    protected virtual void rrend_async_" << fix_name(m->Name) << "(WrappedGeneratorClient ret ,Exception err,object param)" << endl << "    {" << endl;
+			w2 << "    var rr_return = await rr_async_GeneratorFunctionCall(\"" + m->Name + "\",rr_param,rr_timeout);" << endl;
 			
-			w2 << "    Action<" << t.generator_csharp_type << ",Exception> rr_handler=(Action<" << t.generator_csharp_type << ",Exception>)param;" << endl;
-			w2 << "    if (err!=null)" << endl << "    {" << endl << "    rr_handler(null,err);" << endl << "    return;" << endl << "    }" << endl;
-			w2 << "    " << t.generator_csharp_base_type << "Client< " << t.generator_csharp_template_params << "> rr_ret=new " << t.generator_csharp_base_type << "Client< " << t.generator_csharp_template_params << ">(ret);" << endl;
-			w2 << "    rr_handler(rr_ret,null);" << endl;			
-			w2 << "    }" << endl;
+			
+			w2 << "    " << t.generator_csharp_base_type << "Client< " << t.generator_csharp_template_params << "> rr_ret=new " << t.generator_csharp_base_type << "Client< " << t.generator_csharp_template_params << ">(rr_return);" << endl;
+			w2 << "    return rr_ret;" << endl;			
+			w2 << "    } }" << endl;
 		}
 		MEMBER_ITER_END()
 
@@ -1823,14 +1796,14 @@ namespace RobotRaconteurGen
 			std::string indtype;
 			if (GetObjRefIndType(m, indtype))
 			{
-				w2 << "    public void async_get_" + fix_name(m->Name) + "(" + indtype + " ind, Action<" + objtype + ",Exception> handler, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE) {" << endl;
-				w2 << "    AsyncFindObjRef(\"" + m->Name + "\",ind.ToString(),handler,timeout);" << endl;
+				w2 << "    public Task<" + objtype + "> async_get_" + fix_name(m->Name) + "(" + indtype + " ind, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE) {" << endl;
+				w2 << "    return AsyncFindObjRef(\"" + m->Name + "\",ind.ToString(),timeout);" << endl;
 				w2 << "    }" << endl;
 			}
 			else
 			{
-				w2 << "    public void async_get_" + fix_name(m->Name) + "(Action<" + objtype + ",Exception> handler, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE) {" << endl;
-				w2 << "    AsyncFindObjRef(\"" + m->Name + "\",handler,timeout);" << endl;
+				w2 << "    public Task<" + objtype + "> async_get_" + fix_name(m->Name) + "(int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE) {" << endl;
+				w2 << "    return AsyncFindObjRef(\"" + m->Name + "\",timeout);" << endl;
 				w2 << "    }" << endl;
 			}
 		}
@@ -1857,14 +1830,14 @@ namespace RobotRaconteurGen
 			std::string indtype;
 			if (GetObjRefIndType(m, indtype))
 			{
-				w2 << "    public void async_get_" + fix_name(m->Name) + "(" + indtype + " ind, Action<" + objtype + ",Exception> handler, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)" << endl << "    {" << endl;
-				w2 << "    AsyncFindObjRefTyped(\"" + fix_name(m->Name) + "\",ind.ToString(),\"" << objecttype2 << "\",handler,timeout);" << endl;
+				w2 << "    public Task<" + objtype + ">  async_get_" + fix_name(m->Name) + "(" + indtype + " ind, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)" << endl << "    {" << endl;
+				w2 << "    return AsyncFindObjRefTyped<" + objtype + ">(\"" + fix_name(m->Name) + "\",ind.ToString(),\"" << objecttype2 << "\",timeout);" << endl;
 				w2 << "    }" << endl;
 			}
 			else
 			{
-				w2 << "    public void async_get_" + fix_name(m->Name) + "(Action<" + objtype + ",Exception> handler, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)" << endl << "    {" << endl;
-				w2 << "    AsyncFindObjRefTyped(\"" + m->Name + "\",\"" << objecttype2 << "\",handler,timeout);" << endl;
+				w2 << "    public Task<" + objtype + "> async_get_" + fix_name(m->Name) + "(int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)" << endl << "    {" << endl;
+				w2 << "    return AsyncFindObjRefTyped<" + objtype + ">(\"" + m->Name + "\",\"" << objecttype2 << "\",timeout);" << endl;
 				w2 << "    }" << endl;
 			}
 		}
@@ -1874,123 +1847,7 @@ namespace RobotRaconteurGen
 		w2 << "}" << endl;
 		
 	}
-
-	void CSharpServiceLangGen::GenerateStubTasks(ServiceEntryDefinition* e, ostream * w)
-	{
-		ostream& w2=*w;
-
-		MEMBER_ITER2(PropertyDefinition)
-		convert_type_result t=convert_type(*m->Type);
-		t.name=fix_name(m->Name);
-		w2 << "    public static Task<"  << t.cs_type + t.cs_arr_type << "> async_get_" << t.name << "(this async_" + fix_name(e->Name) << " rr_obj, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)" << endl << "    {" << endl;
-		w2 << "    RobotRaconteurTaskCompletion<" << t.cs_type + t.cs_arr_type << "> t=new RobotRaconteurTaskCompletion<" << t.cs_type + t.cs_arr_type << ">();" << endl;
-		w2 << "    rr_obj.async_get_" << t.name << "(t.handler,rr_timeout);" << endl;
-		w2 << "    return t.Task;" << endl;
-		w2 << "    }" << endl;
-		w2 << "    public static Task async_set_" << t.name << "(this async_" + fix_name(e->Name) << " rr_obj, " << t.cs_type + t.cs_arr_type <<" value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)" << endl << "    {" << endl;
-		w2 << "    RobotRaconteurVoidTaskCompletion t=new RobotRaconteurVoidTaskCompletion();" << endl;
-		w2 << "    rr_obj.async_set_" << t.name << "(value,t.handler,rr_timeout);" << endl;
-		w2 << "    return t.Task;" << endl;
-		w2 << "    }" << endl;
-		//w2 << "    " + t[1] + t[2] + " " + t[0] + " { get; set; }" << endl; 
-		MEMBER_ITER_END()
-
-
-		MEMBER_ITER2(FunctionDefinition)
-		if (!m->IsGenerator())
-		{
-			convert_type_result t = convert_type(*m->ReturnType);
-			string params = str_pack_parameters(m->Parameters, true);
-			string params3 = str_pack_parameters(m->Parameters, false);
-
-			vector<string> t2;
-			vector<string> t3;
-
-			t2.push_back("this async_" + fix_name(e->Name) + " rr_obj");
-
-			if (m->Parameters.size() > 0)
-			{
-				t2.push_back(params);
-				t3.push_back(params3);
-			}
-
-			t2.push_back("int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE");
-			t3.push_back("rr_t.handler");
-			t3.push_back("rr_timeout");
-
-			if (m->ReturnType->Type == DataTypes_void_t)
-			{
-				w2 << "    public static Task async_" + fix_name(m->Name) + "(" + boost::join(t2, ",") + ")" << endl << "    {" << endl;
-				w2 << "    RobotRaconteurVoidTaskCompletion rr_t=new RobotRaconteurVoidTaskCompletion();" << endl;
-				w2 << "    rr_obj.async_" << fix_name(m->Name) << "(" << boost::join(t3, ",") << ");" << endl;
-				w2 << "    return rr_t.Task;" << endl;
-				w2 << "    }" << endl;
-			}
-			else
-			{
-				w2 << "    public static Task<" + t.cs_type + t.cs_arr_type + "> async_" + fix_name(m->Name) + "(" + boost::join(t2, ",") + ")" << endl << "    {" << endl;
-				w2 << "    RobotRaconteurTaskCompletion<" + t.cs_type + t.cs_arr_type + "> rr_t=new RobotRaconteurTaskCompletion<" + t.cs_type + t.cs_arr_type + ">();" << endl;
-				w2 << "    rr_obj.async_" << fix_name(m->Name) << "(" << boost::join(t3, ",") << ");" << endl;
-				w2 << "    return rr_t.Task;" << endl;
-				w2 << "    }" << endl;
-			}
-		}
-		else
-		{
-			convert_generator_result t = convert_generator(m.get());
-			string params = str_pack_parameters(t.params, true);
-			string params3 = str_pack_parameters(t.params, false);
-
-			vector<string> t2;
-			vector<string> t3;
-
-			t2.push_back("this async_" + fix_name(e->Name) + " rr_obj");
-
-			if (t.params.size() > 0)
-			{
-				t2.push_back(params);
-				t3.push_back(params3);
-			}
-
-			t2.push_back("int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE");
-			t3.push_back("rr_t.handler");
-			t3.push_back("rr_timeout");
-
-			
-			w2 << "    public static Task<" + t.generator_csharp_type + "> async_" + fix_name(m->Name) + "(" + boost::join(t2, ",") + ")" << endl << "    {" << endl;
-			w2 << "    RobotRaconteurTaskCompletion<" + t.generator_csharp_type + "> rr_t=new RobotRaconteurTaskCompletion<" + t.generator_csharp_type + ">();" << endl;
-			w2 << "    rr_obj.async_" << fix_name(m->Name) << "(" << boost::join(t3, ",") << ");" << endl;
-			w2 << "    return rr_t.Task;" << endl;
-			w2 << "    }" << endl;
-			
-		}
-		MEMBER_ITER_END()
-
-
-		MEMBER_ITER2(ObjRefDefinition)
-		string objtype=fix_qualified_name(m->ObjectType);
-		if (objtype=="varobject") objtype="object";
-		std::string indtype;
-		if (GetObjRefIndType(m, indtype))
-		{
-			w2 << "    public static Task<" + objtype +  "> async_get_" + fix_name(m->Name) + "(this async_" + fix_name(e->Name) << " rr_obj, " + indtype + " ind, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)" << endl << "    {" << endl;
-			w2 << "    RobotRaconteurTaskCompletion<" << objtype << "> t=new RobotRaconteurTaskCompletion<" << objtype << ">();" << endl;
-			w2 << "    rr_obj.async_get_" << fix_name(m->Name) << "(ind,t.handler,timeout);" << endl;
-			w2 << "    return t.Task;" << endl;
-			w2 << "    }" << endl;
-		}
-		else
-		{
-			w2 << "    public static Task<" + objtype +  "> async_get_" + fix_name(m->Name) + "(this async_" + fix_name(e->Name) << " rr_obj, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)" << endl << "    {" << endl;
-			w2 << "    RobotRaconteurTaskCompletion<" << objtype << "> t=new RobotRaconteurTaskCompletion<" << objtype << ">();" << endl;
-			w2 << "    rr_obj.async_get_" << fix_name(m->Name) << "(t.handler,timeout);" << endl;
-			w2 << "    return t.Task;" << endl;
-			w2 << "    }" << endl;
-		}
-		MEMBER_ITER_END()
-
-	}
-
+	
 	void CSharpServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, ostream * w)
 	{
 		ostream& w2=*w;

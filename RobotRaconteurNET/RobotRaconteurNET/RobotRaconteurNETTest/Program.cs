@@ -9,6 +9,7 @@ using com.robotraconteur.testing.TestService1;
 using com.robotraconteur.testing.TestService2;
 using com.robotraconteur.testing.TestService3;
 
+using System.Threading.Tasks;
 
 namespace RobotRaconteurNETTest
 {
@@ -272,14 +273,16 @@ namespace RobotRaconteurNETTest
                     print_ServiceInfo2(r);
                 }
 
-                RobotRaconteurNode.s.AsyncFindServiceByType(type, tschemes, delegate(ServiceInfo2[] ret2)
+                var t1 = RobotRaconteurNode.s.AsyncFindServiceByType(type, tschemes);
+                t1.Wait();
+                var ret2 = t1.Result; 
                 {
                     foreach (ServiceInfo2 r in ret2)
                     {
                         print_ServiceInfo2(r);
                     }
 
-                });
+                }
 
                 System.Threading.Thread.Sleep(10000);
                 RobotRaconteurNode.s.Shutdown();
@@ -310,14 +313,16 @@ namespace RobotRaconteurNETTest
 
                 }
 
-                RobotRaconteurNode.s.AsyncFindNodeByID(id, tschemes, delegate(NodeInfo2[] ret2)
+                var ts1 = RobotRaconteurNode.s.AsyncFindNodeByID(id, tschemes);
+                ts1.Wait();
+                var ret2 = ts1.Result;
                 {
                     foreach (NodeInfo2 r in ret2)
                     {
                         print_NodeInfo2(r);
 
                     }
-                });
+                }
 
                 System.Threading.Thread.Sleep(10000);
                 RobotRaconteurNode.s.Shutdown();
@@ -348,14 +353,16 @@ namespace RobotRaconteurNETTest
 
                 }
 
-                RobotRaconteurNode.s.AsyncFindNodeByName(name, tschemes, delegate(NodeInfo2[] ret2)
+                var ts1 = RobotRaconteurNode.s.AsyncFindNodeByName(name, tschemes);
+                ts1.Wait();
+                var ret2 = ts1.Result;
                 {
                     foreach (NodeInfo2 r in ret2)
                     {
                         print_NodeInfo2(r);
 
                     }
-                });
+                }
 
                 System.Threading.Thread.Sleep(10000);
                 RobotRaconteurNode.s.Shutdown();
@@ -384,7 +391,7 @@ namespace RobotRaconteurNETTest
                 object obj = RobotRaconteurNode.s.ConnectService(url1);
                 async_testroot o = (async_testroot)obj;
                 testroot o2 = (testroot)obj;
-                o.async_func3(1, 2, delegate(double d, Exception exp) { servicetest2(o, d, exp); });
+                o.async_func3(1, 2).ContinueWith(ts1 => servicetest2(o, ts1));
 
                 Pipe<double>.PipeEndpoint p = o2.broadcastpipe.Connect(-1);
                 p.PacketReceivedEvent += servicetest7;
@@ -803,11 +810,11 @@ namespace RobotRaconteurNETTest
 
         }
 
-        static void servicetest5(Pipe<double>.PipeEndpoint p, Wire<double>.WireConnection w, TimerEvent ev)
+        static async void servicetest5(Pipe<double>.PipeEndpoint p, Wire<double>.WireConnection w, TimerEvent ev)
         {
             if (ev.stopped) return;
 
-            p.AsyncSendPacket((double)servicetest_count, servicetest6);
+            await p.AsyncSendPacket((double)servicetest_count);
             for (double i = 0; i < 100; i++)
             {
                 double d = ((double)servicetest_count) * 100 + i;
@@ -816,7 +823,7 @@ namespace RobotRaconteurNETTest
             servicetest_count++;
         }
 
-        static void servicetest4(string url1)
+        /*static void servicetest4(string url1)
         {
 
             RobotRaconteurNode.s.AsyncConnectService(url1, null, null, null, null, delegate(object o, Exception exp1) { servicetest3(url1, o, exp1); });
@@ -832,22 +839,29 @@ namespace RobotRaconteurNETTest
 
             RobotRaconteurNode.s.AsyncDisconnectService(obj, delegate() { servicetest4(url1); });
 
-        }
+        }*/
 
-        static void servicetest2(async_testroot o, double d, Exception exp)
+        static async Task servicetest2(async_testroot o, Task<double> t1)
         {
-            if (exp != null)
+            /*if (t1 != null)
             {
                 Console.WriteLine("Got exception");
-                if (servicetest_keepgoing) Environment.Exit(1);
+                
+            }*/
+
+            while (true)
+            {
+                await o.async_func3(1, 2);
+                if (servicetest_keepgoing)
+                {
+                    Environment.Exit(1);
+                    return;
+                }
             }
 
-
-            o.async_func3(1, 2, delegate(double d1, Exception exp1) { servicetest2(o, d1, exp1); });
-            
         }
 
-        static void sevicetest1(object obj, Exception exp)
+        /*static void sevicetest1(object obj, Exception exp)
         {
             if (exp != null)
             {
@@ -859,6 +873,6 @@ namespace RobotRaconteurNETTest
             o.async_func3(1, 2, delegate(double d, Exception exp1) { servicetest2(o, d, exp1); });
             
 
-        }
+        }*/
     }
 }

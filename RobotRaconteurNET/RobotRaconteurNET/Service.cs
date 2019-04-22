@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RobotRaconteur
 {
@@ -689,38 +690,40 @@ namespace RobotRaconteur
     {
        
 
-        protected void rr_async_PropertyGet(string name, Action<MessageElement, Exception, object> handler, object param, int timeout)
+        protected async Task<MessageElement> rr_async_PropertyGet(string name, int timeout)
         {
-            AsyncRequestDirectorImpl d = new AsyncRequestDirectorImpl(handler, param);
+            AsyncRequestDirectorImpl d = new AsyncRequestDirectorImpl();
             int id=RRObjectHeap.AddObject(d);
 
             rr_innerstub.async_PropertyGet(name, timeout, d,id);
-
+            return await d.Task;
         }
 
-        protected void rr_async_PropertySet(string name, MessageElement value, Action<MessageElement, Exception, object> handler, object param, int timeout)
+        protected async Task rr_async_PropertySet(string name, MessageElement value, int timeout)
         {
-            AsyncRequestDirectorImpl d = new AsyncRequestDirectorImpl(handler, param);
+            AsyncRequestDirectorImpl d = new AsyncRequestDirectorImpl();
             int id = RRObjectHeap.AddObject(d);
 
             rr_innerstub.async_PropertySet(name, value, timeout, d, id);
-
+            await d.Task;
         }
 
-        protected void rr_async_FunctionCall(string name, vectorptr_messageelement p, Action<MessageElement, Exception, object> handler, object param, int timeout)
+        protected async Task<MessageElement> rr_async_FunctionCall(string name, vectorptr_messageelement p, int timeout)
         {
-            AsyncRequestDirectorImpl d = new AsyncRequestDirectorImpl(handler, param);
+            AsyncRequestDirectorImpl d = new AsyncRequestDirectorImpl();
             int id = RRObjectHeap.AddObject(d);
 
             rr_innerstub.async_FunctionCall(name, p, timeout, d, id);
+            return await d.Task;
         }
 
-        protected void rr_async_GeneratorFunctionCall(string name, vectorptr_messageelement p, Action<WrappedGeneratorClient, Exception, object> handler, object param, int timeout)
+        protected async Task<WrappedGeneratorClient> rr_async_GeneratorFunctionCall(string name, vectorptr_messageelement p, int timeout)
         {
-            AsyncGeneratorClientReturnDirectorImpl d = new AsyncGeneratorClientReturnDirectorImpl(handler, param);
+            AsyncGeneratorClientReturnDirectorImpl d = new AsyncGeneratorClientReturnDirectorImpl();
             int id = RRObjectHeap.AddObject(d);
 
             rr_innerstub.async_GeneratorFunctionCall(name, p, timeout, d, id);
+            return await d.Task;
         }
 
         public WrappedServiceStub rr_innerstub;
@@ -805,32 +808,36 @@ namespace RobotRaconteur
             }
         }
 
-        public void AsyncFindObjRef(string n, Action<object, Exception> handler, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+        public async Task<object> AsyncFindObjRef(string n, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
         {
-            AsyncStubReturnDirectorImpl<object> d = new AsyncStubReturnDirectorImpl<object>(delegate(object o1, Exception e1, object o2) { handler(o1, e1); }, null);
+            AsyncStubReturnDirectorImpl<object> d = new AsyncStubReturnDirectorImpl<object>(null);
             int id=RRObjectHeap.AddObject(d);
             rr_innerstub.async_FindObjRef(n, timeout, d, id);
+            return await d.Task;
         }
 
-        public void AsyncFindObjRef(string n, string i, Action<object, Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+        public async Task<object> AsyncFindObjRef(string n, string i, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
         {
-            AsyncStubReturnDirectorImpl<object> d = new AsyncStubReturnDirectorImpl<object>(delegate(object o1, Exception e1, object o2) { handler(o1, e1); }, null);
+            AsyncStubReturnDirectorImpl<object> d = new AsyncStubReturnDirectorImpl<object>(null);
             int id = RRObjectHeap.AddObject(d);
             rr_innerstub.async_FindObjRef(n, i, timeout, d, id);
+            return await d.Task;
         }
 
-        public void AsyncFindObjRefTyped<T>(string n, string type, Action<T, Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+        public async Task<T> AsyncFindObjRefTyped<T>(string n, string type, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
         {
-            AsyncStubReturnDirectorImpl<T> d = new AsyncStubReturnDirectorImpl<T>(delegate(T o1, Exception e1, object o2) { handler(o1, e1); }, null);
+            AsyncStubReturnDirectorImpl<T> d = new AsyncStubReturnDirectorImpl<T>(null);
             int id = RRObjectHeap.AddObject(d);
             rr_innerstub.async_FindObjRefTyped(n, type, timeout, d, id);
+            return await d.Task;
         }
 
-        public void AsyncFindObjRefTyped<T>(string n, string i, string type, Action<T, Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+        public async Task<T> AsyncFindObjRefTyped<T>(string n, string i, string type, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
         {
-            AsyncStubReturnDirectorImpl<T> d = new AsyncStubReturnDirectorImpl<T>(delegate(T o1, Exception e1, object o2) { handler(o1, e1); }, null);
+            AsyncStubReturnDirectorImpl<T> d = new AsyncStubReturnDirectorImpl<T>(null);
             int id = RRObjectHeap.AddObject(d);
             rr_innerstub.async_FindObjRefTyped(n, i, type, timeout, d, id);
+            return await d.Task;
         }
 
         public virtual MessageElement CallbackCall(string membername, vectorptr_messageelement m)
@@ -1471,11 +1478,14 @@ namespace RobotRaconteur
 
         private class AsyncConnectDirector : AsyncPipeEndpointReturnDirector
         {
-            Action<PipeEndpoint, Exception> handler_func;
+            protected TaskCompletionSource<PipeEndpoint> handler_task = new TaskCompletionSource<PipeEndpoint>();
 
-            public AsyncConnectDirector(Action<PipeEndpoint, Exception> handler_func)
+            public Task<PipeEndpoint> Task { get => handler_task.Task; }
+
+
+            public AsyncConnectDirector()
             {
-                this.handler_func = handler_func;
+                
             }
 
             public override void handler(WrappedPipeEndpoint m, uint error_code, string errorname, string errormessage)
@@ -1484,7 +1494,7 @@ namespace RobotRaconteur
                 {
                     using (MessageEntry merr = new MessageEntry())
                     {
-                        this.handler_func(null, RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code,errorname,errormessage));
+                        this.handler_task.SetException(RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code,errorname,errormessage));
                         return;
                     }
                 }
@@ -1497,28 +1507,29 @@ namespace RobotRaconteur
                 }
                 catch (Exception e)
                 {
-                    handler_func(null, e);
+                    handler_task.SetException(e);
                     return;
                 }
 
 
-                handler_func(e1, null);
+                handler_task.SetResult(e1);
             }
 
         }
 
-        public void AsyncConnect(Action<PipeEndpoint, Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+        public Task<PipeEndpoint> AsyncConnect(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
         {
-            AsyncConnect(-1, handler);
+            return AsyncConnect(-1, timeout);
         }
 
-        public void AsyncConnect(int index, Action<PipeEndpoint, Exception> handler, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE )
+        public async Task<PipeEndpoint> AsyncConnect(int index, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE )
         {
 
             if (AsyncConnectFunction == null) throw new InvalidOperationException("Invalid for server");
-            AsyncConnectDirector h = new AsyncConnectDirector(handler);
+            AsyncConnectDirector h = new AsyncConnectDirector();
             int id = RRObjectHeap.AddObject(h);
             AsyncConnectFunction(index,timeout,h,id);
+            return await h.Task;
         }
 
         //public delegate void PipeConnectCallbackFunction(PipeEndpoint newpipe);
@@ -1791,11 +1802,11 @@ namespace RobotRaconteur
                 }
             }
 
-            public void AsyncSendPacket(T data, Action<uint,Exception> handler)
+            public async Task<uint> AsyncSendPacket(T data)
             {
                 object dat = null;
 
-                AsyncUInt32ReturnDirectorImpl h = new AsyncUInt32ReturnDirectorImpl(delegate(uint i1, Exception e1, object o1) { handler(i1, e1); }, null);
+                AsyncUInt32ReturnDirectorImpl h = new AsyncUInt32ReturnDirectorImpl();
                 
 
                 try
@@ -1812,6 +1823,7 @@ namespace RobotRaconteur
                     IDisposable d = dat as IDisposable;
                     if (d != null) d.Dispose();
                 }
+                return await h.Task;
             }
 
 
@@ -1820,11 +1832,12 @@ namespace RobotRaconteur
                 innerpipe.Close();
             }
 
-            public void AsyncClose(Action<Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+            public async Task AsyncClose(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
             {
-                AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl(delegate(Exception e1, object o1) { handler(e1); }, null);
+                AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl();
                 int id = RRObjectHeap.AddObject(h);
                 innerpipe.AsyncClose(timeout, h, id);
+                await h.Task;
             }
 
             class directorclass : WrappedPipeEndpointDirector
@@ -1933,11 +1946,11 @@ namespace RobotRaconteur
             get { return pipe;  }
         }
         
-        public void AsyncSendPacket(T packet, Action handler)
+        public async Task AsyncSendPacket(T packet)
         {
             object dat = null;
 
-            AsyncVoidNoErrReturnDirectorImpl h = new AsyncVoidNoErrReturnDirectorImpl(delegate(object o) { handler(); },null);
+            AsyncVoidNoErrReturnDirectorImpl h = new AsyncVoidNoErrReturnDirectorImpl();
             
             try
             {
@@ -1953,6 +1966,8 @@ namespace RobotRaconteur
                 IDisposable d = dat as IDisposable;
                 if (d != null) d.Dispose();
             }
+
+            await h.Task;
         }
 
         public void SendPacket(T packet)
@@ -2049,11 +2064,14 @@ namespace RobotRaconteur
 
         private class AsyncConnectDirector : AsyncWireConnectionReturnDirector
         {
-            Action<WireConnection, Exception> handler_func;
+            protected TaskCompletionSource<WireConnection> handler_task = new TaskCompletionSource<WireConnection>();
 
-            public AsyncConnectDirector(Action<WireConnection, Exception> handler_func)
+            public Task<WireConnection> Task { get => handler_task.Task; }
+
+
+            public AsyncConnectDirector()
             {
-                this.handler_func = handler_func;
+                
             }
 
             public override void handler(WrappedWireConnection m, uint error_code, string errorname, string errormessage)
@@ -2062,7 +2080,7 @@ namespace RobotRaconteur
                 {
                     using (MessageEntry merr = new MessageEntry())
                     {
-                        this.handler_func(null, RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage));
+                        this.handler_task.SetException(RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage));
                         return;
                     }
                 }
@@ -2076,23 +2094,24 @@ namespace RobotRaconteur
                 }
                 catch (Exception e)
                 {
-                    handler_func(null, e);
+                    handler_task.SetException(e);
                     return;
                 }
 
 
-                handler_func(e1, null);
+                handler_task.SetResult(e1);
             }
 
         }
 
-        public void AsyncConnect(Action<WireConnection, Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+        public async Task<WireConnection> AsyncConnect(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
         {
             WrappedWireClient c = innerwire as WrappedWireClient;
             if (c == null) throw new InvalidOperationException("Invalid for server");
-            AsyncConnectDirector h = new AsyncConnectDirector(handler);
+            AsyncConnectDirector h = new AsyncConnectDirector();
             int id = RRObjectHeap.AddObject(h);
             c.AsyncConnect(timeout, h, id);
+            return await h.Task;
         }
 
         public Action<Wire<T>, WireConnection> WireConnectCallback
@@ -2145,11 +2164,13 @@ namespace RobotRaconteur
 
         class peekdirectorclass : AsyncWirePeekReturnDirector
         {
-            Action<T, TimeSpec, Exception> handler_func;
+            protected TaskCompletionSource<Tuple<T,TimeSpec>> handler_task = new TaskCompletionSource<Tuple<T,TimeSpec>>();
 
-            internal peekdirectorclass(Action<T, TimeSpec, Exception> handler)
+            public Task<Tuple<T,TimeSpec>> Task { get => handler_task.Task; }
+            
+            internal peekdirectorclass()
             {
-                this.handler_func = handler;
+                
             }
 
             public override void handler(MessageElement m, TimeSpec ts, uint error_code, string errorname, string errormessage)
@@ -2165,12 +2186,12 @@ namespace RobotRaconteur
                             using (MessageEntry merr = new MessageEntry())
                             {
 
-                                this.handler_func(default(T), null, RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage));
+                                this.handler_task.SetException(RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage));
                                 return;
                             }
                         }
 
-                        handler_func(Wire<T>.UnpackData(m), ts, null);
+                        this.handler_task.SetResult(Tuple.Create(Wire<T>.UnpackData(m), ts));
 
                     }
                     catch (Exception e)
@@ -2229,27 +2250,29 @@ namespace RobotRaconteur
             }
         }
 
-        public void AsyncPeekInValue(Action<T,TimeSpec,Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+        public async Task<Tuple<T,TimeSpec>> AsyncPeekInValue(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
         {
             WrappedWireClient c = innerwire as WrappedWireClient;
             if (c == null) throw new InvalidOperationException("Invalid for server");
 
-            peekdirectorclass h = new peekdirectorclass(handler);
+            peekdirectorclass h = new peekdirectorclass();
             int id = RRObjectHeap.AddObject(h);
-            c.AsyncPeekInValue(timeout, h, id);           
+            c.AsyncPeekInValue(timeout, h, id);
+            return await h.Task;
         }
 
-        public void AsyncPeekOutValue(Action<T, TimeSpec, Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+        public async Task<Tuple<T,TimeSpec>> AsyncPeekOutValue(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
         {
             WrappedWireClient c = innerwire as WrappedWireClient;
             if (c == null) throw new InvalidOperationException("Invalid for server");
 
-            peekdirectorclass h = new peekdirectorclass(handler);
+            peekdirectorclass h = new peekdirectorclass();
             int id = RRObjectHeap.AddObject(h);
             c.AsyncPeekOutValue(timeout, h, id);
+            return await h.Task;
         }
 
-        public void AsyncPokeOutValue(T value, Action<Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+        public async Task AsyncPokeOutValue(T value, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
         {
             WrappedWireClient c = innerwire as WrappedWireClient;
             if (c == null) throw new InvalidOperationException("Invalid for server");
@@ -2259,9 +2282,10 @@ namespace RobotRaconteur
                 dat = RobotRaconteurNode.s.PackVarType(value);
                 using (MessageElement m = new MessageElement("value", dat))
                 {
-                    AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl(delegate (Exception e1, object o1) { handler(e1); }, null);
+                    AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl();
                     int id = RRObjectHeap.AddObject(h);
                     c.AsyncPokeOutValue(m, timeout, h, id);
+                    await h.Task;
                 }
             }
             finally
@@ -2494,11 +2518,12 @@ namespace RobotRaconteur
                 innerwire.Close();
             }
 
-            public void AsyncClose(Action<Exception> handler, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+            public async Task AsyncClose(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
             {
-                AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl(delegate(Exception e1, object o1) { handler(e1); }, null);
+                AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl();
                 int id = RRObjectHeap.AddObject(h);
                 innerwire.AsyncClose(timeout, h, id);
+                await h.Task;
             }
 
             public event Action<Wire<T>.WireConnection,T,TimeSpec> WireValueChanged;
