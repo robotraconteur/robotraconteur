@@ -46,7 +46,7 @@
 	 map_strstr Policies2=new map_strstr();
 	 for (java.util.Map.Entry<String,String> m : Policies.entrySet())
 	 {
-		 Policies2.set(m.getKey(), m.getValue());
+		 Policies2.put(m.getKey(), m.getValue());
 	 }
 	 
 	 NativeUserAuthenticator a2;
