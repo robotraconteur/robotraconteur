@@ -13,7 +13,7 @@ set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} -Wno-unused-function)
 endif()
 
 INCLUDE(${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurSWIGSources.cmake)
-include_directories(${CMAKE_SOURCE_DIR}/SWIG ${CMAKE_SWIG_OUTDIR})
+include_directories(${CMAKE_SOURCE_DIR}/SWIG ${CMAKE_SWIG_OUTDIR} ${CMAKE_CURRENT_LIST_DIR}/swiglib_patched)
 
 set(${CMAKE_CURRENT_LIST_DIR}/Java_SWIG_sources ${CMAKE_CURRENT_LIST_DIR}/Android.i 
     ${CMAKE_CURRENT_LIST_DIR}/DiscoveryJava.i ${CMAKE_CURRENT_LIST_DIR}/HardwareTransportJava.i 
