@@ -159,43 +159,15 @@ def RegisterService(self, name, objecttype, obj, securitypolicy=None):
 	director.__disown__()
 	return self._RegisterService(name,SplitQualifiedName(objecttype)[0],rrobj,securitypolicy)
 
-__swig_getmethods__["NodeID"]=_NodeID
-__swig_setmethods__["NodeID"]=_SetNodeID
-__swig_getmethods__["NodeName"]=_NodeName
-__swig_setmethods__["NodeName"]=_SetNodeName
-__swig_getmethods__["ThreadPoolCount"]=_GetThreadPoolCount
-__swig_setmethods__["ThreadPoolCount"]=_SetThreadPoolCount
+NodeID = property(lambda self: self._NodeID(), lambda self,nodeid: self._SetNodeID(nodeid))
+NodeName =property(lambda self: self._NodeName(), lambda self,nodename: self._SetNodeName(nodename))
+ThreadPoolCount = property(lambda self: self._GetThreadPoolCount(), lambda self,c: self._SetThreadPoolCount(c))
 	
-__swig_getmethods__["RequestTimeout"]=lambda self : self._GetRequestTimeout()/1000.0
-__swig_setmethods__["RequestTimeout"]=lambda self,t : self._SetRequestTimeout(t*1000)
-__swig_getmethods__["TransportInactivityTimeout"]=lambda self : self._GetTransportInactivityTimeout()/1000.0
-__swig_setmethods__["TransportInactivityTimeout"]=lambda self,t : self._SetTransportInactivityTimeout(t*1000)
-__swig_getmethods__["EndpointInactivityTimeout"]=lambda self : self._GetEndpointInactivityTimeout()/1000.0
-__swig_setmethods__["EndpointInactivityTimeout"]=lambda self,t : self._SetEndpointInactivityTimeout(t*1000)
-__swig_getmethods__["MemoryMaxTransferSize"]=_GetMemoryMaxTransferSize
-__swig_setmethods__["MemoryMaxTransferSize"]=_SetMemoryMaxTransferSize
-__swig_getmethods__["NodeDiscoveryMaxCacheCount"]=_GetNodeDiscoveryMaxCacheCount
-__swig_setmethods__["NodeDiscoveryMaxCacheCount"]=_SetNodeDiscoveryMaxCacheCount
-
-def GetUseNumPy(self):
-	from RobotRaconteur import UseNumPy
-	return UseNumPy
-					
-	
-def SetUseNumPy(self,value):
-	import RobotRaconteur
-	if (not value):
-		RobotRaconteur.UseNumPy=False
-		return
-	try:
-		numpy2=numpy
-	except:
-		raise Exception("NumPy is not available")
-		
-	RobotRaconteur.UseNumPy=True
-		
-__swig_getmethods__["UseNumPy"]=GetUseNumPy
-__swig_setmethods__["UseNumPy"]=SetUseNumPy
+RequestTimeout = property(lambda self : self._GetRequestTimeout()/1000.0, lambda self,t : self._SetRequestTimeout(t*1000))
+TransportInactivityTimeout = property(lambda self : self._GetTransportInactivityTimeout()/1000.0, lambda self,t : self._SetTransportInactivityTimeout(t*1000))
+EndpointInactivityTimeout = property(lambda self : self._GetEndpointInactivityTimeout()/1000.0, lambda self,t : self._SetEndpointInactivityTimeout(t*1000))
+MemoryMaxTransferSize = property(lambda self: self._GetMemoryMaxTransferSize(), lambda self,m: self._SetMemoryMaxTransferSize(m))
+NodeDiscoveryMaxCacheCount = property(lambda self: self._GetNodeDiscoveryMaxCacheCount(), lambda self,c: self._SetNodeDiscoveryMaxCacheCount(c))
 
 def GetConstants(self,servicetype, obj=None):
 	from .RobotRaconteurPythonUtil import ServiceDefinitionConstants
@@ -252,7 +224,7 @@ def PostToThreadPool(self, handler):
 	from .RobotRaconteurPythonUtil import async_call, AsyncVoidNoErrReturnDirectorImpl
 	return async_call(self._PostToThreadPool,(), AsyncVoidNoErrReturnDirectorImpl,handler,noerror=True)
 	
-__swig_getmethods__["RobotRaconteurVersion"]=_GetRobotRaconteurVersion
+RobotRaconteurVersion = property(lambda self: self._GetRobotRaconteurVersion())
 
 def NowUTC(self):
 	return self._NowUTC()

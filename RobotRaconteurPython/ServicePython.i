@@ -28,11 +28,11 @@
 {
 
 %pythoncode %{
-	__swig_getmethods__["Username"]=_GetUsername
-	__swig_getmethods__["Privileges"]=lambda self: list(self._GetPrivileges())
-	__swig_getmethods__["Properties"]=lambda self: list(self._GetProperties())
-	__swig_getmethods__["LoginTime"]=_GetLoginTime
-	__swig_getmethods__["LastAccessTime"]=_GetLastAccessTime
+	Username = property(lambda self: self._GetUsername())
+	Privileges = property(lambda self: list(self._GetPrivileges()))
+	Properties = property(lambda self: list(self._GetProperties()))
+	LoginTime = property(lambda self: self._GetLoginTime())
+	LastAccessTime = property(lambda self: self._GetLastAccessTime())
 %}
 
 }
