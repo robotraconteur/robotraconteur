@@ -4,7 +4,7 @@
 
 %include "CommonInclude.i"
 
-%include "pyabc.i"
+//%include "pyabc.i"
 %{
 #include "PythonTypeSupport.h"
 %}
