@@ -686,7 +686,7 @@ namespace RobotRaconteur
 
     internal class AsyncGeneratorClientReturnDirectorImpl : AsyncGeneratorClientReturnDirector
     {        
-        protected TaskCompletionSource<WrappedGeneratorClient> handler_task = new TaskCompletionSource<WrappedGeneratorClient>();
+        protected TaskCompletionSource<WrappedGeneratorClient> handler_task = new TaskCompletionSource<WrappedGeneratorClient>(TaskContinuationOptions.ExecuteSynchronously);
 
         public Task<WrappedGeneratorClient> Task { get => handler_task.Task; }
 
@@ -697,7 +697,7 @@ namespace RobotRaconteur
 
         public override void handler(WrappedGeneratorClient m, uint error_code, string errorname, string errormessage)
         {
-            using (m)
+            //using (m)
             {
                 try
                 {
