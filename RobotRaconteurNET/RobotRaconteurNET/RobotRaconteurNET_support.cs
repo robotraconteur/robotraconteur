@@ -2615,7 +2615,7 @@ namespace RobotRaconteur
         private class AsyncServiceInfo2DirectorImpl : AsyncServiceInfo2VectorReturnDirector
         {
             
-            protected TaskCompletionSource<ServiceInfo2[]> handler_task = new TaskCompletionSource<ServiceInfo2[]>();
+            protected TaskCompletionSource<ServiceInfo2[]> handler_task = new TaskCompletionSource<ServiceInfo2[]>(TaskContinuationOptions.ExecuteSynchronously);
 
             public Task<ServiceInfo2[]> Task { get => handler_task.Task; }
 
@@ -2664,7 +2664,7 @@ namespace RobotRaconteur
 
         private class AsyncNodeInfo2DirectorImpl : AsyncNodeInfo2VectorReturnDirector
         {
-            protected TaskCompletionSource<NodeInfo2[]> handler_task = new TaskCompletionSource<NodeInfo2[]>();
+            protected TaskCompletionSource<NodeInfo2[]> handler_task = new TaskCompletionSource<NodeInfo2[]>(TaskContinuationOptions.ExecuteSynchronously);
 
             public Task<NodeInfo2[]> Task { get => handler_task.Task; }
 
@@ -3304,7 +3304,7 @@ namespace RobotRaconteur
     internal class AsyncRequestDirectorImpl : AsyncRequestDirector
     {
 
-        protected TaskCompletionSource<MessageElement> handler_task = new TaskCompletionSource<MessageElement>();
+        protected TaskCompletionSource<MessageElement> handler_task = new TaskCompletionSource<MessageElement>(TaskContinuationOptions.ExecuteSynchronously);
         
         public Task<MessageElement> Task { get => handler_task.Task; }
 
@@ -3315,7 +3315,7 @@ namespace RobotRaconteur
 
         public override void handler(MessageElement m, uint error_code, string errorname, string errormessage)
         {
-            using (m)
+            //using (m)
             {
                 try
                 {
@@ -3323,6 +3323,7 @@ namespace RobotRaconteur
 
                     if (error_code != 0)
                     {
+                        using(m)
                         using (MessageEntry merr = new MessageEntry())
                         {
 
@@ -3335,6 +3336,7 @@ namespace RobotRaconteur
                 }
                 catch (Exception e)
                 {
+                    using(m)
                     using (MessageEntry merr = new MessageEntry())
                     {
                         RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
@@ -3348,7 +3350,7 @@ namespace RobotRaconteur
 
     internal class AsyncStubReturnDirectorImpl<T> : AsyncStubReturnDirector
     {
-        protected TaskCompletionSource<T> handler_task = new TaskCompletionSource<T>();
+        protected TaskCompletionSource<T> handler_task = new TaskCompletionSource<T>(TaskContinuationOptions.ExecuteSynchronously);
 
         public Task<T> Task { get => handler_task.Task; }
 
@@ -3421,7 +3423,7 @@ namespace RobotRaconteur
 
     internal class AsyncVoidReturnDirectorImpl : AsyncVoidReturnDirector
     {
-        protected TaskCompletionSource<int> handler_task = new TaskCompletionSource<int>();
+        protected TaskCompletionSource<int> handler_task = new TaskCompletionSource<int>(TaskContinuationOptions.ExecuteSynchronously);
         public Task Task { get => handler_task.Task; }
 
         public AsyncVoidReturnDirectorImpl()
@@ -3461,7 +3463,7 @@ namespace RobotRaconteur
 
     internal class AsyncVoidNoErrReturnDirectorImpl : AsyncVoidNoErrReturnDirector
     {
-        protected TaskCompletionSource<int> handler_task = new TaskCompletionSource<int>();
+        protected TaskCompletionSource<int> handler_task = new TaskCompletionSource<int>(TaskContinuationOptions.ExecuteSynchronously);
 
         public Task Task { get => handler_task.Task; }
 
@@ -3493,7 +3495,7 @@ namespace RobotRaconteur
     internal class AsyncStringReturnDirectorImpl : AsyncStringReturnDirector
     {
 
-        protected TaskCompletionSource<string> handler_task = new TaskCompletionSource<string>();
+        protected TaskCompletionSource<string> handler_task = new TaskCompletionSource<string>(TaskContinuationOptions.ExecuteSynchronously);
 
         public Task<string> Task { get => handler_task.Task; }
 
@@ -3537,7 +3539,7 @@ namespace RobotRaconteur
     internal class AsyncUInt32ReturnDirectorImpl : AsyncUInt32ReturnDirector
     {
 
-        protected TaskCompletionSource<uint> handler_task = new TaskCompletionSource<uint>();
+        protected TaskCompletionSource<uint> handler_task = new TaskCompletionSource<uint>(TaskContinuationOptions.ExecuteSynchronously);
 
         public Task<uint> Task { get => handler_task.Task; }
 

@@ -1478,7 +1478,7 @@ namespace RobotRaconteur
 
         private class AsyncConnectDirector : AsyncPipeEndpointReturnDirector
         {
-            protected TaskCompletionSource<PipeEndpoint> handler_task = new TaskCompletionSource<PipeEndpoint>();
+            protected TaskCompletionSource<PipeEndpoint> handler_task = new TaskCompletionSource<PipeEndpoint>(TaskContinuationOptions.ExecuteSynchronously);
 
             public Task<PipeEndpoint> Task { get => handler_task.Task; }
 
@@ -2064,7 +2064,7 @@ namespace RobotRaconteur
 
         private class AsyncConnectDirector : AsyncWireConnectionReturnDirector
         {
-            protected TaskCompletionSource<WireConnection> handler_task = new TaskCompletionSource<WireConnection>();
+            protected TaskCompletionSource<WireConnection> handler_task = new TaskCompletionSource<WireConnection>(TaskContinuationOptions.ExecuteSynchronously);
 
             public Task<WireConnection> Task { get => handler_task.Task; }
 
@@ -2164,7 +2164,7 @@ namespace RobotRaconteur
 
         class peekdirectorclass : AsyncWirePeekReturnDirector
         {
-            protected TaskCompletionSource<Tuple<T,TimeSpec>> handler_task = new TaskCompletionSource<Tuple<T,TimeSpec>>();
+            protected TaskCompletionSource<Tuple<T,TimeSpec>> handler_task = new TaskCompletionSource<Tuple<T,TimeSpec>>(TaskContinuationOptions.ExecuteSynchronously);
 
             public Task<Tuple<T,TimeSpec>> Task { get => handler_task.Task; }
             
