@@ -70,14 +70,18 @@ matrix:
         - cd boost_1_68_0
         - ./bootstrap.bat
         - ./b2 --with-date_time --with-filesystem --with-regex --with-chrono --with-atomic --with-thread --with-random --with-program_options address-model=32 -d0
-        #- choco install python2
-        #- /c/Python27/Scripts/pip install numpy
-        #- choco install jdk8
-        #- choco install swig
+        - cd $TRAVIS_BUILD_DIR
+        - choco install python2 --forceX86
+        - /c/Python27/Scripts/pip install numpy
+        - choco install python3 --forceX86 --params "/InstallDir:C:\Python3"
+        - /c/Python3/Scripts/pip install numpy
+        - choco install jdk8 --forceX86
+        - curl -o swigwin-4.0.0-beta1.zip -L https://sourceforge.net/projects/swig/files/swigwin/swigwin-4.0.0-beta1/swigwin-4.0.0-beta1.zip/download
+        - unzip -q swigwin-4.0.0-beta1.zip
         - cd $TRAVIS_BUILD_DIR
       env:
         - >
-          RR_CMAKE_EXTRA_ARGS="-DBUILD_NET=OFF -DBoost_USE_STATIC_LIBS=ON -DBOOST_INCLUDEDIR=$TRAVIS_BUILD_DIR/boost_1_68_0 -DBOOST_LIBRARYDIR=$TRAVIS_BUILD_DIR/boost_1_68_0/stage/lib -DPYTHON_EXECUTABLE=C:/Python27/python.exe -DBUILD_PYTHON=OFF -DBUILD_JAVA=OFF"
+          RR_CMAKE_EXTRA_ARGS="-DSWIG_EXECUTABLE=$TRAVIS_BUILD_DIR/swigwin-4.0.0-beta1/swig.exe -DSWIG_DIR=$TRAVIS_BUILD_DIR/swigwin-4.0.0-beta1/Lib -DBUILD_NET=ON -DBoost_USE_STATIC_LIBS=ON -DBOOST_INCLUDEDIR=$TRAVIS_BUILD_DIR/boost_1_68_0 -DBOOST_LIBRARYDIR=$TRAVIS_BUILD_DIR/boost_1_68_0/stage/lib -DPYTHON_EXECUTABLE=C:/Python27/python.exe -DPYTHON3_EXECUTABLE=C:/Python3/python.exe -DBUILD_PYTHON=ON -DBUILD_PYTHON3=ON -DBUILD_JAVA=ON"
         - RR_CMAKE_GENERATOR="Visual Studio 15 2017"
         
     - os: windows
@@ -88,9 +92,17 @@ matrix:
         - ./bootstrap.bat
         - ./b2 --with-date_time --with-filesystem --with-regex --with-chrono --with-atomic --with-thread --with-random --with-program_options address-model=64 -d0
         - cd $TRAVIS_BUILD_DIR
+        - choco install python2
+        - /c/Python27/Scripts/pip install numpy
+        - choco install python3 --params "/InstallDir:C:\Python3"
+        - /c/Python3/Scripts/pip install numpy
+        - choco install jdk8
+        - curl -o swigwin-4.0.0-beta1.zip -L https://sourceforge.net/projects/swig/files/swigwin/swigwin-4.0.0-beta1/swigwin-4.0.0-beta1.zip/download
+        - unzip -q swigwin-4.0.0-beta1.zip
+        - cd $TRAVIS_BUILD_DIR
       env:
         - >
-          RR_CMAKE_EXTRA_ARGS="-DBoost_USE_STATIC_LIBS=ON -DBOOST_INCLUDEDIR=$TRAVIS_BUILD_DIR/boost_1_68_0 -DBOOST_LIBRARYDIR=$TRAVIS_BUILD_DIR/boost_1_68_0/stage/lib"
+          RR_CMAKE_EXTRA_ARGS="-DSWIG_EXECUTABLE=$TRAVIS_BUILD_DIR/swigwin-4.0.0-beta1/swig.exe -DSWIG_DIR=$TRAVIS_BUILD_DIR/swigwin-4.0.0-beta1/Lib -DBUILD_NET=OFF -DBoost_USE_STATIC_LIBS=ON -DBOOST_INCLUDEDIR=$TRAVIS_BUILD_DIR/boost_1_68_0 -DBOOST_LIBRARYDIR=$TRAVIS_BUILD_DIR/boost_1_68_0/stage/lib -DPYTHON_EXECUTABLE=C:/Python27/python.exe -DPYTHON3_EXECUTABLE=C:/Python3/python.exe -DBUILD_PYTHON=ON -DBUILD_PYTHON3=ON -DBUILD_JAVA=ON"
         - RR_CMAKE_GENERATOR="Visual Studio 15 2017 Win64"
         
     
@@ -121,4 +133,4 @@ script:
   - cd build
   - cmake -G "$RR_CMAKE_GENERATOR" -DBUILD_GEN=ON -DBUILD_TEST=ON $RR_CMAKE_EXTRA_ARGS ..
   - cmake --build . --config Release
-  - ctest . -C Release
+  - ctest . -C Release -V
