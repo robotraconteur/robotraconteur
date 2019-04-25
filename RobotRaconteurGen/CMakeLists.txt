@@ -26,8 +26,13 @@ ADD_DEFINITIONS(-DROBOTRACONTEUR_CORE_IMPORTS)
 ENDIF()
 ENDIF()
 
+if(ROBOTRACONTEUR_ROS)
+find_package(roslib REQUIRED)
+include_directories(${roslib_INCLUDE_DIRS})
+endif()
+
 RRSetTargetDirs(RobotRaconteurGen "bin" "lib")
-target_link_libraries(RobotRaconteurGen  ${RobotRaconteur_CORE_LIBRARY} ${Boost_LIBRARIES} ${ROBOTRACONTEUR_EXTRA_LIBS})
+target_link_libraries(RobotRaconteurGen  ${RobotRaconteur_CORE_LIBRARY} ${roslib_LIBRARIES} ${Boost_LIBRARIES} ${ROBOTRACONTEUR_EXTRA_LIBS})
 
 if (NOT DEFINED RobotRaconteur_DIR)
 add_dependencies(RobotRaconteurGen RobotRaconteurCore)

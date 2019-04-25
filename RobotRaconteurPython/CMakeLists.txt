@@ -107,3 +107,10 @@ set(RR_PYTHON_TEST_CMD_ARGS "-E env PYTHONPATH=${CMAKE_BINARY_DIR}/@OUT_DIR_NAME
 RRConfigureTest(test_prog_python "${RR_PYTHON_TEST_CMD}" "test_prog" NOCTEST NODEBUG ARGS "${RR_PYTHON_TEST_CMD_ARGS}")
 RRConfigureTest(test_python_loopback "${RR_PYTHON_TEST_CMD}" "test_prog" NODEBUG ARGS "${RR_PYTHON_TEST_CMD_ARGS} loopback")
 RRConfigureTest(test_python_loopback2 "${RR_PYTHON_TEST_CMD}" "test_prog" NODEBUG ARGS "${RR_PYTHON_TEST_CMD_ARGS} loopback2")
+
+if(ROBOTRACONTEUR_ROS)
+install(DIRECTORY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/python2.7/dist-packages)
+install(CODE "execute_process(COMMAND python setup.py install -f
+--root=/ --prefix=${CMAKE_INSTALL_PREFIX} --install-layout=deb --single-version-externally-managed WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/out/Python)")
+endif()
+
