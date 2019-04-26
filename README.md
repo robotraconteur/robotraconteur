@@ -16,10 +16,10 @@ Release Version 0.8.1 can be downloaded from http://robotraconteur.com/download.
 
 ## Building
 
-The software has been tested with Visual Studio 2017 and Boost 1.65.1, Ubuntu Xenial, and Mac OSX with Boost 1.65.1. 
+The software is tested using Travis CI continuous integration. See travis.yml for more information.
 
 ### Windows
-Building the core library requires Visual Studio 2017, Boost 1.65.1, and CMake. Follow the instructions on the Boost website to build Boost. CMake uses [FindBoost](https://cmake.org/cmake/help/latest/module/FindBoost.html) to locate the boost libraries.
+Building the core library requires Visual Studio 2017, Boost 1.69.0, and CMake. Follow the instructions on the Boost website to build Boost. Alternatively, Boost can be built using the [vcpkg](https://github.com/Microsoft/vcpkg) utility. Using vcpkg is recommended. CMake uses [FindBoost](https://cmake.org/cmake/help/latest/module/FindBoost.html) to locate the boost libraries. If using vcpkg, include the CMAKE_TOOLCHAIN_FILE as specified in the vcpkg instructions so CMake can find Boost.
 
 ### Ubuntu Xenial
 Install the dependencies:
@@ -42,20 +42,32 @@ Build Boost using utility: https://github.com/faithfracture/Apple-Boost-BuildScr
 
 Make the following changes to boost.sh
 
-    `BOOST_VERSION=1.65.1`
-    `BOOST_LIBS="atomic chrono date_time exception filesystem program_options random signals system thread test regex"`
-    
+```
+BOOST_VERSION=1.65.1
+BOOST_LIBS="atomic chrono date_time exception filesystem program_options random signals system thread test regex"
+```
+ 
 Build OpenSSL using utility script: [https://github.com/keeshux/OpenSSL-Apple](https://github.com/keeshux/OpenSSL-Apple). Make sure that you are not building against the old OpenSSL library included in MacOSX.
 
 Configure build for XCode using CMake GUI. Open resulting project file and build.
 
 ### Swig
-Python, Java, and C# use SWIG to generate intearnal language bindings. Due to a bug in SWIG, a forked repo must be used to build SWIG from source. The SWIG source can be found here: [https://github.com/johnwason/swig](https://github.com/johnwason/swig). Note that C# cannot currenty be built on Mac OSX or Linux.
+Python, Java, and C# use SWIG to generate language bindings. Robot Raconteur currently uses SWIG version 4.0.0-beta1. Earlier versions will not work. Windows binaries can be downloaded from SourceForge [swigwin-4.0.0-beta1.zip](https://sourceforge.net/projects/swig/files/swigwin/swigwin-4.0.0-beta1/swigwin-4.0.0-beta1.zip/download) . For Mac OSX and Linux, SWIG must be build from source. Instructions can be found [here](https://github.com/swig/swig/wiki/Getting-Started).
 
 ### MATLAB Mex
 
 MATLAB install required for build. CMake FindMatlab module is used to locate the MATLAB build dependencies. Be sure to build the MEX file against static boost libraries. Linux will require Boost to be built from source with "-fPIC" C++ gcc option. The apt repository static libraries cannot be used because they were not built with "-fPIC".  
 
+## ROS Support
+
+Robot Raconteur can be built and utilized from within ROS. To use, clone the robotraconteur repository into catkin_ws/src, run rosdep to install dependencies, and use catkin_make_isolated to build. By default, the resulting build will not have ROS support and will only build the core static library. To build with ROS support, RobotRaconteurGen, and Python, execute:
+
+    catkin_make_isolated --cmake-args -DROBOTRACONTEUR_ROS=1
+
+The additional cmake variable must be present for the first build to enable additional functionality.
+
+Note that SWIG version 4.0.0-beta1 MUST be installed before attempting to build the Python bindings. Robot Raconteur will not build using the older versions installed from apt! Install to /usr/local so catkin can find the swig executable. See [here](https://github.com/swig/swig/wiki/Getting-Started) for SWIG installation instructions.
+    
 ## Documentation
 
 Documentation for version 0.8.1 can be found at [https://robotraconteur.com/documentation](https://robotraconteur.com/documentation). Documentation is being updated for the upcoming 0.9 release.
