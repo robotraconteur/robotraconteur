@@ -249,13 +249,12 @@ namespace RobotRaconteur
 		MessageErrorType_NotImplementedError,
 		MessageErrorType_MemberBusy,
 		MessageErrorType_ValueNotSet,
-		MessageErrorType_AuthenticationError = 150,
-		MessageErrorType_ObjectLockedError,
-		MessageErrorType_PermissionDenied,
 		MessageErrorType_AbortOperation,
 		MessageErrorType_OperationAborted,
-		MessageErrorType_StopIteration
-
+		MessageErrorType_StopIteration,
+		MessageErrorType_AuthenticationError = 150,
+		MessageErrorType_ObjectLockedError,
+		MessageErrorType_PermissionDenied
 	};
 
 	enum ClientServiceListenerEventType
