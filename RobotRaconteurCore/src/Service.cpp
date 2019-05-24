@@ -268,7 +268,10 @@ namespace RobotRaconteur
 				}
 				else
 				{
-					ret->ElementName="return";
+					if (ret->ElementName != "index")
+					{
+						ret->ElementName = "return";
+					}
 					ret1->AddElement(ret);
 				}
 			}
