@@ -57,42 +57,21 @@ namespace RobotRaconteur
         public abstract ReturnType Next(ParamType param);
 
         public Task AsyncAbort(int timeout = -1)
-        {
-            try
-            {
-                Abort();
-                return Task.FromResult(0);
-            }
-            catch (Exception e)
-            {
-                return Task.FromException(e);               
-            }            
+        {            
+            Abort();
+            return Task.FromResult(0);
         }
 
         public Task AsyncClose(int timeout = -1)
         {
-            try
-            {
-                Close();
-                return Task.FromResult(0);
-            }
-            catch (Exception e)
-            {
-                return Task.FromException(e);                
-            }            
+            Close();
+            return Task.FromResult(0);
         }
 
         public Task<ReturnType> AsyncNext(ParamType param, int timeout = -1)
-        {
-            try
-            {
-                ReturnType r = Next(param);
-                return Task.FromResult(r);
-            }
-            catch (Exception e)
-            {
-                return Task.FromException<ReturnType>(e);
-            }            
+        {            
+            ReturnType r = Next(param);
+            return Task.FromResult(r);                     
         }
     }
 
@@ -104,41 +83,20 @@ namespace RobotRaconteur
 
         public Task AsyncAbort(int timeout = -1)
         {
-            try
-            {
-                Abort();
-                return Task.FromResult(0);
-            }
-            catch (Exception e)
-            {                
-                return Task.FromException(e);
-            }            
+            Abort();
+            return Task.FromResult(0);
         }
 
         public Task AsyncClose(int timeout = -1)
-        {
-            try
-            {
-                Close();
-                return Task.FromResult(0);
-            }
-            catch (Exception e)
-            {
-                return Task.FromException(e);
-            }            
+        {           
+            Close();
+            return Task.FromResult(0);
         }
 
         public Task<ReturnType> AsyncNext(int timeout = -1)
         {
-            try
-            {
-                ReturnType r = Next();
-                return Task.FromResult(r);
-            }
-            catch (Exception e)
-            {                
-                return Task.FromException<ReturnType>(e);
-            }            
+            ReturnType r = Next();
+            return Task.FromResult(r);
         }
 
         public ReturnType[] NextAll()
@@ -164,41 +122,20 @@ namespace RobotRaconteur
 
         public Task AsyncAbort(int timeout = -1)
         {
-            try
-            {
-                Abort();
-                return Task.FromResult(0);
-            }
-            catch (Exception e)
-            {                
-                return Task.FromException(e);
-            }            
+            Abort();
+            return Task.FromResult(0);
         }
 
         public Task AsyncClose(int timeout = -1)
         {
-            try
-            {
-                Close();
-                return Task.FromResult(0);
-            }
-            catch (Exception e)
-            {
-                return Task.FromException(e);
-            }            
+            Close();
+            return Task.FromResult(0);
         }
 
         public Task AsyncNext(ParamType param, int timeout = -1)
         {
-            try
-            {
-                Next(param);
-                return Task.FromResult(0);
-            }
-            catch (Exception e)
-            {                
-                return Task.FromException(e);
-            }            
+            Next(param);
+            return Task.FromResult(0);
         }
     }
 

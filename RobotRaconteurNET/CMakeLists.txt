@@ -60,12 +60,6 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
 endif()
 
-set(NET_SN_KEY "" CACHE FILEPATH "SN key for NET assembly signing")
-if (NET_SN_KEY)
-get_filename_component(NET_SN_KEY_NAME ${NET_SN_KEY} NAME)
-string(CONFIGURE "<PropertyGroup><AssemblyOriginatorKeyFile>@NET_SN_KEY@</AssemblyOriginatorKeyFile></PropertyGroup><ItemGroup><None Include=\"@NET_SN_KEY@\"><Link>@NET_SN_KEY_NAME@</Link></None></ItemGroup>" NET_SN_KEY_XML)
-endif()
-
 include("${CMAKE_CURRENT_SOURCE_DIR}/NETExceptions.cmake")
 
 if (MSVC)
