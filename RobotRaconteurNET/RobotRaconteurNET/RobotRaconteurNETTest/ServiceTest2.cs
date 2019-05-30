@@ -59,7 +59,7 @@ namespace RobotRaconteurNETTest
         public override ArrayMemory<double> readmem { get; }
         public override testenum1 testenum1_prop
         {
-            get => testenum1.anothervalue;
+            get { return testenum1.anothervalue; }
             set
             {
                 if (value != testenum1.hexval1) throw new Exception();

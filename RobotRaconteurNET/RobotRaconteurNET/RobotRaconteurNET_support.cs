@@ -2617,7 +2617,7 @@ namespace RobotRaconteur
             
             protected TaskCompletionSource<ServiceInfo2[]> handler_task = new TaskCompletionSource<ServiceInfo2[]>(TaskContinuationOptions.ExecuteSynchronously);
 
-            public Task<ServiceInfo2[]> Task { get => handler_task.Task; }
+            public Task<ServiceInfo2[]> Task { get { return handler_task.Task; } }
 
 
             public AsyncServiceInfo2DirectorImpl()
@@ -2666,7 +2666,7 @@ namespace RobotRaconteur
         {
             protected TaskCompletionSource<NodeInfo2[]> handler_task = new TaskCompletionSource<NodeInfo2[]>(TaskContinuationOptions.ExecuteSynchronously);
 
-            public Task<NodeInfo2[]> Task { get => handler_task.Task; }
+            public Task<NodeInfo2[]> Task { get { return handler_task.Task; } }
 
             public AsyncNodeInfo2DirectorImpl()
             {
@@ -3306,7 +3306,7 @@ namespace RobotRaconteur
 
         protected TaskCompletionSource<MessageElement> handler_task = new TaskCompletionSource<MessageElement>(TaskContinuationOptions.ExecuteSynchronously);
         
-        public Task<MessageElement> Task { get => handler_task.Task; }
+        public Task<MessageElement> Task { get { return handler_task.Task; } }
 
         public AsyncRequestDirectorImpl()
         {
@@ -3352,7 +3352,7 @@ namespace RobotRaconteur
     {
         protected TaskCompletionSource<T> handler_task = new TaskCompletionSource<T>(TaskContinuationOptions.ExecuteSynchronously);
 
-        public Task<T> Task { get => handler_task.Task; }
+        public Task<T> Task { get { return handler_task.Task; } }
 
         protected ServiceFactory factory;
 
@@ -3424,7 +3424,7 @@ namespace RobotRaconteur
     internal class AsyncVoidReturnDirectorImpl : AsyncVoidReturnDirector
     {
         protected TaskCompletionSource<int> handler_task = new TaskCompletionSource<int>(TaskContinuationOptions.ExecuteSynchronously);
-        public Task Task { get => handler_task.Task; }
+        public Task Task { get { return handler_task.Task; } }
 
         public AsyncVoidReturnDirectorImpl()
         {
@@ -3465,7 +3465,7 @@ namespace RobotRaconteur
     {
         protected TaskCompletionSource<int> handler_task = new TaskCompletionSource<int>(TaskContinuationOptions.ExecuteSynchronously);
 
-        public Task Task { get => handler_task.Task; }
+        public Task Task { get { return handler_task.Task; } }
 
 
         public AsyncVoidNoErrReturnDirectorImpl()
@@ -3497,7 +3497,7 @@ namespace RobotRaconteur
 
         protected TaskCompletionSource<string> handler_task = new TaskCompletionSource<string>(TaskContinuationOptions.ExecuteSynchronously);
 
-        public Task<string> Task { get => handler_task.Task; }
+        public Task<string> Task { get { return handler_task.Task; } }
 
 
         public AsyncStringReturnDirectorImpl()
@@ -3541,7 +3541,7 @@ namespace RobotRaconteur
 
         protected TaskCompletionSource<uint> handler_task = new TaskCompletionSource<uint>(TaskContinuationOptions.ExecuteSynchronously);
 
-        public Task<uint> Task { get => handler_task.Task; }
+        public Task<uint> Task { get { return handler_task.Task; } }
 
 
         public AsyncUInt32ReturnDirectorImpl()
@@ -4456,9 +4456,10 @@ namespace RobotRaconteur
             }
 
             if (s!=null)
-            {
+            {		
                 s.Dispose();
             }
+            RRNativeObjectHeapSupport.Set_Support(null);
         }
 
         private void LoadAllServiceTypes(RobotRaconteurNode node)

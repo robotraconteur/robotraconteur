@@ -625,7 +625,7 @@ namespace RobotRaconteur
     {        
         protected TaskCompletionSource<WrappedGeneratorClient> handler_task = new TaskCompletionSource<WrappedGeneratorClient>(TaskContinuationOptions.ExecuteSynchronously);
 
-        public Task<WrappedGeneratorClient> Task { get => handler_task.Task; }
+        public Task<WrappedGeneratorClient> Task { get { return handler_task.Task; } }
 
         public AsyncGeneratorClientReturnDirectorImpl()
         {

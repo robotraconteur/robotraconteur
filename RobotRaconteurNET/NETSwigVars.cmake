@@ -9,7 +9,7 @@ set(SWIG_NET_EXTRA_ARGS ${SWIG_NET_EXTRA_ARGS_OVERRIDE})
 endif()
 
 INCLUDE(${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurSWIGSources.cmake)
-include_directories(${CMAKE_SOURCE_DIR}/SWIG ${CMAKE_SWIG_OUTDIR} ${CMAKE_CURRENT_LIST_DIRS}/swiglib_patched)
+include_directories(${CMAKE_SOURCE_DIR}/SWIG ${CMAKE_SWIG_OUTDIR} ${CMAKE_CURRENT_LIST_DIR}/swiglib_patched)
 
 set(${CMAKE_CURRENT_LIST_DIR}/NET_SWIG_sources ${CMAKE_CURRENT_LIST_DIR}/DiscoveryNET.i 
   ${CMAKE_CURRENT_LIST_DIR}/HardwareTransportNET.i ${CMAKE_CURRENT_LIST_DIR}/LocalTransportNET.i

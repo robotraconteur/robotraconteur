@@ -36,14 +36,14 @@ endif()
 
 RRSetTargetDirs(${SWIG_MODULE_RobotRaconteurNETNative_REAL_NAME} "NET/Native" "NET/Native")
 
-set_target_properties(${SWIG_MODULE_RobotRaconteurNETNative_REAL_NAME} PROPERTIES OUTPUT_NAME "RobotRaconteurNETNative")
 
 #get_target_property(outdir RobotRaconteurNETNative LIBRARY_OUTPUT_DIRECTORY)
 #get_target_property(outdir RobotRaconteurNETNative RUNTIME_OUTPUT_DIRECTORY_DEBUG)
 
 
-
-
+set(RR_NET_PLATFORM_SUFFIX FALSE CACHE BOOL "")
+if(RR_NET_PLATFORM_SUFFIX)
+set_target_properties(${SWIG_MODULE_RobotRaconteurNETNative_REAL_NAME} PROPERTIES OUTPUT_NAME "RobotRaconteurNETNative")
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 if (CMAKE_SIZEOF_VOID_P EQUAL 8)
 	set_target_properties(${SWIG_MODULE_RobotRaconteurNETNative_REAL_NAME}  PROPERTIES OUTPUT_NAME "RobotRaconteurNETNative-linux64")
@@ -52,12 +52,12 @@ else()
 endif()
 endif()
 
-
-
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
 	set_target_properties(${SWIG_MODULE_RobotRaconteurNETNative_REAL_NAME}  PROPERTIES OUTPUT_NAME "RobotRaconteurNETNative-darwin")
-
+endif()
+else()
+set_target_properties(${SWIG_MODULE_RobotRaconteurNETNative_REAL_NAME} PROPERTIES PREFIX "${CMAKE_SHARED_MODULE_PREFIX}")
 endif()
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/NETExceptions.cmake")
@@ -67,8 +67,12 @@ if (MSVC)
 set(RR32BIN "" CACHE PATH "32-bit build directory")
 #add_custom_target(RobotRaconteurNET ALL msbuild -p:Configuration=$(Configuration) /t:rebuild RobotRaconteurNET.csproj WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
 INCLUDE_EXTERNAL_MSPROJECT(RobotRaconteurNET ${CMAKE_CURRENT_BINARY_DIR}/RobotRaconteurNET.csproj)
-add_dependencies(RobotRaconteurNET RobotRaconteurNETNative)
 #add_custom_target(RobotRaconteurNETTest ALL msbuild -p:Configuration=$(Configuration) /t:rebuild RobotRaconteurNETTest.csproj WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
+else()
+find_program(XBUILD_EXECUTABLE NAMES xbuild msbuild)
+add_custom_target(RobotRaconteurNET ALL "${XBUILD_EXECUTABLE}" RobotRaconteurNET.csproj WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
+endif()
+add_dependencies(RobotRaconteurNET RobotRaconteurNETNative)
 
 include(${CMAKE_SOURCE_DIR}/RobotRaconteurGen/cmake/RobotRaconteurGenerateThunk.cmake)
 
@@ -89,7 +93,12 @@ ROBOTRACONTEUR_GENERATE_THUNK(RR_THUNK_SRCS
 
 add_custom_target(RobotRaconteurNETTest_gen DEPENDS ${RR_THUNK_SRCS})
 add_dependencies(RobotRaconteurNETNative RobotRaconteurNETTest_gen)
+if(MSVC)
 INCLUDE_EXTERNAL_MSPROJECT(RobotRaconteurNETTest ${CMAKE_CURRENT_BINARY_DIR}/RobotRaconteurNETTest.csproj  RobotRaconteurNETTest_gen)
+else()
+find_program(XBUILD_EXECUTABLE NAMES xbuild msbuild)
+add_custom_target(RobotRaconteurNETTest ALL "${XBUILD_EXECUTABLE}" RobotRaconteurNETTest.csproj WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
+endif()
 add_dependencies(RobotRaconteurNETTest RobotRaconteurNET)
 #add_custom_target(RobotRaconteurNETTestVB ALL msbuild -p:Configuration=$(Configuration) /t:rebuild RobotRaconteurNETTestVB.vbproj WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
 #add_dependencies(RobotRaconteurNETTestVB RobotRaconteurNET)
@@ -103,16 +112,17 @@ STRING(TIMESTAMP CurrentYear "%Y")
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurNET/Properties/AssemblyInfo.cs.in" "${CMAKE_CURRENT_BINARY_DIR}/AssemblyInfo.cs" @ONLY)
 
 
-
-endif()
-
 if(WIN32)
 set(RR_NET_TEST_CMD "\"${CMAKE_COMMAND}\"")
 set(RR_NET_TEST_CMD_ARGS "-E env PATH=\"%PATH%\\\;${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/NET/Native\" ${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/NET/RobotRaconteurNETTest")
+else()
+find_program(MONO_EXECUTABLE mono)
+set(RR_NET_TEST_CMD "\"${CMAKE_COMMAND}\"")
+set(RR_NET_TEST_CMD_ARGS "-E env LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/NET/Native\ ${MONO_EXECUTABLE} ${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/NET/RobotRaconteurNETTest.exe")
+endif()
 RRConfigureTest(test_prog_net "${RR_NET_TEST_CMD}" "test_prog" NOCTEST ARGS "${RR_NET_TEST_CMD_ARGS}")
 RRConfigureTest(test_net_loopback "${RR_NET_TEST_CMD}" "test_prog" ARGS "${RR_NET_TEST_CMD_ARGS} loopback")
 RRConfigureTest(test_net_loopback2 "${RR_NET_TEST_CMD}" "test_prog" ARGS "${RR_NET_TEST_CMD_ARGS} loopback2")
-endif()
 
 #endif()
 
