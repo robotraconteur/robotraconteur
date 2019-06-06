@@ -135,7 +135,7 @@ namespace detail
 
 			boost::mutex::scoped_lock op_lock(op->this_lock);
 
-			op->timer = RR_MAKE_SHARED<boost::asio::deadline_timer>(boost::ref(p->get_io_service()));
+			op->timer.reset(new boost::asio::deadline_timer(p->get_io_context()));
 			if (timeout >= 0)
 			{
 				op->timer->expires_from_now(boost::posix_time::milliseconds(timeout));

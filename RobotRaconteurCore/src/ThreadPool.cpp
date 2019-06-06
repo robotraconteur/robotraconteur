@@ -34,8 +34,11 @@ ThreadPool::ThreadPool(RR_SHARED_PTR<RobotRaconteurNode> node)
 	this->node=node;
 
 	thread_count=0;
-	
-	_work=RR_MAKE_SHARED<boost::asio::io_service::work>(boost::ref(_io_service));
+#if BOOST_ASIO_VERSION < 101200	
+	_work=RR_MAKE_SHARED<RR_BOOST_ASIO_IO_CONTEXT::work>(boost::ref(_io_context));
+#else
+	_work.reset(new boost::asio::executor_work_guard<RR_BOOST_ASIO_IO_CONTEXT::executor_type>(_io_context.get_executor()));
+#endif
 
 }
 
@@ -86,14 +89,14 @@ void ThreadPool::Post(boost::function<void()> function)
 {
 	if (!keepgoing) throw InvalidOperationException("Thread pool shutdown");
 
-	_io_service.post(boost::bind(&ThreadPool_post_wrapper,function,GetNode()));
+	RR_BOOST_ASIO_POST(_io_context,boost::bind(&ThreadPool_post_wrapper,function,GetNode()));
 }
 
 bool ThreadPool::TryPost(RR_MOVE_ARG(boost::function<void()>) function)
 {
 	if (!keepgoing) return false;
 
-	_io_service.post(boost::bind(&ThreadPool_post_wrapper, function, GetNode()));
+	RR_BOOST_ASIO_POST(_io_context,boost::bind(&ThreadPool_post_wrapper, function, GetNode()));
 
 	return true;
 }
@@ -118,11 +121,11 @@ void ThreadPool::thread_function()
 		k=keepgoing;
 	}
 
-	while(k || !_io_service.stopped())
+	while(k || !_io_context.stopped())
 	{
 		try
 		{
-			_io_service.run_one();
+			_io_context.run_one();
 		}
 		catch (std::exception& exp)
 		{
@@ -151,7 +154,7 @@ void ThreadPool::Shutdown()
 		
 	} 
 
-	_io_service.stop();
+	_io_context.stop();
 
 	{
 		
@@ -171,9 +174,9 @@ void ThreadPool::Shutdown()
 
 }
 
-boost::asio::io_service& ThreadPool::get_io_service()
+RR_BOOST_ASIO_IO_CONTEXT& ThreadPool::get_io_context()
 {
-	return _io_service;
+	return _io_context;
 }
 
 ThreadPoolFactory::~ThreadPoolFactory() {}

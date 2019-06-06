@@ -85,7 +85,7 @@ int32_t AndroidHardwareHelper::ConnectBluetooth_success(RR_SHARED_PTR<AndroidBlu
 
 	boost::asio::generic::stream_protocol protocol(AF_UNIX, SOCK_STREAM);
 
-	RR_SHARED_PTR<boost::asio::generic::stream_protocol::socket> sock = RR_MAKE_SHARED<boost::asio::generic::stream_protocol::socket>(boost::ref(p->parent->GetNode()->GetThreadPool()->get_io_service()), protocol, fds[0]);
+	RR_SHARED_PTR<boost::asio::generic::stream_protocol::socket> sock = RR_MAKE_SHARED<boost::asio::generic::stream_protocol::socket>(boost::ref(p->parent->GetNode()->GetThreadPool()->get_io_context()), protocol, fds[0]);
 
 	RR_SHARED_PTR<HardwareTransportConnection_bluetooth> c=RR_MAKE_SHARED<HardwareTransportConnection_bluetooth>(p->parent, false, p->endpoint);
 	c->AsyncAttachSocket(sock, p->noden, boost::bind(p->handler, c, _1));

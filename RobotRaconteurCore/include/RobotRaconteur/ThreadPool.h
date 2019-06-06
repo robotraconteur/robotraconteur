@@ -29,14 +29,18 @@ namespace RobotRaconteur
 
 		boost::mutex queue_mutex;
 
-		boost::asio::io_service _io_service;
+		RR_BOOST_ASIO_IO_CONTEXT _io_context;
 
 		size_t thread_count;
 
 		bool keepgoing;
 		boost::mutex keepgoing_lock;
 
-		RR_SHARED_PTR<boost::asio::io_service::work> _work;
+#if BOOST_ASIO_VERSION < 101200
+		RR_SHARED_PTR<RR_BOOST_ASIO_IO_CONTEXT::work> _work;
+#else
+		RR_SHARED_PTR <boost::asio::executor_work_guard<RR_BOOST_ASIO_IO_CONTEXT::executor_type> > _work;
+#endif
 
 		RR_WEAK_PTR<RobotRaconteurNode> node;
 
@@ -56,7 +60,7 @@ namespace RobotRaconteur
 
 		virtual void Shutdown();
 
-		virtual boost::asio::io_service& get_io_service();
+		virtual RR_BOOST_ASIO_IO_CONTEXT& get_io_context();
 
 
 	protected:

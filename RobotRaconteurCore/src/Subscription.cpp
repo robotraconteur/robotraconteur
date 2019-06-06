@@ -51,7 +51,7 @@ namespace RobotRaconteur
 
 			if (cancelled.data()) return;
 
-			RR_SHARED_PTR<boost::asio::deadline_timer> t = RR_MAKE_SHARED<boost::asio::deadline_timer>(boost::ref(n->GetThreadPool()->get_io_service()));
+			RR_SHARED_PTR<boost::asio::deadline_timer> t(new boost::asio::deadline_timer(n->GetThreadPool()->get_io_context()));
 			t->expires_from_now(boost::posix_time::milliseconds(timeout));
 			RobotRaconteurNode::asio_async_wait(node, t, boost::bind(&ServiceSubscription_retrytimer::timer_handler, shared_from_this(), boost::asio::placeholders::error));
 
@@ -595,7 +595,7 @@ namespace RobotRaconteur
 
 		this->node = n;
 
-		listener_strand = RR_MAKE_SHARED<boost::asio::io_service::strand>(boost::ref(n->GetThreadPool()->get_io_service()));
+		listener_strand.reset(RR_BOOST_ASIO_NEW_STRAND(n->GetThreadPool()->get_io_context()));
 	}
 
 	void ServiceSubscription::Init(const std::vector<std::string>& service_types, RR_SHARED_PTR<ServiceSubscriptionFilter> filter)
@@ -724,7 +724,7 @@ namespace RobotRaconteur
 		{
 			try
 			{
-				RobotRaconteurNode::TryPostToThreadPool(n, listener_strand->wrap(
+				RobotRaconteurNode::TryPostToThreadPool(n, RR_BOOST_ASIO_STRAND_WRAP(*listener_strand,
 					boost::bind(&ServiceSubscription::fire_ClientConnectListeners,
 						shared_from_this(), ServiceSubscriptionClientID(c2->nodeid, c2->service_name), c)));
 			}
@@ -841,7 +841,7 @@ namespace RobotRaconteur
 						{
 							try
 							{
-								RobotRaconteurNode::TryPostToThreadPool(n, this1->listener_strand->wrap(
+								RobotRaconteurNode::TryPostToThreadPool(n, RR_BOOST_ASIO_STRAND_WRAP(*this1->listener_strand,
 									boost::bind(&ServiceSubscription::fire_ClientDisconnectListeners,
 										this1, ServiceSubscriptionClientID(c2_1->nodeid, c2_1->service_name), client)));
 							}

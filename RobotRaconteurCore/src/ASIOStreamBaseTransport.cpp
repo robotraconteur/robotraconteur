@@ -46,7 +46,7 @@ namespace RobotRaconteur
 
 
 
-	ASIOStreamBaseTransport::ASIOStreamBaseTransport(RR_SHARED_PTR<RobotRaconteurNode> node) : _io_service(node->GetThreadPool()->get_io_service())
+	ASIOStreamBaseTransport::ASIOStreamBaseTransport(RR_SHARED_PTR<RobotRaconteurNode> node) : _io_context(node->GetThreadPool()->get_io_context())
 {
 	connected.store(true);
 
@@ -120,7 +120,7 @@ void ASIOStreamBaseTransport::AsyncAttachStream(bool server, const NodeID& targe
 
 	try
 	{		
-		heartbeat_timer=RR_MAKE_SHARED<boost::asio::deadline_timer>(boost::ref(_io_service));
+		heartbeat_timer.reset(new boost::asio::deadline_timer(_io_context));
 		{
 			boost::mutex::scoped_lock lock(recv_lock);
 			BeginReceiveMessage1();
@@ -1727,7 +1727,7 @@ void ASIOStreamBaseTransport::BeginCheckStreamCapability(const std::string &name
 
 		CheckStreamCapability_callback=callback;
 
-		CheckStreamCapability_timer=RR_MAKE_SHARED<boost::asio::deadline_timer>(boost::ref(_io_service),boost::posix_time::milliseconds(10000));
+		CheckStreamCapability_timer.reset(new boost::asio::deadline_timer(_io_context,boost::posix_time::milliseconds(10000)));
 		RR_WEAK_PTR<ASIOStreamBaseTransport> t=RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this());
 		RobotRaconteurNode::asio_async_wait(node, CheckStreamCapability_timer,boost::bind(&ASIOStreamBaseTransport::CheckStreamCapability_timercallback, t,boost::asio::placeholders::error));  
 			
@@ -1953,7 +1953,7 @@ void ASIOStreamBaseTransport::BeginStreamOp(const std::string &command, RR_SHARE
 
 		streamop_callback=callback;
 
-		streamop_timer=RR_MAKE_SHARED<boost::asio::deadline_timer>(boost::ref(_io_service),boost::posix_time::milliseconds(10000));
+		streamop_timer.reset(new boost::asio::deadline_timer(_io_context,boost::posix_time::milliseconds(10000)));
 		RR_WEAK_PTR<ASIOStreamBaseTransport> t=RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this());
 		RobotRaconteurNode::asio_async_wait(node, streamop_timer, boost::bind(&ASIOStreamBaseTransport::StreamOp_timercallback, t,boost::asio::placeholders::error));
 			
@@ -2544,7 +2544,7 @@ void ASIOStreamBaseTransport::UpdateStringTable()
 			RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(&ASIOStreamBaseTransport::SimpleAsyncSendMessage,
 				RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this()), m,h	));
 
-			RR_SHARED_PTR<boost::asio::deadline_timer> t = RR_MAKE_SHARED<boost::asio::deadline_timer>(boost::ref(_io_service));
+			RR_SHARED_PTR<boost::asio::deadline_timer> t(new boost::asio::deadline_timer(_io_context));
 			t->expires_from_now(boost::posix_time::seconds(15));
 			RobotRaconteurNode::asio_async_wait(node, t, boost::bind(&ASIOStreamBaseTransport::UpdateStringTable3,
 				RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this()), _1, t, me->RequestID));

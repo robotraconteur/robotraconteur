@@ -103,3 +103,21 @@
 #define RR_MOVE_ARG(type) type
 #define RR_MOVE(x) x
 #endif
+
+#include <boost/asio/version.hpp>
+
+#if BOOST_ASIO_VERSION < 101200
+#define RR_BOOST_ASIO_IO_CONTEXT boost::asio::io_service
+#define RR_BOOST_ASIO_STRAND boost::asio::io_service::strand
+#define RR_BOOST_ASIO_POST(context, func) context.post(func)
+#define RR_BOOST_ASIO_BUFFER_CAST(type,buf) boost::asio::buffer_cast<type>(buf)
+#define RR_BOOST_ASIO_STRAND_WRAP(strand, f) (strand).wrap(f)
+#define RR_BOOST_ASIO_NEW_STRAND(context) (new boost::asio::strand(context))
+#else
+#define RR_BOOST_ASIO_IO_CONTEXT boost::asio::io_context
+#define RR_BOOST_ASIO_STRAND boost::asio::strand<boost::asio::io_context::executor_type>
+#define RR_BOOST_ASIO_POST(context, func) boost::asio::post(context,func)
+#define RR_BOOST_ASIO_BUFFER_CAST(type,buf) (type)buf.data()
+#define RR_BOOST_ASIO_STRAND_WRAP(strand, f) boost::asio::bind_executor(strand,f)
+#define RR_BOOST_ASIO_NEW_STRAND(context) (new boost::asio::strand<boost::asio::io_context::executor_type>(context.get_executor()))
+#endif

@@ -65,7 +65,7 @@ namespace RobotRaconteur
 
 			void FindNodesInDirectory(std::vector<NodeDiscoveryInfo>& nodeinfo, const boost::filesystem::path& path, const std::string& scheme, const boost::posix_time::ptime& now, boost::optional<std::string> username = boost::optional<std::string>());
 
-			RR_SHARED_PTR<LocalTransport::socket_type> FindAndConnectLocalSocket(ParseConnectionURLResult url, const std::vector<boost::filesystem::path>& search_paths, const std::vector<std::string>& usernames, boost::asio::io_service& io_service_);
+			RR_SHARED_PTR<LocalTransport::socket_type> FindAndConnectLocalSocket(ParseConnectionURLResult url, const std::vector<boost::filesystem::path>& search_paths, const std::vector<std::string>& usernames, RR_BOOST_ASIO_IO_CONTEXT& io_service_);
 
 #ifndef ROBOTRACONTEUR_WINDOWS
 

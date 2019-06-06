@@ -189,8 +189,11 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
 
 		protected:
 			//void attach_transport(RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket, boost::function<void( RR_SHARED_PTR<boost::asio::ip::tcp::socket> , RR_SHARED_PTR<SuperNodeTransportConnection> , myerr )>& callback);
-
-			void connect2(int32_t key, const boost::system::error_code& err, boost::asio::ip::tcp::resolver::iterator endpoint_iterator, boost::function<void(RR_SHARED_PTR<TcpTransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > callback);
+#if BOOST_ASIO_VERSION < 101200
+			void connect2(int32_t key, const boost::system::error_code& err, boost::asio::ip::basic_resolver_iterator<boost::asio::ip::tcp> endpoint_iterator, boost::function<void(RR_SHARED_PTR<TcpTransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > callback);
+#else
+			void connect2(int32_t key, const boost::system::error_code& err, boost::asio::ip::tcp::resolver::results_type results, boost::function<void(RR_SHARED_PTR<TcpTransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > callback);
+#endif
 
 			void connected_callback(RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket, RR_SHARED_PTR<boost::signals2::scoped_connection> socket_closer, int32_t key, const boost::system::error_code& error);
 

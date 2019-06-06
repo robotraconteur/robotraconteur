@@ -46,7 +46,7 @@ namespace RobotRaconteur
 			};
 
 
-			boost::asio::io_service& _io_service;
+			RR_BOOST_ASIO_IO_CONTEXT& _io_context;
 
 			boost::atomic<bool> connected;
 

@@ -434,7 +434,7 @@ void HardwareTransport_linux_discovery::Init()
 	running=true;
 
 	boost::asio::generic::datagram_protocol p(AF_NETLINK, NETLINK_KOBJECT_UEVENT);
-	RR_SHARED_PTR<boost::asio::generic::datagram_protocol::socket> nl_socket1=RR_MAKE_SHARED<boost::asio::generic::datagram_protocol::socket>(boost::ref(GetParent()->GetNode()->GetThreadPool()->get_io_service()), p, nl_socket);
+	RR_SHARED_PTR<boost::asio::generic::datagram_protocol::socket> nl_socket1=RR_MAKE_SHARED<boost::asio::generic::datagram_protocol::socket>(boost::ref(GetParent()->GetNode()->GetThreadPool()->get_io_context()), p, nl_socket);
 	netlink_sock=nl_socket1;
 	netlink_sock->async_receive(boost::asio::buffer(msg.get(), NL_MAX_PAYLOAD), boost::bind(&HardwareTransport_linux_discovery::NetlinkMessageReceived, RR_STATIC_POINTER_CAST<HardwareTransport_linux_discovery>(shared_from_this()), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
 

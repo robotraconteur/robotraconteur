@@ -616,7 +616,7 @@ namespace detail
 		next_layer_.close();
 	}
 
-	TlsSchannelAsyncStreamAdapter::TlsSchannelAsyncStreamAdapter(boost::asio::io_service& _io_service_, boost::shared_ptr<TlsSchannelAsyncStreamAdapterContext> context, direction_type direction, const std::string& servername, boost::function<void(mutable_buffers&, boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>)> async_read_some, boost::function<void(const_buffers&, boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>)> async_write_some, boost::function<void()> close) : _io_service(_io_service_), asio_adapter(*this)
+	TlsSchannelAsyncStreamAdapter::TlsSchannelAsyncStreamAdapter(RR_BOOST_ASIO_IO_CONTEXT& _io_context_, boost::shared_ptr<TlsSchannelAsyncStreamAdapterContext> context, direction_type direction, const std::string& servername, boost::function<void(mutable_buffers&, boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>)> async_read_some, boost::function<void(const_buffers&, boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>)> async_write_some, boost::function<void()> close) : _io_context(_io_context_), asio_adapter(*this)
 	{
 		recv_buffer=boost::shared_array<uint8_t>(new uint8_t[max_tls_record_size]);
 		recv_buffer_un=boost::shared_array<uint8_t>(new uint8_t[max_tls_record_size]);
@@ -667,14 +667,14 @@ namespace detail
 		if (!open)
 		{
 			boost::system::error_code ec(boost::system::errc::broken_pipe,boost::system::generic_category());
-			_io_service.post(boost::bind(handler,ec));
+			RR_BOOST_ASIO_POST(_io_context,boost::bind(handler,ec));
 			return;
 		}
 
 		if (handshaking)
 		{
 			boost::system::error_code ec(boost::system::errc::operation_not_permitted,boost::system::generic_category());
-			_io_service.post(boost::bind(handler,ec));
+			RR_BOOST_ASIO_POST(_io_context, boost::bind(handler,ec));
 			return;
 		}
 
@@ -758,7 +758,7 @@ namespace detail
 			else
 			{
 				boost::system::error_code ec(boost::system::errc::protocol_error,boost::system::generic_category());
-				_io_service.post(boost::bind(handler,ec));
+				RR_BOOST_ASIO_POST(_io_context, boost::bind(handler,ec));
 			}
 			return;
 
@@ -837,7 +837,7 @@ namespace detail
 			recv_buffer_end_pos=0;
 			
 			boost::system::error_code ec;
-			_io_service.post(boost::bind(&TlsSchannelAsyncStreamAdapter::do_handshake1,shared_from_this(),ec,r,boost::protect(handler)));
+			RR_BOOST_ASIO_POST(_io_context, boost::bind(&TlsSchannelAsyncStreamAdapter::do_handshake1,shared_from_this(),ec,r,boost::protect(handler)));
 			return;
 		}
 		else
@@ -1095,7 +1095,7 @@ namespace detail
 			recv_buffer_end_pos=0;
 			
 			boost::system::error_code ec;
-			_io_service.post(boost::bind(&TlsSchannelAsyncStreamAdapter::do_handshake2,shared_from_this(),ec,r,boost::protect(handler),true));
+			RR_BOOST_ASIO_POST(_io_context, boost::bind(&TlsSchannelAsyncStreamAdapter::do_handshake2,shared_from_this(),ec,r,boost::protect(handler),true));
 			return;
 		}
 		else
@@ -1157,7 +1157,7 @@ namespace detail
 		{
 			boost::function<void ()> async_write_op1=async_write_op;
 			async_write_op.clear();
-			_io_service.post(async_write_op1);
+			RR_BOOST_ASIO_POST(_io_context, async_write_op1);
 		}
 
 		SECURITY_STATUS scRet = QueryContextAttributes( hContext.get(), SECPKG_ATTR_STREAM_SIZES, &TlsStreamSizes );
@@ -1226,10 +1226,10 @@ namespace detail
 		{
 			boost::function<void ()> async_write_op1=async_write_op;
 			async_write_op.clear();
-			_io_service.post(async_write_op1);
+			RR_BOOST_ASIO_POST(_io_context, async_write_op1);
 		}
 
-		_io_service.post(boost::bind(handler,error));
+		RR_BOOST_ASIO_POST(_io_context, boost::bind(handler,error));
 
 	}
 
@@ -1428,7 +1428,7 @@ namespace detail
 				boost::function<void (const boost::system::error_code&)> async_handshake_handler1=async_handshake_handler_op;
 				async_handshake_handler_op.clear();
 				request_renegotiate=false;
-				_io_service.post(boost::bind(async_handshake_handler1,error));
+				RR_BOOST_ASIO_POST(_io_context, boost::bind(async_handshake_handler1,error));
 				
 			}
 		}
@@ -1437,7 +1437,7 @@ namespace detail
 
 		}
 
-		_io_service.post(boost::bind(handler,error,0));
+		RR_BOOST_ASIO_POST(_io_context, boost::bind(handler,error,0));
 
 
 	}
@@ -1450,7 +1450,7 @@ namespace detail
 		if (!open || shutingdown)
 		{
 			boost::system::error_code ec(boost::system::errc::broken_pipe,boost::system::generic_category());
-			_io_service.post(boost::bind(handler,ec,0));
+			RR_BOOST_ASIO_POST(_io_context, boost::bind(handler,ec,0));
 			return;
 		}
 
@@ -1463,22 +1463,22 @@ namespace detail
 			if (diff > boost::asio::buffer_size(b3))
 			{
 				size_t d=boost::asio::buffer_size(b3);
-				memcpy(boost::asio::buffer_cast<void*>(b3), recv_buffer_un.get(), d);
+				memcpy(RR_BOOST_ASIO_BUFFER_CAST(void*,b3), recv_buffer_un.get(), d);
 				size_t p2=d;
 				memmove(recv_buffer_un.get(),recv_buffer_un.get() + d, recv_buffer_un_end_pos-d);
 				
 				recv_buffer_un_end_pos = (uint32_t)(recv_buffer_un_end_pos - d);
 				boost::system::error_code ec;
-				_io_service.post(boost::bind(handler,ec,d));
+				RR_BOOST_ASIO_POST(_io_context, boost::bind(handler,ec,d));
 				return;
 			}
 			else
 			{
 				size_t d=recv_buffer_un_end_pos;
-				memcpy(boost::asio::buffer_cast<void*>(b3), recv_buffer_un.get(), d);
+				memcpy(RR_BOOST_ASIO_BUFFER_CAST(void*,b3), recv_buffer_un.get(), d);
 				recv_buffer_un_end_pos=0;
 				boost::system::error_code ec;
-				_io_service.post(boost::bind(handler,ec,d));
+				RR_BOOST_ASIO_POST(_io_context, boost::bind(handler,ec,d));
 				return;
 			}
 
@@ -1490,7 +1490,7 @@ namespace detail
 			recv_buffer_end_pos=0;
 			lock.unlock();
 			boost::system::error_code ec1;
-			_io_service.post(boost::bind(&TlsSchannelAsyncStreamAdapter::async_read_some1,shared_from_this(),b3,ec1,d,handler));
+			RR_BOOST_ASIO_POST(_io_context, boost::bind(&TlsSchannelAsyncStreamAdapter::async_read_some1,shared_from_this(),b3,ec1,d,handler));
 			return;
 		}
 		else
@@ -1529,7 +1529,7 @@ namespace detail
 		{
 			reading=false;
 			boost::system::error_code ec(boost::system::errc::broken_pipe,boost::system::generic_category());
-			_io_service.post(boost::bind(handler,ec,0));
+			RR_BOOST_ASIO_POST(_io_context, boost::bind(handler,ec,0));
 			return;
 		}
 
@@ -1669,7 +1669,7 @@ namespace detail
 
 		if (pDataBuffer->cbBuffer <= boost::asio::buffer_size(b))
 		{
-			MoveMemory(boost::asio::buffer_cast<void*>(b),pDataBuffer->pvBuffer,pDataBuffer->cbBuffer);
+			MoveMemory(RR_BOOST_ASIO_BUFFER_CAST(void*,b),pDataBuffer->pvBuffer,pDataBuffer->cbBuffer);
 			if (pExtraBuffer)
 			{
 				MoveMemory(recv_buffer.get(),pExtraBuffer->pvBuffer,pExtraBuffer->cbBuffer);
@@ -1691,7 +1691,7 @@ namespace detail
 		{
 			size_t bsize=boost::asio::buffer_size(b);
 			size_t extra_size=pDataBuffer->cbBuffer-bsize;
-			MoveMemory(boost::asio::buffer_cast<void*>(b),pDataBuffer->pvBuffer,bsize);
+			MoveMemory(RR_BOOST_ASIO_BUFFER_CAST(void*,b),pDataBuffer->pvBuffer,bsize);
 			MoveMemory(recv_buffer_un.get(),((uint8_t*)pDataBuffer->pvBuffer)+bsize,extra_size);
 			recv_buffer_un_end_pos = (uint32_t)extra_size;
 			if (pExtraBuffer)
@@ -1739,27 +1739,27 @@ namespace detail
 		boost::mutex::scoped_lock lock(stream_lock);
 		
 		/*boost::system::error_code ec;
-		_io_service.post(boost::bind(handler,ec));
+		_io_context.post(boost::bind(handler,ec));
 		return;*/
 
 		if (!open)
 		{
 			boost::system::error_code ec;
-			_io_service.post(boost::bind(handler,ec));
+			RR_BOOST_ASIO_POST(_io_context, boost::bind(handler,ec));
 			return;
 		}
 
 		if (async_shutdown_handler_op)
 		{
 			boost::system::error_code ec(boost::system::errc::operation_not_permitted,boost::system::generic_category());
-			_io_service.post(boost::bind(handler,ec));
+			RR_BOOST_ASIO_POST(_io_context, boost::bind(handler,ec));
 			return;				
 		}
 
 		if (shutingdown)
 		{
 			boost::system::error_code ec;
-			_io_service.post(boost::bind(handler,ec));
+			RR_BOOST_ASIO_POST(_io_context, boost::bind(handler,ec));
 			return;
 		}
 
@@ -1925,7 +1925,7 @@ namespace detail
 		{
 			boost::function<void ()> async_shutdown_handler_rd1=async_shutdown_handler_rd;
 			async_write_op.clear();
-			_io_service.post(async_shutdown_handler_rd1);
+			_io_context.post(async_shutdown_handler_rd1);
 		}*/
 
 		//_async_write_some.clear();
@@ -1941,28 +1941,28 @@ namespace detail
 			boost::function<void (const boost::system::error_code&)> async_handshake_handler1=async_handshake_handler_op;
 			async_handshake_handler_op.clear();
 			boost::system::error_code ec1(boost::system::errc::broken_pipe,boost::system::generic_category());
-			_io_service.post(boost::bind(async_handshake_handler1,ec1));
+			RR_BOOST_ASIO_POST(_io_context, boost::bind(async_handshake_handler1,ec1));
 		}		
 
 		if (async_write_op)
 		{
 			boost::function<void ()> async_write_op1=async_write_op;
 			async_write_op.clear();
-			_io_service.post(async_write_op1);
+			RR_BOOST_ASIO_POST(_io_context, async_write_op1);
 		}
 
 		if (async_shutdown_handler_op)
 		{
 			boost::function<void (const boost::system::error_code&)> async_shutdown_handler1=async_shutdown_handler_op;
 			async_shutdown_handler_op.clear();
-			_io_service.post(boost::bind(async_shutdown_handler1,error));
+			RR_BOOST_ASIO_POST(_io_context, boost::bind(async_shutdown_handler1,error));
 		}
 		
 		if (async_shutdown_handler_rd)
 		{
 			boost::function<void ()> async_shutdown_handler1=async_shutdown_handler_rd;
 			async_shutdown_handler_rd.clear();
-			_io_service.post(boost::bind(async_shutdown_handler1));
+			RR_BOOST_ASIO_POST(_io_context, boost::bind(async_shutdown_handler1));
 		}
 
 	}

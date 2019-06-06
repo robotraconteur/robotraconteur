@@ -313,7 +313,7 @@ static void WinUsbDevice_winusb_free(RR_SHARED_PTR<WinUsb_Functions> f, void* hI
 	f->WinUsb_Free(hInterface);
 }
 
-static UsbDeviceStatus WinUsbDevice_open_device(boost::asio::io_service& io_service, RR_SHARED_PTR<WinUsb_Functions>& f, const std::wstring& path, RR_SHARED_PTR<void>& dev_h)
+static UsbDeviceStatus WinUsbDevice_open_device(RR_BOOST_ASIO_IO_CONTEXT& _io_context, RR_SHARED_PTR<WinUsb_Functions>& f, const std::wstring& path, RR_SHARED_PTR<void>& dev_h)
 {
 	HANDLE h1 = CreateFileW(path.c_str(), GENERIC_WRITE | GENERIC_READ, FILE_SHARE_WRITE | FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED, NULL);
 	if (h1 == INVALID_HANDLE_VALUE)
@@ -327,7 +327,7 @@ static UsbDeviceStatus WinUsbDevice_open_device(boost::asio::io_service& io_serv
 		return Error;
 	}
 
-	RR_SHARED_PTR<boost::asio::windows::stream_handle> device_handle1 = RR_MAKE_SHARED<boost::asio::windows::stream_handle>(boost::ref(io_service), h1);
+	RR_SHARED_PTR<boost::asio::windows::stream_handle> device_handle1(new boost::asio::windows::stream_handle(_io_context, h1));
 
 	WINUSB_INTERFACE_HANDLE h2;
 	if (!f->WinUsb_Initialize(device_handle1->native_handle(), &h2))
@@ -361,7 +361,7 @@ WinUsbDevice_Initialize::WinUsbDevice_Initialize(RR_SHARED_PTR<UsbDevice> parent
 
 UsbDeviceStatus WinUsbDevice_Initialize::OpenDevice(RR_SHARED_PTR<void>& dev_h)
 {
-	return WinUsbDevice_open_device(GetNode()->GetThreadPool()->get_io_service(), f, detected_device.path, dev_h);
+	return WinUsbDevice_open_device(GetNode()->GetThreadPool()->get_io_context(), f, detected_device.path, dev_h);
 }
 
 UsbDeviceStatus WinUsbDevice_Initialize::ReadInterfaceSettings(RR_SHARED_PTR<void> dev_h, RR_SHARED_PTR<UsbDevice_Settings>& settings)
@@ -403,7 +403,7 @@ UsbDeviceStatus WinUsbDevice_Initialize::ReadInterfaceSettings(RR_SHARED_PTR<voi
 	
 	while (boost::asio::buffer_size(desc) >= 2)
 	{
-		USB_COMMON_DESCRIPTOR* c1 = boost::asio::buffer_cast<USB_COMMON_DESCRIPTOR*>(desc);
+		USB_COMMON_DESCRIPTOR* c1 = RR_BOOST_ASIO_BUFFER_CAST(USB_COMMON_DESCRIPTOR*,desc);
 		if (c1->bLength > boost::asio::buffer_size(desc))
 		{
 			return Error;
@@ -539,20 +539,20 @@ UsbDeviceStatus WinUsbDevice_Initialize::ReadPipeSettings(RR_SHARED_PTR<void> de
 	return Open;
 }
 
-static void WinUsbDevice_async_control_transfer(boost::asio::io_service& io_service, RR_SHARED_PTR<WinUsb_Functions> f, uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex, boost::asio::mutable_buffer& buf, boost::function< void(const boost::system::error_code&, size_t) > handler, RR_SHARED_PTR<void> dev_h = RR_SHARED_PTR<void>())
+static void WinUsbDevice_async_control_transfer(RR_BOOST_ASIO_IO_CONTEXT& _io_context, RR_SHARED_PTR<WinUsb_Functions> f, uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex, boost::asio::mutable_buffer& buf, boost::function< void(const boost::system::error_code&, size_t) > handler, RR_SHARED_PTR<void> dev_h = RR_SHARED_PTR<void>())
 {
 	RR_SHARED_PTR<void> my_hInterface;
 
 	if (!dev_h)
 	{
-		io_service.post(boost::bind(handler, boost::asio::error::broken_pipe, 0));
+		RR_BOOST_ASIO_POST(_io_context,boost::bind(handler, boost::asio::error::broken_pipe, 0));
 		return;
 	}
 
 	RR_SHARED_PTR<WinUsbDevice_Handle> h = RR_STATIC_POINTER_CAST<WinUsbDevice_Handle>(dev_h);
 	my_hInterface = h->hInterface;
 	
-	boost::asio::detail::win_iocp_overlapped_ptr overlapped(io_service, handler);
+	boost::asio::windows::overlapped_ptr overlapped(_io_context, handler);
 
 	DWORD bytes_transferred = 0;
 
@@ -563,7 +563,7 @@ static void WinUsbDevice_async_control_transfer(boost::asio::io_service& io_serv
 	setup.Index = wIndex;
 	setup.Length = (USHORT)boost::asio::buffer_size(buf);
 
-	BOOL ok = f->WinUsb_ControlTransfer(my_hInterface.get(), setup, boost::asio::buffer_cast<PUCHAR>(buf), boost::asio::buffer_size(buf), &bytes_transferred, overlapped.get());
+	BOOL ok = f->WinUsb_ControlTransfer(my_hInterface.get(), setup, RR_BOOST_ASIO_BUFFER_CAST(PUCHAR,buf), boost::asio::buffer_size(buf), &bytes_transferred, overlapped.get());
 	DWORD last_error = ::GetLastError();
 	if (!ok && last_error != ERROR_IO_PENDING
 		&& last_error != ERROR_MORE_DATA)
@@ -580,13 +580,13 @@ static void WinUsbDevice_async_control_transfer(boost::asio::io_service& io_serv
 void WinUsbDevice_Initialize::AsyncControlTransfer(uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex, boost::asio::mutable_buffer& buf, boost::function< void(const boost::system::error_code&, size_t) > handler, RR_SHARED_PTR<void> dev_h)
 {
 	boost::mutex::scoped_lock lock(this_lock);
-	WinUsbDevice_async_control_transfer(GetNode()->GetThreadPool()->get_io_service(), f, bmRequestType, bRequest, wValue, wIndex, buf, handler, dev_h);
+	WinUsbDevice_async_control_transfer(GetNode()->GetThreadPool()->get_io_context(), f, bmRequestType, bRequest, wValue, wIndex, buf, handler, dev_h);
 }
 
 void WinUsbDevice_Initialize::AsyncControlTransferNoLock(uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex, boost::asio::mutable_buffer& buf, boost::function< void(const boost::system::error_code&, size_t) > handler, RR_SHARED_PTR<void> dev_h)
 {
 	//boost::mutex::scoped_lock lock(this_lock);
-	WinUsbDevice_async_control_transfer(GetNode()->GetThreadPool()->get_io_service(), f, bmRequestType, bRequest, wValue, wIndex, buf, handler, dev_h);
+	WinUsbDevice_async_control_transfer(GetNode()->GetThreadPool()->get_io_context(), f, bmRequestType, bRequest, wValue, wIndex, buf, handler, dev_h);
 }
 
 //WinUsbDevice_Claim
@@ -606,7 +606,7 @@ void WinUsbDevice_Claim::AsyncControlTransfer(uint8_t bmRequestType, uint8_t bRe
 		dev_h = device_handle;
 	}
 
-	WinUsbDevice_async_control_transfer(GetNode()->GetThreadPool()->get_io_service(), f, bmRequestType, bRequest, wValue, wIndex, buf, handler, dev_h);
+	WinUsbDevice_async_control_transfer(GetNode()->GetThreadPool()->get_io_context(), f, bmRequestType, bRequest, wValue, wIndex, buf, handler, dev_h);
 }
 
 void WinUsbDevice_Claim::AsyncControlTransferNoLock(uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex, boost::asio::mutable_buffer& buf, boost::function< void(const boost::system::error_code&, size_t) > handler, RR_SHARED_PTR<void> dev_h)
@@ -618,7 +618,7 @@ void WinUsbDevice_Claim::AsyncControlTransferNoLock(uint8_t bmRequestType, uint8
 		dev_h = device_handle;
 	}
 
-	WinUsbDevice_async_control_transfer(GetNode()->GetThreadPool()->get_io_service(), f, bmRequestType, bRequest, wValue, wIndex, buf, handler, dev_h);
+	WinUsbDevice_async_control_transfer(GetNode()->GetThreadPool()->get_io_context(), f, bmRequestType, bRequest, wValue, wIndex, buf, handler, dev_h);
 }
 
 void WinUsbDevice_Claim::AsyncReadPipe(uint8_t ep, boost::asio::mutable_buffer& buf, boost::function< void(const boost::system::error_code&, size_t) > handler)
@@ -635,13 +635,13 @@ void WinUsbDevice_Claim::AsyncReadPipeNoLock(uint8_t ep, boost::asio::mutable_bu
 		return;
 	}
 
-	boost::asio::io_service& io = device_handle->device_handle->get_io_service();
+	RR_BOOST_ASIO_IO_CONTEXT& io = GetNode()->GetThreadPool()->get_io_context();
 
-	boost::asio::detail::win_iocp_overlapped_ptr overlapped(io, handler);
+	boost::asio::windows::overlapped_ptr overlapped(io, handler);
 
 	DWORD bytes_transferred = 0;
 
-	BOOL ok = f->WinUsb_ReadPipe(device_handle->hInterface.get(), ep, boost::asio::buffer_cast<PUCHAR>(buf), boost::asio::buffer_size(buf), &bytes_transferred, overlapped.get());
+	BOOL ok = f->WinUsb_ReadPipe(device_handle->hInterface.get(), ep, RR_BOOST_ASIO_BUFFER_CAST(PUCHAR,buf), boost::asio::buffer_size(buf), &bytes_transferred, overlapped.get());
 	DWORD last_error = ::GetLastError();
 	if (!ok && last_error != ERROR_IO_PENDING
 		&& last_error != ERROR_MORE_DATA)
@@ -669,13 +669,13 @@ void WinUsbDevice_Claim::AsyncWritePipeNoLock(uint8_t ep, boost::asio::mutable_b
 		return;
 	}
 
-	boost::asio::io_service& io = device_handle->device_handle->get_io_service();
+	RR_BOOST_ASIO_IO_CONTEXT& io = GetNode()->GetThreadPool()->get_io_context();
 
-	boost::asio::detail::win_iocp_overlapped_ptr overlapped(io, handler);
+	boost::asio::windows::overlapped_ptr overlapped(io, handler);
 
 	DWORD bytes_transferred = 0;
 
-	BOOL ok = f->WinUsb_WritePipe(device_handle->hInterface.get(), ep, boost::asio::buffer_cast<PUCHAR>(buf), boost::asio::buffer_size(buf), &bytes_transferred, overlapped.get());
+	BOOL ok = f->WinUsb_WritePipe(device_handle->hInterface.get(), ep, RR_BOOST_ASIO_BUFFER_CAST(PUCHAR,buf), boost::asio::buffer_size(buf), &bytes_transferred, overlapped.get());
 	DWORD last_error = ::GetLastError();
 	if (!ok && last_error != ERROR_IO_PENDING
 		&& last_error != ERROR_MORE_DATA)
@@ -692,7 +692,7 @@ void WinUsbDevice_Claim::AsyncWritePipeNoLock(uint8_t ep, boost::asio::mutable_b
 
 UsbDeviceStatus WinUsbDevice_Claim::ClaimDevice(RR_SHARED_PTR<void>& dev_h)
 {
-	UsbDeviceStatus res= WinUsbDevice_open_device(GetNode()->GetThreadPool()->get_io_service(), f, detected_device.path, dev_h);
+	UsbDeviceStatus res= WinUsbDevice_open_device(GetNode()->GetThreadPool()->get_io_context(), f, detected_device.path, dev_h);
 	if (res != Open)
 	{
 		return res;

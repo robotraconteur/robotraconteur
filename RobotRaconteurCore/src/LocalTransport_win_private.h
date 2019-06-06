@@ -143,17 +143,15 @@ namespace RobotRaconteur
 						return RR_SHARED_PTR<boost::asio::windows::stream_handle>();
 					}
 
-					RR_SHARED_PTR<boost::asio::windows::stream_handle> sp = RR_MAKE_SHARED<boost::asio::windows::stream_handle>(boost::ref(GetNode()->GetThreadPool()->get_io_service()), p);
+					RR_SHARED_PTR<boost::asio::windows::stream_handle> sp(new boost::asio::windows::stream_handle(GetNode()->GetThreadPool()->get_io_context(), p));
 
 					return sp;
 				}
 			public:
 				template<typename Handler>
-				static void async_connect_named_pipe(RR_SHARED_PTR<boost::asio::windows::stream_handle> pipe, Handler handler)
+				static void async_connect_named_pipe(RR_BOOST_ASIO_IO_CONTEXT& io_context, RR_SHARED_PTR<boost::asio::windows::stream_handle> pipe, Handler handler)
 				{
-					boost::asio::io_service& io = pipe->get_io_service();
-
-					boost::asio::detail::win_iocp_overlapped_ptr overlapped(io, handler);
+					boost::asio::windows::overlapped_ptr overlapped(io_context, handler);
 					
 					int result = ::ConnectNamedPipe(pipe->native_handle(), overlapped.get());
 					DWORD last_error = ::WSAGetLastError();
@@ -211,7 +209,7 @@ namespace RobotRaconteur
 						if (ec) return;
 						first = false;
 						RR_WEAK_PTR<named_pipe_acceptor> tthis = shared_from_this();
-						async_connect_named_pipe(h, boost::bind(&named_pipe_acceptor::end_connect_pipe, tthis, h, _1));
+						async_connect_named_pipe(GetNode()->GetThreadPool()->get_io_context(), h, boost::bind(&named_pipe_acceptor::end_connect_pipe, tthis, h, _1));
 						waiting_pipes.push_back(h);
 					}
 				}

@@ -223,7 +223,7 @@ namespace RobotRaconteur
 			HANDLE h = CreateFileW(win_path->c_str(), GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_FLAG_OVERLAPPED | SECURITY_SQOS_PRESENT | SECURITY_IDENTIFICATION, NULL);
 			if (h != INVALID_HANDLE_VALUE)
 			{
-				socket = RR_MAKE_SHARED<LocalTransport::socket_type>(boost::ref(GetNode()->GetThreadPool()->get_io_service()), h);
+				socket.reset(new LocalTransport::socket_type(GetNode()->GetThreadPool()->get_io_context(), h));
 			}			
 		}
 		else if (transport == "pci")
@@ -234,7 +234,7 @@ namespace RobotRaconteur
 				HANDLE h = CreateFileW(win_path->c_str(), GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_FLAG_OVERLAPPED | SECURITY_SQOS_PRESENT | SECURITY_IDENTIFICATION, NULL);
 				if (h != INVALID_HANDLE_VALUE)
 				{
-					socket = RR_MAKE_SHARED<HardwareTransportConnection_driver::socket_type>(boost::ref(GetNode()->GetThreadPool()->get_io_service()), h);
+					socket.reset(new HardwareTransportConnection_driver::socket_type(GetNode()->GetThreadPool()->get_io_context(), h));
 				}
 			}
 		}
@@ -252,7 +252,7 @@ namespace RobotRaconteur
 			HANDLE h = CreateFileW(win_path->c_str(), GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_FLAG_OVERLAPPED | SECURITY_SQOS_PRESENT | SECURITY_IDENTIFICATION, NULL);
 			if (h != INVALID_HANDLE_VALUE)
 			{
-				socket = RR_MAKE_SHARED<HardwareTransportConnection_driver::socket_type>(boost::ref(GetNode()->GetThreadPool()->get_io_service()), h);
+				socket.reset(new HardwareTransportConnection_driver::socket_type(GetNode()->GetThreadPool()->get_io_context(), h));
 			}
 			
 		}
@@ -291,7 +291,7 @@ namespace RobotRaconteur
 			int fd=open(dev_path->c_str(), O_RDWR);
 			if (fd > 0)
 			{
-				RR_SHARED_PTR<HardwareTransportConnection_driver::socket_type> socket1=RR_MAKE_SHARED<HardwareTransportConnection_driver::socket_type>(boost::ref(GetNode()->GetThreadPool()->get_io_service()), fd);
+				RR_SHARED_PTR<HardwareTransportConnection_driver::socket_type> socket1=RR_MAKE_SHARED<HardwareTransportConnection_driver::socket_type>(boost::ref(GetNode()->GetThreadPool()->get_io_context()), fd);
 				socket=socket1;
 			}
 		}
@@ -303,7 +303,7 @@ namespace RobotRaconteur
 				int fd=open(dev_path->c_str(), O_RDWR);
 				if (fd > 0)
 				{
-					RR_SHARED_PTR<HardwareTransportConnection_driver::socket_type> socket1=RR_MAKE_SHARED<HardwareTransportConnection_driver::socket_type>(boost::ref(GetNode()->GetThreadPool()->get_io_service()), fd);
+					RR_SHARED_PTR<HardwareTransportConnection_driver::socket_type> socket1=RR_MAKE_SHARED<HardwareTransportConnection_driver::socket_type>(boost::ref(GetNode()->GetThreadPool()->get_io_context()), fd);
 					socket=socket1;
 				}
 			}
@@ -324,7 +324,7 @@ namespace RobotRaconteur
 				int fd=open(dev_path->c_str(), O_RDWR);
 				if (fd > 0)
 				{
-					RR_SHARED_PTR<HardwareTransportConnection_driver::socket_type> socket1=RR_MAKE_SHARED<HardwareTransportConnection_driver::socket_type>(boost::ref(GetNode()->GetThreadPool()->get_io_service()), fd);
+					RR_SHARED_PTR<HardwareTransportConnection_driver::socket_type> socket1=RR_MAKE_SHARED<HardwareTransportConnection_driver::socket_type>(boost::ref(GetNode()->GetThreadPool()->get_io_context()), fd);
 					socket=socket1;
 				}
 			}
@@ -392,7 +392,7 @@ namespace RobotRaconteur
 		RR_SHARED_PTR<ServerEndpoint> e2 = boost::dynamic_pointer_cast<ServerEndpoint>(e);
 		if (e2)
 		{
-			RR_SHARED_PTR<boost::asio::deadline_timer> timer = RR_MAKE_SHARED<boost::asio::deadline_timer>(boost::ref(GetNode()->GetThreadPool()->get_io_service()));
+			RR_SHARED_PTR<boost::asio::deadline_timer> timer(new boost::asio::deadline_timer(GetNode()->GetThreadPool()->get_io_context()));
 			timer->expires_from_now(boost::posix_time::milliseconds(1000));
 			RobotRaconteurNode::asio_async_wait(node, timer, boost::bind(&HardwareTransport::CloseTransportConnection_timed, shared_from_this(), boost::asio::placeholders::error, e, timer));
 			return;

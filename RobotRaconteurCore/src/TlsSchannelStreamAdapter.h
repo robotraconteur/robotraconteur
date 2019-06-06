@@ -37,7 +37,6 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 #include <boost/asio/buffer.hpp>
-#include <boost/asio/io_service.hpp>
 #include <boost/tuple/tuple.hpp>
 #include <queue>
 #include <boost/uuid/uuid.hpp>
@@ -203,7 +202,7 @@ namespace detail
 				
 		direction_type direction;
 
-		boost::asio::io_service& _io_service;
+		RR_BOOST_ASIO_IO_CONTEXT& _io_context;
 
 		std::string servername;
 
@@ -269,7 +268,7 @@ namespace detail
 #endif
 
 	public:
-		TlsSchannelAsyncStreamAdapter(boost::asio::io_service& _io_service, boost::shared_ptr<TlsSchannelAsyncStreamAdapterContext> context, direction_type direction, const std::string& servername, boost::function<void(mutable_buffers&, boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>)> async_read_some, boost::function<void(const_buffers&, boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>)> async_write_some, boost::function<void()> close);
+		TlsSchannelAsyncStreamAdapter(RR_BOOST_ASIO_IO_CONTEXT& _io_context, boost::shared_ptr<TlsSchannelAsyncStreamAdapterContext> context, direction_type direction, const std::string& servername, boost::function<void(mutable_buffers&, boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>)> async_read_some, boost::function<void(const_buffers&, boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>)> async_write_some, boost::function<void()> close);
 		~TlsSchannelAsyncStreamAdapter();
 
 		virtual void async_handshake(boost::function<void (const boost::system::error_code&)> handler);

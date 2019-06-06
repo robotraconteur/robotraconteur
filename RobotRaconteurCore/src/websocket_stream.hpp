@@ -1127,12 +1127,12 @@ protected:
 			if (boost::asio::buffer_size(buf) > c)
 			{
 				boost::mutex::scoped_lock lock(next_layer_lock);
-				next_layer_.async_read_some(boost::asio::buffer(boost::asio::buffer_cast<uint8_t*>(buf), c), boost::bind(&websocket_stream::async_read_some5, this, boost::asio::placeholders::bytes_transferred, boost::asio::placeholders::error, buf, boost::protect(handler)));
+				next_layer_.async_read_some(boost::asio::buffer(buf, c), boost::bind(&websocket_stream::async_read_some5, this, boost::asio::placeholders::bytes_transferred, boost::asio::placeholders::error, buf, boost::protect(handler)));
 			}
 			else
 			{
 				boost::mutex::scoped_lock lock(next_layer_lock);
-				next_layer_.async_read_some(boost::asio::mutable_buffers_1(buf), boost::bind(&websocket_stream::async_read_some5, this, boost::asio::placeholders::bytes_transferred, boost::asio::placeholders::error, buf, boost::protect(handler)));
+				next_layer_.async_read_some(boost::asio::buffer(buf), boost::bind(&websocket_stream::async_read_some5, this, boost::asio::placeholders::bytes_transferred, boost::asio::placeholders::error, buf, boost::protect(handler)));
 			}
 			return;
 		}
@@ -1221,12 +1221,12 @@ protected:
 			if (boost::asio::buffer_size(buf) > recv_frame_length)
 			{
 				boost::mutex::scoped_lock lock(next_layer_lock);
-				next_layer_.async_read_some(boost::asio::buffer(boost::asio::buffer_cast<uint8_t*>(buf), (size_t)recv_frame_length), boost::bind(&websocket_stream::async_read_some5, this, boost::asio::placeholders::bytes_transferred, boost::asio::placeholders::error, buf, boost::protect(handler)));
+				next_layer_.async_read_some(boost::asio::buffer(buf, (size_t)recv_frame_length), boost::bind(&websocket_stream::async_read_some5, this, boost::asio::placeholders::bytes_transferred, boost::asio::placeholders::error, buf, boost::protect(handler)));
 			}
 			else
 			{
 				boost::mutex::scoped_lock lock(next_layer_lock);
-				next_layer_.async_read_some(boost::asio::mutable_buffers_1(buf), boost::bind(&websocket_stream::async_read_some5, this, boost::asio::placeholders::bytes_transferred, boost::asio::placeholders::error, buf, boost::protect(handler)));
+				next_layer_.async_read_some(boost::asio::buffer(buf), boost::bind(&websocket_stream::async_read_some5, this, boost::asio::placeholders::bytes_transferred, boost::asio::placeholders::error, buf, boost::protect(handler)));
 			}
 			return;
 			
@@ -1311,12 +1311,12 @@ protected:
 		if (boost::asio::buffer_size(buf) > recv_frame_length)
 		{
 			boost::mutex::scoped_lock lock(next_layer_lock);
-			next_layer_.async_read_some(boost::asio::buffer(boost::asio::buffer_cast<uint8_t*>(buf),(size_t)recv_frame_length), boost::bind(&websocket_stream::async_read_some5, this, boost::asio::placeholders::bytes_transferred, boost::asio::placeholders::error, buf, boost::protect(handler)));
+			next_layer_.async_read_some(boost::asio::buffer(buf,(size_t)recv_frame_length), boost::bind(&websocket_stream::async_read_some5, this, boost::asio::placeholders::bytes_transferred, boost::asio::placeholders::error, buf, boost::protect(handler)));
 		}
 		else
 		{
 			boost::mutex::scoped_lock lock(next_layer_lock);
-			next_layer_.async_read_some(boost::asio::mutable_buffers_1(buf), boost::bind(&websocket_stream::async_read_some5, this, boost::asio::placeholders::bytes_transferred, boost::asio::placeholders::error, buf, boost::protect(handler)));
+			next_layer_.async_read_some(boost::asio::buffer(buf), boost::bind(&websocket_stream::async_read_some5, this, boost::asio::placeholders::bytes_transferred, boost::asio::placeholders::error, buf, boost::protect(handler)));
 		}
 
 	}
@@ -1332,7 +1332,7 @@ protected:
 		if (recv_frame_en_mask)
 		{
 			//TODO: make this faster
-			uint8_t* dat = boost::asio::buffer_cast<uint8_t*>(buf);
+			uint8_t* dat = RR_BOOST_ASIO_BUFFER_CAST(uint8_t*,buf);
 			for (size_t i = 0; i < n; i++)
 			{
 				dat[i] = dat[i] ^ recv_frame_mask[(i + recv_frame_pos) % 4];
@@ -1512,7 +1512,7 @@ protected:
 class websocket_tcp_connector : public boost::enable_shared_from_this<websocket_tcp_connector>
 {
 protected:
-	boost::asio::io_service& io_service_;
+	RR_BOOST_ASIO_IO_CONTEXT& _io_context_;
 	std::string path;
 	boost::shared_ptr<boost::asio::ip::tcp::resolver> resolver_;
 
@@ -1526,7 +1526,7 @@ protected:
 
 public:
 
-	websocket_tcp_connector(boost::asio::io_service& io_service) : io_service_(io_service)
+	websocket_tcp_connector(RR_BOOST_ASIO_IO_CONTEXT& _io_context) : _io_context_(_io_context)
 	{
 		complete = false;
 		cancelled = false;
@@ -1557,12 +1557,13 @@ public:
 
 		boost::mutex::scoped_lock lock(handler_lock);
 
-		resolver_ = boost::make_shared<boost::asio::ip::tcp::resolver>(boost::ref(io_service_));
-		boost::asio::ip::tcp::resolver::query q(host, port_str, boost::asio::ip::resolver_query_base::flags());
-
-	//boost:asio::ip::tcp::resolver::query query(host, port, boost::asio::ip::resolver_query_base::flags());
-
+		resolver_.reset(new boost::asio::ip::tcp::resolver(_io_context_));
+#if BOOST_ASIO_VERSION < 101200
+		boost::asio::ip::basic_resolver_query<boost::asio::ip::tcp> q(host, port_str, boost::asio::ip::resolver_query_base::flags());
 		resolver_->async_resolve(q, boost::bind(&websocket_tcp_connector::connect2, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::iterator, boost::protect(handler)));
+#else
+		resolver_->async_resolve(host, port_str, boost::bind(&websocket_tcp_connector::connect2, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::results, boost::protect(handler)));
+#endif
 
 		if (cancelled)
 		{
@@ -1570,13 +1571,19 @@ public:
 			return;
 		}
 
-		timeout_timer = boost::make_shared<boost::asio::deadline_timer>(boost::ref(io_service_));
+		timeout_timer.reset(new boost::asio::deadline_timer(_io_context_));
 		timeout_timer->expires_from_now(boost::posix_time::milliseconds(timeout));
 		timeout_timer->async_wait(boost::bind(&websocket_tcp_connector::connect4, shared_from_this(), boost::asio::placeholders::error, boost::protect(handler)));
 	}
 protected:
+#if BOOST_ASIO_VERSION < 101200
 	void connect2(const boost::system::error_code& err, boost::asio::ip::tcp::resolver::iterator endpoint_iterator, boost::function<void(const boost::system::error_code&, boost::shared_ptr<boost::asio::ip::tcp::socket> socket)> handler)
 	{
+#else
+	void connect2(const boost::system::error_code& err, boost::asio::ip::tcp::resolver::results_type results, boost::function<void(const boost::system::error_code&, boost::shared_ptr<boost::asio::ip::tcp::socket> socket)> handler)
+	{
+		boost::asio::ip::tcp::resolver::results_type::iterator endpoint_iterator = results.begin();
+#endif		
 		boost::mutex::scoped_lock lock(handler_lock);
 		if (complete) return;
 		if (err)
@@ -1598,7 +1605,7 @@ protected:
 			return;
 		}
 
-		boost::asio::ip::tcp::resolver::iterator end;
+		boost::asio::ip::basic_resolver_iterator<boost::asio::ip::tcp> end;
 
 		if (endpoint_iterator == end)
 		{ 
@@ -1673,7 +1680,7 @@ protected:
 		size_t socket_count = ipv4.size() + ipv6.size();
 		for (size_t i=0; i < socket_count; i++)
 		{
-			boost::shared_ptr<boost::asio::ip::tcp::socket> sock = boost::make_shared<boost::asio::ip::tcp::socket>(boost::ref(io_service_));
+			boost::shared_ptr<boost::asio::ip::tcp::socket> sock(new boost::asio::ip::tcp::socket(_io_context_));
 			sockets1.push_back(sock);
 			sockets_.push_back(sock);
 		}

@@ -389,7 +389,7 @@ namespace detail
 					InitializeDevice_err(handler, Busy);
 					return;
 				}
-				RR_SHARED_PTR<boost::asio::deadline_timer> t = RR_MAKE_SHARED<boost::asio::deadline_timer>(boost::ref(GetNode()->GetThreadPool()->get_io_service()));
+				RR_SHARED_PTR<boost::asio::deadline_timer> t(new boost::asio::deadline_timer(GetNode()->GetThreadPool()->get_io_context()));
 				t->expires_from_now(boost::posix_time::milliseconds(100));
 				RobotRaconteurNode::asio_async_wait(node, t, boost::bind(&UsbDevice_Initialize::InitializeDevice1, shared_from_this(), attempt, boost::protect(handler), t));
 				return;
@@ -664,7 +664,7 @@ namespace detail
 						AsyncCreateTransportConnection_err(handler, Busy);
 						return;
 					}
-					RR_SHARED_PTR<boost::asio::deadline_timer> t = RR_MAKE_SHARED<boost::asio::deadline_timer>(boost::ref(GetNode()->GetThreadPool()->get_io_service()));
+					RR_SHARED_PTR<boost::asio::deadline_timer> t(new boost::asio::deadline_timer(GetNode()->GetThreadPool()->get_io_context()));
 					t->expires_from_now(boost::posix_time::milliseconds(100));
 					RobotRaconteurNode::asio_async_wait(node, t, boost::bind(&UsbDevice_Claim::AsyncCreateTransportConnection1, shared_from_this(), url_res, endpoint, noden, boost::protect(handler), attempt));
 					return;
@@ -1038,7 +1038,7 @@ namespace detail
 					boost::asio::mutable_buffer b2 = b + 8;
 
 					size_t s = c->DoWrite(b2);
-					subpacket_header* h = (subpacket_header*)boost::asio::buffer_cast<void*>(b);
+					subpacket_header* h = (subpacket_header*)RR_BOOST_ASIO_BUFFER_CAST(void*,b);
 					h->id = c->stream_id;
 					h->flags = 0;
 					h->len = (uint16_t)(s + 8);
@@ -1140,7 +1140,7 @@ namespace detail
 
 		boost::asio::mutable_buffer b(buf.get(), bytes_transferred);
 
-		subpacket_header* h = (subpacket_header*)boost::asio::buffer_cast<void*>(b);
+		subpacket_header* h = (subpacket_header*)RR_BOOST_ASIO_BUFFER_CAST(void*,b);
 		uint16_t l = h->len;
 		if (l != boost::asio::buffer_size(b))
 		{	
@@ -1167,7 +1167,7 @@ namespace detail
 		{
 			if (boost::asio::buffer_size(b1) >= 2)
 			{
-				uint16_t n = *boost::asio::buffer_cast<const uint16_t*>(b1);
+				uint16_t n = *RR_BOOST_ASIO_BUFFER_CAST(const uint16_t*,b1);
 				switch (n)
 				{
 				case RR_USB_NOTIFICATION_SOCKET_CLOSED:

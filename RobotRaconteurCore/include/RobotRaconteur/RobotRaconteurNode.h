@@ -972,7 +972,7 @@ namespace RobotRaconteur
 			t->async_connect(b, f);
 			return true;
 		}
-
+#if BOOST_ASIO_VERSION < 101200
 		template<typename T, typename B, typename F>
 		static bool asio_async_resolve(RR_WEAK_PTR<RobotRaconteurNode> node, RR_SHARED_PTR<T>& t, const B& b, BOOST_ASIO_MOVE_ARG(F) f)
 		{
@@ -991,6 +991,26 @@ namespace RobotRaconteur
 			t->async_resolve(b, f);
 			return true;
 		}
+#else
+		template<typename T, typename B, typename C, typename F>
+		static bool asio_async_resolve(RR_WEAK_PTR<RobotRaconteurNode> node, RR_SHARED_PTR<T>& t, const B& b, const C& c, BOOST_ASIO_MOVE_ARG(F) f)
+		{
+			RR_SHARED_PTR<RobotRaconteurNode> node1 = node.lock();
+			if (!node1) return false;
+			boost::shared_lock<boost::shared_mutex> l(node1->thread_pool_lock);
+			if (node1->is_shutdown)
+			{
+				l.unlock();
+				RR_SHARED_PTR<ThreadPool> t;
+				if (!node1->TryGetThreadPool(t)) return false;
+				boost::asio::ip::tcp::resolver::results_type results;
+				return t->TryPost(boost::bind(f, boost::asio::error::operation_aborted, results));
+			}
+
+			t->async_resolve(b, c, f);
+			return true;
+		}
+#endif
 
 		template<typename T, typename F>
 		static bool asio_async_handshake(RR_WEAK_PTR<RobotRaconteurNode> node, RR_SHARED_PTR<T>& t, BOOST_ASIO_MOVE_ARG(F) f)
@@ -1002,9 +1022,8 @@ namespace RobotRaconteur
 			{
 				l.unlock();
 				RR_SHARED_PTR<ThreadPool> t;
-				if (!node1->TryGetThreadPool(t)) return false;
-				boost::asio::ip::tcp::resolver::iterator iter;
-				return t->TryPost(boost::bind(f, boost::asio::error::operation_aborted, iter));
+				if (!node1->TryGetThreadPool(t)) return false;				
+				return t->TryPost(boost::bind(f, boost::asio::error::operation_aborted));
 			}
 
 			t->async_handshake(f);
@@ -1021,9 +1040,8 @@ namespace RobotRaconteur
 			{
 				l.unlock();
 				RR_SHARED_PTR<ThreadPool> t;
-				if (!node1->TryGetThreadPool(t)) return false;
-				boost::asio::ip::tcp::resolver::iterator iter;
-				return t->TryPost(boost::bind(f, boost::asio::error::operation_aborted, iter));
+				if (!node1->TryGetThreadPool(t)) return false;				
+				return t->TryPost(boost::bind(f, boost::asio::error::operation_aborted));
 			}
 
 			t->async_handshake(u, f);
@@ -1040,9 +1058,8 @@ namespace RobotRaconteur
 			{
 				l.unlock();
 				RR_SHARED_PTR<ThreadPool> t;
-				if (!node1->TryGetThreadPool(t)) return false;
-				boost::asio::ip::tcp::resolver::iterator iter;
-				return t->TryPost(boost::bind(f, boost::asio::error::operation_aborted, iter));
+				if (!node1->TryGetThreadPool(t)) return false;				
+				return t->TryPost(boost::bind(f, boost::asio::error::operation_aborted));
 			}
 
 			t->async_shutdown(f);

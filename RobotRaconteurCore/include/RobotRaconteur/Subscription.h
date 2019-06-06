@@ -210,7 +210,7 @@ namespace RobotRaconteur
 		boost::signals2::signal<void(RR_SHARED_PTR<ServiceSubscription>, const ServiceSubscriptionClientID&, RR_SHARED_PTR<RRObject>)> connect_listeners;
 		boost::signals2::signal<void(RR_SHARED_PTR<ServiceSubscription>, const ServiceSubscriptionClientID&, RR_SHARED_PTR<RRObject>)> disconnect_listeners;
 
-		RR_SHARED_PTR<boost::asio::io_service::strand> listener_strand;
+		RR_SHARED_PTR<RR_BOOST_ASIO_STRAND> listener_strand;
 
 		boost::unordered_set<RR_SHARED_PTR<WireSubscriptionBase> > wire_subscriptions;
 		boost::unordered_set<RR_SHARED_PTR<PipeSubscriptionBase> > pipe_subscriptions;

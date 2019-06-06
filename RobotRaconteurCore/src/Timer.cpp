@@ -120,7 +120,7 @@ namespace RobotRaconteur
 		last_time=start_time;
 		actual_last_time=last_time;
 
-		timer=RR_MAKE_SHARED<boost::asio::deadline_timer>(boost::ref(n->GetThreadPool()->get_io_service()));
+		timer.reset(new boost::asio::deadline_timer(n->GetThreadPool()->get_io_context()));
 
 		timer->expires_at(last_time+period);
 		if (!RobotRaconteurNode::asio_async_wait(node, timer, boost::bind(&WallTimer::timer_handler, shared_from_this(), boost::asio::placeholders::error)))
@@ -172,7 +172,7 @@ namespace RobotRaconteur
 	}
 
 
-	WallRate::WallRate(double frequency, RR_SHARED_PTR<RobotRaconteurNode> node) : timer(node->GetThreadPool()->get_io_service())
+	WallRate::WallRate(double frequency, RR_SHARED_PTR<RobotRaconteurNode> node) : timer(node->GetThreadPool()->get_io_context())
 	{
 		if (!node) node=RobotRaconteurNode::sp();
 		this->node=node;

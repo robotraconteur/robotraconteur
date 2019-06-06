@@ -260,7 +260,7 @@ public:
 				
 				boost::asio::generic::stream_protocol protocol(family, proto);
 
-				sock = RR_MAKE_SHARED<boost::asio::generic::stream_protocol::socket>(boost::ref(parent->GetNode()->GetThreadPool()->get_io_service()), protocol, s1);
+				sock.reset(new boost::asio::generic::stream_protocol::socket(parent->GetNode()->GetThreadPool()->get_io_context(), protocol, s1));
 				break;
 			}
 		}
