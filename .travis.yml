@@ -67,9 +67,9 @@ matrix:
         
     - os: windows
       before_script: 
-        - curl -o boost_1_68_0.zip -L https://dl.bintray.com/boostorg/release/1.68.0/source/boost_1_68_0.zip
-        - unzip -q boost_1_68_0.zip
-        - cd boost_1_68_0
+        - curl -o boost_1_70_0.zip -L https://dl.bintray.com/boostorg/release/1.70.0/source/boost_1_70_0.zip
+        - unzip -q boost_1_70_0.zip
+        - cd boost_1_70_0
         - ./bootstrap.bat
         - ./b2 --with-date_time --with-filesystem --with-regex --with-chrono --with-atomic --with-thread --with-random --with-program_options address-model=32 -d0
         - cd $TRAVIS_BUILD_DIR
@@ -83,14 +83,14 @@ matrix:
         - cd $TRAVIS_BUILD_DIR
       env:
         - >
-          RR_CMAKE_EXTRA_ARGS="-DSWIG_EXECUTABLE=$TRAVIS_BUILD_DIR/swigwin-4.0.0-beta1/swig.exe -DSWIG_DIR=$TRAVIS_BUILD_DIR/swigwin-4.0.0-beta1/Lib -DBUILD_NET=ON -DBoost_USE_STATIC_LIBS=ON -DBOOST_INCLUDEDIR=$TRAVIS_BUILD_DIR/boost_1_68_0 -DBOOST_LIBRARYDIR=$TRAVIS_BUILD_DIR/boost_1_68_0/stage/lib -DPYTHON_EXECUTABLE=C:/Python27/python.exe -DPYTHON3_EXECUTABLE=C:/Python3/python.exe -DBUILD_PYTHON=ON -DBUILD_PYTHON3=ON -DBUILD_JAVA=ON"
+          RR_CMAKE_EXTRA_ARGS="-DSWIG_EXECUTABLE=$TRAVIS_BUILD_DIR/swigwin-4.0.0-beta1/swig.exe -DSWIG_DIR=$TRAVIS_BUILD_DIR/swigwin-4.0.0-beta1/Lib -DBUILD_NET=ON -DBoost_USE_STATIC_LIBS=ON -DBOOST_INCLUDEDIR=$TRAVIS_BUILD_DIR/boost_1_70_0 -DBOOST_LIBRARYDIR=$TRAVIS_BUILD_DIR/boost_1_70_0/stage/lib -DPYTHON_EXECUTABLE=C:/Python27/python.exe -DPYTHON3_EXECUTABLE=C:/Python3/python.exe -DBUILD_PYTHON=ON -DBUILD_PYTHON3=ON -DBUILD_JAVA=ON"
         - RR_CMAKE_GENERATOR="Visual Studio 15 2017"
         
     - os: windows
       before_script: 
-        - curl -o boost_1_68_0.zip -L https://dl.bintray.com/boostorg/release/1.68.0/source/boost_1_68_0.zip
-        - unzip -q boost_1_68_0.zip
-        - cd boost_1_68_0
+        - curl -o boost_1_70_0.zip -L https://dl.bintray.com/boostorg/release/1.70.0/source/boost_1_70_0.zip
+        - unzip -q boost_1_70_0.zip
+        - cd boost_1_70_0
         - ./bootstrap.bat
         - ./b2 --with-date_time --with-filesystem --with-regex --with-chrono --with-atomic --with-thread --with-random --with-program_options address-model=64 -d0
         - cd $TRAVIS_BUILD_DIR
@@ -104,7 +104,7 @@ matrix:
         - cd $TRAVIS_BUILD_DIR
       env:
         - >
-          RR_CMAKE_EXTRA_ARGS="-DSWIG_EXECUTABLE=$TRAVIS_BUILD_DIR/swigwin-4.0.0-beta1/swig.exe -DSWIG_DIR=$TRAVIS_BUILD_DIR/swigwin-4.0.0-beta1/Lib -DBUILD_NET=ON -DBoost_USE_STATIC_LIBS=ON -DBOOST_INCLUDEDIR=$TRAVIS_BUILD_DIR/boost_1_68_0 -DBOOST_LIBRARYDIR=$TRAVIS_BUILD_DIR/boost_1_68_0/stage/lib -DPYTHON_EXECUTABLE=C:/Python27/python.exe -DPYTHON3_EXECUTABLE=C:/Python3/python.exe -DBUILD_PYTHON=ON -DBUILD_PYTHON3=ON -DBUILD_JAVA=ON"
+          RR_CMAKE_EXTRA_ARGS="-DSWIG_EXECUTABLE=$TRAVIS_BUILD_DIR/swigwin-4.0.0-beta1/swig.exe -DSWIG_DIR=$TRAVIS_BUILD_DIR/swigwin-4.0.0-beta1/Lib -DBUILD_NET=ON -DBoost_USE_STATIC_LIBS=ON -DBOOST_INCLUDEDIR=$TRAVIS_BUILD_DIR/boost_1_70_0 -DBOOST_LIBRARYDIR=$TRAVIS_BUILD_DIR/boost_1_70_0/stage/lib -DPYTHON_EXECUTABLE=C:/Python27/python.exe -DPYTHON3_EXECUTABLE=C:/Python3/python.exe -DBUILD_PYTHON=ON -DBUILD_PYTHON3=ON -DBUILD_JAVA=ON"
         - RR_CMAKE_GENERATOR="Visual Studio 15 2017 Win64"
         
     
