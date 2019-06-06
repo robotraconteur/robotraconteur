@@ -3107,7 +3107,7 @@ void TcpTransportConnection::AsyncAttachWSSWebSocket(RR_SHARED_PTR<boost::asio::
 		this->send_paused = true;
 		this->send_pause_request = true;
 
-		heartbeat_timer = RR_MAKE_SHARED<boost::asio::deadline_timer>(boost::ref(_io_context));
+		heartbeat_timer.reset(new boost::asio::deadline_timer(_io_context));
 		{
 			boost::mutex::scoped_lock lock(recv_lock);
 			BeginReceiveMessage1();
@@ -5367,7 +5367,7 @@ namespace detail
 #else
 				std::string fname="/var/run/robotraconteur/transport/tcp/portsharer/portsharer.sock";
 				RR_SHARED_PTR<boost::asio::local::stream_protocol::socket> l
-					=RR_MAKE_SHARED<boost::asio::local::stream_protocol::socket>(boost::ref(GetParent()->GetNode()->GetThreadPool()->get_io_context()));
+					(new boost::asio::local::stream_protocol::socket(GetParent()->GetNode()->GetThreadPool()->get_io_context()));
 				l->connect(boost::asio::local::stream_protocol::endpoint(fname));
 
 				{
@@ -5482,11 +5482,11 @@ namespace detail
 
 						if (sock_addr.sa_family == AF_INET)
 						{
-							ssocket = RR_MAKE_SHARED<boost::asio::ip::tcp::socket>(boost::ref(node->GetThreadPool()->get_io_context()), boost::asio::ip::tcp::v4(), sock);
+							ssocket.reset(new boost::asio::ip::tcp::socket(node->GetThreadPool()->get_io_context(), boost::asio::ip::tcp::v4(), sock));
 						}
 						else if (sock_addr.sa_family == AF_INET6)
 						{
-							ssocket = RR_MAKE_SHARED<boost::asio::ip::tcp::socket>(boost::ref(node->GetThreadPool()->get_io_context()), boost::asio::ip::tcp::v6(), sock);
+							ssocket.reset(new boost::asio::ip::tcp::socket(node->GetThreadPool()->get_io_context(), boost::asio::ip::tcp::v6(), sock));
 						}
 						else
 						{

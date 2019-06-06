@@ -458,9 +458,9 @@ void LocalTransport::StartServerAsNodeName(const std::string& name, bool public_
 				
 			#else
 
-				RR_SHARED_PTR<LocalTransport::socket_type> socket=RR_MAKE_SHARED<LocalTransport::socket_type>(boost::ref(GetNode()->GetThreadPool()->get_io_context()));
+				RR_SHARED_PTR<LocalTransport::socket_type> socket(new LocalTransport::socket_type(GetNode()->GetThreadPool()->get_io_context()));
 				boost::asio::local::stream_protocol::endpoint ep(pipename);
-				acceptor=RR_MAKE_SHARED<socket_acceptor_type>(boost::ref(GetNode()->GetThreadPool()->get_io_context()),ep);
+				acceptor.reset(new socket_acceptor_type(GetNode()->GetThreadPool()->get_io_context(),ep));
 				acceptor->listen();
 				chmod(pipename.c_str(),S_IRWXU | S_IRWXG);
 				
@@ -514,7 +514,7 @@ void LocalTransport::StartServerAsNodeName(const std::string& name, bool public_
 #ifdef ROBOTRACONTEUR_WINDOWS
 	acceptor->async_accept(boost::bind(&LocalTransport::handle_accept,shared_from_this(),acceptor,_2,boost::asio::placeholders::error));
 #else
-	RR_SHARED_PTR<LocalTransport::socket_type> socket=RR_MAKE_SHARED<LocalTransport::socket_type>(boost::ref(GetNode()->GetThreadPool()->get_io_context()));
+	RR_SHARED_PTR<LocalTransport::socket_type> socket(new LocalTransport::socket_type(GetNode()->GetThreadPool()->get_io_context()));
 	acceptor->async_accept(*socket,boost::bind(&LocalTransport::handle_accept,shared_from_this(),acceptor,socket,boost::asio::placeholders::error));
 #endif
 
@@ -581,9 +581,9 @@ void LocalTransport::StartServerAsNodeID(const NodeID& nodeid1, bool public_)
 				
 			#else
 
-				RR_SHARED_PTR<LocalTransport::socket_type> socket=RR_MAKE_SHARED<LocalTransport::socket_type>(boost::ref(GetNode()->GetThreadPool()->get_io_context()));
+				RR_SHARED_PTR<LocalTransport::socket_type> socket(new LocalTransport::socket_type(GetNode()->GetThreadPool()->get_io_context()));
 				boost::asio::local::stream_protocol::endpoint ep(pipename);
-				acceptor=RR_MAKE_SHARED<socket_acceptor_type>(boost::ref(GetNode()->GetThreadPool()->get_io_context()),ep);
+				acceptor.reset(new socket_acceptor_type(GetNode()->GetThreadPool()->get_io_context(),ep));
 				acceptor->listen();
 				chmod(pipename.c_str(),S_IRWXU | S_IRWXG);
 				
@@ -624,7 +624,7 @@ void LocalTransport::StartServerAsNodeID(const NodeID& nodeid1, bool public_)
 #ifdef ROBOTRACONTEUR_WINDOWS
 	acceptor->async_accept(boost::bind(&LocalTransport::handle_accept,shared_from_this(),acceptor,_2,boost::asio::placeholders::error));
 #else
-	RR_SHARED_PTR<LocalTransport::socket_type> socket=RR_MAKE_SHARED<LocalTransport::socket_type>(boost::ref(GetNode()->GetThreadPool()->get_io_context()));
+	RR_SHARED_PTR<LocalTransport::socket_type> socket(new LocalTransport::socket_type(GetNode()->GetThreadPool()->get_io_context()));
 	acceptor->async_accept(*socket,boost::bind(&LocalTransport::handle_accept,shared_from_this(),acceptor,socket,boost::asio::placeholders::error));
 #endif
 
@@ -713,7 +713,7 @@ void LocalTransport::handle_accept(RR_SHARED_PTR<LocalTransport> parent,RR_SHARE
 #ifdef ROBOTRACONTEUR_WINDOWS
 	acceptor->async_accept(boost::bind(&LocalTransport::handle_accept,parent,acceptor,_2,boost::asio::placeholders::error));
 #else
-	RR_SHARED_PTR<socket_type> socket2=RR_MAKE_SHARED<socket_type>(boost::ref(parent->GetNode()->GetThreadPool()->get_io_context()));
+	RR_SHARED_PTR<socket_type> socket2(new socket_type(parent->GetNode()->GetThreadPool()->get_io_context()));
 	acceptor->async_accept(*socket2,boost::bind(&LocalTransport::handle_accept,parent,acceptor,socket2,boost::asio::placeholders::error));
 #endif
 
@@ -1917,7 +1917,7 @@ namespace detail
 					break;
 #else
 
-				socket = RR_MAKE_SHARED<LocalTransport::socket_type>(boost::ref(_io_context_));
+				socket.reset(new LocalTransport::socket_type(_io_context_));
 				boost::asio::local::stream_protocol::endpoint ep(pipename);
 				boost::system::error_code ec;
 				socket->connect(ep, ec);

@@ -291,7 +291,7 @@ namespace RobotRaconteur
 			int fd=open(dev_path->c_str(), O_RDWR);
 			if (fd > 0)
 			{
-				RR_SHARED_PTR<HardwareTransportConnection_driver::socket_type> socket1=RR_MAKE_SHARED<HardwareTransportConnection_driver::socket_type>(boost::ref(GetNode()->GetThreadPool()->get_io_context()), fd);
+				RR_SHARED_PTR<HardwareTransportConnection_driver::socket_type> socket1(new HardwareTransportConnection_driver::socket_type(GetNode()->GetThreadPool()->get_io_context(), fd));
 				socket=socket1;
 			}
 		}
@@ -303,7 +303,7 @@ namespace RobotRaconteur
 				int fd=open(dev_path->c_str(), O_RDWR);
 				if (fd > 0)
 				{
-					RR_SHARED_PTR<HardwareTransportConnection_driver::socket_type> socket1=RR_MAKE_SHARED<HardwareTransportConnection_driver::socket_type>(boost::ref(GetNode()->GetThreadPool()->get_io_context()), fd);
+					RR_SHARED_PTR<HardwareTransportConnection_driver::socket_type> socket1(new HardwareTransportConnection_driver::socket_type(GetNode()->GetThreadPool()->get_io_context(), fd));
 					socket=socket1;
 				}
 			}
@@ -324,7 +324,7 @@ namespace RobotRaconteur
 				int fd=open(dev_path->c_str(), O_RDWR);
 				if (fd > 0)
 				{
-					RR_SHARED_PTR<HardwareTransportConnection_driver::socket_type> socket1=RR_MAKE_SHARED<HardwareTransportConnection_driver::socket_type>(boost::ref(GetNode()->GetThreadPool()->get_io_context()), fd);
+					RR_SHARED_PTR<HardwareTransportConnection_driver::socket_type> socket1(new HardwareTransportConnection_driver::socket_type(GetNode()->GetThreadPool()->get_io_context(), fd));
 					socket=socket1;
 				}
 			}
