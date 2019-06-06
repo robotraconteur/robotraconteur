@@ -3,7 +3,7 @@
 #endif
 
 #include "MultiDimArrayTest.h"
-#include <boost/detail/endian.hpp>
+#include <boost/predef/other/endian.h>
 #include "CompareArray.h"
 
 namespace RobotRaconteurTest
@@ -24,7 +24,7 @@ namespace RobotRaconteurTest
 	{
 		int32_t dimcount;
 		s.read((char*)&dimcount,4);
-#ifdef BOOST_BIG_ENDIAN
+#if BOOST_ENDIAN_BIG_BYTE
 		std::reverse((uint8_t*)&dimcount,((uint8_t*)&dimcount)+4);
 #endif
 		uint32_t* dims=new uint32_t[dimcount];
@@ -32,7 +32,7 @@ namespace RobotRaconteurTest
 		for (int32_t i=0; i<dimcount; i++)
 		{
 			s.read((char*)&dims[i],4);
-#ifdef BOOST_BIG_ENDIAN
+#if BOOST_ENDIAN_BIG_BYTE
 			std::reverse((uint8_t*)&dims[i],((uint8_t*)&dims[i])+4);
 #endif 
 			count*=dims[i];
@@ -41,7 +41,7 @@ namespace RobotRaconteurTest
 		double* real=new double[count];
 		s.read((char*)real,count*sizeof(double));
 		 
-#ifdef BOOST_BIG_ENDIAN
+#if BOOST_ENDIAN_BIG_BYTE
 		uint8_t* pos=(uint8_t*)real;
 		for (size_t i=0; i<count; i++)
 		{
@@ -68,7 +68,7 @@ namespace RobotRaconteurTest
 	{
 		int32_t dimcount;
 		s.read((char*)&dimcount,4);
-#ifdef BOOST_BIG_ENDIAN
+#if BOOST_ENDIAN_BIG_BYTE
 		std::reverse((uint8_t*)&dimcount,((uint8_t*)&dimcount)+4);
 #endif
 		uint32_t* dims=new uint32_t[dimcount];
@@ -77,7 +77,7 @@ namespace RobotRaconteurTest
 		for (int32_t i=0; i<dimcount; i++)
 		{
 			s.read((char*)&dims[i],4);
-#ifdef BOOST_BIG_ENDIAN
+#if BOOST_ENDIAN_BIG_BYTE
 			std::reverse((uint8_t*)&dims[i],((uint8_t*)&dims[i])+4);
 #endif 
 			count*=dims[i];

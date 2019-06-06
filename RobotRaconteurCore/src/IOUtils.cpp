@@ -164,7 +164,7 @@ void ArrayBinaryReader::ReadArray(RR_INTRUSIVE_PTR<RRBaseArray>& arr)
 		throw DataTypeException("Invalid data type");
 	}
 
-#ifdef BOOST_BIG_ENDIAN
+#if BOOST_ENDIAN_BIG_BYTE
 #error Big endian not configured
 	if (!nativeorder)
 	{
@@ -363,7 +363,7 @@ void ArrayBinaryWriter::WriteArray(RR_INTRUSIVE_PTR<RRBaseArray>& arr)
 	case DataTypes_double_t:
 		{
 		RR_INTRUSIVE_PTR<RRArray<double> > o=rr_cast<RRArray<double> >(arr);
-#ifdef BOOST_BIG_ENDIAN
+#if BOOST_ENDIAN_BIG_BYTE
 		if (!nativeorder) for (size_t i=0; i< o->Length(); i++) WriteNumber((*o)[i]);
 #else
 		Write((uint8_t*)o->data(),0,len*sizeof(double));
@@ -373,7 +373,7 @@ void ArrayBinaryWriter::WriteArray(RR_INTRUSIVE_PTR<RRBaseArray>& arr)
 	case DataTypes_single_t:
 		{
 		RR_INTRUSIVE_PTR<RRArray<float> > o=rr_cast<RRArray<float> >(arr);
-#ifdef BOOST_BIG_ENDIAN
+#if BOOST_ENDIAN_BIG_BYTE
 		if (!nativeorder) for (size_t i=0; i< o->Length(); i++) WriteNumber((*o)[i]);
 #else
 		Write((uint8_t*)o->data(),0,len*sizeof(float));
@@ -399,7 +399,7 @@ void ArrayBinaryWriter::WriteArray(RR_INTRUSIVE_PTR<RRBaseArray>& arr)
 	case DataTypes_int16_t:
 		{
 		RR_INTRUSIVE_PTR<RRArray<int16_t> > o=rr_cast<RRArray<int16_t> >(arr);
-#ifdef BOOST_BIG_ENDIAN
+#if BOOST_ENDIAN_BIG_BYTE
 		if (!nativeorder) for (size_t i=0; i< o->Length(); i++) WriteNumber((*o)[i]);
 #else
 		Write((uint8_t*)o->data(),0,len*sizeof(int16_t));
@@ -409,7 +409,7 @@ void ArrayBinaryWriter::WriteArray(RR_INTRUSIVE_PTR<RRBaseArray>& arr)
 	case DataTypes_uint16_t:
 		{
 		RR_INTRUSIVE_PTR<RRArray<uint16_t> > o=rr_cast<RRArray<uint16_t> >(arr);
-#ifdef BOOST_BIG_ENDIAN
+#if BOOST_ENDIAN_BIG_BYTE
 		if (!nativeorder) for (size_t i=0; i< o->Length(); i++) WriteNumber((*o)[i]);
 #else
 		Write((uint8_t*)o->data(),0,len*sizeof(uint16_t));
@@ -419,7 +419,7 @@ void ArrayBinaryWriter::WriteArray(RR_INTRUSIVE_PTR<RRBaseArray>& arr)
 	case DataTypes_int32_t:
 		{
 		RR_INTRUSIVE_PTR<RRArray<int32_t> > o=rr_cast<RRArray<int32_t> >(arr);
-#ifdef BOOST_BIG_ENDIAN
+#if BOOST_ENDIAN_BIG_BYTE
 		if (!nativeorder) for (size_t i=0; i< o->Length(); i++) WriteNumber((*o)[i]);
 #else
 		Write((uint8_t*)o->data(),0,len*sizeof(int32_t));
@@ -429,7 +429,7 @@ void ArrayBinaryWriter::WriteArray(RR_INTRUSIVE_PTR<RRBaseArray>& arr)
 	case DataTypes_uint32_t:
 		{
 		RR_INTRUSIVE_PTR<RRArray<uint32_t> > o=rr_cast<RRArray<uint32_t> >(arr);
-#ifdef BOOST_BIG_ENDIAN
+#if BOOST_ENDIAN_BIG_BYTE
 		if (!nativeorder) for (size_t i=0; i< o->Length(); i++) WriteNumber((*o)[i]);
 #else
 		Write((uint8_t*)o->data(),0,len*sizeof(uint32_t));
@@ -439,7 +439,7 @@ void ArrayBinaryWriter::WriteArray(RR_INTRUSIVE_PTR<RRBaseArray>& arr)
 	case DataTypes_int64_t:
 		{
 		RR_INTRUSIVE_PTR<RRArray<int64_t> > o=rr_cast<RRArray<int64_t> >(arr);
-#ifdef BOOST_BIG_ENDIAN
+#if BOOST_ENDIAN_BIG_BYTE
 		if (!nativeorder) for (size_t i=0; i< o->Length(); i++) WriteNumber((*o)[i]);
 #else
 		Write((uint8_t*)o->data(),0,len*sizeof(int64_t));
@@ -449,7 +449,7 @@ void ArrayBinaryWriter::WriteArray(RR_INTRUSIVE_PTR<RRBaseArray>& arr)
 	case DataTypes_uint64_t:
 		{
 		RR_INTRUSIVE_PTR<RRArray<uint64_t> > o=rr_cast<RRArray<uint64_t> >(arr);
-#ifdef BOOST_BIG_ENDIAN
+#if BOOST_ENDIAN_BIG_BYTE
 		if (!nativeorder) for (size_t i=0; i< o->Length(); i++) WriteNumber((*o)[i]);
 #else
 		Write((uint8_t*)o->data(),0,len*sizeof(uint64_t));

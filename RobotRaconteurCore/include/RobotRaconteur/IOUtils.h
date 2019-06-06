@@ -17,7 +17,7 @@
 
 
 #include "RobotRaconteur/DataTypes.h"
-#include <boost/detail/endian.hpp>
+#include <boost/predef/other/endian.h>
 #include <stack>
 
 
@@ -41,7 +41,7 @@ namespace RobotRaconteur
 		{
 			T out;
 			Read((uint8_t*)((void*)&out),0,sizeof(T));
-#ifdef BOOST_BIG_ENDIAN
+#if BOOST_ENDIAN_BIG_BYTE
 			if (!nativeorder) std::reverse((uint8_t*)((void*)&out),((uint8_t*)((void*)&out))+sizeof(T));
 #endif
 			return out;
@@ -104,7 +104,7 @@ namespace RobotRaconteur
 		void WriteNumber(T number)
 		{
 			void* n1=(void*)&number;
-#ifdef BOOST_BIG_ENDIAN
+#if BOOST_ENDIAN_BIG_BYTE
 			if (!nativeorder) std::reverse((uint8_t*)n1,((uint8_t*)n1)+sizeof(T));
 #endif
 			Write((uint8_t*)n1,0,sizeof(T));
