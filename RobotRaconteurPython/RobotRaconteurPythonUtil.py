@@ -116,7 +116,7 @@ def GetNamedArrayDType(namedarray_type,obj=None,node=None):
 def GetPrimitiveDTypeFromNamedArrayDType(dt):
     prim_dt = None
     count = 0
-    for dt_i in dt.fields.itervalues():              
+    for dt_i in dt.fields.values():              
         if len(dt_i[0].shape) == 0:
             prim_dt_i = dt_i[0].type
             dt_i_2 = dt_i[0]
