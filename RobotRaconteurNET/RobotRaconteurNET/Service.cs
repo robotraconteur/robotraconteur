@@ -2006,6 +2006,18 @@ namespace RobotRaconteur
                 innerpipe.SetPredicateDirector(p, id);
             }
         }
+
+        public int MaximumBacklog
+        {
+            get
+            {
+                return innerpipe.GetMaximumBacklog();
+            }
+            set
+            {
+                innerpipe.SetMaximumBacklog(value);
+            }
+        }
     }
 
     public class Wire<T>

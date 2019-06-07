@@ -1252,6 +1252,8 @@ namespace RobotRaconteurNETTest
             {
                 m_broadcastpipe = value;
                 m_broadcastpipe_broadcaster = new PipeBroadcaster<double>(value, 3);
+                if (m_broadcastpipe_broadcaster.MaximumBacklog != 3) throw new Exception();
+                m_broadcastpipe_broadcaster.MaximumBacklog = 3;
 
                 RobotRaconteur.Timer t = RobotRaconteurNode.s.CreateTimer(100, delegate(TimerEvent ev)
                 {

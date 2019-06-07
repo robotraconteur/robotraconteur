@@ -143,6 +143,9 @@ RR_KEEP_GIL()
 
 	void SetPredicateDirector(WrappedPipeBroadcasterPredicateDirector* f, int32_t id);
 
+	int32_t GetMaximumBacklog();
+	void SetMaximumBacklog(int32_t maximum_backlog);
+
 };
 
 }

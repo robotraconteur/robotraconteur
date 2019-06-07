@@ -2014,6 +2014,14 @@ class PipeBroadcaster(object):
         p=WrappedPipeBroadcasterPredicateDirectorPython(f)
         self._innerpipe.SetPredicateDirector(p, 0)
         p.__disown__()
+        
+    @property
+    def MaximumBacklog(self):
+        return self._innerpipe.GetMaximumBacklog()
+    
+    @MaximumBacklog.setter
+    def MaximumBacklog(self, maximum_backlog):
+        self._innerpipe.SetMaximumBacklog(maximum_backlog)
 
 class WrappedWireBroadcasterPredicateDirectorPython(RobotRaconteurPython.WrappedWireBroadcasterPredicateDirector):
     def __init__(self, f):

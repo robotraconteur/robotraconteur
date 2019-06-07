@@ -2590,8 +2590,10 @@ class testroot_impl(object):
     @broadcastpipe.setter
     def broadcastpipe(self,value):
         if (self._broadcastpipe is not None): raise Exception("Pipe already set")
-        self._broadcastpipe=PipeBroadcaster(value,3)
-
+        self._broadcastpipe=PipeBroadcaster(value,3)        
+        assert self._broadcastpipe.MaximumBacklog == 3
+        self._broadcastpipe.MaximumBacklog = 3
+        
         def threadfunc():
             try:
                 while(True):

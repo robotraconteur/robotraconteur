@@ -107,4 +107,14 @@ public class PipeBroadcaster<T>
         int id = RRObjectHeap.addObject(p);
         innerpipe.setPredicateDirector(p, id);
 	}
+	
+	public int getMaximumBacklog()
+	{
+		return innerpipe.getMaximumBacklog();
+	}
+	
+	public void setMaximumBacklog(int maximum_backlog)
+	{
+		innerpipe.setMaximumBacklog(maximum_backlog);
+	}
 }
