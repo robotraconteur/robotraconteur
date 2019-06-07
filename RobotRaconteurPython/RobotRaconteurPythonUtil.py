@@ -113,6 +113,47 @@ def GetNamedArrayDType(namedarray_type,obj=None,node=None):
         obj=obj.rrinnerstub
     return RobotRaconteurPython._GetNumPyDescrForType(namedarray_type, obj, node)
 
+def GetPrimitiveDTypeFromNamedArrayDType(dt):
+    prim_dt = None
+    count = 0
+    for dt_i in dt.fields.itervalues():              
+        if len(dt_i[0].shape) == 0:
+            prim_dt_i = dt_i[0].type
+            dt_i_2 = dt_i[0]
+            count_i = 1
+        else:            
+            prim_dt_i = dt_i[0].subdtype[0].type
+            dt_i_2 = dt_i[0].subdtype[0]
+            count_i = dt_i[0].shape[0]
+                        
+        if (prim_dt_i == numpy.void):            
+            prim_dt_i, n = GetPrimitiveDTypeFromNamedArrayDType(dt_i_2)
+            count_i *= n
+        
+        if prim_dt is None:
+            prim_dt = prim_dt_i
+        else:            
+            assert prim_dt == prim_dt_i
+        
+        count += count_i
+        
+    return prim_dt, count
+
+def NamedArrayToArray(named_array):    
+    prim_dt, _ = GetPrimitiveDTypeFromNamedArrayDType(named_array.dtype)
+    a = numpy.ascontiguousarray(named_array.reshape(named_array.shape + (1,)))    
+    return a.view(prim_dt) 
+
+def ArrayToNamedArray(a, named_array_dt):
+    prim_dt, elem_count = GetPrimitiveDTypeFromNamedArrayDType(named_array_dt)
+    a = numpy.ascontiguousarray(a)
+    assert a.dtype == prim_dt, "Array type must match named array element type"
+    assert a.shape[-1] == elem_count, "Last dimension must match named array size"
+    b = a.view(named_array_dt)
+    if b.shape > 1 and b.shape[-1] == 1:
+        return b.reshape(a.shape[0:-1],order="C")
+    return b
+
 def InitStub(stub):
     odef=stub.RR_objecttype
     mdict={}

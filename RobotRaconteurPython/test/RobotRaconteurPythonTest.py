@@ -2950,6 +2950,11 @@ class ServiceTestClient2:
         self._r.testnamedarray5 = (ServiceTest2_create_transform_multidimarray(3, 2, 7732, self._r));
         ServiceTest2_verify_transform_multidimarray(self._r.testnamedarray5, 3, 2, 773142);
         
+        a1 = ServiceTest2_create_transform_array(6, 174, self._r)
+        a2 = RobotRaconteurNode.s.NamedArrayToArray(a1)
+        a3 = RobotRaconteurNode.s.ArrayToNamedArray(a2,a1.dtype)
+        numpy.testing.assert_equal(a1,a3)
+        
     def TestNamedArrayMemories(self):
         self.test_named_array_m1()
         self.test_named_array_m2()

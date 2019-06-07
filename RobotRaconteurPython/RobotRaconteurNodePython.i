@@ -105,6 +105,14 @@ def GetNamedArrayDType(self,type,obj=None):
 	from .RobotRaconteurPythonUtil import GetNamedArrayDType
 	return GetNamedArrayDType(type,obj,self)
 	
+def NamedArrayToArray(self,named_array):
+	from .RobotRaconteurPythonUtil import NamedArrayToArray
+	return NamedArrayToArray(named_array)
+
+def ArrayToNamedArray(self,a,named_array_dt):
+	from .RobotRaconteurPythonUtil import ArrayToNamedArray
+	return ArrayToNamedArray(a,named_array_dt)
+
 class ScopedMonitorLock(object):
     def __init__(self,obj,timeout=-1):
     	self.obj=obj
