@@ -159,11 +159,11 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteurServiceIndex::NodeI
 		RR_INTRUSIVE_PTR<RRMap<int32_t,RRArray<char> > > curl=AllocateEmptyRRMap<int32_t,RRArray<char> >();
 		for (size_t j=0; j<e->URLs.size(); j++)
 		{
-			curl->insert(make_pair((int32_t)j, stringToRRArray(e->URLs.at(j).URL)));
+			curl->insert(make_pair(boost::numeric_cast<int32_t>(j), stringToRRArray(e->URLs.at(j).URL)));
 		}
 
 		ii->ServiceIndexConnectionURL=curl;
-		o->insert(make_pair((int32_t)count,ii));
+		o->insert(make_pair(boost::numeric_cast<int32_t>(count),ii));
 		count++;
 
 	}

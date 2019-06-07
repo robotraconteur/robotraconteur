@@ -1952,7 +1952,7 @@ namespace RobotRaconteur
 	{
 		boost::posix_time::ptime timeout_time = GetNode()->NowUTC() + boost::posix_time::milliseconds(timeout);
 
-		AsyncPullServiceDefinition(servicetype, boost::bind(&ClientContext::AsyncPullServiceDefinitionAndImports1, shared_from_this(), _1, _2, std::string(servicetype), handler, timeout_time), (uint32_t)(timeout_time - GetNode()->NowUTC()).total_milliseconds());
+		AsyncPullServiceDefinition(servicetype, boost::bind(&ClientContext::AsyncPullServiceDefinitionAndImports1, shared_from_this(), _1, _2, std::string(servicetype), handler, timeout_time), boost::numeric_cast<uint32_t>((timeout_time - GetNode()->NowUTC()).total_milliseconds()));
 	}
 
 	void ClientContext::AsyncPullServiceDefinitionAndImports1(RR_SHARED_PTR<ServiceDefinition> root, RR_SHARED_PTR<RobotRaconteurException> err, const std::string& servicetype, boost::function<void(RR_SHARED_PTR<std::vector<RR_SHARED_PTR<ServiceDefinition> > >, RR_SHARED_PTR<RobotRaconteurException>)>& handler, boost::posix_time::ptime timeout_time)
@@ -1992,7 +1992,7 @@ namespace RobotRaconteur
 						{
 							boost::function<void(RR_SHARED_PTR<std::vector<RR_SHARED_PTR<ServiceDefinition> > >, RR_SHARED_PTR<RobotRaconteurException>)> handler2;
 							handler2.swap(handler);
-							AsyncPullServiceDefinitionAndImports(*s, boost::bind(&ClientContext::AsyncPullServiceDefinitionAndImports2, shared_from_this(), _1, _2, boost::make_tuple(std::string(servicetype), root, defs, s, e, handler2, timeout_time)), (uint32_t)(timeout_time - GetNode()->NowUTC()).total_milliseconds());
+							AsyncPullServiceDefinitionAndImports(*s, boost::bind(&ClientContext::AsyncPullServiceDefinitionAndImports2, shared_from_this(), _1, _2, boost::make_tuple(std::string(servicetype), root, defs, s, e, handler2, timeout_time)), boost::numeric_cast<uint32_t>((timeout_time - GetNode()->NowUTC()).total_milliseconds()));
 							return;
 						}
 						s++;
@@ -2057,7 +2057,7 @@ namespace RobotRaconteur
 					}
 					if (!defs_f)
 					{
-						AsyncPullServiceDefinitionAndImports(*s, boost::bind(&ClientContext::AsyncPullServiceDefinitionAndImports2, shared_from_this(), _1, _2, boost::make_tuple(std::string(servicetype), root, defs, s, e, handler, timeout_time)), (uint32_t)(timeout_time - GetNode()->NowUTC()).total_milliseconds());
+						AsyncPullServiceDefinitionAndImports(*s, boost::bind(&ClientContext::AsyncPullServiceDefinitionAndImports2, shared_from_this(), _1, _2, boost::make_tuple(std::string(servicetype), root, defs, s, e, handler, timeout_time)), boost::numeric_cast<uint32_t>((timeout_time - GetNode()->NowUTC()).total_milliseconds()));
 						return;
 					}
 					s++;

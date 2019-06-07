@@ -939,7 +939,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::GenerateErrorReturnMessage(RR_INTR
 	{
 		if ((static_cast<int32_t>(me->EntryType)) % 2 == 1)
 		{
-			RR_INTRUSIVE_PTR<MessageEntry> eret = CreateMessageEntry((MessageEntryType)(me->EntryType+1), me->MemberName);
+			RR_INTRUSIVE_PTR<MessageEntry> eret = CreateMessageEntry(static_cast<MessageEntryType>(me->EntryType+1), me->MemberName);
 			eret->RequestID = me->RequestID;
 			eret->ServicePath = me->ServicePath;
 			eret->AddElement("errorname", stringToRRArray(errname));
@@ -1076,7 +1076,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_INTRUSIVE_PTR<Me
 
 	BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageEntry>& e, m->entries)
 	{
-		RR_INTRUSIVE_PTR<MessageEntry> eret = ret->AddEntry((MessageEntryType)(((uint16_t)e->EntryType)+1),e->MemberName);
+		RR_INTRUSIVE_PTR<MessageEntry> eret = ret->AddEntry(static_cast<MessageEntryType>(static_cast<uint16_t>(e->EntryType)+1),e->MemberName);
 		eret->RequestID = e->RequestID;
 		eret->ServicePath = e->ServicePath;
 
@@ -1933,7 +1933,7 @@ void RobotRaconteurNode::PeriodicCleanupTask(const TimerEvent& err)
 						
 			for(std::map<uint32_t,boost::posix_time::ptime>::iterator e=recent_endpoints.begin(); e!=recent_endpoints.end(); )
 			{
-				int32_t seconds=(now-e->second).total_seconds();
+				int32_t seconds=boost::numeric_cast<int32_t>((now-e->second).total_seconds());
 				if (seconds > 300)
 				{
 					recent_endpoints.erase(e++);
@@ -2190,7 +2190,7 @@ void RobotRaconteurNode::SetThreadPoolFactory(RR_SHARED_PTR<ThreadPoolFactory> f
 
 int32_t RobotRaconteurNode::GetThreadPoolCount()
 {
-	return (int32_t)GetThreadPool()->GetThreadPoolCount();
+	return boost::numeric_cast<int32_t>(GetThreadPool()->GetThreadPoolCount());
 }
 
 void RobotRaconteurNode::SetThreadPoolCount(int32_t count)
@@ -2456,7 +2456,7 @@ std::string RobotRaconteurNode::GetRandomString(size_t count)
 	std::string o;
 	boost::mutex::scoped_lock lock(random_generator_lock);
 	std::string strvals = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-	boost::random::uniform_int_distribution<uint32_t> distribution(0, (uint32_t)(strvals.size() - 1));
+	boost::random::uniform_int_distribution<uint32_t> distribution(0, boost::numeric_cast<uint32_t>(strvals.size() - 1));
 	for (size_t i = 0; i<count; i++)
 	{
 		o += strvals.at(distribution(*random_generator));

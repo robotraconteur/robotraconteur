@@ -43,12 +43,12 @@ namespace RobotRaconteur
 					uint64_t temp_elem_count1 = split_elem_count * count[i];
 					if (temp_elem_count1 > max_elems)
 					{
-						split_dim = (uint32_t)i;
+						split_dim = boost::numeric_cast<uint32_t>(i);
 						split_dim_block = max_elems / split_elem_count;
 						split_dim_found = true;
 						block_count[i] = split_dim_block;
-						splits_count = static_cast<uint32_t>(count[i] / split_dim_block);
-						split_remainder = static_cast<uint32_t>(count[i] % split_dim_block);
+						splits_count = boost::numeric_cast<uint32_t>(count[i] / split_dim_block);
+						split_remainder = boost::numeric_cast<uint32_t>(count[i] % split_dim_block);
 					}
 					else
 					{
@@ -110,7 +110,7 @@ namespace RobotRaconteur
 
 			uint64_t memorypos = RRArrayToScalar(m->FindElement("memorypos")->CastData<RRArray<uint64_t> >());
 			uint64_t count = RRArrayToScalar(m->FindElement("count")->CastData<RRArray<uint64_t> >());
-			RR_INTRUSIVE_PTR<MessageElementData> data = DoRead(memorypos, 0, (size_t)count, mem);
+			RR_INTRUSIVE_PTR<MessageElementData> data = DoRead(memorypos, 0, boost::numeric_cast<size_t>(count), mem);
 			RR_INTRUSIVE_PTR<MessageEntry> ret = CreateMessageEntry(MessageEntryType_MemoryReadRet, GetMemberName());
 			ret->AddElement("memorypos", ScalarToRRArray(memorypos));
 			ret->AddElement("count", ScalarToRRArray(count));
@@ -128,7 +128,7 @@ namespace RobotRaconteur
 			uint64_t memorypos = RRArrayToScalar(m->FindElement("memorypos")->CastData<RRArray<uint64_t> >());
 			uint64_t count = RRArrayToScalar(m->FindElement("count")->CastData<RRArray<uint64_t> >());
 			RR_INTRUSIVE_PTR<MessageElementData> data = m->FindElement("data")->CastData<MessageElementData>();
-			DoWrite(memorypos, data, 0, (size_t)count, mem);
+			DoWrite(memorypos, data, 0, boost::numeric_cast<size_t>(count), mem);
 			RR_INTRUSIVE_PTR<MessageEntry> ret = CreateMessageEntry(MessageEntryType_MemoryReadRet, GetMemberName());
 			ret->AddElement("memorypos", ScalarToRRArray(memorypos));
 			ret->AddElement("count", ScalarToRRArray(count));
@@ -204,7 +204,7 @@ namespace RobotRaconteur
 			RR_INTRUSIVE_PTR<RRArray<uint64_t> > count = m->FindElement("count")->CastData<RRArray<uint64_t> >();
 			uint32_t elemcount = 1;
 			for (size_t i = 0; i < count->size(); i++)
-				elemcount *= static_cast<uint32_t>((*count)[i]);
+				elemcount *= boost::numeric_cast<uint32_t>((*count)[i]);
 
 
 			RR_INTRUSIVE_PTR<MessageElementData> data = DoRead(RRArrayToVector<uint64_t>(memorypos), std::vector<uint64_t>(count->size()), RRArrayToVector<uint64_t>(count), elemcount, mem);
@@ -227,7 +227,7 @@ namespace RobotRaconteur
 			RR_INTRUSIVE_PTR<RRArray<uint64_t> > count = m->FindElement("count")->CastData<RRArray<uint64_t> >();
 			uint32_t elemcount = 1;
 			for (size_t i = 0; i < count->size(); i++)
-				elemcount *= static_cast<uint32_t>((*count)[i]);
+				elemcount *= boost::numeric_cast<uint32_t>((*count)[i]);
 
 			RR_INTRUSIVE_PTR<MessageElementData> data = m->FindElement("data")->CastData<MessageElementData>();
 
@@ -353,7 +353,7 @@ namespace RobotRaconteur
 		}
 
 		uint32_t max_transfer_size = GetMaxTransferSize();
-		uint32_t max_elems = static_cast<uint32_t>(max_transfer_size) / element_size;
+		uint32_t max_elems = boost::numeric_cast<uint32_t>(max_transfer_size) / element_size;
 
 		if (count <= max_elems)
 		{
@@ -366,8 +366,8 @@ namespace RobotRaconteur
 		}
 		else
 		{
-			uint64_t blocks = count / static_cast<uint64_t>(max_elems);
-			uint64_t blockrem = count % static_cast<uint64_t>(max_elems);
+			uint64_t blocks = count / boost::numeric_cast<uint64_t>(max_elems);
+			uint64_t blockrem = count % boost::numeric_cast<uint64_t>(max_elems);
 
 			for (uint64_t i = 0; i < blocks; i++)
 			{
@@ -398,7 +398,7 @@ namespace RobotRaconteur
 		uint32_t max_transfer_size = GetMaxTransferSize();
 
 
-		uint32_t max_elems = static_cast<uint32_t>(max_transfer_size) / element_size;
+		uint32_t max_elems = boost::numeric_cast<uint32_t>(max_transfer_size) / element_size;
 
 
 
@@ -416,11 +416,11 @@ namespace RobotRaconteur
 		}
 		else
 		{
-			if ((static_cast<int64_t>(GetBufferLength(buffer)) - static_cast<int64_t>(bufferpos)) < static_cast<int64_t>(count))
+			if ((boost::numeric_cast<int64_t>(GetBufferLength(buffer)) - boost::numeric_cast<int64_t>(bufferpos)) < boost::numeric_cast<int64_t>(count))
 				throw OutOfRangeException("");
 
-			uint64_t blocks = count / static_cast<uint64_t>(max_elems);
-			uint64_t blockrem = count % static_cast<uint64_t>(max_elems);
+			uint64_t blocks = count / boost::numeric_cast<uint64_t>(max_elems);
+			uint64_t blockrem = count % boost::numeric_cast<uint64_t>(max_elems);
 
 			for (uint64_t i = 0; i < blocks; i++)
 			{
@@ -533,7 +533,7 @@ namespace RobotRaconteur
 		uint64_t elemcount = 1;
 		for (size_t i = 0; i < count.size(); i++)
 			elemcount *= count[i];
-		uint32_t max_elems = static_cast<uint32_t>(max_transfer_size) / element_size;
+		uint32_t max_elems = boost::numeric_cast<uint32_t>(max_transfer_size) / element_size;
 
 		if (elemcount <= max_elems)
 		{
@@ -568,7 +568,7 @@ namespace RobotRaconteur
 			{
 				for (uint32_t i = 0; i < splits_count; i++)
 				{
-					current_pos[split_dim] = split_dim_block * static_cast<uint64_t>(i);
+					current_pos[split_dim] = split_dim_block * boost::numeric_cast<uint64_t>(i);
 
 					std::vector<uint64_t> current_buf_pos = std::vector<uint64_t>(bufferpos.size());
 					std::vector<uint64_t> current_mem_pos = std::vector<uint64_t>(bufferpos.size());
@@ -584,7 +584,7 @@ namespace RobotRaconteur
 
 				if (split_remainder != 0)
 				{
-					current_pos[split_dim] = split_dim_block * static_cast<uint64_t>(splits_count);
+					current_pos[split_dim] = split_dim_block * boost::numeric_cast<uint64_t>(splits_count);
 					std::vector<uint64_t> current_buf_pos = std::vector<uint64_t>(bufferpos.size());
 					std::vector<uint64_t> current_mem_pos = std::vector<uint64_t>(bufferpos.size());
 
@@ -597,7 +597,7 @@ namespace RobotRaconteur
 					ReadBase(current_mem_pos, buffer, current_buf_pos, block_count_edge);
 				}
 
-				if (split_dim == (uint32_t)(count.size() - 1))
+				if (split_dim == boost::numeric_cast<uint32_t>(count.size() - 1))
 				{
 					done = true;
 				}
@@ -606,7 +606,7 @@ namespace RobotRaconteur
 					current_pos[split_dim + 1]++;
 					if (current_pos[split_dim + 1] >= count[split_dim + 1])
 					{
-						if (split_dim + 1 == (uint32_t)(count.size() - 1))
+						if (split_dim + 1 == boost::numeric_cast<uint32_t>(count.size() - 1))
 						{
 							done = true;
 						}
@@ -641,7 +641,7 @@ namespace RobotRaconteur
 		uint64_t elemcount = 1;
 		for (size_t i = 0; i < count.size(); i++)
 			elemcount *= count[i];
-		uint32_t max_elems = static_cast<uint32_t>(max_transfer_size) / element_size;
+		uint32_t max_elems = boost::numeric_cast<uint32_t>(max_transfer_size) / element_size;
 
 		if (elemcount <= max_elems)
 		{
@@ -675,7 +675,7 @@ namespace RobotRaconteur
 			{
 				for (uint32_t i = 0; i < splits_count; i++)
 				{
-					current_pos[split_dim] = split_dim_block * static_cast<uint64_t>(i);
+					current_pos[split_dim] = split_dim_block * boost::numeric_cast<uint64_t>(i);
 
 					std::vector<uint64_t> current_buf_pos = std::vector<uint64_t>(bufferpos.size());
 					std::vector<uint64_t> current_mem_pos = std::vector<uint64_t>(bufferpos.size());
@@ -691,7 +691,7 @@ namespace RobotRaconteur
 
 				if (split_remainder != 0)
 				{
-					current_pos[split_dim] = split_dim_block * static_cast<uint64_t>(splits_count);
+					current_pos[split_dim] = split_dim_block * boost::numeric_cast<uint64_t>(splits_count);
 					std::vector<uint64_t> current_buf_pos(bufferpos.size());
 					std::vector<uint64_t> current_mem_pos(bufferpos.size());
 
@@ -704,7 +704,7 @@ namespace RobotRaconteur
 					WriteBase(current_mem_pos, buffer, current_buf_pos, block_count_edge);
 				}
 
-				if (split_dim == (uint32_t)(count.size() - 1))
+				if (split_dim == boost::numeric_cast<uint32_t>(count.size() - 1))
 				{
 					done = true;
 				}
@@ -713,7 +713,7 @@ namespace RobotRaconteur
 					current_pos[split_dim + 1]++;
 					if (current_pos[split_dim + 1] >= count[split_dim + 1])
 					{
-						if (split_dim + 1 == (uint32_t)(count.size() - 1))
+						if (split_dim + 1 == boost::numeric_cast<uint32_t>(count.size() - 1))
 						{
 							done = true;
 						}

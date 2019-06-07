@@ -361,13 +361,13 @@ std::list<BluezBluetoothConnector::device_info> BluezBluetoothConnector::GetDevi
 		o1.addr.rc_family=AF_BLUETOOTH;
 		o1.addr.rc_bdaddr=addr.rc_bdaddr;
 
-		sdp_record_t *rec = (sdp_record_t*) r->data;
+		sdp_record_t *rec = reinterpret_cast<sdp_record_t*>(r->data);
 
 		sdp_list_t* attrlist=rec->attrlist;
 
 		for (; attrlist; attrlist = attrlist->next)
 		{
-			sdp_data_t* a=(sdp_data_t*)attrlist->data;
+			sdp_data_t* a=reinterpret_cast<sdp_data_t*>(attrlist->data);
 			if(a->attrId == 0xF001 && a->dtd == SDP_TEXT_STR8)
 			{
 				o1.nodeid_str=std::string(a->val.str);
@@ -381,7 +381,7 @@ std::list<BluezBluetoothConnector::device_info> BluezBluetoothConnector::GetDevi
 		sdp_list_t* protos=NULL;
 		if (!sdp_f->sdp_get_access_protos(rec, &protos)) {
 			uint8_t ch = sdp_f->sdp_get_proto_port(protos, RFCOMM_UUID);
-			sdp_list_foreach(protos, (sdp_list_func_t) sdp_f->sdp_list_free, NULL);
+			sdp_list_foreach(protos, reinterpret_cast<sdp_list_func_t>(sdp_f->sdp_list_free), NULL);
 			sdp_f->sdp_list_free(protos, NULL);
 			protos = NULL;
 			o1.addr.rc_channel=ch;
@@ -425,7 +425,7 @@ void HardwareTransport_linux_discovery::Init()
 		return;
 	}
 
-	ret = bind(nl_socket, (struct sockaddr*) &src_addr, sizeof(src_addr));
+	ret = bind(nl_socket, reinterpret_cast<struct sockaddr*>(&src_addr), sizeof(src_addr));
 	if (ret) {
 		close(nl_socket);
 		return;
@@ -505,7 +505,7 @@ void HardwareTransport_linux_discovery::NetlinkMessageReceived(const boost::syst
 		return;
 	}
 
-	boost::iterator_range<char*> evt((char*)msg.get(), (char*)msg.get()+bytes_transferred);
+	boost::iterator_range<char*> evt(reinterpret_cast<char*>(msg.get()), reinterpret_cast<char*>(msg.get())+bytes_transferred);
 
 	std::vector<std::string> evt1;
 	boost::split(evt1, evt, boost::is_any_of(boost::as_array("\0")));

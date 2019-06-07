@@ -40,9 +40,9 @@ namespace RobotRaconteur
 		T ReadNumber()
 		{
 			T out;
-			Read((uint8_t*)((void*)&out),0,sizeof(T));
+			Read(reinterpret_cast<uint8_t*>(&out),0,sizeof(T));
 #if BOOST_ENDIAN_BIG_BYTE
-			if (!nativeorder) std::reverse((uint8_t*)((void*)&out),((uint8_t*)((void*)&out))+sizeof(T));
+			if (!nativeorder) std::reverse(reinterpret_cast<uint8_t*>(&out),(reinterpret_cast<uint8_t*>(&out))+sizeof(T));
 #endif
 			return out;
 
@@ -103,11 +103,11 @@ namespace RobotRaconteur
 		template <typename T> 
 		void WriteNumber(T number)
 		{
-			void* n1=(void*)&number;
+			void* n1=static_cast<void*>(&number);
 #if BOOST_ENDIAN_BIG_BYTE
-			if (!nativeorder) std::reverse((uint8_t*)n1,((uint8_t*)n1)+sizeof(T));
+			if (!nativeorder) std::reverse(static_cast<uint8_t*>(n1),(static_cast<uint8_t*>(n1))+sizeof(T));
 #endif
-			Write((uint8_t*)n1,0,sizeof(T));
+			Write(static_cast<uint8_t*>(n1),0,sizeof(T));
 			
 
 		}

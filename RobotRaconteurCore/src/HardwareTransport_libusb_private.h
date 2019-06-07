@@ -223,7 +223,7 @@ namespace detail {
 
 #define LIBUSB_FUNCTIONS_FIELD_INIT(t) t ## _t t;
 #define LIBUSB_FUNCTIONS_PTR_VOID(t) t = NULL;
-#define LIBUSB_FUNCTIONS_PTR_INIT(t) t = (t ## _t)dlsym(lib_handle, #t); if (t == NULL) return false;
+#define LIBUSB_FUNCTIONS_PTR_INIT(t) t = reinterpret_cast<t ## _t>(dlsym(lib_handle, #t)); if (t == NULL) return false;
 
 class LibUsb_Functions : public boost::noncopyable
 {

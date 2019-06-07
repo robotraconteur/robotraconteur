@@ -238,7 +238,7 @@ namespace RobotRaconteur
 		boost::smatch r_start_match;
 		if (!boost::regex_match(current_line, r_start_match, r_start))
 		{
-			throw RobotRaconteurParseException("Parse error near: " + current_line, (int32_t)pos);
+			throw RobotRaconteurParseException("Parse error near: " + current_line, boost::numeric_cast<int32_t>(pos));
 		}
 
 		os << current_line << "\n";
@@ -265,7 +265,7 @@ namespace RobotRaconteur
 				{
 					if (r_end_match[1] != block_type)
 					{
-						throw RobotRaconteurParseException("Block end does not match start: " + l, (int32_t)pos);
+						throw RobotRaconteurParseException("Block end does not match start: " + l, boost::numeric_cast<int32_t>(pos));
 					}
 				}
 				
@@ -273,7 +273,7 @@ namespace RobotRaconteur
 			}
 		}
 
-		throw RobotRaconteurParseException("Block end not found: " + current_line, (int32_t)init_pos);
+		throw RobotRaconteurParseException("Block end not found: " + current_line, boost::numeric_cast<int32_t>(init_pos));
 
 	}
 
@@ -456,7 +456,7 @@ namespace RobotRaconteur
 				boost::smatch r_entry_match;
 				if (!boost::regex_match(l, r_entry_match, r_entry))
 				{
-					throw RobotRaconteurParseException("Parse error near: " + l, (int32_t)pos);
+					throw RobotRaconteurParseException("Parse error near: " + l, boost::numeric_cast<int32_t>(pos));
 				}
 
 				const boost::smatch::value_type& r_entry_match_blank = r_entry_match[14];
@@ -607,7 +607,7 @@ namespace RobotRaconteur
 					continue;
 				}
 				default:
-					throw RobotRaconteurParseException("Parse error near: " + l, (int32_t)pos);
+					throw RobotRaconteurParseException("Parse error near: " + l, boost::numeric_cast<int32_t>(pos));
 				}
 			}
 
@@ -641,7 +641,7 @@ namespace RobotRaconteur
 		{
 			if (dynamic_cast<RobotRaconteurParseException*>(&e) != 0)
 				throw e;
-			throw RobotRaconteurParseException("Parse error near: " + l, (int32_t)pos);
+			throw RobotRaconteurParseException("Parse error near: " + l, boost::numeric_cast<int32_t>(pos));
 		}
 	}
 
@@ -847,7 +847,7 @@ namespace RobotRaconteur
 		std::string l;
 		if (!ServiceDefinition_GetLine(s, l, startline))
 		{
-			throw RobotRaconteurParseException("Invalid object member", (int32_t)startline);
+			throw RobotRaconteurParseException("Invalid object member", boost::numeric_cast<int32_t>(startline));
 		}
 
 		boost::smatch start_struct_cmatch;
@@ -899,11 +899,11 @@ namespace RobotRaconteur
 						{
 							if (ServiceDefinition_GetLine(s, l, pos))
 							{
-								throw  RobotRaconteurParseException("Parse error", (int32_t)(pos));
+								throw  RobotRaconteurParseException("Parse error", boost::numeric_cast<int32_t>(pos));
 							}
 							return;
 						}
-						throw RobotRaconteurParseException("Parse error near: " + l, (int32_t)pos);
+						throw RobotRaconteurParseException("Parse error near: " + l, boost::numeric_cast<int32_t>(pos));
 					}
 
 					const boost::smatch::value_type& r_member_match_blank = r_member_match[15];
@@ -920,7 +920,7 @@ namespace RobotRaconteur
 
 					if ((EntryType != DataTypes_object_t) && (member_key >= 5 && member_key != 13))
 					{
-						throw RobotRaconteurParseException("Structures can only contain fields, constants, and options", (int32_t)(pos));
+						throw RobotRaconteurParseException("Structures can only contain fields, constants, and options", boost::numeric_cast<int32_t>(pos));
 					}
 
 					switch (member_key)
@@ -929,7 +929,7 @@ namespace RobotRaconteur
 					case 1:
 					{
 						//TODO: look in to this
-						//if (!Members.empty()) throw RobotRaconteurParseException("Structure option must come before members", (int32_t)(pos));
+						//if (!Members.empty()) throw RobotRaconteurParseException("Structure option must come before members", boost::numeric_cast<int32_t>(pos));
 						Options.push_back(r_member_match_remaining);
 						warnings.push_back(RobotRaconteurParseException("option keyword is deprecated", pos));
 						continue;
@@ -937,8 +937,8 @@ namespace RobotRaconteur
 					//implements
 					case 2:
 					{
-						if (!Members.empty()) throw RobotRaconteurParseException("Structure implements must come before members", (int32_t)(pos));
-						if (EntryType != DataTypes_object_t) throw RobotRaconteurParseException("Structures can only contain fields, constants, and options", (int32_t)(pos));
+						if (!Members.empty()) throw RobotRaconteurParseException("Structure implements must come before members", boost::numeric_cast<int32_t>(pos));
+						if (EntryType != DataTypes_object_t) throw RobotRaconteurParseException("Structures can only contain fields, constants, and options", boost::numeric_cast<int32_t>(pos));
 						std::vector<std::string> implements1;
 						ServiceDefinition_FromStringTypeFormat(l, "implements", implements1);
 						Implements.push_back(ServiceEntryDefinition_QualifyTypeWithUsing(*this, implements1.at(0)));
@@ -947,7 +947,7 @@ namespace RobotRaconteur
 					//constant
 					case 3:
 					{				
-						if (!Members.empty()) throw RobotRaconteurParseException("Structure constants must come before members", (int32_t)(pos));
+						if (!Members.empty()) throw RobotRaconteurParseException("Structure constants must come before members", boost::numeric_cast<int32_t>(pos));
 						RR_SHARED_PTR<ConstantDefinition> constant_def = RR_MAKE_SHARED<ConstantDefinition>(shared_from_this());
 						constant_def->FromString(l);
 						Constants.push_back(constant_def);						
@@ -956,7 +956,7 @@ namespace RobotRaconteur
 					//field
 					case 4:
 					{
-						if (EntryType == DataTypes_object_t) throw RobotRaconteurParseException("Objects cannot contain fields.  Use properties instead.", (int32_t)(pos));
+						if (EntryType == DataTypes_object_t) throw RobotRaconteurParseException("Objects cannot contain fields.  Use properties instead.", boost::numeric_cast<int32_t>(pos));
 						ServiceEntryDefinition_FromString_DoMember<PropertyDefinition>(l,shared_from_this());						
 						continue;
 					}
@@ -1016,7 +1016,7 @@ namespace RobotRaconteur
 							boost::smatch matches;
 							if (!boost::regex_match(l, matches, end_struct_regex))
 							{
-								throw  RobotRaconteurParseException("Parse error", (int32_t)(pos));
+								throw  RobotRaconteurParseException("Parse error", boost::numeric_cast<int32_t>(pos));
 							}
 						}
 						else if (EntryType == DataTypes_pod_t)
@@ -1024,7 +1024,7 @@ namespace RobotRaconteur
 							boost::smatch matches;
 							if (!boost::regex_match(l, matches, end_pod_regex))
 							{
-								throw  RobotRaconteurParseException("Parse error", (int32_t)(pos));
+								throw  RobotRaconteurParseException("Parse error", boost::numeric_cast<int32_t>(pos));
 							}
 						}
 						else if (EntryType == DataTypes_namedarray_t)
@@ -1032,7 +1032,7 @@ namespace RobotRaconteur
 							boost::smatch matches;
 							if (!boost::regex_match(l, matches, end_namedarray_regex))
 							{
-								throw  RobotRaconteurParseException("Parse error", (int32_t)(pos));
+								throw  RobotRaconteurParseException("Parse error", boost::numeric_cast<int32_t>(pos));
 							}
 						}
 						else
@@ -1040,24 +1040,24 @@ namespace RobotRaconteur
 							boost::smatch matches;
 							if (!boost::regex_match(l, matches, end_object_regex))
 							{
-								throw  RobotRaconteurParseException("Parse error", (int32_t)(pos));
+								throw  RobotRaconteurParseException("Parse error", boost::numeric_cast<int32_t>(pos));
 							}
 						}
 
 						if (ServiceDefinition_GetLine(s, l, pos))
 						{
-							throw  RobotRaconteurParseException("Parse error", (int32_t)(pos));
+							throw  RobotRaconteurParseException("Parse error", boost::numeric_cast<int32_t>(pos));
 						}
 						return;
 					}
 
 					default:
-						throw RobotRaconteurParseException("Parse error", (int32_t)(pos));
+						throw RobotRaconteurParseException("Parse error", boost::numeric_cast<int32_t>(pos));
 						break;
 
 					}				
 				}
-				catch (RobotRaconteurParseException& exp)
+				catch (RobotRaconteurParseException&)
 				{					
 					throw;					
 				}
@@ -1066,7 +1066,7 @@ namespace RobotRaconteur
 		}
 		catch (std::exception& exp)
 		{
-			throw RobotRaconteurParseException("Parse error: " + std::string(exp.what()) + " near: " + l, (int32_t)(pos));
+			throw RobotRaconteurParseException("Parse error: " + std::string(exp.what()) + " near: " + l, boost::numeric_cast<int32_t>(pos));
 		}
 
 	}
@@ -2666,13 +2666,13 @@ namespace RobotRaconteur
 		boost::smatch r_start_match;			
 		if (!boost::regex_match(lines.front(), r_start_match, r_start))
 		{
-			throw RobotRaconteurParseException("Parse error near: " + lines.front(), (int32_t)startline);
+			throw RobotRaconteurParseException("Parse error near: " + lines.front(), boost::numeric_cast<int32_t>(startline));
 		}
 		Name = r_start_match[1];
 
 		if (!boost::regex_match(lines.back(), r_end))
 		{
-			throw RobotRaconteurParseException("Parse error near: " + lines.front(), (int32_t)(startline+lines.size()-1));
+			throw RobotRaconteurParseException("Parse error near: " + lines.front(), boost::numeric_cast<int32_t>(startline+lines.size()-1));
 		}
 		
 		std::string values1 = boost::join(boost::make_iterator_range(++lines.begin(), --lines.end()), " ");
@@ -2686,7 +2686,7 @@ namespace RobotRaconteur
 			boost::smatch r_value_match;
 			if (!boost::regex_match(l, r_value_match, r_value))
 			{
-				throw RobotRaconteurParseException("Enum value parse error near: " + lines.front(), (int32_t)(startline + lines.size() - 1));
+				throw RobotRaconteurParseException("Enum value parse error near: " + lines.front(), boost::numeric_cast<int32_t>(startline + lines.size() - 1));
 			}
 
 			Values.resize(Values.size() + 1);
@@ -2713,7 +2713,7 @@ namespace RobotRaconteur
 			{
 				if (Values.size() == 1)
 				{
-					throw RobotRaconteurParseException("Enum first value must be specified: " + lines.front(), (int32_t)(startline + lines.size() - 1));
+					throw RobotRaconteurParseException("Enum first value must be specified: " + lines.front(), boost::numeric_cast<int32_t>(startline + lines.size() - 1));
 				}
 
 				enum_i.ImplicitValue = true;				
@@ -2724,7 +2724,7 @@ namespace RobotRaconteur
 
 		if (!VerifyValues())
 		{
-			throw RobotRaconteurParseException("Enum names or values not unique: " + lines.front(), (int32_t)(startline));
+			throw RobotRaconteurParseException("Enum names or values not unique: " + lines.front(), boost::numeric_cast<int32_t>(startline));
 		}
 
 	}
@@ -4192,7 +4192,7 @@ namespace RobotRaconteur
 				}
 				else
 				{
-					array_count = (size_t)boost::accumulate(p->Type->ArrayLength, 1, std::multiplies<int32_t>());
+					array_count = boost::numeric_cast<size_t>(boost::accumulate(p->Type->ArrayLength, 1, std::multiplies<int32_t>()));
 				}
 				s += RRArrayElementSize(p->Type->Type) * array_count;
 			}
@@ -4209,7 +4209,7 @@ namespace RobotRaconteur
 				}
 				else
 				{
-					array_count = (size_t)boost::accumulate(p->Type->ArrayLength, 1, std::multiplies<int32_t>());
+					array_count = boost::numeric_cast<size_t>(boost::accumulate(p->Type->ArrayLength, 1, std::multiplies<int32_t>()));
 				}
 				s += EstimatePodPackedElementSize(nt,other_defs,node,client) * array_count;
 			}
@@ -4253,7 +4253,7 @@ namespace RobotRaconteur
 
 			if (p->Type->ArrayType != DataTypes_ArrayTypes_none)
 			{
-				field_element_count = (size_t)boost::accumulate(p->Type->ArrayLength, 1, std::multiplies<int32_t>());
+				field_element_count = boost::numeric_cast<size_t>(boost::accumulate(p->Type->ArrayLength, 1, std::multiplies<int32_t>()));
 			}
 
 			if (IsTypeNumeric(p->Type->Type))

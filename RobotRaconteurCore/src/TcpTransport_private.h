@@ -520,7 +520,7 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
 				boost::asio::ip::address_v6::bytes_type b=addr.to_bytes();
 				memcpy(&mreq.ipv6mr_multiaddr,&b[0],sizeof(in6_addr));
 				mreq.ipv6mr_interface=scope_id;
-				setsockopt(socket.native_handle(),IPPROTO_IPV6,IPV6_ADD_MEMBERSHIP,(char*)&mreq,sizeof(mreq));
+				setsockopt(socket.native_handle(),IPPROTO_IPV6,IPV6_ADD_MEMBERSHIP,reinterpret_cast<char*>(&mreq),sizeof(mreq));
 
 			}
 

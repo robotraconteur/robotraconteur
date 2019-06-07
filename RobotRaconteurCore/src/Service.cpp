@@ -1061,7 +1061,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 			{
 				if (!noreturn)
 				{
-				ret = CreateMessageEntry(((MessageEntryType)(m->EntryType+1)), m->MemberName);
+				ret = CreateMessageEntry((static_cast<MessageEntryType>(m->EntryType+1)), m->MemberName);
 				RobotRaconteurExceptionUtil::ExceptionToMessageEntry(e, ret);
 				}
 
@@ -1070,7 +1070,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 			{
 				if (!noreturn)
 				{
-				ret = CreateMessageEntry(((MessageEntryType)(m->EntryType+1)), m->MemberName);
+				ret = CreateMessageEntry((static_cast<MessageEntryType>(m->EntryType+1)), m->MemberName);
 				ret->Error=MessageErrorType_RemoteError;
 				ret->AddElement("errorname", stringToRRArray("std::exception"));
 				ret->AddElement("errorstring", stringToRRArray("Unknown exception occured in remote service"));
@@ -1086,7 +1086,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 			if (ret == 0 && !noreturn)
 			{
-				ret = CreateMessageEntry((MessageEntryType)(m->EntryType+1), m->MemberName);
+				ret = CreateMessageEntry(static_cast<MessageEntryType>(m->EntryType+1), m->MemberName);
 				ret->Error = MessageErrorType_ProtocolError;
 				ret->AddElement("errorname", stringToRRArray("RobotRaconteur.ProtocolError"));
 				ret->AddElement("errorstring", stringToRRArray("Unknown request type"));
@@ -1952,7 +1952,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 	int32_t ServerContext::GetMonitorThreadPoolCount()
 	{
-		return (int32_t)GetMonitorThreadPool()->GetThreadPoolCount();
+		return boost::numeric_cast<int32_t>(GetMonitorThreadPool()->GetThreadPoolCount());
 	}
 
 	void ServerContext::SetMonitorThreadPoolCount(int32_t count)

@@ -45,8 +45,8 @@ static T BluetoothConnector_record_read_number(boost::asio::mutable_buffer& buf)
 	}
 
 	buf = buf + sizeof(T);
-#ifdef BOOST_LITTLE_ENDIAN
-	std::reverse((uint8_t*)((void*)&num), ((uint8_t*)((void*)&num)) + sizeof(T));
+#if BOOST_ENDIAN_LITTLE_BYTE
+	std::reverse(reinterpret_cast<uint8_t*>(&num), reinterpret_cast<uint8_t*>(&num) + sizeof(T));
 #endif
 
 	return num;
@@ -62,29 +62,29 @@ static boost::tuple<uint8_t, size_t> BluetoothConnector_record_read_header(boost
 	switch (idx)
 	{
 	case 0:
-		return boost::make_tuple(type, (size_t)1);
+		return boost::make_tuple(type, static_cast<size_t>(1));
 	case 1:
-		return boost::make_tuple(type, (size_t)2);
+		return boost::make_tuple(type, static_cast<size_t>(2));
 	case 2:
-		return boost::make_tuple(type, (size_t)4);
+		return boost::make_tuple(type, static_cast<size_t>(4));
 	case 3:
-		return boost::make_tuple(type, (size_t)8);
+		return boost::make_tuple(type, static_cast<size_t>(8));
 	case 4:
-		return boost::make_tuple(type, (size_t)16);
+		return boost::make_tuple(type, static_cast<size_t>(16));
 	case 5:
 	{
 		uint8_t len = BluetoothConnector_record_read_number<uint8_t>(buf);
-		return boost::make_tuple(type, (size_t)len);
+		return boost::make_tuple(type, boost::numeric_cast<size_t>(len));
 	}
 	case 6:
 	{
 		uint16_t len = BluetoothConnector_record_read_number<uint16_t>(buf);
-		return boost::make_tuple(type, (size_t)len);
+		return boost::make_tuple(type, boost::numeric_cast<size_t>(len));
 	}
 	case 7:
 	{
 		uint32_t len = BluetoothConnector_record_read_number<uint32_t>(buf);
-		return boost::make_tuple(type, (size_t)len);
+		return boost::make_tuple(type, boost::numeric_cast<size_t>(len));
 	}
 	default:
 		throw InvalidArgumentException("Invalid bluetooth header");
@@ -252,7 +252,7 @@ public:
 					continue;
 				}
 
-				int res = connect(s1, (const sockaddr*)&a1, sizeof(a1));
+				int res = connect(s1, reinterpret_cast<const sockaddr*>(&a1), sizeof(a1));
 				if (res == SOCKET_ERROR)
 				{
 					continue;

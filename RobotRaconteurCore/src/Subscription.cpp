@@ -1495,7 +1495,7 @@ namespace RobotRaconteur
 
 		if (max_recv_packets >= 0)
 		{
-			while (recv_packets.size() > max_recv_packets)
+			while (recv_packets.size() > boost::numeric_cast<size_t>(max_recv_packets.data()))
 			{
 				recv_packets.pop_front();
 			}
@@ -1582,7 +1582,7 @@ namespace RobotRaconteur
 			
 			int32_t maximum_backlog = p->max_send_backlog;
 
-			if (maximum_backlog > -1 && ((int32_t)backlog.size()) + ((int32_t)active_sends.size()) > maximum_backlog)
+			if (maximum_backlog > -1 && (boost::numeric_cast<int32_t>(backlog.size()) + boost::numeric_cast<int32_t>(active_sends.size())) > maximum_backlog)
 			{
 				return false;
 			}

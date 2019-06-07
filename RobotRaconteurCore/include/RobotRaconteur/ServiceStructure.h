@@ -155,7 +155,7 @@ namespace RobotRaconteur
 	RR_INTRUSIVE_PTR<RRNamedArray<T> > pod_field_array_ToRRNamedArray(const pod_field_array<T, N, varlength>& i)
 	{
 		typedef typename RRPrimUtil<T>::ElementArrayType element_type;
-		typename RR_INTRUSIVE_PTR<RRArray<element_type> > a = AttachRRArrayCopy<element_type>((const element_type*)&i[0], i.size() * RRPrimUtil<T>::GetElementArrayCount());
+		typename RR_INTRUSIVE_PTR<RRArray<element_type> > a = AttachRRArrayCopy<element_type>(reinterpret_cast<const element_type*>(&i[0]), i.size() * RRPrimUtil<T>::GetElementArrayCount());
 		return new RRNamedArray<T>(a);
 	}
 
@@ -243,7 +243,7 @@ namespace RobotRaconteur
 			if (a->Type != RRPrimUtil<T>::GetElementTypeString()) throw DataTypeException("Pod data type mismatch");
 			//if (a->Elements.size() > N) throw OutOfRangeException("Array is too large for static vector size");
 			v.resize(a->Elements.size());
-			for (int32_t i = 0; i<(int32_t)a->Elements.size(); i++)
+			for (int32_t i = 0; i< boost::numeric_cast<int32_t>(a->Elements.size()); i++)
 			{
 				RR_INTRUSIVE_PTR<MessageElement> m = a->Elements.at(i);
 				int32_t key;
@@ -512,7 +512,7 @@ namespace RobotRaconteur
 		typename RR_INTRUSIVE_PTR<RRArray<element_type> > a1 = MessageElement::FindElement(a->Elements, "array")->template CastData<RRArray<element_type> >();
 		if (a1->size() != sizeof(T) / sizeof(element_type)) throw DataTypeException("Invalid scalar namedarray array format");
 
-		v = *((T*)a1->void_ptr());
+		v = *(static_cast<T*>(a1->void_ptr()));
 	}
 
 	template<typename T>

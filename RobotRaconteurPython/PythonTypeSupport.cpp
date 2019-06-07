@@ -355,7 +355,7 @@ namespace RobotRaconteur
 		}
 
 		boost::tuple<DataTypes, size_t>  s = GetNamedArrayElementTypeAndCount(struct_def, empty_defs, node, obj);
-		if (((size_t)PyArray_ITEMSIZE(data1)) != s.get<1>() * RRArrayElementSize(s.get<0>()))
+		if (boost::numeric_cast<size_t>(PyArray_ITEMSIZE(data1)) != s.get<1>() * RRArrayElementSize(s.get<0>()))
 		{
 			throw DataTypeException("Invalid namedarray type");
 		}
@@ -367,7 +367,7 @@ namespace RobotRaconteur
 		if (data2.get() == NULL) throw DataTypeException("Internal error");
 
 		
-		RR_INTRUSIVE_PTR<RRBaseArray> data3 = AllocateRRArrayByType(s.get<0>(), (size_t)(PyArray_SIZE(data1)*s.get<1>()));
+		RR_INTRUSIVE_PTR<RRBaseArray> data3 = AllocateRRArrayByType(s.get<0>(), (boost::numeric_cast<size_t>(PyArray_SIZE(data1))*s.get<1>()));
 		memcpy(data3->void_ptr(), PyArray_DATA(data2.get()), PyArray_NBYTES(data2.get()));
 
 		std::vector<RR_INTRUSIVE_PTR<MessageElement> > ret1;
@@ -631,7 +631,7 @@ namespace RobotRaconteur
 			element->ElementType = DataTypes_list_t;
 			std::vector<boost::intrusive_ptr<MessageElement> > mret;
 						
-			for (int32_t i = 0; i < (int32_t)PySequence_Size(data); i++)
+			for (int32_t i = 0; i < boost::numeric_cast<int32_t>(PySequence_Size(data)); i++)
 			{
 				PyAutoPtr<PyObject> dat1( PySequence_GetItem(data, (Py_ssize_t)i));
 				boost::intrusive_ptr<MessageElement> el = PackMessageElement(dat1.get(), type2, obj, node);
@@ -655,7 +655,7 @@ namespace RobotRaconteur
 
 			if (PySequence_Check(data))
 			{
-				for (int32_t i = 0; i < (int32_t)PySequence_Size(data); i++)
+				for (int32_t i = 0; i < boost::numeric_cast<int32_t>(PySequence_Size(data)); i++)
 				{
 					PyAutoPtr<PyObject> dat1(PySequence_GetItem(data, (Py_ssize_t)i));
 					boost::intrusive_ptr<MessageElement> el = PackMessageElement(dat1.get(), type2, obj, node);
@@ -702,7 +702,7 @@ namespace RobotRaconteur
 					boost::intrusive_ptr<MessageElement> el = PackMessageElement(val.get(), type2, obj, node);
 					el->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
 					el->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
-					el->ElementNumber = (int32_t)key_l;
+					el->ElementNumber = boost::numeric_cast<int32_t>(key_l);
 					mret.push_back(el);
 				}
 
@@ -845,12 +845,12 @@ namespace RobotRaconteur
 					}
 
 					int npy_dimcount = PyArray_NDIM((PyArrayObject*)data);
-					RR_INTRUSIVE_PTR<RRArray<uint32_t> > dims = AllocateRRArray<uint32_t>((size_t)npy_dimcount);
-					for (size_t i = 0; i < (size_t)npy_dimcount; i++)
+					RR_INTRUSIVE_PTR<RRArray<uint32_t> > dims = AllocateRRArray<uint32_t>(boost::numeric_cast<size_t>(npy_dimcount));
+					for (size_t i = 0; i < boost::numeric_cast<size_t>(npy_dimcount); i++)
 					{
 						npy_intp s;
 						s=PyArray_DIM((PyArrayObject*)data, (int)i);
-						(*dims)[i] = (uint32_t)s;
+						(*dims)[i] = boost::numeric_cast<uint32_t>(s);
 					}
 
 					boost::shared_ptr<TypeDefinition> dims_type = boost::make_shared<TypeDefinition>();
@@ -1091,7 +1091,7 @@ namespace RobotRaconteur
 			}
 		}
 
-		for (uint32_t i = 0; i < (uint32_t)l->Elements.size(); i++)
+		for (uint32_t i = 0; i < boost::numeric_cast<uint32_t>(l->Elements.size()); i++)
 		{
 			boost::intrusive_ptr<MessageElement>& el1 = l->Elements[i];
 
@@ -1383,7 +1383,7 @@ namespace RobotRaconteur
 						boost::intrusive_ptr<MessageElementList> l = element->CastData<MessageElementList>();
 						PyAutoPtr<PyObject> ret(PyList_New(l->Elements.size()));
 
-						for (uint32_t i = 0; i < (uint32_t)l->Elements.size(); i++)
+						for (uint32_t i = 0; i < boost::numeric_cast<uint32_t>(l->Elements.size()); i++)
 						{
 							boost::intrusive_ptr<MessageElement>& el1 = l->Elements[i];
 
@@ -1417,7 +1417,7 @@ namespace RobotRaconteur
 						boost::intrusive_ptr<MessageElementMap<int32_t> > l = element->CastData<MessageElementMap<int32_t> >();
 						PyAutoPtr<PyObject> ret(PyDict_New());
 
-						for (int32_t i = 0; i < (int32_t)l->Elements.size(); i++)
+						for (int32_t i = 0; i < boost::numeric_cast<int32_t>(l->Elements.size()); i++)
 						{
 							boost::intrusive_ptr<MessageElement>& el1 = l->Elements[i];
 							
@@ -1451,7 +1451,7 @@ namespace RobotRaconteur
 						boost::intrusive_ptr<MessageElementMap<std::string> > l = element->CastData<MessageElementMap<std::string> >();
 						PyAutoPtr<PyObject> ret(PyDict_New());
 
-						for (int32_t i = 0; i < (int32_t)l->Elements.size(); i++)
+						for (int32_t i = 0; i < boost::numeric_cast<int32_t>(l->Elements.size()); i++)
 						{
 							boost::intrusive_ptr<MessageElement>& el1 = l->Elements[i];
 							
@@ -1564,7 +1564,7 @@ namespace RobotRaconteur
 			boost::intrusive_ptr<MessageElementList> l = element->CastData<MessageElementList>();
 			PyAutoPtr<PyObject> ret(PyList_New(l->Elements.size()));
 
-			for (uint32_t i = 0; i < (uint32_t)l->Elements.size(); i++)
+			for (uint32_t i = 0; i < boost::numeric_cast<uint32_t>(l->Elements.size()); i++)
 			{
 				boost::intrusive_ptr<MessageElement>& el1 = l->Elements[i];
 
@@ -1600,7 +1600,7 @@ namespace RobotRaconteur
 			boost::intrusive_ptr<MessageElementMap<int32_t> > l = element->CastData<MessageElementMap<int32_t> >();
 			PyAutoPtr<PyObject> ret(PyDict_New());
 
-			for (int32_t i = 0; i < (int32_t)l->Elements.size(); i++)
+			for (int32_t i = 0; i < boost::numeric_cast<int32_t>(l->Elements.size()); i++)
 			{
 				boost::intrusive_ptr<MessageElement>& el1 = l->Elements[i];
 
@@ -1643,7 +1643,7 @@ namespace RobotRaconteur
 			boost::intrusive_ptr<MessageElementMap<std::string> > l = element->CastData<MessageElementMap<std::string> >();
 			PyAutoPtr<PyObject> ret(PyDict_New());
 
-			for (int32_t i = 0; i < (int32_t)l->Elements.size(); i++)
+			for (int32_t i = 0; i < boost::numeric_cast<int32_t>(l->Elements.size()); i++)
 			{
 				boost::intrusive_ptr<MessageElement>& el1 = l->Elements[i];
 
@@ -2396,7 +2396,7 @@ namespace RobotRaconteur
 			int ndim = PyArray_NDIM(array1);			
 			npy_intp* dims1 = PyArray_SHAPE(array1);
 			boost::intrusive_ptr<RRArray<uint32_t> > dims = AllocateRRArray<uint32_t>(ndim);
-			for (int i = 0; i < ndim; i++) { (*dims)[i] = (uint32_t)dims1[i]; }
+			for (int i = 0; i < ndim; i++) { (*dims)[i] = boost::numeric_cast<uint32_t>(dims1[i]); }
 
 			std::vector<boost::intrusive_ptr<MessageElement> > ret_vec;
 			ret_vec.push_back(CreateMessageElement("dims", dims));

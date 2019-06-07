@@ -45,6 +45,8 @@
 
 #include <boost/smart_ptr/intrusive_ref_counter.hpp>
 
+#include <boost/numeric/conversion/cast.hpp>
+
 #pragma once
 
 #define RR_NULL_CHECK(ptr) {if (!ptr) throw NullValueException("Null pointer");}
@@ -712,7 +714,7 @@ namespace RobotRaconteur
 	{
 		if (!in) throw NullValueException("Unexpected null array");
 		std::vector<Y> out(in->size());
-		for (size_t i=0; i<in->size(); i++) out[i]=(Y)(*in)[i];
+		for (size_t i=0; i<in->size(); i++) out[i]=boost::numeric_cast<Y>((*in)[i]);
 		return out;
 	}
 
@@ -720,7 +722,7 @@ namespace RobotRaconteur
 	static RR_INTRUSIVE_PTR<RRArray<Y> > VectorToRRArray(std::vector<U> in)
 	{
 		RR_INTRUSIVE_PTR<RRArray<Y> > out=AllocateRRArray<Y>(in.size());
-		for (size_t i=0; i<in.size(); i++) (*out)[i]=(Y)in[i];
+		for (size_t i=0; i<in.size(); i++) (*out)[i]=boost::numeric_cast<Y>(in[i]);
 		return out;
 	}
 
@@ -730,7 +732,7 @@ namespace RobotRaconteur
 		if (!in) throw NullValueException("Unexpected null array");
 		if (in->size()!=N) throw OutOfRangeException("Array is incorrect size");
 		boost::array<Y,N> out;
-		for (size_t i=0; i<N; i++) out[i]=(Y)(*in)[i];
+		for (size_t i=0; i<N; i++) out[i]=boost::numeric_cast<Y>((*in)[i]);
 		return out;
 	}
 
@@ -739,14 +741,14 @@ namespace RobotRaconteur
 	{
 		if (!in) throw NullValueException("Unexpected null array");
 		if (in->size() != N) throw OutOfRangeException("Array is incorrect size");		
-		for (size_t i = 0; i<N; i++) out[i] = (Y)(*in)[i];		
+		for (size_t i = 0; i<N; i++) out[i] = boost::numeric_cast<Y>((*in)[i]);		
 	}
 
 	template <typename Y, typename U,std::size_t N>
 	static RR_INTRUSIVE_PTR<RRArray<Y> > ArrayToRRArray(boost::array<U,N> in)
 	{
 		RR_INTRUSIVE_PTR<RRArray<Y> > out=AllocateRRArray<Y>(N);
-		for (size_t i=0; i<N; i++) (*out)[i]=(Y)in[i];
+		for (size_t i=0; i<N; i++) (*out)[i]=boost::numeric_cast<Y>(in[i]);
 		return out;
 	}
 
@@ -756,7 +758,7 @@ namespace RobotRaconteur
 		if (!in) throw NullValueException("Unexpected null array");
 		if (in->size() > N) throw OutOfRangeException("Array is too large for static vector size");
 		boost::container::static_vector<Y, N> out(in->size());
-		for (size_t i = 0; i<in->size(); i++) out[i] = (Y)(*in)[i];
+		for (size_t i = 0; i<in->size(); i++) out[i] = boost::numeric_cast<Y>((*in)[i]);
 		return out;
 	}
 
@@ -766,14 +768,14 @@ namespace RobotRaconteur
 		if (!in) throw NullValueException("Unexpected null array");
 		if (in->size() > N) throw OutOfRangeException("Array is too large for static vector size");		
 		out.resize(in->size());
-		for (size_t i = 0; i<in->size(); i++) out[i] = (Y)(*in)[i];		
+		for (size_t i = 0; i<in->size(); i++) out[i] = boost::numeric_cast<Y>((*in)[i]);		
 	}
 
 	template <typename Y, typename U, std::size_t N>
 	static RR_INTRUSIVE_PTR<RRArray<Y> > StaticVectorToRRArray(boost::container::static_vector<U, N> in)
 	{
 		RR_INTRUSIVE_PTR<RRArray<Y> > out = AllocateRRArray<Y>(in.size());
-		for (size_t i = 0; i<in.size(); i++) (*out)[i] = (Y)in[i];
+		for (size_t i = 0; i<in.size(); i++) (*out)[i] = boost::numeric_cast<Y>(in[i]);
 		return out;
 	}
 
@@ -1335,13 +1337,13 @@ namespace RobotRaconteur
 		typedef std::ptrdiff_t difference_type;
 
 		// iterator support
-		iterator        begin() { return (T*)rr_array->begin(); }
-		const_iterator  begin() const { return (const T*)rr_array->begin(); }
-		const_iterator cbegin() const { return (const T*)rr_array->begin(); }
+		iterator        begin() { return static_cast<T*>(rr_array->begin()); }
+		const_iterator  begin() const { return static_cast<const T*>(rr_array->begin()); }
+		const_iterator cbegin() const { return static_cast<const T*>(rr_array->begin()); }
 
-		iterator        end() { return (T*)rr_array->end(); }
-		const_iterator  end() const { return (T*)rr_array->end(); }
-		const_iterator cend() const { return (T*)rr_array->end(); }
+		iterator        end() { return static_cast<T*>(rr_array->end()); }
+		const_iterator  end() const { return static_cast<T*>(rr_array->end()); }
+		const_iterator cend() const { return static_cast<T*>(rr_array->end()); }
 		typedef boost::reverse_iterator<iterator> reverse_iterator;
 		typedef boost::reverse_iterator<const_iterator> const_reverse_iterator;
 
@@ -1365,18 +1367,18 @@ namespace RobotRaconteur
 		reference operator[](size_type i)
 		{
 			BOOST_ASSERT_MSG(i < size(), "out of range");
-			return ((T*)rr_array->void_ptr())[i];
+			return (static_cast<T*>(rr_array->void_ptr())[i]);
 		}
 
 		const_reference operator[](size_type i) const
 		{
 			BOOST_ASSERT_MSG(i < size(), "out of range");
-			return ((T*)rr_array->void_ptr())[i];
+			return (static_cast<T*>(rr_array->void_ptr())[i]);
 		}
 
 		// at() with range check
-		reference at(size_type i) { rangecheck(i); return ((T*)rr_array->void_ptr())[i]; }
-		const_reference at(size_type i) const { rangecheck(i); ((T*)rr_array->void_ptr())[i]; }
+		reference at(size_type i) { rangecheck(i); return (static_cast<T*>(rr_array->void_ptr())[i]); }
+		const_reference at(size_type i) const { rangecheck(i); (static_cast<T*>(rr_array->void_ptr())[i]); }
 
 		// front() and back()
 		reference front()

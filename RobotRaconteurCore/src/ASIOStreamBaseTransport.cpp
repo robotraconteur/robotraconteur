@@ -266,7 +266,7 @@ void ASIOStreamBaseTransport::AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boos
 		message_size = m->ComputeSize3();
 	}
 		
-	if ((int32_t)message_size > (max_message_size-100)) throw ProtocolException("Message larger than maximum message size");
+	if (boost::numeric_cast<int32_t>(message_size) > (max_message_size-100)) throw ProtocolException("Message larger than maximum message size");
 
 	if (!send_large_transfer_authorized)
 	{
@@ -813,7 +813,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage1(size_t startpos, const boost::s
 
 			if (size<8) throw ProtocolException("");
 
-			if ((int32_t)size > (max_message_size)) throw ProtocolException("");
+			if (boost::numeric_cast<int32_t>(size) > (max_message_size)) throw ProtocolException("");
 
 			if (!recv_large_transfer_authorized)
 			{
@@ -1328,7 +1328,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
 				recvbuf_end = recvbuf_pos;				
 
 				size_t l3 = std::min(l2, async_recv_size - async_recv_pos);
-				l3 = std::min(l3, (size_t)1024);
+				l3 = std::min(l3, static_cast<size_t>(1024));
 
 				active_recv_bufs.clear();
 				active_recv_bufs.push_back(boost::asio::buffer(recvbuf.get() + async_recv_pos, l3));
@@ -1348,7 +1348,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
 					async_recv_continue_buf_count = 0;
 
 					size_t l1 = std::min(recvbuf_len, async_recv_size - async_recv_pos);
-					l1 = std::min(l1, (size_t)1024);
+					l1 = std::min(l1, static_cast<size_t>(1024));
 
 					active_recv_bufs.clear();
 					active_recv_bufs.push_back(boost::asio::buffer(recvbuf.get(), l1));
@@ -1368,7 +1368,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
 					size_t l2 = boost::asio::buffer_size(continue_bufs);
 					if (l2 > l3) throw ProtocolException("");
 					size_t l1 = std::min (recvbuf_len, l3 - l2);
-					l1 = std::min(l1, (size_t)1024);
+					l1 = std::min(l1, static_cast<size_t>(1024));
 					
 					boost::range::copy(continue_bufs, std::back_inserter(active_recv_bufs));
 					if (l1 > 0)
@@ -2519,7 +2519,7 @@ void ASIOStreamBaseTransport::UpdateStringTable()
 				codes.push_back(e->code);
 				string_table_3_confirming.push_back(e->code);
 				RR_INTRUSIVE_PTR<MessageElement> el1 = CreateMessageElement("", stringToRRArray(e->value));
-				el1->ElementNumber = (int32_t)e->code;
+				el1->ElementNumber = boost::numeric_cast<int32_t>(e->code);
 				el1->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
 				el1->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
 				el.push_back(el1);
@@ -2631,7 +2631,7 @@ void ASIOStreamBaseTransport::UpdateStringTable2(RR_INTRUSIVE_PTR<Message> m)
 
 			std::string c1 = RRArrayToString(c);
 			if (e->ElementNumber < 2) continue;
-			uint32_t c2 = (uint32_t)e->ElementNumber;
+			uint32_t c2 = boost::numeric_cast<uint32_t>(e->ElementNumber);
 			if (this->string_table3->AddCode(c2, c1))
 			{
 				o.push_back(c2);

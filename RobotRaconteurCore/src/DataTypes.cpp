@@ -319,7 +319,7 @@ TimeSpec TimeSpec::Now(RR_SHARED_PTR<RobotRaconteurNode> node)
 	
 
 	uint64_t sec=diff.total_seconds();
-	uint32_t nanosec=(uint32_t)(diff.fractional_seconds() * (uint32_t)pow(10.0,(9-diff.num_fractional_digits())));
+	uint32_t nanosec=boost::numeric_cast<uint32_t>((diff.fractional_seconds() * boost::numeric_cast<uint32_t>(pow(10.0,(9-diff.num_fractional_digits())))));
 
 	return TimeSpec(sec,nanosec);
 }
@@ -462,14 +462,14 @@ namespace detail
 
 			stridea.resize(count.size());
 			stridea[0] = 1;
-			for (uint32_t i = 1; i < (uint32_t)count.size(); i++)
+			for (uint32_t i = 1; i < boost::numeric_cast<uint32_t>(count.size()); i++)
 			{
 				stridea[i] = stridea[i - 1] * mema_dims[i - 1];				
 			}
 
 			strideb.resize(count.size());
 			strideb[0] = 1;
-			for (uint32_t i = 1; i < (uint32_t)count.size(); i++)
+			for (uint32_t i = 1; i < boost::numeric_cast<uint32_t>(count.size()); i++)
 			{
 				strideb[i] = strideb[i - 1] * memb_dims[i - 1];
 			}
@@ -496,10 +496,10 @@ namespace detail
 			int b = 0;
 
 			indexa = 0;
-			for (uint32_t j = 0; j < (uint32_t)count.size(); j++)
+			for (uint32_t j = 0; j < boost::numeric_cast<uint32_t>(count.size()); j++)
 				indexa += (current_count[j] + mema_pos[j]) * stridea[j];
 			indexb = 0;
-			for (uint32_t j = 0; j < (uint32_t)count.size(); j++)
+			for (uint32_t j = 0; j < boost::numeric_cast<uint32_t>(count.size()); j++)
 				indexb += (current_count[j] + memb_pos[j]) * strideb[j];
 						
 			len = count[0];
@@ -511,12 +511,12 @@ namespace detail
 			}
 
 			current_count[1]++;
-			for (uint32_t j = 1; j < (uint32_t)count.size(); j++)
+			for (uint32_t j = 1; j < boost::numeric_cast<uint32_t>(count.size()); j++)
 			{
 				if (current_count[j] >(count[j] - 1))
 				{
 					current_count[j] = current_count[j] - count[j];
-					if (j < (uint32_t)count.size() - 1)
+					if (j < boost::numeric_cast<uint32_t>(count.size() - 1))
 					{
 						current_count[j + 1]++;
 					}
@@ -571,15 +571,15 @@ namespace detail
 		std::stringstream in(index);
 		std::stringstream out;
 
-		while (in.tellg()<(int)index.length() && ((int)in.tellg()) != -1)
+		while (in.tellg()<boost::numeric_cast<int>(index.length()) && (static_cast<int>(in.tellg())) != -1)
 		{
 			int c = in.get();
 
-			if ((char)c != '%')
+			if (static_cast<char>(c) != '%')
 			{
 				out.put(c);
 			}
-			else if ((char)c == '%')
+			else if (static_cast<char>(c) == '%')
 			{
 				char in2_c[3];
 				in.read(in2_c, 2);

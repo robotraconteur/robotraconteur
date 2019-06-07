@@ -66,8 +66,8 @@ namespace RobotRaconteur
 		}
 
 		if (s > std::numeric_limits<uint32_t>::max()) throw ProtocolException("Message exceeds maximum length");
-		header->UpdateHeader((uint32_t)s, static_cast<uint16_t>(entries.size()));
-		return static_cast<uint32_t>(s);
+		header->UpdateHeader(boost::numeric_cast<uint32_t>(s), boost::numeric_cast<uint16_t>(entries.size()));
+		return boost::numeric_cast<uint32_t>(s);
 	}
 
 	void Message::Write(ArrayBinaryWriter &w)
@@ -77,7 +77,7 @@ namespace RobotRaconteur
 
 		w.PushRelativeLimit(s);
 
-		header->UpdateHeader(s, static_cast<uint16_t>(entries.size()));
+		header->UpdateHeader(s, boost::numeric_cast<uint16_t>(entries.size()));
 		header->Write(w);
 		BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageEntry>& e, entries)
 		{
@@ -108,7 +108,7 @@ namespace RobotRaconteur
 
 	uint32_t Message::ComputeSize3()
 	{
-		header->EntryCount = (uint16_t)entries.size();
+		header->EntryCount = boost::numeric_cast<uint16_t>(entries.size());
 		uint64_t s = 0;
 		BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageEntry>& e, entries)
 		{
@@ -118,12 +118,12 @@ namespace RobotRaconteur
 
 		if (s > std::numeric_limits<uint32_t>::max()) throw ProtocolException("Message exceeds maximum length");
 
-		header->UpdateHeader3((uint32_t)s, static_cast<uint16_t>(entries.size()));
+		header->UpdateHeader3(boost::numeric_cast<uint32_t>(s), boost::numeric_cast<uint16_t>(entries.size()));
 
 		uint32_t s1 = header->MessageSize;
 
 		if (s1 > std::numeric_limits<uint32_t>::max()) throw ProtocolException("Message exceeds maximum length");
-		return static_cast<uint32_t>(s1);
+		return boost::numeric_cast<uint32_t>(s1);
 	}
 
 	void Message::Write3(ArrayBinaryWriter &w, const uint16_t& version_minor)
@@ -165,9 +165,9 @@ namespace RobotRaconteur
 
 	uint16_t MessageHeader::ComputeSize()
 	{
-		uint32_t s1=(uint32_t)ArrayBinaryWriter::GetStringByteCount8(SenderNodeName);
-		uint32_t s2=(uint32_t)ArrayBinaryWriter::GetStringByteCount8(ReceiverNodeName);
-		uint32_t s3=(uint32_t)ArrayBinaryWriter::GetStringByteCount8(MetaData);
+		uint32_t s1=boost::numeric_cast<uint32_t>(ArrayBinaryWriter::GetStringByteCount8(SenderNodeName));
+		uint32_t s2=boost::numeric_cast<uint32_t>(ArrayBinaryWriter::GetStringByteCount8(ReceiverNodeName));
+		uint32_t s3=boost::numeric_cast<uint32_t>(ArrayBinaryWriter::GetStringByteCount8(MetaData));
 
 		if (s1 > std::numeric_limits<uint16_t>::max()) throw ProtocolException("SenderNodeName exceeds maximum length");
 		if (s2 > std::numeric_limits<uint16_t>::max()) throw ProtocolException("ReceiverNodeName exceeds maximum length");
@@ -177,7 +177,7 @@ namespace RobotRaconteur
 
 		if (s > std::numeric_limits<uint16_t>::max()) throw ProtocolException("MessageHeader exceeds maximum length");
 
-		return static_cast<uint16_t>(s );
+		return boost::numeric_cast<uint16_t>(s );
 	}
 
 	void MessageHeader::UpdateHeader(uint32_t message_size, uint16_t entry_count)
@@ -197,13 +197,13 @@ namespace RobotRaconteur
 		w.PushRelativeLimit(HeaderSize);
 		w.WriteString8("RRAC");
 		w.WriteNumber(MessageSize);
-		w.WriteNumber((uint16_t)(2));
+		w.WriteNumber(boost::numeric_cast<uint16_t>(2));
 
 		if (HeaderSize > std::numeric_limits<uint16_t>::max())
 		{
 			throw ProtocolException("Header too large for Message 2");
 		}
-		w.WriteNumber((uint16_t)HeaderSize);
+		w.WriteNumber(boost::numeric_cast<uint16_t>(HeaderSize));
 
 		const boost::array<uint8_t,16> bSenderNodeID = SenderNodeID.ToByteArray();
 		const boost::array<uint8_t,16> bReceiverNodeID = ReceiverNodeID.ToByteArray();
@@ -217,13 +217,13 @@ namespace RobotRaconteur
 		};
 		w.WriteNumber(SenderEndpoint);
 		w.WriteNumber(ReceiverEndpoint);
-		w.WriteNumber((uint16_t)(ArrayBinaryWriter::GetStringByteCount8(SenderNodeName)));
+		w.WriteNumber(boost::numeric_cast<uint16_t>(ArrayBinaryWriter::GetStringByteCount8(SenderNodeName)));
 		w.WriteString8(SenderNodeName);
-		w.WriteNumber((uint16_t)(ArrayBinaryWriter::GetStringByteCount8(ReceiverNodeName)));
+		w.WriteNumber(boost::numeric_cast<uint16_t>(ArrayBinaryWriter::GetStringByteCount8(ReceiverNodeName)));
 		w.WriteString8(ReceiverNodeName);
-		w.WriteNumber((uint16_t)(ArrayBinaryWriter::GetStringByteCount8(MetaData)));
+		w.WriteNumber(boost::numeric_cast<uint16_t>(ArrayBinaryWriter::GetStringByteCount8(MetaData)));
 		w.WriteString8(MetaData);
-		w.WriteNumber((uint16_t)(EntryCount));
+		w.WriteNumber(boost::numeric_cast<uint16_t>(EntryCount));
 		w.WriteNumber(MessageID);
 		w.WriteNumber(MessageResID);
 		
@@ -362,7 +362,7 @@ namespace RobotRaconteur
 
 		if (s > std::numeric_limits<uint32_t>::max()) throw ProtocolException("MessageHeader exceeds maximum length");
 
-		return static_cast<uint32_t>(s);
+		return boost::numeric_cast<uint32_t>(s);
 	}
 
 	void MessageHeader::UpdateHeader3(uint32_t message_entry_size, uint16_t entry_count)
@@ -398,7 +398,7 @@ namespace RobotRaconteur
 		w.PushRelativeLimit(HeaderSize);
 		w.WriteString8("RRAC");
 		w.WriteNumber(MessageSize);
-		w.WriteNumber((uint16_t)(3));
+		w.WriteNumber(boost::numeric_cast<uint16_t>(3));
 
 		w.WriteUintX(HeaderSize);
 		w.WriteNumber(MessageFlags);
@@ -614,7 +614,7 @@ namespace RobotRaconteur
 		{
 			uint32_t c = r.ReadUintX();
 			if (c > std::numeric_limits<uint16_t>::max()) throw ProtocolException("Too many entries in message");
-			EntryCount = (uint16_t)c;
+			EntryCount = boost::numeric_cast<uint16_t>(c);
 		}
 		else
 		{
@@ -697,9 +697,9 @@ namespace RobotRaconteur
 			s += e->ElementSize;
 		}
 
-		uint32_t s1 = static_cast<uint32_t>(ArrayBinaryWriter::GetStringByteCount8(ServicePath));
-		uint32_t s2 = static_cast<uint32_t>(ArrayBinaryWriter::GetStringByteCount8(MemberName));
-		uint32_t s3 = static_cast<uint32_t>(ArrayBinaryWriter::GetStringByteCount8(MetaData));
+		uint32_t s1 = boost::numeric_cast<uint32_t>(ArrayBinaryWriter::GetStringByteCount8(ServicePath));
+		uint32_t s2 = boost::numeric_cast<uint32_t>(ArrayBinaryWriter::GetStringByteCount8(MemberName));
+		uint32_t s3 = boost::numeric_cast<uint32_t>(ArrayBinaryWriter::GetStringByteCount8(MetaData));
 
 		if (s1 > std::numeric_limits<uint16_t>::max()) throw ProtocolException("ServicePath exceeds maximum length");
 		if (s2 > std::numeric_limits<uint16_t>::max()) throw ProtocolException("MemberName exceeds maximum length");
@@ -709,7 +709,7 @@ namespace RobotRaconteur
 
 		if (s > std::numeric_limits<uint32_t>::max()) throw ProtocolException("MessageEntry exceeds maximum length");
 
-		return static_cast<uint32_t>(s);
+		return boost::numeric_cast<uint32_t>(s);
 	}
 
 	RR_INTRUSIVE_PTR<MessageElement> MessageEntry::FindElement(const std::string& name)
@@ -769,18 +769,18 @@ namespace RobotRaconteur
 		w.PushRelativeLimit(EntrySize);
 		
 		w.WriteNumber(EntrySize);
-		w.WriteNumber((uint16_t)(EntryType));
-		w.WriteNumber((uint16_t)(0));
+		w.WriteNumber(static_cast<uint16_t>(EntryType));
+		w.WriteNumber(static_cast<uint16_t>(0));
 
-		w.WriteNumber((uint16_t)(ArrayBinaryWriter::GetStringByteCount8(ServicePath)));
+		w.WriteNumber(boost::numeric_cast<uint16_t>(ArrayBinaryWriter::GetStringByteCount8(ServicePath)));
 		w.WriteString8(ServicePath);
-		w.WriteNumber((uint16_t)(ArrayBinaryWriter::GetStringByteCount8(MemberName)));
+		w.WriteNumber(boost::numeric_cast<uint16_t>(ArrayBinaryWriter::GetStringByteCount8(MemberName)));
 		w.WriteString8(MemberName);
 		w.WriteNumber(RequestID);
-		w.WriteNumber((uint16_t)(Error));
-		 w.WriteNumber((uint16_t)(ArrayBinaryWriter::GetStringByteCount8(MetaData)));
+		w.WriteNumber(static_cast<uint16_t>(Error));
+		w.WriteNumber(boost::numeric_cast<uint16_t>(ArrayBinaryWriter::GetStringByteCount8(MetaData)));
 		w.WriteString8(MetaData);
-		w.WriteNumber((uint16_t)(elements.size()));
+		w.WriteNumber(boost::numeric_cast<uint16_t>(elements.size()));
 
 		BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& e, elements)
 		{
@@ -798,7 +798,7 @@ namespace RobotRaconteur
 
 		r.PushRelativeLimit(EntrySize-4);
 
-		EntryType = static_cast<MessageEntryType>(r.ReadNumber<uint16_t>());
+		EntryType = boost::numeric_cast<MessageEntryType>(r.ReadNumber<uint16_t>());
 		r.ReadNumber<uint16_t>();
 
 		uint16_t sname_s = r.ReadNumber<uint16_t>();
@@ -806,7 +806,7 @@ namespace RobotRaconteur
 		uint16_t mname_s = r.ReadNumber<uint16_t>();
 		MemberName = r.ReadString8(mname_s);
 		RequestID = r.ReadNumber<uint32_t>();
-		Error = static_cast<MessageErrorType>(r.ReadNumber<uint16_t>());
+		Error = boost::numeric_cast<MessageErrorType>(r.ReadNumber<uint16_t>());
 
 		uint16_t metadata_s = r.ReadNumber<uint16_t>();
 		MetaData = r.ReadString8(metadata_s);
@@ -842,7 +842,7 @@ namespace RobotRaconteur
 
 		if (EntryFlags & MessageEntryFlags_SERVICE_PATH_STR)
 		{
-			s += static_cast<uint32_t>(ArrayBinaryWriter::GetStringByteCount8WithXLen(ServicePath));
+			s += boost::numeric_cast<uint32_t>(ArrayBinaryWriter::GetStringByteCount8WithXLen(ServicePath));
 			send_streamid = false;
 		}
 		if (EntryFlags & MessageEntryFlags_SERVICE_PATH_CODE)
@@ -853,7 +853,7 @@ namespace RobotRaconteur
 
 		if (EntryFlags & MessageEntryFlags_MEMBER_NAME_STR)
 		{
-			s += static_cast<uint32_t>(ArrayBinaryWriter::GetStringByteCount8WithXLen(MemberName));
+			s += boost::numeric_cast<uint32_t>(ArrayBinaryWriter::GetStringByteCount8WithXLen(MemberName));
 			send_streamid = false;
 		}
 		if (EntryFlags & MessageEntryFlags_MEMBER_NAME_CODE)
@@ -884,14 +884,14 @@ namespace RobotRaconteur
 
 		if (EntryFlags & MessageEntryFlags_META_INFO)
 		{
-			s += static_cast<uint32_t>(ArrayBinaryWriter::GetStringByteCount8WithXLen(MetaData));
+			s += boost::numeric_cast<uint32_t>(ArrayBinaryWriter::GetStringByteCount8WithXLen(MetaData));
 		}		
 
 		s += ArrayBinaryWriter::GetUintXByteCount(elements.size());
 
 		s = ArrayBinaryWriter::GetSizePlusUintX(s);
 
-		return static_cast<uint32_t>(s);
+		return boost::numeric_cast<uint32_t>(s);
 	}
 
 	void MessageEntry::UpdateData3()
@@ -937,7 +937,7 @@ namespace RobotRaconteur
 
 		w.WriteUintX(EntrySize);
 		w.WriteNumber(EntryFlags);
-		w.WriteNumber((uint16_t)(EntryType));
+		w.WriteNumber(static_cast<uint16_t>(EntryType));
 		
 		bool send_streamid = true;
 
@@ -977,7 +977,7 @@ namespace RobotRaconteur
 
 		if (EntryFlags & MessageEntryFlags_ERROR)
 		{
-			w.WriteNumber((uint16_t)(Error));
+			w.WriteNumber(static_cast<uint16_t>(Error));
 		}
 
 		if (EntryFlags & MessageEntryFlags_META_INFO)
@@ -991,7 +991,7 @@ namespace RobotRaconteur
 			w.WriteIntX(EntryTimeSpec.nanoseconds);
 		}
 
-		w.WriteUintX((uint32_t)elements.size());
+		w.WriteUintX(boost::numeric_cast<uint32_t>(elements.size()));
 
 		BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& e, elements)
 		{
@@ -1012,7 +1012,7 @@ namespace RobotRaconteur
 		r.PushRelativeLimit(EntrySize - ArrayBinaryWriter::GetUintXByteCount(EntrySize));
 
 		EntryFlags = r.ReadNumber<uint8_t>();
-		EntryType = static_cast<MessageEntryType>(r.ReadNumber<uint16_t>());
+		EntryType = boost::numeric_cast<MessageEntryType>(r.ReadNumber<uint16_t>());
 		
 		bool read_streamid = true;
 
@@ -1054,7 +1054,7 @@ namespace RobotRaconteur
 
 		if (EntryFlags & MessageEntryFlags_ERROR)
 		{
-			Error = static_cast<MessageErrorType>(r.ReadNumber<uint16_t>());
+			Error = boost::numeric_cast<MessageErrorType>(r.ReadNumber<uint16_t>());
 		}
 
 		if (EntryFlags & MessageEntryFlags_META_INFO)
@@ -1140,9 +1140,9 @@ namespace RobotRaconteur
 	uint32_t MessageElement::ComputeSize()
 	{
 		uint64_t s = 16;
-		uint32_t s1= static_cast<uint32_t>(ArrayBinaryWriter::GetStringByteCount8(ElementName));
-		uint32_t s2=static_cast<uint32_t>(ArrayBinaryWriter::GetStringByteCount8(ElementTypeName));
-		uint32_t s3=static_cast<uint32_t>(ArrayBinaryWriter::GetStringByteCount8(MetaData));
+		uint32_t s1= boost::numeric_cast<uint32_t>(ArrayBinaryWriter::GetStringByteCount8(ElementName));
+		uint32_t s2=boost::numeric_cast<uint32_t>(ArrayBinaryWriter::GetStringByteCount8(ElementTypeName));
+		uint32_t s3=boost::numeric_cast<uint32_t>(ArrayBinaryWriter::GetStringByteCount8(MetaData));
 
 		if (s1 > std::numeric_limits<uint16_t>::max()) throw ProtocolException("ElementName exceeds maximum length");
 		if (s2 > std::numeric_limits<uint16_t>::max()) throw ProtocolException("ElementTypeName exceeds maximum length");
@@ -1277,7 +1277,7 @@ namespace RobotRaconteur
 				
 		if (s > std::numeric_limits<uint32_t>::max()) throw ProtocolException("MessageElement exceeds maximum length");
 
-		return static_cast<uint32_t>(s);
+		return boost::numeric_cast<uint32_t>(s);
 	}
 
 	void MessageElement::UpdateData()
@@ -1323,14 +1323,14 @@ namespace RobotRaconteur
 			{
 				RR_INTRUSIVE_PTR<RRBaseArray> rdat = RR_DYNAMIC_POINTER_CAST<RRBaseArray>(dat);
 				if (!rdat) throw DataTypeException("");
-				DataCount=(uint32_t)rdat->size();
+				DataCount= boost::numeric_cast<uint32_t>(rdat->size());
 				break;
 			}
 		case DataTypes_structure_t:
 			{
 				RR_INTRUSIVE_PTR<MessageElementStructure> sdat = RR_DYNAMIC_POINTER_CAST<MessageElementStructure>(dat);
 				if (!sdat) throw DataTypeException("");
-				DataCount = (uint32_t)sdat->Elements.size();
+				DataCount = boost::numeric_cast<uint32_t>(sdat->Elements.size());
 				ElementTypeName=sdat->GetTypeString();
 				break;
 			}
@@ -1338,35 +1338,35 @@ namespace RobotRaconteur
 			{
 				RR_INTRUSIVE_PTR<MessageElementMap<int32_t> > vdat = RR_DYNAMIC_POINTER_CAST<MessageElementMap<int32_t> >(dat);
 				if (!vdat) throw DataTypeException("");
-				DataCount = (uint32_t)vdat->Elements.size();
+				DataCount = boost::numeric_cast<uint32_t>(vdat->Elements.size());
 				break;
 			}
 		case DataTypes_dictionary_t:
 			{
 				RR_INTRUSIVE_PTR<MessageElementMap<std::string> > ddat = RR_STATIC_POINTER_CAST<MessageElementMap<std::string> >(dat);
 				if (!ddat) throw DataTypeException("");
-				DataCount = (uint32_t)ddat->Elements.size();
+				DataCount = boost::numeric_cast<uint32_t>(ddat->Elements.size());
 				break;
 			}
 		case DataTypes_multidimarray_t:
 			{
 				RR_INTRUSIVE_PTR<MessageElementMultiDimArray> mdat = RR_STATIC_POINTER_CAST<MessageElementMultiDimArray>(dat);
 				if (!mdat) throw DataTypeException("");
-				DataCount = (uint32_t)mdat->Elements.size();
+				DataCount = boost::numeric_cast<uint32_t>(mdat->Elements.size());
 				break;
 			}
 		case DataTypes_list_t:
 			{
 				RR_INTRUSIVE_PTR<MessageElementList> ddat = RR_STATIC_POINTER_CAST<MessageElementList>(dat);
 				if (!ddat) throw DataTypeException("");
-				DataCount = (uint32_t)ddat->Elements.size();
+				DataCount = boost::numeric_cast<uint32_t>(ddat->Elements.size());
 				break;
 			}
 		case DataTypes_pod_t:
 		{
 			RR_INTRUSIVE_PTR<MessageElementPod> sdat = RR_STATIC_POINTER_CAST<MessageElementPod>(dat);
 			if (!sdat) throw DataTypeException("");
-			DataCount = (uint32_t)sdat->Elements.size();
+			DataCount = boost::numeric_cast<uint32_t>(sdat->Elements.size());
 			ElementTypeName = sdat->GetTypeString();
 			break;
 		}
@@ -1374,7 +1374,7 @@ namespace RobotRaconteur
 		{
 			RR_INTRUSIVE_PTR<MessageElementPodArray> sdat = RR_STATIC_POINTER_CAST<MessageElementPodArray>(dat);
 			if (!sdat) throw DataTypeException("");
-			DataCount = (uint32_t)sdat->Elements.size();
+			DataCount = boost::numeric_cast<uint32_t>(sdat->Elements.size());
 			ElementTypeName = sdat->GetTypeString();
 			break;
 		}
@@ -1382,7 +1382,7 @@ namespace RobotRaconteur
 		{
 			RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementPodMultiDimArray>(dat);
 			if (!sdat) throw DataTypeException("");
-			DataCount = (uint32_t)sdat->Elements.size();
+			DataCount = boost::numeric_cast<uint32_t>(sdat->Elements.size());
 			ElementTypeName = sdat->GetTypeString();
 			break;
 		}
@@ -1390,7 +1390,7 @@ namespace RobotRaconteur
 		{
 			RR_INTRUSIVE_PTR<MessageElementNamedArray> sdat = RR_STATIC_POINTER_CAST<MessageElementNamedArray>(dat);
 			if (!sdat) throw DataTypeException("");
-			DataCount = (uint32_t)sdat->Elements.size();
+			DataCount = boost::numeric_cast<uint32_t>(sdat->Elements.size());
 			ElementTypeName = sdat->GetTypeString();
 			break;
 		}
@@ -1398,7 +1398,7 @@ namespace RobotRaconteur
 		{
 			RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementNamedMultiDimArray>(dat);
 			if (!sdat) throw DataTypeException("");
-			DataCount = (uint32_t)sdat->Elements.size();
+			DataCount = boost::numeric_cast<uint32_t>(sdat->Elements.size());
 			ElementTypeName = sdat->GetTypeString();
 			break;
 		}
@@ -1418,14 +1418,14 @@ namespace RobotRaconteur
 		w.PushRelativeLimit(ElementSize);
 
 		w.WriteNumber(ElementSize);
-		w.WriteNumber((uint16_t)(ArrayBinaryWriter::GetStringByteCount8(ElementName)));
+		w.WriteNumber(boost::numeric_cast<uint16_t>(ArrayBinaryWriter::GetStringByteCount8(ElementName)));
 		w.WriteString8(ElementName);
-		w.WriteNumber((uint16_t)(ElementType));
-		w.WriteNumber((uint16_t)(ArrayBinaryWriter::GetStringByteCount8(ElementTypeName)));
+		w.WriteNumber(static_cast<uint16_t>(ElementType));
+		w.WriteNumber(boost::numeric_cast<uint16_t>(ArrayBinaryWriter::GetStringByteCount8(ElementTypeName)));
 		w.WriteString8(ElementTypeName);
-		w.WriteNumber((uint16_t)(ArrayBinaryWriter::GetStringByteCount8(MetaData)));
+		w.WriteNumber(boost::numeric_cast<uint16_t>(ArrayBinaryWriter::GetStringByteCount8(MetaData)));
 		w.WriteString8(MetaData);
-		w.WriteNumber((uint32_t)(DataCount));
+		w.WriteNumber(boost::numeric_cast<uint32_t>(DataCount));
 
 
 		switch (ElementType)
@@ -1551,7 +1551,7 @@ namespace RobotRaconteur
 
 		uint16_t name_s = r.ReadNumber<uint16_t>();
 		ElementName = r.ReadString8(name_s);
-		ElementType = (DataTypes)(r.ReadNumber<uint16_t>());
+		ElementType = static_cast<DataTypes>(r.ReadNumber<uint16_t>());
 		uint16_t nametype_s = r.ReadNumber<uint16_t>();
 		ElementTypeName = r.ReadString8(nametype_s);
 		uint16_t metadata_s = r.ReadNumber<uint16_t>();
@@ -1577,7 +1577,7 @@ namespace RobotRaconteur
 		case DataTypes_csingle_t:
 		case DataTypes_bool_t:
 		{
-			if ((int32_t)(RRArrayElementSize(ElementType)*DataCount) > r.DistanceFromLimit())
+			if (boost::numeric_cast<int32_t>(RRArrayElementSize(ElementType)*DataCount) > r.DistanceFromLimit())
 			{
 				throw DataSerializationException("Error in message format");
 			}
@@ -1732,7 +1732,7 @@ namespace RobotRaconteur
 
 		if (ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
 		{
-			s += static_cast<uint32_t>(ArrayBinaryWriter::GetStringByteCount8WithXLen(ElementName));
+			s += boost::numeric_cast<uint32_t>(ArrayBinaryWriter::GetStringByteCount8WithXLen(ElementName));
 		}
 		if (ElementFlags & MessageElementFlags_ELEMENT_NAME_CODE)
 		{
@@ -1746,7 +1746,7 @@ namespace RobotRaconteur
 
 		if (ElementFlags & MessageElementFlags_ELEMENT_TYPE_NAME_STR)
 		{
-			s += static_cast<uint32_t>(ArrayBinaryWriter::GetStringByteCount8WithXLen(ElementTypeName));
+			s += boost::numeric_cast<uint32_t>(ArrayBinaryWriter::GetStringByteCount8WithXLen(ElementTypeName));
 		}
 		if (ElementFlags & MessageElementFlags_ELEMENT_TYPE_NAME_CODE)
 		{
@@ -1760,7 +1760,7 @@ namespace RobotRaconteur
 		
 		if (ElementFlags & MessageElementFlags_META_INFO)
 		{
-			s += static_cast<uint32_t>(ArrayBinaryWriter::GetStringByteCount8WithXLen(MetaData));
+			s += boost::numeric_cast<uint32_t>(ArrayBinaryWriter::GetStringByteCount8WithXLen(MetaData));
 		}		
 
 		switch (ElementType)
@@ -1895,7 +1895,7 @@ namespace RobotRaconteur
 
 		s = ArrayBinaryWriter::GetSizePlusUintX(s);
 
-		return static_cast<uint32_t>(s);
+		return boost::numeric_cast<uint32_t>(s);
 	}
 
 	void MessageElement::UpdateData3()
@@ -1930,14 +1930,14 @@ namespace RobotRaconteur
 		{
 			RR_INTRUSIVE_PTR<RRBaseArray> rdat = RR_STATIC_POINTER_CAST<RRBaseArray>(dat);
 			if (!rdat) throw DataTypeException("");
-			DataCount = (uint32_t)rdat->size();
+			DataCount = boost::numeric_cast<uint32_t>(rdat->size());
 			break;
 		}
 		case DataTypes_structure_t:
 		{
 			RR_INTRUSIVE_PTR<MessageElementStructure> sdat = RR_STATIC_POINTER_CAST<MessageElementStructure>(dat);
 			if (!sdat) throw DataTypeException("");
-			DataCount = (uint32_t)sdat->Elements.size();
+			DataCount = boost::numeric_cast<uint32_t>(sdat->Elements.size());
 			//If flags have ElementTypeNameCode set, assume that the ElementTypeName has already been encoded
 			if ((ElementFlags & MessageElementFlags_ELEMENT_TYPE_NAME_CODE) == 0)
 			{
@@ -1949,35 +1949,35 @@ namespace RobotRaconteur
 		{
 			RR_INTRUSIVE_PTR<MessageElementMap<int32_t> > vdat = RR_STATIC_POINTER_CAST<MessageElementMap<int32_t> >(dat);
 			if (!vdat) throw DataTypeException("");
-			DataCount = (uint32_t)vdat->Elements.size();
+			DataCount = boost::numeric_cast<uint32_t>(vdat->Elements.size());
 			break;
 		}
 		case DataTypes_dictionary_t:
 		{
 			RR_INTRUSIVE_PTR<MessageElementMap<std::string> > ddat = RR_STATIC_POINTER_CAST<MessageElementMap<std::string> >(dat);
 			if (!ddat) throw DataTypeException("");
-			DataCount = (uint32_t)ddat->Elements.size();
+			DataCount = boost::numeric_cast<uint32_t>(ddat->Elements.size());
 			break;
 		}
 		case DataTypes_multidimarray_t:
 		{
 			RR_INTRUSIVE_PTR<MessageElementMultiDimArray> mdat = RR_STATIC_POINTER_CAST<MessageElementMultiDimArray>(dat);
 			if (!mdat) throw DataTypeException("");
-			DataCount = (uint32_t)mdat->Elements.size();
+			DataCount = boost::numeric_cast<uint32_t>(mdat->Elements.size());
 			break;
 		}
 		case DataTypes_list_t:
 		{
 			RR_INTRUSIVE_PTR<MessageElementList> ddat = RR_STATIC_POINTER_CAST<MessageElementList>(dat);
 			if (!ddat) throw DataTypeException("");
-			DataCount = (uint32_t)ddat->Elements.size();
+			DataCount = boost::numeric_cast<uint32_t>(ddat->Elements.size());
 			break;
 		}
 		case DataTypes_pod_t:
 		{
 			RR_INTRUSIVE_PTR<MessageElementPod> sdat = RR_STATIC_POINTER_CAST<MessageElementPod>(dat);
 			if (!sdat) throw DataTypeException("");
-			DataCount = (uint32_t)sdat->Elements.size();
+			DataCount = boost::numeric_cast<uint32_t>(sdat->Elements.size());
 			ElementTypeName = sdat->GetTypeString();
 			break;
 		}
@@ -1985,7 +1985,7 @@ namespace RobotRaconteur
 		{
 			RR_INTRUSIVE_PTR<MessageElementPodArray> sdat = RR_STATIC_POINTER_CAST<MessageElementPodArray>(dat);
 			if (!sdat) throw DataTypeException("");
-			DataCount = (uint32_t)sdat->Elements.size();
+			DataCount = boost::numeric_cast<uint32_t>(sdat->Elements.size());
 			ElementTypeName = sdat->GetTypeString();
 			break;
 		}
@@ -1993,7 +1993,7 @@ namespace RobotRaconteur
 		{
 			RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementPodMultiDimArray>(dat);
 			if (!sdat) throw DataTypeException("");
-			DataCount = (uint32_t)sdat->Elements.size();
+			DataCount = boost::numeric_cast<uint32_t>(sdat->Elements.size());
 			ElementTypeName = sdat->GetTypeString();
 			break;
 		}
@@ -2001,7 +2001,7 @@ namespace RobotRaconteur
 		{
 			RR_INTRUSIVE_PTR<MessageElementNamedArray> sdat = RR_STATIC_POINTER_CAST<MessageElementNamedArray>(dat);
 			if (!sdat) throw DataTypeException("");
-			DataCount = (uint32_t)sdat->Elements.size();
+			DataCount = boost::numeric_cast<uint32_t>(sdat->Elements.size());
 			ElementTypeName = sdat->GetTypeString();
 			break;
 		}
@@ -2009,7 +2009,7 @@ namespace RobotRaconteur
 		{
 			RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> sdat = RR_STATIC_POINTER_CAST<MessageElementNamedMultiDimArray>(dat);
 			if (!sdat) throw DataTypeException("");
-			DataCount = (uint32_t)sdat->Elements.size();
+			DataCount = boost::numeric_cast<uint32_t>(sdat->Elements.size());
 			ElementTypeName = sdat->GetTypeString();
 			break;
 		}
@@ -2078,7 +2078,7 @@ namespace RobotRaconteur
 			w.WriteUintX(ElementNameCode);
 		if (ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
 			w.WriteIntX(ElementNumber);
-		w.WriteNumber((uint16_t)(ElementType));	
+		w.WriteNumber(static_cast<uint16_t>(ElementType));	
 		if (ElementFlags & MessageElementFlags_ELEMENT_TYPE_NAME_STR)
 			w.WriteString8WithXLen(ElementTypeName);
 		if (ElementFlags & MessageElementFlags_ELEMENT_TYPE_NAME_CODE)
@@ -2087,7 +2087,7 @@ namespace RobotRaconteur
 			w.WriteUintX(SequenceNumber);
 		if (ElementFlags & MessageElementFlags_META_INFO)
 			w.WriteString8WithXLen(MetaData);
-		w.WriteUintX((uint32_t)(DataCount));
+		w.WriteUintX(boost::numeric_cast<uint32_t>(DataCount));
 
 		switch (ElementType)
 		{
@@ -2228,7 +2228,7 @@ namespace RobotRaconteur
 			ElementNumber = r.ReadIntX();
 		}
 
-		ElementType = (DataTypes)(r.ReadNumber<uint16_t>());
+		ElementType = static_cast<DataTypes>(r.ReadNumber<uint16_t>());
 
 		if (ElementFlags & MessageElementFlags_ELEMENT_TYPE_NAME_STR)
 		{			
@@ -2273,7 +2273,7 @@ namespace RobotRaconteur
 		case DataTypes_csingle_t:
 		case DataTypes_bool_t:
 		{
-			if ((int32_t)(RRArrayElementSize(ElementType)*DataCount) > r.DistanceFromLimit())
+			if (boost::numeric_cast<int32_t>(RRArrayElementSize(ElementType)*DataCount) > r.DistanceFromLimit())
 			{
 				throw DataSerializationException("Error in message format");
 			}

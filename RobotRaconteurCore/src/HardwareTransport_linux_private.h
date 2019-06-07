@@ -83,7 +83,7 @@ namespace detail
 
 #define DBUS_FUNCTIONS_FIELD_INIT(t) t ## _t t;
 #define DBUS_FUNCTIONS_PTR_VOID(t) t = NULL;
-#define DBUS_FUNCTIONS_PTR_INIT(t) t = (t ## _t)dlsym(lib_handle, #t); if (t == NULL) return false;
+#define DBUS_FUNCTIONS_PTR_INIT(t) t = reinterpret_cast<t ## _t>(dlsym(lib_handle, #t)); if (t == NULL) return false;
 
 class DBus_Functions : public boost::noncopyable
 {
@@ -113,7 +113,7 @@ public:
 
 #define SDP_FUNCTIONS_FIELD_INIT(t) t ## _t t;
 #define SDP_FUNCTIONS_PTR_VOID(t) t = NULL;
-#define SDP_FUNCTIONS_PTR_INIT(t) t = (t ## _t)dlsym(lib_handle, #t); if (t == NULL) return false;
+#define SDP_FUNCTIONS_PTR_INIT(t) t = reinterpret_cast<t ## _t>(dlsym(lib_handle, #t)); if (t == NULL) return false;
 
 class Sdp_Functions : public boost::noncopyable
 {

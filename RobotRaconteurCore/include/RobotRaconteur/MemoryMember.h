@@ -30,7 +30,7 @@ namespace RobotRaconteur
 		static std::vector<Y> ConvertVectorType(std::vector<U> in)
 		{
 			std::vector<Y> out(in.size());
-			for (size_t i=0; i<in.size(); i++) out[i]=(Y)in[i];
+			for (size_t i=0; i<in.size(); i++) out[i]=boost::numeric_cast<Y>(in[i]);
 			return out;
 		}
 
@@ -40,7 +40,7 @@ namespace RobotRaconteur
 		static RR_INTRUSIVE_PTR<RRArray<Y> > ConvertRRArrayType(RR_INTRUSIVE_PTR<RRArray<U> > in)
 		{
 			RR_INTRUSIVE_PTR<RRArray<Y> > out=AllocateRRArray<Y>(in->size());
-			for (size_t i=0; i<in->size(); i++) (*out)[i]=(Y)(*in)[i];
+			for (size_t i=0; i<in->size(); i++) (*out)[i]=boost::numeric_cast<Y>((*in)[i]);
 			return out;
 		}
 
@@ -92,7 +92,7 @@ namespace RobotRaconteur
 			if (memorypos+count > memory->size()) throw OutOfRangeException("Index out of range");
 			if (bufferpos+count > buffer->size()) throw OutOfRangeException("Index out of range");
 
-			memcpy(buffer->data()+bufferpos,memory->data()+memorypos,(size_t)count*sizeof(T));
+			memcpy(buffer->data()+bufferpos,memory->data()+memorypos,boost::numeric_cast<size_t>(count*sizeof(T)));
 		}
 
 		virtual void Write(uint64_t memorypos, RR_INTRUSIVE_PTR<RRArray<T> > buffer, uint64_t bufferpos, uint64_t count)
@@ -100,7 +100,7 @@ namespace RobotRaconteur
 			boost::mutex::scoped_lock lock(memory_lock);
 			if (memorypos+count > memory->size()) throw OutOfRangeException("Index out of range");
 			if (bufferpos+count > buffer->size()) throw OutOfRangeException("Index out of range");
-			memcpy(memory->data()+memorypos,buffer->data()+bufferpos,(size_t)count*sizeof(T));
+			memcpy(memory->data()+memorypos,buffer->data()+bufferpos,boost::numeric_cast<size_t>(count*sizeof(T)));
 		}
 		
 		virtual DataTypes ElementTypeID()
@@ -221,8 +221,8 @@ namespace RobotRaconteur
 		virtual RR_INTRUSIVE_PTR<MessageElementData> DoRead(uint64_t memorypos, uint64_t bufferpos, uint64_t count, RR_SHARED_PTR<ArrayMemoryBase> mem)
 		{
 			RR_SHARED_PTR<ArrayMemory<T> > mem1 = rr_cast<ArrayMemory<T> >(mem);
-			RR_INTRUSIVE_PTR<RRArray<T> > buf1 = AllocateRRArray<T>((size_t)count);
-			mem1->Read(memorypos, buf1, 0, (size_t)count);
+			RR_INTRUSIVE_PTR<RRArray<T> > buf1 = AllocateRRArray<T>(boost::numeric_cast<size_t>(count));
+			mem1->Read(memorypos, buf1, 0, boost::numeric_cast<size_t>(count));
 			return buf1;
 		}
 
@@ -230,7 +230,7 @@ namespace RobotRaconteur
 		{
 			RR_SHARED_PTR<ArrayMemory<T> > mem1 = rr_cast<ArrayMemory<T> >(mem);
 			RR_INTRUSIVE_PTR<RRArray<T> > buf1 = rr_cast<RRArray<T> >(buffer);
-			mem1->Write(memorypos, buf1, 0, (size_t)count);
+			mem1->Write(memorypos, buf1, 0, boost::numeric_cast<size_t>(count));
 		}
 	};
 
@@ -271,7 +271,7 @@ namespace RobotRaconteur
 		{
 			RR_SHARED_PTR<MultiDimArrayMemory<T> > mem1 = rr_cast<MultiDimArrayMemory<T> >(mem);
 
-			RR_INTRUSIVE_PTR<RRArray<T> > real = AllocateRRArray<T>((size_t)elemcount);
+			RR_INTRUSIVE_PTR<RRArray<T> > real = AllocateRRArray<T>(boost::numeric_cast<size_t>(elemcount));
 			RR_INTRUSIVE_PTR<RRMultiDimArray<T> > data;
 			
 			data = AllocateRRMultiDimArray<T>(VectorToRRArray<uint32_t>(count), real);
@@ -362,20 +362,20 @@ namespace RobotRaconteur
 		{
 			RR_INTRUSIVE_PTR<RRArray<T> > data = rr_cast<RRArray<T> >(res);
 			RR_INTRUSIVE_PTR<RRArray<T> >& buffer1 = *static_cast<RR_INTRUSIVE_PTR<RRArray<T> >*>(buffer);
-			memcpy(buffer1->data() + bufferpos, data->data(), (size_t)count * sizeof(T));
+			memcpy(buffer1->data() + bufferpos, data->data(), boost::numeric_cast<size_t>(count * sizeof(T)));
 		}
 
 		virtual RR_INTRUSIVE_PTR<MessageElementData> PackWriteRequest(void* buffer, uint64_t bufferpos, uint64_t count)
 		{
 			RR_INTRUSIVE_PTR<RRArray<T> >& buffer1 = *static_cast<RR_INTRUSIVE_PTR<RRArray<T> >*>(buffer);
-			if (bufferpos == 0 && buffer1->size() == static_cast<size_t>(count))
+			if (bufferpos == 0 && buffer1->size() == boost::numeric_cast<size_t>(count))
 			{
 				return buffer1;
 			}
-			else if ((buffer1->size() - static_cast<size_t>(bufferpos)) >= static_cast<size_t>(count))
+			else if ((buffer1->size() - boost::numeric_cast<size_t>(bufferpos)) >= boost::numeric_cast<size_t>(count))
 			{
-				RR_INTRUSIVE_PTR<RRArray<T> > data = AllocateRRArray<T>((size_t)count);				
-				memcpy(data->data(), buffer1->data() + bufferpos, (size_t)count * sizeof(T));
+				RR_INTRUSIVE_PTR<RRArray<T> > data = AllocateRRArray<T>(boost::numeric_cast<size_t>(count));
+				memcpy(data->data(), buffer1->data() + bufferpos, boost::numeric_cast<size_t>(count * sizeof(T)));
 				return data;
 			}
 			else
@@ -495,7 +495,7 @@ namespace RobotRaconteur
 			{
 				RR_INTRUSIVE_PTR<RRMultiDimArray<T> > data;
 				
-				data = AllocateRRMultiDimArray<T>(VectorToRRArray<uint32_t>(count), AllocateRRArray<T>((size_t)elemcount));
+				data = AllocateRRMultiDimArray<T>(VectorToRRArray<uint32_t>(count), AllocateRRArray<T>(boost::numeric_cast<size_t>(elemcount)));
 				
 				buffer1->RetrieveSubArray(detail::ConvertVectorType<uint32_t>(bufferpos), data, std::vector<uint32_t>(count.size()), detail::ConvertVectorType<uint32_t>(count));
 				return GetNode()->PackMultiDimArray(data);
@@ -541,7 +541,7 @@ namespace RobotRaconteur
 
 			for (size_t i = 0; i < count; i++)
 			{
-				buffer->at(i + bufferpos) = memory->at(i + memorypos);
+				buffer->at(boost::numeric_cast<typename RRPodArray<T>::size_type>(i + bufferpos)) = memory->at(boost::numeric_cast<typename RRPodArray<T>::size_type>(i + memorypos));
 			}
 		}
 
@@ -552,7 +552,7 @@ namespace RobotRaconteur
 			if (bufferpos + count > buffer->size()) throw OutOfRangeException("Index out of range");			
 			for (size_t i = 0; i < count; i++)
 			{
-				memory->at(i + memorypos) = buffer->at(i + bufferpos);
+				memory->at(boost::numeric_cast<typename RRPodArray<T>::size_type>(i + memorypos)) = buffer->at(boost::numeric_cast<typename RRPodArray<T>::size_type>(i + bufferpos));
 			}
 		}
 
@@ -575,8 +575,8 @@ namespace RobotRaconteur
 		virtual RR_INTRUSIVE_PTR<MessageElementData> DoRead(uint64_t memorypos, uint64_t bufferpos, uint64_t count, RR_SHARED_PTR<ArrayMemoryBase> mem)
 		{
 			RR_SHARED_PTR<PodArrayMemory<T> > mem1 = rr_cast<PodArrayMemory<T> >(mem);
-			RR_INTRUSIVE_PTR<RRPodArray<T> > buf1 = AllocateEmptyRRPodArray<T>(count);			
-			mem1->Read(memorypos, buf1, 0, (size_t)count);
+			RR_INTRUSIVE_PTR<RRPodArray<T> > buf1 = AllocateEmptyRRPodArray<T>(boost::numeric_cast<size_t>(count));			
+			mem1->Read(memorypos, buf1, 0, boost::numeric_cast<size_t>(count));
 			return PodStub_PackPodArray(buf1);
 		}
 
@@ -584,7 +584,7 @@ namespace RobotRaconteur
 		{
 			RR_SHARED_PTR<PodArrayMemory<T> > mem1 = rr_cast<PodArrayMemory<T> >(mem);
 			RR_INTRUSIVE_PTR<RRPodArray<T> > buf1 = PodStub_UnpackPodArray<T>(rr_cast<MessageElementPodArray>(buffer));
-			mem1->Write(memorypos, buf1, 0, (size_t)count);
+			mem1->Write(memorypos, buf1, 0, boost::numeric_cast<size_t>(count));
 		}
 	};
 
@@ -628,18 +628,18 @@ namespace RobotRaconteur
 
 			for (size_t i = 0; i < count; i++)
 			{
-				buffer1->at(i + bufferpos) = res1->at(i);
+				buffer1->at(boost::numeric_cast<typename RRPodArray<T>::size_type>(i + bufferpos)) = res1->at(i);
 			}			
 		}
 
 		virtual RR_INTRUSIVE_PTR<MessageElementData> PackWriteRequest(void* buffer, uint64_t bufferpos, uint64_t count)
 		{
 			RR_INTRUSIVE_PTR<RRPodArray<T> >& buffer1 = *static_cast<RR_INTRUSIVE_PTR<RRPodArray<T> >* >(buffer);
-			RR_INTRUSIVE_PTR<RRPodArray<T> > o = AllocateEmptyRRPodArray<T>(count);
+			RR_INTRUSIVE_PTR<RRPodArray<T> > o = AllocateEmptyRRPodArray<T>(boost::numeric_cast<size_t>(count));
 			
 			for (size_t i = 0; i < count; i++)
 			{
-				o->at(i) = buffer1->at(i + bufferpos);
+				o->at(i) = buffer1->at(boost::numeric_cast<typename RRPodArray<T>::size_type>(i + bufferpos));
 			}
 			return PodStub_PackPodArray(o);
 		}
@@ -763,7 +763,7 @@ namespace RobotRaconteur
 
 			RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > data = AllocateEmptyRRPodMultiDimArray<T>();
 			data->Dims = VectorToRRArray<uint32_t>(count);
-			data->PodArray = AllocateEmptyRRPodArray<T>(elemcount);
+			data->PodArray = AllocateEmptyRRPodArray<T>(boost::numeric_cast<size_t>(elemcount));
 									
 			buffer1->RetrieveSubArray(detail::ConvertVectorType<uint32_t>(bufferpos), data, std::vector<uint32_t>(count.size()), detail::ConvertVectorType<uint32_t>(count));
 			return GetNode()->PackPodMultiDimArray(data);
@@ -787,7 +787,7 @@ namespace RobotRaconteur
 						
 			RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > data = AllocateEmptyRRPodMultiDimArray<T>();
 			data->Dims = VectorToRRArray<uint32_t>(count);
-			data->PodArray = AllocateEmptyRRPodArray<T>((size_t)elemcount);
+			data->PodArray = AllocateEmptyRRPodArray<T>(boost::numeric_cast<size_t>(elemcount));
 						
 			mem1->Read(memorypos, data, bufferpos, count);
 			return GetNode()->PackPodMultiDimArray(data);
@@ -841,7 +841,7 @@ namespace RobotRaconteur
 
 			for (size_t i = 0; i < count; i++)
 			{
-				(*buffer)[(i + bufferpos)] = (*memory)[(i + memorypos)];
+				(*buffer)[boost::numeric_cast<typename RRNamedArray<T>::size_type>(i + bufferpos)] = (*memory)[boost::numeric_cast<typename RRNamedArray<T>::size_type>(i + memorypos)];
 			}
 		}
 
@@ -852,7 +852,7 @@ namespace RobotRaconteur
 			if (bufferpos + count > buffer->size()) throw OutOfRangeException("Index out of range");
 			for (size_t i = 0; i < count; i++)
 			{
-				(*memory)[(i + memorypos)] = (*buffer)[(i + bufferpos)];
+				(*memory)[boost::numeric_cast<typename RRNamedArray<T>::size_type>(i + memorypos)] = (*buffer)[boost::numeric_cast<typename RRNamedArray<T>::size_type>(i + bufferpos)];
 			}
 		}
 
@@ -875,8 +875,8 @@ namespace RobotRaconteur
 		virtual RR_INTRUSIVE_PTR<MessageElementData> DoRead(uint64_t memorypos, uint64_t bufferpos, uint64_t count, RR_SHARED_PTR<ArrayMemoryBase> mem)
 		{
 			RR_SHARED_PTR<NamedArrayMemory<T> > mem1 = rr_cast<NamedArrayMemory<T> >(mem);
-			RR_INTRUSIVE_PTR<RRNamedArray<T> > buf1 = AllocateEmptyRRNamedArray<T>(count);
-			mem1->Read(memorypos, buf1, 0, (size_t)count);
+			RR_INTRUSIVE_PTR<RRNamedArray<T> > buf1 = AllocateEmptyRRNamedArray<T>(boost::numeric_cast<size_t>(count));
+			mem1->Read(memorypos, buf1, 0, boost::numeric_cast<size_t>(count));
 			return NamedArrayStub_PackNamedArray(buf1);
 		}
 
@@ -884,7 +884,7 @@ namespace RobotRaconteur
 		{
 			RR_SHARED_PTR<NamedArrayMemory<T> > mem1 = rr_cast<NamedArrayMemory<T> >(mem);
 			RR_INTRUSIVE_PTR<RRNamedArray<T> > buf1 = NamedArrayStub_UnpackNamedArray<T>(rr_cast<MessageElementNamedArray>(buffer));
-			mem1->Write(memorypos, buf1, 0, (size_t)count);
+			mem1->Write(memorypos, buf1, 0, boost::numeric_cast<size_t>(count));
 		}
 	};
 
@@ -928,18 +928,18 @@ namespace RobotRaconteur
 
 			for (size_t i = 0; i < count; i++)
 			{
-				(*buffer1)[(i + bufferpos)] = (*res1)[i];
+				(*buffer1)[boost::numeric_cast<typename RRNamedArray<T>::size_type>(i + bufferpos)] = (*res1)[i];
 			}
 		}
 
 		virtual RR_INTRUSIVE_PTR<MessageElementData> PackWriteRequest(void* buffer, uint64_t bufferpos, uint64_t count)
 		{
 			RR_INTRUSIVE_PTR<RRNamedArray<T> >& buffer1 = *static_cast<RR_INTRUSIVE_PTR<RRNamedArray<T> >*>(buffer);
-			RR_INTRUSIVE_PTR<RRNamedArray<T> > o = AllocateEmptyRRNamedArray<T>(count);
+			RR_INTRUSIVE_PTR<RRNamedArray<T> > o = AllocateEmptyRRNamedArray<T>(boost::numeric_cast<size_t>(count));
 
 			for (size_t i = 0; i < count; i++)
 			{
-				(*o)[i] = (*buffer1)[(i + bufferpos)];
+				(*o)[i] = (*buffer1)[boost::numeric_cast<typename RRNamedArray<T>::size_type>(i + bufferpos)];
 			}
 			return NamedArrayStub_PackNamedArray(o);
 		}
@@ -1063,7 +1063,7 @@ namespace RobotRaconteur
 
 			RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > data = AllocateEmptyRRNamedMultiDimArray<T>();
 			data->Dims = VectorToRRArray<uint32_t>(count);			
-			data->NamedArray = AllocateEmptyRRNamedArray<T>(elemcount);
+			data->NamedArray = AllocateEmptyRRNamedArray<T>(boost::numeric_cast<size_t>(elemcount));
 
 			buffer1->RetrieveSubArray(detail::ConvertVectorType<uint32_t>(bufferpos), data, std::vector<uint32_t>(count.size()), detail::ConvertVectorType<uint32_t>(count));
 			return GetNode()->PackNamedMultiDimArray(data);
@@ -1087,7 +1087,7 @@ namespace RobotRaconteur
 
 			RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > data = AllocateEmptyRRNamedMultiDimArray<T>();
 			data->Dims = VectorToRRArray<uint32_t>(count);			
-			data->NamedArray = AllocateEmptyRRNamedArray<T>((size_t)elemcount);
+			data->NamedArray = AllocateEmptyRRNamedArray<T>(boost::numeric_cast<size_t>(elemcount));
 
 			mem1->Read(memorypos, data, bufferpos, count);
 			return GetNode()->PackNamedMultiDimArray(data);

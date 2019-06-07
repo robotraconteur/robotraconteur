@@ -174,14 +174,14 @@ namespace RobotRaconteur
 		//TODO: Handle big endian
 		if (number <= 252)
 		{			
-			uint8_t v1 = (uint8_t)number;
+			uint8_t v1 = static_cast<uint8_t>(number);
 			return write_all_bytes(&v1, 1);			
 		}
 		if (number <= std::numeric_limits<uint16_t>::max())
 		{			
 			uint8_t v1[3];
 			v1[0] = 253;
-			uint16_t v2 = (uint16_t)number;
+			uint16_t v2 = static_cast<uint16_t>(number);
 			memcpy(v1 + 1, &v2, 2);
 			return write_all_bytes(v1, 3);						
 		}
@@ -196,14 +196,14 @@ namespace RobotRaconteur
 		//TODO: Handle big endian
 		if (number <= 252)
 		{			
-			uint8_t v1 = (uint8_t)number;
+			uint8_t v1 = static_cast<uint8_t>(number);
 			return write_all_bytes(&v1, 1);
 		}
 		if (number <= std::numeric_limits<uint16_t>::max())
 		{
 			uint8_t v1[3];
 			v1[0] = 253;
-			uint16_t v2 = (uint16_t)number;
+			uint16_t v2 = static_cast<uint16_t>(number);
 			memcpy(v1 + 1, &v2, 2);
 			return write_all_bytes(v1, 3);			
 		}
@@ -211,7 +211,7 @@ namespace RobotRaconteur
 		{			
 			uint8_t v1[5];
 			v1[0] = 254;
-			uint32_t v2 = (uint32_t)number;
+			uint32_t v2 = static_cast<uint32_t>(number);
 			memcpy(v1 + 1, &v2, 4);
 			return write_all_bytes(v1, 5);			
 		}
@@ -227,14 +227,14 @@ namespace RobotRaconteur
 		//TODO: Handle big endian
 		if (number >= std::numeric_limits<int8_t>::min() && number <= 124)
 		{
-			int8_t v1 = (int8_t)number;
+			int8_t v1 = static_cast<int8_t>(number);
 			return write_all_bytes(&v1, 1);
 		}
 		if (number >= std::numeric_limits<int16_t>::min() && number <= std::numeric_limits<int16_t>::max())
 		{
 			int8_t v1[3];
 			v1[0] = 125;
-			int16_t v2 = (int16_t)number;
+			int16_t v2 = static_cast<int16_t>(number);
 			memcpy(v1 + 1, &v2, 2);
 			return write_all_bytes(v1, 3);
 		}
@@ -249,14 +249,14 @@ namespace RobotRaconteur
 		//TODO: Handle big endian
 		if (number >= std::numeric_limits<int8_t>::min() && number <= 124)
 		{
-			int8_t v1 = (int8_t)number;
+			int8_t v1 = static_cast<int8_t>(number);
 			return write_all_bytes(&v1, 1);
 		}
 		if (number >= std::numeric_limits<int16_t>::min() && number <= std::numeric_limits<int16_t>::max())
 		{
 			int8_t v1[3];
 			v1[0] = 125;
-			int16_t v2 = (int16_t)number;
+			int16_t v2 = static_cast<int16_t>(number);
 			memcpy(v1 + 1, &v2, 2);
 			return write_all_bytes(v1, 3);
 		}
@@ -264,7 +264,7 @@ namespace RobotRaconteur
 		{
 			uint8_t v1[5];
 			v1[0] = 126;
-			int32_t v2 = (int32_t)number;
+			int32_t v2 = static_cast<int32_t>(number);
 			memcpy(v1 + 1, &v2, 4);
 			return write_all_bytes(v1, 5);
 		}
@@ -281,7 +281,7 @@ namespace RobotRaconteur
 	{
 		size_t l = str.size();
 		if (l > std::numeric_limits<uint16_t>::max()) throw ProtocolException("Header string too long");
-		uint16_t l1 = (uint16_t)l;
+		uint16_t l1 = static_cast<uint16_t>(l);
 		if (!write_number(l1)) return false;
 
 		size_t n = write_some_bytes(str.c_str(), l);
@@ -293,14 +293,14 @@ namespace RobotRaconteur
 	bool AsyncMessageWriterImpl::write_string(std::string& str)
 	{
 		state_type next_state = state();
-		next_state = (state_type)(((int)next_state) + 1);
+		next_state = static_cast<state_type>(static_cast<int>(next_state) + 1);
 		return write_string(str, next_state);
 	}
 	bool AsyncMessageWriterImpl::write_string3(std::string& str, state_type next_state)
 	{
 		size_t l = str.size();
 		if (l > std::numeric_limits<uint32_t>::max()) throw ProtocolException("Header string too long");
-		uint32_t l1 = (uint32_t)l;
+		uint32_t l1 = static_cast<uint32_t>(l);
 		if (!write_uint_x(l1)) return false;
 
 		size_t n = write_some_bytes(str.c_str(), l);
@@ -312,7 +312,7 @@ namespace RobotRaconteur
 	bool AsyncMessageWriterImpl::write_string3(std::string& str)
 	{
 		state_type next_state = state();
-		next_state = (state_type)(((int)next_state) + 1);
+		next_state = static_cast<state_type>(static_cast<int>(next_state) + 1);
 		return write_string3(str, next_state);
 	}
 
@@ -433,7 +433,7 @@ namespace RobotRaconteur
 			}
 			case MessageHeader_headersize:
 			{
-				R(write_number((uint16_t)data<MessageHeader>()->HeaderSize));
+				R(write_number(boost::numeric_cast<uint16_t>(data<MessageHeader>()->HeaderSize)));
 				state() = MessageHeader_routing1;
 			}
 			case MessageHeader_routing1:
@@ -517,7 +517,7 @@ namespace RobotRaconteur
 			}
 			case MessageEntry_entrytype:
 			{
-				uint16_t t=(uint16_t)data<MessageEntry>()->EntryType;
+				uint16_t t=static_cast<uint16_t>(data<MessageEntry>()->EntryType);
 				R(write_number(t));
 				state() = MessageEntry_pad;
 			}
@@ -544,7 +544,7 @@ namespace RobotRaconteur
 			}
 			case MessageEntry_error:
 			{				
-				uint16_t err=(uint16_t)data<MessageEntry>()->Error;
+				uint16_t err=static_cast<uint16_t>(data<MessageEntry>()->Error);
 				R(write_number(err));				
 				state() = MessageEntry_metainfo;
 			}
@@ -556,7 +556,7 @@ namespace RobotRaconteur
 			case MessageEntry_elementcount:
 			{
 				MessageEntry* ee = data<MessageEntry>();
-				uint16_t c = (uint16_t)ee->elements.size();
+				uint16_t c = boost::numeric_cast<uint16_t>(ee->elements.size());
 				R(write_number(c));
 				param1() = 0;
 				state() = MessageEntry_writeelements;
@@ -592,7 +592,7 @@ namespace RobotRaconteur
 			}
 			case MessageElement_elementtype:
 			{
-				uint16_t t=(uint16_t)data<MessageElement>()->ElementType;
+				uint16_t t=static_cast<uint16_t>(data<MessageElement>()->ElementType);
 				R(write_number(t));
 				state() = MessageElement_elementtypestr;
 			}
@@ -739,7 +739,7 @@ namespace RobotRaconteur
 				size_t l = param2() - param1();
 				size_t n = std::min(q, l);
 
-				write_bufs.push_back(boost::asio::buffer(((uint8_t*)a->void_ptr()) + param1(), n));
+				write_bufs.push_back(boost::asio::buffer((reinterpret_cast<uint8_t*>(a->void_ptr())) + param1(), n));
 				message_pos += n;
 				if (n >= l)
 				{
@@ -1209,7 +1209,7 @@ namespace RobotRaconteur
 					state() = MessageHeader_entrycount;
 					continue;
 				}
-				uint32_t n = (uint32_t)h->StringTable.size();
+				uint32_t n = boost::numeric_cast<uint32_t>(h->StringTable.size());
 				R(write_uint_x(n));
 				param1() = 0;				
 				state() = MessageHeader_stringtable2;
@@ -1255,7 +1255,7 @@ namespace RobotRaconteur
 					state() = Message_writeentries;
 					continue;
 				}
-				uint32_t n = (uint32_t)h->TransportSpecific.size();
+				uint32_t n = boost::numeric_cast<uint32_t>(h->TransportSpecific.size());
 				R(write_uint_x(n));
 				state() = MessageHeader_transportspecific2;
 			}
@@ -1304,7 +1304,7 @@ namespace RobotRaconteur
 			}
 			case MessageEntry_entrytype:
 			{
-				uint16_t t = (uint16_t)data<MessageEntry>()->EntryType;
+				uint16_t t = static_cast<uint16_t>(data<MessageEntry>()->EntryType);
 				R(write_number(t));				 
 				state() = MessageEntry_servicepathstr;
 			}
@@ -1368,9 +1368,9 @@ namespace RobotRaconteur
 				MessageEntry* ee = data<MessageEntry>();
 				if (ee->EntryFlags & MessageEntryFlags_ERROR)
 				{
-					uint16_t err = (uint16_t)ee->Error;
+					uint16_t err = static_cast<uint16_t>(ee->Error);
 					R(write_number(err));
-					ee->Error = (MessageErrorType)err;
+					ee->Error = static_cast<MessageErrorType>(err);
 				}
 				state() = MessageEntry_metainfo;
 			}
@@ -1403,7 +1403,7 @@ namespace RobotRaconteur
 			case MessageEntry_elementcount:
 			{
 				MessageEntry* ee = data<MessageEntry>();
-				uint32_t c=(uint32_t)ee->elements.size();
+				uint32_t c=boost::numeric_cast<uint32_t>(ee->elements.size());
 				R(write_uint_x(c));
 				param1() = 0;
 				state() = MessageEntry_writeelements;
@@ -1465,7 +1465,7 @@ namespace RobotRaconteur
 			}
 			case MessageElement_elementtype:
 			{
-				uint16_t t = (uint16_t)data<MessageElement>()->ElementType;
+				uint16_t t = static_cast<uint16_t>(data<MessageElement>()->ElementType);
 				R(write_number(t));
 				state() = MessageElement_elementtypestr;
 			}
@@ -1637,7 +1637,7 @@ namespace RobotRaconteur
 				size_t l = param2() - param1();
 				size_t n = std::min(q, l);
 				
-				write_bufs.push_back(boost::asio::buffer(((uint8_t*)a->void_ptr()) + param1(), n));
+				write_bufs.push_back(boost::asio::buffer((reinterpret_cast<uint8_t*>(a->void_ptr())) + param1(), n));
 				message_pos += n;
 				if (n >= l)
 				{

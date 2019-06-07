@@ -1820,7 +1820,7 @@ namespace RobotRaconteur
 #define RR_WAMCU_READ_TYPE(type) RR_SHARED_PTR<ArrayMemory<type> > type ## _var=boost::dynamic_pointer_cast<ArrayMemory<type> >(mem); \
 	if (type ## _var) \
 	{ \
-		RR_INTRUSIVE_PTR<RRArray<type> > dat=AllocateRRArray<type>((size_t)count); \
+		RR_INTRUSIVE_PTR<RRArray<type> > dat=AllocateRRArray<type>(boost::numeric_cast<size_t>(count)); \
 		type ## _var->Read(memorypos,dat,0,count); \
 		return dat; \
 	} \
@@ -1937,7 +1937,7 @@ namespace RobotRaconteur
 		size_t elems=1;
 		for(std::vector<uint64_t>::iterator e=count.begin(); e!=count.end(); ++e)
 		{
-			elems*=(size_t)*e;
+			elems*=boost::numeric_cast<size_t>(*e);
 		}
 
 		/*RR_SHARED_PTR<MultiDimArrayMemory<int8_t> > i8=rr_cast<MultiDimArrayMemory<int8_t> >(mem);
@@ -2079,7 +2079,7 @@ namespace RobotRaconteur
 	{
 		uint64_t ret;
 		DIRECTOR_CALL2(ret = ((WrappedPodArrayMemoryClientBuffer*)buffer)->GetBufferLength());
-		return ret;
+		return boost::numeric_cast<size_t>(ret);
 	}
 
 	WrappedPodMultiDimArrayMemoryClient::WrappedPodMultiDimArrayMemoryClient(const std::string& membername, RR_SHARED_PTR<ServiceStub> stub, size_t element_size, MemberDefinition_Direction direction)
@@ -2144,7 +2144,7 @@ namespace RobotRaconteur
 	{
 		uint64_t ret;
 		DIRECTOR_CALL2(ret = ((WrappedNamedArrayMemoryClientBuffer*)buffer)->GetBufferLength());
-		return ret;
+		return boost::numeric_cast<size_t>(ret);
 	}
 
 	WrappedNamedMultiDimArrayMemoryClient::WrappedNamedMultiDimArrayMemoryClient(const std::string& membername, RR_SHARED_PTR<ServiceStub> stub, size_t element_size, MemberDefinition_Direction direction)

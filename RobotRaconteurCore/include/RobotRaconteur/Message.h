@@ -646,7 +646,7 @@ public:
 	template<typename T>
 	RR_INTRUSIVE_PTR<MessageElementData> MessageElement_PackEnum(const T& value)
 	{
-		return RobotRaconteur::ScalarToRRArray<int32_t>((int32_t)value);
+		return RobotRaconteur::ScalarToRRArray<int32_t>(static_cast<int32_t>(value));
 	}
 
 	template<typename T>
@@ -724,7 +724,7 @@ public:
 	template<typename T>
 	T MessageElement_UnpackEnum(const RR_INTRUSIVE_PTR<MessageElement>& m)
 	{
-		return (T)RRArrayToScalar<int32_t>(m->CastData<RRArray<int32_t> >());
+		return static_cast<T>(RRArrayToScalar<int32_t>(m->CastData<RRArray<int32_t> >()));
 	}
 		
 	template<typename N>

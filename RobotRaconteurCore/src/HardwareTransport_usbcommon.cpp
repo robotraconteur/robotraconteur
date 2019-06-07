@@ -570,14 +570,14 @@ namespace detail
 			return;
 		}
 
-		uint8_t len = *(uint8_t*)buf.get();
+		uint8_t len = *reinterpret_cast<uint8_t*>(buf.get());
 		if (len != bytes_transferred)
 		{
 			handler(boost::asio::error::connection_aborted, "");
 			return;
 		}
 
-		std::string res = boost::locale::conv::utf_to_utf<char>((uint16_t*)(buf.get() + 2));
+		std::string res = boost::locale::conv::utf_to_utf<char>(reinterpret_cast<uint16_t*>(buf.get() + 2));
 		boost::system::error_code ec1;
 		handler(ec1, res);
 	}
@@ -827,7 +827,7 @@ namespace detail
 				return;
 			}
 
-			int32_t id = *(int32_t*)(void*)buf.get();
+			int32_t id = *reinterpret_cast<int32_t*>(buf.get());
 
 			if (id < 0)
 			{
@@ -939,7 +939,7 @@ namespace detail
 				boost::mutex::scoped_lock lock(this_lock);				
 							
 				boost::shared_array<uint8_t> buf(new uint8_t[4]);
-				int32_t* buf1 = (int32_t*)(void*)buf.get();
+				int32_t* buf1 = reinterpret_cast<int32_t*>(buf.get());
 				*buf1 = id;
 								
 				boost::asio::mutable_buffer b1(buf.get(), 4);
@@ -1038,10 +1038,10 @@ namespace detail
 					boost::asio::mutable_buffer b2 = b + 8;
 
 					size_t s = c->DoWrite(b2);
-					subpacket_header* h = (subpacket_header*)RR_BOOST_ASIO_BUFFER_CAST(void*,b);
+					subpacket_header* h = static_cast<subpacket_header*>(RR_BOOST_ASIO_BUFFER_CAST(void*,b));
 					h->id = c->stream_id;
 					h->flags = 0;
-					h->len = (uint16_t)(s + 8);
+					h->len = boost::numeric_cast<uint16_t>(s + 8);
 
 					writes.push_back(boost::make_tuple(boost::asio::buffer(b, s + 8), *e2));
 
@@ -1140,7 +1140,7 @@ namespace detail
 
 		boost::asio::mutable_buffer b(buf.get(), bytes_transferred);
 
-		subpacket_header* h = (subpacket_header*)RR_BOOST_ASIO_BUFFER_CAST(void*,b);
+		subpacket_header* h = static_cast<subpacket_header*>(RR_BOOST_ASIO_BUFFER_CAST(void*,b));
 		uint16_t l = h->len;
 		if (l != boost::asio::buffer_size(b))
 		{	

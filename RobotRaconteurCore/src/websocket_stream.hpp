@@ -152,13 +152,13 @@ protected:
 		int64_t pos = 0;
 		bool end_header = false;
 		
-		while (pos < (int64_t)n && !end_header)
+		while (pos < boost::numeric_cast<int64_t>(n) && !end_header)
 		{
 
 			int64_t i_lf = -1;
-			for (int64_t i = pos; i < (int64_t)n; i++)
+			for (int64_t i = pos; i < boost::numeric_cast<int64_t>(n); i++)
 			{
-				if (buf[(size_t)i] == '\n')
+				if (buf[boost::numeric_cast<size_t>(i)] == '\n')
 				{
 					i_lf = i;
 					break;
@@ -183,20 +183,20 @@ protected:
 				}
 				{
 					boost::mutex::scoped_lock lock(extra_recv_data_lock);
-					extra_recv_data = boost::shared_array<uint8_t>(new uint8_t[n-(size_t)pos]);
-					memcpy(extra_recv_data.get(), buf.get() + (size_t)pos, n - (size_t)pos);
-					extra_recv_data_len = n - (size_t)pos;
+					extra_recv_data = boost::shared_array<uint8_t>(new uint8_t[n- boost::numeric_cast<size_t>(pos)]);
+					memcpy(extra_recv_data.get(), buf.get() + boost::numeric_cast<size_t>(pos), n - boost::numeric_cast<size_t>(pos));
+					extra_recv_data_len = n - boost::numeric_cast<size_t>(pos);
 				}
 				boost::mutex::scoped_lock lock(next_layer_lock);
 				next_layer_.async_read_some(boost::asio::buffer(buf.get(), 4096), boost::bind(&websocket_stream::server_handshake2, this, buf, protocol, allowed_origins, boost::asio::placeholders::bytes_transferred, boost::asio::placeholders::error, boost::protect(handler)));
 				return;
 			}
 
-			std::string line((char*)buf.get() + (size_t)pos, (size_t)i_lf - (size_t)pos + 1);
+			std::string line(reinterpret_cast<char*>(buf.get()) + boost::numeric_cast<size_t>(pos), boost::numeric_cast<size_t>(i_lf) - boost::numeric_cast<size_t>(pos) + 1);
 			if (extra_recv_data_len != 0)
 			{
 				boost::mutex::scoped_lock lock(extra_recv_data_lock);
-				line = std::string((char*)extra_recv_data.get(), extra_recv_data_len);
+				line = std::string(reinterpret_cast<char*>(extra_recv_data.get()), extra_recv_data_len);
 				extra_recv_data_len = 0;
 				extra_recv_data.reset();
 			}
@@ -612,13 +612,13 @@ protected:
 			int64_t pos = 0;
 			bool end_header = false;
 
-			while (pos < (int64_t)n && !end_header)
+			while (pos < boost::numeric_cast<int64_t>(n) && !end_header)
 			{
 
 				int64_t i_lf = -1;
-				for (int64_t i = pos; i < (int64_t)n; i++)
+				for (int64_t i = pos; i < boost::numeric_cast<int64_t>(n); i++)
 				{
-					if (buf[(size_t)i] == '\n')
+					if (buf[boost::numeric_cast<size_t>(i)] == '\n')
 					{
 						i_lf = i;
 						break;
@@ -642,20 +642,20 @@ protected:
 					}
 				{
 					boost::mutex::scoped_lock lock(extra_recv_data_lock);
-					extra_recv_data = boost::shared_array<uint8_t>(new uint8_t[n - (size_t)pos]);
-					memcpy(extra_recv_data.get(), buf.get() + (size_t)pos, n - (size_t)pos);
-					extra_recv_data_len = n - (size_t)pos;
+					extra_recv_data = boost::shared_array<uint8_t>(new uint8_t[n - boost::numeric_cast<size_t>(pos)]);
+					memcpy(extra_recv_data.get(), buf.get() + boost::numeric_cast<size_t>(pos), n - boost::numeric_cast<size_t>(pos));
+					extra_recv_data_len = n - boost::numeric_cast<size_t>(pos);
 				}
 				boost::mutex::scoped_lock lock(next_layer_lock);
 				next_layer_.async_read_some(boost::asio::buffer(buf.get(), 4096), boost::bind(&websocket_stream::async_client_handshake3, this, buf, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred, url, protocol, key, boost::protect(handler)));
 				return;
 				}
 
-				std::string line((char*)buf.get() + (size_t)pos, (size_t)i_lf - (size_t)pos + 1);
+				std::string line(reinterpret_cast<char*>(buf.get()) + boost::numeric_cast<size_t>(pos), boost::numeric_cast<size_t>(i_lf) - boost::numeric_cast<size_t>(pos) + 1);
 				if (extra_recv_data_len != 0)
 				{
 					boost::mutex::scoped_lock lock(extra_recv_data_lock);
-					line = std::string((char*)extra_recv_data.get(), extra_recv_data_len) + line;
+					line = std::string(reinterpret_cast<char*>(extra_recv_data.get()), extra_recv_data_len) + line;
 					extra_recv_data_len = 0;
 					extra_recv_data.reset();
 				}
@@ -846,7 +846,7 @@ protected:
 #endif
 #ifdef ROBOTRACONTEUR_USE_OPENSSL
 		uint8_t hash[SHA_DIGEST_LENGTH];
-		if (!SHA1((uint8_t*)blob.c_str(), blob.size(), hash))
+		if (!SHA1(reinterpret_cast<const uint8_t*>(blob.c_str()), blob.size(), hash))
 		{
 			return "";
 		}
@@ -939,7 +939,7 @@ protected:
 		int res=0;
 		while(!done)
 		{
-			res= BIO_write(b64, random_data, (int)16);
+			res= BIO_write(b64, random_data, static_cast<int>(16));
 
 			if (res<=0)
 			{
@@ -998,10 +998,10 @@ protected:
 		}
 
 
-		header.get()[0] = (uint8_t)(0x80 | (command & 0xF));
+		header.get()[0] = static_cast<uint8_t>(0x80 | (command & 0xF));
 		if (count <= 125)
 		{
-			header.get()[1] = (uint8_t)count;
+			header.get()[1] = static_cast<uint8_t>(count);
 			if (send_en_mask)
 			{
 				memcpy(header.get() + 2, send_mask.get(), 4);
@@ -1011,9 +1011,9 @@ protected:
 		{
 			header.get()[1] = 126;
 			
-			uint16_t c = (uint16_t)count;
-			uint8_t* c1 = (uint8_t*)(void*)&c;
-#ifndef BOOST_BIG_ENDIAN
+			uint16_t c = static_cast<uint16_t>(count);
+			uint8_t* c1 = reinterpret_cast<uint8_t*>(&c);
+#if !BOOST_ENDIAN_BIG_BYTE
 			header.get()[2] = c1[1];
 			header.get()[3] = c1[0];
 #else
@@ -1123,7 +1123,7 @@ protected:
 
 		if (recv_frame_pos > 0 && recv_frame_length > 0)
 		{
-			size_t c = (size_t)(recv_frame_length - recv_frame_pos);
+			size_t c = boost::numeric_cast<size_t>(recv_frame_length - recv_frame_pos);
 			if (boost::asio::buffer_size(buf) > c)
 			{
 				boost::mutex::scoped_lock lock(next_layer_lock);
@@ -1211,17 +1211,17 @@ protected:
 					return;
 				}
 
-				boost::shared_array<uint8_t> op_buf(new uint8_t[(size_t)recv_frame_length]);
+				boost::shared_array<uint8_t> op_buf(new uint8_t[boost::numeric_cast<size_t>(recv_frame_length)]);
 
 				boost::mutex::scoped_lock lock(next_layer_lock);
-				next_layer_.async_read_some(boost::asio::buffer(op_buf.get(), (size_t)recv_frame_length), boost::bind(&websocket_stream::async_read_some6, this, boost::asio::placeholders::bytes_transferred, boost::asio::placeholders::error, op_buf, (size_t)recv_frame_length, 0, buf, boost::protect(handler)));
+				next_layer_.async_read_some(boost::asio::buffer(op_buf.get(), boost::numeric_cast<size_t>(recv_frame_length)), boost::bind(&websocket_stream::async_read_some6, this, boost::asio::placeholders::bytes_transferred, boost::asio::placeholders::error, op_buf, boost::numeric_cast<size_t>(recv_frame_length), 0, buf, boost::protect(handler)));
 				return;
 			}
 
 			if (boost::asio::buffer_size(buf) > recv_frame_length)
 			{
 				boost::mutex::scoped_lock lock(next_layer_lock);
-				next_layer_.async_read_some(boost::asio::buffer(buf, (size_t)recv_frame_length), boost::bind(&websocket_stream::async_read_some5, this, boost::asio::placeholders::bytes_transferred, boost::asio::placeholders::error, buf, boost::protect(handler)));
+				next_layer_.async_read_some(boost::asio::buffer(buf, boost::numeric_cast<size_t>(recv_frame_length)), boost::bind(&websocket_stream::async_read_some5, this, boost::asio::placeholders::bytes_transferred, boost::asio::placeholders::error, buf, boost::protect(handler)));
 			}
 			else
 			{
@@ -1268,10 +1268,10 @@ protected:
 		}
 		else if (count1 == 126)
 		{
-#ifndef BOOST_BIG_ENDIAN
+#if !BOOST_ENDIAN_BIG_BYTE
 			std::reverse(recv_header2, recv_header2 + 2);
 #endif
-			uint16_t r_len = *(uint16_t*)(void*)(recv_header2);
+			uint16_t r_len = *reinterpret_cast<uint16_t*>(recv_header2);
 			recv_frame_length = r_len;
 			if (en_mask)
 			{
@@ -1280,10 +1280,10 @@ protected:
 		}
 		else
 		{
-#ifndef BOOST_BIG_ENDIAN
+#if !BOOST_ENDIAN_BIG_BYTE
 			std::reverse(recv_header2, recv_header2 + 8);
 #endif
-			uint64_t r_len = *(uint64_t*)(void*)(recv_header2);
+			uint64_t r_len = *reinterpret_cast<uint64_t*>(recv_header2);
 			recv_frame_length = r_len;
 			if (en_mask)
 			{
@@ -1301,17 +1301,17 @@ protected:
 				return;
 			}
 
-			boost::shared_array<uint8_t> op_buf(new uint8_t[(size_t)recv_frame_length]);
+			boost::shared_array<uint8_t> op_buf(new uint8_t[boost::numeric_cast<size_t>(recv_frame_length)]);
 
 			boost::mutex::scoped_lock lock(next_layer_lock);
-			next_layer_.async_read_some(boost::asio::buffer(op_buf.get(), (size_t)recv_frame_length), boost::bind(&websocket_stream::async_read_some6, this, boost::asio::placeholders::bytes_transferred, boost::asio::placeholders::error, op_buf, (size_t)recv_frame_length, 0, buf, boost::protect(handler)));
+			next_layer_.async_read_some(boost::asio::buffer(op_buf.get(), boost::numeric_cast<size_t>(recv_frame_length)), boost::bind(&websocket_stream::async_read_some6, this, boost::asio::placeholders::bytes_transferred, boost::asio::placeholders::error, op_buf, boost::numeric_cast<size_t>(recv_frame_length), 0, buf, boost::protect(handler)));
 			return;
 		}
 
 		if (boost::asio::buffer_size(buf) > recv_frame_length)
 		{
 			boost::mutex::scoped_lock lock(next_layer_lock);
-			next_layer_.async_read_some(boost::asio::buffer(buf,(size_t)recv_frame_length), boost::bind(&websocket_stream::async_read_some5, this, boost::asio::placeholders::bytes_transferred, boost::asio::placeholders::error, buf, boost::protect(handler)));
+			next_layer_.async_read_some(boost::asio::buffer(buf, boost::numeric_cast<size_t>(recv_frame_length)), boost::bind(&websocket_stream::async_read_some5, this, boost::asio::placeholders::bytes_transferred, boost::asio::placeholders::error, buf, boost::protect(handler)));
 		}
 		else
 		{

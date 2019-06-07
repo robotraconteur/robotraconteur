@@ -1786,7 +1786,7 @@ RR_INTRUSIVE_PTR<MessageElement> PackMxArrayToMessageElement(const mxArray* pm, 
 
 			RR_INTRUSIVE_PTR<MessageElement> me=PackMxArrayToMessageElement(v,tdef2,stub);
 			me->ElementName = "";
-			me->ElementNumber = (int32_t)i;
+			me->ElementNumber = boost::numeric_cast<int32_t>(i);
 			me->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
 			me->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
 
@@ -2228,7 +2228,7 @@ mxArray* UnpackMessageElementToMxArray_pod(RR_INTRUSIVE_PTR<MessageElement> elem
 	mxArray* a = mxCreateStructArray(1, &dims, (int)struct_def->Members.size(), fieldnames.get());
 
 
-	for (uint32_t i = 0; i < (uint32_t)l->Elements.size(); i++)
+	for (uint32_t i = 0; i < boost::numeric_cast<uint32_t>(l->Elements.size()); i++)
 	{
 		RR_INTRUSIVE_PTR<MessageElement>& el1 = l->Elements[i];
 
@@ -2704,7 +2704,7 @@ mxArray* UnpackMessageElementToMxArray(RR_INTRUSIVE_PTR<MessageElement> m, boost
 					}
 				}
 
-				size_t expected_n_elems=(size_t)boost::accumulate(dims1, 1, std::multiplies<int32_t>()) * namedarray_info.get<1>();
+				size_t expected_n_elems=boost::numeric_cast<size_t>(boost::accumulate(dims1, 1, std::multiplies<int32_t>()) * namedarray_info.get<1>());
 
 				RR_INTRUSIVE_PTR<MessageElementNamedArray> mm = MessageElement::FindElement(mm1->Elements, "array")->CastData<MessageElementNamedArray>();
 				if (!mm) throw DataTypeException("Invalid namedarray");
@@ -3851,7 +3851,7 @@ mxArray* MexServiceStub::subsref(const mxArray* S)
 				int32_t iindex;
 				if (mxIsDouble(index))
 				{
-					iindex=(int32_t)((double*)mxGetData(index))[0];
+					iindex=boost::numeric_cast<int32_t>(((double*)mxGetData(index))[0]);
 				}
 				else
 				{
@@ -4600,7 +4600,7 @@ mxArray* MexServiceStub::MemoryOp(const mxArray* member, const mxArray* command,
 					if (scommand == "read")
 					{
 						if (start < 0) start = 0;
-						if (count < 0) count = (int64_t)mem->Length();
+						if (count < 0) count = boost::numeric_cast<int64_t>(mem->Length());
 						return named_mem->Read(start, 0, count);
 					}
 
@@ -4608,7 +4608,7 @@ mxArray* MexServiceStub::MemoryOp(const mxArray* member, const mxArray* command,
 					{
 						if (data == NULL) throw InvalidArgumentException("Invalid memory read/write request");
 						if (start < 0) start = 0;
-						if (count < 0) count = (int64_t)::mxGetNumberOfElements(data);
+						if (count < 0) count = boost::numeric_cast<int64_t>(::mxGetNumberOfElements(data));
 						if (mxGetN(data) < count)
 							throw OutOfRangeException("Invalid indices");
 						named_mem->Write(start, data, 0, count);
@@ -4625,7 +4625,7 @@ mxArray* MexServiceStub::MemoryOp(const mxArray* member, const mxArray* command,
 			if (scommand=="read")
 			{
 				if (start<0) start=0;
-				if (count<0) count=(int64_t)mem->Length();
+				if (count<0) count=boost::numeric_cast<int64_t>(mem->Length());
 
 				RR_SHARED_PTR<MexPodArrayMemoryClient> pod_mem = RR_DYNAMIC_POINTER_CAST<MexPodArrayMemoryClient>(mem);
 				if (pod_mem)
@@ -4640,7 +4640,7 @@ mxArray* MexServiceStub::MemoryOp(const mxArray* member, const mxArray* command,
 			{
 				if (data==NULL) throw InvalidArgumentException("Invalid memory read/write request");				
 				if (start<0) start=0;
-				if (count<0) count=(int64_t)::mxGetNumberOfElements(data);
+				if (count<0) count=boost::numeric_cast<int64_t>(::mxGetNumberOfElements(data));
 				RR_SHARED_PTR<MexPodArrayMemoryClient> pod_mem = RR_DYNAMIC_POINTER_CAST<MexPodArrayMemoryClient>(mem);
 				if (pod_mem)
 				{
@@ -4652,10 +4652,10 @@ mxArray* MexServiceStub::MemoryOp(const mxArray* member, const mxArray* command,
 				if (!mxIsNumeric(data)) throw InvalidArgumentException("Invalid type for memory write");
 				if (count!=mxGetNumberOfElements(data) && mxGetNumberOfElements(data)==1)
 				{
-					mxArray* data2=mxCreateNumericMatrix((size_t)count,1,mxGetClassID(data), mxIsComplex(data) ? mxCOMPLEX : mxREAL);
+					mxArray* data2=mxCreateNumericMatrix(boost::numeric_cast<size_t>(count),1,mxGetClassID(data), mxIsComplex(data) ? mxCOMPLEX : mxREAL);
 					size_t s=mxGetElementSize(data);
 					
-					for (size_t i=0; i<(size_t)count; i++)
+					for (size_t i=0; i<boost::numeric_cast<size_t>(count); i++)
 					{
 						uint8_t* orig=(uint8_t*)mxGetData(data);
 						uint8_t* dest=(uint8_t*)mxGetData(data2);
@@ -5635,8 +5635,8 @@ void MexWireClient::PokeOutValue(const mxArray* value)
 #define RR_WAMCU_READ_TYPE(type) RR_SHARED_PTR<ArrayMemory<type> > type ## _var=boost::dynamic_pointer_cast<ArrayMemory<type> >(mem); \
 	if (type ## _var) \
 	{ \
-		mxArray* mxdat=mxCreateNumericMatrix((size_t)count,1,rrDataTypeToMxClassID(RRPrimUtil<type>::GetTypeID()),mxREAL); \
-		RR_INTRUSIVE_PTR<RRArray<type> > dat=AttachRRArray<type>((type*)mxGetData(mxdat),(size_t)count,false); \
+		mxArray* mxdat=mxCreateNumericMatrix(boost::numeric_cast<size_t>(count),1,rrDataTypeToMxClassID(RRPrimUtil<type>::GetTypeID()),mxREAL); \
+		RR_INTRUSIVE_PTR<RRArray<type> > dat=AttachRRArray<type>((type*)mxGetData(mxdat),boost::numeric_cast<size_t>(count),false); \
 		type ## _var->Read(memorypos,dat,0,count); \
 		return mxdat; \
 	} \
@@ -5667,7 +5667,7 @@ mxArray* MexArrayMemoryClientUtil::Read(RR_SHARED_PTR<ArrayMemoryBase> mem, uint
 		{			
 			RR_INTRUSIVE_PTR<RRArray<rr_bool> > dat=AllocateRRArray<rr_bool>(count);
 			rr_bool_var->Read(memorypos,dat,0,count);
-			mxArray* mxdat = mxCreateLogicalMatrix((size_t)count, 1);
+			mxArray* mxdat = mxCreateLogicalMatrix(boost::numeric_cast<size_t>(count), 1);
 			for (size_t i = 0; i < count; i++)
 			{
 				::mxGetLogicals(mxdat)[i] = (*dat)[i] == 0 ? false : true;
@@ -5680,7 +5680,7 @@ mxArray* MexArrayMemoryClientUtil::Read(RR_SHARED_PTR<ArrayMemoryBase> mem, uint
 		{
 			RR_INTRUSIVE_PTR<RRArray<cdouble> > dat = AllocateRRArray<cdouble>(count);
 			cdouble_var->Read(memorypos, dat, 0, count);
-			mxArray* mxdat = mxCreateNumericMatrix((size_t)count, 1, mxDOUBLE_CLASS, mxCOMPLEX);
+			mxArray* mxdat = mxCreateNumericMatrix(boost::numeric_cast<size_t>(count), 1, mxDOUBLE_CLASS, mxCOMPLEX);
 			for (size_t i = 0; i < count; i++)
 			{
 				((double*)mxGetData(mxdat))[i] = (*dat)[i].real;
@@ -5694,7 +5694,7 @@ mxArray* MexArrayMemoryClientUtil::Read(RR_SHARED_PTR<ArrayMemoryBase> mem, uint
 		{
 			RR_INTRUSIVE_PTR<RRArray<cfloat> > dat = AllocateRRArray<cfloat>(count);
 			cfloat_var->Read(memorypos, dat, 0, count);
-			mxArray* mxdat = mxCreateNumericMatrix((size_t)count, 1, mxSINGLE_CLASS, mxCOMPLEX);
+			mxArray* mxdat = mxCreateNumericMatrix(boost::numeric_cast<size_t>(count), 1, mxSINGLE_CLASS, mxCOMPLEX);
 			for (size_t i = 0; i < count; i++)
 			{
 				((float*)mxGetData(mxdat))[i] = (*dat)[i].real;
@@ -5795,7 +5795,7 @@ mxArray* MexMultiDimArrayMemoryClientUtil::Read(RR_SHARED_PTR<MultiDimArrayMemor
 	size_t elems=1;
 	BOOST_FOREACH(uint64_t& e, count)
 	{
-		elems*=(size_t)e;
+		elems*=boost::numeric_cast<size_t>(e);
 	}
 
 	/*RR_SHARED_PTR<MultiDimArrayMemory<int8_t> > i8=rr_cast<MultiDimArrayMemory<int8_t> >(mem);
@@ -5916,7 +5916,7 @@ void MexMultiDimArrayMemoryClientUtil::Write(RR_SHARED_PTR<MultiDimArrayMemoryBa
 	{
 		if (i<ndims)
 		{
-		arrdims->data()[i]=(uint32_t)dims[i];
+		arrdims->data()[i]=boost::numeric_cast<uint32_t>(dims[i]);
 		}
 		else
 		{

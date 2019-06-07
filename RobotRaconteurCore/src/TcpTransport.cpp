@@ -1618,7 +1618,7 @@ void TcpTransport::AsyncCreateTransportConnection(const std::string& url, RR_SHA
 		if (max_connections > 0)
 		{
 			boost::mutex::scoped_lock lock(TransportConnections_lock);
-			if ((int32_t)(TransportConnections.size()) > max_connections) throw ConnectionException("Too many active TCP connections");
+			if (boost::numeric_cast<int32_t>(TransportConnections.size()) > max_connections) throw ConnectionException("Too many active TCP connections");
 		}
 	}
 
@@ -1874,7 +1874,7 @@ void TcpTransport::StartServer(int32_t port)
 		ipv6_acceptor->set_option(boost::asio::ip::tcp::socket::linger(false,5));
 
 		int on = 1;
-		setsockopt(ipv6_acceptor->native_handle(), IPPROTO_IPV6, IPV6_V6ONLY, (const char*)&on, sizeof(on));
+		setsockopt(ipv6_acceptor->native_handle(), IPPROTO_IPV6, IPV6_V6ONLY, reinterpret_cast<const char*>(&on), sizeof(on));
 
 		ipv6_acceptor->bind(boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v6(),port));
 
@@ -2060,15 +2060,15 @@ void TcpTransport::GetLocalAdapterIPAddresses(std::vector<boost::asio::ip::addre
 
 			   if (ifa->ifa_addr->sa_family==AF_INET)
 			   {
-				   struct sockaddr_in* ip1=(struct sockaddr_in*)ifa->ifa_addr;
+				   struct sockaddr_in* ip1=reinterpret_cast<struct sockaddr_in*>(ifa->ifa_addr);
 				   boost::asio::ip::address_v4::bytes_type b;
-					memcpy((uint8_t*)&b[0],(uint8_t*)&ip1->sin_addr,4);
+					memcpy(&b[0],&ip1->sin_addr,4);
 					addresses.push_back(boost::asio::ip::address_v4(b));
 			   }
 
 			   if (ifa->ifa_addr->sa_family==AF_INET6)
 			   {
-				   struct sockaddr_in6* ip1=(struct sockaddr_in6*)ifa->ifa_addr;
+				   struct sockaddr_in6* ip1=reinterpret_cast<struct sockaddr_in6*>(ifa->ifa_addr);
 				   	boost::asio::ip::address_v6::bytes_type b;
 					memcpy(&b[0],&ip1->sin6_addr,16);
 					addresses.push_back(boost::asio::ip::address_v6(b,ip1->sin6_scope_id));
@@ -2117,7 +2117,7 @@ void TcpTransport::handle_v4_accept(RR_SHARED_PTR<TcpTransport> parent,RR_SHARED
 	int32_t connection_count = 0;
 	{
 		boost::mutex::scoped_lock lock(parent->TransportConnections_lock);
-		connection_count = (int32_t)parent->TransportConnections.size();
+		connection_count = boost::numeric_cast<int32_t>(parent->TransportConnections.size());
 	}
 
 	int32_t max_connection_count = parent->GetMaxConnectionCount();
@@ -2160,7 +2160,7 @@ void TcpTransport::handle_v6_accept(RR_SHARED_PTR<TcpTransport> parent, RR_SHARE
 	int32_t connection_count = 0;
 	{
 		boost::mutex::scoped_lock lock(parent->TransportConnections_lock);
-		connection_count = (int32_t)parent->TransportConnections.size();
+		connection_count = boost::numeric_cast<int32_t>(parent->TransportConnections.size());
 	}
 
 	int32_t max_connection_count = parent->GetMaxConnectionCount();
@@ -2514,7 +2514,7 @@ void TcpTransport::erase_transport(RR_SHARED_PTR<ITransportConnection> connectio
 	int32_t connection_count = 0;
 	{
 		boost::mutex::scoped_lock lock(TransportConnections_lock);
-		connection_count = (int32_t)TransportConnections.size();
+		connection_count = boost::numeric_cast<int32_t>(TransportConnections.size());
 	}
 
 	int32_t max_connection_count = GetMaxConnectionCount();
@@ -2867,7 +2867,7 @@ void TcpTransportConnection::AsyncAttachSocket(RR_SHARED_PTR<boost::asio::ip::tc
 	catch (std::exception&) {}
 
 	int send_timeout=15000;
-	setsockopt(socket->native_handle(),SOL_SOCKET,SO_SNDTIMEO,(const char*)&send_timeout,sizeof(send_timeout));
+	setsockopt(socket->native_handle(),SOL_SOCKET,SO_SNDTIMEO,reinterpret_cast<const char*>(&send_timeout),sizeof(send_timeout));
 	socket->set_option(boost::asio::ip::tcp::no_delay(true));
 
 	std::string noden;
@@ -2936,7 +2936,7 @@ void TcpTransportConnection::AsyncAttachWebSocket(RR_SHARED_PTR<boost::asio::ip:
 	catch (std::exception&) {}
 
 	int send_timeout = 15000;
-	setsockopt(socket->native_handle(), SOL_SOCKET, SO_SNDTIMEO, (const char*)&send_timeout, sizeof(send_timeout));
+	setsockopt(socket->native_handle(), SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast<const char*>(&send_timeout), sizeof(send_timeout));
 	socket->set_option(boost::asio::ip::tcp::no_delay(true));
 
 	std::string noden;
@@ -3081,7 +3081,7 @@ void TcpTransportConnection::AsyncAttachWSSWebSocket(RR_SHARED_PTR<boost::asio::
 	catch (std::exception&) {}
 
 	int send_timeout = 15000;
-	setsockopt(socket->native_handle(), SOL_SOCKET, SO_SNDTIMEO, (const char*)&send_timeout, sizeof(send_timeout));
+	setsockopt(socket->native_handle(), SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast<const char*>(&send_timeout), sizeof(send_timeout));
 	socket->set_option(boost::asio::ip::tcp::no_delay(true));
 
 	std::string noden;
@@ -4707,7 +4707,7 @@ namespace detail
 
 		if (!error)
 		{
-			std::string s((char*)buffer.get(),bytes_transferred);
+			std::string s(reinterpret_cast<char*>(buffer.get()),bytes_transferred);
 			try
 			{
 
@@ -4941,7 +4941,7 @@ namespace detail
 
 						std::string packetdata = generate_response_packet(e, ee, port);
 						
-						broadcast_discovery_packet(e, packetdata, (IPNodeDiscoveryFlags)broadcast_flags);
+						broadcast_discovery_packet(e, packetdata, static_cast<IPNodeDiscoveryFlags>(broadcast_flags));
 						
 					}
 					catch (std::exception&) {}
@@ -5167,7 +5167,7 @@ namespace detail
 
 				std::string packetdata2 = packetdata;
 
-				broadcast_discovery_packet(e, packetdata, (IPNodeDiscoveryFlags)listen_flags);
+				broadcast_discovery_packet(e, packetdata, static_cast<IPNodeDiscoveryFlags>(listen_flags));
 
 			}
 			catch (std::exception&) {}			
@@ -5390,10 +5390,10 @@ namespace detail
 					uint8_t indata2[4096];
 
 
-					int nread = (int32_t)l->read_some(boost::asio::buffer(&indata2, sizeof(indata2)));
+					int32_t nread = boost::numeric_cast<int32_t>(l->read_some(boost::asio::buffer(&indata2, sizeof(indata2))));
 
 					if (nread == 0) throw InvalidOperationException("Connection closed");
-					std::string indata1((char*)indata2, nread);
+					std::string indata1(reinterpret_cast<char*>(indata2), nread);
 
 					if (!boost::starts_with(indata1, "OK"))
 					{

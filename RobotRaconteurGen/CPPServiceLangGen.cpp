@@ -210,7 +210,7 @@ namespace RobotRaconteurGen
 			return vartype;
 
 		std::string b = "RR_INTRUSIVE_PTR<";
-		int32_t start = (int32_t)b.length();
+		int32_t start = boost::numeric_cast<int32_t>(b.length());
 
 		std::string ret = vartype.substr(start);
 		ret = ret.substr(0, ret.length() - 1);

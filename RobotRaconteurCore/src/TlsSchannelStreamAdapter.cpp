@@ -824,7 +824,7 @@ namespace detail
 
 		if ((send_buffer_transfer_pos + bytes_transferred) < send_buffer_end_pos)
 		{	
-			send_buffer_transfer_pos+=(uint32_t)bytes_transferred;
+			send_buffer_transfer_pos+=boost::numeric_cast<uint32_t>(bytes_transferred);
 			const_buffers send_b;
 			send_b.push_back(boost::asio::const_buffer(send_buffer.get() + send_buffer_transfer_pos, send_buffer_end_pos - send_buffer_transfer_pos));
 			_async_write_some(send_b,boost::bind(&TlsSchannelAsyncStreamAdapter::do_handshake1,shared_from_this(),boost::asio::placeholders::error,boost::asio::placeholders::bytes_transferred,boost::protect(handler)));
@@ -892,7 +892,7 @@ namespace detail
 		SECURITY_STATUS scRet;
 		DWORD dwSSPIFlags, dwSSPIOutFlags;
 
-		recv_buffer_end_pos += (uint32_t)bytes_transferred;
+		recv_buffer_end_pos += boost::numeric_cast<uint32_t>(bytes_transferred);
 
 		dwSSPIFlags = ISC_REQ_SEQUENCE_DETECT   | ISC_REQ_REPLAY_DETECT     | ISC_REQ_CONFIDENTIALITY   |
                ISC_RET_EXTENDED_ERROR    | ISC_REQ_ALLOCATE_MEMORY   | ISC_REQ_STREAM;
@@ -1144,7 +1144,7 @@ namespace detail
 
 		if ((send_buffer_transfer_pos + bytes_transferred) < send_buffer_end_pos)
 		{	
-			send_buffer_transfer_pos += (uint32_t)bytes_transferred;
+			send_buffer_transfer_pos += boost::numeric_cast<uint32_t>(bytes_transferred);
 			const_buffers send_b;
 			send_b.push_back(boost::asio::const_buffer(send_buffer.get() + send_buffer_transfer_pos, send_buffer_end_pos - send_buffer_transfer_pos));
 			_async_write_some(send_b, boost::bind(&TlsSchannelAsyncStreamAdapter::do_handshake1,shared_from_this(),boost::asio::placeholders::error,boost::asio::placeholders::bytes_transferred,boost::protect(handler)));
@@ -1281,7 +1281,7 @@ namespace detail
 		send_buffer_end_pos=0;
 		send_buffer_transfer_pos=0;
 			
-		uint32_t s = (uint32_t)boost::asio::buffer_size(b);
+		uint32_t s = boost::numeric_cast<uint32_t>(boost::asio::buffer_size(b));
 		if (s > TlsStreamSizes.cbMaximumMessage) s=TlsStreamSizes.cbMaximumMessage;
 		
 		SECURITY_STATUS scRet;
@@ -1356,7 +1356,7 @@ namespace detail
 			return;
 		}
 
-		send_buffer_transfer_pos += (uint32_t)bytes_transferred;
+		send_buffer_transfer_pos += boost::numeric_cast<uint32_t>(bytes_transferred);
 		size_t s=send_buffer_transfer_pos;
 
 		if (send_buffer_transfer_pos >= send_buffer_end_pos)
@@ -1467,7 +1467,7 @@ namespace detail
 				size_t p2=d;
 				memmove(recv_buffer_un.get(),recv_buffer_un.get() + d, recv_buffer_un_end_pos-d);
 				
-				recv_buffer_un_end_pos = (uint32_t)(recv_buffer_un_end_pos - d);
+				recv_buffer_un_end_pos = boost::numeric_cast<uint32_t>(recv_buffer_un_end_pos - d);
 				boost::system::error_code ec;
 				RR_BOOST_ASIO_POST(_io_context, boost::bind(handler,ec,d));
 				return;
@@ -1534,7 +1534,7 @@ namespace detail
 		}
 
 		//memcpy(recv_buffer + recv_buffer_end_pos, boost::asio::buffer_cast<void*>(b),bytes_transferred);
-		recv_buffer_end_pos += (uint32_t)bytes_transferred;
+		recv_buffer_end_pos += boost::numeric_cast<uint32_t>(bytes_transferred);
 		
 		bool keepgoing=true;
 
@@ -1693,7 +1693,7 @@ namespace detail
 			size_t extra_size=pDataBuffer->cbBuffer-bsize;
 			MoveMemory(RR_BOOST_ASIO_BUFFER_CAST(void*,b),pDataBuffer->pvBuffer,bsize);
 			MoveMemory(recv_buffer_un.get(),((uint8_t*)pDataBuffer->pvBuffer)+bsize,extra_size);
-			recv_buffer_un_end_pos = (uint32_t)extra_size;
+			recv_buffer_un_end_pos = boost::numeric_cast<uint32_t>(extra_size);
 			if (pExtraBuffer)
 			{
 				MoveMemory(recv_buffer.get(),pExtraBuffer->pvBuffer,pExtraBuffer->cbBuffer);
@@ -1908,7 +1908,7 @@ namespace detail
 		
 		if ((send_buffer_transfer_pos + bytes_transferred) < send_buffer_end_pos)
 		{	
-			send_buffer_transfer_pos += (uint32_t)bytes_transferred;
+			send_buffer_transfer_pos += boost::numeric_cast<uint32_t>(bytes_transferred);
 			const_buffers send_b;
 			send_b.push_back(boost::asio::const_buffer(send_buffer.get() + send_buffer_transfer_pos, send_buffer_end_pos - send_buffer_transfer_pos));
 			_async_write_some(send_b,boost::bind(&TlsSchannelAsyncStreamAdapter::do_shutdown2,shared_from_this(),boost::asio::placeholders::error,boost::asio::placeholders::bytes_transferred));

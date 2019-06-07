@@ -531,7 +531,7 @@ RR_INTRUSIVE_PTR<MessageElement> PipeBase::PackPacket(RR_INTRUSIVE_PTR<RRValue> 
 
 		if (requestack)
 		{
-			elems.push_back(CreateMessageElement("requestack", ScalarToRRArray((uint32_t)1)));
+			elems.push_back(CreateMessageElement("requestack", ScalarToRRArray(static_cast<uint32_t>(1))));
 		}
 
 		RR_INTRUSIVE_PTR<MessageElementMap<std::string> > delems = CreateMessageElementMap<std::string>(elems);
@@ -666,14 +666,14 @@ void PipeClientBase::PipePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32
 					if (me->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
 					{
 						RR_INTRUSIVE_PTR<MessageElement> me1 = CreateMessageElement();
-						me1->SequenceNumber=((uint32_t)pnum);
+						me1->SequenceNumber=(boost::numeric_cast<uint32_t>(pnum));
 						me1->ElementNumber = me->ElementNumber;
 						me1->ElementFlags = MessageElementFlags_ELEMENT_NUMBER | MessageElementFlags_SEQUENCE_NUMBER;
 						ack.push_back(me1);
 					}
 					else
 					{
-						ack.push_back(CreateMessageElement(me->ElementName, ScalarToRRArray((uint32_t)pnum)));
+						ack.push_back(CreateMessageElement(me->ElementName, ScalarToRRArray(boost::numeric_cast<uint32_t>(pnum))));
 					}
 				}
 			}
@@ -808,7 +808,7 @@ void PipeClientBase::AsyncConnect_internal(int32_t index, RR_MOVE_ARG(boost::fun
 	m->AddElement("index", ScalarToRRArray(index));
 
 	if (unreliable)
-		m->AddElement("unreliable",ScalarToRRArray((int32_t)1));
+		m->AddElement("unreliable",ScalarToRRArray(static_cast<int32_t>(1)));
 
 	lock2.unlock();
 	GetStub()->AsyncProcessRequest(m,boost::bind(&PipeClientBase::AsyncConnect_internal1, RR_DYNAMIC_POINTER_CAST<PipeClientBase>(shared_from_this()),_1,_2,index,key,handler),timeout);
@@ -988,14 +988,14 @@ void PipeServerBase::PipePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32
 					if (me->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
 					{
 						RR_INTRUSIVE_PTR<MessageElement> me1 = CreateMessageElement();
-						me1->SequenceNumber = ((uint32_t)pnum);
+						me1->SequenceNumber = (boost::numeric_cast<uint32_t>(pnum));
 						me1->ElementNumber = me->ElementNumber;
 						me1->ElementFlags = MessageElementFlags_ELEMENT_NUMBER | MessageElementFlags_SEQUENCE_NUMBER;
 						ack.push_back(me1);
 					}
 					else
 					{
-						ack.push_back(CreateMessageElement(me->ElementName, ScalarToRRArray((uint32_t)pnum)));
+						ack.push_back(CreateMessageElement(me->ElementName, ScalarToRRArray(boost::numeric_cast<uint32_t>(pnum))));
 					}
 				}
 
@@ -1261,7 +1261,7 @@ RR_INTRUSIVE_PTR<MessageEntry> PipeServerBase::PipeCommand(RR_INTRUSIVE_PTR<Mess
 							if (RRArrayToScalar((m->FindElement("unreliable")->CastData<RRArray<int32_t> >()))==1)
 							{
 								isunreliable=true;
-								ret->AddElement("unreliable",ScalarToRRArray((int32_t)1));
+								ret->AddElement("unreliable",ScalarToRRArray(static_cast<int32_t>(1)));
 							}
 						}
 						catch (std::exception&) {}
@@ -1495,7 +1495,7 @@ void PipeBroadcasterBase::AsyncSendPacketBase(RR_INTRUSIVE_PTR<RRValue> packet, 
 					continue;
 			}
 
-			if (maximum_backlog > -1 && ((int32_t)(*ee2)->backlog.size()) + ((int32_t)(*ee2)->active_sends.size()) > maximum_backlog)
+			if (maximum_backlog > -1 && (boost::numeric_cast<int32_t>((*ee2)->backlog.size()) + boost::numeric_cast<int32_t>((*ee2)->active_sends.size())) > maximum_backlog)
 			{
 				continue;
 			}

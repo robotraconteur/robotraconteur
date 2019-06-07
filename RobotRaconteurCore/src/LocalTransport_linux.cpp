@@ -117,7 +117,7 @@ bool LinuxLocalTransportDiscovery_dir::Refresh()
 
 	for (char* ptr = buf; ptr < buf + len; ptr += sizeof(struct inotify_event) + event->len)
 	{
-		event = (const struct inotify_event *) ptr;
+		event = reinterpret_cast<const struct inotify_event *>(ptr);
 
 		if (event->mask & IN_DELETE_SELF)
 		{
@@ -355,7 +355,7 @@ void LinuxLocalTransportDiscovery::refresh_public()
 		{
 			for (char* ptr = buf; ptr < buf + len; ptr += sizeof(struct inotify_event) + event->len)
 			{
-				event = (const struct inotify_event *) ptr;
+				event = reinterpret_cast<const struct inotify_event *>(ptr);
 
 				if ((event->mask & IN_DELETE_SELF))
 				{

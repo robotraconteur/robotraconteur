@@ -92,7 +92,7 @@ NodeID::NodeID(const std::string& id)
 			ss << std::hex << id3;
 			uint32_t id4;
 			ss >> id4;
-			u1.data[i] = (uint8_t)id4;
+			u1.data[i] = static_cast<uint8_t>((id4 & 0xFF));
 		}
 		this->id = u1;
 	}

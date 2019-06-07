@@ -395,7 +395,7 @@ namespace RobotRaconteur
 	bool AsyncMessageReaderImpl::read_string(std::string& str)
 	{
 		state_type next_state = state();
-		next_state = (state_type)(((int)next_state) + 1);
+		next_state = static_cast<state_type>(static_cast<int>(next_state) + 1);
 		return read_string(str, next_state);
 	}
 
@@ -416,7 +416,7 @@ namespace RobotRaconteur
 	bool AsyncMessageReaderImpl::read_string3(std::string& str)
 	{
 		state_type next_state = state();
-		next_state = (state_type)(((int)next_state) + 1);
+		next_state = static_cast<state_type>(static_cast<int>(next_state) + 1);
 		return read_string3(str, next_state);
 	}
 	
@@ -586,7 +586,7 @@ namespace RobotRaconteur
 			{
 				uint16_t t;
 				R(read_number(t));
-				data<MessageEntry>()->EntryType = (MessageEntryType)t;
+				data<MessageEntry>()->EntryType = static_cast<MessageEntryType>(t);
 				state() = MessageEntry_pad;
 			}
 			case MessageEntry_pad:
@@ -615,7 +615,7 @@ namespace RobotRaconteur
 				MessageEntry* e = data<MessageEntry>();
 				uint16_t err;
 				R(read_number(err));
-				data<MessageEntry>()->Error = (MessageErrorType)err;				
+				data<MessageEntry>()->Error = static_cast<MessageErrorType>(err);				
 				state() = MessageEntry_metainfo;
 			}
 			case MessageEntry_metainfo:
@@ -668,7 +668,7 @@ namespace RobotRaconteur
 			{
 				uint16_t t;
 				R(read_number(t));
-				data<MessageElement>()->ElementType = (DataTypes)t;
+				data<MessageElement>()->ElementType = static_cast<DataTypes>(t);
 				state() = MessageElement_elementtypestr;
 			}
 			case MessageElement_elementtypestr:
@@ -1445,7 +1445,7 @@ namespace RobotRaconteur
 					uint32_t c;
 					R(read_uint_x(c));
 					if (c > std::numeric_limits<uint16_t>::max()) throw ProtocolException("Too many entries in message");
-					h->EntryCount = (uint16_t)c;
+					h->EntryCount = boost::numeric_cast<uint16_t>(c);
 				}
 				state() = MessageHeader_transportspecific1;
 				
@@ -1516,7 +1516,7 @@ namespace RobotRaconteur
 			{
 				uint16_t t;
 				R(read_number(t));
-				data<MessageEntry>()->EntryType = (MessageEntryType)t;
+				data<MessageEntry>()->EntryType = static_cast<MessageEntryType>(t);
 				state() = MessageEntry_servicepathstr;
 			}
 			case MessageEntry_servicepathstr:
@@ -1581,7 +1581,7 @@ namespace RobotRaconteur
 				{
 					uint16_t err;
 					R(read_number(err));
-					ee->Error = (MessageErrorType)err;
+					ee->Error = static_cast<MessageErrorType>(err);
 				}
 				state() = MessageEntry_metainfo;
 			}
@@ -1684,7 +1684,7 @@ namespace RobotRaconteur
 			{
 				uint16_t t;
 				R(read_number(t));
-				data<MessageElement>()->ElementType = (DataTypes)t;
+				data<MessageElement>()->ElementType = static_cast<DataTypes>(t);
 				state() = MessageElement_elementtypestr;
 			}
 			case MessageElement_elementtypestr:

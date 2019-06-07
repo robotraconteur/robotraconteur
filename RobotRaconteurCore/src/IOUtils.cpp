@@ -61,7 +61,7 @@ size_t ArrayBinaryReader::Read(void* buffer, size_t index, size_t length)
 
 	}
 
-	memcpy(((uint8_t*)buffer)+index,this->buffer+position,length);
+	memcpy((static_cast<uint8_t*>(buffer))+index,this->buffer+position,length);
 
 	position+=length;
 
@@ -79,85 +79,85 @@ void ArrayBinaryReader::ReadArray(RR_INTRUSIVE_PTR<RRBaseArray>& arr)
 	case DataTypes_double_t:
 		{
 		RR_INTRUSIVE_PTR<RRArray<double> > o=rr_cast<RRArray<double> >(arr);
-		Read((uint8_t*)o->data(),0,len*sizeof(double));
+		Read(reinterpret_cast<uint8_t*>(o->data()),0,len*sizeof(double));
 		break;	
 		}
 	case DataTypes_single_t:
 		{
 		RR_INTRUSIVE_PTR<RRArray<float> > o=rr_cast<RRArray<float> >(arr);
-		Read((uint8_t*)o->data(),0,len*sizeof(float));
+		Read(reinterpret_cast<uint8_t*>(o->data()),0,len*sizeof(float));
 		break;
 		}
 	case DataTypes_int8_t:
 		{
 		RR_INTRUSIVE_PTR<RRArray<int8_t> > o=rr_cast<RRArray<int8_t> >(arr);
-		Read((uint8_t*)o->data(),0,len*sizeof(int8_t));
+		Read(reinterpret_cast<uint8_t*>(o->data()),0,len*sizeof(int8_t));
 		break;
 		}
 	case DataTypes_uint8_t:
 		{
 		RR_INTRUSIVE_PTR<RRArray<uint8_t> > o=rr_cast<RRArray<uint8_t> >(arr);
-		Read((uint8_t*)o->data(),0,len*sizeof(uint8_t));
+		Read(reinterpret_cast<uint8_t*>(o->data()),0,len*sizeof(uint8_t));
 		break;
 		}
 	case DataTypes_int16_t:
 		{
 		RR_INTRUSIVE_PTR<RRArray<int16_t> > o=rr_cast<RRArray<int16_t> >(arr);
-		Read((uint8_t*)o->data(),0,len*sizeof(int16_t));
+		Read(reinterpret_cast<uint8_t*>(o->data()),0,len*sizeof(int16_t));
 		break;
 		}
 	case DataTypes_uint16_t:
 		{
 		RR_INTRUSIVE_PTR<RRArray<uint16_t> > o=rr_cast<RRArray<uint16_t> >(arr);
-		Read((uint8_t*)o->data(),0,len*sizeof(uint16_t));
+		Read(reinterpret_cast<uint8_t*>(o->data()),0,len*sizeof(uint16_t));
 		break;
 		}
 	case DataTypes_int32_t:
 		{
 		RR_INTRUSIVE_PTR<RRArray<int32_t> > o=rr_cast<RRArray<int32_t> >(arr);
-		Read((uint8_t*)o->data(),0,len*sizeof(int32_t));
+		Read(reinterpret_cast<uint8_t*>(o->data()),0,len*sizeof(int32_t));
 		break;
 		}
 	case DataTypes_uint32_t:
 		{
 		RR_INTRUSIVE_PTR<RRArray<uint32_t> > o=rr_cast<RRArray<uint32_t> >(arr);
-		Read((uint8_t*)o->data(),0,len*sizeof(uint32_t));
+		Read(reinterpret_cast<uint8_t*>(o->data()),0,len*sizeof(uint32_t));
 		break;
 		}
 	case DataTypes_int64_t:
 		{
 		RR_INTRUSIVE_PTR<RRArray<int64_t> > o=rr_cast<RRArray<int64_t> >(arr);
-		Read((uint8_t*)o->data(),0,len*sizeof(int64_t));
+		Read(reinterpret_cast<uint8_t*>(o->data()),0,len*sizeof(int64_t));
 		break;
 		}
 	case DataTypes_uint64_t:
 		{
 		RR_INTRUSIVE_PTR<RRArray<uint64_t> > o=rr_cast<RRArray<uint64_t> >(arr);
-		Read((uint8_t*)o->data(),0,len*sizeof(uint64_t));
+		Read(reinterpret_cast<uint8_t*>(o->data()),0,len*sizeof(uint64_t));
 		break;
 		}
 	case DataTypes_string_t:
 		{
 		RR_INTRUSIVE_PTR<RRArray<char> > o=rr_cast<RRArray<char> >(arr);
-		Read((uint8_t*)o->data(),0,len*sizeof(char));
+		Read(reinterpret_cast<uint8_t*>(o->data()),0,len*sizeof(char));
 		break;
 		}
 	case DataTypes_cdouble_t:
 	{
 		RR_INTRUSIVE_PTR<RRArray<cdouble> > o = rr_cast<RRArray<cdouble> >(arr);
-		Read((uint8_t*)o->data(), 0, len * sizeof(cdouble));
+		Read(reinterpret_cast<uint8_t*>(o->data()), 0, len * sizeof(cdouble));
 		break;
 	}
 	case DataTypes_csingle_t:
 	{
 		RR_INTRUSIVE_PTR<RRArray<cfloat> > o = rr_cast<RRArray<cfloat> >(arr);
-		Read((uint8_t*)o->data(), 0, len * sizeof(cfloat));
+		Read(reinterpret_cast<uint8_t*>(o->data()), 0, len * sizeof(cfloat));
 		break;
 	}
 	case DataTypes_bool_t:
 	{
 		RR_INTRUSIVE_PTR<RRArray<rr_bool> > o = rr_cast<RRArray<rr_bool> >(arr);
-		Read((uint8_t*)o->data(), 0, len * sizeof(rr_bool));
+		Read(reinterpret_cast<uint8_t*>(o->data()), 0, len * sizeof(rr_bool));
 		break;
 	}	
 	default:
@@ -301,7 +301,7 @@ void ArrayBinaryReader::PopLimit()
 
 int32_t ArrayBinaryReader::DistanceFromLimit()
 {
-	return ((int32_t)CurrentLimit()) - ((int32_t)Position());
+	return (boost::numeric_cast<int32_t>(CurrentLimit())) - (boost::numeric_cast<int32_t>(Position()));
 }
 
 ArrayBinaryWriter::ArrayBinaryWriter(uint8_t* buffer, size_t start_position, size_t length, bool nativeorder)
@@ -345,7 +345,7 @@ size_t ArrayBinaryWriter::Write(const void* buffer, size_t index, size_t length)
 
 	}
 
-	memcpy(this->buffer+position,((uint8_t*)buffer)+index,length);
+	memcpy(this->buffer+position,(reinterpret_cast<const uint8_t*>(buffer))+index,length);
 	
 	position+=length;
 
@@ -366,7 +366,7 @@ void ArrayBinaryWriter::WriteArray(RR_INTRUSIVE_PTR<RRBaseArray>& arr)
 #if BOOST_ENDIAN_BIG_BYTE
 		if (!nativeorder) for (size_t i=0; i< o->Length(); i++) WriteNumber((*o)[i]);
 #else
-		Write((uint8_t*)o->data(),0,len*sizeof(double));
+		Write(reinterpret_cast<uint8_t*>(o->data()),0,len*sizeof(double));
 #endif
 		break;
 		}
@@ -376,7 +376,7 @@ void ArrayBinaryWriter::WriteArray(RR_INTRUSIVE_PTR<RRBaseArray>& arr)
 #if BOOST_ENDIAN_BIG_BYTE
 		if (!nativeorder) for (size_t i=0; i< o->Length(); i++) WriteNumber((*o)[i]);
 #else
-		Write((uint8_t*)o->data(),0,len*sizeof(float));
+		Write(reinterpret_cast<uint8_t*>(o->data()),0,len*sizeof(float));
 #endif
 		break;
 		}
@@ -384,7 +384,7 @@ void ArrayBinaryWriter::WriteArray(RR_INTRUSIVE_PTR<RRBaseArray>& arr)
 		{
 		RR_INTRUSIVE_PTR<RRArray<int8_t> > o=rr_cast<RRArray<int8_t> >(arr);
 
-		Write((uint8_t*)o->data(),0,len*sizeof(int8_t));
+		Write(reinterpret_cast<uint8_t*>(o->data()),0,len*sizeof(int8_t));
 
 		break;
 		}
@@ -392,7 +392,7 @@ void ArrayBinaryWriter::WriteArray(RR_INTRUSIVE_PTR<RRBaseArray>& arr)
 		{
 		RR_INTRUSIVE_PTR<RRArray<uint8_t> > o=rr_cast<RRArray<uint8_t> >(arr);
 
-		Write((uint8_t*)o->data(),0,len*sizeof(uint8_t));
+		Write(reinterpret_cast<uint8_t*>(o->data()),0,len*sizeof(uint8_t));
 
 		break;
 		}
@@ -402,7 +402,7 @@ void ArrayBinaryWriter::WriteArray(RR_INTRUSIVE_PTR<RRBaseArray>& arr)
 #if BOOST_ENDIAN_BIG_BYTE
 		if (!nativeorder) for (size_t i=0; i< o->Length(); i++) WriteNumber((*o)[i]);
 #else
-		Write((uint8_t*)o->data(),0,len*sizeof(int16_t));
+		Write(reinterpret_cast<uint8_t*>(o->data()),0,len*sizeof(int16_t));
 #endif
 		break;
 		}
@@ -412,7 +412,7 @@ void ArrayBinaryWriter::WriteArray(RR_INTRUSIVE_PTR<RRBaseArray>& arr)
 #if BOOST_ENDIAN_BIG_BYTE
 		if (!nativeorder) for (size_t i=0; i< o->Length(); i++) WriteNumber((*o)[i]);
 #else
-		Write((uint8_t*)o->data(),0,len*sizeof(uint16_t));
+		Write(reinterpret_cast<uint8_t*>(o->data()),0,len*sizeof(uint16_t));
 #endif
 		break;
 		}
@@ -422,7 +422,7 @@ void ArrayBinaryWriter::WriteArray(RR_INTRUSIVE_PTR<RRBaseArray>& arr)
 #if BOOST_ENDIAN_BIG_BYTE
 		if (!nativeorder) for (size_t i=0; i< o->Length(); i++) WriteNumber((*o)[i]);
 #else
-		Write((uint8_t*)o->data(),0,len*sizeof(int32_t));
+		Write(reinterpret_cast<uint8_t*>(o->data()),0,len*sizeof(int32_t));
 #endif
 		break;
 		}
@@ -432,7 +432,7 @@ void ArrayBinaryWriter::WriteArray(RR_INTRUSIVE_PTR<RRBaseArray>& arr)
 #if BOOST_ENDIAN_BIG_BYTE
 		if (!nativeorder) for (size_t i=0; i< o->Length(); i++) WriteNumber((*o)[i]);
 #else
-		Write((uint8_t*)o->data(),0,len*sizeof(uint32_t));
+		Write(reinterpret_cast<uint8_t*>(o->data()),0,len*sizeof(uint32_t));
 #endif
 		break;
 		}
@@ -442,7 +442,7 @@ void ArrayBinaryWriter::WriteArray(RR_INTRUSIVE_PTR<RRBaseArray>& arr)
 #if BOOST_ENDIAN_BIG_BYTE
 		if (!nativeorder) for (size_t i=0; i< o->Length(); i++) WriteNumber((*o)[i]);
 #else
-		Write((uint8_t*)o->data(),0,len*sizeof(int64_t));
+		Write(reinterpret_cast<uint8_t*>(o->data()),0,len*sizeof(int64_t));
 #endif
 		break;
 		}
@@ -452,32 +452,32 @@ void ArrayBinaryWriter::WriteArray(RR_INTRUSIVE_PTR<RRBaseArray>& arr)
 #if BOOST_ENDIAN_BIG_BYTE
 		if (!nativeorder) for (size_t i=0; i< o->Length(); i++) WriteNumber((*o)[i]);
 #else
-		Write((uint8_t*)o->data(),0,len*sizeof(uint64_t));
+		Write(reinterpret_cast<uint8_t*>(o->data()),0,len*sizeof(uint64_t));
 #endif
 		break;
 		}
 	case DataTypes_string_t:
 		{
 		RR_INTRUSIVE_PTR<RRArray<char> > o=rr_cast<RRArray<char> >(arr);
-		Write((uint8_t*)o->data(),0,len*sizeof(char));
+		Write(reinterpret_cast<uint8_t*>(o->data()),0,len*sizeof(char));
 		break;
 		}
 	case DataTypes_cdouble_t:
 	{
 		RR_INTRUSIVE_PTR<RRArray<cdouble> > o = rr_cast<RRArray<cdouble> >(arr);
-		Write((uint8_t*)o->data(), 0, len * sizeof(cdouble));
+		Write(reinterpret_cast<uint8_t*>(o->data()), 0, len * sizeof(cdouble));
 		break;
 	}
 	case DataTypes_csingle_t:
 	{
 		RR_INTRUSIVE_PTR<RRArray<cfloat> > o = rr_cast<RRArray<cfloat> >(arr);
-		Write((uint8_t*)o->data(), 0, len * sizeof(cfloat));
+		Write(reinterpret_cast<uint8_t*>(o->data()), 0, len * sizeof(cfloat));
 		break;
 	}
 	case DataTypes_bool_t:
 	{
 		RR_INTRUSIVE_PTR<RRArray<rr_bool> > o = rr_cast<RRArray<rr_bool> >(arr);
-		Write((uint8_t*)o->data(), 0, len * sizeof(rr_bool));
+		Write(reinterpret_cast<uint8_t*>(o->data()), 0, len * sizeof(rr_bool));
 		break;
 	}	
 	default:
@@ -488,32 +488,32 @@ void ArrayBinaryWriter::WriteArray(RR_INTRUSIVE_PTR<RRBaseArray>& arr)
 void ArrayBinaryWriter::WriteString8(const std::string& str)
 {
 	const char* datout=str.c_str();
-	Write((const uint8_t*)datout,0,str.size());	
+	Write(reinterpret_cast<const uint8_t*>(datout),0,str.size());	
 }
 
 void ArrayBinaryWriter::WriteString8WithXLen(const std::string& str)
 {
 	size_t a = str.size();
-	WriteUintX((uint32_t)a);
+	WriteUintX(boost::numeric_cast<uint32_t>(a));
 	const char* datout = str.c_str();
-	Write((const uint8_t*)datout, 0, a);
+	Write(reinterpret_cast<const uint8_t*>(datout), 0, a);
 }
 
 void ArrayBinaryWriter::WriteUintX(uint32_t v)
 {
 	if (v <= 252)
 	{
-		WriteNumber((uint8_t)v);
+		WriteNumber(static_cast<uint8_t>(v));
 		return;
 	}
 	if (v <= std::numeric_limits<uint16_t>::max())
 	{
-		WriteNumber((uint8_t)253);
-		WriteNumber((uint16_t)v);
+		WriteNumber(static_cast<uint8_t>(253));
+		WriteNumber(static_cast<uint16_t>(v));
 		return;
 	}
 	
-	WriteNumber((uint8_t)254);
+	WriteNumber(static_cast<uint8_t>(254));
 	WriteNumber(v);
 }
 
@@ -521,11 +521,11 @@ void ArrayBinaryWriter::WriteUintX2(uint64_t v)
 {
 	if (v <= std::numeric_limits<uint32_t>::max())
 	{
-		WriteUintX((uint32_t)v);
+		WriteUintX(boost::numeric_cast<uint32_t>(v));
 	}
 	else
 	{
-		WriteNumber((uint8_t)255);
+		WriteNumber(static_cast<uint8_t>(255));
 		WriteNumber(v);
 	}
 }
@@ -534,17 +534,17 @@ void ArrayBinaryWriter::WriteIntX(int32_t v)
 {
 	if (v >= std::numeric_limits<int8_t>::min() && v <= 124)
 	{
-		WriteNumber((int8_t)v);
+		WriteNumber(static_cast<int8_t>(v));
 		return;
 	}
 	if (v >= std::numeric_limits<int16_t>::min() && v <= std::numeric_limits<int16_t>::max())
 	{
-		WriteNumber((int8_t)125);
-		WriteNumber((int16_t)v);
+		WriteNumber(static_cast<int8_t>(125));
+		WriteNumber(static_cast<int16_t>(v));
 		return;
 	}
 
-	WriteNumber((int8_t)126);
+	WriteNumber(static_cast<int8_t>(126));
 	WriteNumber(v);
 }
 
@@ -552,11 +552,11 @@ void ArrayBinaryWriter::WriteIntX2(int64_t v)
 {
 	if (v >= std::numeric_limits<int32_t>::min() && v <= std::numeric_limits<int32_t>::max())
 	{
-		WriteIntX((int32_t)v);
+		WriteIntX(boost::numeric_cast<int32_t>(v));
 	}
 	else
 	{
-		WriteNumber((int8_t)127);
+		WriteNumber(static_cast<int8_t>(127));
 		WriteNumber(v);
 	}
 }
@@ -607,8 +607,8 @@ size_t ArrayBinaryWriter::GetIntX2ByteCount(int64_t v)
 size_t ArrayBinaryWriter::GetSizePlusUintX(size_t s)
 {
 	if (s <= 251) return s + 1;
-	if (s <= std::numeric_limits<uint16_t>::max() - 3) return s + 3;
-	if (s > std::numeric_limits<uint32_t>::max() - 5) throw BufferLimitViolationException("Message too large");
+	if (s <= boost::numeric_cast<size_t>(std::numeric_limits<uint16_t>::max() - 3)) return s + 3;
+	if (s > boost::numeric_cast<size_t>(std::numeric_limits<uint32_t>::max() - 5)) throw BufferLimitViolationException("Message too large");
 	return s + 5;
 }
 
@@ -637,7 +637,7 @@ void ArrayBinaryWriter::PopLimit()
 
 int32_t ArrayBinaryWriter::DistanceFromLimit()
 {
-	return ((int32_t)CurrentLimit()) - ((int32_t)Position());
+	return (boost::numeric_cast<int32_t>(CurrentLimit())) - (boost::numeric_cast<int32_t>(Position()));
 }
 
 

@@ -317,7 +317,7 @@ namespace RobotRaconteur
 
 			
 			typename RRList<T>::iterator set2_iter = set2->begin();
-			for (int32_t i=0; i < (int32_t)set2->size(); i++)
+			for (int32_t i=0; i < boost::numeric_cast<int32_t>(set2->size()); i++)
 			{
 				int32_t key = i;
 
@@ -341,7 +341,7 @@ namespace RobotRaconteur
 			
 			RR_INTRUSIVE_PTR<RRList<T> > ret=AllocateEmptyRRList<T>();
 
-			for (int32_t i=0; i<(int32_t)mset->Elements.size(); i++)
+			for (int32_t i=0; i< boost::numeric_cast<int32_t>(mset->Elements.size()); i++)
 			{
 				RR_INTRUSIVE_PTR<MessageElement> m = mset->Elements.at(i);
 				int32_t key;

@@ -75,7 +75,7 @@ class rr_memcpy
 public:
 static void memcpy(void* destination, void* source, int64_t num)
 {
-	::memcpy(destination, source, (size_t) num);
+	::memcpy(destination, source, boost::numeric_cast<size_t>(num));
 }
 };
 }
