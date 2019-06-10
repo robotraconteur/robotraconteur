@@ -1243,7 +1243,7 @@ namespace RobotRaconteurGen
 
 			w2 << "};" << endl << endl;
 			w2 << "#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES" << endl;
-			w2 << "using " << fix_name((*e)->Name) << "Ptr = RR_SHARED_PTR<" << fix_name((*e)->Name) << ">;" << endl;
+			w2 << "using " << fix_name((*e)->Name) << "Ptr = RR_INTRUSIVE_PTR<" << fix_name((*e)->Name) << ">;" << endl;
 			w2 << "#endif" << endl << endl;
 
 		}
