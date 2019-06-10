@@ -3963,9 +3963,12 @@ namespace RobotRaconteurGen
 					get_variable_type_result t = get_variable_type(*m->Type);
 					w2 << "if (rrvar_" << fix_name(m->Name) << ") throw RobotRaconteur::InvalidOperationException(\"Pipe already set\");" << endl;
 					w2 << "rrvar_" << fix_name(m->Name) << " = RR_MAKE_SHARED<RobotRaconteur::PipeBroadcaster<" << t.cpp_type << "> >();" << endl;
-					w2 << "rrvar_" << fix_name(m->Name) << "->Init(value);";
+					w2 << "rrvar_" << fix_name(m->Name) << "->Init(value);" << endl;
 				}
-				w2 << "throw RobotRaconteur::NotImplementedException(\"\");" << endl;
+				else
+				{
+					w2 << "throw RobotRaconteur::NotImplementedException(\"\");" << endl;
+				}
 				w2 << "}" << endl;
 			MEMBER_ITER_END()
 

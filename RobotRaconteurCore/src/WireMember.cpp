@@ -914,8 +914,15 @@ namespace RobotRaconteur
 					}
 
 
-						if (connections.find(e) == connections.end())
-							connections.insert(std::make_pair(e, CreateNewWireConnection( e, direction, GetSkel()->GetContext()->UseMessage3(e))));
+					if (connections.find(e) == connections.end())
+					{
+						// Switch connection direction since this is the server
+						MemberDefinition_Direction ep_direction = direction;
+						if (direction == MemberDefinition_Direction_readonly) ep_direction = MemberDefinition_Direction_writeonly;
+						if (direction == MemberDefinition_Direction_writeonly) ep_direction = MemberDefinition_Direction_readonly;
+
+						connections.insert(std::make_pair(e, CreateNewWireConnection(e, ep_direction, GetSkel()->GetContext()->UseMessage3(e))));
+					}
 						RR_SHARED_PTR<WireConnectionBase> con = connections.at(e);
 						lock.unlock();
 						fire_WireConnectCallback(con);

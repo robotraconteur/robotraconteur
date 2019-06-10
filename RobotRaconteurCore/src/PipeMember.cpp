@@ -1269,7 +1269,11 @@ RR_INTRUSIVE_PTR<MessageEntry> PipeServerBase::PipeCommand(RR_INTRUSIVE_PTR<Mess
 					
 					}					
 					
-					RR_SHARED_PTR<PipeEndpointBase> p = CreateNewPipeEndpoint(index,e,isunreliable,direction,GetSkel()->GetContext()->UseMessage3(e));
+					// Switch endpoint direction since this is the server
+					MemberDefinition_Direction ep_direction = direction;
+					if (direction == MemberDefinition_Direction_readonly) ep_direction = MemberDefinition_Direction_writeonly;
+					if (direction == MemberDefinition_Direction_writeonly) ep_direction = MemberDefinition_Direction_readonly;
+					RR_SHARED_PTR<PipeEndpointBase> p = CreateNewPipeEndpoint(index,e,isunreliable,ep_direction,GetSkel()->GetContext()->UseMessage3(e));
 					pipeendpoints.insert(std::make_pair(pipe_endpoint_server_id(e,index), p));
 
 					lock.unlock();
