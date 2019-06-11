@@ -20,7 +20,7 @@ set (RobotRaconteurCore_Extra_Libraries ${RobotRaconteur_Extra_Libraries} Mswsoc
 elseif(APPLE)
 set (RobotRaconteurCore_Extra_Libraries ${RobotRaconteur_Extra_Libraries} ${CoreFoundation_FRAMEWORKS}/CoreFoundation ${Security_FRAMEWORKS}/Security ${OPENSSL_LIBRARIES} c++ )
 else()
-set (RobotRaconteurCore_Extra_Libraries ${RobotRaconteur_Extra_Libraries} ${OPENSSL_LIBRARIES} pthread rt z)
+set (RobotRaconteurCore_Extra_Libraries ${RobotRaconteur_Extra_Libraries} ${OPENSSL_LIBRARIES} pthread rt z dl)
 endif()
 
 set(RobotRaconteur_INCLUDE_DIR   "@CMAKE_INSTALL_FULL_INCLUDEDIR@" )

@@ -473,7 +473,7 @@ namespace RobotRaconteur
 
 	protected:
 
-		static RR_SHARED_PTR<WireConnection<T> > AsyncConnect_cast(RR_SHARED_PTR<WireConnectionBase>& b)
+		static RR_SHARED_PTR<WireConnection<T> > AsyncConnect_cast(RR_SHARED_PTR<WireConnectionBase> b)
 		{
 			return rr_cast<WireConnection<T> >(b);
 		}

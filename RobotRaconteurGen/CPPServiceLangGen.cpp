@@ -3820,6 +3820,8 @@ namespace RobotRaconteurGen
 			type_list += "(RR_MAKE_SHARED< ::" + n1 + "::" + n2 + "Factory>())";
 		}
 		
+		type_list += ".convert_to_container<std::vector<RR_SHARED_PTR<ServiceFactory> > >()";
+
 		w2 << "#define ROBOTRACONTEUR_SERVICE_TYPES " << type_list << endl;
 		w2 << "#pragma once" << endl << endl;
 	}
@@ -4033,14 +4035,14 @@ namespace RobotRaconteurGen
 				{
 					get_variable_type_result t = get_variable_type(*m->Type);
 					w2 << "if (rrvar_" << fix_name(m->Name) << ") throw RobotRaconteur::InvalidOperationException(\"Wire already set\");" << endl;
-					w2 << "rrvar_" << fix_name(m->Name) << " = RR_MAKE_SHARED<RobotRaconteur::WireBroadcaster<" << t.cpp_type << "> >();" << endl;
+					w2 << "rrvar_" << fix_name(m->Name) << " = RR_MAKE_SHARED<RobotRaconteur::WireBroadcaster<" << t.cpp_type << " > >();" << endl;
 					w2 << "rrvar_" << fix_name(m->Name) << "->Init(value);";
 				}
 				else if (m->Direction() == MemberDefinition_Direction_writeonly)
 				{
 					get_variable_type_result t = get_variable_type(*m->Type);
 					w2 << "if (rrvar_" << fix_name(m->Name) << ") throw RobotRaconteur::InvalidOperationException(\"Wire already set\");" << endl;
-					w2 << "rrvar_" << fix_name(m->Name) << " = RR_MAKE_SHARED<RobotRaconteur::WireUnicastReceiver<" << t.cpp_type << "> >();" << endl;
+					w2 << "rrvar_" << fix_name(m->Name) << " = RR_MAKE_SHARED<RobotRaconteur::WireUnicastReceiver<" << t.cpp_type << " > >();" << endl;
 					w2 << "rrvar_" << fix_name(m->Name) << "->Init(value);";
 				}
 				else

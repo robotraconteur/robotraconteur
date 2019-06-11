@@ -514,7 +514,7 @@ namespace RobotRaconteur
 
 	protected:
 
-		static RR_SHARED_PTR<PipeEndpoint<T> > AsyncConnect_cast(RR_SHARED_PTR<PipeEndpointBase>& b)
+		static RR_SHARED_PTR<PipeEndpoint<T> > AsyncConnect_cast(RR_SHARED_PTR<PipeEndpointBase> b)
 		{
 			return rr_cast<PipeEndpoint<T> >(b);
 		}
