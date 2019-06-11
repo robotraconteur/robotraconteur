@@ -30,8 +30,6 @@ message(FATAL_ERROR "/usr/lib/libssl.dylib from OSX is not valid. Please select 
 endif()
 
 include(CMakeFindFrameworks)
-set(CMAKE_XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvm.clang.1_0")
-set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
 CMAKE_FIND_FRAMEWORKS(CoreFoundation)
 CMAKE_FIND_FRAMEWORKS(Security)
 include_directories(${CoreFoundation_FRAMEWORKS}/Headers ${Security_FRAMEWORKS}/Headers)
