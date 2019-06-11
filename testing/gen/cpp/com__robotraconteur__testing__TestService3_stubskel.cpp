@@ -8285,7 +8285,7 @@ return rrvar_peekwire->GetWire();
 void testroot3_default_impl::set_peekwire(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value)
 {
 if (rrvar_peekwire) throw RobotRaconteur::InvalidOperationException("Wire already set");
-rrvar_peekwire = RR_MAKE_SHARED<RobotRaconteur::WireBroadcaster<int32_t> >();
+rrvar_peekwire = RR_MAKE_SHARED<RobotRaconteur::WireBroadcaster<int32_t > >();
 rrvar_peekwire->Init(value);}
 RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > testroot3_default_impl::get_pokewire()
 {
@@ -8296,7 +8296,7 @@ return rrvar_pokewire->GetWire();
 void testroot3_default_impl::set_pokewire(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value)
 {
 if (rrvar_pokewire) throw RobotRaconteur::InvalidOperationException("Wire already set");
-rrvar_pokewire = RR_MAKE_SHARED<RobotRaconteur::WireUnicastReceiver<int32_t> >();
+rrvar_pokewire = RR_MAKE_SHARED<RobotRaconteur::WireUnicastReceiver<int32_t > >();
 rrvar_pokewire->Init(value);}
 RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > testroot3_default_impl::get_w1()
 {
@@ -8527,7 +8527,7 @@ return rrvar_w1->GetWire();
 void obj5_default_impl::set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value)
 {
 if (rrvar_w1) throw RobotRaconteur::InvalidOperationException("Wire already set");
-rrvar_w1 = RR_MAKE_SHARED<RobotRaconteur::WireBroadcaster<int32_t> >();
+rrvar_w1 = RR_MAKE_SHARED<RobotRaconteur::WireBroadcaster<int32_t > >();
 rrvar_w1->Init(value);}
 RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > obj5_default_impl::get_w2()
 {
@@ -8538,7 +8538,7 @@ return rrvar_w2->GetWire();
 void obj5_default_impl::set_w2(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value)
 {
 if (rrvar_w2) throw RobotRaconteur::InvalidOperationException("Wire already set");
-rrvar_w2 = RR_MAKE_SHARED<RobotRaconteur::WireBroadcaster<int32_t> >();
+rrvar_w2 = RR_MAKE_SHARED<RobotRaconteur::WireBroadcaster<int32_t > >();
 rrvar_w2->Init(value);}
 RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > obj5_default_impl::get_m1()
 {
