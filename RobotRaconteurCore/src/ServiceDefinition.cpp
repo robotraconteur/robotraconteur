@@ -1369,6 +1369,21 @@ namespace RobotRaconteur
 		this->ServiceEntry = ServiceEntry;
 	}
 
+	MemberDefinition_NoLock MemberDefinition::NoLock()
+	{
+		if (boost::range::find(Modifiers, "nolock") != Modifiers.end())
+		{
+			return MemberDefinition_NoLock_all;
+		}
+
+		if (boost::range::find(Modifiers, "nolockread") != Modifiers.end())
+		{
+			return MemberDefinition_NoLock_read;
+		}
+
+		return MemberDefinition_NoLock_none;
+	}
+
 	void MemberDefinition::Reset()
 	{
 		Name.clear();
@@ -3089,10 +3104,11 @@ namespace RobotRaconteur
 		}	
 	}
 
-	void VerifyModifiers(RR_SHARED_PTR<MemberDefinition>& m, bool readwrite, bool unreliable, std::vector<RobotRaconteurParseException>& warnings)
+	void VerifyModifiers(RR_SHARED_PTR<MemberDefinition>& m, bool readwrite, bool unreliable, bool nolock, bool nolockread, std::vector<RobotRaconteurParseException>& warnings)
 	{
 		bool direction_found = false;
 		bool unreliable_found = false;
+		bool nolock_found = false;
 
 		BOOST_FOREACH(std::string& s, m->Modifiers)
 		{
@@ -3135,6 +3151,32 @@ namespace RobotRaconteur
 				}
 			}
 
+			if (nolock)
+			{
+				if (s == "nolock")
+				{
+					if (nolock_found)
+					{
+						warnings.push_back(RobotRaconteurParseException("Invalid member modifier combination: [nolock]"));
+					}
+					nolock_found = true;
+					continue;
+				}
+			}
+
+			if (nolock)
+			{
+				if (s == "nolockread")
+				{
+					if (nolock_found)
+					{
+						warnings.push_back(RobotRaconteurParseException("Invalid member modifier combination: [nolock,nolockread]"));
+					}
+					nolock_found = true;
+					continue;
+				}
+			}
+
 			warnings.push_back(RobotRaconteurParseException("Unknown member modifier: [" + s + "]"));
 		}
 	}
@@ -3152,7 +3194,7 @@ namespace RobotRaconteur
 		if (p)
 		{
 			VerifyType(p->Type,def,defs);				
-			VerifyModifiers(m, true, false, warnings);
+			VerifyModifiers(m, true, false, true, true, warnings);
 			return p->Name;
 		}
 		RR_SHARED_PTR<FunctionDefinition> f=RR_DYNAMIC_POINTER_CAST<FunctionDefinition>(m);
@@ -3162,7 +3204,7 @@ namespace RobotRaconteur
 			{
 				VerifyParameters(f->Parameters, def, defs);
 				VerifyReturnType(f->ReturnType, def, defs);
-				VerifyModifiers(m, false, false, warnings);
+				VerifyModifiers(m, false, false, true, false, warnings);
 				return f->Name;
 			}
 			else
@@ -3218,7 +3260,7 @@ namespace RobotRaconteur
 		if (e)
 		{
 			VerifyParameters(e->Parameters, def, defs);			
-			VerifyModifiers(m, false, false, warnings);
+			VerifyModifiers(m, false, false, false, false, warnings);
 			return e->Name;
 		}
 		RR_SHARED_PTR<ObjRefDefinition> o=RR_DYNAMIC_POINTER_CAST<ObjRefDefinition>(m);
@@ -3226,7 +3268,7 @@ namespace RobotRaconteur
 		{
 
 			std::vector<std::string> modifiers;			
-			VerifyModifiers(m, false, false, warnings);
+			VerifyModifiers(m, false, false, false, false, warnings);
 
 			if (o->ObjectType=="varobject") return o->Name;
 
@@ -3274,7 +3316,7 @@ namespace RobotRaconteur
 		if (p2)
 		{
 			VerifyType(p2->Type,def,defs);			
-			VerifyModifiers(m, true, true, warnings);
+			VerifyModifiers(m, true, true, true, false, warnings);
 			return p2->Name;
 		}
 
@@ -3283,7 +3325,7 @@ namespace RobotRaconteur
 		{
 			VerifyParameters(c->Parameters, def, defs);
 			VerifyReturnType(c->ReturnType,def,defs);				
-			VerifyModifiers(m, false, false, warnings);
+			VerifyModifiers(m, false, false, false, false, warnings);
 			return c->Name;
 		}
 
@@ -3291,7 +3333,7 @@ namespace RobotRaconteur
 		if (w)
 		{
 			VerifyType(w->Type,def,defs);
-			VerifyModifiers(m, true, false, warnings);
+			VerifyModifiers(m, true, false, true, false, warnings);
 			return w->Name;
 		}
 
@@ -3299,7 +3341,7 @@ namespace RobotRaconteur
 		if (m2)
 		{
 			VerifyType(m2->Type, def, defs);
-			VerifyModifiers(m, true, false, warnings);
+			VerifyModifiers(m, true, false, true, true, warnings);
 			if (!IsTypeNumeric(m2->Type->Type))
 			{
 				if (m2->Type->Type != DataTypes_namedtype_t)

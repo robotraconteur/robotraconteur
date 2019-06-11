@@ -200,6 +200,8 @@ object testroot3
 	memory bool[] c_m5
 	memory bool[*] c_m6
 	
+	objref obj5 nolock_test
+	
 end
 
 object obj1
@@ -224,5 +226,26 @@ object obj4
 
 	property string data
 	objref sub3{string} o3_1
+end
+
+object obj5
+
+	property double p1
+	property double p2 [nolock]
+	property double p3 [nolockread]
+	
+	function int32 f1()
+	function int32 f2() [nolock]
+		
+	pipe int32 q1 [readonly]
+	pipe int32 q2 [readonly,nolock]
+	
+	wire int32 w1 [readonly]
+	wire int32 w2 [readonly,nolock]
+	
+	memory int32[] m1
+	memory int32[] m2 [nolock]
+	memory int32[] m3 [nolockread]
+	
 end
 

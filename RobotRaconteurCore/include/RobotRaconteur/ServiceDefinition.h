@@ -167,10 +167,14 @@ namespace RobotRaconteur
 
 		MemberDefinition(RR_SHARED_PTR<ServiceEntryDefinition> ServiceEntry);
 
+		virtual MemberDefinition_NoLock NoLock();
+
 		virtual ~MemberDefinition() {}
 
 		virtual std::string ToString() { return ""; }
 		virtual void Reset();
+
+		
 	};
 
 	class ROBOTRACONTEUR_CORE_API  PropertyDefinition : public MemberDefinition

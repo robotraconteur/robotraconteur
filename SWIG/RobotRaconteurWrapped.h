@@ -1193,6 +1193,9 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 
 		virtual int32_t RegisterGeneratorServer(const std::string& function_name, WrappedGeneratorServerDirector* gen);
 
+		std::map<std::string, std::set<MessageEntryType> > nolocks;
+		virtual bool IsRequestNoLock(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m);
+
 	};
 
 	class WrappedRRObject : public RRObject, public IRobotRaconteurMonitorObject

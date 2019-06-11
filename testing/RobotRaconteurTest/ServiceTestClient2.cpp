@@ -27,6 +27,8 @@ namespace RobotRaconteurTest
 		TestComplex();
 		TestComplexMemories();
 
+		TestNoLock();
+
 		Disconnect();
 	}
 
@@ -442,4 +444,42 @@ namespace RobotRaconteurTest
 		ca(c_m2_3->Dims, c_m2_4->Dims);
 		ca(c_m2_3->Array, c_m2_4->Array);
 	}
+
+#define ShouldBeLockedErr(COMMAND) {bool err=false; try { COMMAND } catch (ObjectLockedException&) {err=true;}; if (err==false) throw std::exception();}
+
+	void ServiceTestClient2::TestNoLock()
+	{
+		RR_SHARED_PTR< com::robotraconteur::testing::TestService3::obj5> o5 = r->get_nolock_test();
+
+		ShouldBeLockedErr(o5->get_p1(););
+		o5->get_p2();
+		o5->set_p2(0);
+		o5->get_p3();
+		ShouldBeLockedErr(o5->set_p1(0););
+
+		ShouldBeLockedErr(o5->f1(););
+		o5->f2();
+
+		ShouldBeLockedErr(o5->get_q1()->Connect(-1)->Close(););
+		o5->get_q2()->Connect(-1)->Close();
+		ShouldBeLockedErr(o5->get_w1()->Connect()->Close(););
+		o5->get_w2()->Connect()->Close();
+
+		ShouldBeLockedErr(o5->get_m1()->Length(););
+
+		
+		RR_INTRUSIVE_PTR<RRArray<int32_t> > b1 = AllocateRRArray<int32_t>(100);
+
+		o5->get_m2()->Length();
+		o5->get_m2()->Read(0, b1, 0, 10);
+		o5->get_m2()->Write(0, b1, 0, 10);
+
+		o5->get_m3()->Length();
+		o5->get_m3()->Read(0, b1, 0, 10);
+		ShouldBeLockedErr(o5->get_m3()->Write(0, b1, 0, 10););
+
+
+
+	}
+
 }

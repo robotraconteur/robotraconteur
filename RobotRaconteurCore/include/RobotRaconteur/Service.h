@@ -139,8 +139,10 @@ namespace RobotRaconteur
 
 		bool IsLocked() ;
 
-		bool IsMonitorLocked() ;
+		virtual bool IsRequestNoLock(RR_INTRUSIVE_PTR<MessageEntry> m);
 
+		bool IsMonitorLocked() ;
+		
 		virtual std::string GetObjectType() = 0;
 
 		virtual std::string GetObjectType(RobotRaconteurVersion client_version);
@@ -305,8 +307,18 @@ namespace RobotRaconteur
 
 		virtual void ClientLockOp(RR_INTRUSIVE_PTR<MessageEntry> m, RR_INTRUSIVE_PTR<MessageEntry> ret);
 
+	public:
+
+		void RequestObjectLock(const std::string& servicepath, const std::string& username);
+
+		void RequestClientObjectLock(const std::string& servicepath, const std::string& username, uint32_t endpoint);
+
+		void ReleaseObjectLock(const std::string& servicepath, const std::string& username, bool override_);
+
+		std::string GetObjectLockUsername(const std::string& servicepath);
+
 	protected:
-		void check_lock(RR_SHARED_PTR<ServiceSkel> skel);
+		void check_lock(RR_SHARED_PTR<ServiceSkel> skel, RR_INTRUSIVE_PTR<MessageEntry> m);
 
 		void check_monitor_lock(RR_SHARED_PTR<ServiceSkel> skel);
 

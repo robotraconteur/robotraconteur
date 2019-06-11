@@ -22,6 +22,7 @@ class obj1;
 class obj2;
 class obj3;
 class obj4;
+class obj5;
 
 namespace com__robotraconteur__testing__TestService3Constants 
 {
@@ -162,7 +163,7 @@ virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.te
 };
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
-using teststruct3Ptr = RR_SHARED_PTR<teststruct3>;
+using teststruct3Ptr = RR_INTRUSIVE_PTR<teststruct3>;
 #endif
 
 class testroot3 : public virtual RobotRaconteur::RRObject
@@ -287,6 +288,8 @@ virtual RR_SHARED_PTR<RobotRaconteur::Generator<RR_INTRUSIVE_PTR<com::robotracon
 
 virtual RR_SHARED_PTR<obj4 > get_o4()=0;
 
+virtual RR_SHARED_PTR<obj5 > get_nolock_test()=0;
+
 virtual RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > get_unreliable1()=0;
 virtual void set_unreliable1(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value)=0;
 
@@ -404,6 +407,47 @@ virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.ob
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
 using obj4Ptr = RR_SHARED_PTR<obj4>;
+#endif
+
+class obj5 : public virtual RobotRaconteur::RRObject
+{
+public:
+virtual double get_p1()=0;
+virtual void set_p1(double value)=0;
+
+virtual double get_p2()=0;
+virtual void set_p2(double value)=0;
+
+virtual double get_p3()=0;
+virtual void set_p3(double value)=0;
+
+virtual int32_t f1()=0;
+
+virtual int32_t f2()=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > get_q1()=0;
+virtual void set_q1(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > get_q2()=0;
+virtual void set_q2(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > get_w1()=0;
+virtual void set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > get_w2()=0;
+virtual void set_w2(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value)=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > get_m1()=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > get_m2()=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > get_m3()=0;
+
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.obj5";  }
+};
+
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+using obj5Ptr = RR_SHARED_PTR<obj5>;
 #endif
 
 }

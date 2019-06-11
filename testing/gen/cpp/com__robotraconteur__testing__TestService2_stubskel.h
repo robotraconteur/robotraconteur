@@ -196,6 +196,8 @@ virtual RR_SHARED_PTR<void> GetCallbackFunction(uint32_t endpoint, const std::st
 
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> CallMemoryFunction(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::Endpoint> e);
 
+virtual bool IsRequestNoLock(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m);
+
 virtual std::string GetObjectType();
 virtual RR_SHARED_PTR<com::robotraconteur::testing::TestService2::baseobj > get_obj();
 
@@ -254,6 +256,8 @@ virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> CallWireFunction(RR_INTRU
 virtual RR_SHARED_PTR<void> GetCallbackFunction(uint32_t endpoint, const std::string& membername);
 
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> CallMemoryFunction(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::Endpoint> e);
+
+virtual bool IsRequestNoLock(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m);
 
 virtual std::string GetObjectType();
 virtual RR_SHARED_PTR<com::robotraconteur::testing::TestService2::subobj > get_obj();

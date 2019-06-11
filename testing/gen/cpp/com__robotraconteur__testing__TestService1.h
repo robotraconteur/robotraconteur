@@ -49,7 +49,7 @@ virtual std::string RRType() {return "com.robotraconteur.testing.TestService1.te
 };
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
-using teststruct1Ptr = RR_SHARED_PTR<teststruct1>;
+using teststruct1Ptr = RR_INTRUSIVE_PTR<teststruct1>;
 #endif
 
 class teststruct2 : public RobotRaconteur::RRStructure {
@@ -60,7 +60,7 @@ virtual std::string RRType() {return "com.robotraconteur.testing.TestService1.te
 };
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
-using teststruct2Ptr = RR_SHARED_PTR<teststruct2>;
+using teststruct2Ptr = RR_INTRUSIVE_PTR<teststruct2>;
 #endif
 
 class testroot : public virtual com::robotraconteur::testing::TestService2::baseobj

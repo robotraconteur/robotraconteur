@@ -10,7 +10,8 @@ namespace RobotRaconteurTest
 	void RobotRaconteurTestService2Support::RegisterServices(RR_SHARED_PTR<TcpTransport> transport)
 	{
 		testservice2 = RR_MAKE_SHARED<testroot3_impl>();
-		RobotRaconteurNode::s()->RegisterService("RobotRaconteurTestService2", "com.robotraconteur.testing.TestService3", testservice2);
+		RR_SHARED_PTR<ServerContext> c = RobotRaconteurNode::s()->RegisterService("RobotRaconteurTestService2", "com.robotraconteur.testing.TestService3", testservice2);
+		c->RequestObjectLock("RobotRaconteurTestService2.nolock_test", "server");
 	}
 
 	void RobotRaconteurTestService2Support::UnregisterServices()
@@ -46,6 +47,8 @@ namespace RobotRaconteurTest
 		c_m2 = RR_MAKE_SHARED<RobotRaconteur::MultiDimArrayMemory<RobotRaconteur::cdouble > >(
 			RobotRaconteur::AllocateRRMultiDimArray<RobotRaconteur::cdouble >(AttachRRArrayCopy(c_m2_1,2), AllocateRRArray<cdouble>(100))
 			);
+
+		obj5_ = RR_MAKE_SHARED<obj5_impl>();
 	}
 
 	void testroot3_impl::set_peekwire(RR_SHARED_PTR<Wire<int32_t > > value)
@@ -432,6 +435,42 @@ namespace RobotRaconteurTest
 		return c_m2;
 	}
 
+	RR_SHARED_PTR<com::robotraconteur::testing::TestService3::obj5 > testroot3_impl::get_nolock_test()
+	{
+		return obj5_;
+	}
+
+	obj5_impl::obj5_impl()
+	{
+		_m1 = RR_MAKE_SHARED<RobotRaconteur::ArrayMemory<int32_t > >(RobotRaconteur::AllocateRRArray<int32_t>(100));
+		_m2 = RR_MAKE_SHARED<RobotRaconteur::ArrayMemory<int32_t > >(RobotRaconteur::AllocateRRArray<int32_t>(100));
+		_m3 = RR_MAKE_SHARED<RobotRaconteur::ArrayMemory<int32_t > >(RobotRaconteur::AllocateRRArray<int32_t>(100));
+	}
+		
+	RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > obj5_impl::get_m1()
+	{
+		return _m1;
+	}
+
+	RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > obj5_impl::get_m2()
+	{
+		return _m2;
+	}
+
+	RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > obj5_impl::get_m3()
+	{
+		return _m3;
+	}
+
+	int32_t obj5_impl::f1()
+	{
+		return 10;
+	}
+
+	int32_t obj5_impl::f2()
+	{
+		return 11;
+	}
 
 	class ServiceTest2_test_sequence_gen
 	{

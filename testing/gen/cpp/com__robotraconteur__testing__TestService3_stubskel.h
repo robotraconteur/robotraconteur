@@ -206,6 +206,8 @@ virtual void async_gen_func5(boost::function<void (RR_SHARED_PTR<RobotRaconteur:
 
 virtual void async_get_o4(boost::function<void(RR_SHARED_PTR<obj4>,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>)> handler, int32_t timeout=RR_TIMEOUT_INFINITE)=0;
 
+virtual void async_get_nolock_test(boost::function<void(RR_SHARED_PTR<obj5>,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>)> handler, int32_t timeout=RR_TIMEOUT_INFINITE)=0;
+
 };
 class async_obj1
 {
@@ -247,6 +249,28 @@ virtual void async_set_data(const std::string& value,boost::function<void (RR_SH
 
 
 virtual void async_get_o3_1(const std::string& ind, boost::function<void(RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub3>,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>)> handler, int32_t timeout=RR_TIMEOUT_INFINITE)=0;
+
+};
+class async_obj5
+{
+public:
+virtual void async_get_p1(boost::function<void (double,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE) = 0;
+virtual void async_set_p1(double value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE) = 0;
+
+
+virtual void async_get_p2(boost::function<void (double,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE) = 0;
+virtual void async_set_p2(double value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE) = 0;
+
+
+virtual void async_get_p3(boost::function<void (double,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE) = 0;
+virtual void async_set_p3(double value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE) = 0;
+
+
+virtual void async_f1(boost::function<void (int32_t, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE) = 0;
+
+
+virtual void async_f2(boost::function<void (int32_t, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE) = 0;
+
 
 };
 class testroot3_stub : public virtual testroot3, public virtual async_testroot3, public virtual RobotRaconteur::ServiceStub
@@ -372,6 +396,8 @@ virtual RR_SHARED_PTR<RobotRaconteur::Generator<RR_INTRUSIVE_PTR<RobotRaconteur:
 virtual RR_SHARED_PTR<RobotRaconteur::Generator<RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService1::teststruct2 >,RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService1::teststruct2 > > > gen_func5();
 
 virtual RR_SHARED_PTR<obj4 > get_o4();
+
+virtual RR_SHARED_PTR<obj5 > get_nolock_test();
 
 virtual RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > get_unreliable1();
 virtual void set_unreliable1(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value);
@@ -722,6 +748,8 @@ virtual void async_gen_func5(boost::function<void (RR_SHARED_PTR<RobotRaconteur:
 virtual void rrend_gen_func5(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::Generator<RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService1::teststruct2 >,RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService1::teststruct2 > > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler);
 virtual void async_get_o4(boost::function<void(RR_SHARED_PTR<obj4>,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>)> handler, int32_t timeout=RR_TIMEOUT_INFINITE);
 
+virtual void async_get_nolock_test(boost::function<void(RR_SHARED_PTR<obj5>,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>)> handler, int32_t timeout=RR_TIMEOUT_INFINITE);
+
 virtual std::string RRType();
 };
 
@@ -861,6 +889,93 @@ virtual void async_get_o3_1(const std::string& ind, boost::function<void(RR_SHAR
 virtual std::string RRType();
 };
 
+class obj5_stub : public virtual obj5, public virtual async_obj5, public virtual RobotRaconteur::ServiceStub
+{
+public:
+obj5_stub(const std::string& path, RR_SHARED_PTR<RobotRaconteur::ClientContext> c);
+
+virtual void RRInitStub();
+virtual double get_p1();
+virtual void set_p1(double value);
+
+virtual double get_p2();
+virtual void set_p2(double value);
+
+virtual double get_p3();
+virtual void set_p3(double value);
+
+virtual int32_t f1();
+
+virtual int32_t f2();
+
+virtual RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > get_q1();
+virtual void set_q1(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value);
+
+virtual RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > get_q2();
+virtual void set_q2(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value);
+
+virtual RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > get_w1();
+virtual void set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value);
+
+virtual RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > get_w2();
+virtual void set_w2(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value);
+
+virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > get_m1();
+
+virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > get_m2();
+
+virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > get_m3();
+
+
+virtual void DispatchEvent(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m);
+virtual void DispatchPipeMessage(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m);
+virtual void DispatchWireMessage(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m);
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> CallbackCall(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m);
+virtual void RRClose();
+virtual RR_SHARED_PTR<RobotRaconteur::PipeClientBase> RRGetPipeClient(const std::string& membername);
+virtual RR_SHARED_PTR<RobotRaconteur::WireClientBase> RRGetWireClient(const std::string& membername);
+private:
+RR_SHARED_PTR<RobotRaconteur::PipeClient<int32_t > > rrvar_q1;
+RR_SHARED_PTR<RobotRaconteur::PipeClient<int32_t > > rrvar_q2;
+RR_SHARED_PTR<RobotRaconteur::WireClient<int32_t > > rrvar_w1;
+RR_SHARED_PTR<RobotRaconteur::WireClient<int32_t > > rrvar_w2;
+RR_SHARED_PTR<RobotRaconteur::ArrayMemoryClient<int32_t > > rrvar_m1;
+RR_SHARED_PTR<RobotRaconteur::ArrayMemoryClient<int32_t > > rrvar_m2;
+RR_SHARED_PTR<RobotRaconteur::ArrayMemoryClient<int32_t > > rrvar_m3;
+virtual void async_get_p1(boost::function<void (double,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE);
+virtual void async_set_p1(double value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE);
+
+protected:
+virtual void rrend_get_p1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (double ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler);
+virtual void rrend_set_p1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler);
+public:
+virtual void async_get_p2(boost::function<void (double,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE);
+virtual void async_set_p2(double value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE);
+
+protected:
+virtual void rrend_get_p2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (double ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler);
+virtual void rrend_set_p2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler);
+public:
+virtual void async_get_p3(boost::function<void (double,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE);
+virtual void async_set_p3(double value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE);
+
+protected:
+virtual void rrend_get_p3(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (double ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler);
+virtual void rrend_set_p3(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler);
+public:
+virtual void async_f1(boost::function<void (int32_t, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE);
+
+protected:
+virtual void rrend_f1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (int32_t ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler);
+public:
+virtual void async_f2(boost::function<void (int32_t, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE);
+
+protected:
+virtual void rrend_f2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (int32_t ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler);
+public:
+virtual std::string RRType();
+};
+
 
 class testroot3_skel : public virtual RobotRaconteur::ServiceSkel
 {
@@ -897,6 +1012,8 @@ virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> CallWireFunction(RR_INTRU
 virtual RR_SHARED_PTR<void> GetCallbackFunction(uint32_t endpoint, const std::string& membername);
 
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> CallMemoryFunction(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::Endpoint> e);
+
+virtual bool IsRequestNoLock(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m);
 
 virtual std::string GetObjectType();
 virtual RR_SHARED_PTR<com::robotraconteur::testing::TestService3::testroot3 > get_obj();
@@ -1010,6 +1127,8 @@ virtual RR_SHARED_PTR<void> GetCallbackFunction(uint32_t endpoint, const std::st
 
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> CallMemoryFunction(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::Endpoint> e);
 
+virtual bool IsRequestNoLock(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m);
+
 virtual std::string GetObjectType();
 virtual RR_SHARED_PTR<com::robotraconteur::testing::TestService3::obj1 > get_obj();
 
@@ -1060,6 +1179,8 @@ virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> CallWireFunction(RR_INTRU
 virtual RR_SHARED_PTR<void> GetCallbackFunction(uint32_t endpoint, const std::string& membername);
 
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> CallMemoryFunction(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::Endpoint> e);
+
+virtual bool IsRequestNoLock(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m);
 
 virtual std::string GetObjectType();
 virtual RR_SHARED_PTR<com::robotraconteur::testing::TestService3::obj2 > get_obj();
@@ -1112,6 +1233,8 @@ virtual RR_SHARED_PTR<void> GetCallbackFunction(uint32_t endpoint, const std::st
 
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> CallMemoryFunction(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::Endpoint> e);
 
+virtual bool IsRequestNoLock(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m);
+
 virtual std::string GetObjectType();
 virtual RR_SHARED_PTR<com::robotraconteur::testing::TestService3::obj3 > get_obj();
 
@@ -1163,6 +1286,8 @@ virtual RR_SHARED_PTR<void> GetCallbackFunction(uint32_t endpoint, const std::st
 
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> CallMemoryFunction(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::Endpoint> e);
 
+virtual bool IsRequestNoLock(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m);
+
 virtual std::string GetObjectType();
 virtual RR_SHARED_PTR<com::robotraconteur::testing::TestService3::obj4 > get_obj();
 
@@ -1177,6 +1302,70 @@ protected:bool rr_InitPipeServersRun;
 bool rr_InitWireServersRun;
 public: 
 private:
+
+};
+
+class obj5_skel : public virtual RobotRaconteur::ServiceSkel
+{
+public:
+virtual void Init(const std::string& path, RR_SHARED_PTR<RobotRaconteur::RRObject> object, RR_SHARED_PTR<RobotRaconteur::ServerContext> context);
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> CallGetProperty(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m);
+
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> CallSetProperty(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m);
+
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> CallFunction(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m);
+
+virtual void ReleaseCastObject();
+
+virtual void RegisterEvents(RR_SHARED_PTR<RobotRaconteur::RRObject> rrobj1);
+
+virtual void UnregisterEvents(RR_SHARED_PTR<RobotRaconteur::RRObject> rrobj1);
+
+virtual RR_SHARED_PTR<RobotRaconteur::RRObject> GetSubObj(const std::string &name, const std::string &ind);
+
+virtual void InitPipeServers(RR_SHARED_PTR<RobotRaconteur::RRObject> rrobj1);
+
+virtual void InitWireServers(RR_SHARED_PTR<RobotRaconteur::RRObject> rrobj1);
+
+virtual void DispatchPipeMessage(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, uint32_t e);
+
+virtual void DispatchWireMessage(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, uint32_t e);
+
+virtual void InitCallbackServers(RR_SHARED_PTR<RobotRaconteur::RRObject> o);
+
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> CallPipeFunction(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, uint32_t e);
+
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> CallWireFunction(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, uint32_t e);
+
+virtual RR_SHARED_PTR<void> GetCallbackFunction(uint32_t endpoint, const std::string& membername);
+
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> CallMemoryFunction(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::Endpoint> e);
+
+virtual bool IsRequestNoLock(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m);
+
+virtual std::string GetObjectType();
+virtual RR_SHARED_PTR<com::robotraconteur::testing::TestService3::obj5 > get_obj();
+
+virtual RR_SHARED_PTR<com::robotraconteur::testing::TestService3::async_obj5 > get_asyncobj();
+
+protected:
+static void rr_get_p1(RR_WEAK_PTR<com::robotraconteur::testing::TestService3::obj5_skel> skel, double value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep);
+static void rr_get_p2(RR_WEAK_PTR<com::robotraconteur::testing::TestService3::obj5_skel> skel, double value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep);
+static void rr_get_p3(RR_WEAK_PTR<com::robotraconteur::testing::TestService3::obj5_skel> skel, double value, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep);
+static void rr_f1(RR_WEAK_PTR<com::robotraconteur::testing::TestService3::obj5_skel> skel, int32_t ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep);
+static void rr_f2(RR_WEAK_PTR<com::robotraconteur::testing::TestService3::obj5_skel> skel, int32_t ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep);
+ public:
+protected:bool rr_InitPipeServersRun;
+bool rr_InitWireServersRun;
+RR_SHARED_PTR<RobotRaconteur::PipeServer<int32_t > > rr_q1_pipe;
+RR_SHARED_PTR<RobotRaconteur::PipeServer<int32_t > > rr_q2_pipe;
+RR_SHARED_PTR<RobotRaconteur::WireServer<int32_t > > rr_w1_wire;
+RR_SHARED_PTR<RobotRaconteur::WireServer<int32_t > > rr_w2_wire;
+public: 
+private:
+RR_SHARED_PTR<RobotRaconteur::ArrayMemoryServiceSkel<int32_t > > rr_m1_mem;
+RR_SHARED_PTR<RobotRaconteur::ArrayMemoryServiceSkel<int32_t > > rr_m2_mem;
+RR_SHARED_PTR<RobotRaconteur::ArrayMemoryServiceSkel<int32_t > > rr_m3_mem;
 
 };
 
@@ -1343,6 +1532,8 @@ virtual RR_SHARED_PTR<RobotRaconteur::Generator<RR_INTRUSIVE_PTR<com::robotracon
 
 virtual RR_SHARED_PTR<obj4 > get_o4();
 
+virtual RR_SHARED_PTR<obj5 > get_nolock_test();
+
 virtual RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > get_unreliable1();
 virtual void set_unreliable1(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value);
 
@@ -1452,6 +1643,52 @@ virtual std::string get_data();
 virtual void set_data(const std::string& value);
 
 virtual RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub3 > get_o3_1(const std::string& ind);
+
+};
+
+class obj5_default_impl : public virtual obj5
+{
+protected:boost::mutex this_lock;
+double rrvar_p1;
+double rrvar_p2;
+double rrvar_p3;
+RR_SHARED_PTR<RobotRaconteur::PipeBroadcaster<int32_t > > rrvar_q1;
+RR_SHARED_PTR<RobotRaconteur::PipeBroadcaster<int32_t > > rrvar_q2;
+RR_SHARED_PTR<RobotRaconteur::WireBroadcaster<int32_t > > rrvar_w1;
+RR_SHARED_PTR<RobotRaconteur::WireBroadcaster<int32_t > > rrvar_w2;
+
+public:
+obj5_default_impl();
+virtual double get_p1();
+virtual void set_p1(double value);
+
+virtual double get_p2();
+virtual void set_p2(double value);
+
+virtual double get_p3();
+virtual void set_p3(double value);
+
+virtual int32_t f1();
+
+virtual int32_t f2();
+
+virtual RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > get_q1();
+virtual void set_q1(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value);
+
+virtual RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > get_q2();
+virtual void set_q2(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value);
+
+virtual RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > get_w1();
+virtual void set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value);
+
+virtual RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > get_w2();
+virtual void set_w2(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value);
+
+virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > get_m1();
+
+virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > get_m2();
+
+virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > get_m3();
 
 };
 

@@ -39,6 +39,8 @@ public class ServiceTestClient2 {
 		
 		testComplexMemories();
 		
+		testNoLock();
+		
 		disconnectService();		
 	}
 
@@ -521,6 +523,135 @@ public class ServiceTestClient2 {
 
             ca(c_m2_3.dims, c_m2_4.dims);
             ca((CDouble[])c_m2_3.array, (CDouble[])c_m2_4.array);
+        }
+        
+        public void testNoLock()
+        {
+        	obj5 o5 = r.get_nolock_test();
+        	boolean errthrown = false;
+    		try
+    		{
+    			o5.get_p1();
+    		}
+    		catch (ObjectLockedException e)
+    		{
+    			System.out.println(e.toString());
+    			errthrown = true;
+    		}
+    		if (!errthrown)
+    		{
+    			throw new RuntimeException();
+    		}
+        	
+    		o5.get_p2();
+    		o5.set_p2(0);
+    		o5.get_p3();
+    		
+    		errthrown = false;
+    		try
+    		{
+    			o5.set_p3(0);
+    		}
+    		catch (ObjectLockedException e)
+    		{
+    			System.out.println(e.toString());
+    			errthrown = true;
+    		}
+    		if (!errthrown)
+    		{
+    			throw new RuntimeException();
+    		}
+    		
+    		errthrown = false;
+    		try
+    		{
+    			o5.f1();
+    		}
+    		catch (ObjectLockedException e)
+    		{
+    			System.out.println(e.toString());
+    			errthrown = true;
+    		}
+    		if (!errthrown)
+    		{
+    			throw new RuntimeException();
+    		}
+    		
+    		o5.f2();
+    		
+    		errthrown = false;
+    		try
+    		{
+    			o5.get_q1().connect(-1).close();
+    		}
+    		catch (ObjectLockedException e)
+    		{
+    			System.out.println(e.toString());
+    			errthrown = true;
+    		}
+    		if (!errthrown)
+    		{
+    			throw new RuntimeException();
+    		}
+        	
+    		o5.get_q2().connect(-1).close();
+    		
+    		errthrown = false;
+    		try
+    		{
+    			o5.get_w1().connect().close();
+    		}
+    		catch (ObjectLockedException e)
+    		{
+    			System.out.println(e.toString());
+    			errthrown = true;
+    		}
+    		if (!errthrown)
+    		{
+    			throw new RuntimeException();
+    		}
+        	
+    		o5.get_w2().connect().close();
+    		
+    		errthrown = false;
+    		try
+    		{
+    			o5.get_m1().length();
+    		}
+    		catch (ObjectLockedException e)
+    		{
+    			System.out.println(e.toString());
+    			errthrown = true;
+    		}
+    		if (!errthrown)
+    		{
+    			throw new RuntimeException();
+    		}
+    		
+    		int[] b1 = new int[100];
+    		
+    		o5.get_m2().length();
+    		o5.get_m2().read(0, b1, 0, 10);
+    		o5.get_m2().write(0, b1, 0, 10);
+    		
+    		o5.get_m3().length();
+    		o5.get_m3().read(0, b1, 0, 10);
+    		    		
+    		errthrown = false;
+    		try
+    		{
+    			o5.get_m3().write(0, b1, 0, 10);
+    		}
+    		catch (ObjectLockedException e)
+    		{
+    			System.out.println(e.toString());
+    			errthrown = true;
+    		}
+    		if (!errthrown)
+    		{
+    			throw new RuntimeException();
+    		}
+    		
         }
         
         public final  void ca(CDouble[] v1, CDouble[] v2)

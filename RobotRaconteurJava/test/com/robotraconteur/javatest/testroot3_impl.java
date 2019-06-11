@@ -709,6 +709,14 @@ public class testroot3_impl implements testroot3
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public obj5 get_nolock_test()
+	{
+		return o5;
+	}
+	
+	obj5_impl o5=new obj5_impl();
 		
 	
 }

@@ -150,7 +150,7 @@ def ArrayToNamedArray(a, named_array_dt):
     assert a.dtype == prim_dt, "Array type must match named array element type"
     assert a.shape[-1] == elem_count, "Last dimension must match named array size"
     b = a.view(named_array_dt)
-    if b.shape > 1 and b.shape[-1] == 1:
+    if len(b.shape) > 1 and b.shape[-1] == 1:
         return b.reshape(a.shape[0:-1],order="C")
     return b
 
@@ -1056,7 +1056,7 @@ class MultiDimArrayMemoryClient(object):
 
         dat=RobotRaconteurPython.WrappedMultiDimArrayMemoryClientUtil.Read(self.__innermemory,memorypos,count)
         tdims=RobotRaconteurPython.TypeDefinition()
-        tdims.Type=RobotRaconteurPython.DataTypes_int32_t
+        tdims.Type=RobotRaconteurPython.DataTypes_uint32_t
         tdims.ArrayType=RobotRaconteurPython.DataTypes_ArrayTypes_array
         tdims.ArrayVarLength=True
         tdims.ArrayLength=RobotRaconteurPython.vectorint32([0])
@@ -1073,13 +1073,13 @@ class MultiDimArrayMemoryClient(object):
         bufind=[(slice(bufferpos[i], (bufferpos[i]+count[i]))) for i in range(len(count))]
                 
         buffer2=array.reshape(dims,order="F")
-        buffer[bufind]=buffer2
+        buffer[tuple(bufind)]=buffer2
 
 
     def Write(self, memorypos, buffer, bufferpos, count):
 
         tdims=RobotRaconteurPython.TypeDefinition()
-        tdims.Type=RobotRaconteurPython.DataTypes_int32_t
+        tdims.Type=RobotRaconteurPython.DataTypes_uint32_t
         tdims.ArrayType=RobotRaconteurPython.DataTypes_ArrayTypes_array
         tdims.ArrayVarLength=True
         tdims.ArrayLength=RobotRaconteurPython.vectorint32([0])
@@ -1095,7 +1095,7 @@ class MultiDimArrayMemoryClient(object):
         memind=[slice(memorypos[i],(memorypos[i]+count[i])) for i in range(len(count))]
         bufind=[slice(bufferpos[i],(bufferpos[i]+count[i])) for i in range(len(count))]
                     
-        array=buffer[bufind].flatten(order="F")
+        array=buffer[tuple(bufind)].flatten(order="F")
         
         dims2=PackToRRArray(count,tdims)
         array2=PackToRRArray(array,t)

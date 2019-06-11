@@ -9112,6 +9112,10 @@ return rr_m3_mem->CallMemoryFunction(m,e,get_obj()->get_m3());
 }
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
+bool testroot_skel::IsRequestNoLock(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m)
+{
+return false;
+}
 void sub1_skel::Init(const std::string& path, RR_SHARED_PTR<RobotRaconteur::RRObject> object, RR_SHARED_PTR<RobotRaconteur::ServerContext> context)
 {
 uncastobj=object;
@@ -9434,6 +9438,10 @@ RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> sub1_skel::CallMemoryFunction(RR_
 {
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
+bool sub1_skel::IsRequestNoLock(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m)
+{
+return false;
+}
 void sub2_skel::Init(const std::string& path, RR_SHARED_PTR<RobotRaconteur::RRObject> object, RR_SHARED_PTR<RobotRaconteur::ServerContext> context)
 {
 uncastobj=object;
@@ -9696,6 +9704,10 @@ throw RobotRaconteur::MemberNotFoundException("Member not found");
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> sub2_skel::CallMemoryFunction(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::Endpoint> e)
 {
 throw RobotRaconteur::MemberNotFoundException("Member not found");
+}
+bool sub2_skel::IsRequestNoLock(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m)
+{
+return false;
 }
 void sub3_skel::Init(const std::string& path, RR_SHARED_PTR<RobotRaconteur::RRObject> object, RR_SHARED_PTR<RobotRaconteur::ServerContext> context)
 {
@@ -9992,6 +10004,10 @@ throw RobotRaconteur::MemberNotFoundException("Member not found");
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> sub3_skel::CallMemoryFunction(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::Endpoint> e)
 {
 throw RobotRaconteur::MemberNotFoundException("Member not found");
+}
+bool sub3_skel::IsRequestNoLock(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m)
+{
+return false;
 }
 
 testroot_default_impl::testroot_default_impl()

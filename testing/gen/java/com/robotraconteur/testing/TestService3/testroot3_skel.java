@@ -418,6 +418,9 @@ public class testroot3_skel extends ServiceSkel {
     if(name.equals( "o4")) {
     return obj.get_o4();
     }
+    if(name.equals( "nolock_test")) {
+    return obj.get_nolock_test();
+    }
     throw new MemberNotFoundException("");
     }
     public void registerEvents(Object obj1) {

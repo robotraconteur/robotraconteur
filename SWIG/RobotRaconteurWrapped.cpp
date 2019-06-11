@@ -1992,7 +1992,7 @@ namespace RobotRaconteur
 		type ## _var->Write(memorypos,buffer2,bufferpos,count); \
 		return; \
 	}
-
+	
 	void WrappedMultiDimArrayMemoryClientUtil::Write(RR_SHARED_PTR<MultiDimArrayMemoryBase> mem, std::vector<uint64_t> memorypos, RR_SHARED_PTR<RRMultiDimArrayUntyped> buffer, std::vector<uint64_t> bufferpos, std::vector<uint64_t> count)
 	{
 		/*RR_SHARED_PTR<MultiDimArrayMemory<int8_t> > i8=rr_cast<MultiDimArrayMemory<int8_t> >(mem);
@@ -2476,7 +2476,29 @@ namespace RobotRaconteur
 				}
 			}
 
+			MemberDefinition_NoLock nolock = (*e)->NoLock();
+			if (nolock == MemberDefinition_NoLock_all)
+			{
+				std::set<MessageEntryType> entry_types;
+				nolocks.insert(std::make_pair((*e)->Name, entry_types));
+			}
 
+			if (nolock == MemberDefinition_NoLock_read)
+			{
+				if (RR_DYNAMIC_POINTER_CAST<PropertyDefinition>(*e))
+				{
+					std::set<MessageEntryType> entry_types;
+					entry_types.insert(MessageEntryType_PropertyGetReq);
+					nolocks.insert(std::make_pair((*e)->Name, entry_types));
+				}
+				if (RR_DYNAMIC_POINTER_CAST<MemoryDefinition>(*e))
+				{
+					std::set<MessageEntryType> entry_types;
+					entry_types.insert(MessageEntryType_MemoryGetParam);
+					entry_types.insert(MessageEntryType_MemoryRead);
+					nolocks.insert(std::make_pair((*e)->Name, entry_types));
+				}
+			}
 		}
 
 		boost::shared_ptr<WrappedServiceSkel> sk=rr_cast<WrappedServiceSkel>(shared_from_this());
@@ -2781,6 +2803,25 @@ namespace RobotRaconteur
 		}
 
 
+	}
+
+	bool WrappedServiceSkel::IsRequestNoLock(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m)
+	{
+		std::map<std::string, std::set<MessageEntryType> >::iterator e = nolocks.find(m->MemberName);
+		if (e != nolocks.end())
+		{
+			if (e->second.empty())
+			{
+				return true;
+			}
+
+			if (e->second.find(m->EntryType) != e->second.end())
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/*void WrappedServiceSkel::SetRRDirector(WrappedServiceSkelDirector* director, int32_t id)

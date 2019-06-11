@@ -280,6 +280,13 @@ namespace RobotRaconteur
 		MemberDefinition_Direction_writeonly,
 	};
 
+	enum MemberDefinition_NoLock
+	{
+		MemberDefinition_NoLock_none = 0,
+		MemberDefinition_NoLock_all,
+		MemberDefinition_NoLock_read
+	};
+
 #define RR_TIMEOUT_INFINITE -1
 
 	const uint32_t TranspartCapabilityCode_PAGE_MASK = 0xFFF00000;

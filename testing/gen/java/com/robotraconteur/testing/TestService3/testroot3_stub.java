@@ -584,6 +584,9 @@ public class testroot3_stub extends ServiceStub implements testroot3, async_test
     public obj4 get_o4() {
     return (obj4)findObjRefTyped("o4","com.robotraconteur.testing.TestService3.obj4");
     }
+    public obj5 get_nolock_test() {
+    return (obj5)findObjRefTyped("nolock_test","com.robotraconteur.testing.TestService3.obj5");
+    }
     public Pipe<int[]> get_unreliable1()
     { return rr_unreliable1;  }
     public void set_unreliable1(Pipe<int[]> value)
@@ -2430,5 +2433,8 @@ public class testroot3_stub extends ServiceStub implements testroot3, async_test
     }
     public void async_get_o4(Action2<obj4,RuntimeException> handler, int timeout) {
     asyncFindObjRefTyped("o4","com.robotraconteur.testing.TestService3.obj4",handler,timeout);
+    }
+    public void async_get_nolock_test(Action2<obj5,RuntimeException> handler, int timeout) {
+    asyncFindObjRefTyped("nolock_test","com.robotraconteur.testing.TestService3.obj5",handler,timeout);
     }
 }

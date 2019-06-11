@@ -28,7 +28,7 @@ virtual std::string RRType() {return "com.robotraconteur.testing.TestService2.os
 };
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
-using ostruct2Ptr = RR_SHARED_PTR<ostruct2>;
+using ostruct2Ptr = RR_INTRUSIVE_PTR<ostruct2>;
 #endif
 
 class baseobj : public virtual RobotRaconteur::RRObject

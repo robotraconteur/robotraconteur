@@ -83,6 +83,7 @@ public interface testroot3
     Generator1<UnsignedBytes,UnsignedBytes> gen_func4();
     Generator1<com.robotraconteur.testing.TestService1.teststruct2,com.robotraconteur.testing.TestService1.teststruct2> gen_func5();
     obj4 get_o4();
+    obj5 get_nolock_test();
     Pipe<int[]> get_unreliable1();
     void set_unreliable1(Pipe<int[]> value);
     Pipe<int[]> get_unreliable2();

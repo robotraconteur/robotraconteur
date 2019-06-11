@@ -264,6 +264,7 @@ public interface testroot3
     Generator1<byte[],byte[]> gen_func4();
     Generator1<com.robotraconteur.testing.TestService1.teststruct2,com.robotraconteur.testing.TestService1.teststruct2> gen_func5();
     obj4 get_o4();
+    obj5 get_nolock_test();
     Pipe<int> unreliable1{ get; set; }
     Pipe<int> unreliable2{ get; set; }
     Pipe<int[]> p1{ get; set; }
@@ -312,6 +313,23 @@ public interface obj4 : com.robotraconteur.testing.TestService1.sub2
     int i_ind { get; set; }
     string data { get; set; }
     com.robotraconteur.testing.TestService1.sub3 get_o3_1(string ind);
+}
+
+[RobotRaconteurServiceObjectInterface()]
+public interface obj5
+{
+    double p1 { get; set; }
+    double p2 { get; set; }
+    double p3 { get; set; }
+    int f1();
+    int f2();
+    Pipe<int> q1{ get; set; }
+    Pipe<int> q2{ get; set; }
+    Wire<int> w1{ get; set; }
+    Wire<int> w2{ get; set; }
+    ArrayMemory<int> m1 { get; }
+    ArrayMemory<int> m2 { get; }
+    ArrayMemory<int> m3 { get; }
 }
 
 public static class com__robotraconteur__testing__TestService3Constants 

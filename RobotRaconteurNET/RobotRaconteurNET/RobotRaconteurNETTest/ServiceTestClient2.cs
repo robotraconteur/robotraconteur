@@ -57,6 +57,8 @@ namespace RobotRaconteurNETTest
 
             TestComplexMemories();
 
+            TestNoLock();
+
             DisconnectService();
         }
 
@@ -430,6 +432,55 @@ namespace RobotRaconteurNETTest
 
             ca(c_m2_3.Dims, c_m2_4.Dims);
             ca((CDouble[])c_m2_3.Array_, (CDouble[])c_m2_4.Array_);
+        }
+
+        private static void a(double b) { }
+        private static void a(ulong b) { }
+
+        void TestNoLock()
+        {
+            var o5 = r.get_nolock_test();
+            ShouldBeErr<ObjectLockedException>(() => a(o5.p1));
+
+            a(o5.p2);
+            o5.p2 = 0;
+            a(o5.p3);
+            ShouldBeErr<ObjectLockedException>(() => o5.p3 = 0);
+
+            ShouldBeErr<ObjectLockedException>(() => o5.f1());
+            o5.f2();
+            ShouldBeErr<ObjectLockedException>(() => o5.q1.Connect(-1).Close());
+            o5.q2.Connect(-1).Close();
+            ShouldBeErr<ObjectLockedException>(() => o5.w1.Connect().Close());
+            o5.w2.Connect().Close();
+
+            ShouldBeErr<ObjectLockedException>(() => a(o5.m1.Length));
+
+            var b1 = new int[100];
+
+            a(o5.m2.Length);
+            o5.m2.Read(0, b1, 0, 10);
+            o5.m2.Write(0, b1, 0, 10);
+
+            a(o5.m3.Length);
+            o5.m3.Read(0, b1, 0, 10);
+            ShouldBeErr<ObjectLockedException>(() => o5.m3.Write(0, b1, 0, 10));
+        }
+
+        private void ShouldBeErr<T>(Action a) where T : Exception
+        {
+            bool err = false;
+
+            try
+            {
+                a();
+            }
+            catch (T)
+            {
+                err = true;
+            }
+
+            if (!err) throw new Exception();
         }
     }
     

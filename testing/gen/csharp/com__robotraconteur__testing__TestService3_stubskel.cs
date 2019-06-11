@@ -12,7 +12,7 @@ public class com__robotraconteur__testing__TestService3Factory : ServiceFactory
 {
     public override string DefString()
 {
-    const string s="service com.robotraconteur.testing.TestService3\n\nstdver 0.9.0\n#option version 0.9.0\n\nimport com.robotraconteur.testing.TestService1\nusing  com.robotraconteur.testing.TestService1.testroot\nusing  com.robotraconteur.testing.TestService1.teststruct1\nusing  com.robotraconteur.testing.TestService1.teststruct2\nusing  com.robotraconteur.testing.TestService1.testexception1\nusing  com.robotraconteur.testing.TestService1.sub2\nusing  com.robotraconteur.testing.TestService1.sub3\n\nenum testenum1\nvalue1 = 0,	value2,	value3,	anothervalue = -1,\nanothervalue2 = -2,\nanothervalue3 = -3,\nhexval1 = 0x10,\nhexval2,\nneghexval1 = 0x80000005,\nneghexval2,\nmore_values\nend\n\nconstant string strconst \"This is a\\n \\\"string constant\\\" \\\\\\/\\b\\f \\r\\u00FF tabme\\ttabme\\n smile! \\ud83d\\udE01\"\nconstant int32 int32const 3856384\nconstant int32[] int32const_array {182476, 56483, -2947}\nconstant double[] doubleconst_array {1.5847, 3.14, -548e3, 3452.67e2, 485e-21}\nconstant struct structconst {field1: strconst, field2: int32const_array}\nconstant struct structconst2 {field3: structconst, field4: int32const}\n\nnamedarray vector3\nfield double x\nfield double y\nfield double z\nend namedarray\n\nnamedarray quaternion\nfield double q0\nfield double q1\nfield double q2\nfield double q3\nend\n\nnamedarray transform\nfield quaternion rotation\nfield vector3 translation\nend\n\nnamedarray pixel\nfield uint8 r\nfield uint8 b\nfield uint8 g\nend\n\nnamedarray pixel2\nfield uint8 c\nfield pixel d\nfield pixel e\nfield pixel[7] f\nfield pixel g\nend\n\npod testpod1\nfield double d1\nfield double[6] d2\nfield double[6-] d3\nfield double[3,3] d4\nfield testpod2 s1\nfield testpod2[8] s2\nfield testpod2[9-] s3\nfield testpod2[2,4] s4\nfield transform t1\nfield transform[4] t2\nfield transform[15-] t3\nfield transform[2,4] t4\nend\n\npod testpod2\nfield int8 i1\nfield int8[15] i2\nfield int8[17-] i3\nend\n\nstruct teststruct3\nfield testpod1 s1\nfield testpod1[] s2\nfield testpod1[11] s3\nfield testpod1[16-] s4\nfield testpod1[3,3] s5\nfield testpod1[*] s6\nfield testpod1{list} s7\nfield testpod1[]{list} s8\nfield testpod1[*]{list} s9\nfield varvalue s10\nfield varvalue s11\nfield varvalue s12\nfield varvalue s13\nfield varvalue s14\nfield varvalue s15\nfield transform t1\nfield transform[4] t2\nfield transform[2,4] t3\nfield varvalue t4\nfield varvalue t5\nfield transform{list} t6\nfield transform[4]{list} t7\nfield transform[2,4]{list} t8\nfield varvalue t9\nfield varvalue t10\nfield varvalue t11\n\nend\n\nobject testroot3\nproperty int32 readme [readonly]\nproperty int32 writeme [writeonly]\n\npipe int32 unreliable1 [unreliable,readonly]\noption pipe unreliable2 unreliable\npipe int32 unreliable2\n\nwire int32 peekwire [readonly]\nwire int32 \\\npokewire [writeonly]\nproperty int32 unknown_modifier [unknown, unknown2(), unknown_3(23, 45.8e-5, hello, \"world\")]\n\nmemory double[] readmem [readonly]\n\nobjref obj4 o4\n\nproperty testenum1 testenum1_prop\n\nproperty testpod1 testpod1_prop\nfunction void testpod1_func1(testpod1 s)\nfunction testpod1 testpod1_func2()\n\nproperty teststruct3 teststruct3_prop\n\nmemory testpod2[] pod_m1\nmemory testpod2[*] pod_m2\n\nfunction double{generator} gen_func1()\nfunction uint8[]{generator} gen_func2(string name)\nfunction void gen_func3(string name, uint8[]{generator} in)\nfunction uint8[]{generator} gen_func4(uint8[]{generator} in)\nfunction teststruct2{generator} gen_func5(teststruct2{generator} in)\n\n#extra tests for fixed length arrays\nproperty double[6]{list} d1\nproperty double[6-]{list} d2\nproperty double[6]{int32} d3\nproperty double[6-]{int32} d4\nproperty double[3,3]{list} d5\nproperty double[3,3]{int32} d6\n\n#Test pipe and wire verification\npipe int32[3] p1\npipe int32[3-] p2\npipe int32[2,2] p3\nwire int32[6] w1\nwire int32[6-] w2\nwire int32[3,2] w3\n\n#namedarray test\nproperty vector3 testnamedarray1\nproperty transform testnamedarray2\nproperty transform[10-] testnamedarray3\nproperty transform[*] testnamedarray4\nproperty transform[3,2] testnamedarray5\n\nmemory transform[] namedarray_m1\nmemory transform[*] namedarray_m2\n\n#new primitive types test\nproperty cdouble c1\nproperty cdouble[] c2\nproperty cdouble[*] c3\nproperty cdouble{list} c4\nproperty cdouble[]{list} c5\nproperty cdouble[*]{list} c6\nproperty csingle c7\nproperty csingle[] c8\nproperty csingle[*] c9\nproperty csingle{list} c10\nproperty csingle[]{list} c11\nproperty csingle[*]{list} c12\n\nproperty bool b1\nproperty bool[] b2\nproperty bool[*] b3\nproperty bool{list} b4\nproperty bool[]{list} b5\nproperty bool[*]{list} b6\n\nmemory cdouble[] c_m1\nmemory cdouble[*] c_m2\nmemory cdouble[] c_m3\nmemory cdouble[*] c_m4\nmemory bool[] c_m5\nmemory bool[*] c_m6\n\nend\n\nobject obj1\nproperty double[] d1\nend\n\nobject obj2\nimplements obj1\nproperty double[] d1\nend\n\nobject obj3\nimplements obj1\nimplements obj2\nproperty double[] d1\nend\n\nobject obj4\nimplements sub2\nproperty string s_ind\nproperty int32 i_ind\n\nproperty string data\nobjref sub3{string} o3_1\nend\n\n\n";
+    const string s="service com.robotraconteur.testing.TestService3\n\nstdver 0.9.0\n#option version 0.9.0\n\nimport com.robotraconteur.testing.TestService1\nusing  com.robotraconteur.testing.TestService1.testroot\nusing  com.robotraconteur.testing.TestService1.teststruct1\nusing  com.robotraconteur.testing.TestService1.teststruct2\nusing  com.robotraconteur.testing.TestService1.testexception1\nusing  com.robotraconteur.testing.TestService1.sub2\nusing  com.robotraconteur.testing.TestService1.sub3\n\nenum testenum1\nvalue1 = 0,	value2,	value3,	anothervalue = -1,\nanothervalue2 = -2,\nanothervalue3 = -3,\nhexval1 = 0x10,\nhexval2,\nneghexval1 = 0x80000005,\nneghexval2,\nmore_values\nend\n\nconstant string strconst \"This is a\\n \\\"string constant\\\" \\\\\\/\\b\\f \\r\\u00FF tabme\\ttabme\\n smile! \\ud83d\\udE01\"\nconstant int32 int32const 3856384\nconstant int32[] int32const_array {182476, 56483, -2947}\nconstant double[] doubleconst_array {1.5847, 3.14, -548e3, 3452.67e2, 485e-21}\nconstant struct structconst {field1: strconst, field2: int32const_array}\nconstant struct structconst2 {field3: structconst, field4: int32const}\n\nnamedarray vector3\nfield double x\nfield double y\nfield double z\nend namedarray\n\nnamedarray quaternion\nfield double q0\nfield double q1\nfield double q2\nfield double q3\nend\n\nnamedarray transform\nfield quaternion rotation\nfield vector3 translation\nend\n\nnamedarray pixel\nfield uint8 r\nfield uint8 b\nfield uint8 g\nend\n\nnamedarray pixel2\nfield uint8 c\nfield pixel d\nfield pixel e\nfield pixel[7] f\nfield pixel g\nend\n\npod testpod1\nfield double d1\nfield double[6] d2\nfield double[6-] d3\nfield double[3,3] d4\nfield testpod2 s1\nfield testpod2[8] s2\nfield testpod2[9-] s3\nfield testpod2[2,4] s4\nfield transform t1\nfield transform[4] t2\nfield transform[15-] t3\nfield transform[2,4] t4\nend\n\npod testpod2\nfield int8 i1\nfield int8[15] i2\nfield int8[17-] i3\nend\n\nstruct teststruct3\nfield testpod1 s1\nfield testpod1[] s2\nfield testpod1[11] s3\nfield testpod1[16-] s4\nfield testpod1[3,3] s5\nfield testpod1[*] s6\nfield testpod1{list} s7\nfield testpod1[]{list} s8\nfield testpod1[*]{list} s9\nfield varvalue s10\nfield varvalue s11\nfield varvalue s12\nfield varvalue s13\nfield varvalue s14\nfield varvalue s15\nfield transform t1\nfield transform[4] t2\nfield transform[2,4] t3\nfield varvalue t4\nfield varvalue t5\nfield transform{list} t6\nfield transform[4]{list} t7\nfield transform[2,4]{list} t8\nfield varvalue t9\nfield varvalue t10\nfield varvalue t11\n\nend\n\nobject testroot3\nproperty int32 readme [readonly]\nproperty int32 writeme [writeonly]\n\npipe int32 unreliable1 [unreliable,readonly]\noption pipe unreliable2 unreliable\npipe int32 unreliable2\n\nwire int32 peekwire [readonly]\nwire int32 \\\npokewire [writeonly]\nproperty int32 unknown_modifier [unknown, unknown2(), unknown_3(23, 45.8e-5, hello, \"world\")]\n\nmemory double[] readmem [readonly]\n\nobjref obj4 o4\n\nproperty testenum1 testenum1_prop\n\nproperty testpod1 testpod1_prop\nfunction void testpod1_func1(testpod1 s)\nfunction testpod1 testpod1_func2()\n\nproperty teststruct3 teststruct3_prop\n\nmemory testpod2[] pod_m1\nmemory testpod2[*] pod_m2\n\nfunction double{generator} gen_func1()\nfunction uint8[]{generator} gen_func2(string name)\nfunction void gen_func3(string name, uint8[]{generator} in)\nfunction uint8[]{generator} gen_func4(uint8[]{generator} in)\nfunction teststruct2{generator} gen_func5(teststruct2{generator} in)\n\n#extra tests for fixed length arrays\nproperty double[6]{list} d1\nproperty double[6-]{list} d2\nproperty double[6]{int32} d3\nproperty double[6-]{int32} d4\nproperty double[3,3]{list} d5\nproperty double[3,3]{int32} d6\n\n#Test pipe and wire verification\npipe int32[3] p1\npipe int32[3-] p2\npipe int32[2,2] p3\nwire int32[6] w1\nwire int32[6-] w2\nwire int32[3,2] w3\n\n#namedarray test\nproperty vector3 testnamedarray1\nproperty transform testnamedarray2\nproperty transform[10-] testnamedarray3\nproperty transform[*] testnamedarray4\nproperty transform[3,2] testnamedarray5\n\nmemory transform[] namedarray_m1\nmemory transform[*] namedarray_m2\n\n#new primitive types test\nproperty cdouble c1\nproperty cdouble[] c2\nproperty cdouble[*] c3\nproperty cdouble{list} c4\nproperty cdouble[]{list} c5\nproperty cdouble[*]{list} c6\nproperty csingle c7\nproperty csingle[] c8\nproperty csingle[*] c9\nproperty csingle{list} c10\nproperty csingle[]{list} c11\nproperty csingle[*]{list} c12\n\nproperty bool b1\nproperty bool[] b2\nproperty bool[*] b3\nproperty bool{list} b4\nproperty bool[]{list} b5\nproperty bool[*]{list} b6\n\nmemory cdouble[] c_m1\nmemory cdouble[*] c_m2\nmemory cdouble[] c_m3\nmemory cdouble[*] c_m4\nmemory bool[] c_m5\nmemory bool[*] c_m6\n\nobjref obj5 nolock_test\n\nend\n\nobject obj1\nproperty double[] d1\nend\n\nobject obj2\nimplements obj1\nproperty double[] d1\nend\n\nobject obj3\nimplements obj1\nimplements obj2\nproperty double[] d1\nend\n\nobject obj4\nimplements sub2\nproperty string s_ind\nproperty int32 i_ind\n\nproperty string data\nobjref sub3{string} o3_1\nend\n\nobject obj5\n\nproperty double p1\nproperty double p2 [nolock]\nproperty double p3 [nolockread]\n\nfunction int32 f1()\nfunction int32 f2() [nolock]\n\npipe int32 q1 [readonly]\npipe int32 q2 [readonly,nolock]\n\nwire int32 w1 [readonly]\nwire int32 w2 [readonly,nolock]\n\nmemory int32[] m1\nmemory int32[] m2 [nolock]\nmemory int32[] m3 [nolockread]\n\nend\n\n\n";
     return s;
     }
     public override string GetServiceName() {return "com.robotraconteur.testing.TestService3";}
@@ -69,6 +69,8 @@ public class com__robotraconteur__testing__TestService3Factory : ServiceFactory
     return new obj3_stub(innerstub);
     case "obj4":
     return new obj4_stub(innerstub);
+    case "obj5":
+    return new obj5_stub(innerstub);
     default:
     break;
     }
@@ -93,6 +95,8 @@ public class com__robotraconteur__testing__TestService3Factory : ServiceFactory
     return new obj3_skel((obj3)obj);
     case "obj4":
     return new obj4_skel((obj4)obj);
+    case "obj5":
+    return new obj5_skel((obj5)obj);
     default:
     break;
     }
@@ -454,6 +458,7 @@ public interface async_testroot3
     Task<Generator1<byte[],byte[]>> async_gen_func4(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
     Task<Generator1<com.robotraconteur.testing.TestService1.teststruct2,com.robotraconteur.testing.TestService1.teststruct2>> async_gen_func5(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
     Task<obj4> async_get_o4(int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<obj5> async_get_nolock_test(int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
 }
 public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     private Pipe<int> rr_unreliable1;
@@ -948,6 +953,9 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     }
     public obj4 get_o4() {
     return (obj4)FindObjRefTyped("o4","com.robotraconteur.testing.TestService3.obj4");
+    }
+    public obj5 get_nolock_test() {
+    return (obj5)FindObjRefTyped("nolock_test","com.robotraconteur.testing.TestService3.obj5");
     }
     public Pipe<int> unreliable1 {
     get { return rr_unreliable1;  }
@@ -1545,6 +1553,10 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     {
     return AsyncFindObjRefTyped<obj4>("o4","com.robotraconteur.testing.TestService3.obj4",timeout);
     }
+    public Task<obj5> async_get_nolock_test(int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    return AsyncFindObjRefTyped<obj5>("nolock_test","com.robotraconteur.testing.TestService3.obj5",timeout);
+    }
 }
 public interface async_obj1
 {
@@ -1789,6 +1801,179 @@ public class obj4_stub : ServiceStub , obj4, async_obj4{
     {
     return AsyncFindObjRefTyped<com.robotraconteur.testing.TestService1.sub3>("o3_1",ind.ToString(),"com.robotraconteur.testing.TestService1.sub3",timeout);
     }
+}
+public interface async_obj5
+{
+    Task<double> async_get_p1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_p1(double value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<double> async_get_p2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_p2(double value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<double> async_get_p3(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task async_set_p3(double value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<int> async_f1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    Task<int> async_f2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+}
+public class obj5_stub : ServiceStub , obj5, async_obj5{
+    private Pipe<int> rr_q1;
+    private Pipe<int> rr_q2;
+    private Wire<int> rr_w1;
+    private Wire<int> rr_w2;
+    private ArrayMemory<int> rr_m1;
+    private ArrayMemory<int> rr_m2;
+    private ArrayMemory<int> rr_m3;
+    public obj5_stub(WrappedServiceStub innerstub) : base(innerstub) {
+    rr_q1=new Pipe<int>(innerstub.GetPipe("q1"));
+    rr_q2=new Pipe<int>(innerstub.GetPipe("q2"));
+    rr_w1=new Wire<int>(innerstub.GetWire("w1"));
+    rr_w2=new Wire<int>(innerstub.GetWire("w2"));
+    rr_m1=new ArrayMemoryClient<int>(innerstub.GetArrayMemory("m1"));
+    rr_m2=new ArrayMemoryClient<int>(innerstub.GetArrayMemory("m2"));
+    rr_m3=new ArrayMemoryClient<int>(innerstub.GetArrayMemory("m3"));
+    }
+    public double p1 {
+    get {
+    return (MessageElementUtil.UnpackScalar<double>(rr_innerstub.PropertyGet("p1")));
+    }
+    set {
+    using(MessageElement m=MessageElementUtil.PackScalar<double>("value",value))
+    {
+    rr_innerstub.PropertySet("p1", m);
+    }
+    }
+    }
+    public double p2 {
+    get {
+    return (MessageElementUtil.UnpackScalar<double>(rr_innerstub.PropertyGet("p2")));
+    }
+    set {
+    using(MessageElement m=MessageElementUtil.PackScalar<double>("value",value))
+    {
+    rr_innerstub.PropertySet("p2", m);
+    }
+    }
+    }
+    public double p3 {
+    get {
+    return (MessageElementUtil.UnpackScalar<double>(rr_innerstub.PropertyGet("p3")));
+    }
+    set {
+    using(MessageElement m=MessageElementUtil.PackScalar<double>("value",value))
+    {
+    rr_innerstub.PropertySet("p3", m);
+    }
+    }
+    }
+    public int f1() {
+    using(vectorptr_messageelement rr_param=new vectorptr_messageelement())
+    {
+    using(MessageElement rr_me=rr_innerstub.FunctionCall("f1",rr_param))
+    {
+    return (MessageElementUtil.UnpackScalar<int>(rr_me));
+    }
+    }
+    }
+    public int f2() {
+    using(vectorptr_messageelement rr_param=new vectorptr_messageelement())
+    {
+    using(MessageElement rr_me=rr_innerstub.FunctionCall("f2",rr_param))
+    {
+    return (MessageElementUtil.UnpackScalar<int>(rr_me));
+    }
+    }
+    }
+    public override void DispatchEvent(string rr_membername, vectorptr_messageelement rr_m) {
+    switch (rr_membername) {
+    default:
+    break;
+    }
+    }
+    public Pipe<int> q1 {
+    get { return rr_q1;  }
+    set { throw new InvalidOperationException();}
+    }
+    public Pipe<int> q2 {
+    get { return rr_q2;  }
+    set { throw new InvalidOperationException();}
+    }
+    public Wire<int> w1 {
+    get { return rr_w1;  }
+    set { throw new InvalidOperationException();}
+    }
+    public Wire<int> w2 {
+    get { return rr_w2;  }
+    set { throw new InvalidOperationException();}
+    }
+    public override MessageElement CallbackCall(string rr_membername, vectorptr_messageelement rr_m) {
+    switch (rr_membername) {
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("Member not found");
+    }
+    public ArrayMemory<int> m1 { 
+    get { return rr_m1; }
+    }
+    public ArrayMemory<int> m2 { 
+    get { return rr_m2; }
+    }
+    public ArrayMemory<int> m3 { 
+    get { return rr_m3; }
+    }
+    public virtual async Task<double> async_get_p1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(var rr_value = await rr_async_PropertyGet("p1",rr_timeout)) {
+    var rr_ret=(MessageElementUtil.UnpackScalar<double>(rr_value));
+    return rr_ret;
+    } }
+    public virtual async Task async_set_p1(double value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(MessageElement mm=MessageElementUtil.PackScalar<double>("value",value))
+    {
+    await rr_async_PropertySet("p1",mm,rr_timeout);
+    }
+    }
+    public virtual async Task<double> async_get_p2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(var rr_value = await rr_async_PropertyGet("p2",rr_timeout)) {
+    var rr_ret=(MessageElementUtil.UnpackScalar<double>(rr_value));
+    return rr_ret;
+    } }
+    public virtual async Task async_set_p2(double value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(MessageElement mm=MessageElementUtil.PackScalar<double>("value",value))
+    {
+    await rr_async_PropertySet("p2",mm,rr_timeout);
+    }
+    }
+    public virtual async Task<double> async_get_p3(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(var rr_value = await rr_async_PropertyGet("p3",rr_timeout)) {
+    var rr_ret=(MessageElementUtil.UnpackScalar<double>(rr_value));
+    return rr_ret;
+    } }
+    public virtual async Task async_set_p3(double value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(MessageElement mm=MessageElementUtil.PackScalar<double>("value",value))
+    {
+    await rr_async_PropertySet("p3",mm,rr_timeout);
+    }
+    }
+    public virtual async Task<int> async_f1(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(vectorptr_messageelement rr_param=new vectorptr_messageelement())
+    {
+    using(var rr_return = await rr_async_FunctionCall("f1",rr_param,rr_timeout)) {
+    var rr_ret=(MessageElementUtil.UnpackScalar<int>(rr_return));
+    return rr_ret;
+    } } }
+    public virtual async Task<int> async_f2(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+    using(vectorptr_messageelement rr_param=new vectorptr_messageelement())
+    {
+    using(var rr_return = await rr_async_FunctionCall("f2",rr_param,rr_timeout)) {
+    var rr_ret=(MessageElementUtil.UnpackScalar<int>(rr_return));
+    return rr_ret;
+    } } }
 }
 public class testroot3_skel : ServiceSkel {
     protected testroot3 obj;
@@ -2215,6 +2400,9 @@ public class testroot3_skel : ServiceSkel {
     switch (name) {
     case "o4": {
     return obj.get_o4();
+    }
+    case "nolock_test": {
+    return obj.get_nolock_test();
     }
     default:
     break;
@@ -2808,6 +2996,163 @@ public class obj4_skel : ServiceSkel {
     }
     public override string RRType { get { return "com.robotraconteur.testing.TestService3.obj4"; } }
 }
+public class obj5_skel : ServiceSkel {
+    protected obj5 obj;
+    public obj5_skel(object o) : base(o) { obj=(obj5)o; }
+    public override void ReleaseCastObject() { 
+    obj=null;
+    base.ReleaseCastObject();
+    }
+    public override MessageElement CallGetProperty(string membername) {
+    switch (membername) {
+    case "p1":
+    {
+    double ret=obj.p1;
+    return MessageElementUtil.PackScalar<double>("return",ret);
+    }
+    case "p2":
+    {
+    double ret=obj.p2;
+    return MessageElementUtil.PackScalar<double>("return",ret);
+    }
+    case "p3":
+    {
+    double ret=obj.p3;
+    return MessageElementUtil.PackScalar<double>("return",ret);
+    }
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("Member not found");
+    }
+    public override void CallSetProperty(string membername, MessageElement m) {
+    switch (membername) {
+    case "p1":
+    {
+    obj.p1=(MessageElementUtil.UnpackScalar<double>(m));
+    return;
+    }
+    case "p2":
+    {
+    obj.p2=(MessageElementUtil.UnpackScalar<double>(m));
+    return;
+    }
+    case "p3":
+    {
+    obj.p3=(MessageElementUtil.UnpackScalar<double>(m));
+    return;
+    }
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("Member not found");
+    }
+    public override MessageElement CallFunction(string rr_membername, vectorptr_messageelement rr_m) {
+    switch (rr_membername) {
+    case "f1":
+    {
+    int rr_ret=this.obj.f1();
+    return MessageElementUtil.PackScalar<int>("return",rr_ret);
+    }
+    case "f2":
+    {
+    int rr_ret=this.obj.f2();
+    return MessageElementUtil.PackScalar<int>("return",rr_ret);
+    }
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("Member not found");
+    }
+    public override object GetSubObj(string name, string ind) {
+    switch (name) {
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("");
+    }
+    public override void RegisterEvents(object rrobj1) {
+    obj=(obj5)rrobj1;
+    }
+    public override void UnregisterEvents(object rrobj1) {
+    obj=(obj5)rrobj1;
+    }
+    public override object GetCallbackFunction(uint rr_endpoint, string rr_membername) {
+    switch (rr_membername) {
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("Member not found");
+    }
+    public override void InitPipeServers(object rrobj1) {
+    obj=(obj5)rrobj1;
+    obj.q1=new Pipe<int>(innerskel.GetPipe("q1"));
+    obj.q2=new Pipe<int>(innerskel.GetPipe("q2"));
+    }
+    public override void InitCallbackServers(object rrobj1) {
+    obj=(obj5)rrobj1;
+    }
+    public override void InitWireServers(object rrobj1) {
+    obj=(obj5)rrobj1;
+    obj.w1=new Wire<int>(innerskel.GetWire("w1"));
+    obj.w2=new Wire<int>(innerskel.GetWire("w2"));
+    }
+    public override WrappedArrayMemoryDirector GetArrayMemory(string name) {
+    switch (name) {
+    case "m1": {
+    WrappedArrayMemoryDirectorNET<int> dir=new  WrappedArrayMemoryDirectorNET<int>(obj.m1);
+    return dir;
+    }
+    case "m2": {
+    WrappedArrayMemoryDirectorNET<int> dir=new  WrappedArrayMemoryDirectorNET<int>(obj.m2);
+    return dir;
+    }
+    case "m3": {
+    WrappedArrayMemoryDirectorNET<int> dir=new  WrappedArrayMemoryDirectorNET<int>(obj.m3);
+    return dir;
+    }
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public override WrappedMultiDimArrayMemoryDirector GetMultiDimArrayMemory(string name) {
+    switch (name) {
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public override WrappedPodArrayMemoryDirector GetPodArrayMemory(string name) {
+    switch (name) {
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public override WrappedPodMultiDimArrayMemoryDirector GetPodMultiDimArrayMemory(string name) {
+    switch (name) {
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public override WrappedNamedArrayMemoryDirector GetNamedArrayMemory(string name) {
+    switch (name) {
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public override WrappedNamedMultiDimArrayMemoryDirector GetNamedMultiDimArrayMemory(string name) {
+    switch (name) {
+    default:
+    break;
+    }
+    throw new MemberNotFoundException("Member Not Found");
+    }
+    public override string RRType { get { return "com.robotraconteur.testing.TestService3.obj5"; } }
+}
 public class testroot3_default_impl : testroot3{
     protected PipeBroadcaster<int> rrvar_unreliable1;
     protected WireBroadcaster<int> rrvar_peekwire;
@@ -2862,6 +3207,9 @@ public class testroot3_default_impl : testroot3{
     public virtual Generator1<com.robotraconteur.testing.TestService1.teststruct2,com.robotraconteur.testing.TestService1.teststruct2> gen_func5() {
     throw new NotImplementedException();    }
     public virtual obj4 get_o4() {
+    throw new NotImplementedException();
+    }
+    public virtual obj5 get_nolock_test() {
     throw new NotImplementedException();
     }
     public virtual Pipe<int> unreliable1 {
@@ -2962,6 +3310,56 @@ public class obj4_default_impl : obj4{
     public virtual string data {get; set;} = "";
     public virtual com.robotraconteur.testing.TestService1.sub3 get_o3_1(string ind) {
     throw new NotImplementedException();
+    }
+}
+public class obj5_default_impl : obj5{
+    protected PipeBroadcaster<int> rrvar_q1;
+    protected PipeBroadcaster<int> rrvar_q2;
+    protected WireBroadcaster<int> rrvar_w1;
+    protected WireBroadcaster<int> rrvar_w2;
+    public virtual double p1 {get; set;} = default(double);
+    public virtual double p2 {get; set;} = default(double);
+    public virtual double p3 {get; set;} = default(double);
+    public virtual int f1() {
+    throw new NotImplementedException();    }
+    public virtual int f2() {
+    throw new NotImplementedException();    }
+    public virtual Pipe<int> q1 {
+    get { return rrvar_q1.Pipe;  }
+    set {
+    if (rrvar_q1!=null) throw new InvalidOperationException("Pipe already set");
+    rrvar_q1= new PipeBroadcaster<int>(value);
+    }
+    }
+    public virtual Pipe<int> q2 {
+    get { return rrvar_q2.Pipe;  }
+    set {
+    if (rrvar_q2!=null) throw new InvalidOperationException("Pipe already set");
+    rrvar_q2= new PipeBroadcaster<int>(value);
+    }
+    }
+    public virtual Wire<int> w1 {
+    get { return rrvar_w1.Wire;  }
+    set {
+    if (rrvar_w1!=null) throw new InvalidOperationException("Pipe already set");
+    rrvar_w1= new WireBroadcaster<int>(value);
+    }
+    }
+    public virtual Wire<int> w2 {
+    get { return rrvar_w2.Wire;  }
+    set {
+    if (rrvar_w2!=null) throw new InvalidOperationException("Pipe already set");
+    rrvar_w2= new WireBroadcaster<int>(value);
+    }
+    }
+    public virtual ArrayMemory<int> m1 { 
+    get { throw new NotImplementedException(); }
+    }
+    public virtual ArrayMemory<int> m2 { 
+    get { throw new NotImplementedException(); }
+    }
+    public virtual ArrayMemory<int> m3 { 
+    get { throw new NotImplementedException(); }
     }
 }
 public static class RRExtensions{

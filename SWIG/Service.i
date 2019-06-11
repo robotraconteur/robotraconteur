@@ -166,6 +166,14 @@ public:
 		
 	}	
 	}
+
+	void RequestObjectLock(const std::string& servicepath, const std::string& username);
+
+	void RequestClientObjectLock(const std::string& servicepath, const std::string& username, uint32_t endpoint);
+
+	void ReleaseObjectLock(const std::string& servicepath, const std::string& username, bool override_);
+
+	std::string GetObjectLockUsername(const std::string& servicepath);
 	
 	boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> GetNode();	
 };

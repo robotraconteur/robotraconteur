@@ -134,6 +134,8 @@ namespace RobotRaconteurTest
 
 		virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<RobotRaconteur::cdouble > > get_c_m2();
 
+		virtual RR_SHARED_PTR<com::robotraconteur::testing::TestService3::obj5 > get_nolock_test();
+
 	protected:
 
 		void peekwire_timer_handler(const TimerEvent& e);
@@ -166,6 +168,8 @@ namespace RobotRaconteurTest
 		RR_SHARED_PTR<RobotRaconteur::ArrayMemory<RobotRaconteur::cdouble > > c_m1;
 		RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<RobotRaconteur::cdouble > > c_m2;
 
+		RR_SHARED_PTR<com::robotraconteur::testing::TestService3::obj5> obj5_;
+
 	};
 
 	class obj4_impl : public virtual com::robotraconteur::testing::TestService3::obj4
@@ -182,6 +186,32 @@ namespace RobotRaconteurTest
 
 		virtual RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub3 > get_o3_1(const std::string& ind) { throw std::runtime_error(""); }
 				
+	};
+
+	class obj5_impl : public virtual com::robotraconteur::testing::TestService3::obj5_default_impl
+	{
+	public:
+
+		obj5_impl();
+
+		virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > get_m1();
+
+		virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > get_m2();
+
+		virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > get_m3();
+
+		virtual int32_t f1();
+
+		virtual int32_t f2();
+	
+	protected:
+
+		RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > _m1;
+
+		RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > _m2;
+
+		RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > _m3;
+
 	};
 
 

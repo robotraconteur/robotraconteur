@@ -18,7 +18,8 @@ namespace RobotRaconteurNETTest
         public void RegisterServices(TcpTransport t)
         {
             testservice2 = new testroot3_impl();
-            RobotRaconteurNode.s.RegisterService("RobotRaconteurTestService2", "com.robotraconteur.testing.TestService3", testservice2);
+            var context = RobotRaconteurNode.s.RegisterService("RobotRaconteurTestService2", "com.robotraconteur.testing.TestService3", testservice2);
+            context.RequestObjectLock("RobotRaconteurTestService2.nolock_test", "server");
         }
 
         public void UnregisterServices()
@@ -379,6 +380,13 @@ namespace RobotRaconteurNETTest
 
         public override MultiDimArrayMemory<CDouble> c_m2 { get; } = new MultiDimArrayMemory<CDouble>(new MultiDimArray(new uint[] { 10, 10 }, new CDouble[100]));
 
+        public override obj5 get_nolock_test()
+        {
+            return o5;
+        }
+
+        obj5_impl o5 = new obj5_impl();
+
     }
 
     class func4_gen : SyncGenerator1<byte[], byte[]>
@@ -423,6 +431,47 @@ namespace RobotRaconteurNETTest
         public virtual int i_ind { get; set; }
         public virtual string data { get; set; }
         public com.robotraconteur.testing.TestService1.sub3 get_o3_1(string ind) => null;
+    }
+
+    class obj5_impl : obj5_default_impl
+    {
+        ArrayMemory<int> _m1 = new ArrayMemory<int>(new int[100]);
+        ArrayMemory<int> _m2 = new ArrayMemory<int>(new int[100]);
+        ArrayMemory<int> _m3 = new ArrayMemory<int>(new int[100]);
+
+        public override int f1()
+        {
+            return 10;
+        }
+
+        public override int f2()
+        {
+            return 11;
+        }
+
+        public override ArrayMemory<int> m1
+        {
+            get
+            {
+                return _m1;
+            }
+        }
+
+        public override ArrayMemory<int> m2
+        {
+            get
+            {
+                return _m2;
+            }
+        }
+
+        public override ArrayMemory<int> m3
+        {
+            get
+            {
+                return _m3;
+            }
+        }
     }
 
     class ServiceTest2_test_sequence_gen

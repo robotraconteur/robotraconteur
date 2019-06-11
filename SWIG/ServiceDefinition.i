@@ -141,6 +141,9 @@ public:
 	std::string Name;
 	
 	MemberDefinition(boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition> ServiceEntry);
+
+	virtual MemberDefinition_NoLock NoLock();
+
     RR_PUBLIC_OVERRIDE_METHOD(ToString)
 	virtual std::string ToString() { return ""; }
 	

@@ -2027,6 +2027,7 @@ namespace RobotRaconteurGen
 			w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> CallWireFunction(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, uint32_t e);" << endl << endl;
 			w2 << "virtual RR_SHARED_PTR<void> GetCallbackFunction(uint32_t endpoint, const std::string& membername);" << endl << endl;
 			w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> CallMemoryFunction(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::Endpoint> e);" << endl << endl;
+			w2 << "virtual bool IsRequestNoLock(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m);" << endl << endl;
 			w2 << "virtual std::string GetObjectType();" << endl;
 			w2 << "virtual RR_SHARED_PTR<" << boost::replace_all_copy(fix_name(d->Name),".","::") << "::" << fix_name((*e)->Name) << " > get_obj();" << endl << endl;
 			w2 << "virtual RR_SHARED_PTR<" << boost::replace_all_copy(fix_name(d->Name),".","::") << "::" << "async_" << fix_name((*e)->Name) << " > get_asyncobj();" << endl << endl;
@@ -3386,10 +3387,36 @@ namespace RobotRaconteurGen
 			w2 << "return rr_" << m->Name << "_mem->CallMemoryFunction(m,e,get_obj()->get_" << fix_name(m->Name) << "());" << endl;
 			w2 << "}" << endl;
 			MEMBER_ITER_END()
-			
 			w2 << "throw RobotRaconteur::MemberNotFoundException(\"Member not found\");" << endl;
 			w2 << "}" << endl;
 
+			w2 << "bool " << fix_name((*e)->Name) << "_skel::IsRequestNoLock(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m)" << endl << "{" << endl;
+			BOOST_FOREACH(RR_SHARED_PTR<MemberDefinition> m, (*e)->Members)
+			{
+				if (m->NoLock() == MemberDefinition_NoLock_all)
+				{
+					w2 << "if (m->MemberName == \"" << m->Name << "\")" << endl << "  return true;" << endl;
+				}
+
+				if (m->NoLock() == MemberDefinition_NoLock_read)
+				{
+					RR_SHARED_PTR<PropertyDefinition> m1 = RR_DYNAMIC_POINTER_CAST<PropertyDefinition>(m);
+					if (m1)
+					{
+						w2 << "if (m->MemberName == \"" << m->Name << "\" && m->EntryType == RobotRaconteur::MessageEntryType_PropertyGetReq)" << endl << "  return true;" << endl;
+					}
+
+					RR_SHARED_PTR<MemoryDefinition> m2 = RR_DYNAMIC_POINTER_CAST<MemoryDefinition>(m);
+					if (m2)
+					{
+						w2 << "if (m->MemberName == \"" << m->Name << "\" && (m->EntryType == RobotRaconteur::MessageEntryType_MemoryRead || m->EntryType == RobotRaconteur::MessageEntryType_MemoryGetParam))" << endl << "  return true;" << endl;
+					}
+
+				}
+
+			}
+			w2 << "return false;" << endl;
+			w2 << "}" << endl;
 		}
 
 	}

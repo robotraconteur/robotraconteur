@@ -41,7 +41,9 @@ namespace RobotRaconteurTest
 		void test_namedarray_m2();
 
 		void TestComplex();
-		void TestComplexMemories();
+		void TestComplexMemories(); 
+
+		void TestNoLock();
 
 		RR_SHARED_PTR<testroot3> r;
 

@@ -128,6 +128,9 @@ public class testroot3_default_impl implements testroot3{
     public obj4 get_o4() {
     throw new UnsupportedOperationException();
     }
+    public obj5 get_nolock_test() {
+    throw new UnsupportedOperationException();
+    }
     public Pipe<int[]> get_unreliable1()
     { return rrvar_unreliable1.getPipe();  }
     public void set_unreliable1(Pipe<int[]> value)
