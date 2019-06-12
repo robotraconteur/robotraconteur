@@ -1339,12 +1339,26 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
                 setattr(self.obj,m.Name,cs)
             if (isinstance(m,RobotRaconteurPython.PipeDefinition)):
                 p=skel.GetPipe(m.Name)
-                outerp=Pipe(p)                
-                setattr(self.obj,m.Name,outerp)
+                outerp=Pipe(p)
+                if (not hasattr(self.obj,m.Name)):
+                    if ("readonly" in m.Modifiers):
+                        setattr(self.obj,m.Name,PipeBroadcaster(outerp))                    
+                    else:
+                        setattr(self.obj,m.Name,outerp)
+                else:             
+                    setattr(self.obj,m.Name,outerp)
             if (isinstance(m,RobotRaconteurPython.WireDefinition)):
                 w=skel.GetWire(m.Name)
-                outerw=Wire(w)                
-                setattr(self.obj,m.Name,outerw)
+                outerw=Wire(w)
+                if (not hasattr(self.obj,m.Name)):
+                    if ("readonly" in m.Modifiers):
+                        setattr(self.obj,m.Name,WireBroadcaster(outerw))
+                    elif ("writeonly" in m.Modifiers):
+                        setattr(self.obj,m.Name,WireUnicastReceiver(outerw))
+                    else:
+                        setattr(self.obj,m.Name,outerw)
+                else:                      
+                    setattr(self.obj,m.Name,outerw)
 
     def _CallGetProperty(self, name):
 
