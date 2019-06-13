@@ -112,7 +112,6 @@ endif()
 endif()
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurNET/RobotRaconteurNET.csproj.in" "${CMAKE_CURRENT_BINARY_DIR}/RobotRaconteurNET.csproj" @ONLY)
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurNET/RobotRaconteurNET_embed.msbuild.in" "${CMAKE_CURRENT_BINARY_DIR}/RobotRaconteurNET_embed.msbuild" @ONLY)
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurNET/RobotRaconteurNETTest/RobotRaconteurNETTest.csproj.in" "${CMAKE_CURRENT_BINARY_DIR}/RobotRaconteurNETTest.csproj" @ONLY)
 #configure_file("${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurNET/RobotRaconteurNETTestVB/RobotRaconteurNETTestVB.vbproj.in" "${CMAKE_CURRENT_BINARY_DIR}/RobotRaconteurNETTestVB.vbproj" @ONLY)
 

@@ -17,10 +17,6 @@ namespace RobotRaconteurNETTest
     {
         static void Main(string[] args)
         {
-
-            //Console.ReadLine();
-            RobotRaconteurNativeLoader.Load();
-
             //string path = @"C:\Users\wasonj\Documents\RobotRaconteur2\bin_devel\out_debug\NET\Native\RobotRaconteurNETNative.dll";
 
             //Environment.SetEnvironmentVariable("PATH", Path.GetDirectoryName(path) + ";" + Environment.GetEnvironmentVariable("PATH"));

@@ -167,6 +167,7 @@ int main(int argc, char* argv[])
 	std::vector<std::string> include_dirs;
 	std::vector<std::string> import_vector;
 	std::string master_header;
+	std::string out_file;
 
 	try
 	{
@@ -183,6 +184,7 @@ int main(int argc, char* argv[])
 			("include-path,I", po::value(&include_dirs)->composing(), "include path")
 			("import", po::value(&import_vector)->composing(), "input file for use in imports")
 			("master-header", po::value(&master_header), "master header file for generated cpp files")
+			("outfile", po::value(&out_file), "unified output file (csharp only)")
 
 			;
 
@@ -421,18 +423,42 @@ int main(int argc, char* argv[])
 		if (lang=="csharp")
 		{
 
-			for (size_t i = 0; i< sdefs.size(); i++)
+			if (out_file.empty())
 			{
-				try
+
+				for (size_t i = 0; i < sdefs.size(); i++)
 				{
-					GenerateCSharpFiles(sdefs.at(i), sdefs_str.at(i), output_dir);
+					try
+					{
+						GenerateCSharpFiles(sdefs.at(i), sdefs_str.at(i), output_dir);
+					}
+					catch (std::exception& ee)
+					{
+						cout << "error: " << string(ee.what()) << " in file " << string(sources.at(i)) << endl;
+						cout << "error: Could not open service definition file" << endl;
+						return 2;
+					}
 				}
-				catch (std::exception& ee)
+			}
+			else
+			{
+				std::ofstream csharp_w(out_file.c_str());
+				CSharpServiceLangGen::GenerateOneFileHeader(&csharp_w);
+				for (size_t i = 0; i < sdefs.size(); i++)
 				{
-					cout << "error: " << string(ee.what()) << " in file " << string(sources.at(i)) << endl;
-					cout << "error: Could not open service definition file" << endl;
-					return 2;
+					try
+					{
+						CSharpServiceLangGen::GenerateOneFilePart(sdefs.at(i), sdefs_str.at(i), &csharp_w);
+					}
+					catch (std::exception& ee)
+					{
+						cout << "error: " << string(ee.what()) << " in file " << string(sources.at(i)) << endl;
+						cout << "error: Could not open service definition file" << endl;
+						return 2;
+					}
 				}
+
+				csharp_w.close();
 			}
 
 			return 0;

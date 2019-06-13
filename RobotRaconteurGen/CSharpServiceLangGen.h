@@ -74,9 +74,9 @@ namespace RobotRaconteurGen
 
 		static void GenerateInterface(ServiceEntryDefinition* e, ostream* w);
 
-		static void GenerateInterfaceFile(ServiceDefinition* d, ostream* w);
+		static void GenerateInterfaceFile(ServiceDefinition* d, ostream* w, bool header=true);
 
-		static void GenerateStubSkelFile(ServiceDefinition* d, std::string defstring, ostream* w);
+		static void GenerateStubSkelFile(ServiceDefinition* d, std::string defstring, ostream* w, bool header=true);
 
 		static void GenerateServiceFactory(ServiceDefinition* d, std::string defstring, ostream* w);
 
@@ -100,6 +100,10 @@ namespace RobotRaconteurGen
 
 		//File generators
 		static void GenerateFiles(RR_SHARED_PTR<ServiceDefinition> d, std::string servicedef, std::string path=".");
+
+		static void GenerateOneFileHeader(ostream* w);
+
+		static void GenerateOneFilePart(RR_SHARED_PTR<ServiceDefinition> d, std::string servicedef, ostream* w);
 	};
 
 
