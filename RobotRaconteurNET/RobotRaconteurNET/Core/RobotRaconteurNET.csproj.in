@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>RobotRaconteurNET</PackageId>
+    <Version>@RobotRaconteurVersion@</Version>
+    <Authors>John Wason</Authors>
+    <Company>Wason Technology, LLC</Company>
+    <Product>RobotRaconteurNET C# Library</Product>
+    <Description>RobotRaconteurNET C# Library wrapping RobotRaconteurCore native library</Description>
+    <Copyright>Copyright 2019</Copyright>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>robotraconteur.com</PackageProjectUrl>
+    <RepositoryUrl>github.com/robotraconteur/robotraconteur</RepositoryUrl>
+    <RepositoryType>github</RepositoryType>
+  </PropertyGroup>
+  <PropertyGroup>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+	<RRSourceDir>@CMAKE_CURRENT_SOURCE_DIR@\RobotRaconteurNET\</RRSourceDir>
+	<RRBinDir>@CMAKE_CURRENT_BINARY_DIR@\RobotRaconteurNET\</RRBinDir>
+	<RRSwigDir>@CMAKE_SWIG_OUTDIR@\</RRSwigDir>
+	<PointerSize>@CMAKE_SIZEOF_VOID_P@</PointerSize>
+	<RRErrorDir>@CMAKE_CURRENT_BINARY_DIR@</RRErrorDir>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <Compile Include="$(RRErrorDir)\Error.cs" Link="Error.cs" />
+    <Compile Include="$(RRSwigDir)\RobotRaconteurNET_SWIG.cs" Link="RobotRaconteurNET_SWIG.cs" />
+    <Compile Include="$(RRSourceDir)\Generator.cs" Link="Generator.cs" />
+    <Compile Include="$(RRSourceDir)\Memory.cs" Link="Memory.cs" />
+    <Compile Include="$(RRSourceDir)\MultiDimArray.cs" Link="MultiDimArray.cs" />
+    <Compile Include="$(RRSourceDir)\RobotRaconteurNET_support.cs" Link="RobotRaconteurNET_support.cs" />
+    <Compile Include="$(RRSourceDir)\Service.cs" Link="Service.cs" />
+  </ItemGroup>
+
+</Project>
