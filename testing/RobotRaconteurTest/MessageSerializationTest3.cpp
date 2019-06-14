@@ -305,6 +305,7 @@ namespace RobotRaconteurTest
 		uniform_int_distribution<size_t> small_dist(1, 4);
 		uniform_int_distribution<int32_t> int32_dist;
 		uniform_int_distribution<int64_t> int64_dist;
+		uniform_int_distribution<uint64_t> uint64_dist;
 
 		RR_INTRUSIVE_PTR<Message> m = CreateMessage();
 		RR_INTRUSIVE_PTR<MessageHeader> h = CreateMessageHeader();
@@ -312,7 +313,7 @@ namespace RobotRaconteurTest
 		h->MessageFlags = MessageSerializationTest3_NewRandomMessageFlags(rng);
 		if (h->MessageFlags & MessageFlags_SUBSTREAM_ID)
 		{
-			h->SubstreamID = uint16_dist(rng);
+			h->SubstreamID = uint64_dist(rng);
 		}
 		if (h->MessageFlags & MessageFlags_SUBSTREAM_SEQUENCE_NUMBER)
 		{
@@ -426,7 +427,7 @@ namespace RobotRaconteurTest
 			}
 			if (read_streamid)
 			{
-				ee->EntryStreamID = uint32_dist(rng);
+				ee->EntryStreamID = uint64_dist(rng);
 			}
 			if (ee->EntryFlags & MessageEntryFlags_REQUEST_ID)
 			{

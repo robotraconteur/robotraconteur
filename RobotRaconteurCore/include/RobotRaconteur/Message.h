@@ -86,7 +86,7 @@ namespace RobotRaconteur
 
 		uint16_t MessageFlags;
 		
-		uint16_t SubstreamID;
+		uint64_t SubstreamID;
 
 		SubstreamSequenceNumberHeader SubstreamSequenceNumber;
 
@@ -166,7 +166,7 @@ public:
 
 		uint32_t MemberNameCode;
 
-		uint32_t EntryStreamID;
+		uint64_t EntryStreamID;
 
 		uint32_t RequestID;
 

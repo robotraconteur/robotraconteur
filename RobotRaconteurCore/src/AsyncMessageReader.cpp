@@ -1256,7 +1256,7 @@ namespace RobotRaconteur
 				MessageHeader* h = data<MessageHeader>();
 				if (h->MessageFlags & MessageFlags_SUBSTREAM_ID)
 				{
-					R(read_number(data<MessageHeader>()->SubstreamID));
+					R(read_uint_x2(data<MessageHeader>()->SubstreamID));
 				}
 				state() = MessageHeader_substreamseq1;
 			}
@@ -1561,7 +1561,7 @@ namespace RobotRaconteur
 				if ((ee->EntryFlags & (MessageEntryFlags_MEMBER_NAME_STR | MessageEntryFlags_MEMBER_NAME_CODE
 					| MessageEntryFlags_SERVICE_PATH_STR | MessageEntryFlags_SERVICE_PATH_CODE)) == 0)
 				{
-					R(read_uint_x(ee->EntryStreamID));
+					R(read_uint_x2(ee->EntryStreamID));
 				}
 				state() = MessageEntry_requestid;
 			}

@@ -286,7 +286,7 @@ namespace RobotRaconteur
 
 		if (MessageFlags & MessageFlags_SUBSTREAM_ID)
 		{
-			s += 2;
+			s += ArrayBinaryWriter::GetUintX2ByteCount(SubstreamID);
 		}
 
 		if (MessageFlags & MessageFlags_SUBSTREAM_SEQUENCE_NUMBER)
@@ -410,7 +410,7 @@ namespace RobotRaconteur
 
 		if (MessageFlags & MessageFlags_SUBSTREAM_ID)
 		{
-			w.WriteNumber(SubstreamID);
+			w.WriteUintX2(SubstreamID);
 		}
 
 		if (MessageFlags & MessageFlags_SUBSTREAM_SEQUENCE_NUMBER)
@@ -530,7 +530,7 @@ namespace RobotRaconteur
 
 		if (MessageFlags & MessageFlags_SUBSTREAM_ID)
 		{
-			SubstreamID = r.ReadNumber<uint16_t>();
+			SubstreamID = r.ReadUintX2();
 		}
 
 		if (MessageFlags & MessageFlags_SUBSTREAM_SEQUENCE_NUMBER)
@@ -864,7 +864,7 @@ namespace RobotRaconteur
 
 		if (send_streamid)
 		{
-			s += ArrayBinaryWriter::GetUintXByteCount(EntryStreamID);
+			s += ArrayBinaryWriter::GetUintX2ByteCount(EntryStreamID);
 		}
 
 		if (EntryFlags & MessageEntryFlags_REQUEST_ID)
@@ -967,7 +967,7 @@ namespace RobotRaconteur
 		
 		if (send_streamid)
 		{
-			w.WriteUintX(EntryStreamID);
+			w.WriteUintX2(EntryStreamID);
 		}
 
 		if (EntryFlags & MessageEntryFlags_REQUEST_ID)
@@ -1044,7 +1044,7 @@ namespace RobotRaconteur
 
 		if (read_streamid)
 		{
-			EntryStreamID = r.ReadUintX();
+			EntryStreamID = r.ReadUintX2();
 		}
 
 		if (EntryFlags & MessageEntryFlags_REQUEST_ID)

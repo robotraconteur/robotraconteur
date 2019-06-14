@@ -73,7 +73,7 @@ class MessageHeader : public virtual RRValue
 public:
 	uint16_t HeaderSize;
 	uint16_t MessageFlags;
-	uint16_t SubstreamID;
+	uint64_t SubstreamID;
 	MessageFragmentHeader FragmentHeader;
 	uint32_t SenderEndpoint;
 	uint32_t ReceiverEndpoint;
@@ -105,7 +105,7 @@ public:
 	std::string ServicePath;
 	std::string MemberName;
 	uint32_t MemberNameCode;
-	uint32_t EntryStreamID;
+	uint64_t EntryStreamID;
 	uint32_t RequestID;
 	MessageErrorType Error;
 	std::string MetaData;
