@@ -381,7 +381,12 @@ int main(int argc, char* argv[])
 
 		try
 		{
-			VerifyServiceDefinitions(alldefs);
+			std::vector<RobotRaconteurParseException> warnings;
+			VerifyServiceDefinitions(alldefs,warnings);
+			BOOST_FOREACH(RobotRaconteurParseException w, warnings)
+			{
+				cout << "warning: " << w.what() << endl;
+			}
 		}
 		catch (std::exception& e)
 		{

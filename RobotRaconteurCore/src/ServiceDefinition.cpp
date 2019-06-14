@@ -2797,7 +2797,8 @@ namespace RobotRaconteur
 
 	RobotRaconteurParseException::RobotRaconteurParseException(const std::string &e) : std::runtime_error(e)
 	{
-		Message=e;
+		Message=e;		
+		LineNumber = -1;
 		what_store = ToString();
 	}
 
@@ -3104,11 +3105,13 @@ namespace RobotRaconteur
 		}	
 	}
 
-	void VerifyModifiers(RR_SHARED_PTR<MemberDefinition>& m, bool readwrite, bool unreliable, bool nolock, bool nolockread, std::vector<RobotRaconteurParseException>& warnings)
+	void VerifyModifiers(RR_SHARED_PTR<MemberDefinition>& m, bool readwrite, bool unreliable, bool nolock, bool nolockread, bool perclient, bool urgent, std::vector<RobotRaconteurParseException>& warnings)
 	{
 		bool direction_found = false;
 		bool unreliable_found = false;
 		bool nolock_found = false;
+		bool perclient_found = false;
+		bool urgent_found = false;
 
 		BOOST_FOREACH(std::string& s, m->Modifiers)
 		{
@@ -3177,6 +3180,32 @@ namespace RobotRaconteur
 				}
 			}
 
+			if (perclient)
+			{
+				if (s == "perclient")
+				{
+					if (perclient_found)
+					{
+						warnings.push_back(RobotRaconteurParseException("Invalid member modifier combination: [perclient]"));
+					}
+					perclient_found = true;
+					continue;
+				}
+			}
+
+			if (urgent)
+			{
+				if (s == "urgent")
+				{
+					if (urgent_found)
+					{
+						warnings.push_back(RobotRaconteurParseException("Invalid member modifier combination: [urgent]"));
+					}
+					urgent_found = true;
+					continue;
+				}
+			}
+
 			warnings.push_back(RobotRaconteurParseException("Unknown member modifier: [" + s + "]"));
 		}
 	}
@@ -3194,17 +3223,18 @@ namespace RobotRaconteur
 		if (p)
 		{
 			VerifyType(p->Type,def,defs);				
-			VerifyModifiers(m, true, false, true, true, warnings);
+			VerifyModifiers(m, true, false, true, true, true, true, warnings);
 			return p->Name;
 		}
 		RR_SHARED_PTR<FunctionDefinition> f=RR_DYNAMIC_POINTER_CAST<FunctionDefinition>(m);
 		if (f)
 		{
+			VerifyModifiers(m, false, false, true, false, false, true, warnings);
 			if (!f->IsGenerator())
 			{
 				VerifyParameters(f->Parameters, def, defs);
 				VerifyReturnType(f->ReturnType, def, defs);
-				VerifyModifiers(m, false, false, true, false, warnings);
+				
 				return f->Name;
 			}
 			else
@@ -3252,7 +3282,7 @@ namespace RobotRaconteur
 				{
 					throw ServiceDefinitionException("Generator return or parameter not found");
 				}
-
+				
 				return f->Name;
 			}
 		}
@@ -3260,7 +3290,7 @@ namespace RobotRaconteur
 		if (e)
 		{
 			VerifyParameters(e->Parameters, def, defs);			
-			VerifyModifiers(m, false, false, false, false, warnings);
+			VerifyModifiers(m, false, false, false, false, false, true, warnings);
 			return e->Name;
 		}
 		RR_SHARED_PTR<ObjRefDefinition> o=RR_DYNAMIC_POINTER_CAST<ObjRefDefinition>(m);
@@ -3268,7 +3298,7 @@ namespace RobotRaconteur
 		{
 
 			std::vector<std::string> modifiers;			
-			VerifyModifiers(m, false, false, false, false, warnings);
+			VerifyModifiers(m, false, false, false, false, false, false, warnings);
 
 			if (o->ObjectType=="varobject") return o->Name;
 
@@ -3316,7 +3346,7 @@ namespace RobotRaconteur
 		if (p2)
 		{
 			VerifyType(p2->Type,def,defs);			
-			VerifyModifiers(m, true, true, true, false, warnings);
+			VerifyModifiers(m, true, true, true, false, false, false, warnings);
 			return p2->Name;
 		}
 
@@ -3325,7 +3355,7 @@ namespace RobotRaconteur
 		{
 			VerifyParameters(c->Parameters, def, defs);
 			VerifyReturnType(c->ReturnType,def,defs);				
-			VerifyModifiers(m, false, false, false, false, warnings);
+			VerifyModifiers(m, false, false, false, false, false, true, warnings);
 			return c->Name;
 		}
 
@@ -3333,7 +3363,7 @@ namespace RobotRaconteur
 		if (w)
 		{
 			VerifyType(w->Type,def,defs);
-			VerifyModifiers(m, true, false, true, false, warnings);
+			VerifyModifiers(m, true, false, true, false, false, false, warnings);
 			return w->Name;
 		}
 
@@ -3341,7 +3371,7 @@ namespace RobotRaconteur
 		if (m2)
 		{
 			VerifyType(m2->Type, def, defs);
-			VerifyModifiers(m, true, false, true, true, warnings);
+			VerifyModifiers(m, true, false, true, true, false, false, warnings);
 			if (!IsTypeNumeric(m2->Type->Type))
 			{
 				if (m2->Type->Type != DataTypes_namedtype_t)
