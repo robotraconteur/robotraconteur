@@ -1477,7 +1477,7 @@ mxArray* GetMxArrayFromRRArray(RR_INTRUSIVE_PTR<RRBaseArray> array_, std::vector
 		break;
 	case DataTypes_bool_t:
 	{
-		RR_INTRUSIVE_PTR<RRArray<rr_bool> > bool_array = rr_cast<RRArray<rr_bool>>(array_);
+		RR_INTRUSIVE_PTR<RRArray<rr_bool> > bool_array = rr_cast<RRArray<rr_bool> >(array_);
 		mxArray * pa2 = mxCreateLogicalArray(ndims, &dims[0]);		
 		mxLogical* l = (mxLogical*)mxGetData(pa2);
 		for (size_t i = 0; i < count; i++)
