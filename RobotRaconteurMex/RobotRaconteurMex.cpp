@@ -49,7 +49,25 @@ void rrAtExit()
 	
 }
 
+static std::vector<mxArray*> rr_mxDestroyArray_vec;
+static boost::mutex rr_mxDestroyArray_lock;
 
+
+void rr_mxDestroyArray(mxArray* mx)
+{
+	boost::mutex::scoped_lock(rr_mxDestroyArray_lock);
+	rr_mxDestroyArray_vec.push_back(mx);
+}
+
+void rr_free_mxDestroyArray()
+{
+	boost::mutex::scoped_lock(rr_mxDestroyArray_lock);
+	BOOST_FOREACH(mxArray* mx, rr_mxDestroyArray_vec)
+	{
+		mxDestroyArray(mx);
+	}
+	rr_mxDestroyArray_vec.clear();
+}
 
 std::string mxToString(const mxArray* str)
 {
@@ -226,6 +244,8 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 
 		std::string command=mxToString(prhs[0]);
 	
+		rr_free_mxDestroyArray();
+
 		if (command=="Shutdown")
 		{
 			RobotRaconteurNode::s()->Shutdown();
@@ -262,6 +282,9 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 			}
 			else
 				throw InvalidArgumentException("RobotRaconteur object not a stub");
+
+			rr_free_mxDestroyArray();
+
 			return;
 		}
 		else if (command=="subsref")
@@ -666,9 +689,9 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 				e->MexProcessRequests();
 			}
 
+			rr_free_mxDestroyArray();
+
 			return;
-
-
 		}
 		else if (command=="MemoryOp")
 		{
@@ -1046,7 +1069,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 			if (nlhs!=0 || (nrhs!=4 && nrhs!=5)) throw InvalidArgumentException("RobotRaconteurMex RegisterService requires 4 or 5 input and 0 output arguments");
 			std::string name=mxToString(prhs[1]);
 			std::string type=mxToString(prhs[2]);
-			boost::shared_ptr<mxArray> mxobj=boost::shared_ptr<mxArray>(mxDuplicateArray(prhs[3]),::mxDestroyArray);
+			boost::shared_ptr<mxArray> mxobj=boost::shared_ptr<mxArray>(mxDuplicateArray(prhs[3]),rr_mxDestroyArray);
 			mexMakeArrayPersistent(mxobj.get());
 
 			boost::tuple<std::string,std::string> s1=SplitQualifiedName(type);
@@ -3650,8 +3673,8 @@ mxArray* MexServiceStub::subsref(const mxArray* S)
 			}
 
 			//mexPrintf("async_get: %s\n",membername.c_str());
-			RR_SHARED_PTR<mxArray> handler(mxDuplicateArray(mxGetCell(cell_args,0)),&mxDestroyArray);
-			RR_SHARED_PTR<mxArray> param(mxDuplicateArray(mxGetCell(cell_args,1)),&mxDestroyArray);
+			RR_SHARED_PTR<mxArray> handler(mxDuplicateArray(mxGetCell(cell_args,0)),rr_mxDestroyArray);
+			RR_SHARED_PTR<mxArray> param(mxDuplicateArray(mxGetCell(cell_args,1)),rr_mxDestroyArray);
 
 			mexMakeArrayPersistent(handler.get());
 			mexMakeArrayPersistent(param.get());
@@ -3684,8 +3707,8 @@ mxArray* MexServiceStub::subsref(const mxArray* S)
 			}
 
 			//mexPrintf("async_get: %s\n",membername.c_str());
-			RR_SHARED_PTR<mxArray> handler(mxDuplicateArray(mxGetCell(cell_args,1)),mxDestroyArray);
-			RR_SHARED_PTR<mxArray> param(mxDuplicateArray(mxGetCell(cell_args,2)),mxDestroyArray);
+			RR_SHARED_PTR<mxArray> handler(mxDuplicateArray(mxGetCell(cell_args,1)),rr_mxDestroyArray);
+			RR_SHARED_PTR<mxArray> param(mxDuplicateArray(mxGetCell(cell_args,2)),rr_mxDestroyArray);
 
 			mexMakeArrayPersistent(handler.get());
 			mexMakeArrayPersistent(param.get());
@@ -3729,8 +3752,8 @@ mxArray* MexServiceStub::subsref(const mxArray* S)
 				params.push_back(mxGetCell(cell_args,i));
 			}
 
-			RR_SHARED_PTR<mxArray> handler(mxDuplicateArray(mxGetCell(cell_args,pcount)),mxDestroyArray);
-			RR_SHARED_PTR<mxArray> param(mxDuplicateArray(mxGetCell(cell_args,pcount+1)),mxDestroyArray);
+			RR_SHARED_PTR<mxArray> handler(mxDuplicateArray(mxGetCell(cell_args,pcount)),rr_mxDestroyArray);
+			RR_SHARED_PTR<mxArray> param(mxDuplicateArray(mxGetCell(cell_args,pcount+1)),rr_mxDestroyArray);
 
 			mexMakeArrayPersistent(handler.get());
 			mexMakeArrayPersistent(param.get());
@@ -4118,7 +4141,7 @@ void MexServiceStub::subsasgn(const mxArray* S, const mxArray* value)
 			{
 				mxArray* value2=mxDuplicateArray(value);
 				mexMakeArrayPersistent(value2);
-				callbacks.insert(std::make_pair(cdef->Name,RR_SHARED_PTR<mxArray>(value2,mxDestroyArray)));
+				callbacks.insert(std::make_pair(cdef->Name,RR_SHARED_PTR<mxArray>(value2,rr_mxDestroyArray)));
 			}
 			return;
 		}
@@ -4444,7 +4467,7 @@ mxArray* MexServiceStub::addlistener(const mxArray* name, const mxArray* functio
 
 	mxArray* functionhandle2=mxDuplicateArray(functionhandle);
 	mexMakeArrayPersistent(functionhandle2);
-	eventconnections.insert(std::make_pair(eventconnections_count,boost::make_shared<MexEventConnection>(sname,eventconnections_count,RR_SHARED_PTR<mxArray>(functionhandle2,mxDestroyArray))));
+	eventconnections.insert(std::make_pair(eventconnections_count,boost::make_shared<MexEventConnection>(sname,eventconnections_count,RR_SHARED_PTR<mxArray>(functionhandle2,rr_mxDestroyArray))));
 
 	mxArray* lhs[1];
 	mxArray* rhs[3];
@@ -5059,7 +5082,7 @@ mxArray* MatlabObjectFromMexStub(boost::shared_ptr<MexServiceStub> stub)
 
 	mexMakeArrayPersistent(mxstub);
 	
-	stub->stubptr=RR_SHARED_PTR<mxArray>(mxstub,&mxDestroyArray);
+	stub->stubptr=RR_SHARED_PTR<mxArray>(mxstub,rr_mxDestroyArray);
 	return mxstub;
 
 }
@@ -7771,8 +7794,8 @@ mxArray* MexGeneratorClient::subsref(const mxArray* S)
 			pcount = 0;
 		}
 
-		RR_SHARED_PTR<mxArray> handler(mxDuplicateArray(mxGetCell(cell_args, pcount)), mxDestroyArray);
-		RR_SHARED_PTR<mxArray> async_param(mxDuplicateArray(mxGetCell(cell_args, pcount + 1)), mxDestroyArray);
+		RR_SHARED_PTR<mxArray> handler(mxDuplicateArray(mxGetCell(cell_args, pcount)), rr_mxDestroyArray);
+		RR_SHARED_PTR<mxArray> async_param(mxDuplicateArray(mxGetCell(cell_args, pcount + 1)), rr_mxDestroyArray);
 
 		int32_t timeout = RR_TIMEOUT_INFINITE;
 		if (c2 == pcount + 3)
@@ -7806,8 +7829,8 @@ mxArray* MexGeneratorClient::subsref(const mxArray* S)
 		
 		if (c2 != 2 && c2 != 3) throw InvalidArgumentException("GeneratorClient " + membername + " expects 2 or 3 arguments");
 		
-		RR_SHARED_PTR<mxArray> handler(mxDuplicateArray(mxGetCell(cell_args, 0)), mxDestroyArray);
-		RR_SHARED_PTR<mxArray> async_param(mxDuplicateArray(mxGetCell(cell_args, 1)), mxDestroyArray);
+		RR_SHARED_PTR<mxArray> handler(mxDuplicateArray(mxGetCell(cell_args, 0)), rr_mxDestroyArray);
+		RR_SHARED_PTR<mxArray> async_param(mxDuplicateArray(mxGetCell(cell_args, 1)), rr_mxDestroyArray);
 
 		int32_t timeout = RR_TIMEOUT_INFINITE;
 		if (c2 == 3)
