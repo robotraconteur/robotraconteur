@@ -2292,7 +2292,7 @@ namespace RobotRaconteurGen
 
 		MEMBER_ITER2(EventDefinition)
 		string params = str_pack_parameters(m->Parameters, true);
-		w2 << "    public event " << str_pack_delegate(m->Parameters) << " " << fix_name(m->Name) << ";" << endl;
+		w2 << "    public virtual event " << str_pack_delegate(m->Parameters) << " " << fix_name(m->Name) << ";" << endl;
 		MEMBER_ITER_END()
 
 		
