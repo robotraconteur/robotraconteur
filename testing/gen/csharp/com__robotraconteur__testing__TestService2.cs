@@ -15,8 +15,8 @@ public class ostruct2
 [RobotRaconteurServiceObjectInterface()]
 public interface baseobj
 {
-    double d1 { get; set; }
-    double[] d2 { get; set; }
+    double d1 { get;  set; 	}
+    double[] d2 { get;  set; 	}
     double func3(double d1, double d2);
     event Action ev1;
     subobj get_o5();

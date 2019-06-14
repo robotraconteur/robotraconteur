@@ -6,8 +6,6 @@ import com.robotraconteur.*;
 public interface testroot3
 {
     int get_readme();
-    void set_readme(int value);
-    int get_writeme();
     void set_writeme(int value);
     int get_unknown_modifier();
     void set_unknown_modifier(int value);

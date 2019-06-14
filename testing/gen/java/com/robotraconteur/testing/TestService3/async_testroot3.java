@@ -5,8 +5,6 @@ import com.robotraconteur.*;
 public interface async_testroot3
 {
     void async_get_readme(Action2<Integer,RuntimeException> rr_handler, int rr_timeout);
-    void async_set_readme(int value, Action1<RuntimeException> rr_handler, int rr_timeout);
-    void async_get_writeme(Action2<Integer,RuntimeException> rr_handler, int rr_timeout);
     void async_set_writeme(int value, Action1<RuntimeException> rr_handler, int rr_timeout);
     void async_get_unknown_modifier(Action2<Integer,RuntimeException> rr_handler, int rr_timeout);
     void async_set_unknown_modifier(int value, Action1<RuntimeException> rr_handler, int rr_timeout);

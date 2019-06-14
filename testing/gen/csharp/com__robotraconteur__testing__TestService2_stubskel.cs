@@ -557,7 +557,7 @@ public class baseobj_default_impl : baseobj{
     public virtual double[] d2 {get; set;} = new double[0];
     public virtual double func3(double d1, double d2) {
     throw new NotImplementedException();    }
-    public event Action ev1;
+    public virtual event Action ev1;
     public virtual subobj get_o5() {
     throw new NotImplementedException();
     }

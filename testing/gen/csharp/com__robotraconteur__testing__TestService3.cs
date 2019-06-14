@@ -221,41 +221,41 @@ public struct testpod2
 [RobotRaconteurServiceObjectInterface()]
 public interface testroot3
 {
-    int readme { get; set; }
-    int writeme { get; set; }
-    int unknown_modifier { get; set; }
-    testenum1 testenum1_prop { get; set; }
-    testpod1 testpod1_prop { get; set; }
-    teststruct3 teststruct3_prop { get; set; }
-    List<double[]> d1 { get; set; }
-    List<double[]> d2 { get; set; }
-    Dictionary<int,double[]> d3 { get; set; }
-    Dictionary<int,double[]> d4 { get; set; }
-    List<MultiDimArray> d5 { get; set; }
-    Dictionary<int,MultiDimArray> d6 { get; set; }
-    vector3 testnamedarray1 { get; set; }
-    transform testnamedarray2 { get; set; }
-    transform[] testnamedarray3 { get; set; }
-    NamedMultiDimArray testnamedarray4 { get; set; }
-    NamedMultiDimArray testnamedarray5 { get; set; }
-    CDouble c1 { get; set; }
-    CDouble[] c2 { get; set; }
-    MultiDimArray c3 { get; set; }
-    List<CDouble> c4 { get; set; }
-    List<CDouble[]> c5 { get; set; }
-    List<MultiDimArray> c6 { get; set; }
-    CSingle c7 { get; set; }
-    CSingle[] c8 { get; set; }
-    MultiDimArray c9 { get; set; }
-    List<CSingle> c10 { get; set; }
-    List<CSingle[]> c11 { get; set; }
-    List<MultiDimArray> c12 { get; set; }
-    bool b1 { get; set; }
-    bool[] b2 { get; set; }
-    MultiDimArray b3 { get; set; }
-    List<bool> b4 { get; set; }
-    List<bool[]> b5 { get; set; }
-    List<MultiDimArray> b6 { get; set; }
+    int readme { get; 	}
+    int writeme { set; 	}
+    int unknown_modifier { get;  set; 	}
+    testenum1 testenum1_prop { get;  set; 	}
+    testpod1 testpod1_prop { get;  set; 	}
+    teststruct3 teststruct3_prop { get;  set; 	}
+    List<double[]> d1 { get;  set; 	}
+    List<double[]> d2 { get;  set; 	}
+    Dictionary<int,double[]> d3 { get;  set; 	}
+    Dictionary<int,double[]> d4 { get;  set; 	}
+    List<MultiDimArray> d5 { get;  set; 	}
+    Dictionary<int,MultiDimArray> d6 { get;  set; 	}
+    vector3 testnamedarray1 { get;  set; 	}
+    transform testnamedarray2 { get;  set; 	}
+    transform[] testnamedarray3 { get;  set; 	}
+    NamedMultiDimArray testnamedarray4 { get;  set; 	}
+    NamedMultiDimArray testnamedarray5 { get;  set; 	}
+    CDouble c1 { get;  set; 	}
+    CDouble[] c2 { get;  set; 	}
+    MultiDimArray c3 { get;  set; 	}
+    List<CDouble> c4 { get;  set; 	}
+    List<CDouble[]> c5 { get;  set; 	}
+    List<MultiDimArray> c6 { get;  set; 	}
+    CSingle c7 { get;  set; 	}
+    CSingle[] c8 { get;  set; 	}
+    MultiDimArray c9 { get;  set; 	}
+    List<CSingle> c10 { get;  set; 	}
+    List<CSingle[]> c11 { get;  set; 	}
+    List<MultiDimArray> c12 { get;  set; 	}
+    bool b1 { get;  set; 	}
+    bool[] b2 { get;  set; 	}
+    MultiDimArray b3 { get;  set; 	}
+    List<bool> b4 { get;  set; 	}
+    List<bool[]> b5 { get;  set; 	}
+    List<MultiDimArray> b6 { get;  set; 	}
     void testpod1_func1(testpod1 s);
     testpod1 testpod1_func2();
     Generator2<double> gen_func1();
@@ -291,36 +291,36 @@ public interface testroot3
 [RobotRaconteurServiceObjectInterface()]
 public interface obj1
 {
-    double[] d1 { get; set; }
+    double[] d1 { get;  set; 	}
 }
 
 [RobotRaconteurServiceObjectInterface()]
 public interface obj2 : obj1
 {
-    double[] d1 { get; set; }
+    double[] d1 { get;  set; 	}
 }
 
 [RobotRaconteurServiceObjectInterface()]
 public interface obj3 : obj1, obj2
 {
-    double[] d1 { get; set; }
+    double[] d1 { get;  set; 	}
 }
 
 [RobotRaconteurServiceObjectInterface()]
 public interface obj4 : com.robotraconteur.testing.TestService1.sub2
 {
-    string s_ind { get; set; }
-    int i_ind { get; set; }
-    string data { get; set; }
+    string s_ind { get;  set; 	}
+    int i_ind { get;  set; 	}
+    string data { get;  set; 	}
     com.robotraconteur.testing.TestService1.sub3 get_o3_1(string ind);
 }
 
 [RobotRaconteurServiceObjectInterface()]
 public interface obj5
 {
-    double p1 { get; set; }
-    double p2 { get; set; }
-    double p3 { get; set; }
+    double p1 { get;  set; 	}
+    double p2 { get;  set; 	}
+    double p3 { get;  set; 	}
     int f1();
     int f2();
     Pipe<int> q1{ get; set; }

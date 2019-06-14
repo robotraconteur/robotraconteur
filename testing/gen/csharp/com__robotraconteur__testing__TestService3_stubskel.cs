@@ -381,8 +381,6 @@ public class pixel2_stub : NamedArrayStub<pixel2,byte> {
 public interface async_testroot3
 {
     Task<int> async_get_readme(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    Task async_set_readme(int value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-    Task<int> async_get_writeme(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
     Task async_set_writeme(int value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
     Task<int> async_get_unknown_modifier(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
     Task async_set_unknown_modifier(int value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);
@@ -509,17 +507,8 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     get {
     return (MessageElementUtil.UnpackScalar<int>(rr_innerstub.PropertyGet("readme")));
     }
-    set {
-    using(MessageElement m=MessageElementUtil.PackScalar<int>("value",value))
-    {
-    rr_innerstub.PropertySet("readme", m);
-    }
-    }
     }
     public int writeme {
-    get {
-    return (MessageElementUtil.UnpackScalar<int>(rr_innerstub.PropertyGet("writeme")));
-    }
     set {
     using(MessageElement m=MessageElementUtil.PackScalar<int>("value",value))
     {
@@ -1040,19 +1029,6 @@ public class testroot3_stub : ServiceStub , testroot3, async_testroot3{
     public virtual async Task<int> async_get_readme(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
     using(var rr_value = await rr_async_PropertyGet("readme",rr_timeout)) {
-    var rr_ret=(MessageElementUtil.UnpackScalar<int>(rr_value));
-    return rr_ret;
-    } }
-    public virtual async Task async_set_readme(int value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    using(MessageElement mm=MessageElementUtil.PackScalar<int>("value",value))
-    {
-    await rr_async_PropertySet("readme",mm,rr_timeout);
-    }
-    }
-    public virtual async Task<int> async_get_writeme(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-    {
-    using(var rr_value = await rr_async_PropertyGet("writeme",rr_timeout)) {
     var rr_ret=(MessageElementUtil.UnpackScalar<int>(rr_value));
     return rr_ret;
     } }
@@ -1989,11 +1965,6 @@ public class testroot3_skel : ServiceSkel {
     int ret=obj.readme;
     return MessageElementUtil.PackScalar<int>("return",ret);
     }
-    case "writeme":
-    {
-    int ret=obj.writeme;
-    return MessageElementUtil.PackScalar<int>("return",ret);
-    }
     case "unknown_modifier":
     {
     int ret=obj.unknown_modifier;
@@ -2166,11 +2137,6 @@ public class testroot3_skel : ServiceSkel {
     }
     public override void CallSetProperty(string membername, MessageElement m) {
     switch (membername) {
-    case "readme":
-    {
-    obj.readme=(MessageElementUtil.UnpackScalar<int>(m));
-    return;
-    }
     case "writeme":
     {
     obj.writeme=(MessageElementUtil.UnpackScalar<int>(m));

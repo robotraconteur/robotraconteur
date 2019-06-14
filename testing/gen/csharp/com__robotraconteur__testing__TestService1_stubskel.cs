@@ -3711,8 +3711,8 @@ public class testroot_default_impl : testroot{
     throw new NotImplementedException();    }
     public virtual void test_callbacks() {
     throw new NotImplementedException();    }
-    public event Action ev1;
-    public event Action<double, teststruct2> ev2;
+    public virtual event Action ev1;
+    public virtual event Action<double, teststruct2> ev2;
     public virtual sub1 get_o1() {
     throw new NotImplementedException();
     }

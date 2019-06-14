@@ -18,11 +18,6 @@ public class testroot3_skel extends ServiceSkel {
     int ret=obj.get_readme();
     return MessageElementUtil.<int[]>packArray("return",new int[] {ret});
     }
-    if(membername.equals( "writeme"))
-    {
-    int ret=obj.get_writeme();
-    return MessageElementUtil.<int[]>packArray("return",new int[] {ret});
-    }
     if(membername.equals( "unknown_modifier"))
     {
     int ret=obj.get_unknown_modifier();
@@ -191,11 +186,6 @@ public class testroot3_skel extends ServiceSkel {
     throw new MemberNotFoundException("Member not found");
     }
     public void callSetProperty(String membername, MessageElement m) {
-    if(membername.equals( "readme"))
-    {
-    obj.set_readme((MessageElementUtil.<int[]>castDataAndDispose(m))[0]);
-    return;
-    }
     if(membername.equals( "writeme"))
     {
     obj.set_writeme((MessageElementUtil.<int[]>castDataAndDispose(m))[0]);

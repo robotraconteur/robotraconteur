@@ -1031,8 +1031,14 @@ namespace RobotRaconteurGen
 		MEMBER_ITER2(PropertyDefinition)
 		convert_type_result t=convert_type(*m->Type);
 		t.name=fix_name(m->Name);
-		w2 << "    " + t.java_type + t.java_arr_type + " get_" + t.name + "();" << endl;
-		w2 << "    void set_" + t.name + "(" + t.java_type + t.java_arr_type + " value);" << endl;
+		if (m->Direction() != MemberDefinition_Direction_writeonly)
+		{
+			w2 << "    " + t.java_type + t.java_arr_type + " get_" + t.name + "();" << endl;
+		}
+		if (m->Direction() != MemberDefinition_Direction_readonly)
+		{
+			w2 << "    void set_" + t.name + "(" + t.java_type + t.java_arr_type + " value);" << endl;
+		}
 		MEMBER_ITER_END()
 
 		MEMBER_ITER2(FunctionDefinition)
@@ -1153,12 +1159,18 @@ namespace RobotRaconteurGen
 		w2 << "public interface async_" + fix_name(e->Name) << implements << endl << "{" << endl;
 
 		MEMBER_ITER2(PropertyDefinition)
-		convert_type_result t=convert_type(*m->Type,true);
-		t.name=fix_name(m->Name);
-		w2 << "    void async_get_" << t.name << "(Action2<" << t.java_type + t.java_arr_type << ",RuntimeException> rr_handler, int rr_timeout);" << endl;
-		t=convert_type(*m->Type,false);
-		t.name=fix_name(m->Name);
-		w2 << "    void async_set_" << t.name << "(" << t.java_type + t.java_arr_type <<" value, Action1<RuntimeException> rr_handler, int rr_timeout);" << endl;
+			if (m->Direction() != MemberDefinition_Direction_writeonly)
+			{
+				convert_type_result t = convert_type(*m->Type, true);
+				t.name = fix_name(m->Name);
+				w2 << "    void async_get_" << t.name << "(Action2<" << t.java_type + t.java_arr_type << ",RuntimeException> rr_handler, int rr_timeout);" << endl;
+			}
+			if (m->Direction() != MemberDefinition_Direction_readonly)
+			{
+				convert_type_result t = convert_type(*m->Type, false);
+				t.name = fix_name(m->Name);
+				w2 << "    void async_set_" << t.name << "(" << t.java_type + t.java_arr_type << " value, Action1<RuntimeException> rr_handler, int rr_timeout);" << endl;
+			}
 		//w2 << "    " + t[1] + t[2] + " " + t[0] + " { get; set; }" << endl; 
 		MEMBER_ITER_END()
 
@@ -1622,20 +1634,25 @@ namespace RobotRaconteurGen
 		MEMBER_ITER2(PropertyDefinition)
 		convert_type_result t=convert_type(*m->Type);
 		t.name=m->Name;
-		
-		w2 << "    public " + t.java_type + t.java_arr_type + " get_" + fix_name(t.name) + "() {" << endl;
-		w2 << "    return " + str_unpack_message_element("rr_innerstub.propertyGet(\"" + m->Name + "\")", m->Type) + ";" << endl;
-		w2 << "    }" << endl;
-		w2 << "    public void set_" + fix_name(t.name) + "(" + t.java_type + t.java_arr_type + " value) {" << endl;
-		w2 << "    MessageElement m=null;" << endl;
-		w2 << "    try {" << endl;
-		w2 << "    m=" +str_pack_message_element("value","value",m->Type) + ";" << endl;
-		w2 << "    rr_innerstub.propertySet(\"" + m->Name + "\", m);" << endl;
-		w2 << "    }" << endl;
-		w2 << "    finally {" << endl;
-		w2 << "    if (m!=null) m.delete();" << endl; 
-		w2 << "    }" << endl;
-		w2 << "    }" << endl;
+		if (m->Direction() != MemberDefinition_Direction_writeonly)
+		{
+			w2 << "    public " + t.java_type + t.java_arr_type + " get_" + fix_name(t.name) + "() {" << endl;
+			w2 << "    return " + str_unpack_message_element("rr_innerstub.propertyGet(\"" + m->Name + "\")", m->Type) + ";" << endl;
+			w2 << "    }" << endl;
+		}
+		if (m->Direction() != MemberDefinition_Direction_readonly)
+		{
+			w2 << "    public void set_" + fix_name(t.name) + "(" + t.java_type + t.java_arr_type + " value) {" << endl;
+			w2 << "    MessageElement m=null;" << endl;
+			w2 << "    try {" << endl;
+			w2 << "    m=" + str_pack_message_element("value", "value", m->Type) + ";" << endl;
+			w2 << "    rr_innerstub.propertySet(\"" + m->Name + "\", m);" << endl;
+			w2 << "    }" << endl;
+			w2 << "    finally {" << endl;
+			w2 << "    if (m!=null) m.delete();" << endl;
+			w2 << "    }" << endl;
+			w2 << "    }" << endl;
+		}
 		
 		MEMBER_ITER_END()
 
@@ -1873,43 +1890,49 @@ namespace RobotRaconteurGen
 		MEMBER_ITER2(PropertyDefinition)
 		convert_type_result t=convert_type(*m->Type,true);
 		t.name=fix_name(m->Name);
-		w2 << "    public void async_get_" << t.name << "(Action2<" << t.java_type + t.java_arr_type << ",RuntimeException> rr_handler, int rr_timeout)" << endl << "    {" << endl;
-		w2 << "    rr_async_PropertyGet(\"" + m->Name + "\",new rrend_async_get_" << t.name << "(),rr_handler,rr_timeout);" << endl;
-		w2 << "    }" <<endl;
-		w2 << "    protected class rrend_async_get_" << t.name << " implements Action3<MessageElement,RuntimeException,Object> {" << endl;
-		w2 << "    public void action(MessageElement value ,RuntimeException err,Object param)" << endl << "    {" << endl;
-		w2 << "    Action2<" << t.java_type + t.java_arr_type << ",RuntimeException> rr_handler=(Action2<" << t.java_type + t.java_arr_type << ",RuntimeException>)param;" << endl;
-		w2 << "    if (err!=null)" << endl << "    {" << endl << "    rr_handler.action(" << GetDefaultValue(*m->Type) <<  ",err);" << endl << "    return;" << endl << "    }" << endl;
-		w2 << "    " << t.java_type + t.java_arr_type << " rr_ret;" << endl;
-		w2 << "    try {" << endl;
-		w2 << "    rr_ret=" << str_unpack_message_element("value", m->Type) << ";" << endl;
-		w2 << "    } catch (RuntimeException err2) {" << endl;
-		w2 << "    rr_handler.action(" << GetDefaultValue(*m->Type) <<  ",err2);" << endl;
-		w2 << "    return;" << endl;
-		w2 << "    }" << endl;
-		w2 << "    rr_handler.action(rr_ret,null);" << endl;
-		w2 << "    }" <<endl;
-		w2 << "    }" << endl;
-		t=convert_type(*m->Type,false);
-		t.name=fix_name(m->Name);
-		w2 << "    public void async_set_" << t.name << "(" << t.java_type + t.java_arr_type << " value, Action1<RuntimeException> rr_handler, int rr_timeout)" << endl << "    {" << endl;
-		w2 << "    MessageElement m=null;" << endl;
-		w2 << "    try {" << endl;
-		w2 << "    m=" +str_pack_message_element("value","value",m->Type) + ";" << endl;
-		w2 << "    rr_async_PropertySet(\"" + m->Name + "\",m,new rrend_async_set_" << t.name << "(),rr_handler,rr_timeout);" << endl;
-		w2 << "    }" << endl;
-		w2 << "    finally {" << endl;
-		w2 << "    if (m!=null) m.delete();" << endl; 
-		w2 << "    }" << endl;
-		w2 << "    }" << endl;
-		
-		w2 << "    protected class rrend_async_set_" << t.name << " implements Action3<MessageElement,RuntimeException,Object> {" << endl;
-		w2 << "    public void action(MessageElement m ,RuntimeException err,Object param)" << endl << "    {" << endl;
-		w2 << "    Action1<RuntimeException> rr_handler=(Action1<RuntimeException>)param;" << endl;
-		w2 << "    if (err!=null)" << endl << "    {" << endl << "    rr_handler.action(err);" << endl << "    return;" << endl << "    }" << endl;
-		w2 << "    rr_handler.action(null);" << endl;
-		w2 << "    }" <<endl;
-		w2 << "    }" << endl;
+		if (m->Direction() != MemberDefinition_Direction_writeonly)
+		{
+			w2 << "    public void async_get_" << t.name << "(Action2<" << t.java_type + t.java_arr_type << ",RuntimeException> rr_handler, int rr_timeout)" << endl << "    {" << endl;
+			w2 << "    rr_async_PropertyGet(\"" + m->Name + "\",new rrend_async_get_" << t.name << "(),rr_handler,rr_timeout);" << endl;
+			w2 << "    }" << endl;
+			w2 << "    protected class rrend_async_get_" << t.name << " implements Action3<MessageElement,RuntimeException,Object> {" << endl;
+			w2 << "    public void action(MessageElement value ,RuntimeException err,Object param)" << endl << "    {" << endl;
+			w2 << "    Action2<" << t.java_type + t.java_arr_type << ",RuntimeException> rr_handler=(Action2<" << t.java_type + t.java_arr_type << ",RuntimeException>)param;" << endl;
+			w2 << "    if (err!=null)" << endl << "    {" << endl << "    rr_handler.action(" << GetDefaultValue(*m->Type) << ",err);" << endl << "    return;" << endl << "    }" << endl;
+			w2 << "    " << t.java_type + t.java_arr_type << " rr_ret;" << endl;
+			w2 << "    try {" << endl;
+			w2 << "    rr_ret=" << str_unpack_message_element("value", m->Type) << ";" << endl;
+			w2 << "    } catch (RuntimeException err2) {" << endl;
+			w2 << "    rr_handler.action(" << GetDefaultValue(*m->Type) << ",err2);" << endl;
+			w2 << "    return;" << endl;
+			w2 << "    }" << endl;
+			w2 << "    rr_handler.action(rr_ret,null);" << endl;
+			w2 << "    }" << endl;
+			w2 << "    }" << endl;
+		}
+		if (m->Direction() != MemberDefinition_Direction_readonly)
+		{
+			convert_type_result t = convert_type(*m->Type, false);
+			t.name = fix_name(m->Name);
+			w2 << "    public void async_set_" << t.name << "(" << t.java_type + t.java_arr_type << " value, Action1<RuntimeException> rr_handler, int rr_timeout)" << endl << "    {" << endl;
+			w2 << "    MessageElement m=null;" << endl;
+			w2 << "    try {" << endl;
+			w2 << "    m=" + str_pack_message_element("value", "value", m->Type) + ";" << endl;
+			w2 << "    rr_async_PropertySet(\"" + m->Name + "\",m,new rrend_async_set_" << t.name << "(),rr_handler,rr_timeout);" << endl;
+			w2 << "    }" << endl;
+			w2 << "    finally {" << endl;
+			w2 << "    if (m!=null) m.delete();" << endl;
+			w2 << "    }" << endl;
+			w2 << "    }" << endl;
+
+			w2 << "    protected class rrend_async_set_" << t.name << " implements Action3<MessageElement,RuntimeException,Object> {" << endl;
+			w2 << "    public void action(MessageElement m ,RuntimeException err,Object param)" << endl << "    {" << endl;
+			w2 << "    Action1<RuntimeException> rr_handler=(Action1<RuntimeException>)param;" << endl;
+			w2 << "    if (err!=null)" << endl << "    {" << endl << "    rr_handler.action(err);" << endl << "    return;" << endl << "    }" << endl;
+			w2 << "    rr_handler.action(null);" << endl;
+			w2 << "    }" << endl;
+			w2 << "    }" << endl;
+		}
 		//w2 << "    " + t[1] + t[2] + " " + t[0] + " { get; set; }" << endl; 
 		MEMBER_ITER_END()
 
@@ -2090,15 +2113,17 @@ namespace RobotRaconteurGen
 		w2 << "    public MessageElement callGetProperty(String membername) {" << endl;
 		//w2 << "    switch (membername) {" << endl;
 		MEMBER_ITER2(PropertyDefinition)
-		
-		w2 << "    if(membername.equals( \"" + m->Name + "\"))" << endl << "    {" << endl;
-		
-		
-			convert_type_result t=convert_type(*m->Type);
-			w2 << "    " + t.java_type + t.java_arr_type + " ret=obj.get_" + fix_name(m->Name) + "();" << endl;
-			w2 << "    return " + str_pack_message_element("return","ret",m->Type) +";" << endl;
-		
-		w2 << "    }" << endl;
+			if (m->Direction() != MemberDefinition_Direction_writeonly)
+			{
+				w2 << "    if(membername.equals( \"" + m->Name + "\"))" << endl << "    {" << endl;
+
+
+				convert_type_result t = convert_type(*m->Type);
+				w2 << "    " + t.java_type + t.java_arr_type + " ret=obj.get_" + fix_name(m->Name) + "();" << endl;
+				w2 << "    return " + str_pack_message_element("return", "ret", m->Type) + ";" << endl;
+
+				w2 << "    }" << endl;
+			}
 		MEMBER_ITER_END()
 		//w2 << "    default:" << endl;
 		//w2 << "    break;" << endl;
@@ -2109,12 +2134,14 @@ namespace RobotRaconteurGen
 		w2 << "    public void callSetProperty(String membername, MessageElement m) {" << endl;
 		//w2 << "    switch (membername) {" << endl;
 		MEMBER_ITER2(PropertyDefinition)
-		
-		w2 << "    if(membername.equals( \"" + m->Name + "\"))" << endl << "    {" << endl;
-						
-		w2 << "    obj.set_" + fix_name(m->Name) + "(" + str_unpack_message_element("m",m->Type) + ");" << endl;
-		w2 << "    return;" << endl;		
-		w2 << "    }" << endl;
+			if (m->Direction() != MemberDefinition_Direction_readonly)
+			{
+				w2 << "    if(membername.equals( \"" + m->Name + "\"))" << endl << "    {" << endl;
+
+				w2 << "    obj.set_" + fix_name(m->Name) + "(" + str_unpack_message_element("m", m->Type) + ");" << endl;
+				w2 << "    return;" << endl;
+				w2 << "    }" << endl;
+			}
 		MEMBER_ITER_END()
 		//w2 << "    default:" << endl;
 		//w2 << "    break;" << endl;

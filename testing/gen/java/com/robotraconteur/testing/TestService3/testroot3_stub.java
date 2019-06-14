@@ -51,19 +51,6 @@ public class testroot3_stub extends ServiceStub implements testroot3, async_test
     public int get_readme() {
     return (MessageElementUtil.<int[]>castDataAndDispose(rr_innerstub.propertyGet("readme")))[0];
     }
-    public void set_readme(int value) {
-    MessageElement m=null;
-    try {
-    m=MessageElementUtil.<int[]>packArray("value",new int[] {value});
-    rr_innerstub.propertySet("readme", m);
-    }
-    finally {
-    if (m!=null) m.delete();
-    }
-    }
-    public int get_writeme() {
-    return (MessageElementUtil.<int[]>castDataAndDispose(rr_innerstub.propertyGet("writeme")))[0];
-    }
     public void set_writeme(int value) {
     MessageElement m=null;
     try {
@@ -657,52 +644,6 @@ public class testroot3_stub extends ServiceStub implements testroot3, async_test
     rr_async_PropertyGet("readme",new rrend_async_get_readme(),rr_handler,rr_timeout);
     }
     protected class rrend_async_get_readme implements Action3<MessageElement,RuntimeException,Object> {
-    public void action(MessageElement value ,RuntimeException err,Object param)
-    {
-    Action2<Integer,RuntimeException> rr_handler=(Action2<Integer,RuntimeException>)param;
-    if (err!=null)
-    {
-    rr_handler.action((int)0,err);
-    return;
-    }
-    Integer rr_ret;
-    try {
-    rr_ret=(MessageElementUtil.<int[]>castDataAndDispose(value))[0];
-    } catch (RuntimeException err2) {
-    rr_handler.action((int)0,err2);
-    return;
-    }
-    rr_handler.action(rr_ret,null);
-    }
-    }
-    public void async_set_readme(int value, Action1<RuntimeException> rr_handler, int rr_timeout)
-    {
-    MessageElement m=null;
-    try {
-    m=MessageElementUtil.<int[]>packArray("value",new int[] {value});
-    rr_async_PropertySet("readme",m,new rrend_async_set_readme(),rr_handler,rr_timeout);
-    }
-    finally {
-    if (m!=null) m.delete();
-    }
-    }
-    protected class rrend_async_set_readme implements Action3<MessageElement,RuntimeException,Object> {
-    public void action(MessageElement m ,RuntimeException err,Object param)
-    {
-    Action1<RuntimeException> rr_handler=(Action1<RuntimeException>)param;
-    if (err!=null)
-    {
-    rr_handler.action(err);
-    return;
-    }
-    rr_handler.action(null);
-    }
-    }
-    public void async_get_writeme(Action2<Integer,RuntimeException> rr_handler, int rr_timeout)
-    {
-    rr_async_PropertyGet("writeme",new rrend_async_get_writeme(),rr_handler,rr_timeout);
-    }
-    protected class rrend_async_get_writeme implements Action3<MessageElement,RuntimeException,Object> {
     public void action(MessageElement value ,RuntimeException err,Object param)
     {
     Action2<Integer,RuntimeException> rr_handler=(Action2<Integer,RuntimeException>)param;

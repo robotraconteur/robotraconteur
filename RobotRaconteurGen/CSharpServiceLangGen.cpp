@@ -817,7 +817,16 @@ namespace RobotRaconteurGen
 		MEMBER_ITER2(PropertyDefinition)
 		convert_type_result t=convert_type(*m->Type);
 		t.name=fix_name(m->Name);
-		w2 << "    " + t.cs_type + t.cs_arr_type + " " + t.name + " { get; set; }" << endl; 
+		w2 << "    " + t.cs_type + t.cs_arr_type + " " + t.name + " {";
+		if (m->Direction() != MemberDefinition_Direction_writeonly)
+		{
+			w2 << " get; ";
+		}
+		if (m->Direction() != MemberDefinition_Direction_readonly)
+		{
+			w2 << " set; ";
+		}		
+        w2 << "	}" << endl; 
 		MEMBER_ITER_END()
 
 		MEMBER_ITER2(FunctionDefinition)
@@ -1307,8 +1316,14 @@ namespace RobotRaconteurGen
 		MEMBER_ITER2(PropertyDefinition)
 		convert_type_result t=convert_type(*m->Type);
 		t.name=fix_name(m->Name);
-		w2 << "    Task<" << t.cs_type + t.cs_arr_type << "> async_get_" << t.name << "(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);" << endl;
-		w2 << "    Task async_set_" << t.name << "(" << t.cs_type + t.cs_arr_type <<" value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);" << endl;
+		if (m->Direction() != MemberDefinition_Direction_writeonly)
+		{
+			w2 << "    Task<" << t.cs_type + t.cs_arr_type << "> async_get_" << t.name << "(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);" << endl;
+		}
+		if (m->Direction() != MemberDefinition_Direction_readonly)
+		{
+			w2 << "    Task async_set_" << t.name << "(" << t.cs_type + t.cs_arr_type << " value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);" << endl;
+		}
 		//w2 << "    " + t[1] + t[2] + " " + t[0] + " { get; set; }" << endl; 
 		MEMBER_ITER_END()
 
@@ -1474,14 +1489,20 @@ namespace RobotRaconteurGen
 		convert_type_result t=convert_type(*m->Type);
 		t.name = fix_name(m->Name);
 		w2 << "    public " + t.cs_type + t.cs_arr_type + " " + t.name + " {" << endl;
-		w2 << "    get {" << endl;
-		w2 << "    return " + str_unpack_message_element("rr_innerstub.PropertyGet(\"" + m->Name + "\")", m->Type) + ";" << endl;
-		w2 << "    }" << endl;
-		w2 << "    set {" << endl;
-		w2 << "    using(MessageElement m="+str_pack_message_element("value","value",m->Type) +")" << endl << "    {" << endl; 
-		w2 << "    rr_innerstub.PropertySet(\"" + m->Name + "\", m);" << endl;
-		w2 << "    }" << endl;
-		w2 << "    }" << endl;
+		if (m->Direction() != MemberDefinition_Direction_writeonly)
+		{
+			w2 << "    get {" << endl;
+			w2 << "    return " + str_unpack_message_element("rr_innerstub.PropertyGet(\"" + m->Name + "\")", m->Type) + ";" << endl;
+			w2 << "    }" << endl;
+		}
+		if (m->Direction() != MemberDefinition_Direction_readonly)
+		{
+			w2 << "    set {" << endl;
+			w2 << "    using(MessageElement m=" + str_pack_message_element("value", "value", m->Type) + ")" << endl << "    {" << endl;
+			w2 << "    rr_innerstub.PropertySet(\"" + m->Name + "\", m);" << endl;
+			w2 << "    }" << endl;
+			w2 << "    }" << endl;
+		}
 		w2 << "    }" << endl;
 		MEMBER_ITER_END()
 
@@ -1703,16 +1724,22 @@ namespace RobotRaconteurGen
 		MEMBER_ITER2(PropertyDefinition)
 		convert_type_result t=convert_type(*m->Type);
 		t.name=fix_name(m->Name);
-		w2 << "    public virtual async Task<" << t.cs_type + t.cs_arr_type << "> async_get_" << t.name << "(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)" << endl << "    {" << endl;
-		w2 << "    using(var rr_value = await rr_async_PropertyGet(\"" + m->Name + "\",rr_timeout)) {" << endl;
-		w2 << "    var rr_ret=" << str_unpack_message_element("rr_value", m->Type) << ";" << endl;
-		w2 << "    return rr_ret;" << endl;
-		w2 << "    } }" <<endl;
-		w2 << "    public virtual async Task async_set_" << t.name << "(" << t.cs_type + t.cs_arr_type << " value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)" << endl << "    {" << endl;
-		w2 << "    using(MessageElement mm=" << str_pack_message_element("value","value",m->Type) << ")" << endl <<  "    {" << endl;
-		w2 << "    await rr_async_PropertySet(\"" + m->Name + "\",mm,rr_timeout);" << endl;
-		w2 << "    }" << endl;
-		w2 << "    }" <<endl;
+		if (m->Direction() != MemberDefinition_Direction_writeonly)
+		{
+			w2 << "    public virtual async Task<" << t.cs_type + t.cs_arr_type << "> async_get_" << t.name << "(int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)" << endl << "    {" << endl;
+			w2 << "    using(var rr_value = await rr_async_PropertyGet(\"" + m->Name + "\",rr_timeout)) {" << endl;
+			w2 << "    var rr_ret=" << str_unpack_message_element("rr_value", m->Type) << ";" << endl;
+			w2 << "    return rr_ret;" << endl;
+			w2 << "    } }" << endl;
+		}
+		if (m->Direction() != MemberDefinition_Direction_readonly)
+		{
+			w2 << "    public virtual async Task async_set_" << t.name << "(" << t.cs_type + t.cs_arr_type << " value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)" << endl << "    {" << endl;
+			w2 << "    using(MessageElement mm=" << str_pack_message_element("value", "value", m->Type) << ")" << endl << "    {" << endl;
+			w2 << "    await rr_async_PropertySet(\"" + m->Name + "\",mm,rr_timeout);" << endl;
+			w2 << "    }" << endl;
+			w2 << "    }" << endl;
+		}
 		
 		//w2 << "    " + t[1] + t[2] + " " + t[0] + " { get; set; }" << endl; 
 		MEMBER_ITER_END()
@@ -1870,15 +1897,17 @@ namespace RobotRaconteurGen
 		w2 << "    public override MessageElement CallGetProperty(string membername) {" << endl;
 		w2 << "    switch (membername) {" << endl;
 		MEMBER_ITER2(PropertyDefinition)
-		
-		w2 << "    case \"" + m->Name + "\":" << endl << "    {" << endl;
-		
-		
-			convert_type_result t=convert_type(*m->Type);
-			w2 << "    " + t.cs_type + t.cs_arr_type + " ret=obj." + fix_name(m->Name) + ";" << endl;
-			w2 << "    return " + str_pack_message_element("return","ret",m->Type) +";" << endl;
-		
-		w2 << "    }" << endl;
+			if (m->Direction() != MemberDefinition_Direction_writeonly)
+			{
+				w2 << "    case \"" + m->Name + "\":" << endl << "    {" << endl;
+
+
+				convert_type_result t = convert_type(*m->Type);
+				w2 << "    " + t.cs_type + t.cs_arr_type + " ret=obj." + fix_name(m->Name) + ";" << endl;
+				w2 << "    return " + str_pack_message_element("return", "ret", m->Type) + ";" << endl;
+
+				w2 << "    }" << endl;
+			}
 		MEMBER_ITER_END()
 		w2 << "    default:" << endl;
 		w2 << "    break;" << endl;
@@ -1889,12 +1918,14 @@ namespace RobotRaconteurGen
 		w2 << "    public override void CallSetProperty(string membername, MessageElement m) {" << endl;
 		w2 << "    switch (membername) {" << endl;
 		MEMBER_ITER2(PropertyDefinition)
-		
-		w2 << "    case \"" + m->Name + "\":" << endl << "    {" << endl;
-						
-		w2 << "    obj." + fix_name(m->Name) + "=" + str_unpack_message_element("m",m->Type) + ";" << endl;
-		w2 << "    return;" << endl;		
-		w2 << "    }" << endl;
+			if (m->Direction() != MemberDefinition_Direction_readonly)
+			{
+				w2 << "    case \"" + m->Name + "\":" << endl << "    {" << endl;
+
+				w2 << "    obj." + fix_name(m->Name) + "=" + str_unpack_message_element("m", m->Type) + ";" << endl;
+				w2 << "    return;" << endl;
+				w2 << "    }" << endl;
+			}
 		MEMBER_ITER_END()
 		w2 << "    default:" << endl;
 		w2 << "    break;" << endl;
