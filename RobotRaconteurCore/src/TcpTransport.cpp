@@ -45,8 +45,8 @@
 #endif
 
 #ifdef ROBOTRACONTEUR_APPLE
-#include <CoreFoundation.h>
-#include <Security.h>
+#include <CoreFoundation/CoreFoundation.h>
+#include <Security/Security.h>
 #endif
 
 #include <boost/range/adaptors.hpp>

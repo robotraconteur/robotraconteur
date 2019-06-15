@@ -1016,7 +1016,7 @@ namespace RobotRaconteur
 
 	void WireSubscriptionBase::SetOutValueAllBase(const RR_INTRUSIVE_PTR<RRValue>& val)
 	{
-		boost::mutex::scoped_lock(this_lock);
+		boost::mutex::scoped_lock lock(this_lock);
 		BOOST_FOREACH(RR_SHARED_PTR<detail::WireSubscription_connection> c, connections)
 		{
 			RR_SHARED_PTR<WireConnectionBase> c1 = c->connection.lock();

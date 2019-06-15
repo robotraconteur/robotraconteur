@@ -94,7 +94,7 @@ if(APPLE)
 	CMAKE_FIND_FRAMEWORKS(CoreServices)
 	CMAKE_FIND_FRAMEWORKS(Security)
 	include_directories(${CoreFoundation_FRAMEWORKS}/Headers ${Security_FRAMEWORKS}/Headers ${CoreServices_FRAMEWORKS}/headers)
-	set(OPENSSL_USE_STATIC_LIBS FALSE)
+	
 	find_package(OpenSSL REQUIRED)
 	include_directories(${OPENSSL_INCLUDE_DIR})
 	set (ROBOTRACONTEUR_EXTRA_LIBS ${ROBOTRACONTEUR_EXTRA_LIBS} ${CoreFoundation_FRAMEWORKS}/CoreFoundation ${Security_FRAMEWORKS}/Security ${CoreServices_FRAMEWORKS}/CoreServices ${OPENSSL_LIBRARIES} c++)

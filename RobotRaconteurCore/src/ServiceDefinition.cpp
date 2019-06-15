@@ -2387,11 +2387,6 @@ namespace RobotRaconteur
 		return true;
 	}
 
-	static bool ConstantDefinition_CheckString(const std::string& value)
-	{
-
-	}
-
 	bool ConstantDefinition::VerifyValue()
 	{
 		return VerifyTypeAndValue(*Type, Value);
