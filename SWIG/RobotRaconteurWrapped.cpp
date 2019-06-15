@@ -1632,7 +1632,8 @@ namespace RobotRaconteur
 
 	RR_INTRUSIVE_PTR<RRValue> WrappedWireBroadcaster::do_PeekInValue(const uint32_t& ep)
 	{
-		boost::mutex::scoped_lock lock(connected_wires_lock);
+		boost::mutex::scoped_lock lock(connected_wires_lock);		
+		if (!out_value_valid) throw ValueNotSetException("Value not set");
 		RR_INTRUSIVE_PTR<MessageElement> value2 = ShallowCopyMessageElement(rr_cast<MessageElement>(out_value));
 		return value2;
 	}

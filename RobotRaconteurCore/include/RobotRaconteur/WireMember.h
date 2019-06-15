@@ -742,6 +742,7 @@ namespace RobotRaconteur
 		boost::function<bool (RR_SHARED_PTR<WireBroadcasterBase>&, uint32_t)> predicate;
 
 		RR_INTRUSIVE_PTR<RRValue> out_value;
+		boost::initialized<bool> out_value_valid;
 
 		void ServiceEvent(ServerServiceListenerEventType evt);
 
@@ -832,7 +833,7 @@ namespace RobotRaconteur
 		U GetInValue(TimeSpec& ts, uint32_t& ep)
 		{
 			boost::mutex::scoped_lock lock(this_lock);
-			if (!in_value_valid) throw InvalidOperationException("Value not set");
+			if (!in_value_valid) throw ValueNotSetException("Value not set");
 			ts = in_value_ts;
 			ep = in_value_ep;
 			return in_value;
@@ -886,7 +887,7 @@ namespace RobotRaconteur
 		U ClientPeekOutValue()
 		{
 			boost::mutex::scoped_lock lock(this_lock);
-			if (!in_value_valid) throw InvalidOperationException("Value not set");
+			if (!in_value_valid) throw ValueNotSetException("Value not set");
 			return in_value;
 		}
 

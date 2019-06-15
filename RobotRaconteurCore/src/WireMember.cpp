@@ -1070,6 +1070,7 @@ namespace RobotRaconteur
 		boost::mutex::scoped_lock lock(connected_wires_lock);
 
 		out_value = value;
+		out_value_valid.data() = true;
 
 		RR_SHARED_PTR<WireBroadcasterBase> this_ = shared_from_this();
 
@@ -1143,7 +1144,8 @@ namespace RobotRaconteur
 
 	RR_INTRUSIVE_PTR<RRValue> WireBroadcasterBase::ClientPeekInValueBase()
 	{
-		boost::mutex::scoped_lock lock(connected_wires_lock);
+		boost::mutex::scoped_lock lock(connected_wires_lock);		
+		if (!out_value_valid) throw ValueNotSetException("Value not set");
 		return out_value;
 	}
 
