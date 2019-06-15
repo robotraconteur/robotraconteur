@@ -110,7 +110,7 @@ if ("${CMAKE_SYSTEM}" MATCHES "Linux" AND NOT(${__ANDROID__}))
 set(RobotRaconteurCore_src ${RobotRaconteurCore_src} src/HardwareTransport_linux.cpp src/HardwareTransport_linux_private.h src/HardwareTransport_usbcommon.cpp src/HardwareTransport_usbcommon_private.h src/HardwareTransport_libusb.cpp src/HardwareTransport_libusb_private.h src/LocalTransport_linux.cpp src/LocalTransport_linux_private.h)
 endif()
 
-if(CMAKE_GENERATOR STREQUAL Xcode)
+if(APPLE)
 set(RobotRaconteurCore_src ${RobotRaconteurCore_src} src/LocalTransport_darwin.cpp src/LocalTransport_darwin_private.h)
 endif()
 
