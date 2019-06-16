@@ -24,7 +24,7 @@ Use `vcpkg` to install the Robot Raconteur C++ library.
 vcpkg install robotraconteur
 ```
 
-If Robot Raconteur is not found, clone [johnwason/vcpkg](https://github.com/johnwason/vcpkg).
+If Robot Raconteur is not found, merge [johnwason/vcpkg](https://github.com/johnwason/vcpkg) into your vcpkg directory.
 
 #### Python
 
