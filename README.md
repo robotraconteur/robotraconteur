@@ -90,8 +90,6 @@ Use `brew` to install the Robot Raconteur C++ library.
 brew install johnwason/robotraconteur/robotraconteur
 ```
 
-If Robot Raconteur is not found, clone [johnwason/homebrew-core](https://github.com/johnwason/homebrew-core).
-
 #### Python
 
 The Python wrappers are distributed using PyPi.
