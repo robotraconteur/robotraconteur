@@ -63,8 +63,8 @@ sudo apt-get install robotraconteur-dev
 
 #### Python
 ```
-sudo apt-get install robotraconteur-python
-sudo apt-get install robotraconteur-python3
+sudo apt-get install python-robotraconteur
+sudo apt-get install python3-robotraconteur
 
 ```
 
