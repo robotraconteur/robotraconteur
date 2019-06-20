@@ -1,4 +1,4 @@
-<p align="center"><img src="https://robotraconteur.com/Themes/RobotRaconteurTheme/Content/images/RRHeader.jpg"></p>
+<p align="center"><img src="https://robotraconteurpublicfiles.s3.amazonaws.com/RRheader2.jpg"></p>
 
 # Robot Raconteur Core Library and Wrappers
 
