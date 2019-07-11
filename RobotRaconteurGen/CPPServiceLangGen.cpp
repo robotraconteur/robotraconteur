@@ -1332,7 +1332,7 @@ namespace RobotRaconteurGen
 		}
 		w2 << endl;
 
-		if (!d->Pods.empty())
+		if (!(d->Pods.empty() && d->NamedArrays.empty()))
 		{
 			w2 << "namespace RobotRaconteur" << endl << "{" << endl;
 			BOOST_FOREACH(RR_SHARED_PTR<ServiceEntryDefinition> e, d->Pods)
