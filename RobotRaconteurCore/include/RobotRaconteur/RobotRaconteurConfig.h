@@ -15,7 +15,7 @@
 #pragma once
 
 #ifndef ROBOTRACONTEUR_VERSION
-#define ROBOTRACONTEUR_VERSION "0.9.0"
+#define ROBOTRACONTEUR_VERSION "0.9.1"
 #endif
 
 #if (__GNUC__== 4 && __GNUC_MINOR__== 7 )
