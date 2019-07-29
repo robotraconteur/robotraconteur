@@ -3373,7 +3373,7 @@ namespace RobotRaconteur
 				{ 
 					throw ServiceDefinitionException("Memory member must be numeric or pod");
 				}
-				RR_SHARED_PTR<NamedTypeDefinition> nt = m2->Type->ResolveNamedType();
+				RR_SHARED_PTR<NamedTypeDefinition> nt = m2->Type->ResolveNamedType(defs);
 				if (nt->RRDataType() != DataTypes_pod_t && nt->RRDataType() != DataTypes_namedarray_t)
 				{
 					throw ServiceDefinitionException("Memory member must be numeric or pod");
@@ -3754,7 +3754,7 @@ namespace RobotRaconteur
 
 	}
 
-	void VerifyStructure_check_recursion(RR_SHARED_PTR<ServiceEntryDefinition> strut, std::set<std::string> names, DataTypes entry_type)
+	void VerifyStructure_check_recursion(RR_SHARED_PTR<ServiceEntryDefinition> strut, std::vector<RR_SHARED_PTR<ServiceDefinition> > defs, std::set<std::string> names, DataTypes entry_type)
 	{
 		if (strut->EntryType != entry_type && strut->EntryType != DataTypes_namedarray_t)
 		{
@@ -3770,7 +3770,7 @@ namespace RobotRaconteur
 
 			if (p->Type->Type == DataTypes_namedtype_t)
 			{
-				RR_SHARED_PTR<NamedTypeDefinition> nt_def = p->Type->ResolveNamedType();				
+				RR_SHARED_PTR<NamedTypeDefinition> nt_def = p->Type->ResolveNamedType(defs);
 				RR_SHARED_PTR<ServiceEntryDefinition> et_def = RR_DYNAMIC_POINTER_CAST<ServiceEntryDefinition>(nt_def);
 				if (!et_def) throw InternalErrorException("");
 				if (et_def->EntryType != entry_type && et_def->EntryType != DataTypes_namedarray_t) throw InternalErrorException("");
@@ -3780,7 +3780,7 @@ namespace RobotRaconteur
 					throw ServiceDefinitionException("Recursive namedarray/pod detected in " + strut->Name);
 				}
 
-				VerifyStructure_check_recursion(et_def, names, entry_type);
+				VerifyStructure_check_recursion(et_def, defs, names, entry_type);
 			}
 		}
 	}
@@ -3830,7 +3830,7 @@ namespace RobotRaconteur
 
 				if (t->Type == DataTypes_namedtype_t)
 				{
-					RR_SHARED_PTR<NamedTypeDefinition> tt = t->ResolveNamedType();
+					RR_SHARED_PTR<NamedTypeDefinition> tt = t->ResolveNamedType(defs);
 					if (tt->RRDataType() != DataTypes_pod_t && tt->RRDataType() != DataTypes_namedarray_t)
 					{
 						throw ServiceDefinitionException("Pods must only contain numeric, custruct, pod types");
@@ -3849,7 +3849,7 @@ namespace RobotRaconteur
 				}
 
 				std::set<std::string> n;				
-				VerifyStructure_check_recursion(strut, n, DataTypes_pod_t);
+				VerifyStructure_check_recursion(strut, defs, n, DataTypes_pod_t);
 			}
 
 			if (entry_type == DataTypes_namedarray_t)
@@ -3862,7 +3862,7 @@ namespace RobotRaconteur
 
 				if (t->Type == DataTypes_namedtype_t)
 				{
-					RR_SHARED_PTR<NamedTypeDefinition> tt = t->ResolveNamedType();
+					RR_SHARED_PTR<NamedTypeDefinition> tt = t->ResolveNamedType(defs);
 					if (tt->RRDataType() != DataTypes_namedarray_t)
 					{
 						throw ServiceDefinitionException("NamedArrays must only contain numeric and namedarray types");
@@ -4338,7 +4338,7 @@ namespace RobotRaconteur
 			}
 			else if (p->Type->Type == DataTypes_namedtype_t)
 			{
-				RR_SHARED_PTR<NamedTypeDefinition> nt_def = p->Type->ResolveNamedType();
+				RR_SHARED_PTR<NamedTypeDefinition> nt_def = p->Type->ResolveNamedType(other_defs, node, client);
 				RR_SHARED_PTR<ServiceEntryDefinition> et_def = RR_DYNAMIC_POINTER_CAST<ServiceEntryDefinition>(nt_def);
 				if (!et_def) throw InternalErrorException("");
 				if (et_def->EntryType != DataTypes_namedarray_t) throw InternalErrorException("");
