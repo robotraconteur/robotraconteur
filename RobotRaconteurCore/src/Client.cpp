@@ -808,6 +808,8 @@ namespace RobotRaconteur
 		Endpoint::AsyncSendMessage(mm, callback);
 	}
 
+	void ClientContext_empty_handler() {}
+
 	void ClientContext::MessageReceived(RR_INTRUSIVE_PTR<Message> m)
 	{
 
@@ -837,7 +839,7 @@ namespace RobotRaconteur
 		{
 			if (mm->Error == MessageErrorType_InvalidEndpoint)
 			{
-				RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(&ClientContext::Close, shared_from_this()));
+				AsyncClose(&ClientContext_empty_handler);
 				return;
 			}
 			MessageEntryReceived(mm);
@@ -978,7 +980,7 @@ namespace RobotRaconteur
 
 				try
 				{
-					RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(&ClientContext::Close, shared_from_this()));
+					AsyncClose(&ClientContext_empty_handler);
 				}
 				catch (std::exception&)
 				{
@@ -1120,8 +1122,7 @@ namespace RobotRaconteur
 
 	}
 
-	void ClientContext_empty_handler() {}
-
+	
 	void ClientContext::AsyncConnectService1(RR_SHARED_PTR<Transport> c, RR_SHARED_PTR<ITransportConnection> tc, RR_SHARED_PTR<RobotRaconteurException> e, const std::string& url, const std::string& username, RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials, const std::string& objecttype, boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)>& handler)
 	{
 		boost::recursive_mutex::scoped_lock cl_lock(connect_lock);
