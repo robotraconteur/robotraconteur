@@ -7608,8 +7608,8 @@ mxArray* SubscribeServiceInfo2(const mxArray* service_types, const mxArray* filt
 {
 	std::vector<std::string> service_types2;
 
-	mxToVectorString(service_types, service_types2, "Invalid service_types specified for SubscribeService");
-	if (service_types2.empty()) throw InvalidArgumentException("Invalid service_types specified for SubscribeService");
+	mxToVectorString(service_types, service_types2, "Invalid service_types specified for SubscribeServiceInfo2");
+	//if (service_types2.empty()) throw InvalidArgumentException("Invalid service_types specified for SubscribeService");
 
 	boost::shared_ptr<ServiceSubscriptionFilter> filter2 = SubscribeService_LoadFilter(filter);
 
@@ -7645,7 +7645,7 @@ mxArray* SubscribeService(const mxArray* service_types, const mxArray* filter)
 	std::vector<std::string> service_types2;
 
 	mxToVectorString(service_types, service_types2, "Invalid service_types specified for SubscribeService");
-	if (service_types2.empty()) throw InvalidArgumentException("Invalid service_types specified for SubscribeService");
+	//if (service_types2.empty()) throw InvalidArgumentException("Invalid service_types specified for SubscribeService");
 
 	boost::shared_ptr<ServiceSubscriptionFilter> filter2 = SubscribeService_LoadFilter(filter);
 	
