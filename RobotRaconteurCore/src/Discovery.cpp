@@ -728,6 +728,7 @@ namespace RobotRaconteur
 						o1.ConnectionURL = Discovery_updateserviceinfo_convertmap(e->ConnectionURL);
 						o1.RootObjectType = e->RootObjectType;
 						o1.RootObjectImplements = Discovery_updateserviceinfo_convertmap(e->RootObjectImplements);
+						o1.Attributes = e->Attributes->GetStorageContainer();
 						o->push_back(o1);
 					}
 				}
