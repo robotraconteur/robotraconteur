@@ -49,7 +49,7 @@
 
 #pragma once
 
-#define RR_NULL_CHECK(ptr) {if (!ptr) throw NullValueException("Null pointer");}
+#define RR_NULL_CHECK(ptr) {if (!ptr) throw ::RobotRaconteur::NullValueException("Null pointer");}
 
 namespace RobotRaconteur
 {
