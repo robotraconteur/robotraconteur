@@ -109,8 +109,19 @@ RRConfigureTest(test_python_loopback "${RR_PYTHON_TEST_CMD}" "test_prog" NODEBUG
 RRConfigureTest(test_python_loopback2 "${RR_PYTHON_TEST_CMD}" "test_prog" NODEBUG ARGS "${RR_PYTHON_TEST_CMD_ARGS} loopback2")
 
 if(ROBOTRACONTEUR_ROS)
-install(DIRECTORY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/python2.7/dist-packages)
+
+# This mess is taken from github.com/ros/catkin/cmake/python.cmake...
+set(enable_setuptools_deb_layout OFF)
+if(EXISTS "/etc/debian_version")
+  set(enable_setuptools_deb_layout ON)
+endif()
+option(SETUPTOOLS_DEB_LAYOUT "Enable debian style python package layout" ${enable_setuptools_deb_layout})
+if(SETUPTOOLS_DEB_LAYOUT)
+  message(STATUS "Using Debian Python package layout")
+  set(SETUPTOOLS_ARG_EXTRA "--install-layout=deb")
+endif()
+
 install(CODE "execute_process(COMMAND python setup.py install -f
---root=/ --prefix=${CMAKE_INSTALL_PREFIX} --install-layout=deb --single-version-externally-managed WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/out/Python)")
+--root=/ --prefix=${CMAKE_INSTALL_PREFIX} ${SETUPTOOLS_ARG_EXTRA} --single-version-externally-managed WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/out/Python)")
 endif()
 
