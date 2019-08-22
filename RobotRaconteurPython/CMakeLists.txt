@@ -129,7 +129,7 @@ set(RR_BUILD_CONFIG_DIR \"out_reldebug\")
 elseif (\"$\{CMAKE_INSTALL_CONFIG_NAME\}\" STREQUAL \"Debug\")
 set(RR_BUILD_CONFIG_DIR \"out_debug\")
 else()
-message(FATAL_ERROR \"Invalid install configuration: $\{CMAKE_INSTALL_CONFIG_NAME\}\")
+set(RR_BUILD_CONFIG_DIR \"out\")
 endif()
 message(STATUS \"Running setup.py in ${CMAKE_BINARY_DIR}/$\{RR_BUILD_CONFIG_DIR\}/Python\")
 execute_process(COMMAND python setup.py install -f
