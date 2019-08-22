@@ -98,6 +98,7 @@ ENDFOREACH(P)
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/setup.py.in" "${CMAKE_BINARY_DIR}/out/Python/setup.py" @ONLY)
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/setup.py.in" "${CMAKE_BINARY_DIR}/out_debug/Python/setup.py" @ONLY)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/setup.py.in" "${CMAKE_BINARY_DIR}/out_reldebug/Python/setup.py" @ONLY)
 
 set(PYTHON2_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 include("${CMAKE_CURRENT_SOURCE_DIR}/PythonExceptions.cmake")
@@ -121,7 +122,17 @@ if(SETUPTOOLS_DEB_LAYOUT)
   set(SETUPTOOLS_ARG_EXTRA "--install-layout=deb")
 endif()
 
-install(CODE "execute_process(COMMAND python setup.py install -f
---root=/ --prefix=${CMAKE_INSTALL_PREFIX} ${SETUPTOOLS_ARG_EXTRA} --single-version-externally-managed WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/out/Python)")
+install(CODE "if (\"$\{CMAKE_INSTALL_CONFIG_NAME\}\" STREQUAL \"Release\")
+set(RR_BUILD_CONFIG_DIR \"out\")
+elseif (\"$\{CMAKE_INSTALL_CONFIG_NAME\}\" STREQUAL \"RelWithDebInfo\")
+set(RR_BUILD_CONFIG_DIR \"out_reldebug\")
+elseif (\"$\{CMAKE_INSTALL_CONFIG_NAME\}\" STREQUAL \"Debug\")
+set(RR_BUILD_CONFIG_DIR \"out_debug\")
+else()
+message(FATAL_ERROR \"Invalid install configuration: $\{CMAKE_INSTALL_CONFIG_NAME\}\")
+endif()
+message(STATUS \"Running setup.py in ${CMAKE_BINARY_DIR}/$\{RR_BUILD_CONFIG_DIR\}/Python\")
+execute_process(COMMAND python setup.py install -f
+--root=/ --prefix=${CMAKE_INSTALL_PREFIX} ${SETUPTOOLS_ARG_EXTRA} --single-version-externally-managed WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/$\{RR_BUILD_CONFIG_DIR\}/Python)")
 endif()
 
