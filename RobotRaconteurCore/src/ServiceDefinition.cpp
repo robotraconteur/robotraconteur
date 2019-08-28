@@ -3857,7 +3857,7 @@ namespace RobotRaconteur
 				RR_SHARED_PTR<TypeDefinition> t = p->Type;
 				if (!IsTypeNumeric(t->Type) && t->Type != DataTypes_namedtype_t)
 				{
-					throw ServiceDefinitionException("NamedArrays must only contain numeric and namedarray types");
+					throw ServiceDefinitionException("NamedArrays must only contain numeric and namedarray types: " + e->Name);
 				}
 
 				if (t->Type == DataTypes_namedtype_t)
@@ -3865,13 +3865,13 @@ namespace RobotRaconteur
 					RR_SHARED_PTR<NamedTypeDefinition> tt = t->ResolveNamedType(defs);
 					if (tt->RRDataType() != DataTypes_namedarray_t)
 					{
-						throw ServiceDefinitionException("NamedArrays must only contain numeric and namedarray types");
+						throw ServiceDefinitionException("NamedArrays must only contain numeric and namedarray types: " + e->Name);
 					}
 				}
 
 				if (t->ContainerType != DataTypes_ContainerTypes_none)
 				{
-					throw ServiceDefinitionException("NamedArrays may not use containers");
+					throw ServiceDefinitionException("NamedArrays may not use containers: " + e->Name);
 				}
 
 				switch (t->ArrayType)
