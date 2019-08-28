@@ -102,7 +102,8 @@ namespace RobotRaconteurGen
 			"typedef","typeid","typename","union","unsigned","using",
 			"virtual","void","volatile","wchar_t","while","xor",
 			"xor_eq","override","final","uint8_t","int8_t","int16_t",
-			"uint16_t","int32_t","uint32_t","int64_t","uint64_t"};
+			"uint16_t","int32_t","uint32_t","int64_t","uint64_t",
+			"pascal"};
 
 		std::vector<std::string> reserved(res_str,res_str+sizeof(res_str)/(sizeof(res_str[0])));
 
@@ -388,6 +389,10 @@ namespace RobotRaconteurGen
 					boost::tie(boost::tuples::ignore, enum_type_name) = SplitQualifiedName(tdef.TypeString);
 					o.cpp_type = fix_qualified_name(tdef.TypeString) + "::" + fix_name(enum_type_name);
 				}
+				if (!usescalar)
+				{
+					o.cpp_type = "RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> >";
+				}
 				o.cpp_param_type = o.cpp_type;
 				break;
 			default:
@@ -621,8 +626,11 @@ namespace RobotRaconteurGen
 				structunpackstring = "RobotRaconteur::MessageElement_UnpackStructure<" + fix_qualified_name(tt.cpp_type) + " >(RRGetNodeWeak(), " + varname + ")";
 				break;
 			case DataTypes_enum_t:
-				structunpackstring = "RobotRaconteur::MessageElement_UnpackEnum<" + fix_qualified_name(tt1.cpp_type) + ">(" + varname + ")";
+			{
+				get_variable_type_result tt2 = get_variable_type(t1, true);
+				structunpackstring = "RobotRaconteur::MessageElement_UnpackEnum<" + fix_qualified_name(tt2.cpp_type) + ">(" + varname + ")";
 				break;
+			}
 			case DataTypes_pod_t:
 			case DataTypes_namedarray_t:
 			{
