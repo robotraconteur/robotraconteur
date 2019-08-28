@@ -839,11 +839,11 @@ namespace RobotRaconteur
 			return in_value;
 		}
 
-		bool TryGetInValue(T& value, TimeSpec& ts, uint32_t& ep)
+		bool TryGetInValue(U& value, TimeSpec& ts, uint32_t& ep)
 		{
 			boost::mutex::scoped_lock lock(this_lock);
 			if (!in_value_valid) return false;
-			value = in_value
+			value = in_value;
 			ts = in_value_ts;
 			ep = in_value_ep;
 			return true;
