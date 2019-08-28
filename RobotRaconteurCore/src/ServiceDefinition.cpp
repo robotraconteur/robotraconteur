@@ -3846,12 +3846,9 @@ namespace RobotRaconteur
 					|| (t->ArrayType == DataTypes_ArrayTypes_multidimarray && t->ArrayLength.empty()))
 				{
 					throw ServiceDefinitionException("Pods must have fixed or finite length arrays");
-				}
-
-				std::set<std::string> n;				
-				VerifyStructure_check_recursion(strut, defs, n, DataTypes_pod_t);
+				}								
 			}
-
+			
 			if (entry_type == DataTypes_namedarray_t)
 			{
 				RR_SHARED_PTR<TypeDefinition> t = p->Type;
@@ -3886,13 +3883,21 @@ namespace RobotRaconteur
 				}
 								
 				std::set<std::string> n;
-				GetNamedArrayElementTypeAndCount(strut, defs);
-
-
 			}
 					
 			if (boost::range::find(membernames, membername)!=membernames.end()) throw ServiceDefinitionException("Structure \"" + strut->Name + "\" in service definition \"" + def->Name + "\" contains multiple members named \"" + membername + "\"");
 			membernames.push_back(membername);
+		}
+
+		if (entry_type == DataTypes_pod_t)
+		{
+			std::set<std::string> n;
+			VerifyStructure_check_recursion(strut, defs, n, DataTypes_pod_t);
+		}
+
+		if (entry_type == DataTypes_namedarray_t)
+		{
+			GetNamedArrayElementTypeAndCount(strut, defs);
 		}
 
 	}
