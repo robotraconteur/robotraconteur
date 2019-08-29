@@ -1105,7 +1105,7 @@ namespace RobotRaconteur
 		static std::string GetElementTypeString() {return type_string; } \
 		static RR_INTRUSIVE_PTR<RRPodArray<x> > PrePack(const x& val) {return ScalarToRRPodArray(val);}\
 		template<typename U> \
-		static x PreUnpack(const U& val) {return RRArrayToScalar(rr_cast<RRPodArray<x> >(val));} \
+		static x PreUnpack(const U& val) {return RRPodArrayToScalar(rr_cast<RRPodArray<x> >(val));} \
 		typedef RR_INTRUSIVE_PTR<RRPodArray<x> > BoxedType; \
 	};
 
