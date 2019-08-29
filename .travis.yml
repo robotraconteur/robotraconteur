@@ -68,7 +68,7 @@ matrix:
     - os: windows
       before_script: 
         - curl -o boost_1_70_0.zip -L https://dl.bintray.com/boostorg/release/1.70.0/source/boost_1_70_0.zip
-        - unzip -q boost_1_70_0.zip
+        - unzip -qo boost_1_70_0.zip
         - cd boost_1_70_0
         - ./bootstrap.bat
         - ./b2 --with-date_time --with-filesystem --with-regex --with-chrono --with-atomic --with-thread --with-random --with-program_options address-model=32 -d0
@@ -79,7 +79,7 @@ matrix:
         - /c/Python3/Scripts/pip install numpy
         - choco install jdk8 --forceX86
         - curl -o swigwin-4.0.0-beta1.zip -L https://sourceforge.net/projects/swig/files/swigwin/swigwin-4.0.0-beta1/swigwin-4.0.0-beta1.zip/download
-        - unzip -q swigwin-4.0.0-beta1.zip
+        - unzip -qo swigwin-4.0.0-beta1.zip
         - cd $TRAVIS_BUILD_DIR
       env:
         - >
@@ -89,7 +89,7 @@ matrix:
     - os: windows
       before_script: 
         - curl -o boost_1_70_0.zip -L https://dl.bintray.com/boostorg/release/1.70.0/source/boost_1_70_0.zip
-        - unzip -q boost_1_70_0.zip
+        - unzip -qo boost_1_70_0.zip
         - cd boost_1_70_0
         - ./bootstrap.bat
         - ./b2 --with-date_time --with-filesystem --with-regex --with-chrono --with-atomic --with-thread --with-random --with-program_options address-model=64 -d0
@@ -100,7 +100,7 @@ matrix:
         - /c/Python3/Scripts/pip install numpy
         - choco install jdk8
         - curl -o swigwin-4.0.0-beta1.zip -L https://sourceforge.net/projects/swig/files/swigwin/swigwin-4.0.0-beta1/swigwin-4.0.0-beta1.zip/download
-        - unzip -q swigwin-4.0.0-beta1.zip
+        - unzip -qo swigwin-4.0.0-beta1.zip
         - cd $TRAVIS_BUILD_DIR
       env:
         - >
