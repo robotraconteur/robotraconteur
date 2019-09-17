@@ -136,6 +136,28 @@ namespace RobotRaconteurTest
 
 		virtual RR_SHARED_PTR<com::robotraconteur::testing::TestService3::obj5 > get_nolock_test();
 
+		virtual RobotRaconteur::rr_bool get_b1();
+		virtual void set_b1(RobotRaconteur::rr_bool value);
+
+		virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::rr_bool > > get_b2();
+		virtual void set_b2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::rr_bool > > value);
+
+		virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool > > get_b3();
+		virtual void set_b3(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool > > value);
+
+		virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool >  > > get_b4();
+		virtual void set_b4(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool >  > > value);
+
+		virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool >  > > get_b5();
+		virtual void set_b5(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool >  > > value);
+
+		virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool >  > > get_b6();
+		virtual void set_b6(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool >  > > value);
+
+		virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<RobotRaconteur::rr_bool > > get_c_m5();
+
+		virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<RobotRaconteur::rr_bool > > get_c_m6();
+
 	protected:
 
 		void peekwire_timer_handler(const TimerEvent& e);
@@ -167,6 +189,9 @@ namespace RobotRaconteurTest
 
 		RR_SHARED_PTR<RobotRaconteur::ArrayMemory<RobotRaconteur::cdouble > > c_m1;
 		RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<RobotRaconteur::cdouble > > c_m2;
+
+		RR_SHARED_PTR<RobotRaconteur::ArrayMemory<RobotRaconteur::rr_bool > > c_m5;
+		RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<RobotRaconteur::rr_bool > > c_m6;
 
 		RR_SHARED_PTR<com::robotraconteur::testing::TestService3::obj5> obj5_;
 

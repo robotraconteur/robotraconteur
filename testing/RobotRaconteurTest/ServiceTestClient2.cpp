@@ -29,6 +29,9 @@ namespace RobotRaconteurTest
 
 		TestNoLock();
 
+		TestBools();
+		TestBoolMemories();
+
 		Disconnect();
 	}
 
@@ -406,7 +409,7 @@ namespace RobotRaconteurTest
 		RR_INTRUSIVE_PTR<RRArray<cfloat> > c8_2 = AttachRRArrayCopy((cfloat*)c8_2_1, 16);
 		r->set_c8(c8_2);
 
-		RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cfloat > > c9_1 = r->get_c9();
+		RR_INTRUSIVE_PTR<RRMultiDimArray<cfloat > > c9_1 = r->get_c9();
 		uint32_t c9_1_1[] = { 2,4 };
 		float c9_1_2[] = { 1.397743e+15, 3.933042e+10, -3.812329e+07, 1.508109e+16, -2.091397e-20, 3.207851e+12, -3.640702e+02, 3.903769e+02, -2.879727e+17, -4.589604e-06, 2.202769e-06, 2.892523e+04, -3.306489e-14, 4.522308e-06, 1.665807e+15, 2.340476e+10 };
 		ca(c9_1->Dims, AttachRRArray(c9_1_1, 2, false));
@@ -477,9 +480,95 @@ namespace RobotRaconteurTest
 		o5->get_m3()->Length();
 		o5->get_m3()->Read(0, b1, 0, 10);
 		ShouldBeLockedErr(o5->get_m3()->Write(0, b1, 0, 10););
-
-
-
 	}
 
+	void ServiceTestClient2::TestBools()
+	{
+		if (r->get_b1().value == 0) throw std::runtime_error("");
+		r->set_b1(1);
+
+		rr_bool v2_1_1[] = { 1,0,1,1,0,1,0 };
+		RR_INTRUSIVE_PTR<RRArray<rr_bool> > v2_1 = r->get_b2();
+		ca(v2_1, AttachRRArray(v2_1_1, 7,false));
+		
+		rr_bool v2_2_1[] = { 1,0,0,1,1,1,0,1 };
+		r->set_b2(AttachRRArrayCopy(v2_2_1, 8));
+
+		rr_bool v3_1_1[] = { 0,1,1,0 };
+		uint32_t v3_1_dims[] = { 2,2 };
+
+		RR_INTRUSIVE_PTR<RRMultiDimArray<rr_bool > > v3_1 = r->get_b3();
+		ca(v3_1->Dims, AttachRRArray(v3_1_dims, 2, false));
+		ca(v3_1->Array, AttachRRArray(v3_1_1, 4, false));
+		
+		rr_bool v3_2_1[] = { 1, 0 };
+		uint32_t v3_2_dims[] = { 2,1 };
+
+		r->set_b3(AllocateRRMultiDimArray(AttachRRArrayCopy(v3_2_dims, 2), AttachRRArrayCopy(v3_2_1, 2)));
+
+		RR_INTRUSIVE_PTR<RRList<RRArray<rr_bool >  > > v4_1 = r->get_b4();
+		RR_NULL_CHECK(v4_1);
+		if (v4_1->size() != 1) throw std::runtime_error("");
+		if (RRArrayToScalar(v4_1->front()) != 1) throw std::runtime_error("");
+
+		RR_INTRUSIVE_PTR<RRList<RRArray<rr_bool >  > > v4_2 = AllocateEmptyRRList<RRArray<rr_bool> >();
+		v4_2->push_back(ScalarToRRArray<rr_bool>(1));
+		r->set_b4(v4_2);
+
+		RR_INTRUSIVE_PTR<RRList<RRArray<rr_bool >  > > v5_1 = r->get_b5();
+		rr_bool v5_1_1[] = { 0,1,0,0 };
+		RR_NULL_CHECK(v5_1);
+		if (v5_1->size() != 1) throw std::runtime_error("");
+		ca(v5_1->front(), AttachRRArray(v5_1_1, 4, false));
+
+		RR_INTRUSIVE_PTR<RRList<RRArray<rr_bool >  > > v5_2 = AllocateEmptyRRList<RRArray<rr_bool> >();
+		rr_bool v5_2_1[] ={ 1,0 };
+		v5_2->push_back(AttachRRArrayCopy(v5_2_1,2));
+		r->set_b5(v5_2);
+
+		RR_INTRUSIVE_PTR<RRList<RRMultiDimArray<rr_bool >  > > v6_1 = r->get_b6();
+		rr_bool v6_1_1[] = { 0,1,1,0 };
+		uint32_t v6_1_dims[] = { 2,2 };
+		RR_NULL_CHECK(v6_1);
+		ca(v6_1->front()->Dims, AttachRRArray(v6_1_dims, 2, false));
+		ca(v6_1->front()->Array, AttachRRArray(v6_1_1, 4, false));
+
+		rr_bool v6_2_1[] = { 1,0 };
+		uint32_t v6_2_dims[] = { 2,1 };
+		RR_INTRUSIVE_PTR<RRList<RRMultiDimArray<rr_bool >  > > v6_2 = AllocateEmptyRRList<RRMultiDimArray<rr_bool> >();
+		v6_2->push_back(AllocateRRMultiDimArray(AttachRRArrayCopy(v6_2_dims, 2), AttachRRArrayCopy(v6_2_1, 2)));
+		r->set_b6(v6_2);
+	}
+
+	void ServiceTestClient2::TestBoolMemories()
+	{
+		RR_SHARED_PTR<ArrayMemory<rr_bool > > c_m5 = r->get_c_m5();
+		
+		rr_bool v1_1[] = { 1,0,0,1,1,0,0,0,1,1 };
+		c_m5->Write(100, AttachRRArrayCopy(v1_1, 10), 1, 8);
+		RR_INTRUSIVE_PTR<RRArray<rr_bool> > v2 = AllocateRRArray<rr_bool>(10);
+		c_m5->Read(99, v2, 0, 10);
+		for (size_t i = 1; i < 9; i++)
+		{
+			if (v2->at(i) != v1_1[i])
+				throw std::runtime_error("");
+		}
+
+		RR_SHARED_PTR<MultiDimArrayMemory<rr_bool > > c_m6 = r->get_c_m6();
+		uint32_t v3_dims[] = { 2,5 };
+		RR_INTRUSIVE_PTR<RRMultiDimArray<rr_bool> > v3 = AllocateRRMultiDimArray(AttachRRArrayCopy(v3_dims, 2), AttachRRArrayCopy(v1_1, 10));
+
+		std::vector<uint64_t> z = boost::assign::list_of(0)(0);
+		std::vector<uint64_t> c = boost::assign::list_of(2)(5);
+
+		c_m6->Write(z, v3, z, c);
+		
+		std::vector<uint32_t> v4_dims = boost::assign::list_of(2)(5);
+
+		RR_INTRUSIVE_PTR<RRMultiDimArray<rr_bool> > v4 = AllocateEmptyRRMultiDimArray<rr_bool>(v4_dims);
+		c_m6->Read(z, v4, z, c);
+		ca(v3->Dims, v4->Dims);
+		ca(v3->Array, v4->Array);
+
+	}
 }

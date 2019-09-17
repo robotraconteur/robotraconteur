@@ -42,8 +42,11 @@ namespace RobotRaconteurTest
 
 		void TestComplex();
 		void TestComplexMemories(); 
-
+		
 		void TestNoLock();
+
+		void TestBools();
+		void TestBoolMemories();
 
 		RR_SHARED_PTR<testroot3> r;
 
