@@ -491,6 +491,21 @@ public class testroot3_impl implements testroot3
 		}
 	}
 	
+    public final  void ca(boolean[] v1, boolean[] v2)
+	{
+		if (v1.length != v2.length)
+		{
+			throw new RuntimeException();
+		}
+		for (int i = 0; i < v1.length; i++)
+		{
+			if (v1[i]!=v2[i])
+			{
+				throw new RuntimeException();
+			}
+		}
+	}
+    
     static CDouble[] complexFromScalars(double[] a)
     {
         CDouble[] o = new CDouble[a.length / 2];
@@ -630,52 +645,59 @@ public class testroot3_impl implements testroot3
 	}
 	@Override
 	public boolean get_b1() {
-		throw new UnsupportedOperationException ();
+		return true;
 	}
 	@Override
 	public void set_b1(boolean value) {
-		throw new UnsupportedOperationException ();		
+		if (value != true) throw new RuntimeException();
 	}
 	@Override
 	public boolean[] get_b2() {
-		throw new UnsupportedOperationException ();		
+		return new boolean[] { true, false, true, true, false, true, false };
 	}
 	@Override
 	public void set_b2(boolean[] value) {
-		throw new UnsupportedOperationException ();
-		
+		ca(value, new boolean[] { true, false, false, true, true, true, false, true });		
 	}
 	@Override
 	public MultiDimArray get_b3() {
-		throw new UnsupportedOperationException ();
+		return new MultiDimArray(new int[] { 2, 2 }, new boolean[] { false, true, true, false });
 	}
 	@Override
 	public void set_b3(MultiDimArray value) {
-		throw new UnsupportedOperationException ();		
+		ca(value.dims, new int[] { 2, 1 });
+        ca((boolean[])value.array, new boolean[] { true, false });	
 	}
 	@Override
 	public List<boolean[]> get_b4() {
-		throw new UnsupportedOperationException ();
+		List<boolean[]> o = new ArrayList<boolean[]>();
+        o.add(new boolean[] {true});
+        return o;
 	}
 	@Override
 	public void set_b4(List<boolean[]> value) {
-		throw new UnsupportedOperationException ();
+		if (value.get(0)[0] != true) throw new RuntimeException();
 	}
 	@Override
 	public List<boolean[]> get_b5() {
-		throw new UnsupportedOperationException ();
+		List<boolean[]> o = new ArrayList<boolean[]>();
+        o.add(new boolean[] { false, true, false, false });
+        return o;
 	}
 	@Override
 	public void set_b5(List<boolean[]> value) {
-		throw new UnsupportedOperationException ();		
+		ca(value.get(0), new boolean[] { true, false });		
 	}
 	@Override
 	public List<MultiDimArray> get_b6() {
-		throw new UnsupportedOperationException ();
+		List<MultiDimArray> o = new ArrayList<MultiDimArray>();
+        o.add(new MultiDimArray(new int[] { 2, 2 }, new boolean[] { false, true, true, false}));
+        return o;
 	}
 	@Override
 	public void set_b6(List<MultiDimArray> value) {
-		throw new UnsupportedOperationException ();		
+		ca(value.get(0).dims, new int[] { 2, 1 });
+        ca((boolean[])value.get(0).array, new boolean[] { true, false });
 	}
 		
 	ArrayMemory<CDouble[]> c_m1 = new ArrayMemory<CDouble[]>(new CDouble[512]);
@@ -699,15 +721,17 @@ public class testroot3_impl implements testroot3
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	ArrayMemory<boolean[]> c_m5 = new ArrayMemory<boolean[]>(new boolean[512]);
+    MultiDimArrayMemory<boolean[]> c_m6 = new MultiDimArrayMemory<boolean[]>(new MultiDimArray(new int[] { 10, 10 }, new boolean[100]));
+	
 	@Override
 	public ArrayMemory<boolean[]> get_c_m5() {
-		// TODO Auto-generated method stub
-		return null;
+		return c_m5;
 	}
 	@Override
 	public MultiDimArrayMemory<boolean[]> get_c_m6() {
-		// TODO Auto-generated method stub
-		return null;
+		return c_m6;
 	}
 	
 	@Override

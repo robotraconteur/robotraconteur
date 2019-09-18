@@ -41,6 +41,9 @@ public class ServiceTestClient2 {
 		
 		testNoLock();
 		
+		testBools();
+		testBoolMemories();
+		
 		disconnectService();		
 	}
 
@@ -654,6 +657,62 @@ public class ServiceTestClient2 {
     		
         }
         
+        public void testBools()
+        {
+        	 r.set_b1(true);
+             if (r.get_b1() != true) throw new RuntimeException();
+
+             r.set_b2(new boolean[] { true, false, false, true, true, true, false, true });
+             ca(r.get_b2(), new boolean[] { true, false, true, true, false, true, false });
+
+             MultiDimArray b3_1 = r.get_b3();
+             ca(b3_1.dims, new int[] { 2, 2 });
+             ca((boolean[])b3_1.array, new boolean[] { false, true, true, false });
+             r.set_b3(new MultiDimArray(new int[] { 2, 1 }, new boolean[] { true, false }));
+
+             List<boolean[]> b4_1 = r.get_b4();
+             if (b4_1.get(0)[0] != true) throw new RuntimeException();
+             List<boolean[]> b4_2 = new ArrayList<boolean[]>();
+             b4_2.add(new boolean[] {true});
+             r.set_b4(b4_2);
+
+             List<boolean[]> b5_1 = r.get_b5();
+             ca(b5_1.get(0), new boolean[] { false, true, false, false });
+             List<boolean[]> b5_2 = new ArrayList<boolean[]>();
+             b5_2.add(new boolean[] { true, false });
+             r.set_b5(b5_2);
+
+             List<MultiDimArray> b6_1 = r.get_b6();
+             ca(b6_1.get(0).dims, new int[] { 2, 2 });
+             ca((boolean[])b6_1.get(0).array, new boolean[] { false, true, true, false });
+             List<MultiDimArray> b6_2 = new ArrayList<MultiDimArray>();
+             b6_2.add(new MultiDimArray(new int[] { 2, 1 }, new boolean[] { true, false }));
+             r.set_b6(b6_2);
+        }
+        
+        public void testBoolMemories()
+        {
+        	ArrayMemory<boolean[]> c_m5 = r.get_c_m5();
+            boolean[] v1_1 = { true, false, false, true, true, false, false, false, true, true };
+            c_m5.write(100, v1_1, 1, 8);
+            boolean[] v2 = new boolean[10];
+            c_m5.read(99, v2, 0, 10);
+            for (int i=1; i<9; i++)
+            {
+                if (v2[i] != v1_1[i])
+                    throw new RuntimeException();
+            }
+
+            MultiDimArrayMemory<boolean[]> c_m6 = r.get_c_m6();
+            MultiDimArray v3 = new MultiDimArray(new int[] { 2, 5 }, v1_1);
+            c_m6.write(new long[] { 0, 0 }, v3, new long[] { 0, 0 }, new long[] { 2, 5 });
+
+            MultiDimArray v4 = new MultiDimArray(new int[] { 2, 5 }, new boolean[10]);
+            c_m6.read(new long[] { 0, 0 }, v4, new long[] { 0, 0 }, new long[] { 2, 5 });
+            ca(v3.dims, v4.dims);
+            ca((boolean[])v3.array, (boolean[])v4.array);
+        }
+        
         public final  void ca(CDouble[] v1, CDouble[] v2)
     	{
     		if (v1.length != v2.length)
@@ -701,6 +760,21 @@ public class ServiceTestClient2 {
     	}
         
         public final  void ca(int[] v1, int[] v2)
+    	{
+    		if (v1.length != v2.length)
+    		{
+    			throw new RuntimeException();
+    		}
+    		for (int i = 0; i < v1.length; i++)
+    		{
+    			if (v1[i]!=v2[i])
+    			{
+    				throw new RuntimeException();
+    			}
+    		}
+    	}
+        
+        public final  void ca(boolean[] v1, boolean[] v2)
     	{
     		if (v1.length != v2.length)
     		{

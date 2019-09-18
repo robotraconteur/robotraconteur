@@ -376,6 +376,86 @@ namespace RobotRaconteurNETTest
             }
         }
 
+        public override bool b1
+        {
+            get
+            {
+                return true;
+            }
+            set
+            {
+                if (value != true) throw new Exception();
+            }
+        }
+
+        public override bool[] b2
+        {
+            get
+            {
+                return new bool[] { true, false, true, true, false, true, false };
+            }
+            set
+            {
+                ca(value, new bool[] { true, false, false, true, true, true, false, true });
+            }
+        }
+
+        public override MultiDimArray b3
+        {
+            get
+            {
+                return new MultiDimArray(new uint[] { 2, 2 }, new bool[] { false, true, true, false });
+            }
+            set
+            {
+                ca(value.Dims, new uint[] { 2, 1 });
+                ca((bool[])value.Array_, new bool[] { true, false });
+            }
+        }
+
+        public override List<bool> b4
+        {
+            get
+            {
+                var o = new List<bool>();
+                o.Add(true);
+                return o;
+            }
+            set
+            {
+                if (value[0] != true) throw new Exception();
+            }
+        }
+
+        public override List<bool[]> b5
+        {
+            get
+            {
+                var o = new List<bool[]>();
+                o.Add(new bool[] { false, true, false, false });
+                return o;
+            }
+            set
+            {
+                ca(value[0], new bool[] { true, false });
+            }
+        }
+
+        public override List<MultiDimArray> b6
+        {
+            get
+            {
+                var o = new List<MultiDimArray>();
+                o.Add(new MultiDimArray(new uint[] { 2, 2 }, new bool[] { false, true, true, false}));
+                return o;
+            }
+            set
+            {
+                ca(value[0].Dims, new uint[] { 2, 1 });
+                ca((bool[])value[0].Array_, new bool[] { true, false });
+            }
+        }
+
         public override ArrayMemory<CDouble> c_m1 { get; } = new ArrayMemory<CDouble>(new CDouble[512]);
 
         public override MultiDimArrayMemory<CDouble> c_m2 { get; } = new MultiDimArrayMemory<CDouble>(new MultiDimArray(new uint[] { 10, 10 }, new CDouble[100]));
@@ -387,6 +467,8 @@ namespace RobotRaconteurNETTest
 
         obj5_impl o5 = new obj5_impl();
 
+        public override ArrayMemory<bool> c_m5 { get; } = new ArrayMemory<bool>(new bool[512]);
+        public override MultiDimArrayMemory<bool> c_m6 { get; } = new MultiDimArrayMemory<bool>(new MultiDimArray(new uint[] { 10, 10 }, new bool[100]));
     }
 
     class func4_gen : SyncGenerator1<byte[], byte[]>

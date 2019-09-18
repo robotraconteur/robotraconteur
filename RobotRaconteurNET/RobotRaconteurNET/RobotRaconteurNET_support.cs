@@ -173,7 +173,7 @@ namespace RobotRaconteur
                     return DataTypes.cdouble_t;
                 case "RobotRaconteur.CSingle":
                     return DataTypes.csingle_t;
-                case "System.Bool":
+                case "System.Boolean":
                     return DataTypes.bool_t;
                 default:
                     break;
@@ -226,7 +226,7 @@ namespace RobotRaconteur
                     
                 case "RobotRaconteur.CSingle":
                     
-                case "System.Bool":
+                case "System.Boolean":
                     
                     return true;
 
@@ -337,7 +337,7 @@ namespace RobotRaconteur
                     return new CDouble[] { (CDouble)inv };
                 case "RobotRaconteur.CSingle":
                     return new CSingle[] { (CSingle)inv };
-                case "System.Bool":
+                case "System.Boolean":
                     return new bool[] { (bool)inv };
                 default:
                     break;
@@ -675,7 +675,7 @@ namespace RobotRaconteur
 
             string datatype = datatype = RobotRaconteurNode.GetTypeString(dat.GetType());
             DataTypes elementtype = DataTypeUtil.TypeIDFromString(datatype);
-            if (elementtype != DataTypes.void_t && elementtype < DataTypes.uint64_t && !(dat is Array))
+            if (elementtype != DataTypes.void_t && (elementtype < DataTypes.uint64_t || elementtype == DataTypes.bool_t) && !(dat is Array))
             {
                 object dat2 = DataTypeUtil.ArrayFromScalar(dat);
 

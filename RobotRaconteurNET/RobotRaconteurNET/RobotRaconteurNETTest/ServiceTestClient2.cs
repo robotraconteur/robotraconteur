@@ -59,6 +59,9 @@ namespace RobotRaconteurNETTest
 
             TestNoLock();
 
+            TestBools();
+            TestBoolMemories();
+
             DisconnectService();
         }
 
@@ -465,6 +468,61 @@ namespace RobotRaconteurNETTest
             a(o5.m3.Length);
             o5.m3.Read(0, b1, 0, 10);
             ShouldBeErr<ObjectLockedException>(() => o5.m3.Write(0, b1, 0, 10));
+        }
+
+        void TestBools()
+        {
+            r.b1 = true;
+            if (r.b1 != true) throw new Exception();
+
+            r.b2 = new bool[] { true, false, false, true, true, true, false, true };
+            ca(r.b2, new bool[] { true, false, true, true, false, true, false });
+
+            var b3_1 = r.b3;
+            ca(b3_1.Dims, new uint[] { 2, 2 });
+            ca((bool[])b3_1.Array_, new bool[] { false, true, true, false });
+            r.b3 = new MultiDimArray(new uint[] { 2, 1 }, new bool[] { true, false });
+
+            var b4_1 = r.b4;
+            if (b4_1[0] != true) throw new Exception();
+            var b4_2 = new List<bool>();
+            b4_2.Add(true);
+            r.b4 = b4_2;
+
+            var b5_1 = r.b5;
+            ca(b5_1[0], new bool[] { false, true, false, false });
+            var b5_2 = new List<bool[]>();
+            b5_2.Add(new bool[] { true, false });
+            r.b5 = b5_2;
+
+            var b6_1 = r.b6;
+            ca(b6_1[0].Dims, new uint[] { 2, 2 });
+            ca((bool[])b6_1[0].Array_, new bool[] { false, true, true, false });
+            r.b6 = new List<MultiDimArray>() { new MultiDimArray(new uint[] { 2, 1 }, new bool[] { true, false }) };
+
+        }
+
+        void TestBoolMemories()
+        {
+            var c_m5 = r.c_m5;
+            bool[] v1_1 = { true, false, false, true, true, false, false, false, true, true };
+            c_m5.Write(100, v1_1, 1, 8);
+            var v2 = new bool[10];
+            c_m5.Read(99, v2, 0, 10);
+            for (int i=1; i<9; i++)
+            {
+                if (v2[i] != v1_1[i])
+                    throw new Exception();
+            }
+
+            var c_m6 = r.c_m6;
+            var v3 = new MultiDimArray(new uint[] { 2, 5 }, v1_1);
+            c_m6.Write(new ulong[] { 0, 0 }, v3, new ulong[] { 0, 0 }, new ulong[] { 2, 5 });
+
+            var v4 = new MultiDimArray(new uint[] { 2, 5 }, new bool[10]);
+            c_m6.Read(new ulong[] { 0, 0 }, v4, new ulong[] { 0, 0 }, new ulong[] { 2, 5 });
+            ca(v3.Dims, v4.Dims);
+            ca((bool[])v3.Array_, (bool[])v4.Array_);
         }
 
         private void ShouldBeErr<T>(Action a) where T : Exception
