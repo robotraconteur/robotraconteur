@@ -2774,6 +2774,7 @@ class ServiceTestClient2:
         self.TestNoLock()
 
         self.TestBool()
+        self.TestBoolMemories()
         
         self.DisconnectService()
     
@@ -3146,6 +3147,21 @@ class ServiceTestClient2:
         if not numpy.array_equal(self._r.b6[0], numpy.array([False,True,True,False]).reshape(2,2,order='F')):
             raise Exception()
 
+    def TestBoolMemories(self):
+        v1_1 = numpy.array([True, False, False, True, True, False, False, False, True, True])
+        self._r.c_m5.Write(100, v1_1, 1, 8)
+        v1_2 = numpy.zeros((10,),numpy.bool_)
+        self._r.c_m5.Read(99, v1_2, 0, 10)
+        if not numpy.array_equal(v1_1[1:9], v1_2[1:9]):
+            raise Exception()
+
+        v2_1 = v1_1.reshape(2,5,order='F')
+        self._r.c_m6.Write([0,0],v2_1,[0,0],[2,5])
+        v2_2 = numpy.zeros((2,5),numpy.bool_)
+        self._r.c_m6.Read([0,0],v2_2,[0,0],[2,5])
+        if not numpy.array_equal(v2_1, v2_2):
+            raise Exception()
+
 class testroot3_impl(object):
     def __init__(self):
         self._peekwire=None
@@ -3166,6 +3182,9 @@ class testroot3_impl(object):
         
         self.c_m1=ArrayMemory(numpy.zeros((100,),numpy.complex128))
         self.c_m2=MultiDimArrayMemory(numpy.zeros((3,3),numpy.complex128))
+
+        self.c_m5=ArrayMemory(numpy.zeros((512,),numpy.bool_))
+        self.c_m6=MultiDimArrayMemory(numpy.zeros((10,10),numpy.bool_))
         
     @property
     def peekwire(self):

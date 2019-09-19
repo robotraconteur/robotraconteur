@@ -1552,7 +1552,7 @@ class WrappedArrayMemoryDirectorPython(RobotRaconteurPython.WrappedArrayMemoryDi
 
     def Read(self,memorypos,buffer,bufferpos,count):
 
-        buffer3=[0]*count
+        buffer3=numpy.zeros((count,),dtype=RobotRaconteurPython._RRTypeIdToNumPyDataType(buffer.GetTypeID()))        
         self.memory.Read(memorypos,buffer3,bufferpos,count)        
         type1=RobotRaconteurPython.TypeDefinition()        
         type1.ArrayType=RobotRaconteurPython.DataTypes_ArrayTypes_array
