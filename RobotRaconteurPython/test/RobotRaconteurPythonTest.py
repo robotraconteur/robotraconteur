@@ -2772,6 +2772,8 @@ class ServiceTestClient2:
         self.TestComplexMemories()
         
         self.TestNoLock()
+
+        self.TestBool()
         
         self.DisconnectService()
     
@@ -3118,6 +3120,31 @@ class ServiceTestClient2:
         if not errthrown:
             raise Exception()
         
+    def TestBool(self):
+        
+        self._r.b1=True
+        if not self._r.b1:
+            raise Exception()
+
+        self._r.b2 = [True, False, False, True, True, True, False, True]
+        if not numpy.array_equal(self._r.b2, [True, False, True, True, False, True, False]):
+            raise Exception()
+
+        self._r.b3 = numpy.array([True,False]).reshape(2,1)
+        if not numpy.array_equal(self._r.b3, numpy.array([False, True, True, False]).reshape(2,2,order='F')):
+            raise Exception()
+
+        self._r.b4 = [True]
+        if not self._r.b4[0]:
+            raise Exception()
+
+        self._r.b5 = [numpy.array([True, False])]
+        if not numpy.array_equal(self._r.b5[0],numpy.array([False, True, False, False])):
+            raise Exception()
+
+        self._r.b6 = [numpy.array([True, False]).reshape(2,1)]
+        if not numpy.array_equal(self._r.b6[0], numpy.array([False,True,True,False]).reshape(2,2,order='F')):
+            raise Exception()
 
 class testroot3_impl(object):
     def __init__(self):
@@ -3328,6 +3355,54 @@ class testroot3_impl(object):
     
     def get_nolock_test(self):
         return self._o5, "com.robotraconteur.testing.TestService3.obj5"
+
+    @property
+    def b1(self):
+        return True
+    @b1.setter
+    def b1(self,value):
+        if value != True:
+            raise Exception()
+
+    @property
+    def b2(self):
+        return numpy.array([True, False, True, True, False, True, False])
+    @b2.setter
+    def b2(self,value):
+        if not numpy.array_equal(value, [True, False, False, True, True, True, False, True]):
+            raise Exception()
+
+    @property
+    def b3(self):
+        return numpy.array([False, True, True, False]).reshape(2,2,order='F')
+    @b3.setter
+    def b3(self,value):
+        if not numpy.array_equal(value, numpy.array([True,False]).reshape(2,1)):
+            raise Exception()
+
+    @property
+    def b4(self):
+        return [True]
+    @b4.setter
+    def b4(self,value):
+        if value[0] != True:
+            raise Exception()
+
+    @property
+    def b5(self):
+        return [numpy.array([False, True, False, False])]
+    @b5.setter
+    def b5(self,value):
+        if not numpy.array_equal(value[0], numpy.array([True, False])):
+            raise Exception()
+
+    @property
+    def b6(self):
+        return [numpy.array([False,True,True,False]).reshape(2,2,order='F')]
+    @b6.setter
+    def b6(self,value):
+        if not numpy.array_equal(value[0], numpy.array([True, False]).reshape(2,1)):
+            raise Exception()
     
 class func4_gen(object):
     def __init__(self):

@@ -2028,6 +2028,54 @@ namespace RobotRaconteur
 		return array2;
 	}
 
+	boost::intrusive_ptr<RRBaseArray> PackToRRArray1_bool(PyObject* array_, boost::intrusive_ptr<RRBaseArray> destrrarray)
+	{
+		PyAutoPtr<PyObject> array_fast(PySequence_Fast(array_, "Internal error"));
+		if (array_fast.get() == NULL)
+		{
+			throw InternalErrorException("Internal error");
+		}
+
+		size_t seq_len = (size_t)PySequence_Fast_GET_SIZE(array_fast.get());
+
+		RR_INTRUSIVE_PTR<RRArray<rr_bool> > array2;
+		if (destrrarray)
+		{
+			array2 = RR_DYNAMIC_POINTER_CAST<RRArray<rr_bool> >(destrrarray);
+			if (!array2)
+			{
+				throw DataTypeException("Invalid destination array provided for PackToRRArray");
+			}
+		}
+		else
+		{
+			array2 = AllocateRRArray<rr_bool>(seq_len);
+		}
+
+		rr_bool* buf = array2->data();
+
+		for (size_t i = 0; i < seq_len; i++)
+		{
+			PyObject* v = PySequence_Fast_GET_ITEM(array_fast.get(), i);
+			if (PyBool_Check(v))
+			{
+				rr_bool v2 = (rr_bool)PyObject_IsTrue(v);
+
+				if (PyErr_Occurred())
+				{
+					throw DataTypeException("Invalid value in list provided to PackRRArray");
+				}
+				buf[i] = v2;
+			}			
+			else
+			{
+				throw DataTypeException("Invalid value in list provided to PackRRArray");
+			}
+		}
+
+		return array2;
+	}
+
 	boost::intrusive_ptr<RRBaseArray> PackToRRArray(PyObject* array_, boost::shared_ptr<TypeDefinition> type1, boost::intrusive_ptr<RRBaseArray> destrrarray)
 	{
 		if (!type1) throw NullValueException("PackToRRArray type must not be None");
@@ -2169,6 +2217,8 @@ namespace RobotRaconteur
 			return PackToRRArray1_complex<cdouble>(array_, destrrarray);
 		case DataTypes_csingle_t:
 			return PackToRRArray1_complex<cfloat>(array_, destrrarray);
+		case DataTypes_bool_t:
+			return PackToRRArray1_bool(array_, destrrarray);
 		default:
 			throw DataTypeException("Unknown numeric data type");
 		}
@@ -2351,6 +2401,7 @@ namespace RobotRaconteur
 		case NPY_UINT64:
 		case NPY_COMPLEX128:
 		case NPY_COMPLEX64:
+		case NPY_BOOL:
 		{
 			DataTypes rrtype = type1->Type;
 			size_t count = (size_t)PyArray_SIZE(array1);
@@ -2416,7 +2467,8 @@ namespace RobotRaconteur
 			case NPY_INT64:
 			case NPY_UINT64:
 			case NPY_COMPLEX64:
-			case NPY_COMPLEX128:			
+			case NPY_COMPLEX128:
+			case NPY_BOOL:
 			{
 				ret_vec.push_back(CreateMessageElement("array", PackToMultiDimArray_numpy1(array1,type1).get<0>()));
 				return CreateMessageElementMultiDimArray(ret_vec);
@@ -2484,6 +2536,7 @@ namespace RobotRaconteur
 		case DataTypes_uint64_t:
 		case DataTypes_cdouble_t:
 		case DataTypes_csingle_t:
+		case DataTypes_bool_t:
 		{
 			PyArray_Descr* npy_type = RRTypeIdToNumPyDataType(rr_type);
 			return UnpackFromRRMultiDimArray_numpy1(array, npy_type, npy_dims.size(), &npy_dims[0]);
@@ -2506,7 +2559,7 @@ namespace RobotRaconteur
 		case NPY_INT8:
 			return rr_type == DataTypes_int8_t;
 		case NPY_UINT8:
-			return rr_type == DataTypes_uint8_t || rr_type == DataTypes_bool_t;
+			return rr_type == DataTypes_uint8_t;
 		case NPY_INT16:
 			return rr_type == DataTypes_int16_t;
 		case NPY_UINT16:
@@ -2522,7 +2575,9 @@ namespace RobotRaconteur
 		case NPY_COMPLEX128:
 			return rr_type == DataTypes_cdouble_t;
 		case NPY_COMPLEX64:
-			return rr_type == DataTypes_csingle_t;		
+			return rr_type == DataTypes_csingle_t;
+		case NPY_BOOL:
+			return rr_type == DataTypes_bool_t;
 		default:
 		{
 			PyAutoPtr<PyArray_Descr> datetime_descr(RRTypeIdToNumPyDataType(rr_type));
@@ -2545,8 +2600,7 @@ namespace RobotRaconteur
 			return PyArray_DescrNewFromType(NPY_FLOAT32);
 		case DataTypes_int8_t:
 			return PyArray_DescrNewFromType(NPY_INT8);
-		case DataTypes_uint8_t:
-		case DataTypes_bool_t:
+		case DataTypes_uint8_t:		
 			return PyArray_DescrNewFromType(NPY_UINT8);
 		case DataTypes_int16_t:
 			return PyArray_DescrNewFromType(NPY_INT16);
@@ -2563,7 +2617,9 @@ namespace RobotRaconteur
 		case DataTypes_cdouble_t:
 			return PyArray_DescrNewFromType(NPY_COMPLEX128);
 		case DataTypes_csingle_t:
-			return PyArray_DescrNewFromType(NPY_COMPLEX64);		
+			return PyArray_DescrNewFromType(NPY_COMPLEX64);
+		case DataTypes_bool_t:
+			return PyArray_DescrNewFromType(NPY_BOOL);
 		default:
 			throw DataTypeException("Unknown numpy data type");
 		}
