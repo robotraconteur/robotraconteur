@@ -1824,7 +1824,7 @@ RR_INTRUSIVE_PTR<MessageElement> PackMxArrayToMessageElement(const mxArray* pm, 
 
 	if (IsTypeNumeric(tdef->Type) && tdef->ArrayType != DataTypes_ArrayTypes_multidimarray)
 	{
-		if (!mxIsNumeric(pm)) throw DataTypeException(tdef->Name + " must be a " + GetRRDataTypeString(tdef->Type) + " column vector");
+		if (!(mxIsNumeric(pm) || mxIsLogical(pm))) throw DataTypeException(tdef->Name + " must be a " + GetRRDataTypeString(tdef->Type) + " column vector");
 		
 		size_t ndims=mxGetNumberOfDimensions(pm);
 		std::vector<mwSize> dims(ndims);
@@ -1861,7 +1861,7 @@ RR_INTRUSIVE_PTR<MessageElement> PackMxArrayToMessageElement(const mxArray* pm, 
 
 	if (IsTypeNumeric(tdef->Type) && tdef->ArrayType == DataTypes_ArrayTypes_multidimarray)
 	{
-		if (!mxIsNumeric(pm)) throw DataTypeException(tdef->Name + " must be a " + GetRRDataTypeString(tdef->Type) + " column vector");
+		if (!(mxIsNumeric(pm) || mxIsLogical(pm))) throw DataTypeException(tdef->Name + " must be a " + GetRRDataTypeString(tdef->Type) + " column vector");
 
 		size_t ndims=mxGetNumberOfDimensions(pm);
 		std::vector<mwSize> dims(ndims);
@@ -2082,7 +2082,7 @@ RR_INTRUSIVE_PTR<MessageElement> PackMxArrayToMessageElement(const mxArray* pm, 
 		tdef2->Name=tdef->Name;
 		tdef2->member=tdef->member;
 
-		if (mxIsNumeric(pm))
+		if (mxIsNumeric(pm) || mxIsLogical(pm))
 		{
 			tdef2->Type=mxClassIDToRRDataType(mxGetClassID(pm));
 
@@ -4593,7 +4593,7 @@ mxArray* MexServiceStub::MemoryOp(const mxArray* member, const mxArray* command,
 				}
 				else
 				{ 
-					if (!mxIsNumeric(arg))  throw InvalidArgumentException("Invalid memory read/write request");
+					if (!(mxIsNumeric(arg) || mxIsLogical(arg)))  throw InvalidArgumentException("Invalid memory read/write request");
 					convert_indices(arg,start,count);
 				}
 			}
@@ -4616,7 +4616,7 @@ mxArray* MexServiceStub::MemoryOp(const mxArray* member, const mxArray* command,
 					}
 					else
 					{
-						if (!mxIsNumeric(arg))  throw InvalidArgumentException("Invalid memory read/write request");
+						if (!(mxIsNumeric(arg) || mxIsLogical(arg)))  throw InvalidArgumentException("Invalid memory read/write request");
 						convert_indices(arg, start, count);
 					}
 
@@ -4672,7 +4672,7 @@ mxArray* MexServiceStub::MemoryOp(const mxArray* member, const mxArray* command,
 					pod_mem->Write(start, data, 0, count);
 					return mxCreateNumericMatrix(1, 0, mxDOUBLE_CLASS, mxREAL);
 				}				
-				if (!mxIsNumeric(data)) throw InvalidArgumentException("Invalid type for memory write");
+				if (!(mxIsNumeric(data) || mxIsLogical(data))) throw InvalidArgumentException("Invalid type for memory write");
 				if (count!=mxGetNumberOfElements(data) && mxGetNumberOfElements(data)==1)
 				{
 					mxArray* data2=mxCreateNumericMatrix(boost::numeric_cast<size_t>(count),1,mxGetClassID(data), mxIsComplex(data) ? mxCOMPLEX : mxREAL);
@@ -4803,7 +4803,7 @@ mxArray* MexServiceStub::MemoryOp(const mxArray* member, const mxArray* command,
 						for (size_t i = 1; i < mxGetNumberOfElements(subs); i++)
 						{
 							arg = mxGetCell(subs, i);
-							if (!mxIsNumeric(arg))  throw InvalidArgumentException("Invalid memory read/write request");
+							if (!(mxIsNumeric(arg) || mxIsLogical(arg)))  throw InvalidArgumentException("Invalid memory read/write request");
 							int64_t start1;
 							int64_t count1;
 							convert_indices(arg, start1, count1);
@@ -4838,7 +4838,7 @@ mxArray* MexServiceStub::MemoryOp(const mxArray* member, const mxArray* command,
 						for (size_t i = 0; i < mxGetNumberOfElements(subs); i++)
 						{
 							arg = mxGetCell(subs, i);
-							if (!mxIsNumeric(arg))  throw InvalidArgumentException("Invalid memory read/write request");
+							if (!(mxIsNumeric(arg) || mxIsLogical(arg)))  throw InvalidArgumentException("Invalid memory read/write request");
 							int64_t start1;
 							int64_t count1;
 							convert_indices(arg, start1, count1);
@@ -4911,7 +4911,7 @@ mxArray* MexServiceStub::MemoryOp(const mxArray* member, const mxArray* command,
 					return mxCreateNumericMatrix(1, 0, mxDOUBLE_CLASS, mxREAL);
 				}
 
-				if (!mxIsNumeric(data)) throw InvalidArgumentException("Invalid type for memory write");
+				if (!(mxIsNumeric(data) || mxIsLogical(data))) throw InvalidArgumentException("Invalid type for memory write");
 
 				if (numcount!=mxGetNumberOfElements(data) && mxGetNumberOfElements(data)==1)
 				{

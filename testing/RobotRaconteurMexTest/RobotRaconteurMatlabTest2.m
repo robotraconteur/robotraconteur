@@ -65,6 +65,33 @@ function RobotRaconteurMatlabTest2(url)
         assert(isequal(transform_m1_v1(:,j+4),transform_m1_v2(:,j)))
     end
     
+    c.b1 = true;
+    assert(c.b1 == true)
+    c.b2 = [true, false, false, true, true, true, false, true]';
+    assert(all(c.b2 == [true, false, true, true, false, true, false]'))
+    c.b3 = [true,false]';
+    assert(all(all(c.b3 == reshape([false,true,true,false],2,2))))
+    
+    c.b4 = {true};
+    b4_2 = c.b4;
+    assert(all(b4_2{1} == true));
+    c.b5 = {[true, false]'};
+    b5_2 = c.b5;
+    assert(all(all(b5_2{1} == [false,true,false,false]')))
+    c.b6 = {[true,false]'};
+    b6_2 = c.b6;
+    assert(all(all(b6_2{1} == reshape([false,true,true,false],2,2))))
+    
+    c_m5_v1_1 = [true, false, false, true, true, false, false, false, true, true]';
+    c_m5 = c.c_m5;
+    c_m5(100:107) = c_m5_v1_1(2:9);
+    assert(all(c_m5(100:107) == c_m5_v1_1(2:9)))
+    
+    c_m6_v1_1 = reshape(c_m5_v1_1,2,5);
+    c_m6 = c.c_m6;
+    c_m6(1:2,1:5) = c_m6_v1_1;
+    assert(all(all(c_m6(1:2,1:5) == c_m6_v1_1)))
+    
     disp('Done!')
 
     function gen_func1_handler(key, res, err)
