@@ -79,7 +79,7 @@ namespace RobotRaconteur
 		M(ResourceNotFoundException, MessageErrorType_ResourceNotFound, "RobotRaconteur.ResourceNotFound") \
 		M(IOException, MessageErrorType_IOError, "RobotRaconteur.IOError") \
 		M(BufferLimitViolationException, MessageErrorType_BufferLimitViolation, "RobotRaconteur.BufferLimitViolation") \
-		M(ServiceDefinitionException, MessageErrorType_ServiceDefinitionError, "RobotRaconteur.SystemDefinitionError") \
+		M(ServiceDefinitionException, MessageErrorType_ServiceDefinitionError, "RobotRaconteur.ServiceDefinitionError") \
 		M(OutOfRangeException, MessageErrorType_OutOfRange, "RobotRaconteur.OutOfRange") \
 		M(KeyNotFoundException, MessageErrorType_KeyNotFound, "RobotRaconteur.KeyNotFound") \
 		M2(RobotRaconteurRemoteException, MessageErrorType_RemoteError) \
