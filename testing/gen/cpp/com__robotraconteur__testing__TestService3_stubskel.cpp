@@ -8241,7 +8241,7 @@ void testroot3_default_impl::set_unreliable1(RR_SHARED_PTR<RobotRaconteur::Pipe<
 {
 boost::mutex::scoped_lock lock(this_lock);
 if (rrvar_unreliable1) throw RobotRaconteur::InvalidOperationException("Pipe already set");
-rrvar_unreliable1 = RR_MAKE_SHARED<RobotRaconteur::PipeBroadcaster<int32_t> >();
+rrvar_unreliable1 = RR_MAKE_SHARED<RobotRaconteur::PipeBroadcaster<int32_t > >();
 rrvar_unreliable1->Init(value);
 }
 RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > testroot3_default_impl::get_unreliable2()
@@ -8502,7 +8502,7 @@ void obj5_default_impl::set_q1(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > va
 {
 boost::mutex::scoped_lock lock(this_lock);
 if (rrvar_q1) throw RobotRaconteur::InvalidOperationException("Pipe already set");
-rrvar_q1 = RR_MAKE_SHARED<RobotRaconteur::PipeBroadcaster<int32_t> >();
+rrvar_q1 = RR_MAKE_SHARED<RobotRaconteur::PipeBroadcaster<int32_t > >();
 rrvar_q1->Init(value);
 }
 RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > obj5_default_impl::get_q2()
@@ -8515,7 +8515,7 @@ void obj5_default_impl::set_q2(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > va
 {
 boost::mutex::scoped_lock lock(this_lock);
 if (rrvar_q2) throw RobotRaconteur::InvalidOperationException("Pipe already set");
-rrvar_q2 = RR_MAKE_SHARED<RobotRaconteur::PipeBroadcaster<int32_t> >();
+rrvar_q2 = RR_MAKE_SHARED<RobotRaconteur::PipeBroadcaster<int32_t > >();
 rrvar_q2->Init(value);
 }
 RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > obj5_default_impl::get_w1()
