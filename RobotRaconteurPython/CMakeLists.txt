@@ -103,6 +103,16 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/setup.py.in" "${CMAKE_BINARY_DIR}/ou
 set(PYTHON2_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 include("${CMAKE_CURRENT_SOURCE_DIR}/PythonExceptions.cmake")
 
+set(BUILD_PYTHON_WHEEL OFF CACHE BOOL "Enable building Python 2 wheels")
+if(BUILD_PYTHON_WHEEL)
+add_custom_target(RobotRaconteurPython_Wheel ALL "${PYTHON_EXECUTABLE}" setup.py bdist_wheel
+	WORKING_DIRECTORY $<TARGET_FILE_DIR:${SWIG_MODULE_RobotRaconteurPython_REAL_NAME}>/..
+	DEPENDS ${SWIG_MODULE_RobotRaconteurPython_REAL_NAME})
+if (WIN32)
+set_target_properties(RobotRaconteurPython_Wheel PROPERTIES EXCLUDE_FROM_DEFAULT_BUILD_DEBUG TRUE)
+endif()
+endif()
+
 set(RR_PYTHON_TEST_CMD "\"${CMAKE_COMMAND}\"")
 set(RR_PYTHON_TEST_CMD_ARGS "-E env PYTHONPATH=${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/Python ROBOTRACONTEUR_ROBDEF_PATH=${CMAKE_SOURCE_DIR}/testing/RobotRaconteurTest \"${PYTHON_EXECUTABLE}\" ${CMAKE_SOURCE_DIR}/RobotRaconteurPython/test/RobotRaconteurPythonTest.py")
 RRConfigureTest(test_prog_python "${RR_PYTHON_TEST_CMD}" "test_prog" NOCTEST NODEBUG ARGS "${RR_PYTHON_TEST_CMD_ARGS}")
