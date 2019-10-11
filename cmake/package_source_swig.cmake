@@ -47,8 +47,13 @@ add_custom_command(
 set(${outfiles} ${SWIG_PYTHON_OUTDIR}/RobotRaconteurPythonPYTHON.cxx PARENT_SCOPE)
 endfunction()
 
+set(PACKAGE_SWIG_SOURCE_ALL OFF CACHE BOOL "Always build swig source")
+if(PACKAGE_SWIG_SOURCE_ALL)
+add_custom_target(package_source_swig ALL)
+else()
 add_custom_target(package_source_swig)
 set_target_properties(package_source_swig PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUDE_FROM_DEFAULT_BUILD 1)
+endif()
 
 package_source_swig_net("" ${CMAKE_BINARY_DIR}/generated_src/NET/swigwordsize32 net_sources_32)
 package_source_swig_java("" ${CMAKE_BINARY_DIR}/generated_src/Java/swigwordsize32/com/robotraconteur java_sources_32)
