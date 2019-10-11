@@ -105,8 +105,7 @@ include("${CMAKE_CURRENT_SOURCE_DIR}/PythonExceptions.cmake")
 
 set(BUILD_PYTHON_WHEEL OFF CACHE BOOL "Enable building Python 2 wheels")
 if(BUILD_PYTHON_WHEEL)
-add_custom_target(RobotRaconteurPython_Wheel ALL "${PYTHON_EXECUTABLE}" setup.py bdist_wheel
-	WORKING_DIRECTORY $<TARGET_FILE_DIR:${SWIG_MODULE_RobotRaconteurPython_REAL_NAME}>/..
+add_custom_target(RobotRaconteurPython_Wheel ALL ${CMAKE_COMMAND} -E chdir "$<TARGET_FILE_DIR:${SWIG_MODULE_RobotRaconteurPython_REAL_NAME}>/.." "${PYTHON_EXECUTABLE}" setup.py bdist_wheel
 	DEPENDS ${SWIG_MODULE_RobotRaconteurPython_REAL_NAME})
 if (WIN32)
 set_target_properties(RobotRaconteurPython_Wheel PROPERTIES EXCLUDE_FROM_DEFAULT_BUILD_DEBUG TRUE)
