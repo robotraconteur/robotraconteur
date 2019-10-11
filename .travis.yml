@@ -67,7 +67,7 @@ matrix:
         
     - os: windows
       before_script:
-        - powershell -Command "Set-MpPreference -DisableRealtimeMonitoring 1"
+        - powershell -Command "Set-MpPreference -DisableRealtimeMonitoring 1" || true
         - curl -o boost_1_70_0.zip -L https://dl.bintray.com/boostorg/release/1.70.0/source/boost_1_70_0.zip
         - unzip -qo boost_1_70_0.zip
         - cd boost_1_70_0
@@ -89,7 +89,7 @@ matrix:
         
     - os: windows
       before_script:
-        - powershell -Command "Set-MpPreference -DisableRealtimeMonitoring 1"
+        - powershell -Command "Set-MpPreference -DisableRealtimeMonitoring 1" || true
         - curl -o boost_1_70_0.zip -L https://dl.bintray.com/boostorg/release/1.70.0/source/boost_1_70_0.zip
         - unzip -qo boost_1_70_0.zip
         - cd boost_1_70_0
