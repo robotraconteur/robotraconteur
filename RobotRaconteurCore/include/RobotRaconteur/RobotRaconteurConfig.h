@@ -15,7 +15,9 @@
 #pragma once
 
 #ifndef ROBOTRACONTEUR_VERSION
-#define ROBOTRACONTEUR_VERSION "0.9.2"
+// Boost Style Version Number
+#define ROBOTRACONTEUR_VERSION 000902
+#define ROBOTRACONTEUR_VERSION_TEXT "0.9.2"
 #endif
 
 #if (__GNUC__== 4 && __GNUC_MINOR__== 7 )

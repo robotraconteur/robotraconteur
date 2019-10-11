@@ -2447,7 +2447,7 @@ bool RobotRaconteurNode::IsEndpointLargeTransferAuthorized(uint32_t endpoint)
 
 std::string RobotRaconteurNode::GetRobotRaconteurVersion()
 {
-	return ROBOTRACONTEUR_VERSION;
+	return ROBOTRACONTEUR_VERSION_TEXT;
 
 }
 

@@ -9,11 +9,11 @@ check_type_size("long int" SIZEOF_LONG_INT BUILTIN_TYPES_ONLY)
 
 CONFIGURE_FILE("${CMAKE_SOURCE_DIR}/RobotRaconteurCore/include/RobotRaconteur/RobotRaconteurConfig.h" "${CMAKE_BINARY_DIR}/RobotRaconteurConfig.h" COPYONLY)
 
-FILE (STRINGS "${CMAKE_SOURCE_DIR}/RobotRaconteurCore/include/RobotRaconteur/RobotRaconteurConfig.h" RobotRaconteurConfigVersion REGEX "#define +ROBOTRACONTEUR_VERSION +\"[0-9]+\\.[0-9]+\\.[0-9]+\"")
+FILE (STRINGS "${CMAKE_SOURCE_DIR}/RobotRaconteurCore/include/RobotRaconteur/RobotRaconteurConfig.h" RobotRaconteurConfigVersion REGEX "#define +ROBOTRACONTEUR_VERSION_TEXT +\"[0-9]+\\.[0-9]+\\.[0-9]+\"")
 IF ("${RobotRaconteurConfigVersion}" STREQUAL "" )
 MESSAGE(FATAL_ERROR "Could not read Robot Raconteur version.")
 ENDIF()
-STRING (REGEX REPLACE "#define ROBOTRACONTEUR_VERSION \"([0-9]+\\.[0-9]+\\.[0-9]+)\"" "\\1" RobotRaconteurVersion ${RobotRaconteurConfigVersion})
+STRING (REGEX REPLACE "#define ROBOTRACONTEUR_VERSION_TEXT \"([0-9]+\\.[0-9]+\\.[0-9]+)\"" "\\1" RobotRaconteurVersion ${RobotRaconteurConfigVersion})
 MESSAGE(STATUS "Robot Raconteur version: ${RobotRaconteurVersion}")
 
 SET(RobotRaconteur_USE_SHARED_CORE_LIB FALSE CACHE BOOL "Build using shared Robot Raconteur core library")

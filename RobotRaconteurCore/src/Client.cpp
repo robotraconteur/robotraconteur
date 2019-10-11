@@ -261,7 +261,7 @@ namespace RobotRaconteur
 		else
 		{
 			RR_INTRUSIVE_PTR<MessageEntry> e = CreateMessageEntry(MessageEntryType_ObjectTypeName, "");
-			e->AddElement("clientversion", stringToRRArray(ROBOTRACONTEUR_VERSION));
+			e->AddElement("clientversion", stringToRRArray(ROBOTRACONTEUR_VERSION_TEXT));
 			//MessageElement m = e.AddElement("ObjectPath", path);
 			e->ServicePath = path;
 			RR_SHARED_PTR<detail::async_timeout_wrapper<RRObject> > t = RR_MAKE_SHARED<detail::async_timeout_wrapper<RRObject> >(GetNode(), boost::bind(&ClientContext::AsyncFindObjRef3, shared_from_this(), _1, _2, path, handler));
@@ -471,7 +471,7 @@ namespace RobotRaconteur
 	void ClientContext::AsyncFindObjectType(const std::string &path, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<std::string>, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout)
 	{
 		RR_INTRUSIVE_PTR<MessageEntry> e = CreateMessageEntry(MessageEntryType_ObjectTypeName, "");
-		e->AddElement("clientversion", stringToRRArray(ROBOTRACONTEUR_VERSION));
+		e->AddElement("clientversion", stringToRRArray(ROBOTRACONTEUR_VERSION_TEXT));
 		//MessageElement m = e.AddElement("ObjectPath", path);
 		e->ServicePath = path;
 		AsyncProcessRequest(e, boost::bind(&ClientContext::AsyncFindObjectType1, shared_from_this(), _1, _2, handler), timeout);
@@ -1216,7 +1216,7 @@ namespace RobotRaconteur
 			m->MemberName = "connectclientcombined";
 			m->EntryType = MessageEntryType_ConnectClientCombined;
 
-			m->AddElement("clientversion", stringToRRArray(ROBOTRACONTEUR_VERSION));
+			m->AddElement("clientversion", stringToRRArray(ROBOTRACONTEUR_VERSION_TEXT));
 			m->AddElement("returnservicedefs", stringToRRArray("true"));
 			if (username.size() != 0)
 			{
@@ -1281,7 +1281,7 @@ namespace RobotRaconteur
 				RR_INTRUSIVE_PTR<MessageEntry> e = CreateMessageEntry(MessageEntryType_ObjectTypeName, "");
 				//e.AddElement("servicepath", ServiceName);
 				e->ServicePath = GetServiceName();
-				e->AddElement("clientversion", stringToRRArray(ROBOTRACONTEUR_VERSION));
+				e->AddElement("clientversion", stringToRRArray(ROBOTRACONTEUR_VERSION_TEXT));
 
 				//std::cout << "AsyncConnectService2_1" << std::endl;
 
@@ -1886,7 +1886,7 @@ namespace RobotRaconteur
 			e3->AddElement("ServiceType", stringToRRArray(ServiceType));
 
 		e3->ServicePath = GetServiceName();
-		e3->AddElement("clientversion", stringToRRArray(ROBOTRACONTEUR_VERSION));
+		e3->AddElement("clientversion", stringToRRArray(ROBOTRACONTEUR_VERSION_TEXT));
 
 		AsyncProcessRequest(e3, boost::bind(&ClientContext::AsyncPullServiceDefinition1, shared_from_this(), _1, _2, std::string(ServiceType),handler), timeout);
 	}

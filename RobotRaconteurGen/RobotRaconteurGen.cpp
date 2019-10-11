@@ -131,7 +131,7 @@ void PullServiceDefinition(string url)
 
 void PrintUsage()
 {
-	cout << "Robot Raconteur version " << ROBOTRACONTEUR_VERSION << endl << endl;
+	cout << "Robot Raconteur version " << ROBOTRACONTEUR_VERSION_TEXT << endl << endl;
 	cout << ("Usage:  RobotRaconteurGen command files") << endl << endl;
 	cout << ("Generate thunk source files") << endl;
 	cout << ("    RobotRaconteurGen --lang=csharp --thunksource servicedefinition1.robdef servicedefinition2.robdef") << endl << endl;
@@ -146,7 +146,7 @@ void PrintUsage()
 
 void PrintVersion()
 {
-	cout << "Robot Raconteur version " << ROBOTRACONTEUR_VERSION << endl << endl;
+	cout << "Robot Raconteur version " << ROBOTRACONTEUR_VERSION_TEXT << endl << endl;
 
 }
 
@@ -205,14 +205,14 @@ int main(int argc, char* argv[])
 
 		if (vm.count("help"))
 		{
-			cout << "RobotRaconteurGen version " << ROBOTRACONTEUR_VERSION << endl << endl;
+			cout << "RobotRaconteurGen version " << ROBOTRACONTEUR_VERSION_TEXT << endl << endl;
 			cout << generic_ << endl;
 			return 0;
 		}
 
 		if (vm.count("version"))
 		{
-			cout << "RobotRaconteurGen version " << ROBOTRACONTEUR_VERSION << endl;
+			cout << "RobotRaconteurGen version " << ROBOTRACONTEUR_VERSION_TEXT << endl;
 			return 0;
 		}
 

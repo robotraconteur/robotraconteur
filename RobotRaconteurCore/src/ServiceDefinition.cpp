@@ -393,7 +393,7 @@ namespace RobotRaconteur
 
 		if (ver == RobotRaconteurVersion(0, 0))
 		{
-			ver = RobotRaconteurVersion(ROBOTRACONTEUR_VERSION);
+			ver = RobotRaconteurVersion(ROBOTRACONTEUR_VERSION_TEXT);
 		}
 
 		if (ver < StdVer)
