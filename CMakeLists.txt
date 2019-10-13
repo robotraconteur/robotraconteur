@@ -102,12 +102,13 @@ endif()
 
 include(GNUInstallDirs)
 
-if (NOT DEFINED RobotRaconteur_DIR)
+set(BUILD_CORE ON CACHE BOOL "Build core library")
+if (BUILD_CORE)
 add_subdirectory(RobotRaconteurCore)
 set(RobotRaconteur_CORE_LIBRARY RobotRaconteurCore)
 else()
-find_package(RobotRaconteur)
-set(RobotRaconteur_CORE_LIBRARY ${RobotRaconteur_LIBRARY})
+find_package(RobotRaconteur REQUIRED)
+set(RobotRaconteur_CORE_LIBRARY RobotRaconteurCore)
 endif()
 
 set (ROBOTRACONTEUR_ROS "" CACHE BOOL "Build Robot Raconteur for ROS workspace")
