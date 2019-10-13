@@ -1,7 +1,4 @@
 language: cpp
-before_install:
-  - mkdir source
-  - ls | grep -v source | xargs mv -t source/
 matrix:
   include:
     - os: linux
@@ -146,7 +143,7 @@ matrix:
 script:
   - mkdir -p build2
   - cd build2
-  - cmake -G "$RR_CMAKE_GENERATOR" -DBUILD_GEN=ON -DBUILD_TEST=ON $RR_CMAKE_EXTRA_ARGS ../source
+  - cmake -G "$RR_CMAKE_GENERATOR" -DBUILD_GEN=ON -DBUILD_TEST=ON $RR_CMAKE_EXTRA_ARGS ..
   - cmake --build . --config Release
   - ctest . -C Release -V
   - cmake --build . --config Release --target package_source || true
