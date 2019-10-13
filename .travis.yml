@@ -1,4 +1,7 @@
 language: cpp
+before_install:
+  - mkdir source
+  - ls | grep -v source | xargs mv -t source/
 matrix:
   include:
     - os: linux
@@ -8,7 +11,7 @@ matrix:
         - gcc
 
       cache: ccache
-      before_install:
+      before_script:
         - >
           sudo apt-get install default-jdk default-jdk-headless default-jre default-jre-headless 
           python2.7-dev libpython2.7-dev libssl1.0.0 zlib1g zlib1g-dev libssl-dev libusb-1.0-0 
@@ -30,7 +33,7 @@ matrix:
             )
       env:
         - >
-          RR_CMAKE_EXTRA_ARGS="-DBUILD_PYTHON3=ON -DBoost_USE_STATIC_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DPYTHON3_EXECUTABLE=/usr/bin/python3.5 -DBUILD_PYTHON=ON -DBUILD_JAVA=ON -DBUILD_NET=ON"
+          RR_CMAKE_EXTRA_ARGS="-DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON -DBoost_USE_STATIC_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DPYTHON3_EXECUTABLE=/usr/bin/python3.5 -DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=ON -DBUILD_JAVA=ON -DBUILD_NET=ON"
         - RR_CMAKE_GENERATOR="Unix Makefiles"
   include:
     - os: linux
@@ -40,7 +43,7 @@ matrix:
         - gcc
 
       cache: ccache
-      before_install:
+      before_script:
         - >
           sudo apt-get install default-jdk default-jdk-headless default-jre default-jre-headless 
           python2.7-dev libpython2.7-dev libssl1.0.0 zlib1g zlib1g-dev libssl-dev libusb-1.0-0 
@@ -62,7 +65,7 @@ matrix:
             )
       env:
         - >
-          RR_CMAKE_EXTRA_ARGS="-DBUILD_PYTHON3=ON -DBoost_USE_STATIC_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DPYTHON3_EXECUTABLE=/usr/bin/python3 -DBUILD_PYTHON=ON -DBUILD_JAVA=ON -DBUILD_NET=ON"
+          RR_CMAKE_EXTRA_ARGS="-DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON -DBoost_USE_STATIC_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DPYTHON3_EXECUTABLE=/usr/bin/python3 -DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=ON -DBUILD_JAVA=ON -DBUILD_NET=ON -DPACKAGE_SWIG_SOURCE_ALL=ON"
         - RR_CMAKE_GENERATOR="Unix Makefiles"
         
     - os: windows
@@ -76,15 +79,19 @@ matrix:
         - cd $TRAVIS_BUILD_DIR
         - choco install python2 --forceX86
         - /c/Python27/Scripts/pip install numpy
+        - /c/Python27/Scripts/pip install setuptools
+        - /c/Python27/Scripts/pip install wheel
         - choco install python3 --forceX86 --params "/InstallDir:C:\Python3"
         - /c/Python3/Scripts/pip install numpy
+        - /c/Python3/Scripts/pip install setuptools
+        - /c/Python3/Scripts/pip install wheel
         - choco install jdk8 --forceX86
         - curl -o swigwin-4.0.0-beta1.zip -L https://sourceforge.net/projects/swig/files/swigwin/swigwin-4.0.0-beta1/swigwin-4.0.0-beta1.zip/download
         - unzip -qo swigwin-4.0.0-beta1.zip
         - cd $TRAVIS_BUILD_DIR
       env:
         - >
-          RR_CMAKE_EXTRA_ARGS="-DSWIG_EXECUTABLE=$TRAVIS_BUILD_DIR/swigwin-4.0.0-beta1/swig.exe -DSWIG_DIR=$TRAVIS_BUILD_DIR/swigwin-4.0.0-beta1/Lib -DBUILD_NET=ON -DBoost_USE_STATIC_LIBS=ON -DBOOST_INCLUDEDIR=$TRAVIS_BUILD_DIR/boost_1_70_0 -DBOOST_LIBRARYDIR=$TRAVIS_BUILD_DIR/boost_1_70_0/stage/lib -DPYTHON_EXECUTABLE=C:/Python27/python.exe -DPYTHON3_EXECUTABLE=C:/Python3/python.exe -DBUILD_PYTHON=ON -DBUILD_PYTHON3=ON -DBUILD_JAVA=ON"
+          RR_CMAKE_EXTRA_ARGS="-DSWIG_EXECUTABLE=$TRAVIS_BUILD_DIR/swigwin-4.0.0-beta1/swig.exe -DSWIG_DIR=$TRAVIS_BUILD_DIR/swigwin-4.0.0-beta1/Lib -DBUILD_NET=ON -DBoost_USE_STATIC_LIBS=ON -DBOOST_INCLUDEDIR=$TRAVIS_BUILD_DIR/boost_1_70_0 -DBOOST_LIBRARYDIR=$TRAVIS_BUILD_DIR/boost_1_70_0/stage/lib -DPYTHON_EXECUTABLE=C:/Python27/python.exe -DPYTHON3_EXECUTABLE=C:/Python3/python.exe -DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON -DBUILD_JAVA=ON"
         - RR_CMAKE_GENERATOR="Visual Studio 15 2017"
         
     - os: windows
@@ -98,15 +105,19 @@ matrix:
         - cd $TRAVIS_BUILD_DIR
         - choco install python2
         - /c/Python27/Scripts/pip install numpy
+        - /c/Python27/Scripts/pip install setuptools
+        - /c/Python27/Scripts/pip install wheel
         - choco install python3 --params "/InstallDir:C:\Python3"
         - /c/Python3/Scripts/pip install numpy
+        - /c/Python3/Scripts/pip install setuptools
+        - /c/Python3/Scripts/pip install wheel
         - choco install jdk8
         - curl -o swigwin-4.0.0-beta1.zip -L https://sourceforge.net/projects/swig/files/swigwin/swigwin-4.0.0-beta1/swigwin-4.0.0-beta1.zip/download
         - unzip -qo swigwin-4.0.0-beta1.zip
         - cd $TRAVIS_BUILD_DIR
       env:
         - >
-          RR_CMAKE_EXTRA_ARGS="-DSWIG_EXECUTABLE=$TRAVIS_BUILD_DIR/swigwin-4.0.0-beta1/swig.exe -DSWIG_DIR=$TRAVIS_BUILD_DIR/swigwin-4.0.0-beta1/Lib -DBUILD_NET=ON -DBoost_USE_STATIC_LIBS=ON -DBOOST_INCLUDEDIR=$TRAVIS_BUILD_DIR/boost_1_70_0 -DBOOST_LIBRARYDIR=$TRAVIS_BUILD_DIR/boost_1_70_0/stage/lib -DPYTHON_EXECUTABLE=C:/Python27/python.exe -DPYTHON3_EXECUTABLE=C:/Python3/python.exe -DBUILD_PYTHON=ON -DBUILD_PYTHON3=ON -DBUILD_JAVA=ON"
+          RR_CMAKE_EXTRA_ARGS="-DSWIG_EXECUTABLE=$TRAVIS_BUILD_DIR/swigwin-4.0.0-beta1/swig.exe -DSWIG_DIR=$TRAVIS_BUILD_DIR/swigwin-4.0.0-beta1/Lib -DBUILD_NET=ON -DBoost_USE_STATIC_LIBS=ON -DBOOST_INCLUDEDIR=$TRAVIS_BUILD_DIR/boost_1_70_0 -DBOOST_LIBRARYDIR=$TRAVIS_BUILD_DIR/boost_1_70_0/stage/lib -DPYTHON_EXECUTABLE=C:/Python27/python.exe -DPYTHON3_EXECUTABLE=C:/Python3/python.exe -DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON -DBUILD_JAVA=ON"
         - RR_CMAKE_GENERATOR="Visual Studio 15 2017 Win64"
         
     
@@ -129,12 +140,49 @@ matrix:
             )
       env:
         - >
-          RR_CMAKE_EXTRA_ARGS="-DBUILD_PYTHON=ON -DBUILD_JAVA=ON -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl"
+          RR_CMAKE_EXTRA_ARGS="-DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=ON -DBUILD_JAVA=ON -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl"
         - RR_CMAKE_GENERATOR="Xcode"
         - RR_CMAKE_TEST_TARGET=RUN_TESTS
 script:
-  - mkdir -p build
-  - cd build
-  - cmake -G "$RR_CMAKE_GENERATOR" -DBUILD_GEN=ON -DBUILD_TEST=ON $RR_CMAKE_EXTRA_ARGS ..
+  - mkdir -p build2
+  - cd build2
+  - cmake -G "$RR_CMAKE_GENERATOR" -DBUILD_GEN=ON -DBUILD_TEST=ON $RR_CMAKE_EXTRA_ARGS ../source
   - cmake --build . --config Release
   - ctest . -C Release -V
+  - cmake --build . --config Release --target package_source || true
+  - mv generated_src out/ || true
+  - cp *.tar.gz out/ || true
+  - cp *.zip out/ || true
+  - export TRAVIS_REPO_OWNER=${TRAVIS_REPO_SLUG%/*}
+  - export TRAVIS_REPO_NAME=${TRAVIS_REPO_SLUG#*/}
+
+before_deploy:
+  - cd $TRAVIS_BUILD_DIR/build2
+  - tar czf out.tar.gz out
+
+deploy:
+  provider: releases
+  repo: johnwason/robotraconteur_travisci_deploy
+  skip_cleanup: true
+  api_key: $GITHUB_TOKEN
+  deployment_file: true
+  file: $TRAVIS_BUILD_DIR/build2/out.tar.gz
+  verbose: true
+  draft: false
+  name: travisci build ${TRAVIS_REPO_SLUG} ${TRAVIS_JOB_NUMBER} 
+  body: |
+    repo: ${TRAVIS_REPO_SLUG}
+    job: ${TRAVIS_JOB_NUMBER}
+    buildid: ${TRAVIS_BUILD_ID}
+    buildurl: ${TRAVIS_JOB_WEB_URL}
+    commit: ${TRAVIS_COMMIT}
+    tag: ${TRAVIS_TAG}
+    osname: ${TRAVIS_OS_NAME}
+    cmakegenerator: ${RR_CMAKE_GENERATOR}
+  on:
+    all_branches: true    
+    condition: $TRAVIS_BRANCH =~ ^(master|travisci)$
+    condition: $TRAVIS_REPO_OWNER =~ ^(robotraconteur|johnwason)$
+    condition: "$TRAVIS_REPO_NAME = robotraconteur"
+    
+    
