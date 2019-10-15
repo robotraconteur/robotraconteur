@@ -116,8 +116,7 @@ matrix:
         - >
           RR_CMAKE_EXTRA_ARGS="-DSWIG_EXECUTABLE=$TRAVIS_BUILD_DIR/swigwin-4.0.0-beta1/swig.exe -DSWIG_DIR=$TRAVIS_BUILD_DIR/swigwin-4.0.0-beta1/Lib -DBUILD_NET=ON -DBoost_USE_STATIC_LIBS=ON -DBOOST_INCLUDEDIR=$TRAVIS_BUILD_DIR/boost_1_70_0 -DBOOST_LIBRARYDIR=$TRAVIS_BUILD_DIR/boost_1_70_0/stage/lib -DPYTHON_EXECUTABLE=C:/Python27/python.exe -DPYTHON3_EXECUTABLE=C:/Python3/python.exe -DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON -DBUILD_JAVA=ON"
         - RR_CMAKE_GENERATOR="Visual Studio 15 2017 Win64"
-        - HOMEBREW_NO_AUTO_UPDATE=1
-        
+                
     
     - os: osx
       before_script:
@@ -130,6 +129,7 @@ matrix:
           RR_CMAKE_EXTRA_ARGS="-DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=ON -DBUILD_JAVA=ON -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl"
         - RR_CMAKE_GENERATOR="Xcode"
         - RR_CMAKE_TEST_TARGET=RUN_TESTS
+        - HOMEBREW_NO_AUTO_UPDATE=1
 script:
   - mkdir -p build2
   - cd build2
