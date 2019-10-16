@@ -122,8 +122,19 @@ matrix:
       before_script:
         - brew install openssl
         #- brew install boost # Already installed on travis ci image??
-        - brew install swig
-        
+        #- brew install swig
+        - | 
+            (
+            rm -rf swig_build_dir
+            mkdir -p swig_build_dir
+            cd swig_build_dir
+            curl -L https://sourceforge.net/projects/swig/files/swig/swig-4.0.0-beta1/swig-4.0.0-beta1.tar.gz --output swig-4.0.0-beta1.tar.gz
+            tar xf swig-4.0.0-beta1.tar.gz
+            cd swig-4.0.0-beta1
+            ./configure
+            make
+            sudo make install
+            )
       env:
         - >
           RR_CMAKE_EXTRA_ARGS="-DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=ON -DBUILD_JAVA=ON -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl"
