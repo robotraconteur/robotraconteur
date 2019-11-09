@@ -753,7 +753,10 @@ return 0;
 		}
 
 		c->EnableNodeAnnounce();
-		c->EnableNodeDiscoveryListening();		
+		c->EnableNodeDiscoveryListening();
+
+		c->AddWebSocketAllowedOrigin("http://localhost");
+		c->AddWebSocketAllowedOrigin("http://localhost:8000");
 
 		RobotRaconteurNode::s()->RegisterTransport(c);
 		RobotRaconteurNode::s()->RegisterTransport(c2);		
