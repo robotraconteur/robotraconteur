@@ -1282,6 +1282,12 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 			return;
 		}
 	}
+	catch (RobotRaconteurException& e)
+	{
+		std::string err = "RobotRaconteurMex Error: " + e.Error + " " + e.Message;
+		mexErrMsgTxt(err.c_str());
+		return;
+	}
 	catch (std::exception& e)
 	{
 		std::string err="RobotRaconteurMex Error: " + std::string(typeid(e).name()) + " " + std::string(e.what());
@@ -1545,600 +1551,577 @@ mxArray* GetMxArrayFromRRArray(RR_INTRUSIVE_PTR<RRBaseArray> array_, std::vector
 	return pa;	
 }
 
-RR_INTRUSIVE_PTR<MessageElementPodArray>  PackMxArrayToMessageElement_pod(const mxArray* pm, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<ServiceStub> obj)
+class PackMxArrayToMessageElementImpl
 {
-	
-	if (!mxIsStruct(pm)) throw DataTypeException(type1->Name + " must be a structure");
+public:
 
-	if (type1->Type != DataTypes_varvalue_t
-		&& type1->ArrayType == DataTypes_ArrayTypes_none
-		&& mxGetNumberOfElements(pm) != 1)
+	RR_INTRUSIVE_PTR<MessageElementPodArray>  PackMxArrayToMessageElement_pod(const mxArray* pm, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<ServiceStub> obj)
 	{
-		throw DataTypeException("Scalar expected");
-	}
-	else
-	{
-		int32_t c = boost::accumulate(type1->ArrayLength, 1, std::multiplies<int32_t>());
-		if (!type1->ArrayLength.empty() && c != 0)
+
+		if (!mxIsStruct(pm)) throw DataTypeException("Matlab structure expected");
+
+		if (type1->Type != DataTypes_varvalue_t
+			&& type1->ArrayType == DataTypes_ArrayTypes_none
+			&& mxGetNumberOfElements(pm) != 1)
 		{
-			if (type1->ArrayVarLength)
-			{
-				if (mxGetNumberOfElements(pm) > c)
-				{
-					throw DataTypeException("Array dimension mismatch");
-				}
-			}
-			else
-			{
-				if (mxGetNumberOfElements(pm) != c)
-				{
-					throw DataTypeException("Array dimension mismatch");
-				}
-			}
-		}
-	}
-
-	std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
-	boost::shared_ptr<ServiceEntryDefinition> struct_def = RR_DYNAMIC_POINTER_CAST<ServiceEntryDefinition>(type1->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), obj));
-	if (!struct_def) throw DataTypeException("Invalid pod data type");
-	if (struct_def->EntryType != DataTypes_pod_t) throw DataTypeException("Invalid pod data type");
-	std::string typestr2 = struct_def->ResolveQualifiedName();
-
-	std::vector<RR_INTRUSIVE_PTR<MessageElement> > ret;
-
-	int mxcount = mxGetNumberOfFields(pm);
-
-	for (size_t i = 0; i < mxGetNumberOfElements(pm); i++)
-	{	
-
-		std::vector<RR_INTRUSIVE_PTR<MessageElement> > m_struct;
-		BOOST_FOREACH(boost::shared_ptr<MemberDefinition> m_def, struct_def->Members)
-		{
-			boost::shared_ptr<PropertyDefinition> p_def = boost::dynamic_pointer_cast<PropertyDefinition>(m_def);
-			if (!p_def) throw ServiceException("Invalid structure definition: " + typestr2);
-
-			mxArray* field_data = NULL;
-			for (int j = 0; j < mxcount; j++)
-			{
-				std::string fname(mxGetFieldNameByNumber(pm, j));
-				if (fname == p_def->Name)
-					field_data = mxGetFieldByNumber(pm, i, j);
-			}
-
-			if (!field_data) throw DataTypeException("Structure field \"" + p_def->Name + "\" not found in: " + type1->TypeString);
-			
-			RR_SHARED_PTR<TypeDefinition> p_def2_type = p_def->Type;
-			RR_INTRUSIVE_PTR<MessageElement> el;
-			if (p_def2_type->ArrayType == DataTypes_ArrayTypes_multidimarray)
-			{	
-				size_t elem_size = 1;
-
-				std::vector<int> dims2 = p_def2_type->ArrayLength;
-				if (p_def->Type->Type == DataTypes_namedtype_t)
-				{
-					RR_SHARED_PTR<NamedTypeDefinition> nt = p_def->Type->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), obj);
-					if (nt->RRDataType() == DataTypes_namedarray_t)
-					{
-						RR_SHARED_PTR<ServiceEntryDefinition> namedarray_def = rr_cast<ServiceEntryDefinition>(nt);
-						boost::tuple<DataTypes, size_t> namedarray_info = GetNamedArrayElementTypeAndCount(namedarray_def, empty_defs, RobotRaconteurNode::sp(), obj);
-						
-						dims2.insert(dims2.begin(),(int)namedarray_info.get<1>());
-						elem_size = namedarray_info.get<1>();
-					}
-				}
-
-				mwSize dim_count = mxGetNumberOfDimensions(field_data);
-				if (dim_count != dims2.size()) throw ServiceException("Array dimension mismatch for field " + p_def->Name);
-				const mwSize* dims = mxGetDimensions(field_data);
-				for (size_t j = 0; j < dim_count; j++)
-				{
-					if (dims[j] != dims2[j]) throw ServiceException("Array dimension mismatch for field " + p_def->Name);
-				}
-
-				p_def2_type = RR_MAKE_SHARED<TypeDefinition>();
-				p_def->Type->CopyTo(*p_def2_type);
-				int32_t c = boost::accumulate(dims2, 1, std::multiplies<int32_t>());
-				p_def2_type->ArrayLength.clear();
-				p_def2_type->ArrayLength.push_back(c/elem_size);
-				p_def2_type->ArrayType = DataTypes_ArrayTypes_array;
-				p_def2_type->ArrayVarLength = false;
-
-				mxArray* field_data2 = mxDuplicateArray(field_data);
-				if (elem_size == 1)
-				{
-					mwSize flat_dims = c;
-					mxSetDimensions(field_data2, &flat_dims, 1);
-				}
-				else
-				{
-					mwSize flat_dims[2];
-					flat_dims[0] = elem_size;
-					flat_dims[1] = c / elem_size;
-					mxSetDimensions(field_data2, flat_dims, 2);
-
-				}
-				el = PackMxArrayToMessageElement(field_data2, p_def2_type, obj, false);
-			}
-			else
-			{
-				el = PackMxArrayToMessageElement(field_data, p_def2_type, obj, false);
-			}
-
-			el->ElementName = p_def->Name;
-			m_struct.push_back(el);
-		}
-
-		RR_INTRUSIVE_PTR<MessageElement> el2 = CreateMessageElement("", CreateMessageElementPod(m_struct));
-		el2->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
-		el2->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
-		el2->ElementNumber = i;
-
-		ret.push_back(el2);
-	}
-
-	return CreateMessageElementPodArray(typestr2, ret);
-}
-
-RR_INTRUSIVE_PTR<MessageElement> PackMxArrayToMessageElement(const mxArray* pm, boost::shared_ptr<TypeDefinition> tdef, RR_SHARED_PTR<ServiceStub> stub, bool allow_null)
-{
-	if (mxIsEmpty(pm) && allow_null)
-	{
-		if (IsTypeNumeric(tdef->Type) && tdef->ContainerType == DataTypes_ContainerTypes_none)
-		{
-			if (tdef->ArrayType == DataTypes_ArrayTypes_none) throw DataTypeException("Scalar " + tdef->Name + " cannot be null");
-
-			if (!tdef->ArrayVarLength) throw DataTypeException("Array " + tdef->Name + " cannot be null");
-
-			if (!tdef->ArrayType == DataTypes_ArrayTypes_array)
-			{
-				return CreateMessageElement(tdef->Name,AllocateRRArrayByType(tdef->Type,0));
-			}
-			/*else
-			{
-				boost::shared_ptr<TypeDefinition> tdef2 = boost::make_shared<TypeDefinition>();
-				tdef->CopyTo(*tdef2);
-				tdef2->ArrayType = DataTypes_ArrayTypes_array;
-
-				mxArray* empty=mxCreateNumericMatrix(1,0,::rrDataTypeToMxClassID(tdef2->Type),::mxREAL);
-				RR_INTRUSIVE_PTR<MessageElement> o=PackMxArrayToMessageElement(empty,tdef2,stub);
-				mxDestroyArray(empty);
-				return o;
-			}*/
+			throw DataTypeException("Scalar expected");
 		}
 		else
 		{
-			return CreateMessageElement(tdef->Name, RR_INTRUSIVE_PTR<MessageElementData>());
+			int32_t c = boost::accumulate(type1->ArrayLength, 1, std::multiplies<int32_t>());
+			if (!type1->ArrayLength.empty() && c != 0)
+			{
+				if (type1->ArrayVarLength)
+				{
+					if (mxGetNumberOfElements(pm) > c)
+					{
+						throw DataTypeException("Array dimension mismatch");
+					}
+				}
+				else
+				{
+					if (mxGetNumberOfElements(pm) != c)
+					{
+						throw DataTypeException("Array dimension mismatch");
+					}
+				}
+			}
 		}
+
+		std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
+		boost::shared_ptr<ServiceEntryDefinition> struct_def = RR_DYNAMIC_POINTER_CAST<ServiceEntryDefinition>(type1->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), obj));
+		if (!struct_def) throw DataTypeException("Invalid pod data type");
+		if (struct_def->EntryType != DataTypes_pod_t) throw DataTypeException("Invalid pod data type");
+		std::string typestr2 = struct_def->ResolveQualifiedName();
+
+		std::vector<RR_INTRUSIVE_PTR<MessageElement> > ret;
+
+		int mxcount = mxGetNumberOfFields(pm);
+
+		RR_SHARED_PTR<TypeDefinition> type2 = type1->Clone();
+		type2->RemoveArray();
+
+		for (size_t i = 0; i < mxGetNumberOfElements(pm); i++)
+		{
+			push_field_level("[" + boost::lexical_cast<std::string>(i) + "]", type2);
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > m_struct;
+			BOOST_FOREACH(boost::shared_ptr<MemberDefinition> m_def, struct_def->Members)
+			{
+				boost::shared_ptr<PropertyDefinition> p_def = boost::dynamic_pointer_cast<PropertyDefinition>(m_def);
+				if (!p_def) throw ServiceException("Invalid structure definition: " + typestr2);
+
+				push_field_level(p_def->Name, p_def->Type);
+
+				mxArray* field_data = NULL;
+				for (int j = 0; j < mxcount; j++)
+				{
+					std::string fname(mxGetFieldNameByNumber(pm, j));
+					if (fname == p_def->Name)
+						field_data = mxGetFieldByNumber(pm, i, j);
+				}
+
+				if (!field_data) throw DataTypeException("Structure field not found");
+
+				RR_SHARED_PTR<TypeDefinition> p_def2_type = p_def->Type;
+				RR_INTRUSIVE_PTR<MessageElement> el;
+				if (p_def2_type->ArrayType == DataTypes_ArrayTypes_multidimarray)
+				{
+					size_t elem_size = 1;
+
+					std::vector<int> dims2 = p_def2_type->ArrayLength;
+					if (p_def->Type->Type == DataTypes_namedtype_t)
+					{
+						RR_SHARED_PTR<NamedTypeDefinition> nt = p_def->Type->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), obj);
+						if (nt->RRDataType() == DataTypes_namedarray_t)
+						{
+							RR_SHARED_PTR<ServiceEntryDefinition> namedarray_def = rr_cast<ServiceEntryDefinition>(nt);
+							boost::tuple<DataTypes, size_t> namedarray_info = GetNamedArrayElementTypeAndCount(namedarray_def, empty_defs, RobotRaconteurNode::sp(), obj);
+
+							dims2.insert(dims2.begin(), (int)namedarray_info.get<1>());
+							elem_size = namedarray_info.get<1>();
+						}
+					}
+
+					mwSize dim_count = mxGetNumberOfDimensions(field_data);
+					if (dim_count != dims2.size()) throw DataTypeException("Array dimension mismatch");
+					const mwSize* dims = mxGetDimensions(field_data);
+					for (size_t j = 0; j < dim_count; j++)
+					{
+						if (dims[j] != dims2[j]) throw DataTypeException("Array dimension mismatch");
+					}
+
+					p_def2_type = RR_MAKE_SHARED<TypeDefinition>();
+					p_def->Type->CopyTo(*p_def2_type);
+					int32_t c = boost::accumulate(dims2, 1, std::multiplies<int32_t>());
+					p_def2_type->ArrayLength.clear();
+					p_def2_type->ArrayLength.push_back(c / elem_size);
+					p_def2_type->ArrayType = DataTypes_ArrayTypes_array;
+					p_def2_type->ArrayVarLength = false;
+
+					mxArray* field_data2 = mxDuplicateArray(field_data);
+					if (elem_size == 1)
+					{
+						mwSize flat_dims = c;
+						mxSetDimensions(field_data2, &flat_dims, 1);
+					}
+					else
+					{
+						mwSize flat_dims[2];
+						flat_dims[0] = elem_size;
+						flat_dims[1] = c / elem_size;
+						mxSetDimensions(field_data2, flat_dims, 2);
+
+					}
+					el = PackMxArrayToMessageElement(field_data2, p_def2_type, obj, false);
+				}
+				else
+				{
+					el = PackMxArrayToMessageElement(field_data, p_def2_type, obj, false);
+				}
+
+				el->ElementName = p_def->Name;
+				m_struct.push_back(el);
+
+				pop_field_level();
+			}
+
+			RR_INTRUSIVE_PTR<MessageElement> el2 = CreateMessageElement("", CreateMessageElementPod(m_struct));
+			el2->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
+			el2->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
+			el2->ElementNumber = i;
+
+			ret.push_back(el2);
+			pop_field_level();
+		}
+
+		return CreateMessageElementPodArray(typestr2, ret);
 	}
 
-	if (tdef->ContainerType == DataTypes_ContainerTypes_map_int32 || tdef->ContainerType == DataTypes_ContainerTypes_map_string)
+	RR_INTRUSIVE_PTR<MessageElement> PackMxArrayToMessageElement(const mxArray* pm, boost::shared_ptr<TypeDefinition> tdef, RR_SHARED_PTR<ServiceStub> stub, bool allow_null=true)
 	{
-		boost::shared_ptr<TypeDefinition> tdef2 = tdef->Clone();
-		tdef2->RemoveContainers();
-
-		if (std::string(mxGetClassName(pm)) != "containers.Map") throw DataTypeException("Expected object of containers.Map for map type");
-		
-		mxArray* keys;
-		mxArray* values;
-		mxArray* pm2=(mxArray*)pm;
-		mexCallMATLAB(1,&keys,1,&pm2,"keys");
-		if (!keys) throw DataTypeException("Could not read keys in map");
-		mxArray* pm3[2];
-		pm3[0]=pm2;
-		pm3[1]=keys;
-		mexCallMATLAB(1,&values,1,pm3,"values");
-		if (!values) throw DataTypeException("Could not read values in map");
-
-
-
-		mwSize elementcount=mxGetNumberOfElements(keys);
-		if (elementcount!=mxGetNumberOfElements(values)) throw InternalErrorException("Internal map error");
-						
-		std::vector<RR_INTRUSIVE_PTR<MessageElement> > mapelems;
-
-		for (mwSize i=0; i<elementcount; i++)
+		if (mxIsEmpty(pm) && allow_null)
 		{
-			mxArray* key=mxGetCell(keys,i);
-			mxArray* data=mxGetCell(values,i);
+			if (IsTypeNumeric(tdef->Type) && tdef->ContainerType == DataTypes_ContainerTypes_none)
+			{
+				if (tdef->ArrayType == DataTypes_ArrayTypes_none) throw DataTypeException("Scalar cannot be null");
 
-			if (key==NULL || data==NULL) throw DataTypeException("Cell contents must be key value pair");
+				if (!tdef->ArrayVarLength) throw DataTypeException("Array cannot be null");
 
-			RR_INTRUSIVE_PTR<MessageElement> me = PackMxArrayToMessageElement(data, tdef2, stub);
+				if (!tdef->ArrayType == DataTypes_ArrayTypes_array)
+				{
+					return CreateMessageElement(tdef->Name, AllocateRRArrayByType(tdef->Type, 0));
+				}
+				/*else
+				{
+					boost::shared_ptr<TypeDefinition> tdef2 = boost::make_shared<TypeDefinition>();
+					tdef->CopyTo(*tdef2);
+					tdef2->ArrayType = DataTypes_ArrayTypes_array;
 
+					mxArray* empty=mxCreateNumericMatrix(1,0,::rrDataTypeToMxClassID(tdef2->Type),::mxREAL);
+					RR_INTRUSIVE_PTR<MessageElement> o=PackMxArrayToMessageElement(empty,tdef2,stub);
+					mxDestroyArray(empty);
+					return o;
+				}*/
+			}
+			else
+			{
+				return CreateMessageElement(tdef->Name, RR_INTRUSIVE_PTR<MessageElementData>());
+			}
+		}
+
+		if (tdef->ContainerType == DataTypes_ContainerTypes_map_int32 || tdef->ContainerType == DataTypes_ContainerTypes_map_string)
+		{
+			boost::shared_ptr<TypeDefinition> tdef2 = tdef->Clone();
+			tdef2->RemoveContainers();
+
+			if (std::string(mxGetClassName(pm)) != "containers.Map") throw DataTypeException("Expected object of containers.Map");
+
+			mxArray* keys;
+			mxArray* values;
+			mxArray* pm2 = (mxArray*)pm;
+			mexCallMATLAB(1, &keys, 1, &pm2, "keys");
+			if (!keys) throw DataTypeException("Could not read keys in map");
+			mxArray* pm3[2];
+			pm3[0] = pm2;
+			pm3[1] = keys;
+			mexCallMATLAB(1, &values, 1, pm3, "values");
+			if (!values) throw DataTypeException("Could not read values in map");
+
+
+
+			mwSize elementcount = mxGetNumberOfElements(keys);
+			if (elementcount != mxGetNumberOfElements(values)) throw InternalErrorException("Internal map error");
+
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > mapelems;
+
+			for (mwSize i = 0; i < elementcount; i++)
+			{
+				mxArray* key = mxGetCell(keys, i);
+				mxArray* data = mxGetCell(values, i);
+
+				if (key == NULL || data == NULL) throw DataTypeException("Cell contents must be key value pair");
+
+				if (mxIsChar(key))
+				{
+					push_field_level("[\"" + mxToString(key) +"\"]", tdef2);
+				}
+				else if(mxIsInt32(key) && mxGetNumberOfElements(key) == 1)
+				{
+					int32_t elemkey = (((int32_t*)mxGetData(key))[0]);
+					push_field_level("[" + boost::lexical_cast<std::string>(elemkey) + "]", tdef2);
+				}
+				else
+				{
+					throw DataTypeException("Key must be scaler int32 or string");
+				}
+				RR_INTRUSIVE_PTR<MessageElement> me = PackMxArrayToMessageElement(data, tdef2, stub);
 			
+				if (tdef->ContainerType == DataTypes_ContainerTypes_map_int32)
+				{
+					int32_t elemkey;
+					if (!mxIsInt32(key) || mxGetNumberOfElements(key) != 1) throw DataTypeException("Key must be scaler int32");
+					elemkey = (((int32_t*)mxGetData(key))[0]);
+					me->ElementName = "";
+					me->ElementNumber = elemkey;
+					me->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
+					me->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
+				}
+				else
+				{
+					std::string elemkey;
+					if (!mxIsChar(key)) throw DataTypeException("Key must be string");
+					elemkey = mxToString(key);
+					me->ElementName = elemkey;
+				}
+				
+				mapelems.push_back(me); 
+
+				pop_field_level();
+			}
+
 
 			if (tdef->ContainerType == DataTypes_ContainerTypes_map_int32)
 			{
-				int32_t elemkey;
-				if (!mxIsInt32(key) || mxGetNumberOfElements(key)!=1) throw DataTypeException("Key must be scaler int32");
-				elemkey=(((int32_t*)mxGetData(key))[0]);
-				me->ElementName = "";
-				me->ElementNumber = elemkey;
-				me->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
-				me->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
+				return CreateMessageElement(tdef->Name, CreateMessageElementMap<int32_t>(mapelems));
+
 			}
 			else
 			{
-				std::string elemkey;
-				if (!mxIsChar(key)) throw DataTypeException("Key must be string");
-				elemkey=mxToString(key);
-				me->ElementName = elemkey;
+				return CreateMessageElement(tdef->Name, CreateMessageElementMap<std::string>(mapelems));
+			}
+		}
+
+		if (tdef->ContainerType == DataTypes_ContainerTypes_list)
+		{
+			boost::shared_ptr<TypeDefinition> tdef2 = tdef->Clone();
+			tdef2->RemoveContainers();
+
+			if (!mxIsCell(pm)) throw DataTypeException("Argument is not a list type (must be cell vector)");
+			size_t ndims = mxGetNumberOfDimensions(pm);
+			std::vector<mwSize> dims1(ndims);
+			memcpy(&dims1[0], mxGetDimensions(pm), sizeof(mwSize)*ndims);
+			for (size_t i = 1; i < ndims; i++)
+			{
+				if (dims1[i] != 1) throw DataTypeException("List types must be single dimensional column vector");
 			}
 
-			
-			
+			mwSize elementcount = dims1[0];
 
-			mapelems.push_back(me);
+
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > mapelems;
+
+			for (mwSize i = 0; i < elementcount; i++)
+			{
+				push_field_level("[" + boost::lexical_cast<std::string>(i) + "]", tdef2);
+
+				mxArray* v = mxGetCell(pm, i);
+
+
+				RR_INTRUSIVE_PTR<MessageElement> me = PackMxArrayToMessageElement(v, tdef2, stub);
+				me->ElementName = "";
+				me->ElementNumber = boost::numeric_cast<int32_t>(i);
+				me->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
+				me->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
+
+				mapelems.push_back(me);
+
+				pop_field_level();
+			}
+
+
+			return CreateMessageElement(tdef->Name, CreateMessageElementList(mapelems));
+
+
 		}
 
-		
-		if (tdef->ContainerType == DataTypes_ContainerTypes_map_int32)
+		if (IsTypeNumeric(tdef->Type) && tdef->ArrayType != DataTypes_ArrayTypes_multidimarray)
 		{
-			return CreateMessageElement(tdef->Name,CreateMessageElementMap<int32_t>(mapelems));
+			if (!(mxIsNumeric(pm) || mxIsLogical(pm))) throw DataTypeException("Column vector expected");
 
-		}
-		else
-		{
-			return CreateMessageElement(tdef->Name,CreateMessageElementMap<std::string>(mapelems));
-		}
-	}
+			size_t ndims = mxGetNumberOfDimensions(pm);
+			std::vector<mwSize> dims(ndims);
+			memcpy(&dims[0], mxGetDimensions(pm), ndims * sizeof(mwSize));
+			for (size_t i = 1; i < ndims; i++)
+			{
+				if (dims[i] != 1) throw DataTypeException("Column vector expected");
+			}
 
-	if (tdef->ContainerType == DataTypes_ContainerTypes_list)
-	{
-		boost::shared_ptr<TypeDefinition> tdef2=tdef->Clone();
-		tdef2->RemoveContainers();
+			if (tdef->ArrayType == DataTypes_ArrayTypes_none && dims[0] != 1) throw DataTypeException("Scalar number expected");
 
-		if (!mxIsCell(pm)) throw DataTypeException("Argument is not a list type (must be cell vector)");
-		size_t ndims=mxGetNumberOfDimensions(pm);
-		std::vector<mwSize> dims1(ndims);
-		memcpy(&dims1[0],mxGetDimensions(pm),sizeof(mwSize)*ndims);
-		for (size_t i=1; i < ndims; i++)
-		{
-			if (dims1[i]!=1) throw DataTypeException("List types must be single dimensional column vector");
-		}
-		
-		mwSize elementcount=dims1[0];
+			if (tdef->ArrayType == DataTypes_ArrayTypes_array && !tdef->ArrayVarLength)
+			{
+				if (tdef->ArrayLength.at(0) != dims[0]) throw DataTypeException("Column vector expected with length " + boost::lexical_cast<std::string>(tdef->ArrayLength.at(0)));
+			}
 
-				
-		std::vector<RR_INTRUSIVE_PTR<MessageElement> > mapelems;
-
-		for (mwSize i=0; i<elementcount; i++)
-		{
-			mxArray* v=mxGetCell(pm,i);
-			
-
-			RR_INTRUSIVE_PTR<MessageElement> me=PackMxArrayToMessageElement(v,tdef2,stub);
-			me->ElementName = "";
-			me->ElementNumber = boost::numeric_cast<int32_t>(i);
-			me->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
-			me->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
-
-			mapelems.push_back(me);
-		}
-
-		
-		return CreateMessageElement(tdef->Name,CreateMessageElementList(mapelems));
-
-		
-	}
-
-	if (IsTypeNumeric(tdef->Type) && tdef->ArrayType != DataTypes_ArrayTypes_multidimarray)
-	{
-		if (!(mxIsNumeric(pm) || mxIsLogical(pm))) throw DataTypeException(tdef->Name + " must be a " + GetRRDataTypeString(tdef->Type) + " column vector");
-		
-		size_t ndims=mxGetNumberOfDimensions(pm);
-		std::vector<mwSize> dims(ndims);
-		memcpy(&dims[0], mxGetDimensions(pm),ndims*sizeof(mwSize));
-		for (size_t i=1; i < ndims; i++)
-		{
-			if (dims[i]!=1) throw DataTypeException(tdef->Name + " must be a column array of type " + GetRRDataTypeString(tdef->Type));
-		}
-
-		if (tdef->ArrayType == DataTypes_ArrayTypes_none && dims[0]!=1) throw DataTypeException(tdef->Name + " must be a scalar number " + GetRRDataTypeString(tdef->Type));
-
-		if (tdef->ArrayType == DataTypes_ArrayTypes_array && !tdef->ArrayVarLength)
-		{
-			if (tdef->ArrayLength.at(0) != dims[0]) throw DataTypeException(tdef->Name + " must be a column array of type " + GetRRDataTypeString(tdef->Type) + " with length " + boost::lexical_cast<std::string>(tdef->ArrayLength.at(0))); 
-		}
-
-		RR_INTRUSIVE_PTR<RRBaseArray> o1=GetRRArrayFromMxArray(pm);
-		if (o1->GetTypeID() != tdef->Type) throw DataTypeException (tdef->Name + " must be a column array of type " + GetRRDataTypeString(tdef->Type));
-		if ((tdef->ArrayType != DataTypes_ArrayTypes_none) && tdef->ArrayLength.at(0)!=0)
+			RR_INTRUSIVE_PTR<RRBaseArray> o1 = GetRRArrayFromMxArray(pm);
+			if (o1->GetTypeID() != tdef->Type) throw DataTypeException("Column vector expected");
+			if ((tdef->ArrayType != DataTypes_ArrayTypes_none) && tdef->ArrayLength.at(0) != 0)
 			{
 				if (tdef->ArrayVarLength)
 				{
-					if (o1->size() > tdef->ArrayLength.at(0)) throw DataTypeException("Array " + tdef->Name+ " exceeds maximum length");
-					
+					if (o1->size() > tdef->ArrayLength.at(0)) throw DataTypeException("Array exceeds maximum length");
+
 				}
 				else
 				{
-					if (o1->size() != tdef->ArrayLength.at(0)) throw DataTypeException("Array " + tdef->Name + " length match error");
+					if (o1->size() != tdef->ArrayLength.at(0)) throw DataTypeException("Array length mismatch");
 				}
 			}
-		return CreateMessageElement(tdef->Name,o1);
+			return CreateMessageElement(tdef->Name, o1);
 
-	}
-
-	if (IsTypeNumeric(tdef->Type) && tdef->ArrayType == DataTypes_ArrayTypes_multidimarray)
-	{
-		if (!(mxIsNumeric(pm) || mxIsLogical(pm))) throw DataTypeException(tdef->Name + " must be a " + GetRRDataTypeString(tdef->Type) + " column vector");
-
-		size_t ndims=mxGetNumberOfDimensions(pm);
-		std::vector<mwSize> dims(ndims);
-		memcpy(&dims[0], mxGetDimensions(pm),ndims*sizeof(mwSize));
-		
-		if (!tdef->ArrayVarLength)
-			{
-				if (mxIsComplex(pm)) throw DataTypeException("Array " + tdef->Name + " must not be complex");
-				if (dims.size()!=tdef->ArrayLength.size()) throw DataTypeException("Array " + tdef->Name + " dimension match error"); 
-				for (size_t i=0; i<dims.size(); i++)
-				{
-					if (dims.at(i)!=tdef->ArrayLength.at(i)) throw DataTypeException("Array " + tdef->Name + " dimension match error"); 
-				}
-			}
-
-
-		std::vector<RR_INTRUSIVE_PTR<MessageElement> > multidimvec;
-
-		multidimvec.push_back(CreateMessageElement("dims",VectorToRRArray<uint32_t>(dims)));
-		
-		RR_INTRUSIVE_PTR<RRBaseArray> array1=GetRRArrayFromMxArray(pm);
-		
-		multidimvec.push_back(CreateMessageElement("array",array1));
-		
-		if (array1->GetTypeID() != tdef->Type) throw DataTypeException (tdef->Name + " must be an array of type " + GetRRDataTypeString(tdef->Type));
-				
-		return CreateMessageElement(tdef->Name,CreateMessageElementMultiDimArray(multidimvec));
-
-	}
-
-	if (tdef->Type == DataTypes_string_t)
-	{
-		if (!mxIsChar(pm)) throw DataTypeException(tdef->Name + " must be a string");
-		if (mxGetNumberOfDimensions(pm) != 2) throw DataTypeException(tdef->Name + " must be a 1xN string");
-		const mwSize* pm_dims = mxGetDimensions(pm);
-		if (pm_dims[0] != 1) throw DataTypeException(tdef->Name + " must be a 1xN string");
-		
-		const uint16_t* str_utf16 = (const uint16_t*)mxGetData(pm);
-		std::string str_utf8 = boost::locale::conv::utf_to_utf<char>(str_utf16, str_utf16+pm_dims[1]);
-		RR_INTRUSIVE_PTR<RRArray<char> > str=stringToRRArray(str_utf8);
-		return CreateMessageElement(tdef->Name,str);
-	}
-
-	if (tdef->Type==DataTypes_namedtype_t)
-	{		
-		std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
-		RR_SHARED_PTR<NamedTypeDefinition> nt = tdef->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), stub);		
-		switch (nt->RRDataType())
-		{
-		case DataTypes_structure_t:
-		{
-			if (!mxIsStruct(pm)) throw DataTypeException(tdef->Name + " must be a structure");
-
-			std::vector<RR_INTRUSIVE_PTR<MessageElement> > structvec;
-			int mxcount = mxGetNumberOfFields(pm);
-			RR_SHARED_PTR<ServiceEntryDefinition> d = rr_cast<ServiceEntryDefinition>(nt);
-			RR_SHARED_PTR<ServiceDefinition> def = d->ServiceDefinition_.lock();
-			if (!def) throw InternalErrorException("Internal type error");
-
-			BOOST_FOREACH(boost::shared_ptr<MemberDefinition>& e, d->Members)
-			{
-				boost::shared_ptr<PropertyDefinition> p = rr_cast<PropertyDefinition>(e);
-				mxArray* data = NULL;
-				for (int i = 0; i < mxcount; i++)
-				{
-					std::string fname(mxGetFieldNameByNumber(pm, i));
-					if (fname == p->Name)
-						data = mxGetFieldByNumber(pm, 0, i);
-				}
-
-				if (!data) throw DataTypeException("Structure field \"" + p->Name + "\" not found in: " + tdef->TypeString);
-
-				RR_INTRUSIVE_PTR<MessageElement> mdata = PackMxArrayToMessageElement(data, p->Type, stub);
-				mdata->ElementName = p->Name;
-				structvec.push_back(mdata);
-
-			}
-			return CreateMessageElement(tdef->Name, CreateMessageElementStructure(def->Name + "." + nt->Name, structvec));
 		}
-		case DataTypes_enum_t:
+
+		if (IsTypeNumeric(tdef->Type) && tdef->ArrayType == DataTypes_ArrayTypes_multidimarray)
 		{
-			RR_SHARED_PTR<TypeDefinition> enum_type = RR_MAKE_SHARED<TypeDefinition>();
-			enum_type->Type = DataTypes_int32_t;
-			enum_type->Name = "value";
-			return CreateMessageElement(tdef->Name, ScalarToRRArray<int32_t>(GetInt32Scalar(pm)));
-		}
-		case DataTypes_pod_t:
-		{			
-			if (tdef->ArrayType == DataTypes_ArrayTypes_multidimarray)
-			{
-				std::vector<RR_INTRUSIVE_PTR<MessageElement> > map_vec;
+			if (!(mxIsNumeric(pm) || mxIsLogical(pm))) throw DataTypeException("Column vector expected");
 
-				if (!mxIsStruct(pm)) throw DataTypeException("Invalid PodMultidimArray");
-				
-				size_t ndims = mxGetNumberOfDimensions(pm);
-				std::vector<mwSize> dims(ndims);
-				memcpy(&dims[0], mxGetDimensions(pm), ndims * sizeof(mwSize));
-				
-				if (!tdef->ArrayVarLength)
-				{					
-					if (dims.size() != tdef->ArrayLength.size()) throw DataTypeException("Array " + tdef->Name + " dimension match error");
-					for (size_t i = 0; i<dims.size(); i++)
-					{
-						if (dims.at(i) != tdef->ArrayLength.at(i)) throw DataTypeException("Array " + tdef->Name + " dimension match error");
-					}
-				}
-								
-				map_vec.push_back(CreateMessageElement("dims", VectorToRRArray<uint32_t>(dims)));
-
-				boost::shared_ptr<TypeDefinition> array_type = boost::make_shared<TypeDefinition>();
-				tdef->CopyTo(*array_type);
-				array_type->ArrayType = DataTypes_ArrayTypes_array;
-				array_type->ArrayLength.clear();
-				array_type->ArrayVarLength = true;
-				array_type->Name = "array";
-				//type1->Name = "real";
-
-				map_vec.push_back(CreateMessageElement("array",PackMxArrayToMessageElement_pod(pm, array_type, stub)));
-
-				RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> mm = CreateMessageElementPodMultiDimArray(tdef->ResolveNamedType()->ResolveQualifiedName(), map_vec);
-
-				return CreateMessageElement(tdef->Name, mm);				
-			}
-			else
-			{
-				return CreateMessageElement(tdef->Name, PackMxArrayToMessageElement_pod(pm, tdef, stub));
-			}
-		}
-		case DataTypes_namedarray_t:
-		{
-			RR_SHARED_PTR<ServiceEntryDefinition> namedarray_def = rr_cast<ServiceEntryDefinition>(nt);
-			boost::tuple<DataTypes, size_t> namedarray_info = GetNamedArrayElementTypeAndCount(namedarray_def, empty_defs, RobotRaconteurNode::sp(), stub);
-			
-			if (namedarray_info.get<0>() != mxClassIDToRRDataType(mxGetClassID(pm))) throw DataTypeException("Invalid namedarray data type");
-						
 			size_t ndims = mxGetNumberOfDimensions(pm);
-			if (ndims < 1) throw DataTypeException("Invalid namedarray data type");
 			std::vector<mwSize> dims(ndims);
 			memcpy(&dims[0], mxGetDimensions(pm), ndims * sizeof(mwSize));
-			if (dims.at(0) != namedarray_info.get<1>()) throw DataTypeException("Invalid namedarray data size");
 
-			switch (tdef->ArrayType)
+			if (!tdef->ArrayVarLength)
 			{
-			case DataTypes_ArrayTypes_none:
-			{
-				for (size_t i = 1; i < dims.size(); i++)
+				if (mxIsComplex(pm)) throw DataTypeException("Array must not be complex");
+				if (dims.size() != tdef->ArrayLength.size()) throw DataTypeException("Array dimension mismatch");
+				for (size_t i = 0; i < dims.size(); i++)
 				{
-					if (dims.at(i) != 1) throw DataTypeException("Invalid namedarray data size");
+					if (dims.at(i) != tdef->ArrayLength.at(i)) throw DataTypeException("Array dimension mismatch");
 				}
-
-				std::vector<RR_INTRUSIVE_PTR<MessageElement> > o1;
-				o1.push_back(CreateMessageElement("array",GetRRArrayFromMxArray(pm)));
-				RR_INTRUSIVE_PTR<MessageElementNamedArray> o2 = CreateMessageElementNamedArray(tdef->ResolveNamedType()->ResolveQualifiedName(), o1);
-				return CreateMessageElement(tdef->Name, o2);
 			}
-			case DataTypes_ArrayTypes_array:
+
+
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > multidimvec;
+
+			multidimvec.push_back(CreateMessageElement("dims", VectorToRRArray<uint32_t>(dims)));
+
+			RR_INTRUSIVE_PTR<RRBaseArray> array1 = GetRRArrayFromMxArray(pm);
+
+			multidimvec.push_back(CreateMessageElement("array", array1));
+
+			if (array1->GetTypeID() != tdef->Type) throw DataTypeException("Array type mismatch");
+
+			return CreateMessageElement(tdef->Name, CreateMessageElementMultiDimArray(multidimvec));
+
+		}
+
+		if (tdef->Type == DataTypes_string_t)
+		{
+			if (!mxIsChar(pm)) throw DataTypeException("String expected");
+			if (mxGetNumberOfDimensions(pm) != 2) throw DataTypeException("1xN string expected ");
+			const mwSize* pm_dims = mxGetDimensions(pm);
+			if (pm_dims[0] != 1) throw DataTypeException("1xN string expected");
+
+			const uint16_t* str_utf16 = (const uint16_t*)mxGetData(pm);
+			std::string str_utf8 = boost::locale::conv::utf_to_utf<char>(str_utf16, str_utf16 + pm_dims[1]);
+			RR_INTRUSIVE_PTR<RRArray<char> > str = stringToRRArray(str_utf8);
+			return CreateMessageElement(tdef->Name, str);
+		}
+
+		if (tdef->Type == DataTypes_namedtype_t)
+		{
+			std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
+			RR_SHARED_PTR<NamedTypeDefinition> nt = tdef->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), stub);
+			switch (nt->RRDataType())
 			{
-				if (ndims > 1)
-				{
-					if (tdef->ArrayType == DataTypes_ArrayTypes_array)
+			case DataTypes_structure_t:
+			{
+				if (!mxIsStruct(pm)) throw DataTypeException("Structure expected");
+
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > structvec;
+				int mxcount = mxGetNumberOfFields(pm);
+				RR_SHARED_PTR<ServiceEntryDefinition> d = rr_cast<ServiceEntryDefinition>(nt);
+				RR_SHARED_PTR<ServiceDefinition> def = d->ServiceDefinition_.lock();
+				if (!def) throw InternalErrorException("Internal type error");
+
+				BOOST_FOREACH(boost::shared_ptr<MemberDefinition>& e, d->Members)
+				{					
+					boost::shared_ptr<PropertyDefinition> p = rr_cast<PropertyDefinition>(e);
+										
+					mxArray* data = NULL;
+					for (int i = 0; i < mxcount; i++)
 					{
-						if (!tdef->ArrayVarLength && tdef->ArrayLength.at(0) != dims.at(1)) throw DataTypeException("Invalid namedarray length");
-						if (tdef->ArrayVarLength && tdef->ArrayLength.at(0) != 0 && tdef->ArrayLength.at(0) < dims.at(1)) throw DataTypeException("Invalid namedarray length");
+						std::string fname(mxGetFieldNameByNumber(pm, i));
+						if (fname == p->Name)
+							data = mxGetFieldByNumber(pm, 0, i);
 					}
-				}
-				
-				for (size_t i = 2; i < dims.size(); i++)
-				{
-					if (dims.at(i) != 1) throw DataTypeException("Invalid namedarray data size");
-				}
 
-				std::vector<RR_INTRUSIVE_PTR<MessageElement> > o1;
-				o1.push_back(CreateMessageElement("array", GetRRArrayFromMxArray(pm)));
-				RR_INTRUSIVE_PTR<MessageElementNamedArray> o2 = CreateMessageElementNamedArray(tdef->ResolveNamedType()->ResolveQualifiedName(), o1);
-				return CreateMessageElement(tdef->Name, o2);
+					if (!data) throw DataTypeException("Structure field \"" + p->Name + "\" not found");
+
+					push_field_level(p->Name, p->Type);
+
+					RR_INTRUSIVE_PTR<MessageElement> mdata = PackMxArrayToMessageElement(data, p->Type, stub);
+					mdata->ElementName = p->Name;
+					structvec.push_back(mdata);
+
+					pop_field_level();
+				}
+				return CreateMessageElement(tdef->Name, CreateMessageElementStructure(def->Name + "." + nt->Name, structvec));
 			}
-			case DataTypes_ArrayTypes_multidimarray:
-			{				
-				if (!tdef->ArrayVarLength)
+			case DataTypes_enum_t:
+			{
+				RR_SHARED_PTR<TypeDefinition> enum_type = RR_MAKE_SHARED<TypeDefinition>();
+				enum_type->Type = DataTypes_int32_t;
+				enum_type->Name = "value";
+				return CreateMessageElement(tdef->Name, ScalarToRRArray<int32_t>(GetInt32Scalar(pm)));
+			}
+			case DataTypes_pod_t:
+			{
+				if (tdef->ArrayType == DataTypes_ArrayTypes_multidimarray)
 				{
-					if (dims.size() != (tdef->ArrayLength.size() + 1)) throw DataTypeException("Invalid namedarray data size");
+					std::vector<RR_INTRUSIVE_PTR<MessageElement> > map_vec;
+
+					if (!mxIsStruct(pm)) throw DataTypeException("Invalid PodMultidimArray");
+
+					size_t ndims = mxGetNumberOfDimensions(pm);
+					std::vector<mwSize> dims(ndims);
+					memcpy(&dims[0], mxGetDimensions(pm), ndims * sizeof(mwSize));
+
+					if (!tdef->ArrayVarLength)
+					{
+						if (dims.size() != tdef->ArrayLength.size()) throw DataTypeException("Array dimension mismatch");
+						for (size_t i = 0; i < dims.size(); i++)
+						{
+							if (dims.at(i) != tdef->ArrayLength.at(i)) throw DataTypeException("Array dimension mismatch");
+						}
+					}
+
+					map_vec.push_back(CreateMessageElement("dims", VectorToRRArray<uint32_t>(dims)));
+
+					boost::shared_ptr<TypeDefinition> array_type = boost::make_shared<TypeDefinition>();
+					tdef->CopyTo(*array_type);
+					array_type->ArrayType = DataTypes_ArrayTypes_array;
+					array_type->ArrayLength.clear();
+					array_type->ArrayVarLength = true;
+					array_type->Name = "array";
+					//type1->Name = "real";
+
+					map_vec.push_back(CreateMessageElement("array", PackMxArrayToMessageElement_pod(pm, array_type, stub)));
+
+					RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> mm = CreateMessageElementPodMultiDimArray(tdef->ResolveNamedType()->ResolveQualifiedName(), map_vec);
+
+					return CreateMessageElement(tdef->Name, mm);
+				}
+				else
+				{
+					return CreateMessageElement(tdef->Name, PackMxArrayToMessageElement_pod(pm, tdef, stub));
+				}
+			}
+			case DataTypes_namedarray_t:
+			{
+				RR_SHARED_PTR<ServiceEntryDefinition> namedarray_def = rr_cast<ServiceEntryDefinition>(nt);
+				boost::tuple<DataTypes, size_t> namedarray_info = GetNamedArrayElementTypeAndCount(namedarray_def, empty_defs, RobotRaconteurNode::sp(), stub);
+
+				if (namedarray_info.get<0>() != mxClassIDToRRDataType(mxGetClassID(pm))) throw DataTypeException("Invalid namedarray data type");
+
+				size_t ndims = mxGetNumberOfDimensions(pm);
+				if (ndims < 1) throw DataTypeException("Invalid namedarray data type");
+				std::vector<mwSize> dims(ndims);
+				memcpy(&dims[0], mxGetDimensions(pm), ndims * sizeof(mwSize));
+				if (dims.at(0) != namedarray_info.get<1>()) throw DataTypeException("Invalid namedarray data size");
+
+				switch (tdef->ArrayType)
+				{
+				case DataTypes_ArrayTypes_none:
+				{
 					for (size_t i = 1; i < dims.size(); i++)
 					{
-						if (dims.at(i) != tdef->ArrayLength.at(i-1)) throw DataTypeException("Invalid namedarray data size");
+						if (dims.at(i) != 1) throw DataTypeException("Invalid namedarray data size");
 					}
+
+					std::vector<RR_INTRUSIVE_PTR<MessageElement> > o1;
+					o1.push_back(CreateMessageElement("array", GetRRArrayFromMxArray(pm)));
+					RR_INTRUSIVE_PTR<MessageElementNamedArray> o2 = CreateMessageElementNamedArray(tdef->ResolveNamedType()->ResolveQualifiedName(), o1);
+					return CreateMessageElement(tdef->Name, o2);
+				}
+				case DataTypes_ArrayTypes_array:
+				{
+					if (ndims > 1)
+					{
+						if (tdef->ArrayType == DataTypes_ArrayTypes_array)
+						{
+							if (!tdef->ArrayVarLength && tdef->ArrayLength.at(0) != dims.at(1)) throw DataTypeException("Invalid namedarray length");
+							if (tdef->ArrayVarLength && tdef->ArrayLength.at(0) != 0 && tdef->ArrayLength.at(0) < dims.at(1)) throw DataTypeException("Invalid namedarray length");
+						}
+					}
+
+					for (size_t i = 2; i < dims.size(); i++)
+					{
+						if (dims.at(i) != 1) throw DataTypeException("Invalid namedarray data size");
+					}
+
+					std::vector<RR_INTRUSIVE_PTR<MessageElement> > o1;
+					o1.push_back(CreateMessageElement("array", GetRRArrayFromMxArray(pm)));
+					RR_INTRUSIVE_PTR<MessageElementNamedArray> o2 = CreateMessageElementNamedArray(tdef->ResolveNamedType()->ResolveQualifiedName(), o1);
+					return CreateMessageElement(tdef->Name, o2);
+				}
+				case DataTypes_ArrayTypes_multidimarray:
+				{
+					if (!tdef->ArrayVarLength)
+					{
+						if (dims.size() != (tdef->ArrayLength.size() + 1)) throw DataTypeException("Invalid namedarray data size");
+						for (size_t i = 1; i < dims.size(); i++)
+						{
+							if (dims.at(i) != tdef->ArrayLength.at(i - 1)) throw DataTypeException("Invalid namedarray data size");
+						}
+					}
+
+					std::vector<RR_INTRUSIVE_PTR<MessageElement> > o1;
+					o1.push_back(CreateMessageElement("array", GetRRArrayFromMxArray(pm)));
+					RR_INTRUSIVE_PTR<MessageElementNamedArray> o2 = CreateMessageElementNamedArray(tdef->ResolveNamedType()->ResolveQualifiedName(), o1);
+
+					std::vector<RR_INTRUSIVE_PTR<MessageElement> > o3;
+					RR_INTRUSIVE_PTR<RRArray<uint32_t> > rr_dims = AllocateRRArray<uint32_t>(dims.size() - 1);
+					for (size_t i = 0; i < rr_dims->size(); i++)
+					{
+						(*rr_dims)[i] = dims.at(i + 1);
+					}
+					o3.push_back(CreateMessageElement("dims", rr_dims));
+					o3.push_back(CreateMessageElement("array", o2));
+					RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> o4 = CreateMessageElementNamedMultiDimArray(tdef->ResolveNamedType()->ResolveQualifiedName(), o3);
+					return CreateMessageElement(tdef->Name, o4);
+				}
+				default:
+					throw DataTypeException("Invalid namedarray type");
 				}
 
-				std::vector<RR_INTRUSIVE_PTR<MessageElement> > o1;
-				o1.push_back(CreateMessageElement("array", GetRRArrayFromMxArray(pm)));
-				RR_INTRUSIVE_PTR<MessageElementNamedArray> o2 = CreateMessageElementNamedArray(tdef->ResolveNamedType()->ResolveQualifiedName(), o1);
-				
-				std::vector<RR_INTRUSIVE_PTR<MessageElement> > o3;				
-				RR_INTRUSIVE_PTR<RRArray<uint32_t> > rr_dims = AllocateRRArray<uint32_t>(dims.size() - 1);
-				for (size_t i = 0; i < rr_dims->size(); i++)
-				{
-					(*rr_dims)[i] = dims.at(i + 1);
-				}				
-				o3.push_back(CreateMessageElement("dims", rr_dims));
-				o3.push_back(CreateMessageElement("array", o2));
-				RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> o4 = CreateMessageElementNamedMultiDimArray(tdef->ResolveNamedType()->ResolveQualifiedName(), o3);
-				return CreateMessageElement(tdef->Name, o4);
 			}
 			default:
-				throw DataTypeException("Invalid namedarray type");
+				throw DataTypeException("Unknown named type id");
 			}
-
 		}
-		default:
-			throw DataTypeException("Unknown named type id");
-		}
-	}
 
 
-	if (tdef->Type==DataTypes_varvalue_t)
-	{
-
-		boost::shared_ptr<TypeDefinition> tdef2=boost::make_shared<TypeDefinition>();
-		tdef2->Name=tdef->Name;
-		tdef2->member=tdef->member;
-
-		if (mxIsNumeric(pm) || mxIsLogical(pm))
+		if (tdef->Type == DataTypes_varvalue_t)
 		{
-			tdef2->Type=mxClassIDToRRDataType(mxGetClassID(pm));
 
-			bool multidim=false;
-			size_t ndims=mxGetNumberOfDimensions(pm);
-			std::vector<mwSize> dims(ndims);
-			memcpy(&dims[0], mxGetDimensions(pm),ndims*sizeof(mwSize));
-			for (size_t i=1; i < ndims; i++)
-			{
-				if (dims[i]!=1) multidim=true;
-			}
+			boost::shared_ptr<TypeDefinition> tdef2 = boost::make_shared<TypeDefinition>();
+			tdef2->Name = tdef->Name;
+			tdef2->member = tdef->member;
 
-			if (multidim)
+			if (mxIsNumeric(pm) || mxIsLogical(pm))
 			{
-				tdef2->ArrayType = DataTypes_ArrayTypes_multidimarray;
-			}
-			else
-			{
-				tdef2->ArrayType = DataTypes_ArrayTypes_array;
-			}
-			tdef2->ArrayVarLength=true;
-			tdef2->ArrayLength.push_back(0);
+				tdef2->Type = mxClassIDToRRDataType(mxGetClassID(pm));
 
-			return PackMxArrayToMessageElement(pm,tdef2,stub);
-		}
-
-		if (mxIsChar(pm))
-		{
-			tdef2->Type=DataTypes_string_t;
-			tdef2->ArrayVarLength=true;
-			return PackMxArrayToMessageElement(pm,tdef2,stub);
-		}
-
-		if (mxIsStruct(pm))
-		{
-			int mxcount=mxGetNumberOfFields(pm);
-			mxArray* data=NULL;
-			for (int i=0; i<mxcount; i++)
-			{
-				std::string fname(mxGetFieldNameByNumber(pm,i));
-				if (fname=="RobotRaconteurStructureType")
-					data=mxGetFieldByNumber(pm,0,i);
-			}
-			if (data==NULL) throw DataTypeException("varvalue type structures must contain a \"RobotRaconteurStructureType\" field with the fully qualified name of a valid structure type");
-			std::string structuretype=mxToString(data);
-
-			tdef2->Type=DataTypes_namedtype_t;
-			tdef2->TypeString=structuretype;
-			std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
-			boost::shared_ptr<NamedTypeDefinition> tdef3 = tdef2->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), stub);
-			if (tdef3->RRDataType() == DataTypes_structure_t)
-			{
-				return PackMxArrayToMessageElement(pm, tdef2, stub);
-			}
-			else
-			{
 				bool multidim = false;
 				size_t ndims = mxGetNumberOfDimensions(pm);
 				std::vector<mwSize> dims(ndims);
@@ -2148,742 +2131,1039 @@ RR_INTRUSIVE_PTR<MessageElement> PackMxArrayToMessageElement(const mxArray* pm, 
 					if (dims[i] != 1) multidim = true;
 				}
 
-				if (!multidim)
+				if (multidim)
 				{
-					tdef2->ArrayType = DataTypes_ArrayTypes_array;
-					tdef2->ArrayLength.push_back(dims[0]);
+					tdef2->ArrayType = DataTypes_ArrayTypes_multidimarray;
 				}
 				else
 				{
-					tdef2->ArrayType = DataTypes_ArrayTypes_multidimarray;
-					boost::range::copy(dims, std::back_inserter(tdef2->ArrayLength));
+					tdef2->ArrayType = DataTypes_ArrayTypes_array;
 				}
+				tdef2->ArrayVarLength = true;
+				tdef2->ArrayLength.push_back(0);
 
 				return PackMxArrayToMessageElement(pm, tdef2, stub);
 			}
-		}
 
-		if (mxIsCell(pm))
-		{
-			
-
-			tdef2->Type=DataTypes_varvalue_t;
-			tdef2->ContainerType=DataTypes_ContainerTypes_list;
-
-			return PackMxArrayToMessageElement(pm,tdef2,stub);
-		}
-
-		if (std::string(mxGetClassName(pm)) == "containers.Map")
-		{
-			tdef2->Type=DataTypes_varvalue_t;			
-
-			std::string keytype=mxToString(mxGetProperty(pm,0,"KeyType"));
-			if (keytype=="int32")
+			if (mxIsChar(pm))
 			{
-				tdef2->ContainerType = DataTypes_ContainerTypes_map_int32;
-			}
-			else if (keytype=="char")
-			{
-				tdef2->ContainerType = DataTypes_ContainerTypes_map_string;
-			}
-			else
-			{
-				throw DataTypeException("Unknown key type for map");
+				tdef2->Type = DataTypes_string_t;
+				tdef2->ArrayVarLength = true;
+				return PackMxArrayToMessageElement(pm, tdef2, stub);
 			}
 
+			if (mxIsStruct(pm))
+			{
+				int mxcount = mxGetNumberOfFields(pm);
+				mxArray* data = NULL;
+				for (int i = 0; i < mxcount; i++)
+				{
+					std::string fname(mxGetFieldNameByNumber(pm, i));
+					if (fname == "RobotRaconteurStructureType")
+						data = mxGetFieldByNumber(pm, 0, i);
+				}
+				if (data == NULL) throw DataTypeException("varvalue type structures must contain a \"RobotRaconteurStructureType\" field with the fully qualified name of a valid structure type");
+				std::string structuretype = mxToString(data);
 
-			return PackMxArrayToMessageElement(pm,tdef2,stub);
+				tdef2->Type = DataTypes_namedtype_t;
+				tdef2->TypeString = structuretype;
+				std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
+				boost::shared_ptr<NamedTypeDefinition> tdef3 = tdef2->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), stub);
+				if (tdef3->RRDataType() == DataTypes_structure_t)
+				{
+					return PackMxArrayToMessageElement(pm, tdef2, stub);
+				}
+				else
+				{
+					bool multidim = false;
+					size_t ndims = mxGetNumberOfDimensions(pm);
+					std::vector<mwSize> dims(ndims);
+					memcpy(&dims[0], mxGetDimensions(pm), ndims * sizeof(mwSize));
+					for (size_t i = 1; i < ndims; i++)
+					{
+						if (dims[i] != 1) multidim = true;
+					}
+
+					if (!multidim)
+					{
+						tdef2->ArrayType = DataTypes_ArrayTypes_array;
+						tdef2->ArrayLength.push_back(dims[0]);
+					}
+					else
+					{
+						tdef2->ArrayType = DataTypes_ArrayTypes_multidimarray;
+						boost::range::copy(dims, std::back_inserter(tdef2->ArrayLength));
+					}
+
+					return PackMxArrayToMessageElement(pm, tdef2, stub);
+				}
+			}
+
+			if (mxIsCell(pm))
+			{
+
+
+				tdef2->Type = DataTypes_varvalue_t;
+				tdef2->ContainerType = DataTypes_ContainerTypes_list;
+
+				return PackMxArrayToMessageElement(pm, tdef2, stub);
+			}
+
+			if (std::string(mxGetClassName(pm)) == "containers.Map")
+			{
+				tdef2->Type = DataTypes_varvalue_t;
+
+				std::string keytype = mxToString(mxGetProperty(pm, 0, "KeyType"));
+				if (keytype == "int32")
+				{
+					tdef2->ContainerType = DataTypes_ContainerTypes_map_int32;
+				}
+				else if (keytype == "char")
+				{
+					tdef2->ContainerType = DataTypes_ContainerTypes_map_string;
+				}
+				else
+				{
+					throw DataTypeException("Unknown key type for map");
+				}
+
+
+				return PackMxArrayToMessageElement(pm, tdef2, stub);
+			}
+
+
+
+
 		}
 
-
-
+		throw DataTypeException("Unknown data type");
 
 	}
 
-	throw DataTypeException("Could not pack " + tdef->Name);
+	std::vector<std::string> field_name;
+	std::vector<RR_SHARED_PTR<TypeDefinition> > field_type;
 
+	void push_field_level(const std::string& new_var, RR_SHARED_PTR<TypeDefinition> new_type)
+	{
+		field_name.push_back(new_var);
+		field_type.push_back(new_type);
+	}
+
+	void pop_field_level()
+	{
+		field_name.pop_back();
+		field_type.pop_back();
+	}
+
+	boost::tuple<std::string, RR_SHARED_PTR<TypeDefinition> > get_current_field()
+	{
+		if (field_name.empty())
+		{
+			return boost::make_tuple("**internal error**", RR_SHARED_PTR<TypeDefinition>());
+		}
+
+		std::string name = boost::join(field_name, ".");
+		boost::replace_all(name, ".[", "[");
+		RR_SHARED_PTR<TypeDefinition> type = field_type.back();
+
+		return boost::make_tuple(name, type);
+	}
+
+	std::string get_exception_message(std::string msg)
+	{
+		boost::tuple<std::string, RR_SHARED_PTR<TypeDefinition> > f = get_current_field();
+
+		std::string msg2 = msg + " for field \"" + f.get<0>() + "\"";
+		if (f.get<1>())
+		{
+			RR_SHARED_PTR<TypeDefinition> f2 = f.get<1>()->Clone();
+			if (f2->Type == DataTypes_namedtype_t)
+			{
+				try
+				{
+					f2->TypeString = f.get<1>()->ResolveNamedType()->ResolveQualifiedName();
+				}
+				catch (std::exception& e) {}
+			}
+			std::vector<std::string> f_split;
+			std::string f2_str = f2->ToString();
+			boost::split(f_split, f2_str, boost::is_any_of(" \t"), boost::token_compress_on);
+			msg2 += " expected Robot Raconteur type \"" + f_split.at(0) + "\"";
+		}
+
+		return msg2;
+	}
+
+};
+
+RR_INTRUSIVE_PTR<MessageElement> PackMxArrayToMessageElement(const mxArray* pm, boost::shared_ptr<TypeDefinition> tdef, RR_SHARED_PTR<ServiceStub> stub, bool allow_null)
+{
+	PackMxArrayToMessageElementImpl p;
+	if (tdef)
+	{
+		p.push_field_level(tdef->Name, tdef);
+	}
+	else
+	{
+		p.push_field_level("value", RR_SHARED_PTR<TypeDefinition>());
+	}
+	try
+	{
+		return p.PackMxArrayToMessageElement(pm, tdef, stub, allow_null);
+	}
+	catch (DataTypeException& e)
+	{
+		e.Message = p.get_exception_message(e.Message);
+		throw;
+	}
+	catch (InvalidArgumentException& e)
+	{
+		e.Message = p.get_exception_message(e.Message);
+		throw;
+	}
 }
 
-mxArray* UnpackMessageElementToMxArray_pod(RR_INTRUSIVE_PTR<MessageElement> element, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<ServiceStub> stub)
-{	
-	std::vector<boost::shared_ptr<ServiceDefinition> > other_defs;
-	boost::shared_ptr<ServiceEntryDefinition> struct_def = rr_cast<ServiceEntryDefinition>(type1->ResolveNamedType(other_defs, RobotRaconteurNode::sp(), stub));
-	if (!struct_def) throw DataTypeException("Invalid pod type: " + type1->TypeString);
-
-	RR_INTRUSIVE_PTR<MessageElementPodArray> l = element->CastData<MessageElementPodArray>();
-	
+RR_INTRUSIVE_PTR<MessageElementPodArray>  PackMxArrayToMessageElement_pod(const mxArray* pm, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<ServiceStub> obj)
+{
+	PackMxArrayToMessageElementImpl p;
 	if (type1)
-	{		
-		int32_t c = boost::accumulate(type1->ArrayLength, 1, std::multiplies<int32_t>());
-		if (!type1->ArrayLength.empty() && c != 0)
-		{
+	{
+		p.push_field_level(type1->Name, type1);
+	}
+	else
+	{
+		p.push_field_level("value", RR_SHARED_PTR<TypeDefinition>());
+	}
+	try
+	{
+		return p.PackMxArrayToMessageElement_pod(pm, type1, obj);
+	}
+	catch (DataTypeException& e)
+	{
+		e.Message = p.get_exception_message(e.Message);
+		throw;
+	}
+	catch (InvalidArgumentException& e)
+	{
+		e.Message = p.get_exception_message(e.Message);
+		throw;
+	}
+}
 
-			if (type1->ArrayVarLength)
+class UnpackMessageElementToMxArrayImpl
+{
+public:
+	mxArray* UnpackMessageElementToMxArray_pod(RR_INTRUSIVE_PTR<MessageElement> element, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<ServiceStub> stub)
+	{
+		std::vector<boost::shared_ptr<ServiceDefinition> > other_defs;
+		boost::shared_ptr<ServiceEntryDefinition> struct_def = rr_cast<ServiceEntryDefinition>(type1->ResolveNamedType(other_defs, RobotRaconteurNode::sp(), stub));
+		if (!struct_def) throw DataTypeException("Invalid pod type");
+
+		RR_INTRUSIVE_PTR<MessageElementPodArray> l = element->CastData<MessageElementPodArray>();
+
+		RR_SHARED_PTR<TypeDefinition> type2;
+
+		if (type1)
+		{
+			int32_t c = boost::accumulate(type1->ArrayLength, 1, std::multiplies<int32_t>());
+			if (!type1->ArrayLength.empty() && c != 0)
 			{
-				if (l->Elements.size() > c)
+
+				if (type1->ArrayVarLength)
 				{
-					throw DataTypeException("Array dimension mismatch");
+					if (l->Elements.size() > c)
+					{
+						throw DataTypeException("Array dimension mismatch");
+					}
 				}
+				else
+				{
+					if (l->Elements.size() != c)
+					{
+						throw DataTypeException("Array dimension mismatch");
+					}
+				}
+			}
+
+			if (type1->ArrayType == DataTypes_ArrayTypes_none)
+			{
+				if (l->Elements.size() != 1) throw DataTypeException("Expected scalar");
+			}
+
+			type2 = type1->Clone();
+			type2->RemoveArray();
+		}
+
+		boost::shared_array<const char*> fieldnames(new const char*[struct_def->Members.size()]);
+
+		for (size_t i = 0; i < struct_def->Members.size(); i++)
+		{
+			fieldnames[i] = struct_def->Members[i]->Name.c_str();
+		}
+
+		mwSize dims = l->Elements.size();
+		mxArray* a = mxCreateStructArray(1, &dims, (int)struct_def->Members.size(), fieldnames.get());
+
+
+		for (uint32_t i = 0; i < boost::numeric_cast<uint32_t>(l->Elements.size()); i++)
+		{
+			push_field_level("[" + boost::lexical_cast<std::string>(i) + "]", type2);
+
+			RR_INTRUSIVE_PTR<MessageElement>& el1 = l->Elements[i];
+
+			if (el1->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
+			{
+				if (i != el1->ElementNumber) throw DataTypeException("Invalid pod array");
+			}
+			else if (el1->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
+			{
+				if (i != boost::lexical_cast<int32_t>(el1->ElementName)) throw DataTypeException("Invalid pod array");
 			}
 			else
 			{
-				if (l->Elements.size() != c)
-				{
-					throw DataTypeException("Array dimension mismatch");
-				}
+				throw DataTypeException("Invalid pod array");
 			}
-		}
 
-		if (type1->ArrayType == DataTypes_ArrayTypes_none)
-		{
-			if (l->Elements.size() != 1) throw DataTypeException("Expected scalar for " + type1->Name);
-		}
-	}
+			RR_INTRUSIVE_PTR<MessageElementPod> s = el1->CastData<MessageElementPod>();
 
-	boost::shared_array<const char*> fieldnames(new const char*[struct_def->Members.size()]);
+			std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
 
-	for (size_t i = 0; i < struct_def->Members.size(); i++)
-	{
-		fieldnames[i] = struct_def->Members[i]->Name.c_str();
-	}
+			int fieldnumber = 0;
+			BOOST_FOREACH(boost::shared_ptr<MemberDefinition> m, struct_def->Members)
+			{
+				boost::shared_ptr<PropertyDefinition> p = rr_cast<PropertyDefinition>(m);
 
-	mwSize dims = l->Elements.size();
-	mxArray* a = mxCreateStructArray(1, &dims, (int)struct_def->Members.size(), fieldnames.get());
+				push_field_level(p->Name, p->Type);
 
-
-	for (uint32_t i = 0; i < boost::numeric_cast<uint32_t>(l->Elements.size()); i++)
-	{
-		RR_INTRUSIVE_PTR<MessageElement>& el1 = l->Elements[i];
-
-		if (el1->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
-		{
-			if (i != el1->ElementNumber) throw DataTypeException("Invalid pod array specified for " + element->ElementName);
-		}
-		else if (el1->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
-		{
-			if (i != boost::lexical_cast<int32_t>(el1->ElementName)) throw DataTypeException("Invalid list specified for " + element->ElementName);
-		}
-		else
-		{
-			throw DataTypeException("Invalid pod array specified for " + element->ElementName);
-		}
+				RR_INTRUSIVE_PTR<MessageElement> el = MessageElement::FindElement(s->Elements, p->Name);
 				
-		RR_INTRUSIVE_PTR<MessageElementPod> s = el1->CastData<MessageElementPod>();
-
-		std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
-
-		int fieldnumber = 0;
-		BOOST_FOREACH(boost::shared_ptr<MemberDefinition> m, struct_def->Members)
-		{
-			boost::shared_ptr<PropertyDefinition> p = rr_cast<PropertyDefinition>(m);
-			RR_INTRUSIVE_PTR<MessageElement> el = MessageElement::FindElement(s->Elements, p->Name);
-
-			RR_SHARED_PTR<TypeDefinition> p1 = p->Type;
-			if (p->Type->ArrayType == DataTypes_ArrayTypes_multidimarray)
-			{
-				p1 = RR_MAKE_SHARED<TypeDefinition>();
-				p->Type->CopyTo(*p1);
-				int32_t c = boost::accumulate(p1->ArrayLength, 1, std::multiplies<int32_t>());
-				p1->ArrayLength.clear();
-				p1->ArrayLength.push_back(c);
-				p1->ArrayType = DataTypes_ArrayTypes_array;
-				p1->ArrayVarLength = false;
-			}
-
-			if (p1->Type == DataTypes_namedtype_t)
-			{
-				std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
-				if (p1->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), stub)->RRDataType() == DataTypes_pod_t)
+				RR_SHARED_PTR<TypeDefinition> p1 = p->Type;
+				if (p->Type->ArrayType == DataTypes_ArrayTypes_multidimarray)
 				{
-					mxArray* el1 = UnpackMessageElementToMxArray_pod(el, p1, stub);
+					p1 = RR_MAKE_SHARED<TypeDefinition>();
+					p->Type->CopyTo(*p1);
+					int32_t c = boost::accumulate(p1->ArrayLength, 1, std::multiplies<int32_t>());
+					p1->ArrayLength.clear();
+					p1->ArrayLength.push_back(c);
+					p1->ArrayType = DataTypes_ArrayTypes_array;
+					p1->ArrayVarLength = false;
+				}
+
+				if (p1->Type == DataTypes_namedtype_t)
+				{
+					std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
+					if (p1->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), stub)->RRDataType() == DataTypes_pod_t)
+					{
+						mxArray* el1 = UnpackMessageElementToMxArray_pod(el, p1, stub);
+						if (p->Type->ArrayType == DataTypes_ArrayTypes_multidimarray && p->Type->ArrayLength.size() > 0)
+						{
+							std::vector<mwSize> mw_dims;
+							BOOST_FOREACH(int32_t d, p->Type->ArrayLength) mw_dims.push_back((mwSize)d);
+							if (mxSetDimensions(el1, &mw_dims[0], mw_dims.size()))
+							{
+								throw DataTypeException("Pod multidimarray dimension mismatch");
+							}
+						}
+						mxSetFieldByNumber(a, i, fieldnumber, el1);
+						fieldnumber++;
+						continue;
+					}
+				}
+
+				{
+					mxArray* el1 = UnpackMessageElementToMxArray(el, p1, stub);
 					if (p->Type->ArrayType == DataTypes_ArrayTypes_multidimarray && p->Type->ArrayLength.size() > 0)
 					{
 						std::vector<mwSize> mw_dims;
+						if (p->Type->Type == DataTypes_namedtype_t)
+						{
+							RR_SHARED_PTR<NamedTypeDefinition> nt = p->Type->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), stub);
+							if (nt->RRDataType() == DataTypes_namedarray_t)
+							{
+								RR_SHARED_PTR<ServiceEntryDefinition> namedarray_def = rr_cast<ServiceEntryDefinition>(nt);
+								boost::tuple<DataTypes, size_t> namedarray_info = GetNamedArrayElementTypeAndCount(namedarray_def, empty_defs, RobotRaconteurNode::sp(), stub);
+								mw_dims.push_back(namedarray_info.get<1>());
+							}
+						}
+
 						BOOST_FOREACH(int32_t d, p->Type->ArrayLength) mw_dims.push_back((mwSize)d);
 						if (mxSetDimensions(el1, &mw_dims[0], mw_dims.size()))
 						{
 							throw DataTypeException("Pod multidimarray dimension mismatch");
 						}
 					}
-					mxSetFieldByNumber(a, i, fieldnumber, el1);				
+					mxSetFieldByNumber(a, i, fieldnumber, el1);
 					fieldnumber++;
-					continue;
 				}
+
+				pop_field_level();
 			}
 
-			{
-				mxArray* el1 = UnpackMessageElementToMxArray(el, p1, stub);
-				if (p->Type->ArrayType == DataTypes_ArrayTypes_multidimarray && p->Type->ArrayLength.size() > 0)
-				{
-					std::vector<mwSize> mw_dims;
-					if (p->Type->Type == DataTypes_namedtype_t)
-					{
-						RR_SHARED_PTR<NamedTypeDefinition> nt = p->Type->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), stub);
-						if (nt->RRDataType() == DataTypes_namedarray_t)
-						{
-							RR_SHARED_PTR<ServiceEntryDefinition> namedarray_def = rr_cast<ServiceEntryDefinition>(nt);
-							boost::tuple<DataTypes, size_t> namedarray_info = GetNamedArrayElementTypeAndCount(namedarray_def, empty_defs, RobotRaconteurNode::sp(), stub);
-							mw_dims.push_back(namedarray_info.get<1>());
-						}
-					}
-
-					BOOST_FOREACH(int32_t d, p->Type->ArrayLength) mw_dims.push_back((mwSize)d);
-					if (mxSetDimensions(el1, &mw_dims[0], mw_dims.size()))
-					{
-						throw DataTypeException("Pod multidimarray dimension mismatch");
-					}
-				}
-				mxSetFieldByNumber(a, i, fieldnumber, el1);
-				fieldnumber++;
-			}
-		}		
-	}
-		
-	return a;
-
-}
-
-mxArray* UnpackMessageElementToMxArray(RR_INTRUSIVE_PTR<MessageElement> m, boost::shared_ptr<TypeDefinition> tdef, RR_SHARED_PTR<ServiceStub> stub)
-{
-	if (!m || m->ElementType==DataTypes_void_t)
-	{
-		if (tdef && (tdef->ContainerType == DataTypes_ContainerTypes_none))
-		{
-			std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
-			if (IsTypeNumeric(tdef->Type))
-			{
-				throw DataTypeException("Scalars and arrays must not be None");
-			}
-			if (tdef->Type == DataTypes_string_t)
-			{
-				throw DataTypeException("Strings must not be None");
-			}
-			if (tdef->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), stub)->RRDataType() == DataTypes_pod_t)
-			{
-				throw DataTypeException("Pods must not be None");
-			}
+			pop_field_level();
 		}
 
-		mwSize empty_dims[]={1,0};
-		return mxCreateNumericArray(2,empty_dims,mxDOUBLE_CLASS,mxREAL);
+		return a;
+
 	}
 
-	if (tdef->ContainerType == DataTypes_ContainerTypes_map_int32 || tdef->ContainerType == DataTypes_ContainerTypes_map_string)
+	mxArray* UnpackMessageElementToMxArray(RR_INTRUSIVE_PTR<MessageElement> m, boost::shared_ptr<TypeDefinition> tdef, RR_SHARED_PTR<ServiceStub> stub)
 	{
-		
-		boost::shared_ptr<TypeDefinition> tdef2 = tdef->Clone();
-		tdef2->RemoveContainers();
-
-		if (tdef->ContainerType==DataTypes_ContainerTypes_map_int32)
+		if (!m || m->ElementType == DataTypes_void_t)
 		{
-			std::vector<RR_INTRUSIVE_PTR<MessageElement> > elems=m->CastData<MessageElementMap<int32_t> >()->Elements;
-		
-			mwIndex count=0;
-
-			mxArray *o;
-			mxArray *prhs[4];
-			prhs[0]=mxCreateString("KeyType");
-			prhs[1]=mxCreateString("int32");
-			prhs[2]=mxCreateString("ValueType");
-			prhs[3]=mxCreateString("any");
-			
-
-			mexCallMATLAB(1,&o,4,prhs,"containers.Map");
-
-			BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& e, elems)
+			if (tdef && (tdef->ContainerType == DataTypes_ContainerTypes_none))
 			{
-				const char* fnames[]={"type","subs"};
-				mxArray* subs=mxCreateStructMatrix(1,1,2,fnames);
-				mxSetFieldByNumber(subs,0,0,mxCreateString("()"));
+				std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
+				if (IsTypeNumeric(tdef->Type))
+				{
+					throw DataTypeException("Scalars and arrays must not be None");
+				}
+				if (tdef->Type == DataTypes_string_t)
+				{
+					throw DataTypeException("Strings must not be None");
+				}
+				if (tdef->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), stub)->RRDataType() == DataTypes_pod_t)
+				{
+					throw DataTypeException("Pods must not be None");
+				}
+			}
 
-				mxArray* mxkey=mxCreateNumericMatrix(1,1,mxINT32_CLASS,mxREAL);
-				int32_t* key=(int32_t*)mxGetData(mxkey);
+			mwSize empty_dims[] = { 1,0 };
+			return mxCreateNumericArray(2, empty_dims, mxDOUBLE_CLASS, mxREAL);
+		}
+
+		if (tdef->ContainerType == DataTypes_ContainerTypes_map_int32 || tdef->ContainerType == DataTypes_ContainerTypes_map_string)
+		{
+
+			boost::shared_ptr<TypeDefinition> tdef2 = tdef->Clone();
+			tdef2->RemoveContainers();
+
+			if (tdef->ContainerType == DataTypes_ContainerTypes_map_int32)
+			{
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > elems = m->CastData<MessageElementMap<int32_t> >()->Elements;
+
+				mwIndex count = 0;
+
+				mxArray *o;
+				mxArray *prhs[4];
+				prhs[0] = mxCreateString("KeyType");
+				prhs[1] = mxCreateString("int32");
+				prhs[2] = mxCreateString("ValueType");
+				prhs[3] = mxCreateString("any");
+
+
+				mexCallMATLAB(1, &o, 4, prhs, "containers.Map");
+
+				BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, elems)
+				{
+					const char* fnames[] = { "type","subs" };
+					mxArray* subs = mxCreateStructMatrix(1, 1, 2, fnames);
+					mxSetFieldByNumber(subs, 0, 0, mxCreateString("()"));
+
+					mxArray* mxkey = mxCreateNumericMatrix(1, 1, mxINT32_CLASS, mxREAL);
+					int32_t* key = (int32_t*)mxGetData(mxkey);
+					if (e->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
+					{
+						key[0] = e->ElementNumber;
+					}
+					else if (e->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
+					{
+						key[0] = boost::lexical_cast<int32_t>(e->ElementName);
+					}
+					else
+					{
+						throw DataTypeException("Invalid key type");
+					}
+
+					push_field_level("[" + boost::lexical_cast<std::string>(key[0]) + "]", tdef2);
+
+					mxArray* k_cell = mxCreateCellMatrix(1, 1);
+
+					mxSetCell(k_cell, 0, mxkey);
+
+					mxSetFieldByNumber(subs, 0, 1, k_cell);
+
+					mxArray* mxdata = UnpackMessageElementToMxArray(e, tdef2, stub);
+
+					mxArray* prhs2[3];
+					prhs2[0] = o;
+					prhs2[1] = subs;
+					prhs2[2] = mxdata;
+
+					mexCallMATLAB(0, NULL, 3, prhs2, "subsasgn");
+
+					count++;
+
+					pop_field_level();
+				}
+
+				return o;
+
+			}
+
+			if (tdef->ContainerType == DataTypes_ContainerTypes_map_string)
+			{
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > elems = m->CastData<MessageElementMap<std::string> >()->Elements;
+
+				mwIndex count = 0;
+
+				mxArray *o;
+				mxArray *prhs[4];
+				prhs[0] = mxCreateString("KeyType");
+				prhs[1] = mxCreateString("char");
+				prhs[2] = mxCreateString("ValueType");
+				prhs[3] = mxCreateString("any");
+
+
+				mexCallMATLAB(1, &o, 4, prhs, "containers.Map");
+
+				BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, elems)
+				{
+					push_field_level("[\"" + e->ElementName + "\"]", tdef2);
+
+					const char* fnames[] = { "type","subs" };
+					mxArray* subs = mxCreateStructMatrix(1, 1, 2, fnames);
+					mxSetFieldByNumber(subs, 0, 0, mxCreateString("()"));
+
+
+					mxArray* mxkey = mxCreateString(e->ElementName.c_str());
+					mxSetFieldByNumber(subs, 0, 1, mxkey);
+
+					//mxSetCell(k,count,mxkey);
+
+					mxArray* mxdata = UnpackMessageElementToMxArray(e, tdef2, stub);
+					//mxSetCell(v,count,mxdata);
+
+					mxArray* prhs2[3];
+					prhs2[0] = o;
+					prhs2[1] = subs;
+					prhs2[2] = mxdata;
+
+					mexCallMATLAB(0, NULL, 3, prhs2, "subsasgn");
+
+					count++;
+
+					pop_field_level();
+				}
+				return o;
+			}
+
+			throw DataTypeException("Unknown map key type");
+
+		}
+
+		if (tdef->ContainerType == DataTypes_ContainerTypes_list)
+		{
+			boost::shared_ptr<TypeDefinition> tdef2 = tdef->Clone();
+			tdef2->RemoveContainers();
+
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > elems = m->CastData<MessageElementList >()->Elements;
+
+			mwSize dims = (mwSize)elems.size();
+
+			mxArray* v = mxCreateCellArray(1, &dims);
+
+			mwIndex count = 0;
+
+			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, elems)
+			{
+
+				int32_t c;
 				if (e->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
 				{
-					key[0] = e->ElementNumber;
+					c = e->ElementNumber;
 				}
 				else if (e->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
 				{
-					key[0] = boost::lexical_cast<int32_t>(e->ElementName);
+					c = boost::lexical_cast<int32_t>(e->ElementName);
 				}
 				else
 				{
 					throw DataTypeException("Invalid list type");
 				}
 
-				mxArray* k_cell=mxCreateCellMatrix(1,1);
+				if (count != c) throw DataTypeException("Error in list format");
 
-				mxSetCell(k_cell,0,mxkey);
+				push_field_level("[" + boost::lexical_cast<std::string>(c) + "]", tdef2);
 
-				mxSetFieldByNumber(subs,0,1,k_cell);
-
-				mxArray* mxdata=UnpackMessageElementToMxArray(e,tdef2,stub);
-				
-				mxArray* prhs2[3];
-				prhs2[0]=o;
-				prhs2[1]=subs;
-				prhs2[2]=mxdata;
-
-				mexCallMATLAB(0,NULL,3,prhs2,"subsasgn");			
+				mxArray* mxdata = UnpackMessageElementToMxArray(e, tdef2, stub);
+				mxSetCell(v, count, mxdata);
 
 				count++;
+
+				pop_field_level();
 			}
 
-			return o;
+			return v;
 
 		}
 
-		if (tdef->ContainerType == DataTypes_ContainerTypes_map_string)
+		if (IsTypeNumeric(tdef->Type))
 		{
-			std::vector<RR_INTRUSIVE_PTR<MessageElement> > elems=m->CastData<MessageElementMap<std::string> >()->Elements;
-
-			mwIndex count=0;
-
-			mxArray *o;
-			mxArray *prhs[4];
-			prhs[0]=mxCreateString("KeyType");
-			prhs[1]=mxCreateString("char");
-			prhs[2]=mxCreateString("ValueType");
-			prhs[3]=mxCreateString("any");
-			
-
-			mexCallMATLAB(1,&o,4,prhs,"containers.Map");
-
-			BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& e, elems)
+			if (tdef->ArrayType != DataTypes_ArrayTypes_multidimarray)
 			{
-				const char* fnames[]={"type","subs"};
-				mxArray* subs=mxCreateStructMatrix(1,1,2,fnames);
-				mxSetFieldByNumber(subs,0,0,mxCreateString("()"));
-				
-
-				mxArray* mxkey=mxCreateString(e->ElementName.c_str());
-				mxSetFieldByNumber(subs,0,1,mxkey);
-
-				//mxSetCell(k,count,mxkey);
-
-				mxArray* mxdata=UnpackMessageElementToMxArray(e,tdef2,stub);
-				//mxSetCell(v,count,mxdata);
-
-				mxArray* prhs2[3];
-				prhs2[0]=o;
-				prhs2[1]=subs;
-				prhs2[2]=mxdata;
-
-				mexCallMATLAB(0,NULL,3,prhs2,"subsasgn");
-
-				count++;
-			}
-			return o;
-		}
-
-		throw DataTypeException("Unknown map key type");
-
-	}
-
-	if (tdef->ContainerType == DataTypes_ContainerTypes_list)
-	{	
-		boost::shared_ptr<TypeDefinition> tdef2 = tdef->Clone();
-		tdef2->RemoveContainers();
-		
-		std::vector<RR_INTRUSIVE_PTR<MessageElement> > elems=m->CastData<MessageElementList >()->Elements;
-
-		mwSize dims=(mwSize)elems.size();
-		
-		mxArray* v=mxCreateCellArray(1,&dims);
-
-		mwIndex count=0;
-
-		BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& e, elems)
-		{
-			
-			int32_t c;
-			if (e->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
-			{
-				c = e->ElementNumber;
-			}
-			else if (e->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
-			{
-				c = boost::lexical_cast<int32_t>(e->ElementName);
-			}
-			else
-			{
-				throw DataTypeException("Invalid list type");
-			}
-
-			if (count!=c) throw DataTypeException("Error in list format");
-			
-			mxArray* mxdata=UnpackMessageElementToMxArray(e,tdef2,stub);
-			mxSetCell(v,count,mxdata);
-			
-			count++;
-		}		
-
-		return v;
-
-	}
-
-	if (IsTypeNumeric(tdef->Type) )
-	{
-		if (tdef->ArrayType != DataTypes_ArrayTypes_multidimarray)
-		{
-			RR_INTRUSIVE_PTR<RRBaseArray> data=m->CastData<RRBaseArray>();
-			if ((tdef->ArrayType != DataTypes_ArrayTypes_none) && tdef->ArrayLength.at(0)!=0)
-			{
-				if (tdef->ArrayVarLength)
-				{
-					//if (data)
-					if (data->size() > tdef->ArrayLength.at(0)) throw DataTypeException("Array " + tdef->Name+ " exceeds maximum length");
-					
-				}
-				else
-				{
-					//if (!data) throw DataTypeException("Array " + tdef->Name + " must not be null");
-					if (data->size() != tdef->ArrayLength.at(0)) throw DataTypeException("Array " + tdef->Name + " length match error");
-				}
-			}
-			if (tdef->ArrayType == DataTypes_ArrayTypes_none)
-			{
-				if (data->size() != 1) throw DataTypeException("Expected scalar for " + tdef->Name);
-			}
-			return GetMxArrayFromRRArray(data);
-		}
-		else
-		{
-			RR_INTRUSIVE_PTR<MessageElementMultiDimArray> a=m->CastData<MessageElementMultiDimArray>();
-			std::vector<mwSize> dims=RRArrayToVector<mwSize>(MessageElement::FindElement(a->Elements,"dims")->CastData<RRArray<uint32_t> >());
-			RR_INTRUSIVE_PTR<RRBaseArray> array=MessageElement::FindElement(a->Elements,"array")->CastData<RRBaseArray>();
-			
-			if (!tdef->ArrayVarLength)
-			{				
-				if (dims.size()!=tdef->ArrayLength.size()) throw DataTypeException("Array " + tdef->Name + " dimension match error"); 
-				for (size_t i=0; i<dims.size(); i++)
-				{
-					if (dims.at(i)!=tdef->ArrayLength.at(i)) throw DataTypeException("Array " + tdef->Name + " dimension match error"); 
-				}
-			}
-
-			return GetMxArrayFromRRArray(array,dims);
-		}
-	}
-
-	if (tdef->Type== DataTypes_string_t)
-	{
-		RR_INTRUSIVE_PTR<RRArray<char> > m_str = m->CastData<RRArray<char> >();
-		std::basic_string<uint16_t> data_utf16 = boost::locale::conv::utf_to_utf<uint16_t>(m_str->data(), m_str->data()+m_str->size());
-
-		mwSize data_size[2];
-		data_size[0] = 1;
-		data_size[1] = data_utf16.size();
-
-		mxArray* mx_str = mxCreateCharArray(2, data_size);
-		uint16_t* mx_str_ptr = (uint16_t*)mxGetData(mx_str);
-		memcpy(mx_str_ptr, data_utf16.c_str(), data_size[1] * sizeof(uint16_t));
-
-		return mx_str;
-	}
-
-	if (tdef->Type==DataTypes_namedtype_t)
-	{
-		std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
-		RR_SHARED_PTR<NamedTypeDefinition> nt = tdef->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), stub);
-		switch (nt->RRDataType())
-		{
-		case DataTypes_structure_t:
-		{
-			RR_INTRUSIVE_PTR<MessageElementStructure> mstruct = m->CastData<MessageElementStructure>();
-			std::vector<RR_INTRUSIVE_PTR<MessageElement> >& melements = mstruct->Elements;
-
-						
-			boost::shared_ptr<ServiceEntryDefinition> d=rr_cast<ServiceEntryDefinition>(nt);
-				
-			boost::shared_array<const char*> fieldnames(new const char*[d->Members.size()]);
-
-			for (size_t i = 0; i < d->Members.size(); i++)
-			{
-				fieldnames[i] = d->Members[i]->Name.c_str();
-			}
-
-			mwSize dims = 1;
-			mxArray* o = mxCreateStructArray(1, &dims, (int)d->Members.size(), fieldnames.get());
-
-
-			RR_INTRUSIVE_PTR<MessageElement> elem;
-
-			int fieldnumber = 0;
-			BOOST_FOREACH(boost::shared_ptr<MemberDefinition>& e, d->Members)
-			{
-				boost::shared_ptr<PropertyDefinition> p = rr_cast<PropertyDefinition>(e);
-
-				elem = MessageElement::FindElement(melements, e->Name);
-										
-				mxArray* data = UnpackMessageElementToMxArray(elem, p->Type, stub);
-
-				mxSetFieldByNumber(o, 0, fieldnumber, data);
-
-				fieldnumber++;
-			}
-
-			return o;
-			
-		}
-		case DataTypes_enum_t:
-		{
-			RR_SHARED_PTR<TypeDefinition> enum_type = RR_MAKE_SHARED<TypeDefinition>();
-			enum_type->Type = DataTypes_int32_t;
-			enum_type->Name = "value";
-			return UnpackMessageElementToMxArray(m, enum_type, stub);			
-		}
-		case DataTypes_pod_t:
-		{
-			switch (tdef->ArrayType)
-			{
-			case DataTypes_ArrayTypes_none:
-			case DataTypes_ArrayTypes_array:
-			{
-				return UnpackMessageElementToMxArray_pod(m, tdef, stub);
-			}
-			case DataTypes_ArrayTypes_multidimarray:
-			{
-				RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> mm = m->CastData<MessageElementPodMultiDimArray>();
-				if (!mm) throw DataTypeException("Invalid pod array");
-
-				std::vector<mwSize> dims = RRArrayToVector<mwSize>(MessageElement::FindElement(mm->Elements, "dims")->CastData<RRArray<uint32_t> >());
-							
-				RR_INTRUSIVE_PTR<MessageElement> array = MessageElement::FindElement(mm->Elements, "array");
-				if (!array) throw DataTypeException("Invalid PodMultiDimArray");
-				boost::shared_ptr<TypeDefinition> type2;
-				if (tdef)
-				{
-					type2 = boost::make_shared<TypeDefinition>();
-					tdef->CopyTo(*type2);
-					type2->ArrayType = DataTypes_ArrayTypes_array;
-					type2->ArrayVarLength = true;
-					type2->ArrayLength.clear();
-				}
-				mxArray* pod_array = UnpackMessageElementToMxArray_pod(array, type2, stub);
-				if (mxSetDimensions(pod_array, &dims[0], dims.size()))
-				{
-					throw DataTypeException("Dimensions mismatch for pod multidimarray");
-				}
-				return pod_array;
-			}
-			default:
-				throw DataTypeException("Invalid pod type");
-			}
-		}
-		case DataTypes_namedarray_t:
-		{
-			RR_INTRUSIVE_PTR<RRBaseArray> namedarray_array;			
-			RR_SHARED_PTR<ServiceEntryDefinition> namedarray_def = rr_cast<ServiceEntryDefinition>(nt);
-			boost::tuple<DataTypes, size_t> namedarray_info = GetNamedArrayElementTypeAndCount(namedarray_def, empty_defs, RobotRaconteurNode::sp(), stub);
-
-			std::vector<size_t> dims;
-			dims.push_back(namedarray_info.get<1>());
-
-									
-			switch (tdef->ArrayType)
-			{
-			case DataTypes_ArrayTypes_none:
-			case DataTypes_ArrayTypes_array:
-			{
-				RR_INTRUSIVE_PTR<MessageElementNamedArray> mm = m->CastData<MessageElementNamedArray>();
-				if (!mm) throw DataTypeException("Invalid namedarray");
-
-				namedarray_array = MessageElement::FindElement(mm->Elements, "array")->CastData<RRBaseArray>();
-				if (!namedarray_array) throw DataTypeException("Invalid namedarray");
-				if (namedarray_array->GetTypeID() != namedarray_info.get<0>()) throw DataTypeException("Invalid namedarray type");
-				if (namedarray_array->size() % namedarray_info.get<1>() != 0) throw DataTypeException("Invalid namedarray length");
-				size_t array_len = namedarray_array->size() / namedarray_info.get<1>();
+				RR_INTRUSIVE_PTR<RRBaseArray> data = m->CastData<RRBaseArray>();
 				if ((tdef->ArrayType != DataTypes_ArrayTypes_none) && tdef->ArrayLength.at(0) != 0)
 				{
 					if (tdef->ArrayVarLength)
-					{						
-						if (array_len > tdef->ArrayLength.at(0)) throw DataTypeException("namedarray " + tdef->Name + " exceeds maximum length");
+					{
+						//if (data)
+						if (data->size() > tdef->ArrayLength.at(0)) throw DataTypeException("Array exceeds maximum length");
+
 					}
 					else
-					{						
-						if (array_len != tdef->ArrayLength.at(0)) throw DataTypeException("namedarray " + tdef->Name + " length match error");
+					{
+						//if (!data) throw DataTypeException("Array " + tdef->Name + " must not be null");
+						if (data->size() != tdef->ArrayLength.at(0)) throw DataTypeException("Array length mismatch");
 					}
 				}
 				if (tdef->ArrayType == DataTypes_ArrayTypes_none)
 				{
-					if (array_len != 1) throw DataTypeException("Expected scalar for " + tdef->Name);
+					if (data->size() != 1) throw DataTypeException("Expected scalar");
 				}
-				dims.push_back(array_len);
-				return GetMxArrayFromRRArray(namedarray_array,dims);
+				return GetMxArrayFromRRArray(data);
 			}
-			case DataTypes_ArrayTypes_multidimarray:
+			else
 			{
-				RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> mm1 = m->CastData<MessageElementNamedMultiDimArray>();
-				if (!mm1) throw DataTypeException("Invalid namedarray");
+				RR_INTRUSIVE_PTR<MessageElementMultiDimArray> a = m->CastData<MessageElementMultiDimArray>();
+				std::vector<mwSize> dims = RRArrayToVector<mwSize>(MessageElement::FindElement(a->Elements, "dims")->CastData<RRArray<uint32_t> >());
+				RR_INTRUSIVE_PTR<RRBaseArray> array = MessageElement::FindElement(a->Elements, "array")->CastData<RRBaseArray>();
 
-				std::vector<size_t> dims1 = RRArrayToVector<mwSize>(MessageElement::FindElement(mm1->Elements, "dims")->CastData<RRArray<uint32_t> >());
 				if (!tdef->ArrayVarLength)
 				{
-					if (dims1.size() != tdef->ArrayLength.size()) throw DataTypeException("namedarray " + tdef->Name + " dimension match error");
-					for (size_t i = 0; i<dims1.size(); i++)
+					if (dims.size() != tdef->ArrayLength.size()) throw DataTypeException("Array dimension mismatch");
+					for (size_t i = 0; i < dims.size(); i++)
 					{
-						if (dims1.at(i) != tdef->ArrayLength.at(i)) throw DataTypeException("namedarray " + tdef->Name + " dimension match error");
+						if (dims.at(i) != tdef->ArrayLength.at(i)) throw DataTypeException("Array dimension mismatch");
 					}
 				}
 
-				size_t expected_n_elems=boost::numeric_cast<size_t>(boost::accumulate(dims1, 1, std::multiplies<int32_t>()) * namedarray_info.get<1>());
+				return GetMxArrayFromRRArray(array, dims);
+			}
+		}
 
-				RR_INTRUSIVE_PTR<MessageElementNamedArray> mm = MessageElement::FindElement(mm1->Elements, "array")->CastData<MessageElementNamedArray>();
-				if (!mm) throw DataTypeException("Invalid namedarray");
+		if (tdef->Type == DataTypes_string_t)
+		{
+			RR_INTRUSIVE_PTR<RRArray<char> > m_str = m->CastData<RRArray<char> >();
+			std::basic_string<uint16_t> data_utf16 = boost::locale::conv::utf_to_utf<uint16_t>(m_str->data(), m_str->data() + m_str->size());
 
-				namedarray_array = MessageElement::FindElement(mm->Elements, "array")->CastData<RRBaseArray>();
-				if (!namedarray_array) throw DataTypeException("Invalid namedarray");
-				if (namedarray_array->GetTypeID() != namedarray_info.get<0>()) throw DataTypeException("Invalid namedarray type");
-				if (namedarray_array->size() != expected_n_elems) throw DataTypeException("namedarray " + tdef->Name + " dimension match error");
+			mwSize data_size[2];
+			data_size[0] = 1;
+			data_size[1] = data_utf16.size();
 
-				boost::range::copy(dims1, std::back_inserter(dims));
-				return GetMxArrayFromRRArray(namedarray_array, dims);
+			mxArray* mx_str = mxCreateCharArray(2, data_size);
+			uint16_t* mx_str_ptr = (uint16_t*)mxGetData(mx_str);
+			memcpy(mx_str_ptr, data_utf16.c_str(), data_size[1] * sizeof(uint16_t));
+
+			return mx_str;
+		}
+
+		if (tdef->Type == DataTypes_namedtype_t)
+		{
+			std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
+			RR_SHARED_PTR<NamedTypeDefinition> nt = tdef->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), stub);
+			switch (nt->RRDataType())
+			{
+			case DataTypes_structure_t:
+			{
+				RR_INTRUSIVE_PTR<MessageElementStructure> mstruct = m->CastData<MessageElementStructure>();
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> >& melements = mstruct->Elements;
+
+
+				boost::shared_ptr<ServiceEntryDefinition> d = rr_cast<ServiceEntryDefinition>(nt);
+
+				boost::shared_array<const char*> fieldnames(new const char*[d->Members.size()]);
+
+				for (size_t i = 0; i < d->Members.size(); i++)
+				{
+					fieldnames[i] = d->Members[i]->Name.c_str();
+				}
+
+				mwSize dims = 1;
+				mxArray* o = mxCreateStructArray(1, &dims, (int)d->Members.size(), fieldnames.get());
+
+
+				RR_INTRUSIVE_PTR<MessageElement> elem;
+
+				int fieldnumber = 0;
+				BOOST_FOREACH(boost::shared_ptr<MemberDefinition>& e, d->Members)
+				{
+					boost::shared_ptr<PropertyDefinition> p = rr_cast<PropertyDefinition>(e);
+
+					push_field_level(p->Name, p->Type);
+					elem = MessageElement::FindElement(melements, e->Name);
+
+					mxArray* data = UnpackMessageElementToMxArray(elem, p->Type, stub);
+
+					mxSetFieldByNumber(o, 0, fieldnumber, data);
+
+					fieldnumber++;
+					pop_field_level();
+				}
+
+				return o;
+
+			}
+			case DataTypes_enum_t:
+			{
+				RR_SHARED_PTR<TypeDefinition> enum_type = RR_MAKE_SHARED<TypeDefinition>();
+				enum_type->Type = DataTypes_int32_t;
+				enum_type->Name = "value";
+				return UnpackMessageElementToMxArray(m, enum_type, stub);
+			}
+			case DataTypes_pod_t:
+			{
+				switch (tdef->ArrayType)
+				{
+				case DataTypes_ArrayTypes_none:
+				case DataTypes_ArrayTypes_array:
+				{
+					return UnpackMessageElementToMxArray_pod(m, tdef, stub);
+				}
+				case DataTypes_ArrayTypes_multidimarray:
+				{
+					RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> mm = m->CastData<MessageElementPodMultiDimArray>();
+					if (!mm) throw DataTypeException("Invalid pod array");
+
+					std::vector<mwSize> dims = RRArrayToVector<mwSize>(MessageElement::FindElement(mm->Elements, "dims")->CastData<RRArray<uint32_t> >());
+
+					RR_INTRUSIVE_PTR<MessageElement> array = MessageElement::FindElement(mm->Elements, "array");
+					if (!array) throw DataTypeException("Invalid PodMultiDimArray");
+					boost::shared_ptr<TypeDefinition> type2;
+					if (tdef)
+					{
+						type2 = boost::make_shared<TypeDefinition>();
+						tdef->CopyTo(*type2);
+						type2->ArrayType = DataTypes_ArrayTypes_array;
+						type2->ArrayVarLength = true;
+						type2->ArrayLength.clear();
+					}
+					mxArray* pod_array = UnpackMessageElementToMxArray_pod(array, type2, stub);
+					if (mxSetDimensions(pod_array, &dims[0], dims.size()))
+					{
+						throw DataTypeException("Dimensions mismatch for pod multidimarray");
+					}
+					return pod_array;
+				}
+				default:
+					throw DataTypeException("Invalid pod type");
+				}
+			}
+			case DataTypes_namedarray_t:
+			{
+				RR_INTRUSIVE_PTR<RRBaseArray> namedarray_array;
+				RR_SHARED_PTR<ServiceEntryDefinition> namedarray_def = rr_cast<ServiceEntryDefinition>(nt);
+				boost::tuple<DataTypes, size_t> namedarray_info = GetNamedArrayElementTypeAndCount(namedarray_def, empty_defs, RobotRaconteurNode::sp(), stub);
+
+				std::vector<size_t> dims;
+				dims.push_back(namedarray_info.get<1>());
+
+
+				switch (tdef->ArrayType)
+				{
+				case DataTypes_ArrayTypes_none:
+				case DataTypes_ArrayTypes_array:
+				{
+					RR_INTRUSIVE_PTR<MessageElementNamedArray> mm = m->CastData<MessageElementNamedArray>();
+					if (!mm) throw DataTypeException("Invalid namedarray");
+
+					namedarray_array = MessageElement::FindElement(mm->Elements, "array")->CastData<RRBaseArray>();
+					if (!namedarray_array) throw DataTypeException("Invalid namedarray");
+					if (namedarray_array->GetTypeID() != namedarray_info.get<0>()) throw DataTypeException("Invalid namedarray type");
+					if (namedarray_array->size() % namedarray_info.get<1>() != 0) throw DataTypeException("Invalid namedarray length");
+					size_t array_len = namedarray_array->size() / namedarray_info.get<1>();
+					if ((tdef->ArrayType != DataTypes_ArrayTypes_none) && tdef->ArrayLength.at(0) != 0)
+					{
+						if (tdef->ArrayVarLength)
+						{
+							if (array_len > tdef->ArrayLength.at(0)) throw DataTypeException("namedarray exceeds maximum length");
+						}
+						else
+						{
+							if (array_len != tdef->ArrayLength.at(0)) throw DataTypeException("namedarray length mismatch");
+						}
+					}
+					if (tdef->ArrayType == DataTypes_ArrayTypes_none)
+					{
+						if (array_len != 1) throw DataTypeException("Expected scalar");
+					}
+					dims.push_back(array_len);
+					return GetMxArrayFromRRArray(namedarray_array, dims);
+				}
+				case DataTypes_ArrayTypes_multidimarray:
+				{
+					RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> mm1 = m->CastData<MessageElementNamedMultiDimArray>();
+					if (!mm1) throw DataTypeException("Invalid namedarray");
+
+					std::vector<size_t> dims1 = RRArrayToVector<mwSize>(MessageElement::FindElement(mm1->Elements, "dims")->CastData<RRArray<uint32_t> >());
+					if (!tdef->ArrayVarLength)
+					{
+						if (dims1.size() != tdef->ArrayLength.size()) throw DataTypeException("namedarray dimension mismatch");
+						for (size_t i = 0; i < dims1.size(); i++)
+						{
+							if (dims1.at(i) != tdef->ArrayLength.at(i)) throw DataTypeException("namedarray dimension mismatch");
+						}
+					}
+
+					size_t expected_n_elems = boost::numeric_cast<size_t>(boost::accumulate(dims1, 1, std::multiplies<int32_t>()) * namedarray_info.get<1>());
+
+					RR_INTRUSIVE_PTR<MessageElementNamedArray> mm = MessageElement::FindElement(mm1->Elements, "array")->CastData<MessageElementNamedArray>();
+					if (!mm) throw DataTypeException("Invalid namedarray");
+
+					namedarray_array = MessageElement::FindElement(mm->Elements, "array")->CastData<RRBaseArray>();
+					if (!namedarray_array) throw DataTypeException("Invalid namedarray");
+					if (namedarray_array->GetTypeID() != namedarray_info.get<0>()) throw DataTypeException("Invalid namedarray type");
+					if (namedarray_array->size() != expected_n_elems) throw DataTypeException("namedarray dimension mismatch");
+
+					boost::range::copy(dims1, std::back_inserter(dims));
+					return GetMxArrayFromRRArray(namedarray_array, dims);
+				}
+				default:
+					throw DataTypeException("Invalid namedarray type");
+				}
 			}
 			default:
-				throw DataTypeException("Invalid namedarray type");
+				throw DataTypeException("Unknown named type id");
 			}
-
-			
-
-
-			
-			
-
 		}
-		default:
-			throw DataTypeException("Unknown named type id");
-		}
-	}
 
-	if (tdef->Type==DataTypes_varvalue_t)
-	{
-		boost::shared_ptr<TypeDefinition> tdef2=boost::make_shared<TypeDefinition>();
-		tdef2->Name=tdef->Name;
-		tdef2->member=tdef->member;
-
-		if (IsTypeNumeric(m->ElementType))
+		if (tdef->Type == DataTypes_varvalue_t)
 		{
-			tdef2->ArrayVarLength=true;
-			tdef2->ArrayLength.push_back(0);
-			tdef2->ArrayType = DataTypes_ArrayTypes_array;
-			tdef2->Type=m->ElementType;
-			return UnpackMessageElementToMxArray(m,tdef2,stub);
-		}
+			boost::shared_ptr<TypeDefinition> tdef2 = boost::make_shared<TypeDefinition>();
+			tdef2->Name = tdef->Name;
+			tdef2->member = tdef->member;
 
-		if (m->ElementType==DataTypes_string_t)
-		{
-			tdef2->Type=m->ElementType;
-			return UnpackMessageElementToMxArray(m,tdef2,stub);
-		}
-
-		if (m->ElementType==DataTypes_structure_t
-			|| m->ElementType==DataTypes_pod_array_t
-			|| m->ElementType==DataTypes_pod_multidimarray_t)
-		{
-			tdef2->Type=DataTypes_namedtype_t;
-			tdef2->TypeString=m->ElementTypeName;
-			if (m->ElementType == DataTypes_pod_array_t)
+			if (IsTypeNumeric(m->ElementType))
 			{
+				tdef2->ArrayVarLength = true;
+				tdef2->ArrayLength.push_back(0);
 				tdef2->ArrayType = DataTypes_ArrayTypes_array;
-			}
-			if (m->ElementType == DataTypes_pod_multidimarray_t)
-			{
-				tdef2->ArrayType = DataTypes_ArrayTypes_multidimarray;
-			}
-			std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
-			tdef2->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), stub);
-			mxArray* o=UnpackMessageElementToMxArray(m,tdef2,stub);
-			
-			int fcount=mxGetNumberOfFields(o);
-			const char** fields=new const char*[fcount+1];
-			fields[0]="RobotRaconteurStructureType";
-			for (int i=0; i<fcount; i++)
-			{	const char* cfname=mxGetFieldNameByNumber(o,i);
-				if (cfname==NULL) throw InternalErrorException("Internal error");
-				fields[i+1]=cfname;
+				tdef2->Type = m->ElementType;
+				return UnpackMessageElementToMxArray(m, tdef2, stub);
 			}
 
-			mwSize dims=mxGetNumberOfElements(o);
-			mxArray* o2=mxCreateStructArray(1,&dims,fcount+1,fields);
-			
-			for (size_t j = 0; j < dims; j++)
+			if (m->ElementType == DataTypes_string_t)
 			{
-				mxSetFieldByNumber(o2, j, 0, mxCreateString(m->ElementTypeName.c_str()));
+				tdef2->Type = m->ElementType;
+				return UnpackMessageElementToMxArray(m, tdef2, stub);
+			}
+
+			if (m->ElementType == DataTypes_structure_t
+				|| m->ElementType == DataTypes_pod_array_t
+				|| m->ElementType == DataTypes_pod_multidimarray_t)
+			{
+				tdef2->Type = DataTypes_namedtype_t;
+				tdef2->TypeString = m->ElementTypeName;
+				if (m->ElementType == DataTypes_pod_array_t)
+				{
+					tdef2->ArrayType = DataTypes_ArrayTypes_array;
+				}
+				if (m->ElementType == DataTypes_pod_multidimarray_t)
+				{
+					tdef2->ArrayType = DataTypes_ArrayTypes_multidimarray;
+				}
+				std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
+				tdef2->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), stub);
+				mxArray* o = UnpackMessageElementToMxArray(m, tdef2, stub);
+
+				int fcount = mxGetNumberOfFields(o);
+				const char** fields = new const char*[fcount + 1];
+				fields[0] = "RobotRaconteurStructureType";
 				for (int i = 0; i < fcount; i++)
 				{
-					mxArray* fdata = mxGetFieldByNumber(o, j, i);
-					mxSetFieldByNumber(o2, j, i + 1, fdata);
-					mxSetFieldByNumber(o, j, i, NULL);
+					const char* cfname = mxGetFieldNameByNumber(o, i);
+					if (cfname == NULL) throw InternalErrorException("Internal error");
+					fields[i + 1] = cfname;
 				}
-			}
-			
-			delete[] fields;
-			mxDestroyArray(o);
-			if (m->ElementType == DataTypes_pod_multidimarray_t)
-			{
-				RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> mm = m->CastData<MessageElementPodMultiDimArray>();
-				std::vector<mwSize> dims = RRArrayToVector<mwSize>(MessageElement::FindElement(mm->Elements, "dims")->CastData<RRArray<uint32_t> >());
-				if (mxSetDimensions(o2, &dims[0], dims.size()))
+
+				mwSize dims = mxGetNumberOfElements(o);
+				mxArray* o2 = mxCreateStructArray(1, &dims, fcount + 1, fields);
+
+				for (size_t j = 0; j < dims; j++)
 				{
-					throw DataTypeException("Dimensions mismatch for pod multidimarray");
+					mxSetFieldByNumber(o2, j, 0, mxCreateString(m->ElementTypeName.c_str()));
+					for (int i = 0; i < fcount; i++)
+					{
+						mxArray* fdata = mxGetFieldByNumber(o, j, i);
+						mxSetFieldByNumber(o2, j, i + 1, fdata);
+						mxSetFieldByNumber(o, j, i, NULL);
+					}
 				}
+
+				delete[] fields;
+				mxDestroyArray(o);
+				if (m->ElementType == DataTypes_pod_multidimarray_t)
+				{
+					RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> mm = m->CastData<MessageElementPodMultiDimArray>();
+					std::vector<mwSize> dims = RRArrayToVector<mwSize>(MessageElement::FindElement(mm->Elements, "dims")->CastData<RRArray<uint32_t> >());
+					if (mxSetDimensions(o2, &dims[0], dims.size()))
+					{
+						throw DataTypeException("Dimensions mismatch for pod multidimarray");
+					}
+				}
+				return o2;
 			}
-			return o2;			
+
+			if (m->ElementType == DataTypes_namedarray_array_t)
+			{
+				tdef2->ArrayVarLength = true;
+				tdef2->ArrayLength.push_back(0);
+				tdef2->ArrayType = DataTypes_ArrayTypes_array;
+				tdef2->Type = DataTypes_namedtype_t;
+				tdef2->TypeString = m->ElementTypeName;
+				return UnpackMessageElementToMxArray(m, tdef2, stub);
+			}
+
+			if (m->ElementType == DataTypes_namedarray_multidimarray_t)
+			{
+				tdef2->ArrayVarLength = true;
+				tdef2->ArrayType = DataTypes_ArrayTypes_multidimarray;
+				tdef2->Type = DataTypes_namedtype_t;
+				tdef2->TypeString = m->ElementTypeName;
+				return UnpackMessageElementToMxArray(m, tdef2, stub);
+			}
+
+			if (m->ElementType == DataTypes_vector_t)
+			{
+				tdef2->Type = DataTypes_varvalue_t;
+				tdef2->ContainerType = DataTypes_ContainerTypes_map_int32;
+				return UnpackMessageElementToMxArray(m, tdef2, stub);
+			}
+
+			if (m->ElementType == DataTypes_dictionary_t)
+			{
+				tdef2->Type = DataTypes_varvalue_t;
+				tdef2->ContainerType = DataTypes_ContainerTypes_map_string;
+				return UnpackMessageElementToMxArray(m, tdef2, stub);
+			}
+
+			if (m->ElementType == DataTypes_list_t)
+			{
+				tdef2->Type = DataTypes_varvalue_t;
+				tdef2->ContainerType = DataTypes_ContainerTypes_list;
+				//tdef2->KeyType=DataTypes_string_t;
+				return UnpackMessageElementToMxArray(m, tdef2, stub);
+			}
+
+			if (m->ElementType == DataTypes_multidimarray_t)
+			{
+				tdef2->Type = MessageElement::FindElement(m->CastData<MessageElementMultiDimArray>()->Elements, "array")->ElementType;
+				tdef2->ArrayType = DataTypes_ArrayTypes_multidimarray;
+				return UnpackMessageElementToMxArray(m, tdef2, stub);
+			}
 		}
 
-		if (m->ElementType == DataTypes_namedarray_array_t)
-		{
-			tdef2->ArrayVarLength = true;
-			tdef2->ArrayLength.push_back(0);
-			tdef2->ArrayType = DataTypes_ArrayTypes_array;
-			tdef2->Type = DataTypes_namedtype_t;
-			tdef2->TypeString = m->ElementTypeName;
-			return UnpackMessageElementToMxArray(m, tdef2, stub);
-		}
 
-		if (m->ElementType == DataTypes_namedarray_multidimarray_t)
-		{
-			tdef2->ArrayVarLength = true;			
-			tdef2->ArrayType = DataTypes_ArrayTypes_multidimarray;
-			tdef2->Type = DataTypes_namedtype_t;
-			tdef2->TypeString = m->ElementTypeName;
-			return UnpackMessageElementToMxArray(m, tdef2, stub);
-		}
+		throw DataTypeException("Unknown data type");
 
-		if (m->ElementType==DataTypes_vector_t)
-		{
-			tdef2->Type=DataTypes_varvalue_t;
-			tdef2->ContainerType = DataTypes_ContainerTypes_map_int32;
-			return UnpackMessageElementToMxArray(m,tdef2,stub);
-		}
-
-		if (m->ElementType==DataTypes_dictionary_t)
-		{
-			tdef2->Type=DataTypes_varvalue_t;
-			tdef2->ContainerType = DataTypes_ContainerTypes_map_string;
-			return UnpackMessageElementToMxArray(m,tdef2,stub);
-		}
-
-		if (m->ElementType==DataTypes_list_t)
-		{
-			tdef2->Type=DataTypes_varvalue_t;
-			tdef2->ContainerType = DataTypes_ContainerTypes_list;
-			//tdef2->KeyType=DataTypes_string_t;
-			return UnpackMessageElementToMxArray(m,tdef2,stub);
-		}
-
-		if (m->ElementType==DataTypes_multidimarray_t)
-		{
-			tdef2->Type=MessageElement::FindElement(m->CastData<MessageElementMultiDimArray>()->Elements,"array")->ElementType;
-			tdef2->ArrayType=DataTypes_ArrayTypes_multidimarray;			
-			return UnpackMessageElementToMxArray(m,tdef2,stub);
-		}
 	}
 
+	std::vector<std::string> field_name;
+	std::vector<RR_SHARED_PTR<TypeDefinition> > field_type;
 
-	throw DataTypeException("Could not unpack " + tdef->Name);
-	
+	void push_field_level(const std::string& new_var, RR_SHARED_PTR<TypeDefinition> new_type)
+	{
+		field_name.push_back(new_var);
+		field_type.push_back(new_type);
+	}
+
+	void pop_field_level()
+	{
+		field_name.pop_back();
+		field_type.pop_back();
+	}
+
+	boost::tuple<std::string, RR_SHARED_PTR<TypeDefinition> > get_current_field()
+	{
+		if (field_name.empty())
+		{
+			return boost::make_tuple("**internal error**", RR_SHARED_PTR<TypeDefinition>());
+		}
+
+		std::string name = boost::join(field_name, ".");
+		boost::replace_all(name, ".[", "[");
+		RR_SHARED_PTR<TypeDefinition> type = field_type.back();
+
+		return boost::make_tuple(name, type);
+	}
+
+	std::string get_exception_message(std::string msg)
+	{
+		boost::tuple<std::string, RR_SHARED_PTR<TypeDefinition> > f = get_current_field();
+
+		std::string msg2 = msg + " for field \"" + f.get<0>() + "\"";
+		if (f.get<1>())
+		{
+			RR_SHARED_PTR<TypeDefinition> f2 = f.get<1>()->Clone();
+			if (f2->Type == DataTypes_namedtype_t)
+			{
+				try
+				{
+					f2->TypeString = f.get<1>()->ResolveNamedType()->ResolveQualifiedName();
+				}
+				catch (std::exception& e) {}
+			}
+			std::vector<std::string> f_split;
+			std::string f2_str = f2->ToString();
+			boost::split(f_split, f2_str, boost::is_any_of(" \t"), boost::token_compress_on);
+			msg2 += " expected Robot Raconteur type \"" + f_split.at(0) + "\"";
+		}
+
+		return msg2;
+	}
+};
+
+mxArray* UnpackMessageElementToMxArray_pod(RR_INTRUSIVE_PTR<MessageElement> element, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<ServiceStub> stub)
+{
+	UnpackMessageElementToMxArrayImpl u;
+	if (type1)
+	{
+		u.push_field_level(type1->Name, type1);
+	}
+	else
+	{
+		u.push_field_level("value", RR_SHARED_PTR<TypeDefinition>());
+	}
+	try
+	{
+		return u.UnpackMessageElementToMxArray_pod(element, type1, stub);
+	}
+	catch (DataTypeException& e)
+	{
+		e.Message = u.get_exception_message(e.Message);
+		throw;
+	}
+	catch (InvalidArgumentException& e)
+	{
+		e.Message = u.get_exception_message(e.Message);
+		throw;
+	}
+}
+
+mxArray* UnpackMessageElementToMxArray(RR_INTRUSIVE_PTR<MessageElement> m, boost::shared_ptr<TypeDefinition> tdef, RR_SHARED_PTR<ServiceStub> stub)
+{
+	UnpackMessageElementToMxArrayImpl u;
+	if (tdef)
+	{
+		u.push_field_level(tdef->Name, tdef);
+	}
+	else
+	{
+		u.push_field_level("value", RR_SHARED_PTR<TypeDefinition>());
+	}
+	try
+	{
+		return u.UnpackMessageElementToMxArray(m, tdef, stub);
+	}
+	catch (DataTypeException& e)
+	{
+		e.Message = u.get_exception_message(e.Message);
+		throw;
+	}
+	catch (InvalidArgumentException& e)
+	{
+		e.Message = u.get_exception_message(e.Message);
+		throw;
+	}
 }
 
 
