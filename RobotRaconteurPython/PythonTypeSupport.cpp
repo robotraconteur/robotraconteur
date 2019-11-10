@@ -1002,13 +1002,13 @@ namespace RobotRaconteur
 		{
 			if (field_name.empty())
 			{
-				throw InternalErrorException("Internal error generating PackMessageElement error message");
+				return boost::make_tuple("**internal error**", RR_SHARED_PTR<TypeDefinition>());
 			}
-			
+
 			std::string name = boost::join(field_name, ".");
 			boost::replace_all(name, ".[", "[");
 			RR_SHARED_PTR<TypeDefinition> type = field_type.back();
-			
+
 			return boost::make_tuple(name, type);
 		}
 
@@ -1016,7 +1016,7 @@ namespace RobotRaconteur
 		{
 			boost::tuple<std::string, RR_SHARED_PTR<TypeDefinition> > f = get_current_field();
 
-			std::string msg2 = msg + " for field " + f.get<0>();
+			std::string msg2 = msg + " for field \"" + f.get<0>() + "\"";
 			if (f.get<1>())
 			{
 				RR_SHARED_PTR<TypeDefinition> f2 = f.get<1>()->Clone();
@@ -1031,7 +1031,7 @@ namespace RobotRaconteur
 				std::vector<std::string> f_split;
 				std::string f2_str = f2->ToString();
 				boost::split(f_split, f2_str, boost::is_any_of(" \t"), boost::token_compress_on);
-				msg2 += " expected " + f_split.at(0);
+				msg2 += " expected Robot Raconteur type \"" + f_split.at(0) + "\"";
 			}
 
 			return msg2;
@@ -1884,7 +1884,7 @@ namespace RobotRaconteur
 		{
 			if (field_name.empty())
 			{
-				throw InternalErrorException("Internal error generating PackMessageElement error message");
+				return boost::make_tuple("**internal error**", RR_SHARED_PTR<TypeDefinition>());
 			}
 
 			std::string name = boost::join(field_name, ".");
@@ -1898,7 +1898,7 @@ namespace RobotRaconteur
 		{
 			boost::tuple<std::string, RR_SHARED_PTR<TypeDefinition> > f = get_current_field();
 
-			std::string msg2 = msg + " for field " + f.get<0>();
+			std::string msg2 = msg + " for field \"" + f.get<0>() + "\"";
 			if (f.get<1>())
 			{
 				RR_SHARED_PTR<TypeDefinition> f2 = f.get<1>()->Clone();
@@ -1913,7 +1913,7 @@ namespace RobotRaconteur
 				std::vector<std::string> f_split;
 				std::string f2_str = f2->ToString();
 				boost::split(f_split, f2_str, boost::is_any_of(" \t"), boost::token_compress_on);
-				msg2 += " expected " + f_split.at(0);
+				msg2 += " expected Robot Raconteur type \"" + f_split.at(0) + "\"";
 			}
 
 			return msg2;
