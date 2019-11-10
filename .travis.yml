@@ -116,19 +116,31 @@ matrix:
         - >
           RR_CMAKE_EXTRA_ARGS="-DSWIG_EXECUTABLE=$TRAVIS_BUILD_DIR/swigwin-4.0.0-beta1/swig.exe -DSWIG_DIR=$TRAVIS_BUILD_DIR/swigwin-4.0.0-beta1/Lib -DBUILD_NET=ON -DBoost_USE_STATIC_LIBS=ON -DBOOST_INCLUDEDIR=$TRAVIS_BUILD_DIR/boost_1_70_0 -DBOOST_LIBRARYDIR=$TRAVIS_BUILD_DIR/boost_1_70_0/stage/lib -DPYTHON_EXECUTABLE=C:/Python27/python.exe -DPYTHON3_EXECUTABLE=C:/Python3/python.exe -DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON -DBUILD_JAVA=ON"
         - RR_CMAKE_GENERATOR="Visual Studio 15 2017 Win64"
-        
+                
     
     - os: osx
       before_script:
-        - HOMEBREW_NO_AUTO_UPDATE=1 brew install openssl
+        - brew install openssl
         #- brew install boost # Already installed on travis ci image??
-        - brew install swig
-        
+        #- brew install swig
+        - | 
+            (
+            rm -rf swig_build_dir
+            mkdir -p swig_build_dir
+            cd swig_build_dir
+            curl -L https://sourceforge.net/projects/swig/files/swig/swig-4.0.0-beta1/swig-4.0.0-beta1.tar.gz --output swig-4.0.0-beta1.tar.gz
+            tar xf swig-4.0.0-beta1.tar.gz
+            cd swig-4.0.0-beta1
+            ./configure
+            make
+            sudo make install
+            )
       env:
         - >
           RR_CMAKE_EXTRA_ARGS="-DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=ON -DBUILD_JAVA=ON -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl"
         - RR_CMAKE_GENERATOR="Xcode"
         - RR_CMAKE_TEST_TARGET=RUN_TESTS
+        - HOMEBREW_NO_AUTO_UPDATE=1
 script:
   - mkdir -p build2
   - cd build2
