@@ -2288,7 +2288,7 @@ public:
 			std::vector<std::string> f_split;
 			std::string f2_str = f2->ToString();
 			boost::split(f_split, f2_str, boost::is_any_of(" \t"), boost::token_compress_on);
-			msg2 += " Robot Raconteur type \"" + f_split.at(0) + "\"";
+			msg2 += " expected Robot Raconteur type \"" + f_split.at(0) + "\"";
 		}
 
 		return msg2;
@@ -3105,7 +3105,7 @@ public:
 			std::vector<std::string> f_split;
 			std::string f2_str = f2->ToString();
 			boost::split(f_split, f2_str, boost::is_any_of(" \t"), boost::token_compress_on);
-			msg2 += " Robot Raconteur type \"" + f_split.at(0) + "\"";
+			msg2 += " expected Robot Raconteur type \"" + f_split.at(0) + "\"";
 		}
 
 		return msg2;
