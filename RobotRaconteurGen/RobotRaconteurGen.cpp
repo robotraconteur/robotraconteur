@@ -47,25 +47,34 @@ using namespace RobotRaconteur;
 using namespace RobotRaconteurGen;
 using std::exception;
 
-std::string ReadFile(const std::string& fname)
+bool ReadFile(std::string& file_contents, const std::string& fname)
 {
-	ifstream file(fname.c_str(),ios_base::in);
-
-	if (!file.is_open()) throw std::runtime_error("File not found");
-
-	int8_t bom1, bom2, bom3;
-	file >> bom1 >> bom2 >> bom3;
-	if (!(bom1==-17 && bom2==-69 && bom3==-65))
+	try
 	{
-		file.seekg(0, ifstream::beg);
+		ifstream file;
+		file.open(fname.c_str(), ios_base::in);
+
+		if (!file) return false;
+
+		int8_t bom1, bom2, bom3;
+		file >> bom1 >> bom2 >> bom3;
+		if (!(bom1 == -17 && bom2 == -69 && bom3 == -65))
+		{
+			file.seekg(0, ifstream::beg);
+		}
+
+		stringstream buffer;
+		buffer << file.rdbuf();
+		file.close();
+
+		file_contents = buffer.str();
+
+		return true;
 	}
-
-	stringstream buffer;
-	buffer << file.rdbuf();
-	file.close();
-
-	return buffer.str();
-
+	catch (std::exception&)
+	{
+		return false;
+	}
 }
 
 void GenerateCPPFiles(RR_SHARED_PTR<ServiceDefinition> d, std::string def_str, std::string output_dir)
@@ -92,20 +101,65 @@ void GenerateJavaFiles(RR_SHARED_PTR<ServiceDefinition> d, std::string def_str, 
 	JavaServiceLangGen::GenerateFiles(d,def_str, output_dir);
 }
 
-void PullServiceDefinition(string url)
+int PullServiceDefinition(string url)
 {
-	ParseConnectionURLResult url_res = ParseConnectionURL(url);
-	std::string url2 = boost::regex_replace(url, boost::regex("(service=[^&]+)"), "service=RobotRaconteurServiceIndex");
+	ParseConnectionURLResult url_res;
+	try
+	{
+		url_res = ParseConnectionURL(url);
+	}
+	catch (std::exception&)
+	{
+		std::cout << "RobotRaconteurGen: fatal error: could not parse specified URL" << std::endl;
+		return 6001;
+	}
 
-	RR_SHARED_PTR<TcpTransport> t=RR_MAKE_SHARED<TcpTransport>();
-	RobotRaconteurNode::s()->RegisterTransport(t);
-	RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<RobotRaconteurServiceIndex::RobotRaconteurServiceIndexFactory>());
+	std::string url2;
+	try
+	{
+		url2 = boost::regex_replace(url, boost::regex("(service=[^&]+)"), "service=RobotRaconteurServiceIndex");
+	}
+	catch (std::exception&)
+	{
+		std::cout << "RobotRaconteurGen: fatal error: invalid service in specified URL" << std::endl;
+		return 6002;
+	}
 
-	RR_SHARED_PTR<RobotRaconteurServiceIndex::ServiceIndex> o=rr_cast<RobotRaconteurServiceIndex::ServiceIndex>(RobotRaconteurNode::s()->ConnectService(url2));
+	try
+	{
+		RR_SHARED_PTR<TcpTransport> t = RR_MAKE_SHARED<TcpTransport>();
+		RobotRaconteurNode::s()->RegisterTransport(t);		
+	}
+	catch (std::exception& e)
+	{
+		std::cout << "RobotRaconteurGen: fatal error: could not initialize Robot Raconteur client node: " << e.what() << std::endl;
+		return 6003;
+	}
+
+	RR_SHARED_PTR<RobotRaconteurServiceIndex::ServiceIndex> o;
+	
+	try
+	{
+		o = rr_cast<RobotRaconteurServiceIndex::ServiceIndex>(RobotRaconteurNode::s()->ConnectService(url2));
+	}
+	catch (RobotRaconteurException e)
+	{
+		std::cout << "RobotRaconteurGen: fatal error: could not connect to specified URL: " << e.Message << std::endl;
+		return 6004;
+	}
+	catch (std::exception& e)
+	{
+		std::cout << "RobotRaconteurGen: fatal error: could not connect to specified URL: " << e.what() << std::endl;
+		return 6005;
+	}
 
 	RR_INTRUSIVE_PTR<RRMap<int32_t, RobotRaconteurServiceIndex::ServiceInfo> > ret=o->GetLocalNodeServices();
 
-	if (!ret) throw std::runtime_error("Error retrieving definition");
+	if (!ret)
+	{
+		std::cout << "RobotRaconteurGen: error: could not retrieve service definition from " + url;
+		return 6006;
+	}
 
 	string type="";
 
@@ -117,37 +171,44 @@ void PullServiceDefinition(string url)
 		}
 	}
 
-	if (type=="") throw std::runtime_error("Service not found: " + url_res.service);
+	if (type=="")
+	{
+		std::cout << "RobotRaconteurGen: error: service not found on remote node: " + url_res.service;
+		return 6006;
+	}
+	
 
-	std::vector<RR_SHARED_PTR<ServiceDefinition> > o2=rr_cast<ServiceStub>(o)->GetContext()->PullServiceDefinitionAndImports(SplitQualifiedName(type).get<0>());
+	std::vector<RR_SHARED_PTR<ServiceDefinition> > o2;
+	try
+	{
+		o2 = rr_cast<ServiceStub>(o)->GetContext()->PullServiceDefinitionAndImports(SplitQualifiedName(type).get<0>());
+	}
+	catch (RobotRaconteurException e)
+	{
+		std::cout << "RobotRaconteurGen: fatal error: could not pull service definition: " << e.Message << std::endl;
+		return 6007;
+	}
+	catch (std::exception& e)
+	{
+		std::cout << "RobotRaconteurGen: fatal error: could not pull service definition: " << e.what() << std::endl;
+		return 6008;
+	}
 
 	for(std::vector<RR_SHARED_PTR<ServiceDefinition> >::iterator e=o2.begin(); e!=o2.end(); e++)
 	{
-		std::ofstream f(((*e)->Name + ".robdef").c_str());
-		f << trim_copy((*e)->ToString()) << endl;
-		f.close();
+		std::string fname = (*e)->Name + ".robdef";
+		try
+		{
+			std::ofstream f(fname.c_str());
+			f << trim_copy((*e)->ToString()) << endl;
+			f.close();
+		}
+		catch (std::exception& e)
+		{
+			std::cout << "RobotRaconteurGen: fatal error: could not save service definition file " << fname << " : " << e.what() << std::endl;
+			return 6009;
+		}
 	}
-}
-
-void PrintUsage()
-{
-	cout << "Robot Raconteur version " << ROBOTRACONTEUR_VERSION_TEXT << endl << endl;
-	cout << ("Usage:  RobotRaconteurGen command files") << endl << endl;
-	cout << ("Generate thunk source files") << endl;
-	cout << ("    RobotRaconteurGen --lang=csharp --thunksource servicedefinition1.robdef servicedefinition2.robdef") << endl << endl;
-	cout << ("Generate a new unique node id") << endl;
-	cout << ("    RobotRaconteurGen --newnodeid") << endl << endl;
-	cout << ("Generate an md5 hash for password files") << endl;
-	cout << ("    RobotRaconteurGen --md5passwordhash password") << endl;
-	cout << ("Get current version") << endl;
-	cout << ("    RobotRaconteurGen --version") << endl;
-	
-}
-
-void PrintVersion()
-{
-	cout << "Robot Raconteur version " << ROBOTRACONTEUR_VERSION_TEXT << endl << endl;
-
 }
 
 int main(int argc, char* argv[])
@@ -223,56 +284,96 @@ int main(int argc, char* argv[])
 		}
 		if (newnodeid)
 		{
-			if (!command.empty()) throw std::logic_error("more than one command specified");
+			if (!command.empty())
+			{
+				std::cout << "RobotRaconteurGen: fatal error: more than one command specified" << std::endl;
+				return 1;
+			}
 			command = "newnodeid";
 		}
 		if (md5passwordhash)
 		{
-			if (!command.empty()) throw std::logic_error("more than one command specified");
+			if (!command.empty())
+			{
+				std::cout << "RobotRaconteurGen: fatal error: more than one command specified" << std::endl;
+				return 1;
+			}
 			command = "md5passwordhash";
 		}
 		if (pullservicedef)
 		{
-			if (!command.empty()) throw std::logic_error("more than one command specified");
+			if (!command.empty())
+			{
+				std::cout << "RobotRaconteurGen: fatal error: more than one command specified" << std::endl;
+				return 1;
+			}
 			command = "pullservicedef";
 		}
 		//End find command
 
 		if (command == "")
 		{
-			cout << "error: no command specified" << endl;
+			
+			std::cout << "RobotRaconteurGen: fatal error: no command specified" << std::endl;						
 			cout << generic_ << endl;
 			return 1;
-
 		}
 
 		if (command == "newnodeid")
 		{
-			if (!string_vector.empty()) throw std::logic_error("invalid options for newnodeid");
-			if (!lang.empty()) throw std::logic_error("invalid options for newnodeid");
+			if (!string_vector.empty() || !lang.empty())
+			{
+				std::cout << "RobotRaconteurGen: fatal error: invalid options for newnodeid" << std::endl;
+				return 2001;
+			}
+			
 			cout << NodeID::NewUniqueID().ToString() << endl;
 			return 0;
 		}
 
 		if (command == "md5passwordhash")
 		{
-			if (string_vector.size() != 1) throw std::logic_error("password not specified");
-			if (!lang.empty()) throw std::logic_error("invalid options for md5passwordhash");
-			cout << "Password hash for password " << string_vector[0] << " is " << PasswordFileUserAuthenticator::MD5Hash(string_vector[0]) << endl;
+			if (string_vector.size() != 1)
+			{
+				std::cout << "RobotRaconteurGen: fatal error: password not specified" << std::endl;
+				return 3001;
+			}
+			if (!lang.empty())
+			{
+				std::cout << "RobotRaconteurGen: fatal error: invalid options for md5passwordhash" << std::endl;
+				return 3001;
+			}
+			cout << "Password hash for password " << string_vector.at(0) << " is " << PasswordFileUserAuthenticator::MD5Hash(string_vector[0]) << endl;
 			return 0;
 		}
 
 		if (command == "pullservicedef")
 		{
-			if (string_vector.size() != 1) throw std::logic_error("service URL not specified");
-			if (!lang.empty()) throw std::logic_error("invalid options for md5passwordhash");
-			PullServiceDefinition(string_vector[0]);
-			return 0;
+			if (string_vector.size() != 1)
+			{
+				std::cout << "RobotRaconteurGen: fatal error: service url not specified" << std::endl;
+				return 4001;
+			}
+			if (!lang.empty())
+			{
+				std::cout << "RobotRaconteurGen: fatal error: invalid options for pullservicedef" << std::endl;
+				return 4002;
+			}
+			return PullServiceDefinition(string_vector[0]);			
 		}
 
-		if (command != "thunksource") throw std::logic_error("invalid command specified");
-		if (string_vector.empty()) throw std::logic_error("no files specified for thunksource");
+		if (command != "thunksource")
+		{
+			std::cout << "RobotRaconteurGen: fatal error: invalid command specified" << std::endl;
+			return 1;
+		}
 
+		if (string_vector.empty())
+		{
+			std::cout << "RobotRaconteurGen: fatal error: no files specified for thunksource" << std::endl;
+			return 1001;
+		}
+		
 		char* robdef_path_c = std::getenv("ROBOTRACONTEUR_ROBDEF_PATH");
 		if (robdef_path_c)
 		{
@@ -339,13 +440,15 @@ int main(int argc, char* argv[])
 		{
 			if (!fs::exists(s))
 			{
-				throw std::logic_error("input file not found: " + s);
+				std::cout << "RobotRaconteurGen: fatal error: input file not found " << s << std::endl;
+				return 1002;
 			}
 		}
 
 		if (!fs::exists(output_dir))
 		{
-			throw std::logic_error("output directory not found: " + output_dir);
+			std::cout << "RobotRaconteurGen: fatal error: output director not found " << output_dir << std::endl;
+			return 1003;
 		}
 		
 		std::vector<boost::shared_ptr<ServiceDefinition> > sdefs;
@@ -357,8 +460,15 @@ int main(int argc, char* argv[])
 			try
 			{
 				boost::shared_ptr<ServiceDefinition> d = boost::make_shared<ServiceDefinition>();
-				string str = ReadFile(e);
-				d->FromString(str);
+				std::string file_contents;
+				if (!ReadFile(file_contents,e))
+				{
+					std::cout << "RobotRaconteurGen: fatal error: could not open file " << e << std::endl;
+					return 1004;
+				}
+				ServiceDefinitionParseInfo parse_info;
+				parse_info.RobDefFilePath = e;
+				d->FromString(file_contents, &parse_info);
 				d->CheckVersion();
 
 				alldefs.push_back(d);
@@ -366,34 +476,46 @@ int main(int argc, char* argv[])
 				if (boost::range::find(sources, e) != sources.end())
 				{
 					sdefs.push_back(d);
-					sdefs_str.push_back(str);
+					sdefs_str.push_back(file_contents);
 				}
 
 			}
+			catch (ServiceDefinitionParseException& ee)
+			{
+				cout << e << "(" << ee.ParseInfo.LineNumber << "): error: " << ee.Message << endl;
+				return 1005;
+			}
 			catch (std::exception& ee)
 			{
-				cout << "error: " << string(ee.what()) << " in file " << string(e) << endl;
-				cout << "error: Could not open service definition file" << endl;
-				return 2;
+				cout << e << ": error: " << string(ee.what()) << endl;
+				return 1006;
 			}
 
 		}
 
 		try
 		{
-			std::vector<RobotRaconteurParseException> warnings;
+			std::vector<ServiceDefinitionParseException> warnings;
 			VerifyServiceDefinitions(alldefs,warnings);
-			BOOST_FOREACH(RobotRaconteurParseException w, warnings)
+			BOOST_FOREACH(ServiceDefinitionParseException w, warnings)
 			{
-				cout << "warning: " << w.what() << endl;
+				cout << w.ParseInfo.RobDefFilePath << "(" << w.ParseInfo.LineNumber << "): warning: " << w.Message << endl;
 			}
 		}
-		catch (std::exception& e)
+		catch (ServiceDefinitionParseException& ee)
 		{
-			cout << "error: " << e.what() << endl;;
-			cout << "error: error verifying service definition set" << endl;
-			return 2;
-
+			cout << ee.ParseInfo.RobDefFilePath << "(" << ee.ParseInfo.LineNumber << "): error: " << ee.Message << endl;
+			return 1007;
+		}
+		catch (ServiceDefinitionVerifyException& ee)
+		{
+			cout << ee.ParseInfo.RobDefFilePath << "(" << ee.ParseInfo.LineNumber << "): error: " << ee.Message << endl;
+			return 1008;
+		}
+		catch (std::exception& ee)
+		{
+			cout << "RobotRaconteurGen: fatal error: could not verify service definition set " << string(ee.what()) << endl;
+			return 1009;
 		}
 
 		if (lang=="cpp")
@@ -407,20 +529,26 @@ int main(int argc, char* argv[])
 				}
 				catch (std::exception& ee)
 				{
-					cout << "error: " <<  string(ee.what()) << " in file " << string(sources.at(i)) << endl;
-					cout << "error: Could not open service definition file" << endl;
-					return 2;
+					cout << sources.at(i) << ": error: could not generate thunksource files " <<  string(ee.what()) << endl;
+					return 1010;
 				}
 			}
 
 			if (!master_header.empty())
 			{
-				boost::filesystem::path master_file_path(boost::filesystem::path(output_dir) / master_header);
-				std::ofstream master_file_w(master_file_path.c_str());
+				try
+				{
+					boost::filesystem::path master_file_path(boost::filesystem::path(output_dir) / master_header);
+					std::ofstream master_file_w(master_file_path.c_str());
 
-				CPPServiceLangGen::GenerateMasterHeaderFile(alldefs, &master_file_w);
-			}
-
+					CPPServiceLangGen::GenerateMasterHeaderFile(alldefs, &master_file_w);
+				}
+				catch (std::exception& ee)
+				{
+					cout << "RobotRaconteurGen: error: could not generate master header file " << string(ee.what()) << endl;
+					return 1011;
+				}				
+			}			
 			return 0;
 
 		}
@@ -439,9 +567,8 @@ int main(int argc, char* argv[])
 					}
 					catch (std::exception& ee)
 					{
-						cout << "error: " << string(ee.what()) << " in file " << string(sources.at(i)) << endl;
-						cout << "error: Could not open service definition file" << endl;
-						return 2;
+						cout << sources.at(i) << ": error: could not generate thunksource files " << string(ee.what()) << endl;
+						return 1010;
 					}
 				}
 			}
@@ -457,9 +584,8 @@ int main(int argc, char* argv[])
 					}
 					catch (std::exception& ee)
 					{
-						cout << "error: " << string(ee.what()) << " in file " << string(sources.at(i)) << endl;
-						cout << "error: Could not open service definition file" << endl;
-						return 2;
+						cout << sources.at(i) << ": error: could not generate thunksource files " << string(ee.what()) << endl;
+						return 1010;
 					}
 				}
 
@@ -480,30 +606,29 @@ int main(int argc, char* argv[])
 				}
 				catch (std::exception& ee)
 				{
-					cout << "error: " << string(ee.what()) << " in file " << string(sources.at(i)) << endl;
-					cout << "error: Could not open service definition file" << endl;
-					return 2;
+					cout << sources.at(i) << ": error: could not generate thunksource files " << string(ee.what()) << endl;
+					return 1010;
 				}
 			}
 
 			return 0;			
 		}
 
-		throw std::runtime_error("Unknown language");
-
-
-
-
+		cout << "RobotRaconteurGen: fatal error: invalid lang specified for thunksource" << endl;
+		return 1012;
+	}
+	catch (po::error& e)
+	{
+		cout << "RobotRaconteurGen: error: " << string(e.what()) << endl;
+		return 5;
 	}
 	catch (std::exception& e)
 	{
-		cout << "error: " + string(e.what()) << endl;
-		return 1;
+		cout << "RobotRaconteurGen: error: internal error " << string(e.what()) << endl;
+		return 6;
 	}
-
-	
-	
-	cout << "unknown error" << endl;
-	return -1;
+			
+	cout << "RobotRaconteurGen: error: unknown internal error" << endl;
+	return 7;
 }
 
