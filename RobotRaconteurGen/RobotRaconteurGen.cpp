@@ -482,7 +482,7 @@ int main(int argc, char* argv[])
 			}
 			catch (ServiceDefinitionParseException& ee)
 			{
-				cout << e << "(" << ee.ParseInfo.LineNumber << "): error: " << ee.Message << endl;
+				cout << e << "(" << ee.ParseInfo.LineNumber << "): error: " << ee.ShortMessage << endl;
 				return 1005;
 			}
 			catch (std::exception& ee)
@@ -499,17 +499,17 @@ int main(int argc, char* argv[])
 			VerifyServiceDefinitions(alldefs,warnings);
 			BOOST_FOREACH(ServiceDefinitionParseException w, warnings)
 			{
-				cout << w.ParseInfo.RobDefFilePath << "(" << w.ParseInfo.LineNumber << "): warning: " << w.Message << endl;
+				cout << w.ParseInfo.RobDefFilePath << "(" << w.ParseInfo.LineNumber << "): warning: " << w.ShortMessage << endl;
 			}
 		}
 		catch (ServiceDefinitionParseException& ee)
 		{
-			cout << ee.ParseInfo.RobDefFilePath << "(" << ee.ParseInfo.LineNumber << "): error: " << ee.Message << endl;
+			cout << ee.ParseInfo.RobDefFilePath << "(" << ee.ParseInfo.LineNumber << "): error: " << ee.ShortMessage << endl;
 			return 1007;
 		}
 		catch (ServiceDefinitionVerifyException& ee)
 		{
-			cout << ee.ParseInfo.RobDefFilePath << "(" << ee.ParseInfo.LineNumber << "): error: " << ee.Message << endl;
+			cout << ee.ParseInfo.RobDefFilePath << "(" << ee.ParseInfo.LineNumber << "): error: " << ee.ShortMessage << endl;
 			return 1008;
 		}
 		catch (std::exception& ee)

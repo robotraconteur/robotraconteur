@@ -522,14 +522,14 @@ namespace RobotRaconteur
 		bool HexValue;
 	};
 		
-	class ROBOTRACONTEUR_CORE_API  ServiceDefinitionParseException : public std::runtime_error
+	class ROBOTRACONTEUR_CORE_API  ServiceDefinitionParseException : public ServiceDefinitionException
 	{
 
 	public:
 		
 		ServiceDefinitionParseInfo ParseInfo;
 
-		std::string Message;
+		std::string ShortMessage;
 
 		ServiceDefinitionParseException(const std::string &e);
 		ServiceDefinitionParseException(const std::string &e, const ServiceDefinitionParseInfo& info);
@@ -545,14 +545,14 @@ namespace RobotRaconteur
 
 	};
 
-	class ROBOTRACONTEUR_CORE_API  ServiceDefinitionVerifyException : public std::runtime_error
+	class ROBOTRACONTEUR_CORE_API  ServiceDefinitionVerifyException : public ServiceDefinitionException
 	{
 
 	public:
 
 		ServiceDefinitionParseInfo ParseInfo;
 
-		std::string Message;
+		std::string ShortMessage;
 
 		ServiceDefinitionVerifyException(const std::string &e);
 		ServiceDefinitionVerifyException(const std::string &e, const ServiceDefinitionParseInfo& info);

@@ -2926,18 +2926,20 @@ namespace RobotRaconteur
 	}
 
 
-	ServiceDefinitionParseException::ServiceDefinitionParseException(const std::string &e) : std::runtime_error(e)
+	ServiceDefinitionParseException::ServiceDefinitionParseException(const std::string &e) : ServiceDefinitionException(e)
 	{
-		Message=e;		
+		ShortMessage=e;		
 		ParseInfo.LineNumber = -1;
-		what_store = ToString();
+		Message = ToString();
+		what_store = Message;
 	}
 
-	ServiceDefinitionParseException::ServiceDefinitionParseException(const std::string &e, const ServiceDefinitionParseInfo& info) : std::runtime_error(e)
+	ServiceDefinitionParseException::ServiceDefinitionParseException(const std::string &e, const ServiceDefinitionParseInfo& info) : ServiceDefinitionException(e)
 	{
-		Message=e;
+		ShortMessage = e;
 		ParseInfo = info;
-		what_store = ToString();
+		Message = ToString();
+		what_store = Message;
 
 	}
 
@@ -2945,15 +2947,15 @@ namespace RobotRaconteur
 	{
 		if (!ParseInfo.ServiceName.empty())
 		{
-			return "RobotRaconteur Parse Error On Line " + boost::lexical_cast<std::string>(ParseInfo.LineNumber) + " in " + ParseInfo.ServiceName + ": " + Message;
+			return "Parse error on line " + boost::lexical_cast<std::string>(ParseInfo.LineNumber) + " in " + ParseInfo.ServiceName + ": " + Message;
 		}
 		else if (!ParseInfo.Line.empty())
 		{
-			return "RobotRaconteur Parse Error in \"" + ParseInfo.Line + "\": " + Message;
+			return "Parse error in \"" + ParseInfo.Line + "\": " + ShortMessage;
 		}
 		else
 		{
-			return "RobotRaconteur Parse Error: " + Message;
+			return "Parse error: " + ShortMessage;
 		}		
 	}
 
@@ -2963,14 +2965,14 @@ namespace RobotRaconteur
 		return what_store.c_str();
 	}
 
-	ServiceDefinitionVerifyException::ServiceDefinitionVerifyException(const std::string &e) : std::runtime_error(e)
+	ServiceDefinitionVerifyException::ServiceDefinitionVerifyException(const std::string &e) : ServiceDefinitionException(e)
 	{
 		Message = e;
 		ParseInfo.LineNumber = -1;
 		what_store = ToString();
 	}
 
-	ServiceDefinitionVerifyException::ServiceDefinitionVerifyException(const std::string &e, const ServiceDefinitionParseInfo& info) : std::runtime_error(e)
+	ServiceDefinitionVerifyException::ServiceDefinitionVerifyException(const std::string &e, const ServiceDefinitionParseInfo& info) : ServiceDefinitionException(e)
 	{
 		Message = e;
 		ParseInfo = info;
@@ -2982,15 +2984,15 @@ namespace RobotRaconteur
 	{
 		if (!ParseInfo.ServiceName.empty())
 		{
-			return "RobotRaconteur Verify Error On Line " + boost::lexical_cast<std::string>(ParseInfo.LineNumber) + " in " + ParseInfo.ServiceName + ": " + Message;
+			return "Verify error on line " + boost::lexical_cast<std::string>(ParseInfo.LineNumber) + " in " + ParseInfo.ServiceName + ": " + ShortMessage;
 		}
 		else if (!ParseInfo.Line.empty())
 		{
-			return "RobotRaconteur Verify Error in \"" + ParseInfo.Line + "\": " + Message;
+			return "Verify error in \"" + ParseInfo.Line + "\": " + ShortMessage;
 		}
 		else
 		{
-			return "RobotRaconteur Verify Error: " + Message;
+			return "Verify error: " + ShortMessage;
 		}
 	}
 

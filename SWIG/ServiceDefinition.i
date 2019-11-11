@@ -41,6 +41,17 @@
 namespace RobotRaconteur
 {
 
+struct ServiceDefinitionParseInfo
+{
+	std::string ServiceName;
+	std::string RobDefFilePath;
+	std::string Line;
+	int32_t LineNumber;
+
+	ServiceDefinitionParseInfo();
+	void Reset();
+};
+
 class RobotRaconteurVersion
 {
 public:
@@ -49,7 +60,7 @@ public:
 	RobotRaconteurVersion(const std::string& v);
 
 	std::string ToString() const;
-	void FromString(const std::string& v);
+	void FromString(const std::string& v, const ServiceDefinitionParseInfo* parse_info = NULL);
 		
 	operator bool() const;
 
@@ -57,6 +68,8 @@ public:
 	uint32_t minor;
 	uint32_t patch;
 	uint32_t tweak;
+
+	ServiceDefinitionParseInfo ParseInfo;
 };
 }
 %rename(RobotRaconteurVersion_eq) operator == (const RobotRaconteur::RobotRaconteurVersion &v1, const RobotRaconteur::RobotRaconteurVersion &v2);
@@ -87,9 +100,10 @@ public:
 	std::vector<boost::shared_ptr<RobotRaconteur::ConstantDefinition> > Constants;
 	std::vector<boost::shared_ptr<RobotRaconteur::EnumDefinition> > Enums;
 	RobotRaconteurVersion StdVer;
+	ServiceDefinitionParseInfo ParseInfo;
     RR_PUBLIC_OVERRIDE_METHOD(ToString)
 	virtual std::string ToString();
-	void FromString(const std::string &s);
+	void FromString(const std::string &s, const ServiceDefinitionParseInfo* parse_info = NULL);
 	ServiceDefinition();
 	
 	void Reset();
@@ -106,11 +120,12 @@ public:
 	std::vector<std::string> Implements;
 	std::vector<std::string> Options;
 	std::vector<boost::shared_ptr<RobotRaconteur::ConstantDefinition> > Constants;
+	ServiceDefinitionParseInfo ParseInfo;
 	ServiceEntryDefinition(boost::shared_ptr<RobotRaconteur::ServiceDefinition> def);
     RR_PUBLIC_OVERRIDE_METHOD(ToString)
 	virtual std::string ToString();
-	void FromString(const std::string &s);
-	void FromString(const std::string &s, int32_t startline);
+	
+	void FromString(const std::string &s, const ServiceDefinitionParseInfo* parse_info = NULL);
 	
 	
 	
@@ -162,6 +177,8 @@ public:
 	
 	std::vector<std::string> Modifiers;
 	
+	ServiceDefinitionParseInfo ParseInfo;
+
 	void Reset();
 
 };
@@ -177,7 +194,7 @@ public:
 	virtual std::string ToString();
     RR_PUBLIC_VIRTUAL_METHOD(ToString)
 	std::string ToString(bool isstruct);
-	void FromString(const std::string &s);
+	void FromString(const std::string &s, const ServiceDefinitionParseInfo* parse_info = NULL);
 };
 
 class FunctionDefinition : public MemberDefinition
@@ -188,7 +205,7 @@ public:
 	FunctionDefinition(boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition> ServiceEntry);
     RR_PUBLIC_OVERRIDE_METHOD(ToString)
 	virtual std::string ToString();
-	void FromString(const std::string &s);
+	void FromString(const std::string &s, const ServiceDefinitionParseInfo* parse_info = NULL);
 	bool IsGenerator();
 };
 
@@ -199,7 +216,7 @@ public:
 	EventDefinition(boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition> ServiceEntry);
     RR_PUBLIC_OVERRIDE_METHOD(ToString)
 	virtual std::string ToString();
-	void FromString(const std::string &s);
+	void FromString(const std::string &s, const ServiceDefinitionParseInfo* parse_info = NULL);
 };
 
 class ObjRefDefinition : public MemberDefinition
@@ -213,7 +230,7 @@ public:
 	ObjRefDefinition(boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition> ServiceEntry);
     RR_PUBLIC_OVERRIDE_METHOD(ToString)
 	virtual std::string ToString();
-	void FromString(const std::string &s);
+	void FromString(const std::string &s, const ServiceDefinitionParseInfo* parse_info = NULL);
 };
 
 class PipeDefinition : public MemberDefinition
@@ -223,7 +240,7 @@ public:
 	PipeDefinition(boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition> ServiceEntry);
     RR_PUBLIC_OVERRIDE_METHOD(ToString)
 	virtual std::string ToString();
-	void FromString(const std::string &s);
+	void FromString(const std::string &s, const ServiceDefinitionParseInfo* parse_info = NULL);
 };
 
 class CallbackDefinition : public MemberDefinition
@@ -234,7 +251,7 @@ public:
 	CallbackDefinition(boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition> ServiceEntry);
     RR_PUBLIC_OVERRIDE_METHOD(ToString)
 	virtual std::string ToString();
-	void FromString(const std::string &s);
+	void FromString(const std::string &s, const ServiceDefinitionParseInfo* parse_info = NULL);
 };
 
 class WireDefinition : public MemberDefinition
@@ -244,7 +261,7 @@ public:
 	WireDefinition(boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition> ServiceEntry);
     RR_PUBLIC_OVERRIDE_METHOD(ToString)
 	virtual std::string ToString();
-	void FromString(const std::string &s);
+	void FromString(const std::string &s, const ServiceDefinitionParseInfo* parse_info = NULL);
 };
 
 class MemoryDefinition : public MemberDefinition
@@ -254,7 +271,7 @@ public:
 	MemoryDefinition(boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition> ServiceEntry);
     RR_PUBLIC_OVERRIDE_METHOD(ToString)
 	virtual std::string ToString();
-	void FromString(const std::string &s);
+	void FromString(const std::string &s, const ServiceDefinitionParseInfo* parse_info = NULL);
 };
 
 %copyctor TypeDefinition;
@@ -272,7 +289,7 @@ public:
 	TypeDefinition();
     RR_PUBLIC_OVERRIDE_METHOD(ToString)
 	virtual std::string ToString();
-	void FromString(const std::string &s);
+	void FromString(const std::string &s, const ServiceDefinitionParseInfo* parse_info = NULL);
 	static DataTypes DataTypeFromString(const std::string &d);
 	static std::string StringFromDataType(DataTypes d);
 	    
@@ -310,6 +327,8 @@ class  UsingDefinition
 		std::string QualifiedName;
 		std::string UnqualifiedName;
 
+		ServiceDefinitionParseInfo ParseInfo;
+
 		RR_PROPERTY(Service)
 		%extend	{
 		boost::shared_ptr<RobotRaconteur::ServiceDefinition> GetService()
@@ -327,7 +346,7 @@ class  UsingDefinition
 		UsingDefinition(boost::shared_ptr<RobotRaconteur::ServiceDefinition> service);
 
 		std::string ToString();
-		void FromString(const std::string& s);
+		void FromString(const std::string& s, const ServiceDefinitionParseInfo* parse_info = NULL);
 	};
 
 	struct ConstantDefinition_StructField
@@ -346,6 +365,8 @@ class  UsingDefinition
 		boost::shared_ptr<RobotRaconteur::TypeDefinition> Type;
 
 		std::string Value;
+
+		ServiceDefinitionParseInfo ParseInfo;
 
 		RR_PROPERTY(Service)
 		%extend	{
@@ -378,7 +399,7 @@ class  UsingDefinition
 		
 		RR_PUBLIC_OVERRIDE_METHOD(ToString)
 		std::string ToString();
-		void FromString(const std::string& s);
+		void FromString(const std::string& s, const ServiceDefinitionParseInfo* parse_info = NULL);
 
 		void Reset();
 		
@@ -401,6 +422,8 @@ class  UsingDefinition
 		std::string Name;
 		std::vector<RobotRaconteur::EnumDefinitionValue> Values;
 
+		ServiceDefinitionParseInfo ParseInfo;
+
 		RR_PROPERTY(Service)
 		%extend	{
 		boost::shared_ptr<RobotRaconteur::ServiceDefinition> GetService()
@@ -417,9 +440,8 @@ class  UsingDefinition
 		EnumDefinition(boost::shared_ptr<RobotRaconteur::ServiceDefinition> service);		
 
 		RR_PUBLIC_OVERRIDE_METHOD(ToString)
-		std::string ToString();
-		void FromString(const std::string& s);
-		void FromString(const std::string& s, int32_t startline);
+		std::string ToString();		
+		void FromString(const std::string& s, const ServiceDefinitionParseInfo* parse_info = NULL);
 
 		bool VerifyValues();
 
