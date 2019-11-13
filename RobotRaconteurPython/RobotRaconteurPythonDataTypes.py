@@ -52,6 +52,8 @@ class RobotRaconteurVarValue(object):
     def __repr__(self):
         return "RobotRaconteurVarValue: " + str(self.datatype) + ": " + repr(self.data)
 
+VarValue = RobotRaconteurVarValue
+
 class ArrayMemory(object):
     def __init__(self,memory=None):
         self.memory=memory
