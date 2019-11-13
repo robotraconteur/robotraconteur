@@ -97,6 +97,10 @@ def NewStructure(self,type,obj=None):
 	from .RobotRaconteurPythonUtil import NewStructure
 	return NewStructure(type,obj,self)
 
+def GetStructureType(self,type,obj=None):
+	from .RobotRaconteurPythonUtil import GetStructureType
+	return GetStructureType(type,obj,self)
+
 def GetPodDType(self,type,obj=None):
 	from .RobotRaconteurPythonUtil import GetPodDType
 	return GetPodDType(type,obj,self)

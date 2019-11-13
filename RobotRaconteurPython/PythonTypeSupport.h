@@ -27,6 +27,7 @@ namespace RobotRaconteur
 	std::string PyObjectToUTF8(PyObject* obj);
 
 	PyObject* NewStructure(const std::string& type, boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj, boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node);
+	PyObject* GetStructureType(const std::string& type, boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj, boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node);
 	PyObject* GetNumPyDescrForType(const std::string& type, boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj, boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node);
 	PyObject* GetNumPyDescrForType(RR_SHARED_PTR<ServiceEntryDefinition> e, boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj, boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node);
 	PyObject* GetNumPyDescrForType(RR_SHARED_PTR<TypeDefinition> e, boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj, boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node);

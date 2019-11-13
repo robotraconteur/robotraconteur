@@ -98,10 +98,18 @@ def UnpackFromRRArray(rrarray,type1=None):
     
     return RobotRaconteurPython._UnpackFromRRArray(rrarray, type1)
 
+def CreateStructureType(name, dict_):
+    return type(name, (RobotRaconteurStructure,), dict_)
+
 def NewStructure(StructType,obj=None,node=None):
     if (hasattr(obj,'rrinnerstub')):
         obj=obj.rrinnerstub
     return RobotRaconteurPython._NewStructure(StructType, obj, node)
+
+def GetStructureType(StructType,obj=None,node=None):
+    if (hasattr(obj,'rrinnerstub')):
+        obj=obj.rrinnerstub
+    return RobotRaconteurPython._GetStructureType(StructType, obj, node)
 
 def GetPodDType(pod_type,obj=None,node=None):
     if (hasattr(obj,'rrinnerstub')):

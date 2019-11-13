@@ -128,7 +128,7 @@ namespace RobotRaconteur
 	}
 
 
-	PyObject* NewStructure(const std::string& type, boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj, boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node)
+	PyObject* GetStructureType(const std::string& type, boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj, boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node)
 	{
 		PyObject* modules_dict = PyImport_GetModuleDict();
 		if (modules_dict == NULL)
@@ -142,10 +142,10 @@ namespace RobotRaconteur
 		throw InternalErrorException("Could not load RobotRaconeturPython module");
 		}*/
 
-		PyObject* rrutil_module = PyDict_GetItemString(modules_dict, "RobotRaconteur.RobotRaconteurPythonDataTypes");
+		PyObject* rrutil_module = PyDict_GetItemString(modules_dict, "RobotRaconteur.RobotRaconteurPythonUtil");
 		if (rrutil_module == NULL)
 		{
-			throw InternalErrorException("Could not load RobotRaconeturPythonDataTypes module");
+			throw InternalErrorException("Could not load RobotRaconeturPythonUtil module");
 		}
 
 		if (!node)
@@ -167,8 +167,8 @@ namespace RobotRaconteur
 		}
 
 		RR_SHARED_PTR<RobotRaconteur::ServiceDefinition> d = f->ServiceDef();
-		RR_SHARED_PTR<RobotRaconteur::ServiceEntryDefinition> s=TryFindByName(d->Structures, s1.get<1>());
-		
+		RR_SHARED_PTR<RobotRaconteur::ServiceEntryDefinition> s = TryFindByName(d->Structures, s1.get<1>());
+
 		if (!s)
 		{
 			s = TryFindByName(d->Pods, s1.get<1>());
@@ -176,27 +176,33 @@ namespace RobotRaconteur
 
 		if (!s) throw ServiceException("Structure " + type + " not found");
 
-		PyAutoPtr<PyObject> struct_class(PyObject_GetAttrString(rrutil_module, "RobotRaconteurStructure"));
-		if (struct_class.get() == NULL)
+		PyAutoPtr<PyObject> new_struct_type_func(PyObject_GetAttrString(rrutil_module, "CreateStructureType"));
+		if (new_struct_type_func.get() == NULL)
 		{
 			throw InternalErrorException("Could not load RobotRaconeturPythonUtil.RobotRaconteurStructure class");
 		}
-
-		PyObject* new_struct = PyObject_CallFunction(struct_class.get(), NULL);
-		if (!new_struct)
-		{
-			throw InternalErrorException("Could not create RobotRaconeturPythonUtil.RobotRaconteurStructure class");
-		}
-
-		PyAutoPtr<PyObject> py_type(stringToPyObject(type));
-		PyObject_SetAttrString(new_struct, "rrstructtype", py_type.get());
 		
+		PyAutoPtr<PyObject> fields(PyDict_New());
 		BOOST_FOREACH(RR_SHARED_PTR<MemberDefinition>& e, s->Members)
 		{
-			PyObject_SetAttrString(new_struct, e->Name.c_str(), Py_None);
+			//TODO: Add default value types
+			PyDict_SetItemString(fields.get(), e->Name.c_str(), Py_None);
 		}
+		
+		std::string type2_str = boost::replace_all_copy(type, ".", "__");
+		PyObject* new_struct_type = PyObject_CallFunction(new_struct_type_func.get(), "s#O", type2_str.c_str(), type2_str.size(), fields.get());
+		if (!new_struct_type)
+		{
+			PyErr_Print();
+			throw InternalErrorException("Could not create requested structure type");
+		}
+		return new_struct_type;
+	}
 
-		return new_struct;
+	PyObject* NewStructure(const std::string& type, boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj, boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node)
+	{		
+		PyAutoPtr<PyObject> struct_type(GetStructureType(type, obj, node));		
+		return PyObject_CallObject(struct_type.get(), NULL);
 	}
 	
 	PyObject* GetNumPyDescrForType(const std::string& type, boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj, boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node)
@@ -797,7 +803,18 @@ namespace RobotRaconteur
 					RR_SHARED_PTR<ServiceEntryDefinition> struct_def = RR_STATIC_POINTER_CAST<ServiceEntryDefinition>(nt);
 					std::string typestr = struct_def->ResolveQualifiedName();
 
-					PyAutoPtr<PyObject> rrstructtype(PyObject_GetAttrString(data, "rrstructtype"));
+					PyAutoPtr<PyObject> rrstructtype(PyObject_Type(data));
+					if (!rrstructtype.get()) throw DataTypeException("Invalid structure, could not get Python type");
+					PyAutoPtr<PyObject> rrstructtype_name(PyObject_GetAttrString(rrstructtype.get(), "__name__"));
+					if (!rrstructtype_name.get()) throw DataTypeException("Invalid structure, could not get Python type name");
+					std::string typestr2 = PyObjectToUTF8(rrstructtype_name.get());
+
+					if (boost::replace_all_copy(typestr,".","__") != typestr2)
+					{
+						throw DataTypeException("Structure type mismatch");
+					}
+					
+					/*PyAutoPtr<PyObject> rrstructtype(PyObject_GetAttrString(data, "rrstructtype"));
 					if (!rrstructtype.get()) throw DataTypeException("Invalid structure, missing rrstructtype");
 					std::string typestr2 = PyObjectToUTF8(rrstructtype.get());
 					if (PyErr_Occurred())
@@ -808,7 +825,7 @@ namespace RobotRaconteur
 					if (typestr != typestr2)
 					{
 						throw DataTypeException("Structure type mismatch");
-					}
+					}*/
 
 					element->ElementType = DataTypes_structure_t;
 					element->ElementTypeName = typestr;

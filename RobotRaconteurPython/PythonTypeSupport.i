@@ -6,6 +6,10 @@ namespace RobotRaconteur
 %rename (_NewStructure) NewStructure;
 PyObject* NewStructure(const std::string& type, boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj, boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node);
 
+%rename (_GetStructureType) GetStructureType;
+PyObject* GetStructureType(const std::string& type, boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj, boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node);
+
+
 %rename (_GetNumPyDescrForType) GetNumPyDescrForType;
 PyObject* GetNumPyDescrForType(boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition> e, boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj, boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node);
 PyObject* GetNumPyDescrForType(const std::string& type, boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj, boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node);
