@@ -179,16 +179,171 @@ namespace RobotRaconteur
 		PyAutoPtr<PyObject> new_struct_type_func(PyObject_GetAttrString(rrutil_module, "CreateStructureType"));
 		if (new_struct_type_func.get() == NULL)
 		{
-			throw InternalErrorException("Could not load RobotRaconeturPythonUtil.RobotRaconteurStructure class");
+			throw InternalErrorException("Could not load RobotRaconeturPythonUtil.CreateStructureType function");
 		}
 		
+		PyAutoPtr<PyObject> create_zero_array_func(PyObject_GetAttrString(rrutil_module, "CreateZeroArray"));
+		if (create_zero_array_func.get() == NULL)
+		{
+			throw InternalErrorException("Could not load RobotRaconeturPythonUtil.CreateZeroArray function");
+		}
+
 		PyAutoPtr<PyObject> fields(PyDict_New());
 		BOOST_FOREACH(RR_SHARED_PTR<MemberDefinition>& e, s->Members)
 		{
-			//TODO: Add default value types
-			PyDict_SetItemString(fields.get(), e->Name.c_str(), Py_None);
+
+			RR_SHARED_PTR<PropertyDefinition> e2 = rr_cast<PropertyDefinition>(e);
+			TypeDefinition& tdef = *e2->Type;
+			if (tdef.ContainerType != DataTypes_ContainerTypes_none)
+			{
+				PyAutoPtr<PyObject> none_args(Py_BuildValue("(ON)", Py_None, PyTuple_New(0)));
+				PyDict_SetItemString(fields.get(), e->Name.c_str(), none_args.get());
+				continue;
+			}
+
+			switch (tdef.Type)
+			{
+			case DataTypes_namedtype_t:
+			{
+				RR_SHARED_PTR<NamedTypeDefinition> named_def = tdef.ResolveNamedType();
+				DataTypes named_def_type = named_def->RRDataType();				
+				PyObject* numpy_desc = NULL;
+				
+				switch (named_def_type)
+				{
+				case DataTypes_namedarray_t:
+				case DataTypes_pod_t:
+				{
+					numpy_desc = GetNumPyDescrForType(rr_cast<ServiceEntryDefinition>(named_def), obj, node);
+					break;
+				}
+				case DataTypes_enum_t:
+				{
+					PyAutoPtr<PyObject> none_args(Py_BuildValue("(ON)", &PyLong_Type, PyTuple_New(0)));
+					PyDict_SetItemString(fields.get(), e->Name.c_str(), none_args.get());
+					continue;
+				}
+				default:
+				{
+					PyAutoPtr<PyObject> none_args(Py_BuildValue("(ON)", Py_None, PyTuple_New(0)));
+					PyDict_SetItemString(fields.get(), e->Name.c_str(), none_args.get());
+					continue;
+				}
+				};
+
+				if (!numpy_desc)
+				{
+					throw InternalErrorException("Could not get numpy descr for pod/namedarray for structure init");
+				}
+				
+				if (tdef.ArrayType == DataTypes_ArrayTypes_none
+					|| tdef.ArrayVarLength || tdef.ArrayLength.size() == 0)
+				{
+					PyAutoPtr<PyObject> args(Py_BuildValue("(O(OO))", create_zero_array_func.get(), numpy_desc, Py_None));
+					Py_XDECREF(numpy_desc);
+					PyDict_SetItemString(fields.get(), e->Name.c_str(), args.get());
+				}
+				else
+				{
+					PyAutoPtr<PyObject> dims_arg(PyTuple_New(tdef.ArrayLength.size()));
+					for (size_t i = 0; i < tdef.ArrayLength.size(); i++)
+					{
+						PyTuple_SetItem(dims_arg.get(), (Py_ssize_t)(i), PyLong_FromLong(tdef.ArrayLength.at(i)));
+					}
+					PyAutoPtr<PyObject> none_args(Py_BuildValue("(O(OO))", create_zero_array_func.get(), numpy_desc, dims_arg.get()));
+					Py_XDECREF(numpy_desc);
+					PyDict_SetItemString(fields.get(), e->Name.c_str(), none_args.get());
+				}				
+				continue;
+
+			}
+			case DataTypes_string_t:
+			{
+				PyAutoPtr<PyObject> none_args(Py_BuildValue("(ON)", &PyUnicode_Type, PyTuple_New(0)));
+				PyDict_SetItemString(fields.get(), e->Name.c_str(), none_args.get());
+				continue;
+			}
+			case DataTypes_varvalue_t:
+			{
+				PyAutoPtr<PyObject> none_args(Py_BuildValue("(ON)", Py_None, PyTuple_New(0)));
+				PyDict_SetItemString(fields.get(), e->Name.c_str(), none_args.get());
+				continue;
+			}
+			default:
+				break;
+			};
+
+			if (!IsTypeNumeric(tdef.Type))
+			{				
+				throw DataTypeException("Invalid Robot Raconteur data type");
+			}
+			
+			if (tdef.ArrayType == DataTypes_ArrayTypes_none)
+			{
+				switch (tdef.Type)
+				{
+				case DataTypes_double_t:
+				case DataTypes_single_t:
+				{
+					PyAutoPtr<PyObject> none_args(Py_BuildValue("(ON)", &PyFloat_Type, PyTuple_New(0)));
+					PyDict_SetItemString(fields.get(), e->Name.c_str(), none_args.get());
+					continue;
+				}
+				case DataTypes_int8_t:
+				case DataTypes_uint8_t:
+				case DataTypes_int16_t:
+				case DataTypes_uint16_t:
+				case DataTypes_int32_t:
+				case DataTypes_uint32_t:
+				case DataTypes_int64_t:
+				case DataTypes_uint64_t:
+				{
+					PyAutoPtr<PyObject> none_args(Py_BuildValue("(ON)", &PyLong_Type, PyTuple_New(0)));
+					PyDict_SetItemString(fields.get(), e->Name.c_str(), none_args.get());
+					continue;
+				}
+				case DataTypes_cdouble_t:
+				case DataTypes_csingle_t:
+				{
+					PyAutoPtr<PyObject> none_args(Py_BuildValue("(ON)", &PyComplex_Type, PyTuple_New(0)));
+					PyDict_SetItemString(fields.get(), e->Name.c_str(), none_args.get());
+					continue;
+				}
+				case DataTypes_bool_t:
+				{
+					PyAutoPtr<PyObject> none_args(Py_BuildValue("(ON)", &PyBool_Type, PyTuple_New(0)));
+					PyDict_SetItemString(fields.get(), e->Name.c_str(), none_args.get());
+					continue;
+				}
+
+
+				default:
+					throw DataTypeException("Invalid Robot Raconteur data type");
+				}
+			}
+			else
+			{
+				if (tdef.ArrayVarLength)
+				{					
+					PyAutoPtr<PyArray_Descr> numpy_desc = RRTypeIdToNumPyDataType(tdef.Type);
+					PyAutoPtr<PyObject> none_args(Py_BuildValue("(O(OO))", create_zero_array_func.get(), numpy_desc.get(), Py_None));
+					PyDict_SetItemString(fields.get(), e->Name.c_str(), none_args.get());					
+				}
+				else
+				{
+					PyAutoPtr<PyObject> dims_arg(PyTuple_New(tdef.ArrayLength.size()));
+					for (size_t i = 0; i < tdef.ArrayLength.size(); i++)
+					{
+						PyTuple_SetItem(dims_arg.get(), (Py_ssize_t)(i), PyLong_FromLong(tdef.ArrayLength.at(i)));
+					}
+					PyAutoPtr<PyArray_Descr> numpy_desc = RRTypeIdToNumPyDataType(tdef.Type);
+					PyAutoPtr<PyObject> none_args(Py_BuildValue("(O(OO))", create_zero_array_func.get(), numpy_desc.get(), dims_arg.get()));
+					PyDict_SetItemString(fields.get(), e->Name.c_str(), none_args.get());
+				}
+				continue;
+			}			
 		}
-		
+
 		std::string type2_str = boost::replace_all_copy(type, ".", "__");
 		PyObject* new_struct_type = PyObject_CallFunction(new_struct_type_func.get(), "s#O", type2_str.c_str(), type2_str.size(), fields.get());
 		if (!new_struct_type)

@@ -28,6 +28,7 @@ import codecs
 import numbers
 import os
 from RobotRaconteur.RobotRaconteurPython import DataTypes_ContainerTypes_generator
+import numpy
 
 if (sys.version_info  > (3,0)):
     from builtins import property
@@ -99,7 +100,20 @@ def UnpackFromRRArray(rrarray,type1=None):
     return RobotRaconteurPython._UnpackFromRRArray(rrarray, type1)
 
 def CreateStructureType(name, dict_):
-    return type(name, (RobotRaconteurStructure,), dict_)
+    def struct_init(s):
+        for k,v in dict_.items():
+            init_type, init_args = v
+            if init_type is None:
+                setattr(s,k,None)
+            else:
+                setattr(s,k,init_type(*init_args))
+    return type(name, (RobotRaconteurStructure,), {'__init__': struct_init})
+
+def CreateZeroArray(dtype, dims):
+    if dims is None:
+        return numpy.zeros((0,),dtype)
+    else:
+        return numpy.zeros(dims, dtype)
 
 def NewStructure(StructType,obj=None,node=None):
     if (hasattr(obj,'rrinnerstub')):
