@@ -205,7 +205,8 @@ namespace RobotRaconteur
 			{
 			case DataTypes_namedtype_t:
 			{
-				RR_SHARED_PTR<NamedTypeDefinition> named_def = tdef.ResolveNamedType();
+				std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
+				RR_SHARED_PTR<NamedTypeDefinition> named_def = tdef.ResolveNamedType(empty_defs,node,obj);
 				DataTypes named_def_type = named_def->RRDataType();				
 				PyObject* numpy_desc = NULL;
 				
@@ -674,7 +675,7 @@ namespace RobotRaconteur
 
 					if (PyArray_CheckScalar(field_obj.get()) && p_def2_type->Type == DataTypes_namedtype_t)
 					{
-						PyAutoPtr<PyObject> field_obj_array_desc(GetNumPyDescrForType(rr_cast<ServiceEntryDefinition>(p_def->Type->ResolveNamedType()), obj, node));
+						PyAutoPtr<PyObject> field_obj_array_desc(GetNumPyDescrForType(rr_cast<ServiceEntryDefinition>(p_def->Type->ResolveNamedType(empty_defs,node,obj)), obj, node));
 						npy_intp field_obj_array_dim = 1;
 						PyAutoPtr<PyObject> field_obj_array(PyArray_SimpleNewFromDescr(1, &field_obj_array_dim, (PyArray_Descr*)field_obj_array_desc.get()));
 						Py_INCREF(field_obj_array.get());
@@ -1058,13 +1059,13 @@ namespace RobotRaconteur
 						{
 						case DataTypes_pod_t:
 						{
-							boost::intrusive_ptr<MessageElementPodMultiDimArray> mm = CreateMessageElementPodMultiDimArray(type1->ResolveNamedType()->ResolveQualifiedName(), map_vec);
+							boost::intrusive_ptr<MessageElementPodMultiDimArray> mm = CreateMessageElementPodMultiDimArray(type1->ResolveNamedType(empty_defs,node,obj)->ResolveQualifiedName(), map_vec);
 							element->SetData(mm);
 							return element;
 						}
 						case DataTypes_namedarray_t:
 						{
-							boost::intrusive_ptr<MessageElementNamedMultiDimArray> mm = CreateMessageElementNamedMultiDimArray(type1->ResolveNamedType()->ResolveQualifiedName(), map_vec);
+							boost::intrusive_ptr<MessageElementNamedMultiDimArray> mm = CreateMessageElementNamedMultiDimArray(type1->ResolveNamedType(empty_defs,node,obj)->ResolveQualifiedName(), map_vec);
 							element->SetData(mm);
 							return element;
 						}
