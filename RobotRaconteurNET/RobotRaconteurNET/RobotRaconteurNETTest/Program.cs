@@ -402,9 +402,68 @@ namespace RobotRaconteurNETTest
                 RobotRaconteurNode.s.Shutdown();
 
                 return;
+            }
+
+            if (command == "latencytestclient" || command == "latencytestclient2")
+            {
+                string url1 = args[1];
+
+                LocalTransport t2 = new LocalTransport();
+                RobotRaconteurNode.s.RegisterTransport(t2);
 
 
+                TcpTransport t = new TcpTransport();
+                t.EnableNodeDiscoveryListening();
 
+                RobotRaconteurNode.s.RegisterTransport(t);
+
+                RobotRaconteurNode.s.RegisterServiceType(new com.robotraconteur.testing.TestService1.com__robotraconteur__testing__TestService1Factory());
+                RobotRaconteurNode.s.RegisterServiceType(new com.robotraconteur.testing.TestService2.com__robotraconteur__testing__TestService2Factory());
+
+                servicetest_count = 0;
+                servicetest_keepgoing = true;
+
+                object obj = RobotRaconteurNode.s.ConnectService(url1);
+                async_testroot o = (async_testroot)obj;
+                testroot o2 = (testroot)obj;
+
+                var o3 = o2.get_o1();
+
+                int iters = 100000;
+
+                var d = new double[10];
+
+                DateTime start;
+                DateTime end;
+
+                if (command == "latencytestclient")
+                {
+                    start = DateTime.UtcNow;
+                    for (int i = 0; i < iters; i++)
+                    {
+                        o3.d1 = d;
+                    }
+                    end = DateTime.UtcNow;
+                }
+                else
+                {
+                    start = DateTime.UtcNow;
+                    for (int i = 0; i < iters; i++)
+                    {
+                        var dummy = o2.struct1;                        
+                    }
+                    end = DateTime.UtcNow;
+                }
+
+                var diff = (end - start).Ticks / (TimeSpan.TicksPerMillisecond / 1000);
+
+                double period = ((double)diff) / ((double)iters);
+
+                Console.WriteLine("Period = {0}", period);
+                
+                RobotRaconteurNode.s.Shutdown();
+
+                return;
             }
 
             if (command == "peeridentity")

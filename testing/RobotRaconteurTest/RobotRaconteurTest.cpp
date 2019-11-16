@@ -976,7 +976,7 @@ return 0;
 
 	}
 
-	if (command=="latencytestclient")
+	if (command=="latencytestclient" || command=="latencytestclient2")
 	{
 		if (argc <3) 
 		{
@@ -1017,18 +1017,27 @@ return 0;
 		latencyitercount=0;
 		latency_event=RR_MAKE_SHARED<AutoResetEvent>();
 
-		boost::posix_time::ptime t1=RobotRaconteurNode::s()->NowUTC();
-
-		//o->async_func3(1,2,boost::bind(&latencytest1,o,_2));
-
-		for (uint32_t i=0; i<iters; i++)
-		{
-			o3->set_d1(d);
-		}
+		boost::posix_time::ptime t1;
+		boost::posix_time::ptime t2;
 		
-		//latency_event->WaitOne();
-
-		boost::posix_time::ptime t2=RobotRaconteurNode::s()->NowUTC();
+		if (command == "latencytestclient")
+		{
+			t1 = RobotRaconteurNode::s()->NowUTC();
+			for (uint32_t i = 0; i < iters; i++)
+			{
+				o3->set_d1(d);
+			}
+			t2 = RobotRaconteurNode::s()->NowUTC();
+		}
+		else
+		{
+			t1 = RobotRaconteurNode::s()->NowUTC();
+			for (uint32_t i = 0; i < iters; i++)
+			{
+				o2->get_struct1();
+			}
+			t2 = RobotRaconteurNode::s()->NowUTC();
+		}
 
 		uint32_t diff=(uint32_t)(t2-t1).total_microseconds();
 		
@@ -1039,8 +1048,7 @@ return 0;
 		RobotRaconteurNode::s()->DisconnectService(obj);
 		RobotRaconteurNode::s()->Shutdown();
 		cout << "Test completed, no errors detected!" << endl;
-		boost::this_thread::sleep(boost::posix_time::seconds(10));
-		
+				
 		return 0;
 
 	}
