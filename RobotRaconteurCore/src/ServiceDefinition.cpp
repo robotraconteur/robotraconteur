@@ -148,7 +148,7 @@ namespace RobotRaconteur
 #define RR_TYPE_REGEX "(?:[a-zA-Z](?:\\w*[a-zA-Z0-9])?)(?:\\.[a-zA-Z](?:\\w*[a-zA-Z0-9])?)*"
 #define RR_QUAIFIED_TYPE_REGEX "(?:[a-zA-Z](?:\\w*[a-zA-Z0-9])?)(?:\\.[a-zA-Z](?:\\w*[a-zA-Z0-9])?)+"
 #define RR_TYPE2_REGEX "(?:[a-zA-Z](?:\\w*[a-zA-Z0-9])?)(?:\\.[a-zA-Z](?:\\w*[a-zA-Z0-9])?)*(?:\\[[0-9\\,\\*\\-]*\\])?(?:\\{\\w{1,16}\\})?"
-#define RR_INT_REGEX "[+\\-]?\\d+"
+#define RR_INT_REGEX "[+\\-]?(?:0|[1-9])\\d*"
 #define RR_FLOAT_REGEX "[+\\-]?(?:(?:0|[1-9]\\d*)(?:\\.\\d*)?|:\\.\\d+)(?:[eE][+\\-]?\\d+)?"
 
 	static void ServiceDefinition_FromStringFormat_common(const boost::regex& r, const std::string& l, const std::string& keyword, std::vector<std::string>& vec, ServiceDefinitionParseInfo& parse_info)
