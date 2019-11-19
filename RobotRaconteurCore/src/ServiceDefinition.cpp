@@ -2811,7 +2811,7 @@ namespace RobotRaconteur
 		std::vector<std::string> values2;
 		boost::split(values2, values1, boost::is_any_of(","));
 
-		boost::regex r_value("^[ \\t]*([A-Za-z]\\w*)(?:[ \\t]*=[ \\t]*(?:(0x\\d+)|(-?\\d+)))?[ \\t]*$");
+		boost::regex r_value("^[ \\t]*([A-Za-z]\\w*)(?:[ \\t]*=[ \\t]*(?:(0x[\\da-fA-F]+)|([+\\-]?\\d+)))?[ \\t]*$");
 
 		BOOST_FOREACH(const std::string& l, values2)
 		{			
