@@ -55,8 +55,7 @@ namespace RobotRaconteurNETTest
 
 
         public override Pipe<int> unreliable1 { get; set; }
-        public override Pipe<int> unreliable2 { get; set; }
-
+        
         public override ArrayMemory<double> readmem { get; }
         public override testenum1 testenum1_prop
         {

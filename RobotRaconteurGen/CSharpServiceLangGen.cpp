@@ -2641,7 +2641,7 @@ namespace RobotRaconteurGen
 					}
 					else
 					{
-						w2 << "    " << fix_name(v.Name) << " = " << v.Value;
+						w2 << "    " << fix_name(v.Name) << " = -0x" << std::hex << -v.Value << std::dec;
 					}
 				}
 				if (i + 1 < e->Values.size())

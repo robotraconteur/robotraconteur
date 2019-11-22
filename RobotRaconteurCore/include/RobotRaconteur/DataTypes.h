@@ -47,6 +47,8 @@
 
 #include <boost/numeric/conversion/cast.hpp>
 
+#include <boost/lexical_cast.hpp>
+
 #pragma once
 
 #define RR_NULL_CHECK(ptr) {if (!ptr) throw ::RobotRaconteur::NullValueException("Null pointer");}
@@ -1721,6 +1723,40 @@ namespace RobotRaconteur
 		ROBOTRACONTEUR_CORE_API std::string encode_index(const std::string& index);
 
 		ROBOTRACONTEUR_CORE_API std::string decode_index(const std::string& index);
+
+		template<typename T, typename U>
+		bool try_convert_string_to_number(const U& arg, T& result)
+		{
+			if (boost::conversion::try_lexical_convert(arg, result))
+			{
+				return true;
+			}
+			
+			if (!boost::is_integral<T>::value)
+			{
+				return false;
+			}
+			
+			boost::regex hex_regex("^[+\\-]?0x[\\da-fA-F]+$");
+			if (!boost::regex_match(arg.begin(), arg.end(), hex_regex))
+			{
+				return false;
+			}
+
+			std::stringstream ss;
+			ss << std::hex << arg;
+			T v;
+			ss >> v;
+			if (ss.fail() || !ss.eof())
+			{
+				return false;
+			}
+
+			result = v;
+
+			return true;
+		}
+
 	}
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES

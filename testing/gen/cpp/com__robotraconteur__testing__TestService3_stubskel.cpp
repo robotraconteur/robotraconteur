@@ -25,7 +25,7 @@ std::string com__robotraconteur__testing__TestService3Factory::DefString()
 std::string out(
 "service com.robotraconteur.testing.TestService3\n"
 "\n"
-"stdver 0.9.0\n"
+"stdver 0.9.2\n"
 "#option version 0.9.0\n"
 "\n"
 "import com.robotraconteur.testing.TestService1\n"
@@ -42,7 +42,7 @@ std::string out(
 "	anothervalue3 = -3,\n"
 "	hexval1 = 0x10,\n"
 "	hexval2,\n"
-"	neghexval1 = 0x80000005,\n"
+"	neghexval1 = -0x7ffffffb,\n"
 "	neghexval2,\n"
 "	more_values\n"
 "end\n"
@@ -50,6 +50,9 @@ std::string out(
 "constant string strconst \"This is a\\n \\\"string constant\\\" \\\\\\/\\b\\f \\r\\u00FF tabme\\ttabme\\n smile! \\ud83d\\udE01\"\n"
 "constant int32 int32const 3856384\n"
 "constant int32[] int32const_array {182476, 56483, -2947}\n"
+"constant int32 int32hexconst 0x082bc7\n"
+"constant int32 int32hexconst2 -0x7264c17\n"
+"constant int32[] int32hexconst_array { 0x8274ec, -0x0001, +0xABCDEF, 0xabcdef, 0x012345, 0x6789 }\n"
 "constant double[] doubleconst_array {1.5847, 3.14, -548e3, 3452.67e2, 485e-21}\n"
 "constant struct structconst {field1: strconst, field2: int32const_array}\n"
 "constant struct structconst2 {field3: structconst, field4: int32const}    \n"
@@ -58,7 +61,7 @@ std::string out(
 "    field double x\n"
 "	field double y\n"
 "	field double z\n"
-"end namedarray\n"
+"end\n"
 "\n"
 "namedarray quaternion\n"
 "    field double q0\n"
@@ -138,17 +141,18 @@ std::string out(
 "end\n"
 "\n"
 "object testroot3\n"
+"\n"
+"    constant string unknown_modifier_hello \"hello world!\"\n"
+"\n"
 "    property int32 readme [readonly]\n"
 "	property int32 writeme [writeonly]\n"
 "	\n"
 "	pipe int32 unreliable1 [unreliable,readonly]\n"
-"	option pipe unreliable2 unreliable\n"
-"	pipe int32 unreliable2\n"
-"\n"
+"	\n"
 "    wire int32 peekwire [readonly]\n"
 "    wire int32 \\\n"
 "	pokewire [writeonly]\n"
-"	property int32 unknown_modifier [unknown, unknown2(), unknown_3(23, 45.8e-5, hello, \"world\")]\n"
+"	property int32 unknown_modifier [unknown, unknown_3(23, 45.8e-5, unknown_modifier_hello)]\n"
 "	\n"
 "	memory double[] readmem [readonly]\n"
 "	\n"
@@ -551,7 +555,6 @@ testroot3_stub::testroot3_stub(const std::string &path, RR_SHARED_PTR<RobotRacon
 void testroot3_stub::RRInitStub()
 {
 rrvar_unreliable1=RR_MAKE_SHARED<RobotRaconteur::PipeClient<int32_t > >("unreliable1",shared_from_this(), true,RobotRaconteur::MemberDefinition_Direction_readonly) ;
-rrvar_unreliable2=RR_MAKE_SHARED<RobotRaconteur::PipeClient<int32_t > >("unreliable2",shared_from_this(), true,RobotRaconteur::MemberDefinition_Direction_both) ;
 rrvar_p1=RR_MAKE_SHARED<RobotRaconteur::PipeClient<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > >("p1",shared_from_this(), false,RobotRaconteur::MemberDefinition_Direction_both,&testroot3_stub_rrverify_p1) ;
 rrvar_p2=RR_MAKE_SHARED<RobotRaconteur::PipeClient<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > >("p2",shared_from_this(), false,RobotRaconteur::MemberDefinition_Direction_both,&testroot3_stub_rrverify_p2) ;
 rrvar_p3=RR_MAKE_SHARED<RobotRaconteur::PipeClient<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > >("p3",shared_from_this(), false,RobotRaconteur::MemberDefinition_Direction_both,&testroot3_stub_rrverify_p3) ;
@@ -1122,17 +1125,6 @@ void testroot3_stub::set_unreliable1(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t 
 throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
 
-RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > testroot3_stub::get_unreliable2()
-{
-RR_SHARED_PTR<RobotRaconteur::PipeClient<int32_t > > value=rrvar_unreliable2;
-if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
-return value;
-}
-void testroot3_stub::set_unreliable2(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value)
-{
-throw RobotRaconteur::InvalidOperationException("Not valid for client");
-}
-
 RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > testroot3_stub::get_p1()
 {
 RR_SHARED_PTR<RobotRaconteur::PipeClient<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > value=rrvar_p1;
@@ -1298,11 +1290,6 @@ if (m->MemberName=="unreliable1")
 rrvar_unreliable1->PipePacketReceived(m);
 return;
 }
-if (m->MemberName=="unreliable2")
-{
-rrvar_unreliable2->PipePacketReceived(m);
-return;
-}
 if (m->MemberName=="p1")
 {
 rrvar_p1->PipePacketReceived(m);
@@ -1365,7 +1352,6 @@ return "com.robotraconteur.testing.TestService3.testroot3";
 void testroot3_stub::RRClose()
 {
 rrvar_unreliable1->Shutdown();
-rrvar_unreliable2->Shutdown();
 rrvar_p1->Shutdown();
 rrvar_p2->Shutdown();
 rrvar_p3->Shutdown();
@@ -1424,7 +1410,6 @@ ServiceStub::RRClose();
 RR_SHARED_PTR<RobotRaconteur::PipeClientBase> testroot3_stub::RRGetPipeClient(const std::string& membername)
 {
 if (membername =="unreliable1") return rrvar_unreliable1;
-if (membername =="unreliable2") return rrvar_unreliable2;
 if (membername =="p1") return rrvar_p1;
 if (membername =="p2") return rrvar_p2;
 if (membername =="p3") return rrvar_p3;
@@ -4332,7 +4317,6 @@ return RR_DYNAMIC_POINTER_CAST<com::robotraconteur::testing::TestService3::async
 void testroot3_skel::ReleaseCastObject() 
 {
 rr_unreliable1_pipe->Shutdown();
-rr_unreliable2_pipe->Shutdown();
 rr_p1_pipe->Shutdown();
 rr_p2_pipe->Shutdown();
 rr_p3_pipe->Shutdown();
@@ -6429,12 +6413,10 @@ if (rr_InitPipeServersRun) return;
 rr_InitPipeServersRun=true;
 RR_SHARED_PTR<com::robotraconteur::testing::TestService3::testroot3 > obj=RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService3::testroot3 >(rrobj1);
 rr_unreliable1_pipe=RR_MAKE_SHARED<RobotRaconteur::PipeServer<int32_t > >("unreliable1",shared_from_this(),true,RobotRaconteur::MemberDefinition_Direction_readonly);
-rr_unreliable2_pipe=RR_MAKE_SHARED<RobotRaconteur::PipeServer<int32_t > >("unreliable2",shared_from_this(),true,RobotRaconteur::MemberDefinition_Direction_both);
 rr_p1_pipe=RR_MAKE_SHARED<RobotRaconteur::PipeServer<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > >("p1",shared_from_this(),false,RobotRaconteur::MemberDefinition_Direction_both,&testroot3_skel_rrverify_p1);
 rr_p2_pipe=RR_MAKE_SHARED<RobotRaconteur::PipeServer<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > >("p2",shared_from_this(),false,RobotRaconteur::MemberDefinition_Direction_both,&testroot3_skel_rrverify_p2);
 rr_p3_pipe=RR_MAKE_SHARED<RobotRaconteur::PipeServer<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > >("p3",shared_from_this(),false,RobotRaconteur::MemberDefinition_Direction_both,&testroot3_skel_rrverify_p3);
 obj->set_unreliable1(rr_unreliable1_pipe);
-obj->set_unreliable2(rr_unreliable2_pipe);
 obj->set_p1(rr_p1_pipe);
 obj->set_p2(rr_p2_pipe);
 obj->set_p3(rr_p3_pipe);
@@ -6445,11 +6427,6 @@ void testroot3_skel::DispatchPipeMessage(RR_INTRUSIVE_PTR<RobotRaconteur::Messag
 if (m->MemberName=="unreliable1")
 {
 rr_unreliable1_pipe->PipePacketReceived(m,e);
-return;
-}
-if (m->MemberName=="unreliable2")
-{
-rr_unreliable2_pipe->PipePacketReceived(m,e);
 return;
 }
 if (m->MemberName=="p1")
@@ -6475,10 +6452,6 @@ RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> testroot3_skel::CallPipeFunction(
 if (m->MemberName=="unreliable1")
 {
 return rr_unreliable1_pipe->PipeCommand(m,e);
-}
-if (m->MemberName=="unreliable2")
-{
-return rr_unreliable2_pipe->PipeCommand(m,e);
 }
 if (m->MemberName=="p1")
 {
@@ -8243,14 +8216,6 @@ boost::mutex::scoped_lock lock(this_lock);
 if (rrvar_unreliable1) throw RobotRaconteur::InvalidOperationException("Pipe already set");
 rrvar_unreliable1 = RR_MAKE_SHARED<RobotRaconteur::PipeBroadcaster<int32_t > >();
 rrvar_unreliable1->Init(value);
-}
-RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > testroot3_default_impl::get_unreliable2()
-{
-throw RobotRaconteur::NotImplementedException("");
-}
-void testroot3_default_impl::set_unreliable2(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value)
-{
-throw RobotRaconteur::NotImplementedException("");
 }
 RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > testroot3_default_impl::get_p1()
 {

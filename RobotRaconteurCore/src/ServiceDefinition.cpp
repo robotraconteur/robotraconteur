@@ -148,8 +148,10 @@ namespace RobotRaconteur
 #define RR_TYPE_REGEX "(?:[a-zA-Z](?:\\w*[a-zA-Z0-9])?)(?:\\.[a-zA-Z](?:\\w*[a-zA-Z0-9])?)*"
 #define RR_QUAIFIED_TYPE_REGEX "(?:[a-zA-Z](?:\\w*[a-zA-Z0-9])?)(?:\\.[a-zA-Z](?:\\w*[a-zA-Z0-9])?)+"
 #define RR_TYPE2_REGEX "(?:[a-zA-Z](?:\\w*[a-zA-Z0-9])?)(?:\\.[a-zA-Z](?:\\w*[a-zA-Z0-9])?)*(?:\\[[0-9\\,\\*\\-]*\\])?(?:\\{\\w{1,16}\\})?"
-#define RR_INT_REGEX "[+\\-]?(?:0|[1-9])\\d*"
-#define RR_FLOAT_REGEX "[+\\-]?(?:(?:0|[1-9]\\d*)(?:\\.\\d*)?|:\\.\\d+)(?:[eE][+\\-]?\\d+)?"
+#define RR_INT_REGEX "[+\\-]?(?:0|[1-9]\\d*)"
+#define RR_HEX_REGEX "[+\\-]?0x[\\da-fA-F]+"
+#define RR_FLOAT_REGEX "[+\\-]?(?:(?:0|[1-9]\\d*)(?:\\.\\d*)?|(?:\\.\\d+))(?:[eE][+\\-]?\\d+)?"
+#define RR_NUMBER_REGEX "(?:" RR_INT_REGEX "|" RR_HEX_REGEX "|" RR_FLOAT_REGEX ")"
 
 	static void ServiceDefinition_FromStringFormat_common(const boost::regex& r, const std::string& l, const std::string& keyword, std::vector<std::string>& vec, ServiceDefinitionParseInfo& parse_info)
 	{		
@@ -236,7 +238,7 @@ namespace RobotRaconteur
 		}
 	}
 
-	static void ServiceDefinition_FindBlock(const std::string& current_line, std::istream& is, std::ostream& os, ServiceDefinitionParseInfo& parse_info, ServiceDefinitionParseInfo& init_parse_info)
+	static void ServiceDefinition_FindBlock(const std::string& current_line, std::istream& is, std::ostream& os, ServiceDefinitionParseInfo& parse_info, ServiceDefinitionParseInfo& init_parse_info, const RobotRaconteurVersion& stdver)
 	{
 		boost::regex r_start("^[ \\t]*(\\w{1,16})[ \\t]+(" RR_NAME_REGEX ")[ \\t]*$");
 		boost::regex r_end("^[ \\t]*end(?:[ \\t]+(\\w{1,16}))?[ \\t]*$");
@@ -271,6 +273,11 @@ namespace RobotRaconteur
 			{
 				if (r_end_match[1].matched)
 				{
+					if (stdver >= RobotRaconteurVersion(0, 9, 2))
+					{
+						throw ServiceDefinitionParseException("end keyword must be only keyword on line in stdver 0.9.2 and greater", parse_info);
+					}
+
 					if (r_end_match[1] != block_type)
 					{
 						throw ServiceDefinitionParseException("Block end does not match start", parse_info);
@@ -529,6 +536,14 @@ namespace RobotRaconteur
 				case 3:
 				{
 					Options.push_back(r_entry_match_remaining);
+					if (stdver_version < RobotRaconteurVersion(0, 9, 2))
+					{
+						warnings.push_back(ServiceDefinitionParseException("option keyword is deprecated", working_info));
+					}
+					else
+					{
+						throw ServiceDefinitionParseException("option keyword is not support in stdver 0.9.2 or greater", working_info);
+					}
 					continue;
 				}
 				//import
@@ -560,7 +575,7 @@ namespace RobotRaconteur
 				//constant
 				case 7:
 				{
-					if (entry_key_max >= 9) throw ServiceDefinitionParseException("exception must be before struct and object", working_info);
+					if (entry_key_max >= 9) throw ServiceDefinitionParseException("constant must be before struct and object", working_info);
 					RR_SHARED_PTR<ConstantDefinition> constant_def = RR_MAKE_SHARED<ConstantDefinition>(shared_from_this());
 					constant_def->FromString(l, &working_info);
 					Constants.push_back(constant_def);
@@ -573,7 +588,7 @@ namespace RobotRaconteur
 					if (entry_key_max >= 9) throw ServiceDefinitionParseException("enum must be before struct and object", working_info);
 					ServiceDefinitionParseInfo init_info;
 					std::stringstream block;
-					ServiceDefinition_FindBlock(l, s, block, working_info, init_info);
+					ServiceDefinition_FindBlock(l, s, block, working_info, init_info, stdver_version);
 					RR_SHARED_PTR<EnumDefinition> enum_def = RR_MAKE_SHARED<EnumDefinition>(shared_from_this());
 					enum_def->FromString(block.str(), &init_info);
 					Enums.push_back(enum_def);
@@ -585,9 +600,11 @@ namespace RobotRaconteur
 				{
 					ServiceDefinitionParseInfo init_info;
 					std::stringstream block;
-					ServiceDefinition_FindBlock(l, s, block, working_info, init_info);
+					ServiceDefinition_FindBlock(l, s, block, working_info, init_info, stdver_version);
 					RR_SHARED_PTR<ServiceEntryDefinition> struct_def = RR_MAKE_SHARED<ServiceEntryDefinition>(shared_from_this());
 					struct_def->FromString(block.str(), warnings, &init_info);
+					if (stdver_version >= RobotRaconteurVersion(0,9,2) && !struct_def->Options.empty())
+						throw ServiceDefinitionParseException("option keyword is not support in stdver 0.9.2 or greater", working_info);
 					Structures.push_back(struct_def);
 					entry_key_max = 9;
 					continue;
@@ -597,9 +614,12 @@ namespace RobotRaconteur
 				{
 					ServiceDefinitionParseInfo init_info;
 					std::stringstream block;
-					ServiceDefinition_FindBlock(l, s, block, working_info, init_info);
+					ServiceDefinition_FindBlock(l, s, block, working_info, init_info, stdver_version);
 					RR_SHARED_PTR<ServiceEntryDefinition> object_def = RR_MAKE_SHARED<ServiceEntryDefinition>(shared_from_this());
 					object_def->FromString(block.str(), warnings, &init_info);
+					if (stdver_version >= RobotRaconteurVersion(0, 9, 2) && !object_def->Options.empty())
+						throw ServiceDefinitionParseException("option keyword is not support in stdver 0.9.2 or greater", working_info);
+
 					Objects.push_back(object_def);
 					entry_key_max = 10;
 					continue;
@@ -609,9 +629,11 @@ namespace RobotRaconteur
 				{
 					ServiceDefinitionParseInfo init_info;
 					std::stringstream block;
-					ServiceDefinition_FindBlock(l, s, block, working_info, init_info);
+					ServiceDefinition_FindBlock(l, s, block, working_info, init_info, stdver_version);
 					RR_SHARED_PTR<ServiceEntryDefinition> struct_def = RR_MAKE_SHARED<ServiceEntryDefinition>(shared_from_this());
 					struct_def->FromString(block.str(), warnings, &init_info);
+					if (stdver_version >= RobotRaconteurVersion(0, 9, 2) && !struct_def->Options.empty())
+						throw ServiceDefinitionParseException("option keyword is not support in stdver 0.9.2 or greater", working_info);
 					Pods.push_back(struct_def);
 					entry_key_max = 9;
 					continue;
@@ -621,9 +643,11 @@ namespace RobotRaconteur
 				{
 					ServiceDefinitionParseInfo init_info;
 					std::stringstream block;
-					ServiceDefinition_FindBlock(l, s, block, working_info, init_info);
+					ServiceDefinition_FindBlock(l, s, block, working_info, init_info, stdver_version);
 					RR_SHARED_PTR<ServiceEntryDefinition> struct_def = RR_MAKE_SHARED<ServiceEntryDefinition>(shared_from_this());
 					struct_def->FromString(block.str(), warnings, &init_info);
+					if (stdver_version >= RobotRaconteurVersion(0, 9, 2) && !struct_def->Options.empty())
+						throw ServiceDefinitionParseException("option keyword is not support in stdver 0.9.2 or greater", working_info);
 					NamedArrays.push_back(struct_def);
 					entry_key_max = 9;
 					continue;
@@ -852,7 +876,7 @@ namespace RobotRaconteur
 		{
 			ParseInfo = *parse_info;
 		}
-
+				
 		boost::regex start_struct_regex("^[ \\t]*struct[ \\t]+(\\w+)[ \\t]*$");
 		boost::regex start_pod_regex("^[ \\t]*pod[ \\t]+(\\w+)[ \\t]*$");
 		boost::regex start_namedarray_regex("^[ \\t]*namedarray[ \\t]+(\\w+)[ \\t]*$");
@@ -1185,9 +1209,26 @@ namespace RobotRaconteur
 	template<typename T>
 	static bool MemberDefinition_ParseModifiers(const std::string& s, std::vector<T>& res)
 	{
-		boost::regex r_modifier("^[ \\t]*(" RR_NAME_REGEX "(?:\\([\\w\\-\\., \\t\\\"\\{\\}\\:]*\\))?)(?:[ \\t]*,([ -~\\t]*))?$");
+		boost::regex r_modifiers("^[ \\t]*(" RR_NAME_REGEX "(?:\\([\\w\\-\\+\\., \\t]*\\))?)(?:[ \\t]*,([ -~\\t]*))?$");
 		
-		return MemberDefinition_ParseCommaList(r_modifier, s, res);
+		if (!MemberDefinition_ParseCommaList(r_modifiers, s, res))
+		{
+			return false;
+		}
+
+		if (!res.empty())
+		{
+			boost::regex r_modifier("^[ \\t]*" RR_NAME_REGEX "(?:\\([ \\t]*(?:" RR_NUMBER_REGEX "|" RR_NAME_REGEX ")[ \\t]*(?:,[ \\t]*(?:" RR_NUMBER_REGEX "|" RR_NAME_REGEX "))*[ \\t]*\\))?");
+			BOOST_FOREACH(const std::string& s2, res)
+			{
+				if (!boost::regex_match(s2, r_modifier))
+				{
+					return false;
+				}
+			}
+		}
+
+		return true;
 	}
 
 	static std::string MemberDefinition_ModifiersToString(const std::vector<std::string> modifiers)
@@ -2457,35 +2498,55 @@ namespace RobotRaconteur
 			switch (t)
 			{			
 			case DataTypes_double_t:
-				boost::lexical_cast<double>(val);
-				return true;
+			{
+				double v;
+				return detail::try_convert_string_to_number(std::string(val.begin(), val.end()), v);
+			}
 			case DataTypes_single_t:
-				boost::lexical_cast<float>(val);
-				return true;
+			{
+				float v;
+				return detail::try_convert_string_to_number(std::string(val.begin(), val.end()), v);
+			}
 			case DataTypes_int8_t:
-				boost::lexical_cast<int8_t>(val);
-				return true;
+			{
+				int8_t v;
+				return detail::try_convert_string_to_number(std::string(val.begin(), val.end()), v);
+			}
 			case DataTypes_uint8_t:
-				boost::lexical_cast<uint8_t>(val);
-				return true;
+			{
+				uint8_t v;
+				return detail::try_convert_string_to_number(std::string(val.begin(), val.end()), v);
+			}
 			case DataTypes_int16_t:
-				boost::lexical_cast<int16_t>(val);
-				return true;
+			{
+				int16_t v;
+				return detail::try_convert_string_to_number(std::string(val.begin(), val.end()), v);
+			}
 			case DataTypes_uint16_t:
-				boost::lexical_cast<uint16_t>(val);
-				return true;
+			{
+				uint16_t v;
+				return detail::try_convert_string_to_number(std::string(val.begin(), val.end()), v);
+			}
 			case DataTypes_int32_t:
-				boost::lexical_cast<int32_t>(val);
-				return true;
+			{
+				int32_t v;
+				return detail::try_convert_string_to_number(std::string(val.begin(), val.end()), v);
+			}
 			case DataTypes_uint32_t:
-				boost::lexical_cast<uint32_t>(val);
-				return true;
+			{
+				uint32_t v;
+				return detail::try_convert_string_to_number(std::string(val.begin(), val.end()), v);
+			}
 			case DataTypes_int64_t:
-				boost::lexical_cast<int64_t>(val);
-				return true;
+			{
+				int64_t v;
+				return detail::try_convert_string_to_number(std::string(val.begin(), val.end()), v);
+			}
 			case DataTypes_uint64_t:
-				boost::lexical_cast<uint16_t>(val);
-				return true;
+			{
+				uint64_t v;
+				return detail::try_convert_string_to_number(std::string(val.begin(), val.end()), v);
+			}
 			default:
 				return false;
 			}
@@ -2521,7 +2582,7 @@ namespace RobotRaconteur
 				}
 				else
 				{
-					boost::regex r_scalar("^[ \\t]*" RR_INT_REGEX "[ \\t]*$");
+					boost::regex r_scalar("^[ \\t]*(?:(?:" RR_INT_REGEX ")|(?:" RR_HEX_REGEX "))[ \\t]*$");
 					if (!regex_match(value.begin(), value.end(), r_scalar)) 
 						return false;					
 				}
@@ -2538,7 +2599,7 @@ namespace RobotRaconteur
 				}
 				else
 				{
-					boost::regex r_array("^[ \\t]*\\{[ \\t]*((?:" RR_INT_REGEX ")(?:[ \\t]*,[ \\t]*(?:" RR_INT_REGEX "))*)?[ \\t]*}[ \\t]*$");
+					boost::regex r_array("^[ \\t]*\\{[ \\t]*((?:(:?" RR_INT_REGEX ")|(?:" RR_HEX_REGEX "))(?:[ \\t]*,[ \\t]*(?:" RR_INT_REGEX "|" RR_HEX_REGEX "))*)?[ \\t]*}[ \\t]*$");
 					if (!regex_match(value.begin(), value.end(), r_array_match, r_array)) 
 						return false;
 				}
@@ -2626,6 +2687,10 @@ namespace RobotRaconteur
 				uint16_t v2;
 				ss << std::hex << v;
 				ss >> std::hex >> v2;
+				if (ss.fail() || !ss.eof())
+				{
+					throw InvalidArgumentException("Invalid escaped constant string");
+				}
 				v3[j] = v2;
 			}
 			return boost::locale::conv::utf_to_utf<char>(v3);
@@ -2755,15 +2820,23 @@ namespace RobotRaconteur
 				}
 				else
 				{
-					uint32_t v = static_cast<uint32_t>(e.Value);
-					std::stringstream ss;
-					ss << std::hex << v;
-					values.push_back( "    " + e.Name + " = 0x" + ss.str());
+					if (e.Value >= 0)
+					{
+						std::stringstream ss;
+						ss << std::hex << e.Value;
+						values.push_back("    " + e.Name + " = 0x" + ss.str());
+					}
+					else
+					{
+						std::stringstream ss;
+						ss << std::hex << -e.Value;
+						values.push_back("    " + e.Name + " = -0x" + ss.str());
+					}
 				}
 			}
 		}
 		s += boost::join(values, ",\n");
-		s += "\nend enum\n";
+		s += "\nend\n";
 		return s;
 	}
 	
@@ -2811,7 +2884,7 @@ namespace RobotRaconteur
 		std::vector<std::string> values2;
 		boost::split(values2, values1, boost::is_any_of(","));
 
-		boost::regex r_value("^[ \\t]*([A-Za-z]\\w*)(?:[ \\t]*=[ \\t]*(?:(0x[\\da-fA-F]+)|([+\\-]?\\d+)))?[ \\t]*$");
+		boost::regex r_value("^[ \\t]*([A-Za-z]\\w*)(?:[ \\t]*=[ \\t]*(?:(" RR_HEX_REGEX ")|(" RR_INT_REGEX ")))?[ \\t]*$");
 
 		BOOST_FOREACH(const std::string& l, values2)
 		{			
@@ -2827,19 +2900,37 @@ namespace RobotRaconteur
 
 			if (r_value_match[2].matched)
 			{
-				std::stringstream ss;
-				ss << std::hex << std::string(r_value_match[2]);
-				uint32_t v;
-				ss >> v;
-				enum_i.ImplicitValue = false;
-				enum_i.Value = static_cast<uint32_t>(v);
-				enum_i.HexValue = true;
+				try
+				{
+					std::stringstream ss;
+					ss << std::hex << std::string(r_value_match[2]);
+					int64_t v;
+					ss >> v;
+					if (ss.fail() || !ss.eof())
+					{
+						throw InvalidArgumentException("Bad hex number");
+					}
+					enum_i.ImplicitValue = false;
+					enum_i.Value = boost::numeric_cast<int32_t>(v);
+					enum_i.HexValue = true;
+				}
+				catch (std::exception&)
+				{
+					throw ServiceDefinitionParseException("Enum parse error", working_info);
+				}
 			}
 			else if (r_value_match[3].matched)
-			{ 
-				enum_i.ImplicitValue = false;
-				enum_i.Value = boost::lexical_cast<int32_t>(r_value_match[3]);
-				enum_i.HexValue = false;
+			{
+				try
+				{
+					enum_i.ImplicitValue = false;
+					enum_i.Value = boost::lexical_cast<int32_t>(r_value_match[3]);
+					enum_i.HexValue = false;
+				}
+				catch (std::exception&)
+				{
+					throw ServiceDefinitionParseException("Enum parse error", working_info);
+				}
 			}
 			else
 			{
@@ -3297,6 +3388,50 @@ namespace RobotRaconteur
 		}	
 	}
 
+	void VerifyModifier(const std::string& modifier_str, RR_SHARED_PTR<MemberDefinition>& m, std::vector<ServiceDefinitionParseException>& warnings)
+	{
+		boost::regex r_modifier("^[ \\t]*" RR_NAME_REGEX "(?:\\([ \\t]*((?:" RR_NUMBER_REGEX "|" RR_NAME_REGEX ")[ \\t]*(?:,[ \\t]*(?:" RR_NUMBER_REGEX "|" RR_NAME_REGEX "))*)[ \\t]*\\))?");
+		typename boost::smatch r_match;
+
+		if (!boost::regex_match(modifier_str, r_match, r_modifier))
+		{
+			throw ServiceDefinitionVerifyException("Invalid modifier: [" + modifier_str + "]", m->ParseInfo);
+		}
+
+		if (r_match[1].matched)
+		{
+			std::vector<std::string> modifier_params;
+			std::string r_match1 = r_match[1].str();
+			boost::split(modifier_params, r_match1, boost::is_any_of(","));
+			if (modifier_params.empty())
+			{
+				throw ServiceDefinitionVerifyException("Invalid modifier parameters: [" + modifier_str + "]", m->ParseInfo);
+			}
+
+			BOOST_FOREACH(std::string& p, modifier_params)
+			{
+				boost::trim(p);
+				boost::regex r_name(RR_NAME_REGEX);
+				if (boost::regex_match(p, r_name))
+				{
+					RR_SHARED_PTR<ServiceEntryDefinition> entry_def = m->ServiceEntry.lock();
+					if (!entry_def)
+					{
+						warnings.push_back(ServiceDefinitionParseException("Could not verify modifier parameters: [" + modifier_str + "]", m->ParseInfo));
+						continue;
+					}
+
+					RR_SHARED_PTR<ConstantDefinition> param_const = TryFindByName(entry_def->Constants, p);
+					if (!param_const)
+					{
+						warnings.push_back(ServiceDefinitionParseException("Could not verify modifier parameters: [" + modifier_str + "]", m->ParseInfo));
+					}
+				}
+			}
+		}
+	}
+
+
 	void VerifyModifiers(RR_SHARED_PTR<MemberDefinition>& m, bool readwrite, bool unreliable, bool nolock, bool nolockread, bool perclient, bool urgent, std::vector<ServiceDefinitionParseException>& warnings)
 	{
 		bool direction_found = false;
@@ -3397,6 +3532,8 @@ namespace RobotRaconteur
 					continue;
 				}
 			}
+
+			VerifyModifier(s, m, warnings);
 
 			warnings.push_back(ServiceDefinitionParseException("Unknown member modifier: [" + s + "]",m->ParseInfo));
 		}
@@ -4586,5 +4723,4 @@ namespace RobotRaconteur
 		std::set<std::string> n;
 		return GetNamedArrayElementTypeAndCount(def, other_defs, node, client, n);
 	}
-
 }

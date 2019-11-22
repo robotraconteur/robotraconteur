@@ -402,9 +402,6 @@ virtual RR_SHARED_PTR<obj5 > get_nolock_test();
 virtual RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > get_unreliable1();
 virtual void set_unreliable1(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value);
 
-virtual RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > get_unreliable2();
-virtual void set_unreliable2(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value);
-
 virtual RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > get_p1();
 virtual void set_p1(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > value);
 
@@ -461,7 +458,6 @@ virtual RR_SHARED_PTR<RobotRaconteur::PipeClientBase> RRGetPipeClient(const std:
 virtual RR_SHARED_PTR<RobotRaconteur::WireClientBase> RRGetWireClient(const std::string& membername);
 private:
 RR_SHARED_PTR<RobotRaconteur::PipeClient<int32_t > > rrvar_unreliable1;
-RR_SHARED_PTR<RobotRaconteur::PipeClient<int32_t > > rrvar_unreliable2;
 RR_SHARED_PTR<RobotRaconteur::PipeClient<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > rrvar_p1;
 RR_SHARED_PTR<RobotRaconteur::PipeClient<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > rrvar_p2;
 RR_SHARED_PTR<RobotRaconteur::PipeClient<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > rrvar_p3;
@@ -1066,7 +1062,6 @@ static void rr_gen_func5(RR_WEAK_PTR<com::robotraconteur::testing::TestService3:
 protected:bool rr_InitPipeServersRun;
 bool rr_InitWireServersRun;
 RR_SHARED_PTR<RobotRaconteur::PipeServer<int32_t > > rr_unreliable1_pipe;
-RR_SHARED_PTR<RobotRaconteur::PipeServer<int32_t > > rr_unreliable2_pipe;
 RR_SHARED_PTR<RobotRaconteur::PipeServer<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > rr_p1_pipe;
 RR_SHARED_PTR<RobotRaconteur::PipeServer<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > rr_p2_pipe;
 RR_SHARED_PTR<RobotRaconteur::PipeServer<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > rr_p3_pipe;
@@ -1536,9 +1531,6 @@ virtual RR_SHARED_PTR<obj5 > get_nolock_test();
 
 virtual RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > get_unreliable1();
 virtual void set_unreliable1(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value);
-
-virtual RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > get_unreliable2();
-virtual void set_unreliable2(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value);
 
 virtual RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > get_p1();
 virtual void set_p1(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > value);

@@ -1823,7 +1823,7 @@ def convert_constant(const):
         else:
             if (t.ArrayType == RobotRaconteurPython.DataTypes_ArrayTypes_array):
                 s3=const.Value.strip().lstrip('{').rstrip('}')
-                return const.Name, [int(i) for i in s3.split(',')]
+                return const.Name, [int(i,0) for i in s3.split(',')]
             else:
                 return const.Name, const.Value
     
@@ -1877,7 +1877,7 @@ def ServiceDefinitionConstants(servicedef, node, obj):
                 c_value[f_name]=o[f_value]
                 
                 
-    for n,v in elem_o.values():
+    for n,v in elem_o.items():
         o[n]=v
     
     for e in servicedef.Enums:

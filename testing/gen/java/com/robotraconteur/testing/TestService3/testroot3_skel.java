@@ -425,7 +425,6 @@ public class testroot3_skel extends ServiceSkel {
     public  void initPipeServers(Object obj1) {
     obj=(testroot3)obj1;
     obj.set_unreliable1(new Pipe<int[]>(innerskel.getPipe("unreliable1")));
-    obj.set_unreliable2(new Pipe<int[]>(innerskel.getPipe("unreliable2")));
     obj.set_p1(new Pipe<int[]>(innerskel.getPipe("p1")));
     obj.set_p2(new Pipe<int[]>(innerskel.getPipe("p2")));
     obj.set_p3(new Pipe<MultiDimArray>(innerskel.getPipe("p3")));

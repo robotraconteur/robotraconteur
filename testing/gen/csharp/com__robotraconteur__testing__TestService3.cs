@@ -266,7 +266,6 @@ public interface testroot3
     obj4 get_o4();
     obj5 get_nolock_test();
     Pipe<int> unreliable1{ get; set; }
-    Pipe<int> unreliable2{ get; set; }
     Pipe<int[]> p1{ get; set; }
     Pipe<int[]> p2{ get; set; }
     Pipe<MultiDimArray> p3{ get; set; }
@@ -337,9 +336,16 @@ public static class com__robotraconteur__testing__TestService3Constants
     public const string strconst="This is a\n \"string constant\" \\/\b\f \r\u00ff tabme\ttabme\n smile! \ud83d\ude01";
     public const int int32const=3856384;
     public static readonly int[] int32const_array={182476, 56483, -2947};
+    public const int int32hexconst=0x082bc7;
+    public const int int32hexconst2=-0x7264c17;
+    public static readonly int[] int32hexconst_array={ 0x8274ec, -0x0001, +0xABCDEF, 0xabcdef, 0x012345, 0x6789 };
     public static readonly double[] doubleconst_array={1.5847, 3.14, -548e3, 3452.67e2, 485e-21};
     public static class structconst { public const string strconst="This is a\n \"string constant\" \\/\b\f \r\u00ff tabme\ttabme\n smile! \ud83d\ude01"; public static readonly int[] int32const_array={182476, 56483, -2947}; }
     public static class structconst2 { public static class structconst { public const string strconst="This is a\n \"string constant\" \\/\b\f \r\u00ff tabme\ttabme\n smile! \ud83d\ude01"; public static readonly int[] int32const_array={182476, 56483, -2947}; } public const int int32const=3856384; }
+    public static class testroot3
+    {
+    public const string unknown_modifier_hello="hello world!";
+    }
 }
     public enum testenum1
     {
@@ -351,8 +357,8 @@ public static class com__robotraconteur__testing__TestService3Constants
     anothervalue3 = -3,
     hexval1 = 0x10,
     hexval2 = 0x11,
-    neghexval1 = -2147483643,
-    neghexval2 = -2147483642,
-    more_values = -2147483641
+    neghexval1 = -0x7ffffffb,
+    neghexval2 = -0x7ffffffa,
+    more_values = -0x7ffffff9
     };
 }

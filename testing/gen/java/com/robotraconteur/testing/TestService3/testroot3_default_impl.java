@@ -138,10 +138,6 @@ public class testroot3_default_impl implements testroot3{
     if (rrvar_unreliable1!=null) throw new IllegalStateException("Pipe already set");
     rrvar_unreliable1= new PipeBroadcaster<int[]>(value);
     }
-    public Pipe<int[]> get_unreliable2()
-    { throw new UnsupportedOperationException(); }
-    public void set_unreliable2(Pipe<int[]> value)
-    { throw new IllegalStateException();}
     public Pipe<int[]> get_p1()
     { throw new UnsupportedOperationException(); }
     public void set_p1(Pipe<int[]> value)

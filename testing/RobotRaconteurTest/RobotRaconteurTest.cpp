@@ -1645,12 +1645,6 @@ return 0;
 			if (!p3->IsUnreliable())
 				throw std::exception();
 
-			RR_SHARED_PTR<PipeDefinition> p4 = rr_cast<PipeDefinition>(TryFindByName(entry->Members, "unreliable2"));
-			if (p4->Direction() != MemberDefinition_Direction_both)
-				throw std::exception();
-			if (!p4->IsUnreliable())
-				throw std::exception();
-
 			RR_SHARED_PTR<WireDefinition> w1 = rr_cast<WireDefinition>(TryFindByName(entry->Members, "peekwire"));
 			if (w1->Direction() != MemberDefinition_Direction_readonly)
 				throw std::exception();

@@ -84,8 +84,6 @@ public interface testroot3
     obj5 get_nolock_test();
     Pipe<int[]> get_unreliable1();
     void set_unreliable1(Pipe<int[]> value);
-    Pipe<int[]> get_unreliable2();
-    void set_unreliable2(Pipe<int[]> value);
     Pipe<int[]> get_p1();
     void set_p1(Pipe<int[]> value);
     Pipe<int[]> get_p2();

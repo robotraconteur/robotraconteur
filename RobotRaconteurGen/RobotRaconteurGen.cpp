@@ -221,6 +221,7 @@ int main(int argc, char* argv[])
 	std::string lang = "";
 	std::string output_dir;
 	bool thunksource = false;
+	bool verify_robdef = false;
 	bool newnodeid = false;
 	bool md5passwordhash = false;
 	bool pullservicedef = false;
@@ -238,6 +239,7 @@ int main(int argc, char* argv[])
 			("version", "print program version")
 			("output-dir", po::value(&output_dir)->default_value("."), "directory for output")
 			("thunksource", po::bool_switch(&thunksource), "generate RR thunk source files")
+			("verify-robdef", po::bool_switch(&verify_robdef), "verify robdef files")
 			("newnodeid", po::bool_switch(&newnodeid), "generate a new NodeID")
 			("md5passwordhash", po::bool_switch(&md5passwordhash), "hash a password using MD5 algorithm")
 			("pullservicedef", po::bool_switch(&pullservicedef), "pull a service definition from a service URL")
@@ -281,6 +283,10 @@ int main(int argc, char* argv[])
 		if (thunksource)
 		{
 			command = "thunksource";
+		}
+		else if (verify_robdef)
+		{
+			command = "verify-robdef";
 		}
 		if (newnodeid)
 		{
@@ -362,7 +368,7 @@ int main(int argc, char* argv[])
 			return PullServiceDefinition(string_vector[0]);			
 		}
 
-		if (command != "thunksource")
+		if (command != "thunksource" && command != "verify-robdef")
 		{
 			std::cout << "RobotRaconteurGen: fatal error: invalid command specified" << std::endl;
 			return 1;
@@ -454,6 +460,7 @@ int main(int argc, char* argv[])
 		std::vector<boost::shared_ptr<ServiceDefinition> > sdefs;
 		std::vector<std::string> sdefs_str;
 		std::vector<boost::shared_ptr<ServiceDefinition> > alldefs;
+		std::vector<std::string> alldefs_str;
 
 		BOOST_FOREACH(std::string& e, boost::range::join(sources, imports))
 		{
@@ -472,6 +479,7 @@ int main(int argc, char* argv[])
 				d->CheckVersion();
 
 				alldefs.push_back(d);
+				alldefs_str.push_back(file_contents);
 
 				if (boost::range::find(sources, e) != sources.end())
 				{
@@ -516,6 +524,35 @@ int main(int argc, char* argv[])
 		{
 			cout << "RobotRaconteurGen: fatal error: could not verify service definition set " << string(ee.what()) << endl;
 			return 1009;
+		}
+
+		if (verify_robdef)
+		{
+			for (size_t i = 0; i < alldefs.size(); i++)
+			{
+				RR_SHARED_PTR<ServiceDefinition> d = alldefs.at(i);
+				if (d->StdVer < RobotRaconteurVersion(0, 9, 2))
+				{
+					cout << d->ParseInfo.RobDefFilePath << "(1): error: stdver 0.9.2 or greater required for service definition verification" << endl;
+					
+					return 1020;
+				}
+
+				//TODO: Verify robdef using regex??
+				/*std::vector<std::string> robdef_msgs;
+				if (!VerifyServiceDefinitionMatchesStandardRegex(alldefs_str.at(i), robdef_msgs))
+				{
+					cout << d->ParseInfo.RobDefFilePath << "(1): error: service definition does not match stdver 0.9.2 syntax regex" << endl;
+					return 1020;
+				}*/
+
+			}
+
+		}
+
+		if (!thunksource)
+		{
+			return 0;
 		}
 
 		if (lang=="cpp")

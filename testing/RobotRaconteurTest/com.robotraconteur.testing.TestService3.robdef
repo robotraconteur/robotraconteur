@@ -1,6 +1,6 @@
 service com.robotraconteur.testing.TestService3
 
-stdver 0.9.0
+stdver 0.9.2
 #option version 0.9.0
 
 import com.robotraconteur.testing.TestService1
@@ -17,7 +17,7 @@ enum testenum1
 	anothervalue3 = -3,
 	hexval1 = 0x10,
 	hexval2,
-	neghexval1 = 0x80000005,
+	neghexval1 = -0x7ffffffb,
 	neghexval2,
 	more_values
 end
@@ -25,6 +25,9 @@ end
 constant string strconst "This is a\n \"string constant\" \\\/\b\f \r\u00FF tabme\ttabme\n smile! \ud83d\udE01"
 constant int32 int32const 3856384
 constant int32[] int32const_array {182476, 56483, -2947}
+constant int32 int32hexconst 0x082bc7
+constant int32 int32hexconst2 -0x7264c17
+constant int32[] int32hexconst_array { 0x8274ec, -0x0001, +0xABCDEF, 0xabcdef, 0x012345, 0x6789 }
 constant double[] doubleconst_array {1.5847, 3.14, -548e3, 3452.67e2, 485e-21}
 constant struct structconst {field1: strconst, field2: int32const_array}
 constant struct structconst2 {field3: structconst, field4: int32const}    
@@ -33,7 +36,7 @@ namedarray vector3
     field double x
 	field double y
 	field double z
-end namedarray
+end
 
 namedarray quaternion
     field double q0
@@ -113,17 +116,18 @@ struct teststruct3
 end
 
 object testroot3
+
+    constant string unknown_modifier_hello "hello world!"
+
     property int32 readme [readonly]
 	property int32 writeme [writeonly]
 	
 	pipe int32 unreliable1 [unreliable,readonly]
-	option pipe unreliable2 unreliable
-	pipe int32 unreliable2
-
+	
     wire int32 peekwire [readonly]
     wire int32 \
 	pokewire [writeonly]
-	property int32 unknown_modifier [unknown, unknown2(), unknown_3(23, 45.8e-5, hello, "world")]
+	property int32 unknown_modifier [unknown, unknown_3(23, 45.8e-5, unknown_modifier_hello)]
 	
 	memory double[] readmem [readonly]
 	

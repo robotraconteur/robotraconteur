@@ -583,12 +583,19 @@ namespace detail
 			{
 				char in2_c[3];
 				in.read(in2_c, 2);
+				if (in.fail())
+				{
+					throw InvalidArgumentException("Invalid encoded index");
+				}
 				in2_c[2] = 0;
 				std::stringstream in2(in2_c);
-
-
+				
 				int v;
 				in2 >> std::hex >> v;
+				if (in2.fail() || !in2.eof())
+				{
+					throw InvalidArgumentException("Invalid encoded index");
+				}
 				out.put(v);
 			}
 

@@ -3643,7 +3643,14 @@ namespace RobotRaconteurGen
 				}
 				else
 				{
-					w2 << "    " << fix_name(v.Name) << " = 0x" << std::hex << v.Value << std::dec;
+					if (v.Value >= 0)
+					{
+						w2 << "    " << fix_name(v.Name) << " = 0x" << std::hex << v.Value << std::dec;
+					}
+					else
+					{
+						w2 << "    " << fix_name(v.Name) << " = -0x" << std::hex << -v.Value << std::dec;
+					}
 				}
 				if (i + 1 < e->Values.size())
 				{

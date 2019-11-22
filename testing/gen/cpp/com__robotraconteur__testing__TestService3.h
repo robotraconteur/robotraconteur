@@ -29,6 +29,9 @@ namespace com__robotraconteur__testing__TestService3Constants
     static const char* strconst="This is a\n \"string constant\" \\/\b\f \r\xc3\xbf tabme\ttabme\n smile! \xf0\x9f\x98\x81";
     static const int32_t int32const=3856384;
     static const int32_t int32const_array[]={182476, 56483, -2947};
+    static const int32_t int32hexconst=0x082bc7;
+    static const int32_t int32hexconst2=-0x7264c17;
+    static const int32_t int32hexconst_array[]={ 0x8274ec, -0x0001, +0xABCDEF, 0xabcdef, 0x012345, 0x6789 };
     static const double doubleconst_array[]={1.5847, 3.14, -548e3, 3452.67e2, 485e-21};
     namespace structconst { static const char* strconst="This is a\n \"string constant\" \\/\b\f \r\xc3\xbf tabme\ttabme\n smile! \xf0\x9f\x98\x81"; static const int32_t int32const_array[]={182476, 56483, -2947}; }
     namespace structconst2 { namespace structconst { static const char* strconst="This is a\n \"string constant\" \\/\b\f \r\xc3\xbf tabme\ttabme\n smile! \xf0\x9f\x98\x81"; static const int32_t int32const_array[]={182476, 56483, -2947}; } static const int32_t int32const=3856384; }
@@ -45,9 +48,9 @@ namespace com__robotraconteur__testing__TestService3Constants
     anothervalue3 = -3,
     hexval1 = 0x10,
     hexval2 = 0x11,
-    neghexval1 = 0x80000005,
-    neghexval2 = 0x80000006,
-    more_values = 0x80000007
+    neghexval1 = -0x7ffffffb,
+    neghexval2 = -0x7ffffffa,
+    more_values = -0x7ffffff9
     };
     }
 
@@ -292,9 +295,6 @@ virtual RR_SHARED_PTR<obj5 > get_nolock_test()=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > get_unreliable1()=0;
 virtual void set_unreliable1(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value)=0;
-
-virtual RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > get_unreliable2()=0;
-virtual void set_unreliable2(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value)=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > get_p1()=0;
 virtual void set_p1(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > value)=0;

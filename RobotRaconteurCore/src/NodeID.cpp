@@ -92,6 +92,10 @@ NodeID::NodeID(const std::string& id)
 			ss << std::hex << id3;
 			uint32_t id4;
 			ss >> id4;
+			if (ss.fail() || !ss.eof())
+			{
+				throw InvalidArgumentException("Invalid NodeID");
+			}
 			u1.data[i] = static_cast<uint8_t>((id4 & 0xFF));
 		}
 		this->id = u1;

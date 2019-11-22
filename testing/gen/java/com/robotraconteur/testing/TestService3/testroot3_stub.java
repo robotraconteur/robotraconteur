@@ -4,7 +4,6 @@ import java.util.*;
 import com.robotraconteur.*;
 public class testroot3_stub extends ServiceStub implements testroot3, async_testroot3 {
     private Pipe<int[]> rr_unreliable1;
-    private Pipe<int[]> rr_unreliable2;
     private Pipe<int[]> rr_p1;
     private Pipe<int[]> rr_p2;
     private Pipe<MultiDimArray> rr_p3;
@@ -27,7 +26,6 @@ public class testroot3_stub extends ServiceStub implements testroot3, async_test
     public testroot3_stub(WrappedServiceStub innerstub) {
         super(innerstub); 
     rr_unreliable1=new Pipe<int[]>(innerstub.getPipe("unreliable1"));
-    rr_unreliable2=new Pipe<int[]>(innerstub.getPipe("unreliable2"));
     rr_p1=new Pipe<int[]>(innerstub.getPipe("p1"));
     rr_p2=new Pipe<int[]>(innerstub.getPipe("p2"));
     rr_p3=new Pipe<MultiDimArray>(innerstub.getPipe("p3"));
@@ -577,10 +575,6 @@ public class testroot3_stub extends ServiceStub implements testroot3, async_test
     public Pipe<int[]> get_unreliable1()
     { return rr_unreliable1;  }
     public void set_unreliable1(Pipe<int[]> value)
-    { throw new RuntimeException();}
-    public Pipe<int[]> get_unreliable2()
-    { return rr_unreliable2;  }
-    public void set_unreliable2(Pipe<int[]> value)
     { throw new RuntimeException();}
     public Pipe<int[]> get_p1()
     { return rr_p1;  }

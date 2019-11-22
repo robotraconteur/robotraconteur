@@ -439,7 +439,12 @@ namespace RobotRaconteur
 		template<typename T>
 		T ValueToScalar()
 		{
-			return boost::lexical_cast<T>(boost::trim_copy(Value));
+			T v;
+			if (!detail::try_convert_string_to_number(boost::trim_copy(Value), v))
+			{
+				throw ServiceDefinitionParseException("Invalid constant", ParseInfo);
+			}
+			return v;
 		}
 
 		template<typename T>
@@ -465,12 +470,15 @@ namespace RobotRaconteur
 
 			size_t i = 0;
 
-			//Count number of elements
+			//Read elements
 			typedef boost::split_iterator<std::string::const_iterator> string_split_iterator;
 			for (string_split_iterator e = boost::make_split_iterator(value1, boost::token_finder(boost::is_any_of(","), boost::token_compress_on));
 				e != string_split_iterator(); e++)
 			{
-				(*o)[i] = boost::lexical_cast<T>(boost::trim_copy(*e));
+				if (!detail::try_convert_string_to_number(boost::trim_copy(*e), (*o)[i]))
+				{
+					throw ServiceDefinitionParseException("Invalid constant", ParseInfo);
+				}				
 				i++;
 			}
 
@@ -483,8 +491,7 @@ namespace RobotRaconteur
 		std::vector<ConstantDefinition_StructField> ValueToStructFields();
 
 		static std::string UnescapeString(const std::string& in);
-		static std::string EscapeString(const std::string& in);
-
+		static std::string EscapeString(const std::string& in);				
 	};
 
 	class ROBOTRACONTEUR_CORE_API  EnumDefinition : public NamedTypeDefinition
@@ -595,7 +602,7 @@ namespace RobotRaconteur
 	ROBOTRACONTEUR_CORE_API size_t EstimatePodPackedElementSize(RR_SHARED_PTR<ServiceEntryDefinition> def, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs = std::vector<RR_SHARED_PTR<ServiceDefinition> >(), RR_SHARED_PTR<RobotRaconteurNode> node = RR_SHARED_PTR<RobotRaconteurNode>(), RR_SHARED_PTR<RRObject> client = RR_SHARED_PTR<RRObject>());
 
 	ROBOTRACONTEUR_CORE_API boost::tuple<DataTypes, size_t> GetNamedArrayElementTypeAndCount(RR_SHARED_PTR<ServiceEntryDefinition> def, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs = std::vector<RR_SHARED_PTR<ServiceDefinition> >(), RR_SHARED_PTR<RobotRaconteurNode> node = RR_SHARED_PTR<RobotRaconteurNode>(), RR_SHARED_PTR<RRObject> client = RR_SHARED_PTR<RRObject>());
-	
+		
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
 	using ServiceDefinitionPtr = RR_SHARED_PTR<ServiceDefinition>;
 	using NamedTypeDefinitionPtr = RR_SHARED_PTR<NamedTypeDefinition>;
