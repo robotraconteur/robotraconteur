@@ -1213,7 +1213,7 @@ namespace RobotRaconteur
 		{
 			RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry();
 			m->ServicePath = GetServiceName();
-			m->MemberName = "connectclientcombined";
+			//m->MemberName = "connectclientcombined";
 			m->EntryType = MessageEntryType_ConnectClientCombined;
 
 			m->AddElement("clientversion", stringToRRArray(ROBOTRACONTEUR_VERSION_TEXT));
