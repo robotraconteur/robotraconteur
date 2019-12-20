@@ -175,7 +175,13 @@ public:
 
 	std::string GetObjectLockUsername(const std::string& servicepath);
 	
-	boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> GetNode();	
+	boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> GetNode();
+	
+	std::vector<std::string> GetExtraImports();
+		
+	void AddExtraImport(const std::string& import_);
+
+	bool RemoveExtraImport(const std::string& import_);
 };
 
 %nodefaultctor AuthenticatedUser;

@@ -1151,10 +1151,23 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_INTRUSIVE_PTR<Me
 								v.FromString(m_ver->CastDataToString());
 							}
 
+							RR_SHARED_PTR<ServerContext> service = GetService(name);
+
 							servicedef = GetService(name)->GetRootObjectServiceDef(v)->DefString();
 							RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> > attr=AllocateEmptyRRMap<std::string,RRValue>();
-							attr->GetStorageContainer()=GetService(name)->GetAttributes();
+							attr->GetStorageContainer()=service->GetAttributes();
 							eret->AddElement("attributes", PackMapType<std::string, RRValue>(attr));
+
+							std::vector<std::string> extra_imports = service->GetExtraImports();
+							if (!extra_imports.empty())
+							{
+								RR_INTRUSIVE_PTR<RRList<RRArray<char> > > extra_imports_rr = AllocateEmptyRRList<RRArray<char> >();
+								BOOST_FOREACH(const std::string& s, extra_imports)
+								{
+									extra_imports_rr->push_back(stringToRRArray(s));
+								}
+								eret->AddElement("extraimports", PackListType<RRArray<char> >(extra_imports_rr));
+							}
 						}
 						eret->AddElement("servicedef", stringToRRArray(servicedef));
 					}
@@ -1328,6 +1341,15 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_INTRUSIVE_PTR<Me
 						RR_SHARED_PTR<ServiceFactory> servicedef1 = c->GetRootObjectServiceDef(v);
 						std::map<std::string, RR_SHARED_PTR<ServiceFactory> > defs;
 						defs.insert(std::make_pair(servicedef1->GetServiceName(), servicedef1));
+
+						std::vector<std::string> extra_imports = c->GetExtraImports();
+						BOOST_FOREACH(const std::string& e, extra_imports)
+						{
+							if (defs.find(e) == defs.end())
+							{
+								defs.insert(std::make_pair(e, GetServiceType(e)));
+							}
+						}
 
 						while (true)
 						{

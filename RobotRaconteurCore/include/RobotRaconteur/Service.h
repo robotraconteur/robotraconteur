@@ -187,6 +187,17 @@ namespace RobotRaconteur
 		RR_SHARED_PTR<ServiceFactory> m_ServiceDef;
 
 	public:
+		std::vector<std::string> GetExtraImports();
+		
+		void AddExtraImport(const std::string& import_);
+
+		bool RemoveExtraImport(const std::string& import_);
+
+	protected:
+		std::vector<std::string> extra_imports;
+		boost::mutex extra_imports_lock;
+
+	public:
 		std::string GetServiceName() const;
 
 	protected:

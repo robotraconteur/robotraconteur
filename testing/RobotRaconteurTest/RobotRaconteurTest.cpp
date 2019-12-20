@@ -1663,6 +1663,46 @@ return 0;
 		return 0;
 	}
 
+	if (command == "extraimportstest")
+	{
+		RobotRaconteurNode::s()->SetExceptionHandler(myhandler);
+
+		RR_SHARED_PTR<TcpTransport> c = RR_MAKE_SHARED<TcpTransport>();
+		c->StartServer(4565);
+
+		//c->EnableNodeAnnounce();
+		//c->EnableNodeDiscoveryListening();
+
+		RobotRaconteurNode::s()->SetRequestTimeout(100000000);
+		RobotRaconteurNode::s()->SetTransportInactivityTimeout(1000000000);
+		RobotRaconteurNode::s()->SetEndpointInactivityTimeout(100000000);
+
+		RobotRaconteurNode::s()->RegisterTransport(c);
+		RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<com__robotraconteur__testing__TestService1Factory>());
+		RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<com__robotraconteur__testing__TestService2Factory>());
+		RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<com__robotraconteur__testing__TestService3Factory>());
+
+		RR_SHARED_PTR<RRObject> testservice = RR_MAKE_SHARED<RobotRaconteurTest_testroot>(c);
+
+		RR_SHARED_PTR<ServerContext> server_context = RobotRaconteurNode::s()->RegisterService("RobotRaconteurTestService", "com.robotraconteur.testing.TestService1", testservice);
+		server_context->AddExtraImport("com.robotraconteur.testing.TestService3");
+	
+		{
+			ServiceTestClient cl;
+			cl.RunMinimalTest("tcp://localhost:4565/{0}/RobotRaconteurTestService");
+		}
+
+		//_CrtMemCheckpoint(&s1);
+
+		cout << "start shutdown" << endl;
+
+
+
+		RobotRaconteurNode::s()->Shutdown();
+
+		cout << "Test completed, no errors detected!" << endl;
+	}
+
 	throw runtime_error("Unknown test command");
 
 }

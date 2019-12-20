@@ -181,7 +181,7 @@ int PullServiceDefinition(string url)
 	std::vector<RR_SHARED_PTR<ServiceDefinition> > o2;
 	try
 	{
-		o2 = rr_cast<ServiceStub>(o)->GetContext()->PullServiceDefinitionAndImports(SplitQualifiedName(type).get<0>());
+		o2 = rr_cast<ServiceStub>(o)->GetContext()->PullServiceDefinitionAndImports(SplitQualifiedName(type).get<0>()).defs;
 	}
 	catch (RobotRaconteurException e)
 	{

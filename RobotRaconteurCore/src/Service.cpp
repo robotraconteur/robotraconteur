@@ -490,6 +490,41 @@ namespace RobotRaconteur
 		 return GetNode()->GetServiceType(root_object_def);		 
 	 }
 
+	 std::vector<std::string> ServerContext::GetExtraImports()
+	 {
+		 boost::mutex::scoped_lock lock(extra_imports_lock);
+		 return extra_imports;
+	 }
+
+	 void ServerContext::AddExtraImport(const std::string& import_)
+	 {
+		 GetNode()->GetServiceType(import_);
+
+		 boost::mutex::scoped_lock lock(extra_imports_lock);
+
+		 if (boost::range::find(extra_imports, import_) != extra_imports.end())
+		 {
+			 throw InvalidArgumentException("Extra import already added");
+		 }
+
+		 extra_imports.push_back(import_);
+	 }
+
+	 bool ServerContext::RemoveExtraImport(const std::string& import_)
+	 {
+		 boost::mutex::scoped_lock lock(extra_imports_lock);
+
+		 std::vector<std::string>::iterator e = boost::range::find(extra_imports, import_);
+
+		 if (e == extra_imports.end())
+		 {
+			 return false;
+		 }
+
+		 extra_imports.erase(e);
+		 return true;
+	 }
+
 	 std::string ServerContext::GetServiceName() const
 	{
 		return m_ServiceName;
