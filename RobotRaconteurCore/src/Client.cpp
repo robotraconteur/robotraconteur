@@ -286,8 +286,20 @@ namespace RobotRaconteur
 			try
 			{
 				std::string objecttype = ret->FindElement("objecttype")->CastDataToString();
+				if (!objecttype2.empty() && objecttype != objecttype2)
+				{					
+					RR_INTRUSIVE_PTR<MessageElement> objectimplements_m;
+					if (ret->TryFindElement("objectimplements", objectimplements_m))
+					{
+						std::vector<std::string> objectimplements = RRListToStringVector(GetNode()->UnpackListType<RRArray<char> >(objectimplements_m->CastData<MessageElementList>()));
+						if (boost::range::find(objectimplements, objecttype2) != objectimplements.end())							
+						{
+							objecttype = objecttype2;								
+						}
+					}
+				}
 
-				if (objecttype == "")
+				if (objecttype.empty())
 					throw ObjectNotFoundException("Object type was not returned.");
 
 
@@ -375,7 +387,7 @@ namespace RobotRaconteur
 						}
 					}
 
-					if (objecttype2 != "")
+					if (!objecttype2.empty() && objecttype1 != objecttype2)
 					{
 						VerifyObjectImplements(objecttype, objecttype2);
 						objecttype = objecttype2;
@@ -388,7 +400,7 @@ namespace RobotRaconteur
 
 				else
 				{
-					if (objecttype2 != "")
+					if (!objecttype2.empty() && objecttype1 != objecttype2)
 					{
 						VerifyObjectImplements(objecttype, objecttype2);
 						objecttype = objecttype2;
@@ -1317,19 +1329,30 @@ namespace RobotRaconteur
 			{
 
 				std::string type = ret->FindElement("objecttype")->CastDataToString();
-				if (type == "")
+				if (type.empty())
 					throw ObjectNotFoundException("Could not find object type");
 				;
 
 				//If we want a desired type, try to figure out if the upcast is valid
-				if (objecttype != "")
+				if (!objecttype.empty() && type != objecttype)
 				{
+					RR_INTRUSIVE_PTR<MessageElement> objectimplements_m;
+					if (ret->TryFindElement("objectimplements", objectimplements_m))
+					{
+						std::vector<std::string> objectimplements = RRListToStringVector(GetNode()->UnpackListType<RRArray<char> >(objectimplements_m->CastData<MessageElementList>()));
+						if (boost::range::find(objectimplements, objecttype) != objectimplements.end())
+						{
+							type = objecttype;
+							AsyncConnectService4(d, RR_SHARED_PTR<RobotRaconteurException>(), username, credentials, objecttype, type, (handler));
+						}
+					}
+
 					VerifyObjectImplements(type, objecttype);
 					type = objecttype;
 
-
-					AsyncPullServiceDefinitionAndImports(SplitQualifiedName(type).get<0>(), boost::bind(&ClientContext::AsyncConnectService4, shared_from_this(), _1, _2, username, credentials, objecttype, type, handler), GetNode()->GetRequestTimeout());
-					return;
+					//The type has already been pulled by now, no need to try again
+					//AsyncPullServiceDefinitionAndImports(SplitQualifiedName(type).get<0>(), boost::bind(&ClientContext::AsyncConnectService4, shared_from_this(), _1, _2, username, credentials, objecttype, type, handler), GetNode()->GetRequestTimeout());
+					//return;
 				}
 
 				//std::cout << "AsyncConnectService3_1" << std::endl;
@@ -1549,15 +1572,30 @@ namespace RobotRaconteur
 
 			std::string type = ret->FindElement("objecttype")->CastDataToString();
 
-			if (type == "")
+			if (type.empty())
 				throw ObjectNotFoundException("Could not find object type");
 
 
 			//If we want a desired type, try to figure out if the upcast is valid
-			if (objecttype != "")
+			if (!objecttype.empty() && type != objecttype)
 			{
-				VerifyObjectImplements(type, objecttype);
-				type = objecttype;
+				bool found = false;
+				RR_INTRUSIVE_PTR<MessageElement> objectimplements_m;
+				if (ret->TryFindElement("objectimplements", objectimplements_m))
+				{
+					std::vector<std::string> objectimplements = RRListToStringVector(GetNode()->UnpackListType<RRArray<char> >(objectimplements_m->CastData<MessageElementList>()));
+					if (boost::range::find(objectimplements, objecttype) != objectimplements.end())
+					{
+						type = objecttype;						
+						found = true;
+					}
+				}
+
+				if (!found)
+				{
+					VerifyObjectImplements(type, objecttype);
+					type = objecttype;
+				}
 			}
 
 			try

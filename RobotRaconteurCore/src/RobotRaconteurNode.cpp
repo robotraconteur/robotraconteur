@@ -1106,7 +1106,15 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_INTRUSIVE_PTR<Me
 
 						std::string objtype = s->GetObjectType(path,v);
 						eret->AddElement("objecttype", stringToRRArray(objtype));
-						
+
+						boost::tuple<std::string, std::string> objtype_s = SplitQualifiedName(objtype);
+						RR_SHARED_PTR<ServiceEntryDefinition> def = TryFindByName(GetServiceType(objtype_s.get<0>())->ServiceDef()->Objects, objtype_s.get<1>());
+						if (!def) throw ServiceException("Invalid service object");
+
+						if (!def->Implements.empty())
+						{
+							eret->AddElement("objectimplements", PackListType<RRArray<char> >(stringVectorToRRList(def->Implements)));
+						}						
 					}
 					catch (std::exception&)
 					{
@@ -1161,12 +1169,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_INTRUSIVE_PTR<Me
 							std::vector<std::string> extra_imports = service->GetExtraImports();
 							if (!extra_imports.empty())
 							{
-								RR_INTRUSIVE_PTR<RRList<RRArray<char> > > extra_imports_rr = AllocateEmptyRRList<RRArray<char> >();
-								BOOST_FOREACH(const std::string& s, extra_imports)
-								{
-									extra_imports_rr->push_back(stringToRRArray(s));
-								}
-								eret->AddElement("extraimports", PackListType<RRArray<char> >(extra_imports_rr));
+								eret->AddElement("extraimports", PackListType<RRArray<char> >(stringVectorToRRList(extra_imports)));
 							}
 						}
 						eret->AddElement("servicedef", stringToRRArray(servicedef));
@@ -1306,6 +1309,16 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_INTRUSIVE_PTR<Me
 					c = GetService(name);
 					std::string objtype= c->GetRootObjectType(v);
 					eret->AddElement("objecttype", stringToRRArray(objtype));
+
+					boost::tuple<std::string, std::string> objtype_s = SplitQualifiedName(objtype);
+					RR_SHARED_PTR<ServiceEntryDefinition> def = TryFindByName(GetServiceType(objtype_s.get<0>())->ServiceDef()->Objects, objtype_s.get<1>());
+					if (!def) throw ServiceException("Invalid service object");
+
+					if (!def->Implements.empty())
+					{						
+						eret->AddElement("objectimplements", PackListType<RRArray<char> >(stringVectorToRRList(def->Implements)));
+					}
+
 				}
 				catch (std::exception&)
 				{
