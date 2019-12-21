@@ -26,7 +26,6 @@
 
 namespace RobotRaconteur
 {
-	
 	class ROBOTRACONTEUR_CORE_API  ServiceEntryDefinition;
 	class ROBOTRACONTEUR_CORE_API  MemberDefinition;
 	class ROBOTRACONTEUR_CORE_API  FunctionDefinition;
@@ -82,6 +81,52 @@ namespace RobotRaconteur
 		uint32_t tweak;
 
 		ServiceDefinitionParseInfo ParseInfo;
+	};
+
+	class ROBOTRACONTEUR_CORE_API  ServiceDefinitionParseException : public ServiceDefinitionException
+	{
+
+	public:
+
+		ServiceDefinitionParseInfo ParseInfo;
+
+		std::string ShortMessage;
+
+		ServiceDefinitionParseException(const std::string &e);
+		ServiceDefinitionParseException(const std::string &e, const ServiceDefinitionParseInfo& info);
+
+		virtual std::string ToString();
+
+		virtual const char* what() const throw ();
+
+		~ServiceDefinitionParseException() throw () {}
+
+	private:
+		std::string what_store;
+
+	};
+
+	class ROBOTRACONTEUR_CORE_API  ServiceDefinitionVerifyException : public ServiceDefinitionException
+	{
+
+	public:
+
+		ServiceDefinitionParseInfo ParseInfo;
+
+		std::string ShortMessage;
+
+		ServiceDefinitionVerifyException(const std::string &e);
+		ServiceDefinitionVerifyException(const std::string &e, const ServiceDefinitionParseInfo& info);
+
+		virtual std::string ToString();
+
+		virtual const char* what() const throw ();
+
+		~ServiceDefinitionVerifyException() throw () {}
+
+	private:
+		std::string what_store;
+
 	};
 
 	class ROBOTRACONTEUR_CORE_API  ServiceDefinition : public RR_ENABLE_SHARED_FROM_THIS<ServiceDefinition>
@@ -529,52 +574,6 @@ namespace RobotRaconteur
 		bool HexValue;
 	};
 		
-	class ROBOTRACONTEUR_CORE_API  ServiceDefinitionParseException : public ServiceDefinitionException
-	{
-
-	public:
-		
-		ServiceDefinitionParseInfo ParseInfo;
-
-		std::string ShortMessage;
-
-		ServiceDefinitionParseException(const std::string &e);
-		ServiceDefinitionParseException(const std::string &e, const ServiceDefinitionParseInfo& info);
-
-		virtual std::string ToString();
-
-		virtual const char* what() const throw ();
-
-		~ServiceDefinitionParseException() throw () {}
-
-	private:
-		std::string what_store;
-
-	};
-
-	class ROBOTRACONTEUR_CORE_API  ServiceDefinitionVerifyException : public ServiceDefinitionException
-	{
-
-	public:
-
-		ServiceDefinitionParseInfo ParseInfo;
-
-		std::string ShortMessage;
-
-		ServiceDefinitionVerifyException(const std::string &e);
-		ServiceDefinitionVerifyException(const std::string &e, const ServiceDefinitionParseInfo& info);
-
-		virtual std::string ToString();
-
-		virtual const char* what() const throw ();
-
-		~ServiceDefinitionVerifyException() throw () {}
-
-	private:
-		std::string what_store;
-
-	};
-
 	ROBOTRACONTEUR_CORE_API void VerifyServiceDefinitions(std::vector<RR_SHARED_PTR<ServiceDefinition> > def, std::vector<ServiceDefinitionParseException>& warnings);
 	ROBOTRACONTEUR_CORE_API void VerifyServiceDefinitions(std::vector<RR_SHARED_PTR<ServiceDefinition> > def);
 
