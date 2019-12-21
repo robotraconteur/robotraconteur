@@ -224,31 +224,31 @@ namespace packing
 		{
 
 			if (type == "RobotRaconteur.RRMultiDimArray<double>")
-				return PackMultiDimArray(rr_cast<RRMultiDimArray<double>>(vardata));
+				return PackMultiDimArray(rr_cast<RRMultiDimArray<double> >(vardata));
 			if (type == "RobotRaconteur.RRMultiDimArray<single>")
-				return PackMultiDimArray(rr_cast<RRMultiDimArray<float>>(vardata));
+				return PackMultiDimArray(rr_cast<RRMultiDimArray<float> >(vardata));
 			if (type == "RobotRaconteur.RRMultiDimArray<int8>")
-				return PackMultiDimArray(rr_cast<RRMultiDimArray<int8_t>>(vardata));
+				return PackMultiDimArray(rr_cast<RRMultiDimArray<int8_t> >(vardata));
 			if (type == "RobotRaconteur.RRMultiDimArray<uint8>")
-				return PackMultiDimArray(rr_cast<RRMultiDimArray<uint8_t>>(vardata));
+				return PackMultiDimArray(rr_cast<RRMultiDimArray<uint8_t> >(vardata));
 			if (type == "RobotRaconteur.RRMultiDimArray<int16>")
-				return PackMultiDimArray(rr_cast<RRMultiDimArray<int16_t>>(vardata));
+				return PackMultiDimArray(rr_cast<RRMultiDimArray<int16_t> >(vardata));
 			if (type == "RobotRaconteur.RRMultiDimArray<uint16>")
-				return PackMultiDimArray(rr_cast<RRMultiDimArray<uint16_t>>(vardata));
+				return PackMultiDimArray(rr_cast<RRMultiDimArray<uint16_t> >(vardata));
 			if (type == "RobotRaconteur.RRMultiDimArray<int32>")
-				return PackMultiDimArray(rr_cast<RRMultiDimArray<int32_t>>(vardata));
+				return PackMultiDimArray(rr_cast<RRMultiDimArray<int32_t> >(vardata));
 			if (type == "RobotRaconteur.RRMultiDimArray<uint32>")
-				return PackMultiDimArray(rr_cast<RRMultiDimArray<uint32_t>>(vardata));
+				return PackMultiDimArray(rr_cast<RRMultiDimArray<uint32_t> >(vardata));
 			if (type == "RobotRaconteur.RRMultiDimArray<int64>")
-				return PackMultiDimArray(rr_cast<RRMultiDimArray<int64_t>>(vardata));
+				return PackMultiDimArray(rr_cast<RRMultiDimArray<int64_t> >(vardata));
 			if (type == "RobotRaconteur.RRMultiDimArray<uint64>")
-				return PackMultiDimArray(rr_cast<RRMultiDimArray<uint64_t>>(vardata));
+				return PackMultiDimArray(rr_cast<RRMultiDimArray<uint64_t> >(vardata));
 			if (type == "RobotRaconteur.RRMultiDimArray<cdouble>")
-				return PackMultiDimArray(rr_cast<RRMultiDimArray<cdouble>>(vardata));
+				return PackMultiDimArray(rr_cast<RRMultiDimArray<cdouble> >(vardata));
 			if (type == "RobotRaconteur.RRMultiDimArray<csingle>")
-				return PackMultiDimArray(rr_cast<RRMultiDimArray<cfloat>>(vardata));
+				return PackMultiDimArray(rr_cast<RRMultiDimArray<cfloat> >(vardata));
 			if (type == "RobotRaconteur.RRMultiDimArray<bool>")
-				return PackMultiDimArray(rr_cast<RRMultiDimArray<rr_bool>>(vardata));
+				return PackMultiDimArray(rr_cast<RRMultiDimArray<rr_bool> >(vardata));
 			throw DataTypeException("Invalid MultiDimArray type");
 		}
 
@@ -306,12 +306,12 @@ namespace packing
 
 		if (type == DataTypes_vector_t)
 		{
-			return check_node_null(node)->UnpackMapType<int32_t, RRValue>(rr_cast<MessageElementMap<int32_t>>(mvardata));
+			return check_node_null(node)->UnpackMapType<int32_t, RRValue>(rr_cast<MessageElementMap<int32_t> >(mvardata));
 		}
 
 		if (type == DataTypes_dictionary_t)
 		{
-			return check_node_null(node)->UnpackMapType<std::string, RRValue>(rr_cast<MessageElementMap<std::string>>(mvardata));
+			return check_node_null(node)->UnpackMapType<std::string, RRValue>(rr_cast<MessageElementMap<std::string> >(mvardata));
 		}
 
 		if (type == DataTypes_multidimarray_t)

@@ -101,7 +101,7 @@ namespace packing
 		{
 			if (!set) return RR_INTRUSIVE_PTR<MessageElementMap<int32_t> >();
 
-			RR_INTRUSIVE_PTR<RRMap<int32_t, T> > set2 = rr_cast<RRMap<int32_t, T>>(set);
+			RR_INTRUSIVE_PTR<RRMap<int32_t, T> > set2 = rr_cast<RRMap<int32_t, T> >(set);
 
 			std::vector<RR_INTRUSIVE_PTR<MessageElement> > mret;
 
@@ -162,7 +162,7 @@ namespace packing
 		{
 			if (!set) return RR_INTRUSIVE_PTR<MessageElementMap<std::string> >();
 
-			RR_INTRUSIVE_PTR<RRMap<std::string, T> > set2 = rr_cast<RRMap<std::string, T>>(set);
+			RR_INTRUSIVE_PTR<RRMap<std::string, T> > set2 = rr_cast<RRMap<std::string, T> >(set);
 
 			std::vector<RR_INTRUSIVE_PTR<MessageElement> > mret;
 
@@ -220,7 +220,7 @@ namespace packing
 	{
 		if (!set) return RR_INTRUSIVE_PTR<MessageElementList >();
 
-		RR_INTRUSIVE_PTR<RRList<T> > set2 = rr_cast<RRList<T>>(set);
+		RR_INTRUSIVE_PTR<RRList<T> > set2 = rr_cast<RRList<T> >(set);
 
 		std::vector<RR_INTRUSIVE_PTR<MessageElement> > mret;
 
@@ -377,7 +377,7 @@ namespace packing
 		template<typename U, typename NodeType>
 		static RR_INTRUSIVE_PTR<MessageElementData> PackAnyType(const U& data, NodeType node)
 		{
-			return PackMultiDimArray<T>(rr_cast<RRMultiDimArray<T>>(data));
+			return PackMultiDimArray<T>(rr_cast<RRMultiDimArray<T> >(data));
 		}
 
 		template<typename NodeType>
