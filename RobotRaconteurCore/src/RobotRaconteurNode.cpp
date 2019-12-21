@@ -245,352 +245,63 @@ uint32_t RobotRaconteurNode::RegisterTransport(RR_SHARED_PTR<Transport> transpor
 
 RR_INTRUSIVE_PTR<MessageElementStructure> RobotRaconteurNode::PackStructure(RR_INTRUSIVE_PTR<RRStructure> structure)
 {
-	
-	if (!structure) return RR_INTRUSIVE_PTR<MessageElementStructure>();
-
-	std::string type=structure->RRType();
-
-	std::string servicetype=SplitQualifiedName(type).get<0>();
-	//std::string structuretype=res[1];
-
-	RR_SHARED_PTR<ServiceFactory> factory=GetServiceType(servicetype);
-
-	return factory->PackStructure(structure);
-
+	return detail::packing::PackStructure(structure, this);
 }
 
 RR_INTRUSIVE_PTR<RRStructure> RobotRaconteurNode::UnpackStructure(RR_INTRUSIVE_PTR<MessageElementStructure> structure)
 {
-	if (!structure) return RR_INTRUSIVE_PTR<RRStructure>();
-
-	std::string type=structure->Type;
-
-	
-	std::string servicetype=SplitQualifiedName(type).get<0>();
-	//std::string structuretype=res[1];
-
-	RR_SHARED_PTR<ServiceFactory> factory=GetServiceType(servicetype);
-
-	return rr_cast<RRStructure>(factory->UnpackStructure(structure));
-	
+	return detail::packing::UnpackStructure(structure, this);
 }
 
 RR_INTRUSIVE_PTR<MessageElementPodArray> RobotRaconteurNode::PackPodArray(RR_INTRUSIVE_PTR<RRPodBaseArray> a)
 {
-
-	if (!a) return RR_INTRUSIVE_PTR<MessageElementPodArray>();
-
-	std::string type = a->RRElementTypeString();
-
-	std::string servicetype = SplitQualifiedName(type).get<0>();
-	//std::string structuretype=res[1];
-
-	RR_SHARED_PTR<ServiceFactory> factory = GetServiceType(servicetype);
-
-	return factory->PackPodArray(a);
+	return detail::packing::PackPodArray(a, this);
 }
 
 RR_INTRUSIVE_PTR<RRPodBaseArray> RobotRaconteurNode::UnpackPodArray(RR_INTRUSIVE_PTR<MessageElementPodArray> a)
 {
-	if (!a) return RR_INTRUSIVE_PTR<RRPodBaseArray>();
-
-	std::string type = a->Type;
-
-
-	std::string servicetype = SplitQualifiedName(type).get<0>();
-	//std::string structuretype=res[1];
-
-	RR_SHARED_PTR<ServiceFactory> factory = GetServiceType(servicetype);
-
-	return rr_cast<RRPodBaseArray>(factory->UnpackPodArray(a));
+	return detail::packing::UnpackPodArray(a, this);
 }
 
 RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> RobotRaconteurNode::PackPodMultiDimArray(RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> a)
 {
-
-	if (!a) return RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray>();
-
-	std::string type = a->RRElementTypeString();
-
-	std::string servicetype = SplitQualifiedName(type).get<0>();
-	//std::string structuretype=res[1];
-
-	RR_SHARED_PTR<ServiceFactory> factory = GetServiceType(servicetype);
-
-	return factory->PackPodMultiDimArray(a);
+	return detail::packing::PackPodMultiDimArray(a, this);
 }
 
 RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> RobotRaconteurNode::UnpackPodMultiDimArray(RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> a)
 {
-	if (!a) return RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray>();
-
-	std::string type = a->Type;
-
-
-	std::string servicetype = SplitQualifiedName(type).get<0>();
-	//std::string structuretype=res[1];
-
-	RR_SHARED_PTR<ServiceFactory> factory = GetServiceType(servicetype);
-
-	return rr_cast<RRPodBaseMultiDimArray>(factory->UnpackPodMultiDimArray(a));
+	return detail::packing::UnpackPodMultiDimArray(a, this);
 }
 
 
 RR_INTRUSIVE_PTR<MessageElementNamedArray> RobotRaconteurNode::PackNamedArray(RR_INTRUSIVE_PTR<RRNamedBaseArray> a)
 {
-
-	if (!a) return RR_INTRUSIVE_PTR<MessageElementNamedArray>();
-
-	std::string type = a->RRElementTypeString();
-
-	std::string servicetype = SplitQualifiedName(type).get<0>();
-	//std::string structuretype=res[1];
-
-	RR_SHARED_PTR<ServiceFactory> factory = GetServiceType(servicetype);
-
-	return factory->PackNamedArray(a);
+	return detail::packing::PackNamedArray(a, this);
 }
 
 RR_INTRUSIVE_PTR<RRNamedBaseArray> RobotRaconteurNode::UnpackNamedArray(RR_INTRUSIVE_PTR<MessageElementNamedArray> a)
 {
-	if (!a) return RR_INTRUSIVE_PTR<RRNamedBaseArray>();
-
-	std::string type = a->Type;
-
-
-	std::string servicetype = SplitQualifiedName(type).get<0>();
-	//std::string structuretype=res[1];
-
-	RR_SHARED_PTR<ServiceFactory> factory = GetServiceType(servicetype);
-
-	return rr_cast<RRNamedBaseArray>(factory->UnpackNamedArray(a));
+	return detail::packing::UnpackNamedArray(a, this);
 }
 
 RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> RobotRaconteurNode::PackNamedMultiDimArray(RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> a)
 {
-
-	if (!a) return RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray>();
-
-	std::string type = a->RRElementTypeString();
-
-	std::string servicetype = SplitQualifiedName(type).get<0>();
-	//std::string structuretype=res[1];
-
-	RR_SHARED_PTR<ServiceFactory> factory = GetServiceType(servicetype);
-
-	return factory->PackNamedMultiDimArray(a);
+	return detail::packing::PackNamedMultiDimArray(a, this);
 }
 
 RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> RobotRaconteurNode::UnpackNamedMultiDimArray(RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> a)
 {
-	if (!a) return RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray>();
-
-	std::string type = a->Type;
-
-
-	std::string servicetype = SplitQualifiedName(type).get<0>();
-	//std::string structuretype=res[1];
-
-	RR_SHARED_PTR<ServiceFactory> factory = GetServiceType(servicetype);
-
-	return rr_cast<RRNamedBaseMultiDimArray>(factory->UnpackNamedMultiDimArray(a));
+	return detail::packing::UnpackNamedMultiDimArray(a, this);
 }
 
 RR_INTRUSIVE_PTR<MessageElementData> RobotRaconteurNode::PackVarType(RR_INTRUSIVE_PTR<RRValue> vardata)
 {
-
-	if (!vardata) return RR_INTRUSIVE_PTR<MessageElementData>();
-
-	std::string type=vardata->RRType();
-
-	std::string t1="RobotRaconteur.RRArray";
-	if (type.compare(0,t1.length(),t1)==0)
-	{
-		return rr_cast<MessageElementData>(vardata);
-	}
-
-	std::string t2="RobotRaconteur.RRMap<int32_t>";
-	if (type==t2)
-	{
-		return PackMapType<int32_t,RRValue>(vardata);
-	}
-
-	std::string t3="RobotRaconteur.RRMap<string>";
-	if (type==t3)
-	{
-		return PackMapType<std::string,RRValue>(vardata);
-	}
-	
-	std::string t6="RobotRaconteur.RRMap";
-	if (type.compare(0,t6.size(),t6)==0)
-	{
-		//Unknown keytype type for map
-		throw DataTypeException("Invalid map keytype");	
-	}	
-
-	std::string t5="RobotRaconteur.RRMultiDimArray";
-	if (type.compare(0,t5.length(),t5)==0)
-	{
-
-		if (type=="RobotRaconteur.RRMultiDimArray<double>")
-			return PackMultiDimArray(rr_cast<RRMultiDimArray<double> >(vardata));
-		if (type=="RobotRaconteur.RRMultiDimArray<single>")
-			return PackMultiDimArray(rr_cast<RRMultiDimArray<float> >(vardata));
-		if (type=="RobotRaconteur.RRMultiDimArray<int8>")
-			return PackMultiDimArray(rr_cast<RRMultiDimArray<int8_t> >(vardata));
-		if (type=="RobotRaconteur.RRMultiDimArray<uint8>")
-			return PackMultiDimArray(rr_cast<RRMultiDimArray<uint8_t> >(vardata));
-		if (type=="RobotRaconteur.RRMultiDimArray<int16>")
-			return PackMultiDimArray(rr_cast<RRMultiDimArray<int16_t> >(vardata));
-		if (type=="RobotRaconteur.RRMultiDimArray<uint16>")
-			return PackMultiDimArray(rr_cast<RRMultiDimArray<uint16_t> >(vardata));
-		if (type=="RobotRaconteur.RRMultiDimArray<int32>")
-			return PackMultiDimArray(rr_cast<RRMultiDimArray<int32_t> >(vardata));
-		if (type=="RobotRaconteur.RRMultiDimArray<uint32>")
-			return PackMultiDimArray(rr_cast<RRMultiDimArray<uint32_t> >(vardata));
-		if (type=="RobotRaconteur.RRMultiDimArray<int64>")
-			return PackMultiDimArray(rr_cast<RRMultiDimArray<int64_t> >(vardata));
-		if (type=="RobotRaconteur.RRMultiDimArray<uint64>")
-			return PackMultiDimArray(rr_cast<RRMultiDimArray<uint64_t> >(vardata));
-		if (type == "RobotRaconteur.RRMultiDimArray<cdouble>")
-			return PackMultiDimArray(rr_cast<RRMultiDimArray<cdouble> >(vardata));
-		if (type == "RobotRaconteur.RRMultiDimArray<csingle>")
-			return PackMultiDimArray(rr_cast<RRMultiDimArray<cfloat> >(vardata));
-		if (type == "RobotRaconteur.RRMultiDimArray<bool>")
-			return PackMultiDimArray(rr_cast<RRMultiDimArray<rr_bool> >(vardata));
-		throw DataTypeException("Invalid MultiDimArray type");
-	}
-
-	std::string t8="RobotRaconteur.RRList";
-	if (type==t8)
-	{
-		return PackListType<RRValue>(vardata);
-	}
-
-	std::string t9 = "RobotRaconteur.RRPodArray";
-	if (type == t9)
-	{
-		return PackPodArray(rr_cast<RRPodBaseArray>(vardata));
-	}
-
-	std::string t11 = "RobotRaconteur.RRPodMultiDimArray";
-	if (type == t11)
-	{
-		return PackPodMultiDimArray(rr_cast<RRPodBaseMultiDimArray>(vardata));
-	}
-
-	std::string t12 = "RobotRaconteur.RRNamedArray";
-	if (type == t12)
-	{
-		return PackNamedArray(rr_cast<RRNamedBaseArray>(vardata));
-	}
-
-	std::string t13 = "RobotRaconteur.RRNamedMultiDimArray";
-	if (type == t13)
-	{
-		return PackNamedMultiDimArray(rr_cast<RRNamedBaseMultiDimArray>(vardata));
-	}
-
-	return PackStructure(rr_cast<RRStructure>(vardata));
+	return detail::packing::PackVarType(vardata, this);
 }
 
 RR_INTRUSIVE_PTR<RRValue> RobotRaconteurNode::UnpackVarType(RR_INTRUSIVE_PTR<MessageElement> mvardata1)
 {
-	if (!mvardata1) return RR_INTRUSIVE_PTR<RRValue>();
-	if (mvardata1->ElementType==DataTypes_void_t) return RR_INTRUSIVE_PTR<RRValue>();
-
-	RR_INTRUSIVE_PTR<MessageElementData> mvardata=mvardata1->GetData();
-
-	DataTypes type=mvardata->GetTypeID();
-
-	if (IsTypeRRArray(type))
-	{
-		return rr_cast<RRValue>(mvardata);
-	}
-
-	if (type==DataTypes_structure_t)
-	{
-		return UnpackStructure(rr_cast<MessageElementStructure>(mvardata));
-	}
-
-	if (type==DataTypes_vector_t)
-	{
-		return UnpackMapType<int32_t,RRValue>(rr_cast<MessageElementMap<int32_t> >(mvardata));
-	}
-
-	if (type==DataTypes_dictionary_t)
-	{
-		return UnpackMapType<std::string,RRValue>(rr_cast<MessageElementMap<std::string> >(mvardata));
-	}
-
-	if (type==DataTypes_multidimarray_t)
-	{
-		DataTypes type1=MessageElement::FindElement(mvardata1->CastData<MessageElementMultiDimArray>()->Elements,"array")->ElementType;
-
-		switch (type1)
-		{	
-		
-		case DataTypes_double_t:
-			return rr_cast<RRValue>(UnpackMultiDimArray<double>(rr_cast<MessageElementMultiDimArray>(mvardata)));
-		case DataTypes_single_t:
-			return rr_cast<RRValue>(UnpackMultiDimArray<float>(rr_cast<MessageElementMultiDimArray>(mvardata)));
-		case DataTypes_int8_t:
-			return rr_cast<RRValue>(UnpackMultiDimArray<int8_t>(rr_cast<MessageElementMultiDimArray>(mvardata)));
-		case DataTypes_uint8_t:
-			return rr_cast<RRValue>(UnpackMultiDimArray<uint8_t>(rr_cast<MessageElementMultiDimArray>(mvardata)));
-		case DataTypes_int16_t:
-			return rr_cast<RRValue>(UnpackMultiDimArray<int16_t>(rr_cast<MessageElementMultiDimArray>(mvardata)));
-		case DataTypes_uint16_t:
-			return rr_cast<RRValue>(UnpackMultiDimArray<uint16_t>(rr_cast<MessageElementMultiDimArray>(mvardata)));
-		case DataTypes_int32_t:
-			return rr_cast<RRValue>(UnpackMultiDimArray<int32_t>(rr_cast<MessageElementMultiDimArray>(mvardata)));
-		case DataTypes_uint32_t:
-			return rr_cast<RRValue>(UnpackMultiDimArray<uint32_t>(rr_cast<MessageElementMultiDimArray>(mvardata)));
-		case DataTypes_int64_t:
-			return rr_cast<RRValue>(UnpackMultiDimArray<int64_t>(rr_cast<MessageElementMultiDimArray>(mvardata)));
-		case DataTypes_uint64_t:
-			return rr_cast<RRValue>(UnpackMultiDimArray<uint64_t>(rr_cast<MessageElementMultiDimArray>(mvardata)));
-		case DataTypes_cdouble_t:
-			return rr_cast<RRValue>(UnpackMultiDimArray<cdouble>(rr_cast<MessageElementMultiDimArray>(mvardata)));
-		case DataTypes_csingle_t:
-			return rr_cast<RRValue>(UnpackMultiDimArray<cfloat>(rr_cast<MessageElementMultiDimArray>(mvardata)));
-		case DataTypes_bool_t:
-			return rr_cast<RRValue>(UnpackMultiDimArray<rr_bool>(rr_cast<MessageElementMultiDimArray>(mvardata)));
-		default:
-			throw DataTypeException("Invalid data type");
-			
-		}
-
-
-		throw DataTypeException("Invalid MultiDimArray type");
-	}
-
-	if (type==DataTypes_list_t)
-	{
-		return UnpackListType<RRValue>(rr_cast<MessageElementList >(mvardata));
-	}
-		
-	if (type == DataTypes_pod_array_t)
-	{
-		return UnpackPodArray(rr_cast<MessageElementPodArray>(mvardata));
-	}
-
-	if (type == DataTypes_pod_multidimarray_t)
-	{
-		return UnpackPodMultiDimArray(rr_cast<MessageElementPodMultiDimArray>(mvardata));
-	}
-
-	if (type == DataTypes_namedarray_array_t)
-	{
-		return UnpackNamedArray(rr_cast<MessageElementNamedArray>(mvardata));
-	}
-
-	if (type == DataTypes_namedarray_multidimarray_t)
-	{
-		return UnpackNamedMultiDimArray(rr_cast<MessageElementNamedMultiDimArray>(mvardata));
-	}
-
-	throw DataTypeException("Unknown data type");
+	return detail::packing::UnpackVarType(mvardata1, this);
 }
 
 void RobotRaconteurNode::Shutdown()

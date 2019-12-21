@@ -1965,7 +1965,7 @@ namespace RobotRaconteur
 					RR_INTRUSIVE_PTR<MessageElement> attributes;
 					if (ret3->TryFindElement("attributes", attributes))
 					{
-						RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > attributes1 = rr_cast<RRMap<std::string, RRValue>>((GetNode()->UnpackMapType<std::string, RRValue>(attributes->CastData<MessageElementMap<std::string> >())));
+						RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > attributes1 = rr_cast<RRMap<std::string, RRValue> >((GetNode()->UnpackMapType<std::string, RRValue>(attributes->CastData<MessageElementMap<std::string> >())));
 						if (attributes1)
 						{							
 							ret->attributes = attributes1;

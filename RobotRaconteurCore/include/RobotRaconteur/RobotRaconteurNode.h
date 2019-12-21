@@ -25,6 +25,7 @@
 #include "RobotRaconteur/ThreadPool.h"
 #include "RobotRaconteur/Timer.h"
 #include "RobotRaconteur/Discovery.h"
+#include "RobotRaconteur/DataTypesPacking.h"
 #include <queue>
 #include <boost/asio.hpp>
 #include <boost/unordered_map.hpp>
@@ -139,23 +140,13 @@ namespace RobotRaconteur
 		template <typename T>
 		RR_INTRUSIVE_PTR<MessageElementMultiDimArray> PackMultiDimArray(RR_INTRUSIVE_PTR<RRMultiDimArray<T> > arr)
 		{
-			if (!arr) return RR_INTRUSIVE_PTR<MessageElementMultiDimArray>();
-
-			std::vector<RR_INTRUSIVE_PTR<MessageElement> > ar;			
-			ar.push_back(CreateMessageElement("dims",arr->Dims));
-			ar.push_back(CreateMessageElement("array",arr->Array));			
-			return CreateMessageElementMultiDimArray(ar);
+			return detail::packing::PackMultiDimArray<T>(arr);
 		}
 
 		template <typename T>
 		RR_INTRUSIVE_PTR<RRMultiDimArray<T> > UnpackMultiDimArray(RR_INTRUSIVE_PTR<MessageElementMultiDimArray> ar)
 		{
-			if (!ar) return RR_INTRUSIVE_PTR<RRMultiDimArray<T> >();
-
-			RR_INTRUSIVE_PTR<RRMultiDimArray<T> > arr=AllocateEmptyRRMultiDimArray<T>();
-			arr->Dims=MessageElement::FindElement(ar->Elements,"dims")->CastData<RRArray<uint32_t> >();
-			arr->Array=MessageElement::FindElement(ar->Elements,"array")->CastData<RRArray<T> >();			
-			return arr;
+			return detail::packing::UnpackMultiDimArray<T>(ar);
 		}
 
 	
@@ -163,333 +154,43 @@ namespace RobotRaconteur
 
 		RR_INTRUSIVE_PTR<RRValue> UnpackVarType(RR_INTRUSIVE_PTR<MessageElement> mvardata);
 	
-	private:
-		template<typename K, typename T>
-		class PackMapTypeSupport
-		{
-		public:
-			static RR_INTRUSIVE_PTR<MessageElementMap<K> > PackMapType(RobotRaconteurNode* node, const RR_INTRUSIVE_PTR<RRValue> set)
-			{
-				BOOST_STATIC_ASSERT(sizeof(T) == 0);
-			}
-
-			static RR_INTRUSIVE_PTR<RRValue> UnpackMapType(RobotRaconteurNode* node, const RR_INTRUSIVE_PTR<MessageElementMap<K> > mset)
-			{
-				BOOST_STATIC_ASSERT(sizeof(T) == 0);
-			}
-
-		};
-
-		template<typename T>
-		class PackMapTypeSupport<int32_t, T>
-		{
-		public:
-			template<typename U>
-			static RR_INTRUSIVE_PTR<MessageElementMap<int32_t> > PackMapType(RobotRaconteurNode* node, const U& set)
-			{
-				if (!set) return RR_INTRUSIVE_PTR<MessageElementMap<int32_t> >();
-
-				RR_INTRUSIVE_PTR<RRMap<int32_t, T> > set2 = rr_cast<RRMap<int32_t, T> >(set);
-
-				std::vector<RR_INTRUSIVE_PTR<MessageElement> > mret;
-
-
-				for (typename std::map<int32_t, RR_INTRUSIVE_PTR<T> >::iterator e = set2->begin(); e != set2->end(); e++)
-				{
-					int32_t key = e->first;
-
-					RR_INTRUSIVE_PTR<MessageElementData> dat = node->PackAnyType<RR_INTRUSIVE_PTR<T> >(e->second);
-
-					RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement("", dat);
-					m->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
-					m->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
-					m->ElementNumber = key;
-					mret.push_back(m);
-				}
-
-				return CreateMessageElementMap<int32_t>(mret);
-			}
-
-			static RR_INTRUSIVE_PTR<RRMap<int32_t,T> > UnpackMapType(RobotRaconteurNode* node, const RR_INTRUSIVE_PTR<MessageElementMap<int32_t> >& mset)
-			{
-				if (!mset) return RR_INTRUSIVE_PTR<RRMap<int32_t,T> >();
-
-				RR_INTRUSIVE_PTR<RRMap<int32_t, T> > ret = AllocateEmptyRRMap<int32_t, T>();
-
-				for (std::vector<RR_INTRUSIVE_PTR<MessageElement> >::iterator e = mset->Elements.begin(); e != mset->Elements.end(); e++)
-				{
-					RR_INTRUSIVE_PTR<MessageElement> m = *e;
-					int32_t key;
-					if (m->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
-					{
-						key = m->ElementNumber;
-					}
-					else if (m->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
-					{
-						key = boost::lexical_cast<int32_t>(m->ElementName);
-					}
-					else
-					{
-						throw DataTypeException("Invalid map format");
-					}
-
-					RR_INTRUSIVE_PTR<T> dat = node->UnpackAnyType<RR_INTRUSIVE_PTR<T> >(m);
-					ret->insert(std::make_pair(key, dat));
-				}
-
-				return ret;
-			}
-		};
-
-		template<typename T>
-		class PackMapTypeSupport<std::string, T>
-		{
-		public:
-			template<typename U>
-			static RR_INTRUSIVE_PTR<MessageElementMap<std::string> > PackMapType(RobotRaconteurNode* node, const U& set)
-			{
-				if (!set) return RR_INTRUSIVE_PTR<MessageElementMap<std::string> >();
-
-				RR_INTRUSIVE_PTR<RRMap<std::string, T> > set2 = rr_cast<RRMap<std::string, T> >(set);
-
-				std::vector<RR_INTRUSIVE_PTR<MessageElement> > mret;
-
-				for (typename std::map<std::string, RR_INTRUSIVE_PTR<T> >::iterator e = set2->begin(); e != set2->end(); e++)
-				{
-					RR_INTRUSIVE_PTR<MessageElementData> dat = node->PackAnyType<RR_INTRUSIVE_PTR<T> >(e->second);
-
-					RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement("", dat);					
-					m->ElementName = e->first;
-					mret.push_back(m);
-				}
-
-				return CreateMessageElementMap<std::string>(mret);
-			}
-
-			static RR_INTRUSIVE_PTR<RRMap<std::string,T> > UnpackMapType(RobotRaconteurNode* node, const RR_INTRUSIVE_PTR<MessageElementMap<std::string> >& mset)
-			{
-				if (!mset) return RR_INTRUSIVE_PTR<RRMap<std::string,T> >();
-
-				RR_INTRUSIVE_PTR<RRMap<std::string, T> > ret = AllocateEmptyRRMap<std::string, T>();
-
-				for (std::vector<RR_INTRUSIVE_PTR<MessageElement> >::iterator e = mset->Elements.begin(); e != mset->Elements.end(); e++)
-				{
-					RR_INTRUSIVE_PTR<MessageElement> m = *e;
-
-					if (!(m->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR))
-					{
-						throw DataTypeException("Invalid map format");
-					}
-
-					std::string& key = m->ElementName;
-					
-					RR_INTRUSIVE_PTR<T> dat = node->UnpackAnyType<RR_INTRUSIVE_PTR<T> >(m);
-					ret->insert(std::make_pair(key, dat));
-				}
-
-				return ret;
-			}
-		};
-
 	public:
 
 		template<typename K, typename T, typename U>
 		RR_INTRUSIVE_PTR<MessageElementMap<K> > PackMapType(const U& set)
 		{
-			return PackMapTypeSupport<K, T>::PackMapType(this, set);
+			return detail::packing::PackMapType<K,T,U>(set,this);
 		}
 
 		template<typename K, typename T>
 		RR_INTRUSIVE_PTR<RRMap<K,T> > UnpackMapType(const RR_INTRUSIVE_PTR<MessageElementMap<K> >& mset)
 		{
-			return PackMapTypeSupport<K, T>::UnpackMapType(this, mset);
+			return detail::packing::UnpackMapType<K,T>(mset,this);
 		}	
 
 
 		template<typename T, typename U>
 		RR_INTRUSIVE_PTR<MessageElementList > PackListType(U& set)
 		{
-			if (!set) return RR_INTRUSIVE_PTR<MessageElementList >();			
-
-			RR_INTRUSIVE_PTR<RRList<T> > set2=rr_cast<RRList<T> >(set);			
-
-			std::vector<RR_INTRUSIVE_PTR<MessageElement> > mret;
-
-			
-			typename RRList<T>::iterator set2_iter = set2->begin();
-			for (int32_t i=0; i < boost::numeric_cast<int32_t>(set2->size()); i++)
-			{
-				int32_t key = i;
-
-				RR_INTRUSIVE_PTR<MessageElementData> dat=PackAnyType<RR_INTRUSIVE_PTR<T> >(*set2_iter);
-
-				RR_INTRUSIVE_PTR<MessageElement> m=CreateMessageElement("",dat);
-				m->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
-				m->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
-				m->ElementNumber = key;
-				mret.push_back(m);
-				++set2_iter;
-			}
-
-			return CreateMessageElementList(mret);		
+			return detail::packing::PackListType<T, U>(set,this);
 		}
 
 		template<typename T>
 		RR_INTRUSIVE_PTR<RRList<T> > UnpackListType(const RR_INTRUSIVE_PTR<MessageElementList >& mset)
 		{
-			if (!mset) return RR_INTRUSIVE_PTR<RRList<T> >();			
-			
-			RR_INTRUSIVE_PTR<RRList<T> > ret=AllocateEmptyRRList<T>();
-
-			for (int32_t i=0; i< boost::numeric_cast<int32_t>(mset->Elements.size()); i++)
-			{
-				RR_INTRUSIVE_PTR<MessageElement> m = mset->Elements.at(i);
-				int32_t key;
-				if (m->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
-				{
-					key = m->ElementNumber;
-				}
-				else if (m->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
-				{
-					key = boost::lexical_cast<int32_t>(m->ElementName);
-				}				 
-				else
-				{
-					throw DataTypeException("Invalid list format");
-				}
-				
-				if (key!=i) throw DataTypeException("Invalid list format");
-
-				RR_INTRUSIVE_PTR<T> dat=UnpackAnyType<RR_INTRUSIVE_PTR<T> >(m);
-				ret->push_back(dat);
-			}
-
-			return ret;
+			return detail::packing::UnpackListType<T>(mset, this);
 		}
-
-
-	private:
-		template<typename T > 
-		class PackAnyTypeSupport
-		{
-		public:
-			template<typename NodeType>
-			static RR_INTRUSIVE_PTR<MessageElementData> PackAnyType(const RR_INTRUSIVE_PTR<RRValue>& data, NodeType node)
-			{
-				return node->PackVarType(data);
-			}
-
-			template<typename NodeType>
-			static RR_INTRUSIVE_PTR<RRValue> UnpackAnyType(const RR_INTRUSIVE_PTR<MessageElement>& mdata, NodeType node)
-			{
-				return node->UnpackVarType(mdata);
-			}
-		};		
-
-		template<typename T >
-		class PackAnyTypeSupport<RR_INTRUSIVE_PTR<T> >
-		{
-		public:
-			template<typename U, typename NodeType>
-			static RR_INTRUSIVE_PTR<MessageElementData> PackAnyType(const U& data, NodeType node)
-			{
-				if (boost::is_base_of<RRStructure,T>::value)
-				{ 
-					return node->PackStructure(rr_cast<RRStructure>(data));
-				}
-				return node->PackVarType(data);
-			}
-			
-			template<typename NodeType>
-			static RR_INTRUSIVE_PTR<T> UnpackAnyType(const RR_INTRUSIVE_PTR<MessageElement>& mdata, NodeType node)
-			{
-				if (boost::is_base_of<RRStructure, T>::value)
-				{
-					return rr_cast<T>(node->UnpackStructure(mdata->CastData<MessageElementStructure>()));
-				}
-
-				return rr_cast<T>(node->UnpackVarType(mdata));
-			}
-		};
-
-		template<typename T>
-		class PackAnyTypeSupport<RR_INTRUSIVE_PTR<RRArray<T> > >
-		{
-		public:
-			template<typename U, typename NodeType>
-			static RR_INTRUSIVE_PTR<MessageElementData> PackAnyType(const U& data, NodeType node)
-			{
-				return RR_STATIC_POINTER_CAST<MessageElementData>(data);
-			}
-
-			template<typename NodeType>
-			static RR_INTRUSIVE_PTR<RRArray<T> > UnpackAnyType(const RR_INTRUSIVE_PTR<MessageElement>& mdata, NodeType node)
-			{
-				return mdata->CastData<RRArray<T> >();
-			}
-		};
-		
-		template<typename K, typename T>
-		class PackAnyTypeSupport<RR_INTRUSIVE_PTR<RRMap<K,T> > >
-		{
-		public:
-			template<typename U, typename NodeType>
-			static RR_INTRUSIVE_PTR<MessageElementData> PackAnyType(const U& data, NodeType node)
-			{
-				return node->template PackMapType<K,T>(data);
-			}
-
-			template<typename NodeType>
-			static RR_INTRUSIVE_PTR<RRMap<K,T> > UnpackAnyType(const RR_INTRUSIVE_PTR<MessageElement>& mdata, NodeType node)
-			{
-				return node->template UnpackMapType<K,T>(mdata->CastData<MessageElementMap<K> >());
-			}
-		};
-		
-		template<typename T>
-		class PackAnyTypeSupport<RR_INTRUSIVE_PTR<RRList<T> > >
-		{
-		public:
-			template<typename U, typename NodeType>
-			static RR_INTRUSIVE_PTR<MessageElementData> PackAnyType(const U& data, NodeType node)
-			{
-				return node->template PackListType<T>(data);
-			}
-
-			template<typename NodeType>
-			static RR_INTRUSIVE_PTR<RRList<T> > UnpackAnyType(const RR_INTRUSIVE_PTR<MessageElement>& mdata, NodeType node)
-			{
-				return node->template UnpackListType<T>(mdata->CastData<MessageElementList >());
-			}
-		};
-
-		template<typename T>
-		class PackAnyTypeSupport<RR_INTRUSIVE_PTR<RRMultiDimArray<T> > >
-		{
-		public:
-			template<typename U, typename NodeType>
-			static RR_INTRUSIVE_PTR<MessageElementData> PackAnyType(const U& data, NodeType node)
-			{
-				return node->template PackMultiDimArray<T>(rr_cast<RRMultiDimArray<T> >(data));
-			}
-
-			template<typename NodeType>
-			static RR_INTRUSIVE_PTR<RRMultiDimArray<T> > UnpackAnyType(const RR_INTRUSIVE_PTR<MessageElement>& mdata, NodeType node)
-			{
-				return node->template UnpackMultiDimArray<T>(mdata->CastData<MessageElementMultiDimArray >());
-			}
-		};
 
 	public:
 		
 		template<typename T, typename U> RR_INTRUSIVE_PTR<MessageElementData> PackAnyType(const RR_INTRUSIVE_PTR<U>& data)
 		{
-			return PackAnyTypeSupport<T>::PackAnyType(data,this);
+			return detail::packing::PackAnyType<T,U>(data,this);
 		}
 
 		template<typename T> T UnpackAnyType(const RR_INTRUSIVE_PTR<MessageElement>& mdata)
 		{
-			return PackAnyTypeSupport<T>::UnpackAnyType(mdata,this);
+			return detail::packing::UnpackAnyType<T>(mdata,this);
 		}
 		
 

@@ -59,6 +59,7 @@ set(RobotRaconteurCore_src
 	src/Subscription_private.h
 	src/Generator.cpp
 	src/NodeSetup.cpp
+	src/DataTypesPacking.cpp
 )
 
 set(RobotRaconteurCore_header
@@ -100,6 +101,7 @@ set(RobotRaconteurCore_header
 	include/RobotRaconteur/Subscription.h
 	include/RobotRaconteur/Generator.h
 	include/RobotRaconteur/NodeSetup.h
+	include/RobotRaconteur/DataTypesPacking.h
 )
 
 if (WIN32)
