@@ -121,6 +121,7 @@ matrix:
     - os: osx
       before_script:
         - brew install openssl
+        - pip install numpy
         #- brew install boost # Already installed on travis ci image??
         #- brew install swig
         - | 
