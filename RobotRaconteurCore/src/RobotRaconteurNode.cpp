@@ -1113,7 +1113,8 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_INTRUSIVE_PTR<Me
 
 						if (!def->Implements.empty())
 						{
-							eret->AddElement("objectimplements", PackListType<RRArray<char> >(stringVectorToRRList(def->Implements)));
+							RR_INTRUSIVE_PTR<RRList<RRArray<char> > > implements = stringVectorToRRList(def->Implements);
+							eret->AddElement("objectimplements", PackListType<RRArray<char> >(implements));
 						}						
 					}
 					catch (std::exception&)
@@ -1169,7 +1170,8 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_INTRUSIVE_PTR<Me
 							std::vector<std::string> extra_imports = service->GetExtraImports();
 							if (!extra_imports.empty())
 							{
-								eret->AddElement("extraimports", PackListType<RRArray<char> >(stringVectorToRRList(extra_imports)));
+								RR_INTRUSIVE_PTR<RRList<RRArray<char> > > extra_imports2 = stringVectorToRRList(extra_imports);
+								eret->AddElement("extraimports", PackListType<RRArray<char> >(extra_imports2));
 							}
 						}
 						eret->AddElement("servicedef", stringToRRArray(servicedef));
@@ -1316,7 +1318,8 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_INTRUSIVE_PTR<Me
 
 					if (!def->Implements.empty())
 					{						
-						eret->AddElement("objectimplements", PackListType<RRArray<char> >(stringVectorToRRList(def->Implements)));
+						RR_INTRUSIVE_PTR<RRList<RRArray<char> > > implements = stringVectorToRRList(def->Implements);
+						eret->AddElement("objectimplements", PackListType<RRArray<char> >(implements));
 					}
 
 				}
