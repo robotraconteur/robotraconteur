@@ -625,4 +625,26 @@ bool operator== (const rr_bool &c1, const rr_bool &c2)
 }
 bool operator!= (const rr_bool &c1, const rr_bool &c2) { return !(c1 == c2); }
 
+
+RR_INTRUSIVE_PTR<RRList<RRArray<char> > > stringVectorToRRList(const std::vector<std::string>& string_vector)
+{
+	RR_INTRUSIVE_PTR<RRList<RRArray<char> > > o = AllocateEmptyRRList<RRArray<char> >();
+	BOOST_FOREACH(const std::string& s, string_vector)
+	{
+		o->push_back(stringToRRArray(s));
+	}
+	return o;
+}
+
+std::vector<std::string> RRListToStringVector(RR_INTRUSIVE_PTR<RRList<RRArray<char> > > list)
+{
+	rr_null_check(list, "Unexected null string list");
+	std::vector<std::string> o;
+	BOOST_FOREACH(RR_INTRUSIVE_PTR<RRArray<char> > e, *list)
+	{
+		o.push_back(RRArrayToString(e));
+	}
+	return o;
+}
+
 }

@@ -51,8 +51,6 @@
 
 #pragma once
 
-#define RR_NULL_CHECK(ptr) {if (!ptr) throw ::RobotRaconteur::NullValueException("Null pointer");}
-
 namespace RobotRaconteur
 {
 	struct cdouble
@@ -780,6 +778,32 @@ namespace RobotRaconteur
 		for (size_t i = 0; i<in.size(); i++) (*out)[i] = boost::numeric_cast<Y>(in[i]);
 		return out;
 	}
+
+	RR_INTRUSIVE_PTR<RRList<RRArray<char> > > stringVectorToRRList(const std::vector<std::string>& string_vector);
+
+	std::vector<std::string> RRListToStringVector(RR_INTRUSIVE_PTR<RRList<RRArray<char> > > list);
+
+	template <typename T>
+	RR_INTRUSIVE_PTR<T>& rr_null_check(RR_INTRUSIVE_PTR<T>& ptr)
+	{
+		if (!ptr)
+		{
+			throw NullValueException("Unexpected null value");
+		}
+		return ptr;
+	}
+
+	template <typename T>
+	RR_INTRUSIVE_PTR<T>& rr_null_check(RR_INTRUSIVE_PTR<T>& ptr, const char* msg)
+	{
+		if (!ptr)
+		{
+			throw NullValueException(msg);
+		}
+		return ptr;
+	}
+
+#define RR_NULL_CHECK rr_null_check
 
 	template<typename T>
 	static RR_INTRUSIVE_PTR<RRArray<T> > VerifyRRArrayLength(RR_INTRUSIVE_PTR<RRArray<T> > a, size_t len, bool varlength)
