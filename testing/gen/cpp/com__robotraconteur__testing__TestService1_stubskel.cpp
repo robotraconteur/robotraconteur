@@ -383,8 +383,8 @@ if (rr_type.find('.')==std::string::npos)
 }
 boost::tuple<std::string,std::string> rr_res=RobotRaconteur::SplitQualifiedName(rr_type);
 if (rr_res.get<0>() != "com.robotraconteur.testing.TestService1") GetNode()->DownCastAndThrowException(rr_exp);
-if (rr_res.get<1>()=="testexception1") throw testexception1(rr_exp.Message);
-if (rr_res.get<1>()=="testexception2") throw testexception2(rr_exp.Message);
+if (rr_res.get<1>()=="testexception1") throw testexception1(rr_exp.Message,rr_exp.ErrorSubName,rr_exp.ErrorParam);
+if (rr_res.get<1>()=="testexception2") throw testexception2(rr_exp.Message,rr_exp.ErrorSubName,rr_exp.ErrorParam);
 return;
 }
 RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> com__robotraconteur__testing__TestService1Factory::DownCastException(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> rr_exp){
@@ -396,8 +396,8 @@ if (rr_type.find('.')==std::string::npos)
 }
 boost::tuple<std::string,std::string> rr_res=RobotRaconteur::SplitQualifiedName(rr_type);
 if (rr_res.get<0>() != "com.robotraconteur.testing.TestService1") return GetNode()->DownCastException(rr_exp);
-if (rr_res.get<1>()=="testexception1") return RR_MAKE_SHARED<testexception1>(rr_exp->Message);
-if (rr_res.get<1>()=="testexception2") return RR_MAKE_SHARED<testexception2>(rr_exp->Message);
+if (rr_res.get<1>()=="testexception1") return RR_MAKE_SHARED<testexception1>(rr_exp->Message,rr_exp->ErrorSubName,rr_exp->ErrorParam);
+if (rr_res.get<1>()=="testexception2") return RR_MAKE_SHARED<testexception2>(rr_exp->Message,rr_exp->ErrorSubName,rr_exp->ErrorParam);
 return rr_exp;
 }
 

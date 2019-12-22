@@ -79,6 +79,8 @@ public interface async_testroot3
     void async_gen_func3(String name,Action2<Generator3<UnsignedBytes>, RuntimeException> rr_handler,int rr_timeout);
     void async_gen_func4(Action2<Generator1<UnsignedBytes,UnsignedBytes>, RuntimeException> rr_handler,int rr_timeout);
     void async_gen_func5(Action2<Generator1<com.robotraconteur.testing.TestService1.teststruct2,com.robotraconteur.testing.TestService1.teststruct2>, RuntimeException> rr_handler,int rr_timeout);
+    void async_test_exception_params1(Action1<RuntimeException> rr_handler,int rr_timeout);
+    void async_test_exception_params2(Action1<RuntimeException> rr_handler,int rr_timeout);
     void async_get_o4(Action2<obj4,RuntimeException> handler, int timeout);
     void async_get_nolock_test(Action2<obj5,RuntimeException> handler, int timeout);
 }

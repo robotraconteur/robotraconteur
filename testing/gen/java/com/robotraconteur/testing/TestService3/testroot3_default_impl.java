@@ -125,6 +125,10 @@ public class testroot3_default_impl implements testroot3{
     throw new UnsupportedOperationException();    }
     public Generator1<com.robotraconteur.testing.TestService1.teststruct2,com.robotraconteur.testing.TestService1.teststruct2> gen_func5() {
     throw new UnsupportedOperationException();    }
+    public void test_exception_params1() {
+    throw new UnsupportedOperationException();    }
+    public void test_exception_params2() {
+    throw new UnsupportedOperationException();    }
     public obj4 get_o4() {
     throw new UnsupportedOperationException();
     }

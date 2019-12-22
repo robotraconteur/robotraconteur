@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include "RobotRaconteur/DataTypes.h"
-#include "RobotRaconteur/ServiceStructure.h"
 
 #pragma once
 

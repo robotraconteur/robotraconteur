@@ -402,6 +402,16 @@ public class testroot3_skel extends ServiceSkel {
     int generator_index = innerskel.registerGeneratorServer("gen_func5", new WrappedGenerator1ServerDirectorJava<com.robotraconteur.testing.TestService1.teststruct2,com.robotraconteur.testing.TestService1.teststruct2>(rr_ret));
     return new MessageElement("index",generator_index);
     }
+    if(rr_membername.equals( "test_exception_params1"))
+    {
+    this.obj.test_exception_params1();
+    return new MessageElement("return",new int[] {0});
+    }
+    if(rr_membername.equals( "test_exception_params2"))
+    {
+    this.obj.test_exception_params2();
+    return new MessageElement("return",new int[] {0});
+    }
     throw new MemberNotFoundException("Member not found");
     }
     public Object getSubObj(String name, String ind) {

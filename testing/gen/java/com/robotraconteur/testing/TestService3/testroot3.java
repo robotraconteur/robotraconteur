@@ -80,6 +80,8 @@ public interface testroot3
     Generator3<UnsignedBytes> gen_func3(String name);
     Generator1<UnsignedBytes,UnsignedBytes> gen_func4();
     Generator1<com.robotraconteur.testing.TestService1.teststruct2,com.robotraconteur.testing.TestService1.teststruct2> gen_func5();
+    void test_exception_params1();
+    void test_exception_params2();
     obj4 get_o4();
     obj5 get_nolock_test();
     Pipe<int[]> get_unreliable1();

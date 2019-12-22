@@ -559,6 +559,22 @@ namespace RobotRaconteurTest
 		return c_m6;
 	}
 
+	void testroot3_impl::test_exception_params1()
+	{
+		RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> > params = AllocateEmptyRRMap<std::string,RRValue>();
+		params->insert(std::make_pair("param1",ScalarToRRArray<int32_t>(10)));
+		params->insert(std::make_pair("param2",stringToRRArray("20")));
+		throw InvalidOperationException("test error","my_error",params);
+	}
+
+	void testroot3_impl::test_exception_params2()
+	{
+		RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> > params = AllocateEmptyRRMap<std::string,RRValue>();
+		params->insert(std::make_pair("param1",ScalarToRRArray<int32_t>(30)));
+		params->insert(std::make_pair("param2",stringToRRArray("40")));
+		throw com::robotraconteur::testing::TestService3::test_exception4("test error2","my_error2",params);
+	}
+
 
 	obj5_impl::obj5_impl()
 	{

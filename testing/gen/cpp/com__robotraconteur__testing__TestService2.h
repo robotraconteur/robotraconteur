@@ -79,7 +79,7 @@ using subobjPtr = RR_SHARED_PTR<subobj>;
 class testexception3 : public RobotRaconteur::RobotRaconteurRemoteException
 {
     public:
-    testexception3(std::string message) : RobotRaconteur::RobotRaconteurRemoteException("com.robotraconteur.testing.TestService2.testexception3",message) {}
+    testexception3(const std::string& message, std::string sub_name = "", RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> param_ = RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>()) : RobotRaconteur::RobotRaconteurRemoteException("com.robotraconteur.testing.TestService2.testexception3",message,sub_name,param_) {}
 };
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
 using testexception3Ptr = RR_SHARED_PTR<testexception3>;

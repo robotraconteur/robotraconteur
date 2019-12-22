@@ -289,6 +289,10 @@ virtual RR_SHARED_PTR<RobotRaconteur::Generator<RR_INTRUSIVE_PTR<RobotRaconteur:
 
 virtual RR_SHARED_PTR<RobotRaconteur::Generator<RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService1::teststruct2 >,RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService1::teststruct2 > > > gen_func5()=0;
 
+virtual void test_exception_params1()=0;
+
+virtual void test_exception_params2()=0;
+
 virtual RR_SHARED_PTR<obj4 > get_o4()=0;
 
 virtual RR_SHARED_PTR<obj5 > get_nolock_test()=0;
@@ -450,6 +454,14 @@ virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.ob
 using obj5Ptr = RR_SHARED_PTR<obj5>;
 #endif
 
+class test_exception4 : public RobotRaconteur::RobotRaconteurRemoteException
+{
+    public:
+    test_exception4(const std::string& message, std::string sub_name = "", RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> param_ = RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>()) : RobotRaconteur::RobotRaconteurRemoteException("com.robotraconteur.testing.TestService3.test_exception4",message,sub_name,param_) {}
+};
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+using test_exception4Ptr = RR_SHARED_PTR<test_exception4>;
+#endif
 }
 }
 }

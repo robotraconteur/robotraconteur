@@ -564,6 +564,28 @@ public class testroot3_stub extends ServiceStub implements testroot3, async_test
     rr_param.delete();
     }
     }
+    public void test_exception_params1() {
+    vectorptr_messageelement rr_param=new vectorptr_messageelement();
+    MessageElement rr_me=null;
+    try {
+    rr_me=rr_innerstub.functionCall("test_exception_params1",rr_param);
+    }
+    finally {
+    rr_param.delete();
+    if (rr_me!=null) rr_me.delete();
+    }
+    }
+    public void test_exception_params2() {
+    vectorptr_messageelement rr_param=new vectorptr_messageelement();
+    MessageElement rr_me=null;
+    try {
+    rr_me=rr_innerstub.functionCall("test_exception_params2",rr_param);
+    }
+    finally {
+    rr_param.delete();
+    if (rr_me!=null) rr_me.delete();
+    }
+    }
     public void dispatchEvent(String rr_membername, vectorptr_messageelement rr_m) {
     }
     public obj4 get_o4() {
@@ -2364,6 +2386,50 @@ public class testroot3_stub extends ServiceStub implements testroot3, async_test
     }
     Generator1Client< com.robotraconteur.testing.TestService1.teststruct2,com.robotraconteur.testing.TestService1.teststruct2> rr_ret=new Generator1Client< com.robotraconteur.testing.TestService1.teststruct2,com.robotraconteur.testing.TestService1.teststruct2>(ret);
     rr_handler.action(rr_ret,null);
+    }
+    }
+    public void async_test_exception_params1(Action1<RuntimeException> rr_handler,int rr_timeout)
+    {
+    vectorptr_messageelement rr_param=new vectorptr_messageelement();
+    try {
+    rr_async_FunctionCall("test_exception_params1",rr_param,new rrend_async_test_exception_params1(),rr_handler,rr_timeout);
+    }
+    finally {
+    rr_param.delete();
+    }
+    }
+    protected class rrend_async_test_exception_params1 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement ret ,RuntimeException err,Object param)
+    {
+    Action1<RuntimeException> rr_handler=(Action1<RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(err);
+    return;
+    }
+    rr_handler.action(null);
+    }
+    }
+    public void async_test_exception_params2(Action1<RuntimeException> rr_handler,int rr_timeout)
+    {
+    vectorptr_messageelement rr_param=new vectorptr_messageelement();
+    try {
+    rr_async_FunctionCall("test_exception_params2",rr_param,new rrend_async_test_exception_params2(),rr_handler,rr_timeout);
+    }
+    finally {
+    rr_param.delete();
+    }
+    }
+    protected class rrend_async_test_exception_params2 implements Action3<MessageElement,RuntimeException,Object> {
+    public void action(MessageElement ret ,RuntimeException err,Object param)
+    {
+    Action1<RuntimeException> rr_handler=(Action1<RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(err);
+    return;
+    }
+    rr_handler.action(null);
     }
     }
     public void async_get_o4(Action2<obj4,RuntimeException> handler, int timeout) {

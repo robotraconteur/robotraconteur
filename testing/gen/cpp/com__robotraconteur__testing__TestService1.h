@@ -394,7 +394,7 @@ using sub3Ptr = RR_SHARED_PTR<sub3>;
 class testexception1 : public RobotRaconteur::RobotRaconteurRemoteException
 {
     public:
-    testexception1(std::string message) : RobotRaconteur::RobotRaconteurRemoteException("com.robotraconteur.testing.TestService1.testexception1",message) {}
+    testexception1(const std::string& message, std::string sub_name = "", RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> param_ = RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>()) : RobotRaconteur::RobotRaconteurRemoteException("com.robotraconteur.testing.TestService1.testexception1",message,sub_name,param_) {}
 };
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
 using testexception1Ptr = RR_SHARED_PTR<testexception1>;
@@ -402,7 +402,7 @@ using testexception1Ptr = RR_SHARED_PTR<testexception1>;
 class testexception2 : public RobotRaconteur::RobotRaconteurRemoteException
 {
     public:
-    testexception2(std::string message) : RobotRaconteur::RobotRaconteurRemoteException("com.robotraconteur.testing.TestService1.testexception2",message) {}
+    testexception2(const std::string& message, std::string sub_name = "", RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> param_ = RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>()) : RobotRaconteur::RobotRaconteurRemoteException("com.robotraconteur.testing.TestService1.testexception2",message,sub_name,param_) {}
 };
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
 using testexception2Ptr = RR_SHARED_PTR<testexception2>;

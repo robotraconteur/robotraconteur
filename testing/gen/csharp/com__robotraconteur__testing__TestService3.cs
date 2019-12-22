@@ -263,6 +263,8 @@ public interface testroot3
     Generator3<byte[]> gen_func3(string name);
     Generator1<byte[],byte[]> gen_func4();
     Generator1<com.robotraconteur.testing.TestService1.teststruct2,com.robotraconteur.testing.TestService1.teststruct2> gen_func5();
+    void test_exception_params1();
+    void test_exception_params2();
     obj4 get_o4();
     obj5 get_nolock_test();
     Pipe<int> unreliable1{ get; set; }
@@ -361,4 +363,8 @@ public static class com__robotraconteur__testing__TestService3Constants
     neghexval2 = -0x7ffffffa,
     more_values = -0x7ffffff9
     };
+public class test_exception4 : RobotRaconteurRemoteException
+{
+    public test_exception4(string message) : base("com.robotraconteur.testing.TestService3.test_exception4",message) {}
+};
 }

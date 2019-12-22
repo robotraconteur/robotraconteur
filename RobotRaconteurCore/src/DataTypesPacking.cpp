@@ -203,13 +203,13 @@ namespace packing
 		std::string t2 = "RobotRaconteur.RRMap<int32_t>";
 		if (type == t2)
 		{
-			return check_node_null(node)->PackMapType<int32_t, RRValue>(vardata);
+			return PackMapType<int32_t, RRValue>(vardata,node);
 		}
 
 		std::string t3 = "RobotRaconteur.RRMap<string>";
 		if (type == t3)
 		{
-			return check_node_null(node)->PackMapType<std::string, RRValue>(vardata);
+			return PackMapType<std::string, RRValue>(vardata,node);
 		}
 
 		std::string t6 = "RobotRaconteur.RRMap";
@@ -255,34 +255,34 @@ namespace packing
 		std::string t8 = "RobotRaconteur.RRList";
 		if (type == t8)
 		{
-			return check_node_null(node)->PackListType<RRValue>(vardata);
+			return PackListType<RRValue>(vardata,node);
 		}
 
 		std::string t9 = "RobotRaconteur.RRPodArray";
 		if (type == t9)
 		{
-			return check_node_null(node)->PackPodArray(rr_cast<RRPodBaseArray>(vardata));
+			return PackPodArray(rr_cast<RRPodBaseArray>(vardata),node);
 		}
 
 		std::string t11 = "RobotRaconteur.RRPodMultiDimArray";
 		if (type == t11)
 		{
-			return check_node_null(node)->PackPodMultiDimArray(rr_cast<RRPodBaseMultiDimArray>(vardata));
+			return PackPodMultiDimArray(rr_cast<RRPodBaseMultiDimArray>(vardata),node);
 		}
 
 		std::string t12 = "RobotRaconteur.RRNamedArray";
 		if (type == t12)
 		{
-			return check_node_null(node)->PackNamedArray(rr_cast<RRNamedBaseArray>(vardata));
+			return PackNamedArray(rr_cast<RRNamedBaseArray>(vardata),node);
 		}
 
 		std::string t13 = "RobotRaconteur.RRNamedMultiDimArray";
 		if (type == t13)
 		{
-			return check_node_null(node)->PackNamedMultiDimArray(rr_cast<RRNamedBaseMultiDimArray>(vardata));
+			return PackNamedMultiDimArray(rr_cast<RRNamedBaseMultiDimArray>(vardata),node);
 		}
 
-		return check_node_null(node)->PackStructure(rr_cast<RRStructure>(vardata));
+		return PackStructure(rr_cast<RRStructure>(vardata),node);
 	}
 
 	RR_INTRUSIVE_PTR<RRValue> UnpackVarType(RR_INTRUSIVE_PTR<MessageElement> mvardata1, RobotRaconteurNode* node)
@@ -301,17 +301,17 @@ namespace packing
 
 		if (type == DataTypes_structure_t)
 		{
-			return check_node_null(node)->UnpackStructure(rr_cast<MessageElementStructure>(mvardata));
+			return UnpackStructure(rr_cast<MessageElementStructure>(mvardata),node);
 		}
 
 		if (type == DataTypes_vector_t)
 		{
-			return check_node_null(node)->UnpackMapType<int32_t, RRValue>(rr_cast<MessageElementMap<int32_t> >(mvardata));
+			return UnpackMapType<int32_t, RRValue>(rr_cast<MessageElementMap<int32_t> >(mvardata),node);
 		}
 
 		if (type == DataTypes_dictionary_t)
 		{
-			return check_node_null(node)->UnpackMapType<std::string, RRValue>(rr_cast<MessageElementMap<std::string> >(mvardata));
+			return UnpackMapType<std::string, RRValue>(rr_cast<MessageElementMap<std::string> >(mvardata),node);
 		}
 
 		if (type == DataTypes_multidimarray_t)
@@ -358,27 +358,27 @@ namespace packing
 
 		if (type == DataTypes_list_t)
 		{
-			return check_node_null(node)->UnpackListType<RRValue>(rr_cast<MessageElementList>(mvardata));
+			return UnpackListType<RRValue>(rr_cast<MessageElementList>(mvardata),node);
 		}
 
 		if (type == DataTypes_pod_array_t)
 		{
-			return check_node_null(node)->UnpackPodArray(rr_cast<MessageElementPodArray>(mvardata));
+			return UnpackPodArray(rr_cast<MessageElementPodArray>(mvardata),node);
 		}
 
 		if (type == DataTypes_pod_multidimarray_t)
 		{
-			return check_node_null(node)->UnpackPodMultiDimArray(rr_cast<MessageElementPodMultiDimArray>(mvardata));
+			return UnpackPodMultiDimArray(rr_cast<MessageElementPodMultiDimArray>(mvardata),node);
 		}
 
 		if (type == DataTypes_namedarray_array_t)
 		{
-			return check_node_null(node)->UnpackNamedArray(rr_cast<MessageElementNamedArray>(mvardata));
+			return UnpackNamedArray(rr_cast<MessageElementNamedArray>(mvardata),node);
 		}
 
 		if (type == DataTypes_namedarray_multidimarray_t)
 		{
-			return check_node_null(node)->UnpackNamedMultiDimArray(rr_cast<MessageElementNamedMultiDimArray>(mvardata));
+			return UnpackNamedMultiDimArray(rr_cast<MessageElementNamedMultiDimArray>(mvardata),node);
 		}
 
 		throw DataTypeException("Unknown data type");

@@ -158,6 +158,10 @@ namespace RobotRaconteurTest
 
 		virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<RobotRaconteur::rr_bool > > get_c_m6();
 
+		virtual void test_exception_params1();
+
+		virtual void test_exception_params2();
+
 	protected:
 
 		void peekwire_timer_handler(const TimerEvent& e);

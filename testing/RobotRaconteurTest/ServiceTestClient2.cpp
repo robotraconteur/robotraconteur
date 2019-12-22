@@ -32,6 +32,8 @@ namespace RobotRaconteurTest
 		TestBools();
 		TestBoolMemories();
 
+		TestExceptionParams();
+
 		Disconnect();
 	}
 
@@ -570,5 +572,90 @@ namespace RobotRaconteurTest
 		ca(v3->Dims, v4->Dims);
 		ca(v3->Array, v4->Array);
 
+	}
+
+	void ServiceTestClient2::TestExceptionParams()
+	{
+		bool exp1_caught = false;
+		try
+		{
+			r->test_exception_params1();
+		}
+		catch (InvalidOperationException& exp)
+		{
+			exp1_caught = true;
+			if (exp.Message != "test error")
+			{
+				throw std::runtime_error("");
+			}
+			if (exp.ErrorSubName != "my_error")
+			{
+				throw std::runtime_error("");
+			}
+			if (!exp.ErrorParam)
+			{
+				throw std::runtime_error("");
+			}
+			RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> > param_map = rr_cast<RRMap<std::string,RRValue> >(exp.ErrorParam);
+			if (param_map->size() != 2)
+			{
+				throw std::runtime_error("");
+			}
+			if (RRArrayToScalar(rr_cast<RRArray<int32_t> >(param_map->at("param1"))) != 10)
+			{
+				throw std::runtime_error("");
+			}
+			if (RRArrayToString(rr_cast<RRArray<char> >(param_map->at("param2"))) != "20")
+			{
+				throw std::runtime_error("");
+			}
+
+		}
+
+		if (!exp1_caught)
+		{
+			throw std::runtime_error("");
+		}
+
+		bool exp2_caught = false;
+		try
+		{
+			r->test_exception_params2();
+		}
+		catch (com::robotraconteur::testing::TestService3::test_exception4& exp)
+		{
+			exp2_caught = true;
+			if (exp.Message != "test error2")
+			{
+				throw std::runtime_error("");
+			}
+			if (exp.ErrorSubName != "my_error2")
+			{
+				throw std::runtime_error("");
+			}
+			if (!exp.ErrorParam)
+			{
+				throw std::runtime_error("");
+			}
+			RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> > param_map = rr_cast<RRMap<std::string,RRValue> >(exp.ErrorParam);
+			if (param_map->size() != 2)
+			{
+				throw std::runtime_error("");
+			}
+			if (RRArrayToScalar(rr_cast<RRArray<int32_t> >(param_map->at("param1"))) != 30)
+			{
+				throw std::runtime_error("");
+			}
+			if (RRArrayToString(rr_cast<RRArray<char> >(param_map->at("param2"))) != "40")
+			{
+				throw std::runtime_error("");
+			}
+
+		}
+
+		if (!exp2_caught)
+		{
+			throw std::runtime_error("");
+		}
 	}
 }

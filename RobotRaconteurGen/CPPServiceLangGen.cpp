@@ -1327,7 +1327,7 @@ namespace RobotRaconteurGen
 		{
 			w2 << "class " << fix_name(*e) << " : public RobotRaconteur::RobotRaconteurRemoteException" << endl << "{" << endl;
 			w2 << "    public:" << endl;
-			w2 << "    " << fix_name(*e) << "(std::string message) : RobotRaconteur::RobotRaconteurRemoteException(\"" << d->Name << "." << *e << "\",message) {}" << endl;
+			w2 << "    " << fix_name(*e) << "(const std::string& message, std::string sub_name = \"\", RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> param_ = RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>()) : RobotRaconteur::RobotRaconteurRemoteException(\"" << d->Name << "." << *e << "\",message,sub_name,param_) {}" << endl;
 			w2 << "};" << endl;
 			w2 << "#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES" << endl;
 			w2 << "using " << fix_name((*e)) << "Ptr = RR_SHARED_PTR<" << fix_name((*e)) << ">;" << endl;
@@ -1756,7 +1756,7 @@ namespace RobotRaconteurGen
 		w2 << "if (rr_res.get<0>() != \"" << d->Name << "\") GetNode()->DownCastAndThrowException(rr_exp);" << endl;
 		for (vector<string>::iterator e=d->Exceptions.begin(); e!=d->Exceptions.end(); e++)
 		{
-			w2 << "if (rr_res.get<1>()==\"" << *e << "\") throw " << fix_name(*e) << "(rr_exp.Message);" << endl;
+			w2 << "if (rr_res.get<1>()==\"" << *e << "\") throw " << fix_name(*e) << "(rr_exp.Message,rr_exp.ErrorSubName,rr_exp.ErrorParam);" << endl;
 		}
 		w2 << "return;" << endl;
 		w2 << "}" << endl;
@@ -1772,7 +1772,7 @@ namespace RobotRaconteurGen
 		w2 << "if (rr_res.get<0>() != \"" << d->Name << "\") return GetNode()->DownCastException(rr_exp);" << endl;
 		for (vector<string>::iterator e=d->Exceptions.begin(); e!=d->Exceptions.end(); e++)
 		{
-			w2 << "if (rr_res.get<1>()==\"" << *e << "\") return RR_MAKE_SHARED<" << fix_name(*e) << ">(rr_exp->Message);" << endl;
+			w2 << "if (rr_res.get<1>()==\"" << *e << "\") return RR_MAKE_SHARED<" << fix_name(*e) << ">(rr_exp->Message,rr_exp->ErrorSubName,rr_exp->ErrorParam);" << endl;
 		}
 		w2 << "return rr_exp;" << endl;
 		w2 << "}" << endl;
