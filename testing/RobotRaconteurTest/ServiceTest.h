@@ -3,6 +3,8 @@
 
 #include "CompareArray.h"
 
+#pragma once
+
 using namespace RobotRaconteur;
 using namespace com::robotraconteur::testing::TestService1;
 

@@ -13,12 +13,11 @@ set(RobotRaconteurGen_header
 	JavaServiceLangGen.h
 )
 
-IF(MSVC)
-add_definitions(-DROBOTRACONTEUR_USE_STDAFX)
-ADD_MSVC_PRECOMPILED_HEADER(stdafx.h stdafx.cpp RobotRaconteurGen_src)
-ENDIF()
-
 add_executable(RobotRaconteurGen ${RobotRaconteurGen_src} ${RobotRaconteurGen_header})
+
+if(${CMAKE_VERSION} VERSION_GREATER "3.16.0") 
+	target_precompile_headers(RobotRaconteurGen PRIVATE ${RobotRaconteurGen_header})
+endif()
 
 IF(WIN32)
 IF (RobotRaconteur_USE_SHARED_CORE_LIB)

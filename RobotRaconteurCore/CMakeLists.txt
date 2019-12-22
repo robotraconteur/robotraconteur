@@ -4,7 +4,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -fPIC" )
 endif()
 
 IF (MSVC)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4251 /wd4275")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4251 /wd4275 /bigobj")
 ENDIF()
 
 set(RobotRaconteurCore_src
@@ -136,11 +136,6 @@ ADD_DEFINITIONS(-DROBOTRACONTEUR_CORE_EXPORTS)
 ENDIF()
 ENDIF()
 
-IF(MSVC)
-add_definitions(-DROBOTRACONTEUR_CORE_USE_STDAFX)
-ADD_MSVC_PRECOMPILED_HEADER(stdafx.h src/stdafx.cpp RobotRaconteurCore_src)
-ENDIF()
-
 IF (RobotRaconteur_USE_SHARED_CORE_LIB)
 STRING(REPLACE "." "." RobotRaconteur_LIB_VERSION ${RobotRaconteurVersion})
 SET(RobotRaconteur_SHARED_CORE_VERSION "${RobotRaconteur_LIB_VERSION}")
@@ -160,6 +155,10 @@ ELSE()
 add_library(RobotRaconteurCore STATIC ${RobotRaconteurCore_src} ${RobotRaconteurCore_header} )
 SET_TARGET_PROPERTIES(RobotRaconteurCore PROPERTIES PREFIX lib)
 ENDIF()
+
+if(${CMAKE_VERSION} VERSION_GREATER "3.16.0") 
+	target_precompile_headers(RobotRaconteurCore PRIVATE ${RobotRaconteurCore_header})
+endif()
 
 file(COPY "${CMAKE_SOURCE_DIR}/RobotRaconteurCore/include" DESTINATION "${CMAKE_BINARY_DIR}/out/")
 if (WIN32)

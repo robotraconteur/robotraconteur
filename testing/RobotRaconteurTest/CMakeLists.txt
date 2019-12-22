@@ -44,12 +44,11 @@ set(RobotRaconteurTest_header
 	${RR_THUNK_HDRS}
 )
 
-IF(MSVC)
-add_definitions(-DROBOTRACONTEUR_USE_STDAFX)
-ADD_MSVC_PRECOMPILED_HEADER(stdafx.h stdafx.cpp RobotRaconteurTest_src)
-ENDIF()
-
 add_executable(RobotRaconteurTest ${RobotRaconteurTest_src} ${RobotRaconteurTest_header})
+
+if(${CMAKE_VERSION} VERSION_GREATER "3.16.0") 
+	target_precompile_headers(RobotRaconteurTest PRIVATE ${RobotRaconteurTest_header})
+endif()
 
 IF(WIN32)
 IF (RobotRaconteur_USE_SHARED_CORE_LIB)

@@ -21,6 +21,7 @@
 
 #include <Ws2bth.h>
 #include <windows.h>
+#include <Devpropdef.h>
 #pragma once
 
 
