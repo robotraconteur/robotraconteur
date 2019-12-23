@@ -34,6 +34,6 @@ public interface subobj
 
 public class testexception3 : RobotRaconteurRemoteException
 {
-    public testexception3(string message) : base("com.robotraconteur.testing.TestService2.testexception3",message) {}
+    public testexception3(string message,string errorsubname=null,object param=null) : base("com.robotraconteur.testing.TestService2.testexception3",message,errorsubname,param) {}
 };
 }

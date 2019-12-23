@@ -1,3 +1,10 @@
+%rr_intrusive_ptr(RobotRaconteur::MessageElement)
+
+namespace RobotRaconteur
+{
+class HandlerErrorInfo;
+}
+
 //Exception handling
 %exception  %{
 try {
@@ -6,7 +13,8 @@ try {
 {
 	if (robotRaconteurExceptionHelper!=NULL)
 	{
-		robotRaconteurExceptionHelper->SetRobotRaconteurException(e.ErrorCode,e.Error,e.Message);
+		RobotRaconteur::HandlerErrorInfo err3(e);
+		robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
 		return $null;
 	}
 	else
@@ -29,7 +37,7 @@ try {
 class RobotRaconteurExceptionHelper
 {
 public:
-virtual void SetRobotRaconteurException(MessageErrorType errorcode, std::string errorname, std::string errorstring) {};
+virtual void SetRobotRaconteurException(const RobotRaconteur::HandlerErrorInfo& error) {};
 virtual ~RobotRaconteurExceptionHelper() {}
 };
 

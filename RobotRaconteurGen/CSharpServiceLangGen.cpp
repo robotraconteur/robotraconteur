@@ -950,7 +950,7 @@ namespace RobotRaconteurGen
 		{
 			w2 << "public class " << fix_name(*e) << " : RobotRaconteurRemoteException" << endl << "{" << endl;
 			
-			w2 << "    public " << fix_name(*e) << "(string message) : base(\"" << d->Name << "." << *e << "\",message) {}" << endl;
+			w2 << "    public " << fix_name(*e) << "(string message,string errorsubname=null,object param=null) : base(\"" << d->Name << "." << *e << "\",message,errorsubname,param) {}" << endl;
 			w2 << "};" << endl;
 		}
 
@@ -1151,7 +1151,7 @@ namespace RobotRaconteurGen
 		w2 << "    if (CompareNamespace(rr_type, out rr_stype)) {" << endl;		
 		for (vector<string>::iterator e=d->Exceptions.begin(); e!=d->Exceptions.end(); e++)
 		{
-			w2 << "    if (rr_stype==\"" << *e << "\") return new " << fix_name(*e) << "(rr_exp.Message);" << endl;
+			w2 << "    if (rr_stype==\"" << *e << "\") return new " << fix_name(*e) << "(rr_exp.Message,rr_exp.ErrorSubName,rr_exp.ErrorParam);" << endl;
 		}
 		w2 << "    } else {" << endl;
 		w2 << "    return RobotRaconteurNode.s.DownCastException(rr_exp); " << endl;

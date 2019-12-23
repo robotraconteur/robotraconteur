@@ -468,6 +468,25 @@ namespace RobotRaconteurNETTest
 
         public override ArrayMemory<bool> c_m5 { get; } = new ArrayMemory<bool>(new bool[512]);
         public override MultiDimArrayMemory<bool> c_m6 { get; } = new MultiDimArrayMemory<bool>(new MultiDimArray(new uint[] { 10, 10 }, new bool[100]));
+
+        public override void test_exception_params1()
+        {
+            var params_ = new Dictionary<string,object>();
+            params_.Add("param1",10);
+            params_.Add("param2","20");
+            var exp = new InvalidOperationException("test error");
+            exp.Data.Add("ErrorSubName","my_error");
+            exp.Data.Add("ErrorParam",params_);
+            throw exp;
+        }
+
+        public override void test_exception_params2()
+        {
+            var params_ = new Dictionary<string,object>();
+            params_.Add("param1",30);
+            params_.Add("param2","40");
+            throw new com.robotraconteur.testing.TestService3.test_exception4("test error2","my_error2",params_);
+        }
     }
 
     class func4_gen : SyncGenerator1<byte[], byte[]>
@@ -553,6 +572,9 @@ namespace RobotRaconteurNETTest
                 return _m3;
             }
         }
+
+        
+
     }
 
     class ServiceTest2_test_sequence_gen

@@ -38,7 +38,7 @@ class AsyncPipeEndpointReturnDirector
 {
 public:
 	virtual ~AsyncPipeEndpointReturnDirector();
-	virtual void handler(boost::shared_ptr<RobotRaconteur::WrappedPipeEndpoint> ep, uint32_t error_code, const std::string& errorname, const std::string& errormessage);
+	virtual void handler(boost::shared_ptr<RobotRaconteur::WrappedPipeEndpoint> ep, HandlerErrorInfo& error);
 };
 
 %nodefaultctor WrappedPipeEndpoint;

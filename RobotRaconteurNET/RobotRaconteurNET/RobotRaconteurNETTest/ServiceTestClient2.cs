@@ -37,7 +37,7 @@ namespace RobotRaconteurNETTest
 
             r.get_o4();
 
-            TestWirePeekPoke();
+            /*TestWirePeekPoke();
 
             AsyncTestWirePeekPoke();
 
@@ -60,7 +60,9 @@ namespace RobotRaconteurNETTest
             TestNoLock();
 
             TestBools();
-            TestBoolMemories();
+            TestBoolMemories();*/
+
+            TestExceptionParams();
 
             DisconnectService();
         }
@@ -539,6 +541,90 @@ namespace RobotRaconteurNETTest
             }
 
             if (!err) throw new Exception();
+        }
+
+        private void TestExceptionParams()
+        {
+            bool exp1_caught = false;
+            try
+            {
+                r.test_exception_params1();
+            }
+            catch (InvalidOperationException exp)
+            {
+                exp1_caught = true;
+                if (exp.Message != "test error")
+                {
+                    throw new Exception("");
+                }
+                if ((string)exp.Data["ErrorSubName"] != "my_error")
+                {
+                    throw new Exception("");
+                }
+                if (exp.Data["ErrorParam"] == null)
+                {
+                    throw new Exception("");
+                }
+                var param_map = (Dictionary<string,object>)(exp.Data["ErrorParam"]);
+                if (param_map.Count != 2)
+                {
+                    throw new Exception("");
+                }
+                if (((int[])param_map["param1"])[0] != 10)
+                {
+                    throw new Exception("");
+                }
+                if ((string)param_map["param2"] != "20")
+                {
+                    throw new Exception("");
+                }
+            }
+
+            if (!exp1_caught)
+            {
+                throw new Exception("");
+            }
+
+
+            bool exp2_caught = false;
+            try
+            {
+                r.test_exception_params2();
+            }
+            catch (com.robotraconteur.testing.TestService3.test_exception4 exp)
+            {
+                exp2_caught = true;
+                if (exp.Message != "test error2")
+                {
+                    throw new Exception("");
+                }
+                if ((string)exp.ErrorSubName != "my_error2")
+                {
+                    throw new Exception("");
+                }
+                if (exp.ErrorParam == null)
+                {
+                    throw new Exception("");
+                }
+                var param_map = (Dictionary<string,object>)(exp.ErrorParam);
+                if (param_map.Count != 2)
+                {
+                    throw new Exception("");
+                }
+                if (((int[])param_map["param1"])[0] != 30)
+                {
+                    throw new Exception("");
+                }
+                if ((string)param_map["param2"] != "40")
+                {
+                    throw new Exception("");
+                }
+            }
+
+            if (!exp2_caught)
+            {
+                throw new Exception("");
+            }
         }
     }
     

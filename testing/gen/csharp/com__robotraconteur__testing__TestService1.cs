@@ -161,10 +161,10 @@ public static class com__robotraconteur__testing__TestService1Constants
 }
 public class testexception1 : RobotRaconteurRemoteException
 {
-    public testexception1(string message) : base("com.robotraconteur.testing.TestService1.testexception1",message) {}
+    public testexception1(string message,string errorsubname=null,object param=null) : base("com.robotraconteur.testing.TestService1.testexception1",message,errorsubname,param) {}
 };
 public class testexception2 : RobotRaconteurRemoteException
 {
-    public testexception2(string message) : base("com.robotraconteur.testing.TestService1.testexception2",message) {}
+    public testexception2(string message,string errorsubname=null,object param=null) : base("com.robotraconteur.testing.TestService1.testexception2",message,errorsubname,param) {}
 };
 }

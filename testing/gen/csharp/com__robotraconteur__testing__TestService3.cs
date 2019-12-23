@@ -365,6 +365,6 @@ public static class com__robotraconteur__testing__TestService3Constants
     };
 public class test_exception4 : RobotRaconteurRemoteException
 {
-    public test_exception4(string message) : base("com.robotraconteur.testing.TestService3.test_exception4",message) {}
+    public test_exception4(string message,string errorsubname=null,object param=null) : base("com.robotraconteur.testing.TestService3.test_exception4",message,errorsubname,param) {}
 };
 }

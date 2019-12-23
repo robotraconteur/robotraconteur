@@ -161,9 +161,9 @@ namespace RobotRaconteur
                     return DataTypes.string_t;
                 case "RobotRaconteur.MessageElementStructure":
                     return DataTypes.structure_t;
-                case "RobotRaconteur.MessageElementIndexedSet<int>":
+                case "RobotRaconteur.MessageElementMap_int32_t":
                     return DataTypes.vector_t;
-                case "RobotRaconteur.MessageElementIndexedSet<string>":
+                case "RobotRaconteur.MessageElementMap_string":
                     return DataTypes.dictionary_t;
                 case "RobotRaconteur.MessageElementMultiDimArray":
                     return DataTypes.multidimarray_t;
@@ -214,9 +214,9 @@ namespace RobotRaconteur
 
                 case "RobotRaconteur.MessageElementStructure":
 
-                case "RobotRaconteur.MessageElementIndexedSet<int>":
+                case "RobotRaconteur.MessageElementMap_int32_t":
 
-                case "RobotRaconteur.MessageElementIndexedSet<string>":
+                case "RobotRaconteur.MessageElementMap_string":
 
                 case "RobotRaconteur.MessageElementMultiDimArray":
 
@@ -1367,11 +1367,11 @@ namespace RobotRaconteur
 
         }
 
-        public override void SetRobotRaconteurException(MessageErrorType errorcode, string errorname, string errorstring)
+        public override void SetRobotRaconteurException(HandlerErrorInfo error)
         {
             using (MessageEntry e = new MessageEntry())
             {
-                Exception ex = RobotRaconteurExceptionUtil.ErrorCodeToException(errorcode, errorname, errorstring);
+                Exception ex = RobotRaconteurExceptionUtil.ErrorInfoToException(error);
                 RobotRaconteurNETPINVOKE.SWIGPendingException.Set(ex);
             }
         }
@@ -3189,7 +3189,7 @@ namespace RobotRaconteur
             
         }
 
-        public override void handler(MessageElement m, uint error_code, string errorname, string errormessage)
+        public override void handler(MessageElement m, HandlerErrorInfo error)
         {
             //using (m)
             {
@@ -3197,13 +3197,13 @@ namespace RobotRaconteur
                 {
                     this.Dispose();
 
-                    if (error_code != 0)
+                    if (error.error_code != 0)
                     {
                         using(m)
                         using (MessageEntry merr = new MessageEntry())
                         {
 
-                            this.handler_task.SetException(RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage));
+                            this.handler_task.SetException(RobotRaconteurExceptionUtil.ErrorInfoToException(error));
                             return;
                         }
                     }
@@ -3238,16 +3238,16 @@ namespace RobotRaconteur
             this.factory = f;
         }
 
-        public override void handler(WrappedServiceStub innerstub, uint error_code, string errorname, string errormessage)
+        public override void handler(WrappedServiceStub innerstub, HandlerErrorInfo error)
         {
             try
             {
-                if (error_code != 0)
+                if (error.error_code != 0)
                 {
                     using (MessageEntry merr = new MessageEntry())
                     {
 
-                        this.handler_task.SetException(RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage));
+                        this.handler_task.SetException(RobotRaconteurExceptionUtil.ErrorInfoToException(error));
                         return;
                     }
                 }
@@ -3307,16 +3307,16 @@ namespace RobotRaconteur
             
         }
 
-        public override void handler(uint error_code, string errorname, string errormessage)
+        public override void handler(HandlerErrorInfo error)
         {
             try
             {
-                if (error_code != 0)
+                if (error.error_code != 0)
                 {
                     using (MessageEntry merr = new MessageEntry())
                     {
 
-                        handler_task.SetException(RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage));
+                        handler_task.SetException(RobotRaconteurExceptionUtil.ErrorInfoToException(error));
                         return;
                     }
                 }
@@ -3381,16 +3381,16 @@ namespace RobotRaconteur
             
         }
 
-        public override void handler(string s, uint error_code, string errorname, string errormessage)
+        public override void handler(string s, HandlerErrorInfo error)
         {
             try
             {
-                if (error_code != 0)
+                if (error.error_code != 0)
                 {
                     using (MessageEntry merr = new MessageEntry())
                     {
 
-                        handler_task.SetException(RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage));
+                        handler_task.SetException(RobotRaconteurExceptionUtil.ErrorInfoToException(error));
                         return;
                     }
                 }
@@ -3425,16 +3425,16 @@ namespace RobotRaconteur
             
         }
 
-        public override void handler(uint v, uint error_code, string errorname, string errormessage)
+        public override void handler(uint v, HandlerErrorInfo error)
         {
 
             try
             {
-                if (error_code != 0)
+                if (error.error_code != 0)
                 {
                     using (MessageEntry merr = new MessageEntry())
                     {
-                        this.handler_task.SetException(RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage));
+                        this.handler_task.SetException(RobotRaconteurExceptionUtil.ErrorInfoToException(error));
                         return;
                     }
                 }
@@ -3466,16 +3466,16 @@ namespace RobotRaconteur
 
         }
 
-        public override void handler(uint error_code, string errorname, string errormessage)
+        public override void handler(HandlerErrorInfo error)
         {
             try
             {
-                if (error_code != 0)
+                if (error.error_code != 0)
                 {
                     using (MessageEntry merr = new MessageEntry())
                     {
 
-                        this.handler_func(RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage));
+                        this.handler_func(RobotRaconteurExceptionUtil.ErrorInfoToException(error));
                         return;
                     }
                 }
@@ -3504,7 +3504,7 @@ namespace RobotRaconteur
             this.handler_func = handler_func;
         }
 
-        public override void handler(TimerEvent ev, uint error_code, string errorname, string errormessage)
+        public override void handler(TimerEvent ev, HandlerErrorInfo error)
         {
             try
             {

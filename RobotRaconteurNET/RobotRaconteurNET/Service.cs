@@ -1488,13 +1488,13 @@ namespace RobotRaconteur
                 
             }
 
-            public override void handler(WrappedPipeEndpoint m, uint error_code, string errorname, string errormessage)
+            public override void handler(WrappedPipeEndpoint m, HandlerErrorInfo error)
             {
-                if (error_code != 0)
+                if (error.error_code != 0)
                 {
                     using (MessageEntry merr = new MessageEntry())
                     {
-                        this.handler_task.SetException(RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code,errorname,errormessage));
+                        this.handler_task.SetException(RobotRaconteurExceptionUtil.ErrorInfoToException(error));
                         return;
                     }
                 }
@@ -2086,13 +2086,13 @@ namespace RobotRaconteur
                 
             }
 
-            public override void handler(WrappedWireConnection m, uint error_code, string errorname, string errormessage)
+            public override void handler(WrappedWireConnection m, HandlerErrorInfo error)
             {
-                if (error_code != 0)
+                if (error.error_code != 0)
                 {
                     using (MessageEntry merr = new MessageEntry())
                     {
-                        this.handler_task.SetException(RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage));
+                        this.handler_task.SetException(RobotRaconteurExceptionUtil.ErrorInfoToException(error));
                         return;
                     }
                 }
@@ -2185,7 +2185,7 @@ namespace RobotRaconteur
                 
             }
 
-            public override void handler(MessageElement m, TimeSpec ts, uint error_code, string errorname, string errormessage)
+            public override void handler(MessageElement m, TimeSpec ts, HandlerErrorInfo error)
             {
                 using (m)
                 {
@@ -2193,12 +2193,12 @@ namespace RobotRaconteur
                     {
                         this.Dispose();
 
-                        if (error_code != 0)
+                        if (error.error_code != 0)
                         {
                             using (MessageEntry merr = new MessageEntry())
                             {
 
-                                this.handler_task.SetException(RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage));
+                                this.handler_task.SetException(RobotRaconteurExceptionUtil.ErrorInfoToException(error));
                                 return;
                             }
                         }

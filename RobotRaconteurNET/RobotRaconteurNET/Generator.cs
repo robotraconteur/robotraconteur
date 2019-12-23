@@ -632,7 +632,7 @@ namespace RobotRaconteur
             
         }
 
-        public override void handler(WrappedGeneratorClient m, uint error_code, string errorname, string errormessage)
+        public override void handler(WrappedGeneratorClient m, HandlerErrorInfo error)
         {
             //using (m)
             {
@@ -640,12 +640,12 @@ namespace RobotRaconteur
                 {
                     this.Dispose();
 
-                    if (error_code != 0)
+                    if (error.error_code != 0)
                     {
                         using (MessageEntry merr = new MessageEntry())
                         {
 
-                            handler_task.SetException(RobotRaconteurExceptionUtil.ErrorCodeToException((RobotRaconteur.MessageErrorType)error_code, errorname, errormessage));
+                            handler_task.SetException(RobotRaconteurExceptionUtil.ErrorInfoToException(error));
                             return;
                         }
                     }

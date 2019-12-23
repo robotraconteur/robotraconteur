@@ -40,11 +40,13 @@ namespace RobotRaconteur
         /// <param name="ErrorCode">The error code</param>
         /// <param name="error">The Robot Raconteur error name</param>
         /// <param name="message">The Robot Raconteur error message</param>
-        public RobotRaconteurException(MessageErrorType ErrorCode, string error, string message)
+        public RobotRaconteurException(MessageErrorType ErrorCode, string error, string message, string subname = null, object param_ = null)
             : base(message)
         {
             Error = error;
             this.ErrorCode = ErrorCode;
+            this.ErrorSubName = subname;
+            this.ErrorParam = param_;
         }
 
         /// <summary>
@@ -68,6 +70,10 @@ namespace RobotRaconteur
         /// </summary>
         public string Error = "";
 
+        public string ErrorSubName = null;
+
+        public object ErrorParam = null;
+
         /// <summary>
         /// Returns as tring representation of this exception
         /// </summary>
@@ -85,7 +91,7 @@ namespace RobotRaconteur
     /// <summary>
     /// Helper class for working with RobotRaconteurException
     /// </summary>
-    public class RobotRaconteurExceptionUtil
+    public static class RobotRaconteurExceptionUtil
     {
         /// <summary>
         /// Populates an entry with an exception
@@ -94,15 +100,71 @@ namespace RobotRaconteur
         /// <param name="entry">The entry to populate</param>
         public static void ExceptionToMessageEntry(Exception exception, MessageEntry entry)
         {
-			
+            MessageElementData param2 = null;
+            string errorsubname = null;
+            RobotRaconteurException rr_exp = exception as RobotRaconteurException;
+            if (rr_exp != null)
+            {
+                if (rr_exp.ErrorSubName != null)
+                {
+                    errorsubname = rr_exp.ErrorSubName;
+                }
+
+                if (rr_exp.ErrorParam != null)
+                {
+                    try
+                    {
+                        param2 = (MessageElementData)RobotRaconteurNode.s.PackVarType(rr_exp.ErrorParam);                        
+                    }
+                    catch (Exception)
+                    {
+                        //TODO: log error
+                    }
+                }
+            }
+            else
+            {
+                string errorsubname1 = exception.Data["ErrorSubName"] as string;
+                if (errorsubname1 != null)
+                {
+                    errorsubname = errorsubname1;
+                }
+
+                object param3 = exception.Data["ErrorParam"];
+                if (param3 != null)
+                {
+                    try
+                    {
+                        param2 = (MessageElementData)RobotRaconteurNode.s.PackVarType(param3);
+                        
+                    }
+                    catch (Exception)
+                    {
+                        //TODO: log error
+                    }
+                }
+            }
+            
+			using (param2)
+            {
+
 			@RR_ERRORS_CATCH@
 			
-            if (exception is RobotRaconteurException)
+            if (rr_exp != null)
             {
-                RobotRaconteurException r=(RobotRaconteurException)exception;
+                RobotRaconteurException r=rr_exp;
                 entry.Error = r.ErrorCode;
                 entry.AddElement("errorname", r.Error);
                 entry.AddElement("errorstring", r.Message);
+                if (r.ErrorSubName != null)
+                {
+                    entry.AddElement("errorsubname",r.ErrorSubName);
+                }
+                
+                if (param2 != null)
+                {
+                    entry.AddElement("errorparam",param2);
+                }     
 
             }
             else
@@ -110,10 +172,14 @@ namespace RobotRaconteur
                 entry.Error = MessageErrorType.RemoteError;
                 entry.AddElement("errorname", exception.GetType().ToString());
                 entry.AddElement("errorstring", exception.Message);
-
-
+                
             }
+            }
+        }
 
+        public static Exception ErrorInfoToException(HandlerErrorInfo error_info)
+        {
+            return ErrorCodeToException((MessageErrorType)error_info.error_code, error_info.errorname, error_info.errormessage, error_info.errorsubname, error_info.param_);
         }
 
         /// <summary>
@@ -121,17 +187,38 @@ namespace RobotRaconteur
         /// </summary>
         /// <param name="entry">The entry containing an error</param>
         /// <returns>An populated exception</returns>
-        public static Exception ErrorCodeToException(MessageErrorType error_code, string errorname, string errorstring)
+        public static Exception ErrorCodeToException(MessageErrorType error_code, string errorname, string errorstring, string errorsubname, MessageElement param_)
         {
+            if (errorsubname == "")
+            {
+                errorsubname = null;
+            }
+
+            object param2 = null;
+            if (param_ != null)
+            {
+                using (param_)
+                {
+                try
+                {
+                    param2 = RobotRaconteurNode.s.UnpackVarType(param_);
+                }
+                catch (Exception)
+                {
+                    //TODO: log error
+                }
+                }
+            }
+
             switch (error_code)
             {
 				case MessageErrorType.RemoteError:
-                    RobotRaconteurException e1= new RobotRaconteurRemoteException(errorname,errorstring);
+                    RobotRaconteurException e1= new RobotRaconteurRemoteException(errorname,errorstring,errorsubname,param2);
                     return RobotRaconteurNode.s.DownCastException(e1);
                 @RR_ERRORS_CASE@
             }
 
-            return new RobotRaconteurException(error_code,errorname,errorstring);
+            return new RobotRaconteurException(error_code,errorname,errorstring,errorsubname,param2);
 
         }
     }

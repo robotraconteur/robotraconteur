@@ -43,14 +43,14 @@ class AsyncWireConnectionReturnDirector
 {
 public:
 	virtual ~AsyncWireConnectionReturnDirector();
-	virtual void handler(boost::shared_ptr<RobotRaconteur::WrappedWireConnection> ep, uint32_t error_code, const std::string& errorname, const std::string& errormessage);
+	virtual void handler(boost::shared_ptr<RobotRaconteur::WrappedWireConnection> ep, HandlerErrorInfo& error);
 };
 
 class AsyncWirePeekReturnDirector
 {
 public:
 	virtual ~AsyncWirePeekReturnDirector() {}
-	virtual void handler(boost::intrusive_ptr<RobotRaconteur::MessageElement> value, const TimeSpec& ts, uint32_t error_code, const std::string& errorname, const std::string& errormessage) {};
+	virtual void handler(boost::intrusive_ptr<RobotRaconteur::MessageElement> value, const TimeSpec& ts, HandlerErrorInfo& error) {};
 };
 
 %nodefaultctor WrappedWireConnection;

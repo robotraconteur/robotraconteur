@@ -75,7 +75,7 @@ public class com__robotraconteur__testing__TestService2Factory : ServiceFactory
     if (!rr_type.Contains(".")) return rr_exp;
     string rr_stype;
     if (CompareNamespace(rr_type, out rr_stype)) {
-    if (rr_stype=="testexception3") return new testexception3(rr_exp.Message);
+    if (rr_stype=="testexception3") return new testexception3(rr_exp.Message,rr_exp.ErrorSubName,rr_exp.ErrorParam);
     } else {
     return RobotRaconteurNode.s.DownCastException(rr_exp); 
     }

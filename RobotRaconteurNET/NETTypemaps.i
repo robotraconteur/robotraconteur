@@ -208,6 +208,12 @@
 %typemap(csdirectorout) SWIG_SHARED_PTR_QNAMESPACE::intrusive_ptr< TYPE > "$typemap(cstype, TYPE).getCPtr($cscall).Handle"
 %typemap(csdirectorin) SWIG_SHARED_PTR_QNAMESPACE::intrusive_ptr<  TYPE > "($iminput == global::System.IntPtr.Zero) ? null : new $typemap(cstype, TYPE)($iminput, true)"
 
+%typemap(csvarout, excode=SWIGEXCODE) SWIG_SHARED_PTR_QNAMESPACE::intrusive_ptr< TYPE >& %{
+    get {		
+      global::System.IntPtr cPtr = $imcall;
+      $typemap(cstype, TYPE) ret = (cPtr == global::System.IntPtr.Zero) ? null : new $typemap(cstype, TYPE)(cPtr, true);$excode
+      return ret;
+    } %}
 
 
 %enddef

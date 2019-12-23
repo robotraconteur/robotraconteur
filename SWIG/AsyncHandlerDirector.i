@@ -32,11 +32,21 @@ public:
 
 };*/
 
+class HandlerErrorInfo
+{
+public:
+	uint32_t error_code;
+	std::string errorname;
+	std::string errormessage;
+	std::string errorsubname;
+	boost::intrusive_ptr<RobotRaconteur::MessageElement> param_;
+};
+
 class AsyncRequestDirector
 {
 public:
 	virtual ~AsyncRequestDirector() {}
-	virtual void handler(boost::intrusive_ptr<RobotRaconteur::MessageElement> ret, uint32_t error_code, const std::string& errorname, const std::string& errormessage);
+	virtual void handler(boost::intrusive_ptr<RobotRaconteur::MessageElement> ret, HandlerErrorInfo& error);
 
 };
 
@@ -44,7 +54,7 @@ class AsyncVoidReturnDirector
 {
 public:
 	virtual ~AsyncVoidReturnDirector() {}
-	virtual void handler(uint32_t error_code, const std::string& errorname, const std::string& errormessage);
+	virtual void handler(HandlerErrorInfo& error);
 };
 
 class AsyncVoidNoErrReturnDirector
@@ -58,14 +68,14 @@ class AsyncStringReturnDirector
 {
 public:
 	virtual ~AsyncStringReturnDirector() {}
-	virtual void handler(const std::string& ret, uint32_t error_code, const std::string& errorname, const std::string& errormessage);
+	virtual void handler(const std::string& ret, HandlerErrorInfo& error);
 };
 
 class AsyncUInt32ReturnDirector
 {
 public:
 	virtual ~AsyncUInt32ReturnDirector() {}
-	virtual void handler(uint32_t ret, uint32_t error_code, const std::string& errorname, const std::string& errormessage);
+	virtual void handler(uint32_t ret, HandlerErrorInfo& error);
 };
 
 }

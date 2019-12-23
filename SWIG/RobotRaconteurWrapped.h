@@ -263,11 +263,26 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 
 	};*/
 
+	class HandlerErrorInfo
+	{
+	public:
+		uint32_t error_code;
+		std::string errorname;
+		std::string errormessage;
+		std::string errorsubname;
+		boost::intrusive_ptr<RobotRaconteur::MessageElement> param_;
+
+		HandlerErrorInfo();
+		HandlerErrorInfo(const RobotRaconteurException& exp);
+		HandlerErrorInfo(boost::shared_ptr<RobotRaconteurException> exp);
+		HandlerErrorInfo(boost::intrusive_ptr<MessageEntry> m);
+	};
+
 	class AsyncRequestDirector
 	{
 	public:
 		virtual ~AsyncRequestDirector() {}
-		virtual void handler(RR_INTRUSIVE_PTR<MessageElement> ret, uint32_t error_code, const std::string& errorname, const std::string& errormessage) {};
+		virtual void handler(RR_INTRUSIVE_PTR<MessageElement> ret, HandlerErrorInfo& error) {};
 
 	};
 
@@ -275,7 +290,7 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 	{
 	public:
 		virtual ~AsyncVoidReturnDirector() {}
-		virtual void handler(uint32_t error_code, const std::string& errorname, const std::string& errormessage) {};
+		virtual void handler(HandlerErrorInfo& error) {};
 	};
 
 	class AsyncVoidNoErrReturnDirector
@@ -289,21 +304,21 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 	{
 	public:
 		virtual ~AsyncStringReturnDirector() {}
-		virtual void handler(const std::string& ret, uint32_t error_code, const std::string& errorname, const std::string& errormessage) {};
+		virtual void handler(const std::string& ret, HandlerErrorInfo& error) {};
 	};
 
 	class AsyncUInt32ReturnDirector
 	{
 	public:
 		virtual ~AsyncUInt32ReturnDirector() {}
-		virtual void handler(uint32_t ret, uint32_t error_code, const std::string& errorname, const std::string& errormessage) {};
+		virtual void handler(uint32_t ret, HandlerErrorInfo& error) {};
 	};
 
 	class AsyncTimerEventReturnDirector
 	{
 	public:
 		virtual ~AsyncTimerEventReturnDirector() {}
-		virtual void handler(const TimerEvent& ret, uint32_t error_code, const std::string& errorname, const std::string& errormessage) {};
+		virtual void handler(const TimerEvent& ret, HandlerErrorInfo& error) {};
 	};
 
 	
@@ -330,7 +345,7 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 	{
 	public:
 		virtual ~AsyncStubReturnDirector() {}
-		virtual void handler(boost::shared_ptr<WrappedServiceStub> stub, uint32_t error_code, const std::string& errorname, const std::string& errormessage) {};
+		virtual void handler(boost::shared_ptr<WrappedServiceStub> stub, HandlerErrorInfo& error) {};
 	};
 
 	class WrappedServiceStub : public virtual RobotRaconteur::ServiceStub
@@ -535,7 +550,7 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 	{
 	public:
 		virtual ~AsyncPipeEndpointReturnDirector() {}
-		virtual void handler(boost::shared_ptr<WrappedPipeEndpoint> ep, uint32_t error_code, const std::string& errorname, const std::string& errormessage) {};
+		virtual void handler(boost::shared_ptr<WrappedPipeEndpoint> ep, HandlerErrorInfo& error) {};
 	};
 
 	class WrappedPipeClient : public virtual PipeClientBase
@@ -698,14 +713,14 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 	{
 	public:
 		virtual ~AsyncWireConnectionReturnDirector() {}
-		virtual void handler(boost::shared_ptr<WrappedWireConnection> ep, uint32_t error_code, const std::string& errorname, const std::string& errormessage) {};
+		virtual void handler(boost::shared_ptr<WrappedWireConnection> ep, HandlerErrorInfo& error) {};
 	};
 
 	class AsyncWirePeekReturnDirector
 	{
 	public:
 		virtual ~AsyncWirePeekReturnDirector() {}
-		virtual void handler(RR_INTRUSIVE_PTR<MessageElement> value, const TimeSpec& ts, uint32_t error_code, const std::string& errorname, const std::string& errormessage) {};
+		virtual void handler(RR_INTRUSIVE_PTR<MessageElement> value, const TimeSpec& ts, HandlerErrorInfo& error) {};
 	};
 
 	class WrappedWireClient : public virtual WireClientBase
@@ -887,7 +902,7 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 	{
 	public:
 		virtual ~AsyncGeneratorClientReturnDirector() {}
-		virtual void handler(boost::shared_ptr<WrappedGeneratorClient> ret, uint32_t error_code, const std::string& errorname, const std::string& errormessage) {};
+		virtual void handler(boost::shared_ptr<WrappedGeneratorClient> ret, HandlerErrorInfo& error) {};
 	};
 
 	class WrappedGeneratorClient : public GeneratorClientBase
