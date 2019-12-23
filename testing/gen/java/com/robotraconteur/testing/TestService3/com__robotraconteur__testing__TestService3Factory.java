@@ -98,7 +98,7 @@ public class com__robotraconteur__testing__TestService3Factory extends ServiceFa
     if (!rr_type.contains(".")) return rr_exp;
     String[] rr_stype = RobotRaconteurNode.splitQualifiedName(rr_type);
     if (!rr_stype[0].equals("com.robotraconteur.testing.TestService3")) return RobotRaconteurNode.s().downCastException(rr_exp);
-    if (rr_stype[1].equals("test_exception4")) return new test_exception4(rr_exp.getMessage());
+    if (rr_stype[1].equals("test_exception4")) return new test_exception4(rr_exp.getMessage(),rr_exp.errorSubName,rr_exp.errorParam);
     return rr_exp;
     }
 }

@@ -43,6 +43,8 @@ public class ServiceTestClient2 {
 		
 		testBools();
 		testBoolMemories();
+
+		testExceptionParams();
 		
 		disconnectService();		
 	}
@@ -264,7 +266,7 @@ public class ServiceTestClient2 {
             try
             {
             g.next(new UnsignedBytes(new byte[] { 2, 3, 4 }));
-            }
+			}			
             catch (OperationAbortedException e) {}
             
             Generator2<double[]> g2 = r.gen_func1();
@@ -789,4 +791,50 @@ public class ServiceTestClient2 {
     		}
     	}
 	
-}
+		private void testExceptionParams()
+        {
+           
+            boolean exp2_caught = false;
+            try
+            {
+                r.test_exception_params2();
+            }
+            catch (com.robotraconteur.testing.TestService3.test_exception4 exp)
+            {
+                exp2_caught = true;
+                if (!exp.getMessage().equals("test error2"))
+                {
+                    throw new RuntimeException("");
+                }
+                if (!exp.errorSubName.equals("my_error2"))
+                {
+                    throw new RuntimeException("");
+                }
+                if (exp.errorParam == null)
+                {
+                    throw new RuntimeException("");
+                }
+                HashMap<String,Object> param_map = (HashMap<String,Object>)(exp.errorParam);
+                if (param_map.size() != 2)
+                {
+                    throw new RuntimeException("");
+                }
+                if (((int[])param_map.get("param1"))[0] != 30)
+                {
+                    throw new RuntimeException("");
+                }
+                if (!((String)param_map.get("param2")).equals("40"))
+                {
+                    throw new RuntimeException("");
+                }
+            }
+
+            if (!exp2_caught)
+            {
+                throw new RuntimeException("");
+			}
+			
+			System.out.println("testExceptionParams complete");
+        }
+
+	}

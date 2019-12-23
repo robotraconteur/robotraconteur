@@ -15,26 +15,78 @@ public class RobotRaconteurExceptionUtil
 	{
 		String message=exception.getMessage();
 		if (message==null) message="";
-		
-		@RR_ERRORS_CATCH@
-		
+
+		MessageElementData param2 = null;
+		String errorsubname = null;
+		RobotRaconteurException rr_exp = null;
 		if (exception instanceof RobotRaconteurException)
 		{
-			RobotRaconteurException r = (RobotRaconteurException)exception;
-			entry.setError(r.errorCode);
-			entry.addElement("errorname", r.error);
-			entry.addElement("errorstring", message);
+			rr_exp = (RobotRaconteurException)exception;
+			if (rr_exp.errorSubName != null)
+			{
+				errorsubname = rr_exp.errorSubName;
+			}
 
+			if (rr_exp.errorParam != null)
+			{
+				try
+				{
+					param2 = (MessageElementData)RobotRaconteurNode.s().packVarType(rr_exp.errorParam);                        
+				}
+				catch (Exception e)
+				{
+					//TODO: log error
+				}
+			}
 		}
-		else
+		
+		try
 		{
-			entry.setError(MessageErrorType.MessageErrorType_RemoteError);
-			entry.addElement("errorname", exception.getClass().toString());
-			entry.addElement("errorstring", message);
+			@RR_ERRORS_CATCH@
+			
+			if (rr_exp != null)
+			{			
+				RobotRaconteurException r = rr_exp;
+				entry.setError(r.errorCode);
+				entry.addElement("errorname", r.error);
+				entry.addElement("errorstring", message);
+				if (r.errorSubName != null)
+				{
+					entry.addElement("errorsubname",r.errorSubName);
+				}
+				
+				if (param2 != null)
+				{
+					entry.addElement("errorparam",param2);
+				}    
+			}
+			else
+			{
+				entry.setError(MessageErrorType.MessageErrorType_RemoteError);
+				entry.addElement("errorname", exception.getClass().toString());
+				entry.addElement("errorstring", message);
 
 
+			}
+		}
+		finally
+		{
+			if (param2 != null)
+			{
+				param2.finalize();
+			}
 		}
 
+	}
+
+	private static RuntimeException errorInfoToException(long error_info_ptr)
+	{
+		return errorInfoToException(new HandlerErrorInfo(error_info_ptr,false));
+	}
+
+	public static RuntimeException errorInfoToException(HandlerErrorInfo error_info)
+	{
+		return errorCodeToException(MessageErrorType.swigToEnum((int)error_info.getError_code()), error_info.getErrorname(), error_info.getErrormessage(), error_info.getErrorsubname(), error_info.getParam_());
 	}
 
 	/** 
@@ -43,12 +95,36 @@ public class RobotRaconteurExceptionUtil
 	 @param entry The entry containing an error
 	 @return An populated exception
 	*/
-	public static RuntimeException errorCodeToException(MessageErrorType errorcode, String errorname, String errorstring)
+	public static RuntimeException errorCodeToException(MessageErrorType errorcode, String errorname, String errorstring, String errorsubname, MessageElement param_)
 	{
+		if (errorsubname == "")
+		{
+			errorsubname = null;
+		}
+
+		Object param2 = null;
+		if (param_ != null)
+		{			
+			try
+			{
+				param2 = RobotRaconteurNode.s().unpackVarType(param_);
+			}
+			catch (Exception e)
+			{
+				//TODO: log error
+			}
+			finally
+			{
+				param_.finalize();
+			}
+			
+			
+		}
+
 		switch (errorcode)
 		{			
 			 case MessageErrorType_RemoteError:
-				RobotRaconteurException e1= new RobotRaconteurRemoteException(errorname, errorstring);
+				RobotRaconteurException e1= new RobotRaconteurRemoteException(errorname, errorstring,errorsubname,param2);
 				RobotRaconteurException e2=RobotRaconteurNode.s().downCastException(e1);
 				return e2;
 			@RR_ERRORS_CASE@
@@ -57,7 +133,7 @@ public class RobotRaconteurExceptionUtil
 
 		}
 
-		return new RobotRaconteurException(errorcode, errorname, errorstring);
+		return new RobotRaconteurException(errorcode, errorname, errorstring,errorsubname,param2);
 
 	}
 }

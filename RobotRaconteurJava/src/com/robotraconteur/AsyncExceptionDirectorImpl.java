@@ -11,15 +11,15 @@ Action1<RuntimeException> handler_func=null;
 	}	
 	
 	@Override
-	public void handler(long error_code, String errorname, String errormessage)
+	public void handler(HandlerErrorInfo error)
     {
         try
         {
-        if (error_code!=0)
+        if (error.getError_code()!=0)
         {
         	
            
-            this.handler_func.action(RobotRaconteurExceptionUtil.errorCodeToException(MessageErrorType.swigToEnum((int)error_code),errorname,errormessage));
+            this.handler_func.action(RobotRaconteurExceptionUtil.errorInfoToException(error));
             
             
             return;

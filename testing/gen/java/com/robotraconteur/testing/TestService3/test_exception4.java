@@ -7,4 +7,8 @@ public class test_exception4 extends RobotRaconteurRemoteException
     public test_exception4(String message)  {
     super("com.robotraconteur.testing.TestService3.test_exception4",message);
     }
+
+    public test_exception4(String message, String subname, Object param_)  {
+    super("com.robotraconteur.testing.TestService3.test_exception4",message, subname, param_);
+    }
 };

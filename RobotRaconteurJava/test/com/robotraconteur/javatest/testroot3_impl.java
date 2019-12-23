@@ -741,6 +741,25 @@ public class testroot3_impl implements testroot3
 	}
 	
 	obj5_impl o5=new obj5_impl();
+	
+	@Override
+	public void test_exception_params1()
+	{
+		HashMap<String,Object> params_ = new HashMap<String,Object>();
+		params_.put("param1",new int[] {10});
+		params_.put("param2","20");
+		throw new RobotRaconteurException(MessageErrorType.MessageErrorType_InvalidOperation, "RobotRaconteur.InvalidOperation", "test error","my_error",params_);
 		
+	}
+
+	@Override
+	public void test_exception_params2()
+	{
+		HashMap<String,Object> params_ = new HashMap<String,Object>();
+		params_.put("param1",new int[] {30});
+		params_.put("param2","40");
+		throw new com.robotraconteur.testing.TestService3.test_exception4("test error2","my_error2",params_);
+	}
+
 	
 }

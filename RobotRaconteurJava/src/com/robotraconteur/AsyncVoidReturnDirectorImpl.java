@@ -9,16 +9,16 @@ public class AsyncVoidReturnDirectorImpl extends AsyncVoidReturnDirector {
 		
 	}
 	
-	public void handler(long error_code, String errorname, String errormessage)
+	public void handler(HandlerErrorInfo error)
     {
        try
        {
-        if (error_code!=0)
+        if (error.getError_code()!=0)
         {
         	
             MessageEntry merr=new MessageEntry();
            
-                this.handler_func.action(RobotRaconteurExceptionUtil.errorCodeToException(MessageErrorType.swigToEnum((int)error_code),errorname,errormessage));
+                this.handler_func.action(RobotRaconteurExceptionUtil.errorInfoToException(error));
            
             
             return;

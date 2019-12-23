@@ -45,6 +45,15 @@ public class RobotRaconteurException extends RuntimeException
 		this.errorCode = ErrorCode;
 	}
 
+	public RobotRaconteurException(MessageErrorType ErrorCode, String error, String message, String subname, Object param_)
+	{
+		super(message);
+		this.error = error;
+		this.errorCode = ErrorCode;
+		this.errorSubName = subname;
+		this.errorParam = param_;
+	}
+
 	/** 
 	 Initializes a Robot Raconteur exception that contains a C# exception
 	 
@@ -66,6 +75,10 @@ public class RobotRaconteurException extends RuntimeException
 	 The error name
 	*/
 	public String error = "";
+
+	public String errorSubName = null;
+
+	public Object errorParam = null;
 
 	/** 
 	 Returns as tring representation of this exception

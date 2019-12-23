@@ -1372,7 +1372,7 @@ namespace RobotRaconteurGen
 		w2 << "    if (!rr_stype[0].equals(\"" << d->Name << "\")) return RobotRaconteurNode.s().downCastException(rr_exp);" << endl;
 		for (vector<string>::iterator e=d->Exceptions.begin(); e!=d->Exceptions.end(); e++)
 		{
-			w2 << "    if (rr_stype[1].equals(\"" << *e << "\")) return new " << fix_name(*e) << "(rr_exp.getMessage());" << endl;
+			w2 << "    if (rr_stype[1].equals(\"" << *e << "\")) return new " << fix_name(*e) << "(rr_exp.getMessage(),rr_exp.errorSubName,rr_exp.errorParam);" << endl;
 		}
 		w2 << "    return rr_exp;" << endl;
 		w2 << "    }" << endl;
@@ -3080,6 +3080,9 @@ namespace RobotRaconteurGen
 			w2 << "public class " << fix_name(exp) << " extends RobotRaconteurRemoteException" << endl << "{" << endl;
 			w2 << "    public " << fix_name(exp) << "(String message)  {" << endl;
 			w2 << "    super(\"" << d->Name << "." << exp << "\",message);" << endl;
+			w2 << "    }" << endl << endl;
+			w2 << "    public " << fix_name(exp) << "(String message, String subname, Object param_)  {" << endl;
+			w2 << "    super(\"" << d->Name << "." << exp << "\",message, subname, param_);" << endl;
 			w2 << "    }" << endl;
 			w2 << "};" << endl;
 		

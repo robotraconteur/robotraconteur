@@ -72,8 +72,8 @@ public class com__robotraconteur__testing__TestService1Factory extends ServiceFa
     if (!rr_type.contains(".")) return rr_exp;
     String[] rr_stype = RobotRaconteurNode.splitQualifiedName(rr_type);
     if (!rr_stype[0].equals("com.robotraconteur.testing.TestService1")) return RobotRaconteurNode.s().downCastException(rr_exp);
-    if (rr_stype[1].equals("testexception1")) return new testexception1(rr_exp.getMessage());
-    if (rr_stype[1].equals("testexception2")) return new testexception2(rr_exp.getMessage());
+    if (rr_stype[1].equals("testexception1")) return new testexception1(rr_exp.getMessage(),rr_exp.errorSubName,rr_exp.errorParam);
+    if (rr_stype[1].equals("testexception2")) return new testexception2(rr_exp.getMessage(),rr_exp.errorSubName,rr_exp.errorParam);
     return rr_exp;
     }
 }

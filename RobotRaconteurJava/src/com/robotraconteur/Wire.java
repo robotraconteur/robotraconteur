@@ -89,12 +89,12 @@ public class Wire<T>
 		}
 
 		@Override
-		public void handler(MessageElement m, TimeSpec ts, long error_code, String errorname, String errormessage)
+		public void handler(MessageElement m, TimeSpec ts, HandlerErrorInfo error)
 		{
-			if (error_code!=0)
+			if (error.getError_code()!=0)
             {
             	
-				this.handler_func.action(null,null,RobotRaconteurExceptionUtil.errorCodeToException(MessageErrorType.swigToEnum((int)error_code),errorname,errormessage));
+				this.handler_func.action(null,null,RobotRaconteurExceptionUtil.errorInfoToException(error));
                 
                 return;
             }
@@ -244,14 +244,14 @@ public class Wire<T>
 			
 		}	
 		
-		public void handler(WrappedWireConnection m, long error_code, String errorname, String errormessage)
+		public void handler(WrappedWireConnection m, HandlerErrorInfo error)
 	    {
 	       
-	        if (error_code!=0)
+	        if (error.getError_code()!=0)
 	        {
 	        	
 	            
-	                this.handler_func.action(null,RobotRaconteurExceptionUtil.errorCodeToException(MessageErrorType.swigToEnum((int)error_code),errorname,errormessage));
+	                this.handler_func.action(null,RobotRaconteurExceptionUtil.errorInfoToException(error));
 	           
 	            
 	            return;

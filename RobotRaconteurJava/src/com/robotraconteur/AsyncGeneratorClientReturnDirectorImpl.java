@@ -12,18 +12,18 @@ class AsyncGeneratorClientReturnDirectorImpl extends AsyncGeneratorClientReturnD
         this.param = param;
     }
 
-    public void handler(WrappedGeneratorClient m, long error_code, String errorname, String errormessage)
+    public void handler(WrappedGeneratorClient m, HandlerErrorInfo error)
     {
         
             try
             {
-                if (error_code != 0)
+                if (error.getError_code() != 0)
                 {
                     MessageEntry merr = new MessageEntry();
                     try
                     {
 
-                        this.handler_func.action(null, RobotRaconteurExceptionUtil.errorCodeToException(MessageErrorType.swigToEnum((int)error_code), errorname, errormessage), param);
+                        this.handler_func.action(null, RobotRaconteurExceptionUtil.errorInfoToException(error), param);
                         return;
                     }
                     finally

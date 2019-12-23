@@ -12,7 +12,7 @@ public class AsyncTimerEventReturnDirectorImpl extends AsyncTimerEventReturnDire
 	}
 	
 	@Override
-	public void handler(TimerEvent ev, long error_code, String errorname, String errormessage)
+	public void handler(TimerEvent ev, HandlerErrorInfo error)
     {
        try
        {		

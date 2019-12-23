@@ -37,7 +37,7 @@ namespace RobotRaconteurNETTest
 
             r.get_o4();
 
-            /*TestWirePeekPoke();
+            TestWirePeekPoke();
 
             AsyncTestWirePeekPoke();
 
@@ -60,7 +60,7 @@ namespace RobotRaconteurNETTest
             TestNoLock();
 
             TestBools();
-            TestBoolMemories();*/
+            TestBoolMemories();
 
             TestExceptionParams();
 

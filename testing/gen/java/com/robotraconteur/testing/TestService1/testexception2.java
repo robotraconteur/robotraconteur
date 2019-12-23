@@ -7,4 +7,8 @@ public class testexception2 extends RobotRaconteurRemoteException
     public testexception2(String message)  {
     super("com.robotraconteur.testing.TestService1.testexception2",message);
     }
+
+    public testexception2(String message, String subname, Object param_)  {
+    super("com.robotraconteur.testing.TestService1.testexception2",message, subname, param_);
+    }
 };
