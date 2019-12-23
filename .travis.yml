@@ -147,7 +147,7 @@ script:
   - cd build2
   - cmake -G "$RR_CMAKE_GENERATOR" -DBUILD_GEN=ON -DBUILD_TEST=ON $RR_CMAKE_EXTRA_ARGS ..
   - cmake --build . --config Release
-  - ctest . -C Release -V
+  - ctest . -C Release --output-on-failure
   - cmake --build . --config Release --target package_source || true
   - mv generated_src out/ || true
   - cp *.tar.gz out/ || true
