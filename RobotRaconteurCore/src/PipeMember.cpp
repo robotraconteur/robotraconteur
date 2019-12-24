@@ -534,7 +534,7 @@ RR_INTRUSIVE_PTR<MessageElement> PipeBase::PackPacket(RR_INTRUSIVE_PTR<RRValue> 
 			elems.push_back(CreateMessageElement("requestack", ScalarToRRArray(static_cast<uint32_t>(1))));
 		}
 
-		RR_INTRUSIVE_PTR<MessageElementNestedElementList> delems = CreateMessageElementNestedElementList(DataTypes_dictionary_t,"",elems);
+		RR_INTRUSIVE_PTR<MessageElementNestedElementList> delems = CreateMessageElementNestedElementList(DataTypes_dictionary_t,"",RR_MOVE(elems));
 		RR_INTRUSIVE_PTR<MessageElement> me = CreateMessageElement(boost::lexical_cast<std::string>(index), delems);
 
 		return me;

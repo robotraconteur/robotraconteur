@@ -1435,12 +1435,13 @@ namespace RobotRaconteurGen
 				w2 << "    static RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackToMessageElementPod(const " << q_name << "& v)" << endl;
 				w2 << "    {" << endl;
 				w2 << "    std::vector<RR_INTRUSIVE_PTR<MessageElement> > o;" << endl;
+				w2 << "    o.reserve(" << e->Members.size() << ");" << endl;
 				BOOST_FOREACH(RR_SHARED_PTR<MemberDefinition> m, e->Members)
 				{
 					RR_SHARED_PTR<PropertyDefinition> p = rr_cast<PropertyDefinition>(m);
 					w2 << "    PodStub_PackField(v." << fix_name(p->Name) << ", \"" << p->Name << "\", o);" << endl;
 				}
-				w2 << "    return RobotRaconteur::CreateMessageElementNestedElementList(DataTypes_pod_t,\"\",o);" << endl;
+				w2 << "    return RobotRaconteur::CreateMessageElementNestedElementList(DataTypes_pod_t,\"\",RR_MOVE(o));" << endl;
 				w2 << "    }" << endl;
 				w2 << "    static void UnpackFromMessageElementPod(" << q_name << "& v, RR_INTRUSIVE_PTR<MessageElementNestedElementList> m)" << endl;
 				w2 << "    {" << endl;
@@ -2192,10 +2193,15 @@ namespace RobotRaconteurGen
 			w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> " << fix_name((*e)->Name) << "_stub::PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> s)" << endl << "{" << endl;
 			w2 << "RR_INTRUSIVE_PTR<" << fix_qualified_name((*e)->Name) << " > s2=RobotRaconteur::rr_cast<" << fix_qualified_name((*e)->Name) << " >(s);" << endl;
 			w2 << "std::vector<RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> > vret;" << endl;
+			size_t field_count = 0;
+			MEMBER_ITER(PropertyDefinition)
+				field_count++;
+			MEMBER_ITER_END()
+			w2 << "vret.reserve(" << field_count << ");" << endl;
 			MEMBER_ITER(PropertyDefinition)
 				w2 << "vret.push_back(" << str_pack_message_element(m->Name,"s2->" + fix_name(m->Name),m->Type) << ");" << endl;
 			MEMBER_ITER_END()
-			w2 << "return RobotRaconteur::CreateMessageElementNestedElementList(RobotRaconteur::DataTypes_structure_t,\"" << d->Name << "." << (*e)->Name  << "\",vret);" << endl;
+			w2 << "return RobotRaconteur::CreateMessageElementNestedElementList(RobotRaconteur::DataTypes_structure_t,\"" << d->Name << "." << (*e)->Name  << "\",RR_MOVE(vret));" << endl;
 			w2 << "}" << endl;
 
 			w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> " << fix_name((*e)->Name) << "_stub::UnpackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> m)" << endl << "{" << endl;

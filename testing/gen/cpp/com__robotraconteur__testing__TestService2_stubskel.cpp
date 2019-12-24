@@ -213,8 +213,9 @@ RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> ostruct2_stub:
 {
 RR_INTRUSIVE_PTR<ostruct2 > s2=RobotRaconteur::rr_cast<ostruct2 >(s);
 std::vector<RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> > vret;
+vret.reserve(1);
 vret.push_back(RobotRaconteur::MessageElement_PackArrayElement<double >("a1",s2->a1));
-return RobotRaconteur::CreateMessageElementNestedElementList(RobotRaconteur::DataTypes_structure_t,"com.robotraconteur.testing.TestService2.ostruct2",vret);
+return RobotRaconteur::CreateMessageElementNestedElementList(RobotRaconteur::DataTypes_structure_t,"com.robotraconteur.testing.TestService2.ostruct2",RR_MOVE(vret));
 }
 RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> ostruct2_stub::UnpackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> m)
 {

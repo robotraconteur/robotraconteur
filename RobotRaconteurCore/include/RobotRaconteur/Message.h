@@ -298,9 +298,11 @@ public:
 		DataTypes Type;
 		std::string TypeName;
 		std::vector<RR_INTRUSIVE_PTR<MessageElement> > Elements;
-
+		
 		MessageElementNestedElementList(DataTypes type_, const std::string& type_name_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_);
-
+#if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
+		MessageElementNestedElementList(DataTypes type_, const std::string& type_name_, std::vector<RR_INTRUSIVE_PTR<MessageElement> > &&elements_);
+#endif
 		virtual std::string GetTypeString();
 		virtual DataTypes GetTypeID();		
 		virtual std::string RRType();
@@ -313,7 +315,9 @@ public:
 	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElement> CreateMessageElement();
 	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElement> CreateMessageElement(const std::string& name, RR_INTRUSIVE_PTR<MessageElementData> datin);
 	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNestedElementList> CreateMessageElementNestedElementList(DataTypes type_, const std::string& type_name_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_);
-	
+#if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNestedElementList> CreateMessageElementNestedElementList(DataTypes type_, const std::string& type_name_, std::vector<RR_INTRUSIVE_PTR<MessageElement> > &&elements_);
+#endif
 	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<Message> ShallowCopyMessage(RR_INTRUSIVE_PTR<Message> m);
 	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageEntry> ShallowCopyMessageEntry(RR_INTRUSIVE_PTR<MessageEntry> mm);
 	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElement> ShallowCopyMessageElement(RR_INTRUSIVE_PTR<MessageElement> mm);

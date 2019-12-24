@@ -177,7 +177,7 @@ namespace RobotRaconteur
 		{ \
 			std::vector<RR_INTRUSIVE_PTR<MessageElement> > v1; \
 			v1.push_back(CreateMessageElement("array",ScalarToRRNamedArray<type>(v)->GetNumericArray())); \
-			out.push_back(CreateMessageElement(name, CreateMessageElementNestedElementList(DataTypes_namedarray_array_t,RRPrimUtil<type>::GetElementTypeString(),v1))); \
+			out.push_back(CreateMessageElement(name, CreateMessageElementNestedElementList(DataTypes_namedarray_array_t,RRPrimUtil<type>::GetElementTypeString(),RR_MOVE(v1)))); \
 		} \
 		\
 		template<typename U> \
@@ -202,7 +202,7 @@ namespace RobotRaconteur
 			RR_INTRUSIVE_PTR<RRNamedArray<type> > a = pod_field_array_ToRRNamedArray(v); \
 			std::vector<RR_INTRUSIVE_PTR<MessageElement> > a1; \
 			a1.push_back(CreateMessageElement("array", a->GetNumericArray())); \
-			out.push_back(CreateMessageElement(name, CreateMessageElementNestedElementList(DataTypes_namedarray_array_t,RRPrimUtil<type>::GetElementTypeString(), a1))); \
+			out.push_back(CreateMessageElement(name, CreateMessageElementNestedElementList(DataTypes_namedarray_array_t,RRPrimUtil<type>::GetElementTypeString(), RR_MOVE(a1)))); \
 		} \
 		\
 		template<typename U> \
@@ -224,6 +224,7 @@ namespace RobotRaconteur
 		static void PackField(const pod_field_array<T, N, varlength>& v, const std::string& name, U& out)
 		{
 			std::vector<RR_INTRUSIVE_PTR<MessageElement> > o;
+			o.reserve(v.size());
 			for (size_t j = 0; j < v.size(); j++)
 			{
 				RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement("", PodStub<T>::PackToMessageElementPod(v[j]));
@@ -232,7 +233,7 @@ namespace RobotRaconteur
 				m->ElementNumber = j;
 				o.push_back(m);
 			}
-			out.push_back(CreateMessageElement(name, CreateMessageElementNestedElementList(DataTypes_pod_array_t,RRPrimUtil<T>::GetElementTypeString(), o)));
+			out.push_back(CreateMessageElement(name, CreateMessageElementNestedElementList(DataTypes_pod_array_t,RRPrimUtil<T>::GetElementTypeString(), RR_MOVE(o))));
 		}
 
 		template<typename U>
@@ -290,7 +291,7 @@ namespace RobotRaconteur
 		m->ElementNumber = 0;
 		o.push_back(m);
 		
-		return CreateMessageElementNestedElementList(DataTypes_pod_array_t,RRPrimUtil<T>::GetElementTypeString(), o);		
+		return CreateMessageElementNestedElementList(DataTypes_pod_array_t,RRPrimUtil<T>::GetElementTypeString(), RR_MOVE(o));		
 	}
 
 	template<typename T>
@@ -334,6 +335,7 @@ namespace RobotRaconteur
 	{
 		if (!a) return RR_INTRUSIVE_PTR<MessageElementNestedElementList>();		
 		std::vector<RR_INTRUSIVE_PTR<MessageElement> > o;
+		o.reserve(a->size());
 		for (size_t i = 0; i < a->size(); i++)
 		{
 			RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement("", PodStub<T>::PackToMessageElementPod(a->at(i)));
@@ -342,7 +344,7 @@ namespace RobotRaconteur
 			m->ElementNumber = i;
 			o.push_back(m);
 		}
-		return CreateMessageElementNestedElementList(DataTypes_pod_array_t, RRPrimUtil<T>::GetElementTypeString(), o);
+		return CreateMessageElementNestedElementList(DataTypes_pod_array_t, RRPrimUtil<T>::GetElementTypeString(), RR_MOVE(o));
 	}
 
 	template<typename T>
@@ -382,10 +384,11 @@ namespace RobotRaconteur
 		if (!a) return RR_INTRUSIVE_PTR<MessageElementNestedElementList>();
 
 		std::vector<RR_INTRUSIVE_PTR<MessageElement> > m;
+		m.reserve(2);
 		m.push_back(CreateMessageElement("dims", a->Dims));
 		if (!a->PodArray) throw NullValueException("Multidimarray array must not be null");
 		m.push_back(CreateMessageElement("array", PodStub_PackPodArray(a->PodArray)));
-		return CreateMessageElementNestedElementList(DataTypes_pod_multidimarray_t,RRPrimUtil<T>::GetElementTypeString(), m);		
+		return CreateMessageElementNestedElementList(DataTypes_pod_multidimarray_t,RRPrimUtil<T>::GetElementTypeString(), RR_MOVE(m));		
 	}
 
 	template<typename T>
@@ -501,7 +504,7 @@ namespace RobotRaconteur
 		memcpy(a->void_ptr(), &v, sizeof(T));
 		std::vector<RR_INTRUSIVE_PTR<MessageElement> > a1;
 		a1.push_back(CreateMessageElement("array", a));
-		return CreateMessageElementNestedElementList(DataTypes_namedarray_array_t,RRPrimUtil<T>::GetElementTypeString(), a1);
+		return CreateMessageElementNestedElementList(DataTypes_namedarray_array_t,RRPrimUtil<T>::GetElementTypeString(), RR_MOVE(a1));
 
 	}
 
@@ -533,7 +536,7 @@ namespace RobotRaconteur
 		if (!a) return RR_INTRUSIVE_PTR<MessageElementNestedElementList>();
 		std::vector<RR_INTRUSIVE_PTR<MessageElement> > a1;
 		a1.push_back(CreateMessageElement("array",a->GetNumericArray()));
-		return CreateMessageElementNestedElementList(DataTypes_namedarray_array_t,RRPrimUtil<T>::GetElementTypeString(), a1);
+		return CreateMessageElementNestedElementList(DataTypes_namedarray_array_t,RRPrimUtil<T>::GetElementTypeString(), RR_MOVE(a1));
 	}
 
 	template<typename T>
@@ -553,10 +556,11 @@ namespace RobotRaconteur
 		if (!a) return RR_INTRUSIVE_PTR<MessageElementNestedElementList>();
 
 		std::vector<RR_INTRUSIVE_PTR<MessageElement> > m;
+		m.reserve(2);
 		m.push_back(CreateMessageElement("dims", a->Dims));
 		if (!a->NamedArray) throw NullValueException("Multidimarray array must not be null");
 		m.push_back(CreateMessageElement("array", NamedArrayStub_PackNamedArray(a->NamedArray)));
-		return CreateMessageElementNestedElementList(DataTypes_namedarray_multidimarray_t,RRPrimUtil<T>::GetElementTypeString(), m);
+		return CreateMessageElementNestedElementList(DataTypes_namedarray_multidimarray_t,RRPrimUtil<T>::GetElementTypeString(), RR_MOVE(m));
 	}
 
 	template<typename T>

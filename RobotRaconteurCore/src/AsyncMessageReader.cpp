@@ -819,10 +819,11 @@ namespace RobotRaconteur
 			{
 				MessageElement* el = data<MessageElement>();
 				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
-				RR_INTRUSIVE_PTR<MessageElementNestedElementList> s = CreateMessageElementNestedElementList(el->ElementType,el->ElementTypeName, v);
+				RR_INTRUSIVE_PTR<MessageElementNestedElementList> s = CreateMessageElementNestedElementList(el->ElementType,el->ElementTypeName, RR_MOVE(v));
 				uint32_t l = el->ElementSize;
 				el->SetData(s);
 				el->ElementSize = l;
+				v.reserve(el->DataCount);
 				push_state(MessageElement_readnested2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
 
 			}
@@ -1548,10 +1549,11 @@ namespace RobotRaconteur
 			{
 				MessageElement* el = data<MessageElement>();
 				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
-				RR_INTRUSIVE_PTR<MessageElementNestedElementList> s = CreateMessageElementNestedElementList(el->ElementType, el->ElementTypeName, v);
+				RR_INTRUSIVE_PTR<MessageElementNestedElementList> s = CreateMessageElementNestedElementList(el->ElementType, el->ElementTypeName, RR_MOVE(v));
 				uint32_t l = el->ElementSize;
 				el->SetData(s);
 				el->ElementSize = l;
+				v.reserve(el->DataCount);
 				push_state(MessageElement_readnested2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
 
 			}

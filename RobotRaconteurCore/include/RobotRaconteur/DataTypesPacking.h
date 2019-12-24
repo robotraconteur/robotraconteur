@@ -51,9 +51,10 @@ namespace packing
 		if (!arr) return RR_INTRUSIVE_PTR<MessageElementNestedElementList>();
 
 		std::vector<RR_INTRUSIVE_PTR<MessageElement> > ar;
+		ar.reserve(2);
 		ar.push_back(CreateMessageElement("dims", arr->Dims));
 		ar.push_back(CreateMessageElement("array", arr->Array));
-		return CreateMessageElementNestedElementList(DataTypes_multidimarray_t,"",ar);
+		return CreateMessageElementNestedElementList(DataTypes_multidimarray_t,"",RR_MOVE(ar));
 	}
 
 	template <typename T>
@@ -104,6 +105,7 @@ namespace packing
 			RR_INTRUSIVE_PTR<RRMap<int32_t, T> > set2 = rr_cast<RRMap<int32_t, T> >(set);
 
 			std::vector<RR_INTRUSIVE_PTR<MessageElement> > mret;
+			mret.reserve(set2->size());
 
 
 			for (typename std::map<int32_t, RR_INTRUSIVE_PTR<T> >::iterator e = set2->begin(); e != set2->end(); e++)
@@ -119,7 +121,7 @@ namespace packing
 				mret.push_back(m);
 			}
 
-			return CreateMessageElementNestedElementList(DataTypes_vector_t, "", mret);
+			return CreateMessageElementNestedElementList(DataTypes_vector_t, "", RR_MOVE(mret));
 		}
 
 		static RR_INTRUSIVE_PTR<RRMap<int32_t, T> > UnpackMapType(RobotRaconteurNode* node, const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& mset)
@@ -166,6 +168,7 @@ namespace packing
 			RR_INTRUSIVE_PTR<RRMap<std::string, T> > set2 = rr_cast<RRMap<std::string, T> >(set);
 
 			std::vector<RR_INTRUSIVE_PTR<MessageElement> > mret;
+			mret.reserve(set2->size());
 
 			for (typename std::map<std::string, RR_INTRUSIVE_PTR<T> >::iterator e = set2->begin(); e != set2->end(); e++)
 			{
@@ -176,7 +179,7 @@ namespace packing
 				mret.push_back(m);
 			}
 
-			return CreateMessageElementNestedElementList(DataTypes_dictionary_t, "", mret);
+			return CreateMessageElementNestedElementList(DataTypes_dictionary_t, "", RR_MOVE(mret));
 		}
 
 		static RR_INTRUSIVE_PTR<RRMap<std::string, T> > UnpackMapType(RobotRaconteurNode* node, const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& mset)
@@ -225,6 +228,7 @@ namespace packing
 		RR_INTRUSIVE_PTR<RRList<T> > set2 = rr_cast<RRList<T> >(set);
 
 		std::vector<RR_INTRUSIVE_PTR<MessageElement> > mret;
+		mret.reserve(set2->size());
 
 
 		typename RRList<T>::iterator set2_iter = set2->begin();
@@ -242,7 +246,7 @@ namespace packing
 			++set2_iter;
 		}
 
-		return CreateMessageElementNestedElementList(DataTypes_list_t, "", mret);
+		return CreateMessageElementNestedElementList(DataTypes_list_t, "", RR_MOVE(mret));
 	}
 
 	template<typename T>

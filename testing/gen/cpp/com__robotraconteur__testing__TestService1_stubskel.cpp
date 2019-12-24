@@ -405,6 +405,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> teststruct1_st
 {
 RR_INTRUSIVE_PTR<teststruct1 > s2=RobotRaconteur::rr_cast<teststruct1 >(s);
 std::vector<RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> > vret;
+vret.reserve(10);
 vret.push_back(RobotRaconteur::MessageElement_PackArrayElement<double >("dat1",s2->dat1));
 vret.push_back(RobotRaconteur::MessageElement_PackStringElement("str2",s2->str2));
 vret.push_back(RobotRaconteur::MessageElement_PackMapElement<int32_t,RobotRaconteur::RRArray<char>  >(RRGetNodeWeak(),"vec3",s2->vec3));
@@ -415,7 +416,7 @@ vret.push_back(RobotRaconteur::MessageElement_PackMapElement<std::string,teststr
 vret.push_back(RobotRaconteur::MessageElement_PackListElement<teststruct2  >(RRGetNodeWeak(),"lstruct3",s2->lstruct3));
 vret.push_back(RobotRaconteur::MessageElement_PackMultiDimArrayElement<double >(RRGetNodeWeak(),"multidimarray",s2->multidimarray));
 vret.push_back(RobotRaconteur::MessageElement_PackVarTypeElement(RRGetNodeWeak(),"var3",s2->var3));
-return RobotRaconteur::CreateMessageElementNestedElementList(RobotRaconteur::DataTypes_structure_t,"com.robotraconteur.testing.TestService1.teststruct1",vret);
+return RobotRaconteur::CreateMessageElementNestedElementList(RobotRaconteur::DataTypes_structure_t,"com.robotraconteur.testing.TestService1.teststruct1",RR_MOVE(vret));
 }
 RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> teststruct1_stub::UnpackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> m)
 {
@@ -438,8 +439,9 @@ RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> teststruct2_st
 {
 RR_INTRUSIVE_PTR<teststruct2 > s2=RobotRaconteur::rr_cast<teststruct2 >(s);
 std::vector<RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> > vret;
+vret.reserve(1);
 vret.push_back(RobotRaconteur::MessageElement_PackArrayElement<double >("mydat",s2->mydat));
-return RobotRaconteur::CreateMessageElementNestedElementList(RobotRaconteur::DataTypes_structure_t,"com.robotraconteur.testing.TestService1.teststruct2",vret);
+return RobotRaconteur::CreateMessageElementNestedElementList(RobotRaconteur::DataTypes_structure_t,"com.robotraconteur.testing.TestService1.teststruct2",RR_MOVE(vret));
 }
 RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> teststruct2_stub::UnpackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> m)
 {

@@ -437,7 +437,7 @@ namespace RobotRaconteur
 			std::vector<RR_INTRUSIVE_PTR<MessageElement> > timespec1;
 			timespec1.push_back(CreateMessageElement("seconds", ScalarToRRArray(time.seconds)));
 			timespec1.push_back(CreateMessageElement("nanoseconds", ScalarToRRArray(time.nanoseconds)));
-			RR_INTRUSIVE_PTR<MessageElementNestedElementList> s = CreateMessageElementNestedElementList(DataTypes_structure_t, "RobotRaconteur.TimeSpec", timespec1);
+			RR_INTRUSIVE_PTR<MessageElementNestedElementList> s = CreateMessageElementNestedElementList(DataTypes_structure_t, "RobotRaconteur.TimeSpec", RR_MOVE(timespec1));
 
 
 			std::vector<RR_INTRUSIVE_PTR<MessageElement> > elems;

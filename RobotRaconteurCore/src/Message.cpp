@@ -816,6 +816,7 @@ namespace RobotRaconteur
 
 
 		elements = std::vector<RR_INTRUSIVE_PTR<MessageElement> >();
+		elements.reserve(ecount);
 		for (int32_t i = 0; i < ecount; i++)
 		{
 			RR_INTRUSIVE_PTR<MessageElement> e = CreateMessageElement();
@@ -1073,6 +1074,7 @@ namespace RobotRaconteur
 
 
 		elements = std::vector<RR_INTRUSIVE_PTR<MessageElement> >();
+		elements.reserve(ecount);
 		for (int32_t i = 0; i < ecount; i++)
 		{
 			RR_INTRUSIVE_PTR<MessageElement> e = CreateMessageElement();
@@ -1396,6 +1398,7 @@ namespace RobotRaconteur
 		case DataTypes_namedarray_multidimarray_t:
 		{
 			std::vector<RR_INTRUSIVE_PTR<MessageElement> > l;
+			l.reserve(DataCount);
 			for (size_t i = 0; i < DataCount; i++)
 			{
 				RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement();
@@ -1403,7 +1406,7 @@ namespace RobotRaconteur
 				l.push_back(m);
 			}
 
-			dat = CreateMessageElementNestedElementList(ElementType, ElementTypeName, l);
+			dat = CreateMessageElementNestedElementList(ElementType, ElementTypeName, RR_MOVE(l));
 			break;
 		}		
 		default:
@@ -1782,6 +1785,7 @@ namespace RobotRaconteur
 		case DataTypes_namedarray_multidimarray_t:
 		{
 			std::vector<RR_INTRUSIVE_PTR<MessageElement> > l;
+			l.reserve(DataCount);
 			for (size_t i = 0; i < DataCount; i++)
 			{
 				RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement();
@@ -1790,7 +1794,7 @@ namespace RobotRaconteur
 
 			}
 
-			dat = CreateMessageElementNestedElementList(ElementType, ElementTypeName, l);
+			dat = CreateMessageElementNestedElementList(ElementType, ElementTypeName, RR_MOVE(l));
 			break;
 		}
 		default:
@@ -1861,6 +1865,13 @@ namespace RobotRaconteur
 		TypeName = type_name_;
 		Type = type_;
 	}
+#if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
+	MessageElementNestedElementList::MessageElementNestedElementList(DataTypes type_, const std::string& type_name_, std::vector<RR_INTRUSIVE_PTR<MessageElement> > &&elements_) : Elements(std::move(elements_))
+	{		
+		TypeName = type_name_;
+		Type = type_;
+	}
+#endif
 	
 	std::string MessageElementNestedElementList::GetTypeString()
 	{
@@ -1903,7 +1914,12 @@ namespace RobotRaconteur
 	{
 		return new MessageElementNestedElementList(type_, type_name_, elements_);
 	}	
-
+#if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNestedElementList> CreateMessageElementNestedElementList(DataTypes type_, const std::string& type_name_, std::vector<RR_INTRUSIVE_PTR<MessageElement> > &&elements_)
+	{
+		return new MessageElementNestedElementList(type_, type_name_, std::move(elements_));
+	}	
+#endif()
 	RR_INTRUSIVE_PTR<Message> ShallowCopyMessage(RR_INTRUSIVE_PTR<Message> m)
 	{
 		if (!m) return RR_INTRUSIVE_PTR<Message>();
@@ -2005,10 +2021,11 @@ namespace RobotRaconteur
 			if (sdat)
 			{
 				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
+				v.reserve(sdat->Elements.size());
 				BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& ee, sdat->Elements)
 					v.push_back(ShallowCopyMessageElement(ee));
 
-				RR_INTRUSIVE_PTR<MessageElementNestedElementList> sdat2 = CreateMessageElementNestedElementList(sdat->Type, sdat->TypeName, v);
+				RR_INTRUSIVE_PTR<MessageElementNestedElementList> sdat2 = CreateMessageElementNestedElementList(sdat->Type, sdat->TypeName, RR_MOVE(v));
 				mm2->SetData(sdat2);
 			}
 			break;

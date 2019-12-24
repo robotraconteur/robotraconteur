@@ -1114,7 +1114,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_INTRUSIVE_PTR<Me
 							n++;
 						}
 
-						eret->AddElement("servicedefs", CreateMessageElementNestedElementList(DataTypes_list_t, "", servicedef_list));
+						eret->AddElement("servicedefs", CreateMessageElementNestedElementList(DataTypes_list_t, "", RR_MOVE(servicedef_list)));
 					}
 				}
 				catch (std::exception&)

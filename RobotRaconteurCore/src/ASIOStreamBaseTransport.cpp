@@ -2526,7 +2526,7 @@ void ASIOStreamBaseTransport::UpdateStringTable()
 			}
 
 			RR_INTRUSIVE_PTR<MessageEntry> me = CreateMessageEntry(MessageEntryType_StringTableOp, "confirmcodes");
-			me->AddElement("value", CreateMessageElementNestedElementList(DataTypes_vector_t,"",el));
+			me->AddElement("value", CreateMessageElementNestedElementList(DataTypes_vector_t,"",RR_MOVE(el)));
 			string_table_3_requestid++;
 			me->RequestID = string_table_3_requestid;
 

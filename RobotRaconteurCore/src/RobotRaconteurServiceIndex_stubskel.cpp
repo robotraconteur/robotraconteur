@@ -146,7 +146,7 @@ std::vector<RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> > vret;
 vret.push_back(RobotRaconteur::CreateMessageElement("NodeName",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RobotRaconteur::stringToRRArray(s2->NodeName))));
 vret.push_back(RobotRaconteur::CreateMessageElement("NodeID",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(s2->NodeID)));
 vret.push_back(RobotRaconteur::CreateMessageElement("ServiceIndexConnectionURL",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RRGetNode()->PackMapType<int32_t,RobotRaconteur::RRArray<char>  >(s2->ServiceIndexConnectionURL))));
-return RobotRaconteur::CreateMessageElementNestedElementList(RobotRaconteur::DataTypes_structure_t,"RobotRaconteurServiceIndex.NodeInfo",vret);
+return RobotRaconteur::CreateMessageElementNestedElementList(RobotRaconteur::DataTypes_structure_t,"RobotRaconteurServiceIndex.NodeInfo",RR_MOVE(vret));
 }
 RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> NodeInfo_stub::UnpackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> m)
 {
@@ -166,7 +166,7 @@ vret.push_back(RobotRaconteur::CreateMessageElement("RootObjectType",RobotRacont
 vret.push_back(RobotRaconteur::CreateMessageElement("RootObjectImplements",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RRGetNode()->PackMapType<int32_t,RobotRaconteur::RRArray<char>  >(s2->RootObjectImplements))));
 vret.push_back(RobotRaconteur::CreateMessageElement("ConnectionURL",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RRGetNode()->PackMapType<int32_t,RobotRaconteur::RRArray<char>  >(s2->ConnectionURL))));
 vret.push_back(RobotRaconteur::CreateMessageElement("Attributes",RobotRaconteur::rr_cast<RobotRaconteur::MessageElementData>(RRGetNode()->PackMapType<std::string,RobotRaconteur::RRValue >(s2->Attributes))));
-return RobotRaconteur::CreateMessageElementNestedElementList(RobotRaconteur::DataTypes_structure_t,"RobotRaconteurServiceIndex.ServiceInfo",vret);
+return RobotRaconteur::CreateMessageElementNestedElementList(RobotRaconteur::DataTypes_structure_t,"RobotRaconteurServiceIndex.ServiceInfo",RR_MOVE(vret));
 }
 RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> ServiceInfo_stub::UnpackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> m)
 {

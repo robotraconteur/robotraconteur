@@ -1735,6 +1735,7 @@ public:
     static RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackToMessageElementPod(const com::robotraconteur::testing::TestService3::testpod1& v)
     {
     std::vector<RR_INTRUSIVE_PTR<MessageElement> > o;
+    o.reserve(12);
     PodStub_PackField(v.d1, "d1", o);
     PodStub_PackField(v.d2, "d2", o);
     PodStub_PackField(v.d3, "d3", o);
@@ -1747,7 +1748,7 @@ public:
     PodStub_PackField(v.t2, "t2", o);
     PodStub_PackField(v.t3, "t3", o);
     PodStub_PackField(v.t4, "t4", o);
-    return RobotRaconteur::CreateMessageElementNestedElementList(DataTypes_pod_t,"",o);
+    return RobotRaconteur::CreateMessageElementNestedElementList(DataTypes_pod_t,"",RR_MOVE(o));
     }
     static void UnpackFromMessageElementPod(com::robotraconteur::testing::TestService3::testpod1& v, RR_INTRUSIVE_PTR<MessageElementNestedElementList> m)
     {
@@ -1784,10 +1785,11 @@ public:
     static RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackToMessageElementPod(const com::robotraconteur::testing::TestService3::testpod2& v)
     {
     std::vector<RR_INTRUSIVE_PTR<MessageElement> > o;
+    o.reserve(3);
     PodStub_PackField(v.i1, "i1", o);
     PodStub_PackField(v.i2, "i2", o);
     PodStub_PackField(v.i3, "i3", o);
-    return RobotRaconteur::CreateMessageElementNestedElementList(DataTypes_pod_t,"",o);
+    return RobotRaconteur::CreateMessageElementNestedElementList(DataTypes_pod_t,"",RR_MOVE(o));
     }
     static void UnpackFromMessageElementPod(com::robotraconteur::testing::TestService3::testpod2& v, RR_INTRUSIVE_PTR<MessageElementNestedElementList> m)
     {
