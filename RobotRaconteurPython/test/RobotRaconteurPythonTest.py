@@ -2758,7 +2758,7 @@ class ServiceTestClient2:
     def RunFullTest(self, url):
         self.ConnectService(url);
                 
-        self.TestWirePeekPoke()
+        """self.TestWirePeekPoke()
         self.AsyncTestWirePeekPoke()
         self.TestEnums()
         self.TestPod()
@@ -2774,7 +2774,9 @@ class ServiceTestClient2:
         self.TestNoLock()
 
         self.TestBool()
-        self.TestBoolMemories()
+        self.TestBoolMemories()"""
+
+        self.TestExceptionParams()
         
         self.DisconnectService()
     
@@ -2842,7 +2844,8 @@ class ServiceTestClient2:
             
         self._r.peekwire.AsyncPeekInValue(TestAsync1)
         
-        async_wait.wait()
+        if not async_wait.wait(1):
+            raise Exception()
 
         if (async_err[0]):
             raise async_err[0]
@@ -3162,6 +3165,36 @@ class ServiceTestClient2:
         if not numpy.array_equal(v2_1, v2_2):
             raise Exception()
 
+    def TestExceptionParams(self):
+
+        exp1_caught = False
+        try:
+            self._r.test_exception_params1()
+        except Exception as e:
+            exp1_caught = True
+            assert e.errorname == "RobotRaconteur.InvalidOperation"
+            assert e.message == "test error"
+            assert e.errorsubname == "my_error"
+            assert len(e.errorparam.data) == 2
+            assert e.errorparam.data["param1"][0] == 10
+            assert e.errorparam.data["param2"] == "20"
+        
+        assert exp1_caught == True
+
+        exp2_caught = False
+        try:
+            self._r.test_exception_params2()
+        except Exception as e:
+            exp2_caught = True
+            assert e.errorname == "com.robotraconteur.testing.TestService3.test_exception4"
+            assert e.message == "test error2"
+            assert e.errorsubname == "my_error2"
+            assert len(e.errorparam.data) == 2
+            assert e.errorparam.data["param1"][0] == 30
+            assert e.errorparam.data["param2"] == "40"
+        
+        assert exp2_caught == True
+
 class testroot3_impl(object):
     def __init__(self):
         self._peekwire=None
@@ -3422,6 +3455,23 @@ class testroot3_impl(object):
     def b6(self,value):
         if not numpy.array_equal(value[0], numpy.array([True, False]).reshape(2,1)):
             raise Exception()
+
+    def test_exception_params1(self):
+        params_dict = {}
+        params_dict["param1"] = RobotRaconteurVarValue(10,"int32")
+        params_dict["param2"] = RobotRaconteurVarValue("20","string")
+        params_ = RobotRaconteurVarValue(params_dict,"varvalue{string}")
+        err = InvalidOperationException("test error","my_error",params_)
+        raise err
+
+    def test_exception_params2(self):
+        params_dict = {}
+        params_dict["param1"] = RobotRaconteurVarValue(30,"int32")
+        params_dict["param2"] = RobotRaconteurVarValue("40","string")
+        params_ = RobotRaconteurVarValue(params_dict,"varvalue{string}")
+        e4=RobotRaconteurNode.s.GetExceptionType("com.robotraconteur.testing.TestService3.test_exception4")
+        err = e4("test error2","my_error2",params_)
+        raise err
     
 class func4_gen(object):
     def __init__(self):

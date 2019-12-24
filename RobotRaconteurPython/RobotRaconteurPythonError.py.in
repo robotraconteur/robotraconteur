@@ -22,10 +22,12 @@ import string
 
 
 class RobotRaconteurException(Exception):
-    def __init__(self,errorcode,errorname,errormessage):
+    def __init__(self,errorcode,errorname,errormessage,errorsubname=None,errorparam=None):
         self.errorcode=errorcode
         self.errorname=errorname
         self.message=errormessage
+        self.errorsubname=errorsubname
+        self.errorparam=errorparam
     def __str__(self):
         return self.errorname + " " + self.message
 
@@ -42,20 +44,30 @@ class RobotRaconteurExceptionUtil:
             return RobotRaconteurPython.MessageErrorType_RemoteError, type(exception).__name__, exception.message
 
     @staticmethod
-    def ErrorCodeToException(code,name,errstr):
+    def ErrorCodeToException(code,name,errstr,subname,param_):
+        param2 = None
+        if (param_ is not None):
+            from .RobotRaconteurPythonUtil import UnpackMessageElement
+            param2 = UnpackMessageElement(param_,"varvalue")
+        if subname is not None and len(subname) == 0:
+            subname = None
         if (code==RobotRaconteurPython.MessageErrorType_RemoteError):
             e= GetExceptionType(name)
-            return e(errstr)
+            return e(errstr,subname,param2)
 
-@RR_ERRORS_CASE@        
-        return RobotRaconteurException(code,name,errstr)
+@RR_ERRORS_CASE@
+        return RobotRaconteurException(code,name,errstr,subname,param2)
+
+    @staticmethod
+    def ErrorInfoToException(error_info):
+        return RobotRaconteurExceptionUtil.ErrorCodeToException(error_info.error_code, error_info.errorname, error_info.errormessage, error_info.errorsubname, error_info.param_)
 
 _generated_exceptions=dict()
 _generated_exceptions_lock=threading.Lock()
 
 def _ExceptionFactory(name):
-    def __init__(self,message):
-        super(self.__class__,self).__init__(name,message)
+    def __init__(self,message,subname=None,param_=None):
+        super(self.__class__,self).__init__(name,message,subname,param_)
     return type(name, (RobotRaconteurRemoteException,), {"__init__": __init__})
 
 def GetExceptionType(exception_name):
