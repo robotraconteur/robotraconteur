@@ -2526,7 +2526,7 @@ void ASIOStreamBaseTransport::UpdateStringTable()
 			}
 
 			RR_INTRUSIVE_PTR<MessageEntry> me = CreateMessageEntry(MessageEntryType_StringTableOp, "confirmcodes");
-			me->AddElement("value", CreateMessageElementMap<int32_t>(el));
+			me->AddElement("value", CreateMessageElementNestedElementList(DataTypes_vector_t,"",el));
 			string_table_3_requestid++;
 			me->RequestID = string_table_3_requestid;
 
@@ -2619,7 +2619,7 @@ void ASIOStreamBaseTransport::UpdateStringTable2(RR_INTRUSIVE_PTR<Message> m)
 		RR_INTRUSIVE_PTR<MessageElement> mee = me->elements.at(0);
 		if (mee->ElementName != "value") return;
 		if (mee->ElementType != DataTypes_vector_t) return;
-		std::vector<RR_INTRUSIVE_PTR<MessageElement> > v = mee->CastData<MessageElementMap<int32_t> >()->Elements;
+		std::vector<RR_INTRUSIVE_PTR<MessageElement> > v = mee->CastDataToNestedList(DataTypes_vector_t)->Elements;
 		BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& e, v)
 		{
 			if (!(e->ElementFlags & MessageElementFlags_ELEMENT_NUMBER))

@@ -385,7 +385,7 @@ namespace RobotRaconteur
 		}
 		else
 		{
-			RR_INTRUSIVE_PTR<MessageElementStructure> s = MessageElement::FindElement(me->elements, "packettime")->CastData<MessageElementStructure>();
+			RR_INTRUSIVE_PTR<MessageElementNestedElementList> s = MessageElement::FindElement(me->elements, "packettime")->CastDataToNestedList(DataTypes_structure_t);
 			int64_t seconds = RRArrayToScalar(MessageElement::FindElement(s->Elements, "seconds")->CastData<RRArray<int64_t> >());
 			int32_t nanoseconds = RRArrayToScalar(MessageElement::FindElement(s->Elements, "nanoseconds")->CastData<RRArray<int32_t> >());
 			ts = TimeSpec(seconds, nanoseconds);
@@ -437,7 +437,7 @@ namespace RobotRaconteur
 			std::vector<RR_INTRUSIVE_PTR<MessageElement> > timespec1;
 			timespec1.push_back(CreateMessageElement("seconds", ScalarToRRArray(time.seconds)));
 			timespec1.push_back(CreateMessageElement("nanoseconds", ScalarToRRArray(time.nanoseconds)));
-			RR_INTRUSIVE_PTR<MessageElementStructure> s = CreateMessageElementStructure("RobotRaconteur.TimeSpec", timespec1);
+			RR_INTRUSIVE_PTR<MessageElementNestedElementList> s = CreateMessageElementNestedElementList(DataTypes_structure_t, "RobotRaconteur.TimeSpec", timespec1);
 
 
 			std::vector<RR_INTRUSIVE_PTR<MessageElement> > elems;

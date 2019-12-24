@@ -641,53 +641,17 @@ namespace RobotRaconteur
 					continue;
 				}
 				case DataTypes_structure_t:
-				{
-					state() = MessageElement_writestruct1;
-					continue;
-				}
 				case DataTypes_vector_t:
-				{
-					state() = MessageElement_writevector1;
-					continue;
-				}
 				case DataTypes_dictionary_t:
-				{
-					state() = MessageElement_writedictionary1;
-					continue;
-				}
 				case DataTypes_multidimarray_t:
-				{
-					state() = MessageElement_writemultiarray1;
-					continue;
-				}
 				case DataTypes_list_t:
-				{
-					state() = MessageElement_writelist1;
-					continue;
-				}
 				case DataTypes_pod_t:
-				{
-					state() = MessageElement_writepod1;
-					continue;
-				}
 				case DataTypes_pod_array_t:
-				{
-					state() = MessageElement_writepodarray1;
-					continue;
-				}
 				case DataTypes_pod_multidimarray_t:
-				{
-					state() = MessageElement_writepodmultidimarray1;
-					continue;
-				}
 				case DataTypes_namedarray_array_t:
-				{
-					state() = MessageElement_writenamedarrayarray1;
-					continue;
-				}
 				case DataTypes_namedarray_multidimarray_t:
 				{
-					state() = MessageElement_writenamedarraymultidimarray1;
+					state() = MessageElement_writenested1;
 					continue;
 				}
 				default:
@@ -756,16 +720,16 @@ namespace RobotRaconteur
 
 			
 
-			//Write structure
-			case MessageElement_writestruct1:
+			//Write nested elements
+			case MessageElement_writenested1:
 			{
 				MessageElement* el = data<MessageElement>();
-				RR_INTRUSIVE_PTR<MessageElementStructure> s = el->CastData<MessageElementStructure>();
-				push_state(MessageElement_writestruct2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
+				RR_INTRUSIVE_PTR<MessageElementNestedElementList> s = el->CastData<MessageElementNestedElementList>();
+				push_state(MessageElement_writenested2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
 			}
-			case MessageElement_writestruct2:
+			case MessageElement_writenested2:
 			{
-				MessageElementStructure* s = data<MessageElementStructure>();
+				MessageElementNestedElementList* s = data<MessageElementNestedElementList>();
 				if (param1() >= s->Elements.size())
 				{
 					DO_POP_STATE();
@@ -773,196 +737,11 @@ namespace RobotRaconteur
 
 				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
 				param1()++;
-				push_state(MessageElement_elementsize, MessageElement_writestruct2, el->ElementSize, el);
+				push_state(MessageElement_elementsize, MessageElement_writenested2, el->ElementSize, el);
 				continue;
 			}
 
-			//Write int32 map
-			case MessageElement_writevector1:
-			{
-				MessageElement* el = data<MessageElement>();
-				RR_INTRUSIVE_PTR<MessageElementMap<int32_t> > s = el->CastData<MessageElementMap<int32_t> >();
-				push_state(MessageElement_writevector2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
-			}
-			case MessageElement_writevector2:
-			{
-				MessageElementMap<int32_t>* s = data<MessageElementMap<int32_t> >();
-				if (param1() >= s->Elements.size())
-				{
-					DO_POP_STATE();
-				}
-
-				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
-				param1()++;
-				push_state(MessageElement_elementsize, MessageElement_writevector2, el->ElementSize, el);
-				continue;
-			}
-			//Write string map
-			case MessageElement_writedictionary1:
-			{
-				MessageElement* el = data<MessageElement>();
-				RR_INTRUSIVE_PTR<MessageElementMap<std::string> > s = el->CastData<MessageElementMap<std::string> >();
-				push_state(MessageElement_writedictionary2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
-			}
-			case MessageElement_writedictionary2:
-			{
-				MessageElementMap<std::string>* s = data<MessageElementMap<std::string> >();
-				if (param1() >= s->Elements.size())
-				{
-					DO_POP_STATE();
-				}
-
-				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
-				param1()++;
-				push_state(MessageElement_elementsize, MessageElement_writedictionary2, el->ElementSize, el);
-				continue;
-			}
-			//Write multidimarray
-			case MessageElement_writemultiarray1:
-			{
-				MessageElement* el = data<MessageElement>();
-				RR_INTRUSIVE_PTR<MessageElementMultiDimArray> s = el->CastData<MessageElementMultiDimArray>();
-				push_state(MessageElement_writemultiarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
-			}
-			case MessageElement_writemultiarray2:
-			{
-				MessageElementMultiDimArray* s = data<MessageElementMultiDimArray>();
-				if (param1() >= s->Elements.size())
-				{
-					DO_POP_STATE();
-				}
-
-				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
-				param1()++;
-				push_state(MessageElement_elementsize, MessageElement_writemultiarray2, el->ElementSize, el);
-				continue;
-			}
-			//Write list
-			case MessageElement_writelist1:
-			{
-				MessageElement* el = data<MessageElement>();
-				RR_INTRUSIVE_PTR<MessageElementList> s = el->CastData<MessageElementList>();
-				push_state(MessageElement_writelist2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
-			}
-			case MessageElement_writelist2:
-			{
-				MessageElementList* s = data<MessageElementList>();
-				if (param1() >= s->Elements.size())
-				{
-					DO_POP_STATE();
-				}
-
-				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
-				param1()++;
-				push_state(MessageElement_elementsize, MessageElement_writelist2, el->ElementSize, el);
-				continue;
-			}
-
-			//Write pod
-			case MessageElement_writepod1:
-			{
-				MessageElement* el = data<MessageElement>();
-				RR_INTRUSIVE_PTR<MessageElementPod> s = el->CastData<MessageElementPod>();
-				push_state(MessageElement_writepod2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
-			}
-			case MessageElement_writepod2:
-			{
-				MessageElementPod* s = data<MessageElementPod>();
-				if (param1() >= s->Elements.size())
-				{
-					DO_POP_STATE();
-				}
-
-				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
-				param1()++;
-				push_state(MessageElement_elementsize, MessageElement_writepod2, el->ElementSize, el);
-				continue;
-			}
-
-			//Write podarray
-			case MessageElement_writepodarray1:
-			{
-				MessageElement* el = data<MessageElement>();
-				RR_INTRUSIVE_PTR<MessageElementPodArray> s = el->CastData<MessageElementPodArray>();
-				push_state(MessageElement_writepodarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
-			}
-			case MessageElement_writepodarray2:
-			{
-				MessageElementPodArray* s = data<MessageElementPodArray>();
-				if (param1() >= s->Elements.size())
-				{
-					DO_POP_STATE();
-				}
-
-				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
-				param1()++;
-				push_state(MessageElement_elementsize, MessageElement_writepodarray2, el->ElementSize, el);
-				continue;
-			}
-
-			//Write podarray
-			case MessageElement_writepodmultidimarray1:
-			{
-				MessageElement* el = data<MessageElement>();
-				RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> s = el->CastData<MessageElementPodMultiDimArray>();
-				push_state(MessageElement_writepodmultidimarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
-			}
-			case MessageElement_writepodmultidimarray2:
-			{
-				MessageElementPodMultiDimArray* s = data<MessageElementPodMultiDimArray>();
-				if (param1() >= s->Elements.size())
-				{
-					DO_POP_STATE();
-				}
-
-				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
-				param1()++;
-				push_state(MessageElement_elementsize, MessageElement_writepodmultidimarray2, el->ElementSize, el);
-				continue;
-			}
-
-			//Write namedarrayarray
-			case MessageElement_writenamedarrayarray1:
-			{
-				MessageElement* el = data<MessageElement>();
-				RR_INTRUSIVE_PTR<MessageElementNamedArray> s = el->CastData<MessageElementNamedArray>();
-				push_state(MessageElement_writenamedarrayarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
-			}
-			case MessageElement_writenamedarrayarray2:
-			{
-				MessageElementNamedArray* s = data<MessageElementNamedArray>();
-				if (param1() >= s->Elements.size())
-				{
-					DO_POP_STATE();
-				}
-
-				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
-				param1()++;
-				push_state(MessageElement_elementsize, MessageElement_writenamedarrayarray2, el->ElementSize, el);
-				continue;
-			}
-
-			//Write namedarrayarray
-			case MessageElement_writenamedarraymultidimarray1:
-			{
-				MessageElement* el = data<MessageElement>();
-				RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> s = el->CastData<MessageElementNamedMultiDimArray>();
-				push_state(MessageElement_writenamedarraymultidimarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
-			}
-			case MessageElement_writenamedarraymultidimarray2:
-			{
-				MessageElementNamedMultiDimArray* s = data<MessageElementNamedMultiDimArray>();
-				if (param1() >= s->Elements.size())
-				{
-					DO_POP_STATE();
-				}
-
-				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
-				param1()++;
-				push_state(MessageElement_elementsize, MessageElement_writenamedarraymultidimarray2, el->ElementSize, el);
-				continue;
-			}
-
+			
 			//Handle string interruption
 			case Header_writestring:
 			{
@@ -1539,53 +1318,17 @@ namespace RobotRaconteur
 					continue;
 				}
 				case DataTypes_structure_t:
-				{
-					state() = MessageElement_writestruct1;
-					continue;
-				}
 				case DataTypes_vector_t:
-				{
-					state() = MessageElement_writevector1;
-					continue;
-				}
 				case DataTypes_dictionary_t:
-				{
-					state() = MessageElement_writedictionary1;
-					continue;
-				}
 				case DataTypes_multidimarray_t:
-				{
-					state() = MessageElement_writemultiarray1;
-					continue;
-				}
 				case DataTypes_list_t:
-				{
-					state() = MessageElement_writelist1;
-					continue;
-				}
 				case DataTypes_pod_t:
-				{
-					state() = MessageElement_writepod1;
-					continue;
-				}
 				case DataTypes_pod_array_t:
-				{
-					state() = MessageElement_writepodarray1;
-					continue;
-				}
 				case DataTypes_pod_multidimarray_t:
-				{
-					state() = MessageElement_writepodmultidimarray1;
-					continue;
-				}
 				case DataTypes_namedarray_array_t:
-				{
-					state() = MessageElement_writenamedarrayarray1;
-					continue;
-				}
 				case DataTypes_namedarray_multidimarray_t:
 				{
-					state() = MessageElement_writenamedarraymultidimarray1;
+					state() = MessageElement_writenested1;
 					continue;
 				}
 				default:
@@ -1671,15 +1414,15 @@ namespace RobotRaconteur
 			}
 
 			//Write structure
-			case MessageElement_writestruct1:
+			case MessageElement_writenested1:
 			{
 				MessageElement* el = data<MessageElement>();
-				RR_INTRUSIVE_PTR<MessageElementStructure> s = el->CastData<MessageElementStructure>();
-				push_state(MessageElement_writestruct2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
+				RR_INTRUSIVE_PTR<MessageElementNestedElementList> s = el->CastData<MessageElementNestedElementList>();
+				push_state(MessageElement_writenested2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
 			}
-			case MessageElement_writestruct2:
+			case MessageElement_writenested2:
 			{
-				MessageElementStructure* s = data<MessageElementStructure>();
+				MessageElementNestedElementList* s = data<MessageElementNestedElementList>();
 				if (param1() >= s->Elements.size())
 				{
 					DO_POP_STATE();
@@ -1687,195 +1430,10 @@ namespace RobotRaconteur
 
 				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
 				param1()++;
-				push_state(MessageElement_elementsize, MessageElement_writestruct2, el->ElementSize, el);
+				push_state(MessageElement_elementsize, MessageElement_writenested2, el->ElementSize, el);
 				continue;				
 			}
-
-			//Write int32 map
-			case MessageElement_writevector1:
-			{
-				MessageElement* el = data<MessageElement>();
-				RR_INTRUSIVE_PTR<MessageElementMap<int32_t> > s = el->CastData<MessageElementMap<int32_t> >();
-				push_state(MessageElement_writevector2, MessageElement_finishwritedata, limit() - message_pos, s, 0);							
-			}
-			case MessageElement_writevector2:
-			{
-				MessageElementMap<int32_t>* s = data<MessageElementMap<int32_t> >();
-				if (param1() >= s->Elements.size())
-				{
-					DO_POP_STATE();
-				}
-
-				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
-				param1()++;
-				push_state(MessageElement_elementsize, MessageElement_writevector2, el->ElementSize, el);
-				continue;
-			}
-			//Write string map
-			case MessageElement_writedictionary1:
-			{
-				MessageElement* el = data<MessageElement>();
-				RR_INTRUSIVE_PTR<MessageElementMap<std::string> > s = el->CastData<MessageElementMap<std::string> >();
-				push_state(MessageElement_writedictionary2, MessageElement_finishwritedata, limit() - message_pos, s, 0);				
-			}
-			case MessageElement_writedictionary2:
-			{
-				MessageElementMap<std::string>* s = data<MessageElementMap<std::string> >();
-				if (param1() >= s->Elements.size())
-				{
-					DO_POP_STATE();
-				}
-
-				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
-				param1()++;
-				push_state(MessageElement_elementsize, MessageElement_writedictionary2, el->ElementSize, el);
-				continue;
-			}
-			//Write multidimarray
-			case MessageElement_writemultiarray1:
-			{
-				MessageElement* el = data<MessageElement>();
-				RR_INTRUSIVE_PTR<MessageElementMultiDimArray> s = el->CastData<MessageElementMultiDimArray>();
-				push_state(MessageElement_writemultiarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
-			}
-			case MessageElement_writemultiarray2:
-			{
-				MessageElementMultiDimArray* s = data<MessageElementMultiDimArray>();
-				if (param1() >= s->Elements.size())
-				{
-					DO_POP_STATE();
-				}
-
-				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
-				param1()++;
-				push_state(MessageElement_elementsize, MessageElement_writemultiarray2, el->ElementSize, el);
-				continue;
-			}
-			//Write list
-			case MessageElement_writelist1:
-			{
-				MessageElement* el = data<MessageElement>();
-				RR_INTRUSIVE_PTR<MessageElementList> s = el->CastData<MessageElementList>();
-				push_state(MessageElement_writelist2, MessageElement_finishwritedata, limit() - message_pos, s, 0);					
-			}
-			case MessageElement_writelist2:
-			{
-				MessageElementList* s = data<MessageElementList>();
-				if (param1() >= s->Elements.size())
-				{
-					DO_POP_STATE();
-				}
-
-				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
-				param1()++;
-				push_state(MessageElement_elementsize, MessageElement_writelist2, el->ElementSize, el);
-				continue;
-			}
-			//Write pod
-			case MessageElement_writepod1:
-			{
-				MessageElement* el = data<MessageElement>();
-				RR_INTRUSIVE_PTR<MessageElementPod> s = el->CastData<MessageElementPod>();
-				push_state(MessageElement_writepod2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
-			}
-			case MessageElement_writepod2:
-			{
-				MessageElementPod* s = data<MessageElementPod>();
-				if (param1() >= s->Elements.size())
-				{
-					DO_POP_STATE();
-				}
-
-				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
-				param1()++;
-				push_state(MessageElement_elementsize, MessageElement_writepod2, el->ElementSize, el);
-				continue;
-			}
-
-			//Write podarray
-			case MessageElement_writepodarray1:
-			{
-				MessageElement* el = data<MessageElement>();
-				RR_INTRUSIVE_PTR<MessageElementPodArray> s = el->CastData<MessageElementPodArray>();
-				push_state(MessageElement_writepodarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
-			}
-			case MessageElement_writepodarray2:
-			{
-				MessageElementPodArray* s = data<MessageElementPodArray>();
-				if (param1() >= s->Elements.size())
-				{
-					DO_POP_STATE();
-				}
-
-				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
-				param1()++;
-				push_state(MessageElement_elementsize, MessageElement_writepodarray2, el->ElementSize, el);
-				continue;
-			}
-
-			//Write podarray
-			case MessageElement_writepodmultidimarray1:
-			{
-				MessageElement* el = data<MessageElement>();
-				RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> s = el->CastData<MessageElementPodMultiDimArray>();
-				push_state(MessageElement_writepodmultidimarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
-			}
-			case MessageElement_writepodmultidimarray2:
-			{
-				MessageElementPodMultiDimArray* s = data<MessageElementPodMultiDimArray>();
-				if (param1() >= s->Elements.size())
-				{
-					DO_POP_STATE();
-				}
-
-				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
-				param1()++;
-				push_state(MessageElement_elementsize, MessageElement_writepodmultidimarray2, el->ElementSize, el);
-				continue;
-			}
-
-			//Write namedarrayarray
-			case MessageElement_writenamedarrayarray1:
-			{
-				MessageElement* el = data<MessageElement>();
-				RR_INTRUSIVE_PTR<MessageElementNamedArray> s = el->CastData<MessageElementNamedArray>();
-				push_state(MessageElement_writenamedarrayarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
-			}
-			case MessageElement_writenamedarrayarray2:
-			{
-				MessageElementNamedArray* s = data<MessageElementNamedArray>();
-				if (param1() >= s->Elements.size())
-				{
-					DO_POP_STATE();
-				}
-
-				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
-				param1()++;
-				push_state(MessageElement_elementsize, MessageElement_writenamedarrayarray2, el->ElementSize, el);
-				continue;
-			}
-
-			//Write namedarrayarray
-			case MessageElement_writenamedarraymultidimarray1:
-			{
-				MessageElement* el = data<MessageElement>();
-				RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> s = el->CastData<MessageElementNamedMultiDimArray>();
-				push_state(MessageElement_writenamedarraymultidimarray2, MessageElement_finishwritedata, limit() - message_pos, s, 0);
-			}
-			case MessageElement_writenamedarraymultidimarray2:
-			{
-				MessageElementNamedMultiDimArray* s = data<MessageElementNamedMultiDimArray>();
-				if (param1() >= s->Elements.size())
-				{
-					DO_POP_STATE();
-				}
-
-				RR_INTRUSIVE_PTR<MessageElement> el = s->Elements.at(param1());
-				param1()++;
-				push_state(MessageElement_elementsize, MessageElement_writenamedarraymultidimarray2, el->ElementSize, el);
-				continue;
-			}
-
+			
 			default:
 				throw InvalidOperationException("Invalid write state");
 			}

@@ -188,7 +188,7 @@ namespace RobotRaconteurTest
 			{
 				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(CreateMessageElementStructure(MessageSerializationTest3_NewRandomString(rng, 128),v));
+			e->SetData(CreateMessageElementNestedElementList(DataTypes_structure_t,MessageSerializationTest3_NewRandomString(rng, 128),v));
 			return e;
 		}
 		case DataTypes_vector_t:
@@ -199,7 +199,7 @@ namespace RobotRaconteurTest
 			{
 				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(CreateMessageElementMap<int32_t>(v));
+			e->SetData(CreateMessageElementNestedElementList(DataTypes_vector_t,"",v));
 			return e;
 		}
 		case DataTypes_dictionary_t:
@@ -210,7 +210,7 @@ namespace RobotRaconteurTest
 			{
 				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(CreateMessageElementMap<std::string>(v));
+			e->SetData(CreateMessageElementNestedElementList(DataTypes_dictionary_t,"",v));
 			return e;
 		}
 		case DataTypes_multidimarray_t:
@@ -222,7 +222,7 @@ namespace RobotRaconteurTest
 			{
 				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, 10));
 			}
-			e->SetData(CreateMessageElementMultiDimArray(v));
+			e->SetData(CreateMessageElementNestedElementList(DataTypes_multidimarray_t,"",v));
 			return e;
 		}
 		case DataTypes_list_t:
@@ -233,7 +233,7 @@ namespace RobotRaconteurTest
 			{
 				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(CreateMessageElementList(v));
+			e->SetData(CreateMessageElementNestedElementList(DataTypes_list_t,"",v));
 			return e;
 		}
 
@@ -245,7 +245,7 @@ namespace RobotRaconteurTest
 			{
 				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(CreateMessageElementPod(v));
+			e->SetData(CreateMessageElementNestedElementList(DataTypes_pod_t, "", v));
 			return e;
 		}
 		case DataTypes_pod_array_t:
@@ -256,7 +256,7 @@ namespace RobotRaconteurTest
 			{
 				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(CreateMessageElementPodArray(MessageSerializationTest3_NewRandomString(rng, 128),v));
+			e->SetData(CreateMessageElementNestedElementList(DataTypes_pod_array_t,MessageSerializationTest3_NewRandomString(rng, 128),v));
 			return e;
 		}
 		case DataTypes_pod_multidimarray_t:
@@ -267,7 +267,7 @@ namespace RobotRaconteurTest
 			{
 				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(CreateMessageElementPodMultiDimArray(MessageSerializationTest3_NewRandomString(rng, 128),v));
+			e->SetData(CreateMessageElementNestedElementList(DataTypes_pod_multidimarray_t,MessageSerializationTest3_NewRandomString(rng, 128),v));
 			return e;
 		}
 		case DataTypes_namedarray_array_t:
@@ -278,7 +278,7 @@ namespace RobotRaconteurTest
 			{
 				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(CreateMessageElementNamedArray(MessageSerializationTest3_NewRandomString(rng, 128), v));
+			e->SetData(CreateMessageElementNestedElementList(DataTypes_namedarray_array_t,MessageSerializationTest3_NewRandomString(rng, 128), v));
 			return e;
 		}
 		case DataTypes_namedarray_multidimarray_t:
@@ -289,7 +289,7 @@ namespace RobotRaconteurTest
 			{
 				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(CreateMessageElementNamedMultiDimArray(MessageSerializationTest3_NewRandomString(rng, 128), v));
+			e->SetData(CreateMessageElementNestedElementList(DataTypes_namedarray_multidimarray_t,MessageSerializationTest3_NewRandomString(rng, 128), v));
 			return e;
 		}
 		default:

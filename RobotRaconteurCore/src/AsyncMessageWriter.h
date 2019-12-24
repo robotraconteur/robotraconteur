@@ -103,27 +103,9 @@ namespace RobotRaconteur
 			//Write data
 			MessageElement_writearray1,
 			MessageElement_writearray2,
-			MessageElement_writestruct1,
-			MessageElement_writestruct2,			
-			MessageElement_writevector1,
-			MessageElement_writevector2,			
-			MessageElement_writedictionary1,
-			MessageElement_writedictionary2,			
-			MessageElement_writemultiarray1,
-			MessageElement_writemultiarray2,			
-			MessageElement_writelist1,
-			MessageElement_writelist2,		
-			MessageElement_writepod1,
-			MessageElement_writepod2,
-			MessageElement_writepodarray1,
-			MessageElement_writepodarray2,
-			MessageElement_writepodmultidimarray1,
-			MessageElement_writepodmultidimarray2,
-			MessageElement_writenamedarrayarray1,
-			MessageElement_writenamedarrayarray2,
-			MessageElement_writenamedarraymultidimarray1,
-			MessageElement_writenamedarraymultidimarray2,
-
+			MessageElement_writenested1,
+			MessageElement_writenested2,			
+			
 			//String handling
 			Header_writestring,
 

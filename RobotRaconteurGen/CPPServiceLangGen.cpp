@@ -1430,9 +1430,9 @@ namespace RobotRaconteurGen
 				w2 << "    template<typename U>" << endl;
 				w2 << "    static void UnpackField(" << q_name << "& v, const std::string& name, U& in)" << endl;
 				w2 << "    {" << endl;
-				w2 << "    PodStub_UnpackPodFromArray(v, MessageElement::FindElement(in, name)->template CastData<MessageElementPodArray>());" << endl;
+				w2 << "    PodStub_UnpackPodFromArray(v, MessageElement::FindElement(in, name)->CastDataToNestedList(DataTypes_pod_array_t));" << endl;
 				w2 << "    }" << endl;
-				w2 << "    static RR_INTRUSIVE_PTR<MessageElementPod> PackToMessageElementPod(const " << q_name << "& v)" << endl;
+				w2 << "    static RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackToMessageElementPod(const " << q_name << "& v)" << endl;
 				w2 << "    {" << endl;
 				w2 << "    std::vector<RR_INTRUSIVE_PTR<MessageElement> > o;" << endl;
 				BOOST_FOREACH(RR_SHARED_PTR<MemberDefinition> m, e->Members)
@@ -1440,9 +1440,9 @@ namespace RobotRaconteurGen
 					RR_SHARED_PTR<PropertyDefinition> p = rr_cast<PropertyDefinition>(m);
 					w2 << "    PodStub_PackField(v." << fix_name(p->Name) << ", \"" << p->Name << "\", o);" << endl;
 				}
-				w2 << "    return RobotRaconteur::CreateMessageElementPod(o);" << endl;
+				w2 << "    return RobotRaconteur::CreateMessageElementNestedElementList(DataTypes_pod_t,\"\",o);" << endl;
 				w2 << "    }" << endl;
-				w2 << "    static void UnpackFromMessageElementPod(" << q_name << "& v, RR_INTRUSIVE_PTR<MessageElementPod> m)" << endl;
+				w2 << "    static void UnpackFromMessageElementPod(" << q_name << "& v, RR_INTRUSIVE_PTR<MessageElementNestedElementList> m)" << endl;
 				w2 << "    {" << endl;
 				w2 << "    if (!m) throw NullValueException(\"Unexpected null value for pod unpack\");" << endl;
 				//w2 << "    if (m->Type != \"" << d->Name << "." << e->Name << "\") throw DataTypeException(\"Pod type mismatch\");" << endl;
@@ -1515,25 +1515,25 @@ namespace RobotRaconteurGen
 
 		w2 << "virtual RR_SHARED_PTR<RobotRaconteur::StructureStub> FindStructureStub(const std::string& s);" << endl;
 		
-		w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementStructure> PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> structin);" << endl;
+		w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> structin);" << endl;
 				
-		w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> UnpackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementStructure> mstructin);" << endl;
+		w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> UnpackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> mstructin);" << endl;
 
-		w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementPodArray> PackPodArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> structure);" << endl;
+		w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackPodArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> structure);" << endl;
 
-		w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> UnpackPodArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementPodArray> structure);" << endl;
+		w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> UnpackPodArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> structure);" << endl;
 
-		w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementPodMultiDimArray> PackPodMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> structure);" << endl;
+		w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackPodMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> structure);" << endl;
 
-		w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> UnpackPodMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementPodMultiDimArray> structure);" << endl;
+		w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> UnpackPodMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> structure);" << endl;
 		
-		w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNamedArray> PackNamedArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> structure);" << endl;
+		w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackNamedArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> structure);" << endl;
 
-		w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> UnpackNamedArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNamedArray> structure);" << endl;
+		w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> UnpackNamedArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> structure);" << endl;
 
-		w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNamedMultiDimArray> PackNamedMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> structure);" << endl;
+		w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackNamedMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> structure);" << endl;
 
-		w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> UnpackNamedMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNamedMultiDimArray> structure);" << endl;
+		w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> UnpackNamedMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> structure);" << endl;
 
 		w2 << "virtual RR_SHARED_PTR<RobotRaconteur::ServiceStub> CreateStub(const std::string& objecttype, const std::string& path, RR_SHARED_PTR<RobotRaconteur::ClientContext> context);" << endl;
 
@@ -1586,7 +1586,7 @@ namespace RobotRaconteurGen
 		w2 << "throw RobotRaconteur::ServiceException(\"Invalid structure stub type.\");" << endl;
 		w2 << "}" << endl;
 		
-		w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementStructure> " << factory_name << "::PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> structin)" << endl << "{" << endl;
+		w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> " << factory_name << "::PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> structin)" << endl << "{" << endl;
 		w2 << "std::string type=structin->RRType();";
 		w2 << "boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
 		
@@ -1598,7 +1598,7 @@ namespace RobotRaconteurGen
 		w2 << "throw RobotRaconteur::ServiceException(\"Invalid structure stub type.\");" << endl;
 		w2 << "}" << endl;
 
-		w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> " << factory_name << "::UnpackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementStructure> mstructin)" << endl << "{" << endl;
+		w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> " << factory_name << "::UnpackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> mstructin)" << endl << "{" << endl;
 		w2 << "std::string type=mstructin->GetTypeString();";
 		w2 << "boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
 		
@@ -1610,7 +1610,7 @@ namespace RobotRaconteurGen
 		w2 << "throw RobotRaconteur::ServiceException(\"Invalid structure stub type.\");" << endl;
 		w2 << "}" << endl;
 
-		w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementPodArray> " << factory_name << "::PackPodArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> structin)" << endl << "{" << endl;
+		w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> " << factory_name << "::PackPodArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> structin)" << endl << "{" << endl;
 		w2 << "std::string type=structin->RRElementTypeString();" << endl;
 		w2 << "boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
 
@@ -1624,7 +1624,7 @@ namespace RobotRaconteurGen
 		w2 << "throw RobotRaconteur::ServiceException(\"Invalid pod type.\");" << endl;
 		w2 << "}" << endl;
 
-		w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> " << factory_name << "::UnpackPodArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementPodArray> mstructin)" << endl << "{" << endl;
+		w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> " << factory_name << "::UnpackPodArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> mstructin)" << endl << "{" << endl;
 		w2 << "std::string type=mstructin->GetTypeString();" << endl;
 		w2 << "boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
 		w2 << "std::string servicetype=res.get<0>();" << endl;
@@ -1637,7 +1637,7 @@ namespace RobotRaconteurGen
 		w2 << "throw RobotRaconteur::ServiceException(\"Invalid pod type.\");" << endl;
 		w2 << "}" << endl;
 
-		w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementPodMultiDimArray> " << factory_name << "::PackPodMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> structin)" << endl << "{" << endl;
+		w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> " << factory_name << "::PackPodMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> structin)" << endl << "{" << endl;
 		w2 << "std::string type=structin->RRElementTypeString();" << endl;
 		w2 << "boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
 		w2 << "std::string servicetype=res.get<0>();" << endl;
@@ -1650,7 +1650,7 @@ namespace RobotRaconteurGen
 		w2 << "throw RobotRaconteur::ServiceException(\"Invalid pod type.\");" << endl;
 		w2 << "}" << endl;
 		
-		w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> " << factory_name << "::UnpackPodMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementPodMultiDimArray> mstructin)" << endl << "{" << endl;
+		w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> " << factory_name << "::UnpackPodMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> mstructin)" << endl << "{" << endl;
 		w2 << "std::string type=mstructin->GetTypeString();" << endl;
 		w2 << "boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
 		w2 << "std::string servicetype=res.get<0>();" << endl;
@@ -1663,7 +1663,7 @@ namespace RobotRaconteurGen
 		w2 << "throw RobotRaconteur::ServiceException(\"Invalid pod type.\");" << endl;
 		w2 << "}" << endl;
 
-		w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNamedArray> " << factory_name << "::PackNamedArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> structin)" << endl << "{" << endl;
+		w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> " << factory_name << "::PackNamedArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> structin)" << endl << "{" << endl;
 		w2 << "std::string type=structin->RRElementTypeString();" << endl;
 		w2 << "boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
 
@@ -1677,7 +1677,7 @@ namespace RobotRaconteurGen
 		w2 << "throw RobotRaconteur::ServiceException(\"Invalid namedarray type.\");" << endl;
 		w2 << "}" << endl;
 
-		w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> " << factory_name << "::UnpackNamedArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNamedArray> mstructin)" << endl << "{" << endl;
+		w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> " << factory_name << "::UnpackNamedArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> mstructin)" << endl << "{" << endl;
 		w2 << "std::string type=mstructin->GetTypeString();" << endl;
 		w2 << "boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
 		w2 << "std::string servicetype=res.get<0>();" << endl;
@@ -1690,7 +1690,7 @@ namespace RobotRaconteurGen
 		w2 << "throw RobotRaconteur::ServiceException(\"Invalid namedarray type.\");" << endl;
 		w2 << "}" << endl;
 
-		w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNamedMultiDimArray> " << factory_name << "::PackNamedMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> structin)" << endl << "{" << endl;
+		w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> " << factory_name << "::PackNamedMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> structin)" << endl << "{" << endl;
 		w2 << "std::string type=structin->RRElementTypeString();" << endl;
 		w2 << "boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
 		w2 << "std::string servicetype=res.get<0>();" << endl;
@@ -1703,7 +1703,7 @@ namespace RobotRaconteurGen
 		w2 << "throw RobotRaconteur::ServiceException(\"Invalid namedarray type.\");" << endl;
 		w2 << "}" << endl;
 
-		w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> " << factory_name << "::UnpackNamedMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNamedMultiDimArray> mstructin)" << endl << "{" << endl;
+		w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> " << factory_name << "::UnpackNamedMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> mstructin)" << endl << "{" << endl;
 		w2 << "std::string type=mstructin->GetTypeString();" << endl;
 		w2 << "boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
 		w2 << "std::string servicetype=res.get<0>();" << endl;
@@ -1788,8 +1788,8 @@ namespace RobotRaconteurGen
 			w2 << "class " << fix_name((*e)->Name) << "_stub : public virtual RobotRaconteur::StructureStub" << endl << "{" << endl;
 			w2 << "public:" << endl;
 			w2 << "" << fix_name((*e)->Name) << "_stub(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurNode> node) : RobotRaconteur::StructureStub(node) {}" << endl;
-			w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementStructure> PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> s);" << endl;
-			w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> UnpackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementStructure> m);" << endl;
+			w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> s);" << endl;
+			w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> UnpackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> m);" << endl;
 			w2 << "};" << endl << endl;
 		}
 
@@ -2189,16 +2189,16 @@ namespace RobotRaconteurGen
 
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Structures.begin(); e != d->Structures.end(); ++e)
 		{
-			w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementStructure> " << fix_name((*e)->Name) << "_stub::PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> s)" << endl << "{" << endl;
+			w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> " << fix_name((*e)->Name) << "_stub::PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> s)" << endl << "{" << endl;
 			w2 << "RR_INTRUSIVE_PTR<" << fix_qualified_name((*e)->Name) << " > s2=RobotRaconteur::rr_cast<" << fix_qualified_name((*e)->Name) << " >(s);" << endl;
 			w2 << "std::vector<RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> > vret;" << endl;
 			MEMBER_ITER(PropertyDefinition)
 				w2 << "vret.push_back(" << str_pack_message_element(m->Name,"s2->" + fix_name(m->Name),m->Type) << ");" << endl;
 			MEMBER_ITER_END()
-			w2 << "return RobotRaconteur::CreateMessageElementStructure(\"" << d->Name << "." << (*e)->Name  << "\",vret);" << endl;
+			w2 << "return RobotRaconteur::CreateMessageElementNestedElementList(RobotRaconteur::DataTypes_structure_t,\"" << d->Name << "." << (*e)->Name  << "\",vret);" << endl;
 			w2 << "}" << endl;
 
-			w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> " << fix_name((*e)->Name) << "_stub::UnpackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementStructure> m)" << endl << "{" << endl;
+			w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> " << fix_name((*e)->Name) << "_stub::UnpackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> m)" << endl << "{" << endl;
 			w2 << "std::vector<RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> >& i = m->Elements;" << endl;
 			w2 << "RR_INTRUSIVE_PTR<" << fix_qualified_name((*e)->Name) << " > ret(new " << fix_qualified_name((*e)->Name) << "());" << endl;
 			MEMBER_ITER(PropertyDefinition)

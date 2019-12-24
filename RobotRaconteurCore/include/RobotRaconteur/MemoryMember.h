@@ -283,7 +283,7 @@ namespace RobotRaconteur
 		{
 			RR_SHARED_PTR<MultiDimArrayMemory<T> > mem1 = rr_cast<MultiDimArrayMemory<T> >(mem);
 
-			RR_INTRUSIVE_PTR<RRMultiDimArray<T> > data = GetNode()->template UnpackMultiDimArray<T>(rr_cast<MessageElementMultiDimArray>(buffer));
+			RR_INTRUSIVE_PTR<RRMultiDimArray<T> > data = GetNode()->template UnpackMultiDimArray<T>(rr_cast<MessageElementNestedElementList>(buffer));
 			mem1->Write(memorypos, data, bufferpos, count);
 		}
 	};
@@ -468,7 +468,7 @@ namespace RobotRaconteur
 		virtual void UnpackReadResult(RR_INTRUSIVE_PTR<MessageElementData> res, void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint64_t elemcount)
 		{
 			RR_INTRUSIVE_PTR<RRMultiDimArray<T> >& buffer1 = *static_cast<RR_INTRUSIVE_PTR<RRMultiDimArray<T> >* > (buffer);
-			RR_INTRUSIVE_PTR<RRMultiDimArray<T> > data = GetNode()->template UnpackMultiDimArray<T>(rr_cast<MessageElementMultiDimArray>(res));
+			RR_INTRUSIVE_PTR<RRMultiDimArray<T> > data = GetNode()->template UnpackMultiDimArray<T>(rr_cast<MessageElementNestedElementList>(res));
 
 			RR_SHARED_PTR<MultiDimArrayMemory<T> > data2 = RR_MAKE_SHARED<MultiDimArrayMemory<T> >(data);
 			data2->Read(std::vector<uint64_t>(count.size()), buffer1, bufferpos, count);
@@ -583,7 +583,7 @@ namespace RobotRaconteur
 		virtual void DoWrite(uint64_t memorypos, RR_INTRUSIVE_PTR<MessageElementData> buffer, uint64_t bufferpos, uint64_t count, RR_SHARED_PTR<ArrayMemoryBase> mem)
 		{
 			RR_SHARED_PTR<PodArrayMemory<T> > mem1 = rr_cast<PodArrayMemory<T> >(mem);
-			RR_INTRUSIVE_PTR<RRPodArray<T> > buf1 = PodStub_UnpackPodArray<T>(rr_cast<MessageElementPodArray>(buffer));
+			RR_INTRUSIVE_PTR<RRPodArray<T> > buf1 = PodStub_UnpackPodArray<T>(rr_cast<MessageElementNestedElementList>(buffer));
 			mem1->Write(memorypos, buf1, 0, boost::numeric_cast<size_t>(count));
 		}
 	};
@@ -624,7 +624,7 @@ namespace RobotRaconteur
 		virtual void UnpackReadResult(RR_INTRUSIVE_PTR<MessageElementData> res,void* buffer, uint64_t bufferpos, uint64_t count)
 		{
 			RR_INTRUSIVE_PTR<RRPodArray<T> >& buffer1 = *static_cast<RR_INTRUSIVE_PTR<RRPodArray<T> >* >(buffer);
-			RR_INTRUSIVE_PTR<RRPodArray<T> > res1 = PodStub_UnpackPodArray<T>(rr_cast<RobotRaconteur::MessageElementPodArray>(res));
+			RR_INTRUSIVE_PTR<RRPodArray<T> > res1 = PodStub_UnpackPodArray<T>(rr_cast<RobotRaconteur::MessageElementNestedElementList>(res));
 
 			for (size_t i = 0; i < count; i++)
 			{
@@ -752,7 +752,7 @@ namespace RobotRaconteur
 		virtual void UnpackReadResult(RR_INTRUSIVE_PTR<MessageElementData> res, void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint64_t elemcount)
 		{
 			RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> >& buffer1 = *static_cast<RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> >* > (buffer);
-			RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > data = rr_cast<RRPodMultiDimArray<T> >(GetNode()->UnpackPodMultiDimArray(rr_cast<MessageElementPodMultiDimArray>(res)));
+			RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > data = rr_cast<RRPodMultiDimArray<T> >(GetNode()->UnpackPodMultiDimArray(rr_cast<MessageElementNestedElementList>(res)));
 
 			RR_SHARED_PTR<PodMultiDimArrayMemory<T> > data2 = RR_MAKE_SHARED<PodMultiDimArrayMemory<T> >(data);
 			data2->Read(std::vector<uint64_t>(count.size()), buffer1, bufferpos, count);
@@ -796,7 +796,7 @@ namespace RobotRaconteur
 		{
 			RR_SHARED_PTR<PodMultiDimArrayMemory<T> > mem1 = rr_cast<PodMultiDimArrayMemory<T> >(mem);
 
-			RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > data = rr_cast<RRPodMultiDimArray<T> >(GetNode()->UnpackPodMultiDimArray(rr_cast<MessageElementPodMultiDimArray>(buffer)));
+			RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > data = rr_cast<RRPodMultiDimArray<T> >(GetNode()->UnpackPodMultiDimArray(rr_cast<MessageElementNestedElementList>(buffer)));
 			mem1->Write(memorypos, data, bufferpos, count);
 		}
 	};
@@ -883,7 +883,7 @@ namespace RobotRaconteur
 		virtual void DoWrite(uint64_t memorypos, RR_INTRUSIVE_PTR<MessageElementData> buffer, uint64_t bufferpos, uint64_t count, RR_SHARED_PTR<ArrayMemoryBase> mem)
 		{
 			RR_SHARED_PTR<NamedArrayMemory<T> > mem1 = rr_cast<NamedArrayMemory<T> >(mem);
-			RR_INTRUSIVE_PTR<RRNamedArray<T> > buf1 = NamedArrayStub_UnpackNamedArray<T>(rr_cast<MessageElementNamedArray>(buffer));
+			RR_INTRUSIVE_PTR<RRNamedArray<T> > buf1 = NamedArrayStub_UnpackNamedArray<T>(rr_cast<MessageElementNestedElementList>(buffer));
 			mem1->Write(memorypos, buf1, 0, boost::numeric_cast<size_t>(count));
 		}
 	};
@@ -924,7 +924,7 @@ namespace RobotRaconteur
 		virtual void UnpackReadResult(RR_INTRUSIVE_PTR<MessageElementData> res, void* buffer, uint64_t bufferpos, uint64_t count)
 		{
 			RR_INTRUSIVE_PTR<RRNamedArray<T> >& buffer1 = *static_cast<RR_INTRUSIVE_PTR<RRNamedArray<T> >*>(buffer);
-			RR_INTRUSIVE_PTR<RRNamedArray<T> > res1 = NamedArrayStub_UnpackNamedArray<T>(rr_cast<RobotRaconteur::MessageElementNamedArray>(res));
+			RR_INTRUSIVE_PTR<RRNamedArray<T> > res1 = NamedArrayStub_UnpackNamedArray<T>(rr_cast<RobotRaconteur::MessageElementNestedElementList>(res));
 
 			for (size_t i = 0; i < count; i++)
 			{
@@ -1052,7 +1052,7 @@ namespace RobotRaconteur
 		virtual void UnpackReadResult(RR_INTRUSIVE_PTR<MessageElementData> res, void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint64_t elemcount)
 		{
 			RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> >& buffer1 = *static_cast<RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> >*> (buffer);
-			RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > data = rr_cast<RRNamedMultiDimArray<T> >(GetNode()->UnpackNamedMultiDimArray(rr_cast<MessageElementNamedMultiDimArray>(res)));
+			RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > data = rr_cast<RRNamedMultiDimArray<T> >(GetNode()->UnpackNamedMultiDimArray(rr_cast<MessageElementNestedElementList>(res)));
 
 			RR_SHARED_PTR<NamedMultiDimArrayMemory<T> > data2 = RR_MAKE_SHARED<NamedMultiDimArrayMemory<T> >(data);
 			data2->Read(std::vector<uint64_t>(count.size()), buffer1, bufferpos, count);
@@ -1096,7 +1096,7 @@ namespace RobotRaconteur
 		{
 			RR_SHARED_PTR<NamedMultiDimArrayMemory<T> > mem1 = rr_cast<NamedMultiDimArrayMemory<T> >(mem);
 
-			RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > data = rr_cast<RRNamedMultiDimArray<T> >(GetNode()->UnpackNamedMultiDimArray(rr_cast<MessageElementNamedMultiDimArray>(buffer)));
+			RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > data = rr_cast<RRNamedMultiDimArray<T> >(GetNode()->UnpackNamedMultiDimArray(rr_cast<MessageElementNestedElementList>(buffer)));
 			mem1->Write(memorypos, data, bufferpos, count);
 		}
 	};

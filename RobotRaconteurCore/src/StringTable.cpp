@@ -264,55 +264,24 @@ namespace RobotRaconteur
 			{
 			
 			case DataTypes_structure_t:
+			case DataTypes_vector_t:
+			case DataTypes_dictionary_t:
+			case DataTypes_multidimarray_t:
+			case DataTypes_list_t:
+			case DataTypes_pod_t:
+			case DataTypes_pod_array_t:
+			case DataTypes_pod_multidimarray_t:
+			case DataTypes_namedarray_array_t:
+			case DataTypes_namedarray_multidimarray_t:
 			{
-				RR_INTRUSIVE_PTR<MessageElementStructure> sdat = e->CastData<MessageElementStructure>();
+				RR_INTRUSIVE_PTR<MessageElementNestedElementList> sdat = e->CastDataToNestedList();
 				if (sdat)
 				{
 					BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& ee, sdat->Elements)
 						MessageElementReplaceStringsWithCodes(ee, local_table, next_local_code, table_size);
 				}
 				break;
-			}
-			case DataTypes_vector_t:
-			{
-				RR_INTRUSIVE_PTR<MessageElementMap<int32_t> > vdat = e->CastData<MessageElementMap<int32_t> >();
-				if (vdat)
-				{
-					BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& ee, vdat->Elements)
-						MessageElementReplaceStringsWithCodes(ee, local_table, next_local_code, table_size);
-				}
-				break;
-			}
-			case DataTypes_dictionary_t:
-			{
-				RR_INTRUSIVE_PTR<MessageElementMap<std::string> > ddat = e->CastData<MessageElementMap<std::string> >();
-				if (ddat)
-				{
-					BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& ee, ddat->Elements)
-						MessageElementReplaceStringsWithCodes(ee, local_table, next_local_code, table_size);
-				}
-				break;
-			}
-			case DataTypes_multidimarray_t:
-			{
-				RR_INTRUSIVE_PTR<MessageElementMultiDimArray> mdat = e->CastData<MessageElementMultiDimArray>();
-				if (mdat)
-				{
-					BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& ee, mdat->Elements)
-						MessageElementReplaceStringsWithCodes(ee, local_table, next_local_code, table_size);
-				}
-				break;
-			}
-			case DataTypes_list_t:
-			{
-				RR_INTRUSIVE_PTR<MessageElementList> ddat = e->CastData<MessageElementList>();
-				if (ddat)
-				{
-					BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& ee, ddat->Elements)
-						MessageElementReplaceStringsWithCodes(ee, local_table, next_local_code, table_size);					
-				}
-				break;
-			}
+			}			
 			default:
 				break;
 			}
@@ -349,56 +318,27 @@ namespace RobotRaconteur
 			{
 
 			case DataTypes_structure_t:
+			case DataTypes_vector_t:
+			case DataTypes_dictionary_t:
+			case DataTypes_multidimarray_t:
+			case DataTypes_list_t:
+			case DataTypes_pod_t:
+			case DataTypes_pod_array_t:
+			case DataTypes_pod_multidimarray_t:
+			case DataTypes_namedarray_array_t:
+			case DataTypes_namedarray_multidimarray_t:
 			{
-				RR_INTRUSIVE_PTR<MessageElementStructure> sdat = e->CastData<MessageElementStructure>();
+				RR_INTRUSIVE_PTR<MessageElementNestedElementList> sdat = e->CastDataToNestedList();
 				if (sdat)
 				{
 					BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& ee, sdat->Elements)
 						MessageElementReplaceCodesWithStrings(ee, local_table);
 				}
-				sdat->Type = e->ElementTypeName;
+				sdat->TypeName = e->ElementTypeName;
 				break;
 			}
-			case DataTypes_vector_t:
-			{
-				RR_INTRUSIVE_PTR<MessageElementMap<int32_t> > vdat = e->CastData<MessageElementMap<int32_t> >();
-				if (vdat)
-				{
-					BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& ee, vdat->Elements)
-						MessageElementReplaceCodesWithStrings(ee, local_table);
-				}
-				break;
-			}
-			case DataTypes_dictionary_t:
-			{
-				RR_INTRUSIVE_PTR<MessageElementMap<std::string> > ddat = e->CastData<MessageElementMap<std::string> >();
-				if (ddat)
-				{
-					BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& ee, ddat->Elements)
-						MessageElementReplaceCodesWithStrings(ee, local_table);
-				}
-				break;
-			}
-			case DataTypes_multidimarray_t:
-			{
-				RR_INTRUSIVE_PTR<MessageElementMultiDimArray> mdat = e->CastData<MessageElementMultiDimArray>();
-				if (mdat)
-				{
-					BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& ee, mdat->Elements)
-						MessageElementReplaceCodesWithStrings(ee, local_table);
-				}
-				break;
-			}
-			case DataTypes_list_t:
-			{
-				RR_INTRUSIVE_PTR<MessageElementList> ddat = e->CastData<MessageElementList>();
-				if (ddat)
-				{
-					BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& ee, ddat->Elements)
-						MessageElementReplaceCodesWithStrings(ee, local_table);
-				}
-				break;
-			}
+			
+			
 			default:
 				break;
 			}

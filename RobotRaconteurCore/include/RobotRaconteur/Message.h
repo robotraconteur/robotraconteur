@@ -18,9 +18,7 @@
 #include "RobotRaconteur/DataTypes.h"
 #include "RobotRaconteur/NodeID.h"
 
-
-
-
+#include <boost/intrusive/list.hpp>
 
 namespace RobotRaconteur
 {
@@ -33,6 +31,7 @@ namespace RobotRaconteur
 	class ROBOTRACONTEUR_CORE_API MessageHeader;
 	class ROBOTRACONTEUR_CORE_API MessageEntry;
 	class ROBOTRACONTEUR_CORE_API MessageElement;
+	class ROBOTRACONTEUR_CORE_API MessageElementNestedElementList;
 
 	class ROBOTRACONTEUR_CORE_API Message : public RRValue
 	{
@@ -275,6 +274,10 @@ public:
 
 		std::string CastDataToString();
 
+		RR_INTRUSIVE_PTR<MessageElementNestedElementList> CastDataToNestedList();
+
+		RR_INTRUSIVE_PTR<MessageElementNestedElementList> CastDataToNestedList(DataTypes expected_type);
+
 		template<typename T>
 		static RR_INTRUSIVE_PTR<T> CastData(RR_INTRUSIVE_PTR<MessageElementData> Data)
 		{
@@ -288,252 +291,20 @@ public:
 	
 	};
 
-	class ROBOTRACONTEUR_CORE_API MessageElementStructure : public MessageElementData
+	class ROBOTRACONTEUR_CORE_API MessageElementNestedElementList : public MessageElementData
 	{
 	public:
 
-		std::string Type;
+		DataTypes Type;
+		std::string TypeName;
 		std::vector<RR_INTRUSIVE_PTR<MessageElement> > Elements;
 
-		MessageElementStructure(const std::string& type_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_);
+		MessageElementNestedElementList(DataTypes type_, const std::string& type_name_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_);
 
-		virtual std::string GetTypeString()
-		{
-			return Type;
-		}
-		virtual DataTypes GetTypeID()
-		{
-			return DataTypes_structure_t;
-		}
-		virtual std::string RRType()
-		{
-			return "RobotRaconteur::CMessageElementStructure";
-		}
-
+		virtual std::string GetTypeString();
+		virtual DataTypes GetTypeID();		
+		virtual std::string RRType();
 	};
-
-	
-	template<typename T>
-	class MessageElementMap : public MessageElementData
-	{
-	public:
-		std::vector<RR_INTRUSIVE_PTR<MessageElement> > Elements;
-
-
-		MessageElementMap(const std::vector<RR_INTRUSIVE_PTR<MessageElement> >& e)
-		{
-			Elements=e;
-		}
-
-		virtual std::string GetTypeString()
-		{
-			if (boost::is_same<T,int32_t>::value)
-			{
-				return "varvalue{int32}";
-			}
-
-			if (boost::is_same<T,std::string>::value)
-			{
-				return "varvalue{string}";
-			}
-			throw DataTypeException("Invalid set keytype");
-		}
-		virtual DataTypes GetTypeID()
-		{
-			if (boost::is_same<T,int32_t>::value)
-			{
-				return DataTypes_vector_t;
-			}
-
-			if (boost::is_same<T,std::string>::value)
-			{
-				return DataTypes_dictionary_t;
-			}
-			throw DataTypeException("Invalid object keytype");	
-		}
-		virtual std::string RRType()
-		{
-			return "RobotRaconteur::CMessageElementStructure";
-		}
-
-
-
-	};
-
-	
-	class ROBOTRACONTEUR_CORE_API MessageElementList : public MessageElementData
-	{
-	public:
-		std::vector<RR_INTRUSIVE_PTR<MessageElement> > Elements;
-
-
-		MessageElementList(const std::vector<RR_INTRUSIVE_PTR<MessageElement> >& e)
-		{
-			Elements=e;
-		}
-
-		virtual std::string GetTypeString()
-		{
-			return "varvalue{list}";
-		}
-		virtual DataTypes GetTypeID()
-		{
-			return DataTypes_list_t;	
-		}
-		virtual std::string RRType()
-		{
-			return "RobotRaconteur::CMessageElementStructure";
-		}
-
-
-
-	};
-
-	class ROBOTRACONTEUR_CORE_API MessageElementMultiDimArray : public MessageElementData
-	{
-	public:
-
-
-		std::vector<RR_INTRUSIVE_PTR<MessageElement> > Elements;
-
-		virtual ~MessageElementMultiDimArray() {}
-
-		MessageElementMultiDimArray(const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &e);
-
-		virtual std::string GetTypeString()
-		{
-			DataTypes rrt=GetTypeID();
-
-			
-			std::string elementtype=GetRRDataTypeString(rrt);
-
-			return elementtype + "[*]";
-
-		}
-		virtual DataTypes GetTypeID()
-		{
-			return DataTypes_multidimarray_t;
-		}
-		virtual std::string RRType()
-		{
-			return "RobotRaconteur::MessageElementMultiDimArray";
-		}
-	};
-
-	class ROBOTRACONTEUR_CORE_API MessageElementPod : public MessageElementData
-	{
-	public:
-				
-		std::vector<RR_INTRUSIVE_PTR<MessageElement> > Elements;
-
-		MessageElementPod(const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_);
-
-		virtual std::string GetTypeString()
-		{
-			return "";
-		}
-		virtual DataTypes GetTypeID()
-		{
-			return DataTypes_pod_t;
-		}
-		virtual std::string RRType()
-		{
-			return "RobotRaconteur::MessageElementPod";
-		}
-	};
-
-	class ROBOTRACONTEUR_CORE_API MessageElementPodArray : public MessageElementData
-	{
-	public:
-
-		std::string Type;
-		std::vector<RR_INTRUSIVE_PTR<MessageElement> > Elements;
-
-		MessageElementPodArray(const std::string& type_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_);
-
-		virtual std::string GetTypeString()
-		{
-			return Type;
-		}
-		virtual DataTypes GetTypeID()
-		{
-			return DataTypes_pod_array_t;
-		}
-		virtual std::string RRType()
-		{
-			return "RobotRaconteur::MessageElementPodArray";
-		}
-	};
-
-	class ROBOTRACONTEUR_CORE_API MessageElementPodMultiDimArray : public MessageElementData
-	{
-	public:
-
-		std::string Type;
-		std::vector<RR_INTRUSIVE_PTR<MessageElement> > Elements;
-
-		MessageElementPodMultiDimArray(const std::string& type_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_);
-
-		virtual std::string GetTypeString()
-		{
-			return Type;
-		}
-		virtual DataTypes GetTypeID()
-		{
-			return DataTypes_pod_multidimarray_t;
-		}
-		virtual std::string RRType()
-		{
-			return "RobotRaconteur::MessageElementPodMultiDimArray";
-		}
-	};
-
-	class ROBOTRACONTEUR_CORE_API MessageElementNamedArray : public MessageElementData
-	{
-	public:
-
-		std::string Type;
-		std::vector<RR_INTRUSIVE_PTR<MessageElement> > Elements;
-
-		MessageElementNamedArray(const std::string& type_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_);
-
-		virtual std::string GetTypeString()
-		{
-			return Type;
-		}
-		virtual DataTypes GetTypeID()
-		{
-			return DataTypes_namedarray_array_t;
-		}
-		virtual std::string RRType()
-		{
-			return "RobotRaconteur::MessageElementNamedArray";
-		}
-	};
-
-	class ROBOTRACONTEUR_CORE_API MessageElementNamedMultiDimArray : public MessageElementData
-	{
-	public:
-
-		std::string Type;
-		std::vector<RR_INTRUSIVE_PTR<MessageElement> > Elements;
-
-		MessageElementNamedMultiDimArray(const std::string& type_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_);
-
-		virtual std::string GetTypeString()
-		{
-			return Type;
-		}
-		virtual DataTypes GetTypeID()
-		{
-			return DataTypes_namedarray_multidimarray_t;
-		}
-		virtual std::string RRType()
-		{
-			return "RobotRaconteur::MessageElementNamedMultiDimArray";
-		}
-	};
-
 
 	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<Message> CreateMessage();
 	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageHeader> CreateMessageHeader();
@@ -541,21 +312,8 @@ public:
 	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageEntry> CreateMessageEntry(MessageEntryType t, const std::string& n);
 	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElement> CreateMessageElement();
 	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElement> CreateMessageElement(const std::string& name, RR_INTRUSIVE_PTR<MessageElementData> datin);
-	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementStructure> CreateMessageElementStructure(const std::string& type_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_);
-	template <typename T>
-	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementMap<T> > CreateMessageElementMap(const std::vector<RR_INTRUSIVE_PTR<MessageElement> >& e)
-	{
-		return new MessageElementMap<T>(e);
-	}
-	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementMultiDimArray> CreateMessageElementMultiDimArray(const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &e);
-	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementList> CreateMessageElementList(const std::vector<RR_INTRUSIVE_PTR<MessageElement> >& e);
-	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementPod> CreateMessageElementPod(const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_);
-	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementPodArray> CreateMessageElementPodArray(const std::string& type_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_);
-	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> CreateMessageElementPodMultiDimArray(const std::string& type_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_);
-	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNamedArray> CreateMessageElementNamedArray(const std::string& type_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_);
-	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> CreateMessageElementNamedMultiDimArray(const std::string& type_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_);
-
-
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNestedElementList> CreateMessageElementNestedElementList(DataTypes type_, const std::string& type_name_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_);
+	
 	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<Message> ShallowCopyMessage(RR_INTRUSIVE_PTR<Message> m);
 	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageEntry> ShallowCopyMessageEntry(RR_INTRUSIVE_PTR<MessageEntry> mm);
 	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElement> ShallowCopyMessageElement(RR_INTRUSIVE_PTR<MessageElement> mm);
@@ -703,7 +461,7 @@ public:
 	{
 		RR_SHARED_PTR<N> node1 = node.lock();
 		if (!node1) throw InvalidOperationException("Node has been released");
-		RR_INTRUSIVE_PTR<RRMultiDimArray<T> > a= RobotRaconteur::rr_cast<RRMultiDimArray<T> >(node1->template UnpackMultiDimArray<T>(m->CastData<MessageElementMultiDimArray>()));		
+		RR_INTRUSIVE_PTR<RRMultiDimArray<T> > a= RobotRaconteur::rr_cast<RRMultiDimArray<T> >(node1->template UnpackMultiDimArray<T>(m->CastDataToNestedList(DataTypes_multidimarray_t)));		
 		if (!a) throw NullValueException("Arrays must not be null");
 		return a;
 	}
@@ -718,7 +476,7 @@ public:
 	{
 		RR_SHARED_PTR<N> node1 = node.lock();
 		if (!node1) throw InvalidOperationException("Node has been released");
-		return RobotRaconteur::rr_cast<T>(node1->UnpackStructure(m->CastData<RobotRaconteur::MessageElementStructure>()));
+		return RobotRaconteur::rr_cast<T>(node1->UnpackStructure(m->CastData<RobotRaconteur::MessageElementNestedElementList>()));
 	}
 
 	template<typename T>
@@ -740,7 +498,7 @@ public:
 	{
 		RR_SHARED_PTR<N> node1 = node.lock();
 		if (!node1) throw InvalidOperationException("Node has been released");
-		return node1->template UnpackMapType<K,T>(m->CastData<RobotRaconteur::MessageElementMap<K> >());
+		return node1->template UnpackMapType<K,T>(m->CastData<RobotRaconteur::MessageElementNestedElementList>());
 	}
 
 	template<typename T, typename N>
@@ -748,7 +506,7 @@ public:
 	{
 		RR_SHARED_PTR<N> node1 = node.lock();
 		if (!node1) throw InvalidOperationException("Node has been released");
-		return node1->template UnpackListType<T>(m->CastData<RobotRaconteur::MessageElementList>());
+		return node1->template UnpackListType<T>(m->CastDataToNestedList());
 	}
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
@@ -756,14 +514,6 @@ public:
 	using MessageHeaderPtr = RR_INTRUSIVE_PTR<MessageHeader>;
 	using MessageEntryPtr = RR_INTRUSIVE_PTR<MessageEntry>;
 	using MessageElementPtr = RR_INTRUSIVE_PTR<MessageElement>;
-	using MessageElementStructurePtr = RR_INTRUSIVE_PTR<MessageElementStructure>;
-	template <typename T> using MessageElementMapPtr = RR_INTRUSIVE_PTR<MessageElementMap<T> >;
-	using MessageElementListPtr = RR_INTRUSIVE_PTR<MessageElementList>;
-	using MessageElementMultiDimArrayPtr = RR_INTRUSIVE_PTR<MessageElementMultiDimArray>;
-	using MessageElementPodPtr = RR_INTRUSIVE_PTR<MessageElementPod>;
-	using MessageElementPodArrayPtr = RR_INTRUSIVE_PTR<MessageElementPodArray>;
-	using MessageElementPodMultiDimArrayPtr = RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray>;
-	using MessageElementNamedArrayPtr = RR_INTRUSIVE_PTR<MessageElementNamedArray>;
-	using MessageElementNamedMultiDimArrayPtr = RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray>;
+	using MessageElementNestedElementListPtr = RR_INTRUSIVE_PTR<MessageElementNestedElementList>;	
 #endif
 }

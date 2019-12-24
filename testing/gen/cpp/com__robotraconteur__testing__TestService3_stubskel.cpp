@@ -295,7 +295,7 @@ std::string objecttype=res.get<1>();
 if (objecttype=="teststruct3") return RobotRaconteur::rr_cast<RobotRaconteur::StructureStub>(RR_MAKE_SHARED<teststruct3_stub>(GetNode()));
 throw RobotRaconteur::ServiceException("Invalid structure stub type.");
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementStructure> com__robotraconteur__testing__TestService3Factory::PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> structin)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> com__robotraconteur__testing__TestService3Factory::PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> structin)
 {
 std::string type=structin->RRType();boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);
 std::string servicetype=res.get<0>();
@@ -305,7 +305,7 @@ RR_SHARED_PTR<RobotRaconteur::StructureStub> stub=FindStructureStub(type);
 return stub->PackStructure(structin);
 throw RobotRaconteur::ServiceException("Invalid structure stub type.");
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> com__robotraconteur__testing__TestService3Factory::UnpackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementStructure> mstructin)
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> com__robotraconteur__testing__TestService3Factory::UnpackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> mstructin)
 {
 std::string type=mstructin->GetTypeString();boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);
 std::string servicetype=res.get<0>();
@@ -315,7 +315,7 @@ RR_SHARED_PTR<RobotRaconteur::StructureStub> stub=FindStructureStub(type);
 return stub->UnpackStructure(mstructin);
 throw RobotRaconteur::ServiceException("Invalid structure stub type.");
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementPodArray> com__robotraconteur__testing__TestService3Factory::PackPodArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> structin)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> com__robotraconteur__testing__TestService3Factory::PackPodArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> structin)
 {
 std::string type=structin->RRElementTypeString();
 boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);
@@ -326,7 +326,7 @@ if (objecttype=="testpod1") return RobotRaconteur::PodStub_PackPodArray(RobotRac
 if (objecttype=="testpod2") return RobotRaconteur::PodStub_PackPodArray(RobotRaconteur::rr_cast<RobotRaconteur::RRPodArray<testpod2> >(structin));
 throw RobotRaconteur::ServiceException("Invalid pod type.");
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> com__robotraconteur__testing__TestService3Factory::UnpackPodArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementPodArray> mstructin)
+RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> com__robotraconteur__testing__TestService3Factory::UnpackPodArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> mstructin)
 {
 std::string type=mstructin->GetTypeString();
 boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);
@@ -337,7 +337,7 @@ if (objecttype=="testpod1") return RobotRaconteur::PodStub_UnpackPodArray<testpo
 if (objecttype=="testpod2") return RobotRaconteur::PodStub_UnpackPodArray<testpod2>(mstructin);
 throw RobotRaconteur::ServiceException("Invalid pod type.");
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementPodMultiDimArray> com__robotraconteur__testing__TestService3Factory::PackPodMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> structin)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> com__robotraconteur__testing__TestService3Factory::PackPodMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> structin)
 {
 std::string type=structin->RRElementTypeString();
 boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);
@@ -348,7 +348,7 @@ if (objecttype=="testpod1") return RobotRaconteur::PodStub_PackPodMultiDimArray(
 if (objecttype=="testpod2") return RobotRaconteur::PodStub_PackPodMultiDimArray(RobotRaconteur::rr_cast<RobotRaconteur::RRPodMultiDimArray<testpod2> >(structin));
 throw RobotRaconteur::ServiceException("Invalid pod type.");
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> com__robotraconteur__testing__TestService3Factory::UnpackPodMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementPodMultiDimArray> mstructin)
+RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> com__robotraconteur__testing__TestService3Factory::UnpackPodMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> mstructin)
 {
 std::string type=mstructin->GetTypeString();
 boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);
@@ -359,7 +359,7 @@ if (objecttype=="testpod1") return RobotRaconteur::PodStub_UnpackPodMultiDimArra
 if (objecttype=="testpod2") return RobotRaconteur::PodStub_UnpackPodMultiDimArray<testpod2>(mstructin);
 throw RobotRaconteur::ServiceException("Invalid pod type.");
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNamedArray> com__robotraconteur__testing__TestService3Factory::PackNamedArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> structin)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> com__robotraconteur__testing__TestService3Factory::PackNamedArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> structin)
 {
 std::string type=structin->RRElementTypeString();
 boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);
@@ -373,7 +373,7 @@ if (objecttype=="pixel") return RobotRaconteur::NamedArrayStub_PackNamedArray(Ro
 if (objecttype=="pixel2") return RobotRaconteur::NamedArrayStub_PackNamedArray(RobotRaconteur::rr_cast<RobotRaconteur::RRNamedArray<pixel2> >(structin));
 throw RobotRaconteur::ServiceException("Invalid namedarray type.");
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> com__robotraconteur__testing__TestService3Factory::UnpackNamedArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNamedArray> mstructin)
+RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> com__robotraconteur__testing__TestService3Factory::UnpackNamedArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> mstructin)
 {
 std::string type=mstructin->GetTypeString();
 boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);
@@ -387,7 +387,7 @@ if (objecttype=="pixel") return RobotRaconteur::NamedArrayStub_UnpackNamedArray<
 if (objecttype=="pixel2") return RobotRaconteur::NamedArrayStub_UnpackNamedArray<pixel2>(mstructin);
 throw RobotRaconteur::ServiceException("Invalid namedarray type.");
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNamedMultiDimArray> com__robotraconteur__testing__TestService3Factory::PackNamedMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> structin)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> com__robotraconteur__testing__TestService3Factory::PackNamedMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> structin)
 {
 std::string type=structin->RRElementTypeString();
 boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);
@@ -401,7 +401,7 @@ if (objecttype=="pixel") return RobotRaconteur::NamedArrayStub_PackNamedMultiDim
 if (objecttype=="pixel2") return RobotRaconteur::NamedArrayStub_PackNamedMultiDimArray(RobotRaconteur::rr_cast<RobotRaconteur::RRNamedMultiDimArray<pixel2> >(structin));
 throw RobotRaconteur::ServiceException("Invalid namedarray type.");
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> com__robotraconteur__testing__TestService3Factory::UnpackNamedMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNamedMultiDimArray> mstructin)
+RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> com__robotraconteur__testing__TestService3Factory::UnpackNamedMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> mstructin)
 {
 std::string type=mstructin->GetTypeString();
 boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);
@@ -469,7 +469,7 @@ if (rr_res.get<1>()=="test_exception4") return RR_MAKE_SHARED<test_exception4>(r
 return rr_exp;
 }
 
-RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementStructure> teststruct3_stub::PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> s)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> teststruct3_stub::PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> s)
 {
 RR_INTRUSIVE_PTR<teststruct3 > s2=RobotRaconteur::rr_cast<teststruct3 >(s);
 std::vector<RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> > vret;
@@ -499,9 +499,9 @@ vret.push_back(RobotRaconteur::MessageElement_PackListElement<RobotRaconteur::RR
 vret.push_back(RobotRaconteur::MessageElement_PackVarTypeElement(RRGetNodeWeak(),"t9",s2->t9));
 vret.push_back(RobotRaconteur::MessageElement_PackVarTypeElement(RRGetNodeWeak(),"t10",s2->t10));
 vret.push_back(RobotRaconteur::MessageElement_PackVarTypeElement(RRGetNodeWeak(),"t11",s2->t11));
-return RobotRaconteur::CreateMessageElementStructure("com.robotraconteur.testing.TestService3.teststruct3",vret);
+return RobotRaconteur::CreateMessageElementNestedElementList(RobotRaconteur::DataTypes_structure_t,"com.robotraconteur.testing.TestService3.teststruct3",vret);
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> teststruct3_stub::UnpackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementStructure> m)
+RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> teststruct3_stub::UnpackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> m)
 {
 std::vector<RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> >& i = m->Elements;
 RR_INTRUSIVE_PTR<teststruct3 > ret(new teststruct3());

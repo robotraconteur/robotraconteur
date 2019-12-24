@@ -291,7 +291,7 @@ namespace RobotRaconteur
 					RR_INTRUSIVE_PTR<MessageElement> objectimplements_m;
 					if (ret->TryFindElement("objectimplements", objectimplements_m))
 					{
-						std::vector<std::string> objectimplements = RRListToStringVector(GetNode()->UnpackListType<RRArray<char> >(objectimplements_m->CastData<MessageElementList>()));
+						std::vector<std::string> objectimplements = RRListToStringVector(GetNode()->UnpackListType<RRArray<char> >(objectimplements_m->CastDataToNestedList(DataTypes_list_t)));
 						if (boost::range::find(objectimplements, objecttype2) != objectimplements.end())							
 						{
 							objecttype = objecttype2;								
@@ -1075,14 +1075,14 @@ namespace RobotRaconteur
 		}
 	}
 
-	/*RR_INTRUSIVE_PTR<MessageElementStructure> ClientContext::PackStructure(const RR_SHARED_PTR<void> &s)
+	/*RR_INTRUSIVE_PTR<MessageElementNestedElementList> ClientContext::PackStructure(const RR_SHARED_PTR<void> &s)
 	{
 	return GetServiceDef()->PackStructure(s);
 	;
 	}
 
 	template<typename T>
-	T ClientContext::UnpackStructure(const RR_INTRUSIVE_PTR<MessageElementStructure> &l)
+	T ClientContext::UnpackStructure(const RR_INTRUSIVE_PTR<MessageElementNestedElementList> &l)
 	{
 	return GetServiceDef()->UnpackStructure<T>(l);
 	}*/
@@ -1339,7 +1339,7 @@ namespace RobotRaconteur
 					RR_INTRUSIVE_PTR<MessageElement> objectimplements_m;
 					if (ret->TryFindElement("objectimplements", objectimplements_m))
 					{
-						std::vector<std::string> objectimplements = RRListToStringVector(GetNode()->UnpackListType<RRArray<char> >(objectimplements_m->CastData<MessageElementList>()));
+						std::vector<std::string> objectimplements = RRListToStringVector(GetNode()->UnpackListType<RRArray<char> >(objectimplements_m->CastDataToNestedList(DataTypes_list_t)));
 						if (boost::range::find(objectimplements, objecttype) != objectimplements.end())
 						{
 							type = objecttype;
@@ -1559,7 +1559,7 @@ namespace RobotRaconteur
 		{
 			{
 				boost::mutex::scoped_lock lock(pulled_service_defs_lock);
-				RR_INTRUSIVE_PTR<MessageElementList> l = ret->FindElement("servicedefs")->CastData<MessageElementList>();
+				RR_INTRUSIVE_PTR<MessageElementNestedElementList> l = ret->FindElement("servicedefs")->CastDataToNestedList(DataTypes_list_t);
 				if (!l) throw ServiceException("servicedefs cannot be null on connect");
 				BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement> l1, l->Elements)
 				{
@@ -1583,7 +1583,7 @@ namespace RobotRaconteur
 				RR_INTRUSIVE_PTR<MessageElement> objectimplements_m;
 				if (ret->TryFindElement("objectimplements", objectimplements_m))
 				{
-					std::vector<std::string> objectimplements = RRListToStringVector(GetNode()->UnpackListType<RRArray<char> >(objectimplements_m->CastData<MessageElementList>()));
+					std::vector<std::string> objectimplements = RRListToStringVector(GetNode()->UnpackListType<RRArray<char> >(objectimplements_m->CastDataToNestedList(DataTypes_list_t)));
 					if (boost::range::find(objectimplements, objecttype) != objectimplements.end())
 					{
 						type = objecttype;						
@@ -1965,7 +1965,7 @@ namespace RobotRaconteur
 					RR_INTRUSIVE_PTR<MessageElement> attributes;
 					if (ret3->TryFindElement("attributes", attributes))
 					{
-						RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > attributes1 = rr_cast<RRMap<std::string, RRValue> >((GetNode()->UnpackMapType<std::string, RRValue>(attributes->CastData<MessageElementMap<std::string> >())));
+						RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > attributes1 = rr_cast<RRMap<std::string, RRValue> >((GetNode()->UnpackMapType<std::string, RRValue>(attributes->CastDataToNestedList())));
 						if (attributes1)
 						{							
 							ret->attributes = attributes1;
@@ -1976,7 +1976,7 @@ namespace RobotRaconteur
 					RR_INTRUSIVE_PTR<MessageElement> extra_imports;
 					if (ret3->TryFindElement("extraimports", extra_imports))
 					{
-						RR_INTRUSIVE_PTR<RRList<RRArray<char> > > extra_imports1 = rr_cast<RRList<RRArray<char> > >(GetNode()->UnpackListType<RRArray<char> >(extra_imports->CastData<MessageElementList>()));
+						RR_INTRUSIVE_PTR<RRList<RRArray<char> > > extra_imports1 = rr_cast<RRList<RRArray<char> > >(GetNode()->UnpackListType<RRArray<char> >(extra_imports->CastDataToNestedList(DataTypes_list_t)));
 						if (extra_imports1)
 						{							
 							BOOST_FOREACH(RR_INTRUSIVE_PTR<RRArray<char> > import_, *extra_imports1)

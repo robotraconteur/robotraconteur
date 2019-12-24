@@ -25,41 +25,42 @@ namespace detail
 {
 namespace packing
 {
-	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementStructure> PackStructure(RR_INTRUSIVE_PTR<RRStructure> structure, RobotRaconteurNode* node);
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackStructure(RR_INTRUSIVE_PTR<RRStructure> structure, RobotRaconteurNode* node);
 
-	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRStructure> UnpackStructure(RR_INTRUSIVE_PTR<MessageElementStructure> structure, RobotRaconteurNode* node);
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRStructure> UnpackStructure(RR_INTRUSIVE_PTR<MessageElementNestedElementList> structure, RobotRaconteurNode* node);
 
-	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementPodArray> PackPodArray(RR_INTRUSIVE_PTR<RRPodBaseArray> structure, RobotRaconteurNode* node);
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackPodArray(RR_INTRUSIVE_PTR<RRPodBaseArray> structure, RobotRaconteurNode* node);
 
-	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRPodBaseArray> UnpackPodArray(RR_INTRUSIVE_PTR<MessageElementPodArray> structure, RobotRaconteurNode* node);
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRPodBaseArray> UnpackPodArray(RR_INTRUSIVE_PTR<MessageElementNestedElementList> structure, RobotRaconteurNode* node);
 
-	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> PackPodMultiDimArray(RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> structure, RobotRaconteurNode* node);
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackPodMultiDimArray(RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> structure, RobotRaconteurNode* node);
 
-	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> UnpackPodMultiDimArray(RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> structure, RobotRaconteurNode* node);
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> UnpackPodMultiDimArray(RR_INTRUSIVE_PTR<MessageElementNestedElementList> structure, RobotRaconteurNode* node);
 
-	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNamedArray> PackNamedArray(RR_INTRUSIVE_PTR<RRNamedBaseArray> structure, RobotRaconteurNode* node);
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackNamedArray(RR_INTRUSIVE_PTR<RRNamedBaseArray> structure, RobotRaconteurNode* node);
 
-	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRNamedBaseArray> UnpackNamedArray(RR_INTRUSIVE_PTR<MessageElementNamedArray> structure, RobotRaconteurNode* node);
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRNamedBaseArray> UnpackNamedArray(RR_INTRUSIVE_PTR<MessageElementNestedElementList> structure, RobotRaconteurNode* node);
 
-	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> PackNamedMultiDimArray(RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> structure, RobotRaconteurNode* node);
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackNamedMultiDimArray(RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> structure, RobotRaconteurNode* node);
 
-	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> UnpackNamedMultiDimArray(RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> structure, RobotRaconteurNode* node);
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> UnpackNamedMultiDimArray(RR_INTRUSIVE_PTR<MessageElementNestedElementList> structure, RobotRaconteurNode* node);
 
 	template <typename T>
-	RR_INTRUSIVE_PTR<MessageElementMultiDimArray> PackMultiDimArray(RR_INTRUSIVE_PTR<RRMultiDimArray<T> > arr)
+	RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackMultiDimArray(RR_INTRUSIVE_PTR<RRMultiDimArray<T> > arr)
 	{
-		if (!arr) return RR_INTRUSIVE_PTR<MessageElementMultiDimArray>();
+		if (!arr) return RR_INTRUSIVE_PTR<MessageElementNestedElementList>();
 
 		std::vector<RR_INTRUSIVE_PTR<MessageElement> > ar;
 		ar.push_back(CreateMessageElement("dims", arr->Dims));
 		ar.push_back(CreateMessageElement("array", arr->Array));
-		return CreateMessageElementMultiDimArray(ar);
+		return CreateMessageElementNestedElementList(DataTypes_multidimarray_t,"",ar);
 	}
 
 	template <typename T>
-	RR_INTRUSIVE_PTR<RRMultiDimArray<T> > UnpackMultiDimArray(RR_INTRUSIVE_PTR<MessageElementMultiDimArray> ar)
+	RR_INTRUSIVE_PTR<RRMultiDimArray<T> > UnpackMultiDimArray(RR_INTRUSIVE_PTR<MessageElementNestedElementList> ar)
 	{
 		if (!ar) return RR_INTRUSIVE_PTR<RRMultiDimArray<T> >();
+		if (ar->GetTypeID() != DataTypes_multidimarray_t) throw DataTypeMismatchException("Expected a multidimarray");
 
 		RR_INTRUSIVE_PTR<RRMultiDimArray<T> > arr = AllocateEmptyRRMultiDimArray<T>();
 		arr->Dims = MessageElement::FindElement(ar->Elements, "dims")->CastData<RRArray<uint32_t> >();
@@ -79,12 +80,12 @@ namespace packing
 	class PackMapTypeSupport
 	{
 	public:
-		static RR_INTRUSIVE_PTR<MessageElementMap<K> > PackMapType(RobotRaconteurNode* node, const RR_INTRUSIVE_PTR<RRValue> set)
+		static RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackMapType(RobotRaconteurNode* node, const RR_INTRUSIVE_PTR<RRValue> set)
 		{
 			BOOST_STATIC_ASSERT(sizeof(T) == 0);
 		}
 
-		static RR_INTRUSIVE_PTR<RRValue> UnpackMapType(RobotRaconteurNode* node, const RR_INTRUSIVE_PTR<MessageElementMap<K> > mset)
+		static RR_INTRUSIVE_PTR<RRValue> UnpackMapType(RobotRaconteurNode* node, const RR_INTRUSIVE_PTR<MessageElementNestedElementList> mset)
 		{
 			BOOST_STATIC_ASSERT(sizeof(T) == 0);
 		}
@@ -96,9 +97,9 @@ namespace packing
 	{
 	public:
 		template<typename U>
-		static RR_INTRUSIVE_PTR<MessageElementMap<int32_t> > PackMapType(RobotRaconteurNode* node, const U& set)
+		static RR_INTRUSIVE_PTR<MessageElementNestedElementList > PackMapType(RobotRaconteurNode* node, const U& set)
 		{
-			if (!set) return RR_INTRUSIVE_PTR<MessageElementMap<int32_t> >();
+			if (!set) return RR_INTRUSIVE_PTR<MessageElementNestedElementList>();
 
 			RR_INTRUSIVE_PTR<RRMap<int32_t, T> > set2 = rr_cast<RRMap<int32_t, T> >(set);
 
@@ -118,12 +119,13 @@ namespace packing
 				mret.push_back(m);
 			}
 
-			return CreateMessageElementMap<int32_t>(mret);
+			return CreateMessageElementNestedElementList(DataTypes_vector_t, "", mret);
 		}
 
-		static RR_INTRUSIVE_PTR<RRMap<int32_t, T> > UnpackMapType(RobotRaconteurNode* node, const RR_INTRUSIVE_PTR<MessageElementMap<int32_t> >& mset)
-		{
+		static RR_INTRUSIVE_PTR<RRMap<int32_t, T> > UnpackMapType(RobotRaconteurNode* node, const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& mset)
+		{			
 			if (!mset) return RR_INTRUSIVE_PTR<RRMap<int32_t, T> >();
+			if (mset->GetTypeID() != DataTypes_vector_t) throw DataTypeMismatchException("Expected an int32 map");
 
 			RR_INTRUSIVE_PTR<RRMap<int32_t, T> > ret = AllocateEmptyRRMap<int32_t, T>();
 
@@ -157,9 +159,9 @@ namespace packing
 	{
 	public:
 		template<typename U>
-		static RR_INTRUSIVE_PTR<MessageElementMap<std::string> > PackMapType(RobotRaconteurNode* node, const U& set)
+		static RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackMapType(RobotRaconteurNode* node, const U& set)
 		{
-			if (!set) return RR_INTRUSIVE_PTR<MessageElementMap<std::string> >();
+			if (!set) return RR_INTRUSIVE_PTR<MessageElementNestedElementList>();
 
 			RR_INTRUSIVE_PTR<RRMap<std::string, T> > set2 = rr_cast<RRMap<std::string, T> >(set);
 
@@ -174,12 +176,13 @@ namespace packing
 				mret.push_back(m);
 			}
 
-			return CreateMessageElementMap<std::string>(mret);
+			return CreateMessageElementNestedElementList(DataTypes_dictionary_t, "", mret);
 		}
 
-		static RR_INTRUSIVE_PTR<RRMap<std::string, T> > UnpackMapType(RobotRaconteurNode* node, const RR_INTRUSIVE_PTR<MessageElementMap<std::string> >& mset)
-		{
+		static RR_INTRUSIVE_PTR<RRMap<std::string, T> > UnpackMapType(RobotRaconteurNode* node, const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& mset)
+		{			
 			if (!mset) return RR_INTRUSIVE_PTR<RRMap<std::string, T> >();
+			if (mset->GetTypeID() != DataTypes_dictionary_t) throw DataTypeMismatchException("Expected a string map");
 
 			RR_INTRUSIVE_PTR<RRMap<std::string, T> > ret = AllocateEmptyRRMap<std::string, T>();
 
@@ -203,21 +206,21 @@ namespace packing
 	};
 
 	template<typename K, typename T, typename U>
-	RR_INTRUSIVE_PTR<MessageElementMap<K> > PackMapType(const U& set, RobotRaconteurNode* node)
+	RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackMapType(const U& set, RobotRaconteurNode* node)
 	{
 		return detail::packing::PackMapTypeSupport<K, T>::PackMapType(node, set);
 	}
 
 	template<typename K, typename T>
-	RR_INTRUSIVE_PTR<RRMap<K, T> > UnpackMapType(const RR_INTRUSIVE_PTR<MessageElementMap<K> >& mset, RobotRaconteurNode* node)
+	RR_INTRUSIVE_PTR<RRMap<K, T> > UnpackMapType(const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& mset, RobotRaconteurNode* node)
 	{
 		return detail::packing::PackMapTypeSupport<K, T>::UnpackMapType(node, mset);
 	}
 
 	template<typename T, typename U>
-	RR_INTRUSIVE_PTR<MessageElementList > PackListType(U& set, RobotRaconteurNode* node)
+	RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackListType(U& set, RobotRaconteurNode* node)
 	{
-		if (!set) return RR_INTRUSIVE_PTR<MessageElementList >();
+		if (!set) return RR_INTRUSIVE_PTR<MessageElementNestedElementList >();
 
 		RR_INTRUSIVE_PTR<RRList<T> > set2 = rr_cast<RRList<T> >(set);
 
@@ -239,13 +242,14 @@ namespace packing
 			++set2_iter;
 		}
 
-		return CreateMessageElementList(mret);
+		return CreateMessageElementNestedElementList(DataTypes_list_t, "", mret);
 	}
 
 	template<typename T>
-	RR_INTRUSIVE_PTR<RRList<T> > UnpackListType(const RR_INTRUSIVE_PTR<MessageElementList >& mset, RobotRaconteurNode* node)
-	{
+	RR_INTRUSIVE_PTR<RRList<T> > UnpackListType(const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& mset, RobotRaconteurNode* node)
+	{		
 		if (!mset) return RR_INTRUSIVE_PTR<RRList<T> >();
+		if (mset->GetTypeID() != DataTypes_list_t) throw DataTypeMismatchException("Expected message element list");
 
 		RR_INTRUSIVE_PTR<RRList<T> > ret = AllocateEmptyRRList<T>();
 
@@ -311,7 +315,7 @@ namespace packing
 		{
 			if (boost::is_base_of<RRStructure, T>::value)
 			{
-				return rr_cast<T>(UnpackStructure(mdata->CastData<MessageElementStructure>(),node));
+				return rr_cast<T>(UnpackStructure(mdata->CastDataToNestedList(DataTypes_structure_t),node));
 			}
 
 			return rr_cast<T>(UnpackVarType(mdata,node));
@@ -348,7 +352,7 @@ namespace packing
 		template<typename NodeType>
 		static RR_INTRUSIVE_PTR<RRMap<K, T> > UnpackAnyType(const RR_INTRUSIVE_PTR<MessageElement>& mdata, NodeType node)
 		{
-			return UnpackMapType<K, T>(mdata->CastData<MessageElementMap<K> >(),node);
+			return UnpackMapType<K, T>(mdata->CastDataToNestedList(),node);
 		}
 	};
 
@@ -365,7 +369,7 @@ namespace packing
 		template<typename NodeType>
 		static RR_INTRUSIVE_PTR<RRList<T> > UnpackAnyType(const RR_INTRUSIVE_PTR<MessageElement>& mdata, NodeType node)
 		{
-			return UnpackListType<T>(mdata->CastData<MessageElementList >(),node);
+			return UnpackListType<T>(mdata->CastDataToNestedList(),node);
 		}
 	};
 
@@ -382,7 +386,7 @@ namespace packing
 		template<typename NodeType>
 		static RR_INTRUSIVE_PTR<RRMultiDimArray<T> > UnpackAnyType(const RR_INTRUSIVE_PTR<MessageElement>& mdata, NodeType node)
 		{
-			return UnpackMultiDimArray<T>(mdata->CastData<MessageElementMultiDimArray >());
+			return UnpackMultiDimArray<T>(mdata->CastDataToNestedList(DataTypes_multidimarray_t));
 		}
 	};
 

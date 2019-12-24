@@ -19,16 +19,16 @@ public:
 virtual std::string GetServiceName();
 virtual std::string DefString();
 virtual RR_SHARED_PTR<RobotRaconteur::StructureStub> FindStructureStub(const std::string& s);
-virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementStructure> PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> structin);
-virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> UnpackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementStructure> mstructin);
-virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementPodArray> PackPodArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> structure);
-virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> UnpackPodArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementPodArray> structure);
-virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementPodMultiDimArray> PackPodMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> structure);
-virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> UnpackPodMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementPodMultiDimArray> structure);
-virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNamedArray> PackNamedArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> structure);
-virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> UnpackNamedArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNamedArray> structure);
-virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNamedMultiDimArray> PackNamedMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> structure);
-virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> UnpackNamedMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNamedMultiDimArray> structure);
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> structin);
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> UnpackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> mstructin);
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackPodArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> structure);
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> UnpackPodArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> structure);
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackPodMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> structure);
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> UnpackPodMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> structure);
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackNamedArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> structure);
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> UnpackNamedArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> structure);
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackNamedMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> structure);
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> UnpackNamedMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> structure);
 virtual RR_SHARED_PTR<RobotRaconteur::ServiceStub> CreateStub(const std::string& objecttype, const std::string& path, RR_SHARED_PTR<RobotRaconteur::ClientContext> context);
 virtual RR_SHARED_PTR<RobotRaconteur::ServiceSkel> CreateSkel(const std::string& objecttype, const std::string& path, RR_SHARED_PTR<RobotRaconteur::RRObject> obj, RR_SHARED_PTR<RobotRaconteur::ServerContext> context);
 virtual void DownCastAndThrowException(RobotRaconteur::RobotRaconteurException& exp);
@@ -39,8 +39,8 @@ class teststruct3_stub : public virtual RobotRaconteur::StructureStub
 {
 public:
 teststruct3_stub(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurNode> node) : RobotRaconteur::StructureStub(node) {}
-virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementStructure> PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> s);
-virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> UnpackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementStructure> m);
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> s);
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> UnpackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> m);
 };
 
 class async_testroot3
@@ -1730,9 +1730,9 @@ public:
     template<typename U>
     static void UnpackField(com::robotraconteur::testing::TestService3::testpod1& v, const std::string& name, U& in)
     {
-    PodStub_UnpackPodFromArray(v, MessageElement::FindElement(in, name)->template CastData<MessageElementPodArray>());
+    PodStub_UnpackPodFromArray(v, MessageElement::FindElement(in, name)->CastDataToNestedList(DataTypes_pod_array_t));
     }
-    static RR_INTRUSIVE_PTR<MessageElementPod> PackToMessageElementPod(const com::robotraconteur::testing::TestService3::testpod1& v)
+    static RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackToMessageElementPod(const com::robotraconteur::testing::TestService3::testpod1& v)
     {
     std::vector<RR_INTRUSIVE_PTR<MessageElement> > o;
     PodStub_PackField(v.d1, "d1", o);
@@ -1747,9 +1747,9 @@ public:
     PodStub_PackField(v.t2, "t2", o);
     PodStub_PackField(v.t3, "t3", o);
     PodStub_PackField(v.t4, "t4", o);
-    return RobotRaconteur::CreateMessageElementPod(o);
+    return RobotRaconteur::CreateMessageElementNestedElementList(DataTypes_pod_t,"",o);
     }
-    static void UnpackFromMessageElementPod(com::robotraconteur::testing::TestService3::testpod1& v, RR_INTRUSIVE_PTR<MessageElementPod> m)
+    static void UnpackFromMessageElementPod(com::robotraconteur::testing::TestService3::testpod1& v, RR_INTRUSIVE_PTR<MessageElementNestedElementList> m)
     {
     if (!m) throw NullValueException("Unexpected null value for pod unpack");
     std::vector<RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> >& i = m->Elements;
@@ -1779,17 +1779,17 @@ public:
     template<typename U>
     static void UnpackField(com::robotraconteur::testing::TestService3::testpod2& v, const std::string& name, U& in)
     {
-    PodStub_UnpackPodFromArray(v, MessageElement::FindElement(in, name)->template CastData<MessageElementPodArray>());
+    PodStub_UnpackPodFromArray(v, MessageElement::FindElement(in, name)->CastDataToNestedList(DataTypes_pod_array_t));
     }
-    static RR_INTRUSIVE_PTR<MessageElementPod> PackToMessageElementPod(const com::robotraconteur::testing::TestService3::testpod2& v)
+    static RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackToMessageElementPod(const com::robotraconteur::testing::TestService3::testpod2& v)
     {
     std::vector<RR_INTRUSIVE_PTR<MessageElement> > o;
     PodStub_PackField(v.i1, "i1", o);
     PodStub_PackField(v.i2, "i2", o);
     PodStub_PackField(v.i3, "i3", o);
-    return RobotRaconteur::CreateMessageElementPod(o);
+    return RobotRaconteur::CreateMessageElementNestedElementList(DataTypes_pod_t,"",o);
     }
-    static void UnpackFromMessageElementPod(com::robotraconteur::testing::TestService3::testpod2& v, RR_INTRUSIVE_PTR<MessageElementPod> m)
+    static void UnpackFromMessageElementPod(com::robotraconteur::testing::TestService3::testpod2& v, RR_INTRUSIVE_PTR<MessageElementNestedElementList> m)
     {
     if (!m) throw NullValueException("Unexpected null value for pod unpack");
     std::vector<RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> >& i = m->Elements;

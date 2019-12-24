@@ -243,53 +243,53 @@ uint32_t RobotRaconteurNode::RegisterTransport(RR_SHARED_PTR<Transport> transpor
 }
 
 
-RR_INTRUSIVE_PTR<MessageElementStructure> RobotRaconteurNode::PackStructure(RR_INTRUSIVE_PTR<RRStructure> structure)
+RR_INTRUSIVE_PTR<MessageElementNestedElementList> RobotRaconteurNode::PackStructure(RR_INTRUSIVE_PTR<RRStructure> structure)
 {
 	return detail::packing::PackStructure(structure, this);
 }
 
-RR_INTRUSIVE_PTR<RRStructure> RobotRaconteurNode::UnpackStructure(RR_INTRUSIVE_PTR<MessageElementStructure> structure)
+RR_INTRUSIVE_PTR<RRStructure> RobotRaconteurNode::UnpackStructure(RR_INTRUSIVE_PTR<MessageElementNestedElementList> structure)
 {
 	return detail::packing::UnpackStructure(structure, this);
 }
 
-RR_INTRUSIVE_PTR<MessageElementPodArray> RobotRaconteurNode::PackPodArray(RR_INTRUSIVE_PTR<RRPodBaseArray> a)
+RR_INTRUSIVE_PTR<MessageElementNestedElementList> RobotRaconteurNode::PackPodArray(RR_INTRUSIVE_PTR<RRPodBaseArray> a)
 {
 	return detail::packing::PackPodArray(a, this);
 }
 
-RR_INTRUSIVE_PTR<RRPodBaseArray> RobotRaconteurNode::UnpackPodArray(RR_INTRUSIVE_PTR<MessageElementPodArray> a)
+RR_INTRUSIVE_PTR<RRPodBaseArray> RobotRaconteurNode::UnpackPodArray(RR_INTRUSIVE_PTR<MessageElementNestedElementList> a)
 {
 	return detail::packing::UnpackPodArray(a, this);
 }
 
-RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> RobotRaconteurNode::PackPodMultiDimArray(RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> a)
+RR_INTRUSIVE_PTR<MessageElementNestedElementList> RobotRaconteurNode::PackPodMultiDimArray(RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> a)
 {
 	return detail::packing::PackPodMultiDimArray(a, this);
 }
 
-RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> RobotRaconteurNode::UnpackPodMultiDimArray(RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> a)
+RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> RobotRaconteurNode::UnpackPodMultiDimArray(RR_INTRUSIVE_PTR<MessageElementNestedElementList> a)
 {
 	return detail::packing::UnpackPodMultiDimArray(a, this);
 }
 
 
-RR_INTRUSIVE_PTR<MessageElementNamedArray> RobotRaconteurNode::PackNamedArray(RR_INTRUSIVE_PTR<RRNamedBaseArray> a)
+RR_INTRUSIVE_PTR<MessageElementNestedElementList> RobotRaconteurNode::PackNamedArray(RR_INTRUSIVE_PTR<RRNamedBaseArray> a)
 {
 	return detail::packing::PackNamedArray(a, this);
 }
 
-RR_INTRUSIVE_PTR<RRNamedBaseArray> RobotRaconteurNode::UnpackNamedArray(RR_INTRUSIVE_PTR<MessageElementNamedArray> a)
+RR_INTRUSIVE_PTR<RRNamedBaseArray> RobotRaconteurNode::UnpackNamedArray(RR_INTRUSIVE_PTR<MessageElementNestedElementList> a)
 {
 	return detail::packing::UnpackNamedArray(a, this);
 }
 
-RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> RobotRaconteurNode::PackNamedMultiDimArray(RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> a)
+RR_INTRUSIVE_PTR<MessageElementNestedElementList> RobotRaconteurNode::PackNamedMultiDimArray(RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> a)
 {
 	return detail::packing::PackNamedMultiDimArray(a, this);
 }
 
-RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> RobotRaconteurNode::UnpackNamedMultiDimArray(RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> a)
+RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> RobotRaconteurNode::UnpackNamedMultiDimArray(RR_INTRUSIVE_PTR<MessageElementNestedElementList> a)
 {
 	return detail::packing::UnpackNamedMultiDimArray(a, this);
 }
@@ -1114,7 +1114,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_INTRUSIVE_PTR<Me
 							n++;
 						}
 
-						eret->AddElement("servicedefs", CreateMessageElementList(servicedef_list));
+						eret->AddElement("servicedefs", CreateMessageElementNestedElementList(DataTypes_list_t, "", servicedef_list));
 					}
 				}
 				catch (std::exception&)
@@ -1182,7 +1182,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_INTRUSIVE_PTR<Me
 							throw AuthenticationException("Credentials not provided");
 						}
 
-						RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials = rr_cast<RRMap<std::string,RRValue> >(UnpackMapType<std::string, RRValue>(credentials_el->CastData<MessageElementMap<std::string> >()));
+						RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials = rr_cast<RRMap<std::string,RRValue> >(UnpackMapType<std::string, RRValue>(credentials_el->CastDataToNestedList(DataTypes_dictionary_t)));
 						if (!credentials)
 						{
 							throw AuthenticationException("Credentials cannot be null");

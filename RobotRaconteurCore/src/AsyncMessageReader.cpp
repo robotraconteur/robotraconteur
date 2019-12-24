@@ -715,53 +715,17 @@ namespace RobotRaconteur
 					continue;
 				}
 				case DataTypes_structure_t:
-				{
-					state() = MessageElement_readstruct1;
-					continue;
-				}
 				case DataTypes_vector_t:
-				{
-					state() = MessageElement_readvector1;
-					continue;
-				}
 				case DataTypes_dictionary_t:
-				{
-					state() = MessageElement_readdictionary1;
-					continue;
-				}
 				case DataTypes_multidimarray_t:
-				{
-					state() = MessageElement_readmultiarray1;
-					continue;
-				}
 				case DataTypes_list_t:
-				{
-					state() = MessageElement_readlist1;
-					continue;
-				}
 				case DataTypes_pod_t:
-				{
-					state() = MessageElement_readpod1;
-					continue;
-				}
 				case DataTypes_pod_array_t:
-				{
-					state() = MessageElement_readpodarray1;
-					continue;
-				}
 				case DataTypes_pod_multidimarray_t:
-				{
-					state() = MessageElement_readpodmultidimarray1;
-					continue;
-				}
 				case DataTypes_namedarray_array_t:
-				{
-					state() = MessageElement_readnamedarrayarray1;
-					continue;
-				}
 				case DataTypes_namedarray_multidimarray_t:
 				{
-					state() = MessageElement_readnamedarraymultidimarray1;
+					state() = MessageElement_readnested1;
 					continue;
 				}
 				default:
@@ -850,312 +814,34 @@ namespace RobotRaconteur
 
 			}
 
-			//Read structure
-			case MessageElement_readstruct1:
+			//Read nested element list
+			case MessageElement_readnested1:
 			{
 				MessageElement* el = data<MessageElement>();
 				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
-				RR_INTRUSIVE_PTR<MessageElementStructure> s = CreateMessageElementStructure(el->ElementTypeName, v);
+				RR_INTRUSIVE_PTR<MessageElementNestedElementList> s = CreateMessageElementNestedElementList(el->ElementType,el->ElementTypeName, v);
 				uint32_t l = el->ElementSize;
 				el->SetData(s);
 				el->ElementSize = l;
-				push_state(MessageElement_readstruct2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
+				push_state(MessageElement_readnested2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
 
 			}
-			case MessageElement_readstruct2:
+			case MessageElement_readnested2:
 			{
-				MessageElementStructure* s = data<MessageElementStructure>();
+				MessageElementNestedElementList* s = data<MessageElementNestedElementList>();
 				if (s->Elements.size() >= param1())
 				{
 					DO_POP_STATE();
 				}
 
-				state() = MessageElement_readstruct3;
+				state() = MessageElement_readnested3;
 			}
-			case MessageElement_readstruct3:
+			case MessageElement_readnested3:
 			{
 				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
-				MessageElementStructure* s = data<MessageElementStructure>();
+				MessageElementNestedElementList* s = data<MessageElementNestedElementList>();
 				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readstruct2, limit() - message_pos, el);
-				continue;
-			}
-
-			//Read int32 map
-			case MessageElement_readvector1:
-			{
-				MessageElement* el = data<MessageElement>();
-				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
-				RR_INTRUSIVE_PTR<MessageElementMap<int32_t> > s = CreateMessageElementMap<int32_t>(v);
-				uint32_t l = el->ElementSize;
-				el->SetData(s);
-				el->ElementSize = l;
-				push_state(MessageElement_readvector2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
-
-			}
-			case MessageElement_readvector2:
-			{
-				MessageElementMap<int32_t>* s = data<MessageElementMap<int32_t> >();
-				if (s->Elements.size() >= param1())
-				{
-					DO_POP_STATE();
-				}
-
-				state() = MessageElement_readvector3;
-			}
-			case MessageElement_readvector3:
-			{
-				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
-				MessageElementMap<int32_t>* s = data<MessageElementMap<int32_t> >();
-				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readvector2, limit() - message_pos, el);
-				continue;
-			}
-			//Read string map
-			case MessageElement_readdictionary1:
-			{
-				MessageElement* el = data<MessageElement>();
-				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
-				RR_INTRUSIVE_PTR<MessageElementMap<std::string> > s = CreateMessageElementMap<std::string>(v);
-				uint32_t l = el->ElementSize;
-				el->SetData(s);
-				el->ElementSize = l;
-				push_state(MessageElement_readdictionary2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
-
-			}
-			case MessageElement_readdictionary2:
-			{
-				MessageElementMap<std::string>* s = data < MessageElementMap < std::string > >();
-				if (s->Elements.size() >= param1())
-				{
-					DO_POP_STATE();
-				}
-
-				state() = MessageElement_readdictionary3;
-			}
-			case MessageElement_readdictionary3:
-			{
-				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
-				MessageElementMap<std::string>* s = data<MessageElementMap<std::string> >();
-				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readdictionary2, limit() - message_pos, el);
-				continue;
-			}
-
-			//Read multidimarray
-			case MessageElement_readmultiarray1:
-			{
-				MessageElement* el = data<MessageElement>();
-				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
-				RR_INTRUSIVE_PTR<MessageElementMultiDimArray> s = CreateMessageElementMultiDimArray(v);
-				uint32_t l = el->ElementSize;
-				el->SetData(s);
-				el->ElementSize = l;
-				push_state(MessageElement_readmultiarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
-
-			}
-			case MessageElement_readmultiarray2:
-			{
-				MessageElementMultiDimArray* s = data<MessageElementMultiDimArray>();
-				if (s->Elements.size() >= param1())
-				{
-					DO_POP_STATE();
-				}
-
-				state() = MessageElement_readmultiarray3;
-			}
-			case MessageElement_readmultiarray3:
-			{
-				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
-				MessageElementMultiDimArray* s = data<MessageElementMultiDimArray>();
-				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readmultiarray2, limit() - message_pos, el);
-				continue;
-			}
-
-			//Read list
-			case MessageElement_readlist1:
-			{
-				MessageElement* el = data<MessageElement>();
-				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
-				RR_INTRUSIVE_PTR<MessageElementList> s = CreateMessageElementList(v);
-				uint32_t l = el->ElementSize;
-				el->SetData(s);
-				el->ElementSize = l;
-				push_state(MessageElement_readlist2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
-
-			}
-			case MessageElement_readlist2:
-			{
-				MessageElementList* s = data<MessageElementList>();
-				if (s->Elements.size() >= param1())
-				{
-					DO_POP_STATE();
-				}
-
-				state() = MessageElement_readlist3;
-			}
-			case MessageElement_readlist3:
-			{
-				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
-				MessageElementList* s = data<MessageElementList>();
-				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readlist2, limit() - message_pos, el);
-				continue;
-			}
-
-			//Read pod
-			case MessageElement_readpod1:
-			{
-				MessageElement* el = data<MessageElement>();
-				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
-				RR_INTRUSIVE_PTR<MessageElementPod> s = CreateMessageElementPod(v);
-				uint32_t l = el->ElementSize;
-				el->SetData(s);
-				el->ElementSize = l;
-				push_state(MessageElement_readpod2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
-
-			}
-			case MessageElement_readpod2:
-			{
-				MessageElementPod* s = data<MessageElementPod>();
-				if (s->Elements.size() >= param1())
-				{
-					DO_POP_STATE();
-				}
-
-				state() = MessageElement_readpod3;
-			}
-			case MessageElement_readpod3:
-			{
-				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
-				MessageElementPod* s = data<MessageElementPod>();
-				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readpod2, limit() - message_pos, el);
-				continue;
-			}
-
-			//Read podarray
-			case MessageElement_readpodarray1:
-			{
-				MessageElement* el = data<MessageElement>();
-				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
-				RR_INTRUSIVE_PTR<MessageElementPodArray> s = CreateMessageElementPodArray(el->ElementTypeName, v);
-				uint32_t l = el->ElementSize;
-				el->SetData(s);
-				el->ElementSize = l;
-				push_state(MessageElement_readpodarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
-
-			}
-			case MessageElement_readpodarray2:
-			{
-				MessageElementPodArray* s = data<MessageElementPodArray>();
-				if (s->Elements.size() >= param1())
-				{
-					DO_POP_STATE();
-				}
-
-				state() = MessageElement_readpodarray3;
-			}
-			case MessageElement_readpodarray3:
-			{
-				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
-				MessageElementPodArray* s = data<MessageElementPodArray>();
-				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readpodarray2, limit() - message_pos, el);
-				continue;
-			}
-
-			//Read podmultidimarray
-			case MessageElement_readpodmultidimarray1:
-			{
-				MessageElement* el = data<MessageElement>();
-				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
-				RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> s = CreateMessageElementPodMultiDimArray(el->ElementTypeName, v);
-				uint32_t l = el->ElementSize;
-				el->SetData(s);
-				el->ElementSize = l;
-				push_state(MessageElement_readpodmultidimarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
-
-			}
-			case MessageElement_readpodmultidimarray2:
-			{
-				MessageElementPodMultiDimArray* s = data<MessageElementPodMultiDimArray>();
-				if (s->Elements.size() >= param1())
-				{
-					DO_POP_STATE();
-				}
-
-				state() = MessageElement_readpodmultidimarray3;
-			}
-			case MessageElement_readpodmultidimarray3:
-			{
-				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
-				MessageElementPodMultiDimArray* s = data<MessageElementPodMultiDimArray>();
-				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readpodmultidimarray2, limit() - message_pos, el);
-				continue;
-			}
-
-			//Read namedarrayarray
-			case MessageElement_readnamedarrayarray1:
-			{
-				MessageElement* el = data<MessageElement>();
-				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
-				RR_INTRUSIVE_PTR<MessageElementNamedArray> s = CreateMessageElementNamedArray(el->ElementTypeName, v);
-				uint32_t l = el->ElementSize;
-				el->SetData(s);
-				el->ElementSize = l;
-				push_state(MessageElement_readnamedarrayarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
-
-			}
-			case MessageElement_readnamedarrayarray2:
-			{
-				MessageElementNamedArray* s = data<MessageElementNamedArray>();
-				if (s->Elements.size() >= param1())
-				{
-					DO_POP_STATE();
-				}
-
-				state() = MessageElement_readnamedarrayarray3;
-			}
-			case MessageElement_readnamedarrayarray3:
-			{
-				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
-				MessageElementNamedArray* s = data<MessageElementNamedArray>();
-				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readnamedarrayarray2, limit() - message_pos, el);
-				continue;
-			}
-
-			//Read namedarraymultidimarray
-			case MessageElement_readnamedarraymultidimarray1:
-			{
-				MessageElement* el = data<MessageElement>();
-				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
-				RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> s = CreateMessageElementNamedMultiDimArray(el->ElementTypeName, v);
-				uint32_t l = el->ElementSize;
-				el->SetData(s);
-				el->ElementSize = l;
-				push_state(MessageElement_readnamedarraymultidimarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
-
-			}
-			case MessageElement_readnamedarraymultidimarray2:
-			{
-				MessageElementNamedMultiDimArray* s = data<MessageElementNamedMultiDimArray>();
-				if (s->Elements.size() >= param1())
-				{
-					DO_POP_STATE();
-				}
-
-				state() = MessageElement_readnamedarraymultidimarray3;
-			}
-			case MessageElement_readnamedarraymultidimarray3:
-			{
-				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
-				MessageElementNamedMultiDimArray* s = data<MessageElementNamedMultiDimArray>();
-				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readnamedarraymultidimarray2, limit() - message_pos, el);
+				push_state(MessageElement_elementsize, MessageElement_readnested2, limit() - message_pos, el);
 				continue;
 			}
 
@@ -1757,53 +1443,17 @@ namespace RobotRaconteur
 					continue;
 				}
 				case DataTypes_structure_t:
-				{
-					state() = MessageElement_readstruct1;
-					continue;
-				}
 				case DataTypes_vector_t:
-				{
-					state() = MessageElement_readvector1;
-					continue;
-				}
 				case DataTypes_dictionary_t:
-				{
-					state() = MessageElement_readdictionary1;
-					continue;
-				}
 				case DataTypes_multidimarray_t:
-				{
-					state() = MessageElement_readmultiarray1;
-					continue;
-				}
 				case DataTypes_list_t:
-				{
-					state() = MessageElement_readlist1;
-					continue;
-				}
 				case DataTypes_pod_t:
-				{
-					state() = MessageElement_readpod1;
-					continue;
-				}
 				case DataTypes_pod_array_t:
-				{
-					state() = MessageElement_readpodarray1;
-					continue;
-				}
 				case DataTypes_pod_multidimarray_t:
-				{
-					state() = MessageElement_readpodmultidimarray1;
-					continue;
-				}
 				case DataTypes_namedarray_array_t:
-				{
-					state() = MessageElement_readnamedarrayarray1;
-					continue;
-				}
 				case DataTypes_namedarray_multidimarray_t:
 				{
-					state() = MessageElement_readnamedarraymultidimarray1;
+					state() = MessageElement_readnested1;
 					continue;
 				}
 				default:
@@ -1893,314 +1543,37 @@ namespace RobotRaconteur
 
 			}
 
-			//Read structure
-			case MessageElement_readstruct1:
+			//Read nested elements
+			case MessageElement_readnested1:
 			{
 				MessageElement* el = data<MessageElement>();
 				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
-				RR_INTRUSIVE_PTR<MessageElementStructure> s = CreateMessageElementStructure(el->ElementTypeName, v);
+				RR_INTRUSIVE_PTR<MessageElementNestedElementList> s = CreateMessageElementNestedElementList(el->ElementType, el->ElementTypeName, v);
 				uint32_t l = el->ElementSize;
 				el->SetData(s);
 				el->ElementSize = l;
-				push_state(MessageElement_readstruct2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
+				push_state(MessageElement_readnested2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
 
 			}
-			case MessageElement_readstruct2:
+			case MessageElement_readnested2:
 			{
-				MessageElementStructure* s = data<MessageElementStructure>();
+				MessageElementNestedElementList* s = data<MessageElementNestedElementList>();
 				if (s->Elements.size() >= param1())
 				{
 					DO_POP_STATE();
 				}
 
-				state() = MessageElement_readstruct3;
+				state() = MessageElement_readnested3;
 			}
-			case MessageElement_readstruct3:
+			case MessageElement_readnested3:
 			{
 				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
-				MessageElementStructure* s = data<MessageElementStructure>();
+				MessageElementNestedElementList* s = data<MessageElementNestedElementList>();
 				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readstruct2, limit() - message_pos, el);
+				push_state(MessageElement_elementsize, MessageElement_readnested2, limit() - message_pos, el);
 				continue;
 			}
-
-			//Read int32 map
-			case MessageElement_readvector1:
-			{
-				MessageElement* el = data<MessageElement>();
-				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
-				RR_INTRUSIVE_PTR<MessageElementMap<int32_t> > s = CreateMessageElementMap<int32_t>(v);
-				uint32_t l = el->ElementSize;
-				el->SetData(s);
-				el->ElementSize = l;
-				push_state(MessageElement_readvector2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
-
-			}
-			case MessageElement_readvector2:
-			{
-				MessageElementMap<int32_t>* s = data<MessageElementMap<int32_t> >();
-				if (s->Elements.size() >= param1())
-				{
-					DO_POP_STATE();
-				}
-
-				state() = MessageElement_readvector3;
-			}
-			case MessageElement_readvector3:
-			{
-				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
-				MessageElementMap<int32_t>* s = data<MessageElementMap<int32_t> >();
-				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readvector2, limit() - message_pos, el);
-				continue;
-			}
-			//Read string map
-			case MessageElement_readdictionary1:
-			{
-				MessageElement* el = data<MessageElement>();
-				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
-				RR_INTRUSIVE_PTR<MessageElementMap<std::string> > s = CreateMessageElementMap<std::string>(v);
-				uint32_t l = el->ElementSize;
-				el->SetData(s);
-				el->ElementSize = l;
-				push_state(MessageElement_readdictionary2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
-
-			}
-			case MessageElement_readdictionary2:
-			{
-				MessageElementMap<std::string>* s = data < MessageElementMap < std::string > > ();
-				if (s->Elements.size() >= param1())
-				{
-					DO_POP_STATE();
-				}
-
-				state() = MessageElement_readdictionary3;
-			}
-			case MessageElement_readdictionary3:
-			{
-				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
-				MessageElementMap<std::string>* s = data<MessageElementMap<std::string> >();
-				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readdictionary2, limit() - message_pos, el);
-				continue;
-			}
-
-			//Read multidimarray
-			case MessageElement_readmultiarray1:
-			{
-				MessageElement* el = data<MessageElement>();
-				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
-				RR_INTRUSIVE_PTR<MessageElementMultiDimArray> s = CreateMessageElementMultiDimArray(v);
-				uint32_t l = el->ElementSize;
-				el->SetData(s);
-				el->ElementSize = l;
-				push_state(MessageElement_readmultiarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
-
-			}
-			case MessageElement_readmultiarray2:
-			{
-				MessageElementMultiDimArray* s = data<MessageElementMultiDimArray>();
-				if (s->Elements.size() >= param1())
-				{
-					DO_POP_STATE();
-				}
-
-				state() = MessageElement_readmultiarray3;
-			}
-			case MessageElement_readmultiarray3:
-			{
-				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
-				MessageElementMultiDimArray* s = data<MessageElementMultiDimArray>();
-				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readmultiarray2, limit() - message_pos, el);
-				continue;
-			}
-			//Read pod
-			case MessageElement_readpod1:
-			{
-				MessageElement* el = data<MessageElement>();
-				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
-				RR_INTRUSIVE_PTR<MessageElementPod> s = CreateMessageElementPod(v);
-				uint32_t l = el->ElementSize;
-				el->SetData(s);
-				el->ElementSize = l;
-				push_state(MessageElement_readpod2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
-
-			}
-			case MessageElement_readpod2:
-			{
-				MessageElementPod* s = data<MessageElementPod>();
-				if (s->Elements.size() >= param1())
-				{
-					DO_POP_STATE();
-				}
-
-				state() = MessageElement_readpod3;
-			}
-			case MessageElement_readpod3:
-			{
-				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
-				MessageElementPod* s = data<MessageElementPod>();
-				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readpod2, limit() - message_pos, el);
-				continue;
-			}
-
-			//Read podarray
-			case MessageElement_readpodarray1:
-			{
-				MessageElement* el = data<MessageElement>();
-				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
-				RR_INTRUSIVE_PTR<MessageElementPodArray> s = CreateMessageElementPodArray(el->ElementTypeName, v);
-				uint32_t l = el->ElementSize;
-				el->SetData(s);
-				el->ElementSize = l;
-				push_state(MessageElement_readpodarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
-
-			}
-			case MessageElement_readpodarray2:
-			{
-				MessageElementPodArray* s = data<MessageElementPodArray>();
-				if (s->Elements.size() >= param1())
-				{
-					DO_POP_STATE();
-				}
-
-				state() = MessageElement_readpodarray3;
-			}
-			case MessageElement_readpodarray3:
-			{
-				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
-				MessageElementPodArray* s = data<MessageElementPodArray>();
-				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readpodarray2, limit() - message_pos, el);
-				continue;
-			}
-
-			//Read podmultidimarray
-			case MessageElement_readpodmultidimarray1:
-			{
-				MessageElement* el = data<MessageElement>();
-				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
-				RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> s = CreateMessageElementPodMultiDimArray(el->ElementTypeName, v);
-				uint32_t l = el->ElementSize;
-				el->SetData(s);
-				el->ElementSize = l;
-				push_state(MessageElement_readpodmultidimarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
-
-			}
-			case MessageElement_readpodmultidimarray2:
-			{
-				MessageElementPodMultiDimArray* s = data<MessageElementPodMultiDimArray>();
-				if (s->Elements.size() >= param1())
-				{
-					DO_POP_STATE();
-				}
-
-				state() = MessageElement_readpodmultidimarray3;
-			}
-			case MessageElement_readpodmultidimarray3:
-			{
-				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
-				MessageElementPodMultiDimArray* s = data<MessageElementPodMultiDimArray>();
-				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readpodmultidimarray2, limit() - message_pos, el);
-				continue;
-			}
-
-			//Read namedarrayarray
-			case MessageElement_readnamedarrayarray1:
-			{
-				MessageElement* el = data<MessageElement>();
-				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
-				RR_INTRUSIVE_PTR<MessageElementNamedArray> s = CreateMessageElementNamedArray(el->ElementTypeName, v);
-				uint32_t l = el->ElementSize;
-				el->SetData(s);
-				el->ElementSize = l;
-				push_state(MessageElement_readnamedarrayarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
-
-			}
-			case MessageElement_readnamedarrayarray2:
-			{
-				MessageElementNamedArray* s = data<MessageElementNamedArray>();
-				if (s->Elements.size() >= param1())
-				{
-					DO_POP_STATE();
-				}
-
-				state() = MessageElement_readnamedarrayarray3;
-			}
-			case MessageElement_readnamedarrayarray3:
-			{
-				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
-				MessageElementNamedArray* s = data<MessageElementNamedArray>();
-				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readnamedarrayarray2, limit() - message_pos, el);
-				continue;
-			}
-
-			//Read namedarraymultidimarray
-			case MessageElement_readnamedarraymultidimarray1:
-			{
-				MessageElement* el = data<MessageElement>();
-				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
-				RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> s = CreateMessageElementNamedMultiDimArray(el->ElementTypeName, v);
-				uint32_t l = el->ElementSize;
-				el->SetData(s);
-				el->ElementSize = l;
-				push_state(MessageElement_readnamedarraymultidimarray2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
-
-			}
-			case MessageElement_readnamedarraymultidimarray2:
-			{
-				MessageElementNamedMultiDimArray* s = data<MessageElementNamedMultiDimArray>();
-				if (s->Elements.size() >= param1())
-				{
-					DO_POP_STATE();
-				}
-
-				state() = MessageElement_readnamedarraymultidimarray3;
-			}
-			case MessageElement_readnamedarraymultidimarray3:
-			{
-				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
-				MessageElementNamedMultiDimArray* s = data<MessageElementNamedMultiDimArray>();
-				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readnamedarraymultidimarray2, limit() - message_pos, el);
-				continue;
-			}
-
-			//Read list
-			case MessageElement_readlist1:
-			{
-				MessageElement* el = data<MessageElement>();
-				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
-				RR_INTRUSIVE_PTR<MessageElementList> s = CreateMessageElementList(v);
-				uint32_t l = el->ElementSize;
-				el->SetData(s);
-				el->ElementSize = l;
-				push_state(MessageElement_readlist2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
-
-			}
-			case MessageElement_readlist2:
-			{
-				MessageElementList* s = data<MessageElementList>();
-				if (s->Elements.size() >= param1())
-				{
-					DO_POP_STATE();
-				}
-
-				state() = MessageElement_readlist3;
-			}
-			case MessageElement_readlist3:
-			{
-				RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement();
-				MessageElementList* s = data<MessageElementList>();
-				s->Elements.push_back(el);
-				push_state(MessageElement_elementsize, MessageElement_readlist2, limit() - message_pos, el);
-				continue;
-			}
-
+			
 			//Read header string
 			case Header_readstring:
 			{

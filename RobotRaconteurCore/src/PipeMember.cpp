@@ -456,7 +456,7 @@ bool PipeBase::DispatchPacket(RR_INTRUSIVE_PTR<MessageElement> me, RR_SHARED_PTR
 	else
 	{
 		//Use message 2
-		RR_INTRUSIVE_PTR<MessageElementMap<std::string> > elems1 = me->CastData<MessageElementMap<std::string> >();
+		RR_INTRUSIVE_PTR<MessageElementNestedElementList> elems1 = me->CastDataToNestedList(DataTypes_dictionary_t);
 		packetnumber = RRArrayToScalar(MessageElement::FindElement(elems1->Elements, "packetnumber")->CastData<RRArray<uint32_t> >());
 
 		RR_INTRUSIVE_PTR<RRValue> data;
@@ -534,7 +534,7 @@ RR_INTRUSIVE_PTR<MessageElement> PipeBase::PackPacket(RR_INTRUSIVE_PTR<RRValue> 
 			elems.push_back(CreateMessageElement("requestack", ScalarToRRArray(static_cast<uint32_t>(1))));
 		}
 
-		RR_INTRUSIVE_PTR<MessageElementMap<std::string> > delems = CreateMessageElementMap<std::string>(elems);
+		RR_INTRUSIVE_PTR<MessageElementNestedElementList> delems = CreateMessageElementNestedElementList(DataTypes_dictionary_t,"",elems);
 		RR_INTRUSIVE_PTR<MessageElement> me = CreateMessageElement(boost::lexical_cast<std::string>(index), delems);
 
 		return me;

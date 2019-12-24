@@ -345,7 +345,7 @@ namespace RobotRaconteur
 					if (ret1->Error == RobotRaconteur::MessageErrorType_None)
 					{
 						RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me = ret1->FindElement("return");
-						RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteurServiceIndex::ServiceInfo> > ret = RobotRaconteur::rr_cast<RobotRaconteur::RRMap<int32_t, RobotRaconteurServiceIndex::ServiceInfo  > >((node->UnpackMapType<int32_t, RobotRaconteurServiceIndex::ServiceInfo  >(me->CastData<RobotRaconteur::MessageElementMap<int32_t> >())));
+						RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteurServiceIndex::ServiceInfo> > ret = RobotRaconteur::rr_cast<RobotRaconteur::RRMap<int32_t, RobotRaconteurServiceIndex::ServiceInfo  > >((node->UnpackMapType<int32_t, RobotRaconteurServiceIndex::ServiceInfo  >(me->CastData<RobotRaconteur::MessageElementNestedElementList >())));
 
 						if (ret)
 						{
@@ -715,7 +715,7 @@ namespace RobotRaconteur
 			try
 			{
 				RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me = ret1->FindElement("return");
-				RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteurServiceIndex::ServiceInfo> > ret = RobotRaconteur::rr_cast<RobotRaconteur::RRMap<int32_t, RobotRaconteurServiceIndex::ServiceInfo> >((n->UnpackMapType<int32_t, RobotRaconteurServiceIndex::ServiceInfo>(me->CastData<RobotRaconteur::MessageElementMap<int32_t> >())));
+				RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteurServiceIndex::ServiceInfo> > ret = RobotRaconteur::rr_cast<RobotRaconteur::RRMap<int32_t, RobotRaconteurServiceIndex::ServiceInfo> >((n->UnpackMapType<int32_t, RobotRaconteurServiceIndex::ServiceInfo>(me->CastDataToNestedList())));
 
 				if (ret)
 				{

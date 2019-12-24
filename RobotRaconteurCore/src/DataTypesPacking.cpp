@@ -34,10 +34,10 @@ namespace packing
 		return node;
 	}
 
-	RR_INTRUSIVE_PTR<MessageElementStructure> PackStructure(RR_INTRUSIVE_PTR<RRStructure> structure, RobotRaconteurNode* node)
+	RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackStructure(RR_INTRUSIVE_PTR<RRStructure> structure, RobotRaconteurNode* node)
 	{
 
-		if (!structure) return RR_INTRUSIVE_PTR<MessageElementStructure>();
+		if (!structure) return RR_INTRUSIVE_PTR<MessageElementNestedElementList>();
 
 		std::string type = structure->RRType();
 
@@ -50,11 +50,13 @@ namespace packing
 
 	}
 
-	RR_INTRUSIVE_PTR<RRStructure> UnpackStructure(RR_INTRUSIVE_PTR<MessageElementStructure> structure, RobotRaconteurNode* node)
+	RR_INTRUSIVE_PTR<RRStructure> UnpackStructure(RR_INTRUSIVE_PTR<MessageElementNestedElementList> structure, RobotRaconteurNode* node)
 	{
 		if (!structure) return RR_INTRUSIVE_PTR<RRStructure>();
 
-		std::string type = structure->Type;
+		if (structure->GetTypeID() != DataTypes_structure_t) throw DataTypeMismatchException("Expected structure");
+
+		std::string type = structure->TypeName;
 
 
 		std::string servicetype = SplitQualifiedName(type).get<0>();
@@ -66,10 +68,10 @@ namespace packing
 
 	}
 
-	RR_INTRUSIVE_PTR<MessageElementPodArray> PackPodArray(RR_INTRUSIVE_PTR<RRPodBaseArray> a, RobotRaconteurNode* node)
+	RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackPodArray(RR_INTRUSIVE_PTR<RRPodBaseArray> a, RobotRaconteurNode* node)
 	{
 
-		if (!a) return RR_INTRUSIVE_PTR<MessageElementPodArray>();
+		if (!a) return RR_INTRUSIVE_PTR<MessageElementNestedElementList>();
 
 		std::string type = a->RRElementTypeString();
 
@@ -81,11 +83,11 @@ namespace packing
 		return factory->PackPodArray(a);
 	}
 
-	RR_INTRUSIVE_PTR<RRPodBaseArray> UnpackPodArray(RR_INTRUSIVE_PTR<MessageElementPodArray> a, RobotRaconteurNode* node)
+	RR_INTRUSIVE_PTR<RRPodBaseArray> UnpackPodArray(RR_INTRUSIVE_PTR<MessageElementNestedElementList> a, RobotRaconteurNode* node)
 	{
 		if (!a) return RR_INTRUSIVE_PTR<RRPodBaseArray>();
-
-		std::string type = a->Type;
+		if (a->GetTypeID() != DataTypes_pod_array_t) throw DataTypeMismatchException("Expected pod array");
+		std::string type = a->TypeName;
 
 
 		std::string servicetype = SplitQualifiedName(type).get<0>();
@@ -96,10 +98,10 @@ namespace packing
 		return rr_cast<RRPodBaseArray>(factory->UnpackPodArray(a));
 	}
 
-	RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> PackPodMultiDimArray(RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> a, RobotRaconteurNode* node)
+	RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackPodMultiDimArray(RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> a, RobotRaconteurNode* node)
 	{
 
-		if (!a) return RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray>();
+		if (!a) return RR_INTRUSIVE_PTR<MessageElementNestedElementList>();
 
 		std::string type = a->RRElementTypeString();
 
@@ -111,11 +113,11 @@ namespace packing
 		return factory->PackPodMultiDimArray(a);
 	}
 
-	RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> UnpackPodMultiDimArray(RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> a, RobotRaconteurNode* node)
+	RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> UnpackPodMultiDimArray(RR_INTRUSIVE_PTR<MessageElementNestedElementList> a, RobotRaconteurNode* node)
 	{
 		if (!a) return RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray>();
-
-		std::string type = a->Type;
+		if (a->GetTypeID() != DataTypes_pod_multidimarray_t) throw DataTypeMismatchException("Expected pod multidimarray");
+		std::string type = a->TypeName;
 
 
 		std::string servicetype = SplitQualifiedName(type).get<0>();
@@ -127,10 +129,10 @@ namespace packing
 	}
 
 
-	RR_INTRUSIVE_PTR<MessageElementNamedArray> PackNamedArray(RR_INTRUSIVE_PTR<RRNamedBaseArray> a, RobotRaconteurNode* node)
+	RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackNamedArray(RR_INTRUSIVE_PTR<RRNamedBaseArray> a, RobotRaconteurNode* node)
 	{
 
-		if (!a) return RR_INTRUSIVE_PTR<MessageElementNamedArray>();
+		if (!a) return RR_INTRUSIVE_PTR<MessageElementNestedElementList>();
 
 		std::string type = a->RRElementTypeString();
 
@@ -142,11 +144,12 @@ namespace packing
 		return factory->PackNamedArray(a);
 	}
 
-	RR_INTRUSIVE_PTR<RRNamedBaseArray> UnpackNamedArray(RR_INTRUSIVE_PTR<MessageElementNamedArray> a, RobotRaconteurNode* node)
+	RR_INTRUSIVE_PTR<RRNamedBaseArray> UnpackNamedArray(RR_INTRUSIVE_PTR<MessageElementNestedElementList> a, RobotRaconteurNode* node)
 	{
 		if (!a) return RR_INTRUSIVE_PTR<RRNamedBaseArray>();
+		if (a->GetTypeID() != DataTypes_namedarray_array_t) throw DataTypeMismatchException("Expected namedarray");
 
-		std::string type = a->Type;
+		std::string type = a->TypeName;
 
 
 		std::string servicetype = SplitQualifiedName(type).get<0>();
@@ -157,11 +160,11 @@ namespace packing
 		return rr_cast<RRNamedBaseArray>(factory->UnpackNamedArray(a));
 	}
 
-	RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> PackNamedMultiDimArray(RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> a, RobotRaconteurNode* node)
+	RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackNamedMultiDimArray(RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> a, RobotRaconteurNode* node)
 	{
 
-		if (!a) return RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray>();
-
+		if (!a) return RR_INTRUSIVE_PTR<MessageElementNestedElementList>();
+		
 		std::string type = a->RRElementTypeString();
 
 		std::string servicetype = SplitQualifiedName(type).get<0>();
@@ -172,11 +175,12 @@ namespace packing
 		return factory->PackNamedMultiDimArray(a);
 	}
 
-	RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> UnpackNamedMultiDimArray(RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> a, RobotRaconteurNode* node)
+	RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> UnpackNamedMultiDimArray(RR_INTRUSIVE_PTR<MessageElementNestedElementList> a, RobotRaconteurNode* node)
 	{
 		if (!a) return RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray>();
+		if (a->GetTypeID() != DataTypes_namedarray_multidimarray_t) throw DataTypeMismatchException("Expected namedarray multidimarray");
 
-		std::string type = a->Type;
+		std::string type = a->TypeName;
 
 
 		std::string servicetype = SplitQualifiedName(type).get<0>();
@@ -301,52 +305,52 @@ namespace packing
 
 		if (type == DataTypes_structure_t)
 		{
-			return UnpackStructure(rr_cast<MessageElementStructure>(mvardata),node);
+			return UnpackStructure(rr_cast<MessageElementNestedElementList>(mvardata),node);
 		}
 
 		if (type == DataTypes_vector_t)
 		{
-			return UnpackMapType<int32_t, RRValue>(rr_cast<MessageElementMap<int32_t> >(mvardata),node);
+			return UnpackMapType<int32_t, RRValue>(rr_cast<MessageElementNestedElementList>(mvardata),node);
 		}
 
 		if (type == DataTypes_dictionary_t)
 		{
-			return UnpackMapType<std::string, RRValue>(rr_cast<MessageElementMap<std::string> >(mvardata),node);
+			return UnpackMapType<std::string, RRValue>(rr_cast<MessageElementNestedElementList>(mvardata),node);
 		}
 
 		if (type == DataTypes_multidimarray_t)
-		{
-			DataTypes type1 = MessageElement::FindElement(mvardata1->CastData<MessageElementMultiDimArray>()->Elements, "array")->ElementType;
+		{			
+			DataTypes type1 = MessageElement::FindElement(mvardata1->CastDataToNestedList(DataTypes_multidimarray_t)->Elements, "array")->ElementType;
 
 			switch (type1)
 			{
 
 			case DataTypes_double_t:
-				return rr_cast<RRValue>(UnpackMultiDimArray<double>(rr_cast<MessageElementMultiDimArray>(mvardata)));
+				return rr_cast<RRValue>(UnpackMultiDimArray<double>(rr_cast<MessageElementNestedElementList>(mvardata)));
 			case DataTypes_single_t:
-				return rr_cast<RRValue>(UnpackMultiDimArray<float>(rr_cast<MessageElementMultiDimArray>(mvardata)));
+				return rr_cast<RRValue>(UnpackMultiDimArray<float>(rr_cast<MessageElementNestedElementList>(mvardata)));
 			case DataTypes_int8_t:
-				return rr_cast<RRValue>(UnpackMultiDimArray<int8_t>(rr_cast<MessageElementMultiDimArray>(mvardata)));
+				return rr_cast<RRValue>(UnpackMultiDimArray<int8_t>(rr_cast<MessageElementNestedElementList>(mvardata)));
 			case DataTypes_uint8_t:
-				return rr_cast<RRValue>(UnpackMultiDimArray<uint8_t>(rr_cast<MessageElementMultiDimArray>(mvardata)));
+				return rr_cast<RRValue>(UnpackMultiDimArray<uint8_t>(rr_cast<MessageElementNestedElementList>(mvardata)));
 			case DataTypes_int16_t:
-				return rr_cast<RRValue>(UnpackMultiDimArray<int16_t>(rr_cast<MessageElementMultiDimArray>(mvardata)));
+				return rr_cast<RRValue>(UnpackMultiDimArray<int16_t>(rr_cast<MessageElementNestedElementList>(mvardata)));
 			case DataTypes_uint16_t:
-				return rr_cast<RRValue>(UnpackMultiDimArray<uint16_t>(rr_cast<MessageElementMultiDimArray>(mvardata)));
+				return rr_cast<RRValue>(UnpackMultiDimArray<uint16_t>(rr_cast<MessageElementNestedElementList>(mvardata)));
 			case DataTypes_int32_t:
-				return rr_cast<RRValue>(UnpackMultiDimArray<int32_t>(rr_cast<MessageElementMultiDimArray>(mvardata)));
+				return rr_cast<RRValue>(UnpackMultiDimArray<int32_t>(rr_cast<MessageElementNestedElementList>(mvardata)));
 			case DataTypes_uint32_t:
-				return rr_cast<RRValue>(UnpackMultiDimArray<uint32_t>(rr_cast<MessageElementMultiDimArray>(mvardata)));
+				return rr_cast<RRValue>(UnpackMultiDimArray<uint32_t>(rr_cast<MessageElementNestedElementList>(mvardata)));
 			case DataTypes_int64_t:
-				return rr_cast<RRValue>(UnpackMultiDimArray<int64_t>(rr_cast<MessageElementMultiDimArray>(mvardata)));
+				return rr_cast<RRValue>(UnpackMultiDimArray<int64_t>(rr_cast<MessageElementNestedElementList>(mvardata)));
 			case DataTypes_uint64_t:
-				return rr_cast<RRValue>(UnpackMultiDimArray<uint64_t>(rr_cast<MessageElementMultiDimArray>(mvardata)));
+				return rr_cast<RRValue>(UnpackMultiDimArray<uint64_t>(rr_cast<MessageElementNestedElementList>(mvardata)));
 			case DataTypes_cdouble_t:
-				return rr_cast<RRValue>(UnpackMultiDimArray<cdouble>(rr_cast<MessageElementMultiDimArray>(mvardata)));
+				return rr_cast<RRValue>(UnpackMultiDimArray<cdouble>(rr_cast<MessageElementNestedElementList>(mvardata)));
 			case DataTypes_csingle_t:
-				return rr_cast<RRValue>(UnpackMultiDimArray<cfloat>(rr_cast<MessageElementMultiDimArray>(mvardata)));
+				return rr_cast<RRValue>(UnpackMultiDimArray<cfloat>(rr_cast<MessageElementNestedElementList>(mvardata)));
 			case DataTypes_bool_t:
-				return rr_cast<RRValue>(UnpackMultiDimArray<rr_bool>(rr_cast<MessageElementMultiDimArray>(mvardata)));
+				return rr_cast<RRValue>(UnpackMultiDimArray<rr_bool>(rr_cast<MessageElementNestedElementList>(mvardata)));
 			default:
 				throw DataTypeException("Invalid data type");
 
@@ -358,27 +362,27 @@ namespace packing
 
 		if (type == DataTypes_list_t)
 		{
-			return UnpackListType<RRValue>(rr_cast<MessageElementList>(mvardata),node);
+			return UnpackListType<RRValue>(rr_cast<MessageElementNestedElementList>(mvardata),node);
 		}
 
 		if (type == DataTypes_pod_array_t)
 		{
-			return UnpackPodArray(rr_cast<MessageElementPodArray>(mvardata),node);
+			return UnpackPodArray(rr_cast<MessageElementNestedElementList>(mvardata),node);
 		}
 
 		if (type == DataTypes_pod_multidimarray_t)
 		{
-			return UnpackPodMultiDimArray(rr_cast<MessageElementPodMultiDimArray>(mvardata),node);
+			return UnpackPodMultiDimArray(rr_cast<MessageElementNestedElementList>(mvardata),node);
 		}
 
 		if (type == DataTypes_namedarray_array_t)
 		{
-			return UnpackNamedArray(rr_cast<MessageElementNamedArray>(mvardata),node);
+			return UnpackNamedArray(rr_cast<MessageElementNestedElementList>(mvardata),node);
 		}
 
 		if (type == DataTypes_namedarray_multidimarray_t)
 		{
-			return UnpackNamedMultiDimArray(rr_cast<MessageElementNamedMultiDimArray>(mvardata),node);
+			return UnpackNamedMultiDimArray(rr_cast<MessageElementNestedElementList>(mvardata),node);
 		}
 
 		throw DataTypeException("Unknown data type");

@@ -68,7 +68,7 @@ namespace RobotRaconteurTest
 		double mv_d2[] = { 1000,-2000.10 };
 		mv.push_back(CreateMessageElement("0", AttachRRArrayCopy(mv_d1, 2)));
 		mv.push_back(CreateMessageElement("1", AttachRRArrayCopy(mv_d2, 2)));
-		RR_INTRUSIVE_PTR<MessageElementMap<int32_t> > v = CreateMessageElementMap<int32_t>(mv);
+		RR_INTRUSIVE_PTR<MessageElementNestedElementList > v = CreateMessageElementNestedElementList(DataTypes_vector_t,"",mv);
 		e2->AddElement("testavector", v);
 
 		//Test dictionary
@@ -81,7 +81,7 @@ namespace RobotRaconteurTest
 		float md_d2[] = { 1000, -2000.10f };
 		md.push_back(CreateMessageElement("val1", AttachRRArrayCopy(md_d1, 2)));
 		md.push_back(CreateMessageElement("val2", AttachRRArrayCopy(md_d2, 2)));
-		RR_INTRUSIVE_PTR<MessageElementMap<std::string> > d = CreateMessageElementMap<std::string>(md);
+		RR_INTRUSIVE_PTR<MessageElementNestedElementList > d = CreateMessageElementNestedElementList(DataTypes_dictionary_t, "", md);
 		e3->AddElement("testavector", d);
 
 		//Test structure
@@ -93,7 +93,7 @@ namespace RobotRaconteurTest
 		int64_t ms_d1[] = { 1, 2, 3, 4, 5, -19746, 9870, 345323432 };
 		ms.push_back(CreateMessageElement("field1", AttachRRArrayCopy(ms_d1, 2)));
 		ms.push_back(CreateMessageElement("field2", v));
-		RR_INTRUSIVE_PTR<MessageElementStructure> s = CreateMessageElementStructure("RobotRaconteurTestService.TestStruct", ms);
+		RR_INTRUSIVE_PTR<MessageElementNestedElementList> s = CreateMessageElementNestedElementList(DataTypes_structure_t,"RobotRaconteurTestService.TestStruct", ms);
 		e4->AddElement("teststruct", s);
 
 		//Test MultiDimArray
@@ -128,7 +128,7 @@ namespace RobotRaconteurTest
 		float md_l2[] = { 1003, -2000.10f };
 		ml.push_back(CreateMessageElement("val1", AttachRRArrayCopy(md_l1, 2)));
 		ml.push_back(CreateMessageElement("val2", AttachRRArrayCopy(md_l2, 2)));
-		RR_INTRUSIVE_PTR<MessageElementList > l = CreateMessageElementList(ml);
+		RR_INTRUSIVE_PTR<MessageElementNestedElementList > l = CreateMessageElementNestedElementList(DataTypes_list_t,"",ml);
 		e6->AddElement("testalist", l);
 
 
@@ -251,7 +251,7 @@ namespace RobotRaconteurTest
 			{
 				v.push_back(MessageSerializationTest_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(CreateMessageElementStructure(MessageSerializationTest_NewRandomString(rng, 128), v));
+			e->SetData(CreateMessageElementNestedElementList(DataTypes_structure_t,MessageSerializationTest_NewRandomString(rng, 128), v));
 			return e;
 		}
 		case DataTypes_vector_t:
@@ -262,7 +262,7 @@ namespace RobotRaconteurTest
 			{
 				v.push_back(MessageSerializationTest_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(CreateMessageElementMap<int32_t>(v));
+			e->SetData(CreateMessageElementNestedElementList(DataTypes_vector_t,"",v));
 			return e;
 		}
 		case DataTypes_dictionary_t:
@@ -273,7 +273,7 @@ namespace RobotRaconteurTest
 			{
 				v.push_back(MessageSerializationTest_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(CreateMessageElementMap<std::string>(v));
+			e->SetData(CreateMessageElementNestedElementList(DataTypes_dictionary_t,"",v));
 			return e;
 		}
 		case DataTypes_multidimarray_t:
@@ -285,7 +285,7 @@ namespace RobotRaconteurTest
 			{
 				v.push_back(MessageSerializationTest_NewRandomMessageElement(rng, 10));
 			}
-			e->SetData(CreateMessageElementMultiDimArray(v));
+			e->SetData(CreateMessageElementNestedElementList(DataTypes_multidimarray_t,"",v));
 			return e;
 		}
 		case DataTypes_list_t:
@@ -296,7 +296,7 @@ namespace RobotRaconteurTest
 			{
 				v.push_back(MessageSerializationTest_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(CreateMessageElementList(v));
+			e->SetData(CreateMessageElementNestedElementList(DataTypes_list_t,"",v));
 			return e;
 		}
 
@@ -573,11 +573,10 @@ namespace RobotRaconteurTest
 
 	}
 
-	template<typename T>
 	static void MessageSerializationTest_CompareSubElements(RR_INTRUSIVE_PTR<MessageElement> m1, RR_INTRUSIVE_PTR<MessageElement> m2)
 	{
-		RR_INTRUSIVE_PTR<T> sdat1 = m1->CastData<T>();
-		RR_INTRUSIVE_PTR<T> sdat2 = m1->CastData<T>();
+		RR_INTRUSIVE_PTR<MessageElementNestedElementList> sdat1 = m1->CastDataToNestedList();
+		RR_INTRUSIVE_PTR<MessageElementNestedElementList> sdat2 = m1->CastDataToNestedList();
 
 		if (sdat1->Elements.size() != sdat2->Elements.size()) throw std::runtime_error("");
 		for (size_t i = 0; i < sdat1->Elements.size(); i++)
@@ -658,53 +657,17 @@ namespace RobotRaconteurTest
 			break;
 		}
 		case DataTypes_structure_t:
-		{
-			MessageSerializationTest_CompareSubElements<MessageElementStructure>(m1, m2);
-			break;
-		}
 		case DataTypes_vector_t:
-		{
-			MessageSerializationTest_CompareSubElements<MessageElementMap<int32_t> >(m1, m2);
-			break;
-		}
 		case DataTypes_dictionary_t:
-		{
-			MessageSerializationTest_CompareSubElements<MessageElementMap<std::string> >(m1, m2);
-			break;
-		}
 		case DataTypes_multidimarray_t:
-		{
-			MessageSerializationTest_CompareSubElements<MessageElementMultiDimArray>(m1, m2);
-			break;
-		}
 		case DataTypes_list_t:
-		{
-			MessageSerializationTest_CompareSubElements<MessageElementList>(m1, m2);
-			break;
-		}
 		case DataTypes_pod_t:
-		{
-			MessageSerializationTest_CompareSubElements<MessageElementPod>(m1, m2);
-			break;
-		}
 		case DataTypes_pod_array_t:
-		{
-			MessageSerializationTest_CompareSubElements<MessageElementPodArray>(m1, m2);
-			break;
-		}
 		case DataTypes_pod_multidimarray_t:
-		{
-			MessageSerializationTest_CompareSubElements<MessageElementPodMultiDimArray>(m1, m2);
-			break;
-		}
 		case DataTypes_namedarray_array_t:
-		{
-			MessageSerializationTest_CompareSubElements<MessageElementNamedArray>(m1, m2);
-			break;
-		}
 		case DataTypes_namedarray_multidimarray_t:
 		{
-			MessageSerializationTest_CompareSubElements<MessageElementNamedMultiDimArray>(m1, m2);
+			MessageSerializationTest_CompareSubElements(m1, m2);
 			break;
 		}
 		default:
