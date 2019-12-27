@@ -61,7 +61,7 @@ namespace RobotRaconteur
 	void RobotRaconteurException::InitializeInstanceFields()
 	{
 		ErrorCode = MessageErrorType_None;
-		Error = "";
+		Error.clear();
 	}
 
 #define RR_EXCEPTION_DEF_1(exp_cpp_type, exp_code, exp_type_str) \

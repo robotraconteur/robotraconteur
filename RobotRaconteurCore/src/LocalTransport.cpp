@@ -178,7 +178,7 @@ void LocalTransport::AsyncCreateTransportConnection(boost::string_ref url, RR_SH
 	if (url_res.port != -1) throw ConnectionException("Invalid url for local transport");
 	if (url_res.path != "" && url_res.path != "/") throw ConnectionException("Invalid url for local transport");
 
-	std::string username = "";
+	std::string username;
 
 	std::vector<std::string> usernames;
 
@@ -1764,7 +1764,7 @@ namespace detail
 
 					NodeDiscoveryInfo i;
 					i.NodeID = nodeid;
-					i.NodeName = "";
+					i.NodeName.clear();
 					NodeDiscoveryInfoURL iurl;
 					iurl.URL = url;
 					iurl.LastAnnounceTime = now;

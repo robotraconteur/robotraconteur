@@ -236,7 +236,7 @@ void Endpoint::SendMessage(RR_INTRUSIVE_PTR<Message> m)
 	{
 		m_LocalEndpoint.store(0);
 		m_RemoteEndpoint.store(0);
-		m_RemoteNodeName = "";
+		m_RemoteNodeName.clear();
 		m_RemoteNodeID=NodeID::GetAny();
 		//TransportConnection = 0;
 		m_LastMessageReceivedTime.store(boost::posix_time::microsec_clock::universal_time());

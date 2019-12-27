@@ -1682,7 +1682,7 @@ namespace RobotRaconteur
 		BOOST_FOREACH(std::string& e, o->Implements)
 		{
 			std::string deftype = d->Name;
-			std::string objtype = "";
+			std::string objtype;
 
 			if (!boost::contains(e, "."))
 			{
@@ -2166,7 +2166,7 @@ namespace RobotRaconteur
 			throw InvalidOperationException("User is not authenticated");
 
 		m_UserAuthenticated = false;
-		m_AuthenticatedUsername = "";
+		m_AuthenticatedUsername.clear();
 
 		RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_ClientSessionOpReq, "LogoutUser");
 		m->ServicePath = GetServiceName();
@@ -2192,7 +2192,7 @@ namespace RobotRaconteur
 			throw InvalidArgumentException("Can only lock object opened through Robot Raconteur");
 		RR_SHARED_PTR<ServiceStub> s = rr_cast<ServiceStub>(obj);
 
-		std::string command = "";
+		std::string command;
 		if (flags == RobotRaconteurObjectLockFlags_USER_LOCK)
 		{
 			command = "RequestObjectLock";

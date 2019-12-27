@@ -752,6 +752,11 @@ boost::string_ref MessageStringPtr::str() const
 	return _str_ptr->str;	
 }
 
+void MessageStringPtr::reset()
+{	
+	return _str_ptr.reset();	
+}
+
 bool MessageStringPtr::operator ==(MessageStringRef b) const
 {
 	return this->str() == b.str();

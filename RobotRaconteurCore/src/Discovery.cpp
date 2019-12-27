@@ -1185,7 +1185,7 @@ namespace RobotRaconteur
 
 					RobotRaconteur::NodeID nodeid(idline.at(0));
 
-					std::string nodename = "";
+					std::string nodename;
 					if (idline.size() > 1)
 					{
 						nodename = idline.at(1);
@@ -1200,7 +1200,7 @@ namespace RobotRaconteur
 					}
 					if (nodename.size() > 128)
 					{
-						nodename = "";
+						nodename.clear();
 					}
 
 					try

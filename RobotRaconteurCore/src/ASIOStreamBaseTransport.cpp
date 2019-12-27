@@ -1903,7 +1903,7 @@ void ASIOStreamBaseTransport::BeginStreamOp(boost::string_ref command, RR_SHARED
 		
 		RR_INTRUSIVE_PTR<Message> m = CreateMessage();
 		m->header = CreateMessageHeader();
-		m->header->ReceiverNodeName = "";
+		m->header->ReceiverNodeName.reset();
 		m->header->SenderNodeName = GetNode()->NodeName();
 		m->header->SenderNodeID = GetNode()->NodeID();
 		{

@@ -358,7 +358,7 @@ namespace RobotRaconteur
 				{
 					flags &= ~flag_str;
 					flags |= flag_code;
-					str = "";
+					str.reset();
 					code = s->code;
 				}
 				else
@@ -393,7 +393,7 @@ namespace RobotRaconteur
 
 					flags &= ~flag_str;
 					flags |= flag_code;
-					str = "";
+					str.reset();
 					code = c;
 				}
 			}			

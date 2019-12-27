@@ -1538,7 +1538,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 		   // if (m.ServicePath != ServiceName) throw new Exception("Only locking of root object currently supported");
 
 			std::vector<std::string> priv;
-			std::string username = "";
+			std::string username;
 			if (!boost::starts_with(m->MemberName.str(),"Monitor"))
 			{
 				if (ServerEndpoint::GetCurrentAuthenticatedUser() == 0)
@@ -2027,7 +2027,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 	void ServerContext::InitializeInstanceFields()
 	{
 		
-		m_RootObjectType = "";
+		m_RootObjectType.clear();
 		
 		base_object_set = false;
 		m_RequireValidUser = false;

@@ -191,10 +191,11 @@ namespace RobotRaconteur
 
 
 		boost::string_ref str() const;
+		void reset();
 
 		bool operator ==(MessageStringRef b) const;
 		bool operator !=(MessageStringRef b) const;
-		bool operator <(MessageStringRef b) const;		
+		bool operator <(MessageStringRef b) const;	
 	};
 
 	class ROBOTRACONTEUR_CORE_API MessageStringRef

@@ -637,10 +637,10 @@ namespace RobotRaconteur
 
 	MessageHeader::MessageHeader()
 	{
-		SenderNodeName = "";
-		ReceiverNodeName = "";
+		SenderNodeName.reset();
+		ReceiverNodeName.reset();
 		
-		MetaData = "";
+		MetaData.reset();
 		ReceiverNodeID=NodeID();
 		SenderNodeID=NodeID();
 
@@ -1517,7 +1517,7 @@ namespace RobotRaconteur
 		else
 			ElementType = dat->GetTypeID();
 
-		ElementTypeName = "";
+		ElementTypeName.reset();
 		switch (ElementType)
 		{
 		case DataTypes_void_t:

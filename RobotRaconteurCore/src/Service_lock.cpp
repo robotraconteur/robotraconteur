@@ -209,10 +209,10 @@ namespace RobotRaconteur
 	void ServerContext_ObjectLock::InitializeInstanceFields()
 	{
 		m_Locked = true;
-		m_Username = "";
+		m_Username.clear();
 
 		m_Endpoint = 0;
-		m_RootServicePath = "";
+		m_RootServicePath.clear();
 	}
 
 	uint32_t ServerContext_MonitorObjectSkel::GetLocalEndpoint() const

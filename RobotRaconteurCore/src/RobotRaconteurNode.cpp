@@ -842,7 +842,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_INTRUSIVE_PTR<Me
 					std::string name = e->ServicePath.str().to_string();
 					try
 					{
-						std::string servicedef = "";
+						std::string servicedef;
 
 						bool is_service_type=false;
 						bool is_service_type2 = false;

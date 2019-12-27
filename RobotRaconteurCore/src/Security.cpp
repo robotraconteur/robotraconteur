@@ -170,7 +170,7 @@ namespace RobotRaconteur
 		CryptDestroyHash(hHash);
 		CryptReleaseContext(hProv, 0);
 
-		std::string s2 = "";
+		std::string s2;
 		for (size_t i = 0; i<16; i++)
 		{
 			std::stringstream s;
@@ -186,7 +186,7 @@ namespace RobotRaconteur
 		uint8_t md[MD5_DIGEST_LENGTH];
 		MD5(reinterpret_cast<const uint8_t*>(text.c_str()), text.size(), reinterpret_cast<uint8_t*>(md));
 
-		std::string s2 = "";
+		std::string s2;
 		for (size_t i = 0; i<16; i++)
 		{
 			std::stringstream s;

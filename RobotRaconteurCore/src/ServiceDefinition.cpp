@@ -205,7 +205,7 @@ namespace RobotRaconteur
 			if (!std::getline(is, l2))
 				return false;
 			parse_info.LineNumber++;
-			parse_info.Line = "";
+			parse_info.Line.clear();
 
 			boost::trim_right_if(l2, boost::is_any_of("\r"));
 
@@ -2072,7 +2072,7 @@ namespace RobotRaconteur
 		else
 		{
 			Type = t;
-			TypeString = "";
+			TypeString.clear();
 		}
 	}
 

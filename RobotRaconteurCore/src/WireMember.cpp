@@ -664,7 +664,7 @@ namespace RobotRaconteur
 	{
 		RR_INTRUSIVE_PTR<MessageEntry> m = PackPacket(value, TimeSpec::Now(), GetStub()->GetContext()->UseMessage3());
 		m->EntryType = MessageEntryType_WirePokeOutValueReq;
-		m->MetaData = "";		
+		m->MetaData.reset();		
 		RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr = GetStub()->ProcessRequest(m);
 	}
 
@@ -732,7 +732,7 @@ namespace RobotRaconteur
 	{
 		RR_INTRUSIVE_PTR<MessageEntry> m = PackPacket(value, TimeSpec::Now(), GetStub()->GetContext()->UseMessage3());
 		m->EntryType = MessageEntryType_WirePokeOutValueReq;
-		m->MetaData = "";
+		m->MetaData.reset();
 		GetStub()->AsyncProcessRequest(m, boost::bind(&WireClientBase_AsyncPokeValueBaseEnd, _1, _2, handler), timeout);
 	}
 
@@ -948,7 +948,7 @@ namespace RobotRaconteur
 					RR_INTRUSIVE_PTR<RRValue> value = do_PeekInValue(e);					
 					RR_INTRUSIVE_PTR<MessageEntry> mr = PackPacket(value, TimeSpec::Now(), GetSkel()->GetContext()->UseMessage3(e));
 					mr->EntryType = MessageEntryType_WirePeekInValueRet;
-					mr->MetaData = "";
+					mr->MetaData.reset();
 					return mr;
 				}
 				case MessageEntryType_WirePeekOutValueReq:
@@ -958,7 +958,7 @@ namespace RobotRaconteur
 					RR_INTRUSIVE_PTR<RRValue> value = do_PeekOutValue(e);
 					RR_INTRUSIVE_PTR<MessageEntry> mr = PackPacket(value, TimeSpec::Now(), GetSkel()->GetContext()->UseMessage3(e));
 					mr->EntryType = MessageEntryType_WirePeekOutValueRet;
-					mr->MetaData = "";
+					mr->MetaData.reset();
 					return mr;
 				}
 				case MessageEntryType_WirePokeOutValueReq:
