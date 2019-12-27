@@ -57,6 +57,7 @@ namespace RobotRaconteurGen
         std::set<std::string> str1;
         std::string q_name = def_name + "." + def->Name;
         str1.insert(q_name);
+        str1.insert(def->Name);
         copy_to(str1,GetMembersStrings(def->Members));
         return str1;
     }
