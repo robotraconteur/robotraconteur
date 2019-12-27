@@ -98,10 +98,10 @@ namespace RobotRaconteur
 
 	}
 
-	ServiceSubscriptionClientID::ServiceSubscriptionClientID(const ::RobotRaconteur::NodeID& nodeid, const std::string& service_name)
+	ServiceSubscriptionClientID::ServiceSubscriptionClientID(const ::RobotRaconteur::NodeID& nodeid, boost::string_ref service_name)
 	{
 		this->NodeID = nodeid;
-		this->ServiceName = service_name;
+		this->ServiceName.swap(service_name.to_string());
 	}
 
 	ServiceSubscriptionClientID::ServiceSubscriptionClientID()
@@ -219,12 +219,12 @@ namespace RobotRaconteur
 
 					BOOST_FOREACH(const NodeDiscoveryInfoURL& url2, storage->info->URLs)
 					{
-						const std::string& url1 = url2.URL;
+						boost::string_ref url1 = url2.URL;
 						BOOST_FOREACH(const std::string& scheme1, filter->TransportSchemes)
 						{
 							if (boost::starts_with(url1, scheme1 + "://"))
 							{
-								urls.push_back(boost::replace_last_copy(url1, "RobotRaconteurServiceIndex", info.Name));
+								urls.push_back(boost::replace_last_copy(url1.to_string(), "RobotRaconteurServiceIndex", info.Name));
 							}
 						}
 					}
@@ -1065,11 +1065,11 @@ namespace RobotRaconteur
 		}
 	}
 
-	WireSubscriptionBase::WireSubscriptionBase(RR_SHARED_PTR<ServiceSubscription> parent, const std::string& membername)
+	WireSubscriptionBase::WireSubscriptionBase(RR_SHARED_PTR<ServiceSubscription> parent, boost::string_ref membername)
 	{
 		this->parent = parent;
 		this->node = parent->node;
-		this->membername = membername;
+		this->membername.swap(membername.to_string());
 		this->wire_value_changed_semaphore = RR_MAKE_SHARED<detail::async_signal_pool_semaphore>(parent->node.lock());
 	}
 
@@ -1410,10 +1410,10 @@ namespace RobotRaconteur
 		}
 	}
 
-	PipeSubscriptionBase::PipeSubscriptionBase(RR_SHARED_PTR<ServiceSubscription> parent, const std::string& membername, int32_t max_recv_packets, int32_t max_send_backlog)		
+	PipeSubscriptionBase::PipeSubscriptionBase(RR_SHARED_PTR<ServiceSubscription> parent, boost::string_ref membername, int32_t max_recv_packets, int32_t max_send_backlog)		
 	{
 		this->parent = parent;
-		this->membername = membername;
+		this->membername.swap(membername.to_string());
 		this->max_recv_packets.data() = max_recv_packets;
 		this->pipe_packet_received_semaphore = RR_MAKE_SHARED<detail::async_signal_pool_semaphore>(parent->node.lock());
 		this->max_send_backlog.data() = max_send_backlog;

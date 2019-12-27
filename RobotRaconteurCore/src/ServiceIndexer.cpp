@@ -75,7 +75,8 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteurServiceIndex::Servi
 
 			boost::tuple<std::string,std::string> servicetype;
 			std::string roottype=c->GetRootObjectType(RobotRaconteurVersion());
-			servicetype=SplitQualifiedName(roottype);
+			boost::tuple<boost::string_ref,boost::string_ref> servicetype1=SplitQualifiedName(roottype);
+			servicetype = boost::make_tuple(servicetype1.get<0>().to_string(),servicetype1.get<1>().to_string());
 			
 
 			vector<RR_SHARED_PTR<ServiceEntryDefinition> > objs=c->GetServiceDef()->ServiceDef()->Objects;

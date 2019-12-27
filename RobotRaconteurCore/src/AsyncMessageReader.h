@@ -121,6 +121,7 @@ namespace RobotRaconteur
 			void* ptrdata;
 			size_t param1;
 			size_t param2;
+			std::string param3;
 
 			state_data();			
 		};
@@ -163,13 +164,14 @@ namespace RobotRaconteur
 
 		size_t& param1();
 		size_t& param2();
+		std::string& param3();
 
 		size_t& limit();
 		size_t distance_from_limit();
 
 		void pop_state();
 		void push_state(state_type new_state, state_type pop_state, size_t relative_limit, RR_INTRUSIVE_PTR<RRValue> data, size_t param1 = 0, size_t param2 = 0);
-		void push_state(state_type new_state, state_type pop_state, size_t relative_limit, void *ptrdata, size_t param1 = 0, size_t param2 = 0);
+		void push_state(state_type new_state, state_type pop_state, size_t relative_limit, void *ptrdata, size_t param1, size_t param2, std::string& param3);
 				
 		void prepare_continue(const const_buffers& other_buf, size_t& other_bufs_used);
 
@@ -182,10 +184,10 @@ namespace RobotRaconteur
 		bool read_uint_x2(uint64_t& number);
 		bool read_int_x(int32_t& number);
 		bool read_int_x2(int64_t& number);
-		bool read_string(std::string& str, state_type next_state);
-		bool read_string(std::string& str); //next_state=state()++
-		bool read_string3(std::string& str, state_type next_state);
-		bool read_string3(std::string& str); //next_state=state()++
+		bool read_string(MessageStringPtr& str, state_type next_state);
+		bool read_string(MessageStringPtr& str); //next_state=state()++
+		bool read_string3(MessageStringPtr& str, state_type next_state);
+		bool read_string3(MessageStringPtr& str); //next_state=state()++
 		
 		virtual void Reset();
 		virtual return_type Read(const const_buffers& other_bufs, size_t& other_bufs_used, size_t continue_read_len, mutable_buffers& next_continue_read_bufs);

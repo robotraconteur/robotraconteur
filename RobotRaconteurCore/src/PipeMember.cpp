@@ -619,7 +619,7 @@ void PipeClientBase::PipePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32
 				}
 				else
 				{
-					index = boost::lexical_cast<int32_t>(me->ElementName);
+					index = boost::lexical_cast<int32_t>(me->ElementName.str());
 				}
 				uint32_t pnum;
 				RR_SHARED_PTR<PipeEndpointBase> e;
@@ -723,7 +723,7 @@ void PipeClientBase::PipePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32
 				}
 				else
 				{
-					index = boost::lexical_cast<int32_t>(me->ElementName);
+					index = boost::lexical_cast<int32_t>(me->ElementName.str());
 				}
 
 				RR_SHARED_PTR<PipeEndpointBase> e;
@@ -923,9 +923,9 @@ void PipeClientBase::AsyncConnect_internal1(RR_INTRUSIVE_PTR<MessageEntry> ret, 
 	
 }
 
-PipeClientBase::PipeClientBase(const std::string& name, RR_SHARED_PTR<ServiceStub> stub, bool unreliable, MemberDefinition_Direction direction)
+PipeClientBase::PipeClientBase(boost::string_ref name, RR_SHARED_PTR<ServiceStub> stub, bool unreliable, MemberDefinition_Direction direction)
 {
-	m_MemberName=name;
+	m_MemberName.swap(name.to_string());
 	this->stub=stub;
 	this->unreliable=unreliable;
 	this->direction = direction;
@@ -972,7 +972,7 @@ void PipeServerBase::PipePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32
 				}
 				else
 				{
-					index = boost::lexical_cast<int32_t>(me->ElementName);
+					index = boost::lexical_cast<int32_t>(me->ElementName.str());
 				}
 				uint32_t pnum;
 
@@ -1043,7 +1043,7 @@ void PipeServerBase::PipePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32
 				}
 				else
 				{
-					index = boost::lexical_cast<int32_t>(me->ElementName);
+					index = boost::lexical_cast<int32_t>(me->ElementName.str());
 				}
 				
 				RR_SHARED_PTR<PipeEndpointBase> p;
@@ -1313,9 +1313,9 @@ RR_INTRUSIVE_PTR<MessageEntry> PipeServerBase::PipeCommand(RR_INTRUSIVE_PTR<Mess
 	}
 }
 
-PipeServerBase::PipeServerBase(const std::string& name, RR_SHARED_PTR<ServiceSkel> skel, bool unreliable, MemberDefinition_Direction direction)
+PipeServerBase::PipeServerBase(boost::string_ref name, RR_SHARED_PTR<ServiceSkel> skel, bool unreliable, MemberDefinition_Direction direction)
 {
-	m_MemberName=name;
+	m_MemberName.swap(name.to_string());
 	this->skel=skel;
 	this->init=false;
 	this->unreliable=unreliable;

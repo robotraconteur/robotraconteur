@@ -39,9 +39,9 @@ namespace packing
 
 		if (!structure) return RR_INTRUSIVE_PTR<MessageElementNestedElementList>();
 
-		std::string type = structure->RRType();
+		boost::string_ref type = structure->RRType();
 
-		std::string servicetype = SplitQualifiedName(type).get<0>();
+		boost::string_ref servicetype = SplitQualifiedName(type).get<0>();
 		//std::string structuretype=res[1];
 
 		RR_SHARED_PTR<ServiceFactory> factory = check_node_null(node)->GetServiceType(servicetype);
@@ -56,10 +56,10 @@ namespace packing
 
 		if (structure->GetTypeID() != DataTypes_structure_t) throw DataTypeMismatchException("Expected structure");
 
-		std::string type = structure->TypeName;
+		const MessageStringPtr& type = structure->TypeName;
 
 
-		std::string servicetype = SplitQualifiedName(type).get<0>();
+		boost::string_ref servicetype = SplitQualifiedName(type.str()).get<0>();
 		//std::string structuretype=res[1];
 
 		RR_SHARED_PTR<ServiceFactory> factory = check_node_null(node)->GetServiceType(servicetype);
@@ -73,9 +73,9 @@ namespace packing
 
 		if (!a) return RR_INTRUSIVE_PTR<MessageElementNestedElementList>();
 
-		std::string type = a->RRElementTypeString();
+		boost::string_ref type = a->RRElementTypeString();
 
-		std::string servicetype = SplitQualifiedName(type).get<0>();
+		boost::string_ref servicetype = SplitQualifiedName(type).get<0>();
 		//std::string structuretype=res[1];
 
 		RR_SHARED_PTR<ServiceFactory> factory = check_node_null(node)->GetServiceType(servicetype);
@@ -87,10 +87,10 @@ namespace packing
 	{
 		if (!a) return RR_INTRUSIVE_PTR<RRPodBaseArray>();
 		if (a->GetTypeID() != DataTypes_pod_array_t) throw DataTypeMismatchException("Expected pod array");
-		std::string type = a->TypeName;
+		const MessageStringPtr& type = a->TypeName;
 
 
-		std::string servicetype = SplitQualifiedName(type).get<0>();
+		boost::string_ref servicetype = SplitQualifiedName(type.str()).get<0>();
 		//std::string structuretype=res[1];
 
 		RR_SHARED_PTR<ServiceFactory> factory = check_node_null(node)->GetServiceType(servicetype);
@@ -103,9 +103,9 @@ namespace packing
 
 		if (!a) return RR_INTRUSIVE_PTR<MessageElementNestedElementList>();
 
-		std::string type = a->RRElementTypeString();
+		boost::string_ref type = a->RRElementTypeString();
 
-		std::string servicetype = SplitQualifiedName(type).get<0>();
+		boost::string_ref servicetype = SplitQualifiedName(type).get<0>();
 		//std::string structuretype=res[1];
 
 		RR_SHARED_PTR<ServiceFactory> factory = check_node_null(node)->GetServiceType(servicetype);
@@ -117,10 +117,10 @@ namespace packing
 	{
 		if (!a) return RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray>();
 		if (a->GetTypeID() != DataTypes_pod_multidimarray_t) throw DataTypeMismatchException("Expected pod multidimarray");
-		std::string type = a->TypeName;
+		const MessageStringPtr& type = a->TypeName;
 
 
-		std::string servicetype = SplitQualifiedName(type).get<0>();
+		boost::string_ref servicetype = SplitQualifiedName(type.str()).get<0>();
 		//std::string structuretype=res[1];
 
 		RR_SHARED_PTR<ServiceFactory> factory = check_node_null(node)->GetServiceType(servicetype);
@@ -134,9 +134,9 @@ namespace packing
 
 		if (!a) return RR_INTRUSIVE_PTR<MessageElementNestedElementList>();
 
-		std::string type = a->RRElementTypeString();
+		boost::string_ref type = a->RRElementTypeString();
 
-		std::string servicetype = SplitQualifiedName(type).get<0>();
+		boost::string_ref servicetype = SplitQualifiedName(type).get<0>();
 		//std::string structuretype=res[1];
 
 		RR_SHARED_PTR<ServiceFactory> factory = check_node_null(node)->GetServiceType(servicetype);
@@ -149,10 +149,10 @@ namespace packing
 		if (!a) return RR_INTRUSIVE_PTR<RRNamedBaseArray>();
 		if (a->GetTypeID() != DataTypes_namedarray_array_t) throw DataTypeMismatchException("Expected namedarray");
 
-		std::string type = a->TypeName;
+		const MessageStringPtr& type = a->TypeName;
 
 
-		std::string servicetype = SplitQualifiedName(type).get<0>();
+		boost::string_ref servicetype = SplitQualifiedName(type.str()).get<0>();
 		//std::string structuretype=res[1];
 
 		RR_SHARED_PTR<ServiceFactory> factory = check_node_null(node)->GetServiceType(servicetype);
@@ -165,9 +165,9 @@ namespace packing
 
 		if (!a) return RR_INTRUSIVE_PTR<MessageElementNestedElementList>();
 		
-		std::string type = a->RRElementTypeString();
+		boost::string_ref type = a->RRElementTypeString();
 
-		std::string servicetype = SplitQualifiedName(type).get<0>();
+		boost::string_ref servicetype = SplitQualifiedName(type).get<0>();
 		//std::string structuretype=res[1];
 
 		RR_SHARED_PTR<ServiceFactory> factory = check_node_null(node)->GetServiceType(servicetype);
@@ -180,10 +180,10 @@ namespace packing
 		if (!a) return RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray>();
 		if (a->GetTypeID() != DataTypes_namedarray_multidimarray_t) throw DataTypeMismatchException("Expected namedarray multidimarray");
 
-		std::string type = a->TypeName;
+		const MessageStringPtr& type = a->TypeName;
 
 
-		std::string servicetype = SplitQualifiedName(type).get<0>();
+		boost::string_ref servicetype = SplitQualifiedName(type.str()).get<0>();
 		//std::string structuretype=res[1];
 
 		RR_SHARED_PTR<ServiceFactory> factory = check_node_null(node)->GetServiceType(servicetype);
@@ -196,92 +196,86 @@ namespace packing
 
 		if (!vardata) return RR_INTRUSIVE_PTR<MessageElementData>();
 
-		std::string type = vardata->RRType();
+		boost::string_ref type = vardata->RRType();
 
-		std::string t1 = "RobotRaconteur.RRArray";
-		if (type.compare(0, t1.length(), t1) == 0)
+		if (type.starts_with("RobotRaconteur.RRArray"))
 		{
 			return rr_cast<MessageElementData>(vardata);
 		}
 
-		std::string t2 = "RobotRaconteur.RRMap<int32_t>";
-		if (type == t2)
+		if (type == "RobotRaconteur.RRMap<int32_t>")
 		{
 			return PackMapType<int32_t, RRValue>(vardata,node);
 		}
 
-		std::string t3 = "RobotRaconteur.RRMap<string>";
-		if (type == t3)
+		if (type == "RobotRaconteur.RRMap<string>")
 		{
 			return PackMapType<std::string, RRValue>(vardata,node);
 		}
-
-		std::string t6 = "RobotRaconteur.RRMap";
-		if (type.compare(0, t6.size(), t6) == 0)
+		
+		if (type.starts_with("RobotRaconteur.RRMap"))
 		{
 			//Unknown keytype type for map
 			throw DataTypeException("Invalid map keytype");
 		}
 
-		std::string t5 = "RobotRaconteur.RRMultiDimArray";
-		if (type.compare(0, t5.length(), t5) == 0)
+		if (type.starts_with("RobotRaconteur.RRMultiDimArray"))
 		{
-
-			if (type == "RobotRaconteur.RRMultiDimArray<double>")
+			RR_INTRUSIVE_PTR<RRMultiDimBaseArray> multi_array = rr_cast<RRMultiDimBaseArray>(vardata);
+			switch (multi_array->GetElementTypeID())
+			{
+			case DataTypes_double_t:
 				return PackMultiDimArray(rr_cast<RRMultiDimArray<double> >(vardata));
-			if (type == "RobotRaconteur.RRMultiDimArray<single>")
+			case DataTypes_single_t:
 				return PackMultiDimArray(rr_cast<RRMultiDimArray<float> >(vardata));
-			if (type == "RobotRaconteur.RRMultiDimArray<int8>")
+			case DataTypes_int8_t:
 				return PackMultiDimArray(rr_cast<RRMultiDimArray<int8_t> >(vardata));
-			if (type == "RobotRaconteur.RRMultiDimArray<uint8>")
+			case DataTypes_uint8_t:
 				return PackMultiDimArray(rr_cast<RRMultiDimArray<uint8_t> >(vardata));
-			if (type == "RobotRaconteur.RRMultiDimArray<int16>")
+			case DataTypes_int16_t:
 				return PackMultiDimArray(rr_cast<RRMultiDimArray<int16_t> >(vardata));
-			if (type == "RobotRaconteur.RRMultiDimArray<uint16>")
+			case DataTypes_uint16_t:
 				return PackMultiDimArray(rr_cast<RRMultiDimArray<uint16_t> >(vardata));
-			if (type == "RobotRaconteur.RRMultiDimArray<int32>")
+			case DataTypes_int32_t:
 				return PackMultiDimArray(rr_cast<RRMultiDimArray<int32_t> >(vardata));
-			if (type == "RobotRaconteur.RRMultiDimArray<uint32>")
+			case DataTypes_uint32_t:
 				return PackMultiDimArray(rr_cast<RRMultiDimArray<uint32_t> >(vardata));
-			if (type == "RobotRaconteur.RRMultiDimArray<int64>")
+			case DataTypes_int64_t:
 				return PackMultiDimArray(rr_cast<RRMultiDimArray<int64_t> >(vardata));
-			if (type == "RobotRaconteur.RRMultiDimArray<uint64>")
+			case DataTypes_uint64_t:
 				return PackMultiDimArray(rr_cast<RRMultiDimArray<uint64_t> >(vardata));
-			if (type == "RobotRaconteur.RRMultiDimArray<cdouble>")
+			case DataTypes_cdouble_t:
 				return PackMultiDimArray(rr_cast<RRMultiDimArray<cdouble> >(vardata));
-			if (type == "RobotRaconteur.RRMultiDimArray<csingle>")
+			case DataTypes_csingle_t:
 				return PackMultiDimArray(rr_cast<RRMultiDimArray<cfloat> >(vardata));
-			if (type == "RobotRaconteur.RRMultiDimArray<bool>")
+			case DataTypes_bool_t:
 				return PackMultiDimArray(rr_cast<RRMultiDimArray<rr_bool> >(vardata));
-			throw DataTypeException("Invalid MultiDimArray type");
+			default:
+				throw DataTypeException("Invalid MultiDimArray type");
+			}
 		}
 
-		std::string t8 = "RobotRaconteur.RRList";
-		if (type == t8)
+		if (type == "RobotRaconteur.RRList")
 		{
 			return PackListType<RRValue>(vardata,node);
 		}
 
-		std::string t9 = "RobotRaconteur.RRPodArray";
-		if (type == t9)
+		if (type == "RobotRaconteur.RRPodArray")
 		{
 			return PackPodArray(rr_cast<RRPodBaseArray>(vardata),node);
 		}
 
-		std::string t11 = "RobotRaconteur.RRPodMultiDimArray";
-		if (type == t11)
+		if (type == "RobotRaconteur.RRPodMultiDimArray")
 		{
 			return PackPodMultiDimArray(rr_cast<RRPodBaseMultiDimArray>(vardata),node);
 		}
 
-		std::string t12 = "RobotRaconteur.RRNamedArray";
-		if (type == t12)
+		if (type == "RobotRaconteur.RRNamedArray")
 		{
 			return PackNamedArray(rr_cast<RRNamedBaseArray>(vardata),node);
 		}
 
-		std::string t13 = "RobotRaconteur.RRNamedMultiDimArray";
-		if (type == t13)
+		if (type == "RobotRaconteur.RRNamedMultiDimArray")
 		{
 			return PackNamedMultiDimArray(rr_cast<RRNamedBaseMultiDimArray>(vardata),node);
 		}

@@ -385,9 +385,9 @@ namespace RobotRaconteurGen
 				}
 				else
 				{
-					std::string enum_type_name;
+					boost::string_ref enum_type_name;
 					boost::tie(boost::tuples::ignore, enum_type_name) = SplitQualifiedName(tdef.TypeString);
-					o.cpp_type = fix_qualified_name(tdef.TypeString) + "::" + fix_name(enum_type_name);
+					o.cpp_type = fix_qualified_name(tdef.TypeString) + "::" + fix_name(enum_type_name.to_string());
 				}
 				if (!usescalar)
 				{
@@ -1217,7 +1217,7 @@ namespace RobotRaconteurGen
 
 			if (e2->EntryType == DataTypes_pod_t)
 			{
-				w2 << endl << "virtual std::string RRType() {return \"" << d->Name + "." << e2->Name << "\";  }" << endl;
+				w2 << endl << "virtual boost::string_ref RRType() {return \"" << d->Name + "." << e2->Name << "\";  }" << endl;
 			}
 			else
 			{
@@ -1247,7 +1247,7 @@ namespace RobotRaconteurGen
 				
 			MEMBER_ITER_END()
 
-			w2 << endl << "virtual std::string RRType() {return \"" << d->Name + "." << (*e)->Name <<"\";  }"<< endl;
+			w2 << endl << "virtual boost::string_ref RRType() {return \"" << d->Name + "." << (*e)->Name <<"\";  }"<< endl;
 
 			w2 << "};" << endl << endl;
 			w2 << "#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES" << endl;
@@ -1315,7 +1315,7 @@ namespace RobotRaconteurGen
 				w2 << MemoryDeclaration(m.get(),true) << "=0;" << endl << endl;
 			MEMBER_ITER_END()
 
-			w2 << "virtual std::string RRType() {return \"" << d->Name + "." << (*e)->Name <<"\";  }" << endl;
+			w2 << "virtual boost::string_ref RRType() {return \"" << d->Name + "." << (*e)->Name <<"\";  }" << endl;
 
 			w2 << "};" << endl << endl;
 			w2 << "#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES" << endl;
@@ -1423,12 +1423,12 @@ namespace RobotRaconteurGen
 				w2 << "{" << endl;
 				w2 << "public:" << endl;
 				w2 << "    template<typename U>" << endl;
-				w2 << "    static void PackField(const " << q_name << "& v, const std::string& name, U& out)" << endl;
+				w2 << "    static void PackField(const " << q_name << "& v, MessageStringRef name, U& out)" << endl;
 				w2 << "    {" << endl;
 				w2 << "    out.push_back(RobotRaconteur::CreateMessageElement(name, PodStub_PackPodToArray(v)));" << endl;
 				w2 << "    }" << endl;
 				w2 << "    template<typename U>" << endl;
-				w2 << "    static void UnpackField(" << q_name << "& v, const std::string& name, U& in)" << endl;
+				w2 << "    static void UnpackField(" << q_name << "& v, MessageStringRef name, U& in)" << endl;
 				w2 << "    {" << endl;
 				w2 << "    PodStub_UnpackPodFromArray(v, MessageElement::FindElement(in, name)->CastDataToNestedList(DataTypes_pod_array_t));" << endl;
 				w2 << "    }" << endl;
@@ -1514,7 +1514,7 @@ namespace RobotRaconteurGen
 
 		w2 << "virtual std::string DefString();" << endl;
 
-		w2 << "virtual RR_SHARED_PTR<RobotRaconteur::StructureStub> FindStructureStub(const std::string& s);" << endl;
+		w2 << "virtual RR_SHARED_PTR<RobotRaconteur::StructureStub> FindStructureStub(boost::string_ref s);" << endl;
 		
 		w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> structin);" << endl;
 				
@@ -1536,9 +1536,9 @@ namespace RobotRaconteurGen
 
 		w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> UnpackNamedMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> structure);" << endl;
 
-		w2 << "virtual RR_SHARED_PTR<RobotRaconteur::ServiceStub> CreateStub(const std::string& objecttype, const std::string& path, RR_SHARED_PTR<RobotRaconteur::ClientContext> context);" << endl;
+		w2 << "virtual RR_SHARED_PTR<RobotRaconteur::ServiceStub> CreateStub(boost::string_ref objecttype, boost::string_ref path, RR_SHARED_PTR<RobotRaconteur::ClientContext> context);" << endl;
 
-		w2 << "virtual RR_SHARED_PTR<RobotRaconteur::ServiceSkel> CreateSkel(const std::string& objecttype, const std::string& path, RR_SHARED_PTR<RobotRaconteur::RRObject> obj, RR_SHARED_PTR<RobotRaconteur::ServerContext> context);" << endl;
+		w2 << "virtual RR_SHARED_PTR<RobotRaconteur::ServiceSkel> CreateSkel(boost::string_ref objecttype, boost::string_ref path, RR_SHARED_PTR<RobotRaconteur::RRObject> obj, RR_SHARED_PTR<RobotRaconteur::ServerContext> context);" << endl;
 
 		//w2 << "virtual RR_SHARED_PTR<RobotRaconteur::ServiceDefinition> ServiceDef();" << endl;
 		
@@ -1575,11 +1575,11 @@ namespace RobotRaconteurGen
 		w2 << "return out;" << endl;
 		w2 << "}" << endl;
 
-		w2 << "RR_SHARED_PTR<RobotRaconteur::StructureStub> " << factory_name << "::FindStructureStub(const std::string& s)" << endl << "{" << endl;
-		w2 << "boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(s);" << endl;
+		w2 << "RR_SHARED_PTR<RobotRaconteur::StructureStub> " << factory_name << "::FindStructureStub(boost::string_ref s)" << endl << "{" << endl;
+		w2 << "boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(s);" << endl;
 		
-		w2 << "std::string servicetype=res.get<0>();" << endl;
-		w2 << "std::string objecttype=res.get<1>();" << endl;
+		w2 << "boost::string_ref servicetype=res.get<0>();" << endl;
+		w2 << "boost::string_ref objecttype=res.get<1>();" << endl;
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Structures.begin(); e != d->Structures.end(); ++e)
 		{
 			w2 << "if (objecttype==\"" << (*e)->Name << "\") return RobotRaconteur::rr_cast<RobotRaconteur::StructureStub>(RR_MAKE_SHARED<" << fix_name((*e)->Name) << "_stub>(GetNode()));" << endl;
@@ -1588,11 +1588,11 @@ namespace RobotRaconteurGen
 		w2 << "}" << endl;
 		
 		w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> " << factory_name << "::PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> structin)" << endl << "{" << endl;
-		w2 << "std::string type=structin->RRType();";
-		w2 << "boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
+		w2 << "boost::string_ref type=structin->RRType();";
+		w2 << "boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
 		
-		w2 << "std::string servicetype=res.get<0>();" << endl;
-		w2 << "std::string objecttype=res.get<1>();" << endl;
+		w2 << "boost::string_ref servicetype=res.get<0>();" << endl;
+		w2 << "boost::string_ref objecttype=res.get<1>();" << endl;
 		w2 << "if (servicetype != \"" << d->Name << "\") return GetNode()->PackStructure(structin);" << endl;
 		w2 << "RR_SHARED_PTR<RobotRaconteur::StructureStub> stub=FindStructureStub(type);" << endl;
 		w2 << "return stub->PackStructure(structin);" << endl;
@@ -1600,11 +1600,11 @@ namespace RobotRaconteurGen
 		w2 << "}" << endl;
 
 		w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> " << factory_name << "::UnpackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> mstructin)" << endl << "{" << endl;
-		w2 << "std::string type=mstructin->GetTypeString();";
-		w2 << "boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
+		w2 << "boost::string_ref type=mstructin->GetTypeString().str();";
+		w2 << "boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
 		
-		w2 << "std::string servicetype=res.get<0>();" << endl;
-		w2 << "std::string objecttype=res.get<1>();" << endl;
+		w2 << "boost::string_ref servicetype=res.get<0>();" << endl;
+		w2 << "boost::string_ref objecttype=res.get<1>();" << endl;
 		w2 << "if (servicetype != \"" << d->Name << "\") return GetNode()->UnpackStructure(mstructin);" << endl;
 		w2 << "RR_SHARED_PTR<RobotRaconteur::StructureStub> stub=FindStructureStub(type);" << endl;
 		w2 << "return stub->UnpackStructure(mstructin);" << endl;
@@ -1612,11 +1612,11 @@ namespace RobotRaconteurGen
 		w2 << "}" << endl;
 
 		w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> " << factory_name << "::PackPodArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> structin)" << endl << "{" << endl;
-		w2 << "std::string type=structin->RRElementTypeString();" << endl;
-		w2 << "boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
+		w2 << "boost::string_ref type=structin->RRElementTypeString();" << endl;
+		w2 << "boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
 
-		w2 << "std::string servicetype=res.get<0>();" << endl;
-		w2 << "std::string objecttype=res.get<1>();" << endl;
+		w2 << "boost::string_ref servicetype=res.get<0>();" << endl;
+		w2 << "boost::string_ref objecttype=res.get<1>();" << endl;
 		w2 << "if (servicetype != \"" << d->Name << "\") return GetNode()->PackPodArray(structin);" << endl;
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Pods.begin(); e != d->Pods.end(); ++e)
 		{
@@ -1626,10 +1626,10 @@ namespace RobotRaconteurGen
 		w2 << "}" << endl;
 
 		w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> " << factory_name << "::UnpackPodArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> mstructin)" << endl << "{" << endl;
-		w2 << "std::string type=mstructin->GetTypeString();" << endl;
-		w2 << "boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
-		w2 << "std::string servicetype=res.get<0>();" << endl;
-		w2 << "std::string objecttype=res.get<1>();" << endl;
+		w2 << "boost::string_ref type=mstructin->GetTypeString().str();" << endl;
+		w2 << "boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
+		w2 << "boost::string_ref servicetype=res.get<0>();" << endl;
+		w2 << "boost::string_ref objecttype=res.get<1>();" << endl;
 		w2 << "if (servicetype != \"" << d->Name << "\") return GetNode()->UnpackPodArray(mstructin);" << endl;
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Pods.begin(); e != d->Pods.end(); ++e)
 		{
@@ -1639,10 +1639,10 @@ namespace RobotRaconteurGen
 		w2 << "}" << endl;
 
 		w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> " << factory_name << "::PackPodMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> structin)" << endl << "{" << endl;
-		w2 << "std::string type=structin->RRElementTypeString();" << endl;
-		w2 << "boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
-		w2 << "std::string servicetype=res.get<0>();" << endl;
-		w2 << "std::string objecttype=res.get<1>();" << endl;
+		w2 << "boost::string_ref type=structin->RRElementTypeString();" << endl;
+		w2 << "boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
+		w2 << "boost::string_ref servicetype=res.get<0>();" << endl;
+		w2 << "boost::string_ref objecttype=res.get<1>();" << endl;
 		w2 << "if (servicetype != \"" << d->Name << "\") return GetNode()->PackPodMultiDimArray(structin);" << endl;
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Pods.begin(); e != d->Pods.end(); ++e)
 		{
@@ -1652,10 +1652,10 @@ namespace RobotRaconteurGen
 		w2 << "}" << endl;
 		
 		w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> " << factory_name << "::UnpackPodMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> mstructin)" << endl << "{" << endl;
-		w2 << "std::string type=mstructin->GetTypeString();" << endl;
-		w2 << "boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
-		w2 << "std::string servicetype=res.get<0>();" << endl;
-		w2 << "std::string objecttype=res.get<1>();" << endl;
+		w2 << "boost::string_ref type=mstructin->GetTypeString().str();" << endl;
+		w2 << "boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
+		w2 << "boost::string_ref servicetype=res.get<0>();" << endl;
+		w2 << "boost::string_ref objecttype=res.get<1>();" << endl;
 		w2 << "if (servicetype != \"" << d->Name << "\") return GetNode()->UnpackPodMultiDimArray(mstructin);" << endl;
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Pods.begin(); e != d->Pods.end(); ++e)
 		{
@@ -1665,11 +1665,11 @@ namespace RobotRaconteurGen
 		w2 << "}" << endl;
 
 		w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> " << factory_name << "::PackNamedArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> structin)" << endl << "{" << endl;
-		w2 << "std::string type=structin->RRElementTypeString();" << endl;
-		w2 << "boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
+		w2 << "boost::string_ref type=structin->RRElementTypeString();" << endl;
+		w2 << "boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
 
-		w2 << "std::string servicetype=res.get<0>();" << endl;
-		w2 << "std::string objecttype=res.get<1>();" << endl;
+		w2 << "boost::string_ref servicetype=res.get<0>();" << endl;
+		w2 << "boost::string_ref objecttype=res.get<1>();" << endl;
 		w2 << "if (servicetype != \"" << d->Name << "\") return GetNode()->PackNamedArray(structin);" << endl;
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->NamedArrays.begin(); e != d->NamedArrays.end(); ++e)
 		{
@@ -1679,10 +1679,10 @@ namespace RobotRaconteurGen
 		w2 << "}" << endl;
 
 		w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> " << factory_name << "::UnpackNamedArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> mstructin)" << endl << "{" << endl;
-		w2 << "std::string type=mstructin->GetTypeString();" << endl;
-		w2 << "boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
-		w2 << "std::string servicetype=res.get<0>();" << endl;
-		w2 << "std::string objecttype=res.get<1>();" << endl;
+		w2 << "boost::string_ref type=mstructin->GetTypeString().str();" << endl;
+		w2 << "boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
+		w2 << "boost::string_ref servicetype=res.get<0>();" << endl;
+		w2 << "boost::string_ref objecttype=res.get<1>();" << endl;
 		w2 << "if (servicetype != \"" << d->Name << "\") return GetNode()->UnpackNamedArray(mstructin);" << endl;
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->NamedArrays.begin(); e != d->NamedArrays.end(); ++e)
 		{
@@ -1692,10 +1692,10 @@ namespace RobotRaconteurGen
 		w2 << "}" << endl;
 
 		w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> " << factory_name << "::PackNamedMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> structin)" << endl << "{" << endl;
-		w2 << "std::string type=structin->RRElementTypeString();" << endl;
-		w2 << "boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
-		w2 << "std::string servicetype=res.get<0>();" << endl;
-		w2 << "std::string objecttype=res.get<1>();" << endl;
+		w2 << "boost::string_ref type=structin->RRElementTypeString();" << endl;
+		w2 << "boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
+		w2 << "boost::string_ref servicetype=res.get<0>();" << endl;
+		w2 << "boost::string_ref objecttype=res.get<1>();" << endl;
 		w2 << "if (servicetype != \"" << d->Name << "\") return GetNode()->PackNamedMultiDimArray(structin);" << endl;
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->NamedArrays.begin(); e != d->NamedArrays.end(); ++e)
 		{
@@ -1705,10 +1705,10 @@ namespace RobotRaconteurGen
 		w2 << "}" << endl;
 
 		w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> " << factory_name << "::UnpackNamedMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> mstructin)" << endl << "{" << endl;
-		w2 << "std::string type=mstructin->GetTypeString();" << endl;
-		w2 << "boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
-		w2 << "std::string servicetype=res.get<0>();" << endl;
-		w2 << "std::string objecttype=res.get<1>();" << endl;
+		w2 << "boost::string_ref type=mstructin->GetTypeString().str();" << endl;
+		w2 << "boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
+		w2 << "boost::string_ref servicetype=res.get<0>();" << endl;
+		w2 << "boost::string_ref objecttype=res.get<1>();" << endl;
 		w2 << "if (servicetype != \"" << d->Name << "\") return GetNode()->UnpackNamedMultiDimArray(mstructin);" << endl;
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->NamedArrays.begin(); e != d->NamedArrays.end(); ++e)
 		{
@@ -1717,11 +1717,11 @@ namespace RobotRaconteurGen
 		w2 << "throw RobotRaconteur::ServiceException(\"Invalid namedarray type.\");" << endl;
 		w2 << "}" << endl;
 
-		w2 << "RR_SHARED_PTR<RobotRaconteur::ServiceStub> " << factory_name << "::CreateStub(const std::string& type, const std::string& path, RR_SHARED_PTR<RobotRaconteur::ClientContext> context)" << endl << "{" << endl;
-		w2 << "boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
+		w2 << "RR_SHARED_PTR<RobotRaconteur::ServiceStub> " << factory_name << "::CreateStub(boost::string_ref type, boost::string_ref path, RR_SHARED_PTR<RobotRaconteur::ClientContext> context)" << endl << "{" << endl;
+		w2 << "boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
 		
-		w2 << "std::string servicetype=res.get<0>();" << endl;
-		w2 << "std::string objecttype=res.get<1>();" << endl;
+		w2 << "boost::string_ref servicetype=res.get<0>();" << endl;
+		w2 << "boost::string_ref objecttype=res.get<1>();" << endl;
 		w2 << "if (servicetype != \"" << d->Name << "\") return GetNode()->GetServiceType(servicetype)->CreateStub(type,path,context);" << endl;
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Objects.begin(); e != d->Objects.end(); ++e)
 		{
@@ -1731,12 +1731,12 @@ namespace RobotRaconteurGen
 		w2 << "}" << endl;
 
 
-		w2 << "RR_SHARED_PTR<RobotRaconteur::ServiceSkel> " << factory_name << "::CreateSkel(const std::string& type, const std::string& path, RR_SHARED_PTR<RobotRaconteur::RRObject> obj, RR_SHARED_PTR<RobotRaconteur::ServerContext> context)" << endl << "{" << endl;
+		w2 << "RR_SHARED_PTR<RobotRaconteur::ServiceSkel> " << factory_name << "::CreateSkel(boost::string_ref type, const boost::string_ref path, RR_SHARED_PTR<RobotRaconteur::RRObject> obj, RR_SHARED_PTR<RobotRaconteur::ServerContext> context)" << endl << "{" << endl;
 	
-		w2 << "boost::tuple<std::string,std::string> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
+		w2 << "boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
 		
-		w2 << "std::string servicetype=res.get<0>();" << endl;
-		w2 << "std::string objecttype=res.get<1>();" << endl;
+		w2 << "boost::string_ref servicetype=res.get<0>();" << endl;
+		w2 << "boost::string_ref objecttype=res.get<1>();" << endl;
 		w2 << "if (servicetype != \"" << d->Name << "\") return GetNode()->GetServiceType(servicetype)->CreateSkel(type,path,obj,context);" << endl;
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Objects.begin(); e != d->Objects.end(); ++e)
 		{
@@ -1753,7 +1753,7 @@ namespace RobotRaconteurGen
 		w2 << "{" << endl;
 		w2 << "	return;" << endl;
 		w2 << "}" << endl;
-		w2 << "boost::tuple<std::string,std::string> rr_res=RobotRaconteur::SplitQualifiedName(rr_type);" << endl;
+		w2 << "boost::tuple<boost::string_ref,boost::string_ref> rr_res=RobotRaconteur::SplitQualifiedName(rr_type);" << endl;
 		w2 << "if (rr_res.get<0>() != \"" << d->Name << "\") GetNode()->DownCastAndThrowException(rr_exp);" << endl;
 		for (vector<string>::iterator e=d->Exceptions.begin(); e!=d->Exceptions.end(); e++)
 		{
@@ -1769,7 +1769,7 @@ namespace RobotRaconteurGen
 		w2 << "{" << endl;
 		w2 << "	return rr_exp;" << endl;
 		w2 << "}" << endl;
-		w2 << "boost::tuple<std::string,std::string> rr_res=RobotRaconteur::SplitQualifiedName(rr_type);" << endl;
+		w2 << "boost::tuple<boost::string_ref,boost::string_ref> rr_res=RobotRaconteur::SplitQualifiedName(rr_type);" << endl;
 		w2 << "if (rr_res.get<0>() != \"" << d->Name << "\") return GetNode()->DownCastException(rr_exp);" << endl;
 		for (vector<string>::iterator e=d->Exceptions.begin(); e!=d->Exceptions.end(); e++)
 		{
@@ -1856,7 +1856,7 @@ namespace RobotRaconteurGen
 			w2 << "{" << endl;
 			w2 << "public:" << endl;
 
-			w2 << fix_name((*e)->Name) << "_stub(const std::string& path, RR_SHARED_PTR<RobotRaconteur::ClientContext> c);" << endl << endl;
+			w2 << fix_name((*e)->Name) << "_stub(boost::string_ref, RR_SHARED_PTR<RobotRaconteur::ClientContext> c);" << endl << endl;
 			w2 << "virtual void RRInitStub();" << endl;
 
 			MEMBER_ITER(PropertyDefinition)
@@ -1907,8 +1907,8 @@ namespace RobotRaconteurGen
 			w2 << "virtual void DispatchWireMessage(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m);" << endl;
 			w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> CallbackCall(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m);" << endl;
 			w2 << "virtual void RRClose();" << endl;
-			w2 << "virtual RR_SHARED_PTR<RobotRaconteur::PipeClientBase> RRGetPipeClient(const std::string& membername);" << endl;
-			w2 << "virtual RR_SHARED_PTR<RobotRaconteur::WireClientBase> RRGetWireClient(const std::string& membername);" << endl;
+			w2 << "virtual RR_SHARED_PTR<RobotRaconteur::PipeClientBase> RRGetPipeClient(boost::string_ref membername);" << endl;
+			w2 << "virtual RR_SHARED_PTR<RobotRaconteur::WireClientBase> RRGetWireClient(boost::string_ref membername);" << endl;
 
 			w2 << "private:" << endl;
 
@@ -2005,7 +2005,7 @@ namespace RobotRaconteurGen
 			MEMBER_ITER_END()
 
 
-			w2 << "virtual std::string RRType();" << endl;
+			w2 << "boost::string_ref RRType();" << endl;
 			w2 << "};" << endl << endl;
 		}
 	}
@@ -2019,14 +2019,14 @@ namespace RobotRaconteurGen
 			w2 << "class " << fix_name((*e)->Name) << "_skel : " <<  "public virtual RobotRaconteur::ServiceSkel" << endl;
 			w2 << "{" << endl;
 			w2 << "public:" << endl;
-			w2 << "virtual void Init(const std::string& path, RR_SHARED_PTR<RobotRaconteur::RRObject> object, RR_SHARED_PTR<RobotRaconteur::ServerContext> context);" << endl;
+			w2 << "virtual void Init(boost::string_ref path, RR_SHARED_PTR<RobotRaconteur::RRObject> object, RR_SHARED_PTR<RobotRaconteur::ServerContext> context);" << endl;
 			w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> CallGetProperty(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m);" << endl << endl;
 			w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> CallSetProperty(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m);" << endl << endl;
 			w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> CallFunction(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m);" << endl << endl;
 			w2 << "virtual void ReleaseCastObject();" << endl << endl;
 			w2 << "virtual void RegisterEvents(RR_SHARED_PTR<RobotRaconteur::RRObject> rrobj1);" << endl << endl;
 			w2 << "virtual void UnregisterEvents(RR_SHARED_PTR<RobotRaconteur::RRObject> rrobj1);" << endl << endl;
-			w2 << "virtual RR_SHARED_PTR<RobotRaconteur::RRObject> GetSubObj(const std::string &name, const std::string &ind);" << endl << endl;
+			w2 << "virtual RR_SHARED_PTR<RobotRaconteur::RRObject> GetSubObj(boost::string_ref, boost::string_ref);" << endl << endl;
 			w2 << "virtual void InitPipeServers(RR_SHARED_PTR<RobotRaconteur::RRObject> rrobj1);" << endl << endl;
 			w2 << "virtual void InitWireServers(RR_SHARED_PTR<RobotRaconteur::RRObject> rrobj1);" << endl << endl;
 			w2 << "virtual void DispatchPipeMessage(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, uint32_t e);" << endl << endl;
@@ -2034,7 +2034,7 @@ namespace RobotRaconteurGen
 			w2 << "virtual void InitCallbackServers(RR_SHARED_PTR<RobotRaconteur::RRObject> o);" << endl << endl;
 			w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> CallPipeFunction(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, uint32_t e);" << endl << endl;
 			w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> CallWireFunction(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, uint32_t e);" << endl << endl;
-			w2 << "virtual RR_SHARED_PTR<void> GetCallbackFunction(uint32_t endpoint, const std::string& membername);" << endl << endl;
+			w2 << "virtual RR_SHARED_PTR<void> GetCallbackFunction(uint32_t endpoint, boost::string_ref);" << endl << endl;
 			w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> CallMemoryFunction(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::Endpoint> e);" << endl << endl;
 			w2 << "virtual bool IsRequestNoLock(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m);" << endl << endl;
 			w2 << "virtual std::string GetObjectType();" << endl;
@@ -2238,7 +2238,7 @@ namespace RobotRaconteurGen
 			MEMBER_ITER_END()
 
 			//Constructor
-			w2 << fix_name((*e)->Name) << "_stub::" << fix_name((*e)->Name) << "_stub(const std::string &path, RR_SHARED_PTR<RobotRaconteur::ClientContext> c) : RobotRaconteur::ServiceStub(path,c)"  <<"{ }" << endl;
+			w2 << fix_name((*e)->Name) << "_stub::" << fix_name((*e)->Name) << "_stub(boost::string_ref path, RR_SHARED_PTR<RobotRaconteur::ClientContext> c) : RobotRaconteur::ServiceStub(path,c)"  <<"{ }" << endl;
 
 			w2 << "void " << fix_name((*e)->Name) << "_stub::RRInitStub()" << endl << "{" << endl;
 			MEMBER_ITER(PipeDefinition)
@@ -2525,7 +2525,7 @@ namespace RobotRaconteurGen
 
 			w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>" << fix_name((*e)->Name) << "_stub::CallbackCall(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_m)" << endl << "{" << endl;
 			//w2 << "boost::shared_lock<boost::shared_mutex> lock(context_lock);" << endl;
-			w2 << "std::string ename=rr_m->MemberName;" << endl;
+			w2 << "MessageStringPtr& ename=rr_m->MemberName;" << endl;
 			w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_mr=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_CallbackCallRet, ename);" << endl;
 			w2 << "rr_mr->ServicePath=rr_m->ServicePath;" << endl;
 			w2 << "rr_mr->RequestID=rr_m->RequestID;" << endl;
@@ -2554,7 +2554,7 @@ namespace RobotRaconteurGen
 			w2 << "}" << endl;
 
 			w2 << endl;
-			w2 << "std::string " << fix_name((*e)->Name) << "_stub::RRType()" << endl << "{" << endl;
+			w2 << "boost::string_ref " << fix_name((*e)->Name) << "_stub::RRType()" << endl << "{" << endl;
 			w2 << "return \"" << d->Name << "." << (*e)->Name << "\";" << endl;
 			w2 << "}" << endl;
 
@@ -2588,14 +2588,14 @@ namespace RobotRaconteurGen
 			w2 << "ServiceStub::RRClose();" << endl;
 			w2 << "}" << endl << endl;
 
-			w2 << "RR_SHARED_PTR<RobotRaconteur::PipeClientBase> " << fix_name((*e)->Name) << "_stub::RRGetPipeClient(const std::string& membername)" << endl << "{" << endl;
+			w2 << "RR_SHARED_PTR<RobotRaconteur::PipeClientBase> " << fix_name((*e)->Name) << "_stub::RRGetPipeClient(boost::string_ref membername)" << endl << "{" << endl;
 			MEMBER_ITER(PipeDefinition)
 			w2 << "if (membername ==\"" << m->Name << "\") return rrvar_" << m->Name << ";" << endl;
 			MEMBER_ITER_END()
 			w2 << "return ServiceStub::RRGetPipeClient(membername);" << endl;
 			w2 << "}" << endl << endl;
 
-			w2 << "RR_SHARED_PTR<RobotRaconteur::WireClientBase> " << fix_name((*e)->Name) << "_stub::RRGetWireClient(const std::string& membername)" << endl << "{" << endl;
+			w2 << "RR_SHARED_PTR<RobotRaconteur::WireClientBase> " << fix_name((*e)->Name) << "_stub::RRGetWireClient(boost::string_ref membername)" << endl << "{" << endl;
 			MEMBER_ITER(WireDefinition)
 				w2 << "if (membername ==\"" << m->Name << "\") return rrvar_" << m->Name << ";" << endl;
 			MEMBER_ITER_END()
@@ -2863,7 +2863,7 @@ namespace RobotRaconteurGen
 
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Objects.begin(); e != d->Objects.end(); ++e)
 		{
-			w2 << "void " << fix_name((*e)->Name) << "_skel::Init(const std::string& path, RR_SHARED_PTR<RobotRaconteur::RRObject> object, RR_SHARED_PTR<RobotRaconteur::ServerContext> context)" << endl << "{" << endl;
+			w2 << "void " << fix_name((*e)->Name) << "_skel::Init(boost::string_ref path, RR_SHARED_PTR<RobotRaconteur::RRObject> object, RR_SHARED_PTR<RobotRaconteur::ServerContext> context)" << endl << "{" << endl;
 			w2 << "uncastobj=object;" << endl;
 			w2 << "rr_InitPipeServersRun=false;" << endl;
 			w2 << "rr_InitWireServersRun=false;" << endl;
@@ -3190,14 +3190,14 @@ namespace RobotRaconteurGen
 			w2 << "}" << endl << endl;
 
 			//objrefs
-			w2 << "RR_SHARED_PTR<RobotRaconteur::RRObject> " << fix_name((*e)->Name) << "_skel::GetSubObj(const std::string &name, const std::string &ind)" << endl << "{" << endl;
+			w2 << "RR_SHARED_PTR<RobotRaconteur::RRObject> " << fix_name((*e)->Name) << "_skel::GetSubObj(boost::string_ref name, boost::string_ref ind)" << endl << "{" << endl;
 			MEMBER_ITER(ObjRefDefinition)
 			w2 << "if (name==\"" << m->Name << "\")" << endl << "{" << endl;
 			OBJREF_ARRAY_CONTAINER_CMD(m,
 				w2 << "return RobotRaconteur::rr_cast<RobotRaconteur::RRObject>(get_obj()->get_" << fix_name(m->Name) << "());" << endl,
 				w2 << "return RobotRaconteur::rr_cast<RobotRaconteur::RRObject>(get_obj()->get_" << fix_name(m->Name) << "(boost::lexical_cast<int32_t>(ind)));" << endl,
 				w2 << "return RobotRaconteur::rr_cast<RobotRaconteur::RRObject>(get_obj()->get_" << fix_name(m->Name) << "(boost::lexical_cast<int32_t>(ind)));" << endl,
-				w2 << "return RobotRaconteur::rr_cast<RobotRaconteur::RRObject>(get_obj()->get_" << fix_name(m->Name) << "(ind));" << endl
+				w2 << "return RobotRaconteur::rr_cast<RobotRaconteur::RRObject>(get_obj()->get_" << fix_name(m->Name) << "(ind.to_string()));" << endl
 				)
 		
 			w2 << "}" << endl;
@@ -3336,7 +3336,7 @@ namespace RobotRaconteurGen
 			MEMBER_ITER_END()
 
 			
-			w2 << "RR_SHARED_PTR<void> " << fix_name((*e)->Name) << "_skel::GetCallbackFunction(uint32_t endpoint, const std::string& membername)" << endl << "{" << endl;
+			w2 << "RR_SHARED_PTR<void> " << fix_name((*e)->Name) << "_skel::GetCallbackFunction(uint32_t endpoint, boost::string_ref membername)" << endl << "{" << endl;
 			MEMBER_ITER(CallbackDefinition)
 			w2 << "if (membername==\"" << m->Name << "\")" << endl << "{" << endl;
 			vector<string> p;

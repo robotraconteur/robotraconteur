@@ -29,11 +29,11 @@ namespace RobotRaconteur
 
 
 
-ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRArray<char> > stringToRRArray(const std::string& str)
+ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRArray<char> > stringToRRArray(boost::string_ref str)
 {
 	size_t s=str.size();
 	RR_INTRUSIVE_PTR<RRArray<char> > ret=AllocateRRArray<char>(s);
-	memcpy(ret->data(),str.c_str(),s);
+	memcpy(ret->data(),str.data(),s);
 	return ret;
 
 
@@ -62,13 +62,45 @@ RRValue::RRValue()
 
 }
 
-std::string RRBaseArray::RRType()
+boost::string_ref RRBaseArray::RRType()
 {
-		std::string type=GetTypeString();
-		boost::replace_all(type,"[]","");
-
-		return "RobotRaconteur.RRArray<" + type + ">";
+	switch (GetTypeID())
+	{	
+	case DataTypes_double_t:
+		return "RobotRaconteur.RRArray<double>";
+	case DataTypes_single_t:
+		return "RobotRaconteur.RRArray<single>";
+	case DataTypes_int8_t:
+		return "RobotRaconteur.RRArray<int8>";
+	case DataTypes_uint8_t:
+		return "RobotRaconteur.RRArray<uint8>";
+	case DataTypes_int16_t:
+		return "RobotRaconteur.RRArray<int16>";
+	case DataTypes_uint16_t:
+		return "RobotRaconteur.RRArray<uint16>";
+	case DataTypes_int32_t:
+		return "RobotRaconteur.RRArray<int32>";
+	case DataTypes_uint32_t:
+		return "RobotRaconteur.RRArray<uint32>";
+	case DataTypes_int64_t:
+		return "RobotRaconteur.RRArray<int64>";
+	case DataTypes_uint64_t:
+		return "RobotRaconteur.RRArray<uint64>";
+	case DataTypes_string_t:
+		return "RobotRaconteur.RRArray<char>";
+	case DataTypes_cdouble_t:
+		return "RobotRaconteur.RRArray<cdouble>";
+	case DataTypes_csingle_t:
+		return "RobotRaconteur.RRArray<csingle>";
+	case DataTypes_bool_t:
+		return "RobotRaconteur.RRArray<bool>";
+	default:
+		throw DataTypeException("Invalid data type");
 	}
+
+	throw DataTypeException("Invalid data type");
+
+}
 
 #ifdef ROBOTRACONTEUR_USE_WSTRING
 
@@ -83,7 +115,7 @@ ROBOTRACONTEUR_CORE_API std::string utf8_encode(const std::wstring &wstr)
 }
 
 // Convert an UTF8 string to a wide Unicode String
-ROBOTRACONTEUR_CORE_API std::wstring utf8_decode(const std::string &str)
+ROBOTRACONTEUR_CORE_API std::wstring utf8_decode(boost::string_ref str)
 {
 	if (str.size()==0) return L"";
 
@@ -546,7 +578,7 @@ namespace detail
 
 namespace detail
 {
-	ROBOTRACONTEUR_CORE_API std::string encode_index(const std::string& index)
+	ROBOTRACONTEUR_CORE_API std::string encode_index(boost::string_ref index)
 	{
 		std::stringstream out;
 
@@ -566,9 +598,9 @@ namespace detail
 		return out.str();
 	}
 
-	ROBOTRACONTEUR_CORE_API std::string decode_index(const std::string& index)
+	ROBOTRACONTEUR_CORE_API std::string decode_index(boost::string_ref index)
 	{
-		std::stringstream in(index);
+		std::stringstream in(index.to_string());
 		std::stringstream out;
 
 		while (in.tellg()<boost::numeric_cast<int>(index.length()) && (static_cast<int>(in.tellg())) != -1)
@@ -645,6 +677,131 @@ std::vector<std::string> RRListToStringVector(RR_INTRUSIVE_PTR<RRList<RRArray<ch
 		o.push_back(RRArrayToString(e));
 	}
 	return o;
+}
+
+namespace detail
+{
+
+class MessageStringRef_ptr_to_str : public boost::static_visitor<boost::string_ref>
+{
+public:
+	boost::string_ref operator()(boost::string_ref str) const {return str;}
+	boost::string_ref operator()(detail::MessageStringData* str_ptr) const
+	{
+		if (!str_ptr)
+		{
+			return "";
+		}
+		return str_ptr->str;
+	}
+};
+
+class MessageStringRef_ptr_to_ptr : public boost::static_visitor<detail::MessageStringData*>
+{
+public:
+	detail::MessageStringData* operator()(boost::string_ref str) const
+	{
+		detail::MessageStringData* dat = new detail::MessageStringData();
+		dat->str = str.to_string();
+		return dat;
+	}
+	detail::MessageStringData* operator()(MessageStringData* str_ptr) const {return str_ptr;}
+};
+
+}
+
+MessageStringPtr::MessageStringPtr() 
+{
+	
+}
+MessageStringPtr::MessageStringPtr(const std::string& str)
+{
+	detail::MessageStringData* dat = new detail::MessageStringData();
+	dat->str = str;
+	this->_str_ptr = dat;
+}
+MessageStringPtr::MessageStringPtr(boost::string_ref str)
+{
+	detail::MessageStringData* dat = new detail::MessageStringData();
+	dat->str = str.to_string();
+	this->_str_ptr = dat;
+}
+MessageStringPtr::MessageStringPtr(const MessageStringPtr& str_ptr)
+{
+	this->_str_ptr = str_ptr._str_ptr;
+}
+MessageStringPtr::MessageStringPtr(const MessageStringRef& str_ref)
+{
+	this->_str_ptr.reset(boost::apply_visitor(detail::MessageStringRef_ptr_to_ptr(), str_ref._str));
+}
+#if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
+MessageStringPtr::MessageStringPtr(std::string&& str)
+{
+	detail::MessageStringData* dat = new detail::MessageStringData();
+	dat->str = RR_MOVE(str);
+	this->_str_ptr = dat;
+}
+#endif
+
+boost::string_ref MessageStringPtr::str() const
+{	
+	if (!_str_ptr)
+	{
+		return "";
+	}
+	return _str_ptr->str;	
+}
+
+bool MessageStringPtr::operator ==(MessageStringRef b) const
+{
+	return this->str() == b.str();
+}
+bool MessageStringPtr::operator !=(MessageStringRef b) const
+{
+	return this->str() != b.str();
+}
+bool MessageStringPtr::operator <(MessageStringRef b) const
+{
+	return this->str() <= b.str();
+}
+
+MessageStringRef::MessageStringRef(const std::string& str)
+{
+	boost::string_ref str1(str);
+	_str = str1;
+}
+
+MessageStringRef::MessageStringRef(boost::string_ref str)
+{
+	_str = str;
+}
+MessageStringRef::MessageStringRef(const MessageStringPtr& str_ptr)
+{
+	_str = str_ptr._str_ptr.get();
+}
+MessageStringRef::MessageStringRef(const MessageStringRef& str_ref)
+{
+	_str = str_ref._str;
+}
+
+bool MessageStringRef::operator ==(MessageStringRef b) const
+{
+	return this->str() == b.str();
+}
+bool MessageStringRef::operator !=(MessageStringRef b) const
+{
+	return this->str() != b.str();
+}
+
+boost::string_ref MessageStringRef::str() const
+{
+	return boost::apply_visitor(detail::MessageStringRef_ptr_to_str(), _str);
+}
+
+std::size_t hash_value(const RobotRaconteur::MessageStringPtr& k)
+{
+	boost::string_ref k1 = k.str();
+	return boost::hash_range(k1.begin(), k1.end());
 }
 
 }

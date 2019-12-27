@@ -549,13 +549,13 @@ protected:
 };
 
 
-boost::optional<std::wstring> HardwareTransport_win_find_deviceinterface(RR_SHARED_PTR<void> f, const GUID* interface_guid, const NodeID& nodeid, const std::string& nodename);
+boost::optional<std::wstring> HardwareTransport_win_find_deviceinterface(RR_SHARED_PTR<void> f, const GUID* interface_guid, const NodeID& nodeid, boost::string_ref nodename);
 
-boost::optional<std::wstring> HardwareTransport_win_find_usb(RR_SHARED_PTR<void> f, const NodeID& nodeid, const std::string& nodename);
+boost::optional<std::wstring> HardwareTransport_win_find_usb(RR_SHARED_PTR<void> f, const NodeID& nodeid, boost::string_ref nodename);
 
-boost::optional<std::wstring> HardwareTransport_win_find_pci(RR_SHARED_PTR<void> f, const NodeID& nodeid, const std::string& nodename);
+boost::optional<std::wstring> HardwareTransport_win_find_pci(RR_SHARED_PTR<void> f, const NodeID& nodeid, boost::string_ref nodename);
 
-boost::optional<std::wstring> HardwareTransport_win_find_bluetooth(RR_SHARED_PTR<void> f, const NodeID& nodeid, const std::string& nodename);
+boost::optional<std::wstring> HardwareTransport_win_find_bluetooth(RR_SHARED_PTR<void> f, const NodeID& nodeid, boost::string_ref nodename);
 
 std::list<boost::tuple<NodeID,std::string> > HardwareTransport_win_find_deviceinterfaces(RR_SHARED_PTR<void> f, const GUID* interface_guid);
 

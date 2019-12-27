@@ -51,10 +51,10 @@ namespace RobotRaconteur
 		n->HandleException(e.get());
 	}
 		
-	void ServiceSkel::Init(const std::string &s, RR_SHARED_PTR<RRObject> o, RR_SHARED_PTR<ServerContext> c)
+	void ServiceSkel::Init(boost::string_ref s, RR_SHARED_PTR<RRObject> o, RR_SHARED_PTR<ServerContext> c)
 	{
 		InitializeInstanceFields();
-		m_ServicePath = s;
+		m_ServicePath.swap(s.to_string());
 		m_context = c;
 		uncastobj = o;
 		if (o == 0)
@@ -71,8 +71,8 @@ namespace RobotRaconteur
 		objectlock.reset();
 
 		std::string object_type_q = GetObjectType();
-		std::string object_def;
-		std::string object_type;
+		boost::string_ref object_def;
+		boost::string_ref object_type;
 
 		boost::tie(object_def, object_type) = SplitQualifiedName(object_type_q);
 		RR_SHARED_PTR<ServiceDefinition> d = RRGetNode()->GetServiceType(object_def)->ServiceDef();
@@ -89,10 +89,10 @@ namespace RobotRaconteur
 					if (!boost::contains(s, "."))
 						continue;
 					
-					std::string implement_def;
+					boost::string_ref implement_def;
 					boost::tie(implement_def, boost::tuples::ignore) = SplitQualifiedName(s);
 					bool implement_def_b;
-					boost::tie(boost::tuples::ignore, implement_def_b) = found_defs.insert(implement_def);
+					boost::tie(boost::tuples::ignore, implement_def_b) = found_defs.insert(RR_MOVE(implement_def.to_string()));
 					if (!implement_def_b)
 						continue;
 
@@ -146,7 +146,7 @@ namespace RobotRaconteur
 		return uncastobj;
 	}
 
-	RR_SHARED_PTR<RRObject> ServiceSkel::GetSubObj(const std::string &name)
+	RR_SHARED_PTR<RRObject> ServiceSkel::GetSubObj(boost::string_ref name)
 	{		
 		std::vector<std::string> s1;
 		boost::split(s1,name,boost::is_from_range('[','['));
@@ -181,7 +181,7 @@ namespace RobotRaconteur
 	{
 	}
 
-	void ServiceSkel::ObjRefChanged(const std::string &name)
+	void ServiceSkel::ObjRefChanged(boost::string_ref name)
 	{
 		std::string path = GetServicePath() + "." + name;
 		GetContext()->ReplaceObject(path);
@@ -338,22 +338,22 @@ namespace RobotRaconteur
 
 	RR_INTRUSIVE_PTR<MessageEntry> ServiceSkel::CallPipeFunction(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e)
 	{
-		throw MemberNotFoundException("Pipe " + m->MemberName + " not found");
+		throw MemberNotFoundException("Pipe " + m->MemberName.str() + " not found");
 	}
 
 	RR_INTRUSIVE_PTR<MessageEntry> ServiceSkel::CallWireFunction(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e)
 	{
-		throw MemberNotFoundException("Wire " + m->MemberName + " not found");
+		throw MemberNotFoundException("Wire " + m->MemberName.str() + " not found");
 	}
 
-	RR_SHARED_PTR<void> ServiceSkel::GetCallbackFunction(uint32_t endpoint, const std::string &membername)
+	RR_SHARED_PTR<void> ServiceSkel::GetCallbackFunction(uint32_t endpoint, boost::string_ref membername)
 	{
 		throw MemberNotFoundException("Callback " + membername + " not found");
 	}
 
 	RR_INTRUSIVE_PTR<MessageEntry> ServiceSkel::CallMemoryFunction(RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<Endpoint> e)
 	{
-		throw MemberNotFoundException("Memory " + m->MemberName + " not found");
+		throw MemberNotFoundException("Memory " + m->MemberName.str() + " not found");
 	}
 
 	bool ServiceSkel::IsLocked()
@@ -485,7 +485,7 @@ namespace RobotRaconteur
 	 RR_SHARED_PTR<ServiceFactory> ServerContext::GetRootObjectServiceDef(RobotRaconteurVersion client_version)
 	 {
 		 std::string root_object_type = GetRootObjectType(client_version);
-		 std::string root_object_def;
+		 boost::string_ref root_object_def;
 		 boost::tie(root_object_def, boost::tuples::ignore) = SplitQualifiedName(root_object_type);
 		 return GetNode()->GetServiceType(root_object_def);		 
 	 }
@@ -496,7 +496,7 @@ namespace RobotRaconteur
 		 return extra_imports;
 	 }
 
-	 void ServerContext::AddExtraImport(const std::string& import_)
+	 void ServerContext::AddExtraImport(boost::string_ref import_)
 	 {
 		 GetNode()->GetServiceType(import_);
 
@@ -507,10 +507,10 @@ namespace RobotRaconteur
 			 throw InvalidArgumentException("Extra import already added");
 		 }
 
-		 extra_imports.push_back(import_);
+		 extra_imports.push_back(RR_MOVE(import_.to_string()));
 	 }
 
-	 bool ServerContext::RemoveExtraImport(const std::string& import_)
+	 bool ServerContext::RemoveExtraImport(boost::string_ref import_)
 	 {
 		 boost::mutex::scoped_lock lock(extra_imports_lock);
 
@@ -743,7 +743,7 @@ namespace RobotRaconteur
 
 	}
 
-	void ServerContext::SetBaseObject(const std::string &name, RR_SHARED_PTR<RRObject> o, RR_SHARED_PTR<ServiceSecurityPolicy> policy)
+	void ServerContext::SetBaseObject(boost::string_ref name, RR_SHARED_PTR<RRObject> o, RR_SHARED_PTR<ServiceSecurityPolicy> policy)
 	{
 		if (base_object_set)
 			throw InvalidOperationException("Base object already set");
@@ -755,7 +755,7 @@ namespace RobotRaconteur
 
 		
 
-		m_ServiceName = name;
+		m_ServiceName.swap(name.to_string());
 
 		m_CurrentServicePath.reset(new std::string(name));
 		m_CurrentServerContext.reset(new RR_SHARED_PTR<ServerContext>(shared_from_this()));
@@ -763,7 +763,7 @@ namespace RobotRaconteur
 
 		RR_SHARED_PTR<ServiceSkel> s = GetServiceDef()->CreateSkel(o->RRType(),name, o, shared_from_this());
 
-		m_RootObjectType = o->RRType(); //boost::algorithm::replace_all_copy(o->RRType(),"::",".");
+		m_RootObjectType.swap(o->RRType().to_string()); //boost::algorithm::replace_all_copy(o->RRType(),"::",".");
 		base_object_set = true;
 		
 		{
@@ -777,13 +777,13 @@ namespace RobotRaconteur
 
 	}
 
-	RR_SHARED_PTR<ServiceSkel> ServerContext::GetObjectSkel(const std::string &servicepath)
+	RR_SHARED_PTR<ServiceSkel> ServerContext::GetObjectSkel(MessageStringRef servicepath)
 	{
 		
 		//object obj = null;
 		
 		std::vector<std::string> p;
-		boost::split(p,servicepath,boost::is_from_range('.','.'));
+		boost::split(p,servicepath.str(),boost::is_from_range('.','.'));
 		
 		std::string ppath = p.at(0);
 
@@ -791,7 +791,7 @@ namespace RobotRaconteur
 		{
 			boost::mutex::scoped_lock lock (skels_lock);
 
-			RR_UNORDERED_MAP<std::string, RR_SHARED_PTR<ServiceSkel> >::iterator e1 = skels.find(servicepath);
+			RR_UNORDERED_MAP<MessageStringPtr, RR_SHARED_PTR<ServiceSkel> >::iterator e1 = skels.find(servicepath);
 			if (e1 != skels.end()) return e1->second;
 
 			skel = skels.at(ppath);
@@ -809,7 +809,7 @@ namespace RobotRaconteur
 				ppath=ppath+"." + p.at(i);
 
 				skel1.reset();
-				RR_UNORDERED_MAP<std::string, RR_SHARED_PTR<ServiceSkel> >::iterator e1 = skels.find(ppath);
+				RR_UNORDERED_MAP<MessageStringPtr, RR_SHARED_PTR<ServiceSkel> >::iterator e1 = skels.find(ppath);
 				if (e1 != skels.end())
 				{
 					skel1 = e1->second;
@@ -847,7 +847,7 @@ namespace RobotRaconteur
 		return skel;
 	}
 
-	void ServerContext::ReplaceObject(const std::string &path)
+	void ServerContext::ReplaceObject(boost::string_ref path)
 	{
 
 		ReleaseServicePath(path);
@@ -855,7 +855,7 @@ namespace RobotRaconteur
 
 	}
 
-	std::string ServerContext::GetObjectType(const std::string &servicepath, RobotRaconteurVersion client_version)
+	std::string ServerContext::GetObjectType(MessageStringRef servicepath, RobotRaconteurVersion client_version)
 	{
 		//TODO: check client_version
 		if (servicepath != GetServiceName())
@@ -948,7 +948,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 					noreturn = true;
 				}
 
-				m_CurrentServicePath.reset(new std::string(m->ServicePath));
+				m_CurrentServicePath.reset(new std::string(m->ServicePath.str()));
 				m_CurrentServerContext.reset(new RR_SHARED_PTR<ServerContext>(shared_from_this()));
 
 
@@ -962,8 +962,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 					}
 
 					ret = CreateMessageEntry(MessageEntryType_ObjectTypeNameRet, m->MemberName);
-					std::string path = static_cast<std::string>(m->ServicePath);
-					std::string objtype = GetObjectType(path,v);
+					std::string objtype = GetObjectType(m->ServicePath,v);
 					ret->AddElement("objecttype", stringToRRArray(objtype));
 				}
 
@@ -1440,7 +1439,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 		}
 	}
 
-	void ServerContext::KickUser(const std::string& username)
+	void ServerContext::KickUser(boost::string_ref username)
 	{
 		std::list<RR_SHARED_PTR<ServerEndpoint> > kicked_clients;
 		{
@@ -1475,14 +1474,14 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 	RR_INTRUSIVE_PTR<MessageEntry> ServerContext::ClientSessionOp(RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> e)
 	{
-		if (user_authenticator == 0 && !boost::starts_with(m->MemberName,"Monitor"))
+		if (user_authenticator == 0 && !boost::starts_with(m->MemberName.str(),"Monitor"))
 			throw InvalidOperationException("User authentication not activated for this service");
 
 		RR_INTRUSIVE_PTR<MessageEntry> ret = CreateMessageEntry(MessageEntryType_ClientSessionOpRet, m->MemberName);
 		ret->RequestID = m->RequestID;
 		ret->ServicePath = m->ServicePath;
 
-		std::string command = m->MemberName;
+		const MessageStringPtr& command = m->MemberName;
 
 		if (command == "AuthenticateUser")
 		{
@@ -1521,7 +1520,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 		return m_RequireValidUser;
 	}
 
-	RR_SHARED_PTR<AuthenticatedUser> ServerContext::AuthenticateUser(const std::string &username, std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials)
+	RR_SHARED_PTR<AuthenticatedUser> ServerContext::AuthenticateUser(boost::string_ref username, std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials)
 	{
 
 		if (!user_authenticator) throw AuthenticationException("Authentication not enabled");
@@ -1540,7 +1539,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 			std::vector<std::string> priv;
 			std::string username = "";
-			if (!boost::starts_with(m->MemberName,"Monitor"))
+			if (!boost::starts_with(m->MemberName.str(),"Monitor"))
 			{
 				if (ServerEndpoint::GetCurrentAuthenticatedUser() == 0)
 					throw PermissionDeniedException("User must be authenticated to lock object");
@@ -1552,25 +1551,25 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 
 
-			std::string servicepath = m->ServicePath;
+			MessageStringPtr& servicepath = m->ServicePath;
 
 			RR_SHARED_PTR<ServiceSkel> skel = GetObjectSkel(servicepath);
 
 			if (m->MemberName == "RequestObjectLock")
 			{
-				RequestObjectLock(servicepath, ServerEndpoint::GetCurrentAuthenticatedUser()->GetUsername());
+				RequestObjectLock(servicepath.str(), ServerEndpoint::GetCurrentAuthenticatedUser()->GetUsername());
 				ret->AddElement("return", stringToRRArray("OK"));
 			}
 			else if (m->MemberName == "RequestClientObjectLock")
 			{
-				RequestClientObjectLock(servicepath, ServerEndpoint::GetCurrentAuthenticatedUser()->GetUsername(), ServerEndpoint::GetCurrentEndpoint()->GetLocalEndpoint());
+				RequestClientObjectLock(servicepath.str(), ServerEndpoint::GetCurrentAuthenticatedUser()->GetUsername(), ServerEndpoint::GetCurrentEndpoint()->GetLocalEndpoint());
 				ret->AddElement("return", stringToRRArray("OK"));
 			}
 			else if (m->MemberName == "ReleaseObjectLock")
 			{
 				bool override_ = std::find(priv.begin(), priv.end(), "objectlockoverride") != priv.end();
 				
-				ReleaseObjectLock(servicepath, username, override_);
+				ReleaseObjectLock(servicepath.str(), username, override_);
 
 				ret->AddElement("return", stringToRRArray("OK"));
 			}
@@ -1629,53 +1628,53 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 		}
 	}
 
-	void ServerContext::RequestObjectLock(const std::string& servicepath, const std::string& username)
+	void ServerContext::RequestObjectLock(boost::string_ref servicepath, boost::string_ref username)
 	{
 		RR_SHARED_PTR<ServiceSkel> skel = GetObjectSkel(servicepath);
 		boost::mutex::scoped_lock lock(skels_lock);
 		if (skel->IsLocked())
 			throw ObjectLockedException("Object already locked");
-		for (RR_UNORDERED_MAP<std::string, RR_SHARED_PTR<ServiceSkel> >::iterator s = skels.begin(); s != skels.end(); ++s)
+		for (RR_UNORDERED_MAP<MessageStringPtr, RR_SHARED_PTR<ServiceSkel> >::iterator s = skels.begin(); s != skels.end(); ++s)
 		{
-			if (boost::starts_with(s->first, servicepath))
+			if (boost::starts_with(s->first.str(), servicepath))
 				if (s->second->IsLocked())
 					throw ObjectLockedException("Object already locked");
 		}
 
 		RR_SHARED_PTR<ServerContext_ObjectLock> o = RR_MAKE_SHARED<ServerContext_ObjectLock>(username, skel);
 
-		for (RR_UNORDERED_MAP<std::string, RR_SHARED_PTR<ServiceSkel> >::iterator s = skels.begin(); s != skels.end(); ++s)
+		for (RR_UNORDERED_MAP<MessageStringPtr, RR_SHARED_PTR<ServiceSkel> >::iterator s = skels.begin(); s != skels.end(); ++s)
 		{
-			if (boost::starts_with(s->first, servicepath))
+			if (boost::starts_with(s->first.str(), servicepath))
 				o->AddSkel(s->second);
 		}
 
 		active_object_locks.insert(make_pair(o->GetRootServicePath(), o));
 	}
 
-	void ServerContext::RequestClientObjectLock(const std::string& servicepath, const std::string& username, uint32_t endpoint)
+	void ServerContext::RequestClientObjectLock(boost::string_ref servicepath, boost::string_ref username, uint32_t endpoint)
 	{
 		RR_SHARED_PTR<ServiceSkel> skel = GetObjectSkel(servicepath);
 		boost::mutex::scoped_lock lock(skels_lock);
 		if (skel->IsLocked())
 			throw ObjectLockedException("Object already locked");
-		for (RR_UNORDERED_MAP<std::string, RR_SHARED_PTR<ServiceSkel> >::iterator s = skels.begin(); s != skels.end(); ++s)
+		for (RR_UNORDERED_MAP<MessageStringPtr, RR_SHARED_PTR<ServiceSkel> >::iterator s = skels.begin(); s != skels.end(); ++s)
 		{
-			if (boost::starts_with(s->first, servicepath))
+			if (boost::starts_with(s->first.str(), servicepath))
 				if (s->second->IsLocked())
 					throw ObjectLockedException("Object already locked");
 		}
 
 		RR_SHARED_PTR<ServerContext_ObjectLock> o = RR_MAKE_SHARED<ServerContext_ObjectLock>(username, skel,endpoint);
-		for (RR_UNORDERED_MAP<std::string, RR_SHARED_PTR<ServiceSkel> >::iterator s = skels.begin(); s != skels.end(); ++s)
+		for (RR_UNORDERED_MAP<MessageStringPtr, RR_SHARED_PTR<ServiceSkel> >::iterator s = skels.begin(); s != skels.end(); ++s)
 		{
-			if (boost::starts_with(s->first, servicepath))
+			if (boost::starts_with(s->first.str(), servicepath))
 				o->AddSkel(s->second);
 		}
 		active_object_locks.insert(make_pair(o->GetRootServicePath(), o));
 	}
 
-	void ServerContext::ReleaseObjectLock(const std::string& servicepath, const std::string& username, bool override_)
+	void ServerContext::ReleaseObjectLock(boost::string_ref servicepath, boost::string_ref username, bool override_)
 	{
 		RR_SHARED_PTR<ServiceSkel> skel = GetObjectSkel(servicepath);
 		if (!skel->IsLocked())
@@ -1705,7 +1704,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 			active_object_locks.erase(skel->GetServicePath());
 	}
 
-	std::string ServerContext::GetObjectLockUsername(const std::string& servicepath)
+	std::string ServerContext::GetObjectLockUsername(boost::string_ref servicepath)
 	{
 		RR_SHARED_PTR<ServiceSkel> skel = GetObjectSkel(servicepath);
 		if (!skel->IsLocked())
@@ -1777,7 +1776,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 	}
 
-	void ServerContext::ReleaseServicePath1(const std::string &path)
+	void ServerContext::ReleaseServicePath1(const std::string& path)
 	{
 		if (path == GetServiceName())
 			throw ServiceException("Root object cannot be released");
@@ -1786,11 +1785,12 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 		{
 			boost::mutex::scoped_lock lock (skels_lock);
 			std::vector<std::string> objkeys;
-			BOOST_FOREACH (const std::string& k, skels | boost::adaptors::map_keys)
+			BOOST_FOREACH (const MessageStringPtr& k, skels | boost::adaptors::map_keys)
 			{
-				if (k == path || boost::starts_with(k,path + "."))
+				std::string path_param1 = path + ".";
+				if ( k == path || boost::starts_with(k.str(),path_param1))
 				{
-					objkeys.push_back(k);
+					objkeys.push_back(RR_MOVE(k.str().to_string()));
 				}
 			}
 
@@ -1800,7 +1800,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 			BOOST_FOREACH (std::string& path1, objkeys)
 			{
-				RR_UNORDERED_MAP<std::string, RR_SHARED_PTR<ServiceSkel> >::iterator e1 = skels.find(path1);
+				RR_UNORDERED_MAP<MessageStringPtr, RR_SHARED_PTR<ServiceSkel> >::iterator e1 = skels.find(path1);
 				if (e1 == skels.end()) continue;
 				RR_SHARED_PTR<ServiceSkel> s = e1->second;
 
@@ -1834,10 +1834,10 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 		
 	}
 
-	void ServerContext::ReleaseServicePath(const std::string &path)
+	void ServerContext::ReleaseServicePath(boost::string_ref path)
 	{
 
-		ReleaseServicePath1(path);
+		ReleaseServicePath1(path.to_string());
 
 		RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_ServicePathReleasedReq, "");
 		m->ServicePath = path;
@@ -1845,10 +1845,10 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 		SendEvent(m);
 	}
 
-	void ServerContext::ReleaseServicePath(const std::string &path, const std::vector<uint32_t>& endpoints)
+	void ServerContext::ReleaseServicePath(boost::string_ref path, const std::vector<uint32_t>& endpoints)
 	{
 
-		ReleaseServicePath1(path);
+		ReleaseServicePath1(path.to_string());
 
 		RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_ServicePathReleasedReq, "");
 		m->ServicePath = path;
@@ -2114,7 +2114,7 @@ boost::thread_specific_ptr<RR_SHARED_PTR<AuthenticatedUser> > ServerEndpoint::m_
 		m_CurrentAuthenticatedUser.reset(0);
 	}
 
-	void ServerEndpoint::AuthenticateUser(const std::string &username, std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials)
+	void ServerEndpoint::AuthenticateUser(boost::string_ref username, std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials)
 	{
 		
 		RR_SHARED_PTR<AuthenticatedUser> u = service->AuthenticateUser(username, credentials);

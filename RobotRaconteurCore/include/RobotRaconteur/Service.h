@@ -48,7 +48,7 @@ namespace RobotRaconteur
 
 		virtual ~ServiceSkel() {}
 
-		virtual void Init(const std::string &s, RR_SHARED_PTR<RRObject> o, RR_SHARED_PTR<ServerContext> c);
+		virtual void Init(boost::string_ref s, RR_SHARED_PTR<RRObject> o, RR_SHARED_PTR<ServerContext> c);
 
 		virtual void InitCallbackServers(RR_SHARED_PTR<RRObject> o);
 
@@ -92,9 +92,9 @@ namespace RobotRaconteur
 
 	public:
 
-		virtual RR_SHARED_PTR<RRObject> GetSubObj(const std::string &name, const std::string &ind) = 0;
+		virtual RR_SHARED_PTR<RRObject> GetSubObj(boost::string_ref name, boost::string_ref ind) = 0;
 
-		RR_SHARED_PTR<RRObject> GetSubObj(const std::string &name);
+		RR_SHARED_PTR<RRObject> GetSubObj(boost::string_ref name);
 
 		virtual void RegisterEvents(RR_SHARED_PTR<RRObject> obj1);
 
@@ -104,7 +104,7 @@ namespace RobotRaconteur
 
 		virtual void InitWireServers(RR_SHARED_PTR<RRObject> obj1);
 
-		void ObjRefChanged(const std::string &name);
+		void ObjRefChanged(boost::string_ref name);
 
 		void SendEvent(RR_INTRUSIVE_PTR<MessageEntry> m);
 
@@ -125,7 +125,7 @@ namespace RobotRaconteur
 
 		virtual RR_INTRUSIVE_PTR<MessageEntry> CallWireFunction(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e);
 
-		virtual RR_SHARED_PTR<void> GetCallbackFunction(uint32_t endpoint, const std::string& membername);
+		virtual RR_SHARED_PTR<void> GetCallbackFunction(uint32_t endpoint, boost::string_ref membername);
 
 		virtual RR_INTRUSIVE_PTR<MessageEntry> CallMemoryFunction(RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<Endpoint> e);
 
@@ -189,9 +189,9 @@ namespace RobotRaconteur
 	public:
 		std::vector<std::string> GetExtraImports();
 		
-		void AddExtraImport(const std::string& import_);
+		void AddExtraImport(boost::string_ref import_);
 
-		bool RemoveExtraImport(const std::string& import_);
+		bool RemoveExtraImport(boost::string_ref import_);
 
 	protected:
 		std::vector<std::string> extra_imports;
@@ -204,7 +204,7 @@ namespace RobotRaconteur
 		std::string m_ServiceName;
 
 
-		RR_UNORDERED_MAP<std::string, RR_SHARED_PTR<ServiceSkel> > skels;
+		RR_UNORDERED_MAP<MessageStringPtr, RR_SHARED_PTR<ServiceSkel> > skels;
 		boost::mutex skels_lock;
 
 		RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<ServerEndpoint> > client_endpoints;
@@ -259,14 +259,14 @@ namespace RobotRaconteur
 
 
 	public:
-		virtual void SetBaseObject(const std::string &name, RR_SHARED_PTR<RRObject> o, RR_SHARED_PTR<ServiceSecurityPolicy> policy = RR_SHARED_PTR<ServiceSecurityPolicy>());
+		virtual void SetBaseObject(boost::string_ref name, RR_SHARED_PTR<RRObject> o, RR_SHARED_PTR<ServiceSecurityPolicy> policy = RR_SHARED_PTR<ServiceSecurityPolicy>());
 
-		virtual RR_SHARED_PTR<ServiceSkel> GetObjectSkel(const std::string &servicepath);
+		virtual RR_SHARED_PTR<ServiceSkel> GetObjectSkel(MessageStringRef servicepath);
 
 
-		virtual void ReplaceObject(const std::string &path);
+		virtual void ReplaceObject(boost::string_ref path);
 
-		virtual std::string GetObjectType(const std::string &servicepath, RobotRaconteurVersion client_version);
+		virtual std::string GetObjectType(MessageStringRef servicepath, RobotRaconteurVersion client_version);
 
 		static RR_SHARED_PTR<ServerContext> GetCurrentServerContext();
 	private:
@@ -292,7 +292,7 @@ namespace RobotRaconteur
 		virtual void RemoveClient(RR_SHARED_PTR<ServerEndpoint> cendpoint);
 
 
-		virtual void KickUser(const std::string& username);
+		virtual void KickUser(boost::string_ref username);
 		
 
 
@@ -309,7 +309,7 @@ namespace RobotRaconteur
 
 		virtual bool RequireValidUser();
 
-		virtual RR_SHARED_PTR<AuthenticatedUser> AuthenticateUser(const std::string &username, std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials);
+		virtual RR_SHARED_PTR<AuthenticatedUser> AuthenticateUser(boost::string_ref username, std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials);
 
 
 
@@ -320,13 +320,13 @@ namespace RobotRaconteur
 
 	public:
 
-		void RequestObjectLock(const std::string& servicepath, const std::string& username);
+		void RequestObjectLock(boost::string_ref servicepath, boost::string_ref username);
 
-		void RequestClientObjectLock(const std::string& servicepath, const std::string& username, uint32_t endpoint);
+		void RequestClientObjectLock(boost::string_ref servicepath, boost::string_ref username, uint32_t endpoint);
 
-		void ReleaseObjectLock(const std::string& servicepath, const std::string& username, bool override_);
+		void ReleaseObjectLock(boost::string_ref servicepath, boost::string_ref username, bool override_);
 
-		std::string GetObjectLockUsername(const std::string& servicepath);
+		std::string GetObjectLockUsername(boost::string_ref servicepath);
 
 	protected:
 		void check_lock(RR_SHARED_PTR<ServiceSkel> skel, RR_INTRUSIVE_PTR<MessageEntry> m);
@@ -345,11 +345,11 @@ namespace RobotRaconteur
 		boost::signals2::signal<void (RR_SHARED_PTR<ServerContext>, ServerServiceListenerEventType, RR_SHARED_PTR<void>)> ServerServiceListener;
 
 	protected:
-		void ReleaseServicePath1(const std::string &path);
+		void ReleaseServicePath1(const std::string& path);
 	public:
-		void ReleaseServicePath(const std::string &path);
+		void ReleaseServicePath(boost::string_ref path);
 
-		void ReleaseServicePath(const std::string& path, const std::vector<uint32_t>& endpoints);
+		void ReleaseServicePath(boost::string_ref path, const std::vector<uint32_t>& endpoints);
 
 		void AsyncProcessCallbackRequest(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t endpoint, RR_MOVE_ARG(boost::function<void ( RR_INTRUSIVE_PTR<MessageEntry>, RR_SHARED_PTR<RobotRaconteurException>  )>) handler, int32_t timeout=RR_TIMEOUT_INFINITE);
 
@@ -426,7 +426,7 @@ namespace RobotRaconteur
 
 		virtual void MessageReceived(RR_INTRUSIVE_PTR<Message> m);
 
-		void AuthenticateUser(const std::string &username, std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials);
+		void AuthenticateUser(boost::string_ref username, std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials);
 
 		void LogoutUser();
 

@@ -31,7 +31,7 @@ namespace RobotRaconteur
 
 			StringTableEntry();
 
-			std::string value;
+			MessageStringPtr value;
 			uint32_t code;
 			bool confirmed;			
 		};
@@ -43,10 +43,10 @@ namespace RobotRaconteur
 			StringTable(bool server);
 			virtual ~StringTable();
 
-			uint32_t GetCodeForString(const std::string& str);
-			bool GetStringForCode(uint32_t code, std::string& str);
+			uint32_t GetCodeForString(MessageStringRef str);
+			bool GetStringForCode(uint32_t code, MessageStringPtr& str);
 
-			RR_SHARED_PTR<const StringTableEntry> GetEntryForString(const std::string& str);
+			RR_SHARED_PTR<const StringTableEntry> GetEntryForString(MessageStringRef str);
 			RR_SHARED_PTR<const StringTableEntry> GetEntryForCode(uint32_t code);
 
 			size_t GetUnconfirmedCodeCount();
@@ -54,7 +54,7 @@ namespace RobotRaconteur
 			void ConfirmCodes(const std::vector<uint32_t> codes);
 			void DropUnconfirmedCodes(const std::vector<uint32_t>& code);
 
-			bool AddCode(uint32_t code, const std::string& str, bool default_=false);
+			bool AddCode(uint32_t code, MessageStringRef str, bool default_=false);
 
 			bool IsTableFull();
 
@@ -68,13 +68,13 @@ namespace RobotRaconteur
 
 		protected:
 
-			void MessageEntryReplaceStringsWithCodes(RR_INTRUSIVE_PTR<MessageEntry> e, boost::unordered_map<std::string, uint32_t>& local_table, uint32_t& next_local_code, uint32_t& table_size);
-			void MessageElementReplaceStringsWithCodes(RR_INTRUSIVE_PTR<MessageElement> e, boost::unordered_map<std::string, uint32_t>& local_table, uint32_t& next_local_code, uint32_t& table_size);
-			void MessageEntryReplaceCodesWithStrings(RR_INTRUSIVE_PTR<MessageEntry> e, boost::unordered_map<uint32_t, std::string>& local_table);
-			void MessageElementReplaceCodesWithStrings(RR_INTRUSIVE_PTR<MessageElement> e, boost::unordered_map<uint32_t, std::string>& local_table);
+			void MessageEntryReplaceStringsWithCodes(RR_INTRUSIVE_PTR<MessageEntry> e, boost::unordered_map<MessageStringPtr, uint32_t>& local_table, uint32_t& next_local_code, uint32_t& table_size);
+			void MessageElementReplaceStringsWithCodes(RR_INTRUSIVE_PTR<MessageElement> e, boost::unordered_map<MessageStringPtr, uint32_t>& local_table, uint32_t& next_local_code, uint32_t& table_size);
+			void MessageEntryReplaceCodesWithStrings(RR_INTRUSIVE_PTR<MessageEntry> e, boost::unordered_map<uint32_t, MessageStringPtr>& local_table);
+			void MessageElementReplaceCodesWithStrings(RR_INTRUSIVE_PTR<MessageElement> e, boost::unordered_map<uint32_t, MessageStringPtr>& local_table);
 
-			void DoReplaceString(std::string& str, uint32_t& code, uint8_t& flags, uint32_t flag_str, uint32_t flag_code, boost::unordered_map<std::string, uint32_t>& local_table, uint32_t& next_local_code, uint32_t& table_size);
-			void DoReplaceCode(std::string& str, uint32_t& code, uint8_t& flags, uint32_t flag_str, uint32_t flag_code, boost::unordered_map<uint32_t, std::string>& local_table);
+			void DoReplaceString(MessageStringPtr& str, uint32_t& code, uint8_t& flags, uint32_t flag_str, uint32_t flag_code, boost::unordered_map<MessageStringPtr, uint32_t>& local_table, uint32_t& next_local_code, uint32_t& table_size);
+			void DoReplaceCode(MessageStringPtr& str, uint32_t& code, uint8_t& flags, uint32_t flag_str, uint32_t flag_code, boost::unordered_map<uint32_t, MessageStringPtr>& local_table);
 
 		protected:
 
@@ -87,9 +87,9 @@ namespace RobotRaconteur
 			boost::mutex this_lock;
 
 			RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<StringTableEntry> > code_table;
-			RR_UNORDERED_MAP<std::string, RR_SHARED_PTR<StringTableEntry> > string_table;
+			RR_UNORDERED_MAP<MessageStringPtr, RR_SHARED_PTR<StringTableEntry> > string_table;
 			RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<StringTableEntry> > unconfirmed_code_table;
-			RR_UNORDERED_MAP<std::string, RR_SHARED_PTR<StringTableEntry> > unconfirmed_string_table;
+			RR_UNORDERED_MAP<MessageStringPtr, RR_SHARED_PTR<StringTableEntry> > unconfirmed_string_table;
 
 			void load_defaults();
 

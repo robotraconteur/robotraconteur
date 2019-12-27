@@ -155,7 +155,7 @@ struct robotraconteur_protocol_descriptor {
 
 		virtual void UpdateDevices(boost::function<void()> handler);
 
-		virtual void AsyncCreateTransportConnection(const ParseConnectionURLResult& url_res, uint32_t endpoint, const std::string& noden, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler);
+		virtual void AsyncCreateTransportConnection(const ParseConnectionURLResult& url_res, uint32_t endpoint, boost::string_ref noden, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler);
 		
 		virtual void Shutdown();
 		
@@ -194,7 +194,7 @@ struct robotraconteur_protocol_descriptor {
 		std::string noden;
 		boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler;
 
-		UsbDeviceClaim_create_request(const ParseConnectionURLResult& url_res, uint32_t endpoint, const std::string& noden, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)>& handler);
+		UsbDeviceClaim_create_request(const ParseConnectionURLResult& url_res, uint32_t endpoint, boost::string_ref noden, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)>& handler);
 	};
 
 	class UsbDevice_Claim;
@@ -302,7 +302,7 @@ struct robotraconteur_protocol_descriptor {
 
 		RR_SHARED_PTR<RobotRaconteurNode> GetNode();
 
-		void AsyncCreateTransportConnection(const ParseConnectionURLResult& url_res, uint32_t endpoint, const std::string& noden, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler);
+		void AsyncCreateTransportConnection(const ParseConnectionURLResult& url_res, uint32_t endpoint, boost::string_ref noden, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler);
 
 		virtual void Close();
 
@@ -449,7 +449,7 @@ struct robotraconteur_protocol_descriptor {
 
 		boost::tuple<NodeID, std::string> GetNodeInfo();
 
-		void AsyncCreateTransportConnection(const ParseConnectionURLResult& url_res, uint32_t endpoint, const std::string& noden, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler);
+		void AsyncCreateTransportConnection(const ParseConnectionURLResult& url_res, uint32_t endpoint, boost::string_ref noden, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler);
 
 		void Close();
 
@@ -479,7 +479,7 @@ struct robotraconteur_protocol_descriptor {
 		UsbDeviceTransportConnection(RR_SHARED_PTR<HardwareTransport> parent, uint32_t local_endpoint, RR_SHARED_PTR<UsbDevice_Claim> device, int32_t stream_id);
 		virtual ~UsbDeviceTransportConnection() {}
 
-		void AsyncAttachSocket(std::string noden, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+		void AsyncAttachSocket(boost::string_ref noden, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
 				
 	protected:
 		virtual void async_write_some(const_buffers& b, boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler);

@@ -51,7 +51,7 @@ namespace RobotRaconteur
 		
 		void ReadArray(RR_INTRUSIVE_PTR<RRBaseArray>& arr);
 
-		std::string ReadString8(size_t length);
+		MessageStringPtr ReadString8(size_t length);
 
 		uint32_t ReadUintX();		
 		uint64_t ReadUintX2();
@@ -115,8 +115,8 @@ namespace RobotRaconteur
 		
 		void WriteArray(RR_INTRUSIVE_PTR<RRBaseArray>& arr);
 
-		void WriteString8(const std::string& str);
-		void WriteString8WithXLen(const std::string& str);
+		void WriteString8(MessageStringRef str);
+		void WriteString8WithXLen(MessageStringRef str);
 
 		void WriteUintX(uint32_t v);
 		void WriteUintX2(uint64_t v);
@@ -124,8 +124,8 @@ namespace RobotRaconteur
 		void WriteIntX(int32_t v);
 		void WriteIntX2(int64_t v);
 
-		static size_t GetStringByteCount8(const std::string& str);
-		static size_t GetStringByteCount8WithXLen(const std::string& str);
+		static size_t GetStringByteCount8(MessageStringRef str);
+		static size_t GetStringByteCount8WithXLen(MessageStringRef str);
 		
 		static size_t GetUintXByteCount(uint32_t v);
 		static size_t GetUintX2ByteCount(uint64_t v);

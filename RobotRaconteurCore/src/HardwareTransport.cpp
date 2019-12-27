@@ -123,7 +123,7 @@ namespace RobotRaconteur
 		return "rr+usb";
 	}
 
-	bool HardwareTransport::CanConnectService(const std::string& url)
+	bool HardwareTransport::CanConnectService(boost::string_ref url)
 	{		
 
 		if (boost::starts_with(url,"rr+usb://"))
@@ -142,7 +142,7 @@ namespace RobotRaconteur
 	}
 
 
-	void HardwareTransport::AsyncCreateTransportConnection(const std::string& url, RR_SHARED_PTR<Endpoint> ep, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) >& callback)
+	void HardwareTransport::AsyncCreateTransportConnection(boost::string_ref url, RR_SHARED_PTR<Endpoint> ep, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) >& callback)
 	{
 		ParseConnectionURLResult url_res = ParseConnectionURL(url);
 		if (url_res.nodename.empty() && url_res.nodeid.IsAnyNode())
@@ -375,7 +375,7 @@ namespace RobotRaconteur
 
 	}
 
-	RR_SHARED_PTR<ITransportConnection> HardwareTransport::CreateTransportConnection(const std::string& url, RR_SHARED_PTR<Endpoint> e)
+	RR_SHARED_PTR<ITransportConnection> HardwareTransport::CreateTransportConnection(boost::string_ref url, RR_SHARED_PTR<Endpoint> e)
 	{
 		RR_SHARED_PTR<detail::sync_async_handler<ITransportConnection> > d = RR_MAKE_SHARED<detail::sync_async_handler<ITransportConnection> >(RR_MAKE_SHARED<ConnectionException>("Timeout exception"));
 
@@ -453,7 +453,7 @@ namespace RobotRaconteur
 		t->SendMessage(m);
 	}
 
-	uint32_t HardwareTransport::TransportCapability(const std::string& name)
+	uint32_t HardwareTransport::TransportCapability(boost::string_ref name)
 	{
 		return 0;
 	}
@@ -840,13 +840,13 @@ namespace RobotRaconteur
 			std::string connecturl;
 			if (addr.is_v4())
 			{
-			connecturl="local://" + addr.to_string() + ":" + boost::lexical_cast<std::string>(port) + "/";
+			connecturl="local://" + addr + ":" + boost::lexical_cast<std::string>(port) + "/";
 			}
 			else
 			{
 			boost::asio::ip::address_v6 addr2=addr.to_v6();
 			addr2.scope_id(0);
-			connecturl="tcp://[" + addr2.to_string() + "]:" + boost::lexical_cast<std::string>(port) + "/";
+			connecturl="tcp://[" + addr2 + "]:" + boost::lexical_cast<std::string>(port) + "/";
 			}
 			*/
 
@@ -900,7 +900,7 @@ namespace RobotRaconteur
 	}
 
 	
-	void HardwareTransport_attach_transport(RR_SHARED_PTR<HardwareTransport> parent, RR_SHARED_PTR<HardwareTransportConnection_driver::socket_type> socket, bool server, uint32_t endpoint, std::string noden, const std::string& scheme, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)>& callback)
+	void HardwareTransport_attach_transport(RR_SHARED_PTR<HardwareTransport> parent, RR_SHARED_PTR<HardwareTransportConnection_driver::socket_type> socket, bool server, uint32_t endpoint, std::string noden, boost::string_ref scheme, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)>& callback)
 	{
 		try
 		{
@@ -918,10 +918,10 @@ namespace RobotRaconteur
 
 	//HardwareTransportConnection_driver
 
-	HardwareTransportConnection_driver::HardwareTransportConnection_driver(RR_SHARED_PTR<HardwareTransport> parent, bool server, uint32_t local_endpoint, const std::string& scheme)
+	HardwareTransportConnection_driver::HardwareTransportConnection_driver(RR_SHARED_PTR<HardwareTransport> parent, bool server, uint32_t local_endpoint, boost::string_ref scheme)
 		: HardwareTransportConnection(parent, server, local_endpoint)
 	{
-		this->scheme = scheme;
+		this->scheme.swap(scheme.to_string());
 	}
 
 	void HardwareTransportConnection_driver::async_write_some(const_buffers& b, boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler)

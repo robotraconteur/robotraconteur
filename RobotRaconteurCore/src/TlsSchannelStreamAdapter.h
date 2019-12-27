@@ -96,13 +96,13 @@ namespace detail
 
 		bool VerifyRemoteNodeCertificate(PCCERT_CONTEXT cert, const NodeID& remote_node);
 
-		bool VerifyRemoteHostnameCertificate(PCCERT_CONTEXT cert, const std::string& hostname);
+		bool VerifyRemoteHostnameCertificate(PCCERT_CONTEXT cert, boost::string_ref hostname);
 
 		void LoadCertificateFromMyStore();
 
 	protected:
 
-		bool VerifyCertificateOIDExtension(PCERT_INFO cert1, const std::string& searchoid);
+		bool VerifyCertificateOIDExtension(PCERT_INFO cert1, boost::string_ref searchoid);
 
 	};
 
@@ -268,7 +268,7 @@ namespace detail
 #endif
 
 	public:
-		TlsSchannelAsyncStreamAdapter(RR_BOOST_ASIO_IO_CONTEXT& _io_context, boost::shared_ptr<TlsSchannelAsyncStreamAdapterContext> context, direction_type direction, const std::string& servername, boost::function<void(mutable_buffers&, boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>)> async_read_some, boost::function<void(const_buffers&, boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>)> async_write_some, boost::function<void()> close);
+		TlsSchannelAsyncStreamAdapter(RR_BOOST_ASIO_IO_CONTEXT& _io_context, boost::shared_ptr<TlsSchannelAsyncStreamAdapterContext> context, direction_type direction, boost::string_ref servername, boost::function<void(mutable_buffers&, boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>)> async_read_some, boost::function<void(const_buffers&, boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>)> async_write_some, boost::function<void()> close);
 		~TlsSchannelAsyncStreamAdapter();
 
 		virtual void async_handshake(boost::function<void (const boost::system::error_code&)> handler);
@@ -284,7 +284,7 @@ namespace detail
 
 		virtual bool VerifyRemoteNodeCertificate(const NodeID& remote_node);
 
-		virtual bool VerifyRemoteHostnameCertificate(const std::string &hostname);
+		virtual bool VerifyRemoteHostnameCertificate(boost::string_ref hostname);
 
 		virtual boost::tuple<std::string,std::string> GetTlsPublicKeys();
 

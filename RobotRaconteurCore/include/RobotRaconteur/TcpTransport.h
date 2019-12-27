@@ -77,10 +77,10 @@ namespace RobotRaconteur
 
 		virtual void AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& callback);
 
-		virtual void AsyncCreateTransportConnection(const std::string& url, RR_SHARED_PTR<Endpoint> e, boost::function<void (RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException> ) >& callback);
+		virtual void AsyncCreateTransportConnection(boost::string_ref url, RR_SHARED_PTR<Endpoint> e, boost::function<void (RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException> ) >& callback);
 
 
-		virtual RR_SHARED_PTR<ITransportConnection> CreateTransportConnection(const std::string& url, RR_SHARED_PTR<Endpoint> e);
+		virtual RR_SHARED_PTR<ITransportConnection> CreateTransportConnection(boost::string_ref url, RR_SHARED_PTR<Endpoint> e);
 
 		
 
@@ -101,7 +101,7 @@ namespace RobotRaconteur
 		virtual bool IsPortSharerRunning();
 
 		
-		virtual bool CanConnectService(const std::string& url);
+		virtual bool CanConnectService(boost::string_ref url);
 				
 
 		
@@ -126,7 +126,7 @@ namespace RobotRaconteur
 
 		virtual void PeriodicCleanupTask();		
 
-		uint32_t TransportCapability(const std::string& name);
+		uint32_t TransportCapability(boost::string_ref name);
 
 
 		static void GetLocalAdapterIPAddresses(std::vector<boost::asio::ip::address>& addresses);
@@ -167,8 +167,8 @@ namespace RobotRaconteur
 		virtual void SetAcceptWebSockets(bool value);
 
 		virtual std::vector<std::string> GetWebSocketAllowedOrigins();
-		virtual void AddWebSocketAllowedOrigin(const std::string& origin);
-		virtual void RemoveWebSocketAllowedOrigin(const std::string& origin);
+		virtual void AddWebSocketAllowedOrigin(boost::string_ref origin);
+		virtual void RemoveWebSocketAllowedOrigin(boost::string_ref origin);
 
 		virtual bool GetDisableMessage3();
 		virtual void SetDisableMessage3(bool d);

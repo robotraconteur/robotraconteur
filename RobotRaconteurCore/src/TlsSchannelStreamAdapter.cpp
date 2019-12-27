@@ -313,7 +313,7 @@ namespace detail
 		return client_credentials;
 	}
 
-	bool TlsSchannelAsyncStreamAdapterContext::VerifyCertificateOIDExtension(PCERT_INFO cert1, const std::string& searchoid)
+	bool TlsSchannelAsyncStreamAdapterContext::VerifyCertificateOIDExtension(PCERT_INFO cert1, boost::string_ref searchoid)
 	{
 		bool found_mid_rr_oid = false;
 		for (size_t i = 0; i<cert1->cExtension; i++)
@@ -533,7 +533,7 @@ namespace detail
 		return valid;
 	}
 
-	bool TlsSchannelAsyncStreamAdapterContext::VerifyRemoteHostnameCertificate(PCCERT_CONTEXT cert, const std::string& hostname)
+	bool TlsSchannelAsyncStreamAdapterContext::VerifyRemoteHostnameCertificate(PCCERT_CONTEXT cert, boost::string_ref hostname)
 	{
 
 		//TODO: Check the certificate validation
@@ -572,7 +572,7 @@ namespace detail
 			return false;
 		}
 
-		std::string cn = hostname;
+		std::string cn = RR_MOVE(hostname.to_string());
 		WCHAR* cnw = new WCHAR[cn.size() + 1];
 		ZeroMemory(cnw, (cn.size() + 1)*sizeof(WCHAR));
 		size_t cnw_len;
@@ -616,7 +616,7 @@ namespace detail
 		next_layer_.close();
 	}
 
-	TlsSchannelAsyncStreamAdapter::TlsSchannelAsyncStreamAdapter(RR_BOOST_ASIO_IO_CONTEXT& _io_context_, boost::shared_ptr<TlsSchannelAsyncStreamAdapterContext> context, direction_type direction, const std::string& servername, boost::function<void(mutable_buffers&, boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>)> async_read_some, boost::function<void(const_buffers&, boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>)> async_write_some, boost::function<void()> close) : _io_context(_io_context_), asio_adapter(*this)
+	TlsSchannelAsyncStreamAdapter::TlsSchannelAsyncStreamAdapter(RR_BOOST_ASIO_IO_CONTEXT& _io_context_, boost::shared_ptr<TlsSchannelAsyncStreamAdapterContext> context, direction_type direction, boost::string_ref servername, boost::function<void(mutable_buffers&, boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>)> async_read_some, boost::function<void(const_buffers&, boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>)> async_write_some, boost::function<void()> close) : _io_context(_io_context_), asio_adapter(*this)
 	{
 		recv_buffer=boost::shared_array<uint8_t>(new uint8_t[max_tls_record_size]);
 		recv_buffer_un=boost::shared_array<uint8_t>(new uint8_t[max_tls_record_size]);
@@ -636,7 +636,7 @@ namespace detail
 		this->_async_write_some=async_write_some;
 		this->_close = close;
 		open=true;
-		this->servername=servername;
+		this->servername.swap(servername.to_string());
 		this->direction=direction;
 		this->context=context;
 
@@ -2021,7 +2021,7 @@ namespace detail
 		
 	}
 
-	bool TlsSchannelAsyncStreamAdapter::VerifyRemoteHostnameCertificate(const std::string &hostname)
+	bool TlsSchannelAsyncStreamAdapter::VerifyRemoteHostnameCertificate(boost::string_ref hostname)
 	{
 		boost::mutex::scoped_lock lock(stream_lock);
 		if (!hContext) throw InvalidOperationException("Stream not connected");

@@ -199,7 +199,7 @@ namespace RobotRaconteur
 	public:
 		RR_SHARED_PTR<RobotRaconteurNode> GetNode();		
 		std::string GetMemberName() const;		
-		ArrayMemoryServiceSkelBase(const std::string& membername, RR_SHARED_PTR<ServiceSkel> skel, DataTypes element_type, size_t element_size, MemberDefinition_Direction direction);		
+		ArrayMemoryServiceSkelBase(boost::string_ref membername, RR_SHARED_PTR<ServiceSkel> skel, DataTypes element_type, size_t element_size, MemberDefinition_Direction direction);		
 		virtual ~ArrayMemoryServiceSkelBase();
 		virtual RR_INTRUSIVE_PTR<MessageEntry> CallMemoryFunction(RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<Endpoint> e, RR_SHARED_PTR<ArrayMemoryBase> mem);
 		
@@ -212,7 +212,7 @@ namespace RobotRaconteur
 	class ArrayMemoryServiceSkel : public ArrayMemoryServiceSkelBase
 	{
 	public:
-		ArrayMemoryServiceSkel(const std::string& membername, RR_SHARED_PTR<ServiceSkel> skel, MemberDefinition_Direction direction)
+		ArrayMemoryServiceSkel(boost::string_ref membername, RR_SHARED_PTR<ServiceSkel> skel, MemberDefinition_Direction direction)
 			: ArrayMemoryServiceSkelBase(membername, skel, RRPrimUtil<T>::GetTypeID(), sizeof(T), direction)
 		{
 
@@ -250,7 +250,7 @@ namespace RobotRaconteur
 
 		RR_SHARED_PTR<RobotRaconteurNode> GetNode();
 		std::string GetMemberName() const;		
-		MultiDimArrayMemoryServiceSkelBase(const std::string& membername, RR_SHARED_PTR<ServiceSkel> skel, DataTypes element_type, size_t element_size, MemberDefinition_Direction direction);
+		MultiDimArrayMemoryServiceSkelBase(boost::string_ref membername, RR_SHARED_PTR<ServiceSkel> skel, DataTypes element_type, size_t element_size, MemberDefinition_Direction direction);
 		virtual ~MultiDimArrayMemoryServiceSkelBase();
 		virtual RR_INTRUSIVE_PTR<MessageEntry> CallMemoryFunction(RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<Endpoint> e, RR_SHARED_PTR<MultiDimArrayMemoryBase > mem);
 		virtual RR_INTRUSIVE_PTR<MessageElementData>  DoRead(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint32_t elem_count, RR_SHARED_PTR<MultiDimArrayMemoryBase> mem) = 0;
@@ -261,7 +261,7 @@ namespace RobotRaconteur
 	class MultiDimArrayMemoryServiceSkel : public MultiDimArrayMemoryServiceSkelBase
 	{
 	public:
-		MultiDimArrayMemoryServiceSkel(const std::string& membername, RR_SHARED_PTR<ServiceSkel> skel, MemberDefinition_Direction direction)
+		MultiDimArrayMemoryServiceSkel(boost::string_ref membername, RR_SHARED_PTR<ServiceSkel> skel, MemberDefinition_Direction direction)
 			: MultiDimArrayMemoryServiceSkelBase(membername, skel, RRPrimUtil<T>::GetTypeID(), sizeof(T), direction)
 		{
 
@@ -301,7 +301,7 @@ namespace RobotRaconteur
 	public:
 		const std::string GetMemberName() const;
 		RR_SHARED_PTR<RobotRaconteurNode> GetNode();
-		ArrayMemoryClientBase(const std::string& membername, RR_SHARED_PTR<ServiceStub> stub, DataTypes element_type, size_t element_size, MemberDefinition_Direction direction);
+		ArrayMemoryClientBase(boost::string_ref membername, RR_SHARED_PTR<ServiceStub> stub, DataTypes element_type, size_t element_size, MemberDefinition_Direction direction);
 		virtual ~ArrayMemoryClientBase();
 
 		RR_SHARED_PTR<ServiceStub> GetStub();
@@ -330,7 +330,7 @@ namespace RobotRaconteur
 	{
 	public:
 
-		ArrayMemoryClient(const std::string& membername, RR_SHARED_PTR<ServiceStub> stub, MemberDefinition_Direction direction)
+		ArrayMemoryClient(boost::string_ref membername, RR_SHARED_PTR<ServiceStub> stub, MemberDefinition_Direction direction)
 			: ArrayMemoryClientBase(membername, stub, RRPrimUtil<T>::GetTypeID(), sizeof(T), direction)
 		{
 		}
@@ -403,7 +403,7 @@ namespace RobotRaconteur
 		RR_SHARED_PTR<RobotRaconteurNode> GetNode();
 		const std::string GetMemberName() const;
 		
-		MultiDimArrayMemoryClientBase(const std::string &membername, RR_SHARED_PTR<ServiceStub> stub, DataTypes element_type, size_t element_size, MemberDefinition_Direction direction);
+		MultiDimArrayMemoryClientBase(boost::string_ref membername, RR_SHARED_PTR<ServiceStub> stub, DataTypes element_type, size_t element_size, MemberDefinition_Direction direction);
 		virtual ~MultiDimArrayMemoryClientBase();
 		RR_SHARED_PTR<ServiceStub> GetStub();
 		RobotRaconteur::MemberDefinition_Direction Direction();
@@ -432,7 +432,7 @@ namespace RobotRaconteur
 	{
 	public:
 
-		MultiDimArrayMemoryClient(const std::string& membername, RR_SHARED_PTR<ServiceStub> stub, MemberDefinition_Direction direction)
+		MultiDimArrayMemoryClient(boost::string_ref membername, RR_SHARED_PTR<ServiceStub> stub, MemberDefinition_Direction direction)
 			: MultiDimArrayMemoryClientBase(membername, stub, RRPrimUtil<T>::GetTypeID(), sizeof(T), direction)
 		{
 		}
@@ -566,7 +566,7 @@ namespace RobotRaconteur
 	class PodArrayMemoryServiceSkel : public ArrayMemoryServiceSkelBase
 	{
 	public:
-		PodArrayMemoryServiceSkel(const std::string& membername, RR_SHARED_PTR<ServiceSkel> skel, size_t element_size, MemberDefinition_Direction direction)
+		PodArrayMemoryServiceSkel(boost::string_ref membername, RR_SHARED_PTR<ServiceSkel> skel, size_t element_size, MemberDefinition_Direction direction)
 			: ArrayMemoryServiceSkelBase(membername, skel, DataTypes_pod_t, element_size, direction)
 		{
 
@@ -593,7 +593,7 @@ namespace RobotRaconteur
 	{
 	public:
 
-		PodArrayMemoryClient(const std::string& membername, RR_SHARED_PTR<ServiceStub> stub, size_t element_size, MemberDefinition_Direction direction)
+		PodArrayMemoryClient(boost::string_ref membername, RR_SHARED_PTR<ServiceStub> stub, size_t element_size, MemberDefinition_Direction direction)
 			: ArrayMemoryClientBase(membername, stub, RRPrimUtil<T>::GetTypeID(), element_size, direction)
 		{
 		}
@@ -716,7 +716,7 @@ namespace RobotRaconteur
 	{
 	public:
 
-		PodMultiDimArrayMemoryClient(const std::string& membername, RR_SHARED_PTR<ServiceStub> stub, size_t element_size, MemberDefinition_Direction direction)
+		PodMultiDimArrayMemoryClient(boost::string_ref membername, RR_SHARED_PTR<ServiceStub> stub, size_t element_size, MemberDefinition_Direction direction)
 			: MultiDimArrayMemoryClientBase(membername, stub, DataTypes_pod_t, element_size, direction)
 		{
 		}
@@ -775,7 +775,7 @@ namespace RobotRaconteur
 	class PodMultiDimArrayMemoryServiceSkel : public MultiDimArrayMemoryServiceSkelBase
 	{
 	public:
-		PodMultiDimArrayMemoryServiceSkel(const std::string& membername, RR_SHARED_PTR<ServiceSkel> skel, size_t element_size, MemberDefinition_Direction direction)
+		PodMultiDimArrayMemoryServiceSkel(boost::string_ref membername, RR_SHARED_PTR<ServiceSkel> skel, size_t element_size, MemberDefinition_Direction direction)
 			: MultiDimArrayMemoryServiceSkelBase(membername, skel, DataTypes_structure_t, element_size, direction)
 		{
 
@@ -866,7 +866,7 @@ namespace RobotRaconteur
 	class NamedArrayMemoryServiceSkel : public ArrayMemoryServiceSkelBase
 	{
 	public:
-		NamedArrayMemoryServiceSkel(const std::string& membername, RR_SHARED_PTR<ServiceSkel> skel, size_t element_size, MemberDefinition_Direction direction)
+		NamedArrayMemoryServiceSkel(boost::string_ref membername, RR_SHARED_PTR<ServiceSkel> skel, size_t element_size, MemberDefinition_Direction direction)
 			: ArrayMemoryServiceSkelBase(membername, skel, DataTypes_pod_t, element_size, direction)
 		{
 
@@ -893,7 +893,7 @@ namespace RobotRaconteur
 	{
 	public:
 
-		NamedArrayMemoryClient(const std::string& membername, RR_SHARED_PTR<ServiceStub> stub, size_t element_size, MemberDefinition_Direction direction)
+		NamedArrayMemoryClient(boost::string_ref membername, RR_SHARED_PTR<ServiceStub> stub, size_t element_size, MemberDefinition_Direction direction)
 			: ArrayMemoryClientBase(membername, stub, RRPrimUtil<T>::GetTypeID(), element_size, direction)
 		{
 		}
@@ -1016,7 +1016,7 @@ namespace RobotRaconteur
 	{
 	public:
 
-		NamedMultiDimArrayMemoryClient(const std::string& membername, RR_SHARED_PTR<ServiceStub> stub, size_t element_size, MemberDefinition_Direction direction)
+		NamedMultiDimArrayMemoryClient(boost::string_ref membername, RR_SHARED_PTR<ServiceStub> stub, size_t element_size, MemberDefinition_Direction direction)
 			: MultiDimArrayMemoryClientBase(membername, stub, DataTypes_pod_t, element_size, direction)
 		{
 		}
@@ -1075,7 +1075,7 @@ namespace RobotRaconteur
 	class NamedMultiDimArrayMemoryServiceSkel : public MultiDimArrayMemoryServiceSkelBase
 	{
 	public:
-		NamedMultiDimArrayMemoryServiceSkel(const std::string& membername, RR_SHARED_PTR<ServiceSkel> skel, size_t element_size, MemberDefinition_Direction direction)
+		NamedMultiDimArrayMemoryServiceSkel(boost::string_ref membername, RR_SHARED_PTR<ServiceSkel> skel, size_t element_size, MemberDefinition_Direction direction)
 			: MultiDimArrayMemoryServiceSkelBase(membername, skel, DataTypes_structure_t, element_size, direction)
 		{
 

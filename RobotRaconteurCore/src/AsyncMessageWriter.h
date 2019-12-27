@@ -186,10 +186,10 @@ namespace RobotRaconteur
 		bool write_int_x2(int64_t number);
 
 		//TODO: Use const string
-		bool write_string(std::string& str, state_type next_state);
-		bool write_string(std::string& str); //next_state=state()++
-		bool write_string3(std::string& str, state_type next_state);
-		bool write_string3(std::string& str); //next_state=state()++
+		bool write_string(MessageStringPtr& str, state_type next_state);
+		bool write_string(MessageStringPtr& str); //next_state=state()++
+		bool write_string3(MessageStringPtr& str, state_type next_state);
+		bool write_string3(MessageStringPtr& str); //next_state=state()++
 
 		virtual void Reset();
 		virtual void BeginWrite(RR_INTRUSIVE_PTR<Message> m, uint16_t version);

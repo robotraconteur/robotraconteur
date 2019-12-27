@@ -564,7 +564,7 @@ static std::string HardwareTransport_read_sysfs_attr(const boost::filesystem::pa
 
 }
 
-boost::optional<std::string> HardwareTransport_linux_find_deviceinterface(const std::string& transport_type, const NodeID& nodeid, const std::string& nodename)
+boost::optional<std::string> HardwareTransport_linux_find_deviceinterface(boost::string_ref transport_type, const NodeID& nodeid, boost::string_ref nodename)
 {
 	boost::filesystem::path rr_class="/sys/class/robotraconteur";
 
@@ -648,22 +648,22 @@ boost::optional<std::string> HardwareTransport_linux_find_deviceinterface(const 
 	return boost::optional<std::string>();
 }
 
-boost::optional<std::string> HardwareTransport_linux_find_usb(const NodeID& nodeid, const std::string& nodename)
+boost::optional<std::string> HardwareTransport_linux_find_usb(const NodeID& nodeid, boost::string_ref nodename)
 {
 	return HardwareTransport_linux_find_deviceinterface("usb", nodeid, nodename);
 }
 
-boost::optional<std::string> HardwareTransport_linux_find_pci(const NodeID& nodeid, const std::string& nodename)
+boost::optional<std::string> HardwareTransport_linux_find_pci(const NodeID& nodeid, boost::string_ref nodename)
 {
 	return HardwareTransport_linux_find_deviceinterface("pci", nodeid, nodename);
 }
 
-boost::optional<std::string> HardwareTransport_linux_find_bluetooth(const NodeID& nodeid, const std::string& nodename)
+boost::optional<std::string> HardwareTransport_linux_find_bluetooth(const NodeID& nodeid, boost::string_ref nodename)
 {
 	return HardwareTransport_linux_find_deviceinterface("bluetooth", nodeid, nodename);
 }
 
-std::list<boost::tuple<NodeID,std::string> > HardwareTransport_linux_find_deviceinterfaces(const std::string& transport_type)
+std::list<boost::tuple<NodeID,std::string> > HardwareTransport_linux_find_deviceinterfaces(boost::string_ref transport_type)
 {
 	std::list<boost::tuple<NodeID,std::string> > o;
 

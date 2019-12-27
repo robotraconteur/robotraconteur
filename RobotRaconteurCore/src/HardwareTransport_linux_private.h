@@ -181,15 +181,15 @@ protected:
 
 
 
-boost::optional<std::string> HardwareTransport_linux_find_deviceinterface(const std::string& transport_type, const NodeID& nodeid, const std::string& nodename);
+boost::optional<std::string> HardwareTransport_linux_find_deviceinterface(boost::string_ref transport_type, const NodeID& nodeid, boost::string_ref nodename);
 
-boost::optional<std::string> HardwareTransport_linux_find_usb(const NodeID& nodeid, const std::string& nodename);
+boost::optional<std::string> HardwareTransport_linux_find_usb(const NodeID& nodeid, boost::string_ref nodename);
 
-boost::optional<std::string> HardwareTransport_linux_find_pci(const NodeID& nodeid, const std::string& nodename);
+boost::optional<std::string> HardwareTransport_linux_find_pci(const NodeID& nodeid, boost::string_ref nodename);
 
-boost::optional<std::string> HardwareTransport_linux_find_bluetooth(const NodeID& nodeid, const std::string& nodename);
+boost::optional<std::string> HardwareTransport_linux_find_bluetooth(const NodeID& nodeid, boost::string_ref nodename);
 
-std::list<boost::tuple<NodeID,std::string> > HardwareTransport_linux_find_deviceinterfaces(const std::string& transport_type);
+std::list<boost::tuple<NodeID,std::string> > HardwareTransport_linux_find_deviceinterfaces(boost::string_ref transport_type);
 
 
 }

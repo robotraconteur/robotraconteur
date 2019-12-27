@@ -44,7 +44,7 @@ namespace detail
 
 		void LoadPKCS12FromBuffer(boost::asio::mutable_buffer& buf);
 
-		void LoadPKCS12FromFile(const std::string& fname);
+		void LoadPKCS12FromFile(boost::string_ref fname);
 
 		boost::shared_ptr<boost::asio::ssl::context> GetServerCredentials();
 

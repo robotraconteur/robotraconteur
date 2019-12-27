@@ -60,7 +60,7 @@ namespace RobotRaconteur
 		void SetRemoteEndpoint(uint32_t endpoint);
 
 		std::string GetRemoteNodeName();
-		void SetRemoteNodeName(std::string name);	
+		void SetRemoteNodeName(boost::string_ref name);	
 
 		NodeID GetRemoteNodeID();
 		void SetRemoteNodeID(NodeID id);
@@ -91,7 +91,7 @@ namespace RobotRaconteur
 		virtual void CheckEndpointCapabilityMessage(RR_INTRUSIVE_PTR<Message> m);
 
 	public:
-		virtual uint32_t EndpointCapability(const std::string &name);
+		virtual uint32_t EndpointCapability(boost::string_ref name);
 	
 	public:
 		Endpoint(RR_SHARED_PTR<RobotRaconteurNode> node);

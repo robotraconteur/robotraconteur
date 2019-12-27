@@ -578,14 +578,14 @@ namespace RobotRaconteur
 			}
 		}
 
-		void Discovery_findservicebytype::AsyncFindServiceByType(const std::string& servicetype, const std::vector<std::string>& schemes, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<std::vector<ServiceInfo2> >)>) handler, int32_t timeout)
+		void Discovery_findservicebytype::AsyncFindServiceByType(boost::string_ref servicetype, const std::vector<std::string>& schemes, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<std::vector<ServiceInfo2> >)>) handler, int32_t timeout)
 		{
 			boost::recursive_mutex::scoped_lock lock2(work_lock);
 			this->handler = handler;
 			this->schemes = schemes;
 			this->timeout = timeout;
 
-			this->servicetype = servicetype;
+			this->servicetype.swap(servicetype.to_string());
 			if (timeout != RR_TIMEOUT_INFINITE)
 			{
 				timeout_timer = node->CreateTimer(boost::posix_time::milliseconds(timeout), boost::bind(&Discovery_findservicebytype::timeout_timer_callback, shared_from_this(), _1), true);
@@ -639,7 +639,7 @@ namespace RobotRaconteur
 				return;
 			}
 
-			boost::function<void(RR_SHARED_PTR<Discovery_nodestorage>, RR_SHARED_PTR<std::vector<ServiceInfo2> >, const std::string&, RR_SHARED_PTR<RobotRaconteurException>)> handler2 = handler;
+			boost::function<void(RR_SHARED_PTR<Discovery_nodestorage>, RR_SHARED_PTR<std::vector<ServiceInfo2> >, boost::string_ref, RR_SHARED_PTR<RobotRaconteurException>)> handler2 = handler;
 			handler.clear();
 
 			{
@@ -745,7 +745,7 @@ namespace RobotRaconteur
 				return;
 			}
 
-			boost::function<void(RR_SHARED_PTR<Discovery_nodestorage>, RR_SHARED_PTR<std::vector<ServiceInfo2> >, const std::string&, RR_SHARED_PTR<RobotRaconteurException>)> handler2 = handler;
+			boost::function<void(RR_SHARED_PTR<Discovery_nodestorage>, RR_SHARED_PTR<std::vector<ServiceInfo2> >, boost::string_ref, RR_SHARED_PTR<RobotRaconteurException>)> handler2 = handler;
 			handler.clear();
 						
 			lock.unlock();	
@@ -857,12 +857,12 @@ namespace RobotRaconteur
 
 		}
 
-		void Discovery_updateserviceinfo::AsyncUpdateServiceInfo(RR_SHARED_PTR<Discovery_nodestorage> storage, const std::string& service_nonce, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<Discovery_nodestorage>, RR_SHARED_PTR<std::vector<ServiceInfo2> >, const std::string&, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t extra_backoff)
+		void Discovery_updateserviceinfo::AsyncUpdateServiceInfo(RR_SHARED_PTR<Discovery_nodestorage> storage, boost::string_ref service_nonce, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<Discovery_nodestorage>, RR_SHARED_PTR<std::vector<ServiceInfo2> >, boost::string_ref, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t extra_backoff)
 		{
 			this->storage = storage;
 			this->handler = handler;
 			this->retry_count = 0;
-			this->service_nonce = service_nonce;
+			this->service_nonce.swap(service_nonce.to_string());
 
 
 			RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
@@ -1058,7 +1058,7 @@ namespace RobotRaconteur
 
 		}
 
-		void Discovery::EndUpdateServiceInfo(RR_SHARED_PTR<Discovery_nodestorage> storage, RR_SHARED_PTR<std::vector<ServiceInfo2> > info, const std::string& nonce, RR_SHARED_PTR<RobotRaconteurException> err)
+		void Discovery::EndUpdateServiceInfo(RR_SHARED_PTR<Discovery_nodestorage> storage, RR_SHARED_PTR<std::vector<ServiceInfo2> > info, boost::string_ref nonce, RR_SHARED_PTR<RobotRaconteurException> err)
 		{
 
 			RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
@@ -1071,7 +1071,7 @@ namespace RobotRaconteur
 			
 			boost::mutex::scoped_lock lock2(storage->this_lock);
 			storage->services = info;
-			storage->last_update_nonce = nonce;
+			storage->last_update_nonce.swap(nonce.to_string());
 			storage->last_update_time = n->NowUTC();
 
 			if (storage->last_update_nonce != storage->info->ServiceStateNonce)
@@ -1167,7 +1167,7 @@ namespace RobotRaconteur
 		}
 
 
-		void Discovery::NodeAnnouncePacketReceived(const std::string& packet)
+		void Discovery::NodeAnnouncePacketReceived(boost::string_ref packet)
 		{
 			RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
 			if (!n) return;
@@ -1338,7 +1338,7 @@ namespace RobotRaconteur
 		}
 
 
-		void Discovery::AsyncFindServiceByType(const std::string &servicetype, const std::vector<std::string>& transportschemes, boost::function<void(RR_SHARED_PTR<std::vector<ServiceInfo2> >) >& handler, int32_t timeout)
+		void Discovery::AsyncFindServiceByType(boost::string_ref servicetype, const std::vector<std::string>& transportschemes, boost::function<void(RR_SHARED_PTR<std::vector<ServiceInfo2> >) >& handler, int32_t timeout)
 		{
 			RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
 			if (!n) throw InvalidOperationException("Node has been released");
@@ -1386,7 +1386,7 @@ namespace RobotRaconteur
 
 		}
 
-		std::vector<ServiceInfo2> Discovery::FindServiceByType(const std::string &servicetype, const std::vector<std::string>& transportschemes)
+		std::vector<ServiceInfo2> Discovery::FindServiceByType(boost::string_ref servicetype, const std::vector<std::string>& transportschemes)
 		{
 			RR_SHARED_PTR<detail::sync_async_handler<std::vector<ServiceInfo2> > > t = RR_MAKE_SHARED<detail::sync_async_handler<std::vector<ServiceInfo2> > >();
 			boost::function< void(RR_SHARED_PTR<std::vector<ServiceInfo2> >) > h = boost::bind(&detail::sync_async_handler<std::vector<ServiceInfo2> >::operator(), t, _1, RR_SHARED_PTR<RobotRaconteurException>());
@@ -1465,7 +1465,7 @@ namespace RobotRaconteur
 
 		}
 
-		std::vector<NodeInfo2> Discovery::FindNodeByName(const std::string& name, const std::vector<std::string>& transportschemes)
+		std::vector<NodeInfo2> Discovery::FindNodeByName(boost::string_ref name, const std::vector<std::string>& transportschemes)
 		{
 			RR_SHARED_PTR<detail::sync_async_handler<std::vector<NodeInfo2> > > n = RR_MAKE_SHARED<detail::sync_async_handler<std::vector<NodeInfo2> > >();
 			boost::function< void(RR_SHARED_PTR<std::vector<NodeInfo2> >) > h = boost::bind(&detail::sync_async_handler<std::vector<NodeInfo2> >::operator(), n, _1, RR_SHARED_PTR<RobotRaconteurException>());
@@ -1473,9 +1473,9 @@ namespace RobotRaconteur
 			return *n->end();
 		}
 
-		void Discovery::AsyncFindNodeByName(const std::string& name, const std::vector<std::string>& transportschemes, boost::function< void(RR_SHARED_PTR<std::vector<NodeInfo2> >) >& handler, int32_t timeout)
+		void Discovery::AsyncFindNodeByName(boost::string_ref name, const std::vector<std::string>& transportschemes, boost::function< void(RR_SHARED_PTR<std::vector<NodeInfo2> >) >& handler, int32_t timeout)
 		{
-			boost::function<void()> h = boost::bind(&Discovery::EndAsyncFindNodeByName, shared_from_this(), name, transportschemes, handler);
+			boost::function<void()> h = boost::bind(&Discovery::EndAsyncFindNodeByName, shared_from_this(), name.to_string(), transportschemes, handler);
 			AsyncUpdateDetectedNodes(transportschemes, h, timeout);
 		}
 

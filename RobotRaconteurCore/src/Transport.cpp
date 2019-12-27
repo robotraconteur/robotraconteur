@@ -68,7 +68,7 @@ namespace RobotRaconteur
 
 	}
 
-	uint32_t Transport::TransportCapability(const std::string& name)
+	uint32_t Transport::TransportCapability(boost::string_ref name)
 	{
 		return 0;
 	}
@@ -118,12 +118,12 @@ namespace RobotRaconteur
 
 	}
 
-	ROBOTRACONTEUR_CORE_API ParseConnectionURLResult ParseConnectionURL(const std::string& url)
+	ROBOTRACONTEUR_CORE_API ParseConnectionURLResult ParseConnectionURL(boost::string_ref url)
 	{
 		ParseConnectionURLResult o;
 
-		boost::smatch url_result;
-		boost::regex_search(url, url_result, boost::regex("^([^:\\s]+)://(?:((?:\\[[A-Fa-f0-9\\:]+(?:\\%\\w*)?\\])|(?:[^\\[\\]\\:/\\?\\s]+))(?::([^:/\\?\\s]+))?|/)(?:/([^\\?\\s]*))?\\?\?([^\\s]*)$"));
+		boost::match_results<boost::string_ref::const_iterator> url_result;
+		boost::regex_search(url.begin(), url.end(), url_result, boost::regex("^([^:\\s]+)://(?:((?:\\[[A-Fa-f0-9\\:]+(?:\\%\\w*)?\\])|(?:[^\\[\\]\\:/\\?\\s]+))(?::([^:/\\?\\s]+))?|/)(?:/([^\\?\\s]*))?\\?\?([^\\s]*)$"));
 
 		if (url_result.size()<4) throw ConnectionException("Invalid Connection URL");
 

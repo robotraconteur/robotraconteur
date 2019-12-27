@@ -297,7 +297,7 @@ namespace detail
 		throw NotImplementedException("Not implemented");
 	}
 
-	void OpenSSLAuthContext::LoadPKCS12FromFile(const std::string& fname)
+	void OpenSSLAuthContext::LoadPKCS12FromFile(boost::string_ref fname)
 	{
 		boost::mutex::scoped_lock lock(mylock);
 		if (server_context) throw InvalidOperationException("Certificate already loaded");

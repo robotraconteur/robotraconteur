@@ -57,13 +57,13 @@ namespace RobotRaconteur
 
 			bool ReadInfoFile(const boost::filesystem::path& fname, std::map<std::string, std::string>& data);
 
-			boost::tuple<NodeID, RR_SHARED_PTR<LocalTransportFD> > GetNodeIDForNodeNameAndLock(const std::string& nodename);
+			boost::tuple<NodeID, RR_SHARED_PTR<LocalTransportFD> > GetNodeIDForNodeNameAndLock(boost::string_ref nodename);
 
 			RR_SHARED_PTR<LocalTransportFD> CreatePidFile(const boost::filesystem::path& path, bool for_name=false);
 			RR_SHARED_PTR<LocalTransportFD> CreateInfoFile(const boost::filesystem::path& path, std::map<std::string, std::string> info, bool for_name=false);
-			void RefreshInfoFile(RR_SHARED_PTR<LocalTransportFD> h_info, const std::string& service_nonce);
+			void RefreshInfoFile(RR_SHARED_PTR<LocalTransportFD> h_info, boost::string_ref service_nonce);
 
-			void FindNodesInDirectory(std::vector<NodeDiscoveryInfo>& nodeinfo, const boost::filesystem::path& path, const std::string& scheme, const boost::posix_time::ptime& now, boost::optional<std::string> username = boost::optional<std::string>());
+			void FindNodesInDirectory(std::vector<NodeDiscoveryInfo>& nodeinfo, const boost::filesystem::path& path, boost::string_ref scheme, const boost::posix_time::ptime& now, boost::optional<std::string> username = boost::optional<std::string>());
 
 			RR_SHARED_PTR<LocalTransport::socket_type> FindAndConnectLocalSocket(ParseConnectionURLResult url, const std::vector<boost::filesystem::path>& search_paths, const std::vector<std::string>& usernames, RR_BOOST_ASIO_IO_CONTEXT& io_service_);
 
@@ -179,7 +179,7 @@ namespace RobotRaconteur
 
 			bool read_info();
 
-			bool write(const std::string& data);
+			bool write(boost::string_ref data);
 			
 			bool write_info();
 							

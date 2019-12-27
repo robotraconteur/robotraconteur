@@ -45,7 +45,7 @@ namespace RobotRaconteur
 
 		virtual std::string DefString()=0;
 
-		virtual RR_SHARED_PTR<StructureStub> FindStructureStub(const std::string& s)=0;
+		virtual RR_SHARED_PTR<StructureStub> FindStructureStub(boost::string_ref s)=0;
 		
 		virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackStructure(RR_INTRUSIVE_PTR<RRStructure> structin)=0;
 				
@@ -67,13 +67,13 @@ namespace RobotRaconteur
 
 		virtual RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> UnpackNamedMultiDimArray(RR_INTRUSIVE_PTR<MessageElementNestedElementList> structure) = 0;
 
-		virtual RR_SHARED_PTR<ServiceStub> CreateStub(const std::string& objecttype, const std::string& path, RR_SHARED_PTR<ClientContext> context)=0;
+		virtual RR_SHARED_PTR<ServiceStub> CreateStub(boost::string_ref objecttype, boost::string_ref path, RR_SHARED_PTR<ClientContext> context)=0;
 
-		virtual RR_SHARED_PTR<ServiceSkel> CreateSkel(const std::string& objecttype, const std::string& path, RR_SHARED_PTR<RRObject> obj, RR_SHARED_PTR<ServerContext> context)=0;
+		virtual RR_SHARED_PTR<ServiceSkel> CreateSkel(boost::string_ref objecttype, boost::string_ref path, RR_SHARED_PTR<RRObject> obj, RR_SHARED_PTR<ServerContext> context)=0;
 
 		virtual RR_SHARED_PTR<ServiceDefinition> ServiceDef();
 		
-		virtual std::string RemovePath(const std::string &path);
+		virtual std::string RemovePath(boost::string_ref path);
 
 		virtual void DownCastAndThrowException(RobotRaconteurException& exp)=0;
 
@@ -90,7 +90,7 @@ namespace RobotRaconteur
 
 		virtual ~DynamicServiceFactory() {}
 
-		virtual RR_SHARED_PTR<ServiceFactory> CreateServiceFactory(const std::string& def) = 0;
+		virtual RR_SHARED_PTR<ServiceFactory> CreateServiceFactory(boost::string_ref def) = 0;
 
 		virtual std::vector<RR_SHARED_PTR<ServiceFactory> > CreateServiceFactories(const std::vector<std::string>& def) = 0;
 	};

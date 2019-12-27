@@ -678,7 +678,7 @@ namespace detail
 			if (seed == "GET " || seed == "GET\t")
 			{
 				RR_SHARED_PTR<websocket_stream<boost::asio::ip::tcp::socket&> > websocket = RR_MAKE_SHARED<websocket_stream<boost::asio::ip::tcp::socket&> >(boost::ref(*socket));
-				boost::function<void(const std::string& protocol, const boost::system::error_code& ec)> h = boost::bind(&TcpAcceptor::AcceptSocket5, shared_from_this(),
+				boost::function<void(boost::string_ref protocol, const boost::system::error_code& ec)> h = boost::bind(&TcpAcceptor::AcceptSocket5, shared_from_this(),
 					_2, socket, websocket, socket_closer, handler);
 				websocket->async_server_handshake("robotraconteur.robotraconteur.com", parent->GetWebSocketAllowedOrigins(), h);
 				return;
@@ -704,10 +704,10 @@ namespace detail
 		}
 	}
 	
-	TcpAcceptor::TcpAcceptor(RR_SHARED_PTR<TcpTransport> parent, std::string url, uint32_t local_endpoint)
+	TcpAcceptor::TcpAcceptor(RR_SHARED_PTR<TcpTransport> parent, boost::string_ref url, uint32_t local_endpoint)
 	{
 		this->parent = parent;
-		this->url = url;
+		this->url.swap(url.to_string());
 		this->local_endpoint = local_endpoint;
 		this->node = parent->GetNode();
 	}
@@ -829,9 +829,9 @@ namespace detail
 		this->parent = parent;
 	}
 
-	void TcpWebSocketConnector::Connect(std::string url, uint32_t endpoint, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > handler)
+	void TcpWebSocketConnector::Connect(boost::string_ref url, uint32_t endpoint, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > handler)
 	{
-		this->url = url;
+		this->url.swap(url.to_string());
 		this->endpoint = endpoint;
 
 		try
@@ -851,12 +851,12 @@ namespace detail
 
 			if (url_res.scheme == "rr+ws")
 			{
-				ws_url = boost::replace_first_copy(url, "rr+ws", "ws");
+				ws_url = boost::replace_first_copy(this->url, "rr+ws", "ws");
 			}
 
 			if (url_res.scheme == "rrs+ws")
 			{
-				ws_url = boost::replace_first_copy(url, "rrs+ws", "ws");
+				ws_url = boost::replace_first_copy(this->url, "rrs+ws", "ws");
 			}
 			if (url_res.host == "") throw ConnectionException("Invalid host for usb transport");
 			//std::cout << ws_url << std::endl;
@@ -1050,9 +1050,9 @@ namespace detail {
 		this->node = parent->GetNode();
 	}
 
-	void TcpWSSWebSocketConnector::Connect(std::string url, uint32_t endpoint, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > handler)
+	void TcpWSSWebSocketConnector::Connect(boost::string_ref url, uint32_t endpoint, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > handler)
 	{
-		this->url = url;
+		this->url.swap(url.to_string());
 		this->endpoint = endpoint;
 
 		try
@@ -1073,12 +1073,12 @@ namespace detail {
 
 			if (url_res.scheme == "rr+wss")
 			{
-				ws_url = boost::replace_first_copy(url, "rr+wss", "wss");
+				ws_url = boost::replace_first_copy(this->url, "rr+wss", "wss");
 			}
 
 			if (url_res.scheme == "rrs+wss")
 			{
-				ws_url = boost::replace_first_copy(url, "rrs+wss", "wss");
+				ws_url = boost::replace_first_copy(this->url, "rrs+wss", "wss");
 			}
 			if (url_res.host == "") throw ConnectionException("Invalid host for usb transport");
 			//std::cout << ws_url << std::endl;
@@ -1582,7 +1582,7 @@ int32_t TcpTransport::GetListenPort()
 	return m_Port;
 }
 
-bool TcpTransport::CanConnectService(const std::string& url)
+bool TcpTransport::CanConnectService(boost::string_ref url)
 {
 		
 	if (url.size() < 6) return false;
@@ -1611,7 +1611,7 @@ bool TcpTransport::CanConnectService(const std::string& url)
 	return false;
 }
 
-void TcpTransport::AsyncCreateTransportConnection(const std::string& url, RR_SHARED_PTR<Endpoint> e, boost::function<void (RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException> ) >& callback)
+void TcpTransport::AsyncCreateTransportConnection(boost::string_ref url, RR_SHARED_PTR<Endpoint> e, boost::function<void (RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException> ) >& callback)
 {
 	{
 		int32_t max_connections = GetMaxConnectionCount();
@@ -1639,11 +1639,11 @@ void TcpTransport::AsyncCreateTransportConnection(const std::string& url, RR_SHA
 
 	RR_SHARED_PTR<detail::TcpConnector> c=RR_MAKE_SHARED<detail::TcpConnector>(shared_from_this());
 	std::vector<std::string> url2;
-	url2.push_back(url);
+	url2.push_back(url.to_string());
 	c->Connect(url2,e->GetLocalEndpoint(),callback);	
 }   
 
-RR_SHARED_PTR<ITransportConnection> TcpTransport::CreateTransportConnection(const std::string& url, RR_SHARED_PTR<Endpoint> e)
+RR_SHARED_PTR<ITransportConnection> TcpTransport::CreateTransportConnection(boost::string_ref url, RR_SHARED_PTR<Endpoint> e)
 {
 	RR_SHARED_PTR<detail::sync_async_handler<ITransportConnection> > d=RR_MAKE_SHARED<detail::sync_async_handler<ITransportConnection> >(RR_MAKE_SHARED<ConnectionException>("Timeout exception"));
 	
@@ -1749,7 +1749,7 @@ void TcpTransport::SendMessage(RR_INTRUSIVE_PTR<Message> m)
 	t->SendMessage(m);
 }
 
-uint32_t TcpTransport::TransportCapability(const std::string& name)
+uint32_t TcpTransport::TransportCapability(boost::string_ref name)
 {
 	return 0;
 }
@@ -2261,12 +2261,12 @@ std::vector<std::string> TcpTransport::GetWebSocketAllowedOrigins()
 	boost::mutex::scoped_lock lock(parameter_lock);
 	return allowed_websocket_origins;
 }
-void TcpTransport::AddWebSocketAllowedOrigin(const std::string& origin)
+void TcpTransport::AddWebSocketAllowedOrigin(boost::string_ref origin)
 {
 	boost::mutex::scoped_lock lock(parameter_lock);
 
 	boost::smatch origin_result;
-	if (!boost::regex_search(origin, origin_result, boost::regex("^([^:\\s]+)://(?:((?:\\[[A-Fa-f0-9\\:]+(?:\\%\\w*)?\\])|(?:[^\\[\\]\\:/\\?\\s]+))(?::([^\\:/\\?\\s]+))?)?$")))
+	if (!boost::regex_search(origin.to_string(), origin_result, boost::regex("^([^:\\s]+)://(?:((?:\\[[A-Fa-f0-9\\:]+(?:\\%\\w*)?\\])|(?:[^\\[\\]\\:/\\?\\s]+))(?::([^\\:/\\?\\s]+))?)?$")))
 	{
 		throw InvalidArgumentException("Invalid WebSocket origin");
 	}
@@ -2327,29 +2327,29 @@ void TcpTransport::AddWebSocketAllowedOrigin(const std::string& origin)
 		throw InvalidArgumentException("Invalid WebSocket origin");
 	}
 
-	allowed_websocket_origins.push_back(origin);
+	allowed_websocket_origins.push_back(RR_MOVE(origin.to_string()));
 
 	if (scheme == "http" && port == "")
 	{
-		allowed_websocket_origins.push_back(origin + ":80");
+		allowed_websocket_origins.push_back(RR_MOVE(origin.to_string()) + ":80");
 	}
 
 	if (scheme == "https" && port == "")
 	{
-		allowed_websocket_origins.push_back(origin + ":443");
+		allowed_websocket_origins.push_back(RR_MOVE(origin.to_string()) + ":443");
 	}
 
 	if (scheme == "http" && port == "80")
 	{
-		allowed_websocket_origins.push_back(boost::replace_last_copy(origin, ":80", ""));
+		allowed_websocket_origins.push_back(boost::replace_last_copy(origin.to_string(), ":80", ""));
 	}
 
 	if (scheme == "https" && port == "443")
 	{
-		allowed_websocket_origins.push_back(boost::replace_last_copy(origin, ":443", ""));
+		allowed_websocket_origins.push_back(boost::replace_last_copy(origin.to_string(), ":443", ""));
 	}
 }
-void TcpTransport::RemoveWebSocketAllowedOrigin(const std::string& origin)
+void TcpTransport::RemoveWebSocketAllowedOrigin(boost::string_ref origin)
 {
 	boost::mutex::scoped_lock lock(parameter_lock);
 	allowed_websocket_origins.erase(std::remove(allowed_websocket_origins.begin(), allowed_websocket_origins.end(), origin), allowed_websocket_origins.end());
@@ -2465,7 +2465,7 @@ void TcpTransport_connected_callback2(RR_SHARED_PTR<TcpTransport> parent,RR_SHAR
 	
 }
 
-void TcpTransport_attach_transport(RR_SHARED_PTR<TcpTransport> parent, RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket,  std::string url, bool server, uint32_t endpoint, boost::function<void( RR_SHARED_PTR<boost::asio::ip::tcp::socket> , RR_SHARED_PTR<ITransportConnection> , RR_SHARED_PTR<RobotRaconteurException> )>& callback)
+void TcpTransport_attach_transport(RR_SHARED_PTR<TcpTransport> parent, RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket,  boost::string_ref url, bool server, uint32_t endpoint, boost::function<void( RR_SHARED_PTR<boost::asio::ip::tcp::socket> , RR_SHARED_PTR<ITransportConnection> , RR_SHARED_PTR<RobotRaconteurException> )>& callback)
 {
 	try
 	{
@@ -2832,7 +2832,7 @@ void TcpTransport::LocalNodeServicesChanged()
 	}
 }
 
-TcpTransportConnection::TcpTransportConnection(RR_SHARED_PTR<TcpTransport> parent, std::string url, bool server, uint32_t local_endpoint) : ASIOStreamBaseTransport(parent->GetNode())
+TcpTransportConnection::TcpTransportConnection(RR_SHARED_PTR<TcpTransport> parent, boost::string_ref url, bool server, uint32_t local_endpoint) : ASIOStreamBaseTransport(parent->GetNode())
 {
 	this->parent=parent;
 	this->server=server;
@@ -2843,7 +2843,7 @@ TcpTransportConnection::TcpTransportConnection(RR_SHARED_PTR<TcpTransport> paren
 	this->disable_message3 = parent->GetDisableMessage3();
 	this->disable_string_table = parent->GetDisableStringTable();
 	this->disable_async_io = parent->GetDisableAsyncMessageIO();
-	this->url=url;
+	this->url.swap(url.to_string());
 
 	this->is_tls=false;
 	this->require_tls=parent->GetRequireTls();
@@ -3146,7 +3146,7 @@ void TcpTransportConnection::AsyncAttachWSSWebSocket(RR_SHARED_PTR<boost::asio::
 	AsyncPauseSend(boost::bind(&TcpTransportConnection::do_starttls1, RR_STATIC_POINTER_CAST<TcpTransportConnection>(shared_from_this()), _1,boost::protect(callback)));
 }*/
 
-void TcpTransportConnection::do_starttls1(std::string noden, const boost::system::error_code& error, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback)
+void TcpTransportConnection::do_starttls1(const std::string& noden, const boost::system::error_code& error, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback)
 {
 	if (error)
 	{
@@ -3170,7 +3170,7 @@ void TcpTransportConnection::do_starttls1(std::string noden, const boost::system
 		}
 		else
 		{
-			target_nodename=noden;
+			target_nodename = noden;
 		}
 
 		RR_INTRUSIVE_PTR<Message> m = CreateMessage();
@@ -3954,7 +3954,7 @@ void TcpTransportConnection::MessageReceived(RR_INTRUSIVE_PTR<Message> m)
 			addr2.scope_id(0);
 			/*if (addr2.is_v4_mapped())
 			{
-				connecturl = scheme + "://" + addr2.to_v4().to_string() + ":" + boost::lexical_cast<std::string>(port)+"/";
+				connecturl = scheme + "://" + addr2.to_v4() + ":" + boost::lexical_cast<std::string>(port)+"/";
 			}
 			else
 			{*/
@@ -4067,7 +4067,7 @@ void TcpTransportConnection::StreamOpMessageReceived(RR_INTRUSIVE_PTR<Message> m
 					boost::unique_lock<boost::shared_mutex> lock(RemoteNodeID_lock);
 					RemoteNodeID=target_nodeid;
 				}
-				else if (target_nodename==m->header->SenderNodeName && target_nodeid==NodeID::GetAny())
+				else if (m->header->SenderNodeName==target_nodename && target_nodeid==NodeID::GetAny())
 				{
 					boost::unique_lock<boost::shared_mutex> lock(RemoteNodeID_lock);
 					RemoteNodeID=m->header->SenderNodeID;
@@ -4765,7 +4765,7 @@ namespace detail
 
 	}
 
-	void IPNodeDiscovery::NodeAnnounceReceived(const std::string &packet)
+	void IPNodeDiscovery::NodeAnnounceReceived(boost::string_ref packet)
 	{
 		if (listening)
 		{
@@ -4966,7 +4966,7 @@ namespace detail
 	{
 	}
 
-	void IPNodeDiscovery::broadcast_discovery_packet(const boost::asio::ip::address& source, const std::string& packet, IPNodeDiscoveryFlags flags)
+	void IPNodeDiscovery::broadcast_discovery_packet(const boost::asio::ip::address& source, boost::string_ref packet, IPNodeDiscoveryFlags flags)
 	{
 		RR_BOOST_ASIO_IO_CONTEXT ios;
 		boost::asio::ip::udp::socket s(ios);
@@ -5065,7 +5065,7 @@ namespace detail
 		catch (std::exception&) {}
 	}
 
-	std::string IPNodeDiscovery::generate_response_packet(const boost::asio::ip::address& source, const std::string& scheme, int port)
+	std::string IPNodeDiscovery::generate_response_packet(const boost::asio::ip::address& source, boost::string_ref scheme, int port)
 	{
 		std::string nodeidstring = GetNode()->NodeID().ToString();
 		std::string packetdata = "Robot Raconteur Node Discovery Packet\n";

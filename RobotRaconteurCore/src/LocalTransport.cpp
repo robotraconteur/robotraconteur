@@ -147,7 +147,7 @@ std::string LocalTransport::GetUrlSchemeString() const
 	return "rr+local";
 }
 
-bool LocalTransport::CanConnectService(const std::string& url)
+bool LocalTransport::CanConnectService(boost::string_ref url)
 {
 	if (boost::starts_with(url, "rr+local://"))
 		return true;
@@ -155,7 +155,7 @@ bool LocalTransport::CanConnectService(const std::string& url)
 	return false;
 }
 
-void LocalTransport::AsyncCreateTransportConnection(const std::string& url, RR_SHARED_PTR<Endpoint> ep, boost::function<void (RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException> ) >& callback)
+void LocalTransport::AsyncCreateTransportConnection(boost::string_ref url, RR_SHARED_PTR<Endpoint> ep, boost::function<void (RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException> ) >& callback)
 {
 	ParseConnectionURLResult url_res = ParseConnectionURL(url);
 
@@ -288,7 +288,7 @@ void LocalTransport::AsyncCreateTransportConnection2(RR_SHARED_PTR<LocalTranspor
 
 }
 
-RR_SHARED_PTR<ITransportConnection> LocalTransport::CreateTransportConnection(const std::string& url, RR_SHARED_PTR<Endpoint> e)
+RR_SHARED_PTR<ITransportConnection> LocalTransport::CreateTransportConnection(boost::string_ref url, RR_SHARED_PTR<Endpoint> e)
 {
 	RR_SHARED_PTR<detail::sync_async_handler<ITransportConnection> > d=RR_MAKE_SHARED<detail::sync_async_handler<ITransportConnection> >(RR_MAKE_SHARED<ConnectionException>("Timeout exception"));
 	
@@ -355,7 +355,7 @@ void LocalTransport::CloseTransportConnection_timed(const boost::system::error_c
 	}
 }
 
-/*void LocalTransport::StartServer(const std::string& name)
+/*void LocalTransport::StartServer(boost::string_ref name)
 {
 	boost::mutex::scoped_lock lock(acceptor_lock);
 
@@ -376,9 +376,9 @@ void LocalTransport::CloseTransportConnection_timed(const boost::system::error_c
 
 }*/
 
-void LocalTransport::StartClientAsNodeName(const std::string& name)
+void LocalTransport::StartClientAsNodeName(boost::string_ref name)
 {
-	if (!boost::regex_match(name, boost::regex("^[a-zA-Z][a-zA-Z0-9_\\.\\-]*$")))
+	if (!boost::regex_match(name.begin(), name.end(), boost::regex("^[a-zA-Z][a-zA-Z0-9_\\.\\-]*$")))
 	{
 		throw InvalidArgumentException("\"" + name + "\" is an invalid NodeName");
 	}
@@ -404,11 +404,11 @@ void LocalTransport::StartClientAsNodeName(const std::string& name)
 }
 
 
-void LocalTransport::StartServerAsNodeName(const std::string& name, bool public_)
+void LocalTransport::StartServerAsNodeName(boost::string_ref name, bool public_)
 {
 	boost::mutex::scoped_lock lock(acceptor_lock);
 
-	RR_SHARED_PTR<detail::LocalTransportNodeNameLock> nodename_lock = detail::LocalTransportNodeNameLock::Lock(name);
+	RR_SHARED_PTR<detail::LocalTransportNodeNameLock> nodename_lock = detail::LocalTransportNodeNameLock::Lock(name.to_string());
 	if (!nodename_lock) throw NodeNameAlreadyInUse();
 
 	boost::tuple<NodeID, RR_SHARED_PTR<detail::LocalTransportFD> > nodeid1 = detail::LocalTransportUtil::GetNodeIDForNodeNameAndLock(name);
@@ -653,7 +653,7 @@ void LocalTransport::SendMessage(RR_INTRUSIVE_PTR<Message> m)
 	t->SendMessage(m);
 }
 
-uint32_t LocalTransport::TransportCapability(const std::string& name)
+uint32_t LocalTransport::TransportCapability(boost::string_ref name)
 {
 	return 0;
 }
@@ -994,13 +994,13 @@ void LocalTransportConnection::MessageReceived(RR_INTRUSIVE_PTR<Message> m)
 		std::string connecturl;
 		if (addr.is_v4())
 		{
-			connecturl="local://" + addr.to_string() + ":" + boost::lexical_cast<std::string>(port) + "/";
+			connecturl="local://" + addr + ":" + boost::lexical_cast<std::string>(port) + "/";
 		}
 		else
 		{
 			boost::asio::ip::address_v6 addr2=addr.to_v6();
 			addr2.scope_id(0);
-			connecturl="tcp://[" + addr2.to_string() + "]:" + boost::lexical_cast<std::string>(port) + "/";
+			connecturl="tcp://[" + addr2 + "]:" + boost::lexical_cast<std::string>(port) + "/";
 		}
 		*/
 
@@ -1469,16 +1469,16 @@ namespace detail
 			return true;
 		}
 		
-		boost::tuple<NodeID, RR_SHARED_PTR<LocalTransportFD> > GetNodeIDForNodeNameAndLock(const std::string& nodename)
+		boost::tuple<NodeID, RR_SHARED_PTR<LocalTransportFD> > GetNodeIDForNodeNameAndLock(boost::string_ref nodename)
 		{
 			NodeID nodeid;
 
-			if (!boost::regex_match(nodename, boost::regex("^[a-zA-Z][a-zA-Z0-9_\\.\\-]*$")))
+			if (!boost::regex_match(nodename.begin(), nodename.end(), boost::regex("^[a-zA-Z][a-zA-Z0-9_\\.\\-]*$")))
 			{
 				throw InvalidArgumentException("\"" + nodename + "\" is an invalid NodeName");
 			}
 
-			boost::filesystem::path p = GetUserNodeIDPath() / nodename;
+			boost::filesystem::path p = GetUserNodeIDPath() / nodename.to_string();
 
 #ifdef ROBOTRACONTEUR_WINDOWS
 
@@ -1691,7 +1691,7 @@ namespace detail
 			return fd;
 		}
 
-		void RefreshInfoFile(RR_SHARED_PTR<LocalTransportFD> h_info, const std::string& service_nonce)
+		void RefreshInfoFile(RR_SHARED_PTR<LocalTransportFD> h_info, boost::string_ref service_nonce)
 		{
 
 			if (!h_info) return;
@@ -1705,14 +1705,14 @@ namespace detail
 			}
 			else
 			{
-				e->second = service_nonce;
+				e->second.swap(service_nonce.to_string());
 			}
 
 			h_info->reset();
 			h_info->write_info();			
 		}
 
-		void FindNodesInDirectory(std::vector<NodeDiscoveryInfo>& nodeinfo, const boost::filesystem::path& path, const std::string& scheme, const boost::posix_time::ptime& now, boost::optional<std::string> username)
+		void FindNodesInDirectory(std::vector<NodeDiscoveryInfo>& nodeinfo, const boost::filesystem::path& path, boost::string_ref scheme, const boost::posix_time::ptime& now, boost::optional<std::string> username)
 		{			
 			boost::filesystem::path search_id = path / "by-nodeid";
 			boost::filesystem::path search_name = path / "by-nodename";
@@ -1755,11 +1755,11 @@ namespace detail
 					if (username)
 					{
 						if (username2 != *username) continue;
-						url = scheme + "://" + *username + "@localhost/?nodeid=" + nodeid.ToString("D") + "&service=RobotRaconteurServiceIndex";
+						url = scheme.to_string() + "://" + *username + "@localhost/?nodeid=" + nodeid.ToString("D") + "&service=RobotRaconteurServiceIndex";
 					}
 					else
 					{
-						url = scheme + ":///?nodeid=" + nodeid.ToString("D") + "&service=RobotRaconteurServiceIndex";
+						url = scheme.to_string() + ":///?nodeid=" + nodeid.ToString("D") + "&service=RobotRaconteurServiceIndex";
 					}
 
 					NodeDiscoveryInfo i;
@@ -2174,7 +2174,7 @@ namespace detail
 		return true;
 	}
 
-	bool LocalTransportFD::write(const std::string& data)
+	bool LocalTransportFD::write(boost::string_ref data)
 	{
 #ifdef ROBOTRACONTEUR_WINDOWS
 		DWORD bytes_written = 0;

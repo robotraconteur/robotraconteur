@@ -116,13 +116,13 @@ public:
 
 	virtual ~BluetoothConnector() {}
 
-	void Connect(const ParseConnectionURLResult& url, const std::string& noden, uint32_t endpoint, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > handler)
+	void Connect(const ParseConnectionURLResult& url, boost::string_ref noden, uint32_t endpoint, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > handler)
 	{
 		target_nodeid = url.nodeid;
 		target_nodename = url.nodename;
 
 		this->endpoint = endpoint;
-		this->noden = noden;
+		this->noden.swap(noden.to_string());
 
 		this->connecting = true;
 
@@ -135,7 +135,7 @@ public:
 		return;
 	}
 
-	std::list<btaddr> FindMatchingServices(btaddr addr, const NodeID& nodeid, const std::string& nodename)
+	std::list<btaddr> FindMatchingServices(btaddr addr, const NodeID& nodeid, boost::string_ref nodename)
 	{
 		std::list<device_info> infos = GetDeviceNodes(addr);
 		std::list<btaddr> o;

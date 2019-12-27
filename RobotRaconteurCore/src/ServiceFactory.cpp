@@ -48,10 +48,10 @@ RR_SHARED_PTR<ServiceDefinition> ServiceFactory::ServiceDef()
 	return sdef;
 }
 
-std::string ServiceFactory::RemovePath(const std::string &path)
+std::string ServiceFactory::RemovePath(boost::string_ref path)
 {
 	
-	return SplitQualifiedName(path).get<1>();
+	return SplitQualifiedName(path).get<1>().to_string();
 }
 }
 

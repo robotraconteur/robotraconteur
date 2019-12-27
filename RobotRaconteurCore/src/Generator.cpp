@@ -29,9 +29,9 @@
 
 namespace RobotRaconteur
 {
-	GeneratorClientBase::GeneratorClientBase(const std::string& name, int32_t id, RR_SHARED_PTR<ServiceStub> stub)
+	GeneratorClientBase::GeneratorClientBase(boost::string_ref name, int32_t id, RR_SHARED_PTR<ServiceStub> stub)
 	{
-		this->name = name;
+		this->name.swap(name.to_string());
 		this->id = id;
 		this->stub = stub;
 	}
@@ -131,9 +131,9 @@ namespace RobotRaconteur
 		handler(mret,err,node1);
 	}
 
-	GeneratorServerBase::GeneratorServerBase(const std::string& name, int32_t index, RR_SHARED_PTR<ServiceSkel> skel, RR_SHARED_PTR<ServerEndpoint> ep)
+	GeneratorServerBase::GeneratorServerBase(boost::string_ref name, int32_t index, RR_SHARED_PTR<ServiceSkel> skel, RR_SHARED_PTR<ServerEndpoint> ep)
 	{
-		this->name = name;
+		this->name.swap(name.to_string());
 		this->index = index;
 		this->skel = skel;
 		this->ep = ep;

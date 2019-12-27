@@ -110,13 +110,13 @@ namespace RobotRaconteur
 	{ \
 	public: \
 		template<typename U> \
-		static void PackField(const type& v, const std::string& name, U& out) \
+		static void PackField(const type& v, MessageStringRef name, U& out) \
 		{ \
 			out.push_back(CreateMessageElement(name, ScalarToRRArray<type>(v))); \
 		} \
 		\
 		template<typename U> \
-		static void UnpackField(type& v, const std::string& name, U& in) \
+		static void UnpackField(type& v, MessageStringRef name, U& in) \
 		{ \
 			v = RRArrayToScalar<type>(MessageElement::FindElement(in, name)->template CastData<RRArray<type> >()); \
 		} \
@@ -127,13 +127,13 @@ namespace RobotRaconteur
 	{ \
 	public: \
 		template<typename U> \
-		static void PackField(const pod_field_array<type, N, varlength>& v, const std::string& name, U& out) \
+		static void PackField(const pod_field_array<type, N, varlength>& v, MessageStringRef name, U& out) \
 		{ \
 			out.push_back(CreateMessageElement(name, pod_field_array_ToRRArray(v))); \
 		} \
 		\
 		template<typename U> \
-		static void UnpackField(pod_field_array<type, N, varlength>& v, const std::string& name, U& in) \
+		static void UnpackField(pod_field_array<type, N, varlength>& v, MessageStringRef name, U& in) \
 		{ \
 			RR_INTRUSIVE_PTR<RRArray<type> > a = MessageElement::FindElement(in, name)->template CastData<RRArray<type> >(); \
 			RRArrayTo_pod_field_array(v, a); \
@@ -173,7 +173,7 @@ namespace RobotRaconteur
 	{ \
 	public: \
 		template<typename U> \
-		static void PackField(const type& v, const std::string& name, U& out) \
+		static void PackField(const type& v, MessageStringRef name, U& out) \
 		{ \
 			std::vector<RR_INTRUSIVE_PTR<MessageElement> > v1; \
 			v1.push_back(CreateMessageElement("array",ScalarToRRNamedArray<type>(v)->GetNumericArray())); \
@@ -181,7 +181,7 @@ namespace RobotRaconteur
 		} \
 		\
 		template<typename U> \
-		static void UnpackField(type& v, const std::string& name, U& in) \
+		static void UnpackField(type& v, MessageStringRef name, U& in) \
 		{ \
 			typedef typename RRPrimUtil<type>::ElementArrayType element_type; \
 			RR_INTRUSIVE_PTR<MessageElementNestedElementList> m = MessageElement::FindElement(in,name)->CastDataToNestedList(DataTypes_namedarray_array_t); \
@@ -197,7 +197,7 @@ namespace RobotRaconteur
 	{ \
 	public: \
 		template<typename U> \
-		static void PackField(const pod_field_array<type, N, varlength>& v, const std::string& name, U& out) \
+		static void PackField(const pod_field_array<type, N, varlength>& v, MessageStringRef name, U& out) \
 		{ \
 			RR_INTRUSIVE_PTR<RRNamedArray<type> > a = pod_field_array_ToRRNamedArray(v); \
 			std::vector<RR_INTRUSIVE_PTR<MessageElement> > a1; \
@@ -206,7 +206,7 @@ namespace RobotRaconteur
 		} \
 		\
 		template<typename U> \
-		static void UnpackField(pod_field_array<type, N, varlength>& v, const std::string& name, U& in) \
+		static void UnpackField(pod_field_array<type, N, varlength>& v, MessageStringRef name, U& in) \
 		{ \
 			typedef RRPrimUtil<type>::ElementArrayType element_type; \
 			RR_INTRUSIVE_PTR<MessageElementNestedElementList> a = MessageElement::FindElement(in, name)->CastDataToNestedList(DataTypes_namedarray_array_t); \
@@ -221,7 +221,7 @@ namespace RobotRaconteur
 	{
 	public:
 		template<typename U>
-		static void PackField(const pod_field_array<T, N, varlength>& v, const std::string& name, U& out)
+		static void PackField(const pod_field_array<T, N, varlength>& v, MessageStringRef name, U& out)
 		{
 			std::vector<RR_INTRUSIVE_PTR<MessageElement> > o;
 			o.reserve(v.size());
@@ -237,7 +237,7 @@ namespace RobotRaconteur
 		}
 
 		template<typename U>
-		static void UnpackField(pod_field_array<T, N, varlength>& v, const std::string& name, U& in)
+		static void UnpackField(pod_field_array<T, N, varlength>& v, MessageStringRef name, U& in)
 		{		
 			RR_INTRUSIVE_PTR<MessageElementNestedElementList> a = MessageElement::FindElement(in, name)->CastDataToNestedList(DataTypes_pod_array_t);
 			if (!a) throw NullValueException("Unexpected null array");
@@ -254,7 +254,7 @@ namespace RobotRaconteur
 				}
 				else if (m->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
 				{
-					key = boost::lexical_cast<int32_t>(m->ElementName);
+					key = boost::lexical_cast<int32_t>(m->ElementName.str());
 				}
 				else
 				{
@@ -269,13 +269,13 @@ namespace RobotRaconteur
 	};
 		
 	template<typename T, typename U>
-	void PodStub_PackField(const T& v, const std::string& name, U& out)
+	void PodStub_PackField(const T& v, MessageStringRef name, U& out)
 	{
 		PodStub<T>::PackField(v, name, out);
 	}
 
 	template<typename T, typename U>
-	void PodStub_UnpackField(T& v, const std::string& name, U& out)
+	void PodStub_UnpackField(T& v, MessageStringRef name, U& out)
 	{		
 		PodStub<T>::UnpackField(v, name, out);
 	}
@@ -310,7 +310,7 @@ namespace RobotRaconteur
 		}
 		else if (m->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
 		{
-			key = boost::lexical_cast<int32_t>(m->ElementName);
+			key = boost::lexical_cast<int32_t>(m->ElementName.str());
 		}
 		else
 		{
@@ -364,7 +364,7 @@ namespace RobotRaconteur
 			}
 			else if (m->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
 			{
-				key = boost::lexical_cast<int32_t>(m->ElementName);
+				key = boost::lexical_cast<int32_t>(m->ElementName.str());
 			}
 			else
 			{
@@ -407,20 +407,20 @@ namespace RobotRaconteur
 
 	//MessageElement pack helper functions for pod
 	template<typename T>
-	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackPodToArrayElement(const std::string& elementname, const T& s)
+	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackPodToArrayElement(MessageStringRef elementname, const T& s)
 	{
 		return CreateMessageElement(elementname, PodStub_PackPodToArray(s));
 	}
 
 	template<typename T>
-	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackPodArrayElement(const std::string& elementname, const RR_INTRUSIVE_PTR<RRPodArray<T> >& s)
+	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackPodArrayElement(MessageStringRef elementname, const RR_INTRUSIVE_PTR<RRPodArray<T> >& s)
 	{
 		if (!s) throw NullValueException("Arrays must not be null");
 		return CreateMessageElement(elementname, PodStub_PackPodArray(s));
 	}
 
 	template<typename T>
-	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackPodMultiDimArrayElement(const std::string& elementname, const RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> >& s)
+	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackPodMultiDimArrayElement(MessageStringRef elementname, const RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> >& s)
 	{
 		if (!s) throw NullValueException("Arrays must not be null");
 		return CreateMessageElement(elementname, PodStub_PackPodMultiDimArray(s));
@@ -578,20 +578,20 @@ namespace RobotRaconteur
 
 	//MessageElement pack helper functions for namedarray
 	template<typename T>
-	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackNamedArrayToArrayElement(const std::string& elementname, const T& s)
+	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackNamedArrayToArrayElement(MessageStringRef elementname, const T& s)
 	{
 		return CreateMessageElement(elementname, NamedArrayStub_PackNamedArrayToArray(s));
 	}
 
 	template<typename T>
-	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackNamedArrayElement(const std::string& elementname, const RR_INTRUSIVE_PTR<RRNamedArray<T> >& s)
+	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackNamedArrayElement(MessageStringRef elementname, const RR_INTRUSIVE_PTR<RRNamedArray<T> >& s)
 	{
 		if (!s) throw NullValueException("Arrays must not be null");
 		return CreateMessageElement(elementname, NamedArrayStub_PackNamedArray(s));
 	}
 
 	template<typename T>
-	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackNamedMultiDimArrayElement(const std::string& elementname, const RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> >& s)
+	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackNamedMultiDimArrayElement(MessageStringRef elementname, const RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> >& s)
 	{
 		if (!s) throw NullValueException("Arrays must not be null");
 		return CreateMessageElement(elementname, NamedArrayStub_PackNamedMultiDimArray(s));

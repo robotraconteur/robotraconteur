@@ -57,7 +57,7 @@ namespace RobotRaconteur
 
 		virtual boost::posix_time::ptime GetLastAccessTime();
 
-		AuthenticatedUser(const std::string &username, const std::vector<std::string>& privileges, const std::vector<std::string>& properties, RR_SHARED_PTR<ServerContext> context);
+		AuthenticatedUser(boost::string_ref username, const std::vector<std::string>& privileges, const std::vector<std::string>& properties, RR_SHARED_PTR<ServerContext> context);
 
 		virtual void UpdateLastAccess();
 
@@ -69,7 +69,7 @@ namespace RobotRaconteur
 	class ROBOTRACONTEUR_CORE_API  UserAuthenticator
 	{
 	public:
-		virtual RR_SHARED_PTR<AuthenticatedUser> AuthenticateUser(const std::string &username, const std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials, RR_SHARED_PTR<ServerContext> context) = 0;
+		virtual RR_SHARED_PTR<AuthenticatedUser> AuthenticateUser(boost::string_ref username, const std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials, RR_SHARED_PTR<ServerContext> context) = 0;
 
 		virtual ~UserAuthenticator() {}
 
@@ -94,18 +94,18 @@ namespace RobotRaconteur
 	public:
 		PasswordFileUserAuthenticator(std::istream &file);
 
-		PasswordFileUserAuthenticator(const std::string &data);
+		PasswordFileUserAuthenticator(boost::string_ref data);
 
 		virtual ~PasswordFileUserAuthenticator() {}
 
 	private:
-		void load(const std::string &data);
+		void load(boost::string_ref data);
 
 	public:
-		virtual RR_SHARED_PTR<AuthenticatedUser> AuthenticateUser(const std::string &username, const std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials, RR_SHARED_PTR<ServerContext> context);
+		virtual RR_SHARED_PTR<AuthenticatedUser> AuthenticateUser(boost::string_ref username, const std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials, RR_SHARED_PTR<ServerContext> context);
 
 
-		static std::string MD5Hash(const std::string &text);
+		static std::string MD5Hash(boost::string_ref text);
 
 
 	private:

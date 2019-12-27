@@ -84,9 +84,9 @@ namespace RobotRaconteur
 		return m_MemberName;
 	}
 
-	ArrayMemoryServiceSkelBase::ArrayMemoryServiceSkelBase(const std::string& membername, RR_SHARED_PTR<ServiceSkel> skel, DataTypes element_type, size_t element_size, MemberDefinition_Direction direction)
+	ArrayMemoryServiceSkelBase::ArrayMemoryServiceSkelBase(boost::string_ref membername, RR_SHARED_PTR<ServiceSkel> skel, DataTypes element_type, size_t element_size, MemberDefinition_Direction direction)
 	{
-		this->m_MemberName = membername;
+		this->m_MemberName.swap(membername.to_string());
 		this->skel = skel;
 		this->node = skel->RRGetNode();
 		this->direction = direction;
@@ -176,9 +176,9 @@ namespace RobotRaconteur
 		return m_MemberName;
 	}
 
-	MultiDimArrayMemoryServiceSkelBase::MultiDimArrayMemoryServiceSkelBase(const std::string& membername, RR_SHARED_PTR<ServiceSkel> skel, DataTypes element_type, size_t element_size, MemberDefinition_Direction direction)
+	MultiDimArrayMemoryServiceSkelBase::MultiDimArrayMemoryServiceSkelBase(boost::string_ref membername, RR_SHARED_PTR<ServiceSkel> skel, DataTypes element_type, size_t element_size, MemberDefinition_Direction direction)
 	{
-		this->m_MemberName = membername;
+		this->m_MemberName.swap(membername.to_string());
 		this->skel = skel;
 		this->node = skel->RRGetNode();
 		this->direction = direction;
@@ -287,11 +287,11 @@ namespace RobotRaconteur
 		return n;
 	}
 
-	ArrayMemoryClientBase::ArrayMemoryClientBase(const std::string& membername, RR_SHARED_PTR<ServiceStub> stub, DataTypes element_type, size_t element_size, MemberDefinition_Direction direction)
+	ArrayMemoryClientBase::ArrayMemoryClientBase(boost::string_ref membername, RR_SHARED_PTR<ServiceStub> stub, DataTypes element_type, size_t element_size, MemberDefinition_Direction direction)
 	{
 		this->stub = stub;
 		this->node = stub->RRGetNode();
-		m_MemberName = membername;
+		m_MemberName.swap(membername.to_string());
 		this->direction = direction;
 		this->element_type = element_type;
 		this->element_size = element_size;
@@ -457,11 +457,11 @@ namespace RobotRaconteur
 		return m_MemberName;
 	}
 
-	MultiDimArrayMemoryClientBase::MultiDimArrayMemoryClientBase(const std::string &membername, RR_SHARED_PTR<ServiceStub> stub, DataTypes element_type, size_t element_size, MemberDefinition_Direction direction)
+	MultiDimArrayMemoryClientBase::MultiDimArrayMemoryClientBase(boost::string_ref membername, RR_SHARED_PTR<ServiceStub> stub, DataTypes element_type, size_t element_size, MemberDefinition_Direction direction)
 	{
 		this->stub = stub;
 		this->node = stub->RRGetNode();
-		m_MemberName = membername;
+		m_MemberName.swap(membername.to_string());
 		this->direction = direction;
 		max_size_read = false;
 		remote_max_size = 0;

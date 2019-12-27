@@ -33,7 +33,7 @@ namespace RobotRaconteur
 namespace detail
 {
 	//UsbDeviceClaim_create_request
-	UsbDeviceClaim_create_request::UsbDeviceClaim_create_request(const ParseConnectionURLResult& url_res, uint32_t endpoint, const std::string& noden, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)>& handler)
+	UsbDeviceClaim_create_request::UsbDeviceClaim_create_request(const ParseConnectionURLResult& url_res, uint32_t endpoint, boost::string_ref noden, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)>& handler)
 	{
 		this->url_res = url_res;
 		this->endpoint = endpoint;
@@ -192,9 +192,9 @@ namespace detail
 		}
 	}
 
-	void UsbDeviceManager::AsyncCreateTransportConnection(const ParseConnectionURLResult& url_res, uint32_t endpoint, const std::string& noden, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler)
+	void UsbDeviceManager::AsyncCreateTransportConnection(const ParseConnectionURLResult& url_res, uint32_t endpoint, boost::string_ref noden, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler)
 	{
-		UpdateDevices(boost::bind(&UsbDeviceManager::AsyncCreateTransportConnection1, shared_from_this(), url_res, endpoint, noden, boost::protect(handler)));
+		UpdateDevices(boost::bind(&UsbDeviceManager::AsyncCreateTransportConnection1, shared_from_this(), url_res, endpoint, noden.to_string(), boost::protect(handler)));
 	}
 
 	void UsbDeviceManager::AsyncCreateTransportConnection1(const ParseConnectionURLResult& url_res, uint32_t endpoint, const std::string& noden, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler)
@@ -461,7 +461,7 @@ namespace detail
 			return;
 		}
 
-		settings->nodename = device_nodename;
+		settings->nodename=device_nodename;
 
 		
 		{
@@ -621,14 +621,14 @@ namespace detail
 		return n;
 	}
 
-	void UsbDevice_Claim::AsyncCreateTransportConnection(const ParseConnectionURLResult& url_res, uint32_t endpoint, const std::string& noden, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler)
+	void UsbDevice_Claim::AsyncCreateTransportConnection(const ParseConnectionURLResult& url_res, uint32_t endpoint, boost::string_ref noden, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler)
 	{		
 		boost::mutex::scoped_lock lock(this_lock);
 		stream_connection_in_progress++;
 		RR_SHARED_PTR<ThreadPool> p = GetNode()->GetThreadPool();
 
 		//This next operation might block
-		if (!RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(&UsbDevice_Claim::AsyncCreateTransportConnection1, shared_from_this(), url_res, endpoint, noden, boost::protect(handler), 0)))
+		if (!RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(&UsbDevice_Claim::AsyncCreateTransportConnection1, shared_from_this(), url_res, endpoint, noden.to_string(), boost::protect(handler), 0)))
 		{
 			RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(handler, RR_SHARED_PTR<ITransportConnection>(), RR_MAKE_SHARED<ConnectionException>("Node shutdown")), true);
 		}
@@ -1412,7 +1412,7 @@ namespace detail
 		return boost::make_tuple(*settings->nodeid, *settings->nodename);
 	}
 
-	void UsbDevice::AsyncCreateTransportConnection(const ParseConnectionURLResult& url_res, uint32_t endpoint, const std::string& noden, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler)
+	void UsbDevice::AsyncCreateTransportConnection(const ParseConnectionURLResult& url_res, uint32_t endpoint, boost::string_ref noden, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler)
 	{
 		boost::mutex::scoped_lock lock(this_lock);
 
@@ -1549,9 +1549,9 @@ namespace detail
 	}
 
 
-	void UsbDeviceTransportConnection::AsyncAttachSocket(std::string noden, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback)
+	void UsbDeviceTransportConnection::AsyncAttachSocket(boost::string_ref noden, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback)
 	{
-		AsyncAttachSocket1(noden, callback);
+		AsyncAttachSocket1(noden.to_string(), callback);
 	}	
 
 	void UsbDeviceTransportConnection::async_write_some(const_buffers& b, boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler)

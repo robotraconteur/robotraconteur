@@ -43,7 +43,7 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
 		
 		friend class TcpTransport;
 
-		TcpTransportConnection(RR_SHARED_PTR<TcpTransport> parent, std::string url, bool server, uint32_t local_endpoint);
+		TcpTransportConnection(RR_SHARED_PTR<TcpTransport> parent, boost::string_ref url, bool server, uint32_t local_endpoint);
 
 		void AsyncAttachSocket(RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
 
@@ -59,7 +59,7 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
 
 	protected:
 
-		void do_starttls1(std::string noden, const boost::system::error_code& error, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+		void do_starttls1(const std::string& noden, const boost::system::error_code& error, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
 
 		void do_starttls2(RR_SHARED_PTR<RobotRaconteurException> error, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
 
@@ -171,7 +171,7 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
 
 	};
 
-	void TcpTransport_attach_transport(RR_SHARED_PTR<TcpTransport> parent,RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket, std::string url, bool server, uint32_t endpoint, boost::function<void( RR_SHARED_PTR<boost::asio::ip::tcp::socket> , RR_SHARED_PTR<ITransportConnection> , RR_SHARED_PTR<RobotRaconteurException> )>& callback);
+	void TcpTransport_attach_transport(RR_SHARED_PTR<TcpTransport> parent,RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket, boost::string_ref url, bool server, uint32_t endpoint, boost::function<void( RR_SHARED_PTR<boost::asio::ip::tcp::socket> , RR_SHARED_PTR<ITransportConnection> , RR_SHARED_PTR<RobotRaconteurException> )>& callback);
 
 	void TcpTransport_connected_callback2(RR_SHARED_PTR<TcpTransport> parent, RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket, RR_SHARED_PTR<ITransportConnection> connection, RR_SHARED_PTR<RobotRaconteurException> err);
 	
@@ -277,7 +277,7 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
 
 		public:
 
-			TcpAcceptor(RR_SHARED_PTR<TcpTransport> parent, std::string url, uint32_t local_endpoint);
+			TcpAcceptor(RR_SHARED_PTR<TcpTransport> parent, boost::string_ref url, uint32_t local_endpoint);
 
 			void AcceptSocket(RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket, boost::function<void(RR_SHARED_PTR<boost::asio::ip::tcp::socket>, RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)>& handler);
 		};
@@ -314,7 +314,7 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
 
 			TcpWebSocketConnector(RR_SHARED_PTR<TcpTransport> parent);
 			
-			void Connect(std::string url, uint32_t endpoint, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > handler);			
+			void Connect(boost::string_ref url, uint32_t endpoint, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > handler);			
 		};
 
 #ifdef ROBOTRACONTEUR_USE_SCHANNEL
@@ -361,7 +361,7 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
 			
 			TcpWSSWebSocketConnector(RR_SHARED_PTR<TcpTransport> parent);
 			
-			void Connect(std::string url, uint32_t endpoint, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > handler);
+			void Connect(boost::string_ref url, uint32_t endpoint, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > handler);
 			
 		};
 #endif
@@ -405,7 +405,7 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
 				boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > handler);
 			
 #ifdef ROBOTRACONTEUR_APPLE
-			static bool verify_callback(bool preverified, boost::asio::ssl::verify_context& ctx, std::string servername);
+			static bool verify_callback(bool preverified, boost::asio::ssl::verify_context& ctx, boost::string_ref servername);
 #endif
 			void Connect2(const boost::system::error_code& ec,
 				RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket,
@@ -416,7 +416,7 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
 
 			TcpWSSWebSocketConnector(RR_SHARED_PTR<TcpTransport> parent);
 			
-			void Connect(std::string url, uint32_t endpoint, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > handler);
+			void Connect(boost::string_ref url, uint32_t endpoint, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > handler);
 		};
 #endif
 
@@ -499,13 +499,13 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
 
 			void handle_send( const boost::system::error_code& /*error*/, std::size_t /*bytes_transferred*/, RR_SHARED_PTR<std::string> /*message*/);
 
-			void broadcast_discovery_packet(const boost::asio::ip::address& source, const std::string& packet, IPNodeDiscoveryFlags flags);
+			void broadcast_discovery_packet(const boost::asio::ip::address& source, boost::string_ref packet, IPNodeDiscoveryFlags flags);
 
-			std::string generate_response_packet(const boost::asio::ip::address& source, const std::string& scheme, int port);
+			std::string generate_response_packet(const boost::asio::ip::address& source, boost::string_ref scheme, int port);
 
 			void handle_request_timer(const boost::system::error_code& error, int32_t c);
 						
-			void NodeAnnounceReceived(const std::string &packet);
+			void NodeAnnounceReceived(boost::string_ref packet);
 
 			boost::mutex change_lock;
 

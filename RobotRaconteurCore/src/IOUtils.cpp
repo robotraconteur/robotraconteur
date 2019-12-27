@@ -180,12 +180,13 @@ void ArrayBinaryReader::ReadArray(RR_INTRUSIVE_PTR<RRBaseArray>& arr)
 #endif
 }
 
-std::string ArrayBinaryReader::ReadString8(size_t length)
-{
+MessageStringPtr ArrayBinaryReader::ReadString8(size_t length)
+{	
 	std::string strin;
 	strin.resize(length);
-	Read(&strin[0], 0, length);	
-	return strin;
+	Read(&strin[0], 0, length);
+	MessageStringPtr res(RR_MOVE(strin));
+	return res;
 }
 
 uint32_t ArrayBinaryReader::ReadUintX()
@@ -485,17 +486,19 @@ void ArrayBinaryWriter::WriteArray(RR_INTRUSIVE_PTR<RRBaseArray>& arr)
 	}
 }
 
-void ArrayBinaryWriter::WriteString8(const std::string& str)
+void ArrayBinaryWriter::WriteString8(MessageStringRef str_ptr)
 {
-	const char* datout=str.c_str();
+	boost::string_ref str= str_ptr.str();
+	const char* datout=str.data();
 	Write(reinterpret_cast<const uint8_t*>(datout),0,str.size());	
 }
 
-void ArrayBinaryWriter::WriteString8WithXLen(const std::string& str)
+void ArrayBinaryWriter::WriteString8WithXLen(MessageStringRef str_ptr)
 {
+	boost::string_ref str= str_ptr.str();
 	size_t a = str.size();
 	WriteUintX(boost::numeric_cast<uint32_t>(a));
-	const char* datout = str.c_str();
+	const char* datout = str.data();
 	Write(reinterpret_cast<const uint8_t*>(datout), 0, a);
 }
 
@@ -561,13 +564,15 @@ void ArrayBinaryWriter::WriteIntX2(int64_t v)
 	}
 }
 
-size_t ArrayBinaryWriter::GetStringByteCount8(const std::string& str)
+size_t ArrayBinaryWriter::GetStringByteCount8(MessageStringRef str_ptr)
 {
+	boost::string_ref str= str_ptr.str();
 	return str.size();
 }
 
-size_t ArrayBinaryWriter::GetStringByteCount8WithXLen(const std::string& str)
+size_t ArrayBinaryWriter::GetStringByteCount8WithXLen(MessageStringRef str_ptr)
 {
+	boost::string_ref str= str_ptr.str();
 	size_t a = str.size();
 	if (a >= std::numeric_limits<uint32_t>::max() - 5) throw InvalidArgumentException("String too large");
 	a += GetUintXByteCount(a);

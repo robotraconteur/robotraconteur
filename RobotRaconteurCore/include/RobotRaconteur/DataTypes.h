@@ -49,6 +49,10 @@
 
 #include <boost/lexical_cast.hpp>
 
+#include <boost/utility/string_ref.hpp>
+
+#include <boost/variant.hpp>
+
 #pragma once
 
 namespace RobotRaconteur
@@ -142,7 +146,7 @@ namespace RobotRaconteur
 
 		virtual ~RRObject() {}
 
-		virtual std::string RRType()=0;
+		virtual boost::string_ref RRType()=0;
 	};
 
 	class ROBOTRACONTEUR_CORE_API RRValue : public boost::intrusive_ref_counter<RRValue>, boost::noncopyable
@@ -152,13 +156,97 @@ namespace RobotRaconteur
 
 		virtual ~RRValue() {}
 
-		virtual std::string RRType() = 0;
+		virtual boost::string_ref RRType() = 0;
 	};
+
+	namespace detail
+	{
+		class ROBOTRACONTEUR_CORE_API MessageStringData : public boost::intrusive_ref_counter<MessageStringData>
+		{
+		public:
+			std::string str;
+		};
+	}
+
+	class ROBOTRACONTEUR_CORE_API MessageStringRef;
+
+	class ROBOTRACONTEUR_CORE_API MessageStringPtr
+	{
+	private:
+		boost::intrusive_ptr<detail::MessageStringData> _str_ptr;
+	public:
+		friend class MessageStringRef;
+
+		MessageStringPtr();
+		
+		MessageStringPtr(const std::string& str);
+		MessageStringPtr(boost::string_ref str);
+		MessageStringPtr(const MessageStringPtr& str_ptr);
+		MessageStringPtr(const MessageStringRef& str_ref);
+#if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
+		MessageStringPtr(std::string&& str);
+#endif
+		inline MessageStringPtr(const char *str)
+		  : MessageStringPtr(boost::string_ref(str)) {}
+
+
+		boost::string_ref str() const;
+
+		bool operator ==(MessageStringRef b) const;
+		bool operator !=(MessageStringRef b) const;
+		bool operator <(MessageStringRef b) const;		
+	};
+
+	class ROBOTRACONTEUR_CORE_API MessageStringRef
+	{
+	private:
+		boost::variant<detail::MessageStringData*,boost::string_ref> _str;
+		
+	public:
+		friend class MessageStringPtr;
+		
+		MessageStringRef(const std::string& str);
+		MessageStringRef(boost::string_ref str);
+		MessageStringRef(const MessageStringPtr& str_ptr);
+		MessageStringRef(const MessageStringRef& str_ref);
+
+		inline MessageStringRef(const char *str)
+		  : MessageStringRef(boost::string_ref(str)) {}
+
+		bool operator ==(MessageStringRef b) const;
+		bool operator !=(MessageStringRef b) const;
+
+		boost::string_ref str() const;
+	};
+
+	
+	std::size_t hash_value(const RobotRaconteur::MessageStringPtr& k);
+
+	// boost::string_ref operations
+	inline boost::iterator_range<boost::string_ref::const_iterator> to_range(const boost::string_ref& str)
+	{
+		return boost::iterator_range<boost::string_ref::const_iterator>(str.cbegin(), str.cend());
+	}
+
+	inline std::string operator+ (const char* lhs, boost::string_ref rhs)
+	{
+		return lhs + rhs.to_string();
+	}
+
+	inline std::string operator+ (const std::string& lhs, boost::string_ref rhs)
+	{
+		return lhs + rhs.to_string();
+	}
+
+	inline std::string operator+ (boost::string_ref lhs, const char* rhs)
+	{
+		return lhs.to_string() + rhs;
+	}
 
 	class ROBOTRACONTEUR_CORE_API  MessageElementData : public RRValue
 	{
 	public:
-		virtual std::string GetTypeString()=0;
+		virtual MessageStringPtr GetTypeString()=0;
 		virtual DataTypes GetTypeID()=0;
 	};
 
@@ -173,7 +261,7 @@ namespace RobotRaconteur
 	static T RRArrayToScalar(RR_INTRUSIVE_PTR<RRArray<T> > value);
 
 
-	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRArray<char> > stringToRRArray(const std::string& str);
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRArray<char> > stringToRRArray(boost::string_ref str);
 
 	ROBOTRACONTEUR_CORE_API std::string RRArrayToString(RR_INTRUSIVE_PTR<RRArray<char> > arr);
 
@@ -189,7 +277,7 @@ namespace RobotRaconteur
 	ROBOTRACONTEUR_CORE_API std::string utf8_encode(const std::wstring &wstr);
 
 	// Convert an UTF8 string to a wide Unicode String
-	ROBOTRACONTEUR_CORE_API std::wstring utf8_decode(const std::string &str);
+	ROBOTRACONTEUR_CORE_API std::wstring utf8_decode(boost::string_ref str);
 #endif
 
 
@@ -212,10 +300,14 @@ namespace RobotRaconteur
 	{ 
 	public:
 		static DataTypes GetTypeID() {return DataTypes_void_t;}
-		static std::string GetElementTypeString() {
+		static MessageStringPtr GetElementTypeString() {
 			return "";
 		}
 		
+		static boost::string_ref GetRRElementTypeString() {
+			return "";
+		}
+
 		static RR_INTRUSIVE_PTR<RRValue> PrePack(const RR_INTRUSIVE_PTR<T>& val) {return rr_cast<RRValue>(val);}
 		
 		template<typename U>
@@ -230,10 +322,13 @@ namespace RobotRaconteur
 	{
 	public:
 		static DataTypes GetTypeID() {return DataTypes_string_t;}
-		static std::string GetElementTypeString() {
+		static MessageStringPtr GetElementTypeString() {
 			return "";
 		}
-		static RR_INTRUSIVE_PTR<RRValue> PrePack(const std::string& val) {return rr_cast<RRValue>(stringToRRArray(val));} 
+		static boost::string_ref GetRRElementTypeString() {
+			return "";
+		}
+		static RR_INTRUSIVE_PTR<RRValue> PrePack(boost::string_ref val) {return rr_cast<RRValue>(stringToRRArray(val));} 
 		static std::string PreUnpack(RR_INTRUSIVE_PTR<RRValue> val) {return RRArrayToString(rr_cast<RRArray<char> >(val));} 
 
 		virtual ~RRPrimUtil() {};
@@ -260,7 +355,8 @@ namespace RobotRaconteur
 	{ \
 		public: \
 		static DataTypes GetTypeID() {return code;}  \
-		static std::string GetElementTypeString() {return ""; } \
+		static MessageStringPtr GetElementTypeString() {return ""; } \
+		static boost::string_ref GetRRElementTypeString() {return ""; } \
 		static RR_INTRUSIVE_PTR<RRArray<x> > PrePack(const x& val) {return ScalarToRRArray(val);}\
 		template<typename U> \
 		static x PreUnpack(const U& val) {return RRArrayToScalar(rr_cast<RRArray<x> >(val));} \
@@ -292,7 +388,7 @@ namespace RobotRaconteur
 	public:
 		
 
-		virtual std::string GetTypeString()
+		virtual MessageStringPtr GetTypeString()
 		{
 			std::string type=GetRRDataTypeString(GetTypeID());	
 			return type+"[]";
@@ -302,7 +398,7 @@ namespace RobotRaconteur
 
 		virtual size_t size()=0;
 		
-		virtual std::string RRType();
+		virtual boost::string_ref RRType();
 
 		virtual void* void_ptr()=0;
 
@@ -471,7 +567,13 @@ namespace RobotRaconteur
 	class RRMap_keytype
 	{
 	public:
-		static std::string get ()
+		static boost::string_ref get ()
+		{
+			BOOST_STATIC_ASSERT_MSG(sizeof(T) == 0, "Invalid key type for Robot Raconteur map");
+			throw DataTypeException("Unknown data type");
+		}
+
+		static boost::string_ref get_map_rrtype ()
 		{
 			BOOST_STATIC_ASSERT_MSG(sizeof(T) == 0, "Invalid key type for Robot Raconteur map");
 			throw DataTypeException("Unknown data type");
@@ -482,9 +584,14 @@ namespace RobotRaconteur
 	class RRMap_keytype<int32_t>
 	{
 	public:
-		static std::string get ()
+		static boost::string_ref get ()
 		{			
 			return "int32_t";
+		}
+
+		static boost::string_ref get_map_rrtype ()
+		{			
+			return "RobotRaconteur.RRMap<int32_t>";
 		}
 	};
 
@@ -492,9 +599,14 @@ namespace RobotRaconteur
 	class RRMap_keytype<std::string>
 	{
 	public:
-		static std::string get ()
+		static boost::string_ref get ()
 		{
 			return "string";
+		}
+
+		static boost::string_ref get_map_rrtype ()
+		{			
+			return "RobotRaconteur.RRMap<string>";
 		}
 	};
 
@@ -515,11 +627,9 @@ namespace RobotRaconteur
 
 		virtual ~RRMap() {}
 
-		virtual std::string RRType()
+		virtual boost::string_ref RRType()
 		{
-			std::string keytype=RRMap_keytype<K>::get();			
-
-			return "RobotRaconteur.RRMap<" +keytype +">";
+			return RRMap_keytype<K>::get_map_rrtype();		
 		}
 
 		// C++ container support based on boost::container::map
@@ -588,7 +698,7 @@ namespace RobotRaconteur
 
 		virtual ~RRList() {}
 
-		virtual std::string RRType()
+		virtual boost::string_ref RRType()
 		{
 			return "RobotRaconteur.RRList";
 		}
@@ -803,6 +913,26 @@ namespace RobotRaconteur
 		return ptr;
 	}
 
+	template <typename T>
+	const RR_INTRUSIVE_PTR<T>& rr_null_check(const RR_INTRUSIVE_PTR<T>& ptr)
+	{
+		if (!ptr)
+		{
+			throw NullValueException("Unexpected null value");
+		}
+		return ptr;
+	}
+
+	template <typename T>
+	const RR_INTRUSIVE_PTR<T>& rr_null_check(const RR_INTRUSIVE_PTR<T>& ptr, const char* msg)
+	{
+		if (!ptr)
+		{
+			throw NullValueException(msg);
+		}
+		return ptr;
+	}
+
 #define RR_NULL_CHECK rr_null_check
 
 	template<typename T>
@@ -850,6 +980,8 @@ namespace RobotRaconteur
 	{
 	public:
 		virtual ~RRMultiDimBaseArray() {}
+
+		virtual DataTypes GetElementTypeID() = 0;
 	};
 
 	namespace detail
@@ -884,12 +1016,14 @@ namespace RobotRaconteur
 
 		virtual ~RRMultiDimArray() {}
 
-		virtual std::string RRType()
+		virtual boost::string_ref RRType()
 		{
-			std::string stype;
-			DataTypes type = RRPrimUtil<T>::GetTypeID();
-			stype = GetRRDataTypeString(type);
-			return "RobotRaconteur.RRMultiDimArray<" + stype + ">";
+			return "RobotRaconteur.RRMultiDimArray";
+		}
+
+		virtual DataTypes GetElementTypeID()
+		{
+			return RRPrimUtil<T>::GetTypeID();
 		}
 
 		virtual void RetrieveSubArray(std::vector<uint32_t> memorypos, RR_INTRUSIVE_PTR<RRMultiDimArray<T> > buffer, std::vector<uint32_t> bufferpos, std::vector<uint32_t> count)
@@ -1039,7 +1173,7 @@ namespace RobotRaconteur
 	class RRPodBaseArray : public RRValue
 	{
 	public:
-		virtual std::string RRElementTypeString() = 0;
+		virtual boost::string_ref RRElementTypeString() = 0;
 	};
 
 	template<typename T>
@@ -1067,14 +1201,14 @@ namespace RobotRaconteur
 
 		virtual ~RRPodArray() {}
 
-		virtual std::string RRType()
+		virtual boost::string_ref RRType()
 		{
 			return "RobotRaconteur.RRPodArray";
 		}
 
-		virtual std::string RRElementTypeString()
+		virtual boost::string_ref RRElementTypeString()
 		{
-			return RRPrimUtil<T>::GetElementTypeString();
+			return RRPrimUtil<T>::GetRRElementTypeString();
 		}
 
 		// C++ container support based on boost::container::vector
@@ -1128,7 +1262,8 @@ namespace RobotRaconteur
 	{ \
 		public: \
 		static DataTypes GetTypeID() {return DataTypes_pod_t;}  \
-		static std::string GetElementTypeString() {return type_string; } \
+		static MessageStringPtr GetElementTypeString() {return type_string; } \
+		static boost::string_ref GetRRElementTypeString() {return type_string; } \
 		static RR_INTRUSIVE_PTR<RRPodArray<x> > PrePack(const x& val) {return ScalarToRRPodArray(val);}\
 		template<typename U> \
 		static x PreUnpack(const U& val) {return RRPodArrayToScalar(rr_cast<RRPodArray<x> >(val));} \
@@ -1139,7 +1274,7 @@ namespace RobotRaconteur
 	{
 	public:
 		RR_INTRUSIVE_PTR<RRArray<uint32_t> > Dims;
-		virtual std::string RRElementTypeString() = 0;
+		virtual boost::string_ref RRElementTypeString() = 0;
 	};
 
 	template<typename T>
@@ -1159,14 +1294,14 @@ namespace RobotRaconteur
 
 		virtual ~RRPodMultiDimArray() {}
 
-		virtual std::string RRType()
+		virtual boost::string_ref RRType()
 		{
 			return "RobotRaconteur.RRPodMultiDimArray";
 		}
 
-		virtual std::string RRElementTypeString()
+		virtual boost::string_ref RRElementTypeString()
 		{
-			return RRPrimUtil<T>::GetElementTypeString();
+			return RRPrimUtil<T>::GetRRElementTypeString();
 		}
 
 		virtual void RetrieveSubArray(std::vector<uint32_t> memorypos, RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > buffer, std::vector<uint32_t> bufferpos, std::vector<uint32_t> count)
@@ -1257,7 +1392,8 @@ namespace RobotRaconteur
 	{ \
 		public: \
 		static DataTypes GetTypeID() {return DataTypes_pod_t;}  \
-		static std::string GetElementTypeString() {return type_string; } \
+		static MessageStringPtr GetElementTypeString() {return type_string; } \
+		static boost::string_ref GetRRElementTypeString() {return type_string; } \
 		static RR_INTRUSIVE_PTR<RRNamedArray<x> > PrePack(const x& val) {return ScalarToRRNamedArray(val);}\
 		template<typename U> \
 		static x PreUnpack(const U& val) {return RRNamedArrayToScalar(rr_cast<RRNamedArray<x> >(val));} \
@@ -1279,7 +1415,7 @@ namespace RobotRaconteur
 
 		virtual RR_INTRUSIVE_PTR<RRBaseArray> GetNumericBaseArray() = 0;
 
-		virtual std::string RRElementTypeString() = 0;
+		virtual boost::string_ref RRElementTypeString() = 0;
 	};
 
 	template<typename T>
@@ -1341,14 +1477,14 @@ namespace RobotRaconteur
 			return rr_array;
 		}
 				
-		virtual std::string RRType()
+		virtual boost::string_ref RRType()
 		{
 			return "RobotRaconteur.RRNamedArray";
 		}
 		
-		virtual std::string RRElementTypeString()
+		virtual boost::string_ref RRElementTypeString()
 		{
-			return RRPrimUtil<T>::GetElementTypeString();
+			return RRPrimUtil<T>::GetRRElementTypeString();
 		}
 
 		// C++ container support functions based on boost::array
@@ -1443,7 +1579,7 @@ namespace RobotRaconteur
 	{
 	public:
 		RR_INTRUSIVE_PTR<RRArray<uint32_t> > Dims;
-		virtual std::string RRElementTypeString() = 0;
+		virtual boost::string_ref RRElementTypeString() = 0;
 	};
 
 	template<typename T>
@@ -1463,14 +1599,14 @@ namespace RobotRaconteur
 
 		virtual ~RRNamedMultiDimArray() {}
 
-		virtual std::string RRType()
+		virtual boost::string_ref RRType()
 		{
 			return "RobotRaconteur.RRNamedMultiDimArray";
 		}
 
-		virtual std::string RRElementTypeString()
+		virtual boost::string_ref RRElementTypeString()
 		{
-			return RRPrimUtil<T>::GetElementTypeString();
+			return RRPrimUtil<T>::GetRRElementTypeString();
 		}
 
 		virtual void RetrieveSubArray(std::vector<uint32_t> memorypos, RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > buffer, std::vector<uint32_t> bufferpos, std::vector<uint32_t> count)
@@ -1744,9 +1880,9 @@ namespace RobotRaconteur
 
 	namespace detail
 	{
-		ROBOTRACONTEUR_CORE_API std::string encode_index(const std::string& index);
+		ROBOTRACONTEUR_CORE_API std::string encode_index(boost::string_ref index);
 
-		ROBOTRACONTEUR_CORE_API std::string decode_index(const std::string& index);
+		ROBOTRACONTEUR_CORE_API std::string decode_index(boost::string_ref index);
 
 		template<typename T, typename U>
 		bool try_convert_string_to_number(const U& arg, T& result)

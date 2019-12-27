@@ -277,39 +277,41 @@ namespace RobotRaconteur
 
 	static void null_str_deleter(std::string* s) {}
 
-	bool AsyncMessageWriterImpl::write_string(std::string& str, state_type next_state)
+	bool AsyncMessageWriterImpl::write_string(MessageStringPtr& str_ref, state_type next_state)
 	{
+		boost::string_ref str = str_ref.str();
 		size_t l = str.size();
 		if (l > std::numeric_limits<uint16_t>::max()) throw ProtocolException("Header string too long");
 		uint16_t l1 = static_cast<uint16_t>(l);
 		if (!write_number(l1)) return false;
 
-		size_t n = write_some_bytes(str.c_str(), l);
+		size_t n = write_some_bytes(str.data(), l);
 		if (n ==l) return true;
 
-		push_state(Header_writestring, next_state, l - n, &str, n);
+		push_state(Header_writestring, next_state, l - n, &str_ref, n);
 		return false;
 	}
-	bool AsyncMessageWriterImpl::write_string(std::string& str)
+	bool AsyncMessageWriterImpl::write_string(MessageStringPtr& str)
 	{
 		state_type next_state = state();
 		next_state = static_cast<state_type>(static_cast<int>(next_state) + 1);
 		return write_string(str, next_state);
 	}
-	bool AsyncMessageWriterImpl::write_string3(std::string& str, state_type next_state)
+	bool AsyncMessageWriterImpl::write_string3(MessageStringPtr& str_ref, state_type next_state)
 	{
+		boost::string_ref str= str_ref.str();
 		size_t l = str.size();
 		if (l > std::numeric_limits<uint32_t>::max()) throw ProtocolException("Header string too long");
 		uint32_t l1 = static_cast<uint32_t>(l);
 		if (!write_uint_x(l1)) return false;
 
-		size_t n = write_some_bytes(str.c_str(), l);
+		size_t n = write_some_bytes(str.data(), l);
 		if (n == l) return true;
 
-		push_state(Header_writestring, next_state, l - n, &str, n);
+		push_state(Header_writestring, next_state, l - n, &str_ref, n);
 		return false;
 	}
-	bool AsyncMessageWriterImpl::write_string3(std::string& str)
+	bool AsyncMessageWriterImpl::write_string3(MessageStringPtr& str)
 	{
 		state_type next_state = state();
 		next_state = static_cast<state_type>(static_cast<int>(next_state) + 1);
@@ -746,11 +748,11 @@ namespace RobotRaconteur
 			case Header_writestring:
 			{
 				size_t& p1 = param1();
-				const std::string* s = ptrdata<const std::string>();
-				size_t n = write_some_bytes(&(*s).at(p1), s->size() - p1);
+				boost::string_ref s = ptrdata<MessageStringPtr>()->str();
+				size_t n = write_some_bytes(s.data() + p1, s.size() - p1);
 				p1 += n;
 
-				if (p1 == s->size())
+				if (p1 == s.size())
 				{
 					DO_POP_STATE();
 				}
@@ -1010,7 +1012,7 @@ namespace RobotRaconteur
 			case MessageHeader_stringtable3:
 			{
 				MessageHeader* h = data<MessageHeader>();
-				std::string& s1 = h->StringTable.at(param2()).get<1>();
+				MessageStringPtr& s1 = h->StringTable.at(param2()).get<1>();
 				R(write_string3(s1, MessageHeader_stringtable2));				
 				state() = MessageHeader_stringtable2;
 				continue;
@@ -1399,11 +1401,11 @@ namespace RobotRaconteur
 			case Header_writestring:
 			{
 				size_t& p1 = param1();
-				const std::string* s = ptrdata<const std::string>();
-				size_t n = write_some_bytes(&(*s).at(p1), s->size() - p1);
+				boost::string_ref s = ptrdata<MessageStringPtr>()->str();
+				size_t n = write_some_bytes(s.data() + p1, s.size() - p1);
 				p1 += n;
 
-				if (p1 == s->size())
+				if (p1 == s.size())
 				{
 					DO_POP_STATE();
 				}

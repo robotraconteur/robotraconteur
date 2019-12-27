@@ -35,7 +35,7 @@ namespace RobotRaconteur
 	{
 	
 	public:
-		ServiceStub(const std::string &path, RR_SHARED_PTR<ClientContext> c);
+		ServiceStub(boost::string_ref path, RR_SHARED_PTR<ClientContext> c);
 
 		std::string ServicePath;
 
@@ -51,32 +51,32 @@ namespace RobotRaconteur
 
 		virtual void DispatchEvent(RR_INTRUSIVE_PTR<MessageEntry> m) = 0;
 
-		RR_SHARED_PTR<RRObject> FindObjRef(const std::string &n);
+		RR_SHARED_PTR<RRObject> FindObjRef(boost::string_ref n);
 
-		void AsyncFindObjRef(const std::string &n, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout = RR_TIMEOUT_INFINITE);
+		void AsyncFindObjRef(boost::string_ref n, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout = RR_TIMEOUT_INFINITE);
 
-		RR_SHARED_PTR<RRObject> FindObjRef(const std::string &n, const std::string &i);
+		RR_SHARED_PTR<RRObject> FindObjRef(boost::string_ref n, boost::string_ref i);
 
-		RR_SHARED_PTR<RRObject> FindObjRefTyped(const std::string &n, const std::string& objecttype);
+		RR_SHARED_PTR<RRObject> FindObjRefTyped(boost::string_ref n, boost::string_ref objecttype);
 
-		RR_SHARED_PTR<RRObject> FindObjRefTyped(const std::string &n, const std::string &i, const std::string& objecttype);
+		RR_SHARED_PTR<RRObject> FindObjRefTyped(boost::string_ref n, boost::string_ref i, boost::string_ref objecttype);
 
-		void AsyncFindObjRef(const std::string &n, const std::string &i, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout = RR_TIMEOUT_INFINITE);
+		void AsyncFindObjRef(boost::string_ref n, boost::string_ref i, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout = RR_TIMEOUT_INFINITE);
 
-		void AsyncFindObjRefTyped(const std::string &n, const std::string& objecttype, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout = RR_TIMEOUT_INFINITE);
+		void AsyncFindObjRefTyped(boost::string_ref n, boost::string_ref objecttype, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout = RR_TIMEOUT_INFINITE);
 
-		void AsyncFindObjRefTyped(const std::string &n, const std::string &i, const std::string& objecttype, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout = RR_TIMEOUT_INFINITE);
+		void AsyncFindObjRefTyped(boost::string_ref n, boost::string_ref i, boost::string_ref objecttype, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout = RR_TIMEOUT_INFINITE);
 
 		template <typename T>
 		static void EndAsyncFindObjRef(RR_SHARED_PTR<RRObject> obj, RR_SHARED_PTR<RobotRaconteurException> err, boost::function<void(RR_SHARED_PTR<T>, RR_SHARED_PTR<RobotRaconteurException>)>& handler);
 
-		std::string FindObjectType(const std::string &n);
+		std::string FindObjectType(boost::string_ref n);
 
-		std::string FindObjectType(const std::string &n, const std::string &i);
+		std::string FindObjectType(boost::string_ref n, boost::string_ref i);
 
-		void AsyncFindObjectType(const std::string &n, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<std::string>, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout = RR_TIMEOUT_INFINITE);
+		void AsyncFindObjectType(boost::string_ref n, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<std::string>, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout = RR_TIMEOUT_INFINITE);
 
-		void AsyncFindObjectType(const std::string &n, const std::string &i, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<std::string>, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout = RR_TIMEOUT_INFINITE);
+		void AsyncFindObjectType(boost::string_ref n, boost::string_ref i, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<std::string>, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout = RR_TIMEOUT_INFINITE);
 
 		void AsyncSendPipeMessage(RR_INTRUSIVE_PTR<MessageEntry> m, bool unreliable, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>) >& handler);
 
@@ -88,15 +88,15 @@ namespace RobotRaconteur
 
 		virtual RR_INTRUSIVE_PTR<MessageEntry> CallbackCall(RR_INTRUSIVE_PTR<MessageEntry> m);
 
-		virtual std::string RRType() { return "RobotRaconteur.ServiceStub"; }
+		virtual boost::string_ref RRType() { return "RobotRaconteur.ServiceStub"; }
 
 		virtual void RRClose();
 
 		virtual void RRInitStub() = 0;
 
-		virtual RR_SHARED_PTR<PipeClientBase> RRGetPipeClient(const std::string& membername);
+		virtual RR_SHARED_PTR<PipeClientBase> RRGetPipeClient(boost::string_ref membername);
 
-		virtual RR_SHARED_PTR<WireClientBase> RRGetWireClient(const std::string& membername);
+		virtual RR_SHARED_PTR<WireClientBase> RRGetWireClient(boost::string_ref membername);
 
 		RR_SHARED_PTR<RobotRaconteurNode> RRGetNode();
 		RR_WEAK_PTR<RobotRaconteurNode> RRGetNodeWeak();
@@ -121,7 +121,7 @@ namespace RobotRaconteur
 	class ROBOTRACONTEUR_CORE_API  ClientContext : public Endpoint, public RR_ENABLE_SHARED_FROM_THIS<ClientContext>
 	{
 	protected:
-		RR_UNORDERED_MAP<std::string, RR_SHARED_PTR<ServiceStub> > stubs;
+		RR_UNORDERED_MAP<MessageStringPtr, RR_SHARED_PTR<ServiceStub> > stubs;
 		boost::mutex stubs_lock;
 		std::list<std::string> active_stub_searches;
 		std::list<boost::tuple<std::string, boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)> > > active_stub_searches_handlers;
@@ -135,9 +135,9 @@ namespace RobotRaconteur
 
 		ClientContext(RR_SHARED_PTR<ServiceFactory> service_def, RR_SHARED_PTR<RobotRaconteurNode> node);
 
-		RR_SHARED_PTR<RRObject> FindObjRef(const std::string &path, const std::string& objecttype = "");
+		RR_SHARED_PTR<RRObject> FindObjRef(boost::string_ref path, boost::string_ref objecttype = "");
 
-		void AsyncFindObjRef(const std::string &path, const std::string& objecttype2, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout = RR_TIMEOUT_INFINITE);
+		void AsyncFindObjRef(boost::string_ref path, boost::string_ref objecttype2, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout = RR_TIMEOUT_INFINITE);
 
 
 		template <typename T>
@@ -170,12 +170,12 @@ namespace RobotRaconteur
 
 	public:
 
-		std::string FindObjectType(const std::string &path);
+		std::string FindObjectType(boost::string_ref path);
 
-		void AsyncFindObjectType(const std::string &path, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<std::string>, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout = RR_TIMEOUT_INFINITE);
+		void AsyncFindObjectType(boost::string_ref path, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<std::string>, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout = RR_TIMEOUT_INFINITE);
 
 
-		bool VerifyObjectImplements(const std::string& objecttype, const std::string& implementstype);
+		bool VerifyObjectImplements(boost::string_ref objecttype, boost::string_ref implementstype);
 
 	protected:
 		void AsyncFindObjectType1(RR_INTRUSIVE_PTR<MessageEntry> ret, RR_SHARED_PTR<RobotRaconteurException> err, boost::function<void(RR_SHARED_PTR<std::string>, RR_SHARED_PTR<RobotRaconteurException>)>& handler);
@@ -185,7 +185,7 @@ namespace RobotRaconteur
 		boost::mutex pulled_service_defs_lock;
 		std::map<std::string, RR_SHARED_PTR<ServiceDefinition> > pulled_service_defs;
 		
-		bool VerifyObjectImplements2(const std::string& objecttype, const std::string& implementstype);
+		bool VerifyObjectImplements2(boost::string_ref objecttype, boost::string_ref implementstype);
 
 		struct outstanding_request
 		{
@@ -255,20 +255,20 @@ namespace RobotRaconteur
 		boost::mutex m_Attributes_lock;
 
 	public:
-		RR_SHARED_PTR<RRObject> ConnectService(RR_SHARED_PTR<Transport> c, const std::string &url, const std::string &username = "", RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials = (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()), const std::string& objecttype = "");
+		RR_SHARED_PTR<RRObject> ConnectService(RR_SHARED_PTR<Transport> c, boost::string_ref url, boost::string_ref username = "", RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials = (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()), boost::string_ref objecttype = "");
 
-		RR_SHARED_PTR<RRObject> ConnectService(RR_SHARED_PTR<Transport> c, RR_SHARED_PTR<ITransportConnection> tc, const std::string &url, const std::string &username = "", RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials = (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()), const std::string& objecttype = "");
+		RR_SHARED_PTR<RRObject> ConnectService(RR_SHARED_PTR<Transport> c, RR_SHARED_PTR<ITransportConnection> tc, boost::string_ref url, boost::string_ref username = "", RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials = (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()), boost::string_ref objecttype = "");
 
-		void AsyncConnectService(RR_SHARED_PTR<Transport> c, const std::string &url, const std::string &username, RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials, const std::string& objecttype, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout = RR_TIMEOUT_INFINITE);
+		void AsyncConnectService(RR_SHARED_PTR<Transport> c, boost::string_ref url, boost::string_ref username, RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials, boost::string_ref objecttype, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout = RR_TIMEOUT_INFINITE);
 
-		void AsyncConnectService(RR_SHARED_PTR<Transport> c, RR_SHARED_PTR<ITransportConnection> tc, const std::string &url, const std::string &username, RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials, const std::string& objecttype, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout = RR_TIMEOUT_INFINITE);
+		void AsyncConnectService(RR_SHARED_PTR<Transport> c, RR_SHARED_PTR<ITransportConnection> tc, boost::string_ref url, boost::string_ref username, RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials, boost::string_ref objecttype, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout = RR_TIMEOUT_INFINITE);
 
 	protected:
 
 		//These functions are part of the connection process
 		void AsyncConnectService1(RR_SHARED_PTR<Transport> c, RR_SHARED_PTR<ITransportConnection> tc, RR_SHARED_PTR<RobotRaconteurException> e, const std::string& url, const std::string& username, RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials, const std::string& objecttype, boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)>& handler);
 
-		void AsyncConnectService2(RR_SHARED_PTR<PullServiceDefinitionAndImportsReturn> d, RR_SHARED_PTR<RobotRaconteurException> e, const std::string & username, RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials, const std::string& objecttype, boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)>& handler);
+		void AsyncConnectService2(RR_SHARED_PTR<PullServiceDefinitionAndImportsReturn> d, RR_SHARED_PTR<RobotRaconteurException> e, const std::string&  username, RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials, const std::string& objecttype, boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)>& handler);
 
 		void AsyncConnectService3(RR_INTRUSIVE_PTR<MessageEntry> ret, RR_SHARED_PTR<RobotRaconteurException> e, const std::string& username, RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials, const std::string& objecttype, RR_SHARED_PTR<PullServiceDefinitionAndImportsReturn> d, boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)>& handler);
 
@@ -298,25 +298,25 @@ namespace RobotRaconteur
 
 		void SendWireMessage(RR_INTRUSIVE_PTR<MessageEntry> m);
 
-		PullServiceDefinitionReturn PullServiceDefinition(const std::string &ServiceType = "");
+		PullServiceDefinitionReturn PullServiceDefinition(boost::string_ref ServiceType = "");
 
-		void AsyncPullServiceDefinition(const std::string &ServiceType, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<PullServiceDefinitionReturn>,RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout = RR_TIMEOUT_INFINITE);
+		void AsyncPullServiceDefinition(boost::string_ref ServiceType, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<PullServiceDefinitionReturn>,RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout = RR_TIMEOUT_INFINITE);
 	protected:
 
 		void AsyncPullServiceDefinition1(RR_INTRUSIVE_PTR<MessageEntry> ret3, RR_SHARED_PTR<RobotRaconteurException> err, const std::string& ServiceType, boost::function<void(RR_SHARED_PTR<PullServiceDefinitionReturn>, RR_SHARED_PTR<RobotRaconteurException>)>& handler);
 
 	public:
 
-		PullServiceDefinitionAndImportsReturn PullServiceDefinitionAndImports(const std::string &servicetype = "");
+		PullServiceDefinitionAndImportsReturn PullServiceDefinitionAndImports(boost::string_ref servicetype = "");
 
-		void AsyncPullServiceDefinitionAndImports(const std::string &servicetype, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<PullServiceDefinitionAndImportsReturn>, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout = RR_TIMEOUT_INFINITE);
+		void AsyncPullServiceDefinitionAndImports(boost::string_ref servicetype, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<PullServiceDefinitionAndImportsReturn>, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout = RR_TIMEOUT_INFINITE);
 	protected:
 		void AsyncPullServiceDefinitionAndImports1(RR_SHARED_PTR<PullServiceDefinitionReturn> root, RR_SHARED_PTR<RobotRaconteurException> err, const std::string& servicetype, RR_SHARED_PTR<PullServiceDefinitionAndImportsReturn> current, boost::function<void(RR_SHARED_PTR<PullServiceDefinitionAndImportsReturn>, RR_SHARED_PTR<RobotRaconteurException>)>& handler, boost::posix_time::ptime timeout_time);
 	public:
 
 		std::vector<std::string> GetPulledServiceTypes();
 
-		RR_SHARED_PTR<ServiceFactory> GetPulledServiceType(const std::string& type);
+		RR_SHARED_PTR<ServiceFactory> GetPulledServiceType(boost::string_ref type);
 
 	private:
 
@@ -340,9 +340,9 @@ namespace RobotRaconteur
 	public:
 		const std::string GetAuthenticatedUsername();
 
-		std::string AuthenticateUser(const std::string &username, RR_INTRUSIVE_PTR<RRValue> credentials);
+		std::string AuthenticateUser(boost::string_ref username, RR_INTRUSIVE_PTR<RRValue> credentials);
 
-		void AsyncAuthenticateUser(const std::string &username, RR_INTRUSIVE_PTR<RRValue> credentials, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<std::string>, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout = RR_TIMEOUT_INFINITE);
+		void AsyncAuthenticateUser(boost::string_ref username, RR_INTRUSIVE_PTR<RRValue> credentials, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<std::string>, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout = RR_TIMEOUT_INFINITE);
 
 	protected:
 		void AsyncAuthenticateUser2(RR_INTRUSIVE_PTR<MessageEntry> ret, RR_SHARED_PTR<RobotRaconteurException> err, const std::string& username, boost::function<void(RR_SHARED_PTR<std::string>, RR_SHARED_PTR<RobotRaconteurException>)>& handler);
@@ -367,7 +367,7 @@ namespace RobotRaconteur
 	public:
 		virtual void PeriodicCleanupTask();
 
-		uint32_t CheckServiceCapability(const std::string &name);
+		uint32_t CheckServiceCapability(boost::string_ref name);
 
 
 

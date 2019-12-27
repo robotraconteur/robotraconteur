@@ -32,7 +32,7 @@ namespace RobotRaconteur
 		boost::mutex skels_lock;
 
 	public:
-		ServerContext_ObjectLock(const std::string &username, const RR_SHARED_PTR<ServiceSkel> &root_skel, uint32_t endpoint = 0);
+		ServerContext_ObjectLock(boost::string_ref username, const RR_SHARED_PTR<ServiceSkel> &root_skel, uint32_t endpoint = 0);
 
 		std::string GetUsername() const;
 		bool IsLocked() const;

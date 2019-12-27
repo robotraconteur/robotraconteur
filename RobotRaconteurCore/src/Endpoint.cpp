@@ -52,10 +52,10 @@ std::string Endpoint::GetRemoteNodeName()
 	return ret;
 }
 
-void Endpoint::SetRemoteNodeName(std::string name)
+void Endpoint::SetRemoteNodeName(boost::string_ref name)
 {
 	boost::unique_lock<boost::shared_mutex> lock(m_RemoteNodeName_lock);
-	m_RemoteNodeName=name;
+	m_RemoteNodeName.swap(name.to_string());
 }
 
 NodeID Endpoint::GetRemoteNodeID()
@@ -208,7 +208,7 @@ void Endpoint::SendMessage(RR_INTRUSIVE_PTR<Message> m)
 
 			if (e->EntryType != MessageEntryType_EndpointCheckCapability)
 				throw InvalidArgumentException("");
-			std::string name = e->MemberName;
+			boost::string_ref name = e->MemberName.str();
 			capability = EndpointCapability(name);
 			
 
@@ -227,7 +227,7 @@ void Endpoint::SendMessage(RR_INTRUSIVE_PTR<Message> m)
 
 	}
 
-	uint32_t Endpoint::EndpointCapability(const std::string &name)
+	uint32_t Endpoint::EndpointCapability(boost::string_ref name)
 	{
 		return static_cast<uint32_t>(0);
 	}

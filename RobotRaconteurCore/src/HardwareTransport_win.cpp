@@ -878,7 +878,7 @@ std::list<BluetoothConnector<SOCKADDR_BTH, AF_BTH, BTHPROTO_RFCOMM>::device_info
 
 //Device driver interface search
 
-boost::optional<std::wstring> HardwareTransport_win_find_deviceinterface(RR_SHARED_PTR<void> f, const GUID* interface_guid, const NodeID& nodeid, const std::string& nodename)
+boost::optional<std::wstring> HardwareTransport_win_find_deviceinterface(RR_SHARED_PTR<void> f, const GUID* interface_guid, const NodeID& nodeid, boost::string_ref nodename)
 {
 	if (!f)
 	{
@@ -1070,17 +1070,17 @@ boost::optional<std::wstring> HardwareTransport_win_find_deviceinterface(RR_SHAR
 	return boost::optional<std::wstring>();
 }
 
-boost::optional<std::wstring> HardwareTransport_win_find_usb(RR_SHARED_PTR<void> f, const NodeID& nodeid, const std::string& nodename)
+boost::optional<std::wstring> HardwareTransport_win_find_usb(RR_SHARED_PTR<void> f, const NodeID& nodeid, boost::string_ref nodename)
 {
 	return HardwareTransport_win_find_deviceinterface(f, &GUID_DEVINTERFACE_RobotRaconteurUSBDriver, nodeid, nodename);
 }
 
-boost::optional<std::wstring> HardwareTransport_win_find_pci(RR_SHARED_PTR<void> f, const NodeID& nodeid, const std::string& nodename)
+boost::optional<std::wstring> HardwareTransport_win_find_pci(RR_SHARED_PTR<void> f, const NodeID& nodeid, boost::string_ref nodename)
 {
 	return HardwareTransport_win_find_deviceinterface(f, &GUID_DEVINTERFACE_RobotRaconteurPCIDriver, nodeid, nodename);
 }
 
-boost::optional<std::wstring> HardwareTransport_win_find_bluetooth(RR_SHARED_PTR<void> f, const NodeID& nodeid, const std::string& nodename)
+boost::optional<std::wstring> HardwareTransport_win_find_bluetooth(RR_SHARED_PTR<void> f, const NodeID& nodeid, boost::string_ref nodename)
 {
 	return HardwareTransport_win_find_deviceinterface(f, &GUID_DEVINTERFACE_RobotRaconteurBluetoothDriver, nodeid, nodename);
 }

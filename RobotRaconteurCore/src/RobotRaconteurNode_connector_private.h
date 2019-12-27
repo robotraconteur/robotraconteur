@@ -78,7 +78,7 @@ namespace RobotRaconteur
 
 		public:
 
-			void connect(const std::map<std::string, RR_WEAK_PTR<Transport> >& connectors, const std::string &username, RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials, boost::function<void(RR_SHARED_PTR<ClientContext>, ClientServiceListenerEventType, RR_SHARED_PTR<void>)> listener, const std::string& objecttype, boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)> handler, int32_t timeout);
+			void connect(const std::map<std::string, RR_WEAK_PTR<Transport> >& connectors, boost::string_ref username, RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials, boost::function<void(RR_SHARED_PTR<ClientContext>, ClientServiceListenerEventType, RR_SHARED_PTR<void>)> listener, boost::string_ref objecttype, boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)> handler, int32_t timeout);
 
 		};
 

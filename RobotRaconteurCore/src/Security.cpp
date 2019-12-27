@@ -75,9 +75,9 @@ namespace RobotRaconteur
 		return m_LastAccessTime;
 	}
 
-	AuthenticatedUser::AuthenticatedUser(const std::string &username, const std::vector<std::string>& privileges, const std::vector<std::string>& properties, RR_SHARED_PTR<ServerContext> context)
+	AuthenticatedUser::AuthenticatedUser(boost::string_ref username, const std::vector<std::string>& privileges, const std::vector<std::string>& properties, RR_SHARED_PTR<ServerContext> context)
 	{
-		this->m_Username = username;
+		this->m_Username.swap(username.to_string());
 		this->m_Privileges = privileges;
 		this->m_Properties = properties;
 		this->context = context;
@@ -101,13 +101,13 @@ namespace RobotRaconteur
 		load(buffer.str());
 	}
 
-	PasswordFileUserAuthenticator::PasswordFileUserAuthenticator(const std::string &data)
+	PasswordFileUserAuthenticator::PasswordFileUserAuthenticator(boost::string_ref data)
 	{
 		InitializeInstanceFields();
 		load(data);
 	}
 
-	void PasswordFileUserAuthenticator::load(const std::string &data)
+	void PasswordFileUserAuthenticator::load(boost::string_ref data)
 	{
 
 		std::vector<std::string> lines;
@@ -129,9 +129,9 @@ namespace RobotRaconteur
 		}
 	}
 
-	RR_SHARED_PTR<AuthenticatedUser> PasswordFileUserAuthenticator::AuthenticateUser(const std::string &username, const std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials, RR_SHARED_PTR<ServerContext> context)
+	RR_SHARED_PTR<AuthenticatedUser> PasswordFileUserAuthenticator::AuthenticateUser(boost::string_ref username, const std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials, RR_SHARED_PTR<ServerContext> context)
 	{
-		if (validusers.count(username) == 0)
+		if (validusers.count(username.to_string()) == 0)
 			throw AuthenticationException("Invalid username or password");
 		std::string password;
 		try
@@ -145,14 +145,14 @@ namespace RobotRaconteur
 
 		std::string passwordhash = MD5Hash(password);
 
-		if (validusers.at(username)->passwordhash != passwordhash)
+		if (validusers.at(username.to_string())->passwordhash != passwordhash)
 			throw AuthenticationException("Invalid username or password");
 		std::vector<std::string> properties;
-		return RR_MAKE_SHARED<AuthenticatedUser>(username, validusers.at(username)->privileges, properties, context);
+		return RR_MAKE_SHARED<AuthenticatedUser>(username, validusers.at(username.to_string())->privileges, properties, context);
 
 	}
 
-	std::string PasswordFileUserAuthenticator::MD5Hash(const std::string &text)
+	std::string PasswordFileUserAuthenticator::MD5Hash(boost::string_ref text)
 	{
 #ifdef ROBOTRACONTEUR_WINDOWS
 		HCRYPTPROV hProv = 0;
@@ -161,7 +161,7 @@ namespace RobotRaconteur
 		CryptAcquireContext(&hProv, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT);
 		CryptCreateHash(hProv, CALG_MD5, 0, 0, &hHash);
 
-		CryptHashData(hHash, (BYTE*)text.c_str(), (DWORD)text.length(), 0);
+		CryptHashData(hHash, (BYTE*)text.data(), (DWORD)text.length(), 0);
 
 		BYTE rgbHash[16] = { 0 };
 		DWORD cbHash = 16;

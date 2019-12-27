@@ -141,7 +141,7 @@ namespace packing
 				}
 				else if (m->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
 				{
-					key = boost::lexical_cast<int32_t>(m->ElementName);
+					key = boost::lexical_cast<int32_t>(m->ElementName.str());
 				}
 				else
 				{
@@ -198,10 +198,10 @@ namespace packing
 					throw DataTypeException("Invalid map format");
 				}
 
-				std::string& key = m->ElementName;
+				const MessageStringPtr& key = m->ElementName;
 
 				RR_INTRUSIVE_PTR<T> dat = UnpackAnyType<RR_INTRUSIVE_PTR<T> >(m,node);
-				ret->insert(std::make_pair(key, dat));
+				ret->insert(std::make_pair(RR_MOVE(key.str().to_string()), dat));
 			}
 
 			return ret;
@@ -267,7 +267,7 @@ namespace packing
 			}
 			else if (m->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
 			{
-				key = boost::lexical_cast<int32_t>(m->ElementName);
+				key = boost::lexical_cast<int32_t>(m->ElementName.str());
 			}
 			else
 			{

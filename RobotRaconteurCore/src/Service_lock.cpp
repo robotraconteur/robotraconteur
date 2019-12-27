@@ -22,7 +22,7 @@
 
 namespace RobotRaconteur
 {
-	ServerContext_ObjectLock::ServerContext_ObjectLock(const std::string &username, const RR_SHARED_PTR<ServiceSkel> &root_skel, uint32_t endpoint)
+	ServerContext_ObjectLock::ServerContext_ObjectLock(boost::string_ref username, const RR_SHARED_PTR<ServiceSkel> &root_skel, uint32_t endpoint)
 	{
 		InitializeInstanceFields();
 
@@ -30,7 +30,7 @@ namespace RobotRaconteur
 			boost::mutex::scoped_lock lock(skels_lock);
 			m_Locked = true;
 			m_RootSkel = root_skel;
-			m_Username = username;
+			m_Username.swap(username.to_string());
 			m_RootServicePath = root_skel->GetServicePath();
 			m_Endpoint = endpoint;
 		}

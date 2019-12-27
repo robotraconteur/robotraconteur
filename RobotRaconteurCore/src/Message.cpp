@@ -35,17 +35,17 @@ namespace RobotRaconteur
 		entries.clear();
 	}	
 
-	RR_INTRUSIVE_PTR<MessageEntry> Message::FindEntry(const std::string& name)
+	RR_INTRUSIVE_PTR<MessageEntry> Message::FindEntry(MessageStringRef name)
 	{
 		std::vector<RR_INTRUSIVE_PTR<MessageEntry> >::iterator m=boost::find_if(entries,
 				boost::bind(&MessageEntry::MemberName, _1) == name);
 
-		if (m==entries.end()) throw MessageEntryNotFoundException("Element " + name + " not found.");
+		if (m==entries.end()) throw MessageEntryNotFoundException("Element " + name.str() + " not found.");
 
 		return *m;
 	}
 
-	RR_INTRUSIVE_PTR<MessageEntry> Message::AddEntry(MessageEntryType t, const std::string& name)
+	RR_INTRUSIVE_PTR<MessageEntry> Message::AddEntry(MessageEntryType t, MessageStringRef name)
 	{
 		RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry();
 		m->MemberName = name;
@@ -233,7 +233,7 @@ namespace RobotRaconteur
 
 	void MessageHeader::Read(ArrayBinaryReader &r)
 	{
-		std::string seed = r.ReadString8(4);
+		boost::string_ref seed = r.ReadString8(4).str();
 		if (seed != "RRAC")
 			throw ProtocolException("Incorrect message seed");
 		MessageSize = r.ReadNumber<uint32_t>();
@@ -338,7 +338,7 @@ namespace RobotRaconteur
 		if (MessageFlags & MessageFlags_STRING_TABLE)
 		{
 			uint32_t s1 = 0;
-			for (std::vector < boost::tuple<uint32_t, std::string> >::iterator e = StringTable.begin(); e != StringTable.end(); e++)
+			for (std::vector < boost::tuple<uint32_t, MessageStringPtr> >::iterator e = StringTable.begin(); e != StringTable.end(); e++)
 			{
 				s1 += ArrayBinaryWriter::GetUintXByteCount(e->get<0>());
 				s1 += ArrayBinaryWriter::GetStringByteCount8WithXLen(e->get<1>());
@@ -376,7 +376,7 @@ namespace RobotRaconteur
 			MessageFlags |= MessageFlags_MULTIPLE_ENTRIES;
 		}
 
-		if (MetaData.size() == 0)
+		if (MetaData.str().size() == 0)
 		{
 			MessageFlags &= ~MessageFlags_META_INFO;
 		}
@@ -475,7 +475,7 @@ namespace RobotRaconteur
 		if (MessageFlags & MessageFlags_STRING_TABLE)
 		{
 			w.WriteUintX(StringTable.size());
-			for (std::vector < boost::tuple<uint32_t, std::string> >::iterator e = StringTable.begin(); e != StringTable.end(); e++)
+			for (std::vector < boost::tuple<uint32_t, MessageStringPtr> >::iterator e = StringTable.begin(); e != StringTable.end(); e++)
 			{
 				w.WriteUintX(e->get<0>());
 				w.WriteString8WithXLen(e->get<1>());
@@ -503,7 +503,7 @@ namespace RobotRaconteur
 
 	void MessageHeader::Read3(ArrayBinaryReader &r, uint16_t& version_minor)
 	{
-		std::string magic = r.ReadString8(4);
+		boost::string_ref magic = r.ReadString8(4).str();
 		if (magic != "RRAC")
 			throw ProtocolException("Incorrect message magic");
 		MessageSize = r.ReadNumber<uint32_t>();
@@ -605,7 +605,7 @@ namespace RobotRaconteur
 			{
 				uint32_t c = r.ReadUintX();
 				uint32_t l = r.ReadUintX();
-				std::string v = r.ReadString8(l);
+				MessageStringPtr v = r.ReadString8(l);
 				StringTable.push_back(boost::make_tuple(c, v));
 			}
 		}
@@ -673,7 +673,7 @@ namespace RobotRaconteur
 		
 	}
 
-	MessageEntry::MessageEntry(MessageEntryType t, const std::string& n)
+	MessageEntry::MessageEntry(MessageEntryType t, MessageStringRef n)
 	{
 		ServicePathCode = 0;
 		MemberNameCode = 0;
@@ -712,17 +712,17 @@ namespace RobotRaconteur
 		return boost::numeric_cast<uint32_t>(s);
 	}
 
-	RR_INTRUSIVE_PTR<MessageElement> MessageEntry::FindElement(const std::string& name)
+	RR_INTRUSIVE_PTR<MessageElement> MessageEntry::FindElement(MessageStringRef name)
 	{
 		std::vector<RR_INTRUSIVE_PTR<MessageElement> >::iterator m=boost::find_if(elements,
 				boost::bind(&MessageElement::ElementName, _1) == name);
 
-		if (m==elements.end()) throw MessageElementNotFoundException("Element " + name + " not found.");
+		if (m==elements.end()) throw MessageElementNotFoundException("Element " + name.str() + " not found.");
 
 		return *m;
 	}
 
-	bool MessageEntry::TryFindElement(const std::string& name, RR_INTRUSIVE_PTR<MessageElement>& elem)
+	bool MessageEntry::TryFindElement(MessageStringRef name, RR_INTRUSIVE_PTR<MessageElement>& elem)
 	{
 		std::vector<RR_INTRUSIVE_PTR<MessageElement> >::iterator m = boost::find_if(elements,
 			boost::bind(&MessageElement::ElementName, _1) == name);
@@ -733,7 +733,7 @@ namespace RobotRaconteur
 		return true;
 	}
 
-	RR_INTRUSIVE_PTR<MessageElement> MessageEntry::AddElement(const std::string& name, RR_INTRUSIVE_PTR<MessageElementData> data)
+	RR_INTRUSIVE_PTR<MessageElement> MessageEntry::AddElement(MessageStringRef name, RR_INTRUSIVE_PTR<MessageElementData> data)
 	{
 		RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement();
 		m->ElementName = name;
@@ -916,7 +916,7 @@ namespace RobotRaconteur
 			EntryFlags &= ~MessageEntryFlags_ERROR;
 		}
 
-		if (MetaData.size() > 0)
+		if (MetaData.str().size() > 0)
 		{
 			EntryFlags |= MessageEntryFlags_META_INFO;
 		}
@@ -1100,7 +1100,7 @@ namespace RobotRaconteur
 		SequenceNumber = 0;
 	}
 
-	MessageElement::MessageElement(const std::string& name, RR_INTRUSIVE_PTR<MessageElementData> datin)
+	MessageElement::MessageElement(MessageStringRef name, RR_INTRUSIVE_PTR<MessageElementData> datin)
 	{
 		ElementSize = 0;
 		DataCount = 0;
@@ -1592,7 +1592,7 @@ namespace RobotRaconteur
 			throw ProtocolException("Cannot set both element name and number");
 		}
 
-		if (ElementTypeName.size() > 0)
+		if (ElementTypeName.str().size() > 0)
 		{
 			ElementFlags |= MessageElementFlags_ELEMENT_TYPE_NAME_STR;
 		}
@@ -1601,7 +1601,7 @@ namespace RobotRaconteur
 			ElementFlags &= ~MessageElementFlags_ELEMENT_TYPE_NAME_STR;
 		}		
 
-		if (MetaData.size() > 0)
+		if (MetaData.str().size() > 0)
 		{
 			ElementFlags |= MessageElementFlags_META_INFO;
 		}
@@ -1805,17 +1805,17 @@ namespace RobotRaconteur
 		r.PopLimit();
 	}	
 
-	RR_INTRUSIVE_PTR<MessageElement> MessageElement::FindElement(std::vector<RR_INTRUSIVE_PTR<MessageElement> > &m, const std::string& name)
+	RR_INTRUSIVE_PTR<MessageElement> MessageElement::FindElement(std::vector<RR_INTRUSIVE_PTR<MessageElement> > &m, MessageStringRef name)
 	{
 		std::vector<RR_INTRUSIVE_PTR<MessageElement> >::iterator m1 = boost::find_if(m,
 			boost::bind(&MessageElement::ElementName, _1) == name);
 
-		if (m1 == m.end()) throw MessageElementNotFoundException("Element " + name + " not found.");
+		if (m1 == m.end()) throw MessageElementNotFoundException("Element " + name.str() + " not found.");
 
 		return *m1;
 	}
 
-	bool MessageElement::TryFindElement(std::vector<RR_INTRUSIVE_PTR<MessageElement> > &m, const std::string& name, RR_INTRUSIVE_PTR<MessageElement>& elem)
+	bool MessageElement::TryFindElement(std::vector<RR_INTRUSIVE_PTR<MessageElement> > &m, MessageStringRef name, RR_INTRUSIVE_PTR<MessageElement>& elem)
 	{
 		std::vector<RR_INTRUSIVE_PTR<MessageElement> >::iterator m1 = boost::find_if(m,
 			boost::bind(&MessageElement::ElementName, _1) == name);
@@ -1827,7 +1827,7 @@ namespace RobotRaconteur
 
 	}
 
-	bool MessageElement::ContainsElement(std::vector<RR_INTRUSIVE_PTR<MessageElement> > &m, const std::string& name)
+	bool MessageElement::ContainsElement(std::vector<RR_INTRUSIVE_PTR<MessageElement> > &m, MessageStringRef name)
 	{
 		std::vector<RR_INTRUSIVE_PTR<MessageElement> >::iterator m1 = boost::find_if(m,
 			boost::bind(&MessageElement::ElementName, _1) == name);
@@ -1859,21 +1859,21 @@ namespace RobotRaconteur
 	}
 	
 
-	MessageElementNestedElementList::MessageElementNestedElementList(DataTypes type_, const std::string& type_name_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_)
+	MessageElementNestedElementList::MessageElementNestedElementList(DataTypes type_, MessageStringRef type_name_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_)
 	{
 		Elements = elements_;
 		TypeName = type_name_;
 		Type = type_;
 	}
 #if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
-	MessageElementNestedElementList::MessageElementNestedElementList(DataTypes type_, const std::string& type_name_, std::vector<RR_INTRUSIVE_PTR<MessageElement> > &&elements_) : Elements(std::move(elements_))
+	MessageElementNestedElementList::MessageElementNestedElementList(DataTypes type_, MessageStringRef type_name_, std::vector<RR_INTRUSIVE_PTR<MessageElement> > &&elements_) : Elements(std::move(elements_))
 	{		
 		TypeName = type_name_;
 		Type = type_;
 	}
 #endif
 	
-	std::string MessageElementNestedElementList::GetTypeString()
+	MessageStringPtr MessageElementNestedElementList::GetTypeString()
 	{
 		return TypeName;
 	}
@@ -1881,7 +1881,7 @@ namespace RobotRaconteur
 	{
 		return Type;
 	}
-	std::string MessageElementNestedElementList::RRType()
+	boost::string_ref MessageElementNestedElementList::RRType()
 	{
 		return "RobotRaconteur::MessageElementNestedElementList";
 	}
@@ -1898,7 +1898,7 @@ namespace RobotRaconteur
 	{
 		return new MessageEntry();
 	}
-	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageEntry> CreateMessageEntry(MessageEntryType t, const std::string& n)
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageEntry> CreateMessageEntry(MessageEntryType t, MessageStringRef n)
 	{
 		return new MessageEntry(t, n);
 	}
@@ -1906,16 +1906,16 @@ namespace RobotRaconteur
 	{
 		return new MessageElement();
 	}
-	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElement> CreateMessageElement(const std::string& name, RR_INTRUSIVE_PTR<MessageElementData> datin)
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElement> CreateMessageElement(MessageStringRef name, RR_INTRUSIVE_PTR<MessageElementData> datin)
 	{
 		return new MessageElement(name, datin);
 	}
-	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNestedElementList> CreateMessageElementNestedElementList(DataTypes type_, const std::string& type_name_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_)
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNestedElementList> CreateMessageElementNestedElementList(DataTypes type_, MessageStringRef type_name_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_)
 	{
 		return new MessageElementNestedElementList(type_, type_name_, elements_);
 	}	
 #if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
-	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNestedElementList> CreateMessageElementNestedElementList(DataTypes type_, const std::string& type_name_, std::vector<RR_INTRUSIVE_PTR<MessageElement> > &&elements_)
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNestedElementList> CreateMessageElementNestedElementList(DataTypes type_, MessageStringRef type_name_, std::vector<RR_INTRUSIVE_PTR<MessageElement> > &&elements_)
 	{
 		return new MessageElementNestedElementList(type_, type_name_, std::move(elements_));
 	}	

@@ -57,6 +57,11 @@ namespace RobotRaconteur
 		return state_stack.back().param2;
 	}
 
+	std::string& AsyncMessageReaderImpl::param3()
+	{
+		return state_stack.back().param3;
+	}
+
 	size_t& AsyncMessageReaderImpl::limit()
 	{
 		return state_stack.back().limit;
@@ -88,7 +93,7 @@ namespace RobotRaconteur
 		state_stack.push_back(d);
 	}
 
-	void AsyncMessageReaderImpl::push_state(AsyncMessageReaderImpl::state_type new_state, AsyncMessageReaderImpl::state_type pop_state, size_t relative_limit, void* ptrdata, size_t param1, size_t param2)
+	void AsyncMessageReaderImpl::push_state(AsyncMessageReaderImpl::state_type new_state, AsyncMessageReaderImpl::state_type pop_state, size_t relative_limit, void* ptrdata, size_t param1, size_t param2, std::string& param3)
 	{
 		state_data d;
 		d.state = new_state;
@@ -96,6 +101,7 @@ namespace RobotRaconteur
 		d.ptrdata = ptrdata;
 		d.param1 = param1;
 		d.param2 = param2;
+		d.param3.swap(param3);
 		d.limit = message_pos + relative_limit;
 		if (d.limit > message_len()) throw ProtocolException("Invalid message limit");
 
@@ -378,42 +384,53 @@ namespace RobotRaconteur
 
 	static void null_str_deleter(std::string* s) {}
 
-	bool AsyncMessageReaderImpl::read_string(std::string& str, state_type next_state)
+	bool AsyncMessageReaderImpl::read_string(MessageStringPtr& str, state_type next_state)
 	{
 		uint16_t l;
 		if (!read_number(l)) return false;
-		str.resize(l);
+		//TODO: avoid swap
+		std::string s;		
+		s.resize(l);
 
-		size_t n = read_some_bytes(&str[0], l);
-		if (n == l) return true;
+		size_t n = read_some_bytes(&s[0], l);		
+		if (n == l) 
+		{
+			str = MessageStringPtr(RR_MOVE(s));
+			return true;
+		}
 
-		push_state(Header_readstring, next_state, l - n, &str, n);
+		push_state(Header_readstring, next_state, l - n, &str, n, 0, s);
 		return false;
 
 	}
 
-	bool AsyncMessageReaderImpl::read_string(std::string& str)
+	bool AsyncMessageReaderImpl::read_string(MessageStringPtr& str)
 	{
 		state_type next_state = state();
 		next_state = static_cast<state_type>(static_cast<int>(next_state) + 1);
 		return read_string(str, next_state);
 	}
 
-	bool AsyncMessageReaderImpl::read_string3(std::string& str, state_type next_state)
+	bool AsyncMessageReaderImpl::read_string3(MessageStringPtr& str, state_type next_state)
 	{
 		uint32_t l;
 		if (!read_uint_x(l)) return false;
-		str.resize(l);
+		std::string s;
+		s.resize(l);
 
-		size_t n = read_some_bytes(&str[0], l);
-		if (n == l) return true;
+		size_t n = read_some_bytes(&s[0], l);
+		if (n == l) 
+		{
+			str = MessageStringPtr(s);
+			return true;
+		}
 		
-		push_state(Header_readstring, next_state, l-n, &str, n);
+		push_state(Header_readstring, next_state, l-n, &str, n, 0, s);
 		return false;
 		
 	}
 
-	bool AsyncMessageReaderImpl::read_string3(std::string& str)
+	bool AsyncMessageReaderImpl::read_string3(MessageStringPtr& str)
 	{
 		state_type next_state = state();
 		next_state = static_cast<state_type>(static_cast<int>(next_state) + 1);
@@ -850,12 +867,16 @@ namespace RobotRaconteur
 			case Header_readstring:
 			{
 				size_t& p1 = param1();
-				std::string* s = ptrdata<std::string>();
-				size_t n = read_some_bytes(&(*s).at(p1), s->size() - p1);
+				MessageStringPtr* ptr_s = ptrdata<MessageStringPtr>();
+				std::string& s = param3();
+				//TODO: avoid swaps				
+				size_t n = read_some_bytes(&(s).at(p1), s.size() - p1);
 				p1 += n;
+				size_t s_size = s.size();				
 
-				if (p1 == s->size())
+				if (p1 == s_size)
 				{
+					(*ptr_s) = MessageStringPtr(RR_MOVE(s));
 					DO_POP_STATE();
 				}
 				else
@@ -1580,12 +1601,16 @@ namespace RobotRaconteur
 			case Header_readstring:
 			{
 				size_t& p1 = param1();
-				std::string* s = ptrdata<std::string>();
-				size_t n = read_some_bytes(&(*s).at(p1), s->size() - p1);
+				MessageStringPtr* ptr_s = ptrdata<MessageStringPtr>();
+				//TODO: avoid swaps;
+				std::string& s = param3();				
+				size_t n = read_some_bytes(&(s).at(p1), s.size() - p1);
 				p1 += n;
+				size_t s_size = s.size();			
 
-				if (p1 == s->size())
+				if (p1 == s_size)
 				{
+					(*ptr_s) = MessageStringPtr(RR_MOVE(s)); 
 					DO_POP_STATE();
 				}
 				else

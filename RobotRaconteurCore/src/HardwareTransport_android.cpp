@@ -48,7 +48,7 @@ AndroidHardwareDirector::~AndroidHardwareDirector()
 
 }
 
-void AndroidHardwareDirector::ConnectBluetooth(RR_SHARED_PTR<HardwareTransport> parent, const ParseConnectionURLResult& url, const std::string& noden, uint32_t endpoint, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > handler)
+void AndroidHardwareDirector::ConnectBluetooth(RR_SHARED_PTR<HardwareTransport> parent, const ParseConnectionURLResult& url, boost::string_ref noden, uint32_t endpoint, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > handler)
 {
 
 	boost::mutex::scoped_lock lock(director_lock);
@@ -94,7 +94,7 @@ int32_t AndroidHardwareHelper::ConnectBluetooth_success(RR_SHARED_PTR<AndroidBlu
 	return fds[1];
 }
 
-void AndroidHardwareHelper::ConnectBluetooth_error(RR_SHARED_PTR<AndroidBluetoothConnector_params> p, const std::string& message)
+void AndroidHardwareHelper::ConnectBluetooth_error(RR_SHARED_PTR<AndroidBluetoothConnector_params> p, boost::string_ref message)
 {
 	RobotRaconteurNode::TryPostToThreadPool(p->parent->GetNode(),boost::bind(p->handler, RR_SHARED_PTR<ITransportConnection>(), RR_MAKE_SHARED<ConnectionException>(message)),true);
 }

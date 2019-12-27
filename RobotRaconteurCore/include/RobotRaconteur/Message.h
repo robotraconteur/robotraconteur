@@ -42,9 +42,9 @@ namespace RobotRaconteur
 		Message();
 		
 
-		RR_INTRUSIVE_PTR<MessageEntry> FindEntry(const std::string& name);
+		RR_INTRUSIVE_PTR<MessageEntry> FindEntry(MessageStringRef name);
 
-		RR_INTRUSIVE_PTR<MessageEntry> AddEntry(MessageEntryType t, const std::string& name);
+		RR_INTRUSIVE_PTR<MessageEntry> AddEntry(MessageEntryType t, MessageStringRef name);
 
 		//Version 2 Message
 		uint32_t ComputeSize();
@@ -56,7 +56,7 @@ namespace RobotRaconteur
 		void Write3(ArrayBinaryWriter &w, const uint16_t& version_minor);
 		void Read3(ArrayBinaryReader &r, uint16_t& version_minor);
 
-		virtual std::string RRType()
+		virtual boost::string_ref RRType()
 		{
 			return "RobotRaconteur::Message";
 		}
@@ -95,15 +95,15 @@ namespace RobotRaconteur
 
 		uint32_t ReceiverEndpoint;
 
-		std::string SenderNodeName;
+		MessageStringPtr SenderNodeName;
 
-		std::string ReceiverNodeName;
+		MessageStringPtr ReceiverNodeName;
 
 		NodeID SenderNodeID;
 
 		NodeID ReceiverNodeID;
 
-		std::string MetaData;
+		MessageStringPtr MetaData;
 
 		uint16_t EntryCount;
 
@@ -113,7 +113,7 @@ namespace RobotRaconteur
 
 		uint32_t MessageSize;
 
-		std::vector < boost::tuple<uint32_t, std::string> > StringTable;
+		std::vector < boost::tuple<uint32_t, MessageStringPtr> > StringTable;
 
 		TimeSpec UnreliableExpiration;
 
@@ -135,7 +135,7 @@ namespace RobotRaconteur
 		void Write3(ArrayBinaryWriter &w, const uint16_t& version_minor);
 		void Read3(ArrayBinaryReader &r, uint16_t& version_minor);
 
-		virtual std::string RRType()
+		virtual boost::string_ref RRType()
 		{
 			return "RobotRaconteur::MessageHeader";
 		}	
@@ -157,11 +157,11 @@ public:
 
 		MessageEntryType EntryType;
 
-		std::string ServicePath;
+		MessageStringPtr ServicePath;
 
 		uint32_t ServicePathCode;
 
-		std::string MemberName;
+		MessageStringPtr MemberName;
 
 		uint32_t MemberNameCode;
 
@@ -171,7 +171,7 @@ public:
 
 		MessageErrorType Error;
 
-		std::string MetaData;
+		MessageStringPtr MetaData;
 
 		TimeSpec EntryTimeSpec;
 
@@ -179,13 +179,13 @@ public:
 
 		MessageEntry();
 
-		MessageEntry(MessageEntryType t, const std::string& n);
+		MessageEntry(MessageEntryType t, MessageStringRef n);
 
-		RR_INTRUSIVE_PTR<MessageElement> FindElement(const std::string& name);
+		RR_INTRUSIVE_PTR<MessageElement> FindElement(MessageStringRef name);
 
-		bool TryFindElement(const std::string& name, RR_INTRUSIVE_PTR<MessageElement>& elem);
+		bool TryFindElement(MessageStringRef name, RR_INTRUSIVE_PTR<MessageElement>& elem);
 
-		RR_INTRUSIVE_PTR<MessageElement> AddElement(const std::string& name, RR_INTRUSIVE_PTR<MessageElementData> data);
+		RR_INTRUSIVE_PTR<MessageElement> AddElement(MessageStringRef name, RR_INTRUSIVE_PTR<MessageElementData> data);
 
 		RR_INTRUSIVE_PTR<MessageElement> AddElement(RR_INTRUSIVE_PTR<MessageElement> m);
 
@@ -201,7 +201,7 @@ public:
 		void Write3(ArrayBinaryWriter &w, const uint16_t& version_minor);
 		void Read3(ArrayBinaryReader &r, const uint16_t& version_minor);
 
-		virtual std::string RRType()
+		virtual boost::string_ref RRType()
 		{
 			return "RobotRaconteur::MessageEntry";
 		}			
@@ -219,7 +219,7 @@ public:
 
 		uint8_t ElementFlags;
 
-		std::string ElementName;
+		MessageStringPtr ElementName;
 
 		uint32_t ElementNameCode;
 
@@ -227,13 +227,13 @@ public:
 
 		DataTypes ElementType;
 
-		std::string ElementTypeName;
+		MessageStringPtr ElementTypeName;
 
 		uint32_t ElementTypeNameCode;
 
 		uint32_t SequenceNumber;
 
-		std::string MetaData;
+		MessageStringPtr MetaData;
 
 		uint32_t DataCount;
 
@@ -243,7 +243,7 @@ public:
 	public:
 		MessageElement();
 				
-		MessageElement(const std::string& name, RR_INTRUSIVE_PTR<MessageElementData> datin);
+		MessageElement(MessageStringRef name, RR_INTRUSIVE_PTR<MessageElementData> datin);
 				
 		RR_INTRUSIVE_PTR<MessageElementData> GetData();
 		void SetData(RR_INTRUSIVE_PTR<MessageElementData> value);
@@ -260,11 +260,11 @@ public:
 		void Write3(ArrayBinaryWriter &w, const uint16_t& version_minor);
 		void Read3(ArrayBinaryReader &r, const uint16_t& version_minor);
 
-		static RR_INTRUSIVE_PTR<MessageElement> FindElement(std::vector<RR_INTRUSIVE_PTR<MessageElement> > &m, const std::string& name);
+		static RR_INTRUSIVE_PTR<MessageElement> FindElement(std::vector<RR_INTRUSIVE_PTR<MessageElement> > &m, MessageStringRef name);
 
-		static bool TryFindElement(std::vector<RR_INTRUSIVE_PTR<MessageElement> > &m, const std::string& name, RR_INTRUSIVE_PTR<MessageElement>& elem);
+		static bool TryFindElement(std::vector<RR_INTRUSIVE_PTR<MessageElement> > &m, MessageStringRef name, RR_INTRUSIVE_PTR<MessageElement>& elem);
 
-		static bool ContainsElement(std::vector<RR_INTRUSIVE_PTR<MessageElement> > &m, const std::string& name);
+		static bool ContainsElement(std::vector<RR_INTRUSIVE_PTR<MessageElement> > &m, MessageStringRef name);
 
 		template<typename T>
 		RR_INTRUSIVE_PTR<T> CastData()
@@ -284,7 +284,7 @@ public:
 			return rr_cast<T>(Data);
 		}
 
-		virtual std::string RRType()
+		virtual boost::string_ref RRType()
 		{
 			return "RobotRaconteur::MessageElement";
 		}
@@ -296,27 +296,27 @@ public:
 	public:
 
 		DataTypes Type;
-		std::string TypeName;
+		MessageStringPtr TypeName;
 		std::vector<RR_INTRUSIVE_PTR<MessageElement> > Elements;
 		
-		MessageElementNestedElementList(DataTypes type_, const std::string& type_name_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_);
+		MessageElementNestedElementList(DataTypes type_, MessageStringRef type_name_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_);
 #if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
-		MessageElementNestedElementList(DataTypes type_, const std::string& type_name_, std::vector<RR_INTRUSIVE_PTR<MessageElement> > &&elements_);
+		MessageElementNestedElementList(DataTypes type_, MessageStringRef type_name_, std::vector<RR_INTRUSIVE_PTR<MessageElement> > &&elements_);
 #endif
-		virtual std::string GetTypeString();
+		virtual MessageStringPtr GetTypeString();
 		virtual DataTypes GetTypeID();		
-		virtual std::string RRType();
+		virtual boost::string_ref RRType();
 	};
 
 	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<Message> CreateMessage();
 	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageHeader> CreateMessageHeader();
 	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageEntry> CreateMessageEntry();
-	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageEntry> CreateMessageEntry(MessageEntryType t, const std::string& n);
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageEntry> CreateMessageEntry(MessageEntryType t, MessageStringRef n);
 	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElement> CreateMessageElement();
-	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElement> CreateMessageElement(const std::string& name, RR_INTRUSIVE_PTR<MessageElementData> datin);
-	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNestedElementList> CreateMessageElementNestedElementList(DataTypes type_, const std::string& type_name_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_);
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElement> CreateMessageElement(MessageStringRef name, RR_INTRUSIVE_PTR<MessageElementData> datin);
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNestedElementList> CreateMessageElementNestedElementList(DataTypes type_, MessageStringRef type_name_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_);
 #if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
-	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNestedElementList> CreateMessageElementNestedElementList(DataTypes type_, const std::string& type_name_, std::vector<RR_INTRUSIVE_PTR<MessageElement> > &&elements_);
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNestedElementList> CreateMessageElementNestedElementList(DataTypes type_, MessageStringRef type_name_, std::vector<RR_INTRUSIVE_PTR<MessageElement> > &&elements_);
 #endif
 	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<Message> ShallowCopyMessage(RR_INTRUSIVE_PTR<Message> m);
 	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageEntry> ShallowCopyMessageEntry(RR_INTRUSIVE_PTR<MessageEntry> mm);
@@ -332,7 +332,7 @@ public:
 	}
 
 	template<typename T>
-	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackScalarElement(const std::string& elementname, const T& value)
+	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackScalarElement(MessageStringRef elementname, const T& value)
 	{
 		return CreateMessageElement(elementname, MessageElement_PackScalar(value));
 	}
@@ -345,7 +345,7 @@ public:
 	}
 
 	template<typename T>
-	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackArrayElement(const std::string& elementname, const RR_INTRUSIVE_PTR<RRArray<T> >& value)
+	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackArrayElement(MessageStringRef elementname, const RR_INTRUSIVE_PTR<RRArray<T> >& value)
 	{
 		return CreateMessageElement(elementname, MessageElement_PackArray(value));
 	}
@@ -360,7 +360,7 @@ public:
 	}
 
 	template<typename T, typename N>
-	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackMultiDimArrayElement(RR_WEAK_PTR<N> node, const std::string& elementname, const RR_INTRUSIVE_PTR<RRMultiDimArray<T> >& value)
+	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackMultiDimArrayElement(RR_WEAK_PTR<N> node, MessageStringRef elementname, const RR_INTRUSIVE_PTR<RRMultiDimArray<T> >& value)
 	{
 		return CreateMessageElement(elementname, MessageElement_PackMultiDimArray(node, value));
 	}
@@ -372,7 +372,7 @@ public:
 	}
 
 	template<typename T>
-	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackStringElement(const std::string& elementname, const T& str)
+	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackStringElement(MessageStringRef elementname, const T& str)
 	{
 		return CreateMessageElement(elementname, MessageElement_PackString(str));
 	}
@@ -386,7 +386,7 @@ public:
 	}
 
 	template<typename T, typename N>
-	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackVarTypeElement(RR_WEAK_PTR<N> node, const std::string& elementname, const RR_INTRUSIVE_PTR<T>& s)
+	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackVarTypeElement(RR_WEAK_PTR<N> node, MessageStringRef elementname, const RR_INTRUSIVE_PTR<T>& s)
 	{
 		return CreateMessageElement(elementname, MessageElement_PackVarType(node, s));
 	}
@@ -400,7 +400,7 @@ public:
 	}
 
 	template<typename T, typename N>
-	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackStructElement(RR_WEAK_PTR<N> node, const std::string& elementname, const RR_INTRUSIVE_PTR<T>& s)
+	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackStructElement(RR_WEAK_PTR<N> node, MessageStringRef elementname, const RR_INTRUSIVE_PTR<T>& s)
 	{
 		return CreateMessageElement(elementname, MessageElement_PackStruct(node, s));
 	}
@@ -412,7 +412,7 @@ public:
 	}
 
 	template<typename T>
-	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackEnumElement(const std::string& elementname, const T& value)
+	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackEnumElement(MessageStringRef elementname, const T& value)
 	{
 		return CreateMessageElement(elementname, MessageElement_PackEnum(value));
 	}
@@ -426,7 +426,7 @@ public:
 	}
 
 	template<typename K, typename T, typename N>
-	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackMapElement(RR_WEAK_PTR<N> node, const std::string& elementname, const RR_INTRUSIVE_PTR<RRMap<K, T> >& m)
+	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackMapElement(RR_WEAK_PTR<N> node, MessageStringRef elementname, const RR_INTRUSIVE_PTR<RRMap<K, T> >& m)
 	{
 		return CreateMessageElement(elementname, MessageElement_PackMap(node, m));			
 	}
@@ -440,7 +440,7 @@ public:
 	}
 
 	template<typename T, typename N>
-	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackListElement(RR_WEAK_PTR<N> node, const std::string& elementname, const RR_INTRUSIVE_PTR<RRList<T> >& m)
+	RR_INTRUSIVE_PTR<MessageElement> MessageElement_PackListElement(RR_WEAK_PTR<N> node, MessageStringRef elementname, const RR_INTRUSIVE_PTR<RRList<T> >& m)
 	{
 		return CreateMessageElement(elementname, MessageElement_PackList(node, m));
 	}

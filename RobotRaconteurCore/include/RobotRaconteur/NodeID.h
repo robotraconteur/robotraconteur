@@ -37,7 +37,9 @@ namespace RobotRaconteur
 
 		NodeID(const NodeID& id);
 
-		NodeID(const std::string &id);
+		NodeID(boost::string_ref id);
+
+		NodeID(const std::string& id);
 
 		const boost::array<uint8_t,16> ToByteArray() const;
 
@@ -45,7 +47,7 @@ namespace RobotRaconteur
 
 		virtual std::string ToString() const;
 
-		virtual std::string ToString(const std::string& format) const;
+		virtual std::string ToString(boost::string_ref format) const;
 
 		
 		static NodeID NewUniqueID();
@@ -64,7 +66,7 @@ namespace RobotRaconteur
 
 		virtual int32_t GetHashCode() const;
 
-		virtual std::string RRType() { return "RobotRaconteur::NodeID";}
+		virtual boost::string_ref RRType() { return "RobotRaconteur::NodeID";}
 
 	
 	};

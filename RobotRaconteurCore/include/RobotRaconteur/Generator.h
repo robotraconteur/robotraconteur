@@ -81,7 +81,7 @@ namespace RobotRaconteur
 		int32_t id;
 		RR_WEAK_PTR<ServiceStub> stub;
 
-		GeneratorClientBase(const std::string& name, int32_t id, RR_SHARED_PTR<ServiceStub> stub);
+		GeneratorClientBase(boost::string_ref name, int32_t id, RR_SHARED_PTR<ServiceStub> stub);
 
 		virtual RR_INTRUSIVE_PTR<MessageElement> NextBase(RR_INTRUSIVE_PTR<MessageElement> v);
 		virtual void AsyncNextBase(RR_INTRUSIVE_PTR<MessageElement> v, boost::function<void(RR_INTRUSIVE_PTR<MessageElement>, RR_SHARED_PTR<RobotRaconteurException>, RR_SHARED_PTR<RobotRaconteurNode>)> handler, int32_t timeout);
@@ -130,7 +130,7 @@ namespace RobotRaconteur
 	class GeneratorClient : public Generator<Return,Param>, public GeneratorClientBase
 	{
 	public:
-		GeneratorClient(const std::string& name, int32_t id, RR_SHARED_PTR<ServiceStub> stub)
+		GeneratorClient(boost::string_ref name, int32_t id, RR_SHARED_PTR<ServiceStub> stub)
 			: GeneratorClientBase(name, id, stub)
 		{
 		}
@@ -168,7 +168,7 @@ namespace RobotRaconteur
 	class GeneratorClient<Return,void> : public Generator<Return, void>, public GeneratorClientBase
 	{
 	public:
-		GeneratorClient(const std::string& name, int32_t id, RR_SHARED_PTR<ServiceStub> stub)
+		GeneratorClient(boost::string_ref name, int32_t id, RR_SHARED_PTR<ServiceStub> stub)
 			: GeneratorClientBase(name, id, stub)
 		{
 		}
@@ -204,7 +204,7 @@ namespace RobotRaconteur
 	class GeneratorClient<void,Param> : public Generator<void, Param>, public GeneratorClientBase
 	{
 	public:
-		GeneratorClient(const std::string& name, int32_t id, RR_SHARED_PTR<ServiceStub> stub)
+		GeneratorClient(boost::string_ref name, int32_t id, RR_SHARED_PTR<ServiceStub> stub)
 			: GeneratorClientBase(name, id, stub)
 		{
 		}
@@ -251,7 +251,7 @@ namespace RobotRaconteur
 
 		boost::posix_time::ptime last_access_time;
 
-		GeneratorServerBase(const std::string& name, int32_t index, RR_SHARED_PTR<ServiceSkel> skel, RR_SHARED_PTR<ServerEndpoint> ep);
+		GeneratorServerBase(boost::string_ref name, int32_t index, RR_SHARED_PTR<ServiceSkel> skel, RR_SHARED_PTR<ServerEndpoint> ep);
 		
 	public:
 
@@ -312,7 +312,7 @@ namespace RobotRaconteur
 	
 	public:
 
-		GeneratorServer(RR_SHARED_PTR<Generator<Return, Param> > generator, const std::string& name, int32_t id, RR_SHARED_PTR<ServiceSkel> skel, RR_SHARED_PTR<ServerEndpoint> ep)
+		GeneratorServer(RR_SHARED_PTR<Generator<Return, Param> > generator, boost::string_ref name, int32_t id, RR_SHARED_PTR<ServiceSkel> skel, RR_SHARED_PTR<ServerEndpoint> ep)
 			: GeneratorServerBase(name, id, skel, ep)
 		{
 			if (!generator) throw InvalidOperationException("Generator must not be null");
@@ -357,7 +357,7 @@ namespace RobotRaconteur
 
 	public:
 
-		GeneratorServer(RR_SHARED_PTR<Generator<Return, void> > generator, const std::string& name, int32_t id, RR_SHARED_PTR<ServiceSkel> skel, RR_SHARED_PTR<ServerEndpoint> ep)
+		GeneratorServer(RR_SHARED_PTR<Generator<Return, void> > generator, boost::string_ref name, int32_t id, RR_SHARED_PTR<ServiceSkel> skel, RR_SHARED_PTR<ServerEndpoint> ep)
 			: GeneratorServerBase(name, id, skel, ep)
 		{
 			if (!generator) throw InvalidOperationException("Generator must not be null");
@@ -399,7 +399,7 @@ namespace RobotRaconteur
 
 	public:
 
-		GeneratorServer(RR_SHARED_PTR<Generator<void, Param> > generator, const std::string& name, int32_t id, RR_SHARED_PTR<ServiceSkel> skel, RR_SHARED_PTR<ServerEndpoint> ep)
+		GeneratorServer(RR_SHARED_PTR<Generator<void, Param> > generator, boost::string_ref name, int32_t id, RR_SHARED_PTR<ServiceSkel> skel, RR_SHARED_PTR<ServerEndpoint> ep)
 			: GeneratorServerBase(name, id, skel, ep)
 		{
 			if (!generator) throw InvalidOperationException("Generator must not be null");
