@@ -4,6 +4,7 @@ set(RobotRaconteurGen_src
 	#VBNETServiceLangGen.cpp
 	JavaServiceLangGen.cpp
 	RobotRaconteurGen.cpp
+	StringTableGen.cpp
 )
 
 set(RobotRaconteurGen_header
@@ -11,6 +12,7 @@ set(RobotRaconteurGen_header
 	CSharpServiceLangGen.h	
 	#VBNETServiceLangGen.h	
 	JavaServiceLangGen.h
+	StringTableGen.h
 )
 
 add_executable(RobotRaconteurGen ${RobotRaconteurGen_src} ${RobotRaconteurGen_header})

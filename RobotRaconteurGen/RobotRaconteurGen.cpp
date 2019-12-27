@@ -28,6 +28,7 @@
 #include "CPPServiceLangGen.h" 
 #include "CSharpServiceLangGen.h"
 #include "JavaServiceLangGen.h"
+#include "StringTableGen.h"
 #include <boost/algorithm/string.hpp>
 #include <boost/range/algorithm.hpp>
 #include <boost/range/join.hpp>
@@ -222,6 +223,7 @@ int main(int argc, char* argv[])
 	std::string output_dir;
 	bool thunksource = false;
 	bool verify_robdef = false;
+	bool string_table = false;
 	bool newnodeid = false;
 	bool md5passwordhash = false;
 	bool pullservicedef = false;
@@ -240,6 +242,7 @@ int main(int argc, char* argv[])
 			("output-dir", po::value(&output_dir)->default_value("."), "directory for output")
 			("thunksource", po::bool_switch(&thunksource), "generate RR thunk source files")
 			("verify-robdef", po::bool_switch(&verify_robdef), "verify robdef files")
+			("string-table", po::bool_switch(&string_table), "generate string table entries for robdef")
 			("newnodeid", po::bool_switch(&newnodeid), "generate a new NodeID")
 			("md5passwordhash", po::bool_switch(&md5passwordhash), "hash a password using MD5 algorithm")
 			("pullservicedef", po::bool_switch(&pullservicedef), "pull a service definition from a service URL")
@@ -287,6 +290,10 @@ int main(int argc, char* argv[])
 		else if (verify_robdef)
 		{
 			command = "verify-robdef";
+		}
+		else if (string_table)
+		{
+			command = "string-table";
 		}
 		if (newnodeid)
 		{
@@ -368,7 +375,7 @@ int main(int argc, char* argv[])
 			return PullServiceDefinition(string_vector[0]);			
 		}
 
-		if (command != "thunksource" && command != "verify-robdef")
+		if (command != "thunksource" && command != "verify-robdef" && command != "string-table")
 		{
 			std::cout << "RobotRaconteurGen: fatal error: invalid command specified" << std::endl;
 			return 1;
@@ -524,6 +531,16 @@ int main(int argc, char* argv[])
 		{
 			cout << "RobotRaconteurGen: fatal error: could not verify service definition set " << string(ee.what()) << endl;
 			return 1009;
+		}
+
+		if (string_table)
+		{
+			std::set<std::string> strings = GenerateStringTable(sdefs, alldefs);
+			std::cout << "robdef message strings:" << std::endl << std::endl;
+			BOOST_FOREACH(const std::string& s, strings)
+			{
+				std::cout << s << std::endl;
+			}
 		}
 
 		if (verify_robdef)
