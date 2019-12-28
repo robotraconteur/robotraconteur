@@ -166,6 +166,20 @@ namespace RobotRaconteur
 		public:
 			std::string str;
 		};
+
+		class ROBOTRACONTEUR_CORE_API MessageStringData_string_ref
+		{
+		public:
+			boost::string_ref ref;
+			MessageStringData_string_ref(const boost::string_ref& r) : ref(r) {}
+		};
+		class ROBOTRACONTEUR_CORE_API MessageStringData_static_string
+		{
+		public:
+			boost::string_ref ref;
+			MessageStringData_static_string(const boost::string_ref& r) : ref(r) {}
+		};
+
 	}
 
 	class ROBOTRACONTEUR_CORE_API MessageStringRef;
@@ -173,21 +187,24 @@ namespace RobotRaconteur
 	class ROBOTRACONTEUR_CORE_API MessageStringPtr
 	{
 	private:
-		boost::intrusive_ptr<detail::MessageStringData> _str_ptr;
+		boost::variant<boost::intrusive_ptr<detail::MessageStringData>, 
+		    detail::MessageStringData_static_string> _str_ptr;
 	public:
 		friend class MessageStringRef;
 
 		MessageStringPtr();
 		
 		MessageStringPtr(const std::string& str);
-		MessageStringPtr(boost::string_ref str);
+		MessageStringPtr(boost::string_ref str, bool is_static = false);
 		MessageStringPtr(const MessageStringPtr& str_ptr);
 		MessageStringPtr(const MessageStringRef& str_ref);
 #if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
 		MessageStringPtr(std::string&& str);
 #endif
-		inline MessageStringPtr(const char *str)
-		  : MessageStringPtr(boost::string_ref(str)) {}
+		//WARNING: ONLY USE WITH STRING LITERALS OR STATIC STRINGS!
+		template <size_t N>
+		inline MessageStringPtr(const char (&str)[N])
+		  : MessageStringPtr(boost::string_ref(str,strlen(str)),false) {}
 
 
 		boost::string_ref str() const;
@@ -201,18 +218,23 @@ namespace RobotRaconteur
 	class ROBOTRACONTEUR_CORE_API MessageStringRef
 	{
 	private:
-		boost::variant<detail::MessageStringData*,boost::string_ref> _str;
+		boost::variant<detail::MessageStringData*,
+		    detail::MessageStringData_static_string,
+			detail::MessageStringData_string_ref> _str;
 		
 	public:
 		friend class MessageStringPtr;
 		
 		MessageStringRef(const std::string& str);
-		MessageStringRef(boost::string_ref str);
+		MessageStringRef(boost::string_ref str, bool is_static = false);
 		MessageStringRef(const MessageStringPtr& str_ptr);
 		MessageStringRef(const MessageStringRef& str_ref);
 
-		inline MessageStringRef(const char *str)
-		  : MessageStringRef(boost::string_ref(str)) {}
+		//WARNING: ONLY USE WITH STRING LITERALS OR STATIC STRINGS!
+		template <size_t N>
+		inline MessageStringRef(const char (&str)[N])
+		  : MessageStringRef(boost::string_ref(str,strlen(str)),false) {}
+
 
 		bool operator ==(MessageStringRef b) const;
 		bool operator !=(MessageStringRef b) const;

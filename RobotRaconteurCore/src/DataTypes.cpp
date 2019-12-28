@@ -685,8 +685,17 @@ namespace detail
 class MessageStringRef_ptr_to_str : public boost::static_visitor<boost::string_ref>
 {
 public:
-	boost::string_ref operator()(boost::string_ref str) const {return str;}
-	boost::string_ref operator()(detail::MessageStringData* str_ptr) const
+	boost::string_ref operator()(const detail::MessageStringData_string_ref& str) const {return str.ref;}
+	boost::string_ref operator()(const detail::MessageStringData_static_string& str) const {return str.ref;}
+	boost::string_ref operator()(const detail::MessageStringData* str_ptr) const
+	{
+		if (!str_ptr)
+		{
+			return "";
+		}
+		return str_ptr->str;
+	}
+	boost::string_ref operator()(const boost::intrusive_ptr<detail::MessageStringData>& str_ptr) const
 	{
 		if (!str_ptr)
 		{
@@ -696,23 +705,49 @@ public:
 	}
 };
 
-class MessageStringRef_ptr_to_ptr : public boost::static_visitor<detail::MessageStringData*>
+class MessageStringRef_from_ptr : public boost::static_visitor<boost::variant<detail::MessageStringData*,
+		    detail::MessageStringData_static_string,
+			detail::MessageStringData_string_ref> >
 {
 public:
-	detail::MessageStringData* operator()(boost::string_ref str) const
+
+	boost::variant<detail::MessageStringData*,
+		    detail::MessageStringData_static_string,
+			detail::MessageStringData_string_ref> operator()(const detail::MessageStringData_static_string& str) const
+	{
+		return str;
+	}
+	boost::variant<detail::MessageStringData*,
+		    detail::MessageStringData_static_string,
+			detail::MessageStringData_string_ref> operator()(const boost::intrusive_ptr<MessageStringData>& str_ptr) const {return str_ptr.get();}
+};
+
+class MessageStringPtr_from_ref : public boost::static_visitor<boost::variant<boost::intrusive_ptr<detail::MessageStringData>, 
+		    detail::MessageStringData_static_string> >
+{
+public:
+
+	boost::variant<boost::intrusive_ptr<detail::MessageStringData>, 
+		    detail::MessageStringData_static_string> operator()(const detail::MessageStringData_string_ref& str) const
 	{
 		detail::MessageStringData* dat = new detail::MessageStringData();
-		dat->str = str.to_string();
+		dat->str = str.ref.to_string();
 		return dat;
 	}
-	detail::MessageStringData* operator()(MessageStringData* str_ptr) const {return str_ptr;}
+	boost::variant<boost::intrusive_ptr<detail::MessageStringData>, 
+		    detail::MessageStringData_static_string> operator()(const detail::MessageStringData_static_string& str) const
+	{
+		return str;
+	}
+	boost::variant<boost::intrusive_ptr<detail::MessageStringData>, 
+		    detail::MessageStringData_static_string> operator()(MessageStringData* str_ptr) const {return str_ptr;}
 };
 
 }
 
 MessageStringPtr::MessageStringPtr() 
 {
-	
+	_str_ptr = detail::MessageStringData_static_string("");	
 }
 MessageStringPtr::MessageStringPtr(const std::string& str)
 {
@@ -720,19 +755,27 @@ MessageStringPtr::MessageStringPtr(const std::string& str)
 	dat->str = str;
 	this->_str_ptr = dat;
 }
-MessageStringPtr::MessageStringPtr(boost::string_ref str)
+MessageStringPtr::MessageStringPtr(boost::string_ref str, bool is_static)
 {
-	detail::MessageStringData* dat = new detail::MessageStringData();
-	dat->str = str.to_string();
-	this->_str_ptr = dat;
+	if (is_static)
+	{
+		_str_ptr = detail::MessageStringData_static_string(str);	
+	}
+	else
+	{
+		detail::MessageStringData* dat = new detail::MessageStringData();
+		dat->str = str.to_string();
+		this->_str_ptr = dat;
+	}
 }
+
 MessageStringPtr::MessageStringPtr(const MessageStringPtr& str_ptr)
 {
 	this->_str_ptr = str_ptr._str_ptr;
 }
 MessageStringPtr::MessageStringPtr(const MessageStringRef& str_ref)
 {
-	this->_str_ptr.reset(boost::apply_visitor(detail::MessageStringRef_ptr_to_ptr(), str_ref._str));
+	this->_str_ptr = boost::apply_visitor(detail::MessageStringPtr_from_ref(), str_ref._str);
 }
 #if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
 MessageStringPtr::MessageStringPtr(std::string&& str)
@@ -745,16 +788,12 @@ MessageStringPtr::MessageStringPtr(std::string&& str)
 
 boost::string_ref MessageStringPtr::str() const
 {	
-	if (!_str_ptr)
-	{
-		return "";
-	}
-	return _str_ptr->str;	
+	return boost::apply_visitor(detail::MessageStringRef_ptr_to_str(), _str_ptr);
 }
 
 void MessageStringPtr::reset()
 {	
-	return _str_ptr.reset();	
+	_str_ptr = detail::MessageStringData_static_string("");	
 }
 
 bool MessageStringPtr::operator ==(MessageStringRef b) const
@@ -773,16 +812,23 @@ bool MessageStringPtr::operator <(MessageStringRef b) const
 MessageStringRef::MessageStringRef(const std::string& str)
 {
 	boost::string_ref str1(str);
-	_str = str1;
+	_str = detail::MessageStringData_string_ref(str1);
 }
 
-MessageStringRef::MessageStringRef(boost::string_ref str)
+MessageStringRef::MessageStringRef(boost::string_ref str, bool is_static)
 {
-	_str = str;
+	if (is_static)
+	{
+		_str = detail::MessageStringData_static_string(str);
+	}
+	else
+	{
+		_str = detail::MessageStringData_string_ref(str);
+	}
 }
 MessageStringRef::MessageStringRef(const MessageStringPtr& str_ptr)
 {
-	_str = str_ptr._str_ptr.get();
+	_str = boost::apply_visitor(detail::MessageStringRef_from_ptr(),str_ptr._str_ptr);
 }
 MessageStringRef::MessageStringRef(const MessageStringRef& str_ref)
 {
