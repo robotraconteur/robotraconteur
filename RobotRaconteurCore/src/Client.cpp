@@ -1441,7 +1441,7 @@ namespace RobotRaconteur
 				//std::cout << "AsyncConnectService4_1" << std::endl;
 				RR_INTRUSIVE_PTR<MessageEntry> e2 = CreateMessageEntry();
 				e2->ServicePath = GetServiceName();
-				e2->MemberName = "registerclient";
+				//e2->MemberName = "registerclient";
 				e2->EntryType = MessageEntryType_ConnectClient;
 				AsyncProcessRequest(e2, boost::bind(&ClientContext::AsyncConnectService5, shared_from_this(), _1, _2, username, credentials, objecttype, type, d, handler), GetNode()->GetRequestTimeout());
 			}			

@@ -3144,7 +3144,7 @@ namespace RobotRaconteur
 		{
 			if (name=="this" || name=="self" || name =="Me") throw ServiceDefinitionVerifyException("The names \"this\", \"self\", and \"Me\" are reserved", parse_info);
 
-			const char* res_str[]={"object","end","option","service","struct","import","implements","field","property","function","event","objref","pipe","callback","wire","memory","void","int8","uint8","int16","uint16","int32","uint32","int64","uint64","single","double","varvalue","varobject","exception", "using", "constant", "enum", "pod", "namedarray", "cdouble", "csingle", "bool", "stdver"};
+			const char* res_str[]={"object","end","option","service","struct","import","implements","field","property","function","event","objref","pipe","callback","wire","memory","void","int8","uint8","int16","uint16","int32","uint32","int64","uint64","single","double","varvalue","varobject","exception", "using", "constant", "enum", "pod", "namedarray", "cdouble", "csingle", "bool", "stdver", "string"};
 			std::vector<std::string> reserved(res_str,res_str+sizeof(res_str)/(sizeof(res_str[0])));
 
 			if (boost::range::find(reserved,name)!=reserved.end())
