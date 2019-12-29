@@ -569,6 +569,7 @@ namespace RobotRaconteur
 			case Message_readentries:
 			{
 				Message* m = data<Message>();
+				m->entries.reserve(m->header->EntryCount);
 				if (m->entries.size() >= m->header->EntryCount)
 				{
 					state() = Message_done;
@@ -645,6 +646,7 @@ namespace RobotRaconteur
 				uint16_t c;
 				R(read_number(c));
 				param1() = c;
+				data<MessageEntry>()->elements.reserve(c);
 				state() = MessageEntry_readelements;
 			}
 			case MessageEntry_readelements:
@@ -836,11 +838,11 @@ namespace RobotRaconteur
 			{
 				MessageElement* el = data<MessageElement>();
 				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
+				v.reserve(el->DataCount);
 				RR_INTRUSIVE_PTR<MessageElementNestedElementList> s = CreateMessageElementNestedElementList(el->ElementType,el->ElementTypeName, RR_MOVE(v));
 				uint32_t l = el->ElementSize;
 				el->SetData(s);
-				el->ElementSize = l;
-				v.reserve(el->DataCount);
+				el->ElementSize = l;				
 				push_state(MessageElement_readnested2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
 
 			}
@@ -1185,6 +1187,7 @@ namespace RobotRaconteur
 			case Message_readentries:
 			{
 				Message* m = data<Message>();
+				m->entries.reserve(m->header->EntryCount);
 				if (m->entries.size() >= m->header->EntryCount)
 				{
 					state() = Message_done;
@@ -1325,6 +1328,7 @@ namespace RobotRaconteur
 				uint32_t c;
 				R(read_uint_x(c));
 				param1() = c;
+				ee->elements.reserve(c);
 				state() = MessageEntry_readelements;
 			}
 			case MessageEntry_readelements:
@@ -1570,11 +1574,11 @@ namespace RobotRaconteur
 			{
 				MessageElement* el = data<MessageElement>();
 				std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
+				v.reserve(el->DataCount);
 				RR_INTRUSIVE_PTR<MessageElementNestedElementList> s = CreateMessageElementNestedElementList(el->ElementType, el->ElementTypeName, RR_MOVE(v));
 				uint32_t l = el->ElementSize;
 				el->SetData(s);
-				el->ElementSize = l;
-				v.reserve(el->DataCount);
+				el->ElementSize = l;				
 				push_state(MessageElement_readnested2, MessageElement_finishreaddata, limit() - message_pos, s, el->DataCount);
 
 			}
