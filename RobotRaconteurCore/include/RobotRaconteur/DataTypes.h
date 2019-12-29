@@ -161,7 +161,7 @@ namespace RobotRaconteur
 
 	namespace detail
 	{
-		class ROBOTRACONTEUR_CORE_API MessageStringData : public boost::intrusive_ref_counter<MessageStringData>
+		class ROBOTRACONTEUR_CORE_API MessageStringData
 		{
 		public:
 			std::string str;
@@ -187,7 +187,7 @@ namespace RobotRaconteur
 	class ROBOTRACONTEUR_CORE_API MessageStringPtr
 	{
 	private:
-		boost::variant<boost::intrusive_ptr<detail::MessageStringData>, 
+		boost::variant<detail::MessageStringData, 
 		    detail::MessageStringData_static_string> _str_ptr;
 	public:
 		friend class MessageStringRef;
@@ -218,7 +218,7 @@ namespace RobotRaconteur
 	class ROBOTRACONTEUR_CORE_API MessageStringRef
 	{
 	private:
-		boost::variant<detail::MessageStringData*,
+		boost::variant<const detail::MessageStringData*,
 		    detail::MessageStringData_static_string,
 			detail::MessageStringData_string_ref> _str;
 		

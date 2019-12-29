@@ -695,52 +695,48 @@ public:
 		}
 		return str_ptr->str;
 	}
-	boost::string_ref operator()(const boost::intrusive_ptr<detail::MessageStringData>& str_ptr) const
+	boost::string_ref operator()(const detail::MessageStringData& str_ptr) const
 	{
-		if (!str_ptr)
-		{
-			return "";
-		}
-		return str_ptr->str;
+		return str_ptr.str;
 	}
 };
 
-class MessageStringRef_from_ptr : public boost::static_visitor<boost::variant<detail::MessageStringData*,
+class MessageStringRef_from_ptr : public boost::static_visitor<boost::variant<const detail::MessageStringData*,
 		    detail::MessageStringData_static_string,
 			detail::MessageStringData_string_ref> >
 {
 public:
 
-	boost::variant<detail::MessageStringData*,
+	boost::variant<const detail::MessageStringData*,
 		    detail::MessageStringData_static_string,
 			detail::MessageStringData_string_ref> operator()(const detail::MessageStringData_static_string& str) const
 	{
 		return str;
 	}
-	boost::variant<detail::MessageStringData*,
+	boost::variant<const detail::MessageStringData*,
 		    detail::MessageStringData_static_string,
-			detail::MessageStringData_string_ref> operator()(const boost::intrusive_ptr<MessageStringData>& str_ptr) const {return str_ptr.get();}
+			detail::MessageStringData_string_ref> operator()(const detail::MessageStringData& str_ptr) const {return &str_ptr;}
 };
 
-class MessageStringPtr_from_ref : public boost::static_visitor<boost::variant<boost::intrusive_ptr<detail::MessageStringData>, 
+class MessageStringPtr_from_ref : public boost::static_visitor<boost::variant<detail::MessageStringData, 
 		    detail::MessageStringData_static_string> >
 {
 public:
 
-	boost::variant<boost::intrusive_ptr<detail::MessageStringData>, 
+	boost::variant<detail::MessageStringData, 
 		    detail::MessageStringData_static_string> operator()(const detail::MessageStringData_string_ref& str) const
 	{
-		detail::MessageStringData* dat = new detail::MessageStringData();
-		dat->str = str.ref.to_string();
+		detail::MessageStringData dat;
+		dat.str = str.ref.to_string();
 		return dat;
 	}
-	boost::variant<boost::intrusive_ptr<detail::MessageStringData>, 
+	boost::variant<detail::MessageStringData, 
 		    detail::MessageStringData_static_string> operator()(const detail::MessageStringData_static_string& str) const
 	{
 		return str;
 	}
-	boost::variant<boost::intrusive_ptr<detail::MessageStringData>, 
-		    detail::MessageStringData_static_string> operator()(MessageStringData* str_ptr) const {return str_ptr;}
+	boost::variant<detail::MessageStringData, 
+		    detail::MessageStringData_static_string> operator()(const detail::MessageStringData* str_ptr) const {return *str_ptr;}
 };
 
 }
@@ -751,9 +747,9 @@ MessageStringPtr::MessageStringPtr()
 }
 MessageStringPtr::MessageStringPtr(const std::string& str)
 {
-	detail::MessageStringData* dat = new detail::MessageStringData();
-	dat->str = str;
-	this->_str_ptr = dat;
+	detail::MessageStringData dat;
+	dat.str = str;
+	this->_str_ptr = RR_MOVE(dat);
 }
 MessageStringPtr::MessageStringPtr(boost::string_ref str, bool is_static)
 {
@@ -763,9 +759,9 @@ MessageStringPtr::MessageStringPtr(boost::string_ref str, bool is_static)
 	}
 	else
 	{
-		detail::MessageStringData* dat = new detail::MessageStringData();
-		dat->str = str.to_string();
-		this->_str_ptr = dat;
+		detail::MessageStringData dat;
+		dat.str = str.to_string();
+		this->_str_ptr = RR_MOVE(dat);
 	}
 }
 
@@ -780,9 +776,9 @@ MessageStringPtr::MessageStringPtr(const MessageStringRef& str_ref)
 #if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
 MessageStringPtr::MessageStringPtr(std::string&& str)
 {
-	detail::MessageStringData* dat = new detail::MessageStringData();
-	dat->str = RR_MOVE(str);
-	this->_str_ptr = dat;
+	detail::MessageStringData dat;
+	dat.str = RR_MOVE(str);
+	this->_str_ptr = RR_MOVE(dat);
 }
 #endif
 
