@@ -2723,8 +2723,8 @@ namespace RobotRaconteur
 		boost::regex r_string_expression("(\\\\\"|\\\\\\\\|\\\\/|\\\\b|\\\\f|\\\\n|\\\\r|\\\\t|(?:\\\\u[\\da-fA-F]{4})+)");
 		//const char* format_string = "(?1\\\")(?2\\\\)(?3\\b)(?4\\f)(?5\\n)(?6\\r)(?7\\t)(?8\\"
 		//TODO: avoid copy
-		std::string in1 = in.to_string();
-		boost::regex_replace(oi, in1.cbegin(), in1.cend(), r_string_expression, ConstantDefinition_UnescapeString_Formatter,
+		const std::string in1 = in.to_string();
+		boost::regex_replace(oi, in1.begin(), in1.end(), r_string_expression, ConstantDefinition_UnescapeString_Formatter,
 			boost::match_default | boost::format_all);
 
 		return t.str();
@@ -2764,8 +2764,8 @@ namespace RobotRaconteur
 		std::ostream_iterator<char, char> oi(t);
 
 		//TODO: avoid copy
-		std::string in1 = in.to_string();
-		boost::regex_replace(oi, in1.cbegin(), in1.cend(), r_replace, ConstantDefinition_EscapeString_Formatter,
+		const std::string in1 = in.to_string();
+		boost::regex_replace(oi, in1.begin(), in1.end(), r_replace, ConstantDefinition_EscapeString_Formatter,
 			boost::match_default | boost::format_all);
 
 		return t.str();
@@ -3299,7 +3299,7 @@ namespace RobotRaconteur
 			throw ServiceDefinitionVerifyException("Using \"" + e.QualifiedName + "\" is invalid", e.ParseInfo);
 		}
 
-		boost::tuple<std::string, std::string> s1=SplitQualifiedName(e.QualifiedName);
+		boost::tuple<boost::string_ref, boost::string_ref> s1=SplitQualifiedName(e.QualifiedName);
 
 		BOOST_FOREACH(RR_SHARED_PTR<ServiceDefinition> d1, importeddefs)
 		{
@@ -3660,9 +3660,9 @@ namespace RobotRaconteur
 			else
 			{
 
-				boost::tuple<std::string,std::string> s1=SplitQualifiedName(o->ObjectType);
+				boost::tuple<boost::string_ref,boost::string_ref> s1=SplitQualifiedName(o->ObjectType);
 				
-				std::string defname=s1.get<0>();
+				boost::string_ref defname=s1.get<0>();
 				RR_SHARED_PTR<ServiceDefinition> def2;
 
 				BOOST_FOREACH (RR_SHARED_PTR<ServiceDefinition>& ee2, defs)
@@ -3802,7 +3802,7 @@ namespace RobotRaconteur
 			}
 			else
 			{
-				boost::tuple<std::string,std::string> s1=SplitQualifiedName(e);
+				boost::tuple<boost::string_ref,boost::string_ref> s1=SplitQualifiedName(e);
 								
 				RR_SHARED_PTR<ServiceDefinition> def2;
 

@@ -585,7 +585,7 @@ namespace RobotRaconteur
 			this->schemes = schemes;
 			this->timeout = timeout;
 
-			this->servicetype.swap(servicetype.to_string());
+			this->servicetype = RR_MOVE(servicetype.to_string());
 			if (timeout != RR_TIMEOUT_INFINITE)
 			{
 				timeout_timer = node->CreateTimer(boost::posix_time::milliseconds(timeout), boost::bind(&Discovery_findservicebytype::timeout_timer_callback, shared_from_this(), _1), true);
@@ -862,7 +862,7 @@ namespace RobotRaconteur
 			this->storage = storage;
 			this->handler = handler;
 			this->retry_count = 0;
-			this->service_nonce.swap(service_nonce.to_string());
+			this->service_nonce = RR_MOVE(service_nonce.to_string());
 
 
 			RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
@@ -1071,7 +1071,7 @@ namespace RobotRaconteur
 			
 			boost::mutex::scoped_lock lock2(storage->this_lock);
 			storage->services = info;
-			storage->last_update_nonce.swap(nonce.to_string());
+			storage->last_update_nonce = RR_MOVE(nonce.to_string());
 			storage->last_update_time = n->NowUTC();
 
 			if (storage->last_update_nonce != storage->info->ServiceStateNonce)
@@ -1621,7 +1621,7 @@ namespace RobotRaconteur
 			{
 				boost::mutex::scoped_lock lock(m_DiscoveredNodes_lock);
 				is_shutdown.data() = true;
-				subscriptions.swap(subscriptions1);
+				subscriptions = RR_MOVE(subscriptions1);
 			}
 
 			BOOST_FOREACH(RR_WEAK_PTR<IServiceSubscription>& s, subscriptions1)

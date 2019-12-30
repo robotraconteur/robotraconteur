@@ -101,7 +101,7 @@ namespace RobotRaconteur
 	ServiceSubscriptionClientID::ServiceSubscriptionClientID(const ::RobotRaconteur::NodeID& nodeid, boost::string_ref service_name)
 	{
 		this->NodeID = nodeid;
-		this->ServiceName.swap(service_name.to_string());
+		this->ServiceName = RR_MOVE(service_name.to_string());
 	}
 
 	ServiceSubscriptionClientID::ServiceSubscriptionClientID()
@@ -1069,7 +1069,7 @@ namespace RobotRaconteur
 	{
 		this->parent = parent;
 		this->node = parent->node;
-		this->membername.swap(membername.to_string());
+		this->membername = RR_MOVE(membername.to_string());
 		this->wire_value_changed_semaphore = RR_MAKE_SHARED<detail::async_signal_pool_semaphore>(parent->node.lock());
 	}
 
@@ -1413,7 +1413,7 @@ namespace RobotRaconteur
 	PipeSubscriptionBase::PipeSubscriptionBase(RR_SHARED_PTR<ServiceSubscription> parent, boost::string_ref membername, int32_t max_recv_packets, int32_t max_send_backlog)		
 	{
 		this->parent = parent;
-		this->membername.swap(membername.to_string());
+		this->membername = RR_MOVE(membername.to_string());
 		this->max_recv_packets.data() = max_recv_packets;
 		this->pipe_packet_received_semaphore = RR_MAKE_SHARED<detail::async_signal_pool_semaphore>(parent->node.lock());
 		this->max_send_backlog.data() = max_send_backlog;

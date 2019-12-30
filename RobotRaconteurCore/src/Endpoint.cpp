@@ -55,7 +55,7 @@ std::string Endpoint::GetRemoteNodeName()
 void Endpoint::SetRemoteNodeName(boost::string_ref name)
 {
 	boost::unique_lock<boost::shared_mutex> lock(m_RemoteNodeName_lock);
-	m_RemoteNodeName.swap(name.to_string());
+	m_RemoteNodeName = RR_MOVE(name.to_string());
 }
 
 NodeID Endpoint::GetRemoteNodeID()

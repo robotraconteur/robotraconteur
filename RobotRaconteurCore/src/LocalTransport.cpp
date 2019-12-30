@@ -482,7 +482,7 @@ void LocalTransport::StartServerAsNodeName(boost::string_ref name, bool public_)
 	boost::filesystem::path info_name_fname = socket_path / "by-nodename" / (name + ".info");
 
 	std::map<std::string, std::string> info;
-	info.insert(std::make_pair("nodename", name));
+	info.insert(std::make_pair("nodename", name.to_string()));
 	info.insert(std::make_pair("nodeid", nodeid.ToString()));
 	info.insert(std::make_pair("socket", pipename));
 	info.insert(std::make_pair("ServiceStateNonce", GetNode()->GetServiceStateNonce()));
@@ -1701,11 +1701,11 @@ namespace detail
 			std::map<std::string, std::string>::iterator e = h_info->info.find("ServiceStateNonce");
 			if (e==h_info->info.end())
 			{
-				h_info->info.insert(std::make_pair("ServiceStateNonce", service_nonce));
+				h_info->info.insert(std::make_pair("ServiceStateNonce", service_nonce.to_string()));
 			}
 			else
 			{
-				e->second.swap(service_nonce.to_string());
+				e->second = RR_MOVE(service_nonce.to_string());
 			}
 
 			h_info->reset();

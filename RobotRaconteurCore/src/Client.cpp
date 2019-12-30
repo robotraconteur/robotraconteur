@@ -48,7 +48,7 @@ namespace RobotRaconteur
 	ServiceStub::ServiceStub(boost::string_ref path, RR_SHARED_PTR<ClientContext> c)
 	{
 		context = c;
-		ServicePath.swap(path.to_string());
+		ServicePath = RR_MOVE(path.to_string());
 		this->node = c->GetNode();
 		RRMutex = RR_MAKE_SHARED<boost::recursive_mutex>();
 	}
@@ -246,7 +246,7 @@ namespace RobotRaconteur
 			{
 				if (boost::range::find(active_stub_searches, path) != active_stub_searches.end())
 				{
-					active_stub_searches_handlers.push_back(boost::make_tuple(path, handler));
+					active_stub_searches_handlers.push_back(boost::make_tuple(path.to_string(), handler));
 					return;
 				}
 			}
@@ -777,7 +777,8 @@ namespace RobotRaconteur
 		mm->entries.push_back(m);
 
 		std::vector<std::string> v;
-		boost::split(v, m->MetaData.str(), boost::is_from_range('\n', '\n'), boost::algorithm::token_compress_on);
+		boost::string_ref metadata1 = m->MetaData.str();
+		boost::split(v, metadata1, boost::is_from_range('\n', '\n'), boost::algorithm::token_compress_on);
 
 		if (std::find(v.begin(), v.end(), "unreliable") != v.end())
 		{
@@ -810,7 +811,8 @@ namespace RobotRaconteur
 		//LastMessageSentTime = GetNode()->NowUTC();
 
 		std::vector<std::string> v;
-		boost::split(v, m->MetaData.str(), boost::is_from_range('\n', '\n'), boost::algorithm::token_compress_on);
+		boost::string_ref metadata1 = m->MetaData.str();
+		boost::split(v, metadata1, boost::is_from_range('\n', '\n'), boost::algorithm::token_compress_on);
 
 		if (std::find(v.begin(), v.end(), "unreliable") != v.end())
 		{
@@ -1101,14 +1103,14 @@ namespace RobotRaconteur
 	RR_SHARED_PTR<RRObject> ClientContext::ConnectService(RR_SHARED_PTR<Transport> c, boost::string_ref url, boost::string_ref username, RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials, boost::string_ref objecttype)
 	{
 		RR_SHARED_PTR<detail::sync_async_handler<RRObject> > d = RR_MAKE_SHARED<detail::sync_async_handler<RRObject> >(RR_MAKE_SHARED<ConnectionException>("Connection timed out"));
-		AsyncConnectService(c, std::string(url), std::string(username), credentials, std::string(objecttype), boost::bind(&detail::sync_async_handler<RRObject>::operator(), d, _1, _2), GetNode()->GetRequestTimeout());
+		AsyncConnectService(c, url, username, credentials, objecttype, boost::bind(&detail::sync_async_handler<RRObject>::operator(), d, _1, _2), GetNode()->GetRequestTimeout());
 		return d->end();
 	}
 
 	RR_SHARED_PTR<RRObject> ClientContext::ConnectService(RR_SHARED_PTR<Transport> c, RR_SHARED_PTR<ITransportConnection> tc, boost::string_ref url, boost::string_ref username, RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials, boost::string_ref objecttype)
 	{
 		RR_SHARED_PTR<detail::sync_async_handler<RRObject> > d = RR_MAKE_SHARED<detail::sync_async_handler<RRObject> >(RR_MAKE_SHARED<ConnectionException>("Connection timed out"));
-		AsyncConnectService(c, tc, std::string(url), std::string(username), credentials, std::string(objecttype), boost::bind(&detail::sync_async_handler<RRObject>::operator(), d, _1, _2), GetNode()->GetRequestTimeout());
+		AsyncConnectService(c, tc, url, username, credentials, objecttype, boost::bind(&detail::sync_async_handler<RRObject>::operator(), d, _1, _2), GetNode()->GetRequestTimeout());
 		return d->end();
 	}
 
@@ -1128,7 +1130,7 @@ namespace RobotRaconteur
 		RR_SHARED_PTR<detail::async_timeout_wrapper<RRObject> > d = RR_MAKE_SHARED<detail::async_timeout_wrapper<RRObject> >(GetNode(), handler, boost::bind(&detail::async_timeout_wrapper_closer<RRObject, ClientContext>, _1));
 
 		boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>) > h1(boost::bind(&detail::async_timeout_wrapper<RRObject>::operator(), d, _1, _2));
-		boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> h(boost::bind(&ClientContext::AsyncConnectService1, shared_from_this(), c, _1, _2, std::string(url), std::string(username), credentials, std::string(objecttype), h1));
+		boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> h(boost::bind(&ClientContext::AsyncConnectService1, shared_from_this(), c, _1, _2, url.to_string(), username.to_string(), credentials, objecttype.to_string(), h1));
 
 		c->AsyncCreateTransportConnection(url, RR_STATIC_POINTER_CAST<Endpoint>(shared_from_this()), h);
 		d->start_timer(timeout, RR_MAKE_SHARED<ConnectionException>("Timeout during operation"));
@@ -1249,14 +1251,14 @@ namespace RobotRaconteur
 
 		if (timeout == RR_TIMEOUT_INFINITE)
 		{
-			AsyncPullServiceDefinitionAndImports("", boost::bind(&ClientContext::AsyncConnectService2, shared_from_this(), _1, _2, std::string(username), credentials, std::string(objecttype), handler), GetNode()->GetRequestTimeout());
+			AsyncPullServiceDefinitionAndImports("", boost::bind(&ClientContext::AsyncConnectService2, shared_from_this(), _1, _2, username.to_string(), credentials, objecttype.to_string(), handler), GetNode()->GetRequestTimeout());
 		}
 		else
 		{
 
 			RR_SHARED_PTR<detail::async_timeout_wrapper<RRObject> > d = RR_MAKE_SHARED<detail::async_timeout_wrapper<RRObject> >(GetNode(), handler, boost::bind(&detail::async_timeout_wrapper_closer<RRObject, ClientContext>, _1));
 			boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)> h1(boost::bind(&detail::async_timeout_wrapper<RRObject>::operator(), d, _1, _2));
-			AsyncPullServiceDefinitionAndImports("", boost::bind(&ClientContext::AsyncConnectService2, shared_from_this(), _1, _2, std::string(username), credentials, std::string(objecttype), h1), GetNode()->GetRequestTimeout());
+			AsyncPullServiceDefinitionAndImports("", boost::bind(&ClientContext::AsyncConnectService2, shared_from_this(), _1, _2, username.to_string(), credentials, objecttype.to_string(), h1), GetNode()->GetRequestTimeout());
 			d->start_timer(timeout, RR_MAKE_SHARED<ConnectionException>("Timeout during operation"));
 		}
 	}
@@ -1656,16 +1658,16 @@ namespace RobotRaconteur
 
 		boost::mutex::scoped_lock lock(pulled_service_defs_lock);
 
-		boost::tuple<std::string, std::string> s1 = SplitQualifiedName(objecttype);
+		boost::tuple<boost::string_ref, boost::string_ref> s1 = SplitQualifiedName(objecttype);
 
 
-		if (pulled_service_defs.find(s1.get<0>()) == pulled_service_defs.end())
+		if (pulled_service_defs.find(s1.get<0>().to_string()) == pulled_service_defs.end())
 		{
 			RR_SHARED_PTR<ServiceDefinition> d1 = PullServiceDefinition(s1.get<0>()).def;
 			pulled_service_defs.insert(std::make_pair(d1->Name, d1));
 		}
 
-		std::map<std::string, RR_SHARED_PTR<ServiceDefinition> >::iterator e1 = pulled_service_defs.find(s1.get<0>());
+		std::map<std::string, RR_SHARED_PTR<ServiceDefinition> >::iterator e1 = pulled_service_defs.find(s1.get<0>().to_string());
 		if (e1 == pulled_service_defs.end()) return false;
 
 		RR_SHARED_PTR<ServiceDefinition> d = e1->second;
@@ -1690,9 +1692,9 @@ namespace RobotRaconteur
 			}
 			else
 			{
-				boost::tuple<std::string, std::string> s2 = SplitQualifiedName(e);
-				deftype = s2.get<0>();
-				objtype = s2.get<1>();
+				boost::tuple<boost::string_ref,boost::string_ref> s2 = SplitQualifiedName(e);
+				deftype = s2.get<0>().to_string();
+				objtype = s2.get<1>().to_string();
 			}
 
 
@@ -1916,7 +1918,7 @@ namespace RobotRaconteur
 	PullServiceDefinitionReturn ClientContext::PullServiceDefinition(boost::string_ref ServiceType)
 	{
 		RR_SHARED_PTR<detail::sync_async_handler<PullServiceDefinitionReturn> > d = RR_MAKE_SHARED<detail::sync_async_handler<PullServiceDefinitionReturn> >(RR_MAKE_SHARED<ServiceException>("Could not pull service definition"));
-		AsyncPullServiceDefinition(std::string(ServiceType), boost::bind(&detail::sync_async_handler<PullServiceDefinitionReturn>::operator(), d, _1, _2), GetNode()->GetRequestTimeout());
+		AsyncPullServiceDefinition(ServiceType, boost::bind(&detail::sync_async_handler<PullServiceDefinitionReturn>::operator(), d, _1, _2), GetNode()->GetRequestTimeout());
 		RR_SHARED_PTR<PullServiceDefinitionReturn> ret = d->end();
 		if (!ret) throw NullValueException("Unexpected null return from service");
 		return *ret;
@@ -1933,7 +1935,7 @@ namespace RobotRaconteur
 		e3->ServicePath = GetServiceName();
 		e3->AddElement("clientversion", stringToRRArray(ROBOTRACONTEUR_VERSION_TEXT));
 
-		AsyncProcessRequest(e3, boost::bind(&ClientContext::AsyncPullServiceDefinition1, shared_from_this(), _1, _2, std::string(ServiceType),handler), timeout);
+		AsyncProcessRequest(e3, boost::bind(&ClientContext::AsyncPullServiceDefinition1, shared_from_this(), _1, _2, ServiceType.to_string(),handler), timeout);
 	}
 
 	void ClientContext::AsyncPullServiceDefinition1(RR_INTRUSIVE_PTR<MessageEntry> ret3, RR_SHARED_PTR<RobotRaconteurException> err, const std::string& ServiceType, boost::function<void(RR_SHARED_PTR<PullServiceDefinitionReturn>, RR_SHARED_PTR<RobotRaconteurException>) > & handler)
@@ -2009,7 +2011,7 @@ namespace RobotRaconteur
 	{
 		boost::posix_time::ptime timeout_time = GetNode()->NowUTC() + boost::posix_time::milliseconds(timeout);
 
-		AsyncPullServiceDefinition(servicetype, boost::bind(&ClientContext::AsyncPullServiceDefinitionAndImports1, shared_from_this(), _1, _2, std::string(servicetype), RR_SHARED_PTR<PullServiceDefinitionAndImportsReturn>(), handler, timeout_time), boost::numeric_cast<uint32_t>((timeout_time - GetNode()->NowUTC()).total_milliseconds()));
+		AsyncPullServiceDefinition(servicetype, boost::bind(&ClientContext::AsyncPullServiceDefinitionAndImports1, shared_from_this(), _1, _2, servicetype.to_string(), RR_SHARED_PTR<PullServiceDefinitionAndImportsReturn>(), handler, timeout_time), boost::numeric_cast<uint32_t>((timeout_time - GetNode()->NowUTC()).total_milliseconds()));
 	}
 
 	void ClientContext::AsyncPullServiceDefinitionAndImports1(RR_SHARED_PTR<PullServiceDefinitionReturn> pull_ret, RR_SHARED_PTR<RobotRaconteurException> err, const std::string& servicetype, RR_SHARED_PTR<PullServiceDefinitionAndImportsReturn> current, boost::function<void(RR_SHARED_PTR<PullServiceDefinitionAndImportsReturn>, RR_SHARED_PTR<RobotRaconteurException>)>& handler, boost::posix_time::ptime timeout_time)
@@ -2073,7 +2075,7 @@ namespace RobotRaconteur
 	{
 
 		RR_SHARED_PTR<detail::sync_async_handler<PullServiceDefinitionAndImportsReturn> > d = RR_MAKE_SHARED<detail::sync_async_handler<PullServiceDefinitionAndImportsReturn> >(RR_MAKE_SHARED<ServiceException>("Could not pull service definition"));
-		AsyncPullServiceDefinitionAndImports(std::string(servicetype), boost::bind(&detail::sync_async_handler<PullServiceDefinitionAndImportsReturn>::operator(), d, _1, _2), GetNode()->GetRequestTimeout());
+		AsyncPullServiceDefinitionAndImports(servicetype, boost::bind(&detail::sync_async_handler<PullServiceDefinitionAndImportsReturn>::operator(), d, _1, _2), GetNode()->GetRequestTimeout());
 		RR_SHARED_PTR<PullServiceDefinitionAndImportsReturn> ret = d->end();
 		if (!ret) throw NullValueException("Unexpected null return from service");
 		return *ret;		
@@ -2139,7 +2141,7 @@ namespace RobotRaconteur
 			mcredentials->ElementName = "credentials";
 			m->AddElement(mcredentials);
 		}
-		AsyncProcessRequest(m, boost::bind(&ClientContext::AsyncAuthenticateUser2, shared_from_this(), _1, _2, std::string(username), handler), timeout);
+		AsyncProcessRequest(m, boost::bind(&ClientContext::AsyncAuthenticateUser2, shared_from_this(), _1, _2, username.to_string(), handler), timeout);
 
 	}
 

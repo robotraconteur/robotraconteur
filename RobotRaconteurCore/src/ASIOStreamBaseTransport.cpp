@@ -1695,7 +1695,7 @@ void ASIOStreamBaseTransport::AsyncCheckStreamCapability(boost::string_ref name,
 	}
 	else
 	{
-		CheckStreamCapability_queue.push(boost::make_tuple(name,callback));
+		CheckStreamCapability_queue.push(boost::make_tuple(name.to_string(),callback));
 	}
 }
 
@@ -1893,7 +1893,7 @@ void ASIOStreamBaseTransport::AsyncStreamOp(boost::string_ref command, RR_SHARED
 	}
 	else
 	{
-		streamop_queue.push(boost::make_tuple(command,args,callback));
+		streamop_queue.push(boost::make_tuple(command.to_string(),args,callback));
 	}
 }
 

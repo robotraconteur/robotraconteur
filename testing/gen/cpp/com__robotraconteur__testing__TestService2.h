@@ -24,7 +24,7 @@ class ostruct2 : public RobotRaconteur::RRStructure {
 public:
 RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > a1;
 
-virtual std::string RRType() {return "com.robotraconteur.testing.TestService2.ostruct2";  }
+virtual boost::string_ref RRType() {return "com.robotraconteur.testing.TestService2.ostruct2";  }
 };
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
@@ -57,7 +57,7 @@ virtual void set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRac
 
 virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<double > > get_m1()=0;
 
-virtual std::string RRType() {return "com.robotraconteur.testing.TestService2.baseobj";  }
+virtual boost::string_ref RRType() {return "com.robotraconteur.testing.TestService2.baseobj";  }
 };
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
@@ -69,7 +69,7 @@ class subobj : public virtual RobotRaconteur::RRObject
 public:
 virtual double add_val(double v)=0;
 
-virtual std::string RRType() {return "com.robotraconteur.testing.TestService2.subobj";  }
+virtual boost::string_ref RRType() {return "com.robotraconteur.testing.TestService2.subobj";  }
 };
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES

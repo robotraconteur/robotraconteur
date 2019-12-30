@@ -636,7 +636,7 @@ namespace detail
 		this->_async_write_some=async_write_some;
 		this->_close = close;
 		open=true;
-		this->servername.swap(servername.to_string());
+		this->servername = RR_MOVE(servername.to_string());
 		this->direction=direction;
 		this->context=context;
 

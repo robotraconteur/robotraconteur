@@ -30,7 +30,7 @@ namespace RobotRaconteur
 	public:
 		Callback(boost::string_ref name)
 		{
-			m_MemberName.swap(name.to_string());
+			m_MemberName = RR_MOVE(name.to_string());
 		}
 
 		virtual ~Callback() {}

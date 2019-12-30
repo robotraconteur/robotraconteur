@@ -925,7 +925,7 @@ void PipeClientBase::AsyncConnect_internal1(RR_INTRUSIVE_PTR<MessageEntry> ret, 
 
 PipeClientBase::PipeClientBase(boost::string_ref name, RR_SHARED_PTR<ServiceStub> stub, bool unreliable, MemberDefinition_Direction direction)
 {
-	m_MemberName.swap(name.to_string());
+	m_MemberName = RR_MOVE(name.to_string());
 	this->stub=stub;
 	this->unreliable=unreliable;
 	this->direction = direction;
@@ -1315,7 +1315,7 @@ RR_INTRUSIVE_PTR<MessageEntry> PipeServerBase::PipeCommand(RR_INTRUSIVE_PTR<Mess
 
 PipeServerBase::PipeServerBase(boost::string_ref name, RR_SHARED_PTR<ServiceSkel> skel, bool unreliable, MemberDefinition_Direction direction)
 {
-	m_MemberName.swap(name.to_string());
+	m_MemberName = RR_MOVE(name.to_string());
 	this->skel=skel;
 	this->init=false;
 	this->unreliable=unreliable;

@@ -30,7 +30,7 @@ namespace RobotRaconteur
 			boost::mutex::scoped_lock lock(skels_lock);
 			m_Locked = true;
 			m_RootSkel = root_skel;
-			m_Username.swap(username.to_string());
+			m_Username = RR_MOVE(username.to_string());
 			m_RootServicePath = root_skel->GetServicePath();
 			m_Endpoint = endpoint;
 		}

@@ -374,10 +374,10 @@ namespace RobotRaconteur
 		{
 
 			this->connectors = connectors;
-			this->username.swap(username.to_string());
+			this->username = RR_MOVE(username.to_string());
 			this->credentials = credentials;
 			this->listener = listener;
-			this->objecttype.swap(objecttype.to_string());
+			this->objecttype = RR_MOVE(objecttype.to_string());
 			this->handler = handler;
 			this->timeout = timeout;
 

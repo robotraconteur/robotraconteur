@@ -308,7 +308,8 @@ namespace detail
 		STACK_OF(X509) *ca = NULL;
 		PKCS12 *p12;
 		int i;
-		if (!(fp=fopen(fname.c_str(),"rb")))
+		std::string fname1 = fname.to_string();
+		if (!(fp=fopen(fname1.c_str(),"rb")))
 		{
 			throw ResourceNotFoundException("Could not load certificate file");
 		}

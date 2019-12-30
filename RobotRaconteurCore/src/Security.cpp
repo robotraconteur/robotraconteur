@@ -77,7 +77,7 @@ namespace RobotRaconteur
 
 	AuthenticatedUser::AuthenticatedUser(boost::string_ref username, const std::vector<std::string>& privileges, const std::vector<std::string>& properties, RR_SHARED_PTR<ServerContext> context)
 	{
-		this->m_Username.swap(username.to_string());
+		this->m_Username = RR_MOVE(username.to_string());
 		this->m_Privileges = privileges;
 		this->m_Properties = properties;
 		this->context = context;
@@ -184,7 +184,7 @@ namespace RobotRaconteur
 		return s2;
 #else
 		uint8_t md[MD5_DIGEST_LENGTH];
-		MD5(reinterpret_cast<const uint8_t*>(text.c_str()), text.size(), reinterpret_cast<uint8_t*>(md));
+		MD5(reinterpret_cast<const uint8_t*>(text.data()), text.size(), reinterpret_cast<uint8_t*>(md));
 
 		std::string s2;
 		for (size_t i = 0; i<16; i++)

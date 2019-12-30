@@ -177,7 +177,7 @@ namespace RobotRaconteur
 				AsyncAttachStream_args(const NodeID& nodeid_, boost::string_ref nodename_)
 				{
 					nodeid = nodeid_;
-					nodename.swap(nodename_.to_string());
+					nodename = RR_MOVE(nodename_.to_string());
 				}
 
 				virtual boost::string_ref RRType()

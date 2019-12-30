@@ -641,7 +641,7 @@ namespace RobotRaconteur
 	WireClientBase::WireClientBase(boost::string_ref name, RR_SHARED_PTR<ServiceStub> stub, MemberDefinition_Direction direction)
 	{
 		this->stub=stub;
-		this->m_MemberName.swap(name.to_string());
+		this->m_MemberName = RR_MOVE(name.to_string());
 		this->node=stub->RRGetNode();
 		this->direction = direction;
 	}
@@ -985,7 +985,7 @@ namespace RobotRaconteur
 	WireServerBase::WireServerBase(boost::string_ref name, RR_SHARED_PTR<ServiceSkel> skel, MemberDefinition_Direction direction)
 	{
 		this->skel=skel;
-		this->m_MemberName.swap(name.to_string());
+		this->m_MemberName = RR_MOVE(name.to_string());
 		this->init=false;
 		this->node=skel->RRGetNode();
 		this->direction = direction;

@@ -86,7 +86,7 @@ namespace RobotRaconteur
 
 	ArrayMemoryServiceSkelBase::ArrayMemoryServiceSkelBase(boost::string_ref membername, RR_SHARED_PTR<ServiceSkel> skel, DataTypes element_type, size_t element_size, MemberDefinition_Direction direction)
 	{
-		this->m_MemberName.swap(membername.to_string());
+		this->m_MemberName = RR_MOVE(membername.to_string());
 		this->skel = skel;
 		this->node = skel->RRGetNode();
 		this->direction = direction;
@@ -178,7 +178,7 @@ namespace RobotRaconteur
 
 	MultiDimArrayMemoryServiceSkelBase::MultiDimArrayMemoryServiceSkelBase(boost::string_ref membername, RR_SHARED_PTR<ServiceSkel> skel, DataTypes element_type, size_t element_size, MemberDefinition_Direction direction)
 	{
-		this->m_MemberName.swap(membername.to_string());
+		this->m_MemberName = RR_MOVE(membername.to_string());
 		this->skel = skel;
 		this->node = skel->RRGetNode();
 		this->direction = direction;
@@ -291,7 +291,7 @@ namespace RobotRaconteur
 	{
 		this->stub = stub;
 		this->node = stub->RRGetNode();
-		m_MemberName.swap(membername.to_string());
+		m_MemberName = RR_MOVE(membername.to_string());
 		this->direction = direction;
 		this->element_type = element_type;
 		this->element_size = element_size;
@@ -461,7 +461,7 @@ namespace RobotRaconteur
 	{
 		this->stub = stub;
 		this->node = stub->RRGetNode();
-		m_MemberName.swap(membername.to_string());
+		m_MemberName = RR_MOVE(membername.to_string());
 		this->direction = direction;
 		max_size_read = false;
 		remote_max_size = 0;

@@ -921,7 +921,7 @@ namespace RobotRaconteur
 	HardwareTransportConnection_driver::HardwareTransportConnection_driver(RR_SHARED_PTR<HardwareTransport> parent, bool server, uint32_t local_endpoint, boost::string_ref scheme)
 		: HardwareTransportConnection(parent, server, local_endpoint)
 	{
-		this->scheme.swap(scheme.to_string());
+		this->scheme = RR_MOVE(scheme.to_string());
 	}
 
 	void HardwareTransportConnection_driver::async_write_some(const_buffers& b, boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler)

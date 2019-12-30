@@ -152,7 +152,7 @@ void RobotRaconteurNode::SetNodeName(boost::string_ref name)
 
 	boost::mutex::scoped_lock lock(id_lock);
 	if (NodeName_set) throw InvalidOperationException("NodeName already set");
-	m_NodeName.swap(name.to_string());
+	m_NodeName = RR_MOVE(name.to_string());
 	NodeName_set=true;
 }
 
@@ -684,7 +684,7 @@ RR_SHARED_PTR<ServerContext> RobotRaconteurNode::RegisterService(boost::string_r
 		c->SetBaseObject(name, obj, securitypolicy);
 
 		//RegisterEndpoint(c);
-		services.insert(make_pair(name, c));		
+		services.insert(make_pair(RR_MOVE(name.to_string()), c));		
 	}
 
 	UpdateServiceStateNonce();
@@ -818,7 +818,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_INTRUSIVE_PTR<Me
 						std::string objtype = s->GetObjectType(path,v);
 						eret->AddElement("objecttype", stringToRRArray(objtype));
 
-						boost::tuple<std::string, std::string> objtype_s = SplitQualifiedName(objtype);
+						boost::tuple<boost::string_ref, boost::string_ref> objtype_s = SplitQualifiedName(objtype);
 						RR_SHARED_PTR<ServiceEntryDefinition> def = TryFindByName(GetServiceType(objtype_s.get<0>())->ServiceDef()->Objects, objtype_s.get<1>());
 						if (!def) throw ServiceException("Invalid service object");
 
@@ -983,7 +983,8 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_INTRUSIVE_PTR<Me
 					const MessageStringPtr& path = e->ServicePath;
 					
 					std::vector<std::string> s1;
-					boost::split(s1,path.str(),boost::is_from_range('.','.'));
+					boost::string_ref s2 = path.str();
+					boost::split(s1,s2,boost::is_from_range('.','.'));
 					try
 					{
 						RR_SHARED_PTR<ServerContext> s;
@@ -1023,7 +1024,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_INTRUSIVE_PTR<Me
 					std::string objtype= c->GetRootObjectType(v);
 					eret->AddElement("objecttype", stringToRRArray(objtype));
 
-					boost::tuple<std::string, std::string> objtype_s = SplitQualifiedName(objtype);
+					boost::tuple<boost::string_ref, boost::string_ref> objtype_s = SplitQualifiedName(objtype);
 					RR_SHARED_PTR<ServiceEntryDefinition> def = TryFindByName(GetServiceType(objtype_s.get<0>())->ServiceDef()->Objects, objtype_s.get<1>());
 					if (!def) throw ServiceException("Invalid service object");
 
@@ -2108,7 +2109,7 @@ void RobotRaconteurNode::DownCastAndThrowException(RobotRaconteurException& exp)
 	{
 		return;
 	}
-	boost::tuple<std::string,std::string> stype=SplitQualifiedName(type);
+	boost::tuple<boost::string_ref,boost::string_ref> stype=SplitQualifiedName(type);
 	if (!IsServiceTypeRegistered(stype.get<0>()))
 	{
 		return;
@@ -2126,7 +2127,7 @@ RR_SHARED_PTR<RobotRaconteurException> RobotRaconteurNode::DownCastException(RR_
 	{
 		return exp;
 	}
-	boost::tuple<std::string,std::string> stype=SplitQualifiedName(type);
+	boost::tuple<boost::string_ref,boost::string_ref> stype=SplitQualifiedName(type);
 	if (!IsServiceTypeRegistered(stype.get<0>()))
 	{
 		return exp;

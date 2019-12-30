@@ -1296,7 +1296,7 @@ namespace RobotRaconteurGen
 			std::string iname=fix_qualified_name(*ee);
 			if (iname.find(".")!=std::string::npos)
 			{
-				boost::tuple<string,string> i1=SplitQualifiedName(iname);
+				boost::tuple<boost::string_ref,boost::string_ref> i1=SplitQualifiedName(iname);
 				
 				
 				iname=i1.get<0>() + ".async_" + i1.get<1>();

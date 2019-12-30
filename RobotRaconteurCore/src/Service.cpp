@@ -54,7 +54,7 @@ namespace RobotRaconteur
 	void ServiceSkel::Init(boost::string_ref s, RR_SHARED_PTR<RRObject> o, RR_SHARED_PTR<ServerContext> c)
 	{
 		InitializeInstanceFields();
-		m_ServicePath.swap(s.to_string());
+		m_ServicePath = RR_MOVE(s.to_string());
 		m_context = c;
 		uncastobj = o;
 		if (o == 0)
@@ -755,15 +755,15 @@ namespace RobotRaconteur
 
 		
 
-		m_ServiceName.swap(name.to_string());
+		m_ServiceName = RR_MOVE(name.to_string());
 
-		m_CurrentServicePath.reset(new std::string(name));
+		m_CurrentServicePath.reset(new std::string(name.to_string()));
 		m_CurrentServerContext.reset(new RR_SHARED_PTR<ServerContext>(shared_from_this()));
 		
 
 		RR_SHARED_PTR<ServiceSkel> s = GetServiceDef()->CreateSkel(o->RRType(),name, o, shared_from_this());
 
-		m_RootObjectType.swap(o->RRType().to_string()); //boost::algorithm::replace_all_copy(o->RRType(),"::",".");
+		m_RootObjectType = RR_MOVE(o->RRType().to_string()); //boost::algorithm::replace_all_copy(o->RRType(),"::",".");
 		base_object_set = true;
 		
 		{
@@ -783,7 +783,8 @@ namespace RobotRaconteur
 		//object obj = null;
 		
 		std::vector<std::string> p;
-		boost::split(p,servicepath.str(),boost::is_from_range('.','.'));
+		boost::string_ref servicepath1 = servicepath.str();
+		boost::split(p,servicepath1,boost::is_from_range('.','.'));
 		
 		std::string ppath = p.at(0);
 
@@ -948,7 +949,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 					noreturn = true;
 				}
 
-				m_CurrentServicePath.reset(new std::string(m->ServicePath.str()));
+				m_CurrentServicePath.reset(new std::string(m->ServicePath.str().to_string()));
 				m_CurrentServerContext.reset(new RR_SHARED_PTR<ServerContext>(shared_from_this()));
 
 

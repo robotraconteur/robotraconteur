@@ -324,7 +324,7 @@ namespace RobotRaconteur
 	public:
 		static DataTypes GetTypeID() {return DataTypes_void_t;}
 		static MessageStringPtr GetElementTypeString() {
-			return "";
+			return MessageStringPtr("");
 		}
 		
 		static boost::string_ref GetRRElementTypeString() {
@@ -346,7 +346,7 @@ namespace RobotRaconteur
 	public:
 		static DataTypes GetTypeID() {return DataTypes_string_t;}
 		static MessageStringPtr GetElementTypeString() {
-			return "";
+			return MessageStringPtr("");
 		}
 		static boost::string_ref GetRRElementTypeString() {
 			return "";
@@ -378,7 +378,7 @@ namespace RobotRaconteur
 	{ \
 		public: \
 		static DataTypes GetTypeID() {return code;}  \
-		static MessageStringPtr GetElementTypeString() {return ""; } \
+		static MessageStringPtr GetElementTypeString() {return MessageStringPtr(""); } \
 		static boost::string_ref GetRRElementTypeString() {return ""; } \
 		static RR_INTRUSIVE_PTR<RRArray<x> > PrePack(const x& val) {return ScalarToRRArray(val);}\
 		template<typename U> \
@@ -1285,7 +1285,7 @@ namespace RobotRaconteur
 	{ \
 		public: \
 		static DataTypes GetTypeID() {return DataTypes_pod_t;}  \
-		static MessageStringPtr GetElementTypeString() {return type_string; } \
+		static MessageStringPtr GetElementTypeString() {return MessageStringPtr(type_string); } \
 		static boost::string_ref GetRRElementTypeString() {return type_string; } \
 		static RR_INTRUSIVE_PTR<RRPodArray<x> > PrePack(const x& val) {return ScalarToRRPodArray(val);}\
 		template<typename U> \
@@ -1415,7 +1415,7 @@ namespace RobotRaconteur
 	{ \
 		public: \
 		static DataTypes GetTypeID() {return DataTypes_pod_t;}  \
-		static MessageStringPtr GetElementTypeString() {return type_string; } \
+		static MessageStringPtr GetElementTypeString() {return MessageStringPtr(type_string); } \
 		static boost::string_ref GetRRElementTypeString() {return type_string; } \
 		static RR_INTRUSIVE_PTR<RRNamedArray<x> > PrePack(const x& val) {return ScalarToRRNamedArray(val);}\
 		template<typename U> \

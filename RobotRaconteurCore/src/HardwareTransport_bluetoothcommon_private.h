@@ -122,7 +122,7 @@ public:
 		target_nodename = url.nodename;
 
 		this->endpoint = endpoint;
-		this->noden.swap(noden.to_string());
+		this->noden = RR_MOVE(noden.to_string());
 
 		this->connecting = true;
 

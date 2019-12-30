@@ -707,7 +707,7 @@ namespace detail
 	TcpAcceptor::TcpAcceptor(RR_SHARED_PTR<TcpTransport> parent, boost::string_ref url, uint32_t local_endpoint)
 	{
 		this->parent = parent;
-		this->url.swap(url.to_string());
+		this->url = RR_MOVE(url.to_string());
 		this->local_endpoint = local_endpoint;
 		this->node = parent->GetNode();
 	}
@@ -831,7 +831,7 @@ namespace detail
 
 	void TcpWebSocketConnector::Connect(boost::string_ref url, uint32_t endpoint, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > handler)
 	{
-		this->url.swap(url.to_string());
+		this->url = RR_MOVE(url.to_string());
 		this->endpoint = endpoint;
 
 		try
@@ -1052,7 +1052,7 @@ namespace detail {
 
 	void TcpWSSWebSocketConnector::Connect(boost::string_ref url, uint32_t endpoint, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > handler)
 	{
-		this->url.swap(url.to_string());
+		this->url = RR_MOVE(url.to_string());
 		this->endpoint = endpoint;
 
 		try
@@ -1335,9 +1335,9 @@ namespace detail {
 			this->node = parent->GetNode();
 		}
 
-		void TcpWSSWebSocketConnector::Connect(std::string url, uint32_t endpoint, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > handler)
+		void TcpWSSWebSocketConnector::Connect(boost::string_ref url, uint32_t endpoint, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > handler)
 		{
-			this->url = url;
+			this->url = RR_MOVE(url.to_string());
 			this->endpoint = endpoint;
 
 			try
@@ -1358,12 +1358,14 @@ namespace detail {
 
 				if (url_res.scheme == "rr+wss")
 				{
-					ws_url = boost::replace_first_copy(url, "rr+wss", "wss");
+					std::string url1 = RR_MOVE(url.to_string());
+					ws_url = boost::replace_first_copy(url1, "rr+wss", "wss");
 				}
 
 				if (url_res.scheme == "rrs+wss")
 				{
-					ws_url = boost::replace_first_copy(url, "rrs+wss", "wss");
+					std::string url1 = RR_MOVE(url.to_string());
+					ws_url = boost::replace_first_copy(url1, "rrs+wss", "wss");
 				}
 
 				//std::cout << ws_url << std::endl;
@@ -2843,7 +2845,7 @@ TcpTransportConnection::TcpTransportConnection(RR_SHARED_PTR<TcpTransport> paren
 	this->disable_message3 = parent->GetDisableMessage3();
 	this->disable_string_table = parent->GetDisableStringTable();
 	this->disable_async_io = parent->GetDisableAsyncMessageIO();
-	this->url.swap(url.to_string());
+	this->url = RR_MOVE(url.to_string());
 
 	this->is_tls=false;
 	this->require_tls=parent->GetRequireTls();
@@ -4982,7 +4984,7 @@ namespace detail
 
 		//s.set_option(boost::asio::ip::udp::socket::linger(false,10));
 
-		RR_SHARED_PTR<std::string> shared_message = RR_MAKE_SHARED<std::string>(packet);
+		RR_SHARED_PTR<std::string> shared_message = RR_MAKE_SHARED<std::string>(packet.to_string());
 
 		s.set_option(boost::asio::ip::udp::socket::reuse_address(true));
 #ifdef ROBOTRACONTEUR_WINDOWS

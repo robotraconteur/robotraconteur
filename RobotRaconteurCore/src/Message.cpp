@@ -1919,7 +1919,7 @@ namespace RobotRaconteur
 	{
 		return new MessageElementNestedElementList(type_, type_name_, std::move(elements_));
 	}	
-#endif()
+#endif
 	RR_INTRUSIVE_PTR<Message> ShallowCopyMessage(RR_INTRUSIVE_PTR<Message> m)
 	{
 		if (!m) return RR_INTRUSIVE_PTR<Message>();
