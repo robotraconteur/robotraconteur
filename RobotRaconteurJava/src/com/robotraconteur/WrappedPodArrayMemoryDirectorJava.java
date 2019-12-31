@@ -43,14 +43,14 @@ public class WrappedPodArrayMemoryDirectorJava<T> extends WrappedPodArrayMemoryD
     }
 
     @Override
-    public MessageElementPodArray read(BigInteger memorypos, BigInteger bufferpos, BigInteger count)
+    public MessageElementNestedElementList read(BigInteger memorypos, BigInteger bufferpos, BigInteger count)
     {
         try
         {
             T buffer3 = (T)Array.newInstance(mem_type,count.intValue());
             mem.read(memorypos.longValue(), buffer3, (long)0, count.longValue());
 
-            return (MessageElementPodArray)RobotRaconteurNode.s().packStructure(buffer3);                
+            return (MessageElementNestedElementList)RobotRaconteurNode.s().packStructure(buffer3);                
         }
         catch (Exception e)
         {
@@ -69,7 +69,7 @@ public class WrappedPodArrayMemoryDirectorJava<T> extends WrappedPodArrayMemoryD
     }
 
     @Override
-    public void write(BigInteger memorypos, MessageElementPodArray buffer, BigInteger bufferpos, BigInteger count)
+    public void write(BigInteger memorypos, MessageElementNestedElementList buffer, BigInteger bufferpos, BigInteger count)
     {
         try
         {

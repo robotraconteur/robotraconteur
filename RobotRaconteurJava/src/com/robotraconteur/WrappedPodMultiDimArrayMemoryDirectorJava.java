@@ -99,7 +99,7 @@ public class WrappedPodMultiDimArrayMemoryDirectorJava<T> extends WrappedPodMult
     }
 
     @Override
-    public MessageElementPodMultiDimArray read(vector_uint64_t memorypos, vector_uint64_t bufferpos, vector_uint64_t count)
+    public MessageElementNestedElementList read(vector_uint64_t memorypos, vector_uint64_t bufferpos, vector_uint64_t count)
     {
     	int elemcount = 1;
     	int[] count2=new int[count.size()];
@@ -115,7 +115,7 @@ public class WrappedPodMultiDimArrayMemoryDirectorJava<T> extends WrappedPodMult
         	long[] count1=vector_uint64_to_long(count);
             PodMultiDimArray buffer3 = new PodMultiDimArray(count2, Array.newInstance(mem_type, elemcount));
             mem.read(memorypos1, buffer3, new long[count1.length], count1);
-            return (MessageElementPodMultiDimArray)RobotRaconteurNode.s().packStructure(buffer3);            
+            return (MessageElementNestedElementList)RobotRaconteurNode.s().packStructure(buffer3);            
         }
         catch (Exception e)
         {
@@ -134,7 +134,7 @@ public class WrappedPodMultiDimArrayMemoryDirectorJava<T> extends WrappedPodMult
     }
 
     @Override
-    public void write(vector_uint64_t memorypos, MessageElementPodMultiDimArray buffer, vector_uint64_t bufferpos, vector_uint64_t count)
+    public void write(vector_uint64_t memorypos, MessageElementNestedElementList buffer, vector_uint64_t bufferpos, vector_uint64_t count)
     {
         try
         {

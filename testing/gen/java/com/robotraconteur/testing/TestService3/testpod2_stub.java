@@ -5,20 +5,20 @@ import com.robotraconteur.*;
 public class testpod2_stub extends PodStub<testpod2> {
     public testpod2_stub(com__robotraconteur__testing__TestService3Factory d) {def=d;}
     private com__robotraconteur__testing__TestService3Factory def;
-    public MessageElementPod packPod(RRPod s1) {
+    public MessageElementNestedElementList packPod(RRPod s1) {
     vectorptr_messageelement m=new vectorptr_messageelement();
     try {
     testpod2 s = (testpod2)s1;
     MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<byte[]>packArray("i1",new byte[] {s.i1}));
     MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<byte[]>packArray("i2",DataTypeUtil.verifyArrayLength(s.i2, 15, false)));
     MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<byte[]>packArray("i3",DataTypeUtil.verifyArrayLength(s.i3, 17, true)));
-    return new MessageElementPod(m);
+    return new MessageElementNestedElementList(DataTypes.DataTypes_pod_t,"",m);
     }
     finally {
     m.delete();
     }
     }
-    public testpod2 unpackPod(MessageElementPod m) {
+    public testpod2 unpackPod(MessageElementNestedElementList m) {
     if (m == null ) throw new NullPointerException("Pod must not be null");
     vectorptr_messageelement mm=m.getElements();
     try {

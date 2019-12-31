@@ -11,7 +11,7 @@ public abstract class NamedArrayStub<T,U> implements INamedArrayStub2<T>
     public abstract T[] getNamedArrayFromNumericArray(U m);
 
 
-    public MessageElementNamedArray packNamedArrayToArray(T s2)
+    public MessageElementNestedElementList packNamedArrayToArray(T s2)
     {
     	vectorptr_messageelement mm = new vectorptr_messageelement();
     	try    	
@@ -20,7 +20,7 @@ public abstract class NamedArrayStub<T,U> implements INamedArrayStub2<T>
                 MessageElementUtil.newMessageElementDispose("array", getNumericArrayFromNamedArrayStruct(s2))
                 );
 
-            return new MessageElementNamedArray(getTypeName(), mm);
+            return new MessageElementNestedElementList(DataTypes.DataTypes_namedarray_array_t,getTypeName(), mm);
         }
     	finally
     	{
@@ -28,7 +28,7 @@ public abstract class NamedArrayStub<T,U> implements INamedArrayStub2<T>
     	}
     }
 
-    public MessageElementNamedArray packNamedArray(T[] s2)
+    public MessageElementNestedElementList packNamedArray(T[] s2)
     {
         if (s2 == null) return null;
 
@@ -40,7 +40,7 @@ public abstract class NamedArrayStub<T,U> implements INamedArrayStub2<T>
                 MessageElementUtil.newMessageElementDispose("array", getNumericArrayFromNamedArray(s2))
                 );
             
-            return new MessageElementNamedArray(getTypeName(), mm);
+            return new MessageElementNestedElementList(DataTypes.DataTypes_namedarray_array_t,getTypeName(), mm);
         }
         finally
         {
@@ -48,7 +48,7 @@ public abstract class NamedArrayStub<T,U> implements INamedArrayStub2<T>
         }
     }
 
-    public MessageElementNamedMultiDimArray packNamedMultiDimArray(NamedMultiDimArray s3)
+    public MessageElementNestedElementList packNamedMultiDimArray(NamedMultiDimArray s3)
     {
         if (s3 == null) return null;
         vectorptr_messageelement l = new vectorptr_messageelement();
@@ -56,7 +56,7 @@ public abstract class NamedArrayStub<T,U> implements INamedArrayStub2<T>
         {
             MessageElementUtil.addMessageElementDispose(l, "dims", new UnsignedInts(s3.dims));
             MessageElementUtil.addMessageElementDispose(l, "array", packNamedArray((T[])s3.namedarray_array));
-            return new MessageElementNamedMultiDimArray(getTypeName(), l);
+            return new MessageElementNestedElementList(DataTypes.DataTypes_namedarray_multidimarray_t,getTypeName(), l);
             
         }
         finally
@@ -65,7 +65,7 @@ public abstract class NamedArrayStub<T,U> implements INamedArrayStub2<T>
         }
     }
 
-    public T unpackNamedArrayFromArray(MessageElementNamedArray s2)
+    public T unpackNamedArrayFromArray(MessageElementNestedElementList s2)
     {
         if (!s2.getType().equals(getTypeName())) throw new DataTypeException("namedarray type mismatch");
         vectorptr_messageelement cdataElements = s2.getElements();
@@ -78,7 +78,7 @@ public abstract class NamedArrayStub<T,U> implements INamedArrayStub2<T>
         }
     }
 
-    public T[] unpackNamedArray(MessageElementNamedArray s2)
+    public T[] unpackNamedArray(MessageElementNestedElementList s2)
     {    	
         if (!s2.getType().equals(getTypeName())) throw new DataTypeException("namedarray type mismatch");
         vectorptr_messageelement cdataElements = s2.getElements();
@@ -96,7 +96,7 @@ public abstract class NamedArrayStub<T,U> implements INamedArrayStub2<T>
         }
     }
 
-    public NamedMultiDimArray unpackNamedMultiDimArray(MessageElementNamedMultiDimArray s3)
+    public NamedMultiDimArray unpackNamedMultiDimArray(MessageElementNestedElementList s3)
     {
         if (!s3.getType().equals(getTypeName())) throw new DataTypeException("namedarray type mismatch");
         NamedMultiDimArray o = new NamedMultiDimArray();
@@ -104,7 +104,7 @@ public abstract class NamedArrayStub<T,U> implements INamedArrayStub2<T>
         try        
         {
             o.dims = (MessageElementUtil.<UnsignedInts>findElementAndCast(marrayElements, "dims")).value;
-            MessageElementNamedArray s2 = (MessageElementUtil.<MessageElementNamedArray>findElementAndCast(marrayElements, "array"));
+            MessageElementNestedElementList s2 = (MessageElementUtil.<MessageElementNestedElementList>findElementAndCast(marrayElements, "array"));
             try
             {
                 o.namedarray_array = unpackNamedArray(s2);
@@ -142,23 +142,21 @@ public abstract class NamedArrayStub<T,U> implements INamedArrayStub2<T>
     }
     public Object unpackStructure(MessageElementData m)
     {
-        /*var m2 = m as MessageElementPod;
+        /*var m2 = m as MessageElementNestedElementList;
         if (m2 != null)
         {
             
             return UnpackPod(m2);           
         }*/
 
-        
-        if (m instanceof MessageElementNamedArray)
+        if (((MessageElementData)m).getTypeID() == DataTypes.DataTypes_namedarray_array_t)
         {
-            return unpackNamedArray((MessageElementNamedArray)m);
+            return unpackNamedArray((MessageElementNestedElementList)m);
         }
-
         
-        if (m instanceof MessageElementNamedMultiDimArray)
+        if (((MessageElementData)m).getTypeID() == DataTypes.DataTypes_namedarray_multidimarray_t)
         {
-            return unpackNamedMultiDimArray((MessageElementNamedMultiDimArray)m);
+            return unpackNamedMultiDimArray((MessageElementNestedElementList)m);
         }
 
         throw new DataTypeException("Unexpected message element type for UnpackNamedArray");

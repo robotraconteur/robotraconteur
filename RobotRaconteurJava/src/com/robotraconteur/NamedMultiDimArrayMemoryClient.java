@@ -49,7 +49,7 @@ public class NamedMultiDimArrayMemoryClient<T> extends NamedMultiDimArrayMemory<
         }
 
         @Override
-        public void unpackReadResult(MessageElementNamedMultiDimArray res, vector_uint64_t bufferpos, vector_uint64_t count)
+        public void unpackReadResult(MessageElementNestedElementList res, vector_uint64_t bufferpos, vector_uint64_t count)
         {        	
             try
             {
@@ -63,7 +63,7 @@ public class NamedMultiDimArrayMemoryClient<T> extends NamedMultiDimArrayMemory<
         }
 
         @Override
-        public MessageElementNamedMultiDimArray packWriteRequest(vector_uint64_t bufferpos, vector_uint64_t count)
+        public MessageElementNestedElementList packWriteRequest(vector_uint64_t bufferpos, vector_uint64_t count)
         {            
         	int elemcount = 1;
         	for (int i=0; i<count.size(); i++)
@@ -78,7 +78,7 @@ public class NamedMultiDimArrayMemoryClient<T> extends NamedMultiDimArrayMemory<
         	
             NamedMultiDimArray o = new NamedMultiDimArray(count1, o_array);
             buffer.retrieveSubArray(bufferpos1, o, new int[buffer.dims.length], count1);
-            return (MessageElementNamedMultiDimArray)RobotRaconteurNode.s().packStructure(o);
+            return (MessageElementNestedElementList)RobotRaconteurNode.s().packStructure(o);
             
         }
     }

@@ -1388,7 +1388,7 @@ namespace RobotRaconteurGen
 		w2 << "public class " + fix_name(e->Name) + "_stub implements IStructureStub {" << endl;
 		w2 << "    public " + fix_name(e->Name) + "_stub(" + boost::replace_all_copy(fix_name(e->ServiceDefinition_.lock()->Name),".","__") + "Factory d) {def=d;}" << endl;
 		w2 << "    private " + boost::replace_all_copy(fix_name(e->ServiceDefinition_.lock()->Name),".","__") + "Factory def;" << endl;
-		w2 << "    public MessageElementStructure packStructure(Object s1) {" << endl;
+		w2 << "    public MessageElementNestedElementList packStructure(Object s1) {" << endl;
 		
 		w2 << "    vectorptr_messageelement m=new vectorptr_messageelement();" << endl;
 		w2 << "    try {" << endl;
@@ -1397,7 +1397,7 @@ namespace RobotRaconteurGen
 		MEMBER_ITER2(PropertyDefinition)
 		w2 << "    MessageElementUtil.addMessageElementDispose(m," + str_pack_message_element(m->Name, "s." + fix_name(m->Name), m->Type, "def") + ");" << endl;
 		MEMBER_ITER_END()
-		w2 << "    return new MessageElementStructure(\"" + e->ServiceDefinition_.lock()->Name + "." + e->Name + "\",m);" << endl;
+		w2 << "    return new MessageElementNestedElementList(DataTypes.DataTypes_structure_t,\"" + e->ServiceDefinition_.lock()->Name + "." + e->Name + "\",m);" << endl;
 		w2 << "    }" << endl;
 		w2 << "    finally {" << endl;
 		w2 << "    m.delete();" << endl;
@@ -1409,7 +1409,7 @@ namespace RobotRaconteurGen
 		w2 << "    public <T> T unpackStructure(MessageElementData m) {" << endl;
 
 		w2 << "    if (m == null ) return null;" << endl;
-		w2 << "    MessageElementStructure m2 = (MessageElementStructure)m;" << endl;
+		w2 << "    MessageElementNestedElementList m2 = (MessageElementNestedElementList)m;" << endl;
 		w2 << "    vectorptr_messageelement mm=m2.getElements();" << endl;
 		w2 << "    try {" << endl;
 		w2 << "    " + fix_name(e->Name) + " s=new " + fix_name(e->Name) + "();" << endl;
@@ -1440,7 +1440,7 @@ namespace RobotRaconteurGen
 		w2 << "public class " + fix_name(e->Name) + "_stub extends PodStub<" << fix_name(e->Name) << "> {" << endl;
 		w2 << "    public " + fix_name(e->Name) + "_stub(" + boost::replace_all_copy(fix_name(e->ServiceDefinition_.lock()->Name), ".", "__") + "Factory d) {def=d;}" << endl;
 		w2 << "    private " + boost::replace_all_copy(fix_name(e->ServiceDefinition_.lock()->Name), ".", "__") + "Factory def;" << endl;
-		w2 << "    public MessageElementPod packPod(RRPod s1) {" << endl;
+		w2 << "    public MessageElementNestedElementList packPod(RRPod s1) {" << endl;
 		w2 << "    vectorptr_messageelement m=new vectorptr_messageelement();" << endl;
 		w2 << "    try {" << endl;		
 		w2 << "    " + fix_qualified_name(e->Name) + " s = (" + fix_qualified_name(e->Name) + ")s1;" << endl;
@@ -1448,7 +1448,7 @@ namespace RobotRaconteurGen
 			RR_SHARED_PTR<TypeDefinition> t2 = JavaServiceLangGen_RemoveMultiDimArray(*m->Type);
 		w2 << "    MessageElementUtil.addMessageElementDispose(m," + str_pack_message_element(m->Name, "s." + fix_name(m->Name), t2, "def") + ");" << endl;
 		MEMBER_ITER_END()
-			w2 << "    return new MessageElementPod(m);" << endl;
+			w2 << "    return new MessageElementNestedElementList(DataTypes.DataTypes_pod_t,\"\",m);" << endl;
 		w2 << "    }" << endl;
 		w2 << "    finally {" << endl;
 		w2 << "    m.delete();" << endl;
@@ -1457,7 +1457,7 @@ namespace RobotRaconteurGen
 
 
 		//Write Read
-		w2 << "    public " << fix_name(e->Name) << " unpackPod(MessageElementPod m) {" << endl;
+		w2 << "    public " << fix_name(e->Name) << " unpackPod(MessageElementNestedElementList m) {" << endl;
 
 		w2 << "    if (m == null ) throw new NullPointerException(\"Pod must not be null\");" << endl;
 		w2 << "    vectorptr_messageelement mm=m.getElements();" << endl;

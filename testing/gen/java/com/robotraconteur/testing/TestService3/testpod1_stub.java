@@ -5,7 +5,7 @@ import com.robotraconteur.*;
 public class testpod1_stub extends PodStub<testpod1> {
     public testpod1_stub(com__robotraconteur__testing__TestService3Factory d) {def=d;}
     private com__robotraconteur__testing__TestService3Factory def;
-    public MessageElementPod packPod(RRPod s1) {
+    public MessageElementNestedElementList packPod(RRPod s1) {
     vectorptr_messageelement m=new vectorptr_messageelement();
     try {
     testpod1 s = (testpod1)s1;
@@ -21,13 +21,13 @@ public class testpod1_stub extends PodStub<testpod1> {
     MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<transform>packNamedArray("t2",DataTypeUtil.verifyArrayLength(s.t2, 4, false)));
     MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<transform>packNamedArray("t3",DataTypeUtil.verifyArrayLength(s.t3, 15, true)));
     MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<transform>packNamedArray("t4",DataTypeUtil.verifyArrayLength(s.t4, 8, false)));
-    return new MessageElementPod(m);
+    return new MessageElementNestedElementList(DataTypes.DataTypes_pod_t,"",m);
     }
     finally {
     m.delete();
     }
     }
-    public testpod1 unpackPod(MessageElementPod m) {
+    public testpod1 unpackPod(MessageElementNestedElementList m) {
     if (m == null ) throw new NullPointerException("Pod must not be null");
     vectorptr_messageelement mm=m.getElements();
     try {

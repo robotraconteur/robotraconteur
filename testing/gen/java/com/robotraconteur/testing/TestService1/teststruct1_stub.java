@@ -5,7 +5,7 @@ import com.robotraconteur.*;
 public class teststruct1_stub implements IStructureStub {
     public teststruct1_stub(com__robotraconteur__testing__TestService1Factory d) {def=d;}
     private com__robotraconteur__testing__TestService1Factory def;
-    public MessageElementStructure packStructure(Object s1) {
+    public MessageElementNestedElementList packStructure(Object s1) {
     vectorptr_messageelement m=new vectorptr_messageelement();
     try {
     if (s1 ==null) return null;
@@ -20,7 +20,7 @@ public class teststruct1_stub implements IStructureStub {
     MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<teststruct2>packListType("lstruct3",s.lstruct3,teststruct2.class));
     MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.packMultiDimArray("multidimarray",(MultiDimArray)s.multidimarray));
     MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.packVarType("var3",s.var3));
-    return new MessageElementStructure("com.robotraconteur.testing.TestService1.teststruct1",m);
+    return new MessageElementNestedElementList(DataTypes.DataTypes_structure_t,"com.robotraconteur.testing.TestService1.teststruct1",m);
     }
     finally {
     m.delete();
@@ -28,7 +28,7 @@ public class teststruct1_stub implements IStructureStub {
     }
     public <T> T unpackStructure(MessageElementData m) {
     if (m == null ) return null;
-    MessageElementStructure m2 = (MessageElementStructure)m;
+    MessageElementNestedElementList m2 = (MessageElementNestedElementList)m;
     vectorptr_messageelement mm=m2.getElements();
     try {
     teststruct1 s=new teststruct1();

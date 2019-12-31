@@ -12,7 +12,7 @@ public abstract class PodStub<T> implements IPodStub
                 MessageElementUtil.addMessageElementDispose(mm,
                     MessageElementUtil.newMessageElementDispose(0, packPod((RRPod)s))
                     );	            
-	            return new MessageElementPodArray(getTypeName(), mm);            
+	            return new MessageElementNestedElementList(DataTypes.DataTypes_pod_array_t,getTypeName(), mm);            
 			}
 			finally
 			{
@@ -38,11 +38,11 @@ public abstract class PodStub<T> implements IPodStub
 		switch (m.getTypeID())
 		{
 		case DataTypes_pod_t:
-			return unpackPod((MessageElementPod)m);
+			return unpackPod((MessageElementNestedElementList)m);
 		case DataTypes_pod_array_t:
-			return unpackPodArray((MessageElementPodArray)m);
+			return unpackPodArray((MessageElementNestedElementList)m);
 		case DataTypes_pod_multidimarray_t:
-			return unpackPodMultiDimArray((MessageElementPodMultiDimArray)m);
+			return unpackPodMultiDimArray((MessageElementNestedElementList)m);
 		default:
 			break;		
 		}
@@ -50,7 +50,7 @@ public abstract class PodStub<T> implements IPodStub
 		throw new RuntimeException("Invalid pod data type");
 	}
 	
-	protected MessageElementPodArray packPodArray(RRPod[] s2)
+	protected MessageElementNestedElementList packPodArray(RRPod[] s2)
 	{
 		vectorptr_messageelement mm = new vectorptr_messageelement();
 		try
@@ -61,7 +61,7 @@ public abstract class PodStub<T> implements IPodStub
                     MessageElementUtil.newMessageElementDispose(i, packPod(s2[i]))
                     );
             }
-            return new MessageElementPodArray(getTypeName(), mm);            
+            return new MessageElementNestedElementList(DataTypes.DataTypes_pod_array_t,getTypeName(), mm);            
 		}
 		finally
 		{
@@ -69,7 +69,7 @@ public abstract class PodStub<T> implements IPodStub
 		}		
 	}
 	
-	protected T[] unpackPodArray(MessageElementPodArray s2)
+	protected T[] unpackPodArray(MessageElementNestedElementList s2)
 	{
 		if (!s2.getTypeString().equals(getTypeName())) throw new DataTypeException("pod type mismatch");
         int count = 0;
@@ -82,7 +82,7 @@ public abstract class PodStub<T> implements IPodStub
                try
                 {
                     if (count != MessageElementUtil.getMessageElementNumber(e)) throw new DataTypeException("Error in list format");
-                    MessageElementPod md = (MessageElementPod)e.getData();
+                    MessageElementNestedElementList md = (MessageElementNestedElementList)e.getData();
                     try
                     {
                         o[count] = unpackPod(md);                            
@@ -106,7 +106,7 @@ public abstract class PodStub<T> implements IPodStub
         }
 	}
 	
-	public MessageElementPodMultiDimArray packPodMultiDimArray(PodMultiDimArray s3)
+	public MessageElementNestedElementList packPodMultiDimArray(PodMultiDimArray s3)
     {
         if (s3 == null) return null;
         vectorptr_messageelement l = new vectorptr_messageelement();
@@ -118,7 +118,7 @@ public abstract class PodStub<T> implements IPodStub
             try
             {
                 MessageElementUtil.addMessageElementDispose(l, "array", s4);
-                return new MessageElementPodMultiDimArray(getTypeName(), l);
+                return new MessageElementNestedElementList(DataTypes.DataTypes_pod_multidimarray_t,getTypeName(), l);
             }
             finally
             {
@@ -131,7 +131,7 @@ public abstract class PodStub<T> implements IPodStub
         }
     }
 	
-	public PodMultiDimArray unpackPodMultiDimArray(MessageElementPodMultiDimArray s3)
+	public PodMultiDimArray unpackPodMultiDimArray(MessageElementNestedElementList s3)
     {
         if (!s3.getTypeString().equals(getTypeName())) throw new DataTypeException("pod type mismatch");
         PodMultiDimArray o = new PodMultiDimArray();
@@ -139,7 +139,7 @@ public abstract class PodStub<T> implements IPodStub
         try
         {
             o.dims = (MessageElementUtil.<UnsignedInts>findElementAndCast(marrayElements, "dims")).value;
-            MessageElementPodArray s2 = (MessageElementUtil.<MessageElementPodArray>findElementAndCast(marrayElements, "array"));
+            MessageElementNestedElementList s2 = (MessageElementUtil.<MessageElementNestedElementList>findElementAndCast(marrayElements, "array"));
             try            
             {
                 o.pod_array = unpackPodArray(s2);
@@ -157,8 +157,8 @@ public abstract class PodStub<T> implements IPodStub
     }
 	
 	
-	public abstract MessageElementPod packPod(RRPod s1);
-	public abstract T unpackPod(MessageElementPod m);
+	public abstract MessageElementNestedElementList packPod(RRPod s1);
+	public abstract T unpackPod(MessageElementNestedElementList m);
 	public abstract String getTypeName();
 	protected abstract T[] createArray(int count); 
 }

@@ -17,14 +17,14 @@ public class NamedArrayMemoryClient<T> extends NamedArrayMemory<T> {
         }
 
         @Override
-        public void unpackReadResult(MessageElementNamedArray res, java.math.BigInteger bufferpos, java.math.BigInteger count)
+        public void unpackReadResult(MessageElementNestedElementList res, java.math.BigInteger bufferpos, java.math.BigInteger count)
         {
             T res1 = (T)RobotRaconteurNode.s().unpackStructureDispose(res);
             System.arraycopy(res1, 0, buffer, bufferpos.intValue(), count.intValue());
         }
 
         @Override
-        public MessageElementNamedArray packWriteRequest(java.math.BigInteger bufferpos, java.math.BigInteger count)
+        public MessageElementNestedElementList packWriteRequest(java.math.BigInteger bufferpos, java.math.BigInteger count)
         {
             T buffer3;            
             if ((long)Array.getLength(buffer) == count.longValue())
@@ -36,7 +36,7 @@ public class NamedArrayMemoryClient<T> extends NamedArrayMemory<T> {
             	buffer3=(T)Array.newInstance(buffer.getClass().getComponentType(),count.intValue());                
                 System.arraycopy(buffer, bufferpos.intValue(), buffer3, 0, count.intValue());
             }
-            return (MessageElementNamedArray)RobotRaconteurNode.s().packStructure(buffer3);
+            return (MessageElementNestedElementList)RobotRaconteurNode.s().packStructure(buffer3);
         }
     }
 

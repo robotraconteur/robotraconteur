@@ -99,7 +99,7 @@ public class WrappedNamedMultiDimArrayMemoryDirectorJava<T> extends WrappedNamed
     }
 
     @Override
-    public MessageElementNamedMultiDimArray read(vector_uint64_t memorypos, vector_uint64_t bufferpos, vector_uint64_t count)
+    public MessageElementNestedElementList read(vector_uint64_t memorypos, vector_uint64_t bufferpos, vector_uint64_t count)
     {
     	int elemcount = 1;
     	int[] count2=new int[count.size()];
@@ -115,7 +115,7 @@ public class WrappedNamedMultiDimArrayMemoryDirectorJava<T> extends WrappedNamed
         	long[] count1=vector_uint64_to_long(count);
             NamedMultiDimArray buffer3 = new NamedMultiDimArray(count2, Array.newInstance(mem_type, elemcount));
             mem.read(memorypos1, buffer3, new long[count1.length], count1);
-            return (MessageElementNamedMultiDimArray)RobotRaconteurNode.s().packStructure(buffer3);            
+            return (MessageElementNestedElementList)RobotRaconteurNode.s().packStructure(buffer3);            
         }
         catch (Exception e)
         {
@@ -134,7 +134,7 @@ public class WrappedNamedMultiDimArrayMemoryDirectorJava<T> extends WrappedNamed
     }
 
     @Override
-    public void write(vector_uint64_t memorypos, MessageElementNamedMultiDimArray buffer, vector_uint64_t bufferpos, vector_uint64_t count)
+    public void write(vector_uint64_t memorypos, MessageElementNestedElementList buffer, vector_uint64_t bufferpos, vector_uint64_t count)
     {
         try
         {

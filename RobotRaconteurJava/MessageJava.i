@@ -55,25 +55,7 @@ public MessageElement(String name, Object data)
           throw new RuntimeException(new DataTypeException("Unknown RRArray type"));
               
       }
-      a = MessageElementDataUtil.toMessageElementStructure(val);
-      if (a != null) return a;
-      a = MessageElementDataUtil.toMessageElementMap_int32_t(val);
-      if (a != null) return a;
-      a = MessageElementDataUtil.toMessageElementMap_string(val);
-      if (a != null) return a;
-	  a = MessageElementDataUtil.toMessageElementList(val);
-      if (a != null) return a;
-      a = MessageElementDataUtil.toMessageElementMultiDimArray(val);
-      if (a != null) return a;
-	  a = MessageElementDataUtil.toMessageElementPod(val);
-      if (a != null) return a;
-	  a = MessageElementDataUtil.toMessageElementPodArray(val);
-      if (a != null) return a;
-	  a = MessageElementDataUtil.toMessageElementPodMultiDimArray(val);
-      if (a != null) return a;
-	  a = MessageElementDataUtil.toMessageElementNamedArray(val);
-      if (a != null) return a;
-	  a = MessageElementDataUtil.toMessageElementNamedMultiDimArray(val);
+      a = MessageElementDataUtil.toMessageElementNestedElementList(val);
       if (a != null) return a;
       throw new RuntimeException(new DataTypeException( "Unknown data type"));
 	}

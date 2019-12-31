@@ -5,13 +5,13 @@ import com.robotraconteur.*;
 public class ostruct2_stub implements IStructureStub {
     public ostruct2_stub(com__robotraconteur__testing__TestService2Factory d) {def=d;}
     private com__robotraconteur__testing__TestService2Factory def;
-    public MessageElementStructure packStructure(Object s1) {
+    public MessageElementNestedElementList packStructure(Object s1) {
     vectorptr_messageelement m=new vectorptr_messageelement();
     try {
     if (s1 ==null) return null;
     ostruct2 s = (ostruct2)s1;
     MessageElementUtil.addMessageElementDispose(m,MessageElementUtil.<double[]>packArray("a1",s.a1));
-    return new MessageElementStructure("com.robotraconteur.testing.TestService2.ostruct2",m);
+    return new MessageElementNestedElementList(DataTypes.DataTypes_structure_t,"com.robotraconteur.testing.TestService2.ostruct2",m);
     }
     finally {
     m.delete();
@@ -19,7 +19,7 @@ public class ostruct2_stub implements IStructureStub {
     }
     public <T> T unpackStructure(MessageElementData m) {
     if (m == null ) return null;
-    MessageElementStructure m2 = (MessageElementStructure)m;
+    MessageElementNestedElementList m2 = (MessageElementNestedElementList)m;
     vectorptr_messageelement mm=m2.getElements();
     try {
     ostruct2 s=new ostruct2();

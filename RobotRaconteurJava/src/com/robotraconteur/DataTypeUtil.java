@@ -76,14 +76,8 @@ public class DataTypeUtil {
                 return DataTypes.DataTypes_csingle_t;
             if(stype.equals( "class [java.lang.Boolean") || stype.equals("class java.lang.Boolean"))
                 return DataTypes.DataTypes_bool_t;            
-            if(stype.equals( "com.robotraconteur.MessageElementStructure"))
-                return DataTypes.DataTypes_structure_t;
-            if(stype.equals("com.robotraconteur.MessageElementMap_int32_t"))
-                return DataTypes.DataTypes_vector_t;
-            if (stype.equals( "com.robotraconteur.MessageElementMap_string"))
-                return DataTypes.DataTypes_dictionary_t;
-            if(stype.equals( "com.robotraconteur.MessageElementMultiDimArray"))
-                return DataTypes.DataTypes_multidimarray_t;
+            if(stype.equals( "com.robotraconteur.MessageElementNestedElementList"))
+                return DataTypes.DataTypes_namedtype_t;
             if(stype.equals( "class java.lang.Object"))
                 return DataTypes.DataTypes_varvalue_t;
 
@@ -129,13 +123,7 @@ public class DataTypeUtil {
                 
             if(stype.equals( "class [java.lang.Boolean") || stype.equals("class java.lang.Boolean")) return true;
                          
-            if(stype.equals( "com.robotraconteur.MessageElementStructure")) return true;
-                
-            if(stype.equals( "com.robotraconteur.MessageElementMap_int32_t")) return true;
-                
-            if(stype.equals( "com.robotraconteur.MessageElementMap_string")) return true;
-               
-            if(stype.equals( "com.robotraconteur.MessageElementMultiDimArray")) return true;
+            if(stype.equals( "com.robotraconteur.MessageElementNestedElementList")) return true;
                 
             if(stype.equals( "class java.lang.Object"))
                 return true;

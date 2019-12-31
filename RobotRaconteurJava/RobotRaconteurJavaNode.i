@@ -426,14 +426,14 @@ import java.util.*;
             case DataTypes_string_t:
                 return (T)e.getData();
 			case DataTypes_multidimarray_t:                
-				return (T)unpackMultiDimArrayDispose((MessageElementMultiDimArray)e.getData());
+				return (T)unpackMultiDimArrayDispose((MessageElementNestedElementList)e.getData());
 			case DataTypes_pod_t:
 			{
 				vectorptr_messageelement m = new vectorptr_messageelement();
 				try
 				{			
 					m.add(e);
-					return (T)unpackStructureDispose(new MessageElementPodArray(e.getElementTypeName(),m));
+					return (T)unpackStructureDispose(new MessageElementNestedElementList(DataTypes.DataTypes_pod_array_t,e.getElementTypeName(),m));
 				}
 				finally
 				{
@@ -471,7 +471,7 @@ import java.util.*;
 				MessageElementUtil.addMessageElementDispose(m,packContainerValue((Integer)d.getKey(), d.getValue(), Tvalue_class));
 			}	
 
-			return new MessageElementMap_int32_t(m);
+			return new MessageElementNestedElementList(DataTypes.DataTypes_vector_t,"",m);
 			}
 			finally
 			{
@@ -492,7 +492,7 @@ import java.util.*;
 				MessageElementUtil.addMessageElementDispose(m,packContainerValue((String)d.getKey(), d.getValue(), Tvalue_class));					
 			}
 			
-			return new MessageElementMap_string(m);
+			return new MessageElementNestedElementList(DataTypes.DataTypes_dictionary_t,"",m);
 			}
 			finally
 			{
@@ -512,11 +512,11 @@ import java.util.*;
 			return null;
 		}
 
-		if (data instanceof MessageElementMap_int32_t)
+		if (((MessageElementData)data).getTypeID() == DataTypes.DataTypes_vector_t)
 		{
 			java.util.HashMap<Integer, Tvalue> o = new java.util.HashMap<Integer, Tvalue>();
 
-			MessageElementMap_int32_t cdata = (MessageElementMap_int32_t)data;
+			MessageElementNestedElementList cdata = (MessageElementNestedElementList)data;
 			vectorptr_messageelement m=cdata.getElements();
 			try
 			{
@@ -539,11 +539,11 @@ import java.util.*;
 				if (m!=null) m.delete();
 			}
 		}
-		else if (data instanceof MessageElementMap_string)
+		else if (((MessageElementData)data).getTypeID() == DataTypes.DataTypes_string_t)
 		{
 			java.util.HashMap<String, Tvalue> o = new java.util.HashMap<String, Tvalue>();
 
-			MessageElementMap_string cdata = (MessageElementMap_string)data;
+			MessageElementNestedElementList cdata = (MessageElementNestedElementList)data;
 			vectorptr_messageelement m=cdata.getElements();
 			try
 			{
@@ -614,7 +614,7 @@ import java.util.*;
 			count++;
 		}						
 
-		return new MessageElementList(m);
+		return new MessageElementNestedElementList(DataTypes.DataTypes_list_t,"",m);
 		}
 		finally
 		{
@@ -634,7 +634,7 @@ import java.util.*;
 		
 			java.util.List<Tvalue> o = new java.util.ArrayList<Tvalue>();
 
-			MessageElementList cdata = (MessageElementList)data;
+			MessageElementNestedElementList cdata = (MessageElementNestedElementList)data;
 			
 			vectorptr_messageelement m=cdata.getElements();
 			try
@@ -802,14 +802,14 @@ import java.util.*;
             case DataTypes_string_t:
                 return me.getData();
 			case DataTypes_multidimarray_t:                
-				return unpackMultiDimArrayDispose((MessageElementMultiDimArray)me.getData());            
+				return unpackMultiDimArrayDispose((MessageElementNestedElementList)me.getData());            
 			case DataTypes_pod_t:
 			{
 				vectorptr_messageelement m = new vectorptr_messageelement();
 				try
 				{			
 					m.add(me);
-					return (Object)unpackStructureDispose(new MessageElementPodArray(me.getElementTypeName(),m));
+					return (Object)unpackStructureDispose(new MessageElementNestedElementList(DataTypes.DataTypes_pod_array_t,me.getElementTypeName(),m));
 				}
 				finally
 				{
@@ -854,12 +854,12 @@ import java.util.*;
 	
 	
 	/** 
-	 Packs a MultiDimArray into a MessageElementMultiDimArray
+	 Packs a MultiDimArray into a MessageElementNestedElementList
 	 
 	 @param array The array to be packed
 	 @return A packed array for use with MessageElement.Data
 	*/
-	public final MessageElementMultiDimArray packMultiDimArray(MultiDimArray array)
+	public final MessageElementNestedElementList packMultiDimArray(MultiDimArray array)
 	{
 		if (array == null)
 		{
@@ -871,7 +871,7 @@ import java.util.*;
 		MessageElementUtil.addMessageElementDispose(l,"dims", new UnsignedInts(array.dims));		
 		MessageElementUtil.addMessageElementDispose(l,"array", array.array);
 		
-		return new MessageElementMultiDimArray(l);
+		return new MessageElementNestedElementList(DataTypes.DataTypes_multidimarray_t,"",l);
 		}
 		finally
 		{
@@ -882,12 +882,12 @@ import java.util.*;
 	}
 
 	/** 
-	 Unpacks a MessageElementMultiDimArray and returns unpacked multidim array
+	 Unpacks a MessageElementNestedElementList and returns unpacked multidim array
 	 
-	 @param marray The MessageElementMultiDimArray to unpack
+	 @param marray The MessageElementNestedElementList to unpack
 	 @return The unpacked multidim array
 	*/
-	public final MultiDimArray unpackMultiDimArray(MessageElementMultiDimArray marray)
+	public final MultiDimArray unpackMultiDimArray(MessageElementNestedElementList marray)
 	{
 		if (marray == null)
 		{
@@ -910,7 +910,7 @@ import java.util.*;
 
 	}
 
-	public final MultiDimArray unpackMultiDimArrayDispose(MessageElementMultiDimArray marray)
+	public final MultiDimArray unpackMultiDimArrayDispose(MessageElementNestedElementList marray)
 	{
 		try
 		{
