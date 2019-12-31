@@ -16,23 +16,11 @@
 
 
 
-%rr_intrusive_ptr(RobotRaconteur::MessageElementMap<int32_t>)
-%rr_intrusive_ptr(RobotRaconteur::MessageElementMap<std::string>)
-%rr_intrusive_ptr(RobotRaconteur::MessageElementList)
-
-
-
 %rr_intrusive_ptr(RobotRaconteur::Message)
 %rr_intrusive_ptr(RobotRaconteur::MessageEntry)
 %rr_intrusive_ptr(RobotRaconteur::MessageHeader)
 %rr_intrusive_ptr(RobotRaconteur::MessageElement)
-%rr_intrusive_ptr(RobotRaconteur::MessageElementStructure)
-%rr_intrusive_ptr(RobotRaconteur::MessageElementMultiDimArray)
-%rr_intrusive_ptr(RobotRaconteur::MessageElementPod)
-%rr_intrusive_ptr(RobotRaconteur::MessageElementPodArray)
-%rr_intrusive_ptr(RobotRaconteur::MessageElementPodMultiDimArray)
-%rr_intrusive_ptr(RobotRaconteur::MessageElementNamedArray)
-%rr_intrusive_ptr(RobotRaconteur::MessageElementNamedMultiDimArray)
+%rr_intrusive_ptr(RobotRaconteur::MessageElementNestedElementList)
 
 //Message
 
@@ -77,11 +65,11 @@ public:
 	MessageFragmentHeader FragmentHeader;
 	uint32_t SenderEndpoint;
 	uint32_t ReceiverEndpoint;
-	std::string SenderNodeName;
-	std::string ReceiverNodeName;
+	MessageStringPtr SenderNodeName;
+	MessageStringPtr ReceiverNodeName;
 	NodeID SenderNodeID;
 	NodeID ReceiverNodeID;
-	std::string MetaData;
+	MessageStringPtr MetaData;
 	uint16_t EntryCount;
 	uint16_t MessageID;
 	uint16_t MessageResID;
@@ -102,13 +90,13 @@ public:
 	uint32_t EntrySize;
 	uint8_t EntryFlags;
 	MessageEntryType EntryType;
-	std::string ServicePath;
-	std::string MemberName;
+	MessageStringPtr ServicePath;
+	MessageStringPtr MemberName;
 	uint32_t MemberNameCode;
 	uint64_t EntryStreamID;
 	uint32_t RequestID;
 	MessageErrorType Error;
-	std::string MetaData;
+	MessageStringPtr MetaData;
 	TimeSpec EntryTimeSpec;
 	std::vector<boost::intrusive_ptr<RobotRaconteur::MessageElement> > elements;
 	MessageEntry();
@@ -131,14 +119,14 @@ class MessageElement : public virtual RRValue
 public:
 	uint32_t ElementSize;
 	uint8_t ElementFlags;
-	std::string ElementName;
+	MessageStringPtr ElementName;
 	uint32_t ElementNameCode;
 	int32_t ElementNumber;
 	DataTypes ElementType;
-	std::string ElementTypeName;
+	MessageStringPtr ElementTypeName;
 	uint32_t ElementTypeNameCode;
 	uint32_t SequenceNumber;
-	std::string MetaData;
+	MessageStringPtr MetaData;
 	uint32_t DataCount;
 	MessageElement();
 	//MessageElement(std::string name, boost::intrusive_ptr<RobotRaconteur::MessageElementData> datin);
@@ -157,105 +145,23 @@ public:
 	static bool ContainsElement(std::vector<boost::intrusive_ptr<RobotRaconteur::MessageElement> > &m, const std::string& name);
 };
 
-
-
-
-class  MessageElementStructure : public virtual MessageElementData
+class MessageElementNestedElementList : public MessageElementData
 {
 public:
 
-	std::string Type;
+	DataTypes Type;
+	MessageStringPtr TypeName;
 	std::vector<boost::intrusive_ptr<MessageElement> > Elements;
-	MessageElementStructure(const std::string& type_, std::vector<boost::intrusive_ptr<MessageElement> > &elements_);
-	virtual std::string GetTypeString();
-	virtual DataTypes GetTypeID();
-};
-
-class MessageElementMultiDimArray  : public virtual MessageElementData
-{
-public:
-	std::vector<boost::intrusive_ptr<MessageElement> > Elements;
-	MessageElementMultiDimArray(std::vector<boost::intrusive_ptr<MessageElement> > &e);
-	virtual std::string GetTypeString();
-	virtual DataTypes GetTypeID();
-};
-
-template<class T>
-class MessageElementMap : public virtual MessageElementData
-{
-public:
-	std::vector<boost::intrusive_ptr<MessageElement> > Elements;
-	MessageElementMap(std::vector<boost::intrusive_ptr<MessageElement> >& e);
-	virtual std::string GetTypeString();
-	virtual DataTypes GetTypeID();
-};
-
-class MessageElementList : public virtual MessageElementData
-{
-public:
-	std::vector<boost::intrusive_ptr<MessageElement> > Elements;
-	MessageElementList(std::vector<boost::intrusive_ptr<MessageElement> >& e);
-	virtual std::string GetTypeString();
-	virtual DataTypes GetTypeID();
-};
-
-class MessageElementPod : public MessageElementData
-{
-public:
 	
-	std::vector<boost::intrusive_ptr<MessageElement> > Elements;
+	MessageElementNestedElementList(DataTypes type_, const std::string& type_name_, const std::vector<boost::intrusive_ptr<MessageElement> > &elements_);
 
-	MessageElementPod(const std::vector<boost::intrusive_ptr<MessageElement> > &elements_);
-	virtual std::string GetTypeString();		
+	virtual MessageStringPtr GetTypeString();
 	virtual DataTypes GetTypeID();		
-};
-
-class MessageElementPodArray : public MessageElementData
-{
-public:
-
-	std::string Type;
-	std::vector<boost::intrusive_ptr<MessageElement> > Elements;
-	MessageElementPodArray(const std::string& type_, const std::vector<boost::intrusive_ptr<MessageElement> > &elements_);
-	virtual std::string GetTypeString();	
-	virtual DataTypes GetTypeID();	
-};
-
-class MessageElementPodMultiDimArray : public MessageElementData
-{
-public:
-	std::string Type;
-	std::vector<boost::intrusive_ptr<MessageElement> > Elements;
-	MessageElementPodMultiDimArray(const std::string& type_, const std::vector<boost::intrusive_ptr<MessageElement> > &elements_);
-	virtual std::string GetTypeString();	
-	virtual DataTypes GetTypeID();	
-};
-
-class MessageElementNamedArray : public MessageElementData
-{
-public:
-
-	std::string Type;
-	std::vector<boost::intrusive_ptr<MessageElement> > Elements;
-	MessageElementNamedArray(const std::string& type_, const std::vector<boost::intrusive_ptr<MessageElement> > &elements_);
-	virtual std::string GetTypeString();	
-	virtual DataTypes GetTypeID();	
-};
-
-class MessageElementNamedMultiDimArray : public MessageElementData
-{
-public:
-	std::string Type;
-	std::vector<boost::intrusive_ptr<MessageElement> > Elements;
-	MessageElementNamedMultiDimArray(const std::string& type_, const std::vector<boost::intrusive_ptr<MessageElement> > &elements_);
-	virtual std::string GetTypeString();	
-	virtual DataTypes GetTypeID();	
+	virtual boost::string_ref RRType();
 };
 
 }
 
-%template(MessageElementMap_int32_t) RobotRaconteur::MessageElementMap<int32_t>;
-%template(MessageElementMap_string) RobotRaconteur::MessageElementMap<std::string>;
 
 %inline
 {
@@ -268,55 +174,11 @@ public:
 		return boost::dynamic_pointer_cast<RRBaseArray>(m);
 	}
 		
-	static boost::intrusive_ptr<RobotRaconteur::MessageElementStructure> ToMessageElementStructure(boost::intrusive_ptr<RobotRaconteur::MessageElementData> m)
+	static boost::intrusive_ptr<RobotRaconteur::MessageElementNestedElementList> ToMessageElementNestedElementList(boost::intrusive_ptr<RobotRaconteur::MessageElementData> m)
 	{
-		return boost::dynamic_pointer_cast<MessageElementStructure>(m);
+		return boost::dynamic_pointer_cast<MessageElementNestedElementList>(m);
 	}
 
-	static boost::intrusive_ptr<RobotRaconteur::MessageElementMap<int32_t> > ToMessageElementMap_int32_t(boost::intrusive_ptr<RobotRaconteur::MessageElementData> m)
-	{
-		return boost::dynamic_pointer_cast<MessageElementMap<int32_t> >(m);
-	}
-
-	static boost::intrusive_ptr<RobotRaconteur::MessageElementMap<std::string> > ToMessageElementMap_string(boost::intrusive_ptr<RobotRaconteur::MessageElementData> m)
-	{
-		return boost::dynamic_pointer_cast<MessageElementMap<std::string> >(m);
-	}
-
-	static boost::intrusive_ptr<RobotRaconteur::MessageElementList > ToMessageElementList(boost::intrusive_ptr<RobotRaconteur::MessageElementData> m)
-	{
-		return boost::dynamic_pointer_cast<MessageElementList >(m);
-	}
-	
-	static boost::intrusive_ptr<RobotRaconteur::MessageElementMultiDimArray> ToMessageElementMultiDimArray(boost::intrusive_ptr<RobotRaconteur::MessageElementData> m)
-	{
-		return boost::dynamic_pointer_cast<MessageElementMultiDimArray>(m);
-	}
-	
-	static boost::intrusive_ptr<RobotRaconteur::MessageElementPod> ToMessageElementPod(boost::intrusive_ptr<RobotRaconteur::MessageElementData> m)
-	{
-		return boost::dynamic_pointer_cast<MessageElementPod>(m);
-	}
-
-	static boost::intrusive_ptr<RobotRaconteur::MessageElementPodArray> ToMessageElementPodArray(boost::intrusive_ptr<RobotRaconteur::MessageElementData> m)
-	{
-		return boost::dynamic_pointer_cast<MessageElementPodArray>(m);
-	}
-
-	static boost::intrusive_ptr<RobotRaconteur::MessageElementPodMultiDimArray> ToMessageElementPodMultiDimArray(boost::intrusive_ptr<RobotRaconteur::MessageElementData> m)
-	{
-		return boost::dynamic_pointer_cast<MessageElementPodMultiDimArray>(m);
-	}
-
-	static boost::intrusive_ptr<RobotRaconteur::MessageElementNamedArray> ToMessageElementNamedArray(boost::intrusive_ptr<RobotRaconteur::MessageElementData> m)
-	{
-		return boost::dynamic_pointer_cast<MessageElementNamedArray>(m);
-	}
-
-	static boost::intrusive_ptr<RobotRaconteur::MessageElementNamedMultiDimArray> ToMessageElementNamedMultiDimArray(boost::intrusive_ptr<RobotRaconteur::MessageElementData> m)
-	{
-		return boost::dynamic_pointer_cast<MessageElementNamedMultiDimArray>(m);
-	}
 
 #ifdef RR_MESSAEGE_ELEMENT_DATA_UTIL_EXTRAS
 	static std::string RRBaseArrayToString(boost::intrusive_ptr<RobotRaconteur::RRBaseArray> rrarray)

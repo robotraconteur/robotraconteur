@@ -97,7 +97,7 @@ RR_RELEASE_GIL()
 		}
 	
 		boost::intrusive_ptr<RRMap<std::string,RRValue> > credentials2;
-		if (credentials) credentials2=rr_cast<RRMap<std::string,RRValue> >($self->UnpackMapType<std::string,RRValue>(rr_cast<MessageElementMap<std::string> >(credentials)));
+		if (credentials) credentials2=rr_cast<RRMap<std::string,RRValue> >($self->UnpackMapType<std::string,RRValue>(rr_cast<MessageElementNestedElementList>(credentials)));
 		boost::shared_ptr<WrappedServiceStub> stub;
 		if (listener==0)
 		{
@@ -123,7 +123,7 @@ RR_RELEASE_GIL()
 		}
 	
 		boost::intrusive_ptr<RRMap<std::string,RRValue> > credentials2;
-		if (credentials) credentials2=rr_cast<RRMap<std::string,RRValue> >($self->UnpackMapType<std::string,RRValue>(rr_cast<MessageElementMap<std::string> >(credentials)));
+		if (credentials) credentials2=rr_cast<RRMap<std::string,RRValue> >($self->UnpackMapType<std::string,RRValue>(rr_cast<MessageElementNestedElementList >(credentials)));
 		boost::shared_ptr<WrappedServiceStub> stub;
 		if (listener==0)
 		{
@@ -150,7 +150,7 @@ RR_KEEP_GIL()
 		boost::shared_ptr<AsyncStubReturnDirector> sphandler(handler,boost::bind(&ReleaseDirector<AsyncStubReturnDirector>,_1,id));
 	
 		boost::intrusive_ptr<RRMap<std::string,RRValue> > credentials2;
-		if (credentials) credentials2=rr_cast<RRMap<std::string,RRValue> >($self->UnpackMapType<std::string,RRValue>(rr_cast<MessageElementMap<std::string> >(credentials)));
+		if (credentials) credentials2=rr_cast<RRMap<std::string,RRValue> >($self->UnpackMapType<std::string,RRValue>(rr_cast<MessageElementNestedElementList >(credentials)));
 		
 		if (listener==0)
 		{
@@ -169,7 +169,7 @@ RR_KEEP_GIL()
 		boost::shared_ptr<AsyncStubReturnDirector> sphandler(handler,boost::bind(&ReleaseDirector<AsyncStubReturnDirector>,_1,id));
 	
 		boost::intrusive_ptr<RRMap<std::string,RRValue> > credentials2;
-		if (credentials) credentials2=rr_cast<RRMap<std::string,RRValue> >($self->UnpackMapType<std::string,RRValue>(rr_cast<MessageElementMap<std::string> >(credentials)));
+		if (credentials) credentials2=rr_cast<RRMap<std::string,RRValue> >($self->UnpackMapType<std::string,RRValue>(rr_cast<MessageElementNestedElementList >(credentials)));
 		
 		if (listener==0)
 		{
@@ -344,7 +344,7 @@ RR_KEEP_GIL()
 		{
 			boost::intrusive_ptr<RRMap<std::string,RRValue> > map=AllocateEmptyRRMap<std::string,RRValue>();
 			map->GetStorageContainer()=$self->GetServiceAttributes(obj);
-			boost::intrusive_ptr<MessageElementMap<std::string> > mmap=$self->PackMapType<std::string,RRValue>(map);
+			boost::intrusive_ptr<MessageElementNestedElementList > mmap=$self->PackMapType<std::string,RRValue>(map);
 			return CreateMessageElement("value",mmap);
 		}
 

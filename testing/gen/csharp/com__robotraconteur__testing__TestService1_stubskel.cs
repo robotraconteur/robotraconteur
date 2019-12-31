@@ -98,7 +98,7 @@ public class com__robotraconteur__testing__TestService1Factory : ServiceFactory
 public class teststruct1_stub : IStructureStub {
     public teststruct1_stub(com__robotraconteur__testing__TestService1Factory d) {def=d;}
     private com__robotraconteur__testing__TestService1Factory def;
-    public MessageElementStructure PackStructure(object s1) {
+    public MessageElementNestedElementList PackStructure(object s1) {
     using(vectorptr_messageelement m=new vectorptr_messageelement())
     {
     if (s1 ==null) return null;
@@ -113,10 +113,10 @@ public class teststruct1_stub : IStructureStub {
     MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackListType<teststruct2>("lstruct3",s.lstruct3));
     MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackMultiDimArray("multidimarray",(MultiDimArray)s.multidimarray));
     MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackVarType("var3",s.var3));
-    return new MessageElementStructure("com.robotraconteur.testing.TestService1.teststruct1",m);
+    return new MessageElementNestedElementList(DataTypes.structure_t,"com.robotraconteur.testing.TestService1.teststruct1",m);
     }
     }
-    public T UnpackStructure<T>(MessageElementStructure m) {
+    public T UnpackStructure<T>(MessageElementNestedElementList m) {
     if (m == null ) return default(T);
     teststruct1 s=new teststruct1();
     using(vectorptr_messageelement mm=m.Elements)
@@ -140,16 +140,16 @@ public class teststruct1_stub : IStructureStub {
 public class teststruct2_stub : IStructureStub {
     public teststruct2_stub(com__robotraconteur__testing__TestService1Factory d) {def=d;}
     private com__robotraconteur__testing__TestService1Factory def;
-    public MessageElementStructure PackStructure(object s1) {
+    public MessageElementNestedElementList PackStructure(object s1) {
     using(vectorptr_messageelement m=new vectorptr_messageelement())
     {
     if (s1 ==null) return null;
     teststruct2 s = (teststruct2)s1;
     MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackArray<double>("mydat",s.mydat));
-    return new MessageElementStructure("com.robotraconteur.testing.TestService1.teststruct2",m);
+    return new MessageElementNestedElementList(DataTypes.structure_t,"com.robotraconteur.testing.TestService1.teststruct2",m);
     }
     }
-    public T UnpackStructure<T>(MessageElementStructure m) {
+    public T UnpackStructure<T>(MessageElementNestedElementList m) {
     if (m == null ) return default(T);
     teststruct2 s=new teststruct2();
     using(vectorptr_messageelement mm=m.Elements)

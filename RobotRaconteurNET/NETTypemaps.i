@@ -218,3 +218,31 @@
 
 %enddef
 
+
+namespace RobotRaconteur
+{
+	%naturalvar MessageStringPtr;
+	class MessageStringPtr;
+
+	%apply std::string { RobotRaconteur::MessageStringPtr }
+	%apply const std::string& { const RobotRaconteur::MessageStringPtr& }
+
+	%typemap(in, canthrow=1) MessageStringPtr 
+	%{ if (!$input) {
+		SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+		return $null;
+	}
+	$1.assign($input,false); %}
+	%typemap(out) MessageStringPtr  %{ std::string temp_ret1 = $1.str().to_string(); $result = SWIG_csharp_string_callback(temp_ret1.c_str()); %}
+	%typemap(in, canthrow=1) const MessageStringPtr &
+	%{ if (!$input) {
+		SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+		return $null;
+	}
+	$*1_ltype $1_str($input,false);
+	$1 = &$1_str; %}
+	%typemap(out) const MessageStringPtr&  %{ std::string temp_ret1 = $1->str().to_string(); $result = SWIG_csharp_string_callback(temp_ret1.c_str()); %}	
+
+
+
+}

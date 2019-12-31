@@ -374,13 +374,13 @@ namespace RobotRaconteur
                 this.buffer = buffer;
             }
 
-            public override void UnpackReadResult(MessageElementPodArray res, ulong bufferpos, ulong count)
+            public override void UnpackReadResult(MessageElementNestedElementList res, ulong bufferpos, ulong count)
             {
                 T[] res1 = RobotRaconteurNode.s.UnpackPodArrayDispose<T>(res);
                 Array.Copy(res1, 0, buffer, (long)bufferpos, (long)count);
             }
 
-            public override MessageElementPodArray PackWriteRequest(ulong bufferpos, ulong count)
+            public override MessageElementNestedElementList PackWriteRequest(ulong bufferpos, ulong count)
             {
                 T[] buffer3;
                 if ((ulong)buffer.Length == count)
@@ -452,7 +452,7 @@ namespace RobotRaconteur
                 this.buffer = buffer;
             }
 
-            public override void UnpackReadResult(MessageElementPodMultiDimArray res, vector_uint64_t bufferpos, vector_uint64_t count)
+            public override void UnpackReadResult(MessageElementNestedElementList res, vector_uint64_t bufferpos, vector_uint64_t count)
             {
                 using (res)
                 using (bufferpos)
@@ -463,7 +463,7 @@ namespace RobotRaconteur
                 }
             }
 
-            public override MessageElementPodMultiDimArray PackWriteRequest(vector_uint64_t bufferpos, vector_uint64_t count)
+            public override MessageElementNestedElementList PackWriteRequest(vector_uint64_t bufferpos, vector_uint64_t count)
             {
                 using (bufferpos)
                 using (count)
@@ -797,7 +797,7 @@ namespace RobotRaconteur
             }
         }
 
-        public override MessageElementPodArray Read(ulong memorypos, ulong bufferpos, ulong count)
+        public override MessageElementNestedElementList Read(ulong memorypos, ulong bufferpos, ulong count)
         {
             try
             {
@@ -817,7 +817,7 @@ namespace RobotRaconteur
             }
         }
 
-        public override void Write(ulong memorypos, MessageElementPodArray buffer, ulong bufferpos, ulong count)
+        public override void Write(ulong memorypos, MessageElementNestedElementList buffer, ulong bufferpos, ulong count)
         {
             try
             {
@@ -888,7 +888,7 @@ namespace RobotRaconteur
             }
         }
 
-        public override MessageElementPodMultiDimArray Read(vector_uint64_t memorypos, vector_uint64_t bufferpos, vector_uint64_t count)
+        public override MessageElementNestedElementList Read(vector_uint64_t memorypos, vector_uint64_t bufferpos, vector_uint64_t count)
         {
             try
             {
@@ -912,7 +912,7 @@ namespace RobotRaconteur
             }
         }
 
-        public override void Write(vector_uint64_t memorypos, MessageElementPodMultiDimArray buffer, vector_uint64_t bufferpos, vector_uint64_t count)
+        public override void Write(vector_uint64_t memorypos, MessageElementNestedElementList buffer, vector_uint64_t bufferpos, vector_uint64_t count)
         {
             try
             {
@@ -1015,13 +1015,13 @@ namespace RobotRaconteur
                 this.buffer = buffer;
             }
 
-            public override void UnpackReadResult(MessageElementNamedArray res, ulong bufferpos, ulong count)
+            public override void UnpackReadResult(MessageElementNestedElementList res, ulong bufferpos, ulong count)
             {
                 T[] res1 = RobotRaconteurNode.s.UnpackNamedArrayDispose<T>(res);
                 Array.Copy(res1, 0, buffer, (long)bufferpos, (long)count);
             }
 
-            public override MessageElementNamedArray PackWriteRequest(ulong bufferpos, ulong count)
+            public override MessageElementNestedElementList PackWriteRequest(ulong bufferpos, ulong count)
             {
                 T[] buffer3;
                 if ((ulong)buffer.Length == count)
@@ -1093,7 +1093,7 @@ namespace RobotRaconteur
                 this.buffer = buffer;
             }
 
-            public override void UnpackReadResult(MessageElementNamedMultiDimArray res, vector_uint64_t bufferpos, vector_uint64_t count)
+            public override void UnpackReadResult(MessageElementNestedElementList res, vector_uint64_t bufferpos, vector_uint64_t count)
             {
                 using (res)
                 using (bufferpos)
@@ -1104,7 +1104,7 @@ namespace RobotRaconteur
                 }
             }
 
-            public override MessageElementNamedMultiDimArray PackWriteRequest(vector_uint64_t bufferpos, vector_uint64_t count)
+            public override MessageElementNestedElementList PackWriteRequest(vector_uint64_t bufferpos, vector_uint64_t count)
             {
                 using (bufferpos)
                 using (count)
@@ -1206,7 +1206,7 @@ namespace RobotRaconteur
             }
         }
 
-        public override MessageElementNamedArray Read(ulong memorypos, ulong bufferpos, ulong count)
+        public override MessageElementNestedElementList Read(ulong memorypos, ulong bufferpos, ulong count)
         {
             try
             {
@@ -1226,7 +1226,7 @@ namespace RobotRaconteur
             }
         }
 
-        public override void Write(ulong memorypos, MessageElementNamedArray buffer, ulong bufferpos, ulong count)
+        public override void Write(ulong memorypos, MessageElementNestedElementList buffer, ulong bufferpos, ulong count)
         {
             try
             {
@@ -1297,7 +1297,7 @@ namespace RobotRaconteur
             }
         }
 
-        public override MessageElementNamedMultiDimArray Read(vector_uint64_t memorypos, vector_uint64_t bufferpos, vector_uint64_t count)
+        public override MessageElementNestedElementList Read(vector_uint64_t memorypos, vector_uint64_t bufferpos, vector_uint64_t count)
         {
             try
             {
@@ -1321,7 +1321,7 @@ namespace RobotRaconteur
             }
         }
 
-        public override void Write(vector_uint64_t memorypos, MessageElementNamedMultiDimArray buffer, vector_uint64_t bufferpos, vector_uint64_t count)
+        public override void Write(vector_uint64_t memorypos, MessageElementNestedElementList buffer, vector_uint64_t bufferpos, vector_uint64_t count)
         {
             try
             {

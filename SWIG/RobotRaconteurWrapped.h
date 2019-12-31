@@ -218,19 +218,19 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		virtual std::string GetServiceName();
 		virtual std::string DefString();
 		virtual RR_SHARED_PTR<ServiceDefinition> ServiceDef();
-		virtual RR_SHARED_PTR<RobotRaconteur::StructureStub> FindStructureStub(const std::string& s);
-		virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementStructure> PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> structin);
-		virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> UnpackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementStructure> mstructin);
-		virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementPodArray> PackPodArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> structure);
-		virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> UnpackPodArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementPodArray> structure);
-		virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementPodMultiDimArray> PackPodMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> structure);
-		virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> UnpackPodMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementPodMultiDimArray> structure);
-		virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNamedArray> PackNamedArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> structure);
-		virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> UnpackNamedArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNamedArray> structure);
-		virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNamedMultiDimArray> PackNamedMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> structure);
-		virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> UnpackNamedMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNamedMultiDimArray> structure);
-		virtual RR_SHARED_PTR<RobotRaconteur::ServiceStub> CreateStub(const std::string& objecttype, const std::string& path, RR_SHARED_PTR<RobotRaconteur::ClientContext> context);
-		virtual RR_SHARED_PTR<RobotRaconteur::ServiceSkel> CreateSkel(const std::string& objecttype, const std::string& path, RR_SHARED_PTR<RobotRaconteur::RRObject> obj, RR_SHARED_PTR<RobotRaconteur::ServerContext> context);
+		virtual RR_SHARED_PTR<RobotRaconteur::StructureStub> FindStructureStub(boost::string_ref s);
+		virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> structin);
+		virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> UnpackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> mstructin);
+		virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackPodArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> structure);
+		virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> UnpackPodArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> structure);
+		virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackPodMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> structure);
+		virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> UnpackPodMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> structure);
+		virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackNamedArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> structure);
+		virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> UnpackNamedArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> structure);
+		virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackNamedMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> structure);
+		virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> UnpackNamedMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> structure);
+		virtual RR_SHARED_PTR<RobotRaconteur::ServiceStub> CreateStub(boost::string_ref objecttype, boost::string_ref path, RR_SHARED_PTR<RobotRaconteur::ClientContext> context);
+		virtual RR_SHARED_PTR<RobotRaconteur::ServiceSkel> CreateSkel(boost::string_ref objecttype, boost::string_ref path, RR_SHARED_PTR<RobotRaconteur::RRObject> obj, RR_SHARED_PTR<RobotRaconteur::ServerContext> context);
 		virtual void DownCastAndThrowException(RobotRaconteurException& exp)
 		{
 			throw exp;
@@ -250,7 +250,7 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 	{
 	public:
 		virtual ~WrappedDynamicServiceFactory() {}
-		virtual RR_SHARED_PTR<ServiceFactory> CreateServiceFactory(const std::string& def);
+		virtual RR_SHARED_PTR<ServiceFactory> CreateServiceFactory(boost::string_ref def);
 		virtual std::vector<RR_SHARED_PTR<ServiceFactory> > CreateServiceFactories(const std::vector<std::string>& def);
 	};
 
@@ -351,7 +351,7 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 	class WrappedServiceStub : public virtual RobotRaconteur::ServiceStub
 	{
 	public:
-		WrappedServiceStub(const std::string& path, RR_SHARED_PTR<ServiceEntryDefinition> type, RR_SHARED_PTR<RobotRaconteur::ClientContext> c);
+		WrappedServiceStub(boost::string_ref path, RR_SHARED_PTR<ServiceEntryDefinition> type, RR_SHARED_PTR<RobotRaconteur::ClientContext> c);
 		virtual ~WrappedServiceStub();
 
 		virtual RR_INTRUSIVE_PTR<MessageElement> PropertyGet(const std::string& PropertyName);
@@ -383,8 +383,8 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> CallbackCall(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m);
 		virtual RR_SHARED_PTR<RobotRaconteur::WrappedPipeClient> GetPipe(const std::string& membername);
 		virtual RR_SHARED_PTR<RobotRaconteur::WrappedWireClient> GetWire(const std::string& membername);
-		virtual RR_SHARED_PTR<PipeClientBase> RRGetPipeClient(const std::string& membername);
-		virtual RR_SHARED_PTR<WireClientBase> RRGetWireClient(const std::string& membername);
+		virtual RR_SHARED_PTR<PipeClientBase> RRGetPipeClient(boost::string_ref membername);
+		virtual RR_SHARED_PTR<WireClientBase> RRGetWireClient(boost::string_ref membername);
 		virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemoryBase> GetArrayMemory(const std::string& membername);
 		virtual RR_SHARED_PTR<WrappedPodArrayMemoryClient> GetPodArrayMemory(const std::string& membername);
 		virtual RR_SHARED_PTR<WrappedNamedArrayMemoryClient> GetNamedArrayMemory(const std::string& membername);
@@ -397,7 +397,7 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		RR_SHARED_PTR<ServiceEntryDefinition> RR_objecttype;
 		
 	public:
-		virtual std::string RRType();
+		virtual boost::string_ref RRType();
 	protected:
 		boost::shared_ptr<WrappedServiceStubDirector> RR_Director;
 		boost::shared_mutex RR_Director_lock;
@@ -982,8 +982,8 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 	class WrappedPodArrayMemoryClientBuffer
 	{
 	public:
-		virtual void UnpackReadResult(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementPodArray> res, uint64_t bufferpos, uint64_t count) = 0;
-		virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementPodArray> PackWriteRequest(uint64_t bufferpos, uint64_t count) = 0;
+		virtual void UnpackReadResult(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> res, uint64_t bufferpos, uint64_t count) = 0;
+		virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackWriteRequest(uint64_t bufferpos, uint64_t count) = 0;
 		virtual uint64_t GetBufferLength() = 0;
 		virtual ~WrappedPodArrayMemoryClientBuffer() {}
 	};
@@ -1003,8 +1003,8 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 	class WrappedPodMultiDimArrayMemoryClientBuffer
 	{
 	public:
-		virtual void UnpackReadResult(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementPodMultiDimArray> res, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) = 0;
-		virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementPodMultiDimArray> PackWriteRequest(const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) = 0;
+		virtual void UnpackReadResult(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> res, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) = 0;
+		virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackWriteRequest(const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) = 0;
 		virtual ~WrappedPodMultiDimArrayMemoryClientBuffer() {}
 	};
 
@@ -1024,8 +1024,8 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 	class WrappedNamedArrayMemoryClientBuffer
 	{
 	public:
-		virtual void UnpackReadResult(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNamedArray> res, uint64_t bufferpos, uint64_t count) = 0;
-		virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNamedArray> PackWriteRequest(uint64_t bufferpos, uint64_t count) = 0;
+		virtual void UnpackReadResult(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> res, uint64_t bufferpos, uint64_t count) = 0;
+		virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackWriteRequest(uint64_t bufferpos, uint64_t count) = 0;
 		virtual uint64_t GetBufferLength() = 0;
 		virtual ~WrappedNamedArrayMemoryClientBuffer() {}
 	};
@@ -1045,8 +1045,8 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 	class WrappedNamedMultiDimArrayMemoryClientBuffer
 	{
 	public:
-		virtual void UnpackReadResult(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNamedMultiDimArray> res, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) = 0;
-		virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNamedMultiDimArray> PackWriteRequest(const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) = 0;
+		virtual void UnpackReadResult(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> res, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) = 0;
+		virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackWriteRequest(const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) = 0;
 		virtual ~WrappedNamedMultiDimArrayMemoryClientBuffer() {}
 	};
 
@@ -1168,7 +1168,7 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		virtual RR_INTRUSIVE_PTR<MessageEntry> CallGetProperty(RR_INTRUSIVE_PTR<MessageEntry> m);
 		virtual RR_INTRUSIVE_PTR<MessageEntry> CallSetProperty(RR_INTRUSIVE_PTR<MessageEntry> m);
 		virtual RR_INTRUSIVE_PTR<MessageEntry> CallFunction(RR_INTRUSIVE_PTR<MessageEntry> m);
-		virtual RR_SHARED_PTR<RRObject> GetSubObj(const std::string &name, const std::string &ind);
+		virtual RR_SHARED_PTR<RRObject> GetSubObj(boost::string_ref name, boost::string_ref ind);
 		virtual void ReleaseCastObject();
 
 		virtual std::string GetObjectType();
@@ -1217,7 +1217,7 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 	{
 	public:
 		WrappedRRObject(const std::string& type, WrappedServiceSkelDirector* RR_Director, int32_t id);
-		virtual std::string RRType();
+		virtual boost::string_ref RRType();
 		std::string Type;
 	protected:
 
@@ -1428,8 +1428,8 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 
 		virtual ~WrappedPodArrayMemoryDirector() {}
 		virtual uint64_t Length() { return 0; }
-		virtual RR_INTRUSIVE_PTR<MessageElementPodArray> Read(uint64_t memorypos, uint64_t bufferpos, uint64_t count) { return RR_INTRUSIVE_PTR<MessageElementPodArray>(); }
-		virtual void Write(uint64_t memorypos, RR_INTRUSIVE_PTR<MessageElementPodArray> buffer, uint64_t bufferpos, uint64_t count) {}
+		virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> Read(uint64_t memorypos, uint64_t bufferpos, uint64_t count) { return RR_INTRUSIVE_PTR<MessageElementNestedElementList>(); }
+		virtual void Write(uint64_t memorypos, RR_INTRUSIVE_PTR<MessageElementNestedElementList> buffer, uint64_t bufferpos, uint64_t count) {}
 		int32_t objectheapid;
 	};
 
@@ -1442,8 +1442,8 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		virtual uint64_t Length();
 		virtual DataTypes ElementTypeID();
 
-		virtual RR_INTRUSIVE_PTR<MessageElementPodArray> Read(uint64_t memorypos, uint64_t bufferpos, uint64_t count);
-		virtual void Write(uint64_t memorypos, RR_INTRUSIVE_PTR<MessageElementPodArray> buffer, uint64_t bufferpos, uint64_t count);
+		virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> Read(uint64_t memorypos, uint64_t bufferpos, uint64_t count);
+		virtual void Write(uint64_t memorypos, RR_INTRUSIVE_PTR<MessageElementNestedElementList> buffer, uint64_t bufferpos, uint64_t count);
 
 		boost::shared_ptr<WrappedPodArrayMemoryDirector> RR_Director;
 		boost::shared_mutex RR_Director_lock;
@@ -1464,8 +1464,8 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		virtual ~WrappedPodMultiDimArrayMemoryDirector() {}
 		virtual std::vector<uint64_t> Dimensions() { return std::vector<uint64_t>(); }
 		virtual uint64_t DimCount() { return 0; }		
-		virtual RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> Read(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) { return RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray>();  }
-		virtual void Write(const std::vector<uint64_t>& memorypos, RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) {}
+		virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> Read(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) { return RR_INTRUSIVE_PTR<MessageElementNestedElementList>();  }
+		virtual void Write(const std::vector<uint64_t>& memorypos, RR_INTRUSIVE_PTR<MessageElementNestedElementList> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) {}
 
 		int32_t objectheapid;
 	};
@@ -1481,8 +1481,8 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		virtual bool Complex();
 		virtual DataTypes ElementTypeID();
 
-		virtual RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> Read(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
-		virtual void Write(const std::vector<uint64_t>& memorypos, RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
+		virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> Read(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
+		virtual void Write(const std::vector<uint64_t>& memorypos, RR_INTRUSIVE_PTR<MessageElementNestedElementList> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
 
 		boost::shared_ptr<WrappedPodMultiDimArrayMemoryDirector> RR_Director;
 		boost::shared_mutex RR_Director_lock;
@@ -1505,8 +1505,8 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		virtual uint64_t Length();
 		virtual DataTypes ElementTypeID();
 
-		virtual RR_INTRUSIVE_PTR<MessageElementNamedArray> Read(uint64_t memorypos, uint64_t bufferpos, uint64_t count);
-		virtual void Write(uint64_t memorypos, RR_INTRUSIVE_PTR<MessageElementNamedArray> buffer, uint64_t bufferpos, uint64_t count);
+		virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> Read(uint64_t memorypos, uint64_t bufferpos, uint64_t count);
+		virtual void Write(uint64_t memorypos, RR_INTRUSIVE_PTR<MessageElementNestedElementList> buffer, uint64_t bufferpos, uint64_t count);
 
 		boost::shared_ptr<WrappedNamedArrayMemoryDirector> RR_Director;
 		boost::shared_mutex RR_Director_lock;
@@ -1523,8 +1523,8 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 
 		virtual ~WrappedNamedArrayMemoryDirector() {}
 		virtual uint64_t Length() { return 0; }
-		virtual RR_INTRUSIVE_PTR<MessageElementNamedArray> Read(uint64_t memorypos, uint64_t bufferpos, uint64_t count) { return RR_INTRUSIVE_PTR<MessageElementNamedArray>(); }
-		virtual void Write(uint64_t memorypos, RR_INTRUSIVE_PTR<MessageElementNamedArray> buffer, uint64_t bufferpos, uint64_t count) {}
+		virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> Read(uint64_t memorypos, uint64_t bufferpos, uint64_t count) { return RR_INTRUSIVE_PTR<MessageElementNestedElementList>(); }
+		virtual void Write(uint64_t memorypos, RR_INTRUSIVE_PTR<MessageElementNestedElementList> buffer, uint64_t bufferpos, uint64_t count) {}
 		int32_t objectheapid;
 	};
 
@@ -1543,8 +1543,8 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		virtual ~WrappedNamedMultiDimArrayMemoryDirector() {}
 		virtual std::vector<uint64_t> Dimensions() { return std::vector<uint64_t>(); }
 		virtual uint64_t DimCount() { return 0; }
-		virtual RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> Read(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) { return RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray>(); }
-		virtual void Write(const std::vector<uint64_t>& memorypos, RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) {}
+		virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> Read(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) { return RR_INTRUSIVE_PTR<MessageElementNestedElementList>(); }
+		virtual void Write(const std::vector<uint64_t>& memorypos, RR_INTRUSIVE_PTR<MessageElementNestedElementList> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) {}
 
 		int32_t objectheapid;
 	};
@@ -1560,8 +1560,8 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		virtual bool Complex();
 		virtual DataTypes ElementTypeID();
 
-		virtual RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> Read(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
-		virtual void Write(const std::vector<uint64_t>& memorypos, RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
+		virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> Read(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
+		virtual void Write(const std::vector<uint64_t>& memorypos, RR_INTRUSIVE_PTR<MessageElementNestedElementList> buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
 
 		boost::shared_ptr<WrappedNamedMultiDimArrayMemoryDirector> RR_Director;
 		boost::shared_mutex RR_Director_lock;
@@ -1601,7 +1601,7 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 	public:
 		void SetRRDirector(WrappedUserAuthenticatorDirector* director, int id);
 
-		virtual RR_SHARED_PTR<AuthenticatedUser> AuthenticateUser(const std::string &username, const std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials, RR_SHARED_PTR<ServerContext> context);
+		virtual RR_SHARED_PTR<AuthenticatedUser> AuthenticateUser(boost::string_ref username, const std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials, RR_SHARED_PTR<ServerContext> context);
 		
 	};
 

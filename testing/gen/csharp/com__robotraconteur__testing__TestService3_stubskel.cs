@@ -123,7 +123,7 @@ public class com__robotraconteur__testing__TestService3Factory : ServiceFactory
 public class teststruct3_stub : IStructureStub {
     public teststruct3_stub(com__robotraconteur__testing__TestService3Factory d) {def=d;}
     private com__robotraconteur__testing__TestService3Factory def;
-    public MessageElementStructure PackStructure(object s1) {
+    public MessageElementNestedElementList PackStructure(object s1) {
     using(vectorptr_messageelement m=new vectorptr_messageelement())
     {
     if (s1 ==null) return null;
@@ -154,10 +154,10 @@ public class teststruct3_stub : IStructureStub {
     MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackVarType("t9",s.t9));
     MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackVarType("t10",s.t10));
     MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackVarType("t11",s.t11));
-    return new MessageElementStructure("com.robotraconteur.testing.TestService3.teststruct3",m);
+    return new MessageElementNestedElementList(DataTypes.structure_t,"com.robotraconteur.testing.TestService3.teststruct3",m);
     }
     }
-    public T UnpackStructure<T>(MessageElementStructure m) {
+    public T UnpackStructure<T>(MessageElementNestedElementList m) {
     if (m == null ) return default(T);
     teststruct3 s=new teststruct3();
     using(vectorptr_messageelement mm=m.Elements)
@@ -197,7 +197,7 @@ public class teststruct3_stub : IStructureStub {
 public class testpod1_stub : PodStub<testpod1> {
     public testpod1_stub(com__robotraconteur__testing__TestService3Factory d) {def=d;}
     private com__robotraconteur__testing__TestService3Factory def;
-    public override MessageElementPod PackPod(ref testpod1 s1) {
+    public override MessageElementNestedElementList PackPod(ref testpod1 s1) {
     using(vectorptr_messageelement m=new vectorptr_messageelement())
     {
     testpod1 s = (testpod1)s1;
@@ -213,10 +213,10 @@ public class testpod1_stub : PodStub<testpod1> {
     MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackNamedArray<transform>("t2",DataTypeUtil.VerifyArrayLength(s.t2, 4, false)));
     MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackNamedArray<transform>("t3",DataTypeUtil.VerifyArrayLength(s.t3, 15, true)));
     MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackNamedArray<transform>("t4",DataTypeUtil.VerifyArrayLength(s.t4, 8, false)));
-    return new MessageElementPod(m);
+    return new MessageElementNestedElementList(DataTypes.pod_t,"",m);
     }
     }
-    public override testpod1 UnpackPod(MessageElementPod m) {
+    public override testpod1 UnpackPod(MessageElementNestedElementList m) {
     if (m == null ) throw new NullReferenceException("Pod must not be null");
     using(vectorptr_messageelement mm=m.Elements)
     {
@@ -241,17 +241,17 @@ public class testpod1_stub : PodStub<testpod1> {
 public class testpod2_stub : PodStub<testpod2> {
     public testpod2_stub(com__robotraconteur__testing__TestService3Factory d) {def=d;}
     private com__robotraconteur__testing__TestService3Factory def;
-    public override MessageElementPod PackPod(ref testpod2 s1) {
+    public override MessageElementNestedElementList PackPod(ref testpod2 s1) {
     using(vectorptr_messageelement m=new vectorptr_messageelement())
     {
     testpod2 s = (testpod2)s1;
     MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackScalar<sbyte>("i1",s.i1));
     MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackArray<sbyte>("i2",DataTypeUtil.VerifyArrayLength(s.i2, 15, false)));
     MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackArray<sbyte>("i3",DataTypeUtil.VerifyArrayLength(s.i3, 17, true)));
-    return new MessageElementPod(m);
+    return new MessageElementNestedElementList(DataTypes.pod_t,"",m);
     }
     }
-    public override testpod2 UnpackPod(MessageElementPod m) {
+    public override testpod2 UnpackPod(MessageElementNestedElementList m) {
     if (m == null ) throw new NullReferenceException("Pod must not be null");
     using(vectorptr_messageelement mm=m.Elements)
     {

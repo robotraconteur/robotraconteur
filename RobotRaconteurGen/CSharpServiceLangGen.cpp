@@ -1171,7 +1171,7 @@ namespace RobotRaconteurGen
 		w2 << "public class " + fix_name(e->Name) + "_stub : IStructureStub {" << endl;
 		w2 << "    public " + fix_name(e->Name) + "_stub(" + boost::replace_all_copy(fix_name(e->ServiceDefinition_.lock()->Name),".","__") + "Factory d) {def=d;}" << endl;
 		w2 << "    private " + boost::replace_all_copy(fix_name(e->ServiceDefinition_.lock()->Name),".","__") + "Factory def;" << endl;
-		w2 << "    public MessageElementStructure PackStructure(object s1) {" << endl;
+		w2 << "    public MessageElementNestedElementList PackStructure(object s1) {" << endl;
 
 		w2 << "    using(vectorptr_messageelement m=new vectorptr_messageelement())" << endl << "    {" << endl;
 		w2 << "    if (s1 ==null) return null;" << endl;
@@ -1179,13 +1179,13 @@ namespace RobotRaconteurGen
 		MEMBER_ITER2(PropertyDefinition)
 		w2 << "    MessageElementUtil.AddMessageElementDispose(m," + str_pack_message_element(m->Name, "s." + fix_name(m->Name), m->Type, "def") + ");" << endl;
 		MEMBER_ITER_END()
-		w2 << "    return new MessageElementStructure(\"" + e->ServiceDefinition_.lock()->Name + "." + e->Name + "\",m);" << endl;
+		w2 << "    return new MessageElementNestedElementList(DataTypes.structure_t,\"" + e->ServiceDefinition_.lock()->Name + "." + e->Name + "\",m);" << endl;
 		w2 << "    }" << endl;
 		w2 << "    }" << endl;
 
 
 		//Write Read
-		w2 << "    public T UnpackStructure<T>(MessageElementStructure m) {" << endl;
+		w2 << "    public T UnpackStructure<T>(MessageElementNestedElementList m) {" << endl;
 
 		w2 << "    if (m == null ) return default(T);" << endl;
 
@@ -1215,20 +1215,20 @@ namespace RobotRaconteurGen
 		w2 << "public class " + fix_name(e->Name) + "_stub : PodStub<" << fix_name(e->Name) << "> {" << endl;
 		w2 << "    public " + fix_name(e->Name) + "_stub(" + boost::replace_all_copy(fix_name(e->ServiceDefinition_.lock()->Name), ".", "__") + "Factory d) {def=d;}" << endl;
 		w2 << "    private " + boost::replace_all_copy(fix_name(e->ServiceDefinition_.lock()->Name), ".", "__") + "Factory def;" << endl;
-		w2 << "    public override MessageElementPod PackPod(ref " << fix_name(e->Name) << " s1) {" << endl;
+		w2 << "    public override MessageElementNestedElementList PackPod(ref " << fix_name(e->Name) << " s1) {" << endl;
 		w2 << "    using(vectorptr_messageelement m=new vectorptr_messageelement())" << endl << "    {" << endl;		
 		w2 << "    " + fix_qualified_name(e->Name) + " s = (" + fix_qualified_name(e->Name) + ")s1;" << endl;
 		MEMBER_ITER2(PropertyDefinition)
 			RR_SHARED_PTR<TypeDefinition> t2 = CSharpServiceLangGen_RemoveMultiDimArray(*m->Type);
 			w2 << "    MessageElementUtil.AddMessageElementDispose(m," + str_pack_message_element(m->Name, "s." + fix_name(m->Name), t2, "def") + ");" << endl;
 		MEMBER_ITER_END()
-			w2 << "    return new MessageElementPod(m);" << endl;
+			w2 << "    return new MessageElementNestedElementList(DataTypes.pod_t,\"\",m);" << endl;
 		w2 << "    }" << endl;
 		w2 << "    }" << endl;
 
 
 		//Write Read
-		w2 << "    public override " << fix_name(e->Name) << " UnpackPod(MessageElementPod m) {" << endl;
+		w2 << "    public override " << fix_name(e->Name) << " UnpackPod(MessageElementNestedElementList m) {" << endl;
 
 		w2 << "    if (m == null ) throw new NullReferenceException(\"Pod must not be null\");" << endl;
 		w2 << "    using(vectorptr_messageelement mm=m.Elements)" << endl << "    {" << endl;

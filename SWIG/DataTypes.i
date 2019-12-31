@@ -50,16 +50,16 @@ class RRValue
 class  MessageElementData : public RRValue
 {
 public:
-	virtual std::string GetTypeString()=0;
+	virtual MessageStringPtr GetTypeString()=0;
 	virtual DataTypes GetTypeID()=0;
 };
 
 class RRBaseArray : public MessageElementData
 {
 public:
-	virtual std::string GetTypeString();
+	virtual MessageStringPtr GetTypeString();
 	virtual size_t size()=0;
-	virtual std::string RRType();
+	virtual boost::string_ref RRType();
 	virtual void* void_ptr()=0;
 	virtual size_t ElementSize()=0;
 	virtual DataTypes GetTypeID()=0;

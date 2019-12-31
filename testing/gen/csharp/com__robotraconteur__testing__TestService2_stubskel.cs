@@ -86,16 +86,16 @@ public class com__robotraconteur__testing__TestService2Factory : ServiceFactory
 public class ostruct2_stub : IStructureStub {
     public ostruct2_stub(com__robotraconteur__testing__TestService2Factory d) {def=d;}
     private com__robotraconteur__testing__TestService2Factory def;
-    public MessageElementStructure PackStructure(object s1) {
+    public MessageElementNestedElementList PackStructure(object s1) {
     using(vectorptr_messageelement m=new vectorptr_messageelement())
     {
     if (s1 ==null) return null;
     ostruct2 s = (ostruct2)s1;
     MessageElementUtil.AddMessageElementDispose(m,MessageElementUtil.PackArray<double>("a1",s.a1));
-    return new MessageElementStructure("com.robotraconteur.testing.TestService2.ostruct2",m);
+    return new MessageElementNestedElementList(DataTypes.structure_t,"com.robotraconteur.testing.TestService2.ostruct2",m);
     }
     }
-    public T UnpackStructure<T>(MessageElementStructure m) {
+    public T UnpackStructure<T>(MessageElementNestedElementList m) {
     if (m == null ) return default(T);
     ostruct2 s=new ostruct2();
     using(vectorptr_messageelement mm=m.Elements)

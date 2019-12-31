@@ -64,7 +64,7 @@ class WrappedRRObject : public RRObject
 	
 public:
 	WrappedRRObject(const std::string& type, WrappedServiceSkelDirector* RR_Director, int32_t id);
-	virtual std::string RRType();
+	virtual boost::string_ref RRType();
 	std::string Type;
 	
 	virtual ~WrappedRRObject();
@@ -161,7 +161,7 @@ public:
 	
 	void SetServiceAttributes(boost::intrusive_ptr<MessageElement> attributes)
 	{
-		boost::intrusive_ptr<RRMap<std::string,RRValue> > mmap=rr_cast<RRMap<std::string,RRValue> >(RobotRaconteurNode::s()->UnpackMapType<std::string,RRValue>(attributes->CastData<MessageElementMap<std::string> >()));
+		boost::intrusive_ptr<RRMap<std::string,RRValue> > mmap=rr_cast<RRMap<std::string,RRValue> >(RobotRaconteurNode::s()->UnpackMapType<std::string,RRValue>(attributes->CastData<MessageElementNestedElementList >()));
 		$self->SetAttributes(mmap->GetStorageContainer());		
 		
 	}	

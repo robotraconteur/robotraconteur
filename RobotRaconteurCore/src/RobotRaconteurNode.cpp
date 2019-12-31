@@ -1269,7 +1269,7 @@ void RobotRaconteurNode::AsyncConnectService(const std::vector<std::string> &url
 		if (connectors.empty()) throw ConnectionException("Could not find any valid transports for requested connection URLs");
 
 		RR_SHARED_PTR<detail::RobotRaconteurNode_connector> connector=RR_MAKE_SHARED<detail::RobotRaconteurNode_connector>(shared_from_this());
-		GetThreadPool()->Post(boost::bind(&detail::RobotRaconteurNode_connector::connect, connector, connectors, username, credentials, listener, objecttype, boost::protect(handler), timeout));
+		GetThreadPool()->Post(boost::bind(&detail::RobotRaconteurNode_connector::connect, connector, connectors, username.to_string(), credentials, listener, objecttype, boost::protect(handler), timeout));
 		return;	
 }
 
