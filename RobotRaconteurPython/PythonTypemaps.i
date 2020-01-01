@@ -109,3 +109,55 @@
 	$result=PyByteArray_FromStringAndSize((const char*)&$1[0],16);
 %}
 
+
+namespace RobotRaconteur
+{
+	%naturalvar MessageStringPtr;
+	class MessageStringPtr;
+
+	%apply std::string { RobotRaconteur::MessageStringPtr }
+	%apply const std::string& { const RobotRaconteur::MessageStringPtr& }
+
+	%fragment(SWIG_AsVal_frag(MessageStringPtr),"header", fragment=SWIG_AsVal_frag(std::string)) {
+		SWIGINTERN int
+		SWIG_AsVal_dec(MessageStringPtr)(SWIG_Object obj, RobotRaconteur::MessageStringPtr *val)
+		{
+			std::string temp1;
+			int res = SWIG_AsVal(std::string)(obj, &temp1);
+			if (!SWIG_IsOK(res))
+			{
+				return res;
+			}
+			*val = temp1;
+			return res;
+		}
+	}
+
+	%fragment(SWIG_From_frag(MessageStringPtr),"header",fragment=SWIG_From_frag(std::string)) {
+		SWIGINTERNINLINE SWIG_Object
+		SWIG_From_dec(MessageStringPtr)  (const RobotRaconteur::MessageStringPtr& m)
+		{
+			return SWIG_From_std_string(m.str().to_string());
+		}
+	}
+
+	%fragment(SWIG_AsPtr_frag(MessageStringPtr),"header",fragment=SWIG_AsVal_frag(std::string)) {
+		SWIGINTERN int
+		SWIG_AsPtr_dec(MessageStringPtr)(SWIG_Object obj, RobotRaconteur::MessageStringPtr **val) 
+		{
+			std::string temp1;
+			int res = SWIG_AsVal(std::string)(obj, &temp1);
+			if (!SWIG_IsOK(res))
+			{
+				return res;
+			}
+			*val = new MessageStringPtr(temp1);
+			return SWIG_NEWOBJ;
+		}
+	}
+
+
+
+
+	%typemaps_asptrfromn(%checkcode(STDSTRING),MessageStringPtr)
+}

@@ -107,7 +107,26 @@ namespace RobotRaconteur
 #endif
 	}
 
-	void VerifyMultiDimArrayLength(boost::intrusive_ptr<MessageElementMultiDimArray> data, boost::shared_ptr<TypeDefinition> type1)
+	
+	PyAutoPtr<PyObject> stringToPyObject(boost::string_ref s)
+	{
+#if (PY_MAJOR_VERSION == 2)		
+		PyObject* r= PyString_FromStringAndSize(s.data(), s.size());
+		if (!r) throw DataTypeException("Invalid string specified");
+		return r;
+#else
+		PyObject* r = PyUnicode_DecodeUTF8(s.data(), s.size(), "Invalid string specified");
+		if (!r) throw DataTypeException("Invalid string specified");
+		return r;
+#endif
+	}
+
+	PyAutoPtr<PyObject> stringToPyObject(const char* s)
+	{
+		return stringToPyObject(boost::string_ref(s,strlen(s)));
+	}
+
+	void VerifyMultiDimArrayLength(boost::intrusive_ptr<MessageElementNestedElementList> data, boost::shared_ptr<TypeDefinition> type1)
 	{
 		boost::intrusive_ptr<RRArray<uint32_t> > data_dims = MessageElement::FindElement(data->Elements, "dims")->CastData<RRArray<uint32_t> >();
 		if (!data_dims) throw DataTypeException("Invalid MultDimArray");
@@ -464,7 +483,7 @@ namespace RobotRaconteur
 	class PackMessageElementImpl
 	{
 	public:
-		boost::intrusive_ptr<MessageElementNamedArray>  PackMessageElement_namedarray(PyObject* data, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<WrappedServiceStub> obj, boost::shared_ptr<RobotRaconteurNode> node)
+		boost::intrusive_ptr<MessageElementNestedElementList>  PackMessageElement_namedarray(PyObject* data, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<WrappedServiceStub> obj, boost::shared_ptr<RobotRaconteurNode> node)
 		{
 			if (!PyArray_Check(data))
 			{
@@ -536,11 +555,11 @@ namespace RobotRaconteur
 
 			std::vector<RR_INTRUSIVE_PTR<MessageElement> > ret1;
 			ret1.push_back(CreateMessageElement("array", data3));
-			RR_INTRUSIVE_PTR<MessageElementNamedArray> ret = CreateMessageElementNamedArray(typestr2, ret1);
+			RR_INTRUSIVE_PTR<MessageElementNestedElementList> ret = CreateMessageElementNestedElementList(DataTypes_namedarray_array_t, typestr2, ret1);
 			return ret;
 		}
 
-		boost::intrusive_ptr<MessageElementPodArray>  PackMessageElement_pod(PyObject* data, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<WrappedServiceStub> obj, boost::shared_ptr<RobotRaconteurNode> node)
+		boost::intrusive_ptr<MessageElementNestedElementList>  PackMessageElement_pod(PyObject* data, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<WrappedServiceStub> obj, boost::shared_ptr<RobotRaconteurNode> node)
 		{
 			if (!PyArray_Check(data))
 			{
@@ -696,7 +715,7 @@ namespace RobotRaconteur
 					m_struct.push_back(el);
 				}
 
-				boost::intrusive_ptr<MessageElement> el2 = CreateMessageElement("", CreateMessageElementPod(m_struct));
+				boost::intrusive_ptr<MessageElement> el2 = CreateMessageElement("", CreateMessageElementNestedElementList(DataTypes_pod_t,"",m_struct));
 				el2->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
 				el2->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
 				el2->ElementNumber = i;
@@ -704,7 +723,7 @@ namespace RobotRaconteur
 				ret.push_back(el2);
 			}
 
-			return CreateMessageElementPodArray(typestr2, ret);
+			return CreateMessageElementNestedElementList(DataTypes_pod_array_t,typestr2, ret);
 		}
 
 		boost::intrusive_ptr<MessageElement>  PackMessageElement(PyObject* data, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<WrappedServiceStub> obj, boost::shared_ptr<RobotRaconteurNode> node)
@@ -807,7 +826,7 @@ namespace RobotRaconteur
 					pop_field_level();
 				}
 				element->DataCount = mret.size();
-				element->SetData(CreateMessageElementList(mret));
+				element->SetData(CreateMessageElementNestedElementList(DataTypes_list_t, "", mret));
 				return element;
 			}
 
@@ -833,7 +852,7 @@ namespace RobotRaconteur
 						pop_field_level();
 					}
 					element->DataCount = mret.size();
-					element->SetData(CreateMessageElementMap<int32_t>(mret));
+					element->SetData(CreateMessageElementNestedElementList(DataTypes_vector_t,"",mret));
 					return element;
 				}
 				else if (PyMapping_Check(data))
@@ -877,7 +896,7 @@ namespace RobotRaconteur
 					}
 
 					element->DataCount = mret.size();
-					element->SetData(CreateMessageElementMap<int32_t>(mret));
+					element->SetData(CreateMessageElementNestedElementList(DataTypes_vector_t,"",mret));
 					return element;
 				}
 				else
@@ -924,7 +943,7 @@ namespace RobotRaconteur
 				}
 
 				element->DataCount = mret.size();
-				element->SetData(CreateMessageElementMap<std::string>(mret));
+				element->SetData(CreateMessageElementNestedElementList(DataTypes_dictionary_t,"",mret));
 				return element;
 
 			}
@@ -933,7 +952,7 @@ namespace RobotRaconteur
 			{
 				if (PyArray_Check(data) || PySequence_Check(data))
 				{
-					boost::intrusive_ptr<MessageElementMultiDimArray> mm = PackToRRMultiDimArray_numpy(data, type1);
+					boost::intrusive_ptr<MessageElementNestedElementList> mm = PackToRRMultiDimArray_numpy(data, type1);
 					element->SetData(mm);
 					if (type1)
 					{
@@ -1006,7 +1025,7 @@ namespace RobotRaconteur
 					}
 
 					element->DataCount = mret.size();
-					element->SetData(CreateMessageElementStructure(typestr, mret));
+					element->SetData(CreateMessageElementNestedElementList(DataTypes_structure_t, typestr, mret));
 					return element;
 				}
 				case DataTypes_enum_t:
@@ -1059,13 +1078,13 @@ namespace RobotRaconteur
 						{
 						case DataTypes_pod_t:
 						{
-							boost::intrusive_ptr<MessageElementPodMultiDimArray> mm = CreateMessageElementPodMultiDimArray(type1->ResolveNamedType(empty_defs,node,obj)->ResolveQualifiedName(), map_vec);
+							boost::intrusive_ptr<MessageElementNestedElementList> mm = CreateMessageElementNestedElementList(DataTypes_pod_multidimarray_t,type1->ResolveNamedType(empty_defs,node,obj)->ResolveQualifiedName(), map_vec);
 							element->SetData(mm);
 							return element;
 						}
 						case DataTypes_namedarray_t:
 						{
-							boost::intrusive_ptr<MessageElementNamedMultiDimArray> mm = CreateMessageElementNamedMultiDimArray(type1->ResolveNamedType(empty_defs,node,obj)->ResolveQualifiedName(), map_vec);
+							boost::intrusive_ptr<MessageElementNestedElementList> mm = CreateMessageElementNestedElementList(DataTypes_namedarray_multidimarray_t,type1->ResolveNamedType(empty_defs,node,obj)->ResolveQualifiedName(), map_vec);
 							element->SetData(mm);
 							return element;
 						}
@@ -1254,10 +1273,10 @@ namespace RobotRaconteur
 	public:
 		PyObject* UnpackMessageElement_namedarray(boost::intrusive_ptr<MessageElement> element, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<WrappedServiceStub> stub, boost::shared_ptr<RobotRaconteurNode> node)
 		{
-			std::string& typestr = element->ElementTypeName;
+			std::string typestr = element->ElementTypeName.str().to_string();
 
 
-			boost::intrusive_ptr<MessageElementNamedArray> l = element->CastData<MessageElementNamedArray>();
+			boost::intrusive_ptr<MessageElementNestedElementList> l = element->CastDataToNestedList(DataTypes_namedarray_array_t);
 
 			RR_SHARED_PTR<TypeDefinition> type2 = RR_MAKE_SHARED<TypeDefinition>();
 			type2->Type = DataTypes_namedtype_t;
@@ -1314,7 +1333,7 @@ namespace RobotRaconteur
 
 		PyObject* UnpackMessageElement_pod(boost::intrusive_ptr<MessageElement> element, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<WrappedServiceStub> stub, boost::shared_ptr<RobotRaconteurNode> node)
 		{
-			std::string& typestr = element->ElementTypeName;
+			std::string typestr = element->ElementTypeName.str().to_string();
 			boost::tuple<std::string, std::string> typestr_s = SplitQualifiedName(typestr);
 			boost::shared_ptr<ServiceDefinition> def;
 			if (!stub)
@@ -1328,7 +1347,7 @@ namespace RobotRaconteur
 
 			boost::shared_ptr<ServiceEntryDefinition> struct_def = find_by_name(def->Pods, typestr_s.get<1>());
 
-			boost::intrusive_ptr<MessageElementPodArray> l = element->CastData<MessageElementPodArray>();
+			boost::intrusive_ptr<MessageElementNestedElementList> l = element->CastDataToNestedList(DataTypes_pod_array_t);
 
 			PyAutoPtr<PyObject> a_descr(GetNumPyDescrForType(typestr, stub, node));
 
@@ -1366,21 +1385,21 @@ namespace RobotRaconteur
 
 				if (el1->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
 				{
-					if (i != el1->ElementNumber) throw DataTypeException("Invalid pod array specified for " + element->ElementName);
+					if (i != el1->ElementNumber) throw DataTypeException("Invalid pod array specified for " + element->ElementName.str());
 				}
 				else if (el1->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
 				{
-					if (i != boost::lexical_cast<int32_t>(el1->ElementName)) throw DataTypeException("Invalid list specified for " + element->ElementName);
+					if (i != boost::lexical_cast<int32_t>(el1->ElementName.str())) throw DataTypeException("Invalid list specified for " + element->ElementName.str());
 				}
 				else
 				{
-					throw DataTypeException("Invalid pod array specified for " + element->ElementName);
+					throw DataTypeException("Invalid pod array specified for " + element->ElementName.str());
 				}
 
 				PyAutoPtr<PyObject> el2_ind(PyLong_FromLong(i));
 				PyAutoPtr<PyObject> el2(PyObject_GetItem(a.get(), el2_ind.get()));
 
-				boost::intrusive_ptr<MessageElementPod> s = el1->CastData<MessageElementPod>();
+				boost::intrusive_ptr<MessageElementNestedElementList> s = el1->CastDataToNestedList(DataTypes_pod_t);
 
 				BOOST_FOREACH(boost::shared_ptr<MemberDefinition> m, struct_def->Members)
 				{
@@ -1566,17 +1585,17 @@ namespace RobotRaconteur
 						else if (element->ElementType == DataTypes_structure_t)
 						{
 							type1_2t->Type = DataTypes_namedtype_t;
-							type1_2t->TypeString = element->ElementTypeName;
+							type1_2t->TypeString = element->ElementTypeName.str().to_string();
 						}
 						else if (element->ElementType == DataTypes_pod_t)
 						{
 							type1_2t->Type = DataTypes_namedtype_t;
-							type1_2t->TypeString = element->ElementTypeName;
+							type1_2t->TypeString = element->ElementTypeName.str().to_string();
 						}
 						else if (element->ElementType == DataTypes_pod_array_t)
 						{
 							type1_2t->Type = DataTypes_namedtype_t;
-							type1_2t->TypeString = element->ElementTypeName;
+							type1_2t->TypeString = element->ElementTypeName.str().to_string();
 							type1_2t->ArrayVarLength = true;
 							type1_2t->ArrayLength.push_back(0);
 							type1_2t->ArrayType = DataTypes_ArrayTypes_array;
@@ -1584,14 +1603,14 @@ namespace RobotRaconteur
 						else if (element->ElementType == DataTypes_pod_multidimarray_t)
 						{
 							type1_2t->Type = DataTypes_namedtype_t;
-							type1_2t->TypeString = element->ElementTypeName;
+							type1_2t->TypeString = element->ElementTypeName.str().to_string();
 							type1_2t->ArrayVarLength = true;
 							type1_2t->ArrayType = DataTypes_ArrayTypes_multidimarray;
 						}
 						else if (element->ElementType == DataTypes_namedarray_array_t)
 						{
 							type1_2t->Type = DataTypes_namedtype_t;
-							type1_2t->TypeString = element->ElementTypeName;
+							type1_2t->TypeString = element->ElementTypeName.str().to_string();
 							type1_2t->ArrayVarLength = true;
 							type1_2t->ArrayLength.push_back(0);
 							type1_2t->ArrayType = DataTypes_ArrayTypes_array;
@@ -1599,7 +1618,7 @@ namespace RobotRaconteur
 						else if (element->ElementType == DataTypes_namedarray_multidimarray_t)
 						{
 							type1_2t->Type = DataTypes_namedtype_t;
-							type1_2t->TypeString = element->ElementTypeName;
+							type1_2t->TypeString = element->ElementTypeName.str().to_string();
 							type1_2t->ArrayVarLength = true;
 							type1_2t->ArrayType = DataTypes_ArrayTypes_multidimarray;
 						}
@@ -1623,7 +1642,7 @@ namespace RobotRaconteur
 							type1_2t->ArrayType = DataTypes_ArrayTypes_multidimarray;
 							type1_2t->ArrayVarLength = true;
 							type1_2t->ArrayLength.push_back(0);
-							type1_2t->Type = MessageElement::FindElement(element->CastData<MessageElementMultiDimArray>()->Elements, "array")->ElementType;
+							type1_2t->Type = MessageElement::FindElement(element->CastDataToNestedList(DataTypes_multidimarray_t)->Elements, "array")->ElementType;
 							if (!IsTypeNumeric(type1_2t->Type)) throw DataTypeException("Invalid MultiDimArray");
 						}
 						else
@@ -1649,7 +1668,7 @@ namespace RobotRaconteur
 							type2->Type = DataTypes_varvalue_t;
 							type2->Name = "value";
 
-							boost::intrusive_ptr<MessageElementList> l = element->CastData<MessageElementList>();
+							boost::intrusive_ptr<MessageElementNestedElementList> l = element->CastDataToNestedList(DataTypes_list_t);
 							PyAutoPtr<PyObject> ret(PyList_New(l->Elements.size()));
 
 							for (uint32_t i = 0; i < boost::numeric_cast<uint32_t>(l->Elements.size()); i++)
@@ -1662,7 +1681,7 @@ namespace RobotRaconteur
 								}
 								else if (el1->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
 								{
-									if (i != boost::lexical_cast<int32_t>(el1->ElementName)) throw DataTypeException("Invalid list");
+									if (i != boost::lexical_cast<int32_t>(el1->ElementName.str())) throw DataTypeException("Invalid list");
 								}
 								else
 								{
@@ -1685,7 +1704,7 @@ namespace RobotRaconteur
 							type2->Type = DataTypes_varvalue_t;
 							type2->Name = "value";
 
-							boost::intrusive_ptr<MessageElementMap<int32_t> > l = element->CastData<MessageElementMap<int32_t> >();
+							boost::intrusive_ptr<MessageElementNestedElementList > l = element->CastDataToNestedList(DataTypes_vector_t);
 							PyAutoPtr<PyObject> ret(PyDict_New());
 
 							for (int32_t i = 0; i < boost::numeric_cast<int32_t>(l->Elements.size()); i++)
@@ -1699,7 +1718,7 @@ namespace RobotRaconteur
 								}
 								else if (el1->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
 								{
-									i2 = boost::lexical_cast<int32_t>(el1->ElementName);
+									i2 = boost::lexical_cast<int32_t>(el1->ElementName.str());
 								}
 								else
 								{
@@ -1721,16 +1740,16 @@ namespace RobotRaconteur
 							type2->Type = DataTypes_varvalue_t;
 							type2->Name = "value";
 
-							boost::intrusive_ptr<MessageElementMap<std::string> > l = element->CastData<MessageElementMap<std::string> >();
+							boost::intrusive_ptr<MessageElementNestedElementList > l = element->CastDataToNestedList(DataTypes_dictionary_t);
 							PyAutoPtr<PyObject> ret(PyDict_New());
 
 							for (int32_t i = 0; i < boost::numeric_cast<int32_t>(l->Elements.size()); i++)
 							{
 								boost::intrusive_ptr<MessageElement>& el1 = l->Elements[i];
 
-								push_field_level("[\"" + el1->ElementName + "\"]", type2);
+								push_field_level("[\"" + el1->ElementName.str() + "\"]", type2);
 								PyAutoPtr<PyObject> el2(UnpackMessageElement(el1, type2, stub, node));
-								PyDict_SetItem(ret.get(), stringToPyObject(el1->ElementName).get(), el2.get());
+								PyDict_SetItem(ret.get(), stringToPyObject(el1->ElementName.str()).get(), el2.get());
 								pop_field_level();
 							}
 
@@ -1797,7 +1816,7 @@ namespace RobotRaconteur
 			if (element->ElementType == DataTypes_structure_t)
 			{
 
-				std::string& typestr = element->ElementTypeName;
+				std::string typestr = element->ElementTypeName.str().to_string();
 				boost::tuple<std::string, std::string> typestr_s = SplitQualifiedName(typestr);
 				boost::shared_ptr<ServiceDefinition> def;
 				if (!stub)
@@ -1813,7 +1832,7 @@ namespace RobotRaconteur
 
 				PyAutoPtr<PyObject> ret(NewStructure(typestr, stub, node));
 
-				boost::intrusive_ptr<MessageElementStructure> s = element->CastData<MessageElementStructure>();
+				boost::intrusive_ptr<MessageElementNestedElementList> s = element->CastDataToNestedList(DataTypes_structure_t);
 
 				BOOST_FOREACH(boost::shared_ptr<MemberDefinition> m, struct_def->Members)
 				{
@@ -1838,7 +1857,7 @@ namespace RobotRaconteur
 					type2->RemoveContainers();
 				}
 
-				boost::intrusive_ptr<MessageElementList> l = element->CastData<MessageElementList>();
+				boost::intrusive_ptr<MessageElementNestedElementList> l = element->CastDataToNestedList(DataTypes_list_t);
 				PyAutoPtr<PyObject> ret(PyList_New(l->Elements.size()));
 
 				for (uint32_t i = 0; i < boost::numeric_cast<uint32_t>(l->Elements.size()); i++)
@@ -1852,7 +1871,7 @@ namespace RobotRaconteur
 					}
 					else if (el1->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
 					{
-						if (i != boost::lexical_cast<int32_t>(el1->ElementName)) throw DataTypeException("Invalid list specified for " + type1->Name);
+						if (i != boost::lexical_cast<int32_t>(el1->ElementName.str())) throw DataTypeException("Invalid list specified for " + type1->Name);
 					}
 					else
 					{
@@ -1877,7 +1896,7 @@ namespace RobotRaconteur
 					type2->RemoveContainers();
 				}
 
-				boost::intrusive_ptr<MessageElementMap<int32_t> > l = element->CastData<MessageElementMap<int32_t> >();
+				boost::intrusive_ptr<MessageElementNestedElementList > l = element->CastDataToNestedList(DataTypes_vector_t);
 				PyAutoPtr<PyObject> ret(PyDict_New());
 
 				for (int32_t i = 0; i < boost::numeric_cast<int32_t>(l->Elements.size()); i++)
@@ -1891,7 +1910,7 @@ namespace RobotRaconteur
 					}
 					else if (el1->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
 					{
-						i2 = boost::lexical_cast<int32_t>(el1->ElementName);
+						i2 = boost::lexical_cast<int32_t>(el1->ElementName.str());
 					}
 					else
 					{
@@ -1921,16 +1940,16 @@ namespace RobotRaconteur
 					type2->RemoveContainers();
 				}
 
-				boost::intrusive_ptr<MessageElementMap<std::string> > l = element->CastData<MessageElementMap<std::string> >();
+				boost::intrusive_ptr<MessageElementNestedElementList > l = element->CastDataToNestedList(DataTypes_dictionary_t);
 				PyAutoPtr<PyObject> ret(PyDict_New());
 
 				for (int32_t i = 0; i < boost::numeric_cast<int32_t>(l->Elements.size()); i++)
 				{
 					boost::intrusive_ptr<MessageElement>& el1 = l->Elements[i];
 
-					push_field_level("[" + el1->ElementName + "]", type2);
+					push_field_level("[" + el1->ElementName.str() + "]", type2);
 					PyAutoPtr<PyObject> el2(UnpackMessageElement(el1, type2, stub, node));
-					PyDict_SetItem(ret.get(), stringToPyObject(el1->ElementName).get(), el2.get());
+					PyDict_SetItem(ret.get(), stringToPyObject(el1->ElementName.str()).get(), el2.get());
 					pop_field_level();
 				}
 
@@ -1939,7 +1958,7 @@ namespace RobotRaconteur
 
 			if (element->ElementType == DataTypes_multidimarray_t)
 			{
-				boost::intrusive_ptr<MessageElementMultiDimArray> mm = element->CastData<MessageElementMultiDimArray>();
+				boost::intrusive_ptr<MessageElementNestedElementList> mm = element->CastDataToNestedList(DataTypes_multidimarray_t);
 
 				if (type1)
 				{
@@ -1950,12 +1969,12 @@ namespace RobotRaconteur
 					}
 				}
 
-				return UnpackFromRRMultiDimArray_numpy(element->CastData<MessageElementMultiDimArray>(), type1);
+				return UnpackFromRRMultiDimArray_numpy(element->CastDataToNestedList(DataTypes_multidimarray_t), type1);
 			}
 
 			if (element->ElementType == DataTypes_pod_multidimarray_t)
 			{
-				boost::intrusive_ptr<MessageElementPodMultiDimArray> mm = element->CastData<MessageElementPodMultiDimArray>();
+				boost::intrusive_ptr<MessageElementNestedElementList> mm = element->CastDataToNestedList(DataTypes_pod_multidimarray_t);
 
 				boost::intrusive_ptr<RRArray<uint32_t> > dims_rr = MessageElement::FindElement(mm->Elements, "dims")->CastData<RRArray<uint32_t> >();
 				if (!dims_rr) throw DataTypeException("Invalid PodMultiDimArray");
@@ -1996,7 +2015,7 @@ namespace RobotRaconteur
 
 			if (element->ElementType == DataTypes_namedarray_multidimarray_t)
 			{
-				boost::intrusive_ptr<MessageElementNamedMultiDimArray> mm = element->CastData<MessageElementNamedMultiDimArray>();
+				boost::intrusive_ptr<MessageElementNestedElementList> mm = element->CastDataToNestedList(DataTypes_namedarray_multidimarray_t);
 
 				boost::intrusive_ptr<RRArray<uint32_t> > dims_rr = MessageElement::FindElement(mm->Elements, "dims")->CastData<RRArray<uint32_t> >();
 				if (!dims_rr) throw DataTypeException("Invalid PodMultiDimArray");
@@ -2803,7 +2822,7 @@ namespace RobotRaconteur
 		}
 	}
 
-	boost::intrusive_ptr<MessageElementMultiDimArray> PackToRRMultiDimArray_numpy(PyObject* array_, boost::shared_ptr<TypeDefinition> type1)
+	boost::intrusive_ptr<MessageElementNestedElementList> PackToRRMultiDimArray_numpy(PyObject* array_, boost::shared_ptr<TypeDefinition> type1)
 	{
 		//if (!_NumPyAvailable) throw InvalidOperationException("NumPy is not available");
 
@@ -2837,7 +2856,7 @@ namespace RobotRaconteur
 			case NPY_BOOL:
 			{
 				ret_vec.push_back(CreateMessageElement("array", PackToMultiDimArray_numpy1(array1,type1).get<0>()));
-				return CreateMessageElementMultiDimArray(ret_vec);
+				return CreateMessageElementNestedElementList(DataTypes_multidimarray_t, "", ret_vec);
 			}
 			
 			default:
@@ -2868,7 +2887,7 @@ namespace RobotRaconteur
 		return array_b.detach();
 	}
 		
-	PyObject* UnpackFromRRMultiDimArray_numpy(boost::intrusive_ptr<MessageElementMultiDimArray> rrarray, boost::shared_ptr<TypeDefinition> type1)
+	PyObject* UnpackFromRRMultiDimArray_numpy(boost::intrusive_ptr<MessageElementNestedElementList> rrarray, boost::shared_ptr<TypeDefinition> type1)
 	{
 		if (!rrarray)
 		{

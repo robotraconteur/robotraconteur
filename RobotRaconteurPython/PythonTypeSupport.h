@@ -46,14 +46,14 @@ namespace RobotRaconteur
 
 	PyObject* UnpackFromRRArray_numpy(boost::intrusive_ptr<RRBaseArray> rrarray, boost::shared_ptr<TypeDefinition> type1);
 
-	/*boost::intrusive_ptr<MessageElementMultiDimArray> PackToRRMultiDimArray(PyObject* array_, boost::shared_ptr<TypeDefinition> type1, boost::intrusive_ptr<RRBaseArray> destrrarray);
+	/*boost::intrusive_ptr<MessageElementNestedElementList> PackToRRMultiDimArray(PyObject* array_, boost::shared_ptr<TypeDefinition> type1, boost::intrusive_ptr<RRBaseArray> destrrarray);
 
-	PyObject* UnpackFromRRMultiDimArray(boost::intrusive_ptr<MessageElementMultiDimArray> rrarray, boost::shared_ptr<TypeDefinition> type1);
+	PyObject* UnpackFromRRMultiDimArray(boost::intrusive_ptr<MessageElementNestedElementList> rrarray, boost::shared_ptr<TypeDefinition> type1);
 	*/
 
-	boost::intrusive_ptr<MessageElementMultiDimArray> PackToRRMultiDimArray_numpy(PyObject* array_, boost::shared_ptr<TypeDefinition> type1);
+	boost::intrusive_ptr<MessageElementNestedElementList> PackToRRMultiDimArray_numpy(PyObject* array_, boost::shared_ptr<TypeDefinition> type1);
 
-	PyObject* UnpackFromRRMultiDimArray_numpy(boost::intrusive_ptr<MessageElementMultiDimArray> rrarray, boost::shared_ptr<TypeDefinition> type1);
+	PyObject* UnpackFromRRMultiDimArray_numpy(boost::intrusive_ptr<MessageElementNestedElementList> rrarray, boost::shared_ptr<TypeDefinition> type1);
 
 	bool VerifyNumPyDataType(PyArray_Descr* np_type, DataTypes rr_type);
 

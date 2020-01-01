@@ -4,21 +4,10 @@
 	a=MessageElementDataUtil.ToRRBaseArray(val)
 	if (not a is None):
 		return a
-	a=MessageElementDataUtil.ToMessageElementStructure(val)
+	a=MessageElementDataUtil.ToMessageElementNestedElementList(val)
 	if (not a is None):
 		return a
-	a=MessageElementDataUtil.ToMessageElementMap_int32_t(val)
-	if (not a is None):
-		return a
-	a=MessageElementDataUtil.ToMessageElementMap_string(val)
-	if (not a is None):
-		return a
-	a=MessageElementDataUtil.ToMessageElementMultiDimArray(val)
-	if (not a is None):
-		return a
-	a=MessageElementDataUtil.ToMessageElementList(val)
-	if (not a is None):
-		return a
+	
 %}
 
 %pythoncode %{
