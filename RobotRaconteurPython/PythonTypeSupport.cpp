@@ -56,6 +56,20 @@ namespace RobotRaconteur
 		throw ServiceException("Unknown structure type " + name);
 	}
 
+	template <typename T>
+	T find_by_name(std::vector<T> t, boost::string_ref name)
+	{
+		BOOST_FOREACH(T t1, t)
+		{
+			if (t1->Name == name)
+			{
+				return t1;
+			}
+		}
+
+		throw ServiceException("Unknown structure type " + name);
+	}
+
 	std::string PyObjectToUTF8(PyObject* obj)
 	{
 #if (PY_MAJOR_VERSION == 2)
@@ -172,7 +186,7 @@ namespace RobotRaconteur
 			node = RobotRaconteur::RobotRaconteurNode::sp();
 		}
 
-		boost::tuple<std::string, std::string> s1 = RobotRaconteur::SplitQualifiedName(type);
+		boost::tuple<boost::string_ref, boost::string_ref> s1 = RobotRaconteur::SplitQualifiedName(type);
 
 		RR_SHARED_PTR<RobotRaconteur::ServiceFactory> f;
 
@@ -1334,7 +1348,7 @@ namespace RobotRaconteur
 		PyObject* UnpackMessageElement_pod(boost::intrusive_ptr<MessageElement> element, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<WrappedServiceStub> stub, boost::shared_ptr<RobotRaconteurNode> node)
 		{
 			std::string typestr = element->ElementTypeName.str().to_string();
-			boost::tuple<std::string, std::string> typestr_s = SplitQualifiedName(typestr);
+			boost::tuple<boost::string_ref, boost::string_ref> typestr_s = SplitQualifiedName(typestr);
 			boost::shared_ptr<ServiceDefinition> def;
 			if (!stub)
 			{
@@ -1817,7 +1831,7 @@ namespace RobotRaconteur
 			{
 
 				std::string typestr = element->ElementTypeName.str().to_string();
-				boost::tuple<std::string, std::string> typestr_s = SplitQualifiedName(typestr);
+				boost::tuple<boost::string_ref, boost::string_ref> typestr_s = SplitQualifiedName(typestr);
 				boost::shared_ptr<ServiceDefinition> def;
 				if (!stub)
 				{
