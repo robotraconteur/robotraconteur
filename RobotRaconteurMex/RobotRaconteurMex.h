@@ -56,20 +56,20 @@ public:
 	virtual std::string GetServiceName();
 	virtual std::string DefString();
 	virtual RR_SHARED_PTR<ServiceDefinition> ServiceDef();
-	virtual RR_SHARED_PTR<RobotRaconteur::StructureStub> FindStructureStub(const std::string& s);
-	virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementStructure> PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> structin);
-	virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> UnpackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementStructure> mstructin);
-	virtual RR_INTRUSIVE_PTR<MessageElementPodArray> PackPodArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> structure);
-	virtual RR_INTRUSIVE_PTR<RRPodBaseArray> UnpackPodArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementPodArray> structure);
-	virtual RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> PackPodMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> structure);
-	virtual RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> UnpackPodMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementPodMultiDimArray> structure);
-	virtual RR_INTRUSIVE_PTR<MessageElementNamedArray> PackNamedArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> structure);
-	virtual RR_INTRUSIVE_PTR<RRNamedBaseArray> UnpackNamedArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNamedArray> structure);
-	virtual RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> PackNamedMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> structure);
-	virtual RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> UnpackNamedMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNamedMultiDimArray> structure);
+	virtual RR_SHARED_PTR<RobotRaconteur::StructureStub> FindStructureStub(boost::string_ref s);
+	virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> structin);
+	virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> UnpackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> mstructin);
+	virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackPodArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> structure);
+	virtual RR_INTRUSIVE_PTR<RRPodBaseArray> UnpackPodArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> structure);
+	virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackPodMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> structure);
+	virtual RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> UnpackPodMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> structure);
+	virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackNamedArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> structure);
+	virtual RR_INTRUSIVE_PTR<RRNamedBaseArray> UnpackNamedArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> structure);
+	virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackNamedMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> structure);
+	virtual RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> UnpackNamedMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> structure);
 	
-	virtual RR_SHARED_PTR<RobotRaconteur::ServiceStub> CreateStub(const std::string& objecttype, const std::string& path, RR_SHARED_PTR<RobotRaconteur::ClientContext> context);
-	virtual RR_SHARED_PTR<RobotRaconteur::ServiceSkel> CreateSkel(const std::string& objecttype, const std::string& path, RR_SHARED_PTR<RobotRaconteur::RRObject> obj, RR_SHARED_PTR<RobotRaconteur::ServerContext> context);
+	virtual RR_SHARED_PTR<RobotRaconteur::ServiceStub> CreateStub(boost::string_ref objecttype, boost::string_ref path, RR_SHARED_PTR<RobotRaconteur::ClientContext> context);
+	virtual RR_SHARED_PTR<RobotRaconteur::ServiceSkel> CreateSkel(boost::string_ref objecttype, boost::string_ref path, RR_SHARED_PTR<RobotRaconteur::RRObject> obj, RR_SHARED_PTR<RobotRaconteur::ServerContext> context);
 
 	virtual void DownCastAndThrowException(RobotRaconteurException& exp)
 	{
@@ -89,7 +89,7 @@ private:
 class MexDynamicServiceFactory : public virtual DynamicServiceFactory
 {
 public:
-	virtual RR_SHARED_PTR<ServiceFactory> CreateServiceFactory(const std::string& def);
+	virtual RR_SHARED_PTR<ServiceFactory> CreateServiceFactory(boost::string_ref def);
 	virtual std::vector<RR_SHARED_PTR<ServiceFactory> > CreateServiceFactories(const std::vector<std::string>& def);
 };
 
@@ -152,7 +152,7 @@ class MexWireClient;
 class MexServiceStub : public virtual RobotRaconteur::ServiceStub
 {
 public:
-	MexServiceStub(const std::string& path, RR_SHARED_PTR<ServiceEntryDefinition> type, RR_SHARED_PTR<RobotRaconteur::ClientContext> c);
+	MexServiceStub(boost::string_ref path, RR_SHARED_PTR<ServiceEntryDefinition> type, RR_SHARED_PTR<RobotRaconteur::ClientContext> c);
 
 	virtual mxArray* PropertyGet(std::string PropertyName);
 	virtual void PropertySet(std::string PropertyName, const mxArray* value);
@@ -179,11 +179,11 @@ public:
 	virtual void RRClose();
 	virtual void RRInitStub();
 
-	virtual RR_SHARED_PTR<PipeClientBase> RRGetPipeClient(const std::string& membername);
-	virtual RR_SHARED_PTR<WireClientBase> RRGetWireClient(const std::string& membername);
+	virtual RR_SHARED_PTR<PipeClientBase> RRGetPipeClient(boost::string_ref membername);
+	virtual RR_SHARED_PTR<WireClientBase> RRGetWireClient(boost::string_ref membername);
 		
 public:
-	virtual std::string RRType();
+	virtual boost::string_ref RRType();
 	RR_SHARED_PTR<ServiceEntryDefinition> RR_objecttype;
 
 	
@@ -377,7 +377,7 @@ public:
 	boost::shared_ptr<ServiceEntryDefinition> type;
 	std::string strtype;
 
-	virtual std::string RRType() {return strtype;}
+	virtual boost::string_ref RRType() {return strtype;}
 };
 
 
@@ -410,7 +410,7 @@ public:
 	
 	virtual void ProcessRequests();
 
-	virtual RR_SHARED_PTR<RRObject> GetSubObj(const std::string &,const std::string &) {throw InvalidArgumentException("Object not found");}
+	virtual RR_SHARED_PTR<RRObject> GetSubObj(boost::string_ref,boost::string_ref) {throw InvalidArgumentException("Object not found");}
 
 	int skelid;
 };

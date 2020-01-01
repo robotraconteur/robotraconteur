@@ -189,8 +189,8 @@ RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > mxArrayToRRMap(const mxArray* in)
 	tc->Type = DataTypes_varvalue_t;
 	tc->ContainerType = DataTypes_ContainerTypes_map_string;
 	
-	RR_INTRUSIVE_PTR<MessageElementMap<std::string> > o1 =
-		PackMxArrayToMessageElement(in, tc, RR_SHARED_PTR<ServiceStub>())->CastData<MessageElementMap<std::string> >();
+	RR_INTRUSIVE_PTR<MessageElementNestedElementList > o1 =
+		PackMxArrayToMessageElement(in, tc, RR_SHARED_PTR<ServiceStub>())->CastDataToNestedList(DataTypes_dictionary_t);
 
 	RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > o = AllocateEmptyRRMap<std::string, RRValue>();
 
@@ -198,7 +198,7 @@ RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > mxArrayToRRMap(const mxArray* in)
 
 	BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, elems)
 	{
-		o->insert(std::make_pair((e)->ElementName, RobotRaconteurNode::s()->UnpackVarType(e)));
+		o->insert(std::make_pair((e)->ElementName.str().to_string(), RobotRaconteurNode::s()->UnpackVarType(e)));
 	}
 
 	return o;
@@ -1072,7 +1072,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 			boost::shared_ptr<mxArray> mxobj=boost::shared_ptr<mxArray>(mxDuplicateArray(prhs[3]),rr_mxDestroyArray);
 			mexMakeArrayPersistent(mxobj.get());
 
-			boost::tuple<std::string,std::string> s1=SplitQualifiedName(type);
+			boost::tuple<boost::string_ref,boost::string_ref> s1=SplitQualifiedName(type);
 			boost::shared_ptr<ServiceDefinition> def=RobotRaconteurNode::s()->GetServiceType(s1.get<0>())->ServiceDef();
 			boost::shared_ptr<ServiceEntryDefinition> type1;
 			BOOST_FOREACH (boost::shared_ptr<ServiceEntryDefinition>& e, def->Objects)
@@ -1555,7 +1555,7 @@ class PackMxArrayToMessageElementImpl
 {
 public:
 
-	RR_INTRUSIVE_PTR<MessageElementPodArray>  PackMxArrayToMessageElement_pod(const mxArray* pm, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<ServiceStub> obj)
+	RR_INTRUSIVE_PTR<MessageElementNestedElementList>  PackMxArrayToMessageElement_pod(const mxArray* pm, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<ServiceStub> obj)
 	{
 
 		if (!mxIsStruct(pm)) throw DataTypeException("Matlab structure expected");
@@ -1685,7 +1685,7 @@ public:
 				pop_field_level();
 			}
 
-			RR_INTRUSIVE_PTR<MessageElement> el2 = CreateMessageElement("", CreateMessageElementPod(m_struct));
+			RR_INTRUSIVE_PTR<MessageElement> el2 = CreateMessageElement("", CreateMessageElementNestedElementList(DataTypes_pod_t,"",m_struct));
 			el2->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
 			el2->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
 			el2->ElementNumber = i;
@@ -1694,7 +1694,7 @@ public:
 			pop_field_level();
 		}
 
-		return CreateMessageElementPodArray(typestr2, ret);
+		return CreateMessageElementNestedElementList(DataTypes_pod_array_t,typestr2, ret);
 	}
 
 	RR_INTRUSIVE_PTR<MessageElement> PackMxArrayToMessageElement(const mxArray* pm, boost::shared_ptr<TypeDefinition> tdef, RR_SHARED_PTR<ServiceStub> stub, bool allow_null=true)
@@ -1802,12 +1802,12 @@ public:
 
 			if (tdef->ContainerType == DataTypes_ContainerTypes_map_int32)
 			{
-				return CreateMessageElement(tdef->Name, CreateMessageElementMap<int32_t>(mapelems));
+				return CreateMessageElement(tdef->Name, CreateMessageElementNestedElementList(DataTypes_vector_t,"",mapelems));
 
 			}
 			else
 			{
-				return CreateMessageElement(tdef->Name, CreateMessageElementMap<std::string>(mapelems));
+				return CreateMessageElement(tdef->Name, CreateMessageElementNestedElementList(DataTypes_dictionary_t,"",mapelems));
 			}
 		}
 
@@ -1849,7 +1849,7 @@ public:
 			}
 
 
-			return CreateMessageElement(tdef->Name, CreateMessageElementList(mapelems));
+			return CreateMessageElement(tdef->Name, CreateMessageElementNestedElementList(DataTypes_list_t, "", mapelems));
 
 
 		}
@@ -1920,7 +1920,7 @@ public:
 
 			if (array1->GetTypeID() != tdef->Type) throw DataTypeException("Array type mismatch");
 
-			return CreateMessageElement(tdef->Name, CreateMessageElementMultiDimArray(multidimvec));
+			return CreateMessageElement(tdef->Name, CreateMessageElementNestedElementList(DataTypes_multidimarray_t,"",multidimvec));
 
 		}
 
@@ -1975,7 +1975,7 @@ public:
 
 					pop_field_level();
 				}
-				return CreateMessageElement(tdef->Name, CreateMessageElementStructure(def->Name + "." + nt->Name, structvec));
+				return CreateMessageElement(tdef->Name, CreateMessageElementNestedElementList(DataTypes_structure_t,def->Name + "." + nt->Name, structvec));
 			}
 			case DataTypes_enum_t:
 			{
@@ -2017,7 +2017,7 @@ public:
 
 					map_vec.push_back(CreateMessageElement("array", PackMxArrayToMessageElement_pod(pm, array_type, stub)));
 
-					RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> mm = CreateMessageElementPodMultiDimArray(tdef->ResolveNamedType()->ResolveQualifiedName(), map_vec);
+					RR_INTRUSIVE_PTR<MessageElementNestedElementList> mm = CreateMessageElementNestedElementList(DataTypes_pod_multidimarray_t,tdef->ResolveNamedType()->ResolveQualifiedName(), map_vec);
 
 					return CreateMessageElement(tdef->Name, mm);
 				}
@@ -2050,7 +2050,7 @@ public:
 
 					std::vector<RR_INTRUSIVE_PTR<MessageElement> > o1;
 					o1.push_back(CreateMessageElement("array", GetRRArrayFromMxArray(pm)));
-					RR_INTRUSIVE_PTR<MessageElementNamedArray> o2 = CreateMessageElementNamedArray(tdef->ResolveNamedType()->ResolveQualifiedName(), o1);
+					RR_INTRUSIVE_PTR<MessageElementNestedElementList> o2 = CreateMessageElementNestedElementList(DataTypes_namedarray_array_t,tdef->ResolveNamedType()->ResolveQualifiedName(), o1);
 					return CreateMessageElement(tdef->Name, o2);
 				}
 				case DataTypes_ArrayTypes_array:
@@ -2071,7 +2071,7 @@ public:
 
 					std::vector<RR_INTRUSIVE_PTR<MessageElement> > o1;
 					o1.push_back(CreateMessageElement("array", GetRRArrayFromMxArray(pm)));
-					RR_INTRUSIVE_PTR<MessageElementNamedArray> o2 = CreateMessageElementNamedArray(tdef->ResolveNamedType()->ResolveQualifiedName(), o1);
+					RR_INTRUSIVE_PTR<MessageElementNestedElementList> o2 = CreateMessageElementNestedElementList(DataTypes_namedarray_array_t,tdef->ResolveNamedType()->ResolveQualifiedName(), o1);
 					return CreateMessageElement(tdef->Name, o2);
 				}
 				case DataTypes_ArrayTypes_multidimarray:
@@ -2087,7 +2087,7 @@ public:
 
 					std::vector<RR_INTRUSIVE_PTR<MessageElement> > o1;
 					o1.push_back(CreateMessageElement("array", GetRRArrayFromMxArray(pm)));
-					RR_INTRUSIVE_PTR<MessageElementNamedArray> o2 = CreateMessageElementNamedArray(tdef->ResolveNamedType()->ResolveQualifiedName(), o1);
+					RR_INTRUSIVE_PTR<MessageElementNestedElementList> o2 = CreateMessageElementNestedElementList(DataTypes_namedarray_array_t,tdef->ResolveNamedType()->ResolveQualifiedName(), o1);
 
 					std::vector<RR_INTRUSIVE_PTR<MessageElement> > o3;
 					RR_INTRUSIVE_PTR<RRArray<uint32_t> > rr_dims = AllocateRRArray<uint32_t>(dims.size() - 1);
@@ -2097,7 +2097,7 @@ public:
 					}
 					o3.push_back(CreateMessageElement("dims", rr_dims));
 					o3.push_back(CreateMessageElement("array", o2));
-					RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> o4 = CreateMessageElementNamedMultiDimArray(tdef->ResolveNamedType()->ResolveQualifiedName(), o3);
+					RR_INTRUSIVE_PTR<MessageElementNestedElementList> o4 = CreateMessageElementNestedElementList(DataTypes_namedarray_multidimarray_t,tdef->ResolveNamedType()->ResolveQualifiedName(), o3);
 					return CreateMessageElement(tdef->Name, o4);
 				}
 				default:
@@ -2323,7 +2323,7 @@ RR_INTRUSIVE_PTR<MessageElement> PackMxArrayToMessageElement(const mxArray* pm, 
 	}
 }
 
-RR_INTRUSIVE_PTR<MessageElementPodArray>  PackMxArrayToMessageElement_pod(const mxArray* pm, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<ServiceStub> obj)
+RR_INTRUSIVE_PTR<MessageElementNestedElementList>  PackMxArrayToMessageElement_pod(const mxArray* pm, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<ServiceStub> obj)
 {
 	PackMxArrayToMessageElementImpl p;
 	if (type1)
@@ -2359,7 +2359,7 @@ public:
 		boost::shared_ptr<ServiceEntryDefinition> struct_def = rr_cast<ServiceEntryDefinition>(type1->ResolveNamedType(other_defs, RobotRaconteurNode::sp(), stub));
 		if (!struct_def) throw DataTypeException("Invalid pod type");
 
-		RR_INTRUSIVE_PTR<MessageElementPodArray> l = element->CastData<MessageElementPodArray>();
+		RR_INTRUSIVE_PTR<MessageElementNestedElementList> l = element->CastDataToNestedList(DataTypes_pod_array_t);
 
 		RR_SHARED_PTR<TypeDefinition> type2;
 
@@ -2417,14 +2417,14 @@ public:
 			}
 			else if (el1->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
 			{
-				if (i != boost::lexical_cast<int32_t>(el1->ElementName)) throw DataTypeException("Invalid pod array");
+				if (i != boost::lexical_cast<int32_t>(el1->ElementName.str())) throw DataTypeException("Invalid pod array");
 			}
 			else
 			{
 				throw DataTypeException("Invalid pod array");
 			}
 
-			RR_INTRUSIVE_PTR<MessageElementPod> s = el1->CastData<MessageElementPod>();
+			RR_INTRUSIVE_PTR<MessageElementNestedElementList> s = el1->CastDataToNestedList(DataTypes_pod_t);
 
 			std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
 
@@ -2539,7 +2539,7 @@ public:
 
 			if (tdef->ContainerType == DataTypes_ContainerTypes_map_int32)
 			{
-				std::vector<RR_INTRUSIVE_PTR<MessageElement> > elems = m->CastData<MessageElementMap<int32_t> >()->Elements;
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > elems = m->CastDataToNestedList(DataTypes_vector_t)->Elements;
 
 				mwIndex count = 0;
 
@@ -2567,7 +2567,7 @@ public:
 					}
 					else if (e->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
 					{
-						key[0] = boost::lexical_cast<int32_t>(e->ElementName);
+						key[0] = boost::lexical_cast<int32_t>(e->ElementName.str());
 					}
 					else
 					{
@@ -2602,7 +2602,7 @@ public:
 
 			if (tdef->ContainerType == DataTypes_ContainerTypes_map_string)
 			{
-				std::vector<RR_INTRUSIVE_PTR<MessageElement> > elems = m->CastData<MessageElementMap<std::string> >()->Elements;
+				std::vector<RR_INTRUSIVE_PTR<MessageElement> > elems = m->CastDataToNestedList(DataTypes_dictionary_t)->Elements;
 
 				mwIndex count = 0;
 
@@ -2618,14 +2618,14 @@ public:
 
 				BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, elems)
 				{
-					push_field_level("[\"" + e->ElementName + "\"]", tdef2);
+					push_field_level("[\"" + e->ElementName.str() + "\"]", tdef2);
 
 					const char* fnames[] = { "type","subs" };
 					mxArray* subs = mxCreateStructMatrix(1, 1, 2, fnames);
 					mxSetFieldByNumber(subs, 0, 0, mxCreateString("()"));
 
-
-					mxArray* mxkey = mxCreateString(e->ElementName.c_str());
+					std::string key1 = e->ElementName.str().to_string();
+					mxArray* mxkey = mxCreateString(key1.c_str());
 					mxSetFieldByNumber(subs, 0, 1, mxkey);
 
 					//mxSetCell(k,count,mxkey);
@@ -2656,7 +2656,7 @@ public:
 			boost::shared_ptr<TypeDefinition> tdef2 = tdef->Clone();
 			tdef2->RemoveContainers();
 
-			std::vector<RR_INTRUSIVE_PTR<MessageElement> > elems = m->CastData<MessageElementList >()->Elements;
+			std::vector<RR_INTRUSIVE_PTR<MessageElement> > elems = m->CastDataToNestedList(DataTypes_list_t)->Elements;
 
 			mwSize dims = (mwSize)elems.size();
 
@@ -2674,7 +2674,7 @@ public:
 				}
 				else if (e->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
 				{
-					c = boost::lexical_cast<int32_t>(e->ElementName);
+					c = boost::lexical_cast<int32_t>(e->ElementName.str());
 				}
 				else
 				{
@@ -2724,7 +2724,7 @@ public:
 			}
 			else
 			{
-				RR_INTRUSIVE_PTR<MessageElementMultiDimArray> a = m->CastData<MessageElementMultiDimArray>();
+				RR_INTRUSIVE_PTR<MessageElementNestedElementList> a = m->CastDataToNestedList(DataTypes_multidimarray_t);
 				std::vector<mwSize> dims = RRArrayToVector<mwSize>(MessageElement::FindElement(a->Elements, "dims")->CastData<RRArray<uint32_t> >());
 				RR_INTRUSIVE_PTR<RRBaseArray> array = MessageElement::FindElement(a->Elements, "array")->CastData<RRBaseArray>();
 
@@ -2765,7 +2765,7 @@ public:
 			{
 			case DataTypes_structure_t:
 			{
-				RR_INTRUSIVE_PTR<MessageElementStructure> mstruct = m->CastData<MessageElementStructure>();
+				RR_INTRUSIVE_PTR<MessageElementNestedElementList> mstruct = m->CastDataToNestedList(DataTypes_structure_t);
 				std::vector<RR_INTRUSIVE_PTR<MessageElement> >& melements = mstruct->Elements;
 
 
@@ -2821,7 +2821,7 @@ public:
 				}
 				case DataTypes_ArrayTypes_multidimarray:
 				{
-					RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> mm = m->CastData<MessageElementPodMultiDimArray>();
+					RR_INTRUSIVE_PTR<MessageElementNestedElementList> mm = m->CastDataToNestedList(DataTypes_pod_multidimarray_t);
 					if (!mm) throw DataTypeException("Invalid pod array");
 
 					std::vector<mwSize> dims = RRArrayToVector<mwSize>(MessageElement::FindElement(mm->Elements, "dims")->CastData<RRArray<uint32_t> >());
@@ -2863,7 +2863,7 @@ public:
 				case DataTypes_ArrayTypes_none:
 				case DataTypes_ArrayTypes_array:
 				{
-					RR_INTRUSIVE_PTR<MessageElementNamedArray> mm = m->CastData<MessageElementNamedArray>();
+					RR_INTRUSIVE_PTR<MessageElementNestedElementList> mm = m->CastDataToNestedList(DataTypes_namedarray_array_t);
 					if (!mm) throw DataTypeException("Invalid namedarray");
 
 					namedarray_array = MessageElement::FindElement(mm->Elements, "array")->CastData<RRBaseArray>();
@@ -2891,7 +2891,7 @@ public:
 				}
 				case DataTypes_ArrayTypes_multidimarray:
 				{
-					RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> mm1 = m->CastData<MessageElementNamedMultiDimArray>();
+					RR_INTRUSIVE_PTR<MessageElementNestedElementList> mm1 = m->CastDataToNestedList(DataTypes_namedarray_multidimarray_t);
 					if (!mm1) throw DataTypeException("Invalid namedarray");
 
 					std::vector<size_t> dims1 = RRArrayToVector<mwSize>(MessageElement::FindElement(mm1->Elements, "dims")->CastData<RRArray<uint32_t> >());
@@ -2906,7 +2906,7 @@ public:
 
 					size_t expected_n_elems = boost::numeric_cast<size_t>(boost::accumulate(dims1, 1, std::multiplies<int32_t>()) * namedarray_info.get<1>());
 
-					RR_INTRUSIVE_PTR<MessageElementNamedArray> mm = MessageElement::FindElement(mm1->Elements, "array")->CastData<MessageElementNamedArray>();
+					RR_INTRUSIVE_PTR<MessageElementNestedElementList> mm = MessageElement::FindElement(mm1->Elements, "array")->CastDataToNestedList(DataTypes_namedarray_array_t);
 					if (!mm) throw DataTypeException("Invalid namedarray");
 
 					namedarray_array = MessageElement::FindElement(mm->Elements, "array")->CastData<RRBaseArray>();
@@ -2952,7 +2952,7 @@ public:
 				|| m->ElementType == DataTypes_pod_multidimarray_t)
 			{
 				tdef2->Type = DataTypes_namedtype_t;
-				tdef2->TypeString = m->ElementTypeName;
+				tdef2->TypeString = m->ElementTypeName.str().to_string();
 				if (m->ElementType == DataTypes_pod_array_t)
 				{
 					tdef2->ArrayType = DataTypes_ArrayTypes_array;
@@ -2980,7 +2980,8 @@ public:
 
 				for (size_t j = 0; j < dims; j++)
 				{
-					mxSetFieldByNumber(o2, j, 0, mxCreateString(m->ElementTypeName.c_str()));
+					std::string m_type_name = m->ElementTypeName.str().to_string();
+					mxSetFieldByNumber(o2, j, 0, mxCreateString(m_type_name.c_str()));
 					for (int i = 0; i < fcount; i++)
 					{
 						mxArray* fdata = mxGetFieldByNumber(o, j, i);
@@ -2993,7 +2994,7 @@ public:
 				mxDestroyArray(o);
 				if (m->ElementType == DataTypes_pod_multidimarray_t)
 				{
-					RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> mm = m->CastData<MessageElementPodMultiDimArray>();
+					RR_INTRUSIVE_PTR<MessageElementNestedElementList> mm = m->CastDataToNestedList(DataTypes_pod_multidimarray_t);
 					std::vector<mwSize> dims = RRArrayToVector<mwSize>(MessageElement::FindElement(mm->Elements, "dims")->CastData<RRArray<uint32_t> >());
 					if (mxSetDimensions(o2, &dims[0], dims.size()))
 					{
@@ -3009,7 +3010,7 @@ public:
 				tdef2->ArrayLength.push_back(0);
 				tdef2->ArrayType = DataTypes_ArrayTypes_array;
 				tdef2->Type = DataTypes_namedtype_t;
-				tdef2->TypeString = m->ElementTypeName;
+				tdef2->TypeString = m->ElementTypeName.str().to_string();
 				return UnpackMessageElementToMxArray(m, tdef2, stub);
 			}
 
@@ -3018,7 +3019,7 @@ public:
 				tdef2->ArrayVarLength = true;
 				tdef2->ArrayType = DataTypes_ArrayTypes_multidimarray;
 				tdef2->Type = DataTypes_namedtype_t;
-				tdef2->TypeString = m->ElementTypeName;
+				tdef2->TypeString = m->ElementTypeName.str().to_string();
 				return UnpackMessageElementToMxArray(m, tdef2, stub);
 			}
 
@@ -3046,7 +3047,7 @@ public:
 
 			if (m->ElementType == DataTypes_multidimarray_t)
 			{
-				tdef2->Type = MessageElement::FindElement(m->CastData<MessageElementMultiDimArray>()->Elements, "array")->ElementType;
+				tdef2->Type = MessageElement::FindElement(m->CastDataToNestedList(DataTypes_multidimarray_t)->Elements, "array")->ElementType;
 				tdef2->ArrayType = DataTypes_ArrayTypes_multidimarray;
 				return UnpackMessageElementToMxArray(m, tdef2, stub);
 			}
@@ -3199,58 +3200,58 @@ RR_SHARED_PTR<ServiceDefinition> MexServiceFactory::ServiceDef()
 	return servicedef;
 }
 
-RR_SHARED_PTR<RobotRaconteur::StructureStub> MexServiceFactory::FindStructureStub(const std::string& s)
+RR_SHARED_PTR<RobotRaconteur::StructureStub> MexServiceFactory::FindStructureStub(boost::string_ref s)
 {
 	throw ServiceException("Invalid for wrapped service type");
 }
 
-RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementStructure> MexServiceFactory::PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> structin)
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> MexServiceFactory::PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> structin)
 {
 	throw ServiceException("Invalid for wrapped service type");
 }
 
-RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> MexServiceFactory::UnpackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementStructure> mstructin)
+RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> MexServiceFactory::UnpackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> mstructin)
 {
 	throw ServiceException("Invalid for wrapped service type");
 }
-RR_INTRUSIVE_PTR<MessageElementPodArray> MexServiceFactory::PackPodArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> structure)
+RR_INTRUSIVE_PTR<MessageElementNestedElementList> MexServiceFactory::PackPodArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> structure)
 {
 	throw ServiceException("Invalid for wrapped service type");
 }
-RR_INTRUSIVE_PTR<RRPodBaseArray> MexServiceFactory::UnpackPodArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementPodArray> structure)
+RR_INTRUSIVE_PTR<RRPodBaseArray> MexServiceFactory::UnpackPodArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> structure)
 {
 	throw ServiceException("Invalid for wrapped service type");
 }
-RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> MexServiceFactory::PackPodMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> structure)
+RR_INTRUSIVE_PTR<MessageElementNestedElementList> MexServiceFactory::PackPodMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> structure)
 {
 	throw ServiceException("Invalid for wrapped service type");
 }
-RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> MexServiceFactory::UnpackPodMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementPodMultiDimArray> structure)
+RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> MexServiceFactory::UnpackPodMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> structure)
 {
 	throw ServiceException("Invalid for wrapped service type");
 }
-RR_INTRUSIVE_PTR<MessageElementNamedArray> MexServiceFactory::PackNamedArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> structure)
+RR_INTRUSIVE_PTR<MessageElementNestedElementList> MexServiceFactory::PackNamedArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> structure)
 {
 	throw ServiceException("Invalid for wrapped service type");
 }
-RR_INTRUSIVE_PTR<RRNamedBaseArray> MexServiceFactory::UnpackNamedArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNamedArray> structure)
+RR_INTRUSIVE_PTR<RRNamedBaseArray> MexServiceFactory::UnpackNamedArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> structure)
 {
 	throw ServiceException("Invalid for wrapped service type");
 }
-RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> MexServiceFactory::PackNamedMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> structure)
+RR_INTRUSIVE_PTR<MessageElementNestedElementList> MexServiceFactory::PackNamedMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> structure)
 {
 	throw ServiceException("Invalid for wrapped service type");
 }
-RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> MexServiceFactory::UnpackNamedMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNamedMultiDimArray> structure)
+RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> MexServiceFactory::UnpackNamedMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> structure)
 {
 	throw ServiceException("Invalid for wrapped service type");
 }
-RR_SHARED_PTR<RobotRaconteur::ServiceStub> MexServiceFactory::CreateStub(const std::string& type, const std::string& path, RR_SHARED_PTR<RobotRaconteur::ClientContext> context)
+RR_SHARED_PTR<RobotRaconteur::ServiceStub> MexServiceFactory::CreateStub(boost::string_ref type, boost::string_ref path, RR_SHARED_PTR<RobotRaconteur::ClientContext> context)
 {
-	boost::tuple<std::string,std::string> res=SplitQualifiedName(type);
+	boost::tuple<boost::string_ref,boost::string_ref> res=SplitQualifiedName(type);
 	
-	std::string servicetype=res.get<0>();
-	std::string objecttype=res.get<1>();
+	std::string servicetype=res.get<0>().to_string();
+	std::string objecttype=res.get<1>().to_string();
 	if (servicetype != GetServiceName()) return RobotRaconteur::RobotRaconteurNode::s()->GetServiceType(servicetype)->CreateStub(type,path,context);
 	BOOST_FOREACH (RR_SHARED_PTR<ServiceEntryDefinition>& ee, servicedef->Objects)
 	{
@@ -3264,17 +3265,17 @@ RR_SHARED_PTR<RobotRaconteur::ServiceStub> MexServiceFactory::CreateStub(const s
 	throw RobotRaconteur::ServiceException("Invalid service stub type.");
 }
 
-RR_SHARED_PTR<RobotRaconteur::ServiceSkel> MexServiceFactory::CreateSkel(const std::string& type, const std::string& path, RR_SHARED_PTR<RobotRaconteur::RRObject> obj, RR_SHARED_PTR<RobotRaconteur::ServerContext> context)
+RR_SHARED_PTR<RobotRaconteur::ServiceSkel> MexServiceFactory::CreateSkel(boost::string_ref type, boost::string_ref path, RR_SHARED_PTR<RobotRaconteur::RRObject> obj, RR_SHARED_PTR<RobotRaconteur::ServerContext> context)
 {
 	
-	boost::tuple<std::string,std::string> res=SplitQualifiedName(type);
+	boost::tuple<boost::string_ref,boost::string_ref> res=SplitQualifiedName(type);
 	
-	std::string servicetype=res.get<0>();
-	std::string objecttype=res.get<1>();
+	std::string servicetype=res.get<0>().to_string();
+	std::string objecttype=res.get<1>().to_string();
 	if (servicetype != GetServiceName()) throw ServiceException("MATLAB cannot create objref skels"); 
 	
 	RR_SHARED_PTR<MexServiceSkel> out=RR_MAKE_SHARED<MexServiceSkel>();
-	out->Init(path,obj,context);
+	out->Init(path.to_string(),obj,context);
 	return out;
 		
 	
@@ -3283,9 +3284,9 @@ RR_SHARED_PTR<RobotRaconteur::ServiceSkel> MexServiceFactory::CreateSkel(const s
 }
 
 //Mex Dynamic Service Factory
-RR_SHARED_PTR<ServiceFactory> MexDynamicServiceFactory::CreateServiceFactory(const std::string& def)
+RR_SHARED_PTR<ServiceFactory> MexDynamicServiceFactory::CreateServiceFactory(boost::string_ref def)
 {
-	return RR_MAKE_SHARED<MexServiceFactory>(def);
+	return RR_MAKE_SHARED<MexServiceFactory>(def.to_string());
 }
 
 std::vector<RR_SHARED_PTR<ServiceFactory> > MexDynamicServiceFactory::CreateServiceFactories(const std::vector<std::string>& def)
@@ -3301,7 +3302,7 @@ std::vector<RR_SHARED_PTR<ServiceFactory> > MexDynamicServiceFactory::CreateServ
 
 //MexServiceStub
 
-MexServiceStub::MexServiceStub(const std::string& path, RR_SHARED_PTR<ServiceEntryDefinition> type, RR_SHARED_PTR<RobotRaconteur::ClientContext> c)
+MexServiceStub::MexServiceStub(boost::string_ref path, RR_SHARED_PTR<ServiceEntryDefinition> type, RR_SHARED_PTR<RobotRaconteur::ClientContext> c)
 	: RobotRaconteur::ServiceStub(path,c)
 {
 	RR_objecttype=type;
@@ -3802,14 +3803,14 @@ void MexServiceStub::DispatchEvent(RR_INTRUSIVE_PTR<MessageEntry> m)
 
 void MexServiceStub::DispatchPipeMessage(RR_INTRUSIVE_PTR<MessageEntry> m)
 {
-	std::map<std::string, RR_SHARED_PTR<MexPipeClient> >::iterator e = pipes.find(m->MemberName);
+	std::map<std::string, RR_SHARED_PTR<MexPipeClient> >::iterator e = pipes.find(m->MemberName.str().to_string());
 	if (e==pipes.end()) throw MemberNotFoundException("Pipe Member Not Found");
 	e->second->PipePacketReceived(m);
 }
 
 void MexServiceStub::DispatchWireMessage(RR_INTRUSIVE_PTR<MessageEntry> m)
 {
-	std::map<std::string, RR_SHARED_PTR<MexWireClient> >::iterator e = wires.find(m->MemberName);
+	std::map<std::string, RR_SHARED_PTR<MexWireClient> >::iterator e = wires.find(m->MemberName.str().to_string());
 	if (e == wires.end()) throw MemberNotFoundException("Pipe Member Not Found");
 	e->second->WirePacketReceived(m);	
 }
@@ -3848,21 +3849,21 @@ void MexServiceStub::RRClose()
 	ServiceStub::RRClose();
 }
 
-std::string MexServiceStub::RRType()
+boost::string_ref MexServiceStub::RRType()
 {
 	return RR_objecttype->Name;
 }
 
-RR_SHARED_PTR<PipeClientBase> MexServiceStub::RRGetPipeClient(const std::string& membername)
+RR_SHARED_PTR<PipeClientBase> MexServiceStub::RRGetPipeClient(boost::string_ref membername)
 {
-	std::map<std::string, RR_SHARED_PTR<MexPipeClient> >::iterator e = pipes.find(membername);
+	std::map<std::string, RR_SHARED_PTR<MexPipeClient> >::iterator e = pipes.find(membername.to_string());
 	if (e == pipes.end()) throw MemberNotFoundException("Pipe Member Not Found");
 	return e->second;
 }
 
-RR_SHARED_PTR<WireClientBase> MexServiceStub::RRGetWireClient(const std::string& membername)
+RR_SHARED_PTR<WireClientBase> MexServiceStub::RRGetWireClient(boost::string_ref membername)
 {
-	std::map<std::string, RR_SHARED_PTR<MexWireClient> >::iterator e = wires.find(membername);
+	std::map<std::string, RR_SHARED_PTR<MexWireClient> >::iterator e = wires.find(membername.to_string());
 	if (e == wires.end()) throw MemberNotFoundException("Wire Member Not Found");
 	return e->second;
 }
@@ -4438,7 +4439,7 @@ RR_INTRUSIVE_PTR<MessageEntry> MexServiceStub::CallbackCall(RR_INTRUSIVE_PTR<Mes
 
 	{
 	boost::recursive_mutex::scoped_lock lock(callback_lock);
-	std::map<std::string, RR_SHARED_PTR<mxArray> >::iterator e1 = callbacks.find(m->MemberName);
+	std::map<std::string, RR_SHARED_PTR<mxArray> >::iterator e1 = callbacks.find(m->MemberName.str().to_string());
 	if (e1==callbacks.end())
 	{
 		throw InvalidOperationException("MATLAB callback function not set");
@@ -4486,7 +4487,7 @@ void MexServiceStub::MexProcessRequests()
 				boost::shared_ptr<EventDefinition> eventdef1=boost::dynamic_pointer_cast<EventDefinition>(ee);
 				if (eventdef1)
 				{
-					if (eventdef1->Name == (e)->MemberName)
+					if (eventdef1->Name == (e)->MemberName.str())
 					{
 						eventdef = eventdef1;
 						break;
@@ -4565,7 +4566,7 @@ void MexServiceStub::MexProcessRequests()
 				boost::shared_ptr<CallbackDefinition> calldef1=boost::dynamic_pointer_cast<CallbackDefinition>(ee);
 				if (calldef1)
 				{
-					if (calldef1->Name == (e)->request->MemberName)
+					if (calldef1->Name == (e)->request->MemberName.str())
 					{
 						calldef = calldef1;
 						break;
@@ -4582,7 +4583,7 @@ void MexServiceStub::MexProcessRequests()
 				args.push_back(UnpackMessageElementToMxArray(arg,ee,shared_from_this()));
 			}
 
-			std::map<std::string, RR_SHARED_PTR<mxArray> >::iterator e1 = callbacks.find(e->request->MemberName);
+			std::map<std::string, RR_SHARED_PTR<mxArray> >::iterator e1 = callbacks.find(e->request->MemberName.str().to_string());
 			if (e1 == callbacks.end())  throw InvalidOperationException("MATLAB callback function not set");
 			
 			mxArray* callbackfunc=e1->second.get();
@@ -6733,14 +6734,14 @@ RR_INTRUSIVE_PTR<MessageEntry> MexServiceSkel::CallGetProperty(RR_INTRUSIVE_PTR<
 	bool found=false;
 	BOOST_FOREACH(boost::shared_ptr<MemberDefinition>& e, obj->type->Members)
 	{
-		if ((e)->Name == m->MemberName && boost::dynamic_pointer_cast<PropertyDefinition>(e) != 0)
+		if ((e)->Name == m->MemberName.str() && boost::dynamic_pointer_cast<PropertyDefinition>(e) != 0)
 		{
 			found = true;
 			break;
 		}
 	}
 
-	if (!found) throw MemberNotFoundException("Property " + m->MemberName + " not found");
+	if (!found) throw MemberNotFoundException("Property " + m->MemberName.str() + " not found");
 
 	property_get_requests.push_back(boost::make_tuple(m,ServerEndpoint::GetCurrentEndpoint()));
 	skels_waiting.Set();
@@ -6754,14 +6755,14 @@ RR_INTRUSIVE_PTR<MessageEntry> MexServiceSkel::CallSetProperty(RR_INTRUSIVE_PTR<
 	bool found=false;
 	BOOST_FOREACH(boost::shared_ptr<MemberDefinition>& e, obj->type->Members)
 	{
-		if ((e)->Name == m->MemberName && boost::dynamic_pointer_cast<PropertyDefinition>(e) != 0)
+		if ((e)->Name == m->MemberName.str() && boost::dynamic_pointer_cast<PropertyDefinition>(e) != 0)
 		{
 			found = true;
 			break;
 		}
 	}
 
-	if (!found) throw MemberNotFoundException("Property " + m->MemberName + " not found");
+	if (!found) throw MemberNotFoundException("Property " + m->MemberName.str() + " not found");
 
 	property_set_requests.push_back(boost::make_tuple(m,ServerEndpoint::GetCurrentEndpoint()));
 	skels_waiting.Set();
@@ -6775,14 +6776,14 @@ RR_INTRUSIVE_PTR<MessageEntry> MexServiceSkel::CallFunction(RR_INTRUSIVE_PTR<Mes
 	bool found=false;
 	BOOST_FOREACH(boost::shared_ptr<MemberDefinition>& e, obj->type->Members)
 	{
-		if ((e)->Name == m->MemberName && boost::dynamic_pointer_cast<FunctionDefinition>(e) != 0)
+		if ((e)->Name == m->MemberName.str() && boost::dynamic_pointer_cast<FunctionDefinition>(e) != 0)
 		{
 			found = true;
 			break;
 		}
 	}
 
-	if (!found) throw MemberNotFoundException("Function " + m->MemberName + " not found");
+	if (!found) throw MemberNotFoundException("Function " + m->MemberName.str() + " not found");
 
 	function_requests.push_back(boost::make_tuple(m,ServerEndpoint::GetCurrentEndpoint()));
 	skels_waiting.Set();
@@ -6904,14 +6905,14 @@ void MexServiceSkel::ProcessRequests()
 
 				BOOST_FOREACH(boost::shared_ptr<MemberDefinition>& e, obj->type->Members)
 				{
-					if (pg.get<0>()->MemberName == (e)->Name)
+					if (pg.get<0>()->MemberName.str() == (e)->Name)
 					{
 						def=boost::dynamic_pointer_cast<PropertyDefinition>(e);
 						break;
 					}
 				}
 
-				if (!def) throw MemberNotFoundException("Member not found: " + pg.get<0>()->MemberName);
+				if (!def) throw MemberNotFoundException("Member not found: " + pg.get<0>()->MemberName.str());
 
 
 				const char* S_fieldnames[]={"type","subs"};
@@ -6971,7 +6972,7 @@ void MexServiceSkel::ProcessRequests()
 					}
 				}
 
-				if (!def) throw MemberNotFoundException("Member not found: " + ps.get<0>()->MemberName);
+				if (!def) throw MemberNotFoundException("Member not found: " + ps.get<0>()->MemberName.str());
 
 				mxArray* val=UnpackMessageElementToMxArray(ps.get<0>()->FindElement("value"),def->Type,RR_SHARED_PTR<ServiceStub>());
 				
@@ -7027,7 +7028,7 @@ void MexServiceSkel::ProcessRequests()
 					boost::shared_ptr<FunctionDefinition> calldef1=boost::dynamic_pointer_cast<FunctionDefinition>(ee);
 					if (calldef1)
 					{
-						if (calldef1->Name == f.get<0>()->MemberName)
+						if (calldef1->Name == f.get<0>()->MemberName.str())
 						{
 							calldef = calldef1;
 							break;
@@ -7046,7 +7047,8 @@ void MexServiceSkel::ProcessRequests()
 										
 				std::vector<mxArray*> args2=args;
 				args2.insert(args2.begin(),obj->mxobj.get());
-				args2.insert(args2.begin(),mxCreateString(f.get<0>()->MemberName.c_str()));
+				std::string member_name = f.get<0>()->MemberName.str().to_string();
+				args2.insert(args2.begin(),mxCreateString(member_name.c_str()));
 			
 				if (calldef->ReturnType->Type==DataTypes_void_t)
 				{
@@ -8249,9 +8251,9 @@ mxArray* MexPodArrayMemoryClient::Read(uint64_t memorypos, uint64_t bufferpos, u
 {	
 	std::vector<RR_INTRUSIVE_PTR<MessageElement> > buffer(count);
 	ReadBase(memorypos, &buffer, bufferpos, count);
-	RR_INTRUSIVE_PTR<MessageElementPodArray> o1 = CreateMessageElementPodArray(type->TypeString, buffer);
+	RR_INTRUSIVE_PTR<MessageElementNestedElementList> o1 = CreateMessageElementNestedElementList(DataTypes_pod_array_t,type->TypeString, buffer);
 	RR_INTRUSIVE_PTR<MessageElement> o = CreateMessageElement("value", o1);
-	o->ElementTypeName = o1->Type;
+	o->ElementTypeName = o1->TypeName;
 	o->DataCount = o1->Elements.size();
 
 	return UnpackMessageElementToMxArray_pod(o, type, this->GetStub());
@@ -8260,7 +8262,7 @@ mxArray* MexPodArrayMemoryClient::Read(uint64_t memorypos, uint64_t bufferpos, u
 void MexPodArrayMemoryClient::Write(uint64_t memorypos, const mxArray* buffer, uint64_t bufferpos, uint64_t count)
 {
 	if (!buffer) throw NullValueException("Buffer must not be null");
-	RR_INTRUSIVE_PTR<MessageElementPodArray> o1 = PackMxArrayToMessageElement_pod(buffer, type, GetStub());
+	RR_INTRUSIVE_PTR<MessageElementNestedElementList> o1 = PackMxArrayToMessageElement_pod(buffer, type, GetStub());
 	WriteBase(memorypos, &o1->Elements, bufferpos, count);
 }
 
@@ -8271,7 +8273,7 @@ uint64_t MexPodArrayMemoryClient::Length()
 
 void MexPodArrayMemoryClient::UnpackReadResult(RR_INTRUSIVE_PTR<MessageElementData> res, void* buffer, uint64_t bufferpos, uint64_t count)
 {		
-	RR_INTRUSIVE_PTR<MessageElementPodArray> res2 = rr_cast<MessageElementPodArray>(res);
+	RR_INTRUSIVE_PTR<MessageElementNestedElementList> res2 = rr_cast<MessageElementNestedElementList>(res);
 	
 	if (res2->Elements.size() != count)
 	{
@@ -8296,7 +8298,7 @@ RR_INTRUSIVE_PTR<MessageElementData> MexPodArrayMemoryClient::PackWriteRequest(v
 	}
 	
 	std::vector<boost::shared_ptr<ServiceDefinition> > other_defs;
-	return CreateMessageElementPodArray(type->ResolveNamedType(other_defs,RobotRaconteurNode::sp(),GetStub())->ResolveQualifiedName(), o);
+	return CreateMessageElementNestedElementList(DataTypes_pod_array_t,type->ResolveNamedType(other_defs,RobotRaconteurNode::sp(),GetStub())->ResolveQualifiedName(), o);
 }
 
 size_t MexPodArrayMemoryClient::GetBufferLength(void* buffer)
@@ -8325,7 +8327,7 @@ mxArray* MexPodMultiDimArrayMemoryClient::Read(const std::vector<uint64_t>& memo
 
 	std::vector<mwSize> mx_dims = detail::ConvertVectorType<mwSize>(count);
 
-	RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement("array", CreateMessageElementPodArray(type->TypeString, buffer));
+	RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement("array", CreateMessageElementNestedElementList(DataTypes_pod_array_t,type->TypeString, buffer));
 
 	mxArray* mx_buffer = UnpackMessageElementToMxArray_pod(m, type, GetStub());
 
@@ -8338,7 +8340,7 @@ mxArray* MexPodMultiDimArrayMemoryClient::Read(const std::vector<uint64_t>& memo
 }
 void MexPodMultiDimArrayMemoryClient::Write(const std::vector<uint64_t>& memorypos, const mxArray* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 {
-	RR_INTRUSIVE_PTR<MessageElementPodArray> buffer2 = PackMxArrayToMessageElement_pod(buffer, type, GetStub());
+	RR_INTRUSIVE_PTR<MessageElementNestedElementList> buffer2 = PackMxArrayToMessageElement_pod(buffer, type, GetStub());
 	WriteBase(memorypos, &buffer2->Elements, bufferpos, count);	
 }
 std::vector<uint64_t> MexPodMultiDimArrayMemoryClient::Dimensions()
@@ -8355,10 +8357,10 @@ DataTypes MexPodMultiDimArrayMemoryClient::ElementTypeID()
 }
 void MexPodMultiDimArrayMemoryClient::UnpackReadResult(RR_INTRUSIVE_PTR<MessageElementData> res, void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint64_t elemcount)
 {
-	RR_INTRUSIVE_PTR<MessageElementPodMultiDimArray> res2 = rr_cast<MessageElementPodMultiDimArray>(res);
+	RR_INTRUSIVE_PTR<MessageElementNestedElementList> res2 = rr_cast<MessageElementNestedElementList>(res);
 	std::vector<uint64_t> dims = RRArrayToVector<uint64_t>(MessageElement::FindElement(res2->Elements, "dims")->CastData<RRArray<uint32_t> >());
 
-	RR_INTRUSIVE_PTR<MessageElementPodArray> array = MessageElement::FindElement(res2->Elements, "array")->CastData<MessageElementPodArray>();
+	RR_INTRUSIVE_PTR<MessageElementNestedElementList> array = MessageElement::FindElement(res2->Elements, "array")->CastDataToNestedList(DataTypes_pod_array_t);
 	
 	if (array->Elements.size() != elemcount)
 	{
@@ -8410,11 +8412,11 @@ RR_INTRUSIVE_PTR<MessageElementData> MexPodMultiDimArrayMemoryClient::PackWriteR
 
 	std::vector<boost::shared_ptr<ServiceDefinition> > other_defs;
 	std::string qualified_name = type->ResolveNamedType(other_defs, RobotRaconteurNode::sp(), GetStub())->ResolveQualifiedName();
-	RR_INTRUSIVE_PTR<MessageElementPodArray> buffer4 = CreateMessageElementPodArray(qualified_name, buffer3);
+	RR_INTRUSIVE_PTR<MessageElementNestedElementList> buffer4 = CreateMessageElementNestedElementList(DataTypes_pod_array_t, qualified_name, buffer3);
 	std::vector<RR_INTRUSIVE_PTR<MessageElement> > buffer5;
 	buffer5.push_back(CreateMessageElement("dims", VectorToRRArray<uint32_t>(count)));
 	buffer5.push_back(CreateMessageElement("array", buffer4));
-	return CreateMessageElementPodMultiDimArray(qualified_name, buffer5);
+	return CreateMessageElementNestedElementList(DataTypes_pod_multidimarray_t,qualified_name, buffer5);
 }
 
 MexNamedArrayMemoryClient::MexNamedArrayMemoryClient(const std::string& membername, RR_SHARED_PTR<ServiceStub> stub, boost::tuple<DataTypes, size_t> array_info, MemberDefinition_Direction direction, RR_SHARED_PTR<TypeDefinition> type)
@@ -8431,9 +8433,9 @@ mxArray* MexNamedArrayMemoryClient::Read(uint64_t memorypos, uint64_t bufferpos,
 	ReadBase(memorypos, &buffer, bufferpos, count);
 	std::vector<RR_INTRUSIVE_PTR<MessageElement> > o2;
 	o2.push_back(CreateMessageElement("array", buffer));
-	RR_INTRUSIVE_PTR<MessageElementNamedArray> o1 = CreateMessageElementNamedArray(type->TypeString, o2);
+	RR_INTRUSIVE_PTR<MessageElementNestedElementList> o1 = CreateMessageElementNestedElementList(DataTypes_namedarray_array_t,type->TypeString, o2);
 	RR_INTRUSIVE_PTR<MessageElement> o = CreateMessageElement("value", o1);
-	o->ElementTypeName = o1->Type;
+	o->ElementTypeName = o1->TypeName;
 	o->DataCount = o1->Elements.size();
 
 	return UnpackMessageElementToMxArray(o, type, this->GetStub());
@@ -8455,8 +8457,8 @@ uint64_t MexNamedArrayMemoryClient::Length()
 
 void MexNamedArrayMemoryClient::UnpackReadResult(RR_INTRUSIVE_PTR<MessageElementData> res, void* buffer, uint64_t bufferpos, uint64_t count)
 {
-	RR_INTRUSIVE_PTR<MessageElementNamedArray> res2 = rr_cast<MessageElementNamedArray>(res);
-	if (res2->Type != type_string) throw DataTypeException("Data type mismatch");
+	RR_INTRUSIVE_PTR<MessageElementNestedElementList> res2 = rr_cast<MessageElementNestedElementList>(res);
+	if (res2->TypeName != type_string) throw DataTypeException("Data type mismatch");
 	RR_INTRUSIVE_PTR<RRBaseArray> res3 = MessageElement::FindElement(res2->Elements, "array")->CastData<RRBaseArray>();
 	if (!res3) throw DataTypeException("Data type mismatch");
 	if (res3->size() != count * array_elementcount) throw InvalidOperationException("Invalid memory read return");
@@ -8476,7 +8478,7 @@ RR_INTRUSIVE_PTR<MessageElementData> MexNamedArrayMemoryClient::PackWriteRequest
 	std::vector<RR_INTRUSIVE_PTR<MessageElement> > o2;
 	o2.push_back(CreateMessageElement("array",o1));
 
-	return CreateMessageElementNamedArray(type_string, o2);
+	return CreateMessageElementNestedElementList(DataTypes_namedarray_array_t,type_string, o2);
 }
 
 size_t MexNamedArrayMemoryClient::GetBufferLength(void* buffer)
@@ -8559,10 +8561,10 @@ DataTypes MexNamedMultiDimArrayMemoryClient::ElementTypeID()
 }
 void MexNamedMultiDimArrayMemoryClient::UnpackReadResult(RR_INTRUSIVE_PTR<MessageElementData> res, void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint64_t elemcount)
 {
-	RR_INTRUSIVE_PTR<MessageElementNamedMultiDimArray> res2 = rr_cast<MessageElementNamedMultiDimArray>(res);
+	RR_INTRUSIVE_PTR<MessageElementNestedElementList> res2 = rr_cast<MessageElementNestedElementList>(res);
 	std::vector<uint64_t> dims = RRArrayToVector<uint64_t>(MessageElement::FindElement(res2->Elements, "dims")->CastData<RRArray<uint32_t> >());
 
-	RR_INTRUSIVE_PTR<MessageElementNamedArray> array = MessageElement::FindElement(res2->Elements, "array")->CastData<MessageElementNamedArray>();
+	RR_INTRUSIVE_PTR<MessageElementNestedElementList> array = MessageElement::FindElement(res2->Elements, "array")->CastDataToNestedList(DataTypes_namedarray_array_t);
 
 	if (array->Elements.size() != 1)
 	{
@@ -8576,7 +8578,7 @@ void MexNamedMultiDimArrayMemoryClient::UnpackReadResult(RR_INTRUSIVE_PTR<Messag
 		
 	if (count.size() == 0) throw InvalidOperationException("Invalid read operation");
 
-	if (array->Type != type_string) throw InvalidOperationException("Invalid memory read return");
+	if (array->TypeName != type_string) throw InvalidOperationException("Invalid memory read return");
 
 	RR_INTRUSIVE_PTR<RRBaseArray> rr_array = MessageElement::FindElement(array->Elements, "array")->CastData<RRBaseArray>();
 
@@ -8626,10 +8628,10 @@ RR_INTRUSIVE_PTR<MessageElementData> MexNamedMultiDimArrayMemoryClient::PackWrit
 	
 	std::vector<RR_INTRUSIVE_PTR<MessageElement> > buffer4;
 	buffer4.push_back(CreateMessageElement("array",buffer3));
-	RR_INTRUSIVE_PTR<MessageElementNamedArray> buffer5 = CreateMessageElementNamedArray(type_string, buffer4);
+	RR_INTRUSIVE_PTR<MessageElementNestedElementList> buffer5 = CreateMessageElementNestedElementList(DataTypes_namedarray_array_t,type_string, buffer4);
 	std::vector<RR_INTRUSIVE_PTR<MessageElement> > buffer6;
 	buffer6.push_back(CreateMessageElement("dims", VectorToRRArray<uint32_t>(count)));
 	buffer6.push_back(CreateMessageElement("array", buffer5));
-	return CreateMessageElementNamedMultiDimArray(type_string, buffer6);
+	return CreateMessageElementNestedElementList(DataTypes_namedarray_multidimarray_t,type_string, buffer6);
 		
 }
