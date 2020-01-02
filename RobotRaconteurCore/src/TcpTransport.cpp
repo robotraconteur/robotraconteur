@@ -2268,7 +2268,8 @@ void TcpTransport::AddWebSocketAllowedOrigin(boost::string_ref origin)
 	boost::mutex::scoped_lock lock(parameter_lock);
 
 	boost::smatch origin_result;
-	if (!boost::regex_search(origin.to_string(), origin_result, boost::regex("^([^:\\s]+)://(?:((?:\\[[A-Fa-f0-9\\:]+(?:\\%\\w*)?\\])|(?:[^\\[\\]\\:/\\?\\s]+))(?::([^\\:/\\?\\s]+))?)?$")))
+	std::string origin1 = origin.to_string();
+	if (!boost::regex_search(origin1, origin_result, boost::regex("^([^:\\s]+)://(?:((?:\\[[A-Fa-f0-9\\:]+(?:\\%\\w*)?\\])|(?:[^\\[\\]\\:/\\?\\s]+))(?::([^\\:/\\?\\s]+))?)?$")))
 	{
 		throw InvalidArgumentException("Invalid WebSocket origin");
 	}

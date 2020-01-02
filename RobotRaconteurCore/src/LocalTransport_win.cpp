@@ -21,6 +21,8 @@
 
 #include <boost/locale.hpp>
 
+#include <aclapi.h>
+
 namespace RobotRaconteur
 {
 
@@ -322,6 +324,41 @@ namespace detail
 
 			std::fstream* f = new std::fstream(file);
 			return RR_SHARED_PTR<std::fstream>(f, &CloseAndDeleteStream<std::fstream>);
+		}
+
+		bool SetWindowsSocketPermissions(const std::string& socket_fname, bool public_)
+		{
+			SECURITY_ATTRIBUTES sa;
+			ZeroMemory(&sa, sizeof(sa));
+			sa.nLength = sizeof(sa);
+
+			std::wstring sid = RobotRaconteur::detail::LocalTransportUtil::GetSIDStringForProcessId(-1);
+			std::wstring dacl_str = L"D:(D;OICI;FA;;;NU)(A;OICI;FRFWFX;;;BA)(A;OICI;FRFWFX;;;SY)(A;OICI;FRFWFX;;;" + sid + L")";
+			
+			if (public_)
+			{
+				boost::optional<std::wstring> rr_group1_sid = RobotRaconteur::detail::LocalTransportUtil::GetSIDStringForName(L"robotraconteur");
+				if (rr_group1_sid) dacl_str += L"(A; OICI; FRFWFX;;; " + *rr_group1_sid + L")";
+				boost::optional<std::wstring> rr_group2_sid = RobotRaconteur::detail::LocalTransportUtil::GetSIDStringForName(L"Robot Raconteur");
+				if (rr_group2_sid) dacl_str += L"(A; OICI; FRFWFX;;; " + *rr_group2_sid + L")";
+			}
+			
+			if (!ConvertStringSecurityDescriptorToSecurityDescriptorW(dacl_str.c_str(), SDDL_REVISION_1, &(sa.lpSecurityDescriptor), NULL))
+
+			{				
+				return false;
+			}
+
+			RR_SHARED_PTR<void> sd_sp(sa.lpSecurityDescriptor, &LocalFree);
+			
+			std::string socket_fname_c = socket_fname + "\0";			
+			
+			DWORD ret = ::SetNamedSecurityInfoA(&socket_fname_c[0], SE_FILE_OBJECT, DACL_SECURITY_INFORMATION, NULL, NULL, (PACL)sa.lpSecurityDescriptor, NULL);
+			if (ret != ERROR_SUCCESS)
+			{
+				return false;
+			}
+			return true;
 		}
 	}
 

@@ -223,7 +223,7 @@ namespace RobotRaconteur
 			HANDLE h = CreateFileW(win_path->c_str(), GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_FLAG_OVERLAPPED | SECURITY_SQOS_PRESENT | SECURITY_IDENTIFICATION, NULL);
 			if (h != INVALID_HANDLE_VALUE)
 			{
-				socket.reset(new LocalTransport::socket_type(GetNode()->GetThreadPool()->get_io_context(), h));
+				socket.reset(new HardwareTransportConnection_driver::socket_type(GetNode()->GetThreadPool()->get_io_context(), h));
 			}			
 		}
 		else if (transport == "pci")

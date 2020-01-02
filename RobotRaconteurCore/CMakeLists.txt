@@ -158,6 +158,7 @@ ENDIF()
 
 if(${CMAKE_VERSION} VERSION_GREATER "3.16.0") 
 	target_precompile_headers(RobotRaconteurCore PRIVATE ${RobotRaconteurCore_header})
+	set_source_files_properties(src/LocalTransport.cpp PROPERTIES SKIP_PRECOMPILE_HEADERS TRUE)
 endif()
 
 file(COPY "${CMAKE_SOURCE_DIR}/RobotRaconteurCore/include" DESTINATION "${CMAKE_BINARY_DIR}/out/")

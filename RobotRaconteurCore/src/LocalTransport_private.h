@@ -14,6 +14,8 @@
 
 #pragma once
 
+#define BOOST_ASIO_HAS_LOCAL_SOCKETS 1
+
 #include "RobotRaconteur/LocalTransport.h"
 #include "ASIOStreamBaseTransport.h"
 #include <boost/filesystem.hpp>
@@ -65,7 +67,7 @@ namespace RobotRaconteur
 
 			void FindNodesInDirectory(std::vector<NodeDiscoveryInfo>& nodeinfo, const boost::filesystem::path& path, boost::string_ref scheme, const boost::posix_time::ptime& now, boost::optional<std::string> username = boost::optional<std::string>());
 
-			RR_SHARED_PTR<LocalTransport::socket_type> FindAndConnectLocalSocket(ParseConnectionURLResult url, const std::vector<boost::filesystem::path>& search_paths, const std::vector<std::string>& usernames, RR_BOOST_ASIO_IO_CONTEXT& io_service_);
+			RR_SHARED_PTR<detail::LocalTransport_socket> FindAndConnectLocalSocket(ParseConnectionURLResult url, const std::vector<boost::filesystem::path>& search_paths, const std::vector<std::string>& usernames, RR_BOOST_ASIO_IO_CONTEXT& io_service_);
 
 #ifndef ROBOTRACONTEUR_WINDOWS
 
@@ -104,7 +106,7 @@ namespace RobotRaconteur
 		LocalTransportConnection(RR_SHARED_PTR<LocalTransport> parent, bool server, uint32_t local_endpoint);
 
 
-		void AsyncAttachSocket(RR_SHARED_PTR<LocalTransport::socket_type> socket, std::string noden, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+		void AsyncAttachSocket(RR_SHARED_PTR<detail::LocalTransport_socket> socket, std::string noden, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
 
 
 
@@ -130,7 +132,7 @@ namespace RobotRaconteur
 	protected:
 
 
-		RR_SHARED_PTR<LocalTransport::socket_type> socket;
+		RR_SHARED_PTR<detail::LocalTransport_socket> socket;
 
 		boost::mutex socket_lock;
 		bool server;
@@ -146,9 +148,9 @@ namespace RobotRaconteur
 
 	
 
-	void LocalTransport_attach_transport(RR_SHARED_PTR<LocalTransport> parent,RR_SHARED_PTR<LocalTransport::socket_type> socket, bool server, uint32_t endpoint, std::string noden, boost::function<void( RR_SHARED_PTR<LocalTransport::socket_type> , RR_SHARED_PTR<ITransportConnection> , RR_SHARED_PTR<RobotRaconteurException> )>& callback);
+	void LocalTransport_attach_transport(RR_SHARED_PTR<LocalTransport> parent,RR_SHARED_PTR<detail::LocalTransport_socket> socket, bool server, uint32_t endpoint, std::string noden, boost::function<void( RR_SHARED_PTR<detail::LocalTransport_socket> , RR_SHARED_PTR<ITransportConnection> , RR_SHARED_PTR<RobotRaconteurException> )>& callback);
 
-	void LocalTransport_connected_callback2(RR_SHARED_PTR<LocalTransport> parent, RR_SHARED_PTR<LocalTransport::socket_type> socket, RR_SHARED_PTR<ITransportConnection> connection, RR_SHARED_PTR<RobotRaconteurException> err);
+	void LocalTransport_connected_callback2(RR_SHARED_PTR<LocalTransport> parent, RR_SHARED_PTR<detail::LocalTransport_socket> socket, RR_SHARED_PTR<ITransportConnection> connection, RR_SHARED_PTR<RobotRaconteurException> err);
 
 	namespace detail
 	{

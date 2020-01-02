@@ -14,7 +14,6 @@
 
 #include "RobotRaconteur/RobotRaconteurNode.h"
 #include <boost/shared_array.hpp>
-#include <boost/asio/windows/stream_handle.hpp>
 
 #pragma once
 
@@ -27,15 +26,10 @@ namespace RobotRaconteur
 
 	namespace detail
 	{
-#ifdef ROBOTRACONTEUR_WINDOWS
-		namespace windows
-		{
-			// Boost ASIO doesn't have a named pipe acceptor :/
-			class named_pipe_acceptor;
-		}
-#endif					
 		class LocalTransportFDs;
 		class LocalTransportDiscovery;
+		class LocalTransport_socket;
+		class LocalTransport_acceptor;
 	}
 		
 	class ROBOTRACONTEUR_CORE_API LocalTransport : public Transport, public RR_ENABLE_SHARED_FROM_THIS<LocalTransport>
@@ -48,14 +42,6 @@ namespace RobotRaconteur
 		bool transportopen;
 		
 	public:
-
-#ifdef ROBOTRACONTEUR_WINDOWS
-		typedef boost::asio::windows::stream_handle socket_type;
-		typedef detail::windows::named_pipe_acceptor socket_acceptor_type;
-#else
-		typedef boost::asio::local::stream_protocol::socket socket_type;
-		typedef boost::asio::local::stream_protocol::acceptor socket_acceptor_type;
-#endif
 
 		RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<ITransportConnection> > TransportConnections;
 		boost::mutex TransportConnections_lock;
@@ -87,11 +73,13 @@ namespace RobotRaconteur
 
 	protected:
 
-		virtual void AsyncCreateTransportConnection2(RR_SHARED_PTR<LocalTransport::socket_type> socket , const std::string& noden, RR_SHARED_PTR<ITransportConnection> transport, RR_SHARED_PTR<RobotRaconteurException> err, boost::function<void (RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException> ) >& callback);
+		virtual void AsyncCreateTransportConnection2(RR_SHARED_PTR<detail::LocalTransport_socket> socket , const std::string& noden, RR_SHARED_PTR<ITransportConnection> transport, RR_SHARED_PTR<RobotRaconteurException> err, boost::function<void (RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException> ) >& callback);
 
 		virtual void CloseTransportConnection_timed(const boost::system::error_code& err, RR_SHARED_PTR<Endpoint> e, RR_SHARED_PTR<void> timer);
 		
 	public:
+
+		static bool IsLocalTransportSupported();
 
 		virtual void StartClientAsNodeName(boost::string_ref name);
 
@@ -147,11 +135,11 @@ namespace RobotRaconteur
 
 	protected:
 
-		RR_SHARED_PTR<socket_acceptor_type> acceptor;
+		RR_SHARED_PTR<detail::LocalTransport_acceptor> acceptor;
 		
 		boost::mutex acceptor_lock;
 
-		static void handle_accept(RR_SHARED_PTR<LocalTransport> parent,RR_SHARED_PTR<socket_acceptor_type> acceptor, RR_SHARED_PTR<socket_type> socket, const boost::system::error_code& error);
+		static void handle_accept(RR_SHARED_PTR<LocalTransport> parent,RR_SHARED_PTR<detail::LocalTransport_acceptor> acceptor, RR_SHARED_PTR<detail::LocalTransport_socket> socket, const boost::system::error_code& error);
 		
 		virtual void register_transport(RR_SHARED_PTR<ITransportConnection> connection);
 		virtual void erase_transport(RR_SHARED_PTR<ITransportConnection> connection);
