@@ -56,13 +56,18 @@ NodeID::NodeID(const NodeID& id)
 }
 
 NodeID::NodeID(const std::string& id)
-	: NodeID(boost::string_ref(id))
 {
-
+	boost::string_ref id2(id);
+	init_from_string(id2);
 }
 
 
 NodeID::NodeID(boost::string_ref id)
+{
+	init_from_string(id);
+}
+
+void NodeID::init_from_string(const boost::string_ref& id)
 {
 	if (id.find(":")!=id.npos)
 	{

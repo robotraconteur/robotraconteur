@@ -204,7 +204,9 @@ namespace RobotRaconteur
 		//WARNING: ONLY USE WITH STRING LITERALS OR STATIC STRINGS!
 		template <size_t N>
 		inline MessageStringPtr(const char (&str)[N])
-		  : MessageStringPtr(boost::string_ref(str,strlen(str)),false) {}
+		{
+			init_literal(str, strlen(str));
+		}
 
 
 		boost::string_ref str() const;
@@ -212,7 +214,10 @@ namespace RobotRaconteur
 
 		bool operator ==(MessageStringRef b) const;
 		bool operator !=(MessageStringRef b) const;
-		bool operator <(MessageStringRef b) const;	
+		bool operator <(MessageStringRef b) const;
+
+	private:
+		void init_literal(const char* str, size_t len);
 	};
 
 	class ROBOTRACONTEUR_CORE_API MessageStringRef
@@ -232,14 +237,19 @@ namespace RobotRaconteur
 
 		//WARNING: ONLY USE WITH STRING LITERALS OR STATIC STRINGS!
 		template <size_t N>
-		inline MessageStringRef(const char (&str)[N])
-		  : MessageStringRef(boost::string_ref(str,strlen(str)),false) {}
+		inline MessageStringRef(const char (&str)[N])		
+		{
+			init_literal(str, strlen(str));
+		}
 
 
 		bool operator ==(MessageStringRef b) const;
 		bool operator !=(MessageStringRef b) const;
 
 		boost::string_ref str() const;
+
+	private:
+		void init_literal(const char* str, size_t len);
 	};
 
 	

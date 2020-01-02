@@ -68,6 +68,8 @@ namespace RobotRaconteur
 
 		virtual boost::string_ref RRType() { return "RobotRaconteur::NodeID";}
 
+	private:
+		void init_from_string(const boost::string_ref& str);
 	
 	};
 
