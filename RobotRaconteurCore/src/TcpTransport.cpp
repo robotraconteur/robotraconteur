@@ -1199,7 +1199,7 @@ namespace detail {
 			}
 		}
 #ifdef ROBOTRACONTEUR_APPLE
-        bool TcpWSSWebSocketConnector::verify_callback(bool preverified, boost::asio::ssl::verify_context& ctx, std::string servername)
+        bool TcpWSSWebSocketConnector::verify_callback(bool preverified, boost::asio::ssl::verify_context& ctx, boost::string_ref servername)
         {
             if (preverified)
             {
@@ -1258,8 +1258,8 @@ namespace detail {
             sk_X509_pop_free(certs, X509_free);
             
             CFArrayRef certarray=CFArrayCreate(NULL,(const void**)&certarray1[0],certarray1.size(),&kCFTypeArrayCallBacks);
-            
-            CFStringRef host2=CFStringCreateWithCString(NULL, servername.c_str(), kCFStringEncodingUTF8);
+			std::string servername1 = servername.to_string();
+            CFStringRef host2=CFStringCreateWithCString(NULL, servername1.c_str(), kCFStringEncodingUTF8);
             SecPolicyRef policy=SecPolicyCreateSSL(true, host2);
             
             SecTrustResultType result=kSecTrustResultDeny;
