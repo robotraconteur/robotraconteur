@@ -755,7 +755,7 @@ MessageStringPtr::MessageStringPtr(boost::string_ref str, bool is_static)
 {
 	if (is_static)
 	{
-		_str_ptr = detail::MessageStringData_static_string(str);	
+		_str_ptr = detail::MessageStringData_static_string(str);
 	}
 	else
 	{
@@ -781,6 +781,11 @@ MessageStringPtr::MessageStringPtr(std::string&& str)
 	this->_str_ptr = RR_MOVE(dat);
 }
 #endif
+
+void MessageStringPtr::init_literal(const char* str, size_t len)
+{
+	_str_ptr = detail::MessageStringData_static_string(boost::string_ref(str,len));
+}
 
 boost::string_ref MessageStringPtr::str() const
 {	
@@ -829,6 +834,11 @@ MessageStringRef::MessageStringRef(const MessageStringPtr& str_ptr)
 MessageStringRef::MessageStringRef(const MessageStringRef& str_ref)
 {
 	_str = str_ref._str;
+}
+
+void MessageStringRef::init_literal(const char* str, size_t len)
+{
+	_str = detail::MessageStringData_static_string(boost::string_ref(str,len));
 }
 
 bool MessageStringRef::operator ==(MessageStringRef b) const
