@@ -227,10 +227,7 @@ namespace RobotRaconteur
 			o.reserve(v.size());
 			for (size_t j = 0; j < v.size(); j++)
 			{
-				RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement("", PodStub<T>::PackToMessageElementPod(v[j]));
-				m->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
-				m->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
-				m->ElementNumber = j;
+				RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement(boost::numeric_cast<int32_t>(j), PodStub<T>::PackToMessageElementPod(v[j]));
 				o.push_back(m);
 			}
 			out.push_back(CreateMessageElement(name, CreateMessageElementNestedElementList(DataTypes_pod_array_t,RRPrimUtil<T>::GetElementTypeString(), RR_MOVE(o))));
@@ -248,15 +245,7 @@ namespace RobotRaconteur
 			{
 				RR_INTRUSIVE_PTR<MessageElement> m = a->Elements.at(i);
 				int32_t key;
-				if (m->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
-				{
-					key = m->ElementNumber;
-				}
-				else if (m->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
-				{
-					key = boost::lexical_cast<int32_t>(m->ElementName.str());
-				}
-				else
+				if (!MessageElement_GetElementNumber(m,key))
 				{
 					throw DataTypeException("Invalid pod array format");
 				}
@@ -285,10 +274,7 @@ namespace RobotRaconteur
 	{
 		std::vector<RR_INTRUSIVE_PTR<MessageElement> > o;
 		
-		RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement("", PodStub<T>::PackToMessageElementPod(v));
-		m->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
-		m->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
-		m->ElementNumber = 0;
+		RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement(0, PodStub<T>::PackToMessageElementPod(v));
 		o.push_back(m);
 		
 		return CreateMessageElementNestedElementList(DataTypes_pod_array_t,RRPrimUtil<T>::GetElementTypeString(), RR_MOVE(o));		
@@ -304,15 +290,7 @@ namespace RobotRaconteur
 
 		RR_INTRUSIVE_PTR<MessageElement> m = a->Elements.at(0);
 		int32_t key;
-		if (m->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
-		{
-			key = m->ElementNumber;
-		}
-		else if (m->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
-		{
-			key = boost::lexical_cast<int32_t>(m->ElementName.str());
-		}
-		else
+		if (!MessageElement_GetElementNumber(m,key))
 		{
 			throw DataTypeException("Invalid pod scalar array format");
 		}
@@ -338,10 +316,7 @@ namespace RobotRaconteur
 		o.reserve(a->size());
 		for (size_t i = 0; i < a->size(); i++)
 		{
-			RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement("", PodStub<T>::PackToMessageElementPod(a->at(i)));
-			m->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
-			m->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
-			m->ElementNumber = i;
+			RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement(boost::numeric_cast<int32_t>(i), PodStub<T>::PackToMessageElementPod(a->at(i)));
 			o.push_back(m);
 		}
 		return CreateMessageElementNestedElementList(DataTypes_pod_array_t, RRPrimUtil<T>::GetElementTypeString(), RR_MOVE(o));
@@ -358,15 +333,7 @@ namespace RobotRaconteur
 		{
 			RR_INTRUSIVE_PTR<MessageElement> m = a->Elements.at(i);
 			int32_t key;
-			if (m->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
-			{
-				key = m->ElementNumber;
-			}
-			else if (m->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
-			{
-				key = boost::lexical_cast<int32_t>(m->ElementName.str());
-			}
-			else
+			if (!MessageElement_GetElementNumber(m,key))
 			{
 				throw DataTypeException("Invalid pod array format");
 			}

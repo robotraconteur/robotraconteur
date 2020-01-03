@@ -114,10 +114,7 @@ namespace packing
 
 				RR_INTRUSIVE_PTR<MessageElementData> dat = PackAnyType<RR_INTRUSIVE_PTR<T> >(e->second,node);
 
-				RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement("", dat);
-				m->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
-				m->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
-				m->ElementNumber = key;
+				RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement(key, dat);
 				mret.push_back(m);
 			}
 
@@ -135,15 +132,7 @@ namespace packing
 			{
 				RR_INTRUSIVE_PTR<MessageElement> m = *e;
 				int32_t key;
-				if (m->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
-				{
-					key = m->ElementNumber;
-				}
-				else if (m->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
-				{
-					key = boost::lexical_cast<int32_t>(m->ElementName.str());
-				}
-				else
+				if (!MessageElement_GetElementNumber(m,key))				
 				{
 					throw DataTypeException("Invalid map format");
 				}
@@ -193,12 +182,14 @@ namespace packing
 			{
 				RR_INTRUSIVE_PTR<MessageElement> m = *e;
 
-				if (!(m->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR))
+				MessageStringPtr key;
+
+				if (!MessageElement_GetElementName(m,key))
 				{
 					throw DataTypeException("Invalid map format");
 				}
 
-				const MessageStringPtr& key = m->ElementName;
+				
 
 				RR_INTRUSIVE_PTR<T> dat = UnpackAnyType<RR_INTRUSIVE_PTR<T> >(m,node);
 				ret->insert(std::make_pair(RR_MOVE(key.str().to_string()), dat));
@@ -238,10 +229,7 @@ namespace packing
 
 			RR_INTRUSIVE_PTR<MessageElementData> dat = PackAnyType<RR_INTRUSIVE_PTR<T> >(*set2_iter, node);
 
-			RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement("", dat);
-			m->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
-			m->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
-			m->ElementNumber = key;
+			RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement(key, dat);
 			mret.push_back(m);
 			++set2_iter;
 		}
@@ -261,15 +249,7 @@ namespace packing
 		{
 			RR_INTRUSIVE_PTR<MessageElement> m = mset->Elements.at(i);
 			int32_t key;
-			if (m->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
-			{
-				key = m->ElementNumber;
-			}
-			else if (m->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
-			{
-				key = boost::lexical_cast<int32_t>(m->ElementName.str());
-			}
-			else
+			if (!MessageElement_GetElementNumber(m,key))
 			{
 				throw DataTypeException("Invalid list format");
 			}

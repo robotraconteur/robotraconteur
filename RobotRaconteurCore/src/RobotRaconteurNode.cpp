@@ -1106,11 +1106,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_INTRUSIVE_PTR<Me
 						std::vector<RR_INTRUSIVE_PTR<MessageElement> > servicedef_list;
 						BOOST_FOREACH(RR_SHARED_PTR<ServiceFactory> d1, defs | boost::adaptors::map_values)
 						{
-							RR_INTRUSIVE_PTR<MessageElement> e1 = CreateMessageElement();
-							e1->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
-							e1->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
-							e1->ElementNumber = n;
-							e1->SetData(stringToRRArray(d1->DefString()));
+							RR_INTRUSIVE_PTR<MessageElement> e1 = CreateMessageElement(boost::numeric_cast<int32_t>(n),stringToRRArray(d1->DefString()));
 							servicedef_list.push_back(e1);
 							n++;
 						}

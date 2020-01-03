@@ -314,6 +314,7 @@ public:
 	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageEntry> CreateMessageEntry(MessageEntryType t, MessageStringRef n);
 	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElement> CreateMessageElement();
 	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElement> CreateMessageElement(MessageStringRef name, RR_INTRUSIVE_PTR<MessageElementData> datin);
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElement> CreateMessageElement(int32_t number, RR_INTRUSIVE_PTR<MessageElementData> datin);
 	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNestedElementList> CreateMessageElementNestedElementList(DataTypes type_, MessageStringRef type_name_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_);
 #if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
 	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNestedElementList> CreateMessageElementNestedElementList(DataTypes type_, MessageStringRef type_name_, std::vector<RR_INTRUSIVE_PTR<MessageElement> > &&elements_);
@@ -512,6 +513,10 @@ public:
 		if (!node1) throw InvalidOperationException("Node has been released");
 		return node1->template UnpackListType<T>(m->CastDataToNestedList());
 	}
+
+	ROBOTRACONTEUR_CORE_API bool MessageElement_GetElementNumber(RR_INTRUSIVE_PTR<MessageElement> m, int32_t& number);
+	ROBOTRACONTEUR_CORE_API void MessageElement_SetElementNumber(RR_INTRUSIVE_PTR<MessageElement> m, int32_t number);
+	ROBOTRACONTEUR_CORE_API bool MessageElement_GetElementName(RR_INTRUSIVE_PTR<MessageElement> m, MessageStringPtr& name);
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
 	using MessagePtr = RR_INTRUSIVE_PTR<Message>;

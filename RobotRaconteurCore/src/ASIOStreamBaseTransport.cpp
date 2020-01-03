@@ -2518,10 +2518,7 @@ void ASIOStreamBaseTransport::UpdateStringTable()
 				if (el.size() >= 32) break;
 				codes.push_back(e->code);
 				string_table_3_confirming.push_back(e->code);
-				RR_INTRUSIVE_PTR<MessageElement> el1 = CreateMessageElement("", stringToRRArray(e->value.str()));
-				el1->ElementNumber = boost::numeric_cast<int32_t>(e->code);
-				el1->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
-				el1->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
+				RR_INTRUSIVE_PTR<MessageElement> el1 = CreateMessageElement(boost::numeric_cast<int32_t>(e->code), stringToRRArray(e->value.str()));
 				el.push_back(el1);
 			}
 

@@ -1910,6 +1910,14 @@ namespace RobotRaconteur
 	{
 		return new MessageElement(name, datin);
 	}
+	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElement> CreateMessageElement(int32_t number, RR_INTRUSIVE_PTR<MessageElementData> datin)
+	{
+		MessageElement* m= new MessageElement("", datin);
+		m->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
+		m->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
+		m->ElementNumber = number;
+		return m;
+	}
 	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNestedElementList> CreateMessageElementNestedElementList(DataTypes type_, MessageStringRef type_name_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > &elements_)
 	{
 		return new MessageElementNestedElementList(type_, type_name_, elements_);
@@ -2036,5 +2044,46 @@ namespace RobotRaconteur
 		}
 
 		return mm2;
+	}
+
+	bool MessageElement_GetElementNumber(RR_INTRUSIVE_PTR<MessageElement> m, int32_t& number)
+	{
+		if (m->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
+		{
+			number = m->ElementNumber;
+			return true;
+		}
+		else if (m->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
+		{
+			int32_t _number;
+			if(!boost::conversion::try_lexical_convert<int32_t>(m->ElementName.str(),_number))
+			{
+				return false;
+			}
+			number = _number;
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	void MessageElement_SetElementNumber(RR_INTRUSIVE_PTR<MessageElement> m, int32_t number)
+	{
+		m->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
+		m->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
+		m->ElementNumber = number;
+	}
+
+	bool MessageElement_GetElementName(RR_INTRUSIVE_PTR<MessageElement> m, MessageStringPtr& name)
+	{
+		if (!(m->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR))
+		{
+			return false;
+		}
+
+		name = m->ElementName;
+		return true;
 	}
 }
