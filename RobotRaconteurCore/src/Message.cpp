@@ -233,8 +233,8 @@ namespace RobotRaconteur
 
 	void MessageHeader::Read(ArrayBinaryReader &r)
 	{
-		boost::string_ref seed = r.ReadString8(4).str();
-		if (seed != "RRAC")
+		MessageStringPtr magic = r.ReadString8(4).str();
+		if (magic != "RRAC")
 			throw ProtocolException("Incorrect message seed");
 		MessageSize = r.ReadNumber<uint32_t>();
 		uint16_t version = r.ReadNumber<uint16_t>();
@@ -503,7 +503,7 @@ namespace RobotRaconteur
 
 	void MessageHeader::Read3(ArrayBinaryReader &r, uint16_t& version_minor)
 	{
-		boost::string_ref magic = r.ReadString8(4).str();
+		MessageStringPtr magic = r.ReadString8(4).str();
 		if (magic != "RRAC")
 			throw ProtocolException("Incorrect message magic");
 		MessageSize = r.ReadNumber<uint32_t>();
