@@ -673,6 +673,18 @@ namespace RobotRaconteur
 			t->async_connect(b, f);
 			return true;
 		}
+
+		template<typename T, typename B, typename C, typename F>
+		static bool asio_async_connect(RR_WEAK_PTR<RobotRaconteurNode> node, RR_SHARED_PTR<T>& t, const B& b, const C& c, BOOST_ASIO_MOVE_ARG(F) f)
+		{
+			RR_SHARED_PTR<RobotRaconteurNode> node1 = node.lock();
+			if (!node1) return false;
+			boost::shared_lock<boost::shared_mutex> l(node1->thread_pool_lock);
+			if (!node1->thread_pool) return false;
+			t->async_connect(b, c, f);
+			return true;
+		}
+
 #if BOOST_ASIO_VERSION < 101200
 		template<typename T, typename B, typename F>
 		static bool asio_async_resolve(RR_WEAK_PTR<RobotRaconteurNode> node, RR_SHARED_PTR<T>& t, const B& b, BOOST_ASIO_MOVE_ARG(F) f)
@@ -685,7 +697,7 @@ namespace RobotRaconteur
 				l.unlock();
 				RR_SHARED_PTR<ThreadPool> t;
 				if (!node1->TryGetThreadPool(t)) return false;
-				boost::asio::ip::tcp::resolver::iterator iter;
+				typename T::iterator iter;
 				return t->TryPost(boost::bind(f, boost::asio::error::operation_aborted, iter));
 			}
 
@@ -704,7 +716,7 @@ namespace RobotRaconteur
 				l.unlock();
 				RR_SHARED_PTR<ThreadPool> t;
 				if (!node1->TryGetThreadPool(t)) return false;
-				boost::asio::ip::tcp::resolver::results_type results;
+				typename T::results_type results;
 				return t->TryPost(boost::bind(f, boost::asio::error::operation_aborted, results));
 			}
 
