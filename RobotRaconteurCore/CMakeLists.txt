@@ -154,7 +154,13 @@ SET_TARGET_PROPERTIES(RobotRaconteurCore PROPERTIES VERSION "${RobotRaconteur_SH
 ELSE()
 add_library(RobotRaconteurCore STATIC ${RobotRaconteurCore_src} ${RobotRaconteurCore_header} )
 SET_TARGET_PROPERTIES(RobotRaconteurCore PROPERTIES PREFIX lib)
+target_link_libraries(RobotRaconteurCore PUBLIC ${Boost_LIBRARIES} ${ROBOTRACONTEUR_EXTRA_LIBS})
 ENDIF()
+
+target_include_directories(RobotRaconteurCore PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
+  $<INSTALL_INTERFACE:include/>  # <prefix>/include/
+)
 
 if(${CMAKE_VERSION} VERSION_GREATER "3.16.0") 
 	target_precompile_headers(RobotRaconteurCore PRIVATE ${RobotRaconteurCore_header})
