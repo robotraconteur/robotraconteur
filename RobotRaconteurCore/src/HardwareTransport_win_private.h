@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #include "RobotRaconteur/HardwareTransport.h"
-#include "ASIOStreamBaseTransport.h"
+#include "RobotRaconteur/ASIOStreamBaseTransport.h"
 
 #include "HardwareTransport_usbcommon_private.h"
 #include "HardwareTransport_bluetoothcommon_private.h"

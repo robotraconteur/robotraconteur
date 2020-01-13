@@ -37,8 +37,7 @@ set(RobotRaconteurCore_src
 	src/TcpTransport.cpp
 	src/Transport.cpp
 	src/WireMember.cpp
-	src/WireMember_private.h
-	src/ASIOStreamBaseTransport.h
+	src/WireMember_private.h	
 	src/ASIOStreamBaseTransport.cpp
 	src/Timer.cpp
 	src/AsyncUtils.cpp
@@ -102,6 +101,7 @@ set(RobotRaconteurCore_header
 	include/RobotRaconteur/Generator.h
 	include/RobotRaconteur/NodeSetup.h
 	include/RobotRaconteur/DataTypesPacking.h
+	include/RobotRaconteur/ASIOStreamBaseTransport.h
 )
 
 if (WIN32)

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #include "RobotRaconteur/TcpTransport.h"
-#include "ASIOStreamBaseTransport.h"
+#include "RobotRaconteur/ASIOStreamBaseTransport.h"
 #include <list>
 
 #include "websocket_stream.hpp"

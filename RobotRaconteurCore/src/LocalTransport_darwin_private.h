@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #include "RobotRaconteur/LocalTransport.h"
-#include "ASIOStreamBaseTransport.h"
+#include "RobotRaconteur/ASIOStreamBaseTransport.h"
 #include "LocalTransport_discovery_private.h"
 
 #include <boost/filesystem.hpp>

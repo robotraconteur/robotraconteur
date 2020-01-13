@@ -17,7 +17,7 @@
 #define BOOST_ASIO_HAS_LOCAL_SOCKETS 1
 
 #include "RobotRaconteur/LocalTransport.h"
-#include "ASIOStreamBaseTransport.h"
+#include "RobotRaconteur/ASIOStreamBaseTransport.h"
 #include <boost/filesystem.hpp>
 #include <boost/call_traits.hpp>
 #include <set>

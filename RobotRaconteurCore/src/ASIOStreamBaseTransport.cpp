@@ -16,7 +16,7 @@
 #include "stdafx.h"
 #endif
 
-#include "ASIOStreamBaseTransport.h"
+#include "RobotRaconteur/ASIOStreamBaseTransport.h"
 #include "RobotRaconteur/Message.h"
 #include "RobotRaconteur/IOUtils.h"
 #include "RobotRaconteur/StringTable.h"
