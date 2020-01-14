@@ -3513,7 +3513,7 @@ namespace RobotRaconteur
 				}
 			}
 
-			if (nolock)
+			if (nolockread)
 			{
 				if (s == "nolockread")
 				{
