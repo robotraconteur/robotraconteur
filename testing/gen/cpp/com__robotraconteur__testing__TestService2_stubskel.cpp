@@ -1149,6 +1149,82 @@ double subobj_default_impl::add_val(double v)
 throw RobotRaconteur::NotImplementedException("");
 }
 
+baseobj_default_abstract_impl::baseobj_default_abstract_impl()
+{
+rrvar_d1=0.0;
+rrvar_d2=RobotRaconteur::AllocateEmptyRRArray<double>(0);
+}
+double baseobj_default_abstract_impl::get_d1()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_d1;
+}
+void baseobj_default_abstract_impl::set_d1(double value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_d1 = value;
+}
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > baseobj_default_abstract_impl::get_d2()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_d2;
+}
+void baseobj_default_abstract_impl::set_d2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_d2 = value;
+}
+double baseobj_default_abstract_impl::func3(double d1, double d2)
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+boost::signals2::signal<void ()>& baseobj_default_abstract_impl::get_ev1()
+{
+return rrvar_ev1;
+}
+RR_SHARED_PTR<subobj > baseobj_default_abstract_impl::get_o5()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > baseobj_default_abstract_impl::get_p1()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+void baseobj_default_abstract_impl::set_p1(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > value)
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void(double, double) > > > baseobj_default_abstract_impl::get_cb2()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_cb2;
+}
+void baseobj_default_abstract_impl::set_cb2(RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void(double, double)> > > value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+if (rrvar_cb2) throw RobotRaconteur::InvalidOperationException("Callback already set");
+rrvar_cb2 = value;
+}
+RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > baseobj_default_abstract_impl::get_w1()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+void baseobj_default_abstract_impl::set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > value)
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+RR_SHARED_PTR<RobotRaconteur::ArrayMemory<double > > baseobj_default_abstract_impl::get_m1()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+subobj_default_abstract_impl::subobj_default_abstract_impl()
+{
+}
+double subobj_default_abstract_impl::add_val(double v)
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+
 }
 }
 }

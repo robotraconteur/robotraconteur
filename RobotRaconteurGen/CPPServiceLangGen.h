@@ -72,7 +72,9 @@ namespace RobotRaconteurGen
 
 		static convert_generator_result convert_generator(FunctionDefinition* f);
 
-		static void GenerateInterfaceHeaderFile(ServiceDefinition* d, ostream* w);
+		static bool is_member_override(MemberDefinition* m, std::vector<RR_SHARED_PTR<ServiceDefinition> > defs);
+
+		static void GenerateInterfaceHeaderFile(ServiceDefinition* d, std::vector<RR_SHARED_PTR<ServiceDefinition> > defs,  ostream* w);
 
 		static string GetPropertyDeclaration(PropertyDefinition* d, bool inclass=true);
 
@@ -106,21 +108,21 @@ namespace RobotRaconteurGen
 
 		static string MemoryDeclaration(MemoryDefinition* d, bool inclass=true);
 
-		static void GenerateStubSkelHeaderFile(ServiceDefinition* d, ostream* w);
+		static void GenerateStubSkelHeaderFile(ServiceDefinition* d, std::vector<RR_SHARED_PTR<ServiceDefinition> > defs, ostream* w);
 
-		static void GenerateStubSkelFile(ServiceDefinition* d, ostream* w, string servicedef);
+		static void GenerateStubSkelFile(ServiceDefinition* d, std::vector<RR_SHARED_PTR<ServiceDefinition> > defs, ostream* w, string servicedef);
 
 		static void GenerateServiceFactoryHeader(ServiceDefinition* d, ostream* w);
 
 		static void GenerateServiceFactory(ServiceDefinition* d, ostream* w, string defstring);
 
-		static void GenerateStubHeader(ServiceDefinition *d, ostream* w);
+		static void GenerateStubHeader(ServiceDefinition *d, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, ostream* w);
 
-		static void GenerateSkelHeader(ServiceDefinition *d, ostream* w);
+		static void GenerateSkelHeader(ServiceDefinition *d, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, ostream* w);
 
-		static void GenerateStubDefinition(ServiceDefinition *d, ostream* w);
+		static void GenerateStubDefinition(ServiceDefinition *d, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, ostream* w);
 
-		static void GenerateSkelDefinition(ServiceDefinition *d, ostream* w);
+		static void GenerateSkelDefinition(ServiceDefinition *d, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, ostream* w);
 	
 		static void GenerateConstants(ServiceDefinition*d, ostream* w);
 
@@ -128,12 +130,12 @@ namespace RobotRaconteurGen
 
 		static std::string GetDefaultInitializedValue(const TypeDefinition& tdef);
 
-		static void GenerateDefaultImplHeader(ServiceDefinition *d, ostream* w);
+		static void GenerateDefaultImplHeader(ServiceDefinition *d, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, bool is_abstract, ostream* w);
 
-		static void GenerateDefaultImplDefinition(ServiceDefinition* d, ostream* w);
+		static void GenerateDefaultImplDefinition(ServiceDefinition* d, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, bool is_abstract, ostream* w);
 
 		//File generators
-		static void GenerateFiles(RR_SHARED_PTR<ServiceDefinition> d, std::string servicedef, std::string path=".");
+		static void GenerateFiles(RR_SHARED_PTR<ServiceDefinition> d, std::string servicedef, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, std::string path=".");
 
 		//Master header file
 		static void GenerateMasterHeaderFile(std::vector<RR_SHARED_PTR<ServiceDefinition> > d, ostream* w);

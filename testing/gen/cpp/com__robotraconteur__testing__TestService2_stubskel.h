@@ -277,7 +277,8 @@ private:
 
 class baseobj_default_impl : public virtual baseobj
 {
-protected:boost::mutex this_lock;
+protected:
+boost::mutex this_lock;
 double rrvar_d1;
 RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > rrvar_d2;
 boost::signals2::signal<void ()> rrvar_ev1;
@@ -312,10 +313,59 @@ virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<double > > get_m1();
 
 class subobj_default_impl : public virtual subobj
 {
-protected:boost::mutex this_lock;
+protected:
+boost::mutex this_lock;
 
 public:
 subobj_default_impl();
+virtual double add_val(double v);
+
+};
+
+
+class baseobj_default_abstract_impl : public virtual baseobj
+{
+protected:
+boost::mutex this_lock;
+double rrvar_d1;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > rrvar_d2;
+boost::signals2::signal<void ()> rrvar_ev1;
+RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void(double, double) > > > rrvar_cb2;
+
+public:
+baseobj_default_abstract_impl();
+virtual double get_d1();
+virtual void set_d1(double value);
+
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > get_d2();
+virtual void set_d2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value);
+
+virtual double func3(double d1, double d2);
+
+virtual boost::signals2::signal<void ()>& get_ev1();
+
+virtual RR_SHARED_PTR<subobj > get_o5();
+
+virtual RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > get_p1();
+virtual void set_p1(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > value);
+
+virtual RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void(double, double) > > > get_cb2();
+virtual void set_cb2(RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void(double, double)> > > value);
+
+virtual RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > get_w1();
+virtual void set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > value);
+
+virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<double > > get_m1();
+
+};
+
+class subobj_default_abstract_impl : public virtual subobj
+{
+protected:
+boost::mutex this_lock;
+
+public:
+subobj_default_abstract_impl();
 virtual double add_val(double v);
 
 };

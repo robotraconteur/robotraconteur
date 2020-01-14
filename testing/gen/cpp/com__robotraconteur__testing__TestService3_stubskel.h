@@ -1389,7 +1389,8 @@ RR_SHARED_PTR<RobotRaconteur::ArrayMemoryServiceSkel<int32_t > > rr_m3_mem;
 
 class testroot3_default_impl : public virtual testroot3
 {
-protected:boost::mutex this_lock;
+protected:
+boost::mutex this_lock;
 int32_t rrvar_readme;
 int32_t rrvar_writeme;
 int32_t rrvar_unknown_modifier;
@@ -1608,7 +1609,8 @@ virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<RobotRaconteur::rr_boo
 
 class obj1_default_impl : public virtual obj1
 {
-protected:boost::mutex this_lock;
+protected:
+boost::mutex this_lock;
 RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > rrvar_d1;
 
 public:
@@ -1620,7 +1622,8 @@ virtual void set_d1(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value);
 
 class obj2_default_impl : public virtual obj2
 {
-protected:boost::mutex this_lock;
+protected:
+boost::mutex this_lock;
 RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > rrvar_d1;
 
 public:
@@ -1632,7 +1635,8 @@ virtual void set_d1(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value);
 
 class obj3_default_impl : public virtual obj3
 {
-protected:boost::mutex this_lock;
+protected:
+boost::mutex this_lock;
 RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > rrvar_d1;
 
 public:
@@ -1644,7 +1648,8 @@ virtual void set_d1(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value);
 
 class obj4_default_impl : public virtual obj4
 {
-protected:boost::mutex this_lock;
+protected:
+boost::mutex this_lock;
 std::string rrvar_s_ind;
 int32_t rrvar_i_ind;
 std::string rrvar_data;
@@ -1666,7 +1671,8 @@ virtual RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub3 > get_o3_
 
 class obj5_default_impl : public virtual obj5
 {
-protected:boost::mutex this_lock;
+protected:
+boost::mutex this_lock;
 double rrvar_p1;
 double rrvar_p2;
 double rrvar_p3;
@@ -1677,6 +1683,314 @@ RR_SHARED_PTR<RobotRaconteur::WireBroadcaster<int32_t > > rrvar_w2;
 
 public:
 obj5_default_impl();
+virtual double get_p1();
+virtual void set_p1(double value);
+
+virtual double get_p2();
+virtual void set_p2(double value);
+
+virtual double get_p3();
+virtual void set_p3(double value);
+
+virtual int32_t f1();
+
+virtual int32_t f2();
+
+virtual RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > get_q1();
+virtual void set_q1(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value);
+
+virtual RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > get_q2();
+virtual void set_q2(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value);
+
+virtual RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > get_w1();
+virtual void set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value);
+
+virtual RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > get_w2();
+virtual void set_w2(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value);
+
+virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > get_m1();
+
+virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > get_m2();
+
+virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > get_m3();
+
+};
+
+
+class testroot3_default_abstract_impl : public virtual testroot3
+{
+protected:
+boost::mutex this_lock;
+int32_t rrvar_readme;
+int32_t rrvar_writeme;
+int32_t rrvar_unknown_modifier;
+testenum1::testenum1 rrvar_testenum1_prop;
+testpod1 rrvar_testpod1_prop;
+RR_INTRUSIVE_PTR<teststruct3 > rrvar_teststruct3_prop;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > rrvar_d1;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > rrvar_d2;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > rrvar_d3;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > rrvar_d4;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > rrvar_d5;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > rrvar_d6;
+vector3 rrvar_testnamedarray1;
+transform rrvar_testnamedarray2;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedArray<transform> > rrvar_testnamedarray3;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedMultiDimArray<transform> > rrvar_testnamedarray4;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedMultiDimArray<transform> > rrvar_testnamedarray5;
+RobotRaconteur::cdouble rrvar_c1;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::cdouble > > rrvar_c2;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cdouble > > rrvar_c3;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble >  > > rrvar_c4;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble >  > > rrvar_c5;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cdouble >  > > rrvar_c6;
+RobotRaconteur::cfloat rrvar_c7;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::cfloat > > rrvar_c8;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cfloat > > rrvar_c9;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cfloat >  > > rrvar_c10;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cfloat >  > > rrvar_c11;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cfloat >  > > rrvar_c12;
+RobotRaconteur::rr_bool rrvar_b1;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::rr_bool > > rrvar_b2;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool > > rrvar_b3;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool >  > > rrvar_b4;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool >  > > rrvar_b5;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool >  > > rrvar_b6;
+RR_SHARED_PTR<RobotRaconteur::PipeBroadcaster<int32_t > > rrvar_unreliable1;
+RR_SHARED_PTR<RobotRaconteur::WireBroadcaster<int32_t > > rrvar_peekwire;
+RR_SHARED_PTR<RobotRaconteur::WireUnicastReceiver<int32_t > > rrvar_pokewire;
+
+public:
+testroot3_default_abstract_impl();
+virtual int32_t get_readme();
+virtual void set_writeme(int32_t value);
+
+virtual int32_t get_unknown_modifier();
+virtual void set_unknown_modifier(int32_t value);
+
+virtual testenum1::testenum1 get_testenum1_prop();
+virtual void set_testenum1_prop(testenum1::testenum1 value);
+
+virtual testpod1 get_testpod1_prop();
+virtual void set_testpod1_prop(const testpod1& value);
+
+virtual RR_INTRUSIVE_PTR<teststruct3 > get_teststruct3_prop();
+virtual void set_teststruct3_prop(RR_INTRUSIVE_PTR<teststruct3 > value);
+
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > get_d1();
+virtual void set_d1(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value);
+
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > get_d2();
+virtual void set_d2(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value);
+
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > get_d3();
+virtual void set_d3(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value);
+
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > get_d4();
+virtual void set_d4(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value);
+
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > get_d5();
+virtual void set_d5(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > value);
+
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > get_d6();
+virtual void set_d6(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > value);
+
+virtual vector3 get_testnamedarray1();
+virtual void set_testnamedarray1(const vector3& value);
+
+virtual transform get_testnamedarray2();
+virtual void set_testnamedarray2(const transform& value);
+
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedArray<transform> > get_testnamedarray3();
+virtual void set_testnamedarray3(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedArray<transform> > value);
+
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedMultiDimArray<transform> > get_testnamedarray4();
+virtual void set_testnamedarray4(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedMultiDimArray<transform> > value);
+
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedMultiDimArray<transform> > get_testnamedarray5();
+virtual void set_testnamedarray5(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedMultiDimArray<transform> > value);
+
+virtual RobotRaconteur::cdouble get_c1();
+virtual void set_c1(RobotRaconteur::cdouble value);
+
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::cdouble > > get_c2();
+virtual void set_c2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::cdouble > > value);
+
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cdouble > > get_c3();
+virtual void set_c3(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cdouble > > value);
+
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble >  > > get_c4();
+virtual void set_c4(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble >  > > value);
+
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble >  > > get_c5();
+virtual void set_c5(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble >  > > value);
+
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cdouble >  > > get_c6();
+virtual void set_c6(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cdouble >  > > value);
+
+virtual RobotRaconteur::cfloat get_c7();
+virtual void set_c7(RobotRaconteur::cfloat value);
+
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::cfloat > > get_c8();
+virtual void set_c8(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::cfloat > > value);
+
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cfloat > > get_c9();
+virtual void set_c9(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cfloat > > value);
+
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cfloat >  > > get_c10();
+virtual void set_c10(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cfloat >  > > value);
+
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cfloat >  > > get_c11();
+virtual void set_c11(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cfloat >  > > value);
+
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cfloat >  > > get_c12();
+virtual void set_c12(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cfloat >  > > value);
+
+virtual RobotRaconteur::rr_bool get_b1();
+virtual void set_b1(RobotRaconteur::rr_bool value);
+
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::rr_bool > > get_b2();
+virtual void set_b2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::rr_bool > > value);
+
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool > > get_b3();
+virtual void set_b3(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool > > value);
+
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool >  > > get_b4();
+virtual void set_b4(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool >  > > value);
+
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool >  > > get_b5();
+virtual void set_b5(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool >  > > value);
+
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool >  > > get_b6();
+virtual void set_b6(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool >  > > value);
+
+virtual void testpod1_func1(const testpod1& s);
+
+virtual testpod1 testpod1_func2();
+
+virtual RR_SHARED_PTR<RobotRaconteur::Generator<double,void > > gen_func1();
+
+virtual RR_SHARED_PTR<RobotRaconteur::Generator<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint8_t > >,void > > gen_func2(const std::string& name);
+
+virtual RR_SHARED_PTR<RobotRaconteur::Generator<void,RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint8_t > > > > gen_func3(const std::string& name);
+
+virtual RR_SHARED_PTR<RobotRaconteur::Generator<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint8_t > >,RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint8_t > > > > gen_func4();
+
+virtual RR_SHARED_PTR<RobotRaconteur::Generator<RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService1::teststruct2 >,RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService1::teststruct2 > > > gen_func5();
+
+virtual void test_exception_params1();
+
+virtual void test_exception_params2();
+
+virtual RR_SHARED_PTR<obj4 > get_o4();
+
+virtual RR_SHARED_PTR<obj5 > get_nolock_test();
+
+virtual RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > get_unreliable1();
+virtual void set_unreliable1(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value);
+
+virtual RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > get_p1();
+virtual void set_p1(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > value);
+
+virtual RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > get_p2();
+virtual void set_p2(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > value);
+
+virtual RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > get_p3();
+virtual void set_p3(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > value);
+
+virtual RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > get_peekwire();
+virtual void set_peekwire(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value);
+
+virtual RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > get_pokewire();
+virtual void set_pokewire(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value);
+
+virtual RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > get_w1();
+virtual void set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > value);
+
+virtual RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > get_w2();
+virtual void set_w2(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > value);
+
+virtual RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > get_w3();
+virtual void set_w3(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > value);
+
+virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<double > > get_readmem();
+
+virtual RR_SHARED_PTR<RobotRaconteur::PodArrayMemory<testpod2 > > get_pod_m1();
+
+virtual RR_SHARED_PTR<RobotRaconteur::PodMultiDimArrayMemory<testpod2 > > get_pod_m2();
+
+virtual RR_SHARED_PTR<RobotRaconteur::NamedArrayMemory<transform > > get_namedarray_m1();
+
+virtual RR_SHARED_PTR<RobotRaconteur::NamedMultiDimArrayMemory<transform > > get_namedarray_m2();
+
+virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<RobotRaconteur::cdouble > > get_c_m1();
+
+virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<RobotRaconteur::cdouble > > get_c_m2();
+
+virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<RobotRaconteur::cdouble > > get_c_m3();
+
+virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<RobotRaconteur::cdouble > > get_c_m4();
+
+virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<RobotRaconteur::rr_bool > > get_c_m5();
+
+virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<RobotRaconteur::rr_bool > > get_c_m6();
+
+};
+
+class obj1_default_abstract_impl : public virtual obj1
+{
+protected:
+boost::mutex this_lock;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > rrvar_d1;
+
+public:
+obj1_default_abstract_impl();
+virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > get_d1();
+virtual void set_d1(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value);
+
+};
+
+class obj2_default_abstract_impl : public virtual obj2
+{
+protected:
+boost::mutex this_lock;
+
+public:
+obj2_default_abstract_impl();
+};
+
+class obj3_default_abstract_impl : public virtual obj3
+{
+protected:
+boost::mutex this_lock;
+
+public:
+obj3_default_abstract_impl();
+};
+
+class obj4_default_abstract_impl : public virtual obj4
+{
+protected:
+boost::mutex this_lock;
+
+public:
+obj4_default_abstract_impl();
+};
+
+class obj5_default_abstract_impl : public virtual obj5
+{
+protected:
+boost::mutex this_lock;
+double rrvar_p1;
+double rrvar_p2;
+double rrvar_p3;
+RR_SHARED_PTR<RobotRaconteur::PipeBroadcaster<int32_t > > rrvar_q1;
+RR_SHARED_PTR<RobotRaconteur::PipeBroadcaster<int32_t > > rrvar_q2;
+RR_SHARED_PTR<RobotRaconteur::WireBroadcaster<int32_t > > rrvar_w1;
+RR_SHARED_PTR<RobotRaconteur::WireBroadcaster<int32_t > > rrvar_w2;
+
+public:
+obj5_default_abstract_impl();
 virtual double get_p1();
 virtual void set_p1(double value);
 

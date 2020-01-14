@@ -78,11 +78,11 @@ bool ReadFile(std::string& file_contents, const std::string& fname)
 	}
 }
 
-void GenerateCPPFiles(RR_SHARED_PTR<ServiceDefinition> d, std::string def_str, std::string output_dir)
+void GenerateCPPFiles(RR_SHARED_PTR<ServiceDefinition> d, std::string def_str, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, std::string output_dir)
 {
 	//cout << str << endl;
 		
-	CPPServiceLangGen::GenerateFiles(d,def_str,output_dir);
+	CPPServiceLangGen::GenerateFiles(d,def_str,other_defs,output_dir);
 }
 
 void GenerateCSharpFiles(RR_SHARED_PTR<ServiceDefinition> d, std::string def_str, std::string output_dir)
@@ -579,7 +579,10 @@ int main(int argc, char* argv[])
 			{				
 				try
 				{					
-					GenerateCPPFiles(sdefs.at(i), sdefs_str.at(i) ,output_dir);
+					std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs = alldefs;
+					other_defs.erase(boost::range::remove(other_defs, sdefs.at(i)),other_defs.end());
+
+					GenerateCPPFiles(sdefs.at(i), sdefs_str.at(i), other_defs, output_dir);
 				}
 				catch (std::exception& ee)
 				{

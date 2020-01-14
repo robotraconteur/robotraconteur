@@ -369,9 +369,6 @@ using obj1Ptr = RR_SHARED_PTR<obj1>;
 class obj2 : public virtual obj1
 {
 public:
-virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > get_d1()=0;
-virtual void set_d1(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value)=0;
-
 virtual boost::string_ref RRType() {return "com.robotraconteur.testing.TestService3.obj2";  }
 };
 
@@ -382,9 +379,6 @@ using obj2Ptr = RR_SHARED_PTR<obj2>;
 class obj3 : public virtual obj1, public virtual obj2
 {
 public:
-virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > get_d1()=0;
-virtual void set_d1(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value)=0;
-
 virtual boost::string_ref RRType() {return "com.robotraconteur.testing.TestService3.obj3";  }
 };
 
@@ -395,17 +389,6 @@ using obj3Ptr = RR_SHARED_PTR<obj3>;
 class obj4 : public virtual com::robotraconteur::testing::TestService1::sub2
 {
 public:
-virtual std::string get_s_ind()=0;
-virtual void set_s_ind(const std::string& value)=0;
-
-virtual int32_t get_i_ind()=0;
-virtual void set_i_ind(int32_t value)=0;
-
-virtual std::string get_data()=0;
-virtual void set_data(const std::string& value)=0;
-
-virtual RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub3 > get_o3_1(const std::string& ind)=0;
-
 virtual boost::string_ref RRType() {return "com.robotraconteur.testing.TestService3.obj4";  }
 };
 

@@ -35,6 +35,12 @@ using namespace RobotRaconteur;
 #define MEMBER_ITER(TYPE) {for (std::vector<RR_SHARED_PTR<MemberDefinition> >::const_iterator m1=(*e)->Members.begin(); m1!=(*e)->Members.end(); ++m1) if (dynamic_cast<TYPE*>(m1->get())!=0) { RR_SHARED_PTR<TYPE> m = dynamic_pointer_cast<TYPE>(*m1);   
 #define MEMBER_ITER_END() }}
 
+#define MEMBER_ITER2(TYPE) {for (std::vector<RR_SHARED_PTR<MemberDefinition> >::const_iterator m1=(*e)->Members.begin(); m1!=(*e)->Members.end(); ++m1) if (dynamic_cast<TYPE*>(m1->get())!=0 && !is_member_override(m1->get(),other_defs)) { RR_SHARED_PTR<TYPE> m = dynamic_pointer_cast<TYPE>(*m1);   
+#define MEMBER_ITER2_END() }}
+
+#define MEMBER_ITER3(TYPE) {for (std::vector<RR_SHARED_PTR<MemberDefinition> >::const_iterator m1=(*e)->Members.begin(); m1!=(*e)->Members.end(); ++m1) if (dynamic_cast<TYPE*>(m1->get())!=0 && !(is_member_override(m1->get(),other_defs) && is_abstract)) { RR_SHARED_PTR<TYPE> m = dynamic_pointer_cast<TYPE>(*m1);   
+#define MEMBER_ITER3_END() }}
+
 #define OBJREF_ARRAY_CONTAINER_CMD(d, scalar_cmd, array_cmd, map_int32_cmd, map_string_cmd) \
 switch (d->ArrayType) \
 { \
@@ -1062,7 +1068,7 @@ namespace RobotRaconteurGen
 		}
 	}
 
-	void CPPServiceLangGen::GenerateInterfaceHeaderFile(ServiceDefinition* d, ostream* w)
+	void CPPServiceLangGen::GenerateInterfaceHeaderFile(ServiceDefinition* d, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, ostream* w)
 	{
 		ostream& w2=*w;
 
@@ -1272,7 +1278,7 @@ namespace RobotRaconteurGen
 			w2 << "class " << fix_name((*e)->Name) << " : " << boost::join(implements,", ") << endl;
 			w2 << "{" << endl;
 			w2 << "public:" << endl;
-			MEMBER_ITER(PropertyDefinition)
+			MEMBER_ITER2(PropertyDefinition)
 				if (m->Direction() != MemberDefinition_Direction_writeonly)
 				{
 					w2 << GetPropertyDeclaration(m.get(), true) << "=0;" << endl;
@@ -1282,38 +1288,38 @@ namespace RobotRaconteurGen
 					w2 << SetPropertyDeclaration(m.get(), true) << "=0;" << endl;
 				}
 				w2 << endl;
-			MEMBER_ITER_END()
+			MEMBER_ITER2_END()
 
-			MEMBER_ITER(FunctionDefinition)
+			MEMBER_ITER2(FunctionDefinition)
 				w2 << FunctionDeclaration(m.get(),true) << "=0;" << endl << endl;
-			MEMBER_ITER_END()
+			MEMBER_ITER2_END()
 
-			MEMBER_ITER(EventDefinition)
+			MEMBER_ITER2(EventDefinition)
 				w2 << EventDeclaration(m.get(),true) << "=0;" << endl << endl;
-			MEMBER_ITER_END()
+			MEMBER_ITER2_END()
 
-			MEMBER_ITER(ObjRefDefinition)
+			MEMBER_ITER2(ObjRefDefinition)
 				w2 << ObjRefDeclaration(m.get(),true) << "=0;" << endl << endl;
-			MEMBER_ITER_END()
+			MEMBER_ITER2_END()
 
-			MEMBER_ITER(PipeDefinition)
+			MEMBER_ITER2(PipeDefinition)
 				w2 << GetPipeDeclaration(m.get(),true) << "=0;" << endl;
 				w2 << SetPipeDeclaration(m.get(),true)  << "=0;" << endl << endl;
-			MEMBER_ITER_END()
+			MEMBER_ITER2_END()
 
-			MEMBER_ITER(CallbackDefinition)
+			MEMBER_ITER2(CallbackDefinition)
 				w2 << GetCallbackDeclaration(m.get(),true) << "=0;" << endl;
 				w2 << SetCallbackDeclaration(m.get(),true)  << "=0;" << endl << endl;
-			MEMBER_ITER_END()
+			MEMBER_ITER2_END()
 
-			MEMBER_ITER(WireDefinition)
+			MEMBER_ITER2(WireDefinition)
 				w2 << GetWireDeclaration(m.get(),true) << "=0;" << endl;
 				w2 << SetWireDeclaration(m.get(),true)  << "=0;" << endl << endl;
-			MEMBER_ITER_END()
+			MEMBER_ITER2_END()
 
-			MEMBER_ITER(MemoryDefinition)
+			MEMBER_ITER2(MemoryDefinition)
 				w2 << MemoryDeclaration(m.get(),true) << "=0;" << endl << endl;
-			MEMBER_ITER_END()
+			MEMBER_ITER2_END()
 
 			w2 << "virtual boost::string_ref RRType() {return \"" << d->Name + "." << (*e)->Name <<"\";  }" << endl;
 
@@ -1363,7 +1369,7 @@ namespace RobotRaconteurGen
 
 	}
 
-	void CPPServiceLangGen::GenerateStubSkelHeaderFile(ServiceDefinition* d, ostream* w)
+	void CPPServiceLangGen::GenerateStubSkelHeaderFile(ServiceDefinition* d, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, ostream* w)
 	{
 		ostream& w2=*w;
 
@@ -1397,11 +1403,13 @@ namespace RobotRaconteurGen
 		w2 << endl;
 		GenerateServiceFactoryHeader(d,w);
 		w2 <<endl;
-		GenerateStubHeader(d,w);
+		GenerateStubHeader(d,other_defs,w);
 		w2 << endl;
-		GenerateSkelHeader(d,w);
+		GenerateSkelHeader(d,other_defs,w);
 		w2 << endl;
-		GenerateDefaultImplHeader(d, w);
+		GenerateDefaultImplHeader(d,other_defs,false,w);
+		w2 << endl;
+		GenerateDefaultImplHeader(d,other_defs,true,w);
 		w2 << endl;
 		
 		for (vector<string>::iterator ns_e=namespace_vec.begin(); ns_e!=namespace_vec.end(); ns_e++)
@@ -1463,7 +1471,7 @@ namespace RobotRaconteurGen
 		w2 << endl;
 	}
 
-	void CPPServiceLangGen::GenerateStubSkelFile(ServiceDefinition* d, ostream* w, string servicedef)
+	void CPPServiceLangGen::GenerateStubSkelFile(ServiceDefinition* d, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, ostream* w, string servicedef)
 	{
 		ostream& w2=*w;
 
@@ -1487,11 +1495,13 @@ namespace RobotRaconteurGen
 
 		GenerateServiceFactory(d,w,servicedef);
 		w2 << endl;
-		GenerateStubDefinition(d,w);
+		GenerateStubDefinition(d,other_defs,w);
 		w2 << endl;
-		GenerateSkelDefinition(d,w);
+		GenerateSkelDefinition(d,other_defs,w);
 		w2 << endl;
-		GenerateDefaultImplDefinition(d, w);
+		GenerateDefaultImplDefinition(d, other_defs, false, w);
+		w2 << endl;
+		GenerateDefaultImplDefinition(d, other_defs, true, w);
 		w2 << endl;
 		for (vector<string>::iterator ns_e=namespace_vec.begin(); ns_e!=namespace_vec.end(); ns_e++)
 		{
@@ -1780,7 +1790,7 @@ namespace RobotRaconteurGen
 
 	}
 
-	void CPPServiceLangGen::GenerateStubHeader(ServiceDefinition* d, ostream* w)
+	void CPPServiceLangGen::GenerateStubHeader(ServiceDefinition* d, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, ostream* w)
 	{
 		ostream& w2=*w;
 
@@ -2010,7 +2020,7 @@ namespace RobotRaconteurGen
 		}
 	}
 
-	void CPPServiceLangGen::GenerateSkelHeader(ServiceDefinition *d, ostream* w)
+	void CPPServiceLangGen::GenerateSkelHeader(ServiceDefinition *d, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, ostream* w)
 	{
 		ostream& w2=*w;
 
@@ -2183,7 +2193,7 @@ namespace RobotRaconteurGen
 		}
 	}
 
-	void CPPServiceLangGen::GenerateStubDefinition(ServiceDefinition *d, ostream* w)
+	void CPPServiceLangGen::GenerateStubDefinition(ServiceDefinition *d, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, ostream* w)
 	{
 
 		ostream& w2=*w;
@@ -2857,7 +2867,7 @@ namespace RobotRaconteurGen
 		}
 	}
 
-	void CPPServiceLangGen::GenerateSkelDefinition(ServiceDefinition *d, ostream* w)
+	void CPPServiceLangGen::GenerateSkelDefinition(ServiceDefinition *d, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, ostream* w)
 	{
 		ostream& w2=*w;
 
@@ -3552,6 +3562,41 @@ namespace RobotRaconteurGen
 		return o;
 	}
 
+	bool CPPServiceLangGen::is_member_override(MemberDefinition* m, std::vector<RR_SHARED_PTR<ServiceDefinition> > defs)
+	{
+		RR_SHARED_PTR<ServiceEntryDefinition> obj_def = m->ServiceEntry.lock();
+		if(!obj_def) throw InternalErrorException("Failure in is_member_override");
+		RR_SHARED_PTR<ServiceDefinition> parent_def = obj_def->ServiceDefinition_.lock();
+		if (!parent_def) throw InternalErrorException("Faisure in is_member_override");
+		BOOST_FOREACH(const std::string& implements_str, obj_def->Implements)
+		{
+			if(!boost::contains(implements_str,"."))
+			{
+				RR_SHARED_PTR<ServiceEntryDefinition> implemented_obj = TryFindByName(parent_def->Objects, implements_str);
+				if (!implemented_obj) continue;
+				if (TryFindByName(implemented_obj->Members,m->Name))
+				{
+					return true;
+				}
+			}
+			else
+			{
+				boost::tuple<boost::string_ref,boost::string_ref> split_name = SplitQualifiedName(implements_str);
+				RR_SHARED_PTR<ServiceDefinition> imported_def = TryFindByName(defs, split_name.get<0>());
+				if (!imported_def) continue;
+				RR_SHARED_PTR<ServiceEntryDefinition> implemented_obj = TryFindByName(imported_def->Objects, split_name.get<1>());
+				if (!implemented_obj) continue;
+				if (TryFindByName(implemented_obj->Members,m->Name))
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+
+
+	}
+
 	void CPPServiceLangGen::GenerateConstants(ServiceDefinition* d, ostream* w)
 	{
 		ostream& w2=*w;
@@ -3672,7 +3717,7 @@ namespace RobotRaconteurGen
 		}
 	}
 
-	void CPPServiceLangGen::GenerateFiles(RR_SHARED_PTR<ServiceDefinition> d, std::string servicedef,std::string path)
+	void CPPServiceLangGen::GenerateFiles(RR_SHARED_PTR<ServiceDefinition> d, std::string servicedef, std::vector<RR_SHARED_PTR<ServiceDefinition> > defs, std::string path)
 	{
 #ifdef _WIN32
 		const std::string os_pathsep("\\");
@@ -3681,15 +3726,15 @@ namespace RobotRaconteurGen
 #endif
 
 		ofstream f1((path+os_pathsep+boost::replace_all_copy(fix_name(d->Name),".","__") + ".h").c_str());
-		GenerateInterfaceHeaderFile(d.get(),&f1);
+		GenerateInterfaceHeaderFile(d.get(),defs,&f1);
 		f1.close();
 
 		ofstream f2((path+os_pathsep+boost::replace_all_copy(fix_name(d->Name),".","__") + "_stubskel.h").c_str());
-		GenerateStubSkelHeaderFile(d.get(),&f2);
+		GenerateStubSkelHeaderFile(d.get(),defs,&f2);
 		f2.close();
 
 		ofstream f3((path+os_pathsep+boost::replace_all_copy(fix_name(d->Name),".","__") + "_stubskel.cpp").c_str());
-		GenerateStubSkelFile(d.get(),&f3,servicedef);
+		GenerateStubSkelFile(d.get(),defs,&f3,servicedef);
 		f3.close();
 
 
@@ -3847,34 +3892,42 @@ namespace RobotRaconteurGen
 		w2 << "#pragma once" << endl << endl;
 	}
 
-	void CPPServiceLangGen::GenerateDefaultImplHeader(ServiceDefinition* d, ostream* w)
+	void CPPServiceLangGen::GenerateDefaultImplHeader(ServiceDefinition* d, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, bool is_abstract, ostream* w)
 	{
 		ostream& w2 = *w;
 	
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Objects.begin(); e != d->Objects.end(); ++e)
 		{
-			w2 << "class " << fix_name((*e)->Name) << "_default_impl : public virtual " << fix_name((*e)->Name) << endl;
+			if (!is_abstract)
+			{
+				w2 << "class " << fix_name((*e)->Name) << "_default_impl : public virtual " << fix_name((*e)->Name) << endl;
+			}
+			else
+			{
+				w2 << "class " << fix_name((*e)->Name) << "_default_abstract_impl : public virtual " << fix_name((*e)->Name) << endl;
+			}
+			
 			w2 << "{" << endl;
-			w2 << "protected:";
+			w2 << "protected:" << endl;
 			w2 << "boost::mutex this_lock;" << endl;
-			MEMBER_ITER(PropertyDefinition)
+			MEMBER_ITER3(PropertyDefinition)
 				get_variable_type_result t = get_variable_type(*m->Type);
 				w2 << t.cpp_type << " rrvar_" << fix_name(m->Name) << ";" << endl;
-			MEMBER_ITER_END()
-			MEMBER_ITER(EventDefinition)
+			MEMBER_ITER3_END()
+			MEMBER_ITER3(EventDefinition)
 				w2 << EventDeclaration(m.get(), true, true) << ";" << endl;
-			MEMBER_ITER_END()
-			MEMBER_ITER(PipeDefinition)
+			MEMBER_ITER3_END()
+			MEMBER_ITER3(PipeDefinition)
 				if (m->Direction() == MemberDefinition_Direction_readonly)
 				{
 					get_variable_type_result t = get_variable_type(*m->Type);
 					w2 << "RR_SHARED_PTR<RobotRaconteur::PipeBroadcaster<" << t.cpp_type << " > > rrvar_" << fix_name(m->Name) << ";" << endl;
 				}
-			MEMBER_ITER_END()
-				MEMBER_ITER(CallbackDefinition)
+			MEMBER_ITER3_END()
+			MEMBER_ITER3(CallbackDefinition)
 				w2 << "RR_SHARED_PTR<RobotRaconteur::Callback<" << GetCallbackDeclaration(m.get(), true, true) << " > > rrvar_" << fix_name(m->Name) << ";" << endl;
-			MEMBER_ITER_END()
-			MEMBER_ITER(WireDefinition)
+			MEMBER_ITER3_END()
+			MEMBER_ITER3(WireDefinition)
 				if (m->Direction() == MemberDefinition_Direction_readonly)
 				{
 					get_variable_type_result t = get_variable_type(*m->Type);
@@ -3885,14 +3938,21 @@ namespace RobotRaconteurGen
 					get_variable_type_result t = get_variable_type(*m->Type);
 					w2 << "RR_SHARED_PTR<RobotRaconteur::WireUnicastReceiver<" << t.cpp_type << " > > rrvar_" << m->Name << ";" << endl;
 				}
-			MEMBER_ITER_END()
+			MEMBER_ITER3_END()
 
 			w2 << endl;
 			w2 << "public:" << endl;
 
-			w2 << fix_name((*e)->Name) << "_default_impl();" << endl;
+			if (!is_abstract)
+			{
+				w2 << fix_name((*e)->Name) << "_default_impl();" << endl;
+			}
+			else
+			{
+				w2 << fix_name((*e)->Name) << "_default_abstract_impl();" << endl;
+			}
 			
-			MEMBER_ITER(PropertyDefinition)
+			MEMBER_ITER3(PropertyDefinition)
 				if (m->Direction() != MemberDefinition_Direction_writeonly)
 				{
 					w2 << GetPropertyDeclaration(m.get(), true) << ";" << endl;
@@ -3901,60 +3961,70 @@ namespace RobotRaconteurGen
 				{
 					w2 << SetPropertyDeclaration(m.get(), true) << ";" << endl << endl;
 				}
-			MEMBER_ITER_END()
+			MEMBER_ITER3_END()
 
-			MEMBER_ITER(FunctionDefinition)
+			MEMBER_ITER3(FunctionDefinition)
 				w2 << FunctionDeclaration(m.get(), true) << ";" << endl << endl;
-			MEMBER_ITER_END()
+			MEMBER_ITER3_END()
 
-			MEMBER_ITER(EventDefinition)
+			MEMBER_ITER3(EventDefinition)
 				w2 << EventDeclaration(m.get(), true) << ";" << endl << endl;
-			MEMBER_ITER_END()
+			MEMBER_ITER3_END()
 
-			MEMBER_ITER(ObjRefDefinition)
+			MEMBER_ITER3(ObjRefDefinition)
 				w2 << ObjRefDeclaration(m.get(), true) << ";" << endl << endl;
-			MEMBER_ITER_END()
+			MEMBER_ITER3_END()
 
-			MEMBER_ITER(PipeDefinition)
+			MEMBER_ITER3(PipeDefinition)
 				w2 << GetPipeDeclaration(m.get(), true) << ";" << endl;
 				w2 << SetPipeDeclaration(m.get(), true) << ";" << endl << endl;
-			MEMBER_ITER_END()
+			MEMBER_ITER3_END()
 
-			MEMBER_ITER(CallbackDefinition)
+			MEMBER_ITER3(CallbackDefinition)
 				w2 << GetCallbackDeclaration(m.get(), true) << ";" << endl;
 				w2 << SetCallbackDeclaration(m.get(), true) << ";" << endl << endl;
-			MEMBER_ITER_END()
+			MEMBER_ITER3_END()
 
-			MEMBER_ITER(WireDefinition)
+			MEMBER_ITER3(WireDefinition)
 				w2 << GetWireDeclaration(m.get(), true) << ";" << endl;
 				w2 << SetWireDeclaration(m.get(), true) << ";" << endl << endl;
-			MEMBER_ITER_END()
+			MEMBER_ITER3_END()
 
-			MEMBER_ITER(MemoryDefinition)
+			MEMBER_ITER3(MemoryDefinition)
 				w2 << MemoryDeclaration(m.get(), true) << ";" << endl << endl;
-			MEMBER_ITER_END()
+			MEMBER_ITER3_END()
 
 			w2 << "};" << endl << endl;
 		}
 	}
 
-	void CPPServiceLangGen::GenerateDefaultImplDefinition(ServiceDefinition* d, ostream* w)
+	void CPPServiceLangGen::GenerateDefaultImplDefinition(ServiceDefinition* d, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, bool is_abstract, ostream* w)
 	{
 		ostream& w2 = *w;
 
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Objects.begin(); e != d->Objects.end(); ++e)
 		{
-			w2 << fix_name((*e)->Name) << "_default_impl::" <<  fix_name((*e)->Name)  << "_default_impl()" << endl;
+			std::string default_impl_name;
+			if (!is_abstract)
+			{
+				default_impl_name = fix_name((*e)->Name) + "_default_impl";
+			}
+			else
+			{
+				default_impl_name = fix_name((*e)->Name) + "_default_abstract_impl";
+			}
+
+			w2 << default_impl_name << "::" << default_impl_name << "()" << endl;
 			w2 << "{" << endl;
-			MEMBER_ITER(PropertyDefinition)
+			MEMBER_ITER3(PropertyDefinition)
 				w2 << "rrvar_" << fix_name(m->Name) << "=" << GetDefaultInitializedValue(*m->Type) << ";" << endl;
-			MEMBER_ITER_END()
+			MEMBER_ITER3_END()
 			w2 << "}" << endl;
 
-			MEMBER_ITER(PropertyDefinition)
+			MEMBER_ITER3(PropertyDefinition)
 				if (m->Direction() != MemberDefinition_Direction_writeonly)
 				{
-					w2 << dforc(GetPropertyDeclaration(m.get(), true), fix_name((*e)->Name) + "_default_impl") << endl;
+					w2 << dforc(GetPropertyDeclaration(m.get(), true), default_impl_name) << endl;
 					w2 << "{" << endl;
 					w2 << "boost::mutex::scoped_lock lock(this_lock);" << endl;
 					w2 << "return rrvar_" << fix_name(m->Name) << ";" << endl;
@@ -3962,37 +4032,37 @@ namespace RobotRaconteurGen
 				}
 				if (m->Direction() != MemberDefinition_Direction_readonly)
 				{
-					w2 << dforc(SetPropertyDeclaration(m.get(), true), fix_name((*e)->Name) + "_default_impl") << endl;
+					w2 << dforc(SetPropertyDeclaration(m.get(), true), default_impl_name) << endl;
 					w2 << "{" << endl;
 					w2 << "boost::mutex::scoped_lock lock(this_lock);" << endl;
 					w2 << "rrvar_" << fix_name(m->Name) << " = value;" << endl;
 					w2 << "}" << endl;
 				}
-			MEMBER_ITER_END()
+			MEMBER_ITER3_END()
 
-			MEMBER_ITER(FunctionDefinition)
-				w2 << dforc(FunctionDeclaration(m.get(), true), fix_name((*e)->Name) + "_default_impl") << endl;
+			MEMBER_ITER3(FunctionDefinition)
+				w2 << dforc(FunctionDeclaration(m.get(), true), default_impl_name) << endl;
 				w2 << "{" << endl;
 				w2 << "throw RobotRaconteur::NotImplementedException(\"\");" << endl;
 				w2 << "}" << endl;
-			MEMBER_ITER_END()
+			MEMBER_ITER3_END()
 
-			MEMBER_ITER(EventDefinition)
-				w2 << dforc(EventDeclaration(m.get(), true), fix_name((*e)->Name) + "_default_impl") << endl;
+			MEMBER_ITER3(EventDefinition)
+				w2 << dforc(EventDeclaration(m.get(), true), default_impl_name) << endl;
 				w2 << "{" << endl;
 				w2 << "return rrvar_" << fix_name(m->Name) << ";" << endl;
 				w2 << "}" << endl;
-			MEMBER_ITER_END()
+			MEMBER_ITER3_END()
 
-			MEMBER_ITER(ObjRefDefinition)
-				w2 << dforc(ObjRefDeclaration(m.get(), true), fix_name((*e)->Name) + "_default_impl") << endl;
+			MEMBER_ITER3(ObjRefDefinition)
+				w2 << dforc(ObjRefDeclaration(m.get(), true), default_impl_name) << endl;
 				w2 << "{" << endl;
 				w2 << "throw RobotRaconteur::NotImplementedException(\"\");" << endl;
 				w2 << "}" << endl;
-			MEMBER_ITER_END()
+			MEMBER_ITER3_END()
 
-			MEMBER_ITER(PipeDefinition)
-				w2 << dforc(GetPipeDeclaration(m.get(), true), fix_name((*e)->Name) + "_default_impl") << endl;
+			MEMBER_ITER3(PipeDefinition)
+				w2 << dforc(GetPipeDeclaration(m.get(), true), default_impl_name) << endl;
 				w2 << "{" << endl;
 				if (m->Direction() == MemberDefinition_Direction_readonly)
 				{
@@ -4005,7 +4075,7 @@ namespace RobotRaconteurGen
 					w2 << "throw RobotRaconteur::NotImplementedException(\"\");" << endl;
 				}
 				w2 << "}" << endl;
-				w2 << dforc(SetPipeDeclaration(m.get(), true), fix_name((*e)->Name) + "_default_impl") << endl;
+				w2 << dforc(SetPipeDeclaration(m.get(), true), default_impl_name) << endl;
 				w2 << "{" << endl;
 				if (m->Direction() == MemberDefinition_Direction_readonly)
 				{
@@ -4020,24 +4090,24 @@ namespace RobotRaconteurGen
 					w2 << "throw RobotRaconteur::NotImplementedException(\"\");" << endl;
 				}
 				w2 << "}" << endl;
-			MEMBER_ITER_END()
+			MEMBER_ITER3_END()
 
-			MEMBER_ITER(CallbackDefinition)
-				w2 << dforc(GetCallbackDeclaration(m.get(), true), fix_name((*e)->Name) + "_default_impl") << endl;
+			MEMBER_ITER3(CallbackDefinition)
+				w2 << dforc(GetCallbackDeclaration(m.get(), true), default_impl_name) << endl;
 				w2 << "{" << endl;
 				w2 << "boost::mutex::scoped_lock lock(this_lock);" << endl;
 				w2 << "return rrvar_" << fix_name(m->Name) << ";" << endl;
 				w2 << "}" << endl;
-				w2 << dforc(SetCallbackDeclaration(m.get(), true), fix_name((*e)->Name) + "_default_impl") << endl;
+				w2 << dforc(SetCallbackDeclaration(m.get(), true), default_impl_name) << endl;
 				w2 << "{" << endl;
 				w2 << "boost::mutex::scoped_lock lock(this_lock);" << endl;
 				w2 << "if (rrvar_" << fix_name(m->Name) << ") throw RobotRaconteur::InvalidOperationException(\"Callback already set\");" << endl;
 				w2 << "rrvar_" << fix_name(m->Name) << " = value;" << endl;
 				w2 << "}" << endl;
-			MEMBER_ITER_END()
+			MEMBER_ITER3_END()
 
-			MEMBER_ITER(WireDefinition)
-				w2 << dforc(GetWireDeclaration(m.get(), true), fix_name((*e)->Name) + "_default_impl") << endl;
+			MEMBER_ITER3(WireDefinition)
+				w2 << dforc(GetWireDeclaration(m.get(), true), default_impl_name) << endl;
 				w2 << "{" << endl;
 				if (m->Direction() == MemberDefinition_Direction_readonly || m->Direction() == MemberDefinition_Direction_writeonly)
 				{
@@ -4050,7 +4120,7 @@ namespace RobotRaconteurGen
 					w2 << "throw RobotRaconteur::NotImplementedException(\"\");" << endl;
 				}
 				w2 << "}" << endl;
-				w2 << dforc(SetWireDeclaration(m.get(), true), fix_name((*e)->Name) + "_default_impl") << endl;
+				w2 << dforc(SetWireDeclaration(m.get(), true), default_impl_name) << endl;
 				w2 << "{" << endl;
 				if (m->Direction() == MemberDefinition_Direction_readonly)
 				{
@@ -4071,14 +4141,14 @@ namespace RobotRaconteurGen
 					w2 << "throw RobotRaconteur::NotImplementedException(\"\");" << endl;
 				}
 				w2 << "}" << endl;
-			MEMBER_ITER_END()
+			MEMBER_ITER3_END()
 
-			MEMBER_ITER(MemoryDefinition)
-				w2 << dforc(MemoryDeclaration(m.get(), true), fix_name((*e)->Name) + "_default_impl") << endl;
+			MEMBER_ITER3(MemoryDefinition)
+				w2 << dforc(MemoryDeclaration(m.get(), true), default_impl_name) << endl;
 				w2 << "{" << endl;				
 				w2 << "throw RobotRaconteur::NotImplementedException(\"\");" << endl;
 				w2 << "}" << endl;
-			MEMBER_ITER_END()
+			MEMBER_ITER3_END()
 
 				
 		}

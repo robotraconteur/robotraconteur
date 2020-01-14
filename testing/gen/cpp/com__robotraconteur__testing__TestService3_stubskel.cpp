@@ -8655,6 +8655,683 @@ RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > obj5_default_impl::get_m3(
 throw RobotRaconteur::NotImplementedException("");
 }
 
+testroot3_default_abstract_impl::testroot3_default_abstract_impl()
+{
+rrvar_readme=0;
+rrvar_writeme=0;
+rrvar_unknown_modifier=0;
+rrvar_testenum1_prop=testenum1::testenum1();
+rrvar_testpod1_prop=testpod1();
+rrvar_teststruct3_prop=RR_INTRUSIVE_PTR<teststruct3 >();
+rrvar_d1=RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > >();
+rrvar_d2=RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > >();
+rrvar_d3=RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > >();
+rrvar_d4=RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > >();
+rrvar_d5=RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > >();
+rrvar_d6=RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > >();
+rrvar_testnamedarray1=vector3();
+rrvar_testnamedarray2=transform();
+rrvar_testnamedarray3=RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedArray<transform> >();
+rrvar_testnamedarray4=RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedMultiDimArray<transform> >();
+rrvar_testnamedarray5=RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedMultiDimArray<transform> >();
+rrvar_c1=RobotRaconteur::cdouble(0.0,0.0);
+rrvar_c2=RobotRaconteur::AllocateEmptyRRArray<RobotRaconteur::cdouble>(0);
+rrvar_c3=RobotRaconteur::AllocateEmptyRRMultiDimArray<RobotRaconteur::cdouble>(boost::assign::list_of(1)(0));
+rrvar_c4=RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble >  > >();
+rrvar_c5=RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble >  > >();
+rrvar_c6=RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cdouble >  > >();
+rrvar_c7=RobotRaconteur::cfloat(0.0,0.0);
+rrvar_c8=RobotRaconteur::AllocateEmptyRRArray<RobotRaconteur::cfloat>(0);
+rrvar_c9=RobotRaconteur::AllocateEmptyRRMultiDimArray<RobotRaconteur::cfloat>(boost::assign::list_of(1)(0));
+rrvar_c10=RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cfloat >  > >();
+rrvar_c11=RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cfloat >  > >();
+rrvar_c12=RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cfloat >  > >();
+rrvar_b1=RobotRaconteur::rr_bool(0);
+rrvar_b2=RobotRaconteur::AllocateEmptyRRArray<RobotRaconteur::rr_bool>(0);
+rrvar_b3=RobotRaconteur::AllocateEmptyRRMultiDimArray<RobotRaconteur::rr_bool>(boost::assign::list_of(1)(0));
+rrvar_b4=RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool >  > >();
+rrvar_b5=RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool >  > >();
+rrvar_b6=RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool >  > >();
+}
+int32_t testroot3_default_abstract_impl::get_readme()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_readme;
+}
+void testroot3_default_abstract_impl::set_writeme(int32_t value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_writeme = value;
+}
+int32_t testroot3_default_abstract_impl::get_unknown_modifier()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_unknown_modifier;
+}
+void testroot3_default_abstract_impl::set_unknown_modifier(int32_t value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_unknown_modifier = value;
+}
+testenum1::testenum1 testroot3_default_abstract_impl::get_testenum1_prop()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_testenum1_prop;
+}
+void testroot3_default_abstract_impl::set_testenum1_prop(testenum1::testenum1 value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_testenum1_prop = value;
+}
+testpod1 testroot3_default_abstract_impl::get_testpod1_prop()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_testpod1_prop;
+}
+void testroot3_default_abstract_impl::set_testpod1_prop(const testpod1& value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_testpod1_prop = value;
+}
+RR_INTRUSIVE_PTR<teststruct3 > testroot3_default_abstract_impl::get_teststruct3_prop()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_teststruct3_prop;
+}
+void testroot3_default_abstract_impl::set_teststruct3_prop(RR_INTRUSIVE_PTR<teststruct3 > value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_teststruct3_prop = value;
+}
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > testroot3_default_abstract_impl::get_d1()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_d1;
+}
+void testroot3_default_abstract_impl::set_d1(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_d1 = value;
+}
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > testroot3_default_abstract_impl::get_d2()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_d2;
+}
+void testroot3_default_abstract_impl::set_d2(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_d2 = value;
+}
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > testroot3_default_abstract_impl::get_d3()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_d3;
+}
+void testroot3_default_abstract_impl::set_d3(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_d3 = value;
+}
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > testroot3_default_abstract_impl::get_d4()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_d4;
+}
+void testroot3_default_abstract_impl::set_d4(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_d4 = value;
+}
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > testroot3_default_abstract_impl::get_d5()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_d5;
+}
+void testroot3_default_abstract_impl::set_d5(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_d5 = value;
+}
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > testroot3_default_abstract_impl::get_d6()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_d6;
+}
+void testroot3_default_abstract_impl::set_d6(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_d6 = value;
+}
+vector3 testroot3_default_abstract_impl::get_testnamedarray1()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_testnamedarray1;
+}
+void testroot3_default_abstract_impl::set_testnamedarray1(const vector3& value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_testnamedarray1 = value;
+}
+transform testroot3_default_abstract_impl::get_testnamedarray2()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_testnamedarray2;
+}
+void testroot3_default_abstract_impl::set_testnamedarray2(const transform& value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_testnamedarray2 = value;
+}
+RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedArray<transform> > testroot3_default_abstract_impl::get_testnamedarray3()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_testnamedarray3;
+}
+void testroot3_default_abstract_impl::set_testnamedarray3(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedArray<transform> > value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_testnamedarray3 = value;
+}
+RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedMultiDimArray<transform> > testroot3_default_abstract_impl::get_testnamedarray4()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_testnamedarray4;
+}
+void testroot3_default_abstract_impl::set_testnamedarray4(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedMultiDimArray<transform> > value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_testnamedarray4 = value;
+}
+RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedMultiDimArray<transform> > testroot3_default_abstract_impl::get_testnamedarray5()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_testnamedarray5;
+}
+void testroot3_default_abstract_impl::set_testnamedarray5(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedMultiDimArray<transform> > value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_testnamedarray5 = value;
+}
+RobotRaconteur::cdouble testroot3_default_abstract_impl::get_c1()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_c1;
+}
+void testroot3_default_abstract_impl::set_c1(RobotRaconteur::cdouble value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_c1 = value;
+}
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::cdouble > > testroot3_default_abstract_impl::get_c2()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_c2;
+}
+void testroot3_default_abstract_impl::set_c2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::cdouble > > value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_c2 = value;
+}
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cdouble > > testroot3_default_abstract_impl::get_c3()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_c3;
+}
+void testroot3_default_abstract_impl::set_c3(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cdouble > > value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_c3 = value;
+}
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble >  > > testroot3_default_abstract_impl::get_c4()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_c4;
+}
+void testroot3_default_abstract_impl::set_c4(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble >  > > value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_c4 = value;
+}
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble >  > > testroot3_default_abstract_impl::get_c5()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_c5;
+}
+void testroot3_default_abstract_impl::set_c5(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble >  > > value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_c5 = value;
+}
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cdouble >  > > testroot3_default_abstract_impl::get_c6()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_c6;
+}
+void testroot3_default_abstract_impl::set_c6(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cdouble >  > > value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_c6 = value;
+}
+RobotRaconteur::cfloat testroot3_default_abstract_impl::get_c7()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_c7;
+}
+void testroot3_default_abstract_impl::set_c7(RobotRaconteur::cfloat value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_c7 = value;
+}
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::cfloat > > testroot3_default_abstract_impl::get_c8()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_c8;
+}
+void testroot3_default_abstract_impl::set_c8(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::cfloat > > value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_c8 = value;
+}
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cfloat > > testroot3_default_abstract_impl::get_c9()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_c9;
+}
+void testroot3_default_abstract_impl::set_c9(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cfloat > > value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_c9 = value;
+}
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cfloat >  > > testroot3_default_abstract_impl::get_c10()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_c10;
+}
+void testroot3_default_abstract_impl::set_c10(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cfloat >  > > value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_c10 = value;
+}
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cfloat >  > > testroot3_default_abstract_impl::get_c11()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_c11;
+}
+void testroot3_default_abstract_impl::set_c11(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cfloat >  > > value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_c11 = value;
+}
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cfloat >  > > testroot3_default_abstract_impl::get_c12()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_c12;
+}
+void testroot3_default_abstract_impl::set_c12(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cfloat >  > > value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_c12 = value;
+}
+RobotRaconteur::rr_bool testroot3_default_abstract_impl::get_b1()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_b1;
+}
+void testroot3_default_abstract_impl::set_b1(RobotRaconteur::rr_bool value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_b1 = value;
+}
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::rr_bool > > testroot3_default_abstract_impl::get_b2()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_b2;
+}
+void testroot3_default_abstract_impl::set_b2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::rr_bool > > value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_b2 = value;
+}
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool > > testroot3_default_abstract_impl::get_b3()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_b3;
+}
+void testroot3_default_abstract_impl::set_b3(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool > > value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_b3 = value;
+}
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool >  > > testroot3_default_abstract_impl::get_b4()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_b4;
+}
+void testroot3_default_abstract_impl::set_b4(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool >  > > value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_b4 = value;
+}
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool >  > > testroot3_default_abstract_impl::get_b5()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_b5;
+}
+void testroot3_default_abstract_impl::set_b5(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool >  > > value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_b5 = value;
+}
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool >  > > testroot3_default_abstract_impl::get_b6()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_b6;
+}
+void testroot3_default_abstract_impl::set_b6(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool >  > > value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_b6 = value;
+}
+void testroot3_default_abstract_impl::testpod1_func1(const testpod1& s)
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+testpod1 testroot3_default_abstract_impl::testpod1_func2()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+RR_SHARED_PTR<RobotRaconteur::Generator<double,void > > testroot3_default_abstract_impl::gen_func1()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+RR_SHARED_PTR<RobotRaconteur::Generator<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint8_t > >,void > > testroot3_default_abstract_impl::gen_func2(const std::string& name)
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+RR_SHARED_PTR<RobotRaconteur::Generator<void,RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint8_t > > > > testroot3_default_abstract_impl::gen_func3(const std::string& name)
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+RR_SHARED_PTR<RobotRaconteur::Generator<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint8_t > >,RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint8_t > > > > testroot3_default_abstract_impl::gen_func4()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+RR_SHARED_PTR<RobotRaconteur::Generator<RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService1::teststruct2 >,RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService1::teststruct2 > > > testroot3_default_abstract_impl::gen_func5()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+void testroot3_default_abstract_impl::test_exception_params1()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+void testroot3_default_abstract_impl::test_exception_params2()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+RR_SHARED_PTR<obj4 > testroot3_default_abstract_impl::get_o4()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+RR_SHARED_PTR<obj5 > testroot3_default_abstract_impl::get_nolock_test()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > testroot3_default_abstract_impl::get_unreliable1()
+{
+boost::mutex::scoped_lock lock(this_lock);
+if (!rrvar_unreliable1) throw RobotRaconteur::InvalidOperationException("Pipe not set");
+return rrvar_unreliable1->GetPipe();
+}
+void testroot3_default_abstract_impl::set_unreliable1(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+if (rrvar_unreliable1) throw RobotRaconteur::InvalidOperationException("Pipe already set");
+rrvar_unreliable1 = RR_MAKE_SHARED<RobotRaconteur::PipeBroadcaster<int32_t > >();
+rrvar_unreliable1->Init(value);
+}
+RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > testroot3_default_abstract_impl::get_p1()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+void testroot3_default_abstract_impl::set_p1(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > value)
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > testroot3_default_abstract_impl::get_p2()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+void testroot3_default_abstract_impl::set_p2(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > value)
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > testroot3_default_abstract_impl::get_p3()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+void testroot3_default_abstract_impl::set_p3(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > value)
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > testroot3_default_abstract_impl::get_peekwire()
+{
+boost::mutex::scoped_lock lock(this_lock);
+if (!rrvar_peekwire) throw RobotRaconteur::InvalidOperationException("Wire not set");
+return rrvar_peekwire->GetWire();
+}
+void testroot3_default_abstract_impl::set_peekwire(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value)
+{
+if (rrvar_peekwire) throw RobotRaconteur::InvalidOperationException("Wire already set");
+rrvar_peekwire = RR_MAKE_SHARED<RobotRaconteur::WireBroadcaster<int32_t > >();
+rrvar_peekwire->Init(value);}
+RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > testroot3_default_abstract_impl::get_pokewire()
+{
+boost::mutex::scoped_lock lock(this_lock);
+if (!rrvar_pokewire) throw RobotRaconteur::InvalidOperationException("Wire not set");
+return rrvar_pokewire->GetWire();
+}
+void testroot3_default_abstract_impl::set_pokewire(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value)
+{
+if (rrvar_pokewire) throw RobotRaconteur::InvalidOperationException("Wire already set");
+rrvar_pokewire = RR_MAKE_SHARED<RobotRaconteur::WireUnicastReceiver<int32_t > >();
+rrvar_pokewire->Init(value);}
+RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > testroot3_default_abstract_impl::get_w1()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+void testroot3_default_abstract_impl::set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > value)
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > testroot3_default_abstract_impl::get_w2()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+void testroot3_default_abstract_impl::set_w2(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > value)
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > testroot3_default_abstract_impl::get_w3()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+void testroot3_default_abstract_impl::set_w3(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > value)
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+RR_SHARED_PTR<RobotRaconteur::ArrayMemory<double > > testroot3_default_abstract_impl::get_readmem()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+RR_SHARED_PTR<RobotRaconteur::PodArrayMemory<testpod2 > > testroot3_default_abstract_impl::get_pod_m1()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+RR_SHARED_PTR<RobotRaconteur::PodMultiDimArrayMemory<testpod2 > > testroot3_default_abstract_impl::get_pod_m2()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+RR_SHARED_PTR<RobotRaconteur::NamedArrayMemory<transform > > testroot3_default_abstract_impl::get_namedarray_m1()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+RR_SHARED_PTR<RobotRaconteur::NamedMultiDimArrayMemory<transform > > testroot3_default_abstract_impl::get_namedarray_m2()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+RR_SHARED_PTR<RobotRaconteur::ArrayMemory<RobotRaconteur::cdouble > > testroot3_default_abstract_impl::get_c_m1()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<RobotRaconteur::cdouble > > testroot3_default_abstract_impl::get_c_m2()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+RR_SHARED_PTR<RobotRaconteur::ArrayMemory<RobotRaconteur::cdouble > > testroot3_default_abstract_impl::get_c_m3()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<RobotRaconteur::cdouble > > testroot3_default_abstract_impl::get_c_m4()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+RR_SHARED_PTR<RobotRaconteur::ArrayMemory<RobotRaconteur::rr_bool > > testroot3_default_abstract_impl::get_c_m5()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<RobotRaconteur::rr_bool > > testroot3_default_abstract_impl::get_c_m6()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+obj1_default_abstract_impl::obj1_default_abstract_impl()
+{
+rrvar_d1=RobotRaconteur::AllocateEmptyRRArray<double>(0);
+}
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > obj1_default_abstract_impl::get_d1()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_d1;
+}
+void obj1_default_abstract_impl::set_d1(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_d1 = value;
+}
+obj2_default_abstract_impl::obj2_default_abstract_impl()
+{
+}
+obj3_default_abstract_impl::obj3_default_abstract_impl()
+{
+}
+obj4_default_abstract_impl::obj4_default_abstract_impl()
+{
+}
+obj5_default_abstract_impl::obj5_default_abstract_impl()
+{
+rrvar_p1=0.0;
+rrvar_p2=0.0;
+rrvar_p3=0.0;
+}
+double obj5_default_abstract_impl::get_p1()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_p1;
+}
+void obj5_default_abstract_impl::set_p1(double value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_p1 = value;
+}
+double obj5_default_abstract_impl::get_p2()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_p2;
+}
+void obj5_default_abstract_impl::set_p2(double value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_p2 = value;
+}
+double obj5_default_abstract_impl::get_p3()
+{
+boost::mutex::scoped_lock lock(this_lock);
+return rrvar_p3;
+}
+void obj5_default_abstract_impl::set_p3(double value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+rrvar_p3 = value;
+}
+int32_t obj5_default_abstract_impl::f1()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+int32_t obj5_default_abstract_impl::f2()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > obj5_default_abstract_impl::get_q1()
+{
+boost::mutex::scoped_lock lock(this_lock);
+if (!rrvar_q1) throw RobotRaconteur::InvalidOperationException("Pipe not set");
+return rrvar_q1->GetPipe();
+}
+void obj5_default_abstract_impl::set_q1(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+if (rrvar_q1) throw RobotRaconteur::InvalidOperationException("Pipe already set");
+rrvar_q1 = RR_MAKE_SHARED<RobotRaconteur::PipeBroadcaster<int32_t > >();
+rrvar_q1->Init(value);
+}
+RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > obj5_default_abstract_impl::get_q2()
+{
+boost::mutex::scoped_lock lock(this_lock);
+if (!rrvar_q2) throw RobotRaconteur::InvalidOperationException("Pipe not set");
+return rrvar_q2->GetPipe();
+}
+void obj5_default_abstract_impl::set_q2(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value)
+{
+boost::mutex::scoped_lock lock(this_lock);
+if (rrvar_q2) throw RobotRaconteur::InvalidOperationException("Pipe already set");
+rrvar_q2 = RR_MAKE_SHARED<RobotRaconteur::PipeBroadcaster<int32_t > >();
+rrvar_q2->Init(value);
+}
+RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > obj5_default_abstract_impl::get_w1()
+{
+boost::mutex::scoped_lock lock(this_lock);
+if (!rrvar_w1) throw RobotRaconteur::InvalidOperationException("Wire not set");
+return rrvar_w1->GetWire();
+}
+void obj5_default_abstract_impl::set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value)
+{
+if (rrvar_w1) throw RobotRaconteur::InvalidOperationException("Wire already set");
+rrvar_w1 = RR_MAKE_SHARED<RobotRaconteur::WireBroadcaster<int32_t > >();
+rrvar_w1->Init(value);}
+RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > obj5_default_abstract_impl::get_w2()
+{
+boost::mutex::scoped_lock lock(this_lock);
+if (!rrvar_w2) throw RobotRaconteur::InvalidOperationException("Wire not set");
+return rrvar_w2->GetWire();
+}
+void obj5_default_abstract_impl::set_w2(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value)
+{
+if (rrvar_w2) throw RobotRaconteur::InvalidOperationException("Wire already set");
+rrvar_w2 = RR_MAKE_SHARED<RobotRaconteur::WireBroadcaster<int32_t > >();
+rrvar_w2->Init(value);}
+RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > obj5_default_abstract_impl::get_m1()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > obj5_default_abstract_impl::get_m2()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > obj5_default_abstract_impl::get_m3()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+
 }
 }
 }
