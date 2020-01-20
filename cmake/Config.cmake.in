@@ -13,7 +13,7 @@ find_dependency(Boost COMPONENTS date_time filesystem system regex chrono atomic
 include_directories(${Boost_INCLUDE_DIRS})
 
 if(NOT WIN32)
-find_depenency(OpenSSL REQUIRED)
+find_dependency(OpenSSL REQUIRED)
 endif()
 
 if(WIN32)
