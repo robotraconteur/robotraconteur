@@ -571,7 +571,7 @@ namespace RobotRaconteur
 				{
 					if (entry_key_max > 5) throw ServiceDefinitionParseException("using must be after imports and before all others except options", working_info);
 					RR_SHARED_PTR<UsingDefinition> using_def = RR_MAKE_SHARED<UsingDefinition>(shared_from_this());
-					using_def->FromString(l);
+					using_def->FromString(l, &working_info);
 					Using.push_back(using_def);
 					entry_key_max = 5;
 					continue;
@@ -3180,7 +3180,7 @@ namespace RobotRaconteur
 		RR_SHARED_PTR<ConstantDefinition> c = RR_MAKE_SHARED<ConstantDefinition>(def);
 		try
 		{
-			c->FromString(constant);
+			c->FromString(constant, &parse_info);
 		}
 		catch (std::exception&) {
 			throw ServiceDefinitionVerifyException("could not parse constant \"" + constant.to_string() + "\"", parse_info);
@@ -3724,12 +3724,12 @@ namespace RobotRaconteur
 			{
 				if (m2->Type->Type != DataTypes_namedtype_t)
 				{ 
-					throw ServiceDefinitionVerifyException("Memory member must be numeric or pod", m2->ParseInfo);
+					throw ServiceDefinitionVerifyException("Memory member must be numeric, pod, or namedarray", m2->ParseInfo);
 				}
 				RR_SHARED_PTR<NamedTypeDefinition> nt = VerifyResolveNamedType(m2->Type,defs);
 				if (nt->RRDataType() != DataTypes_pod_t && nt->RRDataType() != DataTypes_namedarray_t)
 				{
-					throw ServiceDefinitionVerifyException("Memory member must be numeric or pod", m2->ParseInfo);
+					throw ServiceDefinitionVerifyException("Memory member must be numeric, pod, or namedarray", m2->ParseInfo);
 				}
 			}
 			switch (m2->Type->ArrayType)
@@ -3738,7 +3738,7 @@ namespace RobotRaconteur
 			case DataTypes_ArrayTypes_multidimarray:
 				break;
 			default:
-				throw ServiceDefinitionVerifyException("Memory member must be numeric or pod", m2->ParseInfo);
+				throw ServiceDefinitionVerifyException("Memory member must be array or multidimarray", m2->ParseInfo);
 			}
 			
 			if (!m2->Type->ArrayVarLength)
@@ -4589,6 +4589,13 @@ namespace RobotRaconteur
 		for (size_t i = 0; i < service1->Pods.size(); i++)
 		{
 			if (!CompareServiceEntryDefinition(service1, service1->Pods[i], service2, service2->Pods[i]))
+				return false;
+		}
+
+		if (service1->NamedArrays.size() != service2->NamedArrays.size()) return false;
+		for (size_t i = 0; i < service1->NamedArrays.size(); i++)
+		{
+			if (!CompareServiceEntryDefinition(service1, service1->NamedArrays[i], service2, service2->NamedArrays[i]))
 				return false;
 		}
 
