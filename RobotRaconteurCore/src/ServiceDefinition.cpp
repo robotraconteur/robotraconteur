@@ -3077,16 +3077,18 @@ namespace RobotRaconteur
 
 	ServiceDefinitionVerifyException::ServiceDefinitionVerifyException(const std::string& e) : ServiceDefinitionException(e)
 	{
-		Message = e;
+		ShortMessage = e;
+		Message = ToString();
 		ParseInfo.LineNumber = -1;
-		what_store = ToString();
+		what_store = Message;
 	}
 
 	ServiceDefinitionVerifyException::ServiceDefinitionVerifyException(const std::string& e, const ServiceDefinitionParseInfo& info) : ServiceDefinitionException(e)
 	{
-		Message = e;
+		ShortMessage = e;
+		Message = ToString();
 		ParseInfo = info;
-		what_store = ToString();
+		what_store = Message;
 
 	}
 
