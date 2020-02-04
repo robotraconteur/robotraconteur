@@ -814,20 +814,16 @@ class WireConnection(object):
         return self.__innerwire.GetIgnoreInValue()
 
     def TryGetInValue(self):
-        ts=RobotRaconteurPython.TimeSpec()
-        m=RobotRaconteurPython.MessageElement()
-        res=self.__innerwire.TryGetInValue(m,ts)
-        if not res:
+        res=self.__innerwire.TryGetInValue()
+        if not res.res:
             return (False,None, None)
-        return (True, UnpackMessageElement(m,self.__type,self.__obj,self.__innerwire.GetNode()), ts)
+        return (True, UnpackMessageElement(res.value,self.__type,self.__obj,self.__innerwire.GetNode()), res.ts)
 
-    def TryGetOutValue(self):
-        ts=RobotRaconteurPython.TimeSpec()
-        m=RobotRaconteurPython.MessageElement()
-        res=self.__innerwire.TryGetOutValue(m,ts)
-        if not res:
+    def TryGetOutValue(self):        
+        res=self.__innerwire.TryGetOutValue()
+        if not res.res:
             return (False,None, None)
-        return (True, UnpackMessageElement(m,self.__type,self.__obj,self.__innerwire.GetNode()), ts)
+        return (True, UnpackMessageElement(res.value,self.__type,self.__obj,self.__innerwire.GetNode()), res.ts)
 
     @IgnoreInValue.setter
     def IgnoreInValue(self,value):
@@ -2597,13 +2593,12 @@ class PipeSubscription(object):
     def TryReceivePacket(self):
         return self.TryReceivePacketWait(0)
 
-    def TryReceivePacketWait(self, timeout=-1):
-        m=RobotRaconteurPython.MessageElement()
-        res=self._subscription.TryReceivePacketWait(m, adjust_timeout(timeout))
-        if (not res):
+    def TryReceivePacketWait(self, timeout=-1,peek=False):  
+        res=self._subscription.TryReceivePacketWait(adjust_timeout(timeout),peek)
+        if (not res.res):
             return (False, None)
         else:
-            return (True, self._UnpackValue(m))
+            return (True, self._UnpackValue(res.packet))
 
     @property
     def Available(self):

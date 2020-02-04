@@ -41,6 +41,13 @@ public:
 	virtual void handler(boost::shared_ptr<RobotRaconteur::WrappedPipeEndpoint> ep, HandlerErrorInfo& error);
 };
 
+class WrappedTryReceivePacketWaitResult
+{
+public:
+    bool res;
+	boost::intrusive_ptr<MessageElement> packet;
+};
+
 %nodefaultctor WrappedPipeEndpoint;
 class WrappedPipeEndpoint
 {
@@ -55,7 +62,7 @@ RR_RELEASE_GIL()
 
 	boost::intrusive_ptr<MessageElement> ReceivePacketWait(int32_t timeout = RR_TIMEOUT_INFINITE);
 	boost::intrusive_ptr<MessageElement> PeekNextPacketWait(int32_t timeout = RR_TIMEOUT_INFINITE);	
-	bool TryReceivePacketWait(boost::intrusive_ptr<MessageElement>& packet, int32_t timeout = RR_TIMEOUT_INFINITE, bool peek = false);
+	WrappedTryReceivePacketWaitResult TryReceivePacketWait(int32_t timeout = RR_TIMEOUT_INFINITE, bool peek = false);
 	
 	virtual void Close();
 RR_KEEP_GIL()

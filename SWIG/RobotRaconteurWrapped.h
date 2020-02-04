@@ -486,6 +486,13 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 
 	};
 
+	class WrappedTryReceivePacketWaitResult
+	{
+	public:
+		bool res;
+		RR_INTRUSIVE_PTR<MessageElement> packet;
+	};
+
 	class WrappedPipeEndpoint : public PipeEndpointBase
 	{
 
@@ -501,7 +508,7 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		virtual RR_INTRUSIVE_PTR<MessageElement> PeekNextPacket();
 		virtual RR_INTRUSIVE_PTR<MessageElement> ReceivePacketWait(int32_t timeout = RR_TIMEOUT_INFINITE);
 		virtual RR_INTRUSIVE_PTR<MessageElement> PeekNextPacketWait(int32_t timeout = RR_TIMEOUT_INFINITE);
-		virtual bool TryReceivePacketWait(RR_INTRUSIVE_PTR<MessageElement>& packet, int32_t timeout = RR_TIMEOUT_INFINITE, bool peek = false);
+		virtual WrappedTryReceivePacketWaitResult TryReceivePacketWait(int32_t timeout = RR_TIMEOUT_INFINITE, bool peek = false);
 		
 		WrappedPipeEndpoint(RR_SHARED_PTR<PipeBase> parent, int32_t index, uint32_t endpoint, RR_SHARED_PTR<TypeDefinition> Type, bool unreliable, MemberDefinition_Direction direction, bool message3);
 		RR_SHARED_PTR<TypeDefinition> Type;
@@ -660,6 +667,14 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		virtual void WireConnectionClosedCallback() {}
 	};
 
+	class TryGetValueResult
+	{
+	public:
+		bool res;
+		RR_INTRUSIVE_PTR<MessageElement> value;
+		TimeSpec ts;
+	};
+
 	class WrappedWireConnection : public virtual WireConnectionBase
 	{
 	public:
@@ -672,8 +687,8 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		virtual RR_INTRUSIVE_PTR<MessageElement> GetOutValue();
 		virtual void SetOutValue(RR_INTRUSIVE_PTR<MessageElement> value);
 
-		bool TryGetInValue(RR_INTRUSIVE_PTR<MessageElement>& value, TimeSpec& ts);
-		bool TryGetOutValue(RR_INTRUSIVE_PTR<MessageElement>& value, TimeSpec& ts);
+		TryGetValueResult TryGetInValue();
+		TryGetValueResult TryGetOutValue();
 
 		WrappedWireConnection(RR_SHARED_PTR<WireBase> parent, uint32_t endpoint, RR_SHARED_PTR<TypeDefinition> Type, MemberDefinition_Direction direction, bool message3) ;
 

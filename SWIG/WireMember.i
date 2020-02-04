@@ -53,6 +53,14 @@ public:
 	virtual void handler(boost::intrusive_ptr<RobotRaconteur::MessageElement> value, const TimeSpec& ts, HandlerErrorInfo& error) {};
 };
 
+class TryGetValueResult
+{
+public:
+	bool res;
+	boost::intrusive_ptr<RobotRaconteur::MessageElement> value;
+	TimeSpec ts;
+};
+
 %nodefaultctor WrappedWireConnection;
 class WrappedWireConnection
 {
@@ -83,8 +91,8 @@ RR_KEEP_GIL()
 
 	bool GetOutValueValid();
 	
-	bool TryGetInValue(boost::intrusive_ptr<MessageElement>& value, TimeSpec& ts);
-	bool TryGetOutValue(boost::intrusive_ptr<MessageElement>& value, TimeSpec& ts);
+	TryGetValueResult TryGetInValue();
+	TryGetValueResult TryGetOutValue();
 
 	void AsyncClose(int32_t timeout, AsyncVoidReturnDirector* handler, int32_t id);
 	

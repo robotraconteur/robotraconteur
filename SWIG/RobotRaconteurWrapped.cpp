@@ -812,16 +812,18 @@ namespace RobotRaconteur
 		return rr_cast<MessageElement>(PeekPacketBaseWait(timeout));
 	}
 
-	bool WrappedPipeEndpoint::TryReceivePacketWait(RR_INTRUSIVE_PTR<MessageElement>& packet, int32_t timeout, bool peek)
+	WrappedTryReceivePacketWaitResult WrappedPipeEndpoint::TryReceivePacketWait(int32_t timeout, bool peek)
 	{
 		RR_INTRUSIVE_PTR<RRValue> o;
-		if (!TryReceivePacketBaseWait(o, timeout, peek))
+		WrappedTryReceivePacketWaitResult res;
+		res.res = TryReceivePacketBaseWait(o, timeout, peek);
+		if (!res.res)
 		{
-			return false;
+			return res;
 		}
 
-		packet = rr_cast<MessageElement>(o);
-		return true;
+		res.packet = rr_cast<MessageElement>(o);
+		return res;
 	}
 
 
@@ -1306,28 +1308,34 @@ namespace RobotRaconteur
 		this->unicast_receiver = receiver;		
 	}
 
-	bool WrappedWireConnection::TryGetInValue(RR_INTRUSIVE_PTR<MessageElement>& value, TimeSpec& ts)
+	TryGetValueResult WrappedWireConnection::TryGetInValue()
 	{
 		RR_INTRUSIVE_PTR<RRValue> value1;
-		if (!TryGetInValueBase(value1, ts))
+		TryGetValueResult res;
+		res.res = TryGetInValueBase(value1, res.ts);
+		if (!res.res)
 		{
-			return false;
+			return res;
 		}
 
-		value = RR_DYNAMIC_POINTER_CAST<MessageElement>(value1);
-		return true;
+		res.value = RR_DYNAMIC_POINTER_CAST<MessageElement>(value1);
+		res.res = true;
+		return res;
 	}
 
-	bool WrappedWireConnection::TryGetOutValue(RR_INTRUSIVE_PTR<MessageElement>& value, TimeSpec& ts)
+	TryGetValueResult WrappedWireConnection::TryGetOutValue()
 	{
 		RR_INTRUSIVE_PTR<RRValue> value1;
-		if (!TryGetOutValueBase(value1, ts))
+		TryGetValueResult res;
+		res.res = TryGetOutValueBase(value1, res.ts);
+		if (!res.res)
 		{
-			return false;
+			return res;
 		}
 
-		value = RR_DYNAMIC_POINTER_CAST<MessageElement>(value1);
-		return true;
+		res.value = RR_DYNAMIC_POINTER_CAST<MessageElement>(value1);
+		res.res = true;
+		return res;
 	}
 
 	//WrappedWireClient

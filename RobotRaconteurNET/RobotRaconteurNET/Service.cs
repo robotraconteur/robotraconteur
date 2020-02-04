@@ -1769,10 +1769,11 @@ namespace RobotRaconteur
             public bool TryReceivePacketWait(out T packet, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE, bool peek = false)
             {
                 packet = default(T);
-                using (MessageElement m = new MessageElement())
-                {
-                    bool ret = innerpipe.TryReceivePacketWait(m, timeout, peek);
-                    if (ret == false) return false;
+                WrappedTryReceivePacketWaitResult ret = innerpipe.TryReceivePacketWait(timeout, peek);
+                using (ret)
+                using (MessageElement m = ret.packet)
+                {                    
+                    if (ret.res == false) return false;
                     object data = RobotRaconteurNode.s.UnpackVarType(m);
                     if (data is Array)
                     {
@@ -2509,11 +2510,13 @@ namespace RobotRaconteur
             bool TryGetInValue(out T value, out TimeSpec ts)
             {
                 value = default(T);
-                ts = new TimeSpec();
-                using (MessageElement m = new MessageElement())
-                {
-                    bool ret = innerwire.TryGetInValue(m, ts);
-                    if (ret == false) return false;
+                ts = default(TimeSpec);
+                TryGetValueResult ret = innerwire.TryGetInValue();
+                using (ret)
+                using (MessageElement m = ret.value)
+                {                    
+                    if (ret.res == false) return false;
+                    ts = ret.ts;
                     value = Wire<T>.UnpackData(m);
                     return true;
                 }
@@ -2522,11 +2525,13 @@ namespace RobotRaconteur
             bool TryGetOutValue(out T value, out TimeSpec ts)
             {
                 value = default(T);
-                ts = new TimeSpec();
-                using (MessageElement m = new MessageElement())
-                {
-                    bool ret = innerwire.TryGetOutValue(m, ts);
-                    if (ret == false) return false;
+                ts = default(TimeSpec);
+                TryGetValueResult ret = innerwire.TryGetOutValue();
+                using (ret)
+                using (MessageElement m = ret.value)
+                {                    
+                    if (ret.res == false) return false;
+                    ts = ret.ts;
                     value = Wire<T>.UnpackData(m);
                     return true;
                 }

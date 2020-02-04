@@ -360,20 +360,20 @@ public class Pipe<T>
 		public final TryReceivePacketWaitResult TryReceivePacketWait(int timeout, boolean peek)
 		{
 			TryReceivePacketWaitResult o=new TryReceivePacketWaitResult();
+			o.result = false;
 			
-			MessageElement m=null;			
+			WrappedTryReceivePacketWaitResult res = innerpipe.tryReceivePacketWait(timeout, peek);
 			try
-			{
-			o.result= innerpipe.tryReceivePacketWait(m,timeout, peek);
-			if (!o.result) return o;
-			Object data = RobotRaconteurNode.s().unpackVarType(m);
+			{			
+			if (!res.getRes()) return o;
+			Object data = RobotRaconteurNode.s().unpackVarType(res.getPacket());
 			o.result=true;
 			o.packet=(T)data;
 			return o;
 			}
 			finally
 			{
-				if (m!=null) m.delete();			
+				if (res!=null) res.delete();			
 			}
 		}
 
