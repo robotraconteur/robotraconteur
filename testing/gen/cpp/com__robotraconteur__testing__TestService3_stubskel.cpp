@@ -235,6 +235,9 @@ std::string out(
 "\n"
 "	function void test_exception_params1()	\n"
 "	function void test_exception_params2()\n"
+"\n"
+"	function testenum1{generator} enum_generator1()\n"
+"	function testenum1{generator} enum_generator2(int32 a, int32 b, testenum1{generator} enum_gen)\n"
 "	\n"
 "end\n"
 "\n"
@@ -1123,6 +1126,22 @@ void testroot3_stub::test_exception_params2()
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallReq,"test_exception_params2");
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_ret=ProcessRequest(rr_req);
+}
+
+RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,void > > testroot3_stub::enum_generator1()
+{
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallReq,"enum_generator1");
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_ret=ProcessRequest(rr_req);
+return RR_MAKE_SHARED<RobotRaconteur::GeneratorClient<testenum1::testenum1,void > >("enum_generator1", RobotRaconteur::RRArrayToScalar(rr_ret->FindElement("index")->CastData<RobotRaconteur::RRArray<int32_t> >()),shared_from_this());
+}
+
+RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,testenum1::testenum1 > > testroot3_stub::enum_generator2(int32_t a, int32_t b)
+{
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallReq,"enum_generator2");
+rr_req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<int32_t >("a",a));
+rr_req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<int32_t >("b",b));
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_ret=ProcessRequest(rr_req);
+return RR_MAKE_SHARED<RobotRaconteur::GeneratorClient<testenum1::testenum1,testenum1::testenum1 > >("enum_generator2", RobotRaconteur::RRArrayToScalar(rr_ret->FindElement("index")->CastData<RobotRaconteur::RRArray<int32_t> >()),shared_from_this());
 }
 
 RR_SHARED_PTR<obj4 > testroot3_stub::get_o4()
@@ -3350,6 +3369,66 @@ handler(RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m))
 return;
 }
 handler(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
+}
+void testroot3_stub::async_enum_generator1(boost::function<void (RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,void > >, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+{
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallReq,"enum_generator1");
+AsyncProcessRequest(rr_req,boost::bind(&testroot3_stub::rrend_enum_generator1, RobotRaconteur::rr_cast<testroot3_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
+}
+
+void testroot3_stub::rrend_enum_generator1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,void > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+{
+if (err)
+{
+handler(RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,void > >(),err);
+return;
+}
+if (m->Error != RobotRaconteur::MessageErrorType_None)
+{
+handler(RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,void > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+return;
+}
+int32_t index;
+try
+{
+index=RobotRaconteur::RRArrayToScalar(m->FindElement("index")->CastData<RobotRaconteur::RRArray<int32_t> >());
+}
+catch (std::exception& err2)
+{
+RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRaconteur::MessageErrorType_DataTypeError);
+}
+handler(RR_MAKE_SHARED<RobotRaconteur::GeneratorClient<testenum1::testenum1,void > >("enum_generator1", index, shared_from_this()), RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
+}
+void testroot3_stub::async_enum_generator2(int32_t a, int32_t b,boost::function<void (RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,testenum1::testenum1 > >, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
+{
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallReq,"enum_generator2");
+rr_req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<int32_t >("a",a));
+rr_req->AddElement(RobotRaconteur::MessageElement_PackScalarElement<int32_t >("b",b));
+AsyncProcessRequest(rr_req,boost::bind(&testroot3_stub::rrend_enum_generator2, RobotRaconteur::rr_cast<testroot3_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
+}
+
+void testroot3_stub::rrend_enum_generator2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,testenum1::testenum1 > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
+{
+if (err)
+{
+handler(RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,testenum1::testenum1 > >(),err);
+return;
+}
+if (m->Error != RobotRaconteur::MessageErrorType_None)
+{
+handler(RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,testenum1::testenum1 > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
+return;
+}
+int32_t index;
+try
+{
+index=RobotRaconteur::RRArrayToScalar(m->FindElement("index")->CastData<RobotRaconteur::RRArray<int32_t> >());
+}
+catch (std::exception& err2)
+{
+RobotRaconteur::detail::InvokeHandlerWithException(node, handler, err2, RobotRaconteur::MessageErrorType_DataTypeError);
+}
+handler(RR_MAKE_SHARED<RobotRaconteur::GeneratorClient<testenum1::testenum1,testenum1::testenum1 > >("enum_generator2", index, shared_from_this()), RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 void testroot3_stub::async_get_o4(boost::function<void(RR_SHARED_PTR<obj4>,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>)> handler, int32_t timeout)
 {
@@ -6284,6 +6363,36 @@ rr_mr->AddElement("return",RobotRaconteur::ScalarToRRArray<int32_t>(0));
 return rr_mr;
 }
 }
+if (rr_m->MemberName == "enum_generator1")
+{
+{
+RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,void > > rr_return=get_obj()->enum_generator1();
+int32_t rr_index;
+{
+boost::mutex::scoped_lock lock(generators_lock);
+rr_index = get_new_generator_index();
+generators.insert(std::make_pair(rr_index,RR_MAKE_SHARED<RobotRaconteur::GeneratorServer<testenum1::testenum1,void > >(rr_return, "enum_generator1",rr_index, shared_from_this(), RobotRaconteur::ServerEndpoint::GetCurrentEndpoint())));
+}
+rr_mr->AddElement("index", RobotRaconteur::ScalarToRRArray(rr_index));
+return rr_mr;
+}
+}
+if (rr_m->MemberName == "enum_generator2")
+{
+int32_t a =RobotRaconteur::MessageElement_UnpackScalar<int32_t >(rr_m->FindElement("a"));
+int32_t b =RobotRaconteur::MessageElement_UnpackScalar<int32_t >(rr_m->FindElement("b"));
+{
+RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,testenum1::testenum1 > > rr_return=get_obj()->enum_generator2(a, b);
+int32_t rr_index;
+{
+boost::mutex::scoped_lock lock(generators_lock);
+rr_index = get_new_generator_index();
+generators.insert(std::make_pair(rr_index,RR_MAKE_SHARED<RobotRaconteur::GeneratorServer<testenum1::testenum1,testenum1::testenum1 > >(rr_return, "enum_generator2",rr_index, shared_from_this(), RobotRaconteur::ServerEndpoint::GetCurrentEndpoint())));
+}
+rr_mr->AddElement("index", RobotRaconteur::ScalarToRRArray(rr_index));
+return rr_mr;
+}
+}
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
 
@@ -6492,6 +6601,60 @@ RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
 try
 {
 mr=RobotRaconteur::CreateMessageElement("return",RobotRaconteur::ScalarToRRArray<int32_t>(0));
+}
+catch (std::exception& err2)
+{
+EndAsyncCallFunction(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+return;
+}
+EndAsyncCallFunction(skel, mr, err, m,ep);
+}
+void testroot3_skel::rr_enum_generator1(RR_WEAK_PTR<com::robotraconteur::testing::TestService3::testroot3_skel> skel, RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,void > > ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+{
+if(err)
+{
+EndAsyncCallFunction(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+return;
+}
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
+try
+{
+RR_SHARED_PTR<com::robotraconteur::testing::TestService3::testroot3_skel> skel1=skel.lock();
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
+int32_t rr_index;
+{
+boost::mutex::scoped_lock lock(skel1->generators_lock);
+rr_index = skel1->get_new_generator_index();
+skel1->generators.insert(std::make_pair(rr_index,RR_MAKE_SHARED<RobotRaconteur::GeneratorServer<testenum1::testenum1,void > >(ret, "enum_generator1",rr_index, skel1, RobotRaconteur::ServerEndpoint::GetCurrentEndpoint())));
+}
+mr = RobotRaconteur::CreateMessageElement("index",RobotRaconteur::ScalarToRRArray(rr_index));
+}
+catch (std::exception& err2)
+{
+EndAsyncCallFunction(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),RobotRaconteur::RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, RobotRaconteur::MessageErrorType_DataTypeError),m, ep);
+return;
+}
+EndAsyncCallFunction(skel, mr, err, m,ep);
+}
+void testroot3_skel::rr_enum_generator2(RR_WEAK_PTR<com::robotraconteur::testing::TestService3::testroot3_skel> skel, RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,testenum1::testenum1 > > ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep)
+{
+if(err)
+{
+EndAsyncCallFunction(skel,RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement>(),err,m, ep);
+return;
+}
+RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> mr;
+try
+{
+RR_SHARED_PTR<com::robotraconteur::testing::TestService3::testroot3_skel> skel1=skel.lock();
+if (!skel1) throw RobotRaconteur::InvalidOperationException("skel release");
+int32_t rr_index;
+{
+boost::mutex::scoped_lock lock(skel1->generators_lock);
+rr_index = skel1->get_new_generator_index();
+skel1->generators.insert(std::make_pair(rr_index,RR_MAKE_SHARED<RobotRaconteur::GeneratorServer<testenum1::testenum1,testenum1::testenum1 > >(ret, "enum_generator2",rr_index, skel1, RobotRaconteur::ServerEndpoint::GetCurrentEndpoint())));
+}
+mr = RobotRaconteur::CreateMessageElement("index",RobotRaconteur::ScalarToRRArray(rr_index));
 }
 catch (std::exception& err2)
 {
@@ -8333,6 +8496,14 @@ void testroot3_default_impl::test_exception_params2()
 {
 throw RobotRaconteur::NotImplementedException("");
 }
+RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,void > > testroot3_default_impl::enum_generator1()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,testenum1::testenum1 > > testroot3_default_impl::enum_generator2(int32_t a, int32_t b)
+{
+throw RobotRaconteur::NotImplementedException("");
+}
 RR_SHARED_PTR<obj4 > testroot3_default_impl::get_o4()
 {
 throw RobotRaconteur::NotImplementedException("");
@@ -9066,6 +9237,14 @@ void testroot3_default_abstract_impl::test_exception_params1()
 throw RobotRaconteur::NotImplementedException("");
 }
 void testroot3_default_abstract_impl::test_exception_params2()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,void > > testroot3_default_abstract_impl::enum_generator1()
+{
+throw RobotRaconteur::NotImplementedException("");
+}
+RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,testenum1::testenum1 > > testroot3_default_abstract_impl::enum_generator2(int32_t a, int32_t b)
 {
 throw RobotRaconteur::NotImplementedException("");
 }

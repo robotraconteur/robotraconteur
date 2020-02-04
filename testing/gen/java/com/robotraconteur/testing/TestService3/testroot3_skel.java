@@ -412,6 +412,20 @@ public class testroot3_skel extends ServiceSkel {
     this.obj.test_exception_params2();
     return new MessageElement("return",new int[] {0});
     }
+    if(rr_membername.equals( "enum_generator1"))
+    {
+    Generator2<testenum1[]> rr_ret=this.obj.enum_generator1();
+    int generator_index = innerskel.registerGeneratorServer("enum_generator1", new WrappedGenerator2ServerDirectorJava<testenum1[]>(rr_ret));
+    return new MessageElement("index",generator_index);
+    }
+    if(rr_membername.equals( "enum_generator2"))
+    {
+    int a=(MessageElementUtil.<int[]>castDataAndDispose(vectorptr_messageelement_util.findElement(rr_m,"a")))[0];
+    int b=(MessageElementUtil.<int[]>castDataAndDispose(vectorptr_messageelement_util.findElement(rr_m,"b")))[0];
+    Generator1<testenum1[],testenum1[]> rr_ret=this.obj.enum_generator2(a, b);
+    int generator_index = innerskel.registerGeneratorServer("enum_generator2", new WrappedGenerator1ServerDirectorJava<testenum1[],testenum1[]>(rr_ret));
+    return new MessageElement("index",generator_index);
+    }
     throw new MemberNotFoundException("Member not found");
     }
     public Object getSubObj(String name, String ind) {

@@ -761,5 +761,12 @@ public class testroot3_impl implements testroot3
 		throw new com.robotraconteur.testing.TestService3.test_exception4("test error2","my_error2",params_);
 	}
 
+	public Generator2<testenum1[]> enum_generator1() {
+		throw new UnsupportedOperationException();    
+	}
+	public Generator1<testenum1[],testenum1[]> enum_generator2(int a, int b) {
+		throw new UnsupportedOperationException();    
+	}
+
 	
 }

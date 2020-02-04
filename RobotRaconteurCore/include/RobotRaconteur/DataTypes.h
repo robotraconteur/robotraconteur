@@ -1729,6 +1729,19 @@ namespace RobotRaconteur
 		return (*value)[0];
 	}
 
+	#define RRPrimUtilEnum(x) \
+	template<> class RRPrimUtil<x> \
+	{ \
+		public: \
+		static DataTypes GetTypeID() {return DataTypes_enum_t;}  \
+		static MessageStringPtr GetElementTypeString() {return MessageStringPtr(""); } \
+		static boost::string_ref GetRRElementTypeString() {return ""; } \
+		static RR_INTRUSIVE_PTR<RRArray<int32_t> > PrePack(const x& val) {return ScalarToRRArray((int32_t)val);}\
+		template<typename U> \
+		static x PreUnpack(const U& val) {return (x)RRArrayToScalar(rr_cast<RRArray<int32_t> >(val));} \
+		typedef RR_INTRUSIVE_PTR<RRArray<int32_t> > BoxedType; \
+	};
+
 	class ROBOTRACONTEUR_CORE_API RobotRaconteurNode;
 
 	class ROBOTRACONTEUR_CORE_API TimeSpec

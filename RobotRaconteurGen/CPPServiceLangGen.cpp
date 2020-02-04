@@ -1363,6 +1363,10 @@ namespace RobotRaconteurGen
 				w2 << "RRPodStubNamedArrayType(" << fix_qualified_name(d->Name) << "::" << fix_name(e->Name) << ");" << endl;
 				
 			}
+			BOOST_FOREACH(RR_SHARED_PTR<EnumDefinition> e, d->Enums)
+			{
+				w2 << "RRPrimUtilEnum(" << fix_qualified_name(d->Name) << "::" << fix_name(e->Name) << "::" << fix_name(e->Name) <<  ");" << endl;
+			}
 			w2 << "}" << endl;
 		}
 

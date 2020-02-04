@@ -586,6 +586,28 @@ public class testroot3_stub extends ServiceStub implements testroot3, async_test
     if (rr_me!=null) rr_me.delete();
     }
     }
+    public Generator2<testenum1[]> enum_generator1() {
+    vectorptr_messageelement rr_param=new vectorptr_messageelement();
+    try {
+    WrappedGeneratorClient generator_client = rr_innerstub.generatorFunctionCall("enum_generator1",rr_param);
+    return new Generator2Client<testenum1[]>(generator_client);
+    }
+    finally {
+    rr_param.delete();
+    }
+    }
+    public Generator1<testenum1[],testenum1[]> enum_generator2(int a, int b) {
+    vectorptr_messageelement rr_param=new vectorptr_messageelement();
+    try {
+    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.<int[]>packArray("a",new int[] {a}));
+    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.<int[]>packArray("b",new int[] {b}));
+    WrappedGeneratorClient generator_client = rr_innerstub.generatorFunctionCall("enum_generator2",rr_param);
+    return new Generator1Client<testenum1[],testenum1[]>(generator_client);
+    }
+    finally {
+    rr_param.delete();
+    }
+    }
     public void dispatchEvent(String rr_membername, vectorptr_messageelement rr_m) {
     }
     public obj4 get_o4() {
@@ -2430,6 +2452,54 @@ public class testroot3_stub extends ServiceStub implements testroot3, async_test
     return;
     }
     rr_handler.action(null);
+    }
+    }
+    public void async_enum_generator1(Action2<Generator2<testenum1[]>, RuntimeException> rr_handler,int rr_timeout)
+    {
+    vectorptr_messageelement rr_param=new vectorptr_messageelement();
+    try {
+    rr_async_GeneratorFunctionCall("enum_generator1",rr_param,new rrend_async_enum_generator1(),rr_handler,rr_timeout);
+    }
+    finally {
+    rr_param.delete();
+    }
+    }
+    protected class rrend_async_enum_generator1 implements Action3<WrappedGeneratorClient, RuntimeException, Object> {
+    public void action(WrappedGeneratorClient ret, RuntimeException err, Object param)
+    {
+    Action2<Generator2<testenum1[]>,RuntimeException> rr_handler=(Action2<Generator2<testenum1[]>,RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(null,err);
+    return;
+    }
+    Generator2Client< testenum1[]> rr_ret=new Generator2Client< testenum1[]>(ret);
+    rr_handler.action(rr_ret,null);
+    }
+    }
+    public void async_enum_generator2(int a, int b,Action2<Generator1<testenum1[],testenum1[]>, RuntimeException> rr_handler,int rr_timeout)
+    {
+    vectorptr_messageelement rr_param=new vectorptr_messageelement();
+    try {
+    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.<int[]>packArray("a",new int[] {a}));
+    MessageElementUtil.addMessageElementDispose(rr_param,MessageElementUtil.<int[]>packArray("b",new int[] {b}));
+    rr_async_GeneratorFunctionCall("enum_generator2",rr_param,new rrend_async_enum_generator2(),rr_handler,rr_timeout);
+    }
+    finally {
+    rr_param.delete();
+    }
+    }
+    protected class rrend_async_enum_generator2 implements Action3<WrappedGeneratorClient, RuntimeException, Object> {
+    public void action(WrappedGeneratorClient ret, RuntimeException err, Object param)
+    {
+    Action2<Generator1<testenum1[],testenum1[]>,RuntimeException> rr_handler=(Action2<Generator1<testenum1[],testenum1[]>,RuntimeException>)param;
+    if (err!=null)
+    {
+    rr_handler.action(null,err);
+    return;
+    }
+    Generator1Client< testenum1[],testenum1[]> rr_ret=new Generator1Client< testenum1[],testenum1[]>(ret);
+    rr_handler.action(rr_ret,null);
     }
     }
     public void async_get_o4(Action2<obj4,RuntimeException> handler, int timeout) {

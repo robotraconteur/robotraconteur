@@ -210,6 +210,9 @@ object testroot3
 
 	function void test_exception_params1()	
 	function void test_exception_params2()
+
+	function testenum1{generator} enum_generator1()
+	function testenum1{generator} enum_generator2(int32 a, int32 b, testenum1{generator} enum_gen)
 	
 end
 

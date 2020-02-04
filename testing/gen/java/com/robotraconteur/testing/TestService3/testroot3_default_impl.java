@@ -129,6 +129,10 @@ public class testroot3_default_impl implements testroot3{
     throw new UnsupportedOperationException();    }
     public void test_exception_params2() {
     throw new UnsupportedOperationException();    }
+    public Generator2<testenum1[]> enum_generator1() {
+    throw new UnsupportedOperationException();    }
+    public Generator1<testenum1[],testenum1[]> enum_generator2(int a, int b) {
+    throw new UnsupportedOperationException();    }
     public obj4 get_o4() {
     throw new UnsupportedOperationException();
     }

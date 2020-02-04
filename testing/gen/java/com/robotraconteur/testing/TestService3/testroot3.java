@@ -82,6 +82,8 @@ public interface testroot3
     Generator1<com.robotraconteur.testing.TestService1.teststruct2,com.robotraconteur.testing.TestService1.teststruct2> gen_func5();
     void test_exception_params1();
     void test_exception_params2();
+    Generator2<testenum1[]> enum_generator1();
+    Generator1<testenum1[],testenum1[]> enum_generator2(int a, int b);
     obj4 get_o4();
     obj5 get_nolock_test();
     Pipe<int[]> get_unreliable1();

@@ -293,6 +293,10 @@ virtual void test_exception_params1()=0;
 
 virtual void test_exception_params2()=0;
 
+virtual RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,void > > enum_generator1()=0;
+
+virtual RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,testenum1::testenum1 > > enum_generator2(int32_t a, int32_t b)=0;
+
 virtual RR_SHARED_PTR<obj4 > get_o4()=0;
 
 virtual RR_SHARED_PTR<obj5 > get_nolock_test()=0;
@@ -464,4 +468,5 @@ RRPrimUtilNamedArray(com::robotraconteur::testing::TestService3::pixel, "com.rob
 RRPodStubNamedArrayType(com::robotraconteur::testing::TestService3::pixel);
 RRPrimUtilNamedArray(com::robotraconteur::testing::TestService3::pixel2, "com.robotraconteur.testing.TestService3.pixel2",uint8_t);
 RRPodStubNamedArrayType(com::robotraconteur::testing::TestService3::pixel2);
+RRPrimUtilEnum(com::robotraconteur::testing::TestService3::testenum1::testenum1);
 }

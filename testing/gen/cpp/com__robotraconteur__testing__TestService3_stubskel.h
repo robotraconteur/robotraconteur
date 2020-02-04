@@ -210,6 +210,12 @@ virtual void async_test_exception_params1(boost::function<void (RR_SHARED_PTR<Ro
 virtual void async_test_exception_params2(boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE) = 0;
 
 
+virtual void async_enum_generator1(boost::function<void (RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,void > >, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE) = 0;
+
+
+virtual void async_enum_generator2(int32_t a, int32_t b,boost::function<void (RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,testenum1::testenum1 > >, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE) = 0;
+
+
 virtual void async_get_o4(boost::function<void(RR_SHARED_PTR<obj4>,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>)> handler, int32_t timeout=RR_TIMEOUT_INFINITE)=0;
 
 virtual void async_get_nolock_test(boost::function<void(RR_SHARED_PTR<obj5>,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>)> handler, int32_t timeout=RR_TIMEOUT_INFINITE)=0;
@@ -404,6 +410,10 @@ virtual RR_SHARED_PTR<RobotRaconteur::Generator<RR_INTRUSIVE_PTR<com::robotracon
 virtual void test_exception_params1();
 
 virtual void test_exception_params2();
+
+virtual RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,void > > enum_generator1();
+
+virtual RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,testenum1::testenum1 > > enum_generator2(int32_t a, int32_t b);
 
 virtual RR_SHARED_PTR<obj4 > get_o4();
 
@@ -762,6 +772,12 @@ virtual void async_test_exception_params2(boost::function<void (RR_SHARED_PTR<Ro
 protected:
 virtual void rrend_test_exception_params2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler);
 public:
+virtual void async_enum_generator1(boost::function<void (RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,void > >, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE);
+
+virtual void rrend_enum_generator1(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,void > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler);
+virtual void async_enum_generator2(int32_t a, int32_t b,boost::function<void (RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,testenum1::testenum1 > >, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE);
+
+virtual void rrend_enum_generator2(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,testenum1::testenum1 > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler);
 virtual void async_get_o4(boost::function<void(RR_SHARED_PTR<obj4>,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>)> handler, int32_t timeout=RR_TIMEOUT_INFINITE);
 
 virtual void async_get_nolock_test(boost::function<void(RR_SHARED_PTR<obj5>,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>)> handler, int32_t timeout=RR_TIMEOUT_INFINITE);
@@ -1080,6 +1096,8 @@ static void rr_gen_func4(RR_WEAK_PTR<com::robotraconteur::testing::TestService3:
 static void rr_gen_func5(RR_WEAK_PTR<com::robotraconteur::testing::TestService3::testroot3_skel> skel, RR_SHARED_PTR<RobotRaconteur::Generator<RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService1::teststruct2 >,RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService1::teststruct2 > > > ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep);
 static void rr_test_exception_params1(RR_WEAK_PTR<com::robotraconteur::testing::TestService3::testroot3_skel> skel, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep);
 static void rr_test_exception_params2(RR_WEAK_PTR<com::robotraconteur::testing::TestService3::testroot3_skel> skel, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep);
+static void rr_enum_generator1(RR_WEAK_PTR<com::robotraconteur::testing::TestService3::testroot3_skel> skel, RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,void > > ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep);
+static void rr_enum_generator2(RR_WEAK_PTR<com::robotraconteur::testing::TestService3::testroot3_skel> skel, RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,testenum1::testenum1 > > ret, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep);
  public:
 protected:bool rr_InitPipeServersRun;
 bool rr_InitWireServersRun;
@@ -1552,6 +1570,10 @@ virtual void test_exception_params1();
 
 virtual void test_exception_params2();
 
+virtual RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,void > > enum_generator1();
+
+virtual RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,testenum1::testenum1 > > enum_generator2(int32_t a, int32_t b);
+
 virtual RR_SHARED_PTR<obj4 > get_o4();
 
 virtual RR_SHARED_PTR<obj5 > get_nolock_test();
@@ -1881,6 +1903,10 @@ virtual RR_SHARED_PTR<RobotRaconteur::Generator<RR_INTRUSIVE_PTR<com::robotracon
 virtual void test_exception_params1();
 
 virtual void test_exception_params2();
+
+virtual RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,void > > enum_generator1();
+
+virtual RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,testenum1::testenum1 > > enum_generator2(int32_t a, int32_t b);
 
 virtual RR_SHARED_PTR<obj4 > get_o4();
 
