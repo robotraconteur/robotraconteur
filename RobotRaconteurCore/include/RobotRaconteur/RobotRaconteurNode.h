@@ -612,6 +612,29 @@ namespace RobotRaconteur
 	public:
 
 		//Race free functions for ASIO
+	protected:
+
+		template <typename F>
+		class asio_async_wait1
+		{
+		public:
+			asio_async_wait1(F f) : f_(BOOST_ASIO_MOVE_CAST(F)(f))
+			{
+			}
+
+			void do_complete(const boost::system::error_code& err)
+			{
+				f_(err);
+			}
+
+		protected:
+
+			F f_;			
+		};
+
+
+	public:
+		
 		template<typename T, typename F>
 		static bool asio_async_wait(RR_WEAK_PTR<RobotRaconteurNode> node, RR_SHARED_PTR<T>& t, BOOST_ASIO_MOVE_ARG(F) f)
 		{
@@ -626,13 +649,17 @@ namespace RobotRaconteur
 				return t->TryPost(boost::bind(f, boost::asio::error::operation_aborted));
 			}
 
-			t->async_wait(f);
+			RR_SHARED_PTR<asio_async_wait1<F> > f1(new asio_async_wait1<F>(f));
+			t->async_wait(boost::bind(&asio_async_wait1<F>::do_complete, f1, boost::asio::placeholders::error));
+			
 			node1->shutdown_listeners.connect(
 				boost::signals2::signal<void()>::slot_type(
 					boost::bind(&T::cancel, t.get())
-				).track(t));
+				).track(t).track(f1));
 			return true;
 		}
+
+	public:
 
 		template<typename T, typename B, typename F>
 		static bool asio_async_read_some(RR_WEAK_PTR<RobotRaconteurNode> node, RR_SHARED_PTR<T>& t, B& b, BOOST_ASIO_MOVE_ARG(F) f)
