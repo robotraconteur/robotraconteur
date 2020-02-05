@@ -190,14 +190,14 @@ configure_package_config_file(
   CMAKE_INSTALL_INCLUDEDIR
   CMAKE_INSTALL_BINDIR  
 )
-write_basic_package_version_file("${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}Version.cmake" 
+write_basic_package_version_file("${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake" 
     VERSION ${RobotRaconteurVersion} COMPATIBILITY AnyNewerVersion)
 
 install(FILES
         ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${CMAKE_PROJECT_NAME})
 install(FILES
-        ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}Version.cmake
+        ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${CMAKE_PROJECT_NAME})
 
 list(APPEND CPACK_SOURCE_IGNORE_FILES "/\.git/")
