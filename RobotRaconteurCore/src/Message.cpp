@@ -1853,7 +1853,7 @@ namespace RobotRaconteur
 		RR_INTRUSIVE_PTR<MessageElementNestedElementList> l = CastData<MessageElementNestedElementList>();
 		if (l && l->GetTypeID() != expected_type)
 		{
-			throw DataTypeMismatchException("Unexpected nested list type");
+			throw DataTypeMismatchException("Unexpected MessageElementNestedElementList type");
 		}
 		return l;
 	}
