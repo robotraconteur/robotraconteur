@@ -2015,15 +2015,15 @@ namespace RobotRaconteur
             }
         }
 
-        public int MaximumBacklog
+        public int MaxBacklog
         {
             get
             {
-                return innerpipe.GetMaximumBacklog();
+                return innerpipe.GetMaxBacklog();
             }
             set
             {
-                innerpipe.SetMaximumBacklog(value);
+                innerpipe.SetMaxBacklog(value);
             }
         }
     }

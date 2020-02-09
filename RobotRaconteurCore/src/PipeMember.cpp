@@ -1560,13 +1560,13 @@ void PipeBroadcasterBase::SetPredicate(boost::function<bool(RR_SHARED_PTR<PipeBr
 	predicate = f;
 }
 
-int32_t PipeBroadcasterBase::GetMaximumBacklog()
+int32_t PipeBroadcasterBase::GetMaxBacklog()
 {
 	boost::mutex::scoped_lock lock(endpoints_lock);
 	return maximum_backlog;
 }
 
-void PipeBroadcasterBase::SetMaximumBacklog(int32_t maximum_backlog)
+void PipeBroadcasterBase::SetMaxBacklog(int32_t maximum_backlog)
 {
 	boost::mutex::scoped_lock lock(endpoints_lock);
 	if (endpoints.size() > 0)

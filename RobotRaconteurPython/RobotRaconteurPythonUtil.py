@@ -2048,12 +2048,12 @@ class PipeBroadcaster(object):
         p.__disown__()
         
     @property
-    def MaximumBacklog(self):
-        return self._innerpipe.GetMaximumBacklog()
+    def MaxBacklog(self):
+        return self._innerpipe.GetMaxBacklog()
     
-    @MaximumBacklog.setter
-    def MaximumBacklog(self, maximum_backlog):
-        self._innerpipe.SetMaximumBacklog(maximum_backlog)
+    @MaxBacklog.setter
+    def MaxBacklog(self, maximum_backlog):
+        self._innerpipe.SetMaxBacklog(maximum_backlog)
 
 class WrappedWireBroadcasterPredicateDirectorPython(RobotRaconteurPython.WrappedWireBroadcasterPredicateDirector):
     def __init__(self, f):

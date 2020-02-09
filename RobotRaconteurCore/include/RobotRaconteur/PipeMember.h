@@ -690,8 +690,8 @@ namespace RobotRaconteur
 		boost::function<bool(RR_SHARED_PTR<PipeBroadcasterBase>&, uint32_t, int32_t) > GetPredicate();
 		void SetPredicate(boost::function<bool(RR_SHARED_PTR<PipeBroadcasterBase>&,  uint32_t, int32_t)> f);
 
-		int32_t GetMaximumBacklog();
-		void SetMaximumBacklog(int32_t maximum_backlog);
+		int32_t GetMaxBacklog();
+		void SetMaxBacklog(int32_t maximum_backlog);
 
 	protected:
 

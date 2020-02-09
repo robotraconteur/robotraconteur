@@ -1640,8 +1640,8 @@ public class RobotRaconteurTest_testroot implements testroot
 	public void set_broadcastpipe(Pipe<double[]> value) {
 		m_broadcastpipe = value;
         m_broadcastpipe_broadcaster = new PipeBroadcaster<double[]>(value, 3);
-        if (m_broadcastpipe_broadcaster.getMaximumBacklog() != 3) throw new RuntimeException();
-        m_broadcastpipe_broadcaster.setMaximumBacklog(3);
+        if (m_broadcastpipe_broadcaster.getMaxBacklog() != 3) throw new RuntimeException();
+        m_broadcastpipe_broadcaster.setMaxBacklog(3);
         
         BroadcastPipeTimerHandler h=new BroadcastPipeTimerHandler();
         com.robotraconteur.Timer t = RobotRaconteurNode.s().createTimer(40, h, false);

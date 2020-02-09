@@ -108,13 +108,13 @@ public class PipeBroadcaster<T>
         innerpipe.setPredicateDirector(p, id);
 	}
 	
-	public int getMaximumBacklog()
+	public int getMaxBacklog()
 	{
-		return innerpipe.getMaximumBacklog();
+		return innerpipe.getMaxBacklog();
 	}
 	
-	public void setMaximumBacklog(int maximum_backlog)
+	public void setMaxBacklog(int maximum_backlog)
 	{
-		innerpipe.setMaximumBacklog(maximum_backlog);
+		innerpipe.setMaxBacklog(maximum_backlog);
 	}
 }
