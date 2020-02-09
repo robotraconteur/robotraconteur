@@ -88,7 +88,7 @@ namespace RobotRaconteur
 
 		virtual RR_INTRUSIVE_PTR<MessageEntry> CallbackCall(RR_INTRUSIVE_PTR<MessageEntry> m);
 
-		virtual boost::string_ref RRType() { return "RobotRaconteur.ServiceStub"; }
+		virtual std::string RRType() { return "RobotRaconteur.ServiceStub"; }
 
 		virtual void RRClose();
 

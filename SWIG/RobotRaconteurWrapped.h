@@ -397,7 +397,7 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		RR_SHARED_PTR<ServiceEntryDefinition> RR_objecttype;
 		
 	public:
-		virtual boost::string_ref RRType();
+		virtual std::string RRType();
 	protected:
 		boost::shared_ptr<WrappedServiceStubDirector> RR_Director;
 		boost::shared_mutex RR_Director_lock;
@@ -1232,7 +1232,7 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 	{
 	public:
 		WrappedRRObject(const std::string& type, WrappedServiceSkelDirector* RR_Director, int32_t id);
-		virtual boost::string_ref RRType();
+		virtual std::string RRType();
 		std::string Type;
 	protected:
 

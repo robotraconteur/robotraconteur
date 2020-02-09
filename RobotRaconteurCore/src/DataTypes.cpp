@@ -62,7 +62,7 @@ RRValue::RRValue()
 
 }
 
-boost::string_ref RRBaseArray::RRType()
+std::string RRBaseArray::RRType()
 {
 	switch (GetTypeID())
 	{	

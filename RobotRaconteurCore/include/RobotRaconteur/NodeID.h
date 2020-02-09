@@ -66,7 +66,7 @@ namespace RobotRaconteur
 
 		virtual int32_t GetHashCode() const;
 
-		virtual boost::string_ref RRType() { return "RobotRaconteur::NodeID";}
+		virtual std::string RRType() { return "RobotRaconteur::NodeID";}
 
 	private:
 		void init_from_string(const boost::string_ref& str);

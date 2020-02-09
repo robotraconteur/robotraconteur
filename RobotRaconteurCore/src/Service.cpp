@@ -763,7 +763,7 @@ namespace RobotRaconteur
 
 		RR_SHARED_PTR<ServiceSkel> s = GetServiceDef()->CreateSkel(o->RRType(),name, o, shared_from_this());
 
-		m_RootObjectType = RR_MOVE(o->RRType().to_string()); //boost::algorithm::replace_all_copy(o->RRType(),"::",".");
+		m_RootObjectType = RR_MOVE(o->RRType()); //boost::algorithm::replace_all_copy(o->RRType(),"::",".");
 		base_object_set = true;
 		
 		{

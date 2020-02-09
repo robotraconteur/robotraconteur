@@ -73,7 +73,7 @@ throw RobotRaconteur::ServiceException("Invalid structure stub type.");
 }
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> com__robotraconteur__testing__TestService2Factory::PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> structin)
 {
-boost::string_ref type=structin->RRType();boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type);
+std::string type=structin->RRType();boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type);
 boost::string_ref servicetype=res.get<0>();
 boost::string_ref objecttype=res.get<1>();
 if (servicetype != "com.robotraconteur.testing.TestService2") return GetNode()->PackStructure(structin);
@@ -365,7 +365,7 @@ return rr_mr;
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
 
-boost::string_ref baseobj_stub::RRType()
+std::string baseobj_stub::RRType()
 {
 return "com.robotraconteur.testing.TestService2.baseobj";
 }
@@ -567,7 +567,7 @@ rr_mr->RequestID=rr_m->RequestID;
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
 
-boost::string_ref subobj_stub::RRType()
+std::string subobj_stub::RRType()
 {
 return "com.robotraconteur.testing.TestService2.subobj";
 }

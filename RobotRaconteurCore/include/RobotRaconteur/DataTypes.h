@@ -146,7 +146,7 @@ namespace RobotRaconteur
 
 		virtual ~RRObject() {}
 
-		virtual boost::string_ref RRType()=0;
+		virtual std::string RRType()=0;
 	};
 
 	class ROBOTRACONTEUR_CORE_API RRValue : public boost::intrusive_ref_counter<RRValue>, boost::noncopyable
@@ -156,7 +156,7 @@ namespace RobotRaconteur
 
 		virtual ~RRValue() {}
 
-		virtual boost::string_ref RRType() = 0;
+		virtual std::string RRType() = 0;
 	};
 
 	namespace detail
@@ -431,7 +431,7 @@ namespace RobotRaconteur
 
 		virtual size_t size()=0;
 		
-		virtual boost::string_ref RRType();
+		virtual std::string RRType();
 
 		virtual void* void_ptr()=0;
 
@@ -606,7 +606,7 @@ namespace RobotRaconteur
 			throw DataTypeException("Unknown data type");
 		}
 
-		static boost::string_ref get_map_rrtype ()
+		static std::string get_map_rrtype ()
 		{
 			BOOST_STATIC_ASSERT_MSG(sizeof(T) == 0, "Invalid key type for Robot Raconteur map");
 			throw DataTypeException("Unknown data type");
@@ -622,7 +622,7 @@ namespace RobotRaconteur
 			return "int32_t";
 		}
 
-		static boost::string_ref get_map_rrtype ()
+		static std::string get_map_rrtype ()
 		{			
 			return "RobotRaconteur.RRMap<int32_t>";
 		}
@@ -637,7 +637,7 @@ namespace RobotRaconteur
 			return "string";
 		}
 
-		static boost::string_ref get_map_rrtype ()
+		static std::string get_map_rrtype ()
 		{			
 			return "RobotRaconteur.RRMap<string>";
 		}
@@ -660,7 +660,7 @@ namespace RobotRaconteur
 
 		virtual ~RRMap() {}
 
-		virtual boost::string_ref RRType()
+		virtual std::string RRType()
 		{
 			return RRMap_keytype<K>::get_map_rrtype();		
 		}
@@ -731,7 +731,7 @@ namespace RobotRaconteur
 
 		virtual ~RRList() {}
 
-		virtual boost::string_ref RRType()
+		virtual std::string RRType()
 		{
 			return "RobotRaconteur.RRList";
 		}
@@ -1049,7 +1049,7 @@ namespace RobotRaconteur
 
 		virtual ~RRMultiDimArray() {}
 
-		virtual boost::string_ref RRType()
+		virtual std::string RRType()
 		{
 			return "RobotRaconteur.RRMultiDimArray";
 		}
@@ -1234,7 +1234,7 @@ namespace RobotRaconteur
 
 		virtual ~RRPodArray() {}
 
-		virtual boost::string_ref RRType()
+		virtual std::string RRType()
 		{
 			return "RobotRaconteur.RRPodArray";
 		}
@@ -1327,7 +1327,7 @@ namespace RobotRaconteur
 
 		virtual ~RRPodMultiDimArray() {}
 
-		virtual boost::string_ref RRType()
+		virtual std::string RRType()
 		{
 			return "RobotRaconteur.RRPodMultiDimArray";
 		}
@@ -1510,7 +1510,7 @@ namespace RobotRaconteur
 			return rr_array;
 		}
 				
-		virtual boost::string_ref RRType()
+		virtual std::string RRType()
 		{
 			return "RobotRaconteur.RRNamedArray";
 		}
@@ -1632,7 +1632,7 @@ namespace RobotRaconteur
 
 		virtual ~RRNamedMultiDimArray() {}
 
-		virtual boost::string_ref RRType()
+		virtual std::string RRType()
 		{
 			return "RobotRaconteur.RRNamedMultiDimArray";
 		}

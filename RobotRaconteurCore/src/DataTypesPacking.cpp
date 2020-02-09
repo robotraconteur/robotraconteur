@@ -39,7 +39,7 @@ namespace packing
 
 		if (!structure) return RR_INTRUSIVE_PTR<MessageElementNestedElementList>();
 
-		boost::string_ref type = structure->RRType();
+		std::string type = structure->RRType();
 
 		boost::string_ref servicetype = SplitQualifiedName(type).get<0>();
 		//std::string structuretype=res[1];
@@ -196,9 +196,9 @@ namespace packing
 
 		if (!vardata) return RR_INTRUSIVE_PTR<MessageElementData>();
 
-		boost::string_ref type = vardata->RRType();
+		std::string type = vardata->RRType();
 
-		if (type.starts_with("RobotRaconteur.RRArray"))
+		if (boost::starts_with(type, "RobotRaconteur.RRArray"))
 		{
 			return rr_cast<MessageElementData>(vardata);
 		}
@@ -213,13 +213,13 @@ namespace packing
 			return PackMapType<std::string, RRValue>(vardata,node);
 		}
 		
-		if (type.starts_with("RobotRaconteur.RRMap"))
+		if (boost::starts_with(type, "RobotRaconteur.RRMap"))
 		{
 			//Unknown keytype type for map
 			throw DataTypeException("Invalid map keytype");
 		}
 
-		if (type.starts_with("RobotRaconteur.RRMultiDimArray"))
+		if (boost::starts_with(type, "RobotRaconteur.RRMultiDimArray"))
 		{
 			RR_INTRUSIVE_PTR<RRMultiDimBaseArray> multi_array = rr_cast<RRMultiDimBaseArray>(vardata);
 			switch (multi_array->GetElementTypeID())

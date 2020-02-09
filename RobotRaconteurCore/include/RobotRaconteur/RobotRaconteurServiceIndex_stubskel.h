@@ -95,7 +95,7 @@ virtual void async_GetDetectedNodes(boost::function<void (RR_INTRUSIVE_PTR<Robot
 protected:
 virtual void rrend_GetDetectedNodes(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,NodeInfo  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler);
 public:
-virtual boost::string_ref RRType();
+virtual std::string RRType();
 };
 
 

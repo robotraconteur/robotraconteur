@@ -1128,7 +1128,7 @@ virtual void async_get_o5(boost::function<void(RR_SHARED_PTR<com::robotraconteur
 
 virtual void async_get_o6(boost::function<void(RR_SHARED_PTR<RobotRaconteur::RRObject>,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>)> handler, int32_t timeout=RR_TIMEOUT_INFINITE);
 
-boost::string_ref RRType();
+std::string RRType();
 };
 
 class sub1_stub : public virtual sub1, public virtual async_sub1, public virtual RobotRaconteur::ServiceStub
@@ -1198,7 +1198,7 @@ virtual void async_get_o2_2(int32_t ind, boost::function<void(RR_SHARED_PTR<sub2
 
 virtual void async_get_o2_3(const std::string& ind, boost::function<void(RR_SHARED_PTR<sub2>,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>)> handler, int32_t timeout=RR_TIMEOUT_INFINITE);
 
-boost::string_ref RRType();
+std::string RRType();
 };
 
 class sub2_stub : public virtual sub2, public virtual async_sub2, public virtual RobotRaconteur::ServiceStub
@@ -1250,7 +1250,7 @@ virtual void rrend_set_data(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR
 public:
 virtual void async_get_o3_1(const std::string& ind, boost::function<void(RR_SHARED_PTR<sub3>,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>)> handler, int32_t timeout=RR_TIMEOUT_INFINITE);
 
-boost::string_ref RRType();
+std::string RRType();
 };
 
 class sub3_stub : public virtual sub3, public virtual async_sub3, public virtual RobotRaconteur::ServiceStub
@@ -1305,7 +1305,7 @@ virtual void async_add(double d,boost::function<void (double, RR_SHARED_PTR<Robo
 protected:
 virtual void rrend_add(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (double ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler);
 public:
-boost::string_ref RRType();
+std::string RRType();
 };
 
 
@@ -1615,10 +1615,9 @@ private:
 };
 
 
-class testroot_default_impl : public virtual testroot
+class testroot_default_impl : public virtual testroot, public virtual RobotRaconteur::RRObject_default_impl
 {
 protected:
-boost::mutex this_lock;
 double rrvar_d1;
 RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > rrvar_d2;
 RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > rrvar_d3;
@@ -1935,10 +1934,9 @@ virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<uint8_t > > get_m3();
 
 };
 
-class sub1_default_impl : public virtual sub1
+class sub1_default_impl : public virtual sub1, public virtual RobotRaconteur::RRObject_default_impl
 {
 protected:
-boost::mutex this_lock;
 RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > rrvar_d1;
 RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > > rrvar_d2;
 std::string rrvar_s_ind;
@@ -1966,10 +1964,9 @@ virtual RR_SHARED_PTR<sub2 > get_o2_3(const std::string& ind);
 
 };
 
-class sub2_default_impl : public virtual sub2
+class sub2_default_impl : public virtual sub2, public virtual RobotRaconteur::RRObject_default_impl
 {
 protected:
-boost::mutex this_lock;
 std::string rrvar_s_ind;
 int32_t rrvar_i_ind;
 std::string rrvar_data;
@@ -1989,10 +1986,9 @@ virtual RR_SHARED_PTR<sub3 > get_o3_1(const std::string& ind);
 
 };
 
-class sub3_default_impl : public virtual sub3
+class sub3_default_impl : public virtual sub3, public virtual RobotRaconteur::RRObject_default_impl
 {
 protected:
-boost::mutex this_lock;
 std::string rrvar_ind;
 std::string rrvar_data2;
 double rrvar_data3;
@@ -2013,10 +2009,9 @@ virtual double add(double d);
 };
 
 
-class testroot_default_abstract_impl : public virtual testroot
+class testroot_default_abstract_impl : public virtual testroot, public virtual RobotRaconteur::RRObject_default_impl
 {
 protected:
-boost::mutex this_lock;
 RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > rrvar_d3;
 RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > rrvar_d4;
 RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > > rrvar_d5;
@@ -2306,10 +2301,9 @@ virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<uint8_t > > get_m3();
 
 };
 
-class sub1_default_abstract_impl : public virtual sub1
+class sub1_default_abstract_impl : public virtual sub1, public virtual RobotRaconteur::RRObject_default_impl
 {
 protected:
-boost::mutex this_lock;
 RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > rrvar_d1;
 RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > > rrvar_d2;
 std::string rrvar_s_ind;
@@ -2337,10 +2331,9 @@ virtual RR_SHARED_PTR<sub2 > get_o2_3(const std::string& ind);
 
 };
 
-class sub2_default_abstract_impl : public virtual sub2
+class sub2_default_abstract_impl : public virtual sub2, public virtual RobotRaconteur::RRObject_default_impl
 {
 protected:
-boost::mutex this_lock;
 std::string rrvar_s_ind;
 int32_t rrvar_i_ind;
 std::string rrvar_data;
@@ -2360,10 +2353,9 @@ virtual RR_SHARED_PTR<sub3 > get_o3_1(const std::string& ind);
 
 };
 
-class sub3_default_abstract_impl : public virtual sub3
+class sub3_default_abstract_impl : public virtual sub3, public virtual RobotRaconteur::RRObject_default_impl
 {
 protected:
-boost::mutex this_lock;
 std::string rrvar_ind;
 std::string rrvar_data2;
 double rrvar_data3;

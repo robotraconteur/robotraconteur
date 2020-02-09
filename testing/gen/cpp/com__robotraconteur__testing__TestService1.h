@@ -45,7 +45,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRList<teststruct2  > > lstruct3;
 RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double > > multidimarray;
 RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> var3;
 
-virtual boost::string_ref RRType() {return "com.robotraconteur.testing.TestService1.teststruct1";  }
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService1.teststruct1";  }
 };
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
@@ -56,7 +56,7 @@ class teststruct2 : public RobotRaconteur::RRStructure {
 public:
 RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > mydat;
 
-virtual boost::string_ref RRType() {return "com.robotraconteur.testing.TestService1.teststruct2";  }
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService1.teststruct2";  }
 };
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
@@ -291,7 +291,7 @@ virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<double > > get_m2()=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<uint8_t > > get_m3()=0;
 
-virtual boost::string_ref RRType() {return "com.robotraconteur.testing.TestService1.testroot";  }
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService1.testroot";  }
 };
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
@@ -319,7 +319,7 @@ virtual RR_SHARED_PTR<sub2 > get_o2_2(int32_t ind)=0;
 
 virtual RR_SHARED_PTR<sub2 > get_o2_3(const std::string& ind)=0;
 
-virtual boost::string_ref RRType() {return "com.robotraconteur.testing.TestService1.sub1";  }
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService1.sub1";  }
 };
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
@@ -340,7 +340,7 @@ virtual void set_data(const std::string& value)=0;
 
 virtual RR_SHARED_PTR<sub3 > get_o3_1(const std::string& ind)=0;
 
-virtual boost::string_ref RRType() {return "com.robotraconteur.testing.TestService1.sub2";  }
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService1.sub2";  }
 };
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
@@ -361,7 +361,7 @@ virtual void set_data3(double value)=0;
 
 virtual double add(double d)=0;
 
-virtual boost::string_ref RRType() {return "com.robotraconteur.testing.TestService1.sub3";  }
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService1.sub3";  }
 };
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES

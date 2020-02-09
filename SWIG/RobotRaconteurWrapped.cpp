@@ -731,7 +731,7 @@ namespace RobotRaconteur
 
 	}
 
-	boost::string_ref WrappedServiceStub::RRType()
+	std::string WrappedServiceStub::RRType()
 	{
 		return RR_objecttype->Name;
 	}
@@ -2324,7 +2324,7 @@ namespace RobotRaconteur
 		
 
 		boost::shared_ptr<ServiceEntryDefinition> type1;
-		boost::string_ref type=o->RRType();
+		std::string type=o->RRType();
 		boost::tuple<boost::string_ref,boost::string_ref> s1=SplitQualifiedName(type);
 		
 		
@@ -2589,7 +2589,7 @@ namespace RobotRaconteur
 
 	std::string WrappedServiceSkel::GetObjectType()
 	{
-		return castobj->RRType().to_string();
+		return castobj->RRType();
 	}
 
 	void WrappedServiceSkel::ReleaseCastObject()
@@ -3070,7 +3070,7 @@ namespace RobotRaconteur
 		//std::cout  << "objid=" << id << std::endl;
 		this->RR_Director.reset(RR_Director, boost::bind(&ReleaseDirector<WrappedServiceSkelDirector>, _1, id));
 	}
-	boost::string_ref WrappedRRObject::RRType()
+	std::string WrappedRRObject::RRType()
 	{
 		return Type;
 	}

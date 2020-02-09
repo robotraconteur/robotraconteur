@@ -180,7 +180,7 @@ namespace RobotRaconteur
 					nodename = RR_MOVE(nodename_.to_string());
 				}
 
-				virtual boost::string_ref RRType()
+				virtual std::string RRType()
 				{
 					return "RobotRaconteur::ASIOStreamBaseTransport::AsyncAttachStream_args";
 				}

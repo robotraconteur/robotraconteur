@@ -466,6 +466,12 @@ public:
 
 	};
 
+	class ROBOTRACONTEUR_CORE_API RRObject_default_impl : public virtual RRObject
+	{
+	protected:
+		boost::mutex this_lock;
+	};
+
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
 	using ServiceSkelPtr = RR_SHARED_PTR<ServiceSkel>;
 	using ServerContextPtr = RR_SHARED_PTR<ServerContext>;

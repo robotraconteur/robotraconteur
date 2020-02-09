@@ -131,7 +131,7 @@ virtual void rrend_func3(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SH
 public:
 virtual void async_get_o5(boost::function<void(RR_SHARED_PTR<subobj>,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>)> handler, int32_t timeout=RR_TIMEOUT_INFINITE);
 
-boost::string_ref RRType();
+std::string RRType();
 };
 
 class subobj_stub : public virtual subobj, public virtual async_subobj, public virtual RobotRaconteur::ServiceStub
@@ -156,7 +156,7 @@ virtual void async_add_val(double v,boost::function<void (double, RR_SHARED_PTR<
 protected:
 virtual void rrend_add_val(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (double ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler);
 public:
-boost::string_ref RRType();
+std::string RRType();
 };
 
 
@@ -275,10 +275,9 @@ private:
 };
 
 
-class baseobj_default_impl : public virtual baseobj
+class baseobj_default_impl : public virtual baseobj, public virtual RobotRaconteur::RRObject_default_impl
 {
 protected:
-boost::mutex this_lock;
 double rrvar_d1;
 RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > rrvar_d2;
 boost::signals2::signal<void ()> rrvar_ev1;
@@ -311,10 +310,9 @@ virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<double > > get_m1();
 
 };
 
-class subobj_default_impl : public virtual subobj
+class subobj_default_impl : public virtual subobj, public virtual RobotRaconteur::RRObject_default_impl
 {
 protected:
-boost::mutex this_lock;
 
 public:
 subobj_default_impl();
@@ -323,10 +321,9 @@ virtual double add_val(double v);
 };
 
 
-class baseobj_default_abstract_impl : public virtual baseobj
+class baseobj_default_abstract_impl : public virtual baseobj, public virtual RobotRaconteur::RRObject_default_impl
 {
 protected:
-boost::mutex this_lock;
 double rrvar_d1;
 RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > rrvar_d2;
 boost::signals2::signal<void ()> rrvar_ev1;
@@ -359,10 +356,9 @@ virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<double > > get_m1();
 
 };
 
-class subobj_default_abstract_impl : public virtual subobj
+class subobj_default_abstract_impl : public virtual subobj, public virtual RobotRaconteur::RRObject_default_impl
 {
 protected:
-boost::mutex this_lock;
 
 public:
 subobj_default_abstract_impl();

@@ -56,7 +56,7 @@ namespace RobotRaconteur
 		void Write3(ArrayBinaryWriter &w, const uint16_t& version_minor);
 		void Read3(ArrayBinaryReader &r, uint16_t& version_minor);
 
-		virtual boost::string_ref RRType()
+		virtual std::string RRType()
 		{
 			return "RobotRaconteur::Message";
 		}
@@ -135,7 +135,7 @@ namespace RobotRaconteur
 		void Write3(ArrayBinaryWriter &w, const uint16_t& version_minor);
 		void Read3(ArrayBinaryReader &r, uint16_t& version_minor);
 
-		virtual boost::string_ref RRType()
+		virtual std::string RRType()
 		{
 			return "RobotRaconteur::MessageHeader";
 		}	
@@ -201,7 +201,7 @@ public:
 		void Write3(ArrayBinaryWriter &w, const uint16_t& version_minor);
 		void Read3(ArrayBinaryReader &r, const uint16_t& version_minor);
 
-		virtual boost::string_ref RRType()
+		virtual std::string RRType()
 		{
 			return "RobotRaconteur::MessageEntry";
 		}			
@@ -284,7 +284,7 @@ public:
 			return rr_cast<T>(Data);
 		}
 
-		virtual boost::string_ref RRType()
+		virtual std::string RRType()
 		{
 			return "RobotRaconteur::MessageElement";
 		}
@@ -305,7 +305,7 @@ public:
 #endif
 		virtual MessageStringPtr GetTypeString();
 		virtual DataTypes GetTypeID();		
-		virtual boost::string_ref RRType();
+		virtual std::string RRType();
 	};
 
 	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<Message> CreateMessage();

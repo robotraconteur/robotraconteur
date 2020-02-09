@@ -300,7 +300,7 @@ throw RobotRaconteur::ServiceException("Invalid structure stub type.");
 }
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> com__robotraconteur__testing__TestService3Factory::PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> structin)
 {
-boost::string_ref type=structin->RRType();boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type);
+std::string type=structin->RRType();boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type);
 boost::string_ref servicetype=res.get<0>();
 boost::string_ref objecttype=res.get<1>();
 if (servicetype != "com.robotraconteur.testing.TestService3") return GetNode()->PackStructure(structin);
@@ -1385,7 +1385,7 @@ rr_mr->RequestID=rr_m->RequestID;
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
 
-boost::string_ref testroot3_stub::RRType()
+std::string testroot3_stub::RRType()
 {
 return "com.robotraconteur.testing.TestService3.testroot3";
 }
@@ -3480,7 +3480,7 @@ rr_mr->RequestID=rr_m->RequestID;
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
 
-boost::string_ref obj1_stub::RRType()
+std::string obj1_stub::RRType()
 {
 return "com.robotraconteur.testing.TestService3.obj1";
 }
@@ -3588,7 +3588,7 @@ rr_mr->RequestID=rr_m->RequestID;
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
 
-boost::string_ref obj2_stub::RRType()
+std::string obj2_stub::RRType()
 {
 return "com.robotraconteur.testing.TestService3.obj2";
 }
@@ -3696,7 +3696,7 @@ rr_mr->RequestID=rr_m->RequestID;
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
 
-boost::string_ref obj3_stub::RRType()
+std::string obj3_stub::RRType()
 {
 return "com.robotraconteur.testing.TestService3.obj3";
 }
@@ -3837,7 +3837,7 @@ rr_mr->RequestID=rr_m->RequestID;
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
 
-boost::string_ref obj4_stub::RRType()
+std::string obj4_stub::RRType()
 {
 return "com.robotraconteur.testing.TestService3.obj4";
 }
@@ -4181,7 +4181,7 @@ rr_mr->RequestID=rr_m->RequestID;
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
 
-boost::string_ref obj5_stub::RRType()
+std::string obj5_stub::RRType()
 {
 return "com.robotraconteur.testing.TestService3.obj5";
 }

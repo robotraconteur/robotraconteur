@@ -65,7 +65,7 @@ throw RobotRaconteur::ServiceException("Invalid structure stub type.");
 }
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> RobotRaconteurServiceIndexFactory::PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> structin)
 {
-std::string type=structin->RRType().to_string();std::vector<std::string> res;
+std::string type=structin->RRType();std::vector<std::string> res;
 boost::split(res,type,boost::is_from_range('.','.'));
 std::string servicetype=res.at(0);
 std::string objecttype=res.at(1);
@@ -239,7 +239,7 @@ rr_mr->RequestID=rr_m->RequestID;
 throw RobotRaconteur::MemberNotFoundException("Member not found");
 }
 
-boost::string_ref ServiceIndex_stub::RRType()
+std::string ServiceIndex_stub::RRType()
 {
 return "RobotRaconteurServiceIndex.ServiceIndex";
 }

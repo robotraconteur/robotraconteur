@@ -93,7 +93,7 @@ int8_t i1;
 RobotRaconteur::pod_field_array<int8_t,15,false> i2;
 RobotRaconteur::pod_field_array<int8_t,17,true> i3;
 
-virtual boost::string_ref RRType() {return "com.robotraconteur.testing.TestService3.testpod2";  }
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.testpod2";  }
 };
 
 union vector3{
@@ -130,7 +130,7 @@ RobotRaconteur::pod_field_array<transform,4,false> t2;
 RobotRaconteur::pod_field_array<transform,15,true> t3;
 RobotRaconteur::pod_field_array<transform,8,false> t4;
 
-virtual boost::string_ref RRType() {return "com.robotraconteur.testing.TestService3.testpod1";  }
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.testpod1";  }
 };
 
 class teststruct3 : public RobotRaconteur::RRStructure {
@@ -162,7 +162,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> t9;
 RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> t10;
 RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> t11;
 
-virtual boost::string_ref RRType() {return "com.robotraconteur.testing.TestService3.teststruct3";  }
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.teststruct3";  }
 };
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
@@ -350,7 +350,7 @@ virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<RobotRaconteur::rr_bool > > ge
 
 virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<RobotRaconteur::rr_bool > > get_c_m6()=0;
 
-virtual boost::string_ref RRType() {return "com.robotraconteur.testing.TestService3.testroot3";  }
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.testroot3";  }
 };
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
@@ -363,7 +363,7 @@ public:
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > get_d1()=0;
 virtual void set_d1(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value)=0;
 
-virtual boost::string_ref RRType() {return "com.robotraconteur.testing.TestService3.obj1";  }
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.obj1";  }
 };
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
@@ -373,7 +373,7 @@ using obj1Ptr = RR_SHARED_PTR<obj1>;
 class obj2 : public virtual obj1
 {
 public:
-virtual boost::string_ref RRType() {return "com.robotraconteur.testing.TestService3.obj2";  }
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.obj2";  }
 };
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
@@ -383,7 +383,7 @@ using obj2Ptr = RR_SHARED_PTR<obj2>;
 class obj3 : public virtual obj1, public virtual obj2
 {
 public:
-virtual boost::string_ref RRType() {return "com.robotraconteur.testing.TestService3.obj3";  }
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.obj3";  }
 };
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
@@ -393,7 +393,7 @@ using obj3Ptr = RR_SHARED_PTR<obj3>;
 class obj4 : public virtual com::robotraconteur::testing::TestService1::sub2
 {
 public:
-virtual boost::string_ref RRType() {return "com.robotraconteur.testing.TestService3.obj4";  }
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.obj4";  }
 };
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
@@ -434,7 +434,7 @@ virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > get_m2()=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > get_m3()=0;
 
-virtual boost::string_ref RRType() {return "com.robotraconteur.testing.TestService3.obj5";  }
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.obj5";  }
 };
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES

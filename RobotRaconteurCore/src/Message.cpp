@@ -1881,7 +1881,7 @@ namespace RobotRaconteur
 	{
 		return Type;
 	}
-	boost::string_ref MessageElementNestedElementList::RRType()
+	std::string MessageElementNestedElementList::RRType()
 	{
 		return "RobotRaconteur::MessageElementNestedElementList";
 	}

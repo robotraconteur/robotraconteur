@@ -1223,7 +1223,7 @@ namespace RobotRaconteurGen
 
 			if (e2->EntryType == DataTypes_pod_t)
 			{
-				w2 << endl << "virtual boost::string_ref RRType() {return \"" << d->Name + "." << e2->Name << "\";  }" << endl;
+				w2 << endl << "virtual std::string RRType() {return \"" << d->Name + "." << e2->Name << "\";  }" << endl;
 			}
 			else
 			{
@@ -1253,7 +1253,7 @@ namespace RobotRaconteurGen
 				
 			MEMBER_ITER_END()
 
-			w2 << endl << "virtual boost::string_ref RRType() {return \"" << d->Name + "." << (*e)->Name <<"\";  }"<< endl;
+			w2 << endl << "virtual std::string RRType() {return \"" << d->Name + "." << (*e)->Name <<"\";  }"<< endl;
 
 			w2 << "};" << endl << endl;
 			w2 << "#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES" << endl;
@@ -1321,7 +1321,7 @@ namespace RobotRaconteurGen
 				w2 << MemoryDeclaration(m.get(),true) << "=0;" << endl << endl;
 			MEMBER_ITER2_END()
 
-			w2 << "virtual boost::string_ref RRType() {return \"" << d->Name + "." << (*e)->Name <<"\";  }" << endl;
+			w2 << "virtual std::string RRType() {return \"" << d->Name + "." << (*e)->Name <<"\";  }" << endl;
 
 			w2 << "};" << endl << endl;
 			w2 << "#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES" << endl;
@@ -1602,7 +1602,7 @@ namespace RobotRaconteurGen
 		w2 << "}" << endl;
 		
 		w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> " << factory_name << "::PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> structin)" << endl << "{" << endl;
-		w2 << "boost::string_ref type=structin->RRType();";
+		w2 << "std::string type=structin->RRType();";
 		w2 << "boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
 		
 		w2 << "boost::string_ref servicetype=res.get<0>();" << endl;
@@ -2019,7 +2019,7 @@ namespace RobotRaconteurGen
 			MEMBER_ITER_END()
 
 
-			w2 << "boost::string_ref RRType();" << endl;
+			w2 << "std::string RRType();" << endl;
 			w2 << "};" << endl << endl;
 		}
 	}
@@ -2568,7 +2568,7 @@ namespace RobotRaconteurGen
 			w2 << "}" << endl;
 
 			w2 << endl;
-			w2 << "boost::string_ref " << fix_name((*e)->Name) << "_stub::RRType()" << endl << "{" << endl;
+			w2 << "std::string " << fix_name((*e)->Name) << "_stub::RRType()" << endl << "{" << endl;
 			w2 << "return \"" << d->Name << "." << (*e)->Name << "\";" << endl;
 			w2 << "}" << endl;
 
@@ -3904,16 +3904,15 @@ namespace RobotRaconteurGen
 		{
 			if (!is_abstract)
 			{
-				w2 << "class " << fix_name((*e)->Name) << "_default_impl : public virtual " << fix_name((*e)->Name) << endl;
+				w2 << "class " << fix_name((*e)->Name) << "_default_impl : public virtual " << fix_name((*e)->Name) << ", public virtual RobotRaconteur::RRObject_default_impl" << endl;
 			}
 			else
 			{
-				w2 << "class " << fix_name((*e)->Name) << "_default_abstract_impl : public virtual " << fix_name((*e)->Name) << endl;
+				w2 << "class " << fix_name((*e)->Name) << "_default_abstract_impl : public virtual " << fix_name((*e)->Name) << ", public virtual RobotRaconteur::RRObject_default_impl" << endl;
 			}
 			
 			w2 << "{" << endl;
-			w2 << "protected:" << endl;
-			w2 << "boost::mutex this_lock;" << endl;
+			w2 << "protected:" << endl;			
 			MEMBER_ITER3(PropertyDefinition)
 				get_variable_type_result t = get_variable_type(*m->Type);
 				w2 << t.cpp_type << " rrvar_" << fix_name(m->Name) << ";" << endl;
