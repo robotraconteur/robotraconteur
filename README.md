@@ -18,13 +18,25 @@ See [http://robotraconteur.com/documentation](http://robotraconteur.com/document
 
 #### C++
 
-Use `vcpkg` to install the Robot Raconteur C++ library.
+`vcpkg` is used to install the Robot Raconteur C++ library. See https://github.com/microsoft/vcpkg for installation instructions.
+
+To build Robot Raconteur, clone the `vcpkg-robotraconteur` overlay repo in the vcpkg directory:
 
 ```
-vcpkg install robotraconteur
+git clone https://github.com/robotraconteur/vcpkg-robotraconteur.git
 ```
 
-If Robot Raconteur is not found, merge [johnwason/vcpkg](https://github.com/johnwason/vcpkg) into your vcpkg directory.
+and build the library:
+
+```
+vcpkg --overlay-ports=vcpkg-robotraconteur\ports install robotraconteur
+```
+
+To build x64, use:
+
+```
+vcpkg --overlay-ports=vcpkg-robotraconteur\ports install robotraconteur:x64-windows
+```
 
 #### Python
 
