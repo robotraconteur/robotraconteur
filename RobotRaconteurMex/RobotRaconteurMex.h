@@ -183,7 +183,7 @@ public:
 	virtual RR_SHARED_PTR<WireClientBase> RRGetWireClient(boost::string_ref membername);
 		
 public:
-	virtual boost::string_ref RRType();
+	virtual std::string RRType();
 	RR_SHARED_PTR<ServiceEntryDefinition> RR_objecttype;
 
 	
@@ -377,7 +377,7 @@ public:
 	boost::shared_ptr<ServiceEntryDefinition> type;
 	std::string strtype;
 
-	virtual boost::string_ref RRType() {return strtype;}
+	virtual std::string RRType() {return strtype;}
 };
 
 

@@ -3849,7 +3849,7 @@ void MexServiceStub::RRClose()
 	ServiceStub::RRClose();
 }
 
-boost::string_ref MexServiceStub::RRType()
+std::string MexServiceStub::RRType()
 {
 	return RR_objecttype->Name;
 }
