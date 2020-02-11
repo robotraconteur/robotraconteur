@@ -1,4 +1,4 @@
-language: cpp
+language: shell
 matrix:
   include:
     - os: linux
@@ -21,9 +21,9 @@ matrix:
             rm -rf swig_build_dir
             mkdir -p swig_build_dir
             cd swig_build_dir
-            curl -L https://sourceforge.net/projects/swig/files/swig/swig-4.0.0-beta1/swig-4.0.0-beta1.tar.gz --output swig-4.0.0-beta1.tar.gz
-            tar xf swig-4.0.0-beta1.tar.gz
-            cd swig-4.0.0-beta1
+            curl -L http://prdownloads.sourceforge.net/swig/swig-4.0.1.tar.gz --output swig-4.0.1.tar.gz
+            tar xf swig-4.0.1.tar.gz
+            cd swig-4.0.1
             ./configure
             make
             sudo make install
@@ -36,10 +36,6 @@ matrix:
     - os: linux
       sudo: required
       dist: bionic
-      compiler:
-        - gcc
-
-      cache: ccache
       before_script:
         - >
           sudo apt-get install default-jdk default-jdk-headless default-jre default-jre-headless 
@@ -53,24 +49,24 @@ matrix:
             rm -rf swig_build_dir
             mkdir -p swig_build_dir
             cd swig_build_dir
-            curl -L https://sourceforge.net/projects/swig/files/swig/swig-4.0.0-beta1/swig-4.0.0-beta1.tar.gz --output swig-4.0.0-beta1.tar.gz
-            tar xf swig-4.0.0-beta1.tar.gz
-            cd swig-4.0.0-beta1            
+            curl -L http://prdownloads.sourceforge.net/swig/swig-4.0.1.tar.gz --output swig-4.0.1.tar.gz
+            tar xf swig-4.0.1.tar.gz
+            cd swig-4.0.1            
             ./configure
             make
             sudo make install
             )
       env:
         - >
-          RR_CMAKE_EXTRA_ARGS="-DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON -DBoost_USE_STATIC_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DPYTHON3_EXECUTABLE=/usr/bin/python3 -DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=ON -DBUILD_JAVA=ON -DBUILD_NET=ON -DPACKAGE_SWIG_SOURCE_ALL=ON"
+          RR_CMAKE_EXTRA_ARGS="-DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON -DBoost_USE_STATIC_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DPYTHON3_EXECUTABLE=/usr/bin/python3 -DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=ON -DBUILD_JAVA=ON -DBUILD_NET=ON -DPACKAGE_SWIG_SOURCE_ALL=ON -DJAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64"
         - RR_CMAKE_GENERATOR="Unix Makefiles"
         
     - os: windows
       before_script:
         - powershell -Command "Set-MpPreference -DisableRealtimeMonitoring 1" || true
-        - curl -o boost_1_70_0.zip -L https://dl.bintray.com/boostorg/release/1.70.0/source/boost_1_70_0.zip
-        - unzip -qo boost_1_70_0.zip
-        - cd boost_1_70_0
+        - curl -o boost_1_72_0.zip -L https://dl.bintray.com/boostorg/release/1.72.0/source/boost_1_72_0.zip
+        - unzip -qo boost_1_72_0.zip
+        - cd boost_1_72_0
         - ./bootstrap.bat
         - ./b2 --with-date_time --with-filesystem --with-regex --with-chrono --with-atomic --with-thread --with-random --with-program_options address-model=32 -d0
         - cd $TRAVIS_BUILD_DIR
@@ -83,20 +79,19 @@ matrix:
         - /c/Python3/Scripts/pip install setuptools
         - /c/Python3/Scripts/pip install wheel
         - choco install jdk8 --forceX86
-        - curl -o swigwin-4.0.0-beta1.zip -L https://sourceforge.net/projects/swig/files/swigwin/swigwin-4.0.0-beta1/swigwin-4.0.0-beta1.zip/download
-        - unzip -qo swigwin-4.0.0-beta1.zip
+        - choco install swig
         - cd $TRAVIS_BUILD_DIR
       env:
         - >
-          RR_CMAKE_EXTRA_ARGS="-DSWIG_EXECUTABLE=$TRAVIS_BUILD_DIR/swigwin-4.0.0-beta1/swig.exe -DSWIG_DIR=$TRAVIS_BUILD_DIR/swigwin-4.0.0-beta1/Lib -DBUILD_NET=ON -DBoost_USE_STATIC_LIBS=ON -DBOOST_INCLUDEDIR=$TRAVIS_BUILD_DIR/boost_1_70_0 -DBOOST_LIBRARYDIR=$TRAVIS_BUILD_DIR/boost_1_70_0/stage/lib -DPYTHON_EXECUTABLE=C:/Python27/python.exe -DPYTHON3_EXECUTABLE=C:/Python3/python.exe -DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON -DBUILD_JAVA=ON"
+          RR_CMAKE_EXTRA_ARGS="-DBUILD_NET=ON -DBoost_USE_STATIC_LIBS=ON -DBOOST_INCLUDEDIR=$TRAVIS_BUILD_DIR/boost_1_72_0 -DBOOST_LIBRARYDIR=$TRAVIS_BUILD_DIR/boost_1_72_0/stage/lib -DPYTHON_EXECUTABLE=C:/Python27/python.exe -DPYTHON3_EXECUTABLE=C:/Python3/python.exe -DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON -DBUILD_JAVA=ON"
         - RR_CMAKE_GENERATOR="Visual Studio 15 2017"
         
-    - os: windows
+    - os: windows      
       before_script:
         - powershell -Command "Set-MpPreference -DisableRealtimeMonitoring 1" || true
-        - curl -o boost_1_70_0.zip -L https://dl.bintray.com/boostorg/release/1.70.0/source/boost_1_70_0.zip
-        - unzip -qo boost_1_70_0.zip
-        - cd boost_1_70_0
+        - curl -o boost_1_72_0.zip -L https://dl.bintray.com/boostorg/release/1.72.0/source/boost_1_72_0.zip
+        - unzip -qo boost_1_72_0.zip
+        - cd boost_1_72_0
         - ./bootstrap.bat
         - ./b2 --with-date_time --with-filesystem --with-regex --with-chrono --with-atomic --with-thread --with-random --with-program_options address-model=64 -d0
         - cd $TRAVIS_BUILD_DIR
@@ -109,12 +104,11 @@ matrix:
         - /c/Python3/Scripts/pip install setuptools
         - /c/Python3/Scripts/pip install wheel
         - choco install jdk8
-        - curl -o swigwin-4.0.0-beta1.zip -L https://sourceforge.net/projects/swig/files/swigwin/swigwin-4.0.0-beta1/swigwin-4.0.0-beta1.zip/download
-        - unzip -qo swigwin-4.0.0-beta1.zip
+        - choco install swig
         - cd $TRAVIS_BUILD_DIR
       env:
         - >
-          RR_CMAKE_EXTRA_ARGS="-DSWIG_EXECUTABLE=$TRAVIS_BUILD_DIR/swigwin-4.0.0-beta1/swig.exe -DSWIG_DIR=$TRAVIS_BUILD_DIR/swigwin-4.0.0-beta1/Lib -DBUILD_NET=ON -DBoost_USE_STATIC_LIBS=ON -DBOOST_INCLUDEDIR=$TRAVIS_BUILD_DIR/boost_1_70_0 -DBOOST_LIBRARYDIR=$TRAVIS_BUILD_DIR/boost_1_70_0/stage/lib -DPYTHON_EXECUTABLE=C:/Python27/python.exe -DPYTHON3_EXECUTABLE=C:/Python3/python.exe -DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON -DBUILD_JAVA=ON"
+          RR_CMAKE_EXTRA_ARGS="-DBUILD_NET=ON -DBoost_USE_STATIC_LIBS=ON -DBOOST_INCLUDEDIR=$TRAVIS_BUILD_DIR/boost_1_72_0 -DBOOST_LIBRARYDIR=$TRAVIS_BUILD_DIR/boost_1_72_0/stage/lib -DPYTHON_EXECUTABLE=C:/Python27/python.exe -DPYTHON3_EXECUTABLE=C:/Python3/python.exe -DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON -DBUILD_JAVA=ON"
         - RR_CMAKE_GENERATOR="Visual Studio 15 2017 Win64"
                 
     
@@ -129,9 +123,9 @@ matrix:
             rm -rf swig_build_dir
             mkdir -p swig_build_dir
             cd swig_build_dir
-            curl -L https://sourceforge.net/projects/swig/files/swig/swig-4.0.0-beta1/swig-4.0.0-beta1.tar.gz --output swig-4.0.0-beta1.tar.gz
-            tar xf swig-4.0.0-beta1.tar.gz
-            cd swig-4.0.0-beta1
+            curl -L http://prdownloads.sourceforge.net/swig/swig-4.0.1.tar.gz --output swig-4.0.1.tar.gz
+            tar xf swig-4.0.1.tar.gz
+            cd swig-4.0.1
             ./configure
             make
             sudo make install
