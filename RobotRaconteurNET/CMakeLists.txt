@@ -121,8 +121,15 @@ endif()
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurNET/RobotRaconteurNET.csproj.in" "${CMAKE_CURRENT_BINARY_DIR}/RobotRaconteurNET.csproj" @ONLY)
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurNET/RobotRaconteurNETTest/RobotRaconteurNETTest.csproj.in" "${CMAKE_CURRENT_BINARY_DIR}/RobotRaconteurNETTest.csproj" @ONLY)
 
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurNET/Core/RobotRaconteurNET.csproj.in" "${CMAKE_CURRENT_BINARY_DIR}/Core/Lib/RobotRaconteurNET.csproj" @ONLY)
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurNET/Core/RobotRaconteurNETTest.csproj.in" "${CMAKE_CURRENT_BINARY_DIR}/Core/Test/RobotRaconteurNETTest.csproj" @ONLY)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurNET/netstandard/RobotRaconteurNET.csproj.in" "${CMAKE_CURRENT_BINARY_DIR}/netstandard/Lib/RobotRaconteurNET.csproj" @ONLY)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurNET/netstandard/RobotRaconteurNETTest.csproj.in" "${CMAKE_CURRENT_BINARY_DIR}/netstandard/Test/RobotRaconteurNETTest.csproj" @ONLY)
+
+if(WIN32 AND ( MSVC_VERSION GREATER 1900 ))
+add_custom_target(RobotRaconteurNET_standard ALL msbuild /restore $<$<CONFIG:debug>:/p:Configuration=Debug>$<$<CONFIG:release>:/p:Configuration=Release> /t:rebuild RobotRaconteurNET.csproj WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/netstandard/Lib")
+add_custom_target(RobotRaconteurNETTest_standard ALL msbuild /restore $<$<CONFIG:debug>:/p:Configuration=Debug>$<$<CONFIG:release>:/p:Configuration=Release> /t:rebuild RobotRaconteurNETTest.csproj WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/netstandard/Test")
+add_dependencies(RobotRaconteurNET_standard ${SWIG_MODULE_RobotRaconteurNETNative_REAL_NAME})
+add_dependencies(RobotRaconteurNETTest_standard RobotRaconteurNET_standard)
+endif()
 
 #configure_file("${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurNET/RobotRaconteurNETTestVB/RobotRaconteurNETTestVB.vbproj.in" "${CMAKE_CURRENT_BINARY_DIR}/RobotRaconteurNETTestVB.vbproj" @ONLY)
 
