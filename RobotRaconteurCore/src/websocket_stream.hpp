@@ -85,6 +85,16 @@ protected:
 	boost::mutex random_lock;
 	boost::random::mt19937 random;
 public:
+
+
+#if BOOST_ASIO_VERSION >= 101200
+	typedef RR_BOOST_ASIO_IO_CONTEXT executor_type;
+	executor_type get_executor() BOOST_ASIO_NOEXCEPT
+    {
+      return next_layer_.get_executor();
+    }
+#endif
+
 	websocket_stream(Stream& next_layer) : next_layer_(next_layer)
 	{
 		extra_recv_data_len = 0;
