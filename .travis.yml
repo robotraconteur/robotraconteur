@@ -164,14 +164,14 @@ deploy:
   verbose: true
   draft: false
   name: travisci build ${TRAVIS_REPO_SLUG} ${TRAVIS_JOB_NUMBER} 
-  body: |
-    repo: ${TRAVIS_REPO_SLUG}
-    job: ${TRAVIS_JOB_NUMBER}
-    buildid: ${TRAVIS_BUILD_ID}
-    buildurl: ${TRAVIS_JOB_WEB_URL}
-    commit: ${TRAVIS_COMMIT}
-    tag: ${TRAVIS_TAG}
-    osname: ${TRAVIS_OS_NAME}
+  body: >
+    repo: ${TRAVIS_REPO_SLUG},
+    job: ${TRAVIS_JOB_NUMBER},
+    buildid: ${TRAVIS_BUILD_ID},
+    buildurl: ${TRAVIS_JOB_WEB_URL},
+    commit: ${TRAVIS_COMMIT},
+    tag: ${TRAVIS_TAG},
+    osname: ${TRAVIS_OS_NAME},
     cmakegenerator: ${RR_CMAKE_GENERATOR}
   on:
     all_branches: true    
