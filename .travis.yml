@@ -146,6 +146,7 @@ script:
   - mv generated_src out/ || true
   - cp *.tar.gz out/ || true
   - cp *.zip out/ || true
+  - cp ../LICENSE.txt out/ || true
   - export TRAVIS_REPO_OWNER=${TRAVIS_REPO_SLUG%/*}
   - export TRAVIS_REPO_NAME=${TRAVIS_REPO_SLUG#*/}
 
