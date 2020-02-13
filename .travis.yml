@@ -149,6 +149,19 @@ script:
   - cp ../LICENSE.txt out/ || true
   - export TRAVIS_REPO_OWNER=${TRAVIS_REPO_SLUG%/*}
   - export TRAVIS_REPO_NAME=${TRAVIS_REPO_SLUG#*/}
+  - export NOW=`date -u '+%F_%H:%M:%S'`
+  - > 
+    echo 
+    repo: ${TRAVIS_REPO_SLUG},
+    job: ${TRAVIS_JOB_NUMBER},
+    buildid: ${TRAVIS_BUILD_ID},
+    buildurl: ${TRAVIS_JOB_WEB_URL},
+    commit: ${TRAVIS_COMMIT},
+    tag: ${TRAVIS_TAG},
+    osname: ${TRAVIS_OS_NAME},
+    cmakegenerator: ${RR_CMAKE_GENERATOR},
+    now: ${NOW}
+    > out/travis_build_info.txt
 
 before_deploy:
   - cd $TRAVIS_BUILD_DIR/build2
