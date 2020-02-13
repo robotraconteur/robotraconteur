@@ -1932,6 +1932,7 @@ virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<double > > get_m2();
 
 virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<uint8_t > > get_m3();
 
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService1.testroot";  }
 };
 
 class sub1_default_impl : public virtual sub1, public virtual RobotRaconteur::RRObject_default_impl
@@ -1962,6 +1963,7 @@ virtual RR_SHARED_PTR<sub2 > get_o2_2(int32_t ind);
 
 virtual RR_SHARED_PTR<sub2 > get_o2_3(const std::string& ind);
 
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService1.sub1";  }
 };
 
 class sub2_default_impl : public virtual sub2, public virtual RobotRaconteur::RRObject_default_impl
@@ -1984,6 +1986,7 @@ virtual void set_data(const std::string& value);
 
 virtual RR_SHARED_PTR<sub3 > get_o3_1(const std::string& ind);
 
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService1.sub2";  }
 };
 
 class sub3_default_impl : public virtual sub3, public virtual RobotRaconteur::RRObject_default_impl
@@ -2006,6 +2009,7 @@ virtual void set_data3(double value);
 
 virtual double add(double d);
 
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService1.sub3";  }
 };
 
 
@@ -2299,6 +2303,7 @@ virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<double > > get_m2();
 
 virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<uint8_t > > get_m3();
 
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService1.testroot";  }
 };
 
 class sub1_default_abstract_impl : public virtual sub1, public virtual RobotRaconteur::RRObject_default_impl
@@ -2329,6 +2334,7 @@ virtual RR_SHARED_PTR<sub2 > get_o2_2(int32_t ind);
 
 virtual RR_SHARED_PTR<sub2 > get_o2_3(const std::string& ind);
 
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService1.sub1";  }
 };
 
 class sub2_default_abstract_impl : public virtual sub2, public virtual RobotRaconteur::RRObject_default_impl
@@ -2351,6 +2357,7 @@ virtual void set_data(const std::string& value);
 
 virtual RR_SHARED_PTR<sub3 > get_o3_1(const std::string& ind);
 
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService1.sub2";  }
 };
 
 class sub3_default_abstract_impl : public virtual sub3, public virtual RobotRaconteur::RRObject_default_impl
@@ -2373,6 +2380,7 @@ virtual void set_data3(double value);
 
 virtual double add(double d);
 
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService1.sub3";  }
 };
 
 

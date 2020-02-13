@@ -1626,6 +1626,7 @@ virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<RobotRaconteur::rr_bool > > ge
 
 virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<RobotRaconteur::rr_bool > > get_c_m6();
 
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.testroot3";  }
 };
 
 class obj1_default_impl : public virtual obj1, public virtual RobotRaconteur::RRObject_default_impl
@@ -1638,6 +1639,7 @@ obj1_default_impl();
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > get_d1();
 virtual void set_d1(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value);
 
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.obj1";  }
 };
 
 class obj2_default_impl : public virtual obj2, public virtual RobotRaconteur::RRObject_default_impl
@@ -1650,6 +1652,7 @@ obj2_default_impl();
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > get_d1();
 virtual void set_d1(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value);
 
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.obj2";  }
 };
 
 class obj3_default_impl : public virtual obj3, public virtual RobotRaconteur::RRObject_default_impl
@@ -1662,6 +1665,7 @@ obj3_default_impl();
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > get_d1();
 virtual void set_d1(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value);
 
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.obj3";  }
 };
 
 class obj4_default_impl : public virtual obj4, public virtual RobotRaconteur::RRObject_default_impl
@@ -1684,6 +1688,7 @@ virtual void set_data(const std::string& value);
 
 virtual RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub3 > get_o3_1(const std::string& ind);
 
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.obj4";  }
 };
 
 class obj5_default_impl : public virtual obj5, public virtual RobotRaconteur::RRObject_default_impl
@@ -1730,6 +1735,7 @@ virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > get_m2();
 
 virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > get_m3();
 
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.obj5";  }
 };
 
 
@@ -1954,6 +1960,7 @@ virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<RobotRaconteur::rr_bool > > ge
 
 virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<RobotRaconteur::rr_bool > > get_c_m6();
 
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.testroot3";  }
 };
 
 class obj1_default_abstract_impl : public virtual obj1, public virtual RobotRaconteur::RRObject_default_impl
@@ -1966,6 +1973,7 @@ obj1_default_abstract_impl();
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > get_d1();
 virtual void set_d1(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value);
 
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.obj1";  }
 };
 
 class obj2_default_abstract_impl : public virtual obj2, public virtual RobotRaconteur::RRObject_default_impl
@@ -1974,6 +1982,7 @@ protected:
 
 public:
 obj2_default_abstract_impl();
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.obj2";  }
 };
 
 class obj3_default_abstract_impl : public virtual obj3, public virtual RobotRaconteur::RRObject_default_impl
@@ -1982,6 +1991,7 @@ protected:
 
 public:
 obj3_default_abstract_impl();
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.obj3";  }
 };
 
 class obj4_default_abstract_impl : public virtual obj4, public virtual RobotRaconteur::RRObject_default_impl
@@ -1990,6 +2000,7 @@ protected:
 
 public:
 obj4_default_abstract_impl();
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.obj4";  }
 };
 
 class obj5_default_abstract_impl : public virtual obj5, public virtual RobotRaconteur::RRObject_default_impl
@@ -2036,6 +2047,7 @@ virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > get_m2();
 
 virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > get_m3();
 
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.obj5";  }
 };
 
 

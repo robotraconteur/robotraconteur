@@ -308,6 +308,7 @@ virtual void set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRac
 
 virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<double > > get_m1();
 
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService2.baseobj";  }
 };
 
 class subobj_default_impl : public virtual subobj, public virtual RobotRaconteur::RRObject_default_impl
@@ -318,6 +319,7 @@ public:
 subobj_default_impl();
 virtual double add_val(double v);
 
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService2.subobj";  }
 };
 
 
@@ -354,6 +356,7 @@ virtual void set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRac
 
 virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<double > > get_m1();
 
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService2.baseobj";  }
 };
 
 class subobj_default_abstract_impl : public virtual subobj, public virtual RobotRaconteur::RRObject_default_impl
@@ -364,6 +367,7 @@ public:
 subobj_default_abstract_impl();
 virtual double add_val(double v);
 
+virtual std::string RRType() {return "com.robotraconteur.testing.TestService2.subobj";  }
 };
 
 
