@@ -3997,6 +3997,8 @@ namespace RobotRaconteurGen
 				w2 << MemoryDeclaration(m.get(), true) << ";" << endl << endl;
 			MEMBER_ITER3_END()
 
+			w2 << "virtual std::string RRType() {return \"" << d->Name + "." << (*e)->Name <<"\";  }" << endl;
+
 			w2 << "};" << endl << endl;
 		}
 	}
