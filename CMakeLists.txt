@@ -206,6 +206,7 @@ list(APPEND CPACK_SOURCE_IGNORE_FILES "/build/")
 list(APPEND CPACK_SOURCE_IGNORE_FILES "/\.cache")
 list(APPEND CPACK_SOURCE_IGNORE_FILES "/\.gitignore")
 list(APPEND CPACK_SOURCE_IGNORE_FILES "/\.travis.yml")
+list(APPEND CPACK_SOURCE_IGNORE_FILES "/\.clang-format")
 
 string(REPLACE "." ";" RobotRaconteurVersionList ${RobotRaconteurVersion})
 list(GET RobotRaconteurVersionList 0 CPACK_PACKAGE_VERSION_MAJOR)
