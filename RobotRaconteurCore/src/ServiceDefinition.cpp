@@ -3038,7 +3038,7 @@ namespace RobotRaconteur
 
 	ServiceDefinitionParseException::ServiceDefinitionParseException(const std::string& e) : ServiceDefinitionException(e)
 	{
-		ShortMessage;		
+		ShortMessage = e;		
 		ParseInfo.LineNumber = -1;
 		Message = ToString();
 		what_store = Message;
