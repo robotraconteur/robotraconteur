@@ -880,7 +880,7 @@ namespace RobotRaconteur
 
 					PyObject* item;
 
-					while (item = PyIter_Next(iter.get()))
+					while ((item = PyIter_Next(iter.get())))
 					{						
 						PyAutoPtr<PyObject> item1(item);
 
@@ -2481,7 +2481,7 @@ namespace RobotRaconteur
 
 		if (array_ == Py_None)
 		{
-			if (type1->ArrayType = DataTypes_ArrayTypes_none) throw DataTypeException("Scalar values must not be none");
+			if (type1->ArrayType == DataTypes_ArrayTypes_none) throw DataTypeException("Scalar values must not be none");
 			return boost::intrusive_ptr<RRBaseArray>();
 		}
 		
