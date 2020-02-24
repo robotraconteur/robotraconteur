@@ -504,6 +504,7 @@ namespace RobotRaconteur
 		static bool TryPostToThreadPool(RR_WEAK_PTR<RobotRaconteurNode> node, BOOST_ASIO_MOVE_ARG(HandlerType) h, bool shutdown_op=false)
 		{			
 			RR_SHARED_PTR<RobotRaconteurNode> node1 = node.lock();
+			if (!node1) return false;
 			{
 				boost::shared_lock<boost::shared_mutex> l(node1->thread_pool_lock);
 				if (!shutdown_op && node1->is_shutdown) return false;
