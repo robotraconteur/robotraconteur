@@ -18,19 +18,37 @@
 
 namespace RobotRaconteur
 {
+	/** @brief Synchronization event for thread synchronization. Resets automatically after
+	 * being triggered
+	 * 
+	 * Construct using RobotRaconteurNode::CreateAutoResetEvent()
+	 */
 	class ROBOTRACONTEUR_CORE_API AutoResetEvent : private boost::noncopyable
 	{
 	public:
-
+		
 		AutoResetEvent();
 		virtual ~AutoResetEvent();
 
+		/** @brief Set the event, releasing waiting threads */
 		virtual void Set();
 
+		/** @brief Reset the event */
 		virtual void Reset();
 
+		/** @brief Block the current thread infinitely until Set() is called */
 		virtual void WaitOne();
 
+		/**
+		 * @brief Block the current thread until Set() is called, or timeout
+		 * expires
+		 * 
+		 * Timeout is based on the RobotRaconteurNode time provider
+		 * 
+		 * @param timeout The timeout in milliseconds
+		 * @return true Set() was called
+		 * @return false The wait timed out
+		 */
 		virtual bool WaitOne(int32_t timeout);
 #ifdef ROBOTRACONTEUR_WINDOWS
 	private:
