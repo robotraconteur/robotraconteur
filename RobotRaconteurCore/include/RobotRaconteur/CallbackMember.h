@@ -1,16 +1,25 @@
-// Copyright 2011-2019 Wason Technology, LLC
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//    http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+/** 
+ * @file CallbackMember.h
+ * 
+ * @author Dr. John Wason
+ * 
+ * @copyright Copyright 2011-2020 Wason Technology, LLC
+ *
+ * @par License
+ * Software License Agreement (Apache License)
+ * @par
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * @par
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * @par
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 #pragma once
 
@@ -20,6 +29,18 @@
 
 namespace RobotRaconteur
 {
+	/**
+	 * @brief `callback` member type interface
+	 * 
+	 * The Callback class implements the `callback` member type. On the client side,
+	 * the client specifies a function for the callback using the SetFunction() function.
+	 * On the service side, the function GetFunction(RR_SHARED_PTR<Endpoint> endpoint) is used to retrieve
+	 * the proxy function to call a client callback.
+	 * 
+	 * This class is instantiated by the node. It should not be instantiated by the user.
+	 * 
+	 * @tparam T The type of the callback function. This is determined by the thunk source generator.
+	 */
 	template<typename T>
 	class Callback : private boost::noncopyable
 	{
@@ -35,13 +56,64 @@ namespace RobotRaconteur
 
 		virtual ~Callback() {}
 
+		/**
+		 * @brief Get the currently configured callback function on client side
+		 * 
+		 * @return T The currently configured function
+		 */
 		virtual T GetFunction() = 0;
+
+		/**
+		 * @brief Set the callback function reference on the client side
+		 * 
+		 * The callback function set will be made available to be called by
+		 * the service using a function proxy.
+		 * 
+		 * Use lambda function or boost::bind to create the callback function reference
+		 * 
+		 * @param value The callback function.
+		 */
 		virtual void SetFunction(T value) = 0;
 
-		virtual T GetClientFunction(RR_SHARED_PTR<Endpoint> e) = 0;
+		/**
+		 * @brief Get the proxy function to call the callback for the specified client on
+		 * the service side
+		 * 
+		 * This function returns a proxy to the callback on a specified client. The proxy
+		 * operates as a reverse function, sending parameters, executing the callback,
+		 * and receiving the results.
+		 * 
+		 * Because services can have multiple clients, it is necessary to specify which client
+		 * to call. This is done by passing the endpoint of the client connection to the 
+		 * endpoint parameter.
+		 * 
+		 * The endpoint of a client can be determined using the ServerEndpoint::CurrentEndpoint()
+		 * function during a `function` or `property` member call. The service can store this 
+		 * value, and use it to retrieve the callback proxy.
+		 * 
+		 * @param endpoint The endpoint of the client connection
+		 * @return T The callback proxy function
+		 */
+		virtual T GetClientFunction(RR_SHARED_PTR<Endpoint> endpoint) = 0;
 
-		virtual T GetClientFunction(uint32_t e) = 0;
+		/**
+		 * @brief Get the proxy function to call the callback for the specified client
+		 * on the service side
+		 * 
+		 * Same as GetClientFunction(RR_SHARED_PTR<Endpoint> endpoint), except the endpoint
+		 * is specified using the uint32_t LocalEndpoint id instead of the Endpoint
+		 * object.
+		 * 
+		 * @param endpoint The uint32_t LocalEndpoint id
+		 * @return T The callback proxy function
+		 */
+		virtual T GetClientFunction(uint32_t endpoint) = 0;
 
+		/**
+		 * @brief Get the member name of the callback
+		 * 
+		 * @return std::string 
+		 */
 		virtual std::string GetMemberName()
 		{
 			return m_MemberName;

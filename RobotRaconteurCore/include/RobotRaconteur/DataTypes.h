@@ -1,16 +1,25 @@
-// Copyright 2011-2019 Wason Technology, LLC
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//    http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+/** 
+ * @file DataTypes.h
+ * 
+ * @author Dr. John Wason
+ * 
+ * @copyright Copyright 2011-2020 Wason Technology, LLC
+ *
+ * @par License
+ * Software License Agreement (Apache License)
+ * @par
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * @par
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * @par
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 #include <string>
 #include <vector>
@@ -57,22 +66,72 @@
 
 namespace RobotRaconteur
 {
+	/**
+	 * @brief Complex double precision floating point number
+	 * 
+	 * 128-bit complex float 
+	 */
 	struct cdouble
 	{
-		double real; double imag;
+		/** @brief real component */
+		double real;
+		/** @brief imaginary component */
+		double imag;
+		/** @brief Construct a new cdouble with 0.0 real and imag */
 		cdouble() : real(0.0), imag(0.0) {}
+		/**
+		 * @brief Construct a new cdouble
+		 * 
+		 * @param r real component
+		 * @param i imaginary component
+		 */
 		cdouble(double r, double i) : real(r), imag(i) {}
 	};
+
+	/**
+	 * @brief Complex single precision floating point number
+	 * 
+	 * 64-bit complex float 
+	 */
 	struct cfloat
 	{
-		float real; float imag;
+		/** @brief real component */
+		float real; 
+		/** @brief imaginary component */
+		float imag;
+		/** @brief Construct a new csingle with 0.0 real and imag */
 		cfloat() : real(0.0), imag(0.0) {}
+		/**
+		 * @brief Construct a new cfloat
+		 * 
+		 * @param r real component
+		 * @param i imaginary component
+		 */
 		cfloat(float r, float i) : real(r), imag(i) {}
 	};
+
+	/**
+	 * @brief Logical boolean represented using 8 bits
+	 * 
+	 * C++ does not have a standard 8 bit representation for boolean. Use
+	 * this struct for booleans with Robot Raconteur messages.	 * 
+	 */
 	struct rr_bool
 	{
+		/**
+		 * @brief The vaue of the boolean
+		 * 
+		 * 0 for `false`, >0 for `true` 
+		 */
 		uint8_t value;
+
+		/** @brief Construct a new `false` rr_bool */
 		rr_bool() : value(0) {}
+		/**
+		 * @brief Construct a new rr_bool object
+		 * 
+		 * @param b initial logical value
+		 */
 		rr_bool(uint8_t b) : value(b) {}
 	};
 	
@@ -129,16 +188,42 @@ namespace RobotRaconteur
 		}
 	};
 
+	/**
+	 * @brief Dynamic cast a RR_SHARED_PTR type. Throws DataTypeMismatchException if cast
+	 * is invalid instead of returning null
+	 * 
+	 * @tparam T Output cast pointer type
+	 * @tparam U Input pointer type
+	 * @param objin The object to cast
+	 * @return RR_SHARED_PTR<T> The object dynamically cast to RR_SHARED_PTR of type T
+	 */
 	template<typename T, typename U> static RR_SHARED_PTR<T> rr_cast(const RR_SHARED_PTR<U>& objin)
 	{
 		return rr_cast_support<T, U>::rr_cast(objin);
 	}
 
+	/**
+	 * @brief Dynamic cast a RR_INTRUSIVE_PTR type. This is used to cast value types stored
+	 * using intrusive pointers. Throws DataTypeMismatchException if cast
+	 * is invalid instead of returning null
+	 * 
+	 * @tparam T Output cast pointer type
+	 * @tparam U Input pointer type
+	 * @param objin The object to cast
+	 * @return RR_INTRUSIVE_PTR<T> The object dynamically cast to RR_INTRUSIVE_PTR of type T
+	 */
 	template<typename T, typename U> static RR_INTRUSIVE_PTR<T> rr_cast(const RR_INTRUSIVE_PTR<U>& objin)
 	{
 		return rr_cast_support<T, U>::rr_cast(objin);
 	}
 
+	/**
+	 * @brief Base class for all Robot Raconteur objects
+	 * 
+	 * RRObject is always stored in RR_SHARED_PTR smart pointers. Allocating
+	 * on stack or without the RR_SHARED_PTR smart pointer is undefined. RR_MAKE_SHARED
+	 * should always be used to allocate subclasses of RRObject.	 * 
+	 */
 	class ROBOTRACONTEUR_CORE_API RRObject : boost::noncopyable
 	{
 	public:
@@ -146,9 +231,23 @@ namespace RobotRaconteur
 
 		virtual ~RRObject() {}
 
+		/**
+		 * @brief Gets the type of the object as a string. This string is in
+		 * C++ format, using two colons to separate namespaces instead of dots.
+		 * 
+		 * @return std::string 
+		 */
 		virtual std::string RRType()=0;
 	};
 
+	/**
+	 * @brief Base class for all Robot Raconteur value types (except primitives)
+	 * 
+	 * RRValue is always stored in an RR_INTRUSIVE_PTR container. Allocating on the
+	 * stack is undefined. RRValue extends boost::intrusive_ref_counter to support
+	 * RR_INTRUSIVE_PTR
+	 * 
+	 */
 	class ROBOTRACONTEUR_CORE_API RRValue : public boost::intrusive_ref_counter<RRValue>, boost::noncopyable
 	{
 	public:
@@ -276,6 +375,10 @@ namespace RobotRaconteur
 		return lhs.to_string() + rhs;
 	}
 
+	/**
+	 * @brief Base class for types that can be stored in MessageElement
+	 * 
+	 */
 	class ROBOTRACONTEUR_CORE_API  MessageElementData : public RRValue
 	{
 	public:
@@ -287,31 +390,46 @@ namespace RobotRaconteur
 	template<typename T>
 	class RRArray;
 
+	/**
+	 * @brief Convert a scalar number into an array with one element
+	 * 
+	 * @tparam T The type of the number
+	 * @param value The value of the number
+	 * @return RR_INTRUSIVE_PTR<RRArray<T> > The new array with one element
+	 */
 	template<typename T>
 	static RR_INTRUSIVE_PTR<RRArray<T> > ScalarToRRArray(T value);
 
+	/**
+	 * @brief Convert an array with one element into a scalar
+	 * 
+	 * @tparam T The type of the number
+	 * @param value The array with one element
+	 * @return T The scalar value of the first element in the array
+	 */
 	template<typename T>
 	static T RRArrayToScalar(RR_INTRUSIVE_PTR<RRArray<T> > value);
 
 
+	/**
+	 * @brief Convert a string to an array of characters
+	 * 
+	 * This function creates a new copy of the data stored in the returned array
+	 * 
+	 * @param str The string t convert
+	 * @return RR_INTRUSIVE_PTR<RRArray<char> >
+	 */
 	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRArray<char> > stringToRRArray(boost::string_ref str);
 
+	/**
+	 * @brief Convert an array of characters into std::string
+	 * 
+	 * This function creates a new copy of the data stored in the returned std::string.
+	 * 
+	 * @param arr The array of characters
+	 * @return std::string 
+	 */
 	ROBOTRACONTEUR_CORE_API std::string RRArrayToString(RR_INTRUSIVE_PTR<RRArray<char> > arr);
-
-
-	
-
-#ifdef ROBOTRACONTEUR_USE_WSTRING
-	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRArray<char> > wstringToRRArray(const std::wstring& str);
-
-	ROBOTRACONTEUR_CORE_API std::wstring RRArrayToWString(RR_INTRUSIVE_PTR<RRArray<char> > arr);
-
-	// Convert a wide Unicode string to an UTF8 string
-	ROBOTRACONTEUR_CORE_API std::string utf8_encode(const std::wstring &wstr);
-
-	// Convert an UTF8 string to a wide Unicode String
-	ROBOTRACONTEUR_CORE_API std::wstring utf8_decode(boost::string_ref str);
-#endif
 
 
 	template <typename T> class RRPrimUtil  
@@ -370,19 +488,6 @@ namespace RobotRaconteur
 
 	};
 
-#ifdef ROBOTRACONTEUR_USE_WSTRING
-
-	template<> class RRPrimUtil<std::wstring>
-	{
-	public:
-		static DataTypes GetTypeID() {return DataTypes_string_t;} 
-		static RR_INTRUSIVE_PTR<RRValue> PrePack(std::wstring val) {return rr_cast<RRValue>(wstringToRRArray(val));} 
-		static std::wstring PreUnpack(RR_INTRUSIVE_PTR<RRValue> val) {return RRArrayToWString(rr_cast<RRArray<char> >(val));} 
-
-		typedef RR_SHARED_PTR<RRArary<wchar_t> > BoxedType;
-	};
-#endif
-
 #define RRPrimUtilNumeric(x,code) \
 	template<> class RRPrimUtil<x> \
 	{ \
@@ -416,6 +521,14 @@ namespace RobotRaconteur
 	ROBOTRACONTEUR_CORE_API bool IsTypeRRArray(DataTypes type);
 	ROBOTRACONTEUR_CORE_API bool IsTypeNumeric(DataTypes type);
 
+	/**
+	 * @brief Base class for numeric and character array value types
+	 * 
+	 * Arrays should be allocated using AllocateRRArray<T>(), 
+	 * AttachRRArray<T>(), AttachRRArrayCopy<T>(), AllocateRRArrayByType<T>(),
+	 * or AllocateEmptyRRArray<T>() 
+	 * 
+	 */
 	class ROBOTRACONTEUR_CORE_API RRBaseArray : public MessageElementData
 	{
 	public:
@@ -429,16 +542,48 @@ namespace RobotRaconteur
 
 		virtual ~RRBaseArray() {}
 
+		/**
+		 * @brief Get the number of elements in the array
+		 * 
+		 * @return size_t 
+		 */
 		virtual size_t size()=0;
 		
 		virtual std::string RRType();
 
+		/**
+		 * @brief Get a void pointer to the contained array
+		 * 
+		 * @return void* 
+		 */
 		virtual void* void_ptr()=0;
 
+		/**
+		 * @brief Get the number of bytes per element of the array
+		 * 
+		 * @return size_t 
+		 */
 		virtual size_t ElementSize()=0;
 		
 	};
 
+	/**
+	 * @brief Numeric primitive or character array value type
+	 * 
+	 * This class stores a numeric primitive or character array. Arrays should 
+	 * always be  allocated using AllocateRRArray<T>(), 
+	 * AttachRRArray<T>(), AttachRRArrayCopy<T>(), AllocateRRArrayByType<T>(),
+	 * or AllocateEmptyRRArray<T>()
+	 * 
+	 * Valid values for T are `rr_bool`, `double`, `float`, `int8_t`, `uint8_t`, `int16_t`,
+	 * `uint16_t`, `int32_t`, `uint32_t`, `int64_t`, `uint64_t`, `cdouble`,
+	 * `csingle`, or `char`. Attempts to use any other types will result in a compiler error.
+	 * 
+	 * RRArray must be stored in RR_INTRUSIVE_PTR. It will be 
+	 * deleted automatically when the reference count goes to zero.
+	 * 
+	 * @tparam T The type of the array elements
+	 */
 	template <typename T>
 	class  RRArray : public RRBaseArray
 	{
@@ -484,98 +629,145 @@ namespace RobotRaconteur
 		// C++ container support functions based on boost::array
 
 		// type definitions
+		/** value_type */
 		typedef T              value_type;
+		/** iterator */
 		typedef T*             iterator;
+		/** const_iterator */
 		typedef const T*       const_iterator;
+		/** reference */
 		typedef T&             reference;
+		/** const_reference */
 		typedef const T&       const_reference;
+		/** size_type */
 		typedef std::size_t    size_type;
+		/** difference_type */
 		typedef std::ptrdiff_t difference_type;
 
 		// iterator support
+
+		/** @brief returns an iterator to the beginning */
 		iterator        begin() { return data_; }
+		/** @brief returns an iterator to the beginning */
 		const_iterator  begin() const { return data_; }
+		/** @brief returns a const iterator to the beginning */
 		const_iterator cbegin() const { return data_; }
 
+		/** @brief returns an iterator to the end */
 		iterator        end() { return data_ + element_count; }
+		/** @brief returns an iterator to the end */
 		const_iterator  end() const { return data_ + element_count; }
+		/** @brief returns a const iterator to the end */
 		const_iterator cend() const { return data_ + element_count; }
+
+		/** reverse_iterator */
 		typedef boost::reverse_iterator<iterator> reverse_iterator;
+		/** const_reverse_iterator */
 		typedef boost::reverse_iterator<const_iterator> const_reverse_iterator;
 
+		/** @brief returns a reverse iterator to the beginning */
 		reverse_iterator rbegin() { return reverse_iterator(end()); }
+		/** @brief returns a reverse iterator to the beginning */
 		const_reverse_iterator rbegin() const {
 			return const_reverse_iterator(end());
 		}
+		/** @brief returns a reverse iterator to the beginning */
 		const_reverse_iterator crbegin() const {
 			return const_reverse_iterator(end());
 		}
 
+		/** @brief returns a reverse iterator to the end */
 		reverse_iterator rend() { return reverse_iterator(begin()); }
+		/** @brief returns a reverse iterator to the end */
 		const_reverse_iterator rend() const {
 			return const_reverse_iterator(begin());
 		}
+		/** @brief returns a reverse iterator to the end */
 		const_reverse_iterator crend() const {
 			return const_reverse_iterator(begin());
 		}
 
-		// operator[]
+		/** @brief access specified element */
 		reference operator[](size_type i)
 		{
 			BOOST_ASSERT_MSG(i < element_count, "out of range");
 			return data_[i];
 		}
 
+		/** @brief access specified element */
 		const_reference operator[](size_type i) const
 		{
 			BOOST_ASSERT_MSG(i < element_count, "out of range");
 			return data_[i];
 		}
 
-		// at() with range check
+		/** @brief access specified element with bounds checking */
 		reference at(size_type i) { rangecheck(i); return data_[i]; }
+		/** @brief access specified element with bounds checking */
 		const_reference at(size_type i) const { rangecheck(i); return data_[i]; }
 
-		// front() and back()
+		/** @brief access the first element */
 		reference front()
 		{
 			return data_[0];
 		}
 
+		/** @brief access the first element */
 		const_reference front() const
 		{
 			return data_[0];
 		}
 
+		/** @brief access the last element */
 		reference back()
 		{
 			return data_[element_count - 1];
 		}
 
+		/** @brief access the last element */
 		const_reference back() const
 		{
 			return data_[element_count - 1];
 		}
 
+		/** @brief checks whether the container is empty */
 		bool empty() { return false; }
+		/** @brief returns the maximum possible number of elements */
 		size_type max_size() { return element_count; }
 
-		// direct access to data (read-only)
+		/** @brief direct access to the underlying array */
 		const T* data() const { return data_; }
+		/** @brief direct access to the underlying array */
 		T* data() { return data_; }
 
-		// use array as C array (direct read/write access to data)
 		T* c_array() { return data_; }
 
-		// assignment with type conversion
+		/**
+		 * @brief assignment with type conversion
+		 * 
+		 * @tparam T2 The type of the input array
+		 * @param rhs The input array to assign (and copy) to this array
+		 * @return RRArray<T>& reference to this array
+		 */
 		template <typename T2>
 		RRArray<T>& operator= (const RRArray<T2>& rhs) {
 			std::copy(rhs.begin(), rhs.end(), begin());
 			return *this;
 		}
 
-		// assign one value to all elements
-		void assign(const T& value) { fill(value); }    // A synonym for fill
+		/**
+		 * @brief Assign one value to all elements
+		 * 
+		 * Synonynm for fill()
+		 * 
+		 * @param value The value to assign all elements
+		 */		
+		void assign(const T& value) { fill(value); }
+		/**
+		 * @brief Fill array with value
+		 * 
+		 * @param value The value to fill array with
+		 */
 		void fill(const T& value)
 		{
 			std::fill_n(begin(), size(), value);
@@ -643,6 +835,16 @@ namespace RobotRaconteur
 		}
 	};
 
+	/**
+	 * @brief Map container value type
+	 * 
+	 * Implementation of map container types for Robot Raconteur. Must be stored
+	 * using RR_INTRUSIVE_PTR. Use AllocateEmptyRRMap() to allocate. It will be
+	 * deleted automatically when the reference count goes to zero.
+	 *  
+	 * @tparam K Map key type. Must be int32_t or std::string
+	 * @tparam T Stored value type. Must extend RRValue
+	 */
 	template<typename K, typename T>
 	class RRMap : public RRValue
 	{
@@ -667,52 +869,111 @@ namespace RobotRaconteur
 
 		// C++ container support based on boost::container::map
 
+		/** key_type */
 		typedef typename std::map<K, RR_INTRUSIVE_PTR<T> >::key_type                   key_type;
+		/** mapped_type */
 		typedef typename std::map<K, RR_INTRUSIVE_PTR<T> >::mapped_type                mapped_type;
+		/** value_type */
 		typedef typename std::map<K, RR_INTRUSIVE_PTR<T> >::value_type                 value_type;
+		/** pointer */
 		typedef typename std::map<K, RR_INTRUSIVE_PTR<T> >::pointer                    pointer;
+		/** const_pointer */
 		typedef typename std::map<K, RR_INTRUSIVE_PTR<T> >::const_pointer              const_pointer;
+		/** reference */
 		typedef typename std::map<K, RR_INTRUSIVE_PTR<T> >::reference                  reference;
+		/** const_reference */
 		typedef typename std::map<K, RR_INTRUSIVE_PTR<T> >::const_reference            const_reference;
+		/** size_type */
 		typedef typename std::map<K, RR_INTRUSIVE_PTR<T> >::size_type                  size_type;
+		/** iterator */
 		typedef typename std::map<K, RR_INTRUSIVE_PTR<T> >::iterator                   iterator;
+		/** const_iterator */
 		typedef typename std::map<K, RR_INTRUSIVE_PTR<T> >::const_iterator             const_iterator;
+		/** reverse_iterator */
 		typedef typename std::map<K, RR_INTRUSIVE_PTR<T> >::reverse_iterator           reverse_iterator;
+		/** const_reverse_iterator */
 		typedef typename std::map<K, RR_INTRUSIVE_PTR<T> >::const_reverse_iterator     const_reverse_iterator;
 
+		/** @brief returns an iterator to the beginning */
 		iterator begin() { return map.begin(); }
+		/** @brief returns an iterator to the beginning */
+		const_iterator cbegin() const { return map.cbegin(); }
+		/** @brief returns an iterator to the beginning */
 		const_iterator begin() const { return map.begin(); }
+		/** @brief returns an iterator to the end */
 		iterator end() { return map.end(); }
+		/** @brief returns an iterator to the end */
+		const_iterator cend() const { return map.end(); }
+		/** @brief returns an iterator to the end */
 		const_iterator end() const { return map.end(); }
+		/** @brief returns a reverse iterator to the beginning */
 		reverse_iterator rbegin() { return map.rbegin(); };
+		/** @brief returns a reverse iterator to the beginning */
+		const_reverse_iterator crbegin() const { return map.crbegin(); };
+		/** @brief returns a reverse iterator to the beginning */
 		const_reverse_iterator rbegin() const { return map.rbegin(); };
+		/** @brief returns a reverse iterator to the end */
 		reverse_iterator rend() { return map.rend(); }
+		/** @brief returns a reverse iterator to the end */
+		const_reverse_iterator crend() const { return map.rend(); }
+		/** @brief returns a reverse iterator to the end */
 		const_reverse_iterator rend() const { return map.rend(); }
+		/** @brief checks whether the container is empty */
 		bool empty() const { return map.empty(); }
+		/** @brief returns the number of elements */
 		size_type size() const { return map.size(); }
+		/** @brief returns the maximum possible number of elements */
 		size_type max_size() const { return map.max_size(); };
+		/** @brief access or insert the specified element */
 		mapped_type& operator[](const key_type &k) { return map[k]; }
+		/** @brief access specified element with bounds checking */
 		mapped_type& at(const key_type& k) { return map.at(k); }
+		/** @brief access specified element with bounds checking */
 		const mapped_type& at(const key_type& k) const { return map.at(k); }
+		/** @brief inserts elements */
 		std::pair<iterator, bool> insert(const value_type& x) { return map.insert(x); }
+		/** @brief inserts elements */
 		iterator insert(const_iterator p, const value_type& x) { return map.insert(x); }
+		/** @brief inserts elements */
 		template <class InputIterator>
 		void insert(InputIterator first, InputIterator last) { map.insert(first,last); }
+		/** @brief erases element */
 		void erase(iterator p) { map.erase(p); }
+		/** @brief erases element */
 		size_type erase(const key_type& x) { return map.erase(x); }
+		/** @brief erases element */
 		void erase(iterator first, iterator last) { map.erase(first,last); }
+		/** @brief clears the contents */
 		void clear() { map.clear(); }
+		/** @brief finds element with the specified key */
 		iterator find(const key_type& x) { return map.find(x); }
+		/** @brief finds element with the specified key */
 		const_iterator find(const key_type& x) const { return map.find(x); }
+		/** @brief returns the number of elemnts matching the specified key */
 		size_type count(const key_type& x) const { return map.count(x); }
-
-		// WARNING: this may change, use with caution!
+		
+		/**
+		 * @brief Get the underlying storage container
+		 * 
+		 * WARNING: this may change, use with caution!
+		 * 
+		 * @return std::map<K, RR_INTRUSIVE_PTR<T> >& 
+		 */
 		typename std::map<K, RR_INTRUSIVE_PTR<T> >& GetStorageContainer()
 		{
 			return map;
 		}
 	};
 		
+	/**
+	 * @brief List container value type
+	 * 
+	 * Implementation of list container types for Robot Raconteur. Must be stored
+	 * using RR_INTRUSIVE_PTR. Use AllocateEmptyRRList() to allocate. It will be
+	 * released automatically when the reference count goes to zero.
+	 *  
+	 * @tparam T Stored value type. Must extend RRValue
+	 */
 	template<typename T>
 	class RRList : public RRValue
 	{
@@ -738,48 +999,96 @@ namespace RobotRaconteur
 
 		// C++ container support based on boost::container::list
 
+		/** value_type */
 		typedef RR_INTRUSIVE_PTR<T>                                         value_type;
+		/** pointer */
 		typedef typename std::list<RR_INTRUSIVE_PTR<T> >::pointer           pointer;
+		/** const_pointer */
 		typedef typename std::list<RR_INTRUSIVE_PTR<T> >::const_pointer     const_pointer;
+		/** reference */
 		typedef typename std::list<RR_INTRUSIVE_PTR<T> >::reference         reference;
+		/** const_reference */
 		typedef typename std::list<RR_INTRUSIVE_PTR<T> >::const_reference   const_reference;
+		/** size_type */
 		typedef typename std::list<RR_INTRUSIVE_PTR<T> >::size_type         size_type;
+		/** difference_type */
 		typedef typename std::list<RR_INTRUSIVE_PTR<T> >::difference_type   difference_type;
+		/** iterator */
 		typedef typename std::list<RR_INTRUSIVE_PTR<T> >::iterator                   iterator;
+		/** const_iterator */
 		typedef typename std::list<RR_INTRUSIVE_PTR<T> >::const_iterator             const_iterator;
+		/** reverse_iterator */
 		typedef typename std::list<RR_INTRUSIVE_PTR<T> >::reverse_iterator           reverse_iterator;
-		typedef typename std::list<RR_INTRUSIVE_PTR<T> >::const_reverse_iterator     const_reverse_iterator;
+		/** const_reverse_iterator */
+		typedef typename std::list<RR_INTRUSIVE_PTR<T> >::const_reverse_iterator     const_reverse_iterator;		
 
-		iterator begin() { return list.begin(); }
+		/** @brief returns an iterator to the beginning */
+		iterator begin() { return list.begin(); }		
+		/** @brief returns an iterator to the beginning */
 		const_iterator begin() const { return list.begin(); }
-		iterator end() { return list.end(); }
+		/** @brief returns an iterator to the end */
+		iterator end() { return list.end(); }		
+		/** @brief returns an iterator to the end */
 		const_iterator end() const { return list.end(); }
-		reverse_iterator rbegin() { return list.rbegin(); }
+		/** @brief returns a reverse iterator to the beginning */
+		reverse_iterator rbegin() { return list.rbegin(); }		
+		/** @brief returns a reverse iterator to the beginning */
 		const_reverse_iterator rbegin() const { return list.rbegin(); }
+		/** @brief returns a reverse iterator to the end */
 		reverse_iterator rend() { return list.rend(); }
+		/** @brief returns a reverse iterator to the end */
+		const_reverse_iterator crend() const { return list.crend(); }
+		/** @brief returns a reverse iterator to the end */
 		const_reverse_iterator rend() const { return list.rend(); }
+		/** @brief returns an iterator to the beginning */
 		const_iterator cbegin() const { return list.cbegin(); }
+		/** @brief returns an iterator to the end */
 		const_iterator cend() const { return list.cend(); }
+		/** @brief returns a reverse iterator to the beginning */
 		const_reverse_iterator const crbegin() { return list.crbegin(); }
+		/** @brief returns a reverse iterator to the end */
 		const_reverse_iterator const crend() { return list.crend(); }
+		/** @brief checks whether the container is empty */
 		bool empty() const { return list.empty(); }
+		/** @brief returns the number of elements */
 		virtual size_type size() const { return list.size(); }
+		/** @brief returns the maximum possible number of elements */
 		size_type max_size() const { return list.max_size(); }
+		/** @brief access the first element */
 		reference front() { return list.front(); }
+		/** @brief access the first element */
 		const_reference front() const { return list.front(); }
+		/** @brief access the last element */
 		reference back() { return list.back(); }
+		/** @brief access the last element */
 		const_reference back() const { return list.back(); }
+		/** @brief inserts an element at the beginning */
 		void push_front(const RR_INTRUSIVE_PTR<T> &x) { list.push_front(x); }
+		/** @brief adds an element to the end */
 		void push_back(const RR_INTRUSIVE_PTR<T> &x) { list.push_back(x); }
+		/** @brief removes the first element */
 		void pop_front() { list.pop_front(); }
+		/** @brief removes the last element */
 		void pop_back() { list.pop_back(); }
+		/** @brief inserts element */
 		iterator insert(const_iterator p, const RR_INTRUSIVE_PTR<T> &x) { list.insert(p, x); }
+		/** @brief erases element */
 		iterator erase(const_iterator p) { list.erase(p); }
+		/** @brief erases element */
 		iterator erase(const_iterator first, const_iterator last) { list.erase(first, last); }
+		/** @brief clears the contents */
 		void clear() { list.clear(); }
+		/** @brief removes elements equal to value */
 		void remove(const RR_INTRUSIVE_PTR<T>& value) { list.remove(value); }
 
-		// WARNING: this may change, use with caution!
+		
+		/**
+		 * @brief Get the underlying storage container
+		 * 
+		 * WARNING: this may change, use with caution!
+		 * 
+		 * @return std::list<RR_INTRUSIVE_PTR<T> >& 
+		 */
 		typename std::list<RR_INTRUSIVE_PTR<T> >& GetStorageContainer()
 		{
 			return list;
@@ -787,6 +1096,14 @@ namespace RobotRaconteur
 
 	};
 		
+	/**
+	 * @brief Base class for user defined `structure` value types
+	 * 
+	 * Structure types are defined in service definition (robdef)
+	 * files. The implementation for these structures is generated
+	 * as part of the thunk source.
+	 * 
+	 */
 	class ROBOTRACONTEUR_CORE_API RRStructure : public RRValue
 	{
 	public:
@@ -794,6 +1111,21 @@ namespace RobotRaconteur
 
 	};
 
+	/**
+	 * @brief Allocate a numeric primitive or character array with the 
+	 * specified type and length
+	 * 
+	 * This function does not initialize the returned array. The contents
+	 * will not be set to zero.
+	 * 
+	 * Valid values for T are `rr_bool`, `double`, `float`, `int8_t`, `uint8_t`, `int16_t`,
+	 * `uint16_t`, `int32_t`, `uint32_t`, `int64_t`, `uint64_t`, `cdouble`,
+	 * `csingle`, or `char`. Attempts to use any other types will result in a compiler error.
+	 * 
+	 * @tparam T The type of the array elements
+	 * @param length The length of the returned array (element count)
+	 * @return RR_INTRUSIVE_PTR<RRArray<T> > The allocated array
+	 */
 	template<typename T>
 	static RR_INTRUSIVE_PTR<RRArray<T> > AllocateRRArray(size_t length)
 	{
@@ -801,12 +1133,42 @@ namespace RobotRaconteur
 		return RR_INTRUSIVE_PTR<RRArray<T> >(new RRArray<T>(data,length,true));	
 	}
 
+	/**
+	 * @brief Allocates an array object and attaches to existing numeric primitive or character
+	 * array pointer
+	 * 
+	 * This function will attach to an existing numeric array pointer, and provide read/write access
+	 * to its contents. If owned is true, the array will be deleted using `delete[]` when
+	 * the reference count of the array object goes to zero.
+	 * 
+	 * Valid values for T are `rr_bool`, `double`, `float`, `int8_t`, `uint8_t`, `int16_t`,
+	 * `uint16_t`, `int32_t`, `uint32_t`, `int64_t`, `uint64_t`, `cdouble`, 
+	 * `csingle`, or `char`. Attempts to use any other types will result in a compiler error.
+	 * 
+	 * @tparam T The type of the array elements
+	 * @param data Pointer to existing numeric primitive or character array
+	 * @param length Length of existing array (element count)
+	 * @param owned true if the data lifetime is owned by the new array object
+	 * @return RR_INTRUSIVE_PTR<RRArray<T> > The allocated array object
+	 */
 	template<typename T>
 	static RR_INTRUSIVE_PTR<RRArray<T> > AttachRRArray(T* data,size_t length,bool owned)
 	{	
 		return RR_INTRUSIVE_PTR<RRArray<T> >(new RRArray<T>(data,length,owned));		
 	}
 
+	/**
+	 * @brief Allocates an array object and copies existing numeric
+	 * 
+	 * Valid values for T are `rr_bool`, `double`, `float`, `int8_t`, `uint8_t`, `int16_t`,
+	 * `uint16_t`, `int32_t`, `uint32_t`, `int64_t`, `uint64_t`, `cdouble`,
+	 * `csingle`, or `char`. Attempts to use any other types will result in a compiler error.
+	 * 
+	 * @tparam T The type of the array elements
+	 * @param data Pointer to existing numeric
+	 * @param length Length of existing array (element count)
+	 * @return RR_INTRUSIVE_PTR<RRArray<T> > The allocated array object with copied data
+	 */
 	template<typename T>
 	static RR_INTRUSIVE_PTR<RRArray<T> > AttachRRArrayCopy(const T* data,const size_t length)
 	{
@@ -815,8 +1177,39 @@ namespace RobotRaconteur
 		return RR_INTRUSIVE_PTR<RRArray<T> >(new RRArray<T>(data_copy,length,true));		
 	}
 
+	/**
+	 * @brief Allocate an RRBaseArray by type code
+	 * 
+	 * This function does not initialize the returned array. The contents
+	 * will not be set to zero.
+	 * 
+	 * Valid values for type are `DataTypes_bool_t`, `DataTypes_double_t`, 
+	 * `DataTypes_single_t`, `DataTypes_int8_t`, `DataTypes_uint8_t`, 
+	 * `DataTypes_int16_t`, `DataTypes_uint16_t`, `DataTypes_int32_t`, 
+	 * `DataTypes_uint32_t`, `DataTypes_int64_t`, `DataTypes_uint64_t`, 
+	 * `DataTypes_cdouble_t`, or`DataTypes_csingle_t`. Attempts to use any other 
+	 * types will result in an InvalidArgumentException.
+	 * 
+	 * @param type The type code
+	 * @param length The length of the returned array (element count)
+	 * @return RR_INRUSIVE_PTR<RRBaseArray> The allocated array 
+	 */
 	ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRBaseArray> AllocateRRArrayByType(DataTypes type, size_t length);
 
+	/**
+	 * @brief Allocate a numeric primitive or character array with the 
+	 * specified type and length and initialize to zero
+	 * 
+	 * All elements are initialized to zero
+	 * 
+	 * Valid values for T are `rr_bool`, `double`, `float`, `int8_t`, `uint8_t`, `int16_t`,
+	 * `uint16_t`, `int32_t`, `uint32_t`, `int64_t`, `uint64_t`, `cdouble`,
+	 * `csingle`, or `char`. Attempts to use any other types will result in a compiler error.
+	 * 
+	 * @tparam T The type of the array elements
+	 * @param length The length of the returned array (element count)
+	 * @return RR_INTRUSIVE_PTR<RRArray<T> > The allocated array
+	 */
 	template<typename T>
 	static RR_INTRUSIVE_PTR<RRArray<T> > AllocateEmptyRRArray(size_t length)
 	{
@@ -828,8 +1221,28 @@ namespace RobotRaconteur
 		return o;
 	}
 		
+	/**
+	 * @brief Get the number of bytes to store a numeric primitive scalar
+	 * 
+	 * Valid values for type are `DataTypes_bool_t`, `DataTypes_double_t`, 
+	 * `DataTypes_single_t`, `DataTypes_int8_t`, `DataTypes_uint8_t`, 
+	 * `DataTypes_int16_t`, `DataTypes_uint16_t`, `DataTypes_int32_t`, 
+	 * `DataTypes_uint32_t`, `DataTypes_int64_t`, `DataTypes_uint64_t`, 
+	 * `DataTypes_cdouble_t`, or`DataTypes_csingle_t`. Attempts to use any other 
+	 * types will result in a InvalidArgumentException.
+	 * 
+	 * @param type The numeric type
+	 * @return size_t The number of bytes 
+	 */
 	ROBOTRACONTEUR_CORE_API size_t RRArrayElementSize(DataTypes type);
     
+	/**
+	 * @brief Convert a scalar number into an array with one element
+	 * 
+	 * @tparam T The type of the number
+	 * @param value The value of the number
+	 * @return RR_INTRUSIVE_PTR<RRArray<T> > The new array with one element
+	 */
     template<typename T>
 	static RR_INTRUSIVE_PTR<RRArray<T> > ScalarToRRArray(T value)
 	{
@@ -838,6 +1251,13 @@ namespace RobotRaconteur
 		return AttachRRArray(data,1,true);
 	}
     
+	/**
+	 * @brief Convert an array with one element into a scalar
+	 * 
+	 * @tparam T The type of the number
+	 * @param value The array with one element
+	 * @return T The scalar value of the first element in the array
+	 */
 	template<typename T>
 	static T RRArrayToScalar(RR_INTRUSIVE_PTR<RRArray<T> > value)
 	{
@@ -852,6 +1272,19 @@ namespace RobotRaconteur
         
 	}
 
+	/**
+	 * @brief Convert an RRArray\<U> to a std::vector<Y>
+	 * 
+	 * This function creates a copy of the data in an alloctade RRArray<T>
+	 * 
+	 * boost::numeric_cast<Y>() is used to convert between numeric types
+	 * 
+	 * @tparam Y The type of the output std::vector elements
+	 * @tparam U The type of the input RRArray elements
+	 * @param in The input RRArray to be converted
+	 * @return std::vector<Y> The output std::vector filled with the values converted
+	 * from in
+	 */
 	template <typename Y,typename U>
 	static std::vector<Y> RRArrayToVector(RR_INTRUSIVE_PTR<RRArray<U> > in)
 	{
@@ -861,6 +1294,17 @@ namespace RobotRaconteur
 		return out;
 	}
 
+	/**
+	 * @brief Convert a std::vector<U> to an RRArray<Y>
+	 * 
+	 * boost::numeric_cast<Y>() is used to convert between numeric types
+	 * 
+	 * @tparam Y The type of the output RRArray elements
+	 * @tparam U The type of the input std::vector elements
+	 * @param in The input std::vector to be converted
+	 * @return RR_INTRUSIVE_PTR<RRArray<Y> > The output RRArray filled with the
+	 * values converted from in
+	 */
 	template <typename Y,typename U>
 	static RR_INTRUSIVE_PTR<RRArray<Y> > VectorToRRArray(std::vector<U> in)
 	{
@@ -869,6 +1313,19 @@ namespace RobotRaconteur
 		return out;
 	}
 
+
+	/**
+	 * @brief Convert an RRArray to a boost::array
+	 * 
+	 * boost::numeric_cast<Y>() is used to convert between numeric types
+	 * 
+	 * @tparam Y The type of the output boost::array elements
+	 * @tparam N The number of elements of the boost::array
+	 * @tparam U The type of the output boost::array elements to be converted
+	 * @param in The input RRArray to be converted
+	 * @return boost::array<Y,N> The output boost::array filled with values
+	 * converted from in
+	 */
 	template <typename Y,std::size_t N,typename U>
 	static boost::array<Y,N> RRArrayToArray(RR_INTRUSIVE_PTR<RRArray<U> > in)
 	{
@@ -879,6 +1336,17 @@ namespace RobotRaconteur
 		return out;
 	}
 
+	/**
+	 * @brief Convert an RRArray to a boost::array
+	 * 
+	 * boost::numeric_cast<Y>() is used to convert between numeric types
+	 * 
+	 * @tparam Y The type of the output boost::array elements
+	 * @tparam N The number of elements of the boost::array
+	 * @tparam U The type of the output boost::array elements to be converted
+	 * @param in The input RRArray to be converted
+	 * @param out The target boost::array for converted elements
+	 */
 	template <typename Y, std::size_t N, typename U>
 	static void RRArrayToArray(boost::array<Y, N>& out, RR_INTRUSIVE_PTR<RRArray<U> > in)
 	{
@@ -887,6 +1355,18 @@ namespace RobotRaconteur
 		for (size_t i = 0; i<N; i++) out[i] = boost::numeric_cast<Y>((*in)[i]);		
 	}
 
+	/**
+	 * @brief Convert a boost::array to an RRArray
+	 * 
+	 * boost::numeric_cast<Y>() is used to convert between numeric types
+	 * 
+	 * @tparam Y The type of the output RRArray elements
+	 * @tparam U The type of the input boost::array elements
+	 * @tparam N The number of elements in the input boost::array
+	 * @param in The input boost::array to be converted
+	 * @return RR_INTRUSIVE_PTR<RRArray<Y> > The output RRArray filled
+	 * with values converted from in
+	 */
 	template <typename Y, typename U,std::size_t N>
 	static RR_INTRUSIVE_PTR<RRArray<Y> > ArrayToRRArray(boost::array<U,N> in)
 	{
@@ -895,6 +1375,20 @@ namespace RobotRaconteur
 		return out;
 	}
 
+	/**
+	 * @brief Convert an RRArray to a boost::static_vector
+	 * 
+	 * boost::container::static vector is a vector with fixed maximum capacity N
+	 * 
+	 * boost::numeric_cast<Y>() is used to convert between numeric types
+	 * 
+	 * @tparam Y The type of the output boost::static_vector elements
+	 * @tparam N The maximum element capacity of the output vector
+	 * @tparam U The type of the input RRArray elements
+	 * @param in The input RRArray to be converted
+	 * @return boost::container::static_vector<Y, N> The output 
+	 * boost::container::static_vector with values converted from in
+	 */
 	template <typename Y, std::size_t N, typename U>
 	static boost::container::static_vector<Y, N> RRArrayToStaticVector(RR_INTRUSIVE_PTR<RRArray<U> > in)
 	{
@@ -905,6 +1399,20 @@ namespace RobotRaconteur
 		return out;
 	}
 
+	/**
+	 * @brief Convert an RRArray to a boost::static_vector
+	 * 
+	 * boost::container::static vector is a vector with fixed maximum capacity N
+	 * 
+	 * boost::numeric_cast<Y>() is used to convert between numeric types
+	 * 
+	 * @tparam Y The type of the output boost::static_vector elements
+	 * @tparam N The maximum element capacity of the output vector
+	 * @tparam U The type of the input RRArray elements
+	 * @param out The target boost::container::static_vector for converted
+	 * elements
+	 * @param in The input RRArray to be converted	 
+	 */
 	template <typename Y, std::size_t N, typename U>
 	static void RRArrayToStaticVector(boost::container::static_vector<Y, N>& out, RR_INTRUSIVE_PTR<RRArray<U> > in)
 	{
@@ -914,6 +1422,20 @@ namespace RobotRaconteur
 		for (size_t i = 0; i<in->size(); i++) out[i] = boost::numeric_cast<Y>((*in)[i]);		
 	}
 
+	/**
+	 * @brief Convert a boost::container::static_vector to an RRArray
+	 * 
+	 * boost::container::static vector is a vector with fixed maximum capacity N
+	 * 
+	 * boost::numeric_cast<Y>() is used to convert between numeric types
+	 * 
+	 * @tparam Y The type of the input RRArray elements
+	 * @tparam U The type of the output boost::static_vector elements
+	 * @tparam N The maximum element capacity of the input vector
+	 * @param in The input boost::container::static_vector to be converted
+	 * @return RR_INTRUSIVE_PTR<RRArray<Y> > The output 
+	 * RRArray with values converted from in
+	 */
 	template <typename Y, typename U, std::size_t N>
 	static RR_INTRUSIVE_PTR<RRArray<Y> > StaticVectorToRRArray(boost::container::static_vector<U, N> in)
 	{
@@ -922,10 +1444,37 @@ namespace RobotRaconteur
 		return out;
 	}
 
+	/**
+	 * @brief Convert a string vector to a RRList
+	 * 
+	 * This function creates copies of the strings
+	 * 
+	 * @param string_vector The input string vector to be converted
+	 * @return RR_INTRUSIVE_PTR<RRList<RRArray<char> > > The converted RRList
+	 */
 	RR_INTRUSIVE_PTR<RRList<RRArray<char> > > stringVectorToRRList(const std::vector<std::string>& string_vector);
 
+	/**
+	 * @brief Convert a RRList containing strings to a string vector
+	 * 
+	 * This function creates copies of the strings
+	 * 
+	 * @param list The input RRList to be converted
+	 * @return std::vector<std::string> The converted string vector
+	 */
 	std::vector<std::string> RRListToStringVector(RR_INTRUSIVE_PTR<RRList<RRArray<char> > > list);
 
+	/**
+	 * @brief Checks if a value RR_INTRUSIVE_PTR is null
+	 * 
+	 * If the value is null, throws NullValueException
+	 * 
+	 * Returns reference to ptr
+	 * 
+	 * @tparam T The type of the value contained in RR_INTRUSIVE_PTR
+	 * @param ptr The value to check
+	 * @return RR_INTRUSIVE_PTR<T>& Reference to ptr
+	 */
 	template <typename T>
 	RR_INTRUSIVE_PTR<T>& rr_null_check(RR_INTRUSIVE_PTR<T>& ptr)
 	{
@@ -936,6 +1485,19 @@ namespace RobotRaconteur
 		return ptr;
 	}
 
+	/**
+	 * @brief Checks if a value RR_INTRUSIVE_PTR is null with exception message
+	 *  
+	 * If the value is null, throws NullValueException with the message specified
+	 * in msg
+	 * 
+	 * Returns reference to ptr
+	 * 
+	 * @tparam T The type of the value contained in RR_INTRUSIVE_PTR
+	 * @param ptr The value to check
+	 * @param msg Error message for NullValueException if ptr is null
+	 * @return RR_INTRUSIVE_PTR<T>& Reference to ptr
+	 */
 	template <typename T>
 	RR_INTRUSIVE_PTR<T>& rr_null_check(RR_INTRUSIVE_PTR<T>& ptr, const char* msg)
 	{
@@ -946,6 +1508,17 @@ namespace RobotRaconteur
 		return ptr;
 	}
 
+	/**
+	 * @brief Checks if a value const RR_INTRUSIVE_PTR is null
+	 * 
+	 * If the value is null, throws NullValueException
+	 * 
+	 * Returns reference to ptr
+	 * 
+	 * @tparam T The type of the value contained in RR_INTRUSIVE_PTR
+	 * @param ptr The value to check
+	 * @return RR_INTRUSIVE_PTR<T>& Reference to ptr
+	 */
 	template <typename T>
 	const RR_INTRUSIVE_PTR<T>& rr_null_check(const RR_INTRUSIVE_PTR<T>& ptr)
 	{
@@ -956,6 +1529,19 @@ namespace RobotRaconteur
 		return ptr;
 	}
 
+	/**
+	 * @brief Checks if a value const RR_INTRUSIVE_PTR is null with exception message
+	 *  
+	 * If the value is null, throws NullValueException with the message specified
+	 * in msg
+	 * 
+	 * Returns reference to ptr
+	 * 
+	 * @tparam T The type of the value contained in RR_INTRUSIVE_PTR
+	 * @param ptr The value to check
+	 * @param msg Error message for NullValueException if ptr is null
+	 * @return RR_INTRUSIVE_PTR<T>& Reference to ptr
+	 */
 	template <typename T>
 	const RR_INTRUSIVE_PTR<T>& rr_null_check(const RR_INTRUSIVE_PTR<T>& ptr, const char* msg)
 	{
@@ -1008,7 +1594,13 @@ namespace RobotRaconteur
 		return a;
 	}
 
-
+	/**
+	 * @brief Base class for numeric multidimensional arrays
+	 * 
+	 * Multidimensional arrays should be allocated using 
+	 * AllocateRRMultiDimArray() or AllocateEmptyRRMultiDimArray()
+	 * 
+	 */
 	class ROBOTRACONTEUR_CORE_API RRMultiDimBaseArray : public RRValue
 	{
 	public:
@@ -1030,6 +1622,26 @@ namespace RobotRaconteur
 		ROBOTRACONTEUR_CORE_API RR_SHARED_PTR<MultiDimArray_CalculateCopyIndicesIter> MultiDimArray_CalculateCopyIndicesBeginIter(const std::vector<uint32_t>& mema_dims, const std::vector<uint32_t>& mema_pos, const std::vector<uint32_t>& memb_dims, const std::vector<uint32_t>& memb_pos, const std::vector<uint32_t>& count);
 	}
 
+	/**
+	 * @brief Numeric primitive multidimensional array value type
+	 * 
+	 * This class stores a numeric primitive multidimensional arrays. 
+	 * Multidimensional arrays are stored as a uint32_t array of
+	 * dimensions, and an array of the flattened elements. 
+	 * Arrays are stored in column major, or "Fortran" order.
+	 * 
+	 * Multidimensional arrays should be allocated using 
+	 * AllocateRRMultiDimArray() or AllocateEmptyRRMultiDimArray()
+	 * 
+	 * Valid values for T are `rr_bool`, `double`, `float`, `int8_t`, `uint8_t`, `int16_t`,
+	 * `uint16_t`, `int32_t`, `uint32_t`, `int64_t`, `uint64_t`, `cdouble`,
+	 * or `csingle`. Attempts to use any other types will result in a compiler error.
+	 * 
+	 * RRMultiDimArray must be stored in RR_INTRUSIVE_PTR. It will be 
+	 * deleted automatically when the reference count goes to zero.
+	 * 
+	 * @tparam T The type of the array elements
+	 */
 	template<typename T>
 	class RRMultiDimArray : public RRMultiDimBaseArray
 	{
@@ -1059,6 +1671,14 @@ namespace RobotRaconteur
 			return RRPrimUtil<T>::GetTypeID();
 		}
 
+		/**
+		 * @brief Retrieve a subset of an array
+		 * 
+		 * @param memorypos Position in array to read
+		 * @param buffer Buffer to store retrieved data
+		 * @param bufferpos Position within buffer to store data
+		 * @param count Count of data to retrieve
+		 */
 		virtual void RetrieveSubArray(std::vector<uint32_t> memorypos, RR_INTRUSIVE_PTR<RRMultiDimArray<T> > buffer, std::vector<uint32_t> bufferpos, std::vector<uint32_t> count)
 		{
 						
@@ -1077,6 +1697,14 @@ namespace RobotRaconteur
 
 		}
 
+		/**
+		 * @brief Assign a subset of an array
+		 * 
+		 * @param memorypos Position within array to store data
+		 * @param buffer Buffer to assign data from
+		 * @param bufferpos Position within buffer to assign from
+		 * @param count Count of data to assign
+		 */
 		virtual void AssignSubArray(std::vector<uint32_t> memorypos, RR_INTRUSIVE_PTR<RRMultiDimArray<T> > buffer, std::vector<uint32_t> bufferpos, std::vector<uint32_t> count)
 		{
 						
@@ -1152,13 +1780,29 @@ namespace RobotRaconteur
 		}
 	}
 
+	/**
+	 * @brief Allocate an empty multidimensional array with the
+	 * specified dimensions
+	 * 
+	 * The elements of the returned array are initialized to zero
+	 * 
+	 * @tparam T The element type of the array
+	 * @param dims The dimensions of the new multidimensional array
+	 * @return RR_INTRUSIVE_PTR<RRMultiDimArray<T> > The allocated multidimensional array
+	 */
 	template<typename T>
-	static RR_INTRUSIVE_PTR<RRMultiDimArray<T> > AllocateEmptyRRMultiDimArray(std::vector<uint32_t> length)
+	static RR_INTRUSIVE_PTR<RRMultiDimArray<T> > AllocateEmptyRRMultiDimArray(std::vector<uint32_t> dims)
 	{
-		uint32_t n_elems = boost::accumulate(length, 1, std::multiplies<uint32_t>());
-		return new RRMultiDimArray<T>(VectorToRRArray<uint32_t>(length), AllocateEmptyRRArray<T>(n_elems));
+		uint32_t n_elems = boost::accumulate(dims, 1, std::multiplies<uint32_t>());
+		return new RRMultiDimArray<T>(VectorToRRArray<uint32_t>(dims), AllocateEmptyRRArray<T>(n_elems));
 	}
 
+	/**
+	 * @brief Allocate an empty multidimensional array
+	 * 
+	 * @tparam T The element type of the array
+	 * @return RR_INTRUSIVE_PTR<RRMultiDimArray<T> > The allocated empty multidimensional array
+	 */
 	template<typename T>
 	static RR_INTRUSIVE_PTR<RRMultiDimArray<T> > AllocateEmptyRRMultiDimArray()
 	{
@@ -1167,48 +1811,115 @@ namespace RobotRaconteur
 		return new RRMultiDimArray<T>(VectorToRRArray<uint32_t>(length), AllocateEmptyRRArray<T>(0));
 	}
 
+	/**
+	 * @brief Allocate a multidimensional using existing dimensions and data array
+	 * 
+	 * This function does not copy the provided arrays
+	 * 
+	 * @tparam T The element type of the array
+	 * @param dims The existing 
+	 * @param array_ The existing flattened array
+	 * @return RR_INTRUSIVE_PTR<RRMultiDimArray<T> > The allocated multidimensional array
+	 */
 	template<typename T>
 	static RR_INTRUSIVE_PTR<RRMultiDimArray<T> > AllocateRRMultiDimArray(RR_INTRUSIVE_PTR<RRArray<uint32_t> > dims, RR_INTRUSIVE_PTR<RRArray<T> > array_)
 	{		
 		return new RRMultiDimArray<T>(dims, array_);
 	}
 
+	/**
+	 * @brief Allocate an empty RRList 
+	 * 
+	 * @tparam T The type of value stored in the list
+	 * @return RR_INTRUSIVE_PTR<RRList<T> > The allocated empty list
+	 */
 	template<typename T>
 	RR_INTRUSIVE_PTR<RRList<T> > AllocateEmptyRRList()
 	{
 		return new RRList<T>();
 	}
 
+	/**
+	 * @brief Allocate RRList with a value
+	 * 
+	 * @tparam T The type of value stored in the list
+	 * @tparam U The type of the argument to pass to RRList constructor
+	 * @param c Existing list to copy
+	 * @return RR_INTRUSIVE_PTR<RRList<T> > The allocated list
+	 */
 	template<typename T, typename U>
 	RR_INTRUSIVE_PTR<RRList<T> > AllocateRRList(const U& c)
 	{
 		return new RRList<T>(c);
 	}
 
+	/**
+	 * @brief Allocate an empty RRMap
+	 * 
+	 * @tparam K The key type for map. Must be `int32_t` or `std::string`
+	 * @tparam T The type of value stored in map
+	 * @return RR_INTRUSIVE_PTR<RRMap<K,T> > The allocated map
+	 */
 	template<typename K, typename T>
 	RR_INTRUSIVE_PTR<RRMap<K,T> > AllocateEmptyRRMap()
 	{
 		return new RRMap<K,T>();
 	}
 
+	/**
+	 * @brief Allocate RRMap with value
+	 * 
+	 * @tparam K The key type for map. Must be `int32_t` or `std::string`
+	 * @tparam T The type of value stored in map
+	 * @tparam U The type of the argument to pass to RRMap constructor
+	 * @param c Existing map to copy
+	 * @return RR_INTRUSIVE_PTR<RRMap<K, T> > The allocated map
+	 */
 	template<typename K, typename T, typename U>
 	RR_INTRUSIVE_PTR<RRMap<K, T> > AllocateRRMap(const U& c)
 	{
 		return new RRMap<K, T>(c);
 	}
 
+	/**
+	 * @brief Base class for user defined `pod` value types
+	 * 
+	 * Pod types are defined in service definition (robdef)
+	 * files. The implementation for these structures is generated
+	 * as part of the thunk source.
+	 */
 	class ROBOTRACONTEUR_CORE_API RRPod
 	{
 	public:
 		
 	};
 
+	/**
+	 * @brief Base class for `pod` array value types
+	 * 
+	 * Pod arrays should be allocated using AllocateEmptyRRPodArray()
+	 * 
+	 */
 	class RRPodBaseArray : public RRValue
 	{
 	public:
 		virtual boost::string_ref RRElementTypeString() = 0;
 	};
 
+	/**
+	 * @brief `pod` array value type
+	 * 
+	 * This class stores a pod array. Pod arrays should 
+	 * always be allocated using AllocateEmptyRRPodArray()
+	 * 
+	 * T must be a pod type that has been generated as
+	 * part of the thunk source.
+	 * 
+	 * RRPodArray must be stored in RR_INTRUSIVE_PTR. It will be 
+	 * deleted automatically when the reference count goes to zero.
+	 * 
+	 * @tparam T The type of the array elements
+	 */
 	template<typename T>
 	class RRPodArray : public RRPodBaseArray
 	{
@@ -1246,44 +1957,85 @@ namespace RobotRaconteur
 
 		// C++ container support based on boost::container::vector
 
+		/** value_type */
 		typedef T                                                value_type;
+		/** pointer */
 		typedef typename std::vector<T>::pointer                 pointer;
+		/** const_pointer */
 		typedef typename std::vector<T>::const_pointer           const_pointer;
+		/** reference */
 		typedef typename std::vector<T>::reference               reference;
+		/** const_reference */
 		typedef typename std::vector<T>::const_reference         const_reference;
+		/** size_type */
 		typedef typename std::vector<T>::size_type               size_type;
+		/** iterator */
 		typedef typename std::vector<T>::iterator                iterator;
+		/** const_iterator */
 		typedef typename std::vector<T>::const_iterator          const_iterator;
+		/** reverse_iterator */
 		typedef typename std::vector<T>::reverse_iterator       reverse_iterator;
+		/** const_reverse_iterator */
 		typedef typename std::vector<T>::const_reverse_iterator  const_reverse_iterator;
-
+		
+		/** @brief returns an iterator to the beginning */
 		iterator begin() { return pod_array.begin(); }
+		/** @brief retuns an iterator to the beginning */
 		const_iterator begin() const { return pod_array.begin(); }
+		/** @brief returns an iterator to the end */
 		iterator end() { return pod_array.end(); }
+		/** @brief returns an iterator to the end */
 		const_iterator end() const { return pod_array.end(); }
+		/** @brief returns a reverse iterator to the beginning */
 		reverse_iterator rbegin() { return pod_array.rbegin(); }
+		/** @brief returns a reverse iterator to the beginning */
 		const_reverse_iterator rbegin() const { return pod_array.rbegin(); }
+		/** @brief returns a reverse iterator to the end */
 		reverse_iterator rend() { return pod_array.rend(); }
+		/** @brief returns a reverse iterator to the end */
 		const_reverse_iterator rend() const { return pod_array.rend(); }
+		/** @brief returns an iterator to the beginning */
 		const_iterator cbegin() const { return pod_array.cbegin(); }
+		/** @brief returns an iterator to the end */
 		const_iterator cend() const { return pod_array.cend(); }
+		/** @brief returns a reverse iterator to the beginning */
 		const_reverse_iterator const crbegin() { return pod_array.crbegin(); }
+		/** @brief returns a reverse iterator to the end */
 		const_reverse_iterator const crend() { return pod_array.crend(); }
+		/** @brief checks whether the container is empty */
 		bool empty() const { return pod_array.empty(); }
+		/** @brief returns the number of elements */
 		virtual size_type size() const { return pod_array.size(); }
+		/** @brief returns the maximum possible number of elements */
 		size_type max_size() const { return size(); }
+		/** @brief access the first element */
 		reference front() { return pod_array.front(); }
+		/** @brief access the first element */
 		const_reference front() const { return pod_array.front(); }
+		/** @brief access the last element */
 		reference back() { return pod_array.back(); }
+		/** @brief access the last element */
 		const_reference back() const { return pod_array.back(); }
+		/** @brief access the specified element */
 		reference operator[](size_type i) { return pod_array[i]; }
+		/** @brief access the specified element */
 		const_reference operator[](size_type i) const { return pod_array[i]; }
+		/** @brief access the specified element with bounds checking */
 		reference at(size_type i) { return pod_array.at(i); }
+		/** @brief access the specified element with bounds checking */
 		const_reference at(size_type i) const { return pod_array.at(i); }
+		/** @brief direct access to the underlying array */
 		T * data() { return pod_array.data(); }
+		/** @brief direct access to the underlying array */
 		const T * data() const { return pod_array.data(); }
 
-		// WARNING: this may change, use with caution!
+		/**
+		 * @brief Get the underlying storage container
+		 * 
+		 * WARNING: this may change, use with caution!
+		 * 
+		 * @return std::vector<T>& 
+		 */
 		typename std::vector<T>& GetStorageContainer()
 		{
 			return pod_array;
@@ -1303,6 +2055,13 @@ namespace RobotRaconteur
 		typedef RR_INTRUSIVE_PTR<RRPodArray<x> > BoxedType; \
 	};
 
+	/**
+	 * @brief Base class for pod multidimensional arrays
+	 * 
+	 * Pod multidimensional arrays should be allocated using 
+	 * AllocateEmptyRRPodMultiDimArray()
+	 * 
+	 */
 	class RRPodBaseMultiDimArray : public RRValue
 	{
 	public:
@@ -1310,6 +2069,25 @@ namespace RobotRaconteur
 		virtual boost::string_ref RRElementTypeString() = 0;
 	};
 
+	/**
+	 * @brief `pod` multidimensional array value type
+	 * 
+	 * This class stores a pod multidimensional array. 
+	 * Multidimensional arrays are stored as a uint32_t array of
+	 * dimensions, and an array of the flattened elements. 
+	 * Arrays are stored in column major, or "Fortran" order.
+	 * 
+	 * Multidimensional arrays should be allocated using 
+	 * AllocateEmptyRRPodMultiDimArray()
+	 * 
+	 * T must be a pod type that has been generated as
+	 * part of the thunk source.
+	 * 
+	 * RRPodMultiDimArray must be stored in RR_INTRUSIVE_PTR. It will be 
+	 * deleted automatically when the reference count goes to zero.
+	 * 
+	 * @tparam T The type of the array elements
+	 */
 	template<typename T>
 	class RRPodMultiDimArray : public RRPodBaseMultiDimArray
 	{
@@ -1337,6 +2115,14 @@ namespace RobotRaconteur
 			return RRPrimUtil<T>::GetRRElementTypeString();
 		}
 
+		/**
+		 * @brief Retrieve a subset of an array
+		 * 
+		 * @param memorypos Position in array to read
+		 * @param buffer Buffer to store retrieved data
+		 * @param bufferpos Position within buffer to store data
+		 * @param count Count of data to retrieve
+		 */
 		virtual void RetrieveSubArray(std::vector<uint32_t> memorypos, RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > buffer, std::vector<uint32_t> bufferpos, std::vector<uint32_t> count)
 		{
 
@@ -1358,6 +2144,14 @@ namespace RobotRaconteur
 
 		}
 
+		/**
+		 * @brief Assign a subset of an array
+		 * 
+		 * @param memorypos Position within array to store data
+		 * @param buffer Buffer to assign data from
+		 * @param bufferpos Position within buffer to assign from
+		 * @param count Count of data to assign
+		 */
 		virtual void AssignSubArray(std::vector<uint32_t> memorypos, RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > buffer, std::vector<uint32_t> bufferpos, std::vector<uint32_t> count)
 		{
 			
@@ -1380,12 +2174,26 @@ namespace RobotRaconteur
 		}
 	};
 
+	/**
+	 * @brief Convert a scalar pod into a pod array with one element
+	 * 
+	 * @tparam T The type of the pod
+	 * @param value The pod
+	 * @return RR_INTRUSIVE_PTR<RRPodArray<T> > The new pod array with one element
+	 */
 	template<typename T>
 	static RR_INTRUSIVE_PTR<RRPodArray<T> > ScalarToRRPodArray(const T& value)
 	{
 		return new RRPodArray<T>(value);
 	}
 
+	/**
+	 * @brief Convert a pod array with one element into a scalar pod
+	 * 
+	 * @tparam T The type of the pod
+	 * @param value The pod array with one element
+	 * @return T The first pod in the array
+	 */
 	template<typename T>
 	static T RRPodArrayToScalar(RR_INTRUSIVE_PTR<RRPodArray<T> > value)
 	{
@@ -1399,19 +2207,55 @@ namespace RobotRaconteur
 		return value->at(0);
 	}
 
+	/**
+	 * @brief Allocate a pod array with the 
+	 * specified type and length and initialize to zero
+	 * 
+	 * All elements are initialized to zero
+	 * 
+	 * T must be a pod type that has been generated as
+	 * part of the thunk source.
+	 * 
+	 * @tparam T The type of the array elements
+	 * @param length The length of the returned array (element count)
+	 * @return RR_INTRUSIVE_PTR<RRPodArray<T> > The allocated array
+	 */
 	template<typename T>
 	static RR_INTRUSIVE_PTR<RRPodArray<T> > AllocateEmptyRRPodArray(size_t length)
 	{
 		return new RRPodArray<T>(length);		
 	}
 
+	/**
+	 * @brief Allocate an empty multidimensional pod array with the
+	 * specified dimensions
+	 * 
+	 * The elements of the returned array are initialized to zero
+	 * 
+	 * T must be a pod type that has been generated as
+	 * part of the thunk source.
+	 * 
+	 * @tparam T The element type of the array
+	 * @param dims The dimensions of the new multidimensional array
+	 * @return RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > The allocated multidimensional array
+	 */
 	template<typename T>
-	static RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > AllocateEmptyRRPodMultiDimArray(std::vector<uint32_t> length)
+	static RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > AllocateEmptyRRPodMultiDimArray(std::vector<uint32_t> dims)
 	{
-		uint32_t n_elems = boost::accumulate(length, 1, std::multiplies<uint32_t>());
-		return new RRPodMultiDimArray<T>(VectorToRRArray<uint32_t>(length), AllocateEmptyRRPodArray<T>(n_elems));
+		uint32_t n_elems = boost::accumulate(dims, 1, std::multiplies<uint32_t>());
+		return new RRPodMultiDimArray<T>(VectorToRRArray<uint32_t>(dims), AllocateEmptyRRPodArray<T>(n_elems));
 	}
 
+	/**
+	 * @brief Allocate an empty multidimensional pod array with 
+	 * zero elements
+	 * 
+	 * T must be a pod type that has been generated as
+	 * part of the thunk source.
+	 * 
+	 * @tparam T The element type of the array	 
+	 * @return RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > The allocated multidimensional array
+	 */
 	template<typename T>
 	static RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > AllocateEmptyRRPodMultiDimArray()
 	{
@@ -1437,6 +2281,13 @@ namespace RobotRaconteur
 		static DataTypes GetElementArrayTypeID() {return RRPrimUtil<array_type>::GetTypeID();} \
 	};
 
+
+	/**
+	 * @brief Base class for `namedarray` array value types
+	 * 
+	 * NamedArray arrays should be allocated using AllocateEmptyRRNamedArray()
+	 * 
+	 */
 	class ROBOTRACONTEUR_CORE_API RRNamedBaseArray : public RRValue
 	{
 	public:
@@ -1451,6 +2302,20 @@ namespace RobotRaconteur
 		virtual boost::string_ref RRElementTypeString() = 0;
 	};
 
+	/**
+	 * @brief `namedarray` array value type
+	 * 
+	 * This class stores a named array. Named arrays should 
+	 * always be  allocated using AllocateEmptyRRNamedArray()
+	 * 
+	 * T must be a `namedarray` type that has been generated as
+	 * part of the thunk source.
+	 * 
+	 * RRNamedArray must be stored in RR_INTRUSIVE_PTR. It will be 
+	 * deleted automatically when the reference count goes to zero.
+	 * 
+	 * @tparam T The type of the array elements
+	 */
 	template<typename T>
 	class RRNamedArray : public RRNamedBaseArray
 	{	
@@ -1469,42 +2334,42 @@ namespace RobotRaconteur
 		{
 			return RRPrimUtil<T>::GetTypeID();
 		}
-
+		/** @brief returns the number of elements (`namedarray` elements)*/
 		virtual size_t size() const
 		{
 			return rr_array->size() / (RRPrimUtil<T>::ElementArrayCount);
 		}
-
+		/** @brief returns the number of elements (`namedarray` elements)*/
 		virtual size_t size()
 		{
 			return rr_array->size() / (RRPrimUtil<T>::ElementArrayCount);
 		}
-
+		/** @brief get a void pointer to the underlying numeric array */
 		virtual void* void_ptr()
 		{
 			return rr_array->void_ptr();
 		}
-
+		/** @brief get the number of bytes per `namedarray` element of the array */
 		virtual size_t ElementSize()
 		{
 			return sizeof(T);
 		}
-
+		/** @brief get the type of the underlying numeric array */
 		virtual DataTypes ElementArrayType()
 		{
 			return RRPrimUtil<T>::GetElementArrayTypeID();
 		}
-		
+		/** @brief get the total number of elements in the underlying numeric array */
 		virtual size_t ElementArrayCount()
 		{
 			return RRPrimUtil<T>::ElementArrayCount;
 		}
-
+		/** @brief get the underlying numeric RRArray */
 		virtual RR_INTRUSIVE_PTR<RRArray<typename RRPrimUtil<T>::ElementArrayType> > GetNumericArray()
 		{
 			return rr_array;
 		}
-
+		/** @brief get the underlying numeric array as an RRBaseArray */
 		virtual RR_INTRUSIVE_PTR<RRBaseArray> GetNumericBaseArray()
 		{
 			return rr_array;
@@ -1523,80 +2388,108 @@ namespace RobotRaconteur
 		// C++ container support functions based on boost::array
 
 		// type definitions
+		/** value_type */
 		typedef T              value_type;
+		/** iterator */
 		typedef T*             iterator;
+		/** const_iterator */
 		typedef const T*       const_iterator;
+		/** reference */
 		typedef T&             reference;
+		/** const_reference */
 		typedef const T&       const_reference;
+		/** size_type */
 		typedef std::size_t    size_type;
+		/** difference_type */
 		typedef std::ptrdiff_t difference_type;
 
 		// iterator support
+
+		/** @brief returns an iterator to the beginning */
 		iterator        begin() { return static_cast<T*>(rr_array->begin()); }
+		/** @brief returns an iterator to the beginning */
 		const_iterator  begin() const { return static_cast<const T*>(rr_array->begin()); }
+		/** @brief returns an iterator to the beginning */
 		const_iterator cbegin() const { return static_cast<const T*>(rr_array->begin()); }
 
+		/** @brief returns an iterator to the end */
 		iterator        end() { return static_cast<T*>(rr_array->end()); }
+		/** @brief returns an iterator to the end */
 		const_iterator  end() const { return static_cast<T*>(rr_array->end()); }
+		/** @brief returns an iterator to the end */
 		const_iterator cend() const { return static_cast<T*>(rr_array->end()); }
+
+		/** reverse_iterator */
 		typedef boost::reverse_iterator<iterator> reverse_iterator;
+		/** const_reverse_iterator */
 		typedef boost::reverse_iterator<const_iterator> const_reverse_iterator;
 
+		/** @brief returns a reverse iterator to the beginning */
 		reverse_iterator rbegin() { return reverse_iterator(end()); }
+		/** @brief returns a reverse iterator to the beginning */
 		const_reverse_iterator rbegin() const {
 			return const_reverse_iterator(end());
 		}
+		/** @brief returns a reverse iterator to the beginning */
 		const_reverse_iterator crbegin() const {
 			return const_reverse_iterator(end());
 		}
 
+		/** @brief returns a reverse iterator to the end */
 		reverse_iterator rend() { return reverse_iterator(begin()); }
+		/** @brief returns a reverse iterator to the end */
 		const_reverse_iterator rend() const {
 			return const_reverse_iterator(begin());
 		}
+		/** @brief returns a reverse iterator to the end */
 		const_reverse_iterator crend() const {
 			return const_reverse_iterator(begin());
 		}
 
-		// operator[]
+		/** @brief access specified `namedarray` element */
 		reference operator[](size_type i)
 		{
 			BOOST_ASSERT_MSG(i < size(), "out of range");
 			return (static_cast<T*>(rr_array->void_ptr())[i]);
 		}
 
+		/** @brief access specified `namedarray` element */
 		const_reference operator[](size_type i) const
 		{
 			BOOST_ASSERT_MSG(i < size(), "out of range");
 			return (static_cast<T*>(rr_array->void_ptr())[i]);
 		}
 
-		// at() with range check
+		/** @brief access specified `namedarray` element with bounds checking */
 		reference at(size_type i) { rangecheck(i); return (static_cast<T*>(rr_array->void_ptr())[i]); }
+		/** @brief access specified `namedarray` element with bounds checking */
 		const_reference at(size_type i) const { rangecheck(i); (static_cast<T*>(rr_array->void_ptr())[i]); }
 
-		// front() and back()
+		/** @brief access the first element */
 		reference front()
 		{
 			return this->at(0);
 		}
-
+		/** @brief access the first element */
 		const_reference front() const
 		{
 			return this->at(0);
 		}
 
+		/** @brief access the last element */
 		reference back()
 		{
 			return this->at(size() - 1);
 		}
-
+		/** @brief access the last element */
 		const_reference back() const
 		{
 			return this->at(size() - 1);
 		}
 
+		/** @brief checks whether the container is empty */
 		bool empty() { return rr_array->empty(); }
+		/** @brief returns the maximum possible number of elements */
 		size_type max_size() { return size(); }
 												
 		void rangecheck(size_type i) {
@@ -1608,6 +2501,13 @@ namespace RobotRaconteur
 
 	};
 
+	/**
+	 * @brief Base class for namedarray multidimensional arrays
+	 * 
+	 * Namedarray multidimensional arrays should be allocated using 
+	 * AllocateEmptyRRNamedMultiDimArray()
+	 * 
+	 */
 	class RRNamedBaseMultiDimArray : public RRValue
 	{
 	public:
@@ -1615,6 +2515,25 @@ namespace RobotRaconteur
 		virtual boost::string_ref RRElementTypeString() = 0;
 	};
 
+	/**
+	 * @brief `namedarray` multidimensional array value type
+	 * 
+	 * This class stores a namedarray multidimensional array. 
+	 * Multidimensional arrays are stored as a uint32_t array of
+	 * dimensions, and an array of the flattened elements. 
+	 * Arrays are stored in column major, or "Fortran" order.
+	 * 
+	 * Multidimensional arrays should be allocated using 
+	 * AllocateEmptyRRNamedMultiDimArray()
+	 * 
+	 * T must be a namedarray type that has been generated as
+	 * part of the thunk source.
+	 * 
+	 * RRNamedMultiDimArray must be stored in RR_INTRUSIVE_PTR. It will be 
+	 * deleted automatically when the reference count goes to zero.
+	 * 
+	 * @tparam T The type of the array elements
+	 */
 	template<typename T>
 	class RRNamedMultiDimArray : public RRNamedBaseMultiDimArray
 	{
@@ -1642,6 +2561,14 @@ namespace RobotRaconteur
 			return RRPrimUtil<T>::GetRRElementTypeString();
 		}
 
+		/**
+		 * @brief Retrieve a subset of an array
+		 * 
+		 * @param memorypos Position in array to read
+		 * @param buffer Buffer to store retrieved data
+		 * @param bufferpos Position within buffer to store data
+		 * @param count Count of data to retrieve
+		 */
 		virtual void RetrieveSubArray(std::vector<uint32_t> memorypos, RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > buffer, std::vector<uint32_t> bufferpos, std::vector<uint32_t> count)
 		{
 
@@ -1663,6 +2590,14 @@ namespace RobotRaconteur
 
 		}
 
+		/**
+		 * @brief Assign a subset of an array
+		 * 
+		 * @param memorypos Position within array to store data
+		 * @param buffer Buffer to assign data from
+		 * @param bufferpos Position within buffer to assign from
+		 * @param count Count of data to assign
+		 */
 		virtual void AssignSubArray(std::vector<uint32_t> memorypos, RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > buffer, std::vector<uint32_t> bufferpos, std::vector<uint32_t> count)
 		{
 
@@ -1684,7 +2619,20 @@ namespace RobotRaconteur
 
 		}
 	};
-		
+	
+	/**
+	 * @brief Allocate a `namedarray` array with the 
+	 * specified type and length and initialize to zero
+	 * 
+	 * All elements are initialized to zero
+	 * 
+	 * T must be a namedarray type that has been generated as
+	 * part of the thunk source.
+	 * 
+	 * @tparam T The type of the array elements
+	 * @param length The length of the returned array (element count)
+	 * @return RR_INTRUSIVE_PTR<RRNamedrray<T> > The allocated array
+	 */
 	template<typename T>
 	static RR_INTRUSIVE_PTR<RRNamedArray<T> > AllocateEmptyRRNamedArray(size_t length)
 	{
@@ -1693,13 +2641,36 @@ namespace RobotRaconteur
 		return new RRNamedArray<T>(a);		
 	}
 
+	/**
+	 * @brief Allocate an empty multidimensional namedarray array with the
+	 * specified dimensions
+	 * 
+	 * The elements of the returned array are initialized to zero
+	 * 
+	 * T must be a namedarray type that has been generated as
+	 * part of the thunk source.
+	 * 
+	 * @tparam T The element type of the array
+	 * @param dims The dimensions of the new multidimensional array
+	 * @return RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > The allocated multidimensional array
+	 */
 	template<typename T>
-	static RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > AllocateEmptyRRNamedMultiDimArray(std::vector<uint32_t> length)
+	static RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > AllocateEmptyRRNamedMultiDimArray(std::vector<uint32_t> dims)
 	{
-		uint32_t n_elems = boost::accumulate(length, 1, std::multiplies<uint32_t>());
-		return new RRNamedMultiDimArray<T>(VectorToRRArray<uint32_t>(length), AllocateEmptyRRNamedArray<T>(n_elems));
+		uint32_t n_elems = boost::accumulate(dims, 1, std::multiplies<uint32_t>());
+		return new RRNamedMultiDimArray<T>(VectorToRRArray<uint32_t>(dims), AllocateEmptyRRNamedArray<T>(n_elems));
 	}
 
+	/**
+	 * @brief Allocate an empty multidimensional namedarray array with 
+	 * zero elements
+	 * 
+	 * T must be a namedarray type that has been generated as
+	 * part of the thunk source.
+	 * 
+	 * @tparam T The element type of the array	 
+	 * @return RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > The allocated multidimensional array
+	 */
 	template<typename T>
 	static RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > AllocateEmptyRRNamedMultiDimArray()
 	{		
@@ -1708,6 +2679,16 @@ namespace RobotRaconteur
 		return new RRNamedMultiDimArray<T>(VectorToRRArray<uint32_t>(length), AllocateEmptyRRNamedArray<T>(0));
 	}
 
+	/**
+	 * @brief Convert a scalar namedarray into a namedarray array with one element
+	 * 
+	 * Note that this acts on the namedarray union, not a scalar number within the
+	 * namedarray union
+	 * 
+	 * @tparam T The type of the namedarray
+	 * @param value The namedarray
+	 * @return RR_INTRUSIVE_PTR<RRPodArray<T> > The new namedarray array with one element
+	 */
 	template<typename T>
 	static RR_INTRUSIVE_PTR<RRNamedArray<T> > ScalarToRRNamedArray(const T& value)
 	{
@@ -1716,6 +2697,16 @@ namespace RobotRaconteur
 		return a;
 	}
 
+	/**
+	 * @brief Convert a namedarray array with one element into a namedarray
+	 * 
+	 * Note that this acts on the namedarray union, not a scalar number within the
+	 * namedarray union
+	 * 
+	 * @tparam T The type of the namedarray
+	 * @param value The namedarray array with one element
+	 * @return T The first namedarray in the array
+	 */
 	template<typename T>
 	static T RRNamedArrayToScalar(RR_INTRUSIVE_PTR<RRNamedArray<T> > value)
 	{
@@ -1744,39 +2735,69 @@ namespace RobotRaconteur
 
 	class ROBOTRACONTEUR_CORE_API RobotRaconteurNode;
 
+	/**
+	 * @brief Represents. a point in time. Used by `wire` members to 
+	 * timestamp packets
+	 * 
+	 * Time is always in UTC
+	 * 
+	 * Time is relative to the UNIX epoch "1970-01-01T00:00:00Z"
+	 * 
+	 */
 	class ROBOTRACONTEUR_CORE_API TimeSpec
 	{
 	public:
+		/** @brief Seconds since epoch */
 		int64_t seconds;
+		/** @brief Nanoseconds from epoch. Normalized to be between 0 and 1e9-1 */
 		int32_t nanoseconds;
 
+		/** @brief Construct empty timespec */
 		TimeSpec();
 
+		/**
+		 * @brief Construct timespec with specified time
+		 * 
+		 * @param seconds Seconds since epoch
+		 * @param nanoseconds Nanoseconds since epoch
+		 */
 		TimeSpec(int64_t seconds, int32_t nanoseconds);
 
+		/**
+		 * @brief Current UTC time using default RobotRaconteurNode time provider
+		 * 
+		 * @return TimeSpec The current UTC time
+		 */
 		static TimeSpec Now();
 
+		/**
+		 * @brief Current UTC time using the specified node time provider
+		 * 
+		 * @param node The node to use for the time provider
+		 * @return TimeSpec The current UTC time
+		 */
 		static TimeSpec Now(RR_SHARED_PTR<RobotRaconteurNode> node);
 
 	public:
+		/** @brief equality comparison */
 		bool operator == (const TimeSpec &t2);
-
+		/** @brief inequality comparison */
 		bool operator != (const TimeSpec &t2);
-
+		/** @brief subtraction operator */
 		TimeSpec operator - (const TimeSpec &t2);
-
+		/** @brief addition operator */
 		TimeSpec operator + (const TimeSpec &t2);
-
+		/** @brief greater-than comparison */
 		bool operator > (const TimeSpec &t2);
-
+		/** @brief greater-than-or-equal comparison */
 		bool operator >= (const TimeSpec &t2);
-
+		/** @brief less-then comparison */
 		bool operator < (const TimeSpec &t2);
-
+		/** @brief less-than-or-equal comparison */
 		bool operator <= (const TimeSpec &t2);
 
 	public:
-
+		/** @brief normalize nanoseconds to be within 0 and 1e9-1 */
 		void cleanup_nanosecs();
 
 	};
@@ -1966,41 +2987,77 @@ namespace RobotRaconteur
 	}
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+	/** @brief Convenience alias for RRObject shared_ptr */
 	using RRObjectPtr = RR_SHARED_PTR<RRObject>;
+	/** @brief Convenience alias for RRObject const shared_ptr */
 	using RRObjectConstPtr = RR_SHARED_PTR<const RRObject>;
+	/** @brief Convenience alias for RRValue intrusive_ptr */
 	using RRValuePtr = RR_INTRUSIVE_PTR<RRValue>;
+	/** @brief Convenience alias for RRValue const intrusive_ptr */
 	using RRValueConstPtr = RR_INTRUSIVE_PTR<const RRValue>;
+	/** @brief Convenience alias for MessageElementData intrusive_ptr */
 	using MessageElementDataPtr = RR_INTRUSIVE_PTR<MessageElementData>;
+	/** @brief Convenience alias for MessageElementData const intrusive_ptr */
 	using MessageElementDataConstPtr = RR_INTRUSIVE_PTR<const MessageElementData>;
+	/** @brief Convenience alias for RRBaseArray intrusive_ptr */
 	using RRBaseArrayPtr = RR_INTRUSIVE_PTR<RRBaseArray>;
+	/** @brief Convenience alias for RRBaseArray const intrusive_ptr */
 	using RRBaseArrayConstPtr = RR_INTRUSIVE_PTR<const RRBaseArray>;
+	/** @brief Convenience alias for RRArray intrusive_ptr */
 	template<typename T> using RRArrayPtr = RR_INTRUSIVE_PTR<RRArray<T> >;
+	/** @brief Convenience alias for RRArray const intrusive_ptr */
 	template<typename T> using RRArrayConstPtr = RR_INTRUSIVE_PTR<const RRArray<T> >;
+	/** @brief Convenience alias for RRMap intrusive_ptr */
 	template<typename K, typename T> using RRMapPtr = RR_INTRUSIVE_PTR<RRMap<K,T> >;
+	/** @brief Convenience alias for RRMap const intrusive_ptr */
 	template<typename K, typename T> using RRMapConstPtr = RR_INTRUSIVE_PTR<const RRMap<K, T> >;
+	/** @brief Convenience alias for RRList intrusive_ptr */
 	template<typename T> using RRListPtr = RR_INTRUSIVE_PTR<RRList<T> >;
+	/** @brief Convenience alias for RRList const intrusive_ptr */
 	template<typename T> using RRListConstPtr = RR_INTRUSIVE_PTR<const RRList<T> >;
+	/** @brief Convenience alias for RRStructure intrusive_ptr */
 	using RRStructurePtr = RR_INTRUSIVE_PTR<RRStructure>;
+	/** @brief Convenience alias for RRStructure const intrusive_ptr */
 	using RRStructureConstPtr = RR_INTRUSIVE_PTR<const RRStructure>;
+	/** @brief Convenience alias for RRMultiDimBaseArray intrusive_ptr */
 	using RRMultiDimBaseArrayPtr = RR_INTRUSIVE_PTR<RRMultiDimBaseArray>;
+	/** @brief Convenience alias for RRMultiDimBaseArray const intrusive_ptr */
 	using RRMultiDimBaseArrayConstPtr = RR_INTRUSIVE_PTR<const RRMultiDimBaseArray>;
+	/** @brief Convenience alias for RRMultiDimArray intrusive_ptr */
 	template <typename T> using RRMultiDimArrayPtr = RR_INTRUSIVE_PTR<RRMultiDimArray<T> >;
+	/** @brief Convenience alias for RRMultiDimArray const intrusive_ptr */
 	template <typename T> using RRMultiDimArrayConstPtr = RR_INTRUSIVE_PTR<const RRMultiDimArray<T> >;
+	/** @brief Convenience alias for RRPodBaseArray intrusive_ptr */
 	using RRPodBaseArrayPtr = RR_INTRUSIVE_PTR<RRPodBaseArray>;
+	/** @brief Convenience alias for RRPodBaseArray const intrusive_ptr */
 	using RRPodBaseArrayConstPtr = RR_INTRUSIVE_PTR<const RRPodBaseArray>;
+	/** @brief Convenience alias for RRPodArray intrusive_ptr */
 	template<typename T> using RRPodArrayPtr = RR_INTRUSIVE_PTR<RRPodArray<T> >;
+	/** @brief Convenience alias for RRPodArray const intrusive_ptr */
 	template<typename T> using RRPodArrayConstPtr = RR_INTRUSIVE_PTR<const RRPodArray<T> >;
+	/** @brief Convenience alias for RRPodBaseMultiDimArray intrusive_ptr */
 	using RRPodBaseMultiDimArrayPtr = RR_INTRUSIVE_PTR <RRPodBaseMultiDimArray>;
+	/** @brief Convenience alias for RRPodBaseMultiDimArray const intrusive_ptr */
 	using RRPodBaseMultiDimBaseArrayConstPtr = RR_INTRUSIVE_PTR<const RRPodBaseMultiDimArray>;
+	/** @brief Convenience alias for RRPodMultiDimArray intrusive_ptr */
 	template <typename T> using RRPodMultiDimArrayPtr = RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> >;
+	/** @brief Convenience alias for RRPodMultiDimArray const intrusive_ptr */
 	template <typename T> using RRPodMultiDimArrayConstPtr = RR_INTRUSIVE_PTR<const RRPodMultiDimArray<T> >;
+	/** @brief Convenience alias for RRNamedBaseArray intrusive_ptr */
 	using RRNamedBaseArrayPtr = RR_INTRUSIVE_PTR<RRNamedBaseArray>;
+	/** @brief Convenience alias for RRNamedBaseArray const intrusive_ptr */
 	using RRNamedBaseArrayConstPtr = RR_INTRUSIVE_PTR<const RRNamedBaseArray>;
+	/** @brief Convenience alias for RRNamedArray intrusive_ptr */
 	template<typename T> using RRNamedArrayPtr = RR_INTRUSIVE_PTR<RRNamedArray<T> >;
+	/** @brief Convenience alias for RRNamedArray const intrusive_ptr */
 	template<typename T> using RRNamedArrayConstPtr = RR_INTRUSIVE_PTR<const RRNamedArray<T> >;
+	/** @brief Convenience alias for RRNamedBaseMultiDimArray intrusive_ptr */
 	using RRNamedBaseMultiDimArrayPtr = RR_INTRUSIVE_PTR <RRNamedBaseMultiDimArray>;
+	/** @brief Convenience alias for RRNamedBaseMultiDimArray const intrusive_ptr */
 	using RRNamedBaseMultiDimBaseArrayConstPtr = RR_INTRUSIVE_PTR<const RRNamedBaseMultiDimArray>;
+	/** @brief Convenience alias for RRNamedMultiDimArray intrusive_ptr */
 	template <typename T> using RRNamedMultiDimArrayPtr = RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> >;
+	/** @brief Convenience alias for RRNamedMultiDimArray const intrusive_ptr */
 	template <typename T> using RRNamedMultiDimArrayConstPtr = RR_INTRUSIVE_PTR<const RRNamedMultiDimArray<T> >;
 #endif
 }

@@ -16,14 +16,10 @@
 
 namespace RobotRaconteur
 {
-/// <summary>
-	/// Interface for objects that can be registered with the node for periodic cleanup
-	/// </summary>
+
 	class IPeriodicCleanupTask
 	{
-		/// <summary>
-		/// Called by the node every few seconds for general cleanup
-		/// </summary>
+
 	public:
 		virtual void PeriodicCleanupTask() = 0;
 };

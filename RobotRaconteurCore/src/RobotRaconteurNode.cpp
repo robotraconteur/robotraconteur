@@ -1945,16 +1945,6 @@ void RobotRaconteurNode::SetThreadPoolCount(int32_t count)
 	GetThreadPool()->SetThreadPoolCount(count);
 }
 
-bool RobotRaconteurNode::TryLockThreadPool(RR_WEAK_PTR<RobotRaconteurNode> node, thread_pool_lock_type& lock, bool shutdown_op)
-{
-	RR_SHARED_PTR<RobotRaconteurNode> node1 = node.lock();
-	if (!node1) return false;
-	thread_pool_lock_type lock1(node1->thread_pool_lock);
-	if (!shutdown_op && node1->is_shutdown) return false;
-	lock.swap(lock1);
-	return true;
-}
-
 bool RobotRaconteurNode::InitThreadPool(int32_t thread_count)
 {
 	boost::unique_lock<boost::shared_mutex> lock(thread_pool_lock);

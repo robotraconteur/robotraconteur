@@ -102,55 +102,6 @@ std::string RRBaseArray::RRType()
 
 }
 
-#ifdef ROBOTRACONTEUR_USE_WSTRING
-
-ROBOTRACONTEUR_CORE_API std::string utf8_encode(const std::wstring &wstr)
-{
-	if (wstr.size()==0) return "";
-
-    int size_needed = WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(), NULL, 0, NULL, NULL);
-    std::string strTo( size_needed, 0 );
-    WideCharToMultiByte                  (CP_UTF8, 0, &wstr[0], (int)wstr.size(), &strTo[0], size_needed, NULL, NULL);
-    return strTo;
-}
-
-// Convert an UTF8 string to a wide Unicode String
-ROBOTRACONTEUR_CORE_API std::wstring utf8_decode(boost::string_ref str)
-{
-	if (str.size()==0) return L"";
-
-    int size_needed = MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), NULL, 0);
-    std::wstring wstrTo( size_needed, 0 );
-    MultiByteToWideChar                  (CP_UTF8, 0, &str[0], (int)str.size(), &wstrTo[0], size_needed);
-    return wstrTo;
-}
-
-ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRArray<char> > wstringToRRArray(const std::wstring& str)
-{
-	std::string str2=utf8_encode(str);
-	size_t s=str2.size();
-	RR_INTRUSIVE_PTR<RRArray<char> > ret=AllocateRRArray<char>(s);
-	memcpy(ret->ptr(),str.c_str(),s);
-	return ret;
-
-
-}
-
-ROBOTRACONTEUR_CORE_API std::wstring RRArrayToWString(RR_INTRUSIVE_PTR<RRArray<char> > arr)
-{
-	if (!arr)
-	{
-		throw DataTypeException("Null pointer");
-		
-	}
-
-	size_t s=arr->Length();
-    std::string utf(arr->ptr(),s);
-	return utf8_decode(utf);
-}
-
-#endif
-
 ROBOTRACONTEUR_CORE_API std::string GetRRDataTypeString(DataTypes type)
 {
 	switch (type)

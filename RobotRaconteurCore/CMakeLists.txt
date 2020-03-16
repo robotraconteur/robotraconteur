@@ -183,3 +183,20 @@ install(
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     FILES_MATCHING PATTERN "*.h*")
 install(EXPORT RobotRaconteurCoreTargets DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${CMAKE_PROJECT_NAME})
+
+
+# https://p5r.uk/blog/2014/cmake-doxygen.html
+if(BUILD_DOCUMENTATION)
+  if(NOT DOXYGEN_FOUND)
+    message(FATAL_ERROR "Doxygen is needed to build the documentation")
+  endif()
+
+  file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/doc/cpp)
+  configure_file(${CMAKE_SOURCE_DIR}/doc/cpp/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
+  
+  add_custom_target(RobotRaconteurCore_doc
+        COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        COMMENT "Generating API documentation with Doxygen"
+        VERBATIM)
+endif()
