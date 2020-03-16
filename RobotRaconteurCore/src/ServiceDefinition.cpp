@@ -25,7 +25,6 @@
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
 //#include "Error.h"
-#include "RobotRaconteur/nulldeleter.h"
 #include "RobotRaconteur/RobotRaconteurNode.h"
 #include "RobotRaconteur/IOUtils.h"
 
