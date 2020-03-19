@@ -262,8 +262,10 @@ namespace RobotRaconteur
 		c1->GetMonitorThreadPool()->Post(boost::bind(&ServerContext_MonitorObjectSkel::thread_func, shared_from_this()));
 
 
-
-		wait_event->WaitOne(5000);
+		if (detail::ThreadPool_IsNodeMultithreaded(s1->RRGetNodeWeak()))
+		{
+			wait_event->WaitOne(5000);
+		}
 
 		if (monitor_acquire_exception != 0)
 		{
@@ -289,7 +291,12 @@ namespace RobotRaconteur
 			throw monitor_acquire_exception;
 		}
 
-		wait_event->WaitOne(5000);
+		RR_SHARED_PTR<ServiceSkel> s1 = skel.lock();
+		if (!s1) throw InvalidOperationException("Object has been closed");
+		if (detail::ThreadPool_IsNodeMultithreaded(s1->RRGetNodeWeak()))
+		{
+			wait_event->WaitOne(5000);
+		}
 
 		if (monitor_acquire_exception != 0)
 		{

@@ -1999,7 +1999,13 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 		if (!monitor_thread_pool)
 		{
-			monitor_thread_pool=GetNode()->GetThreadPoolFactory()->NewThreadPool(GetNode());
+			RR_SHARED_PTR<ThreadPoolFactory> factory = GetNode()->GetThreadPoolFactory();
+			if (!factory)
+			{
+				factory = RR_MAKE_SHARED<ThreadPoolFactory>();
+			}
+
+			monitor_thread_pool=factory->NewThreadPool(GetNode());
 			monitor_thread_pool->SetThreadPoolCount(5);
 		
 		}
