@@ -72,6 +72,7 @@ namespace detail
 		socket_connected = false;
 
 		connect_timer.reset(new boost::asio::deadline_timer(parent->GetNode()->GetThreadPool()->get_io_context()));
+		backoff_timer.reset(new boost::asio::deadline_timer(parent->GetNode()->GetThreadPool()->get_io_context()));
 		node = parent->GetNode();
 
 	}
@@ -179,6 +180,9 @@ namespace detail
 		try
 		{
 
+			RR_SHARED_PTR<std::list<boost::asio::ip::tcp::endpoint> > candidate_endpoints
+			    = RR_MAKE_SHARED<std::list<boost::asio::ip::tcp::endpoint> >();
+
 			std::vector<boost::asio::ip::tcp::endpoint> ipv4;
 			std::vector<boost::asio::ip::tcp::endpoint> ipv6;
 
@@ -199,27 +203,7 @@ namespace detail
 
 			BOOST_FOREACH (boost::asio::ip::tcp::endpoint& e, ipv4)
 			{
-				RR_SHARED_PTR<boost::asio::ip::tcp::socket> sock(new boost::asio::ip::tcp::socket(parent->GetNode()->GetThreadPool()->get_io_context()));
-
-				int32_t key2;
-				{
-					boost::mutex::scoped_lock lock(this_lock);
-					if (!connecting) return;
-
-					active_count++;
-					key2 = active_count;
-
-					RR_SHARED_PTR<boost::signals2::scoped_connection> sock_closer
-						= RR_MAKE_SHARED<boost::signals2::scoped_connection>(
-							parent->AddCloseListener(sock, boost::bind(&boost::asio::ip::tcp::socket::close, _1))
-							);
-
-					RobotRaconteurNode::asio_async_connect(node,sock, e, boost::bind(&TcpConnector::connected_callback, shared_from_this(), sock, sock_closer, key2, boost::asio::placeholders::error));
-					//std::cout << "Start connect " << e->address() << ":" << e->port() << std::endl;
-					
-					active.push_back(key2);
-				}
-				boost::this_thread::sleep(boost::posix_time::milliseconds(5));								
+				candidate_endpoints->push_back(e);							
 			}
 
 
@@ -273,37 +257,17 @@ namespace detail
 
 				BOOST_FOREACH (boost::asio::ip::tcp::endpoint& e2, ipv62)
 				{
-
-					RR_SHARED_PTR<boost::asio::ip::tcp::socket> sock(new boost::asio::ip::tcp::socket(parent->GetNode()->GetThreadPool()->get_io_context()));
-
-					int32_t key2;
-					{
-						boost::mutex::scoped_lock lock(this_lock);
-						if (!connecting) return;
-
-						active_count++;
-						key2 = active_count;
-						
-						RR_SHARED_PTR<boost::signals2::scoped_connection> sock_closer =
-							RR_MAKE_SHARED<boost::signals2::scoped_connection>(
-								parent->AddCloseListener(sock, boost::bind(&boost::asio::ip::tcp::socket::close, _1))
-								);
-
-						RobotRaconteurNode::asio_async_connect(node, sock, e2, boost::bind(&TcpConnector::connected_callback, shared_from_this(), sock, sock_closer, key2, boost::asio::placeholders::error));
-						
-						active.push_back(key2);
-					}
-
-					//std::cout << "Start connect [" << e2->address() << "]:" << e2->port() << std::endl;
-
-					boost::this_thread::sleep(boost::posix_time::milliseconds(5));					
+					candidate_endpoints->push_back(e2);
 				}
 			}
 
-
+			boost::system::error_code ec;
+			connect3(candidate_endpoints, key, ec);
 
 			boost::mutex::scoped_lock lock(this_lock);
 			active.remove(key);
+
+			
 		}
 		catch (std::exception&)
 		{
@@ -312,6 +276,63 @@ namespace detail
 		}
 
 
+		connect4();
+	}
+
+	void TcpConnector::connect3(RR_SHARED_PTR<std::list<boost::asio::ip::tcp::endpoint> > candidate_endpoints, int32_t key, const boost::system::error_code& e)
+	{
+		
+		try
+		{
+			boost::mutex::scoped_lock lock(this_lock);
+			
+			// This should never happen!
+			if (candidate_endpoints->empty())
+			{
+				connect4();
+				return;
+			}
+
+			boost::asio::ip::tcp::endpoint ep = candidate_endpoints->front();
+			candidate_endpoints->pop_front();
+
+			RR_SHARED_PTR<boost::asio::ip::tcp::socket> sock(new boost::asio::ip::tcp::socket(parent->GetNode()->GetThreadPool()->get_io_context()));
+
+			int32_t key2;
+			{				
+				if (!connecting) return;
+
+				active_count++;
+				key2 = active_count;
+				
+				RR_SHARED_PTR<boost::signals2::scoped_connection> sock_closer =
+					RR_MAKE_SHARED<boost::signals2::scoped_connection>(
+						parent->AddCloseListener(sock, boost::bind(&boost::asio::ip::tcp::socket::close, _1))
+						);
+
+				RobotRaconteurNode::asio_async_connect(node, sock, ep, boost::bind(&TcpConnector::connected_callback, shared_from_this(), sock, sock_closer, key2, boost::asio::placeholders::error));
+				
+				active.push_back(key2);
+			}
+		}
+		catch (std::exception&)
+		{
+			handle_error(key, boost::system::error_code(boost::system::errc::io_error, boost::system::generic_category()));
+			return;
+		}
+
+		if (!candidate_endpoints->empty())
+		{
+			backoff_timer->expires_from_now(boost::posix_time::milliseconds(5));
+			RobotRaconteurNode::asio_async_wait(node, connect_timer, boost::bind(&TcpConnector::connect3, shared_from_this(), candidate_endpoints, key, boost::asio::placeholders::error));
+			return;
+		}
+
+		connect4();
+	}
+
+	void TcpConnector::connect4()
+	{
 		bool all_stopped = false;
 		{
 			boost::mutex::scoped_lock lock(this_lock);
@@ -355,10 +376,6 @@ namespace detail
 
 			callback(RR_SHARED_PTR<TcpTransportConnection>(), errors.back());
 		}
-
-
-
-
 	}
 
 	void TcpConnector::connected_callback(RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket, RR_SHARED_PTR<boost::signals2::scoped_connection> socket_closer, int32_t key, const boost::system::error_code& error)

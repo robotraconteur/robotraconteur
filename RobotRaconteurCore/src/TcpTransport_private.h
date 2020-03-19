@@ -195,6 +195,10 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
 			void connect2(int32_t key, const boost::system::error_code& err, boost::asio::ip::tcp::resolver::results_type results, boost::function<void(RR_SHARED_PTR<TcpTransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > callback);
 #endif
 
+			void connect3(RR_SHARED_PTR<std::list<boost::asio::ip::tcp::endpoint> > candidate_endpoints, int32_t key, const boost::system::error_code& e);
+
+			void connect4();
+
 			void connected_callback(RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket, RR_SHARED_PTR<boost::signals2::scoped_connection> socket_closer, int32_t key, const boost::system::error_code& error);
 
 			void connected_callback2(RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket, int32_t key, RR_SHARED_PTR<ITransportConnection> connection, RR_SHARED_PTR<RobotRaconteurException> err);
@@ -229,6 +233,8 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
 
 			boost::mutex this_lock;
 			std::string url;
+			
+			RR_SHARED_PTR<boost::asio::deadline_timer> backoff_timer;
 
 			RR_WEAK_PTR<RobotRaconteurNode> node;			
 		public:
