@@ -181,4 +181,61 @@ RR_BOOST_ASIO_IO_CONTEXT& ThreadPool::get_io_context()
 
 ThreadPoolFactory::~ThreadPoolFactory() {}
     
+
+
+IOContextThreadPool::IOContextThreadPool(RR_SHARED_PTR<RobotRaconteurNode> node, RR_BOOST_ASIO_IO_CONTEXT& external_io_context, bool multithreaded)
+: ThreadPool(node), _external_io_context(external_io_context), _multithreaded(multithreaded)
+{
+
+}
+
+IOContextThreadPool::~IOContextThreadPool()
+{
+
+}
+
+size_t IOContextThreadPool::GetThreadPoolCount()
+{
+	return _multithreaded ? 2 : 1;
+}
+
+void IOContextThreadPool::SetThreadPoolCount(size_t count)
+{
+	throw InvalidOperationException("Cannot set thread count on IOContextThreadPool");
+}
+
+void IOContextThreadPool::Post(boost::function<void()> function)
+{
+	RR_BOOST_ASIO_POST(_external_io_context,boost::bind(&ThreadPool_post_wrapper, function, GetNode()));
+}
+bool IOContextThreadPool::TryPost(RR_MOVE_ARG(boost::function<void()>) function)
+{
+	RR_BOOST_ASIO_POST(_external_io_context,boost::bind(&ThreadPool_post_wrapper, function, GetNode()));
+	return true;
+}
+
+void IOContextThreadPool::Shutdown()
+{
+
+}
+
+RR_BOOST_ASIO_IO_CONTEXT& IOContextThreadPool::get_io_context()
+{
+	return _external_io_context;
+}
+
+namespace detail
+	{
+		bool ThreadPool_IsNodeMultithreaded(RR_WEAK_PTR<RobotRaconteurNode> node)
+		{
+			RR_SHARED_PTR<RobotRaconteurNode> node1 = node.lock();
+			if (!node1) throw InvalidOperationException("Node has been released");
+
+			RR_SHARED_PTR<ThreadPool> p;
+			if (!node1->TryGetThreadPool(p)) throw InvalidOperationException("Node has been released");
+
+			return p->GetThreadPoolCount() > 1;
+		}
+	}
+
 }

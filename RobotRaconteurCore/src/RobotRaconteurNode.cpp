@@ -1915,10 +1915,15 @@ RR_SHARED_PTR<ThreadPoolFactory> RobotRaconteurNode::GetThreadPoolFactory()
 	
 	boost::mutex::scoped_lock lock(thread_pool_factory_lock);
 
-	if (!thread_pool_factory)
+	if (!thread_pool && !thread_pool_factory)
 	{
 		thread_pool_factory=RR_MAKE_SHARED<ThreadPoolFactory>();
 				
+	}
+
+	if (!thread_pool_factory)
+	{
+		throw InvalidOperationException("ThreadPool set but ThreadPoolFactory not configured");
 	}
 
 	return thread_pool_factory;

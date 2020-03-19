@@ -90,6 +90,37 @@ namespace RobotRaconteur
 		}
         virtual ~ThreadPoolFactory();
 	};
+
+	class ROBOTRACONTEUR_CORE_API IOContextThreadPool : public ThreadPool
+	{
+
+	protected:
+		
+		RR_BOOST_ASIO_IO_CONTEXT& _external_io_context;
+		bool _multithreaded;
+		
+	public:
+
+		IOContextThreadPool(RR_SHARED_PTR<RobotRaconteurNode> node, RR_BOOST_ASIO_IO_CONTEXT& external_io_context, bool multithreaded);
+        virtual ~IOContextThreadPool();
+		
+		virtual size_t GetThreadPoolCount();
+		virtual void SetThreadPoolCount(size_t count);
+
+		virtual void Post(boost::function<void()> function);
+		virtual bool TryPost(RR_MOVE_ARG(boost::function<void()>) function);
+
+		virtual void Shutdown();
+
+		virtual RR_BOOST_ASIO_IO_CONTEXT& get_io_context();
+
+	};
+
+	namespace detail
+	{
+		bool ThreadPool_IsNodeMultithreaded(RR_WEAK_PTR<RobotRaconteurNode> node);
+	}
+
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
 	using ThreadPoolPtr = RR_SHARED_PTR<ThreadPool>;
 	using ThreadPoolFactoryPtr = RR_SHARED_PTR<ThreadPoolFactory>;

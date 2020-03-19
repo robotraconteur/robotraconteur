@@ -1703,6 +1703,79 @@ return 0;
 		cout << "Test completed, no errors detected!" << endl;
 	}
 
+	if (command=="singlethreadserver")
+	{
+		if (argc < 4)
+		{
+			cout << "Usage for server:  RobotRaconteurTest server port nodename" << endl;
+			return -1;
+		}
+
+		string nodename(argv[3]);
+		int port = boost::lexical_cast<int>(string(argv[2]));
+
+		RR_BOOST_ASIO_IO_CONTEXT asio_io_context;
+		
+		RR_SHARED_PTR<IOContextThreadPool> io_context_thread_pool = RR_MAKE_SHARED<IOContextThreadPool>(RobotRaconteurNode::sp(), boost::ref(asio_io_context), false);
+		RobotRaconteurNode::s()->SetThreadPool(io_context_thread_pool);
+		
+		RR_SHARED_PTR<LocalTransport> c2=RR_MAKE_SHARED<LocalTransport>();
+		c2->StartServerAsNodeName(nodename);
+
+		RR_SHARED_PTR<TcpTransport> c=RR_MAKE_SHARED<TcpTransport>();
+		
+		try
+		{
+			c->LoadTlsNodeCertificate();
+		}
+		catch (std::exception&)
+		{
+			std::cout << "warning: Could not load node certificate" << std::endl;
+		}
+		
+		c->StartServer(port);
+		
+		c->EnableNodeAnnounce();
+		c->EnableNodeDiscoveryListening();
+
+		c->AddWebSocketAllowedOrigin("http://localhost");
+		c->AddWebSocketAllowedOrigin("http://localhost:8000");
+
+		RobotRaconteurNode::s()->RegisterTransport(c);
+		RobotRaconteurNode::s()->RegisterTransport(c2);		
+		RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<com__robotraconteur__testing__TestService1Factory>());
+		RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<com__robotraconteur__testing__TestService2Factory>());
+		RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<com__robotraconteur__testing__TestService3Factory>());
+
+		RobotRaconteurTestServiceSupport s;
+		s.RegisterServices(c);
+
+		RobotRaconteurTestService2Support s2;
+		s2.RegisterServices(c);
+		auto node = RobotRaconteurNode::sp();
+		cout << "Server started, press enter to quit" << endl;
+		int event_count = 0;
+		while (true)
+		{
+			int res = asio_io_context.poll_one();
+			if (res > 0)
+			{
+				event_count++;
+				//std::cout << "Ran events: " << res << ", event_count: " << event_count << std::endl;
+			}
+			else
+			{
+				//std::cout << "No events" << std::endl;
+			}
+			boost::this_thread::sleep(boost::posix_time::microseconds(1));
+		}
+		getchar();
+		RobotRaconteurNode::s()->Shutdown();
+		cout << "Test completed, no errors detected!" << endl;
+		return 0;
+
+	}
+
 	throw runtime_error("Unknown test command");
 
 }
