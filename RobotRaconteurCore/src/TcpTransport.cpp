@@ -324,7 +324,7 @@ namespace detail
 		if (!candidate_endpoints->empty())
 		{
 			backoff_timer->expires_from_now(boost::posix_time::milliseconds(5));
-			RobotRaconteurNode::asio_async_wait(node, connect_timer, boost::bind(&TcpConnector::connect3, shared_from_this(), candidate_endpoints, key, boost::asio::placeholders::error));
+			RobotRaconteurNode::asio_async_wait(node, backoff_timer, boost::bind(&TcpConnector::connect3, shared_from_this(), candidate_endpoints, key, boost::asio::placeholders::error));
 			return;
 		}
 
