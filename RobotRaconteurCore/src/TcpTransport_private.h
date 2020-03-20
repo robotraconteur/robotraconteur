@@ -493,7 +493,11 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
 
 			RR_SHARED_PTR<boost::asio::deadline_timer> discovery_request_timer;
 
+			std::map<int32_t,RR_SHARED_PTR<boost::asio::deadline_timer> > backoff_timers;
+
 			void start_listen_sockets();
+
+			void start_listen_sockets2(int32_t key, const boost::system::error_code& ec);
 
 			void start_ipv6_listen_socket(boost::asio::ip::udp::endpoint ep);
 

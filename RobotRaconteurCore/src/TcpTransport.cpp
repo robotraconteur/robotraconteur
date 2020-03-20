@@ -4564,6 +4564,26 @@ namespace detail
 
 	void IPNodeDiscovery::start_listen_sockets()
 	{
+		int32_t key = 0;
+		while (backoff_timers.find(key) != backoff_timers.end())
+		{
+			key++;
+		}
+
+		RR_SHARED_PTR<boost::asio::deadline_timer> backoff_timer(new boost::asio::deadline_timer(GetNode()->GetThreadPool()->get_io_context()));
+		backoff_timer->expires_from_now(boost::posix_time::milliseconds(10));
+		backoff_timer->async_wait(boost::bind(&IPNodeDiscovery::start_listen_sockets2, shared_from_this(), key, boost::asio::placeholders::error));
+		backoff_timers.insert(std::make_pair(key,backoff_timer));
+	}
+
+	void IPNodeDiscovery::start_listen_sockets2(int32_t key, const boost::system::error_code& ec)
+	{
+		boost::mutex::scoped_lock lock(change_lock);
+		backoff_timers.erase(key);
+		if (ec)
+		{
+			return;
+		}
 		int32_t flags = broadcast_flags | listen_flags;
 
 		if (flags == listen_socket_flags)
@@ -4571,8 +4591,6 @@ namespace detail
 
 		ip4_listen.reset();
 		ip6_listen.clear();
-
-		boost::this_thread::sleep(boost::posix_time::milliseconds(5));
 
 		std::vector<boost::asio::ip::address> local_addresses;
 
@@ -5148,7 +5166,7 @@ namespace detail
 			discovery_request_timer.reset(new boost::asio::deadline_timer(p1->GetNode()->GetThreadPool()->get_io_context()));
 			uint32_t delay=p1->GetNode()->GetRandomInt<uint32_t>(250, 1000);
 			discovery_request_timer->expires_from_now(boost::posix_time::milliseconds(delay));
-			RobotRaconteurNode::asio_async_wait(node, discovery_request_timer, boost::bind(&IPNodeDiscovery::handle_request_timer, shared_from_this(), boost::asio::placeholders::error, 3));
+			RobotRaconteurNode::asio_async_wait(node, discovery_request_timer, boost::bind(&IPNodeDiscovery::handle_request_timer, this, boost::asio::placeholders::error, 3));
 		}
 	}
 
