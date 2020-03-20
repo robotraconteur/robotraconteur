@@ -76,7 +76,7 @@ throw RobotRaconteur::ServiceException("Invalid structure stub type.");
 }
 RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> RobotRaconteurServiceIndexFactory::UnpackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> mstructin)
 {
-boost::string_ref type=mstructin->GetTypeString().str();std::vector<std::string> res;
+std::string type=mstructin->GetTypeString().str().to_string();std::vector<std::string> res;
 boost::split(res,type,boost::is_from_range('.','.'));
 std::string servicetype=res.at(0);
 std::string objecttype=res.at(1);
