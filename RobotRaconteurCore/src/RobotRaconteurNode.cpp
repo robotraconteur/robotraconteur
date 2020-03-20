@@ -1236,6 +1236,11 @@ void RobotRaconteurNode::AsyncConnectService(boost::string_ref url, boost::strin
 void RobotRaconteurNode::AsyncConnectService(const std::vector<std::string> &url, boost::string_ref username, RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> > credentials, boost::function<void (RR_SHARED_PTR<ClientContext>,ClientServiceListenerEventType,RR_SHARED_PTR<void>)> listener, boost::string_ref objecttype, boost::function<void(RR_SHARED_PTR<RRObject>,RR_SHARED_PTR<RobotRaconteurException>)> handler, int32_t timeout)
 {
 	
+	if (url.empty())
+	{
+		throw InvalidArgumentException("URL vector must not be empty for AsyncConnectService");
+	}
+
 	std::vector<RR_SHARED_PTR<Transport> > atransports;
 
 	std::map<std::string,RR_WEAK_PTR<Transport> > connectors;
