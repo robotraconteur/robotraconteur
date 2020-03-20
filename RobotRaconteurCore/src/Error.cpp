@@ -232,6 +232,12 @@ namespace RobotRaconteur
 
 	}
 
+	RR_SHARED_PTR<RobotRaconteurException> RobotRaconteurExceptionUtil::DownCastException(RR_SHARED_PTR<RobotRaconteurException> err)
+	{
+		RobotRaconteurException* err1 = err.get();
+		return DownCastException(*err1);
+	}
+
 	RR_SHARED_PTR<RobotRaconteurException> RobotRaconteurExceptionUtil::ExceptionToSharedPtr(std::exception& err, MessageErrorType default_type)
 	{
 		RobotRaconteurException *err2 = dynamic_cast<RobotRaconteurException*>(&err);
@@ -255,22 +261,28 @@ namespace RobotRaconteur
 
 #define RR_DownCastAndThrowException_M1(exp_cpp_type, exp_code, exp_type_str) \
 	case exp_code : \
-		throw exp_cpp_type(err->Message,err->ErrorSubName,err->ErrorParam); \
+		throw exp_cpp_type(err.Message,err.ErrorSubName,err.ErrorParam); \
 
 #define RR_DownCastAndThrowException_M2(exp_cpp_type, exp_code) \
 	case exp_code : \
-		throw exp_cpp_type(err->Error, err->Message,err->ErrorSubName,err->ErrorParam); \
+		throw exp_cpp_type(err.Error, err.Message,err.ErrorSubName,err.ErrorParam); \
 
 
-	void RobotRaconteurExceptionUtil::DownCastAndThrowException(RR_SHARED_PTR<RobotRaconteurException> err)
+	void RobotRaconteurExceptionUtil::DownCastAndThrowException(RobotRaconteurException& err)
 	{
-		switch (err->ErrorCode)
+		switch (err.ErrorCode)
 		{
 			RR_EXCEPTION_TYPES_INIT(RR_DownCastAndThrowException_M1, RR_DownCastAndThrowException_M2)
 		default:
 			break;
 		}
 
-		throw RobotRaconteurException(err->ErrorCode,err->Error,err->Message,err->ErrorSubName,err->ErrorParam);
+		throw RobotRaconteurException(err.ErrorCode,err.Error,err.Message,err.ErrorSubName,err.ErrorParam);
+	}
+
+	void RobotRaconteurExceptionUtil::DownCastAndThrowException(RR_SHARED_PTR<RobotRaconteurException> err)
+	{
+		RobotRaconteurException* err1 = err.get();
+		DownCastAndThrowException(*err1);
 	}
 }

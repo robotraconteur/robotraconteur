@@ -39,9 +39,13 @@ namespace RobotRaconteur
 		static void ThrowMessageEntryException(RR_INTRUSIVE_PTR<MessageEntry> entry);
 
 		static RR_SHARED_PTR<RobotRaconteurException> DownCastException(RobotRaconteurException& err);
+		
+		static RR_SHARED_PTR<RobotRaconteurException> DownCastException(RR_SHARED_PTR<RobotRaconteurException> err);
 
 		static RR_SHARED_PTR<RobotRaconteurException> ExceptionToSharedPtr(std::exception& err, MessageErrorType default_type=MessageErrorType_UnknownError);
 
+		static void DownCastAndThrowException(RobotRaconteurException& err);
+		
 		static void DownCastAndThrowException(RR_SHARED_PTR<RobotRaconteurException> err);
 	};
 

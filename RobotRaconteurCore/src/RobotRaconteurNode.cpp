@@ -2100,15 +2100,20 @@ RR_SHARED_PTR<AutoResetEvent> RobotRaconteurNode::CreateAutoResetEvent()
 
 void RobotRaconteurNode::DownCastAndThrowException(RobotRaconteurException& exp)
 {
+	if (exp.ErrorCode != MessageErrorType_RemoteError)
+	{
+		RobotRaconteurExceptionUtil::DownCastAndThrowException(exp);
+	}
+
 	std::string type=exp.Error;
 	if (!boost::contains(type,"."))
 	{
-		return;
+		throw exp;
 	}
 	boost::tuple<boost::string_ref,boost::string_ref> stype=SplitQualifiedName(type);
 	if (!IsServiceTypeRegistered(stype.get<0>()))
 	{
-		return;
+		throw exp;
 	}
 
 	GetServiceType(stype.get<0>())->DownCastAndThrowException(exp);
@@ -2118,6 +2123,12 @@ void RobotRaconteurNode::DownCastAndThrowException(RobotRaconteurException& exp)
 RR_SHARED_PTR<RobotRaconteurException> RobotRaconteurNode::DownCastException(RR_SHARED_PTR<RobotRaconteurException> exp)
 {
 	if (!exp) return exp;
+
+	if (exp->ErrorCode != MessageErrorType_RemoteError)
+	{		
+		return RobotRaconteurExceptionUtil::DownCastException(exp);
+	}
+
 	std::string type=exp->Error;
 	if (!boost::contains(type,"."))
 	{
