@@ -37,6 +37,7 @@ namespace RobotRaconteurTest
 
 		void RunFullTest(string url, string authurl);
 		void RunMinimalTest(string url);
+		void RunSingleThreadTest(string url, RR_BOOST_ASIO_IO_CONTEXT& io_context);
 
 		
 		void TestProperties();

@@ -236,6 +236,16 @@ namespace detail
 
 			return p->GetThreadPoolCount() > 1;
 		}
+
+		RR_SHARED_PTR<RobotRaconteurNode> IOContextThreadPool_RobotRaconteurNode_sp()
+		{
+			return RobotRaconteurNode::sp();
+		}
+
+		void IOContextThreadPool_RobotRaconteurNode_DownCastAndThrowException(RR_SHARED_PTR<RobotRaconteurNode> node, RobotRaconteurException& exp)
+		{
+			node->DownCastAndThrowException(exp);
+		}
 	}
 
 }

@@ -121,6 +121,108 @@ namespace RobotRaconteur
 		bool ThreadPool_IsNodeMultithreaded(RR_WEAK_PTR<RobotRaconteurNode> node);
 	}
 
+	namespace detail
+	{
+		template<typename T>
+		struct IOContextThreadPool_AsyncResultAdapter_traits
+		{
+			typedef T result_type;	
+		};
+
+		template<>
+		struct IOContextThreadPool_AsyncResultAdapter_traits<void>
+		{
+			typedef int32_t result_type;	
+		};
+
+		template<typename T>
+		struct IOContextThreadPool_AsyncResultAdapter_data
+		{
+			typedef typename IOContextThreadPool_AsyncResultAdapter_traits<T>::result_type result_type;
+			boost::initialized<result_type> _result;
+			RR_SHARED_PTR<RobotRaconteurException> _exp;
+			boost::initialized<bool> _complete;
+		};
+
+		ROBOTRACONTEUR_CORE_API RR_SHARED_PTR<RobotRaconteurNode> IOContextThreadPool_RobotRaconteurNode_sp();
+
+		ROBOTRACONTEUR_CORE_API void IOContextThreadPool_RobotRaconteurNode_DownCastAndThrowException(RR_SHARED_PTR<RobotRaconteurNode> node, RobotRaconteurException& exp);
+	}
+
+	template<typename T>
+	class IOContextThreadPool_AsyncResultAdapter
+	{
+	private:
+		RR_SHARED_PTR<RobotRaconteurNode> _node;
+		RR_BOOST_ASIO_IO_CONTEXT& _io_context;
+		RR_SHARED_PTR<detail::IOContextThreadPool_AsyncResultAdapter_data<T> > _data; 
+	public:
+
+		typedef typename detail::IOContextThreadPool_AsyncResultAdapter_traits<T>::result_type result_type;
+
+		IOContextThreadPool_AsyncResultAdapter(RR_SHARED_PTR<RobotRaconteurNode>& node, RR_BOOST_ASIO_IO_CONTEXT& io_context)
+			: _node(node), _io_context(io_context), _data(RR_MAKE_SHARED<detail::IOContextThreadPool_AsyncResultAdapter_data<T> >())  {}
+
+		IOContextThreadPool_AsyncResultAdapter(RR_BOOST_ASIO_IO_CONTEXT& io_context)
+			: _node(detail::IOContextThreadPool_RobotRaconteurNode_sp()), _io_context(io_context), _data(RR_MAKE_SHARED<detail::IOContextThreadPool_AsyncResultAdapter_data<T> >()) {}
+
+		void operator () (result_type res, RR_SHARED_PTR<RobotRaconteurException> exp)
+		{
+			_data->_complete.data() = true;
+			_data->_result.data() = res;
+			_data->_exp = exp;
+		}
+
+		void operator () (RR_SHARED_PTR<RobotRaconteurException> exp)
+		{
+			_data->_complete.data() = true;
+			_data->_exp = exp;
+		}
+
+		void operator () (result_type res)
+		{
+			_data->_complete.data() = true;
+			_data->_result.data() = res;			
+		}
+
+		void operator () ()
+		{
+			_data->_complete.data() = true;			
+		}
+
+		result_type GetResult()
+		{
+			while (!_data->_complete.data())
+			{
+				_io_context.run_one();
+			}
+
+			result_type res;
+			RR_SHARED_PTR<RobotRaconteurException> exp;
+			boost::swap(res, _data->_result.data());
+			exp = _data->_exp;
+			_data->_exp.reset();
+			if (exp)
+			{
+				RobotRaconteurException* exp1 = exp.get();
+				detail::IOContextThreadPool_RobotRaconteurNode_DownCastAndThrowException(_node,*exp1);
+			}			
+			return res;
+		}
+
+		bool PollResult(result_type& ret, RR_SHARED_PTR<RobotRaconteurException>& exp)
+		{
+			if(!_data->_complete.data())
+			{
+				return false;
+			}
+
+			boost::swap(ret,_data->_result.data());
+			boost::swap(exp,_data->_exp);
+			return true;
+		}
+	};
+
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
 	using ThreadPoolPtr = RR_SHARED_PTR<ThreadPool>;
 	using ThreadPoolFactoryPtr = RR_SHARED_PTR<ThreadPoolFactory>;

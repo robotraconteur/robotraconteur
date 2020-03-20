@@ -698,6 +698,41 @@ return 0;
 
 	}
 
+	if (command == "singlethreadclient")
+	{
+		if (argc <3)
+		{
+			cout << "Usage for singlethreadclient:  RobotRaconteurTest singlethreadclient url" << endl;
+			return -1;
+		}
+
+		string url1(argv[2]);
+		
+		RR_BOOST_ASIO_IO_CONTEXT asio_io_context;
+		RR_SHARED_PTR<IOContextThreadPool> thread_pool = RR_MAKE_SHARED<IOContextThreadPool>(RobotRaconteurNode::sp(), boost::ref(asio_io_context), false);
+
+		RobotRaconteurNode::s()->SetThreadPool(thread_pool);
+
+		RR_SHARED_PTR<TcpTransport> c = RR_MAKE_SHARED<TcpTransport>();
+		
+		RR_SHARED_PTR<LocalTransport> c2 = RR_MAKE_SHARED<LocalTransport>();
+		
+		RobotRaconteurNode::s()->RegisterTransport(c);
+		RobotRaconteurNode::s()->RegisterTransport(c2);		
+		RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<com__robotraconteur__testing__TestService1Factory>());
+		RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<com__robotraconteur__testing__TestService2Factory>());
+				
+		ServiceTestClient cl;
+		cl.RunSingleThreadTest(url1, asio_io_context);
+		
+		RobotRaconteurNode::s()->Shutdown();
+
+		boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+		cout << "Test completed, no errors detected!" << endl;
+		return 0;
+
+	}
+
 	if (command=="server")
 	{
 		if (argc < 4)
