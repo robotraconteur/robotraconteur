@@ -291,6 +291,14 @@ bool subscribertest_filter_predicate(const ServiceInfo2& node)
 	return false;
 }
 
+static bool singlethreadserver_keep_going = true;
+void singlethreadserver_quit_thread_func()
+{
+	cout << "Server started, press enter to quit" << endl;
+	getchar();
+	singlethreadserver_keep_going = false;
+} 
+
 int main(int argc, char* argv[])
 {
 
@@ -1788,9 +1796,15 @@ return 0;
 		RobotRaconteurTestService2Support s2;
 		s2.RegisterServices(c);
 		
-		cout << "Server started, press enter to quit" << endl;
+		
 		int event_count = 0;
-		while (true)
+
+		bool single_thread_server_keep_going = true;
+		
+
+		boost::thread quit_thread(singlethreadserver_quit_thread_func);
+
+		while (singlethreadserver_keep_going)
 		{
 			int res = asio_io_context.poll_one();
 			if (res > 0)
@@ -1804,8 +1818,8 @@ return 0;
 			}
 			boost::this_thread::sleep(boost::posix_time::microseconds(1));
 		}
-		getchar();
-		RobotRaconteurNode::s()->Shutdown();
+		
+		
 		cout << "Test completed, no errors detected!" << endl;
 		return 0;
 
