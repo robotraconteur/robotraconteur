@@ -126,7 +126,10 @@ namespace RobotRaconteur
 	{
 		if (node)
 		{
-			node->Shutdown();
+			if (detail::ThreadPool_IsNodeMultithreaded(node))
+			{
+				node->Shutdown();
+			}
 		}
 	}
 
