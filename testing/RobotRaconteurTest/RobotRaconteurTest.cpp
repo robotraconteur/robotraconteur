@@ -1787,7 +1787,7 @@ return 0;
 
 		RobotRaconteurTestService2Support s2;
 		s2.RegisterServices(c);
-		auto node = RobotRaconteurNode::sp();
+		
 		cout << "Server started, press enter to quit" << endl;
 		int event_count = 0;
 		while (true)
