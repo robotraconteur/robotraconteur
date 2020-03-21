@@ -100,6 +100,8 @@ namespace RobotRaconteur
 
 	std::vector<NodeDiscoveryInfo>  Transport::GetDetectedNodes(const std::vector<std::string>& schemes)
 	{
+		ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
+
 		RR_SHARED_PTR<detail::sync_async_handler<std::vector<NodeDiscoveryInfo> > > t=RR_MAKE_SHARED<detail::sync_async_handler<std::vector<NodeDiscoveryInfo> > >();
 		boost::function<void(RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >)> h = boost::bind(&detail::sync_async_handler<std::vector<NodeDiscoveryInfo> >::operator(), t, _1, RR_SHARED_PTR<RobotRaconteurException>());
 		AsyncGetDetectedNodes(schemes, h);

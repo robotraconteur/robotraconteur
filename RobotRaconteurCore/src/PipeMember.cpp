@@ -94,6 +94,8 @@ size_t PipeEndpointBase::Available()
 
 void PipeEndpointBase::Close()
 {
+	ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
+
 	RR_SHARED_PTR<detail::sync_async_handler<void> > t=RR_MAKE_SHARED<detail::sync_async_handler<void > >();
 	AsyncClose(boost::bind(&detail::sync_async_handler<void>::operator(),t,_1),GetNode()->GetRequestTimeout());
 	t->end_void();
@@ -1460,6 +1462,8 @@ void PipeBroadcasterBase::handle_send(int32_t id, RR_SHARED_PTR<RobotRaconteurEx
 
 void PipeBroadcasterBase::SendPacketBase(RR_INTRUSIVE_PTR<RRValue> packet)
 {
+	ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
+
 	RR_SHARED_PTR<detail::sync_async_handler<void> > t = RR_MAKE_SHARED<detail::sync_async_handler<void> >();
 	AsyncSendPacketBase(packet, boost::bind(&detail::sync_async_handler<void>::operator(), t));
 	t->end_void();

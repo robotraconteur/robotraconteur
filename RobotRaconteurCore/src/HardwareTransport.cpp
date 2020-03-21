@@ -377,6 +377,8 @@ namespace RobotRaconteur
 
 	RR_SHARED_PTR<ITransportConnection> HardwareTransport::CreateTransportConnection(boost::string_ref url, RR_SHARED_PTR<Endpoint> e)
 	{
+		ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
+
 		RR_SHARED_PTR<detail::sync_async_handler<ITransportConnection> > d = RR_MAKE_SHARED<detail::sync_async_handler<ITransportConnection> >(RR_MAKE_SHARED<ConnectionException>("Timeout exception"));
 
 		boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > h

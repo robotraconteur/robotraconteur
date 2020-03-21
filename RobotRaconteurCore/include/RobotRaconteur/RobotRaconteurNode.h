@@ -635,6 +635,8 @@ namespace RobotRaconteur
 		 * 6. Releases all periodic cleanup task listeners
 		 * 7. Shuts down and releases the thread pool
 		 *  
+		 * Requires Multithreading
+		 * 
 		 */
 		virtual void Shutdown();
 
@@ -693,7 +695,10 @@ namespace RobotRaconteur
 		 * once the transport has sent the message, or an error occurs. An exception
 		 * is thrown if the message cannot be sent.
 		 * 
+		 * Requires Multithreading
+		 * 
 		 * @param m The message to send
+		 * 
 		 */
 		void SendMessage(RR_INTRUSIVE_PTR<Message> m);
 
@@ -975,6 +980,8 @@ namespace RobotRaconteur
 		 * and all the implemented types. The client will normally want a specific one of the implement types.
 		 * Specify this desired type in objecttype to avoid future compatibility issues.
 		 * 
+		 * Requires multithreading
+		 * 
 		 * @param url The URL of the service to connect
 		 * @param username An optional username for authentication
 		 * @param credentials Optional credentials for authentication
@@ -1011,6 +1018,8 @@ namespace RobotRaconteur
 		 * function will attempt each of the candidate URLs kind-of-the-hill style to 
 		 * find the best one.
 		 * 
+		 * Requires multithreading
+		 * 
 		 * @param urls Vector of candidate URLs to attempt
 		 * @param username An optional username for authentication
 		 * @param credentials Optional credentials for authentication
@@ -1043,6 +1052,8 @@ namespace RobotRaconteur
 		 * Synchronously disconnects a client connection. Client connections
 		 * are automatically closed by Shutdown(), so this function
 		 * is optional. 
+		 * 
+		 * Requires multithreading
 		 * 
 		 * @param obj The root object of the service to disconnect
 		 */
@@ -1244,6 +1255,8 @@ namespace RobotRaconteur
 		 * if nodes are rapidly added and removed from the network. Call this
 		 * function to update the detected nodes.
 		 * 
+		 * Requires multithreading
+		 * 
 		 * @param schemes A vector of transport schemes, ie "rr+tcp", "rr+local", etc. to update.
 		 */
 		void UpdateDetectedNodes(const std::vector<std::string>& schemes);
@@ -1372,6 +1385,8 @@ namespace RobotRaconteur
 		 * `com.robotraconteur.robotics.robot.Robot`. This process will update the detected 
 		 * node cache.
 		 * 
+		 * Requires multithreading
+		 * 
 		 * @param servicetype The service type to find, ie `com.robotraconteur.robotics.robot.Robot`
 		 * @param transportschemes A list of transport types to search, ie `rr+tcp`, `rr+local`, `rrs+tcp`, etc
 		 * @return std::vector<ServiceInfo2> The detected services
@@ -1396,6 +1411,8 @@ namespace RobotRaconteur
 		 * Updates the discovery cache and find nodes with the specified NodeID.
 		 * This function returns unverified cache information.
 		 * 
+		 * Requires multithreading
+		 * 
 		 * @param id The NodeID to find
 		 * @param transportschemes A list of transport types to search, ie `rr+tcp`, `rr+local`, `rrs+tcp`, etc
 		 * @return std::vector<NodeInfo2> 
@@ -1419,6 +1436,8 @@ namespace RobotRaconteur
 		 * 
 		 * Updates the discovery cache and find nodes with the specified NodeName.
 		 * This function returns unverified cache information.
+		 * 
+		 * Requires multithreading
 		 * 
 		 * @param name The NodeName to find
 		 * @param transportschemes A list of transport types to search, ie `rr+tcp`, `rr+local`, `rrs+tcp`, etc
@@ -1448,6 +1467,8 @@ namespace RobotRaconteur
 		 * prevent other users ("User" lock) or client connections  ("Session" lock) 
 		 * from interacting with the objects.
 		 *  
+		 * Requires multithreading
+		 * 
 		 * @param obj The object to lock. Must be returned by ConnectService or returned by an `objref`
 		 * @param flags Select either a "User" or "Session" lock
 		 * @return std::string "OK" on success
@@ -1472,6 +1493,8 @@ namespace RobotRaconteur
 		 * 
 		 * Object must have previously been locked using RequestObjectLock() or
 		 * AsyncRequestObjectLock()
+		 * 
+		 * Requires multithreading
 		 * 
 		 * @param obj The object previously locked
 		 * @return std::string "OK" on success
@@ -1502,6 +1525,8 @@ namespace RobotRaconteur
 		 * 
 		 * Monitor locks do not lock any sub-objects (objref)
 		 * 
+		 * Requires multithreading
+		 * 
 		 * @param obj The object to lock
 		 * @param timeout The timeout in milliseconds to acquire the monitor lock, 
 		 * or RR_TIMEOUT_INFINITE
@@ -1513,6 +1538,8 @@ namespace RobotRaconteur
 		 * 
 		 * Use of ScopedMonitorLock instead of this function is highly recommended
 		 * to take advantage of RAII scoping
+		 * 
+		 * Requires multithreading
 		 * 
 		 * @param obj The object previously locked by MonitorEnter()
 		 */
@@ -1633,6 +1660,8 @@ namespace RobotRaconteur
 		 * This function will return the object from an `objref` as the specified type,
 		 * or throw an error if the type is invalid.
 		 * 
+		 * Requires multithreading
+		 * 
 		 * @param obj The object with the desired `objref`
 		 * @param objref The name of the `objref` member
 		 * @param objecttype The desired service object type
@@ -1645,6 +1674,8 @@ namespace RobotRaconteur
 		 * @brief Returns an indexed objref as a specified type
 		 * 
 		 * Same as FindObjectTyped() but includes an `objref` index
+		 * 
+		 * Requires multithreading
 		 * 
 		 * @param obj The object with the desired `objref`
 		 * @param objref The name of the `objref` member
@@ -1686,6 +1717,8 @@ namespace RobotRaconteur
 		 * 
 		 * Returns the fully qualified object type that would be returned by an `objref` member
 		 * 
+		 * Requires multithreading
+		 * 
 		 * @param obj The object with the desired `objref`
 		 * @param objref The name of the `objref` member
 		 * @return std::string The fully qaulified object type
@@ -1696,6 +1729,8 @@ namespace RobotRaconteur
 		 * @brief Returns the type of a service object
 		 * 
 		 * Returns the fully qualified object type that would be returned by an indexed `objref` member
+		 * 
+		 * Requires multithreading
 		 * 
 		 * @param obj The object with the desired `objref`
 		 * @param objref The name of the `objref` member
@@ -2010,6 +2045,8 @@ namespace RobotRaconteur
 		 * 
 		 * Normally will sleep based on the system clock, but in certain
 		 * circumstances will use simulation time
+		 * 
+		 * Requires multithreading
 		 * 
 		 * @param duration The duration to sleep
 		 */

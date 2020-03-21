@@ -2468,6 +2468,8 @@ NodeID ASIOStreamBaseTransport::GetRemoteNodeID()
 
 void ASIOStreamBaseTransport::SendMessage(RR_INTRUSIVE_PTR<Message> m)
 {
+	ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
+
 	RR_SHARED_PTR<detail::sync_async_handler<void> > s=RR_MAKE_SHARED<detail::sync_async_handler<void> >(RR_MAKE_SHARED<ConnectionException>("Send timeout"));
 	
 	boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&detail::sync_async_handler<void>::operator(), s, _1);

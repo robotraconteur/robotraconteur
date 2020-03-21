@@ -223,6 +223,8 @@ namespace RobotRaconteur
 
 	RR_SHARED_PTR<RRObject> ClientContext::FindObjRef(boost::string_ref path, boost::string_ref objecttype2)
 	{
+		ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
+
 		RR_SHARED_PTR<detail::sync_async_handler<RRObject> >h = RR_MAKE_SHARED<detail::sync_async_handler<RRObject> >();
 		AsyncFindObjRef(path, objecttype2, boost::bind(&detail::sync_async_handler<RRObject>::operator(), h, _1, _2), GetNode()->GetRequestTimeout());
 		return h->end();
@@ -475,6 +477,8 @@ namespace RobotRaconteur
 
 	std::string ClientContext::FindObjectType(boost::string_ref path)
 	{
+		ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
+
 		RR_SHARED_PTR<detail::sync_async_handler<std::string> > h = RR_MAKE_SHARED<detail::sync_async_handler<std::string> >(RR_MAKE_SHARED<ServiceException>("Error retrieving object type"));
 		AsyncFindObjectType(path, boost::bind(&detail::sync_async_handler<std::string>::operator(), h, _1, _2), GetNode()->GetRequestTimeout());
 		return *h->end();
@@ -523,6 +527,8 @@ namespace RobotRaconteur
 	RR_INTRUSIVE_PTR<MessageEntry> ClientContext::ProcessRequest(RR_INTRUSIVE_PTR<MessageEntry> m)
 	{
 		
+		ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
+
 		if (!GetConnected()) throw ConnectionException("Service client not connected");
 
 		uint32_t mytransid;
@@ -1102,6 +1108,8 @@ namespace RobotRaconteur
 
 	RR_SHARED_PTR<RRObject> ClientContext::ConnectService(RR_SHARED_PTR<Transport> c, boost::string_ref url, boost::string_ref username, RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials, boost::string_ref objecttype)
 	{
+		ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
+
 		RR_SHARED_PTR<detail::sync_async_handler<RRObject> > d = RR_MAKE_SHARED<detail::sync_async_handler<RRObject> >(RR_MAKE_SHARED<ConnectionException>("Connection timed out"));
 		AsyncConnectService(c, url, username, credentials, objecttype, boost::bind(&detail::sync_async_handler<RRObject>::operator(), d, _1, _2), GetNode()->GetRequestTimeout());
 		return d->end();
@@ -1109,6 +1117,8 @@ namespace RobotRaconteur
 
 	RR_SHARED_PTR<RRObject> ClientContext::ConnectService(RR_SHARED_PTR<Transport> c, RR_SHARED_PTR<ITransportConnection> tc, boost::string_ref url, boost::string_ref username, RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials, boost::string_ref objecttype)
 	{
+		ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
+
 		RR_SHARED_PTR<detail::sync_async_handler<RRObject> > d = RR_MAKE_SHARED<detail::sync_async_handler<RRObject> >(RR_MAKE_SHARED<ConnectionException>("Connection timed out"));
 		AsyncConnectService(c, tc, url, username, credentials, objecttype, boost::bind(&detail::sync_async_handler<RRObject>::operator(), d, _1, _2), GetNode()->GetRequestTimeout());
 		return d->end();
@@ -1717,6 +1727,8 @@ namespace RobotRaconteur
 
 	void ClientContext::Close()
 	{
+		ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
+
 		RR_SHARED_PTR<detail::sync_async_handler<void> > h = RR_MAKE_SHARED<detail::sync_async_handler<void> >(RR_MAKE_SHARED<RequestTimeoutException>(""));
 		AsyncClose(boost::bind(&detail::sync_async_handler<void>::operator(), h));
 
@@ -1917,6 +1929,8 @@ namespace RobotRaconteur
 
 	PullServiceDefinitionReturn ClientContext::PullServiceDefinition(boost::string_ref ServiceType)
 	{
+		ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
+
 		RR_SHARED_PTR<detail::sync_async_handler<PullServiceDefinitionReturn> > d = RR_MAKE_SHARED<detail::sync_async_handler<PullServiceDefinitionReturn> >(RR_MAKE_SHARED<ServiceException>("Could not pull service definition"));
 		AsyncPullServiceDefinition(ServiceType, boost::bind(&detail::sync_async_handler<PullServiceDefinitionReturn>::operator(), d, _1, _2), GetNode()->GetRequestTimeout());
 		RR_SHARED_PTR<PullServiceDefinitionReturn> ret = d->end();
@@ -2074,6 +2088,8 @@ namespace RobotRaconteur
 	PullServiceDefinitionAndImportsReturn ClientContext::PullServiceDefinitionAndImports(boost::string_ref servicetype)
 	{
 
+		ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
+
 		RR_SHARED_PTR<detail::sync_async_handler<PullServiceDefinitionAndImportsReturn> > d = RR_MAKE_SHARED<detail::sync_async_handler<PullServiceDefinitionAndImportsReturn> >(RR_MAKE_SHARED<ServiceException>("Could not pull service definition"));
 		AsyncPullServiceDefinitionAndImports(servicetype, boost::bind(&detail::sync_async_handler<PullServiceDefinitionAndImportsReturn>::operator(), d, _1, _2), GetNode()->GetRequestTimeout());
 		RR_SHARED_PTR<PullServiceDefinitionAndImportsReturn> ret = d->end();
@@ -2117,6 +2133,8 @@ namespace RobotRaconteur
 
 	std::string ClientContext::AuthenticateUser(boost::string_ref username, RR_INTRUSIVE_PTR<RRValue> credentials)
 	{
+		ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
+
 		RR_SHARED_PTR<detail::sync_async_handler<std::string> > d = RR_MAKE_SHARED<detail::sync_async_handler<std::string> >(RR_MAKE_SHARED<AuthenticationException>("Timed out"));
 		AsyncAuthenticateUser(username, credentials, boost::bind(&detail::sync_async_handler<std::string>::operator(), d, _1, _2));
 		return *d->end();
@@ -2180,6 +2198,8 @@ namespace RobotRaconteur
 
 	std::string ClientContext::RequestObjectLock(RR_SHARED_PTR<RRObject> obj, RobotRaconteurObjectLockFlags flags)
 	{
+		ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
+
 		RR_SHARED_PTR<detail::sync_async_handler<std::string> > t = RR_MAKE_SHARED<detail::sync_async_handler<std::string> >();
 		AsyncRequestObjectLock(obj, flags, boost::bind(&detail::sync_async_handler<std::string>::operator(), t, _1, _2), GetNode()->GetRequestTimeout());
 		return *t->end();
@@ -2236,6 +2256,8 @@ namespace RobotRaconteur
 
 	std::string ClientContext::ReleaseObjectLock(RR_SHARED_PTR<RRObject> obj)
 	{
+		ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
+
 		RR_SHARED_PTR<detail::sync_async_handler<std::string> > t = RR_MAKE_SHARED<detail::sync_async_handler<std::string> >();
 		AsyncReleaseObjectLock(obj, boost::bind(&detail::sync_async_handler<std::string>::operator(), t, _1, _2), GetNode()->GetRequestTimeout());
 		return *t->end();

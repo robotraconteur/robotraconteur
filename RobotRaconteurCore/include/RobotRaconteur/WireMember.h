@@ -475,6 +475,8 @@ namespace RobotRaconteur
 
 		virtual RR_SHARED_PTR<WireConnection<T> > Connect()
 		{
+			ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
+
 			RR_SHARED_PTR<detail::sync_async_handler<WireConnection<T> > > t=RR_MAKE_SHARED<detail::sync_async_handler<WireConnection<T> > >();
 			AsyncConnect(boost::bind(&detail::sync_async_handler<WireConnection<T> >::operator(),t,_1,_2),GetNode()->GetRequestTimeout());
 			return t->end(); 

@@ -80,6 +80,8 @@ namespace RobotRaconteur
 
 	void WireConnectionBase::Close()
 	{
+		ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
+
 		RR_SHARED_PTR<detail::sync_async_handler<void> > t=RR_MAKE_SHARED<detail::sync_async_handler<void > >();
 		AsyncClose(boost::bind(&detail::sync_async_handler<void>::operator(),t,_1),GetNode()->GetRequestTimeout());
 		t->end_void();

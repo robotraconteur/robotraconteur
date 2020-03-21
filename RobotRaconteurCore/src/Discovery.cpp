@@ -1145,6 +1145,8 @@ namespace RobotRaconteur
 
 		void Discovery::UpdateDetectedNodes(const std::vector<std::string>& schemes)
 		{
+			ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
+
 			RR_SHARED_PTR<detail::sync_async_handler<void> > t = RR_MAKE_SHARED<detail::sync_async_handler<void> >();
 			boost::function<void()> h = boost::bind(&detail::sync_async_handler<void>::operator(), t);
 			AsyncUpdateDetectedNodes(schemes, h);
@@ -1388,6 +1390,8 @@ namespace RobotRaconteur
 
 		std::vector<ServiceInfo2> Discovery::FindServiceByType(boost::string_ref servicetype, const std::vector<std::string>& transportschemes)
 		{
+			ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
+
 			RR_SHARED_PTR<detail::sync_async_handler<std::vector<ServiceInfo2> > > t = RR_MAKE_SHARED<detail::sync_async_handler<std::vector<ServiceInfo2> > >();
 			boost::function< void(RR_SHARED_PTR<std::vector<ServiceInfo2> >) > h = boost::bind(&detail::sync_async_handler<std::vector<ServiceInfo2> >::operator(), t, _1, RR_SHARED_PTR<RobotRaconteurException>());
 			AsyncFindServiceByType(servicetype, transportschemes, h);
@@ -1396,6 +1400,8 @@ namespace RobotRaconteur
 
 		std::vector<NodeInfo2> Discovery::FindNodeByID(const RobotRaconteur::NodeID& id, const std::vector<std::string>& transportschemes)
 		{
+			ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
+
 			RR_SHARED_PTR<detail::sync_async_handler<std::vector<NodeInfo2> > > n = RR_MAKE_SHARED<detail::sync_async_handler<std::vector<NodeInfo2> > >();
 			boost::function< void(RR_SHARED_PTR<std::vector<NodeInfo2> >) > h = boost::bind(&detail::sync_async_handler<std::vector<NodeInfo2> >::operator(), n, _1, RR_SHARED_PTR<RobotRaconteurException>());
 			AsyncFindNodeByID(id, transportschemes, h);
@@ -1467,6 +1473,8 @@ namespace RobotRaconteur
 
 		std::vector<NodeInfo2> Discovery::FindNodeByName(boost::string_ref name, const std::vector<std::string>& transportschemes)
 		{
+			ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
+
 			RR_SHARED_PTR<detail::sync_async_handler<std::vector<NodeInfo2> > > n = RR_MAKE_SHARED<detail::sync_async_handler<std::vector<NodeInfo2> > >();
 			boost::function< void(RR_SHARED_PTR<std::vector<NodeInfo2> >) > h = boost::bind(&detail::sync_async_handler<std::vector<NodeInfo2> >::operator(), n, _1, RR_SHARED_PTR<RobotRaconteurException>());
 			AsyncFindNodeByName(name, transportschemes, h);

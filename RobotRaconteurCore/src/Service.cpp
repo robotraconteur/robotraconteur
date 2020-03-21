@@ -1908,6 +1908,8 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 	RR_INTRUSIVE_PTR<MessageEntry> ServerContext::ProcessCallbackRequest(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t endpointid)
 	{
+		ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
+
 		RR_SHARED_PTR<ServerEndpoint> e;
 		{
 			boost::mutex::scoped_lock lock(client_endpoints_lock);

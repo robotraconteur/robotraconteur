@@ -223,6 +223,8 @@ namespace RobotRaconteur
 		}
 	};
 
+#define ROBOTRACONTEUR_ASSERT_MULTITHREADED(node) BOOST_ASSERT_MSG(detail::ThreadPool_IsNodeMultithreaded(node)  ,"multithreading required for requested operation")
+
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
 	using ThreadPoolPtr = RR_SHARED_PTR<ThreadPool>;
 	using ThreadPoolFactoryPtr = RR_SHARED_PTR<ThreadPoolFactory>;

@@ -177,6 +177,8 @@ namespace RobotRaconteur
 
 		virtual uint32_t SendPacket(typename boost::call_traits<T>::param_type packet)
 		{
+			ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
+
 			 RR_SHARED_PTR<detail::sync_async_handler<uint32_t> > t=RR_MAKE_SHARED<detail::sync_async_handler<uint32_t> >();
 			 boost::function<void(RR_SHARED_PTR<uint32_t>, RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&detail::sync_async_handler<uint32_t>::operator(), t, _1, _2);
 			 AsyncSendPacket(packet,boost::bind(&PipeEndpoint::send_handler,_1,_2,h));
@@ -496,6 +498,8 @@ namespace RobotRaconteur
 
 		virtual RR_SHARED_PTR<PipeEndpoint<T> > Connect(int32_t index)
 		{
+			ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
+
 			RR_SHARED_PTR<detail::sync_async_handler<PipeEndpoint<T> > > t=RR_MAKE_SHARED<detail::sync_async_handler<PipeEndpoint<T> > >();
 			AsyncConnect(index,boost::bind(&detail::sync_async_handler<PipeEndpoint<T> >::operator(),t,_1,_2),GetNode()->GetRequestTimeout());
 			return t->end();

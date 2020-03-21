@@ -306,7 +306,9 @@ RR_INTRUSIVE_PTR<RRValue> RobotRaconteurNode::UnpackVarType(RR_INTRUSIVE_PTR<Mes
 
 void RobotRaconteurNode::Shutdown()
 {
-	{
+	ROBOTRACONTEUR_ASSERT_MULTITHREADED(shared_from_this());
+
+	{		
 		if (!instance_is_init) return;
 		boost::mutex::scoped_lock lock2(shutdown_lock);
 		if (is_shutdown) return;
@@ -445,7 +447,7 @@ void RobotRaconteurNode::ReleaseThreadPool()
 
 RobotRaconteurNode::~RobotRaconteurNode()
 {
-	Shutdown();
+	//Shutdown();
 	
 	
 }
@@ -453,6 +455,8 @@ RobotRaconteurNode::~RobotRaconteurNode()
 
 void RobotRaconteurNode::SendMessage(RR_INTRUSIVE_PTR<Message> m)
 {
+
+	ROBOTRACONTEUR_ASSERT_MULTITHREADED(shared_from_this());
 
 	if (m->header->SenderNodeID != NodeID())
 	{	
@@ -1276,6 +1280,8 @@ void RobotRaconteurNode::AsyncConnectService(const std::vector<std::string> &url
 
 RR_SHARED_PTR<RRObject> RobotRaconteurNode::ConnectService(const std::vector<std::string>& urls, boost::string_ref username, RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> > credentials, boost::function<void (RR_SHARED_PTR<ClientContext>,ClientServiceListenerEventType,RR_SHARED_PTR<void>)> listener, boost::string_ref objecttype)
 {
+	ROBOTRACONTEUR_ASSERT_MULTITHREADED(shared_from_this());
+
 	RR_SHARED_PTR<detail::sync_async_handler<RRObject> > h=RR_MAKE_SHARED<detail::sync_async_handler<RRObject> >(RR_MAKE_SHARED<ConnectionException>("Connection timed out"));
 	AsyncConnectService(urls,username,credentials,listener,objecttype,boost::bind(&detail::sync_async_handler<RRObject>::operator(),h,_1,_2),this->GetRequestTimeout()*2);
 	return h->end();
@@ -1283,6 +1289,8 @@ RR_SHARED_PTR<RRObject> RobotRaconteurNode::ConnectService(const std::vector<std
 
 RR_SHARED_PTR<RRObject> RobotRaconteurNode::ConnectService(boost::string_ref url, boost::string_ref username, RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> > credentials, boost::function<void (RR_SHARED_PTR<ClientContext>,ClientServiceListenerEventType,RR_SHARED_PTR<void>)> listener, boost::string_ref objecttype)
 {
+	ROBOTRACONTEUR_ASSERT_MULTITHREADED(shared_from_this());
+
 	std::vector<std::string> urls;
 	urls.push_back(RR_MOVE(url.to_string()));
 	return ConnectService(urls,username,credentials,listener,objecttype);
@@ -1290,6 +1298,8 @@ RR_SHARED_PTR<RRObject> RobotRaconteurNode::ConnectService(boost::string_ref url
 
 void RobotRaconteurNode::DisconnectService(RR_SHARED_PTR<RRObject> obj)
 {
+	ROBOTRACONTEUR_ASSERT_MULTITHREADED(shared_from_this());
+
 	if (!obj) return;
 	RR_SHARED_PTR<ServiceStub> stub = rr_cast<ServiceStub>(obj);
 	
@@ -1407,6 +1417,8 @@ void RobotRaconteurNode::NodeDetected(const NodeDiscoveryInfo& info)
 
 void RobotRaconteurNode::UpdateDetectedNodes(const std::vector<std::string>& schemes)
 {
+	ROBOTRACONTEUR_ASSERT_MULTITHREADED(shared_from_this());
+
 	if (!m_Discovery) throw InvalidOperationException("Node not init");
 	m_Discovery->UpdateDetectedNodes(schemes);
 }
@@ -1543,12 +1555,16 @@ void RobotRaconteurNode::AsyncFindServiceByType(boost::string_ref servicetype, c
 
 std::vector<ServiceInfo2> RobotRaconteurNode::FindServiceByType(boost::string_ref servicetype, const std::vector<std::string>& transportschemes)
 {
+	ROBOTRACONTEUR_ASSERT_MULTITHREADED(shared_from_this());
+
 	if (!m_Discovery) throw InvalidOperationException("Node not init");
 	return m_Discovery->FindServiceByType(servicetype, transportschemes);
 }
 
 std::vector<NodeInfo2> RobotRaconteurNode::FindNodeByID(const RobotRaconteur::NodeID& id, const std::vector<std::string>& transportschemes)
 {
+	ROBOTRACONTEUR_ASSERT_MULTITHREADED(shared_from_this());
+
 	if (!m_Discovery) throw InvalidOperationException("Node not init");
 	return m_Discovery->FindNodeByID(id, transportschemes);
 }
@@ -1561,6 +1577,8 @@ void RobotRaconteurNode::AsyncFindNodeByID(const RobotRaconteur::NodeID& id, con
 
 std::vector<NodeInfo2> RobotRaconteurNode::FindNodeByName(boost::string_ref name, const std::vector<std::string>& transportschemes)
 {
+	ROBOTRACONTEUR_ASSERT_MULTITHREADED(shared_from_this());
+
 	if (!m_Discovery) throw InvalidOperationException("Node not init");
 	return m_Discovery->FindNodeByName(name, transportschemes);
 }
@@ -1573,6 +1591,8 @@ void RobotRaconteurNode::AsyncFindNodeByName(boost::string_ref name, const std::
 
 std::string RobotRaconteurNode::RequestObjectLock(RR_SHARED_PTR<RRObject> obj, RobotRaconteurObjectLockFlags flags)
 {
+	ROBOTRACONTEUR_ASSERT_MULTITHREADED(shared_from_this());
+
 	if (!(dynamic_cast<ServiceStub*>(obj.get()) != 0))
 		throw InvalidArgumentException("Can only lock object opened through Robot Raconteur");
 	RR_SHARED_PTR<ServiceStub> s = rr_cast<ServiceStub>(obj);
@@ -1584,6 +1604,8 @@ std::string RobotRaconteurNode::RequestObjectLock(RR_SHARED_PTR<RRObject> obj, R
 
 std::string RobotRaconteurNode::ReleaseObjectLock(RR_SHARED_PTR<RRObject> obj)
 {
+	ROBOTRACONTEUR_ASSERT_MULTITHREADED(shared_from_this());
+
 	if (!(dynamic_cast<ServiceStub*>(obj.get()) != 0))
 		throw InvalidArgumentException("Can only unlock object opened through Robot Raconteur");
 	RR_SHARED_PTR<ServiceStub> s = rr_cast<ServiceStub>(obj);
@@ -1609,6 +1631,8 @@ void RobotRaconteurNode::AsyncReleaseObjectLock(RR_SHARED_PTR<RRObject> obj, boo
 
 void RobotRaconteurNode::MonitorEnter(RR_SHARED_PTR<RRObject> obj, int32_t timeout)
 {		
+	ROBOTRACONTEUR_ASSERT_MULTITHREADED(shared_from_this());
+
 	RR_SHARED_PTR<ServiceStub> s = RR_DYNAMIC_POINTER_CAST<ServiceStub>(obj);
 	if (!s) throw InvalidArgumentException("Only service stubs can be monitored by RobotRaconteurNode");
 	s->GetContext()->MonitorEnter(obj,timeout);
@@ -1616,6 +1640,8 @@ void RobotRaconteurNode::MonitorEnter(RR_SHARED_PTR<RRObject> obj, int32_t timeo
 
 void RobotRaconteurNode::MonitorExit(RR_SHARED_PTR<RRObject> obj)
 {		
+	ROBOTRACONTEUR_ASSERT_MULTITHREADED(shared_from_this());
+
 	RR_SHARED_PTR<ServiceStub> s = RR_DYNAMIC_POINTER_CAST<ServiceStub>(obj);
 	if (!s) throw InvalidArgumentException("Only service stubs can be monitored by RobotRaconteurNode");
 	s->GetContext()->MonitorExit(obj);
@@ -1784,6 +1810,8 @@ void RobotRaconteurNode::RemovePeriodicCleanupTask(RR_SHARED_PTR<IPeriodicCleanu
 
 RR_SHARED_PTR<RRObject> RobotRaconteurNode::FindObjRefTyped(RR_SHARED_PTR<RRObject> obj, boost::string_ref objref, boost::string_ref objecttype)
 {		
+	ROBOTRACONTEUR_ASSERT_MULTITHREADED(shared_from_this());
+
 	RR_SHARED_PTR<ServiceStub> s = RR_DYNAMIC_POINTER_CAST<ServiceStub>(obj);
 	if (!s) throw InvalidArgumentException("Only service stubs can be have objrefs");
 	return s->FindObjRefTyped(objref,objecttype);
@@ -1791,6 +1819,8 @@ RR_SHARED_PTR<RRObject> RobotRaconteurNode::FindObjRefTyped(RR_SHARED_PTR<RRObje
 
 RR_SHARED_PTR<RRObject> RobotRaconteurNode::FindObjRefTyped(RR_SHARED_PTR<RRObject> obj, boost::string_ref objref, boost::string_ref index, boost::string_ref objecttype)
 {
+	ROBOTRACONTEUR_ASSERT_MULTITHREADED(shared_from_this());
+
 	RR_SHARED_PTR<ServiceStub> s = RR_DYNAMIC_POINTER_CAST<ServiceStub>(obj);
 	if (!s) throw InvalidArgumentException("Only service stubs can be have objrefs");
 	return s->FindObjRefTyped(objref,index,objecttype);
@@ -1812,6 +1842,9 @@ void RobotRaconteurNode::AsyncFindObjRefTyped(RR_SHARED_PTR<RRObject> obj, boost
 
 std::string RobotRaconteurNode::FindObjectType(RR_SHARED_PTR<RRObject> obj, boost::string_ref n)
 {
+
+	ROBOTRACONTEUR_ASSERT_MULTITHREADED(shared_from_this());
+
 	RR_SHARED_PTR<ServiceStub> s = RR_DYNAMIC_POINTER_CAST<ServiceStub>(obj);
 	if (!s) throw InvalidArgumentException("Only service stubs can be have objrefs");
 	return s->FindObjectType(n);
@@ -1819,6 +1852,8 @@ std::string RobotRaconteurNode::FindObjectType(RR_SHARED_PTR<RRObject> obj, boos
 
 std::string RobotRaconteurNode::FindObjectType(RR_SHARED_PTR<RRObject> obj, boost::string_ref n, boost::string_ref i)
 {
+	ROBOTRACONTEUR_ASSERT_MULTITHREADED(shared_from_this());
+
 	RR_SHARED_PTR<ServiceStub> s = RR_DYNAMIC_POINTER_CAST<ServiceStub>(obj);
 	if (!s) throw InvalidArgumentException("Only service stubs can be have objrefs");
 	return s->FindObjectType(n,i);
@@ -1912,6 +1947,12 @@ void RobotRaconteurNode::SetThreadPool(RR_SHARED_PTR<ThreadPool> pool)
 	boost::unique_lock<boost::shared_mutex> lock(thread_pool_lock);
 	if (thread_pool) throw InvalidOperationException("Thread pool already set");
 	thread_pool=pool;
+
+	if (!PeriodicCleanupTask_timerstarted)
+	{
+		PeriodicCleanupTask_timerstarted = true;
+		thread_pool->Post(boost::bind(&StartPeriodicCleanupTask, shared_from_this()));
+	}
 
 }
 
@@ -2067,6 +2108,9 @@ RR_SHARED_PTR<Rate> RobotRaconteurNode::CreateRate(double frequency)
 
 void RobotRaconteurNode::Sleep(const boost::posix_time::time_duration& duration)
 {
+
+	ROBOTRACONTEUR_ASSERT_MULTITHREADED(shared_from_this());
+
 	RR_SHARED_PTR<ITransportTimeProvider> t;
 	{
 		boost::shared_lock<boost::shared_mutex> lock(time_provider_lock);
