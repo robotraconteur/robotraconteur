@@ -111,6 +111,12 @@ namespace RobotRaconteur
 			}
 		}
 
+		RR_SHARED_PTR<IRRServiceObject> init_object = RR_DYNAMIC_POINTER_CAST<IRRServiceObject>(o);
+		if (init_object)
+		{
+			init_object->RRServiceObjectInit(c, s.to_string());
+		}
+
 	}
 
 	RR_SHARED_PTR<RobotRaconteurNode> ServiceSkel::RRGetNode()

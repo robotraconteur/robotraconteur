@@ -50,6 +50,12 @@ namespace RobotRaconteur
 
 	class ROBOTRACONTEUR_CORE_API  IRobotRaconteurMonitorObject;
 
+	class ROBOTRACONTEUR_CORE_API IRRServiceObject
+	{
+	public:
+		virtual void RRServiceObjectInit(RR_WEAK_PTR<ServerContext> context, const std::string& service_path) = 0;
+	};
+
 	class ROBOTRACONTEUR_CORE_API  ServiceSkel : public RR_ENABLE_SHARED_FROM_THIS<ServiceSkel>, private boost::noncopyable
 	{
 
