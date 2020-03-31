@@ -50,3 +50,4 @@
 #include "RobotRaconteur/Subscription.h"
 #include "RobotRaconteur/Generator.h"
 #include "RobotRaconteur/NodeSetup.h"
+#include "RobotRaconteur/Logging.h"

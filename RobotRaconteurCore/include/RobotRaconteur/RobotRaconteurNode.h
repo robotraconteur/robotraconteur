@@ -180,6 +180,16 @@ namespace RobotRaconteur
 		static RR_SHARED_PTR<RobotRaconteurNode> sp();
 
 		/**
+		 * @brief Singleton weak_ptr accessor
+		 * 
+		 * Same as `sp()`, but returns a weak_ptr instead of
+		 * a shared_ptr.
+		 * 
+		 * @return RR_SHARED_PTR<RobotRaconteurNode>
+		 */
+		static RR_WEAK_PTR<RobotRaconteurNode> weak_sp();
+
+		/**
 		 * @brief Get the current NodeID
 		 * 
 		 * Gets the current NodeID. If one has not been set using `SetNodeID()`,
@@ -226,6 +236,30 @@ namespace RobotRaconteur
 		 * @param name 
 		 */
 		void SetNodeName(boost::string_ref name);
+
+		/**
+		 * @brief Tries getting the current NodeID
+		 * 
+		 * Tries to get the NodeID. Returns false if no
+		 * NodeID has been configured
+		 * 
+		 * @param id the NodeID if set
+		 * 
+		 * @return bool
+		 */
+		bool TryGetNodeID(RobotRaconteur::NodeID& id);
+
+		/**
+		 * @brief Tries getting the current NodeName
+		 * 
+		 * Gets the current NodeName. Returns false if NodeName is
+		 * empty
+		 * 
+		 * @param node_name the NodeName if not empty
+		 * 
+		 * @return bool
+		 */
+		bool TryGetNodeName(std::string& node_name);
 
 		/**
 		 * @brief Returns a previously registered service type
@@ -1126,6 +1160,7 @@ namespace RobotRaconteur
 
 		static RobotRaconteurNode m_s;
 		static RR_SHARED_PTR<RobotRaconteurNode> m_sp;
+		static RR_WEAK_PTR<RobotRaconteurNode> m_weak_sp;
 
 		RobotRaconteur::NodeID m_NodeID;
 		std::string m_NodeName;

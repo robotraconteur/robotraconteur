@@ -43,6 +43,7 @@ namespace RobotRaconteur
 
 RobotRaconteurNode RobotRaconteurNode::m_s;
 RR_SHARED_PTR<RobotRaconteurNode> RobotRaconteurNode::m_sp;
+RR_WEAK_PTR<RobotRaconteurNode> RobotRaconteurNode::m_weak_sp;
 
 bool RobotRaconteurNode::is_init=false;
 boost::mutex RobotRaconteurNode::init_lock;
@@ -100,6 +101,7 @@ RobotRaconteurNode* RobotRaconteurNode::s()
 
 		m_sp.reset(&m_s,&RobotRaconteurNode_emptydeleter);
 		m_s._internal_accept_owner(&m_sp,&m_s);
+		m_weak_sp = m_sp;
 		m_s.Init();
 	}
 	return &m_s;
@@ -109,6 +111,11 @@ RR_SHARED_PTR<RobotRaconteurNode> RobotRaconteurNode::sp()
 {
 	RobotRaconteurNode::s();
 	return m_sp;
+}
+
+RR_WEAK_PTR<RobotRaconteurNode> RobotRaconteurNode::weak_sp()
+{
+	return m_weak_sp;
 }
 
 NodeID RobotRaconteurNode::NodeID()
@@ -132,6 +139,30 @@ std::string RobotRaconteurNode::NodeName()
 		NodeName_set=true;
 	}
 	return m_NodeName;
+}
+
+bool RobotRaconteurNode::TryGetNodeID(RobotRaconteur::NodeID& id)
+{
+	boost::mutex::scoped_lock lock(id_lock);
+	if (!NodeID_set)
+	{
+		return false;
+	}
+
+	id = m_NodeID;
+	return true;
+}
+
+bool RobotRaconteurNode::TryGetNodeName(std::string& node_name)
+{
+	boost::mutex::scoped_lock lock(id_lock);
+	if (!NodeName_set)
+	{
+		return false;
+	}
+
+	node_name = m_NodeName;
+	return true;
 }
 
 void RobotRaconteurNode::SetNodeID(const RobotRaconteur::NodeID& id)
