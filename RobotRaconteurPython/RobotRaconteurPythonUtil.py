@@ -1377,6 +1377,8 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
                         setattr(self.obj,m.Name,outerw)
                 else:                      
                     setattr(self.obj,m.Name,outerw)
+        if hasattr(self.obj,"RRServiceObjectInit"):
+            self.obj.RRServiceObjectInit(skel.GetContext(),skel.GetServicePath())
 
     def _CallGetProperty(self, name):
 

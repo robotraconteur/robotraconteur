@@ -899,6 +899,11 @@ namespace RobotRaconteur
         }        
     }
 
+    public interface IRRServiceObject
+    {
+        void RRServiceObjectInit(ServerContext context, string service_path);
+    }
+
 
     public abstract class ServiceSkel : WrappedServiceSkelDirector
     {
@@ -968,6 +973,12 @@ namespace RobotRaconteur
             InitPipeServers(uncastobj);
             InitCallbackServers(uncastobj);
             InitWireServers(uncastobj);
+
+            var init_object = uncastobj as IRRServiceObject;
+            if (init_object != null)
+            {
+                init_object.RRServiceObjectInit(skel.GetContext(), skel.GetServicePath());
+            }
         }
         public override MessageElement _CallFunction(string name, vectorptr_messageelement args)
         {

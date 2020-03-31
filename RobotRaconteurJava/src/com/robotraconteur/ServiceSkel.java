@@ -90,6 +90,12 @@ public abstract class ServiceSkel extends WrappedServiceSkelDirector
 		initPipeServers(uncastobj);
 		initCallbackServers(uncastobj);
 		initWireServers(uncastobj);
+
+		if (uncastobj instanceof IRRServiceObject)
+		{
+			((IRRServiceObject)uncastobj).rRInitServiceObject(skel.getContext(), skel.getServicePath());
+		}
+
 	}
 	@Override
 	public MessageElement _CallFunction(String name, vectorptr_messageelement args)

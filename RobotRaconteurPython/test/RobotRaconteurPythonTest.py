@@ -2738,6 +2738,9 @@ class sub2_impl(object):
                 self._o3_1[iind].ind=iind
             return self._o3_1[iind],  "com.robotraconteur.testing.TestService1.sub3"
 
+    def RRServiceObjectInit(self, context, service_path):
+        print("Got RRServiceObjectInit: " + str(context) + " service_path: " + service_path)        
+
 class sub3_impl(object):
     def __init__(self):
         self.ind=""
