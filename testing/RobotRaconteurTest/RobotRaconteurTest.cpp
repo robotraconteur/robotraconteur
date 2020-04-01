@@ -390,7 +390,7 @@ int main(int argc, char* argv[])
 
 		//std::set_terminate(myterminate);
 
-		RobotRaconteurNode::s()->SetLogLevel(RobotRaconteur_LogLevel_Trace);
+		//RobotRaconteurNode::s()->SetLogLevel(RobotRaconteur_LogLevel_Trace);
 
 		RobotRaconteurNode::s()->SetExceptionHandler(myhandler);
 		
