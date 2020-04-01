@@ -390,6 +390,8 @@ int main(int argc, char* argv[])
 
 		//std::set_terminate(myterminate);
 
+		RobotRaconteurNode::s()->SetLogLevel(RobotRaconteur_LogLevel_Trace);
+
 		RobotRaconteurNode::s()->SetExceptionHandler(myhandler);
 		
 		RR_SHARED_PTR<TcpTransport> c=RR_MAKE_SHARED<TcpTransport>();

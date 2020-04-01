@@ -35,6 +35,7 @@
 #include "RobotRaconteur/Timer.h"
 #include "RobotRaconteur/Discovery.h"
 #include "RobotRaconteur/DataTypesPacking.h"
+#include "RobotRaconteur/Logging.h"
 #include <queue>
 #include <boost/asio.hpp>
 #include <boost/unordered_map.hpp>
@@ -2236,8 +2237,85 @@ namespace RobotRaconteur
 		 */
 		void UpdateServiceStateNonce();
 
+	protected:
+
+		boost::function<void(const RRLogRecord& record)> log_handler;
+		boost::shared_mutex log_handler_mutex;
+		RobotRaconteur_LogLevel log_level;
+
 	public:
 
+		/**
+		 * @brief Test if the specified log level would be accepted
+		 * 
+		 * @param log_level Log level to test
+		 * @return true The log would be accepted
+		 * @return false The log would be ignored
+		 */
+		bool CompareLogLevel(RobotRaconteur_LogLevel log_level);
+
+		/**
+		 * @brief Log a simple message using the current node
+		 * 
+		 * The record will be sent to the configured log handler,
+		 * or sent to std::cerr if none is configured
+		 * 
+		 * If the level of the message is below the current log level
+		 * for the node, the record will be ignored
+		 * 
+		 * @param level The level for the log message
+		 * @param message The log message
+		 */
+		void LogMessage(RobotRaconteur_LogLevel level, std::string& message);
+
+		/**
+		 * @brief Log a record to the node. Use the macros specified in Logging.h
+		 * instead of this function directly.
+		 * 
+		 * The record will be sent to the configured log handler,
+		 * or sent to std::cerr if none is configured
+		 * 
+		 * If the level of the message is below the current log level
+		 * for the node, it will be ignored
+		 * 
+		 * @param record The record to log
+		 */
+		void LogRecord(const RRLogRecord& record);
+
+		/**
+		 * @brief Get the current log level for the node
+		 * 
+		 * Default level is "info"
+		 * 
+		 * @return RobotRaconteur_LogLevel 
+		 */
+		RobotRaconteur_LogLevel GetLogLevel();
+		/**
+		 * @brief Set the log level for the node
+		 * 
+		 * Set RobotRaconteur_LogLevel_Disable to disable logging
+		 * 
+		 * @param level The desired log level
+		 */
+		void SetLogLevel(RobotRaconteur_LogLevel level);
+
+		/**
+		 * @brief Get the currently configured log record handler
+		 * 
+		 * If NULL, records are sent to std::cerr
+		 * 
+		 * @return boost::function<void(const RRLogRecord& record)> 
+		 */
+		boost::function<void(const RRLogRecord& record)> GetLogRecordHandler();
+
+		/**
+		 * @brief Set the handler for log records
+		 * 
+		 * If handler is NULL, records are sent to std::cerr
+		 * 
+		 * @param handler The log record handler function
+		 */
+		void SetLogRecordHandler(boost::function<void(const RRLogRecord& record)> handler);
 		
 	protected:
 		/**

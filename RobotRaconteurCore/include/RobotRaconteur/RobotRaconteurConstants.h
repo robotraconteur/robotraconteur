@@ -310,4 +310,34 @@ namespace RobotRaconteur
 	const uint32_t TransportCapabilityCode_MESSAGE3_STRINGTABLE_MESSAGE_LOCAL = 0x00000002;
 	const uint32_t TransportCapabilityCode_MESSAGE3_STRINGTABLE_DYNAMIC_TABLE = 0x00000004;
 	const uint32_t TransportCapabilityCode_MESSAGE3_STRINGTABLE_STANDARD_TABLE = 0x00000008;
+
+	enum RobotRaconteur_LogLevel
+	{
+		RobotRaconteur_LogLevel_Trace,
+		RobotRaconteur_LogLevel_Debug,
+		RobotRaconteur_LogLevel_Info,
+		RobotRaconteur_LogLevel_Warning,
+		RobotRaconteur_LogLevel_Error,
+		RobotRaconteur_LogLevel_Fatal,
+		RobotRaconteur_LogLevel_Disable=1000
+	};
+
+	enum RobotRaconteur_LogSource
+	{
+		RobotRaconteur_LogSource_Default,
+		RobotRaconteur_LogSource_Node,
+		RobotRaconteur_LogSource_Transport,
+		RobotRaconteur_LogSource_Client,
+		RobotRaconteur_LogSource_Service,
+		RobotRaconteur_LogSource_Member,		
+		RobotRaconteur_LogSource_Pack,
+		RobotRaconteur_LogSource_Unpack,
+		RobotRaconteur_LogSource_ServiceDefinition,
+		RobotRaconteur_LogSource_Discovery,
+		RobotRaconteur_LogSource_Subscription,
+		RobotRaconteur_LogSource_NodeSetup,
+		RobotRaconteur_LogSource_Utility,
+		RobotRaconteur_LogSource_User
+	};
+
 }

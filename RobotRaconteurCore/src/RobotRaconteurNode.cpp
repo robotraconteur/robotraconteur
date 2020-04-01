@@ -63,6 +63,8 @@ RobotRaconteurNode::RobotRaconteurNode()
 	RequestTimeout = 15000;
 	MemoryMaxTransferSize = 102400;
 	instance_is_init=false;
+
+	log_level = RobotRaconteur_LogLevel_Info;
 	
 }
 
@@ -2323,6 +2325,66 @@ void RobotRaconteurNode::UpdateServiceStateNonce()
 			t->LocalNodeServicesChanged();
 		}
 	}
+}
+
+bool RobotRaconteurNode::CompareLogLevel(RobotRaconteur_LogLevel record_level)
+{
+	return record_level >= log_level;
+}
+
+void RobotRaconteurNode::LogMessage(RobotRaconteur_LogLevel level, std::string& message)
+{
+	RRLogRecord r;
+	r.Node=shared_from_this();
+	r.Level=level;
+	r.Source=RobotRaconteur_LogSource_Default;
+	r.Endpoint=0;
+	r.Message=message;
+	
+
+	LogRecord(r);
+}
+
+void RobotRaconteurNode::LogRecord(const RRLogRecord& record)
+{
+	
+	boost::upgrade_lock<boost::shared_mutex> lock(log_handler_mutex);
+	if (record.Level < log_level)
+	{
+		return;
+	}
+	
+	if (log_handler)
+	{
+		log_handler(record);
+		return;
+	}
+	
+	boost::upgrade_to_unique_lock<boost::shared_mutex> lock2(lock);
+	std::cout << record << std::endl; 
+
+}
+
+RobotRaconteur_LogLevel RobotRaconteurNode::GetLogLevel()
+{
+	boost::shared_lock<boost::shared_mutex> lock(log_handler_mutex);
+	return log_level;
+}
+void RobotRaconteurNode::SetLogLevel(RobotRaconteur_LogLevel level)
+{
+	boost::lock_guard<boost::shared_mutex> lock(log_handler_mutex);
+	log_level = level;
+}
+
+boost::function<void(const RRLogRecord& record)> RobotRaconteurNode::GetLogRecordHandler()
+{
+	boost::shared_lock<boost::shared_mutex> lock(log_handler_mutex);
+	return log_handler;
+}
+void RobotRaconteurNode::SetLogRecordHandler(boost::function<void(const RRLogRecord& record)> handler)
+{
+	boost::lock_guard<boost::shared_mutex> lock(log_handler_mutex);
+	log_handler = handler;
 }
 
 }

@@ -116,6 +116,8 @@ namespace RobotRaconteur
 
 void ASIOStreamBaseTransport::AsyncAttachStream(bool server, const NodeID& target_nodeid, boost::string_ref target_nodename, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback)
 {
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "Begin AsyncAttachStream")
+
 	string_table3 = RR_MAKE_SHARED<detail::StringTable>(server);
 
 	try
@@ -151,10 +153,12 @@ void ASIOStreamBaseTransport::AsyncAttachStream(bool server, const NodeID& targe
 					}
 
 				}
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "Completed AsyncAttachStream as server")
 				detail::PostHandler(node, callback, true);				
 			}
 			catch (std::exception& e)
 			{				
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "Exception in AsyncAttachStream")
 				detail::PostHandlerWithException(node, callback, e, MessageErrorType_ConnectionError, true);
 			}
 		}
@@ -163,6 +167,7 @@ void ASIOStreamBaseTransport::AsyncAttachStream(bool server, const NodeID& targe
 	}
 	catch(std::exception& e)
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "Exception in AsyncAttachStream")
 		detail::InvokeHandlerWithException(node, callback, e, MessageErrorType_ConnectionError);
 	}
 }
@@ -173,7 +178,7 @@ void ASIOStreamBaseTransport::AsyncAttachStream1(RR_SHARED_PTR<RRObject> paramet
 	//std::cout << "AsyncAttachStream1" << std::endl;
 	if (err)
 	{
-		
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "AsyncAttachStream ConnectStream failed: " << err->what())
 		RobotRaconteurNode::TryPostToThreadPool(node,boost::bind(&ASIOStreamBaseTransport::Close,shared_from_this()));
 		
 		detail::PostHandlerWithException(node, (callback), err, true);		
@@ -183,6 +188,7 @@ void ASIOStreamBaseTransport::AsyncAttachStream1(RR_SHARED_PTR<RRObject> paramet
 	{
 		if (!parameter)
 		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "AsyncAttachStream ConnectStream did not return parameter")
 			detail::PostHandlerWithException(node, (callback), RR_MAKE_SHARED<ConnectionException>("IO error"), true);
 			return;
 		}
@@ -198,6 +204,7 @@ void ASIOStreamBaseTransport::AsyncAttachStream1(RR_SHARED_PTR<RRObject> paramet
 			{
 				if (RemoteNodeID != RemoteNodeID1)
 				{
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "AsyncAttachStream ConnectStream returned unexpected server NodeID")
 					detail::PostHandlerWithException(node, (callback), RR_MAKE_SHARED<ConnectionException>("Invalid server NodeID"), true);
 					return;
 				}
@@ -215,10 +222,12 @@ void ASIOStreamBaseTransport::AsyncAttachStream1(RR_SHARED_PTR<RRObject> paramet
 
 		}
 
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "Completed AsyncAttachStream as client")
 		detail::PostHandler(node, callback, true);
 	}
 	catch (std::exception& e)
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "Completed AsyncAttachStream1 failed: " << e.what())
 		detail::InvokeHandlerWithException(node, callback, e, MessageErrorType_ConnectionError);
 	}
 
@@ -229,10 +238,14 @@ void ASIOStreamBaseTransport::AsyncAttachStream1(RR_SHARED_PTR<RRObject> paramet
 void ASIOStreamBaseTransport::AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boost::function<void (RR_SHARED_PTR<RobotRaconteurException>)>& callback)
 {
 
+	
 	if (!connected.load())
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "Attempt to send message to disconnected transport")
 		throw ConnectionException("Transport not connected");
 	}
+
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "begin sending message")
 
 	// Clear flags that should not be sent from the node layer
 	if (m->header->MessageFlags & MessageFlags_TRANSPORT_SPECIFIC) m->header->TransportSpecific.clear();
@@ -266,7 +279,11 @@ void ASIOStreamBaseTransport::AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boos
 		message_size = m->ComputeSize3();
 	}
 		
-	if (boost::numeric_cast<int32_t>(message_size) > (max_message_size-100)) throw ProtocolException("Message larger than maximum message size");
+	if (boost::numeric_cast<int32_t>(message_size) > (max_message_size-100)) 
+	{
+		ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "attempt to send message size " << message_size << " when max is " << max_message_size-100)
+		throw ProtocolException("Message larger than maximum message size");
+	}
 
 	if (!send_large_transfer_authorized)
 	{
@@ -275,8 +292,12 @@ void ASIOStreamBaseTransport::AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boos
 			send_large_transfer_authorized = true;
 		}
 		else
-		{
-			if (message_size > 16 * 1024) throw ProtocolException("");
+		{			
+			if (message_size > 16 * 1024) 
+			{
+				ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "attempt to send large message before authorized")
+				throw ProtocolException("");
+			}
 		}
 	}
 
@@ -316,6 +337,7 @@ void ASIOStreamBaseTransport::AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boos
 						if (ee->message->entries.at(0)->ServicePath==m->entries.at(0)->ServicePath
 							&& ee->message->entries.at(0)->MemberName==m->entries.at(0)->MemberName)
 						{
+							ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "dropping wire message " << m->entries.at(0)->ServicePath.str())
 							remove=true;
 						}
 					}
@@ -348,11 +370,13 @@ void ASIOStreamBaseTransport::AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boos
 
 		if (!replaced)
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "enqueuing message")
 			send_queue.push_back(e);
 		}
 	}
 	else
 	{
+		
 		BeginSendMessage(m,callback);
 	}
 }
@@ -364,8 +388,9 @@ void ASIOStreamBaseTransport::SimpleAsyncSendMessage(RR_INTRUSIVE_PTR<Message> m
 	{
 		AsyncSendMessage(m, callback);
 	}
-	catch (std::exception&)
+	catch (std::exception& exp)
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "failed sending internal message: " << exp.what())
 		Close();
 	}
 
@@ -375,6 +400,7 @@ void ASIOStreamBaseTransport::SimpleAsyncEndSendMessage(RR_SHARED_PTR<RobotRacon
 {
 	if (err)
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "failed sending internal message: " << err->what())
 		Close();
 	}
 }
@@ -383,6 +409,8 @@ void ASIOStreamBaseTransport::SimpleAsyncEndSendMessage(RR_SHARED_PTR<RobotRacon
 
 void ASIOStreamBaseTransport::BeginSendMessage(RR_INTRUSIVE_PTR<Message> m, boost::function<void (RR_SHARED_PTR<RobotRaconteurException>)>& callback)
 {
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "begin sending message to stream")
+
 	size_t message_size = 0;
 	bool send_3=send_version3.load();
 	bool string_table3 = use_string_table3.load();
@@ -411,6 +439,7 @@ void ASIOStreamBaseTransport::BeginSendMessage(RR_INTRUSIVE_PTR<Message> m, boos
 			async_send_version = 2;
 			sending = true;
 			send_message_size = message_size;
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "sending message size " << message_size << " using message version 2 with asyncio")
 			BeginSendMessage1(m, callback);
 			return;
 		}
@@ -424,6 +453,7 @@ void ASIOStreamBaseTransport::BeginSendMessage(RR_INTRUSIVE_PTR<Message> m, boos
 
 		ArrayBinaryWriter w(sendbuf.get(), 0, message_size);
 		m->Write(w);
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "sending message size " << message_size << " using message version 2 buffer")
 	}
 	else
 	{
@@ -455,6 +485,7 @@ void ASIOStreamBaseTransport::BeginSendMessage(RR_INTRUSIVE_PTR<Message> m, boos
 			sending = true;
 			send_message_size = message_size;
 			async_send_version = 3;
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "sending message size " << message_size << " using message version 3 with asyncio")
 			BeginSendMessage1(m, callback);
 			return;
 		}
@@ -468,6 +499,7 @@ void ASIOStreamBaseTransport::BeginSendMessage(RR_INTRUSIVE_PTR<Message> m, boos
 
 		ArrayBinaryWriter w(sendbuf.get(), 0, message_size);
 		m->Write3(w, 0);
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "sending message size " << message_size << " using message version 3 buffer")
 
 	}
 
@@ -508,6 +540,7 @@ void ASIOStreamBaseTransport::BeginSendMessage1(RR_INTRUSIVE_PTR<Message> m, boo
 		async_writer->Write3(send_message_size, work_bufs, work_bufs_used, async_send_bufs);
 		break;
 	default:
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "attempt to send invalid message version " << async_send_version)
 		throw InvalidOperationException("Invalid message version");
 	}
 	
@@ -527,9 +560,12 @@ void ASIOStreamBaseTransport::EndSendMessage2(const boost::system::error_code& e
 		{
 			Close();
 			sending = false;
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "error sending message")
 			detail::InvokeHandlerWithException(node, callback, RR_MAKE_SHARED<ConnectionException>(error.message()));
 			return;
 		}
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "sent " << bytes_transferred << " bytes using asyncio")
 
 		buffers_consume(async_send_bufs, bytes_transferred);
 
@@ -564,6 +600,7 @@ void ASIOStreamBaseTransport::EndSendMessage2(const boost::system::error_code& e
 				async_writer->Write3(remaining, work_bufs, work_bufs_used, async_send_bufs);
 				break;
 			default:
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "attempt to send invalid message version " << async_send_version)
 				throw InvalidOperationException("Invalid message version");
 			}
 
@@ -582,6 +619,7 @@ void ASIOStreamBaseTransport::EndSendMessage2(const boost::system::error_code& e
 	
 	catch (std::exception& exp)
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "error sending message: " << exp.what())
 		Close();
 		detail::InvokeHandlerWithException(node, callback, RR_MAKE_SHARED<ConnectionException>("Send message error: " + std::string(exp.what())));
 	}
@@ -590,11 +628,13 @@ void ASIOStreamBaseTransport::EndSendMessage2(const boost::system::error_code& e
 	{
 		EndSendMessage1();
 	}
-	catch (std::exception&)
+	catch (std::exception& exp)
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "error sending next message: " << exp.what())
 		Close();
 	}
 
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "message sent")
 	detail::InvokeHandler(node, callback);
 }
 
@@ -607,10 +647,13 @@ void ASIOStreamBaseTransport::EndSendMessage(size_t startpos, const boost::syste
 		{
 			Close();
 			sending = false;
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "error sending message")
 			detail::InvokeHandlerWithException(node, callback, RR_MAKE_SHARED<ConnectionException>(error.message()));
 			return;
 
 		}
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "sent " << bytes_transferred << " bytes")
 
 		if (bytes_transferred < (m_len - startpos))
 		{
@@ -632,11 +675,13 @@ void ASIOStreamBaseTransport::EndSendMessage(size_t startpos, const boost::syste
 		EndSendMessage1();
 	}
 
-	catch (std::exception&)
+	catch (std::exception& exp)
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "error sending message or next message: " << exp.what())
 		Close();		
 	}
 
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "message sent")
 	detail::InvokeHandler(node, callback);
 	
 }
@@ -653,6 +698,7 @@ void ASIOStreamBaseTransport::EndSendMessage1()
 
 	if (send_queue.size() != 0 && c && !send_pause_request)
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "dequeing next message")
 		message_queue_entry m = send_queue.front();
 		send_queue.pop_front();
 		try
@@ -661,6 +707,7 @@ void ASIOStreamBaseTransport::EndSendMessage1()
 		}
 		catch (std::exception& e)
 		{			
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "error sending next message " << e.what())
 			detail::InvokeHandlerWithException(node, m.callback,RR_MAKE_SHARED<ConnectionException>(e.what()));			
 		}
 	}
@@ -670,6 +717,7 @@ void ASIOStreamBaseTransport::EndSendMessage1()
 		send_event.notify_all();
 		if (send_pause_request && !send_paused)
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "pausing send")
 			send_paused = true;
 			boost::system::error_code ec;
 			boost::function<void(const boost::system::error_code&)> f = send_pause_request_handler;
@@ -683,15 +731,21 @@ void ASIOStreamBaseTransport::EndSendMessage1()
 //void ASIOStreamBaseTransport::
 void ASIOStreamBaseTransport::AsyncPauseSend(boost::function<void (const boost::system::error_code&)>& handler)
 {
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "requesting send pause: " << GetLocalEndpoint())
 	boost::mutex::scoped_lock lock(send_lock);
 
-	if (send_pause_request || send_paused) throw InvalidOperationException("Already pausing");
+	if (send_pause_request || send_paused) 
+	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "attempt to pause send when already paused: " << GetLocalEndpoint())
+		throw InvalidOperationException("Already pausing");
+	}
 
 	if (!sending)
 	{
 		send_pause_request=true;
 		send_paused=true;
 		
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "pausing send")
 		boost::system::error_code ec;
 		RobotRaconteurNode::TryPostToThreadPool(node,boost::bind(handler,ec));
 
@@ -707,10 +761,12 @@ void ASIOStreamBaseTransport::AsyncPauseSend(boost::function<void (const boost::
 
 void ASIOStreamBaseTransport::AsyncResumeSend()
 {
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "requesting send resume")
 	boost::mutex::scoped_lock lock(send_lock);
 	if (!send_pause_request) return;
 	if (send_pause_request && !send_paused)
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "attempt to resume send when not paused")
 		throw InvalidOperationException("Invalid operation");
 	}
 
@@ -719,6 +775,7 @@ void ASIOStreamBaseTransport::AsyncResumeSend()
 
 	bool c=connected.load();
 
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "send resumed")
 	if (send_queue.size()!=0 && c && !send_pause_request && !sending)
 	{
 		message_queue_entry m=send_queue.front();
@@ -729,6 +786,7 @@ void ASIOStreamBaseTransport::AsyncResumeSend()
 		}
 		catch (std::exception& e)
 		{			
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "error sending message after resuming")
 			detail::InvokeHandlerWithException(node, m.callback, RR_MAKE_SHARED<ConnectionException>(e.what()));			
 		}
 	}
@@ -737,7 +795,7 @@ void ASIOStreamBaseTransport::AsyncResumeSend()
 
 void ASIOStreamBaseTransport::BeginReceiveMessage1()
 {
-	
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "begin receive message")
 		receiving=true;
 		if (disable_async_io)
 		{
@@ -782,6 +840,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage1(size_t startpos, const boost::s
 	{
 		if (!error)
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "received " << bytes_transferred << " bytes")
 			if (bytes_transferred < (8-startpos))
 			{
 				size_t new_startpos=startpos+bytes_transferred;
@@ -809,11 +868,23 @@ void ASIOStreamBaseTransport::EndReceiveMessage1(size_t startpos, const boost::s
 			std::reverse((uint8_t*)&size,((uint8_t*)&size)+4);
 #endif
 
-			if (std::string(seed,4) != "RRAC") throw ProtocolException("");
+			if (std::string(seed,4) != "RRAC")
+			{
+			  ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "received invalid magic expected \"RRAC\" received  \"" << std::string(seed,4) << "\"")
+			  throw ProtocolException("");
+			}
 
-			if (size<8) throw ProtocolException("");
+			if (size<8)
+			{
+				ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "received too small a message")
+				throw ProtocolException("");
+			}
 
-			if (boost::numeric_cast<int32_t>(size) > (max_message_size)) throw ProtocolException("");
+			if (boost::numeric_cast<int32_t>(size) > (max_message_size))
+			{
+				ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "received too large a message " << size << " but max allowed " << max_message_size)
+			 	throw ProtocolException("");
+			}
 
 			if (!recv_large_transfer_authorized)
 			{
@@ -823,7 +894,11 @@ void ASIOStreamBaseTransport::EndReceiveMessage1(size_t startpos, const boost::s
 				}
 				else
 				{
-					if (size > 16 * 1024) throw ProtocolException("");
+					if (size > 16 * 1024)
+					{
+						ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "received too large a message " << size << " before authorized")
+					 throw ProtocolException("");
+					}
 				}
 
 			}
@@ -846,9 +921,10 @@ void ASIOStreamBaseTransport::EndReceiveMessage1(size_t startpos, const boost::s
 				boost::asio::placeholders::error,
 				boost::asio::placeholders::bytes_transferred));*/
 
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "receiving message size " << size << " bytes")
 			if (recvbuf_len < size)
 			{
-				
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "receive buffer too small, resizing to " << size << " bytes")
 				recvbuf_len=size*12/10;
 				recvbuf=boost::shared_array<uint8_t>(new uint8_t[recvbuf_len]);
 			}
@@ -876,11 +952,13 @@ void ASIOStreamBaseTransport::EndReceiveMessage1(size_t startpos, const boost::s
 		}
 		else
 		{
+			ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "closing due to stream error: " << error)
 			Close();
 		}
 	}
-	catch (std::exception&)
+	catch (std::exception& exp)
 	{
+		ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "error receiving message: " << exp.what())
 		Close();
 	}
 }
@@ -894,6 +972,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage2(size_t startpos, const boost::s
 	{
 		if (!error)
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "received " << bytes_transferred)
 			if (bytes_transferred<(message_size-startpos))
 			{
 				size_t new_startpos=startpos+bytes_transferred;
@@ -923,6 +1002,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage2(size_t startpos, const boost::s
 
 			if (message_version == 3)
 			{
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "received message deserialize using message 3 buffer")
 				uint16_t message_version_minor;
 				message->Read3(r, message_version_minor);
 
@@ -951,18 +1031,21 @@ void ASIOStreamBaseTransport::EndReceiveMessage2(size_t startpos, const boost::s
 			}
 			else
 			{
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "received message deserialize using message 2 buffer")
 				message->Read(r);
 			}
 						
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "successfully deserialized message")
 			EndReceiveMessage3(message);
 		}
 		else
 		{
+			ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "closing due to stream error: " << error)
 			Close();
 		}
 	}
-	catch (std::exception&) {
-	
+	catch (std::exception& exp) {
+		ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "error receiving message: " << exp.what())
 		Close();
 	}
 
@@ -978,7 +1061,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage3(RR_INTRUSIVE_PTR<Message> messa
 		{
 			if (message->entries.at(0)->EntryType == MessageEntryType_ConnectionTest)
 			{
-
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "received heartbeat, sending response")
 				EndReceiveMessage4();	
 				RR_INTRUSIVE_PTR<Message> &m=message;
 						
@@ -1015,6 +1098,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage3(RR_INTRUSIVE_PTR<Message> messa
 			}
 			else if (message->entries.at(0)->EntryType== MessageEntryType_ConnectionTestRet)
 			{
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "received heartbeat response")
 				EndReceiveMessage4();
 			}
 			else if (message->entries.at(0)->EntryType ==MessageEntryType_StreamOp || message->entries.at(0)->EntryType ==MessageEntryType_StreamOpRet)
@@ -1039,16 +1123,20 @@ void ASIOStreamBaseTransport::EndReceiveMessage3(RR_INTRUSIVE_PTR<Message> messa
 				{
 				MessageReceived(message);
 				}
-				catch (...) {
+				catch (std::exception& exp) {
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "error dispatching message " << exp.what())
 					Close();
-				}
+				}				
 			}
 
 			tlastrecv.store(GetNode()->NowUTC());
 
 		}
 	}
-	catch (std::exception&) {}
+	catch (std::exception& exp) 
+	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "error processing received message " << exp.what())
+	}
 		
 		
 
@@ -1067,7 +1155,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage4()
 
 		if (recv_pause_request)
 		{
-
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "pausing receive")
 			receiving=false;
 			recv_paused=true;
 			boost::system::error_code ec;
@@ -1080,6 +1168,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage4()
 
 		if (!recv_pause_request && recv_paused)
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "resuming receive")
 			recv_paused=false;
 		}
 		
