@@ -390,9 +390,14 @@ int main(int argc, char* argv[])
 
 		//std::set_terminate(myterminate);
 
-		//RobotRaconteurNode::s()->SetLogLevel(RobotRaconteur_LogLevel_Trace);
-
-		RobotRaconteurNode::s()->SetExceptionHandler(myhandler);
+		if (argc >= 4 && std::string(argv[3]) == "trace")
+		{
+			RobotRaconteurNode::s()->SetLogLevel(RobotRaconteur_LogLevel_Trace);
+		}
+		else
+		{
+			RobotRaconteurNode::s()->SetExceptionHandler(myhandler);
+		}		
 		
 		RR_SHARED_PTR<TcpTransport> c=RR_MAKE_SHARED<TcpTransport>();
 		c->StartServer(4565);
