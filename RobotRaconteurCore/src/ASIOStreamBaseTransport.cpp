@@ -795,10 +795,11 @@ void ASIOStreamBaseTransport::AsyncResumeSend()
 
 void ASIOStreamBaseTransport::BeginReceiveMessage1()
 {
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "begin receive message")
+		
 		receiving=true;
 		if (disable_async_io)
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "begin receive message")
 			mutable_buffers buf;
 			buf.push_back(boost::asio::buffer(streamseed, 8));
 			boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)> h = boost::bind(&ASIOStreamBaseTransport::EndReceiveMessage1,
@@ -810,6 +811,7 @@ void ASIOStreamBaseTransport::BeginReceiveMessage1()
 		}
 		else
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "begin receive message with asyncio")
 			active_recv_bufs.clear();
 			active_recv_bufs.push_back(boost::asio::buffer(recvbuf.get(), 16));
 
@@ -1118,13 +1120,14 @@ void ASIOStreamBaseTransport::EndReceiveMessage3(RR_INTRUSIVE_PTR<Message> messa
 			}
 			else
 			{
-				BeginReceiveMessage1();
+				EndReceiveMessage4();
 				try
 				{
-				MessageReceived(message);
+					ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "dispatching received message to node")
+					MessageReceived(message);
 				}
 				catch (std::exception& exp) {
-					ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "error dispatching message " << exp.what())
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "error dispatching message " << exp.what() <<", closing transport") 
 					Close();
 				}				
 			}
@@ -1184,12 +1187,14 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
 	{
 		if (error)
 		{
+			ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "closing due to stream error with asyncio: " << error)
 			Close();
 			return;
 		}
 
 		if (bytes_transferred == 0)
 		{
+			ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "closing due to zero byte receive with asyncio (connection cleanly closed) with asyncio")
 			Close();
 			return;
 		}
@@ -1199,7 +1204,11 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
 
 			if (async_recv_size == 0)
 			{
-				if (active_recv_bufs.size() != 1) throw ProtocolException("");
+				if (active_recv_bufs.size() != 1)
+				{
+				 ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "asyncio internal error")
+				 throw ProtocolException("");
+				}
 
 				recvbuf_end += bytes_transferred;
 
@@ -1231,8 +1240,16 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
 				std::reverse((uint8_t*)&message_version, ((uint8_t*)&message_version) + 2);
 #endif
 
-				if (std::string(magic, 4) != "RRAC") throw ProtocolException("");
-				if (size < 16) throw ProtocolException("");
+				if (std::string(magic, 4) != "RRAC")
+				{
+					ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "received invalid magic expected \"RRAC\" received  \"" << std::string(magic,4) << "\" with asyncio")
+					throw ProtocolException("");
+				}
+				if (size < 16)
+				{
+					ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "received too small a message with asyncio")
+				 	throw ProtocolException("");
+				}
 
 				async_recv_size = size;
 				async_recv_version = message_version;
@@ -1263,6 +1280,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
 					ret = async_reader->Read3(bufs, bufs_read, 0, continue_bufs);
 					break;
 				default:
+					ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "received invalid message version: " << async_recv_version)
 					throw InvalidOperationException("");
 				}
 
@@ -1278,6 +1296,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
 
 				if (ret == AsyncMessageReader::ReadReturn_continue_buffers && recvbuf_end != 0)
 				{
+					ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "asyncio internal error")
 					throw ProtocolException("");
 				}
 			}
@@ -1288,7 +1307,11 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
 				{
 					for (size_t i=0; i<async_recv_continue_buf_count; i++)
 					{
-						if (e == active_recv_bufs.end()) throw ProtocolException("");
+						if (e == active_recv_bufs.end())
+						{
+							ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "asyncio internal error")
+						 	throw ProtocolException("");
+						}
 						continue_buffer_bytes += boost::asio::buffer_size(*e);
 						e++;
 					}
@@ -1300,7 +1323,11 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
 				{
 					b1 = continue_buffer_bytes;
 					recvbuf_end += bytes_transferred - continue_buffer_bytes;
-					if (recvbuf_end > recvbuf_len) throw ProtocolException("");
+					if (recvbuf_end > recvbuf_len) 
+					{
+						ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "asyncio internal error")
+						throw ProtocolException("");
+					}
 				}
 
 				const_buffers bufs;
@@ -1314,6 +1341,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
 					ret = async_reader->Read3(bufs, bufs_read, b1, continue_bufs);
 					break;
 				default:
+					ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "received invalid message version: " << async_recv_version)
 					throw ProtocolException("");
 				}
 
@@ -1335,6 +1363,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
 						ret = async_reader->Read3(bufs, bufs_read, 0, continue_bufs);
 						break;
 					default:
+						ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "received invalid message version: " << async_recv_version)
 						throw InvalidOperationException("");
 					}
 
@@ -1350,13 +1379,22 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
 			}
 
 			//Sanity checks
-			if (recvbuf_pos > recvbuf_len) throw ProtocolException("");
-			if (async_recv_pos > async_recv_size) throw ProtocolException("");
+			if (recvbuf_pos > recvbuf_len) 
+			{
+				ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "received message protocol error")
+				throw ProtocolException("");
+			}
+			if (async_recv_pos > async_recv_size)
+			{
+				ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "received message protocol error")
+				throw ProtocolException("");
+			}
 
 			if (ret == AsyncMessageReader::ReadReturn_done)
 			{
 				if (async_recv_pos != async_recv_size)
 				{
+					ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "received message protocol error, message did not read all data")
 					throw ProtocolException("Message did not read all data");
 				}
 
@@ -1392,11 +1430,12 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
 
 					if (recvbuf_pos != recvbuf_end)
 					{
+						ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "received message protocol error, data still in buffer")
 						throw ProtocolException("Still data in buffer");
 					}
 
 					//lock.unlock();
-
+					ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "successfully deserialized message with asyncio")
 					EndReceiveMessage3(m);
 
 					return;					
@@ -1473,8 +1512,9 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
 			}
 		}
 	}
-	catch (std::exception&)
+	catch (std::exception& exp)
 	{
+		ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "error receiving message with asyncio: " << exp.what())
 		Close();
 	}
 }
