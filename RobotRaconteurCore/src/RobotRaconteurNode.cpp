@@ -2082,6 +2082,10 @@ void RobotRaconteurNode::HandleException(const std::exception* exp)
 		}
 		catch (...) {}
 	}
+	else
+	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(),Node,-1,"uncaught exception in unknown handler: " << exp->what())
+	}
 }
 
 bool RobotRaconteurNode::TryHandleException(RR_WEAK_PTR<RobotRaconteurNode> node, const std::exception* exp)
