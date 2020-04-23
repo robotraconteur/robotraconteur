@@ -21,9 +21,13 @@
 %enddef
 
 %define RR_RELEASE_GIL() 
-RR_Py_Exception_GIL()
+//RR_Py_Exception_GIL()
+// Use SWIG -threads option instead of manually releasing GIL
+%thread;
+RR_Py_Exception()
 %enddef
 %define RR_KEEP_GIL() 
+%nothread;
 RR_Py_Exception()
 %enddef
 

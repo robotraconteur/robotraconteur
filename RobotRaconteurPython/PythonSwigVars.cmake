@@ -48,4 +48,4 @@ set(SWIG_DEPENDS ${RobotRaconteur_SWIG_sources} ${Python_SWIG_sources} ${Python_
 SET(SWIG_CXX_EXTENSION cxx)
 
 set_property(SOURCE ${CMAKE_CURRENT_LIST_DIR}/RobotRaconteurPython.i PROPERTY CPLUSPLUS ON)
-set_property(SOURCE ${CMAKE_CURRENT_LIST_DIR}/RobotRaconteurPython.i PROPERTY SWIG_FLAGS ${SWIG_PYTHON_EXTRA_ARGS} -relativeimport)
+set_property(SOURCE ${CMAKE_CURRENT_LIST_DIR}/RobotRaconteurPython.i PROPERTY SWIG_FLAGS ${SWIG_PYTHON_EXTRA_ARGS} -relativeimport -threads)

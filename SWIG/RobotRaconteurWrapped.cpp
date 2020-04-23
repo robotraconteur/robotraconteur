@@ -719,6 +719,8 @@ namespace RobotRaconteur
 #ifdef RR_PYTHON
 
 		boost::mutex::scoped_lock lock(pystub_lock);
+
+		RR_Ensure_GIL py_gil;
 		if (pystub!=NULL)
 		{
 			DIRECTOR_CALL2(Py_XDECREF(pystub));

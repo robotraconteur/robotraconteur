@@ -25,6 +25,7 @@ namespace RobotRaconteur
 {
 #ifdef RR_PYTHON
 
+	// Use -threads SWIG option instead of manually releasing and ensuring GIL
 	class RR_Release_GIL
 	{
 	public:
@@ -61,7 +62,7 @@ namespace RobotRaconteur
 
 #define DIRECTOR_CALL(dirtype,command){ \
 	boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock); \
-	RR_Ensure_GIL gil; \
+	/*RR_Ensure_GIL gil;*/ \
 	boost::shared_ptr<dirtype> RR_Director2(this->RR_Director); \
 	\
 	lock.unlock(); \
@@ -70,12 +71,12 @@ namespace RobotRaconteur
 }
 
 #define DIRECTOR_CALL2(command) { \
-RR_Ensure_GIL gil; \
+/*RR_Ensure_GIL gil;*/ \
 {command ;}\
 }
 
 #define DIRECTOR_CALL3(dirtype,command){ \
-	RR_Ensure_GIL gil; \
+	/*RR_Ensure_GIL gil;*/ \
 	boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock); \
 	boost::shared_ptr<dirtype> RR_Director2(this->RR_Director); \
 	\
@@ -432,6 +433,9 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		PyObject* GetPyStub()
 		{
 			boost::mutex::scoped_lock lock(pystub_lock);
+
+			RR_Ensure_GIL py_gil;
+
             if (pystub!=NULL)
             {
                 Py_XINCREF(pystub);
@@ -448,6 +452,9 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		void SetPyStub(PyObject* stub)
 		{
 			boost::mutex::scoped_lock lock(pystub_lock);
+
+			RR_Ensure_GIL py_gil;
+
             if (pystub!=NULL)
             {
 			Py_XDECREF(pystub);
@@ -1858,6 +1865,9 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		virtual void thread_function()
 		{
 			DIRECTOR_CALL2(
+
+				RR_Ensure_GIL py_gil;
+
 				PyRun_SimpleString("import RobotRaconteur.RobotRaconteurPythonUtil as RRU\nRRU.settrace()\n");
 				
 				
