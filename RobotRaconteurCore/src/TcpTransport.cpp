@@ -4872,7 +4872,8 @@ namespace detail
 				(ip6_listen1)->close();
 			}
 		}		
-		receive_update_timer->cancel();
+		if (receive_update_timer)
+			receive_update_timer->cancel();
 
 	}
 
