@@ -144,6 +144,8 @@ namespace RobotRaconteur
                 return "node";
             case RobotRaconteur_LogSource_Transport:
                 return "transport";
+            case RobotRaconteur_LogSource_Message:
+                return "message";
             case RobotRaconteur_LogSource_Client:
                 return "client";
             case RobotRaconteur_LogSource_Service:

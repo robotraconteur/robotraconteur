@@ -327,6 +327,7 @@ namespace RobotRaconteur
 		RobotRaconteur_LogSource_Default,
 		RobotRaconteur_LogSource_Node,
 		RobotRaconteur_LogSource_Transport,
+		RobotRaconteur_LogSource_Message,
 		RobotRaconteur_LogSource_Client,
 		RobotRaconteur_LogSource_Service,
 		RobotRaconteur_LogSource_Member,		
