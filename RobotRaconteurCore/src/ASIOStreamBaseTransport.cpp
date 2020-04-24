@@ -974,7 +974,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage2(size_t startpos, const boost::s
 	{
 		if (!error)
 		{
-			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "received " << bytes_transferred)
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "received " << bytes_transferred << " bytes")
 			if (bytes_transferred<(message_size-startpos))
 			{
 				size_t new_startpos=startpos+bytes_transferred;
@@ -1063,7 +1063,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage3(RR_INTRUSIVE_PTR<Message> messa
 		{
 			if (message->entries.at(0)->EntryType == MessageEntryType_ConnectionTest)
 			{
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "received heartbeat, sending response")
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "received heartbeat request, sending response")
 				EndReceiveMessage4();	
 				RR_INTRUSIVE_PTR<Message> &m=message;
 						
@@ -1199,6 +1199,8 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
 			return;
 		}
 		
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "received " << bytes_transferred << " bytes with asyncio")
+
 		{
 			//boost::mutex::scoped_lock lock(recv_lock);
 
@@ -1249,6 +1251,29 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
 				{
 					ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "received too small a message with asyncio")
 				 	throw ProtocolException("");
+				}
+
+				if (boost::numeric_cast<int32_t>(size) > (max_message_size))
+				{
+					ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "received too large a message " << size << " but max allowed " << max_message_size << ", with asyncio")
+					throw ProtocolException("");
+				}
+
+				if (!recv_large_transfer_authorized)
+				{
+					if (IsLargeTransferAuthorized())
+					{
+						recv_large_transfer_authorized = true;
+					}
+					else
+					{
+						if (size > 16 * 1024)
+						{
+							ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "received too large a message " << size << " before authorized, with asyncio")
+						throw ProtocolException("");
+						}
+					}
+
 				}
 
 				async_recv_size = size;
@@ -1523,14 +1548,21 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
 
 void ASIOStreamBaseTransport::AsyncPauseReceive(boost::function<void (const boost::system::error_code&)>& handler)
 {
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "requesting receive pause")
 	boost::mutex::scoped_lock lock(recv_lock);
-	if (recv_pause_request || recv_paused) throw InvalidOperationException("Already pausing");
+	if (recv_pause_request || recv_paused) 
+	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "attempt to pause receive when already paused")
+		throw InvalidOperationException("Already pausing");
+	}
 	
 	
 	if (!receiving)
 	{
 		recv_pause_request=true;
 		recv_paused=true;
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "pausing receive")
 
 		boost::system::error_code ec;
 		RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(handler,ec));
@@ -1546,10 +1578,12 @@ void ASIOStreamBaseTransport::AsyncPauseReceive(boost::function<void (const boos
 
 void ASIOStreamBaseTransport::AsyncResumeReceive()
 {
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "requesting receive resume")
 	boost::mutex::scoped_lock lock(recv_lock);
 	if (!recv_pause_request) return;
 	if (recv_pause_request && !recv_paused)
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "attempt to resume receive when not paused")
 		throw InvalidOperationException("Invalid operation");
 	}
 
@@ -1562,16 +1596,22 @@ void ASIOStreamBaseTransport::AsyncResumeReceive()
 
 	if (receiving) return;
 
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "receive resumed")
 	BeginReceiveMessage1();
 
 }
 
 void ASIOStreamBaseTransport::Close()
 {
+
+	
+
 	{
 		bool c=connected.exchange(false);
 		if (!c) return;
 	}
+
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "close requested")
 
 	//std::cout << "ASIO Close" << std::endl;
 
@@ -1681,7 +1721,7 @@ void ASIOStreamBaseTransport::Close()
 			string_table_3_timers.clear();
 		}
 
-	
+	ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "transport connection closed")
 }
 
 void ASIOStreamBaseTransport::heartbeat_timer_func(const boost::system::error_code& e)
@@ -1715,12 +1755,14 @@ void ASIOStreamBaseTransport::heartbeat_timer_func(const boost::system::error_co
 				RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this()),
 				_1);
 			AsyncSendMessage(m, h);
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "heartbeat request sent")
 		}
 
 		boost::posix_time::ptime tr=tlastrecv.load();
 
 		if ((t - tr).total_milliseconds()> ReceiveTimeout)
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "transport close requested due to heartbeat timeout")
 			Close();
 		}
 		else
@@ -1735,8 +1777,9 @@ void ASIOStreamBaseTransport::heartbeat_timer_func(const boost::system::error_co
 
 		}
 		}
-		catch (std::exception&)
+		catch (std::exception& exp)
 		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "transport close requested due exception in heartbeat timer: " << exp.what())
 			Close();
 		}
 	}
@@ -1812,6 +1855,7 @@ uint32_t ASIOStreamBaseTransport::StreamCapabilities(boost::string_ref name)
 
 void ASIOStreamBaseTransport::AsyncCheckStreamCapability(boost::string_ref name, boost::function<void (uint32_t, RR_SHARED_PTR<RobotRaconteurException>)>& callback)
 {
+
 	boost::mutex::scoped_lock lock (CheckStreamCapability_lock);
 	if (CheckStreamCapability_closed)
 	{
@@ -1824,6 +1868,7 @@ void ASIOStreamBaseTransport::AsyncCheckStreamCapability(boost::string_ref name,
 	}
 	else
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "Queuing AsyncCheckStreamCapability \"" << name << "\"")
 		CheckStreamCapability_queue.push(boost::make_tuple(name.to_string(),callback));
 	}
 }
@@ -1833,8 +1878,12 @@ void ASIOStreamBaseTransport::BeginCheckStreamCapability(boost::string_ref name,
 		
 	{
 		
-
-		if (CheckStreamCapability_waiting) throw InvalidOperationException("Already checking capability");
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "BeginCheckStreamCapability \"" << name << "\"")
+		if (CheckStreamCapability_waiting) 
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "Attempt to call AsyncCheckStreamCapability \"" << name << "\" when already in progress")
+			throw InvalidOperationException("Already checking capability");
+		}
 		CheckStreamCapability_waiting=true;
 		RR_INTRUSIVE_PTR<Message> m = CreateMessage();
 		m->header->SenderNodeID = GetNode()->NodeID();
@@ -1867,7 +1916,7 @@ void ASIOStreamBaseTransport::BeginCheckStreamCapability(boost::string_ref name,
 			RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this()),
 			_1);
 		AsyncSendMessage(m, h);
-
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "sent CheckStreamCapability \"" << name << "\" request")
 			
 		return ;
 
@@ -1880,6 +1929,7 @@ void ASIOStreamBaseTransport::CheckStreamCapability_EndSendMessage(RR_SHARED_PTR
 {
 	if (err)
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "CheckStreamCapability send message failed " << err)
 		boost::mutex::scoped_lock lock (CheckStreamCapability_lock);
 		if (CheckStreamCapability_waiting)
 		{
@@ -1925,6 +1975,8 @@ void ASIOStreamBaseTransport::CheckStreamCapability_timercallback(RR_WEAK_PTR<AS
 		boost::mutex::scoped_lock lock (t2->CheckStreamCapability_lock);
 		if (t2->CheckStreamCapability_waiting)
 		{
+
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(t2->node, Transport, t2->GetLocalEndpoint(), "CheckStreamCapability timed out")
 			if (t2->CheckStreamCapability_callback)
 			{
 				RobotRaconteurNode::TryPostToThreadPool(t2->node, boost::bind(t2->CheckStreamCapability_callback,0,RR_MAKE_SHARED<RequestTimeoutException>("Timed out")));
@@ -1960,7 +2012,7 @@ void ASIOStreamBaseTransport::CheckStreamCapability_MessageReceived( RR_INTRUSIV
 			mret->AddElement("return", ScalarToRRArray(StreamCapabilities(m->entries.at(0)->MemberName.str())));
 			ret->entries.push_back(mret);
 
-			
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "received CheckStreamCapability \"" << m->entries.at(0)->MemberName << "\" request, sending response")
 
 			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&ASIOStreamBaseTransport::SimpleAsyncEndSendMessage,
 				RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this()),
@@ -1974,7 +2026,9 @@ void ASIOStreamBaseTransport::CheckStreamCapability_MessageReceived( RR_INTRUSIV
 			{
 				if (CheckStreamCapability_callback)
 				{
-					RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(CheckStreamCapability_callback,RRArrayToScalar(m->entries.at(0)->FindElement("return")->CastData<RRArray<uint32_t> >()),RR_SHARED_PTR<RobotRaconteurException>()));
+					int32_t cap_level = RRArrayToScalar(m->entries.at(0)->FindElement("return")->CastData<RRArray<uint32_t> >());
+					ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "received CheckStreamCapability \"" << m->entries.at(0)->MemberName << "\" response: " << cap_level)
+					RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(CheckStreamCapability_callback,cap_level,RR_SHARED_PTR<RobotRaconteurException>()));
 				}
 				CheckStreamCapability_waiting=false;
 				CheckStreamCapability_callback=NULL;
@@ -2000,8 +2054,9 @@ void ASIOStreamBaseTransport::CheckStreamCapability_MessageReceived( RR_INTRUSIV
 			}
 		}
 	}
-	catch (std::exception&)
+	catch (std::exception& exp)
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "exception receiving CheckStreamCapability message: " << exp.what())
 	};
 }
 
@@ -2022,14 +2077,35 @@ void ASIOStreamBaseTransport::AsyncStreamOp(boost::string_ref command, RR_SHARED
 	}
 	else
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "Queuing AsyncStreamOp \"" << command << "\"")
 		streamop_queue.push(boost::make_tuple(command.to_string(),args,callback));
 	}
+}
+
+static std::string ASIOStreamBaseTransport_log_caps(const std::vector<uint32_t>& caps)
+{
+	std::stringstream ss;
+	for (size_t i=0; ;)
+	{
+		ss << "0x" << std::hex << caps[i];
+		++i;
+		if (i<caps.size())
+		{
+			ss << ", ";
+		}
+		else
+		{
+			break;
+		}
+	}
+	return ss.str();
 }
 
 void ASIOStreamBaseTransport::BeginStreamOp(boost::string_ref command, RR_SHARED_PTR<RRObject> args,  boost::function<void (RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)>& callback)
 {
 	{		
 		
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "BeginStreamOp \"" << command << "\"")
 		RR_INTRUSIVE_PTR<Message> m = CreateMessage();
 		m->header = CreateMessageHeader();
 		m->header->ReceiverNodeName.reset();
@@ -2065,6 +2141,7 @@ void ASIOStreamBaseTransport::BeginStreamOp(boost::string_ref command, RR_SHARED
 			}
 			mm->AddElement("capabilities", VectorToRRArray<uint32_t>(caps));
 			m->entries.push_back(mm);
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "client transport requesting capabilities: " << ASIOStreamBaseTransport_log_caps(caps))
 		}
 		else
 		{
@@ -2097,12 +2174,11 @@ void ASIOStreamBaseTransport::BeginStreamOp(boost::string_ref command, RR_SHARED
 
 		AsyncSendMessage(m, h);
 
-			
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "sent StreamOp \"" << command  << "\" request")
 
 
 	}
 }
-
 
 RR_INTRUSIVE_PTR<MessageEntry> ASIOStreamBaseTransport::PackStreamOpRequest(boost::string_ref command, RR_SHARED_PTR<RRObject> args)
 {
@@ -2113,6 +2189,7 @@ RR_INTRUSIVE_PTR<MessageEntry> ASIOStreamBaseTransport::PackStreamOpRequest(boos
 	}
 	else
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "unknown StreamOp command: \"" << command << "\"")
 			throw InvalidOperationException("Unknown StreamOp command");
 
 	}
@@ -2124,6 +2201,7 @@ void ASIOStreamBaseTransport::StreamOp_EndSendMessage(RR_SHARED_PTR<RobotRaconte
 {
 	if (err)
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "StreamOp send message failed " << err->Message)
 		//std::cout << "Err sending streamop message" << endl;
 		boost::mutex::scoped_lock lock (streamop_lock);
 		if (streamop_waiting)
@@ -2170,6 +2248,7 @@ void ASIOStreamBaseTransport::StreamOp_timercallback(RR_WEAK_PTR<ASIOStreamBaseT
 		boost::mutex::scoped_lock lock (t2->streamop_lock);
 		if (t2->streamop_waiting)
 		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(t2->node, Transport, t2->GetLocalEndpoint(), "StreamOp timed out")
 			if (t2->streamop_callback)
 			{
 				detail::PostHandlerWithException(t2->node, t2->streamop_callback,RR_MAKE_SHARED<RequestTimeoutException>("Timed out"), true, false);
@@ -2189,7 +2268,6 @@ void ASIOStreamBaseTransport::StreamOp_timercallback(RR_WEAK_PTR<ASIOStreamBaseT
 		}
 	}
 }
-
 
 RR_INTRUSIVE_PTR<MessageEntry> ASIOStreamBaseTransport::ProcessStreamOpRequest(RR_INTRUSIVE_PTR<MessageEntry> request, RR_INTRUSIVE_PTR<MessageHeader> header)
 {
@@ -2212,7 +2290,8 @@ RR_INTRUSIVE_PTR<MessageEntry> ASIOStreamBaseTransport::ProcessStreamOpRequest(R
 
 				std::vector<uint32_t> ret_caps;
 
-				RR_INTRUSIVE_PTR<RRArray<uint32_t> > caps_array = elem_caps->CastData<RRArray<uint32_t> >();
+				RR_INTRUSIVE_PTR<RRArray<uint32_t> > caps_array = rr_null_check(elem_caps->CastData<RRArray<uint32_t> >());
+				std::vector<uint32_t> caps_array1 = RRArrayToVector<uint32_t>(caps_array);
 				for (size_t i = 0; i < caps_array->size(); i++)
 				{
 					uint32_t cap = (*caps_array)[i];
@@ -2242,6 +2321,7 @@ RR_INTRUSIVE_PTR<MessageEntry> ASIOStreamBaseTransport::ProcessStreamOpRequest(R
 
 				if (!(message2_basic_caps & TransportCapabilityCode_MESSAGE2_BASIC_ENABLE))
 				{
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "CreateConnection client transport must support message version 2")
 					throw ProtocolException("Transport must support Message Version 2");
 				}
 				else
@@ -2269,6 +2349,7 @@ RR_INTRUSIVE_PTR<MessageEntry> ASIOStreamBaseTransport::ProcessStreamOpRequest(R
 					}
 				}				
 
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "server transport negotiated capabilities: " << ASIOStreamBaseTransport_log_caps(ret_caps) << " client requested capabilities: " << ASIOStreamBaseTransport_log_caps(ret_caps))
 				mmret->AddElement("capabilities", VectorToRRArray<uint32_t>(ret_caps));
 			}
 			
@@ -2291,18 +2372,22 @@ RR_INTRUSIVE_PTR<MessageEntry> ASIOStreamBaseTransport::ProcessStreamOpRequest(R
 				}
 			}
 			
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "client requested unknown node")
+
 			mmret->Error = MessageErrorType_NodeNotFound;
 			mmret->AddElement("errorname", stringToRRArray("RobotRaconteur.NodeNotFound"));
 			mmret->AddElement("errorstring", stringToRRArray("Node not found"));
 		}
 		else
 		{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "client requested unknown StreamOp command: \"" << command << "\"")
 				throw ProtocolException("Unknown StreamOp command");
 
 		}
 	}
-	catch (std::exception&)
+	catch (std::exception& exp)
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "processing StreamOp request failed: \"" << exp.what() << "\"")
 		mmret->Error = MessageErrorType_ProtocolError;
 		mmret->AddElement("errorname", stringToRRArray("RobotRaconteur.ProtocolError"));
 		mmret->AddElement("errorstring", stringToRRArray("Invalid Stream Operation"));
@@ -2341,8 +2426,11 @@ void ASIOStreamBaseTransport::StreamOpMessageReceived(RR_INTRUSIVE_PTR<Message> 
 		mret->header->ReceiverNodeID = m->header->SenderNodeID;
 		RR_INTRUSIVE_PTR<MessageEntry> mmret = ProcessStreamOpRequest(mm,m->header);
 		
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "received StreamOp \"" << command << "\" request")
+
 		if (mmret)
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "sending StreamOp \"" << command << "\" response")
 			mret->entries.push_back(mmret);
 			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&ASIOStreamBaseTransport::StreamOp_EndSendMessage, RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this()), _1);
 			AsyncSendMessage(mret, h);
@@ -2360,6 +2448,8 @@ void ASIOStreamBaseTransport::StreamOpMessageReceived(RR_INTRUSIVE_PTR<Message> 
 			RR_SHARED_PTR<RobotRaconteurException> rrexp;
 			RR_SHARED_PTR<RRObject> ret;
 
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "received StreamOp \"" << command << "\" response")
+
 			try
 			{
 
@@ -2367,6 +2457,7 @@ void ASIOStreamBaseTransport::StreamOpMessageReceived(RR_INTRUSIVE_PTR<Message> 
 			}			
 			catch (std::exception& exp)
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "error unpacking StreamOp \"" << m->entries.at(0)->MemberName << "\" response: " << exp.what())
 				rrexp=RobotRaconteurExceptionUtil::ExceptionToSharedPtr(exp);
 			}
 
@@ -2376,8 +2467,9 @@ void ASIOStreamBaseTransport::StreamOpMessageReceived(RR_INTRUSIVE_PTR<Message> 
 				{
 					streamop_callback(rr_cast<RRObject>(ret),rrexp);
 				}
-				catch (std::exception&)
+				catch (std::exception& exp)
 				{
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "error in StreamOp \"" << m->entries.at(0)->MemberName << "\" handler: " << exp.what() << ", closing transport connection")
 					Close();
 				}
 			}
@@ -2433,20 +2525,30 @@ RR_SHARED_PTR<RRObject> ASIOStreamBaseTransport::UnpackStreamOpResponse(RR_INTRU
 
 		if (!RemoteNodeID.IsAnyNode())
 		{
-			if (header->SenderNodeID!=RemoteNodeID) throw ConnectionException("Invalid node connection");
+			if (header->SenderNodeID!=RemoteNodeID) 
+			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "CreateConnection server returned unexpected NodeID")
+				throw ConnectionException("Invalid node connection");
+			}
 		}
 		else
 		{
 			if (target_nodename!="")
 			{
 				if (header->SenderNodeName != target_nodename)
+				{
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "CreateConnection server returned unexpected NodeName")
 					throw ConnectionException("Invalid node connection");
+				}
 			}
 
 			if (!target_nodeid.IsAnyNode())
 			{
 				if (target_nodeid!=header->SenderNodeID)
+				{
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "CreateConnection server returned unexpected NodeID")
 					throw ConnectionException("Invalid node connection");
+				}
 			}
 		}
 		
@@ -2457,7 +2559,9 @@ RR_SHARED_PTR<RRObject> ASIOStreamBaseTransport::UnpackStreamOpResponse(RR_INTRU
 			uint32_t message3_basic_caps = 0;
 			uint32_t message3_string_caps = 0;
 
-			RR_INTRUSIVE_PTR<RRArray<uint32_t> > caps_array = elem_caps->CastData<RRArray<uint32_t> >();
+			RR_INTRUSIVE_PTR<RRArray<uint32_t> > caps_array = rr_null_check(elem_caps->CastData<RRArray<uint32_t> >());
+			std::vector<uint32_t> caps_array1 = RRArrayToVector<uint32_t>(caps_array);
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "client transport negotiated capabilities: " << ASIOStreamBaseTransport_log_caps(caps_array1))
 			for (size_t i = 0; i < caps_array->size(); i++)
 			{
 				uint32_t cap = (*caps_array)[i];
@@ -2467,12 +2571,14 @@ RR_SHARED_PTR<RRObject> ASIOStreamBaseTransport::UnpackStreamOpResponse(RR_INTRU
 				{
 					if (!(cap_value & TransportCapabilityCode_MESSAGE2_BASIC_ENABLE))
 					{
+						ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "CreateConnection server transport must support message version 2")
 						throw ProtocolException("Transport must support Message Version 2");
 					}
 
 					if ((cap_value & ~(TransportCapabilityCode_MESSAGE2_BASIC_ENABLE
 						| TransportCapabilityCode_MESSAGE2_BASIC_CONNECTCOMBINED)) != 0)
 					{
+						ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "CreateConnection invalid version 2 message caps returned by server")
 						throw ProtocolException("Invalid Message Version 2 capabilities");
 					}
 
@@ -2485,6 +2591,7 @@ RR_SHARED_PTR<RRObject> ASIOStreamBaseTransport::UnpackStreamOpResponse(RR_INTRU
 					{
 						if (cap_value != 0)
 						{
+							ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "CreateConnection invalid version 3 message caps returned by server")
 							throw ProtocolException("Invalid Message Version 3 capabilities");
 						}
 					}
@@ -2494,6 +2601,7 @@ RR_SHARED_PTR<RRObject> ASIOStreamBaseTransport::UnpackStreamOpResponse(RR_INTRU
 						{
 							if (cap_value != 0)
 							{
+								ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "CreateConnection invalid version 3 message caps returned by server")
 								throw ProtocolException("Invalid Message Version 3 capabilities");
 							}
 						}
@@ -2502,6 +2610,7 @@ RR_SHARED_PTR<RRObject> ASIOStreamBaseTransport::UnpackStreamOpResponse(RR_INTRU
 							if ((cap_value & ~(TransportCapabilityCode_MESSAGE3_BASIC_ENABLE
 								| TransportCapabilityCode_MESSAGE3_BASIC_CONNECTCOMBINED)) != 0)
 							{
+								ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "CreateConnection invalid version 3 message caps returned by server")
 								throw ProtocolException("Invalid Message Version 2 capabilities");
 							}
 
@@ -2518,6 +2627,7 @@ RR_SHARED_PTR<RRObject> ASIOStreamBaseTransport::UnpackStreamOpResponse(RR_INTRU
 					{
 						if (cap_value != 0)
 						{
+							ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "CreateConnection invalid version 3 string table caps returned by server")
 							throw ProtocolException("Invalid Message Version 3 String Table capabilities");
 						}
 					}
@@ -2527,6 +2637,7 @@ RR_SHARED_PTR<RRObject> ASIOStreamBaseTransport::UnpackStreamOpResponse(RR_INTRU
 						{
 							if (cap_value != 0)
 							{
+								ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "CreateConnection invalid version 3 string table caps returned by server")
 								throw ProtocolException("Invalid Message Version 3 String Table capabilities");
 							}
 						}
@@ -2537,6 +2648,7 @@ RR_SHARED_PTR<RRObject> ASIOStreamBaseTransport::UnpackStreamOpResponse(RR_INTRU
 								| TransportCapabilityCode_MESSAGE3_STRINGTABLE_DYNAMIC_TABLE
 								| TransportCapabilityCode_MESSAGE3_STRINGTABLE_STANDARD_TABLE)) != 0)
 							{
+								ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "CreateConnection invalid version 3 string table caps returned by server")
 								throw ProtocolException("Invalid Message Version 3 String Table capabilities");
 							}
 
@@ -2565,6 +2677,7 @@ RR_SHARED_PTR<RRObject> ASIOStreamBaseTransport::UnpackStreamOpResponse(RR_INTRU
 			{
 				if (message3_string_caps != 0)
 				{
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "CreateConnection invalid version 3 string table settings returned by server")
 					throw ProtocolException("Message 3 must be enabled for String Table 3");
 				}
 			}
@@ -2578,6 +2691,7 @@ RR_SHARED_PTR<RRObject> ASIOStreamBaseTransport::UnpackStreamOpResponse(RR_INTRU
 	else
 	{
 				
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "unknown StreamOp command \"" << command << "\"")
 		throw MemberNotFoundException("Unknown command");
 
 	}

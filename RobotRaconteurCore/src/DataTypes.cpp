@@ -812,4 +812,15 @@ std::size_t hash_value(const RobotRaconteur::MessageStringPtr& k)
 	return boost::hash_range(k1.begin(), k1.end());
 }
 
+std::ostream & operator << (std::ostream &out, const MessageStringPtr &str)
+{
+	out << str.str();
+	return out;
+}
+std::ostream & operator << (std::ostream &out, const MessageStringRef &str)
+{
+	out << str.str();
+	return out;
+}
+
 }

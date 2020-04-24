@@ -50,7 +50,7 @@ public:
     std::string ThreadID;
 };
 
-std::ostream & operator << (std::ostream &out, const RRLogRecord &record);
+ROBOTRACONTEUR_CORE_API std::ostream & operator << (std::ostream &out, const RRLogRecord &record);
 
 ROBOTRACONTEUR_CORE_API std::string RRLogRecord_Level_ToString(RobotRaconteur_LogLevel level);
 ROBOTRACONTEUR_CORE_API std::string RRLogRecord_Source_ToString(RobotRaconteur_LogSource source);

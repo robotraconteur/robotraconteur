@@ -353,6 +353,9 @@ namespace RobotRaconteur
 
 	
 	std::size_t hash_value(const RobotRaconteur::MessageStringPtr& k);
+	
+	ROBOTRACONTEUR_CORE_API std::ostream & operator << (std::ostream &out, const MessageStringPtr &str);
+	ROBOTRACONTEUR_CORE_API std::ostream & operator << (std::ostream &out, const MessageStringRef &str);
 
 	// boost::string_ref operations
 	inline boost::iterator_range<boost::string_ref::const_iterator> to_range(const boost::string_ref& str)
