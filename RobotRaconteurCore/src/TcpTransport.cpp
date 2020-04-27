@@ -79,6 +79,9 @@ namespace detail
 
 	void TcpConnector::Connect(std::vector<std::string> url, uint32_t endpoint, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > handler)
 	{
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, endpoint, "TcpConnector begin connection with candidate URLs: " << boost::join(url,", "));
+
 		this->callback = handler;
 		this->endpoint = endpoint;
 		this->url = url.at(0);
@@ -117,14 +120,19 @@ namespace detail
 				boost::trim_right_if(host, boost::is_from_range(']', ']'));
 				queries.push_back(boost::make_tuple(host, port));
 			}
-			catch (std::exception&)
+			catch (std::exception& exp)
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, endpoint, "candidate URL \"" << e << "\" error: " << exp.what());
 				if (url.size() == 1) throw;
 
 			}
 		}
 
-		if (queries.size() == 0) throw ConnectionException("Could not find route to supplied address");
+		if (queries.size() == 0)
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, endpoint, "could not find route to supplied address");
+		 	throw ConnectionException("Could not find route to supplied address");
+		}
 		
 		{
 			{
@@ -161,6 +169,25 @@ namespace detail
 		}
 	}
 
+	static std::string TcpConnector_log_candidate_endpoints(RR_SHARED_PTR<std::list<boost::asio::ip::tcp::endpoint> >& eps)
+	{
+		std::stringstream ss;		
+		for (std::list<boost::asio::ip::tcp::endpoint>::iterator e=eps->begin(); ;)
+		{
+			ss << *e;
+			++e;
+			if (e!=eps->end())
+			{
+				ss << ", ";
+			}
+			else
+			{
+				break;
+			}
+		}
+		return ss.str();
+	}
+
 #if BOOST_ASIO_VERSION < 101200
 	void TcpConnector::connect2(int32_t key, const boost::system::error_code& err, boost::asio::ip::tcp::resolver::iterator endpoint_iterator, boost::function<void(RR_SHARED_PTR<TcpTransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > callback)
 	{
@@ -172,6 +199,7 @@ namespace detail
 		
 		if (err)
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, endpoint, "error resolving candidate host: " << err);
 			handle_error(key, err);
 			return;
 		}
@@ -261,6 +289,8 @@ namespace detail
 				}
 			}
 
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, endpoint, "found candidate endpoints: " << TcpConnector_log_candidate_endpoints(candidate_endpoints));
+
 			boost::system::error_code ec;
 			connect3(candidate_endpoints, key, ec);
 
@@ -269,8 +299,9 @@ namespace detail
 
 			
 		}
-		catch (std::exception&)
+		catch (std::exception& exp)
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, endpoint, "error resolving candidate endpoints: " << exp.what());
 			handle_error(key, boost::system::error_code(boost::system::errc::io_error, boost::system::generic_category()));
 			return;
 		}
@@ -278,7 +309,7 @@ namespace detail
 
 		connect4();
 	}
-
+	
 	void TcpConnector::connect3(RR_SHARED_PTR<std::list<boost::asio::ip::tcp::endpoint> > candidate_endpoints, int32_t key, const boost::system::error_code& e)
 	{
 		
@@ -312,6 +343,8 @@ namespace detail
 
 				RobotRaconteurNode::asio_async_connect(node, sock, ep, boost::bind(&TcpConnector::connected_callback, shared_from_this(), sock, sock_closer, key2, boost::asio::placeholders::error));
 				
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, endpoint, "TCP begin connect to endpoint: " << ep);
+
 				active.push_back(key2);
 			}
 		}
@@ -350,6 +383,7 @@ namespace detail
 		{
 			if (errors.size() == 0)
 			{
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, endpoint, "could not connect to remote node");
 				callback(RR_SHARED_PTR<TcpTransportConnection>(), RR_MAKE_SHARED<ConnectionException>("Could not connect to remote node"));
 				return;
 			}
@@ -359,6 +393,7 @@ namespace detail
 				RR_SHARED_PTR<NodeNotFoundException> e2 = RR_DYNAMIC_POINTER_CAST<NodeNotFoundException>(e);
 				if (e2)
 				{
+					ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, endpoint, "error connecting to remote host:" << e2->what());
 					callback(RR_SHARED_PTR<TcpTransportConnection>(), e2);
 					return;
 				}
@@ -369,11 +404,13 @@ namespace detail
 				RR_SHARED_PTR<AuthenticationException> e2 = RR_DYNAMIC_POINTER_CAST<AuthenticationException>(e);
 				if (e2)
 				{
+					ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, endpoint, "error connecting to remote host:" << e2->what());
 					callback(RR_SHARED_PTR<TcpTransportConnection>(), e2);
 					return;
 				}
 			}
 
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, endpoint, "error connecting to remote host:" << errors.back()->what());
 			callback(RR_SHARED_PTR<TcpTransportConnection>(), errors.back());
 		}
 	}
@@ -382,6 +419,7 @@ namespace detail
 	{
 		if (error)
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, endpoint, "candidate endpoint " << socket->remote_endpoint() << " connection error: " << error);
 			handle_error(key, error);
 			return;
 		}
@@ -418,6 +456,8 @@ namespace detail
 				key2 = active_count;
 				socket_connected = true;
 
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, endpoint, "candidate endpoint " << socket->remote_endpoint() << " connected!");
+
 				socket->set_option(boost::asio::ip::tcp::socket::linger(true, 5));
 				boost::function<void(RR_SHARED_PTR<boost::asio::ip::tcp::socket>, RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> cb = boost::bind(&TcpConnector::connected_callback2, shared_from_this(), _1, key2, _2, _3);
 				TcpTransport_attach_transport(parent, socket, url, false, endpoint, cb);
@@ -427,8 +467,9 @@ namespace detail
 			
 			active.remove(key);
 		}
-		catch (std::exception&)
+		catch (std::exception& exp)
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, endpoint, "candidate endpoint " << socket->remote_endpoint() << " connection error: " << exp.what());
 			handle_error(key, boost::system::error_code(boost::system::errc::io_error, boost::system::generic_category()));
 		}
 	}	
@@ -441,11 +482,13 @@ namespace detail
 			{
 				try
 				{
+					ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, endpoint, "closing losing candidate connection: " << socket->remote_endpoint());
 					connection->Close();
 				}
 				catch (std::exception&) {}
 			}
 			//callback(RR_SHARED_PTR<TcpTransportConnection>(),err);
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, endpoint, "error attaching transport to socket: " << socket->remote_endpoint());
 			handle_error(key, err);
 			return;
 
@@ -487,15 +530,19 @@ namespace detail
 			{
 
 				//std::cout << "connect callback" << std::endl;
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, endpoint, "TcpConnector connected transport to " << socket->remote_endpoint());
+				ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, endpoint, "TcpTransport connected transport to " << socket->remote_endpoint() << " from " << socket->local_endpoint());
 				callback(boost::dynamic_pointer_cast<ITransportConnection>(connection), RR_SHARED_PTR<RobotRaconteurException>());
 			}
 			catch (std::exception& exp)
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, endpoint, "error in transport connect handler: " << exp.what());
 				RobotRaconteurNode::TryHandleException(node, &exp);
 			}
 		}
-		catch (std::exception&)
+		catch (std::exception& exp2)
 		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, endpoint, "error finalizing transport connection " << exp2.what());
 			handle_error(key, boost::system::error_code(boost::system::errc::io_error, boost::system::generic_category()));
 		}
 
@@ -514,10 +561,12 @@ namespace detail
 			}
 			try
 			{
+				ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, endpoint, "TcpTransport connect operation timed out");
 				callback(RR_SHARED_PTR<TcpTransportConnection>(), RR_MAKE_SHARED<ConnectionException>("Connection timed out"));
 			}
 			catch (std::exception& exp)
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, endpoint, "error in transport connect handler: " << exp.what());
 				RobotRaconteurNode::TryHandleException(node, &exp);
 			}
 		}
@@ -556,11 +605,13 @@ namespace detail
 			connect_timer.reset();
 		}
 
+		
 		BOOST_FOREACH (RR_SHARED_PTR<RobotRaconteurException> e, errors)
 		{
 			RR_SHARED_PTR<NodeNotFoundException> e2 = RR_DYNAMIC_POINTER_CAST<NodeNotFoundException>(e);
 			if (e2)
 			{
+				ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, endpoint, "TcpTransport failed to connect: " << e2->what());
 				callback(RR_SHARED_PTR<TcpTransportConnection>(), e2);
 				return;
 			}
@@ -571,6 +622,7 @@ namespace detail
 			RR_SHARED_PTR<AuthenticationException> e2 = RR_DYNAMIC_POINTER_CAST<AuthenticationException>(e);
 			if (e2)
 			{
+				ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, endpoint, "TcpTransport failed to connect: " << e2->what());
 				callback(RR_SHARED_PTR<TcpTransportConnection>(), e2);
 				return;
 			}
@@ -580,10 +632,12 @@ namespace detail
 		{
 			try
 			{
+				ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, endpoint, "TcpTransport failed to connect: " << err->what());
 				callback(RR_SHARED_PTR<TcpTransportConnection>(), err);
 			}
 			catch (std::exception& exp)
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, endpoint, "error in transport connect handler: " << exp.what());
 				RobotRaconteurNode::TryHandleException(node, &exp);
 			}
 		}
@@ -591,10 +645,12 @@ namespace detail
 		{
 			try
 			{
+				ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, endpoint, "TcpTransport failed to connect: " << err->what());
 				callback(RR_SHARED_PTR<TcpTransportConnection>(), RR_MAKE_SHARED<ConnectionException>("Could not connect to service"));
 			}
 			catch (std::exception& exp)
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, endpoint, "error in transport connect handler: " << exp.what());
 				RobotRaconteurNode::TryHandleException(node, &exp);
 			}
 		}
@@ -602,6 +658,24 @@ namespace detail
 	
 	
 	//class TcpAcceptor
+
+	void TcpAcceptor::AcceptSocket6(RR_SHARED_PTR<RobotRaconteurException> err,
+				RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket,	
+				RR_SHARED_PTR<TcpTransportConnection> t,		
+				boost::function<void(RR_SHARED_PTR<boost::asio::ip::tcp::socket>, RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)>& handler
+			)
+	{
+		if (err)
+		{
+			ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, 0, "TcpTransport accepted socket stream attach failed " << socket->remote_endpoint() << " to " << socket->local_endpoint() << " with error: " << err->what());
+			handler(RR_SHARED_PTR<boost::asio::ip::tcp::socket>(), RR_SHARED_PTR<ITransportConnection>(), err);
+			return;
+		}
+
+		ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, 0, "TcpTransport accepted incoming transport connection " << socket->remote_endpoint() << " to " << socket->local_endpoint());
+		handler(socket, t, err);
+	}
+
 	void TcpAcceptor::AcceptSocket5(const boost::system::error_code& ec,
 		RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket,
 		RR_SHARED_PTR<websocket_stream<boost::asio::ip::tcp::socket&> > websocket,
@@ -611,6 +685,7 @@ namespace detail
 	{
 		if (ec)
 		{
+			ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, 0, "TcpTransport accepted socket closed " << socket->remote_endpoint() << " to " << socket->local_endpoint() << " with error: " << ec.message());
 			RR_SHARED_PTR<ConnectionException> err = RR_MAKE_SHARED<ConnectionException>("Connection closed");
 			handler(RR_SHARED_PTR<boost::asio::ip::tcp::socket>(), RR_SHARED_PTR<ITransportConnection>(), err);
 			return;
@@ -618,6 +693,7 @@ namespace detail
 
 		try
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, 0, "TcpTransport accepted socket attaching websocket protocol " << socket->remote_endpoint() << " to " << socket->local_endpoint());
 			RR_SHARED_PTR<TcpTransportConnection> t = RR_MAKE_SHARED<TcpTransportConnection>(parent, url, true, local_endpoint);
 			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(handler, socket, t, _1);
 			t->AsyncAttachWebSocket(socket, websocket, h);
@@ -652,6 +728,7 @@ namespace detail
 
 		if (ec)
 		{
+			ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, 0, "TcpTransport accepted socket closed " << socket->remote_endpoint() << " to " << socket->local_endpoint() << " with error " << ec.message() );
 			RR_SHARED_PTR<ConnectionException> err = RR_MAKE_SHARED<ConnectionException>("Connection closed");
 			handler(RR_SHARED_PTR<boost::asio::ip::tcp::socket>(), RR_SHARED_PTR<ITransportConnection>(), err);
 			return;
@@ -662,6 +739,7 @@ namespace detail
 			boost::posix_time::time_duration diff = parent->GetNode()->NowUTC() - start_time;
 			if (diff.total_milliseconds() > 5000)
 			{
+				ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, 0, "TcpTransport accepted socket timed out " << socket->remote_endpoint() << " to " << socket->local_endpoint());
 				RR_SHARED_PTR<ConnectionException> err = RR_MAKE_SHARED<ConnectionException>("Connection timed out");
 				handler(RR_SHARED_PTR<boost::asio::ip::tcp::socket>(), RR_SHARED_PTR<ITransportConnection>(), err);
 				return;
@@ -680,13 +758,15 @@ namespace detail
 		{
 			try
 			{
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, 0, "TcpTransport accepted socket attaching raw protocol " << socket->remote_endpoint() << " to " << socket->local_endpoint());
 				RR_SHARED_PTR<TcpTransportConnection> t = RR_MAKE_SHARED<TcpTransportConnection>(parent, url, true, local_endpoint);
-				boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(handler, socket, t, _1);
+				boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&TcpAcceptor::AcceptSocket6,shared_from_this(),_1,socket,t,handler);
 				t->AsyncAttachSocket(socket, h);
 				parent->AddCloseListener(t, &TcpTransportConnection::Close);
 			}
 			catch (std::exception&)
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, 0, "TcpTransport accepted socket attach stream failed " << socket->remote_endpoint() << " to " << socket->local_endpoint());
 				RobotRaconteurNode::TryPostToThreadPool(parent->GetNode(),boost::bind(handler, RR_SHARED_PTR<boost::asio::ip::tcp::socket>(), RR_SHARED_PTR<TcpTransportConnection>(), RR_MAKE_SHARED<ConnectionException>("Could not connect to service")),true);
 			}
 		}
@@ -694,6 +774,7 @@ namespace detail
 		{
 			if (seed == "GET " || seed == "GET\t")
 			{
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, 0, "TcpTransport accepted socket websocket handshake " << socket->remote_endpoint() << " to " << socket->local_endpoint());
 				RR_SHARED_PTR<websocket_stream<boost::asio::ip::tcp::socket&> > websocket = RR_MAKE_SHARED<websocket_stream<boost::asio::ip::tcp::socket&> >(boost::ref(*socket));
 				boost::function<void(boost::string_ref protocol, const boost::system::error_code& ec)> h = boost::bind(&TcpAcceptor::AcceptSocket5, shared_from_this(),
 					_2, socket, websocket, socket_closer, handler);
@@ -702,6 +783,7 @@ namespace detail
 			}
 			else
 			{
+				ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, 0, "TcpTransport accepted socket invalid HTTP websocket header " << socket->remote_endpoint() << " to " << socket->local_endpoint());
 				std::string response2_1 = "HTTP/1.1 404 File Not Found\r\n";
 				RR_SHARED_PTR<std::string> response2 = RR_MAKE_SHARED<std::string>(response2_1);
 				BOOST_AUTO(response2_buf,boost::asio::buffer(response2->c_str(), response2->size()));
@@ -716,6 +798,7 @@ namespace detail
 		}
 		else
 		{		
+			ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, 0, "TcpTransport accepted socket invalid protocol " << socket->remote_endpoint() << " to " << socket->local_endpoint());
 			RR_SHARED_PTR<ConnectionException> err = RR_MAKE_SHARED<ConnectionException>("Invalid protocol");
 			handler(RR_SHARED_PTR<boost::asio::ip::tcp::socket>(), RR_SHARED_PTR<ITransportConnection>(), err);
 		}
@@ -731,6 +814,7 @@ namespace detail
 
 	void TcpAcceptor::AcceptSocket(RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket, boost::function<void(RR_SHARED_PTR<boost::asio::ip::tcp::socket>, RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)>& handler)
 	{
+		ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, 0, "TcpTransport accepted socket from " << socket->remote_endpoint() << " to " << socket->local_endpoint());
 		start_time = parent->GetNode()->NowUTC();
 
 		RR_SHARED_PTR<boost::signals2::scoped_connection> socket_closer
@@ -765,12 +849,14 @@ namespace detail
 			}
 			catch (std::exception&) {}
 
+			ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, endpoint, "TcpTransport websocket stream attach failed: " << err->what());
 			handler(RR_SHARED_PTR<ITransportConnection>(), err);
 			return;
 		}
 
 		parent->register_transport(connection);
 
+		ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, endpoint, "TcpTransport connected websocket transport to " << socket->remote_endpoint() << " from " << socket->local_endpoint());
 		handler(connection, RR_SHARED_PTR<RobotRaconteurException>());
 	}
 
@@ -785,6 +871,7 @@ namespace detail
 
 		if (ec)
 		{
+			ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, endpoint, "TcpTransport websocket handshake failed: " << ec);
 			RR_SHARED_PTR<ConnectionException> err = RR_MAKE_SHARED<ConnectionException>("Could not connect to remote websocket");
 			handler(RR_SHARED_PTR<ITransportConnection>(), err);
 			return;
@@ -795,14 +882,16 @@ namespace detail
 
 		try
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, endpoint, "websocket connected, begin attach transport");
 			RR_SHARED_PTR<TcpTransportConnection> t = RR_MAKE_SHARED<TcpTransportConnection>(parent, url, false, endpoint);
 			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&TcpWebSocketConnector::Connect4, shared_from_this(),
 				_1, t, socket, websocket, boost::protect(handler));
 			t->AsyncAttachWebSocket(socket, websocket, h);
 			parent->AddCloseListener(t, &TcpTransportConnection::Close);
 		}
-		catch (std::exception&)
+		catch (std::exception& exp)
 		{
+			ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, endpoint, "TcpTransport websocket could not connect to supplied URL: " << exp.what());
 			handler(RR_SHARED_PTR<TcpTransportConnection>(), RR_MAKE_SHARED<ConnectionException>("Could not connect to service"));
 		}
 	}
@@ -814,6 +903,7 @@ namespace detail
 	{
 		if (ec)
 		{
+			ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, endpoint, "TcpTransport websocket could not connect to supplied URL: " << ec);
 			RR_SHARED_PTR<ConnectionException> err = RR_MAKE_SHARED<ConnectionException>("Could not contact remote host");
 			handler(RR_SHARED_PTR<ITransportConnection>(), err);
 			return;
@@ -828,12 +918,14 @@ namespace detail
 					parent->AddCloseListener(websocket, &websocket_stream<boost::asio::ip::tcp::socket&>::close)
 					);				
 
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, endpoint, "websocket tcp socket connected, begin handshake");
 			websocket->async_client_handshake(ws_url, "robotraconteur.robotraconteur.com",
 				boost::bind(&TcpWebSocketConnector::Connect3, shared_from_this(), _1, socket, websocket, websocket_closer, boost::protect(handler)));
 			
 		}
-		catch (std::exception&)
+		catch (std::exception& exp)
 		{
+			ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, endpoint, "TcpTransport websocket could not connect to supplied URL: " << exp.what());
 			RR_SHARED_PTR<ConnectionException> err = RR_MAKE_SHARED<ConnectionException>("Could not contact remote host");
 			handler(RR_SHARED_PTR<ITransportConnection>(), err);
 			return;
@@ -844,10 +936,14 @@ namespace detail
 	TcpWebSocketConnector::TcpWebSocketConnector(RR_SHARED_PTR<TcpTransport> parent)
 	{
 		this->parent = parent;
+		this->node = parent->GetNode();
 	}
 
 	void TcpWebSocketConnector::Connect(boost::string_ref url, uint32_t endpoint, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > handler)
 	{
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, endpoint, "TcpTransport begin websocket connection with URL: " << url);
+
 		this->url = RR_MOVE(url.to_string());
 		this->endpoint = endpoint;
 
@@ -875,7 +971,7 @@ namespace detail
 			{
 				ws_url = boost::replace_first_copy(this->url, "rrs+ws", "ws");
 			}
-			if (url_res.host == "") throw ConnectionException("Invalid host for usb transport");
+			if (url_res.host == "") throw ConnectionException("Invalid host for websocket transport");
 			//std::cout << ws_url << std::endl;
 
 			RR_SHARED_PTR<detail::websocket_tcp_connector> socket_connector =
@@ -885,8 +981,9 @@ namespace detail
 				_1, _2, socket_connector, boost::protect(handler)));
 			parent->AddCloseListener(socket_connector, &detail::websocket_tcp_connector::cancel);
 		}
-		catch (std::exception&)
+		catch (std::exception& exp)
 		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, endpoint, "invalid websocket URL: " << url << " " << exp.what());
 			throw ConnectionException("Invalid URL for websocket connection");
 
 		}
@@ -941,12 +1038,14 @@ namespace detail {
 			}
 			catch (std::exception&) {}
 
+			ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, endpoint, "TcpTransport wss stream attach failed: " << err->what());
 			handler(RR_SHARED_PTR<ITransportConnection>(), err);
 			return;
 		}
 
 		parent->register_transport(connection);
 
+		ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, endpoint, "TcpTransport connected wss transport to " << socket->remote_endpoint() << " from " << socket->local_endpoint());
 		handler(connection, RR_SHARED_PTR<RobotRaconteurException>());
 	}
 
@@ -962,6 +1061,7 @@ namespace detail {
 
 		if (ec)
 		{
+			ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, endpoint, "TcpTransport wss websocket handshake failed: " << ec);
 			RR_SHARED_PTR<ConnectionException> err = RR_MAKE_SHARED<ConnectionException>("Could not connect to remote websocket");
 			handler(RR_SHARED_PTR<ITransportConnection>(), err);
 			return;
@@ -971,14 +1071,16 @@ namespace detail {
 
 		try
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, endpoint, "wss connected, begin attach transport");
 			RR_SHARED_PTR<TcpTransportConnection> t = RR_MAKE_SHARED<TcpTransportConnection>(parent, url, false, endpoint);
 			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h= boost::bind(&TcpWSSWebSocketConnector::Connect4, shared_from_this(),
 				_1, t, socket, tls_stream, websocket, boost::protect(handler));
 			t->AsyncAttachWSSWebSocket(socket, tls_stream, websocket, h);
 			parent->AddCloseListener(t, &TcpTransportConnection::Close);
 		}
-		catch (std::exception&)
+		catch (std::exception& exp)
 		{
+			ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, endpoint, "TcpTransport wss could not connect to supplied URL: " << exp.what());
 			handler(RR_SHARED_PTR<TcpTransportConnection>(), RR_MAKE_SHARED<ConnectionException>("Could not connect to service"));
 		}
 
@@ -993,6 +1095,7 @@ namespace detail {
 	{
 		if (ec)
 		{
+			ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, endpoint, "TcpTransport wss HTTP TLS client handshake failed: " << ec.message());
 			RR_SHARED_PTR<ConnectionException> err = RR_MAKE_SHARED<ConnectionException>("Could not contact remote host");
 			handler(RR_SHARED_PTR<ITransportConnection>(), err);
 			return;
@@ -1000,6 +1103,7 @@ namespace detail {
 
 		if (!tls_stream->VerifyRemoteHostnameCertificate(servername))
 		{
+			ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, endpoint, "TcpTransport wss could not verify server certificate \"" << servername << "\"");
 			RR_SHARED_PTR<ConnectionException> err = RR_MAKE_SHARED<ConnectionException>("Could not verify server certificate");
 			handler(RR_SHARED_PTR<ITransportConnection>(), err);
 			return;
@@ -1007,12 +1111,14 @@ namespace detail {
 
 		try
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, endpoint, "wss tcp socket connected, begin handshake");
 			RR_SHARED_PTR<websocket_stream<TlsSchannelAsyncStreamAdapter_ASIO_adapter&> > websocket = RR_MAKE_SHARED<websocket_stream<TlsSchannelAsyncStreamAdapter_ASIO_adapter&> >(boost::ref(tls_stream->get_asio_adapter()));
 			websocket->async_client_handshake(ws_url, "robotraconteur.robotraconteur.com",
 				boost::bind(&TcpWSSWebSocketConnector::Connect3, shared_from_this(), _1, socket, socket_closer, tls_stream, websocket, boost::protect(handler)));
 		}
-		catch (std::exception&)
+		catch (std::exception& exp)
 		{
+			ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, endpoint, "TcpTransport wss could not connect to supplied URL: " << exp.what());
 			RR_SHARED_PTR<ConnectionException> err = RR_MAKE_SHARED<ConnectionException>("Could not contact remote host");
 			handler(RR_SHARED_PTR<ITransportConnection>(), err);
 			return;
@@ -1026,11 +1132,13 @@ namespace detail {
 	{
 		if (ec)
 		{
+			ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, endpoint, "TcpTransport websocket could not connect to supplied URL: " << ec);
 			RR_SHARED_PTR<ConnectionException> err = RR_MAKE_SHARED<ConnectionException>("Could not contact remote host");
 			handler(RR_SHARED_PTR<ITransportConnection>(), err);
 			return;
 		}
 
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, endpoint, "websocket tcp socket connected, begin wss HTTP TLS handshake");
 		try
 		{
 			
@@ -1053,8 +1161,9 @@ namespace detail {
 
 			RobotRaconteurNode::asio_async_handshake(node, tls_stream,boost::bind(&TcpWSSWebSocketConnector::Connect2_1, shared_from_this(), _1, socket, socket_closer, tls_stream, boost::protect(handler)));
 		}
-		catch (std::exception&)
+		catch (std::exception& exp)
 		{
+			ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, endpoint, "TcpTransport wss HTTP TLS client handshake failed" << exp.what());
 			RR_SHARED_PTR<ConnectionException> err = RR_MAKE_SHARED<ConnectionException>("Could not contact remote host");
 			handler(RR_SHARED_PTR<ITransportConnection>(), err);
 			return;
@@ -1069,6 +1178,9 @@ namespace detail {
 
 	void TcpWSSWebSocketConnector::Connect(boost::string_ref url, uint32_t endpoint, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > handler)
 	{
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, endpoint, "TcpTransport begin wss connection with URL: " << url);
+
 		this->url = RR_MOVE(url.to_string());
 		this->endpoint = endpoint;
 
@@ -1108,8 +1220,9 @@ namespace detail {
 			parent->AddCloseListener(socket_connector, &detail::websocket_tcp_connector::cancel);
 
 		}
-		catch (std::exception&)
+		catch (std::exception& exp)
 		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, endpoint, "invalid websocket URL: " << url << " " << exp.what());
 			throw ConnectionException("Invalid URL for websocket connection");
 
 		}
@@ -1139,12 +1252,14 @@ namespace detail {
 				}
 				catch (std::exception&) {}
 
+				ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, endpoint, "TcpTransport wss stream attach failed: " << err->what());
 				handler(RR_SHARED_PTR<ITransportConnection>(), err);
 				return;
 			}
 
 			parent->register_transport(connection);
 
+			ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, endpoint, "TcpTransport connected wss transport to " << socket->remote_endpoint() << " from " << socket->local_endpoint());
 			handler(connection, RR_SHARED_PTR<RobotRaconteurException>());
 		}
 
@@ -1160,6 +1275,7 @@ namespace detail {
 
 			if (ec)
 			{
+				ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, endpoint, "TcpTransport wss websocket handshake failed: " << ec);
 				RR_SHARED_PTR<ConnectionException> err = RR_MAKE_SHARED<ConnectionException>("Could not connect to remote websocket");
 				handler(RR_SHARED_PTR<ITransportConnection>(), err);
 				return;
@@ -1171,6 +1287,7 @@ namespace detail {
 
 			try
 			{
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, endpoint, "wss connected, begin attach transport");
 				RR_SHARED_PTR<TcpTransportConnection> t = RR_MAKE_SHARED<TcpTransportConnection>(parent, url, false, endpoint);
 				boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&TcpWSSWebSocketConnector::Connect4, shared_from_this(),
 					_1, t, socket, tls_stream, websocket, handler);
@@ -1180,6 +1297,7 @@ namespace detail {
 			}
 			catch (std::exception&)
 			{
+				ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, endpoint, "TcpTransport wss could not connect to supplied URL: " << exp.what());
 				handler(RR_SHARED_PTR<TcpTransportConnection>(), RR_MAKE_SHARED<ConnectionException>("Could not connect to service"));
 			}
 
@@ -1195,6 +1313,7 @@ namespace detail {
 		{
 			if (ec)
 			{
+				ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, endpoint, "TcpTransport wss HTTP TLS client handshake failed: " << exp.what());
 				RR_SHARED_PTR<ConnectionException> err = RR_MAKE_SHARED<ConnectionException>("Could not contact remote host");
 				handler(RR_SHARED_PTR<ITransportConnection>(), err);
 				return;
@@ -1204,12 +1323,14 @@ namespace detail {
 
 			try
 			{
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, endpoint, "wss tcp socket connected, begin handshake");
 				RR_SHARED_PTR<websocket_stream<boost::asio::ssl::stream<boost::asio::ip::tcp::socket&> &> > websocket = RR_MAKE_SHARED<websocket_stream<boost::asio::ssl::stream<boost::asio::ip::tcp::socket&> &> >(boost::ref(*tls_stream));
 				websocket->async_client_handshake(ws_url, "robotraconteur.robotraconteur.com",
 					boost::bind(&TcpWSSWebSocketConnector::Connect3, shared_from_this(), _1, socket, socket_closer, tls_stream, websocket, boost::protect(handler)));
 			}
 			catch (std::exception&)
 			{
+				ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, endpoint, "TcpTransport wss could not connect to supplied URL: " << exp.what());
 				RR_SHARED_PTR<ConnectionException> err = RR_MAKE_SHARED<ConnectionException>("Could not contact remote host");
 				handler(RR_SHARED_PTR<ITransportConnection>(), err);
 				return;
@@ -1309,11 +1430,13 @@ namespace detail {
 		{
 			if (ec)
 			{
+				ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, endpoint, "TcpTransport websocket could not connect to supplied URL: " << ec);
 				RR_SHARED_PTR<ConnectionException> err = RR_MAKE_SHARED<ConnectionException>("Could not contact remote host");
 				handler(RR_SHARED_PTR<ITransportConnection>(), err);
 				return;
 			}
 
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, endpoint, "wss tcp socket connected, begin wss HTTP TLS handshake");
 			try
 			{
 				RR_SHARED_PTR<boost::signals2::scoped_connection> socket_closer
@@ -1338,8 +1461,9 @@ namespace detail {
 				RobotRaconteurNode::asio_async_handshake(node, tls_stream ,boost::asio::ssl::stream<boost::asio::ip::tcp::socket&>::client,
 						boost::bind(&TcpWSSWebSocketConnector::Connect2_1, shared_from_this(), _1, socket, socket_closer, tls_stream, boost::protect(handler)));
 			}
-			catch (std::exception&)
+			catch (std::exception& exp)
 			{
+				ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, endpoint, "TcpTransport wss HTTP TLS client handshake failed" << exp.what());
 				RR_SHARED_PTR<ConnectionException> err = RR_MAKE_SHARED<ConnectionException>("Could not contact remote host");
 				handler(RR_SHARED_PTR<ITransportConnection>(), err);
 				return;
@@ -1354,6 +1478,9 @@ namespace detail {
 
 		void TcpWSSWebSocketConnector::Connect(boost::string_ref url, uint32_t endpoint, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > handler)
 		{
+
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, endpoint, "TcpTransport begin wss connection with URL: " << url);
+
 			this->url = RR_MOVE(url.to_string());
 			this->endpoint = endpoint;
 
@@ -1395,8 +1522,9 @@ namespace detail {
 				parent->AddCloseListener(socket_connector, &detail::websocket_tcp_connector::cancel);
 
 			}
-			catch (std::exception&)
+			catch (std::exception& exp)
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, endpoint, "invalid websocket URL: " << url << " " << exp.what());
 				throw ConnectionException("Invalid URL for websocket connection");
 
 			}
@@ -1448,6 +1576,8 @@ TcpTransport::TcpTransport(RR_SHARED_PTR<RobotRaconteurNode> node)
 #endif
 	disable_async_message_io = false;
 	closed = false;
+
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "TcpTransport created");
 
 }
 
@@ -1568,6 +1698,8 @@ void TcpTransport::Close()
 	}
 
 	close_signal();
+
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "TcpTransport closed");
 }
 
 bool TcpTransport::IsServer() const
@@ -1632,12 +1764,19 @@ bool TcpTransport::CanConnectService(boost::string_ref url)
 
 void TcpTransport::AsyncCreateTransportConnection(boost::string_ref url, RR_SHARED_PTR<Endpoint> e, boost::function<void (RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException> ) >& callback)
 {
+
+	ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, e->GetLocalEndpoint(), "TcpTransport begin create transport connection with URL: " << url);
+
 	{
 		int32_t max_connections = GetMaxConnectionCount();
 		if (max_connections > 0)
 		{
 			boost::mutex::scoped_lock lock(TransportConnections_lock);
-			if (boost::numeric_cast<int32_t>(TransportConnections.size()) > max_connections) throw ConnectionException("Too many active TCP connections");
+			if (boost::numeric_cast<int32_t>(TransportConnections.size()) > max_connections) 
+			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, e->GetLocalEndpoint(), "too many active TCP connections");
+				throw ConnectionException("Too many active TCP connections");
+			}
 		}
 	}
 
@@ -1678,6 +1817,8 @@ RR_SHARED_PTR<ITransportConnection> TcpTransport::CreateTransportConnection(boos
 void TcpTransport::CloseTransportConnection(RR_SHARED_PTR<Endpoint> e)
 {
 	
+	ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, e->GetLocalEndpoint(), "TcpTransport begin close transport connection");
+
 	RR_SHARED_PTR<ServerEndpoint> e2=boost::dynamic_pointer_cast<ServerEndpoint>(e);
 	if (e2)
 	{
@@ -1763,7 +1904,11 @@ void TcpTransport::SendMessage(RR_INTRUSIVE_PTR<Message> m)
 	{
 		boost::mutex::scoped_lock lock(TransportConnections_lock);
 		RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<ITransportConnection> >::iterator e1 = TransportConnections.find(m->header->SenderEndpoint);
-		if (e1 == TransportConnections.end()) throw ConnectionException("Transport connection to remote host not found");
+		if (e1 == TransportConnections.end()) 
+		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, m->header->SenderEndpoint, "transport connection to remote host not found");
+			throw ConnectionException("Transport connection to remote host not found");
+		}
 		t = e1->second;
 	}	
 
@@ -1836,7 +1981,11 @@ void TcpTransport::AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boost::function
 	{
 		boost::mutex::scoped_lock lock(TransportConnections_lock);
 		RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<ITransportConnection> >::iterator e1 = TransportConnections.find(m->header->SenderEndpoint);
-		if (e1 == TransportConnections.end()) throw ConnectionException("Transport connection to remote host not found");
+		if (e1 == TransportConnections.end()) 
+		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, m->header->SenderEndpoint, "transport connection to remote host not found");
+			throw ConnectionException("Transport connection to remote host not found");
+		}
 		t = e1->second;
 	}
 
@@ -1848,9 +1997,17 @@ void TcpTransport::StartServer(int32_t port)
 {
 
 #ifndef ROBOTRACONTEUR_ALLOW_TCP_LISTEN_PORT_48653
-	if (port==48653) throw InvalidArgumentException("Port 48653 is reserved");
+	if (port==48653) 
+	{
+		ROBOTRACONTEUR_LOG_ERROR_SOURCE(node, Transport, -1, "TCP port 48653 is reserved for Robot Raconteur port sharer");
+		throw InvalidArgumentException("Port 48653 is reserved");
+	}
 #endif
 	
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "TcpTransport starting server on port: " << port);
+
+	try
+	{
 	boost::mutex::scoped_lock lock(acceptor_lock);
 	std::vector<boost::asio::ip::address> local_addresses;
 			
@@ -1915,11 +2072,19 @@ void TcpTransport::StartServer(int32_t port)
 
 	m_Port=port;
 
+	ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, -1, "TcpTransport server started on port: " << port);
+	}
+	catch (std::exception& exp)
+	{
+		ROBOTRACONTEUR_LOG_ERROR_SOURCE(node, Transport, -1, "TcpTransport starting server on port : " << port << " failed: " << exp.what());
+		throw;
+	}
 
 }
 
 void TcpTransport::StartServerUsingPortSharer()
 {
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "TcpTransport starting server using Robot Raconteur port sharer");
 	boost::mutex::scoped_lock lock(port_sharer_client_lock);
 	RR_SHARED_PTR<detail::TcpTransportPortSharerClient> c;
 	if (port_sharer_client)
@@ -1933,6 +2098,8 @@ void TcpTransport::StartServerUsingPortSharer()
 	
 	port_sharer_client = c;
 	c->Start();
+
+	ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, -1, "TcpTransport server started using Robot Raconteur port sharer");
 }
 
 bool TcpTransport::IsPortSharerRunning()
@@ -2148,6 +2315,7 @@ void TcpTransport::handle_v4_accept(RR_SHARED_PTR<TcpTransport> parent,RR_SHARED
 	{			
 		if (connection_count > max_connection_count)
 		{
+			ROBOTRACONTEUR_LOG_INFO_SOURCE(parent->node, Transport, -1, "TcpTransport pausing IPv4 accept due to exceeding MaxConnectionCount");
 			parent->ipv4_acceptor_paused = true;
 			return;
 		}
@@ -2191,6 +2359,7 @@ void TcpTransport::handle_v6_accept(RR_SHARED_PTR<TcpTransport> parent, RR_SHARE
 	{		
 		if (connection_count > max_connection_count)
 		{
+			ROBOTRACONTEUR_LOG_INFO_SOURCE(parent->node, Transport, -1, "TcpTransport pausing IPv6 accept due to exceeding MaxConnectionCount");
 			parent->ipv6_acceptor_paused = true;
 			return;
 		}
@@ -2211,9 +2380,14 @@ int32_t TcpTransport::GetDefaultHeartbeatPeriod()
 
 void TcpTransport::SetDefaultHeartbeatPeriod(int32_t milliseconds)
 {
-	if (!(milliseconds>0)) throw InvalidArgumentException("Heartbeat must be positive");
+	if (!(milliseconds>0))
+	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, -1, "Heartbeat period must be positive");
+	 	throw InvalidArgumentException("Heartbeat period must be positive");
+	}
 	boost::mutex::scoped_lock lock(parameter_lock);
 	heartbeat_period=milliseconds;
+	ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, -1, "Heartbeat period set to " << milliseconds << " ms");
 }
 
 int32_t TcpTransport::GetDefaultReceiveTimeout()
@@ -2223,9 +2397,15 @@ int32_t TcpTransport::GetDefaultReceiveTimeout()
 }
 void TcpTransport::SetDefaultReceiveTimeout(int32_t milliseconds)
 {
-	if (!(milliseconds>0)) throw InvalidArgumentException("Timeout must be positive");
+	if (!(milliseconds>0))
+	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, -1, "Receive timeout must be positive");
+	 	throw InvalidArgumentException("Timeout must be positive");
+	}
 	boost::mutex::scoped_lock lock(parameter_lock);
 	default_receive_timeout=milliseconds;
+
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "Receive timeout set to " << milliseconds << " ms");
 }
 int32_t TcpTransport::GetDefaultConnectTimeout()
 {
@@ -2234,9 +2414,15 @@ int32_t TcpTransport::GetDefaultConnectTimeout()
 }
 void TcpTransport::SetDefaultConnectTimeout(int32_t milliseconds)
 {
-	if (!(milliseconds>0)) throw InvalidArgumentException("Timeout must be positive");
+	if (!(milliseconds>0))
+	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, -1, "Default connect timeout must be positive");
+		throw InvalidArgumentException("Timeout must be positive");
+	}
 	boost::mutex::scoped_lock lock(parameter_lock);
 	default_connect_timeout=milliseconds;
+
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "Default connect timeout set to " << milliseconds << " ms");
 }
 
 int32_t TcpTransport::GetMaxMessageSize()
@@ -2247,9 +2433,15 @@ int32_t TcpTransport::GetMaxMessageSize()
 
 void TcpTransport::SetMaxMessageSize(int32_t size)
 {
-	if (size < 16 * 1024 || size > 12 * 1024 * 1024) throw InvalidArgumentException("Invalid maximum message size");
+	if (size < 16 * 1024 || size > 12 * 1024 * 1024) 
+	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, -1, "Invalid MaxMessageSize: " << size);
+		throw InvalidArgumentException("Invalid maximum message size");
+	}
 	boost::mutex::scoped_lock lock(parameter_lock);
 	max_message_size = size;
+
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "MaxMessageSize set to " << size << " bytes");
 }
 
 int32_t TcpTransport::GetMaxConnectionCount()
@@ -2260,9 +2452,15 @@ int32_t TcpTransport::GetMaxConnectionCount()
 
 void TcpTransport::SetMaxConnectionCount(int32_t count)
 {
-	if (count < -1) throw InvalidArgumentException("Invalid maximum connection count");
+	if (count < -1) 
+	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, -1, "Invalid MaxConnectionCount: " << count);
+		throw InvalidArgumentException("Invalid maximum connection count");
+	}
 	boost::mutex::scoped_lock lock(parameter_lock);
-	max_connection_count = count;	
+	max_connection_count = count;
+
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "MaxConnectionCount set to " << count);
 }
 
 bool TcpTransport::GetAcceptWebSockets()
@@ -2275,6 +2473,8 @@ void TcpTransport::SetAcceptWebSockets(bool value)
 {
 	boost::mutex::scoped_lock lock(parameter_lock);
 	accept_websockets=value;
+
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "AcceptWebSockets set to: " << value);
 }
 
 std::vector<std::string> TcpTransport::GetWebSocketAllowedOrigins()
@@ -2290,10 +2490,15 @@ void TcpTransport::AddWebSocketAllowedOrigin(boost::string_ref origin)
 	std::string origin1 = origin.to_string();
 	if (!boost::regex_search(origin1, origin_result, boost::regex("^([^:\\s]+)://(?:((?:\\[[A-Fa-f0-9\\:]+(?:\\%\\w*)?\\])|(?:[^\\[\\]\\:/\\?\\s]+))(?::([^\\:/\\?\\s]+))?)?$")))
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, -1, "Invalid WebSocket origin: " << origin1);
 		throw InvalidArgumentException("Invalid WebSocket origin");
 	}
 
-	if (origin_result.size()<4) throw InvalidArgumentException("Invalid WebSocket origin");
+	if (origin_result.size()<4)
+	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, -1, "Invalid WebSocket origin: " << origin1);
+	 	throw InvalidArgumentException("Invalid WebSocket origin");
+	}
 
 	std::string host;
 	std::string port;
@@ -2309,6 +2514,7 @@ void TcpTransport::AddWebSocketAllowedOrigin(boost::string_ref origin)
 
 			if (host2.find("*") != std::string::npos)
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, -1, "Invalid WebSocket origin: " << origin1);
 				throw InvalidArgumentException("Invalid WebSocket origin");
 			}
 
@@ -2316,6 +2522,7 @@ void TcpTransport::AddWebSocketAllowedOrigin(boost::string_ref origin)
 			{
 				if (!boost::starts_with(host2, "."))
 				{
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, -1, "Invalid WebSocket origin: " << origin1);
 					throw InvalidArgumentException("Invalid WebSocket origin");
 				}
 			}
@@ -2324,6 +2531,7 @@ void TcpTransport::AddWebSocketAllowedOrigin(boost::string_ref origin)
 		{
 			if (host.find("*") != std::string::npos)
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, -1, "Invalid WebSocket origin: " << origin1);
 				throw InvalidArgumentException("Invalid WebSocket origin");
 			}
 		}
@@ -2339,6 +2547,7 @@ void TcpTransport::AddWebSocketAllowedOrigin(boost::string_ref origin)
 			}
 			catch (std::exception)
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, -1, "Invalid WebSocket origin: " << origin1);
 				throw InvalidArgumentException("Invalid WebSocket origin");
 			}
 		}
@@ -2346,6 +2555,7 @@ void TcpTransport::AddWebSocketAllowedOrigin(boost::string_ref origin)
 	}
 	else if (origin_result[3] != "")
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, -1, "Invalid WebSocket origin: " << origin1);
 		throw InvalidArgumentException("Invalid WebSocket origin");
 	}
 
@@ -2370,15 +2580,20 @@ void TcpTransport::AddWebSocketAllowedOrigin(boost::string_ref origin)
 	{
 		allowed_websocket_origins.push_back(boost::replace_last_copy(origin.to_string(), ":443", ""));
 	}
+
+	ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, -1, "Added WebSocket origin: " << origin1);
 }
 void TcpTransport::RemoveWebSocketAllowedOrigin(boost::string_ref origin)
 {
 	boost::mutex::scoped_lock lock(parameter_lock);
 	allowed_websocket_origins.erase(std::remove(allowed_websocket_origins.begin(), allowed_websocket_origins.end(), origin), allowed_websocket_origins.end());
+	ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, -1, "Removed WebSocket origin: " << origin);
 }
 
 void TcpTransport::LoadTlsNodeCertificate()
 {
+	try
+	{
 #ifdef ROBOTRACONTEUR_WINDOWS
 			
 #ifdef ROBOTRACONTEUR_USE_SCHANNEL
@@ -2399,7 +2614,7 @@ void TcpTransport::LoadTlsNodeCertificate()
 			DWORD dwAttrib = GetFileAttributes(certpath.c_str());
 			if (dwAttrib == INVALID_FILE_ATTRIBUTES)
 			{
-			throw SystemResourceException("Could not load noad certificate");
+			throw SystemResourceException("Could not load node certificate");
 			}
 			RR_SHARED_PTR<detail::OpenSSLAuthContext> c=RR_STATIC_POINTER_CAST<detail::OpenSSLAuthContext>(GetTlsContext());
 			c->LoadPKCS12FromFile(certpath);
@@ -2429,6 +2644,13 @@ void TcpTransport::LoadTlsNodeCertificate()
 
 
 #endif
+		ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, -1, "Loaded TLS certificate for NodeID: " << GetNode()->NodeID().ToString());
+	}
+	catch (std::exception& exp)
+	{
+		ROBOTRACONTEUR_LOG_WARN_SOURCE(node, Transport, -1, "Loading TLS certificate for NodeID: " << GetNode()->NodeID().ToString() << " failed: " << exp.what() 
+		<< ". This warning can be ignored if TLS not in use");
+	}
 
 
 }
@@ -2447,7 +2669,11 @@ boost::shared_ptr<void> TcpTransport::GetTlsContext()
 		NodeID id=GetNode()->NodeID();
 		tls_context=RR_MAKE_SHARED<detail::OpenSSLAuthContext>(id);
 #endif
-		if (!tls_context) throw SystemResourceException("Could not initialize TLS");
+		if (!tls_context)
+		{
+			ROBOTRACONTEUR_LOG_ERROR_SOURCE(node, Transport, -1, "Could not initialize TLS context");
+		 	throw SystemResourceException("Could not initialize TLS");
+		}
 	}
 	
 	return tls_context;
@@ -2464,6 +2690,8 @@ void TcpTransport::SetRequireTls(bool b)
 {
 	boost::mutex::scoped_lock lock(tls_context_lock);
 	require_tls=b;
+
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "RequireTls set to: " << b);
 }
 
 bool TcpTransport::IsTlsNodeCertificateLoaded()
@@ -2551,6 +2779,7 @@ void TcpTransport::erase_transport(RR_SHARED_PTR<ITransportConnection> connectio
 				RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket2(new boost::asio::ip::tcp::socket(GetNode()->GetThreadPool()->get_io_context()));
 				ipv4_acceptor->async_accept(*socket2, boost::bind(&TcpTransport::handle_v4_accept, shared_from_this(), ipv4_acceptor, socket2, boost::asio::placeholders::error));
 				ipv4_acceptor_paused = false;
+				ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, -1, "TcpTransport resuming IPv4 accept");
 			}
 
 			if (ipv6_acceptor_paused)
@@ -2558,6 +2787,7 @@ void TcpTransport::erase_transport(RR_SHARED_PTR<ITransportConnection> connectio
 				RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket2(new boost::asio::ip::tcp::socket(GetNode()->GetThreadPool()->get_io_context()));
 				ipv6_acceptor->async_accept(*socket2, boost::bind(&TcpTransport::handle_v6_accept, shared_from_this(), ipv6_acceptor, socket2, boost::asio::placeholders::error));
 				ipv6_acceptor_paused = false;
+				ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, -1, "TcpTransport resuming IPv6 accept");
 			}
 
 		}
@@ -2583,6 +2813,8 @@ void TcpTransport::EnableNodeDiscoveryListening(uint32_t flags)
 	}
 	boost::reinterpret_pointer_cast<detail::IPNodeDiscovery>(node_discovery)->StartListeningForNodes(flags);
 
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "Node discovery listening enabled with flags 0x" << std::hex << flags);
+
 }
 
 void TcpTransport::DisableNodeDiscoveryListening()
@@ -2591,6 +2823,8 @@ void TcpTransport::DisableNodeDiscoveryListening()
 	if (!node_discovery)
 		return;
 	boost::reinterpret_pointer_cast<detail::IPNodeDiscovery>(node_discovery)->StopListeningForNodes();
+
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "Node discovery listening disabled");
 }
 
 void TcpTransport::EnableNodeAnnounce(uint32_t flags)
@@ -2601,6 +2835,8 @@ void TcpTransport::EnableNodeAnnounce(uint32_t flags)
 		node_discovery = RR_MAKE_SHARED<detail::IPNodeDiscovery>(shared_from_this());
 	}
 	boost::reinterpret_pointer_cast<detail::IPNodeDiscovery>(node_discovery)->StartAnnouncingNode(flags);
+
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "Node announce enabled with flags 0x" << std::hex << flags);
 }
 
 void TcpTransport::DisableNodeAnnounce()
@@ -2609,6 +2845,7 @@ void TcpTransport::DisableNodeAnnounce()
 	if (node_discovery == 0)
 		return;
 	boost::reinterpret_pointer_cast<detail::IPNodeDiscovery>(node_discovery)->StopAnnouncingNode();
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "Node announce disabled");
 }
 
 int32_t TcpTransport::GetNodeAnnouncePeriod()
@@ -2631,6 +2868,8 @@ void TcpTransport::SetNodeAnnouncePeriod(int32_t millis)
 	}
 	boost::reinterpret_pointer_cast<detail::IPNodeDiscovery>(node_discovery)->SetNodeAnnouncePeriod(millis);
 
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "Node announce period set to " << millis << " ms");
+
 }
 
 void TcpTransport::SendDiscoveryRequest()
@@ -2648,7 +2887,11 @@ bool TcpTransport::IsTransportConnectionSecure(uint32_t endpoint)
 	{
 		boost::mutex::scoped_lock lock(TransportConnections_lock);
 		RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<ITransportConnection> >::iterator e1 = TransportConnections.find(endpoint);
-		if (e1 == TransportConnections.end()) throw ConnectionException("Transport connection to remote host not found");
+		if (e1 == TransportConnections.end()) 
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, endpoint, "Transport connection to remote host not found");
+			throw ConnectionException("Transport connection to remote host not found");
+		}
 		t = e1->second;
 	}
 
@@ -2663,7 +2906,11 @@ bool TcpTransport::IsTransportConnectionSecure(RR_SHARED_PTR<Endpoint> endpoint)
 	{
 		boost::mutex::scoped_lock lock(TransportConnections_lock);
 		RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<ITransportConnection> >::iterator e1 = TransportConnections.find(endpoint->GetLocalEndpoint());
-		if (e1 == TransportConnections.end()) throw ConnectionException("Transport connection to remote host not found");
+		if (e1 == TransportConnections.end())
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, endpoint->GetLocalEndpoint(), "Transport connection to remote host not found");
+		 	throw ConnectionException("Transport connection to remote host not found");
+		}
 		t = e1->second;
 	}
 	
@@ -2673,7 +2920,11 @@ bool TcpTransport::IsTransportConnectionSecure(RR_SHARED_PTR<Endpoint> endpoint)
 bool TcpTransport::IsTransportConnectionSecure(RR_SHARED_PTR<RRObject> obj)
 {
 	RR_SHARED_PTR<ServiceStub> stub = RR_DYNAMIC_POINTER_CAST<ServiceStub>(obj);
-	if (!stub) throw InvalidArgumentException("Object is not a connection");
+	if (!stub)
+	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, -1, "Object is not a connection");
+	 	throw InvalidArgumentException("Object is not a connection");
+	}
 	RR_SHARED_PTR<Endpoint> endpoint = stub->GetContext();
 
 	RR_SHARED_PTR<ITransportConnection> t;
@@ -2681,7 +2932,11 @@ bool TcpTransport::IsTransportConnectionSecure(RR_SHARED_PTR<RRObject> obj)
 	{
 		boost::mutex::scoped_lock lock(TransportConnections_lock);
 		RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<ITransportConnection> >::iterator e1 = TransportConnections.find(endpoint->GetLocalEndpoint());
-		if (e1 == TransportConnections.end()) throw ConnectionException("Transport connection to remote host not found");
+		if (e1 == TransportConnections.end())
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, endpoint->GetLocalEndpoint(), "Transport connection to remote host not found");
+			throw ConnectionException("Transport connection to remote host not found");
+		}
 		t = e1->second;
 	}
 
@@ -2691,7 +2946,11 @@ bool TcpTransport::IsTransportConnectionSecure(RR_SHARED_PTR<RRObject> obj)
 bool TcpTransport::IsTransportConnectionSecure(RR_SHARED_PTR<ITransportConnection> transport)
 {
 	RR_SHARED_PTR<TcpTransportConnection> t=RR_DYNAMIC_POINTER_CAST<TcpTransportConnection>(transport);
-	if (!t) throw InvalidArgumentException("Invalid transport connection type");	
+	if (!t) 
+	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, -1, "Invalid transport connection type");
+		throw InvalidArgumentException("Invalid transport connection type");	
+	}
 
 	return t->IsSecure();
 }
@@ -2702,7 +2961,11 @@ bool TcpTransport::IsSecurePeerIdentityVerified(uint32_t endpoint)
 	{
 		boost::mutex::scoped_lock lock(TransportConnections_lock);
 		RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<ITransportConnection> >::iterator e1 = TransportConnections.find(endpoint);
-		if (e1 == TransportConnections.end()) throw ConnectionException("Transport connection to remote host not found");
+		if (e1 == TransportConnections.end())
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, endpoint, "Transport connection to remote host not found");
+		 	throw ConnectionException("Transport connection to remote host not found");
+		}
 		t = e1->second;
 	}
 
@@ -2719,7 +2982,11 @@ bool TcpTransport::IsSecurePeerIdentityVerified(RR_SHARED_PTR<Endpoint> endpoint
 	{
 		boost::mutex::scoped_lock lock(TransportConnections_lock);
 		RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<ITransportConnection> >::iterator e1 = TransportConnections.find(endpoint->GetLocalEndpoint());
-		if (e1 == TransportConnections.end()) throw ConnectionException("Transport connection to remote host not found");
+		if (e1 == TransportConnections.end())
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, endpoint->GetLocalEndpoint(), "Transport connection to remote host not found");
+		 	throw ConnectionException("Transport connection to remote host not found");
+		}
 		t = e1->second;
 	}
 	
@@ -2730,7 +2997,11 @@ bool TcpTransport::IsSecurePeerIdentityVerified(RR_SHARED_PTR<Endpoint> endpoint
 bool TcpTransport::IsSecurePeerIdentityVerified(RR_SHARED_PTR<RRObject> obj)
 {
 	RR_SHARED_PTR<ServiceStub> stub = RR_DYNAMIC_POINTER_CAST<ServiceStub>(obj);
-	if (!stub) throw InvalidArgumentException("Object is not a connection");
+	if (!stub)
+	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, -1, "Object is not a connection");
+	 	throw InvalidArgumentException("Object is not a connection");
+	}
 	RR_SHARED_PTR<Endpoint> endpoint = stub->GetContext();
 
 
@@ -2738,7 +3009,11 @@ bool TcpTransport::IsSecurePeerIdentityVerified(RR_SHARED_PTR<RRObject> obj)
 	{
 		boost::mutex::scoped_lock lock(TransportConnections_lock);
 		RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<ITransportConnection> >::iterator e1 = TransportConnections.find(endpoint->GetLocalEndpoint());
-		if (e1 == TransportConnections.end()) throw ConnectionException("Transport connection to remote host not found");
+		if (e1 == TransportConnections.end())
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, endpoint->GetLocalEndpoint(), "Transport connection to remote host not found");
+			throw ConnectionException("Transport connection to remote host not found");
+		}
 		t = e1->second;
 	}
 
@@ -2748,7 +3023,11 @@ bool TcpTransport::IsSecurePeerIdentityVerified(RR_SHARED_PTR<RRObject> obj)
 bool TcpTransport::IsSecurePeerIdentityVerified(RR_SHARED_PTR<ITransportConnection> transport)
 {
 	RR_SHARED_PTR<TcpTransportConnection> t = RR_DYNAMIC_POINTER_CAST<TcpTransportConnection>(transport);
-	if (!t) throw InvalidArgumentException("Invalid transport connection type");
+	if (!t)
+	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, -1, "Invalid transport connection type");
+	 	throw InvalidArgumentException("Invalid transport connection type");
+	}
 
 	return t->IsSecurePeerIdentityVerified();
 }
@@ -2759,7 +3038,11 @@ std::string TcpTransport::GetSecurePeerIdentity(uint32_t endpoint)
 	{
 		boost::mutex::scoped_lock lock(TransportConnections_lock);
 		RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<ITransportConnection> >::iterator e1 = TransportConnections.find(endpoint);
-		if (e1 == TransportConnections.end()) throw ConnectionException("Transport connection to remote host not found");
+		if (e1 == TransportConnections.end())
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, endpoint, "Transport connection to remote host not found");
+		 	throw ConnectionException("Transport connection to remote host not found");
+		}
 		t = e1->second;
 	}
 
@@ -2770,13 +3053,21 @@ std::string TcpTransport::GetSecurePeerIdentity(uint32_t endpoint)
 std::string TcpTransport::GetSecurePeerIdentity(RR_SHARED_PTR<Endpoint> endpoint)
 {
 
-	if (!endpoint) throw ConnectionException("Transport connection to remote host not found");
+	if (!endpoint)
+	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, -1, "Transport connection to remote host not found");
+	 	throw ConnectionException("Transport connection to remote host not found");
+	}
 
 	RR_SHARED_PTR<ITransportConnection> t;
 	{
 		boost::mutex::scoped_lock lock(TransportConnections_lock);
 		RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<ITransportConnection> >::iterator e1 = TransportConnections.find(endpoint->GetLocalEndpoint());
-		if (e1 == TransportConnections.end()) throw ConnectionException("Transport connection to remote host not found");
+		if (e1 == TransportConnections.end())
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, endpoint->GetLocalEndpoint(), "Transport connection to remote host not found");
+		 	throw ConnectionException("Transport connection to remote host not found");
+		}
 		t = e1->second;
 	}
 	
@@ -2787,14 +3078,22 @@ std::string TcpTransport::GetSecurePeerIdentity(RR_SHARED_PTR<Endpoint> endpoint
 std::string TcpTransport::GetSecurePeerIdentity(RR_SHARED_PTR<RRObject> obj)
 {
 	RR_SHARED_PTR<ServiceStub> stub = RR_DYNAMIC_POINTER_CAST<ServiceStub>(obj);
-	if (!stub) throw InvalidArgumentException("Object is not a connection");
+	if (!stub)
+	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, -1, "Object is not a connection");
+	 	throw InvalidArgumentException("Object is not a connection");
+	}
 	RR_SHARED_PTR<Endpoint> endpoint = stub->GetContext();
 
 	RR_SHARED_PTR<ITransportConnection> t;
 	{
 		boost::mutex::scoped_lock lock(TransportConnections_lock);
 		RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<ITransportConnection> >::iterator e1 = TransportConnections.find(endpoint->GetLocalEndpoint());
-		if (e1 == TransportConnections.end()) throw ConnectionException("Transport connection to remote host not found");
+		if (e1 == TransportConnections.end())
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, endpoint->GetLocalEndpoint(), "Transport connection to remote host not found");
+		 	throw ConnectionException("Transport connection to remote host not found");
+		}
 		t = e1->second;
 	}
 
@@ -2805,7 +3104,11 @@ std::string TcpTransport::GetSecurePeerIdentity(RR_SHARED_PTR<RRObject> obj)
 std::string TcpTransport::GetSecurePeerIdentity(RR_SHARED_PTR<ITransportConnection> transport)
 {
 	RR_SHARED_PTR<TcpTransportConnection> t = RR_DYNAMIC_POINTER_CAST<TcpTransportConnection>(transport);
-	if (!t) throw InvalidArgumentException("Invalid transport connection type");
+	if (!t)
+	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, -1, "Invalid transport connection type");
+	 	throw InvalidArgumentException("Invalid transport connection type");
+	}
 
 
 	return t->GetSecurePeerIdentity();
@@ -2821,6 +3124,7 @@ void TcpTransport::SetDisableMessage3(bool d)
 {
 	boost::mutex::scoped_lock lock(parameter_lock);
 	disable_message3 = d;
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "DisableMessage3 set to: " << d);
 }
 
 bool TcpTransport::GetDisableStringTable()
@@ -2832,6 +3136,7 @@ void TcpTransport::SetDisableStringTable(bool d)
 {
 	boost::mutex::scoped_lock lock(parameter_lock);
 	disable_string_table = d;
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "DisableStringTable set to: " << d);
 }
 
 bool TcpTransport::GetDisableAsyncMessageIO()
@@ -2843,6 +3148,7 @@ void TcpTransport::SetDisableAsyncMessageIO(bool d)
 {
 	boost::mutex::scoped_lock lock(parameter_lock);
 	disable_async_message_io = d;
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "DisableAsyncMessageIO set to: " << d);
 }
 
 void TcpTransport::LocalNodeServicesChanged()
@@ -3172,11 +3478,12 @@ void TcpTransportConnection::do_starttls1(const std::string& noden, const boost:
 {
 	if (error)
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "Could not initialize TLS connection: " << error.message());
 		callback(RR_MAKE_SHARED<ConnectionException>("Could not initialize TLS connection"));
 		return;
 	}
 
-	
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, m_LocalEndpoint, "Begin client send STARTTLS");
 
 	try
 	{
@@ -3211,6 +3518,7 @@ void TcpTransportConnection::do_starttls1(const std::string& noden, const boost:
 		RR_SHARED_PTR<detail::TlsSchannelAsyncStreamAdapterContext> context = RR_STATIC_POINTER_CAST<detail::TlsSchannelAsyncStreamAdapterContext>(p->GetTlsContext());
 		if (context->IsCertificateLoaded())
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, m_LocalEndpoint, "Client requesting mutual certificate authentication");
 			mm->AddElement("mutualauth", stringToRRArray("true"));
 		}
 #endif
@@ -3219,6 +3527,7 @@ void TcpTransportConnection::do_starttls1(const std::string& noden, const boost:
 		RR_SHARED_PTR<detail::OpenSSLAuthContext> context = RR_STATIC_POINTER_CAST<detail::OpenSSLAuthContext>(p->GetTlsContext());
 		if (context->IsCertificateLoaded())
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, m_LocalEndpoint, "Client requesting mutual certificate authentication");
 			mm->AddElement("mutualauth", stringToRRArray("true"));
 		}
 #endif
@@ -3228,6 +3537,7 @@ void TcpTransportConnection::do_starttls1(const std::string& noden, const boost:
 		if (starttls_timer)
 		{
 			lock.unlock();
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "Could not initialize TLS connection");
 			callback(RR_MAKE_SHARED<ConnectionException>("Could not initialize TLS connection"));
 			return;
 		}
@@ -3247,11 +3557,12 @@ void TcpTransportConnection::do_starttls1(const std::string& noden, const boost:
 			BeginSendMessage(m, h);
 		}
 
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, m_LocalEndpoint, "Client sending STARTTLS");
 
 	}
-	catch (std::exception)
+	catch (std::exception& exp)
 	{
-		
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "Client failed sending STARTTLS: " << exp.what());
 		{
 			boost::mutex::scoped_lock lock(streamop_lock);
 			starttls_handler.clear();
@@ -3270,6 +3581,7 @@ void TcpTransportConnection::do_starttls2(RR_SHARED_PTR<RobotRaconteurException>
 {
 	if (error)
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "Client failed sending STARTTLS: " << error->what());
 		{
 			boost::mutex::scoped_lock lock(streamop_lock);
 			starttls_handler.clear();
@@ -3278,6 +3590,8 @@ void TcpTransportConnection::do_starttls2(RR_SHARED_PTR<RobotRaconteurException>
 		callback(RR_MAKE_SHARED<ConnectionException>("Could not initialize TLS connection"));
 		return;
 	}
+
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, m_LocalEndpoint, "Client sent STARTTLS");
 }
 
 
@@ -3324,12 +3638,14 @@ void TcpTransportConnection::do_starttls4(const std::string& servername, const b
 
 	if (!tls_handshaking)
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "Client received unexpected STARTTLS");
 		return;
 	}
 	tls_handshaking = false;
 
 	if (ec2)
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "Client failed receiving STARTTLS: " << ec2.message());
 		boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> starttls_handler1=starttls_handler;
 		starttls_handler.clear();
 		starttls_timer.reset();
@@ -3340,7 +3656,7 @@ void TcpTransportConnection::do_starttls4(const std::string& servername, const b
 
 	try
 	{
-
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, m_LocalEndpoint, "Client begin TLS handshake");
 		starttls_timer.reset();
 
 		RR_SHARED_PTR<TcpTransport> p = parent.lock();
@@ -3415,8 +3731,9 @@ void TcpTransportConnection::do_starttls4(const std::string& servername, const b
 
 #endif
 	}
-	catch (std::exception&)
+	catch (std::exception& exp)
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "Client failed starting TLS handshake: " << exp.what());
 		boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> starttls_handler1 = starttls_handler;
 		starttls_handler.clear();
 		starttls_timer.reset();
@@ -3433,6 +3750,7 @@ void TcpTransportConnection::do_starttls5(const boost::system::error_code& error
 	boost::mutex::scoped_lock lock(streamop_lock);
 	if (error)
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "Client TLS handshake failed: " << error.message());
 		boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> starttls_handler1=starttls_handler;
 		starttls_handler.clear();
 		starttls_timer.reset();
@@ -3463,6 +3781,7 @@ void TcpTransportConnection::do_starttls5(const boost::system::error_code& error
 	{
 		if (!tls_socket->VerifyRemoteNodeCertificate(RemoteNodeID1))
 		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "Client could not verify server TLS certificate");
 			detail::InvokeHandlerWithException(node, starttls_handler1, RR_MAKE_SHARED<AuthenticationException>("Could not verify server TLS certificate"));
 			return;
 		}
@@ -3471,6 +3790,7 @@ void TcpTransportConnection::do_starttls5(const boost::system::error_code& error
 	{
 		if (!tls_websocket->VerifyRemoteNodeCertificate(RemoteNodeID1))
 		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "Client could not verify server TLS certificate");
 			detail::InvokeHandlerWithException(node, starttls_handler1, RR_MAKE_SHARED<AuthenticationException>("Could not verify server TLS certificate"));
 			return;
 		}
@@ -3479,6 +3799,7 @@ void TcpTransportConnection::do_starttls5(const boost::system::error_code& error
 	{
 		if (!tls_wss_websocket->VerifyRemoteNodeCertificate(RemoteNodeID1))
 		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "Client could not verify server TLS certificate");
 			detail::InvokeHandlerWithException(node, starttls_handler1, RR_MAKE_SHARED<AuthenticationException>("Could not verify server TLS certificate"));
 			return;
 		}
@@ -3491,6 +3812,7 @@ void TcpTransportConnection::do_starttls5(const boost::system::error_code& error
 	{
 		if (!tls_context->VerifyRemoteNodeCertificate(tls_socket->native_handle(),RemoteNodeID1))
 		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "Client could not verify server TLS certificate");
 			detail::InvokeHandlerWithException(node, starttls_handler1, RR_MAKE_SHARED<AuthenticationException>("Could not verify server TLS certificate"));
 			return;
 		}
@@ -3499,6 +3821,7 @@ void TcpTransportConnection::do_starttls5(const boost::system::error_code& error
 	{
 		if (!tls_context->VerifyRemoteNodeCertificate(tls_websocket->native_handle(),RemoteNodeID1))
 		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "Client could not verify server TLS certificate");
 			detail::InvokeHandlerWithException(node, starttls_handler1, RR_MAKE_SHARED<AuthenticationException>("Could not verify server TLS certificate"));
 			return;
 		}
@@ -3508,6 +3831,7 @@ void TcpTransportConnection::do_starttls5(const boost::system::error_code& error
 	{
 		if (!tls_context->VerifyRemoteNodeCertificate(tls_wss_websocket->native_handle(),RemoteNodeID1))
 		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "Client could not verify server TLS certificate");
 			detail::InvokeHandlerWithException(node, starttls_handler1, RR_MAKE_SHARED<AuthenticationException>("Could not verify server TLS certificate"));
 			return;
 		}
@@ -3522,8 +3846,9 @@ void TcpTransportConnection::do_starttls5(const boost::system::error_code& error
 	AsyncResumeSend();
 	AsyncResumeReceive();
 	}
-	catch (std::exception&)
+	catch (std::exception& exp)
 	{				
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "Client failed resuming messages" << exp.what());
 		detail::InvokeHandlerWithException(node, starttls_handler1, RR_MAKE_SHARED<ConnectionException>("Could not initialize TLS connection"));
 		return;
 	}
@@ -3535,11 +3860,13 @@ void TcpTransportConnection::do_starttls5(const boost::system::error_code& error
 		boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&TcpTransportConnection::do_starttls5_1, RR_STATIC_POINTER_CAST<TcpTransportConnection>(shared_from_this()), _1, _2, starttls_handler1);
 		AsyncStreamOp("CreateConnection", args, h);
 
+		ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, m_LocalEndpoint, "TcpTransport TLS activated on client connection to " << socket->remote_endpoint() << " from " << socket->local_endpoint());
 		//starttls_handler1(RR_SHARED_PTR<RobotRaconteurException>());
 		return;
 	}
 	catch(std::exception& e)
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "Client failed CreateConnection after activating TLS: " << e.what());
 		detail::InvokeHandlerWithException(node, starttls_handler1, RR_MAKE_SHARED<ConnectionException>(e.what()));
 	}
 
@@ -3550,6 +3877,7 @@ void TcpTransportConnection::do_starttls5_1(RR_SHARED_PTR<RRObject> parameter, R
 	//std::cout << "AsyncAttachStream1" << std::endl;
 	if (err)
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "Client failed creating connection after activating TLS: " << err->what());
 		try
 		{
 			Close();
@@ -3558,6 +3886,8 @@ void TcpTransportConnection::do_starttls5_1(RR_SHARED_PTR<RRObject> parameter, R
 		RobotRaconteurNode::TryPostToThreadPool(node,boost::bind(callback,err),true);
 		return;
 	}	
+
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, m_LocalEndpoint, "CreateConnection complete after activating TLS");
 
 	try
 	{		
@@ -3584,6 +3914,7 @@ void TcpTransportConnection::do_starttls6(const boost::system::error_code& error
 {
 	if(error)
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "Could not initialize TLS connection: " << error.message());
 		Close();
 		return;
 	}
@@ -3596,6 +3927,7 @@ void TcpTransportConnection::do_starttls7(const boost::system::error_code& error
 {
 	if(error)
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "Could not initialize TLS connection: " << error.message());
 		Close();
 		return;
 	}
@@ -3618,12 +3950,14 @@ void TcpTransportConnection::do_starttls7(const boost::system::error_code& error
 	RR_SHARED_PTR<TcpTransport> p = parent.lock();
 	if (!p)
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "Parent transport released");
 		Close();
 		return;
 	}
 
 	if (!p->IsTlsNodeCertificateLoaded())
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "Server TLS certificate not loaded");
 		mmret->Error = MessageErrorType_ConnectionError;
 		mmret->AddElement("errorname", stringToRRArray("RobotRaconteur.ConnectionError"));
 		mmret->AddElement("errorstring", stringToRRArray("Server certificate not loaded"));
@@ -3634,21 +3968,31 @@ void TcpTransportConnection::do_starttls7(const boost::system::error_code& error
 
 		if (tls_mutual_auth)
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, m_LocalEndpoint, "Server requesting mutual certificate authentication");
 			mmret->AddElement("mutualauth", stringToRRArray("true"));
 		}
 	}
 	mret->entries.push_back(mmret);
 	boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&TcpTransportConnection::do_starttls8, RR_STATIC_POINTER_CAST<TcpTransportConnection>(shared_from_this()), _1, request);
 	BeginSendMessage(mret, h);
+
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, m_LocalEndpoint, "Server sending STARTTLS");
 }
 
 void TcpTransportConnection::do_starttls8(RR_SHARED_PTR<RobotRaconteurException> error, RR_INTRUSIVE_PTR<Message> request)
 {
 	if(error)
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "Server failed sending STARTTLS: " << error->what());
 		Close();
 		return;
 	}
+
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, m_LocalEndpoint, "Server sent STARTTLS");
+
+	try
+	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, m_LocalEndpoint, "Server begin TLS handshake");
 	RR_SHARED_PTR<TcpTransport> p=parent.lock();
 	if (!p) throw InvalidOperationException("Transport shutdown");
 #ifdef ROBOTRACONTEUR_USE_SCHANNEL
@@ -3737,9 +4081,11 @@ void TcpTransportConnection::do_starttls8(RR_SHARED_PTR<RobotRaconteurException>
 	}
 
 #endif
-
-
-
+	}
+	catch (std::exception& exp)
+	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "Server failed starting TLS handshake: " << exp.what());
+	}
 
 }
 
@@ -3747,6 +4093,7 @@ void TcpTransportConnection::do_starttls9(const boost::system::error_code& error
 {
 	if(error)
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "Server TLS handshake failed: " << error.message());
 		Close();
 		return;
 	}
@@ -3756,13 +4103,16 @@ void TcpTransportConnection::do_starttls9(const boost::system::error_code& error
 		is_tls=true;
 	}
 
+	ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, m_LocalEndpoint, "TcpTransport TLS activated on server connection to " << socket->remote_endpoint() << " to " << socket->local_endpoint() << socket->);
+
 	try
 	{
 	AsyncResumeSend();
 	AsyncResumeReceive();
 	}
-	catch (std::exception&)
+	catch (std::exception& exp)
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "Server failed resuming messages" << exp.what());
 		Close();
 		return;
 	}
@@ -3797,6 +4147,7 @@ void TcpTransportConnection::MessageReceived(RR_INTRUSIVE_PTR<Message> m)
 
 		if (bad_message)
 		{
+			ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, m_LocalEndpoint, "Message received without TLS active when TLS is required, closing transport");
 			//This may not be the nicest way to handle the situation but it is the safest
 			Close();
 		}
@@ -3813,6 +4164,7 @@ void TcpTransportConnection::MessageReceived(RR_INTRUSIVE_PTR<Message> m)
 			if (RemoteNodeID1 != m->header->SenderNodeID)
 			{
 				RR_INTRUSIVE_PTR<Message> ret1=GetNode()->GenerateErrorReturnMessage(m,MessageErrorType_NodeNotFound,"RobotRaconteur.NodeNotFound","Invalid sender node");
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "Message with invalid SenderNodeID received: " << m->header->SenderNodeID.toString() << " expected: " << RemoteNodeID1.ToString());
 				if (ret1->entries.size() >0)
 				{
 					boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&TcpTransportConnection::SimpleAsyncEndSendMessage, RR_STATIC_POINTER_CAST<TcpTransportConnection>(shared_from_this()), _1);
@@ -3828,9 +4180,19 @@ void TcpTransportConnection::MessageReceived(RR_INTRUSIVE_PTR<Message> m)
 		{
 			if (local_ep!=m->header->ReceiverEndpoint || remote_ep!=m->header->SenderEndpoint)
 			{
-				RR_INTRUSIVE_PTR<Message> ret1=GetNode()->GenerateErrorReturnMessage(m,MessageErrorType_InvalidEndpoint,"RobotRaconteur.InvalidEndpoint","Invalid sender endpoint");
-				if (ret1->entries.size() >0)
+				RR_INTRUSIVE_PTR<Message> ret1;
+				if (remote_ep!=m->header->SenderEndpoint)
 				{
+					ret1=GetNode()->GenerateErrorReturnMessage(m,MessageErrorType_InvalidEndpoint,"RobotRaconteur.InvalidEndpoint","Invalid sender endpoint");
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "Message received with invalid SenderEndpoint received: " << m->header->SenderEndpoint << " expected: " << remote_ep;
+				}
+				if (local_ep!=m->header->ReceiverEndpoint)
+				{
+					ret1=GetNode()->GenerateErrorReturnMessage(m,MessageErrorType_InvalidEndpoint,"RobotRaconteur.InvalidEndpoint","Invalid receiver endpoint");
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "Message received with invalid ReceiverEndpoint received: " << m->header->ReceiverEndpoint << " expected: " << local_ep;
+				}
+				if (ret1->entries.size() >0)
+				{					
 					boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h =  boost::bind(&TcpTransportConnection::SimpleAsyncEndSendMessage, RR_STATIC_POINTER_CAST<TcpTransportConnection>(shared_from_this()), _1);
 					AsyncSendMessage(ret1, h);
 					return;
@@ -3846,12 +4208,14 @@ void TcpTransportConnection::MessageReceived(RR_INTRUSIVE_PTR<Message> m)
 	RR_INTRUSIVE_PTR<Message> ret = p->SpecialRequest(m, shared_from_this());
 	if (ret != 0)
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, m_LocalEndpoint, "TcpTransport sending special request response to " << socket->remote_endpoint() << " from " << socket->local_endpoint());
 		try
 		{
 			if ((m->entries.at(0)->EntryType == MessageEntryType_ConnectionTest || m->entries.at(0)->EntryType == MessageEntryType_ConnectionTestRet))
 			{
 				if (m->entries.at(0)->Error != MessageErrorType_None)
 				{
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "SpecialRequest failed");
 					Close();
 					return;
 				}
@@ -3874,8 +4238,9 @@ void TcpTransportConnection::MessageReceived(RR_INTRUSIVE_PTR<Message> m)
 							m_LocalEndpoint = ret->header->SenderEndpoint;
 						}
 
-
 						p->register_transport(RR_STATIC_POINTER_CAST<TcpTransportConnection>(shared_from_this()));
+
+						ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, m_LocalEndpoint, "TcpTransport connection to " << socket->remote_endpoint() << " from " << socket->local_endpoint() " assigned LocalEndpoint: " << m_LocalEndpoint);
 					}
 				}
 					
@@ -3884,8 +4249,9 @@ void TcpTransportConnection::MessageReceived(RR_INTRUSIVE_PTR<Message> m)
 			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&TcpTransportConnection::SimpleAsyncEndSendMessage, RR_STATIC_POINTER_CAST<TcpTransportConnection>(shared_from_this()), _1);
 			AsyncSendMessage(ret, h);
 		}
-		catch (std::exception&)
+		catch (std::exception& exp)
 		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, endpoint, "SpecialRequest failed: " << exp.what());
 			Close();
 		}
 
@@ -4215,6 +4581,7 @@ void TcpTransportConnection::Close()
 	if(closing) return;
 	closing=true;
 	{
+		ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, 0, "TcpTransport closing transport connection " << socket->remote_endpoint() << " to " << socket->local_endpoint());
 		boost::mutex::scoped_lock lock(socket_lock);
 
 		if (false /*is_tls*/)
@@ -4302,6 +4669,8 @@ void TcpTransportConnection::Close()
 	
 
 	ASIOStreamBaseTransport::Close();
+
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, 0, "TcpTransport closed transport connection");
 
 }
 

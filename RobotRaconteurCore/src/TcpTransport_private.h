@@ -259,6 +259,12 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
 
 		protected:
 
+			void AcceptSocket6(RR_SHARED_PTR<RobotRaconteurException> err,
+				RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket,
+				RR_SHARED_PTR<TcpTransportConnection> t,		
+				boost::function<void(RR_SHARED_PTR<boost::asio::ip::tcp::socket>, RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)>& handler
+			);
+
 			void AcceptSocket5(const boost::system::error_code& ec,
 				RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket,
 				RR_SHARED_PTR<websocket_stream<boost::asio::ip::tcp::socket&> > websocket,
@@ -295,6 +301,7 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
 			uint32_t endpoint;
 			std::string url;
 			std::string ws_url;
+			RR_WEAK_PTR<RobotRaconteurNode> node;
 
 		protected:
 

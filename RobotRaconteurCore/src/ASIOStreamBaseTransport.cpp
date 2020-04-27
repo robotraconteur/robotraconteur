@@ -227,7 +227,7 @@ void ASIOStreamBaseTransport::AsyncAttachStream1(RR_SHARED_PTR<RRObject> paramet
 	}
 	catch (std::exception& e)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "Completed AsyncAttachStream1 failed: " << e.what())
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "AsyncAttachStream1 failed: " << e.what())
 		detail::InvokeHandlerWithException(node, callback, e, MessageErrorType_ConnectionError);
 	}
 
@@ -281,7 +281,7 @@ void ASIOStreamBaseTransport::AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boos
 		
 	if (boost::numeric_cast<int32_t>(message_size) > (max_message_size-100)) 
 	{
-		ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "attempt to send message size " << message_size << " when max is " << max_message_size-100)
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "attempt to send message size " << message_size << " when max is " << max_message_size-100)
 		throw ProtocolException("Message larger than maximum message size");
 	}
 
@@ -295,7 +295,7 @@ void ASIOStreamBaseTransport::AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boos
 		{			
 			if (message_size > 16 * 1024) 
 			{
-				ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "attempt to send large message before authorized")
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "attempt to send large message before authorized")
 				throw ProtocolException("");
 			}
 		}
@@ -560,7 +560,7 @@ void ASIOStreamBaseTransport::EndSendMessage2(const boost::system::error_code& e
 		{
 			Close();
 			sending = false;
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "error sending message")
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "error sending message: " << error.message())
 			detail::InvokeHandlerWithException(node, callback, RR_MAKE_SHARED<ConnectionException>(error.message()));
 			return;
 		}
@@ -647,7 +647,7 @@ void ASIOStreamBaseTransport::EndSendMessage(size_t startpos, const boost::syste
 		{
 			Close();
 			sending = false;
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "error sending message")
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "error sending message: " << error.message())
 			detail::InvokeHandlerWithException(node, callback, RR_MAKE_SHARED<ConnectionException>(error.message()));
 			return;
 
@@ -872,19 +872,20 @@ void ASIOStreamBaseTransport::EndReceiveMessage1(size_t startpos, const boost::s
 
 			if (std::string(seed,4) != "RRAC")
 			{
-			  ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "received invalid magic expected \"RRAC\" received  \"" << std::string(seed,4) << "\"")
+			  ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "received invalid magic expected {0x52,0x52,0x41,0x43} received " 
+			  	<< std::hex << "{0x" << (int)seed[0] << ",0x" << (int)seed[1] << ",0x" << (int)seed[2] << ",0x" << (int)seed[3] << "}")
 			  throw ProtocolException("");
 			}
 
 			if (size<8)
 			{
-				ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "received too small a message")
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "received too small a message")
 				throw ProtocolException("");
 			}
 
 			if (boost::numeric_cast<int32_t>(size) > (max_message_size))
 			{
-				ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "received too large a message " << size << " but max allowed " << max_message_size)
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "received too large a message " << size << " but max allowed " << max_message_size)
 			 	throw ProtocolException("");
 			}
 
@@ -898,7 +899,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage1(size_t startpos, const boost::s
 				{
 					if (size > 16 * 1024)
 					{
-						ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "received too large a message " << size << " before authorized")
+						ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "received too large a message " << size << " before authorized")
 					 throw ProtocolException("");
 					}
 				}
@@ -954,13 +955,13 @@ void ASIOStreamBaseTransport::EndReceiveMessage1(size_t startpos, const boost::s
 		}
 		else
 		{
-			ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "closing due to stream error: " << error)
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "closing due to stream error: " << error)
 			Close();
 		}
 	}
 	catch (std::exception& exp)
 	{
-		ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "error receiving message: " << exp.what())
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "error receiving message: " << exp.what())
 		Close();
 	}
 }
@@ -1042,12 +1043,12 @@ void ASIOStreamBaseTransport::EndReceiveMessage2(size_t startpos, const boost::s
 		}
 		else
 		{
-			ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "closing due to stream error: " << error)
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "closing due to stream error: " << error.message())
 			Close();
 		}
 	}
 	catch (std::exception& exp) {
-		ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "error receiving message: " << exp.what())
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "error receiving message: " << exp.what())
 		Close();
 	}
 
@@ -1187,14 +1188,14 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
 	{
 		if (error)
 		{
-			ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "closing due to stream error with asyncio: " << error)
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "closing due to stream error with asyncio: " << error.message())
 			Close();
 			return;
 		}
 
 		if (bytes_transferred == 0)
 		{
-			ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "closing due to zero byte receive with asyncio (connection cleanly closed) with asyncio")
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "closing due to zero byte receive with asyncio (connection cleanly closed) with asyncio")
 			Close();
 			return;
 		}
@@ -1208,7 +1209,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
 			{
 				if (active_recv_bufs.size() != 1)
 				{
-				 ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "asyncio internal error")
+				 ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "asyncio internal error")
 				 throw ProtocolException("");
 				}
 
@@ -1244,18 +1245,18 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
 
 				if (std::string(magic, 4) != "RRAC")
 				{
-					ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "received invalid magic expected \"RRAC\" received  \"" << std::string(magic,4) << "\" with asyncio")
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "received invalid magic expected \"RRAC\" received  \"" << std::string(magic,4) << "\" with asyncio")
 					throw ProtocolException("");
 				}
 				if (size < 16)
 				{
-					ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "received too small a message with asyncio")
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "received too small a message with asyncio")
 				 	throw ProtocolException("");
 				}
 
 				if (boost::numeric_cast<int32_t>(size) > (max_message_size))
 				{
-					ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "received too large a message " << size << " but max allowed " << max_message_size << ", with asyncio")
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "received too large a message " << size << " but max allowed " << max_message_size << ", with asyncio")
 					throw ProtocolException("");
 				}
 
@@ -1269,7 +1270,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
 					{
 						if (size > 16 * 1024)
 						{
-							ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "received too large a message " << size << " before authorized, with asyncio")
+							ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "received too large a message " << size << " before authorized, with asyncio")
 						throw ProtocolException("");
 						}
 					}
@@ -1305,7 +1306,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
 					ret = async_reader->Read3(bufs, bufs_read, 0, continue_bufs);
 					break;
 				default:
-					ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "received invalid message version: " << async_recv_version)
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "received invalid message version: " << async_recv_version)
 					throw InvalidOperationException("");
 				}
 
@@ -1321,7 +1322,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
 
 				if (ret == AsyncMessageReader::ReadReturn_continue_buffers && recvbuf_end != 0)
 				{
-					ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "asyncio internal error")
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "asyncio internal error")
 					throw ProtocolException("");
 				}
 			}
@@ -1334,7 +1335,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
 					{
 						if (e == active_recv_bufs.end())
 						{
-							ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "asyncio internal error")
+							ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "asyncio internal error")
 						 	throw ProtocolException("");
 						}
 						continue_buffer_bytes += boost::asio::buffer_size(*e);
@@ -1350,7 +1351,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
 					recvbuf_end += bytes_transferred - continue_buffer_bytes;
 					if (recvbuf_end > recvbuf_len) 
 					{
-						ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "asyncio internal error")
+						ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "asyncio internal error")
 						throw ProtocolException("");
 					}
 				}
@@ -1366,7 +1367,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
 					ret = async_reader->Read3(bufs, bufs_read, b1, continue_bufs);
 					break;
 				default:
-					ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "received invalid message version: " << async_recv_version)
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "received invalid message version: " << async_recv_version)
 					throw ProtocolException("");
 				}
 
@@ -1388,7 +1389,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
 						ret = async_reader->Read3(bufs, bufs_read, 0, continue_bufs);
 						break;
 					default:
-						ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "received invalid message version: " << async_recv_version)
+						ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "received invalid message version: " << async_recv_version)
 						throw InvalidOperationException("");
 					}
 
@@ -1406,12 +1407,12 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
 			//Sanity checks
 			if (recvbuf_pos > recvbuf_len) 
 			{
-				ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "received message protocol error")
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "received message protocol error")
 				throw ProtocolException("");
 			}
 			if (async_recv_pos > async_recv_size)
 			{
-				ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "received message protocol error")
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "received message protocol error")
 				throw ProtocolException("");
 			}
 
@@ -1419,7 +1420,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
 			{
 				if (async_recv_pos != async_recv_size)
 				{
-					ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "received message protocol error, message did not read all data")
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "received message protocol error, message did not read all data")
 					throw ProtocolException("Message did not read all data");
 				}
 
@@ -1455,7 +1456,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
 
 					if (recvbuf_pos != recvbuf_end)
 					{
-						ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "received message protocol error, data still in buffer")
+						ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "received message protocol error, data still in buffer")
 						throw ProtocolException("Still data in buffer");
 					}
 
@@ -1539,7 +1540,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
 	}
 	catch (std::exception& exp)
 	{
-		ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "error receiving message with asyncio: " << exp.what())
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "error receiving message with asyncio: " << exp.what())
 		Close();
 	}
 }
@@ -1721,7 +1722,7 @@ void ASIOStreamBaseTransport::Close()
 			string_table_3_timers.clear();
 		}
 
-	ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, GetLocalEndpoint(), "transport connection closed")
+	ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "transport connection closed")
 }
 
 void ASIOStreamBaseTransport::heartbeat_timer_func(const boost::system::error_code& e)
@@ -1929,7 +1930,7 @@ void ASIOStreamBaseTransport::CheckStreamCapability_EndSendMessage(RR_SHARED_PTR
 {
 	if (err)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "CheckStreamCapability send message failed " << err)
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "CheckStreamCapability send message failed " << err->what())
 		boost::mutex::scoped_lock lock (CheckStreamCapability_lock);
 		if (CheckStreamCapability_waiting)
 		{
