@@ -550,6 +550,7 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
 		{
 		protected:
 			RR_WEAK_PTR<TcpTransport> parent;
+			RR_WEAK_PTR<RobotRaconteurNode> node;
 			boost::mutex this_lock;
 			bool open;
 #ifdef ROBOTRACONTEUR_WINDOWS
