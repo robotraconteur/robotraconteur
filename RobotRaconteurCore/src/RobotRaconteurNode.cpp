@@ -2365,7 +2365,7 @@ void RobotRaconteurNode::LogRecord(const RRLogRecord& record)
 	}
 	
 	boost::upgrade_to_unique_lock<boost::shared_mutex> lock2(lock);
-	std::cout << record << std::endl; 
+	std::cerr << record << std::endl; 
 
 }
 
