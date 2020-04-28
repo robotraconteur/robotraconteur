@@ -299,6 +299,51 @@ void singlethreadserver_quit_thread_func()
 	singlethreadserver_keep_going = false;
 } 
 
+RobotRaconteur_LogLevel get_env_loglevel()
+{
+	char* loglevel_c = std::getenv("ROBOTRACONTEUR_LOG_LEVEL");
+	if (!loglevel_c) return RobotRaconteur_LogLevel_Warning;
+	std::string loglevel(loglevel_c);
+	if (loglevel== "DISABLE")
+	{
+		return RobotRaconteur_LogLevel_Disable;
+	}
+
+	if (loglevel == "FATAL")
+	{
+		return RobotRaconteur_LogLevel_Fatal;
+	}
+
+	if (loglevel == "ERROR")
+	{
+		return RobotRaconteur_LogLevel_Error;
+	}
+
+	if (loglevel == "WARNING")
+	{
+		return RobotRaconteur_LogLevel_Warning;
+	}
+
+	if (loglevel == "INFO")
+	{
+		return RobotRaconteur_LogLevel_Info;
+	}
+
+	if (loglevel == "DEBUG")
+	{
+		return RobotRaconteur_LogLevel_Debug;
+	}
+
+	if (loglevel == "TRACE")
+	{
+		return RobotRaconteur_LogLevel_Trace;
+	}
+
+	std::cerr << "Invalid log level specified: " << loglevel << std::endl;
+
+	return RobotRaconteur_LogLevel_Warning;
+}
+
 int main(int argc, char* argv[])
 {
 
@@ -390,14 +435,9 @@ int main(int argc, char* argv[])
 
 		//std::set_terminate(myterminate);
 
-		if (argc >= 4 && std::string(argv[3]) == "trace")
-		{
-			RobotRaconteurNode::s()->SetLogLevel(RobotRaconteur_LogLevel_Trace);
-		}
-		else
-		{
-			RobotRaconteurNode::s()->SetExceptionHandler(myhandler);
-		}		
+		
+		RobotRaconteurNode::s()->SetLogLevel(get_env_loglevel());
+			
 		
 		RR_SHARED_PTR<TcpTransport> c=RR_MAKE_SHARED<TcpTransport>();
 		c->StartServer(4565);
@@ -529,6 +569,8 @@ return 0;
 
 	if (command == "loopback2")
 	{
+
+		RobotRaconteurNode::s()->SetLogLevel(get_env_loglevel());
 		RobotRaconteurNode::s()->SetExceptionHandler(myhandler);
 
 		/*RR_SHARED_PTR<TcpTransport> c = RR_MAKE_SHARED<TcpTransport>();
@@ -567,6 +609,8 @@ return 0;
 
 		string url1(argv[2]);
 		string url2(argv[3]);
+
+		RobotRaconteurNode::s()->SetLogLevel(get_env_loglevel());
 
 		RR_SHARED_PTR<TcpTransport> c=RR_MAKE_SHARED<TcpTransport>();
 		//c->EnableNodeAnnounce();
@@ -620,6 +664,8 @@ return 0;
 
 		string url1(argv[2]);
 		
+		RobotRaconteurNode::s()->SetLogLevel(get_env_loglevel());
+
 		RR_SHARED_PTR<TcpTransport> c = RR_MAKE_SHARED<TcpTransport>();
 		//c->EnableNodeAnnounce();
 		c->EnableNodeDiscoveryListening();
@@ -671,6 +717,8 @@ return 0;
 
 		string url1(argv[2]);
 		
+		RobotRaconteurNode::s()->SetLogLevel(get_env_loglevel());
+
 		RR_SHARED_PTR<TcpTransport> c = RR_MAKE_SHARED<TcpTransport>();
 		//c->EnableNodeAnnounce();
 		//c->EnableNodeDiscoveryListening();
@@ -723,6 +771,8 @@ return 0;
 
 		string url1(argv[2]);
 		
+		RobotRaconteurNode::s()->SetLogLevel(get_env_loglevel());
+
 		RR_BOOST_ASIO_IO_CONTEXT asio_io_context;
 		RR_SHARED_PTR<IOContextThreadPool> thread_pool = RR_MAKE_SHARED<IOContextThreadPool>(RobotRaconteurNode::sp(), boost::ref(asio_io_context), false);
 
@@ -776,6 +826,8 @@ return 0;
 				local_public = true;
 			}
 		}
+
+		RobotRaconteurNode::s()->SetLogLevel(get_env_loglevel());
 
 		//RobotRaconteurNode::s()->SetNodeID(id);
 		//RobotRaconteurNode::s()->SetNodeName(nodename);
@@ -840,6 +892,8 @@ return 0;
 		vector<string> schemes;
 		boost::split(schemes,argv[3],boost::is_from_range(',',','));
 
+		RobotRaconteurNode::s()->SetLogLevel(get_env_loglevel());
+
 		RR_SHARED_PTR<TcpTransport> t=RR_MAKE_SHARED<TcpTransport>();
 		t->EnableNodeDiscoveryListening();
 		RobotRaconteurNode::s()->RegisterTransport(t);
@@ -899,6 +953,8 @@ return 0;
 			return -1;
 		}
 
+		RobotRaconteurNode::s()->SetLogLevel(get_env_loglevel());
+
 		NodeID id=NodeID(string(argv[2]));
 		vector<string> schemes;
 		boost::split(schemes,argv[3],boost::is_from_range(',',','));
@@ -942,6 +998,8 @@ return 0;
 		vector<string> schemes;
 		boost::split(schemes,argv[3],boost::is_from_range(',',','));
 
+		RobotRaconteurNode::s()->SetLogLevel(get_env_loglevel());
+
 		RR_SHARED_PTR<TcpTransport> t=RR_MAKE_SHARED<TcpTransport>();
 		t->EnableNodeDiscoveryListening();
 		RobotRaconteurNode::s()->RegisterTransport(t);
@@ -979,6 +1037,8 @@ return 0;
 
 		string url1(argv[2]);
 		//string url2(argv[3]);
+
+		RobotRaconteurNode::s()->SetLogLevel(get_env_loglevel());
 
 		RR_SHARED_PTR<TcpTransport> c=RR_MAKE_SHARED<TcpTransport>();
 		c->EnableNodeAnnounce(IPNodeDiscoveryFlags_NODE_LOCAL | IPNodeDiscoveryFlags_LINK_LOCAL | IPNodeDiscoveryFlags_SITE_LOCAL);
@@ -1036,6 +1096,8 @@ return 0;
 
 		string url1(argv[2]);
 		//string url2(argv[3]);
+
+		RobotRaconteurNode::s()->SetLogLevel(get_env_loglevel());
 
 		RR_SHARED_PTR<TcpTransport> c=RR_MAKE_SHARED<TcpTransport>();
 		c->EnableNodeAnnounce(IPNodeDiscoveryFlags_NODE_LOCAL | IPNodeDiscoveryFlags_LINK_LOCAL | IPNodeDiscoveryFlags_SITE_LOCAL);
@@ -1112,6 +1174,8 @@ return 0;
 		}
 
 		string url1(argv[2]);
+
+		RobotRaconteurNode::s()->SetLogLevel(get_env_loglevel());
 
 		RR_SHARED_PTR<TcpTransport> c = RR_MAKE_SHARED<TcpTransport>();
 
@@ -1204,6 +1268,8 @@ return 0;
 		}
 		//string url2(argv[3]);
 
+		RobotRaconteurNode::s()->SetLogLevel(get_env_loglevel());
+
 		RR_SHARED_PTR<TcpTransport> c = RR_MAKE_SHARED<TcpTransport>();
 		c->EnableNodeAnnounce(IPNodeDiscoveryFlags_NODE_LOCAL | IPNodeDiscoveryFlags_LINK_LOCAL | IPNodeDiscoveryFlags_SITE_LOCAL);
 		c->EnableNodeDiscoveryListening(IPNodeDiscoveryFlags_NODE_LOCAL | IPNodeDiscoveryFlags_LINK_LOCAL | IPNodeDiscoveryFlags_SITE_LOCAL);
@@ -1249,6 +1315,8 @@ return 0;
 		string servicetype = string(argv[2]);
 		//vector<string> schemes;
 		//boost::split(schemes, argv[3], boost::is_from_range(',', ','));
+
+		RobotRaconteurNode::s()->SetLogLevel(get_env_loglevel());
 
 		RR_SHARED_PTR<TcpTransport> t = RR_MAKE_SHARED<TcpTransport>();
 		t->EnableNodeDiscoveryListening();
@@ -1332,6 +1400,8 @@ return 0;
 		string servicetype = string(argv[2]);
 		//vector<string> schemes;
 		//boost::split(schemes, argv[3], boost::is_from_range(',', ','));
+
+		RobotRaconteurNode::s()->SetLogLevel(get_env_loglevel());
 
 		RR_SHARED_PTR<ServiceSubscriptionFilter> f = RR_MAKE_SHARED<ServiceSubscriptionFilter>();
 		
@@ -1479,6 +1549,8 @@ return 0;
 		string servicetype = string(argv[2]);
 		//vector<string> schemes;
 		//boost::split(schemes, argv[3], boost::is_from_range(',', ','));
+
+		RobotRaconteurNode::s()->SetLogLevel(get_env_loglevel());
 
 		RR_SHARED_PTR<TcpTransport> t = RR_MAKE_SHARED<TcpTransport>();
 		t->EnableNodeDiscoveryListening();
@@ -1715,6 +1787,8 @@ return 0;
 
 	if (command == "extraimportstest")
 	{
+		RobotRaconteurNode::s()->SetLogLevel(get_env_loglevel());
+
 		RobotRaconteurNode::s()->SetExceptionHandler(myhandler);
 
 		RR_SHARED_PTR<TcpTransport> c = RR_MAKE_SHARED<TcpTransport>();
@@ -1760,6 +1834,8 @@ return 0;
 			cout << "Usage for server:  RobotRaconteurTest server port nodename" << endl;
 			return -1;
 		}
+
+		RobotRaconteurNode::s()->SetLogLevel(get_env_loglevel());
 
 		string nodename(argv[3]);
 		int port = boost::lexical_cast<int>(string(argv[2]));
