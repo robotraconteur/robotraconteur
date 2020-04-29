@@ -378,6 +378,7 @@ void LocalTransport::AsyncCreateTransportConnection2(RR_SHARED_PTR<detail::Local
 {
 	if (err)
 	{
+		ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, transport->GetLocalEndpoint(), "LocalTransport failed to connect: " << err->what());
 		try
 		{
 			callback(RR_SHARED_PTR<ITransportConnection>(),err);

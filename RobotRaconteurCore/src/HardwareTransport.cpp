@@ -54,6 +54,8 @@
 #include "HardwareTransport_android_private.h"
 #endif
 
+#include <boost/locale.hpp>
+
 namespace RobotRaconteur
 {
 
@@ -78,11 +80,17 @@ namespace RobotRaconteur
 
 		closed = false;
 
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "HardwareTransport created");
+
 #ifdef ROBOTRACONTEUR_WINDOWS
 		RR_SHARED_PTR<SetupApi_Functions> f = RR_MAKE_SHARED<SetupApi_Functions>();
 		if (f->LoadFunctions())
 		{
 			internal1 = f;
+		}
+		else
+		{
+			ROBOTRACONTEUR_LOG_WARN_SOURCE(node, Transport, -1, "LocalTransport could not load SetupApi functions");
 		}
 #endif
 
@@ -92,11 +100,19 @@ namespace RobotRaconteur
 		{
 			internal1=f1;
 		}
+		else
+		{
+			ROBOTRACONTEUR_LOG_WARN_SOURCE(node, Transport, -1, "LocalTransport could not load DBus functions");
+		}
 
 		RR_SHARED_PTR<detail::Sdp_Functions> f4=RR_MAKE_SHARED<detail::Sdp_Functions>();
 		if (f4->LoadFunctions())
 		{
 			internal4=f4;
+		}
+		else
+		{
+			ROBOTRACONTEUR_LOG_WARN_SOURCE(node, Transport, -1, "LocalTransport could not load Sdp functions");
 		}
 
 #endif
@@ -144,9 +160,14 @@ namespace RobotRaconteur
 
 	void HardwareTransport::AsyncCreateTransportConnection(boost::string_ref url, RR_SHARED_PTR<Endpoint> ep, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) >& callback)
 	{
+		ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, ep->GetLocalEndpoint(), "HardwareTransport begin create transport connection with URL: " << url);
+
+		try
+		{
 		ParseConnectionURLResult url_res = ParseConnectionURL(url);
 		if (url_res.nodename.empty() && url_res.nodeid.IsAnyNode())
 		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, ep->GetLocalEndpoint(), "HardwareTransport NodeID and/or NodeName not specified in URL: " << url);
 			throw ConnectionException("NodeID and/or NodeName must be specified for HardwareTransport");
 		}
 		
@@ -164,10 +185,22 @@ namespace RobotRaconteur
 		std::string transport;
 		
 		std::string host = url_res.host;
-		if (url_res.port != -1) throw ConnectionException("Invalid URL for hardware transport");
-		if (url_res.path != "" && url_res.path!= "/") throw ConnectionException("Invalid URL for hardware transport");
+		if (url_res.port != -1)
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, ep->GetLocalEndpoint(), "HardwareTransport must not contain port, invalid URL: " << url);
+		 	throw ConnectionException("Invalid URL for hardware transport");
+		}
+		if (url_res.path != "" && url_res.path!= "/")
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, ep->GetLocalEndpoint(), "HardwareTransport must not contain a path, invalid URL: " << url);
+		 	throw ConnectionException("Invalid URL for hardware transport");
+		}
 				
-		if (host!= "localhost" && host!="") throw ConnectionException("Invalid host for hardware transport");
+		if (host!= "localhost" && host!="")
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, ep->GetLocalEndpoint(), "HardwareTransport host must be empty or \"localhost\", invalid URL: " << url);
+		 	throw ConnectionException("Invalid host for hardware transport");
+		}
 						
 		if (url_res.scheme == "rr+usb")
 		{
@@ -187,6 +220,7 @@ namespace RobotRaconteur
 		}
 		else
 		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, ep->GetLocalEndpoint(), "LocalTransport invalid transport for URL: " << url);
 			throw ConnectionException("Invalid connection transport");
 		}
 
@@ -220,21 +254,32 @@ namespace RobotRaconteur
 				}
 			}
 
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, ep->GetLocalEndpoint(), "HardwareTransport opening path \"" << boost::locale::conv::utf_to_utf<char>(*win_path) << "\" for URL: " << url);
+
 			HANDLE h = CreateFileW(win_path->c_str(), GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_FLAG_OVERLAPPED | SECURITY_SQOS_PRESENT | SECURITY_IDENTIFICATION, NULL);
 			if (h != INVALID_HANDLE_VALUE)
-			{
+			{				
 				socket.reset(new HardwareTransportConnection_driver::socket_type(GetNode()->GetThreadPool()->get_io_context(), h));
-			}			
+			}
+			else
+			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, ep->GetLocalEndpoint(), "HardwareTransport failed opening path \"" << boost::locale::conv::utf_to_utf<char>(*win_path) << "\" error code " << GetLastError());
+			}	
 		}
 		else if (transport == "pci")
 		{
 			boost::optional<std::wstring> win_path = detail::HardwareTransport_win_find_pci(internal1, url_res.nodeid, url_res.nodename);
 			if (win_path)
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, ep->GetLocalEndpoint(), "HardwareTransport opening path \"" << boost::locale::conv::utf_to_utf<char>(*win_path) << "\" for URL: " << url);
 				HANDLE h = CreateFileW(win_path->c_str(), GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_FLAG_OVERLAPPED | SECURITY_SQOS_PRESENT | SECURITY_IDENTIFICATION, NULL);
 				if (h != INVALID_HANDLE_VALUE)
-				{
+				{					
 					socket.reset(new HardwareTransportConnection_driver::socket_type(GetNode()->GetThreadPool()->get_io_context(), h));
+				}
+				else
+				{
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, ep->GetLocalEndpoint(), "HardwareTransport failed opening path \"" << boost::locale::conv::utf_to_utf<char>(*win_path) << "\" error code " << GetLastError());
 				}
 			}
 		}
@@ -249,10 +294,15 @@ namespace RobotRaconteur
 
 			}
 			
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, ep->GetLocalEndpoint(), "HardwareTransport opening path \"" << boost::locale::conv::utf_to_utf<char>(*win_path) << "\" for URL: " << url);
 			HANDLE h = CreateFileW(win_path->c_str(), GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_FLAG_OVERLAPPED | SECURITY_SQOS_PRESENT | SECURITY_IDENTIFICATION, NULL);
 			if (h != INVALID_HANDLE_VALUE)
-			{
+			{				
 				socket.reset(new HardwareTransportConnection_driver::socket_type(GetNode()->GetThreadPool()->get_io_context(), h));
+			}
+			else
+			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, ep->GetLocalEndpoint(), "HardwareTransport failed opening path \"" << boost::locale::conv::utf_to_utf<char>(*win_path) << "\" error code " << GetLastError());
 			}
 			
 		}
@@ -288,11 +338,17 @@ namespace RobotRaconteur
 				}
 			}
 
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, ep->GetLocalEndpoint(), "HardwareTransport opening path \"" << *dev_path << "\" for URL: " << url);
+
 			int fd=open(dev_path->c_str(), O_RDWR);
 			if (fd > 0)
 			{
 				RR_SHARED_PTR<HardwareTransportConnection_driver::socket_type> socket1(new HardwareTransportConnection_driver::socket_type(GetNode()->GetThreadPool()->get_io_context(), fd));
 				socket=socket1;
+			}
+			else
+			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, ep->GetLocalEndpoint(), "HardwareTransport failed opening path \"" << *dev_path << "\" error code " << errno);
 			}
 		}
 		else if (transport=="pci")
@@ -300,11 +356,17 @@ namespace RobotRaconteur
 			boost::optional<std::string> dev_path = detail::HardwareTransport_linux_find_pci(url_res.nodeid, url_res.nodename);
 			if (dev_path)
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, ep->GetLocalEndpoint(), "HardwareTransport opening path \"" << *dev_path << "\" for URL: " << url);
+
 				int fd=open(dev_path->c_str(), O_RDWR);
 				if (fd > 0)
 				{
 					RR_SHARED_PTR<HardwareTransportConnection_driver::socket_type> socket1(new HardwareTransportConnection_driver::socket_type(GetNode()->GetThreadPool()->get_io_context(), fd));
 					socket=socket1;
+				}
+				else
+				{
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, ep->GetLocalEndpoint(), "HardwareTransport failed opening path \"" << *dev_path << "\" error code " << errno);
 				}
 			}
 		}
@@ -321,11 +383,16 @@ namespace RobotRaconteur
 
 			if (dev_path)
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, ep->GetLocalEndpoint(), "HardwareTransport opening path \"" << *dev_path << "\" for URL: " << url);
 				int fd=open(dev_path->c_str(), O_RDWR);
 				if (fd > 0)
 				{
 					RR_SHARED_PTR<HardwareTransportConnection_driver::socket_type> socket1(new HardwareTransportConnection_driver::socket_type(GetNode()->GetThreadPool()->get_io_context(), fd));
 					socket=socket1;
+				}
+				else
+				{
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, ep->GetLocalEndpoint(), "HardwareTransport failed opening path \"" << *dev_path << "\" error code " << errno);
 				}
 			}
 
@@ -347,15 +414,24 @@ namespace RobotRaconteur
 #endif
 
 		//TODO: test this
-		if (!socket) throw ConnectionException("Could not connect to service");		
+		if (!socket)
+		{			
+		 	throw ConnectionException("Could not connect to service");		
+		}
 		boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&HardwareTransport::AsyncCreateTransportConnection2, shared_from_this(), noden, _1, _2, callback);
 		HardwareTransport_attach_transport(shared_from_this(), socket, false, ep->GetLocalEndpoint(), noden, url_res.scheme, h);
+		}
+		catch (std::exception& exp)
+		{
+			ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, ep->GetLocalEndpoint(), "HardwareTransport could not connect to service URL: " << url << " error: " << exp.what());
+		}
 	}
 
 	void HardwareTransport::AsyncCreateTransportConnection2(const std::string& noden, RR_SHARED_PTR<ITransportConnection> transport, RR_SHARED_PTR<RobotRaconteurException> err, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) >& callback)
 	{
 		if (err)
 		{
+			ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, transport->GetLocalEndpoint(), "HardwareTransport failed to connect to device: " << err->what());
 			try
 			{
 				callback(RR_SHARED_PTR<ITransportConnection>(), err);
@@ -370,6 +446,7 @@ namespace RobotRaconteur
 
 		register_transport(transport);
 
+		ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, transport->GetLocalEndpoint(), "HardwareTransport connected transport to device");
 		callback(transport, RR_SHARED_PTR<RobotRaconteurException>());
 
 
@@ -391,6 +468,8 @@ namespace RobotRaconteur
 
 	void HardwareTransport::CloseTransportConnection(RR_SHARED_PTR<Endpoint> e)
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, e->GetLocalEndpoint(), "HardwareTransport request close transport connection");
+
 		RR_SHARED_PTR<ServerEndpoint> e2 = boost::dynamic_pointer_cast<ServerEndpoint>(e);
 		if (e2)
 		{
@@ -495,7 +574,11 @@ namespace RobotRaconteur
 		{
 			boost::mutex::scoped_lock lock(TransportConnections_lock);
 			RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<ITransportConnection> >::iterator e1 = TransportConnections.find(m->header->SenderEndpoint);
-			if (e1 == TransportConnections.end()) throw ConnectionException("Transport connection to remote host not found");
+			if (e1 == TransportConnections.end())
+			{
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, m->header->SenderEndpoint, "transport connection to remote host not found");
+			 	throw ConnectionException("Transport connection to remote host not found");
+			}
 			t = e1->second;
 
 		}
@@ -616,6 +699,7 @@ namespace RobotRaconteur
 	{
 		boost::mutex::scoped_lock lock(parameter_lock);
 		disable_message3 = d;
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "DisableMessage3 set to: " << d);
 	}
 
 	bool HardwareTransport::GetDisableStringTable()
@@ -627,6 +711,7 @@ namespace RobotRaconteur
 	{
 		boost::mutex::scoped_lock lock(parameter_lock);
 		disable_string_table = d;
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "DisableStringTable set to: " << d);
 	}
 
 	bool HardwareTransport::GetDisableAsyncMessageIO()
@@ -638,11 +723,13 @@ namespace RobotRaconteur
 	{
 		boost::mutex::scoped_lock lock(parameter_lock);
 		disable_async_message_io = d;
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "DisableAsyncMessageIO set to: " << d);
 	}
 
 	void HardwareTransport::AddUsbDevice(uint16_t vid, uint16_t pid, uint8_t interface_)
 	{
 #ifdef ROBOTRACONTEUR_WINDOWS
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, -1, "Use WinUsb INF file on Windows to add USB device");
 		throw InvalidOperationException("Use WinUsb INF file on Windows to add USB device");
 #endif
 
@@ -650,6 +737,7 @@ namespace RobotRaconteur
 		boost::tuple<uint16_t,uint16_t,uint8_t> u=boost::make_tuple<uint16_t,uint16_t,uint8_t>(vid,pid,interface_);
 		if (boost::range::find(usb_devices, u) == usb_devices.end())
 		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, -1, "Added USB device " << std::hex << vid << ":" << pid << ":" << interface_);
 			usb_devices.push_back(u);
 		}
 
@@ -658,12 +746,15 @@ namespace RobotRaconteur
 	void HardwareTransport::RemoveUsbDevice(uint16_t vid, uint16_t pid, uint8_t interface_)
 	{
 #ifdef ROBOTRACONTEUR_WINDOWS
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, -1, "Use WinUsb INF file on Windows to add USB device");
 		throw InvalidOperationException("Use WinUsb INF file on Windows to add USB device");
 #endif
 		boost::mutex::scoped_lock lock(parameter_lock);
 		boost::tuple<uint16_t,uint16_t,uint8_t> u=boost::make_tuple<uint16_t,uint16_t,uint8_t>(vid,pid,interface_);
 
 		usb_devices.remove(u);
+
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, -1, "Removed USB device " << std::hex << vid << ":" << pid << ":" << interface_);
 	}
 
 	bool HardwareTransport::IsValidUsbDevice(uint16_t vid, uint16_t pid, uint8_t interface_)
@@ -679,7 +770,11 @@ namespace RobotRaconteur
 		{
 			boost::mutex::scoped_lock lock(TransportConnections_lock);
 			RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<ITransportConnection> >::iterator e = TransportConnections.find(endpoint);
-			if (e==TransportConnections.end()) throw ConnectionException("Transport connection to remote host not found");
+			if (e==TransportConnections.end())
+			{
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, endpoint, "Transport connection to remote host not found");
+			 	throw ConnectionException("Transport connection to remote host not found");
+			}
 			t = e->second;
 		}
 		t->CheckConnection(endpoint);
@@ -743,6 +838,8 @@ namespace RobotRaconteur
 #endif
 
 		close_signal();
+
+		ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, -1, "HardwareTransport closed");
 	}
 
 
@@ -787,12 +884,14 @@ namespace RobotRaconteur
 		RR_INTRUSIVE_PTR<Message> ret = p->SpecialRequest(m, shared_from_this());
 		if (ret != 0)
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, m_LocalEndpoint, "sending special request response");
 			try
 			{
 				if ((m->entries.at(0)->EntryType == MessageEntryType_ConnectionTest || m->entries.at(0)->EntryType == MessageEntryType_ConnectionTestRet))
 				{
 					if (m->entries.at(0)->Error != MessageErrorType_None)
 					{
+						ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "SpecialRequest failed");
 						Close();
 						return;
 					}
@@ -812,6 +911,7 @@ namespace RobotRaconteur
 
 
 						p->register_transport(RR_STATIC_POINTER_CAST<HardwareTransportConnection>(shared_from_this()));
+						ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "HardwareTransport connection  assigned LocalEndpoint: " << m_LocalEndpoint);
 					}
 
 				}
@@ -820,8 +920,9 @@ namespace RobotRaconteur
 					= boost::bind(&HardwareTransportConnection::SimpleAsyncEndSendMessage, RR_STATIC_POINTER_CAST<HardwareTransportConnection>(shared_from_this()), _1);
 				AsyncSendMessage(ret, h);
 			}
-			catch (std::exception&)
+			catch (std::exception& exp)
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "SpecialRequest failed: " << exp.what());
 				Close();
 			}
 
@@ -859,6 +960,7 @@ namespace RobotRaconteur
 		}
 		catch (std::exception& exp)
 		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "HardwareTransport failed receiving message: " << exp.what());
 			RobotRaconteurNode::TryHandleException(node, &exp);
 			Close();
 		}
@@ -874,6 +976,8 @@ namespace RobotRaconteur
 		boost::recursive_mutex::scoped_lock lock(close_lock);
 		
 		Close1();
+
+		ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, m_LocalEndpoint, "HardwareTransport closing connection");
 
 		try
 		{
@@ -898,7 +1002,11 @@ namespace RobotRaconteur
 
 	void HardwareTransportConnection::CheckConnection(uint32_t endpoint)
 	{
-		if (endpoint != m_LocalEndpoint || !connected.load()) throw ConnectionException("Connection lost");
+		if (endpoint != m_LocalEndpoint || !connected.load())
+		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, m_LocalEndpoint, "Connection lost");
+		 	throw ConnectionException("Connection lost");
+		}
 	}
 
 	
