@@ -754,7 +754,7 @@ namespace detail
 
 		if (ec)
 		{
-			ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, 0, "TcpTransport accepted socket closed " << TcpTransport_socket_remote_endpoint(socket) << " to " << TcpTransport_socket_local_endpoint(socket) << " with error " << ec.message() );
+			ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, 0, "TcpTransport accepted socket closed " << TcpTransport_socket_remote_endpoint(socket) << " to " << TcpTransport_socket_local_endpoint(socket) << " with error: " << ec.message() );
 			RR_SHARED_PTR<ConnectionException> err = RR_MAKE_SHARED<ConnectionException>("Connection closed");
 			handler(RR_SHARED_PTR<boost::asio::ip::tcp::socket>(), RR_SHARED_PTR<ITransportConnection>(), err);
 			return;
@@ -800,7 +800,7 @@ namespace detail
 		{
 			if (seed == "GET " || seed == "GET\t")
 			{
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, 0, "TcpTransport accepted socket websocket handshake " << TcpTransport_socket_remote_endpoint(socket) << " to " << TcpTransport_socket_local_endpoint(socket));
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, 0, "TcpTransport accepted socket begin websocket handshake " << TcpTransport_socket_remote_endpoint(socket) << " to " << TcpTransport_socket_local_endpoint(socket));
 				RR_SHARED_PTR<websocket_stream<boost::asio::ip::tcp::socket&> > websocket = RR_MAKE_SHARED<websocket_stream<boost::asio::ip::tcp::socket&> >(boost::ref(*socket));
 				boost::function<void(boost::string_ref protocol, const boost::system::error_code& ec)> h = boost::bind(&TcpAcceptor::AcceptSocket5, shared_from_this(),
 					_2, socket, websocket, socket_closer, handler);

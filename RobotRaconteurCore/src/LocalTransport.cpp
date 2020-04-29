@@ -102,6 +102,19 @@ namespace detail
 }
 
 
+static std::string LocalTransport_socket_remote_endpoint(RR_SHARED_PTR<detail::LocalTransport_socket>& socket)
+{
+	boost::system::error_code ec;
+	boost::asio::local::stream_protocol::endpoint ep = socket->socket->remote_endpoint(ec);
+	if (ec)
+	{
+		return "[unknown]";
+	}
+	std::stringstream ss;
+	ss << ep;
+	return ss.str();
+}
+
 LocalTransport::LocalTransport(RR_SHARED_PTR<RobotRaconteurNode> node)
 	: Transport(node)
 {
@@ -126,7 +139,7 @@ LocalTransport::LocalTransport(RR_SHARED_PTR<RobotRaconteurNode> node)
 
 	closed = false;
 
-
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "LocalTransport created");
 
 }
 
@@ -190,6 +203,8 @@ void LocalTransport::Close()
 
 	close_signal();
 
+	ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, -1, "LocalTransport closed");
+
 }
 
 bool LocalTransport::IsServer() const
@@ -217,10 +232,13 @@ bool LocalTransport::CanConnectService(boost::string_ref url)
 
 void LocalTransport::AsyncCreateTransportConnection(boost::string_ref url, RR_SHARED_PTR<Endpoint> ep, boost::function<void (RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException> ) >& callback)
 {
+	ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, ep->GetLocalEndpoint(), "LocalTransport begin create transport connection with URL: " << url);
+
 	ParseConnectionURLResult url_res = ParseConnectionURL(url);
 
 	if (url_res.nodename.empty() && url_res.nodeid.IsAnyNode())
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, ep->GetLocalEndpoint(), "LocalTransport NodeID and/or NodeName not specified in URL: " << url);
 		throw ConnectionException("NodeID and/or NodeName must be specified for LocalTransport");
 	}
 
@@ -235,8 +253,16 @@ void LocalTransport::AsyncCreateTransportConnection(boost::string_ref url, RR_SH
 
 	std::string host = url_res.host;
 
-	if (url_res.port != -1) throw ConnectionException("Invalid url for local transport");
-	if (url_res.path != "" && url_res.path != "/") throw ConnectionException("Invalid url for local transport");
+	if (url_res.port != -1) 
+	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, ep->GetLocalEndpoint(), "LocalTransport must not contain port, invalid URL: " << url);
+		throw ConnectionException("Invalid url for local transport");
+	}
+	if (url_res.path != "" && url_res.path != "/")
+	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, ep->GetLocalEndpoint(), "LocalTransport must not contain a path, invalid URL: " << url);
+	 	throw ConnectionException("Invalid url for local transport");
+	}
 
 	std::string username;
 
@@ -244,11 +270,17 @@ void LocalTransport::AsyncCreateTransportConnection(boost::string_ref url, RR_SH
 
 	if (!boost::contains(host,"@"))
 	{
-		if (host!="localhost" && host!="") throw ConnectionException("Invalid host for local transport");
+		if (host!="localhost" && host!="")
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, ep->GetLocalEndpoint(), "LocalTransport host must be empty or \"localhost\", invalid URL: " << url);
+		 	throw ConnectionException("Invalid host for local transport");
+		}
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, ep->GetLocalEndpoint(), "LocalTransport searching " << user_path << " for URL: " << url);
 		search_paths.push_back(user_path);
 
 		if (public_user_path)
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, ep->GetLocalEndpoint(), "LocalTransport searching " << *public_user_path << " for URL: " << url);
 			search_paths.push_back(*public_user_path);
 		}
 
@@ -264,6 +296,7 @@ void LocalTransport::AsyncCreateTransportConnection(boost::string_ref url, RR_SH
 			boost::filesystem::path service_path = *public_search_path / service_username;
 			if (boost::filesystem::is_directory(service_path))
 			{
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, ep->GetLocalEndpoint(), "LocalTransport searching " << service_path << " for URL: " << url);
 				search_paths.push_back(service_path);
 			}
 
@@ -274,21 +307,32 @@ void LocalTransport::AsyncCreateTransportConnection(boost::string_ref url, RR_SH
 	{
 		std::vector<std::string> v1;
 		boost::split(v1,host,boost::is_from_range('@','@'));
-		if (v1.size()!=2) throw ConnectionException("Malformed URL");
-		if (v1.at(1)!="localhost") throw ConnectionException("Invalid host for local transport");
+		if (v1.size()!=2)
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, ep->GetLocalEndpoint(), "LocalTransport malformed username@localhost URL: " << url);
+		 	throw ConnectionException("Malformed URL");
+		}
+		if (v1.at(1)!="localhost")
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, ep->GetLocalEndpoint(), "LocalTransport malformed username@localhost URL: " << url);
+		 	throw ConnectionException("Invalid host for local transport");
+		}
 
 		username=boost::trim_copy(v1.at(0));
 
 		if(!boost::regex_match(username,boost::regex("^[a-zA-Z][a-zA-Z0-9_\\-]*$")))
 		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, ep->GetLocalEndpoint(), "LocalTransport invalid username in URL: " << url);
 			throw ConnectionException("\"" + username + "\" is an invalid username");
 		}
 
 		if (username == my_username)
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, ep->GetLocalEndpoint(), "LocalTransport searching " << user_path << " for URL: " << url);
 			search_paths.push_back(user_path);
 			if (public_user_path)
 			{
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, ep->GetLocalEndpoint(), "LocalTransport searching " << *public_user_path << " public path for URL: " << url);
 				search_paths.push_back(*public_user_path);
 			}
 		}
@@ -299,6 +343,7 @@ void LocalTransport::AsyncCreateTransportConnection(boost::string_ref url, RR_SH
 				boost::filesystem::path service_path = *public_search_path / username;
 				if (boost::filesystem::is_directory(service_path))
 				{
+					ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, ep->GetLocalEndpoint(), "LocalTransport searching " << service_path << " public path for URL: " << url);
 					search_paths.push_back(service_path);
 				}
 			}
@@ -308,7 +353,11 @@ void LocalTransport::AsyncCreateTransportConnection(boost::string_ref url, RR_SH
 
 	//TODO: test this
 	RR_SHARED_PTR <detail::LocalTransport_socket> socket = detail::LocalTransportUtil::FindAndConnectLocalSocket(url_res, search_paths, usernames, GetNode()->GetThreadPool()->get_io_context());
-	if (!socket) throw ConnectionException("Could not connect to service");
+	if (!socket)
+	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, ep->GetLocalEndpoint(), "LocalTransport could not connect to URL: " << url);
+	 	throw ConnectionException("Could not connect to service");
+	}
 
 	std::string noden;
 	if (!(url_res.nodeid.IsAnyNode() && url_res.nodename != ""))
@@ -343,6 +392,7 @@ void LocalTransport::AsyncCreateTransportConnection2(RR_SHARED_PTR<detail::Local
 
 	register_transport(transport);
 
+	ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, transport->GetLocalEndpoint(), "LocalTransport connected transport to " << LocalTransport_socket_remote_endpoint(socket));
 	callback(transport,RR_SHARED_PTR<RobotRaconteurException>());
 
 
@@ -363,6 +413,8 @@ RR_SHARED_PTR<ITransportConnection> LocalTransport::CreateTransportConnection(bo
 
 void LocalTransport::CloseTransportConnection(RR_SHARED_PTR<Endpoint> e)
 {	
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, e->GetLocalEndpoint(), "LocalTransport request close transport connection");
+
 	RR_SHARED_PTR<ServerEndpoint> e2=boost::dynamic_pointer_cast<ServerEndpoint>(e);
 	if (e2)
 	{
@@ -445,9 +497,13 @@ void LocalTransport::StartClientAsNodeName(boost::string_ref name)
 		throw InvalidArgumentException("\"" + name + "\" is an invalid NodeName");
 	}
 
+	try
+	{
 	boost::mutex::scoped_lock lock(acceptor_lock);
 		
 	boost::tuple<NodeID, RR_SHARED_PTR<detail::LocalTransportFD> > p = detail::LocalTransportUtil::GetNodeIDForNodeNameAndLock(name);
+
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "LocalTransport loaded NodeID " << p.get<0>().ToString() << "for NodeName \"" << name << "\"")
 
 	try
 	{
@@ -462,6 +518,12 @@ void LocalTransport::StartClientAsNodeName(boost::string_ref name)
 	{
 		boost::mutex::scoped_lock lock(fds_lock);
 		fds->h_nodename_s = p.get<1>();		
+	}
+	}
+	catch (std::exception& exp)
+	{
+		ROBOTRACONTEUR_LOG_ERROR_SOURCE(node, Transport, -1, "LocalTransport could not start client with NodeName \"" << name << "\": " << exp.what());
+		throw;
 	}
 }
 
@@ -485,11 +547,15 @@ void LocalTransport::StartServerAsNodeName(boost::string_ref name, bool public_)
 {
 	if (!IsLocalTransportSupported())
 	{
-		std::cerr << "warning: local transport not supported on this operating system";
+		ROBOTRACONTEUR_LOG_WARN_SOURCE(node, Transport, -1, "LocalTransport not supported on this operating system. Other transports will operate normally");
 		StartClientAsNodeName(name);
 		return;
 	}
 
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "LocalTransport starting server with NodeName \"" << name << "\"")
+
+	try
+	{
 	boost::mutex::scoped_lock lock(acceptor_lock);
 
 	RR_SHARED_PTR<detail::LocalTransportNodeNameLock> nodename_lock = detail::LocalTransportNodeNameLock::Lock(name.to_string());
@@ -501,6 +567,8 @@ void LocalTransport::StartServerAsNodeName(boost::string_ref name, bool public_)
 	RR_SHARED_PTR<detail::LocalTransportNodeIDLock> nodeid_lock = detail::LocalTransportNodeIDLock::Lock(nodeid);
 	if (!nodeid_lock) throw NodeIDAlreadyInUse();
 	
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "LocalTransport loaded NodeID " << nodeid.ToString() << "for NodeName \"" << name << "\"")
+
 	int32_t tries=0;
 
 	boost::filesystem::path socket_path;
@@ -508,13 +576,16 @@ void LocalTransport::StartServerAsNodeName(boost::string_ref name, bool public_)
 	if (!public_)
 	{
 		socket_path = detail::LocalTransportUtil::GetTransportPrivateSocketPath();
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "LocalTransport server using private socket_path: " << socket_path)
 	}
 	else
 	{
 		boost::optional<boost::filesystem::path> socket_path1 = detail::LocalTransportUtil::GetTransportPublicSocketPath();
 		if (!socket_path1) throw ConnectionException("Computer not initialized for public node server");
 		socket_path = *socket_path1;
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "LocalTransport server using public socket_path: " << socket_path)
 	}
+	
 	std::string pipename;
 		
 	while (true)
@@ -618,13 +689,23 @@ void LocalTransport::StartServerAsNodeName(boost::string_ref name, bool public_)
 	}
 
 	socket_file_name=pipename;
+
+	ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, -1, "LocalTransport started server for NodeName \"" << name << "\" with NodeID " << nodeid.ToString() 
+		<< " unix socket " << pipename);
+
+	}
+	catch (std::exception& exp)
+	{
+		ROBOTRACONTEUR_LOG_ERROR_SOURCE(node, Transport, -1, "LocalTransport could not start server: " << exp.what());
+		throw;
+	}
 }
 
 void LocalTransport::StartServerAsNodeID(const NodeID& nodeid1, bool public_)
 {
 	if (!IsLocalTransportSupported())
 	{
-		std::cerr << "warning: local transport not supported on this operating system";
+		ROBOTRACONTEUR_LOG_WARN_SOURCE(node, Transport, -1, "LocalTransport not supported on this operating system. Other transports will operate normally");
 		try
 		{
 			GetNode()->SetNodeID(nodeid1);
@@ -638,8 +719,16 @@ void LocalTransport::StartServerAsNodeID(const NodeID& nodeid1, bool public_)
 	}
 
 	NodeID nodeid=nodeid1;
-	if (nodeid.IsAnyNode()) throw InvalidArgumentException("NodeID must not be zero node");
+	if (nodeid.IsAnyNode())
+	{
+		ROBOTRACONTEUR_LOG_WARN_SOURCE(node, Transport, -1, "LocalTransport cannot start server with zero node (any node) NodeID");
+	 	throw InvalidArgumentException("NodeID must not be zero node");
+	}
 
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "LocalTransport starting server with NodeID \"" << nodeid.ToString() << "\"")
+
+	try
+	{
 	boost::mutex::scoped_lock lock(acceptor_lock);
 	
 	RR_SHARED_PTR<detail::LocalTransportNodeIDLock> nodeid_lock = detail::LocalTransportNodeIDLock::Lock(nodeid);
@@ -654,12 +743,14 @@ void LocalTransport::StartServerAsNodeID(const NodeID& nodeid1, bool public_)
 	if (!public_)
 	{
 		socket_path = detail::LocalTransportUtil::GetTransportPrivateSocketPath();
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "LocalTransport server using private socket_path: " << socket_path)
 	}
 	else
 	{
 		boost::optional<boost::filesystem::path> socket_path1 = detail::LocalTransportUtil::GetTransportPublicSocketPath();
 		if (!socket_path1) throw ConnectionException("Computer not initialized for public node server");
 		socket_path = *socket_path1;
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "LocalTransport server using public socket_path: " << socket_path)
 	}
 
 	while (true)
@@ -745,6 +836,16 @@ void LocalTransport::StartServerAsNodeID(const NodeID& nodeid1, bool public_)
 	}
 
 	socket_file_name=pipename;
+
+	ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, -1, "LocalTransport started server for NodeID " << nodeid.ToString() 
+		<< " unix socket " << pipename);
+
+	}
+	catch (std::exception& exp)
+	{
+		ROBOTRACONTEUR_LOG_ERROR_SOURCE(node, Transport, -1, "LocalTransport could not start server: " << exp.what());
+		throw;
+	}
 }
 
 void LocalTransport::SendMessage(RR_INTRUSIVE_PTR<Message> m)
@@ -793,7 +894,11 @@ void LocalTransport::AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boost::functi
 	{
 		boost::mutex::scoped_lock lock(TransportConnections_lock);
 		RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<ITransportConnection> >::iterator e1 = TransportConnections.find(m->header->SenderEndpoint);
-		if (e1 == TransportConnections.end()) throw ConnectionException("Transport connection to remote host not found");
+		if (e1 == TransportConnections.end())
+		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, m->header->SenderEndpoint, "transport connection to remote host not found");
+			throw ConnectionException("Transport connection to remote host not found");
+		}
 		t = e1->second;
 	}
 
@@ -805,6 +910,7 @@ void LocalTransport::handle_accept(RR_SHARED_PTR<LocalTransport> parent,RR_SHARE
 	if (error) 
 		return;
 
+	ROBOTRACONTEUR_LOG_INFO_SOURCE(parent->node, Transport, 0, "LocalTransport accepted socket");
 	try
 	{		
 		boost::function<void(RR_SHARED_PTR<detail::LocalTransport_socket>, RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> h
@@ -813,6 +919,7 @@ void LocalTransport::handle_accept(RR_SHARED_PTR<LocalTransport> parent,RR_SHARE
 	}
 	catch (std::exception& exp) 
 	{
+		ROBOTRACONTEUR_LOG_INFO_SOURCE(parent->node, Transport, 0, "LocalTransport accepted socket closed with error: " << exp.what());
 		RobotRaconteurNode::TryHandleException(parent->node, &exp);
 	}
 
@@ -895,10 +1002,16 @@ void LocalTransport::AsyncGetDetectedNodes(const std::vector<std::string>& schem
 					detail::LocalTransportUtil::FindNodesInDirectory(o1, *dir_itr, "rr+local", GetNode()->NowUTC(), username1);
 					boost::range::copy(o1, std::back_inserter(*o));
 				}
-				catch (std::exception&) {}
+				catch (std::exception& exp2)
+				{
+					ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "error detecting local nodes: " << exp2.what())
+				}
 			}
 		}
-		catch (std::exception&) {}
+		catch (std::exception& exp)
+		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "error detecting local nodes: " << exp.what())
+		}
 	}
 
 
@@ -915,6 +1028,7 @@ void LocalTransport::SetDisableMessage3(bool d)
 {
 	boost::mutex::scoped_lock lock(parameter_lock);
 	disable_message3 = d;
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "DisableMessage3 set to: " << d);
 }
 
 bool LocalTransport::GetDisableStringTable()
@@ -926,6 +1040,7 @@ void LocalTransport::SetDisableStringTable(bool d)
 {
 	boost::mutex::scoped_lock lock(parameter_lock);
 	disable_string_table = d;
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "DisableStringTable set to: " << d);
 }
 
 bool LocalTransport::GetDisableAsyncMessageIO()
@@ -937,6 +1052,7 @@ void LocalTransport::SetDisableAsyncMessageIO(bool d)
 {
 	boost::mutex::scoped_lock lock(parameter_lock);
 	disable_async_message_io = d;
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "DisableAsyncMessageIO set to: " << d);
 }
 
 void LocalTransport::EnableNodeDiscoveryListening()
@@ -965,6 +1081,8 @@ void LocalTransport::EnableNodeDiscoveryListening()
 	discovery->Init();
 	try { discovery->Refresh(); } catch (std::exception&) {}
 #endif
+
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "Node discovery listening enabled");
 }
 
 void LocalTransport::DisableNodeDiscoveryListening()
@@ -976,6 +1094,7 @@ void LocalTransport::DisableNodeDiscoveryListening()
 	}
 
 	discovery.reset();
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "Node discovery listening disabled");
 }
 
 void LocalTransport::LocalNodeServicesChanged()
@@ -1039,12 +1158,14 @@ void LocalTransportConnection::MessageReceived(RR_INTRUSIVE_PTR<Message> m)
 	RR_INTRUSIVE_PTR<Message> ret = p->SpecialRequest(m, shared_from_this());
 	if (ret != 0)
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, m_LocalEndpoint, "sending special request response");
 		try
 		{
 			if ((m->entries.at(0)->EntryType == MessageEntryType_ConnectionTest || m->entries.at(0)->EntryType == MessageEntryType_ConnectionTestRet))
 			{
 				if (m->entries.at(0)->Error != MessageErrorType_None)
 				{
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "SpecialRequest failed");
 					Close();
 					return;
 				}
@@ -1069,6 +1190,7 @@ void LocalTransportConnection::MessageReceived(RR_INTRUSIVE_PTR<Message> m)
 
 
 						p->register_transport(RR_STATIC_POINTER_CAST<LocalTransportConnection>(shared_from_this()));
+						ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "LocalTransport connection  assigned LocalEndpoint: " << m_LocalEndpoint);
 					}
 				}
 
@@ -1077,8 +1199,9 @@ void LocalTransportConnection::MessageReceived(RR_INTRUSIVE_PTR<Message> m)
 			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&LocalTransportConnection::SimpleAsyncEndSendMessage, RR_STATIC_POINTER_CAST<LocalTransportConnection>(shared_from_this()), _1);
 			AsyncSendMessage(ret, h);
 		}
-		catch (std::exception&)
+		catch (std::exception& exp)
 		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "SpecialRequest failed: " << exp.what());
 			Close();
 		}
 
@@ -1116,6 +1239,7 @@ void LocalTransportConnection::MessageReceived(RR_INTRUSIVE_PTR<Message> m)
 	}
 	catch (std::exception& exp)
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, m_LocalEndpoint, "LocalTransport failed receiving message: " << exp.what());
 		RobotRaconteurNode::TryHandleException(node, &exp);
 		Close();
 	}
@@ -1155,6 +1279,12 @@ void LocalTransportConnection::Close()
 	{
 		boost::mutex::scoped_lock lock(socket_lock);
 
+		if (!socket->socket->is_open())
+		{
+			return;
+		}
+
+		ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Transport, m_LocalEndpoint, "LocalTransport closing connection");
 
 		try
 		{
@@ -1180,7 +1310,11 @@ void LocalTransport::CheckConnection(uint32_t endpoint)
 	{
 		boost::mutex::scoped_lock lock(TransportConnections_lock);
 		RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<ITransportConnection> >::iterator e = TransportConnections.find(endpoint);
-		if (e == TransportConnections.end()) throw ConnectionException("Transport connection to remote host not found");
+		if (e == TransportConnections.end())
+		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, endpoint, "Transport connection to remote host not found");
+		 	throw ConnectionException("Transport connection to remote host not found");
+		}
 		t = e->second;
 	}
 	t->CheckConnection(endpoint);
@@ -1198,11 +1332,19 @@ uint32_t LocalTransportConnection::GetRemoteEndpoint()
 
 void LocalTransportConnection::CheckConnection(uint32_t endpoint)
 {
-	if (endpoint!=m_LocalEndpoint || !connected.load()) throw ConnectionException("Connection lost");
+	if (endpoint!=m_LocalEndpoint || !connected.load())
+	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, m_LocalEndpoint, "Connection lost");
+	 	throw ConnectionException("Connection lost");
+	}
 }
 
 void LocalTransport_connected_callback2(RR_SHARED_PTR<LocalTransport> parent,RR_SHARED_PTR<detail::LocalTransport_socket> socket, RR_SHARED_PTR<ITransportConnection> connection, RR_SHARED_PTR<RobotRaconteurException> err)
 {
+	if (err)
+	{
+		ROBOTRACONTEUR_LOG_INFO_SOURCE(parent->GetNode(), Transport, 0, "LocalTransport accepted socket closed with error: " << err->what());
+	}
 	//This is just an empty method.  The connected transport will register when it has a local endpoint.
 	
 }
@@ -2044,6 +2186,8 @@ namespace detail
 		
 		if (private_path)
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "LocalTransport discovery searching private path " << *private_path)
+
 			std::vector<NodeDiscoveryInfo> nodeinfo;
 			LocalTransportUtil::FindNodesInDirectory(nodeinfo, *private_path, "rr+local", now, boost::optional<std::string>());
 			BOOST_FOREACH(NodeDiscoveryInfo& n, nodeinfo)
@@ -2054,6 +2198,7 @@ namespace detail
 
 		if (public_path)
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "LocalTransport discovery searching public path " << *public_path)
 			try
 			{
 				boost::filesystem::directory_iterator end_iter;
@@ -2071,6 +2216,7 @@ namespace detail
 						std::string username1 = path1.filename().string();
 						std::vector<NodeDiscoveryInfo> nodeinfo;
 						detail::LocalTransportUtil::FindNodesInDirectory(nodeinfo, *dir_itr, "rr+local", now, username1);
+						ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "LocalTransport discovery searching public user path " << *dir_itr)
 						BOOST_FOREACH(NodeDiscoveryInfo& n, nodeinfo)
 						{
 							node1->NodeDetected(n);

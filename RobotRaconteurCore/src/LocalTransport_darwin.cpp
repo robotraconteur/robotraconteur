@@ -107,6 +107,9 @@ namespace detail
 			
 			CFRunLoopAddTimer(CFRunLoopGetCurrent(), timer, kCFRunLoopDefaultMode);
 			
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "LocalTransport discovery watching private path " << private_path)
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "LocalTransport discovery watching public path " << public_path)
+
 			CFRunLoopRun();
 		}
 		catch (std::exception&)

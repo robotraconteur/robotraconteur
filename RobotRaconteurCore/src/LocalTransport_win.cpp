@@ -405,7 +405,7 @@ namespace detail
 	}
 
 	void WinLocalTransportDiscovery::run()
-	{
+	{		
 		while (true)
 		{
 			if (!private_evt)
@@ -414,6 +414,7 @@ namespace detail
 				{
 					private_path = LocalTransportUtil::GetTransportPrivateSocketPath();
 					private_evt = WinLocalTransportDiscovery_find_first(*private_path);
+					ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "LocalTransport discovery watching private path " << *private_path)
 				}
 				catch (std::exception&) {}
 			}
@@ -430,7 +431,8 @@ namespace detail
 						{
 							public_evt = public_evt1;
 						}
-					}
+						ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, -1, "LocalTransport discovery watching public path " << *private_path)
+					}					
 				}
 				catch (std::exception&) {}
 			}
