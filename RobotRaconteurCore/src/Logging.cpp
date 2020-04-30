@@ -101,7 +101,7 @@ namespace RobotRaconteur
     }
 
     RR_INTRUSIVE_PTR<RRLogRecordStream> RRLogRecordStream::OpenRecordStream(RR_WEAK_PTR<RobotRaconteurNode> node, RobotRaconteur_LogLevel lvl, RobotRaconteur_LogSource source, 
-    int64_t ep, const std::string& service_path, const std::string& member_name, const std::string& source_file, uint32_t source_line)
+    int64_t ep, MessageStringRef service_path, MessageStringRef member_name, const std::string& source_file, uint32_t source_line)
     {
         RR_SHARED_PTR<RobotRaconteurNode> node1 = node.lock();
         if (!node1) 
@@ -110,7 +110,7 @@ namespace RobotRaconteur
         if (!node1->CompareLogLevel(lvl))
             return RR_INTRUSIVE_PTR<RRLogRecordStream>();
 
-        return new RRLogRecordStream(node1, lvl, source, ep, service_path, member_name, boost::posix_time::microsec_clock::local_time(), source_file, source_line, "0x" + boost::lexical_cast<std::string>(boost::this_thread::get_id()));
+        return new RRLogRecordStream(node1, lvl, source, ep, service_path.str().to_string(), member_name.str().to_string(), boost::posix_time::microsec_clock::local_time(), source_file, source_line, "0x" + boost::lexical_cast<std::string>(boost::this_thread::get_id()));
     }
 
 

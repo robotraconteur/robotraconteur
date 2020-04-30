@@ -31,6 +31,7 @@ namespace RobotRaconteur
 {
 
 class ROBOTRACONTEUR_CORE_API RobotRaconteurNode;
+class ROBOTRACONTEUR_CORE_API MessageStringRef;
 
 // Inspired by Boost.Log V2
 
@@ -71,7 +72,7 @@ public:
     ~RRLogRecordStream();
     std::stringstream& Stream();
 
-    static RR_INTRUSIVE_PTR<RRLogRecordStream> OpenRecordStream(RR_WEAK_PTR<RobotRaconteurNode> node, RobotRaconteur_LogLevel lvl, RobotRaconteur_LogSource source, int64_t ep, const std::string& service_path, const std::string& member_name, const std::string& source_file, uint32_t source_line);
+    static RR_INTRUSIVE_PTR<RRLogRecordStream> OpenRecordStream(RR_WEAK_PTR<RobotRaconteurNode> node, RobotRaconteur_LogLevel lvl, RobotRaconteur_LogSource source, int64_t ep, MessageStringRef service_path, MessageStringRef member_name, const std::string& source_file, uint32_t source_line);
 
 };
 
