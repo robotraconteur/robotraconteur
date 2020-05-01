@@ -69,7 +69,7 @@ namespace RobotRaconteur
 
 			void handle_error(const int32_t& key, RR_SHARED_PTR<RobotRaconteurException> err);
 
-			void connected_client(RR_SHARED_PTR<RRObject> client, RR_SHARED_PTR<RobotRaconteurException> err, RR_SHARED_PTR<endpoint_cleanup> ep, int32_t key);
+			void connected_client(RR_SHARED_PTR<RRObject> client, RR_SHARED_PTR<RobotRaconteurException> err, std::string url, RR_SHARED_PTR<endpoint_cleanup> ep, int32_t key);
 
 			void connected_transport(RR_SHARED_PTR<Transport> transport, RR_SHARED_PTR<ITransportConnection> connection, RR_SHARED_PTR<RobotRaconteurException> err, std::string url, RR_SHARED_PTR<endpoint_cleanup> ep, int32_t key);
 
