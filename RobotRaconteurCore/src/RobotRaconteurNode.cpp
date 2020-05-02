@@ -93,7 +93,7 @@ void RobotRaconteurNode::Init()
 
 	m_Discovery = RR_MAKE_SHARED<detail::Discovery>(shared_from_this());
 
-	ROBOTRACONTEUR_LOG_TRACE_SOURCE(weak_sp(), Node, -1, "RobotRaconteurNode initialized");
+	ROBOTRACONTEUR_LOG_INFO_SOURCE(weak_sp(), Node, -1, "RobotRaconteurNode version " << ROBOTRACONTEUR_VERSION_TEXT << " initialized");
 	
 }
 
@@ -1386,7 +1386,16 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_INTRUSIVE_PTR<Me
 						std::string username = username_el->CastDataToString();
 
 						se->AuthenticateUser(username, credentials->GetStorageContainer());
-					}					
+					}
+					else
+					{
+						RR_INTRUSIVE_PTR<MessageElement> username_el;
+						RR_INTRUSIVE_PTR<MessageElement> credentials_el;
+						if (e->TryFindElement("username", username_el) && e->TryFindElement("credentials", credentials_el))
+						{
+							throw AuthenticationException("Authentication not enabled for service");
+						}						
+					}				
 				}
 				catch (std::exception& exp)
 				{
