@@ -201,10 +201,16 @@ namespace RobotRaconteur
 				try
 				{
 					ep->release();
+					RR_SHARED_PTR<ClientContext> client_context = rr_cast<ServiceStub>(client)->GetContext();
 					if (listener != 0)
-						rr_cast<ServiceStub>(client)->GetContext()->ClientServiceListener.connect(listener);
+						client_context->ClientServiceListener.connect(listener);
 					//std::cout << "call connect handler" << std::endl;
 					ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Node, rr_cast<ServiceStub>(client)->GetContext()->GetLocalEndpoint(), "Client connected: " << url);
+					if (client_context->GetUserAuthenticated())
+					{
+						ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Node, rr_cast<ServiceStub>(client)->GetContext()->GetLocalEndpoint(), "Client authenticated with username: \"" << client_context->GetAuthenticatedUsername() << "\"");
+					}
+					
 					detail::InvokeHandler(node, handler, client);
 				}
 				catch (std::exception& exp)
