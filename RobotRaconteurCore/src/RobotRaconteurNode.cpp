@@ -1336,7 +1336,9 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_INTRUSIVE_PTR<Me
 					se->SetTransport(transportid);
 					se->SetTransportConnection(tc);
 
-					c->AddClient(se);
+					se->SetClientVersion(v);
+
+					c->AddClient(se);					
 
 					ret->header->SenderEndpoint = se->GetLocalEndpoint();
 

@@ -52,7 +52,7 @@ namespace RobotRaconteur
 		this->node = c->GetNode();
 		RRMutex = RR_MAKE_SHARED<boost::recursive_mutex>();
 		RREndpoint = c->GetLocalEndpoint();
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, RREndpoint, ServicePath,	"", "Client stub created");
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, RREndpoint, ServicePath,	"", "ServiceStub created with type: " << RRType());
 	}
 
 	RR_SHARED_PTR<ClientContext> ServiceStub::GetContext()
@@ -214,6 +214,8 @@ namespace RobotRaconteur
 		//rec_event = new AutoResetEvent(false);
 		InitializeInstanceFields();
 
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Client, -1, "ClientContext created");
+
 	}
 
 	ClientContext::ClientContext(RR_SHARED_PTR<ServiceFactory> service_def, RR_SHARED_PTR<RobotRaconteurNode> node) : Endpoint(node)
@@ -221,6 +223,7 @@ namespace RobotRaconteur
 		InitializeInstanceFields();
 		m_ServiceDef = service_def;
 
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Client, -1, "ClientContext created");
 
 		//rec_event = new AutoResetEvent(false);
 
@@ -1054,7 +1057,7 @@ namespace RobotRaconteur
 							{
 								RR_SHARED_PTR<RobotRaconteurException> err = RobotRaconteurExceptionUtil::MessageEntryToException(m);
 								RR_SHARED_PTR<RobotRaconteurException> err2 = m_ServiceDef->DownCastException(err);
-								ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Service returned remote error during AsyncProcessRequest: " << err->what());
+								ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Service returned remote error during ProcessRequest: " << err->what());
 								t->handler(RR_INTRUSIVE_PTR<MessageEntry>(), err2);
 							}
 							else
@@ -2043,10 +2046,12 @@ namespace RobotRaconteur
 	{
 		if (!unreliable)
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Client sending reliable pipe packet EntryType " << m->EntryType);
 			AsyncSendMessage(m, (handler));
 		}
 		else
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Client sending unreliable pipe packet EntryType " << m->EntryType);
 			if (UseMessage3())
 			{
 				RR_INTRUSIVE_PTR<Message> mm = CreateMessage();
@@ -2076,6 +2081,7 @@ namespace RobotRaconteur
 
 	void ClientContext::SendWireMessage(RR_INTRUSIVE_PTR<MessageEntry> m)
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Client sending unreliable wire packet EntryType " << m->EntryType);
 		if (UseMessage3())
 		{
 			RR_INTRUSIVE_PTR<Message> mm = CreateMessage();
@@ -2703,7 +2709,7 @@ namespace RobotRaconteur
 		}
 		catch (std::exception& e)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Client callback exception caught: " << e.what());
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Client callback returning caught exception to caller: " << e.what());
 			ret = CreateMessageEntry((MessageEntryType(m->EntryType + 1)), m->MemberName);
 			ret->ServicePath = m->ServicePath;
 			ret->RequestID = m->RequestID;

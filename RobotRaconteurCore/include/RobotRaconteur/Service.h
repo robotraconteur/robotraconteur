@@ -60,7 +60,7 @@ namespace RobotRaconteur
 	{
 
 	public:
-
+		ServiceSkel();
 		virtual ~ServiceSkel() {}
 
 		virtual void Init(boost::string_ref s, RR_SHARED_PTR<RRObject> o, RR_SHARED_PTR<ServerContext> c);
@@ -174,8 +174,7 @@ namespace RobotRaconteur
 	protected:
 		RR_WEAK_PTR<RobotRaconteurNode> node;
 
-	private:
-		void InitializeInstanceFields();
+
 	};
 
 	
@@ -370,9 +369,9 @@ namespace RobotRaconteur
 
 	private:
 		
-		void AsyncProcessCallbackRequest_err(RR_SHARED_PTR<RobotRaconteurException> error, uint32_t requestid);
+		void AsyncProcessCallbackRequest_err(RR_SHARED_PTR<RobotRaconteurException> error, uint32_t endpoint, uint32_t requestid);
 
-		void AsyncProcessCallbackRequest_timeout(const TimerEvent&, uint32_t requestid);
+		void AsyncProcessCallbackRequest_timeout(const TimerEvent&, uint32_t endpoint, uint32_t requestid);
 
 		uint32_t request_number;
 
@@ -456,6 +455,14 @@ namespace RobotRaconteur
 
 		bool UseMessage3();
 		virtual void SetTransportConnection(RR_SHARED_PTR<ITransportConnection> c);
+
+	private:
+		RobotRaconteurVersion client_version;
+		boost::mutex this_lock;
+
+	public:
+		RobotRaconteurVersion GetClientVersion();
+		void SetClientVersion(const RobotRaconteurVersion& version);
 
 
 	private:

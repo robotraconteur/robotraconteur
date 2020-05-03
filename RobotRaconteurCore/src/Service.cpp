@@ -51,70 +51,86 @@ namespace RobotRaconteur
 		n->HandleException(e.get());
 	}
 		
+	ServiceSkel::ServiceSkel()
+	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Service, -1, "ServiceSkel created");
+	}
+
 	void ServiceSkel::Init(boost::string_ref s, RR_SHARED_PTR<RRObject> o, RR_SHARED_PTR<ServerContext> c)
 	{
-		InitializeInstanceFields();
-		m_ServicePath = RR_MOVE(s.to_string());
-		m_context = c;
-		uncastobj = o;
-		if (o == 0)
-			throw InvalidArgumentException("");
 
-		this->node=c->GetNode();
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, -1, s,	"", "Begin initializing service skel with type: " << GetObjectType());
 
-		RegisterEvents(o);
-		InitPipeServers(o);
-		InitWireServers(o);
-		InitCallbackServers(o);
-
-		monitorlock.reset();
-		objectlock.reset();
-
-		std::string object_type_q = GetObjectType();
-		boost::string_ref object_def;
-		boost::string_ref object_type;
-
-		boost::tie(object_def, object_type) = SplitQualifiedName(object_type_q);
-		RR_SHARED_PTR<ServiceDefinition> d = RRGetNode()->GetServiceType(object_def)->ServiceDef();
-		object_type_ver.push_back(boost::make_tuple(d->StdVer, object_type_q));
-		if (d->StdVer)
+		try
 		{
-			RR_SHARED_PTR<ServiceEntryDefinition> e = TryFindByName(d->Objects, object_type);
-			if (e)
+			if (!o) throw InvalidArgumentException("Service object must not be null");
+
+			m_ServicePath = RR_MOVE(s.to_string());
+			m_context = c;
+			uncastobj = o;		
+
+			this->node=c->GetNode();
+
+			RegisterEvents(o);
+			InitPipeServers(o);
+			InitWireServers(o);
+			InitCallbackServers(o);
+
+			monitorlock.reset();
+			objectlock.reset();
+
+			std::string object_type_q = GetObjectType();
+			boost::string_ref object_def;
+			boost::string_ref object_type;
+
+			boost::tie(object_def, object_type) = SplitQualifiedName(object_type_q);
+			RR_SHARED_PTR<ServiceDefinition> d = RRGetNode()->GetServiceType(object_def)->ServiceDef();
+			object_type_ver.push_back(boost::make_tuple(d->StdVer, object_type_q));
+			if (d->StdVer)
 			{
-				std::set<std::string> found_defs;
-				std::set<RobotRaconteurVersion> found_versions;
-				BOOST_FOREACH(const std::string& s, e->Implements)
+				RR_SHARED_PTR<ServiceEntryDefinition> e = TryFindByName(d->Objects, object_type);
+				if (e)
 				{
-					if (!boost::contains(s, "."))
-						continue;
-					
-					boost::string_ref implement_def;
-					boost::tie(implement_def, boost::tuples::ignore) = SplitQualifiedName(s);
-					bool implement_def_b;
-					boost::tie(boost::tuples::ignore, implement_def_b) = found_defs.insert(RR_MOVE(implement_def.to_string()));
-					if (!implement_def_b)
-						continue;
+					std::set<std::string> found_defs;
+					std::set<RobotRaconteurVersion> found_versions;
+					BOOST_FOREACH(const std::string& s, e->Implements)
+					{
+						if (!boost::contains(s, "."))
+							continue;
+						
+						boost::string_ref implement_def;
+						boost::tie(implement_def, boost::tuples::ignore) = SplitQualifiedName(s);
+						bool implement_def_b;
+						boost::tie(boost::tuples::ignore, implement_def_b) = found_defs.insert(RR_MOVE(implement_def.to_string()));
+						if (!implement_def_b)
+							continue;
 
-					RR_SHARED_PTR<ServiceDefinition> d2 = RRGetNode()->GetServiceType(implement_def)->ServiceDef();
-					bool version_b;
-					boost::tie(boost::tuples::ignore, version_b) = found_versions.insert(d2->StdVer);
-					if (!version_b)
-						continue;
+						RR_SHARED_PTR<ServiceDefinition> d2 = RRGetNode()->GetServiceType(implement_def)->ServiceDef();
+						bool version_b;
+						boost::tie(boost::tuples::ignore, version_b) = found_versions.insert(d2->StdVer);
+						if (!version_b)
+							continue;
 
-					object_type_ver.push_back(boost::make_tuple(d2->StdVer, s));
+						object_type_ver.push_back(boost::make_tuple(d2->StdVer, s));
 
-					if (!d2->StdVer)
-						break;
+						if (!d2->StdVer)
+							break;
 
+					}
 				}
 			}
-		}
 
-		RR_SHARED_PTR<IRRServiceObject> init_object = RR_DYNAMIC_POINTER_CAST<IRRServiceObject>(o);
-		if (init_object)
+			RR_SHARED_PTR<IRRServiceObject> init_object = RR_DYNAMIC_POINTER_CAST<IRRServiceObject>(o);
+			if (init_object)
+			{
+				init_object->RRServiceObjectInit(c, s.to_string());
+			}
+
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, -1, s,	"", "Service skel initialized successfully");
+		}
+		catch (std::exception& exp)
 		{
-			init_object->RRServiceObjectInit(c, s.to_string());
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, -1, s,	"", "Initializing service skel failed: " << exp.what());
 		}
 
 	}
@@ -198,6 +214,7 @@ namespace RobotRaconteur
 		RR_SHARED_PTR<ServiceSkel> skel1=skel.lock();
 		if (!skel1) return;
 		
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(skel1->node, Service, ep->GetLocalEndpoint(), skel1->m_ServicePath, m->MemberName, "Begin EndAsyncCallGetProperty");
 
 		try
 		{
@@ -207,6 +224,7 @@ namespace RobotRaconteur
 					
 			if (err)
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(skel1->node, Service, ep->GetLocalEndpoint(), skel1->m_ServicePath, m->MemberName, "EndAsyncCallGetProperty returning caught exception to caller: " << err->what());
 				RobotRaconteurExceptionUtil::ExceptionToMessageEntry(*err,ret);
 			}
 			else
@@ -218,9 +236,11 @@ namespace RobotRaconteur
 
 			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>) > h = boost::bind(&rr_context_emptyhandler,_1);
 			skel1->GetContext()->AsyncSendMessage(ret,ep,h);
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(skel1->node, Service, ep->GetLocalEndpoint(), skel1->m_ServicePath, m->MemberName, "EndAsyncCallGetProperty completed successfully");
 		}
 		catch (std::exception& exp)
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(skel1->node, Service, ep->GetLocalEndpoint(), skel1->m_ServicePath, m->MemberName, "EndAsyncCallGetProperty failed: " << exp.what());
 			RobotRaconteurNode::TryHandleException(skel1->node, &exp);
 		}
 	}
@@ -230,6 +250,8 @@ namespace RobotRaconteur
 		RR_SHARED_PTR<ServiceSkel> skel1=skel.lock();
 		if (!skel1) return;
 		
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(skel1->node, Service, ep->GetLocalEndpoint(), skel1->m_ServicePath, m->MemberName, "Begin EndAsyncCallSetProperty");
+
 		try
 		{
 			RR_INTRUSIVE_PTR<MessageEntry> ret=CreateMessageEntry(MessageEntryType_PropertySetRes,m->MemberName);
@@ -238,14 +260,17 @@ namespace RobotRaconteur
 			
 			if (err)
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(skel1->node, Service, ep->GetLocalEndpoint(), skel1->m_ServicePath, m->MemberName, "EndAsyncCallSetProperty returning caught exception to caller: " << err->what());
 				RobotRaconteurExceptionUtil::ExceptionToMessageEntry(*err,ret);
 			}
 
 			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>) > h = boost::bind(&rr_context_emptyhandler,_1);
 			skel1->GetContext()->AsyncSendMessage(ret,ep,h);
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(skel1->node, Service, ep->GetLocalEndpoint(), skel1->m_ServicePath, m->MemberName, "EndAsyncCallSetProperty completed successfully");
 		}
 		catch (std::exception& exp)
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(skel1->node, Service, ep->GetLocalEndpoint(), skel1->m_ServicePath, m->MemberName, "EndAsyncCallGetProperty failed: " << exp.what());
 			RobotRaconteurNode::TryHandleException(skel1->node, &exp);
 		}
 
@@ -256,6 +281,8 @@ namespace RobotRaconteur
 		RR_SHARED_PTR<ServiceSkel> skel1=skel.lock();
 		if (!skel1) return;
 
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(skel1->node, Service, ep->GetLocalEndpoint(), skel1->m_ServicePath, m->MemberName, "Begin EndAsyncCallFunction");
+
 		try
 		{
 			RR_INTRUSIVE_PTR<MessageEntry> ret1=CreateMessageEntry(MessageEntryType_FunctionCallRes,m->MemberName);
@@ -264,6 +291,7 @@ namespace RobotRaconteur
 
 			if (err)
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(skel1->node, Service, ep->GetLocalEndpoint(), skel1->m_ServicePath, m->MemberName, "EndAsyncCallFunction returning caught exception to caller: " << err->what());
 				RobotRaconteurExceptionUtil::ExceptionToMessageEntry(*err,ret1);
 			}
 			else
@@ -284,9 +312,11 @@ namespace RobotRaconteur
 
 			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>) > h = boost::bind(&rr_context_emptyhandler,_1);
 			skel1->GetContext()->AsyncSendMessage(ret1,ep,h);
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(skel1->node, Service, ep->GetLocalEndpoint(), skel1->m_ServicePath, m->MemberName, "EndAsyncCallFunction completed successfully");
 		}
 		catch (std::exception& exp)
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(skel1->node, Service, ep->GetLocalEndpoint(), skel1->m_ServicePath, m->MemberName, "EndAsyncCallFunction failed: " << exp.what());
 			RobotRaconteurNode::TryHandleException(skel1->node, &exp);
 		}
 	}
@@ -300,6 +330,8 @@ namespace RobotRaconteur
 
 	void ServiceSkel::ReleaseObject()
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, -1, m_ServicePath, "", "ServiceSkel releasing object");
+
 		{
 			boost::mutex::scoped_lock lock(monitorlocks_lock);
 			BOOST_FOREACH (RR_SHARED_PTR<ServerContext_MonitorObjectSkel>& e, monitorlocks | boost::adaptors::map_values)
@@ -336,29 +368,35 @@ namespace RobotRaconteur
 
 	void ServiceSkel::DispatchPipeMessage(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e)
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, e, m_ServicePath, m->MemberName, "Pipe packet received for nonexistant member");
 	}
 
 	void ServiceSkel::DispatchWireMessage(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e)
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, e, m_ServicePath, m->MemberName, "Wire packet received for nonexistant member");
 	}
 
 	RR_INTRUSIVE_PTR<MessageEntry> ServiceSkel::CallPipeFunction(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e)
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, e, m_ServicePath, m->MemberName, "Pipe command received for nonexistant member");
 		throw MemberNotFoundException("Pipe " + m->MemberName.str() + " not found");
 	}
 
 	RR_INTRUSIVE_PTR<MessageEntry> ServiceSkel::CallWireFunction(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e)
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, e, m_ServicePath, m->MemberName, "Wire command received for nonexistant member");
 		throw MemberNotFoundException("Wire " + m->MemberName.str() + " not found");
 	}
 
 	RR_SHARED_PTR<void> ServiceSkel::GetCallbackFunction(uint32_t endpoint, boost::string_ref membername)
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, endpoint, m_ServicePath, membername, "Callback " << membername << " not found");
 		throw MemberNotFoundException("Callback " + membername + " not found");
 	}
 
 	RR_INTRUSIVE_PTR<MessageEntry> ServiceSkel::CallMemoryFunction(RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<Endpoint> e)
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, e->GetLocalEndpoint(), m_ServicePath, m->MemberName, "Memory request received for nonexistant member");
 		throw MemberNotFoundException("Memory " + m->MemberName.str() + " not found");
 	}
 
@@ -385,15 +423,12 @@ namespace RobotRaconteur
 		return monitorlock->IsLocked();
 	}
 
-	void ServiceSkel::InitializeInstanceFields()
-	{
-		monitorlocks.clear();
-	}
-
 	std::string ServiceSkel::GetObjectType(RobotRaconteurVersion client_version)
 	{		
 		if (!client_version)
 		{
+			std::string object_type = GetObjectType();
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, -1, m_ServicePath, "", "GetObjectType returning: " << object_type);			
 			return GetObjectType();
 		}
 
@@ -401,20 +436,26 @@ namespace RobotRaconteur
 		BOOST_FOREACH(e_type e, object_type_ver)
 		{
 			if (!e.get<0>())
+			{
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, -1, m_ServicePath, "", "GetObjectType returning: " << e.get<1>() << " for client version " << client_version.ToString());
 				return e.get<1>();
+			}
 
 			if (e.get<0>() <= client_version)
 			{
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, -1, m_ServicePath, "", "GetObjectType returning: " << e.get<1>() << " for client version " << client_version.ToString());
 				return e.get<1>();
 			}
 		}
 
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, -1, m_ServicePath, "", "GetObjectType could not determine a valid type for client version " << client_version.ToString() << ", newer clientversion required");
 		throw ObjectNotFoundException("Service requires newer client version");
 
 	}
 
 	void ServiceSkel::CallGeneratorNext(RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<Endpoint> ep)
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, ep->GetLocalEndpoint(), m_ServicePath, m->MemberName, "CallGeneratorNext");		
 		int32_t index = RRArrayToScalar(m->FindElement("index")->CastData<RRArray<int32_t> >());
 		RR_SHARED_PTR<GeneratorServerBase> gen;
 		{
@@ -437,6 +478,7 @@ namespace RobotRaconteur
 
 	void ServiceSkel::SendGeneratorResponse(int32_t index, RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> ep)
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, ep->GetLocalEndpoint(), m_ServicePath, m->MemberName, "SendGeneratorResponse generator id: " << index);
 		if (m->Error != MessageErrorType_None)
 		{
 			RR_SHARED_PTR<GeneratorServerBase> gen;
@@ -474,6 +516,7 @@ namespace RobotRaconteur
 		{
 			if (e->second->last_access_time < destroy_time)
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, e->second->GetEndpoint(), m_ServicePath, "", "Destroying generator id " << e->first << " due to timeout");
 				e = generators.erase(e);
 			}
 			else
@@ -510,10 +553,12 @@ namespace RobotRaconteur
 
 		 if (boost::range::find(extra_imports, import_) != extra_imports.end())
 		 {
+			 ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, -1, GetServiceName(), "", "Extra import \"" << import_ << "\" already added");
 			 throw InvalidArgumentException("Extra import already added");
 		 }
 
 		 extra_imports.push_back(RR_MOVE(import_.to_string()));
+		 ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, -1, GetServiceName(), "", "Extra import \"" << import_ << "\" added");
 	 }
 
 	 bool ServerContext::RemoveExtraImport(boost::string_ref import_)
@@ -528,6 +573,7 @@ namespace RobotRaconteur
 		 }
 
 		 extra_imports.erase(e);
+		 ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, -1, GetServiceName(), "", "Extra import \"" << import_ << "\" removed");
 		 return true;
 	 }
 
@@ -544,8 +590,10 @@ namespace RobotRaconteur
 	ServerContext::ServerContext(RR_SHARED_PTR<ServiceFactory> f, RR_SHARED_PTR<RobotRaconteurNode> node)
 	{
 		InitializeInstanceFields();
-		m_ServiceDef = f;
+		m_ServiceDef = f;	
 		this->node=node;
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Client, -1, "ServerContext created with service type " << f->GetServiceName());
 	}
 
 	RR_SHARED_PTR<RobotRaconteurNode> ServerContext::GetNode()
@@ -558,7 +606,8 @@ namespace RobotRaconteur
 	void ServerContext::SendEvent(RR_INTRUSIVE_PTR<MessageEntry> m)
 	{
 
-
+		try
+		{
 		RR_INTRUSIVE_PTR<Message> mm = CreateMessage();
 
 		std::vector<RR_SHARED_PTR<ServerEndpoint> > cc;
@@ -577,10 +626,15 @@ namespace RobotRaconteur
 					try
 					{
 						if (c->GetAuthenticatedUsername()=="")
+						{
+							ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "Skipping sending event due to authentication failure");
 							continue;
+						}
+							
 					}
 					catch (AuthenticationException&)
 					{
+						ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "Skipping sending event due to authentication failure");
 						continue;
 					}
 				}
@@ -590,9 +644,10 @@ namespace RobotRaconteur
 				{
 					m2 = ShallowCopyMessageEntry(m);
 				}
-				catch (std::exception& exp)
+				catch (std::exception& exp2)
 				{
-					RobotRaconteurNode::TryHandleException(node, &exp);
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "ShallowCopyMessage failed: " << exp2.what());
+					RobotRaconteurNode::TryHandleException(node, &exp2);
 					continue;
 				}
 
@@ -602,8 +657,9 @@ namespace RobotRaconteur
 					boost::function<void(RR_SHARED_PTR<RobotRaconteurException>) > h = boost::bind(&rr_context_emptyhandler,_1);
 					AsyncSendMessage(m2,c, h);
 				}
-				catch (std::exception&)
+				catch (std::exception& exp2)
 				{
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "Sending event to client failed: " << exp2.what());
 					try
 					{
 						RemoveClient(c);
@@ -613,6 +669,11 @@ namespace RobotRaconteur
 					};
 				}
 			}
+		}
+		}
+		catch (std::exception& exp)
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, -1, m->ServicePath, m->MemberName, "Error sending event: " << exp.what());
 		}
 
 	}
@@ -625,7 +686,11 @@ namespace RobotRaconteur
 		{
 			boost::mutex::scoped_lock lock(client_endpoints_lock);
 			RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<ServerEndpoint> >::iterator e1 = client_endpoints.find(e);
-			if (e1 == client_endpoints.end()) throw InvalidEndpointException("Invalid client endpoint");
+			if (e1 == client_endpoints.end())
+			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, e, m->ServicePath, m->MemberName, "Attempt to send to invalid endpoint");
+			 	throw InvalidEndpointException("Invalid client endpoint");
+			}
 			s=e1->second;
 		}
 		SendMessage(m,s);
@@ -652,7 +717,11 @@ namespace RobotRaconteur
 		{
 			boost::mutex::scoped_lock lock(client_endpoints_lock);
 			RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<ServerEndpoint> >::iterator e1 = client_endpoints.find(e);
-			if (e1 == client_endpoints.end()) throw InvalidEndpointException("Invalid client endpoint");
+			if (e1 == client_endpoints.end()) 
+			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, e, m->ServicePath, m->MemberName, "Attempt to send to invalid endpoint");
+				throw InvalidEndpointException("Invalid client endpoint");
+			}
 			s = e1->second;
 
 		}
@@ -699,15 +768,21 @@ namespace RobotRaconteur
 	{		
 		if (!unreliable)
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, e, m->ServicePath, m->MemberName, "Service sending reliable pipe packet EntryType " << m->EntryType);
 			AsyncSendMessage(m, e, (callback));
 		}
 		else
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, e, m->ServicePath, m->MemberName, "Service sending unreliable pipe packet EntryType " << m->EntryType);
 			RR_SHARED_PTR<ServerEndpoint> s;
 			{
 				boost::mutex::scoped_lock lock(client_endpoints_lock);
 				RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<ServerEndpoint> >::iterator e1 = client_endpoints.find(e);
-				if (e1 == client_endpoints.end()) throw InvalidEndpointException("Invalid client endpoint");
+				if (e1 == client_endpoints.end())
+				{
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, e, m->ServicePath, m->MemberName, "Attempt to send to invalid endpoint");
+					throw InvalidEndpointException("Invalid client endpoint");
+				}
 				s = e1->second;
 			}
 
@@ -717,11 +792,16 @@ namespace RobotRaconteur
 
 	void ServerContext::SendWireMessage(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e)
 	{		
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, e, m->ServicePath, m->MemberName, "Service sending reliable wire packet EntryType " << m->EntryType);
 		RR_SHARED_PTR<ServerEndpoint> s;
 		{
 			boost::mutex::scoped_lock lock(client_endpoints_lock);
 			RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<ServerEndpoint> >::iterator e1 = client_endpoints.find(e);
-			if (e1 == client_endpoints.end()) throw InvalidEndpointException("Invalid client endpoint");
+			if (e1 == client_endpoints.end())
+			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, e, m->ServicePath, m->MemberName, "Attempt to send to invalid endpoint");
+				throw InvalidEndpointException("Invalid client endpoint");
+			}
 			s = e1->second;
 		}
 		boost::function<void(RR_SHARED_PTR<RobotRaconteurException>) > h = boost::bind(&rr_context_emptyhandler,_1);
@@ -737,13 +817,19 @@ namespace RobotRaconteur
 		if (security_policies.count("requirevaliduser")!=0)
 		{
 			if (boost::algorithm::to_lower_copy(  security_policies.at("requirevaliduser")) == "true")
+			{
 				m_RequireValidUser = true;
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, -1, GetServiceName(), "", "\"requirevaliduser\" policy enabled");
+			}
 		}
 
 		if (security_policies.count("allowobjectlock")!=0)
 		{
 			if (boost::algorithm::to_lower_copy(security_policies.at("allowobjectlock")) == "true")
+			{
 				AllowObjectLock = true;
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, -1, GetServiceName(), "", "\"requirevaliduser\" policy enabled");
+			}
 		}
 
 
@@ -752,42 +838,58 @@ namespace RobotRaconteur
 	void ServerContext::SetBaseObject(boost::string_ref name, RR_SHARED_PTR<RRObject> o, RR_SHARED_PTR<ServiceSecurityPolicy> policy)
 	{
 		if (base_object_set)
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, -1, name, "", "Attempt to set service root object when it is already set");
 			throw InvalidOperationException("Base object already set");
-
-		if (policy != 0)
-		{
-			SetSecurityPolicy(policy);
 		}
 
-		
-
-		m_ServiceName = RR_MOVE(name.to_string());
-
-		m_CurrentServicePath.reset(new std::string(name.to_string()));
-		m_CurrentServerContext.reset(new RR_SHARED_PTR<ServerContext>(shared_from_this()));
-		
-
-		RR_SHARED_PTR<ServiceSkel> s = GetServiceDef()->CreateSkel(o->RRType(),name, o, shared_from_this());
-
-		m_RootObjectType = RR_MOVE(o->RRType()); //boost::algorithm::replace_all_copy(o->RRType(),"::",".");
-		base_object_set = true;
-		
+		try
 		{
-			boost::mutex::scoped_lock lock (skels_lock);
-			skels.insert(std::make_pair(name, s));
+			m_ServiceName = RR_MOVE(name.to_string());
+
+			if (policy != 0)
+			{
+				SetSecurityPolicy(policy);
+			}
+			
+			
+			m_CurrentServicePath.reset(new std::string(name.to_string()));
+			m_CurrentServerContext.reset(new RR_SHARED_PTR<ServerContext>(shared_from_this()));
+			
+
+			RR_SHARED_PTR<ServiceSkel> s = GetServiceDef()->CreateSkel(o->RRType(),name, o, shared_from_this());
+
+			m_RootObjectType = RR_MOVE(o->RRType()); //boost::algorithm::replace_all_copy(o->RRType(),"::",".");
+			base_object_set = true;
+			
+			{
+				boost::mutex::scoped_lock lock (skels_lock);
+				skels.insert(std::make_pair(name, s));
+			}
+
+			m_CurrentServicePath.reset(0);
+
+			m_CurrentServerContext.reset(0);
+
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, -1, name, "", "SetBaseObject completed successfully for service " << name << " with root object type " << m_RootObjectType );
 		}
-
-		m_CurrentServicePath.reset(0);
-
-		m_CurrentServerContext.reset(0);
+		catch (std::exception& exp)
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, -1, name, "", "SetBaseObject failed: " << exp.what());
+			throw;
+		}
 
 	}
 
 	RR_SHARED_PTR<ServiceSkel> ServerContext::GetObjectSkel(MessageStringRef servicepath)
 	{
 		
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, -1, servicepath, "", "GetObjectSkel");
+
 		//object obj = null;
 		
+		try
+		{
 		std::vector<std::string> p;
 		boost::string_ref servicepath1 = servicepath.str();
 		boost::split(p,servicepath1,boost::is_from_range('.','.'));
@@ -833,7 +935,11 @@ namespace RobotRaconteur
 					
 					m_CurrentServerContext.reset(0);
 
-					if (!obj1) throw ServiceException("Requested object is null");
+					if (!obj1)
+					{
+						ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, -1, GetServiceName(), servicepath, "Requested object is nulle");
+					 	throw ServiceException("Requested object is null");
+					}
 
 					skel1 = GetServiceDef()->CreateSkel(obj1->RRType(),ppath, obj1, shared_from_this());
 					boost::mutex::scoped_lock lock2(skel->objectlock_lock);
@@ -852,6 +958,12 @@ namespace RobotRaconteur
 		}
 
 		return skel;
+		}
+		catch (std::exception& exp)
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, -1, GetServiceName(), servicepath, "GetObjectSkel failed: " << exp.what());
+			throw;
+		}
 	}
 
 	void ServerContext::ReplaceObject(boost::string_ref path)
@@ -864,27 +976,35 @@ namespace RobotRaconteur
 
 	std::string ServerContext::GetObjectType(MessageStringRef servicepath, RobotRaconteurVersion client_version)
 	{
-		//TODO: check client_version
-		if (servicepath != GetServiceName())
+		try
 		{
-			if (m_RequireValidUser)
+			//TODO: check client_version
+			if (servicepath != GetServiceName())
 			{
-				if (ServerEndpoint::GetCurrentAuthenticatedUser() == 0)
-					throw PermissionDeniedException("User must authenticate before accessing this service");
+				if (m_RequireValidUser)
+				{
+					if (ServerEndpoint::GetCurrentAuthenticatedUser() == 0)
+						throw PermissionDeniedException("User must authenticate before accessing this service");
+				}
 			}
-		}
 
-		RR_SHARED_PTR<ServiceSkel> s = GetObjectSkel(servicepath);
-				
-		return s->GetObjectType(client_version);
+			RR_SHARED_PTR<ServiceSkel> s = GetObjectSkel(servicepath);
+					
+			return s->GetObjectType(client_version);
+		}
+		catch (std::exception& exp)
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, -1, GetServiceName(), "", "GetObjectType failed: " << exp.what());
+			throw;
+		}
 		
 	}
 
 	RR_SHARED_PTR<ServerContext> ServerContext::GetCurrentServerContext()
 	{
-		if (!m_CurrentServerContext.get()) throw InvalidOperationException("Not set");
+		if (!m_CurrentServerContext.get()) throw InvalidOperationException("Current server context not set");
 		RR_SHARED_PTR<ServerContext> out= *m_CurrentServerContext.get();
-		if (!out) throw InvalidOperationException("Not set");
+		if (!out) throw InvalidOperationException("Current server context not set");
 		return out;
 	}
 	
@@ -894,7 +1014,7 @@ boost::thread_specific_ptr<RR_SHARED_PTR<ServerContext> > ServerContext::m_Curre
 
 	std::string ServerContext::GetCurrentServicePath()
 	{
-		if (m_CurrentServicePath.get()==0) throw InvalidOperationException("Not set");
+		if (m_CurrentServicePath.get()==0) throw InvalidOperationException("Current server context not set");
 		return std::string(*m_CurrentServicePath);
 	}
 
@@ -903,12 +1023,17 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 	RR_INTRUSIVE_PTR<MessageEntry> ServerContext::ProcessMessageEntry(RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> c)
 	{
 		
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "Begin ProcessMessageEntry with EntryType " << m->EntryType);
+
 		bool noreturn = false;
 			RR_INTRUSIVE_PTR<MessageEntry> ret=RR_INTRUSIVE_PTR<MessageEntry>();
 
 
 			if (m->EntryType == MessageEntryType_ServicePathReleasedRet)
+			{
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "Received ServicePathReleasedRet");
 				return RR_INTRUSIVE_PTR<MessageEntry>();
+			}
 
 			try
 			{
@@ -921,6 +1046,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 				if (m->EntryType == MessageEntryType_ClientKeepAliveReq)
 				{
+					ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "Received ClientKeepAlive request, sending response");
 					ret = CreateMessageEntry(MessageEntryType_ClientKeepAliveRet, m->MemberName);
 					ret->RequestID = m->RequestID;
 					ret->ServicePath = m->ServicePath;
@@ -929,7 +1055,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 				if (m->EntryType == MessageEntryType_ServiceCheckCapabilityReq)
 				{
-					ret = CheckServiceCapability(m, c);
+					ret = CheckServiceCapability(m, c);					
 				}
 
 
@@ -937,12 +1063,16 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 				if (m_RequireValidUser)
 				{
 					if (ServerEndpoint::GetCurrentAuthenticatedUser() == 0)
+					{
+						ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "User attempted to access service without authenticating using EntryType: " << m->EntryType);
 						throw PermissionDeniedException("User must authenticate before accessing this service");
+					}
 				}
 
 				
 				if (m->EntryType == MessageEntryType_PipePacket || m->EntryType == MessageEntryType_PipePacketRet)
 				{
+					ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "Received PipePacket, dispatching to member");
 					GetObjectSkel(m->ServicePath)->DispatchPipeMessage(m, c->GetLocalEndpoint());
 					ret.reset();
 					noreturn = true;
@@ -950,6 +1080,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 				if (m->EntryType == MessageEntryType_WirePacket)
 				{
+					ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "Received WirePacket, dispatching to member");
 					GetObjectSkel(m->ServicePath)->DispatchWireMessage(m, c->GetLocalEndpoint());
 					ret.reset();
 					noreturn = true;
@@ -960,12 +1091,17 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 
 				if (m->EntryType == MessageEntryType_ObjectTypeName)
-				{
+				{					
 					RobotRaconteurVersion v;
 					RR_INTRUSIVE_PTR<MessageElement> m_ver;
 					if (m->TryFindElement("clientversion", m_ver))
-					{
+					{						
 						v.FromString(m_ver->CastDataToString());
+						ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "Received ObjectTypeName with clientversion: " << v);
+					}
+					else
+					{
+						ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "Received ObjectTypeName without clientversion");
 					}
 
 					ret = CreateMessageEntry(MessageEntryType_ObjectTypeNameRet, m->MemberName);
@@ -977,6 +1113,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 				if (m->EntryType == MessageEntryType_PropertyGetReq)
 				{
+					ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "Received PropertyGet, dispatching to member");
 					RR_SHARED_PTR<ServiceSkel> skel = GetObjectSkel(m->ServicePath);
 					check_lock(skel, m);
 					ret = skel->CallGetProperty(m);
@@ -985,6 +1122,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 				if (m->EntryType == MessageEntryType_PropertySetReq)
 				{
+					ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "Received PropertySet, dispatching to member");
 					RR_SHARED_PTR<ServiceSkel> skel = GetObjectSkel(m->ServicePath);
 					check_lock(skel, m);
 					ret = skel->CallSetProperty(m);
@@ -993,6 +1131,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 				if (m->EntryType == MessageEntryType_FunctionCallReq)
 				{
+					ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "Received FunctionCall, dispatching to member");
 					RR_SHARED_PTR<ServiceSkel> skel = GetObjectSkel(m->ServicePath);
 					check_lock(skel, m);
 					ret = skel->CallFunction(m);
@@ -1001,6 +1140,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 				if (m->EntryType == MessageEntryType_PipeConnectReq || m->EntryType == MessageEntryType_PipeDisconnectReq)
 				{
+					ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "Received PipeCommand, dispatching to member");
 					RR_SHARED_PTR<ServiceSkel> skel = GetObjectSkel(m->ServicePath);
 					check_lock(skel, m);
 					ret = skel->CallPipeFunction(m,c->GetLocalEndpoint());
@@ -1010,6 +1150,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 					|| m->EntryType == MessageEntryType_WirePeekInValueReq || m->EntryType == MessageEntryType_WirePeekOutValueReq
 					|| m->EntryType == MessageEntryType_WirePokeOutValueReq)
 				{
+					ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "Received WireCommand, dispatching to member");
 					RR_SHARED_PTR<ServiceSkel> skel = GetObjectSkel(m->ServicePath);
 					check_lock(skel, m);
 					ret = skel->CallWireFunction(m, c->GetLocalEndpoint());
@@ -1019,6 +1160,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 				if (m->EntryType == MessageEntryType_MemoryWrite || m->EntryType == MessageEntryType_MemoryRead || m->EntryType == MessageEntryType_MemoryGetParam)
 				{
+					ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "Received MemoryCommand, dispatching to member");
 					RR_SHARED_PTR<ServiceSkel> skel = GetObjectSkel(m->ServicePath);
 					check_lock(skel, m);
 					ret = skel->CallMemoryFunction(m, c);
@@ -1029,11 +1171,11 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 					// Console.WriteLine("Got " + m.RequestID + " " + m.EntryType + " " + m.MemberName);
 					noreturn=true;
 					RR_SHARED_PTR<outstanding_request> t;
-					uint32_t transid = m->RequestID;
+					uint32_t requestid = m->RequestID;
 					{
 						
 						boost::mutex::scoped_lock lock (outstanding_requests_lock);
-						uint32_t transid = m->RequestID;
+						uint32_t requestid = m->RequestID;
 						RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<outstanding_request> >::iterator e1 = outstanding_requests.find(m->RequestID);
 						if (e1 == outstanding_requests.end())
 						{
@@ -1060,28 +1202,32 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 							
 								{
 								boost::mutex::scoped_lock lock (outstanding_requests_lock);
-								outstanding_requests.erase(transid);
+								outstanding_requests.erase(requestid);
 								}
 
 								if (m->Error==MessageErrorType_None)
 								{
+									ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "ProcessCallbackRequest with requestid " << requestid << " successful");
 									t->handler(m,RR_SHARED_PTR<RobotRaconteurException>());
 								}
 								else if (m->Error==MessageErrorType_RemoteError)
 								{
 									RR_SHARED_PTR<RobotRaconteurException> err=RobotRaconteurExceptionUtil::MessageEntryToException(m);
 									RR_SHARED_PTR<RobotRaconteurException> err2=m_ServiceDef->DownCastException(err);
+									ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "Client returned remote error during ProcessCallbackRequest: " << err->what());
 									t->handler(RR_INTRUSIVE_PTR<MessageEntry>(),err2);
 								}
 								else
 								{
+									ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "Client returned error during ProcessCallbackRequest: " << m->Error);
 									t->handler(RR_INTRUSIVE_PTR<MessageEntry>(),RobotRaconteurExceptionUtil::MessageEntryToException(m));
 								}
 							}
 						}
-						catch (std::exception& exp) 
+						catch (std::exception& exp2) 
 						{
-							RobotRaconteurNode::TryHandleException(node, &exp);
+							ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "Error handling AsyncProcessCallbackRequest response: " << exp2.what());
+							RobotRaconteurNode::TryHandleException(node, &exp2);
 						}
 
 					}
@@ -1091,6 +1237,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 				if (m->EntryType == MessageEntryType_GeneratorNextReq)
 				{
+					ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "Received GeneratorNext, dispatching to member");
 					RR_SHARED_PTR<ServiceSkel> skel = GetObjectSkel(m->ServicePath);
 					check_lock(skel, m);
 					skel->CallGeneratorNext(m,c);
@@ -1099,11 +1246,16 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 			}
 			catch (std::exception &e)
-			{
+			{				
 				if (!noreturn)
 				{
-				ret = CreateMessageEntry((static_cast<MessageEntryType>(m->EntryType+1)), m->MemberName);
-				RobotRaconteurExceptionUtil::ExceptionToMessageEntry(e, ret);
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "ProcessMessageEntry returning caught exception to caller: " << e.what());
+					ret = CreateMessageEntry((static_cast<MessageEntryType>(m->EntryType+1)), m->MemberName);
+					RobotRaconteurExceptionUtil::ExceptionToMessageEntry(e, ret);
+				}
+				else
+				{
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "ProcessMessageEntry caught exception: " << e.what());
 				}
 
 			}
@@ -1111,10 +1263,15 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 			{
 				if (!noreturn)
 				{
-				ret = CreateMessageEntry((static_cast<MessageEntryType>(m->EntryType+1)), m->MemberName);
-				ret->Error=MessageErrorType_RemoteError;
-				ret->AddElement("errorname", stringToRRArray("std::exception"));
-				ret->AddElement("errorstring", stringToRRArray("Unknown exception occured in remote service"));
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "ProcessMessageEntry returning unknown exception to caller");
+					ret = CreateMessageEntry((static_cast<MessageEntryType>(m->EntryType+1)), m->MemberName);
+					ret->Error=MessageErrorType_RemoteError;
+					ret->AddElement("errorname", stringToRRArray("std::exception"));
+					ret->AddElement("errorstring", stringToRRArray("Unknown exception occured in remote service"));
+				}
+				else
+				{
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "ProcessMessageEntry caught unknown exception");
 				}
 
 
@@ -1127,6 +1284,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 			if (ret == 0 && !noreturn)
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "ProcessMessageEntry returning unknown request type exception to caller");
 				ret = CreateMessageEntry(static_cast<MessageEntryType>(m->EntryType+1), m->MemberName);
 				ret->Error = MessageErrorType_ProtocolError;
 				ret->AddElement("errorname", stringToRRArray("RobotRaconteur.ProtocolError"));
@@ -1138,6 +1296,12 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 			{
 				ret->ServicePath = m->ServicePath;
 				ret->RequestID = m->RequestID;
+
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "ProcessMessageEntry completed successfully with return");
+			}
+			else
+			{
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "ProcessMessageEntry completed successfully without return");
 			}
 
 			return ret;			
@@ -1145,8 +1309,9 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 	void ServerContext::AsyncProcessCallbackRequest(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t endpoint, RR_MOVE_ARG(boost::function<void ( RR_INTRUSIVE_PTR<MessageEntry>, RR_SHARED_PTR<RobotRaconteurException> )>) handler, int32_t timeout)
 	{
-						
-		uint32_t mytransid;
+		try
+		{			
+		uint32_t myrequestid;
 		
 		RR_SHARED_PTR<outstanding_request> t=RR_MAKE_SHARED<outstanding_request>();
 		t->handler=handler;
@@ -1159,27 +1324,36 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 				request_number++;
 				if (request_number >= std::numeric_limits<uint32_t>::max()) request_number=0;
 				m->RequestID = request_number;
-				mytransid = request_number;
+				myrequestid = request_number;
 			}
-			while (outstanding_requests.count(mytransid)!=0);
+			while (outstanding_requests.count(myrequestid)!=0);
 
 			if (timeout!=RR_TIMEOUT_INFINITE)
 			{
-				RR_SHARED_PTR<Timer> timer=GetNode()->CreateTimer(boost::posix_time::milliseconds(timeout),boost::bind(&ServerContext::AsyncProcessCallbackRequest_timeout,shared_from_this(),_1,mytransid),true);
+				RR_SHARED_PTR<Timer> timer=GetNode()->CreateTimer(boost::posix_time::milliseconds(timeout),boost::bind(&ServerContext::AsyncProcessCallbackRequest_timeout,shared_from_this(),_1,endpoint,myrequestid),true);
 				timer->Start();
 				t->timer=timer;
 
 			}
 
-			outstanding_requests.insert(std::make_pair(mytransid,t));
+			outstanding_requests.insert(std::make_pair(myrequestid,t));
 
 		}
 				
-		boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&ServerContext::AsyncProcessCallbackRequest_err, shared_from_this(), _1, mytransid);
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, endpoint, m->ServicePath, m->MemberName, "AsyncProcessCallbackRequest sending message with requestid " << myrequestid << " EntryType " << m->EntryType);
+		
+
+		boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&ServerContext::AsyncProcessCallbackRequest_err, shared_from_this(), _1, endpoint, myrequestid);
 		AsyncSendMessage(m,endpoint,h);
+		}
+		catch (std::exception& exp)
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, endpoint, m->ServicePath, m->MemberName, "Error during AsyncProcessCallbackRequest: " << exp.what());
+			throw;
+		}
 	}
 
-	void ServerContext::AsyncProcessCallbackRequest_err(RR_SHARED_PTR<RobotRaconteurException> error, uint32_t requestid)
+	void ServerContext::AsyncProcessCallbackRequest_err(RR_SHARED_PTR<RobotRaconteurException> error, uint32_t endpoint, uint32_t requestid)
 	{
 		
 		try
@@ -1194,17 +1368,20 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 				outstanding_requests.erase(e1);
 			}
 
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, endpoint, GetServiceName(), "", "Error during AsyncProcessCallbackRequest with requestid " << requestid << ": " << error->what());
+
 			detail::InvokeHandlerWithException(node, t->handler, error);
 		}
 		catch (std::exception& exp) 
 		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, endpoint, GetServiceName(), "", "Failed to handle error during AsyncProcessCallbackRequest: " << exp.what());
 			RobotRaconteurNode::TryHandleException(node, &exp);
 		}
 		
 
 	}
 
-	void ServerContext::AsyncProcessCallbackRequest_timeout(const TimerEvent& error, uint32_t requestid)
+	void ServerContext::AsyncProcessCallbackRequest_timeout(const TimerEvent& error, uint32_t endpoint, uint32_t requestid)
 	{
 		if (!error.stopped)
 		{
@@ -1220,10 +1397,13 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 				outstanding_requests.erase(e1);
 				}
 
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, endpoint, GetServiceName(), "", "AsyncProcessCallbackRequest with requestid " << requestid << " timed out");
+
 				detail::InvokeHandlerWithException(node, t->handler,RR_MAKE_SHARED<RequestTimeoutException>("Request timed out"));
 			}
 			catch (std::exception& exp) 
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, endpoint, GetServiceName(), "", "Failed to handle error during AsyncProcessCallbackRequest: " << exp.what());
 				RobotRaconteurNode::TryHandleException(node, &exp);
 			}
 		}
@@ -1232,7 +1412,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 	void ServerContext::Close()
 	{
 
-
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, -1, GetServiceName(), "", "Begin close service: " << GetServiceName());
 		
 
 		try
@@ -1312,8 +1492,11 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 		}
 		catch (std::exception& exp)
 		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, -1, GetServiceName(), "", "ServerServiceListener callback raised exception: " << exp.what());
 			RobotRaconteurNode::TryHandleException(node, &exp);
 		}
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, -1, GetServiceName(), "", "Close service complete: " << GetServiceName());
 	}
 
 	void ServerContext::MessageReceived(RR_INTRUSIVE_PTR<Message> m, RR_SHARED_PTR<ServerEndpoint> e)
@@ -1328,6 +1511,8 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 		{
 			if (mm->Error == MessageErrorType_InvalidEndpoint)
 			{
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, e->GetLocalEndpoint(), GetServiceName(), "", "Received invalid endpoint, closing service");
+
 				this->RemoveClient(e);
 				return;
 			}
@@ -1352,6 +1537,16 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 			client_endpoints.insert(std::make_pair(cendpoint->GetLocalEndpoint(), cendpoint));
 		}
 
+		RobotRaconteurVersion client_version = cendpoint->GetClientVersion();
+		if (client_version == RobotRaconteurVersion())
+		{
+			ROBOTRACONTEUR_LOG_INFO_SOURCE_PATH(node, Service, cendpoint->GetLocalEndpoint(), GetServiceName(), "", "Client connected");
+		}
+		else
+		{
+			ROBOTRACONTEUR_LOG_INFO_SOURCE_PATH(node, Service, cendpoint->GetLocalEndpoint(), GetServiceName(), "", "Client connected with Robot Raconteur version " << client_version.ToString());
+		}
+
 		try
 		{
 			RR_SHARED_PTR<uint32_t> endpt=RR_MAKE_SHARED<uint32_t>(cendpoint->GetLocalEndpoint());
@@ -1359,6 +1554,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 		}
 		catch (std::exception& exp)
 		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, -1, GetServiceName(), "", "ServerServiceListener callback raised exception: " << exp.what());
 			RobotRaconteurNode::TryHandleException(node, &exp);
 		}
 
@@ -1434,6 +1630,15 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 		}
 		catch (std::exception&){}
 
+		if (cusername.empty())
+		{
+			ROBOTRACONTEUR_LOG_INFO_SOURCE_PATH(node, Service, ce, GetServiceName(), "", "Client disconnected");
+		}
+		else
+		{
+			ROBOTRACONTEUR_LOG_INFO_SOURCE_PATH(node, Service, ce, GetServiceName(), "", "Client with username \"" << cusername << "\" disconnected");
+		}
+
 		try
 		{
 			
@@ -1442,13 +1647,17 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 		}
 		catch (std::exception& exp)
 		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, -1, GetServiceName(), "", "ServerServiceListener callback raised exception: " << exp.what());
 			RobotRaconteurNode::TryHandleException(node, &exp);
 		}
 	}
 
 	void ServerContext::KickUser(boost::string_ref username)
 	{
-		std::list<RR_SHARED_PTR<ServerEndpoint> > kicked_clients;
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, -1, GetServiceName(), "", "Kicking user \"" << username << "\"");
+
+		typedef boost::tuple<std::string,RR_SHARED_PTR<ServerEndpoint> > kicked_client_type;
+		std::list<kicked_client_type> kicked_clients;
 		{
 			boost::mutex::scoped_lock lock(client_endpoints_lock);
 
@@ -1459,7 +1668,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 					std::string u=e->GetAuthenticatedUsername();
 					if (username==u)
 					{
-						kicked_clients.push_back(e);
+						kicked_clients.push_back(boost::make_tuple(u,e));
 					}
 				}
 				catch (std::exception&) {}
@@ -1468,21 +1677,28 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 		}
 
-		BOOST_FOREACH (RR_SHARED_PTR<ServerEndpoint>& ee, kicked_clients)
+		BOOST_FOREACH (kicked_client_type& ee, kicked_clients)
 		{
 			try
 			{
-				RemoveClient(ee);
+				RemoveClient(ee.get<1>());
 			}
-			catch (std::exception&) {}
+			catch (std::exception& exp)
+			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, ee.get<1>()->GetLocalEndpoint(), GetServiceName(), "", "KickUser \"" << ee.get<0>() << "\" failed: " << exp.what());
+			}
 		}
 
 	}
 
 	RR_INTRUSIVE_PTR<MessageEntry> ServerContext::ClientSessionOp(RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> e)
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, e->GetLocalEndpoint(), m->ServicePath, m->MemberName, "ClientSessionOp");
+
 		if (user_authenticator == 0 && !boost::starts_with(m->MemberName.str(),"Monitor"))
+		{			
 			throw InvalidOperationException("User authentication not activated for this service");
+		}
 
 		RR_INTRUSIVE_PTR<MessageEntry> ret = CreateMessageEntry(MessageEntryType_ClientSessionOpRet, m->MemberName);
 		ret->RequestID = m->RequestID;
@@ -1494,13 +1710,24 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 		{
 					std::string username = m->FindElement("username")->CastDataToString();
 					RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> > credentials = rr_cast<RRMap<std::string,RRValue> >((GetNode()->UnpackMapType<std::string, RRValue>(m->FindElement("credentials")->CastDataToNestedList(DataTypes_dictionary_t))));
-					e->AuthenticateUser(username, credentials->GetStorageContainer());
-					ret->AddElement("return", stringToRRArray("OK"));
-					return ret;
+					try
+					{
+						e->AuthenticateUser(username, credentials->GetStorageContainer());
+						ROBOTRACONTEUR_LOG_INFO_SOURCE_PATH(node, Service, e->GetLocalEndpoint(), m->ServicePath, m->MemberName, "Client authenticated by service with username \"" << username << "\"");
+						ret->AddElement("return", stringToRRArray("OK"));
+						return ret;
+					}
+					catch (std::exception& exp2)
+					{
+						ROBOTRACONTEUR_LOG_INFO_SOURCE_PATH(node, Service, e->GetLocalEndpoint(), m->ServicePath, m->MemberName, "Client authentication by service failed with username \"" << username << "\": " << exp2.what());
+						throw;
+					}
 		}
 		else if (command == "LogoutUser")
 		{
+					std::string username = e->GetAuthenticatedUsername();
 					e->LogoutUser();
+					ROBOTRACONTEUR_LOG_INFO_SOURCE_PATH(node, Service, e->GetLocalEndpoint(), m->ServicePath, m->MemberName, "Client \"" << username << "\" logged out");
 					ret->AddElement("return",stringToRRArray("OK"));
 					return ret;
 
@@ -1593,6 +1820,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 						lock.unlock();
 						std::string retcode = s->MonitorEnter(ServerEndpoint::GetCurrentEndpoint()->GetLocalEndpoint(), timeout);
+						ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, ServerEndpoint::GetCurrentEndpoint()->GetLocalEndpoint(), servicepath, "", "MonitorEnter result: " << retcode);
 						ret->AddElement("return", stringToRRArray(retcode));
 
 			}
@@ -1609,7 +1837,8 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 				}
 				lock.unlock();
 				std::string retcode = s->MonitorContinueEnter(ServerEndpoint::GetCurrentEndpoint()->GetLocalEndpoint());
-				ret->AddElement("return", stringToRRArray(retcode));
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, ServerEndpoint::GetCurrentEndpoint()->GetLocalEndpoint(), servicepath, "", "MonitorContinueEnter result: " << retcode);
+				ret->AddElement("return", stringToRRArray(retcode));				
 
 			}
 			else if (m->MemberName == "MonitorExit")
@@ -1626,6 +1855,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 					s = e1->second;
 				}
 					std::string retcode = s->MonitorExit(ServerEndpoint::GetCurrentEndpoint()->GetLocalEndpoint());
+					ROBOTRACONTEUR_LOG_INFO_SOURCE_PATH(node, Service, ServerEndpoint::GetCurrentEndpoint()->GetLocalEndpoint(), servicepath, "", "MonitorExit result: " << retcode);
 					ret->AddElement("return", stringToRRArray(retcode));
 			}
 			else
@@ -1657,6 +1887,8 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 		}
 
 		active_object_locks.insert(make_pair(o->GetRootServicePath(), o));
+
+		ROBOTRACONTEUR_LOG_INFO_SOURCE_PATH(node, Service, -1, servicepath, "", "Object locked by user \"" << username << "\"");
 	}
 
 	void ServerContext::RequestClientObjectLock(boost::string_ref servicepath, boost::string_ref username, uint32_t endpoint)
@@ -1679,6 +1911,8 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 				o->AddSkel(s->second);
 		}
 		active_object_locks.insert(make_pair(o->GetRootServicePath(), o));
+
+		ROBOTRACONTEUR_LOG_INFO_SOURCE_PATH(node, Service, -1, servicepath, "", "Object session locked by user \"" << username << "\" ep " << endpoint);
 	}
 
 	void ServerContext::ReleaseObjectLock(boost::string_ref servicepath, boost::string_ref username, bool override_)
@@ -1709,6 +1943,15 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 		lock2.lock();
 		if (active_object_locks.count(skel->GetServicePath()) != 0)
 			active_object_locks.erase(skel->GetServicePath());
+
+		if(username != lock->GetUsername() && override_)
+		{
+			ROBOTRACONTEUR_LOG_INFO_SOURCE_PATH(node, Service, -1, servicepath, "", "Object lock released using override by user \"" << username << "\"");
+		}
+		else
+		{
+			ROBOTRACONTEUR_LOG_INFO_SOURCE_PATH(node, Service, -1, servicepath, "", "Object lock released by user \"" << username << "\"");
+		}
 	}
 
 	std::string ServerContext::GetObjectLockUsername(boost::string_ref servicepath)
@@ -1786,7 +2029,10 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 	void ServerContext::ReleaseServicePath1(const std::string& path)
 	{
 		if (path == GetServiceName())
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, -1, path, "", "Attempt to release root object");
 			throw ServiceException("Root object cannot be released");
+		}
 
 		
 		{
@@ -1803,7 +2049,10 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 	
 			if (objkeys.size() == 0)
+			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, -1, path, "", "Unknown service path");
 				throw ServiceException("Unknown service path");
+			}
 
 			BOOST_FOREACH (std::string& path1, objkeys)
 			{
@@ -1836,6 +2085,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 				//s->ReleaseCastObject();
 				skels.erase(path1);
 				s->ReleaseObject();
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, -1, path, "", "Object released");
 			}
 		}
 		
@@ -1849,6 +2099,8 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 		RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_ServicePathReleasedReq, "");
 		m->ServicePath = path;
 
+		ROBOTRACONTEUR_LOG_INFO_SOURCE_PATH(node, Service, -1, path, "", "Service path released");
+
 		SendEvent(m);
 	}
 
@@ -1856,6 +2108,8 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 	{
 
 		ReleaseServicePath1(path.to_string());
+
+		ROBOTRACONTEUR_LOG_INFO_SOURCE_PATH(node, Service, -1, path, "", "Service path released");
 
 		RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_ServicePathReleasedReq, "");
 		m->ServicePath = path;
@@ -1897,8 +2151,9 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 					boost::function<void(RR_SHARED_PTR<RobotRaconteurException>) > h = boost::bind(&rr_context_emptyhandler,_1);
 					AsyncSendMessage(ShallowCopyMessageEntry(m), c, h);
 				}
-				catch (std::exception&)
+				catch (std::exception& exp)
 				{
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, c->GetLocalEndpoint(), path, "", "Error sending ReleaseServicePath event to client: " << exp.what());
 					try
 					{
 						RemoveClient(c);
@@ -1916,75 +2171,87 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 	{
 		ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
 
-		RR_SHARED_PTR<ServerEndpoint> e;
+		RR_INTRUSIVE_PTR<MessageEntry> rec_message;
+		uint32_t myrequestid = 0;
+
+		try
 		{
-			boost::mutex::scoped_lock lock(client_endpoints_lock);
-			RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<ServerEndpoint> >::iterator e1 = client_endpoints.find(endpointid);
-			if (e1 == client_endpoints.end()) throw InvalidEndpointException("Invalid client endpoint");
-			e = e1->second;
-		}
-
-		uint32_t mytransid;
-		RR_SHARED_PTR<outstanding_request> t = RR_MAKE_SHARED<outstanding_request>();
-		t->evt = GetNode()->CreateAutoResetEvent();
-		{
-			boost::mutex::scoped_lock lock(outstanding_requests_lock);
-
-			do {
-				request_number++;
-				if (request_number >= std::numeric_limits<uint32_t>::max()) request_number = 0;
-				m->RequestID = request_number;
-				mytransid = request_number;
-			} while (outstanding_requests.count(mytransid) != 0);
-
-			outstanding_requests.insert(std::make_pair(mytransid, t));
-
-		}
-
-
-
-
-		//Console.WriteLine("Sent " + m.RequestID + " " + m.EntryType + " " + m.MemberName);
-		SendMessage(m, e);
-
-
-		boost::posix_time::ptime request_start = GetNode()->NowUTC();
-		uint32_t request_timeout = GetNode()->GetRequestTimeout();
-		while (true)
-		{
-
+			RR_SHARED_PTR<ServerEndpoint> e;
+			{
+				boost::mutex::scoped_lock lock(client_endpoints_lock);
+				RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<ServerEndpoint> >::iterator e1 = client_endpoints.find(endpointid);
+				if (e1 == client_endpoints.end()) throw InvalidEndpointException("Invalid client endpoint");
+				e = e1->second;
+			}
+			
+			RR_SHARED_PTR<outstanding_request> t = RR_MAKE_SHARED<outstanding_request>();
+			t->evt = GetNode()->CreateAutoResetEvent();
 			{
 				boost::mutex::scoped_lock lock(outstanding_requests_lock);
-				if (t->ret)
-					break;
+
+				do {
+					request_number++;
+					if (request_number >= std::numeric_limits<uint32_t>::max()) request_number = 0;
+					m->RequestID = request_number;
+					myrequestid = request_number;
+				} while (outstanding_requests.count(myrequestid) != 0);
+
+				outstanding_requests.insert(std::make_pair(myrequestid, t));
+
 			}
-			GetNode()->CheckConnection(e->GetLocalEndpoint());
 
 
 
-			t->evt->WaitOne(10);
-			if ((GetNode()->NowUTC() - request_start).total_milliseconds() > request_timeout)
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, endpointid, m->ServicePath, m->MemberName, "ProcessCallbackRequest sending message with requestid " << myrequestid << " EntryType " << m->EntryType);
+	
+			//Console.WriteLine("Sent " + m.RequestID + " " + m.EntryType + " " + m.MemberName);
+			SendMessage(m, e);
+
+
+			boost::posix_time::ptime request_start = GetNode()->NowUTC();
+			uint32_t request_timeout = GetNode()->GetRequestTimeout();
+			while (true)
 			{
 
 				{
 					boost::mutex::scoped_lock lock(outstanding_requests_lock);
-					outstanding_requests.erase(mytransid);
+					if (t->ret)
+						break;
 				}
-				throw RequestTimeoutException("Request timeout");
+				GetNode()->CheckConnection(e->GetLocalEndpoint());
 
+
+
+				t->evt->WaitOne(10);
+				if ((GetNode()->NowUTC() - request_start).total_milliseconds() > request_timeout)
+				{
+
+					{
+						boost::mutex::scoped_lock lock(outstanding_requests_lock);
+						outstanding_requests.erase(myrequestid);
+					}
+					throw RequestTimeoutException("Request timeout");
+
+				}
 			}
+
+			{
+				boost::mutex::scoped_lock lock(outstanding_requests_lock);
+				outstanding_requests.erase(myrequestid);
+				rec_message = t->ret;
+			}
+
+			if (rec_message->RequestID != myrequestid)
+				throw InternalErrorException("This should be impossible!");
+
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, endpointid, m->ServicePath, m->MemberName, "ProcessRequest received response with requestid " << myrequestid);
+
 		}
-
-
-		RR_INTRUSIVE_PTR<MessageEntry> rec_message;
+		catch (std::exception& exp)
 		{
-			boost::mutex::scoped_lock lock(outstanding_requests_lock);
-			outstanding_requests.erase(mytransid);
-			rec_message = t->ret;
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, endpointid, m->ServicePath, m->MemberName, "Error during ProcessCallbackRequest: " << exp.what());
+			throw;
 		}
-
-		if (rec_message->RequestID != mytransid)
-			throw InternalErrorException("This should be impossible!");
 
 		if (rec_message->Error != MessageErrorType_None)
 		{
@@ -1992,13 +2259,18 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 			{
 				RR_SHARED_PTR<RobotRaconteurException> err = RobotRaconteurExceptionUtil::MessageEntryToException(rec_message);
 				if (!err) RobotRaconteurExceptionUtil::ThrowMessageEntryException(rec_message);
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, endpointid, m->ServicePath, m->MemberName, "Client callback returned remote error during ProcessCallbackRequest: " << err->what());
 				m_ServiceDef->DownCastAndThrowException(*err);
 			}
 
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, endpointid, m->ServicePath, m->MemberName, "Client callback returned error during ProcessCallbackRequest: " << rec_message->Error);
 			RobotRaconteurExceptionUtil::ThrowMessageEntryException(rec_message);
 		}
 
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, endpointid, m->ServicePath, m->MemberName, "ProcessCallbackRequest with requestid " << myrequestid << " successful");
+
 		return rec_message;
+		
 	}
 
 	RR_SHARED_PTR<ThreadPool> ServerContext::GetMonitorThreadPool()
@@ -2015,6 +2287,8 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 			monitor_thread_pool=factory->NewThreadPool(GetNode());
 			monitor_thread_pool->SetThreadPoolCount(5);
+
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, -1, GetServiceName(), "", "Initialized monitor lock thread pool with 5 threads");
 		
 		}
 		
@@ -2029,6 +2303,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 	void ServerContext::SetMonitorThreadPoolCount(int32_t count)
 	{
 		GetMonitorThreadPool()->SetThreadPoolCount(count);
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, -1, GetServiceName(), "", "Monitor thread pool count set to " << count << "threads");
 	}
 
 	bool ServerContext::UseMessage3(uint32_t ep)
@@ -2073,6 +2348,8 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 			GetNode()->UpdateServiceStateNonce();
 		}
 		catch (std::exception&) {}
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Service, -1, GetServiceName(), "", "Service attributes set");
 	}
 
 
@@ -2081,9 +2358,9 @@ boost::thread_specific_ptr<RR_SHARED_PTR<ServerEndpoint> > ServerEndpoint::m_Cur
 	RR_SHARED_PTR<ServerEndpoint> ServerEndpoint::GetCurrentEndpoint()
 	{
 		
-		if (!m_CurrentEndpoint.get()) throw InvalidOperationException("Not set");
+		if (!m_CurrentEndpoint.get()) throw InvalidOperationException("Current ServiceEndpoint Not set");
 		RR_SHARED_PTR<ServerEndpoint> out=*m_CurrentEndpoint.get();
-		if (!out) throw InvalidOperationException("Not set");
+		if (!out) throw InvalidOperationException("Current ServiceEndpoint Not set");
 		return out;
 	}
 
@@ -2167,6 +2444,17 @@ boost::thread_specific_ptr<RR_SHARED_PTR<AuthenticatedUser> > ServerEndpoint::m_
 	void ServerEndpoint::InitializeInstanceFields()
 	{
 		endpoint_authenticated_user.reset();
+	}
+
+	RobotRaconteurVersion ServerEndpoint::GetClientVersion()
+	{
+		boost::mutex::scoped_lock lock(this_lock);
+		return client_version;
+	}
+	void ServerEndpoint::SetClientVersion(const RobotRaconteurVersion& version)
+	{
+		boost::mutex::scoped_lock lock(this_lock);
+		client_version = version;
 	}
 
 	
