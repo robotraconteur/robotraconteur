@@ -89,6 +89,9 @@ namespace RobotRaconteur
 		std::string name;
 		int32_t id;
 		RR_WEAK_PTR<ServiceStub> stub;
+		RR_WEAK_PTR<RobotRaconteurNode> node;
+		uint32_t endpoint;
+		std::string service_path;
 
 		GeneratorClientBase(boost::string_ref name, int32_t id, RR_SHARED_PTR<ServiceStub> stub);
 
@@ -257,6 +260,8 @@ namespace RobotRaconteur
 		RR_WEAK_PTR<ServiceSkel> skel;
 		RR_INTRUSIVE_PTR<MessageElement> m;
 		RR_SHARED_PTR<ServerEndpoint> ep;
+		RR_WEAK_PTR<RobotRaconteurNode> node;
+		std::string service_path;
 
 		boost::posix_time::ptime last_access_time;
 
@@ -330,6 +335,7 @@ namespace RobotRaconteur
 
 		virtual void CallNext(RR_INTRUSIVE_PTR<MessageEntry> m)
 		{	
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node,Service,ep->GetLocalEndpoint(),service_path,name,"Generator CallNext with id " << index);
 			RR_SHARED_PTR<ServiceSkel> skel1 = skel.lock();
 			if (!skel1)
 			{

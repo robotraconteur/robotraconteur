@@ -204,6 +204,7 @@ namespace RobotRaconteur
 		MemberDefinition_Direction direction;
 		DataTypes element_type;
 		size_t element_size;
+		std::string service_path;
 
 	public:
 		RR_SHARED_PTR<RobotRaconteurNode> GetNode();		
@@ -254,6 +255,7 @@ namespace RobotRaconteur
 		MemberDefinition_Direction direction;
 		DataTypes element_type;
 		size_t element_size;
+		std::string service_path;
 
 	public:
 
@@ -306,6 +308,8 @@ namespace RobotRaconteur
 		MemberDefinition_Direction direction;
 		DataTypes element_type;
 		size_t element_size;
+		std::string service_path;
+		uint32_t endpoint;
 
 	public:
 		const std::string GetMemberName() const;
@@ -407,6 +411,8 @@ namespace RobotRaconteur
 		MemberDefinition_Direction direction;
 		DataTypes element_type;
 		size_t element_size;
+		std::string service_path;
+		uint32_t endpoint;
 
 	public:
 		RR_SHARED_PTR<RobotRaconteurNode> GetNode();

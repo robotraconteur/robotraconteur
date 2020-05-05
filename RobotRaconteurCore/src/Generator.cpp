@@ -31,9 +31,12 @@ namespace RobotRaconteur
 {
 	GeneratorClientBase::GeneratorClientBase(boost::string_ref name, int32_t id, RR_SHARED_PTR<ServiceStub> stub)
 	{
+		this->node=stub->RRGetNode();
+		this->endpoint=stub->GetContext()->GetLocalEndpoint();		
 		this->name = RR_MOVE(name.to_string());
 		this->id = id;
 		this->stub = stub;
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node,Client,endpoint,service_path,name,"Created generator with id " << id);
 	}
 
 	RR_SHARED_PTR<ServiceStub> GeneratorClientBase::GetStub()
@@ -45,6 +48,7 @@ namespace RobotRaconteur
 
 	void GeneratorClientBase::Abort()
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node,Client,endpoint,service_path,name,"Requesting generator abort with id " << id);
 		RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_GeneratorNextReq, GetMemberName());
 		AbortOperationException err("Generator abort requested");
 		RobotRaconteurExceptionUtil::ExceptionToMessageEntry(err, m);
@@ -53,6 +57,7 @@ namespace RobotRaconteur
 	}
 	void GeneratorClientBase::AsyncAbort(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler, int32_t timeout)
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node,Client,endpoint,service_path,name,"Requesting async generator abort with id " << id);
 		RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_GeneratorNextReq, GetMemberName());
 		AbortOperationException err("Generator abort requested");
 		RobotRaconteurExceptionUtil::ExceptionToMessageEntry(err, m);
@@ -62,6 +67,7 @@ namespace RobotRaconteur
 
 	void GeneratorClientBase::Close()
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node,Client,endpoint,service_path,name,"Requesting generator close with id " << id);
 		RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_GeneratorNextReq, GetMemberName());
 		StopIterationException err("");
 		RobotRaconteurExceptionUtil::ExceptionToMessageEntry(err, m);
@@ -70,6 +76,7 @@ namespace RobotRaconteur
 	}
 	void GeneratorClientBase::AsyncClose(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler, int32_t timeout)
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node,Client,endpoint,service_path,name,"Requesting async generator close with id " << id);
 		RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_GeneratorNextReq, GetMemberName());
 		StopIterationException err("");
 		RobotRaconteurExceptionUtil::ExceptionToMessageEntry(err, m);
@@ -84,6 +91,7 @@ namespace RobotRaconteur
 
 	RR_INTRUSIVE_PTR<MessageElement> GeneratorClientBase::NextBase(RR_INTRUSIVE_PTR<MessageElement> v)
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node,Client,endpoint,service_path,name,"Calling generator next with id " << id);
 		RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_GeneratorNextReq, GetMemberName());		
 		m->AddElement("index", ScalarToRRArray(id));
 		if (v)
@@ -98,6 +106,7 @@ namespace RobotRaconteur
 	}
 	void GeneratorClientBase::AsyncNextBase(RR_INTRUSIVE_PTR<MessageElement> v, boost::function<void(RR_INTRUSIVE_PTR<MessageElement> m, RR_SHARED_PTR<RobotRaconteurException> err, RR_SHARED_PTR<RobotRaconteurNode>)> handler, int32_t timeout)
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node,Client,endpoint,service_path,name,"Calling async generator next with id " << id);
 		RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_GeneratorNextReq, GetMemberName());
 		m->AddElement("index", ScalarToRRArray(id));
 		if (v)
@@ -138,6 +147,9 @@ namespace RobotRaconteur
 		this->skel = skel;
 		this->ep = ep;
 		this->last_access_time = boost::posix_time::second_clock::universal_time();
+		this->node = skel->RRGetNodeWeak();
+		this->service_path = skel->GetServicePath();
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node,Service,ep->GetLocalEndpoint(),service_path,name,"Created generator skel with id " << index);
 	}
 
 	uint32_t GeneratorServerBase::GetEndpoint()
