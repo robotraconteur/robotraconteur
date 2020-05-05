@@ -89,6 +89,8 @@ namespace RobotRaconteur
 
 	void WireConnectionBase::AsyncClose(RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout)
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, member_name, "Requesting close wire connection");
+
 		{
 			boost::mutex::scoped_lock lock(outval_lock);
 			send_closed = true;
@@ -115,6 +117,8 @@ namespace RobotRaconteur
 		recv_closed = false;
 		node = parent->GetNode();
 		this->direction = direction;
+		this->service_path=parent->GetServicePath();
+		this->member_name=parent->GetMemberName();
 	}
 
 	RR_SHARED_PTR<RobotRaconteurNode> WireConnectionBase::GetNode()
@@ -136,6 +140,8 @@ namespace RobotRaconteur
 
 			if (lasttime_recv == TimeSpec(0,0) || timespec > lasttime_recv)
 			{
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, member_name, "Wire packet received timespec " << timespec.seconds << ", " << timespec.nanoseconds);
+
 				{
 					boost::mutex::scoped_lock lock2(inval_lock);
 					inval = packet;
@@ -161,6 +167,10 @@ namespace RobotRaconteur
 				}
 
 			}
+			else
+			{
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, member_name, "Old wire packet received timespec " << timespec.seconds << ", " << timespec.nanoseconds << ", dropping");
+			}
 			
 		}
 	}
@@ -169,6 +179,8 @@ namespace RobotRaconteur
 
 	void WireConnectionBase::RemoteClose()
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, member_name, "Received remote close wire connection");
+
 		{
 			boost::mutex::scoped_lock lock(outval_lock);
 			send_closed = true;
@@ -207,7 +219,10 @@ namespace RobotRaconteur
 	RR_INTRUSIVE_PTR<RRValue> WireConnectionBase::GetInValueBase()
 	{
 		if (direction == MemberDefinition_Direction_writeonly)
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, endpoint, service_path, member_name, "Attempt to get InValue of write only wire");
 			throw WriteOnlyMemberException("Write only member");
+		}
 		RR_INTRUSIVE_PTR<RRValue> val;
 		{
 			boost::mutex::scoped_lock lock2(inval_lock);
@@ -221,7 +236,10 @@ namespace RobotRaconteur
 	RR_INTRUSIVE_PTR<RRValue> WireConnectionBase::GetOutValueBase() 
 	{
 		if (direction == MemberDefinition_Direction_readonly)
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, endpoint, service_path, member_name, "Attempt to get OutValue of read only wire");
 			throw ReadOnlyMemberException("Read only member");
+		}
 		RR_INTRUSIVE_PTR<RRValue> val;
 		{
 			boost::mutex::scoped_lock lock2(outval_lock);
@@ -235,8 +253,12 @@ namespace RobotRaconteur
 	void WireConnectionBase::SetOutValueBase(RR_INTRUSIVE_PTR<RRValue> value)
 	{
 		if (direction == MemberDefinition_Direction_readonly)
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, endpoint, service_path, member_name, "Attempt to get OutValue of read only wire");
 			throw ReadOnlyMemberException("Read only member");
+		}
 
+		try		
 		{
 			boost::mutex::scoped_lock lock (sendlock);
 			
@@ -257,6 +279,11 @@ namespace RobotRaconteur
 			outval_valid = true;
 			outval_wait.notify_all();
 			
+		}
+		catch (std::exception& exp)
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, endpoint, service_path, member_name, "Wire set OutValue failed: " << exp.what());
+			throw;
 		}
 	}
 
@@ -334,12 +361,14 @@ namespace RobotRaconteur
 	{
 		boost::mutex::scoped_lock lock2(inval_lock);
 		ignore_inval = ignore;
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, member_name, "IgnoreInValue set to " << ignore)
 	}
 
 	void WireConnectionBase::AddListener(RR_SHARED_PTR<WireConnectionBaseListener> listener)
 	{
 		boost::mutex::scoped_lock lock(listeners_lock);
 		listeners.push_back(listener);
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, member_name, "WireConnectionBaseListener added to wire connection");
 	}
 
 	void WireConnectionBase::Shutdown()
@@ -372,6 +401,8 @@ namespace RobotRaconteur
 				RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(&WireConnectionBaseListener::WireConnectionClosed, l1, shared_from_this()),true);
 			}
 		}
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, member_name, "WireConnectionBase shut down");
 	}
 
 	MemberDefinition_Direction WireConnectionBase::Direction()
@@ -480,6 +511,11 @@ namespace RobotRaconteur
 		return m_MemberName;
 	}
 
+	std::string WireClientBase::GetServicePath()
+	{
+		return service_path;
+	}
+
 	void WireClientBase::WirePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e)
 	{
 		//boost::shared_lock<boost::shared_mutex> lock2(stub_lock);
@@ -492,8 +528,9 @@ namespace RobotRaconteur
 					connection->Close();
 					connection.reset();
 				}
-				catch (std::exception&)
+				catch (std::exception& exp)
 				{
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "Error closing wire connection: " << exp.what());
 				}
 			}
 			else if (m->EntryType == MessageEntryType_WirePacket)
@@ -505,13 +542,16 @@ namespace RobotRaconteur
 					boost::mutex::scoped_lock lock (connection_lock);
 					c=connection;
 					if (!c)
+					{
+						ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "Received packet for unconnected wire");
 						return;
+					}
 					}
 					DispatchPacket(m, c);
 				}
-				catch (std::exception&)
+				catch (std::exception& exp)
 				{
-					
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "Error receiving and dispatching wire packet: " << exp.what());
 				}
 			}
 	}
@@ -544,6 +584,8 @@ namespace RobotRaconteur
 		catch (std::exception&)
 		{
 		}
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "WireClient shut down");
 		
 	}
 
@@ -585,17 +627,21 @@ namespace RobotRaconteur
 			try
 			{
 				if (connection != 0)
+				{
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "Wire already connected");
 					throw InvalidOperationException("Already connected");
+				}
 				
 				RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_WireConnectReq, GetMemberName());
 				GetStub()->AsyncProcessRequest(m,boost::bind(&WireClientBase::AsyncConnect_internal1, RR_DYNAMIC_POINTER_CAST<WireClientBase>(shared_from_this()),_1,_2,handler),timeout);
 
-
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "Begin connect wire connection");
 				
 			}
 			catch (std::exception &e)
 			{
 				connection.reset();
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "Wire connect failed: " << e.what());
 				throw e;
 			}
 		}
@@ -605,7 +651,7 @@ namespace RobotRaconteur
 	{
 		if (err)
 		{
-					
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "Connecting wire failed: " << err->what());
 			detail::InvokeHandlerWithException(node, handler,err);
 			return;			
 		}
@@ -624,6 +670,7 @@ namespace RobotRaconteur
 				connection = CreateNewWireConnection(direction, GetStub()->GetContext()->UseMessage3());
 			}
 			
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "Wire connected");
 
 			detail::InvokeHandler(node, handler, connection);
 			
@@ -631,6 +678,7 @@ namespace RobotRaconteur
 		}
 		catch (std::exception& err2)
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "Connecting wire failed: " << err2.what());
 			detail::InvokeHandlerWithException(node, handler, err2);		
 		}
 	}
@@ -640,16 +688,26 @@ namespace RobotRaconteur
 		return m_MemberName;
 	}
 
+	std::string WireServerBase::GetServicePath()
+	{
+		return service_path;
+	}
+
 	WireClientBase::WireClientBase(boost::string_ref name, RR_SHARED_PTR<ServiceStub> stub, MemberDefinition_Direction direction)
 	{
 		this->stub=stub;
 		this->m_MemberName = RR_MOVE(name.to_string());
 		this->node=stub->RRGetNode();
 		this->direction = direction;
+		this->service_path = stub->ServicePath;
+		this->endpoint=stub->GetContext()->GetLocalEndpoint();
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "WireClient created");
 	}
 
 	RR_INTRUSIVE_PTR<RRValue> WireClientBase::PeekInValueBase(TimeSpec& ts)
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "Requesting PeekInValue");
 		RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m = CreateMessageEntry(MessageEntryType_WirePeekInValueReq, GetMemberName());
 		RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr = GetStub()->ProcessRequest(m);
 		return UnpackPacket(mr, ts);		
@@ -657,6 +715,7 @@ namespace RobotRaconteur
 
 	RR_INTRUSIVE_PTR<RRValue> WireClientBase::PeekOutValueBase(TimeSpec& ts)
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "Requesting PeekOutValue");
 		RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m = CreateMessageEntry(MessageEntryType_WirePeekOutValueReq, GetMemberName());
 		RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr = GetStub()->ProcessRequest(m);
 		return UnpackPacket(mr, ts);
@@ -664,6 +723,7 @@ namespace RobotRaconteur
 
 	void WireClientBase::PokeOutValueBase(RR_INTRUSIVE_PTR<RRValue> value)
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "Requesting PokeOutValue");
 		RR_INTRUSIVE_PTR<MessageEntry> m = PackPacket(value, TimeSpec::Now(), GetStub()->GetContext()->UseMessage3());
 		m->EntryType = MessageEntryType_WirePokeOutValueReq;
 		m->MetaData.reset();		
@@ -705,12 +765,14 @@ namespace RobotRaconteur
 
 	void WireClientBase::AsyncPeekInValueBase(RR_MOVE_ARG(boost::function<void(const RR_INTRUSIVE_PTR<RRValue>&, const TimeSpec&, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout)
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "Requesting PeekInValue");
 		RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m = CreateMessageEntry(MessageEntryType_WirePeekInValueReq, GetMemberName());
 		GetStub()->AsyncProcessRequest(m, boost::bind(&WireClientBase::AsyncPeekValueBaseEnd1, RR_DYNAMIC_POINTER_CAST<WireClientBase>(shared_from_this()), _1, _2, handler),timeout);		
 	}
 
 	void WireClientBase::AsyncPeekOutValueBase(RR_MOVE_ARG(boost::function<void(const RR_INTRUSIVE_PTR<RRValue>&, const TimeSpec&, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout)
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "Requesting PeekOutValue");
 		RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m = CreateMessageEntry(MessageEntryType_WirePeekOutValueReq, GetMemberName());
 		GetStub()->AsyncProcessRequest(m, boost::bind(&WireClientBase::AsyncPeekValueBaseEnd1, RR_DYNAMIC_POINTER_CAST<WireClientBase>(shared_from_this()), _1, _2, handler), timeout);
 	}
@@ -732,6 +794,7 @@ namespace RobotRaconteur
 
 	void WireClientBase::AsyncPokeOutValueBase(const RR_INTRUSIVE_PTR<RRValue>& value, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout)
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "Requesting PokeOutValue");
 		RR_INTRUSIVE_PTR<MessageEntry> m = PackPacket(value, TimeSpec::Now(), GetStub()->GetContext()->UseMessage3());
 		m->EntryType = MessageEntryType_WirePokeOutValueReq;
 		m->MetaData.reset();
@@ -753,8 +816,10 @@ namespace RobotRaconteur
 				}
 				DispatchPacket(m, c);
 			}
-			catch (std::exception&)
-			{				
+			catch (std::exception& exp)
+			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, e, service_path, m_MemberName, "Error receiving and dispatching wire packet: "
+					 << exp.what());
 			}
 
 		}
@@ -777,6 +842,7 @@ namespace RobotRaconteur
 					//ee->second->RemoteClose();
 					c.push_back(ee->second);
 					ee=connections.erase(ee);
+					ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, ep, service_path, m_MemberName, "Client disconected, closing connection");
 				
 				
 				
@@ -840,7 +906,9 @@ namespace RobotRaconteur
 		
 		//skel.reset();;
 
-		listener_connection.disconnect();		
+		listener_connection.disconnect();
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, -1, service_path, m_MemberName, "WireServer shut down");		
 	}
 
 	RR_SHARED_PTR<ServiceSkel> WireServerBase::GetSkel()
@@ -915,6 +983,8 @@ namespace RobotRaconteur
 						init=true;
 					}
 
+					try
+					{
 
 					if (connections.find(e) == connections.end())
 					{
@@ -930,10 +1000,20 @@ namespace RobotRaconteur
 						fire_WireConnectCallback(con);
 
 						RR_INTRUSIVE_PTR<MessageEntry> ret = CreateMessageEntry(MessageEntryType_WireConnectRet, GetMemberName());
+
+						ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, e, service_path, m_MemberName, "Wire connected");
 						return ret;
+					}
+					catch (std::exception& exp)
+					{
+						ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, e, service_path, m_MemberName, "Connecting wire connection failed: " << exp.what());
+						throw;
+					}
 				}
 				case MessageEntryType_WireDisconnectReq:
 				{
+					try
+					{
 					RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<WireConnectionBase> >::iterator e1 = connections.find(e);
 						if (e1 == connections.end())
 							throw ServiceException("Invalid wire connection");
@@ -942,46 +1022,77 @@ namespace RobotRaconteur
 						c->RemoteClose();
 						//connections.erase(e);
 						return CreateMessageEntry(MessageEntryType_WireDisconnectRet, GetMemberName());
+					}
+					catch (std::exception& exp)
+					{
+						ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, e, service_path, m_MemberName, "Disconnecting wire failed: " << exp.what());
+						throw;
+					}
 				}
 				case MessageEntryType_WirePeekInValueReq:
 				{
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, e, service_path, m_MemberName, "Wire PeekInValue requested");
+					try
+					{
 					if (direction == MemberDefinition_Direction_writeonly)
 						throw WriteOnlyMemberException("Write only member");
 					RR_INTRUSIVE_PTR<RRValue> value = do_PeekInValue(e);					
 					RR_INTRUSIVE_PTR<MessageEntry> mr = PackPacket(value, TimeSpec::Now(), GetSkel()->GetContext()->UseMessage3(e));
 					mr->EntryType = MessageEntryType_WirePeekInValueRet;
-					mr->MetaData.reset();
+					mr->MetaData.reset();					
 					return mr;
+					}
+					catch (std::exception& exp)
+					{
+						ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, e, service_path, m_MemberName, "Wire PeekInValue failed: " << exp.what());
+						throw;
+					}
 				}
 				case MessageEntryType_WirePeekOutValueReq:
 				{
-					if (direction == MemberDefinition_Direction_readonly)
-						throw ReadOnlyMemberException("Read only member");
-					RR_INTRUSIVE_PTR<RRValue> value = do_PeekOutValue(e);
-					RR_INTRUSIVE_PTR<MessageEntry> mr = PackPacket(value, TimeSpec::Now(), GetSkel()->GetContext()->UseMessage3(e));
-					mr->EntryType = MessageEntryType_WirePeekOutValueRet;
-					mr->MetaData.reset();
-					return mr;
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, e, service_path, m_MemberName, "Wire PeekOutValue requested");
+					try
+					{
+						if (direction == MemberDefinition_Direction_readonly)
+							throw ReadOnlyMemberException("Read only member");
+						RR_INTRUSIVE_PTR<RRValue> value = do_PeekOutValue(e);
+						RR_INTRUSIVE_PTR<MessageEntry> mr = PackPacket(value, TimeSpec::Now(), GetSkel()->GetContext()->UseMessage3(e));
+						mr->EntryType = MessageEntryType_WirePeekOutValueRet;
+						mr->MetaData.reset();
+						return mr;
+					}
+					catch (std::exception& exp)
+					{
+						ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, e, service_path, m_MemberName, "Wire PeekOutValue failed: " << exp.what());
+						throw;
+					}
 				}
 				case MessageEntryType_WirePokeOutValueReq:
 				{
-					if (direction == MemberDefinition_Direction_readonly)
-						throw ReadOnlyMemberException("Read only member");
-					TimeSpec ts;
-					RR_INTRUSIVE_PTR<RRValue> value1 = UnpackPacket(m, ts);
-					do_PokeOutValue(value1, ts, e);
-					return CreateMessageEntry(MessageEntryType_WirePokeOutValueRet, GetMemberName());
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, e, service_path, m_MemberName, "Wire PokeOutValue requested");
+					try
+					{
+						if (direction == MemberDefinition_Direction_readonly)
+							throw ReadOnlyMemberException("Read only member");
+						TimeSpec ts;
+						RR_INTRUSIVE_PTR<RRValue> value1 = UnpackPacket(m, ts);
+						do_PokeOutValue(value1, ts, e);
+						return CreateMessageEntry(MessageEntryType_WirePokeOutValueRet, GetMemberName());
+					}
+					catch (std::exception& exp)
+					{
+						ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, e, service_path, m_MemberName, "Wire PokeOutValue failed: " << exp.what());
+						throw;
+					}
 				}
 
 				default:
+				{
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, e, service_path, m_MemberName, "Received invalid wire command");
 					throw InvalidOperationException("Invalid Command");
-
-
-
+				}
 			}
 		}
-
-
 	}
 
 	WireServerBase::WireServerBase(boost::string_ref name, RR_SHARED_PTR<ServiceSkel> skel, MemberDefinition_Direction direction)
@@ -991,6 +1102,9 @@ namespace RobotRaconteur
 		this->init=false;
 		this->node=skel->RRGetNode();
 		this->direction = direction;
+		this->service_path = skel->GetServicePath();
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, -1, service_path, m_MemberName, "WireServer created");
 
 	}
 
@@ -1024,10 +1138,16 @@ namespace RobotRaconteur
 	void WireBroadcasterBase::InitBase(RR_SHARED_PTR<WireBase> wire)
 	{
 		RR_SHARED_PTR<WireServerBase> wire1 = RR_DYNAMIC_POINTER_CAST<WireServerBase>(wire);
-		if (!wire1) throw InvalidArgumentException("Wire must be a WireServer for WireBroadcaster");
+		if (!wire1) 
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, -1, service_path, member_name, "WireBroadcaster init must be passed a WireServer");
+			throw InvalidArgumentException("Wire must be a WireServer for WireBroadcaster");
+		}
 
 		this->wire = wire1;
 		this->node = wire->GetNode();
+		this->service_path = wire1->GetServicePath();
+		this->member_name = wire1->GetMemberName();
 
 		AttachWireServerEvents(wire1);
 
@@ -1036,6 +1156,8 @@ namespace RobotRaconteur
 				boost::bind(&WireBroadcasterBase::ServiceEvent, this, _2)
 			).track(shared_from_this())
 		);
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, -1, service_path, member_name, "WireBroadcaster initialized");
 	}
 
 	void WireBroadcasterBase::ServiceEvent(ServerServiceListenerEventType evt)
@@ -1048,11 +1170,23 @@ namespace RobotRaconteur
 	void WireBroadcasterBase::ConnectionClosedBase(RR_SHARED_PTR<detail::WireBroadcaster_connected_connection> ep)
 	{
 		boost::mutex::scoped_lock lock(connected_wires_lock);
+		uint32_t endpoint = 0;
+		try
+	{
+	RR_SHARED_PTR<WireConnectionBase> ep1 = ep->connection.lock();
+	if (ep1)
+	{
+		endpoint = ep1->GetEndpoint();		
+	}
+	}
+	catch (std::exception&) {}
 		try
 		{
 			connected_wires.remove(ep);
 		}
 		catch (std::exception&) {}
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, member_name, "WireBroadcaster wire connection closed");
 	}
 
 	void WireBroadcasterBase::ConnectionConnectedBase(RR_SHARED_PTR<WireConnectionBase > ep)
@@ -1065,6 +1199,8 @@ namespace RobotRaconteur
 		AttachWireConnectionEvents(ep, c);
 
 		connected_wires.push_back(c);
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, ep->GetEndpoint(), service_path, member_name, "WireBroadcaster wire connected");
 	}
 
 	void WireBroadcasterBase::SetOutValueBase(RR_INTRUSIVE_PTR<RRValue> value)
@@ -1075,11 +1211,12 @@ namespace RobotRaconteur
 		out_value_valid.data() = true;
 
 		RR_SHARED_PTR<WireBroadcasterBase> this_ = shared_from_this();
-
+		
 		for (std::list<RR_SHARED_PTR<detail::WireBroadcaster_connected_connection> >::iterator ee = connected_wires.begin(); ee != connected_wires.end(); )
 		{
+			uint32_t ep_endpoint = 0;
 			try
-			{
+			{				
 				RR_SHARED_PTR<WireConnectionBase > c = (*ee)->connection.lock();
 				if (!c)
 				{
@@ -1088,8 +1225,10 @@ namespace RobotRaconteur
 				}
 				else
 				{
+					ep_endpoint = c->GetEndpoint();
 					if (predicate)
 					{
+						ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, ep_endpoint, service_path, member_name, "WireBroadcaster skipping send out value: predicate is false");
 						if (!predicate(this_, c->GetEndpoint()))
 						{
 							ee++;
@@ -1097,6 +1236,7 @@ namespace RobotRaconteur
 						}
 					}
 					
+					ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, ep_endpoint, service_path, member_name, "WireBroadcaster sending out value");
 					if (!copy_element)
 					{
 						c->SetOutValueBase(value);
@@ -1109,8 +1249,9 @@ namespace RobotRaconteur
 					ee++;
 				}
 			}
-			catch (std::exception&)
+			catch (std::exception& exp)
 			{
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, ep_endpoint, service_path, member_name, "WireBroadcaster failed sending out value: " << exp.what());
 				ee = connected_wires.erase(ee);
 			}
 		}
@@ -1142,6 +1283,7 @@ namespace RobotRaconteur
 	{
 		boost::mutex::scoped_lock lock(connected_wires_lock);
 		predicate = f;
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, -1, service_path, member_name, "WireBroadcaster predicate set");
 	}
 
 	RR_INTRUSIVE_PTR<RRValue> WireBroadcasterBase::ClientPeekInValueBase()
