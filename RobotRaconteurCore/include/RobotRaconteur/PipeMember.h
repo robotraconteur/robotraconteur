@@ -138,6 +138,8 @@ namespace RobotRaconteur
 		RR_WEAK_PTR<PipeBase> parent;
 		int32_t index;
 		uint32_t endpoint;
+		std::string service_path;
+		std::string member_name;
 
 		RR_UNORDERED_MAP<uint32_t,RR_INTRUSIVE_PTR<RRValue> > out_of_order_packets;
 
@@ -321,7 +323,7 @@ namespace RobotRaconteur
 
 		virtual void Shutdown()=0;
 
-
+		virtual std::string GetServicePath()=0;
 		
 
 		virtual void AsyncClose(RR_SHARED_PTR<PipeEndpointBase> endpoint, bool remote, uint32_t ee, RR_MOVE_ARG(boost::function<void (RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout)=0;
@@ -442,6 +444,8 @@ namespace RobotRaconteur
 
 		RR_SHARED_PTR<ServiceStub> GetStub();
 
+		virtual std::string GetServicePath();
+
 	protected:
 
 		virtual void AsyncSendPipePacket(RR_INTRUSIVE_PTR<RRValue> data, int32_t index, uint32_t packetnumber, bool requestack, uint32_t endpoint, bool unreliable, bool message3, RR_MOVE_ARG(boost::function<void(uint32_t,RR_SHARED_PTR<RobotRaconteurException>)>) handler);
@@ -457,6 +461,8 @@ namespace RobotRaconteur
 		std::list<boost::tuple<int32_t, int32_t> > connecting_endpoints;
 		int32_t connecting_key_count;
 		RR_UNORDERED_MAP<int32_t, RR_SHARED_PTR<PipeEndpointBase> > early_endpoints;
+		std::string service_path;
+		uint32_t endpoint;
 
 		void AsyncConnect_internal(int32_t index, RR_MOVE_ARG(boost::function<void (RR_SHARED_PTR<PipeEndpointBase>,RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout);
 
@@ -561,9 +567,12 @@ namespace RobotRaconteur
 
 		RR_SHARED_PTR<ServiceSkel> GetSkel();
 
+		virtual std::string GetServicePath();
+
 	protected:
 		
 		std::string m_MemberName;
+		std::string service_path;
 				
 		struct pipe_endpoint_server_id
 		{
@@ -736,6 +745,8 @@ namespace RobotRaconteur
 		RR_WEAK_PTR<PipeServerBase> pipe;
 		RR_WEAK_PTR<RobotRaconteurNode> node;
 		int32_t maximum_backlog;
+		std::string service_path;
+		std::string member_name;
 
 		bool copy_element;
 

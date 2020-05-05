@@ -62,6 +62,8 @@ PipeEndpointBase::PipeEndpointBase(RR_SHARED_PTR<PipeBase> parent, int32_t index
 	this->endpoint=endpoint;
 	this->unreliable=unreliable;
 	this->direction = direction;
+	this->service_path = parent->GetServicePath();
+	this->member_name=parent->GetMemberName();
 
 	RequestPacketAck=false;
 	ignore_incoming_packets = false;
@@ -103,6 +105,9 @@ void PipeEndpointBase::Close()
 
 void PipeEndpointBase::AsyncClose(RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout)
 {
+
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, member_name, "Requesting close pipe endpoint index " << index);
+
 	{
 		boost::mutex::scoped_lock lock(recvlock);
 		//recv_packets.clear();
@@ -131,6 +136,8 @@ void PipeEndpointBase_RemoteClose_emptyhandler(RR_SHARED_PTR<RobotRaconteurExcep
 
 void PipeEndpointBase::RemoteClose()
 {
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, member_name, "Received remote close pipe endpoint index " << index);
+
 	{
 		boost::mutex::scoped_lock lock(recvlock);
 		closed = true;
@@ -160,15 +167,23 @@ void PipeEndpointBase::AsyncSendPacketBase(RR_INTRUSIVE_PTR<RRValue> packet, RR_
 { 
 	if (direction == MemberDefinition_Direction_readonly)
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, endpoint, service_path, member_name, "Attempt to send packet to read only pipe endpoint index " << index);
 		throw ReadOnlyMemberException("Read only pipe");
 	}
 	
+	try
 	{
 		boost::mutex::scoped_lock lock(sendlock);
 		send_packet_number = (send_packet_number < UINT_MAX) ? send_packet_number + 1 : 0;
 
 		GetParent()->AsyncSendPipePacket(packet, index, send_packet_number, RequestPacketAck, endpoint,unreliable,message3,RR_MOVE(handler));
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, member_name, "Sent pipe packet " << send_packet_number << " pipe endpoint index " << index);
 		
+	}
+	catch (std::exception& exp)
+	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, endpoint, service_path, member_name, "Sending packet failed pipe endpoint index " << index << ": " << exp.what());
+		throw;
 	}
 
 
@@ -217,6 +232,7 @@ bool PipeEndpointBase::TryReceivePacketBaseWait(RR_INTRUSIVE_PTR<RRValue>& packe
 {
 	if (direction == MemberDefinition_Direction_writeonly)
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, endpoint, service_path, member_name, "Attempt to receive packet from write only pipe index " << index);
 		throw WriteOnlyMemberException("Write only pipe");
 	}
 
@@ -264,6 +280,7 @@ void PipeEndpointBase::PipePacketReceived(RR_INTRUSIVE_PTR<RRValue> packet, uint
 {	
 	if (direction == MemberDefinition_Direction_writeonly)
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, member_name, "Received packet for write only pipe endpoint index " << index);
 		return;
 	}
 
@@ -303,6 +320,8 @@ void PipeEndpointBase::PipePacketReceived(RR_INTRUSIVE_PTR<RRValue> packet, uint
 			if (packetnum == increment_packet_number(recv_packet_number))
 			{
 				recv_packets.push_back(packet);
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, member_name, "Received incoming packet " << recv_packet_number
+					<< " pipe endpoint index " << index);
 				recv_packet_number = increment_packet_number(recv_packet_number);
 				if (out_of_order_packets.size() > 0)
 				{
@@ -312,6 +331,8 @@ void PipeEndpointBase::PipePacketReceived(RR_INTRUSIVE_PTR<RRValue> packet, uint
 						RR_INTRUSIVE_PTR<RRValue> opacket = out_of_order_packets[recv_packet_number];
 						recv_packets.push_back(opacket);
 						out_of_order_packets.erase(recv_packet_number);
+						ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, member_name, "Dequeued packet " << recv_packet_number
+							<< " pipe endpoint index " << index);
 
 					}
 
@@ -340,6 +361,8 @@ void PipeEndpointBase::PipePacketReceived(RR_INTRUSIVE_PTR<RRValue> packet, uint
 			}
 			else
 			{
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, member_name, "Received out of order" 
+					<< "incoming packet " << recv_packet_number	<< " pipe endpoint index " << index << ", packet queued");
 				out_of_order_packets.insert(std::make_pair(packetnum, packet));
 			}
 		}
@@ -348,6 +371,8 @@ void PipeEndpointBase::PipePacketReceived(RR_INTRUSIVE_PTR<RRValue> packet, uint
 
 void PipeEndpointBase::PipePacketAckReceived(uint32_t packetnum)
 {
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, member_name, "Received pipe packet ack " << packetnum 
+		<< " for pipe endpoint " << index);
 	RR_PIPE_ENDPOINT_LISTENER_ITER(p1->PipePacketAckReceived(shared_from_this(), packetnum));
 
 	fire_PacketAckReceivedEvent(packetnum);
@@ -376,6 +401,8 @@ void PipeEndpointBase::SetRequestPacketAck(bool ack)
 {
 	boost::mutex::scoped_lock lock(sendlock);
 	RequestPacketAck=ack;
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, member_name, "RequestPacketAck set to " << ack 
+					<< " for pipe endpoint index " << index);
 }
 
 bool PipeEndpointBase::GetIgnoreReceived()
@@ -386,14 +413,21 @@ bool PipeEndpointBase::GetIgnoreReceived()
 void PipeEndpointBase::SetIgnoreReceived(bool ignore)
 {
 	boost::mutex::scoped_lock lock(recvlock);
-	if (!ignore && ignore_incoming_packets) throw InvalidOperationException("Cannot stop ignoring packets");
+	if (!ignore && ignore_incoming_packets)
+	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, endpoint, service_path, member_name, "Cannot stop ignoring incoming packets");
+	 	throw InvalidOperationException("Cannot stop ignoring packets");
+	}
 	ignore_incoming_packets = ignore;
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, member_name, "IgnoreIncomingPackets set to " << ignore 
+					<< " for pipe endpoint index " << index);
 }
 
 void PipeEndpointBase::AddListener(RR_SHARED_PTR<PipeEndpointBaseListener> listener)
 {
 	boost::mutex::scoped_lock lock(listeners_lock);
 	listeners.push_back(listener);
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, member_name, "PipeEndpointBaseListener added to pipe endpoint " << index);
 }
 
 void PipeEndpointBase::Shutdown()
@@ -418,6 +452,8 @@ void PipeEndpointBase::Shutdown()
 			RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(&PipeEndpointBaseListener::PipeEndpointClosed, l1, shared_from_this()));
 		}
 	}
+
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, member_name, "PipeEndpointBase shut down");
 }
 
 void PipeBase::DispatchPacketAck (RR_INTRUSIVE_PTR<MessageElement> me, RR_SHARED_PTR<PipeEndpointBase> e)
@@ -572,11 +608,12 @@ void PipeClientBase::PipePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32
 	
 	if (m->EntryType == MessageEntryType_PipeClosed)
 	{
+		int32_t index = -1;
 		try
 		{
 			
 
-			int32_t index = RRArrayToScalar(m->FindElement("index")->CastData<RRArray<int32_t> >());
+			index = RRArrayToScalar(m->FindElement("index")->CastData<RRArray<int32_t> >());
 			RR_SHARED_PTR<PipeEndpointBase> p;
 			{
 				boost::mutex::scoped_lock lock(pipeendpoints_lock);
@@ -588,22 +625,27 @@ void PipeClientBase::PipePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32
 			p->RemoteClose();
 			
 		}
-		catch (std::exception&)
+		catch (std::exception& exp)
 		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "Error closing pipe endpoint index "
+				<< index << ": " << exp.what());
 		};
 	}
 
 	else if (m->EntryType==MessageEntryType_PipeClosedRet)
 	{
+		int32_t index = -1;
 		try
 		{
 			boost::mutex::scoped_lock lock(pipeendpoints_lock);
-			int32_t index = RRArrayToScalar(m->FindElement("index")->CastData<RRArray<int32_t> >());
+			index = RRArrayToScalar(m->FindElement("index")->CastData<RRArray<int32_t> >());
 			
 			pipeendpoints.erase(index);
 		}
-		catch (std::exception&)
+		catch (std::exception& exp)
 		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "Received invalid PipeClosedRet message index "
+				<< index << ": " << exp.what());
 		};	
 	}
 
@@ -612,9 +654,10 @@ void PipeClientBase::PipePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32
 		std::vector<RR_INTRUSIVE_PTR<MessageElement> > ack;;
 		BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& me, m->elements)
 		{
+			int32_t index = -1;
 			try
 			{				
-				int32_t index;
+				
 				if (me->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
 				{
 					index = me->ElementNumber;
@@ -665,6 +708,8 @@ void PipeClientBase::PipePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32
 
 				if (DispatchPacket(me, e, pnum))
 				{		
+					ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "Sending packet ack for " << pnum
+					<< " pipe endpoint index " << me);
 					if (me->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
 					{
 						RR_INTRUSIVE_PTR<MessageElement> me1 = CreateMessageElement();
@@ -682,6 +727,8 @@ void PipeClientBase::PipePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32
 
 			catch (std::exception& e)
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "Error receiving and dispatching pipe packet "
+					<< "for pipe endpoint index " << index << ": " << e.what());
 				RobotRaconteurNode::TryHandleException(node, &e);
 			}
 
@@ -706,6 +753,8 @@ void PipeClientBase::PipePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32
 		}
 		catch (std::exception& e)
 		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "Error sending pipe packet ack: "
+				<< e.what());
 			RobotRaconteurNode::TryHandleException(node, &e);
 		}
 		}
@@ -738,9 +787,10 @@ void PipeClientBase::PipePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32
 				DispatchPacketAck(me, e);
 			}
 		}
-		catch (std::exception&)
+		catch (std::exception& exp)
 		{
-			
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "Error receiving and dispatching pipe packet ack: "
+				 << exp.what());
 		}
 
 	}
@@ -766,6 +816,8 @@ void PipeClientBase::Shutdown()
 			RobotRaconteurNode::TryHandleException(node, &e);
 		}		
 	}
+
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "PipeClient shut down");
 
 	//stub.reset();
 }
@@ -813,6 +865,9 @@ void PipeClientBase::AsyncConnect_internal(int32_t index, RR_MOVE_ARG(boost::fun
 		m->AddElement("unreliable",ScalarToRRArray(static_cast<int32_t>(1)));
 
 	lock2.unlock();
+
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "Begin connect pipe endpoint with index " << index);
+
 	GetStub()->AsyncProcessRequest(m,boost::bind(&PipeClientBase::AsyncConnect_internal1, RR_DYNAMIC_POINTER_CAST<PipeClientBase>(shared_from_this()),_1,_2,index,key,handler),timeout);
 }
 
@@ -836,6 +891,8 @@ void PipeClientBase::AsyncConnect_internal1(RR_INTRUSIVE_PTR<MessageEntry> ret, 
 
 	if (err)
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "Connecting pipe endpoint " 
+			<< index << " failed: " << err->what()); 
 		try
 		{
 			if (connecting_endpoints.size() == 0)
@@ -849,6 +906,8 @@ void PipeClientBase::AsyncConnect_internal1(RR_INTRUSIVE_PTR<MessageEntry> ret, 
 		}
 		catch (std::exception& e) 
 		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "Handling pipe endpoint " 
+				<< index << " connect failure failed: " << e.what());
 			RobotRaconteurNode::TryHandleException(node, &e);
 			return;
 		}
@@ -861,7 +920,10 @@ void PipeClientBase::AsyncConnect_internal1(RR_INTRUSIVE_PTR<MessageEntry> ret, 
 		try
 		{
 			if (RRArrayToScalar((ret->FindElement("unreliable")->CastData<RRArray<int32_t> >()))==1)
+			{
 				runreliable=true;
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "Unreliable packets enabled for pipe endpoint index " << index);
+			}
 		}
 		catch (std::exception&) 
 		{
@@ -869,6 +931,9 @@ void PipeClientBase::AsyncConnect_internal1(RR_INTRUSIVE_PTR<MessageEntry> ret, 
 		}
 
 		int32_t rindex = RRArrayToScalar((ret->FindElement("index")->CastData<RRArray<int32_t> >()));
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "Connecting pipe endpoint " 
+			<< index << " now using returned index " << rindex);
 
 		RR_SHARED_PTR<PipeEndpointBase> e;
 		
@@ -895,6 +960,8 @@ void PipeClientBase::AsyncConnect_internal1(RR_INTRUSIVE_PTR<MessageEntry> ret, 
 		}
 						
 		pipeendpoints.insert(std::make_pair(rindex, e));
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "Pipe endpoint index " << rindex << " connected");
 		
 		try
 		{
@@ -907,11 +974,15 @@ void PipeClientBase::AsyncConnect_internal1(RR_INTRUSIVE_PTR<MessageEntry> ret, 
 			detail::InvokeHandler(node, handler, e);
 		}
 		catch (std::exception& exp) {
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "Processing early packets for pipe endpoint " 
+				<< index << " failed: " << exp.what());
 			RobotRaconteurNode::TryHandleException(node, &exp);
 		}
 	}
 	catch (std::exception& err2)
 	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "Connecting pipe index " 
+				<< index << " failed: " << err2.what());
 		if (connecting_endpoints.size() == 0)
 		{
 			early_endpoints.clear();
@@ -931,8 +1002,12 @@ PipeClientBase::PipeClientBase(boost::string_ref name, RR_SHARED_PTR<ServiceStub
 	this->stub=stub;
 	this->unreliable=unreliable;
 	this->direction = direction;
-	this->node=stub->RRGetNode();	
+	this->node=stub->RRGetNode();
+	this->service_path = stub->ServicePath;
+	this->endpoint = stub->GetContext()->GetLocalEndpoint();
 	connecting_key_count = 0;
+
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "PipeClient created");
 }
 
 RR_SHARED_PTR<ServiceStub> PipeClientBase::GetStub()
@@ -940,6 +1015,11 @@ RR_SHARED_PTR<ServiceStub> PipeClientBase::GetStub()
 	RR_SHARED_PTR<ServiceStub> out=stub.lock();
 	if (!out) throw InvalidOperationException("Pipe has been closed");
 	return out;
+}
+
+std::string PipeClientBase::GetServicePath()
+{
+	return GetStub()->ServicePath;
 }
 
 void PipeClientBase::DeleteEndpoint(RR_SHARED_PTR<PipeEndpointBase> e)
@@ -965,9 +1045,9 @@ void PipeServerBase::PipePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32
 		std::vector<RR_INTRUSIVE_PTR<MessageElement> > ack;
 		BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& me, m->elements)
 		{
+			int32_t index = -1;
 			try
-			{
-				int32_t index;
+			{				
 				if (me->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
 				{
 					index = me->ElementNumber;
@@ -987,6 +1067,8 @@ void PipeServerBase::PipePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32
 				}
 				if (DispatchPacket(me, p, pnum))
 				{					
+					ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, e, service_path, m_MemberName, "Sending packet ack for " << pnum
+					<< " pipe endpoint index " << me);
 					if (me->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
 					{
 						RR_INTRUSIVE_PTR<MessageElement> me1 = CreateMessageElement();
@@ -1004,6 +1086,8 @@ void PipeServerBase::PipePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32
 			}
 			catch (std::exception& exp)
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, e, service_path, m_MemberName, "Error receiving and dispatching pipe packet "
+					<< "for pipe endpoint index " << index << ": " << exp.what());
 				RobotRaconteurNode::TryHandleException(node, &exp);
 			}
 
@@ -1028,6 +1112,8 @@ void PipeServerBase::PipePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32
 		}
 		catch (std::exception& exp)
 		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, e, service_path, m_MemberName, "Error sending pipe packet ack: "
+				<< exp.what());
 			RobotRaconteurNode::TryHandleException(node, &exp);
 		}
 	}
@@ -1058,9 +1144,10 @@ void PipeServerBase::PipePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32
 				DispatchPacketAck(me, p);
 			}
 		}
-		catch (std::exception&)
+		catch (std::exception& exp)
 		{
-			
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, e, service_path, m_MemberName, "Error receiving and dispatching pipe packet ack: "
+				 << exp.what());
 		}
 
 	}
@@ -1113,6 +1200,8 @@ void PipeServerBase::Shutdown()
 		
 		listener_connection.disconnect();
 	}
+
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, -1, service_path, m_MemberName, "PipeServer shut down");
 
 }
 
@@ -1169,7 +1258,9 @@ void PipeServerBase::ClientDisconnected(RR_SHARED_PTR<ServerContext> context, Se
 	
 	if (ev==ServerServiceListenerEventType_ClientDisconnected)
 	{
+		
 		uint32_t ep=*RR_STATIC_POINTER_CAST<uint32_t>(param);
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, ep, service_path, m_MemberName, "Client disconected, closing endpoints");
 		std::vector<RR_SHARED_PTR<PipeEndpointBase> > p;
 
 		{
@@ -1199,6 +1290,8 @@ void PipeServerBase::ClientDisconnected(RR_SHARED_PTR<ServerContext> context, Se
 				e->Shutdown();
 			}
 			catch (std::exception& exp) {
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, e->GetEndpoint(), service_path, m_MemberName, 
+					"Error shutting down pipe endpoint index " << e->GetIndex() << ": " << exp.what() );
 				RobotRaconteurNode::TryHandleException(node, &exp);
 			}
 		}
@@ -1230,73 +1323,86 @@ RR_INTRUSIVE_PTR<MessageEntry> PipeServerBase::PipeCommand(RR_INTRUSIVE_PTR<Mess
 						init=true;
 					}
 					
-					int32_t index = RRArrayToScalar(m->FindElement("index")->CastData<RRArray<int32_t> >());
-					
-					
-					BOOST_FOREACH (pipe_endpoint_server_id ee, pipeendpoints | boost::adaptors::map_keys)
-					{
-						if (ee.endpoint==e && ee.index >=index)
-							index=ee.index+1;
-					}
-							
-					if (index == -1)
-					{
-						index = 1;
-						while (pipeendpoints.find(pipe_endpoint_server_id(e, index)) != pipeendpoints.end())
-						{
-							index++;
-						}						
-					}
-
-					if (pipeendpoints.find(pipe_endpoint_server_id(e,index))!= pipeendpoints.end())
-						throw InvalidArgumentException("Pipe endpoint index in use");
-
-					bool isunreliable=false;
-
-					RR_INTRUSIVE_PTR<MessageEntry> ret = CreateMessageEntry(MessageEntryType_PipeConnectRet, GetMemberName());
-					ret->AddElement("index", ScalarToRRArray(index));
-
-					if (unreliable)
-					{
-						try
-						{
-							if (RRArrayToScalar((m->FindElement("unreliable")->CastData<RRArray<int32_t> >()))==1)
-							{
-								isunreliable=true;
-								ret->AddElement("unreliable",ScalarToRRArray(static_cast<int32_t>(1)));
-							}
-						}
-						catch (std::exception&) {}
-					
-					
-					}					
-					
-					// Switch endpoint direction since this is the server
-					MemberDefinition_Direction ep_direction = direction;
-					if (direction == MemberDefinition_Direction_readonly) ep_direction = MemberDefinition_Direction_writeonly;
-					if (direction == MemberDefinition_Direction_writeonly) ep_direction = MemberDefinition_Direction_readonly;
-					RR_SHARED_PTR<PipeEndpointBase> p = CreateNewPipeEndpoint(index,e,isunreliable,ep_direction,GetSkel()->GetContext()->UseMessage3(e));
-					pipeendpoints.insert(std::make_pair(pipe_endpoint_server_id(e,index), p));
-
-					lock.unlock();
-
+					int32_t index = -1;
 					try
 					{
-						fire_PipeConnectCallback(p);
+
+						index = RRArrayToScalar(m->FindElement("index")->CastData<RRArray<int32_t> >());
+						
+						
+						BOOST_FOREACH (pipe_endpoint_server_id ee, pipeendpoints | boost::adaptors::map_keys)
+						{
+							if (ee.endpoint==e && ee.index >=index)
+								index=ee.index+1;
+						}
+								
+						if (index == -1)
+						{
+							index = 1;
+							while (pipeendpoints.find(pipe_endpoint_server_id(e, index)) != pipeendpoints.end())
+							{
+								index++;
+							}						
+						}
+
+						if (pipeendpoints.find(pipe_endpoint_server_id(e,index))!= pipeendpoints.end())
+							throw InvalidArgumentException("Pipe endpoint index in use");
+
+						bool isunreliable=false;
+
+						RR_INTRUSIVE_PTR<MessageEntry> ret = CreateMessageEntry(MessageEntryType_PipeConnectRet, GetMemberName());
+						ret->AddElement("index", ScalarToRRArray(index));
+
+						if (unreliable)
+						{
+							try
+							{
+								if (RRArrayToScalar((m->FindElement("unreliable")->CastData<RRArray<int32_t> >()))==1)
+								{
+									isunreliable=true;
+									ret->AddElement("unreliable",ScalarToRRArray(static_cast<int32_t>(1)));
+								}
+							}
+							catch (std::exception&) {}
+						
+						
+						}					
+						
+						// Switch endpoint direction since this is the server
+						MemberDefinition_Direction ep_direction = direction;
+						if (direction == MemberDefinition_Direction_readonly) ep_direction = MemberDefinition_Direction_writeonly;
+						if (direction == MemberDefinition_Direction_writeonly) ep_direction = MemberDefinition_Direction_readonly;
+						RR_SHARED_PTR<PipeEndpointBase> p = CreateNewPipeEndpoint(index,e,isunreliable,ep_direction,GetSkel()->GetContext()->UseMessage3(e));
+						pipeendpoints.insert(std::make_pair(pipe_endpoint_server_id(e,index), p));
+
+						lock.unlock();
+
+						try
+						{
+							fire_PipeConnectCallback(p);
+						}
+						catch (std::exception& exp)
+						{
+							RobotRaconteurNode::TryHandleException(node, &exp);
+						}
+
+						ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, e, service_path, m_MemberName, "Pipe endpoint connected with index " << index);
+						
+						return ret;
 					}
 					catch (std::exception& exp)
 					{
-						RobotRaconteurNode::TryHandleException(node, &exp);
+						ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, e, service_path, m_MemberName, "Connecting pipe endpoint with index " << index << " failed: " << exp.what());
+						throw;
 					}
-
-					
-					return ret;
 			}
 
 			case MessageEntryType_PipeDisconnectReq:
 			{
-					
-					int32_t index = RRArrayToScalar(m->FindElement("index")->CastData<RRArray<int32_t> >());
+				int32_t index = -1;
+				try
+				{	
+					index = RRArrayToScalar(m->FindElement("index")->CastData<RRArray<int32_t> >());
 					
 					RR_UNORDERED_MAP<pipe_endpoint_server_id, RR_SHARED_PTR<PipeEndpointBase> > ::iterator e1 = pipeendpoints.find(pipe_endpoint_server_id(e, index));
 					if (e1 == pipeendpoints.end()) throw InvalidArgumentException("Invalid pipe");;
@@ -1307,9 +1413,18 @@ RR_INTRUSIVE_PTR<MessageEntry> PipeServerBase::PipeCommand(RR_INTRUSIVE_PTR<Mess
 					//ep.erase(index);
 
 					return CreateMessageEntry(MessageEntryType_PipeDisconnectRet, GetMemberName());
+				}
+				catch (std::exception& exp)
+				{
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, e, service_path, m_MemberName, "Disconnecting pipe endpoint with index " << index << " failed: " << exp.what());
+					throw;
+				}
 			}
 			default:
+			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, e, service_path, m_MemberName, "Received invalid pipe command");
 				throw InvalidOperationException("Invalid Command");
+			}
 
 		}
 	}
@@ -1323,6 +1438,7 @@ PipeServerBase::PipeServerBase(boost::string_ref name, RR_SHARED_PTR<ServiceSkel
 	this->unreliable=unreliable;
 	this->direction = direction;
 	this->node=skel->RRGetNode();
+	this->service_path=skel->GetServicePath();
 	
 
 }
@@ -1332,6 +1448,11 @@ RR_SHARED_PTR<ServiceSkel> PipeServerBase::GetSkel()
 	RR_SHARED_PTR<ServiceSkel> out=skel.lock();
 	if (!out) throw InvalidOperationException("Pipe has been closed");
 	return out;
+}
+
+std::string PipeServerBase::GetServicePath()
+{
+	return GetSkel()->GetServicePath();
 }
 
 
@@ -1366,7 +1487,7 @@ namespace detail
 
 PipeBroadcasterBase::PipeBroadcasterBase()
 {
-	copy_element = false;
+	copy_element = false;	
 }
 
 PipeBroadcasterBase::~PipeBroadcasterBase()
@@ -1383,8 +1504,12 @@ void PipeBroadcasterBase::InitBase(RR_SHARED_PTR<PipeBase> pipe, int32_t maximum
 	this->maximum_backlog = maximum_backlog;
 	this->pipe = pipe1;
 	this->node = pipe->GetNode();
+	this->service_path = pipe1->GetServicePath();
+	this->member_name = pipe1->GetMemberName();
 
 	AttachPipeServerEvents(pipe1);
+
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, -1, service_path, member_name, "PipeBroadcaster initialized");
 }
 
 void PipeBroadcasterBase::EndpointConnectedBase(RR_SHARED_PTR<PipeEndpointBase > ep)
@@ -1400,16 +1525,32 @@ void PipeBroadcasterBase::EndpointConnectedBase(RR_SHARED_PTR<PipeEndpointBase >
 	ep->SetIgnoreReceived(true);
 	AttachPipeEndpointEvents(ep, cep);
 	endpoints.push_back(cep);
+
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, ep->GetEndpoint(), service_path, member_name, "PipeBroadcaster pipe endpoint connected index: " << ep->GetIndex());
 }
 
 void PipeBroadcasterBase::EndpointClosedBase(RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint> ep)
 {
 	boost::mutex::scoped_lock lock(endpoints_lock);
+	uint32_t endpoint = 0;
+	int32_t index = -1;
+	try
+	{
+	RR_SHARED_PTR<PipeEndpointBase> ep1 = ep->endpoint.lock();
+	if (ep1)
+	{
+		endpoint = ep1->GetEndpoint();
+		index = ep1->GetIndex();
+	}
+	}
+	catch (std::exception&) {}
 	try
 	{
 		endpoints.remove(ep);
 	}
 	catch (std::exception&) {}
+
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, member_name, "PipeBroadcaster pipe endpoint closed index: " << index);
 }
 
 void PipeBroadcasterBase::PacketAckReceivedBase(RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint> ep, uint32_t id)
@@ -1472,6 +1613,7 @@ void PipeBroadcasterBase::SendPacketBase(RR_INTRUSIVE_PTR<RRValue> packet)
 void PipeBroadcasterBase::AsyncSendPacketBase(RR_INTRUSIVE_PTR<RRValue> packet, RR_MOVE_ARG(boost::function<void()>) handler)
 {
 
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, -1, service_path, member_name, "PipeBroadcaster begin sending packet");
 	boost::mutex::scoped_lock lock(endpoints_lock);
 
 	RR_SHARED_PTR<PipeBroadcasterBase> this_ = shared_from_this();
@@ -1482,6 +1624,8 @@ void PipeBroadcasterBase::AsyncSendPacketBase(RR_INTRUSIVE_PTR<RRValue> packet, 
 
 	for (std::list<RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint> >::iterator ee = endpoints.begin(); ee != endpoints.end(); )
 	{
+		int32_t ep_index = -1;
+		uint32_t ep_endpoint = 0;
 		try
 		{
 			std::list<RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint> >::iterator ee2 = ee;
@@ -1497,20 +1641,28 @@ void PipeBroadcasterBase::AsyncSendPacketBase(RR_INTRUSIVE_PTR<RRValue> packet, 
 				ee++;
 			}
 
+			ep_index = ep->GetIndex();
+			ep_endpoint = ep->GetEndpoint();
+
 			if (predicate)
 			{
-				if (!predicate(this_, ep->GetEndpoint(), ep->GetIndex()))
+				if (!predicate(this_, ep_endpoint, ep_index))
+				{
+					ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, ep_endpoint, service_path, member_name, "PipeBroadcaster skipping send packet to pipe endpoint index " << ep_index << ": predicate is false");
 					continue;
+				}
 			}
 
 			if (maximum_backlog > -1 && (boost::numeric_cast<int32_t>((*ee2)->backlog.size()) + boost::numeric_cast<int32_t>((*ee2)->active_sends.size())) > maximum_backlog)
 			{
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, ep_endpoint, service_path, member_name, "PipeBroadcaster skipping send packet to pipe endpoint index " << ep_index << ": backlog exceeded");
 				continue;
 			}
 
 			(*ee2)->active_send_count = (*ee2)->active_send_count < std::numeric_limits<int32_t>::max() ? (*ee2)->active_send_count + 1 : 0;
 			int32_t send_key = (*ee2)->active_send_count;
 			(*ee2)->active_sends.push_back(send_key);
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, ep_endpoint, service_path, member_name, "PipeBroadcaster sending packet to pipe endpoint index " << ep_index);
 			if (!copy_element)
 			{
 				ep->AsyncSendPacketBase(packet, boost::bind(&PipeBroadcasterBase::handle_send, this->shared_from_this(), _1, _2, *ee2, op, count, send_key, handler));
@@ -1525,7 +1677,10 @@ void PipeBroadcasterBase::AsyncSendPacketBase(RR_INTRUSIVE_PTR<RRValue> packet, 
 
 			count++;
 		}
-		catch (std::exception&) {}
+		catch (std::exception& exp)
+		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, ep_endpoint, service_path, member_name, "PipeBroadcaster failed sending packet to pipe endpoint index " << ep_index << ": " << exp.what());
+		}
 
 	}
 
@@ -1575,6 +1730,7 @@ void PipeBroadcasterBase::SetMaxBacklog(int32_t maximum_backlog)
 	boost::mutex::scoped_lock lock(endpoints_lock);
 	if (endpoints.size() > 0)
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, -1, service_path, member_name, "PipeBroadcaster cannot change maximum backlong while endpoints are connected");
 		throw InvalidOperationException("Cannot change maxmimum_backlog while endpoints are connected");
 	}
 	this->maximum_backlog = maximum_backlog;
