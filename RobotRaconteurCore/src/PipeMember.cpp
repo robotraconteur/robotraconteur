@@ -1499,7 +1499,11 @@ void PipeBroadcasterBase::InitBase(RR_SHARED_PTR<PipeBase> pipe, int32_t maximum
 {
 
 	RR_SHARED_PTR<PipeServerBase> pipe1 = RR_DYNAMIC_POINTER_CAST<PipeServerBase>(pipe);
-	if (!pipe1) throw InvalidArgumentException("Pipe must be a PipeServer for PipeBroadcaster");
+	if (!pipe1) 
+	{
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, -1, service_path, member_name, "PipeBroadcaster init must be passed a PipeServer");
+		throw InvalidArgumentException("Pipe must be a PipeServer for PipeBroadcaster");
+	}
 	
 	this->maximum_backlog = maximum_backlog;
 	this->pipe = pipe1;
@@ -1717,6 +1721,7 @@ void PipeBroadcasterBase::SetPredicate(boost::function<bool(RR_SHARED_PTR<PipeBr
 {
 	boost::mutex::scoped_lock lock(endpoints_lock);
 	predicate = f;
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, -1, service_path, member_name, "PipeBroadcaster predicate set");
 }
 
 int32_t PipeBroadcasterBase::GetMaxBacklog()
@@ -1730,10 +1735,11 @@ void PipeBroadcasterBase::SetMaxBacklog(int32_t maximum_backlog)
 	boost::mutex::scoped_lock lock(endpoints_lock);
 	if (endpoints.size() > 0)
 	{
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, -1, service_path, member_name, "PipeBroadcaster cannot change maximum backlong while endpoints are connected");
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, -1, service_path, member_name, "PipeBroadcaster cannot change maximum backlong while endpoints are connected");
 		throw InvalidOperationException("Cannot change maxmimum_backlog while endpoints are connected");
 	}
 	this->maximum_backlog = maximum_backlog;
+	ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, -1, service_path, member_name, "PipeBroadcaster MaxBacklog set to " << maximum_backlog);
 }
 
 RR_SHARED_PTR<PipeBase> PipeBroadcasterBase::GetPipeBase()
