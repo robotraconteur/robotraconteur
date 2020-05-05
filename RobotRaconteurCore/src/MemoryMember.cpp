@@ -350,6 +350,8 @@ namespace RobotRaconteur
 		remote_max_size = 0;
 		service_path = stub->ServicePath;
 		endpoint = stub->GetContext()->GetLocalEndpoint();
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "ArrayMemoryClientBase created");
 	}
 
 	ArrayMemoryClientBase::~ArrayMemoryClientBase() {}
@@ -558,6 +560,8 @@ namespace RobotRaconteur
 		this->element_size = element_size;
 		this->service_path = stub->ServicePath;
 		this->endpoint = stub->GetContext()->GetLocalEndpoint();
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "MultiDimArrayMemoryClientBase created");
 	}
 
 	MultiDimArrayMemoryClientBase::~MultiDimArrayMemoryClientBase() {}
