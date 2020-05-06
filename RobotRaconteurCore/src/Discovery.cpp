@@ -88,6 +88,8 @@ namespace RobotRaconteur
 					timeout_timer.reset();
 				}
 
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "UpdateDiscoveredNodes timed out, returning current results");
+
 				detail::InvokeHandler(node, handler);
 								
 			}
@@ -140,6 +142,7 @@ namespace RobotRaconteur
 					timeout_timer.reset();
 				}
 
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "UpdateDiscoveredNodes completed successfully");
 				detail::InvokeHandler(node, handler);
 				
 			}
@@ -148,6 +151,9 @@ namespace RobotRaconteur
 
 		void Discovery_updatediscoverednodes::UpdateDiscoveredNodes(const std::vector<std::string>& schemes, const std::vector<RR_SHARED_PTR<Transport> >& transports, RR_MOVE_ARG(boost::function<void()>) handler, int32_t timeout)
 		{
+
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "Begin UpdateDiscoveredNodes");
+
 			boost::mutex::scoped_lock lock(work_lock);
 
 			this->handler = handler;
@@ -174,10 +180,14 @@ namespace RobotRaconteur
 					int32_t key = active_count++;
 					try
 					{
+						ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "Begin GetDetectedNodes for transport " << e->GetUrlSchemeString());
 						boost::function<void(RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >)> h = boost::bind(&Discovery_updatediscoverednodes::getdetectednodes_callback, shared_from_this(), _1, key);
 						e->AsyncGetDetectedNodes(schemes, h, timeout1);
 					}
-					catch (std::exception&) {}
+					catch (std::exception& exp) 
+					{
+						ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Discovery, -1, "Begin GetDetectedNodes failed for transport " << e->GetUrlSchemeString() << ": " << exp.what());
+					}
 
 					active.push_back(key);
 				}
@@ -195,6 +205,7 @@ namespace RobotRaconteur
 
 			if (done)
 			{
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "No transports available for node discovery");
 				detail::InvokeHandler(node, handler);
 			}
 
@@ -217,6 +228,7 @@ namespace RobotRaconteur
 				if (!searching) return;
 			}
 
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Discovery, -1, "FindServiceByType candidate failed: " << err->what());
 
 			{
 				boost::mutex::scoped_lock lock(active_lock);
@@ -246,6 +258,7 @@ namespace RobotRaconteur
 
 			
 			boost::mutex::scoped_lock lock(ret_lock);
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "FindServiceByType last candidate failed, returning " << ret->size() << " discovered services");
 			detail::InvokeHandler(node, handler, ret);
 			
 
@@ -272,9 +285,10 @@ namespace RobotRaconteur
 					catch (std::exception&) {}
 					timeout_timer.reset();
 				}
-
 				
+
 				boost::mutex::scoped_lock lock(ret_lock);
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "FindServiceByType timed out, returning " << ret->size() << " discovered services");
 				detail::InvokeHandler(node, handler, ret);
 				
 			}
@@ -291,6 +305,8 @@ namespace RobotRaconteur
 			boost::recursive_mutex::scoped_lock lock2(work_lock);
 			if (err)
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Discovery, -1, "FindServiceByType getting ServiceInfo2 from " << url << " failed: " << err->what());
+
 				try
 				{
 					node->AsyncDisconnectService(client, &Discovery_findservicebytype::rr_empty_handler);
@@ -408,6 +424,12 @@ namespace RobotRaconteur
 							}
 						}
 
+						ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "FindServiceByType getting ServiceInfo2 from " << url << " completed successfully");
+
+					}
+					else
+					{
+						ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Discovery, -1, "FindServiceByType getting ServiceInfo2 from " << url << " failed: " << ret1->Error);
 					}
 					bool done = false;
 
@@ -441,6 +463,7 @@ namespace RobotRaconteur
 
 							
 							boost::mutex::scoped_lock lock(ret_lock);
+							ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Discovery, -1, "FindServiceByType completed successfully with " << this->ret->size() << " discovered services");
 							detail::InvokeHandler(node, handler, this->ret);							
 						}
 					}
@@ -448,6 +471,7 @@ namespace RobotRaconteur
 				}				
 				catch (std::exception& err2)
 				{
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Discovery, -1, "FindServiceByType getting ServiceInfo2 from " << url << " failed: " << err2.what());
 					handle_error(key, RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, MessageErrorType_ConnectionError));
 				}
 			}
@@ -459,6 +483,7 @@ namespace RobotRaconteur
 
 			if (err)
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Discovery, -1, "FindServiceByType connecting to " << url << " failed: " << err->what());
 				handle_error(key, err);
 				return;
 			}
@@ -484,6 +509,7 @@ namespace RobotRaconteur
 				try
 				{
 
+					ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "FindServiceByType connectted to " << url << ", begin getting ServiceInfo2");
 
 					int32_t key2;
 					{
@@ -505,6 +531,7 @@ namespace RobotRaconteur
 				}				
 				catch (std::exception& err2)
 				{
+					ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "FindServiceByType begin getting ServiceInfo2 from url " << url << " failed: " << err2.what());
 					try
 					{
 						node->AsyncDisconnectService(client, &Discovery_findservicebytype::rr_empty_handler);
@@ -547,11 +574,14 @@ namespace RobotRaconteur
 
 					if (!urls1.empty()) urls.push_back(urls1);
 				}
-				catch (std::exception&) {}
+				catch (std::exception& exp) {
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Discovery, -1, "FindServiceByType error processing NodeDiscoveryInfo for NodeID " << ee.NodeID.ToString() << ": " << exp.what() );
+				}
 			}
 
 			if (urls.empty())
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Discovery, -1, "FindServiceByType could not find any candidate URLs");
 				RR_SHARED_PTR<std::vector<ServiceInfo2> > ret = RR_MAKE_SHARED<std::vector<ServiceInfo2> >();
 				detail::PostHandler(node,handler, ret,true);
 				return;
@@ -569,17 +599,24 @@ namespace RobotRaconteur
 						active_count++;
 						key = active_count;
 
+						ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "FindServiceByType connecting to node using candidate URLs " << boost::join(e,", "));
 						node->AsyncConnectService(e, "", (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()), NULL, "", boost::bind(&Discovery_findservicebytype::connect_callback, shared_from_this(), _1, _2, e.front(), key), timeout);
 
 						active.push_back(key);
 					}
 				}
-				catch (std::exception&) {}
+				catch (std::exception& exp2)
+				{
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Discovery, -1, "FindServiceByType connecting to node using candidate URLs " << boost::join(e,", ") 
+						<< " failed: " << exp2.what());
+				}
 			}
 		}
 
 		void Discovery_findservicebytype::AsyncFindServiceByType(boost::string_ref servicetype, const std::vector<std::string>& schemes, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<std::vector<ServiceInfo2> >)>) handler, int32_t timeout)
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "Begin FindServiceByType for type \"" << servicetype << "\" with schemes " << boost::join(schemes, ", "));
+
 			boost::recursive_mutex::scoped_lock lock2(work_lock);
 			this->handler = handler;
 			this->schemes = schemes;
@@ -594,6 +631,7 @@ namespace RobotRaconteur
 
 			}
 
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "FindServiceByType begin update detected nodes");
 			//int32_t timeout2=(timeout==RR_TIMEOUT_INFINITE) ? RR_TIMEOUT_INFINITE : timeout/4;
 			node->AsyncUpdateDetectedNodes(schemes, boost::bind(&Discovery_findservicebytype::find2, shared_from_this()), timeout / 4);
 		}
@@ -627,6 +665,8 @@ namespace RobotRaconteur
 			retry_count++;
 			if (retry_count < 3)
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Discovery, -1, "UpdateServiceInfo for remote node " << this->remote_nodeid.ToString() << " failed, retrying: " << err->what());
+
 				//Restart the process 3 times
 				backoff = n->GetRandomInt(0, 500);
 				RR_SHARED_PTR<Timer> t = n->CreateTimer(boost::posix_time::milliseconds(backoff),
@@ -638,6 +678,8 @@ namespace RobotRaconteur
 
 				return;
 			}
+
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Discovery, -1, "UpdateServiceInfo for remote node " << this->remote_nodeid.ToString() << " failed, out of retries: " << err->what());
 
 			boost::function<void(RR_SHARED_PTR<Discovery_nodestorage>, RR_SHARED_PTR<std::vector<ServiceInfo2> >, boost::string_ref, RR_SHARED_PTR<RobotRaconteurException>)> handler2 = handler;
 			handler.clear();
@@ -678,6 +720,7 @@ namespace RobotRaconteur
 
 			if (err)
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Discovery, -1, "UpdateServiceInfo getting ServiceInfo2 for remote node " << this->remote_nodeid.ToString() << " failed: " << err->what());
 				handle_error(err);
 				return;
 			}
@@ -700,12 +743,14 @@ namespace RobotRaconteur
 
 			if (!ret1)
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Discovery, -1, "UpdateServiceInfo for remote node " << this->remote_nodeid.ToString() << " failed: Invalid return");
 				handle_error(RR_MAKE_SHARED<ServiceException>("Invalid return"));
 				return;
 			}
 
 			if (ret1->Error != MessageErrorType_None)
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Discovery, -1, "UpdateServiceInfo getting ServiceInfo2 for remote node " << this->remote_nodeid.ToString() << " failed: " << ret1->Error);
 				handle_error(RobotRaconteurExceptionUtil::MessageEntryToException(ret1));
 				return;
 			};
@@ -736,11 +781,13 @@ namespace RobotRaconteur
 			}
 			catch (RobotRaconteurException& err)
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Discovery, -1, "UpdateServiceInfo getting ServiceInfo2 for remote node " << this->remote_nodeid.ToString() << " failed: " << err.what());
 				handle_error(RobotRaconteurExceptionUtil::DownCastException(err));
 				return;
 			}
 			catch (std::exception& err)
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Discovery, -1, "UpdateServiceInfo getting ServiceInfo2 for remote node " << this->remote_nodeid.ToString() << " failed: " << err.what());
 				handle_error(RR_MAKE_SHARED<ServiceException>(err.what()));
 				return;
 			}
@@ -758,6 +805,8 @@ namespace RobotRaconteur
 
 			}
 
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "UpdateServiceInfo getting ServiceInfo2 for remote node " << this->remote_nodeid.ToString() << " completed successfully");
+
 			if (!handler2) return;
 
 			RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(handler2, storage, o, service_nonce, RR_SHARED_PTR<RobotRaconteurException>()), true);
@@ -769,6 +818,7 @@ namespace RobotRaconteur
 
 			if (err)
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Discovery, -1, "UpdateServiceInfo connect for remote node " << this->remote_nodeid.ToString() << " failed: " << err->what());
 				handle_error(err);
 				return;
 			}
@@ -784,6 +834,8 @@ namespace RobotRaconteur
 
 			try
 			{
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "UpdateServiceInfo connected to remote node " << this->remote_nodeid.ToString() << ", begin getting ServiceInfo2");
+
 				RR_SHARED_PTR<ServiceStub> client3 = rr_cast<ServiceStub>(client);
 				remote_nodeid=client3->GetContext()->GetRemoteNodeID();
 				remote_nodename = client3->GetContext()->GetRemoteNodeName();
@@ -805,11 +857,13 @@ namespace RobotRaconteur
 			}
 			catch (RobotRaconteurException& err)
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Discovery, -1, "UpdateServiceInfo connect for remote node " << this->remote_nodeid.ToString() << " failed: " << err.what());
 				handle_error(RobotRaconteurExceptionUtil::DownCastException(err));
 				return;
 			}
 			catch (std::exception& err)
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Discovery, -1, "UpdateServiceInfo connect for remote node " << this->remote_nodeid.ToString() << " failed: " << err.what());
 				handle_error(RR_MAKE_SHARED<ServiceException>(err.what()));
 				return;
 			}
@@ -841,16 +895,22 @@ namespace RobotRaconteur
 
 			try
 			{
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "UpdateServiceInfo connecting to remote node " << this->remote_nodeid.ToString()
+					<< " using candidate URLs " << boost::join(urls,", "));
 				n->AsyncConnectService(urls, "", RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(), NULL, "",
 					boost::bind(&Discovery_updateserviceinfo::connect_handler, shared_from_this(), _1, _2), 15000);
 			}
 			catch (RobotRaconteurException& err)
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Discovery, -1, "UpdateServiceInfo connecting to remote node " <<
+				 this->remote_nodeid.ToString() << " using candidate URLs " << boost::join(urls,", ") << " failed: " << err.what());
 				handle_error(RobotRaconteurExceptionUtil::DownCastException(err));
 				return;
 			}
 			catch (std::exception& err)
 			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Discovery, -1, "UpdateServiceInfo connecting to remote node " <<
+				 this->remote_nodeid.ToString() << " using candidate URLs " << boost::join(urls,", ") << " failed: " << err.what());
 				handle_error(RR_MAKE_SHARED<ServiceException>(err.what()));
 				return;
 			}
@@ -875,6 +935,8 @@ namespace RobotRaconteur
 			t->Start();
 
 			timeout_timer = t;
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "Begin UpdateServiceInfo to remote node " <<
+				 this->remote_nodeid.ToString() << " using " << backoff << " ms backoff");
 		}
 		
 		//class Discovery
@@ -883,6 +945,7 @@ namespace RobotRaconteur
 		{
 			max_DiscoveredNodes.data() = 4096;
 			this->node = node;
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "Discovery created");
 		}
 
 		std::vector<NodeDiscoveryInfo> Discovery::GetDetectedNodes()
@@ -894,7 +957,20 @@ namespace RobotRaconteur
 				boost::mutex::scoped_lock lock2(o1->this_lock);
 				o.push_back(*o1->info);
 			}
+
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "GetDetectedNodes returning " << o.size() << " detected nodes");
+
 			return o;
+		}
+
+		static std::string Discovery_log_NodeDiscoveryInfoURLs_url_field(const NodeDiscoveryInfoURL& url)
+		{
+			return url.URL;
+		}
+
+		static std::string Discovery_log_NodeDiscoveryInfoURLs(const std::vector<NodeDiscoveryInfoURL>& urls)
+		{
+			return boost::join(urls | boost::adaptors::transformed(&Discovery_log_NodeDiscoveryInfoURLs_url_field), ", ");
 		}
 
 		void Discovery::NodeDetected(const NodeDiscoveryInfo& info)
@@ -904,7 +980,14 @@ namespace RobotRaconteur
 			RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
 			if (!n) return;
 
-			if (info.ServiceStateNonce.size() > 32) return;
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "Node detected NodeID " << info.NodeID.ToString() << " NodeName " << info.NodeName 
+				<< " URLs " << Discovery_log_NodeDiscoveryInfoURLs(info.URLs));
+
+			if (info.ServiceStateNonce.size() > 32) 
+			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Discovery, -1, "Node detected NodeID " << info.NodeID.ToString() << " invalid ServiceStateNonce");
+				return;
+			}
 
 			try
 			{
@@ -912,6 +995,7 @@ namespace RobotRaconteur
 
 				if (info.NodeName.size() > 128)
 				{
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Discovery, -1, "Node detected NodeID " << info.NodeID.ToString() << " invalid NodeName");
 					return;
 				}
 
@@ -921,6 +1005,8 @@ namespace RobotRaconteur
 				{
 					if (m_DiscoveredNodes.size() >= max_DiscoveredNodes)
 					{
+						ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Discovery, -1, "Detected node NodeID " << info.NodeID.ToString() 
+							<< " dropped due to full node cache");
 						return;
 					}
 					RR_SHARED_PTR<NodeDiscoveryInfo> info2 = RR_MAKE_SHARED<NodeDiscoveryInfo>(info);
@@ -942,23 +1028,30 @@ namespace RobotRaconteur
 									valid = false;
 								}
 							}
-							catch (std::exception&)
+							catch (std::exception& exp2)
 							{
+								ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Discovery, -1, "Node detected NodeID " << info.NodeID.ToString() << " provides invalid URL: " << e->URL << ": " << exp2.what());
 								valid = false;
 							}
 						}
 
 						if (valid)
 						{
+							ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "Node detected NodeID " << info.NodeID.ToString() << " accepting candidate URL " << e->URL);
 							e++;
 						}
 						else
 						{
+							ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "Node detected NodeID " << info.NodeID.ToString() << " rejecting candidate URL " << e->URL);
 							e = info2->URLs.erase(e);
 						}
 					}
 
-					if (info2->URLs.size() == 0) return;
+					if (info2->URLs.size() == 0)
+					{
+						ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "Node detected NodeID " << info.NodeID.ToString() << " did not find any valid candidate URLs");
+					 return;
+					}
 
 					RR_SHARED_PTR<Discovery_nodestorage> storage = RR_MAKE_SHARED<Discovery_nodestorage>();
 					storage->info = info2;					
@@ -974,6 +1067,7 @@ namespace RobotRaconteur
 					
 					if (!subscriptions.empty())
 					{
+						ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "Node detected NodeID " << info.NodeID.ToString() << " updating service info");
 						update->AsyncUpdateServiceInfo(storage, info2->ServiceStateNonce, boost::bind(&Discovery::EndUpdateServiceInfo, shared_from_this(), _1, _2, _3, _4));
 					}
 					return;
@@ -991,6 +1085,8 @@ namespace RobotRaconteur
 							{
 								if (e.LastAnnounceTime > ee.LastAnnounceTime)
 								{
+									ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "Node detected NodeID " << info.NodeID.ToString() 
+										<< " updating last announce time for candidate URL " << e.URL);
 									ee.LastAnnounceTime = e.LastAnnounceTime;
 								}
 								found = true;
@@ -1011,16 +1107,19 @@ namespace RobotRaconteur
 									continue;
 								}
 							}
-							catch (std::exception&)
+							catch (std::exception& exp2)
 							{
+								ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Discovery, -1, "Node detected NodeID " << info.NodeID.ToString() << " provides invalid URL: " << e.URL << ": " << exp2.what());
 								continue;
 							}
+							ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "Node detected NodeID " << info.NodeID.ToString() << " accepting candidate URL " << e.URL);
 							i->URLs.push_back(e);
 						}
 					}
 
 					if (i->ServiceStateNonce != info.ServiceStateNonce && !info.ServiceStateNonce.empty())
 					{
+						ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "Node detected NodeID " << info.NodeID.ToString() << " updating ServiceStateNonce");
 						i->ServiceStateNonce = info.ServiceStateNonce;
 					}
 
@@ -1046,6 +1145,8 @@ namespace RobotRaconteur
 						if (((i->ServiceStateNonce != e1->second->last_update_nonce) || i->ServiceStateNonce.empty())
 							&& !e1->second->updater.lock())
 						{
+							ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "Node detected NodeID " << info.NodeID.ToString() 
+								<< " updating service info due to change in ServiceStateNonce");
 							RetryUpdateServiceInfo(e1->second);
 						}
 					}
@@ -1054,7 +1155,10 @@ namespace RobotRaconteur
 				
 
 			}
-			catch (std::exception&) {}
+			catch (std::exception& exp)
+			{
+				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Discovery, -1, "Node detected NodeID " << info.NodeID.ToString() << " failed: " << exp.what());
+			}
 
 		}
 
@@ -1079,6 +1183,8 @@ namespace RobotRaconteur
 				//We missed an update, do another refresh but delay 5 seconds to prevent flooding
 				if (!storage->updater.lock())
 				{
+					ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "ServiceStateNonce for " << storage->info->NodeID.ToString() << 
+						" changed during update, retry");
 					RetryUpdateServiceInfo(storage);
 				}
 
@@ -1104,6 +1210,8 @@ namespace RobotRaconteur
 		{
 			//If updater is running, return
 			if (storage->updater.lock()) return;
+
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "UpdateServiceInfo retry requested for " << storage->info->NodeID.ToString());
 
 			RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
 			if (!n) return;
@@ -1138,6 +1246,9 @@ namespace RobotRaconteur
 			}
 			
 
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "UpdateServiceInfo retry requested for " << storage->info->NodeID.ToString() 
+			 << " using backoff " << backoff  << " ms for retry " << retry_count);
+
 			RR_SHARED_PTR<Discovery_updateserviceinfo> update = RR_MAKE_SHARED<Discovery_updateserviceinfo>(node);
 			storage->updater = update;
 			update->AsyncUpdateServiceInfo(storage, storage->info->ServiceStateNonce, boost::bind(&Discovery::EndUpdateServiceInfo, shared_from_this(), _1, _2, _3, _4), backoff);
@@ -1157,6 +1268,8 @@ namespace RobotRaconteur
 		{
 			RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
 			if (!n) throw InvalidOperationException("Node has been released");
+
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "UpdateDetectedNodes requested for schemes " << boost::join(schemes,", "));
 
 			std::vector<RR_SHARED_PTR<Transport> > t;
 			{
@@ -1198,6 +1311,7 @@ namespace RobotRaconteur
 					//If the URL or nodename is excessively long, just ignore it
 					if (url.size() > 256)
 					{
+						ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "Parsing discovery text packet failed: invalid URL");
 						return;
 					}
 					if (nodename.size() > 128)
@@ -1210,11 +1324,13 @@ namespace RobotRaconteur
 						ParseConnectionURLResult u = ParseConnectionURL(url);
 						if (u.nodeid != nodeid)
 						{
+							ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Discovery, -1, "Parsing discovery text packet failed: invalid URL");
 							return;
 						}
 					}
-					catch (ConnectionException&)
+					catch (ConnectionException& exp2)
 					{
+						ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Discovery, -1, "Parsing discovery text packet URL failed: " << exp2.what());
 						return;
 					}
 
@@ -1243,7 +1359,10 @@ namespace RobotRaconteur
 							}
 						}
 					}
-					catch (std::exception&) {}
+					catch (std::exception& exp2)
+					{
+						ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Discovery, -1, "Parsing discovery text packet attributes failed: " << exp2.what());
+					}	
 
 					NodeDiscoveryInfo info;
 					info.NodeID = nodeid;
@@ -1254,12 +1373,19 @@ namespace RobotRaconteur
 					info.URLs.push_back(url1);
 					info.ServiceStateNonce = services_nonce;
 
+					ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "Parsing discovery text packet successful for node " << info.NodeID.ToString());
+
 					NodeDetected(info);
+				}
+				else
+				{
+					ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "Invalid discovery text packet received");
 				}
 
 			}
-			catch (std::exception&)
+			catch (std::exception& exp)
 			{
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "Parsing discovery text packet failed: " << exp.what());
 			};
 
 			//Console.WriteLine(packet);
@@ -1304,6 +1430,8 @@ namespace RobotRaconteur
 
 						if (newurls.empty())
 						{
+							ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "Discovery lost node " << e1->second->info->NodeID.ToString());
+
 							RR_SHARED_PTR<Discovery_nodestorage> e2 = e1->second;
 
 							BOOST_FOREACH(RR_WEAK_PTR<IServiceSubscription> s, subscriptions)
@@ -1323,7 +1451,10 @@ namespace RobotRaconteur
 							RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(&RobotRaconteurNode::FireNodeLost, n, e2->info));
 						}
 					}
-					catch (std::exception&) {}
+					catch (std::exception& exp2)
+					{
+						ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Discovery, -1, "Error cleaning node " << e << ": " << exp2.what());
+					}
 				}
 			}
 		}
@@ -1337,6 +1468,7 @@ namespace RobotRaconteur
 		{
 			boost::mutex::scoped_lock lock(m_DiscoveredNodes_lock);
 			max_DiscoveredNodes.data() = count;
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "NodeDiscoveryMaxCacheCount set to " << count);
 		}
 
 
@@ -1380,7 +1512,10 @@ namespace RobotRaconteur
 
 					if (!urls.empty()) all_urls.push_back(urls);
 				}
-				catch (std::exception&) {}
+				catch (std::exception& exp)
+				{
+					ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "Error searching for candidate URLs for FindServiceByType: " << exp.what());
+				}
 			}
 
 			RR_SHARED_PTR<Discovery_findservicebytype> f = RR_MAKE_SHARED<Discovery_findservicebytype>(n);
@@ -1410,6 +1545,7 @@ namespace RobotRaconteur
 
 		void Discovery::AsyncFindNodeByID(const RobotRaconteur::NodeID& id, const std::vector<std::string>& transportschemes, boost::function< void(RR_SHARED_PTR<std::vector<NodeInfo2> >) >& handler, int32_t timeout)
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "Begin AsyncFindNodeByID for remote node " << id.ToString());
 			RobotRaconteur::NodeID id1 = id;
 
 			boost::function<void()> h = boost::bind(&Discovery::EndAsyncFindNodeByID, shared_from_this(), id1, transportschemes, handler);
@@ -1418,6 +1554,8 @@ namespace RobotRaconteur
 
 		void Discovery::EndAsyncFindNodeByID(RobotRaconteur::NodeID id, std::vector<std::string> transportschemes, boost::function< void(RR_SHARED_PTR<std::vector<NodeInfo2> >) >& handler)
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "AsyncFindNodeByID for remote node " << id.ToString() << " update complete");
+
 			RR_SHARED_PTR<std::vector<NodeInfo2> > ret = RR_MAKE_SHARED<std::vector<NodeInfo2> >();
 			std::string sid = id.ToString();
 			{
@@ -1455,7 +1593,11 @@ namespace RobotRaconteur
 									break;
 								}
 							}
-							catch (std::exception&) {}
+							catch (std::exception& exp2)
+							{
+								ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Discovery, -1, "AsyncFindNodeByID for remote node " << id.ToString() 
+									<< " failed processing candidate: " << exp2.what());
+							}
 						}
 					}
 
@@ -1466,6 +1608,9 @@ namespace RobotRaconteur
 
 				}
 			}
+
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "AsyncFindNodeByID for remote node " << id.ToString()
+				<< " completed successfully with " << ret->size() << " candidates");
 
 			detail::InvokeHandler(node, handler, ret);
 
@@ -1483,6 +1628,7 @@ namespace RobotRaconteur
 
 		void Discovery::AsyncFindNodeByName(boost::string_ref name, const std::vector<std::string>& transportschemes, boost::function< void(RR_SHARED_PTR<std::vector<NodeInfo2> >) >& handler, int32_t timeout)
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "Begin AsyncFindNodeByName for remote node \"" << name << "\"");
 			boost::function<void()> h = boost::bind(&Discovery::EndAsyncFindNodeByName, shared_from_this(), name.to_string(), transportschemes, handler);
 			AsyncUpdateDetectedNodes(transportschemes, h, timeout);
 		}
@@ -1490,6 +1636,7 @@ namespace RobotRaconteur
 
 		void Discovery::EndAsyncFindNodeByName(std::string name, std::vector<std::string> transportschemes, boost::function< void(RR_SHARED_PTR<std::vector<NodeInfo2> >) >& handler)
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "AsyncFindNodeByName for remote node \"" << name << "\" update complete");
 			RR_SHARED_PTR<std::vector<NodeInfo2> > ret = RR_MAKE_SHARED<std::vector<NodeInfo2> >();
 
 			{
@@ -1527,7 +1674,11 @@ namespace RobotRaconteur
 										break;
 									}
 								}
-								catch (std::exception&) {}
+								catch (std::exception& exp2)
+								{
+									ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Discovery, -1, "AsyncFindNodeByID for remote node \"" << name 
+									<< "\" failed processing candidate: " << exp2.what());
+								}
 							}
 						}
 
@@ -1539,6 +1690,9 @@ namespace RobotRaconteur
 
 				}
 			}
+
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "AsyncFindNodeByID for remote node \"" << name
+				<< "\" completed successfully with " << ret->size() << " candidates");
 
 			detail::InvokeHandler(node, handler, ret);
 
@@ -1567,6 +1721,9 @@ namespace RobotRaconteur
 
 		void Discovery::DoSubscribe(const std::vector<std::string>& service_types, RR_SHARED_PTR<ServiceSubscriptionFilter> filter, RR_SHARED_PTR<IServiceSubscription> s)
 		{
+
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "Begin DoSubscribe for service types " << boost::join(service_types, ", "));
+
 			boost::mutex::scoped_lock lock(m_DiscoveredNodes_lock);
 			subscriptions.push_back(s);
 			s->Init(service_types, filter);
@@ -1584,6 +1741,7 @@ namespace RobotRaconteur
 				{
 					try
 					{
+						ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "Subscription requesting update for node " << n->info->NodeID.ToString());
 						RetryUpdateServiceInfo(n);
 					}
 					catch (std::exception& exp)
@@ -1601,6 +1759,8 @@ namespace RobotRaconteur
 		{
 			boost::mutex::scoped_lock lock(m_DiscoveredNodes_lock);
 			
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "Subscription closed");
+
 			for (std::list<RR_WEAK_PTR<IServiceSubscription> >::iterator e = subscriptions.begin(); e != subscriptions.end(); )
 			{
 				RR_SHARED_PTR<IServiceSubscription> s = e->lock();
@@ -1640,6 +1800,8 @@ namespace RobotRaconteur
 					s1->Close();
 				}
 			}
+
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Discovery, -1, "Discovery shut down");
 
 		}
 		
