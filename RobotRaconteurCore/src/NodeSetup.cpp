@@ -7,6 +7,11 @@ namespace RobotRaconteur
 	{
 		this->node = node;
 
+		BOOST_FOREACH(RR_SHARED_PTR<ServiceFactory> f, service_types)
+		{
+			node->RegisterServiceType(f);
+		}
+
 		if (flags & RobotRaconteurNodeSetupFlags_ENABLE_LOCAL_TRANSPORT)
 		{
 			local_transport = RR_MAKE_SHARED<LocalTransport>(node);
@@ -94,12 +99,7 @@ namespace RobotRaconteur
 			
 			node->RegisterTransport(hardware_transport);
 		}
-
-		BOOST_FOREACH(RR_SHARED_PTR<ServiceFactory> f, service_types)
-		{
-			node->RegisterServiceType(f);
-		}
-
+		
 		if (flags & RobotRaconteurNodeSetupFlags_DISABLE_TIMEOUTS)
 		{
 			node->SetRequestTimeout(std::numeric_limits<uint32_t>::max());
