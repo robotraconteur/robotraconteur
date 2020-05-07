@@ -2607,8 +2607,8 @@ std::string RobotRaconteurNode::GetServicePath(RR_SHARED_PTR<RRObject> obj)
 {
 	if (!(dynamic_cast<ServiceStub*>(obj.get()) != 0))
 	{
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE(weak_sp(), Node, -1, "Only service stubs can be have objrefs");
-		throw InvalidArgumentException("Only service stubs can be have objrefs");
+		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Only service stubs can have objrefs");
+		throw InvalidArgumentException("Only service stubs can have objrefs");
 	}
 	RR_SHARED_PTR<ServiceStub> s = rr_cast<ServiceStub>(obj);
 	return s->ServicePath;
@@ -2692,16 +2692,17 @@ std::string RobotRaconteurNode::GetServiceStateNonce()
 
 void RobotRaconteurNode::UpdateServiceStateNonce()
 {
+	std::string new_nonce;
 	{
 		boost::mutex::scoped_lock lock(service_state_nonce_lock);
-
-		std::string new_nonce;
+		
 		do
 		{
 			new_nonce = GetRandomString(16);
 		} while (new_nonce == service_state_nonce);
 
 		service_state_nonce = new_nonce;
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(weak_sp(), Node, -1, "Service state nonce updated to \"" << new_nonce << "\"");
 	}
 	
 	{
