@@ -2300,6 +2300,20 @@ namespace RobotRaconteur
 		void SetLogLevel(RobotRaconteur_LogLevel level);
 
 		/**
+		 * @brief Set the log level for the node from specified environmental variable
+		 * 
+		 * Retrieves the specified environmental variable and sets the log level based
+		 * on one of the following values: DISABLE, FATAL, ERROR, WARNING, INFO, DEBUG, TRACE
+		 * 
+		 * If an invalid value or the variable does not exist, the log level is left unchanged. 
+		 * 
+		 * @param env_variable_name The environmental variable to use. Defaults to 
+		 * `ROBOTRACONTEUR_LOG_LEVEL`
+		 * @return RobotRaconteur_LogLevel The log level
+		 */
+		RobotRaconteur_LogLevel SetLogLevelFromEnvVariable(std::string env_variable_name = "ROBOTRACONTEUR_LOG_LEVEL");
+
+		/**
 		 * @brief Get the currently configured log record handler
 		 * 
 		 * If NULL, records are sent to std::cerr

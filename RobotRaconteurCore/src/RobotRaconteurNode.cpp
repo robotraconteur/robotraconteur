@@ -2763,6 +2763,59 @@ void RobotRaconteurNode::SetLogLevel(RobotRaconteur_LogLevel level)
 	log_level = level;
 }
 
+RobotRaconteur_LogLevel RobotRaconteurNode::SetLogLevelFromEnvVariable(std::string env_variable_name)
+{
+	boost::lock_guard<boost::shared_mutex> lock(log_handler_mutex);
+	char* loglevel_c = std::getenv(env_variable_name.c_str());
+	if (!loglevel_c) return RobotRaconteur_LogLevel_Warning;
+	std::string loglevel(loglevel_c);
+	if (loglevel== "DISABLE")
+	{
+		log_level = RobotRaconteur_LogLevel_Disable;
+		return RobotRaconteur_LogLevel_Disable;
+	}
+
+	if (loglevel == "FATAL")
+	{
+		log_level = RobotRaconteur_LogLevel_Fatal;
+		return RobotRaconteur_LogLevel_Fatal;
+	}
+
+	if (loglevel == "ERROR")
+	{
+		log_level = RobotRaconteur_LogLevel_Error;
+		return RobotRaconteur_LogLevel_Error;
+	}
+
+	if (loglevel == "WARNING")
+	{
+		log_level = RobotRaconteur_LogLevel_Warning;
+		return RobotRaconteur_LogLevel_Warning;
+	}
+
+	if (loglevel == "INFO")
+	{
+		log_level = RobotRaconteur_LogLevel_Info;
+		return RobotRaconteur_LogLevel_Info;
+	}
+
+	if (loglevel == "DEBUG")
+	{
+		log_level = RobotRaconteur_LogLevel_Debug;
+		return RobotRaconteur_LogLevel_Debug;
+	}
+
+	if (loglevel == "TRACE")
+	{
+		log_level = RobotRaconteur_LogLevel_Trace;
+		return RobotRaconteur_LogLevel_Trace;
+	}
+
+	ROBOTRACONTEUR_LOG_WARN_SOURCE(weak_sp(), Node, -1, "Invalid log level specified in environmental variable: " << loglevel);
+
+	return log_level;
+}
+
 boost::function<void(const RRLogRecord& record)> RobotRaconteurNode::GetLogRecordHandler()
 {
 	boost::shared_lock<boost::shared_mutex> lock(log_handler_mutex);
