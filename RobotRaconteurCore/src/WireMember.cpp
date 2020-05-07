@@ -140,7 +140,7 @@ namespace RobotRaconteur
 
 			if (lasttime_recv == TimeSpec(0,0) || timespec > lasttime_recv)
 			{
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, member_name, "Wire packet received timespec " << timespec.seconds << ", " << timespec.nanoseconds);
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, member_name, "Wire packet in value received timespec " << timespec.seconds << ", " << timespec.nanoseconds);
 
 				{
 					boost::mutex::scoped_lock lock2(inval_lock);
@@ -270,6 +270,7 @@ namespace RobotRaconteur
 				time.cleanup_nanosecs();
 			}
 			
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, member_name, "Wire sending out value packet timespec " << time.seconds << ", " << time.nanoseconds);
 			
 			GetParent()->SendWirePacket(value, time, endpoint, message3);
 			
