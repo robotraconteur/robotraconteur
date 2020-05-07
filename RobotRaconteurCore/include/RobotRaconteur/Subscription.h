@@ -407,6 +407,7 @@ namespace RobotRaconteur
 		boost::unordered_set<RR_SHARED_PTR<detail::PipeSubscription_connection> > connections;
 		boost::initialized<bool> closed;
 		RR_WEAK_PTR<ServiceSubscription> parent;
+		RR_WEAK_PTR<RobotRaconteurNode> node;
 
 		std::deque<boost::tuple<RR_INTRUSIVE_PTR<RRValue>, RR_SHARED_PTR<PipeEndpointBase> > > recv_packets;
 		boost::condition_variable recv_packets_wait;

@@ -57,12 +57,16 @@ namespace RobotRaconteur
 
 			this->timer = t;
 
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Subscription, -1, "Retry timer started with " << timeout << " ms timeout");
+
 		}
 		void ServiceSubscription_retrytimer::Cancel()
 		{
 			boost::mutex::scoped_lock lock(this_lock);
 			cancelled.data() = true;
 			timer.reset();
+
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Subscription, -1, "Retry timer cancelled");
 		}
 		int64_t ServiceSubscription_retrytimer::MillisecondsRemaining()
 		{
@@ -90,6 +94,7 @@ namespace RobotRaconteur
 			RR_SHARED_PTR<ServiceSubscription_client> c2 = this1->c2.lock();
 			if (!c2) return;
 
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(p->node, Subscription, -1, "Retry firing");
 			p->ConnectRetry2(c2);
 		}
 	}
@@ -293,6 +298,8 @@ namespace RobotRaconteur
 		lock.unlock();
 
 		d->SubscriptionClosed(shared_from_this());
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Subscription, -1, "ServiceInfo2Subscription closed");
 	}
 		
 	ServiceInfo2Subscription::ServiceInfo2Subscription(RR_SHARED_PTR<detail::Discovery> parent)
@@ -307,6 +314,8 @@ namespace RobotRaconteur
 		this->active = true;
 		this->service_types = service_types;
 		this->filter = filter;
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Subscription, -1, "ServiceInfo2Subscription initialized for service types: " << boost::join(service_types,", "));
 	}
 
 	void ServiceInfo2Subscription::NodeUpdated(RR_SHARED_PTR<detail::Discovery_nodestorage> storage)
@@ -320,6 +329,7 @@ namespace RobotRaconteur
 		RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
 		if (!n) return;
 
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Subscription, -1, "ServiceInfo2Subscription received node update for " << storage->info->NodeID.ToString());
 
 		BOOST_FOREACH(ServiceInfo2& info, *storage->services)
 		{
@@ -338,6 +348,8 @@ namespace RobotRaconteur
 					|| info2.ConnectionURL != info.ConnectionURL
 					|| info2.RootObjectImplements != info.RootObjectImplements)
 				{
+					ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Subscription, -1, "ServiceInfo2Subscription new service named \"" << info.Name << "\" detected on node " 
+						<< info.NodeID.ToString());
 					e->second->service_info2 = info;
 					RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(&ServiceInfo2Subscription::fire_ServiceDetectedListener, shared_from_this(), k, info));
 				}
@@ -353,6 +365,8 @@ namespace RobotRaconteur
 
 			if (!ServiceSubscription_FilterService(service_types, filter, storage, info, urls, client_service_type, filter_node))
 			{
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Subscription, -1, "ServiceInfo2Subscription ignoring service named \"" << info.Name << "\" on node " 
+						<< info.NodeID.ToString() << " due to filter match failure");
 				continue;
 			}
 
@@ -367,6 +381,9 @@ namespace RobotRaconteur
 				ServiceSubscriptionClientID noden(c2->nodeid, c2->service_name);
 
 				clients.insert(std::make_pair(noden, c2));
+
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Subscription, -1, "ServiceInfo2Subscription adding new service named \"" << info.Name << "\" on node " 
+						<< info.NodeID.ToString());
 
 				RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(&ServiceInfo2Subscription::fire_ServiceDetectedListener, shared_from_this(), noden, c2->service_info2));
 			}			
@@ -394,6 +411,9 @@ namespace RobotRaconteur
 					e++;
 					clients.erase(e1);
 
+					ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Subscription, -1, "ServiceInfo2Subscription removing service named \"" << info1.Name << "\" on node " 
+						<< info1.NodeID.ToString() << " due to service no longer advertising");
+
 					RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(&ServiceInfo2Subscription::fire_ServiceDetectedListener, shared_from_this(), id1, info1));
 				}
 				else
@@ -417,6 +437,8 @@ namespace RobotRaconteur
 
 		NodeID id1 = storage->info->NodeID;
 
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Subscription, -1, "ServiceInfo2Subscription received node lost for " << storage->info->NodeID.ToString());
+
 		for (std::map<ServiceSubscriptionClientID, RR_SHARED_PTR<detail::ServiceInfo2Subscription_client> >::iterator e = clients.begin(); e != clients.end();)
 		{
 			if (e->first.NodeID == storage->info->NodeID)
@@ -427,6 +449,9 @@ namespace RobotRaconteur
 				std::map<ServiceSubscriptionClientID, RR_SHARED_PTR<detail::ServiceInfo2Subscription_client> >::iterator e1 = e;
 				e++;
 				clients.erase(e1);
+
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Subscription, -1, "ServiceInfo2Subscription removing service named \"" << info1.Name << "\" on node " 
+						<< info1.NodeID.ToString() << " due to node lost");
 
 				RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(&ServiceInfo2Subscription::fire_ServiceLostListener, shared_from_this(), id1, info1));				
 			}
@@ -518,6 +543,8 @@ namespace RobotRaconteur
 		lock.unlock();
 
 		d->SubscriptionClosed(shared_from_this());
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Subscription, -1, "ServiceSubscription closed");
 	}
 
 	static RR_SHARED_PTR<detail::ServiceSubscription_client> SeviceSubscription_FindClient(std::map<ServiceSubscriptionClientID, RR_SHARED_PTR<detail::ServiceSubscription_client> >& clients, RR_SHARED_PTR<RRObject> client)
@@ -554,37 +581,55 @@ namespace RobotRaconteur
 
 	void ServiceSubscription::ClaimClient(RR_SHARED_PTR<RRObject> client)
 	{
-		boost::mutex::scoped_lock lock(this_lock);
-		if (!active) throw InvalidOperationException("Service closed");
+		try
+		{
+			boost::mutex::scoped_lock lock(this_lock);
+			if (!active) throw InvalidOperationException("Service closed");
 
-		RR_SHARED_PTR<detail::ServiceSubscription_client> sub =
-			SeviceSubscription_FindClient(clients, client);
+			RR_SHARED_PTR<detail::ServiceSubscription_client> sub =
+				SeviceSubscription_FindClient(clients, client);
 
-		if (!sub) throw InvalidArgumentException("Invalid client for ClaimClient");
+			if (!sub) throw InvalidArgumentException("Invalid client for ClaimClient");
 
-		sub->claimed.data() = true;
+			sub->claimed.data() = true;
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Subscription, -1, "ServiceSubscription claimed client " << sub->nodeid.ToString() << "," << sub->service_name);
+		}
+		catch (std::exception& exp)
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Subscription, -1, "ServiceSubscription ClaimClient failed: " << exp.what());
+			throw;
+		}
 	}
 
 	void ServiceSubscription::ReleaseClient(RR_SHARED_PTR<RRObject> client)
 	{
-		boost::mutex::scoped_lock lock(this_lock);
-		if (!active)
+		try
 		{
-			RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
-			if (!n) return;
-			try
+			boost::mutex::scoped_lock lock(this_lock);
+			if (!active)
 			{
-				n->AsyncDisconnectService(client, &ServiceSubscription_close_handler);
+				RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
+				if (!n) return;
+				try
+				{
+					n->AsyncDisconnectService(client, &ServiceSubscription_close_handler);
+				}
+				catch (std::runtime_error&) {}
 			}
-			catch (std::runtime_error&) {}
+
+			RR_SHARED_PTR<detail::ServiceSubscription_client> sub =
+				SeviceSubscription_FindClient(clients, client);
+
+			if (!sub) return;
+
+			sub->claimed.data() = false;
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Subscription, -1, "ServiceSubscription released claimed client " << sub->nodeid.ToString() << "," << sub->service_name);
 		}
-
-		RR_SHARED_PTR<detail::ServiceSubscription_client> sub =
-			SeviceSubscription_FindClient(clients, client);
-
-		if (!sub) return;
-
-		sub->claimed.data() = false;
+		catch (std::exception& exp)
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Subscription, -1, "ServiceSubscription ReleaseClient failed: " << exp.what());
+			throw;
+		}
 	}
 
 	ServiceSubscription::ServiceSubscription(RR_SHARED_PTR<detail::Discovery> parent)
@@ -603,6 +648,8 @@ namespace RobotRaconteur
 		this->active = true;
 		this->service_types = service_types;
 		this->filter = filter;
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Subscription, -1, "ServiceSubscription initialized for service types: " << boost::join(service_types,", "));
 	}
 
 	void ServiceSubscription::NodeUpdated(RR_SHARED_PTR<detail::Discovery_nodestorage> storage)
@@ -616,6 +663,7 @@ namespace RobotRaconteur
 		RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
 		if (!n) return;
 
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Subscription, -1, "ServiceSubscription received node update for " << storage->info->NodeID.ToString());
 		
 		BOOST_FOREACH(ServiceInfo2& info, *storage->services)
 		{
@@ -635,6 +683,8 @@ namespace RobotRaconteur
 
 			if (!ServiceSubscription_FilterService(service_types, filter, storage, info, urls, client_service_type, filter_node))
 			{
+				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Subscription, -1, "ServiceSubscription ignoring service named \"" << info.Name << "\" on node " 
+						<< info.NodeID.ToString() << " due to filter match failure");
 				continue;
 			}
 						
@@ -658,6 +708,8 @@ namespace RobotRaconteur
 							
 				try
 				{
+					ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Subscription, -1, "ServiceSubscription begin connect to service named \"" << info.Name << "\" on node " 
+						<< info.NodeID.ToString());
 					RR_WEAK_PTR<ServiceSubscription> weak_this = shared_from_this();
 					n->AsyncConnectService(urls, c2->username, c2->credentials,
 						boost::bind(&ServiceSubscription::ClientEvent, weak_this ,_1, _2, _3, c2),
@@ -667,13 +719,18 @@ namespace RobotRaconteur
 					clients.insert(std::make_pair(ServiceSubscriptionClientID(c2->nodeid, c2->service_name), c2));
 					continue;
 				}
-				catch (std::exception&) {}
+				catch (std::exception& exp2)
+				{
+					ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Subscription, -1, "ServiceSubscription connect to service named \"" << info.Name << "\" on node " 
+						<< info.NodeID.ToString() << " failed: " << exp2.what());
+				}
 
 				ConnectRetry(c2);
 
 			}
 			else
 			{	
+				
 				RR_SHARED_PTR<detail::ServiceSubscription_client>& c2 = e->second;
 				c2->urls = urls;
 				c2->last_node_update = n->NowUTC();
@@ -689,6 +746,8 @@ namespace RobotRaconteur
 						c2->retry_timer = t2;
 
 						uint32_t backoff = n->GetRandomInt<uint32_t>(100, 600);
+						ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Subscription, -1, "ServiceSubscription begin backoff timer to retry connect service named \"" << info.Name << "\" on node " 
+							<< info.NodeID.ToString());
 						t2->Start(c2, backoff);
 					}
 
@@ -701,6 +760,7 @@ namespace RobotRaconteur
 
 	void ServiceSubscription::NodeLost(RR_SHARED_PTR<detail::Discovery_nodestorage> storage)
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Subscription, -1, "ServiceSubscription received node lost for " << storage->info->NodeID.ToString());
 	}
 
 	void ServiceSubscription::ClientConnected(RR_SHARED_PTR<RRObject> c, RR_SHARED_PTR<RobotRaconteurException> err, RR_SHARED_PTR<detail::ServiceSubscription_client> c2)
@@ -709,12 +769,17 @@ namespace RobotRaconteur
 		if (!n) return;
 
 		boost::mutex::scoped_lock lock(this_lock);
-
+		
 		if (err)
 		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Subscription, -1, "ServiceSubscription connecting to service named \"" << c2->service_name << "\" on node " 
+						<< c2->nodeid.ToString() << "failed: " << err->what());
 			ConnectRetry(c2);
 			return;
 		}
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Subscription, -1, "ServiceSubscription connected to service named \"" << c2->service_name << "\" on node " 
+						<< c2->nodeid.ToString());
 
 		c2->connecting.data() = false;
 		c2->client = c;
@@ -748,14 +813,20 @@ namespace RobotRaconteur
 		RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
 		if (!n) return;
 
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Subscription, -1, "ServiceSubscription begin retry timer config for service \"" << c2->service_name << "\" on node " 
+						<< c2->nodeid.ToString() << " with error count " << c2->error_count);
 		if (c2->error_count > 25)
 		{
+			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Subscription, -1, "ServiceSubscription for service \"" << c2->service_name << "\" on node " 
+						<< c2->nodeid.ToString() << " with error count " << c2->error_count << " aborting retry due to too many errors");
 			//Too many errors, give up
 			c2->connecting.data() = false;
 			return;
 		}
 		c2->error_count++;
 
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Subscription, -1, "ServiceSubscription starting retry timer for service \"" << c2->service_name << "\" on node " 
+						<< c2->nodeid.ToString() << " with " << retry_delay << " ms delay");
 
 		RR_SHARED_PTR<detail::ServiceSubscription_retrytimer> t = RR_MAKE_SHARED<detail::ServiceSubscription_retrytimer>(shared_from_this());
 		c2->retry_timer = t;
@@ -776,12 +847,16 @@ namespace RobotRaconteur
 
 		if (n->NowUTC() > (c2->last_node_update + boost::posix_time::seconds(65)))
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Subscription, -1, "ServiceSubscription retry for service \"" << c2->service_name << "\" on node " 
+						<< c2->nodeid.ToString() << " aborted due to node lost");
 			ServiceSubscriptionClientID k(c2->nodeid, c2->service_name);
 			clients.erase(k);
 			return;
 		}
 		try
 		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Subscription, -1, "ServiceSubscription begin retry connect to service named \"" << c2->service_name << "\" on node " 
+						<< c2->nodeid.ToString());
 			RR_WEAK_PTR<ServiceSubscription> weak_this = shared_from_this();
 			n->AsyncConnectService(c2->urls, c2->username, c2->credentials,
 				boost::bind(&ServiceSubscription::ClientEvent, weak_this, _1, _2, _3, c2),
@@ -790,7 +865,11 @@ namespace RobotRaconteur
 				n->GetRequestTimeout() * 2);
 			return;
 		}
-		catch (std::exception&) {}
+		catch (std::exception& exp)
+		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Subscription, -1, "ServiceSubscription retry connect to service named \"" << c2->service_name << "\" on node " 
+					<< c2->nodeid.ToString() << " failed: " << exp.what());
+		}
 				
 		ConnectRetry(c2);
 
@@ -798,13 +877,13 @@ namespace RobotRaconteur
 
 	void ServiceSubscription::ClientEvent(RR_WEAK_PTR<ServiceSubscription> this_, RR_SHARED_PTR<ClientContext> ctx, ClientServiceListenerEventType evt, RR_SHARED_PTR<void> p, RR_WEAK_PTR<detail::ServiceSubscription_client> c2)
 	{
+		
+		RR_SHARED_PTR<ServiceSubscription> this1 = this_.lock();
+		if (!this1) return;
+		RR_SHARED_PTR<detail::ServiceSubscription_client> c2_1 = c2.lock();
+		RR_SHARED_PTR<RobotRaconteurNode> n = this1->node.lock();
 		try
 		{
-			RR_SHARED_PTR<ServiceSubscription> this1 = this_.lock();
-			if (!this1) return;
-			RR_SHARED_PTR<detail::ServiceSubscription_client> c2_1 = c2.lock();
-			RR_SHARED_PTR<RobotRaconteurNode> n = this1->node.lock();
-
 			if (!this1 || !c2_1) return;
 
 			boost::mutex::scoped_lock lock(this1->this_lock);
@@ -816,6 +895,9 @@ namespace RobotRaconteur
 				RR_SHARED_PTR<RRObject> client = c2_1->client.lock();
 				if (client)
 				{
+					ROBOTRACONTEUR_LOG_TRACE_SOURCE(n, Subscription, -1, "ServiceSubscription connection to service named \"" << c2_1->service_name << "\" on node " 
+						<< c2_1->nodeid.ToString() << " lost");
+
 					if (rr_cast<ServiceStub>(client)->GetContext() == ctx)
 					{
 						c2_1->client.reset();
@@ -857,7 +939,11 @@ namespace RobotRaconteur
 			}
 
 		}
-		catch (std::exception&) {}
+		catch (std::exception& exp)
+		{
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE(n, Subscription, -1, "ServiceSubscription processing event for service named \"" << c2_1->service_name << "\" on node " 
+					<< c2_1->nodeid.ToString() << " failed: " << exp.what());
+		}
 	}
 
 	uint32_t ServiceSubscription::GetConnectRetryDelay()
@@ -870,6 +956,7 @@ namespace RobotRaconteur
 	{
 		boost::mutex::scoped_lock lock(this_lock);
 		retry_delay = delay_milliseconds;
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Subscription, -1, "ConnectRetryDelay set to " << delay_milliseconds << " ms");
 
 	}
 
@@ -884,6 +971,9 @@ namespace RobotRaconteur
 
 	void ServiceSubscription::SubscribeWire1(RR_SHARED_PTR<WireSubscriptionBase> s)
 	{
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Subscription, -1, "", s->membername, "ServiceSubscription SubscribeWire");
+
 		boost::mutex::scoped_lock lock(this_lock);
 		wire_subscriptions.insert(s);
 
@@ -900,6 +990,7 @@ namespace RobotRaconteur
 
 	void ServiceSubscription::WireSubscriptionClosed(RR_SHARED_PTR<WireSubscriptionBase> s)
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Subscription, -1, "", s->membername, "ServiceSubscription wire subscription closed");
 		{
 			boost::mutex::scoped_lock lock(this_lock);
 			wire_subscriptions.erase(s);
@@ -908,6 +999,7 @@ namespace RobotRaconteur
 
 	void ServiceSubscription::SubscribePipe1(RR_SHARED_PTR<PipeSubscriptionBase> s)
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Subscription, -1, "", s->membername, "ServiceSubscription SubscribePipe");
 		boost::mutex::scoped_lock lock(this_lock);
 		pipe_subscriptions.insert(s);
 
@@ -924,6 +1016,7 @@ namespace RobotRaconteur
 
 	void ServiceSubscription::PipeSubscriptionClosed(RR_SHARED_PTR<PipeSubscriptionBase> s)
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Subscription, -1, "", s->membername, "ServiceSubscription pipe subscription closed");
 		{
 			boost::mutex::scoped_lock lock(this_lock);
 			pipe_subscriptions.erase(s);
@@ -1012,10 +1105,13 @@ namespace RobotRaconteur
 			in_value.reset();
 			in_value_time = TimeSpec();
 		}
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Subscription, -1, "", membername, "IgnoreInValue set to " << ignore);
 	}
 
 	void WireSubscriptionBase::SetOutValueAllBase(const RR_INTRUSIVE_PTR<RRValue>& val)
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Subscription, -1, "", membername, "Setting out value to all connected wires");
 		boost::mutex::scoped_lock lock(this_lock);
 		BOOST_FOREACH(RR_SHARED_PTR<detail::WireSubscription_connection> c, connections)
 		{
@@ -1026,7 +1122,10 @@ namespace RobotRaconteur
 				{
 					c1->SetOutValueBase(val);
 				}
-				catch (std::exception&) {}
+				catch (std::exception& exp)
+				{
+					ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Subscription, -1, "", membername, "SetOutValue failed for subscription connection: " << exp.what());
+				}
 			}
 		}
 	}
@@ -1063,6 +1162,8 @@ namespace RobotRaconteur
 		{
 			p->WireSubscriptionClosed(shared_from_this());
 		}
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Subscription, -1, "", membername, "WireSubscription closed");
 	}
 
 	WireSubscriptionBase::WireSubscriptionBase(RR_SHARED_PTR<ServiceSubscription> parent, boost::string_ref membername)
@@ -1083,6 +1184,8 @@ namespace RobotRaconteur
 		boost::mutex::scoped_lock lock(this_lock);
 		if (closed.data()) return;
 
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Subscription, -1, "", membername, "ServiceSubscription client connected, begin connect wire");
+
 		try
 		{
 			RR_SHARED_PTR<ServiceStub> stub = RR_DYNAMIC_POINTER_CAST<ServiceStub>(client);
@@ -1092,8 +1195,8 @@ namespace RobotRaconteur
 			wire_client->AsyncConnect_internal(boost::bind(&WireSubscriptionBase::ClientConnected1, shared_from_this(), client, _1, _2), n->GetRequestTimeout());
 
 		}
-		catch (std::exception&) {
-			//TODO: log error
+		catch (std::exception& exp) {
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Subscription, -1, "", membername, "ServiceSubscription client connect wire failed: " << exp.what());
 		}
 	}
 
@@ -1105,7 +1208,7 @@ namespace RobotRaconteur
 
 		if (err)
 		{
-			//TODO: log error
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Subscription, -1, "", membername, "ServiceSubscription client connect wire failed: " << err->what());
 			return;
 		}
 
@@ -1130,11 +1233,14 @@ namespace RobotRaconteur
 
 		connection->SetIgnoreInValue(ignore_in_value.data());
 		connection->AddListener(c);
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Subscription, -1, "", membername, "ServiceSubscription client connect wire connection completed successfully");
 		
 	}
 
 	void WireSubscriptionBase::WireConnectionClosed(RR_SHARED_PTR<detail::WireSubscription_connection> wire)
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Subscription, -1, "", membername, "ServiceSubscription client wire connection closed");
 		boost::mutex::scoped_lock lock(this_lock);
 		connections.erase(wire);		
 	}
@@ -1142,6 +1248,8 @@ namespace RobotRaconteur
 	{
 		RR_SHARED_PTR<WireConnectionBase> connection = wire->connection.lock();
 		if (!connection) return;
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Subscription, -1, "", membername, "Wire subscription received InValue");
 						
 		{
 			boost::mutex::scoped_lock lock(this_lock);
@@ -1359,12 +1467,16 @@ namespace RobotRaconteur
 		{
 			recv_packets.clear();
 		}
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Subscription, -1, "", membername, "IgnoreReceived set to " << ignore);
 	}
 
 	static void PipeSubscriptionBase_empty_send_handler(uint32_t, RR_SHARED_PTR<RobotRaconteurException>) {}
 
 	void PipeSubscriptionBase::AsyncSendPacketAllBase(const RR_INTRUSIVE_PTR<RRValue>& packet)
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Subscription, -1, "", membername, "Sending packet to all connected pipe endpoints");
+
 		boost::mutex::scoped_lock lock(this_lock);
 		BOOST_FOREACH(RR_SHARED_PTR<detail::PipeSubscription_connection> c, connections)
 		{
@@ -1408,11 +1520,14 @@ namespace RobotRaconteur
 		{
 			p->PipeSubscriptionClosed(shared_from_this());
 		}
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Subscription, -1, "", membername, "PipeSubscription closed");
 	}
 
 	PipeSubscriptionBase::PipeSubscriptionBase(RR_SHARED_PTR<ServiceSubscription> parent, boost::string_ref membername, int32_t max_recv_packets, int32_t max_send_backlog)		
 	{
 		this->parent = parent;
+		this->node = parent->node;
 		this->membername = RR_MOVE(membername.to_string());
 		this->max_recv_packets.data() = max_recv_packets;
 		this->pipe_packet_received_semaphore = RR_MAKE_SHARED<detail::async_signal_pool_semaphore>(parent->node.lock());
@@ -1429,6 +1544,8 @@ namespace RobotRaconteur
 		boost::mutex::scoped_lock lock(this_lock);
 		if (closed.data()) return;
 
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Subscription, -1, "", membername, "ServiceSubscription client connected, begin connect pipe endpoint");
+
 		try
 		{
 			RR_SHARED_PTR<ServiceStub> stub = RR_DYNAMIC_POINTER_CAST<ServiceStub>(client);
@@ -1438,8 +1555,8 @@ namespace RobotRaconteur
 			pipe_client->AsyncConnect_internal(-1, boost::bind(&PipeSubscriptionBase::ClientConnected1, shared_from_this(), client, _1, _2),n->GetRequestTimeout());
 
 		}
-		catch (std::exception&) {
-			//TODO: log error
+		catch (std::exception& exp) {
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Subscription, -1, "", membername, "ServiceSubscription client connect pipe endpoint failed: " << exp.what());
 		}
 	}
 
@@ -1451,7 +1568,7 @@ namespace RobotRaconteur
 
 		if (err)
 		{
-			//TODO: log error
+			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Subscription, -1, "", membername, "ServiceSubscription client connect pipe endpoint failed: " << err->what());
 			return;
 		}
 
@@ -1475,11 +1592,13 @@ namespace RobotRaconteur
 		}
 		connection->SetIgnoreReceived(ignore_incoming_packets.data());
 		connection->AddListener(c);
-				
+		
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Subscription, -1, "", membername, "ServiceSubscription client connect pipe endpoint completed successfully");
 	}
 
 	void PipeSubscriptionBase::PipeEndpointClosed(RR_SHARED_PTR<detail::PipeSubscription_connection> pipe)
 	{
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Subscription, -1, "", membername, "ServiceSubscription client pipe endpoint closed");
 		boost::mutex::scoped_lock lock(this_lock);
 		connections.erase(pipe);
 				
@@ -1488,6 +1607,8 @@ namespace RobotRaconteur
 	{
 		//RR_SHARED_PTR<RRObject> client = wire->client.lock();
 		//if (!client) return;
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Subscription, -1, "", membername, "Pipe subscription received packet");
 
 		boost::mutex::scoped_lock lock(this_lock);
 		
