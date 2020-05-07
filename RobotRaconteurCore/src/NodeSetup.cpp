@@ -5,7 +5,13 @@ namespace RobotRaconteur
 	RobotRaconteurNodeSetup::RobotRaconteurNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node, const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, 
 		boost::string_ref node_name, uint16_t tcp_port, uint32_t flags)
 	{
+
 		this->node = node;
+
+		node->SetLogLevelFromEnvVariable();
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, NodeSetup, -1, "Setting up RobotRaconteurNode version " << node->GetRobotRaconteurVersion() 
+			<< " with NodeName: \"" << node_name << "\" tcp port: " << tcp_port << " flags: 0x" << std::hex << flags);
 
 		BOOST_FOREACH(RR_SHARED_PTR<ServiceFactory> f, service_types)
 		{
@@ -106,6 +112,8 @@ namespace RobotRaconteur
 			node->SetTransportInactivityTimeout(std::numeric_limits<uint32_t>::max());
 			node->SetEndpointInactivityTimeout(std::numeric_limits<uint32_t>::max());			
 		}
+
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, NodeSetup, -1, "Node setup complete");
 
 	}
 

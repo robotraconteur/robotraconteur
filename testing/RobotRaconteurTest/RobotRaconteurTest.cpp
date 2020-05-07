@@ -526,7 +526,6 @@ return 0;
 	if (command == "loopback2")
 	{
 
-		RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
 		RobotRaconteurNode::s()->SetExceptionHandler(myhandler);
 
 		/*RR_SHARED_PTR<TcpTransport> c = RR_MAKE_SHARED<TcpTransport>();
