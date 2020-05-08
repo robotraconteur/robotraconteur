@@ -24,7 +24,7 @@ namespace RobotRaconteur
         out << "[" << to_iso_extended_string(record.Time) << "] [" << RRLogRecord_Level_ToString(record.Level)
         << "] [" << record.ThreadID
 		<< "] ["<< RRLogRecord_Node_ToString(record.Node)
-	    << "] [" << RRLogRecord_Source_ToString(record.Source) << "," << record.Endpoint;
+	    << "] [" << RRLogRecord_Component_ToString(record.Component) << "," << record.Endpoint;
         if (!record.ServicePath.empty())
         {
             out << "," << record.ServicePath;
@@ -50,18 +50,18 @@ namespace RobotRaconteur
         this->node=node;
         record.Node=node;
         record.Level = RobotRaconteur_LogLevel_Trace;
-        record.Source = RobotRaconteur_LogSource_Default;
+        record.Component = RobotRaconteur_LogComponent_Default;
         record.Time = boost::posix_time::microsec_clock::local_time();
     }
     
-    RRLogRecordStream::RRLogRecordStream(RR_SHARED_PTR<RobotRaconteurNode> node, RobotRaconteur_LogLevel lvl, RobotRaconteur_LogSource source, int64_t ep, const boost::posix_time::ptime& time, const std::string& source_file, uint32_t source_line, const std::string& thread_id)
+    RRLogRecordStream::RRLogRecordStream(RR_SHARED_PTR<RobotRaconteurNode> node, RobotRaconteur_LogLevel lvl, RobotRaconteur_LogComponent component, int64_t ep, const boost::posix_time::ptime& time, const std::string& source_file, uint32_t source_line, const std::string& thread_id)
     {
         BOOST_ASSERT_MSG(node, "RRLogRecordStream node must not be nullptr");
 
         this->node = node;
         record.Node = node;
         record.Level = lvl;
-        record.Source = source;
+        record.Component = component;
         record.Endpoint = ep;
         record.Time = time;
         record.SourceFile = source_file;
@@ -70,7 +70,7 @@ namespace RobotRaconteur
 
     }
 
-    RRLogRecordStream::RRLogRecordStream(RR_SHARED_PTR<RobotRaconteurNode> node, RobotRaconteur_LogLevel lvl, RobotRaconteur_LogSource source, int64_t ep, 
+    RRLogRecordStream::RRLogRecordStream(RR_SHARED_PTR<RobotRaconteurNode> node, RobotRaconteur_LogLevel lvl, RobotRaconteur_LogComponent component, int64_t ep, 
         const std::string& service_path, const std::string& member, const boost::posix_time::ptime& time,
         const std::string& source_file, uint32_t source_line, const std::string& thread_id)
     {
@@ -79,7 +79,7 @@ namespace RobotRaconteur
         this->node = node;
         record.Node = node;
         record.Level = lvl;
-        record.Source = source;
+        record.Component = component;
         record.Endpoint = ep;
         record.ServicePath = service_path;
         record.Member = member;
@@ -100,7 +100,7 @@ namespace RobotRaconteur
         return ss;
     }
 
-    RR_INTRUSIVE_PTR<RRLogRecordStream> RRLogRecordStream::OpenRecordStream(RR_WEAK_PTR<RobotRaconteurNode> node, RobotRaconteur_LogLevel lvl, RobotRaconteur_LogSource source, 
+    RR_INTRUSIVE_PTR<RRLogRecordStream> RRLogRecordStream::OpenRecordStream(RR_WEAK_PTR<RobotRaconteurNode> node, RobotRaconteur_LogLevel lvl, RobotRaconteur_LogComponent component, 
     int64_t ep, MessageStringRef service_path, MessageStringRef member_name, const std::string& source_file, uint32_t source_line)
     {
         RR_SHARED_PTR<RobotRaconteurNode> node1 = node.lock();
@@ -110,7 +110,7 @@ namespace RobotRaconteur
         if (!node1->CompareLogLevel(lvl))
             return RR_INTRUSIVE_PTR<RRLogRecordStream>();
 
-        return new RRLogRecordStream(node1, lvl, source, ep, service_path.str().to_string(), member_name.str().to_string(), boost::posix_time::microsec_clock::local_time(), source_file, source_line, "0x" + boost::lexical_cast<std::string>(boost::this_thread::get_id()));
+        return new RRLogRecordStream(node1, lvl, component, ep, service_path.str().to_string(), member_name.str().to_string(), boost::posix_time::microsec_clock::local_time(), source_file, source_line, "0x" + boost::lexical_cast<std::string>(boost::this_thread::get_id()));
     }
 
 
@@ -134,39 +134,39 @@ namespace RobotRaconteur
             return "unknown";
         }
     }
-    std::string RRLogRecord_Source_ToString(RobotRaconteur_LogSource source)
+    std::string RRLogRecord_Component_ToString(RobotRaconteur_LogComponent component)
     {
-        switch (source)
+        switch (component)
         {
-            case RobotRaconteur_LogSource_Default:
+            case RobotRaconteur_LogComponent_Default:
                 return "default";
-            case RobotRaconteur_LogSource_Node:
+            case RobotRaconteur_LogComponent_Node:
                 return "node";
-            case RobotRaconteur_LogSource_Transport:
+            case RobotRaconteur_LogComponent_Transport:
                 return "transport";
-            case RobotRaconteur_LogSource_Message:
+            case RobotRaconteur_LogComponent_Message:
                 return "message";
-            case RobotRaconteur_LogSource_Client:
+            case RobotRaconteur_LogComponent_Client:
                 return "client";
-            case RobotRaconteur_LogSource_Service:
+            case RobotRaconteur_LogComponent_Service:
                 return "service";
-            case RobotRaconteur_LogSource_Member:
+            case RobotRaconteur_LogComponent_Member:
                 return "member";
-            case RobotRaconteur_LogSource_Pack:
+            case RobotRaconteur_LogComponent_Pack:
                 return "pack";                
-            case RobotRaconteur_LogSource_Unpack:
+            case RobotRaconteur_LogComponent_Unpack:
                 return "unpack";
-            case RobotRaconteur_LogSource_ServiceDefinition:
+            case RobotRaconteur_LogComponent_ServiceDefinition:
                 return "service_definition";                
-            case RobotRaconteur_LogSource_Discovery:
+            case RobotRaconteur_LogComponent_Discovery:
                 return "discovery";
-            case RobotRaconteur_LogSource_Subscription:
+            case RobotRaconteur_LogComponent_Subscription:
                 return "subscription";
-            case RobotRaconteur_LogSource_NodeSetup:
+            case RobotRaconteur_LogComponent_NodeSetup:
                 return "node_setup";
-            case RobotRaconteur_LogSource_Utility:
+            case RobotRaconteur_LogComponent_Utility:
                 return "utility";            
-            case RobotRaconteur_LogSource_User:
+            case RobotRaconteur_LogComponent_User:
                 return "user";
         default:
             return "unknown";

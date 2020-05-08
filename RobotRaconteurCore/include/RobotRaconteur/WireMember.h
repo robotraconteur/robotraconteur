@@ -545,42 +545,42 @@ namespace RobotRaconteur
 		//Unused service-side functions
 		virtual boost::function<void(RR_SHARED_PTR<WireConnection<T> >)> GetWireConnectCallback() 
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "GetWireConnectCallback is not valid for WireClient");
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName, "GetWireConnectCallback is not valid for WireClient");
 			throw InvalidOperationException("Not valid for client"); 
 		}
 		virtual void SetWireConnectCallback(boost::function<void(RR_SHARED_PTR<WireConnection<T> >)> function) 
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "SetWireConnectCallback is not valid for WireClient"); 
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName, "SetWireConnectCallback is not valid for WireClient"); 
 			throw InvalidOperationException("Not valid for client"); 
 		}
 		virtual boost::function<T(const uint32_t&)> GetPeekInValueCallback()
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "GetPeekInValueCallback is not valid for WireClient"); 
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName, "GetPeekInValueCallback is not valid for WireClient"); 
 			throw InvalidOperationException("Not valid for client");
 		}
 		virtual void SetPeekInValueCallback(boost::function<T(const uint32_t&)> function) 
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "SetPeekInValueCallback is not valid for WireClient");  
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName, "SetPeekInValueCallback is not valid for WireClient");  
 			throw InvalidOperationException("Not valid for client"); 
 		}
 		virtual boost::function<T(const uint32_t&)> GetPeekOutValueCallback()
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "GetPeekOutValueCallback is not valid for WireClient"); 
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName, "GetPeekOutValueCallback is not valid for WireClient"); 
 			throw InvalidOperationException("Not valid for client"); 
 		}
 		virtual void SetPeekOutValueCallback(boost::function<T(const uint32_t&)> function) 
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "SetPeekOutValueCallback is not valid for WireClient");  
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName, "SetPeekOutValueCallback is not valid for WireClient");  
 			throw InvalidOperationException("Not valid for client"); 
 		}
 		virtual boost::function<void(const T&, const TimeSpec&, const uint32_t&)> GetPokeOutValueCallback() 
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "GetPokeOutValueCallback is not valid for WireClient");  
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName, "GetPokeOutValueCallback is not valid for WireClient");  
 			throw InvalidOperationException("Not valid for client"); 
 		}
 		virtual void SetPokeOutValueCallback(boost::function<void(const T&, const TimeSpec&, const uint32_t&)> function) 
 		{ 
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "SetPokeOutValueCallback is not valid for WireClient"); 
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName, "SetPokeOutValueCallback is not valid for WireClient"); 
 			throw InvalidOperationException("Not valid for client"); 
 		}
 		
@@ -672,42 +672,42 @@ namespace RobotRaconteur
 
 		virtual void AsyncConnect(RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<WireConnection<T> >, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout = RR_TIMEOUT_INFINITE)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, -1, service_path, m_MemberName, "AsyncConnect is not valid for WireServer"); 
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, -1, service_path, m_MemberName, "AsyncConnect is not valid for WireServer"); 
 			throw InvalidOperationException("Not valid for server");
 		}
 		virtual RR_SHARED_PTR<WireConnection<T> > Connect()	
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, -1, service_path, m_MemberName, "Connect is not valid for WireServer");  
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, -1, service_path, m_MemberName, "Connect is not valid for WireServer");  
 			throw InvalidOperationException("Not valid for server"); 
 		}
 		virtual T PeekInValue(TimeSpec& ts) 
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, -1, service_path, m_MemberName, "PeekInValue is not valid for WireServer");  
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, -1, service_path, m_MemberName, "PeekInValue is not valid for WireServer");  
 			throw InvalidOperationException("Not valid for server"); 
 		}
 		virtual T PeekOutValue(TimeSpec& ts) 
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, -1, service_path, m_MemberName, "PeekOutValue is not valid for WireServer");  
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, -1, service_path, m_MemberName, "PeekOutValue is not valid for WireServer");  
 			throw InvalidOperationException("Not valid for server"); 
 		}
 		virtual void PokeOutValue(const T& value) 
 		{ 
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, -1, service_path, m_MemberName, "PokeOutValue is not valid for WireServer"); 
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, -1, service_path, m_MemberName, "PokeOutValue is not valid for WireServer"); 
 			throw InvalidOperationException("Not valid for server"); 
 		}
 		virtual void AsyncPeekInValue(RR_MOVE_ARG(boost::function<void(const T&, const TimeSpec&, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout = RR_TIMEOUT_INFINITE) 
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, -1, service_path, m_MemberName, "AsyncPeekInValue is not valid for WireServer");  
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, -1, service_path, m_MemberName, "AsyncPeekInValue is not valid for WireServer");  
 			throw InvalidOperationException("Not valid for server"); 
 		}
 		virtual void AsyncPeekOutValue(RR_MOVE_ARG(boost::function<void(const T&, const TimeSpec&, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout = RR_TIMEOUT_INFINITE) 
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, -1, service_path, m_MemberName, "AsyncPeekOutValue is not valid for WireServer");  
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, -1, service_path, m_MemberName, "AsyncPeekOutValue is not valid for WireServer");  
 			throw InvalidOperationException("Not valid for server"); 
 		}
 		virtual void AsyncPokeOutValue(const T& value, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout = RR_TIMEOUT_INFINITE)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, -1, service_path, m_MemberName, "AsyncPokeOutValue is not valid for WireServer");  
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, -1, service_path, m_MemberName, "AsyncPokeOutValue is not valid for WireServer");  
 			throw InvalidOperationException("Not valid for server"); 
 		}
 
@@ -742,7 +742,7 @@ namespace RobotRaconteur
 		{
 			if (!peek_in_callback) 
 			{
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, ep, service_path, m_MemberName, "Attempt to call PeekInValue when callback not set"); 
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, ep, service_path, m_MemberName, "Attempt to call PeekInValue when callback not set"); 
 				throw InvalidOperationException("Invalid operation");
 			}
 			return RRPrimUtil<T>::PrePack(peek_in_callback(ep));
@@ -752,7 +752,7 @@ namespace RobotRaconteur
 		{
 			if (!peek_out_callback)
 			{
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, ep, service_path, m_MemberName, "Attempt to call PeekOutValue when callback not set"); 
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, ep, service_path, m_MemberName, "Attempt to call PeekOutValue when callback not set"); 
 				throw InvalidOperationException("Invalid operation");
 			}
 			return RRPrimUtil<T>::PrePack(peek_out_callback(ep));
@@ -762,7 +762,7 @@ namespace RobotRaconteur
 		{
 			if (!poke_out_callback)
 			{
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, ep, service_path, m_MemberName, "Attempt to call PokeOutValue when callback not set"); 
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, ep, service_path, m_MemberName, "Attempt to call PokeOutValue when callback not set"); 
 				throw InvalidOperationException("Invalid operation");
 			}
 			return poke_out_callback(RRPrimUtil<T>::PreUnpack(value), ts, ep);
@@ -919,7 +919,7 @@ namespace RobotRaconteur
 			RR_SHARED_PTR<wireserver_type> wire_server = RR_DYNAMIC_POINTER_CAST<wireserver_type>(wire);			
 			if (!wire_server) 
 			{
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, -1, service_path, member_name, "WireUnicastReceiver init must be passed a WireServer");
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, -1, service_path, member_name, "WireUnicastReceiver init must be passed a WireServer");
 				throw InvalidOperationException("WireServer required for WireUnicastReceiver");
 			}
 			this->wire = wire_server;
@@ -937,7 +937,7 @@ namespace RobotRaconteur
 			this->service_path = wire_server->GetServicePath();
 			this->member_name = wire_server->GetMemberName();
 
-			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, -1, service_path, member_name, "WireUnicastReceiver initialized");
+			ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, -1, service_path, member_name, "WireUnicastReceiver initialized");
 		}
 
 		U GetInValue(TimeSpec& ts, uint32_t& ep)
@@ -981,13 +981,13 @@ namespace RobotRaconteur
 				catch (std::exception&) {}
 				active_connection.reset();
 
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, active_ep, service_path, member_name, "WireUnicastReceiver active wire closed for new connection");
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, active_ep, service_path, member_name, "WireUnicastReceiver active wire closed for new connection");
 			}
 			active_connection = connection;
 			connection->SetWireConnectionClosedCallback(boost::bind(&WireUnicastReceiverBase<T,U>::ConnectionClosed, this->shared_from_this(), _1));			
 			connection->WireValueChanged.connect(boost::bind(&WireUnicastReceiverBase<T,U>::ConnectionInValueChanged, this->shared_from_this(), _1, _2, _3));
 
-			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, -1, service_path, member_name, "WireUnicastReceiver wire connected, made active wire");
+			ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, -1, service_path, member_name, "WireUnicastReceiver wire connected, made active wire");
 		}
 
 		void ConnectionClosed(RR_SHARED_PTR<wireconnection_type> connection)
@@ -1026,7 +1026,7 @@ namespace RobotRaconteur
 
 			InValueChanged(value, ts, ep);
 
-			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, ep, service_path, member_name, "WireUnicastReceiver value changed");
+			ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, ep, service_path, member_name, "WireUnicastReceiver value changed");
 		}
 
 		void ServiceEvent(ServerServiceListenerEventType evt)

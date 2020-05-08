@@ -121,7 +121,7 @@ namespace RobotRaconteur
 			}
 
 			if (!c) return;
-			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Node, -1, "Client connection failed: " << err->what());
+			ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Node, -1, "Client connection failed: " << err->what());
 			
 			detail::InvokeHandlerWithException(node, handler, err);
 			
@@ -132,7 +132,7 @@ namespace RobotRaconteur
 			//std::cout << "Connected client" << std::endl;
 			if (err)
 			{
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Node, -1, "Client connection failed: " << err->what());
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Node, -1, "Client connection failed: " << err->what());
 
 				bool c;
 				{
@@ -176,7 +176,7 @@ namespace RobotRaconteur
 			}
 			if (!c)
 			{
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Node, -1, "Already connected, closing candidate: " << err->what());
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Node, -1, "Already connected, closing candidate: " << err->what());
 				try
 				{
 					if (client)
@@ -205,10 +205,10 @@ namespace RobotRaconteur
 					if (listener != 0)
 						client_context->ClientServiceListener.connect(listener);
 					//std::cout << "call connect handler" << std::endl;
-					ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Node, rr_cast<ServiceStub>(client)->GetContext()->GetLocalEndpoint(), "Client connected: " << url);
+					ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Node, rr_cast<ServiceStub>(client)->GetContext()->GetLocalEndpoint(), "Client connected: " << url);
 					if (client_context->GetUserAuthenticated())
 					{
-						ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Node, rr_cast<ServiceStub>(client)->GetContext()->GetLocalEndpoint(), "Client authenticated with username: \"" << client_context->GetAuthenticatedUsername() << "\"");
+						ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Node, rr_cast<ServiceStub>(client)->GetContext()->GetLocalEndpoint(), "Client authenticated with username: \"" << client_context->GetAuthenticatedUsername() << "\"");
 					}
 					
 					detail::InvokeHandler(node, handler, client);
@@ -225,7 +225,7 @@ namespace RobotRaconteur
 
 			if (err)
 			{
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Node, -1, "Error connecting to candidate service url " << url << " : " << err->what());
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Node, -1, "Error connecting to candidate service url " << url << " : " << err->what());
 				//std::cout << "Transport connect error" << std::endl;
 				handle_error(key, err);
 				return;
@@ -233,7 +233,7 @@ namespace RobotRaconteur
 
 			boost::mutex::scoped_lock lock(connecting_lock);
 
-			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Node, -1, "Transport connected: " << url);
+			ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Node, -1, "Transport connected: " << url);
 			//std::cout << "Transport connected" << std::endl;
 			bool c;
 			bool tc;
@@ -246,7 +246,7 @@ namespace RobotRaconteur
 			}
 			if (!c)
 			{
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Node, -1, "Already connected, closing candidate url: " << url);
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Node, -1, "Already connected, closing candidate url: " << url);
 				//std::cout << "Node connector close transport" << std::endl;
 				try
 				{
@@ -258,7 +258,7 @@ namespace RobotRaconteur
 			}
 			else if (tc)
 			{
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Node, -1, "Already connected, closing candidate url: " << url);
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Node, -1, "Already connected, closing candidate url: " << url);
 				boost::mutex::scoped_lock lock(active_lock);
 				active.remove(key);
 				try
@@ -280,7 +280,7 @@ namespace RobotRaconteur
 						key2 = active_count;
 
 
-						ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Node, -1, "Transport connected, connect service: " << url);
+						ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Node, -1, "Transport connected, connect service: " << url);
 
 						//std::cout << "Node connector connect service" << std::endl;
 						ep->ep->AsyncConnectService(transport, connection, url, username, credentials, objecttype, boost::protect(boost::bind(&RobotRaconteurNode_connector::connected_client, shared_from_this(), _1, _2, url, ep, key2)), timeout);
@@ -294,7 +294,7 @@ namespace RobotRaconteur
 				}
 				catch (RobotRaconteurException& err2)
 				{
-					ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Node, -1, "Error connecting to candidate service url: " << err2.what());
+					ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Node, -1, "Error connecting to candidate service url: " << err2.what());
 					if (transport)
 					{
 						try
@@ -310,7 +310,7 @@ namespace RobotRaconteur
 				}
 				catch (std::exception& err2)
 				{
-					ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Node, -1, "Error connecting to candidate service url: " << err2.what());
+					ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Node, -1, "Error connecting to candidate service url: " << err2.what());
 					if (transport)
 					{
 						try
@@ -346,7 +346,7 @@ namespace RobotRaconteur
 					connect_timer.reset();
 				}
 				
-				ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Node, -1, "Connect timed out");												
+				ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Node, -1, "Connect timed out");												
 				boost::mutex::scoped_lock lock2(handler_lock);				
 				detail::InvokeHandlerWithException(node, handler, RR_MAKE_SHARED<ConnectionException>("Connection timed out"));
 				
@@ -388,7 +388,7 @@ namespace RobotRaconteur
 				}
 				catch (RobotRaconteurException& err2)
 				{
-					ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Node, -1, "Error connecting to candidate service url: " << err2.what());
+					ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Node, -1, "Error connecting to candidate service url: " << err2.what());
 					start_connect_timer();
 					lock2.unlock();
 					handle_error(main_key, RobotRaconteurExceptionUtil::DownCastException(err2));
@@ -396,7 +396,7 @@ namespace RobotRaconteur
 				}
 				catch (std::exception& err2)
 				{					
-					ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Node, -1, "Error connecting to candidate service url: " << err2.what());
+					ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Node, -1, "Error connecting to candidate service url: " << err2.what());
 					start_connect_timer();
 					lock2.unlock();
 					handle_error(main_key, RR_MAKE_SHARED<ConnectionException>(err2.what()));
@@ -426,7 +426,7 @@ namespace RobotRaconteur
 				}
 				catch (RobotRaconteurException& err2)
 				{
-					ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Node, -1, "Error connecting to candidate service url: " << err2.what());
+					ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Node, -1, "Error connecting to candidate service url: " << err2.what());
 					boost::mutex::scoped_lock lock2(active_lock);
 					if (urls->empty())
 					{
@@ -437,7 +437,7 @@ namespace RobotRaconteur
 				}
 				catch (std::exception& err2)
 				{
-					ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Node, -1, "Error connecting to candidate service url: " << err2.what());
+					ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Node, -1, "Error connecting to candidate service url: " << err2.what());
 					boost::mutex::scoped_lock lock2(active_lock);
 					if (urls->empty())
 					{
@@ -475,7 +475,7 @@ namespace RobotRaconteur
 		void RobotRaconteurNode_connector::connect(const std::map<std::string, RR_WEAK_PTR<Transport> >& connectors, boost::string_ref username, RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials, boost::function<void(RR_SHARED_PTR<ClientContext>, ClientServiceListenerEventType, RR_SHARED_PTR<void>)> listener, boost::string_ref objecttype, boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)> handler, int32_t timeout)
 		{
 
-			ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Node, -1, "Begin connect with candidate urls: " << boost::join(connectors | boost::adaptors::map_keys, ", "));
+			ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Node, -1, "Begin connect with candidate urls: " << boost::join(connectors | boost::adaptors::map_keys, ", "));
 
 			this->connectors = connectors;
 			this->username = RR_MOVE(username.to_string());
@@ -512,12 +512,12 @@ namespace RobotRaconteur
 			}
 			catch (RobotRaconteurException& err2)
 			{
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Node, -1, "Error connecting to service: " << err2.what());
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Node, -1, "Error connecting to service: " << err2.what());
 				handle_error(key, RobotRaconteurExceptionUtil::DownCastException(err2));
 			}
 			catch (std::exception& err2)
 			{
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Node, -1, "Error connecting to service: " << err2.what());
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Node, -1, "Error connecting to service: " << err2.what());
 				handle_error(key, RR_MAKE_SHARED<ConnectionException>(err2.what()));
 			}
 		}		

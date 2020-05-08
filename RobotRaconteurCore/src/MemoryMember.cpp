@@ -121,7 +121,7 @@ namespace RobotRaconteur
 			}
 			catch (std::exception& exp)
 			{
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, e->GetLocalEndpoint(), service_path, m_MemberName, "Memory read operation failed: " << exp.what());
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, e->GetLocalEndpoint(), service_path, m_MemberName, "Memory read operation failed: " << exp.what());
 				throw;
 			}
 
@@ -146,7 +146,7 @@ namespace RobotRaconteur
 			}
 			catch (std::exception& exp)
 			{
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, e->GetLocalEndpoint(), service_path, m_MemberName, "Memory write operation failed: " << exp.what());
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, e->GetLocalEndpoint(), service_path, m_MemberName, "Memory write operation failed: " << exp.what());
 				throw;
 			}
 
@@ -178,12 +178,12 @@ namespace RobotRaconteur
 			}
 			catch (std::exception& exp)
 			{
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, e->GetLocalEndpoint(), service_path, m_MemberName, "Memory get param operation failed: " << exp.what());
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, e->GetLocalEndpoint(), service_path, m_MemberName, "Memory get param operation failed: " << exp.what());
 				throw;
 			}
 		}
 		default:
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, e->GetLocalEndpoint(), service_path, m_MemberName, "Invalid memory command");
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, e->GetLocalEndpoint(), service_path, m_MemberName, "Invalid memory command");
 			throw ProtocolException("Invalid command");
 
 		}
@@ -245,7 +245,7 @@ namespace RobotRaconteur
 			}
 			catch (std::exception& exp)
 			{
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, e->GetLocalEndpoint(), service_path, m_MemberName, "Memory read operation failed: " << exp.what());
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, e->GetLocalEndpoint(), service_path, m_MemberName, "Memory read operation failed: " << exp.what());
 				throw;
 			}
 
@@ -276,7 +276,7 @@ namespace RobotRaconteur
 			}
 			catch (std::exception& exp)
 			{
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, e->GetLocalEndpoint(), service_path, m_MemberName, "Memory write operation failed: " << exp.what());
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, e->GetLocalEndpoint(), service_path, m_MemberName, "Memory write operation failed: " << exp.what());
 				throw;
 			}
 
@@ -316,12 +316,12 @@ namespace RobotRaconteur
 			}
 			catch (std::exception& exp)
 			{
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, e->GetLocalEndpoint(), service_path, m_MemberName, "Memory get param operation failed: " << exp.what());
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, e->GetLocalEndpoint(), service_path, m_MemberName, "Memory get param operation failed: " << exp.what());
 				throw;
 			}
 		}
 		default:
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Service, e->GetLocalEndpoint(), service_path, m_MemberName, "Invalid memory command");
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, e->GetLocalEndpoint(), service_path, m_MemberName, "Invalid memory command");
 			throw ProtocolException("Invalid command");
 		}
 	}
@@ -351,7 +351,7 @@ namespace RobotRaconteur
 		service_path = stub->ServicePath;
 		endpoint = stub->GetContext()->GetLocalEndpoint();
 
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "ArrayMemoryClientBase created");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName, "ArrayMemoryClientBase created");
 	}
 
 	ArrayMemoryClientBase::~ArrayMemoryClientBase() {}
@@ -365,7 +365,7 @@ namespace RobotRaconteur
 
 	uint64_t ArrayMemoryClientBase::Length()
 	{
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, endpoint, service_path, m_MemberName, "Requesting memory length");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, endpoint, service_path, m_MemberName, "Requesting memory length");
 		RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_MemoryGetParam, GetMemberName());
 		m->AddElement("parameter", stringToRRArray("Length"));
 		RR_INTRUSIVE_PTR<MessageEntry> ret = GetStub()->ProcessRequest(m);
@@ -386,7 +386,7 @@ namespace RobotRaconteur
 			boost::mutex::scoped_lock lock(max_size_lock);
 			if (!max_size_read)
 			{
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, endpoint, service_path, m_MemberName, "Requesting memory service MaxTransferSize");
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, endpoint, service_path, m_MemberName, "Requesting memory service MaxTransferSize");
 				RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_MemoryGetParam, GetMemberName());
 				m->AddElement("parameter", stringToRRArray("MaxTransferSize"));
 				RR_INTRUSIVE_PTR<MessageEntry> ret = GetStub()->ProcessRequest(m);
@@ -395,12 +395,12 @@ namespace RobotRaconteur
 			uint32_t my_max_size = GetNode()->GetMemoryMaxTransferSize();
 			if (remote_max_size > my_max_size)
 			{
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, endpoint, service_path, m_MemberName, "Negotiated MaxTransferSize: " << my_max_size << " bytes");
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, endpoint, service_path, m_MemberName, "Negotiated MaxTransferSize: " << my_max_size << " bytes");
 				return my_max_size;
 			}
 			else
 			{
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, endpoint, service_path, m_MemberName, "Negotiated MaxTransferSize: " << remote_max_size << " bytes");
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, endpoint, service_path, m_MemberName, "Negotiated MaxTransferSize: " << remote_max_size << " bytes");
 				return remote_max_size;
 			}
 		}
@@ -409,10 +409,10 @@ namespace RobotRaconteur
 
 	void ArrayMemoryClientBase::ReadBase(uint64_t memorypos, void* buffer, uint64_t bufferpos, uint64_t count)
 	{
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, endpoint, service_path, m_MemberName, "Begin memory read with " << count << " elements");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, endpoint, service_path, m_MemberName, "Begin memory read with " << count << " elements");
 		if (direction == MemberDefinition_Direction_writeonly)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Client, endpoint, service_path, m_MemberName, "Attempt to read a write only memory");
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, endpoint, service_path, m_MemberName, "Attempt to read a write only memory");
 			throw WriteOnlyMemberException("Write only member");
 		}
 
@@ -423,7 +423,7 @@ namespace RobotRaconteur
 		{
 			try
 			{
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, endpoint, service_path, m_MemberName, "Requesting memory read with " << count << " elements");
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, endpoint, service_path, m_MemberName, "Requesting memory read with " << count << " elements");
 				//Transfer all data in one block
 				RR_INTRUSIVE_PTR<MessageEntry> e = CreateMessageEntry(MessageEntryType_MemoryRead, GetMemberName());
 				e->AddElement("memorypos", ScalarToRRArray(memorypos));
@@ -433,7 +433,7 @@ namespace RobotRaconteur
 			}
 			catch (std::exception& exp)
 			{
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Client, endpoint, service_path, m_MemberName, "Memory read request failed: " << exp.what());
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, endpoint, service_path, m_MemberName, "Memory read request failed: " << exp.what());
 				throw;
 			}
 		}
@@ -442,14 +442,14 @@ namespace RobotRaconteur
 			uint64_t blocks = count / boost::numeric_cast<uint64_t>(max_elems);
 			uint64_t blockrem = count % boost::numeric_cast<uint64_t>(max_elems);
 
-			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, endpoint, service_path, m_MemberName, "Memory read request too large, reading in " << blocks << " blocks");
+			ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, endpoint, service_path, m_MemberName, "Memory read request too large, reading in " << blocks << " blocks");
 
 			for (uint64_t i = 0; i < blocks; i++)
 			{
 				uint64_t bufferpos_i = bufferpos + max_elems * i;
 				uint64_t memorypos_i = memorypos + max_elems * i;
 
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, endpoint, service_path, m_MemberName, "Memory read block " << i);
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, endpoint, service_path, m_MemberName, "Memory read block " << i);
 				ReadBase(memorypos_i, buffer, bufferpos_i, max_elems);
 
 			}
@@ -459,7 +459,7 @@ namespace RobotRaconteur
 				uint64_t bufferpos_i = bufferpos + max_elems * blocks;
 				uint64_t memorypos_i = memorypos + max_elems * blocks;
 
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, endpoint, service_path, m_MemberName, "Memory read block remaining");
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, endpoint, service_path, m_MemberName, "Memory read block remaining");
 				ReadBase(memorypos_i, buffer, bufferpos_i, blockrem);
 			}
 		}
@@ -467,10 +467,10 @@ namespace RobotRaconteur
 
 	void ArrayMemoryClientBase::WriteBase(uint64_t memorypos, void* buffer, uint64_t bufferpos, uint64_t count)
 	{
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, endpoint, service_path, m_MemberName, "Begin memory write with " << count << " elements");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, endpoint, service_path, m_MemberName, "Begin memory write with " << count << " elements");
 		if (direction == MemberDefinition_Direction_readonly)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Client, endpoint, service_path, m_MemberName, "Attempt to write a read only memory");
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, endpoint, service_path, m_MemberName, "Attempt to write a read only memory");
 			throw ReadOnlyMemberException("Read only member");
 		}
 
@@ -485,7 +485,7 @@ namespace RobotRaconteur
 		{
 			try
 			{
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, endpoint, service_path, m_MemberName, "Requesting memory write with " << count << " elements");
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, endpoint, service_path, m_MemberName, "Requesting memory write with " << count << " elements");
 				//Transfer all data in one block
 				RR_INTRUSIVE_PTR<MessageEntry> e = CreateMessageEntry(MessageEntryType_MemoryWrite, GetMemberName());
 				e->AddElement("memorypos", ScalarToRRArray(memorypos));
@@ -497,7 +497,7 @@ namespace RobotRaconteur
 			}
 			catch (std::exception& exp)
 			{
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Client, endpoint, service_path, m_MemberName, "Memory write request failed: " << exp.what());
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, endpoint, service_path, m_MemberName, "Memory write request failed: " << exp.what());
 				throw;
 			}
 		}
@@ -509,14 +509,14 @@ namespace RobotRaconteur
 			uint64_t blocks = count / boost::numeric_cast<uint64_t>(max_elems);
 			uint64_t blockrem = count % boost::numeric_cast<uint64_t>(max_elems);
 
-			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, endpoint, service_path, m_MemberName, "Memory write request too large, writing in " << blocks << " blocks");
+			ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, endpoint, service_path, m_MemberName, "Memory write request too large, writing in " << blocks << " blocks");
 
 			for (uint64_t i = 0; i < blocks; i++)
 			{
 				uint64_t bufferpos_i = bufferpos + max_elems * i;
 				uint64_t memorypos_i = memorypos + max_elems * i;
 
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, endpoint, service_path, m_MemberName, "Memory write block " << i);
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, endpoint, service_path, m_MemberName, "Memory write block " << i);
 				WriteBase(memorypos_i, buffer, bufferpos_i, max_elems);
 
 			}
@@ -526,7 +526,7 @@ namespace RobotRaconteur
 				uint64_t  bufferpos_i = bufferpos + max_elems * blocks;
 				uint64_t  memorypos_i = memorypos + max_elems * blocks;
 
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, endpoint, service_path, m_MemberName, "Memory write block remaining");
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, endpoint, service_path, m_MemberName, "Memory write block remaining");
 				WriteBase(memorypos_i, buffer, bufferpos_i, blockrem);
 			}
 		}
@@ -561,7 +561,7 @@ namespace RobotRaconteur
 		this->service_path = stub->ServicePath;
 		this->endpoint = stub->GetContext()->GetLocalEndpoint();
 
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "MultiDimArrayMemoryClientBase created");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName, "MultiDimArrayMemoryClientBase created");
 	}
 
 	MultiDimArrayMemoryClientBase::~MultiDimArrayMemoryClientBase() {}
@@ -580,7 +580,7 @@ namespace RobotRaconteur
 
 	std::vector<uint64_t> MultiDimArrayMemoryClientBase::Dimensions()
 	{
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, endpoint, service_path, m_MemberName, "Requesting memory dimensions");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, endpoint, service_path, m_MemberName, "Requesting memory dimensions");
 		RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_MemoryGetParam, GetMemberName());
 		m->AddElement("parameter", stringToRRArray("Dimensions"));
 		RR_INTRUSIVE_PTR<MessageEntry> ret = GetStub()->ProcessRequest(m);
@@ -589,7 +589,7 @@ namespace RobotRaconteur
 
 	uint64_t MultiDimArrayMemoryClientBase::DimCount()
 	{
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, endpoint, service_path, m_MemberName, "Requesting memory dimension count");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, endpoint, service_path, m_MemberName, "Requesting memory dimension count");
 		RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_MemoryGetParam, GetMemberName());
 		m->AddElement("parameter", stringToRRArray("DimCount"));
 		RR_INTRUSIVE_PTR<MessageEntry> ret = GetStub()->ProcessRequest(m);
@@ -602,7 +602,7 @@ namespace RobotRaconteur
 			boost::mutex::scoped_lock lock(max_size_lock);
 			if (!max_size_read)
 			{
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, endpoint, service_path, m_MemberName, "Requesting memory service MaxTransferSize");
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, endpoint, service_path, m_MemberName, "Requesting memory service MaxTransferSize");
 				RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_MemoryGetParam, GetMemberName());
 				m->AddElement("parameter", stringToRRArray("MaxTransferSize"));
 				RR_INTRUSIVE_PTR<MessageEntry> ret = GetStub()->ProcessRequest(m);
@@ -611,12 +611,12 @@ namespace RobotRaconteur
 			uint32_t my_max_size = GetNode()->GetMemoryMaxTransferSize();
 			if (remote_max_size > my_max_size)
 			{
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, endpoint, service_path, m_MemberName, "Negotiated MaxTransferSize: " << my_max_size << " bytes");
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, endpoint, service_path, m_MemberName, "Negotiated MaxTransferSize: " << my_max_size << " bytes");
 				return my_max_size;
 			}
 			else
 			{
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, endpoint, service_path, m_MemberName, "Negotiated MaxTransferSize: " << remote_max_size << " bytes");
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, endpoint, service_path, m_MemberName, "Negotiated MaxTransferSize: " << remote_max_size << " bytes");
 				return remote_max_size;
 			}
 		}
@@ -630,10 +630,10 @@ namespace RobotRaconteur
 
 	void MultiDimArrayMemoryClientBase::ReadBase(const std::vector<uint64_t>& memorypos, void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 	{
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, endpoint, service_path, m_MemberName, "Begin memory read with " << std_vec_uint64_t_to_string(count) << " count");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, endpoint, service_path, m_MemberName, "Begin memory read with " << std_vec_uint64_t_to_string(count) << " count");
 		if (direction == MemberDefinition_Direction_writeonly)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Client, endpoint, service_path, m_MemberName, "Attempt to read a write only memory");
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, endpoint, service_path, m_MemberName, "Attempt to read a write only memory");
 			throw WriteOnlyMemberException("Write only member");
 		}
 
@@ -648,7 +648,7 @@ namespace RobotRaconteur
 		{
 			try
 			{
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, endpoint, service_path, m_MemberName, "Requesting memory read with " << std_vec_uint64_t_to_string(count) << " count");
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, endpoint, service_path, m_MemberName, "Requesting memory read with " << std_vec_uint64_t_to_string(count) << " count");
 				//Transfer all data in one block
 				RR_INTRUSIVE_PTR<MessageEntry> e = CreateMessageEntry(MessageEntryType_MemoryRead, GetMemberName());
 				e->AddElement("memorypos", VectorToRRArray<uint64_t>(memorypos));
@@ -659,7 +659,7 @@ namespace RobotRaconteur
 			}
 			catch (std::exception& exp)
 			{
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Client, endpoint, service_path, m_MemberName, "Memory read request failed: " << exp.what());
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, endpoint, service_path, m_MemberName, "Memory read request failed: " << exp.what());
 				throw;
 			}
 
@@ -681,7 +681,7 @@ namespace RobotRaconteur
 			bool done = false;
 			std::vector<uint64_t> current_pos = std::vector<uint64_t>(count.size());
 
-			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, endpoint, service_path, m_MemberName, "Memory read request too large, reading in blocks");
+			ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, endpoint, service_path, m_MemberName, "Memory read request too large, reading in blocks");
 
 			while (!done)
 			{
@@ -750,10 +750,10 @@ namespace RobotRaconteur
 		
 	void MultiDimArrayMemoryClientBase::WriteBase(const std::vector<uint64_t>& memorypos, void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 	{
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, endpoint, service_path, m_MemberName, "Begin memory write with " << std_vec_uint64_t_to_string(count) << " count");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, endpoint, service_path, m_MemberName, "Begin memory write with " << std_vec_uint64_t_to_string(count) << " count");
 		if (direction == MemberDefinition_Direction_readonly)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Client, endpoint, service_path, m_MemberName, "Attempt to write a read only memory");
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, endpoint, service_path, m_MemberName, "Attempt to write a read only memory");
 			throw ReadOnlyMemberException("Read only member");
 		}
 
@@ -768,7 +768,7 @@ namespace RobotRaconteur
 		{
 			try
 			{
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, endpoint, service_path, m_MemberName, "Requesting memory write with " << std_vec_uint64_t_to_string(count) << " count");
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, endpoint, service_path, m_MemberName, "Requesting memory write with " << std_vec_uint64_t_to_string(count) << " count");
 				//Transfer all data in one block
 				RR_INTRUSIVE_PTR<MessageEntry> e = CreateMessageEntry(MessageEntryType_MemoryWrite, GetMemberName());
 				e->AddElement("memorypos", VectorToRRArray<uint64_t>(memorypos));
@@ -780,7 +780,7 @@ namespace RobotRaconteur
 			}
 			catch (std::exception& exp)
 			{
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Client, endpoint, service_path, m_MemberName, "Memory write request failed: " << exp.what());
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, endpoint, service_path, m_MemberName, "Memory write request failed: " << exp.what());
 				throw;
 			}
 
@@ -800,7 +800,7 @@ namespace RobotRaconteur
 			bool done = false;
 			std::vector<uint64_t> current_pos = std::vector<uint64_t>(count.size());
 
-			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, endpoint, service_path, m_MemberName, "Memory write request too large, reading in blocks");
+			ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, endpoint, service_path, m_MemberName, "Memory write request too large, reading in blocks");
 
 			while (!done)
 			{

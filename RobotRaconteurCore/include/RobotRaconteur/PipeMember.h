@@ -488,13 +488,13 @@ namespace RobotRaconteur
 		
 		virtual boost::function<void(RR_SHARED_PTR<PipeEndpoint<T> >)> GetPipeConnectCallback()
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "GetPipeConnectCallback is not valid for PipeClient");
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName, "GetPipeConnectCallback is not valid for PipeClient");
 			throw InvalidOperationException("Not valid for client");
 		}
 		
 		virtual void SetPipeConnectCallback(boost::function<void(RR_SHARED_PTR<PipeEndpoint<T> >)> function)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, endpoint, service_path, m_MemberName, "SetPipeConnectCallback is not valid for PipeClient");
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName, "SetPipeConnectCallback is not valid for PipeClient");
 			throw InvalidOperationException("Not valid for client");
 		}
 		
@@ -648,13 +648,13 @@ namespace RobotRaconteur
 		
 		virtual RR_SHARED_PTR<PipeEndpoint<T> > Connect(int32_t index)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, -1, service_path, m_MemberName, "Connect is not valid for PipeServer");
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, -1, service_path, m_MemberName, "Connect is not valid for PipeServer");
 			throw InvalidOperationException("Not valid for server");
 		}
 
 		virtual void AsyncConnect(int32_t index, RR_MOVE_ARG(boost::function<void (RR_SHARED_PTR<PipeEndpoint<T> >, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout=RR_TIMEOUT_INFINITE)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Member, -1, service_path, m_MemberName, "AsyncConnect is not valid for PipeServer");
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, -1, service_path, m_MemberName, "AsyncConnect is not valid for PipeServer");
 			throw InvalidOperationException("Not valid for server");
 		}
 

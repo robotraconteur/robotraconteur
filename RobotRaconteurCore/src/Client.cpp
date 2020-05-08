@@ -52,7 +52,7 @@ namespace RobotRaconteur
 		this->node = c->GetNode();
 		RRMutex = RR_MAKE_SHARED<boost::recursive_mutex>();
 		RREndpoint = c->GetLocalEndpoint();
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, RREndpoint, ServicePath,	"", "ServiceStub created with type: " << RRType());
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, RREndpoint, ServicePath,	"", "ServiceStub created with type: " << RRType());
 	}
 
 	RR_SHARED_PTR<ClientContext> ServiceStub::GetContext()
@@ -159,23 +159,23 @@ namespace RobotRaconteur
 
 	void ServiceStub::DispatchPipeMessage(RR_INTRUSIVE_PTR<MessageEntry> m)
 	{
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, RREndpoint, ServicePath, m->MemberName, "Pipe packet received for nonexistant member");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, RREndpoint, ServicePath, m->MemberName, "Pipe packet received for nonexistant member");
 	}
 
 	void ServiceStub::DispatchWireMessage(RR_INTRUSIVE_PTR<MessageEntry> m)
 	{
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, RREndpoint, ServicePath, m->MemberName, "Wire packet received for nonexistant member");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, RREndpoint, ServicePath, m->MemberName, "Wire packet received for nonexistant member");
 	}
 
 	RR_INTRUSIVE_PTR<MessageEntry> ServiceStub::CallbackCall(RR_INTRUSIVE_PTR<MessageEntry> m)
 	{
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, RREndpoint, ServicePath, m->MemberName, "Callback request received for nonexistant member");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, RREndpoint, ServicePath, m->MemberName, "Callback request received for nonexistant member");
 		throw MemberNotFoundException("Member not found");
 	}
 
 	void ServiceStub::RRClose()
 	{
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, RREndpoint, ServicePath, "",	"Client stub closed");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, RREndpoint, ServicePath, "",	"Client stub closed");
 	}
 
 	RR_SHARED_PTR<PipeClientBase> ServiceStub::RRGetPipeClient(boost::string_ref membername)
@@ -214,7 +214,7 @@ namespace RobotRaconteur
 		//rec_event = new AutoResetEvent(false);
 		InitializeInstanceFields();
 
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Client, -1, "ClientContext created");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, -1, "ClientContext created");
 
 	}
 
@@ -223,7 +223,7 @@ namespace RobotRaconteur
 		InitializeInstanceFields();
 		m_ServiceDef = service_def;
 
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Client, -1, "ClientContext created");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, -1, "ClientContext created");
 
 		//rec_event = new AutoResetEvent(false);
 
@@ -241,11 +241,11 @@ namespace RobotRaconteur
 	void ClientContext::AsyncFindObjRef(boost::string_ref path, boost::string_ref objecttype2, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout)
 	{
 
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, GetLocalEndpoint(), path, "", "Begin FindObjRef");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), path, "", "Begin FindObjRef");
 		
 		if (!GetConnected()) 
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Client, GetLocalEndpoint(), path, "", "Service client not connected");
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, GetLocalEndpoint(), path, "", "Service client not connected");
 			throw ConnectionException("Service client not connected");
 		}
 
@@ -271,7 +271,7 @@ namespace RobotRaconteur
 
 		if (stub)
 		{
-			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, GetLocalEndpoint(), path, "", "Returning cached stub");
+			ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), path, "", "Returning cached stub");
 			RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(handler, rr_cast<RRObject>(stub), RR_SHARED_PTR<RobotRaconteurException>()), true);
 			return;
 		}
@@ -295,13 +295,13 @@ namespace RobotRaconteur
 	{
 		if (err)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Client, GetLocalEndpoint(), path, "", "Error during FindObjRef: " << err->what());
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, GetLocalEndpoint(), path, "", "Error during FindObjRef: " << err->what());
 			detail::InvokeHandlerWithException(node, handler, err);
 			return;
 		}
 		else
 		{
-			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, GetLocalEndpoint(), path, "", "Received FindObjRef response");
+			ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), path, "", "Received FindObjRef response");
 
 			try
 			{
@@ -341,7 +341,7 @@ namespace RobotRaconteur
 			}			
 			catch (std::exception& err)
 			{
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Client, GetLocalEndpoint(), path, "", "Error during FindObjRef: " << err.what());
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, GetLocalEndpoint(), path, "", "Error during FindObjRef: " << err.what());
 				detail::InvokeHandlerWithException(node, handler, err, MessageErrorType_ServiceError);
 			}
 		}
@@ -352,7 +352,7 @@ namespace RobotRaconteur
 		std::string objecttype = objecttype1;
 		if (err)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Client, GetLocalEndpoint(), path, "", "Error during FindObjRef: " << err->what());
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, GetLocalEndpoint(), path, "", "Error during FindObjRef: " << err->what());
 			detail::InvokeHandlerWithException(node, handler, err);
 			return;
 		}
@@ -417,7 +417,7 @@ namespace RobotRaconteur
 
 					RR_SHARED_PTR<ServiceFactory> f = GetPulledServiceType(objectdef);
 
-					ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Client, GetLocalEndpoint(), path, "", "FindObjRef returned type \"" << objecttype << "\" creating stub");
+					ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, GetLocalEndpoint(), path, "", "FindObjRef returned type \"" << objecttype << "\" creating stub");
 
 					stub = f->CreateStub(objecttype, path, shared_from_this());
 				}
@@ -430,7 +430,7 @@ namespace RobotRaconteur
 						objecttype=objecttype2;
 					}
 
-					ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Client, GetLocalEndpoint(), path, "", "FindObjRef returned type \"" << objecttype << "\" creating stub");
+					ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, GetLocalEndpoint(), path, "", "FindObjRef returned type \"" << objecttype << "\" creating stub");
 
 					stub = GetServiceDef()->CreateStub(objecttype, path, shared_from_this());
 				}
@@ -455,7 +455,7 @@ namespace RobotRaconteur
 			}			
 			catch (std::exception& err2)
 			{
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Client, GetLocalEndpoint(), path, "", "Error during FindObjRef: " << err2.what());
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, GetLocalEndpoint(), path, "", "Error during FindObjRef: " << err2.what());
 				detail::InvokeHandlerWithException(node, handler, err2, MessageErrorType_ServiceError);
 			}
 		}
@@ -504,7 +504,7 @@ namespace RobotRaconteur
 
 	void ClientContext::AsyncFindObjectType(boost::string_ref path, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<std::string>, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout)
 	{
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, GetLocalEndpoint(), path, "", "Begin FindObjectType");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), path, "", "Begin FindObjectType");
 
 		RR_INTRUSIVE_PTR<MessageEntry> e = CreateMessageEntry(MessageEntryType_ObjectTypeName, "");
 		e->AddElement("clientversion", stringToRRArray(ROBOTRACONTEUR_VERSION_TEXT));
@@ -517,7 +517,7 @@ namespace RobotRaconteur
 	{
 		if (err)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Client, GetLocalEndpoint(), path, "", "Error during FindObjectType: " << err->what());
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, GetLocalEndpoint(), path, "", "Error during FindObjectType: " << err->what());
 			detail::InvokeHandlerWithException(node, handler, err);			
 			return;
 		}
@@ -529,19 +529,19 @@ namespace RobotRaconteur
 
 				try
 				{
-					ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, GetLocalEndpoint(), path, "", "FindObjectType returned \"" << objecttype << "\"");
+					ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), path, "", "FindObjectType returned \"" << objecttype << "\"");
 					RR_SHARED_PTR<std::string> ret = RR_MAKE_SHARED<std::string>(objecttype);
 					detail::InvokeHandler(node, handler, ret);
 				}
 				catch (std::exception& exp)
 				{
-					ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Client, GetLocalEndpoint(), path, "", "Error during FindObjectType: " << exp.what());
+					ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, GetLocalEndpoint(), path, "", "Error during FindObjectType: " << exp.what());
 					RobotRaconteurNode::TryHandleException(node, &exp);
 				}
 			}			
 			catch (std::exception& err)
 			{
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Client, GetLocalEndpoint(), path, "", "Error during FindObjectType: " << err.what());
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, GetLocalEndpoint(), path, "", "Error during FindObjectType: " << err.what());
 				detail::InvokeHandlerWithException(node, handler, err, MessageErrorType_ServiceError);
 			}
 		}
@@ -580,7 +580,7 @@ namespace RobotRaconteur
 
 
 
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "ProcessRequest sending message with requestid " << myrequestid << " EntryType " << m->EntryType);
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "ProcessRequest sending message with requestid " << myrequestid << " EntryType " << m->EntryType);
 		//Console.WriteLine("Sent " + m.RequestID + " " + m.EntryType + " " + m.MemberName);
 		SendMessage(m);
 
@@ -624,12 +624,12 @@ namespace RobotRaconteur
 		if (rec_message->RequestID != myrequestid)
 			throw InternalErrorException("This should be impossible!");
 
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "ProcessRequest received response with requestid " << myrequestid);
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "ProcessRequest received response with requestid " << myrequestid);
 
 		}
 		catch (std::exception& exp)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Error during ProcessRequest: " << exp.what());
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Error during ProcessRequest: " << exp.what());
 			throw;
 		}
 
@@ -639,17 +639,17 @@ namespace RobotRaconteur
 			{
 				RR_SHARED_PTR<RobotRaconteurException> err = RobotRaconteurExceptionUtil::MessageEntryToException(rec_message);
 				if (!err) RobotRaconteurExceptionUtil::ThrowMessageEntryException(rec_message);
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Service returned remote error during ProcessRequest: " << err->what());
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Service returned remote error during ProcessRequest: " << err->what());
 				m_ServiceDef->DownCastAndThrowException(*err);
 			}
 
 			if (rec_message->Error != MessageErrorType_StopIteration)
 			{
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Service returned error during ProcessRequest: " << rec_message->Error);
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Service returned error during ProcessRequest: " << rec_message->Error);
 			}
 			else
 			{
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Service returned error during ProcessRequest: " << rec_message->Error);
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Service returned error during ProcessRequest: " << rec_message->Error);
 			}
 
 			RobotRaconteurExceptionUtil::ThrowMessageEntryException(rec_message);
@@ -657,7 +657,7 @@ namespace RobotRaconteur
 
 		}
 		
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "ProcessRequest with requestid " << myrequestid << " successful");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "ProcessRequest with requestid " << myrequestid << " successful");
 
 		return rec_message;		
 
@@ -708,7 +708,7 @@ namespace RobotRaconteur
 
 		}
 
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "AsyncProcessRequest sending message with requestid " << myrequestid << " EntryType " << m->EntryType);
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "AsyncProcessRequest sending message with requestid " << myrequestid << " EntryType " << m->EntryType);
 		//Console.WriteLine("Sent " + m.RequestID + " " + m.EntryType + " " + m.MemberName);
 		boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&ClientContext::AsyncProcessRequest_err, shared_from_this(), _1, myrequestid);
 		AsyncSendMessage(m, h);
@@ -716,7 +716,7 @@ namespace RobotRaconteur
 		}
 		catch (std::exception& exp)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Error during AsyncProcessRequest: " << exp.what());
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Error during AsyncProcessRequest: " << exp.what());
 			throw;
 		}
 
@@ -760,7 +760,7 @@ namespace RobotRaconteur
 
 			BOOST_FOREACH(handler_type& e, handlers)
 			{				
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "Connection lost during AsyncProcessRequest with requestid " << e.get<0>());
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "Connection lost during AsyncProcessRequest with requestid " << e.get<0>());
 				detail::InvokeHandlerWithException(node,e.get<1>(),exp);				
 			}
 		}
@@ -781,7 +781,7 @@ namespace RobotRaconteur
 				outstanding_requests.erase(e1);
 			}
 
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "Error during AsyncProcessRequest with requestid " << requestid << ": " << error->what());
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "Error during AsyncProcessRequest with requestid " << requestid << ": " << error->what());
 
 			detail::InvokeHandlerWithException(node, t->handler, error);
 
@@ -789,7 +789,7 @@ namespace RobotRaconteur
 		}
 		catch (std::exception& exp)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "Failed to handle error during AsyncProcessRequest: " << exp.what());
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "Failed to handle error during AsyncProcessRequest: " << exp.what());
 			RobotRaconteurNode::TryHandleException(node, &exp);
 		}
 	}
@@ -813,13 +813,13 @@ namespace RobotRaconteur
 					outstanding_requests.erase(e1);
 				}
 
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "AsyncProcessRequest with requestid " << requestid << " timed out");
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncProcessRequest with requestid " << requestid << " timed out");
 
 				detail::InvokeHandlerWithException(node, t->handler, RR_MAKE_SHARED<RequestTimeoutException>("Request timeout"));
 			}
 			catch (std::exception& exp)
 			{
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "Failed to handle error during AsyncProcessRequest: " << exp.what());
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "Failed to handle error during AsyncProcessRequest: " << exp.what());
 				RobotRaconteurNode::TryHandleException(node, &exp);
 			}
 		}
@@ -902,7 +902,7 @@ namespace RobotRaconteur
 		{
 			if (m->entries[0]->EntryType == MessageEntryType_ConnectClientRet || m->entries[0]->EntryType == MessageEntryType_ConnectClientCombinedRet)
 			{
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Client, GetLocalEndpoint(), "Client received connect client response RemoteNodeID: " 
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "Client received connect client response RemoteNodeID: " 
 					<< m->header->SenderNodeID.ToString() << " RemoteNodeName: " << m->header->SenderNodeName
 					<< " RemoteEndpoint: " << m->header->SenderEndpoint);
 		
@@ -922,7 +922,7 @@ namespace RobotRaconteur
 		{
 			if (mm->Error == MessageErrorType_InvalidEndpoint)
 			{
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "Client received InvalidEndpoint error, assume session lost and close");
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "Client received InvalidEndpoint error, assume session lost and close");
 				AsyncClose(&ClientContext_empty_handler);
 				return;
 			}
@@ -939,7 +939,7 @@ namespace RobotRaconteur
 		}
 		catch (std::exception& exp)
 		{			
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Client, ep, m->ServicePath, m->MemberName, "DispatchEvent failed: " << exp.what());
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, ep, m->ServicePath, m->MemberName, "DispatchEvent failed: " << exp.what());
 			RobotRaconteurNode::TryHandleException(node,&exp);			
 		}
 	}
@@ -947,7 +947,7 @@ namespace RobotRaconteur
 	void ClientContext::MessageEntryReceived(RR_INTRUSIVE_PTR<MessageEntry> m)
 	{
 
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName,
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName,
 			"Client received message entry EntryType " << m->EntryType << " Error " << m->Error);
 
 		{
@@ -967,7 +967,7 @@ namespace RobotRaconteur
 				}
 				else
 				{
-					ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName,
+					ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName,
 						"Client received event for nonexistant service path");
 				}
 				//stub.DispatchEvent(m);
@@ -1048,25 +1048,25 @@ namespace RobotRaconteur
 
 							if (m->Error == MessageErrorType_None)
 							{
-								ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "AsyncProcessRequest with requestid " << requestid << " successful");
+								ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "AsyncProcessRequest with requestid " << requestid << " successful");
 								t->handler(m, RR_SHARED_PTR<RobotRaconteurException>());
 							}
 							else if (m->Error == MessageErrorType_RemoteError)
 							{
 								RR_SHARED_PTR<RobotRaconteurException> err = RobotRaconteurExceptionUtil::MessageEntryToException(m);
 								RR_SHARED_PTR<RobotRaconteurException> err2 = m_ServiceDef->DownCastException(err);
-								ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Service returned remote error during ProcessRequest: " << err->what());
+								ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Service returned remote error during ProcessRequest: " << err->what());
 								t->handler(RR_INTRUSIVE_PTR<MessageEntry>(), err2);
 							}
 							else
 							{
 								if (m->Error != MessageErrorType_StopIteration)
 								{
-									ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Service returned error during ProcessRequest: " << m->Error);
+									ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Service returned error during ProcessRequest: " << m->Error);
 								}
 								else
 								{
-									ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Service returned error during ProcessRequest: " << m->Error);
+									ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Service returned error during ProcessRequest: " << m->Error);
 								}
 								t->handler(RR_INTRUSIVE_PTR<MessageEntry>(), RobotRaconteurExceptionUtil::MessageEntryToException(m));
 							}
@@ -1074,7 +1074,7 @@ namespace RobotRaconteur
 					}
 					catch (std::exception& exp)
 					{
-						ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Error handling AsyncProcessRequest response: " << exp.what());
+						ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Error handling AsyncProcessRequest response: " << exp.what());
 						RobotRaconteurNode::TryHandleException(node, &exp);
 					}
 				}
@@ -1082,7 +1082,7 @@ namespace RobotRaconteur
 			}
 			else if (m->EntryType == MessageEntryType_ServiceClosed)
 			{
-				ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Client, GetLocalEndpoint(), "Client received ServiceClosed, disconnecting");
+				ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Client, GetLocalEndpoint(), "Client received ServiceClosed, disconnecting");
 
 				try
 				{
@@ -1104,7 +1104,7 @@ namespace RobotRaconteur
 			else if (m->EntryType == MessageEntryType_PipePacket || m->EntryType == MessageEntryType_PipeClosed || m->EntryType == MessageEntryType_PipePacketRet)
 			{
 
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Received pipe packet entry type " << m->EntryType);
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Received pipe packet entry type " << m->EntryType);
 
 				RR_SHARED_PTR<ServiceStub> stub;
 				{
@@ -1119,14 +1119,14 @@ namespace RobotRaconteur
 				}
 				else
 				{				
-					ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName,
+					ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName,
 						"Client received pipe packet for nonexistant service path");				
 				}
 				return;
 			}
 			else if (m->EntryType == MessageEntryType_WirePacket || m->EntryType == MessageEntryType_WireClosed)
 			{
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Received wire packet entry type " << m->EntryType);
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Received wire packet entry type " << m->EntryType);
 
 				RR_SHARED_PTR<ServiceStub> stub;
 				{
@@ -1141,13 +1141,13 @@ namespace RobotRaconteur
 				}
 				else
 				{
-					ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName,
+					ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName,
 						"Client received wire packet for nonexistant service path");				
 				}
 			}
 			else if (m->EntryType == MessageEntryType_ServicePathReleasedReq)
 			{
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName,
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName,
 						"Service path released by service, destroying stubs");
 
 				boost::mutex::scoped_lock lock(stubs_lock);
@@ -1188,7 +1188,7 @@ namespace RobotRaconteur
 			}
 			else
 			{
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName,
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName,
 						"Client received unkown EntryType: " << m->EntryType);
 				throw ServiceException("Unknown service command");
 			}
@@ -1249,7 +1249,7 @@ namespace RobotRaconteur
 
 		if (!c->CanConnectService(url))
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "Invalid transport provided to AsyncConnectService");
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "Invalid transport provided to AsyncConnectService");
 			throw ServiceException("Invalid transport");
 		}
 
@@ -1264,7 +1264,7 @@ namespace RobotRaconteur
 		}
 		catch (std::exception& exp)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "AsyncConnectService failed: " << exp.what());
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncConnectService failed: " << exp.what());
 			throw;
 		}
 
@@ -1276,7 +1276,7 @@ namespace RobotRaconteur
 		boost::recursive_mutex::scoped_lock cl_lock(connect_lock);
 		if (e)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "AsyncConnectService failed: " << e->what());
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncConnectService failed: " << e->what());
 			detail::InvokeHandlerWithException(node, handler, e);
 			
 			AsyncClose(&ClientContext_empty_handler);
@@ -1300,7 +1300,7 @@ namespace RobotRaconteur
 
 	void ClientContext::AsyncConnectService(RR_SHARED_PTR<Transport> c, RR_SHARED_PTR<ITransportConnection> tc, boost::string_ref url, boost::string_ref username, RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials, boost::string_ref objecttype, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout)
 	{
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Client, GetLocalEndpoint(), "Begin AsyncConnectService with url: " << url);
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "Begin AsyncConnectService with url: " << url);
 
 		boost::recursive_mutex::scoped_lock cl_lock(connect_lock);
 
@@ -1359,13 +1359,13 @@ namespace RobotRaconteur
 		}
 		catch (std::exception& exp)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "Client listener callback raised exception: " << exp.what());
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "Client listener callback raised exception: " << exp.what());
 			RobotRaconteurNode::TryHandleException(node, &exp);
 		}
 
 		if (use_combined_connection.load())
 		{
-			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Client, GetLocalEndpoint(), "AsyncConnectService using ConnectClientCombined");
+			ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncConnectService using ConnectClientCombined");
 
 			RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry();
 			m->ServicePath = GetServiceName();
@@ -1389,7 +1389,7 @@ namespace RobotRaconteur
 			return;
 		}
 
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Client, GetLocalEndpoint(), "AsyncConnectService not using ConnectClientCombined");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncConnectService not using ConnectClientCombined");
 
 		if (timeout == RR_TIMEOUT_INFINITE)
 		{
@@ -1406,7 +1406,7 @@ namespace RobotRaconteur
 		}
 		catch (std::exception & exp)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "AsyncConnectService failed: " << exp.what());
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncConnectService failed: " << exp.what());
 			throw;
 		}
 	}
@@ -1418,7 +1418,7 @@ namespace RobotRaconteur
 		//std::cout << "AsyncConnectService2" << std::endl;
 		if (e)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "AsyncConnectService failed: " << e->what());
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncConnectService failed: " << e->what());
 			detail::InvokeHandlerWithException(node, handler, e);
 			
 			AsyncClose(&ClientContext_empty_handler);
@@ -1454,13 +1454,13 @@ namespace RobotRaconteur
 
 				//std::cout << "AsyncConnectService2_1" << std::endl;
 
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Client, GetLocalEndpoint(), "AsyncConnectService pulled service types");
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncConnectService pulled service types");
 
 				AsyncProcessRequest(e, boost::bind(&ClientContext::AsyncConnectService3, shared_from_this(), _1, _2, username, credentials, std::string(objecttype), d, handler), GetNode()->GetRequestTimeout());
 			}
 			catch (std::exception& err)
 			{
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "AsyncConnectService failed: " << err.what());
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncConnectService failed: " << err.what());
 				detail::InvokeHandlerWithException(node, handler, err, MessageErrorType_ServiceError);
 
 				AsyncClose(&ClientContext_empty_handler);
@@ -1474,7 +1474,7 @@ namespace RobotRaconteur
 		//std::cout << "AsyncConnectService3" << std::endl;
 		if (e)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "AsyncConnectService failed: " << e->what());
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncConnectService failed: " << e->what());
 			detail::InvokeHandlerWithException(node, handler, e);
 			AsyncClose(&ClientContext_empty_handler);
 			return;
@@ -1511,7 +1511,7 @@ namespace RobotRaconteur
 					//return;
 				}
 
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Client, GetLocalEndpoint(), "AsyncConnectService retrieved root object type: " << type);
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncConnectService retrieved root object type: " << type);
 
 				//std::cout << "AsyncConnectService3_1" << std::endl;
 				AsyncConnectService4(d, RR_SHARED_PTR<RobotRaconteurException>(), username, credentials, objecttype, type, (handler));
@@ -1519,14 +1519,14 @@ namespace RobotRaconteur
 			}
 			catch (RobotRaconteurException& err)
 			{
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "AsyncConnectService failed: " << err.what());
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncConnectService failed: " << err.what());
 				detail::InvokeHandlerWithException(node, handler, err);				
 
 				AsyncClose(&ClientContext_empty_handler);
 			}
 			catch (std::exception& err)
 			{
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "AsyncConnectService failed: " << err.what());
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncConnectService failed: " << err.what());
 				detail::InvokeHandlerWithException(node, handler, err, MessageErrorType_ServiceError);
 				AsyncClose(&ClientContext_empty_handler);
 			}
@@ -1540,7 +1540,7 @@ namespace RobotRaconteur
 		//std::cout << "AsyncConnectService4" << std::endl;
 		if (e)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "AsyncConnectService failed: " << e->what());
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncConnectService failed: " << e->what());
 			detail::InvokeHandlerWithException(node, handler, e);			
 			AsyncClose(&ClientContext_empty_handler);
 			return;
@@ -1575,7 +1575,7 @@ namespace RobotRaconteur
 							missingdefs_vec.push_back(e->ToString());
 						}
 
-						ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "AsyncConnectService using dynamic service factory for types: " << boost::join(missingdefs_names,", "));
+						ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncConnectService using dynamic service factory for types: " << boost::join(missingdefs_names,", "));
 
 						std::vector<RR_SHARED_PTR<ServiceFactory> > di2 = GetNode()->GetDynamicServiceFactory()->CreateServiceFactories(missingdefs_vec);
 
@@ -1601,7 +1601,7 @@ namespace RobotRaconteur
 					}
 				}
 
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Client, GetLocalEndpoint(), "AsyncConnectService retrieved additional service types");
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncConnectService retrieved additional service types");
 
 				//std::cout << "AsyncConnectService4_1" << std::endl;
 				RR_INTRUSIVE_PTR<MessageEntry> e2 = CreateMessageEntry();
@@ -1612,7 +1612,7 @@ namespace RobotRaconteur
 			}			
 			catch (std::exception& err)
 			{
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "AsyncConnectService failed: " << err.what());
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncConnectService failed: " << err.what());
 				detail::InvokeHandlerWithException(node, handler, err, MessageErrorType_ServiceError);
 				AsyncClose(&ClientContext_empty_handler);
 			}
@@ -1625,7 +1625,7 @@ namespace RobotRaconteur
 		//std::cout << "AsyncConnectService5" << std::endl;
 		if (e)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "AsyncConnectService failed: " << e->what());
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncConnectService failed: " << e->what());
 			detail::InvokeHandlerWithException(node, handler, e);
 			AsyncClose(&ClientContext_empty_handler);
 			return;
@@ -1637,7 +1637,7 @@ namespace RobotRaconteur
 
 				if (username != "")
 				{
-					ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Client, GetLocalEndpoint(), "AsyncConnectService authenticating with username " << username);
+					ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncConnectService authenticating with username " << username);
 
 					try
 					{						
@@ -1664,7 +1664,7 @@ namespace RobotRaconteur
 			}
 			catch (std::exception& err)
 			{
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "AsyncConnectService failed: " << e->what());
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncConnectService failed: " << e->what());
 				detail::InvokeHandlerWithException(node, handler, err, MessageErrorType_ServiceError);
 
 				AsyncClose(&ClientContext_empty_handler);
@@ -1678,14 +1678,14 @@ namespace RobotRaconteur
 		//std::cout << "AsyncConnectService6" << std::endl;
 		if (e)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "AsyncConnectService failed: " << e->what());
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncConnectService failed: " << e->what());
 			detail::InvokeHandlerWithException(node, handler, e);			
 			AsyncClose(&ClientContext_empty_handler);
 			return;
 		}
 		else if (*ret != "OK")
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "AsyncConnectService authentication failed");
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncConnectService authentication failed");
 			detail::InvokeHandlerWithException(node, handler, RR_MAKE_SHARED<AuthenticationException>("Invalid username or credentials"));
 			
 			AsyncClose(&ClientContext_empty_handler);
@@ -1702,7 +1702,7 @@ namespace RobotRaconteur
 					stubs.insert(make_pair(GetServiceName(), stub));
 				}
 
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "AsyncConnectService completed successfully");
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncConnectService completed successfully");
 				
 				//std::cout << "handler" << std::endl;
 				RR_SHARED_PTR<RRObject> ret = RR_STATIC_POINTER_CAST<RRObject>(stub);
@@ -1711,7 +1711,7 @@ namespace RobotRaconteur
 			}			
 			catch (std::exception& err)
 			{
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "AsyncConnectService initializing client stub failed: " << err.what());
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncConnectService initializing client stub failed: " << err.what());
 				detail::InvokeHandlerWithException(node, handler, err, MessageErrorType_ServiceError);
 				AsyncClose(&ClientContext_empty_handler);
 			}
@@ -1724,7 +1724,7 @@ namespace RobotRaconteur
 
 		if (e)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "AsyncConnectService failed: " << e->what());
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncConnectService failed: " << e->what());
 			detail::InvokeHandlerWithException(node, handler, e);
 			AsyncClose(&ClientContext_empty_handler);
 			return;
@@ -1812,7 +1812,7 @@ namespace RobotRaconteur
 				stubs.insert(make_pair(GetServiceName(), stub));
 			}
 
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "AsyncConnectService completed successfully");
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncConnectService completed successfully");
 
 			if (!username.empty())
 			{
@@ -1826,7 +1826,7 @@ namespace RobotRaconteur
 		}		
 		catch (std::exception& err)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "AsyncConnectService failed: " << err.what());
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncConnectService failed: " << err.what());
 			detail::InvokeHandlerWithException(node, handler, err, MessageErrorType_ServiceError);
 			AsyncClose(&ClientContext_empty_handler);
 		}
@@ -1917,7 +1917,7 @@ namespace RobotRaconteur
 	{
 
 
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Client, GetLocalEndpoint(), "Begin AsyncClose");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "Begin AsyncClose");
 
 		boost::mutex::scoped_lock lock3(close_lock);
 		{
@@ -1933,7 +1933,7 @@ namespace RobotRaconteur
 		}
 		catch (std::exception& err)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "AsyncClose failed: " << err.what());
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncClose failed: " << err.what());
 
 			{
 				boost::mutex::scoped_lock lock(m_Connected_lock);
@@ -1988,7 +1988,7 @@ namespace RobotRaconteur
 				}
 				catch (std::exception& exp)
 				{
-					ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Error handling AsyncProcessRequest connection closed: " << exp.what());
+					ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Error handling AsyncProcessRequest connection closed: " << exp.what());
 					RobotRaconteurNode::TryHandleException(node, &exp);
 				}
 			}
@@ -2026,12 +2026,12 @@ namespace RobotRaconteur
 			}
 			catch (std::exception& exp)
 			{
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "Client listener callback raised exception: " << exp.what());
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "Client listener callback raised exception: " << exp.what());
 				RobotRaconteurNode::TryHandleException(node, &exp);
 			}
 			catch (...) {}
 
-			ROBOTRACONTEUR_LOG_INFO_SOURCE(node, Client, GetLocalEndpoint(), "Client closed");
+			ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Client, GetLocalEndpoint(), "Client closed");
 
 			detail::InvokeHandler(node, handler);
 
@@ -2046,12 +2046,12 @@ namespace RobotRaconteur
 	{
 		if (!unreliable)
 		{
-			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Client sending reliable pipe packet EntryType " << m->EntryType);
+			ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Client sending reliable pipe packet EntryType " << m->EntryType);
 			AsyncSendMessage(m, (handler));
 		}
 		else
 		{
-			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Client sending unreliable pipe packet EntryType " << m->EntryType);
+			ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Client sending unreliable pipe packet EntryType " << m->EntryType);
 			if (UseMessage3())
 			{
 				RR_INTRUSIVE_PTR<Message> mm = CreateMessage();
@@ -2081,7 +2081,7 @@ namespace RobotRaconteur
 
 	void ClientContext::SendWireMessage(RR_INTRUSIVE_PTR<MessageEntry> m)
 	{
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Client sending unreliable wire packet EntryType " << m->EntryType);
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Client sending unreliable wire packet EntryType " << m->EntryType);
 		if (UseMessage3())
 		{
 			RR_INTRUSIVE_PTR<Message> mm = CreateMessage();
@@ -2119,7 +2119,7 @@ namespace RobotRaconteur
 
 	void ClientContext::AsyncPullServiceDefinition(boost::string_ref ServiceType, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<PullServiceDefinitionReturn>, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout)
 	{
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Client, GetLocalEndpoint(), " Begin AsyncPullServiceDefinition for type " << ServiceType);
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), " Begin AsyncPullServiceDefinition for type " << ServiceType);
 
 		RR_INTRUSIVE_PTR<MessageEntry> e3 = CreateMessageEntry(MessageEntryType_GetServiceDesc, "");
 		//e.AddElement("servicepath", ServiceName);
@@ -2137,7 +2137,7 @@ namespace RobotRaconteur
 	{
 		if (err)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "AsyncPullServiceDefinition failed: " << err->what());
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncPullServiceDefinition failed: " << err->what());
 			detail::InvokeHandlerWithException(node, handler, err);
 			return;
 		}
@@ -2186,14 +2186,14 @@ namespace RobotRaconteur
 					}
 				}
 
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Client, GetLocalEndpoint(), "AsyncPullServiceDefinition completed successfully");
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncPullServiceDefinition completed successfully");
 
 				detail::InvokeHandler(node, handler, ret);
 								
 			}
 			catch (std::exception& err)
 			{
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "AsyncPullServiceDefinition failed: " << err.what());
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncPullServiceDefinition failed: " << err.what());
 				detail::InvokeHandlerWithException(node, handler, err, MessageErrorType_ConnectionError);
 			}
 		}
@@ -2208,7 +2208,7 @@ namespace RobotRaconteur
 
 	void ClientContext::AsyncPullServiceDefinitionAndImports(boost::string_ref servicetype, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<PullServiceDefinitionAndImportsReturn>, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "Begin AsyncPullServiceDefinitionAndImports for type: " << servicetype);
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "Begin AsyncPullServiceDefinitionAndImports for type: " << servicetype);
 		boost::posix_time::ptime timeout_time = GetNode()->NowUTC() + boost::posix_time::milliseconds(timeout);
 
 		AsyncPullServiceDefinition(servicetype, boost::bind(&ClientContext::AsyncPullServiceDefinitionAndImports1, shared_from_this(), _1, _2, servicetype.to_string(), RR_SHARED_PTR<PullServiceDefinitionAndImportsReturn>(), handler, timeout_time), boost::numeric_cast<uint32_t>((timeout_time - GetNode()->NowUTC()).total_milliseconds()));
@@ -2218,7 +2218,7 @@ namespace RobotRaconteur
 	{
 		if (err)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "AsyncPullServiceDefinition failed: " << err->what());
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncPullServiceDefinition failed: " << err->what());
 			detail::InvokeHandlerWithException(node, handler, err);			
 			return;
 		}
@@ -2255,7 +2255,7 @@ namespace RobotRaconteur
 
 				if (needed_defs.empty())
 				{
-					ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Client, GetLocalEndpoint(), "AsyncPullServiceDefinitionAndImports completed successfully");
+					ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncPullServiceDefinitionAndImports completed successfully");
 					detail::InvokeHandler(node, handler, current);
 					return;
 				}
@@ -2267,7 +2267,7 @@ namespace RobotRaconteur
 			}			
 			catch (std::exception& err)
 			{
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "Begin AsyncPullServiceDefinition failed: " << err.what());
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "Begin AsyncPullServiceDefinition failed: " << err.what());
 				detail::InvokeHandlerWithException(node, handler, err, MessageErrorType_ConnectionError);				
 			}
 		}
@@ -2332,7 +2332,7 @@ namespace RobotRaconteur
 	void ClientContext::AsyncAuthenticateUser(boost::string_ref username, RR_INTRUSIVE_PTR<RRValue> credentials, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<std::string>, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout)
 	{
 
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Client, GetLocalEndpoint(), "Begin AuthenticateUser with username \"" << username << "\"");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "Begin AuthenticateUser with username \"" << username << "\"");
 		try
 		{
 			boost::mutex::scoped_lock lock(m_Authentication_lock);
@@ -2354,7 +2354,7 @@ namespace RobotRaconteur
 		}
 		catch (std::exception& exp)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "AuthenticateUser failed: " << exp.what());
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "AuthenticateUser failed: " << exp.what());
 			throw;
 		}
 
@@ -2365,7 +2365,7 @@ namespace RobotRaconteur
 	{
 		if (err)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "AuthenticateUser failed: " << err->what());
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "AuthenticateUser failed: " << err->what());
 			detail::InvokeHandlerWithException(node, handler, err);
 			return;
 		}
@@ -2375,7 +2375,7 @@ namespace RobotRaconteur
 		std::string res = ret->FindElement("return")->CastDataToString();
 		RR_SHARED_PTR<std::string> res2 = RR_MAKE_SHARED<std::string>(res);
 
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Client, GetLocalEndpoint(), "AuthenticateUser completed successfully with username \"" << username << "\"");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "AuthenticateUser completed successfully with username \"" << username << "\"");
 
 		detail::InvokeHandler(node, handler, res2);
 
@@ -2383,7 +2383,7 @@ namespace RobotRaconteur
 
 	std::string ClientContext::LogoutUser()
 	{
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Client, GetLocalEndpoint(), "Begin LogoutUser");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "Begin LogoutUser");
 
 		try
 		{
@@ -2402,7 +2402,7 @@ namespace RobotRaconteur
 		}
 		catch (std::exception& exp)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "LogoutUser failed: " << exp.what());
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "LogoutUser failed: " << exp.what());
 			throw;
 		}
 
@@ -2436,7 +2436,7 @@ namespace RobotRaconteur
 			else
 				throw InvalidArgumentException("Unknown flags");
 
-			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Client, GetLocalEndpoint(), "Begin AsyncRequestObjectLock for servicepath \"" << s->ServicePath << "\" with command " << command);
+			ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "Begin AsyncRequestObjectLock for servicepath \"" << s->ServicePath << "\" with command " << command);
 
 			RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_ClientSessionOpReq, command);
 			m->ServicePath = s->ServicePath;
@@ -2445,7 +2445,7 @@ namespace RobotRaconteur
 		}
 		catch (std::exception& e)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "AsyncRequestObjectLock failed: " << e.what())
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncRequestObjectLock failed: " << e.what())
 			throw;
 		}
 
@@ -2456,7 +2456,7 @@ namespace RobotRaconteur
 	{
 		if (err)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "Object lock operation failed: " << err->what())
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "Object lock operation failed: " << err->what())
 			detail::InvokeHandlerWithException(node, handler, err);
 			return;
 		}
@@ -2464,13 +2464,13 @@ namespace RobotRaconteur
 		{
 			std::string rets = ret->FindElement("return")->CastDataToString();
 			RR_SHARED_PTR<std::string> rets2 = RR_MAKE_SHARED<std::string>(rets);
-			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Client, GetLocalEndpoint(), "Object lock operation completed successfully for servicepath \"" << ret->ServicePath << "\"")
+			ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "Object lock operation completed successfully for servicepath \"" << ret->ServicePath << "\"")
 			detail::InvokeHandler(node, handler, rets2);
 			
 		}		
 		catch (std::exception& err)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "Object lock operation failed: " << err.what())
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "Object lock operation failed: " << err.what())
 			detail::InvokeHandlerWithException(node, handler, err, MessageErrorType_ServiceError);
 		}
 	}
@@ -2492,7 +2492,7 @@ namespace RobotRaconteur
 
 			if (!s)	throw InvalidArgumentException("Can only unlock object opened through Robot Raconteur");
 			
-			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Client, GetLocalEndpoint(), "Begin AsyncReleaseObjectLock for servicepath \"" << s->ServicePath << "\"");
+			ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "Begin AsyncReleaseObjectLock for servicepath \"" << s->ServicePath << "\"");
 
 			RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_ClientSessionOpReq, "ReleaseObjectLock");
 			m->ServicePath = s->ServicePath;
@@ -2501,7 +2501,7 @@ namespace RobotRaconteur
 		}
 		catch (std::exception& exp)
 		{
-			ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Client, GetLocalEndpoint(), "AsyncReleaseObjectLock failed: " << exp.what())
+			ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncReleaseObjectLock failed: " << exp.what())
 			throw;
 		}
 		
@@ -2515,7 +2515,7 @@ namespace RobotRaconteur
 		if (!stub2)
 			throw InvalidArgumentException("Can only unlock object opened through Robot Raconteur");
 
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Client, GetLocalEndpoint(), "Begin MonitorEnter for servicepath \"" << stub2->ServicePath << "\"");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "Begin MonitorEnter for servicepath \"" << stub2->ServicePath << "\"");
 
 		bool iserror = true;
 
@@ -2535,7 +2535,7 @@ namespace RobotRaconteur
 			if (retcode == "OK")
 			{
 				iserror = false;
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Client, GetLocalEndpoint(), "MonitorEnter for successful for servicepath \"" << s->ServicePath << "\"");
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "MonitorEnter for successful for servicepath \"" << s->ServicePath << "\"");
 				return "OK";
 
 			}
@@ -2543,7 +2543,7 @@ namespace RobotRaconteur
 			{
 				while (keep_trying)
 				{
-					ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Client, GetLocalEndpoint(), "MonitorEnter continue enter for servicepath \"" << s->ServicePath << "\"");
+					ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "MonitorEnter continue enter for servicepath \"" << s->ServicePath << "\"");
 					RR_INTRUSIVE_PTR<MessageEntry> m1 = CreateMessageEntry(MessageEntryType_ClientSessionOpReq, "MonitorContinueEnter");
 					m1->ServicePath = s->ServicePath;
 
@@ -2551,7 +2551,7 @@ namespace RobotRaconteur
 					std::string retcode1 = ret1->FindElement("return")->CastDataToString();
 					if (retcode1 == "OK")
 					{
-						ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Client, GetLocalEndpoint(), "MonitorEnter for successful for servicepath \"" << s->ServicePath << "\"");
+						ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "MonitorEnter for successful for servicepath \"" << s->ServicePath << "\"");
 						iserror = false;
 						return "OK";
 					}
@@ -2577,7 +2577,7 @@ namespace RobotRaconteur
 		}
 		catch (std::exception& exp)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "MonitorEnter failed: " << exp.what());
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "MonitorEnter failed: " << exp.what());
 			throw;
 		}
 	}
@@ -2592,7 +2592,7 @@ namespace RobotRaconteur
 			throw InvalidArgumentException("Can only unlock object opened through Robot Raconteur");
 		}
 
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Client, GetLocalEndpoint(), "Begin MonitorExit for servicepath \"" << stub2->ServicePath << "\"");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "Begin MonitorExit for servicepath \"" << stub2->ServicePath << "\"");
 
 		try
 		{			
@@ -2621,12 +2621,12 @@ namespace RobotRaconteur
 		}
 		catch (std::exception&) {}
 
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Client, GetLocalEndpoint(), "MonitorExit for successful for servicepath \"" << stub2->ServicePath << "\"");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "MonitorExit for successful for servicepath \"" << stub2->ServicePath << "\"");
 
 		}
 		catch (std::exception& exp)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "MonitorExit failed: " << exp.what());
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "MonitorExit failed: " << exp.what());
 		}
 	}
 
@@ -2659,7 +2659,7 @@ namespace RobotRaconteur
 		{
 			if ((GetNode()->NowUTC() - GetLastMessageSentTime()).total_milliseconds() > 60000)
 			{
-				ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Client, GetLocalEndpoint(), "Client sending keep alive request");
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "Client sending keep alive request");
 				try
 				{
 				RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_ClientKeepAliveReq, "");
@@ -2670,7 +2670,7 @@ namespace RobotRaconteur
 				}
 				catch (std::exception& exp)
 				{
-					ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Client, GetLocalEndpoint(), "Client keep alive message failed: " << exp.what());
+					ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "Client keep alive message failed: " << exp.what());
 				}
 			}
 		}
@@ -2688,7 +2688,7 @@ namespace RobotRaconteur
 	void ClientContext::ProcessCallbackCall(RR_INTRUSIVE_PTR<MessageEntry> m)
 	{
 
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Received callback call request with requestid " << m->RequestID);
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Received callback call request with requestid " << m->RequestID);
 
 		RR_INTRUSIVE_PTR<MessageEntry> ret;
 		try
@@ -2709,7 +2709,7 @@ namespace RobotRaconteur
 		}
 		catch (std::exception& e)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Client callback returning caught exception to caller: " << e.what());
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Client callback returning caught exception to caller: " << e.what());
 			ret = CreateMessageEntry((MessageEntryType(m->EntryType + 1)), m->MemberName);
 			ret->ServicePath = m->ServicePath;
 			ret->RequestID = m->RequestID;
@@ -2720,7 +2720,7 @@ namespace RobotRaconteur
 		boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&rr_context_node_handler, GetNode(), _1);
 		AsyncSendMessage(ret, h);
 
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Client callback completed successfully");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Client callback completed successfully");
 
 	}
 
@@ -2750,7 +2750,7 @@ namespace RobotRaconteur
 			return;
 		}
 
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Client, GetLocalEndpoint(), "Client received transport connection closed");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "Client received transport connection closed");
 
 		try
 		{

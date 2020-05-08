@@ -322,23 +322,23 @@ namespace RobotRaconteur
 		RobotRaconteur_LogLevel_Disable=1000
 	};
 
-	enum RobotRaconteur_LogSource
+	enum RobotRaconteur_LogComponent
 	{
-		RobotRaconteur_LogSource_Default,
-		RobotRaconteur_LogSource_Node,
-		RobotRaconteur_LogSource_Transport,
-		RobotRaconteur_LogSource_Message,
-		RobotRaconteur_LogSource_Client,
-		RobotRaconteur_LogSource_Service,
-		RobotRaconteur_LogSource_Member,		
-		RobotRaconteur_LogSource_Pack,
-		RobotRaconteur_LogSource_Unpack,
-		RobotRaconteur_LogSource_ServiceDefinition,
-		RobotRaconteur_LogSource_Discovery,
-		RobotRaconteur_LogSource_Subscription,
-		RobotRaconteur_LogSource_NodeSetup,
-		RobotRaconteur_LogSource_Utility,
-		RobotRaconteur_LogSource_User
+		RobotRaconteur_LogComponent_Default,
+		RobotRaconteur_LogComponent_Node,
+		RobotRaconteur_LogComponent_Transport,
+		RobotRaconteur_LogComponent_Message,
+		RobotRaconteur_LogComponent_Client,
+		RobotRaconteur_LogComponent_Service,
+		RobotRaconteur_LogComponent_Member,		
+		RobotRaconteur_LogComponent_Pack,
+		RobotRaconteur_LogComponent_Unpack,
+		RobotRaconteur_LogComponent_ServiceDefinition,
+		RobotRaconteur_LogComponent_Discovery,
+		RobotRaconteur_LogComponent_Subscription,
+		RobotRaconteur_LogComponent_NodeSetup,
+		RobotRaconteur_LogComponent_Utility,
+		RobotRaconteur_LogComponent_User
 	};
 
 }

@@ -66,7 +66,7 @@ RobotRaconteurNode::RobotRaconteurNode()
 
 	log_level = RobotRaconteur_LogLevel_Warning;
 
-	//ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Node, -1, "RobotRaconteurNode created");
+	//ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Node, -1, "RobotRaconteurNode created");
 	
 }
 
@@ -93,7 +93,7 @@ void RobotRaconteurNode::Init()
 
 	m_Discovery = RR_MAKE_SHARED<detail::Discovery>(shared_from_this());
 
-	ROBOTRACONTEUR_LOG_INFO_SOURCE(weak_sp(), Node, -1, "RobotRaconteurNode version " << ROBOTRACONTEUR_VERSION_TEXT << " initialized");
+	ROBOTRACONTEUR_LOG_INFO_COMPONENT(weak_sp(), Node, -1, "RobotRaconteurNode version " << ROBOTRACONTEUR_VERSION_TEXT << " initialized");
 	
 }
 
@@ -133,7 +133,7 @@ NodeID RobotRaconteurNode::NodeID()
 		NodeID_set=true;
 		::RobotRaconteur::NodeID n = m_NodeID;
 		lock.unlock();
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE(weak_sp(), Node, -1, "RobotRaconteurNode NodeID configured with random UUID " << n.ToString());
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_sp(), Node, -1, "RobotRaconteurNode NodeID configured with random UUID " << n.ToString());
 		return n;
 	}
 
@@ -181,25 +181,25 @@ void RobotRaconteurNode::SetNodeID(const RobotRaconteur::NodeID& id)
 	if (NodeID_set)
 	{
 		lock.unlock();
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "RobotRaconteurNode attempt to set NodeID when already set");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "RobotRaconteurNode attempt to set NodeID when already set");
 	 	throw InvalidOperationException("NodeID already set");
 	}
 	m_NodeID=id;
 	NodeID_set=true;
 	lock.unlock();
-	ROBOTRACONTEUR_LOG_TRACE_SOURCE(weak_sp(), Node, -1, "RobotRaconteurNode NodeID set to UUID " << m_NodeID.ToString());
+	ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_sp(), Node, -1, "RobotRaconteurNode NodeID set to UUID " << m_NodeID.ToString());
 }
 
 void RobotRaconteurNode::SetNodeName(boost::string_ref name)
 {
 	if (name.size() > 1024)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "NodeName too long");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "NodeName too long");
 	 	throw InvalidArgumentException("NodeName too long");
 	}
 	if(!boost::regex_match(name.begin(),name.end(),boost::regex("^[a-zA-Z][a-zA-Z0-9_\\.\\-]*$")))
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Invalid NodeName \"" << name << "\"");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Invalid NodeName \"" << name << "\"");
 		throw InvalidArgumentException("\"" + name + "\" is an invalid NodeName");
 	}
 
@@ -207,14 +207,14 @@ void RobotRaconteurNode::SetNodeName(boost::string_ref name)
 	if (NodeName_set)
 	{
 		lock.unlock();
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "RobotRaconteurNode attempt to set NodeName when already set");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "RobotRaconteurNode attempt to set NodeName when already set");
 		throw InvalidOperationException("NodeName already set");
 	}
 	m_NodeName = RR_MOVE(name.to_string());
 	NodeName_set=true;
 
 	lock.unlock();
-	ROBOTRACONTEUR_LOG_TRACE_SOURCE(weak_sp(), Node, -1, "RobotRaconteurNode NodeName set to \"" << m_NodeName << "\"");
+	ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_sp(), Node, -1, "RobotRaconteurNode NodeName set to \"" << m_NodeName << "\"");
 }
 
 RR_SHARED_PTR<ServiceFactory> RobotRaconteurNode::GetServiceType(boost::string_ref servicename)
@@ -224,7 +224,7 @@ RR_SHARED_PTR<ServiceFactory> RobotRaconteurNode::GetServiceType(boost::string_r
 	RR_UNORDERED_MAP<std::string, RR_SHARED_PTR<ServiceFactory> >::iterator e1 = service_factories.find(servicename.to_string());
 	if(e1==service_factories.end())
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Unknown service type \"" << servicename << "\"");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Unknown service type \"" << servicename << "\"");
 		throw ServiceException("Unknown service type");
 	}
 	return e1->second;
@@ -246,7 +246,7 @@ void RobotRaconteurNode::RegisterServiceType(RR_SHARED_PTR<ServiceFactory> facto
 
 	if(service_factories.count(factory->GetServiceName())!=0)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Service type already registered \"" << factory->GetServiceName() << "\"");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Service type already registered \"" << factory->GetServiceName() << "\"");
 		throw ServiceException("Service type already registered");		
 	}
 
@@ -257,7 +257,7 @@ void RobotRaconteurNode::RegisterServiceType(RR_SHARED_PTR<ServiceFactory> facto
 
 	service_factories.insert(std::make_pair(factory->GetServiceName(),factory));
 
-	ROBOTRACONTEUR_LOG_TRACE_SOURCE(weak_sp(), Node, -1, "Service type registered \"" << factory->GetServiceName() << "\"");
+	ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_sp(), Node, -1, "Service type registered \"" << factory->GetServiceName() << "\"");
 }
 
 void RobotRaconteurNode::UnregisterServiceType(boost::string_ref type)
@@ -266,11 +266,11 @@ void RobotRaconteurNode::UnregisterServiceType(boost::string_ref type)
 	RR_UNORDERED_MAP<std::string, RR_SHARED_PTR<ServiceFactory> >::iterator e1 = service_factories.find(type.to_string());
 	if (e1==service_factories.end())
 	{ 
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Cannot unregister nonexistant service type \"" << type << "\"");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Cannot unregister nonexistant service type \"" << type << "\"");
 		throw InvalidArgumentException("Service type not registered");
 	}
 	service_factories.erase(e1);
-	ROBOTRACONTEUR_LOG_TRACE_SOURCE(weak_sp(), Node, -1, "Service type unregistered \"" << type << "\"");
+	ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_sp(), Node, -1, "Service type unregistered \"" << type << "\"");
 }
 
 
@@ -306,7 +306,7 @@ uint32_t RobotRaconteurNode::RegisterTransport(RR_SHARED_PTR<Transport> transpor
 
 	}
 
-	ROBOTRACONTEUR_LOG_TRACE_SOURCE(weak_sp(), Node, -1, "Node " << transport->GetUrlSchemeString() << " registered");
+	ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_sp(), Node, -1, "Node " << transport->GetUrlSchemeString() << " registered");
 
 	return transport->TransportID;
 }
@@ -377,7 +377,7 @@ void RobotRaconteurNode::Shutdown()
 {
 	ROBOTRACONTEUR_ASSERT_MULTITHREADED(shared_from_this());
 
-	ROBOTRACONTEUR_LOG_INFO_SOURCE(weak_sp(), Node, -1, "RobotRaconteurNode begin shutdown");
+	ROBOTRACONTEUR_LOG_INFO_COMPONENT(weak_sp(), Node, -1, "RobotRaconteurNode begin shutdown");
 
 	{		
 		if (!instance_is_init) return;
@@ -498,7 +498,7 @@ void RobotRaconteurNode::Shutdown()
 	discovery_updated_listeners.disconnect_all_slots();
 	discovery_lost_listeners.disconnect_all_slots();
 	
-	ROBOTRACONTEUR_LOG_INFO_SOURCE(weak_sp(), Node, -1, "RobotRaconteurNode shutdown complete");
+	ROBOTRACONTEUR_LOG_INFO_COMPONENT(weak_sp(), Node, -1, "RobotRaconteurNode shutdown complete");
 }
 
 
@@ -508,7 +508,7 @@ void RobotRaconteurNode::ReleaseThreadPool()
 
 	if (!is_shutdown)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Node must be shut down to release thread pool");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Node must be shut down to release thread pool");
 		throw InvalidOperationException("Node must be shut down to release thread pool");
 	}
 
@@ -516,7 +516,7 @@ void RobotRaconteurNode::ReleaseThreadPool()
 		boost::unique_lock<boost::shared_mutex> lock(thread_pool_lock);
 		thread_pool.reset();
 	}
-	ROBOTRACONTEUR_LOG_TRACE_SOURCE(weak_sp(), Node, -1, "Thread pool released");
+	ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_sp(), Node, -1, "Thread pool released");
 }
 
 RobotRaconteurNode::~RobotRaconteurNode()
@@ -576,7 +576,7 @@ void RobotRaconteurNode::SendMessage(RR_INTRUSIVE_PTR<Message> m)
 
 	if (m->header->SenderNodeID != NodeID())
 	{	
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Attempt to send message with invalid SenderNodeID");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Attempt to send message with invalid SenderNodeID");
 		throw ConnectionException("Could not route message");		
 	}
 		
@@ -588,11 +588,11 @@ void RobotRaconteurNode::SendMessage(RR_INTRUSIVE_PTR<Message> m)
 		{
 			if (is_shutdown)
 			{
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Attempt to send message after node shutdown");
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Attempt to send message after node shutdown");
 				throw InvalidEndpointException("Attempt to send message after node shutdown");
 			}
 
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Attempt to send message using invalid endpoint " << m->header->SenderEndpoint);
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Attempt to send message using invalid endpoint " << m->header->SenderEndpoint);
 		 	throw InvalidEndpointException("Could not find endpoint");
 		}
 		e = e1->second;
@@ -604,7 +604,7 @@ void RobotRaconteurNode::SendMessage(RR_INTRUSIVE_PTR<Message> m)
 		RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<Transport> >::iterator e1 = transports.find(e->GetTransport());
 		if (e1==transports.end())
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Transport, e->GetLocalEndpoint(), "Could not find transport to send message from endpoint " << e->GetLocalEndpoint());
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Transport, e->GetLocalEndpoint(), "Could not find transport to send message from endpoint " << e->GetLocalEndpoint());
 		 	throw ConnectionException("Could not find transport");
 		}
 		c = e1->second;
@@ -612,7 +612,7 @@ void RobotRaconteurNode::SendMessage(RR_INTRUSIVE_PTR<Message> m)
 
 	c->SendMessage(m);
 
-	ROBOTRACONTEUR_LOG_MESSAGE(ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH,weak_sp(),Node,"Sending message",m)
+	ROBOTRACONTEUR_LOG_MESSAGE(ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH,weak_sp(),Node,"Sending message",m)
 }
 
 void RobotRaconteurNode::AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& callback)
@@ -620,7 +620,7 @@ void RobotRaconteurNode::AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boost::fu
 	if (m->header->SenderNodeID != NodeID())
 	{
 
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Attempt to send message with invalid SenderNodeID");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Attempt to send message with invalid SenderNodeID");
 		throw ConnectionException("Could not route message");
 		
 	}
@@ -633,11 +633,11 @@ void RobotRaconteurNode::AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boost::fu
 		{
 			if (is_shutdown)
 			{
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Attempt to send message after node shutdown");
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Attempt to send message after node shutdown");
 				throw InvalidOperationException("Attempt to send message after node shutdown");
 			}
 
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Attempt to send message using invalid endpoint " << m->header->SenderEndpoint);
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Attempt to send message using invalid endpoint " << m->header->SenderEndpoint);
 		 	throw InvalidEndpointException("Could not find endpoint");
 		}
 		e = e1->second;
@@ -649,7 +649,7 @@ void RobotRaconteurNode::AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boost::fu
 		RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<Transport> >::iterator e1 = transports.find(e->GetTransport());
 		if (e1==transports.end())
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Transport, e->GetLocalEndpoint(), "Could not find transport to send message from endpoint " << e->GetLocalEndpoint());
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Transport, e->GetLocalEndpoint(), "Could not find transport to send message from endpoint " << e->GetLocalEndpoint());
 		 	throw ConnectionException("Could not find transport");
 		}
 		c = e1->second;
@@ -657,7 +657,7 @@ void RobotRaconteurNode::AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boost::fu
 
 	c->AsyncSendMessage(m,callback);
 
-	ROBOTRACONTEUR_LOG_MESSAGE(ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH,weak_sp(),Node,"Sending message",m)
+	ROBOTRACONTEUR_LOG_MESSAGE(ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH,weak_sp(),Node,"Sending message",m)
 }
 
 void RobotRaconteurNode::MessageReceived(RR_INTRUSIVE_PTR<Message> m)
@@ -666,7 +666,7 @@ void RobotRaconteurNode::MessageReceived(RR_INTRUSIVE_PTR<Message> m)
 		{
 		if (m->header->ReceiverNodeID != NodeID())
 		{
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Received message with invalid ReceiverNodeID: " << m->header->ReceiverNodeID.ToString());
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Received message with invalid ReceiverNodeID: " << m->header->ReceiverNodeID.ToString());
 				RR_INTRUSIVE_PTR<Message> eret = GenerateErrorReturnMessage(m, MessageErrorType_NodeNotFound, "RobotRaconteur.NodeNotFound", "Could not find route to remote node");
 				if (eret->entries.size() > 0)
 					SendMessage(eret);
@@ -688,12 +688,12 @@ void RobotRaconteurNode::MessageReceived(RR_INTRUSIVE_PTR<Message> m)
 
 			if (e)
 			{
-				ROBOTRACONTEUR_LOG_MESSAGE(ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH,weak_sp(),Node,"Received message",m)
+				ROBOTRACONTEUR_LOG_MESSAGE(ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH,weak_sp(),Node,"Received message",m)
 				e->MessageReceived(m);
 			}
 			else
 			{			
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Received message with invalid ReceiverEndpoint: " << m->header->ReceiverEndpoint);
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Received message with invalid ReceiverEndpoint: " << m->header->ReceiverEndpoint);
 			RR_INTRUSIVE_PTR<Message> eret = GenerateErrorReturnMessage(m, MessageErrorType_InvalidEndpoint, "RobotRaconteur.InvalidEndpoint", "Invalid destination endpoint");
 			if (eret->entries.size() > 0)
 				SendMessage(eret);				
@@ -702,14 +702,14 @@ void RobotRaconteurNode::MessageReceived(RR_INTRUSIVE_PTR<Message> m)
 	}
 	catch (std::exception& e)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Exception receiving message: " << e.what());
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Exception receiving message: " << e.what());
 		HandleException(&e);
 	}
 }
 
 void RobotRaconteurNode::TransportConnectionClosed(uint32_t endpoint)
 {
-	ROBOTRACONTEUR_LOG_TRACE_SOURCE(weak_sp(), Node, endpoint, "Node notified that tranport connection was closed");
+	ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_sp(), Node, endpoint, "Node notified that tranport connection was closed");
 
 	RR_SHARED_PTR<Endpoint> e;
 	{
@@ -738,7 +738,7 @@ void RobotRaconteurNode::SetRequestTimeout(uint32_t timeout)
 {
 	boost::mutex::scoped_lock lock(RequestTimeout_lock);
 	RequestTimeout=timeout;
-	ROBOTRACONTEUR_LOG_TRACE_SOURCE(weak_sp(), Node, -1, "RequestTimeout set to: " << timeout << " ms");
+	ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_sp(), Node, -1, "RequestTimeout set to: " << timeout << " ms");
 }
 
 uint32_t RobotRaconteurNode::GetTransportInactivityTimeout()
@@ -750,7 +750,7 @@ void RobotRaconteurNode::SetTransportInactivityTimeout(uint32_t timeout)
 {
 	boost::mutex::scoped_lock lock(TransportInactivityTimeout_lock);
 	TransportInactivityTimeout=timeout;
-	ROBOTRACONTEUR_LOG_TRACE_SOURCE(weak_sp(), Node, -1, "TransportInactivityTimeout set to: " << timeout << " ms");
+	ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_sp(), Node, -1, "TransportInactivityTimeout set to: " << timeout << " ms");
 }
 
 uint32_t RobotRaconteurNode::GetEndpointInactivityTimeout()
@@ -763,7 +763,7 @@ void RobotRaconteurNode::SetEndpointInactivityTimeout(uint32_t timeout)
 {
 	boost::mutex::scoped_lock lock(EndpointInactivityTimeout_lock);
 	EndpointInactivityTimeout=timeout;
-	ROBOTRACONTEUR_LOG_TRACE_SOURCE(weak_sp(), Node, -1, "EndpointInactivityTimeout set to: " << timeout << " ms");
+	ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_sp(), Node, -1, "EndpointInactivityTimeout set to: " << timeout << " ms");
 }
 
 uint32_t RobotRaconteurNode::GetMemoryMaxTransferSize()
@@ -776,7 +776,7 @@ void RobotRaconteurNode::SetMemoryMaxTransferSize(uint32_t size)
 {
 	boost::mutex::scoped_lock lock(MemoryMaxTransferSize_lock);
 	MemoryMaxTransferSize=size;
-	ROBOTRACONTEUR_LOG_TRACE_SOURCE(weak_sp(), Node, -1, "MemoryMaxTransferSize set to: " << size << " bytes");
+	ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_sp(), Node, -1, "MemoryMaxTransferSize set to: " << size << " bytes");
 }
 
 
@@ -792,7 +792,7 @@ void RobotRaconteurNode::SetDynamicServiceFactory(RR_SHARED_PTR<RobotRaconteur::
 
 	if (this->dynamic_factory != 0)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Dynamic service factory already set");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Dynamic service factory already set");
 		throw InvalidOperationException("Dynamic service factory already set");
 	}
 	this->dynamic_factory = f;
@@ -829,7 +829,7 @@ RR_SHARED_PTR<ServerContext> RobotRaconteurNode::RegisterService(boost::string_r
 		
 	if(!boost::regex_match(name.begin(),name.end(),boost::regex("^[a-zA-Z][a-zA-Z0-9_]*$")))
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "\"" << name << "\" is an invalid service name");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "\"" << name << "\" is an invalid service name");
 		throw InvalidArgumentException("\"" + name + "\" is an invalid service name");
 	}
 
@@ -840,7 +840,7 @@ RR_SHARED_PTR<ServerContext> RobotRaconteurNode::RegisterService(boost::string_r
 
 		if (services.count(name.to_string())!=0)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Service name \"" << name << "\" in use");
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Service name \"" << name << "\" in use");
 			throw InvalidOperationException("Service name in use");
 		}
 
@@ -853,7 +853,7 @@ RR_SHARED_PTR<ServerContext> RobotRaconteurNode::RegisterService(boost::string_r
 
 	UpdateServiceStateNonce();
 
-	ROBOTRACONTEUR_LOG_INFO_SOURCE(weak_sp(), Node, -1, "Service \"" << name << "\" registered");
+	ROBOTRACONTEUR_LOG_INFO_COMPONENT(weak_sp(), Node, -1, "Service \"" << name << "\" registered");
 
 	return c;
 }
@@ -863,7 +863,7 @@ RR_SHARED_PTR<ServerContext> RobotRaconteurNode::RegisterService(RR_SHARED_PTR<S
 		
 	if(!boost::regex_match(c->GetServiceName(),boost::regex("^[a-zA-Z][a-zA-Z0-9_]*$")))
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "\"" << c->GetServiceName() << "\" is an invalid service name");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "\"" << c->GetServiceName() << "\" is an invalid service name");
 		throw InvalidArgumentException("\"" + c->GetServiceName() + "\" is an invalid NodeName");
 	}
 		
@@ -879,7 +879,7 @@ RR_SHARED_PTR<ServerContext> RobotRaconteurNode::RegisterService(RR_SHARED_PTR<S
 		
 	UpdateServiceStateNonce();
 
-	ROBOTRACONTEUR_LOG_INFO_SOURCE(weak_sp(), Node, -1, "Service \"" << c->GetServiceName() << "\" registered");
+	ROBOTRACONTEUR_LOG_INFO_COMPONENT(weak_sp(), Node, -1, "Service \"" << c->GetServiceName() << "\" registered");
 
 	return c;
 }
@@ -893,7 +893,7 @@ void RobotRaconteurNode::CloseService(boost::string_ref sname)
 		RR_UNORDERED_MAP<std::string, RR_SHARED_PTR<ServerContext> >::iterator e1 = services.find(sname.to_string());
 		if (e1 == services.end())
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Cannot close nonexistent service \"" << sname << "\"");
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Cannot close nonexistent service \"" << sname << "\"");
 		 	throw ServiceException("Service not found");
 		}
 		s = e1->second;
@@ -902,7 +902,7 @@ void RobotRaconteurNode::CloseService(boost::string_ref sname)
 		services.erase(sname.to_string());
 	}
 
-	ROBOTRACONTEUR_LOG_INFO_SOURCE(weak_sp(), Node, -1, "Service \"" << sname << "\" closed");
+	ROBOTRACONTEUR_LOG_INFO_COMPONENT(weak_sp(), Node, -1, "Service \"" << sname << "\" closed");
 }
 
 
@@ -929,7 +929,7 @@ RR_SHARED_PTR<ServerContext> RobotRaconteurNode::GetService(boost::string_ref na
 		return e1->second;
 	}
 		
-	ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Service \"" << name << "\" not found");
+	ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Service \"" << name << "\" not found");
 	throw ServiceNotFoundException("Service " + name + " not found");	
 }
 
@@ -940,7 +940,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_INTRUSIVE_PTR<Me
 
 	if (!(m->header->ReceiverNodeID == NodeID().GetAny() && (m->header->ReceiverNodeName == "" || m->header->ReceiverNodeName == NodeName())) && !(m->header->ReceiverNodeID == NodeID()))
 	{		
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Received SpecialRequest with invalid ReceiverNodeID: " << m->header->ReceiverNodeID.ToString());
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Received SpecialRequest with invalid ReceiverNodeID: " << m->header->ReceiverNodeID.ToString());
 		return GenerateErrorReturnMessage(m, MessageErrorType_NodeNotFound, "RobotRaconteur.NodeNotFound", "Could not find route to remote node");
 	}
 
@@ -968,7 +968,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_INTRUSIVE_PTR<Me
 		eret->RequestID = e->RequestID;
 		eret->ServicePath = e->ServicePath;
 
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(weak_sp(),Node,m->header->ReceiverEndpoint,e->ServicePath,
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(weak_sp(),Node,m->header->ReceiverEndpoint,e->ServicePath,
 			e->MemberName, "SpecialRequest received from " << m->header->SenderNodeID.ToString() << " ep " 
 			<< m->header->SenderEndpoint << " to " << m->header->ReceiverNodeID.ToString() << " ep " << m->header->ReceiverEndpoint 
 			<< " EntryType " << e->EntryType << " Error " << e->Error);
@@ -1012,7 +1012,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_INTRUSIVE_PTR<Me
 					}
 					catch (std::exception&)
 					{
-						ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(weak_sp(),Node,m->header->ReceiverEndpoint,e->ServicePath,
+						ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(weak_sp(),Node,m->header->ReceiverEndpoint,e->ServicePath,
 							e->MemberName, "Client requested type of an invalid service path")
 						eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ObjectNotFoundException"));
 						eret->AddElement("errorstring", stringToRRArray("Object not found"));
@@ -1073,7 +1073,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_INTRUSIVE_PTR<Me
 					}
 					catch (std::exception&)
 					{
-						ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(weak_sp(),Node,m->header->ReceiverEndpoint,e->ServicePath,
+						ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(weak_sp(),Node,m->header->ReceiverEndpoint,e->ServicePath,
 							e->MemberName, "Client requested type of an invalid service type: \"" << name << "\"")
 						eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ServiceNotFoundException"));
 						eret->AddElement("errorstring", stringToRRArray("Service not found"));
@@ -1106,7 +1106,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_INTRUSIVE_PTR<Me
 					}
 					catch (std::exception& exp)
 					{
-						ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(weak_sp(),Node,m->header->ReceiverEndpoint,e->ServicePath,
+						ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(weak_sp(),Node,m->header->ReceiverEndpoint,e->ServicePath,
 							e->MemberName, "Error connecting client: " << exp.what())
 						eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ServiceNotFoundException"));
 						eret->AddElement("errorstring", stringToRRArray("Service not found"));
@@ -1154,7 +1154,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_INTRUSIVE_PTR<Me
 					}
 					catch (std::exception& exp)
 					{
-						ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(weak_sp(),Node,m->header->ReceiverEndpoint,e->ServicePath,
+						ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(weak_sp(),Node,m->header->ReceiverEndpoint,e->ServicePath,
 							e->MemberName, "Error disconnecting client: " << exp.what())
 						eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ServiceNotFoundException"));
 						eret->AddElement("errorstring", stringToRRArray("Service not found"));
@@ -1187,7 +1187,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_INTRUSIVE_PTR<Me
 					}
 					catch (std::exception& exp)
 					{
-						ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(weak_sp(),Node,m->header->ReceiverEndpoint,e->ServicePath,
+						ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(weak_sp(),Node,m->header->ReceiverEndpoint,e->ServicePath,
 							e->MemberName, "Error returning service attributes: " << exp.what())
 						eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ServiceError"));
 						eret->AddElement("errorstring", stringToRRArray("Service not found"));
@@ -1229,7 +1229,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_INTRUSIVE_PTR<Me
 				}
 				catch (std::exception& exp)
 				{
-					ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(weak_sp(),Node,m->header->ReceiverEndpoint,e->ServicePath,
+					ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(weak_sp(),Node,m->header->ReceiverEndpoint,e->ServicePath,
 							e->MemberName, "Error connecting client: " << exp.what())
 					eret->elements.clear();
 					eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ServiceNotFoundException"));
@@ -1310,7 +1310,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_INTRUSIVE_PTR<Me
 				}
 				catch (std::exception& exp)
 				{
-					ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(weak_sp(),Node,m->header->ReceiverEndpoint,e->ServicePath,
+					ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(weak_sp(),Node,m->header->ReceiverEndpoint,e->ServicePath,
 							e->MemberName, "Error connecting client: " << exp.what())
 					eret->elements.clear();
 					eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ServiceNotFoundException"));
@@ -1354,7 +1354,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_INTRUSIVE_PTR<Me
 						catch (std::exception&) {}
 					}
 
-					ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(weak_sp(),Node,m->header->ReceiverEndpoint,e->ServicePath,
+					ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(weak_sp(),Node,m->header->ReceiverEndpoint,e->ServicePath,
 							e->MemberName, "Error connecting client: " << exp.what())
 					eret->elements.clear();
 					eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ServiceNotFoundException"));
@@ -1401,7 +1401,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_INTRUSIVE_PTR<Me
 				}
 				catch (std::exception& exp)
 				{
-					ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(weak_sp(),Node,m->header->ReceiverEndpoint,e->ServicePath,
+					ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(weak_sp(),Node,m->header->ReceiverEndpoint,e->ServicePath,
 							e->MemberName, "Error authenticating client: " << exp.what())
 					try
 					{
@@ -1423,7 +1423,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_INTRUSIVE_PTR<Me
 			break;
 
 			default:
-				ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(weak_sp(),Node,m->header->ReceiverEndpoint,e->ServicePath,
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(weak_sp(),Node,m->header->ReceiverEndpoint,e->ServicePath,
 							e->MemberName, "Invalid special request EntryType: " << e->EntryType)
 				eret->Error = MessageErrorType_ProtocolError;
 				eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ProtocolError"));
@@ -1449,11 +1449,11 @@ void RobotRaconteurNode::AsyncConnectService(boost::string_ref url, boost::strin
 void RobotRaconteurNode::AsyncConnectService(const std::vector<std::string> &url, boost::string_ref username, RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> > credentials, boost::function<void (RR_SHARED_PTR<ClientContext>,ClientServiceListenerEventType,RR_SHARED_PTR<void>)> listener, boost::string_ref objecttype, boost::function<void(RR_SHARED_PTR<RRObject>,RR_SHARED_PTR<RobotRaconteurException>)> handler, int32_t timeout)
 {
 	
-	ROBOTRACONTEUR_LOG_TRACE_SOURCE(weak_sp(), Node, -1, "Begin ConnectService with candidate urls: " << boost::join(url, ", "));
+	ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_sp(), Node, -1, "Begin ConnectService with candidate urls: " << boost::join(url, ", "));
 
 	if (url.empty())
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "No urls specified for ConnectService");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "No urls specified for ConnectService");
 		throw InvalidArgumentException("URL vector must not be empty for AsyncConnectService");
 	}
 
@@ -1485,7 +1485,7 @@ void RobotRaconteurNode::AsyncConnectService(const std::vector<std::string> &url
 
 		if (connectors.empty())
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "ConnectService could not find any valid transports for urls: " << boost::join(url, ", "));
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "ConnectService could not find any valid transports for urls: " << boost::join(url, ", "));
 		 	throw ConnectionException("Could not find any valid transports for requested connection URLs");
 		}
 
@@ -1527,11 +1527,11 @@ void RobotRaconteurNode::DisconnectService(RR_SHARED_PTR<RRObject> obj)
 	}
 	catch (std::exception& e)
 	{
-		ROBOTRACONTEUR_LOG_INFO_SOURCE(weak_sp(), Node, -1, "DisconnectClient failed: " << e.what());
+		ROBOTRACONTEUR_LOG_INFO_COMPONENT(weak_sp(), Node, -1, "DisconnectClient failed: " << e.what());
 		return;
 	}
 
-	ROBOTRACONTEUR_LOG_INFO_SOURCE(weak_sp(), Node, c->GetLocalEndpoint(), "Client Disconnected");
+	ROBOTRACONTEUR_LOG_INFO_COMPONENT(weak_sp(), Node, c->GetLocalEndpoint(), "Client Disconnected");
 }
 
 void RobotRaconteurNode::AsyncDisconnectService(RR_SHARED_PTR<RRObject> obj, boost::function<void()> handler)
@@ -1541,7 +1541,7 @@ void RobotRaconteurNode::AsyncDisconnectService(RR_SHARED_PTR<RRObject> obj, boo
 	
 	RR_SHARED_PTR<ClientContext> c = stub->GetContext();
 
-	ROBOTRACONTEUR_LOG_TRACE_SOURCE(weak_sp(), Node, c->GetLocalEndpoint(), "Client Disconnecting");
+	ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_sp(), Node, c->GetLocalEndpoint(), "Client Disconnecting");
 	c->AsyncClose(RR_MOVE(handler));
 }
 
@@ -1570,7 +1570,7 @@ uint32_t RobotRaconteurNode::RegisterEndpoint(RR_SHARED_PTR<Endpoint> e)
 		e->SetLocalEndpoint(id);
 		endpoints.insert(std::make_pair(id, e));
 
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE(weak_sp(), Node, e->GetLocalEndpoint(), "Endpoint registered, RemoteNodeID " << e->GetRemoteNodeID().ToString() << " ep " << e->GetRemoteEndpoint());
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_sp(), Node, e->GetLocalEndpoint(), "Endpoint registered, RemoteNodeID " << e->GetRemoteNodeID().ToString() << " ep " << e->GetRemoteEndpoint());
 
 		return id;
 		
@@ -1596,7 +1596,7 @@ void RobotRaconteurNode::DeleteEndpoint(RR_SHARED_PTR<Endpoint> e)
 	}
 	catch (std::exception& exp)
 	{
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE(weak_sp(), Node, e->GetLocalEndpoint(), "Error deleting endpoint: " << exp.what());
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_sp(), Node, e->GetLocalEndpoint(), "Error deleting endpoint: " << exp.what());
 	}
 
 	try
@@ -1614,10 +1614,10 @@ void RobotRaconteurNode::DeleteEndpoint(RR_SHARED_PTR<Endpoint> e)
 	}
 	catch (std::exception& exp)
 	{
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE(weak_sp(), Node, e->GetLocalEndpoint(), "Error closing transport connection for deleted endpoint: " << exp.what());
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_sp(), Node, e->GetLocalEndpoint(), "Error closing transport connection for deleted endpoint: " << exp.what());
 	}
 
-	ROBOTRACONTEUR_LOG_TRACE_SOURCE(weak_sp(), Node, e->GetLocalEndpoint(), "Endpoint deleted");
+	ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_sp(), Node, e->GetLocalEndpoint(), "Endpoint deleted");
 }
 
 void RobotRaconteurNode::CheckConnection(uint32_t endpoint)
@@ -1652,7 +1652,7 @@ std::vector<NodeDiscoveryInfo> RobotRaconteurNode::GetDetectedNodes()
 {
 	if (!m_Discovery)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Node not init");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Node not init");
 	 	throw InvalidOperationException("Node not init");
 	}
 	return m_Discovery->GetDetectedNodes();
@@ -1662,7 +1662,7 @@ void RobotRaconteurNode::NodeDetected(const NodeDiscoveryInfo& info)
 {
 	if (!m_Discovery)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Node not init");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Node not init");
 	 	throw InvalidOperationException("Node not init");
 	}
 	m_Discovery->NodeDetected(info);
@@ -1674,7 +1674,7 @@ void RobotRaconteurNode::UpdateDetectedNodes(const std::vector<std::string>& sch
 
 	if (!m_Discovery)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Node not init");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Node not init");
 	 	throw InvalidOperationException("Node not init");
 	}
 	m_Discovery->UpdateDetectedNodes(schemes);
@@ -1691,7 +1691,7 @@ void RobotRaconteurNode::NodeAnnouncePacketReceived(boost::string_ref packet)
 {
 	if (!m_Discovery)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Node not init");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Node not init");
 	 	throw InvalidOperationException("Node not init");
 	}
 	m_Discovery->NodeAnnouncePacketReceived(packet);
@@ -1701,7 +1701,7 @@ void RobotRaconteurNode::CleanDiscoveredNodes()
 {
 	if (!m_Discovery)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Node not init");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Node not init");
 	 	throw InvalidOperationException("Node not init");
 	}
 	m_Discovery->CleanDiscoveredNodes();
@@ -1711,7 +1711,7 @@ uint32_t RobotRaconteurNode::GetNodeDiscoveryMaxCacheCount()
 {
 	if (!m_Discovery)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Node not init");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Node not init");
 	 	throw InvalidOperationException("Node not init");
 	}
 	return m_Discovery->GetNodeDiscoveryMaxCacheCount();
@@ -1720,7 +1720,7 @@ void RobotRaconteurNode::SetNodeDiscoveryMaxCacheCount(uint32_t count)
 {
 	if (!m_Discovery)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Node not init");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Node not init");
 	 	throw InvalidOperationException("Node not init");
 	}
 	m_Discovery->SetNodeDiscoveryMaxCacheCount(count);
@@ -1730,7 +1730,7 @@ RR_SHARED_PTR<ServiceSubscription> RobotRaconteurNode::SubscribeService(const st
 {
 	if (!m_Discovery)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Node not init");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Node not init");
 	 	throw InvalidOperationException("Node not init");
 	}
 	return m_Discovery->SubscribeService(service_types, filter);
@@ -1740,7 +1740,7 @@ RR_SHARED_PTR<ServiceInfo2Subscription> RobotRaconteurNode::SubscribeServiceInfo
 {
 	if (!m_Discovery)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Node not init");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Node not init");
 		throw InvalidOperationException("Node not init");
 	}
 	return m_Discovery->SubscribeServiceInfo2(service_types, filter);
@@ -1831,7 +1831,7 @@ void RobotRaconteurNode::AsyncFindServiceByType(boost::string_ref servicetype, c
 {
 	if (!m_Discovery)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Node not init");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Node not init");
 	 	throw InvalidOperationException("Node not init");
 	}
 	m_Discovery->AsyncFindServiceByType(servicetype, transportschemes, handler, timeout);
@@ -1844,7 +1844,7 @@ std::vector<ServiceInfo2> RobotRaconteurNode::FindServiceByType(boost::string_re
 
 	if (!m_Discovery)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Node not init");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Node not init");
 	 	throw InvalidOperationException("Node not init");
 	}
 	return m_Discovery->FindServiceByType(servicetype, transportschemes);
@@ -1856,7 +1856,7 @@ std::vector<NodeInfo2> RobotRaconteurNode::FindNodeByID(const RobotRaconteur::No
 
 	if (!m_Discovery)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Node not init");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Node not init");
 		throw InvalidOperationException("Node not init");
 	}
 	return m_Discovery->FindNodeByID(id, transportschemes);
@@ -1866,7 +1866,7 @@ void RobotRaconteurNode::AsyncFindNodeByID(const RobotRaconteur::NodeID& id, con
 {
 	if (!m_Discovery)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Node not init");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Node not init");
 		throw InvalidOperationException("Node not init");
 	}
 	m_Discovery->AsyncFindNodeByID(id, transportschemes, handler, timeout);
@@ -1878,7 +1878,7 @@ std::vector<NodeInfo2> RobotRaconteurNode::FindNodeByName(boost::string_ref name
 
 	if (!m_Discovery)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Node not init");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Node not init");
 		throw InvalidOperationException("Node not init");
 	}
 	return m_Discovery->FindNodeByName(name, transportschemes);
@@ -1888,7 +1888,7 @@ void RobotRaconteurNode::AsyncFindNodeByName(boost::string_ref name, const std::
 {
 	if (!m_Discovery)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Node not init");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Node not init");
 		throw InvalidOperationException("Node not init");
 	}
 	m_Discovery->AsyncFindNodeByName(name, transportschemes, handler, timeout);
@@ -1900,7 +1900,7 @@ std::string RobotRaconteurNode::RequestObjectLock(RR_SHARED_PTR<RRObject> obj, R
 
 	if (!(dynamic_cast<ServiceStub*>(obj.get()) != 0))
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Can only lock object opened through Robot Raconteur");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Can only lock object opened through Robot Raconteur");
 		throw InvalidArgumentException("Can only lock object opened through Robot Raconteur");
 	}
 	RR_SHARED_PTR<ServiceStub> s = rr_cast<ServiceStub>(obj);
@@ -1916,7 +1916,7 @@ std::string RobotRaconteurNode::ReleaseObjectLock(RR_SHARED_PTR<RRObject> obj)
 
 	if (!(dynamic_cast<ServiceStub*>(obj.get()) != 0))
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Can only unlock object opened through Robot Raconteur");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Can only unlock object opened through Robot Raconteur");
 		throw InvalidArgumentException("Can only unlock object opened through Robot Raconteur");
 	}
 	RR_SHARED_PTR<ServiceStub> s = rr_cast<ServiceStub>(obj);
@@ -1931,7 +1931,7 @@ void RobotRaconteurNode::AsyncRequestObjectLock(RR_SHARED_PTR<RRObject> obj, Rob
 	RR_SHARED_PTR<ServiceStub> s = RR_DYNAMIC_POINTER_CAST<ServiceStub>(obj);
 	if (!s)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Can only lock object opened through Robot Raconteur");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Can only lock object opened through Robot Raconteur");
 	 	throw InvalidArgumentException("Can only lock object opened through Robot Raconteur");
 	}
 	s->GetContext()->AsyncRequestObjectLock(obj,flags,RR_MOVE(handler),timeout);
@@ -1942,7 +1942,7 @@ void RobotRaconteurNode::AsyncReleaseObjectLock(RR_SHARED_PTR<RRObject> obj, boo
 	RR_SHARED_PTR<ServiceStub> s = RR_DYNAMIC_POINTER_CAST<ServiceStub>(obj);
 	if (!s)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Can only lock object opened through Robot Raconteur");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Can only lock object opened through Robot Raconteur");
 		throw InvalidArgumentException("Can only unlock object opened through Robot Raconteur");
 	}
 	s->GetContext()->AsyncReleaseObjectLock(obj,RR_MOVE(handler),timeout);
@@ -1955,7 +1955,7 @@ void RobotRaconteurNode::MonitorEnter(RR_SHARED_PTR<RRObject> obj, int32_t timeo
 	RR_SHARED_PTR<ServiceStub> s = RR_DYNAMIC_POINTER_CAST<ServiceStub>(obj);
 	if (!s) 
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Only service stubs can be monitored by RobotRaconteurNode");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Only service stubs can be monitored by RobotRaconteurNode");
 		throw InvalidArgumentException("Only service stubs can be monitored by RobotRaconteurNode");
 	}
 	s->GetContext()->MonitorEnter(obj,timeout);
@@ -1968,7 +1968,7 @@ void RobotRaconteurNode::MonitorExit(RR_SHARED_PTR<RRObject> obj)
 	RR_SHARED_PTR<ServiceStub> s = RR_DYNAMIC_POINTER_CAST<ServiceStub>(obj);
 	if (!s)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Only service stubs can be monitored by RobotRaconteurNode");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Only service stubs can be monitored by RobotRaconteurNode");
 		throw InvalidArgumentException("Only service stubs can be monitored by RobotRaconteurNode");
 	}
 	s->GetContext()->MonitorExit(obj);
@@ -1987,7 +1987,7 @@ RobotRaconteurNode::ScopedMonitorLock::ScopedMonitorLock(RR_SHARED_PTR<RRObject>
 	RR_SHARED_PTR<ServiceStub> s = RR_DYNAMIC_POINTER_CAST<ServiceStub>(obj);
 	if (!s)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Node, -1, "Only service stubs can be monitored by RobotRaconteurNode");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Node, -1, "Only service stubs can be monitored by RobotRaconteurNode");
 	 	throw InvalidArgumentException("Only service stubs can be monitored by RobotRaconteurNode");
 	}
 	this->node=s->RRGetNode();
@@ -2000,7 +2000,7 @@ void RobotRaconteurNode::ScopedMonitorLock::lock(int32_t timeout)
 	if (!obj) return;
 	if (locked)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Node, -1, "Already locked");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Node, -1, "Already locked");
 		throw InvalidOperationException("Already locked");
 	}
 	this->GetNode()->MonitorEnter(obj,timeout);
@@ -2012,7 +2012,7 @@ void RobotRaconteurNode::ScopedMonitorLock::unlock()
 	if (!obj) return;
 	if (!locked)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Node, -1, "Node locked");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Node, -1, "Node locked");
 		throw InvalidOperationException("Not locked");
 	}
 	this->GetNode()->MonitorExit(obj);
@@ -2154,7 +2154,7 @@ RR_SHARED_PTR<RRObject> RobotRaconteurNode::FindObjRefTyped(RR_SHARED_PTR<RRObje
 	RR_SHARED_PTR<ServiceStub> s = RR_DYNAMIC_POINTER_CAST<ServiceStub>(obj);
 	if (!s)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Only service stubs can be have objrefs");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Only service stubs can be have objrefs");
 		throw InvalidArgumentException("Only service stubs can be have objrefs");
 	}
 	return s->FindObjRefTyped(objref,objecttype);
@@ -2167,7 +2167,7 @@ RR_SHARED_PTR<RRObject> RobotRaconteurNode::FindObjRefTyped(RR_SHARED_PTR<RRObje
 	RR_SHARED_PTR<ServiceStub> s = RR_DYNAMIC_POINTER_CAST<ServiceStub>(obj);
 	if (!s)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Only service stubs can be have objrefs");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Only service stubs can be have objrefs");
 		throw InvalidArgumentException("Only service stubs can be have objrefs");
 	}
 	return s->FindObjRefTyped(objref,index,objecttype);
@@ -2178,7 +2178,7 @@ void RobotRaconteurNode::AsyncFindObjRefTyped(RR_SHARED_PTR<RRObject> obj, boost
 	RR_SHARED_PTR<ServiceStub> s = RR_DYNAMIC_POINTER_CAST<ServiceStub>(obj);
 	if (!s)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Only service stubs can be have objrefs");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Only service stubs can be have objrefs");
 		throw InvalidArgumentException("Only service stubs can be have objrefs");
 	}
 	s->AsyncFindObjRefTyped(objref,objecttype,RR_MOVE(handler),timeout);
@@ -2189,7 +2189,7 @@ void RobotRaconteurNode::AsyncFindObjRefTyped(RR_SHARED_PTR<RRObject> obj, boost
 	RR_SHARED_PTR<ServiceStub> s = RR_DYNAMIC_POINTER_CAST<ServiceStub>(obj);
 	if (!s)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Only service stubs can be have objrefs");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Only service stubs can be have objrefs");
 		throw InvalidArgumentException("Only service stubs can be have objrefs");
 	}
 	s->AsyncFindObjRefTyped(objref,index,objecttype,RR_MOVE(handler),timeout);
@@ -2203,7 +2203,7 @@ std::string RobotRaconteurNode::FindObjectType(RR_SHARED_PTR<RRObject> obj, boos
 	RR_SHARED_PTR<ServiceStub> s = RR_DYNAMIC_POINTER_CAST<ServiceStub>(obj);
 	if (!s)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Only service stubs can be have objrefs");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Only service stubs can be have objrefs");
 		throw InvalidArgumentException("Only service stubs can be have objrefs");
 	}
 	return s->FindObjectType(n);
@@ -2216,7 +2216,7 @@ std::string RobotRaconteurNode::FindObjectType(RR_SHARED_PTR<RRObject> obj, boos
 	RR_SHARED_PTR<ServiceStub> s = RR_DYNAMIC_POINTER_CAST<ServiceStub>(obj);
 	if (!s)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Only service stubs can be have objrefs");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Only service stubs can be have objrefs");
 		throw InvalidArgumentException("Only service stubs can be have objrefs");
 	}
 	return s->FindObjectType(n,i);
@@ -2227,7 +2227,7 @@ void RobotRaconteurNode::AsyncFindObjectType(RR_SHARED_PTR<RRObject> obj, boost:
 	RR_SHARED_PTR<ServiceStub> s = RR_DYNAMIC_POINTER_CAST<ServiceStub>(obj);
 	if (!s)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Only service stubs can be have objrefs");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Only service stubs can be have objrefs");
 		throw InvalidArgumentException("Only service stubs can be have objrefs");
 	}
 	s->AsyncFindObjectType(n,RR_MOVE(handler),timeout);
@@ -2238,7 +2238,7 @@ void RobotRaconteurNode::AsyncFindObjectType(RR_SHARED_PTR<RRObject> obj, boost:
 	RR_SHARED_PTR<ServiceStub> s = RR_DYNAMIC_POINTER_CAST<ServiceStub>(obj);
 	if (!s)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Only service stubs can be have objrefs");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Only service stubs can be have objrefs");
 		throw InvalidArgumentException("Only service stubs can be have objrefs");
 	}
 	s->AsyncFindObjectType(n,i,RR_MOVE(handler),timeout);
@@ -2249,7 +2249,7 @@ std::vector<std::string> RobotRaconteurNode::GetPulledServiceTypes(RR_SHARED_PTR
 	RR_SHARED_PTR<ServiceStub> s = RR_DYNAMIC_POINTER_CAST<ServiceStub>(obj);
 	if (!s)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Only service stubs can be have objrefs");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Only service stubs can be have objrefs");
 		throw InvalidArgumentException("Only service stubs can be have objrefs");
 	}
 	return s->GetContext()->GetPulledServiceTypes();
@@ -2260,7 +2260,7 @@ RR_SHARED_PTR<ServiceFactory> RobotRaconteurNode::GetPulledServiceType(RR_SHARED
 	RR_SHARED_PTR<ServiceStub> s = RR_DYNAMIC_POINTER_CAST<ServiceStub>(obj);
 	if (!s)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Only service stubs can be have objrefs");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Only service stubs can be have objrefs");
 		throw InvalidArgumentException("Only service stubs can be have objrefs");
 	}
 	return s->GetContext()->GetPulledServiceType(type);
@@ -2287,7 +2287,7 @@ RR_SHARED_PTR<ThreadPool> RobotRaconteurNode::GetThreadPool()
 		boost::unique_lock<boost::shared_mutex> lock(thread_pool_lock);
 		if (!thread_pool)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Could not initialize thread pool");
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Could not initialize thread pool");
 			throw InternalErrorException("Could not initialize thread pool");
 		}
 			
@@ -2325,13 +2325,13 @@ void RobotRaconteurNode::SetThreadPool(RR_SHARED_PTR<ThreadPool> pool)
 
 	if (is_shutdown)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Attempt to set thread pool after node shutdown");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Attempt to set thread pool after node shutdown");
 		throw InvalidOperationException("Node has been shutdown");
 	}
 	boost::unique_lock<boost::shared_mutex> lock(thread_pool_lock);
 	if (thread_pool)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Thread pool already set");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Thread pool already set");
 		throw InvalidOperationException("Thread pool already set");
 	}
 	thread_pool=pool;
@@ -2342,7 +2342,7 @@ void RobotRaconteurNode::SetThreadPool(RR_SHARED_PTR<ThreadPool> pool)
 		thread_pool->Post(boost::bind(&StartPeriodicCleanupTask, shared_from_this()));
 	}
 
-	ROBOTRACONTEUR_LOG_TRACE_SOURCE(weak_sp(), Node, -1, "ThreadPool set");
+	ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_sp(), Node, -1, "ThreadPool set");
 
 }
 
@@ -2359,7 +2359,7 @@ RR_SHARED_PTR<ThreadPoolFactory> RobotRaconteurNode::GetThreadPoolFactory()
 
 	if (!thread_pool_factory)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "ThreadPool set but ThreadPoolFactory not configured");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "ThreadPool set but ThreadPoolFactory not configured");
 		throw InvalidOperationException("ThreadPool set but ThreadPoolFactory not configured");
 	}
 
@@ -2373,12 +2373,12 @@ void RobotRaconteurNode::SetThreadPoolFactory(RR_SHARED_PTR<ThreadPoolFactory> f
 	boost::mutex::scoped_lock lock(thread_pool_factory_lock);
 	if (thread_pool_factory)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Thread pool already set");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Thread pool already set");
 		throw InvalidOperationException("Thread pool already set");
 	}
 	thread_pool_factory=factory;
 
-	ROBOTRACONTEUR_LOG_TRACE_SOURCE(weak_sp(), Node, -1, "ThreadPoolFactory set");
+	ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_sp(), Node, -1, "ThreadPoolFactory set");
 
 }
 
@@ -2401,7 +2401,7 @@ bool RobotRaconteurNode::InitThreadPool(int32_t thread_count)
 	
 	if (is_shutdown)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Attempt to initialize thread pool after thread pool shutdown");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Attempt to initialize thread pool after thread pool shutdown");
 		throw InvalidOperationException("Node has been shutdown");
 	}
 
@@ -2414,7 +2414,7 @@ bool RobotRaconteurNode::InitThreadPool(int32_t thread_count)
 		thread_pool->Post(boost::bind(&StartPeriodicCleanupTask, shared_from_this()));
 	}
 
-	ROBOTRACONTEUR_LOG_TRACE_SOURCE(weak_sp(), Node, -1, "ThreadPool initialized with " << thread_count << " threads");
+	ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_sp(), Node, -1, "ThreadPool initialized with " << thread_count << " threads");
 
 	return true;
 }
@@ -2451,7 +2451,7 @@ void RobotRaconteurNode::HandleException(const std::exception* exp)
 	}
 	else
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(),Node,-1,"uncaught exception in unknown handler: " << exp->what())
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(),Node,-1,"uncaught exception in unknown handler: " << exp->what())
 	}
 }
 
@@ -2489,13 +2489,13 @@ RR_SHARED_PTR<Timer> RobotRaconteurNode::CreateTimer(const boost::posix_time::ti
 	if (!t)
 	{
 		RR_SHARED_PTR<Timer> timer = RR_MAKE_SHARED<WallTimer>(period,handler,oneshot,shared_from_this());
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE(weak_sp(), Node, -1, "Timer created using WallTimer");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_sp(), Node, -1, "Timer created using WallTimer");
 		return timer;
 	}
 	else
 	{
 		RR_SHARED_PTR<Timer> timer = t->CreateTimer(period,handler,oneshot);
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE(weak_sp(), Node, -1, "Timer created using transport provider");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_sp(), Node, -1, "Timer created using transport provider");
 		return timer;
 	}
 }
@@ -2507,13 +2507,13 @@ RR_SHARED_PTR<Rate> RobotRaconteurNode::CreateRate(double frequency)
 	if (!t)
 	{
 		RR_SHARED_PTR<Rate> rate = RR_MAKE_SHARED<WallRate>(frequency,shared_from_this());
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE(weak_sp(), Node, -1, "Rate created using WallRate");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_sp(), Node, -1, "Rate created using WallRate");
 		return rate;
 	}
 	else
 	{
 		RR_SHARED_PTR<Rate> rate = t->CreateRate(frequency);
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE(weak_sp(), Node, -1, "Rate created using transport provider");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_sp(), Node, -1, "Rate created using transport provider");
 		return rate;
 	}
 }
@@ -2546,13 +2546,13 @@ RR_SHARED_PTR<AutoResetEvent> RobotRaconteurNode::CreateAutoResetEvent()
 	if (!t)
 	{
 		RR_SHARED_PTR<AutoResetEvent> evt =  RR_MAKE_SHARED<AutoResetEvent>();
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE(weak_sp(), Node, -1, "AutoResetEvent created");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_sp(), Node, -1, "AutoResetEvent created");
 		return evt;
 	}
 	else
 	{
 		RR_SHARED_PTR<AutoResetEvent> evt = t->CreateAutoResetEvent();
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE(weak_sp(), Node, -1, "AutoResetEvent created using transport provider");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_sp(), Node, -1, "AutoResetEvent created using transport provider");
 		return evt;
 	}
 
@@ -2607,7 +2607,7 @@ std::string RobotRaconteurNode::GetServicePath(RR_SHARED_PTR<RRObject> obj)
 {
 	if (!(dynamic_cast<ServiceStub*>(obj.get()) != 0))
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(weak_sp(), Node, -1, "Only service stubs can have objrefs");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Only service stubs can have objrefs");
 		throw InvalidArgumentException("Only service stubs can have objrefs");
 	}
 	RR_SHARED_PTR<ServiceStub> s = rr_cast<ServiceStub>(obj);
@@ -2702,7 +2702,7 @@ void RobotRaconteurNode::UpdateServiceStateNonce()
 		} while (new_nonce == service_state_nonce);
 
 		service_state_nonce = new_nonce;
-		ROBOTRACONTEUR_LOG_TRACE_SOURCE(weak_sp(), Node, -1, "Service state nonce updated to \"" << new_nonce << "\"");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_sp(), Node, -1, "Service state nonce updated to \"" << new_nonce << "\"");
 	}
 	
 	{
@@ -2724,7 +2724,7 @@ void RobotRaconteurNode::LogMessage(RobotRaconteur_LogLevel level, std::string& 
 	RRLogRecord r;
 	r.Node=shared_from_this();
 	r.Level=level;
-	r.Source=RobotRaconteur_LogSource_Default;
+	r.Component=RobotRaconteur_LogComponent_Default;
 	r.Endpoint=0;
 	r.Message=message;
 	
@@ -2811,7 +2811,7 @@ RobotRaconteur_LogLevel RobotRaconteurNode::SetLogLevelFromEnvVariable(std::stri
 		return RobotRaconteur_LogLevel_Trace;
 	}
 
-	ROBOTRACONTEUR_LOG_WARN_SOURCE(weak_sp(), Node, -1, "Invalid log level specified in environmental variable: " << loglevel);
+	ROBOTRACONTEUR_LOG_WARN_COMPONENT(weak_sp(), Node, -1, "Invalid log level specified in environmental variable: " << loglevel);
 
 	return log_level;
 }

@@ -335,7 +335,7 @@ namespace RobotRaconteur
 
 		virtual void CallNext(RR_INTRUSIVE_PTR<MessageEntry> m)
 		{	
-			ROBOTRACONTEUR_LOG_TRACE_SOURCE_PATH(node,Service,ep->GetLocalEndpoint(),service_path,name,"Generator CallNext with id " << index);
+			ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node,Service,ep->GetLocalEndpoint(),service_path,name,"Generator CallNext with id " << index);
 			RR_SHARED_PTR<ServiceSkel> skel1 = skel.lock();
 			if (!skel1)
 			{
