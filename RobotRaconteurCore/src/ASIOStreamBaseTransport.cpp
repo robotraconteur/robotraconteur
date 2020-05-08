@@ -293,7 +293,7 @@ void ASIOStreamBaseTransport::AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boos
 		}
 		else
 		{			
-			if (message_size > 16 * 1024) 
+			if (message_size > 512 * 1024) 
 			{
 				ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "attempt to send large message before authorized")
 				throw ProtocolException("");
@@ -698,7 +698,7 @@ void ASIOStreamBaseTransport::EndSendMessage1()
 
 	if (send_queue.size() != 0 && c && !send_pause_request)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "dequeing next message")
+		ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Transport, GetLocalEndpoint(), "dequeing next message")
 		message_queue_entry m = send_queue.front();
 		send_queue.pop_front();
 		try
@@ -897,7 +897,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage1(size_t startpos, const boost::s
 				}
 				else
 				{
-					if (size > 16 * 1024)
+					if (size > 512 * 1024)
 					{
 						ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "received too large a message " << size << " before authorized")
 					 throw ProtocolException("");
@@ -1268,7 +1268,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
 					}
 					else
 					{
-						if (size > 16 * 1024)
+						if (size > 512 * 1024)
 						{
 							ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Transport, GetLocalEndpoint(), "received too large a message " << size << " before authorized, with asyncio")
 						throw ProtocolException("");
