@@ -55,13 +55,6 @@ NodeID::NodeID(const NodeID& id)
 	this->id=id.id;
 }
 
-NodeID::NodeID(const std::string& id)
-{
-	boost::string_ref id2(id);
-	init_from_string(id2);
-}
-
-
 NodeID::NodeID(boost::string_ref id)
 {
 	init_from_string(id);

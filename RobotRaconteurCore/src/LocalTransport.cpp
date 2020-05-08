@@ -548,7 +548,7 @@ void LocalTransport::StartServerAsNodeName(boost::string_ref name, bool public_)
 {
 	if (!IsLocalTransportSupported())
 	{
-		ROBOTRACONTEUR_LOG_WARN_COMPONENT(node, Transport, -1, "LocalTransport not supported on this operating system. Other transports will operate normally");
+		ROBOTRACONTEUR_LOG_WARNING_COMPONENT(node, Transport, -1, "LocalTransport not supported on this operating system. Other transports will operate normally");
 		StartClientAsNodeName(name);
 		return;
 	}
@@ -706,7 +706,7 @@ void LocalTransport::StartServerAsNodeID(const NodeID& nodeid1, bool public_)
 {
 	if (!IsLocalTransportSupported())
 	{
-		ROBOTRACONTEUR_LOG_WARN_COMPONENT(node, Transport, -1, "LocalTransport not supported on this operating system. Other transports will operate normally");
+		ROBOTRACONTEUR_LOG_WARNING_COMPONENT(node, Transport, -1, "LocalTransport not supported on this operating system. Other transports will operate normally");
 		try
 		{
 			GetNode()->SetNodeID(nodeid1);
@@ -722,7 +722,7 @@ void LocalTransport::StartServerAsNodeID(const NodeID& nodeid1, bool public_)
 	NodeID nodeid=nodeid1;
 	if (nodeid.IsAnyNode())
 	{
-		ROBOTRACONTEUR_LOG_WARN_COMPONENT(node, Transport, -1, "LocalTransport cannot start server with zero node (any node) NodeID");
+		ROBOTRACONTEUR_LOG_WARNING_COMPONENT(node, Transport, -1, "LocalTransport cannot start server with zero node (any node) NodeID");
 	 	throw InvalidArgumentException("NodeID must not be zero node");
 	}
 
@@ -1986,7 +1986,7 @@ namespace detail
 						continue;
 					}
 
-					NodeID nodeid = nodeid1->second;
+					NodeID nodeid(nodeid1->second);
 					std::string& username2 = username1->second;
 					
 
@@ -2050,7 +2050,7 @@ namespace detail
 						continue;
 					}
 
-					NodeID nodeid = nodeid1->second;
+					NodeID nodeid(nodeid1->second);
 					
 					if (nodename1->second != boost::filesystem::change_extension(dir_itr->path().filename(), ""))
 					{

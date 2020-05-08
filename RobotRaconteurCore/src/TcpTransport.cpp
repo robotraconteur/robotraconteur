@@ -2674,7 +2674,7 @@ void TcpTransport::LoadTlsNodeCertificate()
 	}
 	catch (std::exception& exp)
 	{
-		ROBOTRACONTEUR_LOG_WARN_COMPONENT(node, Transport, -1, "Loading TLS certificate for NodeID: " << GetNode()->NodeID().ToString() << " failed: " << exp.what() 
+		ROBOTRACONTEUR_LOG_WARNING_COMPONENT(node, Transport, -1, "Loading TLS certificate for NodeID: " << GetNode()->NodeID().ToString() << " failed: " << exp.what() 
 		<< ". This warning can be ignored if TLS not in use");
 	}
 
@@ -5067,7 +5067,7 @@ namespace detail
 			}
 			catch (std::exception& exp2)
 			{
-				ROBOTRACONTEUR_LOG_WARN_COMPONENT(node, Transport, -1, "TcpTransport discovery error starting IPv6 listen socket: " << exp2.what());
+				ROBOTRACONTEUR_LOG_WARNING_COMPONENT(node, Transport, -1, "TcpTransport discovery error starting IPv6 listen socket: " << exp2.what());
 			}
 
 			RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(&IPNodeDiscovery::handle_receive_update_timer, shared_from_this(), boost::system::error_code()), true);
@@ -5077,7 +5077,7 @@ namespace detail
 		}
 		catch (std::exception& exp)
 		{
-			ROBOTRACONTEUR_LOG_WARN_COMPONENT(node, Transport, -1, "TcpTransport discovery error starting listen socket: " << exp.what());
+			ROBOTRACONTEUR_LOG_WARNING_COMPONENT(node, Transport, -1, "TcpTransport discovery error starting listen socket: " << exp.what());
 		}
 
 

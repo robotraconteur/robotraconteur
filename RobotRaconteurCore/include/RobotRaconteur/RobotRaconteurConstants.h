@@ -338,7 +338,11 @@ namespace RobotRaconteur
 		RobotRaconteur_LogComponent_Subscription,
 		RobotRaconteur_LogComponent_NodeSetup,
 		RobotRaconteur_LogComponent_Utility,
-		RobotRaconteur_LogComponent_User
+		RobotRaconteur_LogComponent_RobDefLib,
+		RobotRaconteur_LogComponent_User,
+		RobotRaconteur_LogComponent_UserClient,
+		RobotRaconteur_LogComponent_UserService,
+		RobotRaconteur_LogComponent_ThirdParty
 	};
 
 }

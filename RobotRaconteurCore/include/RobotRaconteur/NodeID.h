@@ -48,8 +48,6 @@ namespace RobotRaconteur
 
 		NodeID(boost::string_ref id);
 
-		NodeID(const std::string& id);
-
 		const boost::array<uint8_t,16> ToByteArray() const;
 
 		const boost::uuids::uuid ToUuid() const;

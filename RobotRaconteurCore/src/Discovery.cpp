@@ -1566,7 +1566,7 @@ namespace RobotRaconteur
 					boost::mutex::scoped_lock lock2(e1->second->this_lock);
 					RR_SHARED_PTR<NodeDiscoveryInfo> ni = e1->second->info;
 					NodeInfo2 n;
-					n.NodeID = sid;
+					n.NodeID = NodeID(sid);
 					n.NodeName = ni->NodeName;
 
 					BOOST_FOREACH(NodeDiscoveryInfoURL& url, ni->URLs)

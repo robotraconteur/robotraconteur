@@ -90,7 +90,7 @@ namespace RobotRaconteur
 		}
 		else
 		{
-			ROBOTRACONTEUR_LOG_WARN_COMPONENT(node, Transport, -1, "LocalTransport could not load SetupApi functions");
+			ROBOTRACONTEUR_LOG_WARNING_COMPONENT(node, Transport, -1, "LocalTransport could not load SetupApi functions");
 		}
 #endif
 
@@ -102,7 +102,7 @@ namespace RobotRaconteur
 		}
 		else
 		{
-			ROBOTRACONTEUR_LOG_WARN_COMPONENT(node, Transport, -1, "LocalTransport could not load DBus functions");
+			ROBOTRACONTEUR_LOG_WARNING_COMPONENT(node, Transport, -1, "LocalTransport could not load DBus functions");
 		}
 
 		RR_SHARED_PTR<detail::Sdp_Functions> f4=RR_MAKE_SHARED<detail::Sdp_Functions>();
@@ -112,7 +112,7 @@ namespace RobotRaconteur
 		}
 		else
 		{
-			ROBOTRACONTEUR_LOG_WARN_COMPONENT(node, Transport, -1, "LocalTransport could not load Sdp functions");
+			ROBOTRACONTEUR_LOG_WARNING_COMPONENT(node, Transport, -1, "LocalTransport could not load Sdp functions");
 		}
 
 #endif

@@ -2811,7 +2811,7 @@ RobotRaconteur_LogLevel RobotRaconteurNode::SetLogLevelFromEnvVariable(std::stri
 		return RobotRaconteur_LogLevel_Trace;
 	}
 
-	ROBOTRACONTEUR_LOG_WARN_COMPONENT(weak_sp(), Node, -1, "Invalid log level specified in environmental variable: " << loglevel);
+	ROBOTRACONTEUR_LOG_WARNING_COMPONENT(weak_sp(), Node, -1, "Invalid log level specified in environmental variable: " << loglevel);
 
 	return log_level;
 }
