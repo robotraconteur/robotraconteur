@@ -150,6 +150,7 @@ public:
 #define ROBOTRACONTEUR_LOG_DEBUG_THROTTLE_PATH(node,component,ep,service_path,member,limit,args) ROBOTRACONTEUR_LOG_THROTTLE(node,Debug,component,"","",ep,service_path,member,limit,args)
 #define ROBOTRACONTEUR_LOG_DEBUG_THROTTLE_COMPONENTNAME_PATH(node,component,component_name,component_object_id,ep,service_path,member,limit,args) ROBOTRACONTEUR_LOG_THROTTLE(node,Debug,component,component_name,component_object_id,ep,service_path,member,limit,args)
 
+#ifndef NDEBUG
 #define ROBOTRACONTEUR_LOG_TRACE(node,args) ROBOTRACONTEUR_LOG(node,Trace,Default,"","",-1,"","",args)
 #define ROBOTRACONTEUR_LOG_TRACE_DEFAULT(args) ROBOTRACONTEUR_LOG(ROBOTRACONTEUR_LOG_DEFAULT_NODE,Trace,Default,"","",-1,"","",args)
 #define ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node,component,ep,args) ROBOTRACONTEUR_LOG(node,Trace,component,"","",ep,"","",args)
@@ -159,4 +160,17 @@ public:
 #define ROBOTRACONTEUR_LOG_TRACE_THROTTLE(node,component,ep,limit,args) ROBOTRACONTEUR_LOG_THROTTLE(node,Trace,component,"","",ep,"","",limit,args)
 #define ROBOTRACONTEUR_LOG_TRACE_THROTTLE_PATH(node,component,ep,service_path,member,limit,args) ROBOTRACONTEUR_LOG_THROTTLE(node,Trace,component,"","",ep,service_path,member,limit,args)
 #define ROBOTRACONTEUR_LOG_TRACE_THROTTLE_COMPONENTNAME_PATH(node,component,component_name,component_object_id,ep,service_path,member,limit,args) ROBOTRACONTEUR_LOG_THROTTLE(node,Trace,component,component_name,component_object_id,ep,service_path,member,limit,args)
+#else
+// Disable Trace log level in release builds for performance
+#define ROBOTRACONTEUR_LOG_TRACE(node,args)
+#define ROBOTRACONTEUR_LOG_TRACE_DEFAULT(args)
+#define ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node,component,ep,args)
+#define ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node,component,ep,service_path,member,args)
+#define ROBOTRACONTEUR_LOG_TRACE_COMPONENTNAME(node,component,component_name,component_object_id,ep,args)
+#define ROBOTRACONTEUR_LOG_TRACE_COMPONENTNAME_PATH(node,component,component_name,component_object_id,ep,service_path,member,args)
+#define ROBOTRACONTEUR_LOG_TRACE_THROTTLE(node,component,ep,limit,args)
+#define ROBOTRACONTEUR_LOG_TRACE_THROTTLE_PATH(node,component,ep,service_path,member,limit,args)
+#define ROBOTRACONTEUR_LOG_TRACE_THROTTLE_COMPONENTNAME_PATH(node,component,component_name,component_object_id,ep,service_path,member,limit,args)
+
+#endif
 }
