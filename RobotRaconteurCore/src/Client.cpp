@@ -465,9 +465,7 @@ namespace RobotRaconteur
 
 	void ClientContext::AsyncFindObjRef3(RR_SHARED_PTR<RRObject> ret, RR_SHARED_PTR<RobotRaconteurException> err, const std::string& path, boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)>& handler)
 	{
-
-		ROBOTRACONTEUR_LOG_DEBUG_SOURCE_PATH(node, Client, GetLocalEndpoint(), path, "", "FindObjRef timed out");
-
+		
 		try
 		{
 			boost::mutex::scoped_lock lock(stubs_lock);
@@ -1570,12 +1568,14 @@ namespace RobotRaconteur
 					if (missingdefs.size() > 0)
 					{
 						std::vector<std::string> missingdefs_vec;
+						std::vector<std::string> missingdefs_names;
 						BOOST_FOREACH(RR_SHARED_PTR<ServiceDefinition>& e, missingdefs)
 						{
+							missingdefs_names.push_back(e->Name);
 							missingdefs_vec.push_back(e->ToString());
 						}
 
-						ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "AsyncConnectService using dynamic service factory for types: " << boost::join(missingdefs_vec,", "));
+						ROBOTRACONTEUR_LOG_DEBUG_SOURCE(node, Client, GetLocalEndpoint(), "AsyncConnectService using dynamic service factory for types: " << boost::join(missingdefs_names,", "));
 
 						std::vector<RR_SHARED_PTR<ServiceFactory> > di2 = GetNode()->GetDynamicServiceFactory()->CreateServiceFactories(missingdefs_vec);
 
