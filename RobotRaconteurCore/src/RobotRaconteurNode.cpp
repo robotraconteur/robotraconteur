@@ -64,7 +64,7 @@ RobotRaconteurNode::RobotRaconteurNode()
 	MemoryMaxTransferSize = 102400;
 	instance_is_init=false;
 
-	log_level = RobotRaconteur_LogLevel_Debug;
+	log_level = RobotRaconteur_LogLevel_Warning;
 
 	//ROBOTRACONTEUR_LOG_TRACE_SOURCE(node, Node, -1, "RobotRaconteurNode created");
 	
