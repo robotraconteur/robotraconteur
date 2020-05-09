@@ -216,5 +216,34 @@ namespace RobotRaconteur
         }
         return id.ToString("B") + "," + name;
     }
+
+    void FileLogRecordHandler::OpenFile(const std::string& filename, bool append)
+    {
+        if (append)
+        {
+            file.open(filename, std::ofstream::app);            
+        }
+        else
+        {
+            file.open(filename, std::ofstream::trunc);
+        }
+
+        if (!file.is_open())
+        {
+            throw SystemResourceException("Open file for writing log failed");
+        }
+    }
+
+    void FileLogRecordHandler::HandleLogRecord(const RRLogRecord& record)
+    {
+        try
+        {
+            file << record << std::endl;
+        }
+        catch (std::exception& exp)
+        {
+            std::cerr << "Failed to log record to file: " << record << std::endl;
+        }
+    }
     
 }

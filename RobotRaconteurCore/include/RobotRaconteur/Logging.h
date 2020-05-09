@@ -86,6 +86,15 @@ public:
     virtual void HandleLogRecord(const RRLogRecord& record) = 0;
 };
 
+class ROBOTRACONTEUR_CORE_API FileLogRecordHandler
+{
+    std::ofstream file;
+
+public:
+    void OpenFile(const std::string& filename, bool append = true);
+    virtual void HandleLogRecord(const RRLogRecord& record);
+};
+
 #define ROBOTRACONTEUR_LOG_EMPTY_NODE
 #define ROBOTRACONTEUR_LOG_DEFAULT_NODE RobotRaconteur::RobotRaconteurNode::weak_sp()
 
