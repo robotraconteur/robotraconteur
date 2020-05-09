@@ -275,12 +275,12 @@ void LocalTransport::AsyncCreateTransportConnection(boost::string_ref url, RR_SH
 			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, ep->GetLocalEndpoint(), "LocalTransport host must be empty or \"localhost\", invalid URL: " << url);
 		 	throw ConnectionException("Invalid host for local transport");
 		}
-		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, ep->GetLocalEndpoint(), "LocalTransport searching " << user_path << " for URL: " << url);
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, ep->GetLocalEndpoint(), "LocalTransport searching \"" << user_path << "\" for URL: " << url);
 		search_paths.push_back(user_path);
 
 		if (public_user_path)
 		{
-			ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, ep->GetLocalEndpoint(), "LocalTransport searching " << *public_user_path << " for URL: " << url);
+			ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, ep->GetLocalEndpoint(), "LocalTransport searching \"" << *public_user_path << "\" for URL: " << url);
 			search_paths.push_back(*public_user_path);
 		}
 
@@ -296,7 +296,7 @@ void LocalTransport::AsyncCreateTransportConnection(boost::string_ref url, RR_SH
 			boost::filesystem::path service_path = *public_search_path / service_username;
 			if (boost::filesystem::is_directory(service_path))
 			{
-				ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, ep->GetLocalEndpoint(), "LocalTransport searching " << service_path << " for URL: " << url);
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, ep->GetLocalEndpoint(), "LocalTransport searching \"" << service_path << "\" for URL: " << url);
 				search_paths.push_back(service_path);
 			}
 
@@ -328,11 +328,11 @@ void LocalTransport::AsyncCreateTransportConnection(boost::string_ref url, RR_SH
 
 		if (username == my_username)
 		{
-			ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, ep->GetLocalEndpoint(), "LocalTransport searching " << user_path << " for URL: " << url);
+			ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, ep->GetLocalEndpoint(), "LocalTransport searching \"" << user_path << "\" for URL: " << url);
 			search_paths.push_back(user_path);
 			if (public_user_path)
 			{
-				ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, ep->GetLocalEndpoint(), "LocalTransport searching " << *public_user_path << " public path for URL: " << url);
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, ep->GetLocalEndpoint(), "LocalTransport searching \"" << *public_user_path << "\" public path for URL: " << url);
 				search_paths.push_back(*public_user_path);
 			}
 		}
@@ -343,7 +343,7 @@ void LocalTransport::AsyncCreateTransportConnection(boost::string_ref url, RR_SH
 				boost::filesystem::path service_path = *public_search_path / username;
 				if (boost::filesystem::is_directory(service_path))
 				{
-					ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, ep->GetLocalEndpoint(), "LocalTransport searching " << service_path << " public path for URL: " << url);
+					ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, ep->GetLocalEndpoint(), "LocalTransport searching \"" << service_path << "\" public path for URL: " << url);
 					search_paths.push_back(service_path);
 				}
 			}
@@ -393,7 +393,7 @@ void LocalTransport::AsyncCreateTransportConnection2(RR_SHARED_PTR<detail::Local
 
 	register_transport(transport);
 
-	ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Transport, transport->GetLocalEndpoint(), "LocalTransport connected transport to " << LocalTransport_socket_remote_endpoint(socket));
+	ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Transport, transport->GetLocalEndpoint(), "LocalTransport connected transport to \"" << LocalTransport_socket_remote_endpoint(socket) << "\"");
 	callback(transport,RR_SHARED_PTR<RobotRaconteurException>());
 
 
@@ -504,7 +504,7 @@ void LocalTransport::StartClientAsNodeName(boost::string_ref name)
 		
 	boost::tuple<NodeID, RR_SHARED_PTR<detail::LocalTransportFD> > p = detail::LocalTransportUtil::GetNodeIDForNodeNameAndLock(name);
 
-	ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "LocalTransport loaded NodeID " << p.get<0>().ToString() << "for NodeName \"" << name << "\"")
+	ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "LocalTransport loaded NodeID " << p.get<0>().ToString() << "for NodeName \"" << name << "\"");
 
 	try
 	{
@@ -553,7 +553,7 @@ void LocalTransport::StartServerAsNodeName(boost::string_ref name, bool public_)
 		return;
 	}
 
-	ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "LocalTransport starting server with NodeName \"" << name << "\"")
+	ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "LocalTransport starting server with NodeName \"" << name << "\"");
 
 	try
 	{
@@ -568,7 +568,7 @@ void LocalTransport::StartServerAsNodeName(boost::string_ref name, bool public_)
 	RR_SHARED_PTR<detail::LocalTransportNodeIDLock> nodeid_lock = detail::LocalTransportNodeIDLock::Lock(nodeid);
 	if (!nodeid_lock) throw NodeIDAlreadyInUse();
 	
-	ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "LocalTransport loaded NodeID " << nodeid.ToString() << "for NodeName \"" << name << "\"")
+	ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "LocalTransport loaded NodeID " << nodeid.ToString() << "for NodeName \"" << name << "\"");
 
 	int32_t tries=0;
 
@@ -577,14 +577,14 @@ void LocalTransport::StartServerAsNodeName(boost::string_ref name, bool public_)
 	if (!public_)
 	{
 		socket_path = detail::LocalTransportUtil::GetTransportPrivateSocketPath();
-		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "LocalTransport server using private socket_path: " << socket_path)
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "LocalTransport server using private socket_path: \"" << socket_path << "\"");
 	}
 	else
 	{
 		boost::optional<boost::filesystem::path> socket_path1 = detail::LocalTransportUtil::GetTransportPublicSocketPath();
 		if (!socket_path1) throw ConnectionException("Computer not initialized for public node server");
 		socket_path = *socket_path1;
-		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "LocalTransport server using public socket_path: " << socket_path)
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "LocalTransport server using public socket_path: \"" << socket_path << "\"");
 	}
 	
 	std::string pipename;
@@ -726,7 +726,7 @@ void LocalTransport::StartServerAsNodeID(const NodeID& nodeid1, bool public_)
 	 	throw InvalidArgumentException("NodeID must not be zero node");
 	}
 
-	ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "LocalTransport starting server with NodeID \"" << nodeid.ToString() << "\"")
+	ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "LocalTransport starting server with NodeID " << nodeid.ToString());
 
 	try
 	{
@@ -744,14 +744,14 @@ void LocalTransport::StartServerAsNodeID(const NodeID& nodeid1, bool public_)
 	if (!public_)
 	{
 		socket_path = detail::LocalTransportUtil::GetTransportPrivateSocketPath();
-		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "LocalTransport server using private socket_path: " << socket_path)
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "LocalTransport server using private socket_path: \"" << socket_path << "\"");
 	}
 	else
 	{
 		boost::optional<boost::filesystem::path> socket_path1 = detail::LocalTransportUtil::GetTransportPublicSocketPath();
 		if (!socket_path1) throw ConnectionException("Computer not initialized for public node server");
 		socket_path = *socket_path1;
-		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "LocalTransport server using public socket_path: " << socket_path)
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "LocalTransport server using public socket_path: \"" << socket_path << "\"");
 	}
 
 	while (true)
@@ -897,7 +897,7 @@ void LocalTransport::AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boost::functi
 		RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<ITransportConnection> >::iterator e1 = TransportConnections.find(m->header->SenderEndpoint);
 		if (e1 == TransportConnections.end())
 		{
-			ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, m->header->SenderEndpoint, "transport connection to remote host not found");
+			ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, m->header->SenderEndpoint, "Transport connection to remote host not found");
 			throw ConnectionException("Transport connection to remote host not found");
 		}
 		t = e1->second;
@@ -1005,13 +1005,13 @@ void LocalTransport::AsyncGetDetectedNodes(const std::vector<std::string>& schem
 				}
 				catch (std::exception& exp2)
 				{
-					ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "error detecting local nodes: " << exp2.what())
+					ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "Error detecting local nodes: " << exp2.what());
 				}
 			}
 		}
 		catch (std::exception& exp)
 		{
-			ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "error detecting local nodes: " << exp.what())
+			ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "Error detecting local nodes: " << exp.what());
 		}
 	}
 
@@ -1159,7 +1159,7 @@ void LocalTransportConnection::MessageReceived(RR_INTRUSIVE_PTR<Message> m)
 	RR_INTRUSIVE_PTR<Message> ret = p->SpecialRequest(m, shared_from_this());
 	if (ret != 0)
 	{
-		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, m_LocalEndpoint, "sending special request response");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, m_LocalEndpoint, "Sending special request response");
 		try
 		{
 			if ((m->entries.at(0)->EntryType == MessageEntryType_ConnectionTest || m->entries.at(0)->EntryType == MessageEntryType_ConnectionTestRet))
@@ -1191,7 +1191,7 @@ void LocalTransportConnection::MessageReceived(RR_INTRUSIVE_PTR<Message> m)
 
 
 						p->register_transport(RR_STATIC_POINTER_CAST<LocalTransportConnection>(shared_from_this()));
-						ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, m_LocalEndpoint, "LocalTransport connection  assigned LocalEndpoint: " << m_LocalEndpoint);
+						ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, m_LocalEndpoint, "LocalTransport connection assigned LocalEndpoint: " << m_LocalEndpoint);
 					}
 				}
 
@@ -2187,7 +2187,7 @@ namespace detail
 		
 		if (private_path)
 		{
-			ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "LocalTransport discovery searching private path " << *private_path)
+			ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "LocalTransport discovery searching private path \"" << *private_path << "\"");
 
 			std::vector<NodeDiscoveryInfo> nodeinfo;
 			LocalTransportUtil::FindNodesInDirectory(nodeinfo, *private_path, "rr+local", now, boost::optional<std::string>());
@@ -2199,7 +2199,7 @@ namespace detail
 
 		if (public_path)
 		{
-			ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "LocalTransport discovery searching public path " << *public_path)
+			ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "LocalTransport discovery searching public path \"" << *public_path << "\"");
 			try
 			{
 				boost::filesystem::directory_iterator end_iter;
@@ -2217,7 +2217,7 @@ namespace detail
 						std::string username1 = path1.filename().string();
 						std::vector<NodeDiscoveryInfo> nodeinfo;
 						detail::LocalTransportUtil::FindNodesInDirectory(nodeinfo, *dir_itr, "rr+local", now, username1);
-						ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "LocalTransport discovery searching public user path " << *dir_itr)
+						ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "LocalTransport discovery searching public user path \"" << *dir_itr << "\"");
 						BOOST_FOREACH(NodeDiscoveryInfo& n, nodeinfo)
 						{
 							node1->NodeDetected(n);

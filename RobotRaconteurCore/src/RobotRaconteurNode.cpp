@@ -133,7 +133,7 @@ NodeID RobotRaconteurNode::NodeID()
 		NodeID_set=true;
 		::RobotRaconteur::NodeID n = m_NodeID;
 		lock.unlock();
-		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_sp(), Node, -1, "RobotRaconteurNode NodeID configured with random UUID " << n.ToString());
+		ROBOTRACONTEUR_LOG_INFO_COMPONENT(weak_sp(), Node, -1, "RobotRaconteurNode NodeID configured with random UUID " << n.ToString());
 		return n;
 	}
 
@@ -187,7 +187,7 @@ void RobotRaconteurNode::SetNodeID(const RobotRaconteur::NodeID& id)
 	m_NodeID=id;
 	NodeID_set=true;
 	lock.unlock();
-	ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_sp(), Node, -1, "RobotRaconteurNode NodeID set to UUID " << m_NodeID.ToString());
+	ROBOTRACONTEUR_LOG_INFO_COMPONENT(weak_sp(), Node, -1, "RobotRaconteurNode NodeID set to UUID " << m_NodeID.ToString());
 }
 
 void RobotRaconteurNode::SetNodeName(boost::string_ref name)
@@ -214,7 +214,7 @@ void RobotRaconteurNode::SetNodeName(boost::string_ref name)
 	NodeName_set=true;
 
 	lock.unlock();
-	ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_sp(), Node, -1, "RobotRaconteurNode NodeName set to \"" << m_NodeName << "\"");
+	ROBOTRACONTEUR_LOG_INFO_COMPONENT(weak_sp(), Node, -1, "RobotRaconteurNode NodeName set to \"" << m_NodeName << "\"");
 }
 
 RR_SHARED_PTR<ServiceFactory> RobotRaconteurNode::GetServiceType(boost::string_ref servicename)
@@ -709,7 +709,7 @@ void RobotRaconteurNode::MessageReceived(RR_INTRUSIVE_PTR<Message> m)
 
 void RobotRaconteurNode::TransportConnectionClosed(uint32_t endpoint)
 {
-	ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_sp(), Node, endpoint, "Node notified that tranport connection was closed");
+	ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_sp(), Node, endpoint, "Node notified that transport connection was closed");
 
 	RR_SHARED_PTR<Endpoint> e;
 	{
@@ -2401,7 +2401,7 @@ bool RobotRaconteurNode::InitThreadPool(int32_t thread_count)
 	
 	if (is_shutdown)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Attempt to initialize thread pool after thread pool shutdown");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Attempt to initialize thread pool after node shutdown");
 		throw InvalidOperationException("Node has been shutdown");
 	}
 
@@ -2451,7 +2451,7 @@ void RobotRaconteurNode::HandleException(const std::exception* exp)
 	}
 	else
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(),Node,-1,"uncaught exception in unknown handler: " << exp->what())
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(),Node,-1,"Uncaught exception in unknown handler: " << exp->what())
 	}
 }
 

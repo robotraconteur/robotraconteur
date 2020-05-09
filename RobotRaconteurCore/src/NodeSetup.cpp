@@ -10,8 +10,8 @@ namespace RobotRaconteur
 
 		node->SetLogLevelFromEnvVariable();
 
-		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, NodeSetup, -1, "Setting up RobotRaconteurNode version " << node->GetRobotRaconteurVersion() 
-			<< " with NodeName: \"" << node_name << "\" tcp port: " << tcp_port << " flags: 0x" << std::hex << flags);
+		ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, NodeSetup, -1, "Setting up RobotRaconteurNode version " << node->GetRobotRaconteurVersion() 
+			<< " with NodeName: \"" << node_name << "\" TCP port: " << tcp_port << " flags: 0x" << std::hex << flags);
 
 		BOOST_FOREACH(RR_SHARED_PTR<ServiceFactory> f, service_types)
 		{

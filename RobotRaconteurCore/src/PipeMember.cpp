@@ -1260,7 +1260,7 @@ void PipeServerBase::ClientDisconnected(RR_SHARED_PTR<ServerContext> context, Se
 	{
 		
 		uint32_t ep=*RR_STATIC_POINTER_CAST<uint32_t>(param);
-		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, ep, service_path, m_MemberName, "Client disconected, closing endpoints");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, ep, service_path, m_MemberName, "Client disconnected, closing endpoints");
 		std::vector<RR_SHARED_PTR<PipeEndpointBase> > p;
 
 		{

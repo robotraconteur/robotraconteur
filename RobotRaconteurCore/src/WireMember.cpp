@@ -140,7 +140,7 @@ namespace RobotRaconteur
 
 			if (lasttime_recv == TimeSpec(0,0) || timespec > lasttime_recv)
 			{
-				ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, endpoint, service_path, member_name, "Wire packet in value received timespec " << timespec.seconds << ", " << timespec.nanoseconds);
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, endpoint, service_path, member_name, "Wire packet in value received timespec " << timespec.seconds << "," << timespec.nanoseconds);
 
 				{
 					boost::mutex::scoped_lock lock2(inval_lock);
@@ -169,7 +169,7 @@ namespace RobotRaconteur
 			}
 			else
 			{
-				ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, endpoint, service_path, member_name, "Old wire packet received timespec " << timespec.seconds << ", " << timespec.nanoseconds << ", dropping");
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, endpoint, service_path, member_name, "Old wire packet received timespec " << timespec.seconds << "," << timespec.nanoseconds << ", dropping");
 			}
 			
 		}
@@ -270,7 +270,7 @@ namespace RobotRaconteur
 				time.cleanup_nanosecs();
 			}
 			
-			ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, endpoint, service_path, member_name, "Wire sending out value packet timespec " << time.seconds << ", " << time.nanoseconds);
+			ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, endpoint, service_path, member_name, "Wire sending out value packet timespec " << time.seconds << "," << time.nanoseconds);
 			
 			GetParent()->SendWirePacket(value, time, endpoint, message3);
 			
@@ -1032,7 +1032,7 @@ namespace RobotRaconteur
 				}
 				case MessageEntryType_WirePeekInValueReq:
 				{
-					ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, e, service_path, m_MemberName, "Wire PeekInValue requested");
+					ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, e, service_path, m_MemberName, "Wire PeekInValue requested");
 					try
 					{
 					if (direction == MemberDefinition_Direction_writeonly)
@@ -1051,7 +1051,7 @@ namespace RobotRaconteur
 				}
 				case MessageEntryType_WirePeekOutValueReq:
 				{
-					ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, e, service_path, m_MemberName, "Wire PeekOutValue requested");
+					ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, e, service_path, m_MemberName, "Wire PeekOutValue requested");
 					try
 					{
 						if (direction == MemberDefinition_Direction_readonly)
@@ -1070,7 +1070,7 @@ namespace RobotRaconteur
 				}
 				case MessageEntryType_WirePokeOutValueReq:
 				{
-					ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, e, service_path, m_MemberName, "Wire PokeOutValue requested");
+					ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, e, service_path, m_MemberName, "Wire PokeOutValue requested");
 					try
 					{
 						if (direction == MemberDefinition_Direction_readonly)

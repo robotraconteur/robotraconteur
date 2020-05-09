@@ -193,7 +193,7 @@ void LinuxLocalTransportDiscovery::run()
 						private_dir=private_dir1;
 						refresh_now=true;
 					}
-					ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "LocalTransport discovery watching private path " << *private_path)
+					ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "LocalTransport discovery watching private path \"" << *private_path << "\"")
 				}
 			}
 			catch (std::exception&) {}
@@ -206,7 +206,7 @@ void LinuxLocalTransportDiscovery::run()
 
 		if (public_path)
 		{
-			ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "LocalTransport discovery watching public path " << *public_path)
+			ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "LocalTransport discovery watching public path \"" << *public_path << "\"")
 		}
 
 		std::vector<struct pollfd> poll_fds;

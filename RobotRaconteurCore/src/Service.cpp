@@ -59,7 +59,7 @@ namespace RobotRaconteur
 	void ServiceSkel::Init(boost::string_ref s, RR_SHARED_PTR<RRObject> o, RR_SHARED_PTR<ServerContext> c)
 	{
 
-		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, -1, s,	"", "Begin initializing service skel with type: " << GetObjectType());
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, -1, s,	"", "Begin initializing service skel with type \"" << GetObjectType() << "\"");
 
 		try
 		{
@@ -240,7 +240,7 @@ namespace RobotRaconteur
 		}
 		catch (std::exception& exp)
 		{
-			ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(skel1->node, Service, ep->GetLocalEndpoint(), skel1->m_ServicePath, m->MemberName, "EndAsyncCallGetProperty failed: " << exp.what());
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(skel1->node, Service, ep->GetLocalEndpoint(), skel1->m_ServicePath, m->MemberName, "EndAsyncCallGetProperty failed: " << exp.what());
 			RobotRaconteurNode::TryHandleException(skel1->node, &exp);
 		}
 	}
@@ -270,7 +270,7 @@ namespace RobotRaconteur
 		}
 		catch (std::exception& exp)
 		{
-			ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(skel1->node, Service, ep->GetLocalEndpoint(), skel1->m_ServicePath, m->MemberName, "EndAsyncCallGetProperty failed: " << exp.what());
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(skel1->node, Service, ep->GetLocalEndpoint(), skel1->m_ServicePath, m->MemberName, "EndAsyncCallGetProperty failed: " << exp.what());
 			RobotRaconteurNode::TryHandleException(skel1->node, &exp);
 		}
 
@@ -316,7 +316,7 @@ namespace RobotRaconteur
 		}
 		catch (std::exception& exp)
 		{
-			ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(skel1->node, Service, ep->GetLocalEndpoint(), skel1->m_ServicePath, m->MemberName, "EndAsyncCallFunction failed: " << exp.what());
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(skel1->node, Service, ep->GetLocalEndpoint(), skel1->m_ServicePath, m->MemberName, "EndAsyncCallFunction failed: " << exp.what());
 			RobotRaconteurNode::TryHandleException(skel1->node, &exp);
 		}
 	}
@@ -390,7 +390,7 @@ namespace RobotRaconteur
 
 	RR_SHARED_PTR<void> ServiceSkel::GetCallbackFunction(uint32_t endpoint, boost::string_ref membername)
 	{
-		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, endpoint, m_ServicePath, membername, "Callback " << membername << " not found");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, endpoint, m_ServicePath, membername, "Callback \"" << membername << "\" not found");
 		throw MemberNotFoundException("Callback " + membername + " not found");
 	}
 
@@ -428,7 +428,7 @@ namespace RobotRaconteur
 		if (!client_version)
 		{
 			std::string object_type = GetObjectType();
-			ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, -1, m_ServicePath, "", "GetObjectType returning: " << object_type);			
+			ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, -1, m_ServicePath, "", "GetObjectType returning \"" << object_type << "\"");			
 			return GetObjectType();
 		}
 
@@ -437,13 +437,13 @@ namespace RobotRaconteur
 		{
 			if (!e.get<0>())
 			{
-				ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, -1, m_ServicePath, "", "GetObjectType returning: " << e.get<1>() << " for client version " << client_version.ToString());
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, -1, m_ServicePath, "", "GetObjectType returning \"" << e.get<1>() << "\" for client version " << client_version.ToString());
 				return e.get<1>();
 			}
 
 			if (e.get<0>() <= client_version)
 			{
-				ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, -1, m_ServicePath, "", "GetObjectType returning: " << e.get<1>() << " for client version " << client_version.ToString());
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, -1, m_ServicePath, "", "GetObjectType returning \"" << e.get<1>() << "\" for client version " << client_version.ToString());
 				return e.get<1>();
 			}
 		}
@@ -593,7 +593,7 @@ namespace RobotRaconteur
 		m_ServiceDef = f;	
 		this->node=node;
 
-		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, -1, "ServerContext created with service type " << f->GetServiceName());
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, -1, "ServerContext created with service type \"" << f->GetServiceName() << "\"");
 	}
 
 	RR_SHARED_PTR<RobotRaconteurNode> ServerContext::GetNode()
@@ -627,14 +627,14 @@ namespace RobotRaconteur
 					{
 						if (c->GetAuthenticatedUsername()=="")
 						{
-							ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "Skipping sending event due to authentication failure");
+							ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "Skipping sending event due to authentication failure");
 							continue;
 						}
 							
 					}
 					catch (AuthenticationException&)
 					{
-						ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "Skipping sending event due to authentication failure");
+						ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "Skipping sending event due to authentication failure");
 						continue;
 					}
 				}
@@ -688,7 +688,7 @@ namespace RobotRaconteur
 			RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<ServerEndpoint> >::iterator e1 = client_endpoints.find(e);
 			if (e1 == client_endpoints.end())
 			{
-				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, e, m->ServicePath, m->MemberName, "Attempt to send to invalid endpoint");
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, e, m->ServicePath, m->MemberName, "Attempt to send message to invalid endpoint");
 			 	throw InvalidEndpointException("Invalid client endpoint");
 			}
 			s=e1->second;
@@ -719,7 +719,7 @@ namespace RobotRaconteur
 			RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<ServerEndpoint> >::iterator e1 = client_endpoints.find(e);
 			if (e1 == client_endpoints.end()) 
 			{
-				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, e, m->ServicePath, m->MemberName, "Attempt to send to invalid endpoint");
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, e, m->ServicePath, m->MemberName, "Attempt to send message to invalid endpoint");
 				throw InvalidEndpointException("Invalid client endpoint");
 			}
 			s = e1->second;
@@ -780,7 +780,7 @@ namespace RobotRaconteur
 				RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<ServerEndpoint> >::iterator e1 = client_endpoints.find(e);
 				if (e1 == client_endpoints.end())
 				{
-					ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, e, m->ServicePath, m->MemberName, "Attempt to send to invalid endpoint");
+					ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, e, m->ServicePath, m->MemberName, "Attempt to send message to invalid endpoint");
 					throw InvalidEndpointException("Invalid client endpoint");
 				}
 				s = e1->second;
@@ -799,7 +799,7 @@ namespace RobotRaconteur
 			RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<ServerEndpoint> >::iterator e1 = client_endpoints.find(e);
 			if (e1 == client_endpoints.end())
 			{
-				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, e, m->ServicePath, m->MemberName, "Attempt to send to invalid endpoint");
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, e, m->ServicePath, m->MemberName, "Attempt to send message to invalid endpoint");
 				throw InvalidEndpointException("Invalid client endpoint");
 			}
 			s = e1->second;
@@ -871,7 +871,7 @@ namespace RobotRaconteur
 
 			m_CurrentServerContext.reset(0);
 
-			ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, -1, name, "", "SetBaseObject completed successfully for service " << name << " with root object type " << m_RootObjectType );
+			ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, -1, name, "", "SetBaseObject completed successfully for service \"" << name << "\" with root object type \"" << m_RootObjectType << "\"");
 		}
 		catch (std::exception& exp)
 		{
@@ -937,7 +937,7 @@ namespace RobotRaconteur
 
 					if (!obj1)
 					{
-						ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, -1, GetServiceName(), servicepath, "Requested object is nulle");
+						ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, -1, GetServiceName(), servicepath, "Requested object is null");
 					 	throw ServiceException("Requested object is null");
 					}
 
@@ -1064,7 +1064,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 				{
 					if (ServerEndpoint::GetCurrentAuthenticatedUser() == 0)
 					{
-						ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "User attempted to access service without authenticating using EntryType: " << m->EntryType);
+						ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName, "User attempted to access service without authenticating using EntryType " << m->EntryType);
 						throw PermissionDeniedException("User must authenticate before accessing this service");
 					}
 				}
@@ -1412,7 +1412,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 	void ServerContext::Close()
 	{
 
-		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, -1, GetServiceName(), "", "Begin close service: " << GetServiceName());
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, -1, GetServiceName(), "", "Begin close service \"" << GetServiceName() << "\"");
 		
 
 		try
@@ -1496,7 +1496,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 			RobotRaconteurNode::TryHandleException(node, &exp);
 		}
 
-		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, -1, GetServiceName(), "", "Close service complete: " << GetServiceName());
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, -1, GetServiceName(), "", "Close service complete \"" << GetServiceName() << "\"");
 	}
 
 	void ServerContext::MessageReceived(RR_INTRUSIVE_PTR<Message> m, RR_SHARED_PTR<ServerEndpoint> e)
@@ -1654,7 +1654,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 	void ServerContext::KickUser(boost::string_ref username)
 	{
-		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, -1, GetServiceName(), "", "Kicking user \"" << username << "\"");
+		ROBOTRACONTEUR_LOG_INFO_COMPONENT_PATH(node, Service, -1, GetServiceName(), "", "Kicking user \"" << username << "\"");
 
 		typedef boost::tuple<std::string,RR_SHARED_PTR<ServerEndpoint> > kicked_client_type;
 		std::list<kicked_client_type> kicked_clients;

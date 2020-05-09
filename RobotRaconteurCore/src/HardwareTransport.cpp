@@ -348,7 +348,7 @@ namespace RobotRaconteur
 			}
 			else
 			{
-				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, ep->GetLocalEndpoint(), "HardwareTransport failed opening path \"" << *dev_path << "\" error code " << errno);
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, ep->GetLocalEndpoint(), "HardwareTransport failed opening path \"" << *dev_path << "\" errno: " << errno);
 			}
 		}
 		else if (transport=="pci")
@@ -366,7 +366,7 @@ namespace RobotRaconteur
 				}
 				else
 				{
-					ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, ep->GetLocalEndpoint(), "HardwareTransport failed opening path \"" << *dev_path << "\" error code " << errno);
+					ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, ep->GetLocalEndpoint(), "HardwareTransport failed opening path \"" << *dev_path << "\" errno: " << errno);
 				}
 			}
 		}
@@ -576,7 +576,7 @@ namespace RobotRaconteur
 			RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<ITransportConnection> >::iterator e1 = TransportConnections.find(m->header->SenderEndpoint);
 			if (e1 == TransportConnections.end())
 			{
-				ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, m->header->SenderEndpoint, "transport connection to remote host not found");
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, m->header->SenderEndpoint, "Transport connection to remote host not found");
 			 	throw ConnectionException("Transport connection to remote host not found");
 			}
 			t = e1->second;
@@ -884,7 +884,7 @@ namespace RobotRaconteur
 		RR_INTRUSIVE_PTR<Message> ret = p->SpecialRequest(m, shared_from_this());
 		if (ret != 0)
 		{
-			ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, m_LocalEndpoint, "sending special request response");
+			ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, m_LocalEndpoint, "Sending special request response");
 			try
 			{
 				if ((m->entries.at(0)->EntryType == MessageEntryType_ConnectionTest || m->entries.at(0)->EntryType == MessageEntryType_ConnectionTestRet))
@@ -911,7 +911,7 @@ namespace RobotRaconteur
 
 
 						p->register_transport(RR_STATIC_POINTER_CAST<HardwareTransportConnection>(shared_from_this()));
-						ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, m_LocalEndpoint, "HardwareTransport connection  assigned LocalEndpoint: " << m_LocalEndpoint);
+						ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, m_LocalEndpoint, "HardwareTransport connection assigned LocalEndpoint: " << m_LocalEndpoint);
 					}
 
 				}

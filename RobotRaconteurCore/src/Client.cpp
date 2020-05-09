@@ -320,7 +320,10 @@ namespace RobotRaconteur
 				}
 
 				if (objecttype.empty())
+				{
+					ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, GetLocalEndpoint(), path, "", "FindObjRef object type was not returned");
 					throw ObjectNotFoundException("Object type was not returned.");
+				}
 
 
 				boost::string_ref objectdef = SplitQualifiedName(objecttype).get<0>();
@@ -331,6 +334,7 @@ namespace RobotRaconteur
 					std::vector<std::string> servicetypes = GetPulledServiceTypes();
 					if (std::find(servicetypes.begin(), servicetypes.end(), objectdef) == servicetypes.end())
 					{
+						ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), path, "", "FindObjRef pulling object type: " << objecttype);
 						AsyncPullServiceDefinitionAndImports(objectdef, boost::bind(&ClientContext::AsyncFindObjRef2, shared_from_this(), _1, _2, objecttype, objectdef.to_string(), path, objecttype2, handler, timeout), timeout);
 						return;
 					}
@@ -375,7 +379,7 @@ namespace RobotRaconteur
 							std::vector<RR_SHARED_PTR<ServiceDefinition> > d = ret->defs;
 
 							std::vector<RR_SHARED_PTR<ServiceDefinition> > missingdefs = std::vector<RR_SHARED_PTR<ServiceDefinition> >();
-
+							std::vector<std::string> missingdefs_names;
 
 
 							BOOST_FOREACH(RR_SHARED_PTR<ServiceDefinition>& di, d)
@@ -385,6 +389,7 @@ namespace RobotRaconteur
 								if (std::find(servicetypes2.begin(), servicetypes2.end(), (di->Name)) == servicetypes2.end())
 								{
 									missingdefs.push_back(di);
+									missingdefs_names.push_back(di->Name);
 								}
 
 							}
@@ -396,6 +401,8 @@ namespace RobotRaconteur
 								{
 									missingdefs_str.push_back(ee->ToString());
 								}
+
+								ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "FindObjRef using dynamic service factory for types: " << boost::join(missingdefs_names,", "));
 
 								std::vector<RR_SHARED_PTR<ServiceFactory> > di2 = GetNode()->GetDynamicServiceFactory()->CreateServiceFactories(missingdefs_str);
 
@@ -2119,7 +2126,7 @@ namespace RobotRaconteur
 
 	void ClientContext::AsyncPullServiceDefinition(boost::string_ref ServiceType, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<PullServiceDefinitionReturn>, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout)
 	{
-		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), " Begin AsyncPullServiceDefinition for type " << ServiceType);
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "Begin AsyncPullServiceDefinition for type \"" << ServiceType << "\"");
 
 		RR_INTRUSIVE_PTR<MessageEntry> e3 = CreateMessageEntry(MessageEntryType_GetServiceDesc, "");
 		//e.AddElement("servicepath", ServiceName);
@@ -2208,7 +2215,7 @@ namespace RobotRaconteur
 
 	void ClientContext::AsyncPullServiceDefinitionAndImports(boost::string_ref servicetype, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<PullServiceDefinitionAndImportsReturn>, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout)
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "Begin AsyncPullServiceDefinitionAndImports for type: " << servicetype);
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "Begin AsyncPullServiceDefinitionAndImports for type \"" << servicetype << "\"");
 		boost::posix_time::ptime timeout_time = GetNode()->NowUTC() + boost::posix_time::milliseconds(timeout);
 
 		AsyncPullServiceDefinition(servicetype, boost::bind(&ClientContext::AsyncPullServiceDefinitionAndImports1, shared_from_this(), _1, _2, servicetype.to_string(), RR_SHARED_PTR<PullServiceDefinitionAndImportsReturn>(), handler, timeout_time), boost::numeric_cast<uint32_t>((timeout_time - GetNode()->NowUTC()).total_milliseconds()));
@@ -2445,7 +2452,7 @@ namespace RobotRaconteur
 		}
 		catch (std::exception& e)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncRequestObjectLock failed: " << e.what())
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncRequestObjectLock failed: " << e.what());
 			throw;
 		}
 
@@ -2464,13 +2471,13 @@ namespace RobotRaconteur
 		{
 			std::string rets = ret->FindElement("return")->CastDataToString();
 			RR_SHARED_PTR<std::string> rets2 = RR_MAKE_SHARED<std::string>(rets);
-			ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "Object lock operation completed successfully for servicepath \"" << ret->ServicePath << "\"")
+			ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "Object lock operation completed successfully for servicepath \"" << ret->ServicePath << "\"");
 			detail::InvokeHandler(node, handler, rets2);
 			
 		}		
 		catch (std::exception& err)
 		{
-			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "Object lock operation failed: " << err.what())
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "Object lock operation failed: " << err.what());
 			detail::InvokeHandlerWithException(node, handler, err, MessageErrorType_ServiceError);
 		}
 	}
@@ -2501,7 +2508,7 @@ namespace RobotRaconteur
 		}
 		catch (std::exception& exp)
 		{
-			ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncReleaseObjectLock failed: " << exp.what())
+			ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "AsyncReleaseObjectLock failed: " << exp.what());
 			throw;
 		}
 		
@@ -2621,7 +2628,7 @@ namespace RobotRaconteur
 		}
 		catch (std::exception&) {}
 
-		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "MonitorExit for successful for servicepath \"" << stub2->ServicePath << "\"");
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "MonitorExit successful for servicepath \"" << stub2->ServicePath << "\"");
 
 		}
 		catch (std::exception& exp)
@@ -2670,7 +2677,7 @@ namespace RobotRaconteur
 				}
 				catch (std::exception& exp)
 				{
-					ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "Client keep alive message failed: " << exp.what());
+					ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "Client keep alive message failed: " << exp.what());
 				}
 			}
 		}
