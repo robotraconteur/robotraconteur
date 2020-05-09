@@ -2239,7 +2239,7 @@ namespace RobotRaconteur
 
 	protected:
 
-		boost::function<void(const RRLogRecord& record)> log_handler;
+		RR_SHARED_PTR<LogRecordHandler> log_handler;
 		boost::shared_mutex log_handler_mutex;
 		RobotRaconteur_LogLevel log_level;
 
@@ -2318,9 +2318,9 @@ namespace RobotRaconteur
 		 * 
 		 * If NULL, records are sent to std::cerr
 		 * 
-		 * @return boost::function<void(const RRLogRecord& record)> 
+		 * @return RR_SHARED_PTR<LogRecordHandler>
 		 */
-		boost::function<void(const RRLogRecord& record)> GetLogRecordHandler();
+		RR_SHARED_PTR<LogRecordHandler> GetLogRecordHandler();
 
 		/**
 		 * @brief Set the handler for log records
@@ -2329,7 +2329,7 @@ namespace RobotRaconteur
 		 * 
 		 * @param handler The log record handler function
 		 */
-		void SetLogRecordHandler(boost::function<void(const RRLogRecord& record)> handler);
+		void SetLogRecordHandler(RR_SHARED_PTR<LogRecordHandler> handler);
 		
 	protected:
 		/**

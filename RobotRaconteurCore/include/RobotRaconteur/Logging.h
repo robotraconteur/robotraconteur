@@ -80,6 +80,12 @@ public:
 };
 
 
+class ROBOTRACONTEUR_CORE_API LogRecordHandler
+{
+public:
+    virtual void HandleLogRecord(const RRLogRecord& record) = 0;
+};
+
 #define ROBOTRACONTEUR_LOG_EMPTY_NODE
 #define ROBOTRACONTEUR_LOG_DEFAULT_NODE RobotRaconteur::RobotRaconteurNode::weak_sp()
 

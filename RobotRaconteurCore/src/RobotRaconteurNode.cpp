@@ -2743,7 +2743,7 @@ void RobotRaconteurNode::LogRecord(const RRLogRecord& record)
 	
 	if (log_handler)
 	{
-		log_handler(record);
+		log_handler->HandleLogRecord(record);
 		return;
 	}
 	
@@ -2816,14 +2816,14 @@ RobotRaconteur_LogLevel RobotRaconteurNode::SetLogLevelFromEnvVariable(std::stri
 	return log_level;
 }
 
-boost::function<void(const RRLogRecord& record)> RobotRaconteurNode::GetLogRecordHandler()
+RR_SHARED_PTR<LogRecordHandler> RobotRaconteurNode::GetLogRecordHandler()
 {
 	boost::shared_lock<boost::shared_mutex> lock(log_handler_mutex);
 	return log_handler;
 }
-void RobotRaconteurNode::SetLogRecordHandler(boost::function<void(const RRLogRecord& record)> handler)
+void RobotRaconteurNode::SetLogRecordHandler(RR_SHARED_PTR<LogRecordHandler> handler)
 {
-	boost::lock_guard<boost::shared_mutex> lock(log_handler_mutex);
+	boost::unique_lock<boost::shared_mutex> lock(log_handler_mutex);
 	log_handler = handler;
 }
 
