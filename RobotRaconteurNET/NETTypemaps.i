@@ -12,6 +12,21 @@
 %apply const unsigned int & { const size_t & };
 #endif
 
+%typemap(cstype) boost::posix_time::ptime "DateTime";
+%typemap(ctype) boost::posix_time::ptime "char*";
+%typemap(imtype) boost::posix_time::ptime "string";
+
+%typemap(cstype) boost::posix_time::ptime* "DateTime";
+%typemap(ctype) boost::posix_time::ptime* "char*";
+%typemap(imtype) boost::posix_time::ptime* "string";
+
+%typemap(cstype) boost::posix_time::ptime& "DateTime";
+%typemap(ctype) boost::posix_time::ptime& "char*";
+%typemap(imtype) boost::posix_time::ptime& "string";
+
+%typemap(in) boost::posix_time::ptime {
+}
+
 %typemap(out) boost::posix_time::ptime {
     //$result=PyString_FromString(boost::posix_time::to_iso_string($1).c_str());
     std::stringstream o;
@@ -27,13 +42,7 @@
 	  $result=SWIG_csharp_string_callback(o.str().c_str());
 }
 
-
-%typemap(cstype) boost::posix_time::ptime "DateTime";
-
-%typemap(ctype) boost::posix_time::ptime "char*";
-%typemap(imtype) boost::posix_time::ptime "string";
-
-%typemap(csout, excode=SWIGEXCODE) boost::posix_time::ptime {
+%typemap(csout, excode=SWIGEXCODE) boost::posix_time::ptime, boost::posix_time::ptime* {
     string date = $imcall;$excode
     return new DateTime(Int32.Parse(date.Substring(0, 4)),
                     Int32.Parse(date.Substring(4, 2)),
@@ -44,7 +53,7 @@
                     Int32.Parse(date.Substring(16, 3)));
 }
 
-%typemap(csvarout, excode=SWIGEXCODE) boost::posix_time::ptime %{
+%typemap(csvarout, excode=SWIGEXCODE) boost::posix_time::ptime, boost::posix_time::ptime* %{
 	get {
     string date = $imcall;$excode
     return new DateTime(Int32.Parse(date.Substring(0, 4)),
@@ -177,6 +186,13 @@
 	$1=(RobotRaconteurObjectLockFlags)$input;
 }
 
+
+%define %rr_weak_ptr( TYPE )
+%typemap(ctype) boost::weak_ptr< TYPE > boost::shared_ptr< TYPE >;
+%typemap(ctype) const boost::weak_ptr< TYPE >& boost::shared_ptr< TYPE >;
+%typemap(ctype) boost::weak_ptr< TYPE >& boost::shared_ptr< TYPE >;
+//%apply boost::shared_ptr< TYPE > { boost::weak_ptr< TYPE > }
+%enddef
 
 %define %rr_intrusive_ptr( TYPE )
 %intrusive_ptr( TYPE );
