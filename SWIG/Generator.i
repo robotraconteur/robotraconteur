@@ -16,6 +16,7 @@
 
 %feature("director") RobotRaconteur::AsyncGeneratorReturnRequestDirector;
 %feature("director") RobotRaconteur::WrappedGeneratorServerDirector;
+%feature("director") RobotRaconteur::AsyncGeneratorClientReturnDirector;
 
 namespace RobotRaconteur
 {
