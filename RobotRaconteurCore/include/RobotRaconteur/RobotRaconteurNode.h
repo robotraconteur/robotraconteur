@@ -1650,6 +1650,7 @@ namespace RobotRaconteur
 
 		
 		RR_SHARED_PTR<Timer> PeriodicCleanupTask_timer;
+		boost::shared_mutex PeriodicCleanupTask_timer_lock;
 
 		static void StartPeriodicCleanupTask(RR_SHARED_PTR<RobotRaconteurNode> node);
 
@@ -2266,7 +2267,7 @@ namespace RobotRaconteur
 		 * @param level The level for the log message
 		 * @param message The log message
 		 */
-		void LogMessage(RobotRaconteur_LogLevel level, std::string& message);
+		void LogMessage(RobotRaconteur_LogLevel level, const std::string& message);
 
 		/**
 		 * @brief Log a record to the node. Use the macros specified in Logging.h
@@ -2311,7 +2312,7 @@ namespace RobotRaconteur
 		 * `ROBOTRACONTEUR_LOG_LEVEL`
 		 * @return RobotRaconteur_LogLevel The log level
 		 */
-		RobotRaconteur_LogLevel SetLogLevelFromEnvVariable(std::string env_variable_name = "ROBOTRACONTEUR_LOG_LEVEL");
+		RobotRaconteur_LogLevel SetLogLevelFromEnvVariable(const std::string& env_variable_name = "ROBOTRACONTEUR_LOG_LEVEL");
 
 		/**
 		 * @brief Get the currently configured log record handler

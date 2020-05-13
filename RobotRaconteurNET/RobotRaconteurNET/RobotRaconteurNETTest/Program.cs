@@ -822,6 +822,21 @@ namespace RobotRaconteurNETTest
                 return;
             }
 
+            if (command == "testlogging")
+            {
+                var r = new RRLogRecord();
+                var node = RobotRaconteurNode.s;
+                var nodeid = node.NodeID;
+                r.Node = node;
+                r.Time = DateTime.UtcNow;
+                r.Level = LogLevel.LogLevel_Warning;
+                r.Message = "This is a test warning";
+                RobotRaconteurNode.s.LogRecord(r);
+
+                RobotRaconteurNode.s.Shutdown();
+                return;
+            }
+
             throw new Exception("Unknown command");
             
 

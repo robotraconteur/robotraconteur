@@ -20,11 +20,10 @@
 
 namespace RobotRaconteur
 {
-    %rename(WrappedRRLogRecord) RRLogRecord;
     class RRLogRecord
     {
     public:
-        //boost::weak_ptr<RobotRaconteur::RobotRaconteurNode> Node;
+        
         RR_PROPERTY(Node)
         %extend
         {
@@ -50,5 +49,17 @@ namespace RobotRaconteur
         uint32_t SourceLine;
         std::string ThreadID;
         std::string FiberID;
+    };
+
+    %nodefaultctor LogRecordHandler;
+    class LogRecordHandler
+    {
+        virtual ~LogRecordHandler() {}
+    };
+
+    class FileLogRecordHandler
+    {
+    public:
+        void OpenFile(const std::string& filename, bool append = true);
     };
 }
