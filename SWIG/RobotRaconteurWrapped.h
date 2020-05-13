@@ -129,7 +129,7 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 
 	public:
 		static void Reset();
-		static void SetError(RR_INTRUSIVE_PTR<MessageEntry> err);
+		static void SetError(RR_INTRUSIVE_PTR<MessageEntry> err, const std::string& exception_str);
 		static bool IsErrorPending();
 		static RR_INTRUSIVE_PTR<MessageEntry> GetError();
 

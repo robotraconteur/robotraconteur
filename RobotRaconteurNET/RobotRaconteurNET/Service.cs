@@ -879,7 +879,7 @@ namespace RobotRaconteur
                 using (MessageEntry merr = new MessageEntry())
                 {
                     RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
+                    RRDirectorExceptionHelper.SetError(merr,e.ToString());
                     return null;
                 }
             }            
@@ -994,7 +994,7 @@ namespace RobotRaconteur
                 using (MessageEntry merr = new MessageEntry())
                 {
                     RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
+                    RRDirectorExceptionHelper.SetError(merr,e.ToString());
                     return null;
                 }
             }
@@ -1011,7 +1011,7 @@ namespace RobotRaconteur
                 using (MessageEntry merr = new MessageEntry())
                 {
                     RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
+                    RRDirectorExceptionHelper.SetError(merr,e.ToString());
                     return null;
                 }
             }           
@@ -1032,7 +1032,7 @@ namespace RobotRaconteur
                 using (MessageEntry merr = new MessageEntry())
                 {
                     RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
+                    RRDirectorExceptionHelper.SetError(merr,e.ToString());
                 }
             }
         }
@@ -1056,7 +1056,7 @@ namespace RobotRaconteur
                 using (MessageEntry merr = new MessageEntry())
                 {
                     RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
+                    RRDirectorExceptionHelper.SetError(merr,e.ToString());
                     return null;
                 }
             }
@@ -1079,7 +1079,7 @@ namespace RobotRaconteur
                 using (MessageEntry merr = new MessageEntry())
                 {
                     RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
+                    RRDirectorExceptionHelper.SetError(merr,e.ToString());
                 }
                 
             }
@@ -1103,7 +1103,7 @@ namespace RobotRaconteur
                 using (MessageEntry merr = new MessageEntry())
                 {
                     RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
+                    RRDirectorExceptionHelper.SetError(merr,e.ToString());
                 }
                 
             }
@@ -1122,7 +1122,7 @@ namespace RobotRaconteur
                 using (MessageEntry merr = new MessageEntry())
                 {
                     RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
+                    RRDirectorExceptionHelper.SetError(merr,e.ToString());
                     return null;
                 }
             }
@@ -1139,7 +1139,7 @@ namespace RobotRaconteur
                 using (MessageEntry merr = new MessageEntry())
                 {
                     RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
+                    RRDirectorExceptionHelper.SetError(merr,e.ToString());
                     return null;
                 }
             }
@@ -1166,7 +1166,7 @@ namespace RobotRaconteur
                 using (MessageEntry merr = new MessageEntry())
                 {
                     RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
+                    RRDirectorExceptionHelper.SetError(merr,e.ToString());
                     return null;
                 }
             }
@@ -1183,7 +1183,7 @@ namespace RobotRaconteur
                 using (MessageEntry merr = new MessageEntry())
                 {
                     RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
+                    RRDirectorExceptionHelper.SetError(merr,e.ToString());
                     return null;
                 }
             }
@@ -1210,7 +1210,7 @@ namespace RobotRaconteur
                 using (MessageEntry merr = new MessageEntry())
                 {
                     RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
+                    RRDirectorExceptionHelper.SetError(merr,e.ToString());
                     return null;
                 }
             }
@@ -1227,7 +1227,7 @@ namespace RobotRaconteur
                 using (MessageEntry merr = new MessageEntry())
                 {
                     RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
+                    RRDirectorExceptionHelper.SetError(merr,e.ToString());
                     return null;
                 }
             }
@@ -1593,7 +1593,7 @@ namespace RobotRaconteur
                     using (MessageEntry merr = new MessageEntry())
                     {
                         RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                        RRDirectorExceptionHelper.SetError(merr);
+                        RRDirectorExceptionHelper.SetError(merr,e.ToString());
                     }
                     
                 }
@@ -1881,7 +1881,7 @@ namespace RobotRaconteur
                         using (MessageEntry merr = new MessageEntry())
                         {
                             RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                            RRDirectorExceptionHelper.SetError(merr);
+                            RRDirectorExceptionHelper.SetError(merr,e.ToString());
                         }
                        
                     }
@@ -1899,7 +1899,7 @@ namespace RobotRaconteur
                         using (MessageEntry merr = new MessageEntry())
                         {
                             RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                            RRDirectorExceptionHelper.SetError(merr);
+                            RRDirectorExceptionHelper.SetError(merr,e.ToString());
                         }
                        
                     }
@@ -1917,7 +1917,7 @@ namespace RobotRaconteur
                         using (MessageEntry merr = new MessageEntry())
                         {
                             RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                            RRDirectorExceptionHelper.SetError(merr);
+                            RRDirectorExceptionHelper.SetError(merr,e.ToString());
                         }
                         
                     }
@@ -2185,7 +2185,7 @@ namespace RobotRaconteur
                     using (MessageEntry merr = new MessageEntry())
                     {
                         RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                        RRDirectorExceptionHelper.SetError(merr);
+                        RRDirectorExceptionHelper.SetError(merr,e.ToString());
                     }
                     
                 }
@@ -2230,7 +2230,7 @@ namespace RobotRaconteur
                         using (MessageEntry merr = new MessageEntry())
                         {
                             RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                            RRDirectorExceptionHelper.SetError(merr);
+                            RRDirectorExceptionHelper.SetError(merr,e.ToString());
                         }
                     }
                 }
@@ -2632,7 +2632,7 @@ namespace RobotRaconteur
                         using (MessageEntry merr = new MessageEntry())
                         {
                             RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                            RRDirectorExceptionHelper.SetError(merr);
+                            RRDirectorExceptionHelper.SetError(merr,e.ToString());
                         }
                        
                     }
@@ -2668,7 +2668,7 @@ namespace RobotRaconteur
                         using (MessageEntry merr = new MessageEntry())
                         {
                             RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                            RRDirectorExceptionHelper.SetError(merr);
+                            RRDirectorExceptionHelper.SetError(merr,e.ToString());
                         }
                         
                     }

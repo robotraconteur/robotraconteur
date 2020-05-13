@@ -27,6 +27,8 @@
 #include "RobotRaconteurConstants.h"
 #include <boost/smart_ptr/intrusive_ref_counter.hpp>
 
+#include <fstream>
+
 namespace RobotRaconteur
 {
 
