@@ -814,6 +814,14 @@ namespace RobotRaconteurNETTest
                 return;
             }
 
+            if (command == "nowutc")
+            {
+                Console.WriteLine(RobotRaconteurNode.s.NowUTC);
+
+                RobotRaconteurNode.s.Shutdown();
+                return;
+            }
+
             throw new Exception("Unknown command");
             
 
