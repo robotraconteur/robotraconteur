@@ -2744,37 +2744,42 @@ void RobotRaconteurNode::LogMessage(RobotRaconteur_LogLevel level, const std::st
 void RobotRaconteurNode::LogRecord(const RRLogRecord& record)
 {
 	
-	boost::upgrade_lock<boost::shared_mutex> lock(log_handler_mutex);
+	boost::shared_lock<boost::shared_mutex> lock(log_level_mutex);
 	if (record.Level < log_level)
 	{
 		return;
 	}
 	
+	lock.unlock();
+	
+	boost::upgrade_lock<boost::shared_mutex> lock2(log_handler_mutex);
+	
+
 	if (log_handler)
 	{
 		log_handler->HandleLogRecord(record);
 		return;
 	}
 	
-	boost::upgrade_to_unique_lock<boost::shared_mutex> lock2(lock);
+	boost::upgrade_to_unique_lock<boost::shared_mutex> lock3(lock2);
 	std::cerr << record << std::endl; 
 
 }
 
 RobotRaconteur_LogLevel RobotRaconteurNode::GetLogLevel()
 {
-	boost::shared_lock<boost::shared_mutex> lock(log_handler_mutex);
+	boost::shared_lock<boost::shared_mutex> lock(log_level_mutex);
 	return log_level;
 }
 void RobotRaconteurNode::SetLogLevel(RobotRaconteur_LogLevel level)
 {
-	boost::lock_guard<boost::shared_mutex> lock(log_handler_mutex);
+	boost::unique_lock<boost::shared_mutex> lock(log_level_mutex);
 	log_level = level;
 }
 
 RobotRaconteur_LogLevel RobotRaconteurNode::SetLogLevelFromEnvVariable(const std::string& env_variable_name)
 {
-	boost::lock_guard<boost::shared_mutex> lock(log_handler_mutex);
+	boost::unique_lock<boost::shared_mutex> lock(log_level_mutex);
 	char* loglevel_c = std::getenv(env_variable_name.c_str());
 	if (!loglevel_c) return RobotRaconteur_LogLevel_Warning;
 	std::string loglevel(loglevel_c);
@@ -2819,6 +2824,8 @@ RobotRaconteur_LogLevel RobotRaconteurNode::SetLogLevelFromEnvVariable(const std
 		log_level = RobotRaconteur_LogLevel_Trace;
 		return RobotRaconteur_LogLevel_Trace;
 	}
+
+	lock.unlock();
 
 	ROBOTRACONTEUR_LOG_WARNING_COMPONENT(weak_sp(), Node, -1, "Invalid log level specified in environmental variable: " << loglevel);
 

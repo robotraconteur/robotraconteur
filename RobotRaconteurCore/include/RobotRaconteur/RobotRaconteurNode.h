@@ -2243,6 +2243,7 @@ namespace RobotRaconteur
 		RR_SHARED_PTR<LogRecordHandler> log_handler;
 		boost::shared_mutex log_handler_mutex;
 		RobotRaconteur_LogLevel log_level;
+		boost::shared_mutex log_level_mutex;
 
 	public:
 
