@@ -12,9 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-%rr_intrusive_ptr(RobotRaconteur::LogRecord)
+//%rr_intrusive_ptr(RobotRaconteur::LogRecord)
 %shared_ptr(RobotRaconteur::LogRecordHandler)
 %shared_ptr(RobotRaconteur::FileLogRecordHandler)
+%shared_ptr(RobotRaconteur::UserLogRecordHandlerBase)
+%feature("director") RobotRaconteur::UserLogRecordHandlerDirector;
 
 %shared_ptr(RobotRaconteur::RobotRaconteurNode)
 
@@ -49,17 +51,43 @@ namespace RobotRaconteur
         uint32_t SourceLine;
         std::string ThreadID;
         std::string FiberID;
+
+        %extend
+        {
+            std::string ToString()
+            {
+                std::stringstream ss;
+                ss << *$self;
+                return ss.str();
+            }
+        }
     };
 
     %nodefaultctor LogRecordHandler;
     class LogRecordHandler
     {
-        virtual ~LogRecordHandler() {}
+        //virtual ~LogRecordHandler() {}
     };
 
     class FileLogRecordHandler
     {
     public:
         void OpenFile(const std::string& filename, bool append = true);
+        //virtual ~FileLogRecordHandler();
     };
+
+    class UserLogRecordHandlerDirector
+	{
+	public:
+		virtual void HandleLogRecord(const RRLogRecord& record) {};
+        virtual ~UserLogRecordHandlerDirector();
+	};
+
+	class UserLogRecordHandlerBase : public LogRecordHandler
+	{
+	public:
+        %rename(_SetHandler) SetHandler;
+		void SetHandler(UserLogRecordHandlerDirector* director, int32_t id);
+        //virtual ~UserLogRecordHandlerBase();
+	};
 }

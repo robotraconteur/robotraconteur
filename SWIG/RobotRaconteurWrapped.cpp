@@ -3706,4 +3706,25 @@ namespace RobotRaconteur
 		}
 	}
 
+	void UserLogRecordHandlerBase::SetHandler(UserLogRecordHandlerDirector* director, int32_t id)
+	{
+		if (!director)
+		{
+			handler_director.reset(); 
+			return;
+		}
+
+		RR_SHARED_PTR<UserLogRecordHandlerDirector> spdirector(director, boost::bind(&ReleaseDirector<UserLogRecordHandlerDirector>, _1, id));
+		handler_director = spdirector;
+	}
+
+    void UserLogRecordHandlerBase::HandleLogRecord(const RRLogRecord& record)
+	{
+		RR_SHARED_PTR<UserLogRecordHandlerDirector> spdirector = handler_director;
+		if (spdirector)
+		{
+			spdirector->HandleLogRecord(record);
+		}
+	}
+
 }

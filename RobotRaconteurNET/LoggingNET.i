@@ -13,4 +13,7 @@ public RobotRaconteurNode Node
 
 }
 %}
+
+%csmethodmodifiers RobotRaconteur::RRLogRecord::ToString "public override";
+
 %include "Logging.i"

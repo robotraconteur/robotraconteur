@@ -4351,4 +4351,27 @@ namespace RobotRaconteur
             : base(node_name, tcp_port, flags)
         { }
     }
+
+    public class UserLogRecordHandler : UserLogRecordHandlerBase
+    {
+        class UserLogRecordHandlerDirectorNET : UserLogRecordHandlerDirector
+        {
+            public UserLogRecordHandlerDirectorNET(Action<RRLogRecord> handler)
+            {
+                this.handler = handler;
+            }
+
+            Action<RRLogRecord> handler;
+            public override void HandleLogRecord(RRLogRecord record)
+            {
+                handler?.Invoke(record);
+            }
+        }
+        public UserLogRecordHandler(Action<RRLogRecord> handler)
+        {
+            UserLogRecordHandlerDirectorNET director = new UserLogRecordHandlerDirectorNET(handler);
+            int id = RRObjectHeap.AddObject(director);
+            _SetHandler(director,id);
+        }
+    }
 }

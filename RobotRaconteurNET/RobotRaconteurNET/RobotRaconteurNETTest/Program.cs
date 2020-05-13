@@ -837,6 +837,31 @@ namespace RobotRaconteurNETTest
                 return;
             }
 
+            if (command == "testloghandler")
+            {
+                var user_log_handler = new UserLogRecordHandler(x => Console.WriteLine("csharp handler: " + x.ToString()));
+                RobotRaconteurNode.s.SetLogRecordHandler(user_log_handler);
+                RobotRaconteurNode.s.SetLogLevel(LogLevel.LogLevel_Debug);
+
+                TcpTransport t = new TcpTransport();
+                t.StartServer(2323);
+               
+                RobotRaconteurNode.s.RegisterTransport(t);
+
+                RobotRaconteurNode.s.RegisterServiceType(new com.robotraconteur.testing.TestService1.com__robotraconteur__testing__TestService1Factory());
+                RobotRaconteurNode.s.RegisterServiceType(new com.robotraconteur.testing.TestService2.com__robotraconteur__testing__TestService2Factory());
+
+                RobotRaconteurTestServiceSupport sup = new RobotRaconteurTestServiceSupport();
+                sup.RegisterServices(t);
+                ServiceTestClient c = new ServiceTestClient();
+                c.RunFullTest("tcp://localhost:2323/{0}/RobotRaconteurTestService", "tcp://localhost:2323/{0}/RobotRaconteurTestService_auth");
+               
+                RobotRaconteurNode.s.Shutdown();
+                Console.WriteLine("Test completed");
+                
+                return;
+            }
+
             throw new Exception("Unknown command");
             
 
