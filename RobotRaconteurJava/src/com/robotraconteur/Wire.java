@@ -226,7 +226,7 @@ public class Wire<T>
 			{
 				MessageEntry merr = new MessageEntry();
 				RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-				RRDirectorExceptionHelper.setError(merr);
+				RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
 				merr.delete();
 
 			}
@@ -541,7 +541,7 @@ public class Wire<T>
 				{
 					MessageEntry merr = new MessageEntry();
 					RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-					RRDirectorExceptionHelper.setError(merr);
+					RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
 					merr.delete();
 
 				}
@@ -569,7 +569,7 @@ public class Wire<T>
 				{
 					MessageEntry merr = new MessageEntry();
 					RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-					RRDirectorExceptionHelper.setError(merr);
+					RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
 					merr.delete();
 
 				}

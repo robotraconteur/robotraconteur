@@ -63,7 +63,7 @@ public class WrappedNamedMultiDimArrayMemoryDirectorJava<T> extends WrappedNamed
             try
             {
                 RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-                RRDirectorExceptionHelper.setError(merr);
+                RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
                 return BigInteger.valueOf(0);
             }
             finally
@@ -87,7 +87,7 @@ public class WrappedNamedMultiDimArrayMemoryDirectorJava<T> extends WrappedNamed
             try
             {
                 RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-                RRDirectorExceptionHelper.setError(merr);
+                RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
                 return new vector_uint64_t();
             }
             finally
@@ -123,7 +123,7 @@ public class WrappedNamedMultiDimArrayMemoryDirectorJava<T> extends WrappedNamed
             try
             {
                 RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-                RRDirectorExceptionHelper.setError(merr);
+                RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
             }
             finally
             {
@@ -147,7 +147,7 @@ public class WrappedNamedMultiDimArrayMemoryDirectorJava<T> extends WrappedNamed
             try
             {
                 RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-                RRDirectorExceptionHelper.setError(merr);
+                RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
             }
             finally
             {

@@ -67,7 +67,7 @@ public class AsyncStubReturnDirectorImpl<T> extends AsyncStubReturnDirector {
 		{
 			MessageEntry merr = new MessageEntry();
 			RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-			RRDirectorExceptionHelper.setError(merr);
+			RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
 			merr.delete();
 		}
 

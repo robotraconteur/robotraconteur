@@ -41,7 +41,7 @@ class AsyncGeneratorClientReturnDirectorImpl extends AsyncGeneratorClientReturnD
                 try
                 {
                     RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.setError(merr);
+                    RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
                 }
                 finally
                 {

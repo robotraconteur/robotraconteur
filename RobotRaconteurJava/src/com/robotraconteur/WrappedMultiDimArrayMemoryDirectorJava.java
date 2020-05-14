@@ -29,7 +29,7 @@ public class WrappedMultiDimArrayMemoryDirectorJava<T> extends WrappedMultiDimAr
 		{
 			MessageEntry merr = new MessageEntry();
 			RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-			RRDirectorExceptionHelper.setError(merr);
+			RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
 			merr.delete();
 			return BigInteger.valueOf(0);
 		}
@@ -52,7 +52,7 @@ public class WrappedMultiDimArrayMemoryDirectorJava<T> extends WrappedMultiDimAr
 		{
 			MessageEntry merr = new MessageEntry();
 			RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-			RRDirectorExceptionHelper.setError(merr);
+			RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
 			merr.delete();
 			return new vector_uint64_t();
 		}
@@ -111,7 +111,7 @@ public class WrappedMultiDimArrayMemoryDirectorJava<T> extends WrappedMultiDimAr
 		{
 			MessageEntry merr = new MessageEntry();
 			RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-			RRDirectorExceptionHelper.setError(merr);
+			RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
 			merr.delete();
 
 		}
@@ -186,7 +186,7 @@ public class WrappedMultiDimArrayMemoryDirectorJava<T> extends WrappedMultiDimAr
 		{
 			MessageEntry merr = new MessageEntry();
 			RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-			RRDirectorExceptionHelper.setError(merr);
+			RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
 			merr.delete();
 
 		}

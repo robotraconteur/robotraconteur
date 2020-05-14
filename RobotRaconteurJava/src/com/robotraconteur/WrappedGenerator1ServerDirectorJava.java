@@ -37,7 +37,7 @@ public class WrappedGenerator1ServerDirectorJava<ReturnType,ParamType> extends W
         	try
             {
                 RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-                RRDirectorExceptionHelper.setError(merr);
+                RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
                 return null;
             }
         	finally
@@ -65,7 +65,7 @@ public class WrappedGenerator1ServerDirectorJava<ReturnType,ParamType> extends W
         	try
             {
                 RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-                RRDirectorExceptionHelper.setError(merr);
+                RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
                 return;
             }
         	finally
@@ -88,7 +88,7 @@ public class WrappedGenerator1ServerDirectorJava<ReturnType,ParamType> extends W
         	try
             {
                 RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-                RRDirectorExceptionHelper.setError(merr);
+                RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
                 return;
             }
         	finally

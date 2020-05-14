@@ -110,7 +110,7 @@ public abstract class ServiceSkel extends WrappedServiceSkelDirector
 		{
 			MessageEntry merr = new MessageEntry();
 			RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-			RRDirectorExceptionHelper.setError(merr);
+			RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
 			merr.delete();
 			return null;
 		}
@@ -133,7 +133,7 @@ public abstract class ServiceSkel extends WrappedServiceSkelDirector
 		{
 			MessageEntry merr = new MessageEntry();
 			RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-			RRDirectorExceptionHelper.setError(merr);
+			RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
 			merr.delete();
 			return null;
 		}
@@ -152,7 +152,7 @@ public abstract class ServiceSkel extends WrappedServiceSkelDirector
 		{
 			MessageEntry merr = new MessageEntry();
 			RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-			RRDirectorExceptionHelper.setError(merr);
+			RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
 			merr.delete();
 		}
 		finally
@@ -185,7 +185,7 @@ public abstract class ServiceSkel extends WrappedServiceSkelDirector
 		{
 			MessageEntry merr = new MessageEntry();
 			RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-			RRDirectorExceptionHelper.setError(merr);
+			RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
 			merr.delete();
 			return null;
 		}
@@ -210,7 +210,7 @@ public abstract class ServiceSkel extends WrappedServiceSkelDirector
 		{
 			MessageEntry merr = new MessageEntry();
 			RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-			RRDirectorExceptionHelper.setError(merr);
+			RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
 			merr.delete();
 
 		}
@@ -234,7 +234,7 @@ public abstract class ServiceSkel extends WrappedServiceSkelDirector
 		{
 			MessageEntry merr = new MessageEntry();
 			RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-			RRDirectorExceptionHelper.setError(merr);
+			RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
 			merr.delete();
 
 		}
@@ -253,7 +253,7 @@ public abstract class ServiceSkel extends WrappedServiceSkelDirector
 		{
 			MessageEntry merr = new MessageEntry();
 			RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-			RRDirectorExceptionHelper.setError(merr);
+			RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
 			merr.delete();
 			return null;
 		}
@@ -270,7 +270,7 @@ public abstract class ServiceSkel extends WrappedServiceSkelDirector
 		{
 			MessageEntry merr = new MessageEntry();
 			RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-			RRDirectorExceptionHelper.setError(merr);
+			RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
 			merr.delete();
 			return null;
 		}
@@ -299,7 +299,7 @@ public abstract class ServiceSkel extends WrappedServiceSkelDirector
             try
             {
                 RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-                RRDirectorExceptionHelper.setError(merr);
+                RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
                 return null;
             }
             finally
@@ -322,7 +322,7 @@ public abstract class ServiceSkel extends WrappedServiceSkelDirector
             try
             {
                 RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-                RRDirectorExceptionHelper.setError(merr);
+                RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
                 return null;
             }
             finally
@@ -357,7 +357,7 @@ public abstract class ServiceSkel extends WrappedServiceSkelDirector
             try
             {
                 RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-                RRDirectorExceptionHelper.setError(merr);
+                RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
                 return null;
             }
             finally
@@ -380,7 +380,7 @@ public abstract class ServiceSkel extends WrappedServiceSkelDirector
             try
             {
                 RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-                RRDirectorExceptionHelper.setError(merr);
+                RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
                 return null;
             }
             finally

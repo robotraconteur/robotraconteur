@@ -31,7 +31,7 @@ public class WrappedPodArrayMemoryDirectorJava<T> extends WrappedPodArrayMemoryD
             try
             {
                 RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-                RRDirectorExceptionHelper.setError(merr);
+                RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
                 return BigInteger.valueOf(0);
             }
         	finally
@@ -58,7 +58,7 @@ public class WrappedPodArrayMemoryDirectorJava<T> extends WrappedPodArrayMemoryD
             try
             {
                 RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-                RRDirectorExceptionHelper.setError(merr);
+                RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
             }
             finally
             {
@@ -82,7 +82,7 @@ public class WrappedPodArrayMemoryDirectorJava<T> extends WrappedPodArrayMemoryD
             try
             {
                 RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-                RRDirectorExceptionHelper.setError(merr);
+                RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
             }
             finally
             {

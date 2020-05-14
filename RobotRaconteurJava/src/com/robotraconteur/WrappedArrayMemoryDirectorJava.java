@@ -30,7 +30,7 @@ public class WrappedArrayMemoryDirectorJava<T> extends WrappedArrayMemoryDirecto
 		{
 			MessageEntry merr = new MessageEntry();
 			RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-			RRDirectorExceptionHelper.setError(merr);
+			RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
 			merr.delete();
 			return BigInteger.valueOf(0);
 
@@ -59,7 +59,7 @@ public class WrappedArrayMemoryDirectorJava<T> extends WrappedArrayMemoryDirecto
 		{
 			MessageEntry merr = new MessageEntry();
 			RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-			RRDirectorExceptionHelper.setError(merr);
+			RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
 			merr.delete();
 
 		}
@@ -77,7 +77,7 @@ public class WrappedArrayMemoryDirectorJava<T> extends WrappedArrayMemoryDirecto
 		{
 			MessageEntry merr = new MessageEntry();
 			RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-			RRDirectorExceptionHelper.setError(merr);
+			RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
 			merr.delete();
 
 		}

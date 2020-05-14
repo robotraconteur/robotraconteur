@@ -76,13 +76,13 @@ public String getUsername()
 	return o;
   }
   
-  public GregorianCalendar getLoginTime()
+  public TimeSpec getLoginTime()
   {
 	  return _GetLoginTime();
 	  
   }
   
-  public GregorianCalendar getLastAccessTime()
+  public TimeSpec getLastAccessTime()
   {
 	  return _GetLastAccessTime();
 	  

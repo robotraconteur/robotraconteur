@@ -2805,6 +2805,22 @@ namespace RobotRaconteur
 
 	};
 
+	/**
+	 * @brief Convert a TimeSpec into a boost::posix_time::ptime
+	 * 
+	 * @param ts The TimeSpec to convert
+	 * @return boost::posix_time::ptime The converted ptime 
+	 */
+	
+	boost::posix_time::ptime ROBOTRACONTEUR_CORE_API TimeSpecToPTime(const TimeSpec& ts);
+	/**
+	 * @brief Convert a boost::posix_time::ptime into a TimeSpec
+	 * 
+	 * @param t The ptime to convert
+	 * @return TimeSpec The converted TimeSpec 
+	 */
+	TimeSpec ROBOTRACONTEUR_CORE_API ptimeToTimeSpec(const boost::posix_time::ptime& t);
+
 #ifdef ROBOTRACONTEUR_USE_SMALL_VECTOR
 	typedef boost::container::small_vector<boost::asio::const_buffer, 4> const_buffers;
 	typedef boost::container::small_vector<boost::asio::mutable_buffer, 4> mutable_buffers;
