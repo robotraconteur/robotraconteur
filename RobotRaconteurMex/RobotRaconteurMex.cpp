@@ -220,6 +220,8 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 		{
 			mexAtExit(rrAtExit);
 
+			RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
+
 			RobotRaconteurNode::s()->SetDynamicServiceFactory(boost::make_shared<MexDynamicServiceFactory>());
 			
 
@@ -1276,10 +1278,101 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 			return;
 		}
 
+		// Logging
+		else if (command=="GetLogLevel")
+		{
+			if (nlhs!=1 || nrhs!=1) throw InvalidArgumentException("RobotRaconteurMex GetLogLevel requires 1 input and 1 output arguments");
+			std::string level;
+			RobotRaconteur_LogLevel l = RobotRaconteurNode::s()->GetLogLevel();
+			switch (l)
+			{
+			case RobotRaconteur_LogLevel_Disable:
+				level = "DISABLE";
+				break;
+			case RobotRaconteur_LogLevel_Fatal:
+				level = "FATAL";
+				break;			
+			case RobotRaconteur_LogLevel_Error:
+				level = "ERROR";
+				break;
+			case RobotRaconteur_LogLevel_Warning:
+				level = "WARNING";
+				break;
+			case RobotRaconteur_LogLevel_Info:
+				level = "INFO";
+				break;
+			case RobotRaconteur_LogLevel_Debug:
+				level = "DEBUG";
+				break;
+			case RobotRaconteur_LogLevel_Trace:
+				level = "TRACE";
+				break;
+			default:
+				level = "DISABLE";
+				break;
+			}
+
+			plhs[0] = mxCreateString(level.c_str());
+			return;
+		}
+
+		else if (command=="SetLogLevel")
+		{
+			if (nlhs!=0 || nrhs!=2) throw InvalidArgumentException("RobotRaconteurMex SetLogLevel requires 2 input and 0 output arguments");
+			std::string level = mxToString(prhs[1]);
+			boost::to_lower(level);
+			if (level == "disable")
+			{
+				RobotRaconteurNode::s()->SetLogLevel(RobotRaconteur_LogLevel_Disable);
+			}
+			else if (level == "fatal")
+			{
+				RobotRaconteurNode::s()->SetLogLevel(RobotRaconteur_LogLevel_Fatal);
+			}
+			else if (level == "error")
+			{
+				RobotRaconteurNode::s()->SetLogLevel(RobotRaconteur_LogLevel_Error);
+			}
+			else if (level == "warning")
+			{
+				RobotRaconteurNode::s()->SetLogLevel(RobotRaconteur_LogLevel_Warning);
+			}
+			else if (level == "info")
+			{
+				RobotRaconteurNode::s()->SetLogLevel(RobotRaconteur_LogLevel_Info);
+			}
+			else if (level == "debug")
+			{
+				RobotRaconteurNode::s()->SetLogLevel(RobotRaconteur_LogLevel_Debug);
+			}
+			else if (level == "trace")
+			{
+				RobotRaconteurNode::s()->SetLogLevel(RobotRaconteur_LogLevel_Trace);
+			}
+			else
+			{
+				throw InvalidArgumentException("Invalid log level: " + level);
+			}
+			return;			
+		}
+		else if (command=="OpenLogFile")
+		{
+			if (nlhs!=0 || nrhs!=2) throw InvalidArgumentException("RobotRaconteurMex OpenLogFile requires 2 input and 0 output arguments");
+			std::string fname = mxToString(prhs[1]);
+			RR_SHARED_PTR<FileLogRecordHandler> fhandler = RR_MAKE_SHARED<FileLogRecordHandler>();
+			fhandler->OpenFile(fname);
+			RobotRaconteurNode::s()->SetLogRecordHandler(fhandler);
+			return;
+		}
+		else if (command=="CloseLogFile")
+		{
+			if (nlhs!=0 || nrhs!=1) throw InvalidArgumentException("RobotRaconteurMex CloseLogFile requires 1 input and 0 output arguments");
+			RobotRaconteurNode::s()->SetLogRecordHandler(RR_SHARED_PTR<FileLogRecordHandler>());
+			return;
+		}
 		else
 		{
-			throw InvalidArgumentException("Unknown command for RobotRaconteurMex");
-			return;
+			throw InvalidArgumentException("Unknown command for RobotRaconteurMex");			
 		}
 	}
 	catch (RobotRaconteurException& e)

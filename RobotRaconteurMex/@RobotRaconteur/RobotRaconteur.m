@@ -227,7 +227,22 @@ classdef RobotRaconteur
 		function setTransportTimeout(timeout)
 			RobotRaconteurMex('SetTransportTimeout',timeout);
 		end
+
+		function level=GetLogLevel()
+			level=RobotRaconteurMex('GetLogLevel');
+		end
+
+		function SetLogLevel(level)
+			RobotRaconteurMex('SetLogLevel',level);
+		end
 		
+		function OpenLogFile(filename)
+			RobotRaconteurMex('OpenLogFile',filename);
+		end
+
+		function CloseLogFile()
+			RobotRaconteurMex('CloseLogFile');
+		end
 	end
     
 end
