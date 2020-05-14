@@ -3734,10 +3734,17 @@ namespace RobotRaconteur
 
     void UserLogRecordHandlerBase::HandleLogRecord(const RRLogRecord& record)
 	{
+		try
+		{
 		RR_SHARED_PTR<UserLogRecordHandlerDirector> spdirector = handler_director;
 		if (spdirector)
 		{
-			spdirector->HandleLogRecord(record);
+			DIRECTOR_CALL2(spdirector->HandleLogRecord(record));
+		}
+		}
+		catch (std::exception& err)
+		{
+			std::cerr << "Error handling log record in wrapped language: " << err.what() << std::endl;
 		}
 	}
 

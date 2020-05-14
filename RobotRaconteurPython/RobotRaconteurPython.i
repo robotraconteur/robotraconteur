@@ -41,6 +41,7 @@ RR_Py_Exception()
 {
 
 PyEval_InitThreads();
+PyDateTime_IMPORT;
 
 RobotRaconteur::PythonTypeSupport_Init();
 
@@ -63,6 +64,9 @@ RobotRaconteur::RobotRaconteurNode::s()->SetThreadPoolFactory(RR_MAKE_SHARED<Rob
 %enddef
 %include "PythonTypemaps.i"
 %include "PythonExceptionTypemaps.i"
+
+%rename("%(regex:/^(RobotRaconteur_LogLevel)_(.*)/LogLevel_\\2/)s", %$isenumitem) "";
+%rename("%(regex:/^(RobotRaconteur_LogComponent)_(.*)/LogComponent_\\2/)s", %$isenumitem) "";
 %include "RobotRaconteurConstants.i"
 %include "DataTypes.i"
 
@@ -95,6 +99,8 @@ RobotRaconteur::RobotRaconteurNode::s()->SetThreadPoolFactory(RR_MAKE_SHARED<Rob
 
 %include "DiscoveryPython.i"
 %include "Subscription.i"
+
+%include "LoggingPython.i"
 
 %include "RobotRaconteurNodePython.i"
 

@@ -4,5 +4,5 @@ from .RobotRaconteurPython import *
 from .RobotRaconteurPythonError import *
 from .RobotRaconteurPythonUtil import PipeBroadcaster, WireBroadcaster, WireUnicastReceiver, \
     ServiceSubscriptionFilter, ServiceSubscriptionFilterNode, RobotRaconteurNodeSetup, \
-    ClientNodeSetup, ServerNodeSetup
+    ClientNodeSetup, ServerNodeSetup, UserLogRecordHandler
 from .RobotRaconteurPythonDataTypes import *

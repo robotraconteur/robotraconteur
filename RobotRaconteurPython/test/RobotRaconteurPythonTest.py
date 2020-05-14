@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import sys
 import time
 from os import path
@@ -14,6 +16,8 @@ import numpy
 #sys.path.append(r"C:\Users\wasonj\Documents\RobotRaconteur2\bin\out\Python\build\lib.win32-2.7")
 from RobotRaconteur import *
 from RobotRaconteur import RobotRaconteurPythonUtil
+
+
 
 try: 
     xrange 
@@ -44,6 +48,9 @@ def main():
         command="loopback"
 
     if (command=="loopback"):
+
+        RobotRaconteurNode.s.SetLogLevelFromEnvVariable()
+
         t=TcpTransport()
         t.EnableNodeAnnounce()
         t.EnableNodeDiscoveryListening()
@@ -81,7 +88,7 @@ def main():
         return
 
     if (command=="loopback2"):
-        
+        RobotRaconteurNode.s.SetLogLevelFromEnvVariable()
         with ServerNodeSetup("com.robotraconteur.testing.test2", 4564, RobotRaconteurNodeSetupFlags_ENABLE_TCP_TRANSPORT | RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER):
         
             RobotRaconteurNode.s.RegisterServiceTypeFromFile("com.robotraconteur.testing.TestService2")
@@ -102,6 +109,8 @@ def main():
     if (command=="client"):
         url1=sys.argv[2]
         url2=sys.argv[3]
+
+        RobotRaconteurNode.s.SetLogLevelFromEnvVariable()
 
         t=TcpTransport()
         t.EnableNodeDiscoveryListening()
@@ -128,6 +137,8 @@ def main():
     if (command=="client2"):
         url1=sys.argv[2]
         
+        RobotRaconteurNode.s.SetLogLevelFromEnvVariable()
+
         t=TcpTransport()
         t.EnableNodeDiscoveryListening()
 
@@ -154,6 +165,8 @@ def main():
         else:
             port=int(sys.argv[2])
         nodename=(sys.argv[3])
+
+        RobotRaconteurNode.s.SetLogLevelFromEnvVariable()
 
         RobotRaconteurNode.s.RegisterServiceTypeFromFile("com.robotraconteur.testing.TestService2")
         RobotRaconteurNode.s.RegisterServiceTypeFromFile("com.robotraconteur.testing.TestService1")
@@ -202,6 +215,8 @@ def main():
         rrtype=sys.argv[2]
         transports=sys.argv[3].split(",")
 
+        RobotRaconteurNode.s.SetLogLevelFromEnvVariable()
+
         t1=LocalTransport()
         RobotRaconteurNode.s.RegisterTransport(t1)
 
@@ -229,6 +244,7 @@ def main():
         rrname=sys.argv[2]
         transports=sys.argv[3].split(",")
 
+        RobotRaconteurNode.s.SetLogLevelFromEnvVariable()
         t1=LocalTransport()
         RobotRaconteurNode.s.RegisterTransport(t1)
 
@@ -252,6 +268,7 @@ def main():
         return
 
     if (command=="findnodebyid"):
+        RobotRaconteurNode.s.SetLogLevelFromEnvVariable()
         rrid=NodeID(sys.argv[2])
         transports=sys.argv[3].split(",")
 
@@ -279,6 +296,8 @@ def main():
 
     if (command=="stresstestclient"):
         url=sys.argv[2]
+
+        RobotRaconteurNode.s.SetLogLevelFromEnvVariable()
 
         RobotRaconteurNode.s.SetExceptionHandler(errhandler)
 
@@ -384,6 +403,7 @@ def main():
             return
 
         RRN=RobotRaconteurNode.s
+        RRN.SetLogLevelFromEnvVariable()
 
         url1=sys.argv[2]
 
@@ -426,6 +446,7 @@ def main():
         
         
         RRN=RobotRaconteurNode.s
+        RRN.SetLogLevelFromEnvVariable()
 
         service_type=sys.argv[2]
 
@@ -563,6 +584,7 @@ def main():
         
         
         RRN=RobotRaconteurNode.s
+        RRN.SetLogLevelFromEnvVariable()
 
         service_type=sys.argv[2]
 
@@ -590,6 +612,53 @@ def main():
         raw_input("Press enter")
         
         return
+
+    if (command == "nowutc"):
+        print(RobotRaconteurNode.s.NowUTC())
+        return
+
+    if (command == "testlogging"):
+        import datetime
+        r = RRLogRecord()
+        print(RobotRaconteurNode.s.NodeID)
+        r.Node = RobotRaconteurNode.s
+        r.Time = datetime.datetime.now()
+        r.Level = LogLevel_Warning
+        r.Message = "This is a test warning"
+
+        RobotRaconteurNode.s.LogRecord(r)
+
+        print(r)
+
+        return
+
+    if (command == "testloghandler"):
+        RRN = RobotRaconteurNode.s
+        RRN.SetLogLevel(LogLevel_Debug)
+        user_log_handler = UserLogRecordHandler(lambda x : print("python handler: " + str(x)))
+        RRN.SetLogRecordHandler(user_log_handler)
+        t = TcpTransport()
+        t.StartServer(4564)
+
+        RRN.RegisterServiceTypeFromFile("com.robotraconteur.testing.TestService2")
+        RRN.RegisterServiceTypeFromFile("com.robotraconteur.testing.TestService1")        
+        RRN.RegisterTransport(t)
+
+        t2=testroot_impl(t)
+        context=RRN.RegisterService("RobotRaconteurTestService","com.robotraconteur.testing.TestService1.testroot",t2)
+
+        t3=testroot_impl(t)
+        authdata="testuser1 0b91dec4fe98266a03b136b59219d0d6 objectlock\ntestuser2 841c4221c2e7e0cefbc0392a35222512 objectlock\ntestsuperuser 503ed776c50169f681ad7bbc14198b68 objectlock,objectlockoverride"
+        p=PasswordFileUserAuthenticator(authdata)
+        policies={"requirevaliduser" : "true", "allowobjectlock" : "true"}
+        s=ServiceSecurityPolicy(p,policies)
+        RRN.RegisterService("RobotRaconteurTestService_auth","com.robotraconteur.testing.TestService1.testroot",t3,s)
+
+        s=ServiceTestClient()
+        s.RunFullTest('rr+tcp://localhost:4564/?service=RobotRaconteurTestService','rr+tcp://localhost:4564/?service=RobotRaconteurTestService_auth')
+        print ("Test completed no errors detected")
+        return
+
 
     raise Exception("Unknown test command")
 

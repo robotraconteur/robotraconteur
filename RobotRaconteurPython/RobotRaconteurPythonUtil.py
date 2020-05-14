@@ -2785,6 +2785,22 @@ class SecureServerNodeSetup(RobotRaconteurNodeSetup):
     def __init__(self, node_name, tcp_port, flags=RobotRaconteurPython.RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT, node=None):
         super(SecureServerNodeSetup,self).__init__(node_name,tcp_port,flags,node)
 
+class UserLogRecordHandlerDirectorPython(RobotRaconteurPython.UserLogRecordHandlerDirector):
+    def __init__(self, handler):
+        super(UserLogRecordHandlerDirectorPython,self).__init__()
+        self.handler = handler
+
+    def HandleLogRecord(self,record):
+        if self.handler is not None:
+            self.handler(record)
+
+class UserLogRecordHandler(RobotRaconteurPython.UserLogRecordHandlerBase):
+    def __init__(self,handler):
+        super(UserLogRecordHandler,self).__init__()
+        director = UserLogRecordHandlerDirectorPython(handler)
+        self._SetHandler(director,0)
+        director.__disown__()
+
 
 def settrace():
     # Enable debugging in vscode if ptvsd has been loaded

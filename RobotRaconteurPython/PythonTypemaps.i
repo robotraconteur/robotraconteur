@@ -1,3 +1,7 @@
+%{
+#include <datetime.h>
+%}
+
 %typemap (in) void* {
 	$1 = PyLong_AsVoidPtr($input);
 }
@@ -25,49 +29,22 @@
 } 
 
 %typemap(out) boost::posix_time::ptime {
-    //$result=PyString_FromString(boost::posix_time::to_iso_string($1).c_str());
-    std::stringstream o;
-	o << boost::gregorian::to_iso_string($1.date()) << "T";
-    boost::posix_time::time_duration t=$1.time_of_day();
-	o << std::setw(2) << std::setfill('0') << t.hours() << std::setw(2) << t.minutes() <<  std::setw(2) << t.seconds() << ".";
-	std::stringstream o2;
-	o2 << std::setw(t.num_fractional_digits()) << std::setfill('0') <<  t.fractional_seconds();
-    std::string o3=o2.str();
-	while (o3.size() < 6) o3 += "0";
-	o << o3.substr(0,6);
-	std::string o4=o.str();
-	
-	PyObject* modules_dict= PyImport_GetModuleDict();
-	if (modules_dict==NULL)
-	{
-		PyErr_SetString(PyExc_Exception, "Could not load RobotRaconeturPythonError module");
-		goto fail;
+    $result = PyDateTime_FromDateAndTime((int)$1.date().year(), (int)$1.date().month(), (int)$1.date().day(),
+		(int)$1.time_of_day().hours(), (int)$1.time_of_day().minutes(), (int)$1.time_of_day().seconds(),
+		boost::numeric_cast<int32_t>(($1.time_of_day().fractional_seconds() * boost::numeric_cast<int32_t>(pow(10.0,(9-$1.time_of_day().num_fractional_digits())))))/1000);
+}
+
+%typemap(in) boost::posix_time::ptime {
+	if (PyDateTime_Check($input)) {
+		$1 = boost::posix_time::ptime(boost::gregorian::date((int)PyDateTime_GET_YEAR($input),(int)PyDateTime_GET_MONTH($input),(int)PyDateTime_GET_DAY($input)),
+			boost::posix_time::time_duration((int)PyDateTime_DATE_GET_HOUR($input),(int)PyDateTime_DATE_GET_MINUTE($input),(int)PyDateTime_DATE_GET_SECOND($input)))
+			 + boost::posix_time::microseconds((int)PyDateTime_DATE_GET_MICROSECOND($input));
 	}
-
-	PyObject* datetime_module=PyDict_GetItemString(modules_dict, "datetime");
-	if (datetime_module==NULL)
+	else
 	{
-		PyErr_SetString(PyExc_Exception, "Could not load datetime module");
-		goto fail;
+		PyErr_SetString(PyExc_TypeError, "not a datetime");
+    	SWIG_fail;
 	}
-
-	PyObject* datetime=PyObject_GetAttrString(datetime_module, "datetime");
-	if (datetime==NULL)
-	{
-		PyErr_SetString(PyExc_Exception, "Could not load datetime.datetime class");
-		goto fail;
-	}
-
-	PyObject* strptime=PyObject_GetAttrString(datetime, "strptime");
-	if (strptime==NULL)
-	{
-		PyErr_SetString(PyExc_Exception, "Could not load datetime.strptime function");
-		goto fail;
-	}
-
-	PyObject* res=PyObject_CallFunction(strptime, "s#,s", o4.c_str(), o4.size(), "%Y%m%dT%H%M%S.%f");
-
-	$result=res;
 }
 
 %typemap(out) boost::posix_time::time_duration %{
