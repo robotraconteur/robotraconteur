@@ -3096,8 +3096,22 @@ namespace RobotRaconteur
 	{
 		last_err.reset();
 	}
-	void RRDirectorExceptionHelper::SetError(RR_INTRUSIVE_PTR<MessageEntry> err)
+
+	static std::string RRDirectorExceptionHelper_SetError_replace_newline(const std::string& exception_str)
 	{
+		std::string exception_str1 = exception_str;
+		boost::replace_all(exception_str1, "\n", "\\n");
+		boost::replace_all(exception_str1, "\r", "");
+		return exception_str1;
+	}
+
+	void RRDirectorExceptionHelper::SetError(RR_INTRUSIVE_PTR<MessageEntry> err, const std::string& exception_str)
+	{
+		RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+		if (default_node)
+		{			
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, User, -1, "Exception caught from wrapped language, passing to C++: " << RRDirectorExceptionHelper_SetError_replace_newline(exception_str));
+		}
 		last_err.reset(new RR_INTRUSIVE_PTR<MessageEntry>(err));
 	}
 	
@@ -3703,6 +3717,34 @@ namespace RobotRaconteur
 			{
 				this->param_ = param_;
 			}
+		}
+	}
+
+	void UserLogRecordHandlerBase::SetHandler(UserLogRecordHandlerDirector* director, int32_t id)
+	{
+		if (!director)
+		{
+			handler_director.reset(); 
+			return;
+		}
+
+		RR_SHARED_PTR<UserLogRecordHandlerDirector> spdirector(director, boost::bind(&ReleaseDirector<UserLogRecordHandlerDirector>, _1, id));
+		handler_director = spdirector;
+	}
+
+    void UserLogRecordHandlerBase::HandleLogRecord(const RRLogRecord& record)
+	{
+		try
+		{
+		RR_SHARED_PTR<UserLogRecordHandlerDirector> spdirector = handler_director;
+		if (spdirector)
+		{
+			DIRECTOR_CALL2(spdirector->HandleLogRecord(record));
+		}
+		}
+		catch (std::exception& err)
+		{
+			std::cerr << "Error handling log record in wrapped language: " << err.what() << std::endl;
 		}
 	}
 

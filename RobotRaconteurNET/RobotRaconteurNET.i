@@ -47,6 +47,8 @@
 %enddef
 
 %rename("%(regex:/^([A-Z][a-z]+)+_(.*)/\\2/)s", %$isenumitem) ""; // Colour_Red -> Red
+//%rename("%(regex:/^(RobotRaconteur_LogLevel)_(.*)/\\2/)s", %$isenumitem) "";
+//%rename("%(regex:/^(RobotRaconteur_LogComponent)_(.*)/\\2/)s", %$isenumitem) "";
 
 %include "RobotRaconteurConstants.i"
 
@@ -101,6 +103,8 @@ static void memcpy(void* destination, void* source, int64_t num)
 
 %include "DiscoveryNET.i"
 %include "Subscription.i"
+
+%include "LoggingNET.i"
 
 %include "RobotRaconteurNodeNET.i"
 %include "NodeSetupNET.i"

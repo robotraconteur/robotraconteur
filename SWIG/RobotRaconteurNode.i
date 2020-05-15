@@ -451,6 +451,17 @@ RR_KEEP_GIL()
 	RR_MAKE_METHOD_PRIVATE(GetRobotRaconteurVersion)
 	std::string GetRobotRaconteurVersion();
 
+	bool CompareLogLevel(RobotRaconteur_LogLevel log_level);
+	void LogMessage(RobotRaconteur_LogLevel level, const std::string& message);
+	void LogRecord(const RRLogRecord& record);
+	RobotRaconteur_LogLevel GetLogLevel();
+	void SetLogLevel(RobotRaconteur_LogLevel level);
+	RobotRaconteur_LogLevel SetLogLevelFromEnvVariable(const std::string& env_variable_name = "ROBOTRACONTEUR_LOG_LEVEL");
+	boost::shared_ptr<RobotRaconteur::LogRecordHandler> GetLogRecordHandler();
+	void SetLogRecordHandler(boost::shared_ptr<RobotRaconteur::LogRecordHandler> handler);
+
+
+
 };
 	
 }

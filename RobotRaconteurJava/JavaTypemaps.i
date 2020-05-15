@@ -1,40 +1,35 @@
 //Typemap
 
 %typemap(out) boost::posix_time::ptime {
-    //$result=PyString_FromString(boost::posix_time::to_iso_string($1).c_str());
-    std::stringstream o;
-	o << boost::gregorian::to_iso_string($1.date()) << "T";
-    boost::posix_time::time_duration t=$1.time_of_day();
-	o << std::setw(2) << std::setfill('0') << t.hours() << std::setw(2) << t.minutes() << std::setw(2) << t.seconds() << ".";
-	std::stringstream o2;
-	o2 << std::setw(t.num_fractional_digits()) << std::setfill('0') <<  t.fractional_seconds();
-    std::string o3=o2.str();
-	while (o3.size() < 6) o3 += "0";
-	o << o3.substr(0,6);
-	
-	  $result=jenv->NewStringUTF(o.str().c_str());
+	{
+		TimeSpec timespec_result1 = RobotRaconteur::ptimeToTimeSpec($1);
+		*(RobotRaconteur::TimeSpec **)&$result = new RobotRaconteur::TimeSpec((const RobotRaconteur::TimeSpec &)timespec_result1);
+	}    
 }
 
+%typemap(in) boost::posix_time::ptime {
+	{
+		TimeSpec* temp_ptime = *(RobotRaconteur::TimeSpec **)&$input;
+		if (!temp_ptime) 
+		{
+			SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "Attempt to dereference null TimeSpec");
+			return $null;
+		}
+		$1 = TimeSpecToPTime(*temp_ptime);
+	}    
+}
 
-%typemap(jstype) boost::posix_time::ptime "java.util.GregorianCalendar";
-
-%typemap(jni) boost::posix_time::ptime "jstring";
-%typemap(jtype) boost::posix_time::ptime "String";
-
+%typemap(jstype) boost::posix_time::ptime "com.robotraconteur.TimeSpec";
+%typemap(jni) boost::posix_time::ptime "jlong";
+%typemap(jtype) boost::posix_time::ptime "long";
 
 %typemap(javaout) boost::posix_time::ptime {
-    String date=$jnicall;
-	  java.util.GregorianCalendar o=new java.util.GregorianCalendar(
-			  Integer.parseInt(date.substring(0, 4)),
-			  Integer.parseInt(date.substring(4,6)),
-			  Integer.parseInt(date.substring(6,8)),
-			  Integer.parseInt(date.substring(9,11)),
-			  Integer.parseInt(date.substring(11,13)),
-			  Integer.parseInt(date.substring(13,15))			  			
-			  );
-	  o.set(java.util.Calendar.MILLISECOND, Integer.parseInt(date.substring(16,19)));
-	  return o;
+    return new TimeSpec($jnicall,true);
 }
+
+%typemap(javain) boost::posix_time::ptime "TimeSpec.getCPtr($javainput)"
+    
+
 
 %typemap(jstype) boost::posix_time::time_duration "int"
 %typemap(jni) boost::posix_time::time_duration "jint"

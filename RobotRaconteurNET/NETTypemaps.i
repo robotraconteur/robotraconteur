@@ -12,49 +12,35 @@
 %apply const unsigned int & { const size_t & };
 #endif
 
-%typemap(out) boost::posix_time::ptime {
-    //$result=PyString_FromString(boost::posix_time::to_iso_string($1).c_str());
-    std::stringstream o;
-	o << boost::gregorian::to_iso_string($1.date()) << "T";
-    boost::posix_time::time_duration t=$1.time_of_day();
-	o << std::setw(2) << std::setfill('0') << t.hours() << std::setw(2) << t.minutes() << std::setw(2) << t.seconds() << ".";
-	std::stringstream o2;
-	o2 << std::setw(t.num_fractional_digits()) << std::setfill('0') <<  t.fractional_seconds();
-    std::string o3=o2.str();
-	while (o3.size() < 6) o3 += "0";
-	o << o3.substr(0,6);
-	
-	  $result=SWIG_csharp_string_callback(o.str().c_str());
-}
-
-
 %typemap(cstype) boost::posix_time::ptime "DateTime";
+%typemap(ctype) boost::posix_time::ptime "int64_t";
+%typemap(imtype) boost::posix_time::ptime "long";
 
-%typemap(ctype) boost::posix_time::ptime "char*";
-%typemap(imtype) boost::posix_time::ptime "string";
-
-%typemap(csout, excode=SWIGEXCODE) boost::posix_time::ptime {
-    string date = $imcall;$excode
-    return new DateTime(Int32.Parse(date.Substring(0, 4)),
-                    Int32.Parse(date.Substring(4, 2)),
-                    Int32.Parse(date.Substring(6, 2)),
-                    Int32.Parse(date.Substring(9, 2)),
-                    Int32.Parse(date.Substring(11, 2)),
-                    Int32.Parse(date.Substring(13, 2)),
-                    Int32.Parse(date.Substring(16, 3)));
+%typemap(in) boost::posix_time::ptime {
+    $1 = boost::posix_time::ptime(boost::gregorian::date(1970,1,1),boost::posix_time::time_duration(0,0,0)) + boost::posix_time::microseconds($input/10);
 }
 
-%typemap(csvarout, excode=SWIGEXCODE) boost::posix_time::ptime %{
+%typemap(out) boost::posix_time::ptime {
+    {
+	boost::posix_time::time_duration ptime_diff = ($1 - boost::posix_time::ptime(boost::gregorian::date(1970,1,1),boost::posix_time::time_duration(0,0,0)));
+	$result=ptime_diff.total_microseconds()*10;
+    }
+}
+
+%typemap(csout, excode=SWIGEXCODE) boost::posix_time::ptime, boost::posix_time::ptime* {
+    long date_ticks = $imcall;$excode
+    return new DateTime(date_ticks + (new DateTime(1970,1,1)).Ticks);
+}
+
+%typemap(csvarout, excode=SWIGEXCODE) boost::posix_time::ptime, boost::posix_time::ptime* %{
 	get {
-    string date = $imcall;$excode
-    return new DateTime(Int32.Parse(date.Substring(0, 4)),
-                    Int32.Parse(date.Substring(4, 2)),
-                    Int32.Parse(date.Substring(6, 2)),
-                    Int32.Parse(date.Substring(9, 2)),
-                    Int32.Parse(date.Substring(11, 2)),
-                    Int32.Parse(date.Substring(13, 2)),
-                    Int32.Parse(date.Substring(16, 3)));
+    long date_ticks = $imcall;$excode
+    return new DateTime(date_ticks + (new DateTime(1970,1,1)).Ticks);
 	}
+%}
+
+%typemap(csin, excode=SWIGEXCODE) boost::posix_time::ptime, boost::posix_time::ptime* %{
+    $csinput.Ticks - (new DateTime(1970,1,1)).Ticks
 %}
 
 %typemap(cstype) boost::posix_time::time_duration "int"
@@ -177,6 +163,13 @@
 	$1=(RobotRaconteurObjectLockFlags)$input;
 }
 
+
+%define %rr_weak_ptr( TYPE )
+%typemap(ctype) boost::weak_ptr< TYPE > boost::shared_ptr< TYPE >;
+%typemap(ctype) const boost::weak_ptr< TYPE >& boost::shared_ptr< TYPE >;
+%typemap(ctype) boost::weak_ptr< TYPE >& boost::shared_ptr< TYPE >;
+//%apply boost::shared_ptr< TYPE > { boost::weak_ptr< TYPE > }
+%enddef
 
 %define %rr_intrusive_ptr( TYPE )
 %intrusive_ptr( TYPE );

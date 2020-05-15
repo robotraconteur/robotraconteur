@@ -295,14 +295,22 @@ TimeSpec TimeSpec::Now()
 TimeSpec TimeSpec::Now(RR_SHARED_PTR<RobotRaconteurNode> node)
 {
 	boost::posix_time::ptime now=node->NowUTC();
+	return ptimeToTimeSpec(now);	
+}
 
+boost::posix_time::ptime TimeSpecToPTime(const TimeSpec& ts)
+{
 	boost::posix_time::ptime epoch(boost::gregorian::date(1970,boost::gregorian::Jan,1),boost::posix_time::time_duration(0,0,0));
-	boost::posix_time::time_duration diff=now-epoch;
+	// TODO: increase precision
+	return epoch + boost::posix_time::seconds(ts.seconds) + boost::posix_time::microseconds(ts.nanoseconds/1000);
+}
+TimeSpec ptimeToTimeSpec(const boost::posix_time::ptime& t)
+{
+	boost::posix_time::ptime epoch(boost::gregorian::date(1970,boost::gregorian::Jan,1),boost::posix_time::time_duration(0,0,0));
+	boost::posix_time::time_duration diff=t-epoch;	
 
-	
-
-	uint64_t sec=diff.total_seconds();
-	uint32_t nanosec=boost::numeric_cast<uint32_t>((diff.fractional_seconds() * boost::numeric_cast<uint32_t>(pow(10.0,(9-diff.num_fractional_digits())))));
+	int64_t sec=diff.total_seconds();
+	int32_t nanosec=boost::numeric_cast<int32_t>((diff.fractional_seconds() * boost::numeric_cast<int32_t>(pow(10.0,(9-diff.num_fractional_digits())))));
 
 	return TimeSpec(sec,nanosec);
 }

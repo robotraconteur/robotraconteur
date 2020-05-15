@@ -64,10 +64,13 @@
 %include "enums.swg"
 
 %javaconst(1);
+
+%rename("%(regex:/^(RobotRaconteur_LogLevel)_(.*)/LogLevel_\\2/)s", %$isenumitem) "";
+%rename("%(regex:/^(RobotRaconteur_LogComponent)_(.*)/LogComponent_\\2/)s", %$isenumitem) "";
 %include "RobotRaconteurConstants.i"
 
-%include "JavaExceptionTypemaps.i"
 %include "JavaTypemaps.i"
+%include "JavaExceptionTypemaps.i"
 
 //%rename ToString toString;
 
@@ -124,26 +127,9 @@
 %include "DiscoveryJava.i"
 %include "Subscription.i"
 
+%include "Logging.i"
+
 %include "NodeSetup.i"
-
-
-//RRDirectorExceptionHelper
-namespace RobotRaconteur {
-class RRDirectorExceptionHelper
-	{
-	
-
-	public:
-		static void Reset();
-		static void SetError(boost::intrusive_ptr<MessageEntry> err);
-		static bool IsErrorPending();
-		static boost::intrusive_ptr<MessageEntry> GetError();
-
-	};
-	
-	}
-	
-	
 
 %inline
 {

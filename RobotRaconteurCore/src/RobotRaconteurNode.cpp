@@ -463,7 +463,7 @@ void RobotRaconteurNode::Shutdown()
 	shutdown_listeners();
 
 	{
-		boost::unique_lock<boost::shared_mutex> lock(thread_pool_lock);
+		boost::unique_lock<boost::shared_mutex> lock(PeriodicCleanupTask_timer_lock);
 		if (this->PeriodicCleanupTask_timer)
 		{
 			try
@@ -2119,7 +2119,12 @@ void RobotRaconteurNode::PeriodicCleanupTask(const TimerEvent& err)
 		{
 		}
 
-		BOOST_FOREACH (RR_SHARED_PTR<IPeriodicCleanupTask>& t, cleanupobjs)
+		std::vector<RR_SHARED_PTR<IPeriodicCleanupTask> > cleanobjs;
+		{
+			boost::mutex::scoped_lock lock (cleanupobjs_lock);
+			boost::copy(cleanupobjs, std::back_inserter(cleanobjs));						
+		}
+		BOOST_FOREACH (RR_SHARED_PTR<IPeriodicCleanupTask>& t, cleanobjs)
 		{
 			try
 			{
@@ -2269,6 +2274,7 @@ RR_SHARED_PTR<ServiceFactory> RobotRaconteurNode::GetPulledServiceType(RR_SHARED
 
 void RobotRaconteurNode::StartPeriodicCleanupTask(RR_SHARED_PTR<RobotRaconteurNode> node)
 {
+	boost::unique_lock<boost::shared_mutex> lock(node->PeriodicCleanupTask_timer_lock);
 	node->PeriodicCleanupTask_timer=node->CreateTimer(boost::posix_time::seconds(5),boost::bind(&RobotRaconteurNode::PeriodicCleanupTask,node,_1));
 	node->PeriodicCleanupTask_timer->Start();
 }
@@ -2336,6 +2342,9 @@ void RobotRaconteurNode::SetThreadPool(RR_SHARED_PTR<ThreadPool> pool)
 	}
 	thread_pool=pool;
 
+	lock.unlock();
+
+	boost::unique_lock<boost::shared_mutex> lock2(PeriodicCleanupTask_timer_lock);
 	if (!PeriodicCleanupTask_timerstarted)
 	{
 		PeriodicCleanupTask_timerstarted = true;
@@ -2719,7 +2728,7 @@ bool RobotRaconteurNode::CompareLogLevel(RobotRaconteur_LogLevel record_level)
 	return record_level >= log_level;
 }
 
-void RobotRaconteurNode::LogMessage(RobotRaconteur_LogLevel level, std::string& message)
+void RobotRaconteurNode::LogMessage(RobotRaconteur_LogLevel level, const std::string& message)
 {
 	RRLogRecord r;
 	r.Node=shared_from_this();
@@ -2735,37 +2744,42 @@ void RobotRaconteurNode::LogMessage(RobotRaconteur_LogLevel level, std::string& 
 void RobotRaconteurNode::LogRecord(const RRLogRecord& record)
 {
 	
-	boost::upgrade_lock<boost::shared_mutex> lock(log_handler_mutex);
+	boost::shared_lock<boost::shared_mutex> lock(log_level_mutex);
 	if (record.Level < log_level)
 	{
 		return;
 	}
 	
+	lock.unlock();
+	
+	boost::upgrade_lock<boost::shared_mutex> lock2(log_handler_mutex);
+	
+
 	if (log_handler)
 	{
 		log_handler->HandleLogRecord(record);
 		return;
 	}
 	
-	boost::upgrade_to_unique_lock<boost::shared_mutex> lock2(lock);
+	boost::upgrade_to_unique_lock<boost::shared_mutex> lock3(lock2);
 	std::cerr << record << std::endl; 
 
 }
 
 RobotRaconteur_LogLevel RobotRaconteurNode::GetLogLevel()
 {
-	boost::shared_lock<boost::shared_mutex> lock(log_handler_mutex);
+	boost::shared_lock<boost::shared_mutex> lock(log_level_mutex);
 	return log_level;
 }
 void RobotRaconteurNode::SetLogLevel(RobotRaconteur_LogLevel level)
 {
-	boost::lock_guard<boost::shared_mutex> lock(log_handler_mutex);
+	boost::unique_lock<boost::shared_mutex> lock(log_level_mutex);
 	log_level = level;
 }
 
-RobotRaconteur_LogLevel RobotRaconteurNode::SetLogLevelFromEnvVariable(std::string env_variable_name)
+RobotRaconteur_LogLevel RobotRaconteurNode::SetLogLevelFromEnvVariable(const std::string& env_variable_name)
 {
-	boost::lock_guard<boost::shared_mutex> lock(log_handler_mutex);
+	boost::unique_lock<boost::shared_mutex> lock(log_level_mutex);
 	char* loglevel_c = std::getenv(env_variable_name.c_str());
 	if (!loglevel_c) return RobotRaconteur_LogLevel_Warning;
 	std::string loglevel(loglevel_c);
@@ -2810,6 +2824,8 @@ RobotRaconteur_LogLevel RobotRaconteurNode::SetLogLevelFromEnvVariable(std::stri
 		log_level = RobotRaconteur_LogLevel_Trace;
 		return RobotRaconteur_LogLevel_Trace;
 	}
+
+	lock.unlock();
 
 	ROBOTRACONTEUR_LOG_WARNING_COMPONENT(weak_sp(), Node, -1, "Invalid log level specified in environmental variable: " << loglevel);
 

@@ -1,3 +1,4 @@
+
 %exception {
 try
 {
@@ -31,4 +32,33 @@ try
     jenv->ThrowNew(clazz, e.what());
     return $null;
   }
+}
+
+%rr_intrusive_ptr(RobotRaconteur::MessageEntry)
+
+//RRDirectorExceptionHelper
+
+%typemap(javacode) RobotRaconteur::RRDirectorExceptionHelper %{
+public static String exceptionToStackTraceString(Exception exp)
+{
+	java.io.StringWriter sw = new java.io.StringWriter();
+	java.io.PrintWriter pw = new java.io.PrintWriter(sw);
+	exp.printStackTrace(pw);
+	return sw.toString();
+}
+%}
+
+namespace RobotRaconteur {
+class RRDirectorExceptionHelper
+{
+
+
+public:
+	static void Reset();
+	static void SetError(boost::intrusive_ptr<RobotRaconteur::MessageEntry> err, const std::string& exception_str);
+	static bool IsErrorPending();
+	static boost::intrusive_ptr<RobotRaconteur::MessageEntry> GetError();
+
+};
+
 }

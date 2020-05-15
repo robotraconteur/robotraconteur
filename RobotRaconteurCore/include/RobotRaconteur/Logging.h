@@ -27,6 +27,8 @@
 #include "RobotRaconteurConstants.h"
 #include <boost/smart_ptr/intrusive_ref_counter.hpp>
 
+#include <fstream>
+
 namespace RobotRaconteur
 {
 
@@ -86,7 +88,7 @@ public:
     virtual void HandleLogRecord(const RRLogRecord& record) = 0;
 };
 
-class ROBOTRACONTEUR_CORE_API FileLogRecordHandler
+class ROBOTRACONTEUR_CORE_API FileLogRecordHandler : public LogRecordHandler
 {
     std::ofstream file;
 

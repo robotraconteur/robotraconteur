@@ -28,6 +28,7 @@ public class RobotRaconteurJavaTest {
 			
 			if (command.equals("loopback"))
 			{
+				RobotRaconteurNode.s().setLogLevelFromEnvVariable();
 			
 				TcpTransport c=new TcpTransport();
 				c.enableNodeDiscoveryListening();
@@ -70,6 +71,8 @@ public class RobotRaconteurJavaTest {
 			if (command.equals("loopback2"))
 			{
 			
+				RobotRaconteurNode.s().setLogLevelFromEnvVariable();
+
 				ServerNodeSetup node_setup = new ServerNodeSetup("com.robotraconteur.testing.TestService2",
 						2323, RobotRaconteurNodeSetupFlags.RobotRaconteurNodeSetupFlags_ENABLE_TCP_TRANSPORT.swigValue() 
 						| RobotRaconteurNodeSetupFlags.RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER.swigValue() );
@@ -98,6 +101,8 @@ public class RobotRaconteurJavaTest {
 			
 			if (command.equals("client"))
 			{
+				RobotRaconteurNode.s().setLogLevelFromEnvVariable();
+
 				String url=args[1];
 				String url_auth=args[2];
 				
@@ -134,6 +139,8 @@ public class RobotRaconteurJavaTest {
 						
 			if (command.equals("client2"))
 			{
+				RobotRaconteurNode.s().setLogLevelFromEnvVariable();
+
 				String url=args[1];				
 				
 				TcpTransport t = new TcpTransport();
@@ -161,6 +168,8 @@ public class RobotRaconteurJavaTest {
 						
 			if (command.equals("server"))
 			{
+				RobotRaconteurNode.s().setLogLevelFromEnvVariable();
+
 				int port;
 				if (args[1].equals("sharer"))
 				{
@@ -225,6 +234,8 @@ public class RobotRaconteurJavaTest {
 			
 			if (command.equals("findservicebytype"))
 			{
+				RobotRaconteurNode.s().setLogLevelFromEnvVariable();
+
 				String type=args[1];
 				String[] tschemes=args[2].split(",");
 				
@@ -255,6 +266,8 @@ public class RobotRaconteurJavaTest {
 			
 			if (command.equals("findnodebyid"))
 			{
+				RobotRaconteurNode.s().setLogLevelFromEnvVariable();
+
 				NodeID id=new NodeID(args[1]);
 				String[] tschemes=args[2].split(",");
 				
@@ -285,6 +298,8 @@ public class RobotRaconteurJavaTest {
 			
 			if (command.equals("findnodebyname"))
 			{
+				RobotRaconteurNode.s().setLogLevelFromEnvVariable();
+
 				String name=args[1];
 				String[] tschemes=args[2].split(",");
 				
@@ -315,6 +330,8 @@ public class RobotRaconteurJavaTest {
 			
 			if (command.equals("peeridentity"))
 			{
+				RobotRaconteurNode.s().setLogLevelFromEnvVariable();
+
 				if (args.length < 2)
 				{
 					System.out.println("Usage for peeridentity: RobotRaconteurTest peeridentity url [nodeid]");
@@ -391,6 +408,8 @@ public class RobotRaconteurJavaTest {
 
 			if (command.equals("subscribertest"))
 			{
+				RobotRaconteurNode.s().setLogLevelFromEnvVariable();
+
 				String type=args[1];
 								
 				TcpTransport t = new TcpTransport();
@@ -424,7 +443,8 @@ public class RobotRaconteurJavaTest {
 
 			if (command.equals( "subscriberfiltertest"))
 			{
-				
+				RobotRaconteurNode.s().setLogLevelFromEnvVariable();
+
 				String type=args[1];
 				
 				ServiceSubscriptionFilter f=new ServiceSubscriptionFilter();
@@ -505,6 +525,8 @@ public class RobotRaconteurJavaTest {
 
 			if (command.equals("serviceinfo2subscribertest"))
 			{
+				RobotRaconteurNode.s().setLogLevelFromEnvVariable();
+
 				String type=args[1];
 								
 				TcpTransport t = new TcpTransport();
@@ -538,6 +560,55 @@ public class RobotRaconteurJavaTest {
                 RobotRaconteurNode.s().shutdown();
                 return;
 			}
+
+			if (command.equals("nowutc"))
+            {
+                System.out.println(RobotRaconteurNode.s().nowUTC());
+
+                RobotRaconteurNode.s().shutdown();
+                return;
+            }
+
+            if (command.equals("testlogging"))
+            {
+                RRLogRecord r = new RRLogRecord();
+                RobotRaconteurNode node = RobotRaconteurNode.s();
+                NodeID nodeid = node.getNodeID();
+                r.setNode(node);
+                r.setTime(RobotRaconteurNode.s().nowUTC());
+                r.setLevel(LogLevel.LogLevel_Warning);
+                r.setMessage ("This is a test warning");
+                RobotRaconteurNode.s().logRecord(r);
+
+                RobotRaconteurNode.s().shutdown();
+                return;
+            }
+
+            if (command.equals("testloghandler"))
+            {
+				UserLogRecordHandler user_log_handler = new UserLogRecordHandler(new UserLogRecordHandler_PrintLn());
+                RobotRaconteurNode.s().setLogRecordHandler(user_log_handler);
+                RobotRaconteurNode.s().setLogLevel(LogLevel.LogLevel_Debug);
+
+				RobotRaconteurNode.s().registerServiceType(new com.robotraconteur.testing.TestService1.com__robotraconteur__testing__TestService1Factory());
+                RobotRaconteurNode.s().registerServiceType(new com.robotraconteur.testing.TestService2.com__robotraconteur__testing__TestService2Factory());
+
+
+                TcpTransport t = new TcpTransport();
+                t.startServer(2323);
+               
+                RobotRaconteurNode.s().registerTransport(t);
+
+                RobotRaconteurTestServiceSupport sup = new RobotRaconteurTestServiceSupport();
+                sup.RegisterServices(t);
+                ServiceTestClient c = new ServiceTestClient();
+                c.RunFullTest("tcp://localhost:2323/{0}/RobotRaconteurTestService", "tcp://localhost:2323/{0}/RobotRaconteurTestService_auth");
+               
+                RobotRaconteurNode.s().shutdown();
+                System.out.println("Test completed");
+                
+                return;
+            }
 			
 			throw new Exception("Unknown command");
 	        
@@ -550,6 +621,15 @@ public class RobotRaconteurJavaTest {
 		}
 		
 		
+	}
+
+	static class UserLogRecordHandler_PrintLn implements Action1<RRLogRecord>
+	{
+		@Override
+		public void action(RRLogRecord rec)
+		{
+			System.out.println("java handler: " + rec.toString());
+		}
 	}
 	
 	static void print_ServiceInfo2(ServiceInfo2 s)

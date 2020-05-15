@@ -221,11 +221,11 @@ namespace RobotRaconteur
     {
         if (append)
         {
-            file.open(filename, std::ofstream::app);            
+            file.open(filename.c_str(), std::ofstream::app);            
         }
         else
         {
-            file.open(filename, std::ofstream::trunc);
+            file.open(filename.c_str(), std::ofstream::trunc);
         }
 
         if (!file.is_open())

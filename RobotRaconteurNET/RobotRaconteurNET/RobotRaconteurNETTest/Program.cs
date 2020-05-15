@@ -40,6 +40,8 @@ namespace RobotRaconteurNETTest
             {
 
 
+                RobotRaconteurNode.s.SetLogLevelFromEnvVariable();
+
                 TcpTransport t = new TcpTransport();
                 t.StartServer(2323);
                 t.EnableNodeDiscoveryListening();
@@ -98,6 +100,7 @@ namespace RobotRaconteurNETTest
             if (command == "loopback2")
             {
 
+                RobotRaconteurNode.s.SetLogLevelFromEnvVariable();
 
                 using (var setup = new ServerNodeSetup("com.robotraconteur.testing.TestService2", 4565,
                     RobotRaconteurNodeSetupFlags.ENABLE_TCP_TRANSPORT | RobotRaconteurNodeSetupFlags.TCP_TRANSPORT_START_SERVER))
@@ -117,6 +120,9 @@ namespace RobotRaconteurNETTest
 
             if (command == "client")
             {
+
+                RobotRaconteurNode.s.SetLogLevelFromEnvVariable();
+
                 string url = args[1];
                 string url_auth = args[2];
 
@@ -163,6 +169,8 @@ namespace RobotRaconteurNETTest
 
             if (command == "client2")
             {
+                RobotRaconteurNode.s.SetLogLevelFromEnvVariable();
+
                 string url = args[1];
 
                 TcpTransport t = new TcpTransport();
@@ -188,6 +196,8 @@ namespace RobotRaconteurNETTest
 
             if (command == "server")
             {
+                RobotRaconteurNode.s.SetLogLevelFromEnvVariable();
+
                 int port;
                 if (args[1] == "sharer")
                 {
@@ -248,6 +258,8 @@ namespace RobotRaconteurNETTest
 
             if (command == "findservicebytype")
             {
+                RobotRaconteurNode.s.SetLogLevelFromEnvVariable();
+
                 string type = args[1];
                 string[] tschemes = args[2].Split(new char[] { ',' });
 
@@ -287,6 +299,8 @@ namespace RobotRaconteurNETTest
 
             if (command == "findnodebyid")
             {
+                RobotRaconteurNode.s.SetLogLevelFromEnvVariable();
+
                 NodeID id = new NodeID(args[1]);
                 string[] tschemes = args[2].Split(new char[] { ',' });
 
@@ -327,6 +341,8 @@ namespace RobotRaconteurNETTest
 
             if (command == "findnodebyname")
             {
+                RobotRaconteurNode.s.SetLogLevelFromEnvVariable();
+
                 string name = args[1];
                 string[] tschemes = args[2].Split(new char[] { ',' });
 
@@ -367,6 +383,8 @@ namespace RobotRaconteurNETTest
 
             if (command == "stresstestclient")
             {
+                RobotRaconteurNode.s.SetLogLevelFromEnvVariable();
+
                 string url1 = args[1];
 
                 LocalTransport t2 = new LocalTransport();
@@ -406,6 +424,8 @@ namespace RobotRaconteurNETTest
 
             if (command == "latencytestclient" || command == "latencytestclient2")
             {
+                RobotRaconteurNode.s.SetLogLevelFromEnvVariable();
+
                 string url1 = args[1];
 
                 LocalTransport t2 = new LocalTransport();
@@ -468,6 +488,8 @@ namespace RobotRaconteurNETTest
 
             if (command == "peeridentity")
             {
+                RobotRaconteurNode.s.SetLogLevelFromEnvVariable();
+
                 if (args.Length < 2)
                 {
                     Console.WriteLine("Usage for peeridentity:  RobotRaconteurTest peeridentity url [nodeid]");
@@ -547,6 +569,8 @@ namespace RobotRaconteurNETTest
 
             if (command=="subscribertest")
             {
+                RobotRaconteurNode.s.SetLogLevelFromEnvVariable();
+
                 if (args.Length < 2)
                 {
                     Console.WriteLine("Usage for subscribertest:  RobotRaconteurTest subscribertest servicetype");
@@ -629,6 +653,8 @@ namespace RobotRaconteurNETTest
 
             if (command == "subscriberfiltertest")
             {
+                RobotRaconteurNode.s.SetLogLevelFromEnvVariable();
+
                 if (args.Length < 2)
                 {
                     throw new Exception("Usage for subscriberfiltertest:  RobotRaconteurTest subscriberfiltertest servicetype");
@@ -763,6 +789,8 @@ namespace RobotRaconteurNETTest
 
             if (command == "serviceinfo2subscribertest")
             {
+                RobotRaconteurNode.s.SetLogLevelFromEnvVariable();
+                
                 if (args.Length < 2)
                 {
                     Console.WriteLine("Usage for subscribertest:  RobotRaconteurTest subscribertest servicetype");
@@ -811,6 +839,54 @@ namespace RobotRaconteurNETTest
 
                 RobotRaconteurNode.s.Shutdown();
 
+                return;
+            }
+
+            if (command == "nowutc")
+            {
+                Console.WriteLine(RobotRaconteurNode.s.NowUTC);
+
+                RobotRaconteurNode.s.Shutdown();
+                return;
+            }
+
+            if (command == "testlogging")
+            {
+                var r = new RRLogRecord();
+                var node = RobotRaconteurNode.s;
+                var nodeid = node.NodeID;
+                r.Node = node;
+                r.Time = DateTime.UtcNow;
+                r.Level = LogLevel.LogLevel_Warning;
+                r.Message = "This is a test warning";
+                RobotRaconteurNode.s.LogRecord(r);
+
+                RobotRaconteurNode.s.Shutdown();
+                return;
+            }
+
+            if (command == "testloghandler")
+            {
+                var user_log_handler = new UserLogRecordHandler(x => Console.WriteLine("csharp handler: " + x.ToString()));
+                RobotRaconteurNode.s.SetLogRecordHandler(user_log_handler);
+                RobotRaconteurNode.s.SetLogLevel(LogLevel.LogLevel_Debug);
+
+                TcpTransport t = new TcpTransport();
+                t.StartServer(2323);
+               
+                RobotRaconteurNode.s.RegisterTransport(t);
+
+                RobotRaconteurNode.s.RegisterServiceType(new com.robotraconteur.testing.TestService1.com__robotraconteur__testing__TestService1Factory());
+                RobotRaconteurNode.s.RegisterServiceType(new com.robotraconteur.testing.TestService2.com__robotraconteur__testing__TestService2Factory());
+
+                RobotRaconteurTestServiceSupport sup = new RobotRaconteurTestServiceSupport();
+                sup.RegisterServices(t);
+                ServiceTestClient c = new ServiceTestClient();
+                c.RunFullTest("tcp://localhost:2323/{0}/RobotRaconteurTestService", "tcp://localhost:2323/{0}/RobotRaconteurTestService_auth");
+               
+                RobotRaconteurNode.s.Shutdown();
+                Console.WriteLine("Test completed");
+                
                 return;
             }
 

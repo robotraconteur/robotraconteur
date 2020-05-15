@@ -2628,7 +2628,7 @@ namespace RobotRaconteur
                     using (MessageEntry merr = new MessageEntry())
                     {
                         RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                        RRDirectorExceptionHelper.SetError(merr);
+                        RRDirectorExceptionHelper.SetError(merr,e.ToString());
                     }
                 }
             }
@@ -2675,7 +2675,7 @@ namespace RobotRaconteur
                     using (MessageEntry merr = new MessageEntry())
                     {
                         RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                        RRDirectorExceptionHelper.SetError(merr);
+                        RRDirectorExceptionHelper.SetError(merr,e.ToString());
                     }
                 }
             }
@@ -3188,7 +3188,7 @@ namespace RobotRaconteur
                     using (MessageEntry merr = new MessageEntry())
                     {
                         RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                        RRDirectorExceptionHelper.SetError(merr);
+                        RRDirectorExceptionHelper.SetError(merr,e.ToString());
                     }
                 }
             }
@@ -3261,7 +3261,7 @@ namespace RobotRaconteur
                 using (MessageEntry merr = new MessageEntry())
                 {
                     RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
+                    RRDirectorExceptionHelper.SetError(merr,e.ToString());
                 }
             }
         }
@@ -3300,7 +3300,7 @@ namespace RobotRaconteur
                 using (MessageEntry merr = new MessageEntry())
                 {
                     RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
+                    RRDirectorExceptionHelper.SetError(merr,e.ToString());
                 }
             }
 
@@ -3332,7 +3332,7 @@ namespace RobotRaconteur
                 using (MessageEntry merr = new MessageEntry())
                 {
                     RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
+                    RRDirectorExceptionHelper.SetError(merr,e.ToString());
                 }
             }
 
@@ -3374,7 +3374,7 @@ namespace RobotRaconteur
                 using (MessageEntry merr = new MessageEntry())
                 {
                     RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
+                    RRDirectorExceptionHelper.SetError(merr,e.ToString());
                 }
             }
 
@@ -3419,7 +3419,7 @@ namespace RobotRaconteur
                 using (MessageEntry merr = new MessageEntry())
                 {
                     RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
+                    RRDirectorExceptionHelper.SetError(merr,e.ToString());
                 }
             }
 
@@ -3459,7 +3459,7 @@ namespace RobotRaconteur
                 using (MessageEntry merr = new MessageEntry())
                 {
                     RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
+                    RRDirectorExceptionHelper.SetError(merr,e.ToString());
                 }
             }
 
@@ -3487,7 +3487,7 @@ namespace RobotRaconteur
                 using (MessageEntry merr = new MessageEntry())
                 {
                     RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr);
+                    RRDirectorExceptionHelper.SetError(merr,e.ToString());
                 }
             }
 
@@ -4350,5 +4350,28 @@ namespace RobotRaconteur
         public SecureServerNodeSetup(string node_name, ushort tcp_port, RobotRaconteurNodeSetupFlags flags = RobotRaconteurNodeSetupFlags.SECURE_SERVER_DEFAULT)
             : base(node_name, tcp_port, flags)
         { }
+    }
+
+    public class UserLogRecordHandler : UserLogRecordHandlerBase
+    {
+        class UserLogRecordHandlerDirectorNET : UserLogRecordHandlerDirector
+        {
+            public UserLogRecordHandlerDirectorNET(Action<RRLogRecord> handler)
+            {
+                this.handler = handler;
+            }
+
+            Action<RRLogRecord> handler;
+            public override void HandleLogRecord(RRLogRecord record)
+            {
+                handler?.Invoke(record);
+            }
+        }
+        public UserLogRecordHandler(Action<RRLogRecord> handler)
+        {
+            UserLogRecordHandlerDirectorNET director = new UserLogRecordHandlerDirectorNET(handler);
+            int id = RRObjectHeap.AddObject(director);
+            _SetHandler(director,id);
+        }
     }
 }

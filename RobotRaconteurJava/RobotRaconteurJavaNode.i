@@ -539,7 +539,7 @@ import java.util.*;
 				if (m!=null) m.delete();
 			}
 		}
-		else if (((MessageElementData)data).getTypeID() == DataTypes.DataTypes_string_t)
+		else if (((MessageElementData)data).getTypeID() == DataTypes.DataTypes_dictionary_t)
 		{
 			java.util.HashMap<String, Tvalue> o = new java.util.HashMap<String, Tvalue>();
 
@@ -1089,7 +1089,7 @@ import java.util.*;
 		return _RegisterService(name, servicetype, o,policy);
 	}
 
-    public GregorianCalendar nowUTC()
+    public TimeSpec nowUTC()
   {
 	  return _NowUTC();
 	  	  
@@ -1260,7 +1260,7 @@ import java.util.*;
 		{
 			MessageEntry merr = new MessageEntry();
 			RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-			RRDirectorExceptionHelper.setError(merr);
+			RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
 			merr.delete();
 		}
 	  }
@@ -1306,7 +1306,7 @@ import java.util.*;
 			{
 				MessageEntry merr = new MessageEntry();
 				RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-				RRDirectorExceptionHelper.setError(merr);
+				RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
 				merr.delete();
 			}
 	  }
