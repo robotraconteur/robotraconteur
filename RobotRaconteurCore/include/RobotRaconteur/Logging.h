@@ -190,4 +190,14 @@ public:
 #define ROBOTRACONTEUR_LOG_TRACE_THROTTLE_COMPONENTNAME_PATH(node,component,component_name,component_object_id,ep,service_path,member,limit,args)
 
 #endif
+
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+    using RRLogRecordStreamPtr = RR_INTRUSIVE_PTR<RRLogRecordStream>;
+    using RRLogRecordStreamConstPtr = RR_INTRUSIVE_PTR<const RRLogRecordStream>;
+	using LogRecordHandlerPtr = RR_SHARED_PTR<LogRecordHandler>;
+	using LogRecordHandlerConstPtr = RR_SHARED_PTR<const LogRecordHandler>;
+    using FileLogRecordHandlerPtr = RR_SHARED_PTR<FileLogRecordHandler>;
+	using FileLogRecordHandlerConstPtr = RR_SHARED_PTR<const FileLogRecordHandler>;
+#endif
+
 }

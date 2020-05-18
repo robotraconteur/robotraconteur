@@ -650,7 +650,7 @@ namespace RobotRaconteur
 				m_ServiceDef->DownCastAndThrowException(*err);
 			}
 
-			if (rec_message->Error != MessageErrorType_StopIteration)
+			if (rec_message->Error == MessageErrorType_StopIteration)
 			{
 				ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Service returned error during ProcessRequest: " << rec_message->Error);
 			}
@@ -1067,7 +1067,7 @@ namespace RobotRaconteur
 							}
 							else
 							{
-								if (m->Error != MessageErrorType_StopIteration)
+								if (m->Error == MessageErrorType_StopIteration)
 								{
 									ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Service returned error during ProcessRequest: " << m->Error);
 								}
