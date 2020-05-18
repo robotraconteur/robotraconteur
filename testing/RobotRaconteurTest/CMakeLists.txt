@@ -47,7 +47,7 @@ set(RobotRaconteurTest_header
 add_executable(RobotRaconteurTest ${RobotRaconteurTest_src} ${RobotRaconteurTest_header})
 
 if(${CMAKE_VERSION} VERSION_GREATER "3.16.0") 
-	target_precompile_headers(RobotRaconteurTest PRIVATE ${RobotRaconteurTest_header})
+	target_precompile_headers(RobotRaconteurTest PRIVATE ${RR_THUNK_HDRS})
 endif()
 
 IF(WIN32)
