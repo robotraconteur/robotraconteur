@@ -4276,17 +4276,42 @@ namespace RobotRaconteur
         public LocalTransport LocalTransport { get; }
         public HardwareTransport HardwareTransport { get; }
 
+        public CommandLineConfigParser CommandLineConfig { get; }
+
         protected WrappedRobotRaconteurNodeSetup setup;
 
         public RobotRaconteurNodeSetup(string node_name, ushort tcp_port, RobotRaconteurNodeSetupFlags flags)
         {
             if (node_name == null) node_name = "";
+            LoadAllServiceTypes(RobotRaconteurNode.s);
             setup = new WrappedRobotRaconteurNodeSetup(RobotRaconteurNode.s, node_name, tcp_port, (uint)flags);
             TcpTransport = setup.GetTcpTransport();
             LocalTransport = setup.GetLocalTransport();
             HardwareTransport = setup.GetHardwareTransport();
+            CommandLineConfig = setup.GetCommandLineConfig();     
+        }
 
+        public RobotRaconteurNodeSetup(string node_name, ushort tcp_port, RobotRaconteurNodeSetupFlags flags,
+            RobotRaconteurNodeSetupFlags allowed_overrides, string[] args)
+        {
+            if (node_name == null) node_name = "";
             LoadAllServiceTypes(RobotRaconteurNode.s);
+            setup = new WrappedRobotRaconteurNodeSetup(RobotRaconteurNode.s, node_name, tcp_port, (uint)flags, (uint)allowed_overrides,
+                new vectorstring(args));
+            TcpTransport = setup.GetTcpTransport();
+            LocalTransport = setup.GetLocalTransport();
+            HardwareTransport = setup.GetHardwareTransport();
+            CommandLineConfig = setup.GetCommandLineConfig();     
+        }
+
+        public RobotRaconteurNodeSetup(CommandLineConfigParser config)
+        {
+            LoadAllServiceTypes(RobotRaconteurNode.s);
+            setup = new WrappedRobotRaconteurNodeSetup(RobotRaconteurNode.s, config);
+            TcpTransport = setup.GetTcpTransport();
+            LocalTransport = setup.GetLocalTransport();
+            HardwareTransport = setup.GetHardwareTransport();
+            CommandLineConfig = setup.GetCommandLineConfig();     
         }
 
         public void Dispose()
@@ -4336,6 +4361,10 @@ namespace RobotRaconteur
         public ClientNodeSetup(string node_name = null, RobotRaconteurNodeSetupFlags flags = RobotRaconteurNodeSetupFlags.CLIENT_DEFAULT)            
             : base(node_name, 0, flags)
         { }
+
+        public ClientNodeSetup(string[] args)            
+            : base("", 0, RobotRaconteurNodeSetupFlags.CLIENT_DEFAULT, RobotRaconteurNodeSetupFlags.CLIENT_DEFAULT_ALLOWED_OVERRIDE, args)
+        { }
     }
 
     public class ServerNodeSetup : RobotRaconteurNodeSetup
@@ -4343,12 +4372,20 @@ namespace RobotRaconteur
         public ServerNodeSetup(string node_name, ushort tcp_port, RobotRaconteurNodeSetupFlags flags = RobotRaconteurNodeSetupFlags.SERVER_DEFAULT)
             : base(node_name, tcp_port, flags)
         { }
+
+        public ServerNodeSetup(string node_name, ushort tcp_port, string[] args)            
+            : base(node_name, tcp_port, RobotRaconteurNodeSetupFlags.SERVER_DEFAULT, RobotRaconteurNodeSetupFlags.SERVER_DEFAULT_ALLOWED_OVERRIDE, args)
+        { }
     }
 
     public class SecureServerNodeSetup : RobotRaconteurNodeSetup
     {
         public SecureServerNodeSetup(string node_name, ushort tcp_port, RobotRaconteurNodeSetupFlags flags = RobotRaconteurNodeSetupFlags.SECURE_SERVER_DEFAULT)
             : base(node_name, tcp_port, flags)
+        { }
+
+        public SecureServerNodeSetup(string node_name, ushort tcp_port, string[] args)            
+            : base(node_name, tcp_port, RobotRaconteurNodeSetupFlags.SECURE_SERVER_DEFAULT, RobotRaconteurNodeSetupFlags.SECURE_SERVER_DEFAULT_ALLOWED_OVERRIDE, args)
         { }
     }
 

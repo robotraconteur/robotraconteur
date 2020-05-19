@@ -248,7 +248,7 @@ namespace RobotRaconteur
 
 
 	RobotRaconteurNodeSetup::RobotRaconteurNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node, const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, 
-		boost::string_ref node_name, uint16_t tcp_port, uint32_t flags)
+		const std::string& node_name, uint16_t tcp_port, uint32_t flags)
 	{
 
 		RR_SHARED_PTR<CommandLineConfigParser> c = RR_MAKE_SHARED<CommandLineConfigParser>(0);
@@ -257,13 +257,30 @@ namespace RobotRaconteur
 	}
 
 	RobotRaconteurNodeSetup::RobotRaconteurNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node, const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, 
-			boost::string_ref node_name, uint16_t tcp_port, uint32_t flags, uint32_t allowed_overrides, int argc, char* argv[])
+			const std::string& node_name, uint16_t tcp_port, uint32_t flags, uint32_t allowed_overrides, int argc, char* argv[])
 	{
 		RR_SHARED_PTR<CommandLineConfigParser> c = RR_MAKE_SHARED<CommandLineConfigParser>(allowed_overrides);
 		c->SetDefaults(node_name, tcp_port, flags);
 		try
 		{
 			c->ParseCommandLine(argc, argv);
+		}
+		catch (std::exception& exp)
+		{
+			ROBOTRACONTEUR_LOG_ERROR_COMPONENT(node, NodeSetup, -1, "Command line parsing error: " << exp.what());
+			throw;
+		}
+		DoSetup(node, service_types, c);
+	}
+
+	RobotRaconteurNodeSetup::RobotRaconteurNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node, const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, 
+			const std::string& node_name, uint16_t tcp_port, uint32_t flags, uint32_t allowed_overrides, const std::vector<std::string>& args)
+	{
+		RR_SHARED_PTR<CommandLineConfigParser> c = RR_MAKE_SHARED<CommandLineConfigParser>(allowed_overrides);
+		c->SetDefaults(node_name, tcp_port, flags);
+		try
+		{
+			c->ParseCommandLine(args);
 		}
 		catch (std::exception& exp)
 		{
@@ -310,13 +327,13 @@ namespace RobotRaconteur
 	}
 
 	ClientNodeSetup::ClientNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node, const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, 
-		boost::string_ref node_name, uint32_t flags)
+		const std::string& node_name, uint32_t flags)
 		: RobotRaconteurNodeSetup(node, service_types, node_name, 0, flags)
 	{
 
 	}
 
-	ClientNodeSetup::ClientNodeSetup(const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, boost::string_ref node_name, uint32_t flags)
+	ClientNodeSetup::ClientNodeSetup(const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, const std::string& node_name, uint32_t flags)
 		: RobotRaconteurNodeSetup(RobotRaconteurNode::sp(), service_types, node_name, 0, flags)
 	{
 
@@ -337,14 +354,29 @@ namespace RobotRaconteur
 
 	}
 
-	ServerNodeSetup::ServerNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node, const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, boost::string_ref node_name,
+	ClientNodeSetup::ClientNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node, const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, 
+			const std::vector<std::string>& args)
+			: RobotRaconteurNodeSetup(node, service_types, "", 0, RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT,
+			RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT_ALLOWED_OVERRIDE, args)
+	{
+		
+	}
+
+	ClientNodeSetup::ClientNodeSetup(const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, const std::vector<std::string>& args)
+		: RobotRaconteurNodeSetup(RobotRaconteurNode::sp(), service_types, "", 0, RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT,
+			RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT_ALLOWED_OVERRIDE, args)
+	{
+
+	}
+
+	ServerNodeSetup::ServerNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node, const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, const std::string& node_name,
 		uint16_t tcp_port, uint32_t flags)
 		: RobotRaconteurNodeSetup(node, service_types, node_name, tcp_port, flags)
 	{
 
 	}
 
-	ServerNodeSetup::ServerNodeSetup(const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, boost::string_ref node_name, uint16_t tcp_port,
+	ServerNodeSetup::ServerNodeSetup(const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, const std::string& node_name, uint16_t tcp_port,
 		uint32_t flags)
 		: RobotRaconteurNodeSetup(RobotRaconteurNode::sp(), service_types, node_name, tcp_port, flags)
 	{
@@ -352,14 +384,14 @@ namespace RobotRaconteur
 	}
 
 	ServerNodeSetup::ServerNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node, const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, 
-			boost::string_ref node_name, uint16_t tcp_port, int argc, char* argv[])
+			const std::string& node_name, uint16_t tcp_port, int argc, char* argv[])
 		: RobotRaconteurNodeSetup(node, service_types, node_name, tcp_port, RobotRaconteurNodeSetupFlags_SERVER_DEFAULT,
 			RobotRaconteurNodeSetupFlags_SERVER_DEFAULT_ALLOWED_OVERRIDE, argc, argv)
 	{
 
 	}
 
-	ServerNodeSetup::ServerNodeSetup(std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, boost::string_ref node_name, uint16_t tcp_port,
+	ServerNodeSetup::ServerNodeSetup(std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, const std::string& node_name, uint16_t tcp_port,
 		int argc, char* argv[])
 		: RobotRaconteurNodeSetup(RobotRaconteurNode::sp(), service_types, node_name, tcp_port, RobotRaconteurNodeSetupFlags_SERVER_DEFAULT,
 			RobotRaconteurNodeSetupFlags_SERVER_DEFAULT_ALLOWED_OVERRIDE, argc, argv)
@@ -367,14 +399,30 @@ namespace RobotRaconteur
 		
 	}
 
-	SecureServerNodeSetup::SecureServerNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node, const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, boost::string_ref node_name,
+	ServerNodeSetup::ServerNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node, const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, 
+			const std::string& node_name, uint16_t tcp_port, const std::vector<std::string>& args)
+		: RobotRaconteurNodeSetup(node, service_types, node_name, tcp_port, RobotRaconteurNodeSetupFlags_SERVER_DEFAULT,
+			RobotRaconteurNodeSetupFlags_SERVER_DEFAULT_ALLOWED_OVERRIDE, args)
+	{
+
+	}
+
+	ServerNodeSetup::ServerNodeSetup(std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, const std::string& node_name, uint16_t tcp_port,
+		const std::vector<std::string>& args)
+		: RobotRaconteurNodeSetup(RobotRaconteurNode::sp(), service_types, node_name, tcp_port, RobotRaconteurNodeSetupFlags_SERVER_DEFAULT,
+			RobotRaconteurNodeSetupFlags_SERVER_DEFAULT_ALLOWED_OVERRIDE, args)
+	{
+		
+	}
+
+	SecureServerNodeSetup::SecureServerNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node, const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, const std::string& node_name,
 		uint16_t tcp_port, uint32_t flags)
 		: RobotRaconteurNodeSetup(node, service_types, node_name, tcp_port, flags)
 	{
 
 	}
 
-	SecureServerNodeSetup::SecureServerNodeSetup(const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, boost::string_ref node_name, uint16_t tcp_port,
+	SecureServerNodeSetup::SecureServerNodeSetup(const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, const std::string& node_name, uint16_t tcp_port,
 		uint32_t flags)
 		: RobotRaconteurNodeSetup(RobotRaconteurNode::sp(), service_types, node_name, tcp_port, flags)
 	{
@@ -382,17 +430,33 @@ namespace RobotRaconteur
 	}
 
 	SecureServerNodeSetup::SecureServerNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node, const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, 
-			boost::string_ref node_name, uint16_t tcp_port, int argc, char* argv[])
+			const std::string& node_name, uint16_t tcp_port, int argc, char* argv[])
 		: RobotRaconteurNodeSetup(node, service_types, node_name, tcp_port, RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT,
 			RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT_ALLOWED_OVERRIDE, argc, argv)
 	{
 
 	}
 
-	SecureServerNodeSetup::SecureServerNodeSetup(std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, boost::string_ref node_name, uint16_t tcp_port,
+	SecureServerNodeSetup::SecureServerNodeSetup(std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, const std::string& node_name, uint16_t tcp_port,
 		int argc, char* argv[])
 		: RobotRaconteurNodeSetup(RobotRaconteurNode::sp(), service_types, node_name, tcp_port, RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT,
 			RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT_ALLOWED_OVERRIDE, argc, argv)
+	{
+		
+	}
+
+	SecureServerNodeSetup::SecureServerNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node, const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, 
+			const std::string& node_name, uint16_t tcp_port, const std::vector<std::string>& args)
+		: RobotRaconteurNodeSetup(node, service_types, node_name, tcp_port, RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT,
+			RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT_ALLOWED_OVERRIDE, args)
+	{
+
+	}
+
+	SecureServerNodeSetup::SecureServerNodeSetup(std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, const std::string& node_name, uint16_t tcp_port,
+		const std::vector<std::string>& args)
+		: RobotRaconteurNodeSetup(RobotRaconteurNode::sp(), service_types, node_name, tcp_port, RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT,
+			RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT_ALLOWED_OVERRIDE, args)
 	{
 		
 	}
@@ -401,32 +465,32 @@ namespace RobotRaconteur
 	{
 	public:
 
-		boost::string_ref& prefix;
+		const std::string& prefix;
 		uint32_t& allowed_overrides;
 		boost::program_options::options_description& desc;
-		FillOptionsDescription_add_helper(boost::program_options::options_description& desc_, boost::string_ref prefix_, uint32_t allowed_overrides_)
+		FillOptionsDescription_add_helper(boost::program_options::options_description& desc_, const std::string& prefix_, uint32_t allowed_overrides_)
 			: desc(desc_), prefix(prefix_), allowed_overrides(allowed_overrides_) {}
 
 		template<typename T>
-		void add(boost::string_ref name, boost::string_ref descr, uint32_t flag)
+		void add(const std::string& name, const std::string& descr, uint32_t flag)
 		{
 			if (flag & allowed_overrides)
 			{
-				std::string name1 = prefix.to_string() + name;
+				std::string name1 = prefix + name;
 				desc.add_options()((name1).c_str(), boost::program_options::value<T>(), descr.data());
 			}
 		}
 
 		template<typename T>
-		void add(boost::string_ref name, boost::string_ref descr)
+		void add(const std::string& name, const std::string& descr)
 		{			
-			std::string name1 = prefix.to_string() + name;
+			std::string name1 = prefix + name;
 			desc.add_options()((name1).c_str(), boost::program_options::value<T>(), descr.data());			
 		}
 	};
 
 	
-	void CommandLineConfigParser::FillOptionsDescription(boost::program_options::options_description& desc, uint32_t allowed_overrides, boost::string_ref prefix)
+	void CommandLineConfigParser::FillOptionsDescription(boost::program_options::options_description& desc, uint32_t allowed_overrides, const std::string& prefix)
 	{
 		FillOptionsDescription_add_helper h(desc, prefix, allowed_overrides);
 		h.add<bool>("discovery-listening-enable","enable node discovery listening", RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING);
@@ -456,30 +520,30 @@ namespace RobotRaconteur
 
 	}
 
-	CommandLineConfigParser::CommandLineConfigParser(uint32_t allowed_overrides, boost::string_ref prefix)
+	CommandLineConfigParser::CommandLineConfigParser(uint32_t allowed_overrides, const std::string& prefix)
 	{
-		this->prefix=prefix.to_string();
+		this->prefix=prefix;
 		FillOptionsDescription(desc, allowed_overrides, prefix);
 	}
 
-	void CommandLineConfigParser::SetDefaults(boost::string_ref node_name, uint16_t tcp_port, uint32_t default_flags)
+	void CommandLineConfigParser::SetDefaults(const std::string& node_name, uint16_t tcp_port, uint32_t default_flags)
 	{
-		this->default_node_name = node_name.to_string();
+		this->default_node_name = node_name;
 		this->default_tcp_port = tcp_port;
 		this->default_flags = default_flags;
 	}
 
-	void CommandLineConfigParser::AddStringOption(boost::string_ref name, boost::string_ref descr)
+	void CommandLineConfigParser::AddStringOption(const std::string& name, const std::string& descr)
 	{
 		desc.add_options()((this->prefix + name).c_str(), boost::program_options::value<std::string>(), descr.data());		
 	}
 
-	void CommandLineConfigParser::AddBoolOption(boost::string_ref name, boost::string_ref descr)
+	void CommandLineConfigParser::AddBoolOption(const std::string& name, const std::string& descr)
 	{
 		desc.add_options()((this->prefix + name).c_str(), boost::program_options::value<bool>(), descr.data());	
 	}
 
-	void CommandLineConfigParser::AddIntOption(boost::string_ref name, boost::string_ref descr)
+	void CommandLineConfigParser::AddIntOption(const std::string& name, const std::string& descr)
 	{
 		desc.add_options()((this->prefix + name).c_str(), boost::program_options::value<int32_t>(), descr.data());	
 	}

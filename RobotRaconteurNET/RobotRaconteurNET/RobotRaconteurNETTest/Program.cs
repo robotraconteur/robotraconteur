@@ -890,6 +890,28 @@ namespace RobotRaconteurNETTest
                 return;
             }
 
+            if (command == "server2")
+            {
+
+                ServerNodeSetup node_setup = new ServerNodeSetup("testprog", 22222, args);
+                using (node_setup)
+                {
+                    var t = node_setup.TcpTransport;
+                    
+                    RobotRaconteurTestServiceSupport sup = new RobotRaconteurTestServiceSupport();
+                    sup.RegisterServices(t);
+
+                    RobotRaconteurTestServiceSupport2 sup2 = new RobotRaconteurTestServiceSupport2();
+                    sup2.RegisterServices(t);
+
+                    Console.WriteLine("Server started, press enter to quit");
+                    Console.ReadLine();
+                    RobotRaconteurNode.s.Shutdown();
+                    Console.WriteLine("Test complete, no error detected");
+                    return;
+                }
+            }
+
             throw new Exception("Unknown command");
             
 

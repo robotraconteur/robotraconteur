@@ -13,11 +13,36 @@
 // limitations under the License.
 
 %shared_ptr(RobotRaconteur::RobotRaconteurNodeSetup)
+%shared_ptr(RobotRaconteur::CommandLineConfigParser)
 
 %include "RobotRaconteur/NodeSetup.h"
 
 namespace RobotRaconteur
 {
+
+	class CommandLineConfigParser
+	{		
+	public:
+				
+		CommandLineConfigParser(uint32_t allowed_overrides, const std::string& prefix="robotraconteur-");
+
+		void SetDefaults(const std::string& node_name, uint16_t tcp_port, uint32_t default_flags);
+
+		void AddStringOption(const std::string& name, const std::string& descr);
+		void AddBoolOption(const std::string& name, const std::string& descr);
+		void AddIntOption(const std::string& name, const std::string& descr);
+
+		void ParseCommandLine(const std::vector<std::string>& args);
+		
+		std::string GetOptionOrDefaultAsString(const std::string& option);
+		std::string GetOptionOrDefaultAsString(const std::string& option, const std::string& default_value);
+		bool GetOptionOrDefaultAsBool(const std::string& option);
+		bool GetOptionOrDefaultAsBool(const std::string& option, bool default_value);
+		int32_t GetOptionOrDefaultAsInt(const std::string& option);
+		int32_t GetOptionOrDefaultAsInt(const std::string& option, int32_t default_value);
+	};
+
+
 	%nodefaultctor RobotRaconteurNodeSetup;
 	%rename(WrappedRobotRaconteurNodeSetup) RobotRaconteurNodeSetup;
     class RobotRaconteurNodeSetup
@@ -29,6 +54,7 @@ namespace RobotRaconteur
 		boost::shared_ptr<LocalTransport> GetLocalTransport();
 		boost::shared_ptr<TcpTransport> GetTcpTransport();
 		boost::shared_ptr<HardwareTransport> GetHardwareTransport();
+		boost::shared_ptr<CommandLineConfigParser> GetCommandLineConfig();
 		
 		virtual ~RobotRaconteurNodeSetup();
 	};
@@ -42,6 +68,23 @@ namespace RobotRaconteur
 				RobotRaconteurNodeSetup* n = new RobotRaconteurNodeSetup(node, s, node_name, tcp_port, flags);
 				return n;
 			}	
+
+		RobotRaconteurNodeSetup(boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node,
+			boost::shared_ptr<RobotRaconteur::CommandLineConfigParser> config)
+			{
+				std::vector<RR_SHARED_PTR<ServiceFactory> > s;
+				RobotRaconteurNodeSetup* n = new RobotRaconteurNodeSetup(node, s, config);
+				return n;
+			}
+
+		RobotRaconteurNodeSetup(boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node, 
+			const std::string& node_name, uint16_t tcp_port, uint32_t flags, uint32_t allowed_overrides, 
+			const std::vector<std::string>& args)
+			{
+				std::vector<RR_SHARED_PTR<ServiceFactory> > s;
+				RobotRaconteurNodeSetup* n = new RobotRaconteurNodeSetup(node, s, node_name, tcp_port, flags, allowed_overrides, args);
+				return n;
+			}
 	}
 
 }
