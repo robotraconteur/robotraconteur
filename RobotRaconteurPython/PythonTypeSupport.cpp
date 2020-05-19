@@ -436,8 +436,8 @@ namespace RobotRaconteur
 
 			if (f_def->ArrayType == DataTypes_ArrayTypes_none)
 			{
-				PyAutoPtr<PyObject> f_dims(PyTuple_New(1));
-				PyTuple_SetItem(f.get(), 2, PyLong_FromLong(1));
+				PyAutoPtr<PyObject> f_dims(PyTuple_New(0));
+				PyTuple_SetItem(f.get(), 2, f_dims.detach());
 			}			
 			else
 			{
@@ -459,7 +459,7 @@ namespace RobotRaconteur
 				// Use "len" and "array" field for variable length arrays
 
 				PyAutoPtr<PyObject> f_decr_list(PyList_New(2));
-				PyList_SetItem(f_decr_list.get(), 0, Py_BuildValue("(s,O,i)", "len", PyArray_DescrNewFromType(NPY_INT32), 1));
+				PyList_SetItem(f_decr_list.get(), 0, Py_BuildValue("(s,O,O)", "len", PyArray_DescrNewFromType(NPY_INT32), PyTuple_New(0)));
 				PyTuple_SetItem(f.get(), 0, stringToPyObject("array").detach());
 				PyList_SetItem(f_decr_list.get(), 1, f.detach());
 

@@ -693,8 +693,8 @@ def main():
         RobotRaconteurNode.s.RegisterServiceTypeFromFile("com.robotraconteur.testing.TestService1")
         RobotRaconteurNode.s.RegisterServiceTypeFromFile("com.robotraconteur.testing.TestService3") 
 
-        #RobotRaconteurNode.s.GetNamedArrayDType('com.robotraconteur.testing.TestService3.transform')
-        #RobotRaconteurNode.s.GetConstants("com.robotraconteur.testing.TestService3")
+        RobotRaconteurNode.s.GetNamedArrayDType('com.robotraconteur.testing.TestService3.transform')
+        RobotRaconteurNode.s.GetConstants("com.robotraconteur.testing.TestService3")
         RobotRaconteurNode.s.GetPodDType('com.robotraconteur.testing.TestService3.testpod2')
         return
 
