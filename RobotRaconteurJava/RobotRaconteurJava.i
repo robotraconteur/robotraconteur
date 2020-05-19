@@ -129,7 +129,7 @@
 
 %include "Logging.i"
 
-%include "NodeSetup.i"
+%include "NodeSetupJava.i"
 
 %inline
 {

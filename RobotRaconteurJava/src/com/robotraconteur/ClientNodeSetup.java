@@ -15,4 +15,11 @@ public class ClientNodeSetup extends RobotRaconteurNodeSetup {
 	{
 		super("", 0, RobotRaconteurNodeSetupFlags.RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT.swigValue());
 	}
+
+	public ClientNodeSetup(String[] args)
+	{
+		super("", 0, RobotRaconteurNodeSetupFlags.RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT.swigValue(),
+		RobotRaconteurNodeSetupFlags.RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT_ALLOWED_OVERRIDE.swigValue(),
+		args);
+	}
 }

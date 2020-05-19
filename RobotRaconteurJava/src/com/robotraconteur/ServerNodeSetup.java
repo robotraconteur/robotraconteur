@@ -15,5 +15,12 @@ public class ServerNodeSetup extends RobotRaconteurNodeSetup {
 	{
 		super(node_name, 0, RobotRaconteurNodeSetupFlags.RobotRaconteurNodeSetupFlags_SERVER_DEFAULT.swigValue());
 	}
+
+	public ServerNodeSetup(String node_name, int tcp_port, String[] args)
+	{
+		super(node_name, tcp_port, RobotRaconteurNodeSetupFlags.RobotRaconteurNodeSetupFlags_SERVER_DEFAULT.swigValue(),
+		RobotRaconteurNodeSetupFlags.RobotRaconteurNodeSetupFlags_SERVER_DEFAULT_ALLOWED_OVERRIDE.swigValue(),
+		args);
+	}
 	
 }
