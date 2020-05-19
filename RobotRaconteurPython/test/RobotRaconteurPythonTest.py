@@ -89,7 +89,7 @@ def main():
 
     if (command=="loopback2"):
         RobotRaconteurNode.s.SetLogLevelFromEnvVariable()
-        with ServerNodeSetup("com.robotraconteur.testing.test2", 4564, RobotRaconteurNodeSetupFlags_ENABLE_TCP_TRANSPORT | RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER):
+        with RobotRaconteurNodeSetup("com.robotraconteur.testing.test2", 4564, flags=RobotRaconteurNodeSetupFlags_ENABLE_TCP_TRANSPORT | RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER):
         
             RobotRaconteurNode.s.RegisterServiceTypeFromFile("com.robotraconteur.testing.TestService2")
             RobotRaconteurNode.s.RegisterServiceTypeFromFile("com.robotraconteur.testing.TestService1")
@@ -657,6 +657,45 @@ def main():
         s=ServiceTestClient()
         s.RunFullTest('rr+tcp://localhost:4564/?service=RobotRaconteurTestService','rr+tcp://localhost:4564/?service=RobotRaconteurTestService_auth')
         print ("Test completed no errors detected")
+        return
+
+    if (command=="server2"):
+
+        node_setup = ServerNodeSetup("testprog", 22222, argv = sys.argv)
+        with node_setup:
+            RobotRaconteurNode.s.RegisterServiceTypeFromFile("com.robotraconteur.testing.TestService2")
+            RobotRaconteurNode.s.RegisterServiceTypeFromFile("com.robotraconteur.testing.TestService1")
+            RobotRaconteurNode.s.RegisterServiceTypeFromFile("com.robotraconteur.testing.TestService3")  
+
+            t = node_setup.tcp_transport
+
+            t2=testroot_impl(t)
+            RobotRaconteurNode.s.RegisterService("RobotRaconteurTestService","com.robotraconteur.testing.TestService1.testroot",t2)
+
+            t3=testroot_impl(t)
+            authdata="testuser1 0b91dec4fe98266a03b136b59219d0d6 objectlock\ntestuser2 841c4221c2e7e0cefbc0392a35222512 objectlock\ntestsuperuser 503ed776c50169f681ad7bbc14198b68 objectlock,objectlockoverride"
+            p=PasswordFileUserAuthenticator(authdata)
+            policies={"requirevaliduser" : "true", "allowobjectlock" : "true"}
+            s=ServiceSecurityPolicy(p,policies)
+
+            RobotRaconteurNode.s.RegisterService("RobotRaconteurTestService_auth","com.robotraconteur.testing.TestService1.testroot",t3,s)
+
+            t4=testroot3_impl()
+            c = RobotRaconteurNode.s.RegisterService("RobotRaconteurTestService2","com.robotraconteur.testing.TestService3.testroot3",t4)
+            c.RequestObjectLock("RobotRaconteurTestService2.nolock_test", "server")
+
+            print ("Server ready")
+            raw_input("Press enter to quit")            
+            return
+
+    if (command == "getnumpytype"):
+        RobotRaconteurNode.s.RegisterServiceTypeFromFile("com.robotraconteur.testing.TestService2")
+        RobotRaconteurNode.s.RegisterServiceTypeFromFile("com.robotraconteur.testing.TestService1")
+        RobotRaconteurNode.s.RegisterServiceTypeFromFile("com.robotraconteur.testing.TestService3") 
+
+        #RobotRaconteurNode.s.GetNamedArrayDType('com.robotraconteur.testing.TestService3.transform')
+        #RobotRaconteurNode.s.GetConstants("com.robotraconteur.testing.TestService3")
+        RobotRaconteurNode.s.GetPodDType('com.robotraconteur.testing.TestService3.testpod2')
         return
 
 

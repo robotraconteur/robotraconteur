@@ -2752,19 +2752,29 @@ def ReadServiceDefinitionFile(servicedef_name):
         return f.read()
 
 class RobotRaconteurNodeSetup(object):
-    def __init__(self, node_name, tcp_port, flags, node=None):
-        if node_name is None:
-            node_name = ""
-        if tcp_port is None:
-            tcp_port = 0
-        if flags is None:
-            flags = 0
-        if node is None:
-            node=RobotRaconteurPython.RobotRaconteurNode.s
-        self.__setup=RobotRaconteurPython.WrappedRobotRaconteurNodeSetup(node,node_name,tcp_port,flags)    
+    def __init__(self, node_name=None, tcp_port=None, flags=None, allowed_overrides=None, node=None, argv=None, config=None):
+        if (config is not None):
+            assert node_name is None and tcp_port is None and flags is None and allowed_overrides is None and argv is None
+            self.__setup=RobotRaconteurPython.WrappedRobotRaconteurNodeSetup(config)
+        else:
+            if node_name is None:
+                node_name = ""
+            if tcp_port is None:
+                tcp_port = 0
+            if flags is None:
+                flags = 0
+            if node is None:
+                node=RobotRaconteurPython.RobotRaconteurNode.s
+            if allowed_overrides is None:
+                allowed_overrides=0
+            if argv is None:
+                argv = []        
+            self.__setup=RobotRaconteurPython.WrappedRobotRaconteurNodeSetup(node,node_name,tcp_port,flags, allowed_overrides, \
+                RobotRaconteurPython.vectorstring(argv))
         self.tcp_transport=self.__setup.GetTcpTransport()
         self.local_transport=self.__setup.GetLocalTransport()
         self.hardware_transport=self.__setup.GetHardwareTransport()
+        self.command_line_config = self.__setup.GetCommandLineConfig()
         self.__node=node
         
     def __enter__(self):
@@ -2774,16 +2784,19 @@ class RobotRaconteurNodeSetup(object):
         self.__node.Shutdown()
         
 class ClientNodeSetup(RobotRaconteurNodeSetup):
-    def __init__(self, node_name=None, flags=RobotRaconteurPython.RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT, node=None):
-        super(ClientNodeSetup,self).__init__(node_name,0,flags,node)
+    def __init__(self, node_name=None, node=None, argv=None):
+        super(ClientNodeSetup,self).__init__(node_name,0, RobotRaconteurPython.RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT, \
+            RobotRaconteurPython.RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT_ALLOWED_OVERRIDE,node,argv)
             
 class ServerNodeSetup(RobotRaconteurNodeSetup):
-    def __init__(self, node_name, tcp_port, flags=RobotRaconteurPython.RobotRaconteurNodeSetupFlags_SERVER_DEFAULT, node=None):
-        super(ServerNodeSetup,self).__init__(node_name,tcp_port,flags,node)
+    def __init__(self, node_name, tcp_port, node=None, argv=None):
+        super(ServerNodeSetup,self).__init__(node_name,tcp_port,RobotRaconteurPython.RobotRaconteurNodeSetupFlags_SERVER_DEFAULT, \
+            RobotRaconteurPython.RobotRaconteurNodeSetupFlags_SERVER_DEFAULT_ALLOWED_OVERRIDE,node,argv)
 
 class SecureServerNodeSetup(RobotRaconteurNodeSetup):
-    def __init__(self, node_name, tcp_port, flags=RobotRaconteurPython.RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT, node=None):
-        super(SecureServerNodeSetup,self).__init__(node_name,tcp_port,flags,node)
+    def __init__(self, node_name, tcp_port, node=None, argv=None):
+        super(SecureServerNodeSetup,self).__init__(node_name,tcp_port,RobotRaconteurPython.RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT, \
+            RobotRaconteurPython.RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT_ALLOWED_OVVERIDE,node,argv)
 
 class UserLogRecordHandlerDirectorPython(RobotRaconteurPython.UserLogRecordHandlerDirector):
     def __init__(self, handler):
