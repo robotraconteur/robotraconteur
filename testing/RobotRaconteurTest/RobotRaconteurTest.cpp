@@ -1902,6 +1902,27 @@ return 0;
 		return 0;
 	}
 
+	if (command=="server2")
+	{
+		
+		ServerNodeSetup node_setup(ROBOTRACONTEUR_SERVICE_TYPES,"testprog",22222,argc,argv);
+
+		RR_SHARED_PTR<TcpTransport> c = node_setup.GetTcpTransport();
+
+		RobotRaconteurTestServiceSupport s;
+		s.RegisterServices(c);
+
+		RobotRaconteurTestService2Support s2;
+		s2.RegisterServices(c);
+
+		cout << "Server started, press enter to quit" << endl;
+		getchar();
+		RobotRaconteurNode::s()->Shutdown();
+		cout << "Test completed, no errors detected!" << endl;
+		return 0;
+
+	}
+
 	throw runtime_error("Unknown test command");
 
 }

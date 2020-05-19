@@ -2783,6 +2783,13 @@ RobotRaconteur_LogLevel RobotRaconteurNode::SetLogLevelFromEnvVariable(const std
 	char* loglevel_c = std::getenv(env_variable_name.c_str());
 	if (!loglevel_c) return RobotRaconteur_LogLevel_Warning;
 	std::string loglevel(loglevel_c);
+	lock.unlock();
+	return SetLogLevelFromString(loglevel);
+}
+
+RobotRaconteur_LogLevel RobotRaconteurNode::SetLogLevelFromString(boost::string_ref loglevel)
+{
+	boost::unique_lock<boost::shared_mutex> lock(log_level_mutex);
 	if (loglevel== "DISABLE")
 	{
 		log_level = RobotRaconteur_LogLevel_Disable;
@@ -2827,7 +2834,7 @@ RobotRaconteur_LogLevel RobotRaconteurNode::SetLogLevelFromEnvVariable(const std
 
 	lock.unlock();
 
-	ROBOTRACONTEUR_LOG_WARNING_COMPONENT(weak_sp(), Node, -1, "Invalid log level specified in environmental variable: " << loglevel);
+	ROBOTRACONTEUR_LOG_WARNING_COMPONENT(weak_sp(), Node, -1, "Invalid log level specified in environmental variable or command line: " << loglevel);
 
 	return log_level;
 }

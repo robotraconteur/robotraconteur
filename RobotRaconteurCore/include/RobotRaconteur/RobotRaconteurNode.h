@@ -2292,6 +2292,7 @@ namespace RobotRaconteur
 		 * @return RobotRaconteur_LogLevel 
 		 */
 		RobotRaconteur_LogLevel GetLogLevel();
+		
 		/**
 		 * @brief Set the log level for the node
 		 * 
@@ -2300,6 +2301,18 @@ namespace RobotRaconteur
 		 * @param level The desired log level
 		 */
 		void SetLogLevel(RobotRaconteur_LogLevel level);
+
+		/**
+		 * @brief Set the log level for the node from a string
+		 * 
+		 * Must be one of the following values: DISABLE, FATAL, ERROR, WARNING, INFO, DEBUG, TRACE
+		 * 
+		 * Defaults to WARNING
+		 * 
+		 * @param level The desired log level
+		 * @return RobotRaconteur_LogLevel The log level
+		 */
+		RobotRaconteur_LogLevel SetLogLevelFromString(boost::string_ref level);
 
 		/**
 		 * @brief Set the log level for the node from specified environmental variable
