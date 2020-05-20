@@ -1392,7 +1392,15 @@ namespace RobotRaconteur
         using KeyNotFoundExceptionPtr = RR_SHARED_PTR<KeyNotFoundException>();
         /** @brief Convenience alias for KeyNotFoundException const shared_ptr */
         using KeyNotFoundExceptionConstPtr = RR_SHARED_PTR<const KeyNotFoundException>();
-        /** @brief Convenience alias for RobotRaconteurRemoteException shared_ptr */
+		/** @brief Convenience alias for InvalidConfigurationException shared_ptr */
+        using InvalidConfigurationExceptionPtr = RR_SHARED_PTR<InvalidConfigurationException>();
+        /** @brief Convenience alias for InvalidConfigurationException const shared_ptr */
+        using InvalidConfigurationExceptionConstPtr = RR_SHARED_PTR<const InvalidConfigurationException>();
+		/** @brief Convenience alias for InvalidStateException shared_ptr */
+        using InvalidStateExceptionPtr = RR_SHARED_PTR<InvalidStateException>();
+        /** @brief Convenience alias for InvalidStateException const shared_ptr */
+        using InvalidStateExceptionConstPtr = RR_SHARED_PTR<const InvalidStateException>();		
+		/** @brief Convenience alias for RobotRaconteurRemoteException shared_ptr */
         using RobotRaconteurRemoteExceptionPtr = RR_SHARED_PTR<RobotRaconteurRemoteException>();
         /** @brief Convenience alias for RobotRaconteurRemoteException const shared_ptr */
         using RobotRaconteurRemoteExceptionConstPtr = RR_SHARED_PTR<const RobotRaconteurRemoteException>();
@@ -1443,7 +1451,15 @@ namespace RobotRaconteur
         /** @brief Convenience alias for StopIterationException shared_ptr */
         using StopIterationExceptionPtr = RR_SHARED_PTR<StopIterationException>();
         /** @brief Convenience alias for StopIterationException const shared_ptr */
-        using StopIterationExceptionConstPtr = RR_SHARED_PTR<const StopIterationException>();	
+        using StopIterationExceptionConstPtr = RR_SHARED_PTR<const StopIterationException>();
+		/** @brief Convenience alias for OperationTimeoutException shared_ptr */
+        using OperationTimeoutExceptionPtr = RR_SHARED_PTR<OperationTimeoutException>();
+        /** @brief Convenience alias for OperationTimeoutException const shared_ptr */
+        using OperationTimeoutExceptionConstPtr = RR_SHARED_PTR<const OperationTimeoutException>();
+		/** @brief Convenience alias for OperationCancelledException shared_ptr */
+        using OperationCancelledExceptionPtr = RR_SHARED_PTR<OperationCancelledException>();
+        /** @brief Convenience alias for OperationCancelledException const shared_ptr */
+        using OperationCancelledExceptionConstPtr = RR_SHARED_PTR<const OperationCacnelledException>();
 	#endif
 
 #endif // GENERATING_DOCUMENTATION
