@@ -231,6 +231,17 @@ namespace RobotRaconteur
 			
 			node->RegisterTransport(hardware_transport);
 		}
+
+		if (config->GetOptionOrDefaultAsBool("intra-enable"))
+		{
+			intra_transport = RR_MAKE_SHARED<IntraTransport>(node);
+			if (config->GetOptionOrDefaultAsBool("intra-start-server"))
+			{
+				intra_transport->StartServer();
+			}
+
+			node->RegisterTransport(intra_transport);
+		}
 		
 		if (config->GetOptionOrDefaultAsBool("disable-timeouts"))
 		{
@@ -308,6 +319,10 @@ namespace RobotRaconteur
 	RR_SHARED_PTR<HardwareTransport> RobotRaconteurNodeSetup::GetHardwareTransport()
 	{
 		return hardware_transport;
+	}
+	RR_SHARED_PTR<IntraTransport> RobotRaconteurNodeSetup::GetIntraTransport()
+	{
+		return intra_transport;
 	}
 
 	RR_SHARED_PTR<CommandLineConfigParser> RobotRaconteurNodeSetup::GetCommandLineConfig()
@@ -498,6 +513,7 @@ namespace RobotRaconteur
 		h.add<bool>("local-enable", "enable Local transport", RobotRaconteurNodeSetupFlags_ENABLE_LOCAL_TRANSPORT);
 		h.add<bool>("tcp-enable", "enable TCP transport", RobotRaconteurNodeSetupFlags_ENABLE_TCP_TRANSPORT);
 		h.add<bool>("hardware-enable", "enable Hardware transport", RobotRaconteurNodeSetupFlags_ENABLE_HARDWARE_TRANSPORT);
+		h.add<bool>("intra-enable", "enable Intra transport", RobotRaconteurNodeSetupFlags_ENABLE_INTRA_TRANSPORT);
 		h.add<bool>("local-start-server", "start Local server listening", RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_SERVER);
 		h.add<bool>("local-start-client", "start Local client with node name", RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_CLIENT);
 		h.add<bool>("local-server-public", "local server is public on system", RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_SERVER_PUBLIC);
@@ -505,6 +521,7 @@ namespace RobotRaconteur
 		h.add<std::string>("tcp-ws-add-origins", "add websocket origins (comma separated)", RobotRaconteurNodeSetupFlags_TCP_WEBSOCKET_ORIGIN_OVERRIDE);
 		h.add<std::string>("tcp-ws-remove-origins", "remove websocket origins (comma separated)", RobotRaconteurNodeSetupFlags_TCP_WEBSOCKET_ORIGIN_OVERRIDE);
 		h.add<bool>("tcp-start-server-sharer", "start TCP server listening using port sharer", RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER_PORT_SHARER);
+		h.add<bool>("intra-start-server", "start Intra server listening", RobotRaconteurNodeSetupFlags_INTRA_TRANSPORT_START_SERVER);
 		h.add<bool>("disable-timeouts", "disable timeouts for debugging", RobotRaconteurNodeSetupFlags_DISABLE_TIMEOUTS);
 		h.add<bool>("disable-message3", "disable message v3", RobotRaconteurNodeSetupFlags_DISABLE_MESSAGE3);
 		h.add<bool>("disable-stringtable", "disable message v3 string table", RobotRaconteurNodeSetupFlags_DISABLE_STRINGTABLE);
@@ -640,6 +657,11 @@ namespace RobotRaconteur
 			return (this->default_flags & RobotRaconteurNodeSetupFlags_ENABLE_HARDWARE_TRANSPORT) != 0;
 		}
 
+		if (option == "intra-enable")
+		{
+			return (this->default_flags & RobotRaconteurNodeSetupFlags_ENABLE_INTRA_TRANSPORT) != 0;
+		}
+
 		if (option == "local-start-server")
 		{
 			return (this->default_flags & RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_SERVER) != 0;
@@ -663,6 +685,11 @@ namespace RobotRaconteur
 		if (option == "tcp-start-server-sharer")
 		{
 			return (this->default_flags & RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER_PORT_SHARER) != 0;
+		}
+
+		if (option == "intra-start-server")
+		{
+			return (this->default_flags & RobotRaconteurNodeSetupFlags_INTRA_TRANSPORT_START_SERVER) != 0;
 		}
 
 		if (option == "disable-timeouts")

@@ -26,6 +26,7 @@
 #include "RobotRaconteur/TcpTransport.h"
 #include "RobotRaconteur/LocalTransport.h"
 #include "RobotRaconteur/HardwareTransport.h"
+#include "RobotRaconteur/IntraTransport.h"
 
 #include <boost/assign/list_of.hpp>
 #include <boost/program_options.hpp>
@@ -61,19 +62,22 @@ namespace RobotRaconteur
 		RobotRaconteurNodeSetupFlags_NODEID_OVERRIDE = 0x20000,
 		RobotRaconteurNodeSetupFlags_TCP_PORT_OVERRIDE = 0x40000,
 		RobotRaconteurNodeSetupFlags_TCP_WEBSOCKET_ORIGIN_OVERRIDE = 0x80000,
-		
 
-		RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS = 0x1C,
+		RobotRaconteurNodeSetupFlags_ENABLE_INTRA_TRANSPORT = 0x100000,
+		RobotRaconteurNodeSetupFlags_INTRA_TRANSPORT_START_SERVER = 0x200000,		
+
+		RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS = 0x10001C,
 		/*RobotRaconteurNodeSetupFlags_ENABLE_LOCAL_TRANSPORT 
 		| RobotRaconteurNodeSetupFlags_ENABLE_TCP_TRANSPORT 
-		| RobotRaconteurNodeSetupFlags_ENABLE_HARDWARE_TRANSPORT,*/
+		| RobotRaconteurNodeSetupFlags_ENABLE_HARDWARE_TRANSPORT,
+		| RobotRaconteurNodeSetupFlags_ENABLE_INTRA_TRANSPORT*/
 
-		RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT = 0x5D,
+		RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT = 0x10005D,
 		/*RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS 
 		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING 
 		| RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_CLIENT,*/
 
-		RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT_ALLOWED_OVERRIDE = 0x33E5D,
+		RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT_ALLOWED_OVERRIDE = 0x133E5D,
 		/*RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS 
 		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING 
 		| RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_CLIENT
@@ -85,17 +89,19 @@ namespace RobotRaconteur
 		| RobotRaconteurNodeSetupFlags_NODENAME_OVERRIDE,
 		| RobotRaconteurNodeSetupFlags_NODEID_OVERRIDE */
 
-		RobotRaconteurNodeSetupFlags_SERVER_DEFAULT = 0xBF,
+		RobotRaconteurNodeSetupFlags_SERVER_DEFAULT = 0x3000BF,
 		/*RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS 
 		| RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_SERVER 
-		| RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER 
+		| RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER
+		| RobotRaconteurNodeSetupFlags_INTRA_TRANSPORT_START_SERVER
 		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_ANNOUNCE 
 		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING,*/
 
-		RobotRaconteurNodeSetupFlags_SERVER_DEFAULT_ALLOWED_OVERRIDE = 0xF7FFF,
+		RobotRaconteurNodeSetupFlags_SERVER_DEFAULT_ALLOWED_OVERRIDE = 0x3F7FFF,
 		/*RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS 
 		| RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_SERVER 
-		| RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER 
+		| RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER
+		| RobotRaconteurNodeSetupFlags_INTRA_TRANSPORT_START_SERVER
 		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_ANNOUNCE 
 		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING
 		| RobotRaconteurNodeSetupFlags_DISABLE_MESSAGE3
@@ -112,19 +118,21 @@ namespace RobotRaconteur
         | RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER_PORT_SHARER */
 
 
-		RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT = 0x30BF,
+		RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT = 0x3030BF,
 		/*RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS
 		| RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_SERVER
 		| RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER
+		| RobotRaconteurNodeSetupFlags_INTRA_TRANSPORT_START_SERVER
 		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_ANNOUNCE
 		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING
 		| RobotRaconteurNodeSetupFlags_LOAD_TLS_CERT
 		| RobotRaconteurNodeSetupFlags_REQUIRE_TLS*/
 
-		RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT_ALLOWED_OVERRIDE = 0xF4FFF
+		RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT_ALLOWED_OVERRIDE = 0x3F4FFF
 		/*RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS 
 		| RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_SERVER 
-		| RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER 
+		| RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER
+		| RobotRaconteurNodeSetupFlags_INTRA_TRANSPORT_START_SERVER
 		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_ANNOUNCE 
 		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING
 		| RobotRaconteurNodeSetupFlags_DISABLE_MESSAGE3
@@ -180,6 +188,7 @@ namespace RobotRaconteur
 		RR_SHARED_PTR<TcpTransport> tcp_transport;
 		RR_SHARED_PTR<LocalTransport> local_transport;
 		RR_SHARED_PTR<HardwareTransport> hardware_transport;
+		RR_SHARED_PTR<IntraTransport> intra_transport;
 		RR_SHARED_PTR<RobotRaconteurNode> node;
 		RR_SHARED_PTR<CommandLineConfigParser> config;
 
@@ -202,6 +211,7 @@ namespace RobotRaconteur
 		RR_SHARED_PTR<LocalTransport> GetLocalTransport();
 		RR_SHARED_PTR<TcpTransport> GetTcpTransport();
 		RR_SHARED_PTR<HardwareTransport> GetHardwareTransport();
+		RR_SHARED_PTR<IntraTransport> GetIntraTransport();
 
 		RR_SHARED_PTR<CommandLineConfigParser> GetCommandLineConfig();
 
