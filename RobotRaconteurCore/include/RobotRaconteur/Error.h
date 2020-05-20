@@ -167,6 +167,8 @@ namespace RobotRaconteur
 		M(ServiceDefinitionException, MessageErrorType_ServiceDefinitionError, "RobotRaconteur.ServiceDefinitionError") \
 		M(OutOfRangeException, MessageErrorType_OutOfRange, "RobotRaconteur.OutOfRange") \
 		M(KeyNotFoundException, MessageErrorType_KeyNotFound, "RobotRaconteur.KeyNotFound") \
+		M(InvalidConfigurationException, MessageErrorType_InvalidConfiguration, "RobotRaconteur.InvalidConfiguration") \
+		M(InvalidState, MessageErrorType_InvalidState, "RobotRaconteur.InvalidState") \
 		M2(RobotRaconteurRemoteException, MessageErrorType_RemoteError) \
 		M(RequestTimeoutException, MessageErrorType_RequestTimeout, "RobotRaconteur.RequestTimeout") \
 		M(ReadOnlyMemberException, MessageErrorType_ReadOnlyMember, "RobotRaconteur.ReadOnlyMember") \
@@ -179,7 +181,9 @@ namespace RobotRaconteur
 		M(PermissionDeniedException, MessageErrorType_PermissionDenied, "RobotRaconteur.PermissionDenied") \
 		M(AbortOperationException, MessageErrorType_AbortOperation, "RobotRaconteur.AbortOperation") \
 		M(OperationAbortedException, MessageErrorType_OperationAborted, "RobotRaconteur.OperationAborted") \
-		M(StopIterationException, MessageErrorType_StopIteration, "RobotRaconteur.StopIteration")
+		M(StopIterationException, MessageErrorType_StopIteration, "RobotRaconteur.StopIteration") \
+		M(OperationTimeoutException, MessageErrorType_OperationTimeout, "RobotRaconteur.OperationTimeout") \
+		M(OperationCancelledException, MessageErrorType_OperationCancelled, "RobotRaconteur.OperationCancelled")
 
 
 #define RR_EXCEPTION_DECL_1(exp_cpp_type, exp_code, exp_type_str) \
@@ -898,6 +902,48 @@ namespace RobotRaconteur
 	};
 
 	/**
+	 * @brief Exception thrown when an invalid configuration is specified or encountered
+	 * 
+	 * Error code MessageErrorType_InvalidConfiguration (31)
+	 * 
+	 */
+	class InvalidConfigurationException : public RobotRaconteurException
+	{
+	public:
+		/**
+		 * @brief Construct an InvalidConfiguration exception
+		 * 
+		 * @param message Message for the user
+		 * @param sub_name Optional error sub_name
+		 * @param param_ Optional error param
+		 */
+
+		InvalidConfigurationException(const std::string &message, std::string sub_name = "", RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+
+	};
+
+	/**
+	 * @brief Exception thrown when an invalid state is specified or encountered
+	 * 
+	 * Error code MessageErrorType_InvalidState (32)
+	 * 
+	 */
+	class InvalidStateException : public RobotRaconteurException
+	{
+	public:
+		/**
+		 * @brief Construct an InvalidState exception
+		 * 
+		 * @param message Message for the user
+		 * @param sub_name Optional error sub_name
+		 * @param param_ Optional error param
+		 */
+
+		InvalidStateException(const std::string &message, std::string sub_name = "", RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+
+	};
+
+	/**
 	 * @brief Exception thrown when an error occurs on a remote
 	 * member request
 	 * 
@@ -1180,6 +1226,48 @@ namespace RobotRaconteur
 		 * @param param_ Optional error param
 		 */
 		StopIterationException(const std::string &message, std::string sub_name = "", RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+
+	};
+
+	/**
+	 * @brief Exception thrown when an operation does not complete in the expected time
+	 * 
+	 * 
+	 * Error code MessageErrorType_OperationTimeout (110)
+	 * 
+	 */
+	class OperationTimeoutException : public RobotRaconteurException
+	{
+	public:
+		/**
+		 * @brief Construct an OperationTimeoutException
+		 * 
+		 * @param message Message for the user
+		 * @param sub_name Optional error sub_name
+		 * @param param_ Optional error param
+		 */
+		OperationTimeoutException(const std::string &message, std::string sub_name = "", RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+
+	};
+
+	/**
+	 * @brief Exception thrown when an operation is cancelled before it is started
+	 * 
+	 * 
+	 * Error code MessageErrorType_OperationCancelled (111)
+	 * 
+	 */
+	class OperationCancelledException : public RobotRaconteurException
+	{
+	public:
+		/**
+		 * @brief Construct an OperationCancelledException
+		 * 
+		 * @param message Message for the user
+		 * @param sub_name Optional error sub_name
+		 * @param param_ Optional error param
+		 */
+		OperationCancelledException(const std::string &message, std::string sub_name = "", RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
 
 	};
 

@@ -251,6 +251,8 @@ namespace RobotRaconteur
 		MessageErrorType_ServiceDefinitionError,
 		MessageErrorType_OutOfRange,
 		MessageErrorType_KeyNotFound,
+		MessageErrorType_InvalidConfiguration,
+		MessageErrorType_InvalidState,
 		MessageErrorType_RemoteError = 100,
 		MessageErrorType_RequestTimeout,
 		MessageErrorType_ReadOnlyMember,
@@ -261,6 +263,8 @@ namespace RobotRaconteur
 		MessageErrorType_AbortOperation,
 		MessageErrorType_OperationAborted,
 		MessageErrorType_StopIteration,
+		MessageErrorType_OperationTimeout,
+		MessageErrorType_OperationCancelled,
 		MessageErrorType_AuthenticationError = 150,
 		MessageErrorType_ObjectLockedError,
 		MessageErrorType_PermissionDenied
