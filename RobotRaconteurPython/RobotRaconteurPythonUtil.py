@@ -346,6 +346,14 @@ def InitStub(stub):
     outerstub.rrlock=threading.RLock()
     return outerstub
 
+def check_member_args(name, param_types, args, isasync=False):
+    expected_args_len = len(param_types)
+    if isasync:
+        expected_args_len += 1
+    if len(param_types) > 0 and param_types[-1].ContainerType == RobotRaconteurPython.DataTypes_ContainerTypes_generator:
+        expected_args_len -= 1        
+    if expected_args_len != len(args):
+            raise TypeError("%s() expects exactly %d arguments (%d given)" % (name, expected_args_len, len(args)))
 
 def stub_getproperty(stub,name,type1):
     return UnpackMessageElement(stub.PropertyGet(name),type1.Type,stub,stub.RRGetNode())
@@ -355,6 +363,7 @@ def stub_setproperty(stub,name,type1,value):
     stub.PropertySet(name,pvalue)
 
 def stub_functioncall(stub,name,type1,*args):
+    check_member_args(name, type1.Parameters, args)
     m=RobotRaconteurPython.vectorptr_messageelement()
     i=0
     for p in type1.Parameters:
@@ -365,6 +374,7 @@ def stub_functioncall(stub,name,type1,*args):
     return UnpackMessageElement(ret,type1.ReturnType,stub,stub.RRGetNode())
 
 def stub_functioncallvoid(stub,name,type1,*args):
+    check_member_args(name, type1.Parameters, args)
     m=RobotRaconteurPython.vectorptr_messageelement()
     i=0
     for p in type1.Parameters:
@@ -374,6 +384,7 @@ def stub_functioncallvoid(stub,name,type1,*args):
     stub.FunctionCall(name,m)
 
 def stub_functioncallgenerator(stub,name,type1,*args):
+    check_member_args(name, type1.Parameters, args)
     m=RobotRaconteurPython.vectorptr_messageelement()
     i=0
     param_type = None
@@ -428,6 +439,7 @@ def stub_async_setproperty(stub,name,type1,value,handler,timeout=-1):
 
 
 def stub_async_functioncall(stub,name,type1,*args):
+    check_member_args(name, type1.Parameters, args, True)
     m=RobotRaconteurPython.vectorptr_messageelement()
     i=0
     for p in type1.Parameters:
@@ -442,6 +454,7 @@ def stub_async_functioncall(stub,name,type1,*args):
     return async_call(stub.async_FunctionCall,(name,m,adjust_timeout(timeout)),AsyncRequestDirectorImpl,handler,directorargs=(False,type1.ReturnType,stub,stub.RRGetNode()))
 
 def stub_async_functioncallvoid(stub,name,type1,*args):
+    check_member_args(name, type1.Parameters, args, True)
     m=RobotRaconteurPython.vectorptr_messageelement()
     i=0
     for p in type1.Parameters:
@@ -457,6 +470,7 @@ def stub_async_functioncallvoid(stub,name,type1,*args):
     return async_call(stub.async_FunctionCall,(name,m,adjust_timeout(timeout)),AsyncRequestDirectorImpl,handler,directorargs=(True,type1.ReturnType,stub,stub.RRGetNode()))
 
 def stub_async_functioncallgenerator(stub,name,type1,*args):
+    check_member_args(name, type1.Parameters, args, True)
     m=RobotRaconteurPython.vectorptr_messageelement()
     i=0
     param_type = None
@@ -1519,6 +1533,7 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
         self.skel=None
 
 def skel_dispatchevent(skel,name,type1,*args):
+    check_member_args(name, type1.Parameters, args)
     m=RobotRaconteurPython.vectorptr_messageelement()
     i=0
     node=skel.RRGetNode()
@@ -1529,6 +1544,7 @@ def skel_dispatchevent(skel,name,type1,*args):
     skel.WrappedDispatchEvent(name,m)
 
 def skel_callbackcall(skel,name,type1,endpoint,*args):
+    check_member_args(name, type1.Parameters, args)
     m=RobotRaconteurPython.vectorptr_messageelement()
     i=0
     node=skel.RRGetNode()
@@ -1540,6 +1556,7 @@ def skel_callbackcall(skel,name,type1,endpoint,*args):
     return UnpackMessageElement(ret,type1.ReturnType,node=node)
 
 def skel_callbackcallvoid(skel,name,type1,endpoint,*args):
+    check_member_args(name, type1.Parameters, args)
     m=RobotRaconteurPython.vectorptr_messageelement()
     i=0
     node=skel.RRGetNode()
