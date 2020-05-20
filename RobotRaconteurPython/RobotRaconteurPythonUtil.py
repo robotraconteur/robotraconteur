@@ -2774,6 +2774,7 @@ class RobotRaconteurNodeSetup(object):
         self.tcp_transport=self.__setup.GetTcpTransport()
         self.local_transport=self.__setup.GetLocalTransport()
         self.hardware_transport=self.__setup.GetHardwareTransport()
+        self.intra_transport=self.__setup.GetIntraTransport()
         self.command_line_config = self.__setup.GetCommandLineConfig()
         self.__node=node
         

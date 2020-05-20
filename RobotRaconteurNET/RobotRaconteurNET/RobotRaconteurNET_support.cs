@@ -4276,6 +4276,8 @@ namespace RobotRaconteur
         public LocalTransport LocalTransport { get; }
         public HardwareTransport HardwareTransport { get; }
 
+        public IntraTransport IntraTransport { get; }
+
         public CommandLineConfigParser CommandLineConfig { get; }
 
         protected WrappedRobotRaconteurNodeSetup setup;
@@ -4288,6 +4290,7 @@ namespace RobotRaconteur
             TcpTransport = setup.GetTcpTransport();
             LocalTransport = setup.GetLocalTransport();
             HardwareTransport = setup.GetHardwareTransport();
+            IntraTransport = setup.GetIntraTransport();
             CommandLineConfig = setup.GetCommandLineConfig();     
         }
 
@@ -4301,6 +4304,7 @@ namespace RobotRaconteur
             TcpTransport = setup.GetTcpTransport();
             LocalTransport = setup.GetLocalTransport();
             HardwareTransport = setup.GetHardwareTransport();
+            IntraTransport = setup.GetIntraTransport();
             CommandLineConfig = setup.GetCommandLineConfig();     
         }
 
@@ -4311,6 +4315,7 @@ namespace RobotRaconteur
             TcpTransport = setup.GetTcpTransport();
             LocalTransport = setup.GetLocalTransport();
             HardwareTransport = setup.GetHardwareTransport();
+            IntraTransport = setup.GetIntraTransport();
             CommandLineConfig = setup.GetCommandLineConfig();     
         }
 

@@ -111,6 +111,7 @@
 %include "TcpTransportJava.i"
 %include "LocalTransport.i"
 %include "HardwareTransportJava.i"
+%include "IntraTransport.i"
 
 %include "TimerJava.i"
 %include "TimeSpecJava.i"

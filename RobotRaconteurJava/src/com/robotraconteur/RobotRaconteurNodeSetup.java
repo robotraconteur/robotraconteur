@@ -8,6 +8,7 @@ public class RobotRaconteurNodeSetup {
 	TcpTransport tcp_transport;
 	LocalTransport local_transport;
 	HardwareTransport hardware_transport;
+	IntraTransport intra_transport;
 	CommandLineConfigParser config;
 	
 	public RobotRaconteurNodeSetup(String node_name, int tcp_port, int flags)
@@ -15,7 +16,8 @@ public class RobotRaconteurNodeSetup {
 		setup = new WrappedRobotRaconteurNodeSetup(RobotRaconteurNode.s(), node_name, tcp_port, flags);	
 		tcp_transport=setup.getTcpTransport();
 		local_transport=setup.getLocalTransport();
-		hardware_transport=setup.getHardwareTransport();		
+		hardware_transport=setup.getHardwareTransport();
+		intra_transport=setup.getIntraTransport();	
 		config=setup.getCommandLineConfig();	
 	}
 	
@@ -24,7 +26,8 @@ public class RobotRaconteurNodeSetup {
 		setup = new WrappedRobotRaconteurNodeSetup(RobotRaconteurNode.s(), node_name, tcp_port, flags, allowed_overrides, new vectorstring(args));	
 		tcp_transport=setup.getTcpTransport();
 		local_transport=setup.getLocalTransport();
-		hardware_transport=setup.getHardwareTransport();		
+		hardware_transport=setup.getHardwareTransport();
+		intra_transport=setup.getIntraTransport();	
 		config=setup.getCommandLineConfig();	
 	}
 
@@ -33,7 +36,8 @@ public class RobotRaconteurNodeSetup {
 		setup = new WrappedRobotRaconteurNodeSetup(RobotRaconteurNode.s(), config);	
 		tcp_transport=setup.getTcpTransport();
 		local_transport=setup.getLocalTransport();
-		hardware_transport=setup.getHardwareTransport();		
+		hardware_transport=setup.getHardwareTransport();
+		intra_transport=setup.getIntraTransport();		
 		config=setup.getCommandLineConfig();	
 	}
 

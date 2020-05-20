@@ -86,6 +86,7 @@ static void memcpy(void* destination, void* source, int64_t num)
 %include "TcpTransportNET.i"
 %include "LocalTransportNET.i"
 %include "HardwareTransportNET.i"
+%include "IntraTransport.i"
 
 %include "TimerNET.i"
 

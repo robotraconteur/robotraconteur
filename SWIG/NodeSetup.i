@@ -52,6 +52,7 @@ namespace RobotRaconteur
 		//	const std::string& node_name, uint16_t tcp_port, uint32_t flags);
 		
 		boost::shared_ptr<LocalTransport> GetLocalTransport();
+		boost::shared_ptr<IntraTransport> GetIntraTransport();
 		boost::shared_ptr<TcpTransport> GetTcpTransport();
 		boost::shared_ptr<HardwareTransport> GetHardwareTransport();
 		boost::shared_ptr<CommandLineConfigParser> GetCommandLineConfig();
