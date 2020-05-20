@@ -857,7 +857,11 @@ void LocalTransport::SendMessage(RR_INTRUSIVE_PTR<Message> m)
 	{
 		boost::mutex::scoped_lock lock(TransportConnections_lock);
 		RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<ITransportConnection> >::iterator e1 = TransportConnections.find(m->header->SenderEndpoint);
-		if (e1 == TransportConnections.end()) throw ConnectionException("Transport connection to remote host not found");
+		if (e1 == TransportConnections.end())
+		{
+			ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, m->header->SenderEndpoint, "Transport connection to remote host not found");
+		 	throw ConnectionException("Transport connection to remote host not found");
+		}
 		t = e1->second;
 	}
 	t->SendMessage(m);

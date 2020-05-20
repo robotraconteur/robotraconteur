@@ -1923,6 +1923,55 @@ return 0;
 
 	}
 
+	if (command=="intraloopback")
+	{
+		RobotRaconteurNode::s()->SetNodeName("test_intra_loopback");
+		RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();			
+		
+		RR_SHARED_PTR<IntraTransport> c=RR_MAKE_SHARED<IntraTransport>();
+		c->StartServer();
+
+		RR_SHARED_PTR<TcpTransport> c2 = RR_MAKE_SHARED<TcpTransport>();
+		c2->StartServer(38472);
+		
+		//c->EnableNodeAnnounce();
+		//c->EnableNodeDiscoveryListening();
+
+		RobotRaconteurNode::s()->RegisterTransport(c);
+		RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<com__robotraconteur__testing__TestService1Factory>());
+		RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<com__robotraconteur__testing__TestService2Factory>());
+
+		RobotRaconteurTestServiceSupport s;
+		s.RegisterServices(c2);
+
+		{
+		ServiceTestClient cl;
+		cl.RunFullTest("rr+intra:///?nodename=test_intra_loopback&service=RobotRaconteurTestService", "rr+intra:///?nodename=test_intra_loopback&service=RobotRaconteurTestService_auth");
+		}
+		
+		int count = 1;
+
+		if (argc >= 3)
+		{
+			std::string scount(argv[2]);
+			count = boost::lexical_cast<int>(scount);
+		}
+		
+		for (int j=0; j<count; j++)
+		{
+			ServiceTestClient cl;
+			cl.RunFullTest("rr+intra:///?nodename=test_intra_loopback&service=RobotRaconteurTestService", "rr+intra:///?nodename=test_intra_loopback&service=RobotRaconteurTestService_auth");
+		}			
+		
+		cout << "start shutdown" << endl;
+
+		RobotRaconteurNode::s()->Shutdown();
+		
+		cout << "Test completed, no errors detected!" << endl;
+		return 0;
+
+	}
+
 	throw runtime_error("Unknown test command");
 
 }

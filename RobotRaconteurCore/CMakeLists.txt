@@ -60,6 +60,7 @@ set(RobotRaconteurCore_src
 	src/NodeSetup.cpp
 	src/DataTypesPacking.cpp
 	src/Logging.cpp
+	src/IntraTransport.cpp
 )
 
 set(RobotRaconteurCore_header
@@ -104,6 +105,7 @@ set(RobotRaconteurCore_header
 	include/RobotRaconteur/DataTypesPacking.h
 	include/RobotRaconteur/ASIOStreamBaseTransport.h
 	include/RobotRaconteur/Logging.h
+	include/RobotRaconteur/IntraTransport.h
 )
 
 if (WIN32)
