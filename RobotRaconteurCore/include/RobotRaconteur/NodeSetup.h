@@ -64,7 +64,10 @@ namespace RobotRaconteur
 		RobotRaconteurNodeSetupFlags_TCP_WEBSOCKET_ORIGIN_OVERRIDE = 0x80000,
 
 		RobotRaconteurNodeSetupFlags_ENABLE_INTRA_TRANSPORT = 0x100000,
-		RobotRaconteurNodeSetupFlags_INTRA_TRANSPORT_START_SERVER = 0x200000,		
+		RobotRaconteurNodeSetupFlags_INTRA_TRANSPORT_START_SERVER = 0x200000,
+
+		RobotRaconteurNodeSetupFlags_LOCAL_TAP_ENABLE = 0x1000000,
+		RobotRaconteurNodeSetupFlags_LOCAL_TAP_NAME = 0x2000000,
 
 		RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS = 0x10001C,
 		/*RobotRaconteurNodeSetupFlags_ENABLE_LOCAL_TRANSPORT 
@@ -77,7 +80,7 @@ namespace RobotRaconteur
 		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING 
 		| RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_CLIENT,*/
 
-		RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT_ALLOWED_OVERRIDE = 0x133E5D,
+		RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT_ALLOWED_OVERRIDE = 0x3133E5D,
 		/*RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS 
 		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING 
 		| RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_CLIENT
@@ -97,7 +100,7 @@ namespace RobotRaconteur
 		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_ANNOUNCE 
 		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING,*/
 
-		RobotRaconteurNodeSetupFlags_SERVER_DEFAULT_ALLOWED_OVERRIDE = 0x3F7FFF,
+		RobotRaconteurNodeSetupFlags_SERVER_DEFAULT_ALLOWED_OVERRIDE = 0x33F7FFF,
 		/*RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS 
 		| RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_SERVER 
 		| RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER
@@ -128,7 +131,7 @@ namespace RobotRaconteur
 		| RobotRaconteurNodeSetupFlags_LOAD_TLS_CERT
 		| RobotRaconteurNodeSetupFlags_REQUIRE_TLS*/
 
-		RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT_ALLOWED_OVERRIDE = 0x3F4FFF
+		RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT_ALLOWED_OVERRIDE = 0x33F4FFF
 		/*RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS 
 		| RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_SERVER 
 		| RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER

@@ -497,6 +497,15 @@ void RobotRaconteurNode::Shutdown()
 
 	discovery_updated_listeners.disconnect_all_slots();
 	discovery_lost_listeners.disconnect_all_slots();
+
+	{
+		boost::unique_lock<boost::shared_mutex> lock(tap_lock);
+		if (tap)
+		{
+			tap->Close();
+			tap.reset();
+		}
+	}
 	
 	ROBOTRACONTEUR_LOG_INFO_COMPONENT(weak_sp(), Node, -1, "RobotRaconteurNode shutdown complete");
 }
@@ -579,6 +588,14 @@ void RobotRaconteurNode::SendMessage(RR_INTRUSIVE_PTR<Message> m)
 		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Attempt to send message with invalid SenderNodeID");
 		throw ConnectionException("Could not route message");		
 	}
+
+	{
+		boost::shared_lock<boost::shared_mutex> lock3(tap_lock);
+		if (tap)
+		{
+			tap->RecordMessage(m);
+		}
+	}	
 		
 	RR_SHARED_PTR<Endpoint> e;		
 	{
@@ -625,6 +642,14 @@ void RobotRaconteurNode::AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boost::fu
 		
 	}
 
+	{
+		boost::shared_lock<boost::shared_mutex> lock3(tap_lock);
+		if (tap)
+		{
+			tap->RecordMessage(m);
+		}
+	}
+
 	RR_SHARED_PTR<Endpoint> e;
 	{
 		boost::mutex::scoped_lock lock(endpoint_lock);
@@ -662,6 +687,14 @@ void RobotRaconteurNode::AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boost::fu
 
 void RobotRaconteurNode::MessageReceived(RR_INTRUSIVE_PTR<Message> m)
 {
+	{
+		boost::shared_lock<boost::shared_mutex> lock3(tap_lock);
+		if (tap)
+		{
+			tap->RecordMessage(m);
+		}
+	}
+
 	try
 		{
 		if (m->header->ReceiverNodeID != NodeID())
@@ -944,6 +977,13 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_INTRUSIVE_PTR<Me
 		return GenerateErrorReturnMessage(m, MessageErrorType_NodeNotFound, "RobotRaconteur.NodeNotFound", "Could not find route to remote node");
 	}
 
+	{
+		boost::shared_lock<boost::shared_mutex> lock3(tap_lock);
+		if (tap)
+		{
+			tap->RecordMessage(m);
+		}
+	}
 
 	if (m->header->ReceiverEndpoint != 0 && m->entries.size() == 1 && m->entries.at(0)->EntryType == MessageEntryType_ObjectTypeName)
 	{
@@ -1429,6 +1469,14 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(RR_INTRUSIVE_PTR<Me
 				eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ProtocolError"));
 				eret->AddElement("errorstring", stringToRRArray("Invalid Special Operation"));
 				break;
+		}
+	}
+
+	{
+		boost::shared_lock<boost::shared_mutex> lock3(tap_lock);
+		if (tap)
+		{
+			tap->RecordMessage(ret);
 		}
 	}
 
@@ -2743,26 +2791,35 @@ void RobotRaconteurNode::LogMessage(RobotRaconteur_LogLevel level, const std::st
 
 void RobotRaconteurNode::LogRecord(const RRLogRecord& record)
 {
-	
-	boost::shared_lock<boost::shared_mutex> lock(log_level_mutex);
-	if (record.Level < log_level)
 	{
-		return;
+		boost::shared_lock<boost::shared_mutex> lock(log_level_mutex);
+		if (record.Level < log_level)
+		{
+			return;
+		}
 	}
-	
-	lock.unlock();
-	
-	boost::upgrade_lock<boost::shared_mutex> lock2(log_handler_mutex);
-	
 
-	if (log_handler)
 	{
-		log_handler->HandleLogRecord(record);
-		return;
-	}
+		boost::shared_lock<boost::shared_mutex> lock3(tap_lock);
+		if (tap)
+		{
+			tap->RecordLogRecord(record);
+		}
+	}	
 	
-	boost::upgrade_to_unique_lock<boost::shared_mutex> lock3(lock2);
-	std::cerr << record << std::endl; 
+	{
+		boost::upgrade_lock<boost::shared_mutex> lock2(log_handler_mutex);
+		
+
+		if (log_handler)
+		{
+			log_handler->HandleLogRecord(record);
+			return;
+		}
+		
+		boost::upgrade_to_unique_lock<boost::shared_mutex> lock3(lock2);
+		std::cerr << record << std::endl; 
+	}
 
 }
 
@@ -2848,6 +2905,18 @@ void RobotRaconteurNode::SetLogRecordHandler(RR_SHARED_PTR<LogRecordHandler> han
 {
 	boost::unique_lock<boost::shared_mutex> lock(log_handler_mutex);
 	log_handler = handler;
+}
+
+RR_SHARED_PTR<MessageTap> RobotRaconteurNode::GetMessageTap()
+{
+	boost::shared_lock<boost::shared_mutex> lock(tap_lock);
+	return tap;
+}
+
+void RobotRaconteurNode::SetMessageTap(RR_SHARED_PTR<MessageTap> message_tap)
+{
+	boost::unique_lock<boost::shared_mutex> lock(tap_lock);
+	tap = message_tap;
 }
 
 }

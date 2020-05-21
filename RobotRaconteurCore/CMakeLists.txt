@@ -61,6 +61,7 @@ set(RobotRaconteurCore_src
 	src/DataTypesPacking.cpp
 	src/Logging.cpp
 	src/IntraTransport.cpp
+	src/Tap.cpp
 )
 
 set(RobotRaconteurCore_header
@@ -106,6 +107,7 @@ set(RobotRaconteurCore_header
 	include/RobotRaconteur/ASIOStreamBaseTransport.h
 	include/RobotRaconteur/Logging.h
 	include/RobotRaconteur/IntraTransport.h
+	include/RobotRaconteur/Tap.h
 )
 
 if (WIN32)
@@ -169,6 +171,7 @@ target_include_directories(RobotRaconteurCore PUBLIC
 if(${CMAKE_VERSION} VERSION_GREATER "3.16.0") 
 	target_precompile_headers(RobotRaconteurCore PRIVATE ${RobotRaconteurCore_header})
 	set_source_files_properties(src/LocalTransport.cpp PROPERTIES SKIP_PRECOMPILE_HEADERS TRUE)
+	set_source_files_properties(src/Tap.cpp PROPERTIES SKIP_PRECOMPILE_HEADERS TRUE)
 endif()
 
 file(COPY "${CMAKE_SOURCE_DIR}/RobotRaconteurCore/include" DESTINATION "${CMAKE_BINARY_DIR}/out/")

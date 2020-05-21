@@ -16,6 +16,30 @@ namespace RobotRaconteur
 			node->SetLogLevelFromString(log_level_str);
 		}
 
+		if (config->GetOptionOrDefaultAsBool("local-tap-enable"))
+		{
+			std::string tap_name = config->GetOptionOrDefaultAsString("local-tap-name");
+			if (!tap_name.empty())
+			{
+				try
+				{
+					RR_SHARED_PTR<LocalMessageTap> local_tap = RR_MAKE_SHARED<LocalMessageTap>(tap_name);
+					local_tap->Open();
+					node->SetMessageTap(local_tap);
+
+					ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, NodeSetup, -1, "Local tap initialized with name \"" << tap_name << "\"");
+				}
+				catch (std::exception& exp)
+				{
+					ROBOTRACONTEUR_LOG_ERROR_COMPONENT(node, NodeSetup, -1, "Local tap initialization failed: " << exp.what());
+				}
+			}
+			else
+			{
+				ROBOTRACONTEUR_LOG_ERROR_COMPONENT(node, NodeSetup, -1, "Local tap name not specified, not starting tap interface");
+			}
+		}
+
 		std::string node_name = config->GetOptionOrDefaultAsString("nodename");
 		std::string node_id = config->GetOptionOrDefaultAsString("nodeid","");
 		uint16_t tcp_port = boost::numeric_cast<uint16_t>(config->GetOptionOrDefaultAsInt("tcp-port"));
@@ -533,6 +557,9 @@ namespace RobotRaconteur
 		h.add<int32_t>("tcp-port", "port to listen on for TCP server", RobotRaconteurNodeSetupFlags_TCP_PORT_OVERRIDE);
 
 		h.add<std::string>("log-level", "log level for node");
+
+		h.add<bool>("local-tap-enable", "start local tap interface, must also specify tap name", RobotRaconteurNodeSetupFlags_LOCAL_TAP_ENABLE);
+		h.add<std::string>("local-tap-name", "name of local tap", RobotRaconteurNodeSetupFlags_LOCAL_TAP_NAME);
 		
 
 	}
@@ -606,6 +633,11 @@ namespace RobotRaconteur
 		}
 
 		if (option == "tcp-ws-remove-origins")
+		{
+			return "";
+		}
+
+		if (option == "local-tap-name")
 		{
 			return "";
 		}
@@ -715,6 +747,11 @@ namespace RobotRaconteur
 		if (option == "require-tls")
 		{
 			return (this->default_flags & RobotRaconteurNodeSetupFlags_REQUIRE_TLS) != 0;
+		}
+
+		if (option == "local-tap-enable")
+		{
+			return (this->default_flags & RobotRaconteurNodeSetupFlags_LOCAL_TAP_ENABLE) != 0;
 		}
 
 		throw boost::program_options::required_option(option);

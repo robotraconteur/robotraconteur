@@ -36,6 +36,8 @@
 #include "RobotRaconteur/Discovery.h"
 #include "RobotRaconteur/DataTypesPacking.h"
 #include "RobotRaconteur/Logging.h"
+#include "RobotRaconteur/Tap.h"
+
 #include <queue>
 #include <boost/asio.hpp>
 #include <boost/unordered_map.hpp>
@@ -2345,6 +2347,26 @@ namespace RobotRaconteur
 		 * @param handler The log record handler function
 		 */
 		void SetLogRecordHandler(RR_SHARED_PTR<LogRecordHandler> handler);
+
+	protected:
+		boost::shared_mutex tap_lock;
+		RR_SHARED_PTR<MessageTap> tap;
+
+	public:
+
+		/**
+		 * @brief Get the active message tap
+		 * 
+		 * @return RR_SHARED_PTR<MessageTap> 
+		 */
+		RR_SHARED_PTR<MessageTap> GetMessageTap();
+
+		/**
+		 * @brief Set the a message tap to record log records and messages
+		 * 
+		 * @param message_tap The message tap to use
+		 */
+		void SetMessageTap(RR_SHARED_PTR<MessageTap> message_tap);
 		
 	protected:
 		/**
