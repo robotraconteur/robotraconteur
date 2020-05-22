@@ -36,7 +36,7 @@ namespace RobotRaconteur
 	class ROBOTRACONTEUR_CORE_API ArrayBinaryReader : private boost::noncopyable
 	{
 	public:
-		ArrayBinaryReader(uint8_t* buffer, size_t start_position, size_t length, bool nativeorder=false);
+		ArrayBinaryReader(const uint8_t* buffer, size_t start_position, size_t length, bool nativeorder=false);
 
 		size_t Length();
 
@@ -83,7 +83,7 @@ namespace RobotRaconteur
 		virtual int32_t DistanceFromLimit();
 
 	private:
-		uint8_t* buffer;
+		const uint8_t* buffer;
 		size_t position;
 		size_t length;
 		bool nativeorder;

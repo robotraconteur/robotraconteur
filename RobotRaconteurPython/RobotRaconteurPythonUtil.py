@@ -2832,6 +2832,25 @@ class UserLogRecordHandler(RobotRaconteurPython.UserLogRecordHandlerBase):
         self._SetHandler(director,0)
         director.__disown__()
 
+class TapFileReader(object):
+    def __init__(self, fileobj):
+        self._fileobj = fileobj
+
+    def ReadNextMessage(self):
+        len_bytes = self._fileobj.read(8)
+        if (len(len_bytes) < 8):
+            return None
+        message_len = RobotRaconteurPython.MessageLengthFromBytes(len_bytes)
+        message_bytes = len_bytes + self._fileobj.read(message_len - 8)
+        if (len(message_bytes) < message_len):
+            return None
+        m = RobotRaconteurPython.MessageFromBytes(message_bytes)
+        return m
+
+    def UnpackMessageElement(self, el, node=None):
+        if node is None:
+            node = RobotRaconteurPython.RobotRaconteurNode.s
+        return UnpackMessageElement(el, "varvalue value", None, node)
 
 def settrace():
     # Enable debugging in vscode if ptvsd has been loaded

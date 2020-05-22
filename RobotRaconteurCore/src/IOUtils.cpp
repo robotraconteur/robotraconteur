@@ -22,7 +22,7 @@
 namespace RobotRaconteur
 {
 
-ArrayBinaryReader::ArrayBinaryReader(uint8_t* buffer, size_t start_position, size_t length, bool nativeorder)
+ArrayBinaryReader::ArrayBinaryReader(const uint8_t* buffer, size_t start_position, size_t length, bool nativeorder)
 {
 	this->buffer=buffer;
 	this->position=start_position;
