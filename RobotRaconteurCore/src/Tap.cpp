@@ -339,7 +339,6 @@ namespace RobotRaconteur
 
             void handle_accept_all(RR_SHARED_PTR<detail::Tap_acceptor> acceptor, RR_SHARED_PTR<detail::Tap_socket> socket, const boost::system::error_code& error)
             {
-                std::cout << error.message() << std::endl;
                 if (error)
                     return;
                 if (!is_open.load())
