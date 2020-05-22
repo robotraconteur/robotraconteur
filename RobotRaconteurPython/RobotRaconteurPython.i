@@ -81,7 +81,7 @@ RobotRaconteur::RobotRaconteurNode::s()->SetThreadPoolFactory(RR_MAKE_SHARED<Rob
 %include "TcpTransportPython.i"
 %include "LocalTransportPython.i"
 %include "HardwareTransportPython.i"
-%include "LocalTransport.i"
+%include "IntraTransport.i"
 
 %include "TimerPython.i"
 
