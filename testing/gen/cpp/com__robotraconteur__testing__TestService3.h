@@ -35,6 +35,10 @@ namespace com__robotraconteur__testing__TestService3Constants
     static const double doubleconst_array[]={1.5847, 3.14, -548e3, 3452.67e2, 485e-21};
     namespace structconst { static const char* strconst="This is a\n \"string constant\" \\/\b\f \r\xc3\xbf tabme\ttabme\n smile! \xf0\x9f\x98\x81"; static const int32_t int32const_array[]={182476, 56483, -2947}; }
     namespace structconst2 { namespace structconst { static const char* strconst="This is a\n \"string constant\" \\/\b\f \r\xc3\xbf tabme\ttabme\n smile! \xf0\x9f\x98\x81"; static const int32_t int32const_array[]={182476, 56483, -2947}; } static const int32_t int32const=3856384; }
+    namespace testroot3
+    {
+    static const char* unknown_modifier_hello="hello world!";
+    }
 }
     namespace testenum1
     {

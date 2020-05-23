@@ -12,6 +12,7 @@ ROBOTRACONTEUR_GENERATE_THUNK(RR_THUNK_SRCS RR_THUNK_HDRS
 	com.robotraconteur.testing.TestService1.robdef 
 	com.robotraconteur.testing.TestService2.robdef 
 	com.robotraconteur.testing.TestService3.robdef
+	com.robotraconteur.testing.TestService4.robdef
 	MASTER_HEADER
 	)
 

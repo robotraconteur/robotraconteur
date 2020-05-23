@@ -89,6 +89,7 @@ ROBOTRACONTEUR_GENERATE_THUNK(RR_THUNK_SRCS
 	com.robotraconteur.testing.TestService1.robdef 
 	com.robotraconteur.testing.TestService2.robdef 
 	com.robotraconteur.testing.TestService3.robdef
+	com.robotraconteur.testing.TestService4.robdef
 	LANG csharp
 	IMPORT_DIRS "${CMAKE_SOURCE_DIR}/testing/RobotRaconteurTest"
 	OUTDIR "${CMAKE_CURRENT_BINARY_DIR}/test"

@@ -134,6 +134,8 @@ namespace RobotRaconteurGen
 
 		static void GenerateDefaultImplDefinition(ServiceDefinition* d, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, bool is_abstract, ostream* w);
 
+		static void GenerateDocString(const std::string& docstring, const std::string& prefix, ostream* w);
+
 		//File generators
 		static void GenerateFiles(RR_SHARED_PTR<ServiceDefinition> d, std::string servicedef, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, std::string path=".");
 

@@ -98,6 +98,8 @@ namespace RobotRaconteurGen
 
 		static std::string GetDefaultInitializedValue(const TypeDefinition& tdef);
 
+		static void GenerateDocString(const std::string& docstring, const std::string& prefix, ostream* w);
+
 		//File generators
 		static void GenerateFiles(RR_SHARED_PTR<ServiceDefinition> d, std::string servicedef, std::string path=".");
 

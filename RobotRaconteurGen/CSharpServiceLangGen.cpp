@@ -624,10 +624,11 @@ namespace RobotRaconteurGen
 	{
 		ostream& w2=*w;
 
+		GenerateDocString(e->DocString, "", w);
 		w2 << "public class " + fix_name(e->Name) << endl << "{" << endl;
 
 		MEMBER_ITER2(PropertyDefinition)
-
+		GenerateDocString(m->DocString, "    ", w);
 		convert_type_result t=convert_type(*m->Type);
 		t.name=fix_name(m->Name);
 		w2 << "    public " + t.cs_type + t.cs_arr_type + " " + t.name + ";" << endl; 
@@ -653,6 +654,8 @@ namespace RobotRaconteurGen
 	{
 		ostream& w2 = *w;
 
+		GenerateDocString(e->DocString, "", w);
+
 		if (e->EntryType == DataTypes_namedarray_t)
 		{
 			boost::tuple<DataTypes, size_t> t4 = GetNamedArrayElementTypeAndCount(e);
@@ -665,6 +668,7 @@ namespace RobotRaconteurGen
 		w2 << "public struct " + fix_name(e->Name) << endl << "{" << endl;
 
 		MEMBER_ITER2(PropertyDefinition)
+			GenerateDocString(m->DocString, "    ", w);
 			TypeDefinition t2 = *CSharpServiceLangGen_RemoveMultiDimArray(*m->Type);
 			convert_type_result t = convert_type(t2);
 		t.name = fix_name(m->Name);
@@ -800,6 +804,8 @@ namespace RobotRaconteurGen
 	{
 		ostream& w2=*w;
 
+		GenerateDocString(e->DocString, "", w);
+
 		w2 << "[RobotRaconteurServiceObjectInterface()]" << endl;
 
 		std::vector<std::string> implements2;
@@ -815,6 +821,7 @@ namespace RobotRaconteurGen
 		w2 << "public interface " + fix_name(e->Name) << implements << endl << "{" << endl;
 
 		MEMBER_ITER2(PropertyDefinition)
+		GenerateDocString(m->DocString, "    ", w);
 		convert_type_result t=convert_type(*m->Type);
 		t.name=fix_name(m->Name);
 		w2 << "    " + t.cs_type + t.cs_arr_type + " " + t.name + " {";
@@ -830,6 +837,7 @@ namespace RobotRaconteurGen
 		MEMBER_ITER_END()
 
 		MEMBER_ITER2(FunctionDefinition)
+		GenerateDocString(m->DocString, "    ", w);
 		if (!m->IsGenerator())
 		{
 			convert_type_result t = convert_type(*m->ReturnType);
@@ -845,10 +853,12 @@ namespace RobotRaconteurGen
 		MEMBER_ITER_END()
 
 		MEMBER_ITER2(EventDefinition)
+		GenerateDocString(m->DocString, "    ", w);
 		w2 << "    event " << str_pack_delegate(m->Parameters) << " "<< fix_name(m->Name) << ";" << endl;
 		MEMBER_ITER_END()
 
 		MEMBER_ITER2(ObjRefDefinition)
+		GenerateDocString(m->DocString, "    ", w);
 		string objtype=fix_qualified_name(m->ObjectType);
 		if (objtype=="varobject") objtype="object";
 		std::string indtype;
@@ -865,21 +875,25 @@ namespace RobotRaconteurGen
 		
 
 		MEMBER_ITER2(PipeDefinition)
+		GenerateDocString(m->DocString, "    ", w);
 		convert_type_result t=convert_type(*m->Type);
 		w2 << "    Pipe<" + t.cs_type + t.cs_arr_type + "> " << fix_name(m->Name) << "{ get; set; }" << endl;
 		MEMBER_ITER_END()
 
 
 		MEMBER_ITER2(CallbackDefinition)
+		GenerateDocString(m->DocString, "    ", w);
 		w2 << "    Callback<" + str_pack_delegate(m->Parameters,m->ReturnType) + "> " + fix_name(m->Name) + " {get; set;}" << endl;
 		MEMBER_ITER_END()
 
 		MEMBER_ITER2(WireDefinition)
+		GenerateDocString(m->DocString, "    ", w);
 		convert_type_result t=convert_type(*m->Type);
 		w2 << "    Wire<" + t.cs_type + t.cs_arr_type + "> " << fix_name(m->Name) << "{ get; set; }" << endl;
 		MEMBER_ITER_END()
 
 		MEMBER_ITER2(MemoryDefinition)
+		GenerateDocString(m->DocString, "    ", w);
 		TypeDefinition t2;
 		m->Type->CopyTo(t2);
 		t2.RemoveArray();		
@@ -926,6 +940,11 @@ namespace RobotRaconteurGen
 			w2 << "using System.Collections.Generic;" << endl << endl;
 			w2 << "#pragma warning disable 0108" << endl << endl;
 		}
+
+		if (!d->DocString.empty())
+		{
+			GenerateDocString(d->DocString, "", w);			
+		}
 		w2 << "namespace " << fix_name(d->Name) << endl << "{" << endl;
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Structures.begin(); e != d->Structures.end(); ++e)
 		{
@@ -946,11 +965,12 @@ namespace RobotRaconteurGen
 
 		GenerateConstants(d,w);
 
-		for (vector<string>::iterator e=d->Exceptions.begin(); e!=d->Exceptions.end(); e++)
+		BOOST_FOREACH (RR_SHARED_PTR<ExceptionDefinition> e,d->Exceptions)
 		{
-			w2 << "public class " << fix_name(*e) << " : RobotRaconteurRemoteException" << endl << "{" << endl;
+			GenerateDocString(e->DocString, "    ", w);
+			w2 << "public class " << fix_name(e->Name) << " : RobotRaconteurRemoteException" << endl << "{" << endl;
 			
-			w2 << "    public " << fix_name(*e) << "(string message,string errorsubname=null,object param=null) : base(\"" << d->Name << "." << *e << "\",message,errorsubname,param) {}" << endl;
+			w2 << "    public " << fix_name(e->Name) << "(string message,string errorsubname=null,object param=null) : base(\"" << d->Name << "." << e->Name << "\",message,errorsubname,param) {}" << endl;
 			w2 << "};" << endl;
 		}
 
@@ -1149,9 +1169,9 @@ namespace RobotRaconteurGen
 		w2 << "    if (!rr_type.Contains(\".\")) return rr_exp;" << endl;
 		w2 << "    string rr_stype;" << endl;
 		w2 << "    if (CompareNamespace(rr_type, out rr_stype)) {" << endl;		
-		for (vector<string>::iterator e=d->Exceptions.begin(); e!=d->Exceptions.end(); e++)
+		BOOST_FOREACH (RR_SHARED_PTR<ExceptionDefinition> e, d->Exceptions)
 		{
-			w2 << "    if (rr_stype==\"" << *e << "\") return new " << fix_name(*e) << "(rr_exp.Message,rr_exp.ErrorSubName,rr_exp.ErrorParam);" << endl;
+			w2 << "    if (rr_stype==\"" << e->Name << "\") return new " << fix_name(e->Name) << "(rr_exp.Message,rr_exp.ErrorSubName,rr_exp.ErrorParam);" << endl;
 		}
 		w2 << "    } else {" << endl;
 		w2 << "    return RobotRaconteurNode.s.DownCastException(rr_exp); " << endl;
@@ -2583,6 +2603,7 @@ namespace RobotRaconteurGen
 
 		BOOST_FOREACH(RR_SHARED_PTR<ConstantDefinition>& c, d->Constants)
 		{
+			GenerateDocString(c->DocString, "    ", w);
 			w2 << "    " << convert_constant(c.get(), d->Constants, d) << endl;
 		}
 
@@ -2597,7 +2618,7 @@ namespace RobotRaconteurGen
 
 			if (!(*ee)->Constants.empty()) objhasconstants = true;
 
-			if (objhasconstants)
+			if (objhasconstants || !(*ee)->Constants.empty())
 			{
 				w2 << "    public static class " << fix_name((*ee)->Name) <<  endl << "    {" << endl;
 				for (vector<string>::iterator e=(*ee)->Options.begin(); e!=(*ee)->Options.end(); ++e)
@@ -2613,6 +2634,7 @@ namespace RobotRaconteurGen
 
 				BOOST_FOREACH(RR_SHARED_PTR<ConstantDefinition>& c, (*ee)->Constants)
 				{
+					GenerateDocString(c->DocString, "    ", w);
 					w2 << "    " << convert_constant(c.get(), (*ee)->Constants, d) << endl;
 				}
 
@@ -2624,11 +2646,13 @@ namespace RobotRaconteurGen
 
 		BOOST_FOREACH(RR_SHARED_PTR<EnumDefinition>& e, d->Enums)
 		{
+			GenerateDocString(e->DocString, "    ", w);
 			w2 << "    public enum " << fix_name(e->Name) << std::endl;
 			w2 << "    {" << std::endl;
 			for (size_t i = 0; i<e->Values.size(); i++)
 			{
 				EnumDefinitionValue &v = e->Values[i];
+				GenerateDocString(v.DocString, "    ", w);
 				if (!v.HexValue)
 				{
 					w2 << "    " << fix_name(v.Name) << " = " << v.Value;
@@ -2847,5 +2871,23 @@ namespace RobotRaconteurGen
 		return GetDefaultValue(tdef);
 	}
 
+	void CSharpServiceLangGen::GenerateDocString(const std::string& docstring, const std::string& prefix, ostream* w)
+	{
+		if (docstring.empty())
+		{
+			return;
+		}
+
+		ostream& w2 = *w;
+
+		std::vector<std::string> docstring_v;
+		boost::split(docstring_v, docstring, boost::is_any_of("\n"));
+		w2 << prefix << "/// <summary>" << endl;
+		BOOST_FOREACH(const std::string& s, docstring_v)
+		{
+			w2 << prefix << "/// " << s << endl;
+		}
+		w2 << prefix << "/// </summary>" << endl;
+	}
 
 }

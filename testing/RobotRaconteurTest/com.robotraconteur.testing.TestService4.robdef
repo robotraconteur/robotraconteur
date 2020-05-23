@@ -1,0 +1,111 @@
+##
+## service docstring line 1
+## service docstring line 2
+##
+    ## service docstring line 3
+
+service com.robotraconteur.testing.TestService4
+
+stdver 0.9.2
+
+## constant docstring
+constant double myconst  0
+
+## enum1 docstring
+enum enum1
+    ## enum_val1 docstring line1
+    ## enum_val1 docstring line2
+    enum_val1 = 0,
+    ## enum_val2 docstring
+    enum_val2,
+    ## enum_val3 ignored line
+
+    ## enum_val3 docstring
+    enum_val3, enum_val4
+end
+
+## exception1 docstring line 1
+## exception1 docstring line 2
+exception exception1
+
+##
+## struct docstring ignored
+
+## struct docstring ignored
+# normal comment
+## struct docstring line 1
+    ##
+## struct docstring line 3
+struct struct1
+    field double field1
+    ## field2 docstring line 1
+    ## field2 docstring line 2
+    field double field2
+    ## field3 docstring
+    field double{list} field3
+end
+
+## pod docstring line 1
+##
+##
+## pod docstring line 4
+pod pod1
+    ## field1 docstring
+    field double field1
+    ## field2 docstring line 1
+    ##
+    ## field2 docstring line 3
+    ##
+    field double field2
+    ## field3 docstring
+    field double[2] field3
+end
+
+## namedarray docstring line 1
+##
+## namedarray docstring line 3
+namedarray namedarray1
+    ## field1 docstring
+    field double field1
+    ## field2 docstring line 1
+    ## namedarray
+    ## field2 docstring line 3
+    ##
+    field double field2
+    ## field3 docstring namedarray
+    field double[3] field3
+end
+
+## obj1 docstring
+object obj1
+   
+    ## constant2 docstring
+    constant double myconst2  0
+
+    ## property docstring
+    property int32 p1
+
+    ## function docstring
+    function void f1(int32 a)
+
+    ## event docstring
+    event e1(int32 b, double c)
+
+    ## objref docstring
+    objref obj1 o1
+
+    ## pipe docstring
+    pipe int32 p2
+
+    ## callback docstring
+
+    callback int32 cb(double[] v)
+
+    ## wire docstring
+    wire double w1
+
+    ## memory docstring
+
+    memory double[] m1
+
+end

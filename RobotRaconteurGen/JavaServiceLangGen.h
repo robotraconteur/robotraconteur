@@ -97,10 +97,12 @@ namespace RobotRaconteurGen
 		static void GenerateConstants(ServiceDefinition*d, ostream* w);
 
 		static std::string GetDefaultValue(const TypeDefinition& tdef);
+
+		static void GenerateDocString(const std::string& docstring, const std::string& prefix, ostream* w);
 		
 		//File generators
 
-		static void GenerateExceptionFile(string name, ServiceDefinition*d, ostream* w);
+		static void GenerateExceptionFile(ExceptionDefinition* exp, ServiceDefinition*d, ostream* w);
 
 		static void GenerateEnumFile(EnumDefinition* e, ServiceDefinition*d, ostream* w);
 

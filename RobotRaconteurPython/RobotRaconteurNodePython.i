@@ -197,7 +197,8 @@ def GetExceptionType(self, exceptionname, obj=None):
 		d=self.GetServiceType(t[0])
 	else:
 		d=self.GetPulledServiceType(obj,t[0])
-	if (not t[1] in d.Exceptions): raise Exception('Invalid exception type')
+	if (not any(x.Name == t[1] for x in d.Exceptions)): 
+		raise Exception('Invalid exception type')
 	return GetExceptionType(exceptionname)
 		
 def FindObjectType(self,obj,member,ind=None):

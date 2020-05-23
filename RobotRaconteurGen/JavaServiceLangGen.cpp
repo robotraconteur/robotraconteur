@@ -743,10 +743,12 @@ namespace RobotRaconteurGen
 	{
 		ostream& w2=*w;
 
+		GenerateDocString(e->DocString, "", w);
+
 		w2 << "public class " + fix_name(e->Name) <<" implements RRStructure" << endl << "{" << endl;
 
 		MEMBER_ITER2(PropertyDefinition)
-
+		GenerateDocString(m->DocString, "    ", w);
 		convert_type_result t=convert_type(*m->Type);
 		t.name=fix_name(m->Name);
 		w2 << "    public " + t.java_type + t.java_arr_type + " " + t.name << ";" << endl; 
@@ -772,9 +774,12 @@ namespace RobotRaconteurGen
 	{
 		ostream& w2 = *w;
 
+		GenerateDocString(e->DocString, "", w);
+
 		w2 << "public class " + fix_name(e->Name) << " implements RRPod " << endl << "{" << endl;
 
 		MEMBER_ITER2(PropertyDefinition)
+		GenerateDocString(m->DocString, "    ", w);
 			TypeDefinition t2 = *JavaServiceLangGen_RemoveMultiDimArray(*m->Type);
 		convert_type_result t = convert_type(t2);
 		t.name = fix_name(m->Name);
@@ -787,11 +792,12 @@ namespace RobotRaconteurGen
 	{
 		ostream& w2 = *w;
 
-		
+		GenerateDocString(e->DocString, "", w);
 
 		w2 << "public class " + fix_name(e->Name) << " implements RRNamedArray " << endl << "{" << endl;
 
 		MEMBER_ITER2(PropertyDefinition)
+		GenerateDocString(m->DocString, "    ", w);
 			TypeDefinition t2 = *JavaServiceLangGen_RemoveMultiDimArray(*m->Type);
 		convert_type_result t = convert_type(t2);
 		t.name = fix_name(m->Name);
@@ -1015,6 +1021,8 @@ namespace RobotRaconteurGen
 	{
 		ostream& w2=*w;
 
+		GenerateDocString(e->DocString, "", w);
+
 		std::vector<std::string> implements2;
 
 		for(std::vector<std::string>::iterator ee=e->Implements.begin(); ee!=e->Implements.end(); ee++)
@@ -1029,6 +1037,7 @@ namespace RobotRaconteurGen
 		w2 << "public interface " + fix_name(e->Name) << implements << endl << "{" << endl;
 
 		MEMBER_ITER2(PropertyDefinition)
+		GenerateDocString(m->DocString, "    ", w);
 		convert_type_result t=convert_type(*m->Type);
 		t.name=fix_name(m->Name);
 		if (m->Direction() != MemberDefinition_Direction_writeonly)
@@ -1042,6 +1051,7 @@ namespace RobotRaconteurGen
 		MEMBER_ITER_END()
 
 		MEMBER_ITER2(FunctionDefinition)
+		GenerateDocString(m->DocString, "    ", w);
 			if (!m->IsGenerator())
 			{
 				convert_type_result t = convert_type(*m->ReturnType);
@@ -1058,6 +1068,7 @@ namespace RobotRaconteurGen
 		MEMBER_ITER_END()
 
 		MEMBER_ITER2(EventDefinition)
+		GenerateDocString(m->DocString, "    ", w);
 		w2 << "    void " << " add" << fix_name(m->Name) << "Listener(" << str_pack_delegate(m->Parameters) <<  " listener); " << endl;
 		
 		w2 << "    void " << " remove" << fix_name(m->Name) << "Listener(" << str_pack_delegate(m->Parameters) <<  " listener); " << endl;
@@ -1065,6 +1076,7 @@ namespace RobotRaconteurGen
 		MEMBER_ITER_END()
 		
 		MEMBER_ITER2(ObjRefDefinition)
+		GenerateDocString(m->DocString, "    ", w);
 		string objtype = fix_qualified_name(m->ObjectType);
 		if (objtype == "varobject") objtype = "Object";
 		std::string indtype;
@@ -1079,6 +1091,7 @@ namespace RobotRaconteurGen
 		MEMBER_ITER_END()
 			
 		MEMBER_ITER2(PipeDefinition)
+		GenerateDocString(m->DocString, "    ", w);
 		convert_type_result t=convert_type_array(*m->Type);
 		w2 << "    Pipe<" + t.java_type + t.java_arr_type + "> get_" << fix_name(m->Name) << "();" << endl;
 		w2 << "    void set_" << fix_name(m->Name) << "(Pipe<" + t.java_type + t.java_arr_type + "> value);" << endl;
@@ -1086,17 +1099,20 @@ namespace RobotRaconteurGen
 
 
 		MEMBER_ITER2(CallbackDefinition)
+		GenerateDocString(m->DocString, "    ", w);
 		w2 << "    Callback<" + str_pack_delegate(m->Parameters,m->ReturnType) + "> get_" + fix_name(m->Name) + "();" << endl;
 		w2 << "    void set_" + fix_name(m->Name) + "(Callback<" + str_pack_delegate(m->Parameters,m->ReturnType) + "> value);" << endl;
 		MEMBER_ITER_END()
 
 		MEMBER_ITER2(WireDefinition)
+		GenerateDocString(m->DocString, "    ", w);
 		convert_type_result t=convert_type_array(*m->Type);
 		w2 << "    Wire<" + t.java_type + t.java_arr_type + "> get_" << fix_name(m->Name) << "();" << endl;
 		w2 << "    void set_" << fix_name(m->Name) << "(Wire<" + t.java_type + t.java_arr_type + "> value);" << endl;
 		MEMBER_ITER_END()
 
 		MEMBER_ITER2(MemoryDefinition)
+		GenerateDocString(m->DocString, "    ", w);
 		TypeDefinition t2;
 		m->Type->CopyTo(t2);
 		t2.RemoveArray();
@@ -1370,9 +1386,9 @@ namespace RobotRaconteurGen
 		w2 << "    if (!rr_type.contains(\".\")) return rr_exp;" << endl;
         w2 << "    String[] rr_stype = RobotRaconteurNode.splitQualifiedName(rr_type);" << endl;
 		w2 << "    if (!rr_stype[0].equals(\"" << d->Name << "\")) return RobotRaconteurNode.s().downCastException(rr_exp);" << endl;
-		for (vector<string>::iterator e=d->Exceptions.begin(); e!=d->Exceptions.end(); e++)
+		BOOST_FOREACH (RR_SHARED_PTR<ExceptionDefinition> e, d->Exceptions)
 		{
-			w2 << "    if (rr_stype[1].equals(\"" << *e << "\")) return new " << fix_name(*e) << "(rr_exp.getMessage(),rr_exp.errorSubName,rr_exp.errorParam);" << endl;
+			w2 << "    if (rr_stype[1].equals(\"" << e->Name << "\")) return new " << fix_name(e->Name) << "(rr_exp.getMessage(),rr_exp.errorSubName,rr_exp.errorParam);" << endl;
 		}
 		w2 << "    return rr_exp;" << endl;
 		w2 << "    }" << endl;
@@ -3018,6 +3034,7 @@ namespace RobotRaconteurGen
 
 		BOOST_FOREACH(RR_SHARED_PTR<ConstantDefinition>& c, d->Constants)
 		{
+			GenerateDocString(c->DocString, "    ", w);
 			w2 << "    " << convert_constant(c.get(), d->Constants, d) << endl;
 		}
 
@@ -3032,7 +3049,7 @@ namespace RobotRaconteurGen
 
 			if (!(*ee)->Constants.empty()) objhasconstants = true;
 
-			if (objhasconstants)
+			if (objhasconstants || !(*ee)->Constants.empty())
 			{
 				w2 << "    public static class " << fix_name((*ee)->Name) <<  endl << "    {" << endl;
 				for (vector<string>::iterator e=(*ee)->Options.begin(); e!=(*ee)->Options.end(); ++e)
@@ -3048,6 +3065,7 @@ namespace RobotRaconteurGen
 
 				BOOST_FOREACH(RR_SHARED_PTR<ConstantDefinition>& c, (*ee)->Constants)
 				{
+					GenerateDocString(c->DocString, "    ", w);
 					w2 << "    " << convert_constant(c.get(), (*ee)->Constants, d) << endl;
 				}
 
@@ -3066,7 +3084,7 @@ namespace RobotRaconteurGen
 
 	}
 
-	void JavaServiceLangGen::GenerateExceptionFile(string exp, ServiceDefinition* d, ostream* w)
+	void JavaServiceLangGen::GenerateExceptionFile(ExceptionDefinition* exp, ServiceDefinition* d, ostream* w)
 	{
 		ostream& w2=*w;
 
@@ -3076,13 +3094,14 @@ namespace RobotRaconteurGen
 		w2 << "import com.robotraconteur.*;" << endl;
 		//w2 << "using System.Collections.Generic;" << endl << endl;
 		
+		GenerateDocString(exp->DocString, "    ", w);
 		
-			w2 << "public class " << fix_name(exp) << " extends RobotRaconteurRemoteException" << endl << "{" << endl;
-			w2 << "    public " << fix_name(exp) << "(String message)  {" << endl;
-			w2 << "    super(\"" << d->Name << "." << exp << "\",message);" << endl;
+			w2 << "public class " << fix_name(exp->Name) << " extends RobotRaconteurRemoteException" << endl << "{" << endl;
+			w2 << "    public " << fix_name(exp->Name) << "(String message)  {" << endl;
+			w2 << "    super(\"" << d->Name << "." << exp->Name << "\",message);" << endl;
 			w2 << "    }" << endl << endl;
-			w2 << "    public " << fix_name(exp) << "(String message, String subname, Object param_)  {" << endl;
-			w2 << "    super(\"" << d->Name << "." << exp << "\",message, subname, param_);" << endl;
+			w2 << "    public " << fix_name(exp->Name) << "(String message, String subname, Object param_)  {" << endl;
+			w2 << "    super(\"" << d->Name << "." << exp->Name << "\",message, subname, param_);" << endl;
 			w2 << "    }" << endl;
 			w2 << "};" << endl;
 		
@@ -3098,12 +3117,13 @@ namespace RobotRaconteurGen
 		//w2 << "import com.robotraconteur.*;" << endl;
 		//w2 << "using System.Collections.Generic;" << endl << endl;
 
-
+		GenerateDocString(e->DocString, "", w);
 		w2 << "public enum " << fix_name(e->Name) << std::endl;
 		w2 << "{" << std::endl;
 		for (size_t i = 0; i<e->Values.size(); i++)
 		{
 			EnumDefinitionValue &v = e->Values[i];
+			GenerateDocString(v.DocString, "    ", w);
 			
 			w2 << "    " << fix_name(v.Name) << "(" << v.Value << ")";			
 
@@ -3206,10 +3226,10 @@ namespace RobotRaconteurGen
 		GenerateServiceFactoryFile(d.get(),servicedef,&f1);
 		f1.close();
 
-		for (vector<string>::iterator e=d->Exceptions.begin(); e!=d->Exceptions.end(); ++e)
+		BOOST_FOREACH (RR_SHARED_PTR<ExceptionDefinition> e, d->Exceptions)
 		{
-			ofstream f2((p.string()+os_pathsep+fix_name((*e)) + ".java").c_str());
-			GenerateExceptionFile(*e,d.get(),&f2);
+			ofstream f2((p.string()+os_pathsep+fix_name((e->Name)) + ".java").c_str());
+			GenerateExceptionFile(e.get(),d.get(),&f2);
 			f2.close();
 		}
 
@@ -3326,5 +3346,24 @@ namespace RobotRaconteurGen
 		if (tdef.Type==DataTypes_string_t) return "\"\"";
 		}
 		return "null";
+	}
+
+	void JavaServiceLangGen::GenerateDocString(const std::string& docstring, const std::string& prefix, ostream* w)
+	{
+		if (docstring.empty())
+		{
+			return;
+		}
+
+		ostream& w2 = *w;
+
+		std::vector<std::string> docstring_v;
+		boost::split(docstring_v, docstring, boost::is_any_of("\n"));
+		w2 << prefix << "/**" << endl;
+		BOOST_FOREACH(const std::string& s, docstring_v)
+		{
+			w2 << prefix << " * " << s << endl;
+		}
+		w2 << prefix << " */" << endl;
 	}
 }

@@ -46,6 +46,7 @@ namespace RobotRaconteur
 	class ROBOTRACONTEUR_CORE_API  WireDefinition;
 	class ROBOTRACONTEUR_CORE_API  MemoryDefinition;
 	class ROBOTRACONTEUR_CORE_API  TypeDefinition;
+	class ROBOTRACONTEUR_CORE_API  ExceptionDefinition;
 	class ROBOTRACONTEUR_CORE_API  UsingDefinition;
 	class ROBOTRACONTEUR_CORE_API  ConstantDefinition;
 	class ROBOTRACONTEUR_CORE_API  EnumDefinition;
@@ -154,7 +155,7 @@ namespace RobotRaconteur
 
 		std::vector<RR_SHARED_PTR<UsingDefinition> > Using;
 
-		std::vector<std::string> Exceptions;
+		std::vector<RR_SHARED_PTR<ExceptionDefinition> > Exceptions;
 
 		std::vector<RR_SHARED_PTR<ConstantDefinition> > Constants;
 		std::vector<RR_SHARED_PTR<EnumDefinition> > Enums;
@@ -162,6 +163,8 @@ namespace RobotRaconteur
 		RobotRaconteurVersion StdVer;
 
 		ServiceDefinitionParseInfo ParseInfo;
+
+		std::string DocString;
 
 		virtual ~ServiceDefinition() {}
 
@@ -203,6 +206,8 @@ namespace RobotRaconteur
 
 		ServiceDefinitionParseInfo ParseInfo;
 
+		std::string DocString;
+
 		ServiceEntryDefinition(RR_SHARED_PTR<ServiceDefinition> def);
 
 		virtual ~ServiceEntryDefinition() {}
@@ -235,6 +240,8 @@ namespace RobotRaconteur
 		std::vector<std::string> Modifiers;
 
 		ServiceDefinitionParseInfo ParseInfo;
+
+		std::string DocString;
 
 		MemberDefinition(RR_SHARED_PTR<ServiceEntryDefinition> ServiceEntry);
 
@@ -438,6 +445,26 @@ namespace RobotRaconteur
 
 	};
 
+	class ROBOTRACONTEUR_CORE_API  ExceptionDefinition
+	{
+	public:
+		virtual ~ExceptionDefinition();
+
+		std::string Name;
+		std::string DocString;
+		
+		RR_WEAK_PTR<ServiceDefinition> service;
+
+		ServiceDefinitionParseInfo ParseInfo;
+
+		ExceptionDefinition(RR_SHARED_PTR<ServiceDefinition> service);
+
+		std::string ToString();
+		void FromString(boost::string_ref s, const ServiceDefinitionParseInfo* parse_info = NULL);
+
+		void Reset();
+	};
+
 	class ROBOTRACONTEUR_CORE_API  UsingDefinition
 	{
 	public:
@@ -473,6 +500,8 @@ namespace RobotRaconteur
 		RR_SHARED_PTR<TypeDefinition> Type;
 
 		std::string Value;
+
+		std::string DocString;
 
 		RR_WEAK_PTR<ServiceDefinition> service;
 		RR_WEAK_PTR<ServiceEntryDefinition> service_entry;
@@ -559,6 +588,8 @@ namespace RobotRaconteur
 
 		ServiceDefinitionParseInfo ParseInfo;
 
+		std::string DocString;
+
 		EnumDefinition(RR_SHARED_PTR<ServiceDefinition> service);		
 
 		std::string ToString();
@@ -581,6 +612,8 @@ namespace RobotRaconteur
 		int32_t Value;
 		bool ImplicitValue;
 		bool HexValue;
+
+		std::string DocString;
 	};
 		
 	ROBOTRACONTEUR_CORE_API void VerifyServiceDefinitions(std::vector<RR_SHARED_PTR<ServiceDefinition> > def, std::vector<ServiceDefinitionParseException>& warnings);

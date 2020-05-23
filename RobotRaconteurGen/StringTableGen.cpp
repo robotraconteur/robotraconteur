@@ -44,9 +44,9 @@ namespace RobotRaconteurGen
         copy_to(str1,GetServiceEntriesDefStrings(def->Pods, def->Name));
         copy_to(str1,GetServiceEntriesDefStrings(def->NamedArrays, def->Name));
         copy_to(str1,GetServiceEntriesDefStrings(def->Objects, def->Name));
-        BOOST_FOREACH(const std::string& exp_name, def->Exceptions)
+        BOOST_FOREACH(RR_SHARED_PTR<ExceptionDefinition> exp1, def->Exceptions)
         {
-            std::string q_name = def->Name + "." + exp_name;
+            std::string q_name = def->Name + "." + exp1->Name;
             str1.insert(q_name);    
         }
         return str1;
