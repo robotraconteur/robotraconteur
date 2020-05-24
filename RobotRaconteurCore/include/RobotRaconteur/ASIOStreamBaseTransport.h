@@ -303,15 +303,7 @@ namespace RobotRaconteur
 			virtual size_t available() = 0;
 
 			virtual bool IsLargeTransferAuthorized();
-
-			void UpdateStringTable();
-
-			void UpdateStringTable1(RR_SHARED_PTR<RobotRaconteurException> ret, RR_INTRUSIVE_PTR<Message> m);
-
-			void UpdateStringTable2(RR_INTRUSIVE_PTR<Message> m);
-
-			void UpdateStringTable3(const boost::system::error_code& ec, RR_SHARED_PTR<boost::asio::deadline_timer> t, uint32_t request_id);
-
+			
 		public:
 
 			virtual bool GetDisableMessage3();

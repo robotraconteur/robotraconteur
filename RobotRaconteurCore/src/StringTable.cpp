@@ -69,31 +69,6 @@ namespace RobotRaconteur
 			RR_UNORDERED_MAP<MessageStringPtr, RR_SHARED_PTR<StringTableEntry> >::iterator e = string_table.find(str);
 			if (e == string_table.end())
 			{
-				if (!(this->flags & TransportCapabilityCode_MESSAGE3_STRINGTABLE_DYNAMIC_TABLE))
-				{
-					return RR_SHARED_PTR<const StringTableEntry>();
-				}
-
-				if (!server)
-				{
-					if (unconfirmed_string_table.find(str) == unconfirmed_string_table.end())
-					{
-						if (str.str().size() <= max_str_len)
-						{
-							if (unconfirmed_code_table.size() + code_table.size() < max_entry_count)
-							{
-								RR_SHARED_PTR<StringTableEntry> entry = RR_MAKE_SHARED<StringTableEntry>();
-								entry->code = next_code;
-								next_code += 4;
-								entry->confirmed = false;
-								entry->value = str;
-								unconfirmed_code_table.insert(std::make_pair(entry->code, entry));
-								unconfirmed_string_table.insert(std::make_pair(entry->value, entry));
-							}
-						}
-					}
-				}
-
 				return RR_SHARED_PTR < const StringTableEntry >();
 			}
 
@@ -114,79 +89,10 @@ namespace RobotRaconteur
 			if (e != code_table.end())
 			{
 				return e->second;
-			}
-			e = unconfirmed_code_table.find(code);
-			if (e == code_table.end()) return RR_SHARED_PTR < const StringTableEntry >();
-			return e->second;
-		}
-
-		size_t StringTable::GetUnconfirmedCodeCount()
-		{
-			boost::mutex::scoped_lock lock(this_lock);
-			return unconfirmed_code_table.size();
-		}
-
-		std::vector<RR_SHARED_PTR<const StringTableEntry> > StringTable::GetUnconfirmedCodes(uint32_t max_count)
-		{
-			boost::mutex::scoped_lock lock(this_lock);
-			std::vector<RR_SHARED_PTR<const StringTableEntry> > o;
-			o.reserve(unconfirmed_code_table.size());
-			
-			boost::copy(unconfirmed_code_table | boost::adaptors::map_values, std::back_inserter(o));
-			
-			return o;
-		}
-		void StringTable::ConfirmCodes(const std::vector<uint32_t> codes)
-		{
-			boost::mutex::scoped_lock lock(this_lock);
-
-			BOOST_FOREACH (uint32_t e, codes)
-			{
-				RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<StringTableEntry> >::iterator e2 = unconfirmed_code_table.find(e);
-				if (e2 != code_table.end())
-				{
-					RR_SHARED_PTR<StringTableEntry> entry = e2->second;
-					unconfirmed_code_table.erase(e2);
-					RR_UNORDERED_MAP<MessageStringPtr, RR_SHARED_PTR<StringTableEntry> >::iterator e3 = unconfirmed_string_table.find(entry->value);
-					if (e3->second == entry)
-					{
-						unconfirmed_string_table.erase(e3);
-					}
-
-					RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<StringTableEntry> >::iterator e4 = code_table.find(e);
-					if (e4 == code_table.end())
-					{
-						entry->confirmed = true;
-						code_table.insert(std::make_pair(entry->code, entry));
-						string_table.insert(std::make_pair(entry->value, entry));
-					}						
-				}
-			}
-		}
-
-		void StringTable::DropUnconfirmedCodes(const std::vector<uint32_t>& code)
-		{
-			boost::mutex::scoped_lock lock(this_lock);
-			BOOST_FOREACH (uint32_t e, code)
-			{
-				RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<StringTableEntry> >::iterator e2=unconfirmed_code_table.find(e);
-				if (e2 != unconfirmed_code_table.end())
-				{
-					unconfirmed_string_table.erase(e2->second->value);
-					unconfirmed_code_table.erase(e2);
-				}
-
-			}
-
-		}
-
-		bool StringTable::IsTableFull()
-		{
-			boost::mutex::scoped_lock lock(this_lock);
-
-			return !(unconfirmed_code_table.size() + code_table.size() < max_entry_count);
-		}
-
+			}			
+			return RR_SHARED_PTR < const StringTableEntry >();			
+		}		
+		
 		void StringTable::MessageReplaceStringsWithCodes(RR_INTRUSIVE_PTR<Message> m)
 		{
 			if (m->header->MessageFlags & MessageFlags_STRING_TABLE || m->header->StringTable.size() > 0)

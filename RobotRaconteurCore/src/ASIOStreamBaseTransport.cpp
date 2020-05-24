@@ -477,7 +477,6 @@ void ASIOStreamBaseTransport::BeginSendMessage(RR_INTRUSIVE_PTR<Message> m, boos
 		{
 			this->string_table3->MessageReplaceStringsWithCodes(m);
 			message_size = m->ComputeSize3();
-			UpdateStringTable();
 		}
 
 		if (!disable_async_io)
@@ -1013,8 +1012,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage2(size_t startpos, const boost::s
 
 				if (string_table3)
 				{
-					this->string_table3->MessageReplaceCodesWithStrings(message);
-					UpdateStringTable();
+					this->string_table3->MessageReplaceCodesWithStrings(message);					
 				}
 
 				uint16_t flags = message->header->MessageFlags;
@@ -1112,11 +1110,6 @@ void ASIOStreamBaseTransport::EndReceiveMessage3(RR_INTRUSIVE_PTR<Message> messa
 			else if (message->entries.at(0)->EntryType ==MessageEntryType_StreamCheckCapability ||message->entries.at(0)->EntryType ==MessageEntryType_StreamCheckCapabilityRet)
 			{						
 				CheckStreamCapability_MessageReceived(message);
-				EndReceiveMessage4();
-			}
-			else if (message->entries.at(0)->EntryType == MessageEntryType_StringTableOp || message->entries.at(0)->EntryType == MessageEntryType_StringTableOpRet)
-			{
-				UpdateStringTable2(message);
 				EndReceiveMessage4();
 			}
 			else
@@ -1438,7 +1431,6 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
 					if (string_table3)
 					{
 						this->string_table3->MessageReplaceCodesWithStrings(m);
-						UpdateStringTable();
 					}
 
 					uint16_t flags = m->header->MessageFlags;
@@ -2727,270 +2719,6 @@ void ASIOStreamBaseTransport::SendMessage(RR_INTRUSIVE_PTR<Message> m)
 bool ASIOStreamBaseTransport::IsLargeTransferAuthorized()
 {
 	return true;
-}
-
-void ASIOStreamBaseTransport::UpdateStringTable()
-{
-	if (this->server) return;
-	if (this->string_table_3_pause_updates) return;
-
-	if (string_table3->GetUnconfirmedCodeCount() > 0)
-	{
-		boost::mutex::scoped_lock lock(string_table3_lock);
-		if (string_table_3_closed) return;
-
-		if (this->string_table_3_pause_updates) return;
-		if (string_table_3_requests.size() > 2) return;
-
-		std::vector<RR_SHARED_PTR<const detail::StringTableEntry> > a = string_table3->GetUnconfirmedCodes(512);
-		for (std::vector<RR_SHARED_PTR<const detail::StringTableEntry> >::iterator e = a.begin(); e != a.end();)
-		{
-			uint32_t e1 = (*e)->code;
-			if (std::find(string_table_3_confirming.begin(), string_table_3_confirming.end(), e1) != string_table_3_confirming.end())
-			{
-				e = a.erase(e);
-			}
-			else
-			{
-				e++;
-			}
-		}
-
-		if (a.size() > 0)
-		{
-			std::vector<RR_INTRUSIVE_PTR<MessageElement> > el;
-			std::vector<uint32_t> codes;
-			BOOST_FOREACH (RR_SHARED_PTR<const detail::StringTableEntry>& e, a)
-			{
-				if (el.size() >= 32) break;
-				codes.push_back(e->code);
-				string_table_3_confirming.push_back(e->code);
-				RR_INTRUSIVE_PTR<MessageElement> el1 = CreateMessageElement(boost::numeric_cast<int32_t>(e->code), stringToRRArray(e->value.str()));
-				el.push_back(el1);
-			}
-
-			RR_INTRUSIVE_PTR<MessageEntry> me = CreateMessageEntry(MessageEntryType_StringTableOp, "confirmcodes");
-			me->AddElement("value", CreateMessageElementNestedElementList(DataTypes_vector_t,"",RR_MOVE(el)));
-			string_table_3_requestid++;
-			me->RequestID = string_table_3_requestid;
-
-			boost::posix_time::ptime n = boost::posix_time::microsec_clock::universal_time();
-
-			string_table_3_requests.insert(std::make_pair(string_table_3_requestid, boost::make_tuple(codes,n)));
-
-			RR_INTRUSIVE_PTR<Message> m = CreateMessage();
-			m->header = CreateMessageHeader();
-			m->header->MessageFlags = 0;
-			m->entries.push_back(me);
-
-			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&ASIOStreamBaseTransport::UpdateStringTable1,
-				RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this()), _1, m);
-			RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(&ASIOStreamBaseTransport::SimpleAsyncSendMessage,
-				RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this()), m,h	));
-
-			RR_SHARED_PTR<boost::asio::deadline_timer> t(new boost::asio::deadline_timer(_io_context));
-			t->expires_from_now(boost::posix_time::seconds(15));
-			RobotRaconteurNode::asio_async_wait(node, t, boost::bind(&ASIOStreamBaseTransport::UpdateStringTable3,
-				RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this()), _1, t, me->RequestID));
-			string_table_3_timers.push_back(t);
-
-		}
-
-	}
-}
-
-void ASIOStreamBaseTransport::UpdateStringTable1(RR_SHARED_PTR<RobotRaconteurException> ret, RR_INTRUSIVE_PTR<Message> m)
-{
-	if (ret)
-	{
-		if (this->server) return;
-
-		boost::mutex::scoped_lock lock(string_table3_lock);
-		RR_UNORDERED_MAP<uint32_t, boost::tuple<std::vector<uint32_t>, boost::posix_time::ptime> >::iterator e = string_table_3_requests.find(m->entries.at(0)->RequestID);
-		if (e == string_table_3_requests.end()) return;
-		BOOST_FOREACH (uint32_t& e2, e->second.get<0>())
-		{
-			string_table_3_confirming.remove(e2);
-		}
-		string_table_3_requests.erase(e);
-	}
-}
-
-void ASIOStreamBaseTransport::UpdateStringTable2(RR_INTRUSIVE_PTR<Message> m)
-{		
-	boost::mutex::scoped_lock lock(string_table3_lock);
-
-	if (string_table_3_closed) return;
-
-	if (m->entries.size() != 1) return;
-	RR_INTRUSIVE_PTR<MessageEntry>& me = m->entries.at(0);
-
-	if (me->MemberName == "pause" || me->MemberName == "resume")
-	{
-		if (me->EntryType == MessageEntryType_StringTableOp)
-		{
-			if (me->MemberName == "pause")
-			{
-				this->string_table_3_pause_updates = true;
-			}
-			else
-			{
-				this->string_table_3_pause_updates = false;
-			}
-
-			RR_INTRUSIVE_PTR<MessageEntry> me4 = CreateMessageEntry(MessageEntryType_StringTableOpRet, me->MemberName);
-
-			RR_INTRUSIVE_PTR<Message> m4 = CreateMessage();
-			m4->header = CreateMessageHeader();
-			m4->header->MessageFlags = 0;
-			m4->entries.push_back(me4);
-
-			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&ASIOStreamBaseTransport::SimpleAsyncEndSendMessage,
-				RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this()), _1);
-
-			RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(&ASIOStreamBaseTransport::SimpleAsyncSendMessage,
-				RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this()), m4, h));
-		}
-	}
-
-	if (server)
-	{
-		std::vector<uint32_t> o;		
-		if (me->EntryType != MessageEntryType_StringTableOp) return;
-		if (me->MemberName != "confirmcodes") return;
-		if (me->Error != MessageErrorType_None) return;
-		if (me->elements.size() != 1) return;
-		RR_INTRUSIVE_PTR<MessageElement> mee = me->elements.at(0);
-		if (mee->ElementName != "value") return;
-		if (mee->ElementType != DataTypes_vector_t) return;
-		std::vector<RR_INTRUSIVE_PTR<MessageElement> > v = mee->CastDataToNestedList(DataTypes_vector_t)->Elements;
-		BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& e, v)
-		{
-			if (!(e->ElementFlags & MessageElementFlags_ELEMENT_NUMBER))
-				continue;
-
-			RR_INTRUSIVE_PTR<RRArray<char> > c = RR_DYNAMIC_POINTER_CAST<RRArray<char> >(e->GetData());
-			if (!c)
-				continue;
-
-			std::string c1 = RRArrayToString(c);
-			if (e->ElementNumber < 2) continue;
-			uint32_t c2 = boost::numeric_cast<uint32_t>(e->ElementNumber);
-			if (this->string_table3->AddCode(c2, c1))
-			{
-				o.push_back(c2);
-			}
-		}
-		
-		RR_INTRUSIVE_PTR<RRArray<uint32_t> > o1;
-		if (o.size() > 0)
-		{
-			o1 = AttachRRArrayCopy(&o[0], o.size());
-		}
-		else
-		{ 
-			o1 = AllocateRRArray<uint32_t>(0);
-		}
-
-		RR_INTRUSIVE_PTR<MessageEntry> me2 = CreateMessageEntry(MessageEntryType_StringTableOpRet, "confirmcodes");
-		me2->AddElement("value", o1);
-		
-		me2->RequestID = me->RequestID;		
-
-		RR_INTRUSIVE_PTR<Message> m2 = CreateMessage();
-		m2->header = CreateMessageHeader();
-		m2->header->MessageFlags = 0;
-		m2->entries.push_back(me2);
-
-		boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&ASIOStreamBaseTransport::UpdateStringTable1,
-			RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this()), _1, m2);
-
-		RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(&ASIOStreamBaseTransport::SimpleAsyncSendMessage,
-			RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this()), m2, h));
-
-		if (this->string_table3->IsTableFull())
-		{
-			RR_INTRUSIVE_PTR<MessageEntry> me3 = CreateMessageEntry(MessageEntryType_StringTableOp, "pause");			
-
-			RR_INTRUSIVE_PTR<Message> m3 = CreateMessage();
-			m3->header = CreateMessageHeader();
-			m3->header->MessageFlags = 0;
-			m3->entries.push_back(me3);
-
-			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&ASIOStreamBaseTransport::SimpleAsyncEndSendMessage,
-				RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this()), _1);
-			RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(&ASIOStreamBaseTransport::SimpleAsyncSendMessage,
-				RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this()), m3, h));
-		}
-	}
-	else
-	{
-		std::vector<uint32_t> o;
-		if (m->entries.size() != 1) return;
-		RR_INTRUSIVE_PTR<MessageEntry>& me = m->entries.at(0);
-		if (me->EntryType != MessageEntryType_StringTableOpRet) return;
-		if (me->MemberName != "confirmcodes") return;
-		if (me->Error != MessageErrorType_None) return;
-		if (me->elements.size() != 1) return;
-		RR_INTRUSIVE_PTR<MessageElement> mee = me->elements.at(0);
-		if (mee->ElementName != "value") return;
-		if (mee->ElementType != DataTypes_uint32_t) return;
-		RR_INTRUSIVE_PTR<RRArray<uint32_t> > codes = RR_DYNAMIC_POINTER_CAST<RRArray<uint32_t> >(mee->GetData());
-		if (!codes) return;
-		
-		std::vector<uint32_t> o1;
-		o1.reserve(codes->size());
-		for (size_t i = 0; i < codes->size(); i++)
-		{
-			o1.push_back((*codes)[i]);
-		}
-
-		this->string_table3->ConfirmCodes(o1);
-		std::vector<uint32_t> drop_codes;
-
-		RR_UNORDERED_MAP<uint32_t, boost::tuple<std::vector<uint32_t>, boost::posix_time::ptime> >::iterator e1 = string_table_3_requests.find(me->RequestID);
-		if (e1 != string_table_3_requests.end())
-		{
-			for (std::vector<uint32_t>::iterator e2 = e1->second.get<0>().begin(); e2 != e1->second.get<0>().end(); e2++)
-			{
-				if (std::find(o1.begin(), o1.end(), *e2) == o1.end())
-				{
-					drop_codes.push_back(*e2);					
-				}
-			}
-
-			for (std::vector<uint32_t>::iterator e2 = e1->second.get<0>().begin(); e2 != e1->second.get<0>().end(); e2++)
-			{
-				string_table_3_confirming.remove(*e2);
-			}
-
-			string_table_3_requests.erase(e1);
-		}
-
-		string_table3->DropUnconfirmedCodes(drop_codes);		
-	}
-}
-
-void ASIOStreamBaseTransport::UpdateStringTable3(const boost::system::error_code& ec, RR_SHARED_PTR<boost::asio::deadline_timer> t, uint32_t request_id)
-{
-	boost::mutex::scoped_lock lock(string_table3_lock);
-
-	if (string_table_3_closed) return;
-
-	string_table_3_timers.remove(t);
-
-	if (ec) return;
-
-	RR_UNORDERED_MAP<uint32_t, boost::tuple<std::vector<uint32_t>, boost::posix_time::ptime> >::iterator e1 = string_table_3_requests.find(request_id);
-	if (e1 == string_table_3_requests.end()) return;
-		
-	for (std::vector<uint32_t>::iterator e2 = e1->second.get<0>().begin(); e2 != e1->second.get<0>().end(); e2++)
-	{
-		string_table_3_confirming.remove(*e2);		
-	}
-
-	string_table_3_requests.erase(e1);
-	
 }
 
 bool ASIOStreamBaseTransport::GetDisableMessage3()

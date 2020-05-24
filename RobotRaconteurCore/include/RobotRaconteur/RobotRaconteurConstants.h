@@ -84,22 +84,17 @@ namespace RobotRaconteur
 	};
 
 	//Flags for MessageFlags entry in MessageHeader
-	const uint16_t MessageFlags_PROTOCOL_VERSION_MINOR = 0x01;
-	const uint16_t MessageFlags_SUBSTREAM_ID = 0x02;
-	const uint16_t MessageFlags_SUBSTREAM_SEQUENCE_NUMBER = 0x04;
-	const uint16_t MessageFlags_FRAGMENT = 0x08;
-	const uint16_t MessageFlags_UNRELIABLE = 0x10;
-	const uint16_t MessageFlags_UNRELIABLE_EXPIRATION = 0x20;
-	const uint16_t MessageFlags_PRIORITY = 0x40;
-	const uint16_t MessageFlags_ROUTING_INFO = 0x80;
-	const uint16_t MessageFlags_ENDPOINT_INFO = 0x100;
-	const uint16_t MessageFlags_META_INFO = 0x200;
-	const uint16_t MessageFlags_MESSAGE_ID = 0x400;
-	const uint16_t MessageFlags_STRING_TABLE = 0x800;
-	const uint16_t MessageFlags_MULTIPLE_ENTRIES = 0x1000;
-	const uint16_t MessageFlags_TRANSPORT_SPECIFIC = 0x2000;
+	
+	const uint8_t MessageFlags_ROUTING_INFO = 0x01;
+	const uint8_t MessageFlags_ENDPOINT_INFO = 0x02;
+	const uint8_t MessageFlags_PRIORITY = 0x04;
+	const uint8_t MessageFlags_UNRELIABLE = 0x08;	
+	const uint8_t MessageFlags_META_INFO = 0x10;
+	const uint8_t MessageFlags_STRING_TABLE = 0x20;
+	const uint8_t MessageFlags_MULTIPLE_ENTRIES = 0x40;
+	const uint8_t MessageFlags_EXTENDED = 0x80;
 
-	const uint16_t MessageFlags_Version2Compat = MessageFlags_ROUTING_INFO | MessageFlags_ENDPOINT_INFO | MessageFlags_META_INFO | MessageFlags_MESSAGE_ID | MessageFlags_MULTIPLE_ENTRIES;
+	const uint16_t MessageFlags_Version2Compat = MessageFlags_ROUTING_INFO | MessageFlags_ENDPOINT_INFO | MessageFlags_META_INFO | MessageFlags_MULTIPLE_ENTRIES;
 
 	//Flags for EntryFlags in MessageEntry
 	const uint16_t MessageEntryFlags_SERVICE_PATH_STR = 0x01;
@@ -109,7 +104,7 @@ namespace RobotRaconteur
 	const uint16_t MessageEntryFlags_REQUEST_ID = 0x10;
 	const uint16_t MessageEntryFlags_ERROR = 0x20;
 	const uint16_t MessageEntryFlags_META_INFO = 0x40;
-	const uint16_t MessageEntryFlags_TIMESPEC = 0x80;
+	const uint16_t MessageEntryFlags_EXTENDED = 0x80;
 
 	const uint16_t MessageEntryFlags_Version2Compat = MessageEntryFlags_SERVICE_PATH_STR | MessageEntryFlags_MEMBER_NAME_STR | MessageEntryFlags_REQUEST_ID | MessageEntryFlags_ERROR | MessageEntryFlags_META_INFO;
 
@@ -119,9 +114,8 @@ namespace RobotRaconteur
 	const uint16_t MessageElementFlags_ELEMENT_NUMBER = 0x04;
 	const uint16_t MessageElementFlags_ELEMENT_TYPE_NAME_STR = 0x08;
 	const uint16_t MessageElementFlags_ELEMENT_TYPE_NAME_CODE = 0x10;
-	const uint16_t MessageElementFlags_SEQUENCE_NUMBER = 0x20;
-	const uint16_t MessageElementFlags_REQUEST_ACK = 0x40;
-	const uint16_t MessageElementFlags_META_INFO = 0x80;
+	const uint16_t MessageElementFlags_META_INFO = 0x20;
+	const uint16_t MessageElementFlags_EXTENDED = 0x80;
 
 	const uint16_t MessageElementFlags_Version2Compat = MessageElementFlags_ELEMENT_NAME_STR | MessageElementFlags_ELEMENT_TYPE_NAME_STR | MessageElementFlags_META_INFO;
 
@@ -133,8 +127,8 @@ namespace RobotRaconteur
 		MessageEntryType_StreamOpRet,
 		MessageEntryType_StreamCheckCapability,
 		MessageEntryType_StreamCheckCapabilityRet,
-		MessageEntryType_StringTableOp,
-		MessageEntryType_StringTableOpRet,
+		//MessageEntryType_StringTableOp, - Deprecated!
+		//MessageEntryType_StringTableOpRet, - Deprecated!
 		MessageEntryType_GetServiceDesc = 101,
 		MessageEntryType_GetServiceDescRet,
 		MessageEntryType_ObjectTypeName,

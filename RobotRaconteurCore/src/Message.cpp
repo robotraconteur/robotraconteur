@@ -106,19 +106,19 @@ namespace RobotRaconteur
 		}
 	}
 
-	uint32_t Message::ComputeSize3()
+	uint32_t Message::ComputeSize4()
 	{
 		header->EntryCount = boost::numeric_cast<uint16_t>(entries.size());
 		uint64_t s = 0;
 		BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageEntry>& e, entries)
 		{
-			e->UpdateData3();
+			e->UpdateData4();
 			s += e->EntrySize;
 		}
 
 		if (s > std::numeric_limits<uint32_t>::max()) throw ProtocolException("Message exceeds maximum length");
 
-		header->UpdateHeader3(boost::numeric_cast<uint32_t>(s), boost::numeric_cast<uint16_t>(entries.size()));
+		header->UpdateHeader4(boost::numeric_cast<uint32_t>(s), boost::numeric_cast<uint16_t>(entries.size()));
 
 		uint32_t s1 = header->MessageSize;
 
@@ -126,19 +126,19 @@ namespace RobotRaconteur
 		return boost::numeric_cast<uint32_t>(s1);
 	}
 
-	void Message::Write3(ArrayBinaryWriter &w, const uint16_t& version_minor)
+	void Message::Write4(ArrayBinaryWriter &w, const uint16_t& version_minor)
 	{
 
 		if (version_minor != 0) throw ProtocolException("Invalid Message 3 version minor");
 
-		uint32_t s = ComputeSize3();
+		uint32_t s = ComputeSize4();
 
 		w.PushRelativeLimit(s);
 				
-		header->Write3(w, version_minor);
+		header->Write4(w, version_minor);
 		BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageEntry>& e, entries)
 		{
-			e->Write3(w, version_minor);
+			e->Write4(w, version_minor);
 		}
 
 		w.PopLimit();
@@ -146,10 +146,10 @@ namespace RobotRaconteur
 
 	}
 
-	void Message::Read3(ArrayBinaryReader &r, uint16_t& version_minor)
+	void Message::Read4(ArrayBinaryReader &r, uint16_t& version_minor)
 	{
 		header = CreateMessageHeader();
-		header->Read3(r, version_minor);
+		header->Read4(r, version_minor);
 
 		r.PushRelativeLimit(header->MessageSize - header->HeaderSize);
 
@@ -158,7 +158,7 @@ namespace RobotRaconteur
 		for (int32_t i = 0; i < s; i++)
 		{
 			RR_INTRUSIVE_PTR<MessageEntry> e = CreateMessageEntry();
-			e->Read3(r, version_minor);
+			e->Read4(r, version_minor);
 			entries.push_back(e);
 		}
 	}
@@ -277,42 +277,8 @@ namespace RobotRaconteur
 
 	uint32_t MessageHeader::ComputeSize3()
 	{
-		size_t s = 12;
+		size_t s = 11;
 		
-		if (MessageFlags & MessageFlags_PROTOCOL_VERSION_MINOR)
-		{
-			s += 2;
-		}
-
-		if (MessageFlags & MessageFlags_SUBSTREAM_ID)
-		{
-			s += ArrayBinaryWriter::GetUintX2ByteCount(SubstreamID);
-		}
-
-		if (MessageFlags & MessageFlags_SUBSTREAM_SEQUENCE_NUMBER)
-		{
-			s += ArrayBinaryWriter::GetUintXByteCount(SubstreamSequenceNumber.SequenceNumber);
-			s += ArrayBinaryWriter::GetUintXByteCount(SubstreamSequenceNumber.RecvSequenceNumber);
-		}
-
-		if (MessageFlags & MessageFlags_FRAGMENT)
-		{
-			s += ArrayBinaryWriter::GetUintXByteCount(FragmentHeader.FragmentMessageNumber);
-			s += ArrayBinaryWriter::GetUintXByteCount(FragmentHeader.FragmentMessageSize);
-			s += ArrayBinaryWriter::GetUintXByteCount(FragmentHeader.FragmentOffset);
-		}
-
-		if (MessageFlags & MessageFlags_UNRELIABLE_EXPIRATION)
-		{
-			s += ArrayBinaryWriter::GetIntX2ByteCount(UnreliableExpiration.seconds);
-			s += ArrayBinaryWriter::GetIntXByteCount(UnreliableExpiration.nanoseconds);
-		}
-
-		if (MessageFlags & MessageFlags_PRIORITY)
-		{
-			s += 2;
-		}
-
 		if (MessageFlags & MessageFlags_ROUTING_INFO)
 		{
 			s += 32;
@@ -322,19 +288,21 @@ namespace RobotRaconteur
 
 		if (MessageFlags & MessageFlags_ENDPOINT_INFO)
 		{
-			s += 8;
+			s += ArrayBinaryWriter::GetUintXByteCount(SenderEndpoint);
+			s += ArrayBinaryWriter::GetUintXByteCount(ReceiverEndpoint);
+		}
+
+		if (MessageFlags & MessageFlags_PRIORITY)
+		{
+			s += 2;
 		}
 
 		if (MessageFlags & MessageFlags_META_INFO)
 		{
 			s += ArrayBinaryWriter::GetStringByteCount8WithXLen(MetaData);
-		}
-		
-		if (MessageFlags & MessageFlags_MESSAGE_ID)
-		{
 			s += 4;
 		}
-
+		
 		if (MessageFlags & MessageFlags_STRING_TABLE)
 		{
 			uint32_t s1 = 0;
@@ -352,10 +320,10 @@ namespace RobotRaconteur
 			s += ArrayBinaryWriter::GetUintXByteCount(EntryCount);
 		}
 
-		if (MessageFlags & MessageFlags_TRANSPORT_SPECIFIC)
+		if (MessageFlags & MessageFlags_EXTENDED)
 		{
-			s += TransportSpecific.size();
-			s += ArrayBinaryWriter::GetUintXByteCount(TransportSpecific.size());
+			s += ArrayBinaryWriter::GetUintXByteCount(Extended.size());
+			s += Extended.size();
 		}
 
 		s = ArrayBinaryWriter::GetSizePlusUintX(s);
@@ -365,7 +333,7 @@ namespace RobotRaconteur
 		return boost::numeric_cast<uint32_t>(s);
 	}
 
-	void MessageHeader::UpdateHeader3(uint32_t message_entry_size, uint16_t entry_count)
+	void MessageHeader::UpdateHeader4(uint32_t message_entry_size, uint16_t entry_count)
 	{
 		if (entry_count == 1)
 		{
@@ -376,7 +344,7 @@ namespace RobotRaconteur
 			MessageFlags |= MessageFlags_MULTIPLE_ENTRIES;
 		}
 
-		if (MetaData.str().size() == 0)
+		if (MetaData.str().size() == 0 && MessageID == 0 && MessageResID == 0)
 		{
 			MessageFlags &= ~MessageFlags_META_INFO;
 		}
@@ -385,13 +353,22 @@ namespace RobotRaconteur
 			MessageFlags |= MessageFlags_META_INFO;
 		}
 
+		if (Extended.size() == 0)
+		{
+			MessageFlags &= ~MessageFlags_EXTENDED;
+		}
+		else
+		{
+			MessageFlags |= MessageFlags_EXTENDED;
+		}
+
 		EntryCount = entry_count;
 		HeaderSize = ComputeSize3();
 		MessageSize = message_entry_size + HeaderSize;
 		
 	}
 
-	void MessageHeader::Write3(ArrayBinaryWriter &w, const uint16_t& version_minor)
+	void MessageHeader::Write4(ArrayBinaryWriter &w, const uint16_t& version_minor)
 	{
 		if (version_minor != 0) throw ProtocolException("Invalid Message 3 version minor");
 
@@ -402,40 +379,6 @@ namespace RobotRaconteur
 
 		w.WriteUintX(HeaderSize);
 		w.WriteNumber(MessageFlags);
-
-		if (MessageFlags & MessageFlags_PROTOCOL_VERSION_MINOR)
-		{			
-			w.WriteNumber(version_minor);
-		}
-
-		if (MessageFlags & MessageFlags_SUBSTREAM_ID)
-		{
-			w.WriteUintX2(SubstreamID);
-		}
-
-		if (MessageFlags & MessageFlags_SUBSTREAM_SEQUENCE_NUMBER)
-		{
-			w.WriteUintX(SubstreamSequenceNumber.SequenceNumber);
-			w.WriteUintX(SubstreamSequenceNumber.RecvSequenceNumber);
-		}
-
-		if (MessageFlags & MessageFlags_FRAGMENT)
-		{
-			w.WriteUintX(FragmentHeader.FragmentMessageNumber);
-			w.WriteUintX(FragmentHeader.FragmentMessageSize);
-			w.WriteUintX(FragmentHeader.FragmentOffset);
-		}
-
-		if (MessageFlags & MessageFlags_UNRELIABLE_EXPIRATION)
-		{
-			w.WriteIntX2(UnreliableExpiration.seconds);
-			w.WriteIntX(UnreliableExpiration.nanoseconds);
-		}
-
-		if (MessageFlags & MessageFlags_PRIORITY)
-		{
-			w.WriteNumber(Priority);
-		}
 
 		if (MessageFlags & MessageFlags_ROUTING_INFO)
 		{
@@ -457,21 +400,22 @@ namespace RobotRaconteur
 
 		if (MessageFlags & MessageFlags_ENDPOINT_INFO)
 		{
-			w.WriteNumber(SenderEndpoint);
-			w.WriteNumber(ReceiverEndpoint);
+			w.WriteUintX(SenderEndpoint);
+			w.WriteUintX(ReceiverEndpoint);
+		}
+
+		if (MessageFlags & MessageFlags_PRIORITY)
+		{
+			w.WriteNumber(Priority);
 		}
 
 		if (MessageFlags & MessageFlags_META_INFO)
 		{
 			w.WriteString8WithXLen(MetaData);
-		}
-		
-		if (MessageFlags & MessageFlags_MESSAGE_ID)
-		{			
 			w.WriteNumber(MessageID);
 			w.WriteNumber(MessageResID);
 		}
-
+		
 		if (MessageFlags & MessageFlags_STRING_TABLE)
 		{
 			w.WriteUintX(StringTable.size());
@@ -487,12 +431,12 @@ namespace RobotRaconteur
 			w.WriteUintX(EntryCount);
 		}
 
-		if (MessageFlags & MessageFlags_TRANSPORT_SPECIFIC)
+		if (MessageFlags & MessageFlags_EXTENDED)
 		{
-			w.WriteUintX(TransportSpecific.size());
-			if (!TransportSpecific.empty())
+			w.WriteUintX(Extended.size());
+			if (!Extended.empty())
 			{
-				w.Write(&TransportSpecific[0], 0, TransportSpecific.size());
+				w.Write(&Extended[0], 0, Extended.size());
 			}
 		}
 
@@ -501,7 +445,7 @@ namespace RobotRaconteur
 
 	}
 
-	void MessageHeader::Read3(ArrayBinaryReader &r, uint16_t& version_minor)
+	void MessageHeader::Read4(ArrayBinaryReader &r, uint16_t& version_minor)
 	{
 		MessageStringPtr magic = r.ReadString8(4).str();
 		if (magic != "RRAC")
@@ -516,47 +460,7 @@ namespace RobotRaconteur
 		r.PushRelativeLimit(HeaderSize - 10 - ArrayBinaryWriter::GetUintXByteCount(HeaderSize));
 
 		MessageFlags = r.ReadNumber<uint16_t>();
-
-		if (MessageFlags & MessageFlags_PROTOCOL_VERSION_MINOR)
-		{
-			version_minor = r.ReadNumber<uint16_t>();
-			
-			if (version_minor != 0) throw ProtocolException("Invalid Message 3 version minor");			
-		}
-		else
-		{
-			version_minor = 0;
-		}
-
-		if (MessageFlags & MessageFlags_SUBSTREAM_ID)
-		{
-			SubstreamID = r.ReadUintX2();
-		}
-
-		if (MessageFlags & MessageFlags_SUBSTREAM_SEQUENCE_NUMBER)
-		{
-			SubstreamSequenceNumber.SequenceNumber = r.ReadUintX();
-			SubstreamSequenceNumber.RecvSequenceNumber = r.ReadUintX();
-		}
-
-		if (MessageFlags & MessageFlags_FRAGMENT)
-		{
-			FragmentHeader.FragmentMessageNumber = r.ReadUintX();
-			FragmentHeader.FragmentMessageSize = r.ReadUintX();
-			FragmentHeader.FragmentOffset = r.ReadUintX();
-		}
-
-		if (MessageFlags & MessageFlags_UNRELIABLE_EXPIRATION)
-		{
-			UnreliableExpiration.seconds = r.ReadIntX2();
-			UnreliableExpiration.nanoseconds = r.ReadIntX();
-		}
-
-		if (MessageFlags & MessageFlags_PRIORITY)
-		{
-			Priority = r.ReadNumber<uint16_t>();
-		}
-
+		
 		if (MessageFlags & MessageFlags_ROUTING_INFO)
 		{
 
@@ -582,22 +486,23 @@ namespace RobotRaconteur
 
 		if (MessageFlags & MessageFlags_ENDPOINT_INFO)
 		{
-			SenderEndpoint = r.ReadNumber<uint32_t>();
-			ReceiverEndpoint = r.ReadNumber<uint32_t>();
+			SenderEndpoint = r.ReadUintX();
+			ReceiverEndpoint = r.ReadUintX();
+		}
+
+		if (MessageFlags & MessageFlags_PRIORITY)
+		{
+			Priority = r.ReadNumber<uint16_t>();
 		}
 
 		if (MessageFlags & MessageFlags_META_INFO)
 		{
 			uint32_t meta_s = r.ReadUintX();
 			MetaData = r.ReadString8(meta_s);
-		}
-		
-		if (MessageFlags & MessageFlags_MESSAGE_ID)
-		{
 			MessageID = r.ReadNumber<uint16_t>();
 			MessageResID = r.ReadNumber<uint16_t>();
 		}
-
+		
 		if (MessageFlags & MessageFlags_STRING_TABLE)
 		{
 			uint32_t s1 = r.ReadUintX();
@@ -621,13 +526,13 @@ namespace RobotRaconteur
 			EntryCount = 1;
 		}
 
-		if (MessageFlags & MessageFlags_TRANSPORT_SPECIFIC)
+		if (MessageFlags & MessageFlags_EXTENDED)
 		{
 			size_t l = r.ReadUintX();
-			TransportSpecific.resize(l);
+			Extended.resize(l);
 			if (l != 0)
 			{
-				r.Read(&TransportSpecific[0], 0, l);
+				r.Read(&Extended[0], 0, l);
 			}
 		}
 
@@ -652,9 +557,8 @@ namespace RobotRaconteur
 		MessageResID=0;
 		EntryCount=0;
 
-		memset(&FragmentHeader, 0, sizeof(FragmentHeader));
+		Extended.clear();
 
-		SubstreamID = 0;
 		MessageFlags = MessageFlags_Version2Compat;
 		Priority = 0;
 	}
@@ -668,7 +572,7 @@ namespace RobotRaconteur
 		EntryType = MessageEntryType_Null;
 		EntrySize = 0;
 		EntryFlags = MessageEntryFlags_Version2Compat;
-		EntryStreamID = 0;
+		Extended.clear();
 		elements.clear();
 		
 	}
@@ -682,7 +586,7 @@ namespace RobotRaconteur
 		EntryType = MessageEntryType_Null;
 		EntrySize = 0;
 		EntryFlags = MessageEntryFlags_Version2Compat;
-		EntryStreamID = 0;
+		Extended.clear();
 		elements.clear();
 		EntryType = t;
 		MemberName = n;
@@ -830,12 +734,12 @@ namespace RobotRaconteur
 
 	}
 
-	uint32_t MessageEntry::ComputeSize3()
+	uint32_t MessageEntry::ComputeSize4()
 	{
 		size_t s = 3;
 		BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& e, elements)
 		{
-			e->UpdateData3();
+			e->UpdateData4();
 			s += e->ElementSize;
 		}
 
@@ -863,11 +767,6 @@ namespace RobotRaconteur
 			send_streamid = false;
 		}
 
-		if (send_streamid)
-		{
-			s += ArrayBinaryWriter::GetUintX2ByteCount(EntryStreamID);
-		}
-
 		if (EntryFlags & MessageEntryFlags_REQUEST_ID)
 		{
 			s += ArrayBinaryWriter::GetUintXByteCount(RequestID);
@@ -878,15 +777,16 @@ namespace RobotRaconteur
 			s += 2;
 		}
 
-		if (EntryFlags & MessageEntryFlags_TIMESPEC)
-		{
-			s += ArrayBinaryWriter::GetIntX2ByteCount(EntryTimeSpec.seconds) + ArrayBinaryWriter::GetIntXByteCount(EntryTimeSpec.nanoseconds);
-		}
-
 		if (EntryFlags & MessageEntryFlags_META_INFO)
 		{
 			s += boost::numeric_cast<uint32_t>(ArrayBinaryWriter::GetStringByteCount8WithXLen(MetaData));
-		}		
+		}
+
+		if (EntryFlags & MessageEntryFlags_EXTENDED)
+		{
+			s += ArrayBinaryWriter::GetUintXByteCount(Extended.size());
+			s += Extended.size();
+		}
 
 		s += ArrayBinaryWriter::GetUintXByteCount(elements.size());
 
@@ -895,7 +795,7 @@ namespace RobotRaconteur
 		return boost::numeric_cast<uint32_t>(s);
 	}
 
-	void MessageEntry::UpdateData3()
+	void MessageEntry::UpdateData4()
 	{	
 
 		if (RequestID != 0)
@@ -925,14 +825,23 @@ namespace RobotRaconteur
 			EntryFlags &= ~MessageEntryFlags_META_INFO;
 		}
 
-		EntrySize = ComputeSize3();
+		if (Extended.size() == 0)
+		{
+			EntryFlags &= ~MessageFlags_EXTENDED;
+		}
+		else
+		{
+			EntryFlags |= MessageFlags_EXTENDED;
+		}
+
+		EntrySize = ComputeSize4();
 	}
 
-	void MessageEntry::Write3(ArrayBinaryWriter &w, const uint16_t& version_minor)
+	void MessageEntry::Write4(ArrayBinaryWriter &w, const uint16_t& version_minor)
 	{
 		if (version_minor != 0) throw ProtocolException("Invalid Message 3 version minor");
 
-		UpdateData3();
+		UpdateData4();
 
 		w.PushRelativeLimit(EntrySize);
 
@@ -940,37 +849,26 @@ namespace RobotRaconteur
 		w.WriteNumber(EntryFlags);
 		w.WriteNumber(static_cast<uint16_t>(EntryType));
 		
-		bool send_streamid = true;
-
 		if (EntryFlags & MessageEntryFlags_SERVICE_PATH_STR)
 		{
-			w.WriteString8WithXLen(ServicePath);
-			send_streamid = false;
+			w.WriteString8WithXLen(ServicePath);			
 		}
 
 		if (EntryFlags & MessageEntryFlags_SERVICE_PATH_CODE)
-		{
-			send_streamid = false;
+		{			
 			w.WriteUintX(ServicePathCode);
 		}		
 
 		if (EntryFlags & MessageEntryFlags_MEMBER_NAME_STR)
 		{
-			w.WriteString8WithXLen(MemberName);
-			send_streamid = false;
+			w.WriteString8WithXLen(MemberName);			
 		}
 
 		if (EntryFlags & MessageEntryFlags_MEMBER_NAME_CODE)
-		{
-			send_streamid = false;
+		{			
 			w.WriteUintX(MemberNameCode);
 		}
-		
-		if (send_streamid)
-		{
-			w.WriteUintX2(EntryStreamID);
-		}
-
+				
 		if (EntryFlags & MessageEntryFlags_REQUEST_ID)
 		{
 			w.WriteUintX(RequestID);
@@ -986,17 +884,20 @@ namespace RobotRaconteur
 			w.WriteString8WithXLen(MetaData);
 		}		
 
-		if (EntryFlags & MessageEntryFlags_TIMESPEC)
+		if (EntryFlags & MessageFlags_EXTENDED)
 		{
-			w.WriteIntX2(EntryTimeSpec.seconds);
-			w.WriteIntX(EntryTimeSpec.nanoseconds);
+			w.WriteUintX(Extended.size());
+			if (!Extended.empty())
+			{
+				w.Write(&Extended[0], 0, Extended.size());
+			}
 		}
 
 		w.WriteUintX(boost::numeric_cast<uint32_t>(elements.size()));
 
 		BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& e, elements)
 		{
-			e->Write3(w, version_minor);
+			e->Write4(w, version_minor);
 		}
 
 		if (w.DistanceFromLimit() != 0) throw DataSerializationException("Error in message format");
@@ -1004,7 +905,7 @@ namespace RobotRaconteur
 
 	}
 
-	void MessageEntry::Read3(ArrayBinaryReader &r, const uint16_t& version_minor)
+	void MessageEntry::Read4(ArrayBinaryReader &r, const uint16_t& version_minor)
 	{
 		if (version_minor != 0) throw ProtocolException("Invalid Message 3 version minor");
 
@@ -1015,18 +916,14 @@ namespace RobotRaconteur
 		EntryFlags = r.ReadNumber<uint8_t>();
 		EntryType = boost::numeric_cast<MessageEntryType>(r.ReadNumber<uint16_t>());
 		
-		bool read_streamid = true;
-
 		if (EntryFlags & MessageEntryFlags_SERVICE_PATH_STR)
 		{
-			read_streamid = false;
 			uint32_t sname_s = r.ReadUintX();
 			ServicePath = r.ReadString8(sname_s);
 		}
 
 		if (EntryFlags & MessageEntryFlags_SERVICE_PATH_CODE)
 		{
-			read_streamid = false;
 			ServicePathCode = r.ReadUintX();
 		}
 		
@@ -1034,18 +931,11 @@ namespace RobotRaconteur
 		{
 			uint32_t mname_s = r.ReadUintX();
 			MemberName = r.ReadString8(mname_s);
-			read_streamid = false;
 		}
 
 		if (EntryFlags & MessageEntryFlags_MEMBER_NAME_CODE)
 		{
-			read_streamid = false;
 			MemberNameCode = r.ReadUintX();
-		}
-
-		if (read_streamid)
-		{
-			EntryStreamID = r.ReadUintX2();
 		}
 
 		if (EntryFlags & MessageEntryFlags_REQUEST_ID)
@@ -1064,10 +954,14 @@ namespace RobotRaconteur
 			MetaData = r.ReadString8(metadata_s);
 		}
 
-		if (EntryFlags & MessageEntryFlags_TIMESPEC)
+		if (EntryFlags & MessageFlags_EXTENDED)
 		{
-			EntryTimeSpec.seconds = r.ReadIntX2();
-			EntryTimeSpec.nanoseconds = r.ReadIntX();
+			size_t l = r.ReadUintX();
+			Extended.resize(l);
+			if (l != 0)
+			{
+				r.Read(&Extended[0], 0, l);
+			}
 		}
 
 		uint32_t ecount = r.ReadUintX();
@@ -1078,7 +972,7 @@ namespace RobotRaconteur
 		for (int32_t i = 0; i < ecount; i++)
 		{
 			RR_INTRUSIVE_PTR<MessageElement> e = CreateMessageElement();
-			e->Read3(r, version_minor);
+			e->Read4(r, version_minor);
 			elements.push_back(e);
 		}
 
@@ -1096,8 +990,8 @@ namespace RobotRaconteur
 		ElementNumber = 0;
 		ElementTypeNameCode = 0;
 
-		ElementType = DataTypes_void_t;
-		SequenceNumber = 0;
+		ElementType = DataTypes_void_t;		
+		Extended.clear();
 	}
 
 	MessageElement::MessageElement(MessageStringRef name, RR_INTRUSIVE_PTR<MessageElementData> datin)
@@ -1418,7 +1312,7 @@ namespace RobotRaconteur
 
 	}
 
-	uint32_t MessageElement::ComputeSize3()
+	uint32_t MessageElement::ComputeSize4()
 	{
 		size_t s = 3;
 
@@ -1445,15 +1339,16 @@ namespace RobotRaconteur
 			s += ArrayBinaryWriter::GetUintXByteCount(ElementTypeNameCode);
 		}
 
-		if (ElementFlags & MessageElementFlags_SEQUENCE_NUMBER)
-		{
-			s += ArrayBinaryWriter::GetUintXByteCount(SequenceNumber);
-		}
-		
 		if (ElementFlags & MessageElementFlags_META_INFO)
 		{
 			s += boost::numeric_cast<uint32_t>(ArrayBinaryWriter::GetStringByteCount8WithXLen(MetaData));
-		}		
+		}
+
+		if (ElementFlags & MessageFlags_EXTENDED)
+		{
+			s += ArrayBinaryWriter::GetUintXByteCount(Extended.size());
+			s += Extended.size();
+		}
 
 		switch (ElementType)
 		{
@@ -1489,7 +1384,7 @@ namespace RobotRaconteur
 			RR_INTRUSIVE_PTR<MessageElementNestedElementList> d = rr_cast<MessageElementNestedElementList>(GetData());
 			BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, d->Elements)
 			{
-				e->UpdateData3();
+				e->UpdateData4();
 				s += e->ElementSize;
 			}
 			break;
@@ -1508,7 +1403,7 @@ namespace RobotRaconteur
 		return boost::numeric_cast<uint32_t>(s);
 	}
 
-	void MessageElement::UpdateData3()
+	void MessageElement::UpdateData4()
 	{	
 
 		std::string datatype;
@@ -1610,15 +1505,24 @@ namespace RobotRaconteur
 			ElementFlags &= ~MessageElementFlags_META_INFO;
 		}
 
-		ElementSize = ComputeSize3();
+		if (Extended.size() == 0)
+		{
+			ElementFlags &= ~MessageFlags_EXTENDED;
+		}
+		else
+		{
+			ElementFlags |= MessageFlags_EXTENDED;
+		}
+
+		ElementSize = ComputeSize4();
 
 	}
 
-	void MessageElement::Write3(ArrayBinaryWriter &w, const uint16_t& version_minor)
+	void MessageElement::Write4(ArrayBinaryWriter &w, const uint16_t& version_minor)
 	{
 		if (version_minor != 0) throw ProtocolException("Invalid Message 3 version minor");
 
-		UpdateData3();
+		UpdateData4();
 
 		w.PushRelativeLimit(ElementSize);
 
@@ -1635,10 +1539,16 @@ namespace RobotRaconteur
 			w.WriteString8WithXLen(ElementTypeName);
 		if (ElementFlags & MessageElementFlags_ELEMENT_TYPE_NAME_CODE)
 			w.WriteUintX(ElementTypeNameCode);
-		if (ElementFlags & MessageElementFlags_SEQUENCE_NUMBER)
-			w.WriteUintX(SequenceNumber);
 		if (ElementFlags & MessageElementFlags_META_INFO)
 			w.WriteString8WithXLen(MetaData);
+		if (ElementFlags & MessageFlags_EXTENDED)
+		{
+			w.WriteUintX(Extended.size());
+			if (!Extended.empty())
+			{
+				w.Write(&Extended[0], 0, Extended.size());
+			}
+		}
 		w.WriteUintX(boost::numeric_cast<uint32_t>(DataCount));
 
 		switch (ElementType)
@@ -1679,7 +1589,7 @@ namespace RobotRaconteur
 			RR_INTRUSIVE_PTR<MessageElementNestedElementList> sdat = RR_STATIC_POINTER_CAST<MessageElementNestedElementList>(dat);
 			if (!sdat) throw DataTypeException("");
 			BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& e, sdat->Elements)
-				e->Write3(w, version_minor);
+				e->Write4(w, version_minor);
 			break;
 		}
 		
@@ -1692,7 +1602,7 @@ namespace RobotRaconteur
 
 	}
 
-	void MessageElement::Read3(ArrayBinaryReader &r, const uint16_t& version_minor)
+	void MessageElement::Read4(ArrayBinaryReader &r, const uint16_t& version_minor)
 	{
 		if (version_minor != 0) throw ProtocolException("Invalid Message 3 version minor");
 
@@ -1731,15 +1641,20 @@ namespace RobotRaconteur
 			ElementTypeNameCode = r.ReadUintX();
 		}
 
-		if (ElementFlags & MessageElementFlags_SEQUENCE_NUMBER)
-		{
-			SequenceNumber = r.ReadUintX();
-		}
-
 		if (ElementFlags & MessageElementFlags_META_INFO)
 		{
 			uint32_t metadata_s = r.ReadUintX();
 			MetaData = r.ReadString8(metadata_s);
+		}
+
+		if (ElementFlags & MessageFlags_EXTENDED)
+		{
+			size_t l = r.ReadUintX();
+			Extended.resize(l);
+			if (l != 0)
+			{
+				r.Read(&Extended[0], 0, l);
+			}
 		}
 		
 		DataCount = r.ReadUintX();
@@ -1789,7 +1704,7 @@ namespace RobotRaconteur
 			for (size_t i = 0; i < DataCount; i++)
 			{
 				RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement();
-				m->Read3(r, version_minor);
+				m->Read4(r, version_minor);
 				l.push_back(m);
 
 			}
@@ -1940,9 +1855,6 @@ namespace RobotRaconteur
 			h2->MessageSize = h->MessageSize;
 			h2->HeaderSize = h->HeaderSize;
 			h2->MessageFlags = h->MessageFlags;
-			h2->SubstreamID = h->SubstreamID;
-			h2->SubstreamSequenceNumber = h->SubstreamSequenceNumber;
-			h2->FragmentHeader = h->FragmentHeader;
 			h2->SenderEndpoint = h->SenderEndpoint;
 			h2->ReceiverEndpoint = h->ReceiverEndpoint;
 			h2->SenderNodeName = h->SenderNodeName;
@@ -1954,8 +1866,7 @@ namespace RobotRaconteur
 			h2->MessageID = h->MessageID;
 			h2->MessageResID = h->MessageResID;
 			h2->StringTable = h->StringTable;
-			h2->UnreliableExpiration = h->UnreliableExpiration;
-			h2->TransportSpecific = h->TransportSpecific;
+			h2->Extended = h->Extended;
 			m2->header = h2;
 
 		}
@@ -1980,11 +1891,10 @@ namespace RobotRaconteur
 		mm2->ServicePathCode = mm->ServicePathCode;
 		mm2->MemberName = mm->MemberName;
 		mm2->MemberNameCode = mm->MemberNameCode;
-		mm2->EntryStreamID = mm->EntryStreamID;
 		mm2->RequestID = mm->RequestID;
 		mm2->Error = mm->Error;
 		mm2->MetaData = mm->MetaData;
-		mm2->EntryTimeSpec = mm->EntryTimeSpec;
+		mm2->Extended = mm->Extended;
 		
 		BOOST_FOREACH(RR_INTRUSIVE_PTR<MessageElement>& e, mm->elements)
 		{
@@ -2007,9 +1917,9 @@ namespace RobotRaconteur
 		mm2->ElementType = mm->ElementType;
 		mm2->ElementTypeName = mm->ElementTypeName;
 		mm2->ElementTypeNameCode = mm->ElementTypeNameCode;
-		mm2->SequenceNumber = mm->SequenceNumber;
 		mm2->MetaData = mm->MetaData;
 		mm2->DataCount = mm->DataCount;
+		mm2->Extended = mm->Extended;
 
 		switch (mm->ElementType)
 		{

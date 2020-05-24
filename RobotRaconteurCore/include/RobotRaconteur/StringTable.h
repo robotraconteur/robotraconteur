@@ -58,14 +58,7 @@ namespace RobotRaconteur
 			RR_SHARED_PTR<const StringTableEntry> GetEntryForString(MessageStringRef str);
 			RR_SHARED_PTR<const StringTableEntry> GetEntryForCode(uint32_t code);
 
-			size_t GetUnconfirmedCodeCount();
-			std::vector<RR_SHARED_PTR<const StringTableEntry> > GetUnconfirmedCodes(uint32_t max_count);
-			void ConfirmCodes(const std::vector<uint32_t> codes);
-			void DropUnconfirmedCodes(const std::vector<uint32_t>& code);
-
 			bool AddCode(uint32_t code, MessageStringRef str, bool default_=false);
-
-			bool IsTableFull();
 
 		public:
 
@@ -97,8 +90,6 @@ namespace RobotRaconteur
 
 			RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<StringTableEntry> > code_table;
 			RR_UNORDERED_MAP<MessageStringPtr, RR_SHARED_PTR<StringTableEntry> > string_table;
-			RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<StringTableEntry> > unconfirmed_code_table;
-			RR_UNORDERED_MAP<MessageStringPtr, RR_SHARED_PTR<StringTableEntry> > unconfirmed_string_table;
 
 			void load_defaults();
 

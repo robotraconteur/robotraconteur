@@ -60,28 +60,15 @@ namespace RobotRaconteur
 		void Write(ArrayBinaryWriter &w);
 		void Read(ArrayBinaryReader &r);
 
-		//Version 3 Message
-		uint32_t ComputeSize3();
-		void Write3(ArrayBinaryWriter &w, const uint16_t& version_minor);
-		void Read3(ArrayBinaryReader &r, uint16_t& version_minor);
+		//Version 4 Message
+		uint32_t ComputeSize4();
+		void Write4(ArrayBinaryWriter &w, const uint16_t& version_minor);
+		void Read4(ArrayBinaryReader &r, uint16_t& version_minor);
 
 		virtual std::string RRType()
 		{
 			return "RobotRaconteur::Message";
 		}
-	};
-
-	struct MessageFragmentHeader
-	{
-		uint32_t FragmentMessageNumber;
-		uint32_t FragmentMessageSize;
-		uint32_t FragmentOffset;
-	};
-
-	struct SubstreamSequenceNumberHeader
-	{
-		uint32_t SequenceNumber;
-		uint32_t RecvSequenceNumber;
 	};
 
 	class ROBOTRACONTEUR_CORE_API MessageHeader : public RRValue
@@ -92,14 +79,8 @@ namespace RobotRaconteur
 
 		uint32_t HeaderSize;
 
-		uint16_t MessageFlags;
+		uint8_t MessageFlags;
 		
-		uint64_t SubstreamID;
-
-		SubstreamSequenceNumberHeader SubstreamSequenceNumber;
-
-		MessageFragmentHeader FragmentHeader;
-				
 		uint32_t SenderEndpoint;
 
 		uint32_t ReceiverEndpoint;
@@ -124,11 +105,9 @@ namespace RobotRaconteur
 
 		std::vector < boost::tuple<uint32_t, MessageStringPtr> > StringTable;
 
-		TimeSpec UnreliableExpiration;
-
 		uint16_t Priority;
 
-		std::vector<uint8_t> TransportSpecific;
+		std::vector<uint8_t> Extended;
 
 		//Version 2 Message
 		uint16_t ComputeSize();
@@ -136,13 +115,13 @@ namespace RobotRaconteur
 		void Write(ArrayBinaryWriter &w);
 		void Read(ArrayBinaryReader &r);
 
-		//Version 3 Message
+		//Version 4 Message
 	protected:
 		uint32_t ComputeSize3();
 	public:
-		void UpdateHeader3(uint32_t message_entry_size, uint16_t entry_count);
-		void Write3(ArrayBinaryWriter &w, const uint16_t& version_minor);
-		void Read3(ArrayBinaryReader &r, uint16_t& version_minor);
+		void UpdateHeader4(uint32_t message_entry_size, uint16_t entry_count);
+		void Write4(ArrayBinaryWriter &w, const uint16_t& version_minor);
+		void Read4(ArrayBinaryReader &r, uint16_t& version_minor);
 
 		virtual std::string RRType()
 		{
@@ -174,15 +153,13 @@ public:
 
 		uint32_t MemberNameCode;
 
-		uint64_t EntryStreamID;
-
 		uint32_t RequestID;
 
 		MessageErrorType Error;
 
 		MessageStringPtr MetaData;
 
-		TimeSpec EntryTimeSpec;
+		std::vector<uint8_t> Extended;
 
 		std::vector<RR_INTRUSIVE_PTR<MessageElement> > elements;
 
@@ -204,11 +181,11 @@ public:
 		void Write(ArrayBinaryWriter &w);		
 		void Read(ArrayBinaryReader &r);
 
-		//Version 3 Message
-		uint32_t ComputeSize3();
-		void UpdateData3();
-		void Write3(ArrayBinaryWriter &w, const uint16_t& version_minor);
-		void Read3(ArrayBinaryReader &r, const uint16_t& version_minor);
+		//Version 4 Message
+		uint32_t ComputeSize4();
+		void UpdateData4();
+		void Write4(ArrayBinaryWriter &w, const uint16_t& version_minor);
+		void Read4(ArrayBinaryReader &r, const uint16_t& version_minor);
 
 		virtual std::string RRType()
 		{
@@ -240,9 +217,9 @@ public:
 
 		uint32_t ElementTypeNameCode;
 
-		uint32_t SequenceNumber;
-
 		MessageStringPtr MetaData;
+
+		std::vector<uint8_t> Extended;
 
 		uint32_t DataCount;
 
@@ -263,11 +240,11 @@ public:
 		void Write(ArrayBinaryWriter &w);
 		void Read(ArrayBinaryReader &r);
 
-		//Version 3 Message
-		uint32_t ComputeSize3();
-		void UpdateData3();
-		void Write3(ArrayBinaryWriter &w, const uint16_t& version_minor);
-		void Read3(ArrayBinaryReader &r, const uint16_t& version_minor);
+		//Version 4 Message
+		uint32_t ComputeSize4();
+		void UpdateData4();
+		void Write4(ArrayBinaryWriter &w, const uint16_t& version_minor);
+		void Read4(ArrayBinaryReader &r, const uint16_t& version_minor);
 
 		static RR_INTRUSIVE_PTR<MessageElement> FindElement(std::vector<RR_INTRUSIVE_PTR<MessageElement> > &m, MessageStringRef name);
 
