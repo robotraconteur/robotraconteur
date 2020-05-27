@@ -517,7 +517,7 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		virtual RR_INTRUSIVE_PTR<MessageElement> PeekNextPacketWait(int32_t timeout = RR_TIMEOUT_INFINITE);
 		virtual WrappedTryReceivePacketWaitResult TryReceivePacketWait(int32_t timeout = RR_TIMEOUT_INFINITE, bool peek = false);
 		
-		WrappedPipeEndpoint(RR_SHARED_PTR<PipeBase> parent, int32_t index, uint32_t endpoint, RR_SHARED_PTR<TypeDefinition> Type, bool unreliable, MemberDefinition_Direction direction, bool message3);
+		WrappedPipeEndpoint(RR_SHARED_PTR<PipeBase> parent, int32_t index, uint32_t endpoint, RR_SHARED_PTR<TypeDefinition> Type, bool unreliable, MemberDefinition_Direction direction);
 		RR_SHARED_PTR<TypeDefinition> Type;
 
 	protected:
@@ -583,7 +583,7 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		RR_SHARED_PTR<TypeDefinition> Type;
 
 	protected:
-		virtual RR_SHARED_PTR<PipeEndpointBase> CreateNewPipeEndpoint(int32_t index, bool unreliable, MemberDefinition_Direction direction, bool message3);
+		virtual RR_SHARED_PTR<PipeEndpointBase> CreateNewPipeEndpoint(int32_t index, bool unreliable, MemberDefinition_Direction direction);
 		void AsyncConnect_handler(RR_SHARED_PTR<PipeEndpointBase> ep, RR_SHARED_PTR<RobotRaconteurException> err, RR_SHARED_PTR<AsyncPipeEndpointReturnDirector> handler);
 	};
 
@@ -624,7 +624,7 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		virtual void Shutdown();
 
 	protected:
-		virtual RR_SHARED_PTR<PipeEndpointBase> CreateNewPipeEndpoint(int32_t index, uint32_t endpoint, bool unreliable, MemberDefinition_Direction direction, bool message3);
+		virtual RR_SHARED_PTR<PipeEndpointBase> CreateNewPipeEndpoint(int32_t index, uint32_t endpoint, bool unreliable, MemberDefinition_Direction direction);
 
 		virtual void fire_PipeConnectCallback(RR_SHARED_PTR<PipeEndpointBase> e);
 
@@ -697,7 +697,7 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		TryGetValueResult TryGetInValue();
 		TryGetValueResult TryGetOutValue();
 
-		WrappedWireConnection(RR_SHARED_PTR<WireBase> parent, uint32_t endpoint, RR_SHARED_PTR<TypeDefinition> Type, MemberDefinition_Direction direction, bool message3) ;
+		WrappedWireConnection(RR_SHARED_PTR<WireBase> parent, uint32_t endpoint, RR_SHARED_PTR<TypeDefinition> Type, MemberDefinition_Direction direction) ;
 
 		virtual void fire_WireValueChanged(RR_INTRUSIVE_PTR<RRValue> value, TimeSpec time);
 		virtual void fire_WireClosedCallback();
@@ -770,7 +770,7 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		RR_SHARED_PTR<TypeDefinition> Type;
 
 	protected:
-		virtual RR_SHARED_PTR<WireConnectionBase> CreateNewWireConnection(MemberDefinition_Direction direction, bool message3);
+		virtual RR_SHARED_PTR<WireConnectionBase> CreateNewWireConnection(MemberDefinition_Direction direction);
 		void AsyncConnect_handler(RR_SHARED_PTR<WireConnectionBase> ep, RR_SHARED_PTR<RobotRaconteurException> err, RR_SHARED_PTR<AsyncWireConnectionReturnDirector> handler);
 		
 	};
@@ -807,7 +807,7 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		RR_SHARED_PTR<TypeDefinition> Type;
 		
 	protected:
-		virtual RR_SHARED_PTR<WireConnectionBase> CreateNewWireConnection(uint32_t endpoint, MemberDefinition_Direction direction, bool message);
+		virtual RR_SHARED_PTR<WireConnectionBase> CreateNewWireConnection(uint32_t endpoint, MemberDefinition_Direction direction);
 		virtual void fire_WireConnectCallback(RR_SHARED_PTR<WireConnectionBase> e);
 		
 		boost::function<void(RR_SHARED_PTR<WireConnectionBase >)> callback;

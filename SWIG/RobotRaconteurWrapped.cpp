@@ -829,8 +829,8 @@ namespace RobotRaconteur
 	}
 
 
-	WrappedPipeEndpoint::WrappedPipeEndpoint(RR_SHARED_PTR<PipeBase> parent, int32_t index, uint32_t endpoint, RR_SHARED_PTR<TypeDefinition> type, bool unreliable, MemberDefinition_Direction direction, bool message3)
-		: PipeEndpointBase(parent,index,endpoint,unreliable,direction,message3) {
+	WrappedPipeEndpoint::WrappedPipeEndpoint(RR_SHARED_PTR<PipeBase> parent, int32_t index, uint32_t endpoint, RR_SHARED_PTR<TypeDefinition> type, bool unreliable, MemberDefinition_Direction direction)
+		: PipeEndpointBase(parent,index,endpoint,unreliable,direction) {
 		this->Type=type;
 		//this->RR_Director=0;
 		//this->objectheapid=0;
@@ -1013,9 +1013,9 @@ namespace RobotRaconteur
 		this->rawelements=true;
 	}	
 	
-	RR_SHARED_PTR<PipeEndpointBase> WrappedPipeClient::CreateNewPipeEndpoint(int32_t index, bool unreliable, MemberDefinition_Direction direction, bool message3)
+	RR_SHARED_PTR<PipeEndpointBase> WrappedPipeClient::CreateNewPipeEndpoint(int32_t index, bool unreliable, MemberDefinition_Direction direction)
 	{
-		return RR_MAKE_SHARED<WrappedPipeEndpoint>(rr_cast<WrappedPipeClient>(shared_from_this()),index,0,Type,unreliable,direction,message3);
+		return RR_MAKE_SHARED<WrappedPipeEndpoint>(rr_cast<WrappedPipeClient>(shared_from_this()),index,0,Type,unreliable,direction);
 	}
 
 	//WrappedPipeServerConnectDirector
@@ -1047,9 +1047,9 @@ namespace RobotRaconteur
 		callback.clear();		
 	}
 
-	RR_SHARED_PTR<PipeEndpointBase> WrappedPipeServer::CreateNewPipeEndpoint(int32_t index, uint32_t endpoint,bool unreliable, MemberDefinition_Direction direction,bool message3)
+	RR_SHARED_PTR<PipeEndpointBase> WrappedPipeServer::CreateNewPipeEndpoint(int32_t index, uint32_t endpoint,bool unreliable, MemberDefinition_Direction direction)
 	{
-		return RR_MAKE_SHARED<WrappedPipeEndpoint>(rr_cast<WrappedPipeServer>(shared_from_this()),index,endpoint,Type,unreliable,direction,message3);
+		return RR_MAKE_SHARED<WrappedPipeEndpoint>(rr_cast<WrappedPipeServer>(shared_from_this()),index,endpoint,Type,unreliable,direction);
 	}
 
 	void WrappedPipeServer::fire_PipeConnectCallback(RR_SHARED_PTR<PipeEndpointBase> e)
@@ -1167,8 +1167,8 @@ namespace RobotRaconteur
 		SetOutValueBase(RRPrimUtil<RR_INTRUSIVE_PTR<MessageElement> >::PrePack(value));
 	}
 
-	WrappedWireConnection::WrappedWireConnection(RR_SHARED_PTR<WireBase> parent, uint32_t endpoint, RR_SHARED_PTR<TypeDefinition> Type, MemberDefinition_Direction direction, bool message3)
-		: WireConnectionBase(parent,endpoint,direction,message3) 
+	WrappedWireConnection::WrappedWireConnection(RR_SHARED_PTR<WireBase> parent, uint32_t endpoint, RR_SHARED_PTR<TypeDefinition> Type, MemberDefinition_Direction direction)
+		: WireConnectionBase(parent,endpoint,direction) 
 	{
 		this->Type=Type;
 		//this->RR_Director=0;
@@ -1387,9 +1387,9 @@ namespace RobotRaconteur
 		this->rawelements=true;
 	}
 
-	RR_SHARED_PTR<WireConnectionBase> WrappedWireClient::CreateNewWireConnection(MemberDefinition_Direction direction,bool message3)
+	RR_SHARED_PTR<WireConnectionBase> WrappedWireClient::CreateNewWireConnection(MemberDefinition_Direction direction)
 	{
-		return RR_MAKE_SHARED<WrappedWireConnection>(rr_cast<WrappedWireClient>(shared_from_this()),0,Type,direction,message3);
+		return RR_MAKE_SHARED<WrappedWireConnection>(rr_cast<WrappedWireClient>(shared_from_this()),0,Type,direction);
 	}
 
 	RR_INTRUSIVE_PTR<MessageElement> WrappedWireClient::PeekInValue(TimeSpec& ts)
@@ -1469,9 +1469,9 @@ namespace RobotRaconteur
 		//DIRECTOR_CALL2(DIRECTOR_DELETE(RR_Director));
 	}
 
-	RR_SHARED_PTR<WireConnectionBase> WrappedWireServer::CreateNewWireConnection(uint32_t endpoint, MemberDefinition_Direction direction, bool message3)
+	RR_SHARED_PTR<WireConnectionBase> WrappedWireServer::CreateNewWireConnection(uint32_t endpoint, MemberDefinition_Direction direction)
 	{
-		return RR_MAKE_SHARED<WrappedWireConnection>(rr_cast<WrappedWireServer>(shared_from_this()),endpoint,Type,direction,message3);
+		return RR_MAKE_SHARED<WrappedWireConnection>(rr_cast<WrappedWireServer>(shared_from_this()),endpoint,Type,direction);
 	}
 
 	void WrappedWireServer::fire_WireConnectCallback(RR_SHARED_PTR<WireConnectionBase> e)

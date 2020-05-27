@@ -5504,8 +5504,8 @@ bool MexPipeEndpoint::TryReceivePacketWait(RR_INTRUSIVE_PTR<MessageElement>& pac
 	return true;
 }
 
-MexPipeEndpoint::MexPipeEndpoint(RR_SHARED_PTR<PipeBase> parent, int32_t index, uint32_t endpoint, RR_SHARED_PTR<TypeDefinition> Type, bool unreliable, MemberDefinition_Direction direction, bool message3)
-	: PipeEndpointBase(parent,index,endpoint,unreliable,direction,message3) {
+MexPipeEndpoint::MexPipeEndpoint(RR_SHARED_PTR<PipeBase> parent, int32_t index, uint32_t endpoint, RR_SHARED_PTR<TypeDefinition> Type, bool unreliable, MemberDefinition_Direction direction)
+	: PipeEndpointBase(parent,index,endpoint,unreliable,direction) {
 	this->Type=Type;
 	this->pipeendpointid=0;
 	
@@ -5748,9 +5748,9 @@ MexPipeClient::MexPipeClient(std::string name, RR_SHARED_PTR<ServiceStub> stub, 
 	this->rawelements=true;
 }	
 	
-RR_SHARED_PTR<PipeEndpointBase> MexPipeClient::CreateNewPipeEndpoint(int32_t index, bool unreliable, MemberDefinition_Direction direction, bool message3)
+RR_SHARED_PTR<PipeEndpointBase> MexPipeClient::CreateNewPipeEndpoint(int32_t index, bool unreliable, MemberDefinition_Direction direction)
 {
-	return RR_MAKE_SHARED<MexPipeEndpoint>(rr_cast<MexPipeClient>(shared_from_this()),index,0,Type, unreliable, direction, message3);
+	return RR_MAKE_SHARED<MexPipeEndpoint>(rr_cast<MexPipeClient>(shared_from_this()),index,0,Type, unreliable, direction);
 }
 
 //MexWireConnection
@@ -5769,8 +5769,8 @@ void MexWireConnection::SetOutValue(RR_INTRUSIVE_PTR<MessageElement> value)
 	SetOutValueBase(RRPrimUtil<RR_INTRUSIVE_PTR<MessageElement> >::PrePack(value));
 }
 
-MexWireConnection::MexWireConnection(RR_SHARED_PTR<WireBase> parent, uint32_t endpoint, RR_SHARED_PTR<TypeDefinition> Type, MemberDefinition_Direction direction, bool message3)
-	: WireConnectionBase(parent,endpoint,direction,message3) 
+MexWireConnection::MexWireConnection(RR_SHARED_PTR<WireBase> parent, uint32_t endpoint, RR_SHARED_PTR<TypeDefinition> Type, MemberDefinition_Direction direction)
+	: WireConnectionBase(parent,endpoint,direction) 
 {
 	this->Type=Type;
 	this->wireconnectionid=0;
@@ -6003,9 +6003,9 @@ MexWireClient::MexWireClient(std::string name, RR_SHARED_PTR<ServiceStub> stub, 
 	this->rawelements=true;
 }
 
-RR_SHARED_PTR<WireConnectionBase> MexWireClient::CreateNewWireConnection(MemberDefinition_Direction direction, bool message3)
+RR_SHARED_PTR<WireConnectionBase> MexWireClient::CreateNewWireConnection(MemberDefinition_Direction direction)
 {
-	return RR_MAKE_SHARED<MexWireConnection>(rr_cast<MexWireClient>(shared_from_this()),0,Type, direction, message3);
+	return RR_MAKE_SHARED<MexWireConnection>(rr_cast<MexWireClient>(shared_from_this()),0,Type, direction);
 }
 
 mxArray* MexWireClient::PeekInValue()

@@ -250,7 +250,7 @@ public:
 	virtual RR_INTRUSIVE_PTR<MessageElement> ReceivePacketWait(int32_t timeout);
 	virtual RR_INTRUSIVE_PTR<MessageElement> PeekNextPacketWait(int32_t timeout);
 	virtual bool TryReceivePacketWait(RR_INTRUSIVE_PTR<MessageElement>& packet, int32_t timeout, bool peek);
-	MexPipeEndpoint(RR_SHARED_PTR<PipeBase> parent, int32_t index, uint32_t endpoint, RR_SHARED_PTR<TypeDefinition> Type, bool unreliable, MemberDefinition_Direction direction, bool message3);
+	MexPipeEndpoint(RR_SHARED_PTR<PipeBase> parent, int32_t index, uint32_t endpoint, RR_SHARED_PTR<TypeDefinition> Type, bool unreliable, MemberDefinition_Direction direction);
 	RR_SHARED_PTR<TypeDefinition> Type;
 
 	mxArray* subsref(const mxArray* S);
@@ -282,7 +282,7 @@ public:
 	RR_SHARED_PTR<TypeDefinition> Type;
 
 protected:
-	virtual RR_SHARED_PTR<PipeEndpointBase> CreateNewPipeEndpoint(int32_t index, bool unreliable, MemberDefinition_Direction direction, bool message3);
+	virtual RR_SHARED_PTR<PipeEndpointBase> CreateNewPipeEndpoint(int32_t index, bool unreliable, MemberDefinition_Direction direction);
 		
 };
 
@@ -297,7 +297,7 @@ public:
 	virtual RR_INTRUSIVE_PTR<MessageElement> GetInValue();
 	virtual RR_INTRUSIVE_PTR<MessageElement> GetOutValue();
 	virtual void SetOutValue(RR_INTRUSIVE_PTR<MessageElement> value);
-	MexWireConnection(RR_SHARED_PTR<WireBase> parent, uint32_t endpoint, RR_SHARED_PTR<TypeDefinition> Type, MemberDefinition_Direction direction, bool message3) ;
+	MexWireConnection(RR_SHARED_PTR<WireBase> parent, uint32_t endpoint, RR_SHARED_PTR<TypeDefinition> Type, MemberDefinition_Direction direction) ;
 
 	virtual void fire_WireValueChanged(RR_INTRUSIVE_PTR<RRValue> value, TimeSpec time);
 	virtual void fire_WireClosedCallback();
@@ -329,7 +329,7 @@ public:
 	void PokeOutValue(const mxArray* value);
 
 protected:
-	virtual RR_SHARED_PTR<WireConnectionBase> CreateNewWireConnection(MemberDefinition_Direction direction, bool message3);
+	virtual RR_SHARED_PTR<WireConnectionBase> CreateNewWireConnection(MemberDefinition_Direction direction);
 		
 };
 

@@ -25,9 +25,9 @@ public:
 	virtual std::string GetUrlSchemeString() const;
 	void Close();
 	
-	RR_PROPERTY(DisableMessage3)
-	virtual bool GetDisableMessage3();
-	virtual void SetDisableMessage3(bool d);
+	RR_PROPERTY(DisableMessage4)
+	virtual bool GetDisableMessage4();
+	virtual void SetDisableMessage4(bool d);
 
 	RR_PROPERTY(DisableStringTable)
 	virtual bool GetDisableStringTable();

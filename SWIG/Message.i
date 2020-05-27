@@ -49,20 +49,11 @@ public:
 };
 
 
-struct MessageFragmentHeader
-{
-	uint32_t FragmentMessageNumber;
-	uint32_t FragmentMessageSize;
-	uint32_t FragmentOffset;
-};
-
 class MessageHeader : public virtual RRValue
 {
 public:
 	uint16_t HeaderSize;
-	uint16_t MessageFlags;
-	uint64_t SubstreamID;
-	MessageFragmentHeader FragmentHeader;
+	uint8_t MessageFlags;
 	uint32_t SenderEndpoint;
 	uint32_t ReceiverEndpoint;
 	MessageStringPtr SenderNodeName;
@@ -74,6 +65,8 @@ public:
 	uint16_t MessageID;
 	uint16_t MessageResID;
 	uint32_t MessageSize;
+	uint16_t Priority;
+	std::vector<uint8_t> Extended;
 	uint16_t ComputeSize();
 	//std::vector < boost::tuple<uint32_t, std::string> > StringTable; //Type not SWIG compatible?
 	void UpdateHeader(uint32_t message_size, uint16_t entry_count);
@@ -93,11 +86,10 @@ public:
 	MessageStringPtr ServicePath;
 	MessageStringPtr MemberName;
 	uint32_t MemberNameCode;
-	uint64_t EntryStreamID;
 	uint32_t RequestID;
 	MessageErrorType Error;
 	MessageStringPtr MetaData;
-	TimeSpec EntryTimeSpec;
+	std::vector<uint8_t> Extended;
 	std::vector<boost::intrusive_ptr<RobotRaconteur::MessageElement> > elements;
 	MessageEntry();
 	MessageEntry(MessageEntryType t, const std::string& n);
@@ -125,8 +117,8 @@ public:
 	DataTypes ElementType;
 	MessageStringPtr ElementTypeName;
 	uint32_t ElementTypeNameCode;
-	uint32_t SequenceNumber;
 	MessageStringPtr MetaData;
+	std::vector<uint8_t> Extended;
 	uint32_t DataCount;
 	MessageElement();
 	//MessageElement(std::string name, boost::intrusive_ptr<RobotRaconteur::MessageElementData> datin);

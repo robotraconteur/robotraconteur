@@ -17,7 +17,7 @@
 	RequireTls = property(lambda self: self._GetRequireTls(), lambda self, val: self._SetRequireTls(val))
 	IsTlsNodeCertificateLoaded = property(lambda self: self._IsTlsNodeCertificateLoaded(), lambda self: self._IsPortSharerRunning())
 	AcceptWebSockets = property(lambda self: self._GetAcceptWebSockets(), lambda self, val: self._SetAcceptWebSockets(val))
-	DisableMessage3 = property(lambda self: self._GetDisableMessage3(), lambda self, val: self._SetDisableMessage3(val))
+	DisableMessage4 = property(lambda self: self._GetDisableMessage4(), lambda self, val: self._SetDisableMessage4(val))
 	DisableStringTable = property(lambda self: self._GetDisableStringTable(), lambda self, val: self._SetDisableStringTable(val))
 	DisableAsyncMessageIO = property(lambda self: self._GetDisableAsyncMessageIO(), lambda self, val: self._SetDisableAsyncMessageIO(val))
 	NodeAnnouncePeriod = property(lambda self: self._GetNodeAnnouncePeriod()/1000.0, lambda self, timeout: self._SetNodeAnnouncePeriod(timeout*1000))

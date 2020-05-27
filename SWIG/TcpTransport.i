@@ -99,9 +99,9 @@ public:
 	virtual void AddWebSocketAllowedOrigin(const std::string& origin);
 	virtual void RemoveWebSocketAllowedOrigin(const std::string& origin);
 	
-	RR_PROPERTY(DisableMessage3)
-	virtual bool GetDisableMessage3();
-	virtual void SetDisableMessage3(bool d);
+	RR_PROPERTY(DisableMessage4)
+	virtual bool GetDisableMessage4();
+	virtual void SetDisableMessage4(bool d);
 
 	RR_PROPERTY(DisableStringTable)
 	virtual bool GetDisableStringTable();

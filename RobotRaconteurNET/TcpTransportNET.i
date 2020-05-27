@@ -150,15 +150,15 @@ public bool AcceptWebSockets
 
 }
 
-public bool DisableMessage3
+public bool DisableMessage4
 {
 	get
 	{
-		return _GetDisableMessage3();
+		return _GetDisableMessage4();
 	}
 	set
 	{
-		_SetDisableMessage3(value);
+		_SetDisableMessage4(value);
 	}
 }
 
