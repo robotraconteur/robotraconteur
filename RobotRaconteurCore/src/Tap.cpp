@@ -207,7 +207,7 @@ namespace RobotRaconteur
                 }
 
                 ArrayBinaryWriter w(send_buffer.get(), 0, message_len);
-                message->Write(w);
+                message->Write4(w);
 
                 socket->socket->async_write_some(boost::asio::buffer(send_buffer.get(), message_len),
                     boost::bind(&LocalMessageTapConnectionImpl::end_send,shared_from_this(),
@@ -448,7 +448,7 @@ namespace RobotRaconteur
                 RR_INTRUSIVE_PTR<Message> message2 = RRLogRecordToMessage(log_record);
                 boost::posix_time::ptime now = boost::posix_time::microsec_clock::universal_time();
                 message2->header->MetaData = message2->header->MetaData.str() + "timestamp: " + boost::posix_time::to_iso_extended_string(now) + "\n";
-                message2->ComputeSize();
+                message2->ComputeSize4();
                 {
                     boost::mutex::scoped_lock lock(connections_lock);
                     for(std::list<RR_WEAK_PTR<LocalMessageTapConnectionImpl> >::iterator c=connections.begin(); c!=connections.end();)
@@ -472,7 +472,7 @@ namespace RobotRaconteur
                 RR_INTRUSIVE_PTR<Message> message2 = ShallowCopyMessage(message);
                 boost::posix_time::ptime now = boost::posix_time::microsec_clock::universal_time();
                 message2->header->MetaData = message2->header->MetaData.str() + "timestamp: " + boost::posix_time::to_iso_extended_string(now) + "\n";
-                message2->ComputeSize();
+                message2->ComputeSize4();
                 {
                     boost::mutex::scoped_lock lock(connections_lock);                    
                     for(std::list<RR_WEAK_PTR<LocalMessageTapConnectionImpl> >::iterator c=connections.begin(); c!=connections.end();)

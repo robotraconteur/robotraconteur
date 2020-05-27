@@ -41,8 +41,21 @@ boost::intrusive_ptr<RobotRaconteur::Message> MessageFromBytes(const uint8_t* by
 {
 	using namespace RobotRaconteur;
 	ArrayBinaryReader r(bytes, 0, bytes_len);
+	r.Seek(8);
+	uint16_t ver = r.ReadNumber<uint16_t>();
+	r.Seek(0);
 	boost::intrusive_ptr<Message> m = CreateMessage();
-	m->Read(r);
+	switch (ver)
+	{
+	case 2:
+		m->Read(r);
+		break;
+	case 4:
+		m->Read4(r);
+		break;
+	default:
+		throw InvalidArgumentException("Invalid message version");
+	}
 	return m;
 }
 size_t MessageLengthFromBytes(const uint8_t* bytes, size_t bytes_len)
