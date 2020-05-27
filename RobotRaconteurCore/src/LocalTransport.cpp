@@ -125,10 +125,10 @@ LocalTransport::LocalTransport(RR_SHARED_PTR<RobotRaconteurNode> node)
 	this->node=node;
 
 	fds=RR_MAKE_SHARED<detail::LocalTransportFDs>();
-#ifndef ROBOTRACONTEUR_DISABLE_MESSAGE3
-	disable_message3 = false;
+#ifndef ROBOTRACONTEUR_DISABLE_MESSAGE4
+	disable_message4 = false;
 #else
-	disable_message3 = true;
+	disable_message4 = true;
 #endif
 #ifndef ROBOTRACONTEUR_DISABLE_STRINGTABLE
 	disable_string_table = false;
@@ -1024,16 +1024,16 @@ void LocalTransport::AsyncGetDetectedNodes(const std::vector<std::string>& schem
 
 }
 
-bool LocalTransport::GetDisableMessage3()
+bool LocalTransport::GetDisableMessage4()
 {
 	boost::mutex::scoped_lock lock(parameter_lock);
-	return disable_message3;
+	return disable_message4;
 }
-void LocalTransport::SetDisableMessage3(bool d)
+void LocalTransport::SetDisableMessage4(bool d)
 {
 	boost::mutex::scoped_lock lock(parameter_lock);
-	disable_message3 = d;
-	ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "DisableMessage3 set to: " << d);
+	disable_message4 = d;
+	ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "DisableMessage4 set to: " << d);
 }
 
 bool LocalTransport::GetDisableStringTable()
@@ -1129,7 +1129,7 @@ LocalTransportConnection::LocalTransportConnection(RR_SHARED_PTR<LocalTransport>
 	this->HeartbeatPeriod=30000;
 	this->ReceiveTimeout=600000;
 
-	this->disable_message3 = parent->GetDisableMessage3();
+	this->disable_message4 = parent->GetDisableMessage4();
 	this->disable_string_table = parent->GetDisableStringTable();
 	this->disable_async_io = parent->GetDisableAsyncMessageIO();
 }

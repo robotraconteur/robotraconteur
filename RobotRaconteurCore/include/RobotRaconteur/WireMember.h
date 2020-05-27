@@ -64,7 +64,7 @@ namespace RobotRaconteur
 
 		virtual void AsyncClose(RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout);
 
-		WireConnectionBase(RR_SHARED_PTR<WireBase> parent, uint32_t endpoint = 0, MemberDefinition_Direction direction = MemberDefinition_Direction_both, bool message3 = false);
+		WireConnectionBase(RR_SHARED_PTR<WireBase> parent, uint32_t endpoint = 0, MemberDefinition_Direction direction = MemberDefinition_Direction_both);
 
 		virtual ~WireConnectionBase() {}
 
@@ -136,8 +136,6 @@ namespace RobotRaconteur
 
 		bool ignore_inval;
 
-		bool message3;
-		
 		boost::mutex listeners_lock;
 		std::list<RR_WEAK_PTR<WireConnectionBaseListener> > listeners;
 
@@ -203,8 +201,8 @@ namespace RobotRaconteur
 			return true;
 		}
 
-		WireConnection(RR_SHARED_PTR<WireBase> parent, uint32_t endpoint=0, MemberDefinition_Direction direction = MemberDefinition_Direction_both, bool message3=false)
-			: WireConnectionBase(parent,endpoint,direction,message3) {}
+		WireConnection(RR_SHARED_PTR<WireBase> parent, uint32_t endpoint=0, MemberDefinition_Direction direction = MemberDefinition_Direction_both)
+			: WireConnectionBase(parent,endpoint,direction) {}
 
 	protected:
 		virtual void fire_WireValueChanged(RR_INTRUSIVE_PTR<RRValue> value, TimeSpec time)
@@ -295,7 +293,7 @@ namespace RobotRaconteur
 
 	protected:
 
-		virtual void SendWirePacket(RR_INTRUSIVE_PTR<RRValue> data, TimeSpec time, uint32_t endpoint, bool message3)=0;
+		virtual void SendWirePacket(RR_INTRUSIVE_PTR<RRValue> data, TimeSpec time, uint32_t endpoint)=0;
 
 		bool rawelements;		
 
@@ -303,7 +301,7 @@ namespace RobotRaconteur
 
 		RR_INTRUSIVE_PTR<RRValue> UnpackPacket(RR_INTRUSIVE_PTR<MessageEntry> me, TimeSpec& ts);
 
-		RR_INTRUSIVE_PTR<MessageEntry> PackPacket(RR_INTRUSIVE_PTR<RRValue> data, TimeSpec time, bool message3);
+		RR_INTRUSIVE_PTR<MessageEntry> PackPacket(RR_INTRUSIVE_PTR<RRValue> data, TimeSpec time);
 
 		virtual RR_INTRUSIVE_PTR<MessageElementData> PackData(RR_INTRUSIVE_PTR<RRValue> data)
 		{
@@ -423,7 +421,7 @@ namespace RobotRaconteur
 
 	protected:
 
-		virtual void SendWirePacket(RR_INTRUSIVE_PTR<RRValue> packet, TimeSpec time, uint32_t endpoint, bool message3);
+		virtual void SendWirePacket(RR_INTRUSIVE_PTR<RRValue> packet, TimeSpec time, uint32_t endpoint);
 
 		std::string m_MemberName;
 		std::string service_path;
@@ -441,7 +439,7 @@ namespace RobotRaconteur
 
 		WireClientBase(boost::string_ref name, RR_SHARED_PTR<ServiceStub> stub, MemberDefinition_Direction direction);
 
-		virtual RR_SHARED_PTR<WireConnectionBase> CreateNewWireConnection(MemberDefinition_Direction direction, bool message3) = 0;
+		virtual RR_SHARED_PTR<WireConnectionBase> CreateNewWireConnection(MemberDefinition_Direction direction) = 0;
 
 		RR_INTRUSIVE_PTR<RRValue> PeekInValueBase(TimeSpec& ts);
 		RR_INTRUSIVE_PTR<RRValue> PeekOutValueBase(TimeSpec& ts);
@@ -586,9 +584,9 @@ namespace RobotRaconteur
 		
 
 	protected:
-		virtual RR_SHARED_PTR<WireConnectionBase> CreateNewWireConnection(MemberDefinition_Direction direction, bool message3)
+		virtual RR_SHARED_PTR<WireConnectionBase> CreateNewWireConnection(MemberDefinition_Direction direction)
 		{
-			return RR_MAKE_SHARED<WireConnection<T> >(RR_STATIC_POINTER_CAST<WireBase>(shared_from_this()), 0, direction, message3);
+			return RR_MAKE_SHARED<WireConnection<T> >(RR_STATIC_POINTER_CAST<WireBase>(shared_from_this()), 0, direction);
 		}
 
 	};
@@ -619,7 +617,7 @@ namespace RobotRaconteur
 
 	protected:
 
-		virtual void SendWirePacket(RR_INTRUSIVE_PTR<RRValue> data, TimeSpec time, uint32_t endpoint, bool message3);
+		virtual void SendWirePacket(RR_INTRUSIVE_PTR<RRValue> data, TimeSpec time, uint32_t endpoint);
 
 		std::string m_MemberName;
 		std::string service_path;
@@ -632,7 +630,7 @@ namespace RobotRaconteur
 		
 		WireServerBase(boost::string_ref name, RR_SHARED_PTR<ServiceSkel> skel, MemberDefinition_Direction direction);
 
-		virtual RR_SHARED_PTR<WireConnectionBase> CreateNewWireConnection(uint32_t e, MemberDefinition_Direction direction, bool message3)=0;
+		virtual RR_SHARED_PTR<WireConnectionBase> CreateNewWireConnection(uint32_t e, MemberDefinition_Direction direction)=0;
 				
 		virtual void fire_WireConnectCallback(RR_SHARED_PTR<WireConnectionBase> e)=0;
 
@@ -722,9 +720,9 @@ namespace RobotRaconteur
 		virtual void SetPokeOutValueCallback(boost::function<void(const T&, const TimeSpec&, const uint32_t&)> function) { poke_out_callback = function; }
 		
 	protected:
-		virtual RR_SHARED_PTR<WireConnectionBase> CreateNewWireConnection(uint32_t e, MemberDefinition_Direction direction, bool message3)
+		virtual RR_SHARED_PTR<WireConnectionBase> CreateNewWireConnection(uint32_t e, MemberDefinition_Direction direction)
 		{
-			return RR_MAKE_SHARED<WireConnection<T> >(RR_STATIC_POINTER_CAST<WireBase>(shared_from_this()), e, direction, message3);
+			return RR_MAKE_SHARED<WireConnection<T> >(RR_STATIC_POINTER_CAST<WireBase>(shared_from_this()), e, direction);
 		}
 
 		boost::function<void (RR_SHARED_PTR<WireConnection<T> >)> callback;

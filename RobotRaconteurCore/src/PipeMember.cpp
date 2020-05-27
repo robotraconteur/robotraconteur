@@ -52,7 +52,7 @@ namespace RobotRaconteur
 {
 	void PipeMember_empty_handler(RR_SHARED_PTR<RobotRaconteurException>) {}
 
-PipeEndpointBase::PipeEndpointBase(RR_SHARED_PTR<PipeBase> parent, int32_t index, uint32_t endpoint, bool unreliable, MemberDefinition_Direction direction, bool message3)
+PipeEndpointBase::PipeEndpointBase(RR_SHARED_PTR<PipeBase> parent, int32_t index, uint32_t endpoint, bool unreliable, MemberDefinition_Direction direction)
 {
 	send_packet_number=0;
 	recv_packet_number=0;
@@ -67,7 +67,6 @@ PipeEndpointBase::PipeEndpointBase(RR_SHARED_PTR<PipeBase> parent, int32_t index
 
 	RequestPacketAck=false;
 	ignore_incoming_packets = false;
-	this->message3 = message3;
 	closed = false;
 	this->node = parent->GetNode();
 
@@ -176,7 +175,7 @@ void PipeEndpointBase::AsyncSendPacketBase(RR_INTRUSIVE_PTR<RRValue> packet, RR_
 		boost::mutex::scoped_lock lock(sendlock);
 		send_packet_number = (send_packet_number < UINT_MAX) ? send_packet_number + 1 : 0;
 
-		GetParent()->AsyncSendPipePacket(packet, index, send_packet_number, RequestPacketAck, endpoint,unreliable,message3,RR_MOVE(handler));
+		GetParent()->AsyncSendPipePacket(packet, index, send_packet_number, RequestPacketAck, endpoint,unreliable,RR_MOVE(handler));
 		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, endpoint, service_path, member_name, "Sent pipe packet " << send_packet_number << " pipe endpoint index " << index);
 		
 	}
@@ -458,125 +457,70 @@ void PipeEndpointBase::Shutdown()
 
 void PipeBase::DispatchPacketAck (RR_INTRUSIVE_PTR<MessageElement> me, RR_SHARED_PTR<PipeEndpointBase> e)
 {
-	uint32_t pnum;
-	if (me->ElementFlags & MessageElementFlags_SEQUENCE_NUMBER)
-	{
-		pnum = me->SequenceNumber;
-	}
-	else
-	{
-		pnum = RRArrayToScalar(me->CastData<RRArray<uint32_t> >());
-	}
+	uint32_t pnum;	
+	pnum = RRArrayToScalar(me->CastData<RRArray<uint32_t> >());	
 	e->PipePacketAckReceived(pnum);
 }
 
 bool PipeBase::DispatchPacket(RR_INTRUSIVE_PTR<MessageElement> me, RR_SHARED_PTR<PipeEndpointBase> e, uint32_t& packetnumber)
 {
 	//int32_t index=boost::lexical_cast<int32_t>(me->ElementName);
-	if ((me->ElementFlags & MessageElementFlags_ELEMENT_NUMBER) && (me->ElementFlags & MessageElementFlags_SEQUENCE_NUMBER))
+	
+	//Use message 2
+	RR_INTRUSIVE_PTR<MessageElementNestedElementList> elems1 = me->CastDataToNestedList(DataTypes_dictionary_t);
+	packetnumber = RRArrayToScalar(MessageElement::FindElement(elems1->Elements, "packetnumber")->CastData<RRArray<uint32_t> >());
+
+	RR_INTRUSIVE_PTR<RRValue> data;
+	if (!rawelements)
 	{
-		//Use message 3
-		packetnumber = me->SequenceNumber;
-		RR_INTRUSIVE_PTR<RRValue> data;
-		if (!rawelements)
-		{
-			data = UnpackData(me);
-		}
-		else
-		{
-			data = me;
-		}
-
-		e->PipePacketReceived(data, packetnumber);
-
-		return (me->ElementFlags & MessageElementFlags_REQUEST_ACK)!=0;
+		data = UnpackData(MessageElement::FindElement(elems1->Elements, "packet"));
 	}
 	else
 	{
-		//Use message 2
-		RR_INTRUSIVE_PTR<MessageElementNestedElementList> elems1 = me->CastDataToNestedList(DataTypes_dictionary_t);
-		packetnumber = RRArrayToScalar(MessageElement::FindElement(elems1->Elements, "packetnumber")->CastData<RRArray<uint32_t> >());
-
-		RR_INTRUSIVE_PTR<RRValue> data;
-		if (!rawelements)
-		{
-			data = UnpackData(MessageElement::FindElement(elems1->Elements, "packet"));
-		}
-		else
-		{
-			data = MessageElement::FindElement(elems1->Elements, "packet");
-		}
-
-		e->PipePacketReceived(data, packetnumber);
-
-		RR_INTRUSIVE_PTR<MessageElement> e;
-		if (MessageElement::TryFindElement(elems1->Elements, "requestack", e))
-		{
-			return true;
-		}		
+		data = MessageElement::FindElement(elems1->Elements, "packet");
 	}
+
+	e->PipePacketReceived(data, packetnumber);
+
+	RR_INTRUSIVE_PTR<MessageElement> e1;
+	if (MessageElement::TryFindElement(elems1->Elements, "requestack", e1))
+	{
+		return true;
+	}		
+	
 
 	return false;
 
 }
 
-RR_INTRUSIVE_PTR<MessageElement> PipeBase::PackPacket(RR_INTRUSIVE_PTR<RRValue> data, int32_t index, uint32_t packetnumber, bool requestack, bool message3)
+RR_INTRUSIVE_PTR<MessageElement> PipeBase::PackPacket(RR_INTRUSIVE_PTR<RRValue> data, int32_t index, uint32_t packetnumber, bool requestack)
 {	
-	if (message3)
+	//Use message 2
+	std::vector<RR_INTRUSIVE_PTR<MessageElement> > elems;
+	elems.push_back(CreateMessageElement("packetnumber", ScalarToRRArray(packetnumber)));
+
+	if (!rawelements)
 	{
-		//Use message 3		
-		RR_INTRUSIVE_PTR<MessageElement> me;
-		if (!rawelements)
-		{
-			me = CreateMessageElement();
-			me->SetData(PackData(data));
-		}
-		else
-		{
-			me = CreateMessageElement();
-			RR_INTRUSIVE_PTR<MessageElement> me2 = rr_cast<MessageElement>(data);
-			me->SetData(me2->GetData());
-		}
-
-		me->ElementFlags = MessageElementFlags_ELEMENT_NUMBER | MessageElementFlags_SEQUENCE_NUMBER;
-		me->ElementNumber = index;
-		me->SequenceNumber = packetnumber;
-
-		if (requestack)
-		{
-			me->ElementFlags |= MessageElementFlags_REQUEST_ACK;
-		}
-
-		return me;
+		RR_INTRUSIVE_PTR<MessageElementData> pdata = PackData(data);
+		elems.push_back(CreateMessageElement("packet", pdata));
 	}
 	else
 	{
-		//Use message 2
-		std::vector<RR_INTRUSIVE_PTR<MessageElement> > elems;
-		elems.push_back(CreateMessageElement("packetnumber", ScalarToRRArray(packetnumber)));
-
-		if (!rawelements)
-		{
-			RR_INTRUSIVE_PTR<MessageElementData> pdata = PackData(data);
-			elems.push_back(CreateMessageElement("packet", pdata));
-		}
-		else
-		{
-			RR_INTRUSIVE_PTR<MessageElement> pme = rr_cast<MessageElement>(data);
-			pme->ElementName = "packet";
-			elems.push_back(pme);
-		}
-
-		if (requestack)
-		{
-			elems.push_back(CreateMessageElement("requestack", ScalarToRRArray(static_cast<uint32_t>(1))));
-		}
-
-		RR_INTRUSIVE_PTR<MessageElementNestedElementList> delems = CreateMessageElementNestedElementList(DataTypes_dictionary_t,"",RR_MOVE(elems));
-		RR_INTRUSIVE_PTR<MessageElement> me = CreateMessageElement(boost::lexical_cast<std::string>(index), delems);
-
-		return me;
+		RR_INTRUSIVE_PTR<MessageElement> pme = rr_cast<MessageElement>(data);
+		pme->ElementName = "packet";
+		elems.push_back(pme);
 	}
+
+	if (requestack)
+	{
+		elems.push_back(CreateMessageElement("requestack", ScalarToRRArray(static_cast<uint32_t>(1))));
+	}
+
+	RR_INTRUSIVE_PTR<MessageElementNestedElementList> delems = CreateMessageElementNestedElementList(DataTypes_dictionary_t,"",RR_MOVE(elems));
+	RR_INTRUSIVE_PTR<MessageElement> me = CreateMessageElement(boost::lexical_cast<std::string>(index), delems);
+
+	return me;
+	
 
 }
 
@@ -700,7 +644,7 @@ void PipeClientBase::PipePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32
 							continue;
 						}
 
-						RR_SHARED_PTR<PipeEndpointBase> new_ep = CreateNewPipeEndpoint(index, false, direction, GetStub()->GetContext()->UseMessage3());
+						RR_SHARED_PTR<PipeEndpointBase> new_ep = CreateNewPipeEndpoint(index, false, direction);
 						early_endpoints.insert(std::make_pair(index, new_ep));
 						e = new_ep;
 					}					
@@ -710,18 +654,9 @@ void PipeClientBase::PipePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32
 				{		
 					ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName, "Sending packet ack for " << pnum
 					<< " pipe endpoint index " << me);
-					if (me->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
-					{
-						RR_INTRUSIVE_PTR<MessageElement> me1 = CreateMessageElement();
-						me1->SequenceNumber=(boost::numeric_cast<uint32_t>(pnum));
-						me1->ElementNumber = me->ElementNumber;
-						me1->ElementFlags = MessageElementFlags_ELEMENT_NUMBER | MessageElementFlags_SEQUENCE_NUMBER;
-						ack.push_back(me1);
-					}
-					else
-					{
-						ack.push_back(CreateMessageElement(me->ElementName, ScalarToRRArray(boost::numeric_cast<uint32_t>(pnum))));
-					}
+					
+					ack.push_back(CreateMessageElement(index, ScalarToRRArray(boost::numeric_cast<uint32_t>(pnum))));
+					
 				}
 			}
 
@@ -822,16 +757,15 @@ void PipeClientBase::Shutdown()
 	//stub.reset();
 }
 		
-void PipeClientBase::AsyncSendPipePacket(RR_INTRUSIVE_PTR<RRValue> data, int32_t index, uint32_t packetnumber, bool requestack, uint32_t endpoint, bool unreliable, bool message3, RR_MOVE_ARG(boost::function<void(uint32_t,RR_SHARED_PTR<RobotRaconteurException>)>) handler)
+void PipeClientBase::AsyncSendPipePacket(RR_INTRUSIVE_PTR<RRValue> data, int32_t index, uint32_t packetnumber, bool requestack, uint32_t endpoint, bool unreliable, RR_MOVE_ARG(boost::function<void(uint32_t,RR_SHARED_PTR<RobotRaconteurException>)>) handler)
 {	
-	RR_INTRUSIVE_PTR<MessageElement> me = PackPacket(data, index, packetnumber, requestack, message3);
+	RR_INTRUSIVE_PTR<MessageElement> me = PackPacket(data, index, packetnumber, requestack);
 	RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_PipePacket, GetMemberName());
 	m->AddElement(me);
-	if (!message3)
-	{
-		if (unreliable)
-			m->MetaData = "unreliable\n";
-	}
+	
+	if (unreliable)
+		m->MetaData = "unreliable\n";
+	
 	boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(handler, packetnumber, _1);
 	GetStub()->AsyncSendPipeMessage(m,unreliable, h);
 }
@@ -956,7 +890,7 @@ void PipeClientBase::AsyncConnect_internal1(RR_INTRUSIVE_PTR<MessageEntry> ret, 
 
 		if (!e)
 		{
-			e = CreateNewPipeEndpoint(rindex, runreliable, direction, GetStub()->GetContext()->UseMessage3());
+			e = CreateNewPipeEndpoint(rindex, runreliable, direction);
 		}
 						
 		pipeendpoints.insert(std::make_pair(rindex, e));
@@ -1069,18 +1003,8 @@ void PipeServerBase::PipePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32
 				{					
 					ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, e, service_path, m_MemberName, "Sending packet ack for " << pnum
 					<< " pipe endpoint index " << me);
-					if (me->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
-					{
-						RR_INTRUSIVE_PTR<MessageElement> me1 = CreateMessageElement();
-						me1->SequenceNumber = (boost::numeric_cast<uint32_t>(pnum));
-						me1->ElementNumber = me->ElementNumber;
-						me1->ElementFlags = MessageElementFlags_ELEMENT_NUMBER | MessageElementFlags_SEQUENCE_NUMBER;
-						ack.push_back(me1);
-					}
-					else
-					{
-						ack.push_back(CreateMessageElement(me->ElementName, ScalarToRRArray(boost::numeric_cast<uint32_t>(pnum))));
-					}
+					
+					ack.push_back(CreateMessageElement(index, ScalarToRRArray(boost::numeric_cast<uint32_t>(pnum))));					
 				}
 
 			}
@@ -1205,7 +1129,7 @@ void PipeServerBase::Shutdown()
 
 }
 
-void PipeServerBase::AsyncSendPipePacket(RR_INTRUSIVE_PTR<RRValue> data, int32_t index, uint32_t packetnumber, bool requestack, uint32_t e, bool unreliable, bool message3, RR_MOVE_ARG(boost::function<void(uint32_t,RR_SHARED_PTR<RobotRaconteurException>)>) handler)
+void PipeServerBase::AsyncSendPipePacket(RR_INTRUSIVE_PTR<RRValue> data, int32_t index, uint32_t packetnumber, bool requestack, uint32_t e, bool unreliable, RR_MOVE_ARG(boost::function<void(uint32_t,RR_SHARED_PTR<RobotRaconteurException>)>) handler)
 {
 	
 	
@@ -1216,15 +1140,12 @@ void PipeServerBase::AsyncSendPipePacket(RR_INTRUSIVE_PTR<RRValue> data, int32_t
 		throw InvalidOperationException("Pipe has been disconnect");
 	}
 
-	RR_INTRUSIVE_PTR<MessageElement> me = PackPacket(data, index, packetnumber, requestack, message3);
+	RR_INTRUSIVE_PTR<MessageElement> me = PackPacket(data, index, packetnumber, requestack);
 	RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_PipePacket, GetMemberName());
 	m->AddElement(me);
-
-	if (!message3)
-	{
-		if (unreliable)
-			m->MetaData = "unreliable\n";
-	}
+	
+	if (unreliable)
+		m->MetaData = "unreliable\n";	
 
 	GetSkel()->AsyncSendPipeMessage(m, e, unreliable, boost::bind(handler,packetnumber,_1));
 }
@@ -1372,7 +1293,7 @@ RR_INTRUSIVE_PTR<MessageEntry> PipeServerBase::PipeCommand(RR_INTRUSIVE_PTR<Mess
 						MemberDefinition_Direction ep_direction = direction;
 						if (direction == MemberDefinition_Direction_readonly) ep_direction = MemberDefinition_Direction_writeonly;
 						if (direction == MemberDefinition_Direction_writeonly) ep_direction = MemberDefinition_Direction_readonly;
-						RR_SHARED_PTR<PipeEndpointBase> p = CreateNewPipeEndpoint(index,e,isunreliable,ep_direction,GetSkel()->GetContext()->UseMessage3(e));
+						RR_SHARED_PTR<PipeEndpointBase> p = CreateNewPipeEndpoint(index,e,isunreliable,ep_direction);
 						pipeendpoints.insert(std::make_pair(pipe_endpoint_server_id(e,index), p));
 
 						lock.unlock();

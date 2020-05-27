@@ -443,29 +443,6 @@ namespace RobotRaconteurTest
 		if (h1->MessageSize != h2->MessageSize) throw std::runtime_error("");
 		if (h1->MessageFlags != h2->MessageFlags) throw std::runtime_error("");
 
-		if (h1->MessageFlags & MessageFlags_SUBSTREAM_ID)
-		{
-			if (h1->SubstreamID != h2->SubstreamID) throw std::runtime_error("");
-		}
-
-		if (h1->MessageFlags & MessageFlags_SUBSTREAM_SEQUENCE_NUMBER)
-		{
-			if (h1->SubstreamSequenceNumber.SequenceNumber != h2->SubstreamSequenceNumber.SequenceNumber) throw std::runtime_error("");
-			if (h1->SubstreamSequenceNumber.RecvSequenceNumber != h2->SubstreamSequenceNumber.RecvSequenceNumber) throw std::runtime_error("");
-		}
-
-		if (h1->MessageFlags & MessageFlags_FRAGMENT)
-		{
-			if (h1->FragmentHeader.FragmentMessageNumber != h2->FragmentHeader.FragmentMessageNumber) throw std::runtime_error("");
-			if (h1->FragmentHeader.FragmentMessageSize != h2->FragmentHeader.FragmentMessageSize) throw std::runtime_error("");
-			if (h1->FragmentHeader.FragmentOffset != h2->FragmentHeader.FragmentOffset) throw std::runtime_error("");
-		}
-
-		if (h1->MessageFlags & MessageFlags_UNRELIABLE_EXPIRATION)
-		{
-			if (h1->UnreliableExpiration != h2->UnreliableExpiration) throw std::runtime_error("");
-		}
-		
 		if (h1->MessageFlags & MessageFlags_ROUTING_INFO)
 		{
 			if (h1->SenderNodeID != h2->SenderNodeID) throw std::runtime_error("");
@@ -480,13 +457,14 @@ namespace RobotRaconteurTest
 			if (h1->ReceiverEndpoint != h2->ReceiverEndpoint) throw std::runtime_error("");
 		}
 
+		if (h1->MessageFlags & MessageFlags_PRIORITY)
+		{
+			if (h1->Priority != h2->Priority) throw std::runtime_error("");
+		}
+
 		if (h1->MessageFlags & MessageFlags_META_INFO)
 		{
 			if (h1->MetaData != h2->MetaData) throw std::runtime_error("");
-		}
-
-		if (h1->MessageFlags & MessageFlags_MESSAGE_ID)
-		{
 			if (h1->MessageID != h2->MessageID) throw std::runtime_error("");
 			if (h1->MessageResID != h2->MessageResID) throw std::runtime_error("");
 		}
@@ -501,9 +479,9 @@ namespace RobotRaconteurTest
 			}
 		}
 
-		if (h1->MessageFlags & MessageFlags_TRANSPORT_SPECIFIC)
+		if (h1->MessageFlags & MessageFlags_EXTENDED)
 		{
-			if (h1->TransportSpecific != h2->TransportSpecific) throw std::runtime_error("");
+			if (h1->Extended != h2->Extended) throw std::runtime_error("");
 		}
 
 		if (h1->EntryCount != h2->EntryCount) throw std::runtime_error("");
@@ -521,32 +499,22 @@ namespace RobotRaconteurTest
 		if (m1->EntryFlags != m2->EntryFlags) throw std::runtime_error("");
 		if (m1->EntryType != m2->EntryType) throw std::runtime_error("");
 
-		bool read_streamid = true;
 		if (m1->EntryFlags & MessageEntryFlags_SERVICE_PATH_STR)
-		{
-			read_streamid = false;
+		{			
 			if (m1->ServicePath != m2->ServicePath) throw std::runtime_error("");
 		}
 		if (m1->EntryFlags & MessageEntryFlags_SERVICE_PATH_CODE)
-		{
-			read_streamid = false;
+		{			
 			if (m1->ServicePathCode != m2->ServicePathCode) throw std::runtime_error("");
 		}
 
 		if (m1->EntryFlags & MessageEntryFlags_MEMBER_NAME_STR)
 		{
-			read_streamid = false;
 			if (m1->MemberName != m2->MemberName) throw std::runtime_error("");
 		}
 		if (m1->EntryFlags & MessageEntryFlags_MEMBER_NAME_CODE)
 		{
-			read_streamid = false;
 			if (m1->MemberNameCode != m2->MemberNameCode) throw std::runtime_error("");
-		}
-
-		if (read_streamid)
-		{
-			if (m1->EntryStreamID != m2->EntryStreamID) throw std::runtime_error("");
 		}
 
 		if (m1->EntryFlags & MessageEntryFlags_REQUEST_ID)
@@ -559,9 +527,15 @@ namespace RobotRaconteurTest
 			if (m1->Error != m2->Error) throw std::runtime_error("");
 		}
 
-		if (m1->EntryFlags & MessageEntryFlags_TIMESPEC)
+		if (m1->EntryFlags & MessageEntryFlags_META_INFO)
+		{
+			if (m1->MetaData != m2->MetaData) throw std::runtime_error("");
+			
+		}
+
+		if (m1->EntryFlags & MessageEntryFlags_EXTENDED)
 		{		
-			if (m1->EntryTimeSpec != m2->EntryTimeSpec) throw std::runtime_error("");
+			if (m1->Extended != m2->Extended) throw std::runtime_error("");
 		}
 
 		if (m1->elements.size() != m2->elements.size()) throw std::runtime_error("");
@@ -614,14 +588,16 @@ namespace RobotRaconteurTest
 			if (m1->ElementTypeNameCode != m2->ElementTypeNameCode) throw std::runtime_error("");
 		}
 
-		if (m1->ElementFlags & MessageElementFlags_SEQUENCE_NUMBER)
-		{
-			if (m1->SequenceNumber != m2->SequenceNumber) throw std::runtime_error("");
-		}
-
 		if (m1->ElementFlags & MessageElementFlags_META_INFO)
 		{
 			if (m1->MetaData != m2->MetaData) throw std::runtime_error("");
+		}
+
+		if (m1->ElementFlags & 0x40) throw std::runtime_error("");
+
+		if (m1->ElementFlags & MessageElementFlags_EXTENDED)
+		{		
+			if (m1->Extended != m2->Extended) throw std::runtime_error("");
 		}
 
 		if (m1->DataCount != m2->DataCount) throw std::runtime_error("");

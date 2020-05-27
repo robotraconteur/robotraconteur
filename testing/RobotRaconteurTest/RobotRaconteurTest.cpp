@@ -14,7 +14,7 @@
 #include <boost/algorithm/string.hpp>
 
 #include "MessageSerializationTest.h"
-#include "MessageSerializationTest3.h"
+#include "MessageSerializationTest4.h"
 
 #include "AsyncMessageTest.h"
 
@@ -344,7 +344,7 @@ int main(int argc, char* argv[])
 	if (command == "messagetest")
 	{
 		MessageSerializationTest::Test();
-		MessageSerializationTest3::Test();
+		MessageSerializationTest4::Test();
 		std::cout << "Done!" << std::endl;
 		return 0;
 	}
@@ -357,7 +357,7 @@ int main(int argc, char* argv[])
 			n = boost::lexical_cast<size_t>(string(argv[2]));
 		}
 		MessageSerializationTest::RandomTest(n);
-		MessageSerializationTest3::RandomTest(n);
+		MessageSerializationTest4::RandomTest(n);
 		std::cout << "Done!" << std::endl;
 		return 0;
 	}
@@ -370,9 +370,9 @@ int main(int argc, char* argv[])
 			n = boost::lexical_cast<size_t>(string(argv[2]));
 		}
 		AsyncMessageReaderTest::RandomTest(n);
-		AsyncMessageReaderTest::RandomTest3(n);
+		AsyncMessageReaderTest::RandomTest4(n);
 		AsyncMessageWriterTest::RandomTest(n);
-		AsyncMessageWriterTest::RandomTest3(n);
+		AsyncMessageWriterTest::RandomTest4(n);
 		std::cout << "Done!" << std::endl;
 		return 0;
 	}
@@ -1577,7 +1577,7 @@ return 0;
 
 				RR_INTRUSIVE_PTR<MessageElement> a3 = CreateMessageElement("test", a2);
 				ArrayBinaryWriter w(buf.get(), 0, 10000);
-				a3->Write3(w, 0);
+				a3->Write4(w);
 
 				o.push_back(a1);
 			}

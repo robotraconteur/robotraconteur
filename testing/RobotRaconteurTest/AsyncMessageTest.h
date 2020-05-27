@@ -18,7 +18,7 @@ namespace RobotRaconteurTest
 
 		static void DoTest(RR_INTRUSIVE_PTR<RobotRaconteur::Message> m, uint16_t version, boost::random::mt19937& rng);
 		static void RandomTest(size_t n);
-		static void RandomTest3(size_t n);
+		static void RandomTest4(size_t n);
 		static void LoadRandomTest();
 
 	};
@@ -31,7 +31,7 @@ namespace RobotRaconteurTest
 
 		static void DoTest(RR_INTRUSIVE_PTR<RobotRaconteur::Message> m, uint16_t version, boost::random::mt19937& rng);
 		static void RandomTest(size_t n);
-		static void RandomTest3(size_t n);
+		static void RandomTest4(size_t n);
 
 		static void WriteMessage(RR_INTRUSIVE_PTR<RobotRaconteur::Message> m, uint16_t version);
 		static void LoadRandomTest();

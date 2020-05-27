@@ -62,8 +62,8 @@ namespace RobotRaconteur
 
 		//Version 4 Message
 		uint32_t ComputeSize4();
-		void Write4(ArrayBinaryWriter &w, const uint16_t& version_minor);
-		void Read4(ArrayBinaryReader &r, uint16_t& version_minor);
+		void Write4(ArrayBinaryWriter &w);
+		void Read4(ArrayBinaryReader &r);
 
 		virtual std::string RRType()
 		{
@@ -117,11 +117,11 @@ namespace RobotRaconteur
 
 		//Version 4 Message
 	protected:
-		uint32_t ComputeSize3();
+		uint32_t ComputeSize4();
 	public:
 		void UpdateHeader4(uint32_t message_entry_size, uint16_t entry_count);
-		void Write4(ArrayBinaryWriter &w, const uint16_t& version_minor);
-		void Read4(ArrayBinaryReader &r, uint16_t& version_minor);
+		void Write4(ArrayBinaryWriter &w);
+		void Read4(ArrayBinaryReader &r);
 
 		virtual std::string RRType()
 		{
@@ -184,8 +184,8 @@ public:
 		//Version 4 Message
 		uint32_t ComputeSize4();
 		void UpdateData4();
-		void Write4(ArrayBinaryWriter &w, const uint16_t& version_minor);
-		void Read4(ArrayBinaryReader &r, const uint16_t& version_minor);
+		void Write4(ArrayBinaryWriter &w);
+		void Read4(ArrayBinaryReader &r);
 
 		virtual std::string RRType()
 		{
@@ -243,8 +243,8 @@ public:
 		//Version 4 Message
 		uint32_t ComputeSize4();
 		void UpdateData4();
-		void Write4(ArrayBinaryWriter &w, const uint16_t& version_minor);
-		void Read4(ArrayBinaryReader &r, const uint16_t& version_minor);
+		void Write4(ArrayBinaryWriter &w);
+		void Read4(ArrayBinaryReader &r);
 
 		static RR_INTRUSIVE_PTR<MessageElement> FindElement(std::vector<RR_INTRUSIVE_PTR<MessageElement> > &m, MessageStringRef name);
 

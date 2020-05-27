@@ -297,7 +297,7 @@ namespace RobotRaconteur
 		next_state = static_cast<state_type>(static_cast<int>(next_state) + 1);
 		return write_string(str, next_state);
 	}
-	bool AsyncMessageWriterImpl::write_string3(MessageStringPtr& str_ref, state_type next_state)
+	bool AsyncMessageWriterImpl::write_string4(MessageStringPtr& str_ref, state_type next_state)
 	{
 		boost::string_ref str= str_ref.str();
 		size_t l = str.size();
@@ -311,11 +311,11 @@ namespace RobotRaconteur
 		push_state(Header_writestring, next_state, l - n, &str_ref, n);
 		return false;
 	}
-	bool AsyncMessageWriterImpl::write_string3(MessageStringPtr& str)
+	bool AsyncMessageWriterImpl::write_string4(MessageStringPtr& str)
 	{
 		state_type next_state = state();
 		next_state = static_cast<state_type>(static_cast<int>(next_state) + 1);
-		return write_string3(str, next_state);
+		return write_string4(str, next_state);
 	}
 
 	void AsyncMessageWriterImpl::Reset()
@@ -343,11 +343,11 @@ namespace RobotRaconteur
 			message_pos = 0;
 
 		}
-		else if (version == 3)
+		else if (version == 4)
 		{
-			this->version = 3;
+			this->version = 4;
 
-			size_t n = m->ComputeSize3();
+			size_t n = m->ComputeSize4();
 
 			state_data s;
 			s.data = m;
@@ -356,9 +356,6 @@ namespace RobotRaconteur
 			state_stack.push_back(s);
 
 			message_pos = 0;
-
-			if (m->header->MessageFlags & MessageFlags_PROTOCOL_VERSION_MINOR)
-				throw ProtocolException("Invalid Message 3 minor version");
 		}
 		else
 		{
@@ -769,7 +766,7 @@ namespace RobotRaconteur
 
 	}
 
-	AsyncMessageWriterImpl::return_type AsyncMessageWriterImpl::Write3(size_t write_quota, mutable_buffers& work_bufs, size_t& work_bufs_used, const_buffers& write_bufs)
+	AsyncMessageWriterImpl::return_type AsyncMessageWriterImpl::Write4(size_t write_quota, mutable_buffers& work_bufs, size_t& work_bufs_used, const_buffers& write_bufs)
 	{
 		this->current_work_bufs = work_bufs;
 		this->current_work_bufs_start = work_bufs;
@@ -791,7 +788,7 @@ namespace RobotRaconteur
 			}
 			case Message_done:
 			{
-				if (distance_from_limit() != 0) throw ProtocolException("Message did write all data");
+				if (distance_from_limit() != 0) throw ProtocolException("Message did not write all data");
 				prepare_continue(work_bufs, work_bufs_used, write_bufs);
 				if (boost::asio::buffer_size(write_bufs) > 0)
 				{
@@ -823,7 +820,7 @@ namespace RobotRaconteur
 			}
 			case MessageHeader_version:
 			{
-				uint16_t v = 3;
+				uint16_t v = 4;
 				R(write_number(v));
 				state() = MessageHeader_headersize;
 			}
@@ -835,83 +832,6 @@ namespace RobotRaconteur
 			case MessageHeader_flags:
 			{
 				R(write_number(data<MessageHeader>()->MessageFlags));
-				state() = MessageHeader_substream;
-			}
-			case MessageHeader_substream:
-			{
-				MessageHeader* h = data<MessageHeader>();
-				if (h->MessageFlags & MessageFlags_SUBSTREAM_ID)
-				{
-					R(write_uint_x2(data<MessageHeader>()->SubstreamID));
-				}
-				state() = MessageHeader_substreamseq1;
-			}
-			case MessageHeader_substreamseq1:
-			{
-				MessageHeader* h = data<MessageHeader>();
-				if (!(h->MessageFlags & MessageFlags_SUBSTREAM_SEQUENCE_NUMBER))
-				{
-					state() = MessageHeader_fragment1;
-					continue;
-				}
-
-				R(write_uint_x(h->SubstreamSequenceNumber.SequenceNumber));
-				state() = MessageHeader_substreamseq2;
-			}
-			case MessageHeader_substreamseq2:
-			{
-				R(write_uint_x(data<MessageHeader>()->SubstreamSequenceNumber.RecvSequenceNumber));
-				state() = MessageHeader_fragment1;
-			}
-			case MessageHeader_fragment1:
-			{
-				MessageHeader* h = data<MessageHeader>();
-				if (!(h->MessageFlags & MessageFlags_FRAGMENT))
-				{
-					state() = MessageHeader_unreliableexp1;
-					continue;
-				}
-
-				R(write_uint_x(h->FragmentHeader.FragmentMessageNumber));
-				state() = MessageHeader_fragment2;
-			}
-			case MessageHeader_fragment2:
-			{
-				R(write_uint_x(data<MessageHeader>()->FragmentHeader.FragmentMessageSize));
-				state() = MessageHeader_fragment3;
-			}
-			case MessageHeader_fragment3:
-			{
-				R(write_uint_x(data<MessageHeader>()->FragmentHeader.FragmentOffset));
-				state() = MessageHeader_unreliableexp1;
-			}
-			case MessageHeader_unreliableexp1:
-			{
-				MessageHeader* h = data<MessageHeader>();
-				if (!(h->MessageFlags & MessageFlags_UNRELIABLE_EXPIRATION))
-				{
-					state() = MessageHeader_priority;
-					continue;
-				}
-
-				R(write_int_x2(h->UnreliableExpiration.seconds));
-				state() = MessageHeader_unreliableexp2;
-			}
-			case MessageHeader_unreliableexp2:
-			{
-				R(write_int_x(data<MessageHeader>()->UnreliableExpiration.nanoseconds));
-				state() = MessageHeader_priority;
-			}
-			case MessageHeader_priority:
-			{
-				MessageHeader* h = data<MessageHeader>();
-				if (!(h->MessageFlags & MessageFlags_PRIORITY))
-				{
-					state() = MessageHeader_routing1;
-					continue;
-				}
-
-				R(write_number(h->Priority));
 				state() = MessageHeader_routing1;
 			}
 			case MessageHeader_routing1:
@@ -933,12 +853,12 @@ namespace RobotRaconteur
 			}
 			case MessageHeader_routing3:
 			{
-				R(write_string3(data<MessageHeader>()->SenderNodeName));
+				R(write_string4(data<MessageHeader>()->SenderNodeName));
 				state() = MessageHeader_routing4;
 			}
 			case MessageHeader_routing4:
 			{
-				R(write_string3(data<MessageHeader>()->ReceiverNodeName));
+				R(write_string4(data<MessageHeader>()->ReceiverNodeName));
 				state() = MessageHeader_endpoint1;
 			}
 			case MessageHeader_endpoint1:
@@ -946,34 +866,43 @@ namespace RobotRaconteur
 				MessageHeader* h = data<MessageHeader>();
 				if (!(h->MessageFlags & MessageFlags_ENDPOINT_INFO))
 				{
-					state() = MessageHeader_metainfo;
+					state() = MessageHeader_priority;
 					continue;
 				}
-				R(write_number(h->SenderEndpoint));
+				R(write_uint_x(h->SenderEndpoint));
 				state() = MessageHeader_endpoint2;
 			}
 			case MessageHeader_endpoint2:
 			{
-				R(write_number(data<MessageHeader>()->ReceiverEndpoint));
+				R(write_uint_x(data<MessageHeader>()->ReceiverEndpoint));
+				state() = MessageHeader_priority;
+			}
+			case MessageHeader_priority:
+			{
+				MessageHeader* h = data<MessageHeader>();
+				if (!(h->MessageFlags & MessageFlags_PRIORITY))
+				{
+					state() = MessageHeader_metainfo;
+					continue;
+				}
+
+				R(write_number(h->Priority));
 				state() = MessageHeader_metainfo;
 			}
 			case MessageHeader_metainfo:
 			{
 				MessageHeader* h = data<MessageHeader>();
-				if (h->MessageFlags & MessageFlags_META_INFO)
+				if (!(h->MessageFlags & MessageFlags_META_INFO))
 				{
-					R(write_string3(h->MetaData));
+					state() = MessageHeader_stringtable1;
+					continue;
 				}
+				R(write_string4(h->MetaData));
 				state() = MessageHeader_messageid1;
 			}
 			case MessageHeader_messageid1:
 			{
 				MessageHeader* h = data<MessageHeader>();
-				if (!(h->MessageFlags & MessageFlags_MESSAGE_ID))
-				{
-					state() = MessageHeader_stringtable1;
-					continue;
-				}
 				R(write_number(h->MessageID));
 				state() = MessageHeader_messageid2;
 			}
@@ -1013,7 +942,7 @@ namespace RobotRaconteur
 			{
 				MessageHeader* h = data<MessageHeader>();
 				MessageStringPtr& s1 = h->StringTable.at(param2()).get<1>();
-				R(write_string3(s1, MessageHeader_stringtable2));				
+				R(write_string4(s1, MessageHeader_stringtable2));				
 				state() = MessageHeader_stringtable2;
 				continue;
 			}
@@ -1025,29 +954,31 @@ namespace RobotRaconteur
 					R(write_uint_x(h->EntryCount));					
 				}
 				param1() = 0;				
-				state() = MessageHeader_transportspecific1;
+				state() = MessageHeader_extended1;
 			}
-			case MessageHeader_transportspecific1:
+			case MessageHeader_extended1:
 			{
 				MessageHeader* h = data<MessageHeader>();
-				if (!(h->MessageFlags & MessageFlags_TRANSPORT_SPECIFIC))
+				if (!(h->MessageFlags & MessageFlags_EXTENDED))
 				{
 					pop_state();
+					param1() = 0;
 					state() = Message_writeentries;
 					continue;
 				}
-				uint32_t n = boost::numeric_cast<uint32_t>(h->TransportSpecific.size());
+				uint32_t n = boost::numeric_cast<uint32_t>(h->Extended.size());
 				R(write_uint_x(n));
-				state() = MessageHeader_transportspecific2;
+				state() = MessageHeader_extended2;
 			}
-			case MessageHeader_transportspecific2:
+			case MessageHeader_extended2:
 			{
 				MessageHeader* h = data<MessageHeader>();
-				if (!h->TransportSpecific.empty())
+				if (!h->Extended.empty())
 				{
-					R(write_all_bytes(&h->TransportSpecific[0], h->TransportSpecific.size()));
+					R(write_all_bytes(&h->Extended[0], h->Extended.size()));
 				}
 				pop_state();
+				param1() = 0;
 				state() = Message_writeentries;
 			}
 			case Message_writeentries:
@@ -1094,7 +1025,7 @@ namespace RobotRaconteur
 				MessageEntry* ee = data<MessageEntry>();
 				if (ee->EntryFlags & MessageEntryFlags_SERVICE_PATH_STR)
 				{
-					R(write_string3(ee->ServicePath));
+					R(write_string4(ee->ServicePath));
 				}
 				state() = MessageEntry_servicepathcode;
 			}
@@ -1112,7 +1043,7 @@ namespace RobotRaconteur
 				MessageEntry* ee = data<MessageEntry>();
 				if (ee->EntryFlags & MessageEntryFlags_MEMBER_NAME_STR)
 				{
-					R(write_string3(ee->MemberName));
+					R(write_string4(ee->MemberName));
 				}
 				state() = MessageEntry_membernamecode;
 			}
@@ -1123,18 +1054,8 @@ namespace RobotRaconteur
 				{
 					R(write_uint_x(ee->MemberNameCode));
 				}
-				state() = MessageEntry_entrystreamid;
-			}
-			case MessageEntry_entrystreamid:
-			{
-				MessageEntry* ee = data<MessageEntry>();
-				if ((ee->EntryFlags & (MessageEntryFlags_MEMBER_NAME_STR | MessageEntryFlags_MEMBER_NAME_CODE
-					| MessageEntryFlags_SERVICE_PATH_STR | MessageEntryFlags_SERVICE_PATH_CODE)) == 0)
-				{
-					R(write_uint_x2(ee->EntryStreamID));
-				}
 				state() = MessageEntry_requestid;
-			}
+			}			
 			case MessageEntry_requestid:
 			{
 				MessageEntry* ee = data<MessageEntry>();
@@ -1160,25 +1081,29 @@ namespace RobotRaconteur
 				MessageEntry* ee = data<MessageEntry>();
 				if (ee->EntryFlags & MessageEntryFlags_META_INFO)
 				{
-					R(write_string3(ee->MetaData));
+					R(write_string4(ee->MetaData));
 				}
-				state() = MessageEntry_timespec1;
+				state() = MessageEntry_extended1;
 			}
-			case MessageEntry_timespec1:
+			case MessageEntry_extended1:
 			{
 				MessageEntry* ee = data<MessageEntry>();
-				if (!(ee->EntryFlags & MessageEntryFlags_TIMESPEC))
+				if (!(ee->EntryFlags & MessageEntryFlags_EXTENDED))
 				{
 					state() = MessageEntry_elementcount;
 					continue;
 				}
-				R(write_int_x2(ee->EntryTimeSpec.seconds));
-				state() = MessageEntry_timespec2;
+				uint32_t n = boost::numeric_cast<uint32_t>(ee->Extended.size());
+				R(write_uint_x(n));
+				state() = MessageEntry_extended2;
 			}
-			case MessageEntry_timespec2:
+			case MessageEntry_extended2:
 			{
 				MessageEntry* ee = data<MessageEntry>();
-				R(write_int_x(ee->EntryTimeSpec.nanoseconds));
+				if (!ee->Extended.empty())
+				{
+					R(write_all_bytes(&ee->Extended[0], ee->Extended.size()));
+				}
 				state() = MessageEntry_elementcount;
 			}
 			case MessageEntry_elementcount:
@@ -1222,7 +1147,7 @@ namespace RobotRaconteur
 				MessageElement* el = data<MessageElement>();
 				if (el->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
 				{
-					R(write_string3(el->ElementName));
+					R(write_string4(el->ElementName));
 				}
 				state() = MessageElement_elementnamecode;
 			}
@@ -1255,7 +1180,7 @@ namespace RobotRaconteur
 				MessageElement* el = data<MessageElement>();
 				if (el->ElementFlags & MessageElementFlags_ELEMENT_TYPE_NAME_STR)
 				{
-					R(write_string3(el->ElementTypeName));
+					R(write_string4(el->ElementTypeName));
 				}
 				state() = MessageElement_elementtypecode;
 			}
@@ -1266,23 +1191,35 @@ namespace RobotRaconteur
 				{
 					R(write_uint_x(el->ElementTypeNameCode));
 				}
-				state() = MessageElement_sequencenumber;
-			}
-			case MessageElement_sequencenumber:
-			{
-				MessageElement* el = data<MessageElement>();
-				if (el->ElementFlags & MessageElementFlags_SEQUENCE_NUMBER)
-				{
-					R(write_uint_x(el->SequenceNumber));
-				}
 				state() = MessageElement_metainfo;
-			}
+			}			
 			case MessageElement_metainfo:
 			{
 				MessageElement* el = data<MessageElement>();
 				if (el->ElementFlags & MessageElementFlags_META_INFO)
 				{
-					R(write_string3(el->MetaData));
+					R(write_string4(el->MetaData));
+				}
+				state() = MessageElement_extended1;
+			}
+			case MessageElement_extended1:
+			{
+				MessageElement* ee = data<MessageElement>();
+				if (!(ee->ElementFlags & MessageElementFlags_EXTENDED))
+				{
+					state() = MessageElement_datacount;
+					continue;
+				}
+				uint32_t n = boost::numeric_cast<uint32_t>(ee->Extended.size());
+				R(write_uint_x(n));
+				state() = MessageElement_extended2;
+			}
+			case MessageElement_extended2:
+			{
+				MessageElement* ee = data<MessageElement>();
+				if (!ee->Extended.empty())
+				{
+					R(write_all_bytes(&ee->Extended[0], ee->Extended.size()));
 				}
 				state() = MessageElement_datacount;
 			}

@@ -94,30 +94,30 @@ namespace RobotRaconteur
 	const uint8_t MessageFlags_MULTIPLE_ENTRIES = 0x40;
 	const uint8_t MessageFlags_EXTENDED = 0x80;
 
-	const uint16_t MessageFlags_Version2Compat = MessageFlags_ROUTING_INFO | MessageFlags_ENDPOINT_INFO | MessageFlags_META_INFO | MessageFlags_MULTIPLE_ENTRIES;
+	const uint8_t MessageFlags_Version2Compat = MessageFlags_ROUTING_INFO | MessageFlags_ENDPOINT_INFO | MessageFlags_META_INFO | MessageFlags_MULTIPLE_ENTRIES;
 
 	//Flags for EntryFlags in MessageEntry
-	const uint16_t MessageEntryFlags_SERVICE_PATH_STR = 0x01;
-	const uint16_t MessageEntryFlags_SERVICE_PATH_CODE = 0x02;
-	const uint16_t MessageEntryFlags_MEMBER_NAME_STR = 0x04;
-	const uint16_t MessageEntryFlags_MEMBER_NAME_CODE = 0x08;
-	const uint16_t MessageEntryFlags_REQUEST_ID = 0x10;
-	const uint16_t MessageEntryFlags_ERROR = 0x20;
-	const uint16_t MessageEntryFlags_META_INFO = 0x40;
-	const uint16_t MessageEntryFlags_EXTENDED = 0x80;
+	const uint8_t MessageEntryFlags_SERVICE_PATH_STR = 0x01;
+	const uint8_t MessageEntryFlags_SERVICE_PATH_CODE = 0x02;
+	const uint8_t MessageEntryFlags_MEMBER_NAME_STR = 0x04;
+	const uint8_t MessageEntryFlags_MEMBER_NAME_CODE = 0x08;
+	const uint8_t MessageEntryFlags_REQUEST_ID = 0x10;
+	const uint8_t MessageEntryFlags_ERROR = 0x20;
+	const uint8_t MessageEntryFlags_META_INFO = 0x40;
+	const uint8_t MessageEntryFlags_EXTENDED = 0x80;
 
-	const uint16_t MessageEntryFlags_Version2Compat = MessageEntryFlags_SERVICE_PATH_STR | MessageEntryFlags_MEMBER_NAME_STR | MessageEntryFlags_REQUEST_ID | MessageEntryFlags_ERROR | MessageEntryFlags_META_INFO;
+	const uint8_t MessageEntryFlags_Version2Compat = MessageEntryFlags_SERVICE_PATH_STR | MessageEntryFlags_MEMBER_NAME_STR | MessageEntryFlags_REQUEST_ID | MessageEntryFlags_ERROR | MessageEntryFlags_META_INFO;
 
 	//Flags for ElementFlags in MessageElement
-	const uint16_t MessageElementFlags_ELEMENT_NAME_STR = 0x01;
-	const uint16_t MessageElementFlags_ELEMENT_NAME_CODE = 0x02;
-	const uint16_t MessageElementFlags_ELEMENT_NUMBER = 0x04;
-	const uint16_t MessageElementFlags_ELEMENT_TYPE_NAME_STR = 0x08;
-	const uint16_t MessageElementFlags_ELEMENT_TYPE_NAME_CODE = 0x10;
-	const uint16_t MessageElementFlags_META_INFO = 0x20;
-	const uint16_t MessageElementFlags_EXTENDED = 0x80;
+	const uint8_t MessageElementFlags_ELEMENT_NAME_STR = 0x01;
+	const uint8_t MessageElementFlags_ELEMENT_NAME_CODE = 0x02;
+	const uint8_t MessageElementFlags_ELEMENT_NUMBER = 0x04;
+	const uint8_t MessageElementFlags_ELEMENT_TYPE_NAME_STR = 0x08;
+	const uint8_t MessageElementFlags_ELEMENT_TYPE_NAME_CODE = 0x10;
+	const uint8_t MessageElementFlags_META_INFO = 0x20;
+	const uint8_t MessageElementFlags_EXTENDED = 0x80;
 
-	const uint16_t MessageElementFlags_Version2Compat = MessageElementFlags_ELEMENT_NAME_STR | MessageElementFlags_ELEMENT_TYPE_NAME_STR | MessageElementFlags_META_INFO;
+	const uint8_t MessageElementFlags_Version2Compat = MessageElementFlags_ELEMENT_NAME_STR | MessageElementFlags_ELEMENT_TYPE_NAME_STR | MessageElementFlags_META_INFO;
 
 	enum MessageEntryType
 	{
@@ -300,14 +300,13 @@ namespace RobotRaconteur
 	const uint32_t TransportCapabilityCode_MESSAGE2_BASIC_PAGE = 0x02000000;
 	const uint32_t TransportCapabilityCode_MESSAGE2_BASIC_ENABLE = 0x00000001;
 	const uint32_t TransportCapabilityCode_MESSAGE2_BASIC_CONNECTCOMBINED = 0x00000002;
-	const uint32_t TransportCapabilityCode_MESSAGE3_BASIC_PAGE = 0x03000000;
-	const uint32_t TransportCapabilityCode_MESSAGE3_BASIC_ENABLE = 0x00000001;
-	const uint32_t TransportCapabilityCode_MESSAGE3_BASIC_CONNECTCOMBINED = 0x00000002;
-	const uint32_t TransportCapabilityCode_MESSAGE3_STRINGTABLE_PAGE = 0x03100000;
-	const uint32_t TransportCapabilityCode_MESSAGE3_STRINGTABLE_ENABLE = 0x00000001;
-	const uint32_t TransportCapabilityCode_MESSAGE3_STRINGTABLE_MESSAGE_LOCAL = 0x00000002;
-	const uint32_t TransportCapabilityCode_MESSAGE3_STRINGTABLE_DYNAMIC_TABLE = 0x00000004;
-	const uint32_t TransportCapabilityCode_MESSAGE3_STRINGTABLE_STANDARD_TABLE = 0x00000008;
+	const uint32_t TransportCapabilityCode_MESSAGE4_BASIC_PAGE = 0x04000000;
+	const uint32_t TransportCapabilityCode_MESSAGE4_BASIC_ENABLE = 0x00000001;
+	const uint32_t TransportCapabilityCode_MESSAGE4_BASIC_CONNECTCOMBINED = 0x00000002;
+	const uint32_t TransportCapabilityCode_MESSAGE4_STRINGTABLE_PAGE = 0x04100000;
+	const uint32_t TransportCapabilityCode_MESSAGE4_STRINGTABLE_ENABLE = 0x00000001;
+	const uint32_t TransportCapabilityCode_MESSAGE4_STRINGTABLE_MESSAGE_LOCAL = 0x00000002;	
+	const uint32_t TransportCapabilityCode_MESSAGE4_STRINGTABLE_STANDARD_TABLE = 0x00000004;
 
 	enum RobotRaconteur_LogLevel
 	{

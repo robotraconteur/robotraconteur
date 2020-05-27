@@ -1590,10 +1590,10 @@ TcpTransport::TcpTransport(RR_SHARED_PTR<RobotRaconteurNode> node)
 	allowed_websocket_origins.push_back("https://*.robotraconteur.com");
 	allowed_websocket_origins.push_back("https://*.robotraconteur.com:443");
 
-#ifndef ROBOTRACONTEUR_DISABLE_MESSAGE3
-	disable_message3 = false;
+#ifndef ROBOTRACONTEUR_DISABLE_MESSAGE4
+	disable_message4 = false;
 #else
-	disable_message3 = true;
+	disable_message4 = true;
 #endif
 #ifndef ROBOTRACONTEUR_DISABLE_STRINGTABLE
 	disable_string_table = false;
@@ -3141,16 +3141,16 @@ std::string TcpTransport::GetSecurePeerIdentity(RR_SHARED_PTR<ITransportConnecti
 
 }
 
-bool TcpTransport::GetDisableMessage3()
+bool TcpTransport::GetDisableMessage4()
 {
 	boost::mutex::scoped_lock lock(parameter_lock);
-	return disable_message3;
+	return disable_message4;
 }
-void TcpTransport::SetDisableMessage3(bool d)
+void TcpTransport::SetDisableMessage4(bool d)
 {
 	boost::mutex::scoped_lock lock(parameter_lock);
-	disable_message3 = d;
-	ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "DisableMessage3 set to: " << d);
+	disable_message4 = d;
+	ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "DisableMessage4 set to: " << d);
 }
 
 bool TcpTransport::GetDisableStringTable()
@@ -3194,7 +3194,7 @@ TcpTransportConnection::TcpTransportConnection(RR_SHARED_PTR<TcpTransport> paren
 	this->m_RemoteEndpoint=0;
 	this->ReceiveTimeout=parent->GetDefaultReceiveTimeout();
 	this->HeartbeatPeriod=parent->GetDefaultHeartbeatPeriod();
-	this->disable_message3 = parent->GetDisableMessage3();
+	this->disable_message4 = parent->GetDisableMessage4();
 	this->disable_string_table = parent->GetDisableStringTable();
 	this->disable_async_io = parent->GetDisableAsyncMessageIO();
 	this->url = RR_MOVE(url.to_string());
@@ -3254,7 +3254,7 @@ void TcpTransportConnection::AsyncAttachSocket(RR_SHARED_PTR<boost::asio::ip::tc
 		}
 
 		
-		string_table3 = RR_MAKE_SHARED<detail::StringTable>(server);
+		string_table4 = RR_MAKE_SHARED<detail::StringTable>(server);
 
 		boost::system::error_code ec;
 		if (!RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(&TcpTransportConnection::do_starttls1, RR_STATIC_POINTER_CAST<TcpTransportConnection>(shared_from_this()), noden, ec, callback)))
@@ -3316,7 +3316,7 @@ void TcpTransportConnection::AsyncAttachWebSocket(RR_SHARED_PTR<boost::asio::ip:
 		this->send_paused = true;
 		this->send_pause_request = true;
 
-		string_table3 = RR_MAKE_SHARED<detail::StringTable>(server);
+		string_table4 = RR_MAKE_SHARED<detail::StringTable>(server);
 
 		heartbeat_timer.reset(new boost::asio::deadline_timer(_io_context));
 		{
@@ -3388,7 +3388,7 @@ void TcpTransportConnection::AsyncAttachWSSWebSocket(RR_SHARED_PTR<boost::asio::
 		this->send_paused = true;
 		this->send_pause_request = true;
 
-		string_table3 = RR_MAKE_SHARED<detail::StringTable>(server);
+		string_table4 = RR_MAKE_SHARED<detail::StringTable>(server);
 
 		heartbeat_timer.reset(new boost::asio::deadline_timer(_io_context));
 		{

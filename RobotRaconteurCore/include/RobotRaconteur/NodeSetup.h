@@ -51,7 +51,7 @@ namespace RobotRaconteur
 		RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_CLIENT = 0x40,
 		RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER = 0x80,
 		RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER_PORT_SHARER = 0x100,
-		RobotRaconteurNodeSetupFlags_DISABLE_MESSAGE3  = 0x200,
+		RobotRaconteurNodeSetupFlags_DISABLE_MESSAGE4  = 0x200,
 		RobotRaconteurNodeSetupFlags_DISABLE_STRINGTABLE = 0x400,
 		RobotRaconteurNodeSetupFlags_DISABLE_TIMEOUTS = 0x800,
 		RobotRaconteurNodeSetupFlags_LOAD_TLS_CERT = 0x1000,
@@ -84,7 +84,7 @@ namespace RobotRaconteur
 		/*RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS 
 		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING 
 		| RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_CLIENT
-		| RobotRaconteurNodeSetupFlags_DISABLE_MESSAGE3
+		| RobotRaconteurNodeSetupFlags_DISABLE_MESSAGE4
 		| RobotRaconteurNodeSetupFlags_DISABLE_STRINGTABLE
 		| RobotRaconteurNodeSetupFlags_DISABLE_TIMEOUTS
 		| RobotRaconteurNodeSetupFlags_LOAD_TLS_CERT
@@ -107,7 +107,7 @@ namespace RobotRaconteur
 		| RobotRaconteurNodeSetupFlags_INTRA_TRANSPORT_START_SERVER
 		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_ANNOUNCE 
 		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING
-		| RobotRaconteurNodeSetupFlags_DISABLE_MESSAGE3
+		| RobotRaconteurNodeSetupFlags_DISABLE_MESSAGE4
 		| RobotRaconteurNodeSetupFlags_DISABLE_STRINGTABLE
 		| RobotRaconteurNodeSetupFlags_DISABLE_TIMEOUTS
 		| RobotRaconteurNodeSetupFlags_LOAD_TLS_CERT
@@ -138,7 +138,7 @@ namespace RobotRaconteur
 		| RobotRaconteurNodeSetupFlags_INTRA_TRANSPORT_START_SERVER
 		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_ANNOUNCE 
 		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING
-		| RobotRaconteurNodeSetupFlags_DISABLE_MESSAGE3
+		| RobotRaconteurNodeSetupFlags_DISABLE_MESSAGE4
 		| RobotRaconteurNodeSetupFlags_DISABLE_STRINGTABLE
 		| RobotRaconteurNodeSetupFlags_DISABLE_TIMEOUTS
 		| RobotRaconteurNodeSetupFlags_NODENAME_OVERRIDE

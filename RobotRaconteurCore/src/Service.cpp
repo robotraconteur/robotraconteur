@@ -743,25 +743,13 @@ namespace RobotRaconteur
 	}
 
 	void ServerContext::AsyncSendUnreliableMessage(RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> e, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback)
-	{
-		if (!e->UseMessage3())
-		{
-			RR_INTRUSIVE_PTR<Message> mm = CreateMessage();
-			mm->header = CreateMessageHeader();
-			//mm.header.ReceiverEndpoint = RemoteEndpoint;
-			mm->entries.push_back(m);
-			mm->header->MetaData = "unreliable\n";
-			e->AsyncSendMessage(mm, callback);
-		}
-		else
-		{
-			RR_INTRUSIVE_PTR<Message> mm = CreateMessage();
-			mm->header = CreateMessageHeader();
-			//mm.header.ReceiverEndpoint = RemoteEndpoint;
-			mm->entries.push_back(m);
-			mm->header->MessageFlags |= MessageFlags_UNRELIABLE;
-			e->AsyncSendMessage(mm, callback);
-		}
+	{		
+		RR_INTRUSIVE_PTR<Message> mm = CreateMessage();
+		mm->header = CreateMessageHeader();
+		//mm.header.ReceiverEndpoint = RemoteEndpoint;
+		mm->entries.push_back(m);
+		mm->header->MetaData = "unreliable\n";
+		e->AsyncSendMessage(mm, callback);		
 	}
 
 	void ServerContext::AsyncSendPipeMessage(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e, bool unreliable, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback)
@@ -2306,14 +2294,6 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, -1, GetServiceName(), "", "Monitor thread pool count set to " << count << "threads");
 	}
 
-	bool ServerContext::UseMessage3(uint32_t ep)
-	{
-		boost::mutex::scoped_lock lock(client_endpoints_lock);
-		RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<ServerEndpoint> >::iterator e = client_endpoints.find(ep);
-		if (e == client_endpoints.end()) return false;
-		return e->second->UseMessage3();
-	}
-
 	void ServerContext::InitializeInstanceFields()
 	{
 		
@@ -2428,17 +2408,10 @@ boost::thread_specific_ptr<RR_SHARED_PTR<AuthenticatedUser> > ServerEndpoint::m_
 		}
 	}
 
-	bool ServerEndpoint::UseMessage3()
-	{
-		bool f = false;
-		use_message3.compare_exchange_strong(f, false);
-		return f;
-	}
 	void ServerEndpoint::SetTransportConnection(RR_SHARED_PTR<ITransportConnection> c)
 	{
 		Endpoint::SetTransportConnection(c);
-		bool m = c->CheckCapabilityActive(TransportCapabilityCode_MESSAGE3_BASIC_PAGE | TransportCapabilityCode_MESSAGE3_BASIC_ENABLE);
-		use_message3.store(m);
+		bool m = c->CheckCapabilityActive(TransportCapabilityCode_MESSAGE4_BASIC_PAGE | TransportCapabilityCode_MESSAGE4_BASIC_ENABLE);
 	}
 
 	void ServerEndpoint::InitializeInstanceFields()

@@ -97,9 +97,9 @@ namespace RobotRaconteur
 				// Always announces due to file watching by clients
 			//}
 
-			if (config->GetOptionOrDefaultAsBool("disable-message3"))
+			if (config->GetOptionOrDefaultAsBool("disable-message4"))
 			{
-				local_transport->SetDisableMessage3(true);
+				local_transport->SetDisableMessage4(true);
 			}
 
 			if (config->GetOptionOrDefaultAsBool("disable-stringtable"))
@@ -153,9 +153,9 @@ namespace RobotRaconteur
 				tcp_transport->StartServer(tcp_port);
 			}
 
-			if (config->GetOptionOrDefaultAsBool("disable-message3"))
+			if (config->GetOptionOrDefaultAsBool("disable-message4"))
 			{
-				tcp_transport->SetDisableMessage3(true);
+				tcp_transport->SetDisableMessage4(true);
 			}
 
 			if (config->GetOptionOrDefaultAsBool("disable-stringtable"))
@@ -242,9 +242,9 @@ namespace RobotRaconteur
 		{
 			hardware_transport = RR_MAKE_SHARED<HardwareTransport>(node);
 			
-			if (config->GetOptionOrDefaultAsBool("disable-message3"))
+			if (config->GetOptionOrDefaultAsBool("disable-message4"))
 			{
-				hardware_transport->SetDisableMessage3(true);
+				hardware_transport->SetDisableMessage4(true);
 			}
 
 			if (config->GetOptionOrDefaultAsBool("disable-stringtable"))
@@ -547,8 +547,8 @@ namespace RobotRaconteur
 		h.add<bool>("tcp-start-server-sharer", "start TCP server listening using port sharer", RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER_PORT_SHARER);
 		h.add<bool>("intra-start-server", "start Intra server listening", RobotRaconteurNodeSetupFlags_INTRA_TRANSPORT_START_SERVER);
 		h.add<bool>("disable-timeouts", "disable timeouts for debugging", RobotRaconteurNodeSetupFlags_DISABLE_TIMEOUTS);
-		h.add<bool>("disable-message3", "disable message v3", RobotRaconteurNodeSetupFlags_DISABLE_MESSAGE3);
-		h.add<bool>("disable-stringtable", "disable message v3 string table", RobotRaconteurNodeSetupFlags_DISABLE_STRINGTABLE);
+		h.add<bool>("disable-message4", "disable message v4", RobotRaconteurNodeSetupFlags_DISABLE_MESSAGE4);
+		h.add<bool>("disable-stringtable", "disable message v4 string table", RobotRaconteurNodeSetupFlags_DISABLE_STRINGTABLE);
 		h.add<bool>("load-tls", "load TLS certificate", RobotRaconteurNodeSetupFlags_LOAD_TLS_CERT);
 		h.add<bool>("require-tls", "require TLS for network communication", RobotRaconteurNodeSetupFlags_REQUIRE_TLS);
 
@@ -729,9 +729,9 @@ namespace RobotRaconteur
 			return (this->default_flags & RobotRaconteurNodeSetupFlags_DISABLE_TIMEOUTS) != 0;
 		}
 
-		if (option == "disable-message3")
+		if (option == "disable-message4")
 		{
-			return (this->default_flags & RobotRaconteurNodeSetupFlags_DISABLE_MESSAGE3) != 0;
+			return (this->default_flags & RobotRaconteurNodeSetupFlags_DISABLE_MESSAGE4) != 0;
 		}
 
 		if (option == "disable-stringtable")

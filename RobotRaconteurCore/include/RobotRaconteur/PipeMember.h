@@ -87,7 +87,7 @@ namespace RobotRaconteur
 
 		virtual void RemoteClose();
 
-		PipeEndpointBase(RR_SHARED_PTR<PipeBase> parent, int32_t index, uint32_t endpoint=0, bool unreliable=false, MemberDefinition_Direction direction = MemberDefinition_Direction_both, bool message3=false);
+		PipeEndpointBase(RR_SHARED_PTR<PipeBase> parent, int32_t index, uint32_t endpoint=0, bool unreliable=false, MemberDefinition_Direction direction = MemberDefinition_Direction_both);
 
 		bool unreliable;
 		MemberDefinition_Direction direction;
@@ -144,8 +144,7 @@ namespace RobotRaconteur
 		RR_UNORDERED_MAP<uint32_t,RR_INTRUSIVE_PTR<RRValue> > out_of_order_packets;
 
 		bool ignore_incoming_packets;
-		bool message3;
-
+		
 		boost::mutex listeners_lock;
 		std::list<RR_WEAK_PTR<PipeEndpointBaseListener> > listeners;
 
@@ -221,8 +220,8 @@ namespace RobotRaconteur
 		}
 		
 
-		PipeEndpoint(RR_SHARED_PTR<PipeBase> parent, int32_t index, uint32_t endpoint=0, bool unreliable=false, MemberDefinition_Direction direction = MemberDefinition_Direction_both, bool message3=false) 
-			: PipeEndpointBase(parent,index,endpoint,unreliable,direction,message3) {};
+		PipeEndpoint(RR_SHARED_PTR<PipeBase> parent, int32_t index, uint32_t endpoint=0, bool unreliable=false, MemberDefinition_Direction direction = MemberDefinition_Direction_both) 
+			: PipeEndpointBase(parent,index,endpoint,unreliable,direction) {};
 
 		
 
@@ -332,7 +331,7 @@ namespace RobotRaconteur
 
 		bool unreliable;
 
-		virtual void AsyncSendPipePacket(RR_INTRUSIVE_PTR<RRValue> data, int32_t index, uint32_t packetnumber, bool requestack, uint32_t endpoint, bool unreliable, bool message3, RR_MOVE_ARG(boost::function<void(uint32_t,RR_SHARED_PTR<RobotRaconteurException>)>) handler)=0;
+		virtual void AsyncSendPipePacket(RR_INTRUSIVE_PTR<RRValue> data, int32_t index, uint32_t packetnumber, bool requestack, uint32_t endpoint, bool unreliable, RR_MOVE_ARG(boost::function<void(uint32_t,RR_SHARED_PTR<RobotRaconteurException>)>) handler)=0;
 
 		bool rawelements;
 
@@ -340,7 +339,7 @@ namespace RobotRaconteur
 
 		bool DispatchPacket(RR_INTRUSIVE_PTR<MessageElement> me, RR_SHARED_PTR<PipeEndpointBase> e, uint32_t& packetnumber);
 
-		RR_INTRUSIVE_PTR<MessageElement> PackPacket(RR_INTRUSIVE_PTR<RRValue> data, int32_t index, uint32_t packetnumber, bool requestack, bool message3);
+		RR_INTRUSIVE_PTR<MessageElement> PackPacket(RR_INTRUSIVE_PTR<RRValue> data, int32_t index, uint32_t packetnumber, bool requestack);
 
 		virtual void DeleteEndpoint(RR_SHARED_PTR<PipeEndpointBase> e)=0;
 
@@ -448,7 +447,7 @@ namespace RobotRaconteur
 
 	protected:
 
-		virtual void AsyncSendPipePacket(RR_INTRUSIVE_PTR<RRValue> data, int32_t index, uint32_t packetnumber, bool requestack, uint32_t endpoint, bool unreliable, bool message3, RR_MOVE_ARG(boost::function<void(uint32_t,RR_SHARED_PTR<RobotRaconteurException>)>) handler);
+		virtual void AsyncSendPipePacket(RR_INTRUSIVE_PTR<RRValue> data, int32_t index, uint32_t packetnumber, bool requestack, uint32_t endpoint, bool unreliable, RR_MOVE_ARG(boost::function<void(uint32_t,RR_SHARED_PTR<RobotRaconteurException>)>) handler);
 
 		
 		std::string m_MemberName;
@@ -470,7 +469,7 @@ namespace RobotRaconteur
 
 		PipeClientBase(boost::string_ref name, RR_SHARED_PTR<ServiceStub> stub, bool unreliable, MemberDefinition_Direction direction);
 
-		virtual RR_SHARED_PTR<PipeEndpointBase> CreateNewPipeEndpoint(int32_t index, bool unreliable, MemberDefinition_Direction direction, bool message3)=0;
+		virtual RR_SHARED_PTR<PipeEndpointBase> CreateNewPipeEndpoint(int32_t index, bool unreliable, MemberDefinition_Direction direction)=0;
 
 		virtual void DeleteEndpoint(RR_SHARED_PTR<PipeEndpointBase> e);
 
@@ -540,9 +539,9 @@ namespace RobotRaconteur
 			return rr_cast<PipeEndpoint<T> >(b);
 		}
 
-		virtual RR_SHARED_PTR<PipeEndpointBase> CreateNewPipeEndpoint(int32_t index, bool unreliable, MemberDefinition_Direction direction, bool message3)
+		virtual RR_SHARED_PTR<PipeEndpointBase> CreateNewPipeEndpoint(int32_t index, bool unreliable, MemberDefinition_Direction direction)
 		{
-			return RR_MAKE_SHARED<PipeEndpoint<T> >(RR_STATIC_POINTER_CAST<PipeBase>(shared_from_this()),index,0,unreliable,direction,message3);
+			return RR_MAKE_SHARED<PipeEndpoint<T> >(RR_STATIC_POINTER_CAST<PipeBase>(shared_from_this()),index,0,unreliable,direction);
 		}
 
 	};
@@ -561,7 +560,7 @@ namespace RobotRaconteur
 
 		virtual void Shutdown();
 		
-		virtual void AsyncSendPipePacket(RR_INTRUSIVE_PTR<RRValue> data, int32_t index, uint32_t packetnumber, bool requestack, uint32_t endpoint, bool unreliable, bool message3, RR_MOVE_ARG(boost::function<void(uint32_t,RR_SHARED_PTR<RobotRaconteurException>)>) handler);
+		virtual void AsyncSendPipePacket(RR_INTRUSIVE_PTR<RRValue> data, int32_t index, uint32_t packetnumber, bool requestack, uint32_t endpoint, bool unreliable, RR_MOVE_ARG(boost::function<void(uint32_t,RR_SHARED_PTR<RobotRaconteurException>)>) handler);
 
 		virtual void AsyncClose(RR_SHARED_PTR<PipeEndpointBase> endpoint, bool remote, uint32_t ee, RR_MOVE_ARG(boost::function<void (RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout);
 
@@ -613,7 +612,7 @@ namespace RobotRaconteur
 		
 		PipeServerBase(boost::string_ref name, RR_SHARED_PTR<ServiceSkel> skel, bool unreliable, MemberDefinition_Direction direction);
 
-		virtual RR_SHARED_PTR<PipeEndpointBase> CreateNewPipeEndpoint(int32_t index,uint32_t endpoint, bool unreliable, MemberDefinition_Direction direction, bool message3)=0;
+		virtual RR_SHARED_PTR<PipeEndpointBase> CreateNewPipeEndpoint(int32_t index,uint32_t endpoint, bool unreliable, MemberDefinition_Direction direction)=0;
 
 		void DeleteEndpoint(RR_SHARED_PTR<PipeEndpointBase> e);
 
@@ -672,9 +671,9 @@ namespace RobotRaconteur
 
 
 	protected:
-		virtual RR_SHARED_PTR<PipeEndpointBase> CreateNewPipeEndpoint(int32_t index, uint32_t endpoint, bool unreliable, MemberDefinition_Direction direction, bool message3)
+		virtual RR_SHARED_PTR<PipeEndpointBase> CreateNewPipeEndpoint(int32_t index, uint32_t endpoint, bool unreliable, MemberDefinition_Direction direction)
 		{
-			return RR_MAKE_SHARED<PipeEndpoint<T> >(RR_STATIC_POINTER_CAST<PipeBase>(shared_from_this()),index,endpoint,unreliable,direction,message3);
+			return RR_MAKE_SHARED<PipeEndpoint<T> >(RR_STATIC_POINTER_CAST<PipeBase>(shared_from_this()),index,endpoint,unreliable,direction);
 		}
 
 		boost::function<void (RR_SHARED_PTR<PipeEndpoint<T> >)> callback;

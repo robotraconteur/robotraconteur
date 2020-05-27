@@ -72,7 +72,7 @@ namespace RobotRaconteur
 				return RR_SHARED_PTR < const StringTableEntry >();
 			}
 
-			if (!(this->flags & TransportCapabilityCode_MESSAGE3_STRINGTABLE_STANDARD_TABLE))
+			if (!(this->flags & TransportCapabilityCode_MESSAGE4_STRINGTABLE_STANDARD_TABLE))
 			{
 				if ((e->second->code & (0x2)) == 0)
 				{
@@ -269,7 +269,7 @@ namespace RobotRaconteur
 				}
 				else
 				{
-					if (!(this->flags & TransportCapabilityCode_MESSAGE3_STRINGTABLE_MESSAGE_LOCAL))
+					if (!(this->flags & TransportCapabilityCode_MESSAGE4_STRINGTABLE_MESSAGE_LOCAL))
 					{
 						return;
 					}
@@ -448,7 +448,7 @@ namespace RobotRaconteur
 		{
 			boost::mutex::scoped_lock lock(this_lock);
 			std::vector<uint32_t> o;
-			o.push_back(flags & TransportCapabilityCode_MESSAGE3_STRINGTABLE_PAGE);
+			o.push_back(flags & TransportCapabilityCode_MESSAGE4_STRINGTABLE_PAGE);
 			return o;
 		}
 		void StringTable::SetTableFlags(std::vector<uint32_t> flags_)
@@ -456,7 +456,7 @@ namespace RobotRaconteur
 			boost::mutex::scoped_lock lock(this_lock);
 			BOOST_FOREACH(uint32_t f, flags_)
 			{
-				if ((f & TranspartCapabilityCode_PAGE_MASK) == TransportCapabilityCode_MESSAGE3_STRINGTABLE_PAGE)
+				if ((f & TranspartCapabilityCode_PAGE_MASK) == TransportCapabilityCode_MESSAGE4_STRINGTABLE_PAGE)
 				{
 					flags = (f & (~TranspartCapabilityCode_PAGE_MASK));
 				}

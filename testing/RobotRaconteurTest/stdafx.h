@@ -5,7 +5,7 @@
 #include "com__robotraconteur__testing__TestService3_stubskel.h"
 #include "AsyncMessageTest.h"
 #include "MessageSerializationTest.h"
-#include "MessageSerializationTest3.h"
+#include "MessageSerializationTest4.h"
 #include "MultiDimArrayTest.h"
 #include "ServiceTest2.h"
 #include "ServiceTestClient.h"

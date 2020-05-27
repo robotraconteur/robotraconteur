@@ -40,7 +40,7 @@ namespace RobotRaconteur
 
 		virtual void Reset() = 0;
 		virtual return_type Read(const const_buffers& other_bufs, size_t& other_bufs_used, size_t continue_read_len, mutable_buffers& next_continue_read_bufs) = 0;
-		virtual return_type Read3(const const_buffers& other_bufs, size_t& other_bufs_used, size_t continue_read_len, mutable_buffers& next_continue_read_bufs) = 0;
+		virtual return_type Read4(const const_buffers& other_bufs, size_t& other_bufs_used, size_t continue_read_len, mutable_buffers& next_continue_read_bufs) = 0;
 
 		virtual bool MessageReady() = 0;
 		virtual RR_INTRUSIVE_PTR<Message> GetNextMessage() = 0;
@@ -66,7 +66,7 @@ namespace RobotRaconteur
 		virtual void BeginWrite(RR_INTRUSIVE_PTR<Message> m, uint16_t version) = 0;
 
 		virtual return_type Write(size_t write_quota, mutable_buffers& work_bufs, size_t& work_bufs_used, const_buffers& write_bufs) = 0;
-		virtual return_type Write3(size_t write_quota, mutable_buffers& work_bufs, size_t& work_bufs_used, const_buffers& write_bufs) = 0;
+		virtual return_type Write4(size_t write_quota, mutable_buffers& work_bufs, size_t& work_bufs_used, const_buffers& write_bufs) = 0;
 
 		virtual size_t WriteRemaining() = 0;
 

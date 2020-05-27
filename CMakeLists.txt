@@ -18,12 +18,12 @@ MESSAGE(STATUS "Robot Raconteur version: ${RobotRaconteurVersion}")
 
 SET(RobotRaconteur_USE_SHARED_CORE_LIB FALSE CACHE BOOL "Build using shared Robot Raconteur core library")
 
-SET(RobotRaconteur_DISABLE_MESSAGE3 TRUE CACHE BOOL "Disable Robot Raconteur message version 3 by default" )
+SET(RobotRaconteur_DISABLE_MESSAGE4 FALSE CACHE BOOL "Disable Robot Raconteur message version 3 by default" )
 SET(RobotRaconteur_DISABLE_STRINGTABLE TRUE CACHE BOOL "Disable Robot Raconteur string table by default" )
-mark_as_advanced(RobotRaconteur_DISABLE_MESSAGE3 RobotRaconteur_DISABLE_STRINGTABLE)
+mark_as_advanced(RobotRaconteur_DISABLE_MESSAGE4 RobotRaconteur_DISABLE_STRINGTABLE)
 
-IF(RobotRaconteur_DISABLE_MESSAGE3)
-add_definitions(-DROBOTRACONTEUR_DISABLE_MESSAGE3)
+IF(RobotRaconteur_DISABLE_MESSAGE4)
+add_definitions(-DROBOTRACONTEUR_DISABLE_MESSAGE4)
 ENDIF()
 IF(RobotRaconteur_DISABLE_STRINGTABLE)
 add_definitions(-DROBOTRACONTEUR_DISABLE_STRINGTABLE)

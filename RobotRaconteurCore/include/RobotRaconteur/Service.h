@@ -401,10 +401,6 @@ namespace RobotRaconteur
 		RR_SHARED_PTR<ThreadPool> monitor_thread_pool;
 		boost::mutex monitor_thread_pool_lock;
 
-	public:
-
-		bool UseMessage3(uint32_t ep);
-
 	private:
 		void InitializeInstanceFields();
 	};
@@ -447,13 +443,9 @@ namespace RobotRaconteur
 
 		virtual void PeriodicCleanupTask();
 
-	private:
-
-		boost::atomic<bool> use_message3;
-
+	
 	public:
-
-		bool UseMessage3();
+		
 		virtual void SetTransportConnection(RR_SHARED_PTR<ITransportConnection> c);
 
 	private:

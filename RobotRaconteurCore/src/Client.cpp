@@ -1316,23 +1316,22 @@ namespace RobotRaconteur
 		this->connecttransport = c;
 		this->connecturl = url.to_string();
 
-		bool use_message3_ = tc->CheckCapabilityActive(TransportCapabilityCode_MESSAGE3_BASIC_PAGE | 
-			TransportCapabilityCode_MESSAGE3_BASIC_ENABLE);
+		bool use_message4_ = tc->CheckCapabilityActive(TransportCapabilityCode_MESSAGE4_BASIC_PAGE | 
+			TransportCapabilityCode_MESSAGE4_BASIC_ENABLE);
 
 		bool use_combined_connection_;
 		
-		if (!use_message3_)
+		if (!use_message4_)
 		{
 			use_combined_connection_ = tc->CheckCapabilityActive(TransportCapabilityCode_MESSAGE2_BASIC_PAGE
 				| TransportCapabilityCode_MESSAGE2_BASIC_CONNECTCOMBINED);
 		}
 		else
 		{
-			use_combined_connection_ = tc->CheckCapabilityActive(TransportCapabilityCode_MESSAGE3_BASIC_PAGE
-				| TransportCapabilityCode_MESSAGE3_BASIC_CONNECTCOMBINED);
+			use_combined_connection_ = tc->CheckCapabilityActive(TransportCapabilityCode_MESSAGE4_BASIC_PAGE
+				| TransportCapabilityCode_MESSAGE4_BASIC_CONNECTCOMBINED);
 		}
 
-		use_message3.store(use_message3_);
 		use_combined_connection.store(use_combined_connection_);
 		ParseConnectionURLResult url_res = ParseConnectionURL(url);
 
@@ -2059,49 +2058,7 @@ namespace RobotRaconteur
 		else
 		{
 			ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Client sending unreliable pipe packet EntryType " << m->EntryType);
-			if (UseMessage3())
-			{
-				RR_INTRUSIVE_PTR<Message> mm = CreateMessage();
-				mm->header = CreateMessageHeader();
-				mm->header->MessageFlags |= MessageFlags_UNRELIABLE;
-
-				mm->entries.push_back(m);
-				//m.EntryType= MessageEntryType.PipePacket;
-				boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&rr_context_emptyhandler, _1);
-				Endpoint::AsyncSendMessage(mm, h);
-			}
-			else
-			{
-
-				RR_INTRUSIVE_PTR<Message> mm = CreateMessage();
-				mm->header = CreateMessageHeader();
-				mm->header->MetaData = "unreliable\n";
-
-				mm->entries.push_back(m);
-				//m.EntryType= MessageEntryType.PipePacket;
-				boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&rr_context_emptyhandler, _1);
-				Endpoint::AsyncSendMessage(mm, h);
-			}
-		}
-
-	}
-
-	void ClientContext::SendWireMessage(RR_INTRUSIVE_PTR<MessageEntry> m)
-	{
-		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Client sending unreliable wire packet EntryType " << m->EntryType);
-		if (UseMessage3())
-		{
-			RR_INTRUSIVE_PTR<Message> mm = CreateMessage();
-			mm->header = CreateMessageHeader();
-			mm->header->MessageFlags |= MessageFlags_UNRELIABLE;
-
-			mm->entries.push_back(m);
-			//m.EntryType= MessageEntryType.PipePacket;
-			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&rr_context_emptyhandler, _1);
-			Endpoint::AsyncSendMessage(mm, h);
-		}
-		else
-		{
+			
 			RR_INTRUSIVE_PTR<Message> mm = CreateMessage();
 			mm->header = CreateMessageHeader();
 			mm->header->MetaData = "unreliable\n";
@@ -2109,8 +2066,24 @@ namespace RobotRaconteur
 			mm->entries.push_back(m);
 			//m.EntryType= MessageEntryType.PipePacket;
 			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&rr_context_emptyhandler, _1);
-			Endpoint::AsyncSendMessage(mm, h);
+			Endpoint::AsyncSendMessage(mm, h);			
 		}
+
+	}
+
+	void ClientContext::SendWireMessage(RR_INTRUSIVE_PTR<MessageEntry> m)
+	{
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Client sending unreliable wire packet EntryType " << m->EntryType);
+		
+		RR_INTRUSIVE_PTR<Message> mm = CreateMessage();
+		mm->header = CreateMessageHeader();
+		mm->header->MetaData = "unreliable\n";
+
+		mm->entries.push_back(m);
+		//m.EntryType= MessageEntryType.PipePacket;
+		boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&rr_context_emptyhandler, _1);
+		Endpoint::AsyncSendMessage(mm, h);
+		
 	}
 
 	PullServiceDefinitionReturn ClientContext::PullServiceDefinition(boost::string_ref ServiceType)
@@ -2731,13 +2704,6 @@ namespace RobotRaconteur
 
 	}
 
-	bool ClientContext::UseMessage3()
-	{
-		bool f = false;
-		use_message3.compare_exchange_strong(f, false);
-		return f;
-	}
-
 	void ClientContext::InitializeInstanceFields()
 	{
 
@@ -2746,8 +2712,7 @@ namespace RobotRaconteur
 
 		m_UserAuthenticated = false;
 		use_pulled_types = false;
-		//LastMessageSentTime = GetNode()->NowUTC();
-		use_message3.store(false);
+		//LastMessageSentTime = GetNode()->NowUTC();		
 	}
 
 	void ClientContext::TransportConnectionClosed(uint32_t endpoint)

@@ -110,8 +110,8 @@ namespace RobotRaconteur
 
 		virtual void AsyncGetDetectedNodes(const std::vector<std::string>& schemes, boost::function<void(RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >)>& handler, int32_t timeout=RR_TIMEOUT_INFINITE);
 
-		virtual bool GetDisableMessage3();
-		virtual void SetDisableMessage3(bool d);
+		virtual bool GetDisableMessage4();
+		virtual void SetDisableMessage4(bool d);
 
 		virtual bool GetDisableStringTable();
 		virtual void SetDisableStringTable(bool d);
@@ -157,7 +157,7 @@ namespace RobotRaconteur
 		RR_SHARED_PTR<detail::LocalTransportFDs> fds;
 
 		boost::mutex parameter_lock;		
-		bool disable_message3;
+		bool disable_message4;
 		bool disable_string_table;
 		bool disable_async_message_io;
 

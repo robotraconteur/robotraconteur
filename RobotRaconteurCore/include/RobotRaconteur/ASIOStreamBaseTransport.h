@@ -124,24 +124,24 @@ namespace RobotRaconteur
 			bool send_large_transfer_authorized;
 			bool recv_large_transfer_authorized;
 
-			boost::atomic<bool> send_version3;
-			boost::atomic<bool> use_string_table3;
+			boost::atomic<bool> send_version4;
+			boost::atomic<bool> use_string_table4;
 
-			RR_SHARED_PTR<detail::StringTable> string_table3;
-			boost::mutex string_table3_lock;
-			std::list<uint32_t> string_table_3_confirming;
+			RR_SHARED_PTR<detail::StringTable> string_table4;
+			boost::mutex string_table4_lock;
+			std::list<uint32_t> string_table_4_confirming;
 
-			RR_UNORDERED_MAP<uint32_t, boost::tuple<std::vector<uint32_t>, boost::posix_time::ptime> > string_table_3_requests;
-			uint32_t string_table_3_requestid;
+			RR_UNORDERED_MAP<uint32_t, boost::tuple<std::vector<uint32_t>, boost::posix_time::ptime> > string_table_4_requests;
+			uint32_t string_table_4_requestid;
 
-			std::list<RR_SHARED_PTR<boost::asio::deadline_timer> > string_table_3_timers;
-			bool string_table_3_pause_updates;
+			std::list<RR_SHARED_PTR<boost::asio::deadline_timer> > string_table_4_timers;
+			bool string_table_4_pause_updates;
 
-			bool string_table_3_closed;
+			bool string_table_4_closed;
 
 			bool server;
 
-			bool disable_message3;
+			bool disable_message4;
 			bool disable_string_table;
 			bool disable_async_io;
 
@@ -160,8 +160,8 @@ namespace RobotRaconteur
 			const_buffers async_send_bufs;
 
 			uint32_t active_capabilities_message2_basic;
-			uint32_t active_capabilities_message3_basic;
-			uint32_t active_capabilities_message3_stringtable;
+			uint32_t active_capabilities_message4_basic;
+			uint32_t active_capabilities_message4_stringtable;
 
 		protected:
 
@@ -306,8 +306,8 @@ namespace RobotRaconteur
 			
 		public:
 
-			virtual bool GetDisableMessage3();
-			virtual void SetDisableMessage3(bool d);
+			virtual bool GetDisableMessage4();
+			virtual void SetDisableMessage4(bool d);
 
 			virtual bool GetDisableStringTable();
 			virtual void SetDisableStringTable(bool d);

@@ -2,7 +2,7 @@
 #include "stdafx.h"
 #endif
 
-#include "MessageSerializationTest3.h"
+#include "MessageSerializationTest4.h"
 
 using namespace RobotRaconteur;
 
@@ -21,18 +21,7 @@ using namespace boost::random;
 
 namespace RobotRaconteurTest
 {
-	static uint16_t MessageSerializationTest3_NewRandomMessageFlags(mt19937& rng)
-	{
-		uniform_int_distribution<uint16_t> bit_dist(0, 1);
-		uint16_t o = 0;
-		for (size_t i = 0; i < 14; i++)
-		{
-			o = (o << 1) | bit_dist(rng);
-		}
-		return o;
-	}
-
-	static uint8_t MessageSerializationTest3_NewRandomFlags(mt19937& rng)
+	static uint8_t MessageSerializationTest4_NewRandomMessageFlags(mt19937& rng)
 	{
 		uniform_int_distribution<uint16_t> bit_dist(0, 1);
 		uint8_t o = 0;
@@ -43,7 +32,18 @@ namespace RobotRaconteurTest
 		return o;
 	}
 
-	static std::string MessageSerializationTest3_NewRandomString(mt19937& rng, size_t max_len)
+	static uint8_t MessageSerializationTest4_NewRandomFlags(mt19937& rng)
+	{
+		uniform_int_distribution<uint8_t> bit_dist(0, 1);
+		uint8_t o = 0;
+		for (size_t i = 0; i < 8; i++)
+		{
+			o = (o << 1) | bit_dist(rng);
+		}
+		return o;
+	}
+
+	static std::string MessageSerializationTest4_NewRandomString(mt19937& rng, size_t max_len)
 	{
 		std::stringstream buf;
 		std::string chars(
@@ -63,7 +63,25 @@ namespace RobotRaconteurTest
 
 	}
 
-	static RR_INTRUSIVE_PTR<MessageElement> MessageSerializationTest3_NewRandomMessageElement(mt19937& rng, size_t depth)
+	static std::vector<uint8_t> MessageSerializationTest4_NewRandomExtended(mt19937& rng, size_t max_len)
+	{
+		uniform_int_distribution<uint32_t> size_t_dist(0, max_len);
+		size_t l = size_t_dist(rng);
+
+		std::vector<uint8_t> buf(l);
+
+		boost::random::uniform_int_distribution<uint8_t> value_dist;
+
+		for (size_t i=0; i<l; i++)
+		{
+			buf[i] = value_dist(rng);
+		}
+
+		return buf;
+
+	}
+
+	static RR_INTRUSIVE_PTR<MessageElement> MessageSerializationTest4_NewRandomMessageElement(mt19937& rng, size_t depth)
 	{
 		uniform_int_distribution<uint16_t> type_switch_dist(0, 1);
 		uniform_int_distribution<uint16_t> type_dist(0, 11);
@@ -74,7 +92,8 @@ namespace RobotRaconteurTest
 		uniform_int_distribution<size_t> len_dist(0,256);
 		uniform_int_distribution<size_t> len_sub_dist(1, 8);
 		RR_INTRUSIVE_PTR<MessageElement> e = CreateMessageElement();
-		e->ElementFlags = MessageSerializationTest3_NewRandomFlags(rng);
+		e->ElementFlags = MessageSerializationTest4_NewRandomFlags(rng);
+		e->ElementFlags &= ~0x40;		
 		if (type_switch_dist(rng) == 0 || depth > 2)
 		{
 			e->ElementType = (DataTypes)type_dist(rng);
@@ -119,7 +138,7 @@ namespace RobotRaconteurTest
 
 		if (e->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
 		{			
-			e->ElementName = MessageSerializationTest3_NewRandomString(rng, 128);
+			e->ElementName = MessageSerializationTest4_NewRandomString(rng, 128);
 			e->ElementFlags &= ~MessageElementFlags_ELEMENT_NUMBER;
 		}
 
@@ -136,7 +155,7 @@ namespace RobotRaconteurTest
 
 		if (e->ElementFlags & MessageElementFlags_ELEMENT_TYPE_NAME_STR)
 		{			
-			e->ElementTypeName = MessageSerializationTest3_NewRandomString(rng, 128);
+			e->ElementTypeName = MessageSerializationTest4_NewRandomString(rng, 128);
 		}
 
 		if (e->ElementFlags & MessageElementFlags_ELEMENT_TYPE_NAME_CODE)
@@ -144,14 +163,14 @@ namespace RobotRaconteurTest
 			e->ElementTypeNameCode = uint32_dist(rng);
 		}
 
-		if (e->ElementFlags & MessageElementFlags_SEQUENCE_NUMBER)
-		{
-			e->SequenceNumber = uint32_dist(rng);
-		}
-
 		if (e->ElementFlags & MessageElementFlags_META_INFO)
 		{			
-			e->MetaData = MessageSerializationTest3_NewRandomString(rng, 128);
+			e->MetaData = MessageSerializationTest4_NewRandomString(rng, 128);			
+		}
+
+		if (e->ElementFlags & MessageElementFlags_EXTENDED)
+		{
+			e->Extended = MessageSerializationTest4_NewRandomExtended(rng, 32);
 		}
 
 		switch (e->ElementType)
@@ -186,9 +205,9 @@ namespace RobotRaconteurTest
 			size_t n = len_sub_dist(rng);
 			for (size_t i = 0; i < n; i++)
 			{
-				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
+				v.push_back(MessageSerializationTest4_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(CreateMessageElementNestedElementList(DataTypes_structure_t,MessageSerializationTest3_NewRandomString(rng, 128),v));
+			e->SetData(CreateMessageElementNestedElementList(DataTypes_structure_t,MessageSerializationTest4_NewRandomString(rng, 128),v));
 			return e;
 		}
 		case DataTypes_vector_t:
@@ -197,7 +216,7 @@ namespace RobotRaconteurTest
 			size_t n = len_sub_dist(rng);
 			for (size_t i = 0; i < n; i++)
 			{
-				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
+				v.push_back(MessageSerializationTest4_NewRandomMessageElement(rng, depth + 1));
 			}
 			e->SetData(CreateMessageElementNestedElementList(DataTypes_vector_t,"",v));
 			return e;
@@ -208,7 +227,7 @@ namespace RobotRaconteurTest
 			size_t n = len_sub_dist(rng);
 			for (size_t i = 0; i < n; i++)
 			{
-				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
+				v.push_back(MessageSerializationTest4_NewRandomMessageElement(rng, depth + 1));
 			}
 			e->SetData(CreateMessageElementNestedElementList(DataTypes_dictionary_t,"",v));
 			return e;
@@ -220,7 +239,7 @@ namespace RobotRaconteurTest
 			if (n > 4) n = 4;
 			for (size_t i = 0; i < n; i++)
 			{
-				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, 10));
+				v.push_back(MessageSerializationTest4_NewRandomMessageElement(rng, 10));
 			}
 			e->SetData(CreateMessageElementNestedElementList(DataTypes_multidimarray_t,"",v));
 			return e;
@@ -231,7 +250,7 @@ namespace RobotRaconteurTest
 			size_t n = len_sub_dist(rng);
 			for (size_t i = 0; i < n; i++)
 			{
-				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
+				v.push_back(MessageSerializationTest4_NewRandomMessageElement(rng, depth + 1));
 			}
 			e->SetData(CreateMessageElementNestedElementList(DataTypes_list_t,"",v));
 			return e;
@@ -243,7 +262,7 @@ namespace RobotRaconteurTest
 			size_t n = len_sub_dist(rng);
 			for (size_t i = 0; i < n; i++)
 			{
-				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
+				v.push_back(MessageSerializationTest4_NewRandomMessageElement(rng, depth + 1));
 			}
 			e->SetData(CreateMessageElementNestedElementList(DataTypes_pod_t, "", v));
 			return e;
@@ -254,9 +273,9 @@ namespace RobotRaconteurTest
 			size_t n = len_sub_dist(rng);
 			for (size_t i = 0; i < n; i++)
 			{
-				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
+				v.push_back(MessageSerializationTest4_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(CreateMessageElementNestedElementList(DataTypes_pod_array_t,MessageSerializationTest3_NewRandomString(rng, 128),v));
+			e->SetData(CreateMessageElementNestedElementList(DataTypes_pod_array_t,MessageSerializationTest4_NewRandomString(rng, 128),v));
 			return e;
 		}
 		case DataTypes_pod_multidimarray_t:
@@ -265,9 +284,9 @@ namespace RobotRaconteurTest
 			size_t n = len_sub_dist(rng);
 			for (size_t i = 0; i < n; i++)
 			{
-				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
+				v.push_back(MessageSerializationTest4_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(CreateMessageElementNestedElementList(DataTypes_pod_multidimarray_t,MessageSerializationTest3_NewRandomString(rng, 128),v));
+			e->SetData(CreateMessageElementNestedElementList(DataTypes_pod_multidimarray_t,MessageSerializationTest4_NewRandomString(rng, 128),v));
 			return e;
 		}
 		case DataTypes_namedarray_array_t:
@@ -276,9 +295,9 @@ namespace RobotRaconteurTest
 			size_t n = len_sub_dist(rng);
 			for (size_t i = 0; i < n; i++)
 			{
-				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
+				v.push_back(MessageSerializationTest4_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(CreateMessageElementNestedElementList(DataTypes_namedarray_array_t,MessageSerializationTest3_NewRandomString(rng, 128), v));
+			e->SetData(CreateMessageElementNestedElementList(DataTypes_namedarray_array_t,MessageSerializationTest4_NewRandomString(rng, 128), v));
 			return e;
 		}
 		case DataTypes_namedarray_multidimarray_t:
@@ -287,9 +306,9 @@ namespace RobotRaconteurTest
 			size_t n = len_sub_dist(rng);
 			for (size_t i = 0; i < n; i++)
 			{
-				v.push_back(MessageSerializationTest3_NewRandomMessageElement(rng, depth + 1));
+				v.push_back(MessageSerializationTest4_NewRandomMessageElement(rng, depth + 1));
 			}
-			e->SetData(CreateMessageElementNestedElementList(DataTypes_namedarray_multidimarray_t,MessageSerializationTest3_NewRandomString(rng, 128), v));
+			e->SetData(CreateMessageElementNestedElementList(DataTypes_namedarray_multidimarray_t,MessageSerializationTest4_NewRandomString(rng, 128), v));
 			return e;
 		}
 		default:
@@ -297,7 +316,7 @@ namespace RobotRaconteurTest
 		}
 	}
 
-	RR_INTRUSIVE_PTR<Message> MessageSerializationTest3::NewRandomTestMessage3(boost::random::mt19937& rng)
+	RR_INTRUSIVE_PTR<Message> MessageSerializationTest4::NewRandomTestMessage4(boost::random::mt19937& rng)
 	{
 		uniform_int_distribution<uint8_t>  uint8_dist;
 		uniform_int_distribution<uint16_t> uint16_dist;
@@ -310,27 +329,13 @@ namespace RobotRaconteurTest
 		RR_INTRUSIVE_PTR<Message> m = CreateMessage();
 		RR_INTRUSIVE_PTR<MessageHeader> h = CreateMessageHeader();
 		m->header = h;
-		h->MessageFlags = MessageSerializationTest3_NewRandomMessageFlags(rng);
-		if (h->MessageFlags & MessageFlags_SUBSTREAM_ID)
-		{
-			h->SubstreamID = uint64_dist(rng);
-		}
-		if (h->MessageFlags & MessageFlags_SUBSTREAM_SEQUENCE_NUMBER)
-		{
-			h->SubstreamSequenceNumber.SequenceNumber = uint32_dist(rng);
-			h->SubstreamSequenceNumber.RecvSequenceNumber = uint32_dist(rng);
-		}
-		if (h->MessageFlags & MessageFlags_FRAGMENT)
-		{
-			h->FragmentHeader.FragmentMessageNumber = uint32_dist(rng);
-			h->FragmentHeader.FragmentMessageSize = uint32_dist(rng);
-			h->FragmentHeader.FragmentOffset = uint32_dist(rng);
-		}
-		if (h->MessageFlags & MessageFlags_UNRELIABLE_EXPIRATION)
-		{
-			h->UnreliableExpiration.seconds = int64_dist(rng);
-			h->UnreliableExpiration.nanoseconds = int32_dist(rng);
-		}
+		h->MessageFlags = MessageSerializationTest4_NewRandomMessageFlags(rng);
+		/*h->MessageFlags &= ~MessageFlags_ROUTING_INFO;
+		h->MessageFlags &= ~MessageFlags_ENDPOINT_INFO;
+		h->MessageFlags &= ~MessageFlags_PRIORITY;
+		h->MessageFlags &= ~MessageFlags_META_INFO;
+		h->MessageFlags &= ~MessageFlags_STRING_TABLE;
+		h->MessageFlags &= ~MessageFlags_EXTENDED;*/
 		if (h->MessageFlags & MessageFlags_PRIORITY)
 		{
 			h->Priority = uint16_dist(rng);			
@@ -342,8 +347,8 @@ namespace RobotRaconteurTest
 			h->SenderNodeID = NodeID(b);
 			for (size_t i = 0; i < 16; i++) b[i] = uint8_dist(rng);
 			h->ReceiverNodeID = NodeID(b);
-			h->SenderNodeName = MessageSerializationTest3_NewRandomString(rng, 64);
-			h->ReceiverNodeName = MessageSerializationTest3_NewRandomString(rng, 64);
+			h->SenderNodeName = MessageSerializationTest4_NewRandomString(rng, 64);
+			h->ReceiverNodeName = MessageSerializationTest4_NewRandomString(rng, 64);
 		}
 
 		if (h->MessageFlags & MessageFlags_ENDPOINT_INFO)
@@ -354,11 +359,7 @@ namespace RobotRaconteurTest
 
 		if (h->MessageFlags & MessageFlags_META_INFO)
 		{
-			h->MetaData = MessageSerializationTest3_NewRandomString(rng, 256);
-		}
-
-		if (h->MessageFlags & MessageFlags_MESSAGE_ID)
-		{
+			h->MetaData = MessageSerializationTest4_NewRandomString(rng, 256);
 			h->MessageID = uint16_dist(rng);
 			h->MessageResID = uint16_dist(rng);
 		}
@@ -368,7 +369,7 @@ namespace RobotRaconteurTest
 			size_t n = small_dist(rng);
 			for (size_t i = 0; i < n; i++)
 			{
-				h->StringTable.push_back(boost::make_tuple(uint32_dist(rng), MessageSerializationTest3_NewRandomString(rng, 128)));
+				h->StringTable.push_back(boost::make_tuple(uint32_dist(rng), MessageSerializationTest4_NewRandomString(rng, 128)));
 			}
 		}
 
@@ -381,14 +382,9 @@ namespace RobotRaconteurTest
 			h->EntryCount = 1;
 		}
 
-		if (h->MessageFlags & MessageFlags_TRANSPORT_SPECIFIC)
+		if (h->MessageFlags & MessageFlags_EXTENDED)
 		{
-			std::string dat = MessageSerializationTest3_NewRandomString(rng, 32);
-			h->TransportSpecific.resize(dat.size());
-			for (size_t i = 0; i < dat.size(); i++)
-			{
-				h->TransportSpecific[i] = (uint8_t)(dat[i]);
-			}
+			h->Extended = MessageSerializationTest4_NewRandomExtended(rng, 32);			
 		}
 
 		//Add a large entry sometimes
@@ -396,39 +392,32 @@ namespace RobotRaconteurTest
 
 		for (size_t i = 0; i < h->EntryCount; i++)
 		{
-			if (m->ComputeSize3() > 10 * 1024 * 1024) break;
+			if (m->ComputeSize4() > 10 * 1024 * 1024) break;
 
 			RR_INTRUSIVE_PTR<MessageEntry> ee = CreateMessageEntry();
 
-			ee->EntryFlags = MessageSerializationTest3_NewRandomFlags(rng);
+			ee->EntryFlags = MessageSerializationTest4_NewRandomFlags(rng);
+			
 			uniform_int_distribution<uint16_t> entry_type_dist(101, 120);
 			ee->EntryType = (MessageEntryType)entry_type_dist(rng);
 
-			bool read_streamid = true;
 			if (ee->EntryFlags & MessageEntryFlags_SERVICE_PATH_STR)
-			{
-				read_streamid = false;
-				ee->ServicePath = MessageSerializationTest3_NewRandomString(rng, 256);
+			{				
+				ee->ServicePath = MessageSerializationTest4_NewRandomString(rng, 256);
 			}
 			if (ee->EntryFlags & MessageEntryFlags_SERVICE_PATH_CODE)
-			{
-				read_streamid = false;
+			{				
 				ee->ServicePathCode = uint32_dist(rng);
 			}
 			if (ee->EntryFlags & MessageEntryFlags_MEMBER_NAME_STR)
-			{
-				read_streamid = false;
-				ee->MemberName = MessageSerializationTest3_NewRandomString(rng, 256);
+			{				
+				ee->MemberName = MessageSerializationTest4_NewRandomString(rng, 256);
 			}
 			if (ee->EntryFlags & MessageEntryFlags_MEMBER_NAME_CODE)
-			{
-				read_streamid = false;
+			{				
 				ee->MemberNameCode = uint32_dist(rng);
 			}
-			if (read_streamid)
-			{
-				ee->EntryStreamID = uint64_dist(rng);
-			}
+			
 			if (ee->EntryFlags & MessageEntryFlags_REQUEST_ID)
 			{
 				ee->RequestID = uint32_dist(rng);
@@ -440,12 +429,12 @@ namespace RobotRaconteurTest
 			}
 			if (ee->EntryFlags & MessageEntryFlags_META_INFO)
 			{				
-				ee->MetaData = MessageSerializationTest3_NewRandomString(rng, 256);
+				ee->MetaData = MessageSerializationTest4_NewRandomString(rng, 256);
 			}
-			if (ee->EntryFlags & MessageEntryFlags_TIMESPEC)
+			
+			if (ee->EntryFlags & MessageFlags_EXTENDED)
 			{
-				ee->EntryTimeSpec.seconds = int64_dist(rng);
-				ee->EntryTimeSpec.nanoseconds = int32_dist(rng);
+				ee->Extended = MessageSerializationTest4_NewRandomExtended(rng, 32);
 			}
 			
 			if (add_large_entry == 1 && i == 0)
@@ -459,7 +448,7 @@ namespace RobotRaconteurTest
 					a2[j] = uint32_dist(rng);
 				}
 
-				RR_INTRUSIVE_PTR<MessageElement> el = MessageSerializationTest3_NewRandomMessageElement(rng, 10);
+				RR_INTRUSIVE_PTR<MessageElement> el = MessageSerializationTest4_NewRandomMessageElement(rng, 10);
 				el->SetData(a);
 				ee->elements.push_back(el);
 			}
@@ -469,18 +458,18 @@ namespace RobotRaconteurTest
 				size_t n1 = el_count_dist(rng);
 				for (size_t j = 0; j < n1; j++)
 				{
-					RR_INTRUSIVE_PTR<MessageElement> el= MessageSerializationTest3_NewRandomMessageElement(rng, 0);
+					RR_INTRUSIVE_PTR<MessageElement> el= MessageSerializationTest4_NewRandomMessageElement(rng, 0);
 					ee->elements.push_back(el);
 				}
 			}
 
 			m->entries.push_back(ee);
 		}
-
+				
 		return m;
 	}
 
-	void MessageSerializationTest3::Test()
+	void MessageSerializationTest4::Test()
 	{
 		Test1();
 		Test2(false);
@@ -488,29 +477,28 @@ namespace RobotRaconteurTest
 		Test3();
 	}
 
-	void MessageSerializationTest3::Test1()
+	void MessageSerializationTest4::Test1()
 	{
 		RR_INTRUSIVE_PTR<Message> m = MessageSerializationTest::NewTestMessage();
 
 		//Write to stream and read back
-		size_t message_size=m->ComputeSize3();
+		size_t message_size=m->ComputeSize4();
 		boost::shared_array<uint8_t> buf(new uint8_t[message_size]);
 		ArrayBinaryWriter w(buf.get(),0,message_size); 
-		m->Write3(w, 0);
+		m->Write4(w);
 
-		if (w.Position() != m->ComputeSize3())
+		if (w.Position() != m->ComputeSize4())
 			throw std::runtime_error("");
 
 		ArrayBinaryReader r(buf.get(),0,message_size);
 
 		RR_INTRUSIVE_PTR<Message> m2 = CreateMessage();
-		uint16_t version_minor;
-		m2->Read3(r, version_minor);
+		m2->Read4(r);
 
 		MessageSerializationTest::CompareMessage(m, m2);
 	}
 
-	void MessageSerializationTest3::Test2(bool use_string_table)
+	void MessageSerializationTest4::Test2(bool use_string_table)
 	{
 		RR_INTRUSIVE_PTR<Message> m= MessageSerializationTest::NewTestMessage();
 
@@ -522,19 +510,19 @@ namespace RobotRaconteurTest
 		}
 		
 		//Write to stream and read back
-		size_t message_size = m->ComputeSize3();
+		size_t message_size = m->ComputeSize4();
 		boost::shared_array<uint8_t> buf(new uint8_t[message_size]);
 		ArrayBinaryWriter w(buf.get(), 0, message_size);
-		m->Write3(w, 0);
+		m->Write4(w);
 
-		if (w.Position() != m->ComputeSize3())
+		if (w.Position() != m->ComputeSize4())
 			throw std::runtime_error("");
 
 		ArrayBinaryReader r(buf.get(), 0, message_size);
 
 		RR_INTRUSIVE_PTR<Message> m2 = CreateMessage();
 		uint16_t version_minor;
-		m2->Read3(r, version_minor);		
+		m2->Read4(r);		
 
 		if (use_string_table)
 		{
@@ -546,79 +534,69 @@ namespace RobotRaconteurTest
 		MessageSerializationTest::CompareMessage(m, m2);
 	}
 
-	void MessageSerializationTest3::Test3()
+	void MessageSerializationTest4::Test3()
 	{
 		srand((uint32_t)time(NULL));
 		
 		RR_INTRUSIVE_PTR<MessageElement> e2 = CreateMessageElement();
 		e2->ElementFlags &= MessageElementFlags_ELEMENT_NAME_STR;
-		e2->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER | MessageElementFlags_SEQUENCE_NUMBER | MessageElementFlags_REQUEST_ACK;
-		e2->ElementNumber = 134576569;
-		e2->SequenceNumber = 9998934;
+		e2->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
+		e2->ElementNumber = 134576569;		
 
 		RR_INTRUSIVE_PTR<MessageEntry> e1 = CreateMessageEntry(MessageEntryType_PropertyGetReq, "testprimitives");
-		e1->EntryFlags = MessageEntryFlags_TIMESPEC;
-
-		e1->EntryTimeSpec.seconds = 100;
-		e1->EntryTimeSpec.nanoseconds = 12323;
-		e1->EntryStreamID = 557475;
+		
 
 		RR_INTRUSIVE_PTR<Message> m = CreateMessage();
 		RR_INTRUSIVE_PTR<MessageHeader> h = CreateMessageHeader();
 		h->MessageFlags = 0;
 
 		m->header = h;
-		h->FragmentHeader.FragmentMessageNumber = 1000;
-		h->FragmentHeader.FragmentMessageSize = 1001;
-		h->FragmentHeader.FragmentOffset = 42;
-
-		h->SubstreamID = 34434;
-
-		h->MessageFlags = MessageFlags_FRAGMENT | MessageFlags_SUBSTREAM_ID | MessageFlags_UNRELIABLE;
+	
+		h->MessageFlags = MessageFlags_UNRELIABLE;
 		
 		m->entries.push_back(e1);
 
 		//Write to stream and read back
-		size_t message_size = m->ComputeSize3();
+		size_t message_size = m->ComputeSize4();
 		boost::shared_array<uint8_t> buf(new uint8_t[message_size]);
 		ArrayBinaryWriter w(buf.get(), 0, message_size);
-		m->Write3(w, 0);
+		m->Write4(w);
 
-		if (w.Position() != m->ComputeSize3())
+		if (w.Position() != m->ComputeSize4())
 			throw std::runtime_error("");
 
 		ArrayBinaryReader r(buf.get(), 0, message_size);
 
 		RR_INTRUSIVE_PTR<Message> m2 = CreateMessage();
 		uint16_t version_minor;
-		m2->Read3(r, version_minor);
+		m2->Read4(r);
 
 		MessageSerializationTest::CompareMessage(m, m2);
 	}
 
-	void MessageSerializationTest3::RandomTest(size_t iterations)
+	void MessageSerializationTest4::RandomTest(size_t iterations)
 	{
 		mt19937 rng;
 		rng.seed((uint32_t)std::time(0));
 
 		for (size_t i = 0; i < iterations; i++)
 		{
-			RR_INTRUSIVE_PTR<Message> m = NewRandomTestMessage3(rng);
+			RR_INTRUSIVE_PTR<Message> m = NewRandomTestMessage4(rng);
 
 			//Write to stream and read back
-			size_t message_size = m->ComputeSize3();
+			size_t message_size = m->ComputeSize4();
 			boost::shared_array<uint8_t> buf(new uint8_t[message_size]);
 			ArrayBinaryWriter w(buf.get(), 0, message_size);
-			m->Write3(w, 0);
+			m->Write4(w);
 
-			if (w.Position() != m->ComputeSize3())
+			if (w.Position() != m->ComputeSize4())
 				throw std::runtime_error("");
 
 			ArrayBinaryReader r(buf.get(), 0, message_size);
 
 			RR_INTRUSIVE_PTR<Message> m2 = CreateMessage();
-			uint16_t version_minor;
-			m2->Read3(r, version_minor);
+			
+			m2->Read4(r);
 
 			MessageSerializationTest::CompareMessage(m, m2);
 		}

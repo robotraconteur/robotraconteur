@@ -20,7 +20,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
 set(RobotRaconteurTest_src
 	MessageSerializationTest.cpp
-	MessageSerializationTest3.cpp
+	MessageSerializationTest4.cpp
 	MultiDimArrayTest.cpp
 	RobotRaconteurTest.cpp	
 	ServiceTest.cpp
@@ -34,7 +34,7 @@ set(RobotRaconteurTest_src
 
 set(RobotRaconteurTest_header
 	MessageSerializationTest.h
-	MessageSerializationTest3.h
+	MessageSerializationTest4.h
 	MultiDimArrayTest.h	
 	ServiceTest.h
 	ServiceTestClient.h

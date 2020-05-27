@@ -36,22 +36,13 @@ namespace RobotRaconteur
 			MessageHeader_init,
 			MessageHeader_headersize,
 			MessageHeader_flags,
-			MessageHeader_protocolversionminor,
-			MessageHeader_substream,
-			MessageHeader_substreamseq1,
-			MessageHeader_substreamseq2,
-			MessageHeader_fragment1,
-			MessageHeader_fragment2,
-			MessageHeader_fragment3,
-			MessageHeader_unreliableexp1,
-			MessageHeader_unreliableexp2,
-			MessageHeader_priority,
 			MessageHeader_routing1,
 			MessageHeader_routing2,
 			MessageHeader_routing3,
 			MessageHeader_routing4,
 			MessageHeader_endpoint1,
 			MessageHeader_endpoint2,
+			MessageHeader_priority,
 			MessageHeader_metainfo,
 			MessageHeader_messageid1,
 			MessageHeader_messageid2,
@@ -59,8 +50,8 @@ namespace RobotRaconteur
 			MessageHeader_stringtable2,
 			MessageHeader_stringtable3,
 			MessageHeader_entrycount,
-			MessageHeader_transportspecific1,
-			MessageHeader_transportspecific2,
+			MessageHeader_extended1,
+			MessageHeader_extended2,
 			Message_readentries,
 
 			//Read entry
@@ -73,12 +64,11 @@ namespace RobotRaconteur
 			MessageEntry_servicepathcode,
 			MessageEntry_membernamestr,
 			MessageEntry_membernamecode,
-			MessageEntry_entrystreamid,
 			MessageEntry_requestid,
 			MessageEntry_error,
 			MessageEntry_metainfo,
-			MessageEntry_timespec1,
-			MessageEntry_timespec2,
+			MessageEntry_extended1,
+			MessageEntry_extended2,
 			MessageEntry_elementcount,
 			MessageEntry_readelements,
 
@@ -91,9 +81,10 @@ namespace RobotRaconteur
 			MessageElement_elementnumber,
 			MessageElement_elementtype,
 			MessageElement_elementtypestr,
-			MessageElement_elementtypecode,
-			MessageElement_sequencenumber,
+			MessageElement_elementtypecode,			
 			MessageElement_metainfo,
+			MessageElement_extended1,
+			MessageElement_extended2,
 			MessageElement_datacount,
 			MessageElement_readdata,
 			MessageElement_finishreaddata,
@@ -186,12 +177,12 @@ namespace RobotRaconteur
 		bool read_int_x2(int64_t& number);
 		bool read_string(MessageStringPtr& str, state_type next_state);
 		bool read_string(MessageStringPtr& str); //next_state=state()++
-		bool read_string3(MessageStringPtr& str, state_type next_state);
-		bool read_string3(MessageStringPtr& str); //next_state=state()++
+		bool read_string4(MessageStringPtr& str, state_type next_state);
+		bool read_string4(MessageStringPtr& str); //next_state=state()++
 		
 		virtual void Reset();
 		virtual return_type Read(const const_buffers& other_bufs, size_t& other_bufs_used, size_t continue_read_len, mutable_buffers& next_continue_read_bufs);
-		virtual return_type Read3(const const_buffers& other_bufs, size_t& other_bufs_used, size_t continue_read_len, mutable_buffers& next_continue_read_bufs);
+		virtual return_type Read4(const const_buffers& other_bufs, size_t& other_bufs_used, size_t continue_read_len, mutable_buffers& next_continue_read_bufs);
 
 		virtual bool MessageReady();
 		virtual RR_INTRUSIVE_PTR<Message> GetNextMessage();

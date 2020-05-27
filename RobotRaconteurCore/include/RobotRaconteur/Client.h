@@ -389,12 +389,8 @@ namespace RobotRaconteur
 	protected:
 		void ProcessCallbackCall(RR_INTRUSIVE_PTR<MessageEntry> m);
 
-	protected:
-		boost::atomic<bool> use_message3;
+	protected:		
 		boost::atomic<bool> use_combined_connection;
-
-	public:
-		bool UseMessage3();
 
 	private:
 		void InitializeInstanceFields();

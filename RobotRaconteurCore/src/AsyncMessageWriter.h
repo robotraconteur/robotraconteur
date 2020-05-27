@@ -39,21 +39,13 @@ namespace RobotRaconteur
 			MessageHeader_version,
 			MessageHeader_headersize,
 			MessageHeader_flags,
-			MessageHeader_substream,
-			MessageHeader_substreamseq1,
-			MessageHeader_substreamseq2,
-			MessageHeader_fragment1,
-			MessageHeader_fragment2,
-			MessageHeader_fragment3,
-			MessageHeader_unreliableexp1,
-			MessageHeader_unreliableexp2,
-			MessageHeader_priority,
 			MessageHeader_routing1,
 			MessageHeader_routing2,
 			MessageHeader_routing3,
 			MessageHeader_routing4,
 			MessageHeader_endpoint1,
 			MessageHeader_endpoint2,
+			MessageHeader_priority,
 			MessageHeader_metainfo,
 			MessageHeader_messageid1,
 			MessageHeader_messageid2,
@@ -61,8 +53,8 @@ namespace RobotRaconteur
 			MessageHeader_stringtable2,
 			MessageHeader_stringtable3,
 			MessageHeader_entrycount,
-			MessageHeader_transportspecific1,
-			MessageHeader_transportspecific2,
+			MessageHeader_extended1,
+			MessageHeader_extended2,
 			Message_writeentries,
 
 			//Write entry
@@ -75,12 +67,11 @@ namespace RobotRaconteur
 			MessageEntry_servicepathcode,
 			MessageEntry_membernamestr,
 			MessageEntry_membernamecode,
-			MessageEntry_entrystreamid,
 			MessageEntry_requestid,
 			MessageEntry_error,
 			MessageEntry_metainfo,
-			MessageEntry_timespec1,
-			MessageEntry_timespec2,
+			MessageEntry_extended1,
+			MessageEntry_extended2,
 			MessageEntry_elementcount,
 			MessageEntry_writeelements,
 
@@ -94,8 +85,9 @@ namespace RobotRaconteur
 			MessageElement_elementtype,
 			MessageElement_elementtypestr,
 			MessageElement_elementtypecode,
-			MessageElement_sequencenumber,
 			MessageElement_metainfo,
+			MessageElement_extended1,
+			MessageElement_extended2,			
 			MessageElement_datacount,
 			MessageElement_writedata,
 			MessageElement_finishwritedata,
@@ -188,14 +180,14 @@ namespace RobotRaconteur
 		//TODO: Use const string
 		bool write_string(MessageStringPtr& str, state_type next_state);
 		bool write_string(MessageStringPtr& str); //next_state=state()++
-		bool write_string3(MessageStringPtr& str, state_type next_state);
-		bool write_string3(MessageStringPtr& str); //next_state=state()++
+		bool write_string4(MessageStringPtr& str, state_type next_state);
+		bool write_string4(MessageStringPtr& str); //next_state=state()++
 
 		virtual void Reset();
 		virtual void BeginWrite(RR_INTRUSIVE_PTR<Message> m, uint16_t version);
 
 		virtual return_type Write(size_t write_quota, mutable_buffers& work_bufs, size_t& work_bufs_used, const_buffers& write_bufs);
-		virtual return_type Write3(size_t write_quota, mutable_buffers& work_bufs, size_t& work_bufs_used, const_buffers& write_bufs);
+		virtual return_type Write4(size_t write_quota, mutable_buffers& work_bufs, size_t& work_bufs_used, const_buffers& write_bufs);
 
 		virtual size_t WriteRemaining();
 	};
