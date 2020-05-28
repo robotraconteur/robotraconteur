@@ -42,7 +42,8 @@ namespace RobotRaconteur
 
 			MessageStringPtr value;
 			uint32_t code;
-			bool confirmed;			
+			bool confirmed;
+			std::vector<uint32_t> table_flags;	
 		};
 
 		class ROBOTRACONTEUR_CORE_API StringTable : private boost::noncopyable
@@ -58,7 +59,8 @@ namespace RobotRaconteur
 			RR_SHARED_PTR<const StringTableEntry> GetEntryForString(MessageStringRef str);
 			RR_SHARED_PTR<const StringTableEntry> GetEntryForCode(uint32_t code);
 
-			bool AddCode(uint32_t code, MessageStringRef str, bool default_=false);
+			bool AddCode(uint32_t code, MessageStringRef str, const std::vector<uint32_t>& table_flags);
+			void AddCodesCSV(const std::string& csv, const std::vector<uint32_t>& table_flags);
 
 		public:
 
@@ -78,6 +80,9 @@ namespace RobotRaconteur
 			void DoReplaceString(MessageStringPtr& str, uint32_t& code, uint8_t& flags, uint32_t flag_str, uint32_t flag_code, boost::unordered_map<MessageStringPtr, uint32_t>& local_table, uint32_t& next_local_code, uint32_t& table_size);
 			void DoReplaceCode(MessageStringPtr& str, uint32_t& code, uint8_t& flags, uint32_t flag_str, uint32_t flag_code, boost::unordered_map<uint32_t, MessageStringPtr>& local_table);
 
+			bool _AddCode(uint32_t code, MessageStringRef str, const std::vector<uint32_t>& table_flags);
+			void _AddCodesCSV(const std::string& csv, const std::vector<uint32_t>& table_flags);
+
 		protected:
 
 			bool server;
@@ -90,8 +95,6 @@ namespace RobotRaconteur
 
 			RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<StringTableEntry> > code_table;
 			RR_UNORDERED_MAP<MessageStringPtr, RR_SHARED_PTR<StringTableEntry> > string_table;
-
-			void load_defaults();
 
 			uint32_t flags;
 						

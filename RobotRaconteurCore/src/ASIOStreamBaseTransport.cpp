@@ -473,7 +473,7 @@ void ASIOStreamBaseTransport::BeginSendMessage(RR_INTRUSIVE_PTR<Message> m, boos
 
 		message_size = m->ComputeSize4();
 
-		if (string_table4)
+		if (use_string_table4.load())
 		{
 			this->string_table4->MessageReplaceStringsWithCodes(m);
 			message_size = m->ComputeSize4();

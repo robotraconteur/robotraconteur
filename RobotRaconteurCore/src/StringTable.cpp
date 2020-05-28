@@ -24,8 +24,12 @@
 #include <boost/range/algorithm.hpp>
 #include <boost/foreach.hpp>
 
+#include <boost/algorithm/string.hpp>
+
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <fstream>
+
+#include "StringTable_default_table.h"
 
 namespace RobotRaconteur
 {
@@ -41,11 +45,10 @@ namespace RobotRaconteur
 		StringTable::StringTable(bool server)
 		{
 			this->server = server;
-			max_entry_count = 512;
+			max_entry_count = 8192;
 			max_str_len = 128;
 			next_code = 2;
-			flags = 0;
-			load_defaults();
+			flags = 0;			
 		}
 
 		uint32_t StringTable::GetCodeForString(MessageStringRef str)
@@ -72,12 +75,23 @@ namespace RobotRaconteur
 				return RR_SHARED_PTR < const StringTableEntry >();
 			}
 
-			if (!(this->flags & TransportCapabilityCode_MESSAGE4_STRINGTABLE_STANDARD_TABLE))
+			if (e->second->table_flags.empty())
 			{
-				if ((e->second->code & (0x2)) == 0)
+				return RR_SHARED_PTR<const StringTableEntry>();
+			}
+
+			bool flags_enabled = false;
+			BOOST_FOREACH(uint32_t f, e->second->table_flags)
+			{
+				if ((f & flags) == f)
 				{
-					return RR_SHARED_PTR < const StringTableEntry >();
+					flags_enabled=true;
+					break;
 				}
+			}
+			if (!flags_enabled)
+			{
+				return RR_SHARED_PTR<const StringTableEntry>();
 			}
 
 			return e->second;
@@ -88,9 +102,22 @@ namespace RobotRaconteur
 			RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<StringTableEntry> >::iterator e = code_table.find(code);
 			if (e != code_table.end())
 			{
+				bool flags_enabled = false;
+				BOOST_FOREACH(uint32_t f, e->second->table_flags)
+				{
+					if ((f & flags) == f)
+					{
+						flags_enabled=true;
+						break;
+					}
+				}
+				if (!flags_enabled)
+				{
+					return RR_SHARED_PTR<const StringTableEntry>();
+				}
 				return e->second;
 			}			
-			return RR_SHARED_PTR < const StringTableEntry >();			
+			return RR_SHARED_PTR <const StringTableEntry>();			
 		}		
 		
 		void StringTable::MessageReplaceStringsWithCodes(RR_INTRUSIVE_PTR<Message> m)
@@ -338,79 +365,17 @@ namespace RobotRaconteur
 			}
 		}
 
-		void StringTable::load_defaults()
+		bool StringTable::AddCode(uint32_t code, MessageStringRef str, const std::vector<uint32_t>& table_flags)
 		{
-			AddCode(0x00, "", true);
-			AddCode(0x04, "value", true);
-			AddCode(0x08, "true", true);
-			AddCode(0x0C, "false", true);
-			AddCode(0x10, "return", true);
-			AddCode(0x14, "errorname", true);
-			AddCode(0x18, "errorstring", true);
-			AddCode(0x1C, "dimcount", true);
-			AddCode(0x20, "dims", true);
-			AddCode(0x24, "real", true);
-			AddCode(0x28, "imag", true);
-			AddCode(0x2C, "RobotRaconteur.TimeSpec", true);
-			AddCode(0x30, "seconds", true);
-			AddCode(0x34, "nanoseconds", true);
-			AddCode(0x38, "registerclient", true);
-			AddCode(0x3C, "connectclientcombined", true);
-			AddCode(0x40, "servicename", true);
-			AddCode(0x44, "servicedef", true);
-			AddCode(0x48, "servicedefs", true);
-			AddCode(0x4C, "attributes", true);
-			AddCode(0x50, "servicepath", true);
-			AddCode(0x54, "clientversion", true);
-			AddCode(0x58, "objecttype", true);
-			AddCode(0x5C, "ServiceType", true);
-			AddCode(0x60, "returnservicedefs", true);
-			AddCode(0x64, "timeout", true);
-			AddCode(0x68, "AuthenticateUser", true);
-			AddCode(0x6C, "LogoutUser", true);
-			AddCode(0x70, "username", true);
-			AddCode(0x74, "credentials", true);
-			AddCode(0x78, "RequestObjectLock", true);
-			AddCode(0x7C, "RequestClientObjectLock", true);
-			AddCode(0x80, "ReleaseObjectLock", true);
-			AddCode(0x84, "MonitorEnter", true);
-			AddCode(0x88, "MonitorContinueEnter", true);
-			AddCode(0x8C, "MonitorExit", true);
-			AddCode(0x90, "packet", true);
-			AddCode(0x94, "index", true);
-			AddCode(0x98, "packetnumber", true);
-			AddCode(0x9C, "requestack", true);
-			AddCode(0xA0, "unreliable", true);
-			AddCode(0xA4, "packettime", true);
-			AddCode(0xA8, "data", true);
-			AddCode(0xAC, "count", true);
-			AddCode(0xB0, "parameter", true);
-			AddCode(0xB4, "memorypos", true);
-			AddCode(0xB8, "confirmcodes", true);
-			AddCode(0xBC, "pause", true);
-			AddCode(0xC0, "resume", true);
-			AddCode(0xC4, "CreateConnection", true);
-			AddCode(0xC8, "GetRemoteNodeID", true);
-			AddCode(0xCC, "messageversion", true);
-			AddCode(0xD0, "stringtable", true);
-
+			boost::mutex::scoped_lock lock(this_lock);
+			return _AddCode(code,str,table_flags);
 		}
 
-		bool StringTable::AddCode(uint32_t code, MessageStringRef str, bool default_)
+		bool StringTable::_AddCode(uint32_t code, MessageStringRef str, const std::vector<uint32_t>& table_flags)
 		{
 			if (code & 0x1) return false;
-			if (default_)
-			{
-				if (code & 0x2) return false;
-			}
-			else
-			{
-				if (!(code & 0x2)) return false;
-			}			
-
+			
 			if (str.str().size() > max_str_len) return false;
-
-			boost::mutex::scoped_lock lock(this_lock);
 
 			if (code_table.size() >= max_entry_count) return false;
 
@@ -418,10 +383,45 @@ namespace RobotRaconteur
 			entry->code = code;			
 			entry->confirmed = true;
 			entry->value = str;
-			if (code_table.find(code) != code_table.end()) return false;
+			entry->table_flags = table_flags;
+			if (code_table.find(code) != code_table.end()) 
+			{
+				return false;
+			}
 			code_table.insert(std::make_pair(entry->code, entry));
-			string_table.insert(std::make_pair(entry->value, entry));
+			if (string_table.find(entry->value) == string_table.end())
+			{
+				string_table.insert(std::make_pair(entry->value, entry));
+			}
 			return true;
+		}
+
+		void StringTable::AddCodesCSV(const std::string& csv, const std::vector<uint32_t>& table_flags)
+		{
+			boost::mutex::scoped_lock lock(this_lock);
+			_AddCodesCSV(csv,table_flags);
+		}
+
+		void StringTable::_AddCodesCSV(const std::string& csv, const std::vector<uint32_t>& table_flags)
+		{				
+			typedef boost::split_iterator<std::string::const_iterator> string_split_iterator;
+			
+			boost::regex r_csv_line("^(\\d+),(.*)$");
+
+			for (string_split_iterator e = boost::make_split_iterator(csv, boost::token_finder(boost::is_any_of("\n\r"), boost::token_compress_on));
+				e != string_split_iterator(); e++)
+			{
+				boost::smatch line_match;
+				if (!boost::regex_match(e->begin(), e->end(), line_match, r_csv_line))
+				{
+					throw InvalidArgumentException("Invalid CSV code table specified");
+				}
+
+				uint32_t code = boost::lexical_cast<uint32_t>(line_match[1].str());
+				std::string str = line_match[2].str();
+
+				_AddCode(code, str, table_flags);
+			}
 		}
 
 		StringTable::~StringTable()
@@ -460,6 +460,15 @@ namespace RobotRaconteur
 				{
 					flags = (f & (~TranspartCapabilityCode_PAGE_MASK));
 				}
+			}
+
+
+
+			if (flags & TransportCapabilityCode_MESSAGE4_STRINGTABLE_STANDARD_TABLE)
+			{
+				std::vector<uint32_t> table_flags;
+				table_flags.push_back(TransportCapabilityCode_MESSAGE4_STRINGTABLE_STANDARD_TABLE);
+				_AddCodesCSV(RobotRaconteur::detail::StringTable_default_table_csv, table_flags);
 			}
 		}
 	}	
