@@ -92,13 +92,14 @@ namespace RobotRaconteur
 		| RobotRaconteurNodeSetupFlags_NODENAME_OVERRIDE,
 		| RobotRaconteurNodeSetupFlags_NODEID_OVERRIDE */
 
-		RobotRaconteurNodeSetupFlags_SERVER_DEFAULT = 0x3000BF,
+		RobotRaconteurNodeSetupFlags_SERVER_DEFAULT = 0x3004Bf,
 		/*RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS 
 		| RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_SERVER 
 		| RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER
 		| RobotRaconteurNodeSetupFlags_INTRA_TRANSPORT_START_SERVER
 		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_ANNOUNCE 
-		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING,*/
+		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING,
+		| RobotRaconteurNodeSetupFlags_DISABLE_STRINGTABLE */
 
 		RobotRaconteurNodeSetupFlags_SERVER_DEFAULT_ALLOWED_OVERRIDE = 0x33F7FFF,
 		/*RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS 
@@ -121,7 +122,7 @@ namespace RobotRaconteur
         | RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER_PORT_SHARER */
 
 
-		RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT = 0x3030BF,
+		RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT = 0x3034BF,
 		/*RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS
 		| RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_SERVER
 		| RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER
@@ -129,7 +130,8 @@ namespace RobotRaconteur
 		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_ANNOUNCE
 		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING
 		| RobotRaconteurNodeSetupFlags_LOAD_TLS_CERT
-		| RobotRaconteurNodeSetupFlags_REQUIRE_TLS*/
+		| RobotRaconteurNodeSetupFlags_REQUIRE_TLS
+		| RobotRaconteurNodeSetupFlags_DISABLE_STRINGTABLE*/
 
 		RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT_ALLOWED_OVERRIDE = 0x33F4FFF
 		/*RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS 
