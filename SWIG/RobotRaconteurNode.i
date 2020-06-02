@@ -209,6 +209,7 @@ RR_KEEP_GIL()
 	static std::string SelectRemoteNodeURL(const std::vector<std::string>& urls);
 
 	RR_MAKE_METHOD_PRIVATE(RegisterServiceType)
+	RR_MAKE_METHOD_PRIVATE(RegisterServiceTypes)
 	RR_MAKE_METHOD_PRIVATE(GetServiceType)
 	RR_MAKE_METHOD_PRIVATE(GetPulledServiceType)
 	
@@ -233,6 +234,32 @@ RR_KEEP_GIL()
 
 		$self->RegisterServiceType(boost::make_shared<WrappedServiceFactory>(def2));
 	}
+
+	void RegisterServiceTypes(const std::vector<std::string>& defs_str)
+	{
+		
+		std::vector<boost::shared_ptr<ServiceDefinition> > defs;
+		BOOST_FOREACH(const std::string& def_str, defs_str)
+		{
+			boost::shared_ptr<RobotRaconteur::ServiceDefinition> def2=boost::make_shared<ServiceDefinition>();
+			def2->FromString(def_str);
+			defs.push_back(def2);
+		}
+		std::vector<std::string> names=RobotRaconteurNode::s()->GetRegisteredServiceTypes();
+		for (std::vector<std::string>::iterator e=names.begin(); e!=names.end(); ++e)
+		{
+			if ((*e)!="RobotRaconteurServiceIndex")
+			defs.push_back(RobotRaconteurNode::s()->GetServiceType(*e)->ServiceDef());
+		}		
+
+		VerifyServiceDefinitions(defs);
+
+		BOOST_FOREACH(boost::shared_ptr<RobotRaconteur::ServiceDefinition> def, defs)
+		{
+			$self->RegisterServiceType(boost::make_shared<WrappedServiceFactory>(def));
+		}
+	}
+
 #endif
 	
 	void RegisterServiceType(boost::shared_ptr<RobotRaconteur::ServiceDefinition> def)
@@ -249,6 +276,28 @@ RR_KEEP_GIL()
 		VerifyServiceDefinitions(defs);
 #endif
 		$self->RegisterServiceType(boost::make_shared<WrappedServiceFactory>(def));
+	}
+
+	void RegisterServiceTypes(const std::vector<boost::shared_ptr<RobotRaconteur::ServiceDefinition> >& defs)
+	{
+#ifdef SWIGPYTHON
+		std::vector<boost::shared_ptr<ServiceDefinition> > defs2;
+		std::vector<std::string> names=RobotRaconteurNode::s()->GetRegisteredServiceTypes();
+		for (std::vector<std::string>::iterator e=names.begin(); e!=names.end(); ++e)
+		{
+			defs2.push_back(RobotRaconteurNode::s()->GetServiceType(*e)->ServiceDef());
+		}
+		BOOST_FOREACH(boost::shared_ptr<RobotRaconteur::ServiceDefinition> def, defs)
+		{
+			defs2.push_back(def);
+		}
+
+		VerifyServiceDefinitions(defs2);
+#endif
+		BOOST_FOREACH(boost::shared_ptr<RobotRaconteur::ServiceDefinition> def, defs)
+		{
+			$self->RegisterServiceType(boost::make_shared<WrappedServiceFactory>(def));
+		}
 	}
 
 

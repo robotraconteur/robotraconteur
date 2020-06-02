@@ -91,10 +91,9 @@ def main():
         RobotRaconteurNode.s.SetLogLevelFromEnvVariable()
         with RobotRaconteurNodeSetup("com.robotraconteur.testing.test2", 4564, flags=RobotRaconteurNodeSetupFlags_ENABLE_TCP_TRANSPORT | RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER):
         
-            RobotRaconteurNode.s.RegisterServiceTypeFromFile("com.robotraconteur.testing.TestService2")
-            RobotRaconteurNode.s.RegisterServiceTypeFromFile("com.robotraconteur.testing.TestService1")
-            RobotRaconteurNode.s.RegisterServiceTypeFromFile("com.robotraconteur.testing.TestService3")   
-                
+            RobotRaconteurNode.s.RegisterServiceTypesFromFiles(["com.robotraconteur.testing.TestService2","com.robotraconteur.testing.TestService1", 
+                "com.robotraconteur.testing.TestService3"])
+                            
             t2=testroot3_impl()
             c = RobotRaconteurNode.s.RegisterService("RobotRaconteurTestService2","com.robotraconteur.testing.TestService3.testroot3",t2)
             c.RequestObjectLock("RobotRaconteurTestService2.nolock_test", "server")

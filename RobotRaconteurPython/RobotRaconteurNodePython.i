@@ -67,10 +67,20 @@ def s(self):
 def RegisterServiceType(self, d):
 	self._RegisterServiceType(d)
 
+def RegisterServiceTypes(self, d):
+	self._RegisterServiceTypes(d)
+
 def RegisterServiceTypeFromFile(self, file_name):
 	from .RobotRaconteurPythonUtil import ReadServiceDefinitionFile
 	d = ReadServiceDefinitionFile(file_name)
 	self._RegisterServiceType(str(d))
+
+def RegisterServiceTypesFromFiles(self, file_names):
+	from .RobotRaconteurPythonUtil import ReadServiceDefinitionFile
+	d = []
+	for file_name in file_names:
+		d.append(str(ReadServiceDefinitionFile(file_name)))
+	self._RegisterServiceTypes(d)
 	
 def GetServiceType(self, name):
 	return self._GetServiceType(name)
