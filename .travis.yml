@@ -113,23 +113,13 @@ matrix:
                 
     
     - os: osx
+      osx_image: xcode11.5
       before_script:
         - brew install openssl
         - pip install numpy
         #- brew install boost # Already installed on travis ci image??
-        #- brew install swig
-        - | 
-            (
-            rm -rf swig_build_dir
-            mkdir -p swig_build_dir
-            cd swig_build_dir
-            curl -L http://prdownloads.sourceforge.net/swig/swig-4.0.1.tar.gz --output swig-4.0.1.tar.gz
-            tar xf swig-4.0.1.tar.gz
-            cd swig-4.0.1
-            ./configure
-            make
-            sudo make install
-            )
+        - brew install swig
+        
       env:
         - >
           RR_CMAKE_EXTRA_ARGS="-DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=ON -DBUILD_JAVA=ON -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl"
