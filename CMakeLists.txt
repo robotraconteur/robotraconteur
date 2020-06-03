@@ -103,7 +103,7 @@ if(APPLE)
 	
 	find_package(OpenSSL REQUIRED)
 	include_directories(${OPENSSL_INCLUDE_DIR})
-	set (ROBOTRACONTEUR_EXTRA_LIBS ${ROBOTRACONTEUR_EXTRA_LIBS} ${CoreFoundation_FRAMEWORKS}/CoreFoundation ${Security_FRAMEWORKS}/Security ${CoreServices_FRAMEWORKS}/CoreServices ${OPENSSL_LIBRARIES} c++)
+	set (ROBOTRACONTEUR_EXTRA_LIBS ${ROBOTRACONTEUR_EXTRA_LIBS} ${CoreFoundation_FRAMEWORKS}/CoreFoundation.tbd ${Security_FRAMEWORKS}/Security.tbd ${CoreServices_FRAMEWORKS}/CoreServices.tbd ${OPENSSL_LIBRARIES} c++)
 endif()
 
 include(GNUInstallDirs)
@@ -205,7 +205,9 @@ install(FILES
 
 list(APPEND CPACK_SOURCE_IGNORE_FILES "/\.git/")
 list(APPEND CPACK_SOURCE_IGNORE_FILES "/\.vs/")
-list(APPEND CPACK_SOURCE_IGNORE_FILES "/build/")
+list(APPEND CPACK_SOURCE_IGNORE_FILES "/\.vscode/")
+#list(APPEND CPACK_SOURCE_IGNORE_FILES "/build/")
+list(APPEND CPACK_SOURCE_IGNORE_FILES "^${CMAKE_SOURCE_DIR}/build[\\\\-_/]")
 list(APPEND CPACK_SOURCE_IGNORE_FILES "/\.cache")
 list(APPEND CPACK_SOURCE_IGNORE_FILES "/\.gitignore")
 list(APPEND CPACK_SOURCE_IGNORE_FILES "/\.travis.yml")
