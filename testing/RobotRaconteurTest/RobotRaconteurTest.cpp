@@ -1972,6 +1972,65 @@ return 0;
 
 	}
 
+	if (command=="discoveryloopback")
+	{
+		
+		
+		ServerNodeSetup node_setup(ROBOTRACONTEUR_SERVICE_TYPES,"test_server_node",22222,argc,argv);
+		
+		RobotRaconteurTestServiceSupport s;
+		s.RegisterServices(node_setup.GetTcpTransport());
+
+
+		RR_SHARED_PTR<RobotRaconteurNode> client_node=RR_MAKE_SHARED<RobotRaconteurNode>();
+		client_node->Init();
+		ClientNodeSetup client_node_setup(client_node,ROBOTRACONTEUR_SERVICE_TYPES,argc,argv);
+
+		boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
+
+		std::vector<std::string> schemes;
+		schemes.push_back("rr+tcp");
+		schemes.push_back("rr+local");
+		BOOST_FOREACH(std::string scheme, schemes)
+		{
+			std::vector<std::string> schemes2;
+			schemes2.push_back(scheme);
+			std::vector<ServiceInfo2> discovered_services=client_node->FindServiceByType("com.robotraconteur.testing.TestService1.testroot", schemes2);
+
+			std::cout << "Found " << discovered_services.size() << " services";
+
+			std::set<std::string> expected_service_names;
+			expected_service_names.insert("RobotRaconteurTestService");
+			expected_service_names.insert("RobotRaconteurTestService_auth");
+
+			if (discovered_services.size() != 2) throw std::runtime_error("");
+
+			BOOST_FOREACH(ServiceInfo2 s, discovered_services)
+			{
+				if (expected_service_names.erase(s.Name) != 1) throw std::runtime_error("");
+				if (s.NodeName != "test_server_node") throw std::runtime_error("");
+				if (s.RootObjectType != "com.robotraconteur.testing.TestService1.testroot") throw std::runtime_error("");
+				if (s.RootObjectImplements.size() != 1 || s.RootObjectImplements.at(0) != "com.robotraconteur.testing.TestService2.baseobj")
+					throw std::runtime_error("");
+
+				if (s.Name == "RobotRaconteurTestService")
+				{
+					RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot> c
+						= rr_cast<com::robotraconteur::testing::TestService1::testroot>(client_node->ConnectService(s.ConnectionURL));
+					c->get_d1();
+					client_node->DisconnectService(c);
+				}
+
+			}
+
+			if (expected_service_names.size() != 0) throw std::runtime_error("");
+
+		}
+		cout << "Test completed, no errors detected!" << endl;
+		return 0;
+
+	}
+
 	throw runtime_error("Unknown test command");
 
 }
