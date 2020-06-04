@@ -136,7 +136,7 @@ void ASIOStreamBaseTransport::AsyncAttachStream(bool server, const NodeID& targe
 		{
 			RR_SHARED_PTR<AsyncAttachStream_args> args=RR_MAKE_SHARED<AsyncAttachStream_args>(target_nodeid, target_nodename);
 
-			boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)> cb = boost::bind(&ASIOStreamBaseTransport::AsyncAttachStream1, RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this()), _1, _2, callback);
+			boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)> cb = boost::bind(&ASIOStreamBaseTransport::AsyncAttachStream1, RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this()), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), callback);
 			AsyncStreamOp("CreateConnection", args, cb);
 
 		}
@@ -506,8 +506,8 @@ void ASIOStreamBaseTransport::BeginSendMessage(RR_INTRUSIVE_PTR<Message> m, boos
 	boost::function<void (const boost::system::error_code& error, size_t bytes_transferred)> f=boost::bind(&ASIOStreamBaseTransport::EndSendMessage,
 			shared_from_this(),
 			0,
-			_1,
-			_2, m, message_size, callback, sendbuf);
+			RR_BOOST_PLACEHOLDERS(_1),
+			RR_BOOST_PLACEHOLDERS(_2), m, message_size, callback, sendbuf);
 
 	const_buffers buf;
 	buf.push_back(const_buffer(sendbuf.get(), message_size));
@@ -661,8 +661,8 @@ void ASIOStreamBaseTransport::EndSendMessage(size_t startpos, const boost::syste
 			boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)> f = boost::bind(&ASIOStreamBaseTransport::EndSendMessage,
 				shared_from_this(),
 				new_startpos,
-				_1,
-				_2, m, m_len, callback, sendbuf);
+				RR_BOOST_PLACEHOLDERS(_1),
+				RR_BOOST_PLACEHOLDERS(_2), m, m_len, callback, sendbuf);
 
 			const_buffers buf1;
 			buf1.push_back(const_buffer(sendbuf.get() + new_startpos, m_len - new_startpos));
@@ -1090,7 +1090,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage3(RR_INTRUSIVE_PTR<Message> messa
 
 				
 				boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind((&ASIOStreamBaseTransport::SimpleAsyncEndSendMessage),
-					RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this()), _1
+					RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this()), RR_BOOST_PLACEHOLDERS(_1)
 				);
 				AsyncSendMessage(ret, h);
 
@@ -1746,7 +1746,7 @@ void ASIOStreamBaseTransport::heartbeat_timer_func(const boost::system::error_co
 			
 			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&ASIOStreamBaseTransport::SimpleAsyncEndSendMessage,
 				RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this()),
-				_1);
+				RR_BOOST_PLACEHOLDERS(_1));
 			AsyncSendMessage(m, h);
 			ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, GetLocalEndpoint(), "Heartbeat request sent");
 		}
@@ -1907,7 +1907,7 @@ void ASIOStreamBaseTransport::BeginCheckStreamCapability(boost::string_ref name,
 
 		boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&ASIOStreamBaseTransport::SimpleAsyncEndSendMessage,
 			RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this()),
-			_1);
+			RR_BOOST_PLACEHOLDERS(_1));
 		AsyncSendMessage(m, h);
 		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, GetLocalEndpoint(), "Sent CheckStreamCapability \"" << name << "\" request");
 			
@@ -2009,7 +2009,7 @@ void ASIOStreamBaseTransport::CheckStreamCapability_MessageReceived( RR_INTRUSIV
 
 			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&ASIOStreamBaseTransport::SimpleAsyncEndSendMessage,
 				RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this()),
-				_1);
+				RR_BOOST_PLACEHOLDERS(_1));
 			AsyncSendMessage(ret, h);
 		}
 		else if (m->entries.at(0)->EntryType == MessageEntryType_StreamCheckCapabilityRet)
@@ -2163,7 +2163,7 @@ void ASIOStreamBaseTransport::BeginStreamOp(boost::string_ref command, RR_SHARED
 		
 		boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&ASIOStreamBaseTransport::SimpleAsyncEndSendMessage,
 			RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this()),
-			_1);
+			RR_BOOST_PLACEHOLDERS(_1));
 
 		AsyncSendMessage(m, h);
 
@@ -2424,7 +2424,7 @@ void ASIOStreamBaseTransport::StreamOpMessageReceived(RR_INTRUSIVE_PTR<Message> 
 		{
 			ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, GetLocalEndpoint(), "Sending StreamOp \"" << command << "\" response");
 			mret->entries.push_back(mmret);
-			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&ASIOStreamBaseTransport::StreamOp_EndSendMessage, RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this()), _1);
+			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&ASIOStreamBaseTransport::StreamOp_EndSendMessage, RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this()), RR_BOOST_PLACEHOLDERS(_1));
 			AsyncSendMessage(mret, h);
 		}
 	}
@@ -2706,7 +2706,7 @@ void ASIOStreamBaseTransport::SendMessage(RR_INTRUSIVE_PTR<Message> m)
 
 	RR_SHARED_PTR<detail::sync_async_handler<void> > s=RR_MAKE_SHARED<detail::sync_async_handler<void> >(RR_MAKE_SHARED<ConnectionException>("Send timeout"));
 	
-	boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&detail::sync_async_handler<void>::operator(), s, _1);
+	boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&detail::sync_async_handler<void>::operator(), s, RR_BOOST_PLACEHOLDERS(_1));
 	AsyncSendMessage(m, h);
 
 	s->end_void();

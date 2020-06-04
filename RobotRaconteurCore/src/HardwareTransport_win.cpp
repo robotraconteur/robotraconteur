@@ -215,7 +215,7 @@ std::list<UsbDeviceManager_detected_device> WinUsbDeviceManager::GetDetectedDevi
 		return devices;
 	}
 
-	deviceInfo_sp = RR_SHARED_PTR<void>(deviceInfo, boost::bind(&SetupApi_Functions_SetupDiDestroyDeviceInfoList, setupapi_f, _1));
+	deviceInfo_sp = RR_SHARED_PTR<void>(deviceInfo, boost::bind(&SetupApi_Functions_SetupDiDestroyDeviceInfoList, setupapi_f, RR_BOOST_PLACEHOLDERS(_1)));
 
 	interfaceData.cbSize = sizeof(SP_DEVICE_INTERFACE_DATA);
 
@@ -335,7 +335,7 @@ static UsbDeviceStatus WinUsbDevice_open_device(RR_BOOST_ASIO_IO_CONTEXT& _io_co
 		return Error;
 	}
 
-	RR_SHARED_PTR<void> hInterface1(h2, boost::bind(&WinUsbDevice_winusb_free, f,_1));
+	RR_SHARED_PTR<void> hInterface1(h2, boost::bind(&WinUsbDevice_winusb_free, f,RR_BOOST_PLACEHOLDERS(_1)));
 
 	RR_SHARED_PTR<WinUsbDevice_Handle> h = RR_MAKE_SHARED<WinUsbDevice_Handle>();
 	h->device_handle = device_handle1;
@@ -901,7 +901,7 @@ boost::optional<std::wstring> HardwareTransport_win_find_deviceinterface(RR_SHAR
 		return boost::optional<std::wstring>();
 	}
 
-	deviceInfo_sp = RR_SHARED_PTR<void>(deviceInfo, boost::bind(&SetupApi_Functions_SetupDiDestroyDeviceInfoList, f1, _1));
+	deviceInfo_sp = RR_SHARED_PTR<void>(deviceInfo, boost::bind(&SetupApi_Functions_SetupDiDestroyDeviceInfoList, f1, RR_BOOST_PLACEHOLDERS(_1)));
 
 	interfaceData.cbSize = sizeof(SP_DEVICE_INTERFACE_DATA);
 
@@ -1501,7 +1501,7 @@ void HardwareTransport_win_discovery::OnDeviceChanged_win(GUID guid, DWORD evt)
 
 		if (IsEqualGUID(guid, GUID_DEVINTERFACE_RobotRaconteurWinUsbDevice))
 		{
-			GetUsbDevices(boost::bind(&HardwareTransport_win_discovery::OnDeviceChanged, shared_from_this(), _1));
+			GetUsbDevices(boost::bind(&HardwareTransport_win_discovery::OnDeviceChanged, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1)));
 			return;
 		}
 	}

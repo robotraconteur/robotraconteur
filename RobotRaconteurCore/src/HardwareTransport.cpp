@@ -248,7 +248,7 @@ namespace RobotRaconteur
 						m = RR_STATIC_POINTER_CAST<detail::WinUsbDeviceManager>(internal2);
 					}
 
-					boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > h = boost::bind(&HardwareTransport::AsyncCreateTransportConnection2, shared_from_this(), noden, _1, _2, callback);
+					boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > h = boost::bind(&HardwareTransport::AsyncCreateTransportConnection2, shared_from_this(), noden, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), callback);
 					m->AsyncCreateTransportConnection(url_res, ep->GetLocalEndpoint(), noden, h);
 					return;
 				}
@@ -289,7 +289,7 @@ namespace RobotRaconteur
 			if (!win_path)
 			{
 				RR_SHARED_PTR<detail::WinsockBluetoothConnector> bt_connector = RR_MAKE_SHARED<detail::WinsockBluetoothConnector>(shared_from_this());
-				bt_connector->Connect(url_res, noden, ep->GetLocalEndpoint(), boost::bind(&HardwareTransport::AsyncCreateTransportConnection2, shared_from_this(), noden, _1, _2, callback));
+				bt_connector->Connect(url_res, noden, ep->GetLocalEndpoint(), boost::bind(&HardwareTransport::AsyncCreateTransportConnection2, shared_from_this(), noden, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), callback));
 				return;
 
 			}
@@ -332,7 +332,7 @@ namespace RobotRaconteur
 						m = RR_STATIC_POINTER_CAST<detail::LibUsbDeviceManager>(internal2);
 					}
 
-					boost::function<void(RR_SHARED_PTR<ITransportConnection>,RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&HardwareTransport::AsyncCreateTransportConnection2, shared_from_this(), noden, _1, _2, callback);
+					boost::function<void(RR_SHARED_PTR<ITransportConnection>,RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&HardwareTransport::AsyncCreateTransportConnection2, shared_from_this(), noden, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), callback);
 					m->AsyncCreateTransportConnection(url_res, ep->GetLocalEndpoint(), noden, h);
 					return;
 				}
@@ -377,7 +377,7 @@ namespace RobotRaconteur
 			if (!dev_path && internal1 && internal4)
 			{
 				RR_SHARED_PTR<detail::BluezBluetoothConnector> bt_connector = RR_MAKE_SHARED<detail::BluezBluetoothConnector>(shared_from_this(), internal1, internal4);
-				bt_connector->Connect(url_res, noden, ep->GetLocalEndpoint(), boost::bind(&HardwareTransport::AsyncCreateTransportConnection2, shared_from_this(), noden, _1, _2, callback));
+				bt_connector->Connect(url_res, noden, ep->GetLocalEndpoint(), boost::bind(&HardwareTransport::AsyncCreateTransportConnection2, shared_from_this(), noden, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), callback));
 				return;
 			}
 
@@ -407,7 +407,7 @@ namespace RobotRaconteur
 #ifdef ROBOTRACONTEUR_ANDROID
 		if (transport=="bluetooth")
 		{
-			detail::AndroidHardwareDirector::ConnectBluetooth(shared_from_this(), url_res, noden, ep->GetLocalEndpoint(), boost::bind(&HardwareTransport::AsyncCreateTransportConnection2, shared_from_this(), noden, _1, _2, boost::protect(callback)));
+			detail::AndroidHardwareDirector::ConnectBluetooth(shared_from_this(), url_res, noden, ep->GetLocalEndpoint(), boost::bind(&HardwareTransport::AsyncCreateTransportConnection2, shared_from_this(), noden, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), boost::protect(callback)));
 			return;
 		}
 
@@ -418,7 +418,7 @@ namespace RobotRaconteur
 		{			
 		 	throw ConnectionException("Could not connect to service");		
 		}
-		boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&HardwareTransport::AsyncCreateTransportConnection2, shared_from_this(), noden, _1, _2, callback);
+		boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&HardwareTransport::AsyncCreateTransportConnection2, shared_from_this(), noden, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), callback);
 		HardwareTransport_attach_transport(shared_from_this(), socket, false, ep->GetLocalEndpoint(), noden, url_res.scheme, h);
 		}
 		catch (std::exception& exp)
@@ -459,7 +459,7 @@ namespace RobotRaconteur
 		RR_SHARED_PTR<detail::sync_async_handler<ITransportConnection> > d = RR_MAKE_SHARED<detail::sync_async_handler<ITransportConnection> >(RR_MAKE_SHARED<ConnectionException>("Timeout exception"));
 
 		boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > h
-			= boost::bind(&detail::sync_async_handler<ITransportConnection>::operator(), d, _1, _2);
+			= boost::bind(&detail::sync_async_handler<ITransportConnection>::operator(), d, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2));
 		AsyncCreateTransportConnection(url, e, h);
 
 		return d->end();
@@ -917,7 +917,7 @@ namespace RobotRaconteur
 				}
 
 				boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h
-					= boost::bind(&HardwareTransportConnection::SimpleAsyncEndSendMessage, RR_STATIC_POINTER_CAST<HardwareTransportConnection>(shared_from_this()), _1);
+					= boost::bind(&HardwareTransportConnection::SimpleAsyncEndSendMessage, RR_STATIC_POINTER_CAST<HardwareTransportConnection>(shared_from_this()), RR_BOOST_PLACEHOLDERS(_1));
 				AsyncSendMessage(ret, h);
 			}
 			catch (std::exception& exp)
@@ -1015,7 +1015,7 @@ namespace RobotRaconteur
 		try
 		{
 			RR_SHARED_PTR<HardwareTransportConnection_driver> t = RR_MAKE_SHARED<HardwareTransportConnection_driver>(parent, server, endpoint, scheme);
-			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(callback, t, _1);
+			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(callback, t, RR_BOOST_PLACEHOLDERS(_1));
 			t->AsyncAttachSocket(socket, noden, h);
 			parent->AddCloseListener(t, &HardwareTransportConnection_driver::Close);
 		}
@@ -1117,7 +1117,7 @@ namespace RobotRaconteur
 		try
 		{
 			RR_SHARED_PTR<HardwareTransportConnection_bluetooth> t = RR_MAKE_SHARED<HardwareTransportConnection_bluetooth>(parent, server, endpoint);
-			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(callback, t, _1);
+			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(callback, t, RR_BOOST_PLACEHOLDERS(_1));
 			t->AsyncAttachSocket(socket, noden, h);
 			parent->AddCloseListener(t, &HardwareTransportConnection_bluetooth::Close);
 		}

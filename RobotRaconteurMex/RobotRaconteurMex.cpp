@@ -3747,7 +3747,7 @@ void MexServiceStub::AsyncPropertyGet(std::string PropertyName,RR_SHARED_PTR<mxA
 
 
 	RR_INTRUSIVE_PTR<MessageEntry> req=CreateMessageEntry(MessageEntryType_PropertyGetReq,PropertyName);
-	AsyncProcessRequest(req,boost::bind(&MexServiceStub::EndAsyncPropertyGet,rr_cast<MexServiceStub>(shared_from_this()),_1,_2,handler,param,pdef),timeout);
+	AsyncProcessRequest(req,boost::bind(&MexServiceStub::EndAsyncPropertyGet,rr_cast<MexServiceStub>(shared_from_this()),RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),handler,param,pdef),timeout);
 	
 }
 
@@ -3793,7 +3793,7 @@ void MexServiceStub::AsyncPropertySet(std::string PropertyName, const mxArray* v
 	RR_INTRUSIVE_PTR<MessageEntry> req=CreateMessageEntry(MessageEntryType_PropertySetReq, PropertyName);
 	value2->ElementName="value";
 	req->AddElement(value2);
-	AsyncProcessRequest(req,boost::bind(&MexServiceStub::EndAsyncPropertySet,rr_cast<MexServiceStub>(shared_from_this()),_1,_2,handler,param,pdef),timeout);		
+	AsyncProcessRequest(req,boost::bind(&MexServiceStub::EndAsyncPropertySet,rr_cast<MexServiceStub>(shared_from_this()),RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),handler,param,pdef),timeout);		
 }
 
 void MexServiceStub::EndAsyncPropertySet(RR_INTRUSIVE_PTR<MessageEntry> res, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err,RR_SHARED_PTR<mxArray> handler,RR_SHARED_PTR<mxArray> param,RR_SHARED_PTR<PropertyDefinition> pdef)
@@ -3845,7 +3845,7 @@ void MexServiceStub::AsyncFunctionCall(std::string FunctionName, std::vector<con
 		
 	}
 	
-	AsyncProcessRequest(req,boost::bind(&MexServiceStub::EndAsyncFunctionCall,rr_cast<MexServiceStub>(shared_from_this()),_1,_2,handler,param,fdef),timeout);		
+	AsyncProcessRequest(req,boost::bind(&MexServiceStub::EndAsyncFunctionCall,rr_cast<MexServiceStub>(shared_from_this()),RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),handler,param,fdef),timeout);		
 	
 }
 
@@ -5469,7 +5469,7 @@ static void send_handler(uint32_t packetnumber, RR_SHARED_PTR<RobotRaconteurExce
 uint32_t MexPipeEndpoint::SendPacket(RR_INTRUSIVE_PTR<MessageElement> packet)
 {
 	RR_SHARED_PTR<RobotRaconteur::detail::sync_async_handler<uint32_t> > t=RR_MAKE_SHARED<RobotRaconteur::detail::sync_async_handler<uint32_t> >();
-	AsyncSendPacketBase(packet,boost::bind(&send_handler,_1,_2,boost::protect(boost::bind(&RobotRaconteur::detail::sync_async_handler<uint32_t>::operator(),t,_1,_2))));
+	AsyncSendPacketBase(packet,boost::bind(&send_handler,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),boost::protect(boost::bind(&RobotRaconteur::detail::sync_async_handler<uint32_t>::operator(),t,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)))));
 	
 	return (*t->end());
 }
@@ -5735,7 +5735,7 @@ RR_SHARED_PTR<MexPipeEndpoint> MexPipeClient::Connect(int32_t index)
 {
 
 	RR_SHARED_PTR<RobotRaconteur::detail::sync_async_handler<PipeEndpointBase > > t=RR_MAKE_SHARED<RobotRaconteur::detail::sync_async_handler<RobotRaconteur::PipeEndpointBase > >();
-	AsyncConnect_internal(index,boost::bind(&RobotRaconteur::detail::sync_async_handler<PipeEndpointBase>::operator(),t,_1,_2),GetNode()->GetRequestTimeout());
+	AsyncConnect_internal(index,boost::bind(&RobotRaconteur::detail::sync_async_handler<PipeEndpointBase>::operator(),t,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)),GetNode()->GetRequestTimeout());
 	boost::shared_ptr<MexPipeEndpoint> o= boost::dynamic_pointer_cast<MexPipeEndpoint>(t->end());
 	o->Type=Type;
 
@@ -5990,7 +5990,7 @@ void MexWireConnection::subsasgn(const mxArray* S, const mxArray* value)
 RR_SHARED_PTR<MexWireConnection> MexWireClient::Connect()
 {
 	RR_SHARED_PTR<RobotRaconteur::detail::sync_async_handler<WireConnectionBase > > t=RR_MAKE_SHARED<RobotRaconteur::detail::sync_async_handler<WireConnectionBase > >();
-	AsyncConnect_internal(boost::bind(&RobotRaconteur::detail::sync_async_handler<WireConnectionBase >::operator(),t,_1,_2),GetNode()->GetRequestTimeout());
+	AsyncConnect_internal(boost::bind(&RobotRaconteur::detail::sync_async_handler<WireConnectionBase >::operator(),t,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)),GetNode()->GetRequestTimeout());
 
 	boost::shared_ptr<MexWireConnection> o=boost::dynamic_pointer_cast<MexWireConnection>(t->end()); 
 	o->Type=Type;
@@ -7918,7 +7918,7 @@ static boost::shared_ptr<ServiceSubscriptionFilter> SubscribeService_LoadFilter(
 		{
 			/*boost::shared_ptr<mxArray> mx_predicate = boost::shared_ptr<mxArray>(mxDuplicateArray(filter_predicate1), ::mxDestroyArray);
 			mexMakeArrayPersistent(mx_predicate.get());
-			filter2->Predicate = boost::bind(&MexServiceSubsrciptionPredicate, mx_predicate, _1);*/
+			filter2->Predicate = boost::bind(&MexServiceSubsrciptionPredicate, mx_predicate, RR_BOOST_PLACEHOLDERS(_1));*/
 			throw InvalidArgumentException("ServiceSubscriptionFilter.Predicate not supported in MATLAB");
 		}
 
@@ -8183,7 +8183,7 @@ mxArray* MexGeneratorClient::subsref(const mxArray* S)
 
 		try
 		{
-			AsyncNextBase(param, boost::bind(&MexGeneratorClient::EndAsyncNext, shared_from_this(), _1, _2, handler, async_param), timeout);
+			AsyncNextBase(param, boost::bind(&MexGeneratorClient::EndAsyncNext, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), handler, async_param), timeout);
 			return mxCreateNumericMatrix(0, 1, mxDOUBLE_CLASS, mxREAL);
 		}
 		catch (std::exception&)
@@ -8220,11 +8220,11 @@ mxArray* MexGeneratorClient::subsref(const mxArray* S)
 		{
 			if (membername == "async_Close")
 			{
-				AsyncClose(boost::bind(&MexGeneratorClient::EndAsyncClose, shared_from_this(), _1, handler, async_param), timeout);
+				AsyncClose(boost::bind(&MexGeneratorClient::EndAsyncClose, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), handler, async_param), timeout);
 			}
 			else
 			{
-				AsyncAbort(boost::bind(&MexGeneratorClient::EndAsyncClose, shared_from_this(), _1, handler, async_param), timeout);
+				AsyncAbort(boost::bind(&MexGeneratorClient::EndAsyncClose, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), handler, async_param), timeout);
 			}
 			return mxCreateNumericMatrix(0, 1, mxDOUBLE_CLASS, mxREAL);
 		}

@@ -148,7 +148,7 @@ namespace detail
 			{
 				if (u)
 				{
-					if (RobotRaconteurNode::TryPostToThreadPool(n, boost::bind(&HardwareTransport_discovery::GetUsbDevices, this->shared_from_this(), boost::protect(boost::bind(&HardwareTransport_discovery::GetAll1, this->shared_from_this(), _1, op)))))
+					if (RobotRaconteurNode::TryPostToThreadPool(n, boost::bind(&HardwareTransport_discovery::GetUsbDevices, this->shared_from_this(), boost::protect(boost::bind(&HardwareTransport_discovery::GetAll1, this->shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), op)))))
 					{
 						op->count++;
 					}
@@ -371,7 +371,7 @@ namespace detail
 			}
 
 			RR_SHARED_PTR<refresh_op> op = RR_MAKE_SHARED<refresh_op>();
-			op->handler = boost::bind(&HardwareTransport_discovery::OnBluetoothChanged1, this->shared_from_this(), _1);
+			op->handler = boost::bind(&HardwareTransport_discovery::OnBluetoothChanged1, this->shared_from_this(), RR_BOOST_PLACEHOLDERS(_1));
 			op->ret = RR_MAKE_SHARED<std::vector<NodeDiscoveryInfo> >();
 
 			detected_bluetooth.push_back(boost::make_tuple(addr, n->NowUTC()));

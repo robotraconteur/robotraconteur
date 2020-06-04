@@ -283,7 +283,7 @@ namespace RobotRaconteur
 						ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Node, -1, "Transport connected, connect service: " << url);
 
 						//std::cout << "Node connector connect service" << std::endl;
-						ep->ep->AsyncConnectService(transport, connection, url, username, credentials, objecttype, boost::protect(boost::bind(&RobotRaconteurNode_connector::connected_client, shared_from_this(), _1, _2, url, ep, key2)), timeout);
+						ep->ep->AsyncConnectService(transport, connection, url, username, credentials, objecttype, boost::protect(boost::bind(&RobotRaconteurNode_connector::connected_client, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), url, ep, key2)), timeout);
 
 						transport_connected = true;
 
@@ -419,7 +419,7 @@ namespace RobotRaconteur
 					active_count++;
 					key2 = active_count;
 
-					boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > h = boost::protect(boost::bind(&RobotRaconteurNode_connector::connected_transport, shared_from_this(), t, _1, _2, url, ep, key2));
+					boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > h = boost::protect(boost::bind(&RobotRaconteurNode_connector::connected_transport, shared_from_this(), t, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), url, ep, key2));
 					t->AsyncCreateTransportConnection(url, c, h);
 
 					active.push_back(key2);

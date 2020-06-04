@@ -83,7 +83,7 @@ namespace RobotRaconteur
 		ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
 
 		RR_SHARED_PTR<detail::sync_async_handler<void> > t=RR_MAKE_SHARED<detail::sync_async_handler<void > >();
-		AsyncClose(boost::bind(&detail::sync_async_handler<void>::operator(),t,_1),GetNode()->GetRequestTimeout());
+		AsyncClose(boost::bind(&detail::sync_async_handler<void>::operator(),t,RR_BOOST_PLACEHOLDERS(_1)),GetNode()->GetRequestTimeout());
 		t->end_void();
 	}
 
@@ -584,7 +584,7 @@ namespace RobotRaconteur
 			if (!remote)
 			{
 			RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_WireDisconnectReq, GetMemberName());
-			GetStub()->AsyncProcessRequest(m,boost::bind(handler,_2),timeout);
+			GetStub()->AsyncProcessRequest(m,boost::bind(handler,RR_BOOST_PLACEHOLDERS(_2)),timeout);
 			}
 			connection.reset();
 		}
@@ -605,7 +605,7 @@ namespace RobotRaconteur
 				}
 				
 				RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_WireConnectReq, GetMemberName());
-				GetStub()->AsyncProcessRequest(m,boost::bind(&WireClientBase::AsyncConnect_internal1, RR_DYNAMIC_POINTER_CAST<WireClientBase>(shared_from_this()),_1,_2,handler),timeout);
+				GetStub()->AsyncProcessRequest(m,boost::bind(&WireClientBase::AsyncConnect_internal1, RR_DYNAMIC_POINTER_CAST<WireClientBase>(shared_from_this()),RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),handler),timeout);
 
 				ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName, "Begin connect wire connection");
 				
@@ -739,14 +739,14 @@ namespace RobotRaconteur
 	{
 		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName, "Requesting PeekInValue");
 		RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m = CreateMessageEntry(MessageEntryType_WirePeekInValueReq, GetMemberName());
-		GetStub()->AsyncProcessRequest(m, boost::bind(&WireClientBase::AsyncPeekValueBaseEnd1, RR_DYNAMIC_POINTER_CAST<WireClientBase>(shared_from_this()), _1, _2, handler),timeout);		
+		GetStub()->AsyncProcessRequest(m, boost::bind(&WireClientBase::AsyncPeekValueBaseEnd1, RR_DYNAMIC_POINTER_CAST<WireClientBase>(shared_from_this()), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), handler),timeout);		
 	}
 
 	void WireClientBase::AsyncPeekOutValueBase(RR_MOVE_ARG(boost::function<void(const RR_INTRUSIVE_PTR<RRValue>&, const TimeSpec&, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout)
 	{
 		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName, "Requesting PeekOutValue");
 		RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m = CreateMessageEntry(MessageEntryType_WirePeekOutValueReq, GetMemberName());
-		GetStub()->AsyncProcessRequest(m, boost::bind(&WireClientBase::AsyncPeekValueBaseEnd1, RR_DYNAMIC_POINTER_CAST<WireClientBase>(shared_from_this()), _1, _2, handler), timeout);
+		GetStub()->AsyncProcessRequest(m, boost::bind(&WireClientBase::AsyncPeekValueBaseEnd1, RR_DYNAMIC_POINTER_CAST<WireClientBase>(shared_from_this()), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), handler), timeout);
 	}
 
 	void WireClientBase_AsyncPokeValueBaseEnd(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
@@ -770,7 +770,7 @@ namespace RobotRaconteur
 		RR_INTRUSIVE_PTR<MessageEntry> m = PackPacket(value, TimeSpec::Now());
 		m->EntryType = MessageEntryType_WirePokeOutValueReq;
 		m->MetaData.reset();
-		GetStub()->AsyncProcessRequest(m, boost::bind(&WireClientBase_AsyncPokeValueBaseEnd, _1, _2, handler), timeout);
+		GetStub()->AsyncProcessRequest(m, boost::bind(&WireClientBase_AsyncPokeValueBaseEnd, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), handler), timeout);
 	}
 
 	void WireServerBase::WirePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e)
@@ -951,7 +951,7 @@ namespace RobotRaconteur
 					if (!init)
 					{
 						RR_WEAK_PTR<WireServerBase> weak= RR_DYNAMIC_POINTER_CAST<WireServerBase>(shared_from_this());
-						listener_connection=GetSkel()->GetContext()->ServerServiceListener.connect(boost::bind(&wire_server_client_disconnected,_1,_2,_3,weak));
+						listener_connection=GetSkel()->GetContext()->ServerServiceListener.connect(boost::bind(&wire_server_client_disconnected,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),RR_BOOST_PLACEHOLDERS(_3),weak));
 						init=true;
 					}
 
@@ -1125,7 +1125,7 @@ namespace RobotRaconteur
 
 		wire1->GetSkel()->GetContext()->ServerServiceListener.connect(
 			boost::signals2::signal<void(RR_SHARED_PTR<ServerContext>, ServerServiceListenerEventType, RR_SHARED_PTR<void>)>::slot_type(
-				boost::bind(&WireBroadcasterBase::ServiceEvent, this, _2)
+				boost::bind(&WireBroadcasterBase::ServiceEvent, this, RR_BOOST_PLACEHOLDERS(_2))
 			).track(shared_from_this())
 		);
 

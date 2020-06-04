@@ -234,7 +234,7 @@ namespace RobotRaconteur
 				ret->AddElement(value);
 			}
 
-			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>) > h = boost::bind(&rr_context_emptyhandler,_1);
+			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>) > h = boost::bind(&rr_context_emptyhandler,RR_BOOST_PLACEHOLDERS(_1));
 			skel1->GetContext()->AsyncSendMessage(ret,ep,h);
 			ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(skel1->node, Service, ep->GetLocalEndpoint(), skel1->m_ServicePath, m->MemberName, "EndAsyncCallGetProperty completed successfully");
 		}
@@ -264,7 +264,7 @@ namespace RobotRaconteur
 				RobotRaconteurExceptionUtil::ExceptionToMessageEntry(*err,ret);
 			}
 
-			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>) > h = boost::bind(&rr_context_emptyhandler,_1);
+			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>) > h = boost::bind(&rr_context_emptyhandler,RR_BOOST_PLACEHOLDERS(_1));
 			skel1->GetContext()->AsyncSendMessage(ret,ep,h);
 			ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(skel1->node, Service, ep->GetLocalEndpoint(), skel1->m_ServicePath, m->MemberName, "EndAsyncCallSetProperty completed successfully");
 		}
@@ -310,7 +310,7 @@ namespace RobotRaconteur
 				}
 			}
 
-			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>) > h = boost::bind(&rr_context_emptyhandler,_1);
+			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>) > h = boost::bind(&rr_context_emptyhandler,RR_BOOST_PLACEHOLDERS(_1));
 			skel1->GetContext()->AsyncSendMessage(ret1,ep,h);
 			ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(skel1->node, Service, ep->GetLocalEndpoint(), skel1->m_ServicePath, m->MemberName, "EndAsyncCallFunction completed successfully");
 		}
@@ -355,7 +355,7 @@ namespace RobotRaconteur
 		}
 		else
 		{
-			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>) > h = boost::bind(&rr_context_emptyhandler,_1);
+			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>) > h = boost::bind(&rr_context_emptyhandler,RR_BOOST_PLACEHOLDERS(_1));
 			GetContext()->AsyncSendPipeMessage(m, e, unreliable, h);
 		}
 	}
@@ -493,7 +493,7 @@ namespace RobotRaconteur
 			}
 		}
 
-		boost::function<void(RR_SHARED_PTR<RobotRaconteurException>) > h = boost::bind(&rr_context_emptyhandler, _1);
+		boost::function<void(RR_SHARED_PTR<RobotRaconteurException>) > h = boost::bind(&rr_context_emptyhandler, RR_BOOST_PLACEHOLDERS(_1));
 		GetContext()->AsyncSendMessage(m,ep,h);
 	}
 
@@ -654,7 +654,7 @@ namespace RobotRaconteur
 				try
 				{
 					GetNode()->CheckConnection(c->GetLocalEndpoint());
-					boost::function<void(RR_SHARED_PTR<RobotRaconteurException>) > h = boost::bind(&rr_context_emptyhandler,_1);
+					boost::function<void(RR_SHARED_PTR<RobotRaconteurException>) > h = boost::bind(&rr_context_emptyhandler,RR_BOOST_PLACEHOLDERS(_1));
 					AsyncSendMessage(m2,c, h);
 				}
 				catch (std::exception& exp2)
@@ -792,7 +792,7 @@ namespace RobotRaconteur
 			}
 			s = e1->second;
 		}
-		boost::function<void(RR_SHARED_PTR<RobotRaconteurException>) > h = boost::bind(&rr_context_emptyhandler,_1);
+		boost::function<void(RR_SHARED_PTR<RobotRaconteurException>) > h = boost::bind(&rr_context_emptyhandler,RR_BOOST_PLACEHOLDERS(_1));
 		AsyncSendUnreliableMessage(m, s, h);
 	}
 
@@ -1318,7 +1318,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 			if (timeout!=RR_TIMEOUT_INFINITE)
 			{
-				RR_SHARED_PTR<Timer> timer=GetNode()->CreateTimer(boost::posix_time::milliseconds(timeout),boost::bind(&ServerContext::AsyncProcessCallbackRequest_timeout,shared_from_this(),_1,endpoint,myrequestid),true);
+				RR_SHARED_PTR<Timer> timer=GetNode()->CreateTimer(boost::posix_time::milliseconds(timeout),boost::bind(&ServerContext::AsyncProcessCallbackRequest_timeout,shared_from_this(),RR_BOOST_PLACEHOLDERS(_1),endpoint,myrequestid),true);
 				timer->Start();
 				t->timer=timer;
 
@@ -1331,7 +1331,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, endpoint, m->ServicePath, m->MemberName, "AsyncProcessCallbackRequest sending message with requestid " << myrequestid << " EntryType " << m->EntryType);
 		
 
-		boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&ServerContext::AsyncProcessCallbackRequest_err, shared_from_this(), _1, endpoint, myrequestid);
+		boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&ServerContext::AsyncProcessCallbackRequest_err, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), endpoint, myrequestid);
 		AsyncSendMessage(m,endpoint,h);
 		}
 		catch (std::exception& exp)
@@ -1511,7 +1511,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 		}
 		if (mret->entries.size() > 0)
 		{
-			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&rr_context_node_handler, GetNode(), _1);
+			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&rr_context_node_handler, GetNode(), RR_BOOST_PLACEHOLDERS(_1));
 			e->AsyncSendMessage(mret, h);
 		}
 		
@@ -2136,7 +2136,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 				try
 				{
 					GetNode()->CheckConnection(c->GetLocalEndpoint());
-					boost::function<void(RR_SHARED_PTR<RobotRaconteurException>) > h = boost::bind(&rr_context_emptyhandler,_1);
+					boost::function<void(RR_SHARED_PTR<RobotRaconteurException>) > h = boost::bind(&rr_context_emptyhandler,RR_BOOST_PLACEHOLDERS(_1));
 					AsyncSendMessage(ShallowCopyMessageEntry(m), c, h);
 				}
 				catch (std::exception& exp)

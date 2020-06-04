@@ -43,6 +43,7 @@ namespace detail {
 
 #endif
 
+#include <boost/bind/placeholders.hpp>
 #include <boost/asio.hpp>
 
 #include "LocalTransport_private.h"

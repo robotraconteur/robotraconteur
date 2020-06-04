@@ -181,8 +181,8 @@ namespace RobotRaconteur
 			ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
 
 			 RR_SHARED_PTR<detail::sync_async_handler<uint32_t> > t=RR_MAKE_SHARED<detail::sync_async_handler<uint32_t> >();
-			 boost::function<void(RR_SHARED_PTR<uint32_t>, RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&detail::sync_async_handler<uint32_t>::operator(), t, _1, _2);
-			 AsyncSendPacket(packet,boost::bind(&PipeEndpoint::send_handler,_1,_2,h));
+			 boost::function<void(RR_SHARED_PTR<uint32_t>, RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&detail::sync_async_handler<uint32_t>::operator(), t, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2));
+			 AsyncSendPacket(packet,boost::bind(&PipeEndpoint::send_handler,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),h));
 			 return *t->end();
 		}
 
@@ -285,7 +285,7 @@ namespace RobotRaconteur
 	public:
 		virtual void AsyncClose(RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout=2000)
 		{
-			PipeEndpointBase::AsyncClose(boost::bind(&PipeEndpoint<T>::AsyncClose1,RR_STATIC_POINTER_CAST<PipeEndpoint<T> >(shared_from_this()),_1,handler),timeout);
+			PipeEndpointBase::AsyncClose(boost::bind(&PipeEndpoint<T>::AsyncClose1,RR_STATIC_POINTER_CAST<PipeEndpoint<T> >(shared_from_this()),RR_BOOST_PLACEHOLDERS(_1),handler),timeout);
 			
 		}
 
@@ -500,7 +500,7 @@ namespace RobotRaconteur
 		virtual void AsyncConnect(int32_t index, RR_MOVE_ARG(boost::function<void (RR_SHARED_PTR<PipeEndpoint<T> >, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout=RR_TIMEOUT_INFINITE)
 		{
 			
-			AsyncConnect_internal(index,boost::bind(handler,boost::bind(&PipeClient<T>::AsyncConnect_cast,_1),_2),timeout); 
+			AsyncConnect_internal(index,boost::bind(handler,boost::bind(&PipeClient<T>::AsyncConnect_cast,RR_BOOST_PLACEHOLDERS(_1)),RR_BOOST_PLACEHOLDERS(_2)),timeout); 
 		}
 
 		virtual RR_SHARED_PTR<PipeEndpoint<T> > Connect(int32_t index)
@@ -508,7 +508,7 @@ namespace RobotRaconteur
 			ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
 
 			RR_SHARED_PTR<detail::sync_async_handler<PipeEndpoint<T> > > t=RR_MAKE_SHARED<detail::sync_async_handler<PipeEndpoint<T> > >();
-			AsyncConnect(index,boost::bind(&detail::sync_async_handler<PipeEndpoint<T> >::operator(),t,_1,_2),GetNode()->GetRequestTimeout());
+			AsyncConnect(index,boost::bind(&detail::sync_async_handler<PipeEndpoint<T> >::operator(),t,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)),GetNode()->GetRequestTimeout());
 			return t->end();
 		}
 
@@ -791,7 +791,7 @@ namespace RobotRaconteur
 		{
 			RR_SHARED_PTR<PipeServer<T> > p_T = rr_cast<PipeServer<T> >(p);
 			
-			p_T->SetPipeConnectCallback(boost::bind(&PipeBroadcaster::EndpointConnectedBase, shared_from_this(), _1));			
+			p_T->SetPipeConnectCallback(boost::bind(&PipeBroadcaster::EndpointConnectedBase, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1)));			
 		}
 
 		virtual void AttachPipeEndpointEvents(RR_SHARED_PTR<PipeEndpointBase> ep, RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint> cep)
@@ -799,7 +799,7 @@ namespace RobotRaconteur
 			RR_SHARED_PTR<PipeEndpoint<T> > ep_T = rr_cast<PipeEndpoint<T> >(ep);
 
 			ep_T->SetPipeEndpointClosedCallback(boost::bind(&PipeBroadcaster::EndpointClosedBase, shared_from_this(), cep));
-			ep_T->PacketAckReceivedEvent.connect(boost::bind(&PipeBroadcaster::PacketAckReceivedBase, shared_from_this(), cep, _2));
+			ep_T->PacketAckReceivedEvent.connect(boost::bind(&PipeBroadcaster::PacketAckReceivedBase, shared_from_this(), cep, RR_BOOST_PLACEHOLDERS(_2)));
 		}
 
 	};

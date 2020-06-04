@@ -668,7 +668,7 @@ namespace RobotRaconteurTest
 		
 
 	boost::signals2::connection c1=r->get_ev1().connect(boost::bind(&ServiceTestClient::ev1_cb,this));
-	boost::signals2::connection c2=r->get_ev2().connect(boost::bind(&ServiceTestClient::ev2_cb,this,_1,_2));
+	boost::signals2::connection c2=r->get_ev2().connect(boost::bind(&ServiceTestClient::ev2_cb,this,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));
 
 	
 
@@ -799,8 +799,8 @@ namespace RobotRaconteurTest
         cb5_called = false;
 
         r->get_cb1()->SetFunction( boost::bind(&ServiceTestClient::cb1_func,this));
-        r->get_cb2()->SetFunction( boost::bind(&ServiceTestClient::cb2_func,this,_1,_2));
-        r->get_cb3()->SetFunction(boost::bind(&ServiceTestClient::cb3_func,this,_1,_2));
+        r->get_cb2()->SetFunction( boost::bind(&ServiceTestClient::cb2_func,this,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));
+        r->get_cb3()->SetFunction(boost::bind(&ServiceTestClient::cb3_func,this,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));
         r->get_cb_meaning_of_life()->SetFunction(boost::bind(&ServiceTestClient::cb_meaning_of_life_func,this));
         r->get_cb_errtest()->SetFunction(boost::bind(&ServiceTestClient::cb_errtest,this));
 
@@ -851,10 +851,10 @@ namespace RobotRaconteurTest
 
 		e1->SetRequestPacketAck(true);
 
-		boost::signals2::connection ec1=e1->PacketReceivedEvent.connect(boost::bind(&ServiceTestClient::ee1_cb,this,_1));
-		boost::signals2::connection ec2=e1->PacketAckReceivedEvent.connect(boost::bind(&ServiceTestClient::ee1_ack_cb,this,_1,_2));
-		boost::signals2::connection ec3=e2->PacketReceivedEvent.connect(boost::bind(&ServiceTestClient::ee2_cb,this,_1));
-		boost::signals2::connection ec4=e3->PacketReceivedEvent.connect(boost::bind(&ServiceTestClient::ee3_cb,this,_1));
+		boost::signals2::connection ec1=e1->PacketReceivedEvent.connect(boost::bind(&ServiceTestClient::ee1_cb,this,RR_BOOST_PLACEHOLDERS(_1)));
+		boost::signals2::connection ec2=e1->PacketAckReceivedEvent.connect(boost::bind(&ServiceTestClient::ee1_ack_cb,this,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));
+		boost::signals2::connection ec3=e2->PacketReceivedEvent.connect(boost::bind(&ServiceTestClient::ee2_cb,this,RR_BOOST_PLACEHOLDERS(_1)));
+		boost::signals2::connection ec4=e3->PacketReceivedEvent.connect(boost::bind(&ServiceTestClient::ee3_cb,this,RR_BOOST_PLACEHOLDERS(_1)));
 
 		double d1[]={ 1, 2, 3, 4 };
 		double d2[]={ 5, 6, 7, 8 };
@@ -950,9 +950,9 @@ namespace RobotRaconteurTest
 		RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<teststruct2> > > w2=r->get_w2()->Connect();
 		RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<RRMultiDimArray<int32_t> > > > w3=r->get_w3()->Connect();
 
-		w1->WireValueChanged.connect(boost::bind(&ServiceTestClient::w1_changed,this,_1,_2,_3));
-		w2->WireValueChanged.connect(boost::bind(&ServiceTestClient::w2_changed,this,_1,_2,_3));
-		w3->WireValueChanged.connect(boost::bind(&ServiceTestClient::w3_changed,this,_1,_2,_3));
+		w1->WireValueChanged.connect(boost::bind(&ServiceTestClient::w1_changed,this,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),RR_BOOST_PLACEHOLDERS(_3)));
+		w2->WireValueChanged.connect(boost::bind(&ServiceTestClient::w2_changed,this,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),RR_BOOST_PLACEHOLDERS(_3)));
+		w3->WireValueChanged.connect(boost::bind(&ServiceTestClient::w3_changed,this,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),RR_BOOST_PLACEHOLDERS(_3)));
 
 		double d0[]={0.0};
 		w1->SetOutValue(AttachRRArrayCopy(d0,1));
@@ -1451,7 +1451,7 @@ namespace RobotRaconteurTest
 	{
 		RR_INTRUSIVE_PTR<RRMap<string,RRValue> > cred1=AllocateEmptyRRMap<string,RRValue>();
 		cred1->insert(make_pair("password",stringToRRArray("testpass1")));
-		RobotRaconteurNode::s()->AsyncConnectService(url,"testuser1",cred1,NULL,"",boost::bind(&ServiceTestClient::TestAsync1,this,_1,_2));
+		RobotRaconteurNode::s()->AsyncConnectService(url,"testuser1",cred1,NULL,"",boost::bind(&ServiceTestClient::TestAsync1,this,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));
 
 		async_wait.WaitOne();
 		boost::mutex::scoped_lock lock(async_err_lock);
@@ -1465,7 +1465,7 @@ namespace RobotRaconteurTest
 	{
 		ASYNC_TEST_CALL(
 			RR_SHARED_PTR<async_testroot> r1=rr_cast<async_testroot>(r);
-			r1->async_get_d2(boost::bind(&ServiceTestClient::TestAsync2,this,r1,_1,_2));			
+			r1->async_get_d2(boost::bind(&ServiceTestClient::TestAsync2,this,r1,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));			
 		);
 	}
 
@@ -1481,7 +1481,7 @@ namespace RobotRaconteurTest
 			double d2_b[]={ 1.374233e+19, 2.424327e-04, -1.615609e-02, 3.342963e-21, -4.308134e+14, -1.783430e-07, 2.214302e+18, -1.091018e+17, 3.279396e-20, 2.454183e-01, 1.459922e+07, -3.494941e+16, -7.949200e-21, 1.720101e+17, -1.041015e+16, 1.453541e+05, 1.125846e+06, 1.894394e+07, 1.153038e-17, -3.283589e+06, 2.253268e-10, -3.897051e+06, 1.362011e+05, 5.501697e-19, -4.854610e+01, -1.582705e-05, 7.622313e+04, 2.104642e+08, -1.294512e-06, -1.426230e-19, -4.319619e-15, 9.837716e+03, -4.949316e-01, -2.173576e+02, 2.730509e-19, -2.123803e+05, 1.652596e-17, -2.066863e-09, 3.856560e-08, 1.379652e+18, -2.119906e+16, 4.860679e-05, -1.681801e-10, -1.569650e-15, 3.984306e-21, 3.283336e+08, -9.222510e-16, -3.579521e-02, 1.279363e-05, 3.920153e-12, 4.737275e-15, -4.427587e+06, -3.826670e-14, 2.492484e-04, 4.996082e+09, 4.643228e-11, 2.809952e-17, -2.224883e-13, -4.442602e+18, 4.422736e+11, 4.969282e-18, 4.937908e-15, 6.973867e-22, 1.908796e-19, 4.812115e-08, 1.753516e-02, -3.684764e+02, 1.557482e-17, -1.176997e-11, 1.772798e-05, 4.877622e-16, 1.107926e+11, 4.097985e-14, 2.714049e-18, 3.198732e+15, -1.052497e-01, -5.003982e+07, -1.538353e-04, 3.045308e+17, 1.176208e-18, 1.268710e-10, -1.269719e-05, -2.989599e+00, -3.721343e-11, -1.444196e-10, -2.030635e+04, 2.070258e+16, -3.001278e-14, 1.116018e+14, 4.999239e+15, 4.286177e-21, -2.972550e+10, 3.549075e-20, -2.874186e-06, 2.994430e+09, 2.978356e+10, -2.364977e+07, 2.807278e-01, -3.279567e-10, 4.567428e+05, 1.612242e+07, 4.102315e+05, -1.069501e-20, 2.887812e+10, 4.384194e-09, -2.936771e-11, -4.164448e+07, 3.391389e+04, -3.923673e+17, -2.735518e-22, -2.019257e-01, 3.014806e+15, -3.885050e-15, -2.806241e-20, 3.077066e+18, -1.574438e+14, -3.131588e+19, 4.812541e+03, 4.435881e+16, -3.843380e+02, -7.522165e+03, -3.668055e-21, 2.603478e-08, 2.928775e+08, 2.892123e+00, -1.594119e+04, -4.817379e-01, -2.121948e+03, -8.872132e-09, -3.909318e-06, -3.849648e-14, -4.554589e+18, 4.410297e-15, -2.976295e-04, -2.298802e+10, 4.981337e-07, 5.364781e-12, 1.536953e+07, -4.082889e-07, 1.670759e-21, 4.009147e-13, -4.691543e-18, -2.597887e-13, 2.368696e+18, -2.585884e-07, -5.209726e-03, -2.568300e+06, 2.184692e-20, -1.799204e+16, 1.397292e+04, 4.277966e+13, -4.072388e+09, -2.324749e+16, -4.717399e+10, -2.853124e-05, -3.664750e+11, -3.864796e-08, 3.265198e+07, -3.309827e+19, 3.222296e+03, 2.366113e-19, -3.425143e+14, 1.627821e-08, 4.987622e+00, -1.402489e-17, -1.303904e+15, -2.042850e+17, -1.399340e+09, -3.560871e+05, -4.251240e-21, -7.806581e-10, 1.723498e+00, -2.030115e+08, 4.595621e-19, 1.174387e-10, 3.474174e+14, -4.159866e+03, -1.833464e-19, -3.650925e+05, 3.757361e-03, -1.854280e-10, -1.856982e-13, 1.685338e+08, 4.051670e-11, 4.095232e+03, -2.956025e-16, 4.986423e-05, 4.941458e+10, 4.145946e+11, 3.402975e+14, -1.954363e+11, -2.274907e+10, -3.162121e-17, -5.027950e-07, 4.135173e-02, -3.777913e-04, -4.898637e+15, 2.354747e-02, -6.884549e+13, -1.896920e-05, -1.914414e+15, -1.196744e-19, -4.692974e-01, 8.586675e-10, -2.204766e-17, -3.586447e-14, 1.751276e+17, -2.546189e-05, -2.248796e+03, -9.445830e+02, 1.150138e+03, 4.586691e+11, -2.582686e-15, -2.795788e+12, -3.409768e+07, -2.172186e-03, -1.457882e+06, -4.153022e+13, -4.255977e-08, 3.216237e-07, 4.935803e+02, -4.248965e-16, 1.740357e+07, 4.635370e+19, -4.099930e-14, 2.758885e-16, -4.714106e-05, -4.556226e-20, -4.290894e-19, 1.174284e-09, -1.443257e+16, -2.279471e-08, -3.030819e-16, 1.535128e+18, -3.248271e-07, 3.079855e-21, -3.056403e-02, -1.368113e-12, 4.004190e-10, 4.955150e+07, -2.494283e-16, 2.186037e+05, -1.232946e+03, 5.586112e-05, -2.288144e+17, 2.515602e-19, -4.064132e+08, -3.217400e-02, -2.620215e+07, 2.283421e-14, -1.130075e+08, 3.304955e-03, 1.352402e+01, 6.255755e-03, -3.913649e-08, 5.474984e+01, -4.712294e-08, 3.548418e-16, 1.276896e+12, 2.007320e-08, 3.025617e+04, -2.544836e+14, -2.087825e+17, -3.285556e-09, 2.605304e+07, -1.876210e+07, 3.734943e-10, -3.862726e-15, -4.227362e-05, 1.267773e+14, -1.706991e-05, 3.737441e+10, 2.641527e+01, 4.439891e+10, -1.444933e-05, -2.190034e-12, 8.059924e-18, -1.324313e+18, -1.420214e-10, 3.940158e-20, 3.943349e-02, -2.685925e+19, 4.334133e-05, 3.171371e-21, 2.094486e+12, 1.331741e+03, 1.205892e-02, 1.791416e+04, 3.899239e+10, 6.581991e+06, -3.860368e+11, -3.853916e-02, 1.314566e+09, 3.923126e+03, -3.509905e+13, -4.332430e+06, -1.713419e+01, -1.244104e-14, -5.529613e+01, 6.630349e+06, 1.053668e+10, 3.312332e-05, -1.252220e+08, 3.997107e-07, 1.847068e-13, -2.393157e-11, -2.083719e-10, -4.927155e+11, 2.666499e-15, 4.087292e-10, 4.082567e-10, -2.017655e+07, 9.108015e+15, -4.199693e-15, -4.969705e-17, 1.769881e-02, 1.745504e+00, 2.200377e-16, -4.404838e-06, -1.317122e-15, 7.210560e+08, 1.282439e-18, -3.204957e-06, -1.624277e+05, 4.570975e-22, 1.261776e+04, 4.416193e+12, -4.343457e-18, 4.095420e-14, 4.951026e-09, 2.261753e-15, 4.125062e+05, -4.448849e+11, -3.184924e+06, -2.050956e+05, -9.895539e+09, 4.541548e+11, -4.230580e+11, -4.268059e-15, -4.393836e+09, -2.514832e-08, 3.322394e-04, 2.597384e-18, 1.316619e-11, -2.250081e+16, 2.179579e-10, -1.838295e+04, -1.995626e-17, -4.656110e+17, 3.481814e-07, -2.859273e-11, -2.011768e-06, -1.809342e-17, -3.242126e+10, -1.873723e+08, -2.833009e-12, -3.758282e+12, 2.970198e+15, -2.667738e-01, -3.689173e+11, 1.008362e-10, -1.526867e-20, -1.439753e+06, -6.154602e+16, 4.165816e+00, -1.597823e-09, -1.862803e+14, -2.222766e+15, -2.892587e+17, -4.230426e-14, 2.999121e-21, 1.642245e+00, 1.590694e-14, -4.469755e-06, 2.700655e+12, -1.822443e-02, -4.889338e-16, -3.174990e-11, 4.146024e-03, 1.313280e+01, 3.235142e+15, 3.500547e+00, -4.413708e+03, 1.485548e+16, -1.660821e-11, -4.334510e-22, -1.209739e+04, 1.149570e+12, -4.537849e+00, -3.628402e-16, 2.748853e-12, -4.818907e-21 };
 			ca(AttachRRArray(d2_b,392,false),ret);
 			double d2_a[]={ 8.805544e-12, 3.735066e+12, 3.491919e+17, 4.979833e+12, -4.042302e+00, 2.927731e-12, 5.945355e+11, -3.965351e+06, 4.866934e-14, 1.314597e+04, -2.059923e-11, -5.447989e-20, 1.267732e-21, -2.603983e+10, 2.417961e+03, 3.515469e-16, 1.731329e-01, -2.854408e-04, 2.908090e-06, 3.354746e+08, 9.405914e+05, -3.665276e-01, -2.036897e+02, 3.489765e-01, -3.207702e+11, -2.105708e+18, -1.485891e+13, -7.059704e+04, 3.528381e+11, 4.586056e+02, -8.107050e-16, -1.007106e+09, 2.964453e+05, -3.628810e+05, -2.816870e-14, 5.665387e+09, 8.518736e+11, -1.179981e+12, -1.506569e-21, 1.113076e-06, -4.782847e+06, 8.906463e+17, 2.729604e+03, -3.430604e+16, 2.626956e-07, 1.543395e+15, 3.407777e-21, 1.231519e+06, -4.808410e+16, 2.649811e+10, 2.546524e+01, -3.533472e-13, -3.732759e+04, 1.951505e-20, 9.338953e-21, -1.627672e-04, 1.807084e-19, -4.489206e-17, -2.654284e+08, -2.136947e+16, -3.690031e+09, 3.372245e-14, 4.946361e-11, -1.330965e-01, 2.479789e-17, 2.750331e-18, -4.301452e-03, 3.895091e+19, 2.515863e+13, 6.879298e+12, -2.925884e-15, -2.826248e+00, -4.864526e-06, 2.614765e+00, 4.488816e-19, 2.231337e+15, -7.004595e+07, 2.506835e-08, -2.187450e-02, -2.220025e-07, 1.688346e+02, 8.125250e-07, -4.819391e+10, -1.643306e-14, -4.768222e-18, -4.472162e-16, 2.487563e-01, -3.924904e-15, -1.186331e+06, 2.397369e+01, -3.137448e-02, 1.016507e+06, 2.584749e-16, 8.212180e-08, 1.631561e-12, -4.927066e-08, 1.448920e-14, -4.371505e+03, 2.050871e-21, 2.523287e+01, 7.778552e-05, -4.437786e+18, -1.118552e-07, -3.543717e-09, -5.327587e-07, -1.083197e-17, 2.578295e-10, -4.952430e-12, -3.008597e-13, 3.010829e+01, -6.109332e+09, -2.428341e-03, 9.399191e-01, -4.827230e-06, 1.013860e+10, -2.870341e-20, 4.281756e+11, 1.043519e-09, 2.378027e+06, 2.605309e+09, -4.939600e-04, -2.193966e+08, 4.022755e-03, 2.668705e-09, -1.087393e-18, 1.927676e-12, -1.694835e+10, 3.554035e-03, -1.299796e+01, -1.692862e+07, 2.818156e+07, -2.606821e-13, 1.629588e-15, -7.069991e-16, 1.205863e-19, 2.491209e-17, -3.757951e+04, 3.110266e-04, -4.339472e+11, -3.172428e+02, 1.579905e+09, 2.859499e-01, 4.241852e-06, 2.043341e-09, 2.922865e-16, -2.580974e+01, -3.147566e-02, 1.160590e+03, -2.238096e+01, -1.984601e-13, 2.636096e-03, 8.422872e-04, 2.026040e-16, -3.822500e+01, -2.190513e-18, 3.229839e-11, -2.958164e+06, -8.354021e+11, 3.625367e+08, -4.558085e-01, 1.274325e+04, -2.492750e+05, 3.739269e+18, -3.985407e-03, 3.575816e-13, 1.376847e+06, -6.682659e-20, -9.200014e+08, -2.278973e+10, -3.555184e-04, 3.821512e-10, 5.944167e+07, -2.576511e-15, 1.232459e+02, -3.187831e+02, -4.882568e+12, -1.670486e+05, -2.339878e-20, -4.985496e-16, -2.937093e+17, 8.981723e-06, -5.460686e-04, 1.090528e-11, -4.321598e+17, -3.577227e-08, 2.880194e+01, -4.277921e+00, -4.145678e-02, 4.930810e+08, -4.525745e-21, 4.648764e+07, -2.564920e+16, 1.075546e+01, 3.777591e-18, 1.419816e-08, 1.419490e+10, 1.479453e-19, -4.933130e+13, 4.580471e+15, -3.160785e+02, -2.885209e+06, 2.384424e-03, 1.030777e-12, 2.652784e+04, 4.435144e+10, 3.102484e+17, 4.725294e+11, -3.817788e-04, 4.074841e-01, -7.248042e-13, -4.502531e-08, 2.203521e+01, -4.457124e+01, -2.961745e+06, -3.237080e+14, -3.482497e-19, 1.534088e+05, 4.759060e-14, 2.333791e+04, -4.002051e-03, 3.278553e-06, -2.307217e+13, -2.999411e+19, -9.804484e+02, -1.793367e+01, 3.111735e+07, -4.457329e+10, -2.067659e-13, -5.927573e+03, 6.979879e+10, 3.556110e-06, -3.513094e-13, 1.128057e+19, 4.199038e+13, 7.553080e-20, 4.380028e-11, -2.502103e-19, 5.943049e+15, -1.266134e-10, 4.825578e-09, -2.778134e-16, 1.881866e-10, -3.677556e+08, -2.166345e-10, 3.919158e+05, 2.778912e-07, 1.822489e-05, 1.513496e-01, 9.327925e+05, -4.050132e-14, 3.311913e+01, 9.290544e+15, 1.302267e+03, -1.252080e+17, -4.208811e-04, -3.225464e+16, 2.093787e+16, -3.352116e+07, 4.797665e+15, -1.539672e-17, 4.835159e+04, 2.446236e-07, 2.355328e-17, 2.044244e-12, 3.210415e-11, -1.322741e+16, 5.538184e-14, -4.612046e-05, 4.758939e+15, -2.038208e-10, -2.451148e+18, -2.699711e-19, -2.019804e-09, 5.631634e-13, -2.288031e+05, -3.211488e+12, 7.511869e+13, -3.209453e-09, 3.806128e-18, 4.025006e-14, -1.700945e-10, 4.136280e-13, 4.517870e-04, 2.739233e+11, -3.736057e-03, 2.255379e-20, 3.122584e-16, 3.192660e-18, 4.765755e-09, 2.396494e-13, 1.625326e+02, -3.413821e-18, 3.627586e+10, 8.708108e+07, 2.244241e-09, 3.718827e-02, 1.803394e-18, 4.377806e-04, 1.593155e-04, -2.886859e+19, 2.446955e-06, 4.714172e-07, -1.444181e+14, 5.921228e-22, -3.968436e+05, 2.081487e+08, 4.200042e+18, -1.334353e-20, 1.637913e+12, -7.203262e+03, 3.510359e+09, 5.945107e-08, 2.798793e-07, 1.819020e+17, -1.331690e+02, -2.714485e+18, -2.344350e-18, -1.313232e-20, -6.739364e-22, 1.025007e-02, 1.186976e+07, -1.412268e+09, -6.194861e-18, -4.523625e-03, -4.504270e-06, 2.158726e-21, -8.330465e-17, 4.566938e+11, 6.677905e-05, -2.312717e-13, 5.325983e+16, -1.075392e-04, 1.140532e-13, 2.606136e-11, -2.815243e+16, -3.550714e-16, -1.033372e+05, -1.183041e+03, -7.872171e-21, -4.362058e-07, -3.181126e-07, -2.676671e+18, -2.674920e-15, -3.991169e-16, -4.401799e+07, -2.826847e-10, -2.033266e-20, -5.669789e-11, 3.711339e+05, -1.194584e-17, -3.310173e+10, -1.743331e-15, -2.288755e+15, 8.610375e+06, 4.796813e+07, -1.465344e+07, -4.074823e-12, 2.089962e-21, -4.171761e-18, -4.682371e+18, 4.030447e+08, 4.679856e-07, -2.662732e+15, 2.551805e-21, 2.482089e+05, -2.310281e-10, 3.533837e-08, 1.829437e-07, 3.074466e-06, -2.889997e-12, -4.203806e+01, 1.598374e-21, -1.300526e-05, 2.921093e+14, -8.847920e+14, 3.788583e-04, -4.538453e+19, -2.734893e+07, 1.351281e-04, 1.128593e-01, 3.868545e+13, -1.200438e+18, -2.641822e+10, -4.493835e-16, -6.291094e-13, 2.534337e-08, -4.063653e-03, 3.200675e-02, 2.243642e+08, 5.170843e-08, 8.984841e-14, 2.228243e-01, -6.770559e-09, 3.513375e-16, -2.512038e-14, 3.421696e+04, -4.514522e+01, -1.062799e-20, 2.853168e-19, 8.503515e-21, -1.664790e-03, -2.515606e-18, 1.237958e-21, -8.059224e-20, 4.386086e+00, 5.301466e+17, 4.388106e-12, -3.432129e+00, 2.189230e+18, -1.806446e-02, 3.266789e-18, 3.355664e-13, -1.206966e-21, -4.813560e-02, -1.352049e+18, 1.257234e-07, 2.511470e-09, -2.512775e-01, 3.613773e-10, -9.065202e+16, -1.777852e+18, 1.444606e-01, -2.857379e+00, -1.912993e+00, 3.436817e-09, -1.749039e+14, 2.215154e-18, 3.384923e+18, -4.513038e-09, 4.814904e+05, 3.730911e+15, 1.861706e+12, 3.378290e-03, 2.851468e-06, -1.577518e-04, -4.122504e-12, -2.743002e+03, 8.512568e-02, -1.333039e-09, -4.899609e-17, -1.782085e-11, 2.552482e-02, 4.200193e+10, -4.298147e+03, -1.923210e-10, -1.208889e+01, 4.606772e-21, -3.331241e+10, -3.704566e-16, -3.733178e-20, -4.950049e+16, 3.184384e+15, -4.107375e-06, 1.801875e+09, 9.632951e-16, 7.172728e-10, 2.324621e+07, 2.892586e+15, -1.582511e-17, -4.119044e-13, -1.248361e+09, 1.531907e+08, -1.795628e-19, -1.735919e-17, -4.646689e-07, -2.779304e-11, 8.048984e-10, 3.536087e-02, -6.494880e+18, 2.714073e+06, 3.374557e+18, 3.621468e-06, 2.742652e-07, 2.551176e+03, -4.420578e+18, -4.370624e-08, -4.507765e-11, 4.193746e-20, 1.206645e+13, -3.750231e+03, 4.390893e+08, -9.756466e+11, 3.392778e-06, -3.453465e+01, -1.406102e+11, -3.673526e-15, 1.417082e-03, 1.499926e+16, -4.471032e-17, -2.657920e+16, 4.792261e+09, -3.212735e+17, -3.372737e-05, -4.730048e+01, 3.365478e+07, 2.835695e+13, -3.242022e-07, 3.640288e+11, 1.862055e-08, -4.121250e-19, -3.891100e-02, -4.367058e-15, 1.364067e-17, -4.575429e-12, 3.621347e-07, 1.506864e+11, 3.715065e+18, -1.773352e+08, -3.502359e+07, -2.326890e-04, 2.948814e-17, -2.438988e+14, -2.994787e+04, -3.755515e+12, 2.708013e-13, 3.281046e-01, -3.710727e+12, -8.380304e+14, 1.062737e-05, 2.385939e+16, -4.383210e-20, -3.779417e+03, 3.080324e-03, 3.810188e+16, 3.058415e+00, -2.484879e-21, -1.951684e+01, 6.979033e-10, -3.866994e+06, 4.278936e-19, 9.365131e+10, -3.685205e+01, -2.678752e-16, 2.011434e-19, 1.884072e+08, -1.300910e+04, 2.414058e-09, -4.675979e+11, 3.583361e-19, -4.499438e+18, 1.641999e-21, -2.686795e-10, 6.136688e-20, -3.793690e+16, 4.944562e-20, -3.490443e-03, 3.080547e+02, 2.041413e-06, 2.021979e+03, 2.314233e-06, 1.564131e-01, -8.712542e+17, 7.569081e+16, -1.056907e+17, 2.095024e-14, -2.487621e+17, -3.490381e+19, -6.944641e-01, -2.892354e-08, -3.597351e+12, -1.985424e+06, -2.348859e+09, -1.657051e+01, -3.358823e+14, 3.219974e-16, -4.819092e-13, -2.905178e-11, 8.257664e+04, -4.092466e-15, -3.464711e-13, -3.956400e-14, -2.548275e-08, -8.917872e-21, 7.387291e+13, 2.300996e+16, -4.870764e+18, -9.909380e-03, 1.260429e-08, -3.409396e-12, 1.003848e+02, -4.883178e-02, -3.125474e-14, 1.005294e+11, -4.736012e+09, -1.647544e-09, -3.491431e-03, 4.619061e+07, -4.547601e-09, -3.788900e-02, -2.648380e-17, 4.601877e-16, 1.754357e+13, 4.325616e+12, 1.860822e+03, 4.080727e+15, -4.573470e-14, -1.293538e+16, 2.811449e+05, 4.032351e+06, 4.274005e+04, 3.454035e-21, 4.933014e+09, -3.712562e+08, 3.158678e+06, -1.636782e+11, -2.884298e-18, -3.685740e-17, 1.027472e-07, -3.765173e-12, 2.740894e-17, 2.634880e+02, -4.334010e+00, -3.708285e-14, -3.858731e+16, -3.956687e+13, -4.064064e-12, 2.558646e-05, 4.459143e+03, -9.661948e+03, -1.994335e+16, 1.202714e-17, -3.782707e-17, 9.099692e-04, -1.864561e+09, 3.493877e-08, 4.288188e-01, 1.767126e-14, -6.779451e-22, -1.977471e-09, -3.536454e+06, -7.319495e-04, 2.004028e-16, -3.181521e-17, 3.336202e+14, -2.752423e+07, 3.390953e+01, 4.199625e-15, 2.883232e-12, 3.122912e-06, 7.324619e-19, 3.092709e-02, -2.758364e-15, -2.489492e+12, -1.622009e-08, 2.371204e+06, -1.582081e+08, -6.382371e-17 };
-			r->async_set_d2(AttachRRArrayCopy(d2_a,647),boost::bind(&ServiceTestClient::TestAsync3,this,r,_1));
+			r->async_set_d2(AttachRRArrayCopy(d2_a,647),boost::bind(&ServiceTestClient::TestAsync3,this,r,RR_BOOST_PLACEHOLDERS(_1)));
 		}
 		catch (std::exception&)
 		{
@@ -1492,7 +1492,7 @@ namespace RobotRaconteurTest
 	void ServiceTestClient::TestAsync3(RR_SHARED_PTR<async_testroot> r, RR_SHARED_PTR<RobotRaconteurException> exp)
 	{
 		ASYNC_TEST_CALL(
-		r->async_func1(boost::bind(&ServiceTestClient::TestAsync4,this,r,_1));
+		r->async_func1(boost::bind(&ServiceTestClient::TestAsync4,this,r,RR_BOOST_PLACEHOLDERS(_1)));
 		);
 
 	}
@@ -1500,7 +1500,7 @@ namespace RobotRaconteurTest
 	void ServiceTestClient::TestAsync4(RR_SHARED_PTR<async_testroot> r, RR_SHARED_PTR<RobotRaconteurException> exp)
 	{
 		ASYNC_TEST_CALL(
-		r->async_func3(2,3.45,boost::bind(&ServiceTestClient::TestAsync5, this, r, _1, _2));
+		r->async_func3(2,3.45,boost::bind(&ServiceTestClient::TestAsync5, this, r, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)));
 		);
 	}
 
@@ -1508,7 +1508,7 @@ namespace RobotRaconteurTest
 	{
 		ASYNC_TEST_CALL(
 		if (ret!=5.45) throw std::runtime_error("");
-		r->async_func_errtest(boost::bind(&ServiceTestClient::TestAsync6,this,r,_1));
+		r->async_func_errtest(boost::bind(&ServiceTestClient::TestAsync6,this,r,RR_BOOST_PLACEHOLDERS(_1)));
 		);
 	}
 
@@ -1517,7 +1517,7 @@ namespace RobotRaconteurTest
 		try
 		{
 			if (!exp) throw std::runtime_error("");
-			r->async_get_o1(boost::bind(&ServiceTestClient::TestAsync7,this,r,_1,_2));
+			r->async_get_o1(boost::bind(&ServiceTestClient::TestAsync7,this,r,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));
 
 		}
 		catch (std::exception&)
@@ -1533,7 +1533,7 @@ namespace RobotRaconteurTest
 		o1->get_d1();
 
 		RR_SHARED_PTR<testroot> r1=rr_cast<testroot>(r);
-		r1->get_p1()->AsyncConnect(-1,boost::bind(&ServiceTestClient::TestAsync8,this,r1,_1,_2));
+		r1->get_p1()->AsyncConnect(-1,boost::bind(&ServiceTestClient::TestAsync8,this,r1,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));
 
 		);
 	}
@@ -1543,21 +1543,21 @@ namespace RobotRaconteurTest
 		double d1[]={ 1, 2, 3, 4 };
 		ASYNC_TEST_CALL(
 		
-		e1->AsyncSendPacket(AttachRRArrayCopy(d1,4),boost::bind(&ServiceTestClient::TestAsync9,this,r,e1,_1,_2));
+		e1->AsyncSendPacket(AttachRRArrayCopy(d1,4),boost::bind(&ServiceTestClient::TestAsync9,this,r,e1,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));
 		)
 	}
 
 	void ServiceTestClient::TestAsync9(RR_SHARED_PTR<testroot> r, RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > e1, uint32_t pnum, RR_SHARED_PTR<RobotRaconteurException> exp)
 	{
 		ASYNC_TEST_CALL(
-		e1->AsyncClose(boost::bind(&ServiceTestClient::TestAsync10,this,r,e1,_1));
+		e1->AsyncClose(boost::bind(&ServiceTestClient::TestAsync10,this,r,e1,RR_BOOST_PLACEHOLDERS(_1)));
 		);
 	}
 
 	void ServiceTestClient::TestAsync10(RR_SHARED_PTR<testroot> r, RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > e1, RR_SHARED_PTR<RobotRaconteurException> exp)
 	{
 		ASYNC_TEST_CALL(		
-		r->get_w1()->AsyncConnect(boost::bind(&ServiceTestClient::TestAsync11,this,r,_1,_2))
+		r->get_w1()->AsyncConnect(boost::bind(&ServiceTestClient::TestAsync11,this,r,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)))
 		);
 	}
 
@@ -1566,14 +1566,14 @@ namespace RobotRaconteurTest
 		double d0[]={0.0};
 		ASYNC_TEST_CALL(		
 		w1->SetOutValue(AttachRRArrayCopy(d0,1));
-		w1->AsyncClose(boost::bind(&ServiceTestClient::TestAsync12,this,r,w1,_1));
+		w1->AsyncClose(boost::bind(&ServiceTestClient::TestAsync12,this,r,w1,RR_BOOST_PLACEHOLDERS(_1)));
 		);
 	}
 
 	void ServiceTestClient::TestAsync12(RR_SHARED_PTR<testroot> r, RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<RRArray<double> > > > w1, RR_SHARED_PTR<RobotRaconteurException> exp)
 	{
 		ASYNC_TEST_CALL(
-		RobotRaconteurNode::s()->AsyncRequestObjectLock(r,RobotRaconteurObjectLockFlags_CLIENT_LOCK,boost::bind(&ServiceTestClient::TestAsync13,this,r,_1,_2));
+		RobotRaconteurNode::s()->AsyncRequestObjectLock(r,RobotRaconteurObjectLockFlags_CLIENT_LOCK,boost::bind(&ServiceTestClient::TestAsync13,this,r,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));
 		);
 	}
 
@@ -1582,7 +1582,7 @@ namespace RobotRaconteurTest
 		ASYNC_TEST_CALL(
 			if (!res) throw std::runtime_error("");
 		if (*res!="OK") throw std::runtime_error("");
-		RobotRaconteurNode::s()->AsyncReleaseObjectLock(r,boost::bind(&ServiceTestClient::TestAsync14,this,r,_1,_2));
+		RobotRaconteurNode::s()->AsyncReleaseObjectLock(r,boost::bind(&ServiceTestClient::TestAsync14,this,r,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));
 		);
 	}
 

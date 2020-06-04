@@ -2645,7 +2645,7 @@ namespace RobotRaconteurGen
 			{
 				w2 << boost::replace_last_copy(dforc(GetPropertyDeclaration_async(m.get(), true), fix_name((*e)->Name) + "_stub"), "rr_timeout=RR_TIMEOUT_INFINITE", "rr_timeout") << endl << "{" << endl;
 				w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,\"" << fix_name(m->Name) << "\");" << endl;
-				w2 << "AsyncProcessRequest(m,boost::bind(&" << fix_name((*e)->Name) << "_stub::rrend_get_" << fix_name(m->Name) << ", RobotRaconteur::rr_cast<" << fix_name((*e)->Name) << "_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);" << endl;
+				w2 << "AsyncProcessRequest(m,boost::bind(&" << fix_name((*e)->Name) << "_stub::rrend_get_" << fix_name(m->Name) << ", RobotRaconteur::rr_cast<" << fix_name((*e)->Name) << "_stub>(shared_from_this()),RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),rr_handler ),rr_timeout);" << endl;
 				w2 << "}" << endl;
 				w2 << "void " << fix_name((*e)->Name) << "_stub::rrend_get_" << fix_name(m->Name) << "(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (" << t.cpp_param_type << " ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)" << endl;
 				w2 << "{" << endl;
@@ -2692,7 +2692,7 @@ namespace RobotRaconteurGen
 				w2 << boost::replace_last_copy(dforc(SetPropertyDeclaration_async(m.get(), true), fix_name((*e)->Name) + "_stub"), "rr_timeout=RR_TIMEOUT_INFINITE", "rr_timeout") << endl << "{" << endl;
 				w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,\"" << fix_name(m->Name) << "\");" << endl;
 				w2 << "req->AddElement(" << str_pack_message_element("value", "value", m->Type) << ");" << endl;
-				w2 << "AsyncProcessRequest(req,boost::bind(&" << fix_name((*e)->Name) << "_stub::rrend_set_" << fix_name(m->Name) << ", RobotRaconteur::rr_cast<" << fix_name((*e)->Name) << "_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);" << endl;
+				w2 << "AsyncProcessRequest(req,boost::bind(&" << fix_name((*e)->Name) << "_stub::rrend_set_" << fix_name(m->Name) << ", RobotRaconteur::rr_cast<" << fix_name((*e)->Name) << "_stub>(shared_from_this()),RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),rr_handler ),rr_timeout);" << endl;
 				w2 << "}" << endl;
 				w2 << "void " << fix_name((*e)->Name) << "_stub::rrend_set_" << fix_name(m->Name) << "(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)" << endl;
 				w2 << "{" << endl;
@@ -2727,7 +2727,7 @@ namespace RobotRaconteurGen
 				{
 					w2 << "rr_req->AddElement(" << str_pack_message_element((*ee)->Name, fix_name((*ee)->Name), (*ee)) << ");" << endl;
 				}
-				w2 << "AsyncProcessRequest(rr_req,boost::bind(&" << fix_name((*e)->Name) << "_stub::rrend_" << fix_name(m->Name) << ", RobotRaconteur::rr_cast<" << fix_name((*e)->Name) << "_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);" << endl;
+				w2 << "AsyncProcessRequest(rr_req,boost::bind(&" << fix_name((*e)->Name) << "_stub::rrend_" << fix_name(m->Name) << ", RobotRaconteur::rr_cast<" << fix_name((*e)->Name) << "_stub>(shared_from_this()),RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),rr_handler ),rr_timeout);" << endl;
 
 				w2 << "}" << endl << endl;
 
@@ -2819,7 +2819,7 @@ namespace RobotRaconteurGen
 				{
 					w2 << "rr_req->AddElement(" << str_pack_message_element((*ee)->Name, fix_name((*ee)->Name), (*ee)) << ");" << endl;
 				}
-				w2 << "AsyncProcessRequest(rr_req,boost::bind(&" << fix_name((*e)->Name) << "_stub::rrend_" << fix_name(m->Name) << ", RobotRaconteur::rr_cast<" << fix_name((*e)->Name) << "_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);" << endl;
+				w2 << "AsyncProcessRequest(rr_req,boost::bind(&" << fix_name((*e)->Name) << "_stub::rrend_" << fix_name(m->Name) << ", RobotRaconteur::rr_cast<" << fix_name((*e)->Name) << "_stub>(shared_from_this()),RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),rr_handler ),rr_timeout);" << endl;
 				w2 << "}" << endl << endl;
 
 				w2 << "void " << fix_name((*e)->Name) << "_stub::rrend_" << fix_name(m->Name) << "(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (" << t.generator_cpp_type << " ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)" << endl;
@@ -2859,10 +2859,10 @@ namespace RobotRaconteurGen
 				objecttype="RobotRaconteur::RRObject";
 			
 				OBJREF_ARRAY_CONTAINER_CMD(m, 
-					w2 << "AsyncFindObjRef(\"" << m->Name << "\", boost::bind(&RobotRaconteur::ServiceStub::EndAsyncFindObjRef<" << objecttype << " >,_1,_2,handler) ,timeout);" << endl,
-					w2 << "AsyncFindObjRef(\"" << m->Name << "\", boost::lexical_cast<std::string>(ind), boost::bind(&RobotRaconteur::ServiceStub::EndAsyncFindObjRef<" << objecttype << " >,_1,_2,handler) ,timeout);" << endl,
-					w2 << "AsyncFindObjRef(\"" << m->Name << "\", boost::lexical_cast<std::string>(ind), boost::bind(&RobotRaconteur::ServiceStub::EndAsyncFindObjRef<" << objecttype << " >,_1,_2,handler) ,timeout);" << endl,
-					w2 << "AsyncFindObjRef(\"" << m->Name << "\", ind, boost::bind(&RobotRaconteur::ServiceStub::EndAsyncFindObjRef<" << objecttype << " >,_1,_2,handler) ,timeout);" << endl
+					w2 << "AsyncFindObjRef(\"" << m->Name << "\", boost::bind(&RobotRaconteur::ServiceStub::EndAsyncFindObjRef<" << objecttype << " >,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),handler) ,timeout);" << endl,
+					w2 << "AsyncFindObjRef(\"" << m->Name << "\", boost::lexical_cast<std::string>(ind), boost::bind(&RobotRaconteur::ServiceStub::EndAsyncFindObjRef<" << objecttype << " >,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),handler) ,timeout);" << endl,
+					w2 << "AsyncFindObjRef(\"" << m->Name << "\", boost::lexical_cast<std::string>(ind), boost::bind(&RobotRaconteur::ServiceStub::EndAsyncFindObjRef<" << objecttype << " >,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),handler) ,timeout);" << endl,
+					w2 << "AsyncFindObjRef(\"" << m->Name << "\", ind, boost::bind(&RobotRaconteur::ServiceStub::EndAsyncFindObjRef<" << objecttype << " >,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),handler) ,timeout);" << endl
 					)				
 			}
 			else
@@ -2879,10 +2879,10 @@ namespace RobotRaconteurGen
 				}								
 
 				OBJREF_ARRAY_CONTAINER_CMD(m,
-					w2 << "AsyncFindObjRefTyped(\"" << m->Name << "\", \"" << objecttype2 << "\", boost::bind(&RobotRaconteur::ServiceStub::EndAsyncFindObjRef<" << objecttype << " >,_1,_2,handler) ,timeout);" << endl,
-					w2 << "AsyncFindObjRefTyped(\"" << m->Name << "\", boost::lexical_cast<std::string>(ind),\"" << objecttype2 << "\", boost::bind(&RobotRaconteur::ServiceStub::EndAsyncFindObjRef<" << objecttype << " >,_1,_2,handler) ,timeout);" << endl,
-					w2 << "AsyncFindObjRefTyped(\"" << m->Name << "\", boost::lexical_cast<std::string>(ind),\"" << objecttype2 << "\", boost::bind(&RobotRaconteur::ServiceStub::EndAsyncFindObjRef<" << objecttype << " >,_1,_2,handler) ,timeout);" << endl,
-					w2 << "AsyncFindObjRefTyped(\"" << m->Name << "\", ind, \"" << objecttype2 << "\", boost::bind(&RobotRaconteur::ServiceStub::EndAsyncFindObjRef<" << objecttype << " >,_1,_2,handler) ,timeout);" << endl
+					w2 << "AsyncFindObjRefTyped(\"" << m->Name << "\", \"" << objecttype2 << "\", boost::bind(&RobotRaconteur::ServiceStub::EndAsyncFindObjRef<" << objecttype << " >,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),handler) ,timeout);" << endl,
+					w2 << "AsyncFindObjRefTyped(\"" << m->Name << "\", boost::lexical_cast<std::string>(ind),\"" << objecttype2 << "\", boost::bind(&RobotRaconteur::ServiceStub::EndAsyncFindObjRef<" << objecttype << " >,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),handler) ,timeout);" << endl,
+					w2 << "AsyncFindObjRefTyped(\"" << m->Name << "\", boost::lexical_cast<std::string>(ind),\"" << objecttype2 << "\", boost::bind(&RobotRaconteur::ServiceStub::EndAsyncFindObjRef<" << objecttype << " >,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),handler) ,timeout);" << endl,
+					w2 << "AsyncFindObjRefTyped(\"" << m->Name << "\", ind, \"" << objecttype2 << "\", boost::bind(&RobotRaconteur::ServiceStub::EndAsyncFindObjRef<" << objecttype << " >,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),handler) ,timeout);" << endl
 					)				
 			}
 			w2 << "}" << endl << endl;
@@ -2940,7 +2940,7 @@ namespace RobotRaconteurGen
 			{
 				w2 << "if (async_obj)" << endl << "{" << endl;
 				w2 << "RR_WEAK_PTR<" << boost::replace_all_copy(fix_name(d->Name), ".", "::") << "::" << fix_name((*e)->Name) << "_skel> wp=RobotRaconteur::rr_cast<" << boost::replace_all_copy(fix_name(d->Name), ".", "::") << "::" << fix_name((*e)->Name) << "_skel>(shared_from_this());" << endl;
-				w2 << "async_obj->async_get_" << fix_name(m->Name) << "(boost::bind(&" << boost::replace_all_copy(fix_name(d->Name), ".", "::") << "::" << fix_name((*e)->Name) << "_skel::rr_get_" << fix_name(m->Name) << ",wp,_1,_2,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));" << endl;
+				w2 << "async_obj->async_get_" << fix_name(m->Name) << "(boost::bind(&" << boost::replace_all_copy(fix_name(d->Name), ".", "::") << "::" << fix_name((*e)->Name) << "_skel::rr_get_" << fix_name(m->Name) << ",wp,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));" << endl;
 				w2 << "return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();" << endl;
 				w2 << "}" << endl;
 				w2 << "else" << endl;
@@ -2969,7 +2969,7 @@ namespace RobotRaconteurGen
 				w2 << get_variable_type(*m->Type, true).cpp_type << " value=" << str_unpack_message_element("m->FindElement(\"value\")", m->Type) << ";" << endl;
 				w2 << "if (async_obj)" << endl << "{" << endl;
 				w2 << "RR_WEAK_PTR<" << boost::replace_all_copy(fix_name(d->Name), ".", "::") << "::" << fix_name((*e)->Name) << "_skel> wp=RobotRaconteur::rr_cast<" << boost::replace_all_copy(fix_name(d->Name), ".", "::") << "::" << fix_name((*e)->Name) << "_skel>(shared_from_this());" << endl;
-				w2 << "async_obj->async_set_" << fix_name(m->Name) << "(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,_1,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));" << endl;
+				w2 << "async_obj->async_set_" << fix_name(m->Name) << "(value,boost::bind(&RobotRaconteur::ServiceSkel::EndAsyncCallSetProperty,wp,RR_BOOST_PLACEHOLDERS(_1),m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));" << endl;
 				w2 << "return RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>();" << endl;
 				w2 << "}" << endl;
 				w2 << "else" << endl;
@@ -3034,12 +3034,12 @@ namespace RobotRaconteurGen
 
 				if (m->ReturnType->Type == DataTypes_void_t)
 				{
-					v1.push_back("boost::bind(&" + boost::replace_all_copy(fix_name(d->Name), ".", "::") + "::" + fix_name((*e)->Name) + "_skel::rr_" + fix_name(m->Name) + ",rr_wp, _1, rr_m, RobotRaconteur::ServerEndpoint::GetCurrentEndpoint())");
+					v1.push_back("boost::bind(&" + boost::replace_all_copy(fix_name(d->Name), ".", "::") + "::" + fix_name((*e)->Name) + "_skel::rr_" + fix_name(m->Name) + ",rr_wp, RR_BOOST_PLACEHOLDERS(_1), rr_m, RobotRaconteur::ServerEndpoint::GetCurrentEndpoint())");
 
 				}
 				else
 				{
-					v1.push_back("boost::bind(&" + boost::replace_all_copy(fix_name(d->Name), ".", "::") + "::" + fix_name((*e)->Name) + "_skel::rr_" + fix_name(m->Name) + ", rr_wp, _1, _2, rr_m, RobotRaconteur::ServerEndpoint::GetCurrentEndpoint())");
+					v1.push_back("boost::bind(&" + boost::replace_all_copy(fix_name(d->Name), ".", "::") + "::" + fix_name((*e)->Name) + "_skel::rr_" + fix_name(m->Name) + ", rr_wp, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), rr_m, RobotRaconteur::ServerEndpoint::GetCurrentEndpoint())");
 				}
 
 				w2 << "if (async_obj)" << endl << "{" << endl;
@@ -3077,12 +3077,12 @@ namespace RobotRaconteurGen
 
 				/*if (m->ReturnType->Type == DataTypes_void_t)
 				{
-					v1.push_back("boost::bind(&" + boost::replace_all_copy(fix_name(d->Name), ".", "::") + "::" + fix_name((*e)->Name) + "_skel::rr_" + fix_name(m->Name) + ",rr_wp, _1, rr_m, RobotRaconteur::ServerEndpoint::GetCurrentEndpoint())");
+					v1.push_back("boost::bind(&" + boost::replace_all_copy(fix_name(d->Name), ".", "::") + "::" + fix_name((*e)->Name) + "_skel::rr_" + fix_name(m->Name) + ",rr_wp, RR_BOOST_PLACEHOLDERS(_1), rr_m, RobotRaconteur::ServerEndpoint::GetCurrentEndpoint())");
 
 				}
 				else
 				{
-					v1.push_back("boost::bind(&" + boost::replace_all_copy(fix_name(d->Name), ".", "::") + "::" + fix_name((*e)->Name) + "_skel::rr_" + fix_name(m->Name) + ", rr_wp, _1, _2, rr_m, RobotRaconteur::ServerEndpoint::GetCurrentEndpoint())");
+					v1.push_back("boost::bind(&" + boost::replace_all_copy(fix_name(d->Name), ".", "::") + "::" + fix_name((*e)->Name) + "_skel::rr_" + fix_name(m->Name) + ", rr_wp, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), rr_m, RobotRaconteur::ServerEndpoint::GetCurrentEndpoint())");
 				}
 
 				w2 << "if (async_obj)" << endl << "{" << endl;
@@ -3208,7 +3208,7 @@ namespace RobotRaconteurGen
 			p.push_back("RobotRaconteur::rr_cast<" + fix_name((*e)->Name) + "_skel>(shared_from_this())");
 			for (size_t i=0; i<m->Parameters .size(); i++)
 			{
-				p.push_back("_" + boost::lexical_cast<string>(i+1));
+				p.push_back("RR_BOOST_PLACEHOLDERS(_" + boost::lexical_cast<string>(i+1) + ")");
 			}
 
 			w2 << m->Name << "_rrconnection=obj->get_" << fix_name(m->Name) << "().connect(boost::bind("<< boost::join(p,", ") <<"));" << endl;
@@ -3379,7 +3379,7 @@ namespace RobotRaconteurGen
 			p.push_back("endpoint");
 			for (size_t i=0; i<m->Parameters .size(); i++)
 			{
-				p.push_back("_" + boost::lexical_cast<string>(i+1));
+				p.push_back("RR_BOOST_PLACEHOLDERS(_" + boost::lexical_cast<string>(i+1) + ")");
 			}
 			w2 << "return RR_MAKE_SHARED<" << GetCallbackDeclaration(m.get(),true,true) << " >(boost::bind(" << boost::join(p,", ") << "));" << endl;
 			w2 << "}" << endl;

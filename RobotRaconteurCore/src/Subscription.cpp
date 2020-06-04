@@ -712,9 +712,9 @@ namespace RobotRaconteur
 						<< info.NodeID.ToString());
 					RR_WEAK_PTR<ServiceSubscription> weak_this = shared_from_this();
 					n->AsyncConnectService(urls, c2->username, c2->credentials,
-						boost::bind(&ServiceSubscription::ClientEvent, weak_this ,_1, _2, _3, c2),
+						boost::bind(&ServiceSubscription::ClientEvent, weak_this ,RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), RR_BOOST_PLACEHOLDERS(_3), c2),
 						client_service_type,
-						boost::bind(&ServiceSubscription::ClientConnected, shared_from_this(), _1, _2, c2),
+						boost::bind(&ServiceSubscription::ClientConnected, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), c2),
 						n->GetRequestTimeout() * 2);
 					clients.insert(std::make_pair(ServiceSubscriptionClientID(c2->nodeid, c2->service_name), c2));
 					continue;
@@ -859,9 +859,9 @@ namespace RobotRaconteur
 						<< c2->nodeid.ToString());
 			RR_WEAK_PTR<ServiceSubscription> weak_this = shared_from_this();
 			n->AsyncConnectService(c2->urls, c2->username, c2->credentials,
-				boost::bind(&ServiceSubscription::ClientEvent, weak_this, _1, _2, _3, c2),
+				boost::bind(&ServiceSubscription::ClientEvent, weak_this, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), RR_BOOST_PLACEHOLDERS(_3), c2),
 				c2->service_type,
-				boost::bind(&ServiceSubscription::ClientConnected, shared_from_this(), _1, _2, c2),
+				boost::bind(&ServiceSubscription::ClientConnected, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), c2),
 				n->GetRequestTimeout() * 2);
 			return;
 		}
@@ -1192,7 +1192,7 @@ namespace RobotRaconteur
 			if (!stub) return;
 
 			RR_SHARED_PTR<WireClientBase> wire_client=stub->RRGetWireClient(membername);
-			wire_client->AsyncConnect_internal(boost::bind(&WireSubscriptionBase::ClientConnected1, shared_from_this(), client, _1, _2), n->GetRequestTimeout());
+			wire_client->AsyncConnect_internal(boost::bind(&WireSubscriptionBase::ClientConnected1, shared_from_this(), client, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)), n->GetRequestTimeout());
 
 		}
 		catch (std::exception& exp) {
@@ -1552,7 +1552,7 @@ namespace RobotRaconteur
 			if (!stub) return;
 
 			RR_SHARED_PTR<PipeClientBase> pipe_client = stub->RRGetPipeClient(membername);
-			pipe_client->AsyncConnect_internal(-1, boost::bind(&PipeSubscriptionBase::ClientConnected1, shared_from_this(), client, _1, _2),n->GetRequestTimeout());
+			pipe_client->AsyncConnect_internal(-1, boost::bind(&PipeSubscriptionBase::ClientConnected1, shared_from_this(), client, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)),n->GetRequestTimeout());
 
 		}
 		catch (std::exception& exp) {
@@ -1720,12 +1720,12 @@ namespace RobotRaconteur
 			active_sends.push_back(send_key);
 			if (!send_copy_element.data())
 			{
-				ep->AsyncSendPacketBase(packet, boost::bind(&PipeSubscription_connection::pipe_packet_send_handler, this->shared_from_this(), _1, _2, send_key));
+				ep->AsyncSendPacketBase(packet, boost::bind(&PipeSubscription_connection::pipe_packet_send_handler, this->shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), send_key));
 			}
 			else
 			{
 				RR_INTRUSIVE_PTR<MessageElement> packet2 = ShallowCopyMessageElement(rr_cast<MessageElement>(packet));
-				ep->AsyncSendPacketBase(packet2, boost::bind(&PipeSubscription_connection::pipe_packet_send_handler, this->shared_from_this(), _1, _2, send_key));
+				ep->AsyncSendPacketBase(packet2, boost::bind(&PipeSubscription_connection::pipe_packet_send_handler, this->shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), send_key));
 			}
 		}
 

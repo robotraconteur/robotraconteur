@@ -283,7 +283,7 @@ public:
 			connecting = false;
 
 			c = RR_MAKE_SHARED<HardwareTransportConnection_bluetooth>(parent, false, endpoint);
-			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(handler, c, _1);
+			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(handler, c, RR_BOOST_PLACEHOLDERS(_1));
 			c->AsyncAttachSocket(sock, noden, h);
 			parent->AddCloseListener(c, &HardwareTransportConnection_bluetooth::Close);
 		}

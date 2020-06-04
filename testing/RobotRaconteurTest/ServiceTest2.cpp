@@ -63,7 +63,7 @@ namespace RobotRaconteurTest
 	{
 		testroot3_default_impl::set_peekwire(value);
 				
-		peekwire_timer = RobotRaconteurNode::s()->CreateTimer(boost::posix_time::milliseconds(100), boost::bind(&testroot3_impl::peekwire_timer_handler, shared_from_this(), _1));
+		peekwire_timer = RobotRaconteurNode::s()->CreateTimer(boost::posix_time::milliseconds(100), boost::bind(&testroot3_impl::peekwire_timer_handler, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1)));
 		peekwire_timer->Start();
 		rrvar_peekwire->SetOutValue(56295674);
 	}

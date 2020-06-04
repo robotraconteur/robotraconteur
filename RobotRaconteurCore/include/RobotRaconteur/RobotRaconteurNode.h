@@ -39,6 +39,7 @@
 #include "RobotRaconteur/Tap.h"
 
 #include <queue>
+#include <boost/bind/placeholders.hpp>
 #include <boost/asio.hpp>
 #include <boost/unordered_map.hpp>
 #include <boost/function.hpp>

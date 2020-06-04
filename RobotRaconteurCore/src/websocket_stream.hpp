@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <boost/thread.hpp>
+#include <boost/bind/placeholders.hpp>
 #include <boost/asio.hpp>
 #include <boost/shared_array.hpp>
 #include <boost/bind/protect.hpp>
@@ -1472,7 +1473,7 @@ protected:
 
 			//TODO: use more than first buffer
 			boost::shared_ptr<handler_wrapper<Handler> > handler2 = boost::make_shared<handler_wrapper<Handler> >(boost::ref(handler));
-			async_read_some2(boost::asio::detail::buffer_sequence_adapter<boost::asio::mutable_buffer, MutableBufferSequence >::first(buffers), boost::bind(&handler_wrapper<Handler>::do_complete, handler2, _1, _2));
+			async_read_some2(boost::asio::detail::buffer_sequence_adapter<boost::asio::mutable_buffer, MutableBufferSequence >::first(buffers), boost::bind(&handler_wrapper<Handler>::do_complete, handler2, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)));
 		}
 
 		template <typename Handler>
@@ -1498,12 +1499,12 @@ protected:
 				async_write_message(WebSocketOpcode_pong, send_b, boost::bind(&websocket_stream::async_write_message4, this,
 					boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred, ping_data2, ping_data_len2, 0,
 					boost::asio::detail::buffer_sequence_adapter<boost::asio::const_buffer, const_buffers >::first(buffers),
-					boost::protect(boost::bind(&handler_wrapper<Handler>::do_complete, handler2, _1, _2))));
+					boost::protect(boost::bind(&handler_wrapper<Handler>::do_complete, handler2, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)))));
 			}
 			else
 			{
 				//TODO: use more than first buffer
-				async_write_message(DataFrameType, buffers, boost::bind(&handler_wrapper<Handler>::do_complete, handler2, _1, _2));
+				async_write_message(DataFrameType, buffers, boost::bind(&handler_wrapper<Handler>::do_complete, handler2, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)));
 			}
 		}
 

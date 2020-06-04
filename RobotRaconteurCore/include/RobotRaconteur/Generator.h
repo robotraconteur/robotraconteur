@@ -156,7 +156,7 @@ namespace RobotRaconteur
 		virtual void AsyncNext(const Param& v, boost::function<void(Return, RR_SHARED_PTR<RobotRaconteurException>)> handler, int32_t timeout = RR_TIMEOUT_INFINITE)
 		{
 			RR_INTRUSIVE_PTR<MessageElement> v1 = CreateMessageElement("",GetStub()->RRGetNode()->template PackAnyType<typename RRPrimUtil<Param>::BoxedType>(RRPrimUtil<Param>::PrePack(v)));
-			AsyncNextBase(v1, boost::bind<void>(&detail::GeneratorClient_AsyncNext1<Return>, _1, _2, _3, handler),timeout);
+			AsyncNextBase(v1, boost::bind<void>(&detail::GeneratorClient_AsyncNext1<Return>, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), RR_BOOST_PLACEHOLDERS(_3), handler),timeout);
 		}		
 		virtual void Abort()
 		{
@@ -192,7 +192,7 @@ namespace RobotRaconteur
 		}
 		virtual void AsyncNext(boost::function<void(Return, RR_SHARED_PTR<RobotRaconteurException>)> handler, int32_t timeout = RR_TIMEOUT_INFINITE)
 		{			
-			AsyncNextBase(RR_INTRUSIVE_PTR<MessageElement>(), boost::bind<void>(&detail::GeneratorClient_AsyncNext1<Return>, _1, _2, _3, handler), timeout);
+			AsyncNextBase(RR_INTRUSIVE_PTR<MessageElement>(), boost::bind<void>(&detail::GeneratorClient_AsyncNext1<Return>, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), RR_BOOST_PLACEHOLDERS(_3), handler), timeout);
 		}		
 		virtual void Abort()
 		{
@@ -229,7 +229,7 @@ namespace RobotRaconteur
 		virtual void AsyncNext(const Param& v, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> handler, int32_t timeout = RR_TIMEOUT_INFINITE)
 		{
 			RR_INTRUSIVE_PTR<MessageElement> v1 = CreateMessageElement("", GetStub()->RRGetNode()->template PackAnyType<typename RRPrimUtil<Param>::BoxedType>(RRPrimUtil<Param>::PrePack(v)));
-			AsyncNextBase(v1, boost::bind<void>(&detail::GeneratorClient_AsyncNext2, _1, _2, _3, handler), timeout);
+			AsyncNextBase(v1, boost::bind<void>(&detail::GeneratorClient_AsyncNext2, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), RR_BOOST_PLACEHOLDERS(_3), handler), timeout);
 		}
 		virtual void Abort()
 		{
@@ -346,18 +346,18 @@ namespace RobotRaconteur
 			{
 				if (m->Error == MessageErrorType_StopIteration)
 				{
-					generator->AsyncClose(boost::bind<void>(&GeneratorServerBase::CallNext1<int32_t>, 0, _1, index, skel, m, ep));
+					generator->AsyncClose(boost::bind<void>(&GeneratorServerBase::CallNext1<int32_t>, 0, RR_BOOST_PLACEHOLDERS(_1), index, skel, m, ep));
 				}
 				else
 				{
-					generator->AsyncAbort(boost::bind<void>(&GeneratorServerBase::CallNext1<int32_t>, 0, _1, index, skel, m, ep));
+					generator->AsyncAbort(boost::bind<void>(&GeneratorServerBase::CallNext1<int32_t>, 0, RR_BOOST_PLACEHOLDERS(_1), index, skel, m, ep));
 				}
 				
 			}
 			else
 			{
 				Param v = RRPrimUtil<Param>::PreUnpack(skel1->RRGetNode()->template UnpackAnyType<typename RRPrimUtil<Param>::BoxedType>(m->FindElement("parameter")));
-				generator->AsyncNext(v, boost::bind<void>(&GeneratorServerBase::CallNext1<Return>, _1, _2, index, skel, m, ep));
+				generator->AsyncNext(v, boost::bind<void>(&GeneratorServerBase::CallNext1<Return>, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), index, skel, m, ep));
 			}
 		}
 
@@ -391,16 +391,16 @@ namespace RobotRaconteur
 			{
 				if (m->Error == MessageErrorType_StopIteration)
 				{
-					generator->AsyncClose(boost::bind<void>(&GeneratorServerBase::CallNext1<int32_t>, 0, _1, index, skel, m, ep));
+					generator->AsyncClose(boost::bind<void>(&GeneratorServerBase::CallNext1<int32_t>, 0, RR_BOOST_PLACEHOLDERS(_1), index, skel, m, ep));
 				}
 				else
 				{
-					generator->AsyncAbort(boost::bind<void>(&GeneratorServerBase::CallNext1<int32_t>, 0, _1, index, skel, m, ep));
+					generator->AsyncAbort(boost::bind<void>(&GeneratorServerBase::CallNext1<int32_t>, 0, RR_BOOST_PLACEHOLDERS(_1), index, skel, m, ep));
 				}
 			}
 			else
 			{				
-				generator->AsyncNext(boost::bind<void>(&GeneratorServerBase::CallNext1<Return>, _1, _2, index, skel, m, ep));
+				generator->AsyncNext(boost::bind<void>(&GeneratorServerBase::CallNext1<Return>, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), index, skel, m, ep));
 			}
 		}
 		virtual ~GeneratorServer() {}
@@ -433,17 +433,17 @@ namespace RobotRaconteur
 			{
 				if (m->Error == MessageErrorType_StopIteration)
 				{
-					generator->AsyncClose(boost::bind<void>(&GeneratorServerBase::CallNext1<int32_t>, 0, _1, index, skel, m, ep));
+					generator->AsyncClose(boost::bind<void>(&GeneratorServerBase::CallNext1<int32_t>, 0, RR_BOOST_PLACEHOLDERS(_1), index, skel, m, ep));
 				}
 				else
 				{
-					generator->AsyncAbort(boost::bind<void>(&GeneratorServerBase::CallNext1<int32_t>, 0, _1, index, skel, m, ep));
+					generator->AsyncAbort(boost::bind<void>(&GeneratorServerBase::CallNext1<int32_t>, 0, RR_BOOST_PLACEHOLDERS(_1), index, skel, m, ep));
 				}
 			}
 			else
 			{
 				Param v = RRPrimUtil<Param>::PreUnpack(skel1->RRGetNode()->template UnpackAnyType<typename RRPrimUtil<Param>::BoxedType>(m->FindElement("parameter")));
-				generator->AsyncNext(v, boost::bind<void>(&GeneratorServerBase::CallNext2, _1, index, skel, m, ep));
+				generator->AsyncNext(v, boost::bind<void>(&GeneratorServerBase::CallNext2, RR_BOOST_PLACEHOLDERS(_1), index, skel, m, ep));
 			}
 		}
 		virtual ~GeneratorServer() {}

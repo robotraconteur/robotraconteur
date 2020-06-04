@@ -21,6 +21,7 @@
  * limitations under the License.
  */
 
+#include <boost/bind/placeholders.hpp>
 #include <boost/asio.hpp>
 #include "RobotRaconteur/DataTypes.h"
 

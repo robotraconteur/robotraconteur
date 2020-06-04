@@ -520,7 +520,7 @@ void HardwareTransport_linux_discovery::NetlinkMessageReceived(const boost::syst
 
 				if(l[1] == "usb")
 				{
-					GetUsbDevices(boost::bind(&HardwareTransport_linux_discovery::OnDeviceChanged, RR_STATIC_POINTER_CAST<HardwareTransport_linux_discovery>(shared_from_this()), _1));
+					GetUsbDevices(boost::bind(&HardwareTransport_linux_discovery::OnDeviceChanged, RR_STATIC_POINTER_CAST<HardwareTransport_linux_discovery>(shared_from_this()), RR_BOOST_PLACEHOLDERS(_1)));
 					return;
 				}
 

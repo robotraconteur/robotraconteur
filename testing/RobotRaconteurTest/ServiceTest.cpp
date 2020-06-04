@@ -1108,13 +1108,13 @@ RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<doub
 void RobotRaconteurTest_testroot::set_p1(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > > > value)
 {
 	p1=value;
-	p1->SetPipeConnectCallback(boost::bind(&RobotRaconteurTest_testroot::p1_connect_callback,this,_1));
+	p1->SetPipeConnectCallback(boost::bind(&RobotRaconteurTest_testroot::p1_connect_callback,this,RR_BOOST_PLACEHOLDERS(_1)));
 }
 
 void RobotRaconteurTest_testroot::p1_connect_callback(RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > p)
 {
-	p->PacketReceivedEvent.connect(boost::bind(&RobotRaconteurTest_testroot::p1_packet_received,this,_1));
-	p->PacketAckReceivedEvent.connect(boost::bind(&RobotRaconteurTest_testroot::p1_packet_ack_received,this,_1,_2));
+	p->PacketReceivedEvent.connect(boost::bind(&RobotRaconteurTest_testroot::p1_packet_received,this,RR_BOOST_PLACEHOLDERS(_1)));
+	p->PacketAckReceivedEvent.connect(boost::bind(&RobotRaconteurTest_testroot::p1_packet_ack_received,this,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));
 	
 	p->SetRequestPacketAck(true);
 
@@ -1159,12 +1159,12 @@ RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<teststruct2> > > RobotRacont
 void RobotRaconteurTest_testroot::set_p2(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<teststruct2> > > value)
 {
 	p2=value;
-	p2->SetPipeConnectCallback(boost::bind(&RobotRaconteurTest_testroot::p2_connect_callback,this,_1));
+	p2->SetPipeConnectCallback(boost::bind(&RobotRaconteurTest_testroot::p2_connect_callback,this,RR_BOOST_PLACEHOLDERS(_1)));
 }
 
 void RobotRaconteurTest_testroot::p2_connect_callback(RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<teststruct2> > > p)
 {
-	p->PacketReceivedEvent.connect(boost::bind(&RobotRaconteurTest_testroot::p2_packet_received,this,_1));
+	p->PacketReceivedEvent.connect(boost::bind(&RobotRaconteurTest_testroot::p2_packet_received,this,RR_BOOST_PLACEHOLDERS(_1)));
 }
 
 void RobotRaconteurTest_testroot::p2_packet_received(RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<teststruct2> > > p)
@@ -1207,7 +1207,7 @@ void RobotRaconteurTest_testroot::set_broadcastpipe(RR_SHARED_PTR<RobotRaconteur
 	broadcastpipe->Init(value,3);
 		
 	RR_WEAK_PTR<RobotRaconteurTest_testroot> w=shared_from_this();
-	broadcastpipe_timer=RobotRaconteurNode::s()->CreateTimer(boost::posix_time::milliseconds(100),boost::bind(&RobotRaconteurTest_testroot::broadcastpipe_timer_handler,w,_1));
+	broadcastpipe_timer=RobotRaconteurNode::s()->CreateTimer(boost::posix_time::milliseconds(100),boost::bind(&RobotRaconteurTest_testroot::broadcastpipe_timer_handler,w,RR_BOOST_PLACEHOLDERS(_1)));
 	broadcastpipe_timer->Start();
 }
 
@@ -1304,12 +1304,12 @@ RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<doub
 void RobotRaconteurTest_testroot::set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > > > value)
 {
 	w1=value;
-	w1->SetWireConnectCallback(boost::bind(&RobotRaconteurTest_testroot::w1_connect_callback,this,_1));
+	w1->SetWireConnectCallback(boost::bind(&RobotRaconteurTest_testroot::w1_connect_callback,this,RR_BOOST_PLACEHOLDERS(_1)));
 }
 
 void RobotRaconteurTest_testroot::w1_connect_callback(RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<RRArray<double> > > > wire)
 {
-	wire->WireValueChanged.connect(boost::bind(&RobotRaconteurTest_testroot::w1_value_changed,this,_1,_2,_3));
+	wire->WireValueChanged.connect(boost::bind(&RobotRaconteurTest_testroot::w1_value_changed,this,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),RR_BOOST_PLACEHOLDERS(_3)));
 }
 
 void RobotRaconteurTest_testroot::w1_value_changed(RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<RRArray<double> > > > wire, RR_INTRUSIVE_PTR<RRArray<double> > value, TimeSpec time)
@@ -1329,12 +1329,12 @@ RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<teststruct2> > > RobotRacont
 void RobotRaconteurTest_testroot::set_w2(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<teststruct2> > > value)
 {
 	w2=value;
-	w2->SetWireConnectCallback(boost::bind(&RobotRaconteurTest_testroot::w2_connect_callback,this,_1));
+	w2->SetWireConnectCallback(boost::bind(&RobotRaconteurTest_testroot::w2_connect_callback,this,RR_BOOST_PLACEHOLDERS(_1)));
 }
 
 void RobotRaconteurTest_testroot::w2_connect_callback(RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<teststruct2> > > wire)
 {
-	wire->WireValueChanged.connect(boost::bind(&RobotRaconteurTest_testroot::w2_value_changed,this,_1,_2,_3));
+	wire->WireValueChanged.connect(boost::bind(&RobotRaconteurTest_testroot::w2_value_changed,this,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),RR_BOOST_PLACEHOLDERS(_3)));
 }
 
 void RobotRaconteurTest_testroot::w2_value_changed(RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<teststruct2> > > wire, RR_INTRUSIVE_PTR<teststruct2> value, TimeSpec time)
@@ -1354,12 +1354,12 @@ RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimAr
 void RobotRaconteurTest_testroot::set_w3(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t> > > > value)
 {
 	w3=value;
-	w3->SetWireConnectCallback(boost::bind(&RobotRaconteurTest_testroot::w3_connect_callback,this,_1));
+	w3->SetWireConnectCallback(boost::bind(&RobotRaconteurTest_testroot::w3_connect_callback,this,RR_BOOST_PLACEHOLDERS(_1)));
 }
 
 void RobotRaconteurTest_testroot::w3_connect_callback(RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<RRMultiDimArray<int32_t> > > > wire)
 {
-	wire->WireValueChanged.connect(boost::bind(&RobotRaconteurTest_testroot::w3_value_changed,this,_1,_2,_3));
+	wire->WireValueChanged.connect(boost::bind(&RobotRaconteurTest_testroot::w3_value_changed,this,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),RR_BOOST_PLACEHOLDERS(_3)));
 }
 
 void RobotRaconteurTest_testroot::w3_value_changed(RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<RRMultiDimArray<int32_t> > > > wire, RR_INTRUSIVE_PTR<RRMultiDimArray<int32_t> > value, TimeSpec time)
@@ -1386,7 +1386,7 @@ void RobotRaconteurTest_testroot::set_broadcastwire(RR_SHARED_PTR<RobotRaconteur
 	broadcastwire->Init(value);
 		
 	RR_WEAK_PTR<RobotRaconteurTest_testroot> w=shared_from_this();
-	broadcastwire_timer=RobotRaconteurNode::s()->CreateTimer(boost::posix_time::milliseconds(100),boost::bind(&RobotRaconteurTest_testroot::broadcastwire_timer_handler,w,_1));
+	broadcastwire_timer=RobotRaconteurNode::s()->CreateTimer(boost::posix_time::milliseconds(100),boost::bind(&RobotRaconteurTest_testroot::broadcastwire_timer_handler,w,RR_BOOST_PLACEHOLDERS(_1)));
 	broadcastwire_timer->Start();
 }
 

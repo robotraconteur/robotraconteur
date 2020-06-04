@@ -31,6 +31,7 @@
 
 #include <string>
 #include <vector>
+#include <boost/bind/placeholders.hpp>
 #include <boost/bind.hpp>
 #include <boost/thread.hpp>
 #include <boost/enable_shared_from_this.hpp>
@@ -151,7 +152,7 @@ namespace detail
 			//TODO: use more than just first buffer
 			mutable_buffers b;
 			b.push_back(boost::asio::detail::buffer_sequence_adapter<boost::asio::mutable_buffer, MutableBufferSequence >::first(buffers));
-			next_layer_.async_read_some(b, boost::bind(&handler_wrapper<Handler>::do_complete, handler2, _1, _2));
+			next_layer_.async_read_some(b, boost::bind(&handler_wrapper<Handler>::do_complete, handler2, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)));
 			return;			
 		}
 
@@ -163,7 +164,7 @@ namespace detail
 			//TODO: use more than just first buffer
 			const_buffers b;
 			b.push_back(boost::asio::detail::buffer_sequence_adapter<boost::asio::const_buffer, ConstBufferSequence >::first(buffers));
-			next_layer_.async_write_some(b, boost::bind(&handler_wrapper<Handler>::do_complete, handler2, _1, _2));
+			next_layer_.async_write_some(b, boost::bind(&handler_wrapper<Handler>::do_complete, handler2, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)));
 			return;
 		}
 

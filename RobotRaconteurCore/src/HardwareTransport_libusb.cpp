@@ -290,7 +290,7 @@ static UsbDeviceStatus LibUsbDevice_open_device(RR_SHARED_PTR<LibUsbDeviceManage
 
 	RR_WEAK_PTR<LibUsbDeviceManager> m1=m;
 
-	RR_SHARED_PTR<libusb_device_handle> dev_h1(dev_h, boost::bind(&LibUsbDeviceManager::LibUsbCloseDevice, m1, f, _1));
+	RR_SHARED_PTR<libusb_device_handle> dev_h1(dev_h, boost::bind(&LibUsbDeviceManager::LibUsbCloseDevice, m1, f, RR_BOOST_PLACEHOLDERS(_1)));
 
 	device_handle=dev_h1;
 	return Open;
@@ -317,7 +317,7 @@ bool LibUsbDeviceManager::InitUpdateDevices()
 			return false;
 		}
 
-		context.reset(c, boost::bind(&LibUsb_Functions_libusb_exit, f, _1));
+		context.reset(c, boost::bind(&LibUsb_Functions_libusb_exit, f, RR_BOOST_PLACEHOLDERS(_1)));
 
 		f->libusb_hotplug_register_callback(context.get(), static_cast<libusb_hotplug_event>(LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED |
 				LIBUSB_HOTPLUG_EVENT_DEVICE_LEFT), static_cast<libusb_hotplug_flag>(0), LIBUSB_HOTPLUG_MATCH_ANY, LIBUSB_HOTPLUG_MATCH_ANY,
@@ -439,7 +439,7 @@ std::list<UsbDeviceManager_detected_device> LibUsbDeviceManager::GetDetectedDevi
 
 		if (!rr_found) continue;
 
-		RR_SHARED_PTR<libusb_device> dev_sp(list1[i], boost::bind(&LibUsb_Functions_libusb_unref, f, _1));
+		RR_SHARED_PTR<libusb_device> dev_sp(list1[i], boost::bind(&LibUsb_Functions_libusb_unref, f, RR_BOOST_PLACEHOLDERS(_1)));
 		f->libusb_ref_device(dev_sp.get());
 		UsbDeviceManager_detected_device d;
 		d.handle=dev_sp;

@@ -1547,7 +1547,7 @@ RR_SHARED_PTR<RRObject> RobotRaconteurNode::ConnectService(const std::vector<std
 	ROBOTRACONTEUR_ASSERT_MULTITHREADED(shared_from_this());
 
 	RR_SHARED_PTR<detail::sync_async_handler<RRObject> > h=RR_MAKE_SHARED<detail::sync_async_handler<RRObject> >(RR_MAKE_SHARED<ConnectionException>("Connection timed out"));
-	AsyncConnectService(urls,username,credentials,listener,objecttype,boost::bind(&detail::sync_async_handler<RRObject>::operator(),h,_1,_2),this->GetRequestTimeout()*2);
+	AsyncConnectService(urls,username,credentials,listener,objecttype,boost::bind(&detail::sync_async_handler<RRObject>::operator(),h,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)),this->GetRequestTimeout()*2);
 	return h->end();
 }
 
@@ -2323,7 +2323,7 @@ RR_SHARED_PTR<ServiceFactory> RobotRaconteurNode::GetPulledServiceType(RR_SHARED
 void RobotRaconteurNode::StartPeriodicCleanupTask(RR_SHARED_PTR<RobotRaconteurNode> node)
 {
 	boost::unique_lock<boost::shared_mutex> lock(node->PeriodicCleanupTask_timer_lock);
-	node->PeriodicCleanupTask_timer=node->CreateTimer(boost::posix_time::seconds(5),boost::bind(&RobotRaconteurNode::PeriodicCleanupTask,node,_1));
+	node->PeriodicCleanupTask_timer=node->CreateTimer(boost::posix_time::seconds(5),boost::bind(&RobotRaconteurNode::PeriodicCleanupTask,node,RR_BOOST_PLACEHOLDERS(_1)));
 	node->PeriodicCleanupTask_timer->Start();
 }
 

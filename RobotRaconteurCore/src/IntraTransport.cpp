@@ -261,7 +261,7 @@ RR_SHARED_PTR<ITransportConnection> IntraTransport::CreateTransportConnection(bo
 
 	RR_SHARED_PTR<detail::sync_async_handler<ITransportConnection> > d=RR_MAKE_SHARED<detail::sync_async_handler<ITransportConnection> >(RR_MAKE_SHARED<ConnectionException>("Timeout exception"));
 	
-	boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > h = boost::bind(&detail::sync_async_handler<ITransportConnection>::operator(), d, _1, _2);
+	boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > h = boost::bind(&detail::sync_async_handler<ITransportConnection>::operator(), d, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2));
 	AsyncCreateTransportConnection(url,e,h);
 
 	return d->end();
@@ -655,7 +655,7 @@ void IntraTransportConnection::MessageReceived(RR_INTRUSIVE_PTR<Message> m)
 
 			}
 			
-			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&IntraTransportConnection::SimpleAsyncEndSendMessage, RR_STATIC_POINTER_CAST<IntraTransportConnection>(shared_from_this()), _1);
+			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&IntraTransportConnection::SimpleAsyncEndSendMessage, RR_STATIC_POINTER_CAST<IntraTransportConnection>(shared_from_this()), RR_BOOST_PLACEHOLDERS(_1));
 			AsyncSendMessage(ret, h);
 		}
 		catch (std::exception& exp)
@@ -691,7 +691,7 @@ void IntraTransportConnection::SendMessage(RR_INTRUSIVE_PTR<Message> m)
     ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
 
 	RR_SHARED_PTR<detail::sync_async_handler<void> > s=RR_MAKE_SHARED<detail::sync_async_handler<void> >(RR_MAKE_SHARED<ConnectionException>("Send timeout"));	
-	boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&detail::sync_async_handler<void>::operator(), s, _1);
+	boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&detail::sync_async_handler<void>::operator(), s, RR_BOOST_PLACEHOLDERS(_1));
 	AsyncSendMessage(m, h);
 	s->end_void();
 }

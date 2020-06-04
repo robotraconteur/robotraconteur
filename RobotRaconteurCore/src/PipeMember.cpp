@@ -98,7 +98,7 @@ void PipeEndpointBase::Close()
 	ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
 
 	RR_SHARED_PTR<detail::sync_async_handler<void> > t=RR_MAKE_SHARED<detail::sync_async_handler<void > >();
-	AsyncClose(boost::bind(&detail::sync_async_handler<void>::operator(),t,_1),GetNode()->GetRequestTimeout());
+	AsyncClose(boost::bind(&detail::sync_async_handler<void>::operator(),t,RR_BOOST_PLACEHOLDERS(_1)),GetNode()->GetRequestTimeout());
 	t->end_void();
 }
 
@@ -289,7 +289,7 @@ void PipeEndpointBase::PipePacketReceived(RR_INTRUSIVE_PTR<RRValue> packet, uint
 		if (ignore_incoming_packets) return;
 		recv_packets.push_back(packet);
 						
-		RR_PIPE_ENDPOINT_LISTENER_ITER(p1->PipePacketReceived(shared_from_this(), boost::bind(&PipeEndpointBase_PipePacketReceived_recvpacket, boost::ref(recv_packets), _1)));
+		RR_PIPE_ENDPOINT_LISTENER_ITER(p1->PipePacketReceived(shared_from_this(), boost::bind(&PipeEndpointBase_PipePacketReceived_recvpacket, boost::ref(recv_packets), RR_BOOST_PLACEHOLDERS(_1))));
 		
 		if (!recv_packets.empty())
 		{
@@ -337,7 +337,7 @@ void PipeEndpointBase::PipePacketReceived(RR_INTRUSIVE_PTR<RRValue> packet, uint
 
 				}
 
-				RR_PIPE_ENDPOINT_LISTENER_ITER(p1->PipePacketReceived(shared_from_this(), boost::bind(&PipeEndpointBase_PipePacketReceived_recvpacket, boost::ref(recv_packets), _1)));
+				RR_PIPE_ENDPOINT_LISTENER_ITER(p1->PipePacketReceived(shared_from_this(), boost::bind(&PipeEndpointBase_PipePacketReceived_recvpacket, boost::ref(recv_packets), RR_BOOST_PLACEHOLDERS(_1))));
 
 				if (!recv_packets.empty())
 				{
@@ -681,7 +681,7 @@ void PipeClientBase::PipePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32
 						mack->MetaData = "unreliable\n";
 					}
 				}
-				boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&PipeMember_empty_handler, _1);
+				boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&PipeMember_empty_handler, RR_BOOST_PLACEHOLDERS(_1));
 				GetStub()->AsyncSendPipeMessage(mack,unreliable,h);
 
 			}
@@ -766,7 +766,7 @@ void PipeClientBase::AsyncSendPipePacket(RR_INTRUSIVE_PTR<RRValue> data, int32_t
 	if (unreliable)
 		m->MetaData = "unreliable\n";
 	
-	boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(handler, packetnumber, _1);
+	boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(handler, packetnumber, RR_BOOST_PLACEHOLDERS(_1));
 	GetStub()->AsyncSendPipeMessage(m,unreliable, h);
 }
 
@@ -777,7 +777,7 @@ void PipeClientBase::AsyncClose(RR_SHARED_PTR<PipeEndpointBase> endpoint, bool r
 	{
 	RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_PipeDisconnectReq, GetMemberName());
 	m->AddElement("index", ScalarToRRArray(endpoint->GetIndex()));
-	GetStub()->AsyncProcessRequest(m,boost::bind(handler,_2),timeout);
+	GetStub()->AsyncProcessRequest(m,boost::bind(handler,RR_BOOST_PLACEHOLDERS(_2)),timeout);
 	}
 }
 
@@ -802,7 +802,7 @@ void PipeClientBase::AsyncConnect_internal(int32_t index, RR_MOVE_ARG(boost::fun
 
 	ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName, "Begin connect pipe endpoint with index " << index);
 
-	GetStub()->AsyncProcessRequest(m,boost::bind(&PipeClientBase::AsyncConnect_internal1, RR_DYNAMIC_POINTER_CAST<PipeClientBase>(shared_from_this()),_1,_2,index,key,handler),timeout);
+	GetStub()->AsyncProcessRequest(m,boost::bind(&PipeClientBase::AsyncConnect_internal1, RR_DYNAMIC_POINTER_CAST<PipeClientBase>(shared_from_this()),RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),index,key,handler),timeout);
 }
 
 void PipeClientBase::AsyncConnect_internal1(RR_INTRUSIVE_PTR<MessageEntry> ret, RR_SHARED_PTR<RobotRaconteurException> err, int32_t index, int32_t key, boost::function<void (RR_SHARED_PTR<PipeEndpointBase>,RR_SHARED_PTR<RobotRaconteurException>)>& handler)
@@ -1030,7 +1030,7 @@ void PipeServerBase::PipePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32
 						mack->MetaData = "unreliable\n";
 					}
 				}
-				GetSkel()->AsyncSendPipeMessage(mack, e, unreliable, boost::bind(&PipeMember_empty_handler,_1));
+				GetSkel()->AsyncSendPipeMessage(mack, e, unreliable, boost::bind(&PipeMember_empty_handler,RR_BOOST_PLACEHOLDERS(_1)));
 
 			}
 		}
@@ -1098,7 +1098,7 @@ void PipeServerBase::Shutdown()
 
 					RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_PipeClosed, GetMemberName());
 					m->AddElement("index", ScalarToRRArray(e->GetIndex()));
-					GetSkel()->AsyncSendPipeMessage(m, e->GetEndpoint(), false, boost::bind(&PipeMember_empty_handler,_1));
+					GetSkel()->AsyncSendPipeMessage(m, e->GetEndpoint(), false, boost::bind(&PipeMember_empty_handler,RR_BOOST_PLACEHOLDERS(_1)));
 				}
 				catch (std::exception& exp)
 				{
@@ -1147,7 +1147,7 @@ void PipeServerBase::AsyncSendPipePacket(RR_INTRUSIVE_PTR<RRValue> data, int32_t
 	if (unreliable)
 		m->MetaData = "unreliable\n";	
 
-	GetSkel()->AsyncSendPipeMessage(m, e, unreliable, boost::bind(handler,packetnumber,_1));
+	GetSkel()->AsyncSendPipeMessage(m, e, unreliable, boost::bind(handler,packetnumber,RR_BOOST_PLACEHOLDERS(_1)));
 }
 
 void PipeServerBase::AsyncClose(RR_SHARED_PTR<PipeEndpointBase> e, bool remote, uint32_t ee, RR_MOVE_ARG(boost::function<void (RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout)
@@ -1157,7 +1157,7 @@ void PipeServerBase::AsyncClose(RR_SHARED_PTR<PipeEndpointBase> e, bool remote, 
 	{
 	RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_PipeClosed, GetMemberName());
 	m->AddElement("index", ScalarToRRArray(e->GetIndex()));
-	GetSkel()->AsyncSendPipeMessage(m, ee, false, boost::bind(&PipeMember_empty_handler,_1));
+	GetSkel()->AsyncSendPipeMessage(m, ee, false, boost::bind(&PipeMember_empty_handler,RR_BOOST_PLACEHOLDERS(_1)));
 	}
 
 	DeleteEndpoint(e);
@@ -1240,7 +1240,7 @@ RR_INTRUSIVE_PTR<MessageEntry> PipeServerBase::PipeCommand(RR_INTRUSIVE_PTR<Mess
 					if (!init)
 					{
 						RR_WEAK_PTR<PipeServerBase> weak= RR_DYNAMIC_POINTER_CAST<PipeServerBase>(shared_from_this());
-						listener_connection=GetSkel()->GetContext()->ServerServiceListener.connect(boost::bind(&pipe_server_client_disconnected,_1,_2,_3,weak));
+						listener_connection=GetSkel()->GetContext()->ServerServiceListener.connect(boost::bind(&pipe_server_client_disconnected,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),RR_BOOST_PLACEHOLDERS(_3),weak));
 						init=true;
 					}
 					
@@ -1590,12 +1590,12 @@ void PipeBroadcasterBase::AsyncSendPacketBase(RR_INTRUSIVE_PTR<RRValue> packet, 
 			ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, ep_endpoint, service_path, member_name, "PipeBroadcaster sending packet to pipe endpoint index " << ep_index);
 			if (!copy_element)
 			{
-				ep->AsyncSendPacketBase(packet, boost::bind(&PipeBroadcasterBase::handle_send, this->shared_from_this(), _1, _2, *ee2, op, count, send_key, handler));
+				ep->AsyncSendPacketBase(packet, boost::bind(&PipeBroadcasterBase::handle_send, this->shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), *ee2, op, count, send_key, handler));
 			}
 			else
 			{
 				RR_INTRUSIVE_PTR<MessageElement> packet2 = ShallowCopyMessageElement(rr_cast<MessageElement>(packet));
-				ep->AsyncSendPacketBase(packet2, boost::bind(&PipeBroadcasterBase::handle_send, this->shared_from_this(), _1, _2, *ee2, op, count, send_key, handler));
+				ep->AsyncSendPacketBase(packet2, boost::bind(&PipeBroadcasterBase::handle_send, this->shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), *ee2, op, count, send_key, handler));
 			}
 			op->keys.push_back(count);
 

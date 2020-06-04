@@ -132,3 +132,9 @@
 #define RR_BOOST_ASIO_STRAND_WRAP(strand, f) boost::asio::bind_executor(strand,f)
 #define RR_BOOST_ASIO_NEW_STRAND(context) (new boost::asio::strand<boost::asio::io_context::executor_type>(context.get_executor()))
 #endif
+
+#if BOOST_VERSION <= 105900
+#define RR_BOOST_PLACEHOLDERS(arg) arg
+#else
+#define RR_BOOST_PLACEHOLDERS(arg) boost::placeholders::arg
+#endif

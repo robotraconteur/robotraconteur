@@ -78,7 +78,7 @@ namespace RobotRaconteurTest
 
 	void ServiceTestClient2::AsyncTestWirePeekPoke()
 	{
-		r->get_peekwire()->AsyncPeekInValue(boost::bind(&ServiceTestClient2::AsyncTestWirePeekPoke1, this, _1, _2, _3));
+		r->get_peekwire()->AsyncPeekInValue(boost::bind(&ServiceTestClient2::AsyncTestWirePeekPoke1, this, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), RR_BOOST_PLACEHOLDERS(_3)));
 
 		async_peekpoke_evt.WaitOne(5000);
 
@@ -104,7 +104,7 @@ namespace RobotRaconteurTest
 			return;
 		}
 
-		r->get_pokewire()->AsyncPokeOutValue(75738261, boost::bind(&ServiceTestClient2::AsyncTestWirePeekPoke2, this, _1));
+		r->get_pokewire()->AsyncPokeOutValue(75738261, boost::bind(&ServiceTestClient2::AsyncTestWirePeekPoke2, this, RR_BOOST_PLACEHOLDERS(_1)));
 	}
 
 	void ServiceTestClient2::AsyncTestWirePeekPoke2(RR_SHARED_PTR<RobotRaconteurException> err)
@@ -116,7 +116,7 @@ namespace RobotRaconteurTest
 			return;
 		}
 
-		r->get_pokewire()->AsyncPeekOutValue(boost::bind(&ServiceTestClient2::AsyncTestWirePeekPoke3, this, _1, _2, _3));
+		r->get_pokewire()->AsyncPeekOutValue(boost::bind(&ServiceTestClient2::AsyncTestWirePeekPoke3, this, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), RR_BOOST_PLACEHOLDERS(_3)));
 	}
 
 	void ServiceTestClient2::AsyncTestWirePeekPoke3(const int32_t& value, const TimeSpec& ts, RR_SHARED_PTR<RobotRaconteurException> err)

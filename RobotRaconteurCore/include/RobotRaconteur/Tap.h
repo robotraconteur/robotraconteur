@@ -25,6 +25,7 @@
 
 #include "RobotRaconteur/Logging.h"
 #include "RobotRaconteur/Message.h"
+#include <boost/bind/placeholders.hpp>
 #include <boost/asio.hpp>
 
 namespace RobotRaconteur

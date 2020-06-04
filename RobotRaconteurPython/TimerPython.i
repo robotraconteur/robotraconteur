@@ -35,7 +35,7 @@ namespace RobotRaconteur
 {
 	WallTimer(const boost::posix_time::time_duration& period, bool oneshot, boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node, RobotRaconteur::AsyncTimerEventReturnDirector* handler, int32_t id )
 	{
-		boost::shared_ptr<AsyncTimerEventReturnDirector> sphandler(handler,boost::bind(&ReleaseDirector<AsyncTimerEventReturnDirector>,_1,id));
-		return new WallTimer(period,boost::bind(&TimerHandlerFunc,_1,sphandler),oneshot,node);
+		boost::shared_ptr<AsyncTimerEventReturnDirector> sphandler(handler,boost::bind(&ReleaseDirector<AsyncTimerEventReturnDirector>,RR_BOOST_PLACEHOLDERS(_1),id));
+		return new WallTimer(period,boost::bind(&TimerHandlerFunc,RR_BOOST_PLACEHOLDERS(_1),sphandler),oneshot,node);
 	}
 }

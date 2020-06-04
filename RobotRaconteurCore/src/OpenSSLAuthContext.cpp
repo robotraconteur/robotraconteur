@@ -339,7 +339,7 @@ namespace detail
         InitCA(server_context);
         
 		//server_context->set_verify_mode(boost::asio::ssl::context::verify_peer | boost::asio::ssl::context::verify_client_once);
-		server_context->set_verify_callback(boost::bind(&detail::OpenSSLSupport::verify_callback,_1,_2));
+		server_context->set_verify_callback(boost::bind(&detail::OpenSSLSupport::verify_callback,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));
 
 		//OpenSSLSupport::add_certificate_authority_x509(server_context,boost::asio::buffer(ROBOTRACONTEUR_NODE_CERTIFICATE_AUTHORITY_ROOT,sizeof(ROBOTRACONTEUR_NODE_CERTIFICATE_AUTHORITY_ROOT)));
 		
@@ -362,7 +362,7 @@ namespace detail
 			client_context=RR_MAKE_SHARED<boost::asio::ssl::context>(boost::asio::ssl::context::tlsv1);
 			client_context->set_options(boost::asio::ssl::context::no_sslv2 | boost::asio::ssl::context::no_sslv3 | boost::asio::ssl::context::no_compression);
 			client_context->set_verify_mode(boost::asio::ssl::context::verify_peer);
-			client_context->set_verify_callback(boost::bind(&detail::OpenSSLSupport::verify_callback,_1,_2));
+			client_context->set_verify_callback(boost::bind(&detail::OpenSSLSupport::verify_callback,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));
 
 			//OpenSSLSupport::add_certificate_authority_x509(client_context,boost::asio::buffer(ROBOTRACONTEUR_NODE_CERTIFICATE_AUTHORITY_ROOT,sizeof(ROBOTRACONTEUR_NODE_CERTIFICATE_AUTHORITY_ROOT)));
 
@@ -419,7 +419,7 @@ namespace detail
 			client_context=RR_MAKE_SHARED<boost::asio::ssl::context>(boost::asio::ssl::context::tlsv1);
 			client_context->set_options(boost::asio::ssl::context::no_sslv2 | boost::asio::ssl::context::no_sslv3 | boost::asio::ssl::context::no_compression);
 			client_context->set_verify_mode(boost::asio::ssl::context::verify_peer);
-			client_context->set_verify_callback(boost::bind(&detail::OpenSSLSupport::verify_callback,_1,_2));
+			client_context->set_verify_callback(boost::bind(&detail::OpenSSLSupport::verify_callback,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));
 
 			//OpenSSLSupport::add_certificate_authority_x509(client_context,boost::asio::buffer(ROBOTRACONTEUR_NODE_CERTIFICATE_AUTHORITY_ROOT,sizeof(ROBOTRACONTEUR_NODE_CERTIFICATE_AUTHORITY_ROOT)));
      

@@ -21,6 +21,7 @@
  * limitations under the License.
  */
 
+#include <boost/bind/placeholders.hpp>
 #include <boost/asio.hpp>
 #include <boost/scope_exit.hpp>
 
@@ -249,7 +250,7 @@ namespace RobotRaconteur
 
 			if (timeout!=RR_TIMEOUT_INFINITE)
 			{
-				timeout_timer_=async_timeout_wrapper_CreateTimer(n,boost::posix_time::milliseconds(timeout),boost::bind(&async_timeout_wrapper<T>::timeout_handler,this->shared_from_this(),_1),true);
+				timeout_timer_=async_timeout_wrapper_CreateTimer(n,boost::posix_time::milliseconds(timeout),boost::bind(&async_timeout_wrapper<T>::timeout_handler,this->shared_from_this(),RR_BOOST_PLACEHOLDERS(_1)),true);
 				timeout_timer_->Start();
 				timeout_exception_=timeout_exception;
 			}

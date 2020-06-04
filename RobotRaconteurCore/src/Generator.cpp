@@ -62,7 +62,7 @@ namespace RobotRaconteur
 		AbortOperationException err("Generator abort requested");
 		RobotRaconteurExceptionUtil::ExceptionToMessageEntry(err, m);
 		m->AddElement("index", ScalarToRRArray(id));
-		GetStub()->AsyncProcessRequest(m, boost::bind(handler, _2), timeout);
+		GetStub()->AsyncProcessRequest(m, boost::bind(handler, RR_BOOST_PLACEHOLDERS(_2)), timeout);
 	}
 
 	void GeneratorClientBase::Close()
@@ -81,7 +81,7 @@ namespace RobotRaconteur
 		StopIterationException err("");
 		RobotRaconteurExceptionUtil::ExceptionToMessageEntry(err, m);
 		m->AddElement("index", ScalarToRRArray(id));
-		GetStub()->AsyncProcessRequest(m, boost::bind(handler, _2), timeout);
+		GetStub()->AsyncProcessRequest(m, boost::bind(handler, RR_BOOST_PLACEHOLDERS(_2)), timeout);
 	}
 
 	std::string GeneratorClientBase::GetMemberName()
@@ -115,7 +115,7 @@ namespace RobotRaconteur
 			m->elements.push_back(v);
 		}
 		RR_WEAK_PTR<RobotRaconteurNode> node = GetStub()->RRGetNode();
-		GetStub()->AsyncProcessRequest(m, boost::bind(&GeneratorClientBase::AsyncNextBase1,_1,_2,handler,node));
+		GetStub()->AsyncProcessRequest(m, boost::bind(&GeneratorClientBase::AsyncNextBase1,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),handler,node));
 		
 	}
 

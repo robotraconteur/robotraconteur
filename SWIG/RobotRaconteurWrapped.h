@@ -1303,7 +1303,7 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		{
 			//this->RR_Director=0;
 			if (!RR_Director) throw InvalidArgumentException("RR_Director cannot be null");
-			this->RR_Director.reset(RR_Director, boost::bind(&ReleaseDirector<WrappedArrayMemoryDirector>, _1, RR_Director->objectheapid));
+			this->RR_Director.reset(RR_Director, boost::bind(&ReleaseDirector<WrappedArrayMemoryDirector>, RR_BOOST_PLACEHOLDERS(_1), RR_Director->objectheapid));
 		}
 
 		virtual ~WrappedArrayMemory()
@@ -1372,7 +1372,7 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		{
 			//this->RR_Director=0;
 			if (!RR_Director) throw InvalidArgumentException("RR_Director cannot be null");
-			this->RR_Director.reset(RR_Director, boost::bind(&ReleaseDirector<WrappedMultiDimArrayMemoryDirector>, _1, RR_Director->objectheapid));
+			this->RR_Director.reset(RR_Director, boost::bind(&ReleaseDirector<WrappedMultiDimArrayMemoryDirector>, RR_BOOST_PLACEHOLDERS(_1), RR_Director->objectheapid));
 		}
 
 		virtual ~WrappedMultiDimArrayMemory()

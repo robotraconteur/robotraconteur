@@ -38,7 +38,7 @@ namespace RobotRaconteur
 	RR_INTRUSIVE_PTR<MessageEntry> Message::FindEntry(MessageStringRef name)
 	{
 		std::vector<RR_INTRUSIVE_PTR<MessageEntry> >::iterator m=boost::find_if(entries,
-				boost::bind(&MessageEntry::MemberName, _1) == name);
+				boost::bind(&MessageEntry::MemberName, RR_BOOST_PLACEHOLDERS(_1)) == name);
 
 		if (m==entries.end()) throw MessageEntryNotFoundException("Element " + name.str() + " not found.");
 
@@ -615,7 +615,7 @@ namespace RobotRaconteur
 	RR_INTRUSIVE_PTR<MessageElement> MessageEntry::FindElement(MessageStringRef name)
 	{
 		std::vector<RR_INTRUSIVE_PTR<MessageElement> >::iterator m=boost::find_if(elements,
-				boost::bind(&MessageElement::ElementName, _1) == name);
+				boost::bind(&MessageElement::ElementName, RR_BOOST_PLACEHOLDERS(_1)) == name);
 
 		if (m==elements.end()) throw MessageElementNotFoundException("Element " + name.str() + " not found.");
 
@@ -625,7 +625,7 @@ namespace RobotRaconteur
 	bool MessageEntry::TryFindElement(MessageStringRef name, RR_INTRUSIVE_PTR<MessageElement>& elem)
 	{
 		std::vector<RR_INTRUSIVE_PTR<MessageElement> >::iterator m = boost::find_if(elements,
-			boost::bind(&MessageElement::ElementName, _1) == name);
+			boost::bind(&MessageElement::ElementName, RR_BOOST_PLACEHOLDERS(_1)) == name);
 
 		if (m == elements.end()) return false;
 
@@ -1707,7 +1707,7 @@ namespace RobotRaconteur
 	RR_INTRUSIVE_PTR<MessageElement> MessageElement::FindElement(std::vector<RR_INTRUSIVE_PTR<MessageElement> > &m, MessageStringRef name)
 	{
 		std::vector<RR_INTRUSIVE_PTR<MessageElement> >::iterator m1 = boost::find_if(m,
-			boost::bind(&MessageElement::ElementName, _1) == name);
+			boost::bind(&MessageElement::ElementName, RR_BOOST_PLACEHOLDERS(_1)) == name);
 
 		if (m1 == m.end()) throw MessageElementNotFoundException("Element " + name.str() + " not found.");
 
@@ -1717,7 +1717,7 @@ namespace RobotRaconteur
 	bool MessageElement::TryFindElement(std::vector<RR_INTRUSIVE_PTR<MessageElement> > &m, MessageStringRef name, RR_INTRUSIVE_PTR<MessageElement>& elem)
 	{
 		std::vector<RR_INTRUSIVE_PTR<MessageElement> >::iterator m1 = boost::find_if(m,
-			boost::bind(&MessageElement::ElementName, _1) == name);
+			boost::bind(&MessageElement::ElementName, RR_BOOST_PLACEHOLDERS(_1)) == name);
 
 		if (m1 == m.end()) return false;
 
@@ -1729,7 +1729,7 @@ namespace RobotRaconteur
 	bool MessageElement::ContainsElement(std::vector<RR_INTRUSIVE_PTR<MessageElement> > &m, MessageStringRef name)
 	{
 		std::vector<RR_INTRUSIVE_PTR<MessageElement> >::iterator m1 = boost::find_if(m,
-			boost::bind(&MessageElement::ElementName, _1) == name);
+			boost::bind(&MessageElement::ElementName, RR_BOOST_PLACEHOLDERS(_1)) == name);
 
 		if (m1 == m.end()) return false;
 

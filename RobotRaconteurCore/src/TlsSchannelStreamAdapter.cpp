@@ -18,6 +18,7 @@
 
 #include "TlsSchannelStreamAdapter.h"
 
+#include <boost/bind/placeholders.hpp>
 #include <boost/asio.hpp>
 #include <boost/bind/protect.hpp>
 #include <boost/shared_array.hpp>
@@ -687,7 +688,7 @@ namespace detail
 			{
 				PCredHandle phCreds=new CredHandle();
 				ZeroMemory(phCreds,sizeof(CredHandle));
-				boost::shared_ptr<CredHandle> hCreds1=boost::shared_ptr<CredHandle>(phCreds,boost::bind(&TlsSchannelAsyncStreamAdapter::release_credentials, _1));
+				boost::shared_ptr<CredHandle> hCreds1=boost::shared_ptr<CredHandle>(phCreds,boost::bind(&TlsSchannelAsyncStreamAdapter::release_credentials, RR_BOOST_PLACEHOLDERS(_1)));
 				*phCreds=context->GetClientCredentials();
 				hCreds=hCreds1;
 			}
@@ -737,7 +738,7 @@ namespace detail
 				throw SystemResourceException("Could not initialize TLS");
 			}
 
-			hContext=boost::shared_ptr<CtxtHandle>(phContext,boost::bind(&TlsSchannelAsyncStreamAdapter::release_context, _1));
+			hContext=boost::shared_ptr<CtxtHandle>(phContext,boost::bind(&TlsSchannelAsyncStreamAdapter::release_context, RR_BOOST_PLACEHOLDERS(_1)));
 
 			if(OutBuffers[0].cbBuffer != 0 && OutBuffers[0].pvBuffer != NULL)
 			{
@@ -771,7 +772,7 @@ namespace detail
 			{			
 				PCredHandle phCreds=new CredHandle();
 				ZeroMemory(phCreds,sizeof(CredHandle));
-				boost::shared_ptr<CredHandle> hCreds1=boost::shared_ptr<CredHandle>(phCreds,boost::bind(&TlsSchannelAsyncStreamAdapter::release_credentials, _1));
+				boost::shared_ptr<CredHandle> hCreds1=boost::shared_ptr<CredHandle>(phCreds,boost::bind(&TlsSchannelAsyncStreamAdapter::release_credentials, RR_BOOST_PLACEHOLDERS(_1)));
 				*phCreds=context->GetServerCredentials();
 				hCreds=hCreds1;			
 			}
@@ -968,7 +969,7 @@ namespace detail
 				
 				if (scRet== SEC_E_OK || scRet== SEC_I_CONTINUE_NEEDED)
 				{
-					hContext=boost::shared_ptr<CtxtHandle>(phContext,boost::bind(&TlsSchannelAsyncStreamAdapter::release_context, _1));
+					hContext=boost::shared_ptr<CtxtHandle>(phContext,boost::bind(&TlsSchannelAsyncStreamAdapter::release_context, RR_BOOST_PLACEHOLDERS(_1)));
 				}
 				else
 				{
@@ -1255,7 +1256,7 @@ namespace detail
 			async_shutdown_handler_op.clear();
 			boost::system::error_code ec1(boost::system::errc::broken_pipe,boost::system::generic_category);
 			async_write_op=(boost::bind(handler,ec1,0));
-			do_shutdown1(boost::bind(async_shutdown_handler1,_1));
+			do_shutdown1(boost::bind(async_shutdown_handler1,RR_BOOST_PLACEHOLDERS(_1)));
 
 			return;
 		}*/
@@ -1384,7 +1385,7 @@ namespace detail
 					boost::function<void (const boost::system::error_code&)> async_handshake_handler1=async_handshake_handler_op;
 					async_handshake_handler_op.clear();
 					boost::system::error_code ec2;
-					do_handshake5(boost::bind(async_handshake_handler1,_1));
+					do_handshake5(boost::bind(async_handshake_handler1,RR_BOOST_PLACEHOLDERS(_1)));
 				
 				}
 			}
@@ -1606,14 +1607,14 @@ namespace detail
 		{
 			if (writing)
 			{
-				async_handshake_handler_op=boost::bind(&TlsSchannelAsyncStreamAdapter::async_read_some2,shared_from_this(),_1,b,boost::protect(handler));
+				async_handshake_handler_op=boost::bind(&TlsSchannelAsyncStreamAdapter::async_read_some2,shared_from_this(),RR_BOOST_PLACEHOLDERS(_1),b,boost::protect(handler));
 				request_renegotiate=true;
 				return;
 			}
 			else
 			{
 				
-				do_handshake5(boost::bind(&TlsSchannelAsyncStreamAdapter::async_read_some2,shared_from_this(),_1,b,handler));
+				do_handshake5(boost::bind(&TlsSchannelAsyncStreamAdapter::async_read_some2,shared_from_this(),RR_BOOST_PLACEHOLDERS(_1),b,handler));
 				return;
 			}
 

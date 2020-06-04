@@ -43,6 +43,7 @@ namespace detail {
 
 #endif
 
+#include <boost/bind/placeholders.hpp>
 #include <boost/asio.hpp>
 
 
@@ -370,7 +371,7 @@ void LocalTransport::AsyncCreateTransportConnection(boost::string_ref url, RR_SH
 	}
 
 	boost::function<void(RR_SHARED_PTR<detail::LocalTransport_socket>, RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> h 
-		= boost::bind(&LocalTransport::AsyncCreateTransportConnection2, shared_from_this(), _1, noden, _2, _3, callback);
+		= boost::bind(&LocalTransport::AsyncCreateTransportConnection2, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), noden, RR_BOOST_PLACEHOLDERS(_2), RR_BOOST_PLACEHOLDERS(_3), callback);
 	LocalTransport_attach_transport(shared_from_this(), socket, false, ep->GetLocalEndpoint(), noden, h);
 }   
 
@@ -405,7 +406,7 @@ RR_SHARED_PTR<ITransportConnection> LocalTransport::CreateTransportConnection(bo
 
 	RR_SHARED_PTR<detail::sync_async_handler<ITransportConnection> > d=RR_MAKE_SHARED<detail::sync_async_handler<ITransportConnection> >(RR_MAKE_SHARED<ConnectionException>("Timeout exception"));
 	
-	boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > h = boost::bind(&detail::sync_async_handler<ITransportConnection>::operator(), d, _1, _2);
+	boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > h = boost::bind(&detail::sync_async_handler<ITransportConnection>::operator(), d, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2));
 	AsyncCreateTransportConnection(url,e,h);
 
 	return d->end();
@@ -479,7 +480,7 @@ void LocalTransport::CloseTransportConnection_timed(const boost::system::error_c
 	acceptor=RR_MAKE_SHARED<socket_acceptor_type>("\\\\.\\pipe\\RobotRaconteur_" + name,20,GetNode());
 	acceptor->listen();
 
-	acceptor->async_accept(boost::bind(&LocalTransport::handle_accept,shared_from_this(),acceptor,_2,boost::asio::placeholders::error));
+	acceptor->async_accept(boost::bind(&LocalTransport::handle_accept,shared_from_this(),acceptor,RR_BOOST_PLACEHOLDERS(_2),boost::asio::placeholders::error));
 #else
 	std::string fname="/tmp/RobotRaconteur_" + name;
 	RR_SHARED_PTR<detail::LocalTransport_socket> socket=RR_MAKE_SHARED<detail::LocalTransport_socket>(boost::ref(GetNode()->GetThreadPool()->get_io_context()));
@@ -919,7 +920,7 @@ void LocalTransport::handle_accept(RR_SHARED_PTR<LocalTransport> parent,RR_SHARE
 	try
 	{		
 		boost::function<void(RR_SHARED_PTR<detail::LocalTransport_socket>, RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> h
-			= boost::bind(&LocalTransport_connected_callback2, parent, _1, _2, _3);
+			= boost::bind(&LocalTransport_connected_callback2, parent, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), RR_BOOST_PLACEHOLDERS(_3));
 		LocalTransport_attach_transport(parent,socket,true,0,"{0}",h);
 	}
 	catch (std::exception& exp) 
@@ -1201,7 +1202,7 @@ void LocalTransportConnection::MessageReceived(RR_INTRUSIVE_PTR<Message> m)
 
 			}
 			
-			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&LocalTransportConnection::SimpleAsyncEndSendMessage, RR_STATIC_POINTER_CAST<LocalTransportConnection>(shared_from_this()), _1);
+			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(&LocalTransportConnection::SimpleAsyncEndSendMessage, RR_STATIC_POINTER_CAST<LocalTransportConnection>(shared_from_this()), RR_BOOST_PLACEHOLDERS(_1));
 			AsyncSendMessage(ret, h);
 		}
 		catch (std::exception& exp)
@@ -1359,7 +1360,7 @@ void LocalTransport_attach_transport(RR_SHARED_PTR<LocalTransport> parent, RR_SH
 	try
 	{
 		RR_SHARED_PTR<LocalTransportConnection> t=RR_MAKE_SHARED<LocalTransportConnection>(parent,server,endpoint);
-		boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(callback, socket, t, _1);
+		boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(callback, socket, t, RR_BOOST_PLACEHOLDERS(_1));
 		t->AsyncAttachSocket(socket,noden,h);
 		parent->AddCloseListener(t, &LocalTransportConnection::Close);
 	}

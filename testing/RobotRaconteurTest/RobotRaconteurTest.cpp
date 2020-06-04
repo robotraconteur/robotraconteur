@@ -156,7 +156,7 @@ void servicetest3(std::string url1, RR_SHARED_PTR<RRObject> obj, RR_SHARED_PTR<R
 
 void servicetest4(std::string url1)
 {
-	RobotRaconteurNode::s()->AsyncConnectService(url1,"",RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >(),NULL,"",boost::bind(&servicetest3,url1,_1,_2));
+	RobotRaconteurNode::s()->AsyncConnectService(url1,"",RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >(),NULL,"",boost::bind(&servicetest3,url1,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));
 }
 
 void servicetest3(std::string url1, RR_SHARED_PTR<RRObject> obj, RR_SHARED_PTR<RobotRaconteurException> exp)
@@ -180,7 +180,7 @@ void servicetest2(RR_SHARED_PTR<async_testroot> o, double d, RR_SHARED_PTR<Robot
 		return;
 	}
 
-	o->async_func3(1,2,boost::bind(&servicetest2,o,_1,_2));
+	o->async_func3(1,2,boost::bind(&servicetest2,o,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));
 }
 
 void servicetest1(RR_SHARED_PTR<RRObject> obj, RR_SHARED_PTR<RobotRaconteurException> exp)
@@ -195,7 +195,7 @@ void servicetest1(RR_SHARED_PTR<RRObject> obj, RR_SHARED_PTR<RobotRaconteurExcep
 	try
 	{
 	RR_SHARED_PTR<async_testroot> o=rr_cast<async_testroot>(obj);
-	o->async_func3(1,2,boost::bind(&servicetest2,o,_1,_2));
+	o->async_func3(1,2,boost::bind(&servicetest2,o,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));
 	}
 	catch (std::exception&)
 	{
@@ -220,7 +220,7 @@ void latencytest1(RR_SHARED_PTR<async_testroot> obj, RR_SHARED_PTR<RobotRaconteu
 	try
 	{
 	
-	obj->async_func3(1,2,boost::bind(&latencytest1,obj,_2));
+	obj->async_func3(1,2,boost::bind(&latencytest1,obj,RR_BOOST_PLACEHOLDERS(_2)));
 	if (latencyitercount>100000)
 	{
 		latency_event->Set();
@@ -1014,18 +1014,18 @@ return 0;
 		servicetest_keepgoing=true;
 
 		//RobotRaconteurNode::s()->AsyncConnectService(url1,"",RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >(),NULL,"",&servicetest1);
-		//RobotRaconteurNode::s()->AsyncConnectService(url1,"",RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >(),NULL,"",boost::bind(&servicetest3,url1,_1,_2));
+		//RobotRaconteurNode::s()->AsyncConnectService(url1,"",RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >(),NULL,"",boost::bind(&servicetest3,url1,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));
 
 		RR_SHARED_PTR<RRObject> obj=RobotRaconteurNode::s()->ConnectService(url1,"",RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >(),NULL,"");
 		RR_SHARED_PTR<async_testroot> o=rr_cast<async_testroot>(obj);
 		RR_SHARED_PTR<testroot> o2=rr_cast<testroot>(obj);
-		o->async_func3(1,2,boost::bind(&servicetest2,o,_1,_2));
+		o->async_func3(1,2,boost::bind(&servicetest2,o,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));
 		
 		RR_SHARED_PTR<PipeEndpoint<double> > p=o2->get_broadcastpipe()->Connect(-1);
 		p->PacketReceivedEvent.connect(&servicetest7);
 		RR_SHARED_PTR<WireConnection<double> >w=o2->get_broadcastwire()->Connect();
 
-		RR_SHARED_PTR<Timer> t=RobotRaconteurNode::s()->CreateTimer(boost::posix_time::milliseconds(40),boost::bind(&servicetest5,p,w,_1));
+		RR_SHARED_PTR<Timer> t=RobotRaconteurNode::s()->CreateTimer(boost::posix_time::milliseconds(40),boost::bind(&servicetest5,p,w,RR_BOOST_PLACEHOLDERS(_1)));
 		t->Start();
 
 		cout << "Press enter to quit" << endl;
@@ -1070,7 +1070,7 @@ return 0;
 		servicetest_keepgoing=true;
 
 		//RobotRaconteurNode::s()->AsyncConnectService(url1,"",RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >(),NULL,"",&servicetest1);
-		//RobotRaconteurNode::s()->AsyncConnectService(url1,"",RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >(),NULL,"",boost::bind(&servicetest3,url1,_1,_2));
+		//RobotRaconteurNode::s()->AsyncConnectService(url1,"",RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >(),NULL,"",boost::bind(&servicetest3,url1,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));
 
 		RR_SHARED_PTR<RRObject> obj=RobotRaconteurNode::s()->ConnectService(url1,"",RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >(),NULL,"");
 		RR_SHARED_PTR<async_testroot> o=rr_cast<async_testroot>(obj);

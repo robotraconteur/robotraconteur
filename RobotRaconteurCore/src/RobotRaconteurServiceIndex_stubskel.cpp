@@ -252,7 +252,7 @@ ServiceStub::RRClose();
 void ServiceIndex_stub::async_GetLocalNodeServices(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,ServiceInfo  > >, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallReq,"GetLocalNodeServices");
-AsyncProcessRequest(rr_req,boost::bind(&ServiceIndex_stub::rrend_GetLocalNodeServices, RobotRaconteur::rr_cast<ServiceIndex_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
+AsyncProcessRequest(rr_req,boost::bind(&ServiceIndex_stub::rrend_GetLocalNodeServices, RobotRaconteur::rr_cast<ServiceIndex_stub>(shared_from_this()),RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),rr_handler ),rr_timeout);
 }
 
 void ServiceIndex_stub::rrend_GetLocalNodeServices(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,ServiceInfo  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
@@ -273,7 +273,7 @@ handler(RobotRaconteur::rr_cast<RobotRaconteur::RRMap<int32_t,ServiceInfo  > >((
 void ServiceIndex_stub::async_GetRoutedNodes(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,NodeInfo  > >, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallReq,"GetRoutedNodes");
-AsyncProcessRequest(rr_req,boost::bind(&ServiceIndex_stub::rrend_GetRoutedNodes, RobotRaconteur::rr_cast<ServiceIndex_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
+AsyncProcessRequest(rr_req,boost::bind(&ServiceIndex_stub::rrend_GetRoutedNodes, RobotRaconteur::rr_cast<ServiceIndex_stub>(shared_from_this()),RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),rr_handler ),rr_timeout);
 }
 
 void ServiceIndex_stub::rrend_GetRoutedNodes(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,NodeInfo  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)
@@ -294,7 +294,7 @@ handler(RobotRaconteur::rr_cast<RobotRaconteur::RRMap<int32_t,NodeInfo  > >((RRG
 void ServiceIndex_stub::async_GetDetectedNodes(boost::function<void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,NodeInfo  > >, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> rr_req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallReq,"GetDetectedNodes");
-AsyncProcessRequest(rr_req,boost::bind(&ServiceIndex_stub::rrend_GetDetectedNodes, RobotRaconteur::rr_cast<ServiceIndex_stub>(shared_from_this()),_1,_2,rr_handler ),rr_timeout);
+AsyncProcessRequest(rr_req,boost::bind(&ServiceIndex_stub::rrend_GetDetectedNodes, RobotRaconteur::rr_cast<ServiceIndex_stub>(shared_from_this()),RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),rr_handler ),rr_timeout);
 }
 
 void ServiceIndex_stub::rrend_GetDetectedNodes(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err, boost::function< void (RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,NodeInfo  > > ,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > handler)

@@ -168,7 +168,7 @@ namespace detail
 			RR_SHARED_PTR< std::list < RR_SHARED_PTR<UsbDevice> > > l = RR_MAKE_SHARED< std::list < RR_SHARED_PTR<UsbDevice> > >(init_devices);
 			BOOST_FOREACH(RR_SHARED_PTR<UsbDevice> dev, init_devices)
 			{
-				dev->InitializeDevice(boost::bind(&UsbDeviceManager::UpdateDevices2, shared_from_this(), _1, dev, l, boost::protect(handler)));
+				dev->InitializeDevice(boost::bind(&UsbDeviceManager::UpdateDevices2, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), dev, l, boost::protect(handler)));
 			}
 		}
 
@@ -427,7 +427,7 @@ namespace detail
 
 		lock.unlock();
 
-		ReadRRDeviceString(settings->interface_number, settings->string_nodeid_index, boost::bind(&UsbDevice_Initialize::InitializeDevice2, shared_from_this(), _1, _2, boost::protect(handler), dev_h, settings), dev_h);
+		ReadRRDeviceString(settings->interface_number, settings->string_nodeid_index, boost::bind(&UsbDevice_Initialize::InitializeDevice2, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), boost::protect(handler), dev_h, settings), dev_h);
 	}
 
 	void UsbDevice_Initialize::InitializeDevice2(const boost::system::error_code& ec, const std::string& device_nodeid, boost::function< void(UsbDeviceStatus) > handler, RR_SHARED_PTR<void> dev_h, RR_SHARED_PTR<UsbDevice_Settings> settings)
@@ -450,7 +450,7 @@ namespace detail
 			return;
 		}
 
-		ReadRRDeviceString(settings->interface_number, settings->string_nodename_index, boost::bind(&UsbDevice_Initialize::InitializeDevice3, shared_from_this(), _1, _2, boost::protect(handler), dev_h, settings), dev_h);
+		ReadRRDeviceString(settings->interface_number, settings->string_nodename_index, boost::bind(&UsbDevice_Initialize::InitializeDevice3, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), boost::protect(handler), dev_h, settings), dev_h);
 	}
 
 	void UsbDevice_Initialize::InitializeDevice3(const boost::system::error_code& ec, const std::string& device_nodename, boost::function< void(UsbDeviceStatus) > handler, RR_SHARED_PTR<void> dev_h, RR_SHARED_PTR<UsbDevice_Settings> settings)
@@ -515,7 +515,7 @@ namespace detail
 		boost::shared_array<uint8_t> buf(new uint8_t[255]);
 
 		boost::asio::mutable_buffer buf3(buf.get(), 255);
-		AsyncControlTransfer(0x80, 0x06, 0x0300, 0x409, buf3, boost::bind(&UsbDevice_Initialize::ReadRRDeviceString1, shared_from_this(), _1, _2, interface_number, property_index, buf, boost::protect(handler), dev_h), dev_h);
+		AsyncControlTransfer(0x80, 0x06, 0x0300, 0x409, buf3, boost::bind(&UsbDevice_Initialize::ReadRRDeviceString1, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), interface_number, property_index, buf, boost::protect(handler), dev_h), dev_h);
 	}
 
 	void UsbDevice_Initialize::ReadRRDeviceString1(const boost::system::error_code& ec, size_t bytes_transferred, uint8_t interface_number, uint8_t property_index, boost::shared_array<uint8_t> buf, boost::function< void(const boost::system::error_code&, const std::string&) > handler, RR_SHARED_PTR<void> dev_h)
@@ -552,7 +552,7 @@ namespace detail
 		memset(buf2.get(), 0, 512);
 
 		boost::asio::mutable_buffer buf3(buf2.get(), 255);
-		AsyncControlTransfer(0x80, 0x06, 0x0300 | property_index, code, buf3, boost::bind(&UsbDevice_Initialize::ReadRRDeviceString2, shared_from_this(), _1, _2, interface_number, property_index, buf2, boost::protect(handler), dev_h), dev_h);
+		AsyncControlTransfer(0x80, 0x06, 0x0300 | property_index, code, buf3, boost::bind(&UsbDevice_Initialize::ReadRRDeviceString2, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), interface_number, property_index, buf2, boost::protect(handler), dev_h), dev_h);
 
 	}
 
@@ -688,7 +688,7 @@ namespace detail
 			boost::shared_array<uint8_t> buf(new uint8_t[4]);
 
 			boost::asio::mutable_buffer b1(buf.get(), 4);
-			AsyncControlTransferNoLock(VendorInterfaceRequest, RR_USB_CONTROL_RESET_ALL_STREAM, 0, settings->interface_number, b1, boost::bind(&UsbDevice_Claim::AsyncCreateTransportConnection2, shared_from_this(), _1, _2, buf, url_res, endpoint, noden, boost::protect(handler)));
+			AsyncControlTransferNoLock(VendorInterfaceRequest, RR_USB_CONTROL_RESET_ALL_STREAM, 0, settings->interface_number, b1, boost::bind(&UsbDevice_Claim::AsyncCreateTransportConnection2, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), buf, url_res, endpoint, noden, boost::protect(handler)));
 			break;
 		}
 		case Claiming:		
@@ -728,7 +728,7 @@ namespace detail
 
 		boost::shared_array<uint8_t> buf2(new uint8_t[1]);
 		boost::asio::mutable_buffer buf3(buf2.get(),0);
-		AsyncWritePipe(settings->out_pipe_id, buf3, boost::bind(&UsbDevice_Claim::AsyncCreateTransportConnection3, shared_from_this(), _1, _2, buf2, url_res, endpoint, noden, boost::protect(handler)));
+		AsyncWritePipe(settings->out_pipe_id, buf3, boost::bind(&UsbDevice_Claim::AsyncCreateTransportConnection3, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), buf2, url_res, endpoint, noden, boost::protect(handler)));
 	}
 
 	void UsbDevice_Claim::AsyncCreateTransportConnection3(const boost::system::error_code& ec, size_t bytes_transferred, boost::shared_array<uint8_t> buf, const ParseConnectionURLResult& url_res, uint32_t endpoint, const std::string& noden, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler)
@@ -740,7 +740,7 @@ namespace detail
 		(*reinterpret_cast<uint16_t*>(buf2.get())) = 0x0100;
 
 		boost::asio::mutable_buffer b1(buf2.get(), 2);
-		AsyncControlTransfer(VendorInterfaceOutRequest, RR_USB_CONTROL_CURRENT_PROTOCOL, 0, settings->interface_number, b1, boost::bind(&UsbDevice_Claim::AsyncCreateTransportConnection4, shared_from_this(), _1, _2, buf2, url_res, endpoint, noden, boost::protect(handler)));
+		AsyncControlTransfer(VendorInterfaceOutRequest, RR_USB_CONTROL_CURRENT_PROTOCOL, 0, settings->interface_number, b1, boost::bind(&UsbDevice_Claim::AsyncCreateTransportConnection4, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), buf2, url_res, endpoint, noden, boost::protect(handler)));
 
 	}
 
@@ -802,7 +802,7 @@ namespace detail
 		boost::shared_array<uint8_t> buf(new uint8_t[4]);
 
 		boost::asio::mutable_buffer b1(buf.get(), 4);
-		AsyncControlTransfer(VendorInterfaceRequest, RR_USB_CONTROL_CONNECT_STREAM, 0, settings->interface_number, b1, boost::bind(&UsbDevice_Claim::AsyncCreateTransportConnection6, shared_from_this(), _1, _2, buf, url_res, endpoint, noden, boost::protect(handler)));
+		AsyncControlTransfer(VendorInterfaceRequest, RR_USB_CONTROL_CONNECT_STREAM, 0, settings->interface_number, b1, boost::bind(&UsbDevice_Claim::AsyncCreateTransportConnection6, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), buf, url_res, endpoint, noden, boost::protect(handler)));
 	}
 
 	void UsbDevice_Claim::AsyncCreateTransportConnection6(const boost::system::error_code& ec, size_t bytes_transferred, boost::shared_array<uint8_t> buf, const ParseConnectionURLResult& url_res, uint32_t endpoint, const std::string& noden, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler)
@@ -845,7 +845,7 @@ namespace detail
 			transport_write_idle.push_back(t);
 
 			lock.unlock();
-			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(handler, t, _1);
+			boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h = boost::bind(handler, t, RR_BOOST_PLACEHOLDERS(_1));
 			t->AsyncAttachSocket(noden, h);
 			hw->AddCloseListener(t, &UsbDeviceTransportConnection::Close);
 		}
@@ -943,7 +943,7 @@ namespace detail
 				*buf1 = id;
 								
 				boost::asio::mutable_buffer b1(buf.get(), 4);
-				AsyncControlTransferNoLock(VendorInterfaceOutRequest, RR_USB_CONTROL_CLOSE_STREAM, 0, settings->interface_number, b1, boost::bind(&UsbDevice_Claim::ConnectionClosed1, shared_from_this(), _1, _2, buf));
+				AsyncControlTransferNoLock(VendorInterfaceOutRequest, RR_USB_CONTROL_CLOSE_STREAM, 0, settings->interface_number, b1, boost::bind(&UsbDevice_Claim::ConnectionClosed1, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), buf));
 			}
 
 		}
@@ -977,7 +977,7 @@ namespace detail
 
 			uint64_t c = read_count + 1;			
 			boost::asio::mutable_buffer b1(e->get(), RR_USB_MAX_PACKET_SIZE);
-			AsyncReadPipeNoLock(settings->in_pipe_id, b1, boost::bind(&UsbDevice_Claim::EndRead, shared_from_this(), _1, _2, *e, c));
+			AsyncReadPipeNoLock(settings->in_pipe_id, b1, boost::bind(&UsbDevice_Claim::EndRead, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), *e, c));
 			read_buf_use.splice(read_buf_use.end(), read_buf, e);
 			read_count = c;
 		}
@@ -1062,7 +1062,7 @@ namespace detail
 
 			BOOST_FOREACH(writes_type& e, writes)
 			{
-				AsyncWritePipeNoLock(settings->out_pipe_id, e.get<0>(), boost::bind(&UsbDevice_Claim::EndWrite, shared_from_this(), _1, _2, e.get<1>()));				
+				AsyncWritePipeNoLock(settings->out_pipe_id, e.get<0>(), boost::bind(&UsbDevice_Claim::EndWrite, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), e.get<1>()));				
 			}
 		}
 	}
@@ -1262,7 +1262,7 @@ namespace detail
 
 			boost::shared_array<uint8_t> buf(new uint8_t[4]);
 			boost::asio::mutable_buffer b1(buf.get(), 4);
-			AsyncControlTransferNoLock(VendorInterfaceRequest, RR_USB_CONTROL_RESET_ALL_STREAM, 0, settings->interface_number, b1, boost::bind(&UsbDevice_Claim::Closed1, shared_from_this(), _1, _2, buf));			
+			AsyncControlTransferNoLock(VendorInterfaceRequest, RR_USB_CONTROL_RESET_ALL_STREAM, 0, settings->interface_number, b1, boost::bind(&UsbDevice_Claim::Closed1, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), buf));			
 		}
 
 		BOOST_FOREACH(RR_SHARED_PTR<UsbDeviceTransportConnection>& c, connections)
