@@ -12,6 +12,12 @@ A communication framework for robotics, automation, and the Internet of Things
 
 See [http://robotraconteur.com/documentation](http://robotraconteur.com/documentation) for documentation.
 
+## Getting Help
+
+1. I found a bug! Please leave an issue on the [GitHub Issues](https://github.com/robotraconteur/robotraconteur/issues) page
+2. I have a specific question about how to use Robot Raconteur: Please leave a question on [Stack Overflow](https://stackoverflow.com/) with "Robot Raconteur" in the title.
+3. I have a general question or comment: Please leave a message on the [Robot Raconteur Forum](https://www.robotraconteur.com/forum).
+
 ## Installation
 
 ### Windows
