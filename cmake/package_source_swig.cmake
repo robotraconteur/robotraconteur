@@ -37,7 +37,7 @@ add_custom_command(
     TARGET package_source_swig
 	COMMAND "${CMAKE_COMMAND}" -E make_directory ${SWIG_PYTHON_OUTDIR}
 	COMMAND "${CMAKE_COMMAND}" -E env "SWIG_LIB=${SWIG_DIR}" 
-	"${SWIG_EXECUTABLE}" -python -relativeimport
+	"${SWIG_EXECUTABLE}" -python -relativeimport -threads
 	-outdir ${SWIG_PYTHON_OUTDIR} -c++
 	-I${CMAKE_SOURCE_DIR}/RobotRaconteurCore/include -I${CMAKE_SOURCE_DIR}
 	-I${CMAKE_SOURCE_DIR}/RobotRaconteurPython
