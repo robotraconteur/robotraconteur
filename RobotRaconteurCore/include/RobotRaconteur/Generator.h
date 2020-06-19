@@ -30,29 +30,143 @@
 
 namespace RobotRaconteur
 {
+	/**
+	 * @brief Generator type for use with generator functions, with parameter and return
+	 * 
+	 * Generators are used with generator functions to implement simple coroutines. They are
+	 * returned by function members with a parameter and/or return marked with the
+	 * generator container type. Robot Raconteur generators are modeled on Python generators,
+	 * and are intended to be used in two scenarios:
+	 * 1. Transfering large parameter values or return values that would be over the message
+	 * transfer limit (typically around 10 MB).
+	 * 2. Long running operations that return updates or require periodic input. Generators
+	 * are used to implement functionality similar to "actions" in ROS.
+	 * 
+	 * Generators are a generalization of iterators, where a value is returned every time
+	 * the iterator is advanced until there are no more values. Python and Robot Raconteur iterators
+	 * add the option of passing a parameter every advance, allowing for simple coroutines. The
+	 * generator is advanced by calling the Next() or AsyncNext() functions. These functions
+	 * will either return a value or throw StopIterationException if there are no more values. Next()
+	 * and AsyncNext() may also throw any valid Robot Raconteur exception.
+	 * 
+	 * Generators can be terminated with either the Close() or Abort() functions. Close() should be
+	 * used to cleanly close the generator, and is not considered an error condition. Next(), if called
+	 * after close, should throw StopIterationException. Abort() is considered an error condition, and 
+	 * will cause any action assosciated with the generator to be aborted as quickly as possible (ie faulting
+	 * a robot). If Next() is called after Abort(), OperationAbortedException should be thrown.
+	 * 
+	 * Robot Raconteur clients will return a populated stub generator that calls the service. Services
+	 * are expected to return a subclass of Generator that implements at a minimum Next(), Close(), and Abort().
+	 * AsyncNext(), AsyncAbort(), and AsyncClose() may optionally be implemented for asynchronous operation on the
+	 * service side.
+	 * 
+	 * @tparam Return The type of value returned by Next() and AsyncNext()
+	 * @tparam Param The type of the parameter passed to Next() and AsyncNext()
+	 */
+
 	template <typename Return, typename Param>
 	class Generator : private boost::noncopyable
 	{
 	public:
+		/**
+		 * @brief Advance the generator
+		 * 
+		 * Next() advances the generator to retrieve the next value. This version of 
+		 * Generator includes passing a parameter v to the generator.
+		 * 
+		 * @param v Parameter to pass to generator
+		 * @return Return Return value from generator
+		 */
 		virtual Return Next(const Param& v) = 0;
+		/**
+		 * @brief Asynchronously advance the generator
+		 * 
+		 * Same as Next() but returns asynchronously.
+		 * 
+		 * @param v Parameter to pass to generator
+		 * @param handler A handler function to receive the return value or an exception
+		 * @param timeout Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout.
+		 */
 		virtual void AsyncNext(const Param& v, boost::function<void(const Return, RR_SHARED_PTR<RobotRaconteurException> err)> handler, int32_t timeout = RR_TIMEOUT_INFINITE) = 0;
+		/**
+		 * @brief Abort the generator
+		 * 
+		 * Aborts and destroys the generator. This is assumed to be an error condition. Next() should throw OperationAbortedException
+		 * if called after Abort(). Any ongoing operations should be terminated with an error condition, for example
+		 * a moving robot should be immediately halted.
+		 */
 		virtual void Abort() = 0;
+		/**
+		 * @brief Asynchronously abort the generator
+		 * 
+		 * Same as Abort() but returns asynchronously.
+		 * 
+		 * @param handler The handler to call when abort is complete
+		 * @param timeout Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout.
+		 */
 		virtual void AsyncAbort(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler, int32_t timeout = RR_TIMEOUT_INFINITE) = 0;
+		/**
+		 * @brief Close the generator
+		 * 
+		 * Closes the generator. Closing the generator terminates iteration and destroys the generator.
+		 * This operation cleanly closes the generator, and is not considered to be an error condition. Next()
+		 * should throw StopIterationException if called after Close().
+		 * 
+		 */
 		virtual void Close() = 0;
+		/**
+		 * @brief Asynchronously closes the generator
+		 * 
+		 * Same as Close() but returns asynchronously.
+		 * 
+		 * @param handler The handler to call when close is complete
+		 * @param timeout Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout.
+		 */
 		virtual void AsyncClose(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler, int32_t timeout = RR_TIMEOUT_INFINITE) = 0;
 		virtual ~Generator() {}
 	};
 
+	/**
+	 * @brief Generator type for use with generator functions, with return
+	 *  
+	 * @copydetails Generator
+	 * 
+	 */
 	template <typename Return>
 	class Generator<Return, void> : private boost::noncopyable
 	{
 	public:
+		/**
+		 * @copybrief Generator::Next()
+		 * 
+		 *  Next() advances the generator to retrieve the next value. This version of 
+		 *  Generator does not include passing a parameter to the generator.
+		 * 
+		 * @return Return Return value from generator
+		 */
 		virtual Return Next() = 0;
+		/** 
+		 * @copybrief Generator::AsyncNext()
+		 * 
+		 * Same as Next() but returns asynchronously.
+		 * 
+		 * @param handler A handler function to receive the return value or an exception
+		 * @param timeout Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout.
+		 */
 		virtual void AsyncNext(boost::function<void(const Return, RR_SHARED_PTR<RobotRaconteurException> err)> handler, int32_t timeout = RR_TIMEOUT_INFINITE) = 0;
+		/** @copydoc Generator::Abort() */ 
 		virtual void Abort() = 0;
+		/** @copydoc Generator::AsyncAbort() */ 
 		virtual void AsyncAbort(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler, int32_t timeout = RR_TIMEOUT_INFINITE) = 0;
+		/** @copydoc Generator::Close() */ 
 		virtual void Close() = 0;
+		/** @copydoc Generator::AsyncClose() */ 
 		virtual void AsyncClose(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler, int32_t timeout = RR_TIMEOUT_INFINITE) = 0;
+		/**
+		 * @brief Automatically call Next() repeatedly and return std::vector of results
+		 * 
+		 * @return std::vector<Return> All values returned by generator Next()
+		 */
 		virtual std::vector<Return> NextAll()
 		{
 			std::vector<Return> ret;
@@ -69,15 +183,43 @@ namespace RobotRaconteur
 		virtual ~Generator() {}
 	};
 
+
+	/**
+	 * @brief Generator type for use with generator functions, with parameter
+	 *  
+	 * @copydetails Generator
+	 * 
+	 */
 	template <typename Param>
 	class Generator<void, Param> : private boost::noncopyable
 	{
 	public:
+	/**
+		 * @copybrief Generator::Next()
+		 * 
+		 *  Next() advances the generator to retrieve the next value. This version of 
+		 *  Generator does not include passing a parameter to the generator.
+		 * 
+		 * @param v Parameter to pass to generator
+		 */
 		virtual void Next(const Param& v) = 0;
+		/** 
+		 * @copybrief Generator::AsyncNext()
+		 * 
+		 * Same as Next() but returns asynchronously.
+		 * 
+		 * @param v Parameter to pass to generator
+		 * @param handler The handler to call when next is complete
+		 * @param timeout Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout.
+		 */
 		virtual void AsyncNext(const Param& v, boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler, int32_t timeout = RR_TIMEOUT_INFINITE) = 0;
+		/** @copydoc Generator::Abort() */ 
 		virtual void Abort() = 0;
+		/** @copydoc Generator::AsyncAbort() */ 
 		virtual void AsyncAbort(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler, int32_t timeout = RR_TIMEOUT_INFINITE) = 0;
+		/** @copydoc Generator::Close() */ 
 		virtual void Close() = 0;
+		/** @copydoc Generator::AsyncClose() */ 
 		virtual void AsyncClose(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler, int32_t timeout = RR_TIMEOUT_INFINITE) = 0;
 		virtual ~Generator() {}
 	};
@@ -449,11 +591,21 @@ namespace RobotRaconteur
 		virtual ~GeneratorServer() {}
 	};
 
+	/**
+	 * @brief Helper class for synchronous service generators
+	 * 
+	 * By default, services will call AsyncNext(), AsyncClose(), and AsyncAbort(). This
+	 * class will redirect these calls to synchronous Next(), Close, and Abort(). Inherit
+	 * from SyncGenerator for this behavior.
+	 * 
+	 */
 	template <typename Return, typename Param>
 	class SyncGenerator : public Generator<Return, Param>
 	{
 	public:
+		/** @copydoc Generator<Return,Param>::Next() */
 		virtual Return Next(const Param& v) = 0;
+		/** @copydoc Generator<Return,Param>::AsyncNext() */
 		virtual void AsyncNext(const Param& v, boost::function<void(const Return, RR_SHARED_PTR<RobotRaconteurException> err)> handler, int32_t timeout = RR_TIMEOUT_INFINITE)
 		{
 			Return r;
@@ -469,7 +621,9 @@ namespace RobotRaconteur
 			}
 			detail::InvokeHandler(node, handler, r);
 		}
+		/** @copydoc Generator<Return,Param>::Abort() */
 		virtual void Abort() = 0;
+		/** @copydoc Generator<Return,Param>::AsyncAbort() */
 		virtual void AsyncAbort(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler, int32_t timeout = RR_TIMEOUT_INFINITE)
 		{			
 			RR_WEAK_PTR<RobotRaconteurNode> node;
@@ -484,7 +638,9 @@ namespace RobotRaconteur
 			}
 			detail::InvokeHandler(node, handler);
 		}
+		/** @copydoc Generator<Return,Param>::Close() */
 		virtual void Close() = 0;
+		/** @copydoc Generator<Return,Param>::AsyncClose() */
 		virtual void AsyncClose(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler, int32_t timeout = RR_TIMEOUT_INFINITE)
 		{
 			RR_WEAK_PTR<RobotRaconteurNode> node;
@@ -502,11 +658,14 @@ namespace RobotRaconteur
 		virtual ~SyncGenerator() {}
 	};
 
+	/** @copydoc SyncGenerator */
 	template <typename Return>
 	class SyncGenerator<Return,void> : public Generator<Return, void>
 	{
 	public:
+		/** @copydoc Generator<Return,void>::Next() */
 		virtual Return Next() = 0;
+		/** @copydoc Generator<Return,void>::AsyncNext() */
 		virtual void AsyncNext(boost::function<void(const Return, RR_SHARED_PTR<RobotRaconteurException> err)> handler, int32_t timeout = RR_TIMEOUT_INFINITE)
 		{
 			Return r;
@@ -522,7 +681,9 @@ namespace RobotRaconteur
 			}
 			detail::InvokeHandler(node, handler, r);
 		}
+		/** @copydoc Generator<Return,void>::Abort() */
 		virtual void Abort() = 0;
+		/** @copydoc Generator<Return,void>::AsyncAbort() */
 		virtual void AsyncAbort(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler, int32_t timeout = RR_TIMEOUT_INFINITE)
 		{
 			RR_WEAK_PTR<RobotRaconteurNode> node;
@@ -537,7 +698,9 @@ namespace RobotRaconteur
 			}
 			detail::InvokeHandler(node, handler);
 		}
+		/** @copydoc Generator<Return,void>::Close() */
 		virtual void Close() = 0;
+		/** @copydoc Generator<Return,void>::AsyncClose() */
 		virtual void AsyncClose(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler, int32_t timeout = RR_TIMEOUT_INFINITE)
 		{
 			RR_WEAK_PTR<RobotRaconteurNode> node;
@@ -555,11 +718,14 @@ namespace RobotRaconteur
 		virtual ~SyncGenerator() {}
 	};
 
+	/** @copydoc SyncGenerator */
 	template <typename Param>
 	class SyncGenerator<void,Param> : public Generator<void, Param>
 	{
 	public:
+		/** @copydoc Generator<void,Param>::Next() */
 		virtual void Next(const Param& v) = 0;
+		/** @copydoc Generator<void,Param>::AsyncNext() */
 		virtual void AsyncNext(const Param& v, boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler, int32_t timeout = RR_TIMEOUT_INFINITE)
 		{			
 			RR_WEAK_PTR<RobotRaconteurNode> node;
@@ -574,7 +740,9 @@ namespace RobotRaconteur
 			}
 			detail::InvokeHandler(node, handler);
 		}
+		/** @copydoc Generator<void,Param>::Abort() */
 		virtual void Abort() = 0;
+		/** @copydoc Generator<void,Param>::AsyncAbort() */
 		virtual void AsyncAbort(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler, int32_t timeout = RR_TIMEOUT_INFINITE)
 		{
 			RR_WEAK_PTR<RobotRaconteurNode> node;
@@ -589,7 +757,9 @@ namespace RobotRaconteur
 			}
 			detail::InvokeHandler(node, handler);
 		}
+		/** @copydoc Generator<void,Param>::Close() */
 		virtual void Close() = 0;
+		/** @copydoc Generator<void,Param>::AsyncClose() */
 		virtual void AsyncClose(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler, int32_t timeout = RR_TIMEOUT_INFINITE)
 		{
 			RR_WEAK_PTR<RobotRaconteurNode> node;
@@ -607,6 +777,15 @@ namespace RobotRaconteur
 		virtual ~SyncGenerator() {}
 	};
 
+	/**
+	 * @brief Utility class to use a C++ range with Generator<Return,void>.
+	 * 
+	 * Examples of C++ ranges include std::vector<T> or std::list<T>
+	 * 
+	 * Use CreateRangeGenerator() helper function to instantiate this type
+	 * 
+	 * @tparam T The type contained in the range
+	 */
 	template <typename T>
 	class RangeGenerator : public SyncGenerator<typename T::value_type, void>
 	{
@@ -625,6 +804,7 @@ namespace RobotRaconteur
 			this->aborted = false;
 		}
 
+		/** @copydoc SyncGenerator<void,Param>::Next() */
 		virtual typename T::value_type Next()
 		{
 			boost::mutex::scoped_lock lock(range_lock);
@@ -641,12 +821,14 @@ namespace RobotRaconteur
 
 			return *iter++;
 		}
+		/** @copydoc SyncGenerator<void,Param>::Abort() */
 		virtual void Abort()
 		{
 			boost::mutex::scoped_lock lock(range_lock);
 			iter = range.end();
 			aborted = true;
 		}
+		/** @copydoc SyncGenerator<void,Param>::Close() */
 		virtual void Close()
 		{
 			boost::mutex::scoped_lock lock(range_lock);
@@ -655,6 +837,13 @@ namespace RobotRaconteur
 		virtual ~RangeGenerator() {}
 	};
 
+	/**
+	 * @brief Create a RangeGenerator from a range
+	 *  
+	 * @tparam T The type contained in the range
+	 * @param range The range object to use with generator. Examples include std::vector<T> and std::list<T>
+	 * @return RR_SHARED_PTR<RangeGenerator<T> > The created RangeGenerator
+	 */
 	template<typename T>
 	RR_SHARED_PTR<RangeGenerator<T> > CreateRangeGenerator(const T& range)
 	{
