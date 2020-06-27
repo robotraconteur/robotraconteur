@@ -1138,6 +1138,17 @@ namespace RobotRaconteur
 		 */
 		std::string GetServiceNodeName(RR_SHARED_PTR<RRObject> obj);
 
+		
+		/**
+		 * @brief Get the name of a service from a client connection
+		 * 
+		 * Returns the service name of the remote service that a client is connected
+		 * 
+		 * @param obj The root object of the client to use to retrieve service attributes
+		 * @return std::string The service name
+		 */
+		std::string GetServiceName(RR_SHARED_PTR<RRObject> obj);
+
 		/**
 		 * @internal
 		 * 

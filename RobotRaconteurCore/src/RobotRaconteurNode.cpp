@@ -1538,7 +1538,7 @@ void RobotRaconteurNode::AsyncConnectService(const std::vector<std::string> &url
 		}
 
 		RR_SHARED_PTR<detail::RobotRaconteurNode_connector> connector=RR_MAKE_SHARED<detail::RobotRaconteurNode_connector>(shared_from_this());
-		GetThreadPool()->Post(boost::bind(&detail::RobotRaconteurNode_connector::connect, connector, connectors, username.to_string(), credentials, listener, objecttype, boost::protect(handler), timeout));
+		GetThreadPool()->Post(boost::bind(&detail::RobotRaconteurNode_connector::connect, connector, connectors, username.to_string(), credentials, listener, objecttype.to_string(), boost::protect(handler), timeout));
 		return;	
 }
 
@@ -1609,6 +1609,12 @@ std::string RobotRaconteurNode::GetServiceNodeName(RR_SHARED_PTR<RRObject> obj)
 {
 	RR_SHARED_PTR<ServiceStub> stub = rr_cast<ServiceStub>(obj);
 	return stub->GetContext()->GetRemoteNodeName();
+}
+
+std::string RobotRaconteurNode::GetServiceName(RR_SHARED_PTR<RRObject> obj)
+{
+	RR_SHARED_PTR<ServiceStub> stub = rr_cast<ServiceStub>(obj);
+	return stub->GetContext()->GetServiceName();
 }
 
 uint32_t RobotRaconteurNode::RegisterEndpoint(RR_SHARED_PTR<Endpoint> e)

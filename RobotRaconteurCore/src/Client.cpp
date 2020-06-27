@@ -1843,8 +1843,6 @@ namespace RobotRaconteur
 	{
 		if (objecttype == implementstype) return true;
 
-		boost::mutex::scoped_lock lock(pulled_service_defs_lock);
-
 		boost::tuple<boost::string_ref, boost::string_ref> s1 = SplitQualifiedName(objecttype);
 
 
@@ -1897,6 +1895,7 @@ namespace RobotRaconteur
 
 	bool ClientContext::VerifyObjectImplements(boost::string_ref objecttype, boost::string_ref implementstype)
 	{
+		boost::mutex::scoped_lock lock(pulled_service_defs_lock);
 		if (!VerifyObjectImplements2(objecttype, implementstype))
 			throw ServiceException("Invalid object type");
 		return true;
