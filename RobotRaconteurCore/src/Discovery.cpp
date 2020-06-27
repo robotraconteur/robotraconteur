@@ -1705,7 +1705,14 @@ namespace RobotRaconteur
 			return n;
 		}
 
-		RR_SHARED_PTR<ServiceSubscription> Discovery::SubscribeService(const std::vector<std::string>& service_types, RR_SHARED_PTR<ServiceSubscriptionFilter> filter)
+		RR_SHARED_PTR<ServiceSubscription> Discovery::SubscribeService(const std::vector<std::string>& url, boost::string_ref username, RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> > credentials,  boost::string_ref objecttype)
+		{
+			RR_SHARED_PTR<ServiceSubscription> s = RR_MAKE_SHARED<ServiceSubscription>(shared_from_this());
+			s->InitServiceURL(url,username,credentials,objecttype);
+			return s;
+		}		
+
+		RR_SHARED_PTR<ServiceSubscription> Discovery::SubscribeServiceByType(const std::vector<std::string>& service_types, RR_SHARED_PTR<ServiceSubscriptionFilter> filter)
 		{
 			RR_SHARED_PTR<ServiceSubscription> s = RR_MAKE_SHARED<ServiceSubscription>(shared_from_this());
 			DoSubscribe(service_types, filter, s);

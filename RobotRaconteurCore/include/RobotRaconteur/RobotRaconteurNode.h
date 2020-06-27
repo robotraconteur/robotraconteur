@@ -1119,6 +1119,26 @@ namespace RobotRaconteur
 		std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > GetServiceAttributes(RR_SHARED_PTR<RRObject> obj);
 
 		/**
+		 * @brief Get the service NodeID of the remote node from a client connection
+		 * 
+		 * Returns the NodeID of the remote node that a client is connected
+		 * 
+		 * @param obj The root object of the client to use to retrieve service attributes
+		 * @return NodeID The NodeID
+		 */
+		RobotRaconteur::NodeID GetServiceNodeID(RR_SHARED_PTR<RRObject> obj);
+
+		/**
+		 * @brief Get the service NodeName of the remote node from a client connection
+		 * 
+		 * Returns the NodeName of the remote node that a client is connected
+		 * 
+		 * @param obj The root object of the client to use to retrieve service attributes
+		 * @return std::string The NodeName
+		 */
+		std::string GetServiceNodeName(RR_SHARED_PTR<RRObject> obj);
+
+		/**
 		 * @internal
 		 * 
 		 * @brief Registers an endpoint for use with the node
@@ -1347,14 +1367,28 @@ namespace RobotRaconteur
 		/**
 		 * @brief Subscribe to listen for available services and automatically connect
 		 * 
-		 * A Serviceubscription will track the availability of service types and
+		 * A ServiceSubscription will track the availability of service types and
 		 * create connections when available.
 		 * 
 		 * @param service_types A std::vector of service types to listen for, ie `com.robotraconteur.robotics.robot.Robot`
 		 * @param filter A filter to select individual services based on specified criteria
 		 * @return RR_SHARED_PTR<ServiceSubscription> The active subscription
 		 */
-		RR_SHARED_PTR<ServiceSubscription> SubscribeService(const std::vector<std::string>& service_types, RR_SHARED_PTR<ServiceSubscriptionFilter> filter = RR_SHARED_PTR<ServiceSubscriptionFilter>());
+		RR_SHARED_PTR<ServiceSubscription> SubscribeServiceByType(const std::vector<std::string>& service_types, RR_SHARED_PTR<ServiceSubscriptionFilter> filter = RR_SHARED_PTR<ServiceSubscriptionFilter>());
+
+		/**
+		 * @brief Subscribe to a service using one or more URL. Used to create robust connections to services
+		 * 
+		 * Creates a ServiceSubscription tide to a service with one or more candidate connection URLs. The
+		 * subscription will attempt to maintain a peristent connection, reconnecting if the connection is lost.
+		 * 
+		 * @param url One or more candidate connection urls
+		 * @param username An optional username for authentication
+		 * @param credentials Optional credentials for authentication
+		 * @param objecttype The desired root object proxy type. Optional but highly recommended.
+		 * @return RR_SHARED_PTR<ServiceSubscription> The subscription object
+		 */
+		RR_SHARED_PTR<ServiceSubscription> SubscribeService(const std::vector<std::string>& url, boost::string_ref username = "", RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> > credentials=(RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >()),  boost::string_ref objecttype = "");
 
 	protected:
 

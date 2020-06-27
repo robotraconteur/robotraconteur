@@ -595,7 +595,7 @@ int32_t pipesubscriptions_count = 0;
 std::map<int32_t, boost::shared_ptr<MexPipeSubscription> > pipesubscriptions;
 
 mxArray* SubscribeServiceInfo2(const mxArray* service_types, const mxArray* filter);
-mxArray* SubscribeService(const mxArray* service_types, const mxArray* filter);
+mxArray* SubscribeServiceByType(const mxArray* service_types, const mxArray* filter);
 
 std::map<int, boost::weak_ptr<MexServiceSkel> > skels;
 boost::mutex skels_lock;

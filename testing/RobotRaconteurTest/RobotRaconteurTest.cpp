@@ -1289,7 +1289,7 @@ return 0;
 
 		std::vector<std::string> servicetypes;
 		servicetypes.push_back(servicetype);
-		RR_SHARED_PTR<ServiceSubscription> subscription = RobotRaconteurNode::s()->SubscribeService(servicetypes);
+		RR_SHARED_PTR<ServiceSubscription> subscription = RobotRaconteurNode::s()->SubscribeServiceByType(servicetypes);
 
 		
 
@@ -1469,7 +1469,7 @@ return 0;
 
 		std::vector<std::string> servicetypes;
 		servicetypes.push_back(servicetype);
-		RR_SHARED_PTR<ServiceSubscription> subscription = RobotRaconteurNode::s()->SubscribeService(servicetypes, f);
+		RR_SHARED_PTR<ServiceSubscription> subscription = RobotRaconteurNode::s()->SubscribeServiceByType(servicetypes, f);
 		
 		subscription->AddClientConnectListener(servicesubscription_connected);
 		subscription->AddClientDisconnectListener(servicesubscription_disconnected);
@@ -1546,6 +1546,61 @@ return 0;
 
 		subscription->Close();
 		
+		RobotRaconteurNode::s()->Shutdown();
+
+		return 0;
+	}
+
+	if (command == "subscriberurltest")
+	{
+		if (argc < 3)
+		{
+			cout << "Usage for subscriberurltest:  RobotRaconteurTest subscriberurltest url" << endl;
+			return -1;
+		}
+
+		string url = string(argv[2]);
+		//vector<string> schemes;
+		//boost::split(schemes, argv[3], boost::is_from_range(',', ','));
+
+		RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
+
+		RR_SHARED_PTR<TcpTransport> t = RR_MAKE_SHARED<TcpTransport>();
+		t->EnableNodeDiscoveryListening();
+		RobotRaconteurNode::s()->RegisterTransport(t);
+
+		RR_SHARED_PTR<LocalTransport> c2 = RR_MAKE_SHARED<LocalTransport>();
+		c2->EnableNodeDiscoveryListening();
+		RobotRaconteurNode::s()->RegisterTransport(c2);
+
+		RR_SHARED_PTR<HardwareTransport> c5 = RR_MAKE_SHARED<HardwareTransport>();
+		RobotRaconteurNode::s()->RegisterTransport(c5);
+
+		RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<com__robotraconteur__testing__TestService1Factory>());
+		RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<com__robotraconteur__testing__TestService2Factory>());
+
+		std::vector<std::string> urls;
+		urls.push_back(url);
+		RR_SHARED_PTR<ServiceSubscription> subscription = RobotRaconteurNode::s()->SubscribeService(urls);
+
+		subscription->AddClientConnectListener(servicesubscription_connected);
+		subscription->AddClientDisconnectListener(servicesubscription_disconnected);
+
+		boost::this_thread::sleep(boost::posix_time::seconds(10));
+
+		std::map<ServiceSubscriptionClientID, RR_SHARED_PTR<RRObject> > clients = subscription->GetConnectedClients();
+		typedef std::map<ServiceSubscriptionClientID, RR_SHARED_PTR<RRObject> >::value_type e_type;
+		BOOST_FOREACH(e_type& e, clients)
+		{
+			cout << "Subscribed Node: " << e.first.NodeID.ToString() << " " << e.first.ServiceName << endl;
+		}
+
+		cout << "Press enter to quit" << endl;
+		
+		getchar();
+
+		subscription->Close();
+
 		RobotRaconteurNode::s()->Shutdown();
 
 		return 0;

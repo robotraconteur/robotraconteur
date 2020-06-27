@@ -120,11 +120,11 @@ classdef RobotRaconteur
 			r=RobotRaconteurRate(frequency);
 		end
 		
-		function ret=SubscribeService(service_types,filter)
+		function ret=SubscribeServiceByType(service_types,filter)
             if(nargin ==1)
-				ret=RobotRaconteurMex('SubscribeService',service_types); 
+				ret=RobotRaconteurMex('SubscribeServiceByType',service_types); 
             else
-				ret=RobotRaconteurMex('SubscribeService',service_types,filter); 
+				ret=RobotRaconteurMex('SubscribeServiceByType',service_types,filter); 
             end
         end
 		

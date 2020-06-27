@@ -4256,14 +4256,14 @@ namespace RobotRaconteur
             return new ServiceInfo2Subscription(sub1);
         }
 
-        public ServiceSubscription SubscribeService(string[] service_types, ServiceSubscriptionFilter filter = null)
+        public ServiceSubscription SubscribeServiceByType(string[] service_types, ServiceSubscriptionFilter filter = null)
         {
             var filter2 = SubscribeService_LoadFilter(filter);
 
             var service_types2 = new vectorstring();
             foreach (string s in service_types) service_types2.Add(s);
 
-            var sub1 = RobotRaconteurNET.WrappedSubscribeService(this, service_types2, filter2);
+            var sub1 = RobotRaconteurNET.WrappedSubscribeServiceByType(this, service_types2, filter2);
             return new ServiceSubscription(sub1);
         }
 

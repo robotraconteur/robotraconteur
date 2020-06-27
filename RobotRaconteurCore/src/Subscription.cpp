@@ -641,6 +641,8 @@ namespace RobotRaconteur
 		this->node = n;
 
 		listener_strand.reset(RR_BOOST_ASIO_NEW_STRAND(n->GetThreadPool()->get_io_context()));
+
+		use_service_url = false;
 	}
 
 	void ServiceSubscription::Init(const std::vector<std::string>& service_types, RR_SHARED_PTR<ServiceSubscriptionFilter> filter)
@@ -652,9 +654,84 @@ namespace RobotRaconteur
 		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Subscription, -1, "ServiceSubscription initialized for service types: " << boost::join(service_types,", "));
 	}
 
+	void ServiceSubscription::InitServiceURL(const std::vector<std::string>& url, boost::string_ref username, RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> > credentials,  boost::string_ref objecttype)
+	{
+		if (url.empty())
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1, "No urls specified for SubscribeService");
+			throw InvalidArgumentException("URL vector must not be empty for SubscribeService");
+		}		
+
+		NodeID service_nodeid;
+		std::string service_nodename;
+		std::string service_name;
+
+		ParseConnectionURLResult url_res = ParseConnectionURL(url.at(0));
+		service_nodeid = url_res.nodeid;
+		service_nodename = url_res.nodename;
+		service_name = url_res.service;
+
+		for (size_t i=1; i<url.size(); i++)
+		{	
+			ParseConnectionURLResult url_res1 = ParseConnectionURL(url.at(0));
+			if (url_res1.nodeid != url_res.nodeid
+				|| url_res1.nodename != url_res.nodename
+				|| url_res1.service != url_res.service)
+			{
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1, "Provided URLs do not point to same service in SubscribeService");
+				throw InvalidArgumentException("URLs must point to same service in SubscribeService");
+			}
+		}
+
+		RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
+		if (!n) throw InvalidOperationException("Node has been released");
+
+		this->retry_delay = 2500;
+
+		this->active = true;
+		this->service_url = url;
+		this->service_url_username = username.to_string();
+		this->service_url_credentials = credentials;
+
+		RR_SHARED_PTR<detail::ServiceSubscription_client> c2 = RR_MAKE_SHARED<detail::ServiceSubscription_client>();
+		c2->connecting.data() = true;
+		c2->nodeid = service_nodeid;
+		c2->nodename = service_nodename;
+		c2->service_name = service_name;
+		c2->service_type = objecttype.to_string();
+		c2->urls = url;
+		c2->last_node_update = n->NowUTC();
+						
+		c2->username = username.to_string();
+		c2->credentials = credentials;
+					
+		try
+		{
+			ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Subscription, -1, "ServiceSubscription begin connect to service service with url " << url.front());
+			RR_WEAK_PTR<ServiceSubscription> weak_this = shared_from_this();
+			n->AsyncConnectService(url, c2->username, c2->credentials,
+				boost::bind(&ServiceSubscription::ClientEvent, weak_this ,RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), RR_BOOST_PLACEHOLDERS(_3), c2),
+				objecttype,
+				boost::bind(&ServiceSubscription::ClientConnected, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), c2),
+				n->GetRequestTimeout() * 2);
+			clients.insert(std::make_pair(ServiceSubscriptionClientID(c2->nodeid, c2->service_name), c2));
+			return;
+		}
+		catch (std::exception& exp2)
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1, "ServiceSubscription connect to service with url " << url.front() << " failed: " << exp2.what());
+		}
+
+		ConnectRetry(c2);
+
+
+	}
+
+
 	void ServiceSubscription::NodeUpdated(RR_SHARED_PTR<detail::Discovery_nodestorage> storage)
 	{
 		boost::mutex::scoped_lock lock(this_lock);
+		if (use_service_url) return;
 		if (!active) return;
 		if (!storage) return;
 		if (!storage->services) return;
@@ -760,6 +837,7 @@ namespace RobotRaconteur
 
 	void ServiceSubscription::NodeLost(RR_SHARED_PTR<detail::Discovery_nodestorage> storage)
 	{
+		if (use_service_url) return;
 		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Subscription, -1, "ServiceSubscription received node lost for " << storage->info->NodeID.ToString());
 	}
 
@@ -780,6 +858,16 @@ namespace RobotRaconteur
 
 		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Subscription, -1, "ServiceSubscription connected to service named \"" << c2->service_name << "\" on node " 
 						<< c2->nodeid.ToString());
+
+		if (c2->nodeid.IsAnyNode())
+		{
+			c2->nodeid = n->GetServiceNodeID(c);
+		}
+
+		if (c2->nodename.empty())
+		{
+			c2->nodename = n->GetServiceNodeName(c);
+		}
 
 		c2->connecting.data() = false;
 		c2->client = c;
@@ -815,7 +903,7 @@ namespace RobotRaconteur
 
 		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Subscription, -1, "ServiceSubscription begin retry timer config for service \"" << c2->service_name << "\" on node " 
 						<< c2->nodeid.ToString() << " with error count " << c2->error_count);
-		if (c2->error_count > 25)
+		if (c2->error_count > 25 && !use_service_url)
 		{
 			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1, "ServiceSubscription for service \"" << c2->service_name << "\" on node " 
 						<< c2->nodeid.ToString() << " with error count " << c2->error_count << " aborting retry due to too many errors");

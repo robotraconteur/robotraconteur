@@ -3644,12 +3644,12 @@ namespace RobotRaconteur
 		return RR_MAKE_SHARED<WrappedServiceInfo2Subscription>(sub);
 	}
 
-	RR_SHARED_PTR<WrappedServiceSubscription> WrappedSubscribeService(RR_SHARED_PTR<RobotRaconteurNode> node, const std::vector<std::string>& service_types, RR_SHARED_PTR<WrappedServiceSubscriptionFilter> filter)
+	RR_SHARED_PTR<WrappedServiceSubscription> WrappedSubscribeServiceByType(RR_SHARED_PTR<RobotRaconteurNode> node, const std::vector<std::string>& service_types, RR_SHARED_PTR<WrappedServiceSubscriptionFilter> filter)
 	{
 		
 		RR_SHARED_PTR<ServiceSubscriptionFilter> filter2=WrappedSubscribeService_LoadFilter(node, filter);
 
-		RR_SHARED_PTR<ServiceSubscription> sub = node->SubscribeService(service_types, filter2);
+		RR_SHARED_PTR<ServiceSubscription> sub = node->SubscribeServiceByType(service_types, filter2);
 
 		return RR_MAKE_SHARED<WrappedServiceSubscription>(sub);
 	}

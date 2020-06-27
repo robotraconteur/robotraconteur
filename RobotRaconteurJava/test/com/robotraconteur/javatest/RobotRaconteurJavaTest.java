@@ -422,7 +422,7 @@ public class RobotRaconteurJavaTest {
                 RobotRaconteurNode.s().registerServiceType(new com.robotraconteur.testing.TestService1.com__robotraconteur__testing__TestService1Factory());
                 RobotRaconteurNode.s().registerServiceType(new com.robotraconteur.testing.TestService2.com__robotraconteur__testing__TestService2Factory());
 				
-				ServiceSubscription sub=RobotRaconteurNode.s().subscribeService(new String[] {"com.robotraconteur.testing.TestService1.testroot"});
+				ServiceSubscription sub=RobotRaconteurNode.s().subscribeServiceByType(new String[] {"com.robotraconteur.testing.TestService1.testroot"});
 
 				sub.addConnectListener(new subscription_connect_listener());
 				sub.addDisconnectListener(new subscription_disconnect_listener());
@@ -509,7 +509,7 @@ public class RobotRaconteurJavaTest {
                 RobotRaconteurNode.s().registerServiceType(new com.robotraconteur.testing.TestService1.com__robotraconteur__testing__TestService1Factory());
                 RobotRaconteurNode.s().registerServiceType(new com.robotraconteur.testing.TestService2.com__robotraconteur__testing__TestService2Factory());
 				
-				ServiceSubscription sub=RobotRaconteurNode.s().subscribeService(new String[] {"com.robotraconteur.testing.TestService1.testroot"}, f);
+				ServiceSubscription sub=RobotRaconteurNode.s().subscribeServiceByType(new String[] {"com.robotraconteur.testing.TestService1.testroot"}, f);
 
 				sub.addConnectListener(new subscription_connect_listener());
 				sub.addDisconnectListener(new subscription_disconnect_listener());

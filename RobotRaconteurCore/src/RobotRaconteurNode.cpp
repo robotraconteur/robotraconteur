@@ -1599,6 +1599,18 @@ std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > RobotRaconteurNode::GetService
 	return stub->GetContext()->GetAttributes();
 }
 
+RobotRaconteur::NodeID RobotRaconteurNode::GetServiceNodeID(RR_SHARED_PTR<RRObject> obj)
+{
+	RR_SHARED_PTR<ServiceStub> stub = rr_cast<ServiceStub>(obj);
+	return stub->GetContext()->GetRemoteNodeID();
+}
+
+std::string RobotRaconteurNode::GetServiceNodeName(RR_SHARED_PTR<RRObject> obj)
+{
+	RR_SHARED_PTR<ServiceStub> stub = rr_cast<ServiceStub>(obj);
+	return stub->GetContext()->GetRemoteNodeName();
+}
+
 uint32_t RobotRaconteurNode::RegisterEndpoint(RR_SHARED_PTR<Endpoint> e)
 {
 	
@@ -1774,14 +1786,24 @@ void RobotRaconteurNode::SetNodeDiscoveryMaxCacheCount(uint32_t count)
 	m_Discovery->SetNodeDiscoveryMaxCacheCount(count);
 }
 
-RR_SHARED_PTR<ServiceSubscription> RobotRaconteurNode::SubscribeService(const std::vector<std::string>& service_types, RR_SHARED_PTR<ServiceSubscriptionFilter> filter)
+RR_SHARED_PTR<ServiceSubscription> RobotRaconteurNode::SubscribeServiceByType(const std::vector<std::string>& service_types, RR_SHARED_PTR<ServiceSubscriptionFilter> filter)
 {
 	if (!m_Discovery)
 	{
 		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Node not init");
 	 	throw InvalidOperationException("Node not init");
 	}
-	return m_Discovery->SubscribeService(service_types, filter);
+	return m_Discovery->SubscribeServiceByType(service_types, filter);
+}
+
+RR_SHARED_PTR<ServiceSubscription> RobotRaconteurNode::SubscribeService(const std::vector<std::string>& url, boost::string_ref username, RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> > credentials,  boost::string_ref objecttype)
+{
+	if (!m_Discovery)
+	{
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Node not init");
+	 	throw InvalidOperationException("Node not init");
+	}
+	return m_Discovery->SubscribeService(url, username, credentials, objecttype);
 }
 
 RR_SHARED_PTR<ServiceInfo2Subscription> RobotRaconteurNode::SubscribeServiceInfo2(const std::vector<std::string>& service_types, RR_SHARED_PTR<ServiceSubscriptionFilter> filter)

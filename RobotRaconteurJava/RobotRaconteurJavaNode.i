@@ -1619,12 +1619,12 @@ import java.util.*;
 	return filter2;
   }
 
-  public ServiceSubscription subscribeService(String[] service_types)
+  public ServiceSubscription subscribeServiceByType(String[] service_types)
   {
-	return subscribeService(service_types, null);
+	return subscribeServiceByType(service_types, null);
   }
     
-  public ServiceSubscription subscribeService(String[] service_types, ServiceSubscriptionFilter filter)
+  public ServiceSubscription subscribeServiceByType(String[] service_types, ServiceSubscriptionFilter filter)
   {
 	
 	WrappedServiceSubscriptionFilter filter2=subscribeService_LoadFilter(filter);
@@ -1635,7 +1635,7 @@ import java.util.*;
 		service_types2.add(service_types[i]);
 	}
 		
-	WrappedServiceSubscription sub1=RobotRaconteurJava.wrappedSubscribeService(this, service_types2, filter2);
+	WrappedServiceSubscription sub1=RobotRaconteurJava.wrappedSubscribeServiceByType(this, service_types2, filter2);
 	return new ServiceSubscription(sub1);
 
   }

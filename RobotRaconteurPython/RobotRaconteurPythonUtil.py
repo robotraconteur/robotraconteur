@@ -2710,7 +2710,7 @@ def SubscribeServiceInfo2(node, service_types, filter_=None):
     sub1=RobotRaconteurPython.WrappedSubscribeServiceInfo2(node, service_types2, filter2)
     return ServiceInfo2Subscription(sub1)
 
-def SubscribeService(node, service_types, filter_=None):
+def SubscribeServiceByType(node, service_types, filter_=None):
 
     filter2=_SubscribeService_LoadFilter(node, filter_)
 
@@ -2727,7 +2727,7 @@ def SubscribeService(node, service_types, filter_=None):
             for s in service_types: service_types2.append(s)
 
     
-    sub1=RobotRaconteurPython.WrappedSubscribeService(node, service_types2, filter2)
+    sub1=RobotRaconteurPython.WrappedSubscribeServiceByType(node, service_types2, filter2)
     return ServiceSubscription(sub1)   
 
 class WrappedUserAuthenticatorDirectorPython(RobotRaconteurPython.WrappedUserAuthenticatorDirector):

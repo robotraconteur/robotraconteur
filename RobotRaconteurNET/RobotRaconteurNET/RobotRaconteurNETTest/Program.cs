@@ -593,7 +593,7 @@ namespace RobotRaconteurNETTest
                 RobotRaconteurNode.s.RegisterServiceType(new com.robotraconteur.testing.TestService1.com__robotraconteur__testing__TestService1Factory());
                 RobotRaconteurNode.s.RegisterServiceType(new com.robotraconteur.testing.TestService2.com__robotraconteur__testing__TestService2Factory());
 
-                var subscription = RobotRaconteurNode.s.SubscribeService(new string[] { servicetype });
+                var subscription = RobotRaconteurNode.s.SubscribeServiceByType(new string[] { servicetype });
 
                 subscription.ClientConnected += delegate (ServiceSubscription c, ServiceSubscriptionClientID d, object e)
                 {
@@ -760,7 +760,7 @@ namespace RobotRaconteurNETTest
                     RobotRaconteurNode.s.RegisterServiceType(new com.robotraconteur.testing.TestService1.com__robotraconteur__testing__TestService1Factory());
                     RobotRaconteurNode.s.RegisterServiceType(new com.robotraconteur.testing.TestService2.com__robotraconteur__testing__TestService2Factory());
 
-                    var subscription = RobotRaconteurNode.s.SubscribeService(new string[] { servicetype }, f);
+                    var subscription = RobotRaconteurNode.s.SubscribeServiceByType(new string[] { servicetype }, f);
 
                     subscription.ClientConnected += delegate (ServiceSubscription c, ServiceSubscriptionClientID d, object e)
                     {

@@ -459,7 +459,7 @@ def main():
         RRN.RegisterTransport(c2)        
         RRN.RegisterTransport(c4)
         
-        s=RRN.SubscribeService(service_type)
+        s=RRN.SubscribeServiceByType(service_type)
         def connected(s, client_id, client):
             print ("Client connected: " + str(client_id.NodeID) + "," + client_id.ServiceName)
         def disconnected(s, client_id, client):
@@ -563,7 +563,7 @@ def main():
         RRN.RegisterTransport(c2)        
         RRN.RegisterTransport(c4)
                                
-        s=RRN.SubscribeService(service_type, f)
+        s=RRN.SubscribeServiceByType(service_type, f)
         def connected(s, client_id, client):
             print ("Client connected: " + str(client_id.NodeID) + "," + client_id.ServiceName)
         def disconnected(s, client_id, client):

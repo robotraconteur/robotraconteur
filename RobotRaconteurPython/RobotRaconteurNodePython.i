@@ -255,9 +255,9 @@ def NowUTC(self):
 def Shutdown(self):
 	self._Shutdown()
 
-def SubscribeService(self, service_types, filter_=None):
-	from .RobotRaconteurPythonUtil import SubscribeService
-	return SubscribeService(self, service_types, filter_)
+def SubscribeServiceByType(self, service_types, filter_=None):
+	from .RobotRaconteurPythonUtil import SubscribeServiceByType
+	return SubscribeServiceByType(self, service_types, filter_)
 
 def SubscribeServiceInfo2(self, service_types, filter_=None):
 	from .RobotRaconteurPythonUtil import SubscribeServiceInfo2

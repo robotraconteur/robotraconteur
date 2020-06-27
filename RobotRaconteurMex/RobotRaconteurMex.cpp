@@ -1212,16 +1212,16 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 			}
 
 		}
-		else if (command == "SubscribeService")
+		else if (command == "SubscribeServiceByType")
 		{
-			if (nlhs != 1 || (nrhs != 2 && nrhs != 3)) throw InvalidArgumentException("RobotRaconteurMex SubscribeService requires 2 or 3 input and 1 output arguments");
+			if (nlhs != 1 || (nrhs != 2 && nrhs != 3)) throw InvalidArgumentException("RobotRaconteurMex SubscribeServiceByType requires 2 or 3 input and 1 output arguments");
 			switch (nrhs)
 			{
 			case 2:
-				plhs[0] = SubscribeService(prhs[1], NULL);
+				plhs[0] = SubscribeServiceByType(prhs[1], NULL);
 				return;
 			case 3:
-				plhs[0] = SubscribeService(prhs[1], prhs[2]);
+				plhs[0] = SubscribeServiceByType(prhs[1], prhs[2]);
 				return;				
 			default:
 				return;
@@ -7895,18 +7895,18 @@ static boost::shared_ptr<ServiceSubscriptionFilter> SubscribeService_LoadFilter(
 	boost::shared_ptr<ServiceSubscriptionFilter> filter2;
 	if (filter)
 	{
-		if (!mxIsStruct(filter)) throw InvalidArgumentException("Invalid filter specified for SubscribeService");
+		if (!mxIsStruct(filter)) throw InvalidArgumentException("Invalid filter specified for SubscribeServiceByType");
 
 		filter2 = boost::make_shared<ServiceSubscriptionFilter>();
 
 		if (mxArray* filter_servicenames1 = ::mxGetField(filter, 0, "ServiceNames"))
 		{
-			mxToVectorString(filter_servicenames1, filter2->ServiceNames, "Invalid filter.ServiceNames specified for SubscribeService");
+			mxToVectorString(filter_servicenames1, filter2->ServiceNames, "Invalid filter.ServiceNames specified for SubscribeServiceByType");
 		}
 
 		if (mxArray* filter_schemes1 = ::mxGetField(filter, 0, "TransportSchemes"))
 		{
-			mxToVectorString(filter_schemes1, filter2->TransportSchemes, "Invalid filter.TransportSchemes specified for SubscribeService");
+			mxToVectorString(filter_schemes1, filter2->TransportSchemes, "Invalid filter.TransportSchemes specified for SubscribeServiceByType");
 		}
 
 		if (mxArray* filter_maxconnections1 = ::mxGetField(filter, 0, "MaxConnections"))
@@ -7926,7 +7926,7 @@ static boost::shared_ptr<ServiceSubscriptionFilter> SubscribeService_LoadFilter(
 		{
 			if (!mxIsCell(filter_nodes1))
 			{
-				throw InvalidArgumentException("Invalid filter.Nodes specified for SubscribeService");
+				throw InvalidArgumentException("Invalid filter.Nodes specified for SubscribeServiceByType");
 			}
 
 			for (size_t i = 0; i < mxGetNumberOfElements(filter_nodes1); i++)
@@ -7934,7 +7934,7 @@ static boost::shared_ptr<ServiceSubscriptionFilter> SubscribeService_LoadFilter(
 				boost::shared_ptr<ServiceSubscriptionFilterNode> filter_node2 = boost::make_shared<ServiceSubscriptionFilterNode>();
 
 				mxArray* filter_nodes1_1 = mxGetCell(filter_nodes1, i);
-				if (!mxIsStruct(filter_nodes1_1)) throw InvalidArgumentException("Invalid filter.Nodes specified for SubscribeService");
+				if (!mxIsStruct(filter_nodes1_1)) throw InvalidArgumentException("Invalid filter.Nodes specified for SubscribeServiceByType");
 
 				if (mxArray* filter_nodes1_nodeid = mxGetField(filter_nodes1_1, 0, "NodeID"))
 				{
@@ -7944,7 +7944,7 @@ static boost::shared_ptr<ServiceSubscriptionFilter> SubscribeService_LoadFilter(
 					}
 					catch (std::exception&)
 					{
-						throw InvalidArgumentException("Invalid filter.Nodes specified for SubscribeService");
+						throw InvalidArgumentException("Invalid filter.Nodes specified for SubscribeServiceByType");
 					}
 				}
 
@@ -7966,7 +7966,7 @@ static boost::shared_ptr<ServiceSubscriptionFilter> SubscribeService_LoadFilter(
 					}
 					catch (std::exception& exp)
 					{
-						throw InvalidArgumentException("Invalid credentials specified for SubscribeService.Nodes : " + std::string(exp.what()));
+						throw InvalidArgumentException("Invalid credentials specified for SubscribeServiceByType.Nodes : " + std::string(exp.what()));
 					}
 				}
 
@@ -7984,7 +7984,7 @@ mxArray* SubscribeServiceInfo2(const mxArray* service_types, const mxArray* filt
 	std::vector<std::string> service_types2;
 
 	mxToVectorString(service_types, service_types2, "Invalid service_types specified for SubscribeServiceInfo2");
-	//if (service_types2.empty()) throw InvalidArgumentException("Invalid service_types specified for SubscribeService");
+	//if (service_types2.empty()) throw InvalidArgumentException("Invalid service_types specified for SubscribeServiceByType");
 
 	boost::shared_ptr<ServiceSubscriptionFilter> filter2 = SubscribeService_LoadFilter(filter);
 
@@ -8015,16 +8015,16 @@ mxArray* SubscribeServiceInfo2(const mxArray* service_types, const mxArray* filt
 	return matlabret[0];
 }
 
-mxArray* SubscribeService(const mxArray* service_types, const mxArray* filter)
+mxArray* SubscribeServiceByType(const mxArray* service_types, const mxArray* filter)
 {
 	std::vector<std::string> service_types2;
 
-	mxToVectorString(service_types, service_types2, "Invalid service_types specified for SubscribeService");
-	//if (service_types2.empty()) throw InvalidArgumentException("Invalid service_types specified for SubscribeService");
+	mxToVectorString(service_types, service_types2, "Invalid service_types specified for SubscribeServiceByType");
+	//if (service_types2.empty()) throw InvalidArgumentException("Invalid service_types specified for SubscribeServiceByType");
 
 	boost::shared_ptr<ServiceSubscriptionFilter> filter2 = SubscribeService_LoadFilter(filter);
 	
-	boost::shared_ptr<ServiceSubscription> sub = RobotRaconteurNode::s()->SubscribeService(service_types2, filter2);
+	boost::shared_ptr<ServiceSubscription> sub = RobotRaconteurNode::s()->SubscribeServiceByType(service_types2, filter2);
 
 	boost::shared_ptr<MexServiceSubscription> sub2=boost::make_shared<MexServiceSubscription>(sub);
 

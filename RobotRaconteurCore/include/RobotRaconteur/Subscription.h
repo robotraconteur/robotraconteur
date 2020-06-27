@@ -224,11 +224,17 @@ namespace RobotRaconteur
 		boost::unordered_set<RR_SHARED_PTR<WireSubscriptionBase> > wire_subscriptions;
 		boost::unordered_set<RR_SHARED_PTR<PipeSubscriptionBase> > pipe_subscriptions;
 
+		bool use_service_url;
+		std::vector<std::string> service_url;
+		std::string service_url_username;
+		RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> > service_url_credentials;
+
 	public:
 		//Do not call, use RobotRaconteurNode()->SubscribeService()
 		ServiceSubscription(RR_SHARED_PTR<detail::Discovery> parent);
 	protected:
 		virtual void Init(const std::vector<std::string>& service_types, RR_SHARED_PTR<ServiceSubscriptionFilter> filter);
+		virtual void InitServiceURL(const std::vector<std::string>& url, boost::string_ref username = "", RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> > credentials=(RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >()),  boost::string_ref objecttype = "");
 		virtual void NodeUpdated(RR_SHARED_PTR<detail::Discovery_nodestorage> storage);
 		virtual void NodeLost(RR_SHARED_PTR<detail::Discovery_nodestorage> storage);
 
