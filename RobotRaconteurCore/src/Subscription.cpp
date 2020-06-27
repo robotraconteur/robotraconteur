@@ -1284,12 +1284,33 @@ namespace RobotRaconteur
 		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Subscription, -1, "", membername, "WireSubscription closed");
 	}
 
-	WireSubscriptionBase::WireSubscriptionBase(RR_SHARED_PTR<ServiceSubscription> parent, boost::string_ref membername)
+	WireSubscriptionBase::WireSubscriptionBase(RR_SHARED_PTR<ServiceSubscription> parent, boost::string_ref membername, boost::string_ref servicepath)
 	{
 		this->parent = parent;
 		this->node = parent->node;
 		this->membername = RR_MOVE(membername.to_string());
+		this->servicepath = RR_MOVE(servicepath.to_string());
 		this->wire_value_changed_semaphore = RR_MAKE_SHARED<detail::async_signal_pool_semaphore>(parent->node.lock());
+	}
+
+	static RR_SHARED_PTR<ServiceStub> MemberSubscriptionBase_GetClientStub(RR_SHARED_PTR<RRObject> client, boost::string_ref service_path)
+	{
+		RR_SHARED_PTR<ServiceStub> stub = RR_DYNAMIC_POINTER_CAST<ServiceStub>(client);
+		if (!stub) return RR_SHARED_PTR<ServiceStub>();
+
+		if (service_path.empty() || service_path == "*")
+		{
+			return stub;
+		}
+
+		std::string service_path1 = service_path.to_string();
+
+		if (boost::starts_with(service_path1, "*."))
+		{
+			boost::replace_first(service_path1, "*", stub->GetContext()->GetServiceName());
+		}
+
+		return rr_cast<ServiceStub>(stub->GetContext()->FindObjRef(service_path1));		
 	}
 
 	void WireSubscriptionBase::ClientConnected(RR_SHARED_PTR<RRObject> client)
@@ -1306,9 +1327,9 @@ namespace RobotRaconteur
 
 		try
 		{
-			RR_SHARED_PTR<ServiceStub> stub = RR_DYNAMIC_POINTER_CAST<ServiceStub>(client);
+			RR_SHARED_PTR<ServiceStub> stub = MemberSubscriptionBase_GetClientStub(client,servicepath);
 			if (!stub) return;
-
+			
 			RR_SHARED_PTR<WireClientBase> wire_client=stub->RRGetWireClient(membername);
 			wire_client->AsyncConnect_internal(boost::bind(&WireSubscriptionBase::ClientConnected1, shared_from_this(), client, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)), n->GetRequestTimeout());
 
@@ -1642,11 +1663,12 @@ namespace RobotRaconteur
 		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Subscription, -1, "", membername, "PipeSubscription closed");
 	}
 
-	PipeSubscriptionBase::PipeSubscriptionBase(RR_SHARED_PTR<ServiceSubscription> parent, boost::string_ref membername, int32_t max_recv_packets, int32_t max_send_backlog)		
+	PipeSubscriptionBase::PipeSubscriptionBase(RR_SHARED_PTR<ServiceSubscription> parent, boost::string_ref membername, boost::string_ref servicepath, int32_t max_recv_packets, int32_t max_send_backlog)		
 	{
 		this->parent = parent;
 		this->node = parent->node;
 		this->membername = RR_MOVE(membername.to_string());
+		this->servicepath = RR_MOVE(servicepath.to_string());
 		this->max_recv_packets.data() = max_recv_packets;
 		this->pipe_packet_received_semaphore = RR_MAKE_SHARED<detail::async_signal_pool_semaphore>(parent->node.lock());
 		this->max_send_backlog.data() = max_send_backlog;
@@ -1666,7 +1688,7 @@ namespace RobotRaconteur
 
 		try
 		{
-			RR_SHARED_PTR<ServiceStub> stub = RR_DYNAMIC_POINTER_CAST<ServiceStub>(client);
+			RR_SHARED_PTR<ServiceStub> stub = MemberSubscriptionBase_GetClientStub(client,servicepath);
 			if (!stub) return;
 
 			RR_SHARED_PTR<PipeClientBase> pipe_client = stub->RRGetPipeClient(membername);

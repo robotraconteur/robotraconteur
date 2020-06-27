@@ -1301,7 +1301,7 @@ return 0;
 
 		RR_SHARED_PTR<WireSubscription<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > w1 = subscription->SubscribeWire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > >("w1");
 
-		RR_SHARED_PTR<PipeSubscription<double> > broadcastpipe = subscription->SubscribePipe<double>("broadcastpipe", 100);
+		RR_SHARED_PTR<PipeSubscription<double> > broadcastpipe = subscription->SubscribePipe<double>("broadcastpipe", "", 100);
 		broadcastpipe->AddPipePacketReceivedListener(subscribertest_pipereceived);
 
 		boost::thread t1(boost::bind(&subscribertest_waitwire, w1));
