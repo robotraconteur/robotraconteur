@@ -1162,6 +1162,18 @@ namespace RobotRaconteur
 		boost::mutex::scoped_lock lock(this_lock);
 		if (!in_value_valid) return false;
 
+		if (in_value_lifespan >= 0)
+		{
+			RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
+			if (!n)
+				return false;
+
+			if (in_value_time_local + boost::posix_time::milliseconds(in_value_lifespan) >= n->NowUTC())
+			{
+				return false;
+			}
+		}
+
 		val = in_value;
 		if (time)
 		{
@@ -1225,6 +1237,18 @@ namespace RobotRaconteur
 		}
 
 		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Subscription, -1, "", membername, "IgnoreInValue set to " << ignore);
+	}
+
+	int32_t WireSubscriptionBase::GetInValueLifespan()
+	{
+		boost::mutex::scoped_lock lock(this_lock);
+		return in_value_lifespan;
+	}
+
+	void WireSubscriptionBase::SetInValueLifespan(int32_t millis)
+	{
+		boost::mutex::scoped_lock lock(this_lock);
+		in_value_lifespan = millis;
 	}
 
 	void WireSubscriptionBase::SetOutValueAllBase(const RR_INTRUSIVE_PTR<RRValue>& val)
@@ -1291,6 +1315,7 @@ namespace RobotRaconteur
 		this->membername = RR_MOVE(membername.to_string());
 		this->servicepath = RR_MOVE(servicepath.to_string());
 		this->wire_value_changed_semaphore = RR_MAKE_SHARED<detail::async_signal_pool_semaphore>(parent->node.lock());
+		this->in_value_lifespan = -1;
 	}
 
 	static RR_SHARED_PTR<ServiceStub> MemberSubscriptionBase_GetClientStub(RR_SHARED_PTR<RRObject> client, boost::string_ref service_path)
@@ -1389,7 +1414,9 @@ namespace RobotRaconteur
 		if (!connection) return;
 
 		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Subscription, -1, "", membername, "Wire subscription received InValue");
-						
+
+		RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
+
 		{
 			boost::mutex::scoped_lock lock(this_lock);
 
@@ -1400,6 +1427,10 @@ namespace RobotRaconteur
 			in_value_time = time;
 			in_value_connection = connection;
 			in_value_valid.data() = true;
+			if (n)
+			{
+				in_value_time_local = n->NowUTC();
+			}
 
 			in_value_wait.notify_all();
 		}

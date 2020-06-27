@@ -295,6 +295,7 @@ namespace RobotRaconteur
 	};
 
 #define RR_TIMEOUT_INFINITE -1
+#define RR_VALUE_LIFESPAN_INFINITE -1
 
 	const uint32_t TranspartCapabilityCode_PAGE_MASK = 0xFFF00000;
 	const uint32_t TransportCapabilityCode_MESSAGE2_BASIC_PAGE = 0x02000000;

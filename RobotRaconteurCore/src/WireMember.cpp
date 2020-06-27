@@ -111,6 +111,8 @@ namespace RobotRaconteur
 		this->endpoint=endpoint;
 		outval_valid=false;
 		inval_valid=false;
+		inval_lifespan=-1;
+		outval_lifespan=-1;
 		ignore_inval = false;
 		send_closed = false;
 		recv_closed = false;
@@ -131,6 +133,7 @@ namespace RobotRaconteur
 	{		
 		{
 			boost::mutex::scoped_lock lock (recvlock);
+			RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
 
 			if (ignore_inval)
 			{
@@ -145,6 +148,10 @@ namespace RobotRaconteur
 					boost::mutex::scoped_lock lock2(inval_lock);
 					inval = packet;
 					lasttime_recv = timespec;
+					if (n)
+					{
+						lasttime_recv_local = n->NowUTC();
+					}					
 					inval_valid = true;
 					inval_wait.notify_all();
 				}
@@ -215,6 +222,26 @@ namespace RobotRaconteur
 		
 	}
 
+	static bool WireConnectionBase_IsValueExpired(RR_WEAK_PTR<RobotRaconteurNode> node, const boost::posix_time::ptime& recv_time, int32_t lifespan)
+	{
+		if (lifespan < 0)
+		{
+			return false;
+		}
+
+		RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
+		if (!n)
+		{
+			return true;
+		}
+
+		if (recv_time + boost::posix_time::milliseconds(lifespan) < n->NowUTC())
+		{
+			return true;
+		}
+		return false;
+	}
+
 	RR_INTRUSIVE_PTR<RRValue> WireConnectionBase::GetInValueBase()
 	{
 		if (direction == MemberDefinition_Direction_writeonly)
@@ -227,6 +254,10 @@ namespace RobotRaconteur
 			boost::mutex::scoped_lock lock2(inval_lock);
 		if (!inval_valid)
 			throw ValueNotSetException("Value not set");
+		if(WireConnectionBase_IsValueExpired(node, lasttime_recv_local,inval_lifespan))
+		{
+			throw ValueNotSetException("Value expired");
+		}
 		val=inval;
 		}
 		return val;
@@ -244,6 +275,10 @@ namespace RobotRaconteur
 			boost::mutex::scoped_lock lock2(outval_lock);
 		if (!outval_valid)
 			throw ValueNotSetException("Value not set");
+		if(WireConnectionBase_IsValueExpired(node, lasttime_send_local,outval_lifespan))
+		{
+			throw ValueNotSetException("Value expired");
+		}
 		val=outval;
 		}
 		return val;
@@ -256,6 +291,8 @@ namespace RobotRaconteur
 			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, endpoint, service_path, member_name, "Attempt to get OutValue of read only wire");
 			throw ReadOnlyMemberException("Read only member");
 		}
+
+		RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
 
 		try		
 		{
@@ -276,6 +313,7 @@ namespace RobotRaconteur
 			boost::mutex::scoped_lock lock2(outval_lock);
 			outval = value;
 			lasttime_send = time;
+			lasttime_send_local = n->NowUTC();
 			outval_valid = true;
 			outval_wait.notify_all();
 			
@@ -289,8 +327,17 @@ namespace RobotRaconteur
 
 	bool WireConnectionBase::TryGetInValueBase(RR_INTRUSIVE_PTR<RRValue>& value, TimeSpec& time)
 	{
+		if (direction == MemberDefinition_Direction_writeonly)
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, endpoint, service_path, member_name, "Attempt to get InValue of write only wire");
+			throw WriteOnlyMemberException("Write only member");
+		}
 		boost::mutex::scoped_lock lock2(inval_lock);
 		if (!inval_valid) return false;
+		if(WireConnectionBase_IsValueExpired(node, lasttime_recv_local,inval_lifespan))
+		{
+			return false;
+		}
 		value = inval;
 		time = lasttime_recv;
 		return true;
@@ -298,8 +345,17 @@ namespace RobotRaconteur
 
 	bool WireConnectionBase::TryGetOutValueBase(RR_INTRUSIVE_PTR<RRValue>& value, TimeSpec& time)
 	{
+		if (direction == MemberDefinition_Direction_readonly)
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, endpoint, service_path, member_name, "Attempt to get OutValue of read only wire");
+			throw ReadOnlyMemberException("Read only member");
+		}
 		boost::mutex::scoped_lock lock2(outval_lock);
-		if (!outval_valid) return false;				
+		if (!outval_valid) return false;
+		if(WireConnectionBase_IsValueExpired(node, lasttime_send_local,outval_lifespan))
+		{
+			return false;
+		}			
 		value = outval;
 		time = lasttime_send;
 		return true;
@@ -408,6 +464,28 @@ namespace RobotRaconteur
 	MemberDefinition_Direction WireConnectionBase::Direction()
 	{
 		return direction;
+	}
+
+	int32_t WireConnectionBase::GetInValueLifespan()
+	{
+		boost::mutex::scoped_lock lock(inval_lock);
+		return inval_lifespan;
+	}
+	void WireConnectionBase::SetInValueLifespan(int32_t millis)
+	{
+		boost::mutex::scoped_lock lock(inval_lock);
+		inval_lifespan = millis;
+	}
+	
+	int32_t WireConnectionBase::GetOutValueLifespan()
+	{
+		boost::mutex::scoped_lock lock(outval_lock);
+		return outval_lifespan;
+	}	
+	void WireConnectionBase::SetOutValueLifespan(int32_t millis)
+	{
+		boost::mutex::scoped_lock lock(outval_lock);
+		outval_lifespan = millis;
 	}
 
 	RR_INTRUSIVE_PTR<RRValue> WireBase::UnpackPacket(RR_INTRUSIVE_PTR<MessageEntry> me, TimeSpec& ts)

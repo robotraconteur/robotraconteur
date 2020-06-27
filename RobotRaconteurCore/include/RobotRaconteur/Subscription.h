@@ -299,6 +299,9 @@ namespace RobotRaconteur
 		bool GetIgnoreInValue();
 		void SetIgnoreInValue(bool ignore);
 
+		int32_t GetInValueLifespan();
+		void SetInValueLifespan(int32_t millis);
+
 		void SetOutValueAllBase(const RR_INTRUSIVE_PTR<RRValue>& val);
 
 		size_t GetWireConnectionCount();
@@ -325,6 +328,8 @@ namespace RobotRaconteur
 		TimeSpec in_value_time;
 		boost::initialized<bool> in_value_valid;
 		RR_SHARED_PTR<WireConnectionBase> in_value_connection;
+		int32_t in_value_lifespan;
+		boost::posix_time::ptime in_value_time_local;
 
 		boost::condition_variable in_value_wait;
 

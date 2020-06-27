@@ -954,6 +954,8 @@ namespace RobotRaconteurTest
 		w2->WireValueChanged.connect(boost::bind(&ServiceTestClient::w2_changed,this,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),RR_BOOST_PLACEHOLDERS(_3)));
 		w3->WireValueChanged.connect(boost::bind(&ServiceTestClient::w3_changed,this,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),RR_BOOST_PLACEHOLDERS(_3)));
 
+		w1->SetInValueLifespan(10000);
+
 		double d0[]={0.0};
 		w1->SetOutValue(AttachRRArrayCopy(d0,1));
 
@@ -1016,6 +1018,10 @@ namespace RobotRaconteurTest
 		}, 500);
 
 		if (!w1_called || !w2_called || !w3_called) throw std::exception();
+
+		w1->SetInValueLifespan(1);
+		boost::this_thread::sleep(boost::posix_time::milliseconds(5));
+		ShouldBeErr(w1->GetInValue(););
 
 		w1->Close();
 		//w2->Close();

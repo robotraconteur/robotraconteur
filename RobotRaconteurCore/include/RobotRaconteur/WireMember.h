@@ -86,6 +86,13 @@ namespace RobotRaconteur
 
 		MemberDefinition_Direction Direction();
 
+		virtual int32_t GetInValueLifespan();
+		virtual void SetInValueLifespan(int32_t millis);
+		
+		virtual int32_t GetOutValueLifespan();
+		virtual void SetOutValueLifespan(int32_t millis);
+		
+
 	protected:
 
 		virtual void RemoteClose();
@@ -95,12 +102,17 @@ namespace RobotRaconteur
 
 		bool inval_valid;
 		TimeSpec lasttime_send;
+		boost::posix_time::ptime lasttime_send_local;
 
 		bool  outval_valid;
 		TimeSpec lasttime_recv;
+		boost::posix_time::ptime lasttime_recv_local;
 
 		boost::condition_variable inval_wait;
 		boost::condition_variable outval_wait;
+
+		int32_t inval_lifespan;
+		int32_t outval_lifespan;
 
 		uint32_t endpoint;
 		RR_WEAK_PTR<WireBase> parent;
