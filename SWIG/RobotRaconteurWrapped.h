@@ -1733,9 +1733,11 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		uint32_t GetConnectRetryDelay();
 		void SetConnectRetryDelay(uint32_t delay_milliseconds);
 
-		RR_SHARED_PTR<WrappedWireSubscription> SubscribeWire(const std::string& membername);
+		RR_SHARED_PTR<WrappedWireSubscription> SubscribeWire(const std::string& membername, const std::string& servicepath);
 
-		RR_SHARED_PTR<WrappedPipeSubscription> SubscribePipe(const std::string& membername, uint32_t max_recv_packets = std::numeric_limits<uint32_t>::max());
+		RR_SHARED_PTR<WrappedPipeSubscription> SubscribePipe(const std::string& membername, const std::string& servicepath, uint32_t max_recv_packets = std::numeric_limits<uint32_t>::max());
+
+		RR_SHARED_PTR<WrappedServiceStub> GetDefaultClient();
 
 		void SetRRDirector(WrappedServiceSubscriptionDirector* director, int32_t id);
 		
@@ -1769,7 +1771,7 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 
 		friend class WrappedWireSubscription_send_iterator;
 
-		WrappedWireSubscription(RR_SHARED_PTR<ServiceSubscription> parent, const std::string& membername);
+		WrappedWireSubscription(RR_SHARED_PTR<ServiceSubscription> parent, const std::string& membername, const std::string& servicepath);
 
 		WrappedService_typed_packet GetInValue(TimeSpec* time = NULL);
 		bool TryGetInValue(WrappedService_typed_packet& val, TimeSpec* time = NULL);
@@ -1814,7 +1816,7 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 
 		friend class WrappedPipeSubscription_send_iterator;
 
-		WrappedPipeSubscription(RR_SHARED_PTR<ServiceSubscription> parent, const std::string& membername, int32_t max_recv_packets = -1, int32_t max_send_backlog = 5);
+		WrappedPipeSubscription(RR_SHARED_PTR<ServiceSubscription> parent, const std::string& membername, const std::string& servicepath, int32_t max_recv_packets = -1, int32_t max_send_backlog = 5);
 
 		WrappedService_typed_packet ReceivePacket();
 		bool TryReceivePacket(WrappedService_typed_packet& packet);
@@ -1851,6 +1853,8 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 	RR_SHARED_PTR<WrappedServiceInfo2Subscription> WrappedSubscribeServiceInfo2(RR_SHARED_PTR<RobotRaconteurNode> node, const std::vector<std::string>& service_types, RR_SHARED_PTR<WrappedServiceSubscriptionFilter> filter = RR_SHARED_PTR<WrappedServiceSubscriptionFilter>());
 
 	RR_SHARED_PTR<WrappedServiceSubscription> WrappedSubscribeServiceByType(RR_SHARED_PTR<RobotRaconteurNode> node, const std::vector<std::string>& service_types, RR_SHARED_PTR<WrappedServiceSubscriptionFilter> filter = RR_SHARED_PTR<WrappedServiceSubscriptionFilter>());
+
+	RR_SHARED_PTR<WrappedServiceSubscription> WrappedSubscribeService(RR_SHARED_PTR<RobotRaconteurNode> node, const std::vector<std::string>& url, const std::string& username = "", boost::intrusive_ptr<MessageElementData> credentials=boost::intrusive_ptr<MessageElementData>(),  const std::string& objecttype = "");
 	
 	class UserLogRecordHandlerDirector
 	{

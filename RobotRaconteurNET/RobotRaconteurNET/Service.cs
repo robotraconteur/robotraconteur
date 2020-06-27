@@ -2599,6 +2599,30 @@ namespace RobotRaconteur
                 }
             }
 
+            public int InValueLifespan
+            {
+                get
+                {
+                    return innerwire.GetInValueLifespan();
+                }
+                set
+                {
+                    innerwire.SetInValueLifespan(value);
+                }
+            }
+
+            public int OutValueLifespan
+            {
+                get
+                {
+                    return innerwire.GetOutValueLifespan();
+                }
+                set
+                {
+                    innerwire.SetOutValueLifespan(value);
+                }
+            }
+
             public bool WaitInValueValid(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
             {
                 return innerwire.WaitInValueValid(timeout);

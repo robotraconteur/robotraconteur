@@ -135,9 +135,11 @@ namespace RobotRaconteur
 		uint32_t GetConnectRetryDelay();
 		void SetConnectRetryDelay(uint32_t delay_milliseconds);
 
-		boost::shared_ptr<WrappedWireSubscription> SubscribeWire(const std::string& membername);
+		boost::shared_ptr<WrappedWireSubscription> SubscribeWire(const std::string& membername, const std::string& servicepath);
 
-		boost::shared_ptr<WrappedPipeSubscription> SubscribePipe(const std::string& membername, int32_t max_recv_packets = -1);
+		boost::shared_ptr<WrappedPipeSubscription> SubscribePipe(const std::string& membername, const std::string& servicepath, int32_t max_recv_packets = -1);
+
+		boost::shared_ptr<WrappedServiceStub> GetDefaultClient();
 
 		void SetRRDirector(WrappedServiceSubscriptionDirector* director, int32_t id);
 			
@@ -171,7 +173,10 @@ namespace RobotRaconteur
 		bool WaitInValueValid(int32_t timeout = RR_TIMEOUT_INFINITE);
 
 		bool GetIgnoreInValue();
-		void SetIgnoreInValue(bool ignore);		
+		void SetIgnoreInValue(bool ignore);
+
+		int32_t GetInValueLifespan();
+		void SetInValueLifespan(int32_t millis);	
 
 		size_t GetActiveWireConnectionCount();
 
@@ -238,5 +243,7 @@ namespace RobotRaconteur
 	std::vector<ServiceSubscriptionClientID> WrappedServiceSubscriptionClientsToVector(std::map<ServiceSubscriptionClientID, boost::shared_ptr<WrappedServiceStub> >& clients);
 
 	boost::shared_ptr<WrappedServiceSubscription> WrappedSubscribeServiceByType(boost::shared_ptr<RobotRaconteurNode> node, const std::vector<std::string>& service_types, boost::shared_ptr<WrappedServiceSubscriptionFilter> filter = boost::shared_ptr<WrappedServiceSubscriptionFilter>());
+
+	boost::shared_ptr<WrappedServiceSubscription> WrappedSubscribeService(boost::shared_ptr<RobotRaconteurNode> node, const std::vector<std::string>& url, const std::string& username = "", boost::intrusive_ptr<MessageElementData> credentials=boost::intrusive_ptr<MessageElementData>(),  const std::string& objecttype = "");
 
 }

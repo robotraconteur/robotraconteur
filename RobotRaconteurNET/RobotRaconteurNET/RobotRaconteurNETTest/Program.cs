@@ -651,6 +651,73 @@ namespace RobotRaconteurNETTest
                 return;
             }
 
+            if (command=="subscriberurltest")
+            {
+                RobotRaconteurNode.s.SetLogLevelFromEnvVariable();
+
+                if (args.Length < 2)
+                {
+                    Console.WriteLine("Usage for subscriberurltest:  RobotRaconteurTest subscriberurltest url");
+                    return;
+                }
+
+                var url = args[1];
+
+                LocalTransport t2 = new LocalTransport();
+                t2.EnableNodeDiscoveryListening();
+                RobotRaconteurNode.s.RegisterTransport(t2);
+
+                TcpTransport t = new TcpTransport();
+                t.EnableNodeDiscoveryListening();
+                RobotRaconteurNode.s.RegisterTransport(t);
+
+                HardwareTransport t3 = new HardwareTransport();
+                RobotRaconteurNode.s.RegisterTransport(t3);
+
+                RobotRaconteurNode.s.RegisterServiceType(new com.robotraconteur.testing.TestService1.com__robotraconteur__testing__TestService1Factory());
+                RobotRaconteurNode.s.RegisterServiceType(new com.robotraconteur.testing.TestService2.com__robotraconteur__testing__TestService2Factory());
+
+                var subscription = RobotRaconteurNode.s.SubscribeService(url);
+
+                subscription.ClientConnected += delegate (ServiceSubscription c, ServiceSubscriptionClientID d, object e)
+                {
+                    Console.WriteLine("Client connected: " + d.NodeID.ToString() + ", " + d.ServiceName);
+                    testroot e1 = (testroot)e;
+                    Console.WriteLine("d1 = " + e1.d1);
+                };
+
+                subscription.ClientDisconnected += delegate (ServiceSubscription c, ServiceSubscriptionClientID d, object e)
+                {
+                    Console.WriteLine("Client disconnected: " + d.NodeID.ToString() + ", " + d.ServiceName);
+                };
+
+                System.Threading.Thread.Sleep(6000);
+
+                var connected_clients = subscription.GetConnectedClients();
+
+                foreach(var c in connected_clients)
+                {
+                    Console.WriteLine("Client: " + c.Key.NodeID + ", " + c.Key.ServiceName);
+                }
+
+                try
+                {
+                    Console.WriteLine(((testroot)subscription.GetDefaultClient()).d1);
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("Client not connected");
+                }
+                              
+                Console.WriteLine("Waiting for services...");
+
+                Console.ReadLine();
+
+                RobotRaconteurNode.s.Shutdown();
+
+                return;
+            }
+
             if (command == "subscriberfiltertest")
             {
                 RobotRaconteurNode.s.SetLogLevelFromEnvVariable();

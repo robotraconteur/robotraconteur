@@ -877,6 +877,8 @@ namespace RobotRaconteurNETTest
             Wire<teststruct2>.WireConnection w2 = r.w2.Connect();
             Wire<MultiDimArray>.WireConnection w3 = r.w3.Connect();
 
+            w1.InValueLifespan = 10000;
+
             w1.WireValueChanged += w1_changed;
             w2.WireValueChanged += w2_changed;
             w3.WireValueChanged += w3_changed;
@@ -911,6 +913,12 @@ namespace RobotRaconteurNETTest
             MultiDimArray in3 = w3.InValue;
             ca<uint>(in3.Dims, new uint[] { 2, 5 });
             ca<int>((int[])in3.Array_, new int[] { 2058500854, -611248192, 197490486, -517717939, -513450368, 296469979, 645365194, 2043654604, -1672941174, 710030901 });
+
+            w1.InValueLifespan = 1;
+            Thread.Sleep(10);
+            ShouldBeErr<Exception>(delegate() {
+                double[] in1_2 = w1.InValue;
+            });
 
             if (!w1_called || !w2_called || !w3_called) throw new Exception();
 

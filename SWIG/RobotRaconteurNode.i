@@ -386,6 +386,10 @@ RR_KEEP_GIL()
 }
 	
 	RR_MAKE_METHOD_PRIVATE(GetServiceAttributes)
+	RR_MAKE_METHOD_PRIVATE(GetServiceNodeID)
+	RR_MAKE_METHOD_PRIVATE(GetServiceNodeName)
+	RR_MAKE_METHOD_PRIVATE(GetServiceName)
+
 	
 %extend
 {
@@ -396,6 +400,21 @@ RR_KEEP_GIL()
 			boost::intrusive_ptr<MessageElementNestedElementList > mmap=$self->PackMapType<std::string,RRValue>(map);
 			return CreateMessageElement("value",mmap);
 		}
+
+	NodeID GetServiceNodeID(boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj)
+	{		
+		return $self->GetServiceNodeID(obj);		
+	}
+
+	std::string GetServiceNodeName(boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj)
+	{		
+		return $self->GetServiceNodeName(obj);		
+	}
+
+	std::string GetServiceName(boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj)
+	{		
+		return $self->GetServiceName(obj);		
+	}
 
 }
 

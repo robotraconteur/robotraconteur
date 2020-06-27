@@ -3350,18 +3350,23 @@ namespace RobotRaconteur
 		subscription->SetConnectRetryDelay(delay_milliseconds);
 	}
 
-	RR_SHARED_PTR<WrappedWireSubscription> WrappedServiceSubscription::SubscribeWire(const std::string& membername)
+	RR_SHARED_PTR<WrappedWireSubscription> WrappedServiceSubscription::SubscribeWire(const std::string& membername, const std::string& servicepath)
 	{
-		RR_SHARED_PTR<WrappedWireSubscription> o = RR_MAKE_SHARED<WrappedWireSubscription>(subscription, membername);
+		RR_SHARED_PTR<WrappedWireSubscription> o = RR_MAKE_SHARED<WrappedWireSubscription>(subscription, membername, servicepath);
 		detail::ServiceSubscription_custom_member_subscribers::SubscribeWire(subscription, o);
 		return o;
 	}
 
-	RR_SHARED_PTR<WrappedPipeSubscription> WrappedServiceSubscription::SubscribePipe(const std::string& membername, uint32_t max_recv_packets)
+	RR_SHARED_PTR<WrappedPipeSubscription> WrappedServiceSubscription::SubscribePipe(const std::string& membername, const std::string& servicepath, uint32_t max_recv_packets)
 	{
-		RR_SHARED_PTR<WrappedPipeSubscription> o = RR_MAKE_SHARED<WrappedPipeSubscription>(subscription, membername, max_recv_packets);
+		RR_SHARED_PTR<WrappedPipeSubscription> o = RR_MAKE_SHARED<WrappedPipeSubscription>(subscription, membername, servicepath, max_recv_packets);
 		detail::ServiceSubscription_custom_member_subscribers::SubscribePipe(subscription, o);
 		return o;
+	}
+
+	RR_SHARED_PTR<WrappedServiceStub> WrappedServiceSubscription::GetDefaultClient()
+	{
+		return rr_cast<WrappedServiceStub>(subscription->GetDefaultClient<RRObject>());
 	}
 
 	void WrappedServiceSubscription::SetRRDirector(WrappedServiceSubscriptionDirector* director, int32_t id)
@@ -3403,8 +3408,8 @@ namespace RobotRaconteur
 		DIRECTOR_CALL3(WrappedServiceSubscriptionDirector, RR_Director->ClientDisconnected(s, id, client2));
 	}
 
-	WrappedWireSubscription::WrappedWireSubscription(RR_SHARED_PTR<ServiceSubscription> parent, const std::string& membername)
-		: WireSubscriptionBase(parent, membername)
+	WrappedWireSubscription::WrappedWireSubscription(RR_SHARED_PTR<ServiceSubscription> parent, const std::string& membername, const std::string& servicepath)
+		: WireSubscriptionBase(parent, membername, servicepath)
 	{
 		
 	}
@@ -3498,8 +3503,8 @@ namespace RobotRaconteur
 	}
 
 
-	WrappedPipeSubscription::WrappedPipeSubscription(RR_SHARED_PTR<ServiceSubscription> parent, const std::string& membername, int32_t max_recv_packets, int32_t max_send_backlog)
-		: PipeSubscriptionBase(parent, membername, max_recv_packets, max_send_backlog)
+	WrappedPipeSubscription::WrappedPipeSubscription(RR_SHARED_PTR<ServiceSubscription> parent, const std::string& membername, const std::string& servicepath, int32_t max_recv_packets, int32_t max_send_backlog)
+		: PipeSubscriptionBase(parent, membername, servicepath, max_recv_packets, max_send_backlog)
 	{
 		
 	}
@@ -3651,6 +3656,15 @@ namespace RobotRaconteur
 
 		RR_SHARED_PTR<ServiceSubscription> sub = node->SubscribeServiceByType(service_types, filter2);
 
+		return RR_MAKE_SHARED<WrappedServiceSubscription>(sub);
+	}
+
+	RR_SHARED_PTR<WrappedServiceSubscription> WrappedSubscribeService(RR_SHARED_PTR<RobotRaconteurNode> node, const std::vector<std::string>& url, const std::string& username, boost::intrusive_ptr<MessageElementData> credentials,  const std::string& objecttype)
+	{
+		boost::intrusive_ptr<RRMap<std::string,RRValue> > credentials2;
+		if (credentials) credentials2=rr_cast<RRMap<std::string,RRValue> >(node->UnpackMapType<std::string,RRValue>(rr_cast<MessageElementNestedElementList>(credentials)));
+
+		RR_SHARED_PTR<ServiceSubscription> sub = node->SubscribeService(url, username, credentials2, objecttype);
 		return RR_MAKE_SHARED<WrappedServiceSubscription>(sub);
 	}
 

@@ -1635,6 +1635,24 @@ namespace RobotRaconteur
             }
         }
 
+        public NodeID GetServiceNodeID(object obj)
+        {
+            ServiceStub stub = (ServiceStub)obj;
+            return _GetServiceNodeID(stub.rr_innerstub);
+        }
+
+        public string GetServiceNodeName(object obj)
+        {
+            ServiceStub stub = (ServiceStub)obj;
+            return _GetServiceNodeName(stub.rr_innerstub);
+        }
+
+        public string GetServiceName(object obj)
+        {
+            ServiceStub stub = (ServiceStub)obj;
+            return _GetServiceName(stub.rr_innerstub);
+        }
+
         private ServiceFactory GetServiceFactoryForType(string type)
         {
             string servicename = SplitQualifiedName(type).Item1;
@@ -3808,16 +3826,22 @@ namespace RobotRaconteur
         public event Action<ServiceSubscription, ServiceSubscriptionClientID, object> ClientConnected;
         public event Action<ServiceSubscription, ServiceSubscriptionClientID, object> ClientDisconnected;
 
-        public WireSubscription<T> SubscribeWire<T>(string wire_name)
+        public WireSubscription<T> SubscribeWire<T>(string wire_name, string service_path = "")
         {
-            var s = _subscription.SubscribeWire(wire_name);
+            var s = _subscription.SubscribeWire(wire_name,service_path);
             return new WireSubscription<T>(s);
         }
 
-        public PipeSubscription<T> SubscribePipe<T>(string pipe_name, int max_backlog = -1)
+        public PipeSubscription<T> SubscribePipe<T>(string pipe_name, string service_path = "", int max_backlog = -1)
         {
-            var s = _subscription.SubscribePipe(pipe_name);
+            var s = _subscription.SubscribePipe(pipe_name, service_path, max_backlog);
             return new PipeSubscription<T>(s);
+        }
+
+        public object GetDefaultClient()
+        {
+            var s = _subscription.GetDefaultClient();
+            return GetClientStub(s);
         }
     }
 
@@ -3972,6 +3996,18 @@ namespace RobotRaconteur
             set
             {
                 _subscription.SetIgnoreInValue(value);
+            }
+        }
+
+        public int InValueLifespan
+        {
+            get
+            {
+                return _subscription.GetInValueLifespan();
+            }
+            set
+            {
+                _subscription.SetInValueLifespan(value);
             }
         }
 
@@ -4265,6 +4301,35 @@ namespace RobotRaconteur
 
             var sub1 = RobotRaconteurNET.WrappedSubscribeServiceByType(this, service_types2, filter2);
             return new ServiceSubscription(sub1);
+        }
+
+        public ServiceSubscription SubscribeService(string url, string username = null, Dictionary<string, object> credentials = null, string objecttype = null)
+        {
+            return SubscribeService(new string[] {url}, username, credentials, objecttype);
+        }
+
+        public ServiceSubscription SubscribeService(string[] url, string username = null, Dictionary<string, object> credentials = null, string objecttype = null)
+        {
+            MessageElementData credentials2 = null;
+            try
+            {
+                if (username == null) username = "";
+                if (credentials != null)
+                {
+                    credentials2 = (MessageElementData)PackVarType(credentials);
+                }                                
+
+                if (objecttype == null) objecttype = "";
+                vectorstring url2 = new vectorstring();
+                foreach (string ss in url) url2.Add(ss);
+
+                var sub1 = RobotRaconteurNET.WrappedSubscribeService(this, url2, username, credentials2, objecttype);
+                return new ServiceSubscription(sub1);                
+            }
+            finally
+            {
+                if (credentials2 != null) credentials2.Dispose();
+            }
         }
 
 

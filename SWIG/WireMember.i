@@ -101,6 +101,12 @@ RR_KEEP_GIL()
 	bool GetIgnoreInValue();
 	void SetIgnoreInValue(bool ignore);
 
+	int32_t GetInValueLifespan();
+	void SetInValueLifespan(int32_t millis);
+
+	int32_t GetOutValueLifespan();
+	void SetOutValueLifespan(int32_t millis);
+
 RR_RELEASE_GIL()
 	bool WaitInValueValid(int32_t timeout = RR_TIMEOUT_INFINITE);
 	bool WaitOutValueValid(int32_t timeout = RR_TIMEOUT_INFINITE);
