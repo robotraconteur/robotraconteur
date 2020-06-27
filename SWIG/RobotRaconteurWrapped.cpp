@@ -3668,6 +3668,15 @@ namespace RobotRaconteur
 		return RR_MAKE_SHARED<WrappedServiceSubscription>(sub);
 	}
 
+	RR_SHARED_PTR<WrappedServiceSubscription> WrappedSubscribeService(RR_SHARED_PTR<RobotRaconteurNode> node, const std::string& url, const std::string& username, boost::intrusive_ptr<MessageElementData> credentials,  const std::string& objecttype)
+	{
+		boost::intrusive_ptr<RRMap<std::string,RRValue> > credentials2;
+		if (credentials) credentials2=rr_cast<RRMap<std::string,RRValue> >(node->UnpackMapType<std::string,RRValue>(rr_cast<MessageElementNestedElementList>(credentials)));
+
+		RR_SHARED_PTR<ServiceSubscription> sub = node->SubscribeService(url, username, credentials2, objecttype);
+		return RR_MAKE_SHARED<WrappedServiceSubscription>(sub);
+	}
+
 	HandlerErrorInfo::HandlerErrorInfo()
 	{
 		this->error_code=0;

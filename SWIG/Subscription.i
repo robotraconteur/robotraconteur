@@ -245,5 +245,7 @@ namespace RobotRaconteur
 	boost::shared_ptr<WrappedServiceSubscription> WrappedSubscribeServiceByType(boost::shared_ptr<RobotRaconteurNode> node, const std::vector<std::string>& service_types, boost::shared_ptr<WrappedServiceSubscriptionFilter> filter = boost::shared_ptr<WrappedServiceSubscriptionFilter>());
 
 	boost::shared_ptr<WrappedServiceSubscription> WrappedSubscribeService(boost::shared_ptr<RobotRaconteurNode> node, const std::vector<std::string>& url, const std::string& username = "", boost::intrusive_ptr<MessageElementData> credentials=boost::intrusive_ptr<MessageElementData>(),  const std::string& objecttype = "");
+	
+	boost::shared_ptr<WrappedServiceSubscription> WrappedSubscribeService(boost::shared_ptr<RobotRaconteurNode> node, const std::string& url, const std::string& username = "", boost::intrusive_ptr<MessageElementData> credentials=boost::intrusive_ptr<MessageElementData>(),  const std::string& objecttype = "");
 
 }

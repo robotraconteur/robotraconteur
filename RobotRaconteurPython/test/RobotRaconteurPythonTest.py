@@ -491,6 +491,48 @@ def main():
         
         return
 
+    if (command == "subscriberurltest"):
+        
+        if (len(sys.argv) < 3):
+            print ("Usage for subscriberurltest:  RobotRaconteurTest subscriberurltest url")
+            return
+        
+        
+        RRN=RobotRaconteurNode.s
+        RRN.SetLogLevelFromEnvVariable()
+
+        url=sys.argv[2]
+
+        c=TcpTransport()
+        c.EnableNodeDiscoveryListening()       
+        c2=LocalTransport()        
+        c2.EnableNodeDiscoveryListening()
+        c4=HardwareTransport()
+
+        RRN.RegisterTransport(c)
+        RRN.RegisterTransport(c2)        
+        RRN.RegisterTransport(c4)
+        print(url)
+        
+        s=RRN.SubscribeService(url)
+        def connected(s, client_id, client):
+            print ("Client connected: " + str(client_id.NodeID) + "," + client_id.ServiceName)
+        def disconnected(s, client_id, client):
+            print ("Client disconnected: " + str(client_id.NodeID) + "," + client_id.ServiceName)
+        s.ClientConnected += connected
+        s.ClientDisconnected += disconnected
+        
+        time.sleep(3)        
+        print (s.GetConnectedClients())
+        try:
+            print(s.GetDefaultClient().d1)
+        except:
+            print("Client not connected")
+                
+        raw_input("Press enter")
+        
+        return
+
     if (command == "subscriberfiltertest"):
         
         if (len(sys.argv) < 3):
@@ -1437,6 +1479,9 @@ class ServiceTestClient:
         w1 = self._r.w1.Connect()
         w2 = self._r.w2.Connect()
         w3 = self._r.w3.Connect()
+
+        w1.InValueLifespan=10
+
         w11=w1.WireValueChanged; w11 += self.w1_changed
         w21=w2.WireValueChanged; w21 += self.w2_changed
         w31=w3.WireValueChanged; w31 += self.w3_changed
@@ -1475,6 +1520,13 @@ class ServiceTestClient:
         
         if not w1.Direction == MemberDefinition_Direction_both:
             raise Exception()
+
+        w1.InValueLifespan=0.001
+        time.sleep(0.01)
+        def f1():
+            in1_2 = w1.InValue
+
+        self.ShouldBeErr(f1)
 
         w1.Close()
         w2.Close()

@@ -173,6 +173,15 @@ def AsyncReleaseObjectLock(self,obj,handler,timeout=RR_TIMEOUT_INFINITE):
 def GetServiceAttributes(self,obj):
 	from .RobotRaconteurPythonUtil import UnpackMessageElement
 	return UnpackMessageElement(self._GetServiceAttributes(obj.rrinnerstub),"varvalue{string} value",None,self)
+
+def GetServiceNodeID(self,obj):
+	return self._GetServiceNodeID(obj.rrinnerstub)
+
+def GetServiceNodeName(self,obj):
+	return self._GetServiceNodeName(obj.rrinnerstub)
+
+def GetServiceName(self,obj):
+	return self._GetServiceName(obj.rrinnerstub)
 	
 def RegisterService(self, name, objecttype, obj, securitypolicy=None):
 	from .RobotRaconteurPythonUtil import WrappedServiceSkelDirectorPython, SplitQualifiedName
@@ -262,6 +271,10 @@ def SubscribeServiceByType(self, service_types, filter_=None):
 def SubscribeServiceInfo2(self, service_types, filter_=None):
 	from .RobotRaconteurPythonUtil import SubscribeServiceInfo2
 	return SubscribeServiceInfo2(self, service_types, filter_)
+
+def SubscribeService(self,*args):
+	from .RobotRaconteurPythonUtil import SubscribeService
+	return SubscribeService(self, *args)
 
 %}
 

@@ -858,6 +858,34 @@ class WireConnection(object):
         if (evt is not self._WireValueChanged):
             raise RuntimeError("Invalid operation")
 
+    @property
+    def InValueLifespan(self):
+        t = self.__innerwire.GetInValueLifespan()
+        if t < 0:
+            return t
+        return float(t) / 1000.0
+
+    @InValueLifespan.setter
+    def InValueLifespan(self, secs):
+        if secs < 0:
+            self.__innerwire.SetInValueLifespan(-1)
+        else:
+            self.__innerwire.SetInValueLifespan(int(secs*1000.0))
+
+    @property
+    def OutValueLifespan(self):
+        t = self.__innerwire.GetOutValueLifespan()
+        if t < 0:
+            return t
+        return float(t) / 1000.0
+
+    @OutValueLifespan.setter
+    def OutValueLifespan(self, secs):
+        if secs < 0:
+            self.__innerwire.SetOutValueLifespan(-1)
+        else:
+            self.__innerwire.SetOutValueLifespan(int(secs*1000.0))
+
 class WireConnectionDirector(RobotRaconteurPython.WrappedWireConnectionDirector):
 
     def __init__(self,endpoint,type,obj=None,innerep=None):
@@ -2481,12 +2509,16 @@ class ServiceSubscription(object):
             raise Exception("Invalid ConnectRetryDelay value")
         self._subscription.SetConnectRetryDelay(int(value*1000.0))
 
-    def SubscribeWire(self, wire_name):
-        s=self._subscription.SubscribeWire(wire_name)
+    def SubscribeWire(self, wire_name, service_path = None):
+        if service_path is None:
+            service_path = ""
+        s=self._subscription.SubscribeWire(wire_name, service_path)
         return WireSubscription(s)
 
-    def SubscribePipe(self, pipe_name):
-        s=self._subscription.SubscribePipe(pipe_name)
+    def SubscribePipe(self, pipe_name, service_path = None):
+        if service_path is None:
+            service_path = ""
+        s=self._subscription.SubscribePipe(pipe_name, service_path)
         return PipeSubscription(s)
     
     @property
@@ -2506,6 +2538,9 @@ class ServiceSubscription(object):
     def ClientDisconnected(self, evt):
         if (evt is not self._ClientDisconnected):
             raise RuntimeError("Invalid operation")
+
+    def GetDefaultClient(self):
+        return self._GetClientStub(self._subscription.GetDefaultClient())
             
 class WrappedWireSubscriptionDirectorPython(RobotRaconteurPython.WrappedWireSubscriptionDirector):
     def __init__(self,subscription):
@@ -2558,6 +2593,20 @@ class WireSubscription(object):
     @IgnoreInValue.setter
     def IgnoreInValue(self, ignore):
         self._subscription.SetIgnoreInValue(ignore)
+
+    @property
+    def InValueLifespan(self):
+        t = self._subscription.GetInValueLifespan()
+        if t < 0:
+            return t
+        return float(t) / 1000.0
+
+    @InValueLifespan.setter
+    def InValueLifespan(self, secs):
+        if secs < 0:
+            self._subscription.SetInValueLifespan(-1)
+        else:
+            self._subscription.SetInValueLifespan(int(secs*1000.0))
 
     def SetOutValueAll(self, value):        
         iter=RobotRaconteurPython.WrappedWireSubscription_send_iterator(self._subscription)
@@ -2728,6 +2777,14 @@ def SubscribeServiceByType(node, service_types, filter_=None):
 
     
     sub1=RobotRaconteurPython.WrappedSubscribeServiceByType(node, service_types2, filter2)
+    return ServiceSubscription(sub1)
+
+def SubscribeService(node, *args):
+    args2=list(args)
+    if (len(args) >= 3):
+        if (args[1]==None): args2[1]=""
+        args2[2]=PackMessageElement(args[2],"varvalue{string}",None,node).GetData()    
+    sub1=RobotRaconteurPython.WrappedSubscribeService(node, *args2)
     return ServiceSubscription(sub1)   
 
 class WrappedUserAuthenticatorDirectorPython(RobotRaconteurPython.WrappedUserAuthenticatorDirector):
