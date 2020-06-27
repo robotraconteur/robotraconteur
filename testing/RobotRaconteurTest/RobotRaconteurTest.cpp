@@ -1595,6 +1595,21 @@ return 0;
 			cout << "Subscribed Node: " << e.first.NodeID.ToString() << " " << e.first.ServiceName << endl;
 		}
 
+		try
+		{
+			cout << "Client d1: " << subscription->GetDefaultClient<testroot>()->get_d1() << endl;
+		}
+		catch (ConnectionException& e)
+		{
+			cout << "No client connected" << endl;
+		}
+
+		RR_SHARED_PTR<testroot> default_client;
+		if (subscription->TryGetDefaultClient<testroot>(default_client))
+		{
+			cout << "Client d1: " << default_client->get_d1() << endl;
+		}
+
 		cout << "Press enter to quit" << endl;
 		
 		getchar();

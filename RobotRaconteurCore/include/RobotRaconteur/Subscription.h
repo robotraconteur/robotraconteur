@@ -201,6 +201,28 @@ namespace RobotRaconteur
 			return o;
 		}
 
+		template <typename T>
+		RR_SHARED_PTR<T> GetDefaultClient()
+		{
+			return rr_cast<T>(GetDefaultClientBase());
+		}
+
+		template <typename T>
+		bool TryGetDefaultClient(RR_SHARED_PTR<T>& client_out)
+		{
+			RR_SHARED_PTR<RRObject> c;
+			if (!TryGetDefaultClientBase(c))
+			{
+				return false;
+			}
+			RR_SHARED_PTR<T> c1 = RR_DYNAMIC_POINTER_CAST<T>(c);
+			if (!c1)
+				return false;
+
+			client_out = c1;
+			return true;
+		}
+
 	protected:
 		boost::mutex this_lock;
 
@@ -252,6 +274,9 @@ namespace RobotRaconteur
 
 		void WireSubscriptionClosed(RR_SHARED_PTR<WireSubscriptionBase> s);
 		void PipeSubscriptionClosed(RR_SHARED_PTR<PipeSubscriptionBase> s);
+
+		RR_SHARED_PTR<RRObject> GetDefaultClientBase();
+		bool TryGetDefaultClientBase(RR_SHARED_PTR<RRObject>& client_out);
 	};
 
 	class ROBOTRACONTEUR_CORE_API WireSubscriptionBase : public RR_ENABLE_SHARED_FROM_THIS<WireSubscriptionBase>, private boost::noncopyable

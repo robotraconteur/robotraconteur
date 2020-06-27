@@ -1111,6 +1111,36 @@ namespace RobotRaconteur
 		}
 	}
 
+	bool ServiceSubscription::TryGetDefaultClientBase(RR_SHARED_PTR<RRObject>& client_out)
+	{	
+		boost::mutex::scoped_lock lock(this_lock);
+
+		BOOST_FOREACH(RR_SHARED_PTR<detail::ServiceSubscription_client> c, clients | boost::adaptors::map_values)
+		{
+			RR_SHARED_PTR<RRObject> c1 = c->client.lock();
+			if (c1)
+			{
+				client_out = c1;
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	RR_SHARED_PTR<RRObject> ServiceSubscription::GetDefaultClientBase()
+	{
+		
+		RR_SHARED_PTR<RRObject> client;
+		if (!TryGetDefaultClientBase(client))
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1, "No clients connected for default client");
+			throw ConnectionException("No clients connected");
+		}
+
+		return client;			
+	}
+
 	//class WireSubscriptionBase
 
 	static void WireSubscriptionBase_emptyhandler(RR_SHARED_PTR<RobotRaconteurException> e)
