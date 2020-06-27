@@ -269,6 +269,24 @@ import java.util.*;
 		}
 	}
 
+	public final NodeID getServiceNodeID(Object obj)
+	{
+		ServiceStub stub = (ServiceStub)obj;
+		return _GetServiceNodeID(stub.rr_innerstub);		
+	}
+
+	public final String getServiceNodeName(Object obj)
+	{
+		ServiceStub stub = (ServiceStub)obj;
+		return _GetServiceNodeName(stub.rr_innerstub);		
+	}
+
+	public final String getServiceName(Object obj)
+	{
+		ServiceStub stub = (ServiceStub)obj;
+		return _GetServiceName(stub.rr_innerstub);		
+	}
+
 	public final MessageElementData packStructure(Object s)
 	{
 		if (s == null)
@@ -1661,7 +1679,62 @@ import java.util.*;
 
   }
 
+  public ServiceSubscription subscribeService(String url)
+  {
+	  return subscribeService(url, null, null, null);
+  }
 
+  public ServiceSubscription subscribeService(String url, String username, Map<String,Object> credentials)
+  {
+	  return subscribeService(url, username, credentials, null);
+  }
+
+
+  public ServiceSubscription subscribeService(String url, String username, Map<String, Object> credentials, String objecttype)
+	{
+		return subscribeService(new String[] {url}, username, credentials, objecttype);
+	}
+
+  public ServiceSubscription subscribeService(String[] url)
+  {
+	  return subscribeService(url, null, null, null);
+  }
+
+  public ServiceSubscription subscribeService(String[] url, String username, Map<String,Object> credentials)
+  {
+	  return subscribeService(url, username, credentials, null);
+  }
+
+	public final ServiceSubscription subscribeService(String[] url, String username, Map<String, Object> credentials, String objecttype)
+	{
+		MessageElementData credentials2 = null;
+		try
+		{
+			if (username == null)
+			{
+				username = "";
+			}
+			if (credentials != null)
+			{
+				credentials2 = (MessageElementData)packVarType(credentials);
+			}
+	
+			if (objecttype==null) objecttype="";
+			
+			vectorstring url1=new vectorstring();
+			for (int i=0; i<url.length; i++)
+			{
+				url1.add(url[i]);
+			}
+			WrappedServiceSubscription sub1 = RobotRaconteurJava.wrappedSubscribeService(this, url1, username, credentials2, objecttype);
+			return new ServiceSubscription(sub1); 
+		}
+		finally
+		{
+			if (credentials2!=null) credentials2.delete();
+		}
+
+	}
   //End code typemap
   
   

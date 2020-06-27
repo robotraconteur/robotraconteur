@@ -210,19 +210,43 @@ public class ServiceSubscription
 
 	public <T> WireSubscription<T> subscribeWire(String wire_name)
 	{
-		WrappedWireSubscription s1=_subscription.subscribeWire(wire_name);
+		return subscribeWire(wire_name, null);
+	}
+
+	public <T> WireSubscription<T> subscribeWire(String wire_name, String service_path)	
+	{
+		if (service_path == null)
+		{
+			service_path = "";
+		}
+		WrappedWireSubscription s1=_subscription.subscribeWire(wire_name, service_path);
 		return new WireSubscription<T>(s1);
 	}
 
 	public <T> PipeSubscription<T> subscribePipe(String pipe_name)
 	{
-		return subscribePipe(pipe_name, -1);
+		return subscribePipe(pipe_name, null, -1);
 	}
 
-	public <T> PipeSubscription<T> subscribePipe(String pipe_name, int max_backlog)
+	public <T> PipeSubscription<T> subscribePipe(String pipe_name, String service_path)
 	{
-		WrappedPipeSubscription s1=_subscription.subscribePipe(pipe_name, max_backlog);
+		return subscribePipe(pipe_name, service_path, -1);
+	}
+
+	public <T> PipeSubscription<T> subscribePipe(String pipe_name, String service_path, int max_backlog)	
+	{
+		if (service_path == null)
+		{
+			service_path = "";
+		}
+		WrappedPipeSubscription s1=_subscription.subscribePipe(pipe_name, service_path, max_backlog);
 		return new PipeSubscription<T>(s1);
+	}
+
+	public <T> T getDefaultObject()
+	{
+		WrappedServiceStub s = _subscription.getDefaultClient();
+        return (T)getClientStub(s);	
 	}
 
 

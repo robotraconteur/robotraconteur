@@ -103,6 +103,16 @@ public class WireSubscription<T>
 		_subscription.setIgnoreInValue(ignore);
 	}
 
+	public int getInValueLifespan()
+	{
+		return _subscription.getInValueLifespan();
+	}
+
+	public void setInValueLifespan(int millis)
+	{
+		_subscription.setInValueLifespan(millis);
+	}
+
 	public void setOutValueAll(T value)
 	{
 		WrappedWireSubscription_send_iterator iter=new WrappedWireSubscription_send_iterator(_subscription);

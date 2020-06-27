@@ -513,7 +513,27 @@ public class Wire<T>
 		public void setIgnoreInValue(boolean ignore)
 		{
 			innerwire.setIgnoreInValue(ignore);
-		}		
+		}
+
+		public int getInValueLifespan()
+		{
+			return innerwire.getInValueLifespan();
+		}
+
+		public void setInValueLifespan(int millis)
+		{
+			innerwire.setInValueLifespan(millis);
+		}
+
+		public int getOutValueLifespan()
+		{
+			return innerwire.getOutValueLifespan();
+		}
+
+		public void setOutValueLifespan(int millis)
+		{
+			innerwire.setOutValueLifespan(millis);
+		}
 		
 		private class directorclass extends WrappedWireConnectionDirector
 		{
