@@ -1812,6 +1812,18 @@ RR_SHARED_PTR<ServiceSubscription> RobotRaconteurNode::SubscribeService(const st
 	return m_Discovery->SubscribeService(url, username, credentials, objecttype);
 }
 
+RR_SHARED_PTR<ServiceSubscription> RobotRaconteurNode::SubscribeService(const std::string& url, boost::string_ref username, RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> > credentials,  boost::string_ref objecttype)
+{
+	if (!m_Discovery)
+	{
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_sp(), Node, -1, "Node not init");
+	 	throw InvalidOperationException("Node not init");
+	}
+	std::vector<std::string> url2;
+	url2.push_back(url);
+	return m_Discovery->SubscribeService(url2, username, credentials, objecttype);
+}
+
 RR_SHARED_PTR<ServiceInfo2Subscription> RobotRaconteurNode::SubscribeServiceInfo2(const std::vector<std::string>& service_types, RR_SHARED_PTR<ServiceSubscriptionFilter> filter)
 {
 	if (!m_Discovery)

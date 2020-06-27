@@ -1390,7 +1390,7 @@ namespace RobotRaconteur
 		/**
 		 * @brief Subscribe to a service using one or more URL. Used to create robust connections to services
 		 * 
-		 * Creates a ServiceSubscription tide to a service with one or more candidate connection URLs. The
+		 * Creates a ServiceSubscription assigned to a service with one or more candidate connection URLs. The
 		 * subscription will attempt to maintain a peristent connection, reconnecting if the connection is lost.
 		 * 
 		 * @param url One or more candidate connection urls
@@ -1400,6 +1400,21 @@ namespace RobotRaconteur
 		 * @return RR_SHARED_PTR<ServiceSubscription> The subscription object
 		 */
 		RR_SHARED_PTR<ServiceSubscription> SubscribeService(const std::vector<std::string>& url, boost::string_ref username = "", RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> > credentials=(RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >()),  boost::string_ref objecttype = "");
+
+		/**
+		 * @brief Subscribe to a service using a URL. Used to create robust connections to services
+		 * 
+		 * Creates a ServiceSubscription assigned to a service with a URL. The
+		 * subscription will attempt to maintain a peristent connection, reconnecting if the connection is lost.
+		 * 
+		 * @param url The connection URL
+		 * @param username An optional username for authentication
+		 * @param credentials Optional credentials for authentication
+		 * @param objecttype The desired root object proxy type. Optional but highly recommended.
+		 * @return RR_SHARED_PTR<ServiceSubscription> The subscription object
+		 */
+		RR_SHARED_PTR<ServiceSubscription> SubscribeService(const std::string& url, boost::string_ref username = "", RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> > credentials=(RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >()),  boost::string_ref objecttype = "");
+
 
 	protected:
 
