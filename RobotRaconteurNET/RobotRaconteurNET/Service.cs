@@ -1933,7 +1933,7 @@ namespace RobotRaconteur
     public class PipeBroadcaster<T>
     {
         protected Pipe<T> pipe;
-        protected WrappedPipeBroadcaster innerpipe;
+        protected internal WrappedPipeBroadcaster innerpipe;
         protected TypeDefinition type;
 
         class WrappedPipeBroadcasterPredicateDirectorNET : WrappedPipeBroadcasterPredicateDirector
@@ -2721,7 +2721,7 @@ namespace RobotRaconteur
 
         protected Wire<T> wire;
 
-        protected WrappedWireBroadcaster innerwire;
+        protected internal WrappedWireBroadcaster innerwire;
         protected TypeDefinition type;
         
         public WireBroadcaster(Wire<T> wire)

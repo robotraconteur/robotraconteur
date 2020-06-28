@@ -132,6 +132,8 @@
 
 %include "NodeSetupJava.i"
 
+%include "BroadcastDownsamplerJava.i"
+
 %inline
 {
 

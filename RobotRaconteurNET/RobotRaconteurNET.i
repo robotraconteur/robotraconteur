@@ -110,6 +110,8 @@ static void memcpy(void* destination, void* source, int64_t num)
 %include "RobotRaconteurNodeNET.i"
 %include "NodeSetupNET.i"
 
+%include "BroadcastDownsamplerNET.i"
+
 namespace RobotRaconteur {
 
 %feature("director") RRNativeObjectHeapSupport;

@@ -4486,4 +4486,20 @@ namespace RobotRaconteur
             _SetHandler(director,id);
         }
     }
+
+    public class BroadcastDownsamplerStep : IDisposable
+    {
+        protected BroadcastDownsampler downsampler;
+
+        public BroadcastDownsamplerStep(BroadcastDownsampler downsampler)
+        {
+            this.downsampler=downsampler;
+            downsampler.BeginStep();
+        }
+
+        public void Dispose()
+        {
+            downsampler.EndStep();
+        }
+    }
 }

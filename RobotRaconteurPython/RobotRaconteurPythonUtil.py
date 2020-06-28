@@ -2179,6 +2179,16 @@ class WireUnicastReceiver(object):
         if (evt is not self._InValueChanged):
             raise RuntimeError("Invalid operation")
 
+class BroadcastDownsamplerStep(object):
+    def __init__(self, downsampler):
+        self.downsampler=downsampler
+    
+    def __enter__(self):
+        self.downsampler.BeginStep()
+    
+    def __exit__(self, etype, value, traceback):
+        self.downsampler.EndStep()
+
 class GeneratorClient(object):
     def __init__(self, inner_gen, return_type, param_type, obj, node):
         self._inner_gen=inner_gen
