@@ -203,6 +203,8 @@ namespace RobotRaconteur
 		RR_SHARED_PTR<RobotRaconteurNode> node;
 		RR_SHARED_PTR<CommandLineConfigParser> config;
 
+		bool release_node;
+
 		void DoSetup(RR_SHARED_PTR<RobotRaconteurNode> node, const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, 
 			RR_SHARED_PTR<CommandLineConfigParser>& config);
 
@@ -225,6 +227,8 @@ namespace RobotRaconteur
 		RR_SHARED_PTR<IntraTransport> GetIntraTransport();
 
 		RR_SHARED_PTR<CommandLineConfigParser> GetCommandLineConfig();
+
+		void ReleaseNode();
 
 		virtual ~RobotRaconteurNodeSetup();
 	};

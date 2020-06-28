@@ -285,7 +285,7 @@ namespace RobotRaconteur
 	RobotRaconteurNodeSetup::RobotRaconteurNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node, const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, 
 		const std::string& node_name, uint16_t tcp_port, uint32_t flags)
 	{
-
+		release_node=false;
 		RR_SHARED_PTR<CommandLineConfigParser> c = RR_MAKE_SHARED<CommandLineConfigParser>(0);
 		c->SetDefaults(node_name, tcp_port, flags);
 		DoSetup(node, service_types, c);
@@ -294,6 +294,7 @@ namespace RobotRaconteur
 	RobotRaconteurNodeSetup::RobotRaconteurNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node, const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, 
 			const std::string& node_name, uint16_t tcp_port, uint32_t flags, uint32_t allowed_overrides, int argc, char* argv[])
 	{
+		release_node=false;
 		RR_SHARED_PTR<CommandLineConfigParser> c = RR_MAKE_SHARED<CommandLineConfigParser>(allowed_overrides);
 		c->SetDefaults(node_name, tcp_port, flags);
 		try
@@ -311,6 +312,7 @@ namespace RobotRaconteur
 	RobotRaconteurNodeSetup::RobotRaconteurNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node, const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, 
 			const std::string& node_name, uint16_t tcp_port, uint32_t flags, uint32_t allowed_overrides, const std::vector<std::string>& args)
 	{
+		release_node=false;
 		RR_SHARED_PTR<CommandLineConfigParser> c = RR_MAKE_SHARED<CommandLineConfigParser>(allowed_overrides);
 		c->SetDefaults(node_name, tcp_port, flags);
 		try
@@ -328,6 +330,7 @@ namespace RobotRaconteur
 	RobotRaconteurNodeSetup::RobotRaconteurNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node, const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, 
 		RR_SHARED_PTR<CommandLineConfigParser> config)
 	{
+		release_node=false;
 		DoSetup(node, service_types, config);
 	}
 
@@ -354,8 +357,15 @@ namespace RobotRaconteur
 		return config;
 	}
 
+	void RobotRaconteurNodeSetup::ReleaseNode()
+	{
+		release_node=true;
+	}
+
 	RobotRaconteurNodeSetup::~RobotRaconteurNodeSetup()
 	{
+		if (release_node)
+			return;
 		if (node)
 		{
 			if (detail::ThreadPool_IsNodeMultithreaded(node))

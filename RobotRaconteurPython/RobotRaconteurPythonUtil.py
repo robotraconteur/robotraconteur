@@ -2857,6 +2857,11 @@ class RobotRaconteurNodeSetup(object):
     
     def __exit__(self, etype, value, traceback):
         self.__node.Shutdown()
+
+    def ReleaseNode(self):
+        if self.__setup is None:
+            return
+        self.__setup.ReleaseNode()
         
 class ClientNodeSetup(RobotRaconteurNodeSetup):
     def __init__(self, node_name=None, node=None, argv=None):

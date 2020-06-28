@@ -15,11 +15,10 @@
 import RobotRaconteur as RR
 RRN=RR.RobotRaconteurNode.s
 
-local_transport=RR.LocalTransport()
-tcp_transport=RR.TcpTransport()
-tcp_transport.EnableNodeDiscoveryListening()
-hardware_transport=RR.HardwareTransport()
+node_setup=RR.ClientNodeSetup(argv=__import__("sys").argv)
+node_setup.ReleaseNode()
 
-RRN.RegisterTransport(local_transport)
-RRN.RegisterTransport(tcp_transport)
-RRN.RegisterTransport(hardware_transport)
+local_transport=node_setup.local_transport
+tcp_transport=node_setup.tcp_transport
+hardware_transport=node_setup.hardware_transport
+intra_transport=node_setup.intra_transport

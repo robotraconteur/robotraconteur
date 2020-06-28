@@ -56,6 +56,8 @@ namespace RobotRaconteur
 		boost::shared_ptr<RobotRaconteur::TcpTransport> GetTcpTransport();
 		boost::shared_ptr<RobotRaconteur::HardwareTransport> GetHardwareTransport();
 		boost::shared_ptr<RobotRaconteur::CommandLineConfigParser> GetCommandLineConfig();
+
+		void ReleaseNode();
 		
 		virtual ~RobotRaconteurNodeSetup();
 	};

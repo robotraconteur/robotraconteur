@@ -60,6 +60,13 @@ public class RobotRaconteurNodeSetup {
 	{
 		return config;
 	}
+
+	public void releaseNode()
+	{
+		if (setup==null)
+			return;
+		setup.releaseNode();
+	}
 		
 	@Override
 	public void finalize()

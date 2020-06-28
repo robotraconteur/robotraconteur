@@ -4384,6 +4384,11 @@ namespace RobotRaconteur
             CommandLineConfig = setup.GetCommandLineConfig();     
         }
 
+        public void ReleaseNode()
+        {
+            setup?.ReleaseNode();
+        }
+
         public void Dispose()
         {
             WrappedRobotRaconteurNodeSetup s;
