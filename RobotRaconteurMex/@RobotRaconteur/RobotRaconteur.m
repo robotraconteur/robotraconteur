@@ -134,6 +134,14 @@ classdef RobotRaconteur
             else
 				ret=RobotRaconteurMex('SubscribeServiceInfo2',service_types,filter); 
             end
+		end
+		
+		function ret=SubscribeService(url,username,credentials)
+			if nargin ==1
+				ret=RobotRaconteurMex('SubscribeService',url); 
+			else
+				ret=RobotRaconteurMex('SubscribeService',url,username,credentials); 
+		    end
         end
         
 		%Server Functions

@@ -1330,6 +1330,14 @@ return 0;
 			cout << "broadcastwire: len=" << w1_value->size() << " [0]=" << (*w1_value)[0] << endl;
 		}
 
+		RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<RRArray<double> > > > c;
+		RR_INTRUSIVE_PTR<RRArray<double> > v;
+		TimeSpec time;
+		if (!broadcastwire->TryGetInValue(v, &time, &c))
+		{
+			cout << "Value not set" << endl;
+		}
+
 		cout << "Press enter to quit" << endl;
 		
 		getchar();

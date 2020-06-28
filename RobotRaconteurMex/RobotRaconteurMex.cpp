@@ -1228,6 +1228,19 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 			}
 
 		}
+		else if (command=="SubscribeService")
+		{
+			if (nlhs!=1 || (nrhs !=2 && nrhs != 4))	throw InvalidArgumentException("RobotRaconteurMex SubscribeService requires 2 or 4 input and 1 output arguments");
+			if (nrhs==2)
+			{
+				plhs[0]=SubscribeService(prhs[1],NULL,NULL);
+			}
+			else
+			{
+				plhs[0]=SubscribeService(prhs[1],prhs[2],prhs[3]);
+			}
+			return;
+		}
 
 		//Timeout adjustment
 
@@ -5892,6 +5905,32 @@ mxArray* MexWireConnection::subsref(const mxArray* S)
 			return CreateInt32Scalar((int32_t)this->Direction());
 		}
 
+		if (membername == "InValueLifespan")
+		{
+			double d = GetInValueLifespan();
+			if (d < 0.0)
+			{
+				return mxCreateDoubleScalar(d);
+			}
+			else
+			{
+				return mxCreateDoubleScalar(d/1000.0);
+			}
+		}
+
+		if (membername == "OutValueLifespan")
+		{
+			double d = GetOutValueLifespan();
+			if (d < 0.0)
+			{
+				return mxCreateDoubleScalar(d);
+			}
+			else
+			{
+				return mxCreateDoubleScalar(d/1000.0);
+			}
+		}
+
 		throw InvalidArgumentException("Unknown property for WireConnection");
 	}
 
@@ -5977,6 +6016,34 @@ void MexWireConnection::subsasgn(const mxArray* S, const mxArray* value)
 		if (membername=="OutValue")
 		{
 			SetOutValue(PackMxArrayToMessageElement(value,Type,rr_cast<WireClientBase>(GetParent())->GetStub()));
+			return;
+		}
+
+		if (membername == "InValueLifespan")
+		{
+			double d = GetDoubleScalar(value);
+			if (d < 0.0)
+			{
+				SetInValueLifespan(-1);
+			}
+			else
+			{
+				SetInValueLifespan(boost::numeric_cast<int32_t>(d*1000.0));
+			}
+			return;
+		}
+
+		if (membername == "OutValueLifespan")
+		{
+			double d = GetDoubleScalar(value);
+			if (d < 0.0)
+			{
+				SetOutValueLifespan(-1);
+			}
+			else
+			{
+				SetOutValueLifespan(boost::numeric_cast<int32_t>(d*1000.0));
+			}
 			return;
 		}
 
@@ -7345,11 +7412,17 @@ mxArray* MexServiceSubscription::subsref(const mxArray* S)
 
 	if (membername == "SubscribeWire")
 	{
-		if (mxGetNumberOfElements(cell_args) != 1) throw InvalidArgumentException("SubscribeWire expects one argument");
+		size_t n_args = mxGetNumberOfElements(cell_args);
+		if (n_args != 1 && n_args !=2 ) throw InvalidArgumentException("SubscribeWire expects one argument");
 
 		std::string wire_name = mxToString(mxGetCell(cell_args, 0));
+		std::string service_path;
+		if (n_args == 2)
+		{
+			service_path = mxToString(mxGetCell(cell_args, 1));
+		}
 
-		boost::shared_ptr<WireSubscription<RR_INTRUSIVE_PTR<MessageElement> > > sub1 = subscription->SubscribeWire<RR_INTRUSIVE_PTR<MessageElement> >(wire_name);
+		boost::shared_ptr<WireSubscription<RR_INTRUSIVE_PTR<MessageElement> > > sub1 = subscription->SubscribeWire<RR_INTRUSIVE_PTR<MessageElement> >(wire_name, service_path);
 		boost::shared_ptr<MexWireSubscription> sub2 = boost::make_shared<MexWireSubscription>(shared_from_this(), sub1);
 
 		boost::recursive_mutex::scoped_lock lock(servicesubscriptions_lock);
@@ -7377,11 +7450,17 @@ mxArray* MexServiceSubscription::subsref(const mxArray* S)
 
 	if (membername == "SubscribePipe")
 	{
-		if (mxGetNumberOfElements(cell_args) != 1) throw InvalidArgumentException("SubscribePipe expects one argument");
+		size_t n_args = mxGetNumberOfElements(cell_args);
+		if (n_args != 1 && n_args !=2 ) throw InvalidArgumentException("SubscribePipe expects one argument");
 
 		std::string pipe_name = mxToString(mxGetCell(cell_args, 0));
+		std::string service_path;
+		if (n_args == 2)
+		{
+			service_path = mxToString(mxGetCell(cell_args, 1));
+		}
 
-		boost::shared_ptr<PipeSubscription<RR_INTRUSIVE_PTR<MessageElement> > > sub1 = subscription->SubscribePipe<RR_INTRUSIVE_PTR<MessageElement> >(pipe_name);
+		boost::shared_ptr<PipeSubscription<RR_INTRUSIVE_PTR<MessageElement> > > sub1 = subscription->SubscribePipe<RR_INTRUSIVE_PTR<MessageElement> >(pipe_name,service_path);
 		boost::shared_ptr<MexPipeSubscription> sub2 = boost::make_shared<MexPipeSubscription>(shared_from_this(), sub1);
 
 		boost::recursive_mutex::scoped_lock lock(servicesubscriptions_lock);
@@ -7449,6 +7528,32 @@ mxArray* MexServiceSubscription::subsref(const mxArray* S)
 		subscription->ReleaseClient(stub);
 
 		return mxCreateNumericMatrix(1, 0, mxDOUBLE_CLASS, mxREAL);
+	}
+
+	if (membername == "GetDefaultClient")
+	{
+		if (mxGetNumberOfElements(cell_args) != 0) throw InvalidArgumentException("GetDefaultClient expects zero arguments");
+
+		RR_SHARED_PTR<MexServiceStub> stub=subscription->GetDefaultClient<MexServiceStub>();
+
+		mxArray* mxStub = NULL;
+
+		if (stub->stubptr != NULL)
+		{
+			mxStub=stub->stubptr.get();
+		}
+		else
+		{
+			boost::recursive_mutex::scoped_lock lock(stubs_lock);
+			stubcount++;
+			int stubid = stubcount;
+			stub->stubid = stubid;
+			mxArray* mxstub1 = MatlabObjectFromMexStub(stub);
+			stubs.insert(std::make_pair(stubid, stub));
+			mxStub= mxDuplicateArray(mxstub1);
+		}
+
+		return mxStub;
 	}
 
 	throw InvalidArgumentException("Unknown function for ServiceSubscription");
@@ -7581,16 +7686,16 @@ mxArray* MexWireSubscription::subsref(const mxArray* S)
 	{
 		if (membername == "InValue")
 		{
-			RR_INTRUSIVE_PTR<MessageElement> m;
+			RR_INTRUSIVE_PTR<RRValue> m1;
 			TimeSpec time;
-			RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<MessageElement> > > c;
-			if (!subscription->TryGetInValue(m, &time, &c))
+			RR_SHARED_PTR<WireConnectionBase> c;
+			if (!subscription->TryGetInValueBase(m1, &time, &c))
 			{
 				throw ValueNotSetException("InValue not valid");
 			}
 			if (!c) throw InvalidOperationException("Could not unpack wire value");
 			RR_SHARED_PTR<MexWireConnection> c2 = rr_cast<MexWireConnection>(c);
-			return UnpackMessageElementToMxArray(m, c2->Type, RR_SHARED_PTR<ServiceStub>());
+			return UnpackMessageElementToMxArray(rr_cast<MessageElement>(m1), c2->Type, RR_SHARED_PTR<ServiceStub>(c2->GetStub()));
 		}
 		if (membername == "InValueValid")
 		{
@@ -7603,9 +7708,23 @@ mxArray* MexWireSubscription::subsref(const mxArray* S)
 			
 			return mxCreateLogicalScalar(true);
 		}
+
 		if (membername == "IgnoreInValue")
 		{
 			return mxCreateLogicalScalar(subscription->GetIgnoreInValue());
+		}
+
+		if (membername == "InValueLifespan")
+		{
+			double d = subscription->GetInValueLifespan();
+			if (d < 0.0)
+			{
+				return mxCreateDoubleScalar(d);
+			}
+			else
+			{
+				return mxCreateDoubleScalar(d/1000.0);
+			}
 		}
 
 		throw InvalidArgumentException("Unknown property for ServiceSubscription");
@@ -7696,6 +7815,21 @@ void MexWireSubscription::subsasgn(const mxArray* S, const mxArray* value)
 			{
 				subscription->SetIgnoreInValue(false);
 			}
+			return;
+		}
+
+		if (membername == "InValueLifespan")
+		{
+			double d = GetDoubleScalar(value);
+			if (d < 0.0)
+			{
+				subscription->SetInValueLifespan(-1);
+			}
+			else
+			{
+				subscription->SetInValueLifespan(boost::numeric_cast<int32_t>(d*1000.0));
+			}
+			return;
 		}
 
 	}
@@ -7762,15 +7896,15 @@ mxArray* MexPipeSubscription::subsref(const mxArray* S)
 	if (membername == "ReceivePacket")
 	{		
 		if (mxGetNumberOfElements(cell_args) != 0) throw InvalidArgumentException("ReceivePacket expects zero arguments");
-		RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<MessageElement> > > ep;
-		RR_INTRUSIVE_PTR<MessageElement> p;
-		if (!subscription->TryReceivePacketWait(p, 0, false, &ep))
+		RR_SHARED_PTR<PipeEndpointBase> ep;
+		RR_INTRUSIVE_PTR<RRValue> p;
+		if (!subscription->TryReceivePacketBaseWait(p, 0, false, &ep))
 		{
 			throw InvalidOperationException("PipeSubscription receive queue empty");
 		}
 		if (!ep) throw InvalidOperationException("Could not unpack wire value");
 		RR_SHARED_PTR<MexPipeEndpoint> ep2 = rr_cast<MexPipeEndpoint>(ep);
-		return UnpackMessageElementToMxArray(p, ep2->Type, RR_SHARED_PTR<ServiceStub>());
+		return UnpackMessageElementToMxArray(rr_cast<MessageElement>(p), ep2->Type, RR_SHARED_PTR<ServiceStub>());
 
 	}
 		
@@ -8051,7 +8185,63 @@ mxArray* SubscribeServiceByType(const mxArray* service_types, const mxArray* fil
 	return matlabret[0];
 }
 
+mxArray* SubscribeService(const mxArray* url, const mxArray* username, const mxArray* credentials)
+{
+	std::string susername="";
+	RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > mcredentials;
 
+	if (username != NULL && credentials != NULL)
+	{
+		susername=mxToString(username);
+
+		mcredentials = mxArrayToRRMap(credentials);
+
+	}
+
+	std::vector<std::string> urls;
+
+	if (mxIsCell(url))
+	{
+		size_t urlc=mxGetNumberOfElements(url);
+		for (size_t i=0; i<urlc; i++)
+		{
+			mxArray* urln_a=mxGetCell(url,i);
+			urls.push_back(mxToString(urln_a));
+		}
+	}
+	else
+	{
+	std::string surl1=mxToString(url);
+		
+	boost::split(urls,surl1,boost::is_from_range(',',','));
+	}
+	
+	boost::shared_ptr<ServiceSubscription> sub=RobotRaconteurNode::s()->SubscribeService(urls,susername,mcredentials);
+
+	boost::shared_ptr<MexServiceSubscription> sub2=boost::make_shared<MexServiceSubscription>(sub);
+
+	boost::recursive_mutex::scoped_lock lock(servicesubscriptions_lock);
+	servicesubscriptions_count++;
+	sub2->servicesubscriptionid = servicesubscriptions_count;
+	servicesubscriptions.insert(std::make_pair(sub2->servicesubscriptionid, sub2));
+
+	mxArray* matlabret[1];
+	mxArray* rhs[2];
+
+	rhs[0] = mxCreateNumericMatrix(1, 1, mxINT32_CLASS, mxREAL);
+	rhs[1] = mxCreateNumericMatrix(1, 1, mxINT32_CLASS, mxREAL);
+
+	((int32_t*)mxGetData(rhs[0]))[0] = RR_MEX_SERVICE_SUBSCRIPTION;
+	((int32_t*)mxGetData(rhs[1]))[0] = sub2->servicesubscriptionid;
+
+	int merror = mexCallMATLAB(1, matlabret, 2, rhs, "RobotRaconteurObject");
+	if (merror)
+	{
+		throw InternalErrorException("Internal error");
+	}
+
+	return matlabret[0];
+}
 
 MexGeneratorClient::MexGeneratorClient(const std::string& name, int32_t id, RR_SHARED_PTR<ServiceStub> stub, RR_SHARED_PTR<TypeDefinition> return_type, RR_SHARED_PTR<TypeDefinition> param_type)
 	: GeneratorClientBase(name, id, stub)
