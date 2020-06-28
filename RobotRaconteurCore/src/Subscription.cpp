@@ -1168,7 +1168,7 @@ namespace RobotRaconteur
 			if (!n)
 				return false;
 
-			if (in_value_time_local + boost::posix_time::milliseconds(in_value_lifespan) >= n->NowUTC())
+			if (in_value_time_local + boost::posix_time::milliseconds(in_value_lifespan) < n->NowUTC())
 			{
 				return false;
 			}

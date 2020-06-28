@@ -371,7 +371,7 @@ namespace RobotRaconteur
 			RR_SHARED_PTR<WireConnectionBase> connection1;
 			if (!TryGetInValueBase(o, time, &connection1)) return false;
 			val = RRPrimUtil<T>::PreUnpack(o);
-			if (connection1)
+			if (connection && connection1)
 			{
 				*connection = RR_DYNAMIC_POINTER_CAST<WireConnection<T> >(connection1);
 			}
