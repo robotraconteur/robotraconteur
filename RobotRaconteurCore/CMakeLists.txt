@@ -62,6 +62,7 @@ set(RobotRaconteurCore_src
 	src/Logging.cpp
 	src/IntraTransport.cpp
 	src/Tap.cpp
+	src/BroadcastDownsampler.cpp
 )
 
 set(RobotRaconteurCore_header
@@ -108,6 +109,7 @@ set(RobotRaconteurCore_header
 	include/RobotRaconteur/Logging.h
 	include/RobotRaconteur/IntraTransport.h
 	include/RobotRaconteur/Tap.h
+	include/RobotRaconteur/BroadcastDownsampler.h
 )
 
 if (WIN32)

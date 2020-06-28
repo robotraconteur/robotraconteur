@@ -52,3 +52,4 @@
 #include "RobotRaconteur/NodeSetup.h"
 #include "RobotRaconteur/Logging.h"
 #include "RobotRaconteur/IntraTransport.h"
+#include "RobotRaconteur/BroadcastDownsampler.h"
