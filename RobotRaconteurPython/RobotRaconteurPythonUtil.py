@@ -1400,7 +1400,7 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
             if (isinstance(m,RobotRaconteurPython.PipeDefinition)):
                 p=skel.GetPipe(m.Name)
                 outerp=Pipe(p)
-                if (not hasattr(self.obj,m.Name)):
+                if (not m.Name in dir(self.obj)):
                     if ("readonly" in m.Modifiers):
                         setattr(self.obj,m.Name,PipeBroadcaster(outerp))                    
                     else:
@@ -1410,7 +1410,7 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
             if (isinstance(m,RobotRaconteurPython.WireDefinition)):
                 w=skel.GetWire(m.Name)
                 outerw=Wire(w)
-                if (not hasattr(self.obj,m.Name)):
+                if (not m.Name in dir(self.obj)):
                     if ("readonly" in m.Modifiers):
                         setattr(self.obj,m.Name,WireBroadcaster(outerw))
                     elif ("writeonly" in m.Modifiers):
