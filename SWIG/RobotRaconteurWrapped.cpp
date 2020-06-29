@@ -3529,7 +3529,7 @@ namespace RobotRaconteur
 		RR_INTRUSIVE_PTR<RRValue> packet1;
 		bool ret = TryReceivePacketBaseWait(packet1, timeout, peek, &endpoint1);
 		if (!ret) return false;
-		packet.packet = RR_STATIC_POINTER_CAST<MessageElement>(packet.packet);
+		packet.packet = RR_STATIC_POINTER_CAST<MessageElement>(packet1);
 		if (!endpoint1) throw InvalidOperationException("Invalid subscription pipe endpoint");
 		RR_SHARED_PTR<WrappedPipeEndpoint> endpoint2 = rr_cast<WrappedPipeEndpoint>(endpoint1);
 		packet.type = endpoint2->Type;

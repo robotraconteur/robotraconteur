@@ -2563,7 +2563,7 @@ class WrappedWireSubscriptionDirectorPython(RobotRaconteurPython.WrappedWireSubs
             return
 
         try:            
-            v=RobotRaconteurPython._UnpackMessageElement(value, None, None, None, True)            
+            v=RobotRaconteurPython._UnpackMessageElement(value.packet, value.type, value.stub, None)            
             s.WireValueChanged.fire(s,v,time)
         except:
             traceback.print_exc()
@@ -2577,7 +2577,7 @@ class WireSubscription(object):
         self._WireValueChanged=EventHook()
 
     def _UnpackValue(self, m):
-        return RobotRaconteurPython._UnpackMessageElement(m, None, None, None, True)
+        return RobotRaconteurPython._UnpackMessageElement(m.packet, m.type, m.stub, None)
 
     @property
     def InValue(self):
@@ -2663,7 +2663,7 @@ class PipeSubscription(object):
         self._PipePacketReceived=EventHook()
 
     def _UnpackValue(self, m):
-        return RobotRaconteurPython._UnpackMessageElement(m, None, None, None, True)
+        return RobotRaconteurPython._UnpackMessageElement(m.packet, m.type, m.stub, None)
 
     def ReceivePacket(self):
         return self._UnpackValue(self._subscription.ReceivePacket())
