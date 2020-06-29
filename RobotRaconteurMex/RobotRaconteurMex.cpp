@@ -1539,22 +1539,20 @@ RR_INTRUSIVE_PTR<RRBaseArray> GetRRArrayFromMxArray(const mxArray* pa)
 		case mxDOUBLE_CLASS:
 		{
 			RR_INTRUSIVE_PTR<RRArray<cdouble> > complex_array = AllocateRRArray<cdouble>(count);
-			double* re = (double*)mxGetData(pa);
-			double* im = (double*)mxGetImagData(pa);
+			mxComplexDouble* mx_complex = mxGetComplexDoubles(pa);
 			for (size_t i = 0; i < count; i++)
 			{
-				(*complex_array)[i] = cdouble(re[i], im[i]);
+				(*complex_array)[i] = cdouble(mx_complex[i].real, mx_complex[i].imag);
 			}
 			return complex_array;
 		}
 		case mxSINGLE_CLASS:
 		{
 			RR_INTRUSIVE_PTR<RRArray<cfloat> > complex_array = AllocateRRArray<cfloat>(count);
-			float* re = (float*)mxGetData(pa);
-			float* im = (float*)mxGetImagData(pa);
+			mxComplexSingle* mx_complex = mxGetComplexSingles(pa);
 			for (size_t i = 0; i < count; i++)
 			{
-				(*complex_array)[i] = cfloat(re[i], im[i]);
+				(*complex_array)[i] = cfloat(mx_complex[i].real, mx_complex[i].imag);
 			}
 			return complex_array;
 		}
@@ -1633,12 +1631,11 @@ mxArray* GetMxArrayFromRRArray(RR_INTRUSIVE_PTR<RRBaseArray> array_, std::vector
 	{
 		RR_INTRUSIVE_PTR<RRArray<cdouble> > complex_array = rr_cast<RRArray<cdouble> >(array_);
 		mxArray* pa2 = mxCreateNumericArray(ndims, &dims[0], mxDOUBLE_CLASS, mxCOMPLEX);
-		double* re = (double*)mxGetData(pa2);
-		double* im = (double*)mxGetImagData(pa2);
+		mxComplexDouble* mx_complex = mxGetComplexDoubles(pa2);
 		for (size_t i = 0; i < count; i++)
 		{
-			re[i] = (*complex_array)[i].real;
-			im[i] = (*complex_array)[i].imag;
+			mx_complex[i].real = (*complex_array)[i].real;
+			mx_complex[i].imag = (*complex_array)[i].imag;
 		}
 		return pa2;
 	}
@@ -1646,12 +1643,11 @@ mxArray* GetMxArrayFromRRArray(RR_INTRUSIVE_PTR<RRBaseArray> array_, std::vector
 	{
 		RR_INTRUSIVE_PTR<RRArray<cfloat> > complex_array = rr_cast<RRArray<cfloat> >(array_);
 		mxArray* pa2 = mxCreateNumericArray(ndims, &dims[0], mxSINGLE_CLASS, mxCOMPLEX);
-		float* re = (float*)mxGetData(pa2);
-		float* im = (float*)mxGetImagData(pa2);
+		mxComplexSingle* mx_complex = mxGetComplexSingles(pa2);
 		for (size_t i = 0; i < count; i++)
 		{
-			re[i] = (*complex_array)[i].real;
-			im[i] = (*complex_array)[i].imag;
+			mx_complex[i].real = (*complex_array)[i].real;
+			mx_complex[i].imag = (*complex_array)[i].imag;
 		}
 		return pa2;
 	}
@@ -5074,18 +5070,10 @@ mxArray* MexServiceStub::MemoryOp(const mxArray* member, const mxArray* command,
 					size_t s=mxGetElementSize(data);
 					
 					for (size_t i=0; i<boost::numeric_cast<size_t>(count); i++)
-					{
+					{					
 						uint8_t* orig=(uint8_t*)mxGetData(data);
 						uint8_t* dest=(uint8_t*)mxGetData(data2);
-
-						memcpy((dest)+(i*s),orig,s);
-						if (mxIsComplex(data2))
-						{
-							uint8_t* origi = (uint8_t*)mxGetImagData(data);
-							uint8_t* desti = (uint8_t*)mxGetImagData(data2);
-
-							memcpy((desti)+(i*s), origi, s);
-						}
+						memcpy((dest)+(i*s),orig,s);											
 					}
 					MexArrayMemoryClientUtil::Write(mem,start,data2,0,count);
 					mxDestroyArray(data2);
@@ -5320,18 +5308,12 @@ mxArray* MexServiceStub::MemoryOp(const mxArray* member, const mxArray* command,
 					size_t s=mxGetElementSize(data);
 					
 					for (size_t i=0; i<numcount; i++)
-					{
+					{						
 						uint8_t* orig=(uint8_t*)mxGetData(data);
 						uint8_t* dest=(uint8_t*)mxGetData(data2);
 
 						memcpy((dest)+(i*s),orig,s);
-						if (mxIsComplex(data2))
-						{
-							uint8_t* origi=(uint8_t*)mxGetImagData(data);
-							uint8_t* desti=(uint8_t*)mxGetImagData(data2);
-
-							memcpy((desti)+(i*s),origi,s);
-						}
+						
 					}
 					MexMultiDimArrayMemoryClientUtil::Write(mem,start,data2,bufferpos,count);
 					mxDestroyArray(data2);
@@ -6153,10 +6135,11 @@ mxArray* MexArrayMemoryClientUtil::Read(RR_SHARED_PTR<ArrayMemoryBase> mem, uint
 			RR_INTRUSIVE_PTR<RRArray<cdouble> > dat = AllocateRRArray<cdouble>(count);
 			cdouble_var->Read(memorypos, dat, 0, count);
 			mxArray* mxdat = mxCreateNumericMatrix(boost::numeric_cast<size_t>(count), 1, mxDOUBLE_CLASS, mxCOMPLEX);
+			mxComplexDouble* mx_complex = mxGetComplexDoubles(mxdat);
 			for (size_t i = 0; i < count; i++)
 			{
-				((double*)mxGetData(mxdat))[i] = (*dat)[i].real;
-				((double*)mxGetImagData(mxdat))[i] = (*dat)[i].imag;
+				mx_complex[i].real = (*dat)[i].real;
+				mx_complex[i].imag = (*dat)[i].imag;
 			}
 			return mxdat;
 		}
@@ -6167,10 +6150,11 @@ mxArray* MexArrayMemoryClientUtil::Read(RR_SHARED_PTR<ArrayMemoryBase> mem, uint
 			RR_INTRUSIVE_PTR<RRArray<cfloat> > dat = AllocateRRArray<cfloat>(count);
 			cfloat_var->Read(memorypos, dat, 0, count);
 			mxArray* mxdat = mxCreateNumericMatrix(boost::numeric_cast<size_t>(count), 1, mxSINGLE_CLASS, mxCOMPLEX);
+			mxComplexSingle* mx_complex = mxGetComplexSingles(mxdat);
 			for (size_t i = 0; i < count; i++)
 			{
-				((float*)mxGetData(mxdat))[i] = (*dat)[i].real;
-				((float*)mxGetImagData(mxdat))[i] = (*dat)[i].imag;
+				mx_complex[i].real = (*dat)[i].real;
+				mx_complex[i].imag = (*dat)[i].imag;
 			}
 			return mxdat;
 		}
@@ -6225,24 +6209,26 @@ void MexArrayMemoryClientUtil::Write(RR_SHARED_PTR<ArrayMemoryBase> mem, uint64_
 	{
 		if (mxGetClassID(buffer) != mxDOUBLE_CLASS || mxIsComplex(buffer) != mxCOMPLEX) throw InvalidArgumentException("Memory data type mismatch, expecting complex double");
 		RR_INTRUSIVE_PTR<RRArray<cdouble> > dat = AllocateRRArray<cdouble>(mxGetNumberOfElements(buffer));
+		mxComplexDouble* mx_complex = mxGetComplexDoubles(buffer);
 		for (size_t i = 0; i < dat->size(); i++)
 		{
-			(*dat)[i].real = ((double*)mxGetData(buffer))[i];
-			(*dat)[i].imag = ((double*)mxGetImagData(buffer))[i];
+			(*dat)[i].real = mx_complex[i].real;
+			(*dat)[i].imag = mx_complex[i].imag;
 		}
 		cdouble_var->Write(memorypos, dat, bufferpos, count);
 		return;
 	}
 
 	RR_SHARED_PTR<ArrayMemory<cfloat> > cfloat_var = boost::dynamic_pointer_cast<ArrayMemory<cfloat> >(mem);
-	if (cdouble_var)
+	if (cfloat_var)
 	{
 		if (mxGetClassID(buffer) != mxSINGLE_CLASS || mxIsComplex(buffer) != mxCOMPLEX) throw InvalidArgumentException("Memory data type mismatch, expecting complex single");
 		RR_INTRUSIVE_PTR<RRArray<cfloat> > dat = AllocateRRArray<cfloat>(mxGetNumberOfElements(buffer));
+		mxComplexSingle* mx_complex = mxGetComplexSingles(buffer);
 		for (size_t i = 0; i < dat->size(); i++)
 		{
-			(*dat)[i].real = ((float*)mxGetData(buffer))[i];
-			(*dat)[i].imag = ((float*)mxGetImagData(buffer))[i];
+			(*dat)[i].real = mx_complex[i].real;
+			(*dat)[i].imag = mx_complex[i].imag;
 		}
 		cfloat_var->Write(memorypos, dat, bufferpos, count);
 		return;
@@ -6340,10 +6326,11 @@ mxArray* MexMultiDimArrayMemoryClientUtil::Read(RR_SHARED_PTR<MultiDimArrayMemor
 		RR_INTRUSIVE_PTR<RRArray<cdouble> > realdat = AllocateRRArray<cdouble>(elems);
 		RR_INTRUSIVE_PTR<RRMultiDimArray<cdouble> > dat = AllocateRRMultiDimArray<cdouble>(VectorToRRArray<uint32_t>(count), realdat);
 		cdouble_var->Read(memorypos, dat, bufferpos, count);
+		mxComplexDouble* mx_complex = mxGetComplexDoubles(mxdat);
 		for (size_t i = 0; i < elems; i++)
 		{
-			((double*)mxGetData(mxdat))[i] = (*realdat)[i].real;
-			((double*)mxGetImagData(mxdat))[i] = (*realdat)[i].imag;
+			mx_complex[i].real = (*realdat)[i].real;
+			mx_complex[i].imag = (*realdat)[i].imag;
 		}
 		return mxdat;
 	}
@@ -6355,10 +6342,11 @@ mxArray* MexMultiDimArrayMemoryClientUtil::Read(RR_SHARED_PTR<MultiDimArrayMemor
 		RR_INTRUSIVE_PTR<RRArray<cfloat> > realdat = AllocateRRArray<cfloat>(elems);
 		RR_INTRUSIVE_PTR<RRMultiDimArray<cfloat> > dat = AllocateRRMultiDimArray<cfloat>(VectorToRRArray<uint32_t>(count), realdat);
 		cfloat_var->Read(memorypos, dat, bufferpos, count);
+		mxComplexSingle* mx_complex = mxGetComplexSingles(mxdat);
 		for (size_t i = 0; i < elems; i++)
 		{
-			((float*)mxGetData(mxdat))[i] = (*realdat)[i].real;
-			((float*)mxGetImagData(mxdat))[i] = (*realdat)[i].imag;
+			mx_complex[i].real = (*realdat)[i].real;
+			mx_complex[i].imag = (*realdat)[i].imag;
 		}
 		return mxdat;
 	}
@@ -6442,10 +6430,11 @@ void MexMultiDimArrayMemoryClientUtil::Write(RR_SHARED_PTR<MultiDimArrayMemoryBa
 	{
 		if (mxGetClassID(buffer) != mxDOUBLE_CLASS || mxIsComplex(buffer) != mxCOMPLEX) throw InvalidArgumentException("Memory data type mismatch, expecting complex double");
 		RR_INTRUSIVE_PTR<RRMultiDimArray<cdouble> > buffer2 = AllocateRRMultiDimArray<cdouble>(arrdims, AllocateRRArray<cdouble>(mxGetNumberOfElements(buffer)));
+		mxComplexDouble* mx_complex = mxGetComplexDoubles(buffer);
 		for (size_t i = 0; i < mxGetNumberOfElements(buffer); i++)
 		{
-			(*buffer2->Array)[i].real = ((double*)mxGetData(buffer))[i];
-			(*buffer2->Array)[i].imag = ((double*)mxGetImagData(buffer))[i];
+			(*buffer2->Array)[i].real = mx_complex[i].real;
+			(*buffer2->Array)[i].imag = mx_complex[i].imag;
 		}
 		cdouble_var->Write(memorypos, buffer2, bufferpos, count);
 		return;
@@ -6456,10 +6445,11 @@ void MexMultiDimArrayMemoryClientUtil::Write(RR_SHARED_PTR<MultiDimArrayMemoryBa
 	{
 		if (mxGetClassID(buffer) != mxSINGLE_CLASS || mxIsComplex(buffer) != mxCOMPLEX) throw InvalidArgumentException("Memory data type mismatch, expecting complex single");
 		RR_INTRUSIVE_PTR<RRMultiDimArray<cfloat> > buffer2 = AllocateRRMultiDimArray<cfloat>(arrdims, AllocateRRArray<cfloat>(mxGetNumberOfElements(buffer)));
+		mxComplexSingle* mx_complex = mxGetComplexSingles(buffer);
 		for (size_t i = 0; i < mxGetNumberOfElements(buffer); i++)
 		{
-			(*buffer2->Array)[i].real = ((float*)mxGetData(buffer))[i];
-			(*buffer2->Array)[i].imag = ((float*)mxGetImagData(buffer))[i];
+			(*buffer2->Array)[i].real = mx_complex[i].real;
+			(*buffer2->Array)[i].imag = mx_complex[i].imag;
 		}
 		cfloat_var->Write(memorypos, buffer2, bufferpos, count);
 		return;
