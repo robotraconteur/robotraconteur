@@ -82,7 +82,11 @@ namespace RobotRaconteur
         if (e == this1->client_downsamples.end())
             return true;
 
-        return (this1->step_count % e->second) == 0;
+        uint64_t step_count = this1->step_count;
+        uint32_t downsample = e->second + 1;
+        bool drop = (step_count % downsample) == 0;
+
+        return drop;
     }
 
     bool BroadcastDownsampler::pipe_predicate(RR_WEAK_PTR<BroadcastDownsampler> this_, RR_SHARED_PTR<PipeBroadcasterBase>& wire, uint32_t ep, uint32_t index)
@@ -97,7 +101,11 @@ namespace RobotRaconteur
         if (e == this1->client_downsamples.end())
             return true;
 
-        return (this1->step_count % e->second) == 0;
+        uint64_t step_count = this1->step_count;
+        uint32_t downsample = e->second + 1;
+        bool drop = (step_count % downsample) == 0;
+
+        return drop;
     }
 
     void BroadcastDownsampler::server_event(RR_WEAK_PTR<BroadcastDownsampler> this_, RR_SHARED_PTR<ServerContext> ctx, ServerServiceListenerEventType evt, RR_SHARED_PTR<void> p)
