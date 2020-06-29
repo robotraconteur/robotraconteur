@@ -13,11 +13,11 @@ if (NOT USE_PREGENERATED_SOURCE)
 
 INCLUDE(FindSWIG)
 FIND_PACKAGE(SWIG 4.0.0 REQUIRED)
-INCLUDE(UseSWIG)
+include(${CMAKE_SOURCE_DIR}/cmake/RRUseSwig.cmake)
 
 include(NETSwigVars.cmake)
 
-SWIG_ADD_MODULE(RobotRaconteurNETNative csharp ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.cpp ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.h RobotRaconteurNET.i)
+RR_SWIG_ADD_MODULE(RobotRaconteurNETNative csharp ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.cpp ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.h RobotRaconteurNET.i)
 
 SWIG_LINK_LIBRARIES(RobotRaconteurNETNative ${RobotRaconteur_CORE_LIBRARY} ${Boost_LIBRARIES}  ${ROBOTRACONTEUR_EXTRA_LIBS})
 else()

@@ -37,11 +37,11 @@ if (NOT USE_PREGENERATED_SOURCE)
 
 INCLUDE(FindSWIG)
 FIND_PACKAGE(SWIG 4.0.0 REQUIRED)
-INCLUDE(UseSWIG)
+INCLUDE(${CMAKE_SOURCE_DIR}/cmake/RRUseSWIG.cmake)
 
 include(JavaSwigVars.cmake)
 set(CMAKE_SWIG_OUTDIR ${CMAKE_CURRENT_BINARY_DIR}/swigsrc/com/robotraconteur)
-SWIG_ADD_MODULE(RobotRaconteurJavaNative java RobotRaconteurJava.i  ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.cpp ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.h ${GETIFADDR_SOURCE_FILE} )
+RR_SWIG_ADD_MODULE(RobotRaconteurJavaNative java RobotRaconteurJava.i  ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.cpp ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.h ${GETIFADDR_SOURCE_FILE} )
 
 SWIG_LINK_LIBRARIES(RobotRaconteurJavaNative ${RobotRaconteur_CORE_LIBRARY} ${Boost_LIBRARIES}  ${ROBOTRACONTEUR_EXTRA_LIBS})
 
