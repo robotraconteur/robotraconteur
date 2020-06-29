@@ -94,16 +94,25 @@ endif()
 #to compile boost
 
 if(APPLE)
-	include(CMakeFindFrameworks)
 	
-	CMAKE_FIND_FRAMEWORKS(CoreFoundation)
-	CMAKE_FIND_FRAMEWORKS(CoreServices)
-	CMAKE_FIND_FRAMEWORKS(Security)
-	include_directories(${CoreFoundation_FRAMEWORKS}/Headers ${Security_FRAMEWORKS}/Headers ${CoreServices_FRAMEWORKS}/headers)
+	find_library(COREFOUNDATION_FRAMEWORK "CoreFoundation")
+	if(NOT COREFOUNDATION_FRAMEWORK)
+		message(FATAL_ERROR "CoreFoundation framework not found")
+	endif()
+
+	find_library(SECURITY_FRAMEWORK "Security")
+	if(NOT SECURITY_FRAMEWORK)
+		message(FATAL_ERROR "Security framework not found")
+	endif()
+
+	find_library(CORESERVICES_FRAMEWORK "CoreServices")
+	if(NOT CORESERVICES_FRAMEWORK)
+		message(FATAL_ERROR "CoreFoundation framework not found")
+	endif()
 	
 	find_package(OpenSSL REQUIRED)
 	include_directories(${OPENSSL_INCLUDE_DIR})
-	set (ROBOTRACONTEUR_EXTRA_LIBS ${ROBOTRACONTEUR_EXTRA_LIBS} ${CoreFoundation_FRAMEWORKS}/CoreFoundation.tbd ${Security_FRAMEWORKS}/Security.tbd ${CoreServices_FRAMEWORKS}/CoreServices.tbd ${OPENSSL_LIBRARIES} c++)
+	set (ROBOTRACONTEUR_EXTRA_LIBS ${ROBOTRACONTEUR_EXTRA_LIBS} "${COREFOUNDATION_FRAMEWORK}" "${SECURITY_FRAMEWORK}" "${CORESERVICES_FRAMEWORK}" ${OPENSSL_LIBRARIES} c++)
 endif()
 
 include(GNUInstallDirs)
