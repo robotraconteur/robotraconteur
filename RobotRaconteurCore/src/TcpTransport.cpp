@@ -59,6 +59,12 @@
 #define RR_BOOST_ASIO_IP_ADDRESS_V6_FROM_STRING boost::asio::ip::make_address_v6
 #endif
 
+#if BOOST_ASIO_VERSION < 101200
+#define RR_BOOST_ASIO_IP_ADDRESS_FROM_STRING boost::asio::ip::address::from_string
+#else
+#define RR_BOOST_ASIO_IP_ADDRESS_FROM_STRING boost::asio::ip::make_address
+#endif
+
 namespace RobotRaconteur
 {
 
@@ -5185,7 +5191,7 @@ namespace detail
 			try
 			{
 
-			NodeAnnounceReceived(s);
+			NodeAnnounceReceived(s, *ep);
 			}
 			catch (std::exception& exp)
 			{
@@ -5242,7 +5248,7 @@ namespace detail
 
 	}
 
-	void IPNodeDiscovery::NodeAnnounceReceived(boost::string_ref packet)
+	void IPNodeDiscovery::NodeAnnounceReceived(boost::string_ref packet, const boost::asio::ip::udp::endpoint& send_ep)
 	{
 		if (listening)
 		{
@@ -5257,6 +5263,53 @@ namespace detail
 					std::vector<std::string> s2;
 					boost::split(s2, s1.at(1), boost::is_from_range(',', ','));
 					NodeID id(s2.at(0));
+
+					std::string url = s1.at(2);
+
+					//If the URL or nodename is excessively long, just ignore it
+					if (url.size() > 256)
+					{
+						throw InvalidArgumentException("Invalid URL in packet");
+					}
+					
+					
+					ParseConnectionURLResult u = ParseConnectionURL(url);
+
+					boost::system::error_code address_ec;
+					boost::asio::ip::address addr = RR_BOOST_ASIO_IP_ADDRESS_FROM_STRING(u.host);
+					if (address_ec)
+					{
+						throw InvalidArgumentException("Invalid IP address in packet");
+					}					
+					if (!addr.is_loopback())
+					{
+						if (addr.is_v4() != send_ep.address().is_v4() ||
+							 addr.is_v6() != send_ep.address().is_v6() )
+							 {
+								 throw InvalidOperationException("Discovery packet address family mismatch");
+							 }
+
+						if (addr.is_v6())
+						{
+							boost::asio::ip::address_v6 addr_v6 = addr.to_v6();
+							if (!addr_v6.is_link_local() && !addr_v6.is_site_local())
+							{
+								throw InvalidArgumentException("Only link and site local addresses may be used for discovery");
+							}
+						}
+
+						if (addr.is_v4())
+						{
+							boost::asio::ip::address_v4::bytes_type addr_v4 = addr.to_v4().to_bytes();
+							boost::asio::ip::address_v4::bytes_type sender_v4 = send_ep.address().to_v4().to_bytes();
+
+							if (addr_v4[0] != sender_v4[0] || addr_v4[1] != sender_v4[1])
+							{
+								throw InvalidArgumentException("Subnet mismatch for discovery");
+							}
+						}
+					}
+
 					if (id != GetNode()->NodeID())
 					{
 						ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "TcpTransport discovery received node announce, forwarding to node");

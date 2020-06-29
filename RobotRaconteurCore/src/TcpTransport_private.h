@@ -522,7 +522,7 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
 
 			void handle_request_timer(const boost::system::error_code& error, int32_t c);
 						
-			void NodeAnnounceReceived(boost::string_ref packet);
+			void NodeAnnounceReceived(boost::string_ref packet, const boost::asio::ip::udp::endpoint& send_ep);
 
 			boost::mutex change_lock;
 
