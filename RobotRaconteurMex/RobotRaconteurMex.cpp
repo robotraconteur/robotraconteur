@@ -624,6 +624,29 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 			return;
 
 		}
+		else if (command=="servicedef")
+		{
+			if (nlhs != 1 || nrhs != 3) throw InvalidArgumentException("RobotRaconteurMex servicedef requires 3 input and 1 output arguments");
+			int32_t stubtype=GetInt32Scalar(prhs[1]);
+			int32_t stubid=GetInt32Scalar(prhs[2]);
+			if (stubtype==RR_MEX_STUB)
+			{
+				boost::shared_ptr<MexServiceStub> o;
+				{
+				boost::recursive_mutex::scoped_lock lock(stubs_lock);
+				std::map<int32_t, RR_SHARED_PTR<MexServiceStub> >::iterator e1 = stubs.find(stubid);
+				if (e1 == stubs.end()) throw InvalidArgumentException("Cannot find stub");
+				o = e1->second;
+				}
+				RR_SHARED_PTR<ServiceFactory> factory = RobotRaconteurNode::s()->GetPulledServiceType(o, o->RR_objecttype->ServiceDefinition_.lock()->Name);
+				std::string mem(factory->DefString()); 
+				plhs[0]= mxCreateString(mem.c_str());
+			}
+			else
+				throw InvalidArgumentException("Unknown RobotRaconteur object type");
+			return;
+
+		}
 		else if (command=="GetPulledServiceTypes")
 		{
 			if (nlhs != 1 || nrhs != 3) throw InvalidArgumentException("RobotRaconteurMex GetPulledServiceTypes requires 3 input and 1 output arguments");
