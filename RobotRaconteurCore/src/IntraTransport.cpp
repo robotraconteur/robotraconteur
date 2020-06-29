@@ -21,8 +21,6 @@
 #include <boost/range/algorithm.hpp>
 #include <boost/foreach.hpp>
 
-#pragma once
-
 namespace RobotRaconteur
 {
 
