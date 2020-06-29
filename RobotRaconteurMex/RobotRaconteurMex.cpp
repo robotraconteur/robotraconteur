@@ -71,6 +71,14 @@ void rr_free_mxDestroyArray()
 
 std::string mxToString(const mxArray* str)
 {
+	if (!mxIsChar(str))
+	{
+		if (mxIsClass(str, "string"))
+		{
+			throw InvalidArgumentException("New style MATLAB strings are not supported by Robot Raconteur");
+		}
+		throw InvalidArgumentException("Character array (old-style MATLAB string) expected");
+	}
 	char* str1=mxArrayToString(str);
 	std::string str2(str1);
 	mxFree(str1);
