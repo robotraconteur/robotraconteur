@@ -3425,6 +3425,16 @@ namespace RobotRaconteur
 		RR_SHARED_PTR<WrappedWireConnection> connection2 = rr_cast<WrappedWireConnection>(connection1);
 		o.type = connection2->Type;
 		o.stub = connection2->GetStub();
+		//TODO: Make this more efficient
+		try
+		{
+			o.context = o.stub->GetContext();
+		}
+		catch (InvalidOperationException&)
+		{
+			throw ValueNotSetException("Value not set");
+		}
+		
 		return o;		
 	}
 
@@ -3440,6 +3450,16 @@ namespace RobotRaconteur
 		RR_SHARED_PTR<WrappedWireConnection> connection2 = rr_cast<WrappedWireConnection>(connection1);
 		val.type = connection2->Type;
 		val.stub = connection2->GetStub();
+
+		//TODO: Make this more efficient
+		try
+		{
+			val.context = val.stub->GetContext();
+		}
+		catch (InvalidOperationException&)
+		{
+			return false;
+		}
 		return ret;
 	}
 		
@@ -3457,6 +3477,15 @@ namespace RobotRaconteur
 		RR_SHARED_PTR<WrappedWireConnection> connection2 = rr_cast<WrappedWireConnection>(connection);
 		val.type = connection2->Type;
 		val.stub = connection2->GetStub();
+		//TODO: Make this more efficient
+		try
+		{
+			val.context = val.stub->GetContext();
+		}
+		catch (InvalidOperationException&)
+		{
+			return;
+		}
 		RR_SHARED_PTR<WrappedWireSubscription> s = RR_STATIC_POINTER_CAST<WrappedWireSubscription>(shared_from_this());
 		DIRECTOR_CALL3(WrappedWireSubscriptionDirector, RR_Director->WireValueChanged(s, val, time));
 	}
@@ -3534,6 +3563,15 @@ namespace RobotRaconteur
 		RR_SHARED_PTR<WrappedPipeEndpoint> endpoint2 = rr_cast<WrappedPipeEndpoint>(endpoint1);
 		packet.type = endpoint2->Type;
 		packet.stub = endpoint2->GetStub();
+		//TODO: Make this more efficient
+		try
+		{
+			packet.context = packet.stub->GetContext();
+		}
+		catch (InvalidOperationException&)
+		{
+			return false;
+		}
 		return ret;
 	}
 		

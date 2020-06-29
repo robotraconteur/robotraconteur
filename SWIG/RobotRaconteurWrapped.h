@@ -1700,7 +1700,8 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 	public:
 		RR_INTRUSIVE_PTR<MessageElement> packet;
 		RR_SHARED_PTR<TypeDefinition> type;
-		RR_SHARED_PTR<WrappedServiceStub> stub;		
+		RR_SHARED_PTR<WrappedServiceStub> stub;
+		RR_SHARED_PTR<ClientContext> context;
 	};
 
 	class WrappedServiceSubscription;
