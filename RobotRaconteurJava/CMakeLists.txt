@@ -27,7 +27,7 @@ if (NOT USE_PREGENERATED_SOURCE)
 
 INCLUDE(FindSWIG)
 FIND_PACKAGE(SWIG 4.0.0 REQUIRED)
-INCLUDE(${CMAKE_SOURCE_DIR}/cmake/RRUseSWIG.cmake)
+INCLUDE(${CMAKE_SOURCE_DIR}/cmake/RRUseSwig.cmake)
 
 include(JavaSwigVars.cmake)
 set(CMAKE_SWIG_OUTDIR ${CMAKE_CURRENT_BINARY_DIR}/swigsrc/com/robotraconteur)
