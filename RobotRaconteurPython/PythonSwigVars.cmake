@@ -15,6 +15,8 @@ else()
 set(SWIG_PYTHON_EXTRA_ARGS ${SWIG_PYTHON_EXTRA_ARGS_OVERRIDE})
 endif()
 
+include_directories(${CMAKE_SOURCE_DIR}/SWIG)
+
 INCLUDE(${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurSWIGSources.cmake)
 
 set(Python_SWIG_sources ${CMAKE_CURRENT_LIST_DIR}/ClientPython.i

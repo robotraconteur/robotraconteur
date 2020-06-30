@@ -5,16 +5,6 @@ file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/test)
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/exceptionsrc)
 
-IF(WIN32)
-IF (RobotRaconteur_USE_SHARED_CORE_LIB)
-ADD_DEFINITIONS(-DROBOTRACONTEUR_CORE_IMPORTS)
-ENDIF()
-ENDIF()
-
-IF (MSVC)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
-ENDIF()
-
 if (NOT(${__ANDROID__}))
 INCLUDE(FindJava)
 FIND_PACKAGE(Java COMPONENTS Development)
@@ -41,9 +31,10 @@ INCLUDE(${CMAKE_SOURCE_DIR}/cmake/RRUseSWIG.cmake)
 
 include(JavaSwigVars.cmake)
 set(CMAKE_SWIG_OUTDIR ${CMAKE_CURRENT_BINARY_DIR}/swigsrc/com/robotraconteur)
+include_directories(${CMAKE_SOURCE_DIR}/RobotRaconteurCore/include)
 RR_SWIG_ADD_MODULE(RobotRaconteurJavaNative java RobotRaconteurJava.i  ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.cpp ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.h ${GETIFADDR_SOURCE_FILE} )
 
-SWIG_LINK_LIBRARIES(RobotRaconteurJavaNative ${RobotRaconteur_CORE_LIBRARY} ${Boost_LIBRARIES}  ${ROBOTRACONTEUR_EXTRA_LIBS})
+SWIG_LINK_LIBRARIES(RobotRaconteurJavaNative RobotRaconteurCore)
 
 else()
 set(SWIG_MODULE_RobotRaconteurJavaNative_REAL_NAME RobotRaconteurJavaNative)
@@ -55,13 +46,19 @@ set(CMAKE_SWIG_OUTDIR ${PREGENERATED_SOURCE_DIR}/Java/swigwordsize32/com/robotra
 endif()
 include_directories(${CMAKE_SOURCE_DIR}/SWIG ${CMAKE_SWIG_OUTDIR})
 add_library(RobotRaconteurJavaNative MODULE ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.cpp ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.h ${CMAKE_SWIG_OUTDIR}/RobotRaconteurJavaJAVA_wrap.cxx ${GETIFADDR_SOURCE_FILE})
-target_link_libraries(RobotRaconteurJavaNative ${RobotRaconteur_CORE_LIBRARY} ${Boost_LIBRARIES}  ${ROBOTRACONTEUR_EXTRA_LIBS})
+target_link_libraries(RobotRaconteurJavaNative RobotRaconteurCore)
+
+endif()
+
+IF (MSVC)
+target_compile_options(${SWIG_MODULE_RobotRaconteurJavaNative_REAL_NAME} PRIVATE "/bigobj")
+ENDIF()
+
 if (APPLE)
     set_target_properties (RobotRaconteurJavaNative PROPERTIES SUFFIX ".jnilib")
 endif()
 if ((WIN32 AND MINGW) OR CYGWIN OR CMAKE_SYSTEM_NAME STREQUAL MSYS)
     set_target_properties(RobotRaconteurJavaNative PROPERTIES PREFIX "")
-endif()
 endif()
 
 if (NOT(${__ANDROID__}))

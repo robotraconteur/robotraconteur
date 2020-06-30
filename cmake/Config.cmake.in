@@ -8,36 +8,16 @@ endif()
 
 include(CMakeFindDependencyMacro)
 
-add_definitions(-DBOOST_ALL_NO_LIB)
 find_package(Boost COMPONENTS date_time filesystem system regex chrono atomic thread random program_options REQUIRED)
-include_directories(${Boost_INCLUDE_DIRS})
 
 if(NOT WIN32)
 find_package(OpenSSL REQUIRED)
 endif()
 
-if(WIN32)
-add_definitions( -D_WIN32_WINNT=0x0600 )
-set (RobotRaconteurCore_Extra_Libraries ${RobotRaconteur_Extra_Libraries} Mswsock.lib ws2_32.lib IPHLPAPI.lib Crypt32.lib Secur32.lib Bcrypt.lib)
-elseif(APPLE)
-include(CMakeFindFrameworks)
-CMAKE_FIND_FRAMEWORKS(CoreFoundation)
-CMAKE_FIND_FRAMEWORKS(CoreServices)
-CMAKE_FIND_FRAMEWORKS(Security)
-set (RobotRaconteurCore_Extra_Libraries ${RobotRaconteur_Extra_Libraries} ${CoreFoundation_FRAMEWORKS}/CoreFoundation ${Security_FRAMEWORKS}/Security  ${CoreServices_FRAMEWORKS}/CoreServices ${OPENSSL_LIBRARIES} c++ )
-else()
-set (RobotRaconteurCore_Extra_Libraries ${RobotRaconteur_Extra_Libraries} ${OPENSSL_LIBRARIES} pthread rt z dl)
+if(APPLE)
+
 endif()
 
 set(RobotRaconteur_INCLUDE_DIR   "@CMAKE_INSTALL_FULL_INCLUDEDIR@" )
-set_target_properties(RobotRaconteurCore PROPERTIES IMPORTED_LINK_INTERFACE_LIBRARIES_DEBUG "${Boost_DATE_TIME_LIBRARY_DEBUG};${Boost_FILESYSTEM_LIBRARY_DEBUG};${Boost_SYSTEM_LIBRARY_DEBUG};${Boost_REGEX_LIBRARY_DEBUG};${Boost_CHRONO_LIBRARY_DEBUG};${Boost_ATOMIC_LIBRARY_DEBUG};${Boost_THREAD_LIBRARY_DEBUG};${Boost_RANDOM_LIBRARY_DEBUG};${Boost_PROGRAM_OPTIONS_LIBRARY_DEBUG};${RobotRaconteurCore_Extra_Libraries}")
-set_target_properties(RobotRaconteurCore PROPERTIES IMPORTED_LINK_INTERFACE_LIBRARIES_RELEASE "${Boost_DATE_TIME_LIBRARY_RELEASE};${Boost_FILESYSTEM_LIBRARY_RELEASE};${Boost_SYSTEM_LIBRARY_RELEASE};${Boost_REGEX_LIBRARY_RELEASE};${Boost_CHRONO_LIBRARY_RELEASE};${Boost_ATOMIC_LIBRARY_RELEASE};${Boost_THREAD_LIBRARY_RELEASE};${Boost_RANDOM_LIBRARY_RELEASE};${Boost_PROGRAM_OPTIONS_LIBRARY_RELEASE};${RobotRaconteurCore_Extra_Libraries}")
-set_target_properties(RobotRaconteurCore PROPERTIES IMPORTED_LINK_INTERFACE_LIBRARIES_MINSIZERELEASE "${Boost_DATE_TIME_LIBRARY_RELEASE};${Boost_FILESYSTEM_LIBRARY_RELEASE};${Boost_SYSTEM_LIBRARY_RELEASE};${Boost_REGEX_LIBRARY_RELEASE};${Boost_CHRONO_LIBRARY_RELEASE};${Boost_ATOMIC_LIBRARY_RELEASE};${Boost_THREAD_LIBRARY_RELEASE};${Boost_RANDOM_LIBRARY_RELEASE};${Boost_PROGRAM_OPTIONS_LIBRARY_RELEASE};${RobotRaconteurCore_Extra_Libraries}")
-set_target_properties(RobotRaconteurCore PROPERTIES IMPORTED_LINK_INTERFACE_LIBRARIES_RELWITHDEBINFO "${Boost_DATE_TIME_LIBRARY_RELEASE};${Boost_FILESYSTEM_LIBRARY_RELEASE};${Boost_SYSTEM_LIBRARY_RELEASE};${Boost_REGEX_LIBRARY_RELEASE};${Boost_CHRONO_LIBRARY_RELEASE};${Boost_ATOMIC_LIBRARY_RELEASE};${Boost_THREAD_LIBRARY_RELEASE};${Boost_RANDOM_LIBRARY_RELEASE};${Boost_PROGRAM_OPTIONS_LIBRARY_RELEASE};${RobotRaconteurCore_Extra_Libraries}")
-
-get_target_property(RobotRaconteurCore_target_type RobotRaconteurCore TYPE)
-if (RobotRaconteurCore_target_type STREQUAL "SHARED_LIBRARY")
-    add_definitions(-DROBOTRACONTEUR_CORE_IMPORTS)
-endif ()
 
 check_required_components("@PROJECT_NAME@")

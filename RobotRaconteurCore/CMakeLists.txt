@@ -1,11 +1,51 @@
+SET(BUILD_SHARED_LIBS FALSE CACHE BOOL "Build using shared Robot Raconteur core library")
 
-if(CMAKE_COMPILER_IS_GNUCXX)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -fPIC" )
+SET(RobotRaconteur_DISABLE_MESSAGE4 FALSE CACHE BOOL "Disable Robot Raconteur message version 3 by default" )
+SET(RobotRaconteur_DISABLE_STRINGTABLE FALSE CACHE BOOL "Disable Robot Raconteur string table by default" )
+mark_as_advanced(RobotRaconteur_DISABLE_MESSAGE4 RobotRaconteur_DISABLE_STRINGTABLE)
+
+INCLUDE(FindBoost)
+SET (Boost_USE_MULTITHREADED ON)
+SET (Boost_USE_STATIC_RUNTIME OFF CACHE BOOL "")
+FIND_PACKAGE(Boost COMPONENTS date_time filesystem system regex chrono atomic thread random program_options REQUIRED)
+
+if(WIN32 AND ROBOTRACONTEUR_USE_OPENSSL)	
+	find_package(OpenSSL REQUIRED)		
+endif()
+	
+if(${__ANDROID__})
+	# TODO: Determine how to handle this
+	# list(REMOVE_ITEM Boost_LIBRARIES ${BOOST_THREAD_LIBRARY}) 		
+	find_package(OpenSSL REQUIRED)
 endif()
 
-IF (MSVC)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4251 /wd4275 /bigobj")
-ENDIF()
+if(UNIX AND NOT APPLE)
+	find_path(DBUS_INCLUDE_DIR dbus.h NAMES dbus/dbus.h PATH_SUFFIXES dbus-1.0)
+	find_library(DBUS_LIBRARY dbus-1)
+	get_filename_component(DBUS_LIBRARY_DIR ${DBUS_LIBRARY} DIRECTORY )
+	find_path(DBUS_INCLUDE_ARCH_DIR dbus/dbus-arch-deps.h HINTS ${DBUS_LIBRARY_DIR}/dbus-1.0/include )		
+	find_path(LIBUSB_INCLUDE_DIR libusb.h PATH_SUFFIXES libusb-1.0)		
+	find_package(OpenSSL REQUIRED)
+endif()
+
+if(APPLE)	
+	find_library(COREFOUNDATION_FRAMEWORK "CoreFoundation")
+	if(NOT COREFOUNDATION_FRAMEWORK)
+		message(FATAL_ERROR "CoreFoundation framework not found")
+	endif()
+
+	find_library(SECURITY_FRAMEWORK "Security")
+	if(NOT SECURITY_FRAMEWORK)
+		message(FATAL_ERROR "Security framework not found")
+	endif()
+
+	find_library(CORESERVICES_FRAMEWORK "CoreServices")
+	if(NOT CORESERVICES_FRAMEWORK)
+		message(FATAL_ERROR "CoreFoundation framework not found")
+	endif()
+	
+	find_package(OpenSSL REQUIRED)	
+endif()
 
 set(RobotRaconteurCore_src
 	src/AutoResetEvent.cpp 
@@ -125,44 +165,84 @@ set(RobotRaconteurCore_src ${RobotRaconteurCore_src} src/LocalTransport_darwin.c
 endif()
 
 if (WIN32 AND NOT(ROBOTRACONTEUR_USE_OPENSSL))
-
-set(RobotRaconteurCore_src ${RobotRaconteurCore_src} src/TlsSchannelStreamAdapter.cpp src/TlsSchannelStreamAdapter.h src/HardwareTransport_win.cpp src/HardwareTransport_win_private.h)
-add_definitions(-DROBOTRACONTEUR_USE_SCHANNEL)
+	set(RobotRaconteurCore_src ${RobotRaconteurCore_src} src/TlsSchannelStreamAdapter.cpp src/TlsSchannelStreamAdapter.h src/HardwareTransport_win.cpp src/HardwareTransport_win_private.h)
 else()
-set(RobotRaconteurCore_src ${RobotRaconteurCore_src} src/OpenSSLAuthContext.cpp src/OpenSSLAuthContext.h)
-add_definitions(-DROBOTRACONTEUR_USE_OPENSSL)
+	set(RobotRaconteurCore_src ${RobotRaconteurCore_src} src/OpenSSLAuthContext.cpp src/OpenSSLAuthContext.h)
 endif()
 
 IF (${__ANDROID__})
 set(RobotRaconteurCore_src ${RobotRaconteurCore_src} ${GETIFADDR_SOURCE_FILE} src/HardwareTransport_usbcommon_private.h src/HardwareTransport_usbcommon.cpp src/HardwareTransport_android_private.h src/HardwareTransport_android.cpp)
-include_directories(${LIBUSB_INCLUDE_DIR})
 ENDIF()
 
-IF(WIN32)
-IF (RobotRaconteur_USE_SHARED_CORE_LIB)
-ADD_DEFINITIONS(-DROBOTRACONTEUR_CORE_EXPORTS)
-ENDIF()
-ENDIF()
-
-IF (RobotRaconteur_USE_SHARED_CORE_LIB)
+IF (BUILD_SHARED_LIBS)
 STRING(REPLACE "." "." RobotRaconteur_LIB_VERSION ${RobotRaconteurVersion})
 SET(RobotRaconteur_SHARED_CORE_VERSION "${RobotRaconteur_LIB_VERSION}")
 ENDIF()
 
-link_directories("${Boost_LIBRARY_DIRS}")
-include_directories("${CMAKE_SOURCE_DIR}/RobotRaconteurCore/include" ${Boost_INCLUDE_DIRS})
-
-IF(RobotRaconteur_USE_SHARED_CORE_LIB)
+IF(BUILD_SHARED_LIBS)
 set(CMAKE_DEBUG_POSTFIX "d")
 add_library(RobotRaconteurCore SHARED ${RobotRaconteurCore_src} ${RobotRaconteurCore_header} )
-target_link_libraries(RobotRaconteurCore ${Boost_LIBRARIES} ${ROBOTRACONTEUR_EXTRA_LIBS})
 SET_TARGET_PROPERTIES(RobotRaconteurCore PROPERTIES VERSION "${RobotRaconteur_SHARED_CORE_VERSION}"
     SOVERSION "${RobotRaconteur_SHARED_CORE_VERSION}"
 	COMPILE_DEFINITIONS "ROBOTRACONTEUR_CORE_EXPORTS")
 ELSE()
 add_library(RobotRaconteurCore STATIC ${RobotRaconteurCore_src} ${RobotRaconteurCore_header} )
 SET_TARGET_PROPERTIES(RobotRaconteurCore PROPERTIES PREFIX lib)
-target_link_libraries(RobotRaconteurCore PUBLIC ${Boost_LIBRARIES} ${ROBOTRACONTEUR_EXTRA_LIBS})
+ENDIF()
+
+target_link_libraries(RobotRaconteurCore PUBLIC Boost::boost Boost::disable_autolinking 
+	Boost::date_time Boost::filesystem Boost::system Boost::regex Boost::chrono Boost::atomic
+	Boost::thread Boost::random Boost::program_options)
+
+IF(RobotRaconteur_DISABLE_MESSAGE4)
+target_compile_definitions(RobotRaconteurCore PRIVATE ROBOTRACONTEUR_DISABLE_MESSAGE4)
+ENDIF()
+IF(RobotRaconteur_DISABLE_STRINGTABLE)
+target_compile_definitions(RobotRaconteurCore PRIVATE ROBOTRACONTEUR_DISABLE_STRINGTABLE)
+ENDIF()
+
+if (WIN32)
+	target_compile_definitions(RobotRaconteurCore PUBLIC _WIN32_WINNT=0x0600)
+	if (ROBOTRACONTEUR_USE_OPENSSL)	
+		target_link_libraries(RobotRaconteurCore PRIVATE Mswsock.lib ws2_32.lib IPHLPAPI.lib Bcrypt.lib Crypt32.lib OpenSSL::SSL OpenSSL::Crypto)
+		target_compile_definitions(RobotRaconteurCore PRIVATE ROBOTRACONTEUR_USE_OPENSSL)
+	else()
+		target_link_libraries(RobotRaconteurCore PRIVATE Mswsock.lib ws2_32.lib IPHLPAPI.lib Bcrypt.lib Crypt32.lib Secur32.lib Bcrypt.lib)
+		target_compile_definitions(RobotRaconteurCore PRIVATE ROBOTRACONTEUR_USE_SCHANNEL)
+	endif()
+	
+	if(CMAKE_COMPILER_IS_GNUCXX)
+		target_compile_options(RobotRaconteurCore PRIVATE "-mthreads")
+	endif()
+
+	if(BUILD_SHARED_LIBS)
+		target_compile_definitions(RobotRaconteurCore PRIVATE ROBOTRACONTEUR_CORE_EXPORTS INTERFACE ROBOTRACONTEUR_CORE_IMPORTS)
+	endif()
+endif()
+
+if(APPLE)
+	target_link_libraries(RobotRaconteurCore PRIVATE "${COREFOUNDATION_FRAMEWORK}" "${SECURITY_FRAMEWORK}" "${CORESERVICES_FRAMEWORK}" OpenSSL::SSL OpenSSL::Crypto c++)
+	target_compile_definitions(RobotRaconteurCore PRIVATE ROBOTRACONTEUR_USE_OPENSSL)
+endif()
+
+if (UNIX AND NOT APPLE)
+	target_include_directories(RobotRaconteurCore PRIVATE ${DBUS_INCLUDE_DIR} ${DBUS_INCLUDE_ARCH_DIR} ${LIBUSB_INCLUDE_DIR})
+	target_link_libraries(RobotRaconteurCore PRIVATE OpenSSL::SSL OpenSSL::Crypto pthread rt z dl)
+	target_compile_definitions(RobotRaconteurCore PRIVATE ROBOTRACONTEUR_USE_OPENSSL)
+endif()
+
+if (${__ANDROID__})
+	target_include_directories(RobotRaconteurCore PRIVATE  ${LIBUSB_INCLUDE_DIR})
+	target_link_libraries(RobotRaconteurCore PRIVATE OpenSSL::SSL OpenSSL::Crypto)
+	target_compile_definitions(RobotRaconteurCore PRIVATE ROBOTRACONTEUR_USE_OPENSSL)
+endif()
+
+if(CMAKE_COMPILER_IS_GNUCXX)
+	target_compile_options(RobotRaconteurCore PRIVATE "-fPIC" )
+endif()
+
+IF (MSVC)
+	target_compile_options(RobotRaconteurCore PRIVATE "/wd4251" "/wd4275" "/bigobj")
 ENDIF()
 
 target_include_directories(RobotRaconteurCore PUBLIC
@@ -185,7 +265,7 @@ RRSetTargetDirs(RobotRaconteurCore "bin" "lib")
 
 SET_TARGET_PROPERTIES(RobotRaconteurCore PROPERTIES LINKER_LANGUAGE CXX)
 
-export(TARGETS RobotRaconteurCore FILE ${CMAKE_BINARY_DIR}/RobotRaconteurCoreTargets.cmake)
+export(TARGETS RobotRaconteurCore FILE ${CMAKE_BINARY_DIR}/RobotRaconteurCoreTargets.cmake  )
 install(TARGETS RobotRaconteurCore EXPORT RobotRaconteurCoreTargets DESTINATION ${CMAKE_INSTALL_LIBDIR})
 install(
     DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/

@@ -51,12 +51,6 @@ if(${CMAKE_VERSION} VERSION_GREATER "3.16.0")
 	target_precompile_headers(RobotRaconteurTest PRIVATE ${RR_THUNK_HDRS})
 endif()
 
-IF(WIN32)
-IF (RobotRaconteur_USE_SHARED_CORE_LIB)
-ADD_DEFINITIONS(-DROBOTRACONTEUR_CORE_IMPORTS)
-ENDIF()
-ENDIF()
-
 RRSetTargetDirs(RobotRaconteurTest "bin" "lib")
 
 target_link_libraries(RobotRaconteurTest  ${RobotRaconteur_CORE_LIBRARY} ${Boost_LIBRARIES}  ${ROBOTRACONTEUR_EXTRA_LIBS})

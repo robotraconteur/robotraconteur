@@ -4,18 +4,6 @@ set(Python_ADDITIONAL_VERSIONS 2.7)
 find_package(PythonInterp REQUIRED)
 find_package(PythonLibs REQUIRED)
 
-ADD_DEFINITIONS(-DRR_PYTHON -DNPY_NO_DEPRECATED_API=NPY_1_7_API_VERSION)
-
-IF(WIN32)
-IF (RobotRaconteur_USE_SHARED_CORE_LIB)
-ADD_DEFINITIONS(-DROBOTRACONTEUR_CORE_IMPORTS)
-ENDIF()
-ENDIF()
-
-IF (MSVC)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
-ENDIF()
-
 find_path(NUMPY_INCLUDE_NDARRAYOBJECT_DIR numpy/ndarrayobject.h PATHS ${PYTHON_INCLUDE_DIRS} NO_DEFAULT_PATH)
 if (NUMPY_INCLUDE_NDARRAYOBJECT_DIR)
 set(NUMPY_INCLUDE_DIR ${NUMPY_INCLUDE_NDARRAYOBJECT_DIR})
@@ -34,7 +22,6 @@ endif()
 
 message(STATUS "NumPy Include Directory: ${NUMPY_INCLUDE_DIR}")
 
-INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/SWIG ${CMAKE_CURRENT_SOURCE_DIR} ${NUMPY_INCLUDE_DIR})
 GET_FILENAME_COMPONENT(PYTHON_LINK_DIRS "${PYTHON_LIBRARIES}" DIRECTORY)
 LINK_DIRECTORIES(${PYTHON_LINK_DIRS})
 
@@ -44,8 +31,9 @@ FIND_PACKAGE(SWIG 4.0.0 REQUIRED)
 include(${CMAKE_SOURCE_DIR}/cmake/RRUseSwig.cmake)
 include(PythonSwigVars.cmake)
 set(CMAKE_SWIG_OUTDIR ${CMAKE_CURRENT_BINARY_DIR})
+include_directories(${CMAKE_SOURCE_DIR}/RobotRaconteurCore/include)
 RR_SWIG_ADD_MODULE(RobotRaconteurPython python RobotRaconteurPython.i ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.cpp ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.h PythonTypeSupport.cpp PythonTypeSupport.h)
-SWIG_LINK_LIBRARIES(RobotRaconteurPython ${RobotRaconteur_CORE_LIBRARY} ${Boost_LIBRARIES}  ${ROBOTRACONTEUR_EXTRA_LIBS})
+SWIG_LINK_LIBRARIES(RobotRaconteurPython RobotRaconteurCore)
 else()
 set(SWIG_MODULE_RobotRaconteurPython_REAL_NAME _RobotRaconteurPython)
 
@@ -56,9 +44,16 @@ set(CMAKE_SWIG_OUTDIR ${PREGENERATED_SOURCE_DIR}/Python/swigwordsize32/)
 endif()
 include_directories(${CMAKE_SOURCE_DIR}/SWIG ${CMAKE_SWIG_OUTDIR})
 add_library(_RobotRaconteurPython MODULE ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.cpp ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.h PythonTypeSupport.cpp PythonTypeSupport.h ${CMAKE_SWIG_OUTDIR}/RobotRaconteurPythonPYTHON_wrap.cxx)
-target_link_libraries(_RobotRaconteurPython ${RobotRaconteur_CORE_LIBRARY} ${Boost_LIBRARIES}  ${ROBOTRACONTEUR_EXTRA_LIBS})
+target_link_libraries(_RobotRaconteurPython RobotRaconteurCore)
 set_target_properties(_RobotRaconteurPython PROPERTIES PREFIX "")
 endif()
+
+target_compile_definitions(${SWIG_MODULE_RobotRaconteurPython_REAL_NAME} PRIVATE RR_PYTHON NPY_NO_DEPRECATED_API=NPY_1_7_API_VERSION)
+target_include_directories(${SWIG_MODULE_RobotRaconteurPython_REAL_NAME} PRIVATE ${PYTHON_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/SWIG ${CMAKE_CURRENT_SOURCE_DIR} ${NUMPY_INCLUDE_DIR})
+
+IF (MSVC)
+target_compile_options(${SWIG_MODULE_RobotRaconteurPython_REAL_NAME} PRIVATE "/bigobj")
+ENDIF()
 
 RRSetTargetDirs(${SWIG_MODULE_RobotRaconteurPython_REAL_NAME} "Python/RobotRaconteur" "Python/RobotRaconteur")
 

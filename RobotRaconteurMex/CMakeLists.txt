@@ -4,17 +4,7 @@ IF (MSVC)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
 ENDIF()
 
-IF(WIN32)
-IF (RobotRaconteur_USE_SHARED_CORE_LIB)
-ADD_DEFINITIONS(-DROBOTRACONTEUR_CORE_IMPORTS)
-ENDIF()
-ENDIF()
-
-if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-	set(win64 true)
-endif()
-
-if(CMAKE_GENERATOR STREQUAL Xcode)
+if(APPLE)
 #string(REPLACE "i386" "" CMAKE_OSX_ARCHITECTURES ${CMAKE_OSX_ARCHITECTURES})
 set(CMAKE_SHARED_LINKER_FLAGS ${CMAKE_SHARED_LINKER_FLAGS} -Wl,-exported_symbols_list,${CMAKE_CURRENT_SOURCE_DIR}/osx_mex_exports.txt)
 endif()
@@ -32,7 +22,7 @@ ADD_DEFINITIONS(-DMATLAB_MEX_FILE -DMATLAB_DEFAULT_RELEASE=R2018a)
 
 INCLUDE_DIRECTORIES(${Matlab_INCLUDE_DIRS})
 
-matlab_add_mex(NAME RobotRaconteurMex SRC RobotRaconteurMex.cpp RobotRaconteurMex.h OUTPUT_NAME RobotRaconteurMex LINK_TO ${RobotRaconteur_CORE_LIBRARY} ${Boost_LIBRARIES} ${Matlab_LIBRARIES} ${ROBOTRACONTEUR_EXTRA_LIBS})
+matlab_add_mex(NAME RobotRaconteurMex SRC RobotRaconteurMex.cpp RobotRaconteurMex.h OUTPUT_NAME RobotRaconteurMex LINK_TO RobotRaconteurCore)
 
 FILE(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/out/Matlab")
 FILE(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/out_debug/Matlab")

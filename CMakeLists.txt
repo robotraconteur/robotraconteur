@@ -16,105 +16,6 @@ ENDIF()
 STRING (REGEX REPLACE "#define ROBOTRACONTEUR_VERSION_TEXT \"([0-9]+\\.[0-9]+\\.[0-9]+)\"" "\\1" RobotRaconteurVersion ${RobotRaconteurConfigVersion})
 MESSAGE(STATUS "Robot Raconteur version: ${RobotRaconteurVersion}")
 
-SET(RobotRaconteur_USE_SHARED_CORE_LIB FALSE CACHE BOOL "Build using shared Robot Raconteur core library")
-
-SET(RobotRaconteur_DISABLE_MESSAGE4 FALSE CACHE BOOL "Disable Robot Raconteur message version 3 by default" )
-SET(RobotRaconteur_DISABLE_STRINGTABLE FALSE CACHE BOOL "Disable Robot Raconteur string table by default" )
-mark_as_advanced(RobotRaconteur_DISABLE_MESSAGE4 RobotRaconteur_DISABLE_STRINGTABLE)
-
-IF(RobotRaconteur_DISABLE_MESSAGE4)
-add_definitions(-DROBOTRACONTEUR_DISABLE_MESSAGE4)
-ENDIF()
-IF(RobotRaconteur_DISABLE_STRINGTABLE)
-add_definitions(-DROBOTRACONTEUR_DISABLE_STRINGTABLE)
-ENDIF()
-
-#Find boost and get it ready for use
-INCLUDE(FindBoost)
-#If(NOT DEFINED Boost_USE_STATIC_LIBS)
-#IF(RobotRaconteur_USE_SHARED_CORE_LIB)
-#SET (Boost_USE_STATIC_LIBS OFF)
-#ELSE()
-#SET (Boost_USE_STATIC_LIBS ON)
-#ENDIF()
-#ENDIF()
-SET (Boost_USE_MULTITHREADED ON)
-SET (Boost_USE_STATIC_RUNTIME OFF)
-FIND_PACKAGE(Boost COMPONENTS date_time filesystem system regex chrono atomic thread random program_options REQUIRED)
-include_directories("${CMAKE_SOURCE_DIR}/RobotRaconteurCore/include" ${Boost_INCLUDE_DIRS})
-add_definitions(-DBOOST_ALL_NO_LIB)
-
-if(WIN32)
-	add_definitions( -D_WIN32_WINNT=0x0600 )
-	if (ROBOTRACONTEUR_USE_OPENSSL)
-		find_package(OpenSSL REQUIRED)
-		include_directories(${OPENSSL_INCLUDE_DIR})
-		set (ROBOTRACONTEUR_EXTRA_LIBS ${ROBOTRACONTEUR_EXTRA_LIBS} Mswsock.lib ws2_32.lib IPHLPAPI.lib Bcrypt.lib ${OPENSSL_LIBRARIES})
-	else()
-		set (ROBOTRACONTEUR_EXTRA_LIBS ${ROBOTRACONTEUR_EXTRA_LIBS} Mswsock.lib ws2_32.lib IPHLPAPI.lib Crypt32.lib Secur32.lib Bcrypt.lib)
-	endif()
-endif()
-
-if(CMAKE_COMPILER_IS_GNUCXX)
-
-	
-	IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-		set(OPENSSL_USE_STATIC_LIBS TRUE)
-		find_package(OpenSSL REQUIRED)
-		include_directories(${OPENSSL_INCLUDE_DIR})
-		set (ROBOTRACONTEUR_EXTRA_LIBS ${ROBOTRACONTEUR_EXTRA_LIBS} ${OPENSSL_LIBRARIES} pthread z )
-
-	elseif(${__ANDROID__})
-		message(STATUS android)		
-		list(REMOVE_ITEM Boost_LIBRARIES ${BOOST_THREAD_LIBRARY}) 		
-		set(OPENSSL_USE_STATIC_LIBS TRUE)
-		find_package(OpenSSL REQUIRED)
-		include_directories(${OPENSSL_INCLUDE_DIR} ${LIBUSB_INCLUDE_DIR})
-		set (ROBOTRACONTEUR_EXTRA_LIBS ${ROBOTRACONTEUR_EXTRA_LIBS} ${OPENSSL_LIBRARIES} )
-	else()
-		set(OPENSSL_USE_STATIC_LIBS FALSE)		
-		find_path(DBUS_INCLUDE_DIR dbus.h NAMES dbus/dbus.h PATH_SUFFIXES dbus-1.0)
-		find_library(DBUS_LIBRARY dbus-1)
-		get_filename_component(DBUS_LIBRARY_DIR ${DBUS_LIBRARY} DIRECTORY )
-		find_path(DBUS_INCLUDE_ARCH_DIR dbus/dbus-arch-deps.h HINTS ${DBUS_LIBRARY_DIR}/dbus-1.0/include )		
-		find_path(LIBUSB_INCLUDE_DIR libusb.h PATH_SUFFIXES libusb-1.0)		
-		find_package(OpenSSL REQUIRED)		
-		include_directories(${OPENSSL_INCLUDE_DIR} ${DBUS_INCLUDE_DIR} ${DBUS_INCLUDE_ARCH_DIR} ${LIBUSB_INCLUDE_DIR} )
-		set (ROBOTRACONTEUR_EXTRA_LIBS ${ROBOTRACONTEUR_EXTRA_LIBS} ${OPENSSL_LIBRARIES} pthread rt z dl)
-	endif()
-
-	if(WIN32)
-	 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mthreads")
-	endif()
-	
-endif()
-
-#For mac osx use:
-# ./b2 toolset=clang cxxflags="-I -std=c++11 -stdlib=libc++" linkflags="-stdlib=libc++" link=static 
-#to compile boost
-
-if(APPLE)
-	
-	find_library(COREFOUNDATION_FRAMEWORK "CoreFoundation")
-	if(NOT COREFOUNDATION_FRAMEWORK)
-		message(FATAL_ERROR "CoreFoundation framework not found")
-	endif()
-
-	find_library(SECURITY_FRAMEWORK "Security")
-	if(NOT SECURITY_FRAMEWORK)
-		message(FATAL_ERROR "Security framework not found")
-	endif()
-
-	find_library(CORESERVICES_FRAMEWORK "CoreServices")
-	if(NOT CORESERVICES_FRAMEWORK)
-		message(FATAL_ERROR "CoreFoundation framework not found")
-	endif()
-	
-	find_package(OpenSSL REQUIRED)
-	include_directories(${OPENSSL_INCLUDE_DIR})
-	set (ROBOTRACONTEUR_EXTRA_LIBS ${ROBOTRACONTEUR_EXTRA_LIBS} "${COREFOUNDATION_FRAMEWORK}" "${SECURITY_FRAMEWORK}" "${CORESERVICES_FRAMEWORK}" ${OPENSSL_LIBRARIES} c++)
-endif()
-
 include(GNUInstallDirs)
 
 find_package(Doxygen)
@@ -131,7 +32,6 @@ endif()
 
 set (ROBOTRACONTEUR_ROS "" CACHE BOOL "Build Robot Raconteur for ROS workspace")
 if(ROBOTRACONTEUR_ROS)
-add_definitions(-DROBOTRACONTEUR_ROS)
 set(BUILD_GEN true CACHE BOOL "Build RobotRaconteurGen")
 set(BUILD_TEST true CACHE BOOL "Build RobotRaconteurTest")
 set(BUILD_PYTHON true CACHE BOOL "Build Python wrappers")
