@@ -168,7 +168,7 @@ namespace RobotRaconteur
 		M(OutOfRangeException, MessageErrorType_OutOfRange, "RobotRaconteur.OutOfRange") \
 		M(KeyNotFoundException, MessageErrorType_KeyNotFound, "RobotRaconteur.KeyNotFound") \
 		M(InvalidConfigurationException, MessageErrorType_InvalidConfiguration, "RobotRaconteur.InvalidConfiguration") \
-		M(InvalidState, MessageErrorType_InvalidState, "RobotRaconteur.InvalidState") \
+		M(InvalidStateException, MessageErrorType_InvalidState, "RobotRaconteur.InvalidState") \
 		M2(RobotRaconteurRemoteException, MessageErrorType_RemoteError) \
 		M(RequestTimeoutException, MessageErrorType_RequestTimeout, "RobotRaconteur.RequestTimeout") \
 		M(ReadOnlyMemberException, MessageErrorType_ReadOnlyMember, "RobotRaconteur.ReadOnlyMember") \
