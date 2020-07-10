@@ -37,7 +37,7 @@ namespace RobotRaconteur
     public:
         BroadcastDownsampler();
 
-        void Init(RR_SHARED_PTR<ServerContext> context);
+        void Init(RR_SHARED_PTR<ServerContext> context, uint32_t default_downsample = 0);
 
         uint32_t GetClientDownsample(uint32_t ep);
         void SetClientDownsample(uint32_t ep, uint32_t downsample);
@@ -52,6 +52,7 @@ namespace RobotRaconteur
 
         RR_WEAK_PTR<ServerContext> context;
 
+        uint32_t default_downsample;
         uint64_t step_count;
         RR_UNORDERED_MAP<uint32_t, uint32_t> client_downsamples;
 

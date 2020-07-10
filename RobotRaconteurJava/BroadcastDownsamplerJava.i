@@ -16,6 +16,12 @@
         _Init(context);
     }
 
+    public BroadcastDownsampler(ServerContext context, int default_downsample)
+    {
+        this();
+        _Init(context,default_downsample);
+    }
+
 %}
 
 %javamethodmodifiers RobotRaconteur::BroadcastDownsampler::BroadcastDownsampler "private"

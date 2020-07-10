@@ -21,7 +21,7 @@ namespace RobotRaconteur
     public:
         BroadcastDownsampler();
 
-        void Init(boost::shared_ptr<RobotRaconteur::ServerContext> context);
+        void Init(boost::shared_ptr<RobotRaconteur::ServerContext> context, uint32_t default_downsample = 0);
 
         uint32_t GetClientDownsample(uint32_t ep);
         void SetClientDownsample(uint32_t ep, uint32_t downsample);

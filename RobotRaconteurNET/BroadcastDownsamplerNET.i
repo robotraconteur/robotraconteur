@@ -10,9 +10,9 @@
         _AddWireBroadcaster(broadcaster.innerwire);
     }
 
-    public BroadcastDownsampler(ServerContext context) : this()
+    public BroadcastDownsampler(ServerContext context, uint default_downsample) : this()
     {
-        _Init(context);
+        _Init(context, default_downsample);
     }
 
 %}

@@ -11,9 +11,10 @@ namespace RobotRaconteur
         step_count = 0;
     }
 
-    void BroadcastDownsampler::Init(RR_SHARED_PTR<ServerContext> context)
+    void BroadcastDownsampler::Init(RR_SHARED_PTR<ServerContext> context, uint32_t default_downsample)
     {
         this->context=context;       
+        this->default_downsample = default_downsample;
         RR_WEAK_PTR<BroadcastDownsampler> weak_this = shared_from_this();
 
         context->ServerServiceListener.connect(boost::signals2::signal<void(
@@ -29,7 +30,7 @@ namespace RobotRaconteur
         boost::mutex::scoped_lock lock(this_lock);
         RR_UNORDERED_MAP<uint32_t, uint32_t>::iterator e = client_downsamples.find(ep);
         if (e == client_downsamples.end())
-            return 0;
+            return default_downsample;
         return e->second;
     }
 
@@ -78,12 +79,13 @@ namespace RobotRaconteur
         
         boost::mutex::scoped_lock lock(this1->this_lock);
 
-        RR_UNORDERED_MAP<uint32_t, uint32_t>::iterator e = this1->client_downsamples.find(ep);
-        if (e == this1->client_downsamples.end())
-            return true;
+        uint32_t downsample = this1->default_downsample + 1;
 
-        uint64_t step_count = this1->step_count;
-        uint32_t downsample = e->second + 1;
+        RR_UNORDERED_MAP<uint32_t, uint32_t>::iterator e = this1->client_downsamples.find(ep);
+        if (e != this1->client_downsamples.end())
+            downsample = e->second + 1;
+
+        uint64_t step_count = this1->step_count;        
         bool drop = (step_count % downsample) == 0;
 
         return drop;
@@ -97,12 +99,13 @@ namespace RobotRaconteur
         
         boost::mutex::scoped_lock lock(this1->this_lock);
 
+        uint32_t downsample = this1->default_downsample + 1;
+
         RR_UNORDERED_MAP<uint32_t, uint32_t>::iterator e = this1->client_downsamples.find(ep);
         if (e == this1->client_downsamples.end())
-            return true;
+            downsample = e->second + 1;
 
         uint64_t step_count = this1->step_count;
-        uint32_t downsample = e->second + 1;
         bool drop = (step_count % downsample) == 0;
 
         return drop;
