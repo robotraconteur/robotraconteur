@@ -32,7 +32,13 @@ namespace RobotRaconteur
 	/**
 	 * @brief `callback` member type interface
 	 * 
-	 * The Callback class implements the `callback` member type. On the client side,
+	 * The Callback class implements the `callback` member type. Callbacks are declared in service definition 
+	 * files using the `callback` keyword within object declarations. They provide functionality similar to the
+	 * `function` member, but the direction is reversed, allowing the service to call a function on a specified
+	 * client. The desired client is specified using the Robot Raconteur endpoint identifier. Clients must
+	 * configure the callback to use using SetFunction().
+	 * 
+	 * On the client side,
 	 * the client specifies a function for the callback using the SetFunction() function.
 	 * On the service side, the function GetFunction(RR_SHARED_PTR<Endpoint> endpoint) is used to retrieve
 	 * the proxy function to call a client callback.
@@ -244,7 +250,9 @@ namespace RobotRaconteur
 	};
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+	/** @brief Convenience alias for Callback shared_ptr */
 	template<typename T> using CallbackPtr = RR_SHARED_PTR<Callback<T> >;
+	/** @brief Convenience alias for Callback const shared_ptr */
 	template<typename T> using CallbackConstPtr = RR_SHARED_PTR<const Callback<T> >;
 #endif
 }
