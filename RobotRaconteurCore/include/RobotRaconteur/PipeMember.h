@@ -75,8 +75,8 @@ namespace RobotRaconteur
 		/**
 		 * @brief Returns the Robot Raconteur node Endpoint ID
 		 * 
-		 * Returns the endpoint assosciated with the ClientContext or ServerEndpoint
-		 * assosciated with the pipe endpoint.
+		 * Returns the endpoint associated with the ClientContext or ServerEndpoint
+		 * associated with the pipe endpoint.
 		 * 
 		 * @return uint32_t The Robot Raconteur node Endpoint ID
 		 */
@@ -270,7 +270,7 @@ namespace RobotRaconteur
 	 * TryReceivePacketWait(), TryReceivePacketWait(), or PeekNextPacket(). The endpoint is closed
 	 * using the Close() or AsyncClose() function.
 	 * 
-	 * This class is instantiated by the Pipe class. They should not be instantiated
+	 * This class is instantiated by the Pipe class. It should not be instantiated
 	 * by the user.
 	 * 
 	 * @tparam T The packet data type
@@ -285,7 +285,7 @@ namespace RobotRaconteur
 	public:
 		
 		/**
-		 * @brief Get the currently configured connection closed callback function
+		 * @brief Get the currently configured endpoint closed callback function
 		 * 
 		 * @return boost::function<void (RR_SHARED_PTR<PipeEndpoint<T> >)> 
 		 */
@@ -296,12 +296,12 @@ namespace RobotRaconteur
 		}
 
 		/**
-		 * @brief Set a connection closed callback function
+		 * @brief Set the endpoint closed callback function
 		 * 
 		 * Sets a function to invoke when the pipe endpoint has been closed.
 		 * 
 		 * Callback function must accept one argument, receiving the PipeEndpointPtr<T> that
-		 * received a packet.
+		 * was closed.
 		 * 
 		 * @param callback The callback function
 		 */
@@ -637,7 +637,8 @@ namespace RobotRaconteur
 	 * incoming connection requests through a callback function. This callback is configured using the SetPipeConnectCallback() 
 	 * function. Services may also use the PipeBroadcaster class to automate managing pipe endpoint lifecycles and
 	 * sending packets to all connected client endpoints. If the SetPipeConnectCallback() function is used, the service
-	 * is responsible for keeping track of endpoints as the connect and disconnect.
+	 * is responsible for keeping track of endpoints as the connect and disconnect. See PipeEndpoint for details
+	 * on sending and receiving packets.
 	 * 
 	 * Pipe endpoints are *indexed*, meaning that more than one endpoint pair can be created between the client and the service.
 	 * 
@@ -647,6 +648,8 @@ namespace RobotRaconteur
 	 * Pipes may be declared *readonly* or *writeonly*. If neither is specified, the pipe is assumed to be full duplex. *readonly* 
 	 * pipes may only send packets from service to client. *writeonly* pipes may only send packets from client to service. Use
 	 * Direction() to determine the direction of the pipe.
+	 * 
+	 * The PipeBroadcaster is often used to simplify the use of Pipes. See PipeBroadcaster for more information.
 	 * 
 	 * This class is instantiated by the node. It should not be instantiated by the user.
 	 * 
@@ -684,6 +687,8 @@ namespace RobotRaconteur
 		 * boost::weak_ptr to store the reference to the endpoint is recommended.
 		 * 
 		 * The callback may throw an exception to reject incoming connect request.
+		 *
+		 * Note: Connect callback is configured automatically by PipeBroadcaster
 		 * 
 		 * Only valid for services. Will throw InvalidOperationException on the client side.
 		 * 
@@ -699,6 +704,8 @@ namespace RobotRaconteur
 		 * times for the same client connection to create multple pipe endpoint pairs. For most cases Pipe::ANY_INDEX
 		 * (-1) can be used to automatically select an available index.
 		 * 
+		 * Only valid on clients. Will throw InvalidOperationException on the service side.
+		 * 
 		 * @param index The index of the pipe endpoint, or ANY_INDEX to automatically select an index
 		 * @return RR_SHARED_PTR<PipeEndpoint<T> > The connected pipe endpoint
 		 */
@@ -708,6 +715,8 @@ namespace RobotRaconteur
 		 * @brief Asynchronously connect a pipe endpoint.
 		 * 
 		 * Same as Connect(), but returns asynchronously.
+		 * 
+		 * Only valid on clients. Will throw InvalidOperationException on the service side.
 		 * 
 		 * @param index The index of the pipe endpoint, or ANY_INDEX to automatically select an index
 		 * @param handler A handler function to receive the connected endpoint, or an exception 
@@ -719,6 +728,8 @@ namespace RobotRaconteur
 		 * @brief Asynchronously connect a pipe endpoint.
 		 * 
 		 * Same as AsyncConnect(), but automatically selects a pipe endpoint index
+		 * 
+		 * Only valid on clients. Will throw InvalidOperationException on the service side.
 		 * 
 		 * @param handler A handler function to receive the connected endpoint, or an exception 
 		 * @param timeout Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout
@@ -1039,6 +1050,12 @@ namespace RobotRaconteur
 		struct PipeBroadcasterBase_async_send_operation;
 	}
 
+	/**
+	 * @brief Base class for PipeBroadcaster
+	 * 
+	 * Base class for templated PipeBroadcaster class
+	 * 
+	 */
 	class ROBOTRACONTEUR_CORE_API PipeBroadcasterBase : public RR_ENABLE_SHARED_FROM_THIS<PipeBroadcasterBase>, private boost::noncopyable
 	{
 	public:
@@ -1047,10 +1064,48 @@ namespace RobotRaconteur
 				
 		size_t GetActivePipeEndpointCount();
 
+		/**
+		 * @brief Get the current predicate callback function
+		 * 
+		 * @return boost::function<bool(RR_SHARED_PTR<PipeBroadcasterBase>&, uint32_t, int32_t) > The predicate callback function
+		 */
 		boost::function<bool(RR_SHARED_PTR<PipeBroadcasterBase>&, uint32_t, int32_t) > GetPredicate();
+
+		/**
+		 * @brief Set the predicate callback function
+		 * 
+		 * A predicate is optionally used to regulate when packets are sent to clients. This is used by the
+		 * BroadcastDownsampler to regulate update rates of packets sent to clients. 
+		 * 
+		 * The predicate callback is invoked before the broadcaster sends a packet to an endpoint. If the predicate returns true,
+		 * the packet will be sent. If it is false, the packet will not be sent to that endpoint. The predicate callback must
+		 * have the following signature:
+		 * 
+		 *     bool broadcaster_predicate(PipeBroadcasterBasePtr& broadcaster, uint32_t client_endpoint, int32_t pipe_endpoint_index);
+		 * 
+		 * It receives the broadcaster, the client endpoint ID, and the pipe endpoint index. It returns true to send the packet,
+		 * or false to not send the packet.
+		 * 
+		 * @param f The predicate callback function
+		 */
 		void SetPredicate(boost::function<bool(RR_SHARED_PTR<PipeBroadcasterBase>&,  uint32_t, int32_t)> f);
 
+		/**
+		 * @brief Gets the currently configured maximum backlog
+		 * 
+		 * @return int32_t The maximum backlog
+		 */
 		int32_t GetMaxBacklog();
+
+		/**
+		 * @brief Set the maximum backlog
+		 * 
+		 * PipeBroadcaster provides flow control by optionally tracking how many packets
+		 * are in flight to each client pipe endpoint. (This is accomplished using packet acks.) If a 
+		 * maximum backlog is specified, pipe endpoints exceeding this count will stop sending packets.	 
+		 * 
+		 * @param maximum_backlog The maximum number of packets in flight, or -1 for unlimited
+		 */
 		void SetMaxBacklog(int32_t maximum_backlog);
 
 	protected:
@@ -1095,10 +1150,10 @@ namespace RobotRaconteur
 
 
 	/**
-	 * @brief Broadcast to send packets to all connected clients
+	 * @brief Broadcaster to send packets to all connected clients
 	 * 
-	 * The PipeBroadcaster is used by services to send packets to all connected
-	 * client endpoints. At attaches to the pipe on the service side, and
+	 * PipeBroadcaster is used by services to send packets to all connected
+	 * client endpoints. It attaches to the pipe on the service side, and
 	 * manages the lifecycle of connected endpoints. PipeBroadcaster should
 	 * only be used with pipes that are declared *readonly*, since it has
 	 * no provisions for receiving incoming packets from the client.
@@ -1118,7 +1173,10 @@ namespace RobotRaconteur
 	 * PipeBroadcaster provides flow control by optionally tracking how many packets
 	 * are in flight to each client pipe endpoint. (This is accomplished using packet acks.) If a 
 	 * maximum backlog is specified, pipe endpoints exceeding this count will stop sending packets.
-	 * Specify the maximum backlog using the Init() function.
+	 * Specify the maximum backlog using the Init() function or the SetMaxBacklog() function.
+	 * 
+	 * The rate that packets are sent can be regulated using a callback function configured
+	 * with the SetPredicate() function, or using the BroadcastDownsampler class.
 	 * 
 	 * @tparam T The packet data type
 	 */
@@ -1130,7 +1188,7 @@ namespace RobotRaconteur
 		/**
 		 * @brief Construct a new PipeBroadcaster
 		 * 
-		 * Must use boost::make_shared<PipeBroadcaster>() to construct. Must
+		 * Must use boost::make_shared<PipeBroadcaster<T> >() to construct. Must
 		 * call Init() after construction.
 		 * 
 		 */
