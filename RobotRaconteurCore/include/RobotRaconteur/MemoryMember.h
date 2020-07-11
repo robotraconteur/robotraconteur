@@ -58,6 +58,12 @@ namespace RobotRaconteur
 
 
 
+	/**
+	 * @brief Base class for ArrayMemory
+	 * 
+	 * Base class for templated ArrayMemory classes
+	 * 
+	 */
 	class ROBOTRACONTEUR_CORE_API ArrayMemoryBase
 	{
 	public:
@@ -67,6 +73,32 @@ namespace RobotRaconteur
 
 	};
 
+	/**
+	 * @brief Single dimensional numeric primitive random access memory region
+	 * 
+	 * Memories represent random access memory regions that are typically
+	 * represented as arrays of various shapes and types. Memories can be 
+	 * declared in service definition files using the `memory` member keyword
+	 * within service definitions. Services expose memories to clients, and 
+	 * the nodes will proxy read, write, and parameter requests between the client 
+	 * and service. The node will also break up large requests to avoid the
+	 * message size limit of the transport.
+	 * 
+	 * The ArrayMemory class is used to represent a single dimensional numeric
+	 * primitive array. Multidimensional numeric primitive arrays should use
+	 * MultiDimArrayMemory. Valid types for T are `double`, `float`, `int8_t`,
+	 * `uint8_t`, `int16_t`, `uint16_t`, `int32_t`, `uint32_t`, `int64_t`,
+	 * `uint64_t`, `rr_bool`, `cdouble`, and `csingle`.
+	 * 
+	 * ArrayMemory instances are attached to an RRArrayPtr<T>, either when
+	 * constructed or later using Attach().
+	 * 
+	 * ArrayMemory instances returned by clients are special implementations
+	 * designed to proxy requests to the service. They cannot be attached 
+	 * to an arbitrary array.
+	 * 
+	 * @tparam T The numeric primitive type of the array
+	 */
 	template <typename T>
 	class ArrayMemory : public virtual ArrayMemoryBase
 	{
@@ -76,25 +108,68 @@ namespace RobotRaconteur
 
 	public:
 
+		/**
+		 * @brief Construct a new ArrayMemory instance
+		 * 
+		 * New instance will not be attached to an array.
+		 * 
+		 * ArrayMemory must be constructed with boost::make_shared<ArrayMemory<T> >();
+		 */
 		ArrayMemory() {};
 
+		/**
+		 * @brief Construct a new ArrayMemory instance attached to an RRArrayPtr<T>
+		 * 
+		 * New instance will be constructed attached to an array.
+		 * 
+		 * ArrayMemory must be constructed with boost::make_shared<ArrayMemory<T> >();
+		 * 
+		 * @param memory The array to attach
+		 */
 		ArrayMemory(RR_INTRUSIVE_PTR<RRArray<T> > memory)
 		{
 			this->memory=memory;
 		}
 
+		/**
+		 * @brief Attach ArrayMemory instance to an RRArrayPtr<T>
+		 * 
+		 * @param memory The array to attach
+		 */
 		virtual void Attach(RR_INTRUSIVE_PTR<RRArray<T> > memory)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
 			this->memory=memory;
 		}
 
+		/**
+		 * @brief Return the length of the array memory
+		 * 
+		 * When used with a memory returned by a client, this function will 
+		 * call the service to execute the request.
+		 * 
+		 * @return uint64_t The length of the array memory
+		 */
 		virtual uint64_t Length()
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
 			return memory->size();
 		}
 
+		/**
+		 * @brief Read a segment from an array memory
+		 * 
+		 * Read a segment of an array memory into a supplied buffer array. The start positions and length
+		 * of the read are specified.
+		 * 
+		 * When used with a memory returned by a client, this function will call
+		 * the service to execute the request.
+		 * 
+		 * @param memorypos The start index in the memory array to read
+		 * @param buffer The buffer to receive the read data
+		 * @param bufferpos The start index in the buffer to write the data
+		 * @param count The number of array elements to read
+		 */
 		virtual void Read(uint64_t memorypos, RR_INTRUSIVE_PTR<RRArray<T> > buffer, uint64_t bufferpos, uint64_t count)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
@@ -104,6 +179,20 @@ namespace RobotRaconteur
 			memcpy(buffer->data()+bufferpos,memory->data()+memorypos,boost::numeric_cast<size_t>(count*sizeof(T)));
 		}
 
+		/**
+		 * @brief Write a segment to an array memory
+		 * 
+		 * Writes a segment to an array memory from a supplied buffer array. The start positions and length
+		 * of the write are specified.
+		 * 
+		 * When used with a memory returned by a client, this function will call
+		 * the service to execute the request.
+		 * 
+		 * @param memorypos The start index in the memory array to write
+		 * @param buffer The buffer to write the data from
+		 * @param bufferpos The start index in the buffer to read the data
+		 * @param count The number of array elements to write
+		 */
 		virtual void Write(uint64_t memorypos, RR_INTRUSIVE_PTR<RRArray<T> > buffer, uint64_t bufferpos, uint64_t count)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
@@ -121,6 +210,12 @@ namespace RobotRaconteur
 	};
 
 
+	/**
+	 * @brief Base class for MultiDimArrayMemory
+	 * 
+	 * Based class for templated MultiDimArrayMemory classes
+	 * 
+	 */
 	class ROBOTRACONTEUR_CORE_API MultiDimArrayMemoryBase
 	{
 	public:
@@ -131,6 +226,32 @@ namespace RobotRaconteur
 	};
 
 
+	/**
+	 * @brief Multidimensional numeric primitive random access memory region
+	 * 
+	 * Memories represent random access memory regions that are typically
+	 * represented as arrays of various shapes and types. Memories can be 
+	 * declared in service definition files using the `memory` member keyword
+	 * within service definitions. Services expose memories to clients, and 
+	 * the nodes will proxy read, write, and parameter requests between the client 
+	 * and service. The node will also break up large requests to avoid the
+	 * message size limit of the transport.
+	 * 
+	 * The MultiDimArrayMemory class is used to represent a multidimensional numeric
+	 * primitive array. Single dimensional numeric primitive arrays should use
+	 * ArrayMemory. Valid types for T are `double`, `float`, `int8_t`,
+	 * `uint8_t`, `int16_t`, `uint16_t`, `int32_t`, `uint32_t`, `int64_t`,
+	 * `uint64_t`, `rr_bool`, `cdouble`, and `csingle`.
+	 * 
+	 * MultiDimArrayMemory instances are attached to an RRMultiDimArrayPtr<T>, 
+	 * either when constructed or later using Attach().
+	 * 
+	 * MultiDimArrayMemory instances returned by clients are special implementations
+	 * designed to proxy requests to the service. They cannot be attached 
+	 * to an arbitrary array.
+	 * 
+	 * @tparam T The numeric primitive type of the array
+	 */
 	template <typename T>
 	class MultiDimArrayMemory : public virtual MultiDimArrayMemoryBase
 	{
@@ -139,8 +260,24 @@ namespace RobotRaconteur
 		boost::mutex memory_lock;
 	public:
 
+		/**
+		 * @brief Construct a new MultiDimArrayMemory instance
+		 * 
+		 * New instance will not be attached to an array.
+		 * 
+		 * MultiDimArrayMemory must be constructed with boost::make_shared<MultiDimArrayMemory<T> >();
+		 */
 		MultiDimArrayMemory() {};
 
+		/**
+		 * @brief Construct a new MultiDimArrayMemory instance attached to an RRMultiDimArrayPtr<T>
+		 * 
+		 * New instance will be constructed attached to an array.
+		 * 
+		 * MultiDimArrayMemory must be constructed with boost::make_shared<MultiDimArrayMemory<T> >();
+		 * 
+		 * @param multimemory The array to attach 
+		 */
 		MultiDimArrayMemory(RR_INTRUSIVE_PTR<RRMultiDimArray<T> > multimemory)
 		{
 			this->multimemory =multimemory;
@@ -148,12 +285,27 @@ namespace RobotRaconteur
 
 		virtual ~MultiDimArrayMemory() {}
 
+		/**
+		 * @brief Attach MultiDimArrayMemory instance to an RRMultiDimArrayPtr<T>
+		 * 
+		 * @param multimemory The array to attach
+		 */
 		virtual void Attach(RR_INTRUSIVE_PTR<RRMultiDimArray<T> > multimemory)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
 			this->multimemory =multimemory;
 		}
 
+		/**
+		 * @brief Dimensions of the memory array
+		 * 
+		 * Returns the dimensions (shape) of the memory array
+		 * 
+		 * When used with a memory returned by a client, this function will 
+		 * call the service to execute the request.
+		 * 
+		 * @return std::vector<uint64_t> The dimensions of the memory array
+		 */
 		virtual std::vector<uint64_t> Dimensions()
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
@@ -168,18 +320,55 @@ namespace RobotRaconteur
 
 		}
 
+		/**
+		 * @brief The number of dimensions in the memory array
+		 * 
+		 * When used with a memory returned by a client, this function will 
+		 * call the service to execute the request.
+		 * 
+		 * @return uint64_t Number of dimensions
+		 */
 		virtual uint64_t DimCount()
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
 			return multimemory->Dims->size();
 		}
 				
+		/**
+		 * @brief Read a block from a multidimensional array memory
+		 * 
+		 * Read a block of a multidimensional array memory into a supplied buffer multidimensional array. 
+		 * The start positions and count of the read are specified.
+		 * 
+		 * When used with a memory returned by a client, this function will call
+		 * the service to execute the request.
+		 * 
+		 * @param memorypos The start position in the memory array to read
+		 * @param buffer The buffer to receive the read data
+		 * @param bufferpos The start position in the buffer to write the data
+		 * @param count The count of array elements to read
+		 */
 		virtual void Read(const std::vector<uint64_t>& memorypos, RR_INTRUSIVE_PTR<RRMultiDimArray<T> > buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
 			multimemory->RetrieveSubArray(detail::ConvertVectorType<uint32_t>(memorypos),buffer,detail::ConvertVectorType<uint32_t>(bufferpos),detail::ConvertVectorType<uint32_t>(count));
 		}
 
+		/**
+		 * @brief Write a segment to a multidimensional array memory
+		 * 
+		 * Writes a segment to a multidimensional array memory from a supplied buffer 
+		 * multidimensional array. The start positions and count
+		 * of the write are specified.
+		 * 
+		 * When used with a memory returned by a client, this function will call
+		 * the service to execute the request.
+		 * 
+		 * @param memorypos The start position in the memory array to write
+		 * @param buffer The buffer to write the data from
+		 * @param bufferpos The start position in the buffer to read the data
+		 * @param count The count of array elements to write
+		 */
 		virtual void Write(const std::vector<uint64_t>& memorypos, RR_INTRUSIVE_PTR<RRMultiDimArray<T> > buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
@@ -520,6 +709,31 @@ namespace RobotRaconteur
 
 	// pod
 
+	/**
+	 * @brief Single dimensional pod random access memory region
+	 * 
+	 * Memories represent random access memory regions that are typically
+	 * represented as arrays of various shapes and types. Memories can be 
+	 * declared in service definition files using the `memory` member keyword
+	 * within service definitions. Services expose memories to clients, and 
+	 * the nodes will proxy read, write, and parameter requests between the client 
+	 * and service. The node will also break up large requests to avoid the
+	 * message size limit of the transport.
+	 * 
+	 * The PodArrayMemory class is used to represent a single dimensional pod
+	 * array. Multidimensional pod arrays should use PodMultiDimArrayMemory. 
+	 * Type T must be declared in a service definition using the `pod`
+	 * keyword, and generated using RobotRaconteurGen. 
+	 * 
+	 * PodArrayMemory instances are attached to an RRPodArrayPtr<T>, either when
+	 * constructed or later using Attach().
+	 * 
+	 * PodArrayMemory instances returned by clients are special implementations
+	 * designed to proxy requests to the service. They cannot be attached 
+	 * to an arbitrary array.
+	 * 
+	 * @tparam T The pod type of the array
+	 */
 	template <typename T>
 	class PodArrayMemory : public virtual ArrayMemoryBase
 	{
@@ -529,25 +743,48 @@ namespace RobotRaconteur
 
 	public:
 
+		/**
+		 * @brief Construct a new PodArrayMemory instance
+		 * 
+		 * New instance will not be attached to an array.
+		 * 
+		 * PodArrayMemory must be constructed with boost::make_shared<PodArrayMemory<T> >();
+		 */
 		PodArrayMemory() {};
 
+		/**
+		 * @brief Construct a new PodArrayMemory instance attached to an RRPodArrayPtr<T>
+		 * 
+		 * New instance will be constructed attached to an array.
+		 * 
+		 * PodArrayMemory must be constructed with boost::make_shared<PodArrayMemory<T> >();
+		 * 
+		 * @param memory The array to attach
+		 */
 		PodArrayMemory(RR_INTRUSIVE_PTR<RRPodArray<T> > memory)
 		{
 			this->memory = memory;
 		}
 
+		/**
+		 * @brief Attach PodArrayMemory instance to an RRPodArrayPtr<T>
+		 * 
+		 * @param memory The array to attach
+		 */
 		virtual void Attach(RR_INTRUSIVE_PTR<RRPodArray<T> > memory)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
 			this->memory = memory;
 		}
 
+		/** @copydoc ArrayMemory::Length() */
 		virtual uint64_t Length()
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
 			return memory->size();
 		}
 
+		/** @copydoc ArrayMemory::Read() */
 		virtual void Read(uint64_t memorypos, RR_INTRUSIVE_PTR<RRPodArray<T> > buffer, uint64_t bufferpos, uint64_t count)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
@@ -560,6 +797,7 @@ namespace RobotRaconteur
 			}
 		}
 
+		/** @copydoc ArrayMemory::Write() */
 		virtual void Write(uint64_t memorypos, RR_INTRUSIVE_PTR<RRPodArray<T> > buffer, uint64_t bufferpos, uint64_t count)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
@@ -666,6 +904,31 @@ namespace RobotRaconteur
 		}
 	};
 
+	/**
+	 * @brief Multidimensional pod random access memory region
+	 * 
+	 * Memories represent random access memory regions that are typically
+	 * represented as arrays of various shapes and types. Memories can be 
+	 * declared in service definition files using the `memory` member keyword
+	 * within service definitions. Services expose memories to clients, and 
+	 * the nodes will proxy read, write, and parameter requests between the client 
+	 * and service. The node will also break up large requests to avoid the
+	 * message size limit of the transport.
+	 * 
+	 * The PodMultiDimArrayMemory class is used to represent a multidimensional 
+	 * pod array. Single dimensional pod arrays should use PodArrayMemory. 
+	 * Type T must be declared in a service definition using the `pod`
+	 * keyword, and generated using RobotRaconteurGen.
+	 * 
+	 * PodMultiDimArrayMemory instances are attached to an RRPodMultiDimArrayPtr<T>, 
+	 * either when constructed or later using Attach().
+	 * 
+	 * PodMultiDimArrayMemory instances returned by clients are special implementations
+	 * designed to proxy requests to the service. They cannot be attached 
+	 * to an arbitrary array.
+	 * 
+	 * @tparam T The pod type of the array
+	 */
 	template <typename T>
 	class PodMultiDimArrayMemory : public virtual MultiDimArrayMemoryBase
 	{
@@ -674,8 +937,24 @@ namespace RobotRaconteur
 		boost::mutex memory_lock;
 	public:
 
+		/**
+		 * @brief Construct a new PodMultiDimArrayMemory instance
+		 * 
+		 * New instance will not be attached to an array.
+		 * 
+		 * PodMultiDimArrayMemory must be constructed with boost::make_shared<PodMultiDimArrayMemory<T> >();
+		 */
 		PodMultiDimArrayMemory() {};
 
+		/**
+		 * @brief Construct a new PodMultiDimArrayMemory instance attached to an RRPodMultiDimArrayPtr<T>
+		 * 
+		 * New instance will be constructed attached to an array.
+		 * 
+		 * PodMultiDimArrayMemory must be constructed with boost::make_shared<PodMultiDimArrayMemory<T> >();
+		 * 
+		 * @param multimemory The array to attach 
+		 */
 		PodMultiDimArrayMemory(RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > multimemory)
 		{
 			this->multimemory = multimemory;
@@ -683,12 +962,18 @@ namespace RobotRaconteur
 
 		virtual ~PodMultiDimArrayMemory() {}
 
+		/**
+		 * @brief Attach PodMultiDimArrayMemory instance to an RRPodMultiDimArrayPtr<T>
+		 * 
+		 * @param multimemory The array to attach
+		 */
 		virtual void Attach(RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > multimemory)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
 			this->multimemory = multimemory;
 		}
 
+		/** @copydoc MultiDimArrayMemory::Dimensions() */
 		virtual std::vector<uint64_t> Dimensions()
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
@@ -702,18 +987,21 @@ namespace RobotRaconteur
 			return s;
 		}
 
+		/** @copydoc MultiDimArrayMemory::DimCount() */
 		virtual uint64_t DimCount()
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
 			return multimemory->Dims->size();
 		}
-				
+		
+		/** @copydoc MultiDimArrayMemory::Read() */
 		virtual void Read(const std::vector<uint64_t>& memorypos, RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
 			multimemory->RetrieveSubArray(detail::ConvertVectorType<uint32_t>(memorypos), buffer, detail::ConvertVectorType<uint32_t>(bufferpos), detail::ConvertVectorType<uint32_t>(count));
 		}
 
+		/** @copydoc MultiDimArrayMemory::Write() */
 		virtual void Write(const std::vector<uint64_t>& memorypos, RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
@@ -820,6 +1108,31 @@ namespace RobotRaconteur
 
 	// namedarray
 
+	/**
+	 * @brief Single dimensional namedarray random access memory region
+	 * 
+	 * Memories represent random access memory regions that are typically
+	 * represented as arrays of various shapes and types. Memories can be 
+	 * declared in service definition files using the `memory` member keyword
+	 * within service definitions. Services expose memories to clients, and 
+	 * the nodes will proxy read, write, and parameter requests between the client 
+	 * and service. The node will also break up large requests to avoid the
+	 * message size limit of the transport.
+	 * 
+	 * The NamedArrayMemory class is used to represent a single dimensional named
+	 * array. Multidimensional named arrays should use NamedMultiDimArrayMemory. 
+	 * Type T must be declared in a service definition using the `namedarray`
+	 * keyword, and generated using RobotRaconteurGen. 
+	 * 
+	 * NamedArrayMemory instances are attached to an RRNamedArrayPtr<T>, either when
+	 * constructed or later using Attach().
+	 * 
+	 * NamedArrayMemory instances returned by clients are special implementations
+	 * designed to proxy requests to the service. They cannot be attached 
+	 * to an arbitrary array.
+	 * 
+	 * @tparam T The namedarray type of the array
+	 */
 	template <typename T>
 	class NamedArrayMemory : public virtual ArrayMemoryBase
 	{
@@ -829,25 +1142,48 @@ namespace RobotRaconteur
 
 	public:
 
+		/**
+		 * @brief Construct a new NamedArrayMemory instance
+		 * 
+		 * New instance will not be attached to an array.
+		 * 
+		 * NamedArrayMemory must be constructed with boost::make_shared<NamedArrayMemory<T> >();
+		 */
 		NamedArrayMemory() {};
 
+		/**
+		 * @brief Construct a new NamedArrayMemory instance attached to an RRNamedArrayPtr<T>
+		 * 
+		 * New instance will be constructed attached to an array.
+		 * 
+		 * NamedArrayMemory must be constructed with boost::make_shared<NamedArrayMemory<T> >();
+		 * 
+		 * @param memory The array to attach
+		 */
 		NamedArrayMemory(RR_INTRUSIVE_PTR<RRNamedArray<T> > memory)
 		{
 			this->memory = memory;
 		}
 
+		/**
+		 * @brief Attach NamedArrayMemory instance to an RRNamedArrayPtr<T>
+		 * 
+		 * @param memory The array to attach
+		 */
 		virtual void Attach(RR_INTRUSIVE_PTR<RRNamedArray<T> > memory)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
 			this->memory = memory;
 		}
 
+		/** @copydoc ArrayMemory::Length() */
 		virtual uint64_t Length()
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
 			return memory->size();
 		}
 
+		/** @copydoc ArrayMemory::Read() */
 		virtual void Read(uint64_t memorypos, RR_INTRUSIVE_PTR<RRNamedArray<T> > buffer, uint64_t bufferpos, uint64_t count)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
@@ -860,6 +1196,7 @@ namespace RobotRaconteur
 			}
 		}
 
+		/** @copydoc ArrayMemory::Write() */
 		virtual void Write(uint64_t memorypos, RR_INTRUSIVE_PTR<RRNamedArray<T> > buffer, uint64_t bufferpos, uint64_t count)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
@@ -966,6 +1303,31 @@ namespace RobotRaconteur
 		}
 	};
 
+	/**
+	 * @brief Multidimensional namedarray random access memory region
+	 * 
+	 * Memories represent random access memory regions that are typically
+	 * represented as arrays of various shapes and types. Memories can be 
+	 * declared in service definition files using the `memory` member keyword
+	 * within service definitions. Services expose memories to clients, and 
+	 * the nodes will proxy read, write, and parameter requests between the client 
+	 * and service. The node will also break up large requests to avoid the
+	 * message size limit of the transport.
+	 * 
+	 * The NamedMultiDimArrayMemory class is used to represent a multidimensional 
+	 * named array. Single dimensional named arrays should use NamedArrayMemory. 
+	 * Type T must be declared in a service definition using the `namedarray`
+	 * keyword, and generated using RobotRaconteurGen.
+	 * 
+	 * NamedMultiDimArrayMemory instances are attached to an RRNamedMultiDimArrayPtr<T>, 
+	 * either when constructed or later using Attach().
+	 * 
+	 * NamedMultiDimArrayMemory instances returned by clients are special implementations
+	 * designed to proxy requests to the service. They cannot be attached 
+	 * to an arbitrary array.
+	 * 
+	 * @tparam T The namedarray type of the array
+	 */
 	template <typename T>
 	class NamedMultiDimArrayMemory : public virtual MultiDimArrayMemoryBase
 	{
@@ -974,8 +1336,24 @@ namespace RobotRaconteur
 		boost::mutex memory_lock;
 	public:
 
+		/**
+		 * @brief Construct a new NamedMultiDimArrayMemory instance
+		 * 
+		 * New instance will not be attached to an array.
+		 * 
+		 * NamedMultiDimArrayMemory must be constructed with boost::make_shared<NamedMultiDimArrayMemory<T> >();
+		 */
 		NamedMultiDimArrayMemory() {};
 
+		/**
+		 * @brief Construct a new NamedMultiDimArrayMemory instance attached to an RRNamedMultiDimArrayPtr<T>
+		 * 
+		 * New instance will be constructed attached to an array.
+		 * 
+		 * NamedMultiDimArrayMemory must be constructed with boost::make_shared<NamedMultiDimArrayMemory<T> >();
+		 * 
+		 * @param multimemory The array to attach 
+		 */
 		NamedMultiDimArrayMemory(RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > multimemory)
 		{
 			this->multimemory = multimemory;
@@ -983,12 +1361,18 @@ namespace RobotRaconteur
 
 		virtual ~NamedMultiDimArrayMemory() {}
 
+		/**
+		 * @brief Attach NamedMultiDimArrayMemory instance to an RRNamedMultiDimArrayPtr<T>
+		 * 
+		 * @param multimemory The array to attach
+		 */
 		virtual void Attach(RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > multimemory)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
 			this->multimemory = multimemory;
 		}
 
+		/** @copydoc MultiDimArrayMemory::Dimensions() */
 		virtual std::vector<uint64_t> Dimensions()
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
@@ -1002,18 +1386,21 @@ namespace RobotRaconteur
 			return s;
 		}
 
+		/** @copydoc MultiDimArrayMemory::DimCount() */
 		virtual uint64_t DimCount()
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
 			return multimemory->Dims->size();
 		}
 		
+		/** @copydoc MultiDimArrayMemory::Read() */
 		virtual void Read(const std::vector<uint64_t>& memorypos, RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
 			multimemory->RetrieveSubArray(detail::ConvertVectorType<uint32_t>(memorypos), buffer, detail::ConvertVectorType<uint32_t>(bufferpos), detail::ConvertVectorType<uint32_t>(count));
 		}
 
+		/** @copydoc MultiDimArrayMemory::Write() */
 		virtual void Write(const std::vector<uint64_t>& memorypos, RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 		{
 			boost::mutex::scoped_lock lock(memory_lock);
