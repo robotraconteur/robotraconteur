@@ -1775,11 +1775,17 @@ namespace RobotRaconteur
 
 	};
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+	/** @brief Convenience alias for WireConnectionBase shared_ptr */
 	using WireConnectionBasePtr = RR_SHARED_PTR<WireConnectionBase>;
+	/** @brief Convenience alias for WireConnection shared_ptr */
 	template <typename T> using WireConnectionPtr = RR_SHARED_PTR<WireConnection<T> >;
+	/** @brief Convenience alias for WireBase shared_ptr */
 	using WireBasePtr = RR_SHARED_PTR<WireBase>;
+	/** @brief Convenience alias for Wire shared_ptr */
 	template <typename T> using WirePtr = RR_SHARED_PTR<Wire<T> >;
+	/** @brief Convenience alias for WireBroadcaster shared_ptr */
 	template <typename T> using WireBroadcasterPtr = RR_SHARED_PTR<WireBroadcaster<T> >;
+	/** @brief Convenience alias for WireUnicastReceiver shared_ptr */
 	template <typename T> using WireUnicastReceiverPtr = RR_SHARED_PTR<WireUnicastReceiver<T> >;
 #endif
 
