@@ -63,6 +63,16 @@ public class WireBroadcaster<T> {
 			= new WrappedWireBroadcasterPredicateDirectorJava(f);
         int id = RRObjectHeap.addObject(p);
         innerwire.setPredicateDirector(p, id);
+	} 
+
+	public int getOutValueLifespan()
+	{
+		return innerwire.getOutValueLifespan();
+	}
+
+	public void setOutValueLifespan(int millis)
+	{
+		innerwire.setOutValueLifespan(millis);
 	}
 	
 }

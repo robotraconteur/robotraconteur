@@ -208,6 +208,9 @@ public:
 	size_t GetActiveWireConnectionCount();
 
 	void SetPredicateDirector(WrappedWireBroadcasterPredicateDirector* f, int32_t id);
+
+	int32_t GetOutValueLifespan();
+	void SetOutValueLifespan(int32_t millis);
 };
 
 %apply uint32_t& OUTPUT {uint32_t& ep};
@@ -220,6 +223,9 @@ public:
 	boost::intrusive_ptr<MessageElement> GetInValue(TimeSpec& ts, uint32_t& ep);	
 
 	void AddInValueChangedListener(WrappedWireServerPokeValueDirector* director, int32_t id);
+
+	int32_t GetInValueLifespan();
+	void SetInValueLifespan(int32_t millis);
 };
 
 }

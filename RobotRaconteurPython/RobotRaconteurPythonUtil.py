@@ -2140,6 +2140,20 @@ class WireBroadcaster(object):
         self._innerpipe.SetPredicateDirector(p, 0)
         p.__disown__()
 
+    @property
+    def OutValueLifespan(self):
+        t = self.__innerpipe.GetOutValueLifespan()
+        if t < 0:
+            return t
+        return float(t) / 1000.0
+
+    @OutValueLifespan.setter
+    def OutValueLifespan(self, secs):
+        if secs < 0:
+            self.__innerpipe.SetOutValueLifespan(-1)
+        else:
+            self.__innerpipe.SetOutValueLifespan(int(secs*1000.0))
+
 class WrappedWireUnicastReceiverInValueChangedImpl(RobotRaconteurPython.WrappedWireServerPokeValueDirector):
     def __init__(self, rec):
         super(WrappedWireUnicastReceiverInValueChangedImpl,self).__init__()
@@ -2178,6 +2192,20 @@ class WireUnicastReceiver(object):
     def InValueChanged(self, evt):
         if (evt is not self._InValueChanged):
             raise RuntimeError("Invalid operation")
+
+    @property
+    def InValueLifespan(self):
+        t = self.__innerpipe.GetInValueLifespan()
+        if t < 0:
+            return t
+        return float(t) / 1000.0
+
+    @InValueLifespan.setter
+    def InValueLifespan(self, secs):
+        if secs < 0:
+            self.__innerpipe.SetInValueLifespan(-1)
+        else:
+            self.__innerpipe.SetInValueLifespan(int(secs*1000.0))
 
 class BroadcastDownsamplerStep(object):
     def __init__(self, downsampler):

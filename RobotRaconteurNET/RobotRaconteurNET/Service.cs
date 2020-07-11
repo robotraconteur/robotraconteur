@@ -2776,6 +2776,18 @@ namespace RobotRaconteur
                 innerwire.SetPredicateDirector(p, id);
             }
         }
+
+        public int OutValueLifespan
+        {
+            get
+            {
+                return innerwire.GetOutValueLifespan();
+            }
+            set
+            {
+                innerwire.SetOutValueLifespan(value);
+            }
+        }
     }
 
 
@@ -2837,6 +2849,18 @@ namespace RobotRaconteur
         }
 
         public event Action<T, TimeSpec, uint> InValueChanged;
+
+        public int InValueLifespan
+        {
+            get
+            {
+                return innerwire.GetInValueLifespan();
+            }
+            set
+            {
+                innerwire.SetInValueLifespan(value);
+            }
+        }
 
     }
 

@@ -63,6 +63,16 @@ public class WireUnicastReceiver<T> {
 		}
 	}
 
+	public int getInValueLifespan()
+	{
+		return innerwire.getInValueLifespan();
+	}
+
+	public void setInValueLifespan(int millis)
+	{
+		innerwire.setInValueLifespan(millis);
+	}
+
 	static class ValueChangedDirector<T> extends WrappedWireServerPokeValueDirector
 	{
 		WeakReference<WireUnicastReceiver<T>> cb;

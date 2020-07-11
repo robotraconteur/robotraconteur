@@ -41,7 +41,11 @@ namespace RobotRaconteur
 	class ROBOTRACONTEUR_CORE_API  WireBase;
 	class ROBOTRACONTEUR_CORE_API  WireConnectionBase;
 	class ROBOTRACONTEUR_CORE_API WireConnectionBaseListener;
-	namespace detail { class WireSubscription_connection;  }
+	namespace detail 
+	{ 
+		class WireSubscription_connection;  
+		bool WireConnectionBase_IsValueExpired(RR_WEAK_PTR<RobotRaconteurNode> node, const boost::posix_time::ptime& recv_time, int32_t lifespan);		
+	}
 
 	/**
 	 * @brief Base class for WireConnection
@@ -1404,6 +1408,12 @@ namespace RobotRaconteur
 		 */
 		void SetPredicate(boost::function<bool(RR_SHARED_PTR<WireBroadcasterBase>&, uint32_t)> f);
 
+		/** @copydoc WireConnectionBase::GetOutValueLifespan() */
+		int32_t GetOutValueLifespan();
+
+		/** @copydoc WireConnectionBase::SetOutValueLifespan() */
+		void SetOutValueLifespan(int32_t millis);
+
 	protected:
 
 		WireBroadcasterBase();		
@@ -1435,6 +1445,10 @@ namespace RobotRaconteur
 
 		RR_INTRUSIVE_PTR<RRValue> out_value;
 		boost::initialized<bool> out_value_valid;
+
+		int32_t out_value_lifespan;
+		boost::posix_time::ptime out_value_lasttime_local;
+
 
 		void ServiceEvent(ServerServiceListenerEventType evt);
 
@@ -1575,6 +1589,7 @@ namespace RobotRaconteur
 		void Init(RR_SHARED_PTR<T> wire)
 		{
 			node = wire->GetNode();
+			in_value_lifespan = -1;
 			RR_SHARED_PTR<wireserver_type> wire_server = RR_DYNAMIC_POINTER_CAST<wireserver_type>(wire);			
 			if (!wire_server) 
 			{
@@ -1614,6 +1629,10 @@ namespace RobotRaconteur
 		{
 			boost::mutex::scoped_lock lock(this_lock);
 			if (!in_value_valid) throw ValueNotSetException("Value not set");
+			if(detail::WireConnectionBase_IsValueExpired(node, in_value_lasttime_local,in_value_lifespan))
+			{
+				throw ValueNotSetException("Value expired");
+			}
 			ts = in_value_ts;
 			ep = in_value_ep;
 			return in_value;
@@ -1636,6 +1655,10 @@ namespace RobotRaconteur
 		{
 			boost::mutex::scoped_lock lock(this_lock);
 			if (!in_value_valid) return false;
+			if(detail::WireConnectionBase_IsValueExpired(node, in_value_lasttime_local,in_value_lifespan))
+			{
+				return false;
+			}
 			value = in_value;
 			ts = in_value_ts;
 			ep = in_value_ep;
@@ -1650,6 +1673,20 @@ namespace RobotRaconteur
 		 */
 		boost::signals2::signal<void(const U&, const TimeSpec&, const uint32_t&)> InValueChanged;
 		
+		/** @copydoc WireConnectionBase::GetInValueLifespan() */
+		int32_t GetInValueLifespan()
+		{
+			boost::mutex::scoped_lock lock(this_lock);
+			return in_value_lifespan;
+		}
+
+		/** @copydoc WireConnectionBase::SetInValueLifespan() */
+		void SetInValueLifespan(int32_t millis)
+		{
+			boost::mutex::scoped_lock lock(this_lock);
+			in_value_lifespan = millis;
+		}
+
 		RR_SHARED_PTR<T> GetWire()
 		{
 			return wire;
@@ -1707,11 +1744,16 @@ namespace RobotRaconteur
 
 		void ClientPokeOutValue(const U& value, const TimeSpec& ts, const uint32_t& ep)
 		{
+			RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
 			boost::mutex::scoped_lock lock(this_lock);
 			in_value = value;
 			in_value_ts = ts;
 			in_value_valid.data() = true;
 			in_value_ep.data() = ep;
+			if(n)
+			{
+				in_value_lasttime_local = n->NowUTC();
+			}
 
 			InValueChanged(value, ts, ep);
 
@@ -1732,6 +1774,8 @@ namespace RobotRaconteur
 		TimeSpec in_value_ts;
 		boost::initialized<bool> in_value_valid;
 		boost::initialized<uint32_t> in_value_ep;
+		boost::posix_time::ptime in_value_lasttime_local;
+		int32_t in_value_lifespan;
 
 		std::string member_name;
 		std::string service_path;

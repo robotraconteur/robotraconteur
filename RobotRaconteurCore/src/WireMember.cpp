@@ -222,24 +222,27 @@ namespace RobotRaconteur
 		
 	}
 
-	static bool WireConnectionBase_IsValueExpired(RR_WEAK_PTR<RobotRaconteurNode> node, const boost::posix_time::ptime& recv_time, int32_t lifespan)
+	namespace detail
 	{
-		if (lifespan < 0)
+		bool WireConnectionBase_IsValueExpired(RR_WEAK_PTR<RobotRaconteurNode> node, const boost::posix_time::ptime& recv_time, int32_t lifespan)
 		{
+			if (lifespan < 0)
+			{
+				return false;
+			}
+
+			RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
+			if (!n)
+			{
+				return true;
+			}
+
+			if (recv_time + boost::posix_time::milliseconds(lifespan) < n->NowUTC())
+			{
+				return true;
+			}
 			return false;
 		}
-
-		RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
-		if (!n)
-		{
-			return true;
-		}
-
-		if (recv_time + boost::posix_time::milliseconds(lifespan) < n->NowUTC())
-		{
-			return true;
-		}
-		return false;
 	}
 
 	RR_INTRUSIVE_PTR<RRValue> WireConnectionBase::GetInValueBase()
@@ -254,7 +257,7 @@ namespace RobotRaconteur
 			boost::mutex::scoped_lock lock2(inval_lock);
 		if (!inval_valid)
 			throw ValueNotSetException("Value not set");
-		if(WireConnectionBase_IsValueExpired(node, lasttime_recv_local,inval_lifespan))
+		if(detail::WireConnectionBase_IsValueExpired(node, lasttime_recv_local,inval_lifespan))
 		{
 			throw ValueNotSetException("Value expired");
 		}
@@ -275,7 +278,7 @@ namespace RobotRaconteur
 			boost::mutex::scoped_lock lock2(outval_lock);
 		if (!outval_valid)
 			throw ValueNotSetException("Value not set");
-		if(WireConnectionBase_IsValueExpired(node, lasttime_send_local,outval_lifespan))
+		if(detail::WireConnectionBase_IsValueExpired(node, lasttime_send_local,outval_lifespan))
 		{
 			throw ValueNotSetException("Value expired");
 		}
@@ -334,7 +337,7 @@ namespace RobotRaconteur
 		}
 		boost::mutex::scoped_lock lock2(inval_lock);
 		if (!inval_valid) return false;
-		if(WireConnectionBase_IsValueExpired(node, lasttime_recv_local,inval_lifespan))
+		if(detail::WireConnectionBase_IsValueExpired(node, lasttime_recv_local,inval_lifespan))
 		{
 			return false;
 		}
@@ -352,7 +355,7 @@ namespace RobotRaconteur
 		}
 		boost::mutex::scoped_lock lock2(outval_lock);
 		if (!outval_valid) return false;
-		if(WireConnectionBase_IsValueExpired(node, lasttime_send_local,outval_lifespan))
+		if(detail::WireConnectionBase_IsValueExpired(node, lasttime_send_local,outval_lifespan))
 		{
 			return false;
 		}			
@@ -1183,6 +1186,7 @@ namespace RobotRaconteur
 	WireBroadcasterBase::WireBroadcasterBase()
 	{
 		copy_element = false;
+		out_value_lifespan = -1;
 	}
 
 	void WireBroadcasterBase::InitBase(RR_SHARED_PTR<WireBase> wire)
@@ -1248,6 +1252,11 @@ namespace RobotRaconteur
 
 		AttachWireConnectionEvents(ep, c);
 
+		if (out_value_valid && !detail::WireConnectionBase_IsValueExpired(node, out_value_lasttime_local, out_value_lifespan))
+		{
+			ep->SetOutValueBase(out_value);
+		}
+
 		connected_wires.push_back(c);
 
 		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, ep->GetEndpoint(), service_path, member_name, "WireBroadcaster wire connected");
@@ -1255,10 +1264,15 @@ namespace RobotRaconteur
 
 	void WireBroadcasterBase::SetOutValueBase(RR_INTRUSIVE_PTR<RRValue> value)
 	{
+		RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
 		boost::mutex::scoped_lock lock(connected_wires_lock);
 
 		out_value = value;
 		out_value_valid.data() = true;
+		if (n)
+		{
+			out_value_lasttime_local = n->NowUTC();
+		}
 
 		RR_SHARED_PTR<WireBroadcasterBase> this_ = shared_from_this();
 		
@@ -1340,6 +1354,10 @@ namespace RobotRaconteur
 	{
 		boost::mutex::scoped_lock lock(connected_wires_lock);		
 		if (!out_value_valid) throw ValueNotSetException("Value not set");
+		if(detail::WireConnectionBase_IsValueExpired(node, out_value_lasttime_local, out_value_lifespan))
+		{
+			throw ValueNotSetException("Value expired");
+		}
 		return out_value;
 	}
 
@@ -1350,5 +1368,18 @@ namespace RobotRaconteur
 		return wire1;
 	}
 
+	int32_t WireBroadcasterBase::GetOutValueLifespan()
+	{
+		boost::mutex::scoped_lock lock(connected_wires_lock);
+		return out_value_lifespan;
+	}
+
+	void WireBroadcasterBase::SetOutValueLifespan(int32_t millis)
+	{
+		boost::mutex::scoped_lock lock(connected_wires_lock);
+		out_value_lifespan = millis;
+	}
+	
+	void SetOutValueLifespan(int32_t millis);
 
 }
