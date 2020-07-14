@@ -32,6 +32,24 @@
 namespace RobotRaconteur
 {
 	class ROBOTRACONTEUR_CORE_API LocalTransportConnection;
+
+	/**
+	 * @brief Transport for USB, Bluetooth, and PCIe hardware devices
+	 * 
+	 * **WARNING: THE HARDWARE TRANSPORT IS EXPERIMENTAL!**
+	 * 
+	 * The HardwareTransport is disabled by default by the node setup classes.
+	 * Use `--robotraconteur-hardware-enable=true` option to enable.
+	 * 
+	 * It is recommended that ClientNodeSetup, ServerNodeSetup, or SecureServerNodeSetup
+	 * be used to construct this class.
+	 * 
+	 * See \ref robotraconteur_url for more information on URLs.
+	 * 
+	 * Contact Wason Technology, LLC for more information on the hardware
+	 * transport.
+	 * 
+	 */
 	class ROBOTRACONTEUR_CORE_API HardwareTransport : public Transport, public RR_ENABLE_SHARED_FROM_THIS<HardwareTransport>
 	{
 		friend class HardwareTransportConnection;
@@ -45,6 +63,19 @@ namespace RobotRaconteur
 		RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<ITransportConnection> > TransportConnections;
 		boost::mutex TransportConnections_lock;
 		
+		/**
+		 * @brief Construct a new HardwareTransport
+		 * 
+		 * Must use boost::make_shared<HardwareTransport>()
+		 * 
+		 * The use of RobotRaconteurNodeSetup and subclasses is recommended to construct
+		 * transports.
+		 * 
+		 * The transport must be registered with the node using
+		 * RobotRaconteurNode::RegisterTransport() after construction.
+		 * 
+		 * @param node The node that will use the transport. Default is the singleton node
+		 */
 		HardwareTransport(RR_SHARED_PTR<RobotRaconteurNode> node = RobotRaconteurNode::sp());
 
 		virtual ~HardwareTransport();
@@ -89,18 +120,48 @@ namespace RobotRaconteur
 
 		virtual void AsyncGetDetectedNodes(const std::vector<std::string>& schemes, boost::function<void(RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >)>& handler, int32_t timeout = RR_TIMEOUT_INFINITE);
 
+		/** @copydoc TcpTransport::GetDisableMessage4() */
 		virtual bool GetDisableMessage4();
+		/** @copydoc TcpTransport::SetDisableMessage4() */
 		virtual void SetDisableMessage4(bool d);
 
+		/** @copydoc TcpTransport::GetDisableStringTable() */
 		virtual bool GetDisableStringTable();
+		/** @copydoc TcpTransport::SetDisableStringTable() */
 		virtual void SetDisableStringTable(bool d);
 
+		/** @copydoc TcpTransport::GetDisableAsyncMessageIO() */
 		virtual bool GetDisableAsyncMessageIO();
+		/** @copydoc TcpTransport::GetDisableAsyncMessageIO() */
 		virtual void SetDisableAsyncMessageIO(bool d);
 
+		/**
+		 * @brief Add a USB VID/PID pair to the search list
+		 * 
+		 * @param vid The USB VID
+		 * @param pid The USB PID
+		 * @param interface_ The Robot Raconteur USB interface number
+		 */
 		virtual void AddUsbDevice(uint16_t vid, uint16_t pid, uint8_t interface_);
+		
+		/**
+		 * @brief Remove a registered USB VID/PID pair
+		 * 
+		 * @param vid The USB VID
+		 * @param pid The USB PID
+		 * @param interface_ The Robot Raconteur USB interface number
+		 */
 		virtual void RemoveUsbDevice(uint16_t vid, uint16_t pid, uint8_t interface_);
-	
+
+		/**
+		 * @brief Check if VID/PID pair has been registered
+		 * 
+		 * @param vid The USB VID
+		 * @param pid The USB PID
+		 * @param interface_ The Robot Raconteur USB interface number
+		 * @return true 
+		 * @return false 
+		 */
 		virtual bool IsValidUsbDevice(uint16_t vid, uint16_t pid, uint8_t interface_);
 		
 		virtual void register_transport(RR_SHARED_PTR<ITransportConnection> connection);
