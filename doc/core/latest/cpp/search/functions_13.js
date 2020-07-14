@@ -1,6 +1,10 @@
 var searchData=
 [
-  ['valuenotsetexception_1063',['ValueNotSetException',['../class_robot_raconteur_1_1_value_not_set_exception.html#add09962441e1677ed4b6d8b497011a77',1,'RobotRaconteur::ValueNotSetException']]],
-  ['vectortorrarray_1064',['VectorToRRArray',['../_data_types_8h.html#a0f60f7220d287cf166e31c27ddea82e4',1,'RobotRaconteur']]],
-  ['void_5fptr_1065',['void_ptr',['../class_robot_raconteur_1_1_r_r_base_array.html#abfe2dbc5f701392e0861e600524fb9a6',1,'RobotRaconteur::RRBaseArray::void_ptr()'],['../class_robot_raconteur_1_1_r_r_named_array.html#ad58194a01ca1f9e50454eb3bea99dbc3',1,'RobotRaconteur::RRNamedArray::void_ptr()']]]
+  ['unknownexception_1922',['UnknownException',['../class_robot_raconteur_1_1_unknown_exception.html#aab7829280bcc70920dd3c14bb34fd9f1',1,'RobotRaconteur::UnknownException']]],
+  ['unlock_1923',['unlock',['../class_robot_raconteur_1_1_robot_raconteur_node_1_1_scoped_monitor_lock.html#ae9798039d53b33ed899010f78619aef0',1,'RobotRaconteur::RobotRaconteurNode::ScopedMonitorLock']]],
+  ['unqualifytypestringwithusing_1924',['UnqualifyTypeStringWithUsing',['../class_robot_raconteur_1_1_type_definition.html#affbb1258344a1dd0d8ed3d5e82995e65',1,'RobotRaconteur::TypeDefinition']]],
+  ['unregisterservicetype_1925',['UnregisterServiceType',['../class_robot_raconteur_1_1_robot_raconteur_node.html#aa024d6ce47e6c1cae050df28e6924ca4',1,'RobotRaconteur::RobotRaconteurNode']]],
+  ['updatedetectednodes_1926',['UpdateDetectedNodes',['../class_robot_raconteur_1_1_robot_raconteur_node.html#a1b5c9142ccb18ad1f55937c9d63ce743',1,'RobotRaconteur::RobotRaconteurNode']]],
+  ['updatelastaccess_1927',['UpdateLastAccess',['../class_robot_raconteur_1_1_authenticated_user.html#a5c4237d1827a2c9e7cc2c397ed176abf',1,'RobotRaconteur::AuthenticatedUser']]],
+  ['usingdefinition_1928',['UsingDefinition',['../class_robot_raconteur_1_1_using_definition.html#aa77236cdd3fa3505c39a9efa40586c4c',1,'RobotRaconteur::UsingDefinition']]]
 ];

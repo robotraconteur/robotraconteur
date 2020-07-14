@@ -65,12 +65,50 @@ $(function() {
 </div>
 </div><!-- top -->
 <div class="header">
+  <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#typedef-members">Typedefs</a>  </div>
   <div class="headertitle">
 <div class="title">Security.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
 <p><a href="_security_8h_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_service_security_policy.html">RobotRaconteur::ServiceSecurityPolicy</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Security policy for Robot Raconteur service.  <a href="class_robot_raconteur_1_1_service_security_policy.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_authenticated_user.html">RobotRaconteur::AuthenticatedUser</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class representing an authenticated user.  <a href="class_robot_raconteur_1_1_authenticated_user.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_user_authenticator.html">RobotRaconteur::UserAuthenticator</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base class for user authenticators.  <a href="class_robot_raconteur_1_1_user_authenticator.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_password_file_user_authenticator.html">RobotRaconteur::PasswordFileUserAuthenticator</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simple authenticator using a list of username, password hash, and privileges stored in a file or string.  <a href="class_robot_raconteur_1_1_password_file_user_authenticator.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a73099863143fd391c09a152d111ed49a"><td class="memItemLeft" align="right" valign="top"><a id="a73099863143fd391c09a152d111ed49a"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_security_8h.html#a73099863143fd391c09a152d111ed49a">RobotRaconteur::ServiceSecurityPolicyPtr</a> = boost::shared_ptr&lt; ServiceSecurityPolicy &gt;</td></tr>
+<tr class="memdesc:a73099863143fd391c09a152d111ed49a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience alias for <a class="el" href="class_robot_raconteur_1_1_service_security_policy.html" title="Security policy for Robot Raconteur service.">ServiceSecurityPolicy</a> shared_ptr. <br /></td></tr>
+<tr class="separator:a73099863143fd391c09a152d111ed49a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf380d56046710dd493520d3410c65c9"><td class="memItemLeft" align="right" valign="top"><a id="aaf380d56046710dd493520d3410c65c9"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_security_8h.html#aaf380d56046710dd493520d3410c65c9">RobotRaconteur::AuthenticatedUserPtr</a> = boost::shared_ptr&lt; AuthenticatedUser &gt;</td></tr>
+<tr class="memdesc:aaf380d56046710dd493520d3410c65c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience alias for <a class="el" href="class_robot_raconteur_1_1_authenticated_user.html" title="Class representing an authenticated user.">AuthenticatedUser</a> shared_ptr. <br /></td></tr>
+<tr class="separator:aaf380d56046710dd493520d3410c65c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:addefcdc92a1e5799a4b8ad43c141bd50"><td class="memItemLeft" align="right" valign="top"><a id="addefcdc92a1e5799a4b8ad43c141bd50"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_security_8h.html#addefcdc92a1e5799a4b8ad43c141bd50">RobotRaconteur::UserAuthenticatorPtr</a> = boost::shared_ptr&lt; UserAuthenticator &gt;</td></tr>
+<tr class="memdesc:addefcdc92a1e5799a4b8ad43c141bd50"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience alias for <a class="el" href="class_robot_raconteur_1_1_user_authenticator.html" title="Base class for user authenticators.">UserAuthenticator</a> shared_ptr. <br /></td></tr>
+<tr class="separator:addefcdc92a1e5799a4b8ad43c141bd50"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c55c68568e72caba982997bc6b1def5"><td class="memItemLeft" align="right" valign="top"><a id="a8c55c68568e72caba982997bc6b1def5"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_security_8h.html#a8c55c68568e72caba982997bc6b1def5">RobotRaconteur::PasswordFileUserAuthenticatorPtr</a> = boost::shared_ptr&lt; PasswordFileUserAuthenticator &gt;</td></tr>
+<tr class="memdesc:a8c55c68568e72caba982997bc6b1def5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience alias for <a class="el" href="class_robot_raconteur_1_1_password_file_user_authenticator.html" title="Simple authenticator using a list of username, password hash, and privileges stored in a file or stri...">PasswordFileUserAuthenticator</a> shared_ptr. <br /></td></tr>
+<tr class="separator:a8c55c68568e72caba982997bc6b1def5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><dl class="section author"><dt>Author</dt><dd>Dr. John Wason</dd></dl>
 <dl class="section copyright"><dt>Copyright</dt><dd>Copyright 2011-2020 Wason Technology, LLC</dd></dl>

@@ -297,7 +297,7 @@ $(function() {
 <div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160; </div>
 <div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;            <span class="keywordflow">if</span> (handled) <span class="keywordflow">return</span>;</div>
 <div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160; </div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;            <span class="keywordflow">if</span> (timeout!=RR_TIMEOUT_INFINITE)</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;            <span class="keywordflow">if</span> (timeout!=<a class="code" href="_robot_raconteur_constants_8h.html#a797a515f59232a62a9cc8b16df7ee78b">RR_TIMEOUT_INFINITE</a>)</div>
 <div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;            {</div>
 <div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;                timeout_timer_=async_timeout_wrapper_CreateTimer(n,boost::posix_time::milliseconds(timeout),boost::bind(&amp;async_timeout_wrapper&lt;T&gt;::timeout_handler,this-&gt;shared_from_this(),RR_BOOST_PLACEHOLDERS(_1)),<span class="keyword">true</span>);</div>
 <div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;                timeout_timer_-&gt;Start();</div>
@@ -570,6 +570,7 @@ $(function() {
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="a_auto_reset_event_8h_html"><div class="ttname"><a href="_auto_reset_event_8h.html">AutoResetEvent.h</a></div></div>
 <div class="ttc" id="a_error_8h_html"><div class="ttname"><a href="_error_8h.html">Error.h</a></div></div>
+<div class="ttc" id="a_robot_raconteur_constants_8h_html_a797a515f59232a62a9cc8b16df7ee78b"><div class="ttname"><a href="_robot_raconteur_constants_8h.html#a797a515f59232a62a9cc8b16df7ee78b">RR_TIMEOUT_INFINITE</a></div><div class="ttdeci">#define RR_TIMEOUT_INFINITE</div><div class="ttdoc">Disable timeout for asynchronous operations.</div><div class="ttdef"><b>Definition:</b> RobotRaconteurConstants.h:564</div></div>
 <div class="ttc" id="a_timer_8h_html"><div class="ttname"><a href="_timer_8h.html">Timer.h</a></div></div>
 <div class="ttc" id="a_data_types_8h_html"><div class="ttname"><a href="_data_types_8h.html">DataTypes.h</a></div></div>
 <div class="ttc" id="a_error_util_8h_html"><div class="ttname"><a href="_error_util_8h.html">ErrorUtil.h</a></div></div>

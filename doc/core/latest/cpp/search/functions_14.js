@@ -1,9 +1,14 @@
 var searchData=
 [
-  ['waitinvaluevalid_1066',['WaitInValueValid',['../class_robot_raconteur_1_1_wire_connection_base.html#a5e92b1a902a19ba6de5e15f915d8684f',1,'RobotRaconteur::WireConnectionBase']]],
-  ['waitone_1067',['WaitOne',['../class_robot_raconteur_1_1_auto_reset_event.html#abe947fda09c4a2bc53450fff80c1127c',1,'RobotRaconteur::AutoResetEvent::WaitOne()'],['../class_robot_raconteur_1_1_auto_reset_event.html#a75d2261d6cbcb4e40b8115c01e9f6f3a',1,'RobotRaconteur::AutoResetEvent::WaitOne(int32_t timeout)']]],
-  ['waitoutvaluevalid_1068',['WaitOutValueValid',['../class_robot_raconteur_1_1_wire_connection_base.html#a8c64d9cc53507ce556964f50bb30a60c',1,'RobotRaconteur::WireConnectionBase']]],
-  ['weak_5fsp_1069',['weak_sp',['../class_robot_raconteur_1_1_robot_raconteur_node.html#a2da0778099f48499324a76dbe098bb48',1,'RobotRaconteur::RobotRaconteurNode']]],
-  ['wirebroadcaster_1070',['WireBroadcaster',['../class_robot_raconteur_1_1_wire_broadcaster.html#a103c755565e67b7de11fc6255443b42b',1,'RobotRaconteur::WireBroadcaster']]],
-  ['writeonlymemberexception_1071',['WriteOnlyMemberException',['../class_robot_raconteur_1_1_write_only_member_exception.html#a3cf6fcdf425ba9e2c033473533ab614d',1,'RobotRaconteur::WriteOnlyMemberException']]]
+  ['valuenotsetexception_1929',['ValueNotSetException',['../class_robot_raconteur_1_1_value_not_set_exception.html#a44b0faaa4ff478d66254fdd7ecf62a4c',1,'RobotRaconteur::ValueNotSetException']]],
+  ['valuetoarray_1930',['ValueToArray',['../class_robot_raconteur_1_1_constant_definition.html#ace0e24b0c5e92f98021446ab77aca29a',1,'RobotRaconteur::ConstantDefinition']]],
+  ['valuetoscalar_1931',['ValueToScalar',['../class_robot_raconteur_1_1_constant_definition.html#abf83ba1f6213157695ed8ac593c99d1a',1,'RobotRaconteur::ConstantDefinition']]],
+  ['valuetostring_1932',['ValueToString',['../class_robot_raconteur_1_1_constant_definition.html#a59ffed717a405c233db6ea95918a4bbe',1,'RobotRaconteur::ConstantDefinition']]],
+  ['valuetostructfields_1933',['ValueToStructFields',['../class_robot_raconteur_1_1_constant_definition.html#a825d6cc768043347390bd4a5b64844b5',1,'RobotRaconteur::ConstantDefinition']]],
+  ['vectortorrarray_1934',['VectorToRRArray',['../_data_types_8h.html#a78ce9fc7187ec40a9f851acddbdcc825',1,'RobotRaconteur']]],
+  ['verifyservicedefinitions_1935',['VerifyServiceDefinitions',['../_service_definition_8h.html#a78d80e8a73c0cfe713105e39352fa4e2',1,'RobotRaconteur::VerifyServiceDefinitions(std::vector&lt; boost::shared_ptr&lt; ServiceDefinition &gt; &gt; def, std::vector&lt; ServiceDefinitionParseException &gt; &amp;warnings)'],['../_service_definition_8h.html#a178d9a619e5947b91b7b13aadbff5a12',1,'RobotRaconteur::VerifyServiceDefinitions(std::vector&lt; boost::shared_ptr&lt; ServiceDefinition &gt; &gt; def)']]],
+  ['verifytypeandvalue_1936',['VerifyTypeAndValue',['../class_robot_raconteur_1_1_constant_definition.html#a6b3f2bcfc385bb2ac94c5f2b11c46289',1,'RobotRaconteur::ConstantDefinition']]],
+  ['verifyvalue_1937',['VerifyValue',['../class_robot_raconteur_1_1_constant_definition.html#a2f8b863521407d9f455f01ae89d4ec21',1,'RobotRaconteur::ConstantDefinition']]],
+  ['verifyvalues_1938',['VerifyValues',['../class_robot_raconteur_1_1_enum_definition.html#aca02bd99bfece98aef024cf3a3220c45',1,'RobotRaconteur::EnumDefinition']]],
+  ['void_5fptr_1939',['void_ptr',['../class_robot_raconteur_1_1_r_r_base_array.html#abfe2dbc5f701392e0861e600524fb9a6',1,'RobotRaconteur::RRBaseArray::void_ptr()'],['../class_robot_raconteur_1_1_r_r_named_array.html#ad58194a01ca1f9e50454eb3bea99dbc3',1,'RobotRaconteur::RRNamedArray::void_ptr()']]]
 ];

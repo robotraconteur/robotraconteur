@@ -90,19 +90,19 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a145f0efa38bff8345cd815f2ae4a3c5a"><td class="memItemLeft" align="right" valign="top">virtual Return&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_sync_generator.html#a145f0efa38bff8345cd815f2ae4a3c5a">Next</a> (const Param &amp;v)=0</td></tr>
 <tr class="memdesc:a145f0efa38bff8345cd815f2ae4a3c5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance the generator.  <a href="class_robot_raconteur_1_1_sync_generator.html#a145f0efa38bff8345cd815f2ae4a3c5a">More...</a><br /></td></tr>
 <tr class="separator:a145f0efa38bff8345cd815f2ae4a3c5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac41b4b3a304f1599df384a9c8b10d14b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_sync_generator.html#ac41b4b3a304f1599df384a9c8b10d14b">AsyncNext</a> (const Param &amp;v, boost::function&lt; void(const Return, boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_robot_raconteur_exception.html">RobotRaconteurException</a> &gt; err)&gt; handler, int32_t timeout=RR_TIMEOUT_INFINITE)</td></tr>
+<tr class="memitem:ac41b4b3a304f1599df384a9c8b10d14b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_sync_generator.html#ac41b4b3a304f1599df384a9c8b10d14b">AsyncNext</a> (const Param &amp;v, boost::function&lt; void(const Return, boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_robot_raconteur_exception.html">RobotRaconteurException</a> &gt; err)&gt; handler, int32_t timeout=<a class="el" href="_robot_raconteur_constants_8h.html#a797a515f59232a62a9cc8b16df7ee78b">RR_TIMEOUT_INFINITE</a>)</td></tr>
 <tr class="memdesc:ac41b4b3a304f1599df384a9c8b10d14b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asynchronously advance the generator.  <a href="class_robot_raconteur_1_1_sync_generator.html#ac41b4b3a304f1599df384a9c8b10d14b">More...</a><br /></td></tr>
 <tr class="separator:ac41b4b3a304f1599df384a9c8b10d14b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5e95d36c2540fd177e25f17d6504b22c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_sync_generator.html#a5e95d36c2540fd177e25f17d6504b22c">Abort</a> ()=0</td></tr>
 <tr class="memdesc:a5e95d36c2540fd177e25f17d6504b22c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Abort the generator.  <a href="class_robot_raconteur_1_1_sync_generator.html#a5e95d36c2540fd177e25f17d6504b22c">More...</a><br /></td></tr>
 <tr class="separator:a5e95d36c2540fd177e25f17d6504b22c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af748f0111c97cc8d14bb17da918fc0d6"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_sync_generator.html#af748f0111c97cc8d14bb17da918fc0d6">AsyncAbort</a> (boost::function&lt; void(boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_robot_raconteur_exception.html">RobotRaconteurException</a> &gt; err)&gt; handler, int32_t timeout=RR_TIMEOUT_INFINITE)</td></tr>
+<tr class="memitem:af748f0111c97cc8d14bb17da918fc0d6"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_sync_generator.html#af748f0111c97cc8d14bb17da918fc0d6">AsyncAbort</a> (boost::function&lt; void(boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_robot_raconteur_exception.html">RobotRaconteurException</a> &gt; err)&gt; handler, int32_t timeout=<a class="el" href="_robot_raconteur_constants_8h.html#a797a515f59232a62a9cc8b16df7ee78b">RR_TIMEOUT_INFINITE</a>)</td></tr>
 <tr class="memdesc:af748f0111c97cc8d14bb17da918fc0d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asynchronously abort the generator.  <a href="class_robot_raconteur_1_1_sync_generator.html#af748f0111c97cc8d14bb17da918fc0d6">More...</a><br /></td></tr>
 <tr class="separator:af748f0111c97cc8d14bb17da918fc0d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acca6765876b321610996316bbd98377b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_sync_generator.html#acca6765876b321610996316bbd98377b">Close</a> ()=0</td></tr>
 <tr class="memdesc:acca6765876b321610996316bbd98377b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close the generator.  <a href="class_robot_raconteur_1_1_sync_generator.html#acca6765876b321610996316bbd98377b">More...</a><br /></td></tr>
 <tr class="separator:acca6765876b321610996316bbd98377b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0df556ac4774a22e0f284ad3cf7d47b9"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_sync_generator.html#a0df556ac4774a22e0f284ad3cf7d47b9">AsyncClose</a> (boost::function&lt; void(boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_robot_raconteur_exception.html">RobotRaconteurException</a> &gt; err)&gt; handler, int32_t timeout=RR_TIMEOUT_INFINITE)</td></tr>
+<tr class="memitem:a0df556ac4774a22e0f284ad3cf7d47b9"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_sync_generator.html#a0df556ac4774a22e0f284ad3cf7d47b9">AsyncClose</a> (boost::function&lt; void(boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_robot_raconteur_exception.html">RobotRaconteurException</a> &gt; err)&gt; handler, int32_t timeout=<a class="el" href="_robot_raconteur_constants_8h.html#a797a515f59232a62a9cc8b16df7ee78b">RR_TIMEOUT_INFINITE</a>)</td></tr>
 <tr class="memdesc:a0df556ac4774a22e0f284ad3cf7d47b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asynchronously closes the generator.  <a href="class_robot_raconteur_1_1_sync_generator.html#a0df556ac4774a22e0f284ad3cf7d47b9">More...</a><br /></td></tr>
 <tr class="separator:a0df556ac4774a22e0f284ad3cf7d47b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -168,7 +168,7 @@ template&lt;typename Return , typename Param &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int32_t&#160;</td>
-          <td class="paramname"><em>timeout</em> = <code>RR_TIMEOUT_INFINITE</code>&#160;</td>
+          <td class="paramname"><em>timeout</em> = <code><a class="el" href="_robot_raconteur_constants_8h.html#a797a515f59232a62a9cc8b16df7ee78b">RR_TIMEOUT_INFINITE</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -218,7 +218,7 @@ template&lt;typename Return , typename Param &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int32_t&#160;</td>
-          <td class="paramname"><em>timeout</em> = <code>RR_TIMEOUT_INFINITE</code>&#160;</td>
+          <td class="paramname"><em>timeout</em> = <code><a class="el" href="_robot_raconteur_constants_8h.html#a797a515f59232a62a9cc8b16df7ee78b">RR_TIMEOUT_INFINITE</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -274,7 +274,7 @@ template&lt;typename Return , typename Param &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int32_t&#160;</td>
-          <td class="paramname"><em>timeout</em> = <code>RR_TIMEOUT_INFINITE</code>&#160;</td>
+          <td class="paramname"><em>timeout</em> = <code><a class="el" href="_robot_raconteur_constants_8h.html#a797a515f59232a62a9cc8b16df7ee78b">RR_TIMEOUT_INFINITE</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>

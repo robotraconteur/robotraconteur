@@ -81,48 +81,55 @@ $(function() {
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keyword">class </span>ROBOTRACONTEUR_CORE_API PipeBroadcasterBase;</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">class </span>ROBOTRACONTEUR_CORE_API WireBroadcasterBase;</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">class </span>ROBOTRACONTEUR_CORE_API BroadcastDownsampler : <span class="keyword">public</span> RR_ENABLE_SHARED_FROM_THIS&lt;BroadcastDownsampler&gt;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    {</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        BroadcastDownsampler();</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <span class="keywordtype">void</span> Init(RR_SHARED_PTR&lt;ServerContext&gt; context, uint32_t default_downsample = 0);</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        uint32_t GetClientDownsample(uint32_t ep);</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="keywordtype">void</span> SetClientDownsample(uint32_t ep, uint32_t downsample);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <span class="keywordtype">void</span> BeginStep();</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="keywordtype">void</span> EndStep();</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="keywordtype">void</span> AddPipeBroadcaster(RR_SHARED_PTR&lt;PipeBroadcasterBase&gt; broadcaster);</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        <span class="keywordtype">void</span> AddWireBroadcaster(RR_SHARED_PTR&lt;WireBroadcasterBase&gt; broadcaster);</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        RR_WEAK_PTR&lt;ServerContext&gt; context;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        uint32_t default_downsample;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        uint64_t step_count;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        RR_UNORDERED_MAP&lt;uint32_t, uint32_t&gt; client_downsamples;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        boost::mutex this_lock;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">bool</span> wire_predicate(RR_WEAK_PTR&lt;BroadcastDownsampler&gt; this_, RR_SHARED_PTR&lt;WireBroadcasterBase&gt;&amp; wire, uint32_t ep);</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">bool</span> pipe_predicate(RR_WEAK_PTR&lt;BroadcastDownsampler&gt; this_, RR_SHARED_PTR&lt;PipeBroadcasterBase&gt;&amp; wire, uint32_t ep, uint32_t index);</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> server_event(RR_WEAK_PTR&lt;BroadcastDownsampler&gt; this_, RR_SHARED_PTR&lt;ServerContext&gt; ctx, ServerServiceListenerEventType evt, RR_SHARED_PTR&lt;void&gt; p);</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    };</div>
+<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="class_robot_raconteur_1_1_broadcast_downsampler.html">   63</a></span>&#160;    <span class="keyword">class </span>ROBOTRACONTEUR_CORE_API <a class="code" href="class_robot_raconteur_1_1_broadcast_downsampler.html">BroadcastDownsampler</a> : <span class="keyword">public</span> RR_ENABLE_SHARED_FROM_THIS&lt;BroadcastDownsampler&gt;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    {</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keyword">public</span>:</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keyword">class </span>ROBOTRACONTEUR_CORE_API BroadcastDownsamplerStep</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    {</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        RR_SHARED_PTR&lt;BroadcastDownsampler&gt;&amp; _downsampler;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        BroadcastDownsamplerStep(RR_SHARED_PTR&lt;BroadcastDownsampler&gt;&amp; downsampler);</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        ~BroadcastDownsamplerStep();</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    };</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;}</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <a class="code" href="class_robot_raconteur_1_1_broadcast_downsampler.html">BroadcastDownsampler</a>();</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="keywordtype">void</span> Init(RR_SHARED_PTR&lt;ServerContext&gt; context, uint32_t default_downsample = 0);</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        uint32_t GetClientDownsample(uint32_t ep);</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="keywordtype">void</span> SetClientDownsample(uint32_t ep, uint32_t downsample);</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        <span class="keywordtype">void</span> BeginStep();</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        <span class="keywordtype">void</span> EndStep();</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        <span class="keywordtype">void</span> AddPipeBroadcaster(RR_SHARED_PTR&lt;PipeBroadcasterBase&gt; broadcaster);</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        <span class="keywordtype">void</span> AddWireBroadcaster(RR_SHARED_PTR&lt;WireBroadcasterBase&gt; broadcaster);</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160; </div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    <span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160; </div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        RR_WEAK_PTR&lt;ServerContext&gt; context;</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160; </div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;        uint32_t default_downsample;</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;        uint64_t step_count;</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;        RR_UNORDERED_MAP&lt;uint32_t, uint32_t&gt; client_downsamples;</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160; </div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;        boost::mutex this_lock;</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160; </div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">bool</span> wire_predicate(RR_WEAK_PTR&lt;BroadcastDownsampler&gt; this_, RR_SHARED_PTR&lt;WireBroadcasterBase&gt;&amp; wire, uint32_t ep);</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">bool</span> pipe_predicate(RR_WEAK_PTR&lt;BroadcastDownsampler&gt; this_, RR_SHARED_PTR&lt;PipeBroadcasterBase&gt;&amp; wire, uint32_t ep, uint32_t index);</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160; </div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> server_event(RR_WEAK_PTR&lt;BroadcastDownsampler&gt; this_, RR_SHARED_PTR&lt;ServerContext&gt; ctx, <a class="code" href="_robot_raconteur_constants_8h.html#a5f7d7fbf7df0190e26a4697d265aafe8">ServerServiceListenerEventType</a> evt, RR_SHARED_PTR&lt;void&gt; p);</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    };</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160; </div>
+<div class="line"><a name="l00159"></a><span class="lineno"><a class="line" href="class_robot_raconteur_1_1_broadcast_downsampler_step.html">  159</a></span>&#160;    <span class="keyword">class </span>ROBOTRACONTEUR_CORE_API <a class="code" href="class_robot_raconteur_1_1_broadcast_downsampler_step.html">BroadcastDownsamplerStep</a></div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    {</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        RR_SHARED_PTR&lt;BroadcastDownsampler&gt;&amp; _downsampler;</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;        <a class="code" href="class_robot_raconteur_1_1_broadcast_downsampler_step.html">BroadcastDownsamplerStep</a>(RR_SHARED_PTR&lt;BroadcastDownsampler&gt;&amp; downsampler);</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;        ~<a class="code" href="class_robot_raconteur_1_1_broadcast_downsampler_step.html">BroadcastDownsamplerStep</a>();</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    };</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="a_robot_raconteur_config_8h_html"><div class="ttname"><a href="_robot_raconteur_config_8h.html">RobotRaconteurConfig.h</a></div></div>
+<div class="ttc" id="aclass_robot_raconteur_1_1_broadcast_downsampler_html"><div class="ttname"><a href="class_robot_raconteur_1_1_broadcast_downsampler.html">RobotRaconteur::BroadcastDownsampler</a></div><div class="ttdoc">Downsampler to manage rate of packets sent to client.</div><div class="ttdef"><b>Definition:</b> BroadcastDownsampler.h:63</div></div>
+<div class="ttc" id="a_robot_raconteur_constants_8h_html_a5f7d7fbf7df0190e26a4697d265aafe8"><div class="ttname"><a href="_robot_raconteur_constants_8h.html#a5f7d7fbf7df0190e26a4697d265aafe8">RobotRaconteur::ServerServiceListenerEventType</a></div><div class="ttdeci">ServerServiceListenerEventType</div><div class="ttdoc">Enum of service listener events.</div><div class="ttdef"><b>Definition:</b> RobotRaconteurConstants.h:514</div></div>
+<div class="ttc" id="aclass_robot_raconteur_1_1_broadcast_downsampler_step_html"><div class="ttname"><a href="class_robot_raconteur_1_1_broadcast_downsampler_step.html">RobotRaconteur::BroadcastDownsamplerStep</a></div><div class="ttdoc">Class for automatic broadcast downsampler stepping.</div><div class="ttdef"><b>Definition:</b> BroadcastDownsampler.h:159</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

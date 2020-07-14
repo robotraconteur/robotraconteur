@@ -65,12 +65,471 @@ $(function() {
 </div>
 </div><!-- top -->
 <div class="header">
+  <div class="summary">
+<a href="#define-members">Macros</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">RobotRaconteurConstants.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
 <p><a href="_robot_raconteur_constants_8h_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a797a515f59232a62a9cc8b16df7ee78b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#a797a515f59232a62a9cc8b16df7ee78b">RR_TIMEOUT_INFINITE</a>&#160;&#160;&#160;-1</td></tr>
+<tr class="memdesc:a797a515f59232a62a9cc8b16df7ee78b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disable timeout for asynchronous operations.  <a href="_robot_raconteur_constants_8h.html#a797a515f59232a62a9cc8b16df7ee78b">More...</a><br /></td></tr>
+<tr class="separator:a797a515f59232a62a9cc8b16df7ee78b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46255001b6812bd6e33ccc8b219ea37a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#a46255001b6812bd6e33ccc8b219ea37a">RR_VALUE_LIFESPAN_INFINITE</a>&#160;&#160;&#160;-1</td></tr>
+<tr class="memdesc:a46255001b6812bd6e33ccc8b219ea37a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set wire values to have infinite lifespan and will not expire.  <a href="_robot_raconteur_constants_8h.html#a46255001b6812bd6e33ccc8b219ea37a">More...</a><br /></td></tr>
+<tr class="separator:a46255001b6812bd6e33ccc8b219ea37a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:aa5a73ee3a5f54e464e266a44ba90afdc"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#aa5a73ee3a5f54e464e266a44ba90afdc">RobotRaconteur::DataTypes</a> { <br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#aa5a73ee3a5f54e464e266a44ba90afdcab0aabacf97257a595c62c836821c48a2">RobotRaconteur::DataTypes_void_t</a> = 0, 
+<a class="el" href="_robot_raconteur_constants_8h.html#aa5a73ee3a5f54e464e266a44ba90afdca632eee216005871a6cbed5df512c9c64">RobotRaconteur::DataTypes_double_t</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#aa5a73ee3a5f54e464e266a44ba90afdca08c4d8af6855aa79d8cac959a96bba3e">RobotRaconteur::DataTypes_single_t</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#aa5a73ee3a5f54e464e266a44ba90afdca440a57563b4a7012d39421ee315fb4ba">RobotRaconteur::DataTypes_int8_t</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#aa5a73ee3a5f54e464e266a44ba90afdca0b5fb4fcc689d7de7c983310679a8014">RobotRaconteur::DataTypes_uint8_t</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#aa5a73ee3a5f54e464e266a44ba90afdca1f877c848d042e38215b2d0a90356c23">RobotRaconteur::DataTypes_int16_t</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#aa5a73ee3a5f54e464e266a44ba90afdca3f69d8a902ea25df47f07d76104cc91b">RobotRaconteur::DataTypes_uint16_t</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#aa5a73ee3a5f54e464e266a44ba90afdcaa59b09b0ff4fe42c7fe0289c176cdd5d">RobotRaconteur::DataTypes_int32_t</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#aa5a73ee3a5f54e464e266a44ba90afdca23b2242819bde3d91cae1dace5dacc97">RobotRaconteur::DataTypes_uint32_t</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#aa5a73ee3a5f54e464e266a44ba90afdca6b358c8d5fdf74062d0e5f273893f061">RobotRaconteur::DataTypes_int64_t</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#aa5a73ee3a5f54e464e266a44ba90afdca563a5e051a334e97805f1f7021894b3f">RobotRaconteur::DataTypes_uint64_t</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#aa5a73ee3a5f54e464e266a44ba90afdca9c2f1cbaec6af3e1b64ad77017d5ca35">RobotRaconteur::DataTypes_string_t</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#aa5a73ee3a5f54e464e266a44ba90afdcabfb9b4e7370320b9fff4880e0bab374b">RobotRaconteur::DataTypes_cdouble_t</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#aa5a73ee3a5f54e464e266a44ba90afdcae5e5f4999f6c5f6e8e8775cbe8704946">RobotRaconteur::DataTypes_csingle_t</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#aa5a73ee3a5f54e464e266a44ba90afdcabe7fed20f04b02d50f6c38fd31cd579e">RobotRaconteur::DataTypes_bool_t</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#aa5a73ee3a5f54e464e266a44ba90afdca24876217b32a31e3a3f41b8e364ca19e">RobotRaconteur::DataTypes_structure_t</a> = 101, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#aa5a73ee3a5f54e464e266a44ba90afdca0ed50d6b1622e3fe1616e83326217e10">RobotRaconteur::DataTypes_vector_t</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#aa5a73ee3a5f54e464e266a44ba90afdca7b7b473f1b923a592fae36e346ad1199">RobotRaconteur::DataTypes_dictionary_t</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#aa5a73ee3a5f54e464e266a44ba90afdcab2e0a0e666a9b7f7de8949a94f3f565a">RobotRaconteur::DataTypes_object_t</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#aa5a73ee3a5f54e464e266a44ba90afdcace2c8025259efaa0015dc40f42813e84">RobotRaconteur::DataTypes_varvalue_t</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#aa5a73ee3a5f54e464e266a44ba90afdca1f69b6f858c7a961bcd5d4d340f8cd04">RobotRaconteur::DataTypes_varobject_t</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#aa5a73ee3a5f54e464e266a44ba90afdcab88ffe172d140b1bff9a4eea8f053115">RobotRaconteur::DataTypes_list_t</a> = 108, 
+<a class="el" href="_robot_raconteur_constants_8h.html#aa5a73ee3a5f54e464e266a44ba90afdcadcef2fb14c7d2fc2531633030bffafa4">RobotRaconteur::DataTypes_pod_t</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#aa5a73ee3a5f54e464e266a44ba90afdca046b043ea361a0db6dee88bdd8546da3">RobotRaconteur::DataTypes_pod_array_t</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#aa5a73ee3a5f54e464e266a44ba90afdcad6d9e9a671f86b28b9c279e2c8dfeffc">RobotRaconteur::DataTypes_pod_multidimarray_t</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#aa5a73ee3a5f54e464e266a44ba90afdcaee51bf6aae2969414a1578fb18c52419">RobotRaconteur::DataTypes_enum_t</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#aa5a73ee3a5f54e464e266a44ba90afdca4ee2ff6f8517a7f3b5936cd21fe66d20">RobotRaconteur::DataTypes_namedtype_t</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#aa5a73ee3a5f54e464e266a44ba90afdca49ca812927e349f9a2bec7e3b2490961">RobotRaconteur::DataTypes_namedarray_t</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#aa5a73ee3a5f54e464e266a44ba90afdcab073068a973f0fd2edab69c8a4b2c2f3">RobotRaconteur::DataTypes_namedarray_array_t</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#aa5a73ee3a5f54e464e266a44ba90afdca18060759b21305c6693d78b9ca258f64">RobotRaconteur::DataTypes_namedarray_multidimarray_t</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#aa5a73ee3a5f54e464e266a44ba90afdcad962519fbd6c7a3533cc43acbde3b073">RobotRaconteur::DataTypes_multidimarray_t</a>
+<br />
+ }</td></tr>
+<tr class="memdesc:aa5a73ee3a5f54e464e266a44ba90afdc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type codes for types supported by Robot Raconteur.  <a href="_robot_raconteur_constants_8h.html#aa5a73ee3a5f54e464e266a44ba90afdc">More...</a><br /></td></tr>
+<tr class="separator:aa5a73ee3a5f54e464e266a44ba90afdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad69bcbbe1fdcab23323d58cd8a700315"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#ad69bcbbe1fdcab23323d58cd8a700315">RobotRaconteur::DataTypes_ArrayTypes</a> { <a class="el" href="_robot_raconteur_constants_8h.html#ad69bcbbe1fdcab23323d58cd8a700315aa0b1b47df0d2ae75ed86de4f1e1952de">RobotRaconteur::DataTypes_ArrayTypes_none</a> = 0, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ad69bcbbe1fdcab23323d58cd8a700315a414fbd5b0c4bbe49c00bbc821636e62e">RobotRaconteur::DataTypes_ArrayTypes_array</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ad69bcbbe1fdcab23323d58cd8a700315a3e92f52c1d9ada16cc9ba6b0cba736d9">RobotRaconteur::DataTypes_ArrayTypes_multidimarray</a>
+ }</td></tr>
+<tr class="memdesc:ad69bcbbe1fdcab23323d58cd8a700315"><td class="mdescLeft">&#160;</td><td class="mdescRight">Array type enum for TypeDefinition parser class.  <a href="_robot_raconteur_constants_8h.html#ad69bcbbe1fdcab23323d58cd8a700315">More...</a><br /></td></tr>
+<tr class="separator:ad69bcbbe1fdcab23323d58cd8a700315"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a525d1abb254d0852f47dadaa01617aa3"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#a525d1abb254d0852f47dadaa01617aa3">RobotRaconteur::DataTypes_ContainerTypes</a> { <br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#a525d1abb254d0852f47dadaa01617aa3ad3642b4d4692058e3f63d662a2236de9">RobotRaconteur::DataTypes_ContainerTypes_none</a> = 0, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a525d1abb254d0852f47dadaa01617aa3a0491da8519d07034494ae63d53b426fb">RobotRaconteur::DataTypes_ContainerTypes_list</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a525d1abb254d0852f47dadaa01617aa3ad5c6b305f8c6cd290d0aecbd753213b6">RobotRaconteur::DataTypes_ContainerTypes_map_int32</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a525d1abb254d0852f47dadaa01617aa3ae5fa66dea579b2d049991e64283a5587">RobotRaconteur::DataTypes_ContainerTypes_map_string</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#a525d1abb254d0852f47dadaa01617aa3a80c9c0235515f65b7c67f7d5b5c895ec">RobotRaconteur::DataTypes_ContainerTypes_generator</a>
+<br />
+ }</td></tr>
+<tr class="memdesc:a525d1abb254d0852f47dadaa01617aa3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Container type enum for TypeDefinition parser class.  <a href="_robot_raconteur_constants_8h.html#a525d1abb254d0852f47dadaa01617aa3">More...</a><br /></td></tr>
+<tr class="separator:a525d1abb254d0852f47dadaa01617aa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab2c8e11be4969d7cfdea461917ec9433"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433">RobotRaconteur::MessageEntryType</a> { <br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a1b73e0e7317c6eb33fe2a8ad1fde98df">RobotRaconteur::MessageEntryType_Null</a> = 0, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a1cb32d3d34f5ed35ce10f2b545652652">RobotRaconteur::MessageEntryType_StreamOp</a> = 1, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a8c6da0d728a594ef56020bcf4b86137f">RobotRaconteur::MessageEntryType_StreamOpRet</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433ac7a4ef9af780b57f9e63701745fa4342">RobotRaconteur::MessageEntryType_StreamCheckCapability</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a5236afd6a6f78178a2ce549ffe5eb583">RobotRaconteur::MessageEntryType_StreamCheckCapabilityRet</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a9a1999683095c9167ae2b1b448bf211b">RobotRaconteur::MessageEntryType_GetServiceDesc</a> = 101, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433afa62d2fc478476ead018b36ebad34120">RobotRaconteur::MessageEntryType_GetServiceDescRet</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a48597ff53a3b7909807a8e8e282edafa">RobotRaconteur::MessageEntryType_ObjectTypeName</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a912bc9c06166de7db612f94e68ecc75a">RobotRaconteur::MessageEntryType_ObjectTypeNameRet</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a29cbea38049c43bc6eecc6e342635a50">RobotRaconteur::MessageEntryType_ServiceClosed</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433abea503199438afca89dadad82f0d6184">RobotRaconteur::MessageEntryType_ServiceClosedRet</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a9513c614daf9bd590870fe32575aa702">RobotRaconteur::MessageEntryType_ConnectClient</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a8fac55b51eb4fd9a23365a9ab3169be4">RobotRaconteur::MessageEntryType_ConnectClientRet</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433afa104986763ccce8cd15a65c66ac5a1a">RobotRaconteur::MessageEntryType_DisconnectClient</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a357c75bcf707c15a266de347f17632a2">RobotRaconteur::MessageEntryType_DisconnectClientRet</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a88b822e88596474466bf0f3c6f22e01b">RobotRaconteur::MessageEntryType_ConnectionTest</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a35ec9af81d13e7a8f9d3a9964d94c181">RobotRaconteur::MessageEntryType_ConnectionTestRet</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a69e487f13a03161bb4b8ab6a6f625d90">RobotRaconteur::MessageEntryType_GetNodeInfo</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a07d98d1325ec5716920e93e8eba462c5">RobotRaconteur::MessageEntryType_GetNodeInfoRet</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a440ac8fa11cd9bf65676875df59845b6">RobotRaconteur::MessageEntryType_ReconnectClient</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433ab5c70843293600bc1822e00ed238eece">RobotRaconteur::MessageEntryType_ReconnectClientRet</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433aab5bb9d5831c57a5f78cc08d17cff993">RobotRaconteur::MessageEntryType_NodeCheckCapability</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433ad3c66e86ecf49f4b7dd2a45ce0cb55bb">RobotRaconteur::MessageEntryType_NodeCheckCapabilityRet</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433ac7561317d538459a276d650b401332ed">RobotRaconteur::MessageEntryType_GetServiceAttributes</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a0a5db128d457e39c8f71bf099b5c514f">RobotRaconteur::MessageEntryType_GetServiceAttributesRet</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a13c7aa29454d018542a62f4444e3525d">RobotRaconteur::MessageEntryType_ConnectClientCombined</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a63fb0486ec03395b3daa7ac55a8ff774">RobotRaconteur::MessageEntryType_ConnectClientCombinedRet</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a6924b6778517509c65700daaec4e419c">RobotRaconteur::MessageEntryType_EndpointCheckCapability</a> = 501, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433ac134760c0d56d7f8ba256ac1fec8f03a">RobotRaconteur::MessageEntryType_EndpointCheckCapabilityRet</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a8ec3681f5b4aecefc2e9ef387da9e03d">RobotRaconteur::MessageEntryType_ServiceCheckCapabilityReq</a> = 1101, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433adf6f6aa76ccad73186fb925366eb31f2">RobotRaconteur::MessageEntryType_ServiceCheckCapabilityRet</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433af985c42e4252b453fe87ff90d85067b5">RobotRaconteur::MessageEntryType_ClientKeepAliveReq</a> = 1105, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433abba83926727a8b3a1fb5f56697de7874">RobotRaconteur::MessageEntryType_ClientKeepAliveRet</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a1e65295382508c418cfbc16900746683">RobotRaconteur::MessageEntryType_ClientSessionOpReq</a> = 1107, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a8c322111c0a0e83325deae84934934b9">RobotRaconteur::MessageEntryType_ClientSessionOpRet</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a865e271ba121c7dffb260b4a372dc42e">RobotRaconteur::MessageEntryType_ServicePathReleasedReq</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433aec141e3e593909472856394c0730914c">RobotRaconteur::MessageEntryType_ServicePathReleasedRet</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433ab5df15d9e89f74828816aff732447fe3">RobotRaconteur::MessageEntryType_PropertyGetReq</a> = 1111, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a6a201b0da4d949c23513476863ba5498">RobotRaconteur::MessageEntryType_PropertyGetRes</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433afa26afe8ed2ca8c12df401df8824a7c4">RobotRaconteur::MessageEntryType_PropertySetReq</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a3a041da05d83e676e4d539e41b1c1855">RobotRaconteur::MessageEntryType_PropertySetRes</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433ad9ca2acbd8d47e8a6e9963e517e3e766">RobotRaconteur::MessageEntryType_FunctionCallReq</a> = 1121, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a2fe56e1d7115682e3a623ab3a4815286">RobotRaconteur::MessageEntryType_FunctionCallRes</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a4df4cfc88f31f66c5067530ac242e3ef">RobotRaconteur::MessageEntryType_GeneratorNextReq</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a480a943b1ead0de9262b09605ed55ee4">RobotRaconteur::MessageEntryType_GeneratorNextRes</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a56fc3b51b7f5b3e4448e2f0915d148f1">RobotRaconteur::MessageEntryType_EventReq</a> = 1131, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a75c0cdd7df5aae86de063129a1015554">RobotRaconteur::MessageEntryType_EventRes</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a3dfc3400a6d95c681cd8757e6c425d95">RobotRaconteur::MessageEntryType_PipePacket</a> = 1141, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433af42bdc81ce2a10f9edeee10583bfc959">RobotRaconteur::MessageEntryType_PipePacketRet</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a374c677d97775f9c65b4d228091084b2">RobotRaconteur::MessageEntryType_PipeConnectReq</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a7e4b6f551cca5ce5ba6ab93ab62d774b">RobotRaconteur::MessageEntryType_PipeConnectRet</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a0aba26fbaab51d5b04ea9e41f2900ccf">RobotRaconteur::MessageEntryType_PipeDisconnectReq</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a754811e2b3ef351123cf157f9f2f2ef7">RobotRaconteur::MessageEntryType_PipeDisconnectRet</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a2af74ba4b746a4055a1a78d0dc0f54ff">RobotRaconteur::MessageEntryType_PipeClosed</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a9a3bc1678ed741bb0f65e141dd3ec080">RobotRaconteur::MessageEntryType_PipeClosedRet</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a5bd133a230ee18575ab443850673066c">RobotRaconteur::MessageEntryType_CallbackCallReq</a> = 1151, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433af0dfa6577f1ebaa0164c12f64237b4dc">RobotRaconteur::MessageEntryType_CallbackCallRet</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a950fa3dbf40a9eb937703d5757819952">RobotRaconteur::MessageEntryType_WirePacket</a> = 1161, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a0cadb1aa3f73bbba32a62d73be12bcdf">RobotRaconteur::MessageEntryType_WirePacketRet</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a2b48cab7d937a2d344a03a1dba6b1074">RobotRaconteur::MessageEntryType_WireConnectReq</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a77c874e520245c29ebdb0d6643ee2e96">RobotRaconteur::MessageEntryType_WireConnectRet</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a5a32ad53387f4e2ae436cfdd3c86c26f">RobotRaconteur::MessageEntryType_WireDisconnectReq</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a22476f0908f7f15d7460d29edfaa4200">RobotRaconteur::MessageEntryType_WireDisconnectRet</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433ae44954252ebffdbd87e4284c0d3f1937">RobotRaconteur::MessageEntryType_WireClosed</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a3090eb37be2f38b4440c65cdcb3285d9">RobotRaconteur::MessageEntryType_WireClosedRet</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433ae1eb667981e2d87ea7929a963eb2752f">RobotRaconteur::MessageEntryType_MemoryRead</a> = 1171, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433affb555ead97b6db43381e83be51ee58f">RobotRaconteur::MessageEntryType_MemoryReadRet</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a0c80095234215f8f35bb07761c740000">RobotRaconteur::MessageEntryType_MemoryWrite</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a3c6969a59faea9baeb09d8e3f816f9b7">RobotRaconteur::MessageEntryType_MemoryWriteRet</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433adfa48a6f116c12a62249dc0171cc37a0">RobotRaconteur::MessageEntryType_MemoryGetParam</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a720ed79d08bbe0c7c8e7fb61f73b5ccf">RobotRaconteur::MessageEntryType_MemoryGetParamRet</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a717c6fef61bfe1d7a4c8643c0a7ad6f8">RobotRaconteur::MessageEntryType_WirePeekInValueReq</a> =1181, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a6b7bb10cd1fb129da5f8f5ce22dea6ad">RobotRaconteur::MessageEntryType_WirePeekInValueRet</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433abb7be819d63c6716d832426690dbe5e2">RobotRaconteur::MessageEntryType_WirePeekOutValueReq</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a4f8fd23267878b6b2c3fafbdaf06a0c5">RobotRaconteur::MessageEntryType_WirePeekOutValueRet</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433a30ea4c2e69659ad174d82a77a6150e73">RobotRaconteur::MessageEntryType_WirePokeOutValueReq</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433aa0b01d47da96339d905baff1f902bfc3">RobotRaconteur::MessageEntryType_WirePokeOutValueRet</a>
+<br />
+ }</td></tr>
+<tr class="memdesc:ab2c8e11be4969d7cfdea461917ec9433"><td class="mdescLeft">&#160;</td><td class="mdescRight">Message entry type codes.  <a href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433">More...</a><br /></td></tr>
+<tr class="separator:ab2c8e11be4969d7cfdea461917ec9433"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38809bdfeadca180a2fd9237788be95b"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95b">RobotRaconteur::MessageErrorType</a> { <br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95ba4392ddacbc0daae4f3ef2bb2614d6fb5">RobotRaconteur::MessageErrorType_None</a> = 0, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95badcd5b5b5e0e54629b810906c553c7078">RobotRaconteur::MessageErrorType_ConnectionError</a> = 1, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95ba712a103c1649f65db42033ad19f25b8d">RobotRaconteur::MessageErrorType_ProtocolError</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95baf312b772f9d5c0787ab4d778994262d6">RobotRaconteur::MessageErrorType_ServiceNotFound</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95baf13aed865619119b5d5e1da86d2ac4e4">RobotRaconteur::MessageErrorType_ObjectNotFound</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95ba1f516a6f5e992e2ac8bc156bae45284a">RobotRaconteur::MessageErrorType_InvalidEndpoint</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95ba802055b7a47e4128854777373b22265e">RobotRaconteur::MessageErrorType_EndpointCommunicationFatalError</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95bafe03cad9cea0ec4ce780d58bfa55cca4">RobotRaconteur::MessageErrorType_NodeNotFound</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95bacd5217b8c3d7550d5586774c20ca10ae">RobotRaconteur::MessageErrorType_ServiceError</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95baf22bae0cfa84af3b0d85f85a9046a28c">RobotRaconteur::MessageErrorType_MemberNotFound</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95ba2a13c799989b88df99a4183171ef5bca">RobotRaconteur::MessageErrorType_MemberFormatMismatch</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95ba9c6695bd404205f60000c09a4bf11ab0">RobotRaconteur::MessageErrorType_DataTypeMismatch</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95baaa1227822e9a6160ace69ac7f324c4cc">RobotRaconteur::MessageErrorType_DataTypeError</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95ba5cfa10901b3b151a0d3d34e018e954a5">RobotRaconteur::MessageErrorType_DataSerializationError</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95bafa25ba0835887ab719bfcf5f01629d22">RobotRaconteur::MessageErrorType_MessageEntryNotFound</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95ba224f9871f14220fac745ea7d51b9d1d8">RobotRaconteur::MessageErrorType_MessageElementNotFound</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95ba9fb8d12350899596d3148be3fd6d9a44">RobotRaconteur::MessageErrorType_UnknownError</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95ba9299353e7305d2144cc4d218f99e7ca1">RobotRaconteur::MessageErrorType_InvalidOperation</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95ba4e86095301caa3f2217bc42da31a6cab">RobotRaconteur::MessageErrorType_InvalidArgument</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95ba2899b17ccadcc4422090e0be68cd5a6b">RobotRaconteur::MessageErrorType_OperationFailed</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95ba330fe0f18463208dc3ff8952db2e30cd">RobotRaconteur::MessageErrorType_NullValue</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95ba115c60195032cecb5493f7d161f3fcfb">RobotRaconteur::MessageErrorType_InternalError</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95ba3090f5d95ffdcb7981e5995d92b90c9f">RobotRaconteur::MessageErrorType_SystemResourcePermissionDenied</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95ba6ec8e2d312883eee16cb2343188be5f4">RobotRaconteur::MessageErrorType_OutOfSystemResource</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95baf17ab42c4646627dec4a2263fd54b367">RobotRaconteur::MessageErrorType_SystemResourceError</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95bac7e3328882de45172e7ac3d486cd0737">RobotRaconteur::MessageErrorType_ResourceNotFound</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95ba1dd6eac5c265ce7a06b7f1a8c693b1d1">RobotRaconteur::MessageErrorType_IOError</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95baf6012b95e3cd78b17b53d2e7d48384d8">RobotRaconteur::MessageErrorType_BufferLimitViolation</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95bafd553858cb226fe05614a7e7cd2a11e8">RobotRaconteur::MessageErrorType_ServiceDefinitionError</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95baff5ccc6be71631cb39a633f81c35db12">RobotRaconteur::MessageErrorType_OutOfRange</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95bad7e1b0ac81b6b94b63193f810ef83722">RobotRaconteur::MessageErrorType_KeyNotFound</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95ba5dc2dc0ca0ba548732530f8309553cc0">RobotRaconteur::MessageErrorType_InvalidConfiguration</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95ba89ca883d7383ed8eca1071ab397967dc">RobotRaconteur::MessageErrorType_InvalidState</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95ba93b777f71eabd511ff141c32bba5bb80">RobotRaconteur::MessageErrorType_RemoteError</a> = 100, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95ba16c9eaf305960e77e4450be11096a96e">RobotRaconteur::MessageErrorType_RequestTimeout</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95baffaf0a2d6bf97920fbc31ec343050f69">RobotRaconteur::MessageErrorType_ReadOnlyMember</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95badb1c71ca2a02da0cc04378c34ad1e3ab">RobotRaconteur::MessageErrorType_WriteOnlyMember</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95ba840b07bd2f55e73bdefd5695ffa1a5f8">RobotRaconteur::MessageErrorType_NotImplementedError</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95ba607b8fc937fe994f9cb0a1c4e7bb478b">RobotRaconteur::MessageErrorType_MemberBusy</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95ba5a2dd8563003dc64e86f9a43e2bb9fc3">RobotRaconteur::MessageErrorType_ValueNotSet</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95ba6f87b8d2c540dbbceb35bcbc23185e0c">RobotRaconteur::MessageErrorType_AbortOperation</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95ba7c1b229f45e0dd86eeefde34f6adf59c">RobotRaconteur::MessageErrorType_OperationAborted</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95bac7b0d3f7fb7d473510495821e35ffd62">RobotRaconteur::MessageErrorType_StopIteration</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95bae5aff51d399a8165c5dbeb44d86ac5bb">RobotRaconteur::MessageErrorType_OperationTimeout</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95ba7c4718887c56e0d0076e29a8b3cae24b">RobotRaconteur::MessageErrorType_OperationCancelled</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95ba789cd19a1892ebf1abec3cfd89617e63">RobotRaconteur::MessageErrorType_AuthenticationError</a> = 150, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95baa2eb7349ace02d4f9cd08478f8d9e9a0">RobotRaconteur::MessageErrorType_ObjectLockedError</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95ba41066e105199faa7e52179b7387b6ab9">RobotRaconteur::MessageErrorType_PermissionDenied</a>
+<br />
+ }</td></tr>
+<tr class="memdesc:a38809bdfeadca180a2fd9237788be95b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Message error type codes enum.  <a href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95b">More...</a><br /></td></tr>
+<tr class="separator:a38809bdfeadca180a2fd9237788be95b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a049c1e9d05e8fcb56990ebc4bf92e704"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#a049c1e9d05e8fcb56990ebc4bf92e704">RobotRaconteur::ClientServiceListenerEventType</a> { <a class="el" href="_robot_raconteur_constants_8h.html#a049c1e9d05e8fcb56990ebc4bf92e704aede8775f24f813b8da228431e32b6e0d">RobotRaconteur::ClientServiceListenerEventType_ClientClosed</a> = 1, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a049c1e9d05e8fcb56990ebc4bf92e704a9b2792b9481d722db68ad010c5023b50">RobotRaconteur::ClientServiceListenerEventType_ClientConnectionTimeout</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a049c1e9d05e8fcb56990ebc4bf92e704ac694a9d49be6bbb21ad41fe8876ccb18">RobotRaconteur::ClientServiceListenerEventType_TransportConnectionConnected</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a049c1e9d05e8fcb56990ebc4bf92e704a13677542af46be7dd905cfa680b7fc99">RobotRaconteur::ClientServiceListenerEventType_TransportConnectionClosed</a>
+ }</td></tr>
+<tr class="memdesc:a049c1e9d05e8fcb56990ebc4bf92e704"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enum of client listener events.  <a href="_robot_raconteur_constants_8h.html#a049c1e9d05e8fcb56990ebc4bf92e704">More...</a><br /></td></tr>
+<tr class="separator:a049c1e9d05e8fcb56990ebc4bf92e704"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f7d7fbf7df0190e26a4697d265aafe8"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#a5f7d7fbf7df0190e26a4697d265aafe8">RobotRaconteur::ServerServiceListenerEventType</a> { <a class="el" href="_robot_raconteur_constants_8h.html#a5f7d7fbf7df0190e26a4697d265aafe8a71ee309970fdac1b1089e2a57a365f05">RobotRaconteur::ServerServiceListenerEventType_ServiceClosed</a> = 1, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a5f7d7fbf7df0190e26a4697d265aafe8a4343fe33603c41a4e5b9b9071a99e857">RobotRaconteur::ServerServiceListenerEventType_ClientConnected</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a5f7d7fbf7df0190e26a4697d265aafe8af59124393300409cc4070cfdaaff504e">RobotRaconteur::ServerServiceListenerEventType_ClientDisconnected</a>
+ }</td></tr>
+<tr class="memdesc:a5f7d7fbf7df0190e26a4697d265aafe8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enum of service listener events.  <a href="_robot_raconteur_constants_8h.html#a5f7d7fbf7df0190e26a4697d265aafe8">More...</a><br /></td></tr>
+<tr class="separator:a5f7d7fbf7df0190e26a4697d265aafe8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7420bbe1689d74c66948017ba2d27373"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#a7420bbe1689d74c66948017ba2d27373">RobotRaconteur::MemberDefinition_Direction</a> { <a class="el" href="_robot_raconteur_constants_8h.html#a7420bbe1689d74c66948017ba2d27373a4a78caa215758190bf0bcd5f171345d9">RobotRaconteur::MemberDefinition_Direction_both</a> = 0, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a7420bbe1689d74c66948017ba2d27373a2a677810fce4617c30d9cbf0e289f1a1">RobotRaconteur::MemberDefinition_Direction_readonly</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a7420bbe1689d74c66948017ba2d27373a994ae219c2d7def55247b1efb1a6a3b7">RobotRaconteur::MemberDefinition_Direction_writeonly</a>
+ }</td></tr>
+<tr class="memdesc:a7420bbe1689d74c66948017ba2d27373"><td class="mdescLeft">&#160;</td><td class="mdescRight">Member direction enum.  <a href="_robot_raconteur_constants_8h.html#a7420bbe1689d74c66948017ba2d27373">More...</a><br /></td></tr>
+<tr class="separator:a7420bbe1689d74c66948017ba2d27373"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ba829fd3596e940bcf785d82e0803f6"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#a1ba829fd3596e940bcf785d82e0803f6">RobotRaconteur::MemberDefinition_NoLock</a> { <a class="el" href="_robot_raconteur_constants_8h.html#a1ba829fd3596e940bcf785d82e0803f6ae8dfdfcf1a8bfb3e53a88ee2c2412b0b">RobotRaconteur::MemberDefinition_NoLock_none</a> = 0, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a1ba829fd3596e940bcf785d82e0803f6aadd690d1d5b13d4cedf5c09d506c6186">RobotRaconteur::MemberDefinition_NoLock_all</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a1ba829fd3596e940bcf785d82e0803f6a59f9bfbed738aa09dabc20c0c591feeb">RobotRaconteur::MemberDefinition_NoLock_read</a>
+ }</td></tr>
+<tr class="memdesc:a1ba829fd3596e940bcf785d82e0803f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Member locking options enum.  <a href="_robot_raconteur_constants_8h.html#a1ba829fd3596e940bcf785d82e0803f6">More...</a><br /></td></tr>
+<tr class="separator:a1ba829fd3596e940bcf785d82e0803f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22bd9afe88530132144b5809c24ce622"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#a22bd9afe88530132144b5809c24ce622">RobotRaconteur::RobotRaconteur_LogLevel</a> { <br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#a22bd9afe88530132144b5809c24ce622a3dc08cdca495cb9f3b03aa366e91a5a6">RobotRaconteur::RobotRaconteur_LogLevel_Trace</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a22bd9afe88530132144b5809c24ce622a085a083e772241a1803dcc9721cd5d4a">RobotRaconteur::RobotRaconteur_LogLevel_Debug</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a22bd9afe88530132144b5809c24ce622afc714a7feccf953c0907ca178addb92f">RobotRaconteur::RobotRaconteur_LogLevel_Info</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a22bd9afe88530132144b5809c24ce622ad9190d8ac80c946c39d1201684b03555">RobotRaconteur::RobotRaconteur_LogLevel_Warning</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#a22bd9afe88530132144b5809c24ce622a95a34d91de5d98d896e7893003d2a77e">RobotRaconteur::RobotRaconteur_LogLevel_Error</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a22bd9afe88530132144b5809c24ce622a89c17cde2b1a575806240da7f21e2dc9">RobotRaconteur::RobotRaconteur_LogLevel_Fatal</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#a22bd9afe88530132144b5809c24ce622a6fc5fb411b13a279077f106c1eefc254">RobotRaconteur::RobotRaconteur_LogLevel_Disable</a> =1000
+<br />
+ }</td></tr>
+<tr class="memdesc:a22bd9afe88530132144b5809c24ce622"><td class="mdescLeft">&#160;</td><td class="mdescRight">Log level enum.  <a href="_robot_raconteur_constants_8h.html#a22bd9afe88530132144b5809c24ce622">More...</a><br /></td></tr>
+<tr class="separator:a22bd9afe88530132144b5809c24ce622"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adbb36b42123bdefd483661e172367898"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#adbb36b42123bdefd483661e172367898">RobotRaconteur::RobotRaconteur_LogComponent</a> { <br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#adbb36b42123bdefd483661e172367898a3bab3600079ad633bb3732d90a39da3e">RobotRaconteur::RobotRaconteur_LogComponent_Default</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#adbb36b42123bdefd483661e172367898a7d44465b625098202070aa03d6e10006">RobotRaconteur::RobotRaconteur_LogComponent_Node</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#adbb36b42123bdefd483661e172367898a3e6035786b79c6aeac1bc25a7829fc23">RobotRaconteur::RobotRaconteur_LogComponent_Transport</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#adbb36b42123bdefd483661e172367898aeaaeaba41d77d8b985f985644c1ce513">RobotRaconteur::RobotRaconteur_LogComponent_Message</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#adbb36b42123bdefd483661e172367898af7418257efda57d8365405e5341bc111">RobotRaconteur::RobotRaconteur_LogComponent_Client</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#adbb36b42123bdefd483661e172367898aac30b7ef2b0b10ebce166c2f24eda5fb">RobotRaconteur::RobotRaconteur_LogComponent_Service</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#adbb36b42123bdefd483661e172367898a7406992f28eaeb71a526414446602298">RobotRaconteur::RobotRaconteur_LogComponent_Member</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#adbb36b42123bdefd483661e172367898a000b8a000852cc9fbb41ca98cc10a7f1">RobotRaconteur::RobotRaconteur_LogComponent_Pack</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#adbb36b42123bdefd483661e172367898a34962dbe8dcc1e3b48d030ddde7bf366">RobotRaconteur::RobotRaconteur_LogComponent_Unpack</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#adbb36b42123bdefd483661e172367898a2c5b0d125cd631c8d41e35d8fe1bb325">RobotRaconteur::RobotRaconteur_LogComponent_ServiceDefinition</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#adbb36b42123bdefd483661e172367898a955648653bf2167a1deaee098b7df895">RobotRaconteur::RobotRaconteur_LogComponent_Discovery</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#adbb36b42123bdefd483661e172367898acd5fcd51a0c84140014d532587bb26d0">RobotRaconteur::RobotRaconteur_LogComponent_Subscription</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#adbb36b42123bdefd483661e172367898a100c5480b31f44104047a4accc3fb9e4">RobotRaconteur::RobotRaconteur_LogComponent_NodeSetup</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#adbb36b42123bdefd483661e172367898a190777510c5b234e48450c911ae25bdf">RobotRaconteur::RobotRaconteur_LogComponent_Utility</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#adbb36b42123bdefd483661e172367898abc57324ee9beb98f4708257599597302">RobotRaconteur::RobotRaconteur_LogComponent_RobDefLib</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#adbb36b42123bdefd483661e172367898a8529980900d08acb95f2f180157baaf9">RobotRaconteur::RobotRaconteur_LogComponent_User</a>, 
+<br />
+&#160;&#160;<a class="el" href="_robot_raconteur_constants_8h.html#adbb36b42123bdefd483661e172367898a4f5d41325788f5b5df4bd6225974a5d6">RobotRaconteur::RobotRaconteur_LogComponent_UserClient</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#adbb36b42123bdefd483661e172367898a1716d2ce63992dd6360e9717ebe235f6">RobotRaconteur::RobotRaconteur_LogComponent_UserService</a>, 
+<a class="el" href="_robot_raconteur_constants_8h.html#adbb36b42123bdefd483661e172367898aa30c8b374448c54ae9a74c063b896b9c">RobotRaconteur::RobotRaconteur_LogComponent_ThirdParty</a>
+<br />
+ }</td></tr>
+<tr class="memdesc:adbb36b42123bdefd483661e172367898"><td class="mdescLeft">&#160;</td><td class="mdescRight">Log component enum.  <a href="_robot_raconteur_constants_8h.html#adbb36b42123bdefd483661e172367898">More...</a><br /></td></tr>
+<tr class="separator:adbb36b42123bdefd483661e172367898"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a6cd840bdd710d5e43135f18e924ca04b"><td class="memItemLeft" align="right" valign="top"><a id="a6cd840bdd710d5e43135f18e924ca04b"></a>
+const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#a6cd840bdd710d5e43135f18e924ca04b">RobotRaconteur::MessageFlags_ROUTING_INFO</a> = 0x01</td></tr>
+<tr class="memdesc:a6cd840bdd710d5e43135f18e924ca04b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Message contains ROUTING_INFO section. <br /></td></tr>
+<tr class="separator:a6cd840bdd710d5e43135f18e924ca04b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52d5b169c41113817b77fab742f3f935"><td class="memItemLeft" align="right" valign="top"><a id="a52d5b169c41113817b77fab742f3f935"></a>
+const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#a52d5b169c41113817b77fab742f3f935">RobotRaconteur::MessageFlags_ENDPOINT_INFO</a> = 0x02</td></tr>
+<tr class="memdesc:a52d5b169c41113817b77fab742f3f935"><td class="mdescLeft">&#160;</td><td class="mdescRight">Message contains ENDPOINT_INFO section. <br /></td></tr>
+<tr class="separator:a52d5b169c41113817b77fab742f3f935"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af61027993848e3887e7c4477b6d26cf0"><td class="memItemLeft" align="right" valign="top"><a id="af61027993848e3887e7c4477b6d26cf0"></a>
+const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#af61027993848e3887e7c4477b6d26cf0">RobotRaconteur::MessageFlags_PRIORITY</a> = 0x04</td></tr>
+<tr class="memdesc:af61027993848e3887e7c4477b6d26cf0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Message contains PRIORITY section. <br /></td></tr>
+<tr class="separator:af61027993848e3887e7c4477b6d26cf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a53892f17129a62c9d970cef69783e9f0"><td class="memItemLeft" align="right" valign="top"><a id="a53892f17129a62c9d970cef69783e9f0"></a>
+const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#a53892f17129a62c9d970cef69783e9f0">RobotRaconteur::MessageFlags_UNRELIABLE</a> = 0x08</td></tr>
+<tr class="memdesc:a53892f17129a62c9d970cef69783e9f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Message is unreliable and may be dropped. <br /></td></tr>
+<tr class="separator:a53892f17129a62c9d970cef69783e9f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4242a2542c63e12c30ab7bf4ecf5e766"><td class="memItemLeft" align="right" valign="top"><a id="a4242a2542c63e12c30ab7bf4ecf5e766"></a>
+const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#a4242a2542c63e12c30ab7bf4ecf5e766">RobotRaconteur::MessageFlags_META_INFO</a> = 0x10</td></tr>
+<tr class="memdesc:a4242a2542c63e12c30ab7bf4ecf5e766"><td class="mdescLeft">&#160;</td><td class="mdescRight">Message contains META_INFO section. <br /></td></tr>
+<tr class="separator:a4242a2542c63e12c30ab7bf4ecf5e766"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f4e12a43ba312cd5db772b99a2aec27"><td class="memItemLeft" align="right" valign="top"><a id="a5f4e12a43ba312cd5db772b99a2aec27"></a>
+const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#a5f4e12a43ba312cd5db772b99a2aec27">RobotRaconteur::MessageFlags_STRING_TABLE</a> = 0x20</td></tr>
+<tr class="memdesc:a5f4e12a43ba312cd5db772b99a2aec27"><td class="mdescLeft">&#160;</td><td class="mdescRight">Message contains STRING_TABLE section. <br /></td></tr>
+<tr class="separator:a5f4e12a43ba312cd5db772b99a2aec27"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a261af077d32d48659f71be60af9560"><td class="memItemLeft" align="right" valign="top"><a id="a9a261af077d32d48659f71be60af9560"></a>
+const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#a9a261af077d32d48659f71be60af9560">RobotRaconteur::MessageFlags_MULTIPLE_ENTRIES</a> = 0x40</td></tr>
+<tr class="memdesc:a9a261af077d32d48659f71be60af9560"><td class="mdescLeft">&#160;</td><td class="mdescRight">Message contains MULTIPLE_ENTRIES section. If unset, message contains one entry. <br /></td></tr>
+<tr class="separator:a9a261af077d32d48659f71be60af9560"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f107fa2b4e695a798c28d168c3aa3ef"><td class="memItemLeft" align="right" valign="top"><a id="a2f107fa2b4e695a798c28d168c3aa3ef"></a>
+const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#a2f107fa2b4e695a798c28d168c3aa3ef">RobotRaconteur::MessageFlags_EXTENDED</a> = 0x80</td></tr>
+<tr class="memdesc:a2f107fa2b4e695a798c28d168c3aa3ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Message contains EXTENDED section. <br /></td></tr>
+<tr class="separator:a2f107fa2b4e695a798c28d168c3aa3ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32750531d7bb71e697a3fbed0832829d"><td class="memItemLeft" align="right" valign="top"><a id="a32750531d7bb71e697a3fbed0832829d"></a>
+const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#a32750531d7bb71e697a3fbed0832829d">RobotRaconteur::MessageFlags_Version2Compat</a> = MessageFlags_ROUTING_INFO | MessageFlags_ENDPOINT_INFO | MessageFlags_META_INFO | MessageFlags_MULTIPLE_ENTRIES</td></tr>
+<tr class="memdesc:a32750531d7bb71e697a3fbed0832829d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Message flags for compatibility with Message Format Version 2. <br /></td></tr>
+<tr class="separator:a32750531d7bb71e697a3fbed0832829d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a02e4981876b35c4e5b980b1a5b3ffc9f"><td class="memItemLeft" align="right" valign="top"><a id="a02e4981876b35c4e5b980b1a5b3ffc9f"></a>
+const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#a02e4981876b35c4e5b980b1a5b3ffc9f">RobotRaconteur::MessageEntryFlags_SERVICE_PATH_STR</a> = 0x01</td></tr>
+<tr class="memdesc:a02e4981876b35c4e5b980b1a5b3ffc9f"><td class="mdescLeft">&#160;</td><td class="mdescRight">MessageEntry contains SERVICE_PATH_STR section. <br /></td></tr>
+<tr class="separator:a02e4981876b35c4e5b980b1a5b3ffc9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93e4dda0b77fbb2cd22027c3a50b9208"><td class="memItemLeft" align="right" valign="top"><a id="a93e4dda0b77fbb2cd22027c3a50b9208"></a>
+const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#a93e4dda0b77fbb2cd22027c3a50b9208">RobotRaconteur::MessageEntryFlags_SERVICE_PATH_CODE</a> = 0x02</td></tr>
+<tr class="memdesc:a93e4dda0b77fbb2cd22027c3a50b9208"><td class="mdescLeft">&#160;</td><td class="mdescRight">MessageEntry contains SERVICE_PATH_CODE section. <br /></td></tr>
+<tr class="separator:a93e4dda0b77fbb2cd22027c3a50b9208"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a36ce6137b4861da140bab871d9cae139"><td class="memItemLeft" align="right" valign="top"><a id="a36ce6137b4861da140bab871d9cae139"></a>
+const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#a36ce6137b4861da140bab871d9cae139">RobotRaconteur::MessageEntryFlags_MEMBER_NAME_STR</a> = 0x04</td></tr>
+<tr class="memdesc:a36ce6137b4861da140bab871d9cae139"><td class="mdescLeft">&#160;</td><td class="mdescRight">MessageEntry contains MEMBER_NAME_STR section. <br /></td></tr>
+<tr class="separator:a36ce6137b4861da140bab871d9cae139"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2c2b7992a78039954b4b053e431beab"><td class="memItemLeft" align="right" valign="top"><a id="aa2c2b7992a78039954b4b053e431beab"></a>
+const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#aa2c2b7992a78039954b4b053e431beab">RobotRaconteur::MessageEntryFlags_MEMBER_NAME_CODE</a> = 0x08</td></tr>
+<tr class="memdesc:aa2c2b7992a78039954b4b053e431beab"><td class="mdescLeft">&#160;</td><td class="mdescRight">MessageEntry contains MEMBER_NAME_CODE section. <br /></td></tr>
+<tr class="separator:aa2c2b7992a78039954b4b053e431beab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a519cbd71eda784b481413fc23d76f65c"><td class="memItemLeft" align="right" valign="top"><a id="a519cbd71eda784b481413fc23d76f65c"></a>
+const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#a519cbd71eda784b481413fc23d76f65c">RobotRaconteur::MessageEntryFlags_REQUEST_ID</a> = 0x10</td></tr>
+<tr class="memdesc:a519cbd71eda784b481413fc23d76f65c"><td class="mdescLeft">&#160;</td><td class="mdescRight">MessageEntry contains REQUEST_ID section. <br /></td></tr>
+<tr class="separator:a519cbd71eda784b481413fc23d76f65c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affac14f86062643f3a75edc66aec0358"><td class="memItemLeft" align="right" valign="top"><a id="affac14f86062643f3a75edc66aec0358"></a>
+const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#affac14f86062643f3a75edc66aec0358">RobotRaconteur::MessageEntryFlags_ERROR</a> = 0x20</td></tr>
+<tr class="memdesc:affac14f86062643f3a75edc66aec0358"><td class="mdescLeft">&#160;</td><td class="mdescRight">MessageEntry contains ERROR section. <br /></td></tr>
+<tr class="separator:affac14f86062643f3a75edc66aec0358"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0107768050b982a614f6de38c4ba5957"><td class="memItemLeft" align="right" valign="top"><a id="a0107768050b982a614f6de38c4ba5957"></a>
+const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#a0107768050b982a614f6de38c4ba5957">RobotRaconteur::MessageEntryFlags_META_INFO</a> = 0x40</td></tr>
+<tr class="memdesc:a0107768050b982a614f6de38c4ba5957"><td class="mdescLeft">&#160;</td><td class="mdescRight">MessageEntry contains META_INFO section. <br /></td></tr>
+<tr class="separator:a0107768050b982a614f6de38c4ba5957"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab333babc8fd0fbac28edc16cf0dc0e8d"><td class="memItemLeft" align="right" valign="top"><a id="ab333babc8fd0fbac28edc16cf0dc0e8d"></a>
+const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#ab333babc8fd0fbac28edc16cf0dc0e8d">RobotRaconteur::MessageEntryFlags_EXTENDED</a> = 0x80</td></tr>
+<tr class="memdesc:ab333babc8fd0fbac28edc16cf0dc0e8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">MessageEntry contains EXTENDED section. <br /></td></tr>
+<tr class="separator:ab333babc8fd0fbac28edc16cf0dc0e8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a101bad67a77421a0a77389ace94b322a"><td class="memItemLeft" align="right" valign="top"><a id="a101bad67a77421a0a77389ace94b322a"></a>
+const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#a101bad67a77421a0a77389ace94b322a">RobotRaconteur::MessageEntryFlags_Version2Compat</a> = MessageEntryFlags_SERVICE_PATH_STR | MessageEntryFlags_MEMBER_NAME_STR | MessageEntryFlags_REQUEST_ID | MessageEntryFlags_ERROR | MessageEntryFlags_META_INFO</td></tr>
+<tr class="memdesc:a101bad67a77421a0a77389ace94b322a"><td class="mdescLeft">&#160;</td><td class="mdescRight">MessageEntry flags for compatibility with Message Format Version 2. <br /></td></tr>
+<tr class="separator:a101bad67a77421a0a77389ace94b322a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac59d1d00c9e27a43b4a0bb25a2654bfe"><td class="memItemLeft" align="right" valign="top"><a id="ac59d1d00c9e27a43b4a0bb25a2654bfe"></a>
+const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#ac59d1d00c9e27a43b4a0bb25a2654bfe">RobotRaconteur::MessageElementFlags_ELEMENT_NAME_STR</a> = 0x01</td></tr>
+<tr class="memdesc:ac59d1d00c9e27a43b4a0bb25a2654bfe"><td class="mdescLeft">&#160;</td><td class="mdescRight">MessageElement contains ELEMENT_NAME_STR section. <br /></td></tr>
+<tr class="separator:ac59d1d00c9e27a43b4a0bb25a2654bfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a475d9fd572bb1fa1cd794d6028a4eac7"><td class="memItemLeft" align="right" valign="top"><a id="a475d9fd572bb1fa1cd794d6028a4eac7"></a>
+const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#a475d9fd572bb1fa1cd794d6028a4eac7">RobotRaconteur::MessageElementFlags_ELEMENT_NAME_CODE</a> = 0x02</td></tr>
+<tr class="memdesc:a475d9fd572bb1fa1cd794d6028a4eac7"><td class="mdescLeft">&#160;</td><td class="mdescRight">MessageElement contains ELEMENT_NAME_CODE section. <br /></td></tr>
+<tr class="separator:a475d9fd572bb1fa1cd794d6028a4eac7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f62fc65e51e3eaf770b2af81fa335fd"><td class="memItemLeft" align="right" valign="top"><a id="a2f62fc65e51e3eaf770b2af81fa335fd"></a>
+const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#a2f62fc65e51e3eaf770b2af81fa335fd">RobotRaconteur::MessageElementFlags_ELEMENT_NUMBER</a> = 0x04</td></tr>
+<tr class="memdesc:a2f62fc65e51e3eaf770b2af81fa335fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">MessageElement contains ELEMENT_NUMBER section. <br /></td></tr>
+<tr class="separator:a2f62fc65e51e3eaf770b2af81fa335fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad81a0467464af8a9cbbadcd50e4678ef"><td class="memItemLeft" align="right" valign="top"><a id="ad81a0467464af8a9cbbadcd50e4678ef"></a>
+const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#ad81a0467464af8a9cbbadcd50e4678ef">RobotRaconteur::MessageElementFlags_ELEMENT_TYPE_NAME_STR</a> = 0x08</td></tr>
+<tr class="memdesc:ad81a0467464af8a9cbbadcd50e4678ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">MessageElement contains ELEMENT_TYPE_NAME_STR section. <br /></td></tr>
+<tr class="separator:ad81a0467464af8a9cbbadcd50e4678ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d36de89271b0fd00bc1e6c0f0d09b2a"><td class="memItemLeft" align="right" valign="top"><a id="a0d36de89271b0fd00bc1e6c0f0d09b2a"></a>
+const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#a0d36de89271b0fd00bc1e6c0f0d09b2a">RobotRaconteur::MessageElementFlags_ELEMENT_TYPE_NAME_CODE</a> = 0x10</td></tr>
+<tr class="memdesc:a0d36de89271b0fd00bc1e6c0f0d09b2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">MessageElement contains ELEMENT_TYPE_NAME_CODE section. <br /></td></tr>
+<tr class="separator:a0d36de89271b0fd00bc1e6c0f0d09b2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63b50bf31f3573f6635fa4986d33b938"><td class="memItemLeft" align="right" valign="top"><a id="a63b50bf31f3573f6635fa4986d33b938"></a>
+const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#a63b50bf31f3573f6635fa4986d33b938">RobotRaconteur::MessageElementFlags_META_INFO</a> = 0x20</td></tr>
+<tr class="memdesc:a63b50bf31f3573f6635fa4986d33b938"><td class="mdescLeft">&#160;</td><td class="mdescRight">MessageElement contains META_INFO section. <br /></td></tr>
+<tr class="separator:a63b50bf31f3573f6635fa4986d33b938"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9c55aca978657ffe2dc6b8fa1a6b956"><td class="memItemLeft" align="right" valign="top"><a id="af9c55aca978657ffe2dc6b8fa1a6b956"></a>
+const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#af9c55aca978657ffe2dc6b8fa1a6b956">RobotRaconteur::MessageElementFlags_EXTENDED</a> = 0x80</td></tr>
+<tr class="memdesc:af9c55aca978657ffe2dc6b8fa1a6b956"><td class="mdescLeft">&#160;</td><td class="mdescRight">MessageElement contains EXTENDED section. <br /></td></tr>
+<tr class="separator:af9c55aca978657ffe2dc6b8fa1a6b956"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a230ee578c2842fa30485712db417768c"><td class="memItemLeft" align="right" valign="top"><a id="a230ee578c2842fa30485712db417768c"></a>
+const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#a230ee578c2842fa30485712db417768c">RobotRaconteur::MessageElementFlags_Version2Compat</a> = MessageElementFlags_ELEMENT_NAME_STR | MessageElementFlags_ELEMENT_TYPE_NAME_STR | MessageElementFlags_META_INFO</td></tr>
+<tr class="memdesc:a230ee578c2842fa30485712db417768c"><td class="mdescLeft">&#160;</td><td class="mdescRight">MessageElement flags for compatibility with Message Format Version 2. <br /></td></tr>
+<tr class="separator:a230ee578c2842fa30485712db417768c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e796e0e4b41f614c2fb805ef8c9177a"><td class="memItemLeft" align="right" valign="top"><a id="a4e796e0e4b41f614c2fb805ef8c9177a"></a>
+const uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#a4e796e0e4b41f614c2fb805ef8c9177a">RobotRaconteur::TranspartCapabilityCode_PAGE_MASK</a> = 0xFFF00000</td></tr>
+<tr class="memdesc:a4e796e0e4b41f614c2fb805ef8c9177a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Page mask for transport capability code. <br /></td></tr>
+<tr class="separator:a4e796e0e4b41f614c2fb805ef8c9177a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8813ee7d7304c484bed3590a6fda0e3c"><td class="memItemLeft" align="right" valign="top"><a id="a8813ee7d7304c484bed3590a6fda0e3c"></a>
+const uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#a8813ee7d7304c484bed3590a6fda0e3c">RobotRaconteur::TransportCapabilityCode_MESSAGE2_BASIC_PAGE</a> = 0x02000000</td></tr>
+<tr class="memdesc:a8813ee7d7304c484bed3590a6fda0e3c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Message Version 2 transport capability page code. <br /></td></tr>
+<tr class="separator:a8813ee7d7304c484bed3590a6fda0e3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9eb12ad5a47a117b7467511339407707"><td class="memItemLeft" align="right" valign="top"><a id="a9eb12ad5a47a117b7467511339407707"></a>
+const uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#a9eb12ad5a47a117b7467511339407707">RobotRaconteur::TransportCapabilityCode_MESSAGE2_BASIC_ENABLE</a> = 0x00000001</td></tr>
+<tr class="memdesc:a9eb12ad5a47a117b7467511339407707"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable Message Version 2 transport capability flag. <br /></td></tr>
+<tr class="separator:a9eb12ad5a47a117b7467511339407707"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5a8b5d4c67a3e2752d2251dc196743e"><td class="memItemLeft" align="right" valign="top"><a id="aa5a8b5d4c67a3e2752d2251dc196743e"></a>
+const uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#aa5a8b5d4c67a3e2752d2251dc196743e">RobotRaconteur::TransportCapabilityCode_MESSAGE2_BASIC_CONNECTCOMBINED</a> = 0x00000002</td></tr>
+<tr class="memdesc:aa5a8b5d4c67a3e2752d2251dc196743e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable Message Version 2 connect combined transport capability flag. <br /></td></tr>
+<tr class="separator:aa5a8b5d4c67a3e2752d2251dc196743e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0a246eed505b5a5cd2960da3d460bd0"><td class="memItemLeft" align="right" valign="top"><a id="ac0a246eed505b5a5cd2960da3d460bd0"></a>
+const uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#ac0a246eed505b5a5cd2960da3d460bd0">RobotRaconteur::TransportCapabilityCode_MESSAGE4_BASIC_PAGE</a> = 0x04000000</td></tr>
+<tr class="memdesc:ac0a246eed505b5a5cd2960da3d460bd0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Message Version 4 transport capability page code. <br /></td></tr>
+<tr class="separator:ac0a246eed505b5a5cd2960da3d460bd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab30254703a3fe0107e631d8a2a51bb10"><td class="memItemLeft" align="right" valign="top"><a id="ab30254703a3fe0107e631d8a2a51bb10"></a>
+const uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#ab30254703a3fe0107e631d8a2a51bb10">RobotRaconteur::TransportCapabilityCode_MESSAGE4_BASIC_ENABLE</a> = 0x00000001</td></tr>
+<tr class="memdesc:ab30254703a3fe0107e631d8a2a51bb10"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable Message Version 4 transport capability flag. <br /></td></tr>
+<tr class="separator:ab30254703a3fe0107e631d8a2a51bb10"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6cd0e750bca8ee70b8280714952b664f"><td class="memItemLeft" align="right" valign="top"><a id="a6cd0e750bca8ee70b8280714952b664f"></a>
+const uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#a6cd0e750bca8ee70b8280714952b664f">RobotRaconteur::TransportCapabilityCode_MESSAGE4_BASIC_CONNECTCOMBINED</a> = 0x00000002</td></tr>
+<tr class="memdesc:a6cd0e750bca8ee70b8280714952b664f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable Message Version 4 connect combine transport capability flag. <br /></td></tr>
+<tr class="separator:a6cd0e750bca8ee70b8280714952b664f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4003f47424bfea45d9162e5e6c7e23d"><td class="memItemLeft" align="right" valign="top"><a id="ae4003f47424bfea45d9162e5e6c7e23d"></a>
+const uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#ae4003f47424bfea45d9162e5e6c7e23d">RobotRaconteur::TransportCapabilityCode_MESSAGE4_STRINGTABLE_PAGE</a> = 0x04100000</td></tr>
+<tr class="memdesc:ae4003f47424bfea45d9162e5e6c7e23d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Message Version 4 String Table capability page code. <br /></td></tr>
+<tr class="separator:ae4003f47424bfea45d9162e5e6c7e23d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac07cf8fee4c6cc5c5bffcf2f952543bf"><td class="memItemLeft" align="right" valign="top"><a id="ac07cf8fee4c6cc5c5bffcf2f952543bf"></a>
+const uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#ac07cf8fee4c6cc5c5bffcf2f952543bf">RobotRaconteur::TransportCapabilityCode_MESSAGE4_STRINGTABLE_ENABLE</a> = 0x00000001</td></tr>
+<tr class="memdesc:ac07cf8fee4c6cc5c5bffcf2f952543bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable Message Version 4 String Table transport capability code. <br /></td></tr>
+<tr class="separator:ac07cf8fee4c6cc5c5bffcf2f952543bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13c92888de942bbded6394bf00ad437e"><td class="memItemLeft" align="right" valign="top"><a id="a13c92888de942bbded6394bf00ad437e"></a>
+const uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#a13c92888de942bbded6394bf00ad437e">RobotRaconteur::TransportCapabilityCode_MESSAGE4_STRINGTABLE_MESSAGE_LOCAL</a> = 0x00000002</td></tr>
+<tr class="memdesc:a13c92888de942bbded6394bf00ad437e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable Message Version 4 local String Table capability code. <br /></td></tr>
+<tr class="separator:a13c92888de942bbded6394bf00ad437e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3462388eaa09281497cc3f4f38df23b"><td class="memItemLeft" align="right" valign="top"><a id="aa3462388eaa09281497cc3f4f38df23b"></a>
+const uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_robot_raconteur_constants_8h.html#aa3462388eaa09281497cc3f4f38df23b">RobotRaconteur::TransportCapabilityCode_MESSAGE4_STRINGTABLE_STANDARD_TABLE</a> = 0x00000004</td></tr>
+<tr class="memdesc:aa3462388eaa09281497cc3f4f38df23b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable Message Version 4 standard String Table capability code. <br /></td></tr>
+<tr class="separator:aa3462388eaa09281497cc3f4f38df23b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><dl class="section author"><dt>Author</dt><dd>Dr. John Wason</dd></dl>
 <dl class="section copyright"><dt>Copyright</dt><dd>Copyright 2011-2020 Wason Technology, LLC</dd></dl>
@@ -78,7 +537,657 @@ $(function() {
 <dl class="section user"><dt></dt><dd>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at </dd></dl>
 <dl class="section user"><dt></dt><dd><a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a> </dd></dl>
 <dl class="section user"><dt></dt><dd>Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License. </dd></dl>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a797a515f59232a62a9cc8b16df7ee78b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a797a515f59232a62a9cc8b16df7ee78b">&#9670;&nbsp;</a></span>RR_TIMEOUT_INFINITE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define RR_TIMEOUT_INFINITE&#160;&#160;&#160;-1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Disable timeout for asynchronous operations. </p>
+<p>Pass <code>RR_TIMEOUT_INFINITE</code> for the <code>timeout</code> parameter in asynchronous operations to disable timeout for that operation. </p>
+
+</div>
+</div>
+<a id="a46255001b6812bd6e33ccc8b219ea37a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a46255001b6812bd6e33ccc8b219ea37a">&#9670;&nbsp;</a></span>RR_VALUE_LIFESPAN_INFINITE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define RR_VALUE_LIFESPAN_INFINITE&#160;&#160;&#160;-1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set wire values to have infinite lifespan and will not expire. </p>
+<p>Wire values may optionally expire after a given period in milliseconds. Set <code>RR_TIMEOUT_INFINITE</code> to disable value expiration. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="a049c1e9d05e8fcb56990ebc4bf92e704"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a049c1e9d05e8fcb56990ebc4bf92e704">&#9670;&nbsp;</a></span>ClientServiceListenerEventType</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="_robot_raconteur_constants_8h.html#a049c1e9d05e8fcb56990ebc4bf92e704">RobotRaconteur::ClientServiceListenerEventType</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enum of client listener events. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a049c1e9d05e8fcb56990ebc4bf92e704aede8775f24f813b8da228431e32b6e0d"></a>ClientServiceListenerEventType_ClientClosed&#160;</td><td class="fielddoc"><p>client has been closed </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a049c1e9d05e8fcb56990ebc4bf92e704a9b2792b9481d722db68ad010c5023b50"></a>ClientServiceListenerEventType_ClientConnectionTimeout&#160;</td><td class="fielddoc"><p>client connection has timed out </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a049c1e9d05e8fcb56990ebc4bf92e704ac694a9d49be6bbb21ad41fe8876ccb18"></a>ClientServiceListenerEventType_TransportConnectionConnected&#160;</td><td class="fielddoc"><p>client transport has been connected </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a049c1e9d05e8fcb56990ebc4bf92e704a13677542af46be7dd905cfa680b7fc99"></a>ClientServiceListenerEventType_TransportConnectionClosed&#160;</td><td class="fielddoc"><p>client transport connection has been closed or lost </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a id="aa5a73ee3a5f54e464e266a44ba90afdc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5a73ee3a5f54e464e266a44ba90afdc">&#9670;&nbsp;</a></span>DataTypes</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="_robot_raconteur_constants_8h.html#aa5a73ee3a5f54e464e266a44ba90afdc">RobotRaconteur::DataTypes</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Type codes for types supported by Robot Raconteur. </p>
+<p>Data type codes are used in messages and service definition parsers.</p>
+<p>Data is always stored as little-endian, except for UUID which are big endian </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aa5a73ee3a5f54e464e266a44ba90afdcab0aabacf97257a595c62c836821c48a2"></a>DataTypes_void_t&#160;</td><td class="fielddoc"><p>void or null type </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa5a73ee3a5f54e464e266a44ba90afdca632eee216005871a6cbed5df512c9c64"></a>DataTypes_double_t&#160;</td><td class="fielddoc"><p>IEEE-754 64-bit floating point number. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa5a73ee3a5f54e464e266a44ba90afdca08c4d8af6855aa79d8cac959a96bba3e"></a>DataTypes_single_t&#160;</td><td class="fielddoc"><p>IEEE-754 32-bit floating point number. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa5a73ee3a5f54e464e266a44ba90afdca440a57563b4a7012d39421ee315fb4ba"></a>DataTypes_int8_t&#160;</td><td class="fielddoc"><p>8-bit signed integer </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa5a73ee3a5f54e464e266a44ba90afdca0b5fb4fcc689d7de7c983310679a8014"></a>DataTypes_uint8_t&#160;</td><td class="fielddoc"><p>8-bit unsigned integer </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa5a73ee3a5f54e464e266a44ba90afdca1f877c848d042e38215b2d0a90356c23"></a>DataTypes_int16_t&#160;</td><td class="fielddoc"><p>16-bit signed integer </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa5a73ee3a5f54e464e266a44ba90afdca3f69d8a902ea25df47f07d76104cc91b"></a>DataTypes_uint16_t&#160;</td><td class="fielddoc"><p>16-bit unsigned integer </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa5a73ee3a5f54e464e266a44ba90afdcaa59b09b0ff4fe42c7fe0289c176cdd5d"></a>DataTypes_int32_t&#160;</td><td class="fielddoc"><p>32-bit signed integer </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa5a73ee3a5f54e464e266a44ba90afdca23b2242819bde3d91cae1dace5dacc97"></a>DataTypes_uint32_t&#160;</td><td class="fielddoc"><p>32-bit unsigned integer </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa5a73ee3a5f54e464e266a44ba90afdca6b358c8d5fdf74062d0e5f273893f061"></a>DataTypes_int64_t&#160;</td><td class="fielddoc"><p>64-bit signed integer </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa5a73ee3a5f54e464e266a44ba90afdca563a5e051a334e97805f1f7021894b3f"></a>DataTypes_uint64_t&#160;</td><td class="fielddoc"><p>64-bit unsigned integer </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa5a73ee3a5f54e464e266a44ba90afdca9c2f1cbaec6af3e1b64ad77017d5ca35"></a>DataTypes_string_t&#160;</td><td class="fielddoc"><p>UTF-8 string. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa5a73ee3a5f54e464e266a44ba90afdcabfb9b4e7370320b9fff4880e0bab374b"></a>DataTypes_cdouble_t&#160;</td><td class="fielddoc"><p>128-bit complex double (real,imag) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa5a73ee3a5f54e464e266a44ba90afdcae5e5f4999f6c5f6e8e8775cbe8704946"></a>DataTypes_csingle_t&#160;</td><td class="fielddoc"><p>64-bit complex float (real,imag) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa5a73ee3a5f54e464e266a44ba90afdcabe7fed20f04b02d50f6c38fd31cd579e"></a>DataTypes_bool_t&#160;</td><td class="fielddoc"><p>8-bit boolean </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa5a73ee3a5f54e464e266a44ba90afdca24876217b32a31e3a3f41b8e364ca19e"></a>DataTypes_structure_t&#160;</td><td class="fielddoc"><p>structure (nested message type) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa5a73ee3a5f54e464e266a44ba90afdca0ed50d6b1622e3fe1616e83326217e10"></a>DataTypes_vector_t&#160;</td><td class="fielddoc"><p>map with int32 key (nested message type) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa5a73ee3a5f54e464e266a44ba90afdca7b7b473f1b923a592fae36e346ad1199"></a>DataTypes_dictionary_t&#160;</td><td class="fielddoc"><p>map with string key (nested message type) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa5a73ee3a5f54e464e266a44ba90afdcab2e0a0e666a9b7f7de8949a94f3f565a"></a>DataTypes_object_t&#160;</td><td class="fielddoc"><p>object type (not serializable) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa5a73ee3a5f54e464e266a44ba90afdcace2c8025259efaa0015dc40f42813e84"></a>DataTypes_varvalue_t&#160;</td><td class="fielddoc"><p>varvalue type (not serializable) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa5a73ee3a5f54e464e266a44ba90afdca1f69b6f858c7a961bcd5d4d340f8cd04"></a>DataTypes_varobject_t&#160;</td><td class="fielddoc"><p>varobject type (not serializable) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa5a73ee3a5f54e464e266a44ba90afdcab88ffe172d140b1bff9a4eea8f053115"></a>DataTypes_list_t&#160;</td><td class="fielddoc"><p>list type (nested message type) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa5a73ee3a5f54e464e266a44ba90afdcadcef2fb14c7d2fc2531633030bffafa4"></a>DataTypes_pod_t&#160;</td><td class="fielddoc"><p>pod type (nested message type) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa5a73ee3a5f54e464e266a44ba90afdca046b043ea361a0db6dee88bdd8546da3"></a>DataTypes_pod_array_t&#160;</td><td class="fielddoc"><p>pod array type (nested message type) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa5a73ee3a5f54e464e266a44ba90afdcad6d9e9a671f86b28b9c279e2c8dfeffc"></a>DataTypes_pod_multidimarray_t&#160;</td><td class="fielddoc"><p>pod multidimarray type (nested message type) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa5a73ee3a5f54e464e266a44ba90afdcaee51bf6aae2969414a1578fb18c52419"></a>DataTypes_enum_t&#160;</td><td class="fielddoc"><p>enum type (not serializable, uses int32 for messages) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa5a73ee3a5f54e464e266a44ba90afdca4ee2ff6f8517a7f3b5936cd21fe66d20"></a>DataTypes_namedtype_t&#160;</td><td class="fielddoc"><p>namedtype definition (not serializable) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa5a73ee3a5f54e464e266a44ba90afdca49ca812927e349f9a2bec7e3b2490961"></a>DataTypes_namedarray_t&#160;</td><td class="fielddoc"><p>namedarray type (not serializable) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa5a73ee3a5f54e464e266a44ba90afdcab073068a973f0fd2edab69c8a4b2c2f3"></a>DataTypes_namedarray_array_t&#160;</td><td class="fielddoc"><p>namedarray array type (nested message type) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa5a73ee3a5f54e464e266a44ba90afdca18060759b21305c6693d78b9ca258f64"></a>DataTypes_namedarray_multidimarray_t&#160;</td><td class="fielddoc"><p>namedarray multidimarray type (nested message type) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa5a73ee3a5f54e464e266a44ba90afdcad962519fbd6c7a3533cc43acbde3b073"></a>DataTypes_multidimarray_t&#160;</td><td class="fielddoc"><p>multi-dimensional numeric array (nested message type) </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a id="ad69bcbbe1fdcab23323d58cd8a700315"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad69bcbbe1fdcab23323d58cd8a700315">&#9670;&nbsp;</a></span>DataTypes_ArrayTypes</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="_robot_raconteur_constants_8h.html#ad69bcbbe1fdcab23323d58cd8a700315">RobotRaconteur::DataTypes_ArrayTypes</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Array type enum for TypeDefinition parser class. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ad69bcbbe1fdcab23323d58cd8a700315aa0b1b47df0d2ae75ed86de4f1e1952de"></a>DataTypes_ArrayTypes_none&#160;</td><td class="fielddoc"><p>type is not an array </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ad69bcbbe1fdcab23323d58cd8a700315a414fbd5b0c4bbe49c00bbc821636e62e"></a>DataTypes_ArrayTypes_array&#160;</td><td class="fielddoc"><p>type is a single dimensional array </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ad69bcbbe1fdcab23323d58cd8a700315a3e92f52c1d9ada16cc9ba6b0cba736d9"></a>DataTypes_ArrayTypes_multidimarray&#160;</td><td class="fielddoc"><p>type is a multidimensional array </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a id="a525d1abb254d0852f47dadaa01617aa3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a525d1abb254d0852f47dadaa01617aa3">&#9670;&nbsp;</a></span>DataTypes_ContainerTypes</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="_robot_raconteur_constants_8h.html#a525d1abb254d0852f47dadaa01617aa3">RobotRaconteur::DataTypes_ContainerTypes</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Container type enum for TypeDefinition parser class. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a525d1abb254d0852f47dadaa01617aa3ad3642b4d4692058e3f63d662a2236de9"></a>DataTypes_ContainerTypes_none&#160;</td><td class="fielddoc"><p>type does not have a container </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a525d1abb254d0852f47dadaa01617aa3a0491da8519d07034494ae63d53b426fb"></a>DataTypes_ContainerTypes_list&#160;</td><td class="fielddoc"><p>type has a list container </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a525d1abb254d0852f47dadaa01617aa3ad5c6b305f8c6cd290d0aecbd753213b6"></a>DataTypes_ContainerTypes_map_int32&#160;</td><td class="fielddoc"><p>type has a map with int32 keys container </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a525d1abb254d0852f47dadaa01617aa3ae5fa66dea579b2d049991e64283a5587"></a>DataTypes_ContainerTypes_map_string&#160;</td><td class="fielddoc"><p>type has a map with string keys container </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a525d1abb254d0852f47dadaa01617aa3a80c9c0235515f65b7c67f7d5b5c895ec"></a>DataTypes_ContainerTypes_generator&#160;</td><td class="fielddoc"><p>type has a generator container </p>
+<p>Only valid for use with function generator members </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a id="a7420bbe1689d74c66948017ba2d27373"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7420bbe1689d74c66948017ba2d27373">&#9670;&nbsp;</a></span>MemberDefinition_Direction</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="_robot_raconteur_constants_8h.html#a7420bbe1689d74c66948017ba2d27373">RobotRaconteur::MemberDefinition_Direction</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Member direction enum. </p>
+<p>Use member modifiers to declare member direction (readonly,writeonly) </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a7420bbe1689d74c66948017ba2d27373a4a78caa215758190bf0bcd5f171345d9"></a>MemberDefinition_Direction_both&#160;</td><td class="fielddoc"><p>member supports read and write </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a7420bbe1689d74c66948017ba2d27373a2a677810fce4617c30d9cbf0e289f1a1"></a>MemberDefinition_Direction_readonly&#160;</td><td class="fielddoc"><p>member is readonly </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a7420bbe1689d74c66948017ba2d27373a994ae219c2d7def55247b1efb1a6a3b7"></a>MemberDefinition_Direction_writeonly&#160;</td><td class="fielddoc"><p>member is writeonly </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a id="a1ba829fd3596e940bcf785d82e0803f6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1ba829fd3596e940bcf785d82e0803f6">&#9670;&nbsp;</a></span>MemberDefinition_NoLock</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="_robot_raconteur_constants_8h.html#a1ba829fd3596e940bcf785d82e0803f6">RobotRaconteur::MemberDefinition_NoLock</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Member locking options enum. </p>
+<p>Use member modifiers to declare lock options </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a1ba829fd3596e940bcf785d82e0803f6ae8dfdfcf1a8bfb3e53a88ee2c2412b0b"></a>MemberDefinition_NoLock_none&#160;</td><td class="fielddoc"><p>member cannot be accessed by other users/sessions when object is locked </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a1ba829fd3596e940bcf785d82e0803f6aadd690d1d5b13d4cedf5c09d506c6186"></a>MemberDefinition_NoLock_all&#160;</td><td class="fielddoc"><p>member can be accessed by other users/sessions when object is locked </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a1ba829fd3596e940bcf785d82e0803f6a59f9bfbed738aa09dabc20c0c591feeb"></a>MemberDefinition_NoLock_read&#160;</td><td class="fielddoc"><p>member can be read by other users/sessions when object is locked </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a id="ab2c8e11be4969d7cfdea461917ec9433"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab2c8e11be4969d7cfdea461917ec9433">&#9670;&nbsp;</a></span>MessageEntryType</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="_robot_raconteur_constants_8h.html#ab2c8e11be4969d7cfdea461917ec9433">RobotRaconteur::MessageEntryType</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Message entry type codes. </p>
+<p>Message entries are sent between nodes stored in messages, and represent requests, responses, or packets. The type of the entry is specified through the message entry type code. These type codes are similar to op-codes. This enum contains the defined entry type codes.</p>
+<p>Odd codes represent requests or packets, even codes represent responses.</p>
+<p>Entry types less than 500 are considered "special requests" that can be used before a session is established. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a1b73e0e7317c6eb33fe2a8ad1fde98df"></a>MessageEntryType_Null&#160;</td><td class="fielddoc"><p>no-op </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a1cb32d3d34f5ed35ce10f2b545652652"></a>MessageEntryType_StreamOp&#160;</td><td class="fielddoc"><p>Stream operation request (transport only) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a8c6da0d728a594ef56020bcf4b86137f"></a>MessageEntryType_StreamOpRet&#160;</td><td class="fielddoc"><p>Stream operation response (transport only) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433ac7a4ef9af780b57f9e63701745fa4342"></a>MessageEntryType_StreamCheckCapability&#160;</td><td class="fielddoc"><p>Stream check capability request (transport only) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a5236afd6a6f78178a2ce549ffe5eb583"></a>MessageEntryType_StreamCheckCapabilityRet&#160;</td><td class="fielddoc"><p>Stream check capability response (transport only) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a9a1999683095c9167ae2b1b448bf211b"></a>MessageEntryType_GetServiceDesc&#160;</td><td class="fielddoc"><p>Get service definition request. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433afa62d2fc478476ead018b36ebad34120"></a>MessageEntryType_GetServiceDescRet&#160;</td><td class="fielddoc"><p>Get service definition response. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a48597ff53a3b7909807a8e8e282edafa"></a>MessageEntryType_ObjectTypeName&#160;</td><td class="fielddoc"><p>Get object qualified type name request. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a912bc9c06166de7db612f94e68ecc75a"></a>MessageEntryType_ObjectTypeNameRet&#160;</td><td class="fielddoc"><p>Get object qualified type name response. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a29cbea38049c43bc6eecc6e342635a50"></a>MessageEntryType_ServiceClosed&#160;</td><td class="fielddoc"><p>Service closed notification packet. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433abea503199438afca89dadad82f0d6184"></a>MessageEntryType_ServiceClosedRet&#160;</td><td class="fielddoc"><p>(reserved) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a9513c614daf9bd590870fe32575aa702"></a>MessageEntryType_ConnectClient&#160;</td><td class="fielddoc"><p>Connect client request. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a8fac55b51eb4fd9a23365a9ab3169be4"></a>MessageEntryType_ConnectClientRet&#160;</td><td class="fielddoc"><p>Connect client response. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433afa104986763ccce8cd15a65c66ac5a1a"></a>MessageEntryType_DisconnectClient&#160;</td><td class="fielddoc"><p>Disconnect client request. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a357c75bcf707c15a266de347f17632a2"></a>MessageEntryType_DisconnectClientRet&#160;</td><td class="fielddoc"><p>Disconnect client response. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a88b822e88596474466bf0f3c6f22e01b"></a>MessageEntryType_ConnectionTest&#160;</td><td class="fielddoc"><p>Ping request. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a35ec9af81d13e7a8f9d3a9964d94c181"></a>MessageEntryType_ConnectionTestRet&#160;</td><td class="fielddoc"><p>Pong response. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a69e487f13a03161bb4b8ab6a6f625d90"></a>MessageEntryType_GetNodeInfo&#160;</td><td class="fielddoc"><p>Get node information request (<a class="el" href="class_robot_raconteur_1_1_node_i_d.html" title="NodeID UUID storage and generation.">NodeID</a> and NodeName) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a07d98d1325ec5716920e93e8eba462c5"></a>MessageEntryType_GetNodeInfoRet&#160;</td><td class="fielddoc"><p>Get node information response. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a440ac8fa11cd9bf65676875df59845b6"></a>MessageEntryType_ReconnectClient&#160;</td><td class="fielddoc"><p>(reserved) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433ab5c70843293600bc1822e00ed238eece"></a>MessageEntryType_ReconnectClientRet&#160;</td><td class="fielddoc"><p>(reserved) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433aab5bb9d5831c57a5f78cc08d17cff993"></a>MessageEntryType_NodeCheckCapability&#160;</td><td class="fielddoc"><p>Get node capability request. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433ad3c66e86ecf49f4b7dd2a45ce0cb55bb"></a>MessageEntryType_NodeCheckCapabilityRet&#160;</td><td class="fielddoc"><p>Get node capability response. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433ac7561317d538459a276d650b401332ed"></a>MessageEntryType_GetServiceAttributes&#160;</td><td class="fielddoc"><p>Get service attributes request. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a0a5db128d457e39c8f71bf099b5c514f"></a>MessageEntryType_GetServiceAttributesRet&#160;</td><td class="fielddoc"><p>Get service attributes response. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a13c7aa29454d018542a62f4444e3525d"></a>MessageEntryType_ConnectClientCombined&#160;</td><td class="fielddoc"><p>Connect client combined operation request. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a63fb0486ec03395b3daa7ac55a8ff774"></a>MessageEntryType_ConnectClientCombinedRet&#160;</td><td class="fielddoc"><p>Connect client combined operation response. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a6924b6778517509c65700daaec4e419c"></a>MessageEntryType_EndpointCheckCapability&#160;</td><td class="fielddoc"><p>Get endpoint capability request. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433ac134760c0d56d7f8ba256ac1fec8f03a"></a>MessageEntryType_EndpointCheckCapabilityRet&#160;</td><td class="fielddoc"><p>Get endpoint capabalitiy response. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a8ec3681f5b4aecefc2e9ef387da9e03d"></a>MessageEntryType_ServiceCheckCapabilityReq&#160;</td><td class="fielddoc"><p>Get service capability request. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433adf6f6aa76ccad73186fb925366eb31f2"></a>MessageEntryType_ServiceCheckCapabilityRet&#160;</td><td class="fielddoc"><p>Get service capability response. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433af985c42e4252b453fe87ff90d85067b5"></a>MessageEntryType_ClientKeepAliveReq&#160;</td><td class="fielddoc"><p>Client keep alive request. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433abba83926727a8b3a1fb5f56697de7874"></a>MessageEntryType_ClientKeepAliveRet&#160;</td><td class="fielddoc"><p>Client keep alive response. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a1e65295382508c418cfbc16900746683"></a>MessageEntryType_ClientSessionOpReq&#160;</td><td class="fielddoc"><p>Client session management operation request. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a8c322111c0a0e83325deae84934934b9"></a>MessageEntryType_ClientSessionOpRet&#160;</td><td class="fielddoc"><p>Client session management operation response. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a865e271ba121c7dffb260b4a372dc42e"></a>MessageEntryType_ServicePathReleasedReq&#160;</td><td class="fielddoc"><p>Service path released event notification packet. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433aec141e3e593909472856394c0730914c"></a>MessageEntryType_ServicePathReleasedRet&#160;</td><td class="fielddoc"><p>(reserved) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433ab5df15d9e89f74828816aff732447fe3"></a>MessageEntryType_PropertyGetReq&#160;</td><td class="fielddoc"><p>Property member get request. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a6a201b0da4d949c23513476863ba5498"></a>MessageEntryType_PropertyGetRes&#160;</td><td class="fielddoc"><p>Property member get response. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433afa26afe8ed2ca8c12df401df8824a7c4"></a>MessageEntryType_PropertySetReq&#160;</td><td class="fielddoc"><p>Property member set request. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a3a041da05d83e676e4d539e41b1c1855"></a>MessageEntryType_PropertySetRes&#160;</td><td class="fielddoc"><p>Property member set response. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433ad9ca2acbd8d47e8a6e9963e517e3e766"></a>MessageEntryType_FunctionCallReq&#160;</td><td class="fielddoc"><p>Function member call request. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a2fe56e1d7115682e3a623ab3a4815286"></a>MessageEntryType_FunctionCallRes&#160;</td><td class="fielddoc"><p>Function member call response. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a4df4cfc88f31f66c5067530ac242e3ef"></a>MessageEntryType_GeneratorNextReq&#160;</td><td class="fielddoc"><p>Generater next call request. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a480a943b1ead0de9262b09605ed55ee4"></a>MessageEntryType_GeneratorNextRes&#160;</td><td class="fielddoc"><p>Generater next call response. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a56fc3b51b7f5b3e4448e2f0915d148f1"></a>MessageEntryType_EventReq&#160;</td><td class="fielddoc"><p>Event member notification. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a75c0cdd7df5aae86de063129a1015554"></a>MessageEntryType_EventRes&#160;</td><td class="fielddoc"><p>(reserved) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a3dfc3400a6d95c681cd8757e6c425d95"></a>MessageEntryType_PipePacket&#160;</td><td class="fielddoc"><p><a class="el" href="class_robot_raconteur_1_1_pipe.html" title="pipe member type interface">Pipe</a> member packet. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433af42bdc81ce2a10f9edeee10583bfc959"></a>MessageEntryType_PipePacketRet&#160;</td><td class="fielddoc"><p><a class="el" href="class_robot_raconteur_1_1_pipe.html" title="pipe member type interface">Pipe</a> member packet ack. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a374c677d97775f9c65b4d228091084b2"></a>MessageEntryType_PipeConnectReq&#160;</td><td class="fielddoc"><p><a class="el" href="class_robot_raconteur_1_1_pipe.html" title="pipe member type interface">Pipe</a> member connect request. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a7e4b6f551cca5ce5ba6ab93ab62d774b"></a>MessageEntryType_PipeConnectRet&#160;</td><td class="fielddoc"><p><a class="el" href="class_robot_raconteur_1_1_pipe.html" title="pipe member type interface">Pipe</a> member connect response. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a0aba26fbaab51d5b04ea9e41f2900ccf"></a>MessageEntryType_PipeDisconnectReq&#160;</td><td class="fielddoc"><p><a class="el" href="class_robot_raconteur_1_1_pipe.html" title="pipe member type interface">Pipe</a> member close request. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a754811e2b3ef351123cf157f9f2f2ef7"></a>MessageEntryType_PipeDisconnectRet&#160;</td><td class="fielddoc"><p><a class="el" href="class_robot_raconteur_1_1_pipe.html" title="pipe member type interface">Pipe</a> member close response. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a2af74ba4b746a4055a1a78d0dc0f54ff"></a>MessageEntryType_PipeClosed&#160;</td><td class="fielddoc"><p><a class="el" href="class_robot_raconteur_1_1_pipe.html" title="pipe member type interface">Pipe</a> member closed event notification packet. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a9a3bc1678ed741bb0f65e141dd3ec080"></a>MessageEntryType_PipeClosedRet&#160;</td><td class="fielddoc"><p>(reserved) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a5bd133a230ee18575ab443850673066c"></a>MessageEntryType_CallbackCallReq&#160;</td><td class="fielddoc"><p><a class="el" href="class_robot_raconteur_1_1_callback.html" title="callback member type interface">Callback</a> member call request. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433af0dfa6577f1ebaa0164c12f64237b4dc"></a>MessageEntryType_CallbackCallRet&#160;</td><td class="fielddoc"><p><a class="el" href="class_robot_raconteur_1_1_callback.html" title="callback member type interface">Callback</a> member call response. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a950fa3dbf40a9eb937703d5757819952"></a>MessageEntryType_WirePacket&#160;</td><td class="fielddoc"><p><a class="el" href="class_robot_raconteur_1_1_wire.html" title="wire member type interface">Wire</a> member value packet. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a0cadb1aa3f73bbba32a62d73be12bcdf"></a>MessageEntryType_WirePacketRet&#160;</td><td class="fielddoc"><p>(reserved) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a2b48cab7d937a2d344a03a1dba6b1074"></a>MessageEntryType_WireConnectReq&#160;</td><td class="fielddoc"><p><a class="el" href="class_robot_raconteur_1_1_wire.html" title="wire member type interface">Wire</a> member connect request. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a77c874e520245c29ebdb0d6643ee2e96"></a>MessageEntryType_WireConnectRet&#160;</td><td class="fielddoc"><p><a class="el" href="class_robot_raconteur_1_1_wire.html" title="wire member type interface">Wire</a> member connect response. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a5a32ad53387f4e2ae436cfdd3c86c26f"></a>MessageEntryType_WireDisconnectReq&#160;</td><td class="fielddoc"><p><a class="el" href="class_robot_raconteur_1_1_wire.html" title="wire member type interface">Wire</a> member close request. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a22476f0908f7f15d7460d29edfaa4200"></a>MessageEntryType_WireDisconnectRet&#160;</td><td class="fielddoc"><p><a class="el" href="class_robot_raconteur_1_1_wire.html" title="wire member type interface">Wire</a> member close response. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433ae44954252ebffdbd87e4284c0d3f1937"></a>MessageEntryType_WireClosed&#160;</td><td class="fielddoc"><p><a class="el" href="class_robot_raconteur_1_1_wire.html" title="wire member type interface">Wire</a> member closed event notification packet. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a3090eb37be2f38b4440c65cdcb3285d9"></a>MessageEntryType_WireClosedRet&#160;</td><td class="fielddoc"><p>(reserved) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433ae1eb667981e2d87ea7929a963eb2752f"></a>MessageEntryType_MemoryRead&#160;</td><td class="fielddoc"><p>Memory member read request. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433affb555ead97b6db43381e83be51ee58f"></a>MessageEntryType_MemoryReadRet&#160;</td><td class="fielddoc"><p>Memory member read response. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a0c80095234215f8f35bb07761c740000"></a>MessageEntryType_MemoryWrite&#160;</td><td class="fielddoc"><p>Memory member write request. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a3c6969a59faea9baeb09d8e3f816f9b7"></a>MessageEntryType_MemoryWriteRet&#160;</td><td class="fielddoc"><p>Memory member write response. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433adfa48a6f116c12a62249dc0171cc37a0"></a>MessageEntryType_MemoryGetParam&#160;</td><td class="fielddoc"><p>Memory member get param request. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a720ed79d08bbe0c7c8e7fb61f73b5ccf"></a>MessageEntryType_MemoryGetParamRet&#160;</td><td class="fielddoc"><p>Memory member get param response. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a717c6fef61bfe1d7a4c8643c0a7ad6f8"></a>MessageEntryType_WirePeekInValueReq&#160;</td><td class="fielddoc"><p><a class="el" href="class_robot_raconteur_1_1_wire.html" title="wire member type interface">Wire</a> member peek InValue request. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a6b7bb10cd1fb129da5f8f5ce22dea6ad"></a>MessageEntryType_WirePeekInValueRet&#160;</td><td class="fielddoc"><p><a class="el" href="class_robot_raconteur_1_1_wire.html" title="wire member type interface">Wire</a> member peek InValue response. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433abb7be819d63c6716d832426690dbe5e2"></a>MessageEntryType_WirePeekOutValueReq&#160;</td><td class="fielddoc"><p><a class="el" href="class_robot_raconteur_1_1_wire.html" title="wire member type interface">Wire</a> member peek OutValue request. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a4f8fd23267878b6b2c3fafbdaf06a0c5"></a>MessageEntryType_WirePeekOutValueRet&#160;</td><td class="fielddoc"><p><a class="el" href="class_robot_raconteur_1_1_wire.html" title="wire member type interface">Wire</a> member peek OutValue response. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433a30ea4c2e69659ad174d82a77a6150e73"></a>MessageEntryType_WirePokeOutValueReq&#160;</td><td class="fielddoc"><p><a class="el" href="class_robot_raconteur_1_1_wire.html" title="wire member type interface">Wire</a> member poke OutValue request. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab2c8e11be4969d7cfdea461917ec9433aa0b01d47da96339d905baff1f902bfc3"></a>MessageEntryType_WirePokeOutValueRet&#160;</td><td class="fielddoc"><p><a class="el" href="class_robot_raconteur_1_1_wire.html" title="wire member type interface">Wire</a> member poke OutValue response. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a id="a38809bdfeadca180a2fd9237788be95b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a38809bdfeadca180a2fd9237788be95b">&#9670;&nbsp;</a></span>MessageErrorType</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="_robot_raconteur_constants_8h.html#a38809bdfeadca180a2fd9237788be95b">RobotRaconteur::MessageErrorType</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Message error type codes enum. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95ba4392ddacbc0daae4f3ef2bb2614d6fb5"></a>MessageErrorType_None&#160;</td><td class="fielddoc"><p>success </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95badcd5b5b5e0e54629b810906c553c7078"></a>MessageErrorType_ConnectionError&#160;</td><td class="fielddoc"><p>connection error </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95ba712a103c1649f65db42033ad19f25b8d"></a>MessageErrorType_ProtocolError&#160;</td><td class="fielddoc"><p>protocol error serializing messages </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95baf312b772f9d5c0787ab4d778994262d6"></a>MessageErrorType_ServiceNotFound&#160;</td><td class="fielddoc"><p>specified service not found </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95baf13aed865619119b5d5e1da86d2ac4e4"></a>MessageErrorType_ObjectNotFound&#160;</td><td class="fielddoc"><p>specified object not found </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95ba1f516a6f5e992e2ac8bc156bae45284a"></a>MessageErrorType_InvalidEndpoint&#160;</td><td class="fielddoc"><p>specified endpoint not found </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95ba802055b7a47e4128854777373b22265e"></a>MessageErrorType_EndpointCommunicationFatalError&#160;</td><td class="fielddoc"><p>communication with specified endpoint failed </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95bafe03cad9cea0ec4ce780d58bfa55cca4"></a>MessageErrorType_NodeNotFound&#160;</td><td class="fielddoc"><p>specified node not found </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95bacd5217b8c3d7550d5586774c20ca10ae"></a>MessageErrorType_ServiceError&#160;</td><td class="fielddoc"><p>service error </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95baf22bae0cfa84af3b0d85f85a9046a28c"></a>MessageErrorType_MemberNotFound&#160;</td><td class="fielddoc"><p>specified member not found </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95ba2a13c799989b88df99a4183171ef5bca"></a>MessageErrorType_MemberFormatMismatch&#160;</td><td class="fielddoc"><p>message format incompatible with specified member </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95ba9c6695bd404205f60000c09a4bf11ab0"></a>MessageErrorType_DataTypeMismatch&#160;</td><td class="fielddoc"><p>data type did not match expected type </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95baaa1227822e9a6160ace69ac7f324c4cc"></a>MessageErrorType_DataTypeError&#160;</td><td class="fielddoc"><p>data type failure </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95ba5cfa10901b3b151a0d3d34e018e954a5"></a>MessageErrorType_DataSerializationError&#160;</td><td class="fielddoc"><p>failure serializing data type </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95bafa25ba0835887ab719bfcf5f01629d22"></a>MessageErrorType_MessageEntryNotFound&#160;</td><td class="fielddoc"><p>specified message entry not found </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95ba224f9871f14220fac745ea7d51b9d1d8"></a>MessageErrorType_MessageElementNotFound&#160;</td><td class="fielddoc"><p>specified message element not found </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95ba9fb8d12350899596d3148be3fd6d9a44"></a>MessageErrorType_UnknownError&#160;</td><td class="fielddoc"><p>unknown exception occurred, check <code>error name</code> </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95ba9299353e7305d2144cc4d218f99e7ca1"></a>MessageErrorType_InvalidOperation&#160;</td><td class="fielddoc"><p>invalid operation attempted </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95ba4e86095301caa3f2217bc42da31a6cab"></a>MessageErrorType_InvalidArgument&#160;</td><td class="fielddoc"><p>argument is invalid </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95ba2899b17ccadcc4422090e0be68cd5a6b"></a>MessageErrorType_OperationFailed&#160;</td><td class="fielddoc"><p>the requested operation failed </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95ba330fe0f18463208dc3ff8952db2e30cd"></a>MessageErrorType_NullValue&#160;</td><td class="fielddoc"><p>invalid null value </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95ba115c60195032cecb5493f7d161f3fcfb"></a>MessageErrorType_InternalError&#160;</td><td class="fielddoc"><p>internal error </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95ba3090f5d95ffdcb7981e5995d92b90c9f"></a>MessageErrorType_SystemResourcePermissionDenied&#160;</td><td class="fielddoc"><p>permission denied to a system resource </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95ba6ec8e2d312883eee16cb2343188be5f4"></a>MessageErrorType_OutOfSystemResource&#160;</td><td class="fielddoc"><p>system resource has been exhausted </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95baf17ab42c4646627dec4a2263fd54b367"></a>MessageErrorType_SystemResourceError&#160;</td><td class="fielddoc"><p>system resource error </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95bac7e3328882de45172e7ac3d486cd0737"></a>MessageErrorType_ResourceNotFound&#160;</td><td class="fielddoc"><p>a required resource was not found </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95ba1dd6eac5c265ce7a06b7f1a8c693b1d1"></a>MessageErrorType_IOError&#160;</td><td class="fielddoc"><p>input/output error </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95baf6012b95e3cd78b17b53d2e7d48384d8"></a>MessageErrorType_BufferLimitViolation&#160;</td><td class="fielddoc"><p>a buffer underrun/overrun has occurred </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95bafd553858cb226fe05614a7e7cd2a11e8"></a>MessageErrorType_ServiceDefinitionError&#160;</td><td class="fielddoc"><p>service definition parse or validation error </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95baff5ccc6be71631cb39a633f81c35db12"></a>MessageErrorType_OutOfRange&#160;</td><td class="fielddoc"><p>attempt to access an out of range element </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95bad7e1b0ac81b6b94b63193f810ef83722"></a>MessageErrorType_KeyNotFound&#160;</td><td class="fielddoc"><p>key not found </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95ba5dc2dc0ca0ba548732530f8309553cc0"></a>MessageErrorType_InvalidConfiguration&#160;</td><td class="fielddoc"><p>invalid configuration specified </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95ba89ca883d7383ed8eca1071ab397967dc"></a>MessageErrorType_InvalidState&#160;</td><td class="fielddoc"><p>invalid state </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95ba93b777f71eabd511ff141c32bba5bb80"></a>MessageErrorType_RemoteError&#160;</td><td class="fielddoc"><p>error occurred on remote node </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95ba16c9eaf305960e77e4450be11096a96e"></a>MessageErrorType_RequestTimeout&#160;</td><td class="fielddoc"><p>request timed out </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95baffaf0a2d6bf97920fbc31ec343050f69"></a>MessageErrorType_ReadOnlyMember&#160;</td><td class="fielddoc"><p>attempt to write to a read only member </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95badb1c71ca2a02da0cc04378c34ad1e3ab"></a>MessageErrorType_WriteOnlyMember&#160;</td><td class="fielddoc"><p>attempt to read a write only member </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95ba840b07bd2f55e73bdefd5695ffa1a5f8"></a>MessageErrorType_NotImplementedError&#160;</td><td class="fielddoc"><p>member not implemented </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95ba607b8fc937fe994f9cb0a1c4e7bb478b"></a>MessageErrorType_MemberBusy&#160;</td><td class="fielddoc"><p>member is busy, try again </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95ba5a2dd8563003dc64e86f9a43e2bb9fc3"></a>MessageErrorType_ValueNotSet&#160;</td><td class="fielddoc"><p>value has not been set </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95ba6f87b8d2c540dbbceb35bcbc23185e0c"></a>MessageErrorType_AbortOperation&#160;</td><td class="fielddoc"><p>abort operation (generator only) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95ba7c1b229f45e0dd86eeefde34f6adf59c"></a>MessageErrorType_OperationAborted&#160;</td><td class="fielddoc"><p>the operation has been aborted </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95bac7b0d3f7fb7d473510495821e35ffd62"></a>MessageErrorType_StopIteration&#160;</td><td class="fielddoc"><p>stop generator iteration (generator only) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95bae5aff51d399a8165c5dbeb44d86ac5bb"></a>MessageErrorType_OperationTimeout&#160;</td><td class="fielddoc"><p>the operation has timed out </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95ba7c4718887c56e0d0076e29a8b3cae24b"></a>MessageErrorType_OperationCancelled&#160;</td><td class="fielddoc"><p>the operation has been cancelled </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95ba789cd19a1892ebf1abec3cfd89617e63"></a>MessageErrorType_AuthenticationError&#160;</td><td class="fielddoc"><p>authentication has failed </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95baa2eb7349ace02d4f9cd08478f8d9e9a0"></a>MessageErrorType_ObjectLockedError&#160;</td><td class="fielddoc"><p>the object is locked by another user or session </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a38809bdfeadca180a2fd9237788be95ba41066e105199faa7e52179b7387b6ab9"></a>MessageErrorType_PermissionDenied&#160;</td><td class="fielddoc"><p>permission to service object or resource denied </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a id="adbb36b42123bdefd483661e172367898"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adbb36b42123bdefd483661e172367898">&#9670;&nbsp;</a></span>RobotRaconteur_LogComponent</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="_robot_raconteur_constants_8h.html#adbb36b42123bdefd483661e172367898">RobotRaconteur::RobotRaconteur_LogComponent</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Log component enum. </p>
+<p>Log records contain the code of the component where the log record was generated </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="adbb36b42123bdefd483661e172367898a3bab3600079ad633bb3732d90a39da3e"></a>RobotRaconteur_LogComponent_Default&#160;</td><td class="fielddoc"><p>default component </p>
+</td></tr>
+<tr><td class="fieldname"><a id="adbb36b42123bdefd483661e172367898a7d44465b625098202070aa03d6e10006"></a>RobotRaconteur_LogComponent_Node&#160;</td><td class="fielddoc"><p>Robot Raconteur Node component. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="adbb36b42123bdefd483661e172367898a3e6035786b79c6aeac1bc25a7829fc23"></a>RobotRaconteur_LogComponent_Transport&#160;</td><td class="fielddoc"><p>tranport component </p>
+</td></tr>
+<tr><td class="fieldname"><a id="adbb36b42123bdefd483661e172367898aeaaeaba41d77d8b985f985644c1ce513"></a>RobotRaconteur_LogComponent_Message&#160;</td><td class="fielddoc"><p>message or message serialization component </p>
+</td></tr>
+<tr><td class="fieldname"><a id="adbb36b42123bdefd483661e172367898af7418257efda57d8365405e5341bc111"></a>RobotRaconteur_LogComponent_Client&#160;</td><td class="fielddoc"><p>client component </p>
+</td></tr>
+<tr><td class="fieldname"><a id="adbb36b42123bdefd483661e172367898aac30b7ef2b0b10ebce166c2f24eda5fb"></a>RobotRaconteur_LogComponent_Service&#160;</td><td class="fielddoc"><p>service component </p>
+</td></tr>
+<tr><td class="fieldname"><a id="adbb36b42123bdefd483661e172367898a7406992f28eaeb71a526414446602298"></a>RobotRaconteur_LogComponent_Member&#160;</td><td class="fielddoc"><p>member component </p>
+</td></tr>
+<tr><td class="fieldname"><a id="adbb36b42123bdefd483661e172367898a000b8a000852cc9fbb41ca98cc10a7f1"></a>RobotRaconteur_LogComponent_Pack&#160;</td><td class="fielddoc"><p>data message packing component </p>
+</td></tr>
+<tr><td class="fieldname"><a id="adbb36b42123bdefd483661e172367898a34962dbe8dcc1e3b48d030ddde7bf366"></a>RobotRaconteur_LogComponent_Unpack&#160;</td><td class="fielddoc"><p>data message unpacknig component </p>
+</td></tr>
+<tr><td class="fieldname"><a id="adbb36b42123bdefd483661e172367898a2c5b0d125cd631c8d41e35d8fe1bb325"></a>RobotRaconteur_LogComponent_ServiceDefinition&#160;</td><td class="fielddoc"><p>service definition parser component </p>
+</td></tr>
+<tr><td class="fieldname"><a id="adbb36b42123bdefd483661e172367898a955648653bf2167a1deaee098b7df895"></a>RobotRaconteur_LogComponent_Discovery&#160;</td><td class="fielddoc"><p>node/service discovery component </p>
+</td></tr>
+<tr><td class="fieldname"><a id="adbb36b42123bdefd483661e172367898acd5fcd51a0c84140014d532587bb26d0"></a>RobotRaconteur_LogComponent_Subscription&#160;</td><td class="fielddoc"><p>subscription component </p>
+</td></tr>
+<tr><td class="fieldname"><a id="adbb36b42123bdefd483661e172367898a100c5480b31f44104047a4accc3fb9e4"></a>RobotRaconteur_LogComponent_NodeSetup&#160;</td><td class="fielddoc"><p>node setup component </p>
+</td></tr>
+<tr><td class="fieldname"><a id="adbb36b42123bdefd483661e172367898a190777510c5b234e48450c911ae25bdf"></a>RobotRaconteur_LogComponent_Utility&#160;</td><td class="fielddoc"><p>utility component </p>
+</td></tr>
+<tr><td class="fieldname"><a id="adbb36b42123bdefd483661e172367898abc57324ee9beb98f4708257599597302"></a>RobotRaconteur_LogComponent_RobDefLib&#160;</td><td class="fielddoc"><p>service definition standard library component (external) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="adbb36b42123bdefd483661e172367898a8529980900d08acb95f2f180157baaf9"></a>RobotRaconteur_LogComponent_User&#160;</td><td class="fielddoc"><p>user component (external) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="adbb36b42123bdefd483661e172367898a4f5d41325788f5b5df4bd6225974a5d6"></a>RobotRaconteur_LogComponent_UserClient&#160;</td><td class="fielddoc"><p>user client component (external) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="adbb36b42123bdefd483661e172367898a1716d2ce63992dd6360e9717ebe235f6"></a>RobotRaconteur_LogComponent_UserService&#160;</td><td class="fielddoc"><p>user service component (external) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="adbb36b42123bdefd483661e172367898aa30c8b374448c54ae9a74c063b896b9c"></a>RobotRaconteur_LogComponent_ThirdParty&#160;</td><td class="fielddoc"><p>third party library component (external) </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a id="a22bd9afe88530132144b5809c24ce622"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a22bd9afe88530132144b5809c24ce622">&#9670;&nbsp;</a></span>RobotRaconteur_LogLevel</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="_robot_raconteur_constants_8h.html#a22bd9afe88530132144b5809c24ce622">RobotRaconteur::RobotRaconteur_LogLevel</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Log level enum. </p>
+<p>Enum of possible log levels. Set log level using RobotRaconteurNode::SetLogLevel(), <code>ROBOTRACONTEUR_LOG_LEVEL</code> environmental variable, or <code>--robotraconteur-log-level</code> node setup command line option. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a22bd9afe88530132144b5809c24ce622a3dc08cdca495cb9f3b03aa366e91a5a6"></a>RobotRaconteur_LogLevel_Trace&#160;</td><td class="fielddoc"><p><code>trace</code> log level </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a22bd9afe88530132144b5809c24ce622a085a083e772241a1803dcc9721cd5d4a"></a>RobotRaconteur_LogLevel_Debug&#160;</td><td class="fielddoc"><p><code>debug</code> log level </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a22bd9afe88530132144b5809c24ce622afc714a7feccf953c0907ca178addb92f"></a>RobotRaconteur_LogLevel_Info&#160;</td><td class="fielddoc"><p><code>info</code> log level </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a22bd9afe88530132144b5809c24ce622ad9190d8ac80c946c39d1201684b03555"></a>RobotRaconteur_LogLevel_Warning&#160;</td><td class="fielddoc"><p><code>warning</code> log level </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a22bd9afe88530132144b5809c24ce622a95a34d91de5d98d896e7893003d2a77e"></a>RobotRaconteur_LogLevel_Error&#160;</td><td class="fielddoc"><p><code>error</code> log level </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a22bd9afe88530132144b5809c24ce622a89c17cde2b1a575806240da7f21e2dc9"></a>RobotRaconteur_LogLevel_Fatal&#160;</td><td class="fielddoc"><p><code>fatal</code> log level </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a22bd9afe88530132144b5809c24ce622a6fc5fb411b13a279077f106c1eefc254"></a>RobotRaconteur_LogLevel_Disable&#160;</td><td class="fielddoc"><p><code>disabled</code> log level </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a id="a5f7d7fbf7df0190e26a4697d265aafe8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f7d7fbf7df0190e26a4697d265aafe8">&#9670;&nbsp;</a></span>ServerServiceListenerEventType</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="_robot_raconteur_constants_8h.html#a5f7d7fbf7df0190e26a4697d265aafe8">RobotRaconteur::ServerServiceListenerEventType</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enum of service listener events. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a5f7d7fbf7df0190e26a4697d265aafe8a71ee309970fdac1b1089e2a57a365f05"></a>ServerServiceListenerEventType_ServiceClosed&#160;</td><td class="fielddoc"><p>service has been closed </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a5f7d7fbf7df0190e26a4697d265aafe8a4343fe33603c41a4e5b9b9071a99e857"></a>ServerServiceListenerEventType_ClientConnected&#160;</td><td class="fielddoc"><p>client has connected </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a5f7d7fbf7df0190e26a4697d265aafe8af59124393300409cc4070cfdaaff504e"></a>ServerServiceListenerEventType_ClientDisconnected&#160;</td><td class="fielddoc"><p>client has disconnected </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

@@ -106,13 +106,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aeae58dd88e4ff68b34676503f41e18cb"><td class="memItemLeft" align="right" valign="top">virtual T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_pipe_endpoint.html#aeae58dd88e4ff68b34676503f41e18cb">PeekNextPacket</a> ()</td></tr>
 <tr class="memdesc:aeae58dd88e4ff68b34676503f41e18cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Peeks the next packet in the receive queue.  <a href="class_robot_raconteur_1_1_pipe_endpoint.html#aeae58dd88e4ff68b34676503f41e18cb">More...</a><br /></td></tr>
 <tr class="separator:aeae58dd88e4ff68b34676503f41e18cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9bf7f76a9a2caea45fa973822829d352"><td class="memItemLeft" align="right" valign="top">virtual T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_pipe_endpoint.html#a9bf7f76a9a2caea45fa973822829d352">ReceivePacketWait</a> (int32_t timeout=RR_TIMEOUT_INFINITE)</td></tr>
+<tr class="memitem:a9bf7f76a9a2caea45fa973822829d352"><td class="memItemLeft" align="right" valign="top">virtual T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_pipe_endpoint.html#a9bf7f76a9a2caea45fa973822829d352">ReceivePacketWait</a> (int32_t timeout=<a class="el" href="_robot_raconteur_constants_8h.html#a797a515f59232a62a9cc8b16df7ee78b">RR_TIMEOUT_INFINITE</a>)</td></tr>
 <tr class="memdesc:a9bf7f76a9a2caea45fa973822829d352"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receive the next packet in the receive queue, block if queue is empty.  <a href="class_robot_raconteur_1_1_pipe_endpoint.html#a9bf7f76a9a2caea45fa973822829d352">More...</a><br /></td></tr>
 <tr class="separator:a9bf7f76a9a2caea45fa973822829d352"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a18aea1fa6c69ccf324afa0db06115c9c"><td class="memItemLeft" align="right" valign="top">virtual T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_pipe_endpoint.html#a18aea1fa6c69ccf324afa0db06115c9c">PeekNextPacketWait</a> (int32_t timeout=RR_TIMEOUT_INFINITE)</td></tr>
+<tr class="memitem:a18aea1fa6c69ccf324afa0db06115c9c"><td class="memItemLeft" align="right" valign="top">virtual T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_pipe_endpoint.html#a18aea1fa6c69ccf324afa0db06115c9c">PeekNextPacketWait</a> (int32_t timeout=<a class="el" href="_robot_raconteur_constants_8h.html#a797a515f59232a62a9cc8b16df7ee78b">RR_TIMEOUT_INFINITE</a>)</td></tr>
 <tr class="memdesc:a18aea1fa6c69ccf324afa0db06115c9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Peek the next packet in the receive queue, block if queue is empty.  <a href="class_robot_raconteur_1_1_pipe_endpoint.html#a18aea1fa6c69ccf324afa0db06115c9c">More...</a><br /></td></tr>
 <tr class="separator:a18aea1fa6c69ccf324afa0db06115c9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a82a74cbfb233e32266758bcc41b4947c"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_pipe_endpoint.html#a82a74cbfb233e32266758bcc41b4947c">TryReceivePacketWait</a> (T &amp;val, int32_t timeout=RR_TIMEOUT_INFINITE, bool peek=false)</td></tr>
+<tr class="memitem:a82a74cbfb233e32266758bcc41b4947c"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_pipe_endpoint.html#a82a74cbfb233e32266758bcc41b4947c">TryReceivePacketWait</a> (T &amp;val, int32_t timeout=<a class="el" href="_robot_raconteur_constants_8h.html#a797a515f59232a62a9cc8b16df7ee78b">RR_TIMEOUT_INFINITE</a>, bool peek=false)</td></tr>
 <tr class="memdesc:a82a74cbfb233e32266758bcc41b4947c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Try receiving a packet, optionally blocking if the queue is empty.  <a href="class_robot_raconteur_1_1_pipe_endpoint.html#a82a74cbfb233e32266758bcc41b4947c">More...</a><br /></td></tr>
 <tr class="separator:a82a74cbfb233e32266758bcc41b4947c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a52e4332ad9ac2454dfce3072ee530ab3"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_pipe_endpoint.html#a52e4332ad9ac2454dfce3072ee530ab3">Close</a> ()</td></tr>
@@ -139,7 +139,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2313d0ca8f4a4b02ad3c71b871452076"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_pipe_endpoint_base.html#a2313d0ca8f4a4b02ad3c71b871452076">IsUnreliable</a> ()</td></tr>
 <tr class="memdesc:a2313d0ca8f4a4b02ad3c71b871452076"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get if pipe endpoint is unreliable.  <a href="class_robot_raconteur_1_1_pipe_endpoint_base.html#a2313d0ca8f4a4b02ad3c71b871452076">More...</a><br /></td></tr>
 <tr class="separator:a2313d0ca8f4a4b02ad3c71b871452076"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a30540f8217352d27009d64b854658864"><td class="memItemLeft" align="right" valign="top">MemberDefinition_Direction&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_pipe_endpoint_base.html#a30540f8217352d27009d64b854658864">Direction</a> ()</td></tr>
+<tr class="memitem:a30540f8217352d27009d64b854658864"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_robot_raconteur_constants_8h.html#a7420bbe1689d74c66948017ba2d27373">MemberDefinition_Direction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_pipe_endpoint_base.html#a30540f8217352d27009d64b854658864">Direction</a> ()</td></tr>
 <tr class="memdesc:a30540f8217352d27009d64b854658864"><td class="mdescLeft">&#160;</td><td class="mdescRight">The direction of the pipe.  <a href="class_robot_raconteur_1_1_pipe_endpoint_base.html#a30540f8217352d27009d64b854658864">More...</a><br /></td></tr>
 <tr class="separator:a30540f8217352d27009d64b854658864"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab40239248b4a9aa28a83a8098aa23ed6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_pipe_endpoint_base.html#ab40239248b4a9aa28a83a8098aa23ed6">GetIgnoreReceived</a> ()</td></tr>
@@ -344,7 +344,7 @@ template&lt;typename T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">MemberDefinition_Direction RobotRaconteur::PipeEndpointBase::Direction </td>
+          <td class="memname"><a class="el" href="_robot_raconteur_constants_8h.html#a7420bbe1689d74c66948017ba2d27373">MemberDefinition_Direction</a> RobotRaconteur::PipeEndpointBase::Direction </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -387,7 +387,7 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 
 <p>Returns the Robot Raconteur node Endpoint ID. </p>
-<p>Returns the endpoint associated with the ClientContext or ServerEndpoint associated with the pipe endpoint.</p>
+<p>Returns the endpoint associated with the ClientContext or <a class="el" href="class_robot_raconteur_1_1_server_endpoint.html" title="Server endpoint representing a client connection.">ServerEndpoint</a> associated with the pipe endpoint.</p>
 <dl class="section return"><dt>Returns</dt><dd>uint32_t The Robot Raconteur node Endpoint ID </dd></dl>
 
 </div>
@@ -588,7 +588,7 @@ template&lt;typename T &gt; </div>
           <td class="memname">virtual T <a class="el" href="class_robot_raconteur_1_1_pipe_endpoint.html">RobotRaconteur::PipeEndpoint</a>&lt; T &gt;::PeekNextPacketWait </td>
           <td>(</td>
           <td class="paramtype">int32_t&#160;</td>
-          <td class="paramname"><em>timeout</em> = <code>RR_TIMEOUT_INFINITE</code></td><td>)</td>
+          <td class="paramname"><em>timeout</em> = <code><a class="el" href="_robot_raconteur_constants_8h.html#a797a515f59232a62a9cc8b16df7ee78b">RR_TIMEOUT_INFINITE</a></code></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -657,7 +657,7 @@ template&lt;typename T &gt; </div>
           <td class="memname">virtual T <a class="el" href="class_robot_raconteur_1_1_pipe_endpoint.html">RobotRaconteur::PipeEndpoint</a>&lt; T &gt;::ReceivePacketWait </td>
           <td>(</td>
           <td class="paramtype">int32_t&#160;</td>
-          <td class="paramname"><em>timeout</em> = <code>RR_TIMEOUT_INFINITE</code></td><td>)</td>
+          <td class="paramname"><em>timeout</em> = <code><a class="el" href="_robot_raconteur_constants_8h.html#a797a515f59232a62a9cc8b16df7ee78b">RR_TIMEOUT_INFINITE</a></code></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -847,7 +847,7 @@ template&lt;typename T &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int32_t&#160;</td>
-          <td class="paramname"><em>timeout</em> = <code>RR_TIMEOUT_INFINITE</code>, </td>
+          <td class="paramname"><em>timeout</em> = <code><a class="el" href="_robot_raconteur_constants_8h.html#a797a515f59232a62a9cc8b16df7ee78b">RR_TIMEOUT_INFINITE</a></code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>

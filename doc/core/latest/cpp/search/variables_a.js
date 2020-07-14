@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['url_1095',['URL',['../class_robot_raconteur_1_1_node_discovery_info_u_r_l.html#a7edf4a114c31e38bfe139bb89002f2af',1,'RobotRaconteur::NodeDiscoveryInfoURL']]],
-  ['urls_1096',['URLs',['../class_robot_raconteur_1_1_node_discovery_info.html#a10bf606bdc6b35977ef01e33245dbc50',1,'RobotRaconteur::NodeDiscoveryInfo']]]
+  ['objects_2023',['Objects',['../class_robot_raconteur_1_1_service_definition.html#a9cf47d43ccf191c445a98ee6598a5181',1,'RobotRaconteur::ServiceDefinition']]],
+  ['objecttype_2024',['ObjectType',['../class_robot_raconteur_1_1_obj_ref_definition.html#a9d21e98474b382bec43773fe138de1e1',1,'RobotRaconteur::ObjRefDefinition']]],
+  ['options_2025',['Options',['../class_robot_raconteur_1_1_service_definition.html#a88d0c9ef97e0e73aaa9444b74ad44c5c',1,'RobotRaconteur::ServiceDefinition::Options()'],['../class_robot_raconteur_1_1_service_entry_definition.html#abaf9fabb02168d39d7d27966d9db14f1',1,'RobotRaconteur::ServiceEntryDefinition::Options()']]]
 ];

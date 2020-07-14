@@ -93,11 +93,38 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:affc812941402ed3ae4ff37bb664147c6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_wire_broadcaster_base.html#affc812941402ed3ae4ff37bb664147c6">SetPredicate</a> (boost::function&lt; bool(boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_wire_broadcaster_base.html">WireBroadcasterBase</a> &gt; &amp;, uint32_t)&gt; f)</td></tr>
 <tr class="memdesc:affc812941402ed3ae4ff37bb664147c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the predicate callback function.  <a href="class_robot_raconteur_1_1_wire_broadcaster_base.html#affc812941402ed3ae4ff37bb664147c6">More...</a><br /></td></tr>
 <tr class="separator:affc812941402ed3ae4ff37bb664147c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaeff6f5b43a2b283c374b635144adc94"><td class="memItemLeft" align="right" valign="top">int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_wire_broadcaster_base.html#aaeff6f5b43a2b283c374b635144adc94">GetOutValueLifespan</a> ()</td></tr>
+<tr class="memdesc:aaeff6f5b43a2b283c374b635144adc94"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the lifespan of OutValue.  <a href="class_robot_raconteur_1_1_wire_broadcaster_base.html#aaeff6f5b43a2b283c374b635144adc94">More...</a><br /></td></tr>
+<tr class="separator:aaeff6f5b43a2b283c374b635144adc94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20adc8feeae0c532bbe88f048603329a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_wire_broadcaster_base.html#a20adc8feeae0c532bbe88f048603329a">SetOutValueLifespan</a> (int32_t millis)</td></tr>
+<tr class="memdesc:a20adc8feeae0c532bbe88f048603329a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the lifespan of OutValue.  <a href="class_robot_raconteur_1_1_wire_broadcaster_base.html#a20adc8feeae0c532bbe88f048603329a">More...</a><br /></td></tr>
+<tr class="separator:a20adc8feeae0c532bbe88f048603329a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Base class for <a class="el" href="class_robot_raconteur_1_1_wire_broadcaster.html" title="Broadcaster to send values to all connected clients.">WireBroadcaster</a>. </p>
 <p>Base class for templated <a class="el" href="class_robot_raconteur_1_1_wire_broadcaster.html" title="Broadcaster to send values to all connected clients.">WireBroadcaster</a> class </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="aaeff6f5b43a2b283c374b635144adc94"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaeff6f5b43a2b283c374b635144adc94">&#9670;&nbsp;</a></span>GetOutValueLifespan()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int32_t RobotRaconteur::WireBroadcasterBase::GetOutValueLifespan </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the lifespan of OutValue. </p>
+<p>OutValue may optionally have a finite lifespan specified in milliseconds. Once the lifespan after sending has expired, the OutValue is cleared, and becomes invalid. Attempts to access OutValue will result in a <a class="el" href="class_robot_raconteur_1_1_value_not_set_exception.html" title="Exception thrown if a value has not been set.">ValueNotSetException</a>.</p>
+<dl class="section return"><dt>Returns</dt><dd>int32_t The lifespan in milliseconds </dd></dl>
+
+</div>
+</div>
 <a id="a70086c23ca66a529cbf0d98fb694525a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a70086c23ca66a529cbf0d98fb694525a">&#9670;&nbsp;</a></span>GetPredicate()</h2>
 
@@ -118,6 +145,34 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a20adc8feeae0c532bbe88f048603329a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a20adc8feeae0c532bbe88f048603329a">&#9670;&nbsp;</a></span>SetOutValueLifespan()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RobotRaconteur::WireBroadcasterBase::SetOutValueLifespan </td>
+          <td>(</td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>millis</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the lifespan of OutValue. </p>
+<p>OutValue may optionally have a finite lifespan specified in milliseconds. Once the lifespan after sending has expired, the OutValue is cleared and becomes invalid. Attempts to access OutValue will result in <a class="el" href="class_robot_raconteur_1_1_value_not_set_exception.html" title="Exception thrown if a value has not been set.">ValueNotSetException</a>.</p>
+<p>OutValue lifespans may be used to avoid using a stale value sent by the wire. If the lifespan is not set, the wire will continue to return the last sent value, even if the value is old.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">millis</td><td>The lifespan in millisecond, or RR_VALUE_LIFESPAN_INFINITE for infinite lifespan </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="affc812941402ed3ae4ff37bb664147c6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#affc812941402ed3ae4ff37bb664147c6">&#9670;&nbsp;</a></span>SetPredicate()</h2>
 
@@ -135,7 +190,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Set the predicate callback function. </p>
-<p>A predicate is optionally used to regulate when values are sent to clients. This is used by the BroadcastDownsampler to regulate update rates of values sent to clients.</p>
+<p>A predicate is optionally used to regulate when values are sent to clients. This is used by the <a class="el" href="class_robot_raconteur_1_1_broadcast_downsampler.html" title="Downsampler to manage rate of packets sent to client.">BroadcastDownsampler</a> to regulate update rates of values sent to clients.</p>
 <p>The predicate callback is invoked before the broadcaster sets the OutValue of a connection. If the predicate returns true, the OutValue packet will be sent. If it is false, the OutValue packet will not be sent to that endpoint. The predicate callback must have the following signature: </p><pre class="fragment">bool broadcaster_predicate(WireBroadcasterBasePtr&amp; broadcaster, uint32_t client_endpoint);
 </pre><p>It receives the broadcaster and the client endpoint ID. It returns true to send the OutValue packet, or false to not send the OutValue packet.</p>
 <dl class="params"><dt>Parameters</dt><dd>

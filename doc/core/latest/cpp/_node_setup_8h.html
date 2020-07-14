@@ -65,12 +65,79 @@ $(function() {
 </div>
 </div><!-- top -->
 <div class="header">
+  <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#enum-members">Enumerations</a>  </div>
   <div class="headertitle">
 <div class="title">NodeSetup.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
 <p><a href="_node_setup_8h_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_command_line_config_parser.html">RobotRaconteur::CommandLineConfigParser</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Command line parser for node setup classes.  <a href="class_robot_raconteur_1_1_command_line_config_parser.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node_setup.html">RobotRaconteur::RobotRaconteurNodeSetup</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setup a node using specified options and manage node lifecycle.  <a href="class_robot_raconteur_1_1_robot_raconteur_node_setup.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_client_node_setup.html">RobotRaconteur::ClientNodeSetup</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a <a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html" title="The central node implementation.">RobotRaconteurNode</a> instance to default configuration for a client only node.  <a href="class_robot_raconteur_1_1_client_node_setup.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_server_node_setup.html">RobotRaconteur::ServerNodeSetup</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a <a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html" title="The central node implementation.">RobotRaconteurNode</a> instance to default configuration for a server and client node.  <a href="class_robot_raconteur_1_1_server_node_setup.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_secure_server_node_setup.html">RobotRaconteur::SecureServerNodeSetup</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a <a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html" title="The central node implementation.">RobotRaconteurNode</a> instance to default configuration for a secure server and client node.  <a href="class_robot_raconteur_1_1_secure_server_node_setup.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:a67cc64804f073ee6a0e99ddc2d62aa5f"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_node_setup_8h.html#a67cc64804f073ee6a0e99ddc2d62aa5f">RobotRaconteur::RobotRaconteurNodeSetupFlags</a> { <br />
+&#160;&#160;<a class="el" href="_node_setup_8h.html#a67cc64804f073ee6a0e99ddc2d62aa5fa1d4f26c24df0a1eead053ecf73f7c4a6">RobotRaconteur::RobotRaconteurNodeSetupFlags_NONE</a> = 0x0, 
+<a class="el" href="_node_setup_8h.html#a67cc64804f073ee6a0e99ddc2d62aa5fa9c6173a900fdad92e08b78461be265b0">RobotRaconteur::RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING</a> = 0x1, 
+<a class="el" href="_node_setup_8h.html#a67cc64804f073ee6a0e99ddc2d62aa5fa394e9f88b41fa050b52c7e0acdfc718d">RobotRaconteur::RobotRaconteurNodeSetupFlags_ENABLE_NODE_ANNOUNCE</a> = 0x2, 
+<a class="el" href="_node_setup_8h.html#a67cc64804f073ee6a0e99ddc2d62aa5fa633630ec1751c20b95350473745b3bb2">RobotRaconteur::RobotRaconteurNodeSetupFlags_ENABLE_LOCAL_TRANSPORT</a> = 0x4, 
+<br />
+&#160;&#160;<a class="el" href="_node_setup_8h.html#a67cc64804f073ee6a0e99ddc2d62aa5fa27a1cf92cb07c84527c7859434d3e689">RobotRaconteur::RobotRaconteurNodeSetupFlags_ENABLE_TCP_TRANSPORT</a> = 0x8, 
+<a class="el" href="_node_setup_8h.html#a67cc64804f073ee6a0e99ddc2d62aa5fab132bdc9ee6d3c149f3b1088eea1eee1">RobotRaconteur::RobotRaconteurNodeSetupFlags_ENABLE_HARDWARE_TRANSPORT</a> = 0x10, 
+<a class="el" href="_node_setup_8h.html#a67cc64804f073ee6a0e99ddc2d62aa5faa0cb23dff19aff35c5191657edbeb87a">RobotRaconteur::RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_SERVER</a> = 0x20, 
+<a class="el" href="_node_setup_8h.html#a67cc64804f073ee6a0e99ddc2d62aa5fa695218928620e689ee20fb3a0de98976">RobotRaconteur::RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_CLIENT</a> = 0x40, 
+<br />
+&#160;&#160;<a class="el" href="_node_setup_8h.html#a67cc64804f073ee6a0e99ddc2d62aa5faab887316b0e0a2c9d7b12051cba24226">RobotRaconteur::RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER</a> = 0x80, 
+<a class="el" href="_node_setup_8h.html#a67cc64804f073ee6a0e99ddc2d62aa5fa5a9b94af70b118acb55fc66f600092c7">RobotRaconteur::RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER_PORT_SHARER</a> = 0x100, 
+<a class="el" href="_node_setup_8h.html#a67cc64804f073ee6a0e99ddc2d62aa5fa27e113e89e4b3322d58324a6edc67f99">RobotRaconteur::RobotRaconteurNodeSetupFlags_DISABLE_MESSAGE4</a> = 0x200, 
+<a class="el" href="_node_setup_8h.html#a67cc64804f073ee6a0e99ddc2d62aa5fac1aad3aeba2cf1ba75da7368de99ff41">RobotRaconteur::RobotRaconteurNodeSetupFlags_DISABLE_STRINGTABLE</a> = 0x400, 
+<br />
+&#160;&#160;<a class="el" href="_node_setup_8h.html#a67cc64804f073ee6a0e99ddc2d62aa5fa85dc78b8d99effdf6a0e4f80df265236">RobotRaconteur::RobotRaconteurNodeSetupFlags_DISABLE_TIMEOUTS</a> = 0x800, 
+<a class="el" href="_node_setup_8h.html#a67cc64804f073ee6a0e99ddc2d62aa5fa920ecab72a4ad29dd103148a4f201feb">RobotRaconteur::RobotRaconteurNodeSetupFlags_LOAD_TLS_CERT</a> = 0x1000, 
+<a class="el" href="_node_setup_8h.html#a67cc64804f073ee6a0e99ddc2d62aa5faf87eb8782f5959e1a6c566d4e10393f6">RobotRaconteur::RobotRaconteurNodeSetupFlags_REQUIRE_TLS</a> = 0x2000, 
+<a class="el" href="_node_setup_8h.html#a67cc64804f073ee6a0e99ddc2d62aa5fad0ae4f8d48f0f9d9c92c87b7a496db94">RobotRaconteur::RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_SERVER_PUBLIC</a> = 0x4000, 
+<br />
+&#160;&#160;<a class="el" href="_node_setup_8h.html#a67cc64804f073ee6a0e99ddc2d62aa5fab322d705110685c381a227f1d9d36597">RobotRaconteur::RobotRaconteurNodeSetupFlags_NODENAME_OVERRIDE</a> = 0x10000, 
+<a class="el" href="_node_setup_8h.html#a67cc64804f073ee6a0e99ddc2d62aa5fa16ffed47274ff2ec39f6740042957187">RobotRaconteur::RobotRaconteurNodeSetupFlags_NODEID_OVERRIDE</a> = 0x20000, 
+<a class="el" href="_node_setup_8h.html#a67cc64804f073ee6a0e99ddc2d62aa5fadf652426de701d76085cf144fe6c2707">RobotRaconteur::RobotRaconteurNodeSetupFlags_TCP_PORT_OVERRIDE</a> = 0x40000, 
+<a class="el" href="_node_setup_8h.html#a67cc64804f073ee6a0e99ddc2d62aa5fa8cd43dd9a269e8b0f749cf72e47bf7f8">RobotRaconteur::RobotRaconteurNodeSetupFlags_TCP_WEBSOCKET_ORIGIN_OVERRIDE</a> = 0x80000, 
+<br />
+&#160;&#160;<a class="el" href="_node_setup_8h.html#a67cc64804f073ee6a0e99ddc2d62aa5fa692bd103a306a2ae873d98fc1fffe75b">RobotRaconteur::RobotRaconteurNodeSetupFlags_ENABLE_INTRA_TRANSPORT</a> = 0x100000, 
+<a class="el" href="_node_setup_8h.html#a67cc64804f073ee6a0e99ddc2d62aa5facb30316e95a12af7b9ce76935ee12ff9">RobotRaconteur::RobotRaconteurNodeSetupFlags_INTRA_TRANSPORT_START_SERVER</a> = 0x200000, 
+<a class="el" href="_node_setup_8h.html#a67cc64804f073ee6a0e99ddc2d62aa5fa661b43796deafb7cec39d4b3544fb0e0">RobotRaconteur::RobotRaconteurNodeSetupFlags_LOCAL_TAP_ENABLE</a> = 0x1000000, 
+<a class="el" href="_node_setup_8h.html#a67cc64804f073ee6a0e99ddc2d62aa5fa00876cf3b5a0d590dd983c9c7b1d0520">RobotRaconteur::RobotRaconteurNodeSetupFlags_LOCAL_TAP_NAME</a> = 0x2000000, 
+<br />
+&#160;&#160;<a class="el" href="_node_setup_8h.html#a67cc64804f073ee6a0e99ddc2d62aa5fa719c61b81a7ea1647e2fc8e605b7f6b9">RobotRaconteur::RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS</a> = 0x10001C, 
+<a class="el" href="_node_setup_8h.html#a67cc64804f073ee6a0e99ddc2d62aa5fa29013f1cdaadbb0078c684e5b1ab3b8f">RobotRaconteur::RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT</a> = 0x10004D
+, <a class="el" href="_node_setup_8h.html#a67cc64804f073ee6a0e99ddc2d62aa5fa2709d5fa13e7392e8dc1b37eb22b90cf">RobotRaconteur::RobotRaconteurNodeSetupFlags_SERVER_DEFAULT</a> = 0x3004AF, 
+<a class="el" href="_node_setup_8h.html#a67cc64804f073ee6a0e99ddc2d62aa5fa4d92646f5e192ed34ac4f5e86c23c45d">RobotRaconteur::RobotRaconteurNodeSetupFlags_SERVER_DEFAULT_ALLOWED_OVERRIDE</a> = 0x33F7FFF, 
+<br />
+&#160;&#160;<a class="el" href="_node_setup_8h.html#a67cc64804f073ee6a0e99ddc2d62aa5faffc611e1ca2b303770c4c205bc4da142">RobotRaconteur::RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT</a> = 0x3034AF, 
+<a class="el" href="_node_setup_8h.html#a67cc64804f073ee6a0e99ddc2d62aa5fa35560a2614b9d54dc145aa6f70cd8771">RobotRaconteur::RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT_ALLOWED_OVERRIDE</a> = 0x33F4FFF
+<br />
+ }</td></tr>
+<tr class="memdesc:a67cc64804f073ee6a0e99ddc2d62aa5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setup option flags.  <a href="_node_setup_8h.html#a67cc64804f073ee6a0e99ddc2d62aa5f">More...</a><br /></td></tr>
+<tr class="separator:a67cc64804f073ee6a0e99ddc2d62aa5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><dl class="section author"><dt>Author</dt><dd>Dr. John Wason</dd></dl>
 <dl class="section copyright"><dt>Copyright</dt><dd>Copyright 2011-2020 Wason Technology, LLC</dd></dl>
@@ -78,7 +145,95 @@ $(function() {
 <dl class="section user"><dt></dt><dd>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at </dd></dl>
 <dl class="section user"><dt></dt><dd><a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a> </dd></dl>
 <dl class="section user"><dt></dt><dd>Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License. </dd></dl>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="a67cc64804f073ee6a0e99ddc2d62aa5f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a67cc64804f073ee6a0e99ddc2d62aa5f">&#9670;&nbsp;</a></span>RobotRaconteurNodeSetupFlags</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="_node_setup_8h.html#a67cc64804f073ee6a0e99ddc2d62aa5f">RobotRaconteur::RobotRaconteurNodeSetupFlags</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Setup option flags. </p>
+<p>Setup option flags passed to node setup classes to select options to enable and disable. Flags are used to configure the following types of options:</p>
+<ol type="1">
+<li>Enable and disable transport types</li>
+<li>Modify transport options including discovery, security requirements, and connection listening</li>
+<li>Configure TLS behavior</li>
+<li>Enable local tap for logging</li>
+</ol>
+<p>Node setup classes also allow options and flags to be "overridden" using command line options. Use the <code>*_ALLOW_OVERRIDE</code> options to configure when these overrides are allowed.</p>
+<p>The ClientNodeSetup, ServerNodeSetup, and SecureServerNodeSetup are convenience classes for the most commonly used options. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a67cc64804f073ee6a0e99ddc2d62aa5fa1d4f26c24df0a1eead053ecf73f7c4a6"></a>RobotRaconteurNodeSetupFlags_NONE&#160;</td><td class="fielddoc"><p>No options enabled. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a67cc64804f073ee6a0e99ddc2d62aa5fa9c6173a900fdad92e08b78461be265b0"></a>RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING&#160;</td><td class="fielddoc"><p>Enable node discovery listening on all transports. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a67cc64804f073ee6a0e99ddc2d62aa5fa394e9f88b41fa050b52c7e0acdfc718d"></a>RobotRaconteurNodeSetupFlags_ENABLE_NODE_ANNOUNCE&#160;</td><td class="fielddoc"><p>Enable node announce on all transports. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a67cc64804f073ee6a0e99ddc2d62aa5fa633630ec1751c20b95350473745b3bb2"></a>RobotRaconteurNodeSetupFlags_ENABLE_LOCAL_TRANSPORT&#160;</td><td class="fielddoc"><p>Enable <a class="el" href="class_robot_raconteur_1_1_local_transport.html" title="Transport for communication between processes using UNIX domain sockets.">LocalTransport</a>. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a67cc64804f073ee6a0e99ddc2d62aa5fa27a1cf92cb07c84527c7859434d3e689"></a>RobotRaconteurNodeSetupFlags_ENABLE_TCP_TRANSPORT&#160;</td><td class="fielddoc"><p>Enable <a class="el" href="class_robot_raconteur_1_1_tcp_transport.html" title="Transport for Transport Control Protocol Internet Protocol (TCP/IP) networks.">TcpTransport</a>. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a67cc64804f073ee6a0e99ddc2d62aa5fab132bdc9ee6d3c149f3b1088eea1eee1"></a>RobotRaconteurNodeSetupFlags_ENABLE_HARDWARE_TRANSPORT&#160;</td><td class="fielddoc"><p>Enable <a class="el" href="class_robot_raconteur_1_1_hardware_transport.html" title="Transport for USB, Bluetooth, and PCIe hardware devices.">HardwareTransport</a>. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a67cc64804f073ee6a0e99ddc2d62aa5faa0cb23dff19aff35c5191657edbeb87a"></a>RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_SERVER&#160;</td><td class="fielddoc"><p>Start the <a class="el" href="class_robot_raconteur_1_1_local_transport.html" title="Transport for communication between processes using UNIX domain sockets.">LocalTransport</a> server to listen for incoming clients. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a67cc64804f073ee6a0e99ddc2d62aa5fa695218928620e689ee20fb3a0de98976"></a>RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_CLIENT&#160;</td><td class="fielddoc"><p>Start the <a class="el" href="class_robot_raconteur_1_1_local_transport.html" title="Transport for communication between processes using UNIX domain sockets.">LocalTransport</a> client with specified node name. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a67cc64804f073ee6a0e99ddc2d62aa5faab887316b0e0a2c9d7b12051cba24226"></a>RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER&#160;</td><td class="fielddoc"><p>Start the <a class="el" href="class_robot_raconteur_1_1_tcp_transport.html" title="Transport for Transport Control Protocol Internet Protocol (TCP/IP) networks.">TcpTransport</a> server to listen for incoming clients on the specified port. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a67cc64804f073ee6a0e99ddc2d62aa5fa5a9b94af70b118acb55fc66f600092c7"></a>RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER_PORT_SHARER&#160;</td><td class="fielddoc"><p>Start the <a class="el" href="class_robot_raconteur_1_1_tcp_transport.html" title="Transport for Transport Control Protocol Internet Protocol (TCP/IP) networks.">TcpTransport</a> server to incoming for incoming clients using the port sharer. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a67cc64804f073ee6a0e99ddc2d62aa5fa27e113e89e4b3322d58324a6edc67f99"></a>RobotRaconteurNodeSetupFlags_DISABLE_MESSAGE4&#160;</td><td class="fielddoc"><p>Disable Message Format Version 4 on all transports. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a67cc64804f073ee6a0e99ddc2d62aa5fac1aad3aeba2cf1ba75da7368de99ff41"></a>RobotRaconteurNodeSetupFlags_DISABLE_STRINGTABLE&#160;</td><td class="fielddoc"><p>Disable Message Format Version 4 string table on all transports. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a67cc64804f073ee6a0e99ddc2d62aa5fa85dc78b8d99effdf6a0e4f80df265236"></a>RobotRaconteurNodeSetupFlags_DISABLE_TIMEOUTS&#160;</td><td class="fielddoc"><p>Disable all timeouts (useful for debugging) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a67cc64804f073ee6a0e99ddc2d62aa5fa920ecab72a4ad29dd103148a4f201feb"></a>RobotRaconteurNodeSetupFlags_LOAD_TLS_CERT&#160;</td><td class="fielddoc"><p>Load the TLS certificate for <a class="el" href="class_robot_raconteur_1_1_tcp_transport.html" title="Transport for Transport Control Protocol Internet Protocol (TCP/IP) networks.">TcpTransport</a>. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a67cc64804f073ee6a0e99ddc2d62aa5faf87eb8782f5959e1a6c566d4e10393f6"></a>RobotRaconteurNodeSetupFlags_REQUIRE_TLS&#160;</td><td class="fielddoc"><p>Require TLS for all clients on <a class="el" href="class_robot_raconteur_1_1_tcp_transport.html" title="Transport for Transport Control Protocol Internet Protocol (TCP/IP) networks.">TcpTransport</a>. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a67cc64804f073ee6a0e99ddc2d62aa5fad0ae4f8d48f0f9d9c92c87b7a496db94"></a>RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_SERVER_PUBLIC&#160;</td><td class="fielddoc"><p>Make <a class="el" href="class_robot_raconteur_1_1_local_transport.html" title="Transport for communication between processes using UNIX domain sockets.">LocalTransport</a> server listen for incoming clients from all users. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a67cc64804f073ee6a0e99ddc2d62aa5fab322d705110685c381a227f1d9d36597"></a>RobotRaconteurNodeSetupFlags_NODENAME_OVERRIDE&#160;</td><td class="fielddoc"><p>Allow NodeName to be configured using command line options. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a67cc64804f073ee6a0e99ddc2d62aa5fa16ffed47274ff2ec39f6740042957187"></a>RobotRaconteurNodeSetupFlags_NODEID_OVERRIDE&#160;</td><td class="fielddoc"><p>Allow <a class="el" href="class_robot_raconteur_1_1_node_i_d.html" title="NodeID UUID storage and generation.">NodeID</a> to be configured using command line options. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a67cc64804f073ee6a0e99ddc2d62aa5fadf652426de701d76085cf144fe6c2707"></a>RobotRaconteurNodeSetupFlags_TCP_PORT_OVERRIDE&#160;</td><td class="fielddoc"><p>Allow TCP port to be configured using command line options. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a67cc64804f073ee6a0e99ddc2d62aa5fa8cd43dd9a269e8b0f749cf72e47bf7f8"></a>RobotRaconteurNodeSetupFlags_TCP_WEBSOCKET_ORIGIN_OVERRIDE&#160;</td><td class="fielddoc"><p>Allow TCP WebSocket origin control to be configured using command line options. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a67cc64804f073ee6a0e99ddc2d62aa5fa692bd103a306a2ae873d98fc1fffe75b"></a>RobotRaconteurNodeSetupFlags_ENABLE_INTRA_TRANSPORT&#160;</td><td class="fielddoc"><p>Enable <a class="el" href="class_robot_raconteur_1_1_intra_transport.html" title="Transport for intra-process communication.">IntraTransport</a>. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a67cc64804f073ee6a0e99ddc2d62aa5facb30316e95a12af7b9ce76935ee12ff9"></a>RobotRaconteurNodeSetupFlags_INTRA_TRANSPORT_START_SERVER&#160;</td><td class="fielddoc"><p>Start the <a class="el" href="class_robot_raconteur_1_1_intra_transport.html" title="Transport for intra-process communication.">IntraTransport</a> server to listen for incoming clients. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a67cc64804f073ee6a0e99ddc2d62aa5fa661b43796deafb7cec39d4b3544fb0e0"></a>RobotRaconteurNodeSetupFlags_LOCAL_TAP_ENABLE&#160;</td><td class="fielddoc"><p>Enable the LocalTap debug logging system. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a67cc64804f073ee6a0e99ddc2d62aa5fa00876cf3b5a0d590dd983c9c7b1d0520"></a>RobotRaconteurNodeSetupFlags_LOCAL_TAP_NAME&#160;</td><td class="fielddoc"><p>Allow the user to set the LocalTap name. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a67cc64804f073ee6a0e99ddc2d62aa5fa719c61b81a7ea1647e2fc8e605b7f6b9"></a>RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS&#160;</td><td class="fielddoc"><p>Convenience flag to enable all transports. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a67cc64804f073ee6a0e99ddc2d62aa5fa29013f1cdaadbb0078c684e5b1ab3b8f"></a>RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT&#160;</td><td class="fielddoc"><p>Default configuration for client nodes (See <a class="el" href="class_robot_raconteur_1_1_client_node_setup.html" title="Initializes a RobotRaconteurNode instance to default configuration for a client only node.">ClientNodeSetup</a>) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a67cc64804f073ee6a0e99ddc2d62aa5fa2709d5fa13e7392e8dc1b37eb22b90cf"></a>RobotRaconteurNodeSetupFlags_SERVER_DEFAULT&#160;</td><td class="fielddoc"><p>Default configuration for server nodes. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a67cc64804f073ee6a0e99ddc2d62aa5fa4d92646f5e192ed34ac4f5e86c23c45d"></a>RobotRaconteurNodeSetupFlags_SERVER_DEFAULT_ALLOWED_OVERRIDE&#160;</td><td class="fielddoc"><p>Default allowed overrides for server nodes. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a67cc64804f073ee6a0e99ddc2d62aa5faffc611e1ca2b303770c4c205bc4da142"></a>RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT&#160;</td><td class="fielddoc"><p>Default configuration for server nodes requiring TLS network transports. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a67cc64804f073ee6a0e99ddc2d62aa5fa35560a2614b9d54dc145aa6f70cd8771"></a>RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT_ALLOWED_OVERRIDE&#160;</td><td class="fielddoc"><p>Default allowed overrides for server nodes requiring TLS network transports. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

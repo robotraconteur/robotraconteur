@@ -65,12 +65,67 @@ $(function() {
 </div>
 </div><!-- top -->
 <div class="header">
+  <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">Logging.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
 <p><a href="_logging_8h_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_r_r_log_record.html">RobotRaconteur::RRLogRecord</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Robot Raconteur log record.  <a href="class_robot_raconteur_1_1_r_r_log_record.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_log_record_handler.html">RobotRaconteur::LogRecordHandler</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base class of log record handler.  <a href="class_robot_raconteur_1_1_log_record_handler.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_file_log_record_handler.html">RobotRaconteur::FileLogRecordHandler</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Log record handler that saves to a file.  <a href="class_robot_raconteur_1_1_file_log_record_handler.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a559bbad34a22b8b0d1be9e2b9444efc3"><td class="memItemLeft" align="right" valign="top"><a id="a559bbad34a22b8b0d1be9e2b9444efc3"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_logging_8h.html#a559bbad34a22b8b0d1be9e2b9444efc3">RobotRaconteur::LogRecordHandlerPtr</a> = boost::shared_ptr&lt; LogRecordHandler &gt;</td></tr>
+<tr class="memdesc:a559bbad34a22b8b0d1be9e2b9444efc3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience alias for <a class="el" href="class_robot_raconteur_1_1_log_record_handler.html" title="Base class of log record handler.">LogRecordHandler</a> shared_ptr. <br /></td></tr>
+<tr class="separator:a559bbad34a22b8b0d1be9e2b9444efc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c2597c84fdda53e7827ccc6e1fb4747"><td class="memItemLeft" align="right" valign="top"><a id="a0c2597c84fdda53e7827ccc6e1fb4747"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_logging_8h.html#a0c2597c84fdda53e7827ccc6e1fb4747">RobotRaconteur::LogRecordHandlerConstPtr</a> = boost::shared_ptr&lt; const LogRecordHandler &gt;</td></tr>
+<tr class="memdesc:a0c2597c84fdda53e7827ccc6e1fb4747"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience alias for <a class="el" href="class_robot_raconteur_1_1_log_record_handler.html" title="Base class of log record handler.">LogRecordHandler</a> const shared_ptr. <br /></td></tr>
+<tr class="separator:a0c2597c84fdda53e7827ccc6e1fb4747"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6524273e6a8b7d9a9a8c25581980e1e9"><td class="memItemLeft" align="right" valign="top"><a id="a6524273e6a8b7d9a9a8c25581980e1e9"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_logging_8h.html#a6524273e6a8b7d9a9a8c25581980e1e9">RobotRaconteur::FileLogRecordHandlerPtr</a> = boost::shared_ptr&lt; FileLogRecordHandler &gt;</td></tr>
+<tr class="memdesc:a6524273e6a8b7d9a9a8c25581980e1e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience alias for <a class="el" href="class_robot_raconteur_1_1_file_log_record_handler.html" title="Log record handler that saves to a file.">FileLogRecordHandler</a> shared_ptr. <br /></td></tr>
+<tr class="separator:a6524273e6a8b7d9a9a8c25581980e1e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae632de926d228a74c80e2784ba97d922"><td class="memItemLeft" align="right" valign="top"><a id="ae632de926d228a74c80e2784ba97d922"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_logging_8h.html#ae632de926d228a74c80e2784ba97d922">RobotRaconteur::FileLogRecordHandlerConstPtr</a> = boost::shared_ptr&lt; const FileLogRecordHandler &gt;</td></tr>
+<tr class="memdesc:ae632de926d228a74c80e2784ba97d922"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience alias for <a class="el" href="class_robot_raconteur_1_1_file_log_record_handler.html" title="Log record handler that saves to a file.">FileLogRecordHandler</a> const shared_ptr. <br /></td></tr>
+<tr class="separator:ae632de926d228a74c80e2784ba97d922"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ad929117a548fde556ff69af187819c25"><td class="memItemLeft" align="right" valign="top"><a id="ad929117a548fde556ff69af187819c25"></a>
+std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_logging_8h.html#ad929117a548fde556ff69af187819c25">RobotRaconteur::operator&lt;&lt;</a> (std::ostream &amp;out, const RRLogRecord &amp;record)</td></tr>
+<tr class="memdesc:ad929117a548fde556ff69af187819c25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a RRlogRecord to a stream. <br /></td></tr>
+<tr class="separator:ad929117a548fde556ff69af187819c25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a973794f1cb517df19f0b8dc4d75f87fb"><td class="memItemLeft" align="right" valign="top"><a id="a973794f1cb517df19f0b8dc4d75f87fb"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_logging_8h.html#a973794f1cb517df19f0b8dc4d75f87fb">RobotRaconteur::RRLogRecord_Level_ToString</a> (RobotRaconteur_LogLevel level)</td></tr>
+<tr class="memdesc:a973794f1cb517df19f0b8dc4d75f87fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a RobotRaconteur_LogLevel code to a string. <br /></td></tr>
+<tr class="separator:a973794f1cb517df19f0b8dc4d75f87fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac749a9c3cff0c7903ba9aa27e33cd05"><td class="memItemLeft" align="right" valign="top"><a id="aac749a9c3cff0c7903ba9aa27e33cd05"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_logging_8h.html#aac749a9c3cff0c7903ba9aa27e33cd05">RobotRaconteur::RRLogRecord_Component_ToString</a> (RobotRaconteur_LogComponent component)</td></tr>
+<tr class="memdesc:aac749a9c3cff0c7903ba9aa27e33cd05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a RobotRaconteur_LogComponent code to a string. <br /></td></tr>
+<tr class="separator:aac749a9c3cff0c7903ba9aa27e33cd05"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a600b07e188b6d7d4bc452845c412c0dc"><td class="memItemLeft" align="right" valign="top"><a id="a600b07e188b6d7d4bc452845c412c0dc"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_logging_8h.html#a600b07e188b6d7d4bc452845c412c0dc">RobotRaconteur::RRLogRecord_Node_ToString</a> (const RR_WEAK_PTR&lt; RobotRaconteurNode &gt; &amp;node)</td></tr>
+<tr class="memdesc:a600b07e188b6d7d4bc452845c412c0dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a <a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html" title="The central node implementation.">RobotRaconteurNode</a> weak_ptr to a <a class="el" href="class_robot_raconteur_1_1_node_i_d.html" title="NodeID UUID storage and generation.">NodeID</a> string. Returns "unknown" if could not resolve. <br /></td></tr>
+<tr class="separator:a600b07e188b6d7d4bc452845c412c0dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><dl class="section author"><dt>Author</dt><dd>Dr. John Wason</dd></dl>
 <dl class="section copyright"><dt>Copyright</dt><dd>Copyright 2011-2020 Wason Technology, LLC</dd></dl>

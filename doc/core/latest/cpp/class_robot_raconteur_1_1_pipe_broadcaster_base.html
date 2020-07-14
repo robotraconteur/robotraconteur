@@ -189,7 +189,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Set the predicate callback function. </p>
-<p>A predicate is optionally used to regulate when packets are sent to clients. This is used by the BroadcastDownsampler to regulate update rates of packets sent to clients.</p>
+<p>A predicate is optionally used to regulate when packets are sent to clients. This is used by the <a class="el" href="class_robot_raconteur_1_1_broadcast_downsampler.html" title="Downsampler to manage rate of packets sent to client.">BroadcastDownsampler</a> to regulate update rates of packets sent to clients.</p>
 <p>The predicate callback is invoked before the broadcaster sends a packet to an endpoint. If the predicate returns true, the packet will be sent. If it is false, the packet will not be sent to that endpoint. The predicate callback must have the following signature: </p><pre class="fragment">bool broadcaster_predicate(PipeBroadcasterBasePtr&amp; broadcaster, uint32_t client_endpoint, int32_t pipe_endpoint_index);
 </pre><p>It receives the broadcaster, the client endpoint ID, and the pipe endpoint index. It returns true to send the packet, or false to not send the packet.</p>
 <dl class="params"><dt>Parameters</dt><dd>

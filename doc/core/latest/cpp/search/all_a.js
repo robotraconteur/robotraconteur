@@ -1,9 +1,23 @@
 var searchData=
 [
-  ['lastannouncetime_234',['LastAnnounceTime',['../class_robot_raconteur_1_1_node_discovery_info_u_r_l.html#aab7e6cc5e5e504440a0cf9880c012a7a',1,'RobotRaconteur::NodeDiscoveryInfoURL']]],
-  ['localtransport_2eh_235',['LocalTransport.h',['../_local_transport_8h.html',1,'']]],
-  ['lock_236',['lock',['../class_robot_raconteur_1_1_robot_raconteur_node_1_1_scoped_monitor_lock.html#abfd1edcf73dd5be33223b7a7d5a36386',1,'RobotRaconteur::RobotRaconteurNode::ScopedMonitorLock']]],
-  ['logging_2eh_237',['Logging.h',['../_logging_8h.html',1,'']]],
-  ['logmessage_238',['LogMessage',['../class_robot_raconteur_1_1_robot_raconteur_node.html#a99d97b13d2110d6d0f9573dedce1a048',1,'RobotRaconteur::RobotRaconteurNode']]],
-  ['logrecord_239',['LogRecord',['../class_robot_raconteur_1_1_robot_raconteur_node.html#a7521777a9bf735970c094e45735ccdef',1,'RobotRaconteur::RobotRaconteurNode']]]
+  ['last_5fexpected_419',['last_expected',['../struct_robot_raconteur_1_1_timer_event.html#aa575cbaca8861d47dc447f55464d5b28',1,'RobotRaconteur::TimerEvent']]],
+  ['last_5freal_420',['last_real',['../struct_robot_raconteur_1_1_timer_event.html#ad36695ddf6b7be945786e4fc00ba359f',1,'RobotRaconteur::TimerEvent']]],
+  ['lastannouncetime_421',['LastAnnounceTime',['../class_robot_raconteur_1_1_node_discovery_info_u_r_l.html#aab7e6cc5e5e504440a0cf9880c012a7a',1,'RobotRaconteur::NodeDiscoveryInfoURL']]],
+  ['length_422',['Length',['../class_robot_raconteur_1_1_array_memory.html#afc7acaee9cdff7160e9fc1f294171fd9',1,'RobotRaconteur::ArrayMemory::Length()'],['../class_robot_raconteur_1_1_pod_array_memory.html#a2f6feacb2ea97123c61237b5281173d6',1,'RobotRaconteur::PodArrayMemory::Length()'],['../class_robot_raconteur_1_1_named_array_memory.html#addea16019e646a8caf0019df231e9adc',1,'RobotRaconteur::NamedArrayMemory::Length()']]],
+  ['level_423',['Level',['../class_robot_raconteur_1_1_r_r_log_record.html#a664ff068b1d05c4a97fd96ea1bdf3d01',1,'RobotRaconteur::RRLogRecord']]],
+  ['line_424',['Line',['../struct_robot_raconteur_1_1_service_definition_parse_info.html#a1c9137fed8c6342b8500ebfe793c90f2',1,'RobotRaconteur::ServiceDefinitionParseInfo']]],
+  ['linenumber_425',['LineNumber',['../struct_robot_raconteur_1_1_service_definition_parse_info.html#ad244b71505e6d50c55b6b9d09f9e17c3',1,'RobotRaconteur::ServiceDefinitionParseInfo']]],
+  ['loadtlsnodecertificate_426',['LoadTlsNodeCertificate',['../class_robot_raconteur_1_1_tcp_transport.html#a6210d00b1746d4871e2f71bd9c00d7a9',1,'RobotRaconteur::TcpTransport']]],
+  ['localmessagetap_427',['LocalMessageTap',['../class_robot_raconteur_1_1_local_message_tap.html',1,'RobotRaconteur::LocalMessageTap'],['../class_robot_raconteur_1_1_local_message_tap.html#ae2319714d2a46a91db5b6392def71eb1',1,'RobotRaconteur::LocalMessageTap::LocalMessageTap()']]],
+  ['localtransport_428',['LocalTransport',['../class_robot_raconteur_1_1_local_transport.html',1,'RobotRaconteur::LocalTransport'],['../class_robot_raconteur_1_1_local_transport.html#a907282b59841f8f0fdfb2848636536c3',1,'RobotRaconteur::LocalTransport::LocalTransport()']]],
+  ['localtransport_2eh_429',['LocalTransport.h',['../_local_transport_8h.html',1,'']]],
+  ['localtransportptr_430',['LocalTransportPtr',['../_local_transport_8h.html#a5f07fcd04e5c03c40ce7e4e4fb6903e4',1,'RobotRaconteur']]],
+  ['lock_431',['lock',['../class_robot_raconteur_1_1_robot_raconteur_node_1_1_scoped_monitor_lock.html#abfd1edcf73dd5be33223b7a7d5a36386',1,'RobotRaconteur::RobotRaconteurNode::ScopedMonitorLock']]],
+  ['logging_432',['Logging',['../logging.html',1,'']]],
+  ['logging_2eh_433',['Logging.h',['../_logging_8h.html',1,'']]],
+  ['logmessage_434',['LogMessage',['../class_robot_raconteur_1_1_robot_raconteur_node.html#a99d97b13d2110d6d0f9573dedce1a048',1,'RobotRaconteur::RobotRaconteurNode']]],
+  ['logrecord_435',['LogRecord',['../class_robot_raconteur_1_1_robot_raconteur_node.html#a7521777a9bf735970c094e45735ccdef',1,'RobotRaconteur::RobotRaconteurNode']]],
+  ['logrecordhandler_436',['LogRecordHandler',['../class_robot_raconteur_1_1_log_record_handler.html',1,'RobotRaconteur']]],
+  ['logrecordhandlerconstptr_437',['LogRecordHandlerConstPtr',['../_logging_8h.html#a0c2597c84fdda53e7827ccc6e1fb4747',1,'RobotRaconteur']]],
+  ['logrecordhandlerptr_438',['LogRecordHandlerPtr',['../_logging_8h.html#a559bbad34a22b8b0d1be9e2b9444efc3',1,'RobotRaconteur']]]
 ];

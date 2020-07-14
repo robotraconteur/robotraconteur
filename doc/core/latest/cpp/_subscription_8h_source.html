@@ -111,7 +111,7 @@ $(function() {
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keyword">class </span>ROBOTRACONTEUR_CORE_API ServiceSubscriptionFilterNode</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    {</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        ::RobotRaconteur::NodeID NodeID;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <a class="code" href="class_robot_raconteur_1_1_node_i_d.html">::RobotRaconteur::NodeID</a> <a class="code" href="class_robot_raconteur_1_1_node_i_d.html">NodeID</a>;</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        std::string NodeName;</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        std::string Username;</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        RR_INTRUSIVE_PTR&lt;RRMap&lt;std::string, RRValue&gt; &gt; Credentials;</div>
@@ -131,7 +131,7 @@ $(function() {
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    {</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keyword">public</span>:</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        ::RobotRaconteur::NodeID NodeID;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <a class="code" href="class_robot_raconteur_1_1_node_i_d.html">::RobotRaconteur::NodeID</a> NodeID;</div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        std::string ServiceName;</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        ServiceSubscriptionClientID(const ::RobotRaconteur::NodeID&amp; nodeid, boost::string_ref service_name);</div>
@@ -341,7 +341,7 @@ $(function() {
 <div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;        RR_INTRUSIVE_PTR&lt;RRValue&gt; GetInValueBase(TimeSpec* time = NULL, RR_SHARED_PTR&lt;WireConnectionBase&gt;* connection = NULL);</div>
 <div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;        <span class="keywordtype">bool</span> TryGetInValueBase(RR_INTRUSIVE_PTR&lt;RRValue&gt;&amp; val, TimeSpec* time = NULL, RR_SHARED_PTR&lt;WireConnectionBase&gt;* connection = NULL);</div>
 <div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160; </div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;        <span class="keywordtype">bool</span> WaitInValueValid(int32_t timeout = RR_TIMEOUT_INFINITE);</div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;        <span class="keywordtype">bool</span> WaitInValueValid(int32_t timeout = <a class="code" href="_robot_raconteur_constants_8h.html#a797a515f59232a62a9cc8b16df7ee78b">RR_TIMEOUT_INFINITE</a>);</div>
 <div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160; </div>
 <div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;        <span class="keywordtype">size_t</span> GetActiveWireConnectionCount();</div>
 <div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160; </div>
@@ -465,7 +465,7 @@ $(function() {
 <div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160; </div>
 <div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;        RR_INTRUSIVE_PTR&lt;RRValue&gt; ReceivePacketBase();</div>
 <div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;        <span class="keywordtype">bool</span> TryReceivePacketBase(RR_INTRUSIVE_PTR&lt;RRValue&gt;&amp; packet);</div>
-<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;        <span class="keywordtype">bool</span> TryReceivePacketBaseWait(RR_INTRUSIVE_PTR&lt;RRValue&gt;&amp; packet, int32_t timeout = RR_TIMEOUT_INFINITE, <span class="keywordtype">bool</span> peek = <span class="keyword">false</span>, RR_SHARED_PTR&lt;PipeEndpointBase&gt;* ep = NULL );</div>
+<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;        <span class="keywordtype">bool</span> TryReceivePacketBaseWait(RR_INTRUSIVE_PTR&lt;RRValue&gt;&amp; packet, int32_t timeout = <a class="code" href="_robot_raconteur_constants_8h.html#a797a515f59232a62a9cc8b16df7ee78b">RR_TIMEOUT_INFINITE</a>, <span class="keywordtype">bool</span> peek = <span class="keyword">false</span>, RR_SHARED_PTR&lt;PipeEndpointBase&gt;* ep = NULL );</div>
 <div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160; </div>
 <div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;        <span class="keywordtype">size_t</span> Available();</div>
 <div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;        <span class="keywordtype">size_t</span> GetActivePipeEndpointCount();</div>
@@ -535,7 +535,7 @@ $(function() {
 <div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;        }</div>
 <div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160; </div>
-<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160;        <span class="keywordtype">bool</span> TryReceivePacketWait(T&amp; packet, int32_t timeout = RR_TIMEOUT_INFINITE, <span class="keywordtype">bool</span> peek = <span class="keyword">false</span>, RR_SHARED_PTR&lt;PipeEndpoint&lt;T&gt; &gt;* ep = NULL)</div>
+<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160;        <span class="keywordtype">bool</span> TryReceivePacketWait(T&amp; packet, int32_t timeout = <a class="code" href="_robot_raconteur_constants_8h.html#a797a515f59232a62a9cc8b16df7ee78b">RR_TIMEOUT_INFINITE</a>, <span class="keywordtype">bool</span> peek = <span class="keyword">false</span>, RR_SHARED_PTR&lt;PipeEndpoint&lt;T&gt; &gt;* ep = NULL)</div>
 <div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160;        {</div>
 <div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160;            RR_INTRUSIVE_PTR&lt;RRValue&gt; o;</div>
 <div class="line"><a name="l00492"></a><span class="lineno">  492</span>&#160;            RR_SHARED_PTR&lt;PipeEndpointBase&gt; ep1;</div>
@@ -630,8 +630,10 @@ $(function() {
 <div class="line"><a name="l00581"></a><span class="lineno">  581</span>&#160; </div>
 <div class="line"><a name="l00582"></a><span class="lineno">  582</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
+<div class="ttc" id="a_robot_raconteur_constants_8h_html_a797a515f59232a62a9cc8b16df7ee78b"><div class="ttname"><a href="_robot_raconteur_constants_8h.html#a797a515f59232a62a9cc8b16df7ee78b">RR_TIMEOUT_INFINITE</a></div><div class="ttdeci">#define RR_TIMEOUT_INFINITE</div><div class="ttdoc">Disable timeout for asynchronous operations.</div><div class="ttdef"><b>Definition:</b> RobotRaconteurConstants.h:564</div></div>
 <div class="ttc" id="aclass_robot_raconteur_1_1_service_info2_html"><div class="ttname"><a href="class_robot_raconteur_1_1_service_info2.html">RobotRaconteur::ServiceInfo2</a></div><div class="ttdoc">Contains information about a service found using discovery.</div><div class="ttdef"><b>Definition:</b> Discovery.h:49</div></div>
 <div class="ttc" id="aclass_robot_raconteur_1_1_pipe_endpoint_html"><div class="ttname"><a href="class_robot_raconteur_1_1_pipe_endpoint.html">RobotRaconteur::PipeEndpoint</a></div><div class="ttdoc">Pipe endpoint used to transmit reliable or unreliable data streams.</div><div class="ttdef"><b>Definition:</b> PipeMember.h:280</div></div>
+<div class="ttc" id="aclass_robot_raconteur_1_1_node_i_d_html"><div class="ttname"><a href="class_robot_raconteur_1_1_node_i_d.html">RobotRaconteur::NodeID</a></div><div class="ttdoc">NodeID UUID storage and generation.</div><div class="ttdef"><b>Definition:</b> NodeID.h:57</div></div>
 <div class="ttc" id="a_client_8h_html"><div class="ttname"><a href="_client_8h.html">Client.h</a></div></div>
 <div class="ttc" id="aclass_robot_raconteur_1_1_wire_connection_html"><div class="ttname"><a href="class_robot_raconteur_1_1_wire_connection.html">RobotRaconteur::WireConnection</a></div><div class="ttdoc">Wire connection used to transmit &quot;most recent&quot; values.</div><div class="ttdef"><b>Definition:</b> Subscription.h:50</div></div>
 <div class="ttc" id="aclass_robot_raconteur_1_1_pipe_endpoint_base_html"><div class="ttname"><a href="class_robot_raconteur_1_1_pipe_endpoint_base.html">RobotRaconteur::PipeEndpointBase</a></div><div class="ttdoc">Base class for PipeEndpoint.</div><div class="ttdef"><b>Definition:</b> PipeMember.h:55</div></div>

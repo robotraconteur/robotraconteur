@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['message_1083',['Message',['../class_robot_raconteur_1_1_robot_raconteur_exception.html#a7819fa412ac4ce7e3bbbf80846e28ea0',1,'RobotRaconteur::RobotRaconteurException']]]
+  ['hexvalue_1974',['HexValue',['../class_robot_raconteur_1_1_enum_definition_value.html#a9748b518fecc7e0e34c656e1a7db093b',1,'RobotRaconteur::EnumDefinitionValue']]]
 ];

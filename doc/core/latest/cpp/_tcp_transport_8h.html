@@ -65,12 +65,40 @@ $(function() {
 </div>
 </div><!-- top -->
 <div class="header">
+  <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#enum-members">Enumerations</a>  </div>
   <div class="headertitle">
 <div class="title">TcpTransport.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
 <p><a href="_tcp_transport_8h_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_tcp_transport.html">RobotRaconteur::TcpTransport</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_robot_raconteur_1_1_transport.html" title="Base class for transports.">Transport</a> for <a class="el" href="class_robot_raconteur_1_1_transport.html" title="Base class for transports.">Transport</a> Control Protocol Internet Protocol (TCP/IP) networks.  <a href="class_robot_raconteur_1_1_tcp_transport.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:ab030b45f509684af16b9e3da1ac77146"><td class="memItemLeft" align="right" valign="top"><a id="ab030b45f509684af16b9e3da1ac77146"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_tcp_transport_8h.html#ab030b45f509684af16b9e3da1ac77146">RobotRaconteur::TcpTransportPtr</a> = boost::shared_ptr&lt; TcpTransport &gt;</td></tr>
+<tr class="memdesc:ab030b45f509684af16b9e3da1ac77146"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience alias for <a class="el" href="class_robot_raconteur_1_1_tcp_transport.html" title="Transport for Transport Control Protocol Internet Protocol (TCP/IP) networks.">TcpTransport</a> shared_ptr. <br /></td></tr>
+<tr class="separator:ab030b45f509684af16b9e3da1ac77146"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:a9c28ed5c89a21b4e1a2611b53049baa7"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_tcp_transport_8h.html#a9c28ed5c89a21b4e1a2611b53049baa7">RobotRaconteur::IPNodeDiscoveryFlags</a> { <a class="el" href="_tcp_transport_8h.html#a9c28ed5c89a21b4e1a2611b53049baa7a923323a99cc0bf06623ed102cd99b5c3">RobotRaconteur::IPNodeDiscoveryFlags_NODE_LOCAL</a> = 0x1, 
+<a class="el" href="_tcp_transport_8h.html#a9c28ed5c89a21b4e1a2611b53049baa7a865362687961c2d22ecf1f9c2cae1363">RobotRaconteur::IPNodeDiscoveryFlags_LINK_LOCAL</a> = 0x2, 
+<a class="el" href="_tcp_transport_8h.html#a9c28ed5c89a21b4e1a2611b53049baa7ae1f494988a0f8523fe016ed85a60a6f9">RobotRaconteur::IPNodeDiscoveryFlags_SITE_LOCAL</a> = 0x4, 
+<a class="el" href="_tcp_transport_8h.html#a9c28ed5c89a21b4e1a2611b53049baa7a682a51101e44694ae2cc50f06cc6afdb">RobotRaconteur::IPNodeDiscoveryFlags_IPV4_BROADCAST</a> = 0x8
+ }</td></tr>
+<tr class="memdesc:a9c28ed5c89a21b4e1a2611b53049baa7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration flags for IP network node discovery.  <a href="_tcp_transport_8h.html#a9c28ed5c89a21b4e1a2611b53049baa7">More...</a><br /></td></tr>
+<tr class="separator:a9c28ed5c89a21b4e1a2611b53049baa7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><dl class="section author"><dt>Author</dt><dd>Dr. John Wason</dd></dl>
 <dl class="section copyright"><dt>Copyright</dt><dd>Copyright 2011-2020 Wason Technology, LLC</dd></dl>
@@ -78,7 +106,34 @@ $(function() {
 <dl class="section user"><dt></dt><dd>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at </dd></dl>
 <dl class="section user"><dt></dt><dd><a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a> </dd></dl>
 <dl class="section user"><dt></dt><dd>Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License. </dd></dl>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="a9c28ed5c89a21b4e1a2611b53049baa7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c28ed5c89a21b4e1a2611b53049baa7">&#9670;&nbsp;</a></span>IPNodeDiscoveryFlags</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="_tcp_transport_8h.html#a9c28ed5c89a21b4e1a2611b53049baa7">RobotRaconteur::IPNodeDiscoveryFlags</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Configuration flags for IP network node discovery. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a9c28ed5c89a21b4e1a2611b53049baa7a923323a99cc0bf06623ed102cd99b5c3"></a>IPNodeDiscoveryFlags_NODE_LOCAL&#160;</td><td class="fielddoc"><p>Use IPv6 FF01:: node local multicast addresses. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a9c28ed5c89a21b4e1a2611b53049baa7a865362687961c2d22ecf1f9c2cae1363"></a>IPNodeDiscoveryFlags_LINK_LOCAL&#160;</td><td class="fielddoc"><p>Use IPv6 FF02:: link local multicast addresses. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a9c28ed5c89a21b4e1a2611b53049baa7ae1f494988a0f8523fe016ed85a60a6f9"></a>IPNodeDiscoveryFlags_SITE_LOCAL&#160;</td><td class="fielddoc"><p>Use IPv6 FF05:: site local multicast addresses. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a9c28ed5c89a21b4e1a2611b53049baa7a682a51101e44694ae2cc50f06cc6afdb"></a>IPNodeDiscoveryFlags_IPV4_BROADCAST&#160;</td><td class="fielddoc"><p>Use IPv4 255.255.255.255 broadcast addresses. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

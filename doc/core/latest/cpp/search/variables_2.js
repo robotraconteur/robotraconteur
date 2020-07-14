@@ -1,7 +1,4 @@
 var searchData=
 [
-  ['error_1077',['Error',['../class_robot_raconteur_1_1_robot_raconteur_exception.html#a37e066c9342f8015fe3dec071fd87358',1,'RobotRaconteur::RobotRaconteurException']]],
-  ['errorcode_1078',['ErrorCode',['../class_robot_raconteur_1_1_robot_raconteur_exception.html#aa950d27af0a656a534c1ef36bbd2da06',1,'RobotRaconteur::RobotRaconteurException']]],
-  ['errorparam_1079',['ErrorParam',['../class_robot_raconteur_1_1_robot_raconteur_exception.html#a7e8d83edb146e86eb578a5975207400f',1,'RobotRaconteur::RobotRaconteurException']]],
-  ['errorsubname_1080',['ErrorSubName',['../class_robot_raconteur_1_1_robot_raconteur_exception.html#a82e1c0cd6a6fce360e0c4c5657d1afd5',1,'RobotRaconteur::RobotRaconteurException']]]
+  ['docstring_1964',['DocString',['../class_robot_raconteur_1_1_service_definition.html#a3a3f39e4ec84471b622cbcb71d2678dd',1,'RobotRaconteur::ServiceDefinition::DocString()'],['../class_robot_raconteur_1_1_service_entry_definition.html#a9b3041187615a0e5cf39bb93450ceebd',1,'RobotRaconteur::ServiceEntryDefinition::DocString()'],['../class_robot_raconteur_1_1_member_definition.html#a4b4efc91dafdcd66be594737442c2237',1,'RobotRaconteur::MemberDefinition::DocString()'],['../class_robot_raconteur_1_1_exception_definition.html#af15450274e188037b4d1b7e4d6181d61',1,'RobotRaconteur::ExceptionDefinition::DocString()'],['../class_robot_raconteur_1_1_constant_definition.html#a6c1b721c6d62fb1747e8a2e799a662e7',1,'RobotRaconteur::ConstantDefinition::DocString()'],['../class_robot_raconteur_1_1_enum_definition.html#a5ec927869a5f00854aa1b48be1607a73',1,'RobotRaconteur::EnumDefinition::DocString()'],['../class_robot_raconteur_1_1_enum_definition_value.html#a9495ed06c47283afcfaaefae10da448d',1,'RobotRaconteur::EnumDefinitionValue::DocString()']]]
 ];

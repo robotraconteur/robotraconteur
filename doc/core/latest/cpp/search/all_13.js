@@ -1,10 +1,19 @@
 var searchData=
 [
-  ['value_576',['value',['../struct_robot_raconteur_1_1rr__bool.html#a219ec6c1ffb0954388a84c40a2c19f26',1,'RobotRaconteur::rr_bool']]],
-  ['value_5ftype_577',['value_type',['../class_robot_raconteur_1_1_r_r_array.html#a0ee215da08cb95c46e90ec1e69d1b3bd',1,'RobotRaconteur::RRArray::value_type()'],['../class_robot_raconteur_1_1_r_r_map.html#abe1c2780f6a750b8f31c791345df936b',1,'RobotRaconteur::RRMap::value_type()'],['../class_robot_raconteur_1_1_r_r_list.html#adcc58a3ac42563db4d487793c0ab8e7b',1,'RobotRaconteur::RRList::value_type()'],['../class_robot_raconteur_1_1_r_r_pod_array.html#a6d7bbe808ba316b79461f1026d7259d0',1,'RobotRaconteur::RRPodArray::value_type()'],['../class_robot_raconteur_1_1_r_r_named_array.html#ad82c0377de9aa44a692f1366fb8234e8',1,'RobotRaconteur::RRNamedArray::value_type()']]],
-  ['valuenotsetexception_578',['ValueNotSetException',['../class_robot_raconteur_1_1_value_not_set_exception.html',1,'RobotRaconteur::ValueNotSetException'],['../class_robot_raconteur_1_1_value_not_set_exception.html#add09962441e1677ed4b6d8b497011a77',1,'RobotRaconteur::ValueNotSetException::ValueNotSetException()']]],
-  ['valuenotsetexceptionconstptr_579',['ValueNotSetExceptionConstPtr',['../_error_8h.html#abad0972f70af38b11dafa4fe8fe2017d',1,'RobotRaconteur']]],
-  ['valuenotsetexceptionptr_580',['ValueNotSetExceptionPtr',['../_error_8h.html#a7ff3c1eb3b3dd4d1f7d8fa3ff3f545c7',1,'RobotRaconteur']]],
-  ['vectortorrarray_581',['VectorToRRArray',['../_data_types_8h.html#a0f60f7220d287cf166e31c27ddea82e4',1,'RobotRaconteur']]],
-  ['void_5fptr_582',['void_ptr',['../class_robot_raconteur_1_1_r_r_base_array.html#abfe2dbc5f701392e0861e600524fb9a6',1,'RobotRaconteur::RRBaseArray::void_ptr()'],['../class_robot_raconteur_1_1_r_r_named_array.html#ad58194a01ca1f9e50454eb3bea99dbc3',1,'RobotRaconteur::RRNamedArray::void_ptr()']]]
+  ['unknownexception_1159',['UnknownException',['../class_robot_raconteur_1_1_unknown_exception.html',1,'RobotRaconteur::UnknownException'],['../class_robot_raconteur_1_1_unknown_exception.html#aab7829280bcc70920dd3c14bb34fd9f1',1,'RobotRaconteur::UnknownException::UnknownException()']]],
+  ['unknownexceptionconstptr_1160',['UnknownExceptionConstPtr',['../_error_8h.html#a629c48f2e25b0003eef740f21914fdbe',1,'RobotRaconteur']]],
+  ['unknownexceptionptr_1161',['UnknownExceptionPtr',['../_error_8h.html#a7ddbd467d45cdbb76c98c7f5c3efbf17',1,'RobotRaconteur']]],
+  ['unlock_1162',['unlock',['../class_robot_raconteur_1_1_robot_raconteur_node_1_1_scoped_monitor_lock.html#ae9798039d53b33ed899010f78619aef0',1,'RobotRaconteur::RobotRaconteurNode::ScopedMonitorLock']]],
+  ['unqualifiedname_1163',['UnqualifiedName',['../class_robot_raconteur_1_1_using_definition.html#a61e328315b5be720cb8a1d07405ae7c5',1,'RobotRaconteur::UsingDefinition']]],
+  ['unqualifytypestringwithusing_1164',['UnqualifyTypeStringWithUsing',['../class_robot_raconteur_1_1_type_definition.html#affbb1258344a1dd0d8ed3d5e82995e65',1,'RobotRaconteur::TypeDefinition']]],
+  ['unregisterservicetype_1165',['UnregisterServiceType',['../class_robot_raconteur_1_1_robot_raconteur_node.html#aa024d6ce47e6c1cae050df28e6924ca4',1,'RobotRaconteur::RobotRaconteurNode']]],
+  ['updatedetectednodes_1166',['UpdateDetectedNodes',['../class_robot_raconteur_1_1_robot_raconteur_node.html#a1b5c9142ccb18ad1f55937c9d63ce743',1,'RobotRaconteur::RobotRaconteurNode']]],
+  ['updatelastaccess_1167',['UpdateLastAccess',['../class_robot_raconteur_1_1_authenticated_user.html#a5c4237d1827a2c9e7cc2c397ed176abf',1,'RobotRaconteur::AuthenticatedUser']]],
+  ['url_1168',['URL',['../class_robot_raconteur_1_1_node_discovery_info_u_r_l.html#a7edf4a114c31e38bfe139bb89002f2af',1,'RobotRaconteur::NodeDiscoveryInfoURL']]],
+  ['urls_1169',['URLs',['../class_robot_raconteur_1_1_node_discovery_info.html#a10bf606bdc6b35977ef01e33245dbc50',1,'RobotRaconteur::NodeDiscoveryInfo']]],
+  ['userauthenticator_1170',['UserAuthenticator',['../class_robot_raconteur_1_1_user_authenticator.html',1,'RobotRaconteur']]],
+  ['userauthenticatorptr_1171',['UserAuthenticatorPtr',['../_security_8h.html#addefcdc92a1e5799a4b8ad43c141bd50',1,'RobotRaconteur']]],
+  ['using_1172',['Using',['../class_robot_raconteur_1_1_service_definition.html#a13b92e7b2be9c378e2aa0a3888d30b6e',1,'RobotRaconteur::ServiceDefinition']]],
+  ['usingdefinition_1173',['UsingDefinition',['../class_robot_raconteur_1_1_using_definition.html',1,'RobotRaconteur::UsingDefinition'],['../class_robot_raconteur_1_1_using_definition.html#aa77236cdd3fa3505c39a9efa40586c4c',1,'RobotRaconteur::UsingDefinition::UsingDefinition()']]],
+  ['usingdefinitionptr_1174',['UsingDefinitionPtr',['../_service_definition_8h.html#a831f95f0320816dbf25679b8643886fd',1,'RobotRaconteur']]]
 ];

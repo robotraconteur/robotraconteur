@@ -90,7 +90,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a17c46121987ecbcfbc0ebc1c1c5636e5"><td class="memItemLeft" align="right" valign="top">virtual boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_wire_connection.html">WireConnection</a>&lt; T &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_wire.html#a17c46121987ecbcfbc0ebc1c1c5636e5">Connect</a> ()=0</td></tr>
 <tr class="memdesc:a17c46121987ecbcfbc0ebc1c1c5636e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Connect the wire.  <a href="class_robot_raconteur_1_1_wire.html#a17c46121987ecbcfbc0ebc1c1c5636e5">More...</a><br /></td></tr>
 <tr class="separator:a17c46121987ecbcfbc0ebc1c1c5636e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab5c3337350c6c5ba65ab65e9287b3253"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_wire.html#ab5c3337350c6c5ba65ab65e9287b3253">AsyncConnect</a> (boost::function&lt; void(boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_wire_connection.html">WireConnection</a>&lt; T &gt; &gt;, RR_SHARED_PTR&lt; <a class="el" href="class_robot_raconteur_1_1_robot_raconteur_exception.html">RobotRaconteurException</a> &gt;)&gt; &amp;&amp;handler, int32_t timeout=RR_TIMEOUT_INFINITE)=0</td></tr>
+<tr class="memitem:ab5c3337350c6c5ba65ab65e9287b3253"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_wire.html#ab5c3337350c6c5ba65ab65e9287b3253">AsyncConnect</a> (boost::function&lt; void(boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_wire_connection.html">WireConnection</a>&lt; T &gt; &gt;, RR_SHARED_PTR&lt; <a class="el" href="class_robot_raconteur_1_1_robot_raconteur_exception.html">RobotRaconteurException</a> &gt;)&gt; &amp;&amp;handler, int32_t timeout=<a class="el" href="_robot_raconteur_constants_8h.html#a797a515f59232a62a9cc8b16df7ee78b">RR_TIMEOUT_INFINITE</a>)=0</td></tr>
 <tr class="memdesc:ab5c3337350c6c5ba65ab65e9287b3253"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asynchronously connect the wire.  <a href="class_robot_raconteur_1_1_wire.html#ab5c3337350c6c5ba65ab65e9287b3253">More...</a><br /></td></tr>
 <tr class="separator:ab5c3337350c6c5ba65ab65e9287b3253"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a14c25221a14e5f3f0387ac0340ec74e1"><td class="memItemLeft" align="right" valign="top">virtual T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_wire.html#a14c25221a14e5f3f0387ac0340ec74e1">PeekInValue</a> (<a class="el" href="class_robot_raconteur_1_1_time_spec.html">TimeSpec</a> &amp;ts)=0</td></tr>
@@ -102,13 +102,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aecad256fef31978596e8f37cbb7fd06e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_wire.html#aecad256fef31978596e8f37cbb7fd06e">PokeOutValue</a> (const T &amp;value)=0</td></tr>
 <tr class="memdesc:aecad256fef31978596e8f37cbb7fd06e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Poke the OutValue.  <a href="class_robot_raconteur_1_1_wire.html#aecad256fef31978596e8f37cbb7fd06e">More...</a><br /></td></tr>
 <tr class="separator:aecad256fef31978596e8f37cbb7fd06e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad0c2fc09751710f2fb86e723a820aad8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_wire.html#ad0c2fc09751710f2fb86e723a820aad8">AsyncPeekInValue</a> (boost::function&lt; void(const T &amp;, const <a class="el" href="class_robot_raconteur_1_1_time_spec.html">TimeSpec</a> &amp;, boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_robot_raconteur_exception.html">RobotRaconteurException</a> &gt;)&gt; &amp;&amp;handler, int32_t timeout=RR_TIMEOUT_INFINITE)=0</td></tr>
+<tr class="memitem:ad0c2fc09751710f2fb86e723a820aad8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_wire.html#ad0c2fc09751710f2fb86e723a820aad8">AsyncPeekInValue</a> (boost::function&lt; void(const T &amp;, const <a class="el" href="class_robot_raconteur_1_1_time_spec.html">TimeSpec</a> &amp;, boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_robot_raconteur_exception.html">RobotRaconteurException</a> &gt;)&gt; &amp;&amp;handler, int32_t timeout=<a class="el" href="_robot_raconteur_constants_8h.html#a797a515f59232a62a9cc8b16df7ee78b">RR_TIMEOUT_INFINITE</a>)=0</td></tr>
 <tr class="memdesc:ad0c2fc09751710f2fb86e723a820aad8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asynchronously peek the current InValue.  <a href="class_robot_raconteur_1_1_wire.html#ad0c2fc09751710f2fb86e723a820aad8">More...</a><br /></td></tr>
 <tr class="separator:ad0c2fc09751710f2fb86e723a820aad8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeed1f7d8613e2241d3376685aa646e27"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_wire.html#aeed1f7d8613e2241d3376685aa646e27">AsyncPeekOutValue</a> (boost::function&lt; void(const T &amp;, const <a class="el" href="class_robot_raconteur_1_1_time_spec.html">TimeSpec</a> &amp;, boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_robot_raconteur_exception.html">RobotRaconteurException</a> &gt;)&gt; &amp;&amp;handler, int32_t timeout=RR_TIMEOUT_INFINITE)=0</td></tr>
+<tr class="memitem:aeed1f7d8613e2241d3376685aa646e27"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_wire.html#aeed1f7d8613e2241d3376685aa646e27">AsyncPeekOutValue</a> (boost::function&lt; void(const T &amp;, const <a class="el" href="class_robot_raconteur_1_1_time_spec.html">TimeSpec</a> &amp;, boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_robot_raconteur_exception.html">RobotRaconteurException</a> &gt;)&gt; &amp;&amp;handler, int32_t timeout=<a class="el" href="_robot_raconteur_constants_8h.html#a797a515f59232a62a9cc8b16df7ee78b">RR_TIMEOUT_INFINITE</a>)=0</td></tr>
 <tr class="memdesc:aeed1f7d8613e2241d3376685aa646e27"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asynchronously peek the current OutValue.  <a href="class_robot_raconteur_1_1_wire.html#aeed1f7d8613e2241d3376685aa646e27">More...</a><br /></td></tr>
 <tr class="separator:aeed1f7d8613e2241d3376685aa646e27"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6c05b679ccdb91253648a455b13722cf"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_wire.html#a6c05b679ccdb91253648a455b13722cf">AsyncPokeOutValue</a> (const T &amp;value, boost::function&lt; void(boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_robot_raconteur_exception.html">RobotRaconteurException</a> &gt;)&gt; &amp;&amp;handler, int32_t timeout=RR_TIMEOUT_INFINITE)=0</td></tr>
+<tr class="memitem:a6c05b679ccdb91253648a455b13722cf"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_wire.html#a6c05b679ccdb91253648a455b13722cf">AsyncPokeOutValue</a> (const T &amp;value, boost::function&lt; void(boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_robot_raconteur_exception.html">RobotRaconteurException</a> &gt;)&gt; &amp;&amp;handler, int32_t timeout=<a class="el" href="_robot_raconteur_constants_8h.html#a797a515f59232a62a9cc8b16df7ee78b">RR_TIMEOUT_INFINITE</a>)=0</td></tr>
 <tr class="memdesc:a6c05b679ccdb91253648a455b13722cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asynchronously poke the OutValue.  <a href="class_robot_raconteur_1_1_wire.html#a6c05b679ccdb91253648a455b13722cf">More...</a><br /></td></tr>
 <tr class="separator:a6c05b679ccdb91253648a455b13722cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c3e4483ec35f68a82fcc1a3e341fdc2"><td class="memItemLeft" align="right" valign="top">virtual boost::function&lt; void(boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_wire_connection.html">WireConnection</a>&lt; T &gt; &gt;)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_wire.html#a2c3e4483ec35f68a82fcc1a3e341fdc2">GetWireConnectCallback</a> ()=0</td></tr>
@@ -138,7 +138,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1491278d75142b49bba8bc90832f1fa9"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_wire_base.html#a1491278d75142b49bba8bc90832f1fa9">GetMemberName</a> ()=0</td></tr>
 <tr class="memdesc:a1491278d75142b49bba8bc90832f1fa9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the member name of the wire.  <a href="class_robot_raconteur_1_1_wire_base.html#a1491278d75142b49bba8bc90832f1fa9">More...</a><br /></td></tr>
 <tr class="separator:a1491278d75142b49bba8bc90832f1fa9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a45dd99dc1f894fb1981006fe6e1c0f17"><td class="memItemLeft" align="right" valign="top">MemberDefinition_Direction&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_wire_base.html#a45dd99dc1f894fb1981006fe6e1c0f17">Direction</a> ()</td></tr>
+<tr class="memitem:a45dd99dc1f894fb1981006fe6e1c0f17"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_robot_raconteur_constants_8h.html#a7420bbe1689d74c66948017ba2d27373">MemberDefinition_Direction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_wire_base.html#a45dd99dc1f894fb1981006fe6e1c0f17">Direction</a> ()</td></tr>
 <tr class="memdesc:a45dd99dc1f894fb1981006fe6e1c0f17"><td class="mdescLeft">&#160;</td><td class="mdescRight">The direction of the wire.  <a href="class_robot_raconteur_1_1_wire_base.html#a45dd99dc1f894fb1981006fe6e1c0f17">More...</a><br /></td></tr>
 <tr class="separator:a45dd99dc1f894fb1981006fe6e1c0f17"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -183,7 +183,7 @@ template&lt;typename T &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int32_t&#160;</td>
-          <td class="paramname"><em>timeout</em> = <code>RR_TIMEOUT_INFINITE</code>&#160;</td>
+          <td class="paramname"><em>timeout</em> = <code><a class="el" href="_robot_raconteur_constants_8h.html#a797a515f59232a62a9cc8b16df7ee78b">RR_TIMEOUT_INFINITE</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -232,7 +232,7 @@ template&lt;typename T &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int32_t&#160;</td>
-          <td class="paramname"><em>timeout</em> = <code>RR_TIMEOUT_INFINITE</code>&#160;</td>
+          <td class="paramname"><em>timeout</em> = <code><a class="el" href="_robot_raconteur_constants_8h.html#a797a515f59232a62a9cc8b16df7ee78b">RR_TIMEOUT_INFINITE</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -281,7 +281,7 @@ template&lt;typename T &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int32_t&#160;</td>
-          <td class="paramname"><em>timeout</em> = <code>RR_TIMEOUT_INFINITE</code>&#160;</td>
+          <td class="paramname"><em>timeout</em> = <code><a class="el" href="_robot_raconteur_constants_8h.html#a797a515f59232a62a9cc8b16df7ee78b">RR_TIMEOUT_INFINITE</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -336,7 +336,7 @@ template&lt;typename T &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int32_t&#160;</td>
-          <td class="paramname"><em>timeout</em> = <code>RR_TIMEOUT_INFINITE</code>&#160;</td>
+          <td class="paramname"><em>timeout</em> = <code><a class="el" href="_robot_raconteur_constants_8h.html#a797a515f59232a62a9cc8b16df7ee78b">RR_TIMEOUT_INFINITE</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -408,7 +408,7 @@ template&lt;typename T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">MemberDefinition_Direction RobotRaconteur::WireBase::Direction </td>
+          <td class="memname"><a class="el" href="_robot_raconteur_constants_8h.html#a7420bbe1689d74c66948017ba2d27373">MemberDefinition_Direction</a> RobotRaconteur::WireBase::Direction </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>

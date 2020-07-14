@@ -102,7 +102,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9d9d6cff3861fd3ab972c345aab4850b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_pipe_endpoint_base.html#a9d9d6cff3861fd3ab972c345aab4850b">Close</a> ()</td></tr>
 <tr class="memdesc:a9d9d6cff3861fd3ab972c345aab4850b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close the pipe endpoint.  <a href="class_robot_raconteur_1_1_pipe_endpoint_base.html#a9d9d6cff3861fd3ab972c345aab4850b">More...</a><br /></td></tr>
 <tr class="separator:a9d9d6cff3861fd3ab972c345aab4850b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a29c8fcdd587ed6c08ce0d17552f43c80"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_pipe_endpoint_base.html#a29c8fcdd587ed6c08ce0d17552f43c80">AsyncClose</a> (boost::function&lt; void(boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_robot_raconteur_exception.html">RobotRaconteurException</a> &gt;)&gt; &amp;&amp;handler, int32_t timeout=RR_TIMEOUT_INFINITE)</td></tr>
+<tr class="memitem:a29c8fcdd587ed6c08ce0d17552f43c80"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_pipe_endpoint_base.html#a29c8fcdd587ed6c08ce0d17552f43c80">AsyncClose</a> (boost::function&lt; void(boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_robot_raconteur_exception.html">RobotRaconteurException</a> &gt;)&gt; &amp;&amp;handler, int32_t timeout=<a class="el" href="_robot_raconteur_constants_8h.html#a797a515f59232a62a9cc8b16df7ee78b">RR_TIMEOUT_INFINITE</a>)</td></tr>
 <tr class="memdesc:a29c8fcdd587ed6c08ce0d17552f43c80"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asynchronously close the pipe endpoint.  <a href="class_robot_raconteur_1_1_pipe_endpoint_base.html#a29c8fcdd587ed6c08ce0d17552f43c80">More...</a><br /></td></tr>
 <tr class="separator:a29c8fcdd587ed6c08ce0d17552f43c80"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae8b02417f9fc6048aa886f30bcfa507a"><td class="memItemLeft" align="right" valign="top">virtual size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_pipe_endpoint_base.html#ae8b02417f9fc6048aa886f30bcfa507a">Available</a> ()</td></tr>
@@ -111,7 +111,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2313d0ca8f4a4b02ad3c71b871452076"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_pipe_endpoint_base.html#a2313d0ca8f4a4b02ad3c71b871452076">IsUnreliable</a> ()</td></tr>
 <tr class="memdesc:a2313d0ca8f4a4b02ad3c71b871452076"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get if pipe endpoint is unreliable.  <a href="class_robot_raconteur_1_1_pipe_endpoint_base.html#a2313d0ca8f4a4b02ad3c71b871452076">More...</a><br /></td></tr>
 <tr class="separator:a2313d0ca8f4a4b02ad3c71b871452076"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a30540f8217352d27009d64b854658864"><td class="memItemLeft" align="right" valign="top">MemberDefinition_Direction&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_pipe_endpoint_base.html#a30540f8217352d27009d64b854658864">Direction</a> ()</td></tr>
+<tr class="memitem:a30540f8217352d27009d64b854658864"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_robot_raconteur_constants_8h.html#a7420bbe1689d74c66948017ba2d27373">MemberDefinition_Direction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_pipe_endpoint_base.html#a30540f8217352d27009d64b854658864">Direction</a> ()</td></tr>
 <tr class="memdesc:a30540f8217352d27009d64b854658864"><td class="mdescLeft">&#160;</td><td class="mdescRight">The direction of the pipe.  <a href="class_robot_raconteur_1_1_pipe_endpoint_base.html#a30540f8217352d27009d64b854658864">More...</a><br /></td></tr>
 <tr class="separator:a30540f8217352d27009d64b854658864"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab40239248b4a9aa28a83a8098aa23ed6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_pipe_endpoint_base.html#ab40239248b4a9aa28a83a8098aa23ed6">GetIgnoreReceived</a> ()</td></tr>
@@ -144,7 +144,7 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int32_t&#160;</td>
-          <td class="paramname"><em>timeout</em> = <code>RR_TIMEOUT_INFINITE</code>&#160;</td>
+          <td class="paramname"><em>timeout</em> = <code><a class="el" href="_robot_raconteur_constants_8h.html#a797a515f59232a62a9cc8b16df7ee78b">RR_TIMEOUT_INFINITE</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -239,7 +239,7 @@ Public Member Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">MemberDefinition_Direction RobotRaconteur::PipeEndpointBase::Direction </td>
+          <td class="memname"><a class="el" href="_robot_raconteur_constants_8h.html#a7420bbe1689d74c66948017ba2d27373">MemberDefinition_Direction</a> RobotRaconteur::PipeEndpointBase::Direction </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -277,7 +277,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns the Robot Raconteur node Endpoint ID. </p>
-<p>Returns the endpoint associated with the ClientContext or ServerEndpoint associated with the pipe endpoint.</p>
+<p>Returns the endpoint associated with the ClientContext or <a class="el" href="class_robot_raconteur_1_1_server_endpoint.html" title="Server endpoint representing a client connection.">ServerEndpoint</a> associated with the pipe endpoint.</p>
 <dl class="section return"><dt>Returns</dt><dd>uint32_t The Robot Raconteur node Endpoint ID </dd></dl>
 
 </div>
