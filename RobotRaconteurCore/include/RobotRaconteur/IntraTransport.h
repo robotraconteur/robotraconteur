@@ -172,5 +172,10 @@ namespace RobotRaconteur
 		
 	};
 
+	#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+	/** @brief Convenience alias for IntraTransport shared_ptr */
+	using IntraTransportPtr = RR_SHARED_PTR<IntraTransport>;
+#endif
+
 
 }
