@@ -37,29 +37,55 @@ class ROBOTRACONTEUR_CORE_API MessageStringRef;
 
 // Inspired by Boost.Log V2
 
+/**
+ * @brief Robot Raconteur log record
+ * 
+ * Records information about a logging event
+ * 
+ * See \ref logging for more information.
+ * 
+ */
 class ROBOTRACONTEUR_CORE_API RRLogRecord
 {
 public:
+    /** @brief The source node */
     RR_WEAK_PTR<RobotRaconteurNode> Node;
+    /** @brief The log level */
     RobotRaconteur_LogLevel Level;
+    /** @brief The source component */
     RobotRaconteur_LogComponent Component;
+    /** @brief The source component name */
     std::string ComponentName;
+    /** @brief The source component object ID */
     std::string ComponentObjectID;
+    /** @brief The source endpoint */
     int64_t Endpoint;
+    /** @brief The service path of the source object */
     std::string ServicePath;
+    /** @brief The source member */
     std::string Member;
+    /** @brief Human readable log message */
     std::string Message;
+    /** @brief Time of logging event */
     boost::posix_time::ptime Time;
+    /** @brief The sourcecode filename */
     std::string SourceFile;
+    /** @brief The line within the sourcecode file */
     uint32_t SourceLine;
+    /** @brief The source thread */
     std::string ThreadID;
+    /** @brief The source coroutine fiber */
     std::string FiberID;
 };
 
+/** @brief Write a RRlogRecord to a stream */
 ROBOTRACONTEUR_CORE_API std::ostream & operator << (std::ostream &out, const RRLogRecord &record);
 
+/** @brief Convert a RobotRaconteur_LogLevel code to a string */
 ROBOTRACONTEUR_CORE_API std::string RRLogRecord_Level_ToString(RobotRaconteur_LogLevel level);
+/** @brief Convert a RobotRaconteur_LogComponent code to a string */
 ROBOTRACONTEUR_CORE_API std::string RRLogRecord_Component_ToString(RobotRaconteur_LogComponent component);
+/** @brief Convert a RobotRaconteurNode weak_ptr to a NodeID string. Returns "unknown" if could not resolve */
 ROBOTRACONTEUR_CORE_API std::string RRLogRecord_Node_ToString(const RR_WEAK_PTR<RobotRaconteurNode>& node);
 
 class ROBOTRACONTEUR_CORE_API RRLogRecordStream : public boost::intrusive_ref_counter<RRLogRecordStream>
@@ -81,18 +107,44 @@ public:
 
 };
 
-
+/**
+ * @brief Base class of log record handler
+ * 
+ * By default, RobotRaconteurNode will print log records to std::cerr. Use
+ * RobotRaconteurNode::SetLogRecordHandler() to specify a LogRecordHandler
+ * to accept log records instead of printing them to the screen.
+ * 
+ * See \ref logging for more information.
+ */
 class ROBOTRACONTEUR_CORE_API LogRecordHandler
 {
 public:
+    /**
+     * @brief Function to accept log records from node
+     * 
+     * Override in subclasses
+     * 
+     * @param record The log record
+     */
     virtual void HandleLogRecord(const RRLogRecord& record) = 0;
 };
 
+/**
+ * @brief Log record handler that saves to a file
+ * 
+ * See \ref logging for more information. 
+ */
 class ROBOTRACONTEUR_CORE_API FileLogRecordHandler : public LogRecordHandler
 {
     std::ofstream file;
 
 public:
+    /**
+     * @brief Open a file to store log records
+     * 
+     * @param filename The filename
+     * @param append If true, log messages are appended. If false, the file is truncated when opened
+     */
     void OpenFile(const std::string& filename, bool append = true);
     virtual void HandleLogRecord(const RRLogRecord& record);
 };
@@ -194,9 +246,13 @@ public:
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
     using RRLogRecordStreamPtr = RR_INTRUSIVE_PTR<RRLogRecordStream>;
     using RRLogRecordStreamConstPtr = RR_INTRUSIVE_PTR<const RRLogRecordStream>;
+    /** @brief Convenience alias for LogRecordHandler shared_ptr */
 	using LogRecordHandlerPtr = RR_SHARED_PTR<LogRecordHandler>;
+    /** @brief Convenience alias for LogRecordHandler const shared_ptr */
 	using LogRecordHandlerConstPtr = RR_SHARED_PTR<const LogRecordHandler>;
+    /** @brief Convenience alias for FileLogRecordHandler shared_ptr */
     using FileLogRecordHandlerPtr = RR_SHARED_PTR<FileLogRecordHandler>;
+    /** @brief Convenience alias for FileLogRecordHandler const shared_ptr */
 	using FileLogRecordHandlerConstPtr = RR_SHARED_PTR<const FileLogRecordHandler>;
 #endif
 
