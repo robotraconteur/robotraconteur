@@ -151,6 +151,12 @@ namespace RobotRaconteur
 		 * 
 		 * Must use boost::make_shared<TcpTransport>()
 		 * 
+		 * The use of RobotRaconteurNodeSetup and subclasses is recommended to construct
+		 * transports.
+		 * 
+		 * The transport must be registered with the node using
+		 * RobotRaconteurNode::RegisterTransport() after construction.
+		 * 
 		 * @param node The node that will use the transport. Default is the singleton node
 		 */
 		TcpTransport(RR_SHARED_PTR<RobotRaconteurNode> node=RobotRaconteurNode::sp());
