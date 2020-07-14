@@ -30,6 +30,28 @@ namespace RobotRaconteur
 {
 	class ROBOTRACONTEUR_CORE_API IntraTransportConnection;
 
+	/**
+	 * @brief Transport for intra-process communication
+	 * 
+	 * It is recommended that ClientNodeSetup, ServerNodeSetup, or SecureServerNodeSetup
+	 * be used to construct this class.
+	 * 
+	 * See \ref robotraconteur_url for more information on URLs.
+	 * 
+	 * The IntraTransport implements transport connections between nodes running
+	 * within the same process. This is often true for simulation environments, where
+	 * there may be multiple simulated devices running within the simulation. The
+	 * IntraTransport uses a singleton to keep track of the different nodes running
+	 * in the same process, and to form connections. The singleton also implements
+	 * discovery updates. Because the nodes are all in the same process, it is
+	 * not necessary to serialize messages being passed between nodes. Instead,
+	 * the messages are handed off to the receiving node by the transport. This
+	 * is in effect a shallow copy of the data being transmitted, and pointers to the
+	 * original data are possed to the receiving node. **Because the data is passed as a pointer,
+	 * any modification by the receiver will also modify the sender's buffer. Use with care!**
+	 * 
+	 */
+
     class ROBOTRACONTEUR_CORE_API IntraTransport : public Transport, public RR_ENABLE_SHARED_FROM_THIS<IntraTransport>
 	{
 		friend class IntraTransportConnection;
@@ -48,6 +70,19 @@ namespace RobotRaconteur
 		boost::mutex TransportConnections_lock;
 		
 
+		/**
+		 * @brief Construct a new IntraTransport
+		 * 
+		 * Must use boost::make_shared<IntraTransport>()
+		 * 
+		 * The use of RobotRaconteurNodeSetup and subclasses is recommended to construct
+		 * transports.
+		 * 
+		 * The transport must be registered with the node using
+		 * RobotRaconteurNode::RegisterTransport() after construction.
+		 * 
+		 * @param node The node that will use the transport. Default is the singleton node
+		 */
 		IntraTransport(RR_SHARED_PTR<RobotRaconteurNode> node=RobotRaconteurNode::sp());
 
 		virtual ~IntraTransport();
@@ -70,6 +105,10 @@ namespace RobotRaconteur
 
 		virtual void CloseTransportConnection(RR_SHARED_PTR<Endpoint> e);
 
+		/**
+		 * @brief Start the server to listen for incoming client connections
+		 * 
+		 */
         virtual void StartServer();
 
 	protected:
