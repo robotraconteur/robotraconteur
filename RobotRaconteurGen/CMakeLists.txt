@@ -23,12 +23,15 @@ endif()
 
 if(ROBOTRACONTEUR_ROS)
 	find_package(roslib REQUIRED)
-	target_link_libraries(RobotRaconteurGen PRIVATE roslib::roslib)
+	target_link_libraries(RobotRaconteurGen  PRIVATE RobotRaconteurCore ${roslib_LIBRARIES})
+	target_include_directories(RobotRaconteurGen PRIVATE ${roslib_INCLUDE_DIRS})
 	target_compile_definitions(RobotRaconteurGen PRIVATE ROBOTRACONTEUR_ROS)
+else()
+	target_link_libraries(RobotRaconteurGen  RobotRaconteurCore)
 endif()
 
 RRSetTargetDirs(RobotRaconteurGen "bin" "lib")
-target_link_libraries(RobotRaconteurGen  RobotRaconteurCore)
+
 
 RRConfigureTest(gen_prog "${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/bin/RobotRaconteurGen" "test_prog" NOCTEST)
 #RRConfigureTest(test_cpp_loopback "${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/bin/RobotRaconteurTest" "test_prog" ARGS "loopback")
