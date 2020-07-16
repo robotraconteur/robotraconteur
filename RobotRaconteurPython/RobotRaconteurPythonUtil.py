@@ -2620,6 +2620,14 @@ class WireSubscription(object):
     def WaitInValueValid(self, timeout=-1):
         return self._subscription.WaitInValueValid(adjust_timeout(timeout))
 
+    def TryGetInValue(self):
+        val = RobotRaconteurPython.WrappedService_typed_packet()
+        t=RobotRaconteurPython.TimeSpec()
+        res=self._subscription.TryGetInValue(val,t)
+        if not res:
+            return False, None, None
+        return (True, self._UnpackValue(val), t)
+
     @property
     def ActiveWireConnectionCount(self):
         return self._subscription.GetActiveWireConnectionCount()
@@ -2699,12 +2707,13 @@ class PipeSubscription(object):
     def TryReceivePacket(self):
         return self.TryReceivePacketWait(0)
 
-    def TryReceivePacketWait(self, timeout=-1,peek=False):  
-        res=self._subscription.TryReceivePacketWait(adjust_timeout(timeout),peek)
-        if (not res.res):
+    def TryReceivePacketWait(self, timeout=-1,peek=False):
+        val = RobotRaconteurPython.WrappedService_typed_packet()
+        res=self._subscription.TryReceivePacketWait(val,adjust_timeout(timeout),peek)
+        if (not res):
             return (False, None)
         else:
-            return (True, self._UnpackValue(res.packet))
+            return (True, self._UnpackValue(val))
 
     @property
     def Available(self):

@@ -486,6 +486,10 @@ def main():
         time.sleep(3)        
         print (s.GetConnectedClients())
         print (w.InValue)
+
+        try_val_res, try_val, try_val_ts = w.TryGetInValue()
+        assert try_val_res
+        print (try_val)
         
         raw_input("Press enter")
         
