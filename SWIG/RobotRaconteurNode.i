@@ -222,11 +222,11 @@ RR_KEEP_GIL()
 		boost::shared_ptr<RobotRaconteur::ServiceDefinition> def2=boost::make_shared<ServiceDefinition>();
 		def2->FromString(def);
 		std::vector<boost::shared_ptr<ServiceDefinition> > defs;
-		std::vector<std::string> names=RobotRaconteurNode::s()->GetRegisteredServiceTypes();
+		std::vector<std::string> names=$self->GetRegisteredServiceTypes();
 		for (std::vector<std::string>::iterator e=names.begin(); e!=names.end(); ++e)
 		{
 			if ((*e)!="RobotRaconteurServiceIndex")
-			defs.push_back(RobotRaconteurNode::s()->GetServiceType(*e)->ServiceDef());
+			defs.push_back($self->GetServiceType(*e)->ServiceDef());
 		}
 		defs.push_back(def2);
 
@@ -245,11 +245,11 @@ RR_KEEP_GIL()
 			def2->FromString(def_str);
 			defs.push_back(def2);
 		}
-		std::vector<std::string> names=RobotRaconteurNode::s()->GetRegisteredServiceTypes();
+		std::vector<std::string> names=$self->GetRegisteredServiceTypes();
 		for (std::vector<std::string>::iterator e=names.begin(); e!=names.end(); ++e)
 		{
 			if ((*e)!="RobotRaconteurServiceIndex")
-			defs.push_back(RobotRaconteurNode::s()->GetServiceType(*e)->ServiceDef());
+			defs.push_back($self->GetServiceType(*e)->ServiceDef());
 		}		
 
 		VerifyServiceDefinitions(defs);
@@ -266,10 +266,10 @@ RR_KEEP_GIL()
 	{
 #ifdef SWIGPYTHON
 		std::vector<boost::shared_ptr<ServiceDefinition> > defs;
-		std::vector<std::string> names=RobotRaconteurNode::s()->GetRegisteredServiceTypes();
+		std::vector<std::string> names=$self->GetRegisteredServiceTypes();
 		for (std::vector<std::string>::iterator e=names.begin(); e!=names.end(); ++e)
 		{
-			defs.push_back(RobotRaconteurNode::s()->GetServiceType(*e)->ServiceDef());
+			defs.push_back($self->GetServiceType(*e)->ServiceDef());
 		}
 		defs.push_back(def);
 
@@ -282,10 +282,10 @@ RR_KEEP_GIL()
 	{
 #ifdef SWIGPYTHON
 		std::vector<boost::shared_ptr<ServiceDefinition> > defs2;
-		std::vector<std::string> names=RobotRaconteurNode::s()->GetRegisteredServiceTypes();
+		std::vector<std::string> names=$self->GetRegisteredServiceTypes();
 		for (std::vector<std::string>::iterator e=names.begin(); e!=names.end(); ++e)
 		{
-			defs2.push_back(RobotRaconteurNode::s()->GetServiceType(*e)->ServiceDef());
+			defs2.push_back($self->GetServiceType(*e)->ServiceDef());
 		}
 		BOOST_FOREACH(boost::shared_ptr<RobotRaconteur::ServiceDefinition> def, defs)
 		{
@@ -303,12 +303,12 @@ RR_KEEP_GIL()
 
 	boost::shared_ptr<RobotRaconteur::ServiceDefinition> GetServiceType(const std::string& servicename)
 	{
-		return rr_cast<WrappedServiceFactory>(RobotRaconteurNode::s()->GetServiceType(servicename))->ServiceDef();
+		return rr_cast<WrappedServiceFactory>($self->GetServiceType(servicename))->ServiceDef();
 	}
 
 	boost::shared_ptr<RobotRaconteur::ServiceDefinition> GetPulledServiceType(boost::shared_ptr<RRObject> obj,const std::string& servicename)
 	{
-		return rr_cast<WrappedServiceFactory>(RobotRaconteurNode::s()->GetPulledServiceType(obj,servicename))->ServiceDef();
+		return rr_cast<WrappedServiceFactory>($self->GetPulledServiceType(obj,servicename))->ServiceDef();
 	}
 }
 
