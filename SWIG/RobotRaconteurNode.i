@@ -239,20 +239,22 @@ RR_KEEP_GIL()
 	{
 		
 		std::vector<boost::shared_ptr<ServiceDefinition> > defs;
+		std::vector<boost::shared_ptr<ServiceDefinition> > defs2;
 		BOOST_FOREACH(const std::string& def_str, defs_str)
 		{
 			boost::shared_ptr<RobotRaconteur::ServiceDefinition> def2=boost::make_shared<ServiceDefinition>();
 			def2->FromString(def_str);
 			defs.push_back(def2);
+			defs2.push_back(def2);
 		}
 		std::vector<std::string> names=$self->GetRegisteredServiceTypes();
 		for (std::vector<std::string>::iterator e=names.begin(); e!=names.end(); ++e)
 		{
 			if ((*e)!="RobotRaconteurServiceIndex")
-			defs.push_back($self->GetServiceType(*e)->ServiceDef());
+			defs2.push_back($self->GetServiceType(*e)->ServiceDef());
 		}		
 
-		VerifyServiceDefinitions(defs);
+		VerifyServiceDefinitions(defs2);
 
 		BOOST_FOREACH(boost::shared_ptr<RobotRaconteur::ServiceDefinition> def, defs)
 		{
