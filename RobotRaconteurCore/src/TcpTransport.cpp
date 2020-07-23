@@ -5275,8 +5275,13 @@ namespace detail
 					
 					ParseConnectionURLResult u = ParseConnectionURL(url);
 
+					std::string u_host = u.host;
+					if (boost::starts_with(u_host, "[") && boost::ends_with(u_host, "]"))
+					{
+						u_host = u_host.substr(1, u_host.size() - 2);
+					}
 					boost::system::error_code address_ec;
-					boost::asio::ip::address addr = RR_BOOST_ASIO_IP_ADDRESS_FROM_STRING(u.host);
+					boost::asio::ip::address addr = RR_BOOST_ASIO_IP_ADDRESS_FROM_STRING(u_host);
 					if (address_ec)
 					{
 						throw InvalidArgumentException("Invalid IP address in packet");
