@@ -2177,7 +2177,8 @@ PREDEFINED             = GENERATING_DOCUMENTATION \
                          RR_SHARED_PTR=boost::shared_ptr \
                          RR_INTRUSIVE_PTR=boost::intrusive_ptr \
                          RR_ENABLE_SHARED_FROM_THIS=boost::enable_shared_from_this \
-                         ROBOTRACONTEUR_CORE_API=
+                         ROBOTRACONTEUR_CORE_API= \
+                         RR_BOOST_ASIO_IO_CONTEXT=boost::asio::io_context
 
 
 # If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES then this
