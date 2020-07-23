@@ -1458,18 +1458,19 @@ namespace RobotRaconteur
 		 * the "best" URL to use. The selection criteria ranks URLs in roughly
 		 * the following order, lower number being better:
 		 * 
-		 * 1. "rr+local" for LocalTransport
-		 * 2. "rr+pci" or "rr+usb" for HardwareTransport
-		 * 3. "rrs+tcp://127.0.0.1" for secure TcpTransport loopback
-		 * 4. "rrs+tcp://[::1]" for secure TcpTransport IPv6 loopback
-		 * 5. "rrs+tcp://localhost" for secure TcpTransport loopback
-		 * 6. "rrs+tcp://[fe80" for secure TcpTransport link-local IPv6
-		 * 7. "rrs+tcp://" for any secure TcpTransport
-		 * 8. "rr+tcp://127.0.0.1" for TcpTransport loopback
-		 * 9. "rr+tcp://[::1]" for TcpTransport IPv6 loopback
-		 * 10. "rr+tcp://localhost" for TcpTransport loopback
-		 * 11. "rr+tcp://[fe80" for TcpTransport link-local IPv6
-		 * 12. "rr+tcp://" for any TcpTransport
+		 * 1. "rr+intra" for IntraTransport
+		 * 2. "rr+local" for LocalTransport
+		 * 3. "rr+pci" or "rr+usb" for HardwareTransport
+		 * 4. "rrs+tcp://127.0.0.1" for secure TcpTransport loopback
+		 * 5. "rrs+tcp://[::1]" for secure TcpTransport IPv6 loopback
+		 * 6. "rrs+tcp://localhost" for secure TcpTransport loopback
+		 * 7. "rrs+tcp://[fe80" for secure TcpTransport link-local IPv6
+		 * 8. "rrs+tcp://" for any secure TcpTransport
+		 * 9. "rr+tcp://127.0.0.1" for TcpTransport loopback
+		 * 10. "rr+tcp://[::1]" for TcpTransport IPv6 loopback
+		 * 11. "rr+tcp://localhost" for TcpTransport loopback
+		 * 12. "rr+tcp://[fe80" for TcpTransport link-local IPv6
+		 * 13. "rr+tcp://" for any TcpTransport
 		 *  
 		 * TODO: "rr+quic" QuicTransport
 		 *  

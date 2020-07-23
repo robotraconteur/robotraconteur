@@ -1850,6 +1850,11 @@ std::string RobotRaconteurNode::SelectRemoteNodeURL(const std::vector<std::strin
 {
 	BOOST_FOREACH (const std::string& e, urls)
 	{
+		if (boost::starts_with(e,"rr+intra://")) return e;
+	}
+
+	BOOST_FOREACH (const std::string& e, urls)
+	{
 		if (boost::starts_with(e,"rr+local://")) return e;
 	}
 
