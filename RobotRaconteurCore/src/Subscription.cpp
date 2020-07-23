@@ -1650,9 +1650,16 @@ namespace RobotRaconteur
 		boost::mutex::scoped_lock lock(this_lock);
 		BOOST_FOREACH(RR_SHARED_PTR<detail::PipeSubscription_connection> c, connections)
 		{
-			if (c->DoSendPacket())
+			try
 			{
-				c->AsyncSendPacket(packet);
+				if (c->DoSendPacket())
+				{
+					c->AsyncSendPacket(packet);
+				}
+			}
+			catch (std::exception& exp)
+			{
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Subscription, -1, "", membername, "AsyncSendPacketAll failed for subscription connection: " << exp.what());
 			}
 		}
 	}
