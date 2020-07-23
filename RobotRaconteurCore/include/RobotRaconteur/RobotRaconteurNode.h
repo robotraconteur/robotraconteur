@@ -1214,6 +1214,8 @@ namespace RobotRaconteur
 		boost::signals2::signal<void(const NodeDiscoveryInfo&, const std::vector<ServiceInfo2>& )> discovery_updated_listeners;
 
 		boost::signals2::signal<void(const NodeDiscoveryInfo&)> discovery_lost_listeners;
+
+		RR_WEAK_PTR<RobotRaconteurNode> weak_this;
 				
 	public:
 
