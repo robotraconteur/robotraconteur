@@ -280,8 +280,8 @@ if(BUILD_DOCUMENTATION)
     message(FATAL_ERROR "Doxygen is needed to build the documentation")
   endif()
 
-  file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/doc/cpp)
-  configure_file(${CMAKE_SOURCE_DIR}/doc/cpp/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
+  file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/docs/cpp)
+  configure_file(${CMAKE_SOURCE_DIR}/docs/cpp/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
   
   add_custom_target(RobotRaconteurCore_doc
         COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
