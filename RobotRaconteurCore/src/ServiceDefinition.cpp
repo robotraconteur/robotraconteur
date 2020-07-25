@@ -4426,17 +4426,6 @@ namespace RobotRaconteur
 				}
 			}
 
-			/*if (!def2)
-			{
-				std::vector<std::string> registerednames=RobotRaconteurNode::s()->GetRegisteredServiceTypes();
-				if (std::count(registerednames.begin(),registerednames.end(),*e)!=0)
-				{
-					def2=RobotRaconteurNode::s()->GetServiceType(*e)->ServiceDef();
-					defs.push_back(def2);
-
-				}
-			}*/
-
 			if (!def2) throw ServiceDefinitionVerifyException("Service definition \"" + e + "\" not found", def->ParseInfo);
 
 			if (def2->Name==rootdef->Name) throw ServiceDefinitionVerifyException("Recursive imports between \"" + def->Name + "\" and \"" + rootdef->Name + "\"", def->ParseInfo);

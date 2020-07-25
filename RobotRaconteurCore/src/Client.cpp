@@ -706,7 +706,7 @@ namespace RobotRaconteur
 			{
 				if (!connection_test_timer)
 				{
-					connection_test_timer = RobotRaconteurNode::s()->CreateTimer(boost::posix_time::milliseconds(50), boost::bind(&ClientContext::connection_test, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1)));
+					connection_test_timer = GetNode()->CreateTimer(boost::posix_time::milliseconds(50), boost::bind(&ClientContext::connection_test, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1)));
 					connection_test_timer->Start();
 
 				}

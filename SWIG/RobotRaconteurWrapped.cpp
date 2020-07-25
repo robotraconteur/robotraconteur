@@ -117,7 +117,7 @@ namespace RobotRaconteur
 		
 		boost::string_ref servicetype=res.get<0>();
 		boost::string_ref objecttype=res.get<1>();
-		if (servicetype != GetServiceName()) return RobotRaconteur::RobotRaconteurNode::s()->GetServiceType(servicetype)->CreateStub(type,path,context);
+		if (servicetype != GetServiceName()) return GetNode()->GetServiceType(servicetype)->CreateStub(type,path,context);
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::iterator ee=servicedef->Objects.begin(); ee!=servicedef->Objects.end(); ++ee)
 		{
 			if ((*ee)->Name==objecttype)
@@ -136,7 +136,7 @@ namespace RobotRaconteur
 		
 		boost::string_ref servicetype=res.get<0>();
 		boost::string_ref objecttype=res.get<1>();
-		if (servicetype != GetServiceName()) return RobotRaconteur::RobotRaconteurNode::s()->GetServiceType(servicetype)->CreateSkel(type,path,obj,context);
+		if (servicetype != GetServiceName()) return GetNode()->GetServiceType(servicetype)->CreateSkel(type,path,obj,context);
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::iterator ee=servicedef->Objects.begin(); ee!=servicedef->Objects.end(); ++ee)
 		{
 			if ((*ee)->Name==objecttype)
@@ -981,7 +981,7 @@ namespace RobotRaconteur
 	RR_SHARED_PTR<WrappedPipeEndpoint> WrappedPipeClient::Connect(int32_t index)
 	{
 		RR_SHARED_PTR<detail::sync_async_handler<PipeEndpointBase > > t=RR_MAKE_SHARED<detail::sync_async_handler<PipeEndpointBase> >();
-		AsyncConnect_internal(index,boost::bind(&detail::sync_async_handler<PipeEndpointBase >::operator(),t,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)),RobotRaconteurNode::s()->GetRequestTimeout());
+		AsyncConnect_internal(index,boost::bind(&detail::sync_async_handler<PipeEndpointBase >::operator(),t,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)),GetNode()->GetRequestTimeout());
 		return boost::dynamic_pointer_cast<WrappedPipeEndpoint>(t->end()); 
 	}
 
@@ -1355,7 +1355,7 @@ namespace RobotRaconteur
 	RR_SHARED_PTR<WrappedWireConnection> WrappedWireClient::Connect()
 	{
 		RR_SHARED_PTR<detail::sync_async_handler<WireConnectionBase > > t=RR_MAKE_SHARED<detail::sync_async_handler<WireConnectionBase> >();
-		AsyncConnect_internal(boost::bind(&detail::sync_async_handler<WireConnectionBase >::operator(),t,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)),RobotRaconteurNode::s()->GetRequestTimeout());
+		AsyncConnect_internal(boost::bind(&detail::sync_async_handler<WireConnectionBase >::operator(),t,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)),GetNode()->GetRequestTimeout());
 		return boost::dynamic_pointer_cast<WrappedWireConnection>(t->end()); 
 	}
 
@@ -2223,7 +2223,7 @@ namespace RobotRaconteur
 
 		RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> > map=AllocateEmptyRRMap<std::string,RRValue>();
 		map->GetStorageContainer()=value.Attributes;
-		RR_INTRUSIVE_PTR<MessageElementNestedElementList > mmap=RobotRaconteurNode::s()->PackMapType<std::string,RRValue>(map);
+		RR_INTRUSIVE_PTR<MessageElementNestedElementList > mmap=RobotRaconteur::detail::packing::PackMapType<std::string,RRValue>(map,NULL);
 		Attributes= CreateMessageElement("value",mmap);
 
 	}
@@ -2330,7 +2330,7 @@ namespace RobotRaconteur
 		boost::tuple<boost::string_ref,boost::string_ref> s1=SplitQualifiedName(type);
 		
 		
-		std::vector<boost::shared_ptr<ServiceEntryDefinition> > objs=RobotRaconteurNode::s()->GetServiceType(s1.get<0>())->ServiceDef()->Objects;
+		std::vector<boost::shared_ptr<ServiceEntryDefinition> > objs=c->GetNode()->GetServiceType(s1.get<0>())->ServiceDef()->Objects;
 		for (std::vector<boost::shared_ptr<ServiceEntryDefinition> >::iterator e=objs.begin(); e!=objs.end(); ++e)
 		{
 			if ((*e)->Name==s1.get<1>())

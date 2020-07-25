@@ -164,7 +164,7 @@ public:
 	
 	void SetServiceAttributes(boost::intrusive_ptr<MessageElement> attributes)
 	{
-		boost::intrusive_ptr<RRMap<std::string,RRValue> > mmap=rr_cast<RRMap<std::string,RRValue> >(RobotRaconteurNode::s()->UnpackMapType<std::string,RRValue>(attributes->CastData<MessageElementNestedElementList >()));
+		boost::intrusive_ptr<RRMap<std::string,RRValue> > mmap=rr_cast<RRMap<std::string,RRValue> >(RobotRaconteur::detail::packing::UnpackMapType<std::string,RRValue>(attributes->CastData<MessageElementNestedElementList >(),NULL));
 		$self->SetAttributes(mmap->GetStorageContainer());		
 		
 	}	
