@@ -8,7 +8,7 @@
     <Company>Wason Technology, LLC</Company>
     <Product>RobotRaconteurNET C# Library</Product>
     <Description>RobotRaconteurNET C# Library wrapping RobotRaconteurCore native library</Description>
-    <Copyright>Copyright 2019</Copyright>
+    <Copyright>Copyright 2020</Copyright>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>robotraconteur.com</PackageProjectUrl>
     <RepositoryUrl>github.com/robotraconteur/robotraconteur</RepositoryUrl>
