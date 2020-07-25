@@ -83,6 +83,8 @@ def main():
 
         RobotRaconteurNode.s.Shutdown()
 
+        time.sleep(1)
+
         print ("Test completed no errors detected")
         
         return

@@ -69,4 +69,4 @@ RRConfigureTest(test_cpp_loopback "${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/bin/RobotR
 RRConfigureTest(test_cpp_loopback2 "${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/bin/RobotRaconteurTest" "test_prog" ARGS "loopback2")
 set(RR_ROBDEF_DIR "${CMAKE_SOURCE_DIR}/testing/RobotRaconteurTest")
 RRConfigureTest(test_robdeftest "${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/bin/RobotRaconteurTest" "test_prog" ARGS "robdeftest ${RR_ROBDEF_DIR}/com.robotraconteur.testing.TestService1.robdef ${RR_ROBDEF_DIR}/com.robotraconteur.testing.TestService2.robdef ${RR_ROBDEF_DIR}/com.robotraconteur.testing.TestService3.robdef")
-RRConfigureTest(test_cpp_discoveryloopback "${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/bin/RobotRaconteurTest" "test_prog" ARGS "discoveryloopback")
+RRConfigureTest(test_cpp_discoveryloopback "${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/bin/RobotRaconteurTest" "test_prog" ARGS "discoveryloopback --robotraconteur-local-enable=false")

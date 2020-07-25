@@ -2059,16 +2059,21 @@ return 0;
 		RobotRaconteurTestServiceSupport s;
 		s.RegisterServices(node_setup.GetTcpTransport());
 
-
 		RR_SHARED_PTR<RobotRaconteurNode> client_node=RR_MAKE_SHARED<RobotRaconteurNode>();
 		client_node->Init();
 		ClientNodeSetup client_node_setup(client_node,ROBOTRACONTEUR_SERVICE_TYPES,argc,argv);
 
-		boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
+		boost::this_thread::sleep(boost::posix_time::milliseconds(5000));
 
 		std::vector<std::string> schemes;
-		schemes.push_back("rr+tcp");
-		schemes.push_back("rr+local");
+		if (node_setup.GetTcpTransport())
+		{
+			schemes.push_back("rr+tcp");
+		}
+		if (node_setup.GetLocalTransport())
+		{
+			schemes.push_back("rr+local");
+		}
 		BOOST_FOREACH(std::string scheme, schemes)
 		{
 			std::vector<std::string> schemes2;
