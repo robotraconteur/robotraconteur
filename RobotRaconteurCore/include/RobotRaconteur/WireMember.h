@@ -1,7 +1,7 @@
 /** 
  * @file WireMember.h
  * 
- * @author Dr. John Wason
+ * @author John Wason, PhD
  * 
  * @copyright Copyright 2011-2020 Wason Technology, LLC
  *
