@@ -1,0 +1,214 @@
+name: Dist Test
+
+on: 
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'git ref to run against'
+        required: true
+      prerelease:
+        description: 'use prerelease versions'
+        required: true        
+
+jobs:
+  build-ubuntu:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-18.04, ubuntu-20.04]
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: '${{ github.event.inputs.ref }}'
+        repository: robotraconteur/robotraconteur
+    - name: add PPA
+      if: ${{ github.event.inputs.prerelease != 'true' }}
+      run: sudo add-apt-repository ppa:robotraconteur/ppa -y
+    - name: add prerelease PPA
+      if: ${{ github.event.inputs.prerelease == 'true' }}
+      run: sudo add-apt-repository ppa:robotraconteur/robotraconteur-prerelease -y
+    - name: apt update
+      run: sudo apt update
+    - name: apt python2
+      if: matrix.os != 'ubuntu-20.04'
+      run: >
+        sudo apt-get install python-robotraconteur -q
+    - name: apt python3
+      run: >
+        sudo apt-get install python3-robotraconteur -q
+    - name: test python2
+      if: matrix.os != 'ubuntu-20.04'
+      env:
+        ROBOTRACONTEUR_ROBDEF_PATH: '${{ github.workspace }}/testing/RobotRaconteurTest'
+      run: |
+        cd RobotRaconteurPython/test
+        python RobotRaconteurPythonTest.py loopback
+    - name: test python3
+      env:
+        ROBOTRACONTEUR_ROBDEF_PATH: '${{ github.workspace }}/testing/RobotRaconteurTest'
+      run: |
+        cd RobotRaconteurPython/test
+        python3 RobotRaconteurPythonTest.py loopback
+      continue-on-error: true
+    - name: apt
+      run: >
+        sudo apt-get install robotraconteur-dev libboost-all-dev libbluetooth-dev
+        libdbus-1-dev libssl-dev libusb-1.0-0-dev  -q 
+    - name: configure
+      run: >
+        mkdir build && cd build &&
+        cmake -G "Unix Makefiles" -DBUILD_CORE=OFF -DBUILD_TEST=ON -DBUILD_TESTING=ON
+        ..
+    - name: build
+      run: |        
+        cd build
+        cmake --build . --config Release -j 4
+    - name: test cpp
+      run: |
+        cd build
+        ctest . -C Release --output-on-failure    
+
+  build-win:
+    runs-on: windows-2019
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [x64,x86]
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: '${{ github.event.inputs.ref }}'
+        repository: robotraconteur/robotraconteur
+    - uses: haya14busa/action-cond@v1
+      id: pip_pre
+      with:
+        cond: ${{ github.event.inputs.prerelease == 'true' }}
+        if_true: "--pre"
+        if_false: ""
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '2.7'
+        architecture: ${{ matrix.arch }}
+    - name: pip
+      run: |
+        python -m pip install ${{ steps.pip_pre.outputs.value }} robotraconteur
+    - name: test python
+      env:
+        ROBOTRACONTEUR_ROBDEF_PATH: '${{ github.workspace }}/testing/RobotRaconteurTest'
+      run: |
+        cd RobotRaconteurPython/test
+        python RobotRaconteurPythonTest.py loopback
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+        architecture: ${{ matrix.arch }}
+    - name: pip
+      run: |
+        python -m pip install ${{ steps.pip_pre.outputs.value }} robotraconteur
+    - name: test python3
+      env:
+        ROBOTRACONTEUR_ROBDEF_PATH: '${{ github.workspace }}/testing/RobotRaconteurTest'
+      run: |
+        cd RobotRaconteurPython/test
+        python RobotRaconteurPythonTest.py loopback
+    - name: setup vcpkg
+      run: |
+        cd ..
+        git clone https://github.com/microsoft/vcpkg.git        
+        cd vcpkg
+        git checkout 0896cfc
+        bootstrap-vcpkg.bat
+    - name: setup vcpkg robotraconteur
+      run: |
+        cd ..
+        git clone https://github.com/robotraconteur/vcpkg-robotraconteur.git
+      if: ${{ github.event.inputs.prerelease != 'true' }}
+    - name: setup vcpkg robotraconteur prerelease
+      run: |
+        cd ..
+        git clone https://github.com/robotraconteur/vcpkg-robotraconteur.git
+        git checkout prerelease
+      if: ${{ github.event.inputs.prerelease == 'true' }}
+    - name: vcpkg build robotraconteur
+      run: |
+        cd ..\vcpkg
+        vcpkg install --overlay-ports=..\vcpkg-robotraconteur\ports robotraconteur:${{ matrix.arch }}-windows
+    - uses: haya14busa/action-cond@v1
+      id: cmake_arch
+      with:
+        cond: ${{ matrix.arch == 'x86' }}
+        if_true: "Win32"
+        if_false: "x64"
+    - name: configure cpp
+      run: >
+        mkdir build && cd build &&
+        cmake -G "Visual Studio 16 2019" -A ${{ steps.cmake_arch.outputs.value }} 
+        -DBUILD_CORE=OFF -DBUILD_TEST=ON -DBUILD_TESTING=ON
+        -DCMAKE_TOOLCHAIN_FILE='..\..\vcpkg\scripts\buildsystems\vcpkg.cmake'
+        -DVCPKG_TARGET_TRIPLET='${{ matrix.arch }}-windows'
+        ..
+    - name: build cpp
+      run: |        
+        cd build
+        cmake --build . --config Release -j 4
+    - name: test cpp
+      run: |
+        cd build
+        ctest . -C Release --output-on-failure
+  build-osx:
+    runs-on: macos-10.15
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: '${{ github.event.inputs.ref }}'
+        repository: robotraconteur/robotraconteur
+    - uses: haya14busa/action-cond@v1
+      id: pip_pre
+      with:
+        cond: ${{ github.event.inputs.prerelease == 'true' }}
+        if_true: "--pre"
+        if_false: ""
+    - name: pip
+      run: |
+        python -m pip install ${{ steps.pip_pre.outputs.value }} robotraconteur
+    - name: test python
+      env:
+        ROBOTRACONTEUR_ROBDEF_PATH: '${{ github.workspace }}/testing/RobotRaconteurTest'
+      run: |
+        cd RobotRaconteurPython/test
+        python RobotRaconteurPythonTest.py loopback
+      continue-on-error: true
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+        architecture: ${{ matrix.arch }}
+    - name: pip
+      run: |
+        python -m pip install ${{ steps.pip_pre.outputs.value }} robotraconteur
+      continue-on-error: true
+    - name: test python3
+      env:
+        ROBOTRACONTEUR_ROBDEF_PATH: '${{ github.workspace }}/testing/RobotRaconteurTest'
+      run: |
+        cd RobotRaconteurPython/test
+        python RobotRaconteurPythonTest.py loopback
+      continue-on-error: true
+    - name: homebrew
+      run: brew update && brew install robotraconteur/robotraconteur/robotraconteur
+    - name: configure
+      run: >
+        mkdir build && cd build &&
+        cmake -G "Xcode" -DBUILD_CORE=OFF -DBUILD_TEST=ON -DBUILD_TESTING=ON -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl
+        ..
+    - name: build
+      run: |        
+        cd build
+        cmake --build . --config Release -j 4
+    - name: test cpp
+      run: |
+        cd build
+        ctest . -C Release --output-on-failure
