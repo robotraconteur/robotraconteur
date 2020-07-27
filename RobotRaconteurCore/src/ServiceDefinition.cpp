@@ -123,8 +123,11 @@ namespace RobotRaconteur
 	bool operator > (const RobotRaconteurVersion &v1, const RobotRaconteurVersion &v2)
 	{
 		if (v1.major > v2.major) return true;
+		if (v1.major < v2.major) return false;
 		if (v1.minor > v2.minor) return true;
+		if (v1.minor < v2.minor) return false;
 		if (v1.patch > v2.patch) return true;
+		if (v1.patch < v2.patch) return false;
 		if (v1.tweak > v2.tweak) return true;
 		return false;
 	}
@@ -137,8 +140,11 @@ namespace RobotRaconteur
 	bool operator < (const RobotRaconteurVersion &v1, const RobotRaconteurVersion &v2)
 	{
 		if (v1.major < v2.major) return true;
+		if (v1.major > v2.major) return false;
 		if (v1.minor < v2.minor) return true;
+		if (v1.minor > v2.minor) return false;
 		if (v1.patch < v2.patch) return true;
+		if (v1.patch > v2.patch) return false;
 		if (v1.tweak < v2.tweak) return true;
 		return false;
 	}
