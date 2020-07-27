@@ -1705,7 +1705,7 @@ namespace RobotRaconteur
             {
                 using (MessageElement m = innerpipe.PeekNextPacket())
                 {
-                    object data = RobotRaconteurNode.s.UnpackVarType(m);
+                    object data = RobotRaconteurNode.s.UnpackAnyType<T>(m);
                     if (data is Array)
                     {
                         if (typeof(T).IsArray)
@@ -1724,7 +1724,7 @@ namespace RobotRaconteur
             {
                 using (MessageElement m = innerpipe.ReceivePacket())
                 {
-                    object data = RobotRaconteurNode.s.UnpackVarType(m);
+                    object data = RobotRaconteurNode.s.UnpackAnyType<T>(m);
                     if (data is Array)
                     {
                         if (typeof(T).IsArray)
@@ -1743,7 +1743,7 @@ namespace RobotRaconteur
             {
                 using (MessageElement m = innerpipe.PeekNextPacketWait(timeout))
                 {
-                    object data = RobotRaconteurNode.s.UnpackVarType(m);
+                    object data = RobotRaconteurNode.s.UnpackAnyType<T>(m);
                     if (data is Array)
                     {
                         if (typeof(T).IsArray)
@@ -1762,7 +1762,7 @@ namespace RobotRaconteur
             {
                 using (MessageElement m = innerpipe.ReceivePacketWait(timeout))
                 {
-                    object data = RobotRaconteurNode.s.UnpackVarType(m);
+                    object data = RobotRaconteurNode.s.UnpackAnyType<T>(m);
                     if (data is Array)
                     {
                         if (typeof(T).IsArray)
@@ -1785,7 +1785,7 @@ namespace RobotRaconteur
                 using (MessageElement m = ret.packet)
                 {                    
                     if (ret.res == false) return false;
-                    object data = RobotRaconteurNode.s.UnpackVarType(m);
+                    object data = RobotRaconteurNode.s.UnpackAnyType<T>(m);
                     if (data is Array)
                     {
                         if (typeof(T).IsArray)
@@ -2222,7 +2222,7 @@ namespace RobotRaconteur
                             }
                         }
 
-                        this.handler_task.SetResult(Tuple.Create(Wire<T>.UnpackData(m), ts));
+                        this.handler_task.SetResult(Tuple.Create(RobotRaconteurNode.s.UnpackAnyType<T>(m), ts));
 
                     }
                     catch (Exception e)
@@ -2246,7 +2246,7 @@ namespace RobotRaconteur
             ts = new TimeSpec();
             using (MessageElement m = c.PeekInValue(ts))
             {
-                return UnpackData(m);
+                return RobotRaconteurNode.s.UnpackAnyType<T>(m);
             }
         }
 
@@ -2257,7 +2257,7 @@ namespace RobotRaconteur
             ts = new TimeSpec();
             using (MessageElement m = c.PeekOutValue(ts))
             {
-                return UnpackData(m);
+                return RobotRaconteurNode.s.UnpackAnyType<T>(m);
             }
         }
 
@@ -2326,22 +2326,6 @@ namespace RobotRaconteur
             }
         }
 
-        internal static T UnpackData(MessageElement m)
-        {
-            object data = RobotRaconteurNode.s.UnpackVarType(m);
-            if (data is Array)
-            {
-                if (typeof(T).IsArray)
-                    return (T)data;
-                else
-                    return ((T[])data)[0];
-            }
-            else
-            {
-                return (T)data;
-            }
-        }
-
         class peekcallbackclass : WrappedWireServerPeekValueDirector
         {
             Func<uint,T> cb;
@@ -2372,7 +2356,7 @@ namespace RobotRaconteur
 
             public override void PokeValue(MessageElement el, TimeSpec ts, uint ep)
             {
-                T value = Wire<T>.UnpackData(el);
+                T value = RobotRaconteurNode.s.UnpackAnyType<T>(el);
                 cb(value, ts, ep);               
             }
         }
@@ -2463,7 +2447,7 @@ namespace RobotRaconteur
                 {
                     using (MessageElement m = innerwire.GetInValue())
                     {
-                        return Wire<T>.UnpackData(m);
+                        return RobotRaconteurNode.s.UnpackAnyType<T>(m);
                     }
                 }
 
@@ -2475,7 +2459,7 @@ namespace RobotRaconteur
                 {
                     using (MessageElement m = innerwire.GetOutValue())
                     {
-                        return Wire<T>.UnpackData(m);
+                        return RobotRaconteurNode.s.UnpackAnyType<T>(m);
                     }
                 }
 
@@ -2528,7 +2512,7 @@ namespace RobotRaconteur
                 {                    
                     if (ret.res == false) return false;
                     ts = ret.ts;
-                    value = Wire<T>.UnpackData(m);
+                    value = RobotRaconteurNode.s.UnpackAnyType<T>(m);
                     return true;
                 }
             }
@@ -2543,7 +2527,7 @@ namespace RobotRaconteur
                 {                    
                     if (ret.res == false) return false;
                     ts = ret.ts;
-                    value = Wire<T>.UnpackData(m);
+                    value = RobotRaconteurNode.s.UnpackAnyType<T>(m);
                     return true;
                 }
             }
@@ -2670,7 +2654,7 @@ namespace RobotRaconteur
                         { 
                             if (wire.WireValueChanged == null) return;
                                                 
-                            object data = RobotRaconteurNode.s.UnpackVarType(value);
+                            object data = RobotRaconteurNode.s.UnpackAnyType<T>(value);
                             T data2;
                             if (data is Array)
                             {
@@ -2818,7 +2802,7 @@ namespace RobotRaconteur
         {
             ts = new TimeSpec();
             var m=innerwire.GetInValue(ts, out ep);
-            return Wire<T>.UnpackData(m);
+            return RobotRaconteurNode.s.UnpackAnyType<T>(m);
         }
 
         class ValueChangedDirector : WrappedWireServerPokeValueDirector
@@ -2835,7 +2819,7 @@ namespace RobotRaconteur
                 WireUnicastReceiver<T> cb1 = cb.Target as WireUnicastReceiver<T>;
                 if (cb1 == null) return;
 
-                T value = Wire<T>.UnpackData(el);
+                T value = RobotRaconteurNode.s.UnpackAnyType<T>(el);
                 cb1.ValueChanged(value, ts, ep);
             }
         }

@@ -195,42 +195,28 @@ namespace RobotRaconteur
 
         public ReturnType Next(ParamType param)
         {
-            object param1 = RobotRaconteurNode.s.PackVarType(param);
-            try
+            using(MessageElement m = RobotRaconteurNode.s.PackAnyType<ParamType>("parameter", ref param))
             {
-                using (MessageElement m = new MessageElement("parameter", param1))
+                
+                using (MessageElement m2 = inner_gen.Next(m))
                 {
-                    using (MessageElement m2 = inner_gen.Next(m))
-                    {
-                        return Wire<ReturnType>.UnpackData(m2);
-                    }
+                    return RobotRaconteurNode.s.UnpackAnyType<ReturnType>(m2);
                 }
-            }
-            finally
-            {
-                IDisposable d = param1 as IDisposable;
-                if (d != null) d.Dispose();
-            }
+                
+            }            
         }
         public async Task<ReturnType> AsyncNext(ParamType param, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
         {
-            object param1 = RobotRaconteurNode.s.PackVarType(param);
-            try
+            using(MessageElement m= RobotRaconteurNode.s.PackAnyType<ParamType>("parameter", ref param))
             {
-                using (MessageElement m = new MessageElement("parameter", param1))
-                {
+                
                     AsyncRequestDirectorImpl d = new AsyncRequestDirectorImpl();
                     int id = RRObjectHeap.AddObject(d);
                     inner_gen.AsyncNext(m, timeout, d, id);
                     var mret = await d.Task;
-                    return Wire<ReturnType>.UnpackData(mret);
-                }
+                    return RobotRaconteurNode.s.UnpackAnyType<ReturnType>(mret);                
             }
-            finally
-            {
-                IDisposable d = param1 as IDisposable;
-                if (d != null) d.Dispose();
-            }
+            
         }
 
                 public void Abort()
@@ -271,7 +257,7 @@ namespace RobotRaconteur
         {
             using (MessageElement m2 = inner_gen.Next(null))
             {
-                return Wire<ReturnType>.UnpackData(m2);
+                return RobotRaconteurNode.s.UnpackAnyType<ReturnType>(m2);
             }
         }
         public async Task<ReturnType> AsyncNext(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
@@ -280,7 +266,7 @@ namespace RobotRaconteur
             int id = RRObjectHeap.AddObject(d);
             inner_gen.AsyncNext(null, timeout, d, id);
             var mret = await d.Task;
-            return Wire<ReturnType>.UnpackData(mret);
+            return RobotRaconteurNode.s.UnpackAnyType<ReturnType>(mret);
         }
 
         
@@ -334,38 +320,24 @@ namespace RobotRaconteur
 
         public void Next(ParamType param)
         {
-            object param1 = RobotRaconteurNode.s.PackVarType(param);
-            try
-            {
-                using (MessageElement m = new MessageElement("parameter", param1))
-                {
-                    inner_gen.Next(m);
-                }
+            using(MessageElement m = RobotRaconteurNode.s.PackAnyType<ParamType>("parameter", ref param))
+            {            
+                inner_gen.Next(m);
             }
-            finally
-            {
-                IDisposable d = param1 as IDisposable;
-                if (d != null) d.Dispose();
-            }
+                
         }
         public async Task AsyncNext(ParamType param, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
         {
-            object param1 = RobotRaconteurNode.s.PackVarType(param);
-            try
+            using(MessageElement m = RobotRaconteurNode.s.PackAnyType<ParamType>("parameter", ref param))            
             {
-                using (MessageElement m = new MessageElement("parameter", param1))
-                {
-                    AsyncRequestDirectorImpl d = new AsyncRequestDirectorImpl();
-                    int id = RRObjectHeap.AddObject(d);
-                    inner_gen.AsyncNext(m, timeout, d, id);
-                    var mret = await d.Task;                    
-                }
+                
+                AsyncRequestDirectorImpl d = new AsyncRequestDirectorImpl();
+                int id = RRObjectHeap.AddObject(d);
+                inner_gen.AsyncNext(m, timeout, d, id);
+                var mret = await d.Task;      
+                
             }
-            finally
-            {
-                IDisposable d = param1 as IDisposable;
-                if (d != null) d.Dispose();
-            }
+            
         }
 
         private static void EndAsyncNext(MessageElement m, Exception err, object p)
@@ -415,19 +387,9 @@ namespace RobotRaconteur
             {
                 try
                 {
-                    ParamType p = Wire<ParamType>.UnpackData(m);
+                    ParamType p = RobotRaconteurNode.s.UnpackAnyType<ParamType>(m);
                     ReturnType r = generator.Next(p);
-                    object r1 = RobotRaconteurNode.s.PackVarType(r);
-                    try
-                    {
-                        MessageElement m_r = new MessageElement("return", r1);
-                        return m_r;
-                    }
-                    finally
-                    {
-                        IDisposable d = r1 as IDisposable;
-                        if (d != null) d.Dispose();
-                    }
+                    return RobotRaconteurNode.s.PackAnyType<ReturnType>("return", ref r);                    
                 }
                 catch (Exception e)
                 {
@@ -493,19 +455,8 @@ namespace RobotRaconteur
                 try
                 {
                     ReturnType r = generator.Next();
-                    object r1 = RobotRaconteurNode.s.PackVarType(r);
-                    try
-                    {
-                        MessageElement m_r = new MessageElement("return", r1);
-                        {
-                            return m_r;
-                        }
-                    }
-                    finally
-                    {
-                        IDisposable d = r1 as IDisposable;
-                        if (d != null) d.Dispose();
-                    }
+                    return RobotRaconteurNode.s.PackAnyType<ReturnType>("return", ref r);
+                    
                 }
                 catch (Exception e)
                 {
@@ -570,7 +521,7 @@ namespace RobotRaconteur
             {
                 try
                 {
-                    ParamType p = Wire<ParamType>.UnpackData(m);
+                    ParamType p = RobotRaconteurNode.s.UnpackAnyType<ParamType>(m);
                     generator.Next(p);
                     return null;
                 }

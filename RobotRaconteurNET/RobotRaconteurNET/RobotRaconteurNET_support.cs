@@ -710,6 +710,20 @@ namespace RobotRaconteur
 
         }
 
+        public static MessageElement NewMessageElement(string name, object data)
+        {
+            MessageElement m = null;
+            
+            {
+                m = new MessageElement();
+                m.ElementName = name;
+                m.Data = data;
+                return m;
+            }
+            
+
+        }
+
         public static void AddMessageElementDispose(vectorptr_messageelement vct, string name, object data)
         {
             using (MessageElement m = NewMessageElementDispose(name, data))
@@ -1886,34 +1900,39 @@ namespace RobotRaconteur
             }
         }
 
-        private MessageElement PackContainerValue<T>(string name, ref T data)
+        public MessageElement PackAnyType<T>(string name, ref T data)
         {
             Type t = typeof(T);
 
             if (t == typeof(object))
             {
-                return MessageElementUtil.NewMessageElementDispose(name, PackVarType((object)data));
+                return MessageElementUtil.NewMessageElement(name, PackVarType((object)data));
             }
 
             bool is_array = t.IsArray;
             if (!(t.IsValueType || !EqualityComparer<T>.Default.Equals(data, default(T))))
             {
-                return MessageElementUtil.NewMessageElementDispose(name, null);
+                return MessageElementUtil.NewMessageElement(name, null);
             }
 
-            if (t.IsPrimitive || (is_array && t.GetElementType().IsPrimitive))
+            if (t.IsPrimitive)
             {
-                return MessageElementUtil.NewMessageElementDispose(name, data);
+                return MessageElementUtil.NewMessageElement(name, new T[] { data });
+            }
+
+            if  (is_array && t.GetElementType().IsPrimitive)
+            {
+                return MessageElementUtil.NewMessageElement(name, data );
             }
 
             if (t == typeof(string))
             {
-                return MessageElementUtil.NewMessageElementDispose(name, data);
+                return MessageElementUtil.NewMessageElement(name, data);
             }
 
             if (t == typeof(CDouble) || t == typeof(CSingle))
             {
-                return MessageElementUtil.NewMessageElementDispose(name, data);
+                return MessageElementUtil.NewMessageElement(name, data);
             }
 
             if (is_array)
@@ -1921,59 +1940,72 @@ namespace RobotRaconteur
                 var t2 = t.GetElementType();
                 if (t2 == typeof(CDouble) || t2 == typeof(CSingle))
                 {
-                    return MessageElementUtil.NewMessageElementDispose(name, data);
+                    return MessageElementUtil.NewMessageElement(name, data);
                 }
             }
 
             if (t == typeof(MultiDimArray))
             {
-                return MessageElementUtil.NewMessageElementDispose(name, PackMultiDimArray((MultiDimArray)(object)data));
+                return MessageElementUtil.NewMessageElement(name, PackMultiDimArray((MultiDimArray)(object)data));
             }
 
             if (t == typeof(PodMultiDimArray))
             {
-                return MessageElementUtil.NewMessageElementDispose(name, PackPod((object)data));
+                return MessageElementUtil.NewMessageElement(name, PackPod((object)data));
             }
 
             if (t == typeof(NamedMultiDimArray))
             {
-                return MessageElementUtil.NewMessageElementDispose(name, PackNamedArray((object)data));
+                return MessageElementUtil.NewMessageElement(name, PackNamedArray((object)data));
             }
 
             if (t.IsGenericType)
             {
+                if (t.GetGenericTypeDefinition() == typeof(Dictionary<,>))
+                {
+                    var method = typeof(RobotRaconteurNode).GetMethod("PackMapType");
+                    var dict_params = t.GetGenericArguments();
+                    var generic = method.MakeGenericMethod(dict_params);
+                    var packed_map = generic.Invoke(this, new object[] { data });
+                    return MessageElementUtil.NewMessageElement(name, packed_map);
+                }
+                if (t.GetGenericTypeDefinition() == typeof(List<>))
+                {
+                    var method = typeof(RobotRaconteurNode).GetMethod("PackListType");
+                    var list_params = t.GetGenericArguments();
+                    var generic = method.MakeGenericMethod(list_params);
+                    var packed_list = generic.Invoke(this, new object[] { data });
+                    return MessageElementUtil.NewMessageElement(name, packed_list);
+                }
                 throw new DataTypeException("Invalid Robot Raconteur container value type");
             }
 
             if (!t.IsValueType && !is_array && t != typeof(PodMultiDimArray) && t != typeof(NamedMultiDimArray))
             {
-                return MessageElementUtil.NewMessageElementDispose(name, PackStructure(data));
+                return MessageElementUtil.NewMessageElement(name, PackStructure(data));
             }
             else
             {
                 Type t2 = t;
                 if (t.IsArray) t2 = t.GetElementType();
-                if (Attribute.GetCustomAttribute(t2, typeof(NamedArrayElementTypeAndCount), false) != null)
+                if (t2.GetCustomAttributes(typeof(NamedArrayElementTypeAndCount), false).Length > 0)
                 {
-                    return MessageElementUtil.NewMessageElementDispose(name, PackNamedArray(data));
+                    return MessageElementUtil.NewMessageElement(name, PackNamedArray(data));
                 }
                 else
                 {
-                    return MessageElementUtil.NewMessageElementDispose(name, PackPod(data));
+                    return MessageElementUtil.NewMessageElement(name, PackPod(data));
                 }
             }
         }
 
-        private MessageElement PackContainerValue<T>(int num, ref T data)
+        private MessageElement PackAnyType<T>(int num, ref T data)
         {
-            var m = PackContainerValue("", ref data);
-            m.ElementNumber = num;
-            m.ElementFlags &= ((byte)~RobotRaconteurNET.MessageElementFlags_ELEMENT_NAME_STR);
-            m.ElementFlags |= ((byte)RobotRaconteurNET.MessageElementFlags_ELEMENT_NUMBER);
-            return m;
+            return PackAnyType(num.ToString(), ref data);
         }
 
-        private T UnpackContainerValue<T>(MessageElement e)
+        
+        public T UnpackAnyType<T>(MessageElement e)
         {
             switch (e.ElementType)
             {
@@ -1993,7 +2025,7 @@ namespace RobotRaconteur
                 case DataTypes.uint64_t:
                 case DataTypes.cdouble_t:
                 case DataTypes.csingle_t:
-                case DataTypes.bool_t:               
+                case DataTypes.bool_t:
                     if (typeof(T).IsArray)
                     {
                         return (T)e.Data;
@@ -2005,13 +2037,13 @@ namespace RobotRaconteur
                 case DataTypes.string_t:
                     return (T)e.Data;
                 case DataTypes.multidimarray_t:
-                    using (MessageElementNestedElementList md = (MessageElementNestedElementList)e.Data)
                     {
+                        MessageElementNestedElementList md = (MessageElementNestedElementList)e.Data;
                         return (T)(object)UnpackMultiDimArray(md);
                     }
                 case DataTypes.structure_t:
-                    using (MessageElementNestedElementList md = (MessageElementNestedElementList)e.Data)
                     {
+                        MessageElementNestedElementList md = (MessageElementNestedElementList)e.Data;
                         return UnpackStructure<T>(md);
                     }
                 /*case DataTypes.pod_t:
@@ -2020,28 +2052,25 @@ namespace RobotRaconteur
                         return (T)UnpackPod(md);
                     }*/
                 case DataTypes.pod_array_t:
-                    using (MessageElementNestedElementList md = (MessageElementNestedElementList)e.Data)
                     {
+                        MessageElementNestedElementList md = (MessageElementNestedElementList)e.Data;
                         if (typeof(T).IsValueType)
                         {
                             if (md.Elements.Count != 1) throw new DataTypeException("Invalid array size for scalar structure");
-
                             return ((T[])UnpackPod(md))[0];
-
                         }
                         else
                         {
                             return (T)UnpackPod(md);
                         }
                     }
-                case DataTypes.pod_multidimarray_t:
-                    using (MessageElementData md = (MessageElementData)e.Data)
+                case DataTypes.pod_multidimarray_t:                    
                     {
-                        return (T)UnpackPod(md);
+                        return (T)UnpackPod((MessageElementData)e.Data);
                     }
                 case DataTypes.namedarray_array_t:
-                    using (MessageElementNestedElementList md = (MessageElementNestedElementList)e.Data)
                     {
+                        MessageElementNestedElementList md = (MessageElementNestedElementList)e.Data;
                         if (typeof(T).IsValueType)
                         {
                             if (md.Elements.Count != 1) throw new DataTypeException("Invalid array size for scalar structure");
@@ -2055,26 +2084,68 @@ namespace RobotRaconteur
                         }
                     }
                 case DataTypes.namedarray_multidimarray_t:
-                    using (MessageElementData md = (MessageElementData)e.Data)
+                    {                       
+                        return (T)UnpackNamedArray((MessageElementNestedElementList)e.Data);
+                    }
+                case DataTypes.vector_t:
+                case DataTypes.dictionary_t:
                     {
-                        return (T)UnpackNamedArray(md);
+                        var t = typeof(T);
+                        var method = typeof(RobotRaconteurNode).GetMethod("UnpackMapType");
+                        var dict_params = t.GetGenericArguments();
+                        var generic = method.MakeGenericMethod(dict_params);
+                        return (T) generic.Invoke(this, new object[] { e.Data });
+                    }
+                case DataTypes.list_t:
+                    {
+                        var t = typeof(T);
+                        var method = typeof(RobotRaconteurNode).GetMethod("UnpackListType");
+                        var list_params = t.GetGenericArguments();
+                        var generic = method.MakeGenericMethod(list_params);
+                        return (T) generic.Invoke(this, new object[] { e.Data });
                     }
                 default:
                     throw new DataTypeException("Invalid container data type");
             }
         }
 
-        private T UnpackContainerValue<T>(MessageElement e, out string name)
+        public T UnpackAnyType<T>(MessageElement e, out string name)
         {
             name = e.ElementName;
-            return UnpackContainerValue<T>(e);
+            return UnpackAnyType<T>(e);
         }
 
-        private T UnpackContainerValue<T>(MessageElement e, out int num)
+        public T UnpackAnyType<T>(MessageElement e, out int num)
         {
             num = MessageElementUtil.GetMessageElementNumber(e);
-            return UnpackContainerValue<T>(e);
+            return UnpackAnyType<T>(e);
         }
+
+        public T UnpackAnyTypeDispose<T>(MessageElement e)
+        {
+            using (e)
+            {
+                return UnpackAnyType<T>(e);
+            }
+        }
+
+        public T UnpackAnyTypeDispose<T>(MessageElement e, out string name)
+        {
+            using (e)
+            {
+                return UnpackAnyType<T>(e, out name);
+            }
+        }
+
+        public T UnpackAnyTypeDispose<T>(MessageElement e, out int num)
+        {
+            using (e)
+            {
+                return UnpackAnyType<T>(e, out num);
+            }
+        }
+
+
 
         //Map type packing
 
@@ -2091,7 +2162,7 @@ namespace RobotRaconteur
                     foreach (KeyValuePair<Tkey, Tvalue> d in ddata)
                     {
                         var v = d.Value;
-                        MessageElementUtil.AddMessageElementDispose(m, PackContainerValue(Convert.ToInt32(d.Key), ref v));
+                        MessageElementUtil.AddMessageElementDispose(m, PackAnyType<Tvalue>(Convert.ToInt32(d.Key), ref v));
                     }
                     return new MessageElementNestedElementList(DataTypes.vector_t,"",m);
                 }
@@ -2107,7 +2178,7 @@ namespace RobotRaconteur
                     foreach (KeyValuePair<Tkey, Tvalue> d in ddata)
                     {
                         var v = d.Value;
-                        MessageElementUtil.AddMessageElementDispose(m, PackContainerValue(d.Key.ToString(), ref v));
+                        MessageElementUtil.AddMessageElementDispose(m, PackAnyType<Tvalue>(d.Key.ToString(), ref v));
                     }
                     return new MessageElementNestedElementList(DataTypes.dictionary_t,"",m);
                 }
@@ -2134,7 +2205,7 @@ namespace RobotRaconteur
                         using (e)
                         {
                             int num;
-                            var val = UnpackContainerValue<Tvalue>(e, out num);
+                            var val = UnpackAnyTypeDispose<Tvalue>(e, out num);
                             o.Add(num, val);
                         }
                     }
@@ -2153,7 +2224,7 @@ namespace RobotRaconteur
                         using (e)
                         {
                             string name;
-                            var val = UnpackContainerValue<Tvalue>(e, out name);
+                            var val = UnpackAnyTypeDispose<Tvalue>(e, out name);
                             o.Add(name, val);
                         }
                     }
@@ -2193,7 +2264,7 @@ namespace RobotRaconteur
                 foreach (Tvalue d in ddata)
                 {
                     var v = d;
-                    MessageElementUtil.AddMessageElementDispose(m, PackContainerValue(count, ref v));
+                    MessageElementUtil.AddMessageElementDispose(m, PackAnyType<Tvalue>(count, ref v));
                     count++;
                 }
 
@@ -2215,7 +2286,7 @@ namespace RobotRaconteur
                     using (e)
                     {
                         int num;
-                        var val = UnpackContainerValue<Tvalue>(e, out num);
+                        var val = UnpackAnyTypeDispose<Tvalue>(e, out num);
                         if (count != num) throw new DataTypeException("Error in list format");
                         o.Add(val);
                         count++;
@@ -3867,7 +3938,7 @@ namespace RobotRaconteur
                     {
                         using (var m1 = value.packet)
                         {
-                            var v = s.UnpackValue(m1);
+                            var v = RobotRaconteurNode.s.UnpackAnyType<T>(m1);
 
                             s.WireValueChanged(s, v, time);
                         }
@@ -3889,22 +3960,6 @@ namespace RobotRaconteur
             subscription.SetRRDirector(director, id);
         }
 
-        internal T UnpackValue(MessageElement m)
-        {
-            object data = RobotRaconteurNode.s.UnpackVarType(m);
-            if (data is Array)
-            {
-                if (typeof(T).IsArray)
-                    return (T)data;
-                else
-                    return ((T[])data)[0];
-            }
-            else
-            {
-                return (T)data;
-            }
-        }
-
         public T InValue
         {
             get
@@ -3915,7 +3970,7 @@ namespace RobotRaconteur
                     var m1 = m.packet;
                     using (m1)
                     {
-                        return UnpackValue(m1);
+                        return RobotRaconteurNode.s.UnpackAnyType<T>(m1);
                     }
                 }
             }
@@ -3931,7 +3986,7 @@ namespace RobotRaconteur
                 using (m.packet)
                 {
                     time = t;
-                    return UnpackValue(m1);
+                    return RobotRaconteurNode.s.UnpackAnyType<T>(m1);
                 }
             }
         }
@@ -3946,7 +4001,7 @@ namespace RobotRaconteur
                     var m1 = m.packet;
                     using (m1)
                     {
-                        value = UnpackValue(m1);
+                        value = RobotRaconteurNode.s.UnpackAnyType<T>(m1);
                     }
                     return true;
                 }
@@ -3969,7 +4024,7 @@ namespace RobotRaconteur
                     time = t;
                     using (var m1 = m.packet)
                     {
-                        value = UnpackValue(m1);
+                        value = RobotRaconteurNode.s.UnpackAnyType<T>(m1);
                         return true;
                     }
                 }
@@ -4019,9 +4074,8 @@ namespace RobotRaconteur
             {
                 object dat = null;
                 try
-                {
-                    dat = RobotRaconteurNode.s.PackVarType(value);
-                    using (MessageElement m = new MessageElement("value", dat))
+                {                    
+                    using (MessageElement m = RobotRaconteurNode.s.PackAnyType<T>("value", ref value))
                     {
                         iter.SetOutValue(m);
                     }
@@ -4086,29 +4140,14 @@ namespace RobotRaconteur
             subscription.SetRRDirector(director, id);
         }
 
-        internal T UnpackValue(MessageElement m)
-        {
-            object data = RobotRaconteurNode.s.UnpackVarType(m);
-            if (data is Array)
-            {
-                if (typeof(T).IsArray)
-                    return (T)data;
-                else
-                    return ((T[])data)[0];
-            }
-            else
-            {
-                return (T)data;
-            }
-        }
-
+        
         public T ReceivePacket()
         {
             using (var m = _subscription.ReceivePacket())
             {
                 using (var m1 = m.packet)
                 {
-                    return UnpackValue(m1);
+                    return RobotRaconteurNode.s.UnpackAnyType<T>(m1);
                 }
             }
         }
@@ -4123,7 +4162,7 @@ namespace RobotRaconteur
                     using (var m1 = m.packet)
                     {
 
-                        packet = UnpackValue(m1);
+                        packet = RobotRaconteurNode.s.UnpackAnyType<T>(m1);
                         return true;
                     }
                 }
@@ -4144,7 +4183,7 @@ namespace RobotRaconteur
                     using (var m1 = m.packet)
                     {
 
-                        packet = UnpackValue(m1);
+                        packet = RobotRaconteurNode.s.UnpackAnyType<T>(m1);
                         return true;
                     }
                 }
@@ -4184,9 +4223,8 @@ namespace RobotRaconteur
             {
                 object dat = null;
                 try
-                {
-                    dat = RobotRaconteurNode.s.PackVarType(value);
-                    using (MessageElement m = new MessageElement("value", dat))
+                {                    
+                    using (MessageElement m = RobotRaconteurNode.s.PackAnyType<T>("value",ref value))
                     {
                         iter.AsyncSendPacket(m);
                     }
