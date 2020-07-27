@@ -175,7 +175,7 @@ The MATLAB library is available on the releases page on github. Unzip the conten
 Use `brew` to install the Robot Raconteur C++ library.
 
 ```
-brew install johnwason/robotraconteur/robotraconteur
+brew install robotraconteur/robotraconteur/robotraconteur
 ```
 
 #### Python
