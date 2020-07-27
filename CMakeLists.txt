@@ -16,6 +16,8 @@ ENDIF()
 STRING (REGEX REPLACE "#define ROBOTRACONTEUR_VERSION_TEXT \"([0-9]+\\.[0-9]+\\.[0-9]+)\"" "\\1" RobotRaconteurVersion ${RobotRaconteurConfigVersion})
 MESSAGE(STATUS "Robot Raconteur version: ${RobotRaconteurVersion}")
 
+set(ROBOTRACONTEUR_VERSION_SUFFIX "" CACHE STRING "Version suffix for library")
+
 include(GNUInstallDirs)
 
 find_package(Doxygen)
@@ -126,10 +128,7 @@ list(APPEND CPACK_SOURCE_IGNORE_FILES "/\.gitignore")
 list(APPEND CPACK_SOURCE_IGNORE_FILES "/\.travis.yml")
 list(APPEND CPACK_SOURCE_IGNORE_FILES "/\.clang-format")
 
-string(REPLACE "." ";" RobotRaconteurVersionList ${RobotRaconteurVersion})
-list(GET RobotRaconteurVersionList 0 CPACK_PACKAGE_VERSION_MAJOR)
-list(GET RobotRaconteurVersionList 1 CPACK_PACKAGE_VERSION_MINOR)
-list(GET RobotRaconteurVersionList 2 CPACK_PACKAGE_VERSION_PATCH)
+set(CPACK_PACKAGE_VERSION ${RobotRaconteurVersion}${ROBOTRACONTEUR_VERSION_SUFFIX})
 
 set(CPACK_SOURCE_INSTALLED_DIRECTORIES "${CMAKE_SOURCE_DIR};/;${CMAKE_BINARY_DIR}/generated_src;/generated_src" )
 set(CPACK_SOURCE_TBZ2 OFF CACHE BOOL "" FORCE)
