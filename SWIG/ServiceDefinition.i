@@ -38,7 +38,8 @@
 %template(vector_constantdefinition_structfield) std::vector<RobotRaconteur::ConstantDefinition_StructField>;
 %template(vector_enumdefinitionvalues) std::vector<RobotRaconteur::EnumDefinitionValue>;
 %template(vector_usingdefinition) std::vector<boost::shared_ptr<RobotRaconteur::UsingDefinition> >;
-%template(vectorptr_exceptiondefinition) std::vector<boost::shared_ptr<RobotRaconteur::ExceptionDefinition> >;
+%template(vectorptr_exceptiondefinitiPon) std::vector<boost::shared_ptr<RobotRaconteur::ExceptionDefinition> >;
+%template(vectorptr_servicedefinition) std::vector<boost::shared_ptr<RobotRaconteur::ServiceDefinition> >;
 
 namespace RobotRaconteur
 {

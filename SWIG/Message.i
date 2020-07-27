@@ -149,7 +149,7 @@ public:
 
 	virtual MessageStringPtr GetTypeString();
 	virtual DataTypes GetTypeID();		
-	virtual boost::string_ref RRType();
+	//virtual boost::string_ref RRType();
 };
 
 }

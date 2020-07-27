@@ -64,7 +64,7 @@ class WrappedRRObject : public RRObject
 	
 public:
 	WrappedRRObject(const std::string& type, WrappedServiceSkelDirector* RR_Director, int32_t id);
-	virtual boost::string_ref RRType();
+	//virtual boost::string_ref RRType();
 	std::string Type;
 	
 	virtual ~WrappedRRObject();

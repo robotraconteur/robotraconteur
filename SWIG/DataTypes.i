@@ -59,7 +59,7 @@ class RRBaseArray : public MessageElementData
 public:
 	virtual MessageStringPtr GetTypeString();
 	virtual size_t size()=0;
-	virtual boost::string_ref RRType();
+	//virtual boost::string_ref RRType();
 	virtual void* void_ptr()=0;
 	virtual size_t ElementSize()=0;
 	virtual DataTypes GetTypeID()=0;

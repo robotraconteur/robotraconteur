@@ -109,7 +109,7 @@ RR_RELEASE_GIL()
 RR_KEEP_GIL()
 	
 	boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition> RR_objecttype;
-	virtual boost::string_ref RRType();
+	//virtual boost::string_ref RRType();
 	//WrappedServiceStubDirector* RR_Director;
 
 
