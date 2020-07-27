@@ -49,19 +49,19 @@ public struct vector3
     GetNumericArray(ref a);
     return a.Array;
     }
-    public void GetNumericArray(ref ArraySegment<double> a)
+    public void GetNumericArray(ref ArraySegment<double> rr_a)
     {
-    if(a.Count < 3) throw new ArgumentException("ArraySegment invalid length");
-    a.Array[a.Offset + 0] = x;
-    a.Array[a.Offset + 1] = y;
-    a.Array[a.Offset + 2] = z;
+    if(rr_a.Count < 3) throw new ArgumentException("ArraySegment invalid length");
+    rr_a.Array[rr_a.Offset + 0] = x;
+    rr_a.Array[rr_a.Offset + 1] = y;
+    rr_a.Array[rr_a.Offset + 2] = z;
     }
-    public void AssignFromNumericArray(ref ArraySegment<double> a)
+    public void AssignFromNumericArray(ref ArraySegment<double> rr_a)
     {
-    if(a.Count < 3) throw new ArgumentException("ArraySegment invalid length");
-    x = a.Array[a.Offset + 0];
-    y = a.Array[a.Offset + 1];
-    z = a.Array[a.Offset + 2];
+    if(rr_a.Count < 3) throw new ArgumentException("ArraySegment invalid length");
+    x = rr_a.Array[rr_a.Offset + 0];
+    y = rr_a.Array[rr_a.Offset + 1];
+    z = rr_a.Array[rr_a.Offset + 2];
     }
 }
 
@@ -78,21 +78,21 @@ public struct quaternion
     GetNumericArray(ref a);
     return a.Array;
     }
-    public void GetNumericArray(ref ArraySegment<double> a)
+    public void GetNumericArray(ref ArraySegment<double> rr_a)
     {
-    if(a.Count < 4) throw new ArgumentException("ArraySegment invalid length");
-    a.Array[a.Offset + 0] = q0;
-    a.Array[a.Offset + 1] = q1;
-    a.Array[a.Offset + 2] = q2;
-    a.Array[a.Offset + 3] = q3;
+    if(rr_a.Count < 4) throw new ArgumentException("ArraySegment invalid length");
+    rr_a.Array[rr_a.Offset + 0] = q0;
+    rr_a.Array[rr_a.Offset + 1] = q1;
+    rr_a.Array[rr_a.Offset + 2] = q2;
+    rr_a.Array[rr_a.Offset + 3] = q3;
     }
-    public void AssignFromNumericArray(ref ArraySegment<double> a)
+    public void AssignFromNumericArray(ref ArraySegment<double> rr_a)
     {
-    if(a.Count < 4) throw new ArgumentException("ArraySegment invalid length");
-    q0 = a.Array[a.Offset + 0];
-    q1 = a.Array[a.Offset + 1];
-    q2 = a.Array[a.Offset + 2];
-    q3 = a.Array[a.Offset + 3];
+    if(rr_a.Count < 4) throw new ArgumentException("ArraySegment invalid length");
+    q0 = rr_a.Array[rr_a.Offset + 0];
+    q1 = rr_a.Array[rr_a.Offset + 1];
+    q2 = rr_a.Array[rr_a.Offset + 2];
+    q3 = rr_a.Array[rr_a.Offset + 3];
     }
 }
 
@@ -107,21 +107,21 @@ public struct transform
     GetNumericArray(ref a);
     return a.Array;
     }
-    public void GetNumericArray(ref ArraySegment<double> a)
+    public void GetNumericArray(ref ArraySegment<double> rr_a)
     {
-    if(a.Count < 7) throw new ArgumentException("ArraySegment invalid length");
-    var a0 = new ArraySegment<double>(a.Array, a.Offset + 0, 4);
-    rotation.GetNumericArray(ref a0);
-    var a4 = new ArraySegment<double>(a.Array, a.Offset + 4, 3);
-    translation.GetNumericArray(ref a4);
+    if(rr_a.Count < 7) throw new ArgumentException("ArraySegment invalid length");
+    var rr_a0 = new ArraySegment<double>(rr_a.Array, rr_a.Offset + 0, 4);
+    rotation.GetNumericArray(ref rr_a0);
+    var rr_a4 = new ArraySegment<double>(rr_a.Array, rr_a.Offset + 4, 3);
+    translation.GetNumericArray(ref rr_a4);
     }
-    public void AssignFromNumericArray(ref ArraySegment<double> a)
+    public void AssignFromNumericArray(ref ArraySegment<double> rr_a)
     {
-    if(a.Count < 7) throw new ArgumentException("ArraySegment invalid length");
-    var a0 = new ArraySegment<double>(a.Array, a.Offset + 0, 4);
-    rotation.AssignFromNumericArray(ref a0);
-    var a4 = new ArraySegment<double>(a.Array, a.Offset + 4, 3);
-    translation.AssignFromNumericArray(ref a4);
+    if(rr_a.Count < 7) throw new ArgumentException("ArraySegment invalid length");
+    var rr_a0 = new ArraySegment<double>(rr_a.Array, rr_a.Offset + 0, 4);
+    rotation.AssignFromNumericArray(ref rr_a0);
+    var rr_a4 = new ArraySegment<double>(rr_a.Array, rr_a.Offset + 4, 3);
+    translation.AssignFromNumericArray(ref rr_a4);
     }
 }
 
@@ -137,19 +137,19 @@ public struct pixel
     GetNumericArray(ref a);
     return a.Array;
     }
-    public void GetNumericArray(ref ArraySegment<byte> a)
+    public void GetNumericArray(ref ArraySegment<byte> rr_a)
     {
-    if(a.Count < 3) throw new ArgumentException("ArraySegment invalid length");
-    a.Array[a.Offset + 0] = r;
-    a.Array[a.Offset + 1] = b;
-    a.Array[a.Offset + 2] = g;
+    if(rr_a.Count < 3) throw new ArgumentException("ArraySegment invalid length");
+    rr_a.Array[rr_a.Offset + 0] = r;
+    rr_a.Array[rr_a.Offset + 1] = b;
+    rr_a.Array[rr_a.Offset + 2] = g;
     }
-    public void AssignFromNumericArray(ref ArraySegment<byte> a)
+    public void AssignFromNumericArray(ref ArraySegment<byte> rr_a)
     {
-    if(a.Count < 3) throw new ArgumentException("ArraySegment invalid length");
-    r = a.Array[a.Offset + 0];
-    b = a.Array[a.Offset + 1];
-    g = a.Array[a.Offset + 2];
+    if(rr_a.Count < 3) throw new ArgumentException("ArraySegment invalid length");
+    r = rr_a.Array[rr_a.Offset + 0];
+    b = rr_a.Array[rr_a.Offset + 1];
+    g = rr_a.Array[rr_a.Offset + 2];
     }
 }
 
@@ -167,31 +167,31 @@ public struct pixel2
     GetNumericArray(ref a);
     return a.Array;
     }
-    public void GetNumericArray(ref ArraySegment<byte> a)
+    public void GetNumericArray(ref ArraySegment<byte> rr_a)
     {
-    if(a.Count < 31) throw new ArgumentException("ArraySegment invalid length");
-    a.Array[a.Offset + 0] = c;
-    var a1 = new ArraySegment<byte>(a.Array, a.Offset + 1, 3);
-    d.GetNumericArray(ref a1);
-    var a4 = new ArraySegment<byte>(a.Array, a.Offset + 4, 3);
-    e.GetNumericArray(ref a4);
-    var a7 = new ArraySegment<byte>(a.Array, a.Offset + 7, 21);
-    f.GetNumericArray(ref a7);
-    var a28 = new ArraySegment<byte>(a.Array, a.Offset + 28, 3);
-    g.GetNumericArray(ref a28);
+    if(rr_a.Count < 31) throw new ArgumentException("ArraySegment invalid length");
+    rr_a.Array[rr_a.Offset + 0] = c;
+    var rr_a1 = new ArraySegment<byte>(rr_a.Array, rr_a.Offset + 1, 3);
+    d.GetNumericArray(ref rr_a1);
+    var rr_a4 = new ArraySegment<byte>(rr_a.Array, rr_a.Offset + 4, 3);
+    e.GetNumericArray(ref rr_a4);
+    var rr_a7 = new ArraySegment<byte>(rr_a.Array, rr_a.Offset + 7, 21);
+    f.GetNumericArray(ref rr_a7);
+    var rr_a28 = new ArraySegment<byte>(rr_a.Array, rr_a.Offset + 28, 3);
+    g.GetNumericArray(ref rr_a28);
     }
-    public void AssignFromNumericArray(ref ArraySegment<byte> a)
+    public void AssignFromNumericArray(ref ArraySegment<byte> rr_a)
     {
-    if(a.Count < 31) throw new ArgumentException("ArraySegment invalid length");
-    c = a.Array[a.Offset + 0];
-    var a1 = new ArraySegment<byte>(a.Array, a.Offset + 1, 3);
-    d.AssignFromNumericArray(ref a1);
-    var a4 = new ArraySegment<byte>(a.Array, a.Offset + 4, 3);
-    e.AssignFromNumericArray(ref a4);
-    var a7 = new ArraySegment<byte>(a.Array, a.Offset + 7, 21);
-    f.AssignFromNumericArray(ref a7);
-    var a28 = new ArraySegment<byte>(a.Array, a.Offset + 28, 3);
-    g.AssignFromNumericArray(ref a28);
+    if(rr_a.Count < 31) throw new ArgumentException("ArraySegment invalid length");
+    c = rr_a.Array[rr_a.Offset + 0];
+    var rr_a1 = new ArraySegment<byte>(rr_a.Array, rr_a.Offset + 1, 3);
+    d.AssignFromNumericArray(ref rr_a1);
+    var rr_a4 = new ArraySegment<byte>(rr_a.Array, rr_a.Offset + 4, 3);
+    e.AssignFromNumericArray(ref rr_a4);
+    var rr_a7 = new ArraySegment<byte>(rr_a.Array, rr_a.Offset + 7, 21);
+    f.AssignFromNumericArray(ref rr_a7);
+    var rr_a28 = new ArraySegment<byte>(rr_a.Array, rr_a.Offset + 28, 3);
+    g.AssignFromNumericArray(ref rr_a28);
     }
 }
 

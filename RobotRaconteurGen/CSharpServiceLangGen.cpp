@@ -688,9 +688,9 @@ namespace RobotRaconteurGen
 				w2 << "    return a.Array;" << endl;
 				w2 << "    }" << endl;
 
-				w2 << "    public void GetNumericArray(ref ArraySegment<" + t6.cs_type + "> a)" << endl << "    {" << endl;
+				w2 << "    public void GetNumericArray(ref ArraySegment<" + t6.cs_type + "> rr_a)" << endl << "    {" << endl;
 				{
-					w2 << "    if(a.Count < " << t4.get<1>() << ") throw new ArgumentException(\"ArraySegment invalid length\");" << endl;
+					w2 << "    if(rr_a.Count < " << t4.get<1>() << ") throw new ArgumentException(\"ArraySegment invalid length\");" << endl;
 					int i = 0;
 					MEMBER_ITER2(PropertyDefinition)
 						TypeDefinition t7 = *CSharpServiceLangGen_RemoveMultiDimArray(*m->Type);
@@ -700,12 +700,12 @@ namespace RobotRaconteurGen
 					{
 						if (m->Type->ArrayType == DataTypes_ArrayTypes_none)
 						{
-							w2 << "    a.Array[a.Offset + " << i << "] = " << t8.name << ";" << endl;
+							w2 << "    rr_a.Array[rr_a.Offset + " << i << "] = " << t8.name << ";" << endl;
 							i++;
 						}
 						else
 						{
-							w2 << "    Array.Copy(" << t8.name << ", 0, a.Array, a.Offset + " << i << ", " << t7.ArrayLength.at(0) << ");" << endl;
+							w2 << "    Array.Copy(" << t8.name << ", 0, rr_a.Array, rr_a.Offset + " << i << ", " << t7.ArrayLength.at(0) << ");" << endl;
 							i += t7.ArrayLength.at(0);
 						}
 					}
@@ -715,8 +715,8 @@ namespace RobotRaconteurGen
 						boost::tuple<DataTypes, size_t> t9 = GetNamedArrayElementTypeAndCount(e2);
 						size_t e2_count = m->Type->ArrayType == DataTypes_ArrayTypes_none ? 1 : t7.ArrayLength.at(0);
 
-						w2 << "    var a" << i << " = new ArraySegment<" << t6.cs_type << ">(a.Array, a.Offset + " << i << ", " << t9.get<1>()*e2_count << ");" << endl;
-						w2 << "    " << t8.name << ".GetNumericArray(ref a" << i << ");" << endl;
+						w2 << "    var rr_a" << i << " = new ArraySegment<" << t6.cs_type << ">(rr_a.Array, rr_a.Offset + " << i << ", " << t9.get<1>()*e2_count << ");" << endl;
+						w2 << "    " << t8.name << ".GetNumericArray(ref rr_a" << i << ");" << endl;
 						i += t9.get<1>()*e2_count;
 						
 					}
@@ -725,9 +725,9 @@ namespace RobotRaconteurGen
 				}
 				w2 << "    }" << endl;
 
-				w2 << "    public void AssignFromNumericArray(ref ArraySegment<" + t6.cs_type + "> a)" << endl << "    {" << endl;
+				w2 << "    public void AssignFromNumericArray(ref ArraySegment<" + t6.cs_type + "> rr_a)" << endl << "    {" << endl;
 				{
-					w2 << "    if(a.Count < " << t4.get<1>() << ") throw new ArgumentException(\"ArraySegment invalid length\");" << endl;
+					w2 << "    if(rr_a.Count < " << t4.get<1>() << ") throw new ArgumentException(\"ArraySegment invalid length\");" << endl;
 					int i = 0;
 					MEMBER_ITER2(PropertyDefinition)
 						TypeDefinition t7 = *CSharpServiceLangGen_RemoveMultiDimArray(*m->Type);
@@ -737,12 +737,12 @@ namespace RobotRaconteurGen
 					{
 						if (m->Type->ArrayType == DataTypes_ArrayTypes_none)
 						{
-							w2 << "    " << t8.name << " = a.Array[a.Offset + " << i << "]" << ";" << endl;
+							w2 << "    " << t8.name << " = rr_a.Array[rr_a.Offset + " << i << "]" << ";" << endl;
 							i++;
 						}
 						else
 						{
-							w2 << "    Array.Copy(a.Array, a.Offset + " << i << ", " << t8.name << ", 0, " << t7.ArrayLength.at(0) << ");" << endl;
+							w2 << "    Array.Copy(rr_a.Array, rr_a.Offset + " << i << ", " << t8.name << ", 0, " << t7.ArrayLength.at(0) << ");" << endl;
 							i += t7.ArrayLength.at(0);
 						}
 					}
@@ -752,8 +752,8 @@ namespace RobotRaconteurGen
 						boost::tuple<DataTypes, size_t> t9 = GetNamedArrayElementTypeAndCount(e2);
 						size_t e2_count = m->Type->ArrayType == DataTypes_ArrayTypes_none ? 1 : t7.ArrayLength.at(0);
 
-						w2 << "    var a" << i << " = new ArraySegment<" << t6.cs_type << ">(a.Array, a.Offset + " << i << ", " << t9.get<1>()*e2_count << ");" << endl;
-						w2 << "    " << t8.name << ".AssignFromNumericArray(ref a" << i << ");" << endl;
+						w2 << "    var rr_a" << i << " = new ArraySegment<" << t6.cs_type << ">(rr_a.Array, rr_a.Offset + " << i << ", " << t9.get<1>()*e2_count << ");" << endl;
+						w2 << "    " << t8.name << ".AssignFromNumericArray(ref rr_a" << i << ");" << endl;
 						i += t9.get<1>()*e2_count;
 
 					}
