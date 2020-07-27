@@ -116,6 +116,8 @@
 %include "TimerJava.i"
 %include "TimeSpecJava.i"
 
+%include "TypedPacket.i"
+
 %include "PipeMember.i"
 %include "WireMember.i"
 %include "MemoryMember.i"

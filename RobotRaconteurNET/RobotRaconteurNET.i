@@ -92,6 +92,8 @@ static void memcpy(void* destination, void* source, int64_t num)
 
 %include "TimeSpecNET.i"
 
+%include "TypedPacket.i"
+
 %include "PipeMember.i"
 %include "WireMember.i"
 %include "MemoryMember.i"

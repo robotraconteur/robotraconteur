@@ -87,6 +87,8 @@ RobotRaconteur::RobotRaconteurNode::s()->SetThreadPoolFactory(RR_MAKE_SHARED<Rob
 
 %include "TimeSpecPython.i"
 
+%include "TypedPacket.i"
+
 %include "PipeMember.i"
 %include "WireMember.i"
 %include "MemoryMember.i"
