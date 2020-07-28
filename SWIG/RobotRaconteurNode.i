@@ -530,6 +530,7 @@ RR_KEEP_GIL()
 	boost::shared_ptr<RobotRaconteur::LogRecordHandler> GetLogRecordHandler();
 	void SetLogRecordHandler(boost::shared_ptr<RobotRaconteur::LogRecordHandler> handler);
 
+	void CheckConnection(uint32_t client);
 
 
 };
