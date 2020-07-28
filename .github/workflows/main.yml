@@ -42,6 +42,7 @@ jobs:
         ./configure
         make
         sudo make install
+        sudo apt remove swig
     - name: configure
       run: >
         cd .. &&
