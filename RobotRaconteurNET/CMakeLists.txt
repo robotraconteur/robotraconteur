@@ -122,6 +122,13 @@ STRING(TIMESTAMP CurrentYear "%Y")
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurNET/Properties/AssemblyInfo.cs.in" "${CMAKE_CURRENT_BINARY_DIR}/AssemblyInfo.cs" @ONLY)
 
 
+set(RR_NET_INSTALL_NATIVE_LIB OFF CACHE BOOL "Install .NET Native lib")
+mark_as_advanced(RR_NET_INSTALL_NATIVE_LIB)
+
+if(RR_NET_INSTALL_NATIVE_LIB)
+install(TARGETS ${SWIG_MODULE_RobotRaconteurNETNative_REAL_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR})
+endif()
+
 if(WIN32)
 set(RR_NET_TEST_CMD "\"${CMAKE_COMMAND}\"")
 set(RR_NET_TEST_CMD_ARGS "-E env PATH=\"%PATH%\\\;${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/NET/Native\" ${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/NET/RobotRaconteurNETTest")
