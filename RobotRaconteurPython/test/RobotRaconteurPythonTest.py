@@ -3081,6 +3081,10 @@ class ServiceTestClient2:
         
                 
     def TestMemories(self):
+
+        if sys.platform == "darwin" and sys.version_info[0] < 3:
+            return
+
         self.test_m1()
         self.test_m2()
         
