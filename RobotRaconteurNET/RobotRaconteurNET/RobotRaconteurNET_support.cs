@@ -1935,6 +1935,11 @@ namespace RobotRaconteur
                 return MessageElementUtil.NewMessageElement(name, data);
             }
 
+            if (t.IsEnum)
+            {
+                return MessageElementUtil.NewMessageElement(name, new int[] { (int)(object)(data) });
+            }
+
             if (is_array)
             {
                 var t2 = t.GetElementType();
