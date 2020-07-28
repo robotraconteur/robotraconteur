@@ -5,7 +5,7 @@ on:
   pull_request:
 
 env:
-  version_suffix: -rc1
+  version_suffix:
 
 jobs:
   build-ubuntu:
