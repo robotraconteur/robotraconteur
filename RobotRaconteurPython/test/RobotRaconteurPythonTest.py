@@ -3027,6 +3027,10 @@ class ServiceTestClient2:
         self._r.testenum1_prop=c['testenum1']['hexval1']
         
     def TestPod(self):
+
+        if sys.platform == "darwin" and sys.version_info[0] < 3:
+            return
+
         s1 = ServiceTest2_fill_testpod1(563921043,self._r)        
         ServiceTest2_verify_testpod1(s1[0],563921043)
         
