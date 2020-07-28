@@ -29,7 +29,7 @@ namespace RobotRaconteurNETTest
     }
 
 
-    public class testroot3_impl : testroot3_default_impl
+    public class testroot3_impl : testroot3_default_impl, IRRServiceObject
     {
 
         RobotRaconteur.Timer _peekwire_b_timer;
@@ -53,6 +53,23 @@ namespace RobotRaconteurNETTest
             }
         }
 
+        public void RRServiceObjectInit(ServerContext context, string service_path)
+        {
+            rrvar_pokewire.InValueChanged += delegate(int val, TimeSpec ts, uint client)
+            {
+                Console.WriteLine("PokeWire value changed: {0}", val);
+                TimeSpec ts2;
+                uint client2;
+                Console.WriteLine("PokeWire InValue: {0}", rrvar_pokewire.GetInValue(out ts2, out client2));
+                int val3;
+                TimeSpec ts3;
+                uint client3;
+                if(rrvar_pokewire.TryGetInValue(out val3, out ts3, out client3))
+                {
+                    Console.WriteLine("PokeWire TryGetInValue: {0}", val3);
+                }
+            };
+        }
 
         public override Pipe<int> unreliable1 { get; set; }
         

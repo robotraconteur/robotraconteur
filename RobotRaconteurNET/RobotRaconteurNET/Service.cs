@@ -2805,6 +2805,32 @@ namespace RobotRaconteur
             return RobotRaconteurNode.s.UnpackAnyType<T>(m);
         }
 
+        public bool TryGetInValue(out T value, out TimeSpec time, out uint client)
+        {
+            var m = new WrappedService_typed_packet();
+            var t = new TimeSpec();            
+            using (m)
+            {
+                if (innerwire.TryGetInValue(m, t))
+                {
+                    time = t;
+                    client = m.client;
+                    using (var m1 = m.packet)
+                    {
+                        value = RobotRaconteurNode.s.UnpackAnyType<T>(m1);
+                        return true;
+                    }
+                }
+                else
+                {
+                    time = null;
+                    value = default(T);
+                    client = 0;
+                    return false;
+                }
+            }
+        }
+
         class ValueChangedDirector : WrappedWireServerPokeValueDirector
         {
             WeakReference cb;

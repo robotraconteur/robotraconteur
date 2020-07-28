@@ -1628,7 +1628,7 @@ namespace RobotRaconteur
 		U GetInValue(TimeSpec& ts, uint32_t& ep)
 		{
 			boost::mutex::scoped_lock lock(this_lock);
-			if (!in_value_valid) throw ValueNotSetException("Value not set");
+			if (!in_value_valid.data()) throw ValueNotSetException("Value not set");
 			if(detail::WireConnectionBase_IsValueExpired(node, in_value_lasttime_local,in_value_lifespan))
 			{
 				throw ValueNotSetException("Value expired");
@@ -1754,6 +1754,8 @@ namespace RobotRaconteur
 			{
 				in_value_lasttime_local = n->NowUTC();
 			}
+
+			lock.unlock();
 
 			InValueChanged(value, ts, ep);
 

@@ -902,6 +902,8 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 
 	}
 
+	class WrappedService_typed_packet;
+
 	class WrappedWireUnicastReceiver : public WireUnicastReceiverBase<WrappedWireServer, RR_INTRUSIVE_PTR<MessageElement> >,  public IWrappedWirePeekPokeCallbacks
 	{
 	public:
@@ -918,6 +920,8 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 
 		void AddInValueChangedListener(WrappedWireServerPokeValueDirector* director, int32_t id);
 		static void ValueChanged(const RR_INTRUSIVE_PTR<MessageElement>& m, const TimeSpec& ts, const uint32_t& ep, RR_SHARED_PTR<WrappedWireServerPokeValueDirector> spdirector);
+
+		bool TryGetInValue(WrappedService_typed_packet& val, TimeSpec& time);
 	};
 
 	class AsyncGeneratorClientReturnDirector
@@ -1702,6 +1706,7 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		RR_SHARED_PTR<TypeDefinition> type;
 		RR_SHARED_PTR<WrappedServiceStub> stub;
 		RR_SHARED_PTR<ClientContext> context;
+		uint32_t client;
 	};
 
 	class WrappedServiceSubscription;

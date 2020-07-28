@@ -1686,6 +1686,7 @@ namespace RobotRaconteur
 		this->wire = wire_server;
 		wire_server->SetWireConnectCallback(boost::bind(&WrappedWireUnicastReceiver::WrappedConnectionConnected, RR_DYNAMIC_POINTER_CAST<WrappedWireUnicastReceiver>(shared_from_this()), RR_BOOST_PLACEHOLDERS(_1)));
 		wire_server->SetWireWrappedPeekPokeCallbacks(RR_DYNAMIC_POINTER_CAST<IWrappedWirePeekPokeCallbacks>(shared_from_this()));
+		in_value_lifespan = -1;
 	}
 
 	void WrappedWireUnicastReceiver::WrappedConnectionConnected(RR_SHARED_PTR<WireConnectionBase> connection)
@@ -1729,6 +1730,19 @@ namespace RobotRaconteur
 	void WrappedWireUnicastReceiver::ValueChanged(const RR_INTRUSIVE_PTR<MessageElement>& m, const TimeSpec& ts, const uint32_t& ep, RR_SHARED_PTR<WrappedWireServerPokeValueDirector> spdirector)
 	{
 		DIRECTOR_CALL2(spdirector->PokeValue(m, ts, ep))
+	}
+
+	bool WrappedWireUnicastReceiver::TryGetInValue(WrappedService_typed_packet& val, TimeSpec& time)
+	{
+		uint32_t client;		
+
+		RR_INTRUSIVE_PTR<MessageElement> packet1;
+		bool ret = WireUnicastReceiverBase::TryGetInValue(packet1, time, client);
+		if (!ret) return false;
+		val.packet = RR_STATIC_POINTER_CAST<MessageElement>(packet1);
+		val.client=client;
+
+		return true;
 	}
 
 	//Generator Function

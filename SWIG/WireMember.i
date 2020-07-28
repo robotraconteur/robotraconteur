@@ -226,6 +226,8 @@ public:
 
 	int32_t GetInValueLifespan();
 	void SetInValueLifespan(int32_t millis);
+
+	bool TryGetInValue(WrappedService_typed_packet& val, TimeSpec& time);
 };
 
 }

@@ -1176,10 +1176,10 @@ class PodArrayMemoryClient_bufferdirector(RobotRaconteurPython.WrappedPodArrayMe
         self._type=type1
         
     def UnpackReadResult(self, res, bufferpos, count):
-        res1=RobotRaconteurPython.MessageElementDataUtil.ToMessageElementPodArray(res)
+        res1=RobotRaconteurPython.MessageElementDataUtil.ToMessageElementNestedElementList(res)
         m=RobotRaconteurPython.MessageElement()
         m.SetData(res)
-        m.ElementTypeName=res1.Type
+        m.ElementTypeName=res1.TypeName
         m.DataCount=len(res1.Elements)
         
         res1=UnpackMessageElement(m, self._type, self._obj, self._node)
@@ -1188,7 +1188,7 @@ class PodArrayMemoryClient_bufferdirector(RobotRaconteurPython.WrappedPodArrayMe
     def PackWriteRequest(self, bufferpos, count):
         buf1=self._buffer[bufferpos:(bufferpos+count)]
         m_data = PackMessageElement(buf1,self._type, self._obj, self._node).GetData()
-        return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementPodArray(m_data)
+        return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementNestedElementList(m_data)
 
 class PodArrayMemoryClient(object):
         
@@ -1219,10 +1219,10 @@ class PodMultiDimArrayMemoryClient_bufferdirector(RobotRaconteurPython.WrappedPo
         self._type=type1
         
     def UnpackReadResult(self, res, bufferpos, count):
-        res1=RobotRaconteurPython.MessageElementDataUtil.ToMessageElementPodMultiDimArray(res)
+        res1=RobotRaconteurPython.MessageElementDataUtil.ToMessageElementNestedElementList(res)
         m=RobotRaconteurPython.MessageElement()
         m.SetData(res)
-        m.ElementTypeName=res1.Type
+        m.ElementTypeName=res1.TypeName
         m.DataCount=len(res1.Elements)
         
         res2=UnpackMessageElement(m, self._type, self._obj, self._node)
@@ -1233,7 +1233,7 @@ class PodMultiDimArrayMemoryClient_bufferdirector(RobotRaconteurPython.WrappedPo
         bufind=[(slice(bufferpos[i], (bufferpos[i]+count[i]))) for i in range(len(count))]
         buf1=self._buffer[tuple(bufind)]          
         m_data = PackMessageElement(buf1,self._type, self._obj, self._node).GetData()
-        return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementPodMultiDimArray(m_data)
+        return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementNestedElementList(m_data)
 
 class PodMultiDimArrayMemoryClient(object):
         
@@ -1268,10 +1268,10 @@ class NamedArrayMemoryClient_bufferdirector(RobotRaconteurPython.WrappedNamedArr
         self._type=type1
         
     def UnpackReadResult(self, res, bufferpos, count):
-        res1=RobotRaconteurPython.MessageElementDataUtil.ToMessageElementNamedArray(res)
+        res1=RobotRaconteurPython.MessageElementDataUtil.ToMessageElementNestedElementList(res)
         m=RobotRaconteurPython.MessageElement()
         m.SetData(res)
-        m.ElementTypeName=res1.Type
+        m.ElementTypeName=res1.TypeName
         m.DataCount=len(res1.Elements)
         
         res1=UnpackMessageElement(m, self._type, self._obj, self._node)
@@ -1280,7 +1280,7 @@ class NamedArrayMemoryClient_bufferdirector(RobotRaconteurPython.WrappedNamedArr
     def PackWriteRequest(self, bufferpos, count):
         buf1=self._buffer[bufferpos:(bufferpos+count)]
         m_data = PackMessageElement(buf1,self._type, self._obj, self._node).GetData()
-        return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementNamedArray(m_data)
+        return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementNestedElementList(m_data)
 
 class NamedArrayMemoryClient(object):
         
@@ -1311,10 +1311,10 @@ class NamedMultiDimArrayMemoryClient_bufferdirector(RobotRaconteurPython.Wrapped
         self._type=type1
         
     def UnpackReadResult(self, res, bufferpos, count):
-        res1=RobotRaconteurPython.MessageElementDataUtil.ToMessageElementNamedMultiDimArray(res)
+        res1=RobotRaconteurPython.MessageElementDataUtil.ToMessageElementNestedElementList(res)
         m=RobotRaconteurPython.MessageElement()
         m.SetData(res)
-        m.ElementTypeName=res1.Type
+        m.ElementTypeName=res1.TypeName
         m.DataCount=len(res1.Elements)
         
         res2=UnpackMessageElement(m, self._type, self._obj, self._node)
@@ -1325,7 +1325,7 @@ class NamedMultiDimArrayMemoryClient_bufferdirector(RobotRaconteurPython.Wrapped
         bufind=[(slice(bufferpos[i], (bufferpos[i]+count[i]))) for i in range(len(count))]
         buf1=self._buffer[tuple(bufind)]            
         m_data = PackMessageElement(buf1,self._type, self._obj, self._node).GetData()
-        return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementNamedMultiDimArray(m_data)
+        return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementNestedElementList(m_data)
 
 class NamedMultiDimArrayMemoryClient(object):
         
@@ -1697,12 +1697,12 @@ class WrappedPodArrayMemoryDirectorPython(RobotRaconteurPython.WrappedPodArrayMe
         buffer3=numpy.zeros((count,),dtype=dt)
         self.memory.Read(memorypos,buffer3,bufferpos,count)        
         m=PackMessageElement(buffer3,self.type,node=self.node)
-        return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementPodArray(m.GetData())
+        return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementNestedElementList(m.GetData())
     
-    def Write(self,memorypos,buffer_,bufferpos,count):        
+    def Write(self,memorypos,buffer_,bufferpos,count):
         m=RobotRaconteurPython.MessageElement()
         m.SetData(buffer_)
-        m.ElementTypeName=buffer_.Type
+        m.ElementTypeName=buffer_.TypeName
         m.DataCount=len(buffer_.Elements)
         buffer3=UnpackMessageElement(m,self.type, node=self.node)
         self.memory.Write(memorypos,buffer3,bufferpos,count)
@@ -1734,7 +1734,7 @@ class WrappedPodMultiDimArrayMemoryDirectorPython(RobotRaconteurPython.WrappedPo
         self.memory.Read(list(memorypos),readdat1,list(bufferpos),dims)
 
         m = PackMessageElement(readdat1, self.type, node=self.node)
-        return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementPodMultiDimArray(m.GetData())
+        return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementNestedElementList(m.GetData())
         
     def Write(self,memorypos_,buffer_, bufferpos_, count_):
         try:
@@ -1742,10 +1742,10 @@ class WrappedPodMultiDimArrayMemoryDirectorPython(RobotRaconteurPython.WrappedPo
             bufferpos=list(bufferpos_)
             count=list(count_)
             
-            buffer1=RobotRaconteurPython.MessageElementDataUtil.ToMessageElementPodMultiDimArray(buffer_)
+            buffer1=RobotRaconteurPython.MessageElementDataUtil.ToMessageElementNestedElementList(buffer_)
             m=RobotRaconteurPython.MessageElement()
             m.SetData(buffer_)
-            m.ElementTypeName=buffer1.Type
+            m.ElementTypeName=buffer1.TypeName
             m.DataCount=len(buffer1.Elements)
             buffer2=UnpackMessageElement(m,self.type, node=self.node)       
             self.memory.Write(memorypos,buffer2,bufferpos,count)
@@ -1769,12 +1769,12 @@ class WrappedNamedArrayMemoryDirectorPython(RobotRaconteurPython.WrappedNamedArr
         buffer3=numpy.zeros((count,),dtype=dt)
         self.memory.Read(memorypos,buffer3,bufferpos,count)        
         m=PackMessageElement(buffer3,self.type,node=self.node)
-        return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementNamedArray(m.GetData())
+        return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementNestedElementList(m.GetData())
     
     def Write(self,memorypos,buffer_,bufferpos,count):        
         m=RobotRaconteurPython.MessageElement()
         m.SetData(buffer_)
-        m.ElementTypeName=buffer_.Type
+        m.ElementTypeName=buffer_.TypeName
         m.DataCount=len(buffer_.Elements)
         buffer3=UnpackMessageElement(m,self.type, node=self.node)
         self.memory.Write(memorypos,buffer3,bufferpos,count)
@@ -1802,7 +1802,7 @@ class WrappedNamedMultiDimArrayMemoryDirectorPython(RobotRaconteurPython.Wrapped
         readdat1=numpy.zeros(dims,dtype=dt)
         self.memory.Read(list(memorypos),readdat1,list(bufferpos),dims)
         m = PackMessageElement(readdat1, self.type, node=self.node)
-        return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementNamedMultiDimArray(m.GetData())
+        return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementNestedElementList(m.GetData())
         
     def Write(self,memorypos_,buffer_, bufferpos_, count_):
         try:
@@ -1810,10 +1810,10 @@ class WrappedNamedMultiDimArrayMemoryDirectorPython(RobotRaconteurPython.Wrapped
             bufferpos=list(bufferpos_)
             count=list(count_)
             
-            buffer1=RobotRaconteurPython.MessageElementDataUtil.ToMessageElementNamedMultiDimArray(buffer_)
+            buffer1=RobotRaconteurPython.MessageElementDataUtil.ToMessageElementNestedElementList(buffer_)
             m=RobotRaconteurPython.MessageElement()
             m.SetData(buffer_)
-            m.ElementTypeName=buffer1.Type
+            m.ElementTypeName=buffer1.TypeName
             m.DataCount=len(buffer1.Elements)
             buffer2=UnpackMessageElement(m,self.type, node=self.node)       
             self.memory.Write(memorypos,buffer2,bufferpos,count)
@@ -2183,6 +2183,14 @@ class WireUnicastReceiver(object):
         ts=RobotRaconteurPython.TimeSpec()
         (m,ep)=self._innerpipe.GetInValue(ts)
         return (UnpackMessageElement(m,self._type,self._obj,self._wire._innerpipe.GetNode()),ts)
+
+    def TryGetInValue(self):
+        val = RobotRaconteurPython.WrappedService_typed_packet()
+        ts=RobotRaconteurPython.TimeSpec()
+        res=self._innerpipe.TryGetInValue(val,ts)
+        if not res:
+            return False, None, None, None
+        return (True,UnpackMessageElement(val.packet,self._type,self._obj,self._wire._innerpipe.GetNode()),ts,val.client)
     
     @property
     def InValueChanged(self):
