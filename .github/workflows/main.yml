@@ -32,6 +32,9 @@ jobs:
     - name: build-swig
       if: matrix.os != 'ubuntu-20.04'
       run: |
+        sudo apt remove swig
+        sudo rm -f /usr/bin/swig*
+        sudo rm -rf /usr/share/swig*
         cd ..
         rm -rf swig_build_dir
         mkdir -p swig_build_dir
@@ -39,10 +42,9 @@ jobs:
         curl -L http://prdownloads.sourceforge.net/swig/swig-4.0.1.tar.gz --output swig-4.0.1.tar.gz
         tar xf swig-4.0.1.tar.gz
         cd swig-4.0.1
-        ./configure --prefix=/usr
+        ./configure
         make
-        sudo make install
-        sudo apt remove swig
+        sudo make install        
     - name: configure
       run: >
         cd .. &&
