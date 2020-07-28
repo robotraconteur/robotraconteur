@@ -1089,6 +1089,7 @@ namespace RobotRaconteur
 					{
 					if (direction == MemberDefinition_Direction_writeonly)
 						throw WriteOnlyMemberException("Write only member");
+					lock.unlock();
 					RR_INTRUSIVE_PTR<RRValue> value = do_PeekInValue(e);					
 					RR_INTRUSIVE_PTR<MessageEntry> mr = PackPacket(value, TimeSpec::Now());
 					mr->EntryType = MessageEntryType_WirePeekInValueRet;
@@ -1108,6 +1109,7 @@ namespace RobotRaconteur
 					{
 						if (direction == MemberDefinition_Direction_readonly)
 							throw ReadOnlyMemberException("Read only member");
+						lock.unlock();
 						RR_INTRUSIVE_PTR<RRValue> value = do_PeekOutValue(e);
 						RR_INTRUSIVE_PTR<MessageEntry> mr = PackPacket(value, TimeSpec::Now());
 						mr->EntryType = MessageEntryType_WirePeekOutValueRet;
@@ -1129,6 +1131,7 @@ namespace RobotRaconteur
 							throw ReadOnlyMemberException("Read only member");
 						TimeSpec ts;
 						RR_INTRUSIVE_PTR<RRValue> value1 = UnpackPacket(m, ts);
+						lock.unlock();
 						do_PokeOutValue(value1, ts, e);
 						return CreateMessageEntry(MessageEntryType_WirePokeOutValueRet, GetMemberName());
 					}
