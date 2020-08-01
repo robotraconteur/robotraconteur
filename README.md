@@ -200,7 +200,7 @@ The MATLAB library is available on the releases page on github. Unzip the conten
 
 ## Building
 
-The software is tested using Travis CI continuous integration. See travis.yml for more information.
+The software is tested using GitHub Actions continuous integration. See .github/workflows/main.yml for more information.
 
 ### Windows
 
