@@ -2,11 +2,11 @@
 
 Robot Raconteur provides security using security policies, client authentication, and TLS encrypted transports.
 
-## Security Policy
+## Security Policy {#security_policy}
 
 Services can optionally have a "security policy". This security policy includes an authentication mechanism and the privileges for anonymous and authenticated users. Typically the authentication is password based, using username/password pairs. Authentication may also use TLS certificates for public-key authentication. Privileges specify if authentication is required and fine-grained privileges for each user.
 
-## TLS Certificates
+## TLS Certificates {#tls_certificates}
 
 Robot Raconteur provides security through a combination of Transport Layer Security (TLS) and X.509 certificates issued by Wason Technology, LLC in partnership with Digicert.  TLS provides strong security using RSA encryption combined with a symmetric encryption algorithm, most commonly AES.  AES provides military grade encryption, and because most modern processors contain hardware acceleration, performance is very high. Certificates are used to validate the identity of nodes communicating using 4096-bit RSA keys. The use of TLS over the Robot Raconteur TCP Transport is transparent to the user requiring only a change in the URL. Using TLS requires installation of an identity X.509 certificate on the service node and optionally the client node if certificates are used for authentication. TLS 1.2 is defined in [IETF RFC 5246](https://tools.ietf.org/html/rfc5246). X.509 v3 certificates are defined in [IETF RFC 5280](https://tools.ietf.org/html/rfc5280).
 

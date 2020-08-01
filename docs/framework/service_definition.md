@@ -37,7 +37,7 @@ The first line in the service definition contains the keyword `service` followed
 
 Next in the service there should be `stdver` and the minimum version of Robot Raconteur required to access the service.  For now this should be `0.10`.  Example `createinterface` does not show it, but there can also be one or more `import` to reference structures and objects in other service definitions. The rest of service definition defines the *structures* and *objects* of the service definition. (Lines starting with `#` are comments.)
 
-## Names
+## Names {#service_definition_names}
 
 User-defined names are used throughout service definitions. These names must:
 
@@ -238,7 +238,7 @@ Memories represent a random-access segment of numeric primitive arrays, numeric 
 
 Memories can use modifiers `readonly` or `writeonly`. See \ref modifiers.
 
-## Constants
+## Constants {#constants}
 
 Constants can be specified using the \texttt{constant} keyword. The constants can be numbers, single dimensional arrays, or strings. Constants can be declared either in the global service definition scope or in objects.
 
@@ -246,13 +246,13 @@ Constants can be specified using the \texttt{constant} keyword. The constants ca
     constant double[] myarray {10.3, 584.9, 594}
     constant string mystring "Hello world!"
 
-## Exceptions
+## Exceptions {#exceptions}
 
 Robot Raconteur will transparently pass exceptions thrown by the receiver to the caller for transactions such as functions, properties, callbacks, and memory reads/writes. Normally these exceptions are of the type RobotRaconteurRemoteException which is a universal container for all types of exceptions.  In some cases it is useful to have named exceptions that can be passed from receiver to caller and keep their class type. These custom exceptions inherit from RobotRaconteurRemoteException. Service definitions can define these exceptions. Exceptions are defined by starting the line with `exception` followed by the name of the exception. For example, the following line will define the exception "MyException" which can then be used in any of the supported languages:
 
     exception MyException
 
-## Using
+## Using {#using}
 
 To reduce the clutter in a service definition file, the `using` statement can be used to alias an imported type.
 
@@ -262,7 +262,7 @@ To reduce the clutter in a service definition file, the `using` statement can be
 
     using exmaple.importeddef.obj1 as another_obj1
 
-## Conventions
+## Conventions {#conventions}
 
 Some conventions are recommended for service definition formatting:
 

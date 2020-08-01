@@ -1,4 +1,4 @@
-# Robot Raconteur Nodes and Communication
+# Robot Raconteur Nodes and Communication {#nodes_and_communication}
 
 Is discussed in the \ref introduction, Robot Raconteur is an an augmented object-oriented remote procedure call communication framework. The framework is designed for use with robotics and automation systems, providing specialized value types and object members. These advanced features are built on top of a simple message passing system. Member requests-response operations and data packets are serialized into simple messages, serialized, and transmitted between the nodes. The exact details of how this works is covered in the [Robot Raconteur Standards](https://github.com/johnwason/robotraconteur_standards/) documents. A simple description of how this works is covered follows in the rest of this page.
 
@@ -22,7 +22,7 @@ NodeIDs are typcially generated randomly for clients, but must be static for ser
 
 "NodeName"s are a human-readable string used to name the node. They follow the same naming rules as Service Definition names. See \ref service_definition for more information on Service Definition names. Unlike NodeIDs, NodeNames are not guaranteed to be unique, but are instead intended to be a convenience for connection to a node when there is no ambiguity. (It is recommended that NodeID be used in production environments). When the Local Transport is used to assign a NodeID based on NodeName, the NodeName must be unique on the local system.
 
-### Messages
+### Messages {#messages}
 
 The remote procedure call of Robot Raconteur is built on top of a message passing system. The metadata about the operation being performed and the value type parameters are "packed" into messages. These messages can then be serialized into a binary data stream, and transmitted to the remote node. On the remote node, the message is deserialized, and "unpacked". The unpacked message can then be used by the remote procedure call layer to execute the operation. This process is complex, but the user does not need to be concerned with the details since it is encapsulated by the Robot Raconteur software and ``thunk`` code generators. See [Robot Raconteur Standards](https://github.com/johnwason/robotraconteur_standards/) documents for the details on how messages work.
 
@@ -30,7 +30,7 @@ Value types and each member operation have standardized formats for being packed
 
 **Note: Messages are always serialized as little-endian, with the exception of UUID which are always big-endian.*
 
-#### Value Types
+#### Value Types {#message_value_types}
 
 Value types are passed *by value*, meaning that they are copied when transmitted between nodes. A change to the data on one node will not affect the other unless it is re-transmitted. This section contains a brief overview of value type packing. See the [Robot Raconteur Value Types Standard](https://github.com/johnwason/robotraconteur_standards/blob/master/draft/value_types.md) for more details.
 
@@ -78,7 +78,7 @@ Enums are always packed as a scalar `int32`. The type of the enum is not include
 
 `varvalue` is a wildcard type that can be specified in service definitions. When `varvalue` is used, the node will attempt to pack the data supplied into a valid message format. The receiver will use the message metadata to unpack the `varvalue`. Messages are always strongly typed, since during packing the node knows what the data types are. `varvalue` instructs the node to use reflection and metadata to accomplish the packing and unpacking.
 
-#### Object Protocol
+#### Object Protocol {#message_object_protocol}
 
 The remote procedure call layer uses messages to transmit operations between nodes. These operations and their behavior is called the "Object Protocol". This section contains a brief overview of the object protocol. See the [Robot Raconteur Object Protocol Standard](https://github.com/johnwason/robotraconteur_standards/blob/master/draft/object_protocol.md) for more details.
 
@@ -146,19 +146,19 @@ Clients read a segment of the memory by sending a request with the offset and co
 
 Clients write a segment of the memory by sending a request with the offset, the count, and the new value of the segment packed into the message. The service sends a response with the offset and segment packed into the message, or an exception response.
 
-### Service Paths
+### Service Paths {#service_paths}
 
 Service paths are used to identify objects within a service. When a service is created, a "root" object is specified. This object is returned when clients connect to the service as a reference. Clients access other objects within the service using `objref` members, which return references to other objects. `objref` form a hierarchical tree of objects, starting at the root and continuing through the other objects in the service. A service path string is used to represent this hierarchy, with each level separated by a "dot" ("."). For the root object, the name in the service path is the service name. Objects lower in the tree use the `objref` member name. `objref` indexed by an `int32` or `string` have square brackets with the index as a string appended to the name. (URL parameter encoding is used for non alphanumeric characters.)
 
 When sending request, response, or packet messages, the service path is included to specify which object is being addressed. The message will typically also include the member name being addressed.
 
-### Transports
+## Transports {#transports}
 
 Transports are used to create connections between nodes. Clients create connections using \ref urls, which contain parameters the transport uses to create connections. Transports also implement discovery to help find nodes if the URL is not known.
 
 The following transports are currently supported:
 
-#### TCP Transport
+### TCP Transport
 
 The TCP Transport provides communication between nodes over a TCP/IP LAN network or over the internet. It also implements discovery on a LAN network. TCP Transport can be used with the loopback adapter if both nodes are on the same system, but Local Transport is recomended in this configuration. TCP Transport supports WebSockets for use with web browsers and/or web servers. It also supports TLS encryption for secure communication.
 
@@ -166,21 +166,21 @@ URL Schemes: `rr+tcp`, `rr+ws`, `rrs+tcp`, `rrs+ws`, `rr+wss`, `rrs+wss`
 
 The TCP transport supports both IPv4 and IPv6. IPv6 is recommended for LAN connections, since link-local addresses can be used. Link-local IPv6 address start with `ff80::`, followed by a 64-bit EUI-64 ID tied to the network adaptor. This link-local address is guaranteed to be fixed without configuration, eliminating the hassle of assigning fixed addresses for IPv4. IPv6 is used by default for discovery.
 
-#### Local Transport
+### Local Transport
 
 The Local Transport is used for communication between nodes running on the same system using UNIX sockets. Node discovery uses the local filesystem to detect nodes.
 
 URL Schemes: `rr+local`
 
-#### Intra Transport
+### Intra Transport
 
 The Intra Transport is used for communication between nodes running within the same process. For example, in a simulation there may be multiple devices being simulated running nodes within the same process. A singleton is used to detect and establish connections between nodes.
 
-#### Hardware Transport
+### Hardware Transport
 
 The hardware transport provides experimental support for USB, PCIe, and Bluetooth devices. It is disabled by default.
 
-### Robot Raconteur URLs {#urls}
+## Robot Raconteur URLs {#urls}
 
 URLs are used by clients to connect to services. The URL contains which transport to use, parameters for the transport, the NodeID and/or NodeName (optional), and the service name.
 

@@ -22,7 +22,7 @@ Robot Raconteur communication is based on a simple message passing system with a
 
 Robot Raconteur provides network security through TLS encryption and certificate based authentication.  See the [documentation homepage](https://github.com/robotraconteur/robotraconteur/wiki/Documentation) for more information on using TLS certificates.
 
-## Example Robot {#example-robot}
+## Example Robot {#example_robot}
 
 The example robot used in this documentation is an iRobot Create that has been augmented with two webcams, a power converter, and a Raspberry Pi 3 ARM computer. Figure "Example Robot" shows a picture of the robot.  Services will be developed in this tutorial to drive the robot and access the webcams.  Clients will use the services to control the robot and read the sensors.
 
