@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['bufferlimitviolationexceptionconstptr_2082',['BufferLimitViolationExceptionConstPtr',['../_error_8h.html#af40be4bbecb1f28a3973b691a45c1828',1,'RobotRaconteur']]],
-  ['bufferlimitviolationexceptionptr_2083',['BufferLimitViolationExceptionPtr',['../_error_8h.html#acfa2aa921c081a51705e525fdb04266f',1,'RobotRaconteur']]]
+  ['bufferlimitviolationexceptionconstptr_2113',['BufferLimitViolationExceptionConstPtr',['../_error_8h.html#af40be4bbecb1f28a3973b691a45c1828',1,'RobotRaconteur']]],
+  ['bufferlimitviolationexceptionptr_2114',['BufferLimitViolationExceptionPtr',['../_error_8h.html#acfa2aa921c081a51705e525fdb04266f',1,'RobotRaconteur']]]
 ];

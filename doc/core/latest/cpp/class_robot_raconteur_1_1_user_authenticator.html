@@ -139,7 +139,7 @@ Public Member Functions</h2></td></tr>
 <p>Authenticate a user using username and credentials. </p>
 <p>The service will call AuthenticateUser when clients attempt to authenticate. The username and credentials are passed to <a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html#a1b207bb3fe03ffa925fbe0c63dcac417" title="Create a client connection to a remote service using a URL.">RobotRaconteurNode::ConnectService()</a> or <a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html#a5331e01f78fc91aee870738c9152c9a2" title="Asynchronously create a client connection to a remote service using a URL.">RobotRaconteurNode::AsyncConnectService()</a>. The authenticator must analyze these values to decide how to authenticate the user.</p>
 <p>On successful authentication, return a populated <a class="el" href="class_robot_raconteur_1_1_authenticated_user.html" title="Class representing an authenticated user.">AuthenticatedUser</a> object. On failure, throw an exception.</p>
-<p>See security for more information.</p>
+<p>See <a class="el" href="security.html">Security</a> for more information.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">username</td><td>The username provided by the client </td></tr>

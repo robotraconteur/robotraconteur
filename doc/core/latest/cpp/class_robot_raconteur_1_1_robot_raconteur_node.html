@@ -326,26 +326,26 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af9287ea2a5c9ec5c08b267e8f2af3669"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html#af9287ea2a5c9ec5c08b267e8f2af3669">AsyncFindObjectType</a> (boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_r_r_object.html">RRObject</a> &gt; obj, boost::string_ref objref, boost::string_ref index, boost::function&lt; void(boost::shared_ptr&lt; std::string &gt;, boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_robot_raconteur_exception.html">RobotRaconteurException</a> &gt;)&gt; handler, int32_t timeout=<a class="el" href="_robot_raconteur_constants_8h.html#a797a515f59232a62a9cc8b16df7ee78b">RR_TIMEOUT_INFINITE</a>)</td></tr>
 <tr class="memdesc:af9287ea2a5c9ec5c08b267e8f2af3669"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asynchronously returns the type of a service object.  <a href="class_robot_raconteur_1_1_robot_raconteur_node.html#af9287ea2a5c9ec5c08b267e8f2af3669">More...</a><br /></td></tr>
 <tr class="separator:af9287ea2a5c9ec5c08b267e8f2af3669"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a1cbe435fd92fe82849fc77a8cc9f92"><td class="memItemLeft" align="right" valign="top">boost::shared_ptr&lt; ThreadPool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html#a3a1cbe435fd92fe82849fc77a8cc9f92">GetThreadPool</a> ()</td></tr>
-<tr class="memdesc:a3a1cbe435fd92fe82849fc77a8cc9f92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current ThreadPool for the node.  <a href="class_robot_raconteur_1_1_robot_raconteur_node.html#a3a1cbe435fd92fe82849fc77a8cc9f92">More...</a><br /></td></tr>
+<tr class="memitem:a3a1cbe435fd92fe82849fc77a8cc9f92"><td class="memItemLeft" align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_thread_pool.html">ThreadPool</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html#a3a1cbe435fd92fe82849fc77a8cc9f92">GetThreadPool</a> ()</td></tr>
+<tr class="memdesc:a3a1cbe435fd92fe82849fc77a8cc9f92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current <a class="el" href="class_robot_raconteur_1_1_thread_pool.html" title="Thread pool for Robot Raconteur nodes.">ThreadPool</a> for the node.  <a href="class_robot_raconteur_1_1_robot_raconteur_node.html#a3a1cbe435fd92fe82849fc77a8cc9f92">More...</a><br /></td></tr>
 <tr class="separator:a3a1cbe435fd92fe82849fc77a8cc9f92"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac3a2b3e2120198e12573bce3f819b727"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html#ac3a2b3e2120198e12573bce3f819b727">TryGetThreadPool</a> (boost::shared_ptr&lt; ThreadPool &gt; &amp;pool)</td></tr>
-<tr class="memdesc:ac3a2b3e2120198e12573bce3f819b727"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tries to get the ThreadPool, returns false if the ThreadPool is not available.  <a href="class_robot_raconteur_1_1_robot_raconteur_node.html#ac3a2b3e2120198e12573bce3f819b727">More...</a><br /></td></tr>
+<tr class="memitem:ac3a2b3e2120198e12573bce3f819b727"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html#ac3a2b3e2120198e12573bce3f819b727">TryGetThreadPool</a> (boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_thread_pool.html">ThreadPool</a> &gt; &amp;pool)</td></tr>
+<tr class="memdesc:ac3a2b3e2120198e12573bce3f819b727"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tries to get the <a class="el" href="class_robot_raconteur_1_1_thread_pool.html" title="Thread pool for Robot Raconteur nodes.">ThreadPool</a>, returns false if the <a class="el" href="class_robot_raconteur_1_1_thread_pool.html" title="Thread pool for Robot Raconteur nodes.">ThreadPool</a> is not available.  <a href="class_robot_raconteur_1_1_robot_raconteur_node.html#ac3a2b3e2120198e12573bce3f819b727">More...</a><br /></td></tr>
 <tr class="separator:ac3a2b3e2120198e12573bce3f819b727"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3591e63518e7f0b77d5bd098934908a2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html#a3591e63518e7f0b77d5bd098934908a2">SetThreadPool</a> (boost::shared_ptr&lt; ThreadPool &gt; pool)</td></tr>
-<tr class="memdesc:a3591e63518e7f0b77d5bd098934908a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the ThreadPool for the node.  <a href="class_robot_raconteur_1_1_robot_raconteur_node.html#a3591e63518e7f0b77d5bd098934908a2">More...</a><br /></td></tr>
+<tr class="memitem:a3591e63518e7f0b77d5bd098934908a2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html#a3591e63518e7f0b77d5bd098934908a2">SetThreadPool</a> (boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_thread_pool.html">ThreadPool</a> &gt; pool)</td></tr>
+<tr class="memdesc:a3591e63518e7f0b77d5bd098934908a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the <a class="el" href="class_robot_raconteur_1_1_thread_pool.html" title="Thread pool for Robot Raconteur nodes.">ThreadPool</a> for the node.  <a href="class_robot_raconteur_1_1_robot_raconteur_node.html#a3591e63518e7f0b77d5bd098934908a2">More...</a><br /></td></tr>
 <tr class="separator:a3591e63518e7f0b77d5bd098934908a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac1e0634dc13045f599e3853c5386f9af"><td class="memItemLeft" align="right" valign="top">boost::shared_ptr&lt; ThreadPoolFactory &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html#ac1e0634dc13045f599e3853c5386f9af">GetThreadPoolFactory</a> ()</td></tr>
-<tr class="memdesc:ac1e0634dc13045f599e3853c5386f9af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current ThreadPoolFactory for the node.  <a href="class_robot_raconteur_1_1_robot_raconteur_node.html#ac1e0634dc13045f599e3853c5386f9af">More...</a><br /></td></tr>
+<tr class="memitem:ac1e0634dc13045f599e3853c5386f9af"><td class="memItemLeft" align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_thread_pool_factory.html">ThreadPoolFactory</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html#ac1e0634dc13045f599e3853c5386f9af">GetThreadPoolFactory</a> ()</td></tr>
+<tr class="memdesc:ac1e0634dc13045f599e3853c5386f9af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current <a class="el" href="class_robot_raconteur_1_1_thread_pool_factory.html" title="ThreadPool factory for use with RobotRaconteurNode.">ThreadPoolFactory</a> for the node.  <a href="class_robot_raconteur_1_1_robot_raconteur_node.html#ac1e0634dc13045f599e3853c5386f9af">More...</a><br /></td></tr>
 <tr class="separator:ac1e0634dc13045f599e3853c5386f9af"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a771f99464b199a1c9b1ab855769c63f6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html#a771f99464b199a1c9b1ab855769c63f6">SetThreadPoolFactory</a> (boost::shared_ptr&lt; ThreadPoolFactory &gt; factory)</td></tr>
-<tr class="memdesc:a771f99464b199a1c9b1ab855769c63f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the ThreadPoolFactory for the node.  <a href="class_robot_raconteur_1_1_robot_raconteur_node.html#a771f99464b199a1c9b1ab855769c63f6">More...</a><br /></td></tr>
+<tr class="memitem:a771f99464b199a1c9b1ab855769c63f6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html#a771f99464b199a1c9b1ab855769c63f6">SetThreadPoolFactory</a> (boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_thread_pool_factory.html">ThreadPoolFactory</a> &gt; factory)</td></tr>
+<tr class="memdesc:a771f99464b199a1c9b1ab855769c63f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the <a class="el" href="class_robot_raconteur_1_1_thread_pool_factory.html" title="ThreadPool factory for use with RobotRaconteurNode.">ThreadPoolFactory</a> for the node.  <a href="class_robot_raconteur_1_1_robot_raconteur_node.html#a771f99464b199a1c9b1ab855769c63f6">More...</a><br /></td></tr>
 <tr class="separator:a771f99464b199a1c9b1ab855769c63f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3cba87d18ff28dd49212c2adeffb5b56"><td class="memItemLeft" align="right" valign="top">int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html#a3cba87d18ff28dd49212c2adeffb5b56">GetThreadPoolCount</a> ()</td></tr>
-<tr class="memdesc:a3cba87d18ff28dd49212c2adeffb5b56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of threads for the node ThreadPool.  <a href="class_robot_raconteur_1_1_robot_raconteur_node.html#a3cba87d18ff28dd49212c2adeffb5b56">More...</a><br /></td></tr>
+<tr class="memdesc:a3cba87d18ff28dd49212c2adeffb5b56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of threads for the node <a class="el" href="class_robot_raconteur_1_1_thread_pool.html" title="Thread pool for Robot Raconteur nodes.">ThreadPool</a>.  <a href="class_robot_raconteur_1_1_robot_raconteur_node.html#a3cba87d18ff28dd49212c2adeffb5b56">More...</a><br /></td></tr>
 <tr class="separator:a3cba87d18ff28dd49212c2adeffb5b56"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac446b9e8f12ad138e996ae0b68cb4cb7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html#ac446b9e8f12ad138e996ae0b68cb4cb7">SetThreadPoolCount</a> (int32_t count)</td></tr>
-<tr class="memdesc:ac446b9e8f12ad138e996ae0b68cb4cb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the number of threads for the node ThreadPool.  <a href="class_robot_raconteur_1_1_robot_raconteur_node.html#ac446b9e8f12ad138e996ae0b68cb4cb7">More...</a><br /></td></tr>
+<tr class="memdesc:ac446b9e8f12ad138e996ae0b68cb4cb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the number of threads for the node <a class="el" href="class_robot_raconteur_1_1_thread_pool.html" title="Thread pool for Robot Raconteur nodes.">ThreadPool</a>.  <a href="class_robot_raconteur_1_1_robot_raconteur_node.html#ac446b9e8f12ad138e996ae0b68cb4cb7">More...</a><br /></td></tr>
 <tr class="separator:ac446b9e8f12ad138e996ae0b68cb4cb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6fc11b4d956bd826f310d98b1da4947f"><td class="memItemLeft" align="right" valign="top"><a id="a6fc11b4d956bd826f310d98b1da4947f"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html#a6fc11b4d956bd826f310d98b1da4947f">ReleaseThreadPool</a> ()</td></tr>
@@ -2785,7 +2785,7 @@ template&lt;typename T &gt; </div>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">boost::shared_ptr&lt;ThreadPool&gt; RobotRaconteur::RobotRaconteurNode::GetThreadPool </td>
+          <td class="memname">boost::shared_ptr&lt;<a class="el" href="class_robot_raconteur_1_1_thread_pool.html">ThreadPool</a>&gt; RobotRaconteur::RobotRaconteurNode::GetThreadPool </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -2793,8 +2793,8 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Get the current ThreadPool for the node. </p>
-<p>Returns the current ThreadPool in use by the node. If no ThreadPool has been configured, a ThreadPool is created using the ThreadPoolFactory. By default a ThreadPool is created with 20 threads</p>
+<p>Get the current <a class="el" href="class_robot_raconteur_1_1_thread_pool.html" title="Thread pool for Robot Raconteur nodes.">ThreadPool</a> for the node. </p>
+<p>Returns the current <a class="el" href="class_robot_raconteur_1_1_thread_pool.html" title="Thread pool for Robot Raconteur nodes.">ThreadPool</a> in use by the node. If no <a class="el" href="class_robot_raconteur_1_1_thread_pool.html" title="Thread pool for Robot Raconteur nodes.">ThreadPool</a> has been configured, a <a class="el" href="class_robot_raconteur_1_1_thread_pool.html" title="Thread pool for Robot Raconteur nodes.">ThreadPool</a> is created using the <a class="el" href="class_robot_raconteur_1_1_thread_pool_factory.html" title="ThreadPool factory for use with RobotRaconteurNode.">ThreadPoolFactory</a>. By default a <a class="el" href="class_robot_raconteur_1_1_thread_pool.html" title="Thread pool for Robot Raconteur nodes.">ThreadPool</a> is created with 20 threads</p>
 <dl class="section return"><dt>Returns</dt><dd>RR_SHARED_PTR&lt;ThreadPool&gt; The current thread pool </dd></dl>
 
 </div>
@@ -2814,7 +2814,7 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Get the number of threads for the node ThreadPool. </p>
+<p>Get the number of threads for the node <a class="el" href="class_robot_raconteur_1_1_thread_pool.html" title="Thread pool for Robot Raconteur nodes.">ThreadPool</a>. </p>
 <dl class="section return"><dt>Returns</dt><dd>int32_t </dd></dl>
 
 </div>
@@ -2826,7 +2826,7 @@ template&lt;typename T &gt; </div>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">boost::shared_ptr&lt;ThreadPoolFactory&gt; RobotRaconteur::RobotRaconteurNode::GetThreadPoolFactory </td>
+          <td class="memname">boost::shared_ptr&lt;<a class="el" href="class_robot_raconteur_1_1_thread_pool_factory.html">ThreadPoolFactory</a>&gt; RobotRaconteur::RobotRaconteurNode::GetThreadPoolFactory </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -2834,8 +2834,8 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Get the current ThreadPoolFactory for the node. </p>
-<p>ThreadPoolFactory is used to create a ThreadPool for the node if one is not already set. By default uses ThreadPoolFactory</p>
+<p>Get the current <a class="el" href="class_robot_raconteur_1_1_thread_pool_factory.html" title="ThreadPool factory for use with RobotRaconteurNode.">ThreadPoolFactory</a> for the node. </p>
+<p><a class="el" href="class_robot_raconteur_1_1_thread_pool_factory.html" title="ThreadPool factory for use with RobotRaconteurNode.">ThreadPoolFactory</a> is used to create a <a class="el" href="class_robot_raconteur_1_1_thread_pool.html" title="Thread pool for Robot Raconteur nodes.">ThreadPool</a> for the node if one is not already set. By default uses <a class="el" href="class_robot_raconteur_1_1_thread_pool_factory.html" title="ThreadPool factory for use with RobotRaconteurNode.">ThreadPoolFactory</a></p>
 <dl class="section return"><dt>Returns</dt><dd>RR_SHARED_PTR&lt;ThreadPoolFactory&gt; </dd></dl>
 
 </div>
@@ -3460,6 +3460,7 @@ false </dd></dl>
 <p>Select the "best" URL from a std::vector of candidates. </p>
 <p>Service discovery will often return a list of candidate URLs to use to connect to a node. This function uses hueristics to select the "best" URL to use. The selection criteria ranks URLs in roughly the following order, lower number being better:</p>
 <ol type="1">
+<li>"rr+intra" for <a class="el" href="class_robot_raconteur_1_1_intra_transport.html" title="Transport for intra-process communication.">IntraTransport</a></li>
 <li>"rr+local" for <a class="el" href="class_robot_raconteur_1_1_local_transport.html" title="Transport for communication between processes using UNIX domain sockets.">LocalTransport</a></li>
 <li>"rr+pci" or "rr+usb" for <a class="el" href="class_robot_raconteur_1_1_hardware_transport.html" title="Transport for USB, Bluetooth, and PCIe hardware devices.">HardwareTransport</a></li>
 <li>"rrs+tcp://127.0.0.1" for secure <a class="el" href="class_robot_raconteur_1_1_tcp_transport.html" title="Transport for Transport Control Protocol Internet Protocol (TCP/IP) networks.">TcpTransport</a> loopback</li>
@@ -3555,7 +3556,7 @@ false </dd></dl>
 </div><div class="memdoc">
 
 <p>Set an exception handler function. </p>
-<p>The ThreadPool will catch exceptions that are uncaught by other logic and pass the exception to the specified exception handler. User handler functions that throw exceptions will also be caught and passed to the specified handler function</p>
+<p>The <a class="el" href="class_robot_raconteur_1_1_thread_pool.html" title="Thread pool for Robot Raconteur nodes.">ThreadPool</a> will catch exceptions that are uncaught by other logic and pass the exception to the specified exception handler. User handler functions that throw exceptions will also be caught and passed to the specified handler function</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">handler</td><td>The handler function for uncaught exceptions </td></tr>
@@ -3850,18 +3851,18 @@ false </dd></dl>
         <tr>
           <td class="memname">void RobotRaconteur::RobotRaconteurNode::SetThreadPool </td>
           <td>(</td>
-          <td class="paramtype">boost::shared_ptr&lt; ThreadPool &gt;&#160;</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_thread_pool.html">ThreadPool</a> &gt;&#160;</td>
           <td class="paramname"><em>pool</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Sets the ThreadPool for the node. </p>
-<p>This function must be called before a ThreadPool has been set, either through this fuction, or a ThreadPool is created by <a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html#a3a1cbe435fd92fe82849fc77a8cc9f92" title="Get the current ThreadPool for the node.">GetThreadPool()</a></p>
+<p>Sets the <a class="el" href="class_robot_raconteur_1_1_thread_pool.html" title="Thread pool for Robot Raconteur nodes.">ThreadPool</a> for the node. </p>
+<p>This function must be called before a <a class="el" href="class_robot_raconteur_1_1_thread_pool.html" title="Thread pool for Robot Raconteur nodes.">ThreadPool</a> has been set, either through this fuction, or a <a class="el" href="class_robot_raconteur_1_1_thread_pool.html" title="Thread pool for Robot Raconteur nodes.">ThreadPool</a> is created by <a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html#a3a1cbe435fd92fe82849fc77a8cc9f92" title="Get the current ThreadPool for the node.">GetThreadPool()</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">pool</td><td>The ThreadPool for the node </td></tr>
+    <tr><td class="paramname">pool</td><td>The <a class="el" href="class_robot_raconteur_1_1_thread_pool.html" title="Thread pool for Robot Raconteur nodes.">ThreadPool</a> for the node </td></tr>
   </table>
   </dd>
 </dl>
@@ -3884,11 +3885,11 @@ false </dd></dl>
       </table>
 </div><div class="memdoc">
 
-<p>Set the number of threads for the node ThreadPool. </p>
-<p>The ThreadPool will use a maximum of count threads. If this number is lower than the current ThreadPool count, the ThreadPool will attempt to release threads beyond count as they return to idle</p>
+<p>Set the number of threads for the node <a class="el" href="class_robot_raconteur_1_1_thread_pool.html" title="Thread pool for Robot Raconteur nodes.">ThreadPool</a>. </p>
+<p>The <a class="el" href="class_robot_raconteur_1_1_thread_pool.html" title="Thread pool for Robot Raconteur nodes.">ThreadPool</a> will use a maximum of count threads. If this number is lower than the current <a class="el" href="class_robot_raconteur_1_1_thread_pool.html" title="Thread pool for Robot Raconteur nodes.">ThreadPool</a> count, the <a class="el" href="class_robot_raconteur_1_1_thread_pool.html" title="Thread pool for Robot Raconteur nodes.">ThreadPool</a> will attempt to release threads beyond count as they return to idle</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">count</td><td>The number of threads for the ThreadPool </td></tr>
+    <tr><td class="paramname">count</td><td>The number of threads for the <a class="el" href="class_robot_raconteur_1_1_thread_pool.html" title="Thread pool for Robot Raconteur nodes.">ThreadPool</a> </td></tr>
   </table>
   </dd>
 </dl>
@@ -3904,18 +3905,18 @@ false </dd></dl>
         <tr>
           <td class="memname">void RobotRaconteur::RobotRaconteurNode::SetThreadPoolFactory </td>
           <td>(</td>
-          <td class="paramtype">boost::shared_ptr&lt; ThreadPoolFactory &gt;&#160;</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_thread_pool_factory.html">ThreadPoolFactory</a> &gt;&#160;</td>
           <td class="paramname"><em>factory</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Set the ThreadPoolFactory for the node. </p>
-<p>ThreadPoolFactory is used to create a ThreadPool for the node if one is not already set</p>
+<p>Set the <a class="el" href="class_robot_raconteur_1_1_thread_pool_factory.html" title="ThreadPool factory for use with RobotRaconteurNode.">ThreadPoolFactory</a> for the node. </p>
+<p><a class="el" href="class_robot_raconteur_1_1_thread_pool_factory.html" title="ThreadPool factory for use with RobotRaconteurNode.">ThreadPoolFactory</a> is used to create a <a class="el" href="class_robot_raconteur_1_1_thread_pool.html" title="Thread pool for Robot Raconteur nodes.">ThreadPool</a> for the node if one is not already set</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">factory</td><td>The ThreadPoolFactory for the node </td></tr>
+    <tr><td class="paramname">factory</td><td>The <a class="el" href="class_robot_raconteur_1_1_thread_pool_factory.html" title="ThreadPool factory for use with RobotRaconteurNode.">ThreadPoolFactory</a> for the node </td></tr>
   </table>
   </dd>
 </dl>
@@ -4300,22 +4301,22 @@ false </dd></dl>
         <tr>
           <td class="memname">bool RobotRaconteur::RobotRaconteurNode::TryGetThreadPool </td>
           <td>(</td>
-          <td class="paramtype">boost::shared_ptr&lt; ThreadPool &gt; &amp;&#160;</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_thread_pool.html">ThreadPool</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>pool</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Tries to get the ThreadPool, returns false if the ThreadPool is not available. </p>
+<p>Tries to get the <a class="el" href="class_robot_raconteur_1_1_thread_pool.html" title="Thread pool for Robot Raconteur nodes.">ThreadPool</a>, returns false if the <a class="el" href="class_robot_raconteur_1_1_thread_pool.html" title="Thread pool for Robot Raconteur nodes.">ThreadPool</a> is not available. </p>
 <p>This function will normally only return false if the node has been shut down</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">pool</td><td>Out parameter to receive ThreadPool shared_ptr </td></tr>
+    <tr><td class="paramname">pool</td><td>Out parameter to receive <a class="el" href="class_robot_raconteur_1_1_thread_pool.html" title="Thread pool for Robot Raconteur nodes.">ThreadPool</a> shared_ptr </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>true pool contains shared_ptr to the ThreadPool </dd>
+<dl class="section return"><dt>Returns</dt><dd>true pool contains shared_ptr to the <a class="el" href="class_robot_raconteur_1_1_thread_pool.html" title="Thread pool for Robot Raconteur nodes.">ThreadPool</a> </dd>
 <dd>
 false Threadpool is not available </dd></dl>
 
@@ -4414,7 +4415,7 @@ template&lt;typename HandlerType &gt; </div>
 
 <p>Tries to post a handler function to be called by a thread in the thread pool. Returns immediately. </p>
 <p>This function will not wait for the handler function to complete.</p>
-<p>If node is null or ThreadPool is not available, the handler is not called and false is returned</p>
+<p>If node is null or <a class="el" href="class_robot_raconteur_1_1_thread_pool.html" title="Thread pool for Robot Raconteur nodes.">ThreadPool</a> is not available, the handler is not called and false is returned</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">HandlerType</td><td></td></tr>
@@ -4429,9 +4430,9 @@ template&lt;typename HandlerType &gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>true The function was post to the ThreadPool </dd>
+<dl class="section return"><dt>Returns</dt><dd>true The function was post to the <a class="el" href="class_robot_raconteur_1_1_thread_pool.html" title="Thread pool for Robot Raconteur nodes.">ThreadPool</a> </dd>
 <dd>
-false The handler could not be post to the ThreadPool </dd></dl>
+false The handler could not be post to the <a class="el" href="class_robot_raconteur_1_1_thread_pool.html" title="Thread pool for Robot Raconteur nodes.">ThreadPool</a> </dd></dl>
 
 </div>
 </div>
