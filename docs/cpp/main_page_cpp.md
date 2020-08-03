@@ -32,6 +32,14 @@ Welcome to the Robot Raconteur Core C++ Documentation!
     * \ref user_locking
     * \ref client_locking
     * \ref monitor_locking
+* C++ Core Library
+  * \ref cpp_introduction
+    * \ref cpp_installation
+    * \ref cpp_building
+    * \ref cpp_ros
+    * \ref cpp_intro_cmake_thunk_source_gen
+  * \ref robotraconteurgen
+  * \ref robotraconteur_generate_thunk
 
 
 \htmlonly
