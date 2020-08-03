@@ -1,5 +1,5 @@
 function(ROBOTRACONTEUR_GENERATE_THUNK SRCS )
-	cmake_parse_arguments(RR_GEN "MASTER_HEADER" "LANG;OUTDIR;MASTER_HEADER_FILENAME" "IMPORT_DIRS" ${ARGN})	
+	cmake_parse_arguments(RR_GEN "MASTER_HEADER" "LANG;OUTDIR;MASTER_HEADER_FILENAME" "INCLUDE_DIRS;IMPORT_DIRS;IMPORTS" ${ARGN})	
 			
 	if ("${RR_GEN_LANG}" STREQUAL "")
 		set(RR_GEN_LANG "cpp")
@@ -16,8 +16,15 @@ function(ROBOTRACONTEUR_GENERATE_THUNK SRCS )
 		list(REMOVE_AT RR_GEN_UNPARSED_ARGUMENTS 0)
 	endif()
 	
-	list(APPEND RR_GEN_IMPORT_DIRS "${CMAKE_CURRENT_SOURCE_DIR}")
+	list(APPEND RR_GEN_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}")
 	
+	if(RR_GEN_IMPORT_DIRS)
+		message(DEPRECATION "IMPORT_DIRS argument is deprecated, use INCLUDE_DIRS instead")
+		foreach(f IN LISTS RR_GEN_IMPORT_DIRS)
+			list(APPEND RR_GEN_INCLUDE_DIRS ${f})
+		endforeach()
+	endif()
+
 	if (NOT RR_GEN_OUTDIR)
 		set(RR_GEN_OUTDIR "${CMAKE_CURRENT_BINARY_DIR}")
 	endif()
@@ -27,14 +34,14 @@ function(ROBOTRACONTEUR_GENERATE_THUNK SRCS )
 		if (EXISTS "${f1}")
 			set(f "${f1}")
 		else()
-		foreach (p IN LISTS RR_GEN_IMPORT_DIRS)			
+		foreach (p IN LISTS RR_GEN_INCLUDE_DIRS)			
 			if (EXISTS "${p}/${f1}")
 				set(f "${p}/${f1}")
 				break()
 			endif()			
 		endforeach()		
 		if (NOT EXISTS "${f}")
-			message(FATAL_ERROR "ROBOTRACONTEUR_GENERATE_THUNK could  not find file ${f1}")
+			message(FATAL_ERROR "ROBOTRACONTEUR_GENERATE_THUNK could not find file ${f1}")
 		endif()
 		endif()
 		
@@ -86,11 +93,32 @@ function(ROBOTRACONTEUR_GENERATE_THUNK SRCS )
 		set(RR_GEN_MASTER_HEADER_CMD --master-header "${RR_GEN_MASTER_HEADER_FILENAME}")
 		endif()
 	endif()
+
+	set(GEN_IMPORTS_ARGS)
+	if (RR_GEN_IMPORTS)
+		foreach(f1 IN LISTS RR_GEN_IMPORTS)
+			set(f)
+			if (EXISTS "${f1}")
+				list(APPEND GEN_IMPORT_ARGS "--import=${f1}")
+			else()
+				foreach (p IN LISTS RR_GEN_INCLUDE_DIRS)			
+					if (EXISTS "${p}/${f1}")
+						set(f "${p}/${f1}")
+						break()
+					endif()			
+				endforeach()
+				if (NOT EXISTS "${f}")
+					message(FATAL_ERROR "ROBOTRACONTEUR_GENERATE_THUNK could not find file ${f1}")
+				endif()
+				list(APPEND GEN_IMPORT_ARGS "--import=${f}")	
+			endif()			
+		endforeach()
+	endif()
 	
 	add_custom_command(
       OUTPUT ${THUNK_SRCS} ${THUNK_HDRS}
       COMMAND RobotRaconteurGen
-      ARGS "--thunksource" "--lang=${RR_GEN_LANG}" ${RR_GEN_MASTER_HEADER_CMD} ${RR_GEN_OUTDIR} ${RR_GEN_FILES}
+      ARGS "--thunksource" "--lang=${RR_GEN_LANG}" ${RR_GEN_MASTER_HEADER_CMD} ${RR_GEN_OUTDIR} ${GEN_IMPORT_ARGS} ${RR_GEN_FILES}
       DEPENDS ${RR_GEN_FILES} RobotRaconteurGen
       COMMENT "Running RobotRaconteurGen for ${RR_SERVICE_NAMES}"
       VERBATIM )
