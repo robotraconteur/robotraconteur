@@ -61,6 +61,24 @@ namespace RobotRaconteur
 		BOOST_STATIC_ASSERT(sizeof(T) == -1);
 	};
 
+	/**
+	 * @brief Storage for `pod` array fields
+	 * 
+	 * Storage for `pod` array fields. It is used by the thunk source generators
+	 * for arrays. The array can either be fixed length, for example `double[8]`
+	 * for an 8 element double array, or double[8-] for an array that may be 8 elements
+	 * or fewer. The `varlength` template parameter is true for variable length
+	 * with max size, or false for a fixed size array.
+	 * 
+	 * pod_field_array extends `boost::array<T,N>`, and implements all the standard
+	 * container function. The main differenc is that for variable length
+	 * arrays, the resize() and size() function can be used to
+	 * change the length of the array.
+	 * 
+	 * @tparam T The element type stored in the pod_field_array
+	 * @tparam N The size of the array, or the maximum size for variable length
+	 * @tparam varlength true if the array is variable length, or false
+	 */
 	template<typename T, size_t N, bool varlength>
 	class pod_field_array : public boost::array<T, N>
 	{
