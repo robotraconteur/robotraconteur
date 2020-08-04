@@ -246,7 +246,7 @@ Constants can be specified using the \texttt{constant} keyword. The constants ca
     constant double[] myarray {10.3, 584.9, 594}
     constant string mystring "Hello world!"
 
-## Exceptions {#exceptions}
+## Exceptions {#robdef_exceptions}
 
 Robot Raconteur will transparently pass exceptions thrown by the receiver to the caller for transactions such as functions, properties, callbacks, and memory reads/writes. Normally these exceptions are of the type RobotRaconteurRemoteException which is a universal container for all types of exceptions.  In some cases it is useful to have named exceptions that can be passed from receiver to caller and keep their class type. These custom exceptions inherit from RobotRaconteurRemoteException. Service definitions can define these exceptions. Exceptions are defined by starting the line with `exception` followed by the name of the exception. For example, the following line will define the exception "MyException" which can then be used in any of the supported languages:
 

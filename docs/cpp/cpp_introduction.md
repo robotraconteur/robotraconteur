@@ -162,3 +162,59 @@ If the `MASTER_HEADER` header is used, use the following include in program head
 
     #include <RobotRaconteur.h>
     #include "robotraconteur_generated.h"
+
+## Boost Library {#cpp_boost_library}
+
+The boost libraries are used extensively throughout Robot Raconteur  The following classes are of particular interest by software using Robot Raconteur:
+
+* `boost::shared_ptr<T>`
+* `boost::make_shared<T>`
+* `boost::enable_shared_from_this<T>`
+* `boost::function<...>`
+* `boost::bind<...>`
+* `boost::signals2::signal<...>`
+* `boost::thread`
+* `boost::recursive_mutex`
+* `boost::posix_time::ptime`
+
+Documentation for these types can be found in the [Boost documentation](https://www.boost.org/doc/libs/).
+
+Robot Raconteur uses a number of preprocessor defines for Boost and C++11 types. These are all defined in `RobotRaconteurConfig.h` These are used to allow for configurability. By default, the following defines are used:
+
+    #define RR_SHARED_PTR std::shared_ptr
+    #define RR_MAKE_SHARED std::make_shared
+    #define RR_WEAK_PTR std::weak_ptr
+    #define RR_ENABLE_SHARED_FROM_THIS std::enable_shared_from_this
+    #define RR_DYNAMIC_POINTER_CAST std::dynamic_pointer_cast
+    #define RR_STATIC_POINTER_CAST std::static_pointer_cast
+    #define RR_INTRUSIVE_PTR boost::intrusive_ptr
+    #define RR_UNORDERED_MAP boost::unordered_map
+
+There are a number of defines that are used for incompatibilities between Boost and C++ versions. Consult `RobotRaconteurConfig.h` for there definitions, since the definitions are configuration dependent.
+
+    RR_MOVE_ARG
+    RR_MOVE
+    RR_BOOST_ASIO_IO_CONTEXT
+    RR_BOOST_ASIO_STRAND
+    RR_BOOST_ASIO_POST(context, func)
+    RR_BOOST_ASIO_BUFFER_CAST(type,buf)
+    RR_BOOST_ASIO_STRAND_WRAP(strand, f)
+    RR_BOOST_ASIO_NEW_STRAND(context)
+    RR_BOOST_PLACEHOLDERS
+
+## Smart Pointers and Aliases {#cpp_smart_pointers}
+
+Robot Raconteur uses smart pointers for memory management. Smart pointers use "reference counting" to track the number of currently active references to an object or data. When the number of references go to zero, the object is deleted.
+
+Two types of smart pointers are used: standard smart pointers, implemented using `boost::shared_ptr<T>`, and intrusive pointers, implemented using `boost::intrusive_ptr<T>`. The difference between these pointers is how the reference count is stored in memory. `boost::shared_ptr<T>` allocates a small amount of separate memory on the heap using `new` to store the reference count. This has the advantage of not affecting the object itself, but has the overhead of allocting and destroying this extra memory segment. `boost::intrusive_ptr` requires the object or structure to have a field specifically for reference counting declared in the object/structure itself.
+
+Robot Raconteur uses `boost::shared_ptr<T>` for API objects, service objects, and service object references (proxies). `boost::intrusive_ptr<T>` is used for all value types. Value types inherit from RobotRaconteur::RRValue, which contains the field for reference counting.
+
+The preprocessor macros `RR_SHARED_PTR` and `RR_INTRUSIVE_PTR` are used internally for shared and intrusive pointer types. These are simply aliases to `boost::shared_ptr<T>` and `boost::intrusive_ptr<T>`.
+
+For C++11 capable compilers, "template aliases" are available to make the code look cleaner. API types and generated types have these aliases declared. (RobotRaconteurGen will generate the aliases). A few (pseudocode) examples of aliases and their expansion:
+
+    RobotRaconteurNodePtr = boost::shared_ptr<RobotRaconteurNode>
+    RRArrayPtr<int> = boost::intrusive_ptr<RRArray<int> >
+    MyObjectPtr = boost::shared_ptr<MyObject> // Service definition generated object
+    MyStructPtr = boost::intrusive_ptr<MyObject> // Service definition generated struct

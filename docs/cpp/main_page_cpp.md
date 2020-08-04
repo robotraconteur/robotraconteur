@@ -13,7 +13,7 @@ Welcome to the Robot Raconteur Core C++ Documentation!
     * \ref value_types
     * \ref object_types
     * \ref constants
-    * \ref exceptions
+    * \ref robdef_exceptions
     * \ref using
     * \ref conventions
   * \ref nodes_and_communication
@@ -25,6 +25,7 @@ Welcome to the Robot Raconteur Core C++ Documentation!
       * \ref service_paths
     * \ref transports
     * \ref urls
+  * \ref exceptions
   * \ref security
     * \ref security_policy
     * \ref tls_certificates
@@ -38,6 +39,8 @@ Welcome to the Robot Raconteur Core C++ Documentation!
     * \ref cpp_building
     * \ref cpp_ros
     * \ref cpp_intro_cmake_thunk_source_gen
+    * \ref cpp_boost_library
+    * \ref cpp_smart_pointers
   * \ref robotraconteurgen
   * \ref robotraconteur_generate_thunk
 
