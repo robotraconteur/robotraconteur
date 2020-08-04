@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['object_20locking_2575',['Object Locking',['../locking.html',1,'']]]
+  ['logging_2579',['Logging',['../logging.html',1,'']]]
 ];
