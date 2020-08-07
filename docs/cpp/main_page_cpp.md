@@ -58,9 +58,10 @@ Welcome to the Robot Raconteur Core C++ Documentation!
     * \ref cpp_namedarray_types
     * \ref cpp_container_types
     * \ref cpp_varvalue_type
-
-
-\htmlonly
-<a href="classes.html">Class index</a>
-\endhtmlonly
+* \ref cpp_node_setup
+  * \ref cpp_client_node_setup
+  * \ref cpp_server_node_setup
+  * \ref command_line_options
+  * \ref cpp_advanced_node_setup
+* [Class Index](classes.html)
 
