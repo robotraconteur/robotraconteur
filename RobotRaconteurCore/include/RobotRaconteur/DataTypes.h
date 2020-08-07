@@ -2327,6 +2327,18 @@ namespace RobotRaconteur
 
 	public:
 
+		/**
+		 * @brief Construct a RRNamedArray object
+		 * 
+		 * Must be stored in a boost::intrusive_ptr
+		 * 
+		 * The RRNamedArray creates a memory view of the provided numeric
+		 * array parameter rr_array. The reference count is increased, so the
+		 * array will not be destroyed if the caller releases its smart pointers.
+		 * 
+		 * 
+		 * @param rr_array The array to use for storage
+		 */
 		RRNamedArray(RR_INTRUSIVE_PTR<RRArray<typename RRPrimUtil<T>::ElementArrayType> > rr_array)
 		{
 			if (!rr_array) throw NullValueException("Numeric array for namedarray must not be null");
