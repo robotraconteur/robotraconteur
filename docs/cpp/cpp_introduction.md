@@ -218,3 +218,7 @@ For C++11 capable compilers, "template aliases" are available to make the code l
     RRArrayPtr<int> = boost::intrusive_ptr<RRArray<int> >
     MyObjectPtr = boost::shared_ptr<MyObject> // Service definition generated object
     MyStructPtr = boost::intrusive_ptr<MyObject> // Service definition generated struct
+
+## Boost string_ref
+
+`boost::string_ref` is used for string parameters in the Robot Raconteur library. The `boost::string_ref` is used instead of `std::string` to prevent runtime copies. It can be initialized from a `std::string`, a `char*` and length, or a string literal. It can be converted back to a string using `boost::string_ref::to_string()`. The conversions are normally done automatically, so the user does not need to do anything different compared to using normal `std::string` parameters.
