@@ -630,8 +630,8 @@ namespace RobotRaconteur
 	 * The Pipe class implements the `pipe` member type. Pipes are declared in service definition files
 	 * using the `pipe` keyword within object declarations. Pipes provide reliable packet streaming between
 	 * clients and services. They work by creating pipe endpoint pairs (peers), with one endpoint in the client,
-	 * and one in the service. Packets are transmitted between endpoint pairs. Packets sent by one endpoint is sent
-	 * to the other, where it is placed in a receive queue. Received packets can then be retrieved from the receive queue.
+	 * and one in the service. Packets are transmitted between endpoint pairs. Packets sent by one endpoint are received
+	 * by the other, where they are placed in a receive queue. Received packets can then be retrieved from the receive queue.
 	 * 
 	 * Pipe endpoints are created by the client using the Connect() or AsyncConnect() functions. Services receive
 	 * incoming connection requests through a callback function. This callback is configured using the SetPipeConnectCallback() 

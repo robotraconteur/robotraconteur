@@ -139,7 +139,7 @@ A property is defined within an object with the keyword `property` followed by t
 
 Properties can use modifiers `readonly`, `writeonly`, `urgent`, and/or `perclient`. See \ref modifiers.
 
-### Functions
+### Functions {#service_definition_function}
 
 Keyword: `function`
 
@@ -149,7 +149,7 @@ Functions take zero or more value type parameters, and return a single value typ
 
 Functions can also return a "generator", which is a form of iterator. (These generators are modeled after Python generators.) This is useful for long running operations or to return large amounts of data. Generators take three forms. The first is when each iteration of the generator takes a parameter and returns a value. This takes the form:
 
-    function double{generator} addManyNumbers(int32 a, double{generator} b)}
+    function double{generator} addManyNumbers(int32 a, double{generator} b)
 
 In this example, the `a` parameter is sent with the function call, while `b` and `return` are sent and received using the `Next` function of the generator.
 
@@ -224,7 +224,7 @@ When a `WireConnection` pair is created by the client, the most recent values be
 
 An example wire member definition:
 
-    wire dobule[2] currentposition
+    wire double[2] currentposition
 
 Wires can use modifiers `readonly` or `writeonly`. See \ref modifiers.
 

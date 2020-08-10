@@ -58,10 +58,35 @@ Welcome to the Robot Raconteur Core C++ Documentation!
     * \ref cpp_namedarray_types
     * \ref cpp_container_types
     * \ref cpp_varvalue_type
-* \ref cpp_node_setup
-  * \ref cpp_client_node_setup
-  * \ref cpp_server_node_setup
-  * \ref command_line_options
-  * \ref cpp_advanced_node_setup
+  * \ref cpp_node_setup
+    * \ref cpp_client_node_setup
+    * \ref cpp_server_node_setup
+    * \ref command_line_options
+    * \ref cpp_advanced_node_setup
+  * \ref cpp_client
+    * \ref cpp_client_connections
+      * \ref cpp_client_urls
+      * \ref cpp_client_auth
+      * \ref cpp_client_listener
+      * \ref cpp_client_connect_object_type
+    * \ref cpp_client_disconnect
+    * \ref cpp_client_subscriptions
+    * \ref cpp_client_members
+      * \ref cpp_client_property
+      * \ref cpp_client_function
+        * \ref cpp_client_normal_functions
+        * \ref cpp_client_generator_functions
+        * \ref cpp_client_generators
+      * \ref cpp_client_event
+      * \ref cpp_client_objref
+      * \ref cpp_client_pipe
+      * \ref cpp_client_callback
+      * \ref cpp_client_wire
+      * \ref cpp_client_memory
+    * \ref cpp_client_object_locking
+      * \ref cpp_client_user_locks
+      * \ref cpp_client_client_locks
+      * \ref cpp_client_monitor_locks
+  * \ref cpp_constants
 * [Class Index](classes.html)
 
