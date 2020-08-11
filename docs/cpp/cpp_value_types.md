@@ -211,11 +211,11 @@ Will have the implementation:
 
 Arrays of namedarray may be stored in RobotRaconteur::RRNamedArray and RobotRaconteur::RRNamedMultiDimArray. They are allocated using RobotRaconteur::AllocateEmptyRRNamedArray() and RobotRaconteur::AllocateEmptyRRNamedMultiDimArray(). The functions RobotRaconteur::RRNamedArray::GetNumericArray() can be used to retrieve the entire array as a flattened numeric array. The constructor RobotRaconteur::RRNamedArray::RRNamedArray() can be used to provide an existing array to store the array data. The RobotRaconteur::RRNamedArray provides a union view to the existing data.
 
-## Namedarray Boxing
+### Namedarray Boxing
 
 Because unions are stack allocated, they cannot be stored in containers or passed as `varvalue`. The functions RobotRaconteur::ScalarToRRNamedArray() and RobotRaconteur::RRNamedArrayToScalar() are used to box and unbox namedarray unions. They convert unions to and from single element namedarray arrays.
 
-## Map and List container Types {#cpp_container_types}
+## Map and List Container Types {#cpp_container_types}
 
 Containers are used to store other values in a map or a list. They can store any valid Robot Raconteur value type, except for other containers. For example, `string{list}{list}` is invalid because it contains a container of a container. (The exception to this rule is if the container is used as a `varvalue`, see below.) The value type is always a `boost::intrusive_ptr` type. Stack allocated scalar types must be "boxed" to convert them to a form that can be stored in containers. See the individual types for more information.
 

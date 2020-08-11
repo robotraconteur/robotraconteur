@@ -106,7 +106,7 @@ Lists follow similar rules to maps. They are created with curly braces.  For exa
 
 The multidimensional arrays allow for the transmission of real or complex matrices of any dimension.  They are defined by putting a `*` inside the brackets of an array.  For example, `double[*]` defines a multidimensional array of doubles.  Multidimensional arrays can also have fixed dimensions.  For example `double[3,3]` defines a 3x3 matrix.  The dimensions are in matrix (column-major) order.
 
-### Enums
+### Enums {#enums}
 
 Enums are a special representation of int32 that names each value. Enums are aliases, with the value be stored as int32 internally. An enum is started with the keyword `enum` followed by the enum name.  It is ended with the `end` keyword. The values are specified with a `name = value` format, separated by commas. Values can be signed integers, unsigned hexadecimal, or omitted to implicitly increment from the last value.
 
@@ -242,7 +242,7 @@ Memories can use modifiers `readonly` or `writeonly`. See \ref modifiers.
 
 Constants can be specified using the \texttt{constant} keyword. The constants can be numbers, single dimensional arrays, or strings. Constants can be declared either in the global service definition scope or in objects.
 
-    constant uint32 myconst 0xFB}
+    constant uint32 myconst 0xFB
     constant double[] myarray {10.3, 584.9, 594}
     constant string mystring "Hello world!"
 

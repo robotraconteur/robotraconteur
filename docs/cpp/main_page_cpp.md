@@ -109,9 +109,9 @@ Welcome to the Robot Raconteur Core C++ Documentation!
       * \ref cpp_service_locking_monitor
     * \ref cpp_service_attributes
     * \ref cpp_service_release_path
+  * \ref cpp_constants
   * \ref cpp_discovery
   * \ref cpp_subscriptions
-  * \ref cpp_constants
   * \ref cpp_logging_and_taps
 * [Class Index](classes.html)
 

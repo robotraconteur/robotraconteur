@@ -693,7 +693,7 @@ The service can also use `monitor_lock` directly, when it needs to prevent clien
 
 **Not that unlike client and user locks, monitor locks are not enforced. The client must voluntarily request monitor locks.**
 
-## Service Attributes
+## Service Attributes {#cpp_service_attributes}
 
 Service attributes are provided by services to help with discovery. The attributes are made available to clients during the discovery process. In C++, the attributes have the type `std::map<std::string,RRValuePtr>`. The attributes follow the same type rules as `varvalue{string}`. The attributes map must not contain any types defined in service definitions, since the client won't be able to unpack these types.
 
