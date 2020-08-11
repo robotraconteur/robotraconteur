@@ -20,6 +20,7 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="logo-icon.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Robot Raconteur Core C++ Library
    </div>
@@ -248,16 +249,16 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af71e24cca00eb15c7cde46cdd171e649"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html#af71e24cca00eb15c7cde46cdd171e649">SetNodeDiscoveryMaxCacheCount</a> (uint32_t count)</td></tr>
 <tr class="memdesc:af71e24cca00eb15c7cde46cdd171e649"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set maximum number of detected nodes that will be cached.  <a href="class_robot_raconteur_1_1_robot_raconteur_node.html#af71e24cca00eb15c7cde46cdd171e649">More...</a><br /></td></tr>
 <tr class="separator:af71e24cca00eb15c7cde46cdd171e649"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9b8dfa95723e02f603e5583a96ff11b4"><td class="memItemLeft" align="right" valign="top">boost::shared_ptr&lt; ServiceInfo2Subscription &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html#a9b8dfa95723e02f603e5583a96ff11b4">SubscribeServiceInfo2</a> (const std::vector&lt; std::string &gt; &amp;service_types, boost::shared_ptr&lt; ServiceSubscriptionFilter &gt; filter=boost::shared_ptr&lt; ServiceSubscriptionFilter &gt;())</td></tr>
+<tr class="memitem:a9b8dfa95723e02f603e5583a96ff11b4"><td class="memItemLeft" align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_service_info2_subscription.html">ServiceInfo2Subscription</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html#a9b8dfa95723e02f603e5583a96ff11b4">SubscribeServiceInfo2</a> (const std::vector&lt; std::string &gt; &amp;service_types, boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_service_subscription_filter.html">ServiceSubscriptionFilter</a> &gt; filter=boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_service_subscription_filter.html">ServiceSubscriptionFilter</a> &gt;())</td></tr>
 <tr class="memdesc:a9b8dfa95723e02f603e5583a96ff11b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subscribe to listen for available services information.  <a href="class_robot_raconteur_1_1_robot_raconteur_node.html#a9b8dfa95723e02f603e5583a96ff11b4">More...</a><br /></td></tr>
 <tr class="separator:a9b8dfa95723e02f603e5583a96ff11b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8639a0c1e88b6a23bcce13cdf37dd055"><td class="memItemLeft" align="right" valign="top">boost::shared_ptr&lt; ServiceSubscription &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html#a8639a0c1e88b6a23bcce13cdf37dd055">SubscribeServiceByType</a> (const std::vector&lt; std::string &gt; &amp;service_types, boost::shared_ptr&lt; ServiceSubscriptionFilter &gt; filter=boost::shared_ptr&lt; ServiceSubscriptionFilter &gt;())</td></tr>
+<tr class="memitem:a8639a0c1e88b6a23bcce13cdf37dd055"><td class="memItemLeft" align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_service_subscription.html">ServiceSubscription</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html#a8639a0c1e88b6a23bcce13cdf37dd055">SubscribeServiceByType</a> (const std::vector&lt; std::string &gt; &amp;service_types, boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_service_subscription_filter.html">ServiceSubscriptionFilter</a> &gt; filter=boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_service_subscription_filter.html">ServiceSubscriptionFilter</a> &gt;())</td></tr>
 <tr class="memdesc:a8639a0c1e88b6a23bcce13cdf37dd055"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subscribe to listen for available services and automatically connect.  <a href="class_robot_raconteur_1_1_robot_raconteur_node.html#a8639a0c1e88b6a23bcce13cdf37dd055">More...</a><br /></td></tr>
 <tr class="separator:a8639a0c1e88b6a23bcce13cdf37dd055"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a073f6638ab7a4db125de1125ad0e6f90"><td class="memItemLeft" align="right" valign="top">boost::shared_ptr&lt; ServiceSubscription &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html#a073f6638ab7a4db125de1125ad0e6f90">SubscribeService</a> (const std::vector&lt; std::string &gt; &amp;url, boost::string_ref username=&quot;&quot;, boost::intrusive_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_r_r_map.html">RRMap</a>&lt; std::string, <a class="el" href="class_robot_raconteur_1_1_r_r_value.html">RRValue</a> &gt; &gt; credentials=(boost::intrusive_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_r_r_map.html">RRMap</a>&lt; std::string, <a class="el" href="class_robot_raconteur_1_1_r_r_value.html">RRValue</a> &gt; &gt;()), boost::string_ref objecttype=&quot;&quot;)</td></tr>
+<tr class="memitem:a073f6638ab7a4db125de1125ad0e6f90"><td class="memItemLeft" align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_service_subscription.html">ServiceSubscription</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html#a073f6638ab7a4db125de1125ad0e6f90">SubscribeService</a> (const std::vector&lt; std::string &gt; &amp;url, boost::string_ref username=&quot;&quot;, boost::intrusive_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_r_r_map.html">RRMap</a>&lt; std::string, <a class="el" href="class_robot_raconteur_1_1_r_r_value.html">RRValue</a> &gt; &gt; credentials=(boost::intrusive_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_r_r_map.html">RRMap</a>&lt; std::string, <a class="el" href="class_robot_raconteur_1_1_r_r_value.html">RRValue</a> &gt; &gt;()), boost::string_ref objecttype=&quot;&quot;)</td></tr>
 <tr class="memdesc:a073f6638ab7a4db125de1125ad0e6f90"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subscribe to a service using one or more URL. Used to create robust connections to services.  <a href="class_robot_raconteur_1_1_robot_raconteur_node.html#a073f6638ab7a4db125de1125ad0e6f90">More...</a><br /></td></tr>
 <tr class="separator:a073f6638ab7a4db125de1125ad0e6f90"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5c5946e947d7c5bc5fac008dde8e2bc1"><td class="memItemLeft" align="right" valign="top">boost::shared_ptr&lt; ServiceSubscription &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html#a5c5946e947d7c5bc5fac008dde8e2bc1">SubscribeService</a> (const std::string &amp;url, boost::string_ref username=&quot;&quot;, boost::intrusive_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_r_r_map.html">RRMap</a>&lt; std::string, <a class="el" href="class_robot_raconteur_1_1_r_r_value.html">RRValue</a> &gt; &gt; credentials=(boost::intrusive_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_r_r_map.html">RRMap</a>&lt; std::string, <a class="el" href="class_robot_raconteur_1_1_r_r_value.html">RRValue</a> &gt; &gt;()), boost::string_ref objecttype=&quot;&quot;)</td></tr>
+<tr class="memitem:a5c5946e947d7c5bc5fac008dde8e2bc1"><td class="memItemLeft" align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_service_subscription.html">ServiceSubscription</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html#a5c5946e947d7c5bc5fac008dde8e2bc1">SubscribeService</a> (const std::string &amp;url, boost::string_ref username=&quot;&quot;, boost::intrusive_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_r_r_map.html">RRMap</a>&lt; std::string, <a class="el" href="class_robot_raconteur_1_1_r_r_value.html">RRValue</a> &gt; &gt; credentials=(boost::intrusive_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_r_r_map.html">RRMap</a>&lt; std::string, <a class="el" href="class_robot_raconteur_1_1_r_r_value.html">RRValue</a> &gt; &gt;()), boost::string_ref objecttype=&quot;&quot;)</td></tr>
 <tr class="memdesc:a5c5946e947d7c5bc5fac008dde8e2bc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subscribe to a service using a URL. Used to create robust connections to services.  <a href="class_robot_raconteur_1_1_robot_raconteur_node.html#a5c5946e947d7c5bc5fac008dde8e2bc1">More...</a><br /></td></tr>
 <tr class="separator:a5c5946e947d7c5bc5fac008dde8e2bc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5e6a843097e6f17aee2b8660e58a3f48"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="class_robot_raconteur_1_1_service_info2.html">ServiceInfo2</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html#a5e6a843097e6f17aee2b8660e58a3f48">FindServiceByType</a> (boost::string_ref servicetype, const std::vector&lt; std::string &gt; &amp;transportschemes)</td></tr>
@@ -4059,7 +4060,7 @@ false </dd></dl>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">boost::shared_ptr&lt;ServiceSubscription&gt; RobotRaconteur::RobotRaconteurNode::SubscribeService </td>
+          <td class="memname">boost::shared_ptr&lt;<a class="el" href="class_robot_raconteur_1_1_service_subscription.html">ServiceSubscription</a>&gt; RobotRaconteur::RobotRaconteurNode::SubscribeService </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>url</em>, </td>
@@ -4091,7 +4092,7 @@ false </dd></dl>
 </div><div class="memdoc">
 
 <p>Subscribe to a service using a URL. Used to create robust connections to services. </p>
-<p>Creates a ServiceSubscription assigned to a service with a URL. The subscription will attempt to maintain a peristent connection, reconnecting if the connection is lost.</p>
+<p>Creates a <a class="el" href="class_robot_raconteur_1_1_service_subscription.html" title="Subscription that automatically connects services and manages lifecycle of connected services.">ServiceSubscription</a> assigned to a service with a URL. The subscription will attempt to maintain a peristent connection, reconnecting if the connection is lost.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">url</td><td>The connection URL </td></tr>
@@ -4112,7 +4113,7 @@ false </dd></dl>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">boost::shared_ptr&lt;ServiceSubscription&gt; RobotRaconteur::RobotRaconteurNode::SubscribeService </td>
+          <td class="memname">boost::shared_ptr&lt;<a class="el" href="class_robot_raconteur_1_1_service_subscription.html">ServiceSubscription</a>&gt; RobotRaconteur::RobotRaconteurNode::SubscribeService </td>
           <td>(</td>
           <td class="paramtype">const std::vector&lt; std::string &gt; &amp;&#160;</td>
           <td class="paramname"><em>url</em>, </td>
@@ -4144,7 +4145,7 @@ false </dd></dl>
 </div><div class="memdoc">
 
 <p>Subscribe to a service using one or more URL. Used to create robust connections to services. </p>
-<p>Creates a ServiceSubscription assigned to a service with one or more candidate connection URLs. The subscription will attempt to maintain a peristent connection, reconnecting if the connection is lost.</p>
+<p>Creates a <a class="el" href="class_robot_raconteur_1_1_service_subscription.html" title="Subscription that automatically connects services and manages lifecycle of connected services.">ServiceSubscription</a> assigned to a service with one or more candidate connection URLs. The subscription will attempt to maintain a peristent connection, reconnecting if the connection is lost.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">url</td><td>One or more candidate connection urls </td></tr>
@@ -4165,7 +4166,7 @@ false </dd></dl>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">boost::shared_ptr&lt;ServiceSubscription&gt; RobotRaconteur::RobotRaconteurNode::SubscribeServiceByType </td>
+          <td class="memname">boost::shared_ptr&lt;<a class="el" href="class_robot_raconteur_1_1_service_subscription.html">ServiceSubscription</a>&gt; RobotRaconteur::RobotRaconteurNode::SubscribeServiceByType </td>
           <td>(</td>
           <td class="paramtype">const std::vector&lt; std::string &gt; &amp;&#160;</td>
           <td class="paramname"><em>service_types</em>, </td>
@@ -4173,8 +4174,8 @@ false </dd></dl>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">boost::shared_ptr&lt; ServiceSubscriptionFilter &gt;&#160;</td>
-          <td class="paramname"><em>filter</em> = <code>boost::shared_ptr&lt;&#160;ServiceSubscriptionFilter&#160;&gt;()</code>&#160;</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_service_subscription_filter.html">ServiceSubscriptionFilter</a> &gt;&#160;</td>
+          <td class="paramname"><em>filter</em> = <code>boost::shared_ptr&lt;&#160;<a class="el" href="class_robot_raconteur_1_1_service_subscription_filter.html">ServiceSubscriptionFilter</a>&#160;&gt;()</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -4185,7 +4186,7 @@ false </dd></dl>
 </div><div class="memdoc">
 
 <p>Subscribe to listen for available services and automatically connect. </p>
-<p>A ServiceSubscription will track the availability of service types and create connections when available.</p>
+<p>A <a class="el" href="class_robot_raconteur_1_1_service_subscription.html" title="Subscription that automatically connects services and manages lifecycle of connected services.">ServiceSubscription</a> will track the availability of service types and create connections when available.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">service_types</td><td>A std::vector of service types to listen for, ie <code>com.robotraconteur.robotics.robot.Robot</code> </td></tr>
@@ -4204,7 +4205,7 @@ false </dd></dl>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">boost::shared_ptr&lt;ServiceInfo2Subscription&gt; RobotRaconteur::RobotRaconteurNode::SubscribeServiceInfo2 </td>
+          <td class="memname">boost::shared_ptr&lt;<a class="el" href="class_robot_raconteur_1_1_service_info2_subscription.html">ServiceInfo2Subscription</a>&gt; RobotRaconteur::RobotRaconteurNode::SubscribeServiceInfo2 </td>
           <td>(</td>
           <td class="paramtype">const std::vector&lt; std::string &gt; &amp;&#160;</td>
           <td class="paramname"><em>service_types</em>, </td>
@@ -4212,8 +4213,8 @@ false </dd></dl>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">boost::shared_ptr&lt; ServiceSubscriptionFilter &gt;&#160;</td>
-          <td class="paramname"><em>filter</em> = <code>boost::shared_ptr&lt;&#160;ServiceSubscriptionFilter&#160;&gt;()</code>&#160;</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_service_subscription_filter.html">ServiceSubscriptionFilter</a> &gt;&#160;</td>
+          <td class="paramname"><em>filter</em> = <code>boost::shared_ptr&lt;&#160;<a class="el" href="class_robot_raconteur_1_1_service_subscription_filter.html">ServiceSubscriptionFilter</a>&#160;&gt;()</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -4224,7 +4225,7 @@ false </dd></dl>
 </div><div class="memdoc">
 
 <p>Subscribe to listen for available services information. </p>
-<p>A ServiceInfo2Subscription will track the availability of service types and inform when services become available or are lost. If connections to available services are also required, ServiceSubscription should be used.</p>
+<p>A <a class="el" href="class_robot_raconteur_1_1_service_info2_subscription.html" title="Subscription for information about detected services.">ServiceInfo2Subscription</a> will track the availability of service types and inform when services become available or are lost. If connections to available services are also required, <a class="el" href="class_robot_raconteur_1_1_service_subscription.html" title="Subscription that automatically connects services and manages lifecycle of connected services.">ServiceSubscription</a> should be used.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">service_types</td><td>A std::vector of service types to listen for, ie <code>com.robotraconteur.robotics.robot.Robot</code> </td></tr>

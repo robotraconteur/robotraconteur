@@ -20,6 +20,7 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="logo-icon.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Robot Raconteur Core C++ Library
    </div>
@@ -140,7 +141,51 @@ CMake and Robot Raconteur Thunk Source Generation</h1>
 </pre><p>See the C++ examples for example CMakeLists.txt files.</p>
 <p>If the <code>MASTER_HEADER</code> header is used, use the following include in program header files: </p><pre class="fragment">#include &lt;RobotRaconteur.h&gt;
 #include "robotraconteur_generated.h"
-</pre> </div></div><!-- contents -->
+</pre><h1><a class="anchor" id="cpp_boost_library"></a>
+Boost Library</h1>
+<p>The boost libraries are used extensively throughout Robot Raconteur The following classes are of particular interest by software using Robot Raconteur:</p>
+<ul>
+<li><code>boost::shared_ptr&lt;T&gt;</code></li>
+<li><code>boost::make_shared&lt;T&gt;</code></li>
+<li><code>boost::enable_shared_from_this&lt;T&gt;</code></li>
+<li><code>boost::function&lt;...&gt;</code></li>
+<li><code>boost::bind&lt;...&gt;</code></li>
+<li><code>boost::signals2::signal&lt;...&gt;</code></li>
+<li><code>boost::thread</code></li>
+<li><code>boost::recursive_mutex</code></li>
+<li><code>boost::posix_time::ptime</code></li>
+</ul>
+<p>Documentation for these types can be found in the <a href="https://www.boost.org/doc/libs/">Boost documentation</a>.</p>
+<p>Robot Raconteur uses a number of preprocessor defines for Boost and C++11 types. These are all defined in <code><a class="el" href="_robot_raconteur_config_8h.html">RobotRaconteurConfig.h</a></code> These are used to allow for configurability. By default, the following defines are used: </p><pre class="fragment">#define RR_SHARED_PTR std::shared_ptr
+#define RR_MAKE_SHARED std::make_shared
+#define RR_WEAK_PTR std::weak_ptr
+#define RR_ENABLE_SHARED_FROM_THIS std::enable_shared_from_this
+#define RR_DYNAMIC_POINTER_CAST std::dynamic_pointer_cast
+#define RR_STATIC_POINTER_CAST std::static_pointer_cast
+#define RR_INTRUSIVE_PTR boost::intrusive_ptr
+#define RR_UNORDERED_MAP boost::unordered_map
+</pre><p>There are a number of defines that are used for incompatibilities between Boost and C++ versions. Consult <code><a class="el" href="_robot_raconteur_config_8h.html">RobotRaconteurConfig.h</a></code> for there definitions, since the definitions are configuration dependent. </p><pre class="fragment">RR_MOVE_ARG
+RR_MOVE
+RR_BOOST_ASIO_IO_CONTEXT
+RR_BOOST_ASIO_STRAND
+RR_BOOST_ASIO_POST(context, func)
+RR_BOOST_ASIO_BUFFER_CAST(type,buf)
+RR_BOOST_ASIO_STRAND_WRAP(strand, f)
+RR_BOOST_ASIO_NEW_STRAND(context)
+RR_BOOST_PLACEHOLDERS
+</pre><h1><a class="anchor" id="cpp_smart_pointers"></a>
+Smart Pointers and Aliases</h1>
+<p>Robot Raconteur uses smart pointers for memory management. Smart pointers use "reference counting" to track the number of currently active references to an object or data. When the number of references go to zero, the object is deleted.</p>
+<p>Two types of smart pointers are used: standard smart pointers, implemented using <code>boost::shared_ptr&lt;T&gt;</code>, and intrusive pointers, implemented using <code>boost::intrusive_ptr&lt;T&gt;</code>. The difference between these pointers is how the reference count is stored in memory. <code>boost::shared_ptr&lt;T&gt;</code> allocates a small amount of separate memory on the heap using <code>new</code> to store the reference count. This has the advantage of not affecting the object itself, but has the overhead of allocting and destroying this extra memory segment. <code>boost::intrusive_ptr</code> requires the object or structure to have a field specifically for reference counting declared in the object/structure itself.</p>
+<p>Robot Raconteur uses <code>boost::shared_ptr&lt;T&gt;</code> for API objects, service objects, and service object references (proxies). <code>boost::intrusive_ptr&lt;T&gt;</code> is used for all value types. Value types inherit from <a class="el" href="class_robot_raconteur_1_1_r_r_value.html" title="Base class for all Robot Raconteur value types (except primitives)">RobotRaconteur::RRValue</a>, which contains the field for reference counting.</p>
+<p>The preprocessor macros <code>RR_SHARED_PTR</code> and <code>RR_INTRUSIVE_PTR</code> are used internally for shared and intrusive pointer types. These are simply aliases to <code>boost::shared_ptr&lt;T&gt;</code> and <code>boost::intrusive_ptr&lt;T&gt;</code>.</p>
+<p>For C++11 capable compilers, "template aliases" are available to make the code look cleaner. API types and generated types have these aliases declared. (RobotRaconteurGen will generate the aliases). A few (pseudocode) examples of aliases and their expansion: </p><pre class="fragment">RobotRaconteurNodePtr = boost::shared_ptr&lt;RobotRaconteurNode&gt;
+RRArrayPtr&lt;int&gt; = boost::intrusive_ptr&lt;RRArray&lt;int&gt; &gt;
+MyObjectPtr = boost::shared_ptr&lt;MyObject&gt; // Service definition generated object
+MyStructPtr = boost::intrusive_ptr&lt;MyObject&gt; // Service definition generated struct
+</pre><h1>Boost string_ref</h1>
+<p><code>boost::string_ref</code> is used for string parameters in the Robot Raconteur library. The <code>boost::string_ref</code> is used instead of <code>std::string</code> to prevent runtime copies. It can be initialized from a <code>std::string</code>, a <code>char*</code> and length, or a string literal. It can be converted back to a string using <code>boost::string_ref::to_string()</code>. The conversions are normally done automatically, so the user does not need to do anything different compared to using normal <code>std::string</code> parameters. </p>
+</div></div><!-- contents -->
 </div><!-- PageDoc -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

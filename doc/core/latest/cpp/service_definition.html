@@ -20,6 +20,7 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="logo-icon.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Robot Raconteur Core C++ Library
    </div>
@@ -169,7 +170,8 @@ Value Types</h1>
 <p>Lists follow similar rules to maps. They are created with curly braces. For example, <code>string{list}</code> would be a list of strings. <code>SensorPacket{list}</code> and <code>int32[]{list}</code> are also valid examples. <code>string{list}{list}</code> is <b>not</b> valid. There can only be one dimension of lists and/or map keying.</p>
 <h2>Multidimensional Arrays</h2>
 <p>The multidimensional arrays allow for the transmission of real or complex matrices of any dimension. They are defined by putting a <code>*</code> inside the brackets of an array. For example, <code>double[*]</code> defines a multidimensional array of doubles. Multidimensional arrays can also have fixed dimensions. For example <code>double[3,3]</code> defines a 3x3 matrix. The dimensions are in matrix (column-major) order.</p>
-<h2>Enums</h2>
+<h2><a class="anchor" id="enums"></a>
+Enums</h2>
 <p>Enums are a special representation of int32 that names each value. Enums are aliases, with the value be stored as int32 internally. An enum is started with the keyword <code>enum</code> followed by the enum name. It is ended with the <code>end</code> keyword. The values are specified with a <code>name = value</code> format, separated by commas. Values can be signed integers, unsigned hexadecimal, or omitted to implicitly increment from the last value. </p><pre class="fragment">enum myenum
     value1 = -1,
     value2 = 0xF1,
@@ -186,10 +188,11 @@ Object Types</h1>
 <p>Keyword: <code>property</code></p>
 <p>Properties are similar to class variables (fields). They can be written to (set) or read from (get). A property can take on any valid value type. A property is defined within an object with the keyword <code>property</code> followed by the value type of the property, and finally the name of the property. (All member names within an objectmust be unique). An example: </p><pre class="fragment">property double myvar
 </pre><p>Properties can use modifiers <code>readonly</code>, <code>writeonly</code>, <code>urgent</code>, and/or <code>perclient</code>. See modifiers.</p>
-<h2>Functions</h2>
+<h2><a class="anchor" id="service_definition_function"></a>
+Functions</h2>
 <p>Keyword: <code>function</code></p>
 <p>Functions take zero or more value type parameters, and return a single value type. The parameters of the functions must all have unique names. The return value of the function may be <code>void</code> if there is no return. A function is defined by the keyword <code>function</code> followed by the return type, followed by the name of the function. The parameters follow as a comma separated list of parameter type and parameter name. The parameter list is enclosed with parenthesis. An example: </p><pre class="fragment">function double addTwoNumbers(int32 a, double b)
-</pre><p>Functions can also return a "generator", which is a form of iterator. (These generators are modeled after Python generators.) This is useful for long running operations or to return large amounts of data. Generators take three forms. The first is when each iteration of the generator takes a parameter and returns a value. This takes the form: </p><pre class="fragment">function double{generator} addManyNumbers(int32 a, double{generator} b)}
+</pre><p>Functions can also return a "generator", which is a form of iterator. (These generators are modeled after Python generators.) This is useful for long running operations or to return large amounts of data. Generators take three forms. The first is when each iteration of the generator takes a parameter and returns a value. This takes the form: </p><pre class="fragment">function double{generator} addManyNumbers(int32 a, double{generator} b)
 </pre><p>In this example, the <code>a</code> parameter is sent with the function call, while <code>b</code> and <code>return</code> are sent and received using the <code>Next</code> function of the generator.</p>
 <p>The next form of the generator returns a value each iteration of the generator. </p><pre class="fragment">function double{generator} getSequence(int32 a, double b)
 </pre><p>In this example, <code>a</code> and <code>b</code> are sent with the function call, and <code>return</code> is returned using the <code>Next</code> function of the generator.</p>
@@ -219,7 +222,7 @@ Object Types</h1>
 <p>Keyword: <code>wire</code></p>
 <p>Wires are very similar to pipes, however rather than providing a stream of packets the wire is used when only the "most recent" value is of interest. It is similar in concept to a "port" in Simulink. Wires may be transmitted over lossy channels or channels with latency where packets may not arrive or may arrive out of order. In these situations the lost or out of order packet will be discarded and only the newest value will be used. Each packet has a timestamp of when it is sent (from the sender's clock). Wires are full duplex like pipes meaning it has two-way communication, but unlike pipes they are not indexed so there is only one connection per client object reference. The wire allows for a <code>WireConnection</code> pair to be created with one <code>WireConnection</code> on the client and the other <code>WireConnection</code> on the service. Unlike pipes, each wire member can only create one connection pair per client, per service object instance. The <code>WireConnection</code> is used by setting the <code>OutValue</code> to the current value. This sends the new value to the opposite <code>WireConnection</code>, which updates its <code>InValue</code>. The same can be reversed. For instance, setting the <code>OutValue</code> on the service changes the <code>InValue</code> on the client, and setting the <code>OutValue</code> on the client changes the <code>InValue</code> on the service. It as also possible to receive the <code>LastValueReceivedTime</code> and <code>LastValueSentTime</code> to read the timestamps on the values. Note that <code>LastValueReceivedTime</code> is in the <em>sender's</em> clock, not the local clock and is generated when it is first transmitted. Either the client or the service can close the <code>WireConnection</code> pair using the <code>Close</code> function.</p>
 <p>When a <code>WireConnection</code> pair is created by the client, the most recent values begin streaming between the pair. Sometimes the client needs to read the <code>InValue</code> or set the <code>OutValue</code>, but does not require a streaming update. The <code>Wire</code> provides <code>PeekInValue</code>, <code>PeekOutValue</code>, and <code>PokeOutValue</code> for this purpose. These functions use request-response instead of streaming the most recent values.</p>
-<p>An example wire member definition: </p><pre class="fragment">wire dobule[2] currentposition
+<p>An example wire member definition: </p><pre class="fragment">wire double[2] currentposition
 </pre><p>Wires can use modifiers <code>readonly</code> or <code>writeonly</code>. See modifiers.</p>
 <h2>Memories</h2>
 <p>Keyword: <code>memory</code></p>
@@ -227,7 +230,7 @@ Object Types</h1>
 </pre><p>Memories can use modifiers <code>readonly</code> or <code>writeonly</code>. See modifiers.</p>
 <h1><a class="anchor" id="constants"></a>
 Constants</h1>
-<p>Constants can be specified using the \texttt{constant} keyword. The constants can be numbers, single dimensional arrays, or strings. Constants can be declared either in the global service definition scope or in objects. </p><pre class="fragment">constant uint32 myconst 0xFB}
+<p>Constants can be specified using the \texttt{constant} keyword. The constants can be numbers, single dimensional arrays, or strings. Constants can be declared either in the global service definition scope or in objects. </p><pre class="fragment">constant uint32 myconst 0xFB
 constant double[] myarray {10.3, 584.9, 594}
 constant string mystring "Hello world!"
 </pre><h1><a class="anchor" id="robdef_exceptions"></a>

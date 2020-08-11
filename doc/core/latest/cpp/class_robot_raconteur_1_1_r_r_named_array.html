@@ -20,6 +20,7 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="logo-icon.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Robot Raconteur Core C++ Library
    </div>
@@ -107,6 +108,9 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a18a2ef0ab3c9bc44b8dff72bbc5718e5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_r_r_named_array.html#a18a2ef0ab3c9bc44b8dff72bbc5718e5">RRNamedArray</a> (boost::intrusive_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_r_r_array.html">RRArray</a>&lt; typename RRPrimUtil&lt; T &gt;::<a class="el" href="class_robot_raconteur_1_1_r_r_named_array.html#a9406423c85cfeb8c3ec850e77b9b27d3">ElementArrayType</a> &gt; &gt; rr_array)</td></tr>
+<tr class="memdesc:a18a2ef0ab3c9bc44b8dff72bbc5718e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <a class="el" href="class_robot_raconteur_1_1_r_r_named_array.html" title="namedarray array value type">RRNamedArray</a> object.  <a href="class_robot_raconteur_1_1_r_r_named_array.html#a18a2ef0ab3c9bc44b8dff72bbc5718e5">More...</a><br /></td></tr>
+<tr class="separator:a18a2ef0ab3c9bc44b8dff72bbc5718e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1200cbc262b2460d86b8f0a11feab679"><td class="memItemLeft" align="right" valign="top"><a id="a1200cbc262b2460d86b8f0a11feab679"></a>
 virtual size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_r_r_named_array.html#a1200cbc262b2460d86b8f0a11feab679">size</a> () const</td></tr>
 <tr class="memdesc:a1200cbc262b2460d86b8f0a11feab679"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns the number of elements (<code>namedarray</code> elements) <br /></td></tr>
@@ -366,6 +370,45 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 <p>value_type </p>
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a18a2ef0ab3c9bc44b8dff72bbc5718e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a18a2ef0ab3c9bc44b8dff72bbc5718e5">&#9670;&nbsp;</a></span>RRNamedArray()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_robot_raconteur_1_1_r_r_named_array.html">RobotRaconteur::RRNamedArray</a>&lt; T &gt;::<a class="el" href="class_robot_raconteur_1_1_r_r_named_array.html">RRNamedArray</a> </td>
+          <td>(</td>
+          <td class="paramtype">boost::intrusive_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_r_r_array.html">RRArray</a>&lt; typename RRPrimUtil&lt; T &gt;::<a class="el" href="class_robot_raconteur_1_1_r_r_named_array.html#a9406423c85cfeb8c3ec850e77b9b27d3">ElementArrayType</a> &gt; &gt;&#160;</td>
+          <td class="paramname"><em>rr_array</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Construct a <a class="el" href="class_robot_raconteur_1_1_r_r_named_array.html" title="namedarray array value type">RRNamedArray</a> object. </p>
+<p>Must be stored in a boost::intrusive_ptr</p>
+<p>The <a class="el" href="class_robot_raconteur_1_1_r_r_named_array.html" title="namedarray array value type">RRNamedArray</a> creates a memory view of the provided numeric array parameter rr_array. The reference count is increased, so the array will not be destroyed if the caller releases its smart pointers.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">rr_array</td><td>The array to use for storage </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
