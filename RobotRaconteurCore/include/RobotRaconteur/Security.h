@@ -177,7 +177,23 @@ namespace RobotRaconteur
 	/**
 	 * @brief Simple authenticator using a list of username, password hash, and privileges stored in a file or string
 	 * 
-	 * See \ref security for more information.
+	 * The password user authenticator expects a `string` or `istream` containing a list of users,
+	 * one per line. Each line contains the username, password as md5 hash, and privileges, separated by white spaces.
+	 * An example of authentication file contents:
+	 * 
+	 * ~~~
+	 *    user1 79e262a81dd19d40ae008f74eb59edce objectlock
+	 *    user2 309825a0951b3cf1f25e27b61cee8243 objectlock
+     *    superuser1 11e5dfc68422e697563a4253ba360615 objectlock,objectlockoverride
+	 * ~~~
+	 * 
+	 * The password is md5 hashed. This hash can be generated using the `--md5passwordhash` command in \ref robotraconteurgen. 
+	 * The privileges are comma separated. Valid privileges are as follows:
+	 * 
+	 * | Privilege Name | Description |
+	 * | --- | --- |
+	 * | objectlock | Allow user to lock objects |
+	 * | objectlockoverride | Allow user to unlock object locks made by other users |
 	 * 
 	 */
 	class ROBOTRACONTEUR_CORE_API  PasswordFileUserAuthenticator : public UserAuthenticator
@@ -198,14 +214,14 @@ namespace RobotRaconteur
 
 	public:
 		/**
-		 * @brief Construct a new PasswordUserAuthenticator using text supplied as a stream
+		 * @brief Construct a new PasswordFileUserAuthenticator using text supplied as a stream
 		 * 
 		 * @param file The file text as a stream
 		 */
 		PasswordFileUserAuthenticator(std::istream &file);
 
 		/**
-		 * @brief Construct a new PasswordUserAuthenticator using text supplied as a string
+		 * @brief Construct a new PasswordFileUserAuthenticator using text supplied as a string
 		 * 
 		 * @param data The file text
 		 */

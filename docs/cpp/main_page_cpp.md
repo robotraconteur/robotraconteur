@@ -1,7 +1,7 @@
 Robot Raconteur Core C++ Library {#mainpage}
 ==============
 
-[TOC]
+![](logo-header.svg)
 
 Welcome to the Robot Raconteur Core C++ Documentation!
 
@@ -87,6 +87,31 @@ Welcome to the Robot Raconteur Core C++ Documentation!
       * \ref cpp_client_user_locks
       * \ref cpp_client_client_locks
       * \ref cpp_client_monitor_locks
+  * \ref cpp_service
+    * \ref cpp_service_server_context
+    * \ref cpp_service_server_endpoint
+    * \ref cpp_service_service_path
+    * \ref cpp_service_implement_objects
+      * \ref cpp_service_irrserviceobject_interface
+      * \ref cpp_service_property
+      * \ref cpp_service_function
+        * \ref cpp_service_normal_functions
+        * \ref cpp_service_generator_functions
+      * \ref cpp_service_event
+      * \ref cpp_service_objref
+      * \ref cpp_service_pipe
+      * \ref cpp_service_callback
+      * \ref cpp_service_wire
+      * \ref cpp_service_memory
+    * \ref cpp_service_security
+    * \ref cpp_service_locking
+      * \ref cpp_service_locking_user_client
+      * \ref cpp_service_locking_monitor
+    * \ref cpp_service_attributes
+    * \ref cpp_service_release_path
+  * \ref cpp_discovery
+  * \ref cpp_subscriptions
   * \ref cpp_constants
+  * \ref cpp_logging_and_taps
 * [Class Index](classes.html)
 

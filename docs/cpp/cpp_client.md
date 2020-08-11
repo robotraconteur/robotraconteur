@@ -483,7 +483,7 @@ Pipes can also be used asynchronously. Retrieving a pipe from the abstract inter
 
             // Connect to signal to be notified when packets arrive
             sensordata_ep->PacketReceivedEvent.connect(
-                [](PipeEndpointPtr<double> ep)
+                [](PipeEndpointPtr<RRArrayPtr<double>> ep)
                 {
                     while (ep->Available() > 0)
                     {
@@ -680,6 +680,7 @@ An example of using the array memory client:
 
 The array memory clients do not support asynchronous operations.
 
+It is recommended that clients aquire a monitor lock before memory operations. See \ref cpp_client_monitor_locks.
 
 ## Object Locking {#cpp_client_object_locking}
 
