@@ -10,7 +10,9 @@ A communication framework for robotics, automation, and the Internet of Things
 
 [J. Wason, "Robot Raconteur® version 0.8: An Updated Communication System for Robotics, Automation, Building Control, and the Internet of Things", in Proc. IEEE Conference on Automation Science and Engineering, 2016, pp. 595-602.](https://s3.amazonaws.com/robotraconteurpublicfiles/docs/RobotRaconteur_CASE2016.pdf)
 
-See [http://robotraconteur.com/documentation](http://robotraconteur.com/documentation) for documentation.
+## Documentation
+
+See [https://github.com/robotraconteur/robotraconteur/wiki/Documentation](https://github.com/robotraconteur/robotraconteur/wiki/Documentation) for documentation.
 
 ## Getting Help
 
