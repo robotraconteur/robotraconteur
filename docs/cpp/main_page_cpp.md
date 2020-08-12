@@ -111,7 +111,12 @@ Welcome to the Robot Raconteur Core C++ Documentation!
     * \ref cpp_service_release_path
   * \ref cpp_constants
   * \ref cpp_discovery
+    * \ref cpp_service_discovery
+    * \ref cpp_node_discovery
   * \ref cpp_subscriptions
+    * \ref cpp_service_subscription
+    * \ref cpp_subscription_filters
+    * \ref cpp_subscription_service_type
+    * \ref cpp_subscription_serviceinfo2
   * \ref cpp_logging_and_taps
 * [Class Index](classes.html)
-
