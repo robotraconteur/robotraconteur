@@ -3,9 +3,7 @@ Robot Raconteur Core C++ Library {#mainpage}
 
 ![](logo-header.svg)
 
-Welcome to the Robot Raconteur Core C++ Documentation!
-
-* Framework
+* **Framework**
   * \ref introduction
     * \ref example_robot
   * \ref service_definition
@@ -33,7 +31,7 @@ Welcome to the Robot Raconteur Core C++ Documentation!
     * \ref user_locking
     * \ref client_locking
     * \ref monitor_locking
-* C++ Core Library
+* **C++ Core Library**
   * \ref cpp_introduction
     * \ref cpp_installation
     * \ref cpp_building
@@ -118,5 +116,6 @@ Welcome to the Robot Raconteur Core C++ Documentation!
     * \ref cpp_subscription_filters
     * \ref cpp_subscription_service_type
     * \ref cpp_subscription_serviceinfo2
-  * \ref cpp_logging_and_taps
+  * \ref logging
+  * \ref taps
 * [Class Index](classes.html)
