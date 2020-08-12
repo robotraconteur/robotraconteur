@@ -1,5 +1,5 @@
 /** 
- * @file Generator.h
+ * @file BroadcastDownsampler.h
  * 
  * @author John Wason, PhD
  * 
