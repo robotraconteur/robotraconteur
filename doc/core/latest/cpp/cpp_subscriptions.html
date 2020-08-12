@@ -77,7 +77,125 @@ $(function() {
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">ServiceInfo2 Subscription </td><td class="markdownTableBodyNone">Subscribe to information about services, receiving notifications as they are detected and lost </td><td class="markdownTableBodyNone"><a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html#a9b8dfa95723e02f603e5583a96ff11b4" title="Subscribe to listen for available services information.">RobotRaconteur::RobotRaconteurNode::SubscribeServiceInfo2()</a>  </td></tr>
 </table>
-</div></div><!-- contents -->
+<h1><a class="anchor" id="cpp_service_subscription"></a>
+Service Subscriptions</h1>
+<p>Service subscriptions are used to create a robust connection to a service. The subscription is created using <a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html#a073f6638ab7a4db125de1125ad0e6f90" title="Subscribe to a service using one or more URL. Used to create robust connections to services.">RobotRaconteur::RobotRaconteurNode::SubscribeService()</a>. It takes the service URL, an optional username, and optional credentials. The ServiceSubscription will attempt to maintain a connection to the service, retrying the connection if it fails or is lost.</p>
+<p>The connected client can be accessed using <a class="el" href="class_robot_raconteur_1_1_service_subscription.html#af8cc33974b72d2d2e2cb821fc68ca515" title="Get the &quot;default client&quot; connection.">RobotRaconteur::ServiceSubscription::GetDefaultClient()</a> or <a class="el" href="class_robot_raconteur_1_1_service_subscription.html#a86b11eb1171500cd9f5b195a10f95382" title="Try getting the &quot;default client&quot; connection.">RobotRaconteur::ServiceSubscription::TryGetDefaultClient()</a>. It is recommended these functions be called right before the client is used. This will ensure that the the client is the most recent connection, in case the client was reconnected after a connection was lost.</p>
+<p>When using <code>pipe</code> or <code>wire</code> members, it is recommended that <a class="el" href="class_robot_raconteur_1_1_pipe_subscription.html" title="Subscription for pipe members that aggregates incoming packets from client pipe endpoints.">RobotRaconteur::PipeSubscription</a> or <a class="el" href="class_robot_raconteur_1_1_wire_subscription.html" title="Subscription for wire members that aggregates the values from client wire connections.">RobotRaconteur::WireSubscription</a> be used. These classes automatically create connections to the members, to send and receive streaming data.</p>
+<p>An example of using a <a class="el" href="class_robot_raconteur_1_1_service_subscription.html" title="Subscription that automatically connects services and manages lifecycle of connected services.">RobotRaconteur::ServiceSubscription</a> to invoke a function: </p><pre class="fragment">ServiceSubscriptionPtr sub = RobotRaconteurNode::s()-&gt;SubscribeService("rr+tcp://localhost:62222?service=my_service");
+
+experimental::service_example1::MyObjectPtr obj;
+while (!sub-&gt;TryGetDefaultClient(obj))
+{
+    boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+}
+
+// obj is now a connected client that can be used normally
+obj-&gt;my_function();
+</pre><p>Next, an example of using <a class="el" href="class_robot_raconteur_1_1_wire_subscription.html" title="Subscription for wire members that aggregates the values from client wire connections.">RobotRaconteur::WireSubscription</a> for a client to the first order system service example from cpp_service_wire: </p><pre class="fragment">ServiceSubscriptionPtr sub = RobotRaconteurNode::s()-&gt;SubscribeService("rr+tcp://localhost:62222?service=filter_service");
+
+// Create wire subscriptions to input `u` and output `y`
+WireSubscriptionPtr&lt;double&gt; u_sub = sub-&gt;SubscribeWire&lt;double&gt;("u");
+u-&gt;SetIgnoreInValue(true); // Only use `u` for sending value
+WireSubscriptionPtr&lt;double&gt; y_sub = sub-&gt;SubscribeWire&lt;double&gt;("y");
+
+boost::posix_time::ptime start = RobotRaconteurNode::s()-&gt;NowUTC();
+
+// Use a Rate to stabilize the loop
+RatePtr rate = RobotRaconteurNode::s()-&gt;CreateRate(100);
+
+// Run loop
+while (true)
+{
+    rate-&gt;Sleep();
+
+    double y;
+    if (!y_sub-&gt;TryGetInValue(y))
+    {
+        continue;
+    }
+
+    double t = (RobotRaconturNode::s()-&gt;NowUTC() - start).total_milliseconds()/1000.0;
+    double u = sin(t);
+
+    u_sub-&gt;SetOutValueAll(u);
+
+    std::cout &lt;&lt; "y=" &lt;&lt; y &lt;&lt; ", u=" &lt;&lt; u &lt;&lt; std::endl;    
+}
+</pre><p>The above example uses wires to read and write the output <code>y</code> and input <code>u</code> of the first order system. Using wire subscriptions means that the user does not need to manually manage the lifecycle of the client connections.</p>
+<h1><a class="anchor" id="cpp_subscription_filters"></a>
+Subscription Filters</h1>
+<p><a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html#a8639a0c1e88b6a23bcce13cdf37dd055" title="Subscribe to listen for available services and automatically connect.">RobotRaconteur::RobotRaconteurNode::SubscribeServiceByType()</a> and <a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html#a9b8dfa95723e02f603e5583a96ff11b4" title="Subscribe to listen for available services information.">RobotRaconteur::RobotRaconteurNode::SubscribeServiceInfo2()</a> take a service type that should be connected or tracked, and a RobotRaconteur::ServiceSubscriptionFilterPtr to filter which services should be connected or tracked. See <a class="el" href="class_robot_raconteur_1_1_service_subscription_filter.html" title="Subscription filter.">RobotRaconteur::ServiceSubscriptionFilter</a> for more information on the criteria that can be used to filter nodes.</p>
+<h1><a class="anchor" id="cpp_subscription_service_type"></a>
+Service Type Subscriptions</h1>
+<p>Service type subscriptions subscribe to all services that match a certain type and match an optional filter. They are created using RobotRaconteur::RobotRaconteurNode::SubscribeFilterByType(), and return a <a class="el" href="class_robot_raconteur_1_1_service_subscription.html" title="Subscription that automatically connects services and manages lifecycle of connected services.">RobotRaconteur::ServiceSubscription</a>. Service type subscriptions are similar to service subscriptions, except that multiple clients may be connected if they match the specified type. The connected clients may be accessed as a map using <a class="el" href="class_robot_raconteur_1_1_service_subscription.html#afffd03e9f69bf3b083b3da452545a7f3" title="Returns a map of connected clients.">RobotRaconteur::ServiceSubscription::GetConnectedClients()</a>.</p>
+<p>An example of connecting to a service with a filter: </p><pre class="fragment">ServiceSubscriptionFilterPtr filter = boost::make_shared&lt;ServiceSubscriptionFilter&gt;();
+filter-&gt;max_connection_count = 8; // Limit to 8 concurrent connections.
+filter-&gt;ServiceNames = {"my_service"}; // Require a specific ServiceName to connect
+
+ServiceSubscriptionFilterNodePtr node_filter1 = boost::make_shared&lt;ServiceSubscriptionFilterNode&gt;();
+node_filter1-&gt;NodeName = "my_fancy_node"; // Require a specific node name
+ServiceSubscriptionFilterNodePtr node_filter2 = boost::make_shared&lt;ServiceSubscriptionFilterNode&gt;();
+node_filter2-&gt;NodeName = "another_fancy_node"; // Another allowed node name
+filter-&gt;Nodes = {node_filter1, node_filter2};
+
+ServiceSubscriptionPtr sub = RobotRaconteurNode::s()-&gt;SubscribeService({"experimental.service_example1"});
+
+// Give a few seconds for clients to be connected
+boost::this_thread::sleep(boost::posix_time::milliseconds(2500));
+
+// Now use the connected clients
+for (auto c : sub-&gt;GetConnectedClients())
+{
+    experimental::service_example1::MyObjectPtr c2 
+        = boost::dynamic_pointer_cast&lt;experimental::service_example1::MyObject&gt;(c.second);
+    if (!c2)
+        continue;
+    c2-&gt;do_something();
+}
+</pre><p>Note that the filter is optional, and may be omitted if no filtering is required. Using <code>max_connection_count</code> is highly recommended since the subscription may potentially connect more clients than the system can handle.</p>
+<p><a class="el" href="class_robot_raconteur_1_1_service_subscription.html" title="Subscription that automatically connects services and manages lifecycle of connected services.">RobotRaconteur::ServiceSubscription</a> may also use wire and pipe subscriptions, created using <a class="el" href="class_robot_raconteur_1_1_service_subscription.html#a7bac3d151038fe3a8eaff95adacd9492" title="Creates a pipe subscription.">RobotRaconteur::ServiceSubscription::SubscribePipe()</a> and <a class="el" href="class_robot_raconteur_1_1_service_subscription.html#a5fee8d7cf9d8011f01da824911e04a6e" title="Creates a wire subscription.">RobotRaconteur::ServiceSubscription::SubscribeWire()</a>. Note that more than one client may be connected and sending data to these members. If only one client is expected, use <code>max_connection_count = 1</code> in the filter, or use <a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html#a073f6638ab7a4db125de1125ad0e6f90" title="Subscribe to a service using one or more URL. Used to create robust connections to services.">RobotRaconteur::RobotRaconteurNode::SubscribeService()</a> to subscribe to a specific URL.</p>
+<p>The clients retrieved using <code>GetConnectedClients()</code> have their lifecycle managed by the subscription. This means the subscription could disconnect and reconnect the client at any time. If the user needs a client to stay connected, the client can be "claimed". A claimed client will no longer have its lifecycle managed by the subscription. When the user is done with the client, it can be "released" so the subscription can continue to manage its lifecycle. The user claims a client using <a class="el" href="class_robot_raconteur_1_1_service_subscription.html#aa1a316952971a425c94afa8d8cdd38b8" title="Claim a client that was connected by the subscription.">RobotRaconteur::ServiceSubscription::ClaimClient()</a>. The claim is released using <a class="el" href="class_robot_raconteur_1_1_service_subscription.html#a0d47f832f1432f4b5aa0c9c01ce3da21" title="Release a client previously clamed with ClaimClient()">RobotRaconteur::ServiceSubscription::ReleaseClient()</a>.</p>
+<h1><a class="anchor" id="cpp_subscription_serviceinfo2"></a>
+ServiceInfo2 Subscription</h1>
+<p>ServiceInfo2 subscriptions are used to track services as they are detected and lost. Unlike the service and service type subscriptions, they do not automatically create client connections. An example use case for ServiceInfo2 subscriptions is a dialog shown to users of detected services that is updated as services are detected or lost. Information about detected services is returned as <a class="el" href="class_robot_raconteur_1_1_service_info2.html" title="Contains information about a service found using discovery.">RobotRaconteur::ServiceInfo2</a> structures.</p>
+<p>ServiceInfo2 subscriptions are created using <a class="el" href="class_robot_raconteur_1_1_robot_raconteur_node.html#a9b8dfa95723e02f603e5583a96ff11b4" title="Subscribe to listen for available services information.">RobotRaconteur::RobotRaconteurNode::SubscribeServiceInfo2()</a>. The function returns a RobotRaconteur::ServiceInfo2SubscriptionPtr. The <code>SubscribeServiceInfo2</code> takes a service name, and a filter. See <a class="el" href="cpp_subscriptions.html#cpp_subscription_service_type">Service Type Subscriptions</a> for an example of using the filter.</p>
+<p>The currently detected services can be retrieved using <a class="el" href="class_robot_raconteur_1_1_service_info2_subscription.html#ab95266027b9205cca9a446f3fc6b8995" title="Returns a map of detected services.">RobotRaconteur::ServiceInfo2Subscription::GetDetectedServiceInfo2()</a>. Listeners for services being detected and lost can be added using <a class="el" href="class_robot_raconteur_1_1_service_info2_subscription.html#abaf73a584faeb88c49509947fd4cc30d" title="Add a listener callback that is invoked when a service is detected.">RobotRaconteur::ServiceInfo2Subscription::AddServiceDetectedListener()</a> and <a class="el" href="class_robot_raconteur_1_1_service_info2_subscription.html#ad2dfaf086f6c8f8cee0ad0e4e179f39e" title="Add a listener callback that is invoked when a service is lost.">RobotRaconteur::ServiceInfo2Subscription::AddServiceLostListener()</a>.</p>
+<p>An example using ServiceInfo2 subscription: </p><pre class="fragment">ServiceSubscriptionPtr sub = RobotRaconteurNode::s()-&gt;SubscribeService({"experimental.service_example1"});
+
+// Give a few seconds for services to be detected
+boost::this_thread::sleep(boost::posix_time::milliseconds(2500));
+
+// Print out currently detected services
+for (auto e : sub-&gt;GetDetectedServiceInfo2())
+{
+    for(auto e : detected_services)
+    {
+        std::cout &lt;&lt; "Name: " &lt;&lt; e.second.Name &lt;&lt; std::endl;           
+        std::cout &lt;&lt; "ConnectionURL: " &lt;&lt; boost::join(e.second.ConnectionURL,", ") &lt;&lt; std::endl &lt;&lt; std::endl;
+    }
+}
+
+// Add listeners
+sub-&gt;AddServiceDetectedListener(
+    [] (ServiceInfo2SubscriptionPtr subscription, const ServiceSubscriptionClientID&amp; client_id, const ServiceInfo2&amp; service_info)
+    {
+        std::cout &lt;&lt; "Service Detected:"  &lt;&lt; std::endl;
+        std::cout &lt;&lt; "Name: " &lt;&lt; service_info.Name &lt;&lt; std::endl;           
+        std::cout &lt;&lt; "ConnectionURL: " &lt;&lt; boost::join(service_info.ConnectionURL,", ") &lt;&lt; std::endl &lt;&lt; std::endl;
+    }
+);
+
+sub-&gt;AddServiceLostListener(
+    [] (ServiceInfo2SubscriptionPtr subscription, const ServiceSubscriptionClientID&amp; client_id, const ServiceInfo2&amp; service_info)
+    {
+        std::cout &lt;&lt; "Service Lost:"  &lt;&lt; std::endl;
+        std::cout &lt;&lt; "Name: " &lt;&lt; service_info.Name &lt;&lt; std::endl;            
+    }
+);
+
+// Continue with program, or spin to watch services come and go
+</pre> </div></div><!-- contents -->
 </div><!-- PageDoc -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

@@ -106,11 +106,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a989b0f32b2e4174ce2db1060c85ae85c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the connect retry delay in milliseconds.  <a href="class_robot_raconteur_1_1_service_subscription.html#a989b0f32b2e4174ce2db1060c85ae85c">More...</a><br /></td></tr>
 <tr class="separator:a989b0f32b2e4174ce2db1060c85ae85c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5fee8d7cf9d8011f01da824911e04a6e"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a5fee8d7cf9d8011f01da824911e04a6e"><td class="memTemplItemLeft" align="right" valign="top">boost::shared_ptr&lt; WireSubscription&lt; T &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_service_subscription.html#a5fee8d7cf9d8011f01da824911e04a6e">SubscribeWire</a> (boost::string_ref membername, boost::string_ref servicepath=&quot;&quot;)</td></tr>
+<tr class="memitem:a5fee8d7cf9d8011f01da824911e04a6e"><td class="memTemplItemLeft" align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_wire_subscription.html">WireSubscription</a>&lt; T &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_service_subscription.html#a5fee8d7cf9d8011f01da824911e04a6e">SubscribeWire</a> (boost::string_ref membername, boost::string_ref servicepath=&quot;&quot;)</td></tr>
 <tr class="memdesc:a5fee8d7cf9d8011f01da824911e04a6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a wire subscription.  <a href="class_robot_raconteur_1_1_service_subscription.html#a5fee8d7cf9d8011f01da824911e04a6e">More...</a><br /></td></tr>
 <tr class="separator:a5fee8d7cf9d8011f01da824911e04a6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7bac3d151038fe3a8eaff95adacd9492"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a7bac3d151038fe3a8eaff95adacd9492"><td class="memTemplItemLeft" align="right" valign="top">boost::shared_ptr&lt; PipeSubscription&lt; T &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_service_subscription.html#a7bac3d151038fe3a8eaff95adacd9492">SubscribePipe</a> (boost::string_ref membername, boost::string_ref servicepath=&quot;&quot;, uint32_t max_recv_packets=std::numeric_limits&lt; uint32_t &gt;::max())</td></tr>
+<tr class="memitem:a7bac3d151038fe3a8eaff95adacd9492"><td class="memTemplItemLeft" align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="class_robot_raconteur_1_1_pipe_subscription.html">PipeSubscription</a>&lt; T &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_service_subscription.html#a7bac3d151038fe3a8eaff95adacd9492">SubscribePipe</a> (boost::string_ref membername, boost::string_ref servicepath=&quot;&quot;, uint32_t max_recv_packets=std::numeric_limits&lt; uint32_t &gt;::max())</td></tr>
 <tr class="memdesc:a7bac3d151038fe3a8eaff95adacd9492"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a pipe subscription.  <a href="class_robot_raconteur_1_1_service_subscription.html#a7bac3d151038fe3a8eaff95adacd9492">More...</a><br /></td></tr>
 <tr class="separator:a7bac3d151038fe3a8eaff95adacd9492"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af8cc33974b72d2d2e2cb821fc68ca515"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
@@ -126,7 +126,7 @@ Public Member Functions</h2></td></tr>
 <div class="textblock"><p>Subscription that automatically connects services and manages lifecycle of connected services. </p>
 <p>Created using RobotRaconteur::SubscribeService() or RobotRaconteur::SubscribeServiceByType(). The <a class="el" href="class_robot_raconteur_1_1_service_subscription.html" title="Subscription that automatically connects services and manages lifecycle of connected services.">ServiceSubscription</a> class is used to automatically create and manage connections based on connection criteria. RobotRaconteur::SubscribeService() is used to create a robust connection to a service with a specific URL. RobotRaconteru::SubscribeServiceByType() is used to connect to services with a specified type, filtered with a <a class="el" href="class_robot_raconteur_1_1_service_subscription_filter.html" title="Subscription filter.">ServiceSubscriptionFilter</a>. Subscriptions will create connections to matching services, and will retry the connection if it fails or the connection is lost. This behavior allows subscriptions to be used to create robust connections. The retry delay for connections can be modified using <a class="el" href="class_robot_raconteur_1_1_service_subscription.html#a989b0f32b2e4174ce2db1060c85ae85c" title="Set the connect retry delay in milliseconds.">SetConnectRetryDelay()</a> and <a class="el" href="class_robot_raconteur_1_1_service_subscription.html#aa7cad272f229993d2999cda0bfafb0c2" title="Get the connect retry delay in milliseconds.">GetConnectRetryDelay()</a>.</p>
 <p>The currently connected clients can be retrieved using the <a class="el" href="class_robot_raconteur_1_1_service_subscription.html#afffd03e9f69bf3b083b3da452545a7f3" title="Returns a map of connected clients.">GetConnectedClients()</a> function. A single "default client" can be retrieved using the <a class="el" href="class_robot_raconteur_1_1_service_subscription.html#af8cc33974b72d2d2e2cb821fc68ca515" title="Get the &quot;default client&quot; connection.">GetDefaultClient()</a> function or <a class="el" href="class_robot_raconteur_1_1_service_subscription.html#a86b11eb1171500cd9f5b195a10f95382" title="Try getting the &quot;default client&quot; connection.">TryGetDefaultClient()</a> functions. Listeners for client connect and disconnect events can be added using the <a class="el" href="class_robot_raconteur_1_1_service_subscription.html#ac9723122ee3d42b3f3d60a8ba0ebcaf8" title="Add a listener callback that is invoked when a client is connected.">AddClientConnectListener()</a> and <a class="el" href="class_robot_raconteur_1_1_service_subscription.html#a6ad4a77380f6714ca77608676fc0011e" title="Add a listener callback that is invoked when a client is disconnected.">AddClientDisconnectListener()</a> functions. If the user wants to claim a client, the <a class="el" href="class_robot_raconteur_1_1_service_subscription.html#aa1a316952971a425c94afa8d8cdd38b8" title="Claim a client that was connected by the subscription.">ClaimClient()</a> and <a class="el" href="class_robot_raconteur_1_1_service_subscription.html#a0d47f832f1432f4b5aa0c9c01ce3da21" title="Release a client previously clamed with ClaimClient()">ReleaseClient()</a> functions will be used. Claimed clients will no longer have their lifecycle managed by the subscription.</p>
-<p>Subscriptions can be used to create <code>pipe</code> and <code>wire</code> subscriptions. These member subscriptions aggregate the packets and values being received from all services. They can also act as a "reverse broadcaster" to send packets and values to all services that are actively connected. See PipeSubscription and WireSubscription. </p>
+<p>Subscriptions can be used to create <code>pipe</code> and <code>wire</code> subscriptions. These member subscriptions aggregate the packets and values being received from all services. They can also act as a "reverse broadcaster" to send packets and values to all services that are actively connected. See <a class="el" href="class_robot_raconteur_1_1_pipe_subscription.html" title="Subscription for pipe members that aggregates incoming packets from client pipe endpoints.">PipeSubscription</a> and <a class="el" href="class_robot_raconteur_1_1_wire_subscription.html" title="Subscription for wire members that aggregates the values from client wire connections.">WireSubscription</a>. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="ac9723122ee3d42b3f3d60a8ba0ebcaf8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac9723122ee3d42b3f3d60a8ba0ebcaf8">&#9670;&nbsp;</a></span>AddClientConnectListener()</h2>
@@ -408,7 +408,7 @@ template&lt;typename T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">boost::shared_ptr&lt;PipeSubscription&lt;T&gt; &gt; RobotRaconteur::ServiceSubscription::SubscribePipe </td>
+          <td class="memname">boost::shared_ptr&lt;<a class="el" href="class_robot_raconteur_1_1_pipe_subscription.html">PipeSubscription</a>&lt;T&gt; &gt; RobotRaconteur::ServiceSubscription::SubscribePipe </td>
           <td>(</td>
           <td class="paramtype">boost::string_ref&#160;</td>
           <td class="paramname"><em>membername</em>, </td>
@@ -439,11 +439,11 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 
 <p>Creates a pipe subscription. </p>
-<p><a class="el" href="class_robot_raconteur_1_1_pipe.html" title="pipe member type interface">Pipe</a> subscriptions aggregate the packets received from the connected services. It can also act as a "reverse broadcaster" to send packets to clients. See PipeSubscription.</p>
+<p><a class="el" href="class_robot_raconteur_1_1_pipe.html" title="pipe member type interface">Pipe</a> subscriptions aggregate the packets received from the connected services. It can also act as a "reverse broadcaster" to send packets to clients. See <a class="el" href="class_robot_raconteur_1_1_pipe_subscription.html" title="Subscription for pipe members that aggregates incoming packets from client pipe endpoints.">PipeSubscription</a>.</p>
 <p>The optional service path may be an empty string to use the root object in the service. The first level of the service path may be "*" to match any service name. For instance, the service path "*.sub_obj" will match any service name, and use the "sub_obj" objref.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">T</td><td>The type of the pipe packets </td></tr>
+    <tr><td class="paramname">T</td><td>The type of the pipe packets. This must be specified since the subscription does not know the pipe packet type </td></tr>
   </table>
   </dd>
 </dl>
@@ -470,7 +470,7 @@ template&lt;typename T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">boost::shared_ptr&lt;WireSubscription&lt;T&gt; &gt; RobotRaconteur::ServiceSubscription::SubscribeWire </td>
+          <td class="memname">boost::shared_ptr&lt;<a class="el" href="class_robot_raconteur_1_1_wire_subscription.html">WireSubscription</a>&lt;T&gt; &gt; RobotRaconteur::ServiceSubscription::SubscribeWire </td>
           <td>(</td>
           <td class="paramtype">boost::string_ref&#160;</td>
           <td class="paramname"><em>membername</em>, </td>
@@ -495,11 +495,11 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 
 <p>Creates a wire subscription. </p>
-<p><a class="el" href="class_robot_raconteur_1_1_wire.html" title="wire member type interface">Wire</a> subscriptions aggregate the value received from the connected services. It can also act as a "reverse broadcaster" to send values to clients. See WireSubscription.</p>
+<p><a class="el" href="class_robot_raconteur_1_1_wire.html" title="wire member type interface">Wire</a> subscriptions aggregate the value received from the connected services. It can also act as a "reverse broadcaster" to send values to clients. See <a class="el" href="class_robot_raconteur_1_1_wire_subscription.html" title="Subscription for wire members that aggregates the values from client wire connections.">WireSubscription</a>.</p>
 <p>The optional service path may be an empty string to use the root object in the service. The first level of the service path may be "*" to match any service name. For instance, the service path "*.sub_obj" will match any service name, and use the "sub_obj" objref.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">T</td><td>The type of the wire value </td></tr>
+    <tr><td class="paramname">T</td><td>The type of the wire value. This must be specified since the subscription doesn't know the wire value type </td></tr>
   </table>
   </dd>
 </dl>

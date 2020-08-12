@@ -67,7 +67,8 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a>  </div>
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#typedef-members">Typedefs</a>  </div>
   <div class="headertitle">
 <div class="title">Subscription.h File Reference</div>  </div>
 </div><!--header-->
@@ -80,8 +81,14 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_wire_connection.html">RobotRaconteur::WireConnection&lt; T &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_robot_raconteur_1_1_wire.html" title="wire member type interface">Wire</a> connection used to transmit "most recent" values.  <a href="class_robot_raconteur_1_1_wire_connection.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_wire_subscription.html">RobotRaconteur::WireSubscription&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subscription for wire members that aggregates the values from client wire connections.  <a href="class_robot_raconteur_1_1_wire_subscription.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_pipe_endpoint.html">RobotRaconteur::PipeEndpoint&lt; T &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_robot_raconteur_1_1_pipe.html" title="pipe member type interface">Pipe</a> endpoint used to transmit reliable or unreliable data streams.  <a href="class_robot_raconteur_1_1_pipe_endpoint.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_pipe_subscription.html">RobotRaconteur::PipeSubscription&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subscription for pipe members that aggregates incoming packets from client pipe endpoints.  <a href="class_robot_raconteur_1_1_pipe_subscription.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_service_subscription_filter_node.html">RobotRaconteur::ServiceSubscriptionFilterNode</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subscription filter node information.  <a href="class_robot_raconteur_1_1_service_subscription_filter_node.html#details">More...</a><br /></td></tr>
@@ -98,6 +105,47 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_service_subscription.html">RobotRaconteur::ServiceSubscription</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subscription that automatically connects services and manages lifecycle of connected services.  <a href="class_robot_raconteur_1_1_service_subscription.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_wire_subscription_base.html">RobotRaconteur::WireSubscriptionBase</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base class for <a class="el" href="class_robot_raconteur_1_1_wire_subscription.html" title="Subscription for wire members that aggregates the values from client wire connections.">WireSubscription</a>.  <a href="class_robot_raconteur_1_1_wire_subscription_base.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_wire_subscription.html">RobotRaconteur::WireSubscription&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subscription for wire members that aggregates the values from client wire connections.  <a href="class_robot_raconteur_1_1_wire_subscription.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_pipe_subscription_base.html">RobotRaconteur::PipeSubscriptionBase</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base class for <a class="el" href="class_robot_raconteur_1_1_pipe_subscription.html" title="Subscription for pipe members that aggregates incoming packets from client pipe endpoints.">PipeSubscription</a>.  <a href="class_robot_raconteur_1_1_pipe_subscription_base.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_robot_raconteur_1_1_pipe_subscription.html">RobotRaconteur::PipeSubscription&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subscription for pipe members that aggregates incoming packets from client pipe endpoints.  <a href="class_robot_raconteur_1_1_pipe_subscription.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a152eaf60b78716d7258ca6422a3618ab"><td class="memItemLeft" align="right" valign="top"><a id="a152eaf60b78716d7258ca6422a3618ab"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_subscription_8h.html#a152eaf60b78716d7258ca6422a3618ab">RobotRaconteur::ServiceSubscriptionFilterNodePtr</a> = boost::shared_ptr&lt; ServiceSubscriptionFilterNode &gt;</td></tr>
+<tr class="memdesc:a152eaf60b78716d7258ca6422a3618ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience alias for <a class="el" href="class_robot_raconteur_1_1_service_subscription_filter_node.html" title="Subscription filter node information.">ServiceSubscriptionFilterNode</a> shared_ptr. <br /></td></tr>
+<tr class="separator:a152eaf60b78716d7258ca6422a3618ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab59397efad3cc5641b1604d49c9d4cd9"><td class="memItemLeft" align="right" valign="top"><a id="ab59397efad3cc5641b1604d49c9d4cd9"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_subscription_8h.html#ab59397efad3cc5641b1604d49c9d4cd9">RobotRaconteur::ServiceSubscriptionFilterPtr</a> = boost::shared_ptr&lt; ServiceSubscriptionFilter &gt;</td></tr>
+<tr class="memdesc:ab59397efad3cc5641b1604d49c9d4cd9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience alias for <a class="el" href="class_robot_raconteur_1_1_service_subscription_filter.html" title="Subscription filter.">ServiceSubscriptionFilter</a> shared_ptr. <br /></td></tr>
+<tr class="separator:ab59397efad3cc5641b1604d49c9d4cd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0377b27e1e14b1bc0eea32cd9900d8d1"><td class="memItemLeft" align="right" valign="top"><a id="a0377b27e1e14b1bc0eea32cd9900d8d1"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_subscription_8h.html#a0377b27e1e14b1bc0eea32cd9900d8d1">RobotRaconteur::ServiceInfo2SubscriptionPtr</a> = boost::shared_ptr&lt; ServiceInfo2Subscription &gt;</td></tr>
+<tr class="memdesc:a0377b27e1e14b1bc0eea32cd9900d8d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience alias for <a class="el" href="class_robot_raconteur_1_1_service_info2_subscription.html" title="Subscription for information about detected services.">ServiceInfo2Subscription</a> shared_ptr. <br /></td></tr>
+<tr class="separator:a0377b27e1e14b1bc0eea32cd9900d8d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f6f487e185db990da0b0638cdd14746"><td class="memItemLeft" align="right" valign="top"><a id="a0f6f487e185db990da0b0638cdd14746"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_subscription_8h.html#a0f6f487e185db990da0b0638cdd14746">RobotRaconteur::ServiceSubscriptionPtr</a> = boost::shared_ptr&lt; ServiceSubscription &gt;</td></tr>
+<tr class="memdesc:a0f6f487e185db990da0b0638cdd14746"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience alias for <a class="el" href="class_robot_raconteur_1_1_service_subscription.html" title="Subscription that automatically connects services and manages lifecycle of connected services.">ServiceSubscription</a> shared_ptr. <br /></td></tr>
+<tr class="separator:a0f6f487e185db990da0b0638cdd14746"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93b80d0b2080e2ab19ae98637597ae3d"><td class="memTemplParams" colspan="2"><a id="a93b80d0b2080e2ab19ae98637597ae3d"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a93b80d0b2080e2ab19ae98637597ae3d"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="_subscription_8h.html#a93b80d0b2080e2ab19ae98637597ae3d">RobotRaconteur::PipeSubscriptionPtr</a> = boost::shared_ptr&lt; PipeSubscription&lt; T &gt; &gt;</td></tr>
+<tr class="memdesc:a93b80d0b2080e2ab19ae98637597ae3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience alias for <a class="el" href="class_robot_raconteur_1_1_pipe_subscription.html" title="Subscription for pipe members that aggregates incoming packets from client pipe endpoints.">PipeSubscription</a> shared_ptr. <br /></td></tr>
+<tr class="separator:a93b80d0b2080e2ab19ae98637597ae3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87fa1c3298cbc68ce5ae6357ccb93a1d"><td class="memTemplParams" colspan="2"><a id="a87fa1c3298cbc68ce5ae6357ccb93a1d"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a87fa1c3298cbc68ce5ae6357ccb93a1d"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="_subscription_8h.html#a87fa1c3298cbc68ce5ae6357ccb93a1d">RobotRaconteur::WireSubscriptionPtr</a> = boost::shared_ptr&lt; WireSubscription&lt; T &gt; &gt;</td></tr>
+<tr class="memdesc:a87fa1c3298cbc68ce5ae6357ccb93a1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience alias for <a class="el" href="class_robot_raconteur_1_1_wire_subscription.html" title="Subscription for wire members that aggregates the values from client wire connections.">WireSubscription</a> shared_ptr. <br /></td></tr>
+<tr class="separator:a87fa1c3298cbc68ce5ae6357ccb93a1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><dl class="section author"><dt>Author</dt><dd>John Wason, PhD</dd></dl>
