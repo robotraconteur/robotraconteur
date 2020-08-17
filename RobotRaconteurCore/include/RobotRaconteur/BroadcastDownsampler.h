@@ -172,4 +172,9 @@ namespace RobotRaconteur
         BroadcastDownsamplerStep(RR_SHARED_PTR<BroadcastDownsampler>& downsampler);
         ~BroadcastDownsamplerStep();
     };
+
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+	/** @brief Convenience alias for BroadcastDownsampler shared_ptr */
+	using BroadcastDownsamplerPtr = RR_SHARED_PTR<BroadcastDownsampler>;
+#endif
 }
