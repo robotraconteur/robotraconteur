@@ -3914,7 +3914,7 @@ namespace RobotRaconteurGen
 			type_list += "(RR_MAKE_SHARED< ::" + n1 + "::" + n2 + "Factory>())";
 		}
 		
-		type_list += ".convert_to_container<std::vector<RR_SHARED_PTR<ServiceFactory> > >()";
+		type_list += ".convert_to_container<std::vector<RR_SHARED_PTR<RobotRaconteur::ServiceFactory> > >()";
 
 		w2 << "#define ROBOTRACONTEUR_SERVICE_TYPES " << type_list << endl;
 		w2 << "#pragma once" << endl << endl;
