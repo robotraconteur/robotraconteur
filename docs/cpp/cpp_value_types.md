@@ -99,8 +99,8 @@ Becaue RobotRaconteur::RRArrayPtr is a smart pointer, the allocated memory is de
 Multidimensional arrays stored using RobotRaconteur::RRMultiDimArray. This type has two fields, `Dims` and `Array`. The `Dims` field contains the shape of the array, in column-major order. The `Array` field contains the array element data, stored in column-major (Fortran) order. RobotRaconteur::RRMultiDimArrayPtr is allocated using RobotRaconteur::AllocateRRMultiDimArray() or RobotRaconteur::AllocateEmptyRRMultiDimArray(). An examples:
 
     using namespace RobotRaconteur;
-    std::vector<uint32_t> dims = {3,3}
-    RRMultiDimArrayPtr<double> my_multidimarray = AllocateEmptyRRMultiDimArray(dims);
+    std::vector<uint32_t> dims = {3,3};
+    RRMultiDimArrayPtr<double> my_multidimarray = AllocateEmptyRRMultiDimArray<double>(dims);
 
 RRArray and RRMultiDimArray are non-nullable, meaning that they cannot be `nullptr`. If a `nullptr` of this type is passed to a member, it will result in an error.
 
