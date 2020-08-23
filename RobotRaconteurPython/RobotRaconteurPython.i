@@ -4,6 +4,8 @@
 
 %include "CommonInclude.i"
 
+%include "PythonNondynamic.i"
+
 //%include "pyabc.i"
 %{
 #include "PythonTypeSupport.h"
