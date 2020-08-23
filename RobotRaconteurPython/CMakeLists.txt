@@ -126,7 +126,7 @@ if(SETUPTOOLS_DEB_LAYOUT)
   set(SETUPTOOLS_ARG_EXTRA "--install-layout=deb")
 endif()
 
-install(CODE "if (\"$\{CMAKE_INSTALL_CONFIG_NAME\}\" STREQUAL \"Release\")
+install(CODE "if (\"$\{CMAKE_INSTALL_CONFIG_NAME\}\" STREQUAL \"Release\" OR \"$\{CMAKE_INSTALL_CONFIG_NAME\}\" STREQUAL \"\")
 set(RR_BUILD_CONFIG_DIR \"out\")
 elseif (\"$\{CMAKE_INSTALL_CONFIG_NAME\}\" STREQUAL \"RelWithDebInfo\")
 set(RR_BUILD_CONFIG_DIR \"out_reldebug\")
@@ -136,7 +136,7 @@ else()
 set(RR_BUILD_CONFIG_DIR \"out\")
 endif()
 message(STATUS \"Running setup.py in ${CMAKE_BINARY_DIR}/$\{RR_BUILD_CONFIG_DIR\}/Python\")
-execute_process(COMMAND python setup.py install -f
+execute_process(COMMAND ${PYTHON_EXECUTABLE} setup.py install -f
 --root=/ --prefix=${CMAKE_INSTALL_PREFIX} ${SETUPTOOLS_ARG_EXTRA} --single-version-externally-managed WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/$\{RR_BUILD_CONFIG_DIR\}/Python)")
 endif()
 
