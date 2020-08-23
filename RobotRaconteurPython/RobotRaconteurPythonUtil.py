@@ -107,7 +107,8 @@ def CreateStructureType(name, dict_):
                 setattr(s,k,None)
             else:
                 setattr(s,k,init_type(*init_args))
-    return type(name, (RobotRaconteurStructure,), {'__init__': struct_init})
+    slots = list(dict_.keys())
+    return type(name, (RobotRaconteurStructure,), {'__init__': struct_init, "__slots__": slots})
 
 def CreateZeroArray(dtype, dims):
     if dims is None:
@@ -321,7 +322,7 @@ def InitStub(stub):
                 else:
                     assert False
 
-
+    mdict["__slots__"] = ["rrinnerstub","rrlock"]
     outerstub_type=type(str(odef.Name),(ServiceStub,),mdict)
     outerstub=outerstub_type()
 
@@ -342,7 +343,7 @@ def InitStub(stub):
 
     stub.SetPyStub(outerstub)
    
-    outerstub.rrinnerstub=stub;
+    outerstub.rrinnerstub=stub
     outerstub.rrlock=threading.RLock()
     return outerstub
 
@@ -559,13 +560,16 @@ class WrappedServiceStubDirectorPython(RobotRaconteurPython.WrappedServiceStubDi
             traceback.print_exc()
 
 class ServiceStub(object):
+    __slots__ = ["rrinnerstub","rrlock","__weakref__"]
     pass
 
 class CallbackClient(object):
+    __slots__ = ["Function","__weakref__"]
     def __init__(self):
         self.Function=None
 
 class PipeEndpoint(object):
+    __slots__ = ["__innerpipe", "__type", "PipeEndpointClosedCallback", "_PacketReceivedEvent", "_PacketAckReceivedEvent", "__obj","__weakref__"]
     def __init__(self,innerpipe, type, obj=None):
         self.__innerpipe=innerpipe
         self.__type=type
@@ -707,6 +711,7 @@ class PipeAsyncConnectHandlerImpl(RobotRaconteurPython.AsyncPipeEndpointReturnDi
         self._handler(outerendpoint, None)
 
 class Pipe(object):
+    __slots__ = ["_innerpipe", "_obj","__weakref__"]
     def __init__(self,innerpipe,obj=None):
         self._innerpipe=innerpipe        
         self._obj=obj
@@ -771,6 +776,7 @@ class WrappedPipeServerConnectDirectorPython(RobotRaconteurPython.WrappedPipeSer
         self.callback(outerendpoint)
 
 class WireConnection(object):
+    __slots__ = ["__innerwire", "__type", "WireConnectionClosedCallback", "_WireValueChanged", "__obj","__weakref__"]
     def __init__(self,innerwire, type, obj=None):
         self.__innerwire=innerwire
         self.__type=type
@@ -968,6 +974,7 @@ class WrappedWireServerPokeValueDirectorImpl(RobotRaconteurPython.WrappedWireSer
         self._cb(value, ts, ep)
         
 class Wire(object):
+    __slots__ = ["_innerpipe", "_obj","__weakref__"]
     def __init__(self,innerpipe,obj=None):
         self._innerpipe=innerpipe        
         self._obj=obj
@@ -1074,6 +1081,7 @@ class WrappedWireServerConnectDirectorPython(RobotRaconteurPython.WrappedWireSer
 
 
 class ArrayMemoryClient(object):
+    __slots__ = ["__innermemory","__weakref__"]
     def __init__(self,innermemory):
         self.__innermemory=innermemory
 
@@ -1100,6 +1108,7 @@ class ArrayMemoryClient(object):
         RobotRaconteurPython.WrappedArrayMemoryClientUtil.Write(self.__innermemory, memorypos,dat,0,count)
 
 class MultiDimArrayMemoryClient(object):
+    __slots__ = ["__innermemory","__weakref__"]
     def __init__(self,innermemory):
         self.__innermemory=innermemory
         import RobotRaconteur        
@@ -1191,7 +1200,7 @@ class PodArrayMemoryClient_bufferdirector(RobotRaconteurPython.WrappedPodArrayMe
         return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementNestedElementList(m_data)
 
 class PodArrayMemoryClient(object):
-        
+    __slots__ = ["__innermemory", "_type", "_obj", "_node","__weakref__"]
     def __init__(self,innermemory,type1,obj,node):
         self.__innermemory=innermemory
         self._type=type1
@@ -1236,7 +1245,7 @@ class PodMultiDimArrayMemoryClient_bufferdirector(RobotRaconteurPython.WrappedPo
         return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementNestedElementList(m_data)
 
 class PodMultiDimArrayMemoryClient(object):
-        
+    __slots__ = ["__innermemory", "_type", "_obj", "_node","__weakref__"]
     def __init__(self,innermemory,type1,obj,node):
         self.__innermemory=innermemory
         self._type=type1
@@ -1283,7 +1292,7 @@ class NamedArrayMemoryClient_bufferdirector(RobotRaconteurPython.WrappedNamedArr
         return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementNestedElementList(m_data)
 
 class NamedArrayMemoryClient(object):
-        
+    __slots__ = ["__innermemory", "_type", "_obj", "_node","__weakref__"]
     def __init__(self,innermemory,type1,obj,node):
         self.__innermemory=innermemory
         self._type=type1
@@ -1328,7 +1337,7 @@ class NamedMultiDimArrayMemoryClient_bufferdirector(RobotRaconteurPython.Wrapped
         return RobotRaconteurPython.MessageElementDataUtil.ToMessageElementNestedElementList(m_data)
 
 class NamedMultiDimArrayMemoryClient(object):
-        
+    __slots__ = ["__innermemory", "_type", "_obj", "_node","__weakref__"]
     def __init__(self,innermemory,type1,obj,node):
         self.__innermemory=innermemory
         self._type=type1
@@ -1352,6 +1361,7 @@ class NamedMultiDimArrayMemoryClient(object):
         self.__innermemory.Write(memorypos, b, bufferpos, count)
 
 class ServiceInfo2(object):
+    __slots__ = ["Name", "RootObjectType", "RootObjectImplements", "ConnectionURL", "NodeID", "NodeName", "Attributes"]
     def __init__(self,info):
         self.Name=info.Name
         self.RootObjectType=info.RootObjectType
@@ -1362,6 +1372,7 @@ class ServiceInfo2(object):
         self.Attributes=UnpackMessageElement(info.Attributes,"varvalue{string} value")
 
 class NodeInfo2(object):
+    __slots__ = ["NodeID", "NodeName", "ConnectionURL"]
     def __init__(self,info):
         self.NodeID=RobotRaconteurPython.NodeID(str(info.NodeID))
         self.NodeName=info.NodeName
@@ -1595,6 +1606,7 @@ def skel_callbackcallvoid(skel,name,type1,endpoint,*args):
     skel.WrappedCallbackCall(name,endpoint,m)
 
 class CallbackServer(object):
+    __slots__ = ["func","__weakref__"]
     def __init__(self,func):
 
         self.func=func
@@ -2068,7 +2080,7 @@ class WrappedPipeBroadcasterPredicateDirectorPython(RobotRaconteurPython.Wrapped
 
 class PipeBroadcaster(object):
    
-
+    __slots__ = ["pipe", "_innerpipe", "_obj", "_type","__weakref__"]
     def __init__(self,pipe,maximum_backlog=-1):
         self.pipe=pipe
 
@@ -2115,6 +2127,8 @@ class WrappedWireBroadcasterPredicateDirectorPython(RobotRaconteurPython.Wrapped
             return True
 
 class WireBroadcaster(object):
+
+    __slots__ = ["_wire", "_innerpipe", "_obj", "_type","__weakref__"]
     def __init__(self, wire):
         self._wire=wire
         self._innerpipe=RobotRaconteurPython.WrappedWireBroadcaster()        
@@ -2166,6 +2180,7 @@ class WrappedWireUnicastReceiverInValueChangedImpl(RobotRaconteurPython.WrappedW
         rec.InValueChanged.fire(value, ts, ep)
 
 class WireUnicastReceiver(object):
+    __slots__ = ["_wire", "_innerpipe", "_obj", "_type", "_InValueChanged", "__weakref__"]
     def __init__(self, wire):
         self._wire=wire
         self._innerpipe=RobotRaconteurPython.WrappedWireUnicastReceiver()        
@@ -2216,6 +2231,7 @@ class WireUnicastReceiver(object):
             self.__innerpipe.SetInValueLifespan(int(secs*1000.0))
 
 class BroadcastDownsamplerStep(object):
+    __slots__ = ["downsampler"]
     def __init__(self, downsampler):
         self.downsampler=downsampler
     
@@ -2226,6 +2242,7 @@ class BroadcastDownsamplerStep(object):
         self.downsampler.EndStep()
 
 class GeneratorClient(object):
+    __slots__ = ["_inner_gen", "_obj", "_node", "_return_type", "_param_type","__weakref__"]
     def __init__(self, inner_gen, return_type, param_type, obj, node):
         self._inner_gen=inner_gen
         self._obj=obj
@@ -2326,6 +2343,7 @@ class AsyncGeneratorClientReturnDirectorImpl(RobotRaconteurPython.AsyncGenerator
         self._handler(gen2, None)
 
 class IteratorGenerator(object):
+    __slots__ = ["_iter", "_lock", "_closed", "_aborted"]
     def __init__(self, obj):
         self._iter=iter(obj)
         self._lock=threading.Lock()
@@ -2392,6 +2410,7 @@ class WrappedGeneratorServerDirectorPython(RobotRaconteurPython.WrappedGenerator
 _trace_hook=sys.gettrace()
 
 class ServiceSubscriptionClientID(object):
+    __slots__ = ["NodeID", "ServiceName"]
     def __init__(self, *args):
         if (len(args) == 1):
             self.NodeID=args[0].NodeID
@@ -2415,6 +2434,7 @@ class ServiceSubscriptionClientID(object):
       return hash((str(self.NodeID), self.ServiceName))
 
 class ServiceSubscriptionFilterNode(object):
+    __slots__ = ["NodeID", "NodeName", "Username", "Credentials"]
     def __init__(self):
         self.NodeID=None
         self.NodeName=None
@@ -2422,6 +2442,7 @@ class ServiceSubscriptionFilterNode(object):
         self.Credentials=None
 
 class ServiceSubscriptionFilter(object):
+    __slots__ = ["Nodes", "ServiceNames", "TransportSchemes", "Predicate", "MaxConnections"]
     def __init__(self):
         self.Nodes=[]
         self.ServiceNames=[]
@@ -2451,6 +2472,7 @@ class WrappedServiceInfo2SubscriptionDirectorPython(RobotRaconteurPython.Wrapped
         except: pass
 
 class ServiceInfo2Subscription(object):
+    __slots__ = ["_subscription", "_ServiceDetected", "_ServiceLost","__weakref__"]
     def __init__(self, subscription):
         self._subscription=subscription        
         self._ServiceDetected=EventHook()
@@ -2605,6 +2627,7 @@ class WrappedWireSubscriptionDirectorPython(RobotRaconteurPython.WrappedWireSubs
             traceback.print_exc()
 
 class WireSubscription(object):
+    __slots__ = ["_subscription", "_WireValueChanged","__weakref__"]
     def __init__(self, subscription):
         self._subscription=subscription
         director=WrappedWireSubscriptionDirectorPython(self)
@@ -2699,6 +2722,7 @@ class WrappedPipeSubscriptionDirectorPython(RobotRaconteurPython.WrappedPipeSubs
             traceback.print_exc()
 
 class PipeSubscription(object):
+    __slots__ = ["_subscription", "_PipePacketReceived","__weakref__"]
     def __init__(self, subscription):
         self._subscription=subscription
         director=WrappedPipeSubscriptionDirectorPython(self)
@@ -2881,6 +2905,7 @@ def ReadServiceDefinitionFile(servicedef_name):
         return f.read()
 
 class RobotRaconteurNodeSetup(object):
+    __slots__ = ["__setup", "__node", "tcp_transport", "local_transport", "hardware_transport", "intra_transport", "command_line_config" ]
     def __init__(self, node_name=None, tcp_port=None, flags=None, allowed_overrides=None, node=None, argv=None, config=None):
         if (config is not None):
             assert node_name is None and tcp_port is None and flags is None and allowed_overrides is None and argv is None
@@ -2950,6 +2975,7 @@ class UserLogRecordHandler(RobotRaconteurPython.UserLogRecordHandlerBase):
         director.__disown__()
 
 class TapFileReader(object):
+    __slots__ = ["_fileobj"]
     def __init__(self, fileobj):
         self._fileobj = fileobj
 

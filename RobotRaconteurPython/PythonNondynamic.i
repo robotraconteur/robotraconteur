@@ -66,7 +66,7 @@
 
 // ServiceSecurity.i
 %pythonnondynamic RobotRaconteur::UserAuthenticator;
-%pythonnondynamic RobotRaconteur::ServiceSecurityPolicy
+%pythonnondynamic RobotRaconteur::ServiceSecurityPolicy;
 
 // Subscription.i
 %pythonnondynamic RobotRaconteur::ServiceSubscriptionClientID;

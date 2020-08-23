@@ -17,7 +17,7 @@ from __future__ import absolute_import
 import numpy
 
 class EventHook(object):
-
+    __slots__ = "__handlers"
     def __init__(self):
         self.__handlers = []
 
@@ -39,9 +39,11 @@ class EventHook(object):
                 self -= theHandler
 
 class RobotRaconteurStructure(object):
+    __slots__ = []
     pass
 
 class RobotRaconteurVarValue(object):
+    __slots__ = ["data","datatype"]
     def __init__(self,data,datatype):
         self.data=data
         self.datatype=datatype
@@ -55,6 +57,7 @@ class RobotRaconteurVarValue(object):
 VarValue = RobotRaconteurVarValue
 
 class ArrayMemory(object):
+    __slots__ = ["memory"]
     def __init__(self,memory=None):
         self.memory=memory
 
@@ -72,6 +75,7 @@ class ArrayMemory(object):
         self.memory[memorypos:(memorypos+count)]=buffer[bufferpos:(bufferpos+count)]
 
 class MultiDimArrayMemory(object):
+    __slots__ = ["memory"]
     def __init__(self,memory=None):
         if (memory is None):
             self.memory=None        

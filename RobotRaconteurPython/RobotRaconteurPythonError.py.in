@@ -22,6 +22,7 @@ import string
 
 
 class RobotRaconteurException(Exception):
+    __slots__ = ["errorcode","errorname","message","errorsubname","errorparam"]
     def __init__(self,errorcode,errorname,errormessage,errorsubname=None,errorparam=None):
         self.errorcode=errorcode
         self.errorname=errorname

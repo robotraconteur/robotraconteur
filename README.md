@@ -239,7 +239,7 @@ Note that homebrew does not create symlinks, so the CMake OPENSSL_ROOT_DIR must 
 Configure build for XCode using CMake GUI. Open resulting project file and build.
 
 ### Swig
-Python, Java, and C# use SWIG to generate language bindings. Robot Raconteur currently uses SWIG version 4.0.0 or higher. Windows
+Python, Java, and C# use SWIG to generate language bindings. Robot Raconteur currently requires SWIG version 4.0.2 or higher. Windows
 can download from http://swig.org, or install from chocolatey using
 
     choco install swig
@@ -248,11 +248,7 @@ Mac OSX can install using
 
     brew install swig
 
-Ubuntu Focal or higher can install using
-
-   apt install swig
-
-Ubuntu Bionic and Kinetic must build SWIG from source. See 
+Ubuntu must build SWIG from source. See 
 https://github.com/swig/swig/wiki/Getting-Started for instructions.
 
 ### MATLAB Mex
@@ -276,11 +272,7 @@ To build with `catkin_tools`:
     catkin config --cmake-args -DROBOTRACONTEUR_ROS=1
     catkin build
 
-Note that SWIG version 4.0.0 MUST be installed before attempting to build the Python bindings. Ubuntu Focal includes SWIG 4.0.0, but older versions of Ubuntu do not. Robot Raconteur will not build using theese older versions installed from apt! Install to /usr/local so catkin can find the swig executable. See [here](https://github.com/swig/swig/wiki/Getting-Started) for SWIG installation instructions.
-    
-## Documentation
-
-Documentation for version 0.8.1 can be found at [https://robotraconteur.com/documentation](https://robotraconteur.com/documentation). Documentation is being updated.
+Note that SWIG version 4.0.2 MUST be installed before attempting to build the Python bindings. Ubuntu includes older versions of SWIG in the apt repository. Robot Raconteur will not build using theese older versions installed from apt! Install to /usr/local so catkin can find the swig executable. See [here](https://github.com/swig/swig/wiki/Getting-Started) for SWIG installation instructions.
 
 ## License
 
