@@ -2526,7 +2526,8 @@ class WrappedServiceSubscriptionDirectorPython(RobotRaconteurPython.WrappedServi
         
         try:
             s.ClientConnected.fire(s, ServiceSubscriptionClientID(id), client2)
-        except: pass
+        except:
+            traceback.print_exc()
 
     def ClientDisconnected(self, subscription, id, client):
         s = self._subscription()
@@ -2537,13 +2538,27 @@ class WrappedServiceSubscriptionDirectorPython(RobotRaconteurPython.WrappedServi
 
         try:
             s.ClientDisconnected.fire(s, ServiceSubscriptionClientID(id), client2)
-        except: pass
+        except:
+            traceback.print_exc()
+
+    def ClientConnectFailed(self, subscription, id, url, error_info):
+        s = self._subscription()
+        if (s is None):
+            return
+
+        err=RobotRaconteurPythonError.RobotRaconteurExceptionUtil.ErrorInfoToException(error_info)
+
+        try:
+            s.ClientConnectFailed.fire(s, ServiceSubscriptionClientID(id), list(url), err)
+        except:
+            traceback.print_exc()
 
 class ServiceSubscription(object):
     def __init__(self, subscription):
         self._subscription=subscription        
         self._ClientConnected=EventHook()
         self._ClientDisconnected=EventHook()
+        self._ClientConnectFailed=EventHook()
         director=WrappedServiceSubscriptionDirectorPython(self)
         subscription.SetRRDirector(director,0)
         director.__disown__()
@@ -2605,6 +2620,15 @@ class ServiceSubscription(object):
     @ClientDisconnected.setter
     def ClientDisconnected(self, evt):
         if (evt is not self._ClientDisconnected):
+            raise RuntimeError("Invalid operation")
+
+    @property
+    def ClientConnectFailed(self):
+        return self._ClientConnectFailed
+    
+    @ClientConnectFailed.setter
+    def ClientConnectFailed(self, evt):
+        if (evt is not self._ClientConnectFailed):
             raise RuntimeError("Invalid operation")
 
     def GetDefaultClient(self):

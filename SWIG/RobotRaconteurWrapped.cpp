@@ -3418,6 +3418,7 @@ namespace RobotRaconteur
 			RR_WEAK_PTR<WrappedServiceSubscription> weak_this=shared_from_this();
 			subscription->AddClientConnectListener(boost::bind(&WrappedServiceSubscription::ClientConnected, weak_this, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), RR_BOOST_PLACEHOLDERS(_3)));
 			subscription->AddClientDisconnectListener(boost::bind(&WrappedServiceSubscription::ClientDisconnected, weak_this, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), RR_BOOST_PLACEHOLDERS(_3)));
+			subscription->AddClientConnectFailedListener(boost::bind(&WrappedServiceSubscription::ClientConnectFailed, weak_this, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), RR_BOOST_PLACEHOLDERS(_3), RR_BOOST_PLACEHOLDERS(_4)));
 		}
 	}
 
@@ -3434,6 +3435,13 @@ namespace RobotRaconteur
 		this1->ClientDisconnected1(subscription, id, client);
 	}
 
+	void WrappedServiceSubscription::ClientConnectFailed(RR_WEAK_PTR<WrappedServiceSubscription> this_, boost::shared_ptr<ServiceSubscription> subscription, const ServiceSubscriptionClientID& id, const std::vector<std::string>& url, RR_SHARED_PTR<RobotRaconteurException> err)
+	{
+		RR_SHARED_PTR<WrappedServiceSubscription> this1 = this_.lock();
+		if (!this1) return;
+		this1->ClientConnectFailed1(subscription, id, url, err);
+	}
+
 	void WrappedServiceSubscription::ClientConnected1(RR_SHARED_PTR<ServiceSubscription>& subscription, const ServiceSubscriptionClientID& id, RR_SHARED_PTR<RRObject>& client)
 	{
 		RR_SHARED_PTR<WrappedServiceSubscription> s = shared_from_this();
@@ -3445,6 +3453,13 @@ namespace RobotRaconteur
 		RR_SHARED_PTR<WrappedServiceSubscription> s = shared_from_this();
 		RR_SHARED_PTR<WrappedServiceStub> client2 = RR_DYNAMIC_POINTER_CAST<WrappedServiceStub>(client);
 		DIRECTOR_CALL3(WrappedServiceSubscriptionDirector, RR_Director->ClientDisconnected(s, id, client2));
+	}
+
+	void WrappedServiceSubscription::ClientConnectFailed1(boost::shared_ptr<ServiceSubscription> subscription, const ServiceSubscriptionClientID& id, const std::vector<std::string>& url, RR_SHARED_PTR<RobotRaconteurException> err)
+	{
+		RR_SHARED_PTR<WrappedServiceSubscription> s = shared_from_this();
+		HandlerErrorInfo err2(err);
+		DIRECTOR_CALL3(WrappedServiceSubscriptionDirector, RR_Director->ClientConnectFailed(s, id, url, err2));
 	}
 
 	WrappedWireSubscription::WrappedWireSubscription(RR_SHARED_PTR<ServiceSubscription> parent, const std::string& membername, const std::string& servicepath)

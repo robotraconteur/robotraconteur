@@ -340,7 +340,7 @@ namespace RobotRaconteur
 		 * 
 		 * The callback should have the signature:
 		 * 
-		 *    void cb(ServiceInfo2SubscriptionPtr subscription, const ServiceSubscriptionClientID& client_id, RRObjectPtr client)
+		 *    void cb(ServiceSubscriptionPtr subscription, const ServiceSubscriptionClientID& client_id, RRObjectPtr client)
 		 * 
 		 * The returned event_connection can be used to modify or close the Boost.Signals2 connection.
 		 * 
@@ -354,7 +354,7 @@ namespace RobotRaconteur
 		 * 
 		 * The callback should have the signature:
 		 * 
-		 *    void cb(ServiceInfo2SubscriptionPtr subscription, const ServiceSubscriptionClientID& client_id, RRObjectPtr client)
+		 *    void cb(ServiceSubscriptionPtr subscription, const ServiceSubscriptionClientID& client_id, RRObjectPtr client)
 		 * 
 		 * The returned event_connection can be used to modify or close the Boost.Signals2 connection.
 		 * 
@@ -363,6 +363,18 @@ namespace RobotRaconteur
 		 */
 		event_connection AddClientDisconnectListener(boost::function<void(RR_SHARED_PTR<ServiceSubscription>, const ServiceSubscriptionClientID&, RR_SHARED_PTR<RRObject>)> handler);
 
+		/**
+		 * @brief Add a listener callback that is invoked when a client connection attempt fails
+		 *
+		 * The callback should have the signature:
+		 * 
+		 *    void cb(ServiceSubscriptionPtr subscription, const ServiceSubscriptionClientID& client_id, const std::vector<std::string>& url, RobotRaconteurExceptionPtr err)
+		 * 
+		 * The returned event_connection can be used to modify or close the Boost.Signals2 connection.
+		 * 
+		 * @param handler The callback function
+		 * @return event_connection The Boost.Signals2 connection
+		 */
 		event_connection AddClientConnectFailedListener(boost::function<void(RR_SHARED_PTR<ServiceSubscription>, const ServiceSubscriptionClientID&, const std::vector<std::string>&, RR_SHARED_PTR<RobotRaconteurException>)> handler);
 
 		/**

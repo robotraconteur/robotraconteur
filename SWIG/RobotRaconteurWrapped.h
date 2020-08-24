@@ -1719,6 +1719,7 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 	public:
 		virtual void ClientConnected(boost::shared_ptr<WrappedServiceSubscription> subscription, const ServiceSubscriptionClientID& id, boost::shared_ptr<WrappedServiceStub> client) = 0;
 		virtual void ClientDisconnected(boost::shared_ptr<WrappedServiceSubscription> subscription, const ServiceSubscriptionClientID& id, boost::shared_ptr<WrappedServiceStub> client) = 0;
+		virtual void ClientConnectFailed(boost::shared_ptr<RobotRaconteur::WrappedServiceSubscription> subscription, const ServiceSubscriptionClientID& id, const std::vector<std::string>& url, HandlerErrorInfo& error) = 0;
 		
 		virtual ~WrappedServiceSubscriptionDirector() {}
 	};
@@ -1774,8 +1775,10 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 
 		static void ClientConnected(RR_WEAK_PTR<WrappedServiceSubscription> this_, RR_SHARED_PTR<ServiceSubscription> subscription, const ServiceSubscriptionClientID& id, RR_SHARED_PTR<RRObject> client);
 		static void ClientDisconnected(RR_WEAK_PTR<WrappedServiceSubscription> this_, RR_SHARED_PTR<ServiceSubscription> subscription, const ServiceSubscriptionClientID& id, RR_SHARED_PTR<RRObject> client);
+		static void ClientConnectFailed(RR_WEAK_PTR<WrappedServiceSubscription> this_, boost::shared_ptr<ServiceSubscription> subscription, const ServiceSubscriptionClientID& id, const std::vector<std::string>& url, RR_SHARED_PTR<RobotRaconteurException> err);
 		void ClientConnected1(RR_SHARED_PTR<ServiceSubscription>& subscription, const ServiceSubscriptionClientID& id, RR_SHARED_PTR<RRObject>& client);
 		void ClientDisconnected1(RR_SHARED_PTR<ServiceSubscription>& subscription, const ServiceSubscriptionClientID& id, RR_SHARED_PTR<RRObject>& client);
+		void ClientConnectFailed1(boost::shared_ptr<ServiceSubscription> subscription, const ServiceSubscriptionClientID& id, const std::vector<std::string>& url, RR_SHARED_PTR<RobotRaconteurException> err);
 
 	};
 

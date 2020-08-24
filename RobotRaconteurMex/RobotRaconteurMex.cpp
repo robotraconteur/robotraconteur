@@ -7389,10 +7389,34 @@ void MexServiceInfo2Subscription::Close()
 
 //MexServiceSubscription
 
-MexServiceSubscription::MexServiceSubscription(boost::shared_ptr<ServiceSubscription> subscription)
+MexServiceSubscription::MexServiceSubscription()
 {
-	this->subscription = subscription;
 	servicesubscriptionid = 0;
+}
+
+void MexServiceSubscription::Init(boost::shared_ptr<ServiceSubscription> subscription)
+{
+	RR_WEAK_PTR<MexServiceSubscription> weak_this=shared_from_this();
+	this->subscription = subscription;
+	subscription->AddClientConnectFailedListener(boost::bind(&MexServiceSubscription::ClientConnectFailed, weak_this, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), RR_BOOST_PLACEHOLDERS(_3), RR_BOOST_PLACEHOLDERS(_4)));
+}
+
+void MexServiceSubscription::ClientConnectFailed(RR_WEAK_PTR<MexServiceSubscription> this_, boost::shared_ptr<ServiceSubscription> subscription, const ServiceSubscriptionClientID& id, const std::vector<std::string>& url, RR_SHARED_PTR<RobotRaconteurException> err)
+{
+	RR_SHARED_PTR<MexServiceSubscription> this1 = this_.lock();
+	if (!this1) return;
+	this1->ClientConnectFailed1(subscription, id, url, err);
+}
+
+void MexServiceSubscription::ClientConnectFailed1(boost::shared_ptr<ServiceSubscription> subscription, const ServiceSubscriptionClientID& id, const std::vector<std::string>& url, RR_SHARED_PTR<RobotRaconteurException> err)
+{
+	boost::mutex::scoped_lock lock(this_lock);
+	std::string msg = "Client connect failed: " + id.NodeID.ToString() + " url: " + boost::join(url, ",") + " error: " + err->ToString();
+	connect_failures.push_back(msg);
+	while (connect_failures.size() > 50)
+	{
+		connect_failures.pop_back();
+	}
 }
 
 mxArray* MexServiceSubscription::subsref(const mxArray* S)
@@ -7613,6 +7637,20 @@ mxArray* MexServiceSubscription::subsref(const mxArray* S)
 		}
 
 		return mxStub;
+	}
+
+	if (membername == "GetClientConnectFailures")
+	{
+		if (mxGetNumberOfElements(cell_args) != 0) throw InvalidArgumentException("GetConnectFailures expects zero arguments");
+
+		mxArray* o;
+		boost::mutex::scoped_lock lock(this_lock);
+		o = mxCreateCellMatrix(connect_failures.size(), 1);
+		for (size_t i=0; i<connect_failures.size(); i++)
+		{
+			mxSetCell(o, i, mxCreateString(connect_failures.at(i).c_str()));
+		}
+		return o;
 	}
 
 	throw InvalidArgumentException("Unknown function for ServiceSubscription");
@@ -8219,7 +8257,8 @@ mxArray* SubscribeServiceByType(const mxArray* service_types, const mxArray* fil
 	
 	boost::shared_ptr<ServiceSubscription> sub = RobotRaconteurNode::s()->SubscribeServiceByType(service_types2, filter2);
 
-	boost::shared_ptr<MexServiceSubscription> sub2=boost::make_shared<MexServiceSubscription>(sub);
+	boost::shared_ptr<MexServiceSubscription> sub2=boost::make_shared<MexServiceSubscription>();
+	sub2->Init(sub);
 
 	boost::recursive_mutex::scoped_lock lock(servicesubscriptions_lock);
 	servicesubscriptions_count++;
@@ -8277,7 +8316,8 @@ mxArray* SubscribeService(const mxArray* url, const mxArray* username, const mxA
 	
 	boost::shared_ptr<ServiceSubscription> sub=RobotRaconteurNode::s()->SubscribeService(urls,susername,mcredentials);
 
-	boost::shared_ptr<MexServiceSubscription> sub2=boost::make_shared<MexServiceSubscription>(sub);
+	boost::shared_ptr<MexServiceSubscription> sub2=boost::make_shared<MexServiceSubscription>();
+	sub2->Init(sub);
 
 	boost::recursive_mutex::scoped_lock lock(servicesubscriptions_lock);
 	servicesubscriptions_count++;

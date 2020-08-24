@@ -3795,6 +3795,15 @@ namespace RobotRaconteur
                 }
                 catch { }
             }
+
+            public override void ClientConnectFailed(WrappedServiceSubscription subscription, WrappedServiceSubscriptionClientID id, vectorstring url, HandlerErrorInfo err)
+            {
+                var s = (ServiceSubscription)subscription1.Target;
+                if (s == null) return;
+                if (s.ClientConnectFailed == null) return;
+
+                s.ClientConnectFailed(s, new ServiceSubscriptionClientID(id), url.ToArray(), RobotRaconteurExceptionUtil.ErrorInfoToException(err));
+            }
         }
 
         Dictionary<int, object> client_stubs = new Dictionary<int, object>();
@@ -3907,6 +3916,8 @@ namespace RobotRaconteur
 
         public event Action<ServiceSubscription, ServiceSubscriptionClientID, object> ClientConnected;
         public event Action<ServiceSubscription, ServiceSubscriptionClientID, object> ClientDisconnected;
+
+        public event Action<ServiceSubscription, ServiceSubscriptionClientID, string[], Exception> ClientConnectFailed;
 
         public WireSubscription<T> SubscribeWire<T>(string wire_name, string service_path = "")
         {

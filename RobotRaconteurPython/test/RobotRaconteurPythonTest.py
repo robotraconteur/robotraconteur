@@ -525,8 +525,11 @@ def main():
             print ("Client connected: " + str(client_id.NodeID) + "," + client_id.ServiceName)
         def disconnected(s, client_id, client):
             print ("Client disconnected: " + str(client_id.NodeID) + "," + client_id.ServiceName)
+        def connect_failed(s, client_id, url, err):
+            print ("Client connect failed: " + str(client_id.NodeID) + " url: " + str(url) + " error: " + str(err))
         s.ClientConnected += connected
         s.ClientDisconnected += disconnected
+        s.ClientConnectFailed += connect_failed
         
         def async_get_handler(obj, err):
             if err is not None:

@@ -691,6 +691,11 @@ namespace RobotRaconteurNETTest
                     Console.WriteLine("Client disconnected: " + d.NodeID.ToString() + ", " + d.ServiceName);
                 };
 
+                subscription.ClientConnectFailed += delegate (ServiceSubscription c, ServiceSubscriptionClientID d, string[] url2, Exception err)
+                {
+                    Console.WriteLine("Client connect failed: " + d.NodeID.ToString() + " url: " + String.Join(",",url2) + err.ToString() );
+                };
+
                 subscription.AsyncGetDefaultClient(1000).ContinueWith(delegate(Task<object> res)
                 {
                     if (res.IsFaulted)

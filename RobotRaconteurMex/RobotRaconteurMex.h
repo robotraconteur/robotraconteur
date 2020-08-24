@@ -439,7 +439,8 @@ class MexServiceSubscription : public RR_ENABLE_SHARED_FROM_THIS<MexServiceSubsc
 {
 public:
 
-	MexServiceSubscription(boost::shared_ptr<ServiceSubscription> subscription);
+	MexServiceSubscription();
+	void Init(boost::shared_ptr<ServiceSubscription> subscription);
 
 	int servicesubscriptionid;
 
@@ -453,6 +454,11 @@ public:
 protected:
 
 	boost::shared_ptr<ServiceSubscription> subscription;
+	std::vector<std::string> connect_failures;
+
+	static void ClientConnectFailed(RR_WEAK_PTR<MexServiceSubscription> this_, boost::shared_ptr<ServiceSubscription> subscription, const ServiceSubscriptionClientID& id, const std::vector<std::string>& url, RR_SHARED_PTR<RobotRaconteurException> err);
+	void ClientConnectFailed1(boost::shared_ptr<ServiceSubscription> subscription, const ServiceSubscriptionClientID& id, const std::vector<std::string>& url, RR_SHARED_PTR<RobotRaconteurException> err);
+	boost::mutex this_lock;
 };
 
 class MexWireSubscription

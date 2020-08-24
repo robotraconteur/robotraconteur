@@ -56,11 +56,35 @@ public class ServiceSubscription
 			}
 
 		}
+		
+		@Override
+		public void clientConnectFailed(WrappedServiceSubscription subscription, WrappedServiceSubscriptionClientID id, vectorstring url, HandlerErrorInfo err)
+		{
+			ServiceSubscription s=subscription1.get();
+			if (s==null) return;
+
+			String[] url1 = new String[url.size()];
+			for (int i=0; i<url1.length; i++)
+			{
+				url1[i] = url.get(i);
+			}
+
+			synchronized (s.connect_failed_listeners)
+			{
+				for(Enumeration<Action4<ServiceSubscription, ServiceSubscriptionClientID, String[], RuntimeException>> e= s.connect_failed_listeners.elements(); e.hasMoreElements(); )
+				{
+					Action4<ServiceSubscription, ServiceSubscriptionClientID, String[], RuntimeException> ee=e.nextElement();
+					ee.action(s, new ServiceSubscriptionClientID(id), url1, RobotRaconteurExceptionUtil.errorInfoToException(err));
+						
+				}
+			}
+		}
 				
 	}
 
 	Vector<Action3<ServiceSubscription, ServiceSubscriptionClientID, Object>> connect_listeners = new Vector<Action3<ServiceSubscription, ServiceSubscriptionClientID, Object>>();
 	Vector<Action3<ServiceSubscription, ServiceSubscriptionClientID, Object>> disconnect_listeners = new Vector<Action3<ServiceSubscription, ServiceSubscriptionClientID, Object>>();
+	Vector<Action4<ServiceSubscription, ServiceSubscriptionClientID, String[], RuntimeException>> connect_failed_listeners = new Vector<Action4<ServiceSubscription, ServiceSubscriptionClientID, String[], RuntimeException>>();
 	HashMap<Integer,Object> client_stubs = new HashMap<Integer,Object>();
 
 	Object getClientStub(WrappedServiceStub innerstub)
@@ -205,6 +229,22 @@ public class ServiceSubscription
 		synchronized (disconnect_listeners)
 		{
 			disconnect_listeners.remove(listener);
+		}
+	}
+
+	public void addConnectFailedListener(Action4<ServiceSubscription, ServiceSubscriptionClientID, String[], RuntimeException> listener)
+	{
+		synchronized (connect_failed_listeners)
+		{
+			connect_failed_listeners.add(listener);
+		}
+	}
+
+	public void removeConnectFailedListener(Action4<ServiceSubscription, ServiceSubscriptionClientID, String[], RuntimeException> listener)
+	{
+		synchronized (connect_failed_listeners)
+		{
+			connect_failed_listeners.remove(listener);
 		}
 	}
 
