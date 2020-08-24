@@ -504,7 +504,9 @@ namespace RobotRaconteur
 		/** @brief client transport has been connected */
 		ClientServiceListenerEventType_TransportConnectionConnected,
 		/** @brief client transport connection has been closed or lost */
-		ClientServiceListenerEventType_TransportConnectionClosed
+		ClientServiceListenerEventType_TransportConnectionClosed,
+		/** @brief client has received notification that service path was released */
+		ClientServiceListenerEventType_ServicePathReleased
 	};
 
 	/**

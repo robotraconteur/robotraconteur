@@ -17,10 +17,20 @@ using std::exception;
 namespace RobotRaconteurTest
 {
 		
+	static void ServiceTestClient_Service_Listener(RR_SHARED_PTR<ClientContext> ctx,ClientServiceListenerEventType evt, RR_SHARED_PTR<void> p)
+	{
+		std::cout << evt;
+		if (evt == ClientServiceListenerEventType_ServicePathReleased)
+		{
+			std::cout << " path: " << *RR_STATIC_POINTER_CAST<std::string>(p);			
+		}
+		std::cout << endl;
+	}
+
 	void ServiceTestClient::ConnectService(string url)
 	{
 		
-		r=rr_cast<testroot>(RobotRaconteurNode::s()->ConnectService(url));
+		r=rr_cast<testroot>(RobotRaconteurNode::s()->ConnectService(url,"",RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >(),&ServiceTestClient_Service_Listener));
 	}
 
 	void ServiceTestClient::RunFullTest(string url, string authurl)

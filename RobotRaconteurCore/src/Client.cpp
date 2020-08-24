@@ -1188,6 +1188,17 @@ namespace RobotRaconteur
 
 				}
 
+				try
+				{
+					RR_SHARED_PTR<std::string> service_path_sp = RR_MAKE_SHARED<std::string>(path.str().to_string());
+					ClientServiceListener(shared_from_this(), ClientServiceListenerEventType_ServicePathReleased, service_path_sp);
+				}
+				catch (std::exception& exp)
+				{
+					ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "Client listener callback raised exception: " << exp.what());
+					RobotRaconteurNode::TryHandleException(node, &exp);
+				}
+
 			}
 			else if (m->EntryType == MessageEntryType_CallbackCallReq)
 			{
