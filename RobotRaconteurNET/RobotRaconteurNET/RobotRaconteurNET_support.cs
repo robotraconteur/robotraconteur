@@ -1667,6 +1667,12 @@ namespace RobotRaconteur
             return _GetServiceName(stub.rr_innerstub);
         }
 
+        public string GetObjectServicePath(object obj)
+        {
+            ServiceStub stub = (ServiceStub)obj;
+            return _GetObjectServicePath(stub.rr_innerstub);
+        }
+
         private ServiceFactory GetServiceFactoryForType(string type)
         {
             string servicename = SplitQualifiedName(type).Item1;

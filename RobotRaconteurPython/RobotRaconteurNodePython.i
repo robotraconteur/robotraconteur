@@ -182,6 +182,9 @@ def GetServiceNodeName(self,obj):
 
 def GetServiceName(self,obj):
 	return self._GetServiceName(obj.rrinnerstub)
+
+def GetObjectServicePath(self,obj):
+	return self._GetObjectServicePath(obj.rrinnerstub)
 	
 def RegisterService(self, name, objecttype, obj, securitypolicy=None):
 	from .RobotRaconteurPythonUtil import WrappedServiceSkelDirectorPython, SplitQualifiedName

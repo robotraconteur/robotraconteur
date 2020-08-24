@@ -391,6 +391,7 @@ RR_KEEP_GIL()
 	RR_MAKE_METHOD_PRIVATE(GetServiceNodeID)
 	RR_MAKE_METHOD_PRIVATE(GetServiceNodeName)
 	RR_MAKE_METHOD_PRIVATE(GetServiceName)
+	RR_MAKE_METHOD_PRIVATE(GetObjectServicePath)
 
 	
 %extend
@@ -416,6 +417,11 @@ RR_KEEP_GIL()
 	std::string GetServiceName(boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj)
 	{		
 		return $self->GetServiceName(obj);		
+	}
+
+	std::string GetObjectServicePath(boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj)
+	{		
+		return $self->GetObjectServicePath(obj);		
 	}
 
 }

@@ -1150,6 +1150,14 @@ namespace RobotRaconteur
 		std::string GetServiceName(RR_SHARED_PTR<RRObject> obj);
 
 		/**
+		 * @brief Get the service path of a client object
+		 * 
+		 * @param obj The object to get the service path for
+		 * @return std::string The object's service path
+		 */
+		std::string GetObjectServicePath(RR_SHARED_PTR<RRObject> obj);
+
+		/**
 		 * @internal
 		 * 
 		 * @brief Registers an endpoint for use with the node
