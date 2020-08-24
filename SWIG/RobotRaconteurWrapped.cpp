@@ -3823,4 +3823,26 @@ namespace RobotRaconteur
 		}
 	}
 
+#ifdef RR_PYTHON
+	bool PythonTracebackPrintExc = false;
+	void InitPythonTracebackPrintExc()
+	{
+		PythonTracebackPrintExc = false;
+		const char* p_cstr = std::getenv("ROBOTRACONTEUR_PYTHON_TRACEBACK_PRINT_EXC");
+		if (!p_cstr)
+		{
+			return;
+		}
+
+		std::string p(p_cstr);
+		boost::to_lower(p);
+		boost::trim(p);
+		if (p == "true" || p == "on" || p == "1")
+		{
+			PythonTracebackPrintExc = true;
+			return;
+		}
+	}
+#endif
+
 }

@@ -89,6 +89,9 @@ namespace RobotRaconteur
 
 #define DIRECTOR_DELETE(var) { if(var) {delete var; var=NULL;}}
 
+extern bool PythonTracebackPrintExc;
+void InitPythonTracebackPrintExc();
+
 #else
 #define DIRECTOR_CALL(dirtype,command) { \
 boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\

@@ -127,6 +127,15 @@ public:
 
 }
 
+namespace RobotRaconteur
+{
+extern bool PythonTracebackPrintExc;
+}
+
+%init {
+	RobotRaconteur::InitPythonTracebackPrintExc();
+}
+
 %pythoncode %{
 
 import datetime

@@ -120,6 +120,19 @@ static void ThrowPythonError()
 	PyErr_Fetch(&exc,&val,&tb);
 	PyErr_NormalizeException(&exc,&val,&tb);
 
+	if (RobotRaconteur::PythonTracebackPrintExc)
+	{
+		std::cerr << "RobotRaconteurPython caught exception:" << std::endl;
+		if (exc && val && tb)
+		{
+			PyErr_Display(exc,val,tb);
+		}
+	}
+	else
+	{
+		PyErr_Clear();
+	}
+
 	PyObject* modules_dict= PyImport_GetModuleDict();
 	if (modules_dict==NULL)
 	{
