@@ -29,6 +29,7 @@ import numbers
 import os
 from RobotRaconteur.RobotRaconteurPython import DataTypes_ContainerTypes_generator
 import numpy
+import itertools
 
 if (sys.version_info  > (3,0)):
     from builtins import property
@@ -1906,7 +1907,7 @@ def ServiceDefinitionConstants(servicedef, node, obj):
         o[name]=val
     
     elem_o=dict()
-    for e in servicedef.Objects:
+    for e in itertools.chain(servicedef.NamedArrays,servicedef.Pods,servicedef.Structures,servicedef.Objects):
         o2=dict()
         for s in e.Options:
 

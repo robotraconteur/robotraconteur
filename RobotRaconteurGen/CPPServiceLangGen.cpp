@@ -3627,6 +3627,12 @@ namespace RobotRaconteurGen
 
 		bool hasconstants=false;
 
+		vector<boost::shared_ptr<ServiceEntryDefinition> > entries;
+		boost::copy(d->NamedArrays, std::back_inserter(entries));
+		boost::copy(d->Pods, std::back_inserter(entries));
+		boost::copy(d->Structures, std::back_inserter(entries));
+		boost::copy(d->Objects, std::back_inserter(entries));	
+
 		for (vector<string>::iterator e=d->Options.begin(); e!=d->Options.end(); ++e)
 		{
 			if (boost::starts_with(*e,"constant")) hasconstants=true;
@@ -3634,7 +3640,7 @@ namespace RobotRaconteurGen
 
 		if (!d->Enums.empty() || !d->Constants.empty()) hasconstants = true;
 
-		for (vector<boost::shared_ptr<ServiceEntryDefinition> >::iterator ee=d->Objects.begin(); ee!=d->Objects.end(); ++ee)
+		for (vector<boost::shared_ptr<ServiceEntryDefinition> >::iterator ee=entries.begin(); ee!=entries.end(); ++ee)
 		{
 			for (vector<string>::iterator e=(*ee)->Options.begin(); e!=(*ee)->Options.end(); ++e)
 			{
@@ -3669,7 +3675,8 @@ namespace RobotRaconteurGen
 			w2 << "    " << convert_constant(c.get(), d->Constants, d) << endl;
 		}
 				
-		for (vector<boost::shared_ptr<ServiceEntryDefinition> >::iterator ee=d->Objects.begin(); ee!=d->Objects.end(); ++ee)
+
+		for (vector<boost::shared_ptr<ServiceEntryDefinition> >::iterator ee=entries.begin(); ee!=entries.end(); ++ee)
 		{
 			bool objhasconstants=false;
 

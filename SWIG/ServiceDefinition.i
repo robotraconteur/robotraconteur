@@ -94,6 +94,8 @@ class ServiceDefinition
 {
 public:
 	std::string Name;
+	std::vector<boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition> > NamedArrays;
+	std::vector<boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition> > Pods;
 	std::vector<boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition> > Structures;
 	std::vector<boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition> > Objects;
 	std::vector<std::string> Options;

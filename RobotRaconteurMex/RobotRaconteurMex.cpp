@@ -6795,7 +6795,12 @@ mxArray* ServiceDefinitionConstants(boost::shared_ptr<ServiceDefinition> def)
 
 	}
 
-	BOOST_FOREACH(boost::shared_ptr<ServiceEntryDefinition>& ee, def->Objects)
+	std::vector<boost::shared_ptr<ServiceEntryDefinition> > entries;
+	boost::copy(def->NamedArrays, std::back_inserter(entries));
+	boost::copy(def->Pods, std::back_inserter(entries));
+	boost::copy(def->Structures, std::back_inserter(entries));
+	boost::copy(def->Objects, std::back_inserter(entries));	
+	BOOST_FOREACH(boost::shared_ptr<ServiceEntryDefinition>& ee, entries)
 	{
 		obj_constant_type c2;
 		c2.name=(ee)->Name;
