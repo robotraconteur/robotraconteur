@@ -691,7 +691,25 @@ namespace RobotRaconteurNETTest
                     Console.WriteLine("Client disconnected: " + d.NodeID.ToString() + ", " + d.ServiceName);
                 };
 
-                System.Threading.Thread.Sleep(6000);
+                subscription.AsyncGetDefaultClient(1000).ContinueWith(delegate(Task<object> res)
+                {
+                    if (res.IsFaulted)
+                    {
+                        Console.WriteLine("AsyncGetDefaultClient failed");                        
+                    }
+                    else if (res.Result == null)
+                    {
+                        Console.WriteLine("AsyncGetDefaultClient returned null");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"AsyncGetDefaultClient successful: {res.Result}");
+                    }
+                });
+                var client2 = subscription.GetDefaultClientWait(6000);
+                object client3;
+                var try_res = subscription.TryGetDefaultClientWait(out client3, 6000);
+                Console.WriteLine($"try_res = {try_res}");
 
                 var connected_clients = subscription.GetConnectedClients();
 
@@ -708,6 +726,9 @@ namespace RobotRaconteurNETTest
                 {
                     Console.WriteLine("Client not connected");
                 }
+
+                object client1;
+                subscription.TryGetDefaultClient(out client1);
                               
                 Console.WriteLine("Waiting for services...");
 

@@ -3383,6 +3383,31 @@ namespace RobotRaconteur
 		return rr_cast<WrappedServiceStub>(subscription->GetDefaultClient<RRObject>());
 	}
 
+	WrappedServiceSubscription_TryDefaultClientRes WrappedServiceSubscription::TryGetDefaultClient()
+	{
+		WrappedServiceSubscription_TryDefaultClientRes o;
+		o.res = subscription->TryGetDefaultClient<WrappedServiceStub>(o.client);
+		return o;
+	}
+
+	RR_SHARED_PTR<WrappedServiceStub> WrappedServiceSubscription::GetDefaultClientWait(int32_t timeout)
+	{
+		return rr_cast<WrappedServiceStub>(subscription->GetDefaultClientWait<RRObject>(timeout));
+	}
+
+	WrappedServiceSubscription_TryDefaultClientRes WrappedServiceSubscription::TryGetDefaultClientWait(int32_t timeout)
+	{
+		WrappedServiceSubscription_TryDefaultClientRes o;
+		o.res = subscription->TryGetDefaultClientWait<WrappedServiceStub>(o.client,timeout);
+		return o;
+	}
+
+	void WrappedServiceSubscription::AsyncGetDefaultClient(int32_t timeout, AsyncStubReturnDirector* handler, int32_t id)
+	{
+		boost::shared_ptr<AsyncStubReturnDirector> sphandler(handler,boost::bind(&ReleaseDirector<AsyncStubReturnDirector>,RR_BOOST_PLACEHOLDERS(_1),id));
+		subscription->AsyncGetDefaultClient<RRObject>(boost::bind(&AsyncStubReturn_handler,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),sphandler),timeout);
+	}
+
 	void WrappedServiceSubscription::SetRRDirector(WrappedServiceSubscriptionDirector* director, int32_t id)
 	{
 		boost::unique_lock<boost::shared_mutex> lock(RR_Director_lock);

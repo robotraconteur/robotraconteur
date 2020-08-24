@@ -7577,6 +7577,44 @@ mxArray* MexServiceSubscription::subsref(const mxArray* S)
 		return mxStub;
 	}
 
+	if (membername == "GetDefaultClientWait")
+	{
+		int32_t timeout;
+		if (mxGetNumberOfElements(cell_args) == 0)
+		{
+			timeout = RR_TIMEOUT_INFINITE;
+		}
+		else if (mxGetNumberOfElements(cell_args) == 1)
+		{
+			timeout = mxToTimeoutAdjusted(mxGetCell(cell_args, 0));
+		}
+		else
+		{
+			throw InvalidArgumentException("GetDefaultClientWait expects zero or one arguments");
+		}
+
+		RR_SHARED_PTR<MexServiceStub> stub=subscription->GetDefaultClientWait<MexServiceStub>(timeout);
+
+		mxArray* mxStub = NULL;
+
+		if (stub->stubptr != NULL)
+		{
+			mxStub=stub->stubptr.get();
+		}
+		else
+		{
+			boost::recursive_mutex::scoped_lock lock(stubs_lock);
+			stubcount++;
+			int stubid = stubcount;
+			stub->stubid = stubid;
+			mxArray* mxstub1 = MatlabObjectFromMexStub(stub);
+			stubs.insert(std::make_pair(stubid, stub));
+			mxStub= mxDuplicateArray(mxstub1);
+		}
+
+		return mxStub;
+	}
+
 	throw InvalidArgumentException("Unknown function for ServiceSubscription");
 }
 

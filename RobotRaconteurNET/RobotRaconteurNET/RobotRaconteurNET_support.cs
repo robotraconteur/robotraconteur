@@ -3925,6 +3925,48 @@ namespace RobotRaconteur
             var s = _subscription.GetDefaultClient();
             return GetClientStub(s);
         }
+
+        public bool TryGetDefaultClient(out object obj)
+        {
+            var res = _subscription.TryGetDefaultClient();
+            if (!res.res)
+            {
+                obj = null;
+                return false;
+            }
+
+            var s = res.client;
+            obj = GetClientStub(s);
+            return true;
+        }
+
+        public object GetDefaultClientWait(int timeout = -1)
+        {
+            var s = _subscription.GetDefaultClientWait(timeout);
+            return GetClientStub(s);
+        }
+
+        public bool TryGetDefaultClientWait(out object obj, int timeout = -1)
+        {
+            var res = _subscription.TryGetDefaultClientWait(timeout);
+            if (!res.res)
+            {
+                obj = null;
+                return false;
+            }
+
+            var s = res.client;
+            obj = GetClientStub(s);
+            return true;
+        }
+
+        public async Task<object> AsyncGetDefaultClient(int timeout = -1)
+        {
+            AsyncStubReturnDirectorImpl<object> h = new AsyncStubReturnDirectorImpl<object>(null);
+            int id = RRObjectHeap.AddObject(h);
+            _subscription.AsyncGetDefaultClient(timeout,h,id);
+            return await h.Task;
+        }
     }
 
     public class WireSubscription<T>

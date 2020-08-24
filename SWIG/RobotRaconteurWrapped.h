@@ -1726,6 +1726,13 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 	class WrappedWireSubscription;
 	class WrappedPipeSubscription;
 
+	class WrappedServiceSubscription_TryDefaultClientRes
+	{
+	public:
+		bool res;
+		RR_SHARED_PTR<WrappedServiceStub> client;
+	};
+
 	class WrappedServiceSubscription : public RR_ENABLE_SHARED_FROM_THIS<WrappedServiceSubscription>
 	{
 	public:
@@ -1747,6 +1754,14 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		RR_SHARED_PTR<WrappedPipeSubscription> SubscribePipe(const std::string& membername, const std::string& servicepath, uint32_t max_recv_packets = std::numeric_limits<uint32_t>::max());
 
 		RR_SHARED_PTR<WrappedServiceStub> GetDefaultClient();
+
+		WrappedServiceSubscription_TryDefaultClientRes TryGetDefaultClient();
+
+		RR_SHARED_PTR<WrappedServiceStub> GetDefaultClientWait(int32_t timeout = -1);
+
+		WrappedServiceSubscription_TryDefaultClientRes TryGetDefaultClientWait(int32_t timeout = -1);
+
+		void AsyncGetDefaultClient(int32_t timeout, AsyncStubReturnDirector* handler, int32_t id);
 
 		void SetRRDirector(WrappedServiceSubscriptionDirector* director, int32_t id);
 		

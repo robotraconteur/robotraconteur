@@ -243,11 +243,33 @@ public class ServiceSubscription
 		return new PipeSubscription<T>(s1);
 	}
 
-	public <T> T getDefaultObject()
+	public <T> T getDefaultClient()
 	{
 		WrappedServiceStub s = _subscription.getDefaultClient();
         return (T)getClientStub(s);	
 	}
 
+	public <T> T getDefaultClientWait()
+	{
+		return getDefaultClientWait(-1);
+	}
+
+	public <T> T getDefaultClientWait(int timeout)
+	{
+		WrappedServiceStub s = _subscription.getDefaultClientWait(timeout);
+        return (T)getClientStub(s);	
+	}
+
+	public void asyncGetDefaultClient(Action2<Object,RuntimeException> handler, int timeout)
+	{
+		AsyncStubReturnDirectorImpl<Object> h=new AsyncStubReturnDirectorImpl<Object>(handler);
+		int id1=RRObjectHeap.addObject(h);
+		_subscription.asyncGetDefaultClient(timeout, h, id1);
+	}
+
+	public void asyncGetDefaultClient(Action2<Object,RuntimeException> handler)
+	{
+		asyncGetDefaultClient(handler, -1);
+	}
 
 }

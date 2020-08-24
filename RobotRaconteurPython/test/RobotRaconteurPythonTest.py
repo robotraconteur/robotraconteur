@@ -528,13 +528,21 @@ def main():
         s.ClientConnected += connected
         s.ClientDisconnected += disconnected
         
-        time.sleep(3)        
-        print (s.GetConnectedClients())
+        def async_get_handler(obj, err):
+            if err is not None:
+                print("AsyncGetDefaultClient error: " + str(err))
+            else:
+                print("AsyncGetDefaultClient success: " + str(obj))
+
+        s.AsyncGetDefaultClient(async_get_handler,1)
+        client1 = s.GetDefaultClientWait(6)
+        print(s.TryGetDefaultClientWait(6))        
+        print(s.GetConnectedClients())
         try:
             print(s.GetDefaultClient().d1)
         except:
             print("Client not connected")
-                
+        print(s.TryGetDefaultClient())
         raw_input("Press enter")
         
         return

@@ -2609,6 +2609,24 @@ class ServiceSubscription(object):
 
     def GetDefaultClient(self):
         return self._GetClientStub(self._subscription.GetDefaultClient())
+
+    def TryGetDefaultClient(self):
+        res = self._subscription.TryGetDefaultClient()
+        if not res.res:
+            return False, None
+        return True, self._GetClientStub(res.client)
+
+    def GetDefaultClientWait(self, timeout = -1):
+        return self._GetClientStub(self._subscription.GetDefaultClientWait(adjust_timeout(timeout)))
+
+    def TryGetDefaultClientWait(self, timeout = -1):
+        res = self._subscription.TryGetDefaultClientWait(adjust_timeout(timeout))
+        if not res.res:
+            return False, None
+        return True, self._GetClientStub(res.client)
+
+    def AsyncGetDefaultClient(self, handler, timeout=-1):
+        return async_call(self._subscription.AsyncGetDefaultClient, (adjust_timeout(timeout),), AsyncStubReturnDirectorImpl, handler)
             
 class WrappedWireSubscriptionDirectorPython(RobotRaconteurPython.WrappedWireSubscriptionDirector):
     def __init__(self,subscription):
