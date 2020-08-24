@@ -498,6 +498,10 @@ namespace RobotRaconteur
 	{
 		return disconnect_listeners.connect(handler);
 	}
+	ServiceSubscription::event_connection ServiceSubscription::AddClientConnectFailedListener(boost::function<void(RR_SHARED_PTR<ServiceSubscription>, const ServiceSubscriptionClientID&, const std::vector<std::string>&, RR_SHARED_PTR<RobotRaconteurException>)> handler)
+	{
+		return connect_failed_listeners.connect(handler);
+	}
 
 	void ServiceSubscription::Close()
 	{
@@ -536,6 +540,7 @@ namespace RobotRaconteur
 
 		connect_listeners.disconnect_all_slots();
 		disconnect_listeners.disconnect_all_slots();
+		connect_failed_listeners.disconnect_all_slots();
 
 		RR_SHARED_PTR<detail::Discovery> d = parent.lock();
 		if (!d) return;
@@ -712,7 +717,7 @@ namespace RobotRaconteur
 			n->AsyncConnectService(url, c2->username, c2->credentials,
 				boost::bind(&ServiceSubscription::ClientEvent, weak_this ,RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), RR_BOOST_PLACEHOLDERS(_3), c2),
 				objecttype,
-				boost::bind(&ServiceSubscription::ClientConnected, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), c2),
+				boost::bind(&ServiceSubscription::ClientConnected, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), c2, url),
 				n->GetRequestTimeout() * 2);
 			clients.insert(std::make_pair(ServiceSubscriptionClientID(c2->nodeid, c2->service_name), c2));
 			return;
@@ -791,7 +796,7 @@ namespace RobotRaconteur
 					n->AsyncConnectService(urls, c2->username, c2->credentials,
 						boost::bind(&ServiceSubscription::ClientEvent, weak_this ,RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), RR_BOOST_PLACEHOLDERS(_3), c2),
 						client_service_type,
-						boost::bind(&ServiceSubscription::ClientConnected, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), c2),
+						boost::bind(&ServiceSubscription::ClientConnected, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), c2, urls),
 						n->GetRequestTimeout() * 2);
 					clients.insert(std::make_pair(ServiceSubscriptionClientID(c2->nodeid, c2->service_name), c2));
 					continue;
@@ -841,7 +846,7 @@ namespace RobotRaconteur
 		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Subscription, -1, "ServiceSubscription received node lost for " << storage->info->NodeID.ToString());
 	}
 
-	void ServiceSubscription::ClientConnected(RR_SHARED_PTR<RRObject> c, RR_SHARED_PTR<RobotRaconteurException> err, RR_SHARED_PTR<detail::ServiceSubscription_client> c2)
+	void ServiceSubscription::ClientConnected(RR_SHARED_PTR<RRObject> c, RR_SHARED_PTR<RobotRaconteurException> err, RR_SHARED_PTR<detail::ServiceSubscription_client> c2, const std::vector<std::string>& url)
 	{
 		RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
 		if (!n) return;
@@ -853,6 +858,13 @@ namespace RobotRaconteur
 			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1, "ServiceSubscription connecting to service named \"" << c2->service_name << "\" on node " 
 						<< c2->nodeid.ToString() << "failed: " << err->what());
 			ConnectRetry(c2);
+			try
+			{
+				RobotRaconteurNode::TryPostToThreadPool(n, RR_BOOST_ASIO_STRAND_WRAP(*listener_strand,
+					boost::bind(&ServiceSubscription::fire_ClientConnectFailedListeners,
+						shared_from_this(), ServiceSubscriptionClientID(c2->nodeid, c2->service_name), url, err)));
+			}
+			catch (std::exception&) {}
 			return;
 		}
 
@@ -949,7 +961,7 @@ namespace RobotRaconteur
 			n->AsyncConnectService(c2->urls, c2->username, c2->credentials,
 				boost::bind(&ServiceSubscription::ClientEvent, weak_this, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), RR_BOOST_PLACEHOLDERS(_3), c2),
 				c2->service_type,
-				boost::bind(&ServiceSubscription::ClientConnected, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), c2),
+				boost::bind(&ServiceSubscription::ClientConnected, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), c2, c2->urls),
 				n->GetRequestTimeout() * 2);
 			return;
 		}
@@ -1055,6 +1067,10 @@ namespace RobotRaconteur
 	void ServiceSubscription::fire_ClientDisconnectListeners(const ServiceSubscriptionClientID& noden, RR_SHARED_PTR<RRObject> client)
 	{
 		disconnect_listeners(shared_from_this(), noden, client);
+	}
+	void ServiceSubscription::fire_ClientConnectFailedListeners(const ServiceSubscriptionClientID& noden, const std::vector<std::string>& url, RR_SHARED_PTR<RobotRaconteurException> err)
+	{
+		connect_failed_listeners(shared_from_this(), noden, url, err);
 	}
 
 	void ServiceSubscription::SubscribeWire1(RR_SHARED_PTR<WireSubscriptionBase> s)

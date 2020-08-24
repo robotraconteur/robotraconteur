@@ -304,6 +304,11 @@ static void asyncgetdefaultclient_handler(RR_SHARED_PTR<testroot> obj, RR_SHARED
 	std::cout << "Got default client callback" << std::endl;
 }
 
+static void asyncgetdefaultclient_failed_handler(RR_SHARED_PTR<ServiceSubscription> sub, const ServiceSubscriptionClientID& id, const std::vector<std::string>& url, RR_SHARED_PTR<RobotRaconteurException> err)
+{
+	std::cout << "Connect to " << id.NodeID.ToString() << " with url: " <<boost::join(url, ",") << " failed: " << err->ToString() << std::endl;
+}
+
 
 int main(int argc, char* argv[])
 {
@@ -1599,6 +1604,7 @@ return 0;
 		subscription->AddClientConnectListener(servicesubscription_connected);
 		subscription->AddClientDisconnectListener(servicesubscription_disconnected);
 
+		subscription->AddClientConnectFailedListener(boost::bind(&asyncgetdefaultclient_failed_handler, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), RR_BOOST_PLACEHOLDERS(_3), RR_BOOST_PLACEHOLDERS(_4)));
 		subscription->AsyncGetDefaultClient<testroot>(boost::bind(&asyncgetdefaultclient_handler, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)), 5000);
 		RR_SHARED_PTR<testroot> defaultclient2 = subscription->GetDefaultClientWait<testroot>(10000);
 		RR_SHARED_PTR<testroot> defaultclient3;

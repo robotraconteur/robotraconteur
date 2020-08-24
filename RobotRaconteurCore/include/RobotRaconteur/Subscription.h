@@ -363,6 +363,8 @@ namespace RobotRaconteur
 		 */
 		event_connection AddClientDisconnectListener(boost::function<void(RR_SHARED_PTR<ServiceSubscription>, const ServiceSubscriptionClientID&, RR_SHARED_PTR<RRObject>)> handler);
 
+		event_connection AddClientConnectFailedListener(boost::function<void(RR_SHARED_PTR<ServiceSubscription>, const ServiceSubscriptionClientID&, const std::vector<std::string>&, RR_SHARED_PTR<RobotRaconteurException>)> handler);
+
 		/**
 		 * @brief Close the subscription
 		 * 
@@ -585,6 +587,7 @@ namespace RobotRaconteur
 
 		boost::signals2::signal<void(RR_SHARED_PTR<ServiceSubscription>, const ServiceSubscriptionClientID&, RR_SHARED_PTR<RRObject>)> connect_listeners;
 		boost::signals2::signal<void(RR_SHARED_PTR<ServiceSubscription>, const ServiceSubscriptionClientID&, RR_SHARED_PTR<RRObject>)> disconnect_listeners;
+		boost::signals2::signal<void(RR_SHARED_PTR<ServiceSubscription>, const ServiceSubscriptionClientID&, const std::vector<std::string>&, RR_SHARED_PTR<RobotRaconteurException>)> connect_failed_listeners;
 
 		RR_SHARED_PTR<RR_BOOST_ASIO_STRAND> listener_strand;
 
@@ -605,7 +608,7 @@ namespace RobotRaconteur
 		virtual void NodeUpdated(RR_SHARED_PTR<detail::Discovery_nodestorage> storage);
 		virtual void NodeLost(RR_SHARED_PTR<detail::Discovery_nodestorage> storage);
 
-		void ClientConnected(RR_SHARED_PTR<RRObject> c, RR_SHARED_PTR<RobotRaconteurException> err, RR_SHARED_PTR<detail::ServiceSubscription_client> c2);
+		void ClientConnected(RR_SHARED_PTR<RRObject> c, RR_SHARED_PTR<RobotRaconteurException> err, RR_SHARED_PTR<detail::ServiceSubscription_client> c2, const std::vector<std::string>& url);
 		void ConnectRetry(RR_SHARED_PTR<detail::ServiceSubscription_client> c2);
 		void ConnectRetry2(RR_SHARED_PTR<detail::ServiceSubscription_client> c2);
 
@@ -613,6 +616,7 @@ namespace RobotRaconteur
 
 		void fire_ClientConnectListeners(const ServiceSubscriptionClientID& noden, RR_SHARED_PTR<RRObject> client);
 		void fire_ClientDisconnectListeners(const ServiceSubscriptionClientID& noden, RR_SHARED_PTR<RRObject> client);
+		void fire_ClientConnectFailedListeners(const ServiceSubscriptionClientID& noden, const std::vector<std::string>& url, RR_SHARED_PTR<RobotRaconteurException> err);
 
 		void SubscribeWire1(RR_SHARED_PTR<WireSubscriptionBase> s);
 		void SubscribePipe1(RR_SHARED_PTR<PipeSubscriptionBase> s);
