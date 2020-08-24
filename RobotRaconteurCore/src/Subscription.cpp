@@ -1141,6 +1141,111 @@ namespace RobotRaconteur
 		return client;			
 	}
 
+	namespace detail
+	{
+	class AsyncGetDefaultClientBase_impl : public RR_ENABLE_SHARED_FROM_THIS<AsyncGetDefaultClientBase_impl>
+	{
+	protected:
+		boost::function<void(RR_SHARED_PTR<RRObject>,RR_SHARED_PTR<RobotRaconteurException>)> handler;
+		RR_SHARED_PTR<Timer> timer;
+		boost::mutex this_lock;
+		RR_WEAK_PTR<RobotRaconteurNode> node;
+		ServiceSubscription::event_connection evt_connection;
+
+	public:
+		void Init(RR_WEAK_PTR<RobotRaconteurNode> node, RR_SHARED_PTR<ServiceSubscription> subscription, boost::function<void(RR_SHARED_PTR<RRObject>,RR_SHARED_PTR<RobotRaconteurException>)>& handler, int32_t timeout)
+		{
+			boost::mutex::scoped_lock lock(this_lock);
+
+			evt_connection = subscription->AddClientConnectListener(boost::bind(&AsyncGetDefaultClientBase_impl::connect_handler,shared_from_this(),RR_BOOST_PLACEHOLDERS(_3)));
+
+			RR_SHARED_PTR<RRObject> obj1;
+			if (subscription->TryGetDefaultClient(obj1))
+			{
+				evt_connection.disconnect();
+				detail::PostHandler(node,handler,obj1);
+				return;
+			}
+
+			this->node = node;
+			this->handler = handler;
+
+			if (timeout >= 0)
+			{
+				RR_SHARED_PTR<RobotRaconteurNode> node1 = node.lock();
+				if (!node1)
+				{
+					throw InvalidOperationException("Node has been released");
+				}
+				this->timer = node1->CreateTimer(boost::posix_time::milliseconds(timeout),boost::bind(&AsyncGetDefaultClientBase_impl::timeout_handler,shared_from_this(),RR_BOOST_PLACEHOLDERS(_1)),true);
+				this->timer->Start();
+			}
+
+		}
+
+		void timeout_handler(const TimerEvent& evt)
+		{
+			boost::mutex::scoped_lock lock(this_lock);
+			if (!handler)
+			{
+				return;
+			}
+
+			detail::PostHandlerWithException(node,handler,RR_MAKE_SHARED<ConnectionException>("Subscription default client timed out"));
+			handler.clear();
+			timer.reset();
+			evt_connection.disconnect();
+		}
+
+		void connect_handler(RR_SHARED_PTR<RRObject> obj)
+		{
+			boost::mutex::scoped_lock lock(this_lock);
+			if (!handler)
+			{
+				return;
+			}
+
+			detail::PostHandler(node,handler,obj);
+			handler.clear();
+			timer.reset();
+			evt_connection.disconnect();
+		}
+	};
+	}
+
+	void ServiceSubscription::AsyncGetDefaultClientBase(boost::function<void(RR_SHARED_PTR<RRObject>,RR_SHARED_PTR<RobotRaconteurException>)> handler, int32_t timeout)
+	{
+		RR_SHARED_PTR<detail::AsyncGetDefaultClientBase_impl> impl = RR_MAKE_SHARED<detail::AsyncGetDefaultClientBase_impl>();
+		impl->Init(node, shared_from_this(), handler, timeout);
+	}
+
+	RR_SHARED_PTR<RRObject> ServiceSubscription::GetDefaultClientWaitBase(int32_t timeout)
+	{
+		ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
+
+		RR_SHARED_PTR<detail::sync_async_handler<RRObject> > h=RR_MAKE_SHARED<detail::sync_async_handler<RRObject> >(RR_MAKE_SHARED<ConnectionException>("Subscription get default object failed"));
+		AsyncGetDefaultClientBase(boost::bind(&detail::sync_async_handler<RRObject>::operator(),h,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)),timeout);
+		return h->end();
+	}
+
+	bool ServiceSubscription::TryGetDefaultClientWaitBase(RR_SHARED_PTR<RRObject>& client_out, int32_t timeout)
+	{
+		RR_SHARED_PTR<detail::sync_async_handler<RRObject> > h=RR_MAKE_SHARED<detail::sync_async_handler<RRObject> >(RR_MAKE_SHARED<ConnectionException>("Subscription get default object failed"));
+		AsyncGetDefaultClientBase(boost::bind(&detail::sync_async_handler<RRObject>::operator(),h,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)),timeout);
+
+		RR_SHARED_PTR<RRObject> o;
+		RR_SHARED_PTR<RobotRaconteurException> o_err;
+
+		bool res = h->try_end(o,o_err);
+		if (!res)
+		{
+			return false;
+		}
+
+		client_out = o;
+		return true;
+	}
+
 	//class WireSubscriptionBase
 
 	static void WireSubscriptionBase_emptyhandler(RR_SHARED_PTR<RobotRaconteurException> e)

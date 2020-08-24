@@ -299,6 +299,11 @@ void singlethreadserver_quit_thread_func()
 	singlethreadserver_keep_going = false;
 } 
 
+static void asyncgetdefaultclient_handler(RR_SHARED_PTR<testroot> obj, RR_SHARED_PTR<RobotRaconteurException> err)
+{
+	std::cout << "Got default client callback" << std::endl;
+}
+
 
 int main(int argc, char* argv[])
 {
@@ -1594,7 +1599,14 @@ return 0;
 		subscription->AddClientConnectListener(servicesubscription_connected);
 		subscription->AddClientDisconnectListener(servicesubscription_disconnected);
 
-		boost::this_thread::sleep(boost::posix_time::seconds(10));
+		subscription->AsyncGetDefaultClient<testroot>(boost::bind(&asyncgetdefaultclient_handler, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)), 5000);
+		RR_SHARED_PTR<testroot> defaultclient2 = subscription->GetDefaultClientWait<testroot>(10000);
+		RR_SHARED_PTR<testroot> defaultclient3;
+		subscription->TryGetDefaultClientWait<testroot>(defaultclient3,10000);
+		if (!defaultclient3)
+		{
+			throw std::runtime_error("");
+		}
 
 		std::map<ServiceSubscriptionClientID, RR_SHARED_PTR<RRObject> > clients = subscription->GetConnectedClients();
 		typedef std::map<ServiceSubscriptionClientID, RR_SHARED_PTR<RRObject> >::value_type e_type;

@@ -261,6 +261,28 @@ namespace RobotRaconteur
 
 	};
 
+	namespace detail
+	{
+		template<typename T>
+		void AsyncGetDefaultClient_handler_adapter(boost::function<void(RR_SHARED_PTR<T>,RR_SHARED_PTR<RobotRaconteurException>)>& handler, RR_SHARED_PTR<RRObject> obj, RR_SHARED_PTR<RobotRaconteurException> err)
+		{
+			if (err)
+			{
+				handler(RR_SHARED_PTR<T>(), err);
+				return;
+			}
+
+			RR_SHARED_PTR<T> obj1 = RR_DYNAMIC_POINTER_CAST<T>(obj);
+			if (!obj1)
+			{
+				handler(RR_SHARED_PTR<T>(),RR_MAKE_SHARED<ConnectionException>("Cannot cast client to requested type"));
+				return;
+			}
+
+			handler(obj1, RR_SHARED_PTR<RobotRaconteurException>());
+		}
+	}
+
 	/**
 	 * @brief Subscription that automatically connects services and manages lifecycle of connected services
 	 * 
@@ -481,6 +503,71 @@ namespace RobotRaconteur
 			return true;
 		}
 
+		/**
+		 * @brief Get the "default client" connection, waiting with timeout if not connected
+		 * 
+		 * The "default client" is the "first" client returned from the connected clients map. This is effectively
+		 * default, and is only useful if only a single client connection is expected. This is normally true
+		 * for RobotRaconteur::SubscribeService()
+		 * 
+		 * Clients using GetDefaultClient() should not store a reference to the client. It should instead
+		 * call GetDefaultClient() right before using the client to make sure the most recenty connection
+		 * is being used. If possible, SubscribePipe() or SubscribeWire() should be used so the lifecycle
+		 * of pipes and wires can be managed automatically.
+		 * 
+		 * @param timeout Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout
+		 * @tparam T The type of the client object
+		 * @return RR_SHARED_PTR<T> The client connection
+		 */
+		template <typename T>
+		RR_SHARED_PTR<T> GetDefaultClientWait(int32_t timeout = RR_TIMEOUT_INFINITE)
+		{
+			return rr_cast<T>(GetDefaultClientWaitBase(timeout));
+		}
+
+		/**
+		 * @brief Try getting the "default client" connection, waiting with timeout if not connected
+		 * 
+		 * Same as GetDefaultClientWait(), but returns a bool success instead of throwing
+		 * exceptions on failure.
+		 * 
+		 * @tparam T The type of the client object
+		 * @param client_out [out] The client connection
+		 * @param timeout Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout
+		 * @return true client_out is valid
+		 * @return false client_out is invalid, no client is not currently connected
+		 */
+		template <typename T>
+		bool TryGetDefaultClientWait(RR_SHARED_PTR<T>& client_out, int32_t timeout = RR_TIMEOUT_INFINITE)
+		{
+			RR_SHARED_PTR<RRObject> c;
+			if (!TryGetDefaultClientWaitBase(c,timeout))
+			{
+				return false;
+			}
+			RR_SHARED_PTR<T> c1 = RR_DYNAMIC_POINTER_CAST<T>(c);
+			if (!c1)
+				return false;
+
+			client_out = c1;
+			return true;
+		}
+
+		/**
+		 * @brief Asynchronously get the default client, with optional timeout
+		 * 
+		 * Same as GetDefaultClientWait(), but returns asynchronously.
+		 * 
+		 * @tparam T The type of the client object
+		 * @param handler The handler to call when default client is available, or times out
+		 * @param timeout Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout
+		 */
+		template<typename T>
+		void AsyncGetDefaultClient(boost::function<void(RR_SHARED_PTR<T>,RR_SHARED_PTR<RobotRaconteurException>)> handler, int32_t timeout = RR_TIMEOUT_INFINITE)
+		{
+			AsyncGetDefaultClientBase(boost::bind(&detail::AsyncGetDefaultClient_handler_adapter<T>, handler, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)), timeout);
+		}
+
 	protected:
 		boost::mutex this_lock;
 
@@ -535,6 +622,11 @@ namespace RobotRaconteur
 
 		RR_SHARED_PTR<RRObject> GetDefaultClientBase();
 		bool TryGetDefaultClientBase(RR_SHARED_PTR<RRObject>& client_out);
+
+		RR_SHARED_PTR<RRObject> GetDefaultClientWaitBase(int32_t timeout = RR_TIMEOUT_INFINITE);
+		bool TryGetDefaultClientWaitBase(RR_SHARED_PTR<RRObject>& client_out, int32_t timeout = RR_TIMEOUT_INFINITE);
+
+		void AsyncGetDefaultClientBase(boost::function<void(RR_SHARED_PTR<RRObject>,RR_SHARED_PTR<RobotRaconteurException>)> handler, int32_t timeout = RR_TIMEOUT_INFINITE);
 	};
 
 	/**
