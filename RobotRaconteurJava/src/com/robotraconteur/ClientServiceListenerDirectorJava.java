@@ -19,17 +19,14 @@ public class ClientServiceListenerDirectorJava extends ClientServiceListenerDire
 
 	@Override
 	public void callback(int code)
-	{
-		try
-		{
-			listener.action(stub, ClientServiceListenerEventType.swigToEnum(code), null);
-		}
-		catch (java.lang.Exception e)
-		{
-
-		}
+	{		
+		listener.action(stub, ClientServiceListenerEventType.swigToEnum(code), null);		
 	}
 
-	
+	@Override
+	public void callback2(int code, String p)
+	{		
+		listener.action(stub, ClientServiceListenerEventType.swigToEnum(code), p);		
+	}
 
 }

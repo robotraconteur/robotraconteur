@@ -2907,23 +2907,15 @@ namespace RobotRaconteur
         }
 
         public override void Callback(int code)
-        {
-            try
-            {
-                listener(stub, (ClientServiceListenerEventType)code, null);
-            }
-            catch
-            {
-
-            }
+        {            
+            listener(stub, (ClientServiceListenerEventType)code, null);          
         }
 
-        
-
-        
-
+        public override void Callback2(int code, string p)
+        {
+            listener(stub, (ClientServiceListenerEventType)code, p);
+        }
     }
-
 
     public class ServerServiceListenerDirectorNET : ServerServiceListenerDirector
     {

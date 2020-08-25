@@ -1844,6 +1844,10 @@ class WrappedClientServiceListenerDirector(RobotRaconteurPython.ClientServiceLis
 
        self.callback(self.stub,code,None)
 
+    def Callback2(self,code,p):
+
+       self.callback(self.stub,code,p)
+
 
 class WrappedServerServiceListenerDirector(RobotRaconteurPython.ServerServiceListenerDirector):
     def __init__(self,callback,context):

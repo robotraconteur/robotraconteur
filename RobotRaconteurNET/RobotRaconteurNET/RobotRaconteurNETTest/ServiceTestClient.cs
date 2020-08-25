@@ -54,7 +54,7 @@ namespace RobotRaconteurNETTest
 
         private void client_callback(ServiceStub client, ClientServiceListenerEventType ev, object parameter)
         {
-            Console.WriteLine("Client event " + ev);
+            Console.WriteLine("Client event " + ev + " param: " + parameter?.ToString());
         }
 
         public void DisconnectService()

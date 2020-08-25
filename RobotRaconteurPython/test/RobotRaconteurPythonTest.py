@@ -880,7 +880,9 @@ class ServiceTestClient:
 
 
     def ConnectService(self, url):
-        self._r = RobotRaconteurNode.s.ConnectService(url)
+        def client_listener(c, event_type, p):
+            print("Client event: " + str(event_type) + " param: " + str(p))
+        self._r = RobotRaconteurNode.s.ConnectService(url, None, None, client_listener)
         attributes=RobotRaconteurNode.s.GetServiceAttributes(self._r)
         print (attributes)
 
