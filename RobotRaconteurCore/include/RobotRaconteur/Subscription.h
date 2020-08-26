@@ -146,6 +146,7 @@ namespace RobotRaconteur
 		bool operator <(const ServiceSubscriptionClientID& id2) const;
 	};
 
+	size_t hash_value(const ServiceSubscriptionClientID& id);
 
 	class IServiceSubscription
 	{
@@ -738,14 +739,14 @@ namespace RobotRaconteur
 
 	protected:
 
-		void ClientConnected(RR_SHARED_PTR<RRObject> client);
-		void ClientConnected1(RR_WEAK_PTR<RRObject> client, RR_SHARED_PTR<WireConnectionBase> connection, RR_SHARED_PTR<RobotRaconteurException> err);
-
+		void ClientConnected(const ServiceSubscriptionClientID& client_id, RR_SHARED_PTR<RRObject> client);
+		void ClientDisconnected(const ServiceSubscriptionClientID& client_id, RR_SHARED_PTR<RRObject> client);
+		
 		void WireConnectionClosed(RR_SHARED_PTR<detail::WireSubscription_connection> wire);
 		void WireValueChanged(RR_SHARED_PTR<detail::WireSubscription_connection> wire, RR_INTRUSIVE_PTR<RRValue> value, const TimeSpec& time);
 
 		boost::mutex this_lock;
-		boost::unordered_set<RR_SHARED_PTR<detail::WireSubscription_connection> > connections;
+		boost::unordered_map<ServiceSubscriptionClientID,RR_SHARED_PTR<detail::WireSubscription_connection> > connections;
 		boost::initialized<bool> closed;
 		RR_WEAK_PTR<RobotRaconteurNode> node;
 		RR_WEAK_PTR<ServiceSubscription> parent;
@@ -965,14 +966,14 @@ namespace RobotRaconteur
 
 	protected:
 
-		void ClientConnected(RR_SHARED_PTR<RRObject> client);
-		void ClientConnected1(RR_WEAK_PTR<RRObject> client, RR_SHARED_PTR<PipeEndpointBase> connection, RR_SHARED_PTR<RobotRaconteurException> err);
+		void ClientConnected(const ServiceSubscriptionClientID& client_id, RR_SHARED_PTR<RRObject> client);
+		void ClientDisconnected(const ServiceSubscriptionClientID& client_id, RR_SHARED_PTR<RRObject> client);
 
 		void PipeEndpointClosed(RR_SHARED_PTR<detail::PipeSubscription_connection> pipe);
 		void PipeEndpointPacketReceived(RR_SHARED_PTR<detail::PipeSubscription_connection> pipe, RR_INTRUSIVE_PTR<RRValue> packet);
 
 		boost::mutex this_lock;
-		boost::unordered_set<RR_SHARED_PTR<detail::PipeSubscription_connection> > connections;
+		boost::unordered_map<ServiceSubscriptionClientID,RR_SHARED_PTR<detail::PipeSubscription_connection> > connections;
 		boost::initialized<bool> closed;
 		RR_WEAK_PTR<ServiceSubscription> parent;
 		RR_WEAK_PTR<RobotRaconteurNode> node;
@@ -1137,8 +1138,8 @@ namespace RobotRaconteur
 		protected:
 			RR_SHARED_PTR<WireSubscriptionBase> subscription;
 			boost::mutex::scoped_lock subscription_lock;
-			boost::unordered_set<RR_SHARED_PTR<WireSubscription_connection> >::iterator connections_iterator;
-			boost::unordered_set<RR_SHARED_PTR<WireSubscription_connection> >::iterator current_connection;
+			boost::unordered_map<ServiceSubscriptionClientID,RR_SHARED_PTR<WireSubscription_connection> >::iterator connections_iterator;
+			boost::unordered_map<ServiceSubscriptionClientID,RR_SHARED_PTR<WireSubscription_connection> >::iterator current_connection;
 
 		public:
 			WireSubscription_send_iterator(RR_SHARED_PTR<WireSubscriptionBase> subscription);
@@ -1153,8 +1154,8 @@ namespace RobotRaconteur
 		protected:
 			RR_SHARED_PTR<PipeSubscriptionBase> subscription;
 			boost::mutex::scoped_lock subscription_lock;
-			boost::unordered_set<RR_SHARED_PTR<PipeSubscription_connection> >::iterator connections_iterator;
-			boost::unordered_set<RR_SHARED_PTR<PipeSubscription_connection> >::iterator current_connection;
+			boost::unordered_map<ServiceSubscriptionClientID,RR_SHARED_PTR<PipeSubscription_connection> >::iterator connections_iterator;
+			boost::unordered_map<ServiceSubscriptionClientID,RR_SHARED_PTR<PipeSubscription_connection> >::iterator current_connection;
 
 		public:
 			PipeSubscription_send_iterator(RR_SHARED_PTR<PipeSubscriptionBase> subscription);

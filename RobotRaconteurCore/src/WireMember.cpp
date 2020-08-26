@@ -577,9 +577,13 @@ namespace RobotRaconteur
 			{
 				try
 				{
-					boost::mutex::scoped_lock lock (connection_lock);
-					connection->Close();
-					connection.reset();
+					RR_SHARED_PTR<WireConnectionBase> c;
+					{
+						boost::mutex::scoped_lock lock (connection_lock);
+						c=connection;
+						connection.reset();
+					}
+					c->RemoteClose();
 				}
 				catch (std::exception& exp)
 				{

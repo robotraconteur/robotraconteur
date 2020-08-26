@@ -89,7 +89,12 @@ namespace RobotRaconteur
 			friend class ::RobotRaconteur::WireSubscriptionBase;
 			friend class WireSubscription_send_iterator;
 
-			WireSubscription_connection(RR_SHARED_PTR<WireSubscriptionBase> parent, RR_SHARED_PTR<WireConnectionBase> connection, RR_SHARED_PTR<RRObject> client);
+			WireSubscription_connection();
+			void Init(RR_SHARED_PTR<WireSubscriptionBase> parent, RR_SHARED_PTR<RRObject> client);
+
+			void ClientConnected1(RR_SHARED_PTR<ServiceStub> stub);
+
+			void ClientConnected2(RR_SHARED_PTR<WireConnectionBase> connection, RR_SHARED_PTR<RobotRaconteurException> err);
 
 			void WireConnectionClosed(RR_SHARED_PTR<WireConnectionBase> connection);
 			void WireValueChanged(RR_SHARED_PTR<WireConnectionBase> connection, RR_INTRUSIVE_PTR<RRValue> value, const TimeSpec& time);
@@ -97,10 +102,19 @@ namespace RobotRaconteur
 
 			void SetOutValue(const RR_INTRUSIVE_PTR<RRValue>& value);
 
+			void Close();
+			void RetryConnect();
+
+			void RetryConnect1(const TimerEvent& ev);
+
 		protected:
 			RR_WEAK_PTR<WireSubscriptionBase> parent;
 			RR_WEAK_PTR<WireConnectionBase> connection;
 			RR_WEAK_PTR<RRObject> client;
+			RR_WEAK_PTR<RobotRaconteurNode> node;
+
+			RR_SHARED_PTR<Timer> retry_timer;
+			bool closed;
 
 		};
 
@@ -111,7 +125,12 @@ namespace RobotRaconteur
 			friend class ::RobotRaconteur::PipeSubscriptionBase;
 			friend class PipeSubscription_send_iterator;
 
-			PipeSubscription_connection(RR_SHARED_PTR<PipeSubscriptionBase> parent, RR_SHARED_PTR<PipeEndpointBase> connection, RR_SHARED_PTR<RRObject> client);
+			PipeSubscription_connection();
+			void Init(RR_SHARED_PTR<PipeSubscriptionBase> parent, RR_SHARED_PTR<RRObject> client);
+
+			void ClientConnected1(RR_SHARED_PTR<ServiceStub> stub);
+
+			void ClientConnected2(RR_SHARED_PTR<PipeEndpointBase> connection, RR_SHARED_PTR<RobotRaconteurException> err);
 
 			virtual void PipeEndpointClosed(RR_SHARED_PTR<PipeEndpointBase> endpoint);
 			virtual void PipePacketReceived(RR_SHARED_PTR<PipeEndpointBase> endpoint, boost::function<bool(RR_INTRUSIVE_PTR<RRValue>&)> receive_packet_func);
@@ -122,12 +141,18 @@ namespace RobotRaconteur
 			//Call with PipeSubscription::this_lock locked
 			void AsyncSendPacket(const RR_INTRUSIVE_PTR<RRValue>& packet);
 
+			void RetryConnect();
+			void RetryConnect1(const TimerEvent& ev);
+			
+			void Close();
+
 			~PipeSubscription_connection();
 
 		protected:
 			RR_WEAK_PTR<PipeSubscriptionBase> parent;
 			RR_WEAK_PTR<PipeEndpointBase> connection;
 			RR_WEAK_PTR<RRObject> client;
+			RR_WEAK_PTR<RobotRaconteurNode> node;
 
 			std::list<uint32_t> backlog;
 			std::list<uint32_t> forward_backlog;
@@ -137,6 +162,8 @@ namespace RobotRaconteur
 			boost::initialized<bool> send_copy_element;
 
 			static void pipe_packet_send_handler(RR_WEAK_PTR<PipeSubscription_connection> connection, int32_t pnum, RR_SHARED_PTR<RobotRaconteurException> err, int32_t send_key);
+
+			RR_SHARED_PTR<Timer> retry_timer;
 
 		};
 	}

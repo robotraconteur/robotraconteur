@@ -774,6 +774,7 @@ namespace RobotRaconteur
 	public:
 
 		friend class PipeSubscriptionBase;
+		friend class detail::PipeSubscription_connection;
 
 		virtual ~PipeClientBase() {}
 

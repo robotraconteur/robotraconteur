@@ -969,6 +969,7 @@ namespace RobotRaconteur
 	{
 		friend class WireConnectionBase;
 		friend class WireSubscriptionBase;
+		friend class detail::WireSubscription_connection;
 
 	public:
 
