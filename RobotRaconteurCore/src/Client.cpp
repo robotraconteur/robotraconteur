@@ -296,7 +296,7 @@ namespace RobotRaconteur
 		if (err)
 		{
 			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, GetLocalEndpoint(), path, "", "Error during FindObjRef: " << err->what());
-			detail::InvokeHandlerWithException(node, handler, err);
+			AsyncFindObjRef3(RR_SHARED_PTR<RRObject>(), err, path, handler);
 			return;
 		}
 		else
@@ -346,7 +346,8 @@ namespace RobotRaconteur
 			catch (std::exception& err)
 			{
 				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, GetLocalEndpoint(), path, "", "Error during FindObjRef: " << err.what());
-				detail::InvokeHandlerWithException(node, handler, err, MessageErrorType_ServiceError);
+				RR_SHARED_PTR<RobotRaconteurException> err1 = RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err, MessageErrorType_ServiceError);
+				AsyncFindObjRef3(RR_SHARED_PTR<RRObject>(), err1, path, handler);
 			}
 		}
 	}
@@ -357,7 +358,7 @@ namespace RobotRaconteur
 		if (err)
 		{
 			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, GetLocalEndpoint(), path, "", "Error during FindObjRef: " << err->what());
-			detail::InvokeHandlerWithException(node, handler, err);
+			AsyncFindObjRef3(RR_SHARED_PTR<RRObject>(), err, path, handler);
 			return;
 		}
 		else
@@ -457,13 +458,14 @@ namespace RobotRaconteur
 				}
 
 				RR_SHARED_PTR<RRObject> ret = RR_STATIC_POINTER_CAST<RRObject>(stub);
-				detail::InvokeHandler(node, handler, ret);
+				AsyncFindObjRef3(ret, RR_SHARED_PTR<RobotRaconteurException>(), path, handler);
 				
 			}			
 			catch (std::exception& err2)
 			{
 				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, GetLocalEndpoint(), path, "", "Error during FindObjRef: " << err2.what());
-				detail::InvokeHandlerWithException(node, handler, err2, MessageErrorType_ServiceError);
+				RR_SHARED_PTR<RobotRaconteurException> err1 = RobotRaconteurExceptionUtil::ExceptionToSharedPtr(err2, MessageErrorType_ServiceError);
+				AsyncFindObjRef3(RR_SHARED_PTR<RRObject>(), err1, path, handler);
 			}
 		}
 
@@ -496,8 +498,14 @@ namespace RobotRaconteur
 			}
 		}
 		catch (std::exception&) {}
-
-		detail::InvokeHandler(node,handler,ret);
+		if (err)
+		{
+			detail::InvokeHandlerWithException(node,handler,err);
+		}	
+		else
+		{
+			detail::InvokeHandler(node,handler,ret);
+		}
 	}
 
 	std::string ClientContext::FindObjectType(boost::string_ref path)
