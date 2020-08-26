@@ -187,6 +187,6 @@ namespace RobotRaconteur
 	
 	};
 
-
+	size_t hash(const NodeID& nodeid);
 
 }
