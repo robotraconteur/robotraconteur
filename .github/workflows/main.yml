@@ -78,7 +78,7 @@ jobs:
         name: 'out-${{ matrix.os }}'
         path: out/*
   build-win:
-    runs-on: windows-2019
+    runs-on: windows-2016
     strategy:
       matrix:
         arch: [x64,x86]
@@ -107,11 +107,9 @@ jobs:
         python -m pip install numpy setuptools wheel
     - name: env python3
       run: echo  ("::set-env name=PYTHON3_EXE::" + (Get-Command Python.exe).Path)
-    - name: install swig
+    - name: choco
       run: |
-        cd ..
-        Invoke-WebRequest -Uri https://prdownloads.sourceforge.net/project/swig/swigwin/swigwin-4.0.2/swigwin-4.0.2.zip -OutFile swigwin-4.0.2.zip -UserAgent "Wget/1.20.3 (mingw32)"
-        unzip -q swigwin-4.0.2.zip
+        choco install swig -r
     - uses: haya14busa/action-cond@v1
       id: cmake_arch
       with:
@@ -122,12 +120,11 @@ jobs:
       run: >
         cd .. &&
         md -Force build2 && cd build2 &&
-        cmake -G "Visual Studio 16 2019" -A ${{ steps.cmake_arch.outputs.value }} -DBUILD_GEN=ON -DBUILD_TEST=ON 
+        cmake -G "Visual Studio 15 2017" -A ${{ steps.cmake_arch.outputs.value }} -DBUILD_GEN=ON -DBUILD_TEST=ON 
         -DBUILD_NET=ON -DBoost_USE_STATIC_LIBS=ON -DBUILD_PYTHON=ON 
         -DBUILD_PYTHON_WHEEL=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON -DBUILD_JAVA=ON 
         -DBOOST_ROOT="${env:BOOST_ROOT_1_72_0}" -DPYTHON_EXECUTABLE="${{ env.PYTHON2_EXE }}"
         -DPYTHON3_EXECUTABLE="${{ env.PYTHON3_EXE }}" -DROBOTRACONTEUR_VERSION_SUFFIX="${{ env.version_suffix }}"
-        -DSWIG_EXECUTABLE="${env:GITHUB_WORKSPACE}/../swigwin-4.0.2/swig.exe"
         ../robotraconteur
     - name: build
       run: |
