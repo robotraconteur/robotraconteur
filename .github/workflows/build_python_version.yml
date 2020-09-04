@@ -12,7 +12,7 @@ on:
 
 jobs:
   build-win:
-    runs-on: windows-2019
+    runs-on: windows-2016
     strategy:
       matrix:
         arch: [x64,x86]
@@ -43,7 +43,7 @@ jobs:
       run: >
         cd .. &&
         md -Force build2 && cd build2 &&
-        cmake -G "Visual Studio 16 2019" -A ${{ steps.cmake_arch.outputs.value }} 
+        cmake -G "Visual Studio 15 2017" -A ${{ steps.cmake_arch.outputs.value }} 
         -DBoost_USE_STATIC_LIBS=ON
         -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON 
         -DBOOST_ROOT="${env:BOOST_ROOT_1_72_0}"
