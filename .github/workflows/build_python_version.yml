@@ -32,7 +32,7 @@ jobs:
       run: echo  ("::set-env name=PYTHON3_EXE::" + (Get-Command Python.exe).Path)
     - name: choco
       run: |
-        choco install swig --version=4.0.1 -r
+        choco install swig -r
     - uses: haya14busa/action-cond@v1
       id: cmake_arch
       with:
