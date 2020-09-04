@@ -533,10 +533,29 @@ bool LocalTransport::IsLocalTransportSupported()
 {
 #ifdef ROBOTRACONTEUR_WINDOWS
 	// Test for AF_UNIX support by trying to create socket
-	SOCKET res = ::socket(AF_UNIX, SOCK_STREAM, 0);
-	if (res != INVALID_SOCKET)
+	SOCKET sock = ::socket(AF_UNIX, SOCK_STREAM, 0);
+	if (sock != INVALID_SOCKET)
 	{
-		::closesocket(res);
+		boost::system::error_code ec;
+		boost::filesystem::path tmpfile = boost::filesystem::temp_directory_path() / boost::filesystem::unique_path("%%%%-%%%%-%%%%-%%%%",ec);
+		if (!ec)
+		{
+			sockaddr_un tmpaddr;
+			tmpaddr.sun_family = AF_UNIX;
+			std::string tmpfile_str = tmpfile.string();
+			if (tmpfile_str.size()-1 < UNIX_PATH_MAX)
+			{
+				strcpy(tmpaddr.sun_path, tmpfile_str.c_str());
+				if (::bind(sock,(SOCKADDR*)&tmpaddr,sizeof(tmpaddr)) == SOCKET_ERROR)
+				{
+					::closesocket(sock);
+					return false;
+				}
+				DeleteFileA(tmpfile_str.c_str());
+			}
+		}
+
+		::closesocket(sock);
 		return true;
 	}
 	return false;
