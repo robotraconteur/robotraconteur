@@ -30,6 +30,8 @@
 #include "ServiceTestClient.h"
 #include "ServiceTest2.h"
 #include "ServiceTestClient2.h"
+#include "ServiceTest3.h"
+#include "ServiceTestClient3.h"
 
 #include "boost/foreach.hpp"
 
@@ -564,6 +566,24 @@ return 0;
 		return 0;
 	}
 
+	if (command == "loopback3")
+	{
+
+		{			
+			ServerNodeSetup node_setup(ROBOTRACONTEUR_SERVICE_TYPES, "com.robotraconteur.testing.TestService3", 4567, RobotRaconteurNodeSetupFlags_ENABLE_TCP_TRANSPORT | RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER);
+			RobotRaconteurTestService3Support s;
+			s.RegisterServices();
+
+			ServiceTestClient3 c3;
+			c3.RunFullTest("rr+tcp://localhost:4567/?service=RobotRaconteurTestService3");
+
+		}
+
+		cout << "Test completed, no errors detected!" << endl;
+
+		return 0;
+	}
+
 	if (command=="client")
 	{
 		if (argc <4) 
@@ -666,6 +686,42 @@ return 0;
 
 		RobotRaconteurNode::s()->Shutdown();
 
+		boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+		cout << "Test completed, no errors detected!" << endl;
+		return 0;
+
+	}
+
+	if (command == "client3")
+	{
+		if (argc <3)
+		{
+			cout << "Usage for client2:  RobotRaconteurTest client3 url" << endl;
+			return -1;
+		}
+
+		string url1(argv[2]);
+		{
+			ClientNodeSetup node_setup(ROBOTRACONTEUR_SERVICE_TYPES,argc,argv);
+			
+			
+			boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+
+			int count = 1;
+
+			if (argc >= 4)
+			{
+				std::string scount(argv[3]);
+				count = boost::lexical_cast<int>(scount);
+			}
+
+			for (int j = 0; j < count; j++)
+			{
+				ServiceTestClient3 cl;
+				cl.RunFullTest(url1);
+			}
+
+		}
 		boost::this_thread::sleep(boost::posix_time::milliseconds(100));
 		cout << "Test completed, no errors detected!" << endl;
 		return 0;
@@ -836,6 +892,9 @@ return 0;
 
 		RobotRaconteurTestService2Support s2;
 		s2.RegisterServices(c);
+
+		RobotRaconteurTestService3Support s3;
+		s3.RegisterServices();
 
 		cout << "Server started, press enter to quit" << endl;
 		getchar();
@@ -1930,7 +1989,9 @@ return 0;
 		RobotRaconteurTestService2Support s2;
 		s2.RegisterServices(c);
 		
-		
+		RobotRaconteurTestService3Support s3;
+		s3.RegisterServices();
+
 		int event_count = 0;
 
 		bool single_thread_server_keep_going = true;
@@ -2010,6 +2071,9 @@ return 0;
 
 		RobotRaconteurTestService2Support s2;
 		s2.RegisterServices(c);
+
+		RobotRaconteurTestService3Support s3;
+		s3.RegisterServices();
 
 		cout << "Server started, press enter to quit" << endl;
 		getchar();

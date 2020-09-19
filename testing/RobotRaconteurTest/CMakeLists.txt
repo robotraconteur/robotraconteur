@@ -13,6 +13,7 @@ ROBOTRACONTEUR_GENERATE_THUNK(RR_THUNK_SRCS RR_THUNK_HDRS
 	com.robotraconteur.testing.TestService2.robdef 
 	com.robotraconteur.testing.TestService3.robdef
 	com.robotraconteur.testing.TestService4.robdef
+	com.robotraconteur.testing.TestService5.robdef
 	MASTER_HEADER
 	)
 
@@ -27,6 +28,8 @@ set(RobotRaconteurTest_src
 	ServiceTestClient.cpp
 	ServiceTest2.cpp
 	ServiceTestClient2.cpp
+	ServiceTest3.cpp
+	ServiceTestClient3.cpp
 	AsyncMessageTest.cpp
 	CompareArray.cpp
 	${RR_THUNK_SRCS}
@@ -67,6 +70,7 @@ file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/../testdata" DESTINATION "${CMAKE_BINARY_
 RRConfigureTest(test_prog_cpp "${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/bin/RobotRaconteurTest" "test_prog" NOCTEST)
 RRConfigureTest(test_cpp_loopback "${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/bin/RobotRaconteurTest" "test_prog" ARGS "loopback")
 RRConfigureTest(test_cpp_loopback2 "${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/bin/RobotRaconteurTest" "test_prog" ARGS "loopback2")
+RRConfigureTest(test_cpp_loopback3 "${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/bin/RobotRaconteurTest" "test_prog" ARGS "loopback3")
 set(RR_ROBDEF_DIR "${CMAKE_SOURCE_DIR}/testing/RobotRaconteurTest")
 RRConfigureTest(test_robdeftest "${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/bin/RobotRaconteurTest" "test_prog" ARGS "robdeftest ${RR_ROBDEF_DIR}/com.robotraconteur.testing.TestService1.robdef ${RR_ROBDEF_DIR}/com.robotraconteur.testing.TestService2.robdef ${RR_ROBDEF_DIR}/com.robotraconteur.testing.TestService3.robdef")
 RRConfigureTest(test_cpp_discoveryloopback "${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/bin/RobotRaconteurTest" "test_prog" ARGS "discoveryloopback --robotraconteur-local-enable=false")

@@ -1,0 +1,32 @@
+service com.robotraconteur.testing.TestService5
+
+exception asynctestexp
+
+struct teststruct4
+    field double a
+end
+
+struct teststruct5
+    field string a
+end
+
+object asynctestroot
+    property double d1
+    property string s1
+    property double[] d2
+    property string{list} s2
+    property teststruct4 s3
+    property double err
+
+    function void f1()
+    function void f2(int32 a)
+    function int32 f3(double a, double b)
+    function double{generator} f4()
+    function void f5(double a, double{generator} b)
+    function teststruct4{generator} f6(double a, teststruct5{generator} b)
+
+    function void err_func()
+    function double err_func2()
+    function double{generator} err_func3()
+end
+
