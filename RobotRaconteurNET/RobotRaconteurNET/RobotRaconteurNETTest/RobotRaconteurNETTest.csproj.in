@@ -127,10 +127,12 @@
 	<Compile Include="test\com__robotraconteur__testing__TestService2.cs"/>	
 	<Compile Include="test\com__robotraconteur__testing__TestService3.cs"/>	
   <Compile Include="test\com__robotraconteur__testing__TestService4.cs"/>	
+  <Compile Include="test\com__robotraconteur__testing__TestService5.cs"/>	
 	<Compile Include="test\com__robotraconteur__testing__TestService1_stubskel.cs"/>	
 	<Compile Include="test\com__robotraconteur__testing__TestService2_stubskel.cs"/>
 	<Compile Include="test\com__robotraconteur__testing__TestService3_stubskel.cs"/>
   <Compile Include="test\com__robotraconteur__testing__TestService4_stubskel.cs"/>
+  <Compile Include="test\com__robotraconteur__testing__TestService5_stubskel.cs"/>
 	
     <Compile Include="$(RRSourceDir)\ServiceTest.cs">
 		<Link>ServiceTest.cs</Link>
@@ -142,6 +144,12 @@
 		<Link>ServiceTest2.cs</Link>
 	</Compile>
     <Compile Include="$(RRSourceDir)\ServiceTestClient2.cs">
+		<Link>ServiceTestClient2.cs</Link>
+	</Compile>
+  <Compile Include="$(RRSourceDir)\ServiceTest3.cs">
+		<Link>ServiceTest2.cs</Link>
+	</Compile>
+  <Compile Include="$(RRSourceDir)\ServiceTestClient3.cs">
 		<Link>ServiceTestClient2.cs</Link>
 	</Compile>
   </ItemGroup>

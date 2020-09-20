@@ -98,7 +98,7 @@ public abstract class ServiceSkel extends WrappedServiceSkelDirector
 
 	}
 	@Override
-	public MessageElement _CallFunction(String name, vectorptr_messageelement args)
+	public MessageElement _CallFunction(String name, vectorptr_messageelement args, WrappedServiceSkelAsyncAdapter async_adapter)
 	{		
 		MessageElement r=null;
 		try
@@ -121,7 +121,7 @@ public abstract class ServiceSkel extends WrappedServiceSkelDirector
 	}
 
 	@Override
-	public MessageElement _CallGetProperty(String name)
+	public MessageElement _CallGetProperty(String name, WrappedServiceSkelAsyncAdapter async_adapter)
 	{
 		MessageElement r=null;
 		try
@@ -142,7 +142,7 @@ public abstract class ServiceSkel extends WrappedServiceSkelDirector
 	}
 
 	@Override
-	public void _CallSetProperty(String name, MessageElement m)
+	public void _CallSetProperty(String name, MessageElement m, WrappedServiceSkelAsyncAdapter async_adapter)
 	{		
 		try
 		{			

@@ -45,4 +45,6 @@ public static uint CurrentEndpoint { get { return GetCurrentEndpoint(); } }
 
 %}
 
+%typemap(csclassmodifiers) RobotRaconteur::WrappedServiceSkelAsyncAdapter "public partial class";
+
 %include "Service.i"

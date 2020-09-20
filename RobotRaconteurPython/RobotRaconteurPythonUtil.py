@@ -1434,7 +1434,7 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
         if hasattr(self.obj,"RRServiceObjectInit"):
             self.obj.RRServiceObjectInit(skel.GetContext(),skel.GetServicePath())
 
-    def _CallGetProperty(self, name):
+    def _CallGetProperty(self, name, async_adapter):
 
         type1=FindMemberByName(self.skel.Type.Members,name)
         #type1=[e for e in self.skel.Type.Members if e.Name == name][0]
@@ -1449,7 +1449,7 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
         return PackMessageElement(ret,type2.Type,node=self.skel.RRGetNode())
 
 
-    def _CallSetProperty(self, name, value):
+    def _CallSetProperty(self, name, value, async_adapter):
 
         type1=FindMemberByName(self.skel.Type.Members,name)
         #type1=[e for e in self.skel.Type.Members if e.Name == name][0]
@@ -1458,7 +1458,7 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
         setattr(self.obj,name,a)
 
 
-    def _CallFunction(self, name, args1):
+    def _CallFunction(self, name, args1, async_adapter):
 
         type1=FindMemberByName(self.skel.Type.Members,name)
         type2=RobotRaconteurPython.MemberDefinitionUtil.ToFunction(type1)

@@ -70,4 +70,26 @@ set(RR_CSHARP_ERR_CATCH_M "
 RR_SWIG_REPLACE_ERRORS("${RR_CSHARP_ERR_CATCH_M}" "" "${RR_CSHARP_ERR_CATCH_M}" "${RR_ERRORS}" "${RR_CSHARP_ERR_OVERRIDE}" RR_ERRORS_CATCH1 OVERRIDE_ONLY)
 string(REPLACE "MessageErrorType_" "MessageErrorType." RR_ERRORS_CATCH "${RR_ERRORS_CATCH1}" )
 
+set(RR_CSHARP_ERR_CATCH2_M "
+             if (exception is @RR_ERROR_TYPE@)
+             {
+                 error_info.error_code = (uint)@RR_ERROR_CODE@;
+                 error_info.errorname = @RR_ERROR_TYPE_STR@;
+                 error_info.errormessage = exception.Message;
+                 if (errorsubname != null)
+                 {
+                     error_info.errorsubname = errorsubname;
+                 }                
+                 if (param2 != null)
+                 {
+                     error_info.param_ = param2;
+                 }     
+                 return error_info;
+             }             
+")
+
+
+RR_SWIG_REPLACE_ERRORS("${RR_CSHARP_ERR_CATCH2_M}" "" "${RR_CSHARP_ERR_CATCH2_M}" "${RR_ERRORS}" "${RR_CSHARP_ERR_OVERRIDE}" RR_ERRORS_CATCH2 OVERRIDE_ONLY)
+string(REPLACE "MessageErrorType_" "MessageErrorType." RR_ERRORS_CATCH2 "${RR_ERRORS_CATCH2}" )
+
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurNET/Error.cs.in" "${CMAKE_CURRENT_BINARY_DIR}/Error.cs" @ONLY)

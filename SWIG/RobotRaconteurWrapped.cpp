@@ -2564,8 +2564,15 @@ namespace RobotRaconteur
 		RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetRes,m->MemberName);
 		RR_INTRUSIVE_PTR<MessageElement> ret;
 		
-		DIRECTOR_CALL(WrappedServiceSkelDirector,ret=RR_Director2->CallGetProperty(m->MemberName.str().to_string()))
+		boost::shared_ptr<WrappedServiceSkelAsyncAdapter> async_adapter = boost::make_shared<WrappedServiceSkelAsyncAdapter>();
+		async_adapter->SetHandler(boost::bind(&ServiceSkel::EndAsyncCallGetProperty,shared_from_this(),RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
+		DIRECTOR_CALL(WrappedServiceSkelDirector,ret=RR_Director2->CallGetProperty(m->MemberName.str().to_string(),async_adapter))
 		
+		if (async_adapter->IsAsync())
+		{
+			return RR_INTRUSIVE_PTR<MessageEntry>();
+		}
+
 		ret->ElementName="value";
 		mr->AddElement(ret);
 		return mr;
@@ -2575,16 +2582,33 @@ namespace RobotRaconteur
 	{
 		RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetRes,m->MemberName);
 		RR_INTRUSIVE_PTR<MessageElement> m2=m->FindElement("value");
-		DIRECTOR_CALL(WrappedServiceSkelDirector,RR_Director2->CallSetProperty(m->MemberName.str().to_string(),m2))
+
+		boost::shared_ptr<WrappedServiceSkelAsyncAdapter> async_adapter = boost::make_shared<WrappedServiceSkelAsyncAdapter>();
+		async_adapter->SetHandler(boost::bind(&ServiceSkel::EndAsyncCallSetProperty,shared_from_this(),RR_BOOST_PLACEHOLDERS(_2),m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
+		DIRECTOR_CALL(WrappedServiceSkelDirector,RR_Director2->CallSetProperty(m->MemberName.str().to_string(),m2,async_adapter))
+
+		if (async_adapter->IsAsync())
+		{
+			return RR_INTRUSIVE_PTR<MessageEntry>();
+		}
+
 		return mr;
 	}
 
 	RR_INTRUSIVE_PTR<MessageEntry> WrappedServiceSkel::CallFunction(RR_INTRUSIVE_PTR<MessageEntry> m)
 	{
 		RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr=CreateMessageEntry(RobotRaconteur::MessageEntryType_FunctionCallRes,m->MemberName);
-		RR_INTRUSIVE_PTR<MessageElement> ret;		
-		DIRECTOR_CALL(WrappedServiceSkelDirector,ret=RR_Director2->CallFunction(m->MemberName.str().to_string(),m->elements))
+		RR_INTRUSIVE_PTR<MessageElement> ret;
+		boost::shared_ptr<WrappedServiceSkelAsyncAdapter> async_adapter = boost::make_shared<WrappedServiceSkelAsyncAdapter>();
+		async_adapter->SetHandler(boost::bind(&ServiceSkel::EndAsyncCallFunction,shared_from_this(),RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
 		
+		DIRECTOR_CALL(WrappedServiceSkelDirector,ret=RR_Director2->CallFunction(m->MemberName.str().to_string(),m->elements,async_adapter))
+		
+		if (async_adapter->IsAsync())
+		{
+			return RR_INTRUSIVE_PTR<MessageEntry>();
+		}
+
 		if (ret->ElementName != "return" && ret->ElementName != "index")
 		{
 			ret->ElementName = "return";
@@ -2882,6 +2906,48 @@ namespace RobotRaconteur
 	}*/
 
 	// Pod array memory skels
+
+	WrappedServiceSkelAsyncAdapter::WrappedServiceSkelAsyncAdapter()
+	{
+		is_async = false;
+	}
+
+	void WrappedServiceSkelAsyncAdapter::SetHandler(boost::function<void(RR_INTRUSIVE_PTR<MessageElement>,RR_SHARED_PTR<RobotRaconteurException>)> handler)
+	{
+		this->handler=handler;
+	}
+
+	void WrappedServiceSkelAsyncAdapter::MakeAsync()
+	{
+		is_async = true;
+	}
+
+	bool WrappedServiceSkelAsyncAdapter::IsAsync()
+	{
+		return is_async;
+	}
+
+	void WrappedServiceSkelAsyncAdapter::End(const HandlerErrorInfo& err)
+	{
+		if (err.error_code != 0)
+		{
+			handler(RR_INTRUSIVE_PTR<MessageElement>(), err.ToException());
+			return;
+		}
+
+		handler(RR_INTRUSIVE_PTR<MessageElement>(), RR_SHARED_PTR<RobotRaconteurException>());
+	}
+
+	void WrappedServiceSkelAsyncAdapter::End(RR_INTRUSIVE_PTR<MessageElement> ret, const HandlerErrorInfo& err)
+	{
+		if (err.error_code != 0)
+		{
+			handler(ret, err.ToException());
+			return;
+		}
+
+		handler(ret, RR_SHARED_PTR<RobotRaconteurException>());
+	}
 
 	WrappedPodArrayMemory::WrappedPodArrayMemory(WrappedPodArrayMemoryDirector* RR_Director)
 	{
@@ -3833,6 +3899,66 @@ namespace RobotRaconteur
 				this->param_ = param_;
 			}
 		}
+	}
+
+	HandlerErrorInfo::HandlerErrorInfo(uint32_t error_code, const std::string& errorname, const std::string& errormessage, 
+			const std::string& errorsubname, boost::intrusive_ptr<RobotRaconteur::MessageElement> param_)
+	{
+		this->error_code = error_code;
+		this->errorname = errorname;
+		this->errormessage = errormessage;
+		this->errorsubname = errorsubname;
+		this->param_ = param_;
+	}
+
+	void HandlerErrorInfo::ToMessageEntry(RR_INTRUSIVE_PTR<MessageEntry> m) const
+	{
+		m->elements.clear();
+		m->Error = (MessageErrorType)error_code;
+		m->AddElement("errorname", stringToRRArray(errorname));
+		m->AddElement("errorstring", stringToRRArray(errormessage));
+		if (!errorsubname.empty())
+		{
+			m->AddElement("errorsubname", stringToRRArray(errorsubname));
+		}
+
+		if (param_)
+		{				
+			try
+			{
+				param_->ElementName = "errorparam";
+				m->elements.push_back(param_);
+			}
+			catch (std::exception&)
+			{
+				//TODO: Log Error
+			}				
+		}
+	}
+
+	RR_SHARED_PTR<RobotRaconteurException> HandlerErrorInfo::ToException() const
+	{
+		if (error_code == 0)
+		{
+			return RR_SHARED_PTR<RobotRaconteurException>();
+		}
+
+		RR_INTRUSIVE_PTR<RRValue> err1;
+		if (param_)
+		{
+			try
+			{
+				err1 = detail::packing::UnpackVarType(param_,NULL);
+			}
+			catch (std::exception&)
+			{
+				//TODO: Log Error
+			}
+		}
+
+		RR_SHARED_PTR<RobotRaconteurException> err = RR_MAKE_SHARED<RobotRaconteurException>((MessageErrorType)error_code, errorname, errormessage, errorsubname,err1);
+		
+		return err;
 	}
 
 	void UserLogRecordHandlerBase::SetHandler(UserLogRecordHandlerDirector* director, int32_t id)

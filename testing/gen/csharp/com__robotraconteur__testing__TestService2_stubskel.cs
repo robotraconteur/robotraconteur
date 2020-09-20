@@ -289,20 +289,35 @@ public class subobj_stub : ServiceStub , subobj, async_subobj{
 }
 public class baseobj_skel : ServiceSkel {
     protected baseobj obj;
-    public baseobj_skel(object o) : base(o) { obj=(baseobj)o; }
+    protected async_baseobj async_obj;
+    public baseobj_skel(object o) : base(o)    {
+    obj=(baseobj)o;
+    async_obj = o as async_baseobj;
+    }
     public override void ReleaseCastObject() { 
     obj=null;
+    async_obj=null;
     base.ReleaseCastObject();
     }
-    public override MessageElement CallGetProperty(string membername) {
+    public override MessageElement CallGetProperty(string membername, WrappedServiceSkelAsyncAdapter async_adapter) {
     switch (membername) {
     case "d1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_d1().ContinueWith(t => async_adapter.EndTask<double>(t,async_ret => MessageElementUtil.PackScalar<double>("return",async_ret)));
+    return null;
+    }
     double ret=obj.d1;
     return MessageElementUtil.PackScalar<double>("return",ret);
     }
     case "d2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_d2().ContinueWith(t => async_adapter.EndTask<double[]>(t,async_ret => MessageElementUtil.PackArray<double>("return",async_ret)));
+    return null;
+    }
     double[] ret=obj.d2;
     return MessageElementUtil.PackArray<double>("return",ret);
     }
@@ -311,15 +326,25 @@ public class baseobj_skel : ServiceSkel {
     }
     throw new MemberNotFoundException("Member not found");
     }
-    public override void CallSetProperty(string membername, MessageElement m) {
+    public override void CallSetProperty(string membername, MessageElement m, WrappedServiceSkelAsyncAdapter async_adapter) {
     switch (membername) {
     case "d1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_d1((MessageElementUtil.UnpackScalar<double>(m))).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.d1=(MessageElementUtil.UnpackScalar<double>(m));
     return;
     }
     case "d2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_d2(MessageElementUtil.UnpackArray<double>(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.d2=MessageElementUtil.UnpackArray<double>(m);
     return;
     }
@@ -328,12 +353,17 @@ public class baseobj_skel : ServiceSkel {
     }
     throw new MemberNotFoundException("Member not found");
     }
-    public override MessageElement CallFunction(string rr_membername, vectorptr_messageelement rr_m) {
+    public override MessageElement CallFunction(string rr_membername, vectorptr_messageelement rr_m, WrappedServiceSkelAsyncAdapter rr_async_adapter) {
     switch (rr_membername) {
     case "func3":
     {
     double d1=(MessageElementUtil.UnpackScalar<double>(vectorptr_messageelement_util.FindElement(rr_m,"d1")));
     double d2=(MessageElementUtil.UnpackScalar<double>(vectorptr_messageelement_util.FindElement(rr_m,"d2")));
+    if (async_obj!=null)    {
+    rr_async_adapter.MakeAsync();
+    async_obj.async_func3(d1, d2).ContinueWith(t => rr_async_adapter.EndTask<double>(t,async_ret => MessageElementUtil.PackScalar<double>("return",async_ret)));
+    return null;
+    }
     double rr_ret=this.obj.func3(d1, d2);
     return MessageElementUtil.PackScalar<double>("return",rr_ret);
     }
@@ -446,30 +476,40 @@ public class baseobj_skel : ServiceSkel {
 }
 public class subobj_skel : ServiceSkel {
     protected subobj obj;
-    public subobj_skel(object o) : base(o) { obj=(subobj)o; }
+    protected async_subobj async_obj;
+    public subobj_skel(object o) : base(o)    {
+    obj=(subobj)o;
+    async_obj = o as async_subobj;
+    }
     public override void ReleaseCastObject() { 
     obj=null;
+    async_obj=null;
     base.ReleaseCastObject();
     }
-    public override MessageElement CallGetProperty(string membername) {
+    public override MessageElement CallGetProperty(string membername, WrappedServiceSkelAsyncAdapter async_adapter) {
     switch (membername) {
     default:
     break;
     }
     throw new MemberNotFoundException("Member not found");
     }
-    public override void CallSetProperty(string membername, MessageElement m) {
+    public override void CallSetProperty(string membername, MessageElement m, WrappedServiceSkelAsyncAdapter async_adapter) {
     switch (membername) {
     default:
     break;
     }
     throw new MemberNotFoundException("Member not found");
     }
-    public override MessageElement CallFunction(string rr_membername, vectorptr_messageelement rr_m) {
+    public override MessageElement CallFunction(string rr_membername, vectorptr_messageelement rr_m, WrappedServiceSkelAsyncAdapter rr_async_adapter) {
     switch (rr_membername) {
     case "add_val":
     {
     double v=(MessageElementUtil.UnpackScalar<double>(vectorptr_messageelement_util.FindElement(rr_m,"v")));
+    if (async_obj!=null)    {
+    rr_async_adapter.MakeAsync();
+    async_obj.async_add_val(v).ContinueWith(t => rr_async_adapter.EndTask<double>(t,async_ret => MessageElementUtil.PackScalar<double>("return",async_ret)));
+    return null;
+    }
     double rr_ret=this.obj.add_val(v);
     return MessageElementUtil.PackScalar<double>("return",rr_ret);
     }

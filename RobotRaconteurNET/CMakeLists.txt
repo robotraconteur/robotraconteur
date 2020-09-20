@@ -77,6 +77,7 @@ ROBOTRACONTEUR_GENERATE_THUNK(RR_THUNK_SRCS
 	com.robotraconteur.testing.TestService2.robdef 
 	com.robotraconteur.testing.TestService3.robdef
 	com.robotraconteur.testing.TestService4.robdef
+	com.robotraconteur.testing.TestService5.robdef
 	LANG csharp
 	INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/testing/RobotRaconteurTest"
 	OUTDIR "${CMAKE_CURRENT_BINARY_DIR}/test"
@@ -140,6 +141,7 @@ endif()
 RRConfigureTest(test_prog_net "${RR_NET_TEST_CMD}" "test_prog" NOCTEST ARGS "${RR_NET_TEST_CMD_ARGS}")
 RRConfigureTest(test_net_loopback "${RR_NET_TEST_CMD}" "test_prog" ARGS "${RR_NET_TEST_CMD_ARGS} loopback")
 RRConfigureTest(test_net_loopback2 "${RR_NET_TEST_CMD}" "test_prog" ARGS "${RR_NET_TEST_CMD_ARGS} loopback2")
+RRConfigureTest(test_net_loopback3 "${RR_NET_TEST_CMD}" "test_prog" ARGS "${RR_NET_TEST_CMD_ARGS} loopback3")
 
 #endif()
 

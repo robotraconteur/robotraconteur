@@ -2373,290 +2373,575 @@ public class sub3_stub : ServiceStub , sub3, async_sub3{
 }
 public class testroot_skel : ServiceSkel {
     protected testroot obj;
-    public testroot_skel(object o) : base(o) { obj=(testroot)o; }
+    protected async_testroot async_obj;
+    public testroot_skel(object o) : base(o)    {
+    obj=(testroot)o;
+    async_obj = o as async_testroot;
+    }
     public override void ReleaseCastObject() { 
     obj=null;
+    async_obj=null;
     base.ReleaseCastObject();
     }
-    public override MessageElement CallGetProperty(string membername) {
+    public override MessageElement CallGetProperty(string membername, WrappedServiceSkelAsyncAdapter async_adapter) {
     switch (membername) {
     case "d1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_d1().ContinueWith(t => async_adapter.EndTask<double>(t,async_ret => MessageElementUtil.PackScalar<double>("return",async_ret)));
+    return null;
+    }
     double ret=obj.d1;
     return MessageElementUtil.PackScalar<double>("return",ret);
     }
     case "d2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_d2().ContinueWith(t => async_adapter.EndTask<double[]>(t,async_ret => MessageElementUtil.PackArray<double>("return",async_ret)));
+    return null;
+    }
     double[] ret=obj.d2;
     return MessageElementUtil.PackArray<double>("return",ret);
     }
     case "d3":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_d3().ContinueWith(t => async_adapter.EndTask<double[]>(t,async_ret => MessageElementUtil.PackArray<double>("return",DataTypeUtil.VerifyArrayLength(async_ret, 16, false))));
+    return null;
+    }
     double[] ret=obj.d3;
     return MessageElementUtil.PackArray<double>("return",DataTypeUtil.VerifyArrayLength(ret, 16, false));
     }
     case "d4":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_d4().ContinueWith(t => async_adapter.EndTask<double[]>(t,async_ret => MessageElementUtil.PackArray<double>("return",DataTypeUtil.VerifyArrayLength(async_ret, 16, true))));
+    return null;
+    }
     double[] ret=obj.d4;
     return MessageElementUtil.PackArray<double>("return",DataTypeUtil.VerifyArrayLength(ret, 16, true));
     }
     case "d5":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_d5().ContinueWith(t => async_adapter.EndTask<MultiDimArray>(t,async_ret => MessageElementUtil.PackMultiDimArray("return",(MultiDimArray)async_ret)));
+    return null;
+    }
     MultiDimArray ret=obj.d5;
     return MessageElementUtil.PackMultiDimArray("return",(MultiDimArray)ret);
     }
     case "d6":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_d6().ContinueWith(t => async_adapter.EndTask<MultiDimArray>(t,async_ret => MessageElementUtil.PackMultiDimArray("return",(MultiDimArray)DataTypeUtil.VerifyArrayLength(async_ret,9,new uint[] {3,3}))));
+    return null;
+    }
     MultiDimArray ret=obj.d6;
     return MessageElementUtil.PackMultiDimArray("return",(MultiDimArray)DataTypeUtil.VerifyArrayLength(ret,9,new uint[] {3,3}));
     }
     case "s1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_s1().ContinueWith(t => async_adapter.EndTask<float>(t,async_ret => MessageElementUtil.PackScalar<float>("return",async_ret)));
+    return null;
+    }
     float ret=obj.s1;
     return MessageElementUtil.PackScalar<float>("return",ret);
     }
     case "s2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_s2().ContinueWith(t => async_adapter.EndTask<float[]>(t,async_ret => MessageElementUtil.PackArray<float>("return",async_ret)));
+    return null;
+    }
     float[] ret=obj.s2;
     return MessageElementUtil.PackArray<float>("return",ret);
     }
     case "i8_1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_i8_1().ContinueWith(t => async_adapter.EndTask<sbyte>(t,async_ret => MessageElementUtil.PackScalar<sbyte>("return",async_ret)));
+    return null;
+    }
     sbyte ret=obj.i8_1;
     return MessageElementUtil.PackScalar<sbyte>("return",ret);
     }
     case "i8_2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_i8_2().ContinueWith(t => async_adapter.EndTask<sbyte[]>(t,async_ret => MessageElementUtil.PackArray<sbyte>("return",async_ret)));
+    return null;
+    }
     sbyte[] ret=obj.i8_2;
     return MessageElementUtil.PackArray<sbyte>("return",ret);
     }
     case "u8_1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_u8_1().ContinueWith(t => async_adapter.EndTask<byte>(t,async_ret => MessageElementUtil.PackScalar<byte>("return",async_ret)));
+    return null;
+    }
     byte ret=obj.u8_1;
     return MessageElementUtil.PackScalar<byte>("return",ret);
     }
     case "u8_2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_u8_2().ContinueWith(t => async_adapter.EndTask<byte[]>(t,async_ret => MessageElementUtil.PackArray<byte>("return",async_ret)));
+    return null;
+    }
     byte[] ret=obj.u8_2;
     return MessageElementUtil.PackArray<byte>("return",ret);
     }
     case "u8_3":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_u8_3().ContinueWith(t => async_adapter.EndTask<MultiDimArray>(t,async_ret => MessageElementUtil.PackMultiDimArray("return",(MultiDimArray)async_ret)));
+    return null;
+    }
     MultiDimArray ret=obj.u8_3;
     return MessageElementUtil.PackMultiDimArray("return",(MultiDimArray)ret);
     }
     case "i16_1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_i16_1().ContinueWith(t => async_adapter.EndTask<short>(t,async_ret => MessageElementUtil.PackScalar<short>("return",async_ret)));
+    return null;
+    }
     short ret=obj.i16_1;
     return MessageElementUtil.PackScalar<short>("return",ret);
     }
     case "i16_2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_i16_2().ContinueWith(t => async_adapter.EndTask<short[]>(t,async_ret => MessageElementUtil.PackArray<short>("return",async_ret)));
+    return null;
+    }
     short[] ret=obj.i16_2;
     return MessageElementUtil.PackArray<short>("return",ret);
     }
     case "u16_1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_u16_1().ContinueWith(t => async_adapter.EndTask<ushort>(t,async_ret => MessageElementUtil.PackScalar<ushort>("return",async_ret)));
+    return null;
+    }
     ushort ret=obj.u16_1;
     return MessageElementUtil.PackScalar<ushort>("return",ret);
     }
     case "u16_2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_u16_2().ContinueWith(t => async_adapter.EndTask<ushort[]>(t,async_ret => MessageElementUtil.PackArray<ushort>("return",async_ret)));
+    return null;
+    }
     ushort[] ret=obj.u16_2;
     return MessageElementUtil.PackArray<ushort>("return",ret);
     }
     case "i32_1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_i32_1().ContinueWith(t => async_adapter.EndTask<int>(t,async_ret => MessageElementUtil.PackScalar<int>("return",async_ret)));
+    return null;
+    }
     int ret=obj.i32_1;
     return MessageElementUtil.PackScalar<int>("return",ret);
     }
     case "i32_2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_i32_2().ContinueWith(t => async_adapter.EndTask<int[]>(t,async_ret => MessageElementUtil.PackArray<int>("return",async_ret)));
+    return null;
+    }
     int[] ret=obj.i32_2;
     return MessageElementUtil.PackArray<int>("return",ret);
     }
     case "i32_huge":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_i32_huge().ContinueWith(t => async_adapter.EndTask<int[]>(t,async_ret => MessageElementUtil.PackArray<int>("return",async_ret)));
+    return null;
+    }
     int[] ret=obj.i32_huge;
     return MessageElementUtil.PackArray<int>("return",ret);
     }
     case "u32_1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_u32_1().ContinueWith(t => async_adapter.EndTask<uint>(t,async_ret => MessageElementUtil.PackScalar<uint>("return",async_ret)));
+    return null;
+    }
     uint ret=obj.u32_1;
     return MessageElementUtil.PackScalar<uint>("return",ret);
     }
     case "u32_2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_u32_2().ContinueWith(t => async_adapter.EndTask<uint[]>(t,async_ret => MessageElementUtil.PackArray<uint>("return",async_ret)));
+    return null;
+    }
     uint[] ret=obj.u32_2;
     return MessageElementUtil.PackArray<uint>("return",ret);
     }
     case "i64_1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_i64_1().ContinueWith(t => async_adapter.EndTask<long>(t,async_ret => MessageElementUtil.PackScalar<long>("return",async_ret)));
+    return null;
+    }
     long ret=obj.i64_1;
     return MessageElementUtil.PackScalar<long>("return",ret);
     }
     case "i64_2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_i64_2().ContinueWith(t => async_adapter.EndTask<long[]>(t,async_ret => MessageElementUtil.PackArray<long>("return",async_ret)));
+    return null;
+    }
     long[] ret=obj.i64_2;
     return MessageElementUtil.PackArray<long>("return",ret);
     }
     case "u64_1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_u64_1().ContinueWith(t => async_adapter.EndTask<ulong>(t,async_ret => MessageElementUtil.PackScalar<ulong>("return",async_ret)));
+    return null;
+    }
     ulong ret=obj.u64_1;
     return MessageElementUtil.PackScalar<ulong>("return",ret);
     }
     case "u64_2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_u64_2().ContinueWith(t => async_adapter.EndTask<ulong[]>(t,async_ret => MessageElementUtil.PackArray<ulong>("return",async_ret)));
+    return null;
+    }
     ulong[] ret=obj.u64_2;
     return MessageElementUtil.PackArray<ulong>("return",ret);
     }
     case "str1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_str1().ContinueWith(t => async_adapter.EndTask<string>(t,async_ret => MessageElementUtil.PackString("return",async_ret)));
+    return null;
+    }
     string ret=obj.str1;
     return MessageElementUtil.PackString("return",ret);
     }
     case "struct1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_struct1().ContinueWith(t => async_adapter.EndTask<teststruct1>(t,async_ret => MessageElementUtil.PackStructure("return",async_ret)));
+    return null;
+    }
     teststruct1 ret=obj.struct1;
     return MessageElementUtil.PackStructure("return",ret);
     }
     case "struct2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_struct2().ContinueWith(t => async_adapter.EndTask<teststruct2>(t,async_ret => MessageElementUtil.PackStructure("return",async_ret)));
+    return null;
+    }
     teststruct2 ret=obj.struct2;
     return MessageElementUtil.PackStructure("return",ret);
     }
     case "is_d1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_is_d1().ContinueWith(t => async_adapter.EndTask<Dictionary<int,double>>(t,async_ret => MessageElementUtil.PackMapType<int,double>("return",async_ret)));
+    return null;
+    }
     Dictionary<int,double> ret=obj.is_d1;
     return MessageElementUtil.PackMapType<int,double>("return",ret);
     }
     case "is_d2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_is_d2().ContinueWith(t => async_adapter.EndTask<Dictionary<string,double>>(t,async_ret => MessageElementUtil.PackMapType<string,double>("return",async_ret)));
+    return null;
+    }
     Dictionary<string,double> ret=obj.is_d2;
     return MessageElementUtil.PackMapType<string,double>("return",ret);
     }
     case "is_d3":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_is_d3().ContinueWith(t => async_adapter.EndTask<Dictionary<int,double[]>>(t,async_ret => MessageElementUtil.PackMapType<int,double[]>("return",async_ret)));
+    return null;
+    }
     Dictionary<int,double[]> ret=obj.is_d3;
     return MessageElementUtil.PackMapType<int,double[]>("return",ret);
     }
     case "is_d4":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_is_d4().ContinueWith(t => async_adapter.EndTask<Dictionary<string,double[]>>(t,async_ret => MessageElementUtil.PackMapType<string,double[]>("return",async_ret)));
+    return null;
+    }
     Dictionary<string,double[]> ret=obj.is_d4;
     return MessageElementUtil.PackMapType<string,double[]>("return",ret);
     }
     case "is_d5":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_is_d5().ContinueWith(t => async_adapter.EndTask<Dictionary<int,MultiDimArray>>(t,async_ret => MessageElementUtil.PackMapType<int,MultiDimArray>("return",async_ret)));
+    return null;
+    }
     Dictionary<int,MultiDimArray> ret=obj.is_d5;
     return MessageElementUtil.PackMapType<int,MultiDimArray>("return",ret);
     }
     case "is_d6":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_is_d6().ContinueWith(t => async_adapter.EndTask<Dictionary<string,MultiDimArray>>(t,async_ret => MessageElementUtil.PackMapType<string,MultiDimArray>("return",async_ret)));
+    return null;
+    }
     Dictionary<string,MultiDimArray> ret=obj.is_d6;
     return MessageElementUtil.PackMapType<string,MultiDimArray>("return",ret);
     }
     case "is_str1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_is_str1().ContinueWith(t => async_adapter.EndTask<Dictionary<int,string>>(t,async_ret => MessageElementUtil.PackMapType<int,string>("return",async_ret)));
+    return null;
+    }
     Dictionary<int,string> ret=obj.is_str1;
     return MessageElementUtil.PackMapType<int,string>("return",ret);
     }
     case "is_str2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_is_str2().ContinueWith(t => async_adapter.EndTask<Dictionary<string,string>>(t,async_ret => MessageElementUtil.PackMapType<string,string>("return",async_ret)));
+    return null;
+    }
     Dictionary<string,string> ret=obj.is_str2;
     return MessageElementUtil.PackMapType<string,string>("return",ret);
     }
     case "is_struct1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_is_struct1().ContinueWith(t => async_adapter.EndTask<Dictionary<int,teststruct2>>(t,async_ret => MessageElementUtil.PackMapType<int,teststruct2>("return",async_ret)));
+    return null;
+    }
     Dictionary<int,teststruct2> ret=obj.is_struct1;
     return MessageElementUtil.PackMapType<int,teststruct2>("return",ret);
     }
     case "is_struct2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_is_struct2().ContinueWith(t => async_adapter.EndTask<Dictionary<string,teststruct2>>(t,async_ret => MessageElementUtil.PackMapType<string,teststruct2>("return",async_ret)));
+    return null;
+    }
     Dictionary<string,teststruct2> ret=obj.is_struct2;
     return MessageElementUtil.PackMapType<string,teststruct2>("return",ret);
     }
     case "struct3":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_struct3().ContinueWith(t => async_adapter.EndTask<com.robotraconteur.testing.TestService2.ostruct2>(t,async_ret => MessageElementUtil.PackStructure("return",async_ret)));
+    return null;
+    }
     com.robotraconteur.testing.TestService2.ostruct2 ret=obj.struct3;
     return MessageElementUtil.PackStructure("return",ret);
     }
     case "list_d1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_list_d1().ContinueWith(t => async_adapter.EndTask<List<double>>(t,async_ret => MessageElementUtil.PackListType<double>("return",async_ret)));
+    return null;
+    }
     List<double> ret=obj.list_d1;
     return MessageElementUtil.PackListType<double>("return",ret);
     }
     case "list_d3":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_list_d3().ContinueWith(t => async_adapter.EndTask<List<double[]>>(t,async_ret => MessageElementUtil.PackListType<double[]>("return",async_ret)));
+    return null;
+    }
     List<double[]> ret=obj.list_d3;
     return MessageElementUtil.PackListType<double[]>("return",ret);
     }
     case "list_d5":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_list_d5().ContinueWith(t => async_adapter.EndTask<List<MultiDimArray>>(t,async_ret => MessageElementUtil.PackListType<MultiDimArray>("return",async_ret)));
+    return null;
+    }
     List<MultiDimArray> ret=obj.list_d5;
     return MessageElementUtil.PackListType<MultiDimArray>("return",ret);
     }
     case "list_str1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_list_str1().ContinueWith(t => async_adapter.EndTask<List<string>>(t,async_ret => MessageElementUtil.PackListType<string>("return",async_ret)));
+    return null;
+    }
     List<string> ret=obj.list_str1;
     return MessageElementUtil.PackListType<string>("return",ret);
     }
     case "list_struct1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_list_struct1().ContinueWith(t => async_adapter.EndTask<List<teststruct2>>(t,async_ret => MessageElementUtil.PackListType<teststruct2>("return",async_ret)));
+    return null;
+    }
     List<teststruct2> ret=obj.list_struct1;
     return MessageElementUtil.PackListType<teststruct2>("return",ret);
     }
     case "var1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_var1().ContinueWith(t => async_adapter.EndTask<object>(t,async_ret => MessageElementUtil.PackVarType("return",async_ret)));
+    return null;
+    }
     object ret=obj.var1;
     return MessageElementUtil.PackVarType("return",ret);
     }
     case "var2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_var2().ContinueWith(t => async_adapter.EndTask<Dictionary<int,object>>(t,async_ret => MessageElementUtil.PackMapType<int,object>("return",async_ret)));
+    return null;
+    }
     Dictionary<int,object> ret=obj.var2;
     return MessageElementUtil.PackMapType<int,object>("return",ret);
     }
     case "var_num":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_var_num().ContinueWith(t => async_adapter.EndTask<object>(t,async_ret => MessageElementUtil.PackVarType("return",async_ret)));
+    return null;
+    }
     object ret=obj.var_num;
     return MessageElementUtil.PackVarType("return",ret);
     }
     case "var_str":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_var_str().ContinueWith(t => async_adapter.EndTask<object>(t,async_ret => MessageElementUtil.PackVarType("return",async_ret)));
+    return null;
+    }
     object ret=obj.var_str;
     return MessageElementUtil.PackVarType("return",ret);
     }
     case "var_struct":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_var_struct().ContinueWith(t => async_adapter.EndTask<object>(t,async_ret => MessageElementUtil.PackVarType("return",async_ret)));
+    return null;
+    }
     object ret=obj.var_struct;
     return MessageElementUtil.PackVarType("return",ret);
     }
     case "var_vector":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_var_vector().ContinueWith(t => async_adapter.EndTask<object>(t,async_ret => MessageElementUtil.PackVarType("return",async_ret)));
+    return null;
+    }
     object ret=obj.var_vector;
     return MessageElementUtil.PackVarType("return",ret);
     }
     case "var_dictionary":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_var_dictionary().ContinueWith(t => async_adapter.EndTask<object>(t,async_ret => MessageElementUtil.PackVarType("return",async_ret)));
+    return null;
+    }
     object ret=obj.var_dictionary;
     return MessageElementUtil.PackVarType("return",ret);
     }
     case "var_list":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_var_list().ContinueWith(t => async_adapter.EndTask<object>(t,async_ret => MessageElementUtil.PackVarType("return",async_ret)));
+    return null;
+    }
     object ret=obj.var_list;
     return MessageElementUtil.PackVarType("return",ret);
     }
     case "var_multidimarray":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_var_multidimarray().ContinueWith(t => async_adapter.EndTask<object>(t,async_ret => MessageElementUtil.PackVarType("return",async_ret)));
+    return null;
+    }
     object ret=obj.var_multidimarray;
     return MessageElementUtil.PackVarType("return",ret);
     }
     case "errtest":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_errtest().ContinueWith(t => async_adapter.EndTask<double>(t,async_ret => MessageElementUtil.PackScalar<double>("return",async_ret)));
+    return null;
+    }
     double ret=obj.errtest;
     return MessageElementUtil.PackScalar<double>("return",ret);
     }
     case "nulltest":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_nulltest().ContinueWith(t => async_adapter.EndTask<teststruct1>(t,async_ret => MessageElementUtil.PackStructure("return",async_ret)));
+    return null;
+    }
     teststruct1 ret=obj.nulltest;
     return MessageElementUtil.PackStructure("return",ret);
     }
@@ -2665,285 +2950,565 @@ public class testroot_skel : ServiceSkel {
     }
     throw new MemberNotFoundException("Member not found");
     }
-    public override void CallSetProperty(string membername, MessageElement m) {
+    public override void CallSetProperty(string membername, MessageElement m, WrappedServiceSkelAsyncAdapter async_adapter) {
     switch (membername) {
     case "d1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_d1((MessageElementUtil.UnpackScalar<double>(m))).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.d1=(MessageElementUtil.UnpackScalar<double>(m));
     return;
     }
     case "d2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_d2(MessageElementUtil.UnpackArray<double>(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.d2=MessageElementUtil.UnpackArray<double>(m);
     return;
     }
     case "d3":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_d3(DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackArray<double>(m), 16, false)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.d3=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackArray<double>(m), 16, false);
     return;
     }
     case "d4":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_d4(DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackArray<double>(m), 16, true)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.d4=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackArray<double>(m), 16, true);
     return;
     }
     case "d5":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_d5(MessageElementUtil.UnpackMultiDimArray(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.d5=MessageElementUtil.UnpackMultiDimArray(m);
     return;
     }
     case "d6":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_d6(DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackMultiDimArray(m),9,new uint[] {3,3})).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.d6=DataTypeUtil.VerifyArrayLength(MessageElementUtil.UnpackMultiDimArray(m),9,new uint[] {3,3});
     return;
     }
     case "s1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_s1((MessageElementUtil.UnpackScalar<float>(m))).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.s1=(MessageElementUtil.UnpackScalar<float>(m));
     return;
     }
     case "s2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_s2(MessageElementUtil.UnpackArray<float>(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.s2=MessageElementUtil.UnpackArray<float>(m);
     return;
     }
     case "i8_1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_i8_1((MessageElementUtil.UnpackScalar<sbyte>(m))).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.i8_1=(MessageElementUtil.UnpackScalar<sbyte>(m));
     return;
     }
     case "i8_2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_i8_2(MessageElementUtil.UnpackArray<sbyte>(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.i8_2=MessageElementUtil.UnpackArray<sbyte>(m);
     return;
     }
     case "u8_1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_u8_1((MessageElementUtil.UnpackScalar<byte>(m))).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.u8_1=(MessageElementUtil.UnpackScalar<byte>(m));
     return;
     }
     case "u8_2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_u8_2(MessageElementUtil.UnpackArray<byte>(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.u8_2=MessageElementUtil.UnpackArray<byte>(m);
     return;
     }
     case "u8_3":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_u8_3(MessageElementUtil.UnpackMultiDimArray(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.u8_3=MessageElementUtil.UnpackMultiDimArray(m);
     return;
     }
     case "i16_1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_i16_1((MessageElementUtil.UnpackScalar<short>(m))).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.i16_1=(MessageElementUtil.UnpackScalar<short>(m));
     return;
     }
     case "i16_2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_i16_2(MessageElementUtil.UnpackArray<short>(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.i16_2=MessageElementUtil.UnpackArray<short>(m);
     return;
     }
     case "u16_1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_u16_1((MessageElementUtil.UnpackScalar<ushort>(m))).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.u16_1=(MessageElementUtil.UnpackScalar<ushort>(m));
     return;
     }
     case "u16_2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_u16_2(MessageElementUtil.UnpackArray<ushort>(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.u16_2=MessageElementUtil.UnpackArray<ushort>(m);
     return;
     }
     case "i32_1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_i32_1((MessageElementUtil.UnpackScalar<int>(m))).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.i32_1=(MessageElementUtil.UnpackScalar<int>(m));
     return;
     }
     case "i32_2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_i32_2(MessageElementUtil.UnpackArray<int>(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.i32_2=MessageElementUtil.UnpackArray<int>(m);
     return;
     }
     case "i32_huge":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_i32_huge(MessageElementUtil.UnpackArray<int>(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.i32_huge=MessageElementUtil.UnpackArray<int>(m);
     return;
     }
     case "u32_1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_u32_1((MessageElementUtil.UnpackScalar<uint>(m))).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.u32_1=(MessageElementUtil.UnpackScalar<uint>(m));
     return;
     }
     case "u32_2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_u32_2(MessageElementUtil.UnpackArray<uint>(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.u32_2=MessageElementUtil.UnpackArray<uint>(m);
     return;
     }
     case "i64_1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_i64_1((MessageElementUtil.UnpackScalar<long>(m))).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.i64_1=(MessageElementUtil.UnpackScalar<long>(m));
     return;
     }
     case "i64_2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_i64_2(MessageElementUtil.UnpackArray<long>(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.i64_2=MessageElementUtil.UnpackArray<long>(m);
     return;
     }
     case "u64_1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_u64_1((MessageElementUtil.UnpackScalar<ulong>(m))).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.u64_1=(MessageElementUtil.UnpackScalar<ulong>(m));
     return;
     }
     case "u64_2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_u64_2(MessageElementUtil.UnpackArray<ulong>(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.u64_2=MessageElementUtil.UnpackArray<ulong>(m);
     return;
     }
     case "str1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_str1(MessageElementUtil.UnpackString(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.str1=MessageElementUtil.UnpackString(m);
     return;
     }
     case "struct1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_struct1(MessageElementUtil.UnpackStructure<teststruct1>(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.struct1=MessageElementUtil.UnpackStructure<teststruct1>(m);
     return;
     }
     case "struct2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_struct2(MessageElementUtil.UnpackStructure<teststruct2>(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.struct2=MessageElementUtil.UnpackStructure<teststruct2>(m);
     return;
     }
     case "is_d1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_is_d1(MessageElementUtil.UnpackMap<int,double>(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.is_d1=MessageElementUtil.UnpackMap<int,double>(m);
     return;
     }
     case "is_d2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_is_d2(MessageElementUtil.UnpackMap<string,double>(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.is_d2=MessageElementUtil.UnpackMap<string,double>(m);
     return;
     }
     case "is_d3":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_is_d3(MessageElementUtil.UnpackMap<int,double[]>(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.is_d3=MessageElementUtil.UnpackMap<int,double[]>(m);
     return;
     }
     case "is_d4":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_is_d4(MessageElementUtil.UnpackMap<string,double[]>(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.is_d4=MessageElementUtil.UnpackMap<string,double[]>(m);
     return;
     }
     case "is_d5":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_is_d5(MessageElementUtil.UnpackMap<int,MultiDimArray>(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.is_d5=MessageElementUtil.UnpackMap<int,MultiDimArray>(m);
     return;
     }
     case "is_d6":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_is_d6(MessageElementUtil.UnpackMap<string,MultiDimArray>(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.is_d6=MessageElementUtil.UnpackMap<string,MultiDimArray>(m);
     return;
     }
     case "is_str1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_is_str1(MessageElementUtil.UnpackMap<int,string>(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.is_str1=MessageElementUtil.UnpackMap<int,string>(m);
     return;
     }
     case "is_str2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_is_str2(MessageElementUtil.UnpackMap<string,string>(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.is_str2=MessageElementUtil.UnpackMap<string,string>(m);
     return;
     }
     case "is_struct1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_is_struct1(MessageElementUtil.UnpackMap<int,teststruct2>(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.is_struct1=MessageElementUtil.UnpackMap<int,teststruct2>(m);
     return;
     }
     case "is_struct2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_is_struct2(MessageElementUtil.UnpackMap<string,teststruct2>(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.is_struct2=MessageElementUtil.UnpackMap<string,teststruct2>(m);
     return;
     }
     case "struct3":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_struct3(MessageElementUtil.UnpackStructure<com.robotraconteur.testing.TestService2.ostruct2>(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.struct3=MessageElementUtil.UnpackStructure<com.robotraconteur.testing.TestService2.ostruct2>(m);
     return;
     }
     case "list_d1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_list_d1(MessageElementUtil.UnpackList<double>(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.list_d1=MessageElementUtil.UnpackList<double>(m);
     return;
     }
     case "list_d3":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_list_d3(MessageElementUtil.UnpackList<double[]>(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.list_d3=MessageElementUtil.UnpackList<double[]>(m);
     return;
     }
     case "list_d5":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_list_d5(MessageElementUtil.UnpackList<MultiDimArray>(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.list_d5=MessageElementUtil.UnpackList<MultiDimArray>(m);
     return;
     }
     case "list_str1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_list_str1(MessageElementUtil.UnpackList<string>(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.list_str1=MessageElementUtil.UnpackList<string>(m);
     return;
     }
     case "list_struct1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_list_struct1(MessageElementUtil.UnpackList<teststruct2>(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.list_struct1=MessageElementUtil.UnpackList<teststruct2>(m);
     return;
     }
     case "var1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_var1(MessageElementUtil.UnpackVarType(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.var1=MessageElementUtil.UnpackVarType(m);
     return;
     }
     case "var2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_var2(MessageElementUtil.UnpackMap<int,object>(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.var2=MessageElementUtil.UnpackMap<int,object>(m);
     return;
     }
     case "var_num":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_var_num(MessageElementUtil.UnpackVarType(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.var_num=MessageElementUtil.UnpackVarType(m);
     return;
     }
     case "var_str":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_var_str(MessageElementUtil.UnpackVarType(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.var_str=MessageElementUtil.UnpackVarType(m);
     return;
     }
     case "var_struct":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_var_struct(MessageElementUtil.UnpackVarType(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.var_struct=MessageElementUtil.UnpackVarType(m);
     return;
     }
     case "var_vector":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_var_vector(MessageElementUtil.UnpackVarType(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.var_vector=MessageElementUtil.UnpackVarType(m);
     return;
     }
     case "var_dictionary":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_var_dictionary(MessageElementUtil.UnpackVarType(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.var_dictionary=MessageElementUtil.UnpackVarType(m);
     return;
     }
     case "var_list":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_var_list(MessageElementUtil.UnpackVarType(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.var_list=MessageElementUtil.UnpackVarType(m);
     return;
     }
     case "var_multidimarray":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_var_multidimarray(MessageElementUtil.UnpackVarType(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.var_multidimarray=MessageElementUtil.UnpackVarType(m);
     return;
     }
     case "errtest":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_errtest((MessageElementUtil.UnpackScalar<double>(m))).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.errtest=(MessageElementUtil.UnpackScalar<double>(m));
     return;
     }
     case "nulltest":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_nulltest(MessageElementUtil.UnpackStructure<teststruct1>(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.nulltest=MessageElementUtil.UnpackStructure<teststruct1>(m);
     return;
     }
@@ -2952,10 +3517,15 @@ public class testroot_skel : ServiceSkel {
     }
     throw new MemberNotFoundException("Member not found");
     }
-    public override MessageElement CallFunction(string rr_membername, vectorptr_messageelement rr_m) {
+    public override MessageElement CallFunction(string rr_membername, vectorptr_messageelement rr_m, WrappedServiceSkelAsyncAdapter rr_async_adapter) {
     switch (rr_membername) {
     case "func1":
     {
+    if (async_obj!=null)    {
+    rr_async_adapter.MakeAsync();
+    async_obj.async_func1().ContinueWith(t => rr_async_adapter.EndTask(t,new MessageElement("return",(int)0)));
+    return null;
+    }
     this.obj.func1();
     return new MessageElement("return",(int)0);
     }
@@ -2963,6 +3533,11 @@ public class testroot_skel : ServiceSkel {
     {
     double d1=(MessageElementUtil.UnpackScalar<double>(vectorptr_messageelement_util.FindElement(rr_m,"d1")));
     double d2=(MessageElementUtil.UnpackScalar<double>(vectorptr_messageelement_util.FindElement(rr_m,"d2")));
+    if (async_obj!=null)    {
+    rr_async_adapter.MakeAsync();
+    async_obj.async_func2(d1, d2).ContinueWith(t => rr_async_adapter.EndTask(t,new MessageElement("return",(int)0)));
+    return null;
+    }
     this.obj.func2(d1, d2);
     return new MessageElement("return",(int)0);
     }
@@ -2970,47 +3545,92 @@ public class testroot_skel : ServiceSkel {
     {
     double d1=(MessageElementUtil.UnpackScalar<double>(vectorptr_messageelement_util.FindElement(rr_m,"d1")));
     double d2=(MessageElementUtil.UnpackScalar<double>(vectorptr_messageelement_util.FindElement(rr_m,"d2")));
+    if (async_obj!=null)    {
+    rr_async_adapter.MakeAsync();
+    async_obj.async_func3(d1, d2).ContinueWith(t => rr_async_adapter.EndTask<double>(t,async_ret => MessageElementUtil.PackScalar<double>("return",async_ret)));
+    return null;
+    }
     double rr_ret=this.obj.func3(d1, d2);
     return MessageElementUtil.PackScalar<double>("return",rr_ret);
     }
     case "meaning_of_life":
     {
+    if (async_obj!=null)    {
+    rr_async_adapter.MakeAsync();
+    async_obj.async_meaning_of_life().ContinueWith(t => rr_async_adapter.EndTask<int>(t,async_ret => MessageElementUtil.PackScalar<int>("return",async_ret)));
+    return null;
+    }
     int rr_ret=this.obj.meaning_of_life();
     return MessageElementUtil.PackScalar<int>("return",rr_ret);
     }
     case "func_errtest":
     {
+    if (async_obj!=null)    {
+    rr_async_adapter.MakeAsync();
+    async_obj.async_func_errtest().ContinueWith(t => rr_async_adapter.EndTask(t,new MessageElement("return",(int)0)));
+    return null;
+    }
     this.obj.func_errtest();
     return new MessageElement("return",(int)0);
     }
     case "func_errtest1":
     {
+    if (async_obj!=null)    {
+    rr_async_adapter.MakeAsync();
+    async_obj.async_func_errtest1().ContinueWith(t => rr_async_adapter.EndTask(t,new MessageElement("return",(int)0)));
+    return null;
+    }
     this.obj.func_errtest1();
     return new MessageElement("return",(int)0);
     }
     case "func_errtest2":
     {
+    if (async_obj!=null)    {
+    rr_async_adapter.MakeAsync();
+    async_obj.async_func_errtest2().ContinueWith(t => rr_async_adapter.EndTask(t,new MessageElement("return",(int)0)));
+    return null;
+    }
     this.obj.func_errtest2();
     return new MessageElement("return",(int)0);
     }
     case "func_errtest3":
     {
+    if (async_obj!=null)    {
+    rr_async_adapter.MakeAsync();
+    async_obj.async_func_errtest3().ContinueWith(t => rr_async_adapter.EndTask(t,new MessageElement("return",(int)0)));
+    return null;
+    }
     this.obj.func_errtest3();
     return new MessageElement("return",(int)0);
     }
     case "o6_op":
     {
     int op=(MessageElementUtil.UnpackScalar<int>(vectorptr_messageelement_util.FindElement(rr_m,"op")));
+    if (async_obj!=null)    {
+    rr_async_adapter.MakeAsync();
+    async_obj.async_o6_op(op).ContinueWith(t => rr_async_adapter.EndTask(t,new MessageElement("return",(int)0)));
+    return null;
+    }
     this.obj.o6_op(op);
     return new MessageElement("return",(int)0);
     }
     case "pipe_check_error":
     {
+    if (async_obj!=null)    {
+    rr_async_adapter.MakeAsync();
+    async_obj.async_pipe_check_error().ContinueWith(t => rr_async_adapter.EndTask(t,new MessageElement("return",(int)0)));
+    return null;
+    }
     this.obj.pipe_check_error();
     return new MessageElement("return",(int)0);
     }
     case "test_callbacks":
     {
+    if (async_obj!=null)    {
+    rr_async_adapter.MakeAsync();
+    async_obj.async_test_callbacks().ContinueWith(t => rr_async_adapter.EndTask(t,new MessageElement("return",(int)0)));
+    return null;
+    }
     this.obj.test_callbacks();
     return new MessageElement("return",(int)0);
     }
@@ -3208,30 +3828,55 @@ public class testroot_skel : ServiceSkel {
 }
 public class sub1_skel : ServiceSkel {
     protected sub1 obj;
-    public sub1_skel(object o) : base(o) { obj=(sub1)o; }
+    protected async_sub1 async_obj;
+    public sub1_skel(object o) : base(o)    {
+    obj=(sub1)o;
+    async_obj = o as async_sub1;
+    }
     public override void ReleaseCastObject() { 
     obj=null;
+    async_obj=null;
     base.ReleaseCastObject();
     }
-    public override MessageElement CallGetProperty(string membername) {
+    public override MessageElement CallGetProperty(string membername, WrappedServiceSkelAsyncAdapter async_adapter) {
     switch (membername) {
     case "d1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_d1().ContinueWith(t => async_adapter.EndTask<double[]>(t,async_ret => MessageElementUtil.PackArray<double>("return",async_ret)));
+    return null;
+    }
     double[] ret=obj.d1;
     return MessageElementUtil.PackArray<double>("return",ret);
     }
     case "d2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_d2().ContinueWith(t => async_adapter.EndTask<MultiDimArray>(t,async_ret => MessageElementUtil.PackMultiDimArray("return",(MultiDimArray)async_ret)));
+    return null;
+    }
     MultiDimArray ret=obj.d2;
     return MessageElementUtil.PackMultiDimArray("return",(MultiDimArray)ret);
     }
     case "s_ind":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_s_ind().ContinueWith(t => async_adapter.EndTask<string>(t,async_ret => MessageElementUtil.PackString("return",async_ret)));
+    return null;
+    }
     string ret=obj.s_ind;
     return MessageElementUtil.PackString("return",ret);
     }
     case "i_ind":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_i_ind().ContinueWith(t => async_adapter.EndTask<int>(t,async_ret => MessageElementUtil.PackScalar<int>("return",async_ret)));
+    return null;
+    }
     int ret=obj.i_ind;
     return MessageElementUtil.PackScalar<int>("return",ret);
     }
@@ -3240,25 +3885,45 @@ public class sub1_skel : ServiceSkel {
     }
     throw new MemberNotFoundException("Member not found");
     }
-    public override void CallSetProperty(string membername, MessageElement m) {
+    public override void CallSetProperty(string membername, MessageElement m, WrappedServiceSkelAsyncAdapter async_adapter) {
     switch (membername) {
     case "d1":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_d1(MessageElementUtil.UnpackArray<double>(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.d1=MessageElementUtil.UnpackArray<double>(m);
     return;
     }
     case "d2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_d2(MessageElementUtil.UnpackMultiDimArray(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.d2=MessageElementUtil.UnpackMultiDimArray(m);
     return;
     }
     case "s_ind":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_s_ind(MessageElementUtil.UnpackString(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.s_ind=MessageElementUtil.UnpackString(m);
     return;
     }
     case "i_ind":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_i_ind((MessageElementUtil.UnpackScalar<int>(m))).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.i_ind=(MessageElementUtil.UnpackScalar<int>(m));
     return;
     }
@@ -3267,7 +3932,7 @@ public class sub1_skel : ServiceSkel {
     }
     throw new MemberNotFoundException("Member not found");
     }
-    public override MessageElement CallFunction(string rr_membername, vectorptr_messageelement rr_m) {
+    public override MessageElement CallFunction(string rr_membername, vectorptr_messageelement rr_m, WrappedServiceSkelAsyncAdapter rr_async_adapter) {
     switch (rr_membername) {
     default:
     break;
@@ -3358,25 +4023,45 @@ public class sub1_skel : ServiceSkel {
 }
 public class sub2_skel : ServiceSkel {
     protected sub2 obj;
-    public sub2_skel(object o) : base(o) { obj=(sub2)o; }
+    protected async_sub2 async_obj;
+    public sub2_skel(object o) : base(o)    {
+    obj=(sub2)o;
+    async_obj = o as async_sub2;
+    }
     public override void ReleaseCastObject() { 
     obj=null;
+    async_obj=null;
     base.ReleaseCastObject();
     }
-    public override MessageElement CallGetProperty(string membername) {
+    public override MessageElement CallGetProperty(string membername, WrappedServiceSkelAsyncAdapter async_adapter) {
     switch (membername) {
     case "s_ind":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_s_ind().ContinueWith(t => async_adapter.EndTask<string>(t,async_ret => MessageElementUtil.PackString("return",async_ret)));
+    return null;
+    }
     string ret=obj.s_ind;
     return MessageElementUtil.PackString("return",ret);
     }
     case "i_ind":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_i_ind().ContinueWith(t => async_adapter.EndTask<int>(t,async_ret => MessageElementUtil.PackScalar<int>("return",async_ret)));
+    return null;
+    }
     int ret=obj.i_ind;
     return MessageElementUtil.PackScalar<int>("return",ret);
     }
     case "data":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_data().ContinueWith(t => async_adapter.EndTask<string>(t,async_ret => MessageElementUtil.PackString("return",async_ret)));
+    return null;
+    }
     string ret=obj.data;
     return MessageElementUtil.PackString("return",ret);
     }
@@ -3385,20 +4070,35 @@ public class sub2_skel : ServiceSkel {
     }
     throw new MemberNotFoundException("Member not found");
     }
-    public override void CallSetProperty(string membername, MessageElement m) {
+    public override void CallSetProperty(string membername, MessageElement m, WrappedServiceSkelAsyncAdapter async_adapter) {
     switch (membername) {
     case "s_ind":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_s_ind(MessageElementUtil.UnpackString(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.s_ind=MessageElementUtil.UnpackString(m);
     return;
     }
     case "i_ind":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_i_ind((MessageElementUtil.UnpackScalar<int>(m))).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.i_ind=(MessageElementUtil.UnpackScalar<int>(m));
     return;
     }
     case "data":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_data(MessageElementUtil.UnpackString(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.data=MessageElementUtil.UnpackString(m);
     return;
     }
@@ -3407,7 +4107,7 @@ public class sub2_skel : ServiceSkel {
     }
     throw new MemberNotFoundException("Member not found");
     }
-    public override MessageElement CallFunction(string rr_membername, vectorptr_messageelement rr_m) {
+    public override MessageElement CallFunction(string rr_membername, vectorptr_messageelement rr_m, WrappedServiceSkelAsyncAdapter rr_async_adapter) {
     switch (rr_membername) {
     default:
     break;
@@ -3492,25 +4192,45 @@ public class sub2_skel : ServiceSkel {
 }
 public class sub3_skel : ServiceSkel {
     protected sub3 obj;
-    public sub3_skel(object o) : base(o) { obj=(sub3)o; }
+    protected async_sub3 async_obj;
+    public sub3_skel(object o) : base(o)    {
+    obj=(sub3)o;
+    async_obj = o as async_sub3;
+    }
     public override void ReleaseCastObject() { 
     obj=null;
+    async_obj=null;
     base.ReleaseCastObject();
     }
-    public override MessageElement CallGetProperty(string membername) {
+    public override MessageElement CallGetProperty(string membername, WrappedServiceSkelAsyncAdapter async_adapter) {
     switch (membername) {
     case "ind":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_ind().ContinueWith(t => async_adapter.EndTask<string>(t,async_ret => MessageElementUtil.PackString("return",async_ret)));
+    return null;
+    }
     string ret=obj.ind;
     return MessageElementUtil.PackString("return",ret);
     }
     case "data2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_data2().ContinueWith(t => async_adapter.EndTask<string>(t,async_ret => MessageElementUtil.PackString("return",async_ret)));
+    return null;
+    }
     string ret=obj.data2;
     return MessageElementUtil.PackString("return",ret);
     }
     case "data3":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_get_data3().ContinueWith(t => async_adapter.EndTask<double>(t,async_ret => MessageElementUtil.PackScalar<double>("return",async_ret)));
+    return null;
+    }
     double ret=obj.data3;
     return MessageElementUtil.PackScalar<double>("return",ret);
     }
@@ -3519,20 +4239,35 @@ public class sub3_skel : ServiceSkel {
     }
     throw new MemberNotFoundException("Member not found");
     }
-    public override void CallSetProperty(string membername, MessageElement m) {
+    public override void CallSetProperty(string membername, MessageElement m, WrappedServiceSkelAsyncAdapter async_adapter) {
     switch (membername) {
     case "ind":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_ind(MessageElementUtil.UnpackString(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.ind=MessageElementUtil.UnpackString(m);
     return;
     }
     case "data2":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_data2(MessageElementUtil.UnpackString(m)).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.data2=MessageElementUtil.UnpackString(m);
     return;
     }
     case "data3":
     {
+    if (async_obj!=null)    {
+    async_adapter.MakeAsync();
+    async_obj.async_set_data3((MessageElementUtil.UnpackScalar<double>(m))).ContinueWith(t => async_adapter.EndTask(t));
+    return;
+    }
     obj.data3=(MessageElementUtil.UnpackScalar<double>(m));
     return;
     }
@@ -3541,11 +4276,16 @@ public class sub3_skel : ServiceSkel {
     }
     throw new MemberNotFoundException("Member not found");
     }
-    public override MessageElement CallFunction(string rr_membername, vectorptr_messageelement rr_m) {
+    public override MessageElement CallFunction(string rr_membername, vectorptr_messageelement rr_m, WrappedServiceSkelAsyncAdapter rr_async_adapter) {
     switch (rr_membername) {
     case "add":
     {
     double d=(MessageElementUtil.UnpackScalar<double>(vectorptr_messageelement_util.FindElement(rr_m,"d")));
+    if (async_obj!=null)    {
+    rr_async_adapter.MakeAsync();
+    async_obj.async_add(d).ContinueWith(t => rr_async_adapter.EndTask<double>(t,async_ret => MessageElementUtil.PackScalar<double>("return",async_ret)));
+    return null;
+    }
     double rr_ret=this.obj.add(d);
     return MessageElementUtil.PackScalar<double>("return",rr_ret);
     }

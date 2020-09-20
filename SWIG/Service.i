@@ -17,6 +17,7 @@
 %shared_ptr(RobotRaconteur::ServerContext);
 %shared_ptr(RobotRaconteur::ServerEndpoint);
 %shared_ptr(RobotRaconteur::AuthenticatedUser);
+%shared_ptr(RobotRaconteur::WrappedServiceSkelAsyncAdapter)
 
 %feature("director") RobotRaconteur::WrappedServiceSkelDirector;
 %feature("director") RobotRaconteur::WrappedUserAuthenticatorDirector;
@@ -33,11 +34,11 @@ public:
 	virtual ~WrappedServiceSkelDirector() {}
 	virtual void Init(boost::shared_ptr<RobotRaconteur::WrappedServiceSkel> skel);
 	%rename (_CallGetProperty) CallGetProperty;
-	virtual boost::intrusive_ptr<RobotRaconteur::MessageElement> CallGetProperty(const std::string& name);
+	virtual boost::intrusive_ptr<RobotRaconteur::MessageElement> CallGetProperty(const std::string& name, boost::shared_ptr<RobotRaconteur::WrappedServiceSkelAsyncAdapter> async_adaptor);
 	%rename (_CallSetProperty) CallSetProperty;
-	virtual void CallSetProperty(const std::string& name, boost::intrusive_ptr<RobotRaconteur::MessageElement> m);
+	virtual void CallSetProperty(const std::string& name, boost::intrusive_ptr<RobotRaconteur::MessageElement> m, boost::shared_ptr<RobotRaconteur::WrappedServiceSkelAsyncAdapter> async_adaptor);
 	%rename (_CallFunction) CallFunction;
-	virtual boost::intrusive_ptr<RobotRaconteur::MessageElement> CallFunction(const std::string& name, const std::vector<boost::intrusive_ptr<RobotRaconteur::MessageElement> >& m);
+	virtual boost::intrusive_ptr<RobotRaconteur::MessageElement> CallFunction(const std::string& name, const std::vector<boost::intrusive_ptr<RobotRaconteur::MessageElement> >& m, boost::shared_ptr<RobotRaconteur::WrappedServiceSkelAsyncAdapter> async_adaptor);
 	%rename (_GetSubObj) GetSubObj;
 	virtual boost::shared_ptr<RobotRaconteur::WrappedRRObject> GetSubObj(const std::string& name, const std::string& index);
 	%rename (_GetArrayMemory) GetArrayMemory;
@@ -222,6 +223,16 @@ public:
 	
 	}
     static boost::shared_ptr<RobotRaconteur::AuthenticatedUser> GetCurrentAuthenticatedUser();
+};
+
+%nodefaultctor WrappedServiceSkelAsyncAdapter;
+class WrappedServiceSkelAsyncAdapter
+{		
+public:
+	void MakeAsync();
+	bool IsAsync();
+	void End(const HandlerErrorInfo& err);
+	void End(boost::intrusive_ptr<RobotRaconteur::MessageElement> ret, const HandlerErrorInfo& err);
 };
 
 }

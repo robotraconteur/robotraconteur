@@ -280,6 +280,11 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		HandlerErrorInfo(const RobotRaconteurException& exp);
 		HandlerErrorInfo(boost::shared_ptr<RobotRaconteurException> exp);
 		HandlerErrorInfo(boost::intrusive_ptr<MessageEntry> m);
+		HandlerErrorInfo(uint32_t error_code, const std::string& errorname, const std::string& errormessage, 
+			const std::string& errorsubname = "", boost::intrusive_ptr<RobotRaconteur::MessageElement> param_ = NULL);
+		
+		void ToMessageEntry(RR_INTRUSIVE_PTR<MessageEntry> m) const;
+		RR_SHARED_PTR<RobotRaconteurException> ToException() const;
 	};
 
 	class AsyncRequestDirector
@@ -1157,14 +1162,15 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 	class WrappedNamedArrayMemoryServiceSkel;
 	class WrappedNamedMultiDimArrayMemoryServiceSkel;
 	class WrappedGeneratorServerDirector;
+	class WrappedServiceSkelAsyncAdapter;
 	class WrappedServiceSkelDirector
 	{
 	public:
 		virtual ~WrappedServiceSkelDirector() {}
 		virtual void Init(boost::shared_ptr<WrappedServiceSkel> skel) {};
-		virtual RR_INTRUSIVE_PTR<MessageElement> CallGetProperty(const std::string& name) {return RR_INTRUSIVE_PTR<MessageElement>();};
-		virtual void CallSetProperty(const std::string& name, RR_INTRUSIVE_PTR<MessageElement> m) {};
-		virtual RR_INTRUSIVE_PTR<MessageElement> CallFunction(const std::string& name, const std::vector<RR_INTRUSIVE_PTR<MessageElement> >& m) {return RR_INTRUSIVE_PTR<MessageElement>();};
+		virtual RR_INTRUSIVE_PTR<MessageElement> CallGetProperty(const std::string& name, boost::shared_ptr<WrappedServiceSkelAsyncAdapter> async_adapter) {return RR_INTRUSIVE_PTR<MessageElement>();};
+		virtual void CallSetProperty(const std::string& name, RR_INTRUSIVE_PTR<MessageElement> m, boost::shared_ptr<WrappedServiceSkelAsyncAdapter> async_adapter) {};
+		virtual RR_INTRUSIVE_PTR<MessageElement> CallFunction(const std::string& name, const std::vector<RR_INTRUSIVE_PTR<MessageElement> >& m, boost::shared_ptr<WrappedServiceSkelAsyncAdapter> async_adapter) {return RR_INTRUSIVE_PTR<MessageElement>();};
 		virtual boost::shared_ptr<WrappedRRObject> GetSubObj(const std::string& name, const std::string& index) {return boost::shared_ptr<WrappedRRObject>();};
 		virtual WrappedArrayMemoryDirector* GetArrayMemory(const std::string& name) {return 0;};
 		virtual WrappedMultiDimArrayMemoryDirector* GetMultiDimArrayMemory(const std::string& name) {return 0;};
@@ -1240,6 +1246,21 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		std::map<std::string, std::set<MessageEntryType> > nolocks;
 		virtual bool IsRequestNoLock(RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m);
 
+	};
+
+	class WrappedServiceSkelAsyncAdapter
+	{
+	protected:
+		boost::function<void(RR_INTRUSIVE_PTR<MessageElement>,RR_SHARED_PTR<RobotRaconteurException>)> handler;
+		bool is_async;
+	
+	public:
+		WrappedServiceSkelAsyncAdapter();
+		void SetHandler(boost::function<void(RR_INTRUSIVE_PTR<MessageElement>,RR_SHARED_PTR<RobotRaconteurException>)> handler);
+		void MakeAsync();
+		bool IsAsync();
+		void End(const HandlerErrorInfo& err);
+		void End(RR_INTRUSIVE_PTR<MessageElement> ret, const HandlerErrorInfo& err);
 	};
 
 	class WrappedRRObject : public RRObject, public IRobotRaconteurMonitorObject

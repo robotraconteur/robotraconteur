@@ -24,7 +24,7 @@ namespace RobotRaconteurNETTest
 
         public void UnregisterServices()
         {
-            RobotRaconteurNode.s.Shutdown();
+            
         }
     }
 

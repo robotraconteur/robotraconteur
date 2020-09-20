@@ -930,11 +930,11 @@ namespace RobotRaconteur
 
         public object UncastObject { get { return uncastobj; } }
 
-        public abstract MessageElement CallGetProperty(string name);
+        public abstract MessageElement CallGetProperty(string name, WrappedServiceSkelAsyncAdapter async_adapter);
 
-        public abstract void CallSetProperty(string name, MessageElement m);
+        public abstract void CallSetProperty(string name, MessageElement m, WrappedServiceSkelAsyncAdapter async_adapter);
 
-        public abstract MessageElement CallFunction(string name, vectorptr_messageelement m);
+        public abstract MessageElement CallFunction(string name, vectorptr_messageelement m, WrappedServiceSkelAsyncAdapter async_adapter);
 
         public abstract object GetSubObj(string name, string ind);
 
@@ -980,13 +980,13 @@ namespace RobotRaconteur
                 init_object.RRServiceObjectInit(skel.GetContext(), skel.GetServicePath());
             }
         }
-        public override MessageElement _CallFunction(string name, vectorptr_messageelement args)
+        public override MessageElement _CallFunction(string name, vectorptr_messageelement args, WrappedServiceSkelAsyncAdapter async_adapter)
         {
             try
             {
                 using (args)
                 {
-                    return CallFunction(name, args);                    
+                    return CallFunction(name, args, async_adapter);
                 }
             }
             catch (Exception e)
@@ -1000,11 +1000,11 @@ namespace RobotRaconteur
             }
         }
 
-        public override MessageElement _CallGetProperty(string name)
+        public override MessageElement _CallGetProperty(string name, WrappedServiceSkelAsyncAdapter async_adapter)
         {             
             try
             {
-                return CallGetProperty(name);                
+                return CallGetProperty(name, async_adapter);
             }
             catch (Exception e)
             {
@@ -1018,13 +1018,13 @@ namespace RobotRaconteur
             
         }
 
-        public override void _CallSetProperty(string name, MessageElement m)
+        public override void _CallSetProperty(string name, MessageElement m, WrappedServiceSkelAsyncAdapter async_adapter)
         {
             try
             {
                 using (m)
                 {
-                    CallSetProperty(name, m);
+                    CallSetProperty(name, m, async_adapter);
                 }
             }
             catch (Exception e)
@@ -1283,6 +1283,84 @@ namespace RobotRaconteur
 
         }
 
+    }
+
+    public partial class WrappedServiceSkelAsyncAdapter
+    {
+        public void EndTask<T>(Task<T> task, Func<T,MessageElement> packer)
+        {
+            if (task.IsCanceled)
+            {
+                var exp = new RobotRaconteur.OperationCancelledException("Async operation was cancelled");
+                var error_info = RobotRaconteurExceptionUtil.ExceptionToErrorInfo(exp);
+                End(error_info);
+                return;
+            }
+
+            if (task.IsFaulted)
+            {
+                var exp = task.Exception;
+                var error_info = RobotRaconteurExceptionUtil.ExceptionToErrorInfo(exp.InnerException);
+                End(error_info);
+                return;
+            }
+
+            MessageElement res;
+            try
+            {
+                res = packer(task.Result);
+            }
+            catch (Exception exp)
+            {                
+                var error_info = RobotRaconteurExceptionUtil.ExceptionToErrorInfo(exp);
+                End(error_info);
+                return;
+            }
+
+            End(res,new HandlerErrorInfo());
+        }
+
+        public void EndTask(Task task)
+        {
+            if (task.IsCanceled)
+            {
+                var exp = new RobotRaconteur.OperationCancelledException("Async operation was cancelled");
+                var error_info = RobotRaconteurExceptionUtil.ExceptionToErrorInfo(exp);
+                End(error_info);
+                return;
+            }
+
+            if (task.IsFaulted)
+            {
+                var exp = task.Exception;
+                var error_info = RobotRaconteurExceptionUtil.ExceptionToErrorInfo(exp.InnerException);
+                End(error_info);
+                return;
+            }
+
+            End(new HandlerErrorInfo());
+        }
+
+        public void EndTask(Task task, MessageElement res)
+        {
+            if (task.IsCanceled)
+            {
+                var exp = new RobotRaconteur.OperationCancelledException("Async operation was cancelled");
+                var error_info = RobotRaconteurExceptionUtil.ExceptionToErrorInfo(exp);
+                End(error_info);
+                return;
+            }
+
+            if (task.IsFaulted)
+            {
+                var exp = task.Exception;
+                var error_info = RobotRaconteurExceptionUtil.ExceptionToErrorInfo(exp.InnerException);
+                End(error_info);
+                return;
+            }
+
+            End(res, new HandlerErrorInfo());
+        }
     }
 
     public class RRObjectHeap

@@ -99,18 +99,5 @@ namespace RobotRaconteurTest
             throw std::runtime_error("");
         }
 
-        bool thrown3 = false;
-        try
-        {
-            r->err_func3();
-        }
-        catch (InvalidOperationException&)
-        {
-            thrown3 = true;
-        }
-        if (!thrown3)
-        {
-            throw std::runtime_error("");
-        }
     }
 }

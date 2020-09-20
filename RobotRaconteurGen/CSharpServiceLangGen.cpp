@@ -1907,14 +1907,18 @@ namespace RobotRaconteurGen
 
 		w2 << "public class " + fix_name(e->Name) + "_skel : ServiceSkel {" << endl;
 		w2 << "    protected " + fix_name(e->Name) + " obj;" << endl;
-		w2 << "    public " + fix_name(e->Name) + "_skel(object o) : base(o) { obj=(" + fix_name(e->Name) + ")o; }" << endl;
+		w2 << "    protected async_" + fix_name(e->Name) + " async_obj;" << endl;
+		w2 << "    public " + fix_name(e->Name) + "_skel(object o) : base(o)" << "    {" << endl;
+		w2 << "    obj=(" + fix_name(e->Name) + ")o;" << endl;
+		w2 << "    async_obj = o as async_" << fix_name(e->Name) << ";" << endl << "    }" << endl;
 		w2 << "    public override void ReleaseCastObject() { " << endl;
 		w2 << "    obj=null;" << endl;
+		w2 << "    async_obj=null;" << endl;
 		w2 << "    base.ReleaseCastObject();" << endl;
 		w2 << "    }" << endl;
 
 
-		w2 << "    public override MessageElement CallGetProperty(string membername) {" << endl;
+		w2 << "    public override MessageElement CallGetProperty(string membername, WrappedServiceSkelAsyncAdapter async_adapter) {" << endl;
 		w2 << "    switch (membername) {" << endl;
 		MEMBER_ITER2(PropertyDefinition)
 			if (m->Direction() != MemberDefinition_Direction_writeonly)
@@ -1923,6 +1927,11 @@ namespace RobotRaconteurGen
 
 
 				convert_type_result t = convert_type(*m->Type);
+				w2 << "    if (async_obj!=null)" << "    {" << endl;
+				w2 << "    async_adapter.MakeAsync();" << endl;
+				w2 << "    async_obj.async_get_" << fix_name(m->Name) << "().ContinueWith(t => async_adapter.EndTask<" << t.cs_type + t.cs_arr_type << ">(t," 
+					<< "async_ret => " << str_pack_message_element("return", "async_ret", m->Type) << "));" << endl;
+				w2 << "    return null;" << endl << "    }" << endl;
 				w2 << "    " + t.cs_type + t.cs_arr_type + " ret=obj." + fix_name(m->Name) + ";" << endl;
 				w2 << "    return " + str_pack_message_element("return", "ret", m->Type) + ";" << endl;
 
@@ -1935,13 +1944,16 @@ namespace RobotRaconteurGen
 		w2 << "    throw new MemberNotFoundException(\"Member not found\");" << endl;
 		w2 << "    }" << endl;
 
-		w2 << "    public override void CallSetProperty(string membername, MessageElement m) {" << endl;
+		w2 << "    public override void CallSetProperty(string membername, MessageElement m, WrappedServiceSkelAsyncAdapter async_adapter) {" << endl;
 		w2 << "    switch (membername) {" << endl;
 		MEMBER_ITER2(PropertyDefinition)
 			if (m->Direction() != MemberDefinition_Direction_readonly)
 			{
 				w2 << "    case \"" + m->Name + "\":" << endl << "    {" << endl;
-
+				w2 << "    if (async_obj!=null)" << "    {" << endl;
+				w2 << "    async_adapter.MakeAsync();" << endl;
+				w2 << "    async_obj.async_set_" << fix_name(m->Name) << "(" << str_unpack_message_element("m", m->Type) << ").ContinueWith(t => async_adapter.EndTask(t));" << endl;
+				w2 << "    return;" << endl << "    }" << endl;
 				w2 << "    obj." + fix_name(m->Name) + "=" + str_unpack_message_element("m", m->Type) + ";" << endl;
 				w2 << "    return;" << endl;
 				w2 << "    }" << endl;
@@ -1954,7 +1966,7 @@ namespace RobotRaconteurGen
 		w2 << "    }" << endl;
 
 
-		w2 << "    public override MessageElement CallFunction(string rr_membername, vectorptr_messageelement rr_m) {" << endl;
+		w2 << "    public override MessageElement CallFunction(string rr_membername, vectorptr_messageelement rr_m, WrappedServiceSkelAsyncAdapter rr_async_adapter) {" << endl;
 		w2 << "    switch (rr_membername) {" << endl;
 		MEMBER_ITER2(FunctionDefinition)
 		if (!m->IsGenerator())
@@ -1968,6 +1980,23 @@ namespace RobotRaconteurGen
 				w2 << "    " + t3.cs_type + t3.cs_arr_type + " " + fix_name((*p)->Name) + "=" + str_unpack_message_element("vectorptr_messageelement_util.FindElement(rr_m,\"" + (*p)->Name + "\")", *p) + ";" << endl;;
 
 			}
+
+			w2 << "    if (async_obj!=null)" << "    {" << endl;
+			w2 << "    rr_async_adapter.MakeAsync();" << endl;
+			w2 << "    async_obj.async_" << fix_name(m->Name) << "(" << params << ")";
+			if (m->ReturnType->Type == DataTypes_void_t)
+			{
+				w2 << ".ContinueWith(t => rr_async_adapter.EndTask(t,new MessageElement(\"return\",(int)0)));";
+			}
+			else
+			{
+				convert_type_result t = convert_type(*m->ReturnType);
+				w2 << ".ContinueWith(t => rr_async_adapter.EndTask<" << t.cs_type + t.cs_arr_type << ">(t," 
+					<< "async_ret => " << str_pack_message_element("return", "async_ret",  m->ReturnType) << "));";
+			}
+			w2 << endl;
+			w2 << "    return null;" << endl << "    }" << endl;
+
 			if (m->ReturnType->Type == DataTypes_void_t)
 			{
 				w2 << "    this.obj." + fix_name(m->Name) + "(" + params + ");" << endl;

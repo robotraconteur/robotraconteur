@@ -8,6 +8,7 @@ using System.IO;
 using com.robotraconteur.testing.TestService1;
 using com.robotraconteur.testing.TestService2;
 using com.robotraconteur.testing.TestService3;
+using com.robotraconteur.testing.TestService5;
 
 using System.Threading.Tasks;
 
@@ -118,6 +119,26 @@ namespace RobotRaconteurNETTest
                 return;
             }
 
+            if (command == "loopback3")
+            {
+
+                RobotRaconteurNode.s.SetLogLevelFromEnvVariable();
+
+                using (var setup = new ServerNodeSetup("com.robotraconteur.testing.TestService3", 4567,
+                    RobotRaconteurNodeSetupFlags.ENABLE_TCP_TRANSPORT | RobotRaconteurNodeSetupFlags.TCP_TRANSPORT_START_SERVER))
+                {
+                    
+                    RobotRaconteurTestServiceSupport3 sup = new RobotRaconteurTestServiceSupport3();
+                    sup.RegisterServices();
+
+                    ServiceTestClient3 c = new ServiceTestClient3();
+                    c.RunFullTest("rr+tcp://localhost:4567/?service=RobotRaconteurTestService3");
+
+                }
+                Console.WriteLine("Test completed");
+                return;
+            }
+
             if (command == "client")
             {
 
@@ -194,6 +215,30 @@ namespace RobotRaconteurNETTest
                 return;
             }
 
+            if (command == "client3")
+            {
+                RobotRaconteurNode.s.SetLogLevelFromEnvVariable();
+
+                string url = args[1];
+
+                TcpTransport t = new TcpTransport();
+               
+                t.EnableNodeDiscoveryListening();
+                
+                RobotRaconteurNode.s.RegisterTransport(t);
+
+                RobotRaconteurNode.s.RegisterServiceType(new com.robotraconteur.testing.TestService5.com__robotraconteur__testing__TestService5Factory());
+
+                
+                
+                ServiceTestClient3 c = new ServiceTestClient3();
+                c.RunFullTest(url);
+
+                RobotRaconteurNode.s.Shutdown();
+                Console.WriteLine("Test completed");
+                return;
+            }
+
             if (command == "server")
             {
                 RobotRaconteurNode.s.SetLogLevelFromEnvVariable();
@@ -238,15 +283,17 @@ namespace RobotRaconteurNETTest
                 RobotRaconteurNode.s.RegisterServiceType(new com.robotraconteur.testing.TestService1.com__robotraconteur__testing__TestService1Factory());
                 RobotRaconteurNode.s.RegisterServiceType(new com.robotraconteur.testing.TestService2.com__robotraconteur__testing__TestService2Factory());
                 RobotRaconteurNode.s.RegisterServiceType(new com.robotraconteur.testing.TestService3.com__robotraconteur__testing__TestService3Factory());
+                RobotRaconteurNode.s.RegisterServiceType(new com.robotraconteur.testing.TestService5.com__robotraconteur__testing__TestService5Factory());
 
-
-                MultiDimArrayTest.Test();
-
+                
                 RobotRaconteurTestServiceSupport sup = new RobotRaconteurTestServiceSupport();
                 sup.RegisterServices(t);
 
                 RobotRaconteurTestServiceSupport2 sup2 = new RobotRaconteurTestServiceSupport2();
                 sup2.RegisterServices(t);
+
+                RobotRaconteurTestServiceSupport2 sup3 = new RobotRaconteurTestServiceSupport2();
+                sup3.RegisterServices(t);
 
                 Console.WriteLine("Server started, press enter to quit");
                 Console.ReadLine();
@@ -996,6 +1043,9 @@ namespace RobotRaconteurNETTest
 
                     RobotRaconteurTestServiceSupport2 sup2 = new RobotRaconteurTestServiceSupport2();
                     sup2.RegisterServices(t);
+
+                    RobotRaconteurTestServiceSupport3 sup3 = new RobotRaconteurTestServiceSupport3();
+                    sup3.RegisterServices();
 
                     Console.WriteLine("Server started, press enter to quit");
                     Console.ReadLine();

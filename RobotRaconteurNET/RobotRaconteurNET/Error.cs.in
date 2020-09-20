@@ -177,6 +177,90 @@ namespace RobotRaconteur
             }
         }
 
+        public static HandlerErrorInfo ExceptionToErrorInfo(Exception exception)
+        {
+            MessageElement param2 = null;
+            string errorsubname = null;
+            RobotRaconteurException rr_exp = exception as RobotRaconteurException;
+            HandlerErrorInfo error_info = new HandlerErrorInfo();
+            if (rr_exp != null)
+            {
+                if (rr_exp.ErrorSubName != null)
+                {
+                    errorsubname = rr_exp.ErrorSubName;
+                }
+
+                if (rr_exp.ErrorParam != null)
+                {
+                    try
+                    {
+                        param2 = MessageElementUtil.NewMessageElement("errorparam", RobotRaconteurNode.s.PackVarType(rr_exp.ErrorParam));
+                    }
+                    catch (Exception)
+                    {
+                        //TODO: log error
+                    }
+                }
+            }
+            else
+            {
+                string errorsubname1 = exception.Data["ErrorSubName"] as string;
+                if (errorsubname1 != null)
+                {
+                    errorsubname = errorsubname1;
+                }
+
+                object param3 = exception.Data["ErrorParam"];
+                if (param3 != null)
+                {
+                    try
+                    {
+                        param2 = MessageElementUtil.NewMessageElement("errorparam", RobotRaconteurNode.s.PackVarType(param3));
+                        
+                    }
+                    catch (Exception)
+                    {
+                        //TODO: log error
+                    }
+                }
+            }
+            
+			using (param2)
+            {
+
+			@RR_ERRORS_CATCH2@
+			
+            if (rr_exp != null)
+            {
+                RobotRaconteurException r=rr_exp;
+                error_info.error_code = (uint)r.ErrorCode;
+                error_info.errorname = r.Error;
+                error_info.errormessage = r.Message;
+                if (r.ErrorSubName != null)
+                {
+                    error_info.errorsubname = r.ErrorSubName;
+                }
+                
+                if (param2 != null)
+                {
+                    error_info.param_ = param2;
+                }
+
+                return error_info;
+
+            }
+            else
+            {
+                error_info.error_code = (uint)MessageErrorType.RemoteError;
+                error_info.errorname = exception.GetType().ToString();
+                error_info.errormessage = exception.Message;
+
+                return error_info;
+                
+            }
+            }
+        }
+
         public static Exception ErrorInfoToException(HandlerErrorInfo error_info)
         {
             return ErrorCodeToException((MessageErrorType)error_info.error_code, error_info.errorname, error_info.errormessage, error_info.errorsubname, error_info.param_);
