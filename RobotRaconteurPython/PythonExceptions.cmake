@@ -31,7 +31,7 @@ RR_SWIG_REPLACE_ERRORS("${RR_PYTHON_ERR_CASE_M}" "${RR_PYTHON_ERR_CASE_M2}" "" "
 
 set(RR_PYTHON_ERR_CATCH_M "
         if (isisntance(exception,@RR_ERROR_TYPE@)):
-            return RobotRaconteurPython.@RR_ERROR_CODE@, @RR_ERROR_TYPE_STR@, exception.message		 
+            return RobotRaconteurPython.@RR_ERROR_CODE@, @RR_ERROR_TYPE_STR@, exception.message, exception.errorsubname, exception.errorparam	 
 ")
 
 

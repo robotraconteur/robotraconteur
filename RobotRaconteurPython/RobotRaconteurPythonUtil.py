@@ -1439,6 +1439,27 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
         type1=FindMemberByName(self.skel.Type.Members,name)
         #type1=[e for e in self.skel.Type.Members if e.Name == name][0]
         type2=RobotRaconteurPython.MemberDefinitionUtil.ToProperty(type1)
+        try:
+            async_getter=getattr(self.obj,"async_get_" + name)
+        except AttributeError:
+            pass
+        else:
+            def async_getter_handler(ret,err):
+                if err is not None:
+                    async_adapter.End(RobotRaconteurPythonError.RobotRaconteurExceptionUtil.ExceptionToErrorInfo(err))
+                    return                
+                if (ret is None):
+                    m=RobotRaconteurPython.MessageElement()
+                    m.ElementName="value"
+                    m.ElementType=RobotRaconteurPython.DataTypes_void_t
+                else:
+                    m=PackMessageElement(ret,type2.Type,node=self.skel.RRGetNode())
+                async_adapter.End(m,RobotRaconteurPython.HandlerErrorInfo())
+                return
+            async_adapter.MakeAsync()
+            async_getter(async_getter_handler)
+            return
+                
         ret=getattr(self.obj,name)
 
         if (ret is None):
@@ -1455,8 +1476,23 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
         #type1=[e for e in self.skel.Type.Members if e.Name == name][0]
         type2=RobotRaconteurPython.MemberDefinitionUtil.ToProperty(type1)        
         a=UnpackMessageElement(value,type2.Type,node=self.skel.RRGetNode())
-        setattr(self.obj,name,a)
+        
+        try:
+            async_setter=getattr(self.obj,"async_set_" + name)
+        except AttributeError:
+            pass
+        else:
+            def async_setter_handler(err):
+                if err is not None:
+                    async_adapter.End(RobotRaconteurPythonError.RobotRaconteurExceptionUtil.ExceptionToErrorInfo(err))
+                    return                
+                async_adapter.End(RobotRaconteurPython.HandlerErrorInfo())
+                return
+            async_adapter.MakeAsync()
+            async_setter(a,async_setter_handler)
+            return
 
+        setattr(self.obj,name,a)
 
     def _CallFunction(self, name, args1, async_adapter):
 
@@ -1469,9 +1505,40 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
             m=FindMessageElementByName(args1,p.Name)            
             a=UnpackMessageElement(m,p,node=self.skel.RRGetNode())
             args.append(a)
+        is_generator = type2.IsGenerator()
+        if not is_generator:
+            try:
+                async_func=getattr(self.obj,"async_" + name)
+            except AttributeError:
+                pass
+            else:
+                if type2.ReturnType.Type == RobotRaconteurPython.DataTypes_void_t:
+                    def async_function_handler(err):
+                        if err is not None:
+                            async_adapter.End(RobotRaconteurPythonError.RobotRaconteurExceptionUtil.ExceptionToErrorInfo(err))
+                            return             
+                        async_adapter.End(None,RobotRaconteurPython.HandlerErrorInfo())
+                        return
+                else:
+                    def async_function_handler(ret,err):
+                        if err is not None:
+                            async_adapter.End(RobotRaconteurPythonError.RobotRaconteurExceptionUtil.ExceptionToErrorInfo(err))
+                            return                
+                        if (ret is None):
+                            m=RobotRaconteurPython.MessageElement()
+                            m.ElementName="return"
+                            m.ElementType=RobotRaconteurPython.DataTypes_void_t
+                        else:
+                            m=PackMessageElement(ret,type2.ReturnType,node=self.skel.RRGetNode())
+                        async_adapter.End(m,RobotRaconteurPython.HandlerErrorInfo())
+                        return
+                async_adapter.MakeAsync()
+                async_func(*args+[async_function_handler])
+                return
+
         ret=getattr(self.obj,name)(*args)
 
-        if type2.IsGenerator():
+        if is_generator:
             gen_return_type = None
             if type2.ReturnType.Type != RobotRaconteurPython.DataTypes_void_t:
                 gen_return_type = type2.ReturnType.Clone()

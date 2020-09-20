@@ -37,12 +37,12 @@ class RobotRaconteurException(Exception):
 class RobotRaconteurExceptionUtil:
 
     @staticmethod
-    def ExceptionToErrorCode(exception, entry):
+    def ExceptionToErrorCode(exception):
 @RR_ERRORS_CATCH@
         if (isinstance(exception,RobotRaconteurException)):
-            return exception.errorcode, exception.errorname, exception.message
+            return exception.errorcode, exception.errorname, exception.message, exception.errorsubname, exception.errorparam
         else:
-            return RobotRaconteurPython.MessageErrorType_RemoteError, type(exception).__name__, exception.message
+            return RobotRaconteurPython.MessageErrorType_RemoteError, type(exception).__name__, exception.message, None, None
 
     @staticmethod
     def ErrorCodeToException(code,name,errstr,subname,param_):
@@ -62,6 +62,23 @@ class RobotRaconteurExceptionUtil:
     @staticmethod
     def ErrorInfoToException(error_info):
         return RobotRaconteurExceptionUtil.ErrorCodeToException(error_info.error_code, error_info.errorname, error_info.errormessage, error_info.errorsubname, error_info.param_)
+
+    @staticmethod
+    def ExceptionToErrorInfo(exp):
+        error_code, errorname, message, errorsubname, errorparam = RobotRaconteurExceptionUtil.ExceptionToErrorCode(exp)
+        error_info = RobotRaconteurPython.HandlerErrorInfo()
+        error_info.error_code = error_code
+        error_info.errorname = errorname
+        if message is not None:
+            error_info.errormessage = message
+        if errorsubname is not None:
+            error_info.errorsubname = errorsubname
+        if errorparam is not None:
+            from .RobotRaconteurPythonUtil import PackMessageElement
+            param2 = PackMessageElement(errorparam,"varvalue")
+            error_info.errorparam = param2
+
+        return error_info
 
 _generated_exceptions=dict()
 _generated_exceptions_lock=threading.Lock()

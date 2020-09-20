@@ -107,6 +107,23 @@ def main():
         
         return
 
+    if (command=="loopback3"):
+        RobotRaconteurNode.s.SetLogLevelFromEnvVariable()
+        with RobotRaconteurNodeSetup("com.robotraconteur.testing.test3", 4567, flags=RobotRaconteurNodeSetupFlags_ENABLE_TCP_TRANSPORT | RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER):
+        
+            RobotRaconteurNode.s.RegisterServiceTypesFromFiles(["com.robotraconteur.testing.TestService2","com.robotraconteur.testing.TestService1", 
+                "com.robotraconteur.testing.TestService3","com.robotraconteur.testing.TestService5"])
+                            
+            t3=asynctestroot_impl()
+            c = RobotRaconteurNode.s.RegisterService("RobotRaconteurTestService3","com.robotraconteur.testing.TestService5.asynctestroot",t3)
+                        
+            s=ServiceTestClient3();
+            s.RunFullTest('rr+tcp://localhost:4567/?service=RobotRaconteurTestService3')
+
+        print ("Test completed no errors detected")
+        
+        return
+
     if (command=="client"):
         url1=sys.argv[2]
         url2=sys.argv[3]
@@ -4070,6 +4087,104 @@ def ServiceTest2_verify_transform_multidimarray(v, m, n, seed):
     assert v.shape == (m,n)
     v2 = v.reshape((m*n,), order="F")    
     ServiceTest2_verify_transform_array(v2, m * n, seed)
+
+class ServiceTestClient3:
+    def __init__(self):
+        pass
+    
+    def RunFullTest(self, url):
+        self.ConnectService(url)
+        
+        self.TestProperties()
+
+        self.TestFunctions()
+                
+        self.DisconnectService()
+    
+    def ConnectService(self, url):
+        self._r = RobotRaconteurNode.s.ConnectService(url)        
+
+    def DisconnectService(self):
+        RobotRaconteurNode.s.DisconnectService(self._r)
+
+    def TestProperties(self):
+        _ = self._r.d1
+        self._r.d1 = 3.0819
+        
+        try:
+            _ = self._r.err
+        except InvalidArgumentException as e:
+            if e.message != "Test message 1":
+                raise Exception()
+        else:
+            raise Exception()
+
+        try:
+            self._r.err = 100
+        except InvalidOperationException as e:
+            pass
+        else:
+            raise Exception()
+
+    def TestFunctions(self):
+
+        self._r.f1()
+        self._r.f2(247)
+
+        res = self._r.f3(1,2)
+        if res != 3:
+            raise Exception()
+
+        try:
+            self._r.err_func()
+        except InvalidOperationException:
+            pass
+        else:
+            raise Exception()
+
+        asynctestexp = RobotRaconteurNode.s.GetExceptionType("com.robotraconteur.testing.TestService5.asynctestexp")
+        try:
+            self._r.err_func2()
+        except asynctestexp:
+            pass
+        else:
+            raise Exception()
+
+class asynctestroot_impl(object):
+    def async_get_d1(self,handler):
+        RobotRaconteurNode.s.PostToThreadPool(lambda: handler(8.5515,None))
+
+    def async_set_d1(self,value,handler):
+        if value != 3.0819:
+            raise Exception()
+        RobotRaconteurNode.s.PostToThreadPool(lambda: handler(None))
+
+    def async_get_err(self,handler):
+        RobotRaconteurNode.s.PostToThreadPool(lambda: handler(None,InvalidArgumentException("Test message 1")))
+
+    def async_set_err(self,val,handler):
+        RobotRaconteurNode.s.PostToThreadPool(lambda: handler(InvalidOperationException("")))
+
+    def async_f1(self,handler):
+        RobotRaconteurNode.s.PostToThreadPool(lambda: handler(None))
+    
+    def async_f2(self,a,handler):
+        if a != 247:
+            RobotRaconteurNode.s.PostToThreadPool(lambda: handler(InvalidArgumentException()))
+        RobotRaconteurNode.s.PostToThreadPool(lambda: handler(None))
+
+    def async_f3(self, a, b, handler):
+        res = int(a+b)
+        RobotRaconteurNode.s.PostToThreadPool(lambda: handler(res,None))
+
+    def async_err_func(self,handler):
+        RobotRaconteurNode.s.PostToThreadPool(lambda: handler(InvalidOperationException()))
+
+    def async_err_func2(self,handler):
+        asynctestexp = RobotRaconteurNode.s.GetExceptionType("com.robotraconteur.testing.TestService5.asynctestexp")
+        RobotRaconteurNode.s.PostToThreadPool(lambda: handler(None,asynctestexp("")))
+
+    
 
 def print_ServiceInfo2(s):
     print ("Name: " + s.Name)
