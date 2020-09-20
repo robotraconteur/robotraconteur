@@ -42,7 +42,7 @@ class RobotRaconteurExceptionUtil:
         if (isinstance(exception,RobotRaconteurException)):
             return exception.errorcode, exception.errorname, exception.message, exception.errorsubname, exception.errorparam
         else:
-            return RobotRaconteurPython.MessageErrorType_RemoteError, type(exception).__name__, exception.message, None, None
+            return RobotRaconteurPython.MessageErrorType_RemoteError, type(exception).__name__, str(exception), None, None
 
     @staticmethod
     def ErrorCodeToException(code,name,errstr,subname,param_):

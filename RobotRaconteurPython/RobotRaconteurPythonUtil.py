@@ -2451,14 +2451,49 @@ class WrappedGeneratorServerDirectorPython(RobotRaconteurPython.WrappedGenerator
         self._return_type = return_type
         self._param_type = param_type
         self._node = node
-        if hasattr(gen, "Next"):
+        if hasattr(gen, "Next") or hasattr(gen,"AsyncNext"):
             self._gen = gen
         else:
             if not hasattr(gen, "__iter__"):
                 raise TypeError("Invalid generator")
             self._gen = IteratorGenerator(gen)
         
-    def Next(self, m):
+    def Next(self, m, async_adapter):
+
+        try:
+            async_next_func=getattr(self._gen,"AsyncNext")
+        except AttributeError:
+            pass
+        else:
+            if self._return_type is None:
+                def async_next_handler(err):
+                    if err is not None:
+                        async_adapter.End(RobotRaconteurPythonError.RobotRaconteurExceptionUtil.ExceptionToErrorInfo(err))
+                        return             
+                    async_adapter.End(None,RobotRaconteurPython.HandlerErrorInfo())
+                    return
+            else:
+                def async_next_handler(ret,err):
+                    if err is not None:
+                        async_adapter.End(RobotRaconteurPythonError.RobotRaconteurExceptionUtil.ExceptionToErrorInfo(err))
+                        return                
+                    if (ret is None):
+                        m=RobotRaconteurPython.MessageElement()
+                        m.ElementName="return"
+                        m.ElementType=RobotRaconteurPython.DataTypes_void_t
+                    else:
+                        m=PackMessageElement(ret,self._return_type,node=self._node)
+                    async_adapter.End(m,RobotRaconteurPython.HandlerErrorInfo())
+                    return
+            async_adapter.MakeAsync()
+            if self._param_type is None:
+                async_next_func(async_next_handler)
+            else:
+                param = UnpackMessageElement(m,self._param_type,node=self._node)
+                async_next_func(param,async_next_handler)
+            return
+
+
         if self._param_type is None:
             ret = self._gen.Next()
         else:
@@ -2473,10 +2508,38 @@ class WrappedGeneratorServerDirectorPython(RobotRaconteurPython.WrappedGenerator
         
         return PackMessageElement(ret,self._return_type,node=self._node)
         
-    def Abort(self):
+    def Abort(self,async_adapter):
+        try:
+            async_abort_func=getattr(self._gen,"AsyncAbort")
+        except AttributeError:
+            pass
+        else:
+            def async_abort_handler(err):
+                if err is not None:
+                    async_adapter.End(RobotRaconteurPythonError.RobotRaconteurExceptionUtil.ExceptionToErrorInfo(err))
+                    return                
+                async_adapter.End(RobotRaconteurPython.HandlerErrorInfo())
+                return
+            async_adapter.MakeAsync()
+            async_abort_func(async_abort_handler)
+            return
         self._gen.Abort()
         
-    def Close(self):
+    def Close(self,async_adapter):
+        try:
+            async_close_func=getattr(self._gen,"AsyncClose")
+        except AttributeError:
+            pass
+        else:
+            def async_close_handler(err):
+                if err is not None:
+                    async_adapter.End(RobotRaconteurPythonError.RobotRaconteurExceptionUtil.ExceptionToErrorInfo(err))
+                    return                
+                async_adapter.End(RobotRaconteurPython.HandlerErrorInfo())
+                return
+            async_adapter.MakeAsync()
+            async_close_func(async_close_handler)
+            return
         self._gen.Close()
         
 _trace_hook=sys.gettrace()

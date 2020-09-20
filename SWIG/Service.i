@@ -17,7 +17,7 @@
 %shared_ptr(RobotRaconteur::ServerContext);
 %shared_ptr(RobotRaconteur::ServerEndpoint);
 %shared_ptr(RobotRaconteur::AuthenticatedUser);
-%shared_ptr(RobotRaconteur::WrappedServiceSkelAsyncAdapter)
+%shared_ptr(RobotRaconteur::WrappedServiceSkelAsyncAdapter);
 
 %feature("director") RobotRaconteur::WrappedServiceSkelDirector;
 %feature("director") RobotRaconteur::WrappedUserAuthenticatorDirector;

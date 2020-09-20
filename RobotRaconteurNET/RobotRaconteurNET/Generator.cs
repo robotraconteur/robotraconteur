@@ -381,15 +381,16 @@ namespace RobotRaconteur
             this.objectheapid = RRObjectHeap.AddObject(this);
         }
 
-        public override MessageElement Next(MessageElement m)
+        public override MessageElement Next(MessageElement m, WrappedServiceSkelAsyncAdapter async_adapter)
         {
             using (m)
             {
                 try
                 {
+                    async_adapter.MakeAsync();
                     ParamType p = RobotRaconteurNode.s.UnpackAnyType<ParamType>(m);
-                    ReturnType r = generator.Next(p);
-                    return RobotRaconteurNode.s.PackAnyType<ReturnType>("return", ref r);                    
+                    generator.AsyncNext(p).ContinueWith(t => async_adapter.EndTask<ReturnType>(t, async_ret => RobotRaconteurNode.s.PackAnyType<ReturnType>("return", ref async_ret)));
+                    return null;              
                 }
                 catch (Exception e)
                 {
@@ -403,11 +404,12 @@ namespace RobotRaconteur
             }
         }
 
-        public override void Abort()
+        public override void Abort(WrappedServiceSkelAsyncAdapter async_adapter)
         {
             try
             {
-                generator.Abort();
+                async_adapter.MakeAsync();
+                generator.AsyncAbort().ContinueWith(t => async_adapter.EndTask(t));
             }
             catch (Exception e)
             {
@@ -420,11 +422,12 @@ namespace RobotRaconteur
             }
         }
 
-        public override void Close()
+        public override void Close(WrappedServiceSkelAsyncAdapter async_adapter)
         {
             try
             {
-                generator.Close();
+                async_adapter.MakeAsync();
+                generator.AsyncClose().ContinueWith(t => async_adapter.EndTask(t));
             }
             catch (Exception e)
             {
@@ -448,15 +451,15 @@ namespace RobotRaconteur
             this.objectheapid = RRObjectHeap.AddObject(this);
         }
 
-        public override MessageElement Next(MessageElement m)
+        public override MessageElement Next(MessageElement m, WrappedServiceSkelAsyncAdapter async_adapter)
         {
             using (m)
             {
                 try
                 {
-                    ReturnType r = generator.Next();
-                    return RobotRaconteurNode.s.PackAnyType<ReturnType>("return", ref r);
-                    
+                    async_adapter.MakeAsync();                    
+                    generator.AsyncNext().ContinueWith(t => async_adapter.EndTask<ReturnType>(t, async_ret => RobotRaconteurNode.s.PackAnyType<ReturnType>("return", ref async_ret)));
+                    return null;
                 }
                 catch (Exception e)
                 {
@@ -470,11 +473,12 @@ namespace RobotRaconteur
             }
         }
 
-        public override void Abort()
+        public override void Abort(WrappedServiceSkelAsyncAdapter async_adapter)
         {
             try
             {
-                generator.Abort();
+                async_adapter.MakeAsync();
+                generator.AsyncAbort().ContinueWith(t => async_adapter.EndTask(t));
             }
             catch (Exception e)
             {
@@ -487,11 +491,12 @@ namespace RobotRaconteur
             }
         }
 
-        public override void Close()
+        public override void Close(WrappedServiceSkelAsyncAdapter async_adapter)
         {
             try
             {
-                generator.Close();
+                async_adapter.MakeAsync();
+                generator.AsyncClose().ContinueWith(t => async_adapter.EndTask(t));
             }
             catch (Exception e)
             {
@@ -515,14 +520,15 @@ namespace RobotRaconteur
             this.objectheapid = RRObjectHeap.AddObject(this);
         }
 
-        public override MessageElement Next(MessageElement m)
+        public override MessageElement Next(MessageElement m,WrappedServiceSkelAsyncAdapter async_adapter)
         {
             using (m)
             {
                 try
                 {
+                    async_adapter.MakeAsync();                
                     ParamType p = RobotRaconteurNode.s.UnpackAnyType<ParamType>(m);
-                    generator.Next(p);
+                    generator.AsyncNext(p).ContinueWith(t => async_adapter.EndTask(t));
                     return null;
                 }
                 catch (Exception e)
@@ -537,11 +543,12 @@ namespace RobotRaconteur
             }
         }
 
-        public override void Abort()
+        public override void Abort(WrappedServiceSkelAsyncAdapter async_adapter)
         {
             try
             {
-                generator.Abort();
+                async_adapter.MakeAsync();
+                generator.AsyncAbort().ContinueWith(t => async_adapter.EndTask(t));
             }
             catch (Exception e)
             {
@@ -554,11 +561,12 @@ namespace RobotRaconteur
             }
         }
 
-        public override void Close()
+        public override void Close(WrappedServiceSkelAsyncAdapter async_adapter)
         {
             try
             {
-                generator.Close();
+                async_adapter.MakeAsync();
+                generator.AsyncClose().ContinueWith(t => async_adapter.EndTask(t));
             }
             catch (Exception e)
             {

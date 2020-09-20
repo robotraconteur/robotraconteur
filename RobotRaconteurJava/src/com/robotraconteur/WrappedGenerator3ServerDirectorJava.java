@@ -9,7 +9,7 @@ public class WrappedGenerator3ServerDirectorJava<ParamType> extends WrappedGener
 	}
 	
 	@Override
-	public MessageElement next(MessageElement m)
+	public MessageElement next(MessageElement m, WrappedServiceSkelAsyncAdapter async_adapter)
     {
 		MessageEntry merr=null;
         try
@@ -34,7 +34,7 @@ public class WrappedGenerator3ServerDirectorJava<ParamType> extends WrappedGener
     }
     
 	@Override
-    public void abort()
+    public void abort(WrappedServiceSkelAsyncAdapter async_adapter)
     {
     	try
         {
@@ -57,7 +57,7 @@ public class WrappedGenerator3ServerDirectorJava<ParamType> extends WrappedGener
     }
     
     @Override
-    public void close()
+    public void close(WrappedServiceSkelAsyncAdapter async_adapter)
     {
     	try
         {

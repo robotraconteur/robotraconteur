@@ -958,6 +958,7 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		static void AsyncAbort_handler(RR_SHARED_PTR<RobotRaconteurException> err, RR_SHARED_PTR<AsyncVoidReturnDirector> handler);
 	};
 
+	class WrappedServiceSkelAsyncAdapter;
 	class WrappedGeneratorServerDirector
 	{
 	public:
@@ -967,10 +968,10 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		}
 		virtual ~WrappedGeneratorServerDirector() {}
 
-		virtual RR_INTRUSIVE_PTR<MessageElement> Next(RR_INTRUSIVE_PTR<MessageElement> m) { return RR_INTRUSIVE_PTR<MessageElement>(); }
+		virtual RR_INTRUSIVE_PTR<MessageElement> Next(RR_INTRUSIVE_PTR<MessageElement> m, boost::shared_ptr<WrappedServiceSkelAsyncAdapter> async_adapter) { return RR_INTRUSIVE_PTR<MessageElement>(); }
 
-		virtual void Abort() {}
-		virtual void Close() {}
+		virtual void Abort(boost::shared_ptr<WrappedServiceSkelAsyncAdapter> async_adapter) {}
+		virtual void Close(boost::shared_ptr<WrappedServiceSkelAsyncAdapter> async_adapter) {}
 
 		int32_t objectheapid;
 	};
@@ -1162,7 +1163,6 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 	class WrappedNamedArrayMemoryServiceSkel;
 	class WrappedNamedMultiDimArrayMemoryServiceSkel;
 	class WrappedGeneratorServerDirector;
-	class WrappedServiceSkelAsyncAdapter;
 	class WrappedServiceSkelDirector
 	{
 	public:

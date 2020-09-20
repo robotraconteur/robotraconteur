@@ -1825,16 +1825,19 @@ namespace RobotRaconteur
 	void WrappedGeneratorServer::CallNext(RR_INTRUSIVE_PTR<MessageEntry> m)
 	{
 		if (m->Error != MessageErrorType_None)
-		{			
+		{	
+			boost::shared_ptr<WrappedServiceSkelAsyncAdapter> async_adapter = boost::make_shared<WrappedServiceSkelAsyncAdapter>();
+			async_adapter->SetHandler(boost::bind(&GeneratorServerBase::CallNext1<int32_t>,0,RR_BOOST_PLACEHOLDERS(_2),index,skel,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
+		
 			try
 			{
 				if (m->Error == MessageErrorType_StopIteration)
 				{
-					DIRECTOR_CALL2(RR_Director->Close());
+					DIRECTOR_CALL2(RR_Director->Close(async_adapter));
 				}
 				else
 				{
-					DIRECTOR_CALL2(RR_Director->Abort());
+					DIRECTOR_CALL2(RR_Director->Abort(async_adapter));
 				}
 			}
 			catch (std::exception& exp)
@@ -1842,16 +1845,22 @@ namespace RobotRaconteur
 				GeneratorServerBase::CallNext1<int32_t>(0, RobotRaconteurExceptionUtil::ExceptionToSharedPtr(exp), index, skel, m, ep);
 				return;
 			}
-			GeneratorServerBase::CallNext1<int32_t>(0, RR_SHARED_PTR<RobotRaconteurException>(), index, skel, m, ep);
+			if (!async_adapter->IsAsync())
+			{
+				GeneratorServerBase::CallNext1<int32_t>(0, RR_SHARED_PTR<RobotRaconteurException>(), index, skel, m, ep);
+			}
 			return;
 		}
 
 		RR_INTRUSIVE_PTR<MessageElement> m2;
+		boost::shared_ptr<WrappedServiceSkelAsyncAdapter> async_adapter2 = boost::make_shared<WrappedServiceSkelAsyncAdapter>();
+		async_adapter2->SetHandler(boost::bind(&GeneratorServerBase::EndAsyncCallNext,skel,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),index,m,RobotRaconteur::ServerEndpoint::GetCurrentEndpoint()));
+		
 		try
 		{
 			RR_INTRUSIVE_PTR<MessageElement> m1;
 			m->TryFindElement("parameter", m1);			
-			DIRECTOR_CALL2(m2 = RR_Director->Next(m1));
+			DIRECTOR_CALL2(m2 = RR_Director->Next(m1,async_adapter2));
 			if (m2)
 			{
 				m2->ElementName = "return";
@@ -1862,7 +1871,10 @@ namespace RobotRaconteur
 			GeneratorServerBase::EndAsyncCallNext(skel, RR_INTRUSIVE_PTR<MessageElement>(), RobotRaconteurExceptionUtil::ExceptionToSharedPtr(exp), index, m, ep);
 			return;
 		}
-		GeneratorServerBase::EndAsyncCallNext(skel, m2, RR_SHARED_PTR<RobotRaconteurException>(), index, m, ep);
+		if (!async_adapter2->IsAsync())
+		{
+			GeneratorServerBase::EndAsyncCallNext(skel, m2, RR_SHARED_PTR<RobotRaconteurException>(), index, m, ep);
+		}
 	}
 
 	
