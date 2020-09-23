@@ -1,0 +1,1584 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RobotRaconteurNode &#8212; Robot Raconteur Python  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Misc Data Types" href="DataTypes.html" />
+    <link rel="prev" title="Constants" href="Constants.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="robotraconteurnode">
+<h1>RobotRaconteurNode<a class="headerlink" href="#robotraconteurnode" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="RobotRaconteur.RobotRaconteurNode">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RobotRaconteurNode</code><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>The central node implementation</p>
+<p>RobotRaconteurNode implements the current Robot Raconteur instance
+and acts as the central switchpoint for the instance. The user 
+registers types, connects clients, registers services, and 
+registers transports through this class.</p>
+<p>If the current program only needs one instance of RobotRaconteurNode,
+the singleton can be used. The singleton is accessed using:</p>
+<p>RobotRaconteurNode.s</p>
+<p>The singleton node is typically aliased to <code class="docutils literal notranslate"><span class="pre">RRN</span></code> for shorthand.</p>
+<p>If</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">RobotRaconteur.Client</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+<p>is used, then <code class="docutils literal notranslate"><span class="pre">RRN</span></code> is automatically imported. If not used, the following
+is typically used:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">RobotRaconteur</span> <span class="k">as</span> <span class="nn">RR</span>
+<span class="n">RRN</span> <span class="o">=</span> <span class="n">RobotRaconteur</span><span class="o">.</span><span class="n">s</span>
+</pre></div>
+</div>
+<dl class="py attribute">
+<dt id="RobotRaconteur.RobotRaconteurNode.s">
+<code class="sig-name descname">s</code><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.s" title="Permalink to this definition">¶</a></dt>
+<dd><p>Singleton accessor</p>
+<p>The RobotRaconteurNode singleton can be used when only
+one instance of Robot Raconteur is required in a program.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.ArrayToNamedArray">
+<code class="sig-name descname">ArrayToNamedArray</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="n">named_array_dt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.ArrayToNamedArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a numeric array into a namedarray. The type of the namedarray is 
+specified using <code class="docutils literal notranslate"><span class="pre">dt</span></code>, which is returned from GetNamedArrayDType().
+The input numeric array must have the correct numeric type, and the first dimension 
+must match the element count of the namedarray. The output array will 
+have one fewer dimensions than the input array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>numpy.array</em>) – The numeric array to convert</p></li>
+<li><p><strong>dt</strong> (<em>numpy.dtype</em>) – The data type of the desired namedarray type</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The converted namedarray</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.AsyncConnectService">
+<code class="sig-name descname">AsyncConnectService</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">url</span></em>, <em class="sig-param"><span class="n">username</span></em>, <em class="sig-param"><span class="n">credentials</span></em>, <em class="sig-param"><span class="n">listener</span></em>, <em class="sig-param"><span class="n">handler</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.AsyncConnectService" title="Permalink to this definition">¶</a></dt>
+<dd><p>Asynchronously create a client connection to a remote service using a URL</p>
+<p>Same as ConnectService but returns asynchronously. See ConnectService() for more details
+on client connections.</p>
+<p>handler is called after the client connection succeeds are fails. On success, the object reference
+is returned and the exception is None. On failure, the returned object is None and the exception
+contains a subclass of Exception.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">handler</span></code> is None, returns an awaitable future.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> (<em>Union</em><em>[</em><em>str</em><em>,</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em>) – The URL of the service to connect</p></li>
+<li><p><strong>username</strong> (<em>str</em>) – A username for authentication, None for no authentication</p></li>
+<li><p><strong>credentials</strong> (<em>Dict</em><em>[</em><em>str</em><em>,</em><em>Any</em><em>]</em>) – credentials for authentication, None for no authentication</p></li>
+<li><p><strong>listener</strong> (<em>Callable</em><em>[</em><em>[</em><em>object</em><em>,</em><em>int</em><em>,</em><em>Any</em><em>]</em><em>,</em><em>None</em><em>]</em>) – A listener callback function, None for no listener</p></li>
+<li><p><strong>handler</strong> (<em>Callable</em><em>[</em><em>[</em><em>object</em><em>,</em><em>Exception</em><em>]</em><em>,</em><em>None</em><em>]</em>) – A handler function to receive the object reference or an exception</p></li>
+<li><p><strong>timeout</strong> (<em>float</em>) – Timeout in seconds, or -1 for no timeout</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.AsyncDisconnectService">
+<code class="sig-name descname">AsyncDisconnectService</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">stub</span></em>, <em class="sig-param"><span class="n">handler</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.AsyncDisconnectService" title="Permalink to this definition">¶</a></dt>
+<dd><p>Asynchronously disconnects a client connection to a service</p>
+<p>Same as DisconnectService() but returns asynchronously.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">handler</span></code> is None, returns an awaitable future.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> – The root object of the client to disconnect</p></li>
+<li><p><strong>handler</strong> (<em>Callable</em><em>[</em><em>[</em><em>]</em><em>,</em><em>None</em><em>]</em>) – The handler to call when complete</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.AsyncFindNodeByID">
+<code class="sig-name descname">AsyncFindNodeByID</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">transportschemes</span></em>, <em class="sig-param"><span class="n">handler</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">5</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.AsyncFindNodeByID" title="Permalink to this definition">¶</a></dt>
+<dd><p>Asynchronously finds nodes on the network with the specified NodeID</p>
+<p>Same as FindNodeByID() but returns asynchronously</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">handler</span></code> is None, returns an awaitable future.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>RobotRaconteur.NodeID</em>) – The NodeID to find</p></li>
+<li><p><strong>transportschemes</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – A list of transport types to search, ie “rr+tcp”, “rr+local”, “rrs+tcp”, etc</p></li>
+<li><p><strong>handler</strong> (<em>Callable</em><em>[</em><em>List</em><em>[</em><a class="reference internal" href="DataTypes.html#RobotRaconteur.NodeInfo2" title="RobotRaconteur.NodeInfo2"><em>NodeInfo2</em></a><em>]</em><em>,</em><em>None</em><em>]</em>) – Handler to call on completion</p></li>
+<li><p><strong>timeout</strong> (<em>float</em>) – Timeout in seconds. Using a timeout greater than 5 seconds is not recommended.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.AsyncFindNodeByName">
+<code class="sig-name descname">AsyncFindNodeByName</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">transportschemes</span></em>, <em class="sig-param"><span class="n">handler</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">5</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.AsyncFindNodeByName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Asynchronously finds nodes on the network with the specified NodeName</p>
+<p>Same as FindNodeByName() but returns asynchronously</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">handler</span></code> is None, returns an awaitable future.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The NodeName to find</p></li>
+<li><p><strong>transportschemes</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – A list of transport types to search, ie “rr+tcp”, “rr+local”, “rrs+tcp”, etc</p></li>
+<li><p><strong>handler</strong> (<em>Callable</em><em>[</em><em>List</em><em>[</em><a class="reference internal" href="DataTypes.html#RobotRaconteur.NodeInfo2" title="RobotRaconteur.NodeInfo2"><em>NodeInfo2</em></a><em>]</em><em>,</em><em>None</em><em>]</em>) – Handler to call on completion</p></li>
+<li><p><strong>timeout</strong> (<em>float</em>) – Timeout in seconds. Using a timeout greater than 5 seconds is not recommended.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.AsyncFindObjectType">
+<code class="sig-name descname">AsyncFindObjectType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em>, <em class="sig-param"><span class="n">member</span></em>, <em class="sig-param"><span class="n">handler</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.AsyncFindObjectType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Asynchronously returns an objref as a specific type</p>
+<p>Same as FindObjectType() but returns asynchronously</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">handler</span></code> is None, returns an awaitable future.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> – The object with the desired “objref”</p></li>
+<li><p><strong>objref</strong> (<em>str</em>) – The name of the “objref” member</p></li>
+<li><p><strong>handler</strong> (<em>Callable</em><em>[</em><em>[</em><em>str</em><em>,</em><em>Exception</em><em>]</em><em>,</em><em>None</em><em>]</em>) – A handler function to receive the object type or an exception</p></li>
+<li><p><strong>timeout</strong> (<em>float</em>) – Timeout is milliseconds, or -1 for infinite</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.AsyncFindObjectTypeInd">
+<code class="sig-name descname">AsyncFindObjectTypeInd</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em>, <em class="sig-param"><span class="n">member</span></em>, <em class="sig-param"><span class="n">ind</span></em>, <em class="sig-param"><span class="n">handler</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.AsyncFindObjectTypeInd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Asynchronously returns an objref as a specific type</p>
+<p>Same as FindObjectType() but returns asynchronously</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">handler</span></code> is None, returns an awaitable future.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> – The object with the desired “objref”</p></li>
+<li><p><strong>objref</strong> (<em>str</em>) – The name of the “objref” member</p></li>
+<li><p><strong>ind</strong> (<em>Union</em><em>[</em><em>int</em><em>,</em><em>str</em><em>]</em>) – The index for the “objref”</p></li>
+<li><p><strong>handler</strong> (<em>Callable</em><em>[</em><em>[</em><em>str</em><em>,</em><em>Exception</em><em>]</em><em>,</em><em>None</em><em>]</em>) – A handler function to receive the object type or an exception</p></li>
+<li><p><strong>timeout</strong> (<em>float</em>) – Timeout is milliseconds, or -1 for infinite</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.AsyncFindServiceByType">
+<code class="sig-name descname">AsyncFindServiceByType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">servicetype</span></em>, <em class="sig-param"><span class="n">transportschemes</span></em>, <em class="sig-param"><span class="n">handler</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">5</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.AsyncFindServiceByType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Asynchronously use discovery to find availabe services by service type</p>
+<p>Same as FindServiceByType() but returns asynchronously</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">handler</span></code> is None, returns an awaitable future.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>servicetype</strong> (<em>str</em>) – The service type to find, ie “com.robotraconteur.robotics.robot.Robot”</p></li>
+<li><p><strong>transportschemes</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – A list of transport types to search, ie “rr+tcp”, “rr+local”, “rrs+tcp”, etc</p></li>
+<li><p><strong>handler</strong> (<em>Callable</em><em>[</em><em>[</em><em>List</em><em>[</em><a class="reference internal" href="DataTypes.html#RobotRaconteur.ServiceInfo2" title="RobotRaconteur.ServiceInfo2"><em>ServiceInfo2</em></a><em>]</em><em>]</em><em>,</em><em>None</em><em>]</em>) – Handler to call on completion</p></li>
+<li><p><strong>timeout</strong> (<em>float</em>) – Timeout in seconds. Using a timeout greater than 5 seconds is not recommended.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.AsyncReleaseObjectLock">
+<code class="sig-name descname">AsyncReleaseObjectLock</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em>, <em class="sig-param"><span class="n">handler</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.AsyncReleaseObjectLock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Asynchronously release an excluse access lock previously locked 
+with RequestObjectLock() or AsyncRequestObjectLock()</p>
+<p>Same as ReleaseObjectLock() but returns asynchronously</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">handler</span></code> is None, returns an awaitable future.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> – The object previously locked</p></li>
+<li><p><strong>handler</strong> (<em>Callable</em><em>[</em><em>[</em><em>str</em><em>,</em><em>Exception</em><em>]</em><em>,</em><em>None</em><em>]</em>) – Handler to call on completion</p></li>
+<li><p><strong>timeout</strong> – Timeout in seconds, or -1 for infinite</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.AsyncRequestObjectLock">
+<code class="sig-name descname">AsyncRequestObjectLock</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em>, <em class="sig-param"><span class="n">flags</span></em>, <em class="sig-param"><span class="n">handler</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.AsyncRequestObjectLock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Asynchronously request an exclusive access lock to a service object</p>
+<p>Same as RequestObjectLock() but returns asynchronously</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">handler</span></code> is None, returns an awaitable future.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> – The object to lock. Must be returned by ConnectService or returned by an “objref”</p></li>
+<li><p><strong>flags</strong> – Select either a “User” lock with RobotRaconteur.RobotRaconteurObjectLockFlags_USER_LOCK or “Session” 
+lock with RobotRaconteur.RobotRaconteurObjectLockFlags_CLIENT_LOCK</p></li>
+<li><p><strong>handler</strong> (<em>Callable</em><em>[</em><em>[</em><em>str</em><em>,</em><em>Exception</em><em>]</em><em>,</em><em>None</em><em>]</em>) – Handler to call on completion</p></li>
+<li><p><strong>timeout</strong> (<em>float</em>) – Timeout in seconds, or -1 for infinite</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.AsyncUpdateDetectedNodes">
+<code class="sig-name descname">AsyncUpdateDetectedNodes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">schemes</span></em>, <em class="sig-param"><span class="n">handler</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">5</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.AsyncUpdateDetectedNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Asynchronously update the detected nodes cache</p>
+<p>Same as UpdateDetectedNodes() but returns asynchronously</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">handler</span></code> is None, returns an awaitable future.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>schemes</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – A list of transport schemes, ie “rr+tcp”, “rr+local”, etc. to update.</p></li>
+<li><p><strong>handler</strong> (<em>Callable</em><em>[</em><em>[</em><em>]</em><em>,</em><em>None</em><em>]</em>) – The handler to call on completion</p></li>
+<li><p><strong>timeout</strong> (<em>float</em>) – The timeout for the operation in seconds. This function will often run
+for the full timeout, so values less than 5 seconds are recommended.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.CheckConnection">
+<code class="sig-name descname">CheckConnection</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">client</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.CheckConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check that the TransportConnection associated with an endpoint
+is connected</p>
+<p>Raises <cite>RobotRaconteur.ConnectionException</cite> or other exception if connection is invalid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>endpoint</strong> (<em>int</em>) – The LocalEndpoint identifier to check</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.CloseService">
+<code class="sig-name descname">CloseService</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sname</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.CloseService" title="Permalink to this definition">¶</a></dt>
+<dd><p>Closes a previously registered service</p>
+<p>Services are automatically closed by Shutdown, so this function
+is rarely used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sname</strong> (<em>str</em>) – The name of the service to close</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.CompareLogLevel">
+<code class="sig-name descname">CompareLogLevel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">log_level</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.CompareLogLevel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test if the specified log level would be accepted</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>log_level</strong> (<em>int</em>) – Log level to test</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the log would be accepted, False if it would be ignored</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.ConnectService">
+<code class="sig-name descname">ConnectService</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.ConnectService" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a client connection to a remote service using a URL</p>
+<p>Synchronously creates a connection to a remote service using a URL. URLs are either provided by
+the service, or are determined using discovery functions such as FindServiceByType().
+This function is the primary way to create client connections.</p>
+<p>username and credentials can be used to specify authentication information. Credentials will
+often contain a “password” or token entry.</p>
+<p>The listener is a function that is called during various events. See ClientServiceListenerEventType
+constants for a description of the possible events.</p>
+<p>ConnectService will attempt to instantiate a client object reference (proxy) based on the type
+information provided by the service. The type information will contain the type of the object,
+and all the implemented types. The client will normally want a specific one of the implement types.
+Specify this desired type in objecttype to avoid future compatibility issues.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> (<em>Union</em><em>[</em><em>str</em><em>,</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em>) – The URL of the service to connect</p></li>
+<li><p><strong>username</strong> (<em>str</em>) – An optional username for authentication, None for no authentication</p></li>
+<li><p><strong>credentials</strong> (<em>Dict</em><em>[</em><em>str</em><em>,</em><em>Any</em><em>]</em>) – Optional credentials for authentication, None for no authentication</p></li>
+<li><p><strong>listener</strong> (<em>Callable</em><em>[</em><em>[</em><em>object</em><em>,</em><em>int</em><em>,</em><em>Any</em><em>]</em><em>,</em><em>None</em><em>]</em>) – Optional listener callback function</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The client object reference (proxy).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.CreateAutoResetEvent">
+<code class="sig-name descname">CreateAutoResetEvent</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.CreateAutoResetEvent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an AutoResetEvent object</p>
+<p>Normally the AutoResetEvent will use the system clock for timeouts,
+but in certain circumstances will use simulation time</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The new AutoResetEvent object</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>RobotRaconteur.AutoResetEvent</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.CreateRate">
+<code class="sig-name descname">CreateRate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frequency</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.CreateRate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a Rate object</p>
+<p>Rate is used to stabilize periodic loops to a specified frequency</p>
+<p>This function will normally return a WallRate instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>frequency</strong> (<em>float</em>) – Frequency of loop in Hz</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The new Rate object</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>RobotRaconteur.Rate</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.CreateTimer">
+<code class="sig-name descname">CreateTimer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">period</span></em>, <em class="sig-param"><span class="n">handler</span></em>, <em class="sig-param"><span class="n">oneshot</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.CreateTimer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a Timer object</p>
+<p>This function will normally return a WallTimer instance</p>
+<p>Start() must be called after timer creation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>period</strong> (<em>float</em>) – The period of the timer in seconds</p></li>
+<li><p><strong>handler</strong> (<em>Callable</em><em>[</em><em>[</em><em>TimerEvent</em><em>]</em><em>,</em><em>None</em><em>]</em>) – The handler function to call when timer times out</p></li>
+<li><p><strong>oneshot</strong> (<em>bool</em>) – True if timer is a one-shot timer, False for repeated timer</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The new Timer object. Must call Start()</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>RobotRaconteur.Timer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.DisconnectService">
+<code class="sig-name descname">DisconnectService</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">stub</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.DisconnectService" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disconnects a client connection to a service</p>
+<p>Synchronously disconnects a client connection. Client connections
+are automatically closed by Shutdown(), so this function
+is optional.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj</strong> – The root object of the service to disconnect</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.EndpointInactivityTimeout">
+<em class="property">property </em><code class="sig-name descname">EndpointInactivityTimeout</code><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.EndpointInactivityTimeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>(float) The timeout for endpoint activity in seconds</p>
+<p>Sets a timeout for endpoint inactivity. If no message
+is sent or received by the endpoint for the specified time,
+the endpoint is closed. Default timeout is 10 minutes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.FindNodeByID">
+<code class="sig-name descname">FindNodeByID</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">transportschemes</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.FindNodeByID" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds nodes on the network with a specified NodeID</p>
+<p>Updates the discovery cache and find nodes with the specified NodeID.
+This function returns unverified cache information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>RobotRaconteur.NodeID</em>) – The NodeID to find</p></li>
+<li><p><strong>transportschemes</strong> – A list of transport types to search, ie “rr+tcp”, “rr+local”, “rrs+tcp”, etc</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The discovered nodes</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="DataTypes.html#RobotRaconteur.NodeInfo2" title="RobotRaconteur.NodeInfo2">NodeInfo2</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.FindNodeByName">
+<code class="sig-name descname">FindNodeByName</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">transportschemes</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.FindNodeByName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds nodes on the network with a specified NodeName</p>
+<p>Updates the discovery cache and find nodes with the specified NodeName.
+This function returns unverified cache information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The NodeName to find</p></li>
+<li><p><strong>transportschemes</strong> – A list of transport types to search, ie “rr+tcp”, “rr+local”, “rrs+tcp”, etc</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The discovered nodes</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="DataTypes.html#RobotRaconteur.NodeInfo2" title="RobotRaconteur.NodeInfo2">NodeInfo2</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.FindObjectType">
+<code class="sig-name descname">FindObjectType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em>, <em class="sig-param"><span class="n">member</span></em>, <em class="sig-param"><span class="n">ind</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.FindObjectType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the fully qualified object type that would be returned by an “objref” member</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> – The object with the desired “objref”</p></li>
+<li><p><strong>objref</strong> (<em>str</em>) – The name of the “objref” member</p></li>
+<li><p><strong>ind</strong> (<em>Union</em><em>[</em><em>int</em><em>,</em><em>str</em><em>]</em>) – The index for the “objref”</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The fully qualified object type</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.FindServiceByType">
+<code class="sig-name descname">FindServiceByType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">servicetype</span></em>, <em class="sig-param"><span class="n">transportschemes</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.FindServiceByType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use discovery to find available services by service type</p>
+<p>Uses discovery to find available services based on a service type. This
+service type is the type of the root object, ie 
+“com.robotraconteur.robotics.robot.Robot”. This process will update the detected 
+node cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>servicetype</strong> (<em>str</em>) – The service type to find, ie “com.robotraconteur.robotics.robot.Robot”</p></li>
+<li><p><strong>transportschemes</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – A list of transport types to search, ie “rr+tcp”, “rr+local”, “rrs+tcp”, etc</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The discovered services</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="DataTypes.html#RobotRaconteur.ServiceInfo2" title="RobotRaconteur.ServiceInfo2">RobotRaconteur.ServiceInfo2</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.GetConstants">
+<code class="sig-name descname">GetConstants</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">servicetype</span></em>, <em class="sig-param"><span class="n">obj</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.GetConstants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a structure that contains the constants of the specified service type</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>servicetype</strong> (<em>str</em>) – The name of the service definition</p></li>
+<li><p><strong>obj</strong> – The client connection object reference to be used with to retrive service types.  
+This is necessary because each client maintains type information.  A client must be provided from 
+which type information can be queried. For services this parameter is unnecessary.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Dict[str,Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.GetDetectedNodes">
+<code class="sig-name descname">GetDetectedNodes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.GetDetectedNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the nodes currently detected by Transports</p>
+<p>Transports configured to listen for node discovery send detected node
+information to the parent node, where it is stored. Normally this information
+will expire after one minute, and needs to be constantly refreshed.</p>
+<p>This node information is not verified. It is the raw discovery 
+information received by the transports. Verification is done
+when the node is interrogated for service information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>List of detected NodeID</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>List[RobotRaconteur.NodeID]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.GetExceptionType">
+<code class="sig-name descname">GetExceptionType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">exceptionname</span></em>, <em class="sig-param"><span class="n">obj</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.GetExceptionType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a reference to the exception class of fully qualified type <code class="docutils literal notranslate"><span class="pre">exceptiontype</span></code>. 
+Note that this is a class reference, not an instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>exceptionname</strong> (<em>str</em>) – The fully qualified name of the exception type</p></li>
+<li><p><strong>obj</strong> – The client connection object reference to be used with to retrive service types.  
+This is necessary because each client maintains type information.  A client must be provided from 
+which type information can be queried. For services this parameter is unnecessary.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Exception type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.GetLogLevel">
+<code class="sig-name descname">GetLogLevel</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.GetLogLevel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the current log level for the node</p>
+<p>Default level is “info”</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The current log level</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.GetLogRecordHandler">
+<code class="sig-name descname">GetLogRecordHandler</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.GetLogRecordHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the currently configured log record handler</p>
+<p>If None, records are sent to <code class="docutils literal notranslate"><span class="pre">stdout</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The log record handler</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>LogRecordHandler</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.GetNamedArrayDType">
+<code class="sig-name descname">GetNamedArrayDType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">type</span></em>, <em class="sig-param"><span class="n">obj</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.GetNamedArrayDType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the numpy dtype for <code class="docutils literal notranslate"><span class="pre">namedarraytype</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>type</strong> (<em>str</em>) – The fully qualified type of the namedarray</p></li>
+<li><p><strong>obj</strong> – The client connection object reference to be used with this namedarray type.  
+This is necessary because each client maintains type information.  A client must be provided from 
+which type information can be queried. For services this parameter is unnecessary.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The dtype for the specified namedarray</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.dtype</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.GetObjectServicePath">
+<code class="sig-name descname">GetObjectServicePath</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.GetObjectServicePath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the service path of a client object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj</strong> – The object to get the service path for</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The object’s service path</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.GetPodDType">
+<code class="sig-name descname">GetPodDType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">type</span></em>, <em class="sig-param"><span class="n">obj</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.GetPodDType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the numpy dtype for <code class="docutils literal notranslate"><span class="pre">podtype</span></code></p>
+<p>Use with numpy.array() or numpy.zeros() to create new pod arrays.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>type</strong> (<em>str</em>) – The fully qualified type of the pod</p></li>
+<li><p><strong>obj</strong> – The client connection object reference to be used with this pod type.  
+This is necessary because each client maintains type information.  A client must be provided from 
+which type information can be queried. For services this parameter is unnecessary.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The dtype for the specified podtype</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.dtype</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.GetPulledServiceType">
+<code class="sig-name descname">GetPulledServiceType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em>, <em class="sig-param"><span class="n">servicetype</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.GetPulledServiceType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a ServiceFactory created from a service type pulled by a client</p>
+<p>Clients pull service definitions from services and create
+instances of ServiceFactory if a DynamicServiceFactory has 
+been configured. GetPulledServiceType() returns a
+generated ServiceFactory. Use GetPulledServiceTypes() to 
+return a list of available service types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> – Client object referenece returned by ConnectService() or AsyncConnectService()</p></li>
+<li><p><strong>servicetype</strong> (<em>str</em>) – The name of the service type</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The pulled service factory</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>RobotRaconteur.ServiceDefinition</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.GetPulledServiceTypes">
+<code class="sig-name descname">GetPulledServiceTypes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.GetPulledServiceTypes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the names of service types pulled by a client</p>
+<p>Clients pull service definitions from services and create
+instances of ServiceFactory if a DynamicServiceFactory has 
+been configured. GetPulledServiceTypes returns a list of  the
+names of these pulled service types. Use GetPulledServiceType()
+to retrieve the ServiceFactory for a specific type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj</strong> – Client object referenece returned by ConnectService() or AsyncConnectService()</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The names of the pulled service types</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.GetRegisteredServiceTypes">
+<code class="sig-name descname">GetRegisteredServiceTypes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.GetRegisteredServiceTypes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return names of registered service types</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.GetServiceAttributes">
+<code class="sig-name descname">GetServiceAttributes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.GetServiceAttributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the service attributes of a client connection</p>
+<p>Returns the service attributes of a client connected using 
+ConnectService()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj</strong> – The root object of the client to use to retrieve service attributes</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The service attributes</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Dict[str,Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.GetServiceName">
+<code class="sig-name descname">GetServiceName</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.GetServiceName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the name of a service from a client connection</p>
+<p>Returns the service name of the remote service that a client is connected</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param</dt>
+<dd class="field-odd"><p>obj The root object of the client to use to retrieve service attributes</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The service name</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.GetServiceNodeID">
+<code class="sig-name descname">GetServiceNodeID</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.GetServiceNodeID" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the service NodeID of the remote node from a client connection</p>
+<p>Returns the NodeID of the remote node that a client is connected</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj</strong> – The root object of the client to use to retrieve service attributes</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The NodeID</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>NodeID</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.GetServiceNodeName">
+<code class="sig-name descname">GetServiceNodeName</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.GetServiceNodeName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the service NodeName of the remote node from a client connection</p>
+<p>Returns the NodeName of the remote node that a client is connected</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj</strong> – The root object of the client to use to retrieve service attributes</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The NodeName</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.GetServicePath">
+<code class="sig-name descname">GetServicePath</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.GetServicePath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the ServicePath of a client object reference
+obj must be returned by ConnectService(), AsyncConnectService(),
+or an <code class="docutils literal notranslate"><span class="pre">objref</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj</strong> – The object to query</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The servicepath of the object</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.GetServiceType">
+<code class="sig-name descname">GetServiceType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.GetServiceType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a previously registered service type</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – The name of the service type to retrieve</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>ServiceDefinition</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.GetStructureType">
+<code class="sig-name descname">GetStructureType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">type</span></em>, <em class="sig-param"><span class="n">obj</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.GetStructureType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a constructor for Robot Raconteur structure with type <code class="docutils literal notranslate"><span class="pre">structtype</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>structtype</strong> (<em>str</em>) – The fully qualified type of the structure</p></li>
+<li><p><strong>obj</strong> – The client connection object reference to be used with this structure.  
+This is necessary because each client maintains type information.  A client must be provided from 
+which type information can be queried. For services this parameter is unnecessary.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The constructer for the structure type</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Callable[[],&lt;structtype&gt;]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.Init">
+<code class="sig-name descname">Init</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">thread_count</span><span class="o">=</span><span class="default_value">20</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.Init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize the node. Called automatically for <code class="docutils literal notranslate"><span class="pre">RRN</span></code></p>
+<p>This function must be called to initialize background tasks before
+using the node. It is called automatically by the
+singleton accesors, so the user only needs to call this function
+when not using the singleton. If a custom thread pool is being
+used, the thread pool factory must be specified before 
+calling init.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>thread_count</strong> (<em>int</em>) – The initial number of threads in the thread pool (default 20)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.IsServiceTypeRegistered">
+<code class="sig-name descname">IsServiceTypeRegistered</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">servicename</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.IsServiceTypeRegistered" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test if a service type has been registered</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>type</strong> (<em>str</em>) – The name of the service type to check</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.LogMessage">
+<code class="sig-name descname">LogMessage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">level</span></em>, <em class="sig-param"><span class="n">message</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.LogMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log a simple message using the current node</p>
+<p>The record will be sent to the configured log handler,
+or sent to std::cerr if none is configured</p>
+<p>If the level of the message is below the current log level
+for the node, the record will be ignored</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.LogRecord">
+<code class="sig-name descname">LogRecord</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">record</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.LogRecord" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log a record to the node.</p>
+<p>The record will be sent to the configured log handler,
+or sent to std::cerr if none is configured</p>
+<p>If the level of the message is below the current log level
+for the node, it will be ignored</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>record</strong> (<em>RRLogRecord</em>) – The record to log</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.MemoryMaxTransferSize">
+<em class="property">property </em><code class="sig-name descname">MemoryMaxTransferSize</code><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.MemoryMaxTransferSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) The maximum chunk size for memory transfers in bytes</p>
+<p>“memory” members break up large transfers into chunks to avoid
+sending messages larger than the transport maximum, which is normally
+approximately 10 MB. The memory max transfer size is the largest
+data chunk the memory will send, in bytes. Default is 100 kB.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.MonitorEnter">
+<code class="sig-name descname">MonitorEnter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.MonitorEnter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a monitor lock on a specified object</p>
+<p>Monitor locks are intendended for short operations that require
+guarding to prevent races, corruption, or other concurrency problems.
+Monitors emulate a single thread locking the service object.</p>
+<p>Use of ScopedMonitorLock instead of this function is highly recommended</p>
+<p>Monitor locks do not lock any sub-objects (objref)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param</dt>
+<dd class="field-odd"><p>obj The object to lock</p>
+</dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><p><strong>timeout</strong> – The timeout in seconds to acquire the monitor lock, 
+or -1 for infinite</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.MonitorExit">
+<code class="sig-name descname">MonitorExit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.MonitorExit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Releases a monitor lock</p>
+<p>Use of ScopedMonitorLock instead of this function is highly recommended</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj</strong> – The object previously locked by MonitorEnter()</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.NamedArrayToArray">
+<code class="sig-name descname">NamedArrayToArray</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">named_array</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.NamedArrayToArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a namedarray type into a primitive array with the namedarray numeric type. 
+This function will return an array with one more dimension than the input array, 
+with the first dimension set to the element count of the named array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>namedarray</strong> (<em>numpy.array</em>) – The namedarray to convert stored in a <code class="docutils literal notranslate"><span class="pre">numpy.array</span></code></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The converted numeric array</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.NewStructure">
+<code class="sig-name descname">NewStructure</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">type</span></em>, <em class="sig-param"><span class="n">obj</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.NewStructure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a new Robot Raconteur structure with type <code class="docutils literal notranslate"><span class="pre">structtype</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>structtype</strong> (<em>str</em>) – The fully qualified type of the structure</p></li>
+<li><p><strong>obj</strong> – The client connection object reference to be used with this structure.  
+This is necessary because each client maintains type information.  A client must be provided from 
+which type information can be queried. For services this parameter is unnecessary.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The new structure instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.NodeDiscoveryMaxCacheCount">
+<em class="property">property </em><code class="sig-name descname">NodeDiscoveryMaxCacheCount</code><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.NodeDiscoveryMaxCacheCount" title="Permalink to this definition">¶</a></dt>
+<dd><p>the maximum number of detected nodes that will be cached</p>
+<p>The node keeps a cache of detected nodes. The NodeDiscoveryMaxCacheCount
+sets an upper limit to how many detected nodes are cached. By default set to 4096</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.NodeID">
+<em class="property">property </em><code class="sig-name descname">NodeID</code><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.NodeID" title="Permalink to this definition">¶</a></dt>
+<dd><p>(RobotRaconteur.NodeID) The current NodeID. If one has not been set, one will be automatically generated
+when read. NodeID cannot be set after it has been configured.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.NodeName">
+<em class="property">property </em><code class="sig-name descname">NodeName</code><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.NodeName" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) The current NodeName. If one has not been set, it will be the empty string. Cannot be set after it has been configured.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.NowUTC">
+<code class="sig-name descname">NowUTC</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.NowUTC" title="Permalink to this definition">¶</a></dt>
+<dd><p>The current time in UTC time zone</p>
+<p>Uses the internal node clock to get the current time in UTC.
+While this will normally use the system clock, this may
+use simulation time in certain circumstances</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The current time in UTC</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.PostToThreadPool">
+<code class="sig-name descname">PostToThreadPool</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">handler</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.PostToThreadPool" title="Permalink to this definition">¶</a></dt>
+<dd><p>Posts a function to be called by the node’s native thread pool.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>handler</strong> (<em>Callable</em><em>[</em><em>[</em><em>]</em><em>,</em><em>None</em><em>]</em>) – The function to call</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.RegisterService">
+<code class="sig-name descname">RegisterService</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">objecttype</span></em>, <em class="sig-param"><span class="n">obj</span></em>, <em class="sig-param"><span class="n">securitypolicy</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.RegisterService" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers a service for clients to connect</p>
+<p>The supplied object becomes the root object in the service. Other objects may
+be accessed by clients using “objref” members. The name of the service must conform
+to the naming rules of Robot Raconteur member names. A service is closed using
+either CloseService() or when Shutdown() is called.</p>
+<p>Multiple services can be registered within the same node. Service names
+within a single node must be unique.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of the service, must follow member naming rules</p></li>
+<li><p><strong>objecttype</strong> – The fully qualified Robot Raconteur type of the object</p></li>
+<li><p><strong>obj</strong> – The root object of the service</p></li>
+<li><p><strong>securitypolicy</strong> (<em>ServiceSecurityPolicy</em>) – An optional security policy for the service to control authentication
+and other security functions</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The instantiated ServerContext. This object is owned
+by the node and the return can be safely ignored.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ServerContext</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.RegisterServiceType">
+<code class="sig-name descname">RegisterServiceType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">d</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.RegisterServiceType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a service type</p>
+<p>If passed a string, the string will be parsed as a service definition file</p>
+<p>The service type will be verified. All imported types must already have
+been registered for verification to succeed. It is recommended that
+RegisterServiceTypes() be used for lists of service types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>d</strong> (<em>Union</em><em>[</em><em>RobotRaconteur.ServiceDefinition</em><em>,</em><em>str</em><em>]</em>) – The service definition implementing the type to register</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.RegisterServiceTypeFromFile">
+<code class="sig-name descname">RegisterServiceTypeFromFile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.RegisterServiceTypeFromFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a service type from a file</p>
+<p>The file_name must point to a plain text “robdef” file. The file_name
+may leave off the “.robdef” extension.</p>
+<p>The path in the environmental variable <code class="docutils literal notranslate"><span class="pre">ROBOTRACONTEUR_ROBDEF_PATH</span></code> will
+be searched if the file is not found in the working directory.</p>
+<p>The service type will be verified. All imported types must already have
+been registered for verification to succeed. It is recommended that
+RegisterServiceTypesFromFiles() be used for lists of service types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>d</strong> (<em>str</em>) – The filename of the service type to load</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.RegisterServiceTypes">
+<code class="sig-name descname">RegisterServiceTypes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">d</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.RegisterServiceTypes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a list of service types</p>
+<p>If passed a string, the string will be parsed as a service definition file</p>
+<p>The service types will be verified. All imported types must be included in the list
+or already have been registered for verification to succeed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>d</strong> (<em>Union</em><em>[</em><em>List</em><em>[</em><em>RobotRaconteur.ServiceDefinition</em><em>]</em><em>,</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em>) – The service types implementing the types to register</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.RegisterServiceTypesFromFiles">
+<code class="sig-name descname">RegisterServiceTypesFromFiles</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_names</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.RegisterServiceTypesFromFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a list of service type from files</p>
+<p>The file names in file_names must point to plain text “robdef” files. The 
+file names may leave off the “.robdef” extension.</p>
+<p>The path in the environmental variable <code class="docutils literal notranslate"><span class="pre">ROBOTRACONTEUR_ROBDEF_PATH</span></code> will
+be searched if a file is not found in the working directory.</p>
+<p>The service types will be verified. All imported types must already have
+been registered for verification to succeed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>d</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – The filenames of the service types to load</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.RegisterTransport">
+<code class="sig-name descname">RegisterTransport</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">transport</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.RegisterTransport" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a transport for use by the node</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>transport</strong> (<em>RobotRaconteur.Transport</em>) – The transport to register</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The transport internal id</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.ReleaseObjectLock">
+<code class="sig-name descname">ReleaseObjectLock</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.ReleaseObjectLock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Release an excluse access lock previously locked with RequestObjectLock()
+or AsyncRequestObjectLock()</p>
+<p>Object must have previously been locked using RequestObjectLock() or
+AsyncRequestObjectLock()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj</strong> – The object previously locked</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>“OK” on success</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.RequestObjectLock">
+<code class="sig-name descname">RequestObjectLock</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em>, <em class="sig-param"><span class="n">flags</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.RequestObjectLock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request an exclusive access lock to a service object</p>
+<p>Called by clients to request an exclusive lock on a service object and
+all subobjects (“objrefs”) in the service. The exclusive access lock will
+prevent other users (“User” lock) or client connections  (“Session” lock) 
+from interacting with the objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> – The object to lock. Must be returned by ConnectService or returned by an “objref”</p></li>
+<li><p><strong>flags</strong> – Select either a “User” lock with RobotRaconteur.RobotRaconteurObjectLockFlags_USER_LOCK or “Session” 
+lock with RobotRaconteur.RobotRaconteurObjectLockFlags_CLIENT_LOCK</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>“OK” on success</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.RequestTimeout">
+<em class="property">property </em><code class="sig-name descname">RequestTimeout</code><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.RequestTimeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>(float) The timeout for requests in seconds</p>
+<p>Requests are calls to a remote node that expect a response. “function”,
+“property”, “callback”, “memory”, and setup calls in “pipe” and “wire”
+are all requests. All other Robot Raconteur functions that call the remote
+node and expect a response are requests. Default timeout is 15 seconds.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.RobotRaconteurVersion">
+<em class="property">property </em><code class="sig-name descname">RobotRaconteurVersion</code><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.RobotRaconteurVersion" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Returns the Robot Raconteur library version</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.RobotRaconteurNode.ScopedMonitorLock">
+<em class="property">class </em><code class="sig-name descname">ScopedMonitorLock</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.ScopedMonitorLock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper for RobotRaconteurNode.MonitorEnter() and 
+RobotRaconteurNode.MonitorExit() supporting <code class="docutils literal notranslate"><span class="pre">with</span></code>
+statement scoping</p>
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.ScopedMonitorLock.lock">
+<code class="sig-name descname">lock</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timeout</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.ScopedMonitorLock.lock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Relock the object after calling unlock()</p>
+<dl class="simple">
+<dt>:param timeou:t The timeout in seconds to acquire the monitor lock, </dt><dd><p>or -1 for infinite</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.ScopedMonitorLock.release">
+<code class="sig-name descname">release</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.ScopedMonitorLock.release" title="Permalink to this definition">¶</a></dt>
+<dd><p>Release the monitor lock from the class</p>
+<p>The monitor lock is released from the ScopedMonitorLock
+instance. The monitor lock will not be released
+when the <code class="docutils literal notranslate"><span class="pre">with</span></code> block exits.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.ScopedMonitorLock.unlock">
+<code class="sig-name descname">unlock</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.ScopedMonitorLock.unlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Releases the monitor lock</p>
+<p>The ScopedMonitorLock destructor will release
+the lock automatically, so in most cases it is
+not necessary to call this function</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.SelectRemoteNodeURL">
+<em class="property">static </em><code class="sig-name descname">SelectRemoteNodeURL</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">urls</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.SelectRemoteNodeURL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select the “best” URL from a std::vector of candidates</p>
+<p>Service discovery will often return a list of candidate URLs to 
+use to connect to a node. This function uses hueristics to select
+the “best” URL to use. The selection criteria ranks URLs in roughly
+the following order, lower number being better:</p>
+<ol class="arabic simple">
+<li><p>“rr+intra” for IntraTransport</p></li>
+<li><p>“rr+local” for LocalTransport</p></li>
+<li><p>“rr+pci” or “rr+usb” for HardwareTransport</p></li>
+<li><p>“rrs+tcp://127.0.0.1” for secure TcpTransport loopback</p></li>
+<li><p>“rrs+tcp://[::1]” for secure TcpTransport IPv6 loopback</p></li>
+<li><p>“rrs+tcp://localhost” for secure TcpTransport loopback</p></li>
+<li><p>“rrs+tcp://[fe80” for secure TcpTransport link-local IPv6</p></li>
+<li><p>“rrs+tcp://” for any secure TcpTransport</p></li>
+<li><p>“rr+tcp://127.0.0.1” for TcpTransport loopback</p></li>
+<li><p>“rr+tcp://[::1]” for TcpTransport IPv6 loopback</p></li>
+<li><p>“rr+tcp://localhost” for TcpTransport loopback</p></li>
+<li><p>“rr+tcp://[fe80” for TcpTransport link-local IPv6</p></li>
+<li><p>“rr+tcp://” for any TcpTransport</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>urls</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – The candidate URLs</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The “best” URL out of the candidates</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.SetExceptionHandler">
+<code class="sig-name descname">SetExceptionHandler</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">handler</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.SetExceptionHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set an exception handler function</p>
+<p>The ThreadPool will catch exceptions that are uncaught
+by other logic and pass the exception to the specified
+exception handler. User handler functions that throw exceptions
+will also be caught and passed to the specified handler
+function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>handler</strong> (<em>Callable</em><em>[</em><em>[</em><em>Exception</em><em>]</em><em>,</em><em>None</em><em>]</em>) – The handler function for uncaught exceptions</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.SetLogLevel">
+<code class="sig-name descname">SetLogLevel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">level</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.SetLogLevel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the log level for the node</p>
+<p>Set RobotRaconteur.RobotRaconteur_LogLevel_Disable to disable logging</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>level</strong> (<em>int</em>) – The desired log level</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.SetLogLevelFromEnvVariable">
+<code class="sig-name descname">SetLogLevelFromEnvVariable</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.SetLogLevelFromEnvVariable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the log level for the node from specified environmental variable</p>
+<p>Retrieves the specified environmental variable and sets the log level based
+on one of the following values: DISABLE, FATAL, ERROR, WARNING, INFO, DEBUG, TRACE</p>
+<p>If an invalid value or the variable does not exist, the log level is left unchanged.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>env_variable_name</strong> (<em>str</em>) – The environmental variable to use. Defaults to 
+<code class="docutils literal notranslate"><span class="pre">ROBOTRACONTEUR_LOG_LEVEL</span></code></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The log level</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.SetLogLevelFromString">
+<code class="sig-name descname">SetLogLevelFromString</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">level</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.SetLogLevelFromString" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the log level for the node from a string</p>
+<p>Must be one of the following values: DISABLE, FATAL, ERROR, WARNING, INFO, DEBUG, TRACE</p>
+<p>Defaults to WARNING</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>level</strong> (<em>str</em>) – The desired log level</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The log level</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.SetLogRecordHandler">
+<code class="sig-name descname">SetLogRecordHandler</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">handler</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.SetLogRecordHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the handler for log records</p>
+<p>If handler is NULL, records are sent to std::cerr</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>handler</strong> (<em>RobotRaconteur.LogRecordHandler</em>) – The log record handler function</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.Shutdown">
+<code class="sig-name descname">Shutdown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.Shutdown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shuts down the node. Called automatically by ClientNodeSetup and ServerNodeSetup</p>
+<p>Shutdown must be called before program exit to avoid segfaults and other undefined
+behavior. The singleton node is automatically shut down in Python. The use of 
+ClientNodeSetup and ServerNodeSetup is recommended to automate
+the node lifecycle. Calling this function does the following:
+1. Closes all services and releases all service objects
+2. Closes all client connections
+3. Shuts down discovery
+4. Shuts down all transports
+5. Notifies all shutdown listeners
+6. Releases all periodic cleanup task listeners
+7. Shuts down and releases the thread pool</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.Sleep">
+<code class="sig-name descname">Sleep</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">duration</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.Sleep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sleeps for a specified duration</p>
+<p>Normally will sleep based on the system clock, but in certain
+circumstances will use simulation time</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>duration</strong> (<em>float</em>) – Duration to sleep in seconds</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.SubscribeService">
+<code class="sig-name descname">SubscribeService</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.SubscribeService" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subscribe to a service using one or more URL. Used to create robust connections to services</p>
+<p>Creates a ServiceSubscription assigned to a service with one or more candidate connection URLs. The
+subscription will attempt to maintain a peristent connection, reconnecting if the connection is lost.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> (<em>Union</em><em>[</em><em>str</em><em>,</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em>) – One or more candidate connection urls</p></li>
+<li><p><strong>username</strong> (<em>str</em>) – An optional username for authentication</p></li>
+<li><p><strong>credentials</strong> (<em>Dict</em><em>[</em><em>str</em><em>,</em><em>Any</em><em>]</em>) – Optional credentials for authentication</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The subscription object</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>RobotRaconteur.ServiceSubscription</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.SubscribeServiceByType">
+<code class="sig-name descname">SubscribeServiceByType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">service_types</span></em>, <em class="sig-param"><span class="n">filter_</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.SubscribeServiceByType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subscribe to listen for available services and automatically connect</p>
+<p>A ServiceSubscription will track the availability of service types and
+create connections when available.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>service_types</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – A list of service types to listen for, ie “com.robotraconteur.robotics.robot.Robot”</p></li>
+<li><p><strong>filter</strong> (<a class="reference internal" href="Subscription.html#RobotRaconteur.ServiceSubscriptionFilter" title="RobotRaconteur.ServiceSubscriptionFilter"><em>RobotRaconteur.ServiceSubscriptionFilter</em></a>) – A filter to select individual services based on specified criteria</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The active subscription</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ServiceSubscription</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.SubscribeServiceInfo2">
+<code class="sig-name descname">SubscribeServiceInfo2</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">service_types</span></em>, <em class="sig-param"><span class="n">filter_</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.SubscribeServiceInfo2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subscribe to listen for available services information</p>
+<p>A ServiceInfo2Subscription will track the availability of service types and
+inform when services become available or are lost. If connections to
+available services are also required, ServiceSubscription should be used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>service_types</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – A list of service types to listen for, ie “com.robotraconteur.robotics.robot.Robot”</p></li>
+<li><p><strong>filter</strong> (<a class="reference internal" href="Subscription.html#RobotRaconteur.ServiceSubscriptionFilter" title="RobotRaconteur.ServiceSubscriptionFilter"><em>RobotRaconteur.ServiceSubscriptionFilter</em></a>) – A filter to select individual services based on specified criteria</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The active subscription</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="Subscription.html#RobotRaconteur.ServiceInfo2Subscription" title="RobotRaconteur.ServiceInfo2Subscription">ServiceInfo2Subscription</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.ThreadPoolCount">
+<em class="property">property </em><code class="sig-name descname">ThreadPoolCount</code><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.ThreadPoolCount" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) The size of the native thread pool. May be configured dynamically.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.TransportInactivityTimeout">
+<em class="property">property </em><code class="sig-name descname">TransportInactivityTimeout</code><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.TransportInactivityTimeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>(float) The timeout for transport activity in seconds</p>
+<p>Sets a timeout for transport inactivity. If no message
+is sent or received on the transport for the specified time,
+the transport is closed. Default timeout is 10 minutes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.UnregisterServiceType">
+<code class="sig-name descname">UnregisterServiceType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">type</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.UnregisterServiceType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unregister a previously registered service type</p>
+<p>This function is not recommended as the results can be unpredictable</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>type</strong> (<em>str</em>) – The service type to unregister</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNode.UpdateDetectedNodes">
+<code class="sig-name descname">UpdateDetectedNodes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">schemes</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNode.UpdateDetectedNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the detected nodes cache</p>
+<p>The node keeps a cache of detected nodes, but this may become stale
+if nodes are rapidly added and removed from the network. Call this
+function to update the detected nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>schemes</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – A list of transport schemes, ie “rr+tcp”, “rr+local”, etc. to update.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Robot Raconteur Python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Constants.html">Constants</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">RobotRaconteurNode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="DataTypes.html">Misc Data Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PipeMember.html">PipeMember</a></li>
+<li class="toctree-l1"><a class="reference internal" href="WireMember.html">WireMember</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Subscription.html">Subscription</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NodeSetup.html">Node Setup</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="Constants.html" title="previous chapter">Constants</a></li>
+      <li>Next: <a href="DataTypes.html" title="next chapter">Misc Data Types</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Wason Technology, LLC.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/pages/RobotRaconteurNode.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

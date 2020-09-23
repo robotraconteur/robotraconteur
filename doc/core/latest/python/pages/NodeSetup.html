@@ -1,0 +1,733 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Node Setup &#8212; Robot Raconteur Python  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Subscription" href="Subscription.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="node-setup">
+<h1>Node Setup<a class="headerlink" href="#node-setup" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetup">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RobotRaconteurNodeSetup</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tcp_port</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">flags</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">allowed_overrides</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">node</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">argv</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">config</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Setup a node using specified options and manage node lifecycle</p>
+<p>RobotRaconteurNodeSetup and its subclasses ClientNodeSetup, ServerNodeSetup,
+and SecureServerNodeSetup are designed to help configure nodes and manage
+node lifecycles. The node setup classes use the “with” statement to configure the node
+on construction, and call RobotRaconteurNode.Shutdown() when the instance
+is destroyed.</p>
+<p>The node setup classes execute the following operations to configure the node:
+1. Set log level and tap options from flags, command line options, or environmental variables
+2. Register specified service factory types
+3. Initialize transports using flags specified in flags or from command line options
+4. Configure timeouts</p>
+<p>See ref command_line_options for more information on available command line options.</p>
+<p>Logging level is configured using the environmental variable <code class="docutils literal notranslate"><span class="pre">ROBOTRACONTEUR_LOG_LEVEL</span></code>
+or the command line option <code class="docutils literal notranslate"><span class="pre">--robotraconteur-log-level</span></code>. See ref logging.md for more information.</p>
+<p>See ref taps.md for more information on using taps.</p>
+<p>The node setup classes optionally initialize LocalTransport,
+TcpTransport, HardwareTransport, and/or IntraTransport. 
+ref transports.md for more information.</p>
+<p>The LocalTransport.StartServerAsNodeName() or 
+LocalTransport.StartClientAsNodeName() are used to load the NodeID.
+See LocalTransport for more information on this procedure.</p>
+<dl class="py method">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetup.ReleaseNode">
+<code class="sig-name descname">ReleaseNode</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetup.ReleaseNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Release the node from lifecycle management</p>
+<p>If called, RobotRaconteurNode.Shutdown() will not
+be called when the node setup instance is destroyed</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetup.command_line_config">
+<code class="sig-name descname">command_line_config</code><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetup.command_line_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>The command line config parser object used to configure node</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetup.hardware_transport">
+<code class="sig-name descname">hardware_transport</code><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetup.hardware_transport" title="Permalink to this definition">¶</a></dt>
+<dd><p>The HardwareTransport, will be None if HardwareTransport is not specified in flags, Note: Hardware transport is not enabled by default</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetup.intra_transport">
+<code class="sig-name descname">intra_transport</code><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetup.intra_transport" title="Permalink to this definition">¶</a></dt>
+<dd><p>The IntraTransport, will be None if IntraTransport is not specified in flags</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetup.local_transport">
+<code class="sig-name descname">local_transport</code><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetup.local_transport" title="Permalink to this definition">¶</a></dt>
+<dd><p>The LocalTransport, will be None if LocalTransport is not specified in flags</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetup.tcp_transport">
+<code class="sig-name descname">tcp_transport</code><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetup.tcp_transport" title="Permalink to this definition">¶</a></dt>
+<dd><p>The TcpTransport, will be None if TcpTransport is not specified in flags</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.ClientNodeSetup">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">ClientNodeSetup</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">node</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">argv</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ClientNodeSetup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes a RobotRaconteurNode instance to default configuration for a client only node</p>
+<p>ClientNodeSetup is a subclass of RobotRaconteurNodeSetup providing default configuration for a
+RobotRaconteurNode instance that is used only to create outgoing client connections.</p>
+<p>See ref command_line_options for more information on available command line options.</p>
+<p>Note: String table and HardwareTransport are disabled by default. They can be enabled
+using command line options.</p>
+<p>By default, the configuration will do the following:</p>
+<ol class="arabic simple">
+<li><p>Configure logging level from environmental variable or command line options. Defaults to <cite>INFO</cite> if
+not specified</p></li>
+<li><p>Configure tap if specified in command line options</p></li>
+<li><p>Register service types passed to service_types</p></li>
+<li><p>Start LocalTransport (default enabled)</p>
+<ol class="arabic simple">
+<li><p>If <cite>RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_CLIENT</cite> flag is specified, call
+LocalTransport.StartServerAsNodeName() with the specified node_name</p></li>
+<li><p>Start LocalTransport discovery listening if specified in flags or on command line (default enabled)</p></li>
+<li><p>Disable Message Format Version 4 (default enabled) and/or String Table (default disabled) if 
+specified on command line</p></li>
+</ol>
+</li>
+<li><p>Start TcpTransport (default enabled)</p>
+<ol class="arabic simple">
+<li><p>Disable Message Format Version 4 (default enabled) and/or String Table 
+(default disabled) if specified in flags or command line</p></li>
+<li><p>Start TcpTranport discovery listening (default enabled)</p></li>
+<li><p>Load TLS certificate and set if TLS is specified on command line (default disabled)</p></li>
+<li><p>Process WebSocket origin command line options</p></li>
+</ol>
+</li>
+<li><p>Start HardwareTransport (default disabled)</p>
+<ol class="arabic simple">
+<li><p>Disable Message Format Version 4 (default enabled) and/or String Table 
+(default disabled) if specified in flags or command line</p></li>
+</ol>
+</li>
+<li><p>Start IntraTransport (default enabled)</p>
+<ol class="arabic simple">
+<li><p>Disable Message Format Version 4 (default enabled) and/or String Table 
+(default disabled) if specified in flags or command line</p></li>
+</ol>
+</li>
+<li><p>Disable timeouts if specified in flags or command line (default timeouts normal)</p></li>
+</ol>
+<p>Most users will not need to be concerned with these details, and can simply
+use the default configuration.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.ServerNodeSetup">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">ServerNodeSetup</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node_name</span></em>, <em class="sig-param"><span class="n">tcp_port</span></em>, <em class="sig-param"><span class="n">node</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">argv</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ServerNodeSetup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes a RobotRaconteurNode instance to default configuration for a server and client node</p>
+<p>ServerNodeSetup is a subclass of RobotRaconteurNodeSetup providing default configuration for a
+RobotRaconteurNode instance that is used as a server to accept incoming client connections
+and to initiate client connections.</p>
+<p>ServerNodeSetup requires a NodeName, and a TCP port if LocalTransport and TcpTransport
+are enabled (default behavior).</p>
+<p>See ref command_line_options for more information on available command line options.</p>
+<p>Note: String table and HardwareTransport are disabled by default. They can be enabled
+using command line options.</p>
+<p>By default, the configuration will do the following:</p>
+<p>1. Configure logging level from environmental variable or command line options. Defaults to <cite>INFO</cite> if
+not specified
+2. Configure tap if specified in command line options
+3. Register service types passed to service_types
+4. Start LocalTransport (default enabled)</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Configure the node to use the specified NodeName, and load the NodeID from the filesystem based
+based on the NodeName. NodeID will be automatically generated if not previously used.</p>
+<ol class="arabic simple">
+<li><p>If “public” option is set, the transport will listen for all local users (default disabled)</p></li>
+</ol>
+</li>
+<li><p>Start the LocalTransport server to listen for incoming connections with the specified NodeName and NodeID</p></li>
+<li><p>Start LocalTransport discovery announce and listening (default enabled)</p></li>
+<li><p>Disable Message Format Version 4 (default enabled) and/or String Table (default disabled) if 
+specified on command line</p></li>
+</ol>
+</div></blockquote>
+<ol class="arabic simple" start="5">
+<li><p>Start TcpTransport (default enabled)</p>
+<ol class="arabic simple">
+<li><p>Start the TcpTransport server to listen for incoming connections on specified port 
+or using the port sharer (default enabled using specified port)</p></li>
+<li><p>Disable Message Format Version 4 (default enabled) and/or String Table 
+(default disabled) if specified in flags or command line</p></li>
+<li><p>Start TcpTranport discovery announce and listening (default enabled)</p></li>
+<li><p>Load TLS certificate and set if TLS is specified on command line (default disabled)</p></li>
+<li><p>Process WebSocket origin command line options</p></li>
+</ol>
+</li>
+<li><p>Start HardwareTransport (default disabled)</p>
+<ol class="arabic simple">
+<li><p>Disable Message Format Version 4 (default enabled) and/or String Table 
+(default disabled) if specified in flags or command line</p></li>
+</ol>
+</li>
+<li><p>Start IntraTransport (default enabled)</p>
+<ol class="arabic simple">
+<li><p>Enable IntraTransport server to listen for incoming clients (default enabled)</p></li>
+<li><p>Disable Message Format Version 4 (default enabled) and/or String Table 
+(default disabled) if specified in flags or command line</p></li>
+</ol>
+</li>
+<li><p>Disable timeouts if specified in flags or command line (default timeouts normal)</p></li>
+</ol>
+<p>Most users will not need to be concerned with these details, and can simply
+use the default configuration.</p>
+<dl class="py method">
+<dt id="RobotRaconteur.ServerNodeSetup.ReleaseNode">
+<code class="sig-name descname">ReleaseNode</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ServerNodeSetup.ReleaseNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Release the node from lifecycle management</p>
+<p>If called, RobotRaconteurNode.Shutdown() will not
+be called when the node setup instance is destroyed</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.SecureServerNodeSetup">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">SecureServerNodeSetup</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node_name</span></em>, <em class="sig-param"><span class="n">tcp_port</span></em>, <em class="sig-param"><span class="n">node</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">argv</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.SecureServerNodeSetup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes a RobotRaconteurNode instance to default configuration for a secure server and client node</p>
+<p>SecureServerNodeSetup is a subclass of RobotRaconteurNodeSetup providing default configuration for a
+secure RobotRaconteurNode instance that is used as a server to accept incoming client connections
+and to initiate client connections. SecureServerNodeSetup is identical to ServerNodeSetup,
+except that it requires TLS for all network communication.</p>
+<p>ServerNodeSetup requires a NodeName, and a TCP port if LocalTransport and TcpTransport
+are enabled (default behavior).</p>
+<p>See ref command_line_options for more information on available command line options.</p>
+<p>Note: String table and HardwareTransport are disabled by default. They can be enabled
+using command line options.</p>
+<p>By default, the configuration will do the following:</p>
+<p>1. Configure logging level from environmental variable or command line options. Defaults to <cite>INFO</cite> if
+not specified
+2. Configure tap if specified in command line options
+3. Register service types passed to service_types
+4. Start LocalTransport (default enabled)</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Configure the node to use the specified NodeName, and load the NodeID from the filesystem based
+based on the NodeName. NodeID will be automatically generated if not previously used.</p>
+<ol class="arabic simple">
+<li><p>If “public” option is set, the transport will listen for all local users (default disabled)</p></li>
+</ol>
+</li>
+<li><p>Start the LocalTransport server to listen for incoming connections with the specified NodeName and NodeID</p></li>
+<li><p>Start LocalTransport discovery announce and listening (default enabled)</p></li>
+<li><p>Disable Message Format Version 4 (default enabled) and/or String Table (default disabled) if 
+specified on command line</p></li>
+</ol>
+</div></blockquote>
+<ol class="arabic simple" start="5">
+<li><p>Start TcpTransport (default enabled)</p>
+<ol class="arabic simple">
+<li><p>Start the TcpTransport server to listen for incoming connections on specified port 
+or using the port sharer (default enabled using specified port)</p></li>
+<li><p>Disable Message Format Version 4 (default enabled) and/or String Table 
+(default disabled) if specified in flags or command line</p></li>
+<li><p>Start TcpTranport discovery announce and listening (default enabled)</p></li>
+<li><p>Load TLS certificate and set if TLS is specified on command line (default enabled, required)</p></li>
+<li><p>Process WebSocket origin command line options</p></li>
+</ol>
+</li>
+<li><p>Start HardwareTransport (default disabled)</p>
+<ol class="arabic simple">
+<li><p>Disable Message Format Version 4 (default enabled) and/or String Table 
+(default disabled) if specified in flags or command line</p></li>
+</ol>
+</li>
+<li><p>Start IntraTransport (default enabled)</p>
+<ol class="arabic simple">
+<li><p>Enable IntraTransport server to listen for incoming clients (default enabled)</p></li>
+<li><p>Disable Message Format Version 4 (default enabled) and/or String Table 
+(default disabled) if specified in flags or command line</p></li>
+</ol>
+</li>
+<li><p>Disable timeouts if specified in flags or command line (default timeouts normal)</p></li>
+</ol>
+<p>Most users will not need to be concerned with these details, and can simply
+use the default configuration.</p>
+<dl class="py method">
+<dt id="RobotRaconteur.SecureServerNodeSetup.ReleaseNode">
+<code class="sig-name descname">ReleaseNode</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.SecureServerNodeSetup.ReleaseNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Release the node from lifecycle management</p>
+<p>If called, RobotRaconteurNode.Shutdown() will not
+be called when the node setup instance is destroyed</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.CommandLineConfigParser">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">CommandLineConfigParser</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.CommandLineConfigParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Command line parser for node setup classes</p>
+<p>The CommandLineConfigParser is used to parse command line options specified
+when a program is launched. These options allow for the node configuration to be
+changed without recompiling the software. See ref command_line_options for
+a table of the standard command line options.</p>
+<p>ClientNodeSetup, ServerNodeSetup, and SecureServerNodeSetup use this class to parse
+the <code class="docutils literal notranslate"><span class="pre">sys.argv</span></code> parameters. The RobotRaconteurNodeSetup constructors will accept
+either <code class="docutils literal notranslate"><span class="pre">sys.argv</span></code>, or will accept an initialize CommandLineConfigParser.</p>
+<p>The CommandLineConfig() constructor takes the “allowed override” flags, and the option prefix.
+The “allowed override” specifies which options can be overridden using the command line. The
+prefix option allows the command line flag prefix to be changed. By default it expects
+all options to begin with <cite>–robotraconteur-</cite> followed by the name of the option. If there are
+multiple nodes, it is necessary to change the prefix to be unique for each node. For instance,
+“robotraconteur1-” for the first node and “robotraconteur2-” for the second node.</p>
+<p>Users may add additional options to the parser. Use AddStringOption(),
+AddBoolOption(), or AddIntOption() to add additional options.</p>
+<dl class="py method">
+<dt id="RobotRaconteur.CommandLineConfigParser.AddBoolOption">
+<code class="sig-name descname">AddBoolOption</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">descr</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.CommandLineConfigParser.AddBoolOption" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a new bool option</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of the option</p></li>
+<li><p><strong>descr</strong> (<em>str</em>) – Description of the option</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.CommandLineConfigParser.AddIntOption">
+<code class="sig-name descname">AddIntOption</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">descr</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.CommandLineConfigParser.AddIntOption" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a new int32_t option</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of the option</p></li>
+<li><p><strong>descr</strong> (<em>str</em>) – Description of the option</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.CommandLineConfigParser.AddStringOption">
+<code class="sig-name descname">AddStringOption</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">descr</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.CommandLineConfigParser.AddStringOption" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a new string option</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of the option</p></li>
+<li><p><strong>descr</strong> (<em>str</em>) – Description of the option</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.CommandLineConfigParser.GetOptionOrDefaultAsBool">
+<code class="sig-name descname">GetOptionOrDefaultAsBool</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.CommandLineConfigParser.GetOptionOrDefaultAsBool" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the option value as a bool</p>
+<p>Returns default_value if option not specified on command line</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>option</strong> (<em>bool</em>) – The name of the option</p></li>
+<li><p><strong>default_value</strong> (<em>bool</em>) – The default option value</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The option value, or default_value if not specified on command line</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.CommandLineConfigParser.GetOptionOrDefaultAsInt">
+<code class="sig-name descname">GetOptionOrDefaultAsInt</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.CommandLineConfigParser.GetOptionOrDefaultAsInt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the option value as an int</p>
+<p>Returns default_value if option not specified on command line</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>option</strong> (<em>str</em>) – The name of the option</p></li>
+<li><p><strong>default_value</strong> (<em>int</em>) – The default option value</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The option value, or default_value if not specified on command line</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.CommandLineConfigParser.GetOptionOrDefaultAsString">
+<code class="sig-name descname">GetOptionOrDefaultAsString</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.CommandLineConfigParser.GetOptionOrDefaultAsString" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the option value as a string</p>
+<p>Returns default_value if option not specified on command line</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>option</strong> (<em>str</em>) – The name of the option</p></li>
+<li><p><strong>default_value</strong> (<em>str</em>) – The default option value</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The option value, or default_value if not specified on command line</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.CommandLineConfigParser.ParseCommandLine">
+<code class="sig-name descname">ParseCommandLine</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.CommandLineConfigParser.ParseCommandLine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse a specified string vector containing the options</p>
+<p>Results are stored in the instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>args</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – The options as a string list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.CommandLineConfigParser.SetDefaults">
+<code class="sig-name descname">SetDefaults</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node_name</span></em>, <em class="sig-param"><span class="n">tcp_port</span></em>, <em class="sig-param"><span class="n">default_flags</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.CommandLineConfigParser.SetDefaults" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the default NodeName, TCP port, and flags</p>
+<p>The command line options will be allowed to override the options
+specified in allowed_overrides passed to CommandLineConfigParser().</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>node_name</strong> – The default NodeName</p>
+</dd>
+</dl>
+<p>:type node_name str
+:param tcp_port: The default TCP port
+:type tcp_port: int
+:param default_flags: The default flags
+:type default_flags: int</p>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="node-setup-flags">
+<h2>Node Setup Flags<a class="headerlink" href="#node-setup-flags" title="Permalink to this headline">¶</a></h2>
+<p>Setup option flags</p>
+<p>Setup option flags passed to node setup classes to select options to enable
+and disable. Flags are used to configure the following types of options:</p>
+<ol class="arabic simple">
+<li><p>Enable and disable transport types</p></li>
+<li><p>Modify transport options including discovery, security requirements, and connection listening</p></li>
+<li><p>Configure TLS behavior</p></li>
+<li><p>Enable local tap for logging</p></li>
+</ol>
+<p>Node setup classes also allow options and flags to be “overridden” using
+command line options. Use the <cite>*_ALLOW_OVERRIDE</cite> options to configure
+when these overrides are allowed.</p>
+<p>The ClientNodeSetup, ServerNodeSetup, and SecureServerNodeSetup
+are convenience classes for the most commonly used options.</p>
+<dl class="py data">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetupFlags_NONE">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RobotRaconteurNodeSetupFlags_NONE</code><em class="property"> = 0x0</em><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetupFlags_NONE" title="Permalink to this definition">¶</a></dt>
+<dd><p>No options enabled</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING</code><em class="property"> = 0x1</em><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable node discovery listening on all transports</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetupFlags_ENABLE_NODE_ANNOUNCE">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RobotRaconteurNodeSetupFlags_ENABLE_NODE_ANNOUNCE</code><em class="property"> = 0x2</em><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetupFlags_ENABLE_NODE_ANNOUNCE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable node announce on all transports</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetupFlags_ENABLE_LOCAL_TRANSPORT">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RobotRaconteurNodeSetupFlags_ENABLE_LOCAL_TRANSPORT</code><em class="property"> = 0x4</em><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetupFlags_ENABLE_LOCAL_TRANSPORT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable LocalTransport</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetupFlags_ENABLE_TCP_TRANSPORT">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RobotRaconteurNodeSetupFlags_ENABLE_TCP_TRANSPORT</code><em class="property"> = 0x8</em><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetupFlags_ENABLE_TCP_TRANSPORT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable TcpTransport</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetupFlags_ENABLE_HARDWARE_TRANSPORT">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RobotRaconteurNodeSetupFlags_ENABLE_HARDWARE_TRANSPORT</code><em class="property"> = 0x10</em><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetupFlags_ENABLE_HARDWARE_TRANSPORT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable HardwareTransport</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_SERVER">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_SERVER</code><em class="property"> = 0x20</em><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_SERVER" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start the LocalTransport server to listen for incoming clients</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_CLIENT">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_CLIENT</code><em class="property"> = 0x40</em><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_CLIENT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start the LocalTransport client with specified node name</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER</code><em class="property"> = 0x80</em><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start the TcpTransport server to listen for incoming clients on the specified port</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER_PORT_SHARER">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER_PORT_SHARER</code><em class="property"> = 0x100</em><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER_PORT_SHARER" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start the TcpTransport server to incoming for incoming clients using the port sharer</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetupFlags_DISABLE_MESSAGE4">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RobotRaconteurNodeSetupFlags_DISABLE_MESSAGE4</code><em class="property"> = 0x200</em><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetupFlags_DISABLE_MESSAGE4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disable Message Format Version 4 on all transports</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetupFlags_DISABLE_STRINGTABLE">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RobotRaconteurNodeSetupFlags_DISABLE_STRINGTABLE</code><em class="property"> = 0x400</em><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetupFlags_DISABLE_STRINGTABLE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disable Message Format Version 4 string table on all transports</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetupFlags_DISABLE_TIMEOUTS">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RobotRaconteurNodeSetupFlags_DISABLE_TIMEOUTS</code><em class="property"> = 0x800</em><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetupFlags_DISABLE_TIMEOUTS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disable all timeouts (useful for debugging)</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetupFlags_LOAD_TLS_CERT">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RobotRaconteurNodeSetupFlags_LOAD_TLS_CERT</code><em class="property"> = 0x1000</em><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetupFlags_LOAD_TLS_CERT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the TLS certificate for TcpTransport</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetupFlags_REQUIRE_TLS">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RobotRaconteurNodeSetupFlags_REQUIRE_TLS</code><em class="property"> = 0x2000</em><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetupFlags_REQUIRE_TLS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Require TLS for all clients on TcpTransport</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_SERVER_PUBLIC">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_SERVER_PUBLIC</code><em class="property"> = 0x4000</em><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_SERVER_PUBLIC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make LocalTransport server listen for incoming clients from all users</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetupFlags_NODENAME_OVERRIDE">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RobotRaconteurNodeSetupFlags_NODENAME_OVERRIDE</code><em class="property"> = 0x10000</em><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetupFlags_NODENAME_OVERRIDE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allow NodeName to be configured using command line options</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetupFlags_NODEID_OVERRIDE">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RobotRaconteurNodeSetupFlags_NODEID_OVERRIDE</code><em class="property"> = 0x20000</em><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetupFlags_NODEID_OVERRIDE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allow NodeID to be configured using command line options</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetupFlags_TCP_PORT_OVERRIDE">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RobotRaconteurNodeSetupFlags_TCP_PORT_OVERRIDE</code><em class="property"> = 0x40000</em><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetupFlags_TCP_PORT_OVERRIDE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allow TCP port to be configured using command line options</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetupFlags_TCP_WEBSOCKET_ORIGIN_OVERRIDE">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RobotRaconteurNodeSetupFlags_TCP_WEBSOCKET_ORIGIN_OVERRIDE</code><em class="property"> = 0x80000</em><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetupFlags_TCP_WEBSOCKET_ORIGIN_OVERRIDE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allow TCP WebSocket origin control to be configured using command line options</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetupFlags_ENABLE_INTRA_TRANSPORT">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RobotRaconteurNodeSetupFlags_ENABLE_INTRA_TRANSPORT</code><em class="property"> = 0x100000</em><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetupFlags_ENABLE_INTRA_TRANSPORT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable IntraTransport</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetupFlags_INTRA_TRANSPORT_START_SERVER">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RobotRaconteurNodeSetupFlags_INTRA_TRANSPORT_START_SERVER</code><em class="property"> = 0x200000</em><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetupFlags_INTRA_TRANSPORT_START_SERVER" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start the IntraTransport server to listen for incoming clients</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetupFlags_LOCAL_TAP_ENABLE">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RobotRaconteurNodeSetupFlags_LOCAL_TAP_ENABLE</code><em class="property"> = 0x1000000</em><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetupFlags_LOCAL_TAP_ENABLE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable the LocalTap debug logging system</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetupFlags_LOCAL_TAP_NAME">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RobotRaconteurNodeSetupFlags_LOCAL_TAP_NAME</code><em class="property"> = 0x2000000</em><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetupFlags_LOCAL_TAP_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allow the user to set the LocalTap name</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS</code><em class="property"> = 0x10001c</em><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience flag to enable all transports</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT</code><em class="property"> = 0x10004d</em><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default configuration for client nodes (See ClientNodeSetup)</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT_ALLOWED_OVERRIDE">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT_ALLOWED_OVERRIDE</code><em class="property"> = 0x3133e5d</em><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT_ALLOWED_OVERRIDE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default allowed overrides for client nodes (See ClientNodeSetup)</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetupFlags_SERVER_DEFAULT">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RobotRaconteurNodeSetupFlags_SERVER_DEFAULT</code><em class="property"> = 0x3004af</em><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetupFlags_SERVER_DEFAULT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default configuration for server nodes</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetupFlags_SERVER_DEFAULT_ALLOWED_OVERRIDE">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RobotRaconteurNodeSetupFlags_SERVER_DEFAULT_ALLOWED_OVERRIDE</code><em class="property"> = 0x33f7fff</em><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetupFlags_SERVER_DEFAULT_ALLOWED_OVERRIDE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default allowed overrides for server nodes</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT</code><em class="property"> = 0x3034af</em><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default configuration for server nodes requiring TLS network transports</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT_ALLOWED_OVERRIDE">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT_ALLOWED_OVERRIDE</code><em class="property"> = 0x33f4fff</em><a class="headerlink" href="#RobotRaconteur.RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT_ALLOWED_OVERRIDE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default allowed overrides for server nodes requiring TLS network transports</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Robot Raconteur Python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Constants.html">Constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RobotRaconteurNode.html">RobotRaconteurNode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="DataTypes.html">Misc Data Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PipeMember.html">PipeMember</a></li>
+<li class="toctree-l1"><a class="reference internal" href="WireMember.html">WireMember</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Subscription.html">Subscription</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Node Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#node-setup-flags">Node Setup Flags</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="Subscription.html" title="previous chapter">Subscription</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Wason Technology, LLC.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/pages/NodeSetup.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

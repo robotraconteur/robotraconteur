@@ -1,0 +1,18 @@
+============
+Subscription
+============
+
+.. autoclass:: RobotRaconteur.ServiceInfo2Subscription
+   :members:
+
+.. autoclass:: RobotRaconteur.ServiceSubscriptionFilter
+   :members:
+
+.. autoclass:: RobotRaconteur.ServiceSubscriptionFilterNode
+   :members:
+
+.. autoclass:: RobotRaconteur.WireSubscription
+   :members:
+
+.. autoclass:: RobotRaconteur.PipeSubscription
+   :members:
