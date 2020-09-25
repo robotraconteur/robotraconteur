@@ -979,7 +979,7 @@ is IPv4, and its 32 bit address is typically written as four numbers,
 ie 172.17.12.174. IPv4 has a number of critical limitations, the greatest being 
 its 2^32 address limit (approximately 4 billion). This is a problem when there are 
 tens of billions of internet connected devices already present. IPv6 introduces a 128 
-bit address space, which allows for approximately 3.4×10^38 possible addresses. The major
+bit address space, which allows for approximately 3.4x10^38 possible addresses. The major
 advantage for Robot Raconteur is the introduction of \"link-local\" addresses. These addresses
 begin with \"FE80::\" and finish with an \"EUI-64\" address, which is tied to the MAC address
 of the adaptor. IPv4 addresses need to be assigned to devices locally, and have a tendency
@@ -1532,7 +1532,7 @@ an example of an authenticator. The valid options for Policies are as follows:
 |                  |                 |                 | r               |
 |                  |                 |                 | equirevaliduser |
 |                  |                 |                 | most also be    |
-|                  |                 |                 | “true”          |
+|                  |                 |                 | \"true\"          |
 +------------------+-----------------+-----------------+-----------------+
 
 The security policy is passed as a parameter to RobotRaconteurNode.RegisterService().
