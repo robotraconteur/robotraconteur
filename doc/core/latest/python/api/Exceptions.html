@@ -1,0 +1,2997 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Exceptions &mdash; Robot Raconteur Python  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Logging and Taps" href="Logging.html" />
+    <link rel="prev" title="Service Security" href="ServiceSecurity.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> Robot Raconteur Python
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Tutorial:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/Introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/ServiceDefinition.html">Service Definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/RobotRaconteurPython.html">Robot Raconteur Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/iRobotCreatePythonExample.html">iRobot Create Python Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/WebcamPythonExample.html">Webcam Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/Discovery.html">Service Discovery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/Subscriptions.html">Subscriptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/Authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/ObjectLocks.html">Exclusive object locks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/TimeCritical.html">Time-critical software with Wire member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/ForwardCompatibility.html">Forward compatibility with the “implements” statement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/MemberModifiers.html">Member Modifiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/Async.html">Asynchronous programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/GatherScatter.html">Gather/Scatter operations</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Framework:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/service_definition.html">Service Definitions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/nodes_and_communication.html">Robot Raconteur Nodes and Communication</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/exceptions.html">Exceptions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/security.html">Security</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/locking.html">Object Locking</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Utility:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/command_line_options.html">Node Setup Command Line Options</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/logging.html">Logging</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/taps.html">Taps</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/robotraconteurgen.html">RobotRaconteurGen Utility</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Constants.html">Constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RobotRaconteurNode.html">RobotRaconteurNode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="DataTypes.html">Misc Data Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PipeMember.html">Pipe Member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="WireMember.html">Wire Member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CallbackMember.html">Callback Member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Subscription.html">Subscription</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NodeSetup.html">Node Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Transports.html">Transports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Timers.html">Timers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Generators.html">Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Service.html">Service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ServiceSecurity.html">Service Security</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Exceptions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#robotraconteurexception">RobotRaconteurException</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#other-exceptions">Other Exceptions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Logging.html">Logging and Taps</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Robot Raconteur Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Exceptions</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/Exceptions.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="exceptions">
+<h1>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="robotraconteurexception">
+<h2>RobotRaconteurException<a class="headerlink" href="#robotraconteurexception" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="RobotRaconteur.RobotRaconteurException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RobotRaconteurException</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">errorcode</span></em>, <em class="sig-param"><span class="n">errorname</span></em>, <em class="sig-param"><span class="n">message</span></em>, <em class="sig-param"><span class="n">errorsubname</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">errorparam</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for Robot Raconteur exceptions</p>
+<p>RobotRaconteurException represents an exception that can be serialized and passed
+to a remote node. The MessageErrorType contains an enum of predefined error
+codes that represent different potential errors. Each error code has a corresponding
+Python exception that extends RobotRaconteurException.</p>
+<p>User defined exception types can be declared in Service Definition files. The
+Python exception is accessed using RobotRaconteurNode.GetExceptionType()</p>
+<p>Construct a RobotRaconteurException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>errorcode</strong> (<em>int</em>) – The predefined error code for the exception</p></li>
+<li><p><strong>errorname</strong> (<em>str</em>) – The error type name corresponding to the ErrorCode, or a user defined
+error type</p></li>
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>errorsubname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>errorparam</strong> (<em>Any</em>) – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.RobotRaconteurException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.RobotRaconteurException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<blockquote>
+<div><p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.RobotRaconteurException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.RobotRaconteurException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.RobotRaconteurException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.RobotRaconteurException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.RobotRaconteurException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.RobotRaconteurException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.RobotRaconteurException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.RobotRaconteurException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="other-exceptions">
+<h2>Other Exceptions<a class="headerlink" href="#other-exceptions" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="RobotRaconteur.ConnectionException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">ConnectionException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ConnectionException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when connection to remote node fails</p>
+<p>This exception is thrown if a connection cannot be created,
+the connection fails, or the connection has been closed.</p>
+<p>Error code MessageErrorType_ConnectionError (1)</p>
+<p>Construct a ConnectionException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.ConnectionException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.ConnectionException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ConnectionException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.ConnectionException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ConnectionException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.ConnectionException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ConnectionException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.ConnectionException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ConnectionException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.ConnectionException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.ProtocolException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">ProtocolException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ProtocolException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when a protocol failure occurs on
+a tranport connection</p>
+<p>Error code MessageErrorType_ProtocolError (2)</p>
+<p>Construct a ProtocolException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.ProtocolException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.ProtocolException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ProtocolException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.ProtocolException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ProtocolException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.ProtocolException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ProtocolException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.ProtocolException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ProtocolException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.ProtocolException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.ServiceNotFoundException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">ServiceNotFoundException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ServiceNotFoundException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when a service cannot be found
+on a remote node</p>
+<p>Error code MessageErrorType_ServiceNotFound (3)</p>
+<p>Construct a ServiceNotFoundException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.ServiceNotFoundException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.ServiceNotFoundException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ServiceNotFoundException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.ServiceNotFoundException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ServiceNotFoundException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.ServiceNotFoundException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ServiceNotFoundException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.ServiceNotFoundException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ServiceNotFoundException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.ServiceNotFoundException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.ObjectNotFoundException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">ObjectNotFoundException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ObjectNotFoundException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when a service object cannot
+be found</p>
+<p>This error is thrown when a specified service path
+does not have an assosciate object. The object may
+have been released by the service, or the service
+path is invalid</p>
+<p>Error code MessageErrorType_ObjectNotFound (4)</p>
+<p>Construct a ObjectNotFoundException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.ObjectNotFoundException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.ObjectNotFoundException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ObjectNotFoundException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.ObjectNotFoundException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ObjectNotFoundException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.ObjectNotFoundException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ObjectNotFoundException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.ObjectNotFoundException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ObjectNotFoundException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.ObjectNotFoundException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.InvalidEndpointException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">InvalidEndpointException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.InvalidEndpointException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when an attempt is made
+to send a message to an invalid endpoint</p>
+<p>Transports between two nodes terminate with a pair
+of endpoints, one in each node. If the client, service,
+service endpoint, or transport is destroyed, the endpoint
+will be deleted. This exception is thrown if the
+target endpoint is no longer available.</p>
+<p>Error code MessageErrorType_InvalidEndpoint (5)</p>
+<p>Construct a InvalidEndpointException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.InvalidEndpointException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.InvalidEndpointException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.InvalidEndpointException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.InvalidEndpointException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.InvalidEndpointException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.InvalidEndpointException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.InvalidEndpointException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.InvalidEndpointException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.InvalidEndpointException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.InvalidEndpointException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.EndpointCommunicationFatalException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">EndpointCommunicationFatalException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.EndpointCommunicationFatalException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when an attempt to send a
+message to an endpoint fails</p>
+<p>Transports between two nodes terminate with a pair
+of endpoints, one in each node. Messages are sent
+between endpoint pairs. If for some reason the endpoint
+cannot send (or receive) the message, this exception
+is thrown.</p>
+<p>Error code MessageErrorType_EndpointCommunicationFatalError (6)</p>
+<p>Construct a EndpointCommunicationFatalException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.EndpointCommunicationFatalException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.EndpointCommunicationFatalException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.EndpointCommunicationFatalException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.EndpointCommunicationFatalException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.EndpointCommunicationFatalException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.EndpointCommunicationFatalException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.EndpointCommunicationFatalException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.EndpointCommunicationFatalException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.EndpointCommunicationFatalException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.EndpointCommunicationFatalException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.NodeNotFoundException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">NodeNotFoundException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.NodeNotFoundException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown if the specified node cannot be found</p>
+<p>When connecting to a service or sending a message, the NodeID
+and/or NodeName are specified. If the specified node
+cannot be found, this exception is thrown.</p>
+<p>Error code MessageErrorType_NodeNotFound (7)</p>
+<p>Construct a NodeNotFoundException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.NodeNotFoundException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.NodeNotFoundException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.NodeNotFoundException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.NodeNotFoundException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.NodeNotFoundException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.NodeNotFoundException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.NodeNotFoundException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.NodeNotFoundException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.NodeNotFoundException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.NodeNotFoundException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.ServiceException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">ServiceException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ServiceException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when an exception occurs during
+an operation on a service</p>
+<p>ServiceException is a catch-all error for exceptions on services.
+See the message field for an explanation of the error that occured.</p>
+<p>Error code MessageErrorType_ServiceError (8)</p>
+<p>Construct a ServiceException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.ServiceException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.ServiceException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ServiceException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.ServiceException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ServiceException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.ServiceException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ServiceException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.ServiceException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ServiceException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.ServiceException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.MemberNotFoundException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">MemberNotFoundException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.MemberNotFoundException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when the specified object member is
+not found</p>
+<p>Service objects have member that are declared in a service definition.
+If an attempt is made to call a member that does not exist, this exception
+is thrown.</p>
+<p>Error code MessageErrorType_MemberNotFound (9)</p>
+<p>Construct a MemberNotFoundException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.MemberNotFoundException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.MemberNotFoundException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.MemberNotFoundException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.MemberNotFoundException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.MemberNotFoundException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.MemberNotFoundException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.MemberNotFoundException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.MemberNotFoundException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.MemberNotFoundException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.MemberNotFoundException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.MemberFormatMismatchException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">MemberFormatMismatchException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.MemberFormatMismatchException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when a request to a member has an
+invalid MessageEntryType or the wrong message elements</p>
+<p>Error code MessageErrorType_MemberFormatMismatch (10)</p>
+<p>Construct a MemberFormatMismatchException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.MemberFormatMismatchException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.MemberFormatMismatchException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.MemberFormatMismatchException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.MemberFormatMismatchException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.MemberFormatMismatchException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.MemberFormatMismatchException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.MemberFormatMismatchException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.MemberFormatMismatchException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.MemberFormatMismatchException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.MemberFormatMismatchException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.DataTypeMismatchException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">DataTypeMismatchException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.DataTypeMismatchException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when incorrect data is received
+by a member</p>
+<p>Make sure the provided data matches the expected data types</p>
+<p>Error code MessageErrorType_DataTypeMismatch (11)</p>
+<p>Construct a DataTypeMismatchException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.DataTypeMismatchException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.DataTypeMismatchException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.DataTypeMismatchException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.DataTypeMismatchException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.DataTypeMismatchException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.DataTypeMismatchException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.DataTypeMismatchException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.DataTypeMismatchException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.DataTypeMismatchException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.DataTypeMismatchException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.DataTypeException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">DataTypeException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.DataTypeException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when unexpected or incompatible
+data is provided</p>
+<p>DataTypeException is sometimes thrown when there is a
+type mismatch instead of DataTypeMismatchException</p>
+<p>Make sure the provided data matches the expected data types</p>
+<p>Error code MessageErrorType_DataTypeError (12)</p>
+<p>Construct a DataTypeException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.DataTypeException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.DataTypeException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.DataTypeException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.DataTypeException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.DataTypeException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.DataTypeException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.DataTypeException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.DataTypeException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.DataTypeException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.DataTypeException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.DataSerializationException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">DataSerializationException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.DataSerializationException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when data cannot be serialized</p>
+<p>This exeception is thrown when the provide data cannot be serialized.
+This typically occurs inside a transport.</p>
+<p>Check that the provided data matches the types supported by
+the Robot Raconteur C++ library</p>
+<p>Error code MessageErrorType_DataSerializationError (13)</p>
+<p>Construct a DataSerializationException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.DataSerializationException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.DataSerializationException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.DataSerializationException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.DataSerializationException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.DataSerializationException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.DataSerializationException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.DataSerializationException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.DataSerializationException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.DataSerializationException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.DataSerializationException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.MessageEntryNotFoundException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">MessageEntryNotFoundException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.MessageEntryNotFoundException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when an expected MessageEntry
+is not found</p>
+<p>Error code MessageErrorType_MessageEntryNotfound (14)</p>
+<p>Construct a MessageEntryNotFoundException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.MessageEntryNotFoundException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.MessageEntryNotFoundException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.MessageEntryNotFoundException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.MessageEntryNotFoundException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.MessageEntryNotFoundException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.MessageEntryNotFoundException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.MessageEntryNotFoundException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.MessageEntryNotFoundException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.MessageEntryNotFoundException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.MessageEntryNotFoundException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.MessageElementNotFoundException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">MessageElementNotFoundException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.MessageElementNotFoundException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown wen an expected MessageElement
+is not found</p>
+<p>This exception is thrown when an expected field or parameter
+is not found.</p>
+<p>Error code MessageErrorType_MessageElementNotfound (15)</p>
+<p>Construct a MessageElementNotFoundException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.MessageElementNotFoundException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.MessageElementNotFoundException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.MessageElementNotFoundException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.MessageElementNotFoundException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.MessageElementNotFoundException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.MessageElementNotFoundException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.MessageElementNotFoundException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.MessageElementNotFoundException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.MessageElementNotFoundException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.MessageElementNotFoundException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.UnknownException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">UnknownException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.UnknownException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception representing an unknown exception type</p>
+<p>This exception is used to transmit exceptions that do not have a
+MessageErrorType code. Check the Error field for the name
+of the exception.</p>
+<p>Error code MessageErrorType_UnknownError (16)</p>
+<p>Construct a UnknownException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.UnknownException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.UnknownException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.UnknownException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.UnknownException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.UnknownException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.UnknownException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.UnknownException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.UnknownException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.UnknownException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.UnknownException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.InvalidOperationException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">InvalidOperationException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.InvalidOperationException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when an invalid operation is attempted</p>
+<p>Error code MessageErrorType_InvalidOperation (17)</p>
+<p>Construct a InvalidOperationException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.InvalidOperationException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.InvalidOperationException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.InvalidOperationException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.InvalidOperationException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.InvalidOperationException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.InvalidOperationException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.InvalidOperationException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.InvalidOperationException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.InvalidOperationException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.InvalidOperationException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.InvalidArgumentException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">InvalidArgumentException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.InvalidArgumentException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown for an invalid argument</p>
+<p>Error code MessageErrorType_InvalidArgument (18)</p>
+<p>Construct a InvalidArgumentException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.InvalidArgumentException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.InvalidArgumentException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.InvalidArgumentException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.InvalidArgumentException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.InvalidArgumentException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.InvalidArgumentException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.InvalidArgumentException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.InvalidArgumentException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.InvalidArgumentException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.InvalidArgumentException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.OperationFailedException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">OperationFailedException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.OperationFailedException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when an operation fails</p>
+<p>Error code MessageErrorType_OperationFailed (19)</p>
+<p>Construct a OperationFailedException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.OperationFailedException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.OperationFailedException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.OperationFailedException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.OperationFailedException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.OperationFailedException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.OperationFailedException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.OperationFailedException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.OperationFailedException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.OperationFailedException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.OperationFailedException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.NullValueException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">NullValueException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.NullValueException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown for an unexpected null value</p>
+<p>Error code MessageErrorType_NullValue (20)</p>
+<p>Construct a NullValueException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.NullValueException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.NullValueException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.NullValueException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.NullValueException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.NullValueException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.NullValueException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.NullValueException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.NullValueException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.NullValueException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.NullValueException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.InternalErrorException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">InternalErrorException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.InternalErrorException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when an internal error has occurred</p>
+<p>Error code MessageErrorType_InternalError (21)</p>
+<p>Construct a InternalErrorException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.InternalErrorException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.InternalErrorException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.InternalErrorException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.InternalErrorException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.InternalErrorException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.InternalErrorException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.InternalErrorException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.InternalErrorException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.InternalErrorException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.InternalErrorException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.PermissionDeniedException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">PermissionDeniedException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.PermissionDeniedException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when permission is denied to a service member</p>
+<p>Error code MessageErrorType_PermissionDenied (152)</p>
+<p>Construct a PermissionDeniedException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.PermissionDeniedException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.PermissionDeniedException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.PermissionDeniedException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.PermissionDeniedException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.PermissionDeniedException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.PermissionDeniedException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.PermissionDeniedException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.PermissionDeniedException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.PermissionDeniedException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.PermissionDeniedException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.SystemResourcePermissionDeniedException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">SystemResourcePermissionDeniedException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.SystemResourcePermissionDeniedException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when permission to a system resource is denied</p>
+<p>Error code MessageErrorType_SystemResourcePermissionDenied (22)</p>
+<p>Construct a SystemResourcePermissionDeniedException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.SystemResourcePermissionDeniedException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.SystemResourcePermissionDeniedException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.SystemResourcePermissionDeniedException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.SystemResourcePermissionDeniedException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.SystemResourcePermissionDeniedException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.SystemResourcePermissionDeniedException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.SystemResourcePermissionDeniedException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.SystemResourcePermissionDeniedException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.SystemResourcePermissionDeniedException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.SystemResourcePermissionDeniedException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.OutOfSystemResourceException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">OutOfSystemResourceException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.OutOfSystemResourceException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when a system resource has been exhausted</p>
+<p>Error code MessageErrorType_OutOfsystemResource (23)</p>
+<p>Construct a OutOfSystemResourceException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.OutOfSystemResourceException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.OutOfSystemResourceException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.OutOfSystemResourceException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.OutOfSystemResourceException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.OutOfSystemResourceException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.OutOfSystemResourceException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.OutOfSystemResourceException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.OutOfSystemResourceException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.OutOfSystemResourceException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.OutOfSystemResourceException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.SystemResourceException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">SystemResourceException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.SystemResourceException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when a system resource error occurs</p>
+<p>Error code MessageErrorType_SystemResourceException (24)</p>
+<p>Construct a SystemResourceException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.SystemResourceException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.SystemResourceException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.SystemResourceException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.SystemResourceException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.SystemResourceException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.SystemResourceException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.SystemResourceException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.SystemResourceException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.SystemResourceException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.SystemResourceException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.ResourceNotFoundException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">ResourceNotFoundException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ResourceNotFoundException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when a system resource is not found</p>
+<p>Error code MessageErrorType_ResourceNotFound (25)</p>
+<p>Construct a ResourceNotFoundException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.ResourceNotFoundException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.ResourceNotFoundException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ResourceNotFoundException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.ResourceNotFoundException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ResourceNotFoundException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.ResourceNotFoundException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ResourceNotFoundException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.ResourceNotFoundException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ResourceNotFoundException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.ResourceNotFoundException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.IOException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">IOException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.IOException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when an input/output error occurs</p>
+<p>Error code MessageErrorType_IOError (26)</p>
+<p>Construct a IOException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.IOException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.IOException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.IOException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.IOException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.IOException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.IOException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.IOException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.IOException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.IOException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.IOException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.BufferLimitViolationException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">BufferLimitViolationException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.BufferLimitViolationException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when a transport buffer limit is violated</p>
+<p>This exception typically occurs if there is a bug in
+serialization/deserialization, or the data stream
+has been corrupted</p>
+<p>Error code MessageErrorType_BufferLimitViolation (27)</p>
+<p>Construct a BufferLimitViolationException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.BufferLimitViolationException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.BufferLimitViolationException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.BufferLimitViolationException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.BufferLimitViolationException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.BufferLimitViolationException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.BufferLimitViolationException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.BufferLimitViolationException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.BufferLimitViolationException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.BufferLimitViolationException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.BufferLimitViolationException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.ServiceDefinitionException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">ServiceDefinitionException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ServiceDefinitionException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when a service definition cannot be
+parsed or fails verification</p>
+<p>Error code MessageErrorType_ServiceDefinitionError (28)</p>
+<p>Construct a ServiceDefinitionException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.ServiceDefinitionException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.ServiceDefinitionException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ServiceDefinitionException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.ServiceDefinitionException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ServiceDefinitionException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.ServiceDefinitionException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ServiceDefinitionException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.ServiceDefinitionException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ServiceDefinitionException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.ServiceDefinitionException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.OutOfRangeException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">OutOfRangeException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.OutOfRangeException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when an attempt to acces an array or container
+index is out of range</p>
+<p>Error code MessageErrorType_OutOfRange (29)</p>
+<p>Construct a OutOfRangeException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.OutOfRangeException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.OutOfRangeException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.OutOfRangeException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.OutOfRangeException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.OutOfRangeException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.OutOfRangeException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.OutOfRangeException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.OutOfRangeException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.OutOfRangeException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.OutOfRangeException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.KeyNotFoundException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">KeyNotFoundException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.KeyNotFoundException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when a key is not found in a map</p>
+<p>Error code MessageErrorType_KeyNotFound (30)</p>
+<p>Construct a KeyNotFoundException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.KeyNotFoundException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.KeyNotFoundException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.KeyNotFoundException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.KeyNotFoundException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.KeyNotFoundException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.KeyNotFoundException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.KeyNotFoundException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.KeyNotFoundException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.KeyNotFoundException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.KeyNotFoundException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.InvalidConfigurationException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">InvalidConfigurationException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.InvalidConfigurationException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when an invalid configuration is specified or encountered</p>
+<p>Error code MessageErrorType_InvalidConfiguration (31)</p>
+<p>Construct a InvalidConfigurationException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.InvalidConfigurationException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.InvalidConfigurationException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.InvalidConfigurationException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.InvalidConfigurationException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.InvalidConfigurationException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.InvalidConfigurationException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.InvalidConfigurationException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.InvalidConfigurationException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.InvalidConfigurationException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.InvalidConfigurationException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.InvalidStateException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">InvalidStateException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.InvalidStateException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when an invalid state is specified or encountered</p>
+<p>Error code MessageErrorType_InvalidState (32)</p>
+<p>Construct a InvalidStateException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.InvalidStateException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.InvalidStateException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.InvalidStateException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.InvalidStateException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.InvalidStateException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.InvalidStateException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.InvalidStateException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.InvalidStateException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.InvalidStateException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.InvalidStateException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.RobotRaconteurRemoteException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RobotRaconteurRemoteException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RobotRaconteurRemoteException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when an error occurs on a remote
+member request</p>
+<p>User defined exceptions declared in service definitions extend
+RobotRaconteurRemoteException</p>
+<p>Error code MessageErrorType_RemoteError (100)</p>
+<p>Construct a RobotRaconteurRemoteException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.RobotRaconteurRemoteException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.RobotRaconteurRemoteException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.RobotRaconteurRemoteException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.RobotRaconteurRemoteException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.RobotRaconteurRemoteException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.RobotRaconteurRemoteException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.RobotRaconteurRemoteException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.RobotRaconteurRemoteException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.RobotRaconteurRemoteException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.RobotRaconteurRemoteException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.RequestTimeoutException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RequestTimeoutException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.RequestTimeoutException" title="Permalink to this definition">¶</a></dt>
+<dd><p>The request timed out</p>
+<p>See RobotRaconteurNode::SetRequestTimeout(),
+or the timeout passed to an asynchronous request</p>
+<p>Error code MessageErrorType_RequestTimeout (101)</p>
+<p>Construct a RequestTimeoutException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.RequestTimeoutException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.RequestTimeoutException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.RequestTimeoutException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.RequestTimeoutException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.RequestTimeoutException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.RequestTimeoutException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.RequestTimeoutException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.RequestTimeoutException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.RequestTimeoutException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.RequestTimeoutException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.ReadOnlyMemberException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">ReadOnlyMemberException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ReadOnlyMemberException" title="Permalink to this definition">¶</a></dt>
+<dd><p>An attempt was made to write/set a read only member</p>
+<p>Error code MessageErrorType_ReadOnlyMember (102)</p>
+<p>Construct a ReadOnlyMemberException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.ReadOnlyMemberException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.ReadOnlyMemberException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ReadOnlyMemberException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.ReadOnlyMemberException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ReadOnlyMemberException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.ReadOnlyMemberException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ReadOnlyMemberException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.ReadOnlyMemberException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ReadOnlyMemberException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.ReadOnlyMemberException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.WriteOnlyMemberException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">WriteOnlyMemberException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.WriteOnlyMemberException" title="Permalink to this definition">¶</a></dt>
+<dd><p>An attempt was mode to read/get a write only member</p>
+<p>Error code MessageErrorType_WriteOnlyMember (103)</p>
+<p>Construct a WriteOnlyMemberException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.WriteOnlyMemberException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.WriteOnlyMemberException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.WriteOnlyMemberException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.WriteOnlyMemberException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.WriteOnlyMemberException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.WriteOnlyMemberException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.WriteOnlyMemberException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.WriteOnlyMemberException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.WriteOnlyMemberException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.WriteOnlyMemberException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.NotImplementedException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">NotImplementedException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.NotImplementedException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown if a member is not implemented</p>
+<p>Error code MessageErrorType_NotImplementedError (104)</p>
+<p>Construct a NotImplementedException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.NotImplementedException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.NotImplementedException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.NotImplementedException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.NotImplementedException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.NotImplementedException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.NotImplementedException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.NotImplementedException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.NotImplementedException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.NotImplementedException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.NotImplementedException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.MemberBusyException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">MemberBusyException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.MemberBusyException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Thrown is a member is busy. Retry later</p>
+<p>Error code MessageErrorType_MemberBusy (105)</p>
+<p>Construct a MemberBusyException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.MemberBusyException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.MemberBusyException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.MemberBusyException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.MemberBusyException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.MemberBusyException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.MemberBusyException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.MemberBusyException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.MemberBusyException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.MemberBusyException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.MemberBusyException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.ValueNotSetException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">ValueNotSetException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ValueNotSetException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown if a value has not been set</p>
+<p>This exception is most often used by WireConnection::GetInValue()
+and WireConnection::GetOutValue() if InValue or OutValue
+have not been received or set</p>
+<p>Error code MessageErrorType_ValueNotSet (106)</p>
+<p>Construct a ValueNotSetException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.ValueNotSetException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.ValueNotSetException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ValueNotSetException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.ValueNotSetException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ValueNotSetException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.ValueNotSetException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ValueNotSetException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.ValueNotSetException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ValueNotSetException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.ValueNotSetException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.AuthenticationException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">AuthenticationException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.AuthenticationException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when authentication is required or attempt
+to authenticate fails</p>
+<p>Error code MessageErrorType_AuthenticationError (150)</p>
+<p>Construct a AuthenticationException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.AuthenticationException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.AuthenticationException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.AuthenticationException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.AuthenticationException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.AuthenticationException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.AuthenticationException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.AuthenticationException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.AuthenticationException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.AuthenticationException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.AuthenticationException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.ObjectLockedException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">ObjectLockedException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ObjectLockedException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when attempting to access a locked
+service object</p>
+<p>Service objects can be locked using RobotRaconteurNode::RequestObjectLock().
+This exception is thrown if an attempt is made to access a service object
+(or sub-object) that has been locked by another user or session.</p>
+<p>Error code MessageErrorType_ObjectLockedError (151)</p>
+<p>Construct a ObjectLockedException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.ObjectLockedException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.ObjectLockedException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ObjectLockedException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.ObjectLockedException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ObjectLockedException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.ObjectLockedException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ObjectLockedException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.ObjectLockedException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ObjectLockedException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.ObjectLockedException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.AbortOperationException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">AbortOperationException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.AbortOperationException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception passed to generators to trigger an abort</p>
+<p>This is typically not thrown or received by the user</p>
+<p>Error code MessageErrorType_AbortOperation (107)</p>
+<p>Construct a AbortOperationException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.AbortOperationException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.AbortOperationException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.AbortOperationException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.AbortOperationException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.AbortOperationException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.AbortOperationException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.AbortOperationException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.AbortOperationException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.AbortOperationException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.AbortOperationException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.OperationAbortedException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">OperationAbortedException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.OperationAbortedException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when an operation is aborted</p>
+<p>This is thrown be generator functions when Abort()
+is called</p>
+<p>Generators are destroyed after throwing
+OperationAbortedException during Next()</p>
+<p>This error is passed to generators to trigger an abort</p>
+<p>Error code MessageErrorType_OperationAborted (108)</p>
+<p>Construct a OperationAbortedException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.OperationAbortedException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.OperationAbortedException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.OperationAbortedException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.OperationAbortedException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.OperationAbortedException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.OperationAbortedException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.OperationAbortedException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.OperationAbortedException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.OperationAbortedException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.OperationAbortedException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.StopIterationException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">StopIterationException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.StopIterationException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when a generator has finished sending results</p>
+<p>StopIterationException is not an error condition. It signals
+that a generator is finished sending results.</p>
+<p>This error is passed to generators to trigger a close</p>
+<p>Error code MessageErrorType_StopIteration (109)</p>
+<p>Construct a StopIterationException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.StopIterationException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.StopIterationException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.StopIterationException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.StopIterationException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.StopIterationException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.StopIterationException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.StopIterationException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.StopIterationException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.StopIterationException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.StopIterationException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.OperationTimeoutException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">OperationTimeoutException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.OperationTimeoutException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when an operation does not complete in the expected time</p>
+<p>Error code MessageErrorType_OperationTimeout (110)</p>
+<p>Construct a OperationTimeoutException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.OperationTimeoutException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.OperationTimeoutException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.OperationTimeoutException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.OperationTimeoutException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.OperationTimeoutException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.OperationTimeoutException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.OperationTimeoutException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.OperationTimeoutException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.OperationTimeoutException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.OperationTimeoutException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="RobotRaconteur.OperationCancelledException">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">OperationCancelledException</code><span class="sig-paren">(</span><em class="sig-param">message=</em>, <em class="sig-param">subname=None</em>, <em class="sig-param">param_=None</em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.OperationCancelledException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception thrown when an operation is cancelled before it is started</p>
+<p>Error code MessageErrorType_OperationCancelled (111)</p>
+<p>Construct a OperationCancelledException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A message to pass to the user</p></li>
+<li><p><strong>subname</strong> (<em>str</em>) – An optional sub_name to further categorize the exception</p></li>
+<li><p><strong>param</strong> – An optional exception parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="RobotRaconteur.OperationCancelledException.errorcode">
+<code class="sig-name descname">errorcode</code><a class="headerlink" href="#RobotRaconteur.OperationCancelledException.errorcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) Predefined error code</p>
+<p>Error code that specifies the type of error See MessageErrorType constants.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.OperationCancelledException.errorname">
+<code class="sig-name descname">errorname</code><a class="headerlink" href="#RobotRaconteur.OperationCancelledException.errorname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Name of the error</p>
+<p>Name corresponding to predefined error code, or a user defined
+error type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.OperationCancelledException.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#RobotRaconteur.OperationCancelledException.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Message to pass to the user</p>
+<p>Human readable message to pass to the user</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.OperationCancelledException.errorsubname">
+<code class="sig-name descname">errorsubname</code><a class="headerlink" href="#RobotRaconteur.OperationCancelledException.errorsubname" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) An optional sub_name to further categorize the exception</p>
+<p>The sub_name should follow the Robot Raconteur naming rules. It should
+either be a single name or a fully qualified name using service definition
+naming rules</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.OperationCancelledException.errorparam">
+<code class="sig-name descname">errorparam</code><a class="headerlink" href="#RobotRaconteur.OperationCancelledException.errorparam" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Any) An optional parameter</p>
+<p>Use this placeholder if data needs to be passed with the exception</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="Logging.html" class="btn btn-neutral float-right" title="Logging and Taps" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ServiceSecurity.html" class="btn btn-neutral float-left" title="Service Security" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Wason Technology, LLC
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

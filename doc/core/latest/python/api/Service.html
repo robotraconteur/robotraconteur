@@ -1,0 +1,589 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Service &mdash; Robot Raconteur Python  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Service Security" href="ServiceSecurity.html" />
+    <link rel="prev" title="Generators" href="Generators.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> Robot Raconteur Python
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Tutorial:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/Introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/ServiceDefinition.html">Service Definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/RobotRaconteurPython.html">Robot Raconteur Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/iRobotCreatePythonExample.html">iRobot Create Python Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/WebcamPythonExample.html">Webcam Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/Discovery.html">Service Discovery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/Subscriptions.html">Subscriptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/Authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/ObjectLocks.html">Exclusive object locks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/TimeCritical.html">Time-critical software with Wire member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/ForwardCompatibility.html">Forward compatibility with the “implements” statement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/MemberModifiers.html">Member Modifiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/Async.html">Asynchronous programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/GatherScatter.html">Gather/Scatter operations</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Framework:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/service_definition.html">Service Definitions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/nodes_and_communication.html">Robot Raconteur Nodes and Communication</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/exceptions.html">Exceptions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/security.html">Security</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/locking.html">Object Locking</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Utility:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/command_line_options.html">Node Setup Command Line Options</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/logging.html">Logging</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/taps.html">Taps</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/robotraconteurgen.html">RobotRaconteurGen Utility</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Constants.html">Constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RobotRaconteurNode.html">RobotRaconteurNode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="DataTypes.html">Misc Data Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PipeMember.html">Pipe Member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="WireMember.html">Wire Member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CallbackMember.html">Callback Member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Subscription.html">Subscription</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NodeSetup.html">Node Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Transports.html">Transports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Timers.html">Timers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Generators.html">Generators</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Service</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#servercontext-class">ServerContext Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#serverendpoint-class">ServerEndpoint Class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ServiceSecurity.html">Service Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Exceptions.html">Exceptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Logging.html">Logging and Taps</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Robot Raconteur Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Service</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/Service.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="service">
+<h1>Service<a class="headerlink" href="#service" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="servercontext-class">
+<h2>ServerContext Class<a class="headerlink" href="#servercontext-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="RobotRaconteur.ServerContext">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">ServerContext</code><a class="headerlink" href="#RobotRaconteur.ServerContext" title="Permalink to this definition">¶</a></dt>
+<dd><p>Context for services registered in a node for use by clients</p>
+<p>Services are registered using the RobotRaconteurNode.RegisterService() family of functions.
+The ServerContext manages the services, and dispatches requests and packets to the appropriate
+service object members. Services may expose more than one object. The root object is specified
+when the service is registered. Other objects are specified through ObjRef members. A name
+for the service is also specified when the service is registered. This name forms the root 
+of the service path namespace. Other objects in the service have a unique service path
+based on the ObjRef used to access the object.</p>
+<p>Services may handle multiple connected clients concurrently. Each client is assigned
+a ServerEndpoint. The ServerEndpoint is unique to the client connection,
+and interacts with ServerContext to complete requests and dispatch packets. When
+the service needs to address a specific client, the ServerEndpoint or the
+ServerEndpoint.GetCurrentEndpoint() is used. (ServerEndpoint.GetCurrentEndpoint() returns the
+int local client ID.)</p>
+<p>Service attributes are a varvalue{string} types dictionary that is made available to
+clients during service discovery. These attributes are used to help clients determine
+which service should be selected for use. Because the attributes are passed to the clients
+as part of the discovery process, they should be as concise as possible, and should
+not use user defined types. Use ServerContext.SetAttributes() to set the service attributes
+after registering the service.</p>
+<p>Security for the service is specified using a ServiceSecurityPolicy instance. This policy
+is specified by passing as a parameter to RobotRaconteurNode.RegisterService(), or passing
+the policy to the constructor.</p>
+<p>ServerContext implements authentication and object locking. 
+Server side functions are exposed by ServerContext for authentication, object locking,
+and client management.</p>
+<p>Clients using dynamic typing such as Python and MATLAB will only pull service types
+explicitly imported by the root object and objref objects that have been requested. Clients
+will not pull service types of user-defined named types if that service type is not explicitly
+imported. This can be problematic if new <cite>struct</cite>, <cite>pod</cite>, and/or <cite>namedarray</cite> types are introduced
+that do not have corresponding objects. Extra imports is used to specify extra service definitions
+the client should pull. Use ServerContext.AddExtraImport(), ServerContext.RemoveExtraImport(),
+and ServerContext.GetExtraImports() to manage the extra imports passed to the client.</p>
+<dl class="py method">
+<dt id="RobotRaconteur.ServerContext.AddExtraImport">
+<code class="sig-name descname">AddExtraImport</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">import_</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ServerContext.AddExtraImport" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an extra service definition import</p>
+<p>Clients using dynamic typing will not automatically pull service definitions unless
+imported by the root object or an objref. If new “struct”, “po”, or “namedarray” types
+are introduced in a new service definition type without a corresponding object, an error will
+occur. Use AddExtraImport() to add the name of the new service definition to add it to the 
+list of service definitions the client will pull.</p>
+<p>Service definition must have been registered using RobotRaconteurNode::RegisterServiceType()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>import</strong> (<em>str</em>) – The name of the service definition</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.ServerContext.AddServerServiceListener">
+<code class="sig-name descname">AddServerServiceListener</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">listener</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ServerContext.AddServerServiceListener" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a service listener</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>listener</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference internal" href="#RobotRaconteur.ServerContext" title="RobotRaconteur.ServerContext"><em>RobotRaconteur.ServerContext</em></a><em>,</em><em>int</em><em>,</em><em>object</em><em>]</em><em>]</em>) – Callable listener function</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.ServerContext.GetCurrentServerContext">
+<em class="property">static </em><code class="sig-name descname">GetCurrentServerContext</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ServerContext.GetCurrentServerContext" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the current ServerContext</p>
+<p>Returns the current server context during a request or packet event.
+This is a thread-specific value and only
+valid during the initial request or packet event invocation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The current server context</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#RobotRaconteur.ServerContext" title="RobotRaconteur.ServerContext">RobotRaconteur.ServerContext</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.ServerContext.GetCurrentServicePath">
+<em class="property">static </em><code class="sig-name descname">GetCurrentServicePath</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ServerContext.GetCurrentServicePath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the current object service path</p>
+<p>Returns the service path of the current object during a request or
+packet event.
+This is a thread-specific value and only
+valid during the initial request or packet event invocation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The current object service path</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.ServerContext.GetExtraImports">
+<code class="sig-name descname">GetExtraImports</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ServerContext.GetExtraImports" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the current list of extra service definition imports</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The list of extra imports</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.ServerContext.GetNode">
+<code class="sig-name descname">GetNode</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ServerContext.GetNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the Node</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="RobotRaconteurNode.html#RobotRaconteur.RobotRaconteurNode" title="RobotRaconteur.RobotRaconteurNode">RobotRaconteur.RobotRaconteurNode</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.ServerContext.GetObjectLockUsername">
+<code class="sig-name descname">GetObjectLockUsername</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">servicepath</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ServerContext.GetObjectLockUsername" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the name of the user that has locked the specified service path</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>servicepath</strong> (<em>str</em>) – The service path</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The user owning the lock, or empty servicepath is not locked</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.ServerContext.KickUser">
+<code class="sig-name descname">KickUser</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">username</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ServerContext.KickUser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Kicks a user with the specified username</p>
+<p>User must be authenticated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>username</strong> (<em>str</em>) – The username to kick</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.ServerContext.ReleaseObjectLock">
+<code class="sig-name descname">ReleaseObjectLock</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">servicepath</span></em>, <em class="sig-param"><span class="n">username</span></em>, <em class="sig-param"><span class="n">override_</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ServerContext.ReleaseObjectLock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Release a client lock on servicepath</p>
+<p>This function handles incoming client requests, but may also be used
+by the service directly. Client locks can be released by the user that
+created them if <a href="#id1"><span class="problematic" id="id2">override_</span></a> is false, or by any user if <a href="#id3"><span class="problematic" id="id4">override_</span></a> is true.</p>
+<p>The <a href="#id5"><span class="problematic" id="id6">override_</span></a> parameter is set to true for client requests if the client has
+the “objectlockoverride” permission.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>servicepath</strong> – The service path to release lock</p></li>
+<li><p><strong>username</strong> – The username requsting the lock release</p></li>
+<li><p><strong>override</strong> (<em>bool</em>) – If False, only the creating username can release the lock. If True, 
+any username can release the lock</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.ServerContext.ReleaseServicePath">
+<code class="sig-name descname">ReleaseServicePath</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="n">endpoints</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ServerContext.ReleaseServicePath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Release the specified service path and all sub objects</p>
+<p>Services take ownership of objects returned by objrefs, and will only request the object
+once. Subsequent requests will return the cached object. If the objref has changed,
+the service must call ReleaseServicePath() to tell the service to request the object again.</p>
+<p>Release service path will release the object specified by the service path
+and all sub objects.</p>
+<p>This overload will notify the specified that the objref has been released. If the service
+path contains a session key, this overload should be used so the session key is not leaked.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – The service path to release</p></li>
+<li><p><strong>endpoints</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – (Optional) The client endpoint IDs to notify of the released service path, 
+or None to notify all endpoints</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.ServerContext.RemoveExtraImport">
+<code class="sig-name descname">RemoveExtraImport</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">import_</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ServerContext.RemoveExtraImport" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes an extra import service definition registered with AddExtraImport()</p>
+<p>See AddExtraImport()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>import</strong> (<em>str</em>) – The name of the service definition</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True The service definition was removed, False The service definition was not found in the extra imports vector</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.ServerContext.RequestClientObjectLock">
+<code class="sig-name descname">RequestClientObjectLock</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">servicepath</span></em>, <em class="sig-param"><span class="n">username</span></em>, <em class="sig-param"><span class="n">endpoint</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ServerContext.RequestClientObjectLock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request a client lock on servicepath for a specific client connection</p>
+<p>This function handles incoming client requests, but may also be used
+by the service directly. Client object locks lock for a specific client connection,
+while client locks lock for a specific user. The specific client connection is 
+specified using endpoint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>servicepath</strong> (<em>str</em>) – The service path to lock</p></li>
+<li><p><strong>username</strong> (<em>str</em>) – The name of the user owning the lock</p></li>
+<li><p><strong>endpoint</strong> – The client endpoint ID of the client owning the lock</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.ServerContext.RequestObjectLock">
+<code class="sig-name descname">RequestObjectLock</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">servicepath</span></em>, <em class="sig-param"><span class="n">username</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ServerContext.RequestObjectLock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request an object lock on servicepath for user username</p>
+<p>This function handles incoming client requests, but may also be used
+by the service directly</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>servicepath</strong> (<em>str</em>) – The service path to lock</p></li>
+<li><p><strong>username</strong> (<em>str</em>) – The name of the user owning the lock</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.ServerContext.SetServiceAttributes">
+<code class="sig-name descname">SetServiceAttributes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">attributes</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ServerContext.SetServiceAttributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the service attributes</p>
+<p>Sets the service attributes. Attributes are made available to clients during
+service discovery. Attributes should be concise and not use any user defined
+types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>attr</strong> (<em>Dict</em><em>[</em><em>str</em><em>,</em><em>Any</em><em>]</em>) – The service attributes</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="serverendpoint-class">
+<h2>ServerEndpoint Class<a class="headerlink" href="#serverendpoint-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="RobotRaconteur.ServerEndpoint">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">ServerEndpoint</code><a class="headerlink" href="#RobotRaconteur.ServerEndpoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Server endpoint representing a client connection</p>
+<p>Robot Raconteur creates endpoint pairs between a client and service. For clients, this endpoint
+is a ClientContext. For services, the endpoint becomes a ServerEndpoint. ServerEndpoints are used
+to address a specific client connected to a service, since services may have multiple clients
+connected concurrently. ServerEndpoints also provide client authentication information.</p>
+<p>Use ServerEndpoint.GetCurrentEndpoint() to retrieve the int32
+current endpoint ID. Use ServerEndpoint.GetCurrentAuthenticatedUser() to retrieve
+the current user authentication information.</p>
+<dl class="py method">
+<dt id="RobotRaconteur.ServerEndpoint.GetCurrentAuthenticatedUser">
+<em class="property">static </em><code class="sig-name descname">GetCurrentAuthenticatedUser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ServerEndpoint.GetCurrentAuthenticatedUser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the current authenticated user</p>
+<p>Users that have been authenticated have a corresponding
+AuthenticatedUser object associated with the ServerEndpoint.
+GetCurrentAuthenticatedUser() returns the AuthenticatedUser
+associated with the current ServerEndpoint during a request
+or packet event. This is a thread-specific value and only valid during 
+the initial request or packet event invocation.</p>
+<p>Throws PermissionDeniedException or AuthenticationException
+if there is no AuthenticatedUser set in the current thread.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The AuthenticatedUser</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="ServiceSecurity.html#RobotRaconteur.AuthenticatedUser" title="RobotRaconteur.AuthenticatedUser">RobotRaconteur.AuthenticatedUser</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.ServerEndpoint.GetCurrentEndpoint">
+<em class="property">static </em><code class="sig-name descname">GetCurrentEndpoint</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ServerEndpoint.GetCurrentEndpoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the current server endpoint</p>
+<p>Returns the current server endpoint during a request or packet event.
+This is a thread-specific value and only valid during the initial
+request or packet event invocation.</p>
+<p>Throws InvalidOperationException if not during a request or packet event</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The current server endpoint id</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ServiceSecurity.html" class="btn btn-neutral float-right" title="Service Security" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="Generators.html" class="btn btn-neutral float-left" title="Generators" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Wason Technology, LLC
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

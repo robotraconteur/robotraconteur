@@ -1,0 +1,569 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Logging and Taps &mdash; Robot Raconteur Python  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Exceptions" href="Exceptions.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> Robot Raconteur Python
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Tutorial:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/Introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/ServiceDefinition.html">Service Definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/RobotRaconteurPython.html">Robot Raconteur Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/iRobotCreatePythonExample.html">iRobot Create Python Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/WebcamPythonExample.html">Webcam Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/Discovery.html">Service Discovery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/Subscriptions.html">Subscriptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/Authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/ObjectLocks.html">Exclusive object locks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/TimeCritical.html">Time-critical software with Wire member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/ForwardCompatibility.html">Forward compatibility with the “implements” statement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/MemberModifiers.html">Member Modifiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/Async.html">Asynchronous programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/GatherScatter.html">Gather/Scatter operations</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Framework:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/service_definition.html">Service Definitions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/nodes_and_communication.html">Robot Raconteur Nodes and Communication</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/exceptions.html">Exceptions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/security.html">Security</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/locking.html">Object Locking</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Utility:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/command_line_options.html">Node Setup Command Line Options</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/logging.html">Logging</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/taps.html">Taps</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/robotraconteurgen.html">RobotRaconteurGen Utility</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Constants.html">Constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RobotRaconteurNode.html">RobotRaconteurNode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="DataTypes.html">Misc Data Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PipeMember.html">Pipe Member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="WireMember.html">Wire Member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CallbackMember.html">Callback Member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Subscription.html">Subscription</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NodeSetup.html">Node Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Transports.html">Transports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Timers.html">Timers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Generators.html">Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Service.html">Service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ServiceSecurity.html">Service Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Exceptions.html">Exceptions</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Logging and Taps</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#rrlogrecord-class">RRLogRecord Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#logrecordhandler-class">LogRecordHandler Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#filelogrecordhandler-class">FileLogRecordHandler Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#loglevel-enum">LogLevel Enum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#logcomponent-enum">LogComponent Enum</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Robot Raconteur Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Logging and Taps</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/Logging.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="logging-and-taps">
+<h1>Logging and Taps<a class="headerlink" href="#logging-and-taps" title="Permalink to this headline">¶</a></h1>
+<p>Logging is configured using environmental variblase or command line option
+<code class="docutils literal notranslate"><span class="pre">--robotraconteur-log-level=</span></code> with the node setup classes, or using the
+RobotRaconteur.SetLogLevel() with the RobotRaconteur.LogLevel_* enum values.</p>
+<p>Log output target can be configured using RobotRaconter.RobotRaconturNode.SetLogRecordHandler().
+By default the output is sent to <code class="docutils literal notranslate"><span class="pre">stderr</span></code>. The
+RobotRaconteur.RobotRaconteurNode.FileLogRecordHandler can be used to save the log to a file.</p>
+<p>Taps are used to record log records and message traffic. The “local tap”
+creates a local socket that a recording program can connect to record the traffic.
+This can be enabled using the <code class="docutils literal notranslate"><span class="pre">--robotraconteur-local-tap-enable=true</span></code> and
+<code class="docutils literal notranslate"><span class="pre">--robotraconteur-local-tap-name=</span></code> command line options with the node setup classes.</p>
+<div class="section" id="rrlogrecord-class">
+<h2>RRLogRecord Class<a class="headerlink" href="#rrlogrecord-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="RobotRaconteur.RRLogRecord">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">RRLogRecord</code><a class="headerlink" href="#RobotRaconteur.RRLogRecord" title="Permalink to this definition">¶</a></dt>
+<dd><p>Robot Raconteur log record</p>
+<p>Records information about a logging event</p>
+<p>See ref logging for more information.</p>
+<dl class="py method">
+<dt id="RobotRaconteur.RRLogRecord.Component">
+<em class="property">property </em><code class="sig-name descname">Component</code><a class="headerlink" href="#RobotRaconteur.RRLogRecord.Component" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) The source component</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RRLogRecord.ComponentName">
+<em class="property">property </em><code class="sig-name descname">ComponentName</code><a class="headerlink" href="#RobotRaconteur.RRLogRecord.ComponentName" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) The source component name</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RRLogRecord.ComponentObjectID">
+<em class="property">property </em><code class="sig-name descname">ComponentObjectID</code><a class="headerlink" href="#RobotRaconteur.RRLogRecord.ComponentObjectID" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) The source component object ID</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RRLogRecord.Endpoint">
+<em class="property">property </em><code class="sig-name descname">Endpoint</code><a class="headerlink" href="#RobotRaconteur.RRLogRecord.Endpoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) The source endpoint</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RRLogRecord.FiberID">
+<em class="property">property </em><code class="sig-name descname">FiberID</code><a class="headerlink" href="#RobotRaconteur.RRLogRecord.FiberID" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) The source coroutine fiber</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RRLogRecord.Level">
+<em class="property">property </em><code class="sig-name descname">Level</code><a class="headerlink" href="#RobotRaconteur.RRLogRecord.Level" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) The log level</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RRLogRecord.Member">
+<em class="property">property </em><code class="sig-name descname">Member</code><a class="headerlink" href="#RobotRaconteur.RRLogRecord.Member" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) The source member</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RRLogRecord.Message">
+<em class="property">property </em><code class="sig-name descname">Message</code><a class="headerlink" href="#RobotRaconteur.RRLogRecord.Message" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) Human readable log message</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RRLogRecord.Node">
+<em class="property">property </em><code class="sig-name descname">Node</code><a class="headerlink" href="#RobotRaconteur.RRLogRecord.Node" title="Permalink to this definition">¶</a></dt>
+<dd><p>(RobotRaconteur.RobotRaconteurNode) The source node</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RRLogRecord.ServicePath">
+<em class="property">property </em><code class="sig-name descname">ServicePath</code><a class="headerlink" href="#RobotRaconteur.RRLogRecord.ServicePath" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) The service path of the source object</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RRLogRecord.SourceFile">
+<em class="property">property </em><code class="sig-name descname">SourceFile</code><a class="headerlink" href="#RobotRaconteur.RRLogRecord.SourceFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) The sourcecode filename</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RRLogRecord.SourceLine">
+<em class="property">property </em><code class="sig-name descname">SourceLine</code><a class="headerlink" href="#RobotRaconteur.RRLogRecord.SourceLine" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) The line within the sourcecode file</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RRLogRecord.ThreadID">
+<em class="property">property </em><code class="sig-name descname">ThreadID</code><a class="headerlink" href="#RobotRaconteur.RRLogRecord.ThreadID" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) The source thread</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.RRLogRecord.Time">
+<em class="property">property </em><code class="sig-name descname">Time</code><a class="headerlink" href="#RobotRaconteur.RRLogRecord.Time" title="Permalink to this definition">¶</a></dt>
+<dd><p>(datetime.datetime) Time of logging event</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="logrecordhandler-class">
+<h2>LogRecordHandler Class<a class="headerlink" href="#logrecordhandler-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="RobotRaconteur.LogRecordHandler">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">LogRecordHandler</code><a class="headerlink" href="#RobotRaconteur.LogRecordHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class of log record handler</p>
+<p>By default, RobotRaconteurNode will print log records to <code class="docutils literal notranslate"><span class="pre">stderr</span></code>. Use
+RobotRaconteur.RobotRaconteurNode.SetLogRecordHandler() to specify a LogRecordHandler
+to accept log records instead of printing them to the terminal.</p>
+<p>See ref logging for more information.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="filelogrecordhandler-class">
+<h2>FileLogRecordHandler Class<a class="headerlink" href="#filelogrecordhandler-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="RobotRaconteur.FileLogRecordHandler">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">FileLogRecordHandler</code><a class="headerlink" href="#RobotRaconteur.FileLogRecordHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log record handler that saves to a file</p>
+<p>See ref logging for more information.</p>
+<dl class="py method">
+<dt id="RobotRaconteur.FileLogRecordHandler.OpenFile">
+<code class="sig-name descname">OpenFile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">append</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.FileLogRecordHandler.OpenFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open a file to store log records</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – The filename</p></li>
+<li><p><strong>append</strong> (<em>bool</em>) – If True, log messages are appended. If False, the file is truncated when opened</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="loglevel-enum">
+<h2>LogLevel Enum<a class="headerlink" href="#loglevel-enum" title="Permalink to this headline">¶</a></h2>
+<dl class="py data">
+<dt id="RobotRaconteur.LogLevel_Trace">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">LogLevel_Trace</code><em class="property"> = 0</em><a class="headerlink" href="#RobotRaconteur.LogLevel_Trace" title="Permalink to this definition">¶</a></dt>
+<dd><p><cite>trace</cite> log level</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.LogLevel_Debug">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">LogLevel_Debug</code><em class="property"> = 1</em><a class="headerlink" href="#RobotRaconteur.LogLevel_Debug" title="Permalink to this definition">¶</a></dt>
+<dd><p><cite>debug</cite> log level</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.LogLevel_Info">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">LogLevel_Info</code><em class="property"> = 2</em><a class="headerlink" href="#RobotRaconteur.LogLevel_Info" title="Permalink to this definition">¶</a></dt>
+<dd><p><cite>info</cite> log level</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.LogLevel_Warning">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">LogLevel_Warning</code><em class="property"> = 3</em><a class="headerlink" href="#RobotRaconteur.LogLevel_Warning" title="Permalink to this definition">¶</a></dt>
+<dd><p><cite>warning</cite> log level</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.LogLevel_Error">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">LogLevel_Error</code><em class="property"> = 4</em><a class="headerlink" href="#RobotRaconteur.LogLevel_Error" title="Permalink to this definition">¶</a></dt>
+<dd><p><cite>error</cite> log level</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.LogLevel_Fatal">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">LogLevel_Fatal</code><em class="property"> = 5</em><a class="headerlink" href="#RobotRaconteur.LogLevel_Fatal" title="Permalink to this definition">¶</a></dt>
+<dd><p><cite>fatal</cite> log level</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.LogLevel_Disable">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">LogLevel_Disable</code><em class="property"> = 1000</em><a class="headerlink" href="#RobotRaconteur.LogLevel_Disable" title="Permalink to this definition">¶</a></dt>
+<dd><p><cite>disabled</cite> log level</p>
+</dd></dl>
+
+</div>
+<div class="section" id="logcomponent-enum">
+<h2>LogComponent Enum<a class="headerlink" href="#logcomponent-enum" title="Permalink to this headline">¶</a></h2>
+<dl class="py data">
+<dt id="RobotRaconteur.LogComponent_Default">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">LogComponent_Default</code><em class="property"> = 0</em><a class="headerlink" href="#RobotRaconteur.LogComponent_Default" title="Permalink to this definition">¶</a></dt>
+<dd><p>default component</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.LogComponent_Node">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">LogComponent_Node</code><em class="property"> = 1</em><a class="headerlink" href="#RobotRaconteur.LogComponent_Node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Robot Raconteur Node component</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.LogComponent_Transport">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">LogComponent_Transport</code><em class="property"> = 2</em><a class="headerlink" href="#RobotRaconteur.LogComponent_Transport" title="Permalink to this definition">¶</a></dt>
+<dd><p>tranport component</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.LogComponent_Message">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">LogComponent_Message</code><em class="property"> = 3</em><a class="headerlink" href="#RobotRaconteur.LogComponent_Message" title="Permalink to this definition">¶</a></dt>
+<dd><p>message or message serialization component</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.LogComponent_Client">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">LogComponent_Client</code><em class="property"> = 4</em><a class="headerlink" href="#RobotRaconteur.LogComponent_Client" title="Permalink to this definition">¶</a></dt>
+<dd><p>client component</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.LogComponent_Service">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">LogComponent_Service</code><em class="property"> = 5</em><a class="headerlink" href="#RobotRaconteur.LogComponent_Service" title="Permalink to this definition">¶</a></dt>
+<dd><p>service component</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.LogComponent_Member">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">LogComponent_Member</code><em class="property"> = 6</em><a class="headerlink" href="#RobotRaconteur.LogComponent_Member" title="Permalink to this definition">¶</a></dt>
+<dd><p>member component</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.LogComponent_Pack">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">LogComponent_Pack</code><em class="property"> = 7</em><a class="headerlink" href="#RobotRaconteur.LogComponent_Pack" title="Permalink to this definition">¶</a></dt>
+<dd><p>data message packing component</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.LogComponent_Unpack">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">LogComponent_Unpack</code><em class="property"> = 8</em><a class="headerlink" href="#RobotRaconteur.LogComponent_Unpack" title="Permalink to this definition">¶</a></dt>
+<dd><p>data message unpacknig component</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.LogComponent_ServiceDefinition">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">LogComponent_ServiceDefinition</code><em class="property"> = 9</em><a class="headerlink" href="#RobotRaconteur.LogComponent_ServiceDefinition" title="Permalink to this definition">¶</a></dt>
+<dd><p>service definition parser component</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.LogComponent_Discovery">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">LogComponent_Discovery</code><em class="property"> = 10</em><a class="headerlink" href="#RobotRaconteur.LogComponent_Discovery" title="Permalink to this definition">¶</a></dt>
+<dd><p>node/service discovery component</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.LogComponent_Subscription">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">LogComponent_Subscription</code><em class="property"> = 11</em><a class="headerlink" href="#RobotRaconteur.LogComponent_Subscription" title="Permalink to this definition">¶</a></dt>
+<dd><p>subscription component</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.LogComponent_NodeSetup">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">LogComponent_NodeSetup</code><em class="property"> = 12</em><a class="headerlink" href="#RobotRaconteur.LogComponent_NodeSetup" title="Permalink to this definition">¶</a></dt>
+<dd><p>node setup component</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.LogComponent_Utility">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">LogComponent_Utility</code><em class="property"> = 13</em><a class="headerlink" href="#RobotRaconteur.LogComponent_Utility" title="Permalink to this definition">¶</a></dt>
+<dd><p>utility component</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.LogComponent_RobDefLib">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">LogComponent_RobDefLib</code><em class="property"> = 14</em><a class="headerlink" href="#RobotRaconteur.LogComponent_RobDefLib" title="Permalink to this definition">¶</a></dt>
+<dd><p>service definition standard library component (external)</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.LogComponent_User">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">LogComponent_User</code><em class="property"> = 15</em><a class="headerlink" href="#RobotRaconteur.LogComponent_User" title="Permalink to this definition">¶</a></dt>
+<dd><p>user component (external)</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.LogComponent_UserClient">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">LogComponent_UserClient</code><em class="property"> = 16</em><a class="headerlink" href="#RobotRaconteur.LogComponent_UserClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>user client component (external)</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.LogComponent_UserService">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">LogComponent_UserService</code><em class="property"> = 17</em><a class="headerlink" href="#RobotRaconteur.LogComponent_UserService" title="Permalink to this definition">¶</a></dt>
+<dd><p>user service component (external)</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="RobotRaconteur.LogComponent_ThirdParty">
+<code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">LogComponent_ThirdParty</code><em class="property"> = 18</em><a class="headerlink" href="#RobotRaconteur.LogComponent_ThirdParty" title="Permalink to this definition">¶</a></dt>
+<dd><p>third party library component (external)</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="Exceptions.html" class="btn btn-neutral float-left" title="Exceptions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Wason Technology, LLC
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

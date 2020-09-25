@@ -1,0 +1,450 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Timers &mdash; Robot Raconteur Python  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Generators" href="Generators.html" />
+    <link rel="prev" title="Transports" href="Transports.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> Robot Raconteur Python
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Tutorial:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/Introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/ServiceDefinition.html">Service Definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/RobotRaconteurPython.html">Robot Raconteur Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/iRobotCreatePythonExample.html">iRobot Create Python Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/WebcamPythonExample.html">Webcam Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/Discovery.html">Service Discovery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/Subscriptions.html">Subscriptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/Authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/ObjectLocks.html">Exclusive object locks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/TimeCritical.html">Time-critical software with Wire member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/ForwardCompatibility.html">Forward compatibility with the “implements” statement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/MemberModifiers.html">Member Modifiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/Async.html">Asynchronous programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/GatherScatter.html">Gather/Scatter operations</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Framework:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/service_definition.html">Service Definitions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/nodes_and_communication.html">Robot Raconteur Nodes and Communication</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/exceptions.html">Exceptions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/security.html">Security</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/locking.html">Object Locking</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Utility:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/command_line_options.html">Node Setup Command Line Options</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/logging.html">Logging</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/taps.html">Taps</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/robotraconteurgen.html">RobotRaconteurGen Utility</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Constants.html">Constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RobotRaconteurNode.html">RobotRaconteurNode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="DataTypes.html">Misc Data Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PipeMember.html">Pipe Member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="WireMember.html">Wire Member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CallbackMember.html">Callback Member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Subscription.html">Subscription</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NodeSetup.html">Node Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Transports.html">Transports</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Timers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#timer-class">Timer Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#timerevent-class">TimerEvent Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rate-class">Rate Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#autoresetevent-class">AutoResetEvent Class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Generators.html">Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Service.html">Service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ServiceSecurity.html">Service Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Exceptions.html">Exceptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Logging.html">Logging and Taps</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Robot Raconteur Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Timers</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/Timers.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="timers">
+<h1>Timers<a class="headerlink" href="#timers" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="timer-class">
+<h2>Timer Class<a class="headerlink" href="#timer-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="RobotRaconteur.Timer">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">Timer</code><a class="headerlink" href="#RobotRaconteur.Timer" title="Permalink to this definition">¶</a></dt>
+<dd><p>A timer to invoke a callback</p>
+<p>Timers invoke a callback at a specified rate. The timer
+can either be one-short, or repeating.</p>
+<p>Use RobotRaconteurNode.CreateTimer() to create timers.</p>
+<dl class="py method">
+<dt id="RobotRaconteur.Timer.GetPeriod">
+<code class="sig-name descname">GetPeriod</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.Timer.GetPeriod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the period of the timer in seconds</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.Timer.IsRunning">
+<code class="sig-name descname">IsRunning</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.Timer.IsRunning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get if the timer is running</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.Timer.SetPeriod">
+<code class="sig-name descname">SetPeriod</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">period</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.Timer.SetPeriod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the period of the timer in seconds</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>period</strong> (<em>float</em>) – Period in seconds</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.Timer.Start">
+<code class="sig-name descname">Start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.Timer.Start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start the timer</p>
+<p>Must be called after RobotRaconteurNode.CreateTimer()</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.Timer.Stop">
+<code class="sig-name descname">Stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.Timer.Stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop the timer</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="timerevent-class">
+<h2>TimerEvent Class<a class="headerlink" href="#timerevent-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="RobotRaconteur.TimerEvent">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">TimerEvent</code><a class="headerlink" href="#RobotRaconteur.TimerEvent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Timer event structure</p>
+<p>Contains information about the state of the timer. Passed to the
+callback on invocation.</p>
+<dl class="py method">
+<dt id="RobotRaconteur.TimerEvent.current_expected">
+<em class="property">property </em><code class="sig-name descname">current_expected</code><a class="headerlink" href="#RobotRaconteur.TimerEvent.current_expected" title="Permalink to this definition">¶</a></dt>
+<dd><p>The current expected invocation time</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>datetime.datetime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.TimerEvent.current_real">
+<em class="property">property </em><code class="sig-name descname">current_real</code><a class="headerlink" href="#RobotRaconteur.TimerEvent.current_real" title="Permalink to this definition">¶</a></dt>
+<dd><p>The current invocation time</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>datetime.datetime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.TimerEvent.last_expected">
+<em class="property">property </em><code class="sig-name descname">last_expected</code><a class="headerlink" href="#RobotRaconteur.TimerEvent.last_expected" title="Permalink to this definition">¶</a></dt>
+<dd><p>The last expected callback invocation time</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>datetime.datetime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.TimerEvent.last_real">
+<em class="property">property </em><code class="sig-name descname">last_real</code><a class="headerlink" href="#RobotRaconteur.TimerEvent.last_real" title="Permalink to this definition">¶</a></dt>
+<dd><p>The real last callback invocation time</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>datetime.datetime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.TimerEvent.stopped">
+<em class="property">property </em><code class="sig-name descname">stopped</code><a class="headerlink" href="#RobotRaconteur.TimerEvent.stopped" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if timer has been stopped</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="rate-class">
+<h2>Rate Class<a class="headerlink" href="#rate-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="RobotRaconteur.Rate">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">Rate</code><a class="headerlink" href="#RobotRaconteur.Rate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rate to stabilize a loop</p>
+<p>Rate is used to stabilize the period of a loop. Use
+RobotRaconteur.CreateRate() to create rates.</p>
+<dl class="py method">
+<dt id="RobotRaconteur.Rate.Sleep">
+<code class="sig-name descname">Sleep</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.Rate.Sleep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sleep the calling thread until the current loop period expires</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="autoresetevent-class">
+<h2>AutoResetEvent Class<a class="headerlink" href="#autoresetevent-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="RobotRaconteur.AutoResetEvent">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">AutoResetEvent</code><a class="headerlink" href="#RobotRaconteur.AutoResetEvent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Synchronization event for thread synchronization. Resets automatically after
+being triggered</p>
+<p>Construct using RobotRaconteurNode.CreateAutoResetEvent()</p>
+<dl class="py method">
+<dt id="RobotRaconteur.AutoResetEvent.Reset">
+<code class="sig-name descname">Reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.AutoResetEvent.Reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset the event</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.AutoResetEvent.Set">
+<code class="sig-name descname">Set</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.AutoResetEvent.Set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the event, releasing waiting threads</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.AutoResetEvent.WaitOne">
+<code class="sig-name descname">WaitOne</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.AutoResetEvent.WaitOne" title="Permalink to this definition">¶</a></dt>
+<dd><p>Block the current thread until Set() is called, or timeout
+expires</p>
+<p>Timeout is based on the RobotRaconteurNode time provider</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>timeout</strong> (<em>float</em>) – The timeout in seconds</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if event was set, False if not</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="Generators.html" class="btn btn-neutral float-right" title="Generators" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="Transports.html" class="btn btn-neutral float-left" title="Transports" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Wason Technology, LLC
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

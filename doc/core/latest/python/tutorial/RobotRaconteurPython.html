@@ -1,0 +1,464 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Robot Raconteur Python &mdash; Robot Raconteur Python  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="iRobot Create Python Example" href="iRobotCreatePythonExample.html" />
+    <link rel="prev" title="Service Definition" href="ServiceDefinition.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> Robot Raconteur Python
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Tutorial:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ServiceDefinition.html">Service Definition</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Robot Raconteur Python</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#python-leftrightarrow-robot-raconteur-data-type-mapping">Python <span class="math notranslate nohighlight">\(\leftrightarrow\)</span> Robot Raconteur data type mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#python-reference-to-functions">Python Reference to Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="iRobotCreatePythonExample.html">iRobot Create Python Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="WebcamPythonExample.html">Webcam Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Discovery.html">Service Discovery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Subscriptions.html">Subscriptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ObjectLocks.html">Exclusive object locks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TimeCritical.html">Time-critical software with Wire member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ForwardCompatibility.html">Forward compatibility with the “implements” statement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MemberModifiers.html">Member Modifiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Async.html">Asynchronous programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GatherScatter.html">Gather/Scatter operations</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Framework:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/service_definition.html">Service Definitions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/nodes_and_communication.html">Robot Raconteur Nodes and Communication</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/exceptions.html">Exceptions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/security.html">Security</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/locking.html">Object Locking</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Utility:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/command_line_options.html">Node Setup Command Line Options</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/logging.html">Logging</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/taps.html">Taps</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/robotraconteurgen.html">RobotRaconteurGen Utility</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/Constants.html">Constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/RobotRaconteurNode.html">RobotRaconteurNode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/DataTypes.html">Misc Data Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/PipeMember.html">Pipe Member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/WireMember.html">Wire Member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/CallbackMember.html">Callback Member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Subscription.html">Subscription</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/NodeSetup.html">Node Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Transports.html">Transports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Timers.html">Timers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Generators.html">Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Service.html">Service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/ServiceSecurity.html">Service Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Exceptions.html">Exceptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Logging.html">Logging and Taps</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Robot Raconteur Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Robot Raconteur Python</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/tutorial/RobotRaconteurPython.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="robot-raconteur-python">
+<h1>Robot Raconteur Python<a class="headerlink" href="#robot-raconteur-python" title="Permalink to this headline">¶</a></h1>
+<p>This document uses Python to demonstrate how Robot Raconteur works, and also serves as the reference for the Python
+Robot Raconteur library. The examples require that the Robot Raconteur Python library be installed.</p>
+<p><strong>For Windows and Mac OSX, use the ``pip`` command to install Robot Raconteur from PyPi:</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">robotraconteur</span></code></p>
+<p>Other packages are required to run the examples:</p>
+<p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">pyserial</span> <span class="pre">pygame</span> <span class="pre">opencv</span></code></p>
+<p><strong>For Ubuntu, use the Robot Raconteur PPA:</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">add-apt-repository</span> <span class="pre">ppa:robotraconteur/ppa</span></code> <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">update</span></code></p>
+<p>Once the PPA is configured, install the Robot Raconteur packages:</p>
+<p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">install</span> <span class="pre">python-robotraconteur</span> <span class="pre">python3-robotraconteur</span></code></p>
+<p>Other packages are required to run examples:</p>
+<p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">install</span> <span class="pre">python-pygame</span> <span class="pre">python-opencv</span> <span class="pre">python-pyserial</span></code></p>
+<p>Ubuntu packages are available for 16.04 (Xenial) and 18.04 (Bionic).</p>
+<p>When using Robot Raconteur in Python, the “thunk” code require to handle different service and data types is handled
+dynamically so there is no need to generate out extra source code. Instead, the client will receive an object that has
+all the correct members automatically on connect, and a service simply needs to have the correct functions and
+properties. How this is accomplished will be discussed through the rest of this document. Python uses “duck typing” so
+it is not necessary to worry about inheritance or interfaces, the functions and properties just need to exist. A
+significant advantage of Python’s dynamic typing is Robot Raconteur can generate client interface objects dynamically on
+connect so a client does not need any prior information about the service it is connecting to.</p>
+<div class="section" id="python-leftrightarrow-robot-raconteur-data-type-mapping">
+<h2>Python <span class="math notranslate nohighlight">\(\leftrightarrow\)</span> Robot Raconteur data type mapping<a class="headerlink" href="#python-leftrightarrow-robot-raconteur-data-type-mapping" title="Permalink to this headline">¶</a></h2>
+<p>An important aspect to working with Robot Raconteur is understanding the mapping between Robot Raconteur types and the
+native types in the language using Robot Raconteur. For Python these are a little more complicated because Python does
+not have as strong a typing system as other languages. Robot Raconteur uses numpy arrays for all numeric arrays of all
+shapes.</p>
+<p>Table <a class="reference external" href="#pythontypemap">1</a> shows the mapping between Robot Raconteur and Python data types. For simple arrays, Robot
+Raconteur expects <em>column</em> NumPy arrays of the correct type. Multi-dim arrays are normal NumPy arrays of the correct
+type.</p>
+<p>Structures are initialized using a special command in <code class="docutils literal notranslate"><span class="pre">RobotRaconteurNode</span></code> called <code class="docutils literal notranslate"><span class="pre">NewStructure</span></code>. The
+<code class="docutils literal notranslate"><span class="pre">NewStructure</span></code> command takes the fully qualified name of the structure, and an optional client object reference.</p>
+<p>Pods are represented as <code class="docutils literal notranslate"><span class="pre">numpy.array</span></code> using custom <code class="docutils literal notranslate"><span class="pre">dtype</span></code>. These <code class="docutils literal notranslate"><span class="pre">dtype</span></code> are initialized using the
+<code class="docutils literal notranslate"><span class="pre">GetPodDType</span></code> command in <code class="docutils literal notranslate"><span class="pre">RobotRaconteurNode</span></code>. The <code class="docutils literal notranslate"><span class="pre">GetPodDType</span></code> command takes the fully qualified name of the
+structure, and an optional client object reference. The returned <code class="docutils literal notranslate"><span class="pre">dtype</span></code> can be used as parameter with the
+<code class="docutils literal notranslate"><span class="pre">numpy.zeros(shape,</span> <span class="pre">dtype)</span></code> to initialize an array with the pod type. Note that pods are always stored in
+<code class="docutils literal notranslate"><span class="pre">numpy.array</span></code>. For a scalar, use <code class="docutils literal notranslate"><span class="pre">numpy.zeros((1,),dtype)</span></code>. Note that <code class="docutils literal notranslate"><span class="pre">numpy.array</span></code> uses “array” style indexing
+for fields. For example, to access the “y” field in a 2 dimensional array at index (1,3), use <code class="docutils literal notranslate"><span class="pre">myarray[1][3][’y’]</span></code>.
+This can be used to get or set the value.</p>
+<p>Namedarrays are represented as <code class="docutils literal notranslate"><span class="pre">numpy.array</span></code> using custom <code class="docutils literal notranslate"><span class="pre">dtype</span></code>. These <code class="docutils literal notranslate"><span class="pre">dtype</span></code> are initialized using the
+<code class="docutils literal notranslate"><span class="pre">GetNamedArrayDType</span></code> command in <code class="docutils literal notranslate"><span class="pre">RobotRaconteurNode</span></code>. The <code class="docutils literal notranslate"><span class="pre">GetNamedArrayDType</span></code> command takes the fully qualified
+name of the structure, and an optional client object reference. The returned <code class="docutils literal notranslate"><span class="pre">dtype</span></code> can be used as parameter with the
+<code class="docutils literal notranslate"><span class="pre">numpy.zeros(shape,</span> <span class="pre">dtype)</span></code> to initialize an array with the pod type. Note that pods are always stored in
+<code class="docutils literal notranslate"><span class="pre">numpy.array</span></code>. For a scalar, use <code class="docutils literal notranslate"><span class="pre">numpy.zeros((1,),dtype)</span></code>. ” namedarray can be converted to a normal numeric array
+using the <code class="docutils literal notranslate"><span class="pre">NamedArrayToArray</span></code> command in <code class="docutils literal notranslate"><span class="pre">RobotRaconteurNode</span></code>. A normal numeric array can be converted to namedarray
+using <code class="docutils literal notranslate"><span class="pre">ArrayToNamedArray</span></code> command in <code class="docutils literal notranslate"><span class="pre">RobotRaconteurNode</span></code>. Note that the first dimension of the numeric array must
+match the total number of numeric elements in a scalar namedarray. The normal numeric arrays will have one more
+dimension than the namedarray. Note that <code class="docutils literal notranslate"><span class="pre">numpy.array</span></code> uses “array” style indexing for fields. For example, to access
+the “y” field in a 2 dimensional array at index (1,3), use <code class="docutils literal notranslate"><span class="pre">myarray[1][3][’y’]</span></code>. This can be used to get or set the
+value.</p>
+<p>Maps are <code class="docutils literal notranslate"><span class="pre">dict</span></code> in Python.</p>
+<p>Lists are <code class="docutils literal notranslate"><span class="pre">list</span></code> in Python.</p>
+<p>Enums are stored as <code class="docutils literal notranslate"><span class="pre">int</span></code> in Python.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="docutils container" id="pythontypemap">
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Robot Raconteur <span class="math notranslate nohighlight">\(\leftrightarrow\)</span> Python Type Map</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 42%" />
+<col style="width: 19%" />
+<col style="width: 39%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Robot Raconteur Type</p></th>
+<th class="head"><p>Python Type</p></th>
+<th class="head"><p>Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>double, single</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>cdouble, csingle</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">complex</span></code></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>int8, uint8, int16, uint16, int32, uint32, int64, uint64</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code> or <code class="docutils literal notranslate"><span class="pre">long</span></code></p></td>
+<td><p>Depends on sys.maxint size</p></td>
+</tr>
+<tr class="row-odd"><td><p>double[]</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numpy.array</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numpy.array([1,</span> <span class="pre">2,</span> <span class="pre">...],</span> <span class="pre">dtype=numpy.float64)</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>single[]</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numpy.array</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numpy.array([1,</span> <span class="pre">2,</span> <span class="pre">...],</span> <span class="pre">dtype=numpy.float32)</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>int8[]</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numpy.array</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numpy.array([1,</span> <span class="pre">2,</span> <span class="pre">...],</span> <span class="pre">dtype=numpy.int8)</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>uint8[]</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numpy.array</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numpy.array([1,</span> <span class="pre">2,</span> <span class="pre">...],</span> <span class="pre">dtype=numpy.uint8)</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>int16[]</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numpy.array</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numpy.array([1,</span> <span class="pre">2,</span> <span class="pre">...],</span> <span class="pre">dtype=numpy.int16)</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>uint16[]</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numpy.array</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numpy.array([1,</span> <span class="pre">2,</span> <span class="pre">...],</span> <span class="pre">dtype=numpy.uint16)</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>int32[]</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numpy.array</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numpy.array([1,</span> <span class="pre">2,</span> <span class="pre">...],</span> <span class="pre">dtype=numpy.int32)</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>uint32[]</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numpy.array</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numpy.array([1,</span> <span class="pre">2,</span> <span class="pre">...],</span> <span class="pre">dtype=numpy.uint32)</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>int64[]</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numpy.array</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numpy.array([1,</span> <span class="pre">2,</span> <span class="pre">...],</span> <span class="pre">dtype=numpy.int64)</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>uint64[]</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numpy.array</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numpy.array([1,</span> <span class="pre">2,</span> <span class="pre">...],</span> <span class="pre">dtype=numpy.uint64)</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>cdouble[]</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numpy.array</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numpy.array([1,</span> <span class="pre">2,</span> <span class="pre">...],</span> <span class="pre">dtype=numpy.complex128)</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>csingle[]</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numpy.array</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numpy.array([1,</span> <span class="pre">2,</span> <span class="pre">...],</span> <span class="pre">dtype=numpy.complex64)</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Multi-dim arrays</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numpy.array</span></code></p></td>
+<td><p>Type maps same as array, more dimensions</p></td>
+</tr>
+<tr class="row-even"><td><p>string</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">string</span></code> or <code class="docutils literal notranslate"><span class="pre">unicode</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">unicode</span></code> always returned</p></td>
+</tr>
+<tr class="row-odd"><td><p>Map (int32 key)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">dict</span></code></p></td>
+<td><p>All keys must be <code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Map (string key)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">dict</span></code></p></td>
+<td><p>All keys must be <code class="docutils literal notranslate"><span class="pre">string</span></code> or <code class="docutils literal notranslate"><span class="pre">unicode</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>List</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">list</span></code></p></td>
+<td><p>Standard list of expected type</p></td>
+</tr>
+<tr class="row-even"><td><p>structure</p></td>
+<td><p><em>varies</em></p></td>
+<td><p>See text for more info</p></td>
+</tr>
+<tr class="row-odd"><td><p>pods</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numpy.array</span></code></p></td>
+<td><p>See text for more info</p></td>
+</tr>
+<tr class="row-even"><td><p>namedarrays</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numpy.array</span></code></p></td>
+<td><p>See text for more info</p></td>
+</tr>
+<tr class="row-odd"><td><p>enums</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>varvalue</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">RobotRaconteurVarValue</span></code></p></td>
+<td><p>See text for more info</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>[pythontypemap]</p>
+</div>
+<div class="section" id="python-reference-to-functions">
+<h2>Python Reference to Functions<a class="headerlink" href="#python-reference-to-functions" title="Permalink to this headline">¶</a></h2>
+<p>Robot Raconteur frequently uses function references (called function handles or function pointers) to implement
+callbacks for events and other situations where the library needs to notify the software. In Python, this is
+accomplished using function references (also called function objecs depending on the author). Consider a simple module
+“MyModule” shown in Example <a class="reference external" href="#funcrefex">[funcrefex]</a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">myobj</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">hello1</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+        <span class="nb">print</span> <span class="s2">&quot;Hello &quot;</span> <span class="o">+</span> <span class="n">name</span>
+
+<span class="k">def</span> <span class="nf">hello2</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="nb">print</span> <span class="s2">&quot;Hello &quot;</span> <span class="o">+</span> <span class="n">name</span>
+
+<span class="n">o</span><span class="o">=</span><span class="n">myobj</span><span class="p">()</span>
+<span class="n">ref1</span><span class="o">=</span><span class="n">o</span><span class="o">.</span><span class="n">hello1</span>
+<span class="n">ref2</span><span class="o">=</span><span class="n">hello2</span>
+
+<span class="n">ref1</span><span class="p">(</span><span class="s2">&quot;John&quot;</span><span class="p">)</span>
+<span class="n">ref2</span><span class="p">(</span><span class="s2">&quot;John&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This example demonstrates that a function reference can be easily made by referencing the function without the argument
+parenthesis. This method works for module and class functions.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="iRobotCreatePythonExample.html" class="btn btn-neutral float-right" title="iRobot Create Python Example" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ServiceDefinition.html" class="btn btn-neutral float-left" title="Service Definition" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Wason Technology, LLC
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

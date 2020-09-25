@@ -1,62 +1,373 @@
 
-<!DOCTYPE html>
 
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Welcome to Robot Raconteur Python’s documentation! &#8212; Robot Raconteur Python  documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Welcome to Robot Raconteur Python’s documentation! &mdash; Robot Raconteur Python  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Constants" href="pages/Constants.html" />
+    <link rel="next" title="Introduction" href="tutorial/Introduction.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
    
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
-  </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
           
 
-          <div class="body" role="main">
+          
+            <a href="#" class="icon icon-home" alt="Documentation Home"> Robot Raconteur Python
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Tutorial:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/Introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/ServiceDefinition.html">Service Definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/RobotRaconteurPython.html">Robot Raconteur Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/iRobotCreatePythonExample.html">iRobot Create Python Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/WebcamPythonExample.html">Webcam Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/Discovery.html">Service Discovery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/Subscriptions.html">Subscriptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/Authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/ObjectLocks.html">Exclusive object locks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/TimeCritical.html">Time-critical software with Wire member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/ForwardCompatibility.html">Forward compatibility with the “implements” statement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/MemberModifiers.html">Member Modifiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/Async.html">Asynchronous programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/GatherScatter.html">Gather/Scatter operations</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Framework:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/service_definition.html">Service Definitions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/nodes_and_communication.html">Robot Raconteur Nodes and Communication</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/exceptions.html">Exceptions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/security.html">Security</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/locking.html">Object Locking</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Utility:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/command_line_options.html">Node Setup Command Line Options</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/logging.html">Logging</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/taps.html">Taps</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/robotraconteurgen.html">RobotRaconteurGen Utility</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/Constants.html">Constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/RobotRaconteurNode.html">RobotRaconteurNode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/DataTypes.html">Misc Data Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/PipeMember.html">Pipe Member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/WireMember.html">Wire Member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/CallbackMember.html">Callback Member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/Subscription.html">Subscription</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/NodeSetup.html">Node Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/Transports.html">Transports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/Timers.html">Timers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/Generators.html">Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/Service.html">Service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/ServiceSecurity.html">Service Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/Exceptions.html">Exceptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/Logging.html">Logging and Taps</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">Robot Raconteur Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Welcome to Robot Raconteur Python’s documentation!</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="welcome-to-robot-raconteur-python-s-documentation">
 <h1>Welcome to Robot Raconteur Python’s documentation!<a class="headerlink" href="#welcome-to-robot-raconteur-python-s-documentation" title="Permalink to this headline">¶</a></h1>
+<a class="reference internal image-reference" href="_images/logo-header.svg"><img alt="_images/logo-header.svg" src="_images/logo-header.svg" width="600" /></a>
 <div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Contents:</span></p>
+<p class="caption"><span class="caption-text">Tutorial:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="pages/Constants.html">Constants</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pages/Constants.html#datatypes">DataTypes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/Constants.html#messageentrytype">MessageEntryType</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/Constants.html#messageerrortype">MessageErrorType</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/Constants.html#clientservicelistenereventtype">ClientServiceListenerEventType</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/Constants.html#serverservicelistenereventtype">ServerServiceListenerEventType</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/Constants.html#memberdefinition-constants">MemberDefinition Constants</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/Constants.html#misc-constants">Misc Constants</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/Constants.html#loglevel">LogLevel</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/Constants.html#logcomponent">LogComponent</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/Constants.html#robotraconteurobjectlockflags">RobotRaconteurObjectLockFlags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/Introduction.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/Introduction.html#example-robot">Example Robot</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="pages/RobotRaconteurNode.html">RobotRaconteurNode</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pages/DataTypes.html">Misc Data Types</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pages/PipeMember.html">PipeMember</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pages/WireMember.html">WireMember</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pages/Subscription.html">Subscription</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pages/NodeSetup.html">Node Setup</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pages/NodeSetup.html#node-setup-flags">Node Setup Flags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/ServiceDefinition.html">Service Definition</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/ServiceDefinition.html#value-types">Value types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/ServiceDefinition.html#object-types">Object types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/ServiceDefinition.html#constants">Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/ServiceDefinition.html#exceptions">Exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/ServiceDefinition.html#using">Using</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/ServiceDefinition.html#robot-raconteur-naming">Robot Raconteur naming</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/RobotRaconteurPython.html">Robot Raconteur Python</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/RobotRaconteurPython.html#python-leftrightarrow-robot-raconteur-data-type-mapping">Python <span class="math notranslate nohighlight">\(\leftrightarrow\)</span> Robot Raconteur data type mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/RobotRaconteurPython.html#python-reference-to-functions">Python Reference to Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/iRobotCreatePythonExample.html">iRobot Create Python Example</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/iRobotCreatePythonExample.html#simple-service">Simple service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/iRobotCreatePythonExample.html#simple-client">Simple client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/iRobotCreatePythonExample.html#irobot-create-service">iRobot Create Service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/iRobotCreatePythonExample.html#irobot-create-client">iRobot Create Client</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/WebcamPythonExample.html">Webcam Example</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/WebcamPythonExample.html#webcam-service">Webcam Service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/WebcamPythonExample.html#webcam-client">Webcam Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/WebcamPythonExample.html#webcam-client-streaming">Webcam Client (streaming)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/WebcamPythonExample.html#webcam-client-memory">Webcam Client (memory)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/Discovery.html">Service Discovery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/Subscriptions.html">Subscriptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/Authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/ObjectLocks.html">Exclusive object locks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/ObjectLocks.html#user">User</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/ObjectLocks.html#client">Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/ObjectLocks.html#monitor">Monitor</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/TimeCritical.html">Time-critical software with Wire member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/ForwardCompatibility.html">Forward compatibility with the “implements” statement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/MemberModifiers.html">Member Modifiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/Async.html">Asynchronous programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/GatherScatter.html">Gather/Scatter operations</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Framework:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/service_definition.html">Service Definitions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/nodes_and_communication.html">Robot Raconteur Nodes and Communication</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/exceptions.html">Exceptions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/security.html">Security</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/locking.html">Object Locking</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Utility:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/command_line_options.html">Node Setup Command Line Options</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/logging.html">Logging</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/taps.html">Taps</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/robotraconteurgen.html">RobotRaconteurGen Utility</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">API:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/Constants.html">Constants</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/Constants.html#datatypes-enum">DataTypes Enum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/Constants.html#messageentrytype-enum">MessageEntryType Enum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/Constants.html#messageerrortype-enum">MessageErrorType Enum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/Constants.html#clientservicelistenereventtype-enum">ClientServiceListenerEventType Enum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/Constants.html#serverservicelistenereventtype-enum">ServerServiceListenerEventType Enum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/Constants.html#memberdefinition-enum">MemberDefinition Enum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/Constants.html#misc-constants">Misc Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/Constants.html#robotraconteurobjectlockflags-enum">RobotRaconteurObjectLockFlags Enum</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/RobotRaconteurNode.html">RobotRaconteurNode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/DataTypes.html">Misc Data Types</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/DataTypes.html#eventhook-class">EventHook Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/DataTypes.html#varvalue-class">VarValue Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/DataTypes.html#arraymemory-class">ArrayMemory Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/DataTypes.html#multidimarraymemory-class">MultiDimArrayMemory Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/DataTypes.html#serviceinfo2-class">ServiceInfo2 Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/DataTypes.html#nodeinfo2-class">NodeInfo2 Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/DataTypes.html#timespec-class">TimeSpec Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/DataTypes.html#nodeid-class">NodeID Class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/PipeMember.html">Pipe Member</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/PipeMember.html#pipe-class">Pipe Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/PipeMember.html#pipeendpoint-class">PipeEndpoint Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/PipeMember.html#pipebroadcaster-class">PipeBroadcaster Class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/WireMember.html">Wire Member</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/WireMember.html#wire-class">Wire Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/WireMember.html#wireconnection-class">WireConnection Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/WireMember.html#wirebroadcaster-class">WireBroadcaster Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/WireMember.html#wireunicastreceiver-class">WireUnicastReceiver Class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/CallbackMember.html">Callback Member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/Subscription.html">Subscription</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/Subscription.html#serviceinfo2subscription-class">ServiceInfo2Subscription Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/Subscription.html#servicesubscription-class">ServiceSubscription Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/Subscription.html#servicesubscriptionclientid-class">ServiceSubscriptionClientID Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/Subscription.html#servicesubscriptionfilter-class">ServiceSubscriptionFilter Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/Subscription.html#servicesubscriptionfilternode-class">ServiceSubscriptionFilterNode Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/Subscription.html#wiresubscription-class">WireSubscription Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/Subscription.html#pipesubscription-class">PipeSubscription Class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/NodeSetup.html">Node Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/NodeSetup.html#robotraconteurnodesetup-class">RobotRaconteurNodeSetup Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/NodeSetup.html#clientnodesetup-class">ClientNodeSetup Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/NodeSetup.html#servernodesetup-class">ServerNodeSetup Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/NodeSetup.html#secureservernodesetup-class">SecureServerNodeSetup Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/NodeSetup.html#commandlineconfigparser-class">CommandLineConfigParser Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/NodeSetup.html#node-setup-flags">Node Setup Flags</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/Transports.html">Transports</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/Transports.html#tcptransport-class">TcpTransport Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/Transports.html#localtransport-class">LocalTransport Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/Transports.html#intratransport-class">IntraTransport Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/Transports.html#hardwaretransport-class">HardwareTransport Class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/Timers.html">Timers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/Timers.html#timer-class">Timer Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/Timers.html#timerevent-class">TimerEvent Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/Timers.html#rate-class">Rate Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/Timers.html#autoresetevent-class">AutoResetEvent Class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/Generators.html">Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/Service.html">Service</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/Service.html#servercontext-class">ServerContext Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/Service.html#serverendpoint-class">ServerEndpoint Class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/ServiceSecurity.html">Service Security</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/ServiceSecurity.html#authenticateduser-class">AuthenticatedUser Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/ServiceSecurity.html#servicesecuritypolicy-class">ServiceSecurityPolicy Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/ServiceSecurity.html#nativeuserauthenticator-class">NativeUserAuthenticator Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/ServiceSecurity.html#passwordfileuserauthenticator-class">PasswordFileUserAuthenticator Class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/Exceptions.html">Exceptions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/Exceptions.html#robotraconteurexception">RobotRaconteurException</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/Exceptions.html#other-exceptions">Other Exceptions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/Logging.html">Logging and Taps</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/Logging.html#rrlogrecord-class">RRLogRecord Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/Logging.html#logrecordhandler-class">LogRecordHandler Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/Logging.html#filelogrecordhandler-class">FileLogRecordHandler Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/Logging.html#loglevel-enum">LogLevel Enum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/Logging.html#logcomponent-enum">LogComponent Enum</a></li>
 </ul>
 </li>
 </ul>
@@ -72,77 +383,57 @@
 </div>
 
 
+           </div>
+           
           </div>
-          
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="#">Robot Raconteur Python</a></h1>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="pages/Constants.html">Constants</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pages/RobotRaconteurNode.html">RobotRaconteurNode</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pages/DataTypes.html">Misc Data Types</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pages/PipeMember.html">PipeMember</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pages/WireMember.html">WireMember</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pages/Subscription.html">Subscription</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pages/NodeSetup.html">Node Setup</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="#">Documentation overview</a><ul>
-      <li>Next: <a href="pages/Constants.html" title="next chapter">Constants</a></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="tutorial/Introduction.html" class="btn btn-neutral float-right" title="Introduction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
+  
 
+  <hr/>
 
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Wason Technology, LLC
 
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-
-
-
+</footer>
 
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2020, Wason Technology, LLC.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="_sources/index.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
 
-    
+    </section>
 
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
     
-  </body>
+   
+
+</body>
 </html>

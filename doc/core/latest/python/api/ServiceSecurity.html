@@ -1,0 +1,453 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Service Security &mdash; Robot Raconteur Python  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Exceptions" href="Exceptions.html" />
+    <link rel="prev" title="Service" href="Service.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> Robot Raconteur Python
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Tutorial:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/Introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/ServiceDefinition.html">Service Definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/RobotRaconteurPython.html">Robot Raconteur Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/iRobotCreatePythonExample.html">iRobot Create Python Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/WebcamPythonExample.html">Webcam Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/Discovery.html">Service Discovery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/Subscriptions.html">Subscriptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/Authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/ObjectLocks.html">Exclusive object locks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/TimeCritical.html">Time-critical software with Wire member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/ForwardCompatibility.html">Forward compatibility with the “implements” statement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/MemberModifiers.html">Member Modifiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/Async.html">Asynchronous programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/GatherScatter.html">Gather/Scatter operations</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Framework:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/service_definition.html">Service Definitions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/nodes_and_communication.html">Robot Raconteur Nodes and Communication</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/exceptions.html">Exceptions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/security.html">Security</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/locking.html">Object Locking</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Utility:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/command_line_options.html">Node Setup Command Line Options</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/logging.html">Logging</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/taps.html">Taps</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/robotraconteurgen.html">RobotRaconteurGen Utility</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Constants.html">Constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RobotRaconteurNode.html">RobotRaconteurNode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="DataTypes.html">Misc Data Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PipeMember.html">Pipe Member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="WireMember.html">Wire Member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CallbackMember.html">Callback Member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Subscription.html">Subscription</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NodeSetup.html">Node Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Transports.html">Transports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Timers.html">Timers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Generators.html">Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Service.html">Service</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Service Security</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#authenticateduser-class">AuthenticatedUser Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#servicesecuritypolicy-class">ServiceSecurityPolicy Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#nativeuserauthenticator-class">NativeUserAuthenticator Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#passwordfileuserauthenticator-class">PasswordFileUserAuthenticator Class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Exceptions.html">Exceptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Logging.html">Logging and Taps</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Robot Raconteur Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Service Security</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/ServiceSecurity.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="service-security">
+<h1>Service Security<a class="headerlink" href="#service-security" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="authenticateduser-class">
+<h2>AuthenticatedUser Class<a class="headerlink" href="#authenticateduser-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="RobotRaconteur.AuthenticatedUser">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">AuthenticatedUser</code><a class="headerlink" href="#RobotRaconteur.AuthenticatedUser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class representing an authenticated user</p>
+<p>Use ServerEndpoint.GetCurrentAuthenticatedUser() to retrieve the
+authenticated user making a request</p>
+<p>See ref security for more information.</p>
+<dl class="py method">
+<dt id="RobotRaconteur.AuthenticatedUser.LastAccessTime">
+<em class="property">property </em><code class="sig-name descname">LastAccessTime</code><a class="headerlink" href="#RobotRaconteur.AuthenticatedUser.LastAccessTime" title="Permalink to this definition">¶</a></dt>
+<dd><p>The user last access time</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.AuthenticatedUser.LoginTime">
+<em class="property">property </em><code class="sig-name descname">LoginTime</code><a class="headerlink" href="#RobotRaconteur.AuthenticatedUser.LoginTime" title="Permalink to this definition">¶</a></dt>
+<dd><p>The user login time</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.AuthenticatedUser.Privileges">
+<em class="property">property </em><code class="sig-name descname">Privileges</code><a class="headerlink" href="#RobotRaconteur.AuthenticatedUser.Privileges" title="Permalink to this definition">¶</a></dt>
+<dd><p>The user privileges</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.AuthenticatedUser.Properties">
+<em class="property">property </em><code class="sig-name descname">Properties</code><a class="headerlink" href="#RobotRaconteur.AuthenticatedUser.Properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>The user properties</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.AuthenticatedUser.Username">
+<em class="property">property </em><code class="sig-name descname">Username</code><a class="headerlink" href="#RobotRaconteur.AuthenticatedUser.Username" title="Permalink to this definition">¶</a></dt>
+<dd><p>The authenticated username</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="servicesecuritypolicy-class">
+<h2>ServiceSecurityPolicy Class<a class="headerlink" href="#servicesecuritypolicy-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="RobotRaconteur.ServiceSecurityPolicy">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">ServiceSecurityPolicy</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Authenticator</span></em>, <em class="sig-param"><span class="n">Policies</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ServiceSecurityPolicy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Security policy for Robot Raconteur service</p>
+<p>The security policy sets an authenticator, and a set of policies. PasswordFileUserAuthenticator is
+an example of an authenticator. The valid options for Policies are as follows:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 26%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Policy name</p></th>
+<th class="head"><p>Possible Values</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>requirevaliduser</p></td>
+<td><p>true,false</p></td>
+<td><p>false</p></td>
+<td><p>Set to “true”
+to require a
+user be
+authenticated
+before
+accessing
+service</p></td>
+</tr>
+<tr class="row-odd"><td><p>allowobjectlock</p></td>
+<td><p>true,false</p></td>
+<td><p>false</p></td>
+<td><p>If “true” allow
+users to
+request object
+locks.
+r
+equirevaliduser
+most also be
+“true”</p></td>
+</tr>
+</tbody>
+</table>
+<p>The security policy is passed as a parameter to RobotRaconteurNode.RegisterService().</p>
+<p>See ref security for more information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Authenticator</strong> (<em>RobotRaconteur.Authenticator</em>) – The user authenticator</p></li>
+<li><p><strong>Policies</strong> (<em>Dict</em><em>[</em><em>str</em><em>,</em><em>str</em><em>]</em>) – The security policies</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="nativeuserauthenticator-class">
+<h2>NativeUserAuthenticator Class<a class="headerlink" href="#nativeuserauthenticator-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="RobotRaconteur.NativeUserAuthenticator">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">NativeUserAuthenticator</code><a class="headerlink" href="#RobotRaconteur.NativeUserAuthenticator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for user authenticators</p>
+<p>Used with ServiceSecurityPolicy to secure services</p>
+<p>Override AuthenticateUser to implement different types
+of user authenticators.</p>
+<dl class="py method">
+<dt id="RobotRaconteur.NativeUserAuthenticator.AuthenticateUser">
+<code class="sig-name descname">AuthenticateUser</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">username</span></em>, <em class="sig-param"><span class="n">credentials</span></em>, <em class="sig-param"><span class="n">context</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.NativeUserAuthenticator.AuthenticateUser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Authenticate a user using username and credentials</p>
+<p>The service will call AuthenticateUser when clients attempt to authenticate. The
+username and credentials are passed to RobotRaconteurNode.ConnectService() or
+RobotRaconteurNode.AsyncConnectService(). The authenticator must analyze these
+values to decide how to authenticate the user.</p>
+<p>On successful authentication, return a populated AuthenticatedUser object. On
+failure, throw an exception.</p>
+<p>See ref security for more information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>username</strong> (<em>str</em>) – The username provided by the client</p></li>
+<li><p><strong>credentials</strong> (<em>Dict</em><em>[</em><em>str</em><em>,</em><em>Any</em><em>]</em>) – The credentials provided by the client</p></li>
+<li><p><strong>context</strong> (<a class="reference internal" href="Service.html#RobotRaconteur.ServerContext" title="RobotRaconteur.ServerContext"><em>RobotRaconteur.ServerContext</em></a>) – The context of the service requesting authentication</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An authenticated user object</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#RobotRaconteur.AuthenticatedUser" title="RobotRaconteur.AuthenticatedUser">RobotRaconteur.AuthenticatedUser</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="passwordfileuserauthenticator-class">
+<h2>PasswordFileUserAuthenticator Class<a class="headerlink" href="#passwordfileuserauthenticator-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="RobotRaconteur.PasswordFileUserAuthenticator">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">PasswordFileUserAuthenticator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.PasswordFileUserAuthenticator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simple authenticator using a list of username, password hash, and privileges stored in a file or string</p>
+<p>The password user authenticator expects a string containing a list of users,
+one per line. Each line contains the username, password as md5 hash, and privileges, separated by white spaces.
+An example of authentication string contents:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">user1</span> <span class="mf">79e262</span><span class="n">a81dd19d40ae008f74eb59edce</span> <span class="n">objectlock</span>
+<span class="n">user2</span> <span class="mi">309825</span><span class="n">a0951b3cf1f25e27b61cee8243</span> <span class="n">objectlock</span>
+<span class="n">superuser1</span> <span class="mf">11e5</span><span class="n">dfc68422e697563a4253ba360615</span> <span class="n">objectlock</span><span class="p">,</span><span class="n">objectlockoverride</span>
+</pre></div>
+</div>
+<p>The password is md5 hashed. This hash can be generated using the <code class="docutils literal notranslate"><span class="pre">--md5passwordhash</span></code> command in the “RobotRaconteurGen” utility. 
+The privileges are comma separated. Valid privileges are as follows:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 75%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Privilege Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>objectlock</p></td>
+<td><p>Allow user to lock objects</p></td>
+</tr>
+<tr class="row-odd"><td><p>objectlockoverride</p></td>
+<td><p>Allow user to unlock object locks made by other users</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>str</em>) – The file text</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="Exceptions.html" class="btn btn-neutral float-right" title="Exceptions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="Service.html" class="btn btn-neutral float-left" title="Service" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Wason Technology, LLC
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

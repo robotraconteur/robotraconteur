@@ -1,0 +1,302 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Authentication &mdash; Robot Raconteur Python  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Exclusive object locks" href="ObjectLocks.html" />
+    <link rel="prev" title="Subscriptions" href="Subscriptions.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> Robot Raconteur Python
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Tutorial:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ServiceDefinition.html">Service Definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RobotRaconteurPython.html">Robot Raconteur Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iRobotCreatePythonExample.html">iRobot Create Python Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="WebcamPythonExample.html">Webcam Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Discovery.html">Service Discovery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Subscriptions.html">Subscriptions</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ObjectLocks.html">Exclusive object locks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TimeCritical.html">Time-critical software with Wire member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ForwardCompatibility.html">Forward compatibility with the “implements” statement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MemberModifiers.html">Member Modifiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Async.html">Asynchronous programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GatherScatter.html">Gather/Scatter operations</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Framework:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/service_definition.html">Service Definitions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/nodes_and_communication.html">Robot Raconteur Nodes and Communication</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/exceptions.html">Exceptions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/security.html">Security</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/locking.html">Object Locking</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Utility:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/command_line_options.html">Node Setup Command Line Options</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/logging.html">Logging</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/taps.html">Taps</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/robotraconteurgen.html">RobotRaconteurGen Utility</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/Constants.html">Constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/RobotRaconteurNode.html">RobotRaconteurNode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/DataTypes.html">Misc Data Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/PipeMember.html">Pipe Member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/WireMember.html">Wire Member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/CallbackMember.html">Callback Member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Subscription.html">Subscription</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/NodeSetup.html">Node Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Transports.html">Transports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Timers.html">Timers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Generators.html">Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Service.html">Service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/ServiceSecurity.html">Service Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Exceptions.html">Exceptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Logging.html">Logging and Taps</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Robot Raconteur Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Authentication</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/tutorial/Authentication.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="authentication">
+<h1>Authentication<a class="headerlink" href="#authentication" title="Permalink to this headline">¶</a></h1>
+<p>Robot Raconteur provides a built-in authentication system. During connection, a client can specify a “username” of type
+<code class="docutils literal notranslate"><span class="pre">string</span></code>, and “credentials” of type “varvaluestring”. Normally the credentials contains a simple string entry for the
+password, but some authentication methods may require more complex credentials like a key/password pair. A connection
+example:</p>
+<p><code class="docutils literal notranslate"><span class="pre">credentials={&quot;password&quot;,</span> <span class="pre">RR.RobotRaconteurVarValue(&quot;mypassword&quot;,&quot;string&quot;)}</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">obj=RRN.ConnectService(</span> <span class="pre">&quot;rr+tcp://localhost:2354?service=Create&quot;,&quot;myusername&quot;,credentials)</span></code></p>
+<p>Of course the current example service does not have authentication enabled. The first step is to create a
+<code class="docutils literal notranslate"><span class="pre">UserAuthenticator</span></code>. The <code class="docutils literal notranslate"><span class="pre">UserAuthenticator</span></code> will receive the authentication requests and compare the username and
+credentials. If they are correct, the user is authenticated. The only authenticator currently available is the
+<code class="docutils literal notranslate"><span class="pre">PasswordFileUserAuthenticator</span></code>. This authenticator uses a plain-text string that contains the user definitions, one
+per line. There are three entries separated by spaces: the username, the MD5 hash of the password, and a comma separated
+list of credentials (no spaces between). The two credentials of interest are “objectlock” and “objectlockoverride”. The
+meaning of these is discussed in Section <a class="reference external" href="#objectlocks">[objectlocks]</a>. Example <a class="reference external" href="#passwordfile">[passwordfile]</a>
+shows the contents of a simple password file. The MD5 hash for the password can be generated using “RobotRaconteurGen”.</p>
+<p><code class="docutils literal notranslate"><span class="pre">RobotRaconteurGen</span> <span class="pre">–md5passwordhash</span> <span class="pre">mypassword</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">myusername</span> <span class="pre">34819d7beeabb9260a5c854bc85b3e44</span> <span class="pre">objectlock</span> <span class="pre">anotherusername</span> <span class="pre">1910ea24600608b01b5efd7d4ea6a840</span> <span class="pre">objectlock</span> <span class="pre">superuser</span> <span class="pre">f1bc69265be1165f64296bcb7ca180d5</span> <span class="pre">objectlock,objectlockoverride</span></code></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">PasswordFileUserAuthenticator</span></code> can now be initialized:</p>
+<p><code class="docutils literal notranslate"><span class="pre">with</span> <span class="pre">open(’passwords.txt’)</span> <span class="pre">as</span> <span class="pre">content_file:</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">content=content_file.read()</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">p=RR.PasswordFileUserAuthenticator(content)</span></code></p>
+<p>The next step is to create a <code class="docutils literal notranslate"><span class="pre">ServiceSecurityPolicy</span></code> that describes the security requirements. The policy contains the
+authenticator and a dictionary of policies. Currently only “requirevaliduser” and “allowobjectlock” are valid, and both
+should be set to “true”.</p>
+<p><code class="docutils literal notranslate"><span class="pre">policies={&quot;requirevaliduser&quot;</span> <span class="pre">:</span> <span class="pre">&quot;true&quot;,</span> <span class="pre">&quot;allowobjectlock&quot;</span> <span class="pre">:</span> <span class="pre">&quot;true&quot;}</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">s=RR.ServiceSecurityPolicy(p,policies)</span></code></p>
+<p>Finally, the service can be registered using the policy.</p>
+<p><code class="docutils literal notranslate"><span class="pre">RRN.RegisterService(&quot;Create&quot;,&quot;experimental.create.Create&quot;,obj)</span></code></p>
+<div class="line-block">
+<div class="line">When the service is running, it may be useful to determine if there is a currently authenticated user. This is
+accomplished through the <code class="docutils literal notranslate"><span class="pre">ServerEndpoint</span></code> class static method. The current</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">AuthenticatedUser</span></code> can be retrieved:</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">user=RR.ServerEndpoint.GetCurrentAuthenticatedUser()</span></code></p>
+<div class="line-block">
+<div class="line">Note that this call will raise an exception if no user is currently authenticated. The</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">AuthenticatedUser</span></code> contains the fields <code class="docutils literal notranslate"><span class="pre">Username</span></code>, <code class="docutils literal notranslate"><span class="pre">LoginTime</span></code>, <code class="docutils literal notranslate"><span class="pre">LastAccessTime</span></code>, and <code class="docutils literal notranslate"><span class="pre">Privileges</span></code> fields
+to help determine the user currently accessing the service. This function will work during all transactional calls to
+the service.</div>
+</div>
+<p>The authenticated user will be logged out when the client connection is closed or after a timeout of typically 15
+minutes.</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ObjectLocks.html" class="btn btn-neutral float-right" title="Exclusive object locks" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="Subscriptions.html" class="btn btn-neutral float-left" title="Subscriptions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Wason Technology, LLC
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

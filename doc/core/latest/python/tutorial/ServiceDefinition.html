@@ -1,0 +1,784 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Service Definition &mdash; Robot Raconteur Python  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Robot Raconteur Python" href="RobotRaconteurPython.html" />
+    <link rel="prev" title="Introduction" href="Introduction.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> Robot Raconteur Python
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Tutorial:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Service Definition</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#value-types">Value types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#object-types">Object types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#constants">Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exceptions">Exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using">Using</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#robot-raconteur-naming">Robot Raconteur naming</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="RobotRaconteurPython.html">Robot Raconteur Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iRobotCreatePythonExample.html">iRobot Create Python Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="WebcamPythonExample.html">Webcam Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Discovery.html">Service Discovery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Subscriptions.html">Subscriptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ObjectLocks.html">Exclusive object locks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TimeCritical.html">Time-critical software with Wire member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ForwardCompatibility.html">Forward compatibility with the “implements” statement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MemberModifiers.html">Member Modifiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Async.html">Asynchronous programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GatherScatter.html">Gather/Scatter operations</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Framework:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/service_definition.html">Service Definitions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/nodes_and_communication.html">Robot Raconteur Nodes and Communication</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/exceptions.html">Exceptions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/security.html">Security</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/locking.html">Object Locking</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Utility:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/command_line_options.html">Node Setup Command Line Options</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/logging.html">Logging</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/taps.html">Taps</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/robotraconteurgen.html">RobotRaconteurGen Utility</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/Constants.html">Constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/RobotRaconteurNode.html">RobotRaconteurNode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/DataTypes.html">Misc Data Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/PipeMember.html">Pipe Member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/WireMember.html">Wire Member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/CallbackMember.html">Callback Member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Subscription.html">Subscription</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/NodeSetup.html">Node Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Transports.html">Transports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Timers.html">Timers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Generators.html">Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Service.html">Service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/ServiceSecurity.html">Service Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Exceptions.html">Exceptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Logging.html">Logging and Taps</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Robot Raconteur Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Service Definition</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/tutorial/ServiceDefinition.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="service-definition">
+<h1>Service Definition<a class="headerlink" href="#service-definition" title="Permalink to this headline">¶</a></h1>
+<p>[ServiceDefinition] Example <a class="reference external" href="#createinterface">[createinterface]</a>
+shows the code contained in the “experimental.create.robdef” files. It
+is a <em>service definition</em>. Service definition files are plain text files
+that describe the <em>object types</em> and <em>value types</em> (data types). Object
+types are <em>references</em>, meaning that on the client they are simply an
+advanced reference to the service. Value types are the actual data that
+are transmitted between client and service. They are always passed by
+<em>value</em>, meaning that they are local to the client or service.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#Service to provide sample interface to the iRobot Create</span>
+<span class="n">service</span> <span class="n">experimental</span><span class="o">.</span><span class="n">create2</span>
+
+<span class="n">stdver</span> <span class="mf">0.9</span>
+
+<span class="n">struct</span> <span class="n">SensorPacket</span>
+     <span class="n">field</span> <span class="n">uint8</span> <span class="n">ID</span>
+     <span class="n">field</span> <span class="n">uint8</span><span class="p">[]</span> <span class="n">Data</span>
+<span class="n">end</span>
+
+<span class="nb">object</span> <span class="n">Create</span>
+     <span class="n">constant</span> <span class="n">int16</span> <span class="n">DRIVE_STRAIGHT</span> <span class="mi">32767</span>
+     <span class="n">constant</span> <span class="n">int16</span> <span class="n">SPIN_CLOCKWISE</span> <span class="o">-</span><span class="mi">1</span>
+     <span class="n">constant</span> <span class="n">int16</span> <span class="n">SPIN_COUNTERCLOCKWISE</span> <span class="mi">1</span>
+
+     <span class="n">function</span> <span class="n">void</span> <span class="n">Drive</span><span class="p">(</span><span class="n">int16</span> <span class="n">velocity</span><span class="p">,</span> <span class="n">int16</span> <span class="n">radius</span><span class="p">)</span>
+
+     <span class="n">function</span> <span class="n">void</span> <span class="n">StartStreaming</span><span class="p">()</span>
+     <span class="n">function</span> <span class="n">void</span> <span class="n">StopStreaming</span><span class="p">()</span>
+
+     <span class="nb">property</span> <span class="n">int32</span> <span class="n">DistanceTraveled</span> <span class="p">[</span><span class="n">readonly</span><span class="p">]</span>
+     <span class="nb">property</span> <span class="n">int32</span> <span class="n">AngleTraveled</span> <span class="p">[</span><span class="n">readonly</span><span class="p">]</span>
+     <span class="nb">property</span> <span class="n">uint8</span> <span class="n">Bumpers</span> <span class="p">[</span><span class="n">readonly</span><span class="p">]</span>
+
+     <span class="n">event</span> <span class="n">Bump</span><span class="p">()</span>
+
+     <span class="n">wire</span> <span class="n">SensorPacket</span> <span class="n">packets</span> <span class="p">[</span><span class="n">readonly</span><span class="p">]</span>
+
+     <span class="n">callback</span> <span class="n">uint8</span><span class="p">[]</span> <span class="n">play_callback</span><span class="p">(</span><span class="n">int32</span> <span class="n">DistanceTraveled</span><span class="p">,</span> <span class="n">int32</span> <span class="n">AngleTraveled</span><span class="p">)</span>
+<span class="n">end</span>
+</pre></div>
+</div>
+<p>The first line in the service definition contains the keyword
+<code class="docutils literal notranslate"><span class="pre">service</span></code> followed by the name of the service type. “Namespaces”
+follow similar rules to Java package names. For experimental software,
+the name should be prefixed with “experimental”, for example
+“experimental.create2”. For hobbyists and standalone software, the name
+should be prefixed with “community” and your username, for example
+“community.myusername.create”, where “myusername” is replaced with your
+<code class="docutils literal notranslate"><span class="pre">robotraconteur.com</span></code> username. If a domain name for an organization is
+available it can be used in the same way as Java packages, for example
+“com.wasontech.examples.create2”. Note that namespaces that use a domain
+will require signing certificates in the future. Unless you have valid
+ownership of a domain, “experimental” or “community” should be used.</p>
+<p>Next in the service there should be “stdver” and the minimum version of
+Robot Raconteur required to access the service. For now this should be
+“0.9”. Example <a class="reference external" href="#createinterface">[createinterface]</a> does not show
+it, but there can also be one or more “import” to reference structures
+and objects in other service definitions. The rest of service definition
+defines the <em>structures</em> and <em>objects</em> of the service definition. (Lines
+starting with “#” are comments.)</p>
+<div class="section" id="value-types">
+<h2>Value types<a class="headerlink" href="#value-types" title="Permalink to this headline">¶</a></h2>
+<p>Value types are the data that are passed between the client and service.
+Value types can be <em>primitives</em>, <em>structures</em>, <em>pods</em>, <em>namedarrays</em>,
+<em>maps</em>, <em>multidimensional arrays</em>, or <em>enums</em>.</p>
+<dl>
+<dt>Primitives</dt><dd><div class="line-block">
+<div class="line"><br /></div>
+<div class="line">Primitives consist of scalar numbers, single dimensional number
+arrays, and strings. Table <a class="reference external" href="#primitives">1</a> contains the
+primitives that are available for use. Primitive numerical types
+can be turned into arrays by appending brackets “[]” to the end,
+for example <code class="docutils literal notranslate"><span class="pre">int32[]</span></code> is an array of 32 bit signed integers. If a
+fixed size array is desired, a number can be included between the
+brackets for the desired array size, for example <code class="docutils literal notranslate"><span class="pre">int32[8]</span></code> has a
+fixed length of 8 integers. If an array is desired that has a
+maximum size, a “-” sign can be included in the brackets, for
+example <code class="docutils literal notranslate"><span class="pre">int32[100-]</span></code> can have up to 100 integers. Strings are
+always arrays so the brackets are not valid. The <code class="docutils literal notranslate"><span class="pre">void</span></code> type is
+only used for functions that do not have a return value.</div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="docutils container" id="primitives">
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Robot Raconteur Primitives</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 22%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>Bytes/Element</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>void</p></td>
+<td><p>0</p></td>
+<td><p>Void</p></td>
+</tr>
+<tr class="row-odd"><td><p>double</p></td>
+<td><p>8</p></td>
+<td><p>Double precision floating point</p></td>
+</tr>
+<tr class="row-even"><td><p>single</p></td>
+<td><p>4</p></td>
+<td><p>Single precision floating point</p></td>
+</tr>
+<tr class="row-odd"><td><p>int8</p></td>
+<td><p>1</p></td>
+<td><p>Signed 8-bit integer</p></td>
+</tr>
+<tr class="row-even"><td><p>uint8</p></td>
+<td><p>1</p></td>
+<td><p>Unsigned 8-bit integer</p></td>
+</tr>
+<tr class="row-odd"><td><p>int16</p></td>
+<td><p>2</p></td>
+<td><p>Signed 16-bit integer</p></td>
+</tr>
+<tr class="row-even"><td><p>uint16</p></td>
+<td><p>2</p></td>
+<td><p>Unsigned 16-bit integer</p></td>
+</tr>
+<tr class="row-odd"><td><p>int32</p></td>
+<td><p>4</p></td>
+<td><p>Signed 32-bit integer</p></td>
+</tr>
+<tr class="row-even"><td><p>uint32</p></td>
+<td><p>4</p></td>
+<td><p>Unsigned 32-bit integer</p></td>
+</tr>
+<tr class="row-odd"><td><p>int64</p></td>
+<td><p>8</p></td>
+<td><p>Signed 64-bit integer</p></td>
+</tr>
+<tr class="row-even"><td><p>uint64</p></td>
+<td><p>8</p></td>
+<td><p>Unsigned 64-bit integer</p></td>
+</tr>
+<tr class="row-odd"><td><p>string</p></td>
+<td><p>1</p></td>
+<td><p>UTF-8 string</p></td>
+</tr>
+<tr class="row-even"><td><p>cdouble</p></td>
+<td><p>16</p></td>
+<td><p>Complex double precision floating point</p></td>
+</tr>
+<tr class="row-odd"><td><p>csingle</p></td>
+<td><p>8</p></td>
+<td><p>Complex single precision floating point</p></td>
+</tr>
+<tr class="row-even"><td><p>bool</p></td>
+<td><p>1</p></td>
+<td><p>Logical boolean</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>[primitives]</p>
+</dd>
+<dt>Structures</dt><dd><div class="line-block">
+<div class="line"><br /></div>
+<div class="line">Structures are collections of value types; structures can contain
+primitives, other structures, maps, or multidimensional arrays.
+Example <a class="reference external" href="#createinterface">[createinterface]</a> shows the
+definition of the structure <code class="docutils literal notranslate"><span class="pre">SensorPacket</span></code>. A structure is
+started with the keyword <code class="docutils literal notranslate"><span class="pre">struct</span></code> followed by the structure name.
+It is ended with the <code class="docutils literal notranslate"><span class="pre">end</span></code> keyword. The entries in the structure
+are defined with the keyword <code class="docutils literal notranslate"><span class="pre">field</span></code> followed by the type, and
+finally the name of the field. If a structure from a different
+service definition is used, first the referenced service definition
+is imported at the top of the service definition and the structure
+is referenced by the external service definition “dot” the name of
+the structure.</div>
+</div>
+</dd>
+<dt>Pods</dt><dd><div class="line-block">
+<div class="line"><br /></div>
+<div class="line">Pods (short for “plain-old-data”) are similar to structures, but
+are more restricted to ensure they have the same size. All data
+stored in pods are stored contiguously (c-style), while structs use
+pointers to the data. Pods can only contain pods, arrays of pods
+(fixed or max length), namedarrays, and namedarrays arrays (fixed
+or max length). Only numeric primitives may be used; strings,
+structs, lists, and maps may not be stored in pods. A pod is
+started with the keyword <code class="docutils literal notranslate"><span class="pre">pod</span></code> followed by the pod name. It is
+ended with the <code class="docutils literal notranslate"><span class="pre">end</span></code> keyword. The entries in the pod are defined
+with the keyword <code class="docutils literal notranslate"><span class="pre">field</span></code> followed by the type, and finally the
+name of the field. If a pod from a different service definition is
+used, first the referenced service definition is imported at the
+top of the service definition and the pod is referenced by the
+external service definition “dot” the name of the pod. Pods can be
+used with arrays and multi-dim arrays.</div>
+</div>
+</dd>
+<dt>Namedarrays</dt><dd><div class="line-block">
+<div class="line"><br /></div>
+<div class="line">Namedarrays are a union type designed to store numeric arrays that
+also have specific meanings attached to each entry. An example is a
+3D vector. The vector can either be viewed as a 3x1 array, or as a
+structure containing (x,y,z). A namedarray stores the contained
+data as a primitive array, but allows the data to be viewed as a
+structure. Namedarrays should be used when possible since they have
+the most compact memory format. Namedarrays can only contain
+numeric primitives, fixed numeric primitive arrays (no
+multidimarrays), other namedarrays (with the same numeric type),
+and fixed arrays of namedarrays. A namedarray is started with the
+keyword <code class="docutils literal notranslate"><span class="pre">namedarray</span></code> followed by the namedarray name. It is ended
+with the <code class="docutils literal notranslate"><span class="pre">end</span></code> keyword. The entries in the namedarray are defined
+with the keyword <code class="docutils literal notranslate"><span class="pre">field</span></code> followed by the type, and finally the
+name of the field. If a namedarray from a different service
+definition is used, first the referenced service definition is
+imported at the top of the service definition and the namedarray is
+referenced by the external service definition “dot” the name of the
+namedarray. Namedarrays can be used with arrays and multi-dim
+arrays.</div>
+</div>
+</dd>
+<dt>Maps</dt><dd><div class="line-block">
+<div class="line"><br /></div>
+<div class="line">Maps can either be keyed by <code class="docutils literal notranslate"><span class="pre">int32</span></code> or <code class="docutils literal notranslate"><span class="pre">string</span></code>. In other
+languages they would be called “Dictionary”, “Hashtable”, or “Map”.
+The data is a value type (but not another map). They are created
+with curly braces. For example, <code class="docutils literal notranslate"><span class="pre">string{int32}</span></code> would be a map of
+strings keyed by an integer. <code class="docutils literal notranslate"><span class="pre">string{string}</span></code> would be a map of
+strings keyed by another string. <code class="docutils literal notranslate"><span class="pre">SensorPacket{string}</span></code> and
+<code class="docutils literal notranslate"><span class="pre">int32[]{int32}</span></code> are also valid examples.</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">string{int32}{int32}</span></code> is <em>not</em> valid. There can only be one
+dimension of keying.</div>
+</div>
+</dd>
+<dt>Lists</dt><dd><div class="line-block">
+<div class="line"><br /></div>
+<div class="line">Lists follow similar rules to maps. They are created with curly
+braces. For example,</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">string{list}</span></code> would be a list of strings. <code class="docutils literal notranslate"><span class="pre">SensorPacket{list}</span></code>
+and <code class="docutils literal notranslate"><span class="pre">int32[]{list}</span></code> are also valid examples.</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">string{list}{list}</span></code> is <em>not</em> valid. There can only be one
+dimension of lists.</div>
+</div>
+</dd>
+<dt>Multidimensional Arrays</dt><dd><div class="line-block">
+<div class="line"><br /></div>
+<div class="line">The multidimensional arrays allow for the transmission of real or
+complex matrices of any dimension. They are defined by putting a
+“<em>” inside the brackets of an array. For example, ``double[</em>]``
+defines a multidimensional array of doubles. Multidimensional
+arrays can also have fixed dimensions. For example <code class="docutils literal notranslate"><span class="pre">double[3,3]</span></code>
+defines a 3x3 matrix. The dimensions are in matrix (column-major)
+order.</div>
+</div>
+</dd>
+<dt>Enums</dt><dd><p>Enums are a special representation of int32 that names each value.
+Enums are aliases, with the value be stored as int32 internally. An
+enum is started with the keyword <code class="docutils literal notranslate"><span class="pre">enum</span></code> followed by the enum name.
+It is ended with the <code class="docutils literal notranslate"><span class="pre">end</span></code> keyword. The values are specified with a
+“name” = “value” format, separated by commas. Values can be signed
+integers, unsigned hexadecimal, or omitted to implicitly increment
+from the last value.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">enum</span> <span class="n">myenum</span>
+    <span class="n">value1</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">value2</span> <span class="o">=</span> <span class="mh">0xF1</span><span class="p">,</span>
+    <span class="n">value3</span><span class="p">,</span>
+    <span class="n">value4</span>
+<span class="n">end</span>
+</pre></div>
+</div>
+</dd>
+<dt>varvalue</dt><dd><div class="line-block">
+<div class="line"><br /></div>
+<div class="line">In certain situations it may be desirable to put in a “wildcard”
+value type. The varvalue type allows this. Use with caution!</div>
+</div>
+</dd>
+</dl>
+<p><strong>Note: structs, maps, and lists can be null. All other types are not
+nullable. (NULL, None, etc. depending on language).</strong></p>
+</div>
+<div class="section" id="object-types">
+<span id="objecttypes"></span><h2>Object types<a class="headerlink" href="#object-types" title="Permalink to this headline">¶</a></h2>
+<p>Objects begin with the keyword <code class="docutils literal notranslate"><span class="pre">object</span></code> followed by the name of the
+object, and closed with the keywords <code class="docutils literal notranslate"><span class="pre">end</span></code>. Objects have <em>members</em>
+that implement functionality. Within Robot Raconteur there are eight
+types of members: Properties, Functions, Events, ObjRefs, Pipes,
+Callbacks, Wires, and Memories . They are defined between <code class="docutils literal notranslate"><span class="pre">object</span></code> and
+<code class="docutils literal notranslate"><span class="pre">end</span></code>.</p>
+<dl>
+<dt>Properties (Keyword: <code class="docutils literal notranslate"><span class="pre">property</span></code>)</dt><dd><div class="line-block">
+<div class="line"><br /></div>
+<div class="line">Properties are similar to class variables (field). They can be
+written to (set) or read from (get). A property can take on any
+value type. A property is defined within an object with the keyword
+<code class="docutils literal notranslate"><span class="pre">property</span></code> followed by the value type of the property, and
+finally the name of the property. (All member names must be
+unique). An example:</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">property</span> <span class="pre">double</span> <span class="pre">myvar</span></code></p>
+<p>Properties can use modifiers <code class="docutils literal notranslate"><span class="pre">readonly</span></code>, <code class="docutils literal notranslate"><span class="pre">writeonly</span></code>, <code class="docutils literal notranslate"><span class="pre">urgent</span></code>,
+and/or <code class="docutils literal notranslate"><span class="pre">perclient</span></code>. See Section <a class="reference external" href="#modifiers">[modifiers]</a>.</p>
+</dd>
+<dt>Functions (Keyword: <code class="docutils literal notranslate"><span class="pre">function</span></code>)</dt><dd><div class="line-block">
+<div class="line"><br /></div>
+<div class="line">Functions take zero or more value type parameters, and return a
+single value type. The parameters of the functions must all have
+unique names. The return value of the function may be <code class="docutils literal notranslate"><span class="pre">void</span></code> if
+there is no return. A function is defined by the keyword
+<code class="docutils literal notranslate"><span class="pre">function</span></code> followed by the return type, followed by the name of
+the function. The parameters follow as a comma separated list of
+parameter type and parameter name. The parameter list is enclosed
+with parenthesis. An example:</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">function</span> <span class="pre">double</span> <span class="pre">addTwoNumbers(int32</span> <span class="pre">a,</span> <span class="pre">double</span> <span class="pre">b)</span></code></p>
+<p>Functions can also return a “generator,” which is a form of iterator.
+(These generators are modeled after Python generators.) This is
+useful for long running operations or to return large amounts of
+data. Generators take three forms. The first is when each iteration
+of the generator takes a parameter and returns a value. This takes
+the form:</p>
+<p><code class="docutils literal notranslate"><span class="pre">function</span> <span class="pre">double{generator}</span> <span class="pre">addManyNumbers(int32</span> <span class="pre">a,</span> <span class="pre">double{generator}</span> <span class="pre">b)</span></code></p>
+<p>In this example, the “a” parameter is sent with the function call,
+while “b” and “return” are sent and received using the “Next”
+function of the generator.</p>
+<p>The next form of the generator returns a value each iteration of the
+generator.</p>
+<p><code class="docutils literal notranslate"><span class="pre">function</span> <span class="pre">double{generator}</span> <span class="pre">getSequence(int32</span> <span class="pre">a,</span> <span class="pre">double</span> <span class="pre">b)</span></code></p>
+<p>In this example, “a” and “b” are sent with the function call, and
+“return” is returned using the “Next” function of the generator.</p>
+<p>The last form takes a parameter each iteration.</p>
+<p><code class="docutils literal notranslate"><span class="pre">function</span> <span class="pre">void</span> <span class="pre">accumulateNumbers(double{generator}</span> <span class="pre">b)</span></code></p>
+<p>Note that the generator return must be “void” or a generator type.
+Each call to “Next” will receive a parameter.</p>
+<p>Generators will throw either “StopIterationException” to signal that
+the generator is finished, or it will throw
+“OperationAbortedException” to signal that there was an error and the
+generator should be destroyed. Generators clients must call “Close”
+or “Abort” on a generator if a “StopIterationException” or other
+exception is not received.</p>
+<p>Generators that represent long running operations should return from
+“Next” with updated status information at least every 10 seconds to
+prevent timeout errors.</p>
+<p>Functions can use the <code class="docutils literal notranslate"><span class="pre">urgent</span></code> modifier. See Section
+<a class="reference external" href="#modifiers">[modifiers]</a>.</p>
+</dd>
+<dt>Events (Keyword: <code class="docutils literal notranslate"><span class="pre">event</span></code>)</dt><dd><div class="line-block">
+<div class="line"><br /></div>
+<div class="line">Events provide a way for the service to notify clients that an
+event has occurred. When an event is fired, every client reference
+receives the event. How the event is handled is language-specific.
+An event is defined similar to a function, however there is no
+return. The parameters are passed to the client. There is no
+return. An example:</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">event</span> <span class="pre">somethingHappened(string</span> <span class="pre">what,</span> <span class="pre">double</span> <span class="pre">when)</span></code></p>
+<p>Note that events do not have flow control, so they should be used
+sparingly.</p>
+<p>Events can use the <code class="docutils literal notranslate"><span class="pre">urgent</span></code> modifier. See Section
+<a class="reference external" href="#modifiers">[modifiers]</a>.</p>
+</dd>
+<dt>Object References (Keyword: <code class="docutils literal notranslate"><span class="pre">objref</span></code>)</dt><dd><div class="line-block">
+<div class="line"><br /></div>
+<div class="line">A service consists of any number of objects. The <em>root object</em> is
+the object first referenced when connection to a service. The other
+object references are obtained through the <code class="docutils literal notranslate"><span class="pre">objref</span></code> members.
+These members return a reference to the specified object. An objref
+is defined by the keyword <code class="docutils literal notranslate"><span class="pre">objref</span></code> followed by the object type
+followed by the objref member name. The object type can be
+<code class="docutils literal notranslate"><span class="pre">varobject</span></code> to return any valid object type (Use with caution!).
+The objref can also be indexed by number ([],{int32}) or by string
+({string}). This returns a different reference based on the index.
+It does not return a set of references. An example:</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">objref</span> <span class="pre">mysubobj</span> <span class="pre">anotherobj{string}</span></code></p>
+<p>If an object from a different service definition is used, first the
+referenced service definition is imported at the top of the service
+definition and the object is referenced by the external service
+definition “dot” the name of the object.</p>
+</dd>
+<dt>Pipes (Keyword: <code class="docutils literal notranslate"><span class="pre">pipe</span></code>)</dt><dd><div class="line-block">
+<div class="line"><br /></div>
+<div class="line">Pipes provide full-duplex first-in, first-out (FIFO) connections
+between the client and service. Pipes are unique to each client,
+and are indexed so that the same member can handle multiple
+connections. The pipe member allows for the creation of
+“PipeEndpoint” pairs. One endpoint is on the client side, and the
+other is on the server side. For each connected pipe endpoint pair,
+packets that are sent by the client appear at service end, and
+packets that are sent by the service end up on the client side.
+Packets can be retrieved in order from the receive queue in the
+“PipeEndpoint”. The type of the packets is defined by the member
+definition. An endpoint can request a Packet Acknowledgment to be
+sent once the packet is received by setting “RequestPacketAck” to
+true. “SendPacket” is used to send packets, and “ReceivePacket” is
+used to receive the next packet in the queue. “Available” can be
+used to determine is more packets are available to receive. Pipe
+endpoint pairs are created with the “Connect” function on the
+client. Either the client or the service can close the endpoint
+pair using the “Close” function. A pipe is specified by the keyword
+<code class="docutils literal notranslate"><span class="pre">pipe</span></code> followed by the packet type, followed by the member name
+of the pipe. An example:</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">pipe</span> <span class="pre">double[]</span> <span class="pre">sensordata</span></code></p>
+<p>Pipes can use modifiers <code class="docutils literal notranslate"><span class="pre">readonly</span></code>, <code class="docutils literal notranslate"><span class="pre">writeonly</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">unreliable</span></code>. See Section <a class="reference external" href="#modifiers">[modifiers]</a>.</p>
+</dd>
+<dt>Callbacks (Keyword: <code class="docutils literal notranslate"><span class="pre">callback</span></code>)</dt><dd><div class="line-block">
+<div class="line"><br /></div>
+<div class="line">Callbacks are essentially “reverse functions”, meaning that they
+allow a service to call a function on a client. Because a service
+can have multiple clients connected, the service must specify which
+client to call. The syntax is equivalent to the “function”, just
+replace “function” with “callback”. An example:</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">callback</span> <span class="pre">double</span> <span class="pre">addTwoNumbersOnClient(int32</span> <span class="pre">a,</span> <span class="pre">double</span> <span class="pre">b)</span></code></p>
+</dd>
+<dt>Wires (Keyword: <code class="docutils literal notranslate"><span class="pre">wire</span></code>)</dt><dd><div class="line-block">
+<div class="line"><br /></div>
+<div class="line">Wires are very similar to pipes, however rather than providing a
+stream of packets the wire is used when only the “most recent”
+value is of interest. It is similar in concept to a “port” in
+Simulink. Wires may be transmitted over lossy channels or channels
+with latency where packets may not arrive or may arrive out of
+order. In these situations the lost or out of order packet will be
+ignored and only the newest value will be used. Each packet has a
+timestamp of when it is sent (from the sender’s clock). Wires are
+full duplex like pipes meaning it has two-way communication, but
+unlike pipes they are not indexed so there is only one connection
+per client object reference. The wire allows for a “WireConnection”
+pair to be created with one “WireConnection” on the client and the
+other “WireConnection” on the service. Unlike pipes, each wire
+member can only create one connection pair per client, per service
+object instance. The “WireConnection” is used by setting the
+“OutValue” to the current value. This sends the new value to the
+opposite “WireConnection”, which updates its “InValue”. The same
+can be reversed. For instance, setting the “OutValue” on the
+service changes the “InValue” on the client, and setting the
+“OutValue” on the client changes the “InValue” on the service. It
+as also possible to receive the “LastValueReceivedTime” and
+“LastValueSentTime” to read the timestamps on the values. Note that
+“LastValueReceivedTime” is in the <em>sender’s</em> clock, not the local
+clock and is generated when it is first transmitted. Either the
+client or the service can close the “WireConnection” pair using the
+“Close” function.</div>
+</div>
+<p>The wire provides the basis for future real-time communication. (See
+also Section <a class="reference external" href="#realtimewire">[realtimewire]</a>.) An example wire
+member definition:</p>
+<p><code class="docutils literal notranslate"><span class="pre">wire</span> <span class="pre">double[2]</span> <span class="pre">currentposition</span></code></p>
+<p>Wires can use modifiers <code class="docutils literal notranslate"><span class="pre">readonly</span></code> or <code class="docutils literal notranslate"><span class="pre">writeonly</span></code>. See Section
+<a class="reference external" href="#modifiers">[modifiers]</a>.</p>
+</dd>
+<dt>Memories (Keyword: <code class="docutils literal notranslate"><span class="pre">memory</span></code>)</dt><dd><div class="line-block">
+<div class="line"><br /></div>
+<div class="line">Memories represent a random-access segment of numeric primitive
+arrays, numeric primitive multi-dim arrays, pod arrays, pod
+multi-dim arrays, namedarrays arrays, and namedarrays multi-dim
+arrays. The memory member is available for two reasons: it will
+break down large read and writes into smaller calls to prevent
+buffer overruns (most transports limit message sizes to 10 MB) and
+the memory also provides the basis for future shared-memory
+segments. An example:</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">memory</span> <span class="pre">double[]</span> <span class="pre">datahistory</span></code></p>
+<p>Memories can use modifiers <code class="docutils literal notranslate"><span class="pre">readonly</span></code> or <code class="docutils literal notranslate"><span class="pre">writeonly</span></code>. See Section
+<a class="reference external" href="#modifiers">[modifiers]</a>.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="constants">
+<h2>Constants<a class="headerlink" href="#constants" title="Permalink to this headline">¶</a></h2>
+<p>Constants can be specified using the <code class="docutils literal notranslate"><span class="pre">constant</span></code> keyword. The constants
+can be numbers, single dimensional arrays, or strings. Constants can
+exist either in the global service definition scope, in objects, or in
+structs.</p>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">constant</span> <span class="pre">uint32</span> <span class="pre">myconst</span> <span class="pre">0xFB</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">constant</span> <span class="pre">double[]</span> <span class="pre">myarray</span> <span class="pre">{10.3,</span> <span class="pre">584.9,</span> <span class="pre">594}</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">constant</span> <span class="pre">string</span> <span class="pre">mystring</span> <span class="pre">&quot;Hello</span> <span class="pre">world!&quot;</span></code></div>
+</div>
+</div>
+<div class="section" id="exceptions">
+<h2>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h2>
+<p>Robot Raconteur will transparently pass exceptions thrown by the
+receiver to the caller for transactions such as functions, properties,
+callbacks, and memory reads/writes. Normally these exceptions are of the
+type RobotRaconteurRemoteException which is a universal container for
+all types of exceptions. In some cases it is useful to have named
+exceptions that can be passed from receiver to caller and keep their
+class type. These custom exceptions inherit from
+RobotRaconteurRemoteException. Service definitions can define these
+exceptions. Exceptions are defined by starting the line with
+<code class="docutils literal notranslate"><span class="pre">exception</span></code> followed by the name of the exception. For example, the
+following line will define the exception “MyException” which can then be
+used in any of the supported languages:</p>
+<p><code class="docutils literal notranslate"><span class="pre">exception</span> <span class="pre">MyException</span></code></p>
+</div>
+<div class="section" id="using">
+<h2>Using<a class="headerlink" href="#using" title="Permalink to this headline">¶</a></h2>
+<p>To reduce the clutter in a service definition file, the “using”
+statement can be used to alias an imported type.</p>
+<p><code class="docutils literal notranslate"><span class="pre">using</span> <span class="pre">example.importeddef.obj1</span></code></p>
+<p>“as” can be used to change the name locally.</p>
+<p><code class="docutils literal notranslate"><span class="pre">using</span> <span class="pre">exmaple.importeddef.obj1</span> <span class="pre">as</span> <span class="pre">another_obj1</span></code></p>
+</div>
+<div class="section" id="robot-raconteur-naming">
+<h2>Robot Raconteur naming<a class="headerlink" href="#robot-raconteur-naming" title="Permalink to this headline">¶</a></h2>
+<p>When naming things like service definitions, objects, structures, and
+members, certain rules must be followed. The name must consist of
+letters, numbers, and underscores (_). Names must start with a letter
+and may not start with any uppercase/lowercase combination of
+“RobotRaconteur”, “RR”, “get_”, or “set_”. Service names may not end
+with “_signed”. This is reserved for future use.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="RobotRaconteurPython.html" class="btn btn-neutral float-right" title="Robot Raconteur Python" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="Introduction.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Wason Technology, LLC
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

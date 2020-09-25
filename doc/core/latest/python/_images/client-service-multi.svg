@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   sodipodi:docname="client-service-multi.svg"
+   id="svg977"
+   version="1.1"
+   overflow="hidden"
+   height="606.06952"
+   width="625.72064">
+  <metadata
+     id="metadata981">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     inkscape:current-layer="svg977"
+     inkscape:window-maximized="1"
+     inkscape:window-y="-8"
+     inkscape:window-x="-8"
+     inkscape:cy="343.94595"
+     inkscape:cx="433.97192"
+     inkscape:zoom="1.1486111"
+     showgrid="false"
+     id="namedview979"
+     inkscape:window-height="1017"
+     inkscape:window-width="1920"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0"
+     guidetolerance="10"
+     gridtolerance="10"
+     objecttolerance="10"
+     borderopacity="1"
+     bordercolor="#666666"
+     pagecolor="#ffffff" />
+  <defs
+     id="defs911">
+    <clipPath
+       id="clip0">
+      <path
+         id="path908"
+         clip-rule="evenodd"
+         fill-rule="evenodd"
+         d="M 0,0 H 960 V 720 H 0 Z" />
+    </clipPath>
+  </defs>
+  <g
+     transform="translate(-46.028078,-16.054049)"
+     id="g975"
+     clip-path="url(#clip0)">
+    <rect
+       id="rect913"
+       fill="#ffffff"
+       height="720"
+       width="960"
+       y="0"
+       x="0" />
+    <path
+       id="path915"
+       fill-rule="evenodd"
+       fill="none"
+       stroke-miterlimit="10"
+       stroke-linejoin="round"
+       stroke-width="3.33333"
+       stroke="#000000"
+       d="m 448.5,76.5005 c 0,-15.4642 12.536,-28.0004 28,-28.0004 h 128 c 15.464,0 28,12.5362 28,28.0004 V 188.5 c 0,15.464 -12.536,28 -28,28 h -128 c -15.464,0 -28,-12.536 -28,-28 z" />
+    <path
+       id="path917"
+       fill-rule="evenodd"
+       fill="#a6a6a6"
+       stroke-miterlimit="10"
+       stroke-linejoin="round"
+       stroke-width="2.66667"
+       stroke="#000000"
+       d="m 496.5,184.5 c 0,-8.837 7.164,-16 16,-16 8.837,0 16,7.163 16,16 0,8.837 -7.163,16 -16,16 -8.836,0 -16,-7.163 -16,-16 z" />
+    <path
+       id="path919"
+       fill-rule="evenodd"
+       fill="#a6a6a6"
+       stroke-miterlimit="10"
+       stroke-linejoin="round"
+       stroke-width="2.66667"
+       stroke="#000000"
+       d="m 320.5,440.5 c 0,-4.418 3.582,-8 8,-8 4.418,0 8,3.582 8,8 0,4.418 -3.582,8 -8,8 -4.418,0 -8,-3.582 -8,-8 z" />
+    <path
+       id="path921"
+       fill-rule="evenodd"
+       fill="#a6a6a6"
+       stroke-miterlimit="10"
+       stroke-linejoin="round"
+       stroke-width="2.66667"
+       stroke="#000000"
+       d="m 216.5,440.5 c 0,-4.418 3.582,-8 8,-8 4.418,0 8,3.582 8,8 0,4.418 -3.582,8 -8,8 -4.418,0 -8,-3.582 -8,-8 z" />
+    <path
+       id="path923"
+       fill-rule="evenodd"
+       fill="#a6a6a6"
+       stroke-miterlimit="10"
+       stroke-linejoin="round"
+       stroke-width="2.66667"
+       stroke="#000000"
+       d="m 408.5,440.5 c 0,-4.418 3.582,-8 8,-8 4.418,0 8,3.582 8,8 0,4.418 -3.582,8 -8,8 -4.418,0 -8,-3.582 -8,-8 z" />
+    <path
+       id="path925"
+       fill-rule="evenodd"
+       fill="#a6a6a6"
+       stroke-miterlimit="10"
+       stroke-linejoin="round"
+       stroke-width="2.66667"
+       stroke="#000000"
+       d="m 312.5,504.5 c 0,-8.836 7.164,-16 16,-16 8.837,0 16,7.164 16,16 0,8.837 -7.163,16 -16,16 -8.836,0 -16,-7.163 -16,-16 z" />
+    <text
+       id="text933"
+       transform="translate(478.235,99)"
+       font-size="24px"
+       font-weight="700"
+       font-family="Calibri, Calibri_MSFontService, sans-serif">Client <tspan
+   id="tspan927"
+   y="29"
+   x="-4.1933298">Node 2</tspan><tspan
+   id="tspan929"
+   y="424"
+   x="-292.16599">Service</tspan><tspan
+   id="tspan931"
+   y="453"
+   x="-280.56">Node</tspan></text>
+    <path
+       id="path935"
+       fill="#4a7ebb"
+       d="m 329.163,449.492 -0.159,38.02 -1,-0.004 0.159,-38.02 z m -5.631,7.725 5.135,-8.719 5.062,8.761 c 0.138,0.239 0.056,0.545 -0.183,0.683 -0.239,0.139 -0.545,0.057 -0.683,-0.182 l -4.633,-8.02 0.863,0.004 -4.699,7.98 c -0.141,0.238 -0.447,0.318 -0.685,0.177 -0.238,-0.14 -0.317,-0.446 -0.177,-0.684 z m 10.103,22.566 -5.135,8.719 -5.062,-8.761 c -0.138,-0.239 -0.056,-0.545 0.183,-0.683 0.239,-0.138 0.545,-0.057 0.683,0.183 l 4.633,8.019 -0.864,-0.004 4.7,-7.98 c 0.14,-0.238 0.447,-0.317 0.685,-0.177 0.238,0.14 0.317,0.446 0.177,0.684 z" />
+    <path
+       id="path937"
+       transform="matrix(-4.37114e-8,-1,-1,4.37114e-8,317.529,493.529)"
+       fill="#4a7ebb"
+       d="M 0.910568,0.633318 46.9989,85.9213 46.1192,86.3967 0.0308039,1.10873 Z M -0.331374,10.1113 -0.00110164,-0.00203873 8.63969,5.26354 C 8.87549,5.40724 8.95016,5.71489 8.80647,5.9507 8.66277,6.1865 8.35512,6.26117 8.11931,6.11748 L 0.210467,1.29794 0.970389,0.887287 0.668094,10.144 C 0.65908,10.42 0.428035,10.6364 0.15204,10.6274 -0.123955,10.6184 -0.340387,10.3873 -0.331374,10.1113 Z M 47.3607,76.918 47.0305,87.0314 38.3897,81.7659 c -0.2358,-0.1437 -0.3105,-0.4514 -0.1668,-0.6872 0.1437,-0.2358 0.4514,-0.3105 0.6872,-0.1668 l 7.9088,4.8196 -0.7599,0.4106 0.3023,-9.2567 c 0.009,-0.276 0.24,-0.4924 0.516,-0.4834 0.276,0.009 0.4925,0.2401 0.4834,0.516 z" />
+    <path
+       id="path939"
+       fill="#4a7ebb"
+       d="m 340.05,492.566 69.378,-45.936 0.552,0.834 -69.378,45.936 z m 9.551,0.391 -10.103,0.574 4.473,-9.077 c 0.122,-0.247 0.422,-0.349 0.67,-0.227 0.247,0.122 0.349,0.422 0.227,0.669 l -4.094,8.308 -0.477,-0.72 9.247,-0.526 c 0.276,-0.015 0.512,0.195 0.527,0.471 0.016,0.276 -0.195,0.512 -0.47,0.528 z m 50.828,-45.884 10.102,-0.574 -4.473,9.076 c -0.122,0.248 -0.421,0.35 -0.669,0.228 -0.248,-0.122 -0.35,-0.422 -0.228,-0.67 l 4.094,-8.307 0.477,0.72 -9.246,0.525 c -0.276,0.016 -0.512,-0.195 -0.528,-0.471 -0.016,-0.275 0.195,-0.511 0.471,-0.527 z" />
+    <text
+       id="text947"
+       transform="translate(417.6,470)"
+       font-size="19px"
+       font-weight="400"
+       font-family="Calibri, Calibri_MSFontService, sans-serif">Server Endpoints<tspan
+   id="tspan941"
+   y="40"
+   x="-56">Server Context</tspan><tspan
+   id="tspan943"
+   y="-296"
+   x="128">Client</tspan><tspan
+   id="tspan945"
+   y="-273"
+   x="128">Context</tspan></text>
+    <path
+       id="path949"
+       fill-rule="evenodd"
+       fill="none"
+       stroke-dasharray="8, 2.66667"
+       stroke-miterlimit="10"
+       stroke-linejoin="round"
+       stroke-width="2.66667"
+       stroke="#000000"
+       d="m 516.604,234.963 c -0.756,2.076 -8.1,1.309 -16.404,-1.713 -8.303,-3.023 -14.422,-7.156 -13.667,-9.231 0.756,-2.076 8.1,-1.309 16.404,1.713 8.303,3.022 14.422,7.155 13.667,9.231 z m 0,0 -62.932,172.904 c -0.756,2.076 -8.1,1.308 -16.403,-1.714 -8.304,-3.022 -14.423,-7.155 -13.667,-9.231 l 62.931,-172.903" />
+    <path
+       id="path951"
+       transform="matrix(-1,-8.74228e-8,-8.74228e-8,1,512.5,200.5)"
+       fill="#4a7ebb"
+       d="M 0.816355,0.744596 88.1169,231.457 87.1816,231.811 -0.118927,1.0985 Z M -1.67609,9.97696 -8.20107e-4,-0.0021674 7.86106,6.3681 C 8.07561,6.54195 8.10861,6.85681 7.93477,7.07136 7.76092,7.28591 7.44606,7.31891 7.23151,7.14506 L 0.0355957,1.31441 0.843471,1.00871 -0.68989,10.1425 c -0.045718,0.2724 -0.303548,0.4561 -0.57588,0.4103 C -1.5381,10.5071 -1.72181,10.2493 -1.67609,9.97696 Z M 89.6762,222.584 l -1.6754,9.98 -7.8618,-6.371 c -0.2145,-0.174 -0.2475,-0.489 -0.0737,-0.703 0.1739,-0.215 0.4887,-0.248 0.7033,-0.074 l 7.1958,5.831 -0.8079,0.306 1.5335,-9.134 c 0.0457,-0.273 0.3036,-0.456 0.5759,-0.41 0.2723,0.045 0.456,0.303 0.4103,0.575 z" />
+    <text
+       id="text953"
+       transform="rotate(-70.000015,456.06151,-123.95181)"
+       font-size="19px"
+       font-weight="400"
+       font-family="Calibri, Calibri_MSFontService, sans-serif">Transport</text>
+    <path
+       id="path955"
+       fill-rule="evenodd"
+       fill="none"
+       stroke-miterlimit="10"
+       stroke-linejoin="round"
+       stroke-width="3.33333"
+       stroke="#000000"
+       d="m 96.5001,444.501 c 0,-15.465 12.5359,-28.001 28.0009,-28.001 H 540.5 c 15.464,0 28,12.536 28,28.001 V 556.5 c 0,15.464 -12.536,28 -28,28 H 124.501 c -15.465,0 -28.0009,-12.536 -28.0009,-28 z" />
+    <path
+       id="path957"
+       fill-rule="evenodd"
+       fill="none"
+       stroke-miterlimit="10"
+       stroke-linejoin="round"
+       stroke-width="3.33333"
+       stroke="#000000"
+       d="m 80.5001,76.5005 c 0,-15.4642 12.5362,-28.0004 27.9999,-28.0004 h 128 c 15.464,0 28,12.5362 28,28.0004 V 188.5 c 0,15.464 -12.536,28 -28,28 h -128 c -15.4637,0 -27.9999,-12.536 -27.9999,-28 z" />
+    <path
+       id="path959"
+       fill-rule="evenodd"
+       fill="#a6a6a6"
+       stroke-miterlimit="10"
+       stroke-linejoin="round"
+       stroke-width="2.66667"
+       stroke="#000000"
+       d="m 112.5,176.5 c 0,-8.837 7.163,-16 16,-16 8.837,0 16,7.163 16,16 0,8.837 -7.163,16 -16,16 -8.837,0 -16,-7.163 -16,-16 z" />
+    <text
+       id="text967"
+       transform="translate(110.235,91)"
+       font-size="24px"
+       font-weight="700"
+       font-family="Calibri, Calibri_MSFontService, sans-serif">Client <tspan
+   id="tspan961"
+   y="29"
+   x="-4.1933398">Node 1</tspan><tspan
+   id="tspan963"
+   y="75"
+   x="67.365402"
+   font-size="19px"
+   font-weight="400">Client</tspan><tspan
+   id="tspan965"
+   y="98"
+   x="67.365402"
+   font-size="19px"
+   font-weight="400">Context</tspan></text>
+    <path
+       id="path969"
+       fill-rule="evenodd"
+       fill="none"
+       stroke-dasharray="8, 2.66667"
+       stroke-miterlimit="10"
+       stroke-linejoin="round"
+       stroke-width="2.66667"
+       stroke="#000000"
+       d="m 162.707,225.346 c 0.755,2.076 -5.364,6.209 -13.667,9.231 -8.304,3.023 -15.648,3.79 -16.404,1.714 -0.755,-2.076 5.364,-6.209 13.667,-9.231 8.304,-3.022 15.648,-3.79 16.404,-1.714 z m 0,0 62.931,172.904 c 0.756,2.076 -5.363,6.209 -13.667,9.231 -8.303,3.022 -15.647,3.789 -16.403,1.713 L 132.636,236.291" />
+    <path
+       id="path971"
+       fill="#4a7ebb"
+       d="m 133.429,190.227 86.882,238.704 -0.94,0.342 -86.881,-238.704 z m -2.609,9.2 1.802,-9.957 7.78,6.469 c 0.213,0.177 0.242,0.492 0.065,0.705 -0.177,0.212 -0.492,0.241 -0.704,0.064 l -7.122,-5.921 0.812,-0.295 -1.649,9.113 c -0.049,0.272 -0.309,0.452 -0.581,0.403 -0.272,-0.049 -0.452,-0.309 -0.403,-0.581 z m 91.162,220.652 -1.801,9.957 -7.781,-6.47 c -0.212,-0.176 -0.241,-0.492 -0.065,-0.704 0.177,-0.212 0.492,-0.241 0.705,-0.065 l 7.121,5.922 -0.812,0.295 1.649,-9.113 c 0.049,-0.272 0.31,-0.453 0.581,-0.403 0.272,0.049 0.452,0.309 0.403,0.581 z" />
+    <text
+       id="text973"
+       transform="rotate(-109.99998,207.77389,126.49314)"
+       font-size="19px"
+       font-weight="400"
+       font-family="Calibri, Calibri_MSFontService, sans-serif">Transport</text>
+  </g>
+</svg>

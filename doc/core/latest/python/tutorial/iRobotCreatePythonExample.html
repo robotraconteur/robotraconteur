@@ -1,0 +1,618 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>iRobot Create Python Example &mdash; Robot Raconteur Python  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Webcam Example" href="WebcamPythonExample.html" />
+    <link rel="prev" title="Robot Raconteur Python" href="RobotRaconteurPython.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> Robot Raconteur Python
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Tutorial:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ServiceDefinition.html">Service Definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RobotRaconteurPython.html">Robot Raconteur Python</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">iRobot Create Python Example</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#simple-service">Simple service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#simple-client">Simple client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#irobot-create-service">iRobot Create Service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#irobot-create-client">iRobot Create Client</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="WebcamPythonExample.html">Webcam Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Discovery.html">Service Discovery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Subscriptions.html">Subscriptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ObjectLocks.html">Exclusive object locks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TimeCritical.html">Time-critical software with Wire member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ForwardCompatibility.html">Forward compatibility with the “implements” statement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MemberModifiers.html">Member Modifiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Async.html">Asynchronous programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GatherScatter.html">Gather/Scatter operations</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Framework:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/service_definition.html">Service Definitions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/nodes_and_communication.html">Robot Raconteur Nodes and Communication</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/exceptions.html">Exceptions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/security.html">Security</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/locking.html">Object Locking</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Utility:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/command_line_options.html">Node Setup Command Line Options</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/logging.html">Logging</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/taps.html">Taps</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/robotraconteurgen.html">RobotRaconteurGen Utility</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/Constants.html">Constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/RobotRaconteurNode.html">RobotRaconteurNode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/DataTypes.html">Misc Data Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/PipeMember.html">Pipe Member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/WireMember.html">Wire Member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/CallbackMember.html">Callback Member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Subscription.html">Subscription</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/NodeSetup.html">Node Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Transports.html">Transports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Timers.html">Timers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Generators.html">Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Service.html">Service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/ServiceSecurity.html">Service Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Exceptions.html">Exceptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Logging.html">Logging and Taps</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Robot Raconteur Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>iRobot Create Python Example</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/tutorial/iRobotCreatePythonExample.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="irobot-create-python-example">
+<h1>iRobot Create Python Example<a class="headerlink" href="#irobot-create-python-example" title="Permalink to this headline">¶</a></h1>
+<p>Currently Robot Raconteur is not natively supported by commercial hardware so it is necessary to “wrap” the provided
+APIs with a Robot Raconteur service. For this example, we are going to wrap the serial Create Open Interface (OI) with a
+service. The sample code is by no means exhaustive of all the capabilities the robot has to offer; it is intended to be
+instructive on the use of Robot Raconteur. The user is encouraged to fill out the functionality by adding more members
+to the service definition!</p>
+<div class="section" id="simple-service">
+<h2>Simple service<a class="headerlink" href="#simple-service" title="Permalink to this headline">¶</a></h2>
+<p>The first step in using Robot Raconteur is to develop an object that implements the service definition. Example
+<a class="reference external" href="#createserver1">[createserver1]</a> shows a non-Robot Raconteur program that contains a class <code class="docutils literal notranslate"><span class="pre">Create_impl</span></code> that
+implements the service definition in Example <a class="reference external" href="#createinterface">[createinterface]</a>. Table <a class="reference external" href="#createmembers">1</a>
+lists the members and the functionality that will be implemented.</p>
+<div class="docutils container" id="createmembers">
+<table class="docutils align-default" id="id5">
+<caption><span class="caption-text">Members of Create object</span><a class="headerlink" href="#id5" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 38%" />
+<col style="width: 63%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Member</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">function</span> <span class="pre">void</span> <span class="pre">Drive(int16</span> <span class="pre">velocity,</span> <span class="pre">int16</span> <span class="pre">radius)</span></code></p></td>
+<td><p>Drives the create at <code class="docutils literal notranslate"><span class="pre">velocity</span></code> (mm/s) with <code class="docutils literal notranslate"><span class="pre">radius</span></code> (mm)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">function</span> <span class="pre">void</span> <span class="pre">StartStreaming()</span></code></p></td>
+<td><p>Starts the sensor packet streaming (Bumpers (17), Distance Traveled (19), Angle Traveled (20))</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">function</span> <span class="pre">void</span> <span class="pre">StopStreaming()</span></code></p></td>
+<td><p>Stops the sensor packet streaming</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">property</span> <span class="pre">int32</span> <span class="pre">DistanceTraveled</span></code></p></td>
+<td><p>Total distance traveled (doesn’t seem to be accurate…)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">property</span> <span class="pre">int32</span> <span class="pre">AngleTraveled</span></code></p></td>
+<td><p>Total angle traveled (doesn’t seem to be accurate…)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">property</span> <span class="pre">uint8</span> <span class="pre">Bumpers</span></code></p></td>
+<td><p>Returns the byte with flags about the state of the bumper and wheel drops (See OI manual sensor packet id 7)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">event</span> <span class="pre">Bump()</span></code></p></td>
+<td><p>Event fired when the bumper goes from no contact to contact</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pipe</span> <span class="pre">SensorPacket</span> <span class="pre">packets</span></code></p></td>
+<td><p>Provides a stream of the raw sensor information as it is received. The ID is always 19. The rest of the packet is the sensor data
+followed by checksum. The “nBytes” field is not included.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">callback</span> <span class="pre">uint8[]</span> <span class="pre">play_callback(int32</span> <span class="pre">DistanceTraveled,</span> <span class="pre">int32</span> <span class="pre">AngleTraveled)</span></code></p></td>
+<td><p>A callback that is called when the “Play” button is pressed and returns notes to play on the Create.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>[createmembers]</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">serial</span>
+<span class="kn">import</span> <span class="nn">struct</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">RobotRaconteur</span> <span class="k">as</span> <span class="nn">RR</span>
+<span class="c1">#Convenience shorthand to the default node.</span>
+<span class="c1">#RRN is equivalent to RR.RobotRaconteurNode.s</span>
+<span class="n">RRN</span><span class="o">=</span><span class="n">RR</span><span class="o">.</span><span class="n">RobotRaconteurNode</span><span class="o">.</span><span class="n">s</span>
+<span class="kn">import</span> <span class="nn">thread</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+
+<span class="n">serial_port_name</span><span class="o">=</span><span class="s2">&quot;/dev/ttyUSB0&quot;</span>
+
+<span class="k">class</span> <span class="nc">Create_impl</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Bump</span><span class="o">=</span><span class="n">RR</span><span class="o">.</span><span class="n">EventHook</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="o">=</span><span class="n">threading</span><span class="o">.</span><span class="n">RLock</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_packets</span><span class="o">=</span><span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_play_callback</span><span class="o">=</span><span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">Drive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">velocity</span><span class="p">,</span> <span class="n">radius</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+            <span class="n">dat</span><span class="o">=</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;&gt;B2h&quot;</span><span class="p">,</span><span class="mi">137</span><span class="p">,</span><span class="n">velocity</span><span class="p">,</span><span class="n">radius</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_serial</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">dat</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">StartStreaming</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">StopStreaming</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">DistanceTraveled</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">AngleTraveled</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">Bumpers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">play_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_play_callback</span><span class="p">;</span>
+    <span class="nd">@play_callback</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">play_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_play_callback</span><span class="o">=</span><span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">Init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">port</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_serial</span><span class="o">=</span><span class="n">serial</span><span class="o">.</span><span class="n">Serial</span><span class="p">(</span><span class="n">port</span><span class="o">=</span><span class="s2">&quot;/dev/ttyUSB0&quot;</span><span class="p">,</span><span class="n">baudrate</span><span class="o">=</span><span class="mi">57600</span><span class="p">)</span>
+        <span class="n">dat</span><span class="o">=</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;&gt;2B&quot;</span><span class="p">,</span><span class="mi">128</span><span class="p">,</span><span class="mi">131</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_serial</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">dat</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">Shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_serial</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+
+    <span class="c1">#Initialize the object in the service</span>
+    <span class="n">obj</span><span class="o">=</span><span class="n">Create_impl</span><span class="p">()</span>
+    <span class="n">obj</span><span class="o">.</span><span class="n">Init</span><span class="p">(</span><span class="n">serial_port_name</span><span class="p">)</span>
+
+    <span class="c1">#Drive a bit to show that it works</span>
+    <span class="n">obj</span><span class="o">.</span><span class="n">Drive</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span><span class="mi">1000</span><span class="p">)</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">obj</span><span class="o">.</span><span class="n">Drive</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1">#Shutdown</span>
+    <span class="n">obj</span><span class="o">.</span><span class="n">Shutdown</span><span class="p">()</span>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Example <a class="reference external" href="#createserver1">[createserver1]</a> shows the members implemented. Properties and functions are simply
+properties and functions in Python, events are implemented through the <code class="docutils literal notranslate"><span class="pre">EventHook</span></code> class that must be present as a
+variable in the class. The <code class="docutils literal notranslate"><span class="pre">Wire</span></code> and <code class="docutils literal notranslate"><span class="pre">Callback</span></code> objects are implemented as properties and initialized to <code class="docutils literal notranslate"><span class="pre">None</span></code>
+and will be set by the Robot Raconteur node when the object is exposed as a service. The main function in this example
+will drive the robot a few feet to demonstrate that the service works. Replace “/dev/ttyUSB0” with the appropriate
+device (COM1, COM2, etc on Windows). The class shown above is mostly a skeleton class that needs to be filled in further
+to have functionality beyond simply driving.</p>
+<p>Note that the function drive has a <code class="docutils literal notranslate"><span class="pre">with</span> <span class="pre">self._lock</span></code> block protecting the code within the function. Robot Raconteur is
+multi-threaded, meaning that all members including functions can be called <em>concurrently</em>, meaning that if there is an
+operation or data structure that can be corrupted by simultaneous access, it is necessary to use a <em>thread lock</em>,
+also-known-as a <em>mutex</em>. In the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> for class <code class="docutils literal notranslate"><span class="pre">Create_impl</span></code>, the <code class="docutils literal notranslate"><span class="pre">self._lock</span></code> variable is set to a new
+instance of <code class="docutils literal notranslate"><span class="pre">threading.RLock()</span></code>. When used with the <code class="docutils literal notranslate"><span class="pre">with</span></code> statement, it will lock itself so only one block can
+execute at a time with one thread. If all the functions in the class use the same “with lock”, only one thread at a time
+will be able to access the class. If you are not familiar with multi-threading, it is best to have one global lock for
+all your functions to prevent collisions.</p>
+<p>Now that there is a basic object implemented, it is time to expose it as a Robot Raconteur service. Example
+<a class="reference external" href="#createserver2">[createserver2]</a> shows a replacement for the <code class="docutils literal notranslate"><span class="pre">main</span></code> function that instead of simply driving the
+robot, exposes the service.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+
+    <span class="n">obj</span><span class="o">=</span><span class="n">Create_impl</span><span class="p">()</span>
+    <span class="n">comm_port</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">obj</span><span class="o">.</span><span class="n">Init</span><span class="p">(</span><span class="n">comm_port</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">RR</span><span class="o">.</span><span class="n">ServerNodeSetup</span><span class="p">(</span><span class="s2">&quot;experimental.create2.Create&quot;</span><span class="p">,</span><span class="mi">2354</span><span class="p">):</span>
+
+        <span class="n">RRN</span><span class="o">.</span><span class="n">RegisterServiceTypeFromFile</span><span class="p">(</span><span class="s2">&quot;experimental.create2&quot;</span><span class="p">)</span>
+        <span class="n">RRN</span><span class="o">.</span><span class="n">RegisterService</span><span class="p">(</span><span class="s2">&quot;Create&quot;</span><span class="p">,</span><span class="s2">&quot;experimental.create2.Create&quot;</span><span class="p">,</span><span class="n">obj</span><span class="p">)</span>
+
+        <span class="n">raw_input</span><span class="p">(</span><span class="s2">&quot;Server started, press enter to quit...&quot;</span><span class="p">)</span>
+
+        <span class="n">obj</span><span class="o">.</span><span class="n">Shutdown</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>A Robot Raconteur node requires several steps to initialize a service:</p>
+<ol class="arabic simple">
+<li><p>Assign the “NodeID” and “NodeName”, or automatically generate random</p></li>
+<li><p>Instantiate and register transports, begin listening for clients</p></li>
+<li><p>Register the relevant service types (robdef)</p></li>
+<li><p>Register the root object for the service</p></li>
+</ol>
+<p>Each Robot Raconteur node is uniquely identified by a 128-bit UUID “NodeID”. UUIDs are a widely used concept, and are
+statistically guaranteed to be unique when randomly generated <a class="footnote-reference brackets" href="#id3" id="id1">1</a>. A node also has a name, the “NodeName”. A “NodeName”
+is intended to help clients find relevant services, and is not guaranteed to be unique. For client nodes, the “NodeID”
+is typically allowed to be automatically generated when needed, with the “NodeName” left emtpy. For a server node, the
+“NodeName” is normally specified, with the “NodeID” retrieved from a local cache based on the “NodeName”. The “NodeID”
+is randomly generated the first time the “NodeName” is used, and is retrieved from the cache subsequently. TLS
+certificates for Robot Raconteur are assigned to the “NodeID”. See <em>Robot Raconteur Security using TLS and Certificates</em>
+for more details.</p>
+<p>“Transports” are used to communicate between nodes. The currently available transports are <code class="docutils literal notranslate"><span class="pre">TcpTransport</span></code> for
+communication over a TCP/IP network, <code class="docutils literal notranslate"><span class="pre">LocalTransport</span></code> for communication between nodes running on the same computer,
+and <code class="docutils literal notranslate"><span class="pre">HardwareTransport</span></code> for communication over USB, Bluetooth, and PCIe. For most server nodes, the <code class="docutils literal notranslate"><span class="pre">TcpTransport</span></code>
+and <code class="docutils literal notranslate"><span class="pre">HardwareTransport</span></code> are configured to listen for incoming clients. The <code class="docutils literal notranslate"><span class="pre">TcpTransport</span></code> will listen for
+connections on a TCP port, while the <code class="docutils literal notranslate"><span class="pre">HardwareTransport</span></code> listens for connections on a file handle that is identified
+by the “NodeName” or “NodeID” of the server node <a class="footnote-reference brackets" href="#id4" id="id2">2</a>. If a TLS certificate is available, it can be loaded into the TCP
+transport. See <em>Robot Raconteur Security using TLS and Certificates</em> for more details.</p>
+<p>For most use cases, the Python class <code class="docutils literal notranslate"><span class="pre">ServerNodeSetup</span></code> can be used to initialize the server node. The
+<code class="docutils literal notranslate"><span class="pre">ServerNodeSetup</span></code> takes the “NodeName”, the TCP listen port, and an optional set of flags as parameters. In Python,
+the <code class="docutils literal notranslate"><span class="pre">ServerNodeSetup</span></code> is used with the <code class="docutils literal notranslate"><span class="pre">with</span></code> statement. When the <code class="docutils literal notranslate"><span class="pre">with</span></code> statement scope is exited, the node is
+shut down.</p>
+<p>Service types (stored in robdef files) can either be included in the Python source file as strings, or can be loaded
+from file. In this example, the service definition is loaded from a file using the
+<code class="docutils literal notranslate"><span class="pre">RRN.RegisterServiceDefinitionFromFile</span></code> function.</p>
+<p>Once the identification and transports have been initialized, the object is registered for use. The first parameter in
+<code class="docutils literal notranslate"><span class="pre">RRN.RegisterService</span></code> is the name of the service, the second parameter is the fully qualified Robot Raconteur type of
+the object, and the last parameter is the object to expose as a service. (Note that a node can have multiple services
+registered as long as they have different names).</p>
+<p>After initialization, the program waits for the user to press “Enter” to stop the server. The service is now available
+for use by a client!</p>
+</div>
+<div class="section" id="simple-client">
+<h2>Simple client<a class="headerlink" href="#simple-client" title="Permalink to this headline">¶</a></h2>
+<p>While there are several steps to starting a service, connecting as a client is very simple. Example
+<a class="reference external" href="#createclient1">[createclient1]</a> shows a full example that accomplishes the same driving motion as Example
+<a class="reference external" href="#createserver1">[createserver1]</a> but over the network.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">RobotRaconteur.Client</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1">#Connect to the service</span>
+<span class="n">obj</span><span class="o">=</span><span class="n">RRN</span><span class="o">.</span><span class="n">ConnectService</span><span class="p">(</span><span class="s2">&quot;rr+tcp://101.2.2.2?service=Create&quot;</span><span class="p">)</span>
+
+<span class="c1">#Drive a bit</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">Drive</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">Drive</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The example registers uses the <code class="docutils literal notranslate"><span class="pre">RobotRaconteur.Client</span></code> convenience module to configure for the most common client
+operations. This module creates a variable “RR” that contains the Robot Raconteur module, and “RRN” that is the default
+node. It also registers the transports <code class="docutils literal notranslate"><span class="pre">TcpTransport</span></code>, <code class="docutils literal notranslate"><span class="pre">LocalTransport</span></code>, <code class="docutils literal notranslate"><span class="pre">HardwareTransport</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">CloudTransport</span></code>.</p>
+<p>Robot Raconteur uses URLs to connect to services. The most common URLs are for local and TCP cases.</p>
+<p>The url format for the <code class="docutils literal notranslate"><span class="pre">LocalTransport</span></code> is:</p>
+<p><code class="docutils literal notranslate"><span class="pre">rr+local:///?nodename=TargetNodeName&amp;service=ServiceName</span></code></p>
+<p>and the url format for the <code class="docutils literal notranslate"><span class="pre">TcpTransport</span></code> is:</p>
+<p><code class="docutils literal notranslate"><span class="pre">rr+tcp://server:port?service=ServiceName</span></code></p>
+<p>The standard URL format is used, and the target service is passed as part of the “query” portion of the URL. Often it is
+necessary to specify the node to connect. For instance, the local transport requires the “nodename” to be specified
+because there can be multiple nodes running locally. When using the port sharer, it is also necessary to specify the
+target node (See Appendix <a class="reference external" href="#portsharer">[portsharer]</a>). The target node can be identified by NodeName, by NodeID, or
+by both. The NodeID should be the UUID of the node without curly braces. This is due to the limitations of URL syntax.</p>
+<p>For instance, these are all valid URLs for the local transport to connect to the CreateService (replace the UUID with
+the one generated for your service):</p>
+<p><code class="docutils literal notranslate"><span class="pre">rr+local:///?nodename=experimental.create.Create&amp;service=Create</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">rr+local:///?nodeid=6f6706c9-91cc-d448-ae8c-c5a2acac198c&amp;service=Create</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">rr+local:///?nodeid=6f6706c9-91cc-d448-ae8c-c5a2acac198c&amp;nodename=experimental.create.Create&amp;service=Create</span></code></p>
+<p>The following are valid URLs to connect to the CreateServer using tcp:</p>
+<p><code class="docutils literal notranslate"><span class="pre">rr+tcp://localhost:2354/?service=Create</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">rr+tcp://localhost:2354/?nodename=experimental.create.Create&amp;service=Create</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">rr+tcp://localhost:2354/?nodeid=6f6706c9-91cc-d448-ae8c-c5a2acac198c&amp;service=Create</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">rr+tcp://localhost:2354/?nodeid=6f6706c9-91cc-d448-ae8c-c5a2acac198c&amp;nodename=experimental.create.Create&amp;service=Create</span></code></p>
+<p><em>Replace “localhost” with the IP address or hostname of a foreign computer if accessing over a network.</em></p>
+<p>Note that for the TCP connections, the “rr+tcp” can be connected to “rrs+tcp” to enable TLS to encrypt the
+communication. See the <em>Robot Raconteur Security using TLS and Certificates</em> manual for details on using TLS.</p>
+<p>See Appendix <a class="reference external" href="#urlformat">[urlformat]</a> for details on how to use URLs for more advanced cases.</p>
+<p>A reference to the service object is returned, and it can now be used to access the members. In this example, the robot
+is driven a bit to demonstrate how to use a function.</p>
+</div>
+<div class="section" id="irobot-create-service">
+<h2>iRobot Create Service<a class="headerlink" href="#irobot-create-service" title="Permalink to this headline">¶</a></h2>
+<p>The initial service shown in Example <a class="reference external" href="#createserver2">[createserver2]</a> only fills in the <code class="docutils literal notranslate"><span class="pre">Drive</span></code> member. Appendix
+<a class="reference external" href="#createserver3">[createserver3]</a> shows a complete service that fills in all of the members. This is not intended to
+be exhaustive for the full features of the iRobot Create; it is instead intended to be used to demonstrate features of
+Robot Raconteur. Because of the length of the code it is printed in the appendix and will be referred to throughout this
+section.</p>
+<p>The functions <code class="docutils literal notranslate"><span class="pre">StartStreaming</span></code> and <code class="docutils literal notranslate"><span class="pre">StopStreaming</span></code> start and stop a thread that receives data from the serial port
+and transmits the data to the <code class="docutils literal notranslate"><span class="pre">Bump</span></code> event, the <code class="docutils literal notranslate"><span class="pre">packets</span></code> pipe, or the <code class="docutils literal notranslate"><span class="pre">play_callback</span></code> where appropriate. The
+<code class="docutils literal notranslate"><span class="pre">StartStreaming</span></code> and <code class="docutils literal notranslate"><span class="pre">StopStreaming</span></code> functions also send commands to the Create robot to start or stop sending the
+data. The function <code class="docutils literal notranslate"><span class="pre">_recv_thread</span></code> implements the ability to receive and parse the packets. This function is dedicated
+to handling the serial data from the robot and calls the <code class="docutils literal notranslate"><span class="pre">_fire_Bump</span></code> function to fire the <code class="docutils literal notranslate"><span class="pre">Bump</span></code> event, the
+<code class="docutils literal notranslate"><span class="pre">_SendSensorPacket</span></code> function to set the new value of the <code class="docutils literal notranslate"><span class="pre">packets</span></code> wire, or the <code class="docutils literal notranslate"><span class="pre">_play</span></code> function to handle when
+the Play button is pressed on the robot. It also keeps a running tally of distance and angle traveled in the
+<code class="docutils literal notranslate"><span class="pre">_DistanceTraveled</span></code> and <code class="docutils literal notranslate"><span class="pre">_AngleTraveled</span></code> variables. The rest of this section will discuss the implementation of the
+different members. It stores the Bump data in the <code class="docutils literal notranslate"><span class="pre">_Bumpers</span></code> variable.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Bumpers</span></code>, <code class="docutils literal notranslate"><span class="pre">DistanceTraveled</span></code>, and <code class="docutils literal notranslate"><span class="pre">AngleTraveled</span></code> properties are implemented as standard Python properties
+using the <code class="docutils literal notranslate"><span class="pre">&#64;Property</span></code> decorator. Because these are read only, the setters throw an exception. Properties transparently
+transmit exceptions back to the client. Functions also transparently transmit exceptions to the client. All Robot
+Raconteur calls should be surrounded with try/except blocks that catch <code class="docutils literal notranslate"><span class="pre">Exception</span></code> meaning it will catch and process
+any thrown exception.</p>
+<div class="line-block">
+<div class="line">Events in Python are implemented using the <code class="docutils literal notranslate"><span class="pre">EventHook()</span></code> class. The <code class="docutils literal notranslate"><span class="pre">__init__</span></code> function of</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Create_impl</span></code> sets:</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">self.Bump==RR.EventHook()</span></code></p>
+<p>This line creates the <code class="docutils literal notranslate"><span class="pre">EventHook</span></code> object that is used to connect events. The <code class="docutils literal notranslate"><span class="pre">fire_Bump</span></code> function then fires this
+event. The Robot Raconteur node will transmit this event to all connected clients. Note that the <code class="docutils literal notranslate"><span class="pre">fire</span></code> command of
+<code class="docutils literal notranslate"><span class="pre">EventHook</span></code> may contain parameters if the event has parameters.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">packets</span></code> wire is implemented by the node when the object is registered as a service. Because the wire is marked
+<code class="docutils literal notranslate"><span class="pre">readonly</span></code> using a member modifier and the <code class="docutils literal notranslate"><span class="pre">packets</span></code> object attribute is not set, the node will assume that we want
+a <code class="docutils literal notranslate"><span class="pre">WireBroadcaster</span></code>. The node will create the attribute and assign a <code class="docutils literal notranslate"><span class="pre">WireBroadcaster</span></code>. The <code class="docutils literal notranslate"><span class="pre">WireBroadcaster</span></code>
+class is designed to send the same value to all connected clients. If the wire is marked <code class="docutils literal notranslate"><span class="pre">writeonly</span></code>, the node will
+provide a <code class="docutils literal notranslate"><span class="pre">WireUnicastReceiver</span></code> object. If the wire does not specify a direction, A <code class="docutils literal notranslate"><span class="pre">WireServer</span></code> is passed to the
+object through a property, which must be implemented by the object to receive the <code class="docutils literal notranslate"><span class="pre">WireServer</span></code>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">_SendSensorPackets</span></code> function is called by the serial receive thread when there is a new data packet. The
+<code class="docutils literal notranslate"><span class="pre">_SendSensorPackets</span></code> uses the <code class="docutils literal notranslate"><span class="pre">OutValue</span></code> of the <code class="docutils literal notranslate"><span class="pre">WireBroadcaster</span></code> to send the new value to all connected clients.
+The packet data is stored in a <code class="docutils literal notranslate"><span class="pre">experimental.create.SensorPacket</span></code> structure that is defined in the service definition.
+The <code class="docutils literal notranslate"><span class="pre">RRN.NewStructure</span></code> command is used to initialize a new Robot Raconteur structure in Python. If there is an error,
+assume that the wire has been closed and delete it from the dictionary.</p>
+<p>Wires use the <code class="docutils literal notranslate"><span class="pre">InValue</span></code> and <code class="docutils literal notranslate"><span class="pre">OutValue</span></code> in <code class="docutils literal notranslate"><span class="pre">WireConnection</span></code> to send and receive values. For a <code class="docutils literal notranslate"><span class="pre">readonly</span></code> wire,
+the client will use the <code class="docutils literal notranslate"><span class="pre">InValue</span></code> while the service will use the <code class="docutils literal notranslate"><span class="pre">OutValue</span></code> property. Fir a <code class="docutils literal notranslate"><span class="pre">writeonly</span></code> wire,
+these roles are reversed and the client will use the <code class="docutils literal notranslate"><span class="pre">OutValue</span></code> property while the service will use the <code class="docutils literal notranslate"><span class="pre">InValue</span></code>
+property. If the wire does not specify the direction, both the client and service can use <code class="docutils literal notranslate"><span class="pre">InValue</span></code> and <code class="docutils literal notranslate"><span class="pre">OutValue</span></code>.</p>
+<p>As of Version 0.9, wire clients can also “peek” and “poke” values. The peek and poke read the value synchronously
+without creating a streaming connection. (The behavior of “peek” and “poke” is similar to the behavior of properties.)
+<code class="docutils literal notranslate"><span class="pre">PeekInValue</span></code> is used to read the in value, while <code class="docutils literal notranslate"><span class="pre">PeekOutValue</span></code> and <code class="docutils literal notranslate"><span class="pre">PokeOutValue</span></code> are used to read and write the
+out value. (The “in” and “out” directions in the peek/poke functions are relative to the client.)</p>
+<p><code class="docutils literal notranslate"><span class="pre">WireConnection</span></code> also has the <code class="docutils literal notranslate"><span class="pre">LastValueReceivedTime</span></code> and <code class="docutils literal notranslate"><span class="pre">LastValueSentTime</span></code> to determine the last time that
+values were updated. These are relative to <code class="docutils literal notranslate"><span class="pre">InValue</span></code> and <code class="docutils literal notranslate"><span class="pre">OutValue</span></code> when using streaming data, and are received from
+the peek and poke functions as part of the return from the functions.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">play_callback</span></code> member is assigned to the texttt_play_callback attribute of the <code class="docutils literal notranslate"><span class="pre">Create_impl</span></code> object by the
+node when the object is registered as a service. The <code class="docutils literal notranslate"><span class="pre">_play</span></code> function demonstrates how to use the callback. The
+<code class="docutils literal notranslate"><span class="pre">StartStreaming</span></code> command contains the following line:</p>
+<p><code class="docutils literal notranslate"><span class="pre">self._ep=RR.ServerEndpoint.GetCurrentEndpoint()</span></code></p>
+<p>This line is used to determine the “endpoint” of the current client that is calling the function. The endpoint is used
+to uniquely identify the client. When a callback is used, it is necessary to specify which client to call because there
+may be multiple connected clients. The client is identified using the endpoint. The <code class="docutils literal notranslate"><span class="pre">_play</span></code> function contains the
+following lines, which executes the callback on the client:</p>
+<p><code class="docutils literal notranslate"><span class="pre">cb_func=self.play_callback.GetClientFunction(self._ep)</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">notes=cb_func(self._DistanceTraveled,</span> <span class="pre">self._AngleTraveled)</span></code></p>
+<p>The first line retrieves the a function handle to call the client based on the stored endpoint. The second line executes
+this function, which is actually implemented by calling the client with the supplied parameters and then returning the
+result. Note that exceptions are also transmitted transparently by callbacks from the client to the service. (See
+section <a class="reference external" href="#callbackref">[callbackref]</a>.)</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">ServerNodeSetup</span></code> class by default will call <code class="docutils literal notranslate"><span class="pre">EnableNodeAnnounce</span></code>. This initializes the auto-discovery system to
+send out beacon packets so that client nodes can find the service. This process is discussed in Section
+<a class="reference external" href="#autodiscovery">[autodiscovery]</a>.</p>
+</div>
+<div class="section" id="irobot-create-client">
+<h2>iRobot Create Client<a class="headerlink" href="#irobot-create-client" title="Permalink to this headline">¶</a></h2>
+<p>A client that utilizes the full iRobot Create Service is shown in Appendix <a class="reference external" href="#createclient3">[createclient3]</a>. The
+client is similar to the previous example client, however it adds functionality using the <code class="docutils literal notranslate"><span class="pre">Bump</span></code>, <code class="docutils literal notranslate"><span class="pre">packets</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">play_callback</span></code> member. The line:</p>
+<p><code class="docutils literal notranslate"><span class="pre">c.Bump</span> <span class="pre">+=</span> <span class="pre">Bumped</span></code></p>
+<p>adds the function <code class="docutils literal notranslate"><span class="pre">Bumped</span></code> as a handler when the event is fired. The line:</p>
+<p><code class="docutils literal notranslate"><span class="pre">wire=c.packets.Connect()</span></code></p>
+<p>connects to the <code class="docutils literal notranslate"><span class="pre">packets</span></code> wire and returns a WireConnection object that is stored in the <code class="docutils literal notranslate"><span class="pre">wire</span></code> variable. This
+WireConnection has the same functionality as the one provided to the service object in the previous section. In this
+example, the <code class="docutils literal notranslate"><span class="pre">WireValueChange</span></code> event is used. The line:</p>
+<p><code class="docutils literal notranslate"><span class="pre">wire.WireValueChanged+=wire_changed</span></code></p>
+<p>adds the <code class="docutils literal notranslate"><span class="pre">wire_changed</span></code> function as a handler and is called when the service provides a new value for the wire. This
+event is also available on the service however in this application it is not needed. The final step in the configuration
+is to set the function <code class="docutils literal notranslate"><span class="pre">play_callback</span></code> as the callback function for the <code class="docutils literal notranslate"><span class="pre">play_callback</span></code> member through the following
+line:</p>
+<p><code class="docutils literal notranslate"><span class="pre">c.play_callback.Function=play_callback</span></code></p>
+<p>This function will now be called by the service when the service calls this client’s callback.</p>
+<p>After the setup the robot is driven a bit and then pauses to allow the user to try out the functionality. The
+<code class="docutils literal notranslate"><span class="pre">RobotRaconteurNode</span></code> is shutdown automatically when the program exits.</p>
+<dl class="footnote brackets">
+<dt class="label" id="id3"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>The uniqueness guarantee depends on the quality of available entropy.</p>
+</dd>
+<dt class="label" id="id4"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
+<dd><p>The “NodeID” lookup is implemented using the the “StartServerAsNodeName” function in <code class="docutils literal notranslate"><span class="pre">LocalTransport</span></code>.</p>
+</dd>
+</dl>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="WebcamPythonExample.html" class="btn btn-neutral float-right" title="Webcam Example" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="RobotRaconteurPython.html" class="btn btn-neutral float-left" title="Robot Raconteur Python" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Wason Technology, LLC
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

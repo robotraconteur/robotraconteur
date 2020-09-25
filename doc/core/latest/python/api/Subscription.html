@@ -1,0 +1,1009 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Subscription &mdash; Robot Raconteur Python  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Node Setup" href="NodeSetup.html" />
+    <link rel="prev" title="Callback Member" href="CallbackMember.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> Robot Raconteur Python
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Tutorial:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/Introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/ServiceDefinition.html">Service Definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/RobotRaconteurPython.html">Robot Raconteur Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/iRobotCreatePythonExample.html">iRobot Create Python Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/WebcamPythonExample.html">Webcam Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/Discovery.html">Service Discovery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/Subscriptions.html">Subscriptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/Authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/ObjectLocks.html">Exclusive object locks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/TimeCritical.html">Time-critical software with Wire member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/ForwardCompatibility.html">Forward compatibility with the “implements” statement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/MemberModifiers.html">Member Modifiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/Async.html">Asynchronous programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/GatherScatter.html">Gather/Scatter operations</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Framework:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/service_definition.html">Service Definitions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/nodes_and_communication.html">Robot Raconteur Nodes and Communication</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/exceptions.html">Exceptions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/security.html">Security</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/locking.html">Object Locking</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Utility:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/command_line_options.html">Node Setup Command Line Options</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/logging.html">Logging</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/taps.html">Taps</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/robotraconteurgen.html">RobotRaconteurGen Utility</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Constants.html">Constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RobotRaconteurNode.html">RobotRaconteurNode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="DataTypes.html">Misc Data Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PipeMember.html">Pipe Member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="WireMember.html">Wire Member</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CallbackMember.html">Callback Member</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Subscription</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#serviceinfo2subscription-class">ServiceInfo2Subscription Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#servicesubscription-class">ServiceSubscription Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#servicesubscriptionclientid-class">ServiceSubscriptionClientID Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#servicesubscriptionfilter-class">ServiceSubscriptionFilter Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#servicesubscriptionfilternode-class">ServiceSubscriptionFilterNode Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#wiresubscription-class">WireSubscription Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pipesubscription-class">PipeSubscription Class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="NodeSetup.html">Node Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Transports.html">Transports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Timers.html">Timers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Generators.html">Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Service.html">Service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ServiceSecurity.html">Service Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Exceptions.html">Exceptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Logging.html">Logging and Taps</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Robot Raconteur Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Subscription</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/Subscription.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="subscription">
+<h1>Subscription<a class="headerlink" href="#subscription" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="serviceinfo2subscription-class">
+<h2>ServiceInfo2Subscription Class<a class="headerlink" href="#serviceinfo2subscription-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="RobotRaconteur.ServiceInfo2Subscription">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">ServiceInfo2Subscription</code><a class="headerlink" href="#RobotRaconteur.ServiceInfo2Subscription" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subscription for information about detected services</p>
+<p>Created using RobotRaconteurNode.SubscribeServiceInfo2()</p>
+<p>The ServiceInfo2Subscription class is used to track services with a specific service type as they are
+detected on the local network and when they are lost. The currently detected services can also
+be retrieved. The service information is returned using the ServiceInfo2 structure.</p>
+<dl class="py method">
+<dt id="RobotRaconteur.ServiceInfo2Subscription.Close">
+<code class="sig-name descname">Close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ServiceInfo2Subscription.Close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close the subscription</p>
+<p>Closes the subscription. Subscriptions are automatically closed when the node is shut down.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.ServiceInfo2Subscription.GetDetectedServiceInfo2">
+<code class="sig-name descname">GetDetectedServiceInfo2</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ServiceInfo2Subscription.GetDetectedServiceInfo2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dict of detected services.</p>
+<p>The returned dict contains the detected nodes as ServiceInfo2. The dict
+is keyed with ServiceSubscriptionClientID.</p>
+<p>This function does not block.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The detected services.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Dict[<a class="reference internal" href="#RobotRaconteur.ServiceSubscriptionClientID" title="RobotRaconteur.ServiceSubscriptionClientID">RobotRaconteur.ServiceSubscriptionClientID</a>,<a class="reference internal" href="DataTypes.html#RobotRaconteur.ServiceInfo2" title="RobotRaconteur.ServiceInfo2">ServiceInfo2</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.ServiceInfo2Subscription.ServiceDetected">
+<em class="property">property </em><code class="sig-name descname">ServiceDetected</code><a class="headerlink" href="#RobotRaconteur.ServiceInfo2Subscription.ServiceDetected" title="Permalink to this definition">¶</a></dt>
+<dd><p>Event hook for service detected events. Use to add handlers to be called
+when a service is detected.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">my_handler</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="n">subscription_id</span><span class="p">,</span> <span class="n">service_info2</span><span class="p">):</span>
+   <span class="c1"># Process detected service</span>
+   <span class="k">pass</span>              
+
+<span class="n">my_serviceinfo2_sub</span><span class="o">.</span><span class="n">ServiceDetected</span> <span class="o">+=</span> <span class="n">my_handler</span>
+</pre></div>
+</div>
+<p>Handler must have signature <code class="docutils literal notranslate"><span class="pre">Callable[[RobotRaconteur.ServiceInfo2Subscription,RobotRaconteur.ServiceSubscriptionClientID,RobotRaconteur.ServiceInfo2],None]</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="DataTypes.html#RobotRaconteur.EventHook" title="RobotRaconteur.EventHook">RobotRaconteur.EventHook</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.ServiceInfo2Subscription.ServiceLost">
+<em class="property">property </em><code class="sig-name descname">ServiceLost</code><a class="headerlink" href="#RobotRaconteur.ServiceInfo2Subscription.ServiceLost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Event hook for service lost events. Use to add handlers to be called
+when a service is lost.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">my_handler</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="n">subscription_id</span><span class="p">,</span> <span class="n">service_info2</span><span class="p">):</span>
+   <span class="c1"># Process lost service</span>
+   <span class="k">pass</span>              
+
+<span class="n">my_serviceinfo2_sub</span><span class="o">.</span><span class="n">ServiceLost</span> <span class="o">+=</span> <span class="n">my_handler</span>
+</pre></div>
+</div>
+<p>Handler must have signature <code class="docutils literal notranslate"><span class="pre">Callable[[RobotRaconteur.ServiceInfo2Subscription,RobotRaconteur.ServiceSubscriptionClientID,RobotRaconteur.ServiceInfo2],None]</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="DataTypes.html#RobotRaconteur.EventHook" title="RobotRaconteur.EventHook">RobotRaconteur.EventHook</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="servicesubscription-class">
+<h2>ServiceSubscription Class<a class="headerlink" href="#servicesubscription-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="RobotRaconteur.ServiceSubscription">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">ServiceSubscription</code><a class="headerlink" href="#RobotRaconteur.ServiceSubscription" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subscription that automatically connects services and manages lifecycle of connected services</p>
+<p>Created using RobotRaconteurNode.SubscribeService() or RobotRaconteurNode.SubscribeServiceByType(). The ServiceSubscription
+class is used to automatically create and manage connections based on connection criteria. RobotRaconteur::SubscribeService()
+is used to create a robust connection to a service with a specific URL. RobotRaconteurNode.SubscribeServiceByType() is used
+to connect to services with a specified type, filtered with a ServiceSubscriptionFilter. Subscriptions will create connections
+to matching services, and will retry the connection if it fails or the connection is lost. This behavior allows subscriptions
+to be used to create robust connections. The retry delay for connections can be modified using the ConnectRetryDelay property.</p>
+<p>The currently connected clients can be retrieved using the GetConnectedClients() function. A single “default client” can be
+retrieved using the GetDefaultClient() function or TryGetDefaultClient() functions. Listeners for client connect and 
+disconnect events can be added using the ClientConnectListener and ClientDisconnectListener properties. If 
+the user wants to claim a client, the ClaimClient() and ReleaseClient() functions will be used. Claimed clients will 
+no longer have their lifecycle managed by the subscription.</p>
+<p>Subscriptions can be used to create “pipe” and “wire” subscriptions. These member subscriptions aggregate
+the packets and values being received from all services. They can also act as a “reverse broadcaster” to 
+send packets and values to all services that are actively connected. See PipeSubscription and WireSubscription.</p>
+<dl class="py method">
+<dt id="RobotRaconteur.ServiceSubscription.AsyncGetDefaultClient">
+<code class="sig-name descname">AsyncGetDefaultClient</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">handler</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ServiceSubscription.AsyncGetDefaultClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Asynchronously get the default client, with optional timeout</p>
+<p>Same as GetDefaultClientWait(), but returns asynchronously.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">handler</span></code> is None, returns an awaitable future.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>handler</strong> (<em>Callable</em><em>[</em><em>[</em><em>bool</em><em>,</em><em>object</em><em>]</em><em>,</em><em>None</em><em>]</em>) – The handler to call when default client is available, or times out</p></li>
+<li><p><strong>timeout</strong> (<em>float</em>) – Timeout in seconds, or -1 for infinite</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.ServiceSubscription.ClientConnectFailed">
+<em class="property">property </em><code class="sig-name descname">ClientConnectFailed</code><a class="headerlink" href="#RobotRaconteur.ServiceSubscription.ClientConnectFailed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Event hook for client client connect failed events. Used to receive
+notification of when a client connection was not successful, including
+the urls and resulting exceptions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">my_handler</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="n">subscription_id</span><span class="p">,</span> <span class="n">candidate_urls</span><span class="p">,</span> <span class="n">exceptions</span><span class="p">):</span>
+   <span class="c1"># Process lost service</span>
+   <span class="k">pass</span>              
+
+<span class="n">my_service_sub</span><span class="o">.</span><span class="n">ClientDisconnected</span> <span class="o">+=</span> <span class="n">my_handler</span>
+</pre></div>
+</div>
+<p>Handler must have signature <code class="docutils literal notranslate"><span class="pre">Callable[[RobotRaconteur.ServiceInfo2Subscription,RobotRaconteur.ServiceSubscriptionClientID,List[str],List[Exception]],None]</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="DataTypes.html#RobotRaconteur.EventHook" title="RobotRaconteur.EventHook">RobotRaconteur.EventHook</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.ServiceSubscription.ClientConnected">
+<em class="property">property </em><code class="sig-name descname">ClientConnected</code><a class="headerlink" href="#RobotRaconteur.ServiceSubscription.ClientConnected" title="Permalink to this definition">¶</a></dt>
+<dd><p>Event hook for client connected events. Use to add handlers to be called
+when a client is connected.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">my_handler</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="n">subscription_id</span><span class="p">,</span> <span class="n">connected_service</span><span class="p">):</span>
+   <span class="c1"># Process lost service</span>
+   <span class="k">pass</span>              
+
+<span class="n">my_service_sub</span><span class="o">.</span><span class="n">ClientConnected</span> <span class="o">+=</span> <span class="n">my_handler</span>
+</pre></div>
+</div>
+<p>Handler must have signature <code class="docutils literal notranslate"><span class="pre">Callable[[RobotRaconteur.ServiceInfo2Subscription,RobotRaconteur.ServiceSubscriptionClientID,T],None]</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="DataTypes.html#RobotRaconteur.EventHook" title="RobotRaconteur.EventHook">RobotRaconteur.EventHook</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.ServiceSubscription.ClientDisconnected">
+<em class="property">property </em><code class="sig-name descname">ClientDisconnected</code><a class="headerlink" href="#RobotRaconteur.ServiceSubscription.ClientDisconnected" title="Permalink to this definition">¶</a></dt>
+<dd><p>Event hook for client disconnected events. Use to add handlers to be called
+when a client is disconnected.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">my_handler</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="n">subscription_id</span><span class="p">,</span> <span class="n">connected_service</span><span class="p">):</span>
+   <span class="c1"># Process lost service</span>
+   <span class="k">pass</span>              
+
+<span class="n">my_service_sub</span><span class="o">.</span><span class="n">ClientDisconnected</span> <span class="o">+=</span> <span class="n">my_handler</span>
+</pre></div>
+</div>
+<p>Handler must have signature <code class="docutils literal notranslate"><span class="pre">Callable[[RobotRaconteur.ServiceInfo2Subscription,RobotRaconteur.ServiceSubscriptionClientID,T],None]</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="DataTypes.html#RobotRaconteur.EventHook" title="RobotRaconteur.EventHook">RobotRaconteur.EventHook</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.ServiceSubscription.Close">
+<code class="sig-name descname">Close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ServiceSubscription.Close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close the subscription</p>
+<p>Closes the subscription. Subscriptions are automatically closed when the node is shut down.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.ServiceSubscription.ConnectRetryDelay">
+<em class="property">property </em><code class="sig-name descname">ConnectRetryDelay</code><a class="headerlink" href="#RobotRaconteur.ServiceSubscription.ConnectRetryDelay" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the connect retry delay in seconds</p>
+<p>Default is 2.5 seconds</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.ServiceSubscription.GetConnectedClients">
+<code class="sig-name descname">GetConnectedClients</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ServiceSubscription.GetConnectedClients" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dict of connected clients</p>
+<p>The returned dict contains the connect clients. The dict
+is keyed with ServiceSubscriptionClientID.</p>
+<p>Clients must be cast to a type, similar to the client returned by
+RobotRaconteurNode.ConnectService().</p>
+<p>Clients can be “claimed” using ClaimClient(). Once claimed, the subscription
+will stop managing the lifecycle of the client.</p>
+<p>This function does not block.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Dict[<a class="reference internal" href="#RobotRaconteur.ServiceSubscriptionClientID" title="RobotRaconteur.ServiceSubscriptionClientID">RobotRaconteur.ServiceSubscriptionClientID</a>,Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.ServiceSubscription.GetDefaultClient">
+<code class="sig-name descname">GetDefaultClient</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ServiceSubscription.GetDefaultClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the “default client” connection</p>
+<p>The “default client” is the “first” client returned from the connected clients map. This is effectively
+default, and is only useful if only a single client connection is expected. This is normally true
+for RobotRaconteurNode.SubscribeService()</p>
+<p>Clients using GetDefaultClient() should not store a reference to the client. It should instead
+call GetDefaultClient() right before using the client to make sure the most recenty connection
+is being used. If possible, SubscribePipe() or SubscribeWire() should be used so the lifecycle
+of pipes and wires can be managed automatically.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The client connection</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.ServiceSubscription.GetDefaultClientWait">
+<code class="sig-name descname">GetDefaultClientWait</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ServiceSubscription.GetDefaultClientWait" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the “default client” connection, waiting with timeout if not connected</p>
+<p>The “default client” is the “first” client returned from the connected clients map. This is effectively
+default, and is only useful if only a single client connection is expected. This is normally true
+for RobotRaconteurNode.SubscribeService()</p>
+<p>Clients using GetDefaultClient() should not store a reference to the client. It should instead
+call GetDefaultClient() right before using the client to make sure the most recenty connection
+is being used. If possible, SubscribePipe() or SubscribeWire() should be used so the lifecycle
+of pipes and wires can be managed automatically.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>timeout</strong> (<em>float</em>) – Timeout in seconds, or -1 for infinite</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The client connection</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.ServiceSubscription.SubscribePipe">
+<code class="sig-name descname">SubscribePipe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pipe_name</span></em>, <em class="sig-param"><span class="n">service_path</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ServiceSubscription.SubscribePipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a pipe subscription</p>
+<p>Pipe subscriptions aggregate the packets received from the connected services. It can also act as a 
+“reverse broadcaster” to send packets to clients. See PipeSubscription.</p>
+<p>The optional service path may be an empty string to use the root object in the service. The first level of the
+service path may be “*” to match any service name. For instance, the service path “<a href="#id1"><span class="problematic" id="id2">*</span></a>.sub_obj” will match
+any service name, and use the “sub_obj” objref.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>membername</strong> (<em>str</em>) – The member name of the pipe</p></li>
+<li><p><strong>servicepath</strong> (<em>str</em>) – The service path of the object owning the pipe member</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The pipe subscription</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#RobotRaconteur.PipeSubscription" title="RobotRaconteur.PipeSubscription">RobotRaconteur.PipeSubscription</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.ServiceSubscription.SubscribeWire">
+<code class="sig-name descname">SubscribeWire</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wire_name</span></em>, <em class="sig-param"><span class="n">service_path</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ServiceSubscription.SubscribeWire" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a wire subscription</p>
+<p>Wire subscriptions aggregate the value received from the connected services. It can also act as a 
+“reverse broadcaster” to send values to clients. See WireSubscription.</p>
+<p>The optional service path may be an empty string to use the root object in the service. The first level of the
+service path may be “*” to match any service name. For instance, the service path “<a href="#id3"><span class="problematic" id="id4">*</span></a>.sub_obj” will match
+any service name, and use the “sub_obj” objref.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>membername</strong> (<em>str</em>) – The member name of the wire</p></li>
+<li><p><strong>servicepath</strong> (<em>str</em>) – The service path of the object owning the wire member</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The wire subscription</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#RobotRaconteur.WireSubscription" title="RobotRaconteur.WireSubscription">RobotRaconteur.WireSubscription</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.ServiceSubscription.TryGetDefaultClient">
+<code class="sig-name descname">TryGetDefaultClient</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ServiceSubscription.TryGetDefaultClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Try getting the “default client” connection</p>
+<p>Same as GetDefaultClient(), but returns a bool success instead of throwing
+exceptions on failure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Success and client (if successful) as a tuple</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Tuple[bool,T]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.ServiceSubscription.TryGetDefaultClientWait">
+<code class="sig-name descname">TryGetDefaultClientWait</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.ServiceSubscription.TryGetDefaultClientWait" title="Permalink to this definition">¶</a></dt>
+<dd><p>Try getting the “default client” connection, waiting with timeout if not connected</p>
+<p>Same as GetDefaultClientWait(), but returns a bool success instead of throwing
+exceptions on failure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Success and client (if successful) as a tuple</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Tuple[bool,T]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="servicesubscriptionclientid-class">
+<h2>ServiceSubscriptionClientID Class<a class="headerlink" href="#servicesubscriptionclientid-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="RobotRaconteur.ServiceSubscriptionClientID">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">ServiceSubscriptionClientID</code><a class="headerlink" href="#RobotRaconteur.ServiceSubscriptionClientID" title="Permalink to this definition">¶</a></dt>
+<dd><p>ClientID for use with ServiceSubscription</p>
+<p>The ServiceSubscriptionClientID stores the NodeID
+and ServiceName of a connected service.</p>
+<dl class="py attribute">
+<dt id="RobotRaconteur.ServiceSubscriptionClientID.NodeID">
+<code class="sig-name descname">NodeID</code><a class="headerlink" href="#RobotRaconteur.ServiceSubscriptionClientID.NodeID" title="Permalink to this definition">¶</a></dt>
+<dd><p>(RobotRaconteur.NodeID) The NodeID of the connected service</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ServiceSubscriptionClientID.ServiceName">
+<code class="sig-name descname">ServiceName</code><a class="headerlink" href="#RobotRaconteur.ServiceSubscriptionClientID.ServiceName" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) The ServiceName of the connected service</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="servicesubscriptionfilter-class">
+<h2>ServiceSubscriptionFilter Class<a class="headerlink" href="#servicesubscriptionfilter-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="RobotRaconteur.ServiceSubscriptionFilter">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">ServiceSubscriptionFilter</code><a class="headerlink" href="#RobotRaconteur.ServiceSubscriptionFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subscription filter</p>
+<p>The subscription filter is used with RobotRaconteurNode::SubscribeServiceByType() and 
+RobotRaconteurNode.SubscribeServiceInfo2() to decide which services should
+be connected. Detected services that match the service type are checked against
+the filter before connecting.</p>
+<dl class="py attribute">
+<dt id="RobotRaconteur.ServiceSubscriptionFilter.MaxConnections">
+<code class="sig-name descname">MaxConnections</code><a class="headerlink" href="#RobotRaconteur.ServiceSubscriptionFilter.MaxConnections" title="Permalink to this definition">¶</a></dt>
+<dd><p>(int) The maximum number of connections the subscription will create. Zero means unlimited connections.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ServiceSubscriptionFilter.Nodes">
+<code class="sig-name descname">Nodes</code><a class="headerlink" href="#RobotRaconteur.ServiceSubscriptionFilter.Nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>(List[RobotRaconteurServiceSubscriptionFilterNode]) List of nodes that should be connected. Empty means match any node.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ServiceSubscriptionFilter.Predicate">
+<code class="sig-name descname">Predicate</code><a class="headerlink" href="#RobotRaconteur.ServiceSubscriptionFilter.Predicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Callable[[RobotRaconteur.ServiceInfo2],bool]) A user specified predicate function. If nullptr, the predicate is not checked.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ServiceSubscriptionFilter.ServiceNames">
+<code class="sig-name descname">ServiceNames</code><a class="headerlink" href="#RobotRaconteur.ServiceSubscriptionFilter.ServiceNames" title="Permalink to this definition">¶</a></dt>
+<dd><p>(List[str])  List of service names that should be connected. Empty means match any service name.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ServiceSubscriptionFilter.TransportSchemes">
+<code class="sig-name descname">TransportSchemes</code><a class="headerlink" href="#RobotRaconteur.ServiceSubscriptionFilter.TransportSchemes" title="Permalink to this definition">¶</a></dt>
+<dd><p>(List[str]) List of transport schemes. Empty means match any transport scheme.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="servicesubscriptionfilternode-class">
+<h2>ServiceSubscriptionFilterNode Class<a class="headerlink" href="#servicesubscriptionfilternode-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="RobotRaconteur.ServiceSubscriptionFilterNode">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">ServiceSubscriptionFilterNode</code><a class="headerlink" href="#RobotRaconteur.ServiceSubscriptionFilterNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subscription filter node information</p>
+<p>Specify a node by NodeID and/or NodeName. Also allows specifying
+username and password.</p>
+<p>When using username and credentials, secure transports and specified NodeID should
+be used. Using username and credentials without a transport that verifies the
+NodeID could result in credentials being leaked.</p>
+<dl class="py attribute">
+<dt id="RobotRaconteur.ServiceSubscriptionFilterNode.Credentials">
+<code class="sig-name descname">Credentials</code><a class="headerlink" href="#RobotRaconteur.ServiceSubscriptionFilterNode.Credentials" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Dict[str,Any]) The credentials to use for authentication. Should only be used with secure transports and verified NodeID</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ServiceSubscriptionFilterNode.NodeID">
+<code class="sig-name descname">NodeID</code><a class="headerlink" href="#RobotRaconteur.ServiceSubscriptionFilterNode.NodeID" title="Permalink to this definition">¶</a></dt>
+<dd><p>(RobotRaconteur.NodeID) The NodeID to match. All zero NodeID will match any NodeID.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ServiceSubscriptionFilterNode.NodeName">
+<code class="sig-name descname">NodeName</code><a class="headerlink" href="#RobotRaconteur.ServiceSubscriptionFilterNode.NodeName" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) The NodeName to match. Emtpy NodeName will match any NodeName.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="RobotRaconteur.ServiceSubscriptionFilterNode.Username">
+<code class="sig-name descname">Username</code><a class="headerlink" href="#RobotRaconteur.ServiceSubscriptionFilterNode.Username" title="Permalink to this definition">¶</a></dt>
+<dd><p>(str) The username to use for authentication. Should only be used with secure transports and verified NodeID</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="wiresubscription-class">
+<h2>WireSubscription Class<a class="headerlink" href="#wiresubscription-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="RobotRaconteur.WireSubscription">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">WireSubscription</code><a class="headerlink" href="#RobotRaconteur.WireSubscription" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subscription for wire members that aggregates the values from client wire connections</p>
+<p>Wire subscriptions are created using the ServiceSubscription.SubscribeWire() function. This function takes the
+type of the wire value, the name of the wire member, and an optional service path of the service
+object that owns the wire member.</p>
+<p>Wire subscriptions aggregate the InValue from all active wire connections. When a client connects,
+the wire subscriptions will automatically create wire connections to the wire member specified
+when the WireSubscription was created using ServiceSubscription.SubscribeWire(). The InValue of
+all the active wire connections are collected, and the most recent one is used as the current InValue
+of the wire subscription. The current value, the timespec, and the wire connection can be accessed
+using GetInValue() or TryGetInValue().</p>
+<p>The lifespan of the InValue can be configured using SetInValueLifespan(). It is recommended that
+the lifespan be configured, so that the value will expire if the subscription stops receiving
+fresh in values.</p>
+<p>The wire subscription can also be used to set the OutValue of all active wire connections. This behaves
+similar to a “reverse broadcaster”, sending the same value to all connected services.</p>
+<dl class="py method">
+<dt id="RobotRaconteur.WireSubscription.ActiveWireConnectionCount">
+<em class="property">property </em><code class="sig-name descname">ActiveWireConnectionCount</code><a class="headerlink" href="#RobotRaconteur.WireSubscription.ActiveWireConnectionCount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the number of wire connections currently connected</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.WireSubscription.Close">
+<code class="sig-name descname">Close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.WireSubscription.Close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Closes the wire subscription</p>
+<p>Wire subscriptions are automatically closed when the parent ServiceSubscription is closed
+or when the node is shut down.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.WireSubscription.IgnoreInValue">
+<em class="property">property </em><code class="sig-name descname">IgnoreInValue</code><a class="headerlink" href="#RobotRaconteur.WireSubscription.IgnoreInValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set if InValue should be ignored</p>
+<p>See WireConnection.IgnoreInValue</p>
+<p>If true, InValue will be ignored for all wire connections</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.WireSubscription.InValue">
+<em class="property">property </em><code class="sig-name descname">InValue</code><a class="headerlink" href="#RobotRaconteur.WireSubscription.InValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the current InValue</p>
+<p>Throws ValueNotSetException if no valid value is available</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The current InValue</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.WireSubscription.InValueLifespan">
+<em class="property">property </em><code class="sig-name descname">InValueLifespan</code><a class="headerlink" href="#RobotRaconteur.WireSubscription.InValueLifespan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the InValue lifespan in seconds</p>
+<p>Set the lifespan of InValue in seconds. The value will expire after
+the specified lifespan, becoming invalid. Use -1 for infinite lifespan.</p>
+<p>See also WireConnection.InValueLifespan</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.WireSubscription.InValueWithTimeSpec">
+<em class="property">property </em><code class="sig-name descname">InValueWithTimeSpec</code><a class="headerlink" href="#RobotRaconteur.WireSubscription.InValueWithTimeSpec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the current InValue and TimeSpec</p>
+<p>Throws ValueNotSetException if no valid value is available</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The current InValue and TimeSpec</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Tuple[T,<a class="reference internal" href="DataTypes.html#RobotRaconteur.TimeSpec" title="RobotRaconteur.TimeSpec">RobotRaconteur.TimeSpec</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.WireSubscription.SetOutValueAll">
+<code class="sig-name descname">SetOutValueAll</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.WireSubscription.SetOutValueAll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the OutValue for all active wire connections</p>
+<p>Behaves like a “reverse broadcaster”. Calls WireConnection.OutValue
+for all connected wire connections.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>value</strong> – The value to send</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.WireSubscription.TryGetInValue">
+<code class="sig-name descname">TryGetInValue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.WireSubscription.TryGetInValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Try getting the current InValue and metadata</p>
+<p>Same as GetInValue(), but returns a bool for success or failure instead of throwing
+an exception.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Success and value (if successful)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Tuple[bool,T]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.WireSubscription.WaitInValueValid">
+<code class="sig-name descname">WaitInValueValid</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.WireSubscription.WaitInValueValid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wait for a valid InValue to be received from a client</p>
+<p>Blocks the current thread until value is received or timeout</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>timeout</strong> (<em>float</em>) – The timeout in seconds</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if value was received, otherwise False</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.WireSubscription.WireValueChanged">
+<em class="property">property </em><code class="sig-name descname">WireValueChanged</code><a class="headerlink" href="#RobotRaconteur.WireSubscription.WireValueChanged" title="Permalink to this definition">¶</a></dt>
+<dd><p>Event hook for wire value change. Use to add handlers to be called
+when the InValue changes.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">my_handler</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">ts</span><span class="p">):</span>
+   <span class="c1"># Handle new value</span>
+   <span class="k">pass</span>              
+
+<span class="n">my_wire_csub</span><span class="o">.</span><span class="n">WireValueChanged</span> <span class="o">+=</span> <span class="n">my_handler</span>
+</pre></div>
+</div>
+<p>Handler must have signature <code class="docutils literal notranslate"><span class="pre">Callable[[RobotRaconteur.WireSubscription,T,RobotRaconteur.TimeSpec],None]</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="DataTypes.html#RobotRaconteur.EventHook" title="RobotRaconteur.EventHook">RobotRaconteur.EventHook</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="pipesubscription-class">
+<h2>PipeSubscription Class<a class="headerlink" href="#pipesubscription-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="RobotRaconteur.PipeSubscription">
+<em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">PipeSubscription</code><a class="headerlink" href="#RobotRaconteur.PipeSubscription" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subscription for pipe members that aggregates incoming packets from client pipe endpoints</p>
+<p>Pipe subscriptions are created using the ServiceSubscription.SubscribePipe() function. This function takes the
+the type of the pipe packets, the name of the pipe member, and an optional service path of the service
+object that owns the pipe member.</p>
+<p>Pipe subscriptions collect all incoming packets from connect pipe endpoints. When a client connects,
+the pipe subscription will automatically connect a pipe endpoint the pipe endpoint specified when
+the PipeSubscription was created using ServiceSubscription::SubscribePipe(). The packets received
+from each of the collected pipes are collected and placed into a common receive queue. This queue
+is read using ReceivePacket(), TryReceivePacket(), or TryReceivePacketWait(). The number of packets
+available to receive can be checked using Available().</p>
+<p>Pipe subscriptions can also be used to send packets to all connected pipe endpoints. This is done
+with the AsyncSendPacketAll() function. This function behaves somewhat like a “reverse broadcaster”,
+sending the packets to all connected services.</p>
+<p>If the pipe subscription is being used to send packets but not receive them, the SetIgnoreInValue()
+should be set to true to prevent packets from queueing.</p>
+<dl class="py method">
+<dt id="RobotRaconteur.PipeSubscription.ActivePipeEndpointCount">
+<em class="property">property </em><code class="sig-name descname">ActivePipeEndpointCount</code><a class="headerlink" href="#RobotRaconteur.PipeSubscription.ActivePipeEndpointCount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the number of pipe endpoints currently connected</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.PipeSubscription.AsyncSendPacketAll">
+<code class="sig-name descname">AsyncSendPacketAll</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">packet</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.PipeSubscription.AsyncSendPacketAll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends a packet to all connected pipe endpoints</p>
+<p>Calls AsyncSendPacket() on all connected pipe endpoints with the specified value.
+Returns immediately, not waiting for transmission to complete.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>packet</strong> – The packet to send</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.PipeSubscription.Available">
+<em class="property">property </em><code class="sig-name descname">Available</code><a class="headerlink" href="#RobotRaconteur.PipeSubscription.Available" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the number of packets available to receive</p>
+<p>Use ReceivePacket(), TryReceivePacket(), or TryReceivePacketWait() to receive the packet</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.PipeSubscription.Close">
+<code class="sig-name descname">Close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.PipeSubscription.Close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Closes the pipe subscription</p>
+<p>Pipe subscriptions are automatically closed when the parent ServiceSubscription is closed
+or when the node is shut down.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.PipeSubscription.PipePacketReceived">
+<em class="property">property </em><code class="sig-name descname">PipePacketReceived</code><a class="headerlink" href="#RobotRaconteur.PipeSubscription.PipePacketReceived" title="Permalink to this definition">¶</a></dt>
+<dd><p>Event hook for packet received. Use to add handlers to be called
+when the subscription receives a new packet.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">my_handler</span><span class="p">(</span><span class="n">pipe_sub</span><span class="p">):</span>
+   <span class="k">while</span> <span class="n">pipe_sub</span><span class="o">.</span><span class="n">Available</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+       <span class="n">packet</span> <span class="o">=</span> <span class="n">pipe_sub</span><span class="o">.</span><span class="n">ReceivePacket</span><span class="p">()</span>
+       <span class="c1"># Handle new packet</span>
+       <span class="k">pass</span>              
+
+<span class="n">my_pipe_sub</span><span class="o">.</span><span class="n">PipePacketReceived</span><span class="o">+=</span> <span class="n">my_handler</span>
+</pre></div>
+</div>
+<p>Handler must have signature <code class="docutils literal notranslate"><span class="pre">Callable[[RobotRaconteur.PipeSubscription],None]</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="DataTypes.html#RobotRaconteur.EventHook" title="RobotRaconteur.EventHook">RobotRaconteur.EventHook</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.PipeSubscription.ReceivePacket">
+<code class="sig-name descname">ReceivePacket</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.PipeSubscription.ReceivePacket" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dequeue a packet from the receive queue</p>
+<p>If the receive queue is empty, an InvalidOperationException() is thrown</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The dequeued packet</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.PipeSubscription.TryReceivePacket">
+<code class="sig-name descname">TryReceivePacket</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.PipeSubscription.TryReceivePacket" title="Permalink to this definition">¶</a></dt>
+<dd><p>Try dequeuing a packet from the receive queue</p>
+<p>Same as ReceivePacket(), but returns a bool for success or failure instead of throwing
+an exception</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Success and packet (if successful)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Tuple[bool,T]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.PipeSubscription.TryReceivePacketWait">
+<code class="sig-name descname">TryReceivePacketWait</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">peek</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.PipeSubscription.TryReceivePacketWait" title="Permalink to this definition">¶</a></dt>
+<dd><p>Try dequeuing a packet from the receive queue, optionally waiting or peeking the packet</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timeout</strong> (<em>float</em>) – The time to wait for a packet to be received in seconds if the queue is empty, or -1 to wait forever</p></li>
+<li><p><strong>peek</strong> (<em>bool</em>) – If True, the packet is returned, but not dequeued. If False, the packet is dequeued</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Success and packet (if successful)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple[bool,T]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="NodeSetup.html" class="btn btn-neutral float-right" title="Node Setup" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="CallbackMember.html" class="btn btn-neutral float-left" title="Callback Member" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Wason Technology, LLC
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
