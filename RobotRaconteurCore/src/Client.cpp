@@ -2010,9 +2010,16 @@ namespace RobotRaconteur
 				{
 					e(RR_INTRUSIVE_PTR<MessageEntry>(), RR_MAKE_SHARED<ConnectionException>("Connection closed"));
 				}
-				catch (std::exception& exp)
+				catch (std::exception& exp)					
 				{
-					ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Error handling AsyncProcessRequest connection closed: " << exp.what());
+					if (m)
+					{
+						ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName, "Error handling AsyncProcessRequest connection closed: " << exp.what());
+					}
+					else
+					{
+						ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(), "Error handling AsyncProcessRequest connection closed: " << exp.what());
+					}
 					RobotRaconteurNode::TryHandleException(node, &exp);
 				}
 			}

@@ -41,7 +41,7 @@ namespace RobotRaconteur
 	 * | requirevaliduser | true,false | false | Set to "true" to require a user be authenticated before accessing service |
 	 * | allowobjectlock | true,false | false | If "true" allow users to request object locks. requirevaliduser most also be "true" |
 	 * 
-	 * The security policy is passed as a paremeter to 
+	 * The security policy is passed as a parameter to 
 	 * RobotRaconteurNode::RegisterService(boost::string_ref, boost::string_ref, 
 	 * boost::shared_ptr<RRObject>,  boost::shared_ptr< ServiceSecurityPolicy > securitypolicy),
 	 * or set using ServerContext::SetSecurityPolicy().

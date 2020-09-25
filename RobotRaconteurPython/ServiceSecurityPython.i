@@ -22,6 +22,28 @@
 {
 %pythoncode %{
 	def AuthenticateUser(self, username, credentials, context):
+		"""
+		Authenticate a user using username and credentials
+
+		The service will call AuthenticateUser when clients attempt to authenticate. The
+		username and credentials are passed to RobotRaconteurNode.ConnectService() or
+		RobotRaconteurNode.AsyncConnectService(). The authenticator must analyze these
+		values to decide how to authenticate the user.
+
+		On successful authentication, return a populated AuthenticatedUser object. On
+		failure, throw an exception.
+
+		See \\ref security for more information.
+
+		:param username: The username provided by the client
+		:type username: str
+		:param credentials: The credentials provided by the client
+		:type credentials: Dict[str,Any]
+		:param context: The context of the service requesting authentication
+		:type context: RobotRaconteur.ServerContext
+		:return: An authenticated user object
+		:rtype: RobotRaconteur.AuthenticatedUser
+		"""
 		from .RobotRaconteurPythonUtil import _UserAuthenticator_PackCredentials
 		m=_UserAuthenticator_PackCredentials(credentials)
 		return self._AuthenticateUser(username,m,context);

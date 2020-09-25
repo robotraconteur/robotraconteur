@@ -127,3 +127,27 @@ message(STATUS \"Running setup.py in ${CMAKE_BINARY_DIR}/$\{RR_BUILD_CONFIG_DIR\
 execute_process(COMMAND ${PYTHON3_EXECUTABLE} setup.py install -f
 --root=/ --prefix=${CMAKE_INSTALL_PREFIX} ${SETUPTOOLS_ARG_EXTRA} --single-version-externally-managed WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/$\{RR_BUILD_CONFIG_DIR\}/Python3)")
 endif()
+
+
+if(BUILD_DOCUMENTATION)
+  
+  find_program(SPHINX_EXECUTABLE NAMES sphinx-build)
+
+  if(NOT SPHINX_EXECUTABLE)
+    message(FATAL_ERROR "Sphinx is required to build Python documentation")
+  endif()
+
+  configure_file("${CMAKE_SOURCE_DIR}/docs/python/conf.py.in" "${CMAKE_BINARY_DIR}/out/Python3/sphinx/conf.py" @ONLY)
+  configure_file("${CMAKE_SOURCE_DIR}/docs/python/conf.py.in" "${CMAKE_BINARY_DIR}/out_debug/Python3/sphinx/conf.py" @ONLY)
+  configure_file("${CMAKE_SOURCE_DIR}/docs/python/conf.py.in" "${CMAKE_BINARY_DIR}/out_reldebug/Python3/sphinx/conf.py" @ONLY)
+
+  file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/docs/python3)
+  
+  
+  add_custom_target(RobotRaconteurPython3_doc
+        COMMAND ${SPHINX_EXECUTABLE} -c $<TARGET_FILE_DIR:${SWIG_MODULE_RobotRaconteurPython3_REAL_NAME}>/../sphinx
+        ${CMAKE_SOURCE_DIR}/docs/python/source ${CMAKE_BINARY_DIR}/docs/python3
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        COMMENT "Generating Python documentation with Sphinx"
+        VERBATIM DEPENDS ${SWIG_MODULE_RobotRaconteurPython3_REAL_NAME})
+endif()

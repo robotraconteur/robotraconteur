@@ -17,19 +17,36 @@ from __future__ import absolute_import
 import numpy
 
 class EventHook(object):
+    """
+    EventHook is used to implement multiple listener events in 
+    Robot Raconteur Python. Callback functions are registered with the 
+    EventHook and are all notified when the event is fired.
+    """
     __slots__ = "__handlers"
     def __init__(self):
+        """
+        Initialize new instance
+        """
         self.__handlers = []
 
     def __iadd__(self, handler):
+        """
+        Adds a callback function to be notified of events
+        """
         self.__handlers.append(handler)
         return self
 
     def __isub__(self, handler):
+        """
+        Removes a callback function
+        """
         self.__handlers.remove(handler)
         return self
 
     def fire(self, *args, **keywargs):
+        """
+        Fires the event
+        """
         for handler in self.__handlers:
             handler(*args, **keywargs)
 
@@ -46,7 +63,9 @@ class RobotRaconteurVarValue(object):
     __slots__ = ["data","datatype"]
     def __init__(self,data,datatype):
         self.data=data
+        """The data stored in the ``varvalue``"""
         self.datatype=datatype
+        """(str,RobotRaconteur.TypeDefinition) The type of the ``varvalue`` data"""
         
     def __str__(self):
         return str(self.datatype) + ": " + str(self.data)
@@ -57,52 +76,141 @@ class RobotRaconteurVarValue(object):
 VarValue = RobotRaconteurVarValue
 
 class ArrayMemory(object):
+    """
+    The ``ArrayMemory`` is designed to represent a large array that is read in smaller 
+    pieces. It is used with the \"memory\" member to allow for random access to an array.
+    """
     __slots__ = ["memory"]
     def __init__(self,memory=None):
         self.memory=memory
+        """(numpy.ndarray) The underlying array of the memory"""
 
     def Attach(self,memory):
+        """
+        Attach the memory to an array
+
+        :param memory: The data to attach
+        :type memory: numpy.ndarray
+        """
         self.memory=memory
 
     @property
     def Length(self):
+        """
+        The length of the memory
+
+        :rtype: int
+        """
         return len(self.memory)
 
     def Read(self,memorypos,buffer,bufferpos,count):
+        """
+        Reads data from the memory into ``buffer``
+
+        :param memorypos: The start position in the memory array
+        :type memorypos: int
+        :param buffer: The buffer to read the data into
+        :type buffer: numpy.ndarray
+        :param bufferpos: The start position in the supplied buffer
+        :type bufferpos: int
+        :param count: The number of elements to read
+        :type count: int
+        """
         buffer[bufferpos:(bufferpos+count)]=self.memory[memorypos:(memorypos+count)]
 
     def Write(self,memorypos,buffer,bufferpos,count):
+        """
+        Writes data from ``buffer`` into the memory
+
+        :param memorypos: The start position in the memory array
+        :type memorypos: int
+        :param buffer: The buffer to write the data from
+        :type buffer: numpy.ndarray
+        :param bufferpos: The start position in the supplied buffer
+        :type bufferpos: int
+        :param count: The number of elements to write
+        :type count: int
+        """
         self.memory[memorypos:(memorypos+count)]=buffer[bufferpos:(bufferpos+count)]
 
 class MultiDimArrayMemory(object):
+    """
+    The ``MultiDimArrayMemory`` is designed to represent a large 
+    multi-dimensional array that is read in smaller pieces. It is used with the 
+    \"memory\" member to allow for random access to an multi-dimensional array.  It works with 
+    numpy.ndarray.  For the ``memorypos``, ``bufferpos``, and ``count`` parameters in the 
+    functions, a list is used to represent the dimensions.  The dimensions are column-major 
+    as is numpy.ndarray.
+    """
     __slots__ = ["memory"]
     def __init__(self,memory=None):
         if (memory is None):
-            self.memory=None        
+            self.memory=None
+            """(numpy.ndarray) The underlying array of the memory"""
         else:
             self.Attach(memory)
 
     def Attach(self,memory):
-        
-        if (not isinstance(memory,numpy.ndarray)): raise Exception("MultiDimArrayMemory memory must be MultiDimArray or numpy.ndarray type")
+        """
+        Attach the memory to an array
+
+        :param memory: The data to attach
+        :type memory: numpy.ndarray
+        """
+        if (not isinstance(memory,numpy.ndarray)): raise Exception("MultiDimArrayMemory memory must be numpy.ndarray type")
         self.memory=memory
+    
     @property
     def Dimensions(self):
+        """
+        The dimensions of the memory
+
+        :rtype: List[int]
+        """
         return self.memory.shape
 
     @property
     def DimCount(self):
+        """
+        The number of dimensions
+
+        :rtype: int
+        """
         return self.memory.ndim
     
     def Read(self,memorypos,buffer,bufferpos,count):
+        """
+        Reads data from the memory into ``buffer``
+
+        :param memorypos: The start position in the array
+        :type memorypos: List[int]
+        :param buffer: The buffer to read the data into
+        :type buffer: numpy.ndarray
+        :param bufferpos: The start position int he buffer
+        :type bufferpos: List[int]
+        :param count: The shape of elements to read
+        :type count: List[int]
+        """
         memind=[slice(memorypos[i], (memorypos[i]+count[i])) for i in range(len(count))]
         bufind=[slice(bufferpos[i], (bufferpos[i]+count[i])) for i in range(len(count))]
         buffer[tuple(bufind)]=self.memory[tuple(memind)]
 
-    def Write(self,memorypos,buffer,bufferpos,count):        
-            memind=[slice(memorypos[i], (memorypos[i]+count[i])) for i in range(len(count))]
-            bufind=[slice(bufferpos[i], (bufferpos[i]+count[i])) for i in range(len(count))]
-            self.memory[tuple(memind)]=buffer[tuple(bufind)]
+    def Write(self,memorypos,buffer,bufferpos,count):
+        """
+        Writes data into the memory from ``buffer``
+
+        :param memorypos: The start position in the array
+        :type memorypos: List[int]
+        :param buffer: The buffer to write the data from
+        :type buffer: numpy.ndarray
+        :param bufferpos: The start position in the buffer
+        :type bufferpos: List[int]
+        :param count: The shape of elements to write
+        :type count: List[int]
+        """
+        memind=[slice(memorypos[i], (memorypos[i]+count[i])) for i in range(len(count))]
+        bufind=[slice(bufferpos[i], (bufferpos[i]+count[i])) for i in range(len(count))]
+        self.memory[tuple(memind)]=buffer[tuple(bufind)]
 
 bool_dtype=numpy.uint8
 

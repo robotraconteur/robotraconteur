@@ -5,6 +5,7 @@
 %include "CommonInclude.i"
 
 %include "PythonNondynamic.i"
+%include "PythonDocstring.i"
 
 //%include "pyabc.i"
 %{

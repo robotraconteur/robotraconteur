@@ -227,7 +227,7 @@ namespace RobotRaconteur
 	 * after registering the service. 
 	 * 
 	 * Security for the service is specified using a ServiceSecurityPolicy instance. This policy
-	 * is specified by passing as a parameter to RobotRaconteur::RegisterService(), or passing
+	 * is specified by passing as a parameter to RobotRaconteurNode::RegisterService(), or passing
 	 * the policy to the constructor.
 	 * 
 	 * ServerContext implements authentication and object locking. 

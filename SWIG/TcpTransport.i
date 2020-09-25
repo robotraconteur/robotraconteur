@@ -49,7 +49,7 @@ public:
 	virtual int32_t GetListenPort();
 	virtual void StartServer(int32_t porte);
 	void Close();
-	void EnableNodeDiscoveryListening(uint32_t flags=(IPNodeDiscoveryFlags_NODE_LOCAL | IPNodeDiscoveryFlags_LINK_LOCAL | IPNodeDiscoveryFlags_SITE_LOCAL));
+	void EnableNodeDiscoveryListening(uint32_t flags=(IPNodeDiscoveryFlags_LINK_LOCAL));
 	void DisableNodeDiscoveryListening();
 	void EnableNodeAnnounce(uint32_t flags=IPNodeDiscoveryFlags_LINK_LOCAL);
 	void DisableNodeAnnounce();

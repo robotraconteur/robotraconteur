@@ -208,6 +208,8 @@ namespace RobotRaconteur
 		 * If the connection is not completed within the timeout, the connection
 		 * attempt will be aborted.
 		 * 
+		 * Default: 5 seconds
+		 * 
 		 * @param milliseconds The timeout in milliseconds
 		 */
 		virtual void SetDefaultConnectTimeout(int32_t milliseconds);
@@ -276,7 +278,7 @@ namespace RobotRaconteur
 		/**
 		 * @brief Enable node discovery listening
 		 * 
-		 * By default enables listing on IPv6 link-local scope
+		 * By default enables listining on IPv6 link-local scope
 		 * 
 		 * @param flags The flags specifying the scope
 		 */

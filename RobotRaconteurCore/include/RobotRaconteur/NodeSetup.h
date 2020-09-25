@@ -749,7 +749,7 @@ namespace RobotRaconteur
 	 *      1. If "public" option is set, the transport will listen for all local users (default disabled)
 	 *   2. Start the LocalTransport server to listen for incoming connections with the specified NodeName and NodeID
 	 *   3. Start LocalTransport discovery announce and listening (default enabled)
-	 *   3. Disable Message Format Version 4 (default enabled) and/or String Table (default disabled) if 
+	 *   4. Disable Message Format Version 4 (default enabled) and/or String Table (default disabled) if 
 	 *      specified on command line 
 	 * 5. Start TcpTransport (default enabled)
 	 *   1. Start the TcpTransport server to listen for incoming connections on specified port 
@@ -762,7 +762,7 @@ namespace RobotRaconteur
 	 * 6. Start HardwareTransport (default disabled)
 	 *   1. Disable Message Format Version 4 (default enabled) and/or String Table 
 	 *      (default disabled) if specified in flags or command line
-	 * 7. Start IntraTransport (default disabled)
+	 * 7. Start IntraTransport (default enabled)
 	 *   1. Enable IntraTransport server to listen for incoming clients (default enabled)
 	 *   2. Disable Message Format Version 4 (default enabled) and/or String Table 
 	 *      (default disabled) if specified in flags or command line

@@ -540,6 +540,7 @@ RR_KEEP_GIL()
 	void LogRecord(const RRLogRecord& record);
 	RobotRaconteur_LogLevel GetLogLevel();
 	void SetLogLevel(RobotRaconteur_LogLevel level);
+	RobotRaconteur_LogLevel SetLogLevelFromString(const std::string& level);
 	RobotRaconteur_LogLevel SetLogLevelFromEnvVariable(const std::string& env_variable_name = "ROBOTRACONTEUR_LOG_LEVEL");
 	boost::shared_ptr<RobotRaconteur::LogRecordHandler> GetLogRecordHandler();
 	void SetLogRecordHandler(boost::shared_ptr<RobotRaconteur::LogRecordHandler> handler);

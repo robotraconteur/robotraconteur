@@ -23,10 +23,11 @@ public:
 	LocalTransport();
 	LocalTransport(boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node);
 	
+	static bool IsLocalTransportSupported();
 	virtual std::string GetUrlSchemeString() const;
 	virtual void StartClientAsNodeName(const std::string& name);
-	virtual void StartServerAsNodeName(const std::string& name);
-	virtual void StartServerAsNodeID(const NodeID& nodeid);
+	virtual void StartServerAsNodeName(const std::string& name, bool public_ = false);
+	virtual void StartServerAsNodeID(const NodeID& nodeid, bool public_ = false);
 	void Close();
 	
 	RR_PROPERTY(DisableMessage4)

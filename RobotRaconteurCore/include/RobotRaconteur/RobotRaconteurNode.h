@@ -1181,7 +1181,6 @@ namespace RobotRaconteur
 		void DeleteEndpoint(RR_SHARED_PTR<Endpoint> e);
 
 		/**
-		 * @internal
 		 * 
 		 * @brief Check that the TransportConnection associated with an endpoint
 		 * is connected
@@ -1857,7 +1856,7 @@ namespace RobotRaconteur
 		 * 
 		 * @param obj The object with the desired `objref`
 		 * @param objref The name of the `objref` member
-		 * @param handler A handler function to receive the object reference or an exception
+		 * @param handler A handler function to receive the object type or an exception
 		 * @param timeout Timeout is milliseconds, or RR_TIMEOUT_INFINITE for no timeout
 		 */
 		void AsyncFindObjectType(RR_SHARED_PTR<RRObject> obj, boost::string_ref objref, boost::function<void (RR_SHARED_PTR<std::string>,RR_SHARED_PTR<RobotRaconteurException>)> handler, int32_t timeout=RR_TIMEOUT_INFINITE);
@@ -1870,7 +1869,7 @@ namespace RobotRaconteur
 		 * @param obj The object with the desired `objref`
 		 * @param objref The name of the `objref` member
 		 * @param index The index for the `objref`, convert int to string for int32 index type
-		 * @param handler A handler function to receive the object reference or an exception
+		 * @param handler A handler function to receive the object type or an exception
 		 * @param timeout Timeout is milliseconds, or RR_TIMEOUT_INFINITE for no timeout
 		 */
 		void AsyncFindObjectType(RR_SHARED_PTR<RRObject> obj, boost::string_ref objref, boost::string_ref index, boost::function<void (RR_SHARED_PTR<std::string>,RR_SHARED_PTR<RobotRaconteurException>)> handler, int32_t timeout=RR_TIMEOUT_INFINITE);
@@ -2164,7 +2163,7 @@ namespace RobotRaconteur
 		virtual void Sleep(const boost::posix_time::time_duration& duration);
 
 		/**
-		 * @brief Create a AutoResetEvent object
+		 * @brief Create an AutoResetEvent object
 		 * 
 		 * Normally the AutoResetEvent will use the system clock for timeouts,
 		 * but in certain circumstances will use simulation time

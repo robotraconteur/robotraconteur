@@ -47,7 +47,7 @@ namespace RobotRaconteur
 	 * not necessary to serialize messages being passed between nodes. Instead,
 	 * the messages are handed off to the receiving node by the transport. This
 	 * is in effect a shallow copy of the data being transmitted, and pointers to the
-	 * original data are possed to the receiving node. **Because the data is passed as a pointer,
+	 * original data are passed to the receiving node. **Because the data is passed as a pointer,
 	 * any modification by the receiver will also modify the sender's buffer. Use with care!**
 	 * 
 	 */

@@ -85,8 +85,8 @@ namespace RobotRaconteur
 	/**
 	 * @brief Subscription filter
 	 * 
-	 * The subscription filter is used with RobotRaconteur::SubscribeService() and 
-	 * RobotRaconteur::SubscribeServiceInfo2() to decide which services should
+	 * The subscription filter is used with RobotRaconteurNode::SubscribeServiceByType() and 
+	 * RobotRaconteurNode::SubscribeServiceInfo2() to decide which services should
 	 * be connected. Detected services that match the service type are checked against
 	 * the filter before connecting.
 	 * 
@@ -287,9 +287,9 @@ namespace RobotRaconteur
 	/**
 	 * @brief Subscription that automatically connects services and manages lifecycle of connected services
 	 * 
-	 * Created using RobotRaconteur::SubscribeService() or RobotRaconteur::SubscribeServiceByType(). The ServiceSubscription
-	 * class is used to automatically create and manage connections based on connection criteria. RobotRaconteur::SubscribeService()
-	 * is used to create a robust connection to a service with a specific URL. RobotRaconteru::SubscribeServiceByType() is used
+	 * Created using RobotRaconteurNode::SubscribeService() or RobotRaconteurNode::SubscribeServiceByType(). The ServiceSubscription
+	 * class is used to automatically create and manage connections based on connection criteria. RobotRaconteurNode::SubscribeService()
+	 * is used to create a robust connection to a service with a specific URL. RobotRaconteurNode::SubscribeServiceByType() is used
 	 * to connect to services with a specified type, filtered with a ServiceSubscriptionFilter. Subscriptions will create connections
 	 * to matching services, and will retry the connection if it fails or the connection is lost. This behavior allows subscriptions
 	 * to be used to create robust connections. The retry delay for connections can be modified using SetConnectRetryDelay()
@@ -325,7 +325,7 @@ namespace RobotRaconteur
 		 * is keyed with ServiceSubscriptionClientID.
 		 * 
 		 * Clients must be cast to a type, similar to the client returned by
-		 * RobotRaconteur::ConnectService().
+		 * RobotRaconteurNode::ConnectService().
 		 * 
 		 * Clients can be "claimed" using ClaimClient(). Once claimed, the subscription
 		 * will stop managing the lifecycle of the client.
@@ -475,7 +475,7 @@ namespace RobotRaconteur
 		 * 
 		 * The "default client" is the "first" client returned from the connected clients map. This is effectively
 		 * default, and is only useful if only a single client connection is expected. This is normally true
-		 * for RobotRaconteur::SubscribeService()
+		 * for RobotRaconteurNode::SubscribeService()
 		 * 
 		 * Clients using GetDefaultClient() should not store a reference to the client. It should instead
 		 * call GetDefaultClient() right before using the client to make sure the most recenty connection
@@ -523,7 +523,7 @@ namespace RobotRaconteur
 		 * 
 		 * The "default client" is the "first" client returned from the connected clients map. This is effectively
 		 * default, and is only useful if only a single client connection is expected. This is normally true
-		 * for RobotRaconteur::SubscribeService()
+		 * for RobotRaconteurNode::SubscribeService()
 		 * 
 		 * Clients using GetDefaultClient() should not store a reference to the client. It should instead
 		 * call GetDefaultClient() right before using the client to make sure the most recenty connection
