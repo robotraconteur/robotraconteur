@@ -950,7 +950,7 @@ namespace RobotRaconteur
 		
 		if (!active) return;
 
-		if (n->NowUTC() > (c2->last_node_update + boost::posix_time::seconds(65)))
+		if (use_service_url && (n->NowUTC() > (c2->last_node_update + boost::posix_time::seconds(65))))
 		{
 			ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Subscription, -1, "ServiceSubscription retry for service \"" << c2->service_name << "\" on node " 
 						<< c2->nodeid.ToString() << " aborted due to node lost");
