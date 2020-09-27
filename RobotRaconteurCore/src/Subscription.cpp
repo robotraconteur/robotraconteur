@@ -702,6 +702,7 @@ namespace RobotRaconteur
 		this->service_url = url;
 		this->service_url_username = username.to_string();
 		this->service_url_credentials = credentials;
+		this->use_service_url = true;
 
 		RR_SHARED_PTR<detail::ServiceSubscription_client> c2 = RR_MAKE_SHARED<detail::ServiceSubscription_client>();
 		c2->connecting.data() = true;
@@ -950,7 +951,7 @@ namespace RobotRaconteur
 		
 		if (!active) return;
 
-		if (use_service_url && (n->NowUTC() > (c2->last_node_update + boost::posix_time::seconds(65))))
+		if (!use_service_url && (n->NowUTC() > (c2->last_node_update + boost::posix_time::seconds(65))))
 		{
 			ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Subscription, -1, "ServiceSubscription retry for service \"" << c2->service_name << "\" on node " 
 						<< c2->nodeid.ToString() << " aborted due to node lost");
