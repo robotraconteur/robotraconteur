@@ -3897,7 +3897,7 @@ namespace RobotRaconteur
 
 	
 
-	rrimplements get_implements(RR_SHARED_PTR<ServiceEntryDefinition> obj, RR_SHARED_PTR<ServiceDefinition> def, std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs, std::string rootobj="")
+	rrimplements get_implements(RR_SHARED_PTR<ServiceEntryDefinition> obj, RR_SHARED_PTR<ServiceDefinition> def, std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs, ServiceDefinitionParseInfo& parse_info, std::string rootobj="")
 	{
 		rrimplements out;
 		out.obj=obj;
@@ -3919,11 +3919,11 @@ namespace RobotRaconteur
 					}
 				}
 
-				if (!obj2) throw ServiceDefinitionVerifyException("Object \"" + def->Name + "." + e + " not found to implement",obj->ParseInfo);
+				if (!obj2) throw ServiceDefinitionVerifyException("Object \"" + def->Name + "." + e + " not found to implement in " + out.name, parse_info);
 
-				if (rootobj== (def->Name + "." + obj2->Name)) throw ServiceDefinitionVerifyException("Recursive implements between \"" + rootobj + "\" and \"" + def->Name + "." + obj2->Name + "\"", obj->ParseInfo);
+				if (rootobj== (def->Name + "." + obj2->Name)) throw ServiceDefinitionVerifyException("Recursive implements between \"" + rootobj + "\" and \"" + def->Name + "." + obj2->Name + "\"", parse_info);
 
-				rrimplements imp2=get_implements(obj2,def,defs,rootobj);
+				rrimplements imp2=get_implements(obj2,def,defs,parse_info,rootobj);
 				out.implements.push_back(imp2);
 			}
 			else
@@ -3942,7 +3942,7 @@ namespace RobotRaconteur
 				}
 
 			
-				if (!def2) throw ServiceDefinitionVerifyException("Service definition \"" + e + "\" not found to implement", obj->ParseInfo);
+				if (!def2) throw ServiceDefinitionVerifyException("Service definition \"" + s1.get<0>() + "\" not found to implement in " + out.name, parse_info);
 
 				RR_SHARED_PTR<ServiceEntryDefinition> obj2;
 				BOOST_FOREACH (RR_SHARED_PTR<ServiceEntryDefinition>& ee2,def2->Objects)
@@ -3954,11 +3954,11 @@ namespace RobotRaconteur
 					}
 				}
 
-				if (!obj2) throw ServiceDefinitionVerifyException("Object \"" + e + "\" not found to implement", obj->ParseInfo);
+				if (!obj2) throw ServiceDefinitionVerifyException("Object \"" + e + "\" not found to implement", parse_info);
 
-				if (rootobj== (def2->Name + "." + obj2->Name)) throw ServiceDefinitionVerifyException("Recursive implements between \"" + rootobj + "\" and \"" + def2->Name + "." + obj2->Name + "\"", obj->ParseInfo);
+				if (rootobj== (def2->Name + "." + obj2->Name)) throw ServiceDefinitionVerifyException("Recursive implements between \"" + rootobj + "\" and \"" + def2->Name + "." + obj2->Name + "\"", parse_info);
 
-				rrimplements imp2=get_implements(obj2,def2,defs,rootobj);
+				rrimplements imp2=get_implements(obj2,def2,defs,parse_info,rootobj);
 				out.implements.push_back(imp2);
 			}
 			
@@ -3983,7 +3983,7 @@ namespace RobotRaconteur
 
 				if (!found)
 				{
-					throw ServiceDefinitionVerifyException("Object \"" + out.name + "\" does not implement inherited type \"" + r2.name + "\"", obj->ParseInfo);
+					throw ServiceDefinitionVerifyException("Object \"" + out.name + "\" does not implement inherited type \"" + r2.name + "\"", parse_info);
 				}
 			}
 		}
@@ -4208,7 +4208,7 @@ namespace RobotRaconteur
 			membernames.push_back(membername);
 		}
 
-		rrimplements r=get_implements(obj,def,defs);
+		rrimplements r=get_implements(obj,def,defs,obj->ParseInfo);
 
 		BOOST_FOREACH (rrimplements& e, r.implements)
 		{
