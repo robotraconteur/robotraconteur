@@ -78,6 +78,67 @@ bool ReadFile(std::string& file_contents, const std::string& fname)
 	}
 }
 
+boost::tuple<RR_SHARED_PTR<ServiceDefinition>,std::string> ReadRobDefFile(const std::string& fname, const std::vector<std::string>& include_dirs, bool try_find = false)
+{
+	namespace fs = boost::filesystem;
+
+	std::string s = fname;
+
+	fs::path s2(s);
+	if (!fs::exists(s2) && s2.is_relative())
+	{
+		BOOST_FOREACH(const std::string& p, include_dirs)
+		{
+			fs::path s3 = fs::path(p) / fs::path(s);
+			if (fs::exists(s3))
+			{
+				s=s3.string();
+				break;
+			}
+		}
+	}
+
+	if (!fs::exists(s))
+	{
+		if (try_find)
+		{
+			return boost::make_tuple(RR_SHARED_PTR<ServiceDefinition>(),"");
+		}
+		std::cout << "RobotRaconteurGen: fatal error: input file not found " << s << std::endl;
+		exit(1002);
+	}
+
+	try
+	{
+		boost::shared_ptr<ServiceDefinition> d = boost::make_shared<ServiceDefinition>();
+		std::string file_contents;
+		if (!ReadFile(file_contents,s))
+		{
+			std::cout << "RobotRaconteurGen: fatal error: could not open file " << s << std::endl;
+			exit(1004);
+		}
+		ServiceDefinitionParseInfo parse_info;
+		parse_info.RobDefFilePath = s;
+		d->FromString(file_contents, &parse_info);
+		d->CheckVersion();
+
+		return boost::make_tuple(d,file_contents);
+
+	}
+	catch (ServiceDefinitionParseException& ee)
+	{
+		cout << s << "(" << ee.ParseInfo.LineNumber << "): error: " << ee.ShortMessage << endl;
+		exit(1005);
+	}
+	catch (std::exception& ee)
+	{
+		cout << s << ": error: " << string(ee.what()) << endl;
+		exit(1006);
+	}	
+}
+
+
+
 void GenerateCPPFiles(RR_SHARED_PTR<ServiceDefinition> d, std::string def_str, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, std::string output_dir)
 {
 	//cout << str << endl;
@@ -227,6 +288,7 @@ int main(int argc, char* argv[])
 	bool newnodeid = false;
 	bool md5passwordhash = false;
 	bool pullservicedef = false;
+	bool auto_import = false;
 	std::vector<std::string> string_vector;
 	std::vector<std::string> include_dirs;
 	std::vector<std::string> import_vector;
@@ -251,6 +313,7 @@ int main(int argc, char* argv[])
 			("import", po::value(&import_vector)->composing(), "input file for use in imports")
 			("master-header", po::value(&master_header), "master header file for generated cpp files")
 			("outfile", po::value(&out_file), "unified output file (csharp only)")
+			("auto-import", po::bool_switch(&auto_import), "automatically load imported robdef")
 
 			;
 
@@ -432,35 +495,10 @@ int main(int argc, char* argv[])
 
 		std::vector<std::string> sources = string_vector;
 		std::vector<std::string> imports = import_vector;
-		BOOST_FOREACH(std::string& s, boost::range::join(sources,imports))
-		{
-			fs::path s2(s);
-			if (!fs::exists(s2) && s2.is_relative())
-			{
-				BOOST_FOREACH(std::string& p, include_dirs)
-				{
-					fs::path s3 = fs::path(p) / fs::path(s);
-					if (fs::exists(s3))
-					{
-						s=s3.string();
-						break;
-					}
-				}
-			}
-		}
-
-		BOOST_FOREACH(std::string& s, boost::range::join(sources, imports))
-		{
-			if (!fs::exists(s))
-			{
-				std::cout << "RobotRaconteurGen: fatal error: input file not found " << s << std::endl;
-				return 1002;
-			}
-		}
-
+		
 		if (!fs::exists(output_dir))
 		{
-			std::cout << "RobotRaconteurGen: fatal error: output director not found " << output_dir << std::endl;
+			std::cout << "RobotRaconteurGen: fatal error: output directory not found " << output_dir << std::endl;
 			return 1003;
 		}
 		
@@ -468,44 +506,66 @@ int main(int argc, char* argv[])
 		std::vector<std::string> sdefs_str;
 		std::vector<boost::shared_ptr<ServiceDefinition> > alldefs;
 		std::vector<std::string> alldefs_str;
+		
+		std::set<std::string> required_imports;
 
 		BOOST_FOREACH(std::string& e, boost::range::join(sources, imports))
+		{	
+			RR_SHARED_PTR<ServiceDefinition> d;
+			std::string file_contents;
+			boost::tie(d,file_contents) = ReadRobDefFile(e,include_dirs);
+			alldefs.push_back(d);
+			alldefs_str.push_back(file_contents);
+
+			if (boost::range::find(sources, e) != sources.end())
+			{
+				sdefs.push_back(d);
+				sdefs_str.push_back(file_contents);
+			}
+
+			BOOST_FOREACH(std::string imp, d->Imports)
+			{
+				required_imports.insert(imp);
+			}
+		}
+
+		if (auto_import)
 		{
-			try
+			std::set<std::string> missing_imports;
+			BOOST_FOREACH(const std::string s, required_imports)
 			{
-				boost::shared_ptr<ServiceDefinition> d = boost::make_shared<ServiceDefinition>();
+				if(!RobotRaconteur::TryFindByName(alldefs,s))
+				{
+					missing_imports.insert(s);
+				}
+			}
+
+			std::set<std::string> attempted_imports;
+			while (!missing_imports.empty())
+			{
+				std::string e = *missing_imports.begin();
+				missing_imports.erase(e);
+				RR_SHARED_PTR<ServiceDefinition> d;
 				std::string file_contents;
-				if (!ReadFile(file_contents,e))
+				boost::tie(d,file_contents) = ReadRobDefFile(e + ".robdef",include_dirs,true);
+				if (d)
 				{
-					std::cout << "RobotRaconteurGen: fatal error: could not open file " << e << std::endl;
-					return 1004;
+					alldefs.push_back(d);
+					alldefs_str.push_back(file_contents);
+
+					BOOST_FOREACH(std::string imp, d->Imports)
+					{
+						if(!RobotRaconteur::TryFindByName(alldefs,imp) && attempted_imports.count(imp) == 0)
+						{
+							missing_imports.insert(imp);
+						}
+					}
 				}
-				ServiceDefinitionParseInfo parse_info;
-				parse_info.RobDefFilePath = e;
-				d->FromString(file_contents, &parse_info);
-				d->CheckVersion();
-
-				alldefs.push_back(d);
-				alldefs_str.push_back(file_contents);
-
-				if (boost::range::find(sources, e) != sources.end())
+				else
 				{
-					sdefs.push_back(d);
-					sdefs_str.push_back(file_contents);
+					attempted_imports.insert(e);
 				}
-
 			}
-			catch (ServiceDefinitionParseException& ee)
-			{
-				cout << e << "(" << ee.ParseInfo.LineNumber << "): error: " << ee.ShortMessage << endl;
-				return 1005;
-			}
-			catch (std::exception& ee)
-			{
-				cout << e << ": error: " << string(ee.what()) << endl;
-				return 1006;
-			}
-
 		}
 
 		try
