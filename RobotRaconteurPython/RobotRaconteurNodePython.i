@@ -187,7 +187,7 @@ def RegisterServiceTypeFromFile(self, file_name):
     d = ReadServiceDefinitionFile(file_name)
     self._RegisterServiceType(str(d))
 
-def RegisterServiceTypesFromFiles(self, file_names):
+def RegisterServiceTypesFromFiles(self, file_names, auto_import = False):
     """
     Register a list of service type from files
 
@@ -198,15 +198,18 @@ def RegisterServiceTypesFromFiles(self, file_names):
     be searched if a file is not found in the working directory.
 
     The service types will be verified. All imported types must already have
-    been registered for verification to succeed. 
+    been registered or included in the file_names list for verification to 
+    succeed.
 
-    :param d: The filenames of the service types to load
-    :type d: List[str]
+    If auto_import is True, missing service type files will be loaded.
+
+    :param file_names: The filenames of the service types to load
+    :type file_names: List[str]
+    :param auto_import: If True, attempt to import missing service types
+    :type auto_import: bool
     """
-    from .RobotRaconteurPythonUtil import ReadServiceDefinitionFile
-    d = []
-    for file_name in file_names:
-        d.append(str(ReadServiceDefinitionFile(file_name)))
+    from .RobotRaconteurPythonUtil import ReadServiceDefinitionFiles
+    d = ReadServiceDefinitionFiles(file_names, auto_import)
     self._RegisterServiceTypes(d)
     
 def GetServiceType(self, name):

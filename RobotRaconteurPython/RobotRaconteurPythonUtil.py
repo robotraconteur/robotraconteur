@@ -4597,6 +4597,34 @@ def ReadServiceDefinitionFile(servicedef_name):
     with codecs.open(f_name, 'r', 'utf-8-sig') as f:
         return f.read()
 
+def ReadServiceDefinitionFiles(servicedef_names, auto_import = False):
+
+    d = []
+    for servicedef_name in servicedef_names:
+        d1 = RobotRaconteurPython.ServiceDefinition()
+        d1.FromString(str(ReadServiceDefinitionFile(servicedef_name)))
+        d.append(d1)
+    
+    if auto_import:
+        missing_imports = set()
+        d2 = {d3.Name:d3 for d3 in d}
+        for k,v in d2.items():
+            for imported in v.Imports:
+                if imported not in d2:
+                    missing_imports.add(imported)
+
+        attempted_imports = set()
+        while len(missing_imports) != 0:
+            e = missing_imports.pop()
+            d1 = RobotRaconteurPython.ServiceDefinition()            
+            d1.FromString(str(ReadServiceDefinitionFile(e)))
+            d.append(d1)
+            d2[d1.Name] = d1
+            for imported in d1.Imports:
+                if imported not in d2:
+                    missing_imports.add(imported)
+    return d
+
 class RobotRaconteurNodeSetup(object):
     """
     Setup a node using specified options and manage node lifecycle
