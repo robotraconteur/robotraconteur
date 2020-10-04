@@ -325,10 +325,6 @@ namespace detail
 
 			boost::system::error_code ec;
 			connect3(candidate_endpoints, key, ec);
-
-			boost::mutex::scoped_lock lock(this_lock);
-			active.remove(key);
-
 			
 		}
 		catch (std::exception& exp)
@@ -344,7 +340,7 @@ namespace detail
 	
 	void TcpConnector::connect3(RR_SHARED_PTR<std::list<boost::asio::ip::tcp::endpoint> > candidate_endpoints, int32_t key, const boost::system::error_code& e)
 	{
-		
+		int32_t key2;
 		try
 		{
 			boost::mutex::scoped_lock lock(this_lock);
@@ -356,17 +352,17 @@ namespace detail
 				return;
 			}
 
+			active_count++;
+			key2 = active_count;
+			active.push_back(key2);
+
 			boost::asio::ip::tcp::endpoint ep = candidate_endpoints->front();
 			candidate_endpoints->pop_front();
 
 			RR_SHARED_PTR<boost::asio::ip::tcp::socket> sock(new boost::asio::ip::tcp::socket(parent->GetNode()->GetThreadPool()->get_io_context()));
-
-			int32_t key2;
+			
 			{				
 				if (!connecting) return;
-
-				active_count++;
-				key2 = active_count;
 				
 				RR_SHARED_PTR<boost::signals2::scoped_connection> sock_closer =
 					RR_MAKE_SHARED<boost::signals2::scoped_connection>(
@@ -377,12 +373,12 @@ namespace detail
 				
 				ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, endpoint, "TCP begin connect to endpoint: " << ep);
 
-				active.push_back(key2);
+				
 			}
 		}
 		catch (std::exception&)
 		{
-			handle_error(key, boost::system::error_code(boost::system::errc::io_error, boost::system::generic_category()));
+			handle_error(key2, boost::system::error_code(boost::system::errc::io_error, boost::system::generic_category()));
 			return;
 		}
 
@@ -391,6 +387,11 @@ namespace detail
 			backoff_timer->expires_from_now(boost::posix_time::milliseconds(5));
 			RobotRaconteurNode::asio_async_wait(node, backoff_timer, boost::bind(&TcpConnector::connect3, shared_from_this(), candidate_endpoints, key, boost::asio::placeholders::error));
 			return;
+		}
+
+		{
+		boost::mutex::scoped_lock lock(this_lock);			
+		active.remove(key);		
 		}
 
 		connect4();
@@ -622,9 +623,11 @@ namespace detail
 			active.remove(key);
 			errors.push_back(err);
 
-			if (active.size() != 0) return;
+			if (active.size() != 0) 
+				return;
 			s = socket_connected;
-			if (active.size() != 0) return;		
+			if (active.size() != 0) 
+				return;		
 
 		//return;
 		//All activities have completed, assume failure
