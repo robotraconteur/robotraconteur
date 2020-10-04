@@ -54,6 +54,18 @@ else()
 set_target_properties(${SWIG_MODULE_RobotRaconteurNETNative_REAL_NAME} PROPERTIES PREFIX "${CMAKE_SHARED_MODULE_PREFIX}")
 endif()
 
+set(RR_NET_INSTALL_NATIVE_LIB OFF CACHE BOOL "Install .NET Native lib")
+mark_as_advanced(RR_NET_INSTALL_NATIVE_LIB)
+
+if(RR_NET_INSTALL_NATIVE_LIB)
+install(TARGETS ${SWIG_MODULE_RobotRaconteurNETNative_REAL_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR})
+endif()
+
+set(RR_NET_BUILD_NATIVE_ONLY OFF CACHE BOOL "Install .NET Native lib")
+mark_as_advanced(RR_NET_BUILD_NATIVE_ONLY)
+
+if (NOT RR_NET_BUILD_NATIVE_ONLY)
+
 include("${CMAKE_CURRENT_SOURCE_DIR}/NETExceptions.cmake")
 
 if (WIN32)
@@ -114,6 +126,11 @@ add_custom_target(RobotRaconteurNET_standard ALL msbuild /restore /verbosity:qui
 add_custom_target(RobotRaconteurNETTest_standard ALL msbuild /verbosity:quiet /restore $<$<CONFIG:debug>:/p:Configuration=Debug>$<$<CONFIG:release>:/p:Configuration=Release> /t:rebuild RobotRaconteurNETTest.csproj WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/netstandard/Test")
 add_dependencies(RobotRaconteurNET_standard ${SWIG_MODULE_RobotRaconteurNETNative_REAL_NAME})
 add_dependencies(RobotRaconteurNETTest_standard RobotRaconteurNET_standard)
+add_custom_command(TARGET RobotRaconteurNET_standard 
+	POST_BUILD COMMAND 
+	COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/$<$<CONFIG:debug>:out_debug>$<$<CONFIG:release>:out>/NET/netstandard
+	COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/netstandard/Lib/bin/$<$<CONFIG:debug>:Debug>$<$<CONFIG:release>:Release>/netstandard2.0/RobotRaconteurNET.dll ${CMAKE_BINARY_DIR}/$<$<CONFIG:debug>:out_debug>$<$<CONFIG:release>:out>/NET/netstandard/.
+)
 endif()
 
 #configure_file("${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurNET/RobotRaconteurNETTestVB/RobotRaconteurNETTestVB.vbproj.in" "${CMAKE_CURRENT_BINARY_DIR}/RobotRaconteurNETTestVB.vbproj" @ONLY)
@@ -122,13 +139,6 @@ STRING(TIMESTAMP CurrentYear "%Y")
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurNET/Properties/AssemblyInfo.cs.in" "${CMAKE_CURRENT_BINARY_DIR}/AssemblyInfo.cs" @ONLY)
 
-
-set(RR_NET_INSTALL_NATIVE_LIB OFF CACHE BOOL "Install .NET Native lib")
-mark_as_advanced(RR_NET_INSTALL_NATIVE_LIB)
-
-if(RR_NET_INSTALL_NATIVE_LIB)
-install(TARGETS ${SWIG_MODULE_RobotRaconteurNETNative_REAL_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR})
-endif()
 
 if(WIN32)
 set(RR_NET_TEST_CMD "\"${CMAKE_COMMAND}\"")
@@ -143,5 +153,5 @@ RRConfigureTest(test_net_loopback "${RR_NET_TEST_CMD}" "test_prog" ARGS "${RR_NE
 RRConfigureTest(test_net_loopback2 "${RR_NET_TEST_CMD}" "test_prog" ARGS "${RR_NET_TEST_CMD_ARGS} loopback2")
 RRConfigureTest(test_net_loopback3 "${RR_NET_TEST_CMD}" "test_prog" ARGS "${RR_NET_TEST_CMD_ARGS} loopback3")
 
-#endif()
+endif()
 
