@@ -1414,8 +1414,8 @@ class ServiceTestClient:
         ca(e3.ReceivePacket().mydat, [738.29])
         ca(e3.ReceivePacket().mydat, [89.83])
         time.sleep(.5)
-        if not self._ack_recv:
-            raise Exception()
+        #if not self._ack_recv:
+        #    raise Exception()
         self._r.pipe_check_error()
         
         if not self._r.p1.Direction == MemberDefinition_Direction_both:
@@ -1844,10 +1844,9 @@ class ServiceTestClient:
 
 
 
-        t = threading.Thread(None,f1)
         #ShouldBeErr<ObjectLockedException>(delegate() { r2_o.d1 = new double[] { 0.0 }; });
         with RobotRaconteurNode.ScopedMonitorLock(r1_o):
-            t.start()
+            RobotRaconteurNode.s.PostToThreadPool(f1)
             t1 = True
 
             time.sleep(0.01)
@@ -1857,7 +1856,7 @@ class ServiceTestClient:
                 raise Exception()
             t1 = False
 
-        t.join()
+        time.sleep(0.5)
         if threaderr:
             raise Exception()
 
@@ -2573,26 +2572,25 @@ class testroot_impl(object):
 
     #functions
     def func1(self):
-        def func1_thread():
+        def timer_handler(ev):
             try:
-                time.sleep(1)
                 self.ev1.fire()
             except:
                 traceback.print_exc()
-        t=threading.Thread(target=func1_thread)
-        t.start()
+        t = RobotRaconteurNode.s.CreateTimer(1,timer_handler,True)
+        t.Start()
+        
 
     def func2(self, d1, d2):
-        def func2_thread():
-            try:
-                time.sleep(1)
+        def timer_handler(ev):
+            try:                
                 s=RobotRaconteurNode.s.NewStructure("com.robotraconteur.testing.TestService1.teststruct2")
                 s.mydat=[d2]
                 self.ev2.fire(d1,s)
             except:
                 traceback.print_exc()
-        t=threading.Thread(target=func2_thread)
-        t.start()
+        t = RobotRaconteurNode.s.CreateTimer(1,timer_handler,True)
+        t.Start()
 
     def func3(self, d1, d2):
         try:
@@ -2725,8 +2723,8 @@ class testroot_impl(object):
                             self._packet_sent=True
             except:
                 pass
-        t=threading.Thread(target=p1_pr)
-        t.start()
+        RobotRaconteurNode.s.PostToThreadPool(p1_pr)
+        
 
     def p1_packet_ack_received(self,p,packetnum):
         if (packetnum == self._packetnum):
@@ -2791,18 +2789,17 @@ class testroot_impl(object):
         assert self._broadcastpipe.MaxBacklog == 3
         self._broadcastpipe.MaxBacklog = 3
         
-        def threadfunc():
+        def timer_func(ev):
             try:
-                while(True):
-                    for i in xrange(100):
-                        self._broadcastpipe.AsyncSendPacket(i, lambda: None)
-                    time.sleep(.025)
+                
+                for i in xrange(100):
+                    self._broadcastpipe.AsyncSendPacket(i, lambda: None)
+                    
             except:
                 pass
 
-        t=threading.Thread(target=threadfunc)
-        t.daemon=True
-        t.start()
+        t = RobotRaconteurNode.s.CreateTimer(.025,timer_func,oneshot=False)
+        t.Start()
 
     #wires
     @property
@@ -2861,18 +2858,15 @@ class testroot_impl(object):
 
         b=WireBroadcaster(value)
 
-        def threadfunc():
-            try:
-                while(True):
-                    for i in xrange(100):
-                        b.OutValue=i
-                    time.sleep(.025)
+        def timer_func(ev):
+            try:                
+                for i in xrange(100):
+                    b.OutValue=i                    
             except:
                 pass
 
-        t=threading.Thread(target = threadfunc)
-        t.daemon=True
-        t.start()
+        t = RobotRaconteurNode.s.CreateTimer(.025,timer_func,oneshot=False)
+        t.Start()
 
 class sub1_impl(object):
     def __init__(self):
