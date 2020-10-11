@@ -1,5 +1,5 @@
 function(ROBOTRACONTEUR_GENERATE_THUNK SRCS )
-	cmake_parse_arguments(RR_GEN "MASTER_HEADER" "LANG;OUTDIR;MASTER_HEADER_FILENAME" "INCLUDE_DIRS;IMPORT_DIRS;IMPORTS" ${ARGN})	
+	cmake_parse_arguments(RR_GEN "MASTER_HEADER;AUTO_IMPORT" "LANG;OUTDIR;MASTER_HEADER_FILENAME" "INCLUDE_DIRS;IMPORT_DIRS;IMPORTS;CPP_EXTRA_INCLUDE" ${ARGN})	
 			
 	if ("${RR_GEN_LANG}" STREQUAL "")
 		set(RR_GEN_LANG "cpp")
@@ -114,11 +114,30 @@ function(ROBOTRACONTEUR_GENERATE_THUNK SRCS )
 			endif()			
 		endforeach()
 	endif()
+
+	set(GEN_CPP_EXTRA_INCLUDE_ARGS)
+	if (RR_GEN_CPP_EXTRA_INCLUDE)
+		foreach(f1 IN LISTS RR_GEN_CPP_EXTRA_INCLUDE)
+		list(APPEND GEN_CPP_EXTRA_INCLUDE_ARGS "--cpp-extra-include=${f1}")
+		endforeach()
+	endif()
 	
+	set(GEN_INCLUDE_DIRS_ARGS)
+	if (RR_GEN_INCLUDE_DIRS)
+		foreach(f1 IN LISTS RR_GEN_INCLUDE_DIRS)
+			list(APPEND GEN_INCLUDE_DIRS_ARGS "--include-path=${f1}")
+		endforeach()
+	endif()
+
+	set(GEN_AUTO_IMPORT_ARGS)
+	if (RR_GEN_AUTO_IMPORT)
+		set(GEN_AUTO_IMPORT_ARGS "--auto-import")
+	endif()
+
 	add_custom_command(
       OUTPUT ${THUNK_SRCS} ${THUNK_HDRS}
       COMMAND RobotRaconteurGen
-      ARGS "--thunksource" "--lang=${RR_GEN_LANG}" ${RR_GEN_MASTER_HEADER_CMD} ${RR_GEN_OUTDIR} ${GEN_IMPORT_ARGS} ${RR_GEN_FILES}
+      ARGS "--thunksource" "--lang=${RR_GEN_LANG}" ${RR_GEN_MASTER_HEADER_CMD} ${GEN_INCLUDE_DIRS_ARGS} ${RR_GEN_OUTDIR} ${GEN_IMPORT_ARGS} ${GEN_AUTO_IMPORT_ARGS} ${GEN_CPP_EXTRA_INCLUDE_ARGS} ${RR_GEN_FILES}
       DEPENDS ${RR_GEN_FILES} RobotRaconteurGen
       COMMENT "Running RobotRaconteurGen for ${RR_SERVICE_NAMES}"
       VERBATIM )

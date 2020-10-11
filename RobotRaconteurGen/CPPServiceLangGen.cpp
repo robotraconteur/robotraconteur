@@ -142,6 +142,11 @@ namespace RobotRaconteurGen
 
 	}
 
+	std::string CPPServiceLangGen::export_definition(ServiceDefinition* def)
+	{
+		return "ROBOTRACONTEUR_ROBDEF_THUNK____" + fix_name(boost::replace_all_copy(def->Name,".","__")) + "____EXPORT";
+	}
+
 	CPPServiceLangGen::convert_type_result CPPServiceLangGen::convert_type(const TypeDefinition& tdef)
 	{
 		convert_type_result o;
@@ -1068,7 +1073,7 @@ namespace RobotRaconteurGen
 		}
 	}
 
-	void CPPServiceLangGen::GenerateInterfaceHeaderFile(ServiceDefinition* d, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, ostream* w)
+	void CPPServiceLangGen::GenerateInterfaceHeaderFile(ServiceDefinition* d, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, const std::vector<std::string>& extra_include, ostream* w)
 	{
 		ostream& w2=*w;
 
@@ -1102,7 +1107,18 @@ namespace RobotRaconteurGen
 			w2 << "#include \"" << boost::replace_all_copy(fix_name(*e),".","__") << ".h\"" << endl;
 		}
 
+		for (std::vector<string>::const_iterator e=extra_include.begin(); e!=extra_include.end(); ++e)
+		{
+			w2 << "#include \"" << *e << "\"" << endl;
+		}
+
 		w2 << "#pragma once" << endl << endl;
+
+		std::string export_macro = export_definition(d);
+
+		w2 << "#ifndef " << export_macro << std::endl;
+		w2 << "#define " << export_macro << std::endl;
+		w2 << "#endif" << std::endl << std::endl;
 
 		vector<string> namespace_vec;
 		split(namespace_vec,d->Name,boost::is_from_range('.','.'));
@@ -1116,11 +1132,11 @@ namespace RobotRaconteurGen
 
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Structures.begin(); e != d->Structures.end(); ++e)
 		{
-			w2 << "class " << fix_name((*e)->Name) << ";" << endl;
+			w2 << "class " << export_definition(d) << " " << fix_name((*e)->Name) << ";" << endl;
 		}
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Objects.begin(); e != d->Objects.end(); ++e)
 		{
-			w2 << "class " << fix_name((*e)->Name) << ";" << endl;
+			w2 << "class " << export_definition(d) << " " << fix_name((*e)->Name) << ";" << endl;
 		}
 
 		w2 << endl;
@@ -1180,7 +1196,7 @@ namespace RobotRaconteurGen
 
 			if (e2->EntryType == DataTypes_pod_t)
 			{
-				w2 << "class " << fix_name(e2->Name) << " : public RobotRaconteur::RRPod {" << endl;
+				w2 << "class " << export_definition(d) << " " << fix_name(e2->Name) << " : public RobotRaconteur::RRPod {" << endl;
 				w2 << "public:" << endl;
 			}
 			else
@@ -1253,7 +1269,7 @@ namespace RobotRaconteurGen
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Structures.begin(); e != d->Structures.end(); ++e)
 		{
 			GenerateDocString((*e)->DocString, "", w);
-			w2 << "class " << fix_name((*e)->Name) << " : public RobotRaconteur::RRStructure {" << endl;
+			w2 << "class " << export_definition(d) << " " << fix_name((*e)->Name) << " : public RobotRaconteur::RRStructure {" << endl;
 			w2 << "public:" << endl;
 			MEMBER_ITER(PropertyDefinition)
 				GenerateDocString(m->DocString, "", w);
@@ -1286,7 +1302,7 @@ namespace RobotRaconteurGen
 			if (implements.size() ==0) implements.push_back("public virtual RobotRaconteur::RRObject");
 
 			GenerateDocString((*e)->DocString, "", w);
-			w2 << "class " << fix_name((*e)->Name) << " : " << boost::join(implements,", ") << endl;
+			w2 << "class " << export_definition(d) << " " << fix_name((*e)->Name) << " : " << boost::join(implements,", ") << endl;
 			w2 << "{" << endl;
 			w2 << "public:" << endl;
 			MEMBER_ITER2(PropertyDefinition)
@@ -1351,7 +1367,7 @@ namespace RobotRaconteurGen
 		BOOST_FOREACH (RR_SHARED_PTR<ExceptionDefinition> e, d->Exceptions)
 		{
 			GenerateDocString(e->DocString, "", w);
-			w2 << "class " << fix_name(e->Name) << " : public RobotRaconteur::RobotRaconteurRemoteException" << endl << "{" << endl;
+			w2 << "class " << export_definition(d) << " " << fix_name(e->Name) << " : public RobotRaconteur::RobotRaconteurRemoteException" << endl << "{" << endl;
 			w2 << "    public:" << endl;
 			w2 << "    " << fix_name(e->Name) << "(const std::string& message, std::string sub_name = \"\", RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> param_ = RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>()) : RobotRaconteur::RobotRaconteurRemoteException(\"" << d->Name << "." << e->Name << "\",message,sub_name,param_) {}" << endl;
 			w2 << "};" << endl;
@@ -1451,7 +1467,7 @@ namespace RobotRaconteurGen
 			{
 				std::string q_name = fix_qualified_name(d->Name) + "::" + fix_name(e->Name);
 				w2 << "template<>" << endl;
-				w2 << "class PodStub<" << q_name << ">" << endl;
+				w2 << "class " << export_definition(d) << " PodStub<" << q_name << ">" << endl;
 				w2 << "{" << endl;
 				w2 << "public:" << endl;
 				w2 << "    template<typename U>" << endl;
@@ -1541,7 +1557,7 @@ namespace RobotRaconteurGen
 		string factory_name=fix_name(boost::replace_all_copy(d->Name,".","__")) + "Factory";
 
 		ostream& w2=*w;
-		w2 << "class " << factory_name << " : public virtual RobotRaconteur::ServiceFactory" << endl << "{" << endl;
+		w2 << "class " << export_definition(d) << " " << factory_name << " : public virtual RobotRaconteur::ServiceFactory" << endl << "{" << endl;
 		w2 << "public:" << endl;
 
 		w2 << "virtual std::string GetServiceName();" << endl;
@@ -1820,7 +1836,7 @@ namespace RobotRaconteurGen
 
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Structures.begin(); e != d->Structures.end(); ++e)
 		{
-			w2 << "class " << fix_name((*e)->Name) << "_stub : public virtual RobotRaconteur::StructureStub" << endl << "{" << endl;
+			w2 << "class " << export_definition(d) << " " << fix_name((*e)->Name) << "_stub : public virtual RobotRaconteur::StructureStub" << endl << "{" << endl;
 			w2 << "public:" << endl;
 			w2 << "" << fix_name((*e)->Name) << "_stub(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurNode> node) : RobotRaconteur::StructureStub(node) {}" << endl;
 			w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> s);" << endl;
@@ -1845,7 +1861,7 @@ namespace RobotRaconteurGen
 				
 			}
 
-			w2 << "class async_" << fix_name((*e)->Name) ;
+			w2 << "class " << export_definition(d) << " async_" << fix_name((*e)->Name) ;
 			if (implements.size() >0)
 			{
 				w2 << " : " << boost::join(implements,", ");
@@ -1886,7 +1902,7 @@ namespace RobotRaconteurGen
 
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Objects.begin(); e != d->Objects.end(); ++e)
 		{
-			w2 << "class " << fix_name((*e)->Name) << "_stub : public virtual " << fix_name((*e)->Name)  << ", public virtual async_" << fix_name((*e)->Name)  << ", public virtual RobotRaconteur::ServiceStub" << endl;
+			w2 << "class " << export_definition(d) << " " << fix_name((*e)->Name) << "_stub : public virtual " << fix_name((*e)->Name)  << ", public virtual async_" << fix_name((*e)->Name)  << ", public virtual RobotRaconteur::ServiceStub" << endl;
 			w2 << "{" << endl;
 			w2 << "public:" << endl;
 
@@ -2050,7 +2066,7 @@ namespace RobotRaconteurGen
 
 		for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Objects.begin(); e != d->Objects.end(); ++e)
 		{
-			w2 << "class " << fix_name((*e)->Name) << "_skel : " <<  "public virtual RobotRaconteur::ServiceSkel" << endl;
+			w2 << "class " << export_definition(d) << " " << fix_name((*e)->Name) << "_skel : " <<  "public virtual RobotRaconteur::ServiceSkel" << endl;
 			w2 << "{" << endl;
 			w2 << "public:" << endl;
 			w2 << "virtual void Init(boost::string_ref path, RR_SHARED_PTR<RobotRaconteur::RRObject> object, RR_SHARED_PTR<RobotRaconteur::ServerContext> context);" << endl;
@@ -3752,7 +3768,7 @@ namespace RobotRaconteurGen
 		}
 	}
 
-	void CPPServiceLangGen::GenerateFiles(RR_SHARED_PTR<ServiceDefinition> d, std::string servicedef, std::vector<RR_SHARED_PTR<ServiceDefinition> > defs, std::string path)
+	void CPPServiceLangGen::GenerateFiles(RR_SHARED_PTR<ServiceDefinition> d, std::string servicedef, std::vector<RR_SHARED_PTR<ServiceDefinition> > defs, const std::vector<std::string>& extra_include, std::string path)
 	{
 #ifdef _WIN32
 		const std::string os_pathsep("\\");
@@ -3761,7 +3777,7 @@ namespace RobotRaconteurGen
 #endif
 
 		ofstream f1((path+os_pathsep+boost::replace_all_copy(fix_name(d->Name),".","__") + ".h").c_str());
-		GenerateInterfaceHeaderFile(d.get(),defs,&f1);
+		GenerateInterfaceHeaderFile(d.get(),defs,extra_include,&f1);
 		f1.close();
 
 		ofstream f2((path+os_pathsep+boost::replace_all_copy(fix_name(d->Name),".","__") + "_stubskel.h").c_str());
@@ -3935,11 +3951,11 @@ namespace RobotRaconteurGen
 		{
 			if (!is_abstract)
 			{
-				w2 << "class " << fix_name((*e)->Name) << "_default_impl : public virtual " << fix_name((*e)->Name) << ", public virtual RobotRaconteur::RRObject_default_impl" << endl;
+				w2 << "class " << export_definition(d) << " " << fix_name((*e)->Name) << "_default_impl : public virtual " << fix_name((*e)->Name) << ", public virtual RobotRaconteur::RRObject_default_impl" << endl;
 			}
 			else
 			{
-				w2 << "class " << fix_name((*e)->Name) << "_default_abstract_impl : public virtual " << fix_name((*e)->Name) << ", public virtual RobotRaconteur::RRObject_default_impl" << endl;
+				w2 << "class " << export_definition(d) << " " << fix_name((*e)->Name) << "_default_abstract_impl : public virtual " << fix_name((*e)->Name) << ", public virtual RobotRaconteur::RRObject_default_impl" << endl;
 			}
 			
 			w2 << "{" << endl;

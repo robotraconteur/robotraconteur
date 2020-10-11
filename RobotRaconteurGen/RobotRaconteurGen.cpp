@@ -139,11 +139,11 @@ boost::tuple<RR_SHARED_PTR<ServiceDefinition>,std::string> ReadRobDefFile(const 
 
 
 
-void GenerateCPPFiles(RR_SHARED_PTR<ServiceDefinition> d, std::string def_str, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, std::string output_dir)
+void GenerateCPPFiles(RR_SHARED_PTR<ServiceDefinition> d, std::string def_str, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, const std::vector<std::string>& cpp_extra_include, std::string output_dir)
 {
 	//cout << str << endl;
 		
-	CPPServiceLangGen::GenerateFiles(d,def_str,other_defs,output_dir);
+	CPPServiceLangGen::GenerateFiles(d,def_str,other_defs,cpp_extra_include,output_dir);
 }
 
 void GenerateCSharpFiles(RR_SHARED_PTR<ServiceDefinition> d, std::string def_str, std::string output_dir)
@@ -294,6 +294,7 @@ int main(int argc, char* argv[])
 	std::vector<std::string> import_vector;
 	std::string master_header;
 	std::string out_file;
+	std::vector<std::string> cpp_extra_include;
 
 	try
 	{
@@ -314,6 +315,7 @@ int main(int argc, char* argv[])
 			("master-header", po::value(&master_header), "master header file for generated cpp files")
 			("outfile", po::value(&out_file), "unified output file (csharp only)")
 			("auto-import", po::bool_switch(&auto_import), "automatically load imported robdef")
+			("cpp-extra-include",po::value(&cpp_extra_include)->composing(), "extra include files for C++ thunk headers")
 
 			;
 
@@ -642,7 +644,7 @@ int main(int argc, char* argv[])
 					std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs = alldefs;
 					other_defs.erase(boost::range::remove(other_defs, sdefs.at(i)),other_defs.end());
 
-					GenerateCPPFiles(sdefs.at(i), sdefs_str.at(i), other_defs, output_dir);
+					GenerateCPPFiles(sdefs.at(i), sdefs_str.at(i), other_defs, cpp_extra_include, output_dir);
 				}
 				catch (std::exception& ee)
 				{

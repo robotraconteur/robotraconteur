@@ -34,6 +34,8 @@ namespace RobotRaconteurGen
 
 		static std::string fix_qualified_name(const std::string& name);
 
+		static std::string export_definition(ServiceDefinition* def);
+
 		struct convert_type_result
 		{
 			std::string name; // o[0]
@@ -74,7 +76,7 @@ namespace RobotRaconteurGen
 
 		static bool is_member_override(MemberDefinition* m, std::vector<RR_SHARED_PTR<ServiceDefinition> > defs);
 
-		static void GenerateInterfaceHeaderFile(ServiceDefinition* d, std::vector<RR_SHARED_PTR<ServiceDefinition> > defs,  ostream* w);
+		static void GenerateInterfaceHeaderFile(ServiceDefinition* d, std::vector<RR_SHARED_PTR<ServiceDefinition> > defs, const std::vector<std::string>& extra_include,  ostream* w);
 
 		static string GetPropertyDeclaration(PropertyDefinition* d, bool inclass=true);
 
@@ -137,7 +139,7 @@ namespace RobotRaconteurGen
 		static void GenerateDocString(const std::string& docstring, const std::string& prefix, ostream* w);
 
 		//File generators
-		static void GenerateFiles(RR_SHARED_PTR<ServiceDefinition> d, std::string servicedef, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, std::string path=".");
+		static void GenerateFiles(RR_SHARED_PTR<ServiceDefinition> d, std::string servicedef, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, const std::vector<std::string>& extra_include, std::string path=".");
 
 		//Master header file
 		static void GenerateMasterHeaderFile(std::vector<RR_SHARED_PTR<ServiceDefinition> > d, ostream* w);
