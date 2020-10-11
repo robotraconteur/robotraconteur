@@ -2373,6 +2373,9 @@ namespace RobotRaconteurGen
 		MEMBER_ITER2(EventDefinition)
 		string params = str_pack_parameters(m->Parameters, true);
 		w2 << "    public virtual event " << str_pack_delegate(m->Parameters) << " " << fix_name(m->Name) << ";" << endl;
+		w2 << "    protected virtual void rrfire_" << fix_name(m->Name) << "(" <<  str_pack_parameters(m->Parameters,true) << ") {" << endl;
+		w2 << "    " << fix_name(m->Name) << "?.Invoke(" << str_pack_parameters(m->Parameters,false) << ");" << endl;
+		w2 << "    }" << endl;
 		MEMBER_ITER_END()
 
 		
