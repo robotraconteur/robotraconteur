@@ -4452,7 +4452,13 @@ public class testroot_default_impl : testroot{
     public virtual void test_callbacks() {
     throw new NotImplementedException();    }
     public virtual event Action ev1;
+    protected virtual void rrfire_ev1() {
+    ev1?.Invoke();
+    }
     public virtual event Action<double, teststruct2> ev2;
+    protected virtual void rrfire_ev2(double d1, teststruct2 s2) {
+    ev2?.Invoke(d1, s2);
+    }
     public virtual sub1 get_o1() {
     throw new NotImplementedException();
     }

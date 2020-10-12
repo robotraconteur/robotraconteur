@@ -598,6 +598,9 @@ public class baseobj_default_impl : baseobj{
     public virtual double func3(double d1, double d2) {
     throw new NotImplementedException();    }
     public virtual event Action ev1;
+    protected virtual void rrfire_ev1() {
+    ev1?.Invoke();
+    }
     public virtual subobj get_o5() {
     throw new NotImplementedException();
     }

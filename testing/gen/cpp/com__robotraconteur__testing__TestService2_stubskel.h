@@ -12,7 +12,7 @@ namespace testing
 namespace TestService2
 {
 
-class com__robotraconteur__testing__TestService2Factory : public virtual RobotRaconteur::ServiceFactory
+class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService2____EXPORT com__robotraconteur__testing__TestService2Factory : public virtual RobotRaconteur::ServiceFactory
 {
 public:
 virtual std::string GetServiceName();
@@ -34,7 +34,7 @@ virtual void DownCastAndThrowException(RobotRaconteur::RobotRaconteurException& 
 virtual RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> DownCastException(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> exp);
 };
 
-class ostruct2_stub : public virtual RobotRaconteur::StructureStub
+class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService2____EXPORT ostruct2_stub : public virtual RobotRaconteur::StructureStub
 {
 public:
 ostruct2_stub(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurNode> node) : RobotRaconteur::StructureStub(node) {}
@@ -42,7 +42,7 @@ virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackSt
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> UnpackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> m);
 };
 
-class async_baseobj
+class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService2____EXPORT async_baseobj
 {
 public:
 virtual void async_get_d1(boost::function<void (double,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE) = 0;
@@ -59,14 +59,14 @@ virtual void async_func3(double d1, double d2,boost::function<void (double, RR_S
 virtual void async_get_o5(boost::function<void(RR_SHARED_PTR<subobj>,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>)> handler, int32_t timeout=RR_TIMEOUT_INFINITE)=0;
 
 };
-class async_subobj
+class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService2____EXPORT async_subobj
 {
 public:
 virtual void async_add_val(double v,boost::function<void (double, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout=RR_TIMEOUT_INFINITE) = 0;
 
 
 };
-class baseobj_stub : public virtual baseobj, public virtual async_baseobj, public virtual RobotRaconteur::ServiceStub
+class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService2____EXPORT baseobj_stub : public virtual baseobj, public virtual async_baseobj, public virtual RobotRaconteur::ServiceStub
 {
 public:
 baseobj_stub(boost::string_ref, RR_SHARED_PTR<RobotRaconteur::ClientContext> c);
@@ -134,7 +134,7 @@ virtual void async_get_o5(boost::function<void(RR_SHARED_PTR<subobj>,RR_SHARED_P
 std::string RRType();
 };
 
-class subobj_stub : public virtual subobj, public virtual async_subobj, public virtual RobotRaconteur::ServiceStub
+class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService2____EXPORT subobj_stub : public virtual subobj, public virtual async_subobj, public virtual RobotRaconteur::ServiceStub
 {
 public:
 subobj_stub(boost::string_ref, RR_SHARED_PTR<RobotRaconteur::ClientContext> c);
@@ -160,7 +160,7 @@ std::string RRType();
 };
 
 
-class baseobj_skel : public virtual RobotRaconteur::ServiceSkel
+class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService2____EXPORT baseobj_skel : public virtual RobotRaconteur::ServiceSkel
 {
 public:
 virtual void Init(boost::string_ref path, RR_SHARED_PTR<RobotRaconteur::RRObject> object, RR_SHARED_PTR<RobotRaconteur::ServerContext> context);
@@ -221,7 +221,7 @@ RR_SHARED_PTR<RobotRaconteur::ArrayMemoryServiceSkel<double > > rr_m1_mem;
 
 };
 
-class subobj_skel : public virtual RobotRaconteur::ServiceSkel
+class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService2____EXPORT subobj_skel : public virtual RobotRaconteur::ServiceSkel
 {
 public:
 virtual void Init(boost::string_ref path, RR_SHARED_PTR<RobotRaconteur::RRObject> object, RR_SHARED_PTR<RobotRaconteur::ServerContext> context);
@@ -275,7 +275,7 @@ private:
 };
 
 
-class baseobj_default_impl : public virtual baseobj, public virtual RobotRaconteur::RRObject_default_impl
+class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService2____EXPORT baseobj_default_impl : public virtual baseobj, public virtual RobotRaconteur::RRObject_default_impl
 {
 protected:
 double rrvar_d1;
@@ -311,7 +311,7 @@ virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<double > > get_m1();
 virtual std::string RRType() {return "com.robotraconteur.testing.TestService2.baseobj";  }
 };
 
-class subobj_default_impl : public virtual subobj, public virtual RobotRaconteur::RRObject_default_impl
+class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService2____EXPORT subobj_default_impl : public virtual subobj, public virtual RobotRaconteur::RRObject_default_impl
 {
 protected:
 
@@ -323,7 +323,7 @@ virtual std::string RRType() {return "com.robotraconteur.testing.TestService2.su
 };
 
 
-class baseobj_default_abstract_impl : public virtual baseobj, public virtual RobotRaconteur::RRObject_default_impl
+class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService2____EXPORT baseobj_default_abstract_impl : public virtual baseobj, public virtual RobotRaconteur::RRObject_default_impl
 {
 protected:
 double rrvar_d1;
@@ -359,7 +359,7 @@ virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<double > > get_m1();
 virtual std::string RRType() {return "com.robotraconteur.testing.TestService2.baseobj";  }
 };
 
-class subobj_default_abstract_impl : public virtual subobj, public virtual RobotRaconteur::RRObject_default_impl
+class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService2____EXPORT subobj_default_abstract_impl : public virtual subobj, public virtual RobotRaconteur::RRObject_default_impl
 {
 protected:
 

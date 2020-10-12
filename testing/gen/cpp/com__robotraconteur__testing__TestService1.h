@@ -7,6 +7,10 @@
 #include "com__robotraconteur__testing__TestService2.h"
 #pragma once
 
+#ifndef ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService1____EXPORT
+#define ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService1____EXPORT
+#endif
+
 namespace com
 {
 namespace robotraconteur
@@ -16,12 +20,12 @@ namespace testing
 namespace TestService1
 {
 
-class teststruct1;
-class teststruct2;
-class testroot;
-class sub1;
-class sub2;
-class sub3;
+class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService1____EXPORT teststruct1;
+class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService1____EXPORT teststruct2;
+class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService1____EXPORT testroot;
+class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService1____EXPORT sub1;
+class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService1____EXPORT sub2;
+class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService1____EXPORT sub3;
 
 namespace com__robotraconteur__testing__TestService1Constants 
 {
@@ -32,7 +36,7 @@ namespace com__robotraconteur__testing__TestService1Constants
     }
 }
 
-class teststruct1 : public RobotRaconteur::RRStructure {
+class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService1____EXPORT teststruct1 : public RobotRaconteur::RRStructure {
 public:
 RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > dat1;
 std::string str2;
@@ -52,7 +56,7 @@ virtual std::string RRType() {return "com.robotraconteur.testing.TestService1.te
 using teststruct1Ptr = RR_INTRUSIVE_PTR<teststruct1>;
 #endif
 
-class teststruct2 : public RobotRaconteur::RRStructure {
+class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService1____EXPORT teststruct2 : public RobotRaconteur::RRStructure {
 public:
 RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > mydat;
 
@@ -63,7 +67,7 @@ virtual std::string RRType() {return "com.robotraconteur.testing.TestService1.te
 using teststruct2Ptr = RR_INTRUSIVE_PTR<teststruct2>;
 #endif
 
-class testroot : public virtual com::robotraconteur::testing::TestService2::baseobj
+class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService1____EXPORT testroot : public virtual com::robotraconteur::testing::TestService2::baseobj
 {
 public:
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > get_d3()=0;
@@ -298,7 +302,7 @@ virtual std::string RRType() {return "com.robotraconteur.testing.TestService1.te
 using testrootPtr = RR_SHARED_PTR<testroot>;
 #endif
 
-class sub1 : public virtual RobotRaconteur::RRObject
+class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService1____EXPORT sub1 : public virtual RobotRaconteur::RRObject
 {
 public:
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > get_d1()=0;
@@ -326,7 +330,7 @@ virtual std::string RRType() {return "com.robotraconteur.testing.TestService1.su
 using sub1Ptr = RR_SHARED_PTR<sub1>;
 #endif
 
-class sub2 : public virtual RobotRaconteur::RRObject
+class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService1____EXPORT sub2 : public virtual RobotRaconteur::RRObject
 {
 public:
 virtual std::string get_s_ind()=0;
@@ -347,7 +351,7 @@ virtual std::string RRType() {return "com.robotraconteur.testing.TestService1.su
 using sub2Ptr = RR_SHARED_PTR<sub2>;
 #endif
 
-class sub3 : public virtual RobotRaconteur::RRObject
+class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService1____EXPORT sub3 : public virtual RobotRaconteur::RRObject
 {
 public:
 virtual std::string get_ind()=0;
@@ -368,7 +372,7 @@ virtual std::string RRType() {return "com.robotraconteur.testing.TestService1.su
 using sub3Ptr = RR_SHARED_PTR<sub3>;
 #endif
 
-class testexception1 : public RobotRaconteur::RobotRaconteurRemoteException
+class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService1____EXPORT testexception1 : public RobotRaconteur::RobotRaconteurRemoteException
 {
     public:
     testexception1(const std::string& message, std::string sub_name = "", RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> param_ = RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>()) : RobotRaconteur::RobotRaconteurRemoteException("com.robotraconteur.testing.TestService1.testexception1",message,sub_name,param_) {}
@@ -376,7 +380,7 @@ class testexception1 : public RobotRaconteur::RobotRaconteurRemoteException
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
 using testexception1Ptr = RR_SHARED_PTR<testexception1>;
 #endif
-class testexception2 : public RobotRaconteur::RobotRaconteurRemoteException
+class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService1____EXPORT testexception2 : public RobotRaconteur::RobotRaconteurRemoteException
 {
     public:
     testexception2(const std::string& message, std::string sub_name = "", RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> param_ = RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>()) : RobotRaconteur::RobotRaconteurRemoteException("com.robotraconteur.testing.TestService1.testexception2",message,sub_name,param_) {}

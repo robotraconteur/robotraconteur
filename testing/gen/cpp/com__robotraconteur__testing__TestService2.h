@@ -6,6 +6,10 @@
 #include <boost/container/static_vector.hpp>
 #pragma once
 
+#ifndef ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService2____EXPORT
+#define ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService2____EXPORT
+#endif
+
 namespace com
 {
 namespace robotraconteur
@@ -15,12 +19,12 @@ namespace testing
 namespace TestService2
 {
 
-class ostruct2;
-class baseobj;
-class subobj;
+class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService2____EXPORT ostruct2;
+class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService2____EXPORT baseobj;
+class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService2____EXPORT subobj;
 
 
-class ostruct2 : public RobotRaconteur::RRStructure {
+class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService2____EXPORT ostruct2 : public RobotRaconteur::RRStructure {
 public:
 RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > a1;
 
@@ -31,7 +35,7 @@ virtual std::string RRType() {return "com.robotraconteur.testing.TestService2.os
 using ostruct2Ptr = RR_INTRUSIVE_PTR<ostruct2>;
 #endif
 
-class baseobj : public virtual RobotRaconteur::RRObject
+class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService2____EXPORT baseobj : public virtual RobotRaconteur::RRObject
 {
 public:
 virtual double get_d1()=0;
@@ -64,7 +68,7 @@ virtual std::string RRType() {return "com.robotraconteur.testing.TestService2.ba
 using baseobjPtr = RR_SHARED_PTR<baseobj>;
 #endif
 
-class subobj : public virtual RobotRaconteur::RRObject
+class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService2____EXPORT subobj : public virtual RobotRaconteur::RRObject
 {
 public:
 virtual double add_val(double v)=0;
@@ -76,7 +80,7 @@ virtual std::string RRType() {return "com.robotraconteur.testing.TestService2.su
 using subobjPtr = RR_SHARED_PTR<subobj>;
 #endif
 
-class testexception3 : public RobotRaconteur::RobotRaconteurRemoteException
+class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService2____EXPORT testexception3 : public RobotRaconteur::RobotRaconteurRemoteException
 {
     public:
     testexception3(const std::string& message, std::string sub_name = "", RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> param_ = RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>()) : RobotRaconteur::RobotRaconteurRemoteException("com.robotraconteur.testing.TestService2.testexception3",message,sub_name,param_) {}
