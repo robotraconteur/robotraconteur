@@ -157,4 +157,11 @@ namespace RobotRaconteur
 		virtual std::vector<RR_SHARED_PTR<ServiceFactory> > CreateServiceFactories(const std::vector<std::string>& def) = 0;
 	};
 
+#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+	/** @brief Convenience alias for ServiceFactory shared_ptr */
+	using ServiceFactoryPtr = RR_SHARED_PTR<ServiceFactory>;
+	/** @brief Convenience alias for DynamicServiceFactory shared_ptr */
+	using DynamicServiceFactoryPtr = RR_SHARED_PTR<DynamicServiceFactory>;
+#endif
+
 }
