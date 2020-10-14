@@ -146,7 +146,7 @@ Using Robot Raconteur from CMake is straightforward. In your CMakeLists.txt file
 
 Robot Raconteur uses Service Definitions to define objects, value types, exceptions, constants, and enums. For dynamic languages like Python and MATLAB, these types are handled automatically. Compiled languages like C++ need to have these types generated at compile time. This is accomplished using the `RobotRaconteurGen` utility. See \ref robotraconteurgen for more information on this utility. Robot Raconteur provides a CMake macro to call `RobotRaconteurGen`.
 
-    ROBOTRACONTEUR_GENERATE_THUNK(<SRCS> <HDRS> <ROBDEF_FILES> [MASTER_HEADER] [INCLUDE_DIRS <INCLUDE_DIR1> [<INCLUDE_DIR2> ...]])
+    ROBOTRACONTEUR_GENERATE_THUNK(<SRCS> <HDRS> <ROBDEF_FILES> [MASTER_HEADER] [AUTO_IMPORT] [INCLUDE_DIRS <INCLUDE_DIR1> [<INCLUDE_DIR2> ...]])
 
 See \ref robotraconteur_generate_thunk for more details on using the `ROBOTRACONTEUR_GENERATE_THUNK` macro.
 

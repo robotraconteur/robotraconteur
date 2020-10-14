@@ -4,10 +4,12 @@
         <ROBDEF_FILES>
         [LANG <cpp|csharp|java>]
         [MASTER_HEADER]
+        [AUTO_IMPORT]
         [OUTDIR <DIRECTORY>]
         [MASTER_HEADER_FILENAME <FILENAME>]
         [INCLUDE_DIRS <INCLUDE_DIR1> [<INCLUDE_DIR2> ...]]
         [IMPORTS <ROBDEF_IMPORT_FILE1> [<ROBDEF_IMPORT_FILE2> ...]]
+        [CPP_EXTRA_INCLUDE <CPP_HEADER_FILENAME1> [<CPP_HEADER_FILENAME1> ...]] 
         )
 
 Generate thunk source files when building the project. Custom commands are added to call `RobotRaconteurGen` on the specified service definitions. See \ref robotraconteurgen.
@@ -28,6 +30,10 @@ The programming language to generate source for. Valid values are `cpp`, `java`,
 
 If present, a "master header" file with the default name `robotraconteur_generated.h` is generated. This file can be included to automatically include all generated header files, and to define `ROBOTRACONTEUR_SERVICE_TYPES` for use with RobotRaconteurNodeSetup in C++.
 
+`AUTO_IMPORT`
+
+If present, `RobotRaconteurGen` will search the current directory working and the include path and automatically load service definition files that are imported byt not specified on the command line.
+
 `OUTDIR`
 
 Specify the output directory for generated files. Default is `CMAKE_CURRENT_BINARY_DIR`. Directory must exist.
@@ -44,6 +50,8 @@ Additional directories to search for service definition `*.robdef` files.
 
 Additional service definitions to import to `RobotRaconteurGen`, but not generate sources.
 
+`CPP_EXTRA_INCLUDE`
 
+Add additional `#include` files to the generated C++ header files.
 
 `
