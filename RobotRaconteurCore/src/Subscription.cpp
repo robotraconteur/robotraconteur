@@ -1095,6 +1095,14 @@ namespace RobotRaconteur
 		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Subscription, -1, "", s->membername, "ServiceSubscription SubscribeWire");
 
 		boost::mutex::scoped_lock lock(this_lock);
+		BOOST_FOREACH(RR_SHARED_PTR<WireSubscriptionBase> w1, wire_subscriptions)
+		{
+			if (w1->membername == s->membername && w1->servicepath == s->servicepath)
+			{
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Subscription, -1, "", s->membername, "ServiceSubscription SubscribeWire attempt to subscribe to same member twice");
+				throw InvalidOperationException("Already subscribed to wire member: " + s->membername);
+			}
+		}
 		wire_subscriptions.insert(s);
 
 		BOOST_FOREACH(RR_SHARED_PTR<detail::ServiceSubscription_client> client, clients | boost::adaptors::map_values)
@@ -1121,6 +1129,14 @@ namespace RobotRaconteur
 	{
 		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Subscription, -1, "", s->membername, "ServiceSubscription SubscribePipe");
 		boost::mutex::scoped_lock lock(this_lock);
+		BOOST_FOREACH(RR_SHARED_PTR<PipeSubscriptionBase> p1, pipe_subscriptions)
+		{
+			if (p1->membername == s->membername && p1->servicepath == s->servicepath)
+			{
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Subscription, -1, "", s->membername, "ServiceSubscription SubscribePipe attempt to subscribe to same member twice");
+				throw InvalidOperationException("Already subscribed to pipe member: " + s->membername);
+			}
+		}
 		pipe_subscriptions.insert(s);
 
 		BOOST_FOREACH(RR_SHARED_PTR<detail::ServiceSubscription_client> client, clients | boost::adaptors::map_values)
