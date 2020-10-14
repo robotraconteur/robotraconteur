@@ -1883,33 +1883,30 @@ namespace RobotRaconteur
 
             public uint SendPacket(T data)
             {
-                object dat = null;
+                
                 try
-                {
-                    dat = RobotRaconteurNode.s.PackVarType(data);
-                    using (MessageElement m = new MessageElement("value", dat))
+                {                    
+                    using (MessageElement m = RobotRaconteurNode.s.PackAnyType<T>("value", ref data))
                     {
                         return innerpipe.SendPacket(m);
                     }
                 }
                 finally
                 {
-                    IDisposable d = dat as IDisposable;
-                    if (d != null) d.Dispose();
+                    
                 }
             }
 
             public async Task<uint> AsyncSendPacket(T data)
             {
-                object dat = null;
+                
 
                 AsyncUInt32ReturnDirectorImpl h = new AsyncUInt32ReturnDirectorImpl();
                 
 
                 try
-                {
-                    dat = RobotRaconteurNode.s.PackVarType(data);
-                    using (MessageElement m = new MessageElement("value", dat))
+                {                    
+                    using (MessageElement m = RobotRaconteurNode.s.PackAnyType<T>("value", ref data))
                     {
                         int id = RRObjectHeap.AddObject(h);
                         innerpipe.AsyncSendPacket(m,h,id);
@@ -1917,8 +1914,7 @@ namespace RobotRaconteur
                 }
                 finally
                 {
-                    IDisposable d = dat as IDisposable;
-                    if (d != null) d.Dispose();
+                   
                 }
                 return await h.Task;
             }
@@ -2044,15 +2040,12 @@ namespace RobotRaconteur
         }
         
         public async Task AsyncSendPacket(T packet)
-        {
-            object dat = null;
-
+        {            
             AsyncVoidNoErrReturnDirectorImpl h = new AsyncVoidNoErrReturnDirectorImpl();
             
             try
-            {
-                dat = RobotRaconteurNode.s.PackVarType(packet);
-                using (MessageElement m = new MessageElement("value", dat))
+            {                
+                using (MessageElement m = RobotRaconteurNode.s.PackAnyType<T>("value", ref packet))
                 {
                     int id = RRObjectHeap.AddObject(h);
                     innerpipe.AsyncSendPacket(m, h, id);
@@ -2060,20 +2053,17 @@ namespace RobotRaconteur
             }
             finally
             {
-                IDisposable d = dat as IDisposable;
-                if (d != null) d.Dispose();
+                
             }
 
             await h.Task;
         }
 
         public void SendPacket(T packet)
-        {
-            object dat = null;
+        {            
             try
-            {
-                dat = RobotRaconteurNode.s.PackVarType(packet);
-                using (MessageElement m = new MessageElement("value", dat))
+            {                
+                using (MessageElement m = RobotRaconteurNode.s.PackAnyType<T>("value", ref packet))
                 {
                     innerpipe.SendPacket(m);
                     return;
@@ -2081,8 +2071,7 @@ namespace RobotRaconteur
             }
             finally
             {
-                IDisposable d = dat as IDisposable;
-                if (d != null) d.Dispose();
+               
             }
         }
 
@@ -2343,19 +2332,18 @@ namespace RobotRaconteur
         {
             WrappedWireClient c = innerwire as WrappedWireClient;
             if (c == null) throw new InvalidOperationException("Invalid for server");
-            object dat = null;
+            
             try
             {
-                dat = RobotRaconteurNode.s.PackVarType(value);
-                using (MessageElement m = new MessageElement("value", dat))
+                
+                using (MessageElement m = RobotRaconteurNode.s.PackAnyType<T>("value", ref value))
                 {
                     c.PokeOutValue(m);
                 }
             }
             finally
             {
-                IDisposable d = dat as IDisposable;
-                if (d != null) d.Dispose();
+                
             }
         }
 
@@ -2385,11 +2373,9 @@ namespace RobotRaconteur
         {
             WrappedWireClient c = innerwire as WrappedWireClient;
             if (c == null) throw new InvalidOperationException("Invalid for server");
-            object dat = null;
             try
             {
-                dat = RobotRaconteurNode.s.PackVarType(value);
-                using (MessageElement m = new MessageElement("value", dat))
+                using (MessageElement m = RobotRaconteurNode.s.PackAnyType<T>("value", ref value))
                 {
                     AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl();
                     int id = RRObjectHeap.AddObject(h);
@@ -2399,8 +2385,7 @@ namespace RobotRaconteur
             }
             finally
             {
-                IDisposable d = dat as IDisposable;
-                if (d != null) d.Dispose();
+               
             }
         }
 
@@ -2417,8 +2402,8 @@ namespace RobotRaconteur
             {
                 var value = cb(ep);
                
-                var dat = RobotRaconteurNode.s.PackVarType(value);
-                MessageElement m = new MessageElement("value", dat);
+                
+                MessageElement m = RobotRaconteurNode.s.PackAnyType<T>("value", ref value);
                 return m;
             }
         }
@@ -2543,19 +2528,17 @@ namespace RobotRaconteur
 
                 set
                 {
-                    object dat=null;
+                    
                     try
-                    {
-                        dat = RobotRaconteurNode.s.PackVarType(value);
-                        using (MessageElement m = new MessageElement("value", dat))
+                    {                        
+                        using (MessageElement m = RobotRaconteurNode.s.PackAnyType<T>("value", ref value))
                         {
                             innerwire.SetOutValue(m);
                         }
                     }
                     finally
                     {
-                        IDisposable d = dat as IDisposable;
-                        if (d != null) d.Dispose();
+                        
                     }
 
                 }
@@ -2803,20 +2786,17 @@ namespace RobotRaconteur
         public T OutValue
         {
             set
-            {
-                object dat = null;
+            {                
                 try
-                {
-                    dat = RobotRaconteurNode.s.PackVarType(value);
-                    using (MessageElement m = new MessageElement("value", dat))
+                {                    
+                    using (MessageElement m = RobotRaconteurNode.s.PackAnyType<T>("value", ref value))
                     {
                         innerwire.SetOutValue(m);
                     }
                 }
                 finally
                 {
-                    IDisposable d = dat as IDisposable;
-                    if (d != null) d.Dispose();
+                  
                 }
             }
         }
