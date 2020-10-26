@@ -1206,7 +1206,7 @@ namespace RobotRaconteurGen
 				TypeDefinition tdef;
 				tdef.Type = namedarray_t.get<0>();
 				convert_type_result t = convert_type(tdef);
-				w2 << t.cpp_type << " a" << "[" << namedarray_t.get<1>() << "];" << endl;
+				w2 << "boost::array<" << t.cpp_type << "," << namedarray_t.get<1>() << "> a;" << endl;
 				w2 << "struct s_type {" << endl;
 			}
 			BOOST_FOREACH(RR_SHARED_PTR<MemberDefinition> m, e2->Members)
@@ -1239,7 +1239,7 @@ namespace RobotRaconteurGen
 					}
 					else
 					{
-						w2 << t.cpp_type << " " << t.name << "[" << array_count << "];" << endl;
+						w2 << "boost::array<" << t.cpp_type << "," << array_count << "> " << t.name << ";" << endl;
 					}
 				}
 

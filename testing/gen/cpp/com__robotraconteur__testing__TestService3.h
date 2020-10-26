@@ -63,7 +63,7 @@ namespace com__robotraconteur__testing__TestService3Constants
     }
 
 union pixel{
-uint8_t a[3];
+boost::array<uint8_t,3> a;
 struct s_type {
 uint8_t r;
 uint8_t b;
@@ -73,19 +73,19 @@ uint8_t g;
 BOOST_STATIC_ASSERT(sizeof(pixel) == 3);
 
 union pixel2{
-uint8_t a[31];
+boost::array<uint8_t,31> a;
 struct s_type {
 uint8_t c;
 pixel d;
 pixel e;
-pixel f[7];
+boost::array<pixel,7> f;
 pixel g;
 } s;
 };
 BOOST_STATIC_ASSERT(sizeof(pixel2) == 31);
 
 union quaternion{
-double a[4];
+boost::array<double,4> a;
 struct s_type {
 double q0;
 double q1;
@@ -105,7 +105,7 @@ virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.te
 };
 
 union vector3{
-double a[3];
+boost::array<double,3> a;
 struct s_type {
 double x;
 double y;
@@ -115,7 +115,7 @@ double z;
 BOOST_STATIC_ASSERT(sizeof(vector3) == 24);
 
 union transform{
-double a[7];
+boost::array<double,7> a;
 struct s_type {
 quaternion rotation;
 vector3 translation;
