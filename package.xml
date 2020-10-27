@@ -24,6 +24,7 @@
   <depend>python3</depend>
   <depend>python3-numpy</depend>
   <depend>roslib</depend>
+  <depend>swig</depend>
     
   <export>    
     <build_type>cmake</build_type>
