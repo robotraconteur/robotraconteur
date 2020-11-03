@@ -107,6 +107,11 @@ namespace RobotRaconteur
 				local_transport->SetDisableStringTable(true);
 			}
 
+			if (config->GetOptionOrDefaultAsBool("jumbo-message"))
+			{
+				local_transport->SetMaxMessageSize(100*1024*1024);
+			}
+
 			node->RegisterTransport(local_transport);
 		}
 
@@ -161,6 +166,11 @@ namespace RobotRaconteur
 			if (config->GetOptionOrDefaultAsBool("disable-stringtable"))
 			{
 				tcp_transport->SetDisableStringTable(true);
+			}
+
+			if (config->GetOptionOrDefaultAsBool("jumbo-message"))
+			{
+				local_transport->SetMaxMessageSize(100*1024*1024);
 			}
 
 			if (config->GetOptionOrDefaultAsBool("discovery-listening-enable"))
@@ -252,6 +262,10 @@ namespace RobotRaconteur
 				hardware_transport->SetDisableStringTable(true);
 			}
 
+			if (config->GetOptionOrDefaultAsBool("jumbo-message"))
+			{
+				local_transport->SetMaxMessageSize(100*1024*1024);
+			}
 			
 			node->RegisterTransport(hardware_transport);
 		}
@@ -570,6 +584,8 @@ namespace RobotRaconteur
 
 		h.add<bool>("local-tap-enable", "start local tap interface, must also specify tap name", RobotRaconteurNodeSetupFlags_LOCAL_TAP_ENABLE);
 		h.add<std::string>("local-tap-name", "name of local tap", RobotRaconteurNodeSetupFlags_LOCAL_TAP_NAME);
+
+		h.add<bool>("jumbo-message", "enable jumbo messages (up to 100 MB)", RobotRaconteurNodeSetupFlags_JUMBO_MESSAGE);
 		
 
 	}
@@ -762,6 +778,11 @@ namespace RobotRaconteur
 		if (option == "local-tap-enable")
 		{
 			return (this->default_flags & RobotRaconteurNodeSetupFlags_LOCAL_TAP_ENABLE) != 0;
+		}
+
+		if (option == "jumbo-message")
+		{
+			return (this->default_flags & RobotRaconteurNodeSetupFlags_JUMBO_MESSAGE) != 0;
 		}
 
 		throw boost::program_options::required_option(option);

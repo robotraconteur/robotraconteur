@@ -120,6 +120,11 @@ namespace RobotRaconteur
 
 		virtual void AsyncGetDetectedNodes(const std::vector<std::string>& schemes, boost::function<void(RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >)>& handler, int32_t timeout = RR_TIMEOUT_INFINITE);
 
+		/** @copydoc TcpTransport::GetMaxMessageSize() */
+		virtual int32_t GetMaxMessageSize();
+		/** @copydoc TcpTransport::SetMaxMessageSize() */
+		virtual void SetMaxMessageSize(int32_t size);
+
 		/** @copydoc TcpTransport::GetDisableMessage4() */
 		virtual bool GetDisableMessage4();
 		/** @copydoc TcpTransport::SetDisableMessage4() */
@@ -186,6 +191,7 @@ namespace RobotRaconteur
 	protected:
 
 		boost::mutex parameter_lock;
+		int32_t max_message_size;
 		bool disable_message4;
 		bool disable_string_table;
 		bool disable_async_message_io;

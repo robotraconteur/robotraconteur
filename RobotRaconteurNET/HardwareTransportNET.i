@@ -1,6 +1,19 @@
 %typemap("cscode") RobotRaconteur::HardwareTransport
 %{
 
+public int MaxMessageSize
+{
+	get
+	{
+		return _GetMaxMessageSize();
+	}
+	set
+	{
+		_SetMaxMessageSize(value);
+	}
+	
+}
+
 public bool DisableMessage4
 {
 	get

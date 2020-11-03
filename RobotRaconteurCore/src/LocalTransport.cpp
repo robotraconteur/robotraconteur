@@ -126,6 +126,9 @@ LocalTransport::LocalTransport(RR_SHARED_PTR<RobotRaconteurNode> node)
 	this->node=node;
 
 	fds=RR_MAKE_SHARED<detail::LocalTransportFDs>();
+
+	max_message_size = 12 * 1024 * 1024;
+
 #ifndef ROBOTRACONTEUR_DISABLE_MESSAGE4
 	disable_message4 = false;
 #else
@@ -1044,6 +1047,25 @@ void LocalTransport::AsyncGetDetectedNodes(const std::vector<std::string>& schem
 
 }
 
+int32_t LocalTransport::GetMaxMessageSize()
+{
+	boost::mutex::scoped_lock lock(parameter_lock);
+	return max_message_size;
+}
+
+void LocalTransport::SetMaxMessageSize(int32_t size)
+{
+	if (size < 16 * 1024 || size > 100 * 1024 * 1024) 
+	{
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, -1, "Invalid MaxMessageSize: " << size);
+		throw InvalidArgumentException("Invalid maximum message size");
+	}
+	boost::mutex::scoped_lock lock(parameter_lock);
+	max_message_size = size;
+
+	ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "MaxMessageSize set to " << size << " bytes");
+}
+
 bool LocalTransport::GetDisableMessage4()
 {
 	boost::mutex::scoped_lock lock(parameter_lock);
@@ -1148,6 +1170,8 @@ LocalTransportConnection::LocalTransportConnection(RR_SHARED_PTR<LocalTransport>
 	//will be closed immediately if the other side closes or is terminated
 	this->HeartbeatPeriod=30000;
 	this->ReceiveTimeout=600000;
+
+	this->max_message_size = parent->GetMaxMessageSize();
 
 	this->disable_message4 = parent->GetDisableMessage4();
 	this->disable_string_table = parent->GetDisableStringTable();

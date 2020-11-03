@@ -2468,7 +2468,7 @@ int32_t TcpTransport::GetMaxMessageSize()
 
 void TcpTransport::SetMaxMessageSize(int32_t size)
 {
-	if (size < 16 * 1024 || size > 12 * 1024 * 1024) 
+	if (size < 16 * 1024 || size > 100 * 1024 * 1024) 
 	{
 		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, -1, "Invalid MaxMessageSize: " << size);
 		throw InvalidArgumentException("Invalid maximum message size");

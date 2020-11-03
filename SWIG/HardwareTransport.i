@@ -25,6 +25,10 @@ public:
 	virtual std::string GetUrlSchemeString() const;
 	void Close();
 	
+	RR_PROPERTY(MaxMessageSize)
+	int32_t GetMaxMessageSize();	
+	void SetMaxMessageSize(int32_t size);
+
 	RR_PROPERTY(DisableMessage4)
 	virtual bool GetDisableMessage4();
 	virtual void SetDisableMessage4(bool d);

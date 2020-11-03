@@ -111,6 +111,9 @@ namespace RobotRaconteur
 		/** @brief Allow the user to set the LocalTap name */
 		RobotRaconteurNodeSetupFlags_LOCAL_TAP_NAME = 0x2000000,
 
+		/** @brief Enable jumbo messages (up to 100 MB per message) */
+		RobotRaconteurNodeSetupFlags_JUMBO_MESSAGE = 0x4000000,
+
 		/** @brief Convenience flag to enable all transports */
 		RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS = 0x10001C,
 		/*RobotRaconteurNodeSetupFlags_ENABLE_LOCAL_TRANSPORT 
@@ -127,7 +130,7 @@ namespace RobotRaconteur
 		| RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_CLIENT,*/
 
 		
-		RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT_ALLOWED_OVERRIDE = 0x3133E5D,
+		RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT_ALLOWED_OVERRIDE = 0x7133E5D,
 		/*RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS 
 		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING 
 		| RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_CLIENT
@@ -137,7 +140,8 @@ namespace RobotRaconteur
 		| RobotRaconteurNodeSetupFlags_LOAD_TLS_CERT
 		| RobotRaconteurNodeSetupFlags_REQUIRE_TLS
 		| RobotRaconteurNodeSetupFlags_NODENAME_OVERRIDE,
-		| RobotRaconteurNodeSetupFlags_NODEID_OVERRIDE */
+		| RobotRaconteurNodeSetupFlags_NODEID_OVERRIDE 
+		| RobotRaconteurNodeSetupFlags_JUMBO_MESSAGE */
 
 		/** @brief Default configuration for server nodes */		
 		RobotRaconteurNodeSetupFlags_SERVER_DEFAULT = 0x3004AF,
@@ -152,7 +156,7 @@ namespace RobotRaconteur
 		| RobotRaconteurNodeSetupFlags_DISABLE_STRINGTABLE */
 
 		/** @brief Default allowed overrides for server nodes */	
-		RobotRaconteurNodeSetupFlags_SERVER_DEFAULT_ALLOWED_OVERRIDE = 0x33F7FFF,
+		RobotRaconteurNodeSetupFlags_SERVER_DEFAULT_ALLOWED_OVERRIDE = 0x73F7FFF,
 		/*RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS 
 		| RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_SERVER 
 		| RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER
@@ -170,7 +174,8 @@ namespace RobotRaconteur
 		| RobotRaconteurNodeSetupFlags_TCP_PORT_OVERRIDE 
         | RobotRaconteurNodeSetupFlags_TCP_WEBSOCKET_ORIGIN_OVERRIDE 
         | RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_SERVER_PUBLIC 
-        | RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER_PORT_SHARER */
+        | RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER_PORT_SHARER 
+		| RobotRaconteurNodeSetupFlags_JUMBO_MESSAGE */
 
 		/** @brief Default configuration for server nodes requiring TLS network transports */
 		RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT = 0x3034AF,
@@ -187,7 +192,7 @@ namespace RobotRaconteur
 		| RobotRaconteurNodeSetupFlags_DISABLE_STRINGTABLE*/
 
 		/** @brief Default allowed overrides for server nodes requiring TLS network transports */
-		RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT_ALLOWED_OVERRIDE = 0x33F4FFF
+		RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT_ALLOWED_OVERRIDE = 0x73F4FFF
 		/*RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS 
 		| RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_SERVER 
 		| RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER
@@ -203,7 +208,8 @@ namespace RobotRaconteur
 		| RobotRaconteurNodeSetupFlags_TCP_PORT_OVERRIDE 
         | RobotRaconteurNodeSetupFlags_TCP_WEBSOCKET_ORIGIN_OVERRIDE 
         | RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_SERVER_PUBLIC 
-        | RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER_PORT_SHARER */
+        | RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER_PORT_SHARER 
+		| RobotRaconteurNodeSetupFlags_JUMBO_MESSAGE */
 
 	};
 

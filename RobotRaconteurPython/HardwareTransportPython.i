@@ -4,6 +4,14 @@
 {
 %pythoncode
 %{		
+	MaxMessageSize = property(lambda self: self._GetMaxMessageSize(), lambda self, size: self._SetMaxMessageSize(size),
+		doc = """
+		Set the maximum serialized message size
+
+		Default: 10 MB
+
+		:rtype: int
+		""")
 	DisableMessage4 = property(lambda self: self._GetDisableMessage4(), lambda self, val: self._SetDisableMessage4(val),
 	    doc = """
 			Set disable Message Format Version 4

@@ -30,6 +30,10 @@ public:
 	virtual void StartServerAsNodeID(const NodeID& nodeid, bool public_ = false);
 	void Close();
 	
+	RR_PROPERTY(MaxMessageSize)
+	int32_t GetMaxMessageSize();	
+	void SetMaxMessageSize(int32_t size);
+
 	RR_PROPERTY(DisableMessage4)
 	virtual bool GetDisableMessage4();
 	virtual void SetDisableMessage4(bool d);

@@ -66,6 +66,9 @@ namespace RobotRaconteur
 
 		transportopen = false;
 		this->node = node;
+
+		this->max_message_size = 12 * 1024 * 1024;
+
 #ifndef ROBOTRACONTEUR_DISABLE_MESSAGE4
 		disable_message4 = false;
 #else
@@ -690,6 +693,25 @@ namespace RobotRaconteur
 		TransportConnectionClosed(connection->GetLocalEndpoint());
 	}
 
+	int32_t HardwareTransport::GetMaxMessageSize()
+	{
+		boost::mutex::scoped_lock lock(parameter_lock);
+		return max_message_size;
+	}
+
+	void HardwareTransport::SetMaxMessageSize(int32_t size)
+	{
+		if (size < 16 * 1024 || size > 100 * 1024 * 1024) 
+		{
+			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, -1, "Invalid MaxMessageSize: " << size);
+			throw InvalidArgumentException("Invalid maximum message size");
+		}
+		boost::mutex::scoped_lock lock(parameter_lock);
+		max_message_size = size;
+
+		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "MaxMessageSize set to " << size << " bytes");
+	}
+
 	bool HardwareTransport::GetDisableMessage4()
 	{
 		boost::mutex::scoped_lock lock(parameter_lock);
@@ -852,6 +874,8 @@ namespace RobotRaconteur
 		
 		this->HeartbeatPeriod = 30000;
 		this->ReceiveTimeout = 600000;
+
+		this->max_message_size = parent->GetMaxMessageSize();
 
 		this->disable_message4 = parent->GetDisableMessage4();
 		this->disable_string_table = parent->GetDisableStringTable();
