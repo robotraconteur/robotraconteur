@@ -170,7 +170,7 @@ namespace RobotRaconteur
 
 			if (config->GetOptionOrDefaultAsBool("jumbo-message"))
 			{
-				local_transport->SetMaxMessageSize(100*1024*1024);
+				tcp_transport->SetMaxMessageSize(100*1024*1024);
 			}
 
 			if (config->GetOptionOrDefaultAsBool("discovery-listening-enable"))
@@ -264,7 +264,7 @@ namespace RobotRaconteur
 
 			if (config->GetOptionOrDefaultAsBool("jumbo-message"))
 			{
-				local_transport->SetMaxMessageSize(100*1024*1024);
+				hardware_transport->SetMaxMessageSize(100*1024*1024);
 			}
 			
 			node->RegisterTransport(hardware_transport);
