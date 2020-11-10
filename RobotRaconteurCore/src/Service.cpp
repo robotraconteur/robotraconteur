@@ -878,8 +878,14 @@ namespace RobotRaconteur
 		
 		try
 		{
+		static boost::regex r_service_path("^[a-zA-Z](?:\\w*[a-zA-Z0-9])?(\\.[a-zA-Z](?:\\w*[a-zA-Z0-9])?(?:\\[(?:[a-zA-Z0-9_]|\\%[0-9a-fA-F]{2})+\\])?)*$");
+
 		std::vector<std::string> p;
 		boost::string_ref servicepath1 = servicepath.str();
+		if (!boost::regex_match(servicepath1.begin(), servicepath1.end(), r_service_path))
+		{
+			throw ServiceException("Invalid service path specified");
+		}
 		boost::split(p,servicepath1,boost::is_from_range('.','.'));
 		
 		std::string ppath = p.at(0);
