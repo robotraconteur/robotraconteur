@@ -760,6 +760,13 @@ namespace RobotRaconteur
 			try
 			{
 				RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me = ret1->FindElement("return");
+				// Limit size to protect from memory leak attacks
+				if (me->ElementSize > 64*1024)
+				{
+					ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Discovery, -1, "UpdateServiceInfo dropping response from remote node " << this->remote_nodeid.ToString() << " to prevent overflow");
+					handle_error(RR_MAKE_SHARED<ServiceException>("Return from remote node too large"));
+					return;
+				}
 				RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteurServiceIndex::ServiceInfo> > ret = RobotRaconteur::rr_cast<RobotRaconteur::RRMap<int32_t, RobotRaconteurServiceIndex::ServiceInfo> >((n->UnpackMapType<int32_t, RobotRaconteurServiceIndex::ServiceInfo>(me->CastDataToNestedList())));
 
 				if (ret)
