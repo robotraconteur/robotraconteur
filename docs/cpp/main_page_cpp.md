@@ -27,6 +27,7 @@ Robot Raconteur Core C++ Library {#mainpage}
   * \ref security
     * \ref security_policy
     * \ref tls_certificates
+    * \ref transport_security
   * \ref locking
     * \ref user_locking
     * \ref client_locking
