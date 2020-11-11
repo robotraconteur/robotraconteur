@@ -18,6 +18,9 @@
 
 #include "RobotRaconteur/Service.h"
 #include "RobotRaconteur/Security.h"
+#include "RobotRaconteur/LocalTransport.h"
+#include "RobotRaconteur/IntraTransport.h"
+#include "RobotRaconteur/TcpTransport.h"
 
 #include <boost/algorithm/string.hpp>
 #include <boost/range/adaptors.hpp>
@@ -93,18 +96,20 @@ namespace RobotRaconteur
 		m_LastAccessTime = c->GetNode()->NowUTC();
 	}
 
-	PasswordFileUserAuthenticator::PasswordFileUserAuthenticator(std::istream &file)
+	PasswordFileUserAuthenticator::PasswordFileUserAuthenticator(std::istream &file, bool require_verified_client)
 	{
 		InitializeInstanceFields();
 		std::stringstream buffer;
 		buffer << file.rdbuf();
 		load(buffer.str());
+		this->require_verified_client = require_verified_client;
 	}
 
-	PasswordFileUserAuthenticator::PasswordFileUserAuthenticator(boost::string_ref data)
+	PasswordFileUserAuthenticator::PasswordFileUserAuthenticator(boost::string_ref data, bool require_verified_client)
 	{
 		InitializeInstanceFields();
 		load(data);
+		this->require_verified_client = require_verified_client;
 	}
 
 	void PasswordFileUserAuthenticator::load(boost::string_ref data)
@@ -116,6 +121,7 @@ namespace RobotRaconteur
 
 		BOOST_FOREACH(std::string& l, lines)
 		{
+			if (l.empty()) continue;
 			std::vector<std::string> g;
 			std::string g1 = boost::trim_copy(l);
 			boost::split(g, g1, boost::is_space(), boost::algorithm::token_compress_on);
@@ -123,15 +129,31 @@ namespace RobotRaconteur
 			u->username = g.at(0);
 			u->passwordhash = g.at(1);
 
-			boost::split(u->privileges, g.at(2), boost::is_from_range(',', ','));
+			if (g.at(2) != "_")
+			{
+				boost::split(u->privileges, g.at(2), boost::is_from_range(',', ','));
+			}
+
+			if (g.size() > 3)
+			{
+				std::vector<std::string> n_ids;
+				boost::split(n_ids, g.at(3), boost::is_from_range(',', ','));
+				BOOST_FOREACH(std::string n_id, n_ids)
+				{
+					u->allowed_client_nodeid.push_back(NodeID(n_id));
+				}
+			}
 
 			validusers.insert(make_pair(u->username, u));
 		}
 	}
 
-	RR_SHARED_PTR<AuthenticatedUser> PasswordFileUserAuthenticator::AuthenticateUser(boost::string_ref username, const std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials, RR_SHARED_PTR<ServerContext> context)
+	RR_SHARED_PTR<AuthenticatedUser> PasswordFileUserAuthenticator::AuthenticateUser(boost::string_ref username, const std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials, RR_SHARED_PTR<ServerContext> context, RR_SHARED_PTR<ITransportConnection> transport)
 	{
-		if (validusers.count(username.to_string()) == 0)
+
+		std::map<std::string, RR_SHARED_PTR<PasswordFileUserAuthenticator::User> >::iterator u = validusers.find(username.to_string());
+
+		if (u == validusers.end())
 			throw AuthenticationException("Invalid username or password");
 		std::string password;
 		try
@@ -145,11 +167,57 @@ namespace RobotRaconteur
 
 		std::string passwordhash = MD5Hash(password);
 
-		if (validusers.at(username.to_string())->passwordhash != passwordhash)
+		if (u->second->passwordhash != passwordhash)
 			throw AuthenticationException("Invalid username or password");
+		
+		bool client_verified = false;
+
+		if (require_verified_client && transport)
+		{
+			RR_SHARED_PTR<Transport> t = transport->GetTransport();
+			NodeID remote_nodeid;
+			RR_SHARED_PTR<LocalTransport> local_t = RR_DYNAMIC_POINTER_CAST<LocalTransport>(t);
+			RR_SHARED_PTR<IntraTransport> intra_t = RR_DYNAMIC_POINTER_CAST<IntraTransport>(t);
+			if (local_t || intra_t)
+			{
+				remote_nodeid = transport->GetRemoteNodeID();
+				if (!remote_nodeid.IsAnyNode())
+				{
+					client_verified = true;
+				}
+			}
+
+			RR_SHARED_PTR<TcpTransport> tcp_t = RR_DYNAMIC_POINTER_CAST<TcpTransport>(t);
+			if (tcp_t)
+			{
+				if (tcp_t->IsSecurePeerIdentityVerified(transport))
+				{
+					client_verified = true;
+					remote_nodeid = NodeID(tcp_t->GetSecurePeerIdentity(transport));
+				}
+			}
+
+			if (!local_t && !intra_t && !tcp_t)
+			{
+				throw AuthenticationException("Selected transport does not suppert client verification");
+			}
+
+			if (!client_verified)
+			{
+				throw AuthenticationException("Client connection could not be verified. Check certificate or transport");
+			}
+			if (!u->second->allowed_client_nodeid.empty())
+			{
+				if (std::find(u->second->allowed_client_nodeid.begin(), u->second->allowed_client_nodeid.end(), remote_nodeid) == u->second->allowed_client_nodeid.end())
+				{
+					throw AuthenticationException("Incorrect client NodeID or certificate error");
+				}
+			}
+
+		}		
+
 		std::vector<std::string> properties;
 		return RR_MAKE_SHARED<AuthenticatedUser>(username, validusers.at(username.to_string())->privileges, properties, context);
-
 	}
 
 	std::string PasswordFileUserAuthenticator::MD5Hash(boost::string_ref text)

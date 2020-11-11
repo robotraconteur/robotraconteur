@@ -52,6 +52,7 @@ namespace RobotRaconteur
 	class ROBOTRACONTEUR_CORE_API Timer;
 	struct ROBOTRACONTEUR_CORE_API TimerEvent;
 	class ROBOTRACONTEUR_CORE_API AutoResetEvent;
+	class ROBOTRACONTEUR_CORE_API Transport;
 
 	class ROBOTRACONTEUR_CORE_API ITransportTimeProvider
 	{
@@ -93,6 +94,8 @@ namespace RobotRaconteur
 		virtual RR_SHARED_PTR<RobotRaconteurNode> GetNode() = 0;
 
 		virtual bool CheckCapabilityActive(uint32_t flag) = 0;
+
+		virtual RR_SHARED_PTR<Transport> GetTransport() = 0;
 	};
 
 

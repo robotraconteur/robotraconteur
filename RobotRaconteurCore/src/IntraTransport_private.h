@@ -52,6 +52,8 @@ namespace RobotRaconteur
 
         bool IsConnected();
 
+        virtual RR_SHARED_PTR<Transport> GetTransport();
+
 	protected:
 
         static void ProcessNextRecvMessage(RR_WEAK_PTR<IntraTransportConnection> c);

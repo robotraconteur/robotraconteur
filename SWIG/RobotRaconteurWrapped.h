@@ -1651,7 +1651,7 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 	public:
 		void SetRRDirector(WrappedUserAuthenticatorDirector* director, int id);
 
-		virtual RR_SHARED_PTR<AuthenticatedUser> AuthenticateUser(boost::string_ref username, const std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials, RR_SHARED_PTR<ServerContext> context);
+		virtual RR_SHARED_PTR<AuthenticatedUser> AuthenticateUser(boost::string_ref username, const std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials, RR_SHARED_PTR<ServerContext> context, RR_SHARED_PTR<ITransportConnection> tc);
 		
 	};
 

@@ -1748,12 +1748,18 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 		return m_RequireValidUser;
 	}
 
-	RR_SHARED_PTR<AuthenticatedUser> ServerContext::AuthenticateUser(boost::string_ref username, std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials)
+	RR_SHARED_PTR<AuthenticatedUser> ServerContext::AuthenticateUser(boost::string_ref username, std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials, RR_SHARED_PTR<ServerEndpoint> ep)
 	{
 
 		if (!user_authenticator) throw AuthenticationException("Authentication not enabled");
 
-		return user_authenticator->AuthenticateUser(username, credentials,shared_from_this());
+		RR_SHARED_PTR<ITransportConnection> tc;
+		if (ep)
+		{
+			tc = ep->GetTransportConnection();
+		}
+
+		return user_authenticator->AuthenticateUser(username, credentials,shared_from_this(), tc);
 
 	}
 
@@ -2395,7 +2401,7 @@ boost::thread_specific_ptr<RR_SHARED_PTR<AuthenticatedUser> > ServerEndpoint::m_
 	void ServerEndpoint::AuthenticateUser(boost::string_ref username, std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials)
 	{
 		
-		RR_SHARED_PTR<AuthenticatedUser> u = service->AuthenticateUser(username, credentials);
+		RR_SHARED_PTR<AuthenticatedUser> u = service->AuthenticateUser(username, credentials, shared_from_this());
 		endpoint_authenticated_user = u;
 		m_CurrentAuthenticatedUser.reset(new RR_SHARED_PTR<AuthenticatedUser>( u));
 	}

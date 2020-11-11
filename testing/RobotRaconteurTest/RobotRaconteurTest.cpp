@@ -2198,6 +2198,76 @@ return 0;
 
 	}
 
+	if (command=="certauthserver")
+	{
+		if (argc < 3)
+		{
+			cout << "Usage for certauthserver:  RobotRaconteurTest certauthserver client_nodeids" << endl;
+			return -1;
+		}
+		
+		SecureServerNodeSetup node_setup(ROBOTRACONTEUR_SERVICE_TYPES,"authserver",22222,argc,argv);
+
+		RR_SHARED_PTR<TcpTransport> c = node_setup.GetTcpTransport();
+
+		RobotRaconteurTestServiceSupport s;
+
+		std::vector<NodeID> n;
+		std::vector<std::string> n1;
+		boost::split(n1,argv[2],boost::is_any_of(","));
+		BOOST_FOREACH(std::string n2, n1)
+		{
+			n.push_back(NodeID(n2));
+		}
+
+		s.RegisterSecureServices(c,n);
+
+		cout << "Server started, press enter to quit" << endl;
+		getchar();
+		RobotRaconteurNode::s()->Shutdown();
+		cout << "Test completed, no errors detected!" << endl;
+		return 0;
+
+	}
+
+	if (command == "certauthclient")
+	{
+		if (argc <3)
+		{
+			cout << "Usage for certauthclient:  RobotRaconteurTest certauthclient url" << endl;
+			return -1;
+		}
+
+		string url1(argv[2]);
+		{
+
+		RR_SHARED_PTR<CommandLineConfigParser> config = RR_MAKE_SHARED<CommandLineConfigParser>(RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT_ALLOWED_OVERRIDE);
+		config->SetDefaults("authclient", 0,
+			RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT 
+			| RobotRaconteurNodeSetupFlags_LOAD_TLS_CERT
+			| RobotRaconteurNodeSetupFlags_REQUIRE_TLS);
+		config->ParseCommandLine(argc,argv);
+			
+		RobotRaconteurNodeSetup node_setup(RobotRaconteurNode::sp(),ROBOTRACONTEUR_SERVICE_TYPES, config);
+
+		cout << RobotRaconteurNode::s()->NodeID().ToString() << endl;
+
+		boost::this_thread::sleep(boost::posix_time::milliseconds(1));
+		RR_INTRUSIVE_PTR<RRMap<string,RRValue> > cred1=AllocateEmptyRRMap<string,RRValue>();
+		cred1->insert(make_pair("password",stringToRRArray("testpass1")));
+		
+		RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot> c1 = 
+			rr_cast<com::robotraconteur::testing::TestService1::testroot>(RobotRaconteurNode::s()->ConnectService(url1,"testuser1",cred1));
+
+		c1->get_d1();		
+		}
+		
+		boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+		cout << "Test completed, no errors detected!" << endl;
+		return 0;
+
+	}
+
 	throw runtime_error("Unknown test command");
 
 }

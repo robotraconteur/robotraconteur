@@ -128,6 +128,8 @@ namespace RobotRaconteur
 
 		virtual void CheckConnection(uint32_t endpoint);
 
+		virtual RR_SHARED_PTR<Transport> GetTransport();
+
 
 	protected:
 

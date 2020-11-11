@@ -1669,6 +1669,28 @@ void RobotRaconteurTestServiceSupport::RegisterServices(RR_SHARED_PTR<TcpTranspo
 
 }
 
+void RobotRaconteurTestServiceSupport::RegisterSecureServices(RR_SHARED_PTR<TcpTransport> tcptransport, const std::vector<NodeID>& allowed_clients)
+{
+	testservice_auth=RR_MAKE_SHARED<RobotRaconteurTest_testroot>(tcptransport);
+
+	std::vector<std::string> str_clients;
+	BOOST_FOREACH(NodeID n, allowed_clients)
+	{
+		str_clients.push_back(n.ToString());
+	}
+
+	string authdata = "testuser1 0b91dec4fe98266a03b136b59219d0d6 objectlock " + boost::join(str_clients, ",") + "\n";
+	RR_SHARED_PTR<PasswordFileUserAuthenticator> p=RR_MAKE_SHARED<PasswordFileUserAuthenticator>(authdata,true);
+	map<string,string> policies;
+	policies.insert(make_pair("requirevaliduser","true"));
+	policies.insert(make_pair("allowobjectlock","true"));
+	
+	RR_SHARED_PTR<ServiceSecurityPolicy> s=RR_MAKE_SHARED<ServiceSecurityPolicy>(p,policies);
+
+	RobotRaconteurNode::s()->RegisterService("RobotRaconteurTestService_auth", "com.robotraconteur.testing.TestService1", testservice_auth,s);
+
+}
+
 void RobotRaconteurTestServiceSupport::UnregisterServices()
 {
 	RobotRaconteurNode::s()->CloseService("RobotRaconteurTestService");

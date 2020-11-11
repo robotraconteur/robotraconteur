@@ -117,6 +117,8 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
 
 		virtual std::string GetSecurePeerIdentity();
 
+		virtual RR_SHARED_PTR<Transport> GetTransport();
+
 	protected:
 
 		RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket;

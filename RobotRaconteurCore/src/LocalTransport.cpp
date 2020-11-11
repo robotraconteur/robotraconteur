@@ -520,6 +520,16 @@ void LocalTransport::StartClientAsNodeName(boost::string_ref name)
 			throw;
 	}
 
+	try
+	{
+		GetNode()->SetNodeName(name);
+	}
+	catch (std::exception&)
+	{
+		if (GetNode()->NodeName()!=name)
+			throw;
+	}
+
 	{
 		boost::mutex::scoped_lock lock(fds_lock);
 		fds->h_nodename_s = p.get<1>();		
@@ -1386,6 +1396,13 @@ void LocalTransportConnection::CheckConnection(uint32_t endpoint)
 		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, m_LocalEndpoint, "Connection lost");
 	 	throw ConnectionException("Connection lost");
 	}
+}
+
+RR_SHARED_PTR<Transport> LocalTransportConnection::GetTransport()
+{
+	RR_SHARED_PTR<Transport> p = parent.lock();
+	if (!p) throw InvalidOperationException("Transport has been released");
+	return p;
 }
 
 void LocalTransport_connected_callback2(RR_SHARED_PTR<LocalTransport> parent,RR_SHARED_PTR<detail::LocalTransport_socket> socket, RR_SHARED_PTR<ITransportConnection> connection, RR_SHARED_PTR<RobotRaconteurException> err)

@@ -503,7 +503,7 @@ namespace RobotRaconteur
 		 */
 		virtual bool RequireValidUser();
 
-		virtual RR_SHARED_PTR<AuthenticatedUser> AuthenticateUser(boost::string_ref username, std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials);
+		virtual RR_SHARED_PTR<AuthenticatedUser> AuthenticateUser(boost::string_ref username, std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials, RR_SHARED_PTR<ServerEndpoint> ep);
 
 
 

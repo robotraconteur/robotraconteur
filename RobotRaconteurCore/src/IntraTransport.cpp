@@ -815,6 +815,12 @@ bool IntraTransportConnection::IsConnected()
     return connected.load();
 }
 
+RR_SHARED_PTR<Transport> IntraTransportConnection::GetTransport()
+{
+	RR_SHARED_PTR<Transport> p = parent.lock();
+	if (!p) throw InvalidOperationException("Transport has been released");
+	return p;
+}
 
 
 }

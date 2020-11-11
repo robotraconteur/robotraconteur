@@ -45,6 +45,8 @@ namespace RobotRaconteur
 
 		virtual void Close();
 
+		virtual RR_SHARED_PTR<Transport> GetTransport();
+
 	protected:
 				
 		bool server;

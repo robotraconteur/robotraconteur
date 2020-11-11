@@ -4958,6 +4958,13 @@ bool TcpTransportConnection::IsLargeTransferAuthorized()
 	return GetNode()->IsEndpointLargeTransferAuthorized(m_LocalEndpoint);
 }
 
+RR_SHARED_PTR<Transport> TcpTransportConnection::GetTransport()
+{
+	RR_SHARED_PTR<Transport> p = parent.lock();
+	if (!p) throw InvalidOperationException("Transport has been released");
+	return p;
+}
+
 namespace detail
 {
 	IPNodeDiscovery::IPNodeDiscovery(RR_SHARED_PTR<TcpTransport> parent)

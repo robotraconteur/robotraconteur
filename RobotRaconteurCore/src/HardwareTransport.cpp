@@ -1033,6 +1033,12 @@ namespace RobotRaconteur
 		}
 	}
 
+	RR_SHARED_PTR<Transport> HardwareTransportConnection::GetTransport()
+	{
+		RR_SHARED_PTR<Transport> p = parent.lock();
+		if (!p) throw InvalidOperationException("Transport has been released");
+		return p;
+	}
 	
 	void HardwareTransport_attach_transport(RR_SHARED_PTR<HardwareTransport> parent, RR_SHARED_PTR<HardwareTransportConnection_driver::socket_type> socket, bool server, uint32_t endpoint, std::string noden, boost::string_ref scheme, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)>& callback)
 	{

@@ -168,7 +168,7 @@ namespace RobotRaconteur
 		 * @param context The context of the service requesting authentication
 		 * @return RR_SHARED_PTR<AuthenticatedUser> An authenticated user object
 		 */
-		virtual RR_SHARED_PTR<AuthenticatedUser> AuthenticateUser(boost::string_ref username, const std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials, RR_SHARED_PTR<ServerContext> context) = 0;
+		virtual RR_SHARED_PTR<AuthenticatedUser> AuthenticateUser(boost::string_ref username, const std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials, RR_SHARED_PTR<ServerContext> context, RR_SHARED_PTR<ITransportConnection> transport) = 0;
 
 		virtual ~UserAuthenticator() {}
 
@@ -206,11 +206,13 @@ namespace RobotRaconteur
 			std::string username;
 			std::string passwordhash;
 			std::vector<std::string> privileges;
+			std::vector<NodeID> allowed_client_nodeid;
 
 		};
 
 	private:
 		std::map<std::string, RR_SHARED_PTR<User> > validusers;
+		bool require_verified_client;
 
 	public:
 		/**
@@ -218,14 +220,14 @@ namespace RobotRaconteur
 		 * 
 		 * @param file The file text as a stream
 		 */
-		PasswordFileUserAuthenticator(std::istream &file);
+		PasswordFileUserAuthenticator(std::istream &file, bool require_verified_client = false);
 
 		/**
 		 * @brief Construct a new PasswordFileUserAuthenticator using text supplied as a string
 		 * 
 		 * @param data The file text
 		 */
-		PasswordFileUserAuthenticator(boost::string_ref data);
+		PasswordFileUserAuthenticator(boost::string_ref data, bool require_verified_client = false);
 
 		virtual ~PasswordFileUserAuthenticator() {}
 
@@ -233,7 +235,7 @@ namespace RobotRaconteur
 		void load(boost::string_ref data);
 
 	public:
-		virtual RR_SHARED_PTR<AuthenticatedUser> AuthenticateUser(boost::string_ref username, const std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials, RR_SHARED_PTR<ServerContext> context);
+		virtual RR_SHARED_PTR<AuthenticatedUser> AuthenticateUser(boost::string_ref username, const std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials, RR_SHARED_PTR<ServerContext> context, RR_SHARED_PTR<ITransportConnection> transport);
 
 
 		static std::string MD5Hash(boost::string_ref text);

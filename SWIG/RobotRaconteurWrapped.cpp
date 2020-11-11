@@ -3290,7 +3290,7 @@ namespace RobotRaconteur
 		RR_Director.reset(director, boost::bind(&ReleaseDirector<WrappedUserAuthenticatorDirector>, RR_BOOST_PLACEHOLDERS(_1), id));
 	}
 
-	RR_SHARED_PTR<AuthenticatedUser> WrappedUserAuthenticator::AuthenticateUser(boost::string_ref username, const std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials, RR_SHARED_PTR<ServerContext> context)
+	RR_SHARED_PTR<AuthenticatedUser> WrappedUserAuthenticator::AuthenticateUser(boost::string_ref username, const std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > &credentials, RR_SHARED_PTR<ServerContext> context, RR_SHARED_PTR<ITransportConnection> tc)
 	{
 		if (!RR_Director) throw InvalidOperationException("Director not set for authenticator");
 		RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> > cred1=AllocateEmptyRRMap<std::string,RRValue>();

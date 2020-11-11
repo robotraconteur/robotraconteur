@@ -36,7 +36,7 @@ class UserAuthenticator
 		if (!context) throw InvalidArgumentException("Context cannot be null");
 		if (!credentials) throw InvalidArgumentException("Credentials cannot be null");
 		boost::intrusive_ptr<RRMap<std::string,RRValue> > r=rr_cast<RRMap<std::string,RRValue> >(context->GetNode()->UnpackMapType<std::string,RRValue>(credentials->CastData<MessageElementNestedElementList >()));
-		return $self->AuthenticateUser(username,r->GetStorageContainer(),context);
+		return $self->AuthenticateUser(username,r->GetStorageContainer(),context,RR_SHARED_PTR<RobotRaconteur::ITransportConnection>());
 	}	
 	}
 		
@@ -51,7 +51,7 @@ public:
 class PasswordFileUserAuthenticator : public UserAuthenticator
 {
 public:
-	PasswordFileUserAuthenticator(const std::string& data);
+	PasswordFileUserAuthenticator(const std::string& data, bool require_verified_client = false);
 };
 
 class WrappedUserAuthenticatorDirector
