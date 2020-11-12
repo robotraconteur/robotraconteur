@@ -21,6 +21,13 @@
 #include "RobotRaconteurNodeRootCA.h"
 #include <boost/shared_array.hpp>
 
+
+#if BOOST_ASIO_VERSION >= 101009
+#define ROBOTRACONTEUR_BOOST_ASIO_TLS_METHOD boost::asio::ssl::context::tls
+#else
+#define ROBOTRACONTEUR_BOOST_ASIO_TLS_METHOD boost::asio::ssl::context::tlsv11
+#endif
+
 namespace RobotRaconteur
 {
 namespace detail
@@ -333,7 +340,7 @@ namespace detail
 			throw ResourceNotFoundException("Could not load certificate file");
 		}
 
-		server_context=RR_MAKE_SHARED<boost::asio::ssl::context>(boost::asio::ssl::context::tls);
+		server_context=RR_MAKE_SHARED<boost::asio::ssl::context>(ROBOTRACONTEUR_BOOST_ASIO_TLS_METHOD);
 		server_context->set_options(boost::asio::ssl::context::no_sslv2 | boost::asio::ssl::context::no_sslv3 | boost::asio::ssl::context::no_compression);
 
         InitCA(server_context);
@@ -359,7 +366,7 @@ namespace detail
 		
 		if (!client_context)
 		{
-			client_context=RR_MAKE_SHARED<boost::asio::ssl::context>(boost::asio::ssl::context::tls);
+			client_context=RR_MAKE_SHARED<boost::asio::ssl::context>(ROBOTRACONTEUR_BOOST_ASIO_TLS_METHOD);
 			client_context->set_options(boost::asio::ssl::context::no_sslv2 | boost::asio::ssl::context::no_sslv3 | boost::asio::ssl::context::no_compression);
 			client_context->set_verify_mode(boost::asio::ssl::context::verify_peer);
 			client_context->set_verify_callback(boost::bind(&detail::OpenSSLSupport::verify_callback,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));
@@ -416,7 +423,7 @@ namespace detail
 		boost::mutex::scoped_lock lock(mylock);
 		if (!client_context)
 		{
-			client_context=RR_MAKE_SHARED<boost::asio::ssl::context>(boost::asio::ssl::context::tls);
+			client_context=RR_MAKE_SHARED<boost::asio::ssl::context>(ROBOTRACONTEUR_BOOST_ASIO_TLS_METHOD);
 			client_context->set_options(boost::asio::ssl::context::no_sslv2 | boost::asio::ssl::context::no_sslv3 | boost::asio::ssl::context::no_compression);
 			client_context->set_verify_mode(boost::asio::ssl::context::verify_peer);
 			client_context->set_verify_callback(boost::bind(&detail::OpenSSLSupport::verify_callback,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));
