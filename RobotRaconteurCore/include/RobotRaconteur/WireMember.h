@@ -1560,6 +1560,13 @@ namespace RobotRaconteur
 
 	};
 
+	namespace detail
+	{
+		static void WireUnicastReceiverBase_empty_close_handler(RR_SHARED_PTR<RobotRaconteurException>& err)
+		{
+
+		}
+	}
 	
 	template <typename T, typename U>
 	class WireUnicastReceiverBase : public RR_ENABLE_SHARED_FROM_THIS<WireUnicastReceiverBase<T,U> >
@@ -1703,7 +1710,7 @@ namespace RobotRaconteur
 				uint32_t active_ep = active_connection->GetEndpoint();
 				try
 				{
-					active_connection->Close();
+					active_connection->AsyncClose(&detail::WireUnicastReceiverBase_empty_close_handler);
 				}
 				catch (std::exception&) {}
 				active_connection.reset();
