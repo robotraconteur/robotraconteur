@@ -1562,7 +1562,7 @@ namespace RobotRaconteur
 
 	namespace detail
 	{
-		static void WireUnicastReceiverBase_empty_close_handler(RR_SHARED_PTR<RobotRaconteurException>& err)
+		static void WireUnicastReceiverBase_empty_close_handler(RR_SHARED_PTR<RobotRaconteurException> err)
 		{
 
 		}
