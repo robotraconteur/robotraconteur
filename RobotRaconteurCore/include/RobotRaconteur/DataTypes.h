@@ -2778,21 +2778,6 @@ namespace RobotRaconteur
 		 */
 		TimeSpec(int64_t seconds, int32_t nanoseconds);
 
-		/**
-		 * @brief Current UTC time using default RobotRaconteurNode time provider
-		 * 
-		 * @return TimeSpec The current UTC time
-		 */
-		static TimeSpec Now();
-
-		/**
-		 * @brief Current UTC time using the specified node time provider
-		 * 
-		 * @param node The node to use for the time provider
-		 * @return TimeSpec The current UTC time
-		 */
-		static TimeSpec Now(RR_SHARED_PTR<RobotRaconteurNode> node);
-
 	public:
 		/** @brief equality comparison */
 		bool operator == (const TimeSpec &t2);

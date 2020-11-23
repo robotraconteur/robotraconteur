@@ -744,15 +744,6 @@ Seconds since epoch
 Nanoseconds from epoch. Normalized to be between 0 and 1e9-1
 """
 
-%feature("docstring") RobotRaconteur::TimeSpec::Now(boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node) """Now(node = None)
-Current UTC time using default RobotRaconteurNode time provider
-
-:param node: (optional) Node
-:type node: RobotRaconteur.RobotRaconteurNode
-:return: TimeSpec The current UTC time
-:rtype: RobotRaconteur.RobotRaconteurNode
-"""
-
 %feature("docstring") RobotRaconteur::TimeSpec::operator == (const TimeSpec &t2) """equality comparison"""
 %feature("docstring") RobotRaconteur::TimeSpec::operator != (const TimeSpec &t2) """inequality comparison"""
 %feature("docstring") RobotRaconteur::TimeSpec::operator - (const TimeSpec &t2) """subtraction operator"""

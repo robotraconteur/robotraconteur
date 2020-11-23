@@ -851,8 +851,58 @@ def NowUTC(self):
     use simulation time in certain circumstances
 
     :return: The current time in UTC
+    :rtype: datetime.DateTime
     """
     return self._NowUTC()
+
+def NowTimeSpec(self):
+    """
+    The current time node time as a TimeSpec
+
+    The current node time as a TimeSpec. See NowNodeTime()
+
+    :return: The current node time as a TimeSpec
+    :rtype: RobotRaconteur.TimeSpec
+    """
+    return self._NowTimeSpec()
+
+def NowNodeTime(self):
+    """
+    The current node time
+
+    UTC time is not monotonic, due to the introduction of leap-seconds, and the possibility
+    of the system clock being updated by the user. For a real-time systems, 
+	this is unaccetpable and can lead to system instability. The "node time" used by Robot Raconteur
+	is synchronized to UTC at startup, and is then steadily increasing from that initial time.
+	It will ignore changes to the system clock, and will also ignore corrections like leap
+	seconds.
+
+    :return: The current node time
+    :rtype: datetime.DateTime
+    """
+    return self._NowNodeTime()
+
+def NodeSyncTimeUTC(self):
+    """
+    The sync time of the node as a TimeSpec
+
+    See NodeSyncTimeUTC()
+
+    :return: The node sync time as a TimeSpec
+    :rtype: datetime.DateTime
+    """
+    return self._NodeSyncTimeUTC()
+
+def NodeSyncTimeSpec(self):
+    """
+    The sync time of the node as a TimeSpec
+
+    See NodeSyncTimeUTC()
+
+    :return: The node sync time as a TimeSpec
+    :rtype: RobotRaconteur.TimeSpec
+    """
+    return self._NodeSyncTimeSpec()
 
 def Shutdown(self):
     """

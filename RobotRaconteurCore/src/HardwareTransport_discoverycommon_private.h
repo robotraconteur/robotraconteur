@@ -190,7 +190,7 @@ namespace detail
 					n.NodeName = e.get<1>();
 					NodeDiscoveryInfoURL n1;
 					n1.URL = "rr+usb:///?nodeid=" + e.get<0>().ToString("D") + "&service=RobotRaconteurServiceIndex";
-					n1.LastAnnounceTime = node->NowUTC();
+					n1.LastAnnounceTime = node->NowNodeTime();
 					n.URLs.push_back(n1);
 					o->push_back(n);
 				}
@@ -217,7 +217,7 @@ namespace detail
 				n.NodeName = *e.nodeid_str;
 				NodeDiscoveryInfoURL n1;
 				n1.URL = "rr+bluetooth:///?nodeid=" + n.NodeID.ToString("D") + "&service=RobotRaconteurServiceIndex";
-				n1.LastAnnounceTime = node->NowUTC();
+				n1.LastAnnounceTime = node->NowNodeTime();
 				n.URLs.push_back(n1);
 				op->ret->push_back(n);
 			}
@@ -277,7 +277,7 @@ namespace detail
 				n.NodeName = *e.nodename_str;
 				NodeDiscoveryInfoURL n1;
 				n1.URL = "rr+bluetooth:///?nodeid=" + n.NodeID.ToString("D") + "&service=RobotRaconteurServiceIndex";
-				n1.LastAnnounceTime = node->NowUTC();
+				n1.LastAnnounceTime = node->NowNodeTime();
 				n.URLs.push_back(n1);
 				o->push_back(n);
 			}
@@ -354,7 +354,7 @@ namespace detail
 				typename bluetooth_connector::btaddr_type addr1 = e->template get<0>();
 				if (memcmp(&addr1, &addr, sizeof(addr)) == 0)
 				{
-					if (n->NowUTC() > (e->template get<1>() + boost::posix_time::seconds(30)))
+					if (n->NowNodeTime() > (e->template get<1>() + boost::posix_time::seconds(30)))
 					{
 						e = detected_bluetooth.erase(e);
 					}
@@ -374,7 +374,7 @@ namespace detail
 			op->handler = boost::bind(&HardwareTransport_discovery::OnBluetoothChanged1, this->shared_from_this(), RR_BOOST_PLACEHOLDERS(_1));
 			op->ret = RR_MAKE_SHARED<std::vector<NodeDiscoveryInfo> >();
 
-			detected_bluetooth.push_back(boost::make_tuple(addr, n->NowUTC()));
+			detected_bluetooth.push_back(boost::make_tuple(addr, n->NowNodeTime()));
 
 			if (RobotRaconteurNode::TryPostToThreadPool(n, boost::bind(&HardwareTransport_discovery::GetBluetoothDevices1, this->shared_from_this(), op, addr)))
 			{

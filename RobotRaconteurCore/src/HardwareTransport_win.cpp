@@ -1158,7 +1158,7 @@ std::vector<NodeDiscoveryInfo> HardwareTransport_win_discovery::GetDriverDevices
 			n.NodeName = e.get<1>();
 			NodeDiscoveryInfoURL n1;
 			n1.URL = scheme + ":///?nodeid=" + e.get<0>().ToString("D") + "&service=RobotRaconteurServiceIndex";
-			n1.LastAnnounceTime = node->NowUTC();
+			n1.LastAnnounceTime = node->NowNodeTime();
 			n.URLs.push_back(n1);
 			o.push_back(n);
 		}

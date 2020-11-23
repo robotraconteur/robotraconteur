@@ -111,7 +111,17 @@ classdef RobotRaconteur
 			ts=RobotRaconteurMex('NowUTC');
 			t=datevec(ts,'yyyymmddTHHMMSS.FFF');
 		end
+
+		function t=NowNodeTime()
+			ts=RobotRaconteurMex('NowNodeTime');
+			t=datenum(datevec(ts,'yyyymmddTHHMMSS.FFF'));
+		end
 		
+		function t=NodeSyncTimeUTC()
+			ts=RobotRaconteurMex('NodeSyncTimeUTC');
+			t=datenum(datevec(ts,'yyyymmddTHHMMSS.FFF'));
+		end
+
 		function Sleep(duration)
 			RobotRaconteurMex('Sleep',double(duration));
 		end

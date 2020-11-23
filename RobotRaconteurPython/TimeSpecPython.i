@@ -20,10 +20,6 @@ public:
 
 	TimeSpec(int64_t seconds, int32_t nanoseconds);
 
-	static TimeSpec Now();
-	
-	static TimeSpec Now(boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node);
-
 public:
 	bool operator == (const TimeSpec &t2);
 

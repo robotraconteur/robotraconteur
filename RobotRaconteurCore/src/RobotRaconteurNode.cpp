@@ -83,6 +83,10 @@ void RobotRaconteurNode::Init()
 		random_generator = RR_MAKE_SHARED<boost::random::random_device>();
 	}
 
+	node_sync_time = boost::posix_time::microsec_clock::universal_time();
+	node_internal_start_time = boost::chrono::steady_clock::now();
+	node_sync_timespec = ptimeToTimeSpec(node_sync_time);
+
 	RegisterServiceType(RR_MAKE_SHARED<RobotRaconteurServiceIndex::RobotRaconteurServiceIndexFactory>());
 	RegisterService("RobotRaconteurServiceIndex","RobotRaconteurServiceIndex",RR_MAKE_SHARED<ServiceIndexer>(shared_from_this()));
 	
@@ -1669,7 +1673,7 @@ void RobotRaconteurNode::DeleteEndpoint(RR_SHARED_PTR<Endpoint> e)
 			if (e1 != endpoints.end())			
 			{
 				endpoints.erase(e1);
-				recent_endpoints.insert(std::make_pair(e->GetLocalEndpoint(),NowUTC()));
+				recent_endpoints.insert(std::make_pair(e->GetLocalEndpoint(),NowNodeTime()));
 			}
 		}
 	}
@@ -2145,7 +2149,7 @@ void RobotRaconteurNode::PeriodicCleanupTask(const TimerEvent& err)
 	if (err.stopped) return;
 
 	{
-		boost::posix_time::ptime now=NowUTC();
+		boost::posix_time::ptime now=NowNodeTime();
 		
 		std::vector<RR_SHARED_PTR<Endpoint> > e;
 		
@@ -2594,7 +2598,75 @@ boost::posix_time::ptime RobotRaconteurNode::NowUTC()
 	}
 }
 
+TimeSpec RobotRaconteurNode::NowTimeSpec()
+{
+	boost::shared_lock<boost::shared_mutex> lock(time_provider_lock);
 
+	RR_SHARED_PTR<ITransportTimeProvider> t=time_provider.lock();
+
+	if (t)
+	{
+		return t->NowTimeSpec();
+	}
+	else
+	{
+		boost::chrono::nanoseconds node_time = boost::chrono::duration_cast<boost::chrono::nanoseconds>(boost::chrono::steady_clock::now() - node_internal_start_time);
+		TimeSpec ts1 = node_sync_timespec;
+		ts1.seconds += node_time.count() / 1000000000;
+		ts1.nanoseconds += node_time.count() % 1000000000;
+		ts1.cleanup_nanosecs();
+		return ts1;
+	}
+}
+
+boost::posix_time::ptime RobotRaconteurNode::NowNodeTime()
+{
+	boost::shared_lock<boost::shared_mutex> lock(time_provider_lock);
+
+	RR_SHARED_PTR<ITransportTimeProvider> t=time_provider.lock();
+
+	if (t)
+	{
+		return t->NowNodeTime();
+	}
+	else
+	{
+		boost::chrono::microseconds node_time = boost::chrono::duration_cast<boost::chrono::microseconds>(boost::chrono::steady_clock::now() - node_internal_start_time);
+		return node_sync_time + boost::posix_time::microseconds(node_time.count());
+	}
+}
+
+boost::posix_time::ptime RobotRaconteurNode::NodeSyncTimeUTC()
+{
+	boost::shared_lock<boost::shared_mutex> lock(time_provider_lock);
+
+	RR_SHARED_PTR<ITransportTimeProvider> t=time_provider.lock();
+
+	if (t)
+	{
+		return t->NodeSyncTimeUTC();
+	}
+	else
+	{
+		return node_sync_time;
+	}
+}
+
+TimeSpec RobotRaconteurNode::NodeSyncTimeSpec()
+{
+	boost::shared_lock<boost::shared_mutex> lock(time_provider_lock);
+
+	RR_SHARED_PTR<ITransportTimeProvider> t=time_provider.lock();
+
+	if (t)
+	{
+		return t->NodeSyncTimeSpec();
+	}
+	else
+	{
+		return node_sync_timespec;
+	}
+}
 
 RR_SHARED_PTR<Timer> RobotRaconteurNode::CreateTimer(const boost::posix_time::time_duration& period, boost::function<void (const TimerEvent&)> handler, bool oneshot)
 {

@@ -359,7 +359,7 @@ namespace RobotRaconteur
 					RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(&ServiceInfo2Subscription::fire_ServiceDetectedListener, shared_from_this(), k, info));
 				}
 
-				e->second->last_node_update = n->NowUTC();
+				e->second->last_node_update = n->NowNodeTime();
 
 				return;
 			}
@@ -381,7 +381,7 @@ namespace RobotRaconteur
 				c2->nodeid = info.NodeID;				
 				c2->service_name = info.Name;
 				c2->service_info2 = info;
-				c2->last_node_update = n->NowUTC();
+				c2->last_node_update = n->NowNodeTime();
 
 				ServiceSubscriptionClientID noden(c2->nodeid, c2->service_name);
 
@@ -711,7 +711,7 @@ namespace RobotRaconteur
 		c2->service_name = service_name;
 		c2->service_type = objecttype.to_string();
 		c2->urls = url;
-		c2->last_node_update = n->NowUTC();
+		c2->last_node_update = n->NowNodeTime();
 						
 		c2->username = username.to_string();
 		c2->credentials = credentials;
@@ -785,7 +785,7 @@ namespace RobotRaconteur
 				c2->connecting.data() = true;
 				c2->service_type = client_service_type;
 				c2->urls = urls;
-				c2->last_node_update = n->NowUTC();
+				c2->last_node_update = n->NowNodeTime();
 
 								
 				if (filter_node && !filter_node->Username.empty() && filter_node->Credentials)
@@ -821,7 +821,7 @@ namespace RobotRaconteur
 				
 				RR_SHARED_PTR<detail::ServiceSubscription_client>& c2 = e->second;
 				c2->urls = urls;
-				c2->last_node_update = n->NowUTC();
+				c2->last_node_update = n->NowNodeTime();
 								
 				if (c2->retry_timer)
 				{
@@ -951,7 +951,7 @@ namespace RobotRaconteur
 		
 		if (!active) return;
 
-		if (!use_service_url && (n->NowUTC() > (c2->last_node_update + boost::posix_time::seconds(65))))
+		if (!use_service_url && (n->NowNodeTime() > (c2->last_node_update + boost::posix_time::seconds(65))))
 		{
 			ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Subscription, -1, "ServiceSubscription retry for service \"" << c2->service_name << "\" on node " 
 						<< c2->nodeid.ToString() << " aborted due to node lost");
@@ -1321,7 +1321,7 @@ namespace RobotRaconteur
 			if (!n)
 				return false;
 
-			if (in_value_time_local + boost::posix_time::milliseconds(in_value_lifespan) < n->NowUTC())
+			if (in_value_time_local + boost::posix_time::milliseconds(in_value_lifespan) < n->NowNodeTime())
 			{
 				return false;
 			}
@@ -1562,7 +1562,7 @@ namespace RobotRaconteur
 			in_value_valid.data() = true;
 			if (n)
 			{
-				in_value_time_local = n->NowUTC();
+				in_value_time_local = n->NowNodeTime();
 			}
 
 			in_value_wait.notify_all();

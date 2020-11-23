@@ -46,6 +46,7 @@
 #include <boost/bind/protect.hpp>
 #include <boost/random.hpp>
 #include <boost/random/random_device.hpp>
+#include <boost/chrono.hpp>
 
 #ifdef ROBOTRACONTEUR_WINDOWS
 
@@ -2115,6 +2116,55 @@ namespace RobotRaconteur
 		 */
 		virtual boost::posix_time::ptime NowUTC();
 
+		/**
+		 * @brief The current node time as a TimeSpec
+		 * 
+		 * The current node time as a TimeSpec. See NowNodeTime()
+		 * 
+		 * @return TimeSpec The current node time as a TimeSpec
+		 */
+		virtual TimeSpec NowTimeSpec();
+
+
+		/**
+		 * @brief The current node time
+		 * 
+		 * UTC time is not monotonic, due to the introduction of leap-seconds, and the possibility
+		 * of the system clock being updated by the user. For a real-time systems, 
+		 * this is unaccetpable and can lead to system instability. The "node time" used by Robot Raconteur
+		 * is synchronized to UTC at startup, and is then steadily increasing from that initial time.
+		 * It will ignore changes to the system clock, and will also ignore corrections like leap
+		 * seconds.
+		 * 
+		 * @return boost::posix_time::ptime The current node time
+		 */
+		virtual boost::posix_time::ptime NowNodeTime();
+
+		/**
+		 * @brief The sync time of the node
+		 * 
+		 * The node synchronizes it's clock with the system time in UTC
+		 * when the node is initialized. After this time, a steady
+		 * clock is used. This prevents the clock from jumping
+		 * forward and back in time. It will no longer be updated
+		 * by changes in the system time.
+		 * 
+		 * If an external high precision clock source like PTP is available, 
+		 * that clock will be used in place of the system and steady clock.
+		 * 
+		 * @return boost::posix_time::ptime The node sync time in UTC
+		 */
+		virtual boost::posix_time::ptime NodeSyncTimeUTC();
+
+		/**
+		 * @brief The sync time of the node as a TimeSpec
+		 * 
+		 * See NodeSyncTimeUTC()
+		 * 
+		 * @return TimeSpec The node sync time as a TimeSpec
+		 */
+		virtual TimeSpec NodeSyncTimeSpec();
+
 	protected:
 
 		/** @internal @brief The tranport providing simulation time, or null if using system time */
@@ -2122,6 +2172,11 @@ namespace RobotRaconteur
 		/** @internal  @brief time_provider mutex */
 		boost::shared_mutex time_provider_lock;
 
+		/** @internal @brief The sync time for the node clock **/
+		boost::posix_time::ptime node_sync_time;
+		TimeSpec node_sync_timespec;
+		boost::chrono::steady_clock::time_point node_internal_start_time;
+		
 	public:
 
 		/**

@@ -59,6 +59,14 @@ namespace RobotRaconteur
 	public:
 		virtual boost::posix_time::ptime NowUTC()=0;
 
+		virtual TimeSpec NowTimeSpec()=0;
+
+		virtual boost::posix_time::ptime NowNodeTime() = 0;
+
+		virtual boost::posix_time::ptime NodeSyncTimeUTC() = 0;
+
+		virtual TimeSpec NodeSyncTimeSpec() = 0;
+
 		virtual RR_SHARED_PTR<Timer> CreateTimer(const boost::posix_time::time_duration& duration, boost::function<void(const TimerEvent&)>& handler, bool oneshot=false)=0;
 
 		virtual RR_SHARED_PTR<Rate> CreateRate(double frequency)=0;

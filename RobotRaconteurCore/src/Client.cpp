@@ -600,7 +600,7 @@ namespace RobotRaconteur
 		SendMessage(m);
 
 
-		boost::posix_time::ptime request_start = GetNode()->NowUTC();
+		boost::posix_time::ptime request_start = GetNode()->NowNodeTime();
 		uint32_t request_timeout = GetNode()->GetRequestTimeout();
 		while (true)
 		{
@@ -615,7 +615,7 @@ namespace RobotRaconteur
 
 
 			t->evt->WaitOne(10);
-			if ((GetNode()->NowUTC() - request_start).total_milliseconds() > request_timeout)
+			if ((GetNode()->NowNodeTime() - request_start).total_milliseconds() > request_timeout)
 			{
 
 				{
@@ -865,7 +865,7 @@ namespace RobotRaconteur
 			mm->header->MetaData = "unreliable\n";
 		}
 
-		//LastMessageSentTime = GetNode()->NowUTC();
+		//LastMessageSentTime = GetNode()->NowNodeTime();
 
 		Endpoint::SendMessage(mm);
 
@@ -888,7 +888,7 @@ namespace RobotRaconteur
 
 		mm->entries.push_back(m);
 
-		//LastMessageSentTime = GetNode()->NowUTC();
+		//LastMessageSentTime = GetNode()->NowNodeTime();
 
 		std::vector<std::string> v;
 		boost::string_ref metadata1 = m->MetaData.str();
@@ -911,7 +911,7 @@ namespace RobotRaconteur
 		if (!GetConnected()) return;
 
 
-		SetLastMessageReceivedTime(GetNode()->NowUTC());
+		SetLastMessageReceivedTime(GetNode()->NowNodeTime());
 
 		if (m->entries.size() >= 1)
 		{
@@ -2214,9 +2214,9 @@ namespace RobotRaconteur
 	void ClientContext::AsyncPullServiceDefinitionAndImports(boost::string_ref servicetype, RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<PullServiceDefinitionAndImportsReturn>, RR_SHARED_PTR<RobotRaconteurException>)>) handler, int32_t timeout)
 	{
 		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "Begin AsyncPullServiceDefinitionAndImports for type \"" << servicetype << "\"");
-		boost::posix_time::ptime timeout_time = GetNode()->NowUTC() + boost::posix_time::milliseconds(timeout);
+		boost::posix_time::ptime timeout_time = GetNode()->NowNodeTime() + boost::posix_time::milliseconds(timeout);
 
-		AsyncPullServiceDefinition(servicetype, boost::bind(&ClientContext::AsyncPullServiceDefinitionAndImports1, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), servicetype.to_string(), RR_SHARED_PTR<PullServiceDefinitionAndImportsReturn>(), handler, timeout_time), boost::numeric_cast<uint32_t>((timeout_time - GetNode()->NowUTC()).total_milliseconds()));
+		AsyncPullServiceDefinition(servicetype, boost::bind(&ClientContext::AsyncPullServiceDefinitionAndImports1, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), servicetype.to_string(), RR_SHARED_PTR<PullServiceDefinitionAndImportsReturn>(), handler, timeout_time), boost::numeric_cast<uint32_t>((timeout_time - GetNode()->NowNodeTime()).total_milliseconds()));
 	}
 
 	void ClientContext::AsyncPullServiceDefinitionAndImports1(RR_SHARED_PTR<PullServiceDefinitionReturn> pull_ret, RR_SHARED_PTR<RobotRaconteurException> err, const std::string& servicetype, RR_SHARED_PTR<PullServiceDefinitionAndImportsReturn> current, boost::function<void(RR_SHARED_PTR<PullServiceDefinitionAndImportsReturn>, RR_SHARED_PTR<RobotRaconteurException>)>& handler, boost::posix_time::ptime timeout_time)
@@ -2266,7 +2266,7 @@ namespace RobotRaconteur
 				}
 				else
 				{
-					AsyncPullServiceDefinition(*needed_defs.begin(), boost::bind(&ClientContext::AsyncPullServiceDefinitionAndImports1, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), std::string(servicetype), current, handler, timeout_time), boost::numeric_cast<uint32_t>((timeout_time - GetNode()->NowUTC()).total_milliseconds()));
+					AsyncPullServiceDefinition(*needed_defs.begin(), boost::bind(&ClientContext::AsyncPullServiceDefinitionAndImports1, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), std::string(servicetype), current, handler, timeout_time), boost::numeric_cast<uint32_t>((timeout_time - GetNode()->NowNodeTime()).total_milliseconds()));
 					return;
 				}
 			}			
@@ -2645,7 +2645,7 @@ namespace RobotRaconteur
 			t = GetLastMessageReceivedTime();
 		}
 
-		if ((GetNode()->NowUTC() - t).total_milliseconds() > GetNode()->GetEndpointInactivityTimeout())
+		if ((GetNode()->NowNodeTime() - t).total_milliseconds() > GetNode()->GetEndpointInactivityTimeout())
 		{
 			//This may result in a rare segfault so we can't automatically delete
 			//Close();
@@ -2662,7 +2662,7 @@ namespace RobotRaconteur
 
 		if (GetRemoteEndpoint() != 0)
 		{
-			if ((GetNode()->NowUTC() - GetLastMessageSentTime()).total_milliseconds() > 60000)
+			if ((GetNode()->NowNodeTime() - GetLastMessageSentTime()).total_milliseconds() > 60000)
 			{
 				ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(), "Client sending keep alive request");
 				try
@@ -2737,7 +2737,7 @@ namespace RobotRaconteur
 
 		m_UserAuthenticated = false;
 		use_pulled_types = false;
-		//LastMessageSentTime = GetNode()->NowUTC();		
+		//LastMessageSentTime = GetNode()->NowNodeTime();		
 	}
 
 	void ClientContext::TransportConnectionClosed(uint32_t endpoint)

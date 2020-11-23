@@ -2208,7 +2208,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 			SendMessage(m, e);
 
 
-			boost::posix_time::ptime request_start = GetNode()->NowUTC();
+			boost::posix_time::ptime request_start = GetNode()->NowNodeTime();
 			uint32_t request_timeout = GetNode()->GetRequestTimeout();
 			while (true)
 			{
@@ -2223,7 +2223,7 @@ boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
 
 				t->evt->WaitOne(10);
-				if ((GetNode()->NowUTC() - request_start).total_milliseconds() > request_timeout)
+				if ((GetNode()->NowNodeTime() - request_start).total_milliseconds() > request_timeout)
 				{
 
 					{
@@ -2387,7 +2387,7 @@ boost::thread_specific_ptr<RR_SHARED_PTR<AuthenticatedUser> > ServerEndpoint::m_
 		{
 			
 			
-			SetLastMessageReceivedTime(GetNode()->NowUTC());
+			SetLastMessageReceivedTime(GetNode()->NowNodeTime());
 		}
 		m_CurrentEndpoint.reset(new RR_SHARED_PTR<ServerEndpoint>(shared_from_this()));
 		m_CurrentAuthenticatedUser.reset(new RR_SHARED_PTR<AuthenticatedUser>(endpoint_authenticated_user));
@@ -2414,7 +2414,7 @@ boost::thread_specific_ptr<RR_SHARED_PTR<AuthenticatedUser> > ServerEndpoint::m_
 
 	void ServerEndpoint::PeriodicCleanupTask()
 	{
-		if ((GetNode()->NowUTC() - GetLastMessageReceivedTime()).total_milliseconds() > GetNode()->GetEndpointInactivityTimeout())
+		if ((GetNode()->NowNodeTime() - GetLastMessageReceivedTime()).total_milliseconds() > GetNode()->GetEndpointInactivityTimeout())
 		{
 			service->RemoveClient(shared_from_this());
 		}

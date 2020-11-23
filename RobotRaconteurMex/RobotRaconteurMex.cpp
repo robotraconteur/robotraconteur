@@ -191,6 +191,20 @@ int32_t mxToTimeoutAdjusted(const mxArray* val)
 	}
 }
 
+static std::string ptimeToString(const boost::posix_time::ptime& now)
+{
+	std::stringstream o;
+	o << boost::gregorian::to_iso_string(now.date()) << "T";
+	boost::posix_time::time_duration t=now.time_of_day();
+	o << std::setw(2) << std::setfill('0') << t.hours() << std::setw(2) << t.minutes() <<  std::setw(2) << t.seconds() << ".";
+	std::stringstream o2;
+	o2 << std::setw(t.num_fractional_digits()) << std::setfill('0') <<  t.fractional_seconds();
+	std::string o3=o2.str();
+	while (o3.size() < 3) o3 += "0";
+	o << o3.substr(0,3);
+	return o.str();
+}
+
 RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > mxArrayToRRMap(const mxArray* in)
 {
 	boost::shared_ptr<TypeDefinition> tc = boost::make_shared<TypeDefinition>();
@@ -838,17 +852,26 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 			if (nlhs != 1 || nrhs!=1) throw InvalidArgumentException("RobotRaconteurMex NowUTC requires 1 input and 1 output arguments");
 
 			boost::posix_time::ptime now=RobotRaconteur::RobotRaconteurNode::s()->NowUTC();
+			std::string now_str=ptimeToString(now);	
+			plhs[0]=mxCreateString(now_str.c_str());
+			return;
+		}
+		else if (command=="NowNodeTime")
+		{
+			if (nlhs != 1 || nrhs!=1) throw InvalidArgumentException("RobotRaconteurMex NowNodeTime requires 1 input and 1 output arguments");
 
-			std::stringstream o;
-			o << boost::gregorian::to_iso_string(now.date()) << "T";
-			boost::posix_time::time_duration t=now.time_of_day();
-			o << std::setw(2) << std::setfill('0') << t.hours() << std::setw(2) << t.minutes() <<  std::setw(2) << t.seconds() << ".";
-			std::stringstream o2;
-			o2 << std::setw(t.num_fractional_digits()) << std::setfill('0') <<  t.fractional_seconds();
-			std::string o3=o2.str();
-			while (o3.size() < 3) o3 += "0";
-			o << o3.substr(0,3);
-			plhs[0]=mxCreateString(o.str().c_str());
+			boost::posix_time::ptime now=RobotRaconteur::RobotRaconteurNode::s()->NowNodeTime();
+			std::string now_str=ptimeToString(now);	
+			plhs[0]=mxCreateString(now_str.c_str());
+			return;
+		}
+		else if (command=="NodeSyncTimeUTC")
+		{
+			if (nlhs != 1 || nrhs!=1) throw InvalidArgumentException("RobotRaconteurMex NodeSyncTimeUTC requires 1 input and 1 output arguments");
+
+			boost::posix_time::ptime now=RobotRaconteur::RobotRaconteurNode::s()->NodeSyncTimeUTC();
+			std::string now_str=ptimeToString(now);	
+			plhs[0]=mxCreateString(now_str.c_str());
 			return;
 		}
 		else if (command=="Sleep")

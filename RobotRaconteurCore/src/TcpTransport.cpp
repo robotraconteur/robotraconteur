@@ -771,7 +771,7 @@ namespace detail
 
 		if (n < 4)
 		{
-			boost::posix_time::time_duration diff = parent->GetNode()->NowUTC() - start_time;
+			boost::posix_time::time_duration diff = parent->GetNode()->NowNodeTime() - start_time;
 			if (diff.total_milliseconds() > 5000)
 			{
 				ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Transport, 0, "TcpTransport accepted socket timed out " << TcpTransport_socket_remote_endpoint(socket) << " to " << TcpTransport_socket_local_endpoint(socket));
@@ -850,7 +850,7 @@ namespace detail
 	void TcpAcceptor::AcceptSocket(RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket, boost::function<void(RR_SHARED_PTR<boost::asio::ip::tcp::socket>, RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)>& handler)
 	{
 		ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Transport, 0, "TcpTransport accepted socket from " << TcpTransport_socket_remote_endpoint(socket) << " to " << TcpTransport_socket_local_endpoint(socket));
-		start_time = parent->GetNode()->NowUTC();
+		start_time = parent->GetNode()->NowNodeTime();
 
 		RR_SHARED_PTR<boost::signals2::scoped_connection> socket_closer
 			= RR_MAKE_SHARED<boost::signals2::scoped_connection>(

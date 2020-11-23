@@ -1159,21 +1159,21 @@ return 0;
 		
 		if (command == "latencytestclient")
 		{
-			t1 = RobotRaconteurNode::s()->NowUTC();
+			t1 = RobotRaconteurNode::s()->NowNodeTime();
 			for (uint32_t i = 0; i < iters; i++)
 			{
 				o3->set_d1(d);
 			}
-			t2 = RobotRaconteurNode::s()->NowUTC();
+			t2 = RobotRaconteurNode::s()->NowNodeTime();
 		}
 		else
 		{
-			t1 = RobotRaconteurNode::s()->NowUTC();
+			t1 = RobotRaconteurNode::s()->NowNodeTime();
 			for (uint32_t i = 0; i < iters; i++)
 			{
 				o2->get_struct1();
 			}
-			t2 = RobotRaconteurNode::s()->NowUTC();
+			t2 = RobotRaconteurNode::s()->NowNodeTime();
 		}
 
 		uint32_t diff=(uint32_t)(t2-t1).total_microseconds();

@@ -2869,6 +2869,38 @@ namespace RobotRaconteur
             }
         }
 
+        public DateTime NowNodeTime
+        {
+            get
+            {
+                return _NowNodeTime();
+            }
+        }
+
+        public DateTime NodeSyncTimeUTC
+        {
+            get
+            {
+                return _NodeSyncTimeUTC();
+            }
+        }
+
+        public TimeSpec NowTimeSpec
+        {
+            get
+            {
+                return _NowTimeSpec();
+            }
+        }
+
+        public TimeSpec NodeSyncTimeSpec
+        {
+            get
+            {
+                return _NodeSyncTimeSpec();
+            }
+        }
+
         public object FindObjRefTyped(object obj, string objref, string objecttype)
         {
             if (!(obj is ServiceStub)) throw new ArgumentException("Only service stubs can have objref");

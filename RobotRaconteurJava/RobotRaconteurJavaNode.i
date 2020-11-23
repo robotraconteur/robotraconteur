@@ -1118,6 +1118,27 @@ import java.util.*;
 	  return _NowUTC();
 	  	  
   }
+
+	public TimeSpec nowNodeTime()
+  {
+	  return _NowNodeTime();
+	  	  
+  }
+    
+	public TimeSpec nodeSyncTimeUTC()
+	{
+		return _NodeSyncTimeUTC();
+	}
+
+	public TimeSpec nodeSyncTimeSpec()
+	{
+		return _NodeSyncTimeSpec();
+	}
+
+	public TimeSpec nowTimeSpec()
+	{
+		return _NowTimeSpec();
+	}
   
   public final Object findObjRefTyped(Object obj, String objref, String objecttype)
 	{

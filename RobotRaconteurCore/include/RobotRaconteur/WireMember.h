@@ -1760,7 +1760,7 @@ namespace RobotRaconteur
 			in_value_ep.data() = ep;
 			if(n)
 			{
-				in_value_lasttime_local = n->NowUTC();
+				in_value_lasttime_local = n->NowNodeTime();
 			}
 
 			lock.unlock();

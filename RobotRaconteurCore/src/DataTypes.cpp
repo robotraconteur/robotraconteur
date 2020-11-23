@@ -287,17 +287,6 @@ TimeSpec::TimeSpec(int64_t seconds, int32_t nanoseconds)
 	cleanup_nanosecs();
 }
 
-TimeSpec TimeSpec::Now()
-{
-	return Now(RobotRaconteurNode::sp());
-}
-
-TimeSpec TimeSpec::Now(RR_SHARED_PTR<RobotRaconteurNode> node)
-{
-	boost::posix_time::ptime now=node->NowUTC();
-	return ptimeToTimeSpec(now);	
-}
-
 boost::posix_time::ptime TimeSpecToPTime(const TimeSpec& ts)
 {
 	boost::posix_time::ptime epoch(boost::gregorian::date(1970,boost::gregorian::Jan,1),boost::posix_time::time_duration(0,0,0));

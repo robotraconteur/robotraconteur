@@ -374,6 +374,18 @@ RR_RELEASE_GIL()
 	RR_MAKE_METHOD_PRIVATE(NowUTC)
 	boost::posix_time::ptime NowUTC();
 
+	RR_MAKE_METHOD_PRIVATE(NowTimeSpec)
+	TimeSpec NowTimeSpec();
+
+	RR_MAKE_METHOD_PRIVATE(NowNodeTime)
+	boost::posix_time::ptime NowNodeTime();
+
+	RR_MAKE_METHOD_PRIVATE(NodeSyncTimeUTC)
+	boost::posix_time::ptime NodeSyncTimeUTC();
+
+	RR_MAKE_METHOD_PRIVATE(NodeSyncTimeSpec)
+	TimeSpec NodeSyncTimeSpec();
+
 
 	
 RR_KEEP_GIL()

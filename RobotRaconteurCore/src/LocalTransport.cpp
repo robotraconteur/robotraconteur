@@ -1015,7 +1015,7 @@ void LocalTransport::AsyncGetDetectedNodes(const std::vector<std::string>& schem
 	boost::filesystem::path private_search_dir=detail::LocalTransportUtil::GetTransportPrivateSocketPath();
 
 	std::string my_username = detail::LocalTransportUtil::GetLogonUserName();
-	detail::LocalTransportUtil::FindNodesInDirectory(*o, private_search_dir, "rr+local", GetNode()->NowUTC(), my_username);
+	detail::LocalTransportUtil::FindNodesInDirectory(*o, private_search_dir, "rr+local", GetNode()->NowNodeTime(), my_username);
 
 	//TODO: search other users
 	boost::optional<boost::filesystem::path> search_path = detail::LocalTransportUtil::GetTransportPublicSearchPath();
@@ -1037,7 +1037,7 @@ void LocalTransport::AsyncGetDetectedNodes(const std::vector<std::string>& schem
 
 					std::string username1 = path1.filename().string();
 					std::vector<NodeDiscoveryInfo> o1;
-					detail::LocalTransportUtil::FindNodesInDirectory(o1, *dir_itr, "rr+local", GetNode()->NowUTC(), username1);
+					detail::LocalTransportUtil::FindNodesInDirectory(o1, *dir_itr, "rr+local", GetNode()->NowNodeTime(), username1);
 					boost::range::copy(o1, std::back_inserter(*o));
 				}
 				catch (std::exception& exp2)
@@ -2246,7 +2246,7 @@ namespace detail
 		RR_SHARED_PTR<RobotRaconteurNode> node1 = node.lock();
 		if (!node1) return;
 
-		boost::posix_time::ptime now = node1->NowUTC();
+		boost::posix_time::ptime now = node1->NowNodeTime();
 
 		
 		

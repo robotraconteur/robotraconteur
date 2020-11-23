@@ -14,8 +14,6 @@ public:
 
 	TimeSpec(int64_t seconds, int32_t nanoseconds);
 
-	static TimeSpec Now();
-
 public:
 
    

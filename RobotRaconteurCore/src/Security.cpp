@@ -84,8 +84,8 @@ namespace RobotRaconteur
 		this->m_Privileges = privileges;
 		this->m_Properties = properties;
 		this->context = context;
-		m_LoginTime = context->GetNode()->NowUTC();
-		m_LastAccessTime = context->GetNode()->NowUTC();
+		m_LoginTime = context->GetNode()->NowNodeTime();
+		m_LastAccessTime = context->GetNode()->NowNodeTime();
 	}
 
 	void AuthenticatedUser::UpdateLastAccess()
@@ -93,7 +93,7 @@ namespace RobotRaconteur
 		boost::mutex::scoped_lock lock(m_LastAccessTime_lock);
 		RR_SHARED_PTR<ServerContext> c = context.lock();
 		if (!c) throw InvalidOperationException("Context has been released");
-		m_LastAccessTime = c->GetNode()->NowUTC();
+		m_LastAccessTime = c->GetNode()->NowNodeTime();
 	}
 
 	PasswordFileUserAuthenticator::PasswordFileUserAuthenticator(std::istream &file, bool require_verified_client)

@@ -43,7 +43,7 @@ namespace RobotRaconteur
 			ev.last_expected=last_time;
 			ev.last_real=actual_last_time;
 			ev.current_expected=last_time+period;
-			ev.current_real=n->NowUTC();
+			ev.current_real=n->NowNodeTime();
 			h=handler;
 
 			if (oneshot)
@@ -116,7 +116,7 @@ namespace RobotRaconteur
 		RR_SHARED_PTR<RobotRaconteurNode> n=node.lock();
 		if (!n) throw InvalidOperationException("Node released");
 
-		start_time=n->NowUTC();
+		start_time=n->NowNodeTime();
 		last_time=start_time;
 		actual_last_time=last_time;
 
@@ -177,8 +177,8 @@ namespace RobotRaconteur
 		if (!node) node=RobotRaconteurNode::sp();
 		this->node=node;
 		this->period=boost::posix_time::microseconds(boost::lexical_cast<int64_t>(1000000.0/frequency));
-		start_time=node->NowUTC();
-		last_time=node->NowUTC();
+		start_time=node->NowNodeTime();
+		last_time=node->NowNodeTime();
 	}
 		
 	void WallRate::Sleep()
