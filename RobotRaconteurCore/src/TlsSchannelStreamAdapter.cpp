@@ -33,17 +33,9 @@ namespace RobotRaconteur
 {
 namespace detail
 {
-
-	TlsSchannelAsyncStreamAdapterContext::TlsSchannelAsyncStreamAdapterContext(const NodeID& nodeid)
+	static boost::shared_array<uint8_t> unmask_certificate(const uint8_t* masked_cert, size_t cert_len)
 	{
-		this->nodeid=nodeid;
-		ZeroMemory(&activestore, sizeof(activestore));
-		activecertificate = NULL;
-		ZeroMemory(&server_credentials, sizeof(server_credentials));
-		ZeroMemory(&client_credentials, sizeof(client_credentials));
-
-		//The Root Certificate is masked to prevent program byte level tampering
-		boost::shared_array<uint8_t> b2(new uint8_t[sizeof(ROBOTRACONTEUR_NODE_ROOT_CA)]);
+		boost::shared_array<uint8_t> b2(new uint8_t[cert_len]);
 
 		const uint8_t mask1[] = { 0xbb, 0x1b, 0x38, 0x3b };
 		const uint8_t mask2[] = { 0x99, 0x84, 0xe2, 0xe7 };
@@ -54,40 +46,68 @@ namespace detail
 		const uint8_t mask7[] = { 0x45, 0xec, 0x81, 0x42 };
 		const uint8_t mask8[] = { 0x3d, 0xbd, 0x8e, 0x2b };
 
-		for (size_t i = 0; i < sizeof(ROBOTRACONTEUR_NODE_ROOT_CA); i++)
+		for (size_t i = 0; i < cert_len; i++)
 		{
 			size_t j = i % 16;
-			if (j < 4) b2.get()[i] = ROBOTRACONTEUR_NODE_ROOT_CA[i] ^ mask2[j];
-			if (j >= 4 && j < 8) b2.get()[i] = ROBOTRACONTEUR_NODE_ROOT_CA[i] ^ mask3[j - 4];
-			if (j >= 8 && j < 10) b2.get()[i] = ROBOTRACONTEUR_NODE_ROOT_CA[i] ^ mask1[j - 8];
-			if (j >= 10 && j<12) b2.get()[i] = ROBOTRACONTEUR_NODE_ROOT_CA[i] ^ mask6[j - 9];
-			if (j >= 12 && j < 16) b2.get()[i] = ROBOTRACONTEUR_NODE_ROOT_CA[i] ^ mask7[j - 12];
+			if (j < 4) b2.get()[i] = masked_cert[i] ^ mask2[j];
+			if (j >= 4 && j < 8) b2.get()[i] = masked_cert[i] ^ mask3[j - 4];
+			if (j >= 8 && j < 10) b2.get()[i] = masked_cert[i] ^ mask1[j - 8];
+			if (j >= 10 && j<12) b2.get()[i] = masked_cert[i] ^ mask6[j - 9];
+			if (j >= 12 && j < 16) b2.get()[i] = masked_cert[i] ^ mask7[j - 12];
 		}
 
+		return b2;
+	}
+
+	TlsSchannelAsyncStreamAdapterContext::TlsSchannelAsyncStreamAdapterContext(const NodeID& nodeid)
+	{
+		this->nodeid=nodeid;
+		ZeroMemory(&activestore, sizeof(activestore));
+		activecertificate = NULL;
+		ZeroMemory(&server_credentials, sizeof(server_credentials));
+		ZeroMemory(&client_credentials, sizeof(client_credentials));
+
+		//The Root Certificate is masked to prevent program byte level tampering
+		boost::shared_array<uint8_t> root_cert_2015_bytes = unmask_certificate(ROBOTRACONTEUR_NODE_ROOT_CA_2015,sizeof(ROBOTRACONTEUR_NODE_ROOT_CA_2015));
+		boost::shared_array<uint8_t> root_cert_2020_bytes = unmask_certificate(ROBOTRACONTEUR_NODE_ROOT_CA_2020,sizeof(ROBOTRACONTEUR_NODE_ROOT_CA_2020));
+		
 		/*FILE* f = fopen("root.cer", "wb");
 		fwrite(*b2.get(), 1, sizeof(ROBOTRACONTEUR_NODE_ROOT_CA), f);
 		fclose(f);*/
 
-		HCERTSTORE root = CertOpenStore(CERT_STORE_PROV_MEMORY, 0, NULL, CERT_STORE_CREATE_NEW_FLAG, &rootcertificate);
+		HCERTSTORE root = CertOpenStore(CERT_STORE_PROV_MEMORY, 0, NULL, CERT_STORE_CREATE_NEW_FLAG, &rootcertificate2015);
 		if (!root) throw InternalErrorException("Internal error");
 		stores.push_back(root);
-		BOOL r1 = CertAddEncodedCertificateToStore(root, X509_ASN_ENCODING, b2.get(), sizeof(ROBOTRACONTEUR_NODE_ROOT_CA), CERT_STORE_ADD_ALWAYS, NULL);
+		PCCERT_CONTEXT rootcert2015_1;
+		BOOL r1 = CertAddEncodedCertificateToStore(root, X509_ASN_ENCODING, root_cert_2015_bytes.get(), sizeof(ROBOTRACONTEUR_NODE_ROOT_CA_2015), CERT_STORE_ADD_ALWAYS, &rootcert2015_1);
 		if (!r1) throw InternalErrorException("Internal error");
+		rootcertificate2015 = rootcert2015_1;
+		PCCERT_CONTEXT rootcert2020_1;
+		BOOL r1_2 = CertAddEncodedCertificateToStore(root, X509_ASN_ENCODING, root_cert_2020_bytes.get(), sizeof(ROBOTRACONTEUR_NODE_ROOT_CA_2020), CERT_STORE_ADD_ALWAYS, &rootcert2020_1);
+		if (!r1_2) throw InternalErrorException("Internal error");
+		rootcertificate2020 = rootcert2020_1;
 
 		store = CertOpenStore(CERT_STORE_PROV_COLLECTION, 0, NULL, CERT_STORE_CREATE_NEW_FLAG, 0);
 		if (!store) throw InternalErrorException("Internal error");
 		BOOL r2 = CertAddStoreToCollection(store, root, CERT_PHYSICAL_STORE_ADD_ENABLE_FLAG, 0);
 		if (!r2) throw InternalErrorException("Internal error");
 
-		PCCERT_CONTEXT rootcert = CertFindCertificateInStore(root, X509_ASN_ENCODING, 0, CERT_FIND_SUBJECT_STR, L"Robot Raconteur Node Root CA", NULL);
-		if (!rootcert) throw InternalErrorException("Internal error");
-		rootcertificate = rootcert;
+		//PCCERT_CONTEXT rootcert2015 = CertFindCertificateInStore(root, X509_ASN_ENCODING, 0, CERT_FIND_EXISTING, rootcert2015_1, NULL);
+		//if (!rootcert2015) throw InternalErrorException("Internal error");
+		//rootcertificate2015 = rootcert2015;
 		
+		//PCCERT_CONTEXT rootcert2020 = CertFindCertificateInStore(root, X509_ASN_ENCODING, 0, CERT_FIND_EXISTING, rootcert2020_1, NULL);
+		//if (!rootcert2020) throw InternalErrorException("Internal error");
+		//rootcertificate2020 = rootcert2020;
+
 		char default_env[256];
 		char default_env_2015[256];
+		char default_env_2020[256];
 		DWORD ret1=::GetEnvironmentVariable("ROBOTRACONTEUR_NO_DEFAULT_ROOT_CERT", default_env, sizeof(default_env));
 		DWORD ret2=::GetEnvironmentVariable("ROBOTRACONTEUR_NO_DEFAULT_ROOT_CERT_2015", default_env_2015, sizeof(default_env));
-		use_default_root_cert = true;
+		DWORD ret3=::GetEnvironmentVariable("ROBOTRACONTEUR_NO_DEFAULT_ROOT_CERT_2020", default_env_2020, sizeof(default_env));
+		use_root_cert_2015 = true;
+		use_root_cert_2020 = true;
 		if (ret1 > 0)
 		{
 			std::string default_env_str(default_env, ret1);
@@ -95,18 +115,30 @@ namespace detail
 			boost::to_lower(default_env_str);
 			if (default_env_str == "true" || default_env_str == "1")
 			{
-				use_default_root_cert = false;
+				use_root_cert_2015 = false;
+				use_root_cert_2020 = false;
 			}
 		}
 
-		if (ret2 > 0 && use_default_root_cert)
+		if (ret2 > 0 && use_root_cert_2015)
 		{
 			std::string default_env_str(default_env_2015, ret2);
 			boost::trim(default_env_str);
 			boost::to_lower(default_env_str);
 			if (default_env_str == "true" || default_env_str == "1")
 			{
-				use_default_root_cert = false;
+				use_root_cert_2015 = false;
+			}
+		}
+
+		if (ret3 > 0 && use_root_cert_2020)
+		{
+			std::string default_env_str(default_env_2020, ret3);
+			boost::trim(default_env_str);
+			boost::to_lower(default_env_str);
+			if (default_env_str == "true" || default_env_str == "1")
+			{
+				use_root_cert_2020 = false;
 			}
 		}
 
@@ -126,9 +158,14 @@ namespace detail
 			CertCloseStore(activestore,0);
 		}
 		
-		if (rootcertificate)
+		if (rootcertificate2015)
 		{
-			CertFreeCertificateContext(rootcertificate);
+			CertFreeCertificateContext(rootcertificate2015);
+		}
+
+		if (rootcertificate2020)
+		{
+			CertFreeCertificateContext(rootcertificate2020);
 		}
 
 		if (activecertificate)
@@ -391,7 +428,7 @@ namespace detail
 		DWORD errdiff = pChainContext->TrustStatus.dwErrorStatus & (~okerr);
 		if (errdiff == CERT_TRUST_IS_UNTRUSTED_ROOT)
 		{
-			if (!use_default_root_cert)
+			if (!use_root_cert_2015 && !use_root_cert_2020)
 			{
 				CertFreeCertificateChain(pChainContext);
 				return false;
@@ -405,7 +442,25 @@ namespace detail
 
 			PCERT_INFO root_cert = pChainContext->rgpChain[0]->rgpElement[pChainContext->rgpChain[0]->cElement - 1]->pCertContext->pCertInfo;
 
-			if (!CertComparePublicKeyInfo(X509_ASN_ENCODING, &root_cert->SubjectPublicKeyInfo, &rootcertificate->pCertInfo->SubjectPublicKeyInfo))
+			bool root_cert_match = false;
+
+			if (CertComparePublicKeyInfo(X509_ASN_ENCODING, &root_cert->SubjectPublicKeyInfo, &rootcertificate2015->pCertInfo->SubjectPublicKeyInfo))
+			{
+				if (this->use_root_cert_2015)
+				{
+					root_cert_match = true;
+				}
+			}
+
+			if (!root_cert_match && CertComparePublicKeyInfo(X509_ASN_ENCODING, &root_cert->SubjectPublicKeyInfo, &rootcertificate2020->pCertInfo->SubjectPublicKeyInfo))
+			{
+				if (this->use_root_cert_2020)
+				{
+					root_cert_match = true;
+				}
+			}
+
+			if (!root_cert_match)
 			{
 				CertFreeCertificateChain(pChainContext);
 				return false;

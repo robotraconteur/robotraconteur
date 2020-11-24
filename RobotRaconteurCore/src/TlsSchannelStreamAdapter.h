@@ -75,8 +75,10 @@ namespace detail
 		CredHandle client_credentials;
 		std::vector<HCERTSTORE> stores;
 		HCERTSTORE store;
-		PCCERT_CONTEXT rootcertificate;
-		bool use_default_root_cert;
+		PCCERT_CONTEXT rootcertificate2015;
+		PCCERT_CONTEXT rootcertificate2020;
+		bool use_root_cert_2015;
+		bool use_root_cert_2020;
 		
 #endif
 		boost::mutex mylock;
