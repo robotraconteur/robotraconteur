@@ -208,6 +208,32 @@ namespace detail
     
     #define UNUSED(expr) do { (void)(expr); } while (0)
 
+	static boost::shared_array<uint8_t> unmask_certificate(const uint8_t* masked_cert, size_t cert_len)
+	{
+		boost::shared_array<uint8_t> b2(new uint8_t[cert_len]);
+
+		const uint8_t mask1[] = { 0xbb, 0x1b, 0x38, 0x3b };
+		const uint8_t mask2[] = { 0x99, 0x84, 0xe2, 0xe7 };
+		const uint8_t mask3[] = { 0xe3, 0x51, 0xb5, 0x7 };
+		const uint8_t mask4[] = { 0x42, 0xf7, 0x96, 0xc2 };
+		const uint8_t mask5[] = { 0x22, 0x97, 0x54, 0xd9 };
+		const uint8_t mask6[] = { 0x30, 0x26, 0x90, 0xa1 };
+		const uint8_t mask7[] = { 0x45, 0xec, 0x81, 0x42 };
+		const uint8_t mask8[] = { 0x3d, 0xbd, 0x8e, 0x2b };
+
+		for (size_t i = 0; i < cert_len; i++)
+		{
+			size_t j = i % 16;
+			if (j < 4) b2.get()[i] = masked_cert[i] ^ mask2[j];
+			if (j >= 4 && j < 8) b2.get()[i] = masked_cert[i] ^ mask3[j - 4];
+			if (j >= 8 && j < 10) b2.get()[i] = masked_cert[i] ^ mask1[j - 8];
+			if (j >= 10 && j<12) b2.get()[i] = masked_cert[i] ^ mask6[j - 9];
+			if (j >= 12 && j < 16) b2.get()[i] = masked_cert[i] ^ mask7[j - 12];
+		}
+
+		return b2;
+	}
+
     void OpenSSLAuthContext::InitCA(boost::shared_ptr<boost::asio::ssl::context> context)
     {
         context->set_default_verify_paths();
@@ -233,10 +259,12 @@ namespace detail
         X509_LOOKUP_add_dir(lookup_dir, "/Library/RobotRaconteur/ca-certificates", X509_FILETYPE_PEM);
         X509_LOOKUP_add_dir(lookup_dir, "/System/Library/RobotRaconteur/ca-certificates", X509_FILETYPE_PEM);
 #endif
-        bool use_default_root_cert = true;
+        bool use_root_cert_2015 = true;
+		bool use_root_cert_2020 = true;
         
         char* default_env=getenv("ROBOTRACONTEUR_NO_DEFAULT_ROOT_CERT");
         char* default_env_2015=getenv("ROBOTRACONTEUR_NO_DEFAULT_ROOT_CERT_2015");
+		char* default_env_2020=getenv("ROBOTRACONTEUR_NO_DEFAULT_ROOT_CERT_2020");
 
         if (default_env != NULL)
 		{
@@ -245,53 +273,55 @@ namespace detail
 			boost::to_lower(default_env_str);
 			if (default_env_str == "true" || default_env_str == "1")
 			{
-				use_default_root_cert = false;
+				use_root_cert_2015 = false;
+				use_root_cert_2020 = false;
 			}
 		}
 
-        if (default_env_2015 != NULL && use_default_root_cert)
+        if (default_env_2015 != NULL && use_root_cert_2015)
 		{
 			std::string default_env_str(default_env_2015);
 			boost::trim(default_env_str);
 			boost::to_lower(default_env_str);
 			if (default_env_str == "true" || default_env_str == "1")
 			{
-				use_default_root_cert = false;
+				use_root_cert_2015 = false;
 			}
 		}
 
-        if (use_default_root_cert)
+		if (default_env_2020 != NULL && use_root_cert_2020)
+		{
+			std::string default_env_str(default_env_2020);
+			boost::trim(default_env_str);
+			boost::to_lower(default_env_str);
+			if (default_env_str == "true" || default_env_str == "1")
+			{
+				use_root_cert_2020 = false;
+			}
+		}
+
+        if (use_root_cert_2015)
         {
         	//The Root Certificate is masked to prevent program byte level tampering
-			uint8_t* b2= new uint8_t[sizeof(ROBOTRACONTEUR_NODE_ROOT_CA)];
-
-			const uint8_t mask1[] = { 0xbb, 0x1b, 0x38, 0x3b };
-			const uint8_t mask2[] = { 0x99, 0x84, 0xe2, 0xe7 };
-			const uint8_t mask3[] = { 0xe3, 0x51, 0xb5, 0x7 };
-			const uint8_t mask4[] = { 0x42, 0xf7, 0x96, 0xc2 };
-			const uint8_t mask5[] = { 0x22, 0x97, 0x54, 0xd9 };
-			const uint8_t mask6[] = { 0x30, 0x26, 0x90, 0xa1 };
-			const uint8_t mask7[] = { 0x45, 0xec, 0x81, 0x42 };
-			const uint8_t mask8[] = { 0x3d, 0xbd, 0x8e, 0x2b };
-
-            UNUSED(mask4);
-            UNUSED(mask5);
-            UNUSED(mask8);
-            
-			for (size_t i = 0; i < sizeof(ROBOTRACONTEUR_NODE_ROOT_CA); i++)
+			boost::shared_array<uint8_t> b2=unmask_certificate(ROBOTRACONTEUR_NODE_ROOT_CA_2015,sizeof(ROBOTRACONTEUR_NODE_ROOT_CA_2015));
+			
+			const uint8_t* b3=b2.get();
+			X509 *root_cert=d2i_X509(NULL, &b3, sizeof(ROBOTRACONTEUR_NODE_ROOT_CA_2015));
+			
+			if (root_cert!=NULL)
 			{
-				size_t j = i % 16;
-				if (j < 4) b2[i] = ROBOTRACONTEUR_NODE_ROOT_CA[i] ^ mask2[j];
-				if (j >= 4 && j < 8) b2[i] = ROBOTRACONTEUR_NODE_ROOT_CA[i] ^ mask3[j - 4];
-				if (j >= 8 && j < 10) b2[i] = ROBOTRACONTEUR_NODE_ROOT_CA[i] ^ mask1[j - 8];
-				if (j >= 10 && j<12) b2[i] = ROBOTRACONTEUR_NODE_ROOT_CA[i] ^ mask6[j - 9];
-				if (j >= 12 && j < 16) b2[i] = ROBOTRACONTEUR_NODE_ROOT_CA[i] ^ mask7[j - 12];
+				X509_STORE_add_cert(store, root_cert);
 			}
+        }
 
-			const uint8_t* b3=b2;
-			X509 *root_cert=d2i_X509(NULL, &b3, sizeof(ROBOTRACONTEUR_NODE_ROOT_CA));
-			delete[] b2;
-
+		if (use_root_cert_2020)
+        {
+        	//The Root Certificate is masked to prevent program byte level tampering
+			boost::shared_array<uint8_t> b2=unmask_certificate(ROBOTRACONTEUR_NODE_ROOT_CA_2020,sizeof(ROBOTRACONTEUR_NODE_ROOT_CA_2020));
+			
+			const uint8_t* b3=b2.get();
+			X509 *root_cert=d2i_X509(NULL, &b3, sizeof(ROBOTRACONTEUR_NODE_ROOT_CA_2020));
+			
 			if (root_cert!=NULL)
 			{
 				X509_STORE_add_cert(store, root_cert);
