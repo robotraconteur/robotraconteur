@@ -38,8 +38,18 @@ add_custom_command(TARGET RobotRaconteurMex POST_BUILD COMMAND "${CMAKE_COMMAND}
 add_custom_command(TARGET RobotRaconteurMex POST_BUILD COMMAND "${CMAKE_COMMAND}" -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/@RobotRaconteurMemoryClient $<TARGET_FILE_DIR:RobotRaconteurMex>/@RobotRaconteurMemoryClient)
 add_custom_command(TARGET RobotRaconteurMex POST_BUILD COMMAND "${CMAKE_COMMAND}" -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/@RobotRaconteurRate $<TARGET_FILE_DIR:RobotRaconteurMex>/@RobotRaconteurRate)
 add_custom_command(TARGET RobotRaconteurMex POST_BUILD COMMAND "${CMAKE_COMMAND}" -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/@RobotRaconteurEventData $<TARGET_FILE_DIR:RobotRaconteurMex>/@RobotRaconteurData)
+add_custom_command(TARGET RobotRaconteurMex POST_BUILD COMMAND "${CMAKE_COMMAND}" -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/@RobotRaconteurGenerator $<TARGET_FILE_DIR:RobotRaconteurMex>/@RobotRaconteurGenerator)
+add_custom_command(TARGET RobotRaconteurMex POST_BUILD COMMAND "${CMAKE_COMMAND}" -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/@RobotRaconteurPipeEndpoint $<TARGET_FILE_DIR:RobotRaconteurMex>/@RobotRaconteurPipeEndpoint)
+add_custom_command(TARGET RobotRaconteurMex POST_BUILD COMMAND "${CMAKE_COMMAND}" -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/@RobotRaconteurWireConnection $<TARGET_FILE_DIR:RobotRaconteurMex>/@RobotRaconteurWireConnection)
+add_custom_command(TARGET RobotRaconteurMex POST_BUILD COMMAND "${CMAKE_COMMAND}" -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/@RobotRaconteurWireSubscription $<TARGET_FILE_DIR:RobotRaconteurMex>/@RobotRaconteurWireSubscription)
+add_custom_command(TARGET RobotRaconteurMex POST_BUILD COMMAND "${CMAKE_COMMAND}" -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/@RobotRaconteurPipeSubscription $<TARGET_FILE_DIR:RobotRaconteurMex>/@RobotRaconteurPipeSubscription)
+add_custom_command(TARGET RobotRaconteurMex POST_BUILD COMMAND "${CMAKE_COMMAND}" -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/@RobotRaconteurServiceSubscription $<TARGET_FILE_DIR:RobotRaconteurMex>/@RobotRaconteurServiceSubscription)
+add_custom_command(TARGET RobotRaconteurMex POST_BUILD COMMAND "${CMAKE_COMMAND}" -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/@RobotRaconteurServiceInfo2Subscription $<TARGET_FILE_DIR:RobotRaconteurMex>/@RobotRaconteurServiceInfo2Subscription)
 add_custom_command(TARGET RobotRaconteurMex POST_BUILD COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurObjectServerConnectEvent.m $<TARGET_FILE_DIR:RobotRaconteurMex>/RobotRaconteurObjectServerConnectEvent.m)
 add_custom_command(TARGET RobotRaconteurMex POST_BUILD COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurObjectServerDispatchEvent.m $<TARGET_FILE_DIR:RobotRaconteurMex>/RobotRaconteurObjectServerDispatchEvent.m)
+add_custom_command(TARGET RobotRaconteurMex POST_BUILD COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurAsyncOps.m $<TARGET_FILE_DIR:RobotRaconteurMex>/RobotRaconteurAsyncOps.m)
+add_custom_command(TARGET RobotRaconteurMex POST_BUILD COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurFramework.m $<TARGET_FILE_DIR:RobotRaconteurMex>/RobotRaconteurFramework.m)
+add_custom_command(TARGET RobotRaconteurMex POST_BUILD COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurValueTypes.m $<TARGET_FILE_DIR:RobotRaconteurMex>/RobotRaconteurValueTypes.m)
 
 
 

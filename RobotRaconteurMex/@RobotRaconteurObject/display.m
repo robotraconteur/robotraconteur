@@ -1,5 +1,5 @@
 function display(c)
-
+%display Display information about object
 disp(' ')
 disp([inputname(1) ' ='])
 

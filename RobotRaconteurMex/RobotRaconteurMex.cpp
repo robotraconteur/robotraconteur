@@ -3703,7 +3703,7 @@ mxArray* CreateGeneratorClientMxArray(int32_t id)
 	mxArray* rhs[2];
 	rhs[0] = CreateInt32Scalar(RR_MEX_GENERATOR_CLIENT);
 	rhs[1] = CreateInt32Scalar(id);
-	int merror = mexCallMATLAB(1, lhs, 2, rhs, "RobotRaconteurObject");
+	int merror = mexCallMATLAB(1, lhs, 2, rhs, "RobotRaconteurGenerator");
 	if (merror)
 	{
 		throw InternalErrorException("Internal error");
@@ -4032,7 +4032,7 @@ mxArray* CreatePipeEndpointMxArray(int32_t id)
 	mxArray* rhs[2];
 	rhs[0]=CreateInt32Scalar(RR_MEX_PIPE_ENDPOINT);
 	rhs[1]=CreateInt32Scalar(id);
-	int merror=mexCallMATLAB(1,lhs,2,rhs,"RobotRaconteurObject");
+	int merror=mexCallMATLAB(1,lhs,2,rhs,"RobotRaconteurPipeEndpoint");
 	if(merror)
 	{		
 		throw InternalErrorException("Internal error");
@@ -4049,7 +4049,7 @@ mxArray* CreateWireConnectionMxArray(int32_t id)
 	mxArray* rhs[2];
 	rhs[0]=CreateInt32Scalar(RR_MEX_WIRE_CONNECTION);
 	rhs[1]=CreateInt32Scalar(id);
-	int merror=mexCallMATLAB(1,lhs,2,rhs,"RobotRaconteurObject");
+	int merror=mexCallMATLAB(1,lhs,2,rhs,"RobotRaconteurWireConnection");
 	if(merror)
 	{		
 		throw InternalErrorException("Internal error");
@@ -7512,7 +7512,7 @@ mxArray* MexServiceSubscription::subsref(const mxArray* S)
 		((int32_t*)mxGetData(rhs[0]))[0] = RR_MEX_WIRE_SUBSCRIPTION;
 		((int32_t*)mxGetData(rhs[1]))[0] = sub2->wiresubscriptionid;
 
-		int merror = mexCallMATLAB(1, matlabret, 2, rhs, "RobotRaconteurObject");
+		int merror = mexCallMATLAB(1, matlabret, 2, rhs, "RobotRaconteurWireSubscription");
 		if (merror)
 		{
 			throw InternalErrorException("Internal error");
@@ -7550,7 +7550,7 @@ mxArray* MexServiceSubscription::subsref(const mxArray* S)
 		((int32_t*)mxGetData(rhs[0]))[0] = RR_MEX_PIPE_SUBSCRIPTION;
 		((int32_t*)mxGetData(rhs[1]))[0] = sub2->pipesubscriptionid;
 
-		int merror = mexCallMATLAB(1, matlabret, 2, rhs, "RobotRaconteurObject");
+		int merror = mexCallMATLAB(1, matlabret, 2, rhs, "RobotRaconteurPipeSubscription");
 		if (merror)
 		{
 			throw InternalErrorException("Internal error");
@@ -8265,7 +8265,7 @@ mxArray* SubscribeServiceInfo2(const mxArray* service_types, const mxArray* filt
 	((int32_t*)mxGetData(rhs[0]))[0] = RR_MEX_SERVICEINFO2_SUBSCRIPTION;
 	((int32_t*)mxGetData(rhs[1]))[0] = sub2->servicesubscriptionid;
 
-	int merror = mexCallMATLAB(1, matlabret, 2, rhs, "RobotRaconteurObject");
+	int merror = mexCallMATLAB(1, matlabret, 2, rhs, "RobotRaconteurServiceInfo2Subscription");
 	if (merror)
 	{
 		throw InternalErrorException("Internal error");
@@ -8302,7 +8302,7 @@ mxArray* SubscribeServiceByType(const mxArray* service_types, const mxArray* fil
 	((int32_t*)mxGetData(rhs[0]))[0] = RR_MEX_SERVICE_SUBSCRIPTION;
 	((int32_t*)mxGetData(rhs[1]))[0] = sub2->servicesubscriptionid;
 
-	int merror = mexCallMATLAB(1, matlabret, 2, rhs, "RobotRaconteurObject");
+	int merror = mexCallMATLAB(1, matlabret, 2, rhs, "RobotRaconteurServiceSubscription");
 	if (merror)
 	{
 		throw InternalErrorException("Internal error");
@@ -8361,7 +8361,7 @@ mxArray* SubscribeService(const mxArray* url, const mxArray* username, const mxA
 	((int32_t*)mxGetData(rhs[0]))[0] = RR_MEX_SERVICE_SUBSCRIPTION;
 	((int32_t*)mxGetData(rhs[1]))[0] = sub2->servicesubscriptionid;
 
-	int merror = mexCallMATLAB(1, matlabret, 2, rhs, "RobotRaconteurObject");
+	int merror = mexCallMATLAB(1, matlabret, 2, rhs, "RobotRaconteurServiceSubscription");
 	if (merror)
 	{
 		throw InternalErrorException("Internal error");
