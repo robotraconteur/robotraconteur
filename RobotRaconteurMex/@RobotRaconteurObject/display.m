@@ -28,7 +28,10 @@ try
                S=substruct('.',p{3},'.','PeekInValue','()','');
                w.(p{3})=subsref(c,S);
             end
-        catch
+        catch member_err
+            if contains(member_err.message,'RequestTimeout')
+                break
+            end
         end
     end
 catch
