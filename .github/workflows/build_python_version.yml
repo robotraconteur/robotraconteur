@@ -29,7 +29,7 @@ jobs:
       run: |
         python -m pip install numpy setuptools wheel
     - name: env python3
-      run: echo  ("::set-env name=PYTHON3_EXE::" + (Get-Command Python.exe).Path)
+      run: echo  ("PYTHON3_EXE=" + (Get-Command Python.exe).Path) | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
     - name: choco
       run: |
         choco install swig -r
@@ -85,7 +85,7 @@ jobs:
       run: |
         python -m pip install numpy setuptools wheel
     - name: env python3
-      run: echo "::set-env name=PYTHON3_EXE::${{ env.pythonLocation }}/bin/python"
+      run: echo "PYTHON3_EXE=${{ env.pythonLocation }}/bin/python" >> $GITHUB_ENV
     - name: configure
       run: >
         cd .. &&
