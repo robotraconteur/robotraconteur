@@ -32,6 +32,11 @@ Robot Raconteur Core C++ Library {#mainpage}
     * \ref user_locking
     * \ref client_locking
     * \ref monitor_locking
+  * \ref ecosystem
+    * \ref stdrobdef
+    * \ref companion
+    * \ref directory
+
 * **C++ Core Library**
   * \ref cpp_introduction
     * \ref cpp_installation

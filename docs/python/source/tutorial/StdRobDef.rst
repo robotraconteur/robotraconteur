@@ -1,7 +1,7 @@
 Standard Service Definitions and Companion
 ==========================================
 
-Robot Raconteur has defined a number of standard service definitions that contain
+The Robot Raconteur project has defined a number of standard service definitions that contain
 numerous structure, pod, namedarray, and object types. These types cover a range
 of common data types, and provide standardized interfaces to devices. These types
 should be used whenever possible so that services will be interoperable. The 
@@ -18,8 +18,7 @@ and general utility functions. The following libraries are available:
  - C++: `robotraconteur_companion <https://github.com/robotraconteur/robotraconteur_companion>`_
  - C#: `RobotRaconteurNET.Companion <https://github.com/robotraconteur/RobotRaconteurNET.Companion>`_
 
- The Python companion library can also be installed using ``pip install RobotRaconteurCompanion``
+The Python companion library can also be installed using ``pip install RobotRaconteurCompanion``
 
- See `robotraconteur_camera_driver <https://github.com/robotraconteur-contrib/robotraconteur_camera_driver/blob/master/robotraconteur_camera_driver.py>`_
- for an example utilizing standard types and the companion library.
- 
+See `robotraconteur_camera_driver <https://github.com/robotraconteur-contrib/robotraconteur_camera_driver/blob/master/robotraconteur_camera_driver.py>`_
+for an example utilizing standard types and the companion library.

@@ -45,7 +45,7 @@ namespace RobotRaconteur
      * a downsample of 0 means that no packets are dropped. A downsample of 1 will drop every other
      * packet. A downsample of two will drop 2 packets between sending 1 packet, etc. The 
      * downsample level for each client is set using SetClientDownsample(). This should be
-     * made available to the client using a property.
+     * made available to the client using a property member.
      * 
      * PipeBroadcaster and WireBroadcaster must be added to the downsampler
      * using AddPipeBroadcaster() and AddWireBroadcaster(), respectively.
@@ -93,7 +93,7 @@ namespace RobotRaconteur
         /**
          * @brief Set the downsample for the specified client
          * 
-         * @param ep THe uint32_t endpoint ID of the client
+         * @param ep The uint32_t endpoint ID of the client
          * @param downsample The desired downsample
          */
         void SetClientDownsample(uint32_t ep, uint32_t downsample);
@@ -117,7 +117,7 @@ namespace RobotRaconteur
         /**
          * @brief Add a PipeBroadcaster to the downsampler
          * 
-         * Sets the predicate of the broadcaster 
+         * Sets the predicate of the broadcaster to this downsampler
          * 
          * @param broadcaster The broadcaster to add
          */
@@ -126,7 +126,7 @@ namespace RobotRaconteur
         /**
          * @brief Add a WireBroadcaster to the downsampler
          * 
-         * Sets the predicate of the broadcaster
+         * Sets the predicate of the broadcaster to this downsampler
          * 
          * @param broadcaster The broadcaster to add
          */

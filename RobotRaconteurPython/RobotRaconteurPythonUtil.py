@@ -580,7 +580,7 @@ class PipeEndpoint(object):
 
     Pipe endpoints are created by clients using the Pipe.Connect() or Pipe.AsyncConnect()
     functions. Services receive incoming pipe endpoint connection requests through a 
-    callback function specified using the Pipe.SetPipeConnectCallback() function. Services
+    callback function specified using the Pipe.PipeConnectCallback property. Services
     may also use the PipeBroadcaster class to automate managing pipe endpoint lifecycles and
     sending packets to all connected client endpoints.
 
@@ -933,20 +933,20 @@ class Pipe(object):
     by the other, where they are placed in a receive queue. Received packets can then be retrieved from the receive queue.
 
     Pipe endpoints are created by the client using the Connect() or AsyncConnect() functions. Services receive
-    incoming connection requests through a callback function. This callback is configured using the SetPipeConnectCallback() 
-    function. Services may also use the PipeBroadcaster class to automate managing pipe endpoint lifecycles and
-    sending packets to all connected client endpoints. If the SetPipeConnectCallback() function is used, the service
+    incoming connection requests through a callback function. This callback is configured using the PipeConnectCallback
+    property. Services may also use the PipeBroadcaster class to automate managing pipe endpoint lifecycles and
+    sending packets to all connected client endpoints. If the PipeConnectCallback function is used, the service
     is responsible for keeping track of endpoints as the connect and disconnect. See PipeEndpoint for details
     on sending and receiving packets.
 
     Pipe endpoints are *indexed*, meaning that more than one endpoint pair can be created between the client and the service.
 
-    Pipes may be *unreliable*, meaning that packets may arrive out of order or be dropped. Use IsUnreliable() to check for
+    Pipes may be *unreliable*, meaning that packets may arrive out of order or be dropped. Use IsUnreliable to check for
     unreliable pipes. The member modifier `unreliable` is used to specify that a pipe should be unreliable.
 
     Pipes may be declared *readonly* or *writeonly*. If neither is specified, the pipe is assumed to be full duplex. *readonly* 
     pipes may only send packets from service to client. *writeonly* pipes may only send packets from client to service. Use
-    Direction() to determine the direction of the pipe.
+    Direction to determine the direction of the pipe.
 
     The PipeBroadcaster is often used to simplify the use of Pipes. See PipeBroadcaster for more information.
 
@@ -982,6 +982,8 @@ class Pipe(object):
 
     def AsyncConnect(self,*args):
         """
+        AsyncConnect(index,handler,timeout=-1)
+
         Asynchronously connect a pipe endpoint.
         
         Same as Connect(), but returns asynchronously.
@@ -3625,7 +3627,7 @@ class ServiceSubscriptionFilter(object):
     """
     Subscription filter
 
-    The subscription filter is used with RobotRaconteurNode::SubscribeServiceByType() and 
+    The subscription filter is used with RobotRaconteurNode.SubscribeServiceByType() and 
     RobotRaconteurNode.SubscribeServiceInfo2() to decide which services should
     be connected. Detected services that match the service type are checked against
     the filter before connecting.
@@ -3812,7 +3814,7 @@ class ServiceSubscription(object):
     Subscription that automatically connects services and manages lifecycle of connected services
 
     Created using RobotRaconteurNode.SubscribeService() or RobotRaconteurNode.SubscribeServiceByType(). The ServiceSubscription
-    class is used to automatically create and manage connections based on connection criteria. RobotRaconteur::SubscribeService()
+    class is used to automatically create and manage connections based on connection criteria. RobotRaconteur.SubscribeService()
     is used to create a robust connection to a service with a specific URL. RobotRaconteurNode.SubscribeServiceByType() is used
     to connect to services with a specified type, filtered with a ServiceSubscriptionFilter. Subscriptions will create connections
     to matching services, and will retry the connection if it fails or the connection is lost. This behavior allows subscriptions
@@ -4130,7 +4132,7 @@ class WireSubscription(object):
     of the wire subscription. The current value, the timespec, and the wire connection can be accessed
     using GetInValue() or TryGetInValue().
 
-    The lifespan of the InValue can be configured using SetInValueLifespan(). It is recommended that
+    The lifespan of the InValue can be configured using the InValueLifeSpan property. It is recommended that
     the lifespan be configured, so that the value will expire if the subscription stops receiving
     fresh in values.
 
@@ -4332,7 +4334,7 @@ class PipeSubscription(object):
 
     Pipe subscriptions collect all incoming packets from connect pipe endpoints. When a client connects,
     the pipe subscription will automatically connect a pipe endpoint the pipe endpoint specified when
-    the PipeSubscription was created using ServiceSubscription::SubscribePipe(). The packets received
+    the PipeSubscription was created using ServiceSubscription.SubscribePipe(). The packets received
     from each of the collected pipes are collected and placed into a common receive queue. This queue
     is read using ReceivePacket(), TryReceivePacket(), or TryReceivePacketWait(). The number of packets
     available to receive can be checked using Available().
@@ -4341,7 +4343,7 @@ class PipeSubscription(object):
     with the AsyncSendPacketAll() function. This function behaves somewhat like a "reverse broadcaster",
     sending the packets to all connected services.
 
-    If the pipe subscription is being used to send packets but not receive them, the SetIgnoreInValue()
+    If the pipe subscription is being used to send packets but not receive them, IgnoreInValue
     should be set to true to prevent packets from queueing.
     """
     __slots__ = ["_subscription", "_PipePacketReceived","__weakref__"]
@@ -4636,21 +4638,22 @@ class RobotRaconteurNodeSetup(object):
     is destroyed.
 
     The node setup classes execute the following operations to configure the node:
+
     1. Set log level and tap options from flags, command line options, or environmental variables
     2. Register specified service factory types
     3. Initialize transports using flags specified in flags or from command line options
     4. Configure timeouts
 
-    See \\ref command_line_options for more information on available command line options.
+    See Command Line Options for more information on available command line options.
 
     Logging level is configured using the environmental variable ``ROBOTRACONTEUR_LOG_LEVEL``
-    or the command line option ``--robotraconteur-log-level``. See \\ref logging.md for more information.
+    or the command line option ``--robotraconteur-log-level``. See Logging for more information.
 
-    See \\ref taps.md for more information on using taps.
+    See Taps for more information on using taps.
 
     The node setup classes optionally initialize LocalTransport,
     TcpTransport, HardwareTransport, and/or IntraTransport. 
-    \\ref transports.md for more information.
+    Transports for more information.
 
     The LocalTransport.StartServerAsNodeName() or 
     LocalTransport.StartClientAsNodeName() are used to load the NodeID.
@@ -4724,7 +4727,7 @@ class ClientNodeSetup(RobotRaconteurNodeSetup):
     ClientNodeSetup is a subclass of RobotRaconteurNodeSetup providing default configuration for a
     RobotRaconteurNode instance that is used only to create outgoing client connections. 
 
-    See \\ref command_line_options for more information on available command line options.
+    See CommandLineOptions for more information on available command line options.
 
     Note: String table and HardwareTransport are disabled by default. They can be enabled
     using command line options.
@@ -4783,7 +4786,7 @@ class ServerNodeSetup(RobotRaconteurNodeSetup):
     ServerNodeSetup requires a NodeName, and a TCP port if LocalTransport and TcpTransport
     are enabled (default behavior).
 
-    See \\ref command_line_options for more information on available command line options.
+    See Command Line Options for more information on available command line options.
 
     Note: String table and HardwareTransport are disabled by default. They can be enabled
     using command line options.
@@ -4851,7 +4854,7 @@ class SecureServerNodeSetup(RobotRaconteurNodeSetup):
     ServerNodeSetup requires a NodeName, and a TCP port if LocalTransport and TcpTransport
     are enabled (default behavior).
 
-    See \\ref command_line_options for more information on available command line options.
+    See Command Line Options for more information on available command line options.
 
     Note: String table and HardwareTransport are disabled by default. They can be enabled
     using command line options.

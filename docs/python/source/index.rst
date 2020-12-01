@@ -40,6 +40,7 @@ Welcome to Robot Raconteur Python's documentation!
    Exceptions <https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/exceptions.html>   
    Security <https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/security.html>
    Object Locking <https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/locking.html>
+   Ecosystem <https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/ecosystem.html>
 
 .. toctree::
    :maxdepth: 4
@@ -69,6 +70,7 @@ Welcome to Robot Raconteur Python's documentation!
    api/ServiceSecurity
    api/Exceptions
    api/Logging
+   api/BroadcastDownsampler
 
 
 

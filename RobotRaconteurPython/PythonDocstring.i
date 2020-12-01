@@ -1624,3 +1624,62 @@ Open a file to store log records
 :param append: If True, log messages are appended. If False, the file is truncated when opened
 :type append: bool
 """
+
+%feature("docstring") RobotRaconteur::BroadcastDownsampler """
+Downsampler to manage rate of packets sent to client
+
+PipeBroadcaster and WireBroadcaster by default sends packets to all clients when
+a pipe packet is sent or the wire value is changed. The updates typically happen
+within a sensor or control loop, with the rate set by the specific device producing
+the updates. Some clients may require less frequent data, and may run in to bandwidth
+or processing issues if the data is sent at the full update rate. The BroadcastDownsampler
+is used to implement broadcaster predicates that will drop packets. 
+Clients specify how many packets they want dropped between each packet sent. For instance,
+a downsample of 0 means that no packets are dropped. A downsample of 1 will drop every other
+packet. A downsample of two will drop 2 packets between sending 1 packet, etc. The 
+downsample level for each client is set using SetClientDownsample(). This should be
+made available to the client using a property member.
+
+PipeBroadcaster and WireBroadcaster must be added to the downsampler
+using AddPipeBroadcaster() and AddWireBroadcaster(), respectively.
+It is recommended that these functions be called within
+the RRServiceObjectInit(context,servicepath) function thit is called
+by the node when a service object is initialized.
+
+BeginStep() and EndStep() must be called for each iteration of the
+broadcasting loop. Use BroadcastDownsamplerStep for automatic
+management in the loop.
+
+See com.robotraconteur.isoch.IsochDevice for the standard use 
+of downsampling. 
+"""
+
+%feature("docstring") RobotRaconteur::BroadcastDownsampler::GetClientDownsample(uint32_t ep) """
+Get the downsample for the specified client
+ 
+:param ep: The endpoint ID of the client
+:type ep: int
+:return: The downsample
+:rtype: int
+"""
+
+%feature("docstring") RobotRaconteur::BroadcastDownsampler::SetClientDownsample(uint32_t ep, uint32_t downsample) """
+Set the downsample for the specified client
+ 
+:param ep: The endpoint ID of the client
+:type ep: int
+:param downsample: The desired downsample
+:type downsample: int
+"""
+
+%feature("docstring") RobotRaconteur::BroadcastDownsampler::BeginStep() """
+Begin the update loop step
+
+Use BroadcastDownsamplerStep for automatic stepping
+"""
+
+%feature("docstring") RobotRaconteur::BroadcastDownsampler::EndStep() """
+End the update loop step
+
+Use BroadcastDownsamplerStep for automatic stepping
+"""

@@ -41,6 +41,7 @@ The following options are available:
 | `--robotraconteur-log-level=` | string | WARNING | WARNING | Sets the log level of the node. This overrides the environmental variable. Valid settings are `FATAL`, `ERROR`, `WARNING`, `INFO`, `DEBUG`, `TRACE`.
 | `--robotraconteur-local-tap-enable=` | boolean | false | false | Enable local tap feature (must also specify tap name) |
 | `--robotraconteur-local-tap-name=` | string | | | Name of local tap |
+| `--robotraconteur-jumbo-message=` | boolean | false | false | Enable jumbo messages (up to 100 MB) |
 
 ## Enable Command Line Options
 

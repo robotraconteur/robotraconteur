@@ -40,8 +40,7 @@ def ConnectService(self,*args):
 
     ConnectService will attempt to instantiate a client object reference (proxy) based on the type
     information provided by the service. The type information will contain the type of the object,
-    and all the implemented types. The client will normally want a specific one of the implement types.
-    Specify this desired type in objecttype to avoid future compatibility issues.
+    and all the implemented types.
 
     :param url: The URL of the service to connect
     :type url: Union[str,List[str]]
@@ -201,7 +200,8 @@ def RegisterServiceTypesFromFiles(self, file_names, auto_import = False):
     been registered or included in the file_names list for verification to 
     succeed.
 
-    If auto_import is True, missing service type files will be loaded.
+    If auto_import is True, missing service type files will be loaded automatically from
+    the filesystem.
 
     :param file_names: The filenames of the service types to load
     :type file_names: List[str]
@@ -270,8 +270,8 @@ def GetPulledServiceType(self,obj,servicetype):
 
 def GetServicePath(self,obj):
     """
-    Get the ServicePath of a client object reference
-    obj must be returned by ConnectService(), AsyncConnectService(),
+    Get the ServicePath of a client object reference.
+    ``obj`` have been returned by ConnectService(), AsyncConnectService(),
     or an ``objref``
 
     :param obj: The object to query
@@ -282,7 +282,7 @@ def GetServicePath(self,obj):
         obj=obj.rrinnerstub
     return self._GetServicePath(obj)
 
-def NewStructure(self,type,obj=None):
+def NewStructure(self,structtype,obj=None):
     """
     Returns a new Robot Raconteur structure with type ``structtype``
 
@@ -294,9 +294,9 @@ def NewStructure(self,type,obj=None):
     :return: The new structure instance
     """
     from .RobotRaconteurPythonUtil import NewStructure
-    return NewStructure(type,obj,self)
+    return NewStructure(structtype,obj,self)
 
-def GetStructureType(self,type,obj=None):
+def GetStructureType(self,structtype,obj=None):
     """
     Returns a constructor for Robot Raconteur structure with type ``structtype``
 
@@ -309,9 +309,9 @@ def GetStructureType(self,type,obj=None):
     :rtype: Callable[[],<structtype>]
     """
     from .RobotRaconteurPythonUtil import GetStructureType
-    return GetStructureType(type,obj,self)
+    return GetStructureType(structtype,obj,self)
 
-def GetPodDType(self,type,obj=None):
+def GetPodDType(self,podtype,obj=None):
     """
     Returns the numpy dtype for ``podtype``
 
@@ -326,9 +326,9 @@ def GetPodDType(self,type,obj=None):
     :rtype: numpy.dtype
     """
     from .RobotRaconteurPythonUtil import GetPodDType
-    return GetPodDType(type,obj,self)
+    return GetPodDType(podtype,obj,self)
 
-def GetNamedArrayDType(self,type,obj=None):
+def GetNamedArrayDType(self,namedarraytype,obj=None):
     """
     Returns the numpy dtype for ``namedarraytype``
 
@@ -343,7 +343,7 @@ def GetNamedArrayDType(self,type,obj=None):
     :rtype: numpy.dtype
     """
     from .RobotRaconteurPythonUtil import GetNamedArrayDType
-    return GetNamedArrayDType(type,obj,self)
+    return GetNamedArrayDType(namedarraytype,obj,self)
     
 def NamedArrayToArray(self,named_array):
     """
@@ -886,7 +886,7 @@ def NodeSyncTimeUTC(self):
     """
     The sync time of the node as a TimeSpec
 
-    See NodeSyncTimeUTC()
+    See NowNodeTime()
 
     :return: The node sync time as a TimeSpec
     :rtype: datetime.DateTime
@@ -897,7 +897,7 @@ def NodeSyncTimeSpec(self):
     """
     The sync time of the node as a TimeSpec
 
-    See NodeSyncTimeUTC()
+    See NowTimeSpec()
 
     :return: The node sync time as a TimeSpec
     :rtype: RobotRaconteur.TimeSpec
@@ -960,6 +960,8 @@ def SubscribeServiceInfo2(self, service_types, filter_=None):
 
 def SubscribeService(self,*args):
     """
+    SubscribeService(url,username=None,credentials=None)
+
     Subscribe to a service using one or more URL. Used to create robust connections to services
 
     Creates a ServiceSubscription assigned to a service with one or more candidate connection URLs. The
