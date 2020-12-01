@@ -162,7 +162,13 @@ sudo apt-get install python3-robotraconteur
 
 #### C\# 
 
-C\# must be built from source
+The C\# library is available on NuGet. Search for "RobotRaconteurNET".
+
+The Linux native library must be installed using apt:
+
+```
+sudo apt-get install librobotraconteur-net-native
+```
 
 #### Java
 
