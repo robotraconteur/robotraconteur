@@ -311,6 +311,12 @@ The Python companion library can also be installed using `pip install RobotRacon
 
 See https://github.com/robotraconteur-contrib/robotraconteur_camera_driver/blob/master/robotraconteur_camera_driver.py for an example utilizing standard types and the companion library.
 
+## Robot Raconteur Directory
+
+The Robot Raconteur project maintains a list of available drivers. The directory can be found here:
+
+https://github.com/robotraconteur/robotraconteur-directory
+
 ## License
 
 The Robot Raconteur core library is Apache 2.0 licensed.
