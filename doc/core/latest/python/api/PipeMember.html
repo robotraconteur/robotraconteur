@@ -99,6 +99,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/MemberModifiers.html">Member Modifiers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/Async.html">Asynchronous programming</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/GatherScatter.html">Gather/Scatter operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/StdRobDef.html">Standard Service Definitions and Companion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/Directory.html">Robot Raconteur Directory</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Framework:</span></p>
 <ul>
@@ -108,6 +110,7 @@
 <li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/exceptions.html">Exceptions</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/security.html">Security</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/locking.html">Object Locking</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/ecosystem.html">Ecosystem</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Utility:</span></p>
 <ul>
@@ -138,6 +141,7 @@
 <li class="toctree-l1"><a class="reference internal" href="ServiceSecurity.html">Service Security</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Exceptions.html">Exceptions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Logging.html">Logging and Taps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="BroadcastDownsampler.html">Broadcast Dowsampler</a></li>
 </ul>
 
             
@@ -217,22 +221,22 @@ clients and services. They work by creating pipe endpoint pairs (peers), with on
 and one in the service. Packets are transmitted between endpoint pairs. Packets sent by one endpoint are received
 by the other, where they are placed in a receive queue. Received packets can then be retrieved from the receive queue.</p>
 <p>Pipe endpoints are created by the client using the Connect() or AsyncConnect() functions. Services receive
-incoming connection requests through a callback function. This callback is configured using the SetPipeConnectCallback() 
-function. Services may also use the PipeBroadcaster class to automate managing pipe endpoint lifecycles and
-sending packets to all connected client endpoints. If the SetPipeConnectCallback() function is used, the service
+incoming connection requests through a callback function. This callback is configured using the PipeConnectCallback
+property. Services may also use the PipeBroadcaster class to automate managing pipe endpoint lifecycles and
+sending packets to all connected client endpoints. If the PipeConnectCallback function is used, the service
 is responsible for keeping track of endpoints as the connect and disconnect. See PipeEndpoint for details
 on sending and receiving packets.</p>
 <p>Pipe endpoints are <em>indexed</em>, meaning that more than one endpoint pair can be created between the client and the service.</p>
-<p>Pipes may be <em>unreliable</em>, meaning that packets may arrive out of order or be dropped. Use IsUnreliable() to check for
+<p>Pipes may be <em>unreliable</em>, meaning that packets may arrive out of order or be dropped. Use IsUnreliable to check for
 unreliable pipes. The member modifier <cite>unreliable</cite> is used to specify that a pipe should be unreliable.</p>
 <p>Pipes may be declared <em>readonly</em> or <em>writeonly</em>. If neither is specified, the pipe is assumed to be full duplex. <em>readonly</em> 
 pipes may only send packets from service to client. <em>writeonly</em> pipes may only send packets from client to service. Use
-Direction() to determine the direction of the pipe.</p>
+Direction to determine the direction of the pipe.</p>
 <p>The PipeBroadcaster is often used to simplify the use of Pipes. See PipeBroadcaster for more information.</p>
 <p>This class is instantiated by the node. It should not be instantiated by the user.</p>
 <dl class="py method">
 <dt id="RobotRaconteur.Pipe.AsyncConnect">
-<code class="sig-name descname">AsyncConnect</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.Pipe.AsyncConnect" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">AsyncConnect</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index</span></em>, <em class="sig-param"><span class="n">handler</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.Pipe.AsyncConnect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Asynchronously connect a pipe endpoint.</p>
 <p>Same as Connect(), but returns asynchronously.</p>
 <p>Only valid on clients. Will throw InvalidOperationException on the service side.</p>
@@ -326,7 +330,7 @@ pipe endpoint, but the pipe will retain ownership of the endpoint until it is cl
 See Pipe for more information on pipe members.</p>
 <p>Pipe endpoints are created by clients using the Pipe.Connect() or Pipe.AsyncConnect()
 functions. Services receive incoming pipe endpoint connection requests through a 
-callback function specified using the Pipe.SetPipeConnectCallback() function. Services
+callback function specified using the Pipe.PipeConnectCallback property. Services
 may also use the PipeBroadcaster class to automate managing pipe endpoint lifecycles and
 sending packets to all connected client endpoints.</p>
 <p>Pipe endpoints are <em>indexed</em>, meaning that more than one pipe endpoint pair can be created

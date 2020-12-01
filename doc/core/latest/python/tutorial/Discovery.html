@@ -214,20 +214,22 @@ enabled for IPv6 to reduce network traffic. IPv4 can be enabled by specifying di
 <p>For the <code class="docutils literal notranslate"><span class="pre">LocalTransport</span></code>, the discovery information is stored on the filesystem.</p>
 <p>The packet sent by the service nodes contains the <code class="docutils literal notranslate"><span class="pre">NodeName</span></code>, <code class="docutils literal notranslate"><span class="pre">NodeID</span></code>, and a URL to connect to the “Service Index”,
 which is a special service that lists the services registered in the node. The client will interrogate the service nodes
-it has discovered to determine the available services. This is shown in the diagram by the client requesting the
-available services, and the service node returns the available services. The “Service Index” is registered automatically
-by the node and does not require any extra work by the user.</p>
+it has discovered to determine the available services. The “Service Index” is registered automatically
+by the node and does not require any extra configuration by the user.</p>
 <p>The auto-discovery functionality is automatically enabled by <code class="docutils literal notranslate"><span class="pre">ServerNodeSetup</span></code> and the
 <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">RobotRaconteur.Client</span> <span class="pre">import</span> <span class="pre">*</span></code> functions. To manually enable auto-discovery on transports, use:</p>
-<p><code class="docutils literal notranslate"><span class="pre">t=RR.TcpTransport()</span></code></p>
-<p><code class="docutils literal notranslate"><span class="pre">t.EnableNodeDiscoveryListening()</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">t</span><span class="o">=</span><span class="n">RR</span><span class="o">.</span><span class="n">TcpTransport</span><span class="p">()</span>
+<span class="n">t</span><span class="o">.</span><span class="n">EnableNodeDiscoveryListening</span><span class="p">()</span>
+</pre></div>
+</div>
 <p>For the service, use:</p>
-<p><code class="docutils literal notranslate"><span class="pre">t=RR.TcpTransport()</span></code></p>
-<p><code class="docutils literal notranslate"><span class="pre">t.EnableNodeAnnounce()</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">t</span><span class="o">=</span><span class="n">RR</span><span class="o">.</span><span class="n">TcpTransport</span><span class="p">()</span>
+<span class="n">t</span><span class="o">.</span><span class="n">EnableNodeAnnounce</span><span class="p">()</span>
+</pre></div>
+</div>
 <p>To find a service, use the command:</p>
-<div class="line-block">
-<div class="line"><code class="docutils literal notranslate"><span class="pre">res=RRN.FindServiceByType(&quot;experimental.create.Create&quot;,</span></code></div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">[&quot;rr+local&quot;,&quot;rr+tcp&quot;,&quot;rrs+tcp&quot;])</span></code></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">res</span><span class="o">=</span><span class="n">RRN</span><span class="o">.</span><span class="n">FindServiceByType</span><span class="p">(</span><span class="s2">&quot;experimental.create.Create&quot;</span><span class="p">,[</span><span class="s2">&quot;rr+local&quot;</span><span class="p">,</span><span class="s2">&quot;rr+tcp&quot;</span><span class="p">,</span><span class="s2">&quot;rrs+tcp&quot;</span><span class="p">])</span>
+</pre></div>
 </div>
 <p>where “experimental.create2.Create” is replaced with the fully qualified type being searched for and the second
 parameter is a list of the transport types to search. <code class="docutils literal notranslate"><span class="pre">res</span></code> is a list of <code class="docutils literal notranslate"><span class="pre">ServiceInfo2</span></code> structures that contains the
@@ -235,12 +237,11 @@ parameter is a list of the transport types to search. <code class="docutils lite
 <code class="docutils literal notranslate"><span class="pre">Attributes</span></code>. The attributes entry is type <code class="docutils literal notranslate"><span class="pre">varvalue{string}</span></code> but should only contain type <code class="docutils literal notranslate"><span class="pre">string</span></code> and numeric
 entries. This is used to help identify the correct service to connect to. Service attributes are set through the
 <code class="docutils literal notranslate"><span class="pre">ServerContext</span></code> object that is returned when a service is registered. A short example:</p>
-<p><code class="docutils literal notranslate"><span class="pre">context=RRN.RegisterService</span> <span class="pre">(&quot;Create&quot;,&quot;experimental.create.Create&quot;,obj)</span></code></p>
-<p><code class="docutils literal notranslate"><span class="pre">attributes={&quot;RobotName&quot;</span> <span class="pre">:</span> <span class="pre">RR.RobotRaconteurVarValue(&quot;Create1&quot;,&quot;string&quot;)}</span></code></p>
-<p><code class="docutils literal notranslate"><span class="pre">context.SetServiceAttributes(attributes)</span></code></p>
 <p>Nodes can also be searched for by “NodeID” and “NodeName” separate from services. Use <code class="docutils literal notranslate"><span class="pre">FindNodeByID</span></code> and
 <code class="docutils literal notranslate"><span class="pre">FindNodeByName</span></code> in <code class="docutils literal notranslate"><span class="pre">RobotRaconteurNode</span></code>. These will return the “NodeID”, “NodeName”, and the possible
 “ConnectionURLs” without the query portion.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ServiceInfo2Subscription</span></code> continuosly tracks available services, and generally provides better results than
+<code class="docutils literal notranslate"><span class="pre">FindServiceByType</span></code> since it will detect services as they become available.</p>
 </div>
 
 

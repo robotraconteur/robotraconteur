@@ -201,14 +201,14 @@
   <div class="section" id="gather-scatter-operations">
 <h1>Gather/Scatter operations<a class="headerlink" href="#gather-scatter-operations" title="Permalink to this headline">¶</a></h1>
 <p>In many situations it is necessary to query data from dozens or hundreds of sensors. Thanks to the asynchronous
-functionality discussed in Section <a class="reference external" href="#asyncprog">[asyncprog]</a> this is possible and is limited only by memory and
+functionality discussed in <span class="xref std std-ref">Async</span> this is possible and is limited only by memory and
 network bandwidth. An example of a practical application of gather/scatter operations is that of an advanced lighting
 system that needs to rapidly query large numbers of sensors, make control decisions, and then distribute updated
 commands to a large number of lighting fixtures. Consider a list of connections that have already been connected and are
 stored in a variable <code class="docutils literal notranslate"><span class="pre">c_list</span></code>. Each connection is to a service that has the function <code class="docutils literal notranslate"><span class="pre">ReadSensor()</span></code> that returns
-some important data. Example <a class="reference external" href="#gatherscatter">[gatherscatter]</a> will query each sensor concurrently and call the
+some important data. The following example will query each sensor concurrently and call the
 handler when all the sensors have been queried.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">global_err</span><span class="o">=</span><span class="p">[]</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">global_err</span><span class="o">=</span><span class="p">[]</span>
 <span class="n">global_data</span><span class="o">=</span><span class="p">[]</span>
 <span class="n">ev</span><span class="o">=</span><span class="n">threading</span><span class="o">.</span><span class="n">Event</span><span class="p">()</span>
 

@@ -99,6 +99,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/MemberModifiers.html">Member Modifiers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/Async.html">Asynchronous programming</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/GatherScatter.html">Gather/Scatter operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/StdRobDef.html">Standard Service Definitions and Companion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/Directory.html">Robot Raconteur Directory</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Framework:</span></p>
 <ul>
@@ -108,6 +110,7 @@
 <li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/exceptions.html">Exceptions</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/security.html">Security</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/locking.html">Object Locking</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/ecosystem.html">Ecosystem</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Utility:</span></p>
 <ul>
@@ -139,6 +142,7 @@
 <li class="toctree-l1"><a class="reference internal" href="ServiceSecurity.html">Service Security</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Exceptions.html">Exceptions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Logging.html">Logging and Taps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="BroadcastDownsampler.html">Broadcast Dowsampler</a></li>
 </ul>
 
             
@@ -228,7 +232,7 @@ is IPv4, and its 32 bit address is typically written as four numbers,
 ie 172.17.12.174. IPv4 has a number of critical limitations, the greatest being 
 its 2^32 address limit (approximately 4 billion). This is a problem when there are 
 tens of billions of internet connected devices already present. IPv6 introduces a 128 
-bit address space, which allows for approximately 3.4×10^38 possible addresses. The major
+bit address space, which allows for approximately 3.4x10^38 possible addresses. The major
 advantage for Robot Raconteur is the introduction of “link-local” addresses. These addresses
 begin with “FE80::” and finish with an “EUI-64” address, which is tied to the MAC address
 of the adaptor. IPv4 addresses need to be assigned to devices locally, and have a tendency
@@ -714,6 +718,18 @@ normally.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="RobotRaconteur.LocalTransport.MaxMessageSize">
+<em class="property">property </em><code class="sig-name descname">MaxMessageSize</code><a class="headerlink" href="#RobotRaconteur.LocalTransport.MaxMessageSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the maximum serialized message size</p>
+<p>Default: 10 MB</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="RobotRaconteur.LocalTransport.StartClientAsNodeName">
 <code class="sig-name descname">StartClientAsNodeName</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#RobotRaconteur.LocalTransport.StartClientAsNodeName" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the LocalTransport by assigning a NodeID based on NodeName</p>
@@ -879,6 +895,18 @@ will disable the string table by default</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="RobotRaconteur.HardwareTransport.MaxMessageSize">
+<em class="property">property </em><code class="sig-name descname">MaxMessageSize</code><a class="headerlink" href="#RobotRaconteur.HardwareTransport.MaxMessageSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the maximum serialized message size</p>
+<p>Default: 10 MB</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
 </dd>
 </dl>
 </dd></dl>

@@ -209,14 +209,14 @@ client is only accessing one device this is normally not a problem, but if the c
 devices this can become a severe problem as having a large number of threads becomes very computationally expensive
 and difficult to coordinate. The solution to this problem is to use “asynchronous functions”. These functions begin
 the operation but return immediately. When the operation is completed, a supplied handler function is called by the
-thread pool. See Example <a class="reference external" href="#asyncinvoke">[asyncinvoke]</a>.</div>
+thread pool.</div>
 </div>
 <p>Consider the synchronous connect function used in the previous examples:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">c</span><span class="o">=</span><span class="n">RRN</span><span class="o">.</span><span class="n">ConnectService</span><span class="p">(</span><span class="s1">&#39;rr+tcp://localhost:2354?service=Create&#39;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">c</span><span class="o">=</span><span class="n">RRN</span><span class="o">.</span><span class="n">ConnectService</span><span class="p">(</span><span class="s1">&#39;rr+tcp://localhost:2354?service=Create&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The asynchronous equivalent would be:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">connect_handler</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="n">err</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">connect_handler</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="n">err</span><span class="p">):</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">err</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
         <span class="c1"># If &quot;err&quot; is not None it means that an exception occurred.</span>
         <span class="c1"># &quot;err&quot; contains the exception object</span>
@@ -232,14 +232,14 @@ thread pool. See Example <a class="reference external" href="#asyncinvoke">[asyn
 </div>
 <p>The form of “Async” functions is normally the same as synchronous functions but with “Async” prepended and two extra
 parameters: the handler function and the timeout. The handler function will take zero, one, or two arguments depending
-on the return arguments. The handler function can be any free module function or a bound instance method. The form of
-the handlers for each function are described in Section <a class="reference external" href="#rrref">[rrref]</a>. The last argument is the timeout, which is
+on the return arguments. The handler function can be any free module function or a bound instance method. The last
+argument is the timeout, which is
 in seconds. (Note: other language bindings use milliseconds for the timeout). The default for most is
 RR_TIMEOUT_INFINITE which means the function will never timeout. This is not recommended as it can cause a deadlock.
 Always specify a timeout.</p>
 <p>For object references created by the <code class="docutils literal notranslate"><span class="pre">RRN.ConnectService()</span></code> function, functions, properties, and objrefs are available
 in asynchronous form. In general these functions operate the same as their standard synchronous counterparts but are
-prepended by “<a href="#id1"><span class="problematic" id="id2">async_</span></a>” and have two extra parameters, “handler” and “timeout”. The property forms use getter and setter
+prepended by <code class="docutils literal notranslate"><span class="pre">async_</span></code> and have two extra parameters, “handler” and “timeout”. The property forms use getter and setter
 functions of the form <code class="docutils literal notranslate"><span class="pre">async_get_</span></code> and <code class="docutils literal notranslate"><span class="pre">async_set_</span></code>. If the function produces a return value, the handler will have
 the form <code class="docutils literal notranslate"><span class="pre">handler(ret,</span> <span class="pre">err):</span></code>. For void functions, the handler will have the form <code class="docutils literal notranslate"><span class="pre">handler(err):</span></code>.</p>
 <p>In Python 3, passing “None” for the handler will return a future that can be used with the “await” keyword.</p>

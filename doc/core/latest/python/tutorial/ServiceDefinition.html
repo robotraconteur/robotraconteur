@@ -208,8 +208,8 @@
             
   <div class="section" id="service-definition">
 <h1>Service Definition<a class="headerlink" href="#service-definition" title="Permalink to this headline">¶</a></h1>
-<p>[ServiceDefinition] Example <a class="reference external" href="#createinterface">[createinterface]</a>
-shows the code contained in the “experimental.create.robdef” files. It
+<p>ServiceDefinition Example <code class="docutils literal notranslate"><span class="pre">experimental.create2</span></code> (below)
+shows the code contained in the “experimental.create2.robdef” file. It
 is a <em>service definition</em>. Service definition files are plain text files
 that describe the <em>object types</em> and <em>value types</em> (data types). Object
 types are <em>references</em>, meaning that on the client they are simply an
@@ -219,7 +219,7 @@ are transmitted between client and service. They are always passed by
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#Service to provide sample interface to the iRobot Create</span>
 <span class="n">service</span> <span class="n">experimental</span><span class="o">.</span><span class="n">create2</span>
 
-<span class="n">stdver</span> <span class="mf">0.9</span>
+<span class="n">stdver</span> <span class="mf">0.10</span>
 
 <span class="n">struct</span> <span class="n">SensorPacket</span>
      <span class="n">field</span> <span class="n">uint8</span> <span class="n">ID</span>
@@ -257,12 +257,11 @@ should be prefixed with “community” and your username, for example
 “community.myusername.create”, where “myusername” is replaced with your
 <code class="docutils literal notranslate"><span class="pre">robotraconteur.com</span></code> username. If a domain name for an organization is
 available it can be used in the same way as Java packages, for example
-“com.wasontech.examples.create2”. Note that namespaces that use a domain
-will require signing certificates in the future. Unless you have valid
+“com.wasontech.examples.create2”. Unless you have valid
 ownership of a domain, “experimental” or “community” should be used.</p>
 <p>Next in the service there should be “stdver” and the minimum version of
 Robot Raconteur required to access the service. For now this should be
-“0.9”. Example <a class="reference external" href="#createinterface">[createinterface]</a> does not show
+“0.10”. Example “experimental.create2” does not show
 it, but there can also be one or more “import” to reference structures
 and objects in other service definitions. The rest of service definition
 defines the <em>structures</em> and <em>objects</em> of the service definition. (Lines
@@ -369,13 +368,12 @@ only used for functions that do not have a return value.</div>
 </tbody>
 </table>
 </div>
-<p>[primitives]</p>
 </dd>
 <dt>Structures</dt><dd><div class="line-block">
 <div class="line"><br /></div>
 <div class="line">Structures are collections of value types; structures can contain
 primitives, other structures, maps, or multidimensional arrays.
-Example <a class="reference external" href="#createinterface">[createinterface]</a> shows the
+Example “experimental.create2” shows the
 definition of the structure <code class="docutils literal notranslate"><span class="pre">SensorPacket</span></code>. A structure is
 started with the keyword <code class="docutils literal notranslate"><span class="pre">struct</span></code> followed by the structure name.
 It is ended with the <code class="docutils literal notranslate"><span class="pre">end</span></code> keyword. The entries in the structure
@@ -390,11 +388,12 @@ the structure.</div>
 <dt>Pods</dt><dd><div class="line-block">
 <div class="line"><br /></div>
 <div class="line">Pods (short for “plain-old-data”) are similar to structures, but
-are more restricted to ensure they have the same size. All data
+are more restricted to ensure they always have the same size. All data
 stored in pods are stored contiguously (c-style), while structs use
 pointers to the data. Pods can only contain pods, arrays of pods
 (fixed or max length), namedarrays, and namedarrays arrays (fixed
-or max length). Only numeric primitives may be used; strings,
+or max length). Only types with fixed or maximum size may be used;
+strings,
 structs, lists, and maps may not be stored in pods. A pod is
 started with the keyword <code class="docutils literal notranslate"><span class="pre">pod</span></code> followed by the pod name. It is
 ended with the <code class="docutils literal notranslate"><span class="pre">end</span></code> keyword. The entries in the pod are defined
@@ -509,7 +508,7 @@ unique). An example:</div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">property</span> <span class="pre">double</span> <span class="pre">myvar</span></code></p>
 <p>Properties can use modifiers <code class="docutils literal notranslate"><span class="pre">readonly</span></code>, <code class="docutils literal notranslate"><span class="pre">writeonly</span></code>, <code class="docutils literal notranslate"><span class="pre">urgent</span></code>,
-and/or <code class="docutils literal notranslate"><span class="pre">perclient</span></code>. See Section <a class="reference external" href="#modifiers">[modifiers]</a>.</p>
+and/or <code class="docutils literal notranslate"><span class="pre">perclient</span></code>. See <a class="reference internal" href="MemberModifiers.html"><span class="doc">Member Modifiers</span></a>.</p>
 </dd>
 <dt>Functions (Keyword: <code class="docutils literal notranslate"><span class="pre">function</span></code>)</dt><dd><div class="line-block">
 <div class="line"><br /></div>
@@ -551,8 +550,7 @@ exception is not received.</p>
 <p>Generators that represent long running operations should return from
 “Next” with updated status information at least every 10 seconds to
 prevent timeout errors.</p>
-<p>Functions can use the <code class="docutils literal notranslate"><span class="pre">urgent</span></code> modifier. See Section
-<a class="reference external" href="#modifiers">[modifiers]</a>.</p>
+<p>Functions can use the <code class="docutils literal notranslate"><span class="pre">urgent</span></code> modifier. See See <a class="reference internal" href="MemberModifiers.html"><span class="doc">Member Modifiers</span></a>.</p>
 </dd>
 <dt>Events (Keyword: <code class="docutils literal notranslate"><span class="pre">event</span></code>)</dt><dd><div class="line-block">
 <div class="line"><br /></div>
@@ -560,14 +558,12 @@ prevent timeout errors.</p>
 event has occurred. When an event is fired, every client reference
 receives the event. How the event is handled is language-specific.
 An event is defined similar to a function, however there is no
-return. The parameters are passed to the client. There is no
-return. An example:</div>
+return. The parameters are passed to the client. An example:</div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">event</span> <span class="pre">somethingHappened(string</span> <span class="pre">what,</span> <span class="pre">double</span> <span class="pre">when)</span></code></p>
 <p>Note that events do not have flow control, so they should be used
 sparingly.</p>
-<p>Events can use the <code class="docutils literal notranslate"><span class="pre">urgent</span></code> modifier. See Section
-<a class="reference external" href="#modifiers">[modifiers]</a>.</p>
+<p>Events can use the <code class="docutils literal notranslate"><span class="pre">urgent</span></code> modifier. See <a class="reference internal" href="MemberModifiers.html"><span class="doc">Member Modifiers</span></a>.</p>
 </dd>
 <dt>Object References (Keyword: <code class="docutils literal notranslate"><span class="pre">objref</span></code>)</dt><dd><div class="line-block">
 <div class="line"><br /></div>
@@ -613,7 +609,7 @@ of the pipe. An example:</div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">pipe</span> <span class="pre">double[]</span> <span class="pre">sensordata</span></code></p>
 <p>Pipes can use modifiers <code class="docutils literal notranslate"><span class="pre">readonly</span></code>, <code class="docutils literal notranslate"><span class="pre">writeonly</span></code>, and
-<code class="docutils literal notranslate"><span class="pre">unreliable</span></code>. See Section <a class="reference external" href="#modifiers">[modifiers]</a>.</p>
+<code class="docutils literal notranslate"><span class="pre">unreliable</span></code>. See <a class="reference internal" href="MemberModifiers.html"><span class="doc">Member Modifiers</span></a>.</p>
 </dd>
 <dt>Callbacks (Keyword: <code class="docutils literal notranslate"><span class="pre">callback</span></code>)</dt><dd><div class="line-block">
 <div class="line"><br /></div>
@@ -637,11 +633,11 @@ ignored and only the newest value will be used. Each packet has a
 timestamp of when it is sent (from the sender’s clock). Wires are
 full duplex like pipes meaning it has two-way communication, but
 unlike pipes they are not indexed so there is only one connection
-per client object reference. The wire allows for a “WireConnection”
+per client object reference, per connection. The wire allows for a
+“WireConnection”
 pair to be created with one “WireConnection” on the client and the
-other “WireConnection” on the service. Unlike pipes, each wire
-member can only create one connection pair per client, per service
-object instance. The “WireConnection” is used by setting the
+other “WireConnection” on the service. The “WireConnection” is used
+by setting the
 “OutValue” to the current value. This sends the new value to the
 opposite “WireConnection”, which updates its “InValue”. The same
 can be reversed. For instance, setting the “OutValue” on the
@@ -652,14 +648,19 @@ as also possible to receive the “LastValueReceivedTime” and
 “LastValueReceivedTime” is in the <em>sender’s</em> clock, not the local
 clock and is generated when it is first transmitted. Either the
 client or the service can close the “WireConnection” pair using the
-“Close” function.</div>
+“Close” function.
+As of Robot Raconteur version 0.12, wires also have “lifespan”
+for “InValue” and “OutValue”, which will invalidate the received
+data after a specified time after reception. This prevents the
+wire from returning stale data. Use the “InValueLifespan”
+and “OutValueLifespan” to configure.</div>
 </div>
-<p>The wire provides the basis for future real-time communication. (See
-also Section <a class="reference external" href="#realtimewire">[realtimewire]</a>.) An example wire
+<p>The wire provides the basis for real-time communication. (See
+also <a class="reference internal" href="TimeCritical.html"><span class="doc">Time-critical software with Wire member</span></a>.) An example wire
 member definition:</p>
 <p><code class="docutils literal notranslate"><span class="pre">wire</span> <span class="pre">double[2]</span> <span class="pre">currentposition</span></code></p>
-<p>Wires can use modifiers <code class="docutils literal notranslate"><span class="pre">readonly</span></code> or <code class="docutils literal notranslate"><span class="pre">writeonly</span></code>. See Section
-<a class="reference external" href="#modifiers">[modifiers]</a>.</p>
+<p>Wires can use modifiers <code class="docutils literal notranslate"><span class="pre">readonly</span></code> or <code class="docutils literal notranslate"><span class="pre">writeonly</span></code>.
+See <a class="reference internal" href="MemberModifiers.html"><span class="doc">Member Modifiers</span></a>.</p>
 </dd>
 <dt>Memories (Keyword: <code class="docutils literal notranslate"><span class="pre">memory</span></code>)</dt><dd><div class="line-block">
 <div class="line"><br /></div>
@@ -668,13 +669,14 @@ arrays, numeric primitive multi-dim arrays, pod arrays, pod
 multi-dim arrays, namedarrays arrays, and namedarrays multi-dim
 arrays. The memory member is available for two reasons: it will
 break down large read and writes into smaller calls to prevent
-buffer overruns (most transports limit message sizes to 10 MB) and
+buffer overruns (most transports limit message sizes to 10 MB, unless
+“jumbo” messages are enabled) and
 the memory also provides the basis for future shared-memory
 segments. An example:</div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">memory</span> <span class="pre">double[]</span> <span class="pre">datahistory</span></code></p>
-<p>Memories can use modifiers <code class="docutils literal notranslate"><span class="pre">readonly</span></code> or <code class="docutils literal notranslate"><span class="pre">writeonly</span></code>. See Section
-<a class="reference external" href="#modifiers">[modifiers]</a>.</p>
+<p>Memories can use modifiers <code class="docutils literal notranslate"><span class="pre">readonly</span></code> or <code class="docutils literal notranslate"><span class="pre">writeonly</span></code>.
+See <a class="reference internal" href="MemberModifiers.html"><span class="doc">Member Modifiers</span></a>.</p>
 </dd>
 </dl>
 </div>
@@ -720,8 +722,8 @@ statement can be used to alias an imported type.</p>
 members, certain rules must be followed. The name must consist of
 letters, numbers, and underscores (_). Names must start with a letter
 and may not start with any uppercase/lowercase combination of
-“RobotRaconteur”, “RR”, “get_”, or “set_”. Service names may not end
-with “_signed”. This is reserved for future use.</p>
+“RobotRaconteur”, “RR”, “get_”, “set_”, or “_async_”. Service
+names may not end with “_signed”.</p>
 </div>
 </div>
 

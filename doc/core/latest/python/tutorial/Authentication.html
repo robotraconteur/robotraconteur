@@ -201,11 +201,13 @@
   <div class="section" id="authentication">
 <h1>Authentication<a class="headerlink" href="#authentication" title="Permalink to this headline">¶</a></h1>
 <p>Robot Raconteur provides a built-in authentication system. During connection, a client can specify a “username” of type
-<code class="docutils literal notranslate"><span class="pre">string</span></code>, and “credentials” of type “varvaluestring”. Normally the credentials contains a simple string entry for the
-password, but some authentication methods may require more complex credentials like a key/password pair. A connection
+<code class="docutils literal notranslate"><span class="pre">string</span></code>, and “credentials” of type <code class="docutils literal notranslate"><span class="pre">varvalue{string}</span></code>. Normally the credentials contains a simple string entry for the
+password, but some authentication methods may require more complex credentials like a token/password pair. A connection
 example:</p>
-<p><code class="docutils literal notranslate"><span class="pre">credentials={&quot;password&quot;,</span> <span class="pre">RR.RobotRaconteurVarValue(&quot;mypassword&quot;,&quot;string&quot;)}</span></code></p>
-<p><code class="docutils literal notranslate"><span class="pre">obj=RRN.ConnectService(</span> <span class="pre">&quot;rr+tcp://localhost:2354?service=Create&quot;,&quot;myusername&quot;,credentials)</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">credentials</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="n">RR</span><span class="o">.</span><span class="n">VarValue</span><span class="p">(</span><span class="s2">&quot;mypassword&quot;</span><span class="p">,</span><span class="s2">&quot;string&quot;</span><span class="p">)}</span>
+<span class="n">obj</span><span class="o">=</span><span class="n">RRN</span><span class="o">.</span><span class="n">ConnectService</span><span class="p">(</span> <span class="s2">&quot;rr+tcp://localhost:2354?service=Create&quot;</span><span class="p">,</span><span class="s2">&quot;myusername&quot;</span><span class="p">,</span><span class="n">credentials</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>Of course the current example service does not have authentication enabled. The first step is to create a
 <code class="docutils literal notranslate"><span class="pre">UserAuthenticator</span></code>. The <code class="docutils literal notranslate"><span class="pre">UserAuthenticator</span></code> will receive the authentication requests and compare the username and
 credentials. If they are correct, the user is authenticated. The only authenticator currently available is the
@@ -214,25 +216,39 @@ per line. There are three entries separated by spaces: the username, the MD5 has
 list of credentials (no spaces between). The two credentials of interest are “objectlock” and “objectlockoverride”. The
 meaning of these is discussed in Section <a class="reference external" href="#objectlocks">[objectlocks]</a>. Example <a class="reference external" href="#passwordfile">[passwordfile]</a>
 shows the contents of a simple password file. The MD5 hash for the password can be generated using “RobotRaconteurGen”.</p>
-<p><code class="docutils literal notranslate"><span class="pre">RobotRaconteurGen</span> <span class="pre">–md5passwordhash</span> <span class="pre">mypassword</span></code></p>
-<p><code class="docutils literal notranslate"><span class="pre">myusername</span> <span class="pre">34819d7beeabb9260a5c854bc85b3e44</span> <span class="pre">objectlock</span> <span class="pre">anotherusername</span> <span class="pre">1910ea24600608b01b5efd7d4ea6a840</span> <span class="pre">objectlock</span> <span class="pre">superuser</span> <span class="pre">f1bc69265be1165f64296bcb7ca180d5</span> <span class="pre">objectlock,objectlockoverride</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>RobotRaconteurGen –md5passwordhash mypassword``
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>myusername 34819d7beeabb9260a5c854bc85b3e44 objectlock
+anotherusername 1910ea24600608b01b5efd7d4ea6a840 objectlock
+superuser f1bc69265be1165f64296bcb7ca180d5 objectlock,objectlockoverride``
+</pre></div>
+</div>
 <p>The <code class="docutils literal notranslate"><span class="pre">PasswordFileUserAuthenticator</span></code> can now be initialized:</p>
-<p><code class="docutils literal notranslate"><span class="pre">with</span> <span class="pre">open(’passwords.txt’)</span> <span class="pre">as</span> <span class="pre">content_file:</span></code></p>
-<p><code class="docutils literal notranslate"><span class="pre">content=content_file.read()</span></code></p>
-<p><code class="docutils literal notranslate"><span class="pre">p=RR.PasswordFileUserAuthenticator(content)</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;passwords.txt&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">content_file</span><span class="p">:</span>
+  <span class="n">content</span><span class="o">=</span><span class="n">content_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+  <span class="n">p</span><span class="o">=</span><span class="n">RR</span><span class="o">.</span><span class="n">PasswordFileUserAuthenticator</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>The next step is to create a <code class="docutils literal notranslate"><span class="pre">ServiceSecurityPolicy</span></code> that describes the security requirements. The policy contains the
 authenticator and a dictionary of policies. Currently only “requirevaliduser” and “allowobjectlock” are valid, and both
 should be set to “true”.</p>
-<p><code class="docutils literal notranslate"><span class="pre">policies={&quot;requirevaliduser&quot;</span> <span class="pre">:</span> <span class="pre">&quot;true&quot;,</span> <span class="pre">&quot;allowobjectlock&quot;</span> <span class="pre">:</span> <span class="pre">&quot;true&quot;}</span></code></p>
-<p><code class="docutils literal notranslate"><span class="pre">s=RR.ServiceSecurityPolicy(p,policies)</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">policies</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;requirevaliduser&quot;</span> <span class="p">:</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span> <span class="s2">&quot;allowobjectlock&quot;</span> <span class="p">:</span> <span class="s2">&quot;true&quot;</span><span class="p">}</span>
+<span class="n">s</span><span class="o">=</span><span class="n">RR</span><span class="o">.</span><span class="n">ServiceSecurityPolicy</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">policies</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>Finally, the service can be registered using the policy.</p>
-<p><code class="docutils literal notranslate"><span class="pre">RRN.RegisterService(&quot;Create&quot;,&quot;experimental.create.Create&quot;,obj)</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">RRN</span><span class="o">.</span><span class="n">RegisterService</span><span class="p">(</span><span class="s2">&quot;Create&quot;</span><span class="p">,</span><span class="s2">&quot;experimental.create.Create&quot;</span><span class="p">,</span><span class="n">obj</span><span class="p">)</span>
+</pre></div>
+</div>
 <div class="line-block">
 <div class="line">When the service is running, it may be useful to determine if there is a currently authenticated user. This is
 accomplished through the <code class="docutils literal notranslate"><span class="pre">ServerEndpoint</span></code> class static method. The current</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">AuthenticatedUser</span></code> can be retrieved:</div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">user=RR.ServerEndpoint.GetCurrentAuthenticatedUser()</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">user</span><span class="o">=</span><span class="n">RR</span><span class="o">.</span><span class="n">ServerEndpoint</span><span class="o">.</span><span class="n">GetCurrentAuthenticatedUser</span><span class="p">()</span>
+</pre></div>
+</div>
 <div class="line-block">
 <div class="line">Note that this call will raise an exception if no user is currently authenticated. The</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">AuthenticatedUser</span></code> contains the fields <code class="docutils literal notranslate"><span class="pre">Username</span></code>, <code class="docutils literal notranslate"><span class="pre">LoginTime</span></code>, <code class="docutils literal notranslate"><span class="pre">LastAccessTime</span></code>, and <code class="docutils literal notranslate"><span class="pre">Privileges</span></code> fields

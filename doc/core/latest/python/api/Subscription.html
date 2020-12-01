@@ -99,6 +99,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/MemberModifiers.html">Member Modifiers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/Async.html">Asynchronous programming</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/GatherScatter.html">Gather/Scatter operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/StdRobDef.html">Standard Service Definitions and Companion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/Directory.html">Robot Raconteur Directory</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Framework:</span></p>
 <ul>
@@ -108,6 +110,7 @@
 <li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/exceptions.html">Exceptions</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/security.html">Security</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/locking.html">Object Locking</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/ecosystem.html">Ecosystem</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Utility:</span></p>
 <ul>
@@ -142,6 +145,7 @@
 <li class="toctree-l1"><a class="reference internal" href="ServiceSecurity.html">Service Security</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Exceptions.html">Exceptions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Logging.html">Logging and Taps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="BroadcastDownsampler.html">Broadcast Dowsampler</a></li>
 </ul>
 
             
@@ -293,7 +297,7 @@ when a service is lost.</p>
 <em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">ServiceSubscription</code><a class="headerlink" href="#RobotRaconteur.ServiceSubscription" title="Permalink to this definition">¶</a></dt>
 <dd><p>Subscription that automatically connects services and manages lifecycle of connected services</p>
 <p>Created using RobotRaconteurNode.SubscribeService() or RobotRaconteurNode.SubscribeServiceByType(). The ServiceSubscription
-class is used to automatically create and manage connections based on connection criteria. RobotRaconteur::SubscribeService()
+class is used to automatically create and manage connections based on connection criteria. RobotRaconteur.SubscribeService()
 is used to create a robust connection to a service with a specific URL. RobotRaconteurNode.SubscribeServiceByType() is used
 to connect to services with a specified type, filtered with a ServiceSubscriptionFilter. Subscriptions will create connections
 to matching services, and will retry the connection if it fails or the connection is lost. This behavior allows subscriptions
@@ -573,7 +577,7 @@ and ServiceName of a connected service.</p>
 <dt id="RobotRaconteur.ServiceSubscriptionFilter">
 <em class="property">class </em><code class="sig-prename descclassname">RobotRaconteur.</code><code class="sig-name descname">ServiceSubscriptionFilter</code><a class="headerlink" href="#RobotRaconteur.ServiceSubscriptionFilter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Subscription filter</p>
-<p>The subscription filter is used with RobotRaconteurNode::SubscribeServiceByType() and 
+<p>The subscription filter is used with RobotRaconteurNode.SubscribeServiceByType() and 
 RobotRaconteurNode.SubscribeServiceInfo2() to decide which services should
 be connected. Detected services that match the service type are checked against
 the filter before connecting.</p>
@@ -663,7 +667,7 @@ when the WireSubscription was created using ServiceSubscription.SubscribeWire().
 all the active wire connections are collected, and the most recent one is used as the current InValue
 of the wire subscription. The current value, the timespec, and the wire connection can be accessed
 using GetInValue() or TryGetInValue().</p>
-<p>The lifespan of the InValue can be configured using SetInValueLifespan(). It is recommended that
+<p>The lifespan of the InValue can be configured using the InValueLifeSpan property. It is recommended that
 the lifespan be configured, so that the value will expire if the subscription stops receiving
 fresh in values.</p>
 <p>The wire subscription can also be used to set the OutValue of all active wire connections. This behaves
@@ -822,14 +826,14 @@ the type of the pipe packets, the name of the pipe member, and an optional servi
 object that owns the pipe member.</p>
 <p>Pipe subscriptions collect all incoming packets from connect pipe endpoints. When a client connects,
 the pipe subscription will automatically connect a pipe endpoint the pipe endpoint specified when
-the PipeSubscription was created using ServiceSubscription::SubscribePipe(). The packets received
+the PipeSubscription was created using ServiceSubscription.SubscribePipe(). The packets received
 from each of the collected pipes are collected and placed into a common receive queue. This queue
 is read using ReceivePacket(), TryReceivePacket(), or TryReceivePacketWait(). The number of packets
 available to receive can be checked using Available().</p>
 <p>Pipe subscriptions can also be used to send packets to all connected pipe endpoints. This is done
 with the AsyncSendPacketAll() function. This function behaves somewhat like a “reverse broadcaster”,
 sending the packets to all connected services.</p>
-<p>If the pipe subscription is being used to send packets but not receive them, the SetIgnoreInValue()
+<p>If the pipe subscription is being used to send packets but not receive them, IgnoreInValue
 should be set to true to prevent packets from queueing.</p>
 <dl class="py method">
 <dt id="RobotRaconteur.PipeSubscription.ActivePipeEndpointCount">

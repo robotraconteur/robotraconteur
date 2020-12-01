@@ -97,6 +97,8 @@
 <li class="toctree-l1"><a class="reference internal" href="tutorial/MemberModifiers.html">Member Modifiers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial/Async.html">Asynchronous programming</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial/GatherScatter.html">Gather/Scatter operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/StdRobDef.html">Standard Service Definitions and Companion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/Directory.html">Robot Raconteur Directory</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Framework:</span></p>
 <ul>
@@ -106,6 +108,7 @@
 <li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/exceptions.html">Exceptions</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/security.html">Security</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/locking.html">Object Locking</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/ecosystem.html">Ecosystem</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Utility:</span></p>
 <ul>
@@ -131,6 +134,7 @@
 <li class="toctree-l1"><a class="reference internal" href="api/ServiceSecurity.html">Service Security</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/Exceptions.html">Exceptions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/Logging.html">Logging and Taps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/BroadcastDownsampler.html">Broadcast Dowsampler</a></li>
 </ul>
 
             
@@ -200,6 +204,7 @@
 <div class="genindex-jumpbox">
  <a href="#_"><strong>_</strong></a>
  | <a href="#A"><strong>A</strong></a>
+ | <a href="#B"><strong>B</strong></a>
  | <a href="#C"><strong>C</strong></a>
  | <a href="#D"><strong>D</strong></a>
  | <a href="#E"><strong>E</strong></a>
@@ -282,9 +287,13 @@
 </li>
       <li><a href="api/NodeSetup.html#RobotRaconteur.CommandLineConfigParser.AddIntOption">AddIntOption() (RobotRaconteur.CommandLineConfigParser method)</a>
 </li>
+      <li><a href="api/BroadcastDownsampler.html#RobotRaconteur.BroadcastDownsampler.AddPipeBroadcaster">AddPipeBroadcaster() (RobotRaconteur.BroadcastDownsampler method)</a>
+</li>
       <li><a href="api/Service.html#RobotRaconteur.ServerContext.AddServerServiceListener">AddServerServiceListener() (RobotRaconteur.ServerContext method)</a>
 </li>
       <li><a href="api/NodeSetup.html#RobotRaconteur.CommandLineConfigParser.AddStringOption">AddStringOption() (RobotRaconteur.CommandLineConfigParser method)</a>
+</li>
+      <li><a href="api/BroadcastDownsampler.html#RobotRaconteur.BroadcastDownsampler.AddWireBroadcaster">AddWireBroadcaster() (RobotRaconteur.BroadcastDownsampler method)</a>
 </li>
       <li><a href="api/DataTypes.html#RobotRaconteur.ArrayMemory">ArrayMemory (class in RobotRaconteur)</a>
 </li>
@@ -310,10 +319,10 @@
 </li>
       <li><a href="api/RobotRaconteurNode.html#RobotRaconteur.RobotRaconteurNode.AsyncDisconnectService">AsyncDisconnectService() (RobotRaconteur.RobotRaconteurNode method)</a>
 </li>
-      <li><a href="api/RobotRaconteurNode.html#RobotRaconteur.RobotRaconteurNode.AsyncFindNodeByID">AsyncFindNodeByID() (RobotRaconteur.RobotRaconteurNode method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/RobotRaconteurNode.html#RobotRaconteur.RobotRaconteurNode.AsyncFindNodeByID">AsyncFindNodeByID() (RobotRaconteur.RobotRaconteurNode method)</a>
+</li>
       <li><a href="api/RobotRaconteurNode.html#RobotRaconteur.RobotRaconteurNode.AsyncFindNodeByName">AsyncFindNodeByName() (RobotRaconteur.RobotRaconteurNode method)</a>
 </li>
       <li><a href="api/RobotRaconteurNode.html#RobotRaconteur.RobotRaconteurNode.AsyncFindObjectType">AsyncFindObjectType() (RobotRaconteur.RobotRaconteurNode method)</a>
@@ -366,6 +375,20 @@
         <li><a href="api/Subscription.html#RobotRaconteur.PipeSubscription.Available">(RobotRaconteur.PipeSubscription property)</a>
 </li>
       </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="B">B</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/BroadcastDownsampler.html#RobotRaconteur.BroadcastDownsampler.BeginStep">BeginStep() (RobotRaconteur.BroadcastDownsampler method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/BroadcastDownsampler.html#RobotRaconteur.BroadcastDownsampler">BroadcastDownsampler (class in RobotRaconteur)</a>
+</li>
+      <li><a href="api/BroadcastDownsampler.html#RobotRaconteur.BroadcastDownsamplerStep">BroadcastDownsamplerStep (class in RobotRaconteur)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -535,6 +558,8 @@
 </li>
       </ul></li>
       <li><a href="api/RobotRaconteurNode.html#RobotRaconteur.RobotRaconteurNode.EndpointInactivityTimeout">EndpointInactivityTimeout() (RobotRaconteur.RobotRaconteurNode property)</a>
+</li>
+      <li><a href="api/BroadcastDownsampler.html#RobotRaconteur.BroadcastDownsampler.EndStep">EndStep() (RobotRaconteur.BroadcastDownsampler method)</a>
 </li>
       <li><a href="api/Exceptions.html#RobotRaconteur.AbortOperationException.errorcode">errorcode (RobotRaconteur.AbortOperationException attribute)</a>
 
@@ -968,6 +993,8 @@
 </li>
       <li><a href="api/DataTypes.html#RobotRaconteur.NodeID.GetAny">GetAny() (RobotRaconteur.NodeID static method)</a>
 </li>
+      <li><a href="api/BroadcastDownsampler.html#RobotRaconteur.BroadcastDownsampler.GetClientDownsample">GetClientDownsample() (RobotRaconteur.BroadcastDownsampler method)</a>
+</li>
       <li><a href="api/Subscription.html#RobotRaconteur.ServiceSubscription.GetConnectedClients">GetConnectedClients() (RobotRaconteur.ServiceSubscription method)</a>
 </li>
       <li><a href="api/RobotRaconteurNode.html#RobotRaconteur.RobotRaconteurNode.GetConstants">GetConstants() (RobotRaconteur.RobotRaconteurNode method)</a>
@@ -1170,8 +1197,14 @@
 </li>
       <li><a href="api/Subscription.html#RobotRaconteur.ServiceSubscriptionFilter.MaxConnections">MaxConnections (RobotRaconteur.ServiceSubscriptionFilter attribute)</a>
 </li>
-      <li><a href="api/Transports.html#RobotRaconteur.TcpTransport.MaxMessageSize">MaxMessageSize() (RobotRaconteur.TcpTransport property)</a>
+      <li><a href="api/Transports.html#RobotRaconteur.HardwareTransport.MaxMessageSize">MaxMessageSize() (RobotRaconteur.HardwareTransport property)</a>
+
+      <ul>
+        <li><a href="api/Transports.html#RobotRaconteur.LocalTransport.MaxMessageSize">(RobotRaconteur.LocalTransport property)</a>
 </li>
+        <li><a href="api/Transports.html#RobotRaconteur.TcpTransport.MaxMessageSize">(RobotRaconteur.TcpTransport property)</a>
+</li>
+      </ul></li>
       <li><a href="api/Logging.html#RobotRaconteur.RRLogRecord.Member">Member() (RobotRaconteur.RRLogRecord property)</a>
 </li>
       <li><a href="api/PipeMember.html#RobotRaconteur.Pipe.MemberName">MemberName() (RobotRaconteur.Pipe property)</a>
@@ -1352,7 +1385,13 @@
 </li>
       <li><a href="api/Subscription.html#RobotRaconteur.ServiceSubscriptionFilter.Nodes">Nodes (RobotRaconteur.ServiceSubscriptionFilter attribute)</a>
 </li>
-      <li><a href="api/DataTypes.html#RobotRaconteur.TimeSpec.Now">Now() (RobotRaconteur.TimeSpec static method)</a>
+      <li><a href="api/RobotRaconteurNode.html#RobotRaconteur.RobotRaconteurNode.NodeSyncTimeSpec">NodeSyncTimeSpec() (RobotRaconteur.RobotRaconteurNode method)</a>
+</li>
+      <li><a href="api/RobotRaconteurNode.html#RobotRaconteur.RobotRaconteurNode.NodeSyncTimeUTC">NodeSyncTimeUTC() (RobotRaconteur.RobotRaconteurNode method)</a>
+</li>
+      <li><a href="api/RobotRaconteurNode.html#RobotRaconteur.RobotRaconteurNode.NowNodeTime">NowNodeTime() (RobotRaconteur.RobotRaconteurNode method)</a>
+</li>
+      <li><a href="api/RobotRaconteurNode.html#RobotRaconteur.RobotRaconteurNode.NowTimeSpec">NowTimeSpec() (RobotRaconteur.RobotRaconteurNode method)</a>
 </li>
       <li><a href="api/RobotRaconteurNode.html#RobotRaconteur.RobotRaconteurNode.NowUTC">NowUTC() (RobotRaconteur.RobotRaconteurNode method)</a>
 </li>
@@ -2146,14 +2185,16 @@
 </li>
       <li><a href="api/Timers.html#RobotRaconteur.AutoResetEvent.Set">Set() (RobotRaconteur.AutoResetEvent method)</a>
 </li>
+      <li><a href="api/BroadcastDownsampler.html#RobotRaconteur.BroadcastDownsampler.SetClientDownsample">SetClientDownsample() (RobotRaconteur.BroadcastDownsampler method)</a>
+</li>
       <li><a href="api/NodeSetup.html#RobotRaconteur.CommandLineConfigParser.SetDefaults">SetDefaults() (RobotRaconteur.CommandLineConfigParser method)</a>
 </li>
       <li><a href="api/RobotRaconteurNode.html#RobotRaconteur.RobotRaconteurNode.SetExceptionHandler">SetExceptionHandler() (RobotRaconteur.RobotRaconteurNode method)</a>
 </li>
-      <li><a href="api/RobotRaconteurNode.html#RobotRaconteur.RobotRaconteurNode.SetLogLevel">SetLogLevel() (RobotRaconteur.RobotRaconteurNode method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/RobotRaconteurNode.html#RobotRaconteur.RobotRaconteurNode.SetLogLevel">SetLogLevel() (RobotRaconteur.RobotRaconteurNode method)</a>
+</li>
       <li><a href="api/RobotRaconteurNode.html#RobotRaconteur.RobotRaconteurNode.SetLogLevelFromEnvVariable">SetLogLevelFromEnvVariable() (RobotRaconteur.RobotRaconteurNode method)</a>
 </li>
       <li><a href="api/RobotRaconteurNode.html#RobotRaconteur.RobotRaconteurNode.SetLogLevelFromString">SetLogLevelFromString() (RobotRaconteur.RobotRaconteurNode method)</a>

@@ -99,6 +99,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/MemberModifiers.html">Member Modifiers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/Async.html">Asynchronous programming</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/GatherScatter.html">Gather/Scatter operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/StdRobDef.html">Standard Service Definitions and Companion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/Directory.html">Robot Raconteur Directory</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Framework:</span></p>
 <ul>
@@ -108,6 +110,7 @@
 <li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/exceptions.html">Exceptions</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/security.html">Security</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/locking.html">Object Locking</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/ecosystem.html">Ecosystem</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Utility:</span></p>
 <ul>
@@ -141,6 +144,7 @@
 <li class="toctree-l1"><a class="reference internal" href="ServiceSecurity.html">Service Security</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Exceptions.html">Exceptions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Logging.html">Logging and Taps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="BroadcastDownsampler.html">Broadcast Dowsampler</a></li>
 </ul>
 
             
@@ -219,18 +223,20 @@ and SecureServerNodeSetup are designed to help configure nodes and manage
 node lifecycles. The node setup classes use the “with” statement to configure the node
 on construction, and call RobotRaconteurNode.Shutdown() when the instance
 is destroyed.</p>
-<p>The node setup classes execute the following operations to configure the node:
-1. Set log level and tap options from flags, command line options, or environmental variables
-2. Register specified service factory types
-3. Initialize transports using flags specified in flags or from command line options
-4. Configure timeouts</p>
-<p>See ref command_line_options for more information on available command line options.</p>
+<p>The node setup classes execute the following operations to configure the node:</p>
+<ol class="arabic simple">
+<li><p>Set log level and tap options from flags, command line options, or environmental variables</p></li>
+<li><p>Register specified service factory types</p></li>
+<li><p>Initialize transports using flags specified in flags or from command line options</p></li>
+<li><p>Configure timeouts</p></li>
+</ol>
+<p>See Command Line Options for more information on available command line options.</p>
 <p>Logging level is configured using the environmental variable <code class="docutils literal notranslate"><span class="pre">ROBOTRACONTEUR_LOG_LEVEL</span></code>
-or the command line option <code class="docutils literal notranslate"><span class="pre">--robotraconteur-log-level</span></code>. See ref logging.md for more information.</p>
-<p>See ref taps.md for more information on using taps.</p>
+or the command line option <code class="docutils literal notranslate"><span class="pre">--robotraconteur-log-level</span></code>. See Logging for more information.</p>
+<p>See Taps for more information on using taps.</p>
 <p>The node setup classes optionally initialize LocalTransport,
 TcpTransport, HardwareTransport, and/or IntraTransport. 
-ref transports.md for more information.</p>
+Transports for more information.</p>
 <p>The LocalTransport.StartServerAsNodeName() or 
 LocalTransport.StartClientAsNodeName() are used to load the NodeID.
 See LocalTransport for more information on this procedure.</p>
@@ -295,7 +301,7 @@ be called when the node setup instance is destroyed</p>
 <dd><p>Initializes a RobotRaconteurNode instance to default configuration for a client only node</p>
 <p>ClientNodeSetup is a subclass of RobotRaconteurNodeSetup providing default configuration for a
 RobotRaconteurNode instance that is used only to create outgoing client connections.</p>
-<p>See ref command_line_options for more information on available command line options.</p>
+<p>See CommandLineOptions for more information on available command line options.</p>
 <p>Note: String table and HardwareTransport are disabled by default. They can be enabled
 using command line options.</p>
 <p>By default, the configuration will do the following:</p>
@@ -361,7 +367,7 @@ RobotRaconteurNode instance that is used as a server to accept incoming client c
 and to initiate client connections.</p>
 <p>ServerNodeSetup requires a NodeName, and a TCP port if LocalTransport and TcpTransport
 are enabled (default behavior).</p>
-<p>See ref command_line_options for more information on available command line options.</p>
+<p>See Command Line Options for more information on available command line options.</p>
 <p>Note: String table and HardwareTransport are disabled by default. They can be enabled
 using command line options.</p>
 <p>By default, the configuration will do the following:</p>
@@ -446,7 +452,7 @@ and to initiate client connections. SecureServerNodeSetup is identical to Server
 except that it requires TLS for all network communication.</p>
 <p>ServerNodeSetup requires a NodeName, and a TCP port if LocalTransport and TcpTransport
 are enabled (default behavior).</p>
-<p>See ref command_line_options for more information on available command line options.</p>
+<p>See Command Line Options for more information on available command line options.</p>
 <p>Note: String table and HardwareTransport are disabled by default. They can be enabled
 using command line options.</p>
 <p>By default, the configuration will do the following:</p>

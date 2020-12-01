@@ -216,7 +216,7 @@ Robot Raconteur library. The examples require that the Robot Raconteur Python li
 <p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">install</span> <span class="pre">python-robotraconteur</span> <span class="pre">python3-robotraconteur</span></code></p>
 <p>Other packages are required to run examples:</p>
 <p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">install</span> <span class="pre">python-pygame</span> <span class="pre">python-opencv</span> <span class="pre">python-pyserial</span></code></p>
-<p>Ubuntu packages are available for 16.04 (Xenial) and 18.04 (Bionic).</p>
+<p>Ubuntu packages are available for 16.04 (Xenial), 18.04 (Bionic) and 20.20 (Focal).</p>
 <p>When using Robot Raconteur in Python, the “thunk” code require to handle different service and data types is handled
 dynamically so there is no need to generate out extra source code. Instead, the client will receive an object that has
 all the correct members automatically on connect, and a service simply needs to have the correct functions and
@@ -234,24 +234,25 @@ shapes.</p>
 Raconteur expects <em>column</em> NumPy arrays of the correct type. Multi-dim arrays are normal NumPy arrays of the correct
 type.</p>
 <p>Structures are initialized using a special command in <code class="docutils literal notranslate"><span class="pre">RobotRaconteurNode</span></code> called <code class="docutils literal notranslate"><span class="pre">NewStructure</span></code>. The
-<code class="docutils literal notranslate"><span class="pre">NewStructure</span></code> command takes the fully qualified name of the structure, and an optional client object reference.</p>
+<code class="docutils literal notranslate"><span class="pre">NewStructure</span></code> command takes the fully qualified name of the structure, and an optional client object reference.
+The function <code class="docutils literal notranslate"><span class="pre">GetStructureType</span></code> returns the structure type that can be used as a constructor.</p>
 <p>Pods are represented as <code class="docutils literal notranslate"><span class="pre">numpy.array</span></code> using custom <code class="docutils literal notranslate"><span class="pre">dtype</span></code>. These <code class="docutils literal notranslate"><span class="pre">dtype</span></code> are initialized using the
 <code class="docutils literal notranslate"><span class="pre">GetPodDType</span></code> command in <code class="docutils literal notranslate"><span class="pre">RobotRaconteurNode</span></code>. The <code class="docutils literal notranslate"><span class="pre">GetPodDType</span></code> command takes the fully qualified name of the
 structure, and an optional client object reference. The returned <code class="docutils literal notranslate"><span class="pre">dtype</span></code> can be used as parameter with the
 <code class="docutils literal notranslate"><span class="pre">numpy.zeros(shape,</span> <span class="pre">dtype)</span></code> to initialize an array with the pod type. Note that pods are always stored in
-<code class="docutils literal notranslate"><span class="pre">numpy.array</span></code>. For a scalar, use <code class="docutils literal notranslate"><span class="pre">numpy.zeros((1,),dtype)</span></code>. Note that <code class="docutils literal notranslate"><span class="pre">numpy.array</span></code> uses “array” style indexing
-for fields. For example, to access the “y” field in a 2 dimensional array at index (1,3), use <code class="docutils literal notranslate"><span class="pre">myarray[1][3][’y’]</span></code>.
+<code class="docutils literal notranslate"><span class="pre">numpy.array</span></code>. For a scalar, use <code class="docutils literal notranslate"><span class="pre">numpy.zeros((1,),dtype)</span></code>. <code class="docutils literal notranslate"><span class="pre">numpy.array</span></code> uses “array” style indexing
+for fields. For example, to access the “y” field in a 2 dimensional array at index (1,3), use <code class="docutils literal notranslate"><span class="pre">myarray[1][3]['y']</span></code>.
 This can be used to get or set the value.</p>
 <p>Namedarrays are represented as <code class="docutils literal notranslate"><span class="pre">numpy.array</span></code> using custom <code class="docutils literal notranslate"><span class="pre">dtype</span></code>. These <code class="docutils literal notranslate"><span class="pre">dtype</span></code> are initialized using the
 <code class="docutils literal notranslate"><span class="pre">GetNamedArrayDType</span></code> command in <code class="docutils literal notranslate"><span class="pre">RobotRaconteurNode</span></code>. The <code class="docutils literal notranslate"><span class="pre">GetNamedArrayDType</span></code> command takes the fully qualified
-name of the structure, and an optional client object reference. The returned <code class="docutils literal notranslate"><span class="pre">dtype</span></code> can be used as parameter with the
+name of the namedarray, and an optional client object reference. The returned <code class="docutils literal notranslate"><span class="pre">dtype</span></code> can be used as parameter with the
 <code class="docutils literal notranslate"><span class="pre">numpy.zeros(shape,</span> <span class="pre">dtype)</span></code> to initialize an array with the pod type. Note that pods are always stored in
 <code class="docutils literal notranslate"><span class="pre">numpy.array</span></code>. For a scalar, use <code class="docutils literal notranslate"><span class="pre">numpy.zeros((1,),dtype)</span></code>. ” namedarray can be converted to a normal numeric array
 using the <code class="docutils literal notranslate"><span class="pre">NamedArrayToArray</span></code> command in <code class="docutils literal notranslate"><span class="pre">RobotRaconteurNode</span></code>. A normal numeric array can be converted to namedarray
-using <code class="docutils literal notranslate"><span class="pre">ArrayToNamedArray</span></code> command in <code class="docutils literal notranslate"><span class="pre">RobotRaconteurNode</span></code>. Note that the first dimension of the numeric array must
+using <code class="docutils literal notranslate"><span class="pre">ArrayToNamedArray</span></code> command in <code class="docutils literal notranslate"><span class="pre">RobotRaconteurNode</span></code>. The first dimension of the numeric array must
 match the total number of numeric elements in a scalar namedarray. The normal numeric arrays will have one more
-dimension than the namedarray. Note that <code class="docutils literal notranslate"><span class="pre">numpy.array</span></code> uses “array” style indexing for fields. For example, to access
-the “y” field in a 2 dimensional array at index (1,3), use <code class="docutils literal notranslate"><span class="pre">myarray[1][3][’y’]</span></code>. This can be used to get or set the
+dimension than the namedarray. <code class="docutils literal notranslate"><span class="pre">numpy.array</span></code> uses “array” style indexing for fields. For example, to access
+the “y” field in a 2 dimensional array at index (1,3), use <code class="docutils literal notranslate"><span class="pre">myarray[1][3]['y']</span></code>. This can be used to get or set the
 value.</p>
 <p>Maps are <code class="docutils literal notranslate"><span class="pre">dict</span></code> in Python.</p>
 <p>Lists are <code class="docutils literal notranslate"><span class="pre">list</span></code> in Python.</p>
@@ -377,14 +378,13 @@ value.</p>
 </tbody>
 </table>
 </div>
-<p>[pythontypemap]</p>
 </div>
 <div class="section" id="python-reference-to-functions">
 <h2>Python Reference to Functions<a class="headerlink" href="#python-reference-to-functions" title="Permalink to this headline">¶</a></h2>
 <p>Robot Raconteur frequently uses function references (called function handles or function pointers) to implement
 callbacks for events and other situations where the library needs to notify the software. In Python, this is
 accomplished using function references (also called function objecs depending on the author). Consider a simple module
-“MyModule” shown in Example <a class="reference external" href="#funcrefex">[funcrefex]</a>.</p>
+“MyModule” shown in the following example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">myobj</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">hello1</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
         <span class="nb">print</span> <span class="s2">&quot;Hello &quot;</span> <span class="o">+</span> <span class="n">name</span>

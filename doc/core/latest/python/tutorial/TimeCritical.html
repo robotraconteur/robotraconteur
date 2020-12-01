@@ -202,8 +202,9 @@
 <span id="realtimewire"></span><h1>Time-critical software with Wire member<a class="headerlink" href="#time-critical-software-with-wire-member" title="Permalink to this headline">¶</a></h1>
 <p>The “Wire” member is a unique feature of Robot Raconteur that is designed to transmit a constantly changing value. This
 is intended to emulate a physical wire carrying an analog value, but is capable of carrying any valid Robot Raconteur
-data type. As discussed in Section <a class="reference external" href="#objecttypes">[objecttypes]</a>, the “wire” is full-duplex meaning that it can send
-data in both directions, and it only provides the latest value. When the <code class="docutils literal notranslate"><span class="pre">OutValue</span></code> of one <code class="docutils literal notranslate"><span class="pre">WireConnection</span></code> is
+data type. The “wire” is full-duplex meaning that it can send
+data in both directions, (unless using <code class="docutils literal notranslate"><span class="pre">readonly</span></code> or <code class="docutils literal notranslate"><span class="pre">writeonly</span></code> modifiers) and it only provides the latest value.
+When the <code class="docutils literal notranslate"><span class="pre">OutValue</span></code> of one <code class="docutils literal notranslate"><span class="pre">WireConnection</span></code> is
 changed, a packet is generated that contains the data and a timestamp of type <code class="docutils literal notranslate"><span class="pre">TimeSpec</span></code>. This packet is transmitted
 through the channel and received by the other <code class="docutils literal notranslate"><span class="pre">WireConnection</span></code> in the pair. If the timestamp is newer, the <code class="docutils literal notranslate"><span class="pre">InValue</span></code>
 is updated. The timestamps can also be read through <code class="docutils literal notranslate"><span class="pre">LastValueReceivedTime</span></code> and <code class="docutils literal notranslate"><span class="pre">LastValueSentTime</span></code>.</p>
@@ -213,6 +214,7 @@ with the new value.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">LastValueReceivedTime</span></code> property can be used to detect how old the <code class="docutils literal notranslate"><span class="pre">InValue</span></code> data is. The <code class="docutils literal notranslate"><span class="pre">TimeSpec</span></code> returned
 is in the <strong>remote</strong> node’s clock. This means that it cannot be compared directly to the local node clock. Clock
 synchronization is not directly supported by Robot Raconteur. Different transports may provide this functionality.</p>
+<p>Using the wire <code class="docutils literal notranslate"><span class="pre">InValueLifespan</span></code> property is recommended to prevent stale data from being used.</p>
 <p>Robot Raconteur will in the future add real-time “sideband” transports for Wire connections. This will be implemented
 using the QUIC transport.</p>
 </div>

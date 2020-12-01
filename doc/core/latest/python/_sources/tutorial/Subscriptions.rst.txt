@@ -21,8 +21,5 @@ object. Wires and Pipes for objects retrieved using ObjRefs cannot be used.
 
 Authentication information can be sent as part of ``ServiceSubscriptionFilter``.
 
-See Appendix `[servicesubscriptionref] <#servicesubscriptionref>`__ and
-`[servicesubscriptionfilterref] <#servicesubscriptionfilterref>`__ for more details.
-
 The discovery information can be subscribed without creating connections to clients using the ``SubscribeServiceInfo2``
 function in ``RobotRaconteurNode``. This is essentially a constantly running version of ``FindServiceByType``.

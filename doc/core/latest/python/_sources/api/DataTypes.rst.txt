@@ -51,7 +51,6 @@ TimeSpec Class
       
    .. autoattribute:: seconds
    .. autoattribute:: nanoseconds
-   .. automethod:: Now
    .. automethod:: cleanup_nanosecs()
    .. automethod:: __eq__
    .. automethod:: __ne__

@@ -208,8 +208,9 @@
 <h1>Webcam Example<a class="headerlink" href="#webcam-example" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="webcam-service">
 <h2>Webcam Service<a class="headerlink" href="#webcam-service" title="Permalink to this headline">¶</a></h2>
-<p>The example robot also has webcams that can be accessed using the Python OpenCV libraries. Appendix
-<a class="reference external" href="#webcamservice">[webcamservice]</a> contains the listing of a program that exposes the webcams as a Robot Raconteur
+<p>The example robot also has webcams that can be accessed using the Python OpenCV libraries. Example
+<a class="reference external" href="https://github.com/robotraconteur/RobotRaconteur_Python_Examples/blob/master/SimpleWebcamService.py">SimpleWebcamService.py</a>
+on GitHub is a program that exposes the webcams as a Robot Raconteur
 service. The example is intended to demonstrate the usage of the “objref”, “pipe”, and “memory” members that were not
 used in the iRobot Create examples.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#Service to provide sample interface to webcams</span>
@@ -250,13 +251,13 @@ used in the iRobot Create examples.</p>
 <span class="n">end</span>
 </pre></div>
 </div>
-<p>The service definition for the <code class="docutils literal notranslate"><span class="pre">experimental.createwebcam2</span></code> shown in Example <a class="reference external" href="#webcaminterface">[webcaminterface]</a>
+<p>The service definition for the <code class="docutils literal notranslate"><span class="pre">experimental.createwebcam2</span></code> shown in above
 contains two objects: <code class="docutils literal notranslate"><span class="pre">WebcamHost</span></code> and <code class="docutils literal notranslate"><span class="pre">Webcam</span></code>. The <code class="docutils literal notranslate"><span class="pre">Webcam</span></code> object type represents a single camera, and the
 <code class="docutils literal notranslate"><span class="pre">WebcamHost</span></code> object allows for the client to determine the number of webcams and retrieve the <code class="docutils literal notranslate"><span class="pre">Webcam</span></code> objects
 through an “objref” member.</p>
 <p>The class <code class="docutils literal notranslate"><span class="pre">WebcamHost_impl</span></code> implements the <code class="docutils literal notranslate"><span class="pre">WebcamHost</span></code> object type. The function <code class="docutils literal notranslate"><span class="pre">WebcamNames</span></code> returns a map of
 the indexes and names of the cameras, and is an example of the <code class="docutils literal notranslate"><span class="pre">string{int32}</span></code> Robot Raconteur type. The function
-<code class="docutils literal notranslate"><span class="pre">get_Webcams</span></code> implements the <code class="docutils literal notranslate"><span class="pre">Webcams</span></code> objref. Note that the objref is implemented by prepending “<a href="#id1"><span class="problematic" id="id2">get_</span></a>” to the name
+<code class="docutils literal notranslate"><span class="pre">get_Webcams</span></code> implements the <code class="docutils literal notranslate"><span class="pre">Webcams</span></code> objref. Note that the objref is implemented by prepending <code class="docutils literal notranslate"><span class="pre">get\_</span></code> to the name
 of the objref member. The index may come as a <code class="docutils literal notranslate"><span class="pre">string</span></code> even though an <code class="docutils literal notranslate"><span class="pre">int32</span></code> is expected, so convert the type to
 <code class="docutils literal notranslate"><span class="pre">int</span></code> before using. When returning an object from an objref, it is necessary to return the fully qualified Robot
 Raconteur type of the object as a second parameter.</p>
@@ -271,8 +272,7 @@ the client. The <code class="docutils literal notranslate"><span class="pre">Sta
 <div class="line">PipeEndpoint to the dictionary of connected <code class="docutils literal notranslate"><span class="pre">PipeEndpoint</span></code>s. While a wire can only have one <code class="docutils literal notranslate"><span class="pre">WireConnection</span></code>
 client/server pair per client, pipes can have “indexed” <code class="docutils literal notranslate"><span class="pre">PipeEndpoints</span></code> meaning a single client can have multiple
 <code class="docutils literal notranslate"><span class="pre">PipeEndpoint</span></code> client/server pairs per client. They are “indexed”, meaning a <code class="docutils literal notranslate"><span class="pre">PipeEndpoint</span></code> is defined by the
-Robot Raconteur client endpoint (not to be confused with the PipeEndpoint) and the index of the <code class="docutils literal notranslate"><span class="pre">PipeEndpoint</span></code>. (See
-Section <a class="reference external" href="#piperef">[piperef]</a> and Section <a class="reference external" href="#pipeendpointref">[pipeendpointref]</a>.)</div>
+Robot Raconteur client endpoint (not to be confused with the PipeEndpoint) and the index of the <code class="docutils literal notranslate"><span class="pre">PipeEndpoint</span></code>.</div>
 </div>
 <p>A <code class="docutils literal notranslate"><span class="pre">PipeBroadcaster</span></code> is used for this example. The <code class="docutils literal notranslate"><span class="pre">PipeBroadcaster</span></code> is similar to the <code class="docutils literal notranslate"><span class="pre">WireBroadcaster</span></code>, sending
 packets to all connected clients. While a <code class="docutils literal notranslate"><span class="pre">PipeBroadcaster</span></code> can be inferred for a <code class="docutils literal notranslate"><span class="pre">readonly</span></code> pipe and the attribute
@@ -294,12 +294,12 @@ tell the client how big the image is.</div>
 <p>The two memories are implemented in Python using properties. The <code class="docutils literal notranslate"><span class="pre">buffer</span></code> member returns an <code class="docutils literal notranslate"><span class="pre">ArrayMemory</span></code> object,
 and the <code class="docutils literal notranslate"><span class="pre">multidimbuffer</span></code> returns a <code class="docutils literal notranslate"><span class="pre">MultiDimArrayMemory</span></code> object. Both contain their respective array and
 multi-dimensional array. In this example a new memory object is returned every time. This is not generally the best way
-to use the memory; instead, a persistent memory object should be used with a persistent memory block. (See sections
-<a class="reference external" href="#arraymemoryref">[arraymemoryref]</a> and <a class="reference external" href="#multidimarraymemoryref">[multidimarraymemoryref]</a>.)</p>
+to use the memory; instead, a persistent memory object should be used with a persistent memory block.</p>
 </div>
 <div class="section" id="webcam-client">
 <h2>Webcam Client<a class="headerlink" href="#webcam-client" title="Permalink to this headline">¶</a></h2>
-<p>Appendix <a class="reference external" href="#webcamclient">[webcamclient]</a> lists a program that will read the webcams and display the images. The
+<p>Example <a class="reference external" href="https://github.com/robotraconteur/RobotRaconteur_Python_Examples/blob/master/SimpleWebcamClient.py">SimpleWebcamClient.py</a>
+on GitHub is a program that will read the webcams and display the images. The
 initialization and connection are similar to the iRobot Create example. The main difference is the use of the “objrefs”,
 which are used to get references to the webcams <code class="docutils literal notranslate"><span class="pre">c1</span></code> and <code class="docutils literal notranslate"><span class="pre">c2</span></code>:</p>
 <p><code class="docutils literal notranslate"><span class="pre">c1=c_host.get_Webcams(0)</span></code></p>
@@ -308,7 +308,8 @@ which are used to get references to the webcams <code class="docutils literal no
 </div>
 <div class="section" id="webcam-client-streaming">
 <h2>Webcam Client (streaming)<a class="headerlink" href="#webcam-client-streaming" title="Permalink to this headline">¶</a></h2>
-<p>Appendix <a class="reference external" href="#webcamclient_streaming">[webcamclient_streaming]</a> lists a program that provides a “live” view of the
+<p>Example <a class="reference external" href="https://github.com/robotraconteur/RobotRaconteur_Python_Examples/blob/master/SimpleWebcamClient_streaming.py">SimpleWebcamClient_streaming.py</a>
+is a program that provides a “live” view of the
 camera, although depending on the speed of the computer it may be fairly slow because Python is an interpreted language.
 The program connects and retrieves the webcam object reference <code class="docutils literal notranslate"><span class="pre">c</span></code> the same way as the previous example, and the
 connects to the pipe <code class="docutils literal notranslate"><span class="pre">FrameStream</span></code>. The pipe index is given as the argument, and -1 means <em>any index</em>.</p>
@@ -324,11 +325,12 @@ arrive in order.</p>
 </div>
 <div class="section" id="webcam-client-memory">
 <h2>Webcam Client (memory)<a class="headerlink" href="#webcam-client-memory" title="Permalink to this headline">¶</a></h2>
-<p>Appendix <a class="reference external" href="#webcamclient_memory">[webcamclient_memory]</a> demonstrates the use of the memories. The memories have
+<p>Example <a class="reference external" href="https://github.com/robotraconteur/RobotRaconteur_Python_Examples/blob/master/SimpleWebcamClient_memory.py">SimpleWebcamClient_memory.py</a>
+on GitHub demonstrates the use of the memories. The memories have
 functions <code class="docutils literal notranslate"><span class="pre">Read</span></code> and <code class="docutils literal notranslate"><span class="pre">Write</span></code> that allow for a segment of the memory to be read or written into or from a buffer. The
 memory position, buffer, buffer position, and count are passed. For multi-dimensional arrays, the memory position,
 buffer position, and count are lists. The ArrayMemory has the special property “Length” for the length of the array, and
-the MultiDimArrayMemory has the special properties “Dims”, “DimCount”, and “Complex”.</p>
+the MultiDimArrayMemory has the special properties <code class="docutils literal notranslate"><span class="pre">Dims</span></code>, <code class="docutils literal notranslate"><span class="pre">DimCount</span></code>, and <code class="docutils literal notranslate"><span class="pre">Complex</span></code>.</p>
 </div>
 </div>
 
