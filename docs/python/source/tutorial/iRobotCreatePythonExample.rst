@@ -10,40 +10,11 @@ to the service definition!
 Simple service
 --------------
 
-The first step in using Robot Raconteur is to develop an object that implements the service definition. Example
-`[createserver1] <#createserver1>`__ shows a non-Robot Raconteur program that contains a class ``Create_impl`` that
-implements the service definition in Example `[createinterface] <#createinterface>`__. Table `1 <#createmembers>`__
+The first step in using Robot Raconteur is to develop an object that implements the service definition. The following
+example shows a non-Robot Raconteur program that contains a class ``Create_impl`` that
+implements the service definition "experimental.create2" presented in :doc:`ServiceDefinition`. 
+Table `Members <#createmembers>`__
 lists the members and the functionality that will be implemented.
-
-.. container::
-   :name: createmembers
-
-   .. table:: Members of Create object
-
-      +---------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
-      | Member                                                                          | Description                                                                                                                           |
-      +=================================================================================+=======================================================================================================================================+
-      | ``function void Drive(int16 velocity, int16 radius)``                           | Drives the create at ``velocity`` (mm/s) with ``radius`` (mm)                                                                         |
-      +---------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
-      | ``function void StartStreaming()``                                              | Starts the sensor packet streaming (Bumpers (17), Distance Traveled (19), Angle Traveled (20))                                        |
-      +---------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
-      | ``function void StopStreaming()``                                               | Stops the sensor packet streaming                                                                                                     |
-      +---------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
-      | ``property int32 DistanceTraveled``                                             | Total distance traveled (doesn’t seem to be accurate...)                                                                              |
-      +---------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
-      | ``property int32 AngleTraveled``                                                | Total angle traveled (doesn’t seem to be accurate...)                                                                                 |
-      +---------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
-      | ``property uint8 Bumpers``                                                      | Returns the byte with flags about the state of the bumper and wheel drops (See OI manual sensor packet id 7)                          |
-      +---------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
-      | ``event Bump()``                                                                | Event fired when the bumper goes from no contact to contact                                                                           |
-      +---------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
-      | ``pipe SensorPacket packets``                                                   | Provides a stream of the raw sensor information as it is received. The ID is always 19. The rest of the packet is the sensor data     |
-      |                                                                                 | followed by checksum. The “nBytes" field is not included.                                                                             |
-      +---------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
-      | ``callback uint8[] play_callback(int32 DistanceTraveled, int32 AngleTraveled)`` | A callback that is called when the “Play" button is pressed and returns notes to play on the Create.                                  |
-      +---------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
-
-[createmembers]
 
 .. code:: python
 
@@ -123,7 +94,36 @@ lists the members and the functionality that will be implemented.
    if __name__ == '__main__':
        main()
 
-Example `[createserver1] <#createserver1>`__ shows the members implemented. Properties and functions are simply
+.. container::
+   :name: createmembers
+
+   .. table:: Members of Create object
+
+      +---------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
+      | Member                                                                          | Description                                                                                                                           |
+      +=================================================================================+=======================================================================================================================================+
+      | ``function void Drive(int16 velocity, int16 radius)``                           | Drives the create at ``velocity`` (mm/s) with ``radius`` (mm)                                                                         |
+      +---------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
+      | ``function void StartStreaming()``                                              | Starts the sensor packet streaming (Bumpers (17), Distance Traveled (19), Angle Traveled (20))                                        |
+      +---------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
+      | ``function void StopStreaming()``                                               | Stops the sensor packet streaming                                                                                                     |
+      +---------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
+      | ``property int32 DistanceTraveled``                                             | Total distance traveled (doesn’t seem to be accurate...)                                                                              |
+      +---------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
+      | ``property int32 AngleTraveled``                                                | Total angle traveled (doesn’t seem to be accurate...)                                                                                 |
+      +---------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
+      | ``property uint8 Bumpers``                                                      | Returns the byte with flags about the state of the bumper and wheel drops (See OI manual sensor packet id 7)                          |
+      +---------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
+      | ``event Bump()``                                                                | Event fired when the bumper goes from no contact to contact                                                                           |
+      +---------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
+      | ``pipe SensorPacket packets``                                                   | Provides a stream of the raw sensor information as it is received. The ID is always 19. The rest of the packet is the sensor data     |
+      |                                                                                 | followed by checksum. The “nBytes" field is not included.                                                                             |
+      +---------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
+      | ``callback uint8[] play_callback(int32 DistanceTraveled, int32 AngleTraveled)`` | A callback that is called when the “Play" button is pressed and returns notes to play on the Create.                                  |
+      +---------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
+
+
+The above example shows the members implemented, but not yet exposed as a service. Properties and functions are simply
 properties and functions in Python, events are implemented through the ``EventHook`` class that must be present as a
 variable in the class. The ``Wire`` and ``Callback`` objects are implemented as properties and initialized to ``None``
 and will be set by the Robot Raconteur node when the object is exposed as a service. The main function in this example
@@ -131,8 +131,8 @@ will drive the robot a few feet to demonstrate that the service works. Replace �
 device (COM1, COM2, etc on Windows). The class shown above is mostly a skeleton class that needs to be filled in further
 to have functionality beyond simply driving.
 
-Note that the function drive has a ``with self._lock`` block protecting the code within the function. Robot Raconteur is
-multi-threaded, meaning that all members including functions can be called *concurrently*, meaning that if there is an
+The function "Drive" has a ``with self._lock`` block protecting the code within the function. Robot Raconteur is
+multi-threaded, meaning that all members including functions can be called *concurrently*. If there is an
 operation or data structure that can be corrupted by simultaneous access, it is necessary to use a *thread lock*,
 also-known-as a *mutex*. In the ``__init__`` for class ``Create_impl``, the ``self._lock`` variable is set to a new
 instance of ``threading.RLock()``. When used with the ``with`` statement, it will lock itself so only one block can
@@ -140,8 +140,8 @@ execute at a time with one thread. If all the functions in the class use the sam
 will be able to access the class. If you are not familiar with multi-threading, it is best to have one global lock for
 all your functions to prevent collisions.
 
-Now that there is a basic object implemented, it is time to expose it as a Robot Raconteur service. Example
-`[createserver2] <#createserver2>`__ shows a replacement for the ``main`` function that instead of simply driving the
+Now that there is a basic object implemented, it is time to expose it as a Robot Raconteur service. The 
+following example shows a replacement for the ``main`` function that instead of simply driving the
 robot, exposes the service.
 
 .. code:: python
@@ -164,32 +164,35 @@ robot, exposes the service.
    if __name__ == '__main__':
        main()
 
-A Robot Raconteur node requires several steps to initialize a service:
+A Robot Raconteur node requires a few steps to initialize the service:
 
-#. Assign the “NodeID" and “NodeName", or automatically generate random
-
-#. Instantiate and register transports, begin listening for clients
+#. Use ServerNodeSetup to initialize the node. Use the `with` statement so it
+   will also automatically shut down the node. The setup classes will also
+   automatically check command line arguments to modify options for the node.
 
 #. Register the relevant service types (robdef)
 
 #. Register the root object for the service
 
 Each Robot Raconteur node is uniquely identified by a 128-bit UUID “NodeID”. UUIDs are a widely used concept, and are
-statistically guaranteed to be unique when randomly generated [1]_. A node also has a name, the “NodeName”. A “NodeName”
+statistically guaranteed to be unique when randomly generated 
+(See `Wikipedia UUID <https://en.wikipedia.org/wiki/Universally_unique_identifier>`_ for more information on UUIDs.)
+A node also has a name, the “NodeName”. A “NodeName”
 is intended to help clients find relevant services, and is not guaranteed to be unique. For client nodes, the “NodeID”
 is typically allowed to be automatically generated when needed, with the “NodeName” left emtpy. For a server node, the
 “NodeName” is normally specified, with the “NodeID” retrieved from a local cache based on the “NodeName”. The “NodeID”
 is randomly generated the first time the “NodeName” is used, and is retrieved from the cache subsequently. TLS
-certificates for Robot Raconteur are assigned to the “NodeID”. See *Robot Raconteur Security using TLS and Certificates*
-for more details.
+certificates for Robot Raconteur are assigned to the “NodeID”, and guarantee the identify of the node based on its
+"NodeID".
 
 “Transports" are used to communicate between nodes. The currently available transports are ``TcpTransport`` for
 communication over a TCP/IP network, ``LocalTransport`` for communication between nodes running on the same computer,
-and ``HardwareTransport`` for communication over USB, Bluetooth, and PCIe. For most server nodes, the ``TcpTransport``
-and ``HardwareTransport`` are configured to listen for incoming clients. The ``TcpTransport`` will listen for
-connections on a TCP port, while the ``HardwareTransport`` listens for connections on a file handle that is identified
-by the “NodeName” or “NodeID” of the server node [2]_. If a TLS certificate is available, it can be loaded into the TCP
-transport. See *Robot Raconteur Security using TLS and Certificates* for more details.
+and ``HardwareTransport`` for communication over USB, Bluetooth, and PCIe, and ``IntraTransport`` for communication
+within the same process. For most server nodes, the ``TcpTransport``
+and ``LocalTransport`` are configured to listen for incoming clients. The ``TcpTransport`` will listen for
+connections on a TCP port, while the ``LocalTransport`` listens for connections on a file handle that is identified
+by the “NodeName” or “NodeID” of the server node. If a TLS certificate is available, it can be loaded into the TCP
+transport. This is done using command line arguments to the node, or using ``SecureServerNodeSetup``.
 
 For most use cases, the Python class ``ServerNodeSetup`` can be used to initialize the server node. The
 ``ServerNodeSetup`` takes the “NodeName”, the TCP listen port, and an optional set of flags as parameters. In Python,
@@ -211,9 +214,8 @@ for use by a client!
 Simple client
 -------------
 
-While there are several steps to starting a service, connecting as a client is very simple. Example
-`[createclient1] <#createclient1>`__ shows a full example that accomplishes the same driving motion as Example
-`[createserver1] <#createserver1>`__ but over the network.
+While there are several steps to starting a service, connecting as a client is very simple. The following
+is an example of driving the robot over a network using the service example above:
 
 ::
 
@@ -230,7 +232,7 @@ While there are several steps to starting a service, connecting as a client is v
 The example registers uses the ``RobotRaconteur.Client`` convenience module to configure for the most common client
 operations. This module creates a variable “RR" that contains the Robot Raconteur module, and “RRN" that is the default
 node. It also registers the transports ``TcpTransport``, ``LocalTransport``, ``HardwareTransport``, and
-``CloudTransport``.
+``IntraTransport``.
 
 Robot Raconteur uses URLs to connect to services. The most common URLs are for local and TCP cases.
 
@@ -240,12 +242,11 @@ The url format for the ``LocalTransport`` is:
 
 and the url format for the ``TcpTransport`` is:
 
-``rr+tcp://server:port?service=ServiceName``
+``rr+tcp://hostname:port?service=ServiceName``
 
 The standard URL format is used, and the target service is passed as part of the “query" portion of the URL. Often it is
 necessary to specify the node to connect. For instance, the local transport requires the “nodename" to be specified
-because there can be multiple nodes running locally. When using the port sharer, it is also necessary to specify the
-target node (See Appendix `[portsharer] <#portsharer>`__). The target node can be identified by NodeName, by NodeID, or
+because there can be multiple nodes running locally. The target node can be identified by NodeName, by NodeID, or
 by both. The NodeID should be the UUID of the node without curly braces. This is due to the limitations of URL syntax.
 
 For instance, these are all valid URLs for the local transport to connect to the CreateService (replace the UUID with
@@ -272,7 +273,7 @@ The following are valid URLs to connect to the CreateServer using tcp:
 Note that for the TCP connections, the “rr+tcp" can be connected to “rrs+tcp" to enable TLS to encrypt the
 communication. See the *Robot Raconteur Security using TLS and Certificates* manual for details on using TLS.
 
-See Appendix `[urlformat] <#urlformat>`__ for details on how to use URLs for more advanced cases.
+See `Robot Raconteur URLs <https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/nodes_and_communication.html#urls>`_ for details on how to use URLs for more advanced cases.
 
 A reference to the service object is returned, and it can now be used to access the members. In this example, the robot
 is driven a bit to demonstrate how to use a function.
@@ -280,8 +281,9 @@ is driven a bit to demonstrate how to use a function.
 iRobot Create Service
 ---------------------
 
-The initial service shown in Example `[createserver2] <#createserver2>`__ only fills in the ``Drive`` member. Appendix
-`[createserver3] <#createserver3>`__ shows a complete service that fills in all of the members. This is not intended to
+The initial service shown above only fills in the ``Drive`` member. The example 
+`iRobotCreateService.py <https://github.com/robotraconteur/RobotRaconteur_Python_Examples/blob/master/iRobotCreateService.py>`_
+on GitHub shows a complete service that fills in all of the members. This is not intended to
 be exhaustive for the full features of the iRobot Create; it is instead intended to be used to demonstrate features of
 Robot Raconteur. Because of the length of the code it is printed in the appendix and will be referred to throughout this
 section.
@@ -355,18 +357,17 @@ following lines, which executes the callback on the client:
 
 The first line retrieves the a function handle to call the client based on the stored endpoint. The second line executes
 this function, which is actually implemented by calling the client with the supplied parameters and then returning the
-result. Note that exceptions are also transmitted transparently by callbacks from the client to the service. (See
-section `[callbackref] <#callbackref>`__.)
+result. Note that exceptions are also transmitted transparently by callbacks from the client to the service. 
 
 The ``ServerNodeSetup`` class by default will call ``EnableNodeAnnounce``. This initializes the auto-discovery system to
-send out beacon packets so that client nodes can find the service. This process is discussed in Section
-`[autodiscovery] <#autodiscovery>`__.
+send out beacon packets so that client nodes can find the service.
 
 iRobot Create Client
 --------------------
 
-A client that utilizes the full iRobot Create Service is shown in Appendix `[createclient3] <#createclient3>`__. The
-client is similar to the previous example client, however it adds functionality using the ``Bump``, ``packets``, and
+An example client `iRobotCreateClient.py <https://github.com/robotraconteur/RobotRaconteur_Python_Examples/blob/master/iRobotCreateClient.py>`_
+on GitHub utilizes the service.
+The client is similar to the previous example client, however it adds functionality using the ``Bump``, ``packets``, and
 ``play_callback`` member. The line:
 
 ``c.Bump += Bumped``
@@ -393,8 +394,3 @@ This function will now be called by the service when the service calls this clie
 After the setup the robot is driven a bit and then pauses to allow the user to try out the functionality. The
 ``RobotRaconteurNode`` is shutdown automatically when the program exits.
 
-.. [1]
-   The uniqueness guarantee depends on the quality of available entropy.
-
-.. [2]
-   The “NodeID" lookup is implemented using the the “StartServerAsNodeName” function in ``LocalTransport``.

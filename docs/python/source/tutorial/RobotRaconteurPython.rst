@@ -24,7 +24,7 @@ Other packages are required to run examples:
 
 ``sudo apt install python-pygame python-opencv python-pyserial``
 
-Ubuntu packages are available for 16.04 (Xenial) and 18.04 (Bionic).
+Ubuntu packages are available for 16.04 (Xenial), 18.04 (Bionic) and 20.20 (Focal).
 
 When using Robot Raconteur in Python, the “thunk" code require to handle different service and data types is handled
 dynamically so there is no need to generate out extra source code. Instead, the client will receive an object that has
@@ -48,25 +48,26 @@ type.
 
 Structures are initialized using a special command in ``RobotRaconteurNode`` called ``NewStructure``. The
 ``NewStructure`` command takes the fully qualified name of the structure, and an optional client object reference.
+The function ``GetStructureType`` returns the structure type that can be used as a constructor.
 
 Pods are represented as ``numpy.array`` using custom ``dtype``. These ``dtype`` are initialized using the
 ``GetPodDType`` command in ``RobotRaconteurNode``. The ``GetPodDType`` command takes the fully qualified name of the
 structure, and an optional client object reference. The returned ``dtype`` can be used as parameter with the
 ``numpy.zeros(shape, dtype)`` to initialize an array with the pod type. Note that pods are always stored in
-``numpy.array``. For a scalar, use ``numpy.zeros((1,),dtype)``. Note that ``numpy.array`` uses “array” style indexing
-for fields. For example, to access the "y" field in a 2 dimensional array at index (1,3), use ``myarray[1][3][’y’]``.
+``numpy.array``. For a scalar, use ``numpy.zeros((1,),dtype)``. ``numpy.array`` uses “array” style indexing
+for fields. For example, to access the "y" field in a 2 dimensional array at index (1,3), use ``myarray[1][3]['y']``.
 This can be used to get or set the value.
 
 Namedarrays are represented as ``numpy.array`` using custom ``dtype``. These ``dtype`` are initialized using the
 ``GetNamedArrayDType`` command in ``RobotRaconteurNode``. The ``GetNamedArrayDType`` command takes the fully qualified
-name of the structure, and an optional client object reference. The returned ``dtype`` can be used as parameter with the
+name of the namedarray, and an optional client object reference. The returned ``dtype`` can be used as parameter with the
 ``numpy.zeros(shape, dtype)`` to initialize an array with the pod type. Note that pods are always stored in
 ``numpy.array``. For a scalar, use ``numpy.zeros((1,),dtype)``. " namedarray can be converted to a normal numeric array
 using the ``NamedArrayToArray`` command in ``RobotRaconteurNode``. A normal numeric array can be converted to namedarray
-using ``ArrayToNamedArray`` command in ``RobotRaconteurNode``. Note that the first dimension of the numeric array must
+using ``ArrayToNamedArray`` command in ``RobotRaconteurNode``. The first dimension of the numeric array must
 match the total number of numeric elements in a scalar namedarray. The normal numeric arrays will have one more
-dimension than the namedarray. Note that ``numpy.array`` uses “array” style indexing for fields. For example, to access
-the "y" field in a 2 dimensional array at index (1,3), use ``myarray[1][3][’y’]``. This can be used to get or set the
+dimension than the namedarray. ``numpy.array`` uses “array” style indexing for fields. For example, to access
+the "y" field in a 2 dimensional array at index (1,3), use ``myarray[1][3]['y']``. This can be used to get or set the
 value.
 
 Maps are ``dict`` in Python.
@@ -114,15 +115,13 @@ Enums are stored as ``int`` in Python.
 
       
 
-[pythontypemap]
-
 Python Reference to Functions
 -----------------------------
 
 Robot Raconteur frequently uses function references (called function handles or function pointers) to implement
 callbacks for events and other situations where the library needs to notify the software. In Python, this is
 accomplished using function references (also called function objecs depending on the author). Consider a simple module
-“MyModule" shown in Example `[funcrefex] <#funcrefex>`__.
+“MyModule" shown in the following example:
 
 ::
 

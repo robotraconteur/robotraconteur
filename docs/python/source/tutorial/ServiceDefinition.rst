@@ -1,8 +1,8 @@
 Service Definition
 ==================
 
-[ServiceDefinition] Example `[createinterface] <#createinterface>`__
-shows the code contained in the “experimental.create.robdef" files. It
+ServiceDefinition Example ``experimental.create2`` (below)
+shows the code contained in the “experimental.create2.robdef" file. It
 is a *service definition*. Service definition files are plain text files
 that describe the *object types* and *value types* (data types). Object
 types are *references*, meaning that on the client they are simply an
@@ -16,7 +16,7 @@ are transmitted between client and service. They are always passed by
    #Service to provide sample interface to the iRobot Create
    service experimental.create2
 
-   stdver 0.9
+   stdver 0.10
 
    struct SensorPacket
    	field uint8 ID
@@ -53,13 +53,12 @@ should be prefixed with “community” and your username, for example
 “community.myusername.create”, where “myusername” is replaced with your
 ``robotraconteur.com`` username. If a domain name for an organization is
 available it can be used in the same way as Java packages, for example
-“com.wasontech.examples.create2”. Note that namespaces that use a domain
-will require signing certificates in the future. Unless you have valid
+"com.wasontech.examples.create2". Unless you have valid
 ownership of a domain, “experimental” or “community” should be used.
 
 Next in the service there should be “stdver" and the minimum version of
 Robot Raconteur required to access the service. For now this should be
-“0.9". Example `[createinterface] <#createinterface>`__ does not show
+“0.10". Example "experimental.create2" does not show
 it, but there can also be one or more “import" to reference structures
 and objects in other service definitions. The rest of service definition
 defines the *structures* and *objects* of the service definition. (Lines
@@ -114,13 +113,11 @@ Primitives
          bool    1             Logical boolean                         
          ======= ============= =======================================
 
-   [primitives]
-
 Structures
    | 
    | Structures are collections of value types; structures can contain
      primitives, other structures, maps, or multidimensional arrays.
-     Example `[createinterface] <#createinterface>`__ shows the
+     Example "experimental.create2" shows the
      definition of the structure ``SensorPacket``. A structure is
      started with the keyword ``struct`` followed by the structure name.
      It is ended with the ``end`` keyword. The entries in the structure
@@ -134,11 +131,12 @@ Structures
 Pods
    | 
    | Pods (short for “plain-old-data”) are similar to structures, but
-     are more restricted to ensure they have the same size. All data
+     are more restricted to ensure they always have the same size. All data
      stored in pods are stored contiguously (c-style), while structs use
      pointers to the data. Pods can only contain pods, arrays of pods
      (fixed or max length), namedarrays, and namedarrays arrays (fixed
-     or max length). Only numeric primitives may be used; strings,
+     or max length). Only types with fixed or maximum size may be used; 
+     strings,
      structs, lists, and maps may not be stored in pods. A pod is
      started with the keyword ``pod`` followed by the pod name. It is
      ended with the ``end`` keyword. The entries in the pod are defined
@@ -252,7 +250,7 @@ Properties (Keyword: ``property``)
    ``property double myvar``
 
    Properties can use modifiers ``readonly``, ``writeonly``, ``urgent``,
-   and/or ``perclient``. See Section `[modifiers] <#modifiers>`__.
+   and/or ``perclient``. See :doc:`MemberModifiers`.
 
 Functions (Keyword: ``function``)
    | 
@@ -306,8 +304,7 @@ Functions (Keyword: ``function``)
    “Next” with updated status information at least every 10 seconds to
    prevent timeout errors.
 
-   Functions can use the ``urgent`` modifier. See Section
-   `[modifiers] <#modifiers>`__.
+   Functions can use the ``urgent`` modifier. See See :doc:`MemberModifiers`.
 
 Events (Keyword: ``event``)
    | 
@@ -315,16 +312,14 @@ Events (Keyword: ``event``)
      event has occurred. When an event is fired, every client reference
      receives the event. How the event is handled is language-specific.
      An event is defined similar to a function, however there is no
-     return. The parameters are passed to the client. There is no
-     return. An example:
+     return. The parameters are passed to the client. An example:
 
    ``event somethingHappened(string what, double when)``
 
    Note that events do not have flow control, so they should be used
    sparingly.
 
-   Events can use the ``urgent`` modifier. See Section
-   `[modifiers] <#modifiers>`__.
+   Events can use the ``urgent`` modifier. See :doc:`MemberModifiers`.
 
 Object References (Keyword: ``objref``)
    | 
@@ -372,7 +367,7 @@ Pipes (Keyword: ``pipe``)
    ``pipe double[] sensordata``
 
    Pipes can use modifiers ``readonly``, ``writeonly``, and
-   ``unreliable``. See Section `[modifiers] <#modifiers>`__.
+   ``unreliable``. See :doc:`MemberModifiers`.
 
 Callbacks (Keyword: ``callback``)
    | 
@@ -396,11 +391,11 @@ Wires (Keyword: ``wire``)
      timestamp of when it is sent (from the sender’s clock). Wires are
      full duplex like pipes meaning it has two-way communication, but
      unlike pipes they are not indexed so there is only one connection
-     per client object reference. The wire allows for a “WireConnection"
+     per client object reference, per connection. The wire allows for a 
+     “WireConnection"
      pair to be created with one “WireConnection" on the client and the
-     other “WireConnection" on the service. Unlike pipes, each wire
-     member can only create one connection pair per client, per service
-     object instance. The “WireConnection" is used by setting the
+     other “WireConnection" on the service. The “WireConnection" is used 
+     by setting the
      “OutValue" to the current value. This sends the new value to the
      opposite “WireConnection", which updates its “InValue". The same
      can be reversed. For instance, setting the “OutValue" on the
@@ -412,15 +407,20 @@ Wires (Keyword: ``wire``)
      clock and is generated when it is first transmitted. Either the
      client or the service can close the “WireConnection" pair using the
      “Close" function.
+     As of Robot Raconteur version 0.12, wires also have "lifespan"
+     for "InValue" and "OutValue", which will invalidate the received
+     data after a specified time after reception. This prevents the
+     wire from returning stale data. Use the "InValueLifespan"
+     and "OutValueLifespan" to configure.
 
-   The wire provides the basis for future real-time communication. (See
-   also Section `[realtimewire] <#realtimewire>`__.) An example wire
+   The wire provides the basis for real-time communication. (See
+   also :doc:`TimeCritical`.) An example wire
    member definition:
 
    ``wire double[2] currentposition``
 
-   Wires can use modifiers ``readonly`` or ``writeonly``. See Section
-   `[modifiers] <#modifiers>`__.
+   Wires can use modifiers ``readonly`` or ``writeonly``. 
+   See :doc:`MemberModifiers`.
 
 Memories (Keyword: ``memory``)
    | 
@@ -429,14 +429,15 @@ Memories (Keyword: ``memory``)
      multi-dim arrays, namedarrays arrays, and namedarrays multi-dim
      arrays. The memory member is available for two reasons: it will
      break down large read and writes into smaller calls to prevent
-     buffer overruns (most transports limit message sizes to 10 MB) and
+     buffer overruns (most transports limit message sizes to 10 MB, unless
+     "jumbo" messages are enabled) and
      the memory also provides the basis for future shared-memory
      segments. An example:
 
    ``memory double[] datahistory``
 
-   Memories can use modifiers ``readonly`` or ``writeonly``. See Section
-   `[modifiers] <#modifiers>`__.
+   Memories can use modifiers ``readonly`` or ``writeonly``.
+   See :doc:`MemberModifiers`.
 
 Constants
 ---------
@@ -487,5 +488,5 @@ When naming things like service definitions, objects, structures, and
 members, certain rules must be followed. The name must consist of
 letters, numbers, and underscores (_). Names must start with a letter
 and may not start with any uppercase/lowercase combination of
-“RobotRaconteur", “RR", “get\_", or “set\_". Service names may not end
-with “_signed". This is reserved for future use.
+"RobotRaconteur", "RR", "get\_", "set\_", or "_async\_". Service 
+names may not end with “_signed".

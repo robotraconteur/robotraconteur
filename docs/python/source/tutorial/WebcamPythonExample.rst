@@ -4,8 +4,9 @@ Webcam Example
 Webcam Service
 --------------
 
-The example robot also has webcams that can be accessed using the Python OpenCV libraries. Appendix
-`[webcamservice] <#webcamservice>`__ contains the listing of a program that exposes the webcams as a Robot Raconteur
+The example robot also has webcams that can be accessed using the Python OpenCV libraries. Example
+`SimpleWebcamService.py <https://github.com/robotraconteur/RobotRaconteur_Python_Examples/blob/master/SimpleWebcamService.py>`_ 
+on GitHub is a program that exposes the webcams as a Robot Raconteur
 service. The example is intended to demonstrate the usage of the “objref", “pipe", and “memory" members that were not
 used in the iRobot Create examples.
 
@@ -48,14 +49,14 @@ used in the iRobot Create examples.
        objref Webcam{int32} Webcams
    end
 
-The service definition for the ``experimental.createwebcam2`` shown in Example `[webcaminterface] <#webcaminterface>`__
+The service definition for the ``experimental.createwebcam2`` shown in above
 contains two objects: ``WebcamHost`` and ``Webcam``. The ``Webcam`` object type represents a single camera, and the
 ``WebcamHost`` object allows for the client to determine the number of webcams and retrieve the ``Webcam`` objects
 through an “objref" member.
 
 The class ``WebcamHost_impl`` implements the ``WebcamHost`` object type. The function ``WebcamNames`` returns a map of
 the indexes and names of the cameras, and is an example of the ``string{int32}`` Robot Raconteur type. The function
-``get_Webcams`` implements the ``Webcams`` objref. Note that the objref is implemented by prepending “get_" to the name
+``get_Webcams`` implements the ``Webcams`` objref. Note that the objref is implemented by prepending ``get\_`` to the name
 of the objref member. The index may come as a ``string`` even though an ``int32`` is expected, so convert the type to
 ``int`` before using. When returning an object from an objref, it is necessary to return the fully qualified Robot
 Raconteur type of the object as a second parameter.
@@ -72,8 +73,7 @@ the client. The ``StartStreaming`` and ``StopStreaming`` functions begin or stop
 | PipeEndpoint to the dictionary of connected ``PipeEndpoint``\ s. While a wire can only have one ``WireConnection``
   client/server pair per client, pipes can have “indexed" ``PipeEndpoints`` meaning a single client can have multiple
   ``PipeEndpoint`` client/server pairs per client. They are “indexed", meaning a ``PipeEndpoint`` is defined by the
-  Robot Raconteur client endpoint (not to be confused with the PipeEndpoint) and the index of the ``PipeEndpoint``. (See
-  Section `[piperef] <#piperef>`__ and Section `[pipeendpointref] <#pipeendpointref>`__.)
+  Robot Raconteur client endpoint (not to be confused with the PipeEndpoint) and the index of the ``PipeEndpoint``.
 
 A ``PipeBroadcaster`` is used for this example. The ``PipeBroadcaster`` is similar to the ``WireBroadcaster``, sending
 packets to all connected clients. While a ``PipeBroadcaster`` can be inferred for a ``readonly`` pipe and the attribute
@@ -95,13 +95,13 @@ send frames to the clients.
 The two memories are implemented in Python using properties. The ``buffer`` member returns an ``ArrayMemory`` object,
 and the ``multidimbuffer`` returns a ``MultiDimArrayMemory`` object. Both contain their respective array and
 multi-dimensional array. In this example a new memory object is returned every time. This is not generally the best way
-to use the memory; instead, a persistent memory object should be used with a persistent memory block. (See sections
-`[arraymemoryref] <#arraymemoryref>`__ and `[multidimarraymemoryref] <#multidimarraymemoryref>`__.)
+to use the memory; instead, a persistent memory object should be used with a persistent memory block.
 
 Webcam Client
 -------------
 
-Appendix `[webcamclient] <#webcamclient>`__ lists a program that will read the webcams and display the images. The
+Example `SimpleWebcamClient.py <https://github.com/robotraconteur/RobotRaconteur_Python_Examples/blob/master/SimpleWebcamClient.py>`_ 
+on GitHub is a program that will read the webcams and display the images. The
 initialization and connection are similar to the iRobot Create example. The main difference is the use of the “objrefs",
 which are used to get references to the webcams ``c1`` and ``c2``:
 
@@ -114,7 +114,8 @@ The rest of the program deals with OpenCV related functions to show the images.
 Webcam Client (streaming)
 -------------------------
 
-Appendix `[webcamclient_streaming] <#webcamclient_streaming>`__ lists a program that provides a “live" view of the
+Example `SimpleWebcamClient_streaming.py <https://github.com/robotraconteur/RobotRaconteur_Python_Examples/blob/master/SimpleWebcamClient_streaming.py>`_  
+is a program that provides a “live" view of the
 camera, although depending on the speed of the computer it may be fairly slow because Python is an interpreted language.
 The program connects and retrieves the webcam object reference ``c`` the same way as the previous example, and the
 connects to the pipe ``FrameStream``. The pipe index is given as the argument, and -1 means *any index*.
@@ -137,8 +138,9 @@ The rest of the program handles showing the images as they arrive and shutting d
 Webcam Client (memory)
 ----------------------
 
-Appendix `[webcamclient_memory] <#webcamclient_memory>`__ demonstrates the use of the memories. The memories have
+Example `SimpleWebcamClient_memory.py <https://github.com/robotraconteur/RobotRaconteur_Python_Examples/blob/master/SimpleWebcamClient_memory.py>`_
+on GitHub demonstrates the use of the memories. The memories have
 functions ``Read`` and ``Write`` that allow for a segment of the memory to be read or written into or from a buffer. The
 memory position, buffer, buffer position, and count are passed. For multi-dimensional arrays, the memory position,
 buffer position, and count are lists. The ArrayMemory has the special property "Length" for the length of the array, and
-the MultiDimArrayMemory has the special properties "Dims", "DimCount", and "Complex".
+the MultiDimArrayMemory has the special properties ``Dims``, ``DimCount``, and ``Complex``.

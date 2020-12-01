@@ -1,7 +1,7 @@
 Introduction
 ============
 
-Robot Raconteur  is an Apache-2.0 licensed open-source communication
+Robot Raconteur is an Apache-2.0 licensed open-source communication
 library designed to ease the integration of complex automation systems
 that are composed of disparate components that run within different
 processes on a computer, are distributed over a network, or are embedded
@@ -69,9 +69,10 @@ between the client member reference and the real member in the service.
 To the user the network layer is *almost* invisible. Robot Raconteur
 uses plain-text files called *Service Definition* files to define the
 objects and composite data types (structures) that are used in a
-service. Example `[createinterface] <#createinterface>`__ shows an
-example service definition, and Section
-`[ServiceDefinition] <#ServiceDefinition>`__ goes into great detail how
+service. Example 
+`experimental.create2 <https://github.com/robotraconteur/RobotRaconteur_Python_Examples/blob/master/experimental.create2.robdef>`_ 
+shows an example service definition, and Section
+:doc:`ServiceDefinition` goes into great detail how
 these files are used. A service definition is a very simple way to
 define the *interface* to the service objects. The service definition
 provides a “lowest-common denominator" to all the languages that Robot
@@ -140,6 +141,10 @@ Robot Raconteur provides network security through TLS encryption and
 certificate based authentication. Details on TLS and certificates are
 covered in the document *Robot Raconteur Security using TLS and
 Certificates*.
+
+Python examples can be found in the 
+`RobotRaconteur_Python_Examples <https://github.com/robotraconteur/RobotRaconteur_Python_Examples>`_
+GitHub repository.
 
 Example Robot
 -------------

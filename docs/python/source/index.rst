@@ -27,6 +27,8 @@ Welcome to Robot Raconteur Python's documentation!
    tutorial/MemberModifiers
    tutorial/Async
    tutorial/GatherScatter
+   tutorial/StdRobDef
+   tutorial/Directory
 
 .. toctree::
    :maxdepth: 4

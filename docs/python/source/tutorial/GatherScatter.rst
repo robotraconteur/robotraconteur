@@ -2,15 +2,15 @@ Gather/Scatter operations
 =========================
 
 In many situations it is necessary to query data from dozens or hundreds of sensors. Thanks to the asynchronous
-functionality discussed in Section `[asyncprog] <#asyncprog>`__ this is possible and is limited only by memory and
+functionality discussed in :ref:`Async` this is possible and is limited only by memory and
 network bandwidth. An example of a practical application of gather/scatter operations is that of an advanced lighting
 system that needs to rapidly query large numbers of sensors, make control decisions, and then distribute updated
 commands to a large number of lighting fixtures. Consider a list of connections that have already been connected and are
 stored in a variable ``c_list``. Each connection is to a service that has the function ``ReadSensor()`` that returns
-some important data. Example `[gatherscatter] <#gatherscatter>`__ will query each sensor concurrently and call the
+some important data. The following example will query each sensor concurrently and call the
 handler when all the sensors have been queried.
 
-::
+.. code:: python
 
 
    global_err=[]

@@ -12,4 +12,4 @@ either be 0 or 1. Now consider another service “AdvancedLight" with an object 
 simpler “Light". This is less of an issue in Python because there is no explicit typing, but in other languages this can
 become very important. The implements statement must form a clear hierarchy; there cannot be circular implements.
 Implements can be used with the “import" statement the same way that structures and objrefs can work with the “import"
-statement.
+statement. This behavior is called "polymorphism".

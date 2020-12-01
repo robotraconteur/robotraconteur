@@ -20,27 +20,29 @@ For the ``LocalTransport``, the discovery information is stored on the filesyste
 
 The packet sent by the service nodes contains the ``NodeName``, ``NodeID``, and a URL to connect to the “Service Index",
 which is a special service that lists the services registered in the node. The client will interrogate the service nodes
-it has discovered to determine the available services. This is shown in the diagram by the client requesting the
-available services, and the service node returns the available services. The “Service Index" is registered automatically
-by the node and does not require any extra work by the user.
+it has discovered to determine the available services. The “Service Index" is registered automatically
+by the node and does not require any extra configuration by the user.
 
 The auto-discovery functionality is automatically enabled by ``ServerNodeSetup`` and the
 ``from RobotRaconteur.Client import *`` functions. To manually enable auto-discovery on transports, use:
 
-``t=RR.TcpTransport()``
+.. code:: python
 
-``t.EnableNodeDiscoveryListening()``
+  t=RR.TcpTransport()
+  t.EnableNodeDiscoveryListening()
 
 For the service, use:
 
-``t=RR.TcpTransport()``
+.. code:: python
 
-``t.EnableNodeAnnounce()``
+  t=RR.TcpTransport()
+  t.EnableNodeAnnounce()
 
 To find a service, use the command:
 
-| ``res=RRN.FindServiceByType("experimental.create.Create",``
-| ``["rr+local","rr+tcp","rrs+tcp"])``
+.. code:: python
+
+  res=RRN.FindServiceByType("experimental.create.Create",["rr+local","rr+tcp","rrs+tcp"])
 
 where “experimental.create2.Create" is replaced with the fully qualified type being searched for and the second
 parameter is a list of the transport types to search. ``res`` is a list of ``ServiceInfo2`` structures that contains the
@@ -49,12 +51,14 @@ parameter is a list of the transport types to search. ``res`` is a list of ``Ser
 entries. This is used to help identify the correct service to connect to. Service attributes are set through the
 ``ServerContext`` object that is returned when a service is registered. A short example:
 
-``context=RRN.RegisterService ("Create","experimental.create.Create",obj)``
-
-``attributes={"RobotName" : RR.RobotRaconteurVarValue("Create1","string")}``
-
-``context.SetServiceAttributes(attributes)``
+.. code:: python
+  context=RRN.RegisterService ("Create","experimental.create.Create",obj)
+  attributes={"RobotName" : RR.RobotRaconteurVarValue("Create1","string")}
+  context.SetServiceAttributes(attributes)
 
 Nodes can also be searched for by “NodeID” and “NodeName” separate from services. Use ``FindNodeByID`` and
 ``FindNodeByName`` in ``RobotRaconteurNode``. These will return the “NodeID”, “NodeName”, and the possible
 “ConnectionURLs” without the query portion.
+
+``ServiceInfo2Subscription`` continuosly tracks available services, and generally provides better results than
+``FindServiceByType`` since it will detect services as they become available.
