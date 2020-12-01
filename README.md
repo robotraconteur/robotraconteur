@@ -295,6 +295,22 @@ To build with `catkin_tools`:
 
 Note that SWIG version 4.0.2 MUST be installed before attempting to build the Python bindings. Ubuntu includes older versions of SWIG in the apt repository. Robot Raconteur will not build using theese older versions installed from apt! Install to /usr/local so catkin can find the swig executable. See [here](https://github.com/swig/swig/wiki/Getting-Started) for SWIG installation instructions.
 
+## Standard Service Types
+
+The Robot Raconteur project has defined a number of standard service definitions that contain numerous structure, pod, namedarray, and object types. These types cover a range of common data types, and provide standardized interfaces to devices. These types should be used whenever possible so that services will be interoperable. The standard service types are available in the https://github.com/robotraconteur/robotraconteur_standard_robdef GitHub repository.
+
+## Companion Libraries
+
+The Robot Raconteur Companion libraries are provided to assist in using the standard service types, along with other generic utility functions. Currently, the companion libraries contain the standard service types, info file loaders, and general utility functions. The following libraries are available:
+
+* Python: https://github.com/robotraconteur/robotraconteur_companion_python
+* C++: https://github.com/robotraconteur/robotraconteur_companion
+* C#: https://github.com/robotraconteur/RobotRaconteurNET.Companion
+
+The Python companion library can also be installed using `pip install RobotRaconteurCompanion`
+
+See https://github.com/robotraconteur-contrib/robotraconteur_camera_driver/blob/master/robotraconteur_camera_driver.py for an example utilizing standard types and the companion library.
+
 ## License
 
 The Robot Raconteur core library is Apache 2.0 licensed.
