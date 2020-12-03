@@ -76,6 +76,26 @@ public class WireBroadcaster<T> {
 	}
 	
 
+	class peekcallbackclass extends WrappedWireServerPeekValueDirector
+	{
+		Func1<Long, T> cb;
+
+		public peekcallbackclass(Func1<Long,T> cb)
+		{
+			this.cb=cb;
+		}
+
+		@Override
+		public MessageElement peekValue(long ep)
+		{
+			T value = cb.func(ep);
+
+			Object dat=RobotRaconteurNode.s().packVarType(value);
+			MessageElement m=new MessageElement("value", dat);
+			return m;
+		}
+	}
+
 	public final void setPeekInValueCallback(Func1<Long,T> cb)
 	{
 		peekcallbackclass c=new peekcallbackclass(cb);
