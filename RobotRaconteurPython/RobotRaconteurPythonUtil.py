@@ -3070,6 +3070,19 @@ class WrappedWireBroadcasterPredicateDirectorPython(RobotRaconteurPython.Wrapped
             traceback.print_exc()
             return True
 
+class WrappedWireBroadcasterPeekValueDirectorImpl(RobotRaconteurPython.WrappedWireServerPeekValueDirector):
+    def __init__(self, cb,value_type,node,obj):
+        super(WrappedWireBroadcasterPeekValueDirectorImpl,self).__init__()
+        self._cb=cb
+        self.__node=node
+        self.__obj=obj
+        self.__value_type = value_type
+
+    def PeekValue(self, ep):
+        value = self._cb(ep)
+        m=PackMessageElement(value,self.__value_type,self.__obj,self.__node)
+        return m
+
 class WireBroadcaster(object):
     """
     Broadcaster to send values to all connected clients
@@ -3097,13 +3110,14 @@ class WireBroadcaster(object):
      Specifying a client wire will result in an exception.
     :type wire: RobotRaconteur.Wire
     """
-    __slots__ = ["_wire", "_innerpipe", "_obj", "_type","__weakref__"]
+    __slots__ = ["_wire", "_innerpipe", "_obj", "_type","__weakref__","_node"]
     def __init__(self, wire):
         self._wire=wire
         self._innerpipe=RobotRaconteurPython.WrappedWireBroadcaster()        
         self._innerpipe.Init(wire._innerpipe)
         self._obj=wire._obj
         self._type=wire._innerpipe.Type
+        self._node=wire._innerpipe.GetNode()
 
     @property
     def OutValue(self):
@@ -3166,7 +3180,7 @@ class WireBroadcaster(object):
         Specify -1 for no expiration.
 
         """
-        t = self.__innerpipe.GetOutValueLifespan()
+        t = self._innerpipe.GetOutValueLifespan()
         if t < 0:
             return t
         return float(t) / 1000.0
@@ -3174,9 +3188,26 @@ class WireBroadcaster(object):
     @OutValueLifespan.setter
     def OutValueLifespan(self, secs):
         if secs < 0:
-            self.__innerpipe.SetOutValueLifespan(-1)
+            self._innerpipe.SetOutValueLifespan(-1)
         else:
-            self.__innerpipe.SetOutValueLifespan(int(secs*1000.0))
+            self._innerpipe.SetOutValueLifespan(int(secs*1000.0))
+
+    @property
+    def PeekInValueCallback(self):
+        """
+        Set the PeekInValue callback function for the WireBrodcaster.
+        Overrides the default callback that returns the last set 
+        OutValue.
+
+        :rtype: Callable[[int],T]
+        """
+        raise Exception("Write only property")
+
+    @PeekInValueCallback.setter
+    def PeekInValueCallback(self, c):
+        cb=WrappedWireBroadcasterPeekValueDirectorImpl(c,self._type,self._node,self._obj)
+        self._innerpipe.SetPeekInValueCallback(cb,0)
+        cb.__disown__()
 
 class WrappedWireUnicastReceiverInValueChangedImpl(RobotRaconteurPython.WrappedWireServerPokeValueDirector):
     def __init__(self, rec):

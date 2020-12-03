@@ -1663,9 +1663,32 @@ namespace RobotRaconteur
 		this->SetPredicate(boost::bind(&WrappedWireBroadcasterPredicateDirector::CallPredicate, f_sp, RR_BOOST_PLACEHOLDERS(_2)));
 	}
 
+	void WrappedWireBroadcaster::SetPeekInValueCallback(WrappedWireServerPeekValueDirector* director, int32_t id)
+	{
+		if (!director)
+		{
+			peek_invalue_director.reset(); 
+			return;
+		}
+
+		RR_SHARED_PTR<WrappedWireServerPeekValueDirector> spdirector(director, boost::bind(&ReleaseDirector<WrappedWireServerPeekValueDirector>, RR_BOOST_PLACEHOLDERS(_1), id));
+		peek_invalue_director = spdirector;
+	}
+
 	RR_INTRUSIVE_PTR<RRValue> WrappedWireBroadcaster::do_PeekInValue(const uint32_t& ep)
 	{
-		boost::mutex::scoped_lock lock(connected_wires_lock);		
+		RR_SHARED_PTR<WrappedWireServerPeekValueDirector> peek_invalue_director1;
+		{
+			boost::mutex::scoped_lock lock(connected_wires_lock);
+			peek_invalue_director1 = peek_invalue_director;
+		}
+		if (peek_invalue_director1)
+		{
+			RR_INTRUSIVE_PTR<MessageElement> el;
+			DIRECTOR_CALL2(el = peek_invalue_director1->PeekValue(ep));
+				return el;
+		}
+		
 		if (!out_value_valid) throw ValueNotSetException("Value not set");
 		RR_INTRUSIVE_PTR<MessageElement> value2 = ShallowCopyMessageElement(rr_cast<MessageElement>(out_value));
 		return value2;

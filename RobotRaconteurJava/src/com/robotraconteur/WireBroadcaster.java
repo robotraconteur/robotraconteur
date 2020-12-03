@@ -75,4 +75,11 @@ public class WireBroadcaster<T> {
 		innerwire.setOutValueLifespan(millis);
 	}
 	
+
+	public final void setPeekInValueCallback(Func1<Long,T> cb)
+	{
+		peekcallbackclass c=new peekcallbackclass(cb);
+		int id=RRObjectHeap.addObject(c);
+		(innerwire).setPeekInValueCallback(c, id);
+	}
 }

@@ -2764,6 +2764,25 @@ namespace RobotRaconteur
             }
         }
 
+        class peekcallbackclass : WrappedWireServerPeekValueDirector
+        {
+            Func<uint,T> cb;
+
+            public peekcallbackclass(Func<uint,T> cb)
+            {
+                this.cb = cb;
+            }
+
+            public override MessageElement PeekValue(uint ep)
+            {
+                var value = cb(ep);
+               
+                
+                MessageElement m = RobotRaconteurNode.s.PackAnyType<T>("value", ref value);
+                return m;
+            }
+        }
+
         protected Wire<T> wire;
 
         protected internal WrappedWireBroadcaster innerwire;
@@ -2828,6 +2847,17 @@ namespace RobotRaconteur
             set
             {
                 innerwire.SetOutValueLifespan(value);
+            }
+        }
+
+        public Func<uint,T> PeekInValueCallback
+        {
+            get { throw new InvalidOperationException("Read only property"); }
+            set
+            {
+                peekcallbackclass c = new peekcallbackclass(value);
+                int id = RRObjectHeap.AddObject(c);
+                innerwire.SetPeekInValueCallback(c, id);
             }
         }
     }

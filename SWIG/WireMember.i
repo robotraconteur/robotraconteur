@@ -211,6 +211,8 @@ public:
 
 	int32_t GetOutValueLifespan();
 	void SetOutValueLifespan(int32_t millis);
+
+	void SetPeekInValueCallback(WrappedWireServerPeekValueDirector* director, int32_t id);
 };
 
 %apply uint32_t& OUTPUT {uint32_t& ep};

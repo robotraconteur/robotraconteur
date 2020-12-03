@@ -882,6 +882,8 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 
 		void SetPredicateDirector(WrappedWireBroadcasterPredicateDirector* f, int32_t id);
 
+		virtual void SetPeekInValueCallback(WrappedWireServerPeekValueDirector* director, int32_t id);
+
 	protected:
 
 		virtual void AttachWireServerEvents(RR_SHARED_PTR<WireServerBase> w);
@@ -893,6 +895,10 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		virtual RR_INTRUSIVE_PTR<RRValue> do_PeekInValue(const uint32_t& ep);
 		virtual RR_INTRUSIVE_PTR<RRValue> do_PeekOutValue(const uint32_t& ep);
 		virtual void do_PokeOutValue(const RR_INTRUSIVE_PTR<RRValue>& value, const TimeSpec& ts, const uint32_t& ep);
+
+	protected:
+	
+		RR_SHARED_PTR<WrappedWireServerPeekValueDirector> peek_invalue_director;
 
 	};
 
