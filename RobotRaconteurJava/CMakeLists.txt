@@ -54,6 +54,8 @@ IF (MSVC)
 target_compile_options(${SWIG_MODULE_RobotRaconteurJavaNative_REAL_NAME} PRIVATE "/bigobj")
 ENDIF()
 
+target_compile_definitions(${SWIG_MODULE_RobotRaconteurJavaNative_REAL_NAME} PRIVATE SWIG_TYPE_TABLE=robotraconteur_java)
+
 if (APPLE)
     set_target_properties (RobotRaconteurJavaNative PROPERTIES SUFFIX ".jnilib")
 endif()

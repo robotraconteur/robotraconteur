@@ -48,7 +48,7 @@ target_link_libraries(_RobotRaconteurPython RobotRaconteurCore)
 set_target_properties(_RobotRaconteurPython PROPERTIES PREFIX "")
 endif()
 
-target_compile_definitions(${SWIG_MODULE_RobotRaconteurPython_REAL_NAME} PRIVATE RR_PYTHON NPY_NO_DEPRECATED_API=NPY_1_7_API_VERSION)
+target_compile_definitions(${SWIG_MODULE_RobotRaconteurPython_REAL_NAME} PRIVATE RR_PYTHON NPY_NO_DEPRECATED_API=NPY_1_7_API_VERSION SWIG_TYPE_TABLE=robotraconteur_python)
 target_include_directories(${SWIG_MODULE_RobotRaconteurPython_REAL_NAME} PRIVATE ${PYTHON_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/SWIG ${CMAKE_CURRENT_SOURCE_DIR} ${NUMPY_INCLUDE_DIR})
 
 IF (MSVC)
