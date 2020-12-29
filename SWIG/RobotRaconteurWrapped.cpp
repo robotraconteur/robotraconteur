@@ -1678,12 +1678,11 @@ namespace RobotRaconteur
 	RR_INTRUSIVE_PTR<RRValue> WrappedWireBroadcaster::do_PeekInValue(const uint32_t& ep)
 	{
 		RR_SHARED_PTR<WrappedWireServerPeekValueDirector> peek_invalue_director1;
-		{
-			boost::mutex::scoped_lock lock(connected_wires_lock);
-			peek_invalue_director1 = peek_invalue_director;
-		}
+		boost::mutex::scoped_lock lock(connected_wires_lock);
+		peek_invalue_director1 = peek_invalue_director;
 		if (peek_invalue_director1)
 		{
+			lock.unlock();
 			RR_INTRUSIVE_PTR<MessageElement> el;
 			DIRECTOR_CALL2(el = peek_invalue_director1->PeekValue(ep));
 				return el;

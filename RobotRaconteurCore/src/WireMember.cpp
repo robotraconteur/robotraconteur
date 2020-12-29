@@ -1365,7 +1365,15 @@ namespace RobotRaconteur
 		{
 			throw ValueNotSetException("Value expired");
 		}
-		return out_value;
+		if (!copy_element)
+		{
+			RR_INTRUSIVE_PTR<RRValue> out_value1 = out_value;
+			return out_value1;
+		}
+		else
+		{
+			return ShallowCopyMessageElement(rr_cast<MessageElement>(out_value));
+		}
 	}
 
 	RR_SHARED_PTR<WireBase> WireBroadcasterBase::GetWireBase()
