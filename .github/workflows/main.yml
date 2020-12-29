@@ -71,6 +71,7 @@ jobs:
         ctest . -C Release --output-on-failure
     - name: move out
       run: |
+        cp LICENSE.txt ../build2/out/
         mv ../build2/out .
     - name: archive out
       uses: actions/upload-artifact@v2
@@ -196,6 +197,7 @@ jobs:
         ctest . -C Release --output-on-failure
     - name: move out
       run: |
+        cp LICENSE.txt ../build2/out/
         mv ../build2/out .
     - name: archive out
       uses: actions/upload-artifact@v2
