@@ -31,6 +31,9 @@ typedef struct sockaddr_un
 } SOCKADDR_UN, *PSOCKADDR_UN;
 #endif
 
+#include <boost/asio/version.hpp>
+
+#if BOOST_ASIO_VERSION < 101801
 namespace boost {
 namespace asio {
 namespace detail {
@@ -40,6 +43,7 @@ namespace detail {
 }
 
 #include <boost/asio/local/stream_protocol.hpp>
+#endif
 
 #endif
 
