@@ -370,6 +370,7 @@ def stub_functioncall(stub,name,type1,*args):
     i=0
     for p in type1.Parameters:
         a=PackMessageElement(args[i],p,stub,stub.RRGetNode())
+        a.ElementName = p.Name
         m.append(a)
         i+=1
     ret=stub.FunctionCall(name,m)
@@ -381,6 +382,7 @@ def stub_functioncallvoid(stub,name,type1,*args):
     i=0
     for p in type1.Parameters:
         a=PackMessageElement(args[i],p,stub)
+        a.ElementName = p.Name
         m.append(a)
         i+=1
     stub.FunctionCall(name,m)
@@ -393,6 +395,7 @@ def stub_functioncallgenerator(stub,name,type1,*args):
     for p in type1.Parameters:
         if (p.ContainerType != RobotRaconteurPython.DataTypes_ContainerTypes_generator):
             a=PackMessageElement(args[i],p,stub)
+            a.ElementName = p.Name
             m.append(a)
             i+=1
         else:
@@ -446,6 +449,7 @@ def stub_async_functioncall(stub,name,type1,*args):
     i=0
     for p in type1.Parameters:
         a=PackMessageElement(args[i],p,stub)
+        a.ElementName = p.Name
         m.append(a)
         i+=1
     handler=args[i]
@@ -461,6 +465,7 @@ def stub_async_functioncallvoid(stub,name,type1,*args):
     i=0
     for p in type1.Parameters:
         a=PackMessageElement(args[i],p,stub)
+        a.ElementName = p.Name
         m.append(a)
         i+=1
     handler=args[i]
@@ -479,6 +484,7 @@ def stub_async_functioncallgenerator(stub,name,type1,*args):
     for p in type1.Parameters:
         if (p.ContainerType != RobotRaconteurPython.DataTypes_ContainerTypes_generator):
             a=PackMessageElement(args[i],p,stub)
+            a.ElementName = p.Name
             m.append(a)
             i+=1
         else:
@@ -2441,6 +2447,7 @@ def skel_dispatchevent(skel,name,type1,*args):
     node=skel.RRGetNode()
     for p in type1.Parameters:
         a=PackMessageElement(args[i],p,node=node)
+        a.ElementName = p.Name
         m.append(a)
         i+=1
     skel.WrappedDispatchEvent(name,m)
@@ -2452,6 +2459,7 @@ def skel_callbackcall(skel,name,type1,endpoint,*args):
     node=skel.RRGetNode()
     for p in type1.Parameters:
         a=PackMessageElement(args[i],p,node=node)
+        a.ElementName = p.Name
         m.append(a)
         i+=1
     ret=skel.WrappedCallbackCall(name,endpoint,m)
@@ -2464,6 +2472,7 @@ def skel_callbackcallvoid(skel,name,type1,endpoint,*args):
     node=skel.RRGetNode()
     for p in type1.Parameters:
         a=PackMessageElement(args[i],p,node=node)
+        a.ElementName = p.Name
         m.append(a)
         i+=1
     skel.WrappedCallbackCall(name,endpoint,m)
