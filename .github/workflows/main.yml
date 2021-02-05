@@ -160,7 +160,7 @@ jobs:
         brew install swig boost openssl
     - name: install pip
       run: |
-        sudo /usr/bin/easy_install pip
+        sudo /usr/bin/easy_install pip==19.3.1
         sudo /usr/bin/python -m pip install --upgrade pip
     - name: pip
       run: |
