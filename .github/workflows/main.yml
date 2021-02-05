@@ -157,6 +157,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: brew
       run: |
+        brew update
         brew install swig boost openssl
     - name: install pip
       run: |
