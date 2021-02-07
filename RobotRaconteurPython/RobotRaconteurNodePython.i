@@ -623,15 +623,45 @@ def RegisterService(self, name, objecttype, obj, securitypolicy=None):
     director.__disown__()
     return self._RegisterService(name,SplitQualifiedName(objecttype)[0],rrobj,securitypolicy)
 
-NodeID = property(lambda self: self._NodeID(), lambda self,nodeid: self._SetNodeID(nodeid), 
+NodeID = property(lambda self: self._NodeID(), 
     doc = """
     (RobotRaconteur.NodeID) The current NodeID. If one has not been set, one will be automatically generated
     when read. NodeID cannot be set after it has been configured.	
     """)
-NodeName =property(lambda self: self._NodeName(), lambda self,nodename: self._SetNodeName(nodename),
+def SetNodeID(self,nodeid):
+    """
+    Set the NodeID
+ 
+    The NodeID must be set before NodeID is called. If an attempt to set 
+    the NodeID after NodeID has been called, an InvalidOperationException
+    will be thrown.
+	 
+    The NodeID must not be all zeros.
+
+    :param nodeid: The NodeID
+    :type nodeid: RobotRaconteur.NodeID
+    """
+    self._SetNodeID(nodeid)
+NodeName =property(lambda self: self._NodeName(),
     doc = """
     (str) The current NodeName. If one has not been set, it will be the empty string. Cannot be set after it has been configured.	
     """)
+def SetNodeName(self,nodename):
+    """
+    Set the NodeName
+
+    The NodeName must be set before calling NodeName If an attempt to set 
+    the NodeName after NodeName has been called, an InvalidOperationException
+    will be thrown.
+ 
+    The NodeName must not be empty, and must conform to the following regex:
+ 
+    ^[a-zA-Z][a-zA-Z0-9_\\.\\-]*$
+
+    :param nodename: The NodeName
+    :type nodename: str
+    """
+    self._SetNodeName(nodename)
 ThreadPoolCount = property(lambda self: self._GetThreadPoolCount(), lambda self,c: self._SetThreadPoolCount(c),
     doc = """
     (int) The size of the native thread pool. May be configured dynamically.
