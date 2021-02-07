@@ -15,6 +15,7 @@
 #include <RobotRaconteur.h>
 
 #ifdef RR_PYTHON
+#define PY_SSIZE_T_CLEAN
 #include <Python.h>
 #endif
 #pragma once
