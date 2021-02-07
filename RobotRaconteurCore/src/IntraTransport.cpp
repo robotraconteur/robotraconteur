@@ -804,6 +804,7 @@ void IntraTransportConnection::SetPeer(RR_SHARED_PTR<IntraTransportConnection> p
     }
     this->RemoteNodeID = peer->GetNode()->NodeID();
     this->m_RemoteEndpoint = peer->GetLocalEndpoint();
+	connected.exchange(true);
     
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, m_LocalEndpoint, "Peer set for IntraTransport connection");
 }
