@@ -68,6 +68,65 @@ size_t MessageLengthFromBytes(const uint8_t* bytes, size_t bytes_len)
 
 	return r.ReadNumber<uint32_t>();
 }
+PyObject* MessageToBytes(boost::intrusive_ptr<RobotRaconteur::Message> m, uint32_t ver = 2)
+{
+	using namespace RobotRaconteur;
+	if (m==NULL)
+	{
+		throw std::invalid_argument("m must not be null");
+	}	
 
+	switch (ver)
+	{
+	case 2:
+	{
+		size_t len = m->ComputeSize();
+		boost::shared_array<uint8_t> buf(new uint8_t[len]);
+		ArrayBinaryWriter w(buf.get(), 0, len);
+		m->Write(w);
+		return PyByteArray_FromStringAndSize((char*)buf.get(),len);
+	}	
+	case 4:		
+	{
+		size_t len = m->ComputeSize4();
+		boost::shared_array<uint8_t> buf(new uint8_t[len]);
+		ArrayBinaryWriter w(buf.get(), 0, len);
+		m->Write4(w);
+		return PyByteArray_FromStringAndSize((char*)buf.get(),len);
+	}
+	default:
+		throw InvalidArgumentException("Invalid message version");
+	}
+}
+
+boost::intrusive_ptr<RobotRaconteur::MessageElement> MessageElementFromBytes(const uint8_t* bytes, size_t bytes_len)
+{
+	using namespace RobotRaconteur;
+	ArrayBinaryReader r(bytes, 0, bytes_len);
+	boost::intrusive_ptr<MessageElement> m = CreateMessageElement();
+	m->Read(r);
+	return m;
+}
+size_t MessageElementLengthFromBytes(const uint8_t* bytes, size_t bytes_len)
+{
+	using namespace RobotRaconteur;
+	ArrayBinaryReader r(bytes, 0, bytes_len);
+	return r.ReadNumber<uint32_t>();
+}
+PyObject* MessageElementToBytes(boost::intrusive_ptr<RobotRaconteur::MessageElement> m, uint32_t ver = 2)
+{
+	using namespace RobotRaconteur;
+	if (m==NULL)
+	{
+		throw std::invalid_argument("m must not be null");
+	}
+	m->UpdateData();
+	size_t len = m->ComputeSize();
+	boost::shared_array<uint8_t> buf(new uint8_t[len]);
+	ArrayBinaryWriter w(buf.get(), 0, len);
+	m->Write(w);
+	return PyByteArray_FromStringAndSize((char*)buf.get(),len);
+	
+}
 
 }
