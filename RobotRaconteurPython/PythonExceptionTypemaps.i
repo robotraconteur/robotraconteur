@@ -197,7 +197,7 @@ static void ThrowPythonError()
 				swig::SwigVar_PyObject python_pack_element=PyObject_GetAttrString(util_module, "PackMessageElement");
 				if ((PyObject*)python_pack_element)
 				{
-					swig::SwigVar_PyObject py_errorparam_elem = PyObject_CallFunction(python_pack_element,"NsOO",errorparam,"varvalue errorparam",Py_None,Py_None);
+					swig::SwigVar_PyObject py_errorparam_elem = PyObject_CallFunction(python_pack_element,"OsOO",(PyObject*)errorparam,"varvalue errorparam",Py_None,Py_None);
 					if ((PyObject*)py_errorparam_elem)
 					{
 						try
