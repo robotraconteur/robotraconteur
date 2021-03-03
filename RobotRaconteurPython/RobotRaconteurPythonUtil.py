@@ -354,7 +354,7 @@ def check_member_args(name, param_types, args, isasync=False):
         expected_args_len += 1
     if len(param_types) > 0 and param_types[-1].ContainerType == RobotRaconteurPython.DataTypes_ContainerTypes_generator:
         expected_args_len -= 1        
-    if expected_args_len != len(args):
+    if (expected_args_len != len(args)) and not (isasync and expected_args_len+1 == len(args)):
             raise TypeError("%s() expects exactly %d arguments (%d given)" % (name, expected_args_len, len(args)))
 
 def stub_getproperty(stub,name,type1):
