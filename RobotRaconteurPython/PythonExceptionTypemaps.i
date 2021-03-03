@@ -29,14 +29,14 @@ static void RRExceptionToPythonError(RobotRaconteurException& rrexp)
 		return;
 	}
 
-	PyObject* exceptionUtil=PyObject_GetAttrString(err_module, "RobotRaconteurExceptionUtil");
+	swig::SwigVar_PyObject exceptionUtil=PyObject_GetAttrString(err_module, "RobotRaconteurExceptionUtil");
 	if (exceptionUtil==NULL)
 	{
 		PyErr_SetString(PyExc_Exception, "Could not load RobotRaconeturPythonError.RobotRaconteurExceptionUtil class");
 		return;
 	}
 
-	PyObject* errorCodeToException=PyObject_GetAttrString(exceptionUtil, "ErrorInfoToException");
+	swig::SwigVar_PyObject errorCodeToException=PyObject_GetAttrString(exceptionUtil, "ErrorInfoToException");
 	if (errorCodeToException==NULL)
 	{
 		PyErr_SetString(PyExc_Exception, "Could not load RobotRaconeturExceptionUtil.ErrorInfoToException function");
@@ -48,12 +48,10 @@ static void RRExceptionToPythonError(RobotRaconteurException& rrexp)
 	swig::SwigVar_PyObject error_obj;
   	error_obj = SWIG_NewPointerObj(SWIG_as_voidptr(&error), SWIGTYPE_p_RobotRaconteur__HandlerErrorInfo,  0 );	
 
-	PyObject* pyErr=PyObject_CallFunction(errorCodeToException, "O", (PyObject*)error_obj);
-	PyObject* pyErrType=PyObject_Type(pyErr);
+	swig::SwigVar_PyObject pyErr=PyObject_CallFunction(errorCodeToException, "O", (PyObject*)error_obj);
+	swig::SwigVar_PyObject pyErrType=PyObject_Type(pyErr);
 
 	PyErr_SetObject(pyErrType,pyErr);
-	Py_XDECREF(pyErr);
-	Py_XDECREF(pyErrType);	
 }
 	
 %}
@@ -114,11 +112,14 @@ RR_Py_Exception()
 
 static void ThrowPythonError()
 {
-	PyObject* exc;
-	PyObject* val;
-	PyObject* tb;
-	PyErr_Fetch(&exc,&val,&tb);
-	PyErr_NormalizeException(&exc,&val,&tb);
+	PyObject* exc1;
+	PyObject* val1;
+	PyObject* tb1;
+	PyErr_Fetch(&exc1,&val1,&tb1);
+	PyErr_NormalizeException(&exc1,&val1,&tb1);
+	swig::SwigVar_PyObject exc = exc1;
+	swig::SwigVar_PyObject val = val1;
+	swig::SwigVar_PyObject tb = tb1;	
 
 	if (RobotRaconteur::PythonTracebackPrintExc)
 	{
@@ -126,7 +127,8 @@ static void ThrowPythonError()
 		if (exc && val && tb)
 		{
 			PyErr_Display(exc,val,tb);
-		}
+		}		
+		PyErr_Clear();
 	}
 	else
 	{
@@ -145,7 +147,7 @@ static void ThrowPythonError()
 		throw InternalErrorException("Could not load RobotRaconeturPythonError module");			
 	}
 
-	PyObject* rr_py_RobotRaconteurException=PyObject_GetAttrString(err_module, "RobotRaconteurException");
+	swig::SwigVar_PyObject rr_py_RobotRaconteurException=PyObject_GetAttrString(err_module, "RobotRaconteurException");
 	if (rr_py_RobotRaconteurException==NULL)
 	{
 		throw InternalErrorException("Could not load RobotRaconeturPythonError.RobotRaconteurException type");		
@@ -153,11 +155,15 @@ static void ThrowPythonError()
 
 	if (PyErr_GivenExceptionMatches(exc,rr_py_RobotRaconteurException))
 	{
-		PyObject* message=PyObject_Str(PyObject_GetAttrString(val,"message"));
-		PyObject* errorname=PyObject_Str(PyObject_GetAttrString(val,"errorname"));
-		PyObject* errorcode=PyNumber_Long(PyObject_GetAttrString(val,"errorcode"));
+		swig::SwigVar_PyObject message1 = PyObject_GetAttrString(val,"message");
+		swig::SwigVar_PyObject errorname1 = PyObject_GetAttrString(val,"errorname");
+		swig::SwigVar_PyObject errorcode1 = PyObject_GetAttrString(val,"errorcode");
 		
-		if (!message || !errorcode || !errorname)
+		swig::SwigVar_PyObject message=PyObject_Str(message1);
+		swig::SwigVar_PyObject errorname=PyObject_Str(errorname1);
+		swig::SwigVar_PyObject errorcode=PyNumber_Long(errorcode1);
+		
+		if (!(PyObject*)message || !(PyObject*)errorcode || !(PyObject*)errorname)
 		{
 			throw InternalErrorException("Exception occurred in Python code");
 		}
@@ -172,27 +178,27 @@ static void ThrowPythonError()
 		m->AddElement("errorname",stringToRRArray(errorname2));
 		m->AddElement("errorstring", stringToRRArray(message2));			
 
-		PyObject* errorsubname = PyObject_GetAttrString(val,"errorsubname");
-		if (errorsubname && errorsubname != Py_None)
+		swig::SwigVar_PyObject errorsubname = PyObject_GetAttrString(val,"errorsubname");
+		if ((PyObject*)errorsubname && (PyObject*)errorsubname != Py_None)
 		{
-			PyObject* errorsubname2 = PyObject_Str(errorsubname);
-			if (errorsubname2)
+			swig::SwigVar_PyObject errorsubname2 = PyObject_Str(errorsubname);
+			if ((PyObject*)errorsubname2)
 			{
 				m->AddElement("errorsubname",stringToRRArray(PyObjectToUTF8(errorsubname2)));
 			}
 		}
 
-		PyObject* errorparam = PyObject_GetAttrString(val,"errorparam");
-		if (errorparam && errorparam != Py_None)
+		swig::SwigVar_PyObject errorparam = PyObject_GetAttrString(val,"errorparam");
+		if ((PyObject*)errorparam && (PyObject*)errorparam != Py_None)
 		{
 			PyObject* util_module=PyDict_GetItemString(modules_dict, "RobotRaconteur.RobotRaconteurPythonUtil");
 			if (util_module)
 			{			
-				PyObject* python_pack_element=PyObject_GetAttrString(util_module, "PackMessageElement");
-				if (python_pack_element)
+				swig::SwigVar_PyObject python_pack_element=PyObject_GetAttrString(util_module, "PackMessageElement");
+				if ((PyObject*)python_pack_element)
 				{
-					PyObject* py_errorparam_elem = PyObject_CallFunction(python_pack_element,"NsOO",errorparam,"varvalue errorparam",Py_None,Py_None);
-					if (py_errorparam_elem)
+					swig::SwigVar_PyObject py_errorparam_elem = PyObject_CallFunction(python_pack_element,"NsOO",errorparam,"varvalue errorparam",Py_None,Py_None);
+					if ((PyObject*)py_errorparam_elem)
 					{
 						try
 						{
@@ -216,8 +222,7 @@ static void ThrowPythonError()
 						{
 							//TODO: log error
 						}
-					}
-					Py_XDECREF(py_errorparam_elem);
+					}					
 				}
 			}
 		}
@@ -227,8 +232,9 @@ static void ThrowPythonError()
 	}
 	else
 	{
-		PyObject* str=PyObject_Str(val);
-		PyObject* strname=PyObject_Str(PyObject_GetAttrString(exc,"__name__"));
+		swig::SwigVar_PyObject str=PyObject_Str(val);
+		swig::SwigVar_PyObject strname1 = PyObject_GetAttrString(exc,"__name__");
+		swig::SwigVar_PyObject strname=PyObject_Str(strname1);
 		std::string str2=PyObjectToUTF8(str);
 		std::string strname2=PyObjectToUTF8(strname);
 				
