@@ -224,7 +224,7 @@ Building the core library requires Visual Studio 2012 through 2019, Boost 1.72.0
 Install the dependencies:
 
 ```
-apt-get install default-jdk default-jdk-headless default-jre default-jre-headless zlib1g zlib1g-dev libssl-dev libusb-1.0-0 libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev git cmake g++ make libboost-all-dev autoconf automake libtool bison libpcre3-dev python3-dev python3-numpy python3-setuptools python3-wheel mono-devel -qq
+apt-get install default-jdk default-jdk-headless default-jre default-jre-headless zlib1g zlib1g-dev libssl-dev libusb-1.0-0 libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev git cmake g++ make libboost-all-dev autoconf automake libtool bison libpcre3-dev python3-dev python3-numpy python3-setuptools python3-wheel mono-devel
 ```
 
 To build:
@@ -239,7 +239,7 @@ make
 Install the dependencies:
 
 ```
-apt-get install default-jdk default-jdk-headless default-jre default-jre-headless python2.7-dev libpython2.7-dev zlib1g zlib1g-dev libssl-dev libusb-1.0-0 libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev python-numpy python-setuptools python-wheel git cmake g++ make libboost-all-dev autoconf automake libtool bison libpcre3-dev python3-dev python3-numpy python3-setuptools python3-wheel mono-devel -qq
+apt-get install default-jdk default-jdk-headless default-jre default-jre-headless python2.7-dev libpython2.7-dev zlib1g zlib1g-dev libssl-dev libusb-1.0-0 libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev python-numpy python-setuptools python-wheel git cmake g++ make libboost-all-dev autoconf automake libtool bison libpcre3-dev python3-dev python3-numpy python3-setuptools python3-wheel mono-devel
 ```
 
 To build:
