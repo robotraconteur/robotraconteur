@@ -4236,7 +4236,7 @@ class WireSubscription(object):
         an exception.
 
         :return: Success and value (if successful)
-        :rtype: Tuple[bool,T]
+        :rtype: Tuple[bool,T,RobotRaconteur.TimeSpec]
         """
         val = RobotRaconteurPython.WrappedService_typed_packet()
         t=RobotRaconteurPython.TimeSpec()
