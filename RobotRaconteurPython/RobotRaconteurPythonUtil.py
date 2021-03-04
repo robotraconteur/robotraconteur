@@ -568,7 +568,9 @@ class WrappedServiceStubDirectorPython(RobotRaconteurPython.WrappedServiceStubDi
 
 class ServiceStub(object):
     __slots__ = ["rrinnerstub","rrlock","__weakref__"]
-    pass
+    
+    def RRGetNode(self):
+        return self.rrinnerstub.RRGetNode()
 
 class CallbackClient(object):
     __slots__ = ["Function","__weakref__"]
@@ -883,6 +885,9 @@ class PipeEndpoint(object):
         if (evt is not self._PacketAckReceivedEvent):
             raise RuntimeError("Invalid operation")
 
+    def GetNode(self):
+        return self.__innerpipe.GetNode()
+
 class PipeEndpointDirector(RobotRaconteurPython.WrappedPipeEndpointDirector):
     def __init__(self,endpoint):
         self.__endpoint=endpoint
@@ -1069,6 +1074,9 @@ class Pipe(object):
         wrappedp=WrappedPipeServerConnectDirectorPython(self,self._innerpipe.Type, c)
         self._innerpipe.SetWrappedPipeConnectCallback(wrappedp,0)
         wrappedp.__disown__()
+
+    def GetNode(self):
+        return self._innerpipe.GetNode()
 
 class WrappedPipeServerConnectDirectorPython(RobotRaconteurPython.WrappedPipeServerConnectDirector):
     def __init__(self,pipe,type,callback):
@@ -1405,6 +1413,9 @@ class WireConnection(object):
             self.__innerwire.SetOutValueLifespan(-1)
         else:
             self.__innerwire.SetOutValueLifespan(int(secs*1000.0))
+
+    def GetNode(self):
+        return self.__innerwire.GetNode()
 
 class WireConnectionDirector(RobotRaconteurPython.WrappedWireConnectionDirector):
 
@@ -1826,6 +1837,9 @@ class Wire(object):
         cb=WrappedWireServerPokeValueDirectorImpl(c,self._innerpipe,self._obj)
         self._innerpipe.SetPokeOutValueCallback(cb,0)
         cb.__disown__()
+
+    def GetNode(self):
+        return self._innerpipe.GetNode()
 
 class WrappedWireServerConnectDirectorPython(RobotRaconteurPython.WrappedWireServerConnectDirector):
     def __init__(self,wire,type,callback):
@@ -3806,6 +3820,9 @@ class ServiceInfo2Subscription(object):
         if (evt is not self._ServiceLost):
             raise RuntimeError("Invalid operation")
 
+    def GetNode(self):
+        return self._subscription.GetNode()
+
 class WrappedServiceSubscriptionDirectorPython(RobotRaconteurPython.WrappedServiceSubscriptionDirector):
     def __init__(self, subscription):
         super(WrappedServiceSubscriptionDirectorPython,self).__init__()
@@ -4138,6 +4155,9 @@ class ServiceSubscription(object):
         :type timeout: float
         """
         return async_call(self._subscription.AsyncGetDefaultClient, (adjust_timeout(timeout),), AsyncStubReturnDirectorImpl, handler)
+
+    def GetNode(self):
+        return self._subscription.GetNode()
             
 class WrappedWireSubscriptionDirectorPython(RobotRaconteurPython.WrappedWireSubscriptionDirector):
     def __init__(self,subscription):
@@ -4347,6 +4367,9 @@ class WireSubscription(object):
         if (evt is not self._WireValueChanged):
             raise RuntimeError("Invalid operation")
 
+    def GetNode(self):
+        return self._subscription.GetNode()
+
 class WrappedPipeSubscriptionDirectorPython(RobotRaconteurPython.WrappedPipeSubscriptionDirector):
     def __init__(self,subscription):
         super(WrappedPipeSubscriptionDirectorPython,self).__init__()
@@ -4509,7 +4532,10 @@ class PipeSubscription(object):
     @PipePacketReceived.setter
     def PipePacketReceived(self, evt):
         if (evt is not self._PipePacketReceived):
-            raise RuntimeError("Invalid operation")   
+            raise RuntimeError("Invalid operation")
+
+    def GetNode(self):
+        return self._subscription.GetNode() 
 
 class WrappedServiceSubscriptionFilterPredicateDirectorPython(RobotRaconteurPython.WrappedServiceSubscriptionFilterPredicateDirector):
     def __init__(self, f):

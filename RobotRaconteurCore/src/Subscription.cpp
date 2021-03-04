@@ -306,6 +306,13 @@ namespace RobotRaconteur
 
 		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Subscription, -1, "ServiceInfo2Subscription closed");
 	}
+
+	RR_SHARED_PTR<RobotRaconteurNode> ServiceInfo2Subscription::GetNode()
+	{
+		RR_SHARED_PTR<RobotRaconteurNode> n=node.lock();
+		if (!n) throw InvalidOperationException("Node has been released");
+		return n;
+	}
 		
 	ServiceInfo2Subscription::ServiceInfo2Subscription(RR_SHARED_PTR<detail::Discovery> parent)
 	{
@@ -555,6 +562,13 @@ namespace RobotRaconteur
 		d->SubscriptionClosed(shared_from_this());
 
 		ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Subscription, -1, "ServiceSubscription closed");
+	}
+
+	RR_SHARED_PTR<RobotRaconteurNode> ServiceSubscription::GetNode()
+	{
+		RR_SHARED_PTR<RobotRaconteurNode> n=node.lock();
+		if (!n) throw InvalidOperationException("Node has been released");
+		return n;
 	}
 
 	static RR_SHARED_PTR<detail::ServiceSubscription_client> SeviceSubscription_FindClient(std::map<ServiceSubscriptionClientID, RR_SHARED_PTR<detail::ServiceSubscription_client> >& clients, RR_SHARED_PTR<RRObject> client)
@@ -1459,6 +1473,13 @@ namespace RobotRaconteur
 		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Subscription, -1, "", membername, "WireSubscription closed");
 	}
 
+	RR_SHARED_PTR<RobotRaconteurNode> WireSubscriptionBase::GetNode()
+	{
+		RR_SHARED_PTR<RobotRaconteurNode> n=node.lock();
+		if (!n) throw InvalidOperationException("Node has been released");
+		return n;
+	}
+
 	WireSubscriptionBase::WireSubscriptionBase(RR_SHARED_PTR<ServiceSubscription> parent, boost::string_ref membername, boost::string_ref servicepath)
 	{
 		this->parent = parent;
@@ -2002,6 +2023,13 @@ namespace RobotRaconteur
 		}
 
 		ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Subscription, -1, "", membername, "PipeSubscription closed");
+	}
+
+	RR_SHARED_PTR<RobotRaconteurNode> PipeSubscriptionBase::GetNode()
+	{
+		RR_SHARED_PTR<RobotRaconteurNode> n=node.lock();
+		if (!n) throw InvalidOperationException("Node has been released");
+		return n;
 	}
 
 	PipeSubscriptionBase::PipeSubscriptionBase(RR_SHARED_PTR<ServiceSubscription> parent, boost::string_ref membername, boost::string_ref servicepath, int32_t max_recv_packets, int32_t max_send_backlog)		

@@ -230,6 +230,8 @@ namespace RobotRaconteur
 		 */
 		virtual void Close();
 
+		RR_SHARED_PTR<RobotRaconteurNode> GetNode();
+
 	protected:
 		boost::mutex this_lock;
 
@@ -583,6 +585,8 @@ namespace RobotRaconteur
 			AsyncGetDefaultClientBase(boost::bind(&detail::AsyncGetDefaultClient_handler_adapter<T>, handler, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)), timeout);
 		}
 
+		RR_SHARED_PTR<RobotRaconteurNode> GetNode();
+
 	protected:
 		boost::mutex this_lock;
 
@@ -736,6 +740,8 @@ namespace RobotRaconteur
 		void Close();
 
 		WireSubscriptionBase(RR_SHARED_PTR<ServiceSubscription> parent, boost::string_ref membername, boost::string_ref servicepath);
+
+		RR_SHARED_PTR<RobotRaconteurNode> GetNode();
 
 	protected:
 
@@ -963,6 +969,8 @@ namespace RobotRaconteur
 		void Close();
 
 		PipeSubscriptionBase(RR_SHARED_PTR<ServiceSubscription> parent, boost::string_ref membername, boost::string_ref servicepath = "", int32_t max_recv_packets = -1, int32_t max_send_backlog = 5);
+
+		RR_SHARED_PTR<RobotRaconteurNode> GetNode();
 
 	protected:
 

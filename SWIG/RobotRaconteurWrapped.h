@@ -1720,6 +1720,8 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 
 		void SetRRDirector(WrappedServiceInfo2SubscriptionDirector* director, int32_t id);
 
+		boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> GetNode();
+
 	protected:
 
 		RR_SHARED_PTR<ServiceInfo2Subscription> subscription;
@@ -1797,6 +1799,8 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		void AsyncGetDefaultClient(int32_t timeout, AsyncStubReturnDirector* handler, int32_t id);
 
 		void SetRRDirector(WrappedServiceSubscriptionDirector* director, int32_t id);
+
+		boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> GetNode();
 		
 	protected:
 

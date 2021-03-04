@@ -3403,6 +3403,11 @@ namespace RobotRaconteur
 		}
 	}
 
+	boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> WrappedServiceInfo2Subscription::GetNode()
+	{
+		return subscription->GetNode();
+	}
+
 	void WrappedServiceInfo2Subscription::ServiceDetected(RR_WEAK_PTR<WrappedServiceInfo2Subscription> this_, RR_SHARED_PTR<ServiceInfo2Subscription> subscription, const ServiceSubscriptionClientID& id, const ServiceInfo2& info)
 	{
 		RR_SHARED_PTR<WrappedServiceInfo2Subscription> this1 = this_.lock();
@@ -3578,6 +3583,11 @@ namespace RobotRaconteur
 		RR_SHARED_PTR<WrappedServiceSubscription> s = shared_from_this();
 		HandlerErrorInfo err2(err);
 		DIRECTOR_CALL3(WrappedServiceSubscriptionDirector, RR_Director->ClientConnectFailed(s, id, url, err2));
+	}
+
+	boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> WrappedServiceSubscription::GetNode()
+	{
+		return subscription->GetNode();
 	}
 
 	WrappedWireSubscription::WrappedWireSubscription(RR_SHARED_PTR<ServiceSubscription> parent, const std::string& membername, const std::string& servicepath)
