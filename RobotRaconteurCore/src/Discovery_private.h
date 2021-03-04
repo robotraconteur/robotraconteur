@@ -64,6 +64,10 @@ namespace detail
 
 		std::vector<NodeDiscoveryInfo> GetDetectedNodes();
 
+		NodeInfo2 GetDetectedNodeCacheInfo(const RobotRaconteur::NodeID& nodeid);
+
+		bool TryGetDetectedNodeCacheInfo(const RobotRaconteur::NodeID& nodeid, NodeInfo2& nodeinfo2);
+
 		void NodeAnnouncePacketReceived(boost::string_ref packet);
 
 		void NodeDetected(const NodeDiscoveryInfo& info);

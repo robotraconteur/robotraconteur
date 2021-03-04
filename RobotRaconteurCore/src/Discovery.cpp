@@ -970,6 +970,44 @@ namespace RobotRaconteur
 			return o;
 		}
 
+		NodeInfo2 Discovery::GetDetectedNodeCacheInfo(const RobotRaconteur::NodeID& nodeid)
+		{
+			NodeInfo2 nodeinfo2;
+			bool res = TryGetDetectedNodeCacheInfo(nodeid, nodeinfo2);
+			if (!res)
+			{
+				ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Discovery, -1, "Node " << nodeid.ToString() << "not in node cache");
+				throw NodeNotFoundException("Node " + nodeid.ToString() + "not in node cache");
+			}
+			return nodeinfo2;
+		}
+
+		bool Discovery::TryGetDetectedNodeCacheInfo(const RobotRaconteur::NodeID& nodeid, NodeInfo2& nodeinfo2)
+		{
+			boost::mutex::scoped_lock lock(m_DiscoveredNodes_lock);
+
+			std::map<std::string, RR_SHARED_PTR<Discovery_nodestorage> >::iterator e1 = m_DiscoveredNodes.find(nodeid.ToString());
+			if (e1 == m_DiscoveredNodes.end())
+			{
+				ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Discovery, -1, "TryGetDetectedNodeCacheInfo node " << nodeid.ToString() << " not found");
+				return false;
+			}
+
+			ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Discovery, -1, "TryGetDetectedNodeCacheInfo node " << nodeid.ToString() << " returning " << nodeinfo2.ConnectionURL.size() << " urls");
+
+			nodeinfo2.NodeID = e1->second->info->NodeID;
+			nodeinfo2.NodeName = e1->second->info->NodeName;
+
+			nodeinfo2.ConnectionURL.clear();
+
+			BOOST_FOREACH(NodeDiscoveryInfoURL u, e1->second->info->URLs)
+			{
+				nodeinfo2.ConnectionURL.push_back(u.URL);
+			}
+
+			return true;
+		}
+
 		static std::string Discovery_log_NodeDiscoveryInfoURLs_url_field(const NodeDiscoveryInfoURL& url)
 		{
 			return url.URL;

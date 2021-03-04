@@ -1453,6 +1453,11 @@ import java.util.*;
         return o;        
 	}
 
+	public final NodeInfo2 getDetectedNodeCacheInfo(NodeID nodeid)
+	{
+		return new NodeInfo2(RobotRaconteurJava.wrappedGetDetectedNodeCacheInfo(this,nodeid));
+	}
+
 	public void asyncFindObjRefTyped(Object obj, String objref, String objecttype, Action2<Object,RuntimeException> handler)
   {
 	asyncFindObjRefTyped(obj,objref,objecttype,handler,-1);

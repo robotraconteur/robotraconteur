@@ -2363,6 +2363,16 @@ namespace RobotRaconteur
 		return o;
 	}
 
+	NodeInfo2 WrappedGetDetectedNodeCacheInfo(boost::shared_ptr<RobotRaconteurNode> node, const RobotRaconteur::NodeID& nodeid)
+	{
+		return node->GetDetectedNodeCacheInfo(nodeid);
+	}
+
+	bool WrappedTryGetDetectedNodeCacheInfo(boost::shared_ptr<RobotRaconteurNode> node, const RobotRaconteur::NodeID& nodeid, NodeInfo2& nodeinfo2)
+	{
+		return node->TryGetDetectedNodeCacheInfo(nodeid, nodeinfo2);
+	}
+
 	void WrappedServiceSkel::Init(const std::string &s, RR_SHARED_PTR<RRObject> o, RR_SHARED_PTR<ServerContext> c)
 	{
 

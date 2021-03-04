@@ -2849,6 +2849,24 @@ namespace RobotRaconteur
             return o;
         }
 
+        public NodeInfo2 GetDetectedNodeCacheInfo(NodeID nodeid)
+        {
+            return new NodeInfo2(RobotRaconteurNET.WrappedGetDetectedNodeCacheInfo(this,nodeid));
+        }
+
+        public bool TryGetDetectedNodeCacheInfo(NodeID nodeid, out NodeInfo2 nodeinfo2)
+        {
+            WrappedNodeInfo2 ret = new WrappedNodeInfo2();
+            bool res = RobotRaconteurNET.WrappedTryGetDetectedNodeCacheInfo(this,nodeid, ret);
+            if (!res)
+            {
+                nodeinfo2 = null;
+                return false;
+            }
+            nodeinfo2 = new NodeInfo2(ret);
+            return true;
+        }
+
         public ServerContext RegisterService(string name, string servicetype, object obj, ServiceSecurityPolicy policy = null)
         {
             ServiceSkel skel = GetServiceType(servicetype).CreateSkel(obj);

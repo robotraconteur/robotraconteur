@@ -246,7 +246,37 @@ def GetDetectedNodes(self):
 	:rtype: List[RobotRaconteur.NodeID]
 	"""
 	o1=WrappedGetDetectedNodes(self)
-	return [NodeID(x) for x in o1]	
+	return [NodeID(x) for x in o1]
 
+def GetDetectedNodeCacheInfo(self, nodeid):
+	"""
+	Get cached node discovery information
+
+	Return current node information from the discovery cache. This
+	information is unverified and is used for the first step in the
+	discovery process.
+
+	:param nodeid: The NodeID of the requested node
+	:type nodeid: RobotRaconteur.NodeID
+	:return: The node info
+	:rtype: RobotRaconteur.NodeInfo2
+	"""
+	from .RobotRaconteurPythonUtil import NodeInfo2
+	return NodeInfo2(WrappedGetDetectedNodeCacheInfo(self, nodeid))
+
+def TryGetDetectedNodeCacheInfo(self, nodeid):
+	"""
+	Try get cached node discovery information
+
+	Same as GetDetectedNodeCacheInfo, but returns bool
+	for success or failure instead of throwing an exception
+	"""
+	from .RobotRaconteurPythonUtil import NodeInfo2 as NodeInfo2py
+	ret = NodeInfo2()
+	res = WrappedTryGetDetectedNodeCacheInfo(self,nodeid,ret)
+	if not res:
+		return False, None
+	else:
+		return True, NodeInfo2py(ret)
 %}
 }

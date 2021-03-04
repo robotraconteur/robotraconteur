@@ -1741,6 +1741,26 @@ std::vector<NodeDiscoveryInfo> RobotRaconteurNode::GetDetectedNodes()
 	return m_Discovery->GetDetectedNodes();
 }
 
+NodeInfo2 RobotRaconteurNode::GetDetectedNodeCacheInfo(const RobotRaconteur::NodeID& nodeid)
+{
+	if (!m_Discovery)
+	{
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_this, Node, -1, "Node not init");
+	 	throw InvalidOperationException("Node not init");
+	}
+	return m_Discovery->GetDetectedNodeCacheInfo(nodeid);
+}	
+
+bool RobotRaconteurNode::TryGetDetectedNodeCacheInfo(const RobotRaconteur::NodeID& nodeid, NodeInfo2& nodeinfo2)
+{
+	if (!m_Discovery)
+	{
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_this, Node, -1, "Node not init");
+	 	throw InvalidOperationException("Node not init");
+	}
+	return m_Discovery->TryGetDetectedNodeCacheInfo(nodeid, nodeinfo2);
+}
+
 void RobotRaconteurNode::NodeDetected(const NodeDiscoveryInfo& info)
 {
 	if (!m_Discovery)

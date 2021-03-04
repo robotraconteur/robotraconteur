@@ -1243,6 +1243,30 @@ namespace RobotRaconteur
 		std::vector<NodeDiscoveryInfo> GetDetectedNodes();
 
 		/**
+		 * @brief Get cached node discovery information
+		 * 
+		 * Return current node information from the discovery cache. This
+		 * information is unverified and is used for the first step in the
+		 * discovery process.
+		 * 
+		 * @param nodeid The NodeID of the requested node
+		 * @return NodeInfo2 
+		 */
+		NodeInfo2 GetDetectedNodeCacheInfo(const RobotRaconteur::NodeID& nodeid);
+
+		/**
+		 * @brief Try get cached node discovery information
+		 * 
+		 * Same as GetDetectedNodeCacheInfo, but returns bool
+		 * for success or failure instead of throwing an exception
+		 * 
+		 * @param nodeid The NodeID of the requested node
+		 * @param nodeinfo2 Out parameter for the node info
+		 * @return bool true on success, false on failure
+		 */
+		 bool TryGetDetectedNodeCacheInfo(const RobotRaconteur::NodeID& nodeid, NodeInfo2& nodeinfo2);
+
+		/**
 		 * @brief The boost::signals2 connection type for AddNodeServicesDetectedListener
 		 * 
 		 */

@@ -1157,6 +1157,10 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 
 	std::vector<std::string> WrappedGetDetectedNodes(RR_SHARED_PTR<RobotRaconteurNode> node);
 
+	NodeInfo2 WrappedGetDetectedNodeCacheInfo(boost::shared_ptr<RobotRaconteurNode> node, const RobotRaconteur::NodeID& nodeid);
+	
+	bool WrappedTryGetDetectedNodeCacheInfo(boost::shared_ptr<RobotRaconteurNode> node, const RobotRaconteur::NodeID& nodeid, NodeInfo2& nodeinfo2);
+	
 	class WrappedRRObject;
 	class WrappedServiceSkel;
 	class WrappedArrayMemoryDirector;
