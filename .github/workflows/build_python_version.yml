@@ -70,7 +70,7 @@ jobs:
 
     runs-on: macos-10.15
     env:
-      LDFLAGS: -L/usr/local/Cellar/icu4c/67.1/lib
+      LIBRARY_PATH: /usr/local/opt/icu4c/lib
     steps:
     - uses: actions/checkout@v2
       with:
