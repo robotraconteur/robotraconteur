@@ -293,6 +293,12 @@ import java.util.*;
 		return _GetObjectServicePath(stub.rr_innerstub);		
 	}
 
+	public final String getObjectType(Object obj)
+	{
+		ServiceStub stub = (ServiceStub)obj;
+		return _GetObjectType(stub.rr_innerstub);		
+	}
+
 	public final MessageElementData packStructure(Object s)
 	{
 		if (s == null)

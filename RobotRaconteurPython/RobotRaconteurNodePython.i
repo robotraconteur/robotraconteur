@@ -268,20 +268,6 @@ def GetPulledServiceType(self,obj,servicetype):
         obj=obj.rrinnerstub
     return self._GetPulledServiceType(obj,servicetype)
 
-def GetServicePath(self,obj):
-    """
-    Get the ServicePath of a client object reference.
-    ``obj`` have been returned by ConnectService(), AsyncConnectService(),
-    or an ``objref``
-
-    :param obj: The object to query
-    :return: The servicepath of the object
-    :rtype: str
-    """
-    if (hasattr(obj,'rrinnerstub')):
-        obj=obj.rrinnerstub
-    return self._GetServicePath(obj)
-
 def NewStructure(self,structtype,obj=None):
     """
     Returns a new Robot Raconteur structure with type ``structtype``
@@ -593,7 +579,21 @@ def GetObjectServicePath(self,obj):
     :rtype: str
     """
     return self._GetObjectServicePath(obj.rrinnerstub)
-    
+
+def GetObjectType(self,obj):
+    """
+    Get the Robot Raconteur type of a connected service object
+    ``obj`` have been returned by ConnectService(), AsyncConnectService(),
+    or an ``objref``
+
+    :param obj: The object to query
+    :return: The Robot Raconteur type of the object
+    :rtype: str
+    """
+    if (hasattr(obj,'rrinnerstub')):
+        obj=obj.rrinnerstub
+    return self._GetObjectType(obj)
+
 def RegisterService(self, name, objecttype, obj, securitypolicy=None):
     """
     Registers a service for clients to connect

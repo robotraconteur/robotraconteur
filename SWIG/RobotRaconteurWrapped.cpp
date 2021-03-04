@@ -735,7 +735,15 @@ namespace RobotRaconteur
 
 	std::string WrappedServiceStub::RRType()
 	{
-		return RR_objecttype->Name;
+		RR_SHARED_PTR<ServiceDefinition> def = RR_objecttype->ServiceDefinition_.lock();
+		if (!def)
+		{
+			return RR_objecttype->Name;
+		}
+		else
+		{
+			return def->Name + "." + RR_objecttype->Name;
+		}
 	}
 
 	WrappedServiceStub::~WrappedServiceStub()

@@ -1159,6 +1159,15 @@ namespace RobotRaconteur
 		std::string GetObjectServicePath(RR_SHARED_PTR<RRObject> obj);
 
 		/**
+		 * @brief Get the Robot Raconteur type of a connected service object
+		 * obj must be returned by ConnectService(), AsyncConnectService(),
+		 * or an `objref`
+		 * @param obj The object to query
+		 * @return std::string The Robot Raconteur type of the object
+		 */
+		virtual std::string GetObjectType(RR_SHARED_PTR<RRObject> obj);
+
+		/**
 		 * @internal
 		 * 
 		 * @brief Registers an endpoint for use with the node
@@ -2272,15 +2281,6 @@ namespace RobotRaconteur
 		 * @param exp The RobotRaconteurException to downcast
 		 */
 		RR_SHARED_PTR<RobotRaconteurException> DownCastException(RR_SHARED_PTR<RobotRaconteurException> exp);
-
-		/**
-		 * @brief Get the ServicePath of a client object reference
-		 * obj must be returned by ConnectService(), AsyncConnectService(),
-		 * or an `objref`
-		 * @param obj The object to query
-		 * @return std::string The servicepath of the object
-		 */
-		virtual std::string GetServicePath(RR_SHARED_PTR<RRObject> obj);
 
 		/**
 		 * @brief Check if the endpoint is authorized for large message transfer

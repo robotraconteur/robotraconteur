@@ -2810,15 +2810,15 @@ RR_SHARED_PTR<RobotRaconteurException> RobotRaconteurNode::DownCastException(RR_
 	return GetServiceType(stype.get<0>())->DownCastException(exp);
 }
 
-std::string RobotRaconteurNode::GetServicePath(RR_SHARED_PTR<RRObject> obj)
+std::string RobotRaconteurNode::GetObjectType(RR_SHARED_PTR<RRObject> obj)
 {
 	if (!(dynamic_cast<ServiceStub*>(obj.get()) != 0))
 	{
-		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_this, Node, -1, "Only service stubs can have objrefs");
-		throw InvalidArgumentException("Only service stubs can have objrefs");
+		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_this, Node, -1, "obj is not a service stub");
+		throw InvalidArgumentException("obj is not a service stub");
 	}
 	RR_SHARED_PTR<ServiceStub> s = rr_cast<ServiceStub>(obj);
-	return s->ServicePath;
+	return s->RRType();
 }
 
 bool RobotRaconteurNode::IsEndpointLargeTransferAuthorized(uint32_t endpoint)

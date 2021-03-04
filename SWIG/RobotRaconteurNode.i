@@ -334,9 +334,6 @@ RR_KEEP_GIL()
 	%rename sp _get_s;
 	static boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> sp();
 
-	RR_MAKE_METHOD_PRIVATE(GetServicePath)
-	std::string GetServicePath(boost::shared_ptr<RRObject> obj);
-	
 RR_RELEASE_GIL()
 	
 	RR_MAKE_METHOD_PRIVATE(Shutdown)
@@ -412,7 +409,7 @@ RR_KEEP_GIL()
 	RR_MAKE_METHOD_PRIVATE(GetServiceNodeName)
 	RR_MAKE_METHOD_PRIVATE(GetServiceName)
 	RR_MAKE_METHOD_PRIVATE(GetObjectServicePath)
-
+	RR_MAKE_METHOD_PRIVATE(GetObjectType)
 	
 %extend
 {
@@ -442,6 +439,11 @@ RR_KEEP_GIL()
 	std::string GetObjectServicePath(boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj)
 	{		
 		return $self->GetObjectServicePath(obj);		
+	}
+
+	std::string GetObjectType(boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj)
+	{		
+		return $self->GetObjectType(obj);		
 	}
 
 }
