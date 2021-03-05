@@ -4034,6 +4034,58 @@ namespace RobotRaconteur
             _subscription.AsyncGetDefaultClient(timeout,h,id);
             return await h.Task;
         }
+
+        public string[] ServiceURL
+        {
+            get
+            {
+                return _subscription.GetServiceURL().ToArray();
+            }
+        }
+
+        public void UpdateServiceURL(string[] url, string username = null, Dictionary<string, object> credentials = null, string objecttype = null, bool close_connected = false)
+        {
+            MessageElementData credentials2 = null;
+            try
+            {
+                if (username == null) username = "";
+                if (credentials != null)
+                {
+                    credentials2 = (MessageElementData)RobotRaconteurNode.s.PackVarType(credentials);
+                }                                
+
+                if (objecttype == null) objecttype = "";
+                vectorstring url2 = new vectorstring();
+                foreach (string ss in url) url2.Add(ss);
+
+                _subscription.UpdateServiceURL(url2, username, credentials2, objecttype, close_connected);                
+            }
+            finally
+            {
+                if (credentials2 != null) credentials2.Dispose();
+            }
+        }
+
+        public void UpdateServiceURL(string url, string username = null, Dictionary<string, object> credentials = null, string objecttype = null, bool close_connected = false)
+        {
+            MessageElementData credentials2 = null;
+            try
+            {
+                if (username == null) username = "";
+                if (credentials != null)
+                {
+                    credentials2 = (MessageElementData)RobotRaconteurNode.s.PackVarType(credentials);
+                }                                
+
+                if (objecttype == null) objecttype = "";                
+
+                _subscription.UpdateServiceURL(url, username, credentials2, objecttype, close_connected);                
+            }
+            finally
+            {
+                if (credentials2 != null) credentials2.Dispose();
+            }
+        }
     }
 
     public class WireSubscription<T>

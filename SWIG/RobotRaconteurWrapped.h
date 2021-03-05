@@ -1801,6 +1801,11 @@ boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);\
 		void SetRRDirector(WrappedServiceSubscriptionDirector* director, int32_t id);
 
 		boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> GetNode();
+
+		std::vector<std::string> GetServiceURL();
+
+		void UpdateServiceURL(const std::vector<std::string>& url, const std::string& username = "", boost::intrusive_ptr<MessageElementData> credentials=boost::intrusive_ptr<MessageElementData>(),  const std::string& objecttype = "", bool close_connected = false);
+		void UpdateServiceURL(const std::string& url, const std::string& username = "", boost::intrusive_ptr<MessageElementData> credentials=boost::intrusive_ptr<MessageElementData>(),  const std::string& objecttype = "", bool close_connected = false);
 		
 	protected:
 

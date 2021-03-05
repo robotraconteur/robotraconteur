@@ -4158,7 +4158,40 @@ class ServiceSubscription(object):
 
     def GetNode(self):
         return self._subscription.GetNode()
-            
+
+    @property
+    def ServiceURL(self):
+        """
+        Get the service connection URL
+		 
+		Returns the service connection URL. Only valid when subscription was created using
+		RobotRaconteurNode.SubscribeService(). Will throw an exception if subscription
+		was opened using RobotRaconteurNode.SubscribeServiceByType()
+        """
+        return list(self._subscription.GetServiceURL())
+
+    def UpdateServiceURL(self, url, username = None, credentials = None, close_connected = False):
+        """
+        Update the service connection URL
+		 
+		Updates the URL used to connect to the service. If close_connected is True,
+		existing connections will be closed. If False, existing connections will not be closed.
+
+        :param url: The new URL to use to connect to service
+        :type url: Union[str,List[str]]
+        :param username: An optional username for authentication
+        :type username: str
+        :param credentials: Optional credentials for authentication
+        :type credentials: Dict[str,Any]
+        :param close_connected: Optional, (default False) Close existing connections        
+        """
+
+        if username is None:
+            username = ""
+        if credentials is not None:
+            credentials=PackMessageElement(credentials,"varvalue{string}",None,self._subscription.GetNode()).GetData()    
+        self._subscription.UpdateServiceURL(url,username,credentials,"",close_connected)
+
 class WrappedWireSubscriptionDirectorPython(RobotRaconteurPython.WrappedWireSubscriptionDirector):
     def __init__(self,subscription):
         super(WrappedWireSubscriptionDirectorPython,self).__init__()

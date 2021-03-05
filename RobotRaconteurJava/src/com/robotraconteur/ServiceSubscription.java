@@ -312,4 +312,78 @@ public class ServiceSubscription
 		asyncGetDefaultClient(handler, -1);
 	}
 
+	public String[] getServiceURL()
+	{		
+		vectorstring in=_subscription.getServiceURL();	 
+		String[] o=new String[(int)in.size()];
+		for (int i=0; i<o.length; i++)
+		{
+			o[i]=in.get(i);
+		}
+		return o;
+	}
+
+	public void updateServiceURL(String url)
+	{
+		updateServiceURL(url, null, null, null, false);
+	}
+
+	public void updateServiceURL(String url, String username, Map<String,Object> credentials)
+	{
+		updateServiceURL(url, username, credentials, null, false);
+	}
+
+	public void updateServiceURL(String url, String username, Map<String,Object> credentials, String objecttype)
+	{
+		updateServiceURL(url, username, credentials, objecttype, false);
+	}
+
+	public void updateServiceURL(String url, String username, Map<String, Object> credentials, String objecttype, boolean close_connected)
+	{
+		updateServiceURL(new String[] {url}, username, credentials, objecttype, close_connected);
+	}
+
+	public void updateServiceURL(String[] url)
+	{
+		updateServiceURL(url, null, null, null, false);
+	}
+
+	public void updateServiceURL(String[] url, String username, Map<String,Object> credentials)
+	{
+		updateServiceURL(url, username, credentials, null, false);
+	}
+
+	public void updateServiceURL(String[] url, String username, Map<String,Object> credentials, String objecttype)
+	{
+		updateServiceURL(url, username, credentials, objecttype, false);
+	}
+
+	public final void updateServiceURL(String[] url, String username, Map<String, Object> credentials, String objecttype, boolean close_connected)
+	{
+		MessageElementData credentials2 = null;
+		try
+		{
+			if (username == null)
+			{
+				username = "";
+			}
+			if (credentials != null)
+			{
+				credentials2 = (MessageElementData)RobotRaconteurNode.s().packVarType(credentials);
+			}
+
+			if (objecttype==null) objecttype="";
+			
+			vectorstring url1=new vectorstring();
+			for (int i=0; i<url.length; i++)
+			{
+				url1.add(url[i]);
+			}
+			_subscription.updateServiceURL(url1, username, credentials2, objecttype, close_connected);
+		}
+		finally
+		{
+			if (credentials2!=null) credentials2.delete();
+		}
+	}	
 }

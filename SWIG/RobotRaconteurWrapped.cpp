@@ -3590,6 +3590,25 @@ namespace RobotRaconteur
 		return subscription->GetNode();
 	}
 
+	std::vector<std::string> WrappedServiceSubscription::GetServiceURL()
+	{	
+		return subscription->GetServiceURL();
+	}
+
+	void WrappedServiceSubscription::UpdateServiceURL(const std::vector<std::string>& url, const std::string& username, boost::intrusive_ptr<MessageElementData> credentials, const std::string& objecttype, bool close_connected)
+	{
+		RR_SHARED_PTR<RobotRaconteurNode> node = GetNode();
+		boost::intrusive_ptr<RRMap<std::string,RRValue> > credentials2;
+		if (credentials) credentials2=rr_cast<RRMap<std::string,RRValue> >(node->UnpackMapType<std::string,RRValue>(rr_cast<MessageElementNestedElementList>(credentials)));
+
+		subscription->UpdateServiceURL(url, username, credentials2, objecttype, close_connected);
+	}
+	void WrappedServiceSubscription::UpdateServiceURL(const std::string& url, const std::string& username, boost::intrusive_ptr<MessageElementData> credentials,  const std::string& objecttype, bool close_connected)
+	{
+
+	}
+		
+
 	WrappedWireSubscription::WrappedWireSubscription(RR_SHARED_PTR<ServiceSubscription> parent, const std::string& membername, const std::string& servicepath)
 		: WireSubscriptionBase(parent, membername, servicepath)
 	{
