@@ -926,9 +926,9 @@ namespace RobotRaconteur
 	RR_SHARED_PTR<WrappedServiceStub> WrappedPipeEndpoint::GetStub()
 	{
 		RR_SHARED_PTR<PipeBase> p = parent.lock();
-		if (!p) return RR_SHARED_PTR<WrappedServiceStub>();
+		if (!p) throw InvalidOperationException("Invalid stub");
 		RR_SHARED_PTR<PipeClientBase> p1=RR_DYNAMIC_POINTER_CAST<PipeClientBase>(p);
-		if (!p1) return RR_SHARED_PTR<WrappedServiceStub>();
+		if (!p1) throw InvalidOperationException("Invalid stub");
 		return RR_DYNAMIC_POINTER_CAST<WrappedServiceStub>(p1->GetStub());
 	}
 
@@ -1248,9 +1248,9 @@ namespace RobotRaconteur
 	RR_SHARED_PTR<WrappedServiceStub> WrappedWireConnection::GetStub()
 	{
 		RR_SHARED_PTR<WireBase> w = parent.lock();
-		if (!w) return RR_SHARED_PTR<WrappedServiceStub>();
+		if (!w) throw InvalidOperationException("Invalid stub");
 		RR_SHARED_PTR<WireClientBase> w2 = RR_DYNAMIC_POINTER_CAST<WireClientBase>(w);
-		if (!w2) return RR_SHARED_PTR<WrappedServiceStub>();
+		if (!w2) throw InvalidOperationException("Invalid stub");
 		return RR_DYNAMIC_POINTER_CAST<WrappedServiceStub>(w2->GetStub());
 	}
 
@@ -3707,7 +3707,7 @@ namespace RobotRaconteur
 	{
 		if (!current_connection)
 		{
-			return RR_SHARED_PTR<WrappedServiceStub>();
+			throw InvalidOperationException("Invalid stub");
 		}
 		return current_connection->GetStub();
 	}
@@ -3820,7 +3820,7 @@ namespace RobotRaconteur
 
 		if (!current_connection)
 		{
-			return RR_SHARED_PTR<WrappedServiceStub>();
+			throw InvalidOperationException("Invalid stub");
 		}
 		return current_connection->GetStub();
 	}
@@ -4072,6 +4072,10 @@ namespace RobotRaconteur
 
 #ifdef RR_PYTHON
 	bool PythonTracebackPrintExc = false;
+	void SetPythonTracebackPrintExc(bool value)
+	{
+		PythonTracebackPrintExc = value;
+	}
 	void InitPythonTracebackPrintExc()
 	{
 		PythonTracebackPrintExc = false;
