@@ -204,7 +204,8 @@ void ASIOStreamBaseTransport::AsyncAttachStream1(RR_SHARED_PTR<RRObject> paramet
 			{
 				if (RemoteNodeID != RemoteNodeID1)
 				{
-					ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, GetLocalEndpoint(), "AsyncAttachStream ConnectStream returned unexpected server NodeID");
+					lock.unlock();
+					ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, this->GetLocalEndpoint(), "AsyncAttachStream ConnectStream returned unexpected server NodeID");
 					detail::PostHandlerWithException(node, (callback), RR_MAKE_SHARED<ConnectionException>("Invalid server NodeID"), true);
 					return;
 				}
@@ -2364,6 +2365,7 @@ RR_INTRUSIVE_PTR<MessageEntry> ASIOStreamBaseTransport::ProcessStreamOpRequest(R
 				}
 			}
 			
+			lock.unlock();
 			ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, GetLocalEndpoint(), "Client requested unknown node");
 
 			mmret->Error = MessageErrorType_NodeNotFound;
