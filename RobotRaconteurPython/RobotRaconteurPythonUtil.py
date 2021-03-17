@@ -5047,11 +5047,20 @@ class TapFileReader(object):
         return UnpackMessageElement(el, "varvalue value", None, node)
 
 def settrace():
-    # Enable debugging in vscode if ptvsd has been loaded
-    # This may potentially activate debugging when not expected if ptvsd has been imported
-    # for some reason
+    
+    enable_debugpy = os.environ.get("ROBOTRACONTEUR_PYTHON_ENABLE_DEBUGPY", None)
+    if enable_debugpy is not None:
+        enable_debugpy = enable_debugpy.strip().lower()
+        if enable_debugpy == "1" or enable_debugpy == "true":
+            import debugpy
+            debugpy.debug_this_thread()
+            return
 
-    if 'ptvsd' in sys.modules:
-        import ptvsd
-        ptvsd.debug_this_thread()
+    enable_pydevd = os.environ.get("ROBOTRACONTEUR_PYTHON_ENABLE_PYDEVD", None)
+    if enable_pydevd is not None:
+        enable_pydevd = enable_pydevd.strip().lower()
+        if enable_pydevd == "1" or enable_pydevd == "true":
+            import pydevd
+            pydevd.settrace(suspend=False)
 
+    
