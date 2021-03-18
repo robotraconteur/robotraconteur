@@ -175,12 +175,40 @@ namespace RobotRaconteur
 
 			if (config->GetOptionOrDefaultAsBool("discovery-listening-enable"))
 			{
-				tcp_transport->EnableNodeDiscoveryListening();
+				uint32_t listen_flags = 0;
+
+				if (config->GetOptionOrDefaultAsBool("tcp-ipv4-discovery"))
+				{
+					listen_flags |= IPNodeDiscoveryFlags_IPV4_BROADCAST;
+				}
+				if (config->GetOptionOrDefaultAsBool("tcp-ipv6-discovery"))
+				{
+					listen_flags |= IPNodeDiscoveryFlags_LINK_LOCAL;
+				}
+
+				if (listen_flags != 0)
+				{
+					tcp_transport->EnableNodeDiscoveryListening(listen_flags);
+				}
 			}
 
 			if (config->GetOptionOrDefaultAsBool("discovery-announce-enable"))
 			{
-				tcp_transport->EnableNodeAnnounce();
+				uint32_t announce_flags = 0;
+
+				if (config->GetOptionOrDefaultAsBool("tcp-ipv4-discovery"))
+				{
+					announce_flags |= IPNodeDiscoveryFlags_IPV4_BROADCAST;
+				}
+				if (config->GetOptionOrDefaultAsBool("tcp-ipv6-discovery"))
+				{
+					announce_flags |= IPNodeDiscoveryFlags_LINK_LOCAL;
+				}
+
+				if (announce_flags != 0)
+				{
+					tcp_transport->EnableNodeAnnounce(announce_flags);
+				}				
 			}
 
 			if (config->GetOptionOrDefaultAsBool("load-tls"))
@@ -569,6 +597,8 @@ namespace RobotRaconteur
 		h.add<std::string>("tcp-ws-add-origins", "add websocket origins (comma separated)", RobotRaconteurNodeSetupFlags_TCP_WEBSOCKET_ORIGIN_OVERRIDE);
 		h.add<std::string>("tcp-ws-remove-origins", "remove websocket origins (comma separated)", RobotRaconteurNodeSetupFlags_TCP_WEBSOCKET_ORIGIN_OVERRIDE);
 		h.add<bool>("tcp-start-server-sharer", "start TCP server listening using port sharer", RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER_PORT_SHARER);
+		h.add<bool>("tcp-ipv4-discovery", "use IPv4 for discovery", RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_IPV4_DISCOVERY);
+		h.add<bool>("tcp-ipv6-discovery", "use IPv6 for discovery", RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_IPV6_DISCOVERY);
 		h.add<bool>("intra-start-server", "start Intra server listening", RobotRaconteurNodeSetupFlags_INTRA_TRANSPORT_START_SERVER);
 		h.add<bool>("disable-timeouts", "disable timeouts for debugging", RobotRaconteurNodeSetupFlags_DISABLE_TIMEOUTS);
 		h.add<bool>("disable-message4", "disable message v4", RobotRaconteurNodeSetupFlags_DISABLE_MESSAGE4);
@@ -743,6 +773,16 @@ namespace RobotRaconteur
 		if (option == "tcp-start-server-sharer")
 		{
 			return (this->default_flags & RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER_PORT_SHARER) != 0;
+		}
+
+		if (option == "tcp-ipv4-discovery")
+		{
+			return (this->default_flags & RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_IPV4_DISCOVERY) != 0;
+		}
+
+		if (option == "tcp-ipv6-discovery")
+		{
+			return (this->default_flags & RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_IPV6_DISCOVERY) != 0;
 		}
 
 		if (option == "intra-start-server")
