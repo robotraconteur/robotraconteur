@@ -83,8 +83,19 @@ jobs:
     strategy:
       matrix:
         arch: [x64,x86]
+    env:
+      BOOST_ROOT_1_72_0: C:\hostedtoolcache\windows\Boost\1.72.0\x86_64
     steps:
     - uses: actions/checkout@v2
+    - name: install_boost
+      run: |
+        $url = "https://github.com/actions/boost-versions/releases/download/1.72.0-20200608.4/boost-1.72.0-win32-msvc14.1-x86_64.tar.gz"
+        (New-Object System.Net.WebClient).DownloadFile($url, "$env:TEMP\boost.tar.gz")
+        7z.exe x "$env:TEMP\boost.tar.gz" -o"$env:TEMP\boostArchive" -y | Out-Null
+        7z.exe x "$env:TEMP\boostArchive" -o"$env:TEMP\boost" -y | Out-Null
+        Push-Location -Path "$env:TEMP\boost"
+        Invoke-Expression .\setup.ps1
+      shell: powershell
     - uses: actions/setup-java@v1
       with:
         java-version: 8
