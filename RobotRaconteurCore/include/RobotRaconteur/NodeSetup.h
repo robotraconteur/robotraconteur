@@ -106,6 +106,11 @@ namespace RobotRaconteur
 		/** @brief Start the IntraTransport server to listen for incoming clients */
 		RobotRaconteurNodeSetupFlags_INTRA_TRANSPORT_START_SERVER = 0x200000,
 
+		/** @brief Enable TcpTransport IPv4 discovery */
+		RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_IPV4_DISCOVERY = 0x400000,
+		/** @brief Enable TcpTransport IPv6 discovery */		
+		RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_IPV6_DISCOVERY = 0x800000,
+
 		/** @brief Enable the LocalTap debug logging system */
 		RobotRaconteurNodeSetupFlags_LOCAL_TAP_ENABLE = 0x1000000,
 		/** @brief Allow the user to set the LocalTap name */
@@ -122,17 +127,20 @@ namespace RobotRaconteur
 		| RobotRaconteurNodeSetupFlags_ENABLE_INTRA_TRANSPORT*/
 
 		/** @brief Default configuration for client nodes (See ClientNodeSetup) */
-		RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT = 0x10004D,
+		RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT = 0x90004D,
 		/*RobotRaconteurNodeSetupFlags_ENABLE_TCP_TRANSPORT
 		| RobotRaconteurNodeSetupFlags_ENABLE_LOCAL_TRANSPORT
 		| RobotRaconteurNodeSetupFlags_ENABLE_INTRA_TRANSPORT 
-		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING 
+		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING
+		| RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_IPV6_DISCOVERY
 		| RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_CLIENT,*/
 
 		
-		RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT_ALLOWED_OVERRIDE = 0x7133E5D,
+		RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT_ALLOWED_OVERRIDE = 0x7D33E5D,
 		/*RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS 
 		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING 
+		| RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_IPV6_DISCOVERY
+		| RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_IPV4_DISCOVERY
 		| RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_CLIENT
 		| RobotRaconteurNodeSetupFlags_DISABLE_MESSAGE4
 		| RobotRaconteurNodeSetupFlags_DISABLE_STRINGTABLE
@@ -144,7 +152,7 @@ namespace RobotRaconteur
 		| RobotRaconteurNodeSetupFlags_JUMBO_MESSAGE */
 
 		/** @brief Default configuration for server nodes */		
-		RobotRaconteurNodeSetupFlags_SERVER_DEFAULT = 0x3004AF,
+		RobotRaconteurNodeSetupFlags_SERVER_DEFAULT = 0xB004AF,
 		/*RobotRaconteurNodeSetupFlags_ENABLE_TCP_TRANSPORT
 		| RobotRaconteurNodeSetupFlags_ENABLE_LOCAL_TRANSPORT
 		| RobotRaconteurNodeSetupFlags_ENABLE_INTRA_TRANSPORT 
@@ -153,11 +161,14 @@ namespace RobotRaconteur
 		| RobotRaconteurNodeSetupFlags_INTRA_TRANSPORT_START_SERVER
 		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_ANNOUNCE 
 		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING,
-		| RobotRaconteurNodeSetupFlags_DISABLE_STRINGTABLE */
+		| RobotRaconteurNodeSetupFlags_DISABLE_STRINGTABLE
+		| RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_IPV6_DISCOVERY */
 
 		/** @brief Default allowed overrides for server nodes */	
-		RobotRaconteurNodeSetupFlags_SERVER_DEFAULT_ALLOWED_OVERRIDE = 0x73F7FFF,
-		/*RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS 
+		RobotRaconteurNodeSetupFlags_SERVER_DEFAULT_ALLOWED_OVERRIDE = 0x7FF7FFF,
+		/*RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS
+		| RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_IPV6_DISCOVERY
+		| RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_IPV4_DISCOVERY
 		| RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_SERVER 
 		| RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER
 		| RobotRaconteurNodeSetupFlags_INTRA_TRANSPORT_START_SERVER
@@ -178,7 +189,7 @@ namespace RobotRaconteur
 		| RobotRaconteurNodeSetupFlags_JUMBO_MESSAGE */
 
 		/** @brief Default configuration for server nodes requiring TLS network transports */
-		RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT = 0x3034AF,
+		RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT = 0xB034AF,
 		/*RobotRaconteurNodeSetupFlags_ENABLE_TCP_TRANSPORT
 		| RobotRaconteurNodeSetupFlags_ENABLE_LOCAL_TRANSPORT
 		| RobotRaconteurNodeSetupFlags_ENABLE_INTRA_TRANSPORT
@@ -189,7 +200,8 @@ namespace RobotRaconteur
 		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING
 		| RobotRaconteurNodeSetupFlags_LOAD_TLS_CERT
 		| RobotRaconteurNodeSetupFlags_REQUIRE_TLS
-		| RobotRaconteurNodeSetupFlags_DISABLE_STRINGTABLE*/
+		| RobotRaconteurNodeSetupFlags_DISABLE_STRINGTABLE
+		| RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_IPV6_DISCOVERY */
 
 		/** @brief Default allowed overrides for server nodes requiring TLS network transports */
 		RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT_ALLOWED_OVERRIDE = 0x73F4FFF
@@ -199,6 +211,8 @@ namespace RobotRaconteur
 		| RobotRaconteurNodeSetupFlags_INTRA_TRANSPORT_START_SERVER
 		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_ANNOUNCE 
 		| RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING
+		| RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_IPV6_DISCOVERY
+		| RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_IPV4_DISCOVERY
 		| RobotRaconteurNodeSetupFlags_DISABLE_MESSAGE4
 		| RobotRaconteurNodeSetupFlags_DISABLE_STRINGTABLE
 		| RobotRaconteurNodeSetupFlags_DISABLE_TIMEOUTS
