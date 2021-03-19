@@ -14,6 +14,8 @@ jobs:
       matrix:
         arch: [x64,x86]
         python_version: [3.7,3.9]
+    env:
+      BOOST_ROOT_1_72_0: C:\hostedtoolcache\windows\Boost\1.72.0\x86_64
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-python@v2
