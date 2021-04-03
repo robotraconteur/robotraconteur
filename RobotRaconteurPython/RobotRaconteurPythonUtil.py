@@ -2382,7 +2382,7 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
         if (type2.ArrayType == RobotRaconteurPython.DataTypes_ArrayTypes_array or (type2.ContainerType == RobotRaconteurPython.DataTypes_ContainerTypes_map_int32)):
             obj,objecttype=getattr(self.obj,'get_' + name)(str(index))
         elif (type2.ContainerType == RobotRaconteurPython.DataTypes_ContainerTypes_map_string):
-            obj,objecttype=getattr(self.obj, 'get_' + name)(codecs.encode(index,'utf-8'))
+            obj,objecttype=getattr(self.obj, 'get_' + name)(index)
         else:
             obj,objecttype=getattr(self.obj, 'get_' + name)()
 
