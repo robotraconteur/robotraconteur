@@ -4413,14 +4413,14 @@ namespace RobotRaconteur
 	};
 
 	
-	rrimports get_imports(RR_SHARED_PTR<ServiceDefinition> def, std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs,RR_SHARED_PTR<ServiceDefinition> rootdef=RR_SHARED_PTR<ServiceDefinition>())
+	rrimports get_imports(RR_SHARED_PTR<ServiceDefinition> def, std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs,std::set<std::string> parent_defs=std::set<std::string>())
 	{
 		rrimports out;
 		out.def=def;
 		if (def->Imports.size()==0) return out;
-
-		if (!rootdef) rootdef=def;
-
+		
+		parent_defs.insert(def->Name);
+		
 		BOOST_FOREACH (std::string& e, def->Imports)
 		{
 			RR_SHARED_PTR<ServiceDefinition> def2;
@@ -4436,9 +4436,13 @@ namespace RobotRaconteur
 
 			if (!def2) throw ServiceDefinitionVerifyException("Service definition \"" + e + "\" not found", def->ParseInfo);
 
-			if (def2->Name==rootdef->Name) throw ServiceDefinitionVerifyException("Recursive imports between \"" + def->Name + "\" and \"" + rootdef->Name + "\"", def->ParseInfo);
+			std::set<std::string>::iterator e_parent_defs = parent_defs.find(def2->Name);
+			if(e_parent_defs != parent_defs.end())
+			{
+				throw ServiceDefinitionVerifyException("Recursive imports between \"" + def->Name + "\" and \"" + *e_parent_defs + "\"", def->ParseInfo);
+			}
 
-			rrimports imp2=get_imports(def2,defs,rootdef);
+			rrimports imp2=get_imports(def2,defs,parent_defs);
 			out.imported.push_back(imp2);
 
 		}
