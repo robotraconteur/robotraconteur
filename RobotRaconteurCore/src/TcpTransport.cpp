@@ -5858,11 +5858,21 @@ namespace detail
 
 				std::string fname;
 
-				boost::optional<boost::filesystem::path> p1_1 = detail::LocalTransportUtil::GetTransportPublicSearchPath();
+				boost::scoped_array<wchar_t> sysdata_path1(new wchar_t[MAX_PATH]);
+				if (FAILED(SHGetFolderPathW(NULL,CSIDL_COMMON_APPDATA | CSIDL_FLAG_CREATE,NULL,0,sysdata_path1.get())))
+				{
+					return;
+				}
+
+				boost::filesystem::path sysdata_path(sysdata_path1.get());
+				sysdata_path /= "RobotRaconteur";
+
+				boost::optional<boost::filesystem::path> p1_1 = sysdata_path;
 				if (p1_1)
 				{
-					boost::filesystem::path p1 = *p1_1;
-					p1 /= "..";
+					boost::filesystem::path p1 = *p1_1;	
+					p1 /= "run";
+					p1 /= "transport";		
 					p1 /= "tcp";
 					p1 /= "portsharer";
 					p1 /= "portsharer.info";
