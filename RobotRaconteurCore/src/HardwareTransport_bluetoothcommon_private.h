@@ -18,8 +18,10 @@
 
 #pragma once
 
+#ifndef WINSOCK_VERSION
 #ifndef SOCKET
 #define SOCKET int
+#endif
 #endif
 
 #ifndef INVALID_SOCKET
@@ -259,8 +261,12 @@ public:
 				}
 				
 				boost::asio::generic::stream_protocol protocol(family, proto);
-
-				sock.reset(new boost::asio::generic::stream_protocol::socket(parent->GetNode()->GetThreadPool()->get_io_context(), protocol, s1));
+				#if BOOST_ASIO_VERSION < 101200
+					RR_BOOST_ASIO_IO_CONTEXT& ex = parent->GetNode()->GetThreadPool()->get_io_context();
+				#else
+					const boost::asio::generic::stream_protocol::socket::executor_type& ex = parent->GetNode()->GetThreadPool()->get_io_context().get_executor();
+				#endif
+				sock.reset(new boost::asio::generic::stream_protocol::socket(ex, protocol, s1));
 				break;
 			}
 		}
