@@ -202,7 +202,7 @@ target_compile_definitions(RobotRaconteurCore PRIVATE ROBOTRACONTEUR_DISABLE_STR
 ENDIF()
 
 if (WIN32)
-	target_compile_definitions(RobotRaconteurCore PUBLIC _WIN32_WINNT=0x0600)
+	target_compile_definitions(RobotRaconteurCore PUBLIC _WIN32_WINNT=0x0600 NOMINMAX=1)
 	if (ROBOTRACONTEUR_USE_OPENSSL)	
 		target_link_libraries(RobotRaconteurCore PRIVATE Mswsock.lib ws2_32.lib IPHLPAPI.lib Bcrypt.lib Crypt32.lib OpenSSL::SSL OpenSSL::Crypto)
 		target_compile_definitions(RobotRaconteurCore PRIVATE ROBOTRACONTEUR_USE_OPENSSL)
