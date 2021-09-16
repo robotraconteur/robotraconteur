@@ -270,8 +270,7 @@ namespace RobotRaconteur
 					throw InternalErrorException("Could not get numpy descr for pod/namedarray for structure init");
 				}
 				
-				if (tdef.ArrayType == DataTypes_ArrayTypes_none
-					|| tdef.ArrayVarLength || tdef.ArrayLength.size() == 0)
+				if (tdef.ArrayType != DataTypes_ArrayTypes_none && (tdef.ArrayVarLength || tdef.ArrayLength.size() == 0))
 				{
 					PyAutoPtr<PyObject> args(Py_BuildValue("(O(OO))", create_zero_array_func.get(), numpy_desc, Py_None));
 					Py_XDECREF(numpy_desc);
@@ -279,10 +278,19 @@ namespace RobotRaconteur
 				}
 				else
 				{
-					PyAutoPtr<PyObject> dims_arg(PyTuple_New(tdef.ArrayLength.size()));
-					for (size_t i = 0; i < tdef.ArrayLength.size(); i++)
+					std::vector<int32_t> dims_arg1;
+					if (tdef.ArrayType == DataTypes_ArrayTypes_none)
 					{
-						PyTuple_SetItem(dims_arg.get(), (Py_ssize_t)(i), PyLong_FromLong(tdef.ArrayLength.at(i)));
+						dims_arg1.push_back(1);
+					}
+					else
+					{
+						dims_arg1 = tdef.ArrayLength;
+					}
+					PyAutoPtr<PyObject> dims_arg(PyTuple_New(dims_arg1.size()));
+					for (size_t i = 0; i < dims_arg1.size(); i++)
+					{
+						PyTuple_SetItem(dims_arg.get(), (Py_ssize_t)(i), PyLong_FromLong(dims_arg1.at(i)));
 					}
 					PyAutoPtr<PyObject> none_args(Py_BuildValue("(O(OO))", create_zero_array_func.get(), numpy_desc, dims_arg.get()));
 					Py_XDECREF(numpy_desc);
