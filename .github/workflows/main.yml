@@ -84,21 +84,25 @@ jobs:
     strategy:
       matrix:
         arch: [x64,x86]
-    env:
-      BOOST_ROOT_1_72_0: C:\hostedtoolcache\windows\Boost\1.72.0\x86_64
     steps:
     - uses: actions/checkout@v2
       with:
         path: robotraconteur
-    - name: install_boost
-      run: |
-        $url = "https://github.com/actions/boost-versions/releases/download/1.72.0-20200608.4/boost-1.72.0-win32-msvc14.1-x86_64.tar.gz"
-        (New-Object System.Net.WebClient).DownloadFile($url, "$env:TEMP\boost.tar.gz")
-        7z.exe x "$env:TEMP\boost.tar.gz" -o"$env:TEMP\boostArchive" -y | Out-Null
-        7z.exe x "$env:TEMP\boostArchive" -o"$env:TEMP\boost" -y | Out-Null
-        Push-Location -Path "$env:TEMP\boost"
-        Invoke-Expression .\setup.ps1
-      shell: powershell
+    - uses: haya14busa/action-cond@v1
+      id: vcpkg_triplet
+      with:
+        cond: ${{ matrix.arch == 'x86' }}
+        if_true: "x86-windows-static-md"
+        if_false: "x64-windows-static-md"
+    - name: vcpkg
+      working-directory: ${{ env.VCPKG_INSTALLATION_ROOT }}
+      run: >
+        vcpkg install --triplet ${{ steps.vcpkg_triplet.outputs.value }} boost-algorithm boost-array boost-asio 
+        boost-assign boost-atomic boost-bind boost-config boost-container boost-date-time 
+        boost-smart-ptr boost-filesystem boost-foreach boost-format boost-function boost-interprocess
+        boost-intrusive boost-lexical-cast boost-locale boost-random boost-range boost-regex
+        boost-scope-exit boost-signals2 boost-thread boost-tuple boost-unordered 
+        boost-utility boost-uuid boost-program-options
     - uses: actions/setup-java@v1
       with:
         java-version: 8
@@ -137,8 +141,10 @@ jobs:
         cmake -G "Visual Studio 15 2017" -A ${{ steps.cmake_arch.outputs.value }} -DBUILD_GEN=ON -DBUILD_TEST=ON 
         -DBUILD_NET=ON -DBoost_USE_STATIC_LIBS=ON -DBUILD_PYTHON=ON 
         -DBUILD_PYTHON_WHEEL=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON -DBUILD_JAVA=ON 
-        -DBOOST_ROOT="${env:BOOST_ROOT_1_72_0}" -DPYTHON_EXECUTABLE="${{ env.PYTHON2_EXE }}"
+        -DPYTHON_EXECUTABLE="${{ env.PYTHON2_EXE }}"
         -DPYTHON3_EXECUTABLE="${{ env.PYTHON3_EXE }}" -DROBOTRACONTEUR_VERSION_SUFFIX="${{ env.version_suffix }}"
+        ("-DCMAKE_TOOLCHAIN_FILE=" + $env:VCPKG_INSTALLATION_ROOT + "/scripts/buildsystems/vcpkg.cmake")
+        -DVCPKG_TARGET_TRIPLET=${{ steps.vcpkg_triplet.outputs.value }}
         ../robotraconteur
     - name: build
       run: |
@@ -221,6 +227,58 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: 'out-osx'
+        path: out/*
+  build-matlab:
+
+    runs-on: ubuntu-18.04
+    env:
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        path: robotraconteur
+    - name: apt update
+      run: sudo apt update
+    - name: apt
+      run: >
+        sudo apt-get install zlib1g zlib1g-dev libssl-dev libusb-1.0-0 
+        libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev 
+        git cmake g++ make mono-devel -qq
+    - name: Set up MATLAB
+      uses: matlab-actions/setup-matlab@v1
+      with:
+        release: R2020a
+    - name: vcpkg
+      working-directory: ${{ env.VCPKG_INSTALLATION_ROOT }}
+      run: >
+        vcpkg install boost-algorithm boost-array boost-asio boost-assign boost-atomic
+        boost-bind boost-config boost-container boost-date-time boost-smart-ptr 
+        boost-filesystem boost-foreach boost-format boost-function boost-interprocess
+        boost-intrusive boost-lexical-cast boost-locale boost-random boost-range boost-regex
+        boost-scope-exit boost-signals2 boost-thread boost-tuple boost-unordered 
+        boost-utility boost-uuid boost-program-options
+    - name: configure
+      run: >
+        cmake -G "Unix Makefiles" -DBUILD_GEN=ON  -DBUILD_TEST=ON 
+        -DBoost_USE_STATIC_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DBUILD_MATLAB_MEX=ON
+        -DCMAKE_TOOLCHAIN_FILE=$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake
+        -S robotraconteur -B build2
+    - name: build
+      working-directory: build2
+      run: |
+        cmake --build . --config Release -j 4
+    - name: test
+      working-directory: build2
+      run: |
+        ctest . -C Release --output-on-failure
+    - name: move out
+      run: |
+        cp robotraconteur/LICENSE.txt build2/out/
+        mv build2/out .
+    - name: archive out
+      uses: actions/upload-artifact@v2
+      with:
+        name: 'out-matlab'
         path: out/*
     
       
