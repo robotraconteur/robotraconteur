@@ -14,23 +14,29 @@ jobs:
       matrix:
         arch: [x64,x86]
         python_version: [3.7,3.9]
-    env:
-      BOOST_ROOT_1_72_0: C:\hostedtoolcache\windows\Boost\1.72.0\x86_64
     steps:
     - uses: actions/checkout@v2
+      with:
+        path: robotraconteur
     - uses: actions/setup-python@v2
       with:
         python-version: '${{ matrix.python_version }}'
         architecture: ${{ matrix.arch }}
-    - name: install_boost
-      run: |
-        $url = "https://github.com/actions/boost-versions/releases/download/1.72.0-20200608.4/boost-1.72.0-win32-msvc14.1-x86_64.tar.gz"
-        (New-Object System.Net.WebClient).DownloadFile($url, "$env:TEMP\boost.tar.gz")
-        7z.exe x "$env:TEMP\boost.tar.gz" -o"$env:TEMP\boostArchive" -y | Out-Null
-        7z.exe x "$env:TEMP\boostArchive" -o"$env:TEMP\boost" -y | Out-Null
-        Push-Location -Path "$env:TEMP\boost"
-        Invoke-Expression .\setup.ps1
-      shell: powershell
+    - uses: haya14busa/action-cond@v1
+      id: vcpkg_triplet
+      with:
+        cond: ${{ matrix.arch == 'x86' }}
+        if_true: "x86-windows-static-md"
+        if_false: "x64-windows-static-md"
+    - name: vcpkg
+      working-directory: ${{ env.VCPKG_INSTALLATION_ROOT }}
+      run: >
+        vcpkg install --triplet ${{ steps.vcpkg_triplet.outputs.value }} boost-algorithm boost-array boost-asio 
+        boost-assign boost-atomic boost-bind boost-config boost-container boost-date-time 
+        boost-smart-ptr boost-filesystem boost-foreach boost-format boost-function boost-interprocess
+        boost-intrusive boost-lexical-cast boost-locale boost-random boost-range boost-regex
+        boost-scope-exit boost-signals2 boost-thread boost-tuple boost-unordered 
+        boost-utility boost-uuid boost-program-options
     - name: pip3
       run: |
         python -m pip install numpy setuptools wheel
@@ -47,25 +53,25 @@ jobs:
         if_false: "x64"
     - name: configure
       run: >
-        cd .. &&
         md -Force build2 && cd build2 &&
         cmake -G "Visual Studio 15 2017" -A ${{ steps.cmake_arch.outputs.value }} 
         -DBoost_USE_STATIC_LIBS=ON
-        -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON 
-        -DBOOST_ROOT="${env:BOOST_ROOT_1_72_0}"
+        -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON        
         -DPYTHON3_EXECUTABLE="${{ env.PYTHON3_EXE }}"
+        ("-DCMAKE_TOOLCHAIN_FILE=" + $env:VCPKG_INSTALLATION_ROOT + "/scripts/buildsystems/vcpkg.cmake")
+        -DVCPKG_TARGET_TRIPLET=${{ steps.vcpkg_triplet.outputs.value }}
         ../robotraconteur
     - name: build
       run: |
-        cd ../build2
+        cd build2
         cmake --build . --config Release -j 4
     - name: test
       run: |
-        cd ../build2
+        cd build2
         ctest . -C Release --output-on-failure
     - name: move out
       run: |
-        mv ../build2/out .
+        mv build2/out .
     - name: archive out
       uses: actions/upload-artifact@v2
       with:
@@ -83,8 +89,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        ref: '${{ github.event.inputs.ref }}'
-        repository: robotraconteur/robotraconteur
+        path: robotraconteur
     - name: brew
       run: |
         brew install swig boost openssl
@@ -99,7 +104,6 @@ jobs:
       run: echo "PYTHON3_EXE=${{ env.pythonLocation }}/bin/python" >> $GITHUB_ENV
     - name: configure
       run: >
-        cd .. &&
         mkdir build2 && cd build2 &&
         cmake -G "Xcode" -DBUILD_GEN=ON  -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON 
         -DBoost_USE_STATIC_LIBS=ON -DCMAKE_BUILD_TYPE=Release        
@@ -109,15 +113,15 @@ jobs:
         ../robotraconteur
     - name: build
       run: |        
-        cd ../build2
+        cd build2
         cmake --build . --config Release -j 4
     - name: test
       run: |
-        cd ../build2
+        cd build2
         ctest . -C Release --output-on-failure
     - name: move out
       run: |
-        mv ../build2/out .
+        mv build2/out .
     - name: archive out
       uses: actions/upload-artifact@v2
       with:
