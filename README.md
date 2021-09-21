@@ -392,4 +392,3 @@ This work was supported in part by the New York State Empire State Development D
 
 ![](docs/figures/arm_logo.jpg) ![](docs/figures/nys_logo.jpg)
 
-PyRI is developed by Rensselaer Polytechnic Institute, Wason Technology, LLC, and contributors.
