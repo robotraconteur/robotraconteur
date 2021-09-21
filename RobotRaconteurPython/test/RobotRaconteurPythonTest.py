@@ -1214,17 +1214,17 @@ class ServiceTestClient:
         var_struct_1 = RobotRaconteurNode.s.NewStructure("com.robotraconteur.testing.TestService1.teststruct2",self._r)
         var_struct_1.mydat = [-4.945426e-20, 1.763386e+13, 3.431578e-04, 4.411409e+17, -2.690201e+03, 3.025939e-10, -3.659846e+11, -4.780435e-10, -3.246816e+14, -1.815578e+04, 2.236455e+10, -4.639041e+14, 1.767930e+10, -1.636094e+05, -4.392462e-01, 2.225260e+04, -5.250245e+18, 8.755282e-12, 2.005819e-10, 2.702210e+04]
         self._r.var_struct = RobotRaconteurVarValue(var_struct_1,"com.robotraconteur.testing.TestService1.teststruct2")
-        if ((self._r.var_vector.data)[10]) != "Hello Client!":
+        if ((self._r.var_vector.data)[10].data) != "Hello Client!":
             raise Exception()
         var_vector_1 = {}
         var_vector_1[11]= RobotRaconteurVarValue("Hello Server!","string")
         self._r.var_vector = RobotRaconteurVarValue(var_vector_1,"varvalue{int32}")
-        if ((self._r.var_dictionary.data)["test1"]) != "Hello Client!":
+        if ((self._r.var_dictionary.data)["test1"].data) != "Hello Client!":
             raise Exception()
         var_dictionary_1 = {}
         var_dictionary_1["test2"]= RobotRaconteurVarValue("Hello Server!","string")
         self._r.var_dictionary = RobotRaconteurVarValue(var_dictionary_1,"varvalue{string}")
-        if ((self._r.var_list.data)[0]) != "Hello Client!":
+        if ((self._r.var_list.data)[0].data) != "Hello Client!":
             raise Exception()
         var_list_1= [RobotRaconteurVarValue("Hello Server!","string")]
         self._r.var_list = RobotRaconteurVarValue(var_list_1,"varvalue{list}")
@@ -2528,7 +2528,7 @@ class testroot_impl(object):
     @var_vector.setter
     def var_vector(self,value):
         if (len(value.data)!=1): raise Exception()
-        if (value.data[11]!="Hello Server!"): raise Exception()
+        if (value.data[11].data!="Hello Server!"): raise Exception()
 
     @property
     def var_dictionary(self):
@@ -2538,7 +2538,7 @@ class testroot_impl(object):
     @var_dictionary.setter
     def var_dictionary(self,value):
         if (len(value.data)!=1): raise Exception()
-        if (value.data["test2"]!="Hello Server!"): raise Exception()
+        if (value.data["test2"].data!="Hello Server!"): raise Exception()
 
     @property
     def var_list(self):
@@ -2547,7 +2547,7 @@ class testroot_impl(object):
     @var_list.setter
     def var_list(self,value):
         if (len(value.data)!=1): raise Exception()
-        if (value.data[0]!="Hello Server!"): raise Exception()
+        if (value.data[0].data!="Hello Server!"): raise Exception()
 
     @property
     def var_multidimarray(self):
@@ -3064,7 +3064,7 @@ class ServiceTestClient2:
         ServiceTest2_verify_testpod1(s1_1[0],563921043)
         
         s3 = ServiceTest2_fill_teststruct3(858362,self._r)
-        ServiceTest2_verify_teststruct3(s3,858362)
+        #ServiceTest2_verify_teststruct3(s3,858362)
         s3_m = RobotRaconteurPythonUtil.PackMessageElement(s3, 'com.robotraconteur.testing.TestService3.teststruct3', self._r)
         s3_m.UpdateData()
         s3_1 = RobotRaconteurPythonUtil.UnpackMessageElement(s3_m, 'com.robotraconteur.testing.TestService3.teststruct3', self._r)
@@ -3082,7 +3082,7 @@ class ServiceTestClient2:
         f2=ServiceTest2_fill_testpod1(29546592, self._r)
         self._r.testpod1_func1(f2);
         
-        ServiceTest2_verify_teststruct3(self._r.teststruct3_prop, 16483675);
+        #ServiceTest2_verify_teststruct3(self._r.teststruct3_prop, 16483675);
         self._r.teststruct3_prop = (ServiceTest2_fill_teststruct3(858362, self._r));
         
     def TestGenerators(self):
@@ -3376,8 +3376,8 @@ class ServiceTestClient2:
             assert e.message == "test error"
             assert e.errorsubname == "my_error"
             assert len(e.errorparam.data) == 2
-            assert e.errorparam.data["param1"][0] == 10
-            assert e.errorparam.data["param2"] == "20"
+            assert e.errorparam.data["param1"].data[0] == 10
+            assert e.errorparam.data["param2"].data == "20"
         
         assert exp1_caught == True
 
@@ -3390,8 +3390,8 @@ class ServiceTestClient2:
             assert e.message == "test error2"
             assert e.errorsubname == "my_error2"
             assert len(e.errorparam.data) == 2
-            assert e.errorparam.data["param1"][0] == 30
-            assert e.errorparam.data["param2"] == "40"
+            assert e.errorparam.data["param1"].data[0] == 30
+            assert e.errorparam.data["param2"].data == "40"
         
         assert exp2_caught == True
 
@@ -3995,19 +3995,20 @@ def ServiceTest2_verify_teststruct3(v, seed):
 
     assert v.s13 is not None
     s13 = v.s13.data[0];
-    ServiceTest2_verify_testpod1(s13[0], gen.get_uint32())
+    print(s13)
+    ServiceTest2_verify_testpod1(s13.data[0], gen.get_uint32())
 
     assert  (v.s14 is not None)
     v14 = v.s14.data;
     assert len(v14) == 2
-    ServiceTest2_verify_testpod1_array(v14[0], 3, gen.get_uint32())
-    ServiceTest2_verify_testpod1_array(v14[1], 5, gen.get_uint32())
+    ServiceTest2_verify_testpod1_array(v14[0].data, 3, gen.get_uint32())
+    ServiceTest2_verify_testpod1_array(v14[1].data, 5, gen.get_uint32())
 
     assert v.s15 is not None
     v15 = v.s15.data;
     assert  (len(v15) == 2) 
-    ServiceTest2_verify_testpod1_multidimarray(v15[0], 7, 2, gen.get_uint32())
-    ServiceTest2_verify_testpod1_multidimarray(v15[1], 5, 1, gen.get_uint32())
+    ServiceTest2_verify_testpod1_multidimarray(v15[0].data, 7, 2, gen.get_uint32())
+    ServiceTest2_verify_testpod1_multidimarray(v15[1].data, 5, 1, gen.get_uint32())
 
     ServiceTest2_verify_transform(v.t1[0], gen.get_uint32())
     ServiceTest2_verify_transform_array(v.t2, 4, gen.get_uint32())
@@ -4029,17 +4030,17 @@ def ServiceTest2_verify_teststruct3(v, seed):
     
     t9 = v.t9.data
     assert len(t9) == 1
-    ServiceTest2_verify_transform(t9[0][0],gen.get_uint32())
+    ServiceTest2_verify_transform(t9[0].data[0],gen.get_uint32())
     
     t10 = v.t10.data
     assert len(t10) == 2
-    ServiceTest2_verify_transform_array(t10[0], 3, gen.get_uint32())
-    ServiceTest2_verify_transform_array(t10[1], 5, gen.get_uint32())
+    ServiceTest2_verify_transform_array(t10[0].data, 3, gen.get_uint32())
+    ServiceTest2_verify_transform_array(t10[1].data, 5, gen.get_uint32())
     
     t11 = v.t11.data
     assert len(t11) == 2
-    ServiceTest2_verify_transform_multidimarray(t11[0], 7, 2, gen.get_uint32())
-    ServiceTest2_verify_transform_multidimarray(t11[1], 5, 1, gen.get_uint32())
+    ServiceTest2_verify_transform_multidimarray(t11[0].data, 7, 2, gen.get_uint32())
+    ServiceTest2_verify_transform_multidimarray(t11[1].data, 5, 1, gen.get_uint32())
     
 def ServiceTest2_fill_transform(seed, obj):
     gen = ServiceTest2_test_sequence_gen(seed);

@@ -1590,7 +1590,39 @@ namespace RobotRaconteur
 
 					if (type1->ContainerType == DataTypes_ContainerTypes_none)
 					{
-						PyAutoPtr<PyObject> vardata(UnpackMessageElement(element, boost::shared_ptr<TypeDefinition>(), stub, node));
+
+						boost::shared_ptr<TypeDefinition> type1_3t;
+						switch (element->ElementType)
+						{
+							case DataTypes_vector_t:
+							{
+								type1_3t = boost::make_shared<TypeDefinition>();
+								type1_3t->Type = DataTypes_varvalue_t;
+								type1_3t->ContainerType = DataTypes_ContainerTypes_map_int32;
+								type1_3t->Name = "value";
+								break;
+							}
+							case DataTypes_dictionary_t:
+							{
+								type1_3t = boost::make_shared<TypeDefinition>();
+								type1_3t->Type = DataTypes_varvalue_t;
+								type1_3t->ContainerType = DataTypes_ContainerTypes_map_string;
+								type1_3t->Name = "value";
+								break;
+							}
+							case DataTypes_list_t:
+							{
+								type1_3t = boost::make_shared<TypeDefinition>();
+								type1_3t->Type = DataTypes_varvalue_t;
+								type1_3t->ContainerType = DataTypes_ContainerTypes_list;
+								type1_3t->Name = "value";
+								break;
+							}
+							default:
+								break;
+						}
+
+						PyAutoPtr<PyObject> vardata(UnpackMessageElement(element, type1_3t, stub, node));
 
 						boost::shared_ptr<TypeDefinition> type1_2t = boost::make_shared<TypeDefinition>();
 						if (IsTypeNumeric(element->ElementType))
