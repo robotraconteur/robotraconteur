@@ -2057,13 +2057,29 @@ void TcpTransport::StartServer(int32_t port)
 		if (e.is_v4()) has_ip4=true;
 	}
 
+	bool reuse_addr=false;
+
+	const char* reuse_addr_env1 = std::getenv("ROBOTRACONTEUR_TCP_SERVER_REUSEADDR");
+	if (reuse_addr_env1)
+	{
+		std::string reuse_addr_env(reuse_addr_env1);
+		boost::to_lower(reuse_addr_env);
+		if (reuse_addr_env == "true" || reuse_addr_env == "on" || reuse_addr_env == "1")
+		{
+			reuse_addr=true;
+		}
+	}
 
 	if (has_ip4)
-	{
+	{	
 
 		ipv4_acceptor.reset(new boost::asio::ip::tcp::acceptor(GetNode()->GetThreadPool()->get_io_context(),boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(),port)));
 
 		ipv4_acceptor->set_option(boost::asio::ip::tcp::socket::linger(false,5));
+		if (reuse_addr)
+		{
+			ipv4_acceptor->set_option(boost::asio::ip::tcp::socket::reuse_address(true));
+		}
 
 
 		RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket(new boost::asio::ip::tcp::socket(GetNode()->GetThreadPool()->get_io_context()));
@@ -2075,9 +2091,7 @@ void TcpTransport::StartServer(int32_t port)
 			port=ipv4_acceptor->local_endpoint().port();
 		}
 
-		ipv4_acceptor_paused = false;
-
-	
+		ipv4_acceptor_paused = false;	
 	}
 
 	if (has_ip6)
@@ -2085,6 +2099,10 @@ void TcpTransport::StartServer(int32_t port)
 		ipv6_acceptor.reset(new boost::asio::ip::tcp::acceptor(GetNode()->GetThreadPool()->get_io_context(),boost::asio::ip::tcp::v6()));
 
 		ipv6_acceptor->set_option(boost::asio::ip::tcp::socket::linger(false,5));
+		if (reuse_addr)
+		{
+			ipv6_acceptor->set_option(boost::asio::ip::tcp::socket::reuse_address(true));
+		}
 
 		int on = 1;
 		setsockopt(ipv6_acceptor->native_handle(), IPPROTO_IPV6, IPV6_V6ONLY, reinterpret_cast<const char*>(&on), sizeof(on));
