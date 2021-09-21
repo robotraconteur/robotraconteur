@@ -180,6 +180,57 @@ Java must be built from source
 
 The MATLAB toolbox can be downloaded from the Matlab File Exchange. [https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur](https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur) Click "Download from GitHub" and save the file. Open the file with MATLAB to install the toolbox.
 
+### Debian 10 (buster)
+
+An apt repository is available for Debian. Packages are available for amd64, armhf, and arm64. See below for raspbian setup. To use, run:
+
+```
+sudo apt install apt-transport-https dirmngr gnupg ca-certificates
+wget -O - https://robotraconteur.github.io/robotraconteur-apt/wasontech-apt.gpg.key | sudo apt-key add -
+echo "deb https://robotraconteur.github.io/robotraconteur-apt/debian buster main" | sudo tee /etc/apt/sources.list.d/robotraconteur.list
+sudo apt update
+```
+
+#### C++
+
+```
+sudo apt-get install robotraconteur-dev
+```
+
+#### Python
+```
+sudo apt-get install python-robotraconteur
+sudo apt-get install python3-robotraconteur
+
+```
+
+#### C\# 
+
+The C\# library is available on NuGet. Search for "RobotRaconteurNET".
+
+The Linux native library must be installed using apt:
+
+```
+sudo apt-get install librobotraconteur-net-native
+```
+
+#### Java
+
+Java must be built from source
+
+### Raspbian 10 (buster)
+
+The Raspberry Pi OS (raspbian) for amhf 32-bit processors is slightly different than the main debian armhf distributions. It uses ARMv6 instructions, instead of the ARMv7 instructions used by the main debian installation. Use the following to set up the raspbian repository, and see the debian section for the rest of the instructions.
+
+**Raspberry Pi OS (raspbian) for 64-bit uses the standard debian repository. This is only for 32-bit ARMv6 installation.**
+
+```
+sudo apt install apt-transport-https dirmngr gnupg ca-certificates
+wget -O - https://robotraconteur.github.io/robotraconteur-apt/wasontech-apt.gpg.key | sudo apt-key add -
+echo "deb https://robotraconteur.github.io/robotraconteur-apt/raspbian buster main" | sudo tee /etc/apt/sources.list.d/robotraconteur.list
+sudo apt update
+```
+
 ### Mac OSX
 
 #### C++
