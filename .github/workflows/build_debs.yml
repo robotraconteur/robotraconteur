@@ -35,6 +35,9 @@ jobs:
         binfmt-support qemu-user-static 
         pbuilder debootstrap devscripts git-buildpackage 
         debian-keyring  debian-archive-keyring dh-make -qq
+    - name: raspbian keyring
+      if: ${{ matrix.config.os == 'raspbian' }}
+      run: wget https://archive.raspbian.org/raspbian.public.key -O - | sudo apt-key add -
     - name: cp pbuilderrc
       run: |
         cp pbuilderrc $HOME/.pbuilderrc
