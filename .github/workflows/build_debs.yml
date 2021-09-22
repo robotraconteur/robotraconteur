@@ -1,0 +1,33 @@
+name: build_debs
+
+on:
+  push:
+  pull_request:
+  release:
+    types:
+      - created
+
+jobs:
+  build-debian-buster:    
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: apt update
+      run: sudo apt update
+    - name: apt
+      run: >
+        sudo apt-get install install qemu 
+        binfmt-support qemu-user-static -qq
+
+    - name: pbuilder-create
+      run: |
+        sudo mkdir -p /var/cache/pbuilder/debian-buster-amd64/aptcache/
+        sudo OS=debian DIST=buster ARCH=amd64 pbuilder --config $GITHUB_WORKSPACE/pbuilderrc --create
+    - name: pubilder-build
+      run: |
+        OS=debian DIST=buster ARCH=amd64 pdebuild --config $GITHUB_WORKSPACE/pbuilderrc robotraconteur_*~buster.dsc
+    - name: archive result
+      uses: actions/upload-artifact@v2
+      with:
+        name: 'result-debian-buster-amd64'
+        path: result/*
