@@ -19,7 +19,7 @@ jobs:
         sudo apt-get install qemu 
         binfmt-support qemu-user-static 
         pbuilder debootstrap devscripts git-buildpackage 
-        debian-keyring  debian-archive-keyring -qq
+        debian-keyring  debian-archive-keyring dh-make -qq
     - name: cp pbuilderrc
       run: |
         cp pbuilderrc $HOME/.pbuilderrc
