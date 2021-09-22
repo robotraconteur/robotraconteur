@@ -51,12 +51,12 @@ jobs:
     - name: extact-source-deb
       run: |
         dpkg-source -x robotraconteur_*~buster.dsc src_deb
-    - name: pubilder-build
+    - name: pbuilder-build
       working-directory: src_deb
       run: |
         OS=${{ matrix.config.os }} DIST=${{ matrix.config.dist }} ARCH=${{ matrix.config.arch }} pdebuild
     - name: archive result
       uses: actions/upload-artifact@v2
       with:
-        name: 'result-debian-buster-amd64'
+        name: 'result-${{ matrix.config.os }}-${{ matrix.config.dist }}-${{ matrix.config.arch }}'
         path: result/*
