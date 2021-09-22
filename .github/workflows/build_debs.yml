@@ -10,6 +10,21 @@ on:
 jobs:
   build-debian-buster:    
     runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        config:
+          - os: debian
+            arch: amd64
+            dist: buster
+          - os: debian
+            arch: armhf
+            dist: buster
+          - os: debian
+            arch: arm64
+            dist: buster
+          - os: raspbian
+            arch: armhf
+            dist: buster
     steps:
     - uses: actions/checkout@v2
     - name: apt update
@@ -27,14 +42,14 @@ jobs:
     - name: pbuilder-create
       run: |
         sudo mkdir -p /var/cache/pbuilder/debian-buster-amd64/aptcache/
-        sudo OS=debian DIST=buster ARCH=amd64 pbuilder --create
+        sudo OS=${{ matrix.config.os }} DIST=${{ matrix.config.dist }} ARCH=${{ matrix.config.arch }} pbuilder --create
     - name: extact-source-deb
       run: |
         dpkg-source -x robotraconteur_*~buster.dsc src_deb
     - name: pubilder-build
       working-directory: src_deb
       run: |
-        OS=debian DIST=buster ARCH=amd64 pdebuild
+        OS=${{ matrix.config.os }} DIST=${{ matrix.config.dist }} ARCH=${{ matrix.config.arch }} pdebuild
     - name: archive result
       uses: actions/upload-artifact@v2
       with:
