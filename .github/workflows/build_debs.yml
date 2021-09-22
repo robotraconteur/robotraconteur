@@ -27,8 +27,8 @@ jobs:
         sudo OS=debian DIST=buster ARCH=amd64 pbuilder --create --configfile $GITHUB_WORKSPACE/pbuilderrc
     - name: extact-source-deb
       run: |
-        mkdir src_deb
         dpkg-source -x robotraconteur_*~buster.dsc src_deb
+        ls src_deb
     - name: pubilder-build
       working-directory: src_deb
       run: |
