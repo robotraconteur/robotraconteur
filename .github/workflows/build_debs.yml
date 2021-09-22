@@ -21,7 +21,9 @@ jobs:
         pbuilder debootstrap devscripts git-buildpackage 
         debian-keyring  debian-archive-keyring -qq
     - name: cp pbuilderrc
-      run: cp pbuilderrc /root/.pbuilderrc
+      run: |
+        cp pbuilderrc $HOME/.pbuilderrc
+        sudo cp pbuilderrc /root/.pbuilderrc
     - name: pbuilder-create
       run: |
         sudo mkdir -p /var/cache/pbuilder/debian-buster-amd64/aptcache/
