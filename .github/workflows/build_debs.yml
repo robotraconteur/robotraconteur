@@ -41,7 +41,7 @@ jobs:
         sudo cp pbuilderrc /root/.pbuilderrc
     - name: pbuilder-create
       run: |
-        sudo mkdir -p /var/cache/pbuilder/debian-buster-amd64/aptcache/
+        sudo mkdir -p /var/cache/pbuilder/=${{ matrix.config.os }}-${{ matrix.config.dist }}-${{ matrix.config.arch }}/aptcache/
         sudo OS=${{ matrix.config.os }} DIST=${{ matrix.config.dist }} ARCH=${{ matrix.config.arch }} pbuilder --create
     - name: extact-source-deb
       run: |
