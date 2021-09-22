@@ -17,7 +17,9 @@ jobs:
     - name: apt
       run: >
         sudo apt-get install qemu 
-        binfmt-support qemu-user-static -qq
+        binfmt-support qemu-user-static 
+        pbuilder debootstrap devscripts git-buildpackage 
+        debian-keyring  debian-archive-keyring-qq
 
     - name: pbuilder-create
       run: |
