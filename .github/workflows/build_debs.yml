@@ -24,10 +24,10 @@ jobs:
     - name: pbuilder-create
       run: |
         sudo mkdir -p /var/cache/pbuilder/debian-buster-amd64/aptcache/
-        sudo OS=debian DIST=buster ARCH=amd64 pbuilder --config $GITHUB_WORKSPACE/pbuilderrc --create
+        sudo OS=debian DIST=buster ARCH=amd64 pbuilder --create --configfile $GITHUB_WORKSPACE/pbuilderrc
     - name: pubilder-build
       run: |
-        OS=debian DIST=buster ARCH=amd64 pdebuild --config $GITHUB_WORKSPACE/pbuilderrc robotraconteur_*~buster.dsc
+        OS=debian DIST=buster ARCH=amd64 pdebuild --configfile $GITHUB_WORKSPACE/pbuilderrc robotraconteur_*~buster.dsc
     - name: archive result
       uses: actions/upload-artifact@v2
       with:
