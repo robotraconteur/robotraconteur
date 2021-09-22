@@ -16,7 +16,7 @@ jobs:
       run: sudo apt update
     - name: apt
       run: >
-        sudo apt-get install install qemu 
+        sudo apt-get install qemu 
         binfmt-support qemu-user-static -qq
 
     - name: pbuilder-create
