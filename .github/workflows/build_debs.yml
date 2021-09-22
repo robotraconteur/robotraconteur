@@ -37,7 +37,9 @@ jobs:
         debian-keyring  debian-archive-keyring dh-make -qq
     - name: raspbian keyring
       if: ${{ matrix.config.os == 'raspbian' }}
-      run: wget https://archive.raspbian.org/raspbian.public.key -O - | sudo apt-key add -
+      run: |
+        wget http://archive.raspbian.org/raspbian/pool/main/r/raspbian-archive-keyring/raspbian-archive-keyring_20120528.2_all.deb
+        sudo dpkg -i raspbian-archive-keyring_20120528.2_all.deb
     - name: cp pbuilderrc
       run: |
         cp pbuilderrc $HOME/.pbuilderrc
