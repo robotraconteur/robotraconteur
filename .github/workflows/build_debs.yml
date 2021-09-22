@@ -20,19 +20,19 @@ jobs:
         binfmt-support qemu-user-static 
         pbuilder debootstrap devscripts git-buildpackage 
         debian-keyring  debian-archive-keyring -qq
-
+    - name: cp pbuilderrc
+      run: cp pbuilderrc /root/.pbuilderrc
     - name: pbuilder-create
       run: |
         sudo mkdir -p /var/cache/pbuilder/debian-buster-amd64/aptcache/
-        sudo OS=debian DIST=buster ARCH=amd64 pbuilder --create --configfile $GITHUB_WORKSPACE/pbuilderrc
+        sudo OS=debian DIST=buster ARCH=amd64 pbuilder --create
     - name: extact-source-deb
       run: |
         dpkg-source -x robotraconteur_*~buster.dsc src_deb
-        ls src_deb
     - name: pubilder-build
       working-directory: src_deb
       run: |
-        OS=debian DIST=buster ARCH=amd64 pdebuild --configfile $GITHUB_WORKSPACE/pbuilderrc
+        OS=debian DIST=buster ARCH=amd64 pdebuild
     - name: archive result
       uses: actions/upload-artifact@v2
       with:
