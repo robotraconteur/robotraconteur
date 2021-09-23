@@ -2206,6 +2206,8 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
         for i in range(len(odef.Members)):
             m=odef.Members[i]
             if (isinstance(m,RobotRaconteurPython.EventDefinition)):
+                if (not m.Name in dir(self.obj)):
+                    setattr(self.obj,m.Name,EventHook())
                 def inner_event(m1):
 
                     f=lambda *args : skel_dispatchevent(skel,m1.Name,m1,*args)
