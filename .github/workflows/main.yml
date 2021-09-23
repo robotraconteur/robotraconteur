@@ -96,6 +96,7 @@ jobs:
         ctest . -C Release --output-on-failure
     - name: move out
       run: |
+        cp build2/rrversion.txt build2/out/
         cp robotraconteur/LICENSE.txt build2/out/
         mv build2/out .
     - name: archive out
@@ -205,6 +206,7 @@ jobs:
         ctest . -C Release --output-on-failure -E java
     - name: move out
       run: |
+        copy build2/rrversion.txt build2/out/
         copy robotraconteur/LICENSE.txt build2/out/
         mv build2/out .
     - name: archive out
@@ -278,6 +280,7 @@ jobs:
         ctest . -C Release --output-on-failure
     - name: move out
       run: |
+        cp build2/rrversion.txt build2/out/
         cp robotraconteur/LICENSE.txt build2/out/
         mv build2/out .
     - name: archive out
@@ -353,8 +356,7 @@ jobs:
         ctest . -C Release --output-on-failure
     - name: matlab out tar
       run: >
-         export RR_VER=`grep -oP '#define ROBOTRACONTEUR_VERSION_TEXT "\K([^"]+)' 
-         robotraconteur/RobotRaconteurCore/include/RobotRaconteur/RobotRaconteurConfig.h` 
+         export RR_VER=`cat build2/rrversion.txt` 
          && tar -cf build2/out/RobotRaconteur-$RR_VER-MATLAB-glnxa64.tar.gz 
          --transform "flags=r;s|^build2/out/Matlab|RobotRaconteur-$RR_VER-MATLAB-glnxa64|" 
          --transform "flags=r;s|^robotraconteur|RobotRaconteur-$RR_VER-MATLAB-glnxa64|" 
@@ -362,6 +364,7 @@ jobs:
     - name: move out
       run: |
         cp robotraconteur/LICENSE.txt build2/out/
+        cp build2/rrversion.txt build2/out/
         mv build2/out .
     - name: archive out
       uses: actions/upload-artifact@v2
