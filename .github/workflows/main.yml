@@ -33,7 +33,15 @@ jobs:
         git cmake g++ make libboost-all-dev autoconf 
         automake libtool bison libpcre3-dev python3-dev python3-numpy python3-setuptools python3-wheel 
         mono-devel -qq
+    - name: cache-swig
+      if: ${{ github.event_name != 'created' }}
+      id: cache-swig
+      uses: actions/cache@v2
+      with:
+        path: swig_build_dir
+        key: ${{ runner.os }}-${{ matrix.os }}-swig-4.0.2-main
     - name: build-swig
+      if: steps.cache-swig.outputs.cache-hit != 'true'
       run: |
         sudo apt remove swig -qq
         sudo rm -f /usr/bin/swig*
@@ -47,13 +55,29 @@ jobs:
         ./autogen.sh
         ./configure
         make
-        sudo make install        
+        sudo make install
+    - name: install-swig
+      if: steps.cache-swig.outputs.cache-hit == 'true'
+      working-directory: swig_build_dir/swig-4.0.2
+      run: |
+        sudo apt remove swig -qq
+        sudo rm -f /usr/bin/swig*
+        sudo rm -rf /usr/share/swig*
+        sudo make install
+    - name: cache-build
+      if: ${{ github.event_name != 'created' }}
+      id: cache-build
+      uses: hendrikmuhs/ccache-action@v1
+      with:
+        key: ${{ runner.os }}-${{ matrix.os }}-build-main-ccache
     - name: configure
       run: >
         cmake -G "Unix Makefiles" -DBUILD_GEN=ON  -DBUILD_TEST=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON 
         -DBoost_USE_STATIC_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DPYTHON3_EXECUTABLE=/usr/bin/python3 
         -DBUILD_JAVA=ON -DBUILD_NET=ON -DPACKAGE_SWIG_SOURCE_ALL=ON -DJAVA_HOME=/usr/lib/jvm/default-java 
         -DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=OFF -DROBOTRACONTEUR_VERSION_SUFFIX="${{ env.version_suffix }}"
+        -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache
+        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
         -S robotraconteur -B build2
     - name: build
       working-directory: build2
@@ -79,25 +103,39 @@ jobs:
       with:
         name: 'out-${{ matrix.os }}'
         path: out/*
+    - name: build artifacts
+      if: failure()
+      uses: actions/upload-artifact@v2
+      with:
+        name: 'build-artifacts-${{ matrix.os }}'
+        path: build2/*
+        retention-days: 2
   build-win:
     runs-on: windows-2016
     strategy:
       matrix:
-        arch: [x64,x86]
+        config:
+          - arch: x64
+            vcpkg_triplet: x64-windows-static-md
+            cmake_arch: x64
+          - arch: x86
+            vcpkg_triplet: x86-windows-static-md
+            cmake_arch: Win32
     steps:
     - uses: actions/checkout@v2
       with:
         path: robotraconteur
-    - uses: haya14busa/action-cond@v1
-      id: vcpkg_triplet
+    - name: cache-vcpkg-archives
+      if: ${{ github.event_name != 'created' }}
+      id: cache-vcpkg-archives
+      uses: actions/cache@v2
       with:
-        cond: ${{ matrix.arch == 'x86' }}
-        if_true: "x86-windows-static-md"
-        if_false: "x64-windows-static-md"
+        path: C:\Users\runneradmin\AppData\Local\vcpkg\archives
+        key: ${{ runner.os }}-${{matrix.config.arch}}-vcpkg-main
     - name: vcpkg
       working-directory: ${{ env.VCPKG_INSTALLATION_ROOT }}
       run: >
-        vcpkg install --triplet ${{ steps.vcpkg_triplet.outputs.value }} boost-algorithm boost-array boost-asio 
+        vcpkg install --triplet ${{ matrix.config.vcpkg_triplet }} boost-algorithm boost-array boost-asio 
         boost-assign boost-atomic boost-bind boost-config boost-container boost-date-time 
         boost-smart-ptr boost-filesystem boost-foreach boost-format boost-function boost-interprocess
         boost-intrusive boost-lexical-cast boost-locale boost-random boost-range boost-regex
@@ -107,11 +145,11 @@ jobs:
       with:
         java-version: 8
         java-package: jdk
-        architecture: ${{ matrix.arch }}
+        architecture: ${{ matrix.config.arch }}
     - uses: actions/setup-python@v2
       with:
         python-version: '2.7'
-        architecture: ${{ matrix.arch }}
+        architecture: ${{ matrix.config.arch }}
     - name: pip
       run: |
         python -m pip install numpy setuptools wheel
@@ -120,7 +158,7 @@ jobs:
     - uses: actions/setup-python@v2
       with:
         python-version: '3.8'
-        architecture: ${{ matrix.arch }}
+        architecture: ${{ matrix.config.arch }}
     - name: pip3
       run: |
         python -m pip install numpy setuptools wheel
@@ -129,36 +167,41 @@ jobs:
     - name: choco
       run: |
         choco install swig -r
-    - uses: haya14busa/action-cond@v1
-      id: cmake_arch
+    - name: cache-build
+      if: ${{ github.event_name != 'created' }}
+      id: cache-build
+      uses: mikehardy/buildcache-action@v1
       with:
-        cond: ${{ matrix.arch == 'x86' }}
-        if_true: "Win32"
-        if_false: "x64"
+        cache_key: ${{ runner.os }}-${{ matrix.config.arch }}-build-main-buildcache
+    - uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: ${{ matrix.config.arch }}
     - name: configure
       run: >
-        md -Force build2 && cd build2 &&
-        cmake -G "Visual Studio 15 2017" -A ${{ steps.cmake_arch.outputs.value }} -DBUILD_GEN=ON -DBUILD_TEST=ON 
+        cmake -G "Ninja" -DBUILD_GEN=ON -DBUILD_TEST=ON 
         -DBUILD_NET=ON -DBoost_USE_STATIC_LIBS=ON -DBUILD_PYTHON=ON 
         -DBUILD_PYTHON_WHEEL=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON -DBUILD_JAVA=ON 
         -DPYTHON_EXECUTABLE="${{ env.PYTHON2_EXE }}"
         -DPYTHON3_EXECUTABLE="${{ env.PYTHON3_EXE }}" -DROBOTRACONTEUR_VERSION_SUFFIX="${{ env.version_suffix }}"
         ("-DCMAKE_TOOLCHAIN_FILE=" + $env:VCPKG_INSTALLATION_ROOT + "/scripts/buildsystems/vcpkg.cmake")
-        -DVCPKG_TARGET_TRIPLET=${{ steps.vcpkg_triplet.outputs.value }}
-        ../robotraconteur
+        -DVCPKG_TARGET_TRIPLET=${{ matrix.config.vcpkg_triplet }}
+        -DCMAKE_C_COMPILER_LAUNCHER=buildcache -DCMAKE_CXX_COMPILER_LAUNCHER=buildcache
+        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
+        -DCMAKE_BUILD_TYPE=Release
+        -S robotraconteur -B build2
     - name: build
+      working-directory: build2
       run: |
-        cd build2
         cmake --build . --config Release -j 4
     - name: test
-      if: ${{ matrix.arch != 'x86' }}
+      if: ${{ matrix.config.arch != 'x86' }}
+      working-directory: build2
       run: |
-        cd build2
         ctest . -C Release --output-on-failure
     - name: test x86
-      if: ${{ matrix.arch == 'x86' }}
+      if: ${{ matrix.config.arch == 'x86' }}
+      working-directory: build2
       run: |
-        cd build2
         ctest . -C Release --output-on-failure -E java
     - name: move out
       run: |
@@ -167,8 +210,15 @@ jobs:
     - name: archive out
       uses: actions/upload-artifact@v2
       with:
-        name: 'out-win-${{ matrix.arch }}'
+        name: 'out-win-${{ matrix.config.arch }}'
         path: out/*
+    - name: build artifacts
+      if: failure()
+      uses: actions/upload-artifact@v2
+      with:
+        name: 'build-artifacts-win-${{ matrix.config.arch }}'
+        path: build2/*
+        retention-days: 2    
 
   build-osx:
 
@@ -201,23 +251,30 @@ jobs:
         python -m pip install numpy setuptools wheel
     - name: env python3
       run: echo "PYTHON3_EXE=${{ env.pythonLocation }}/bin/python" >> $GITHUB_ENV
+    - name: cache-build
+      if: ${{ github.event_name != 'created' }}
+      id: cache-build
+      uses: hendrikmuhs/ccache-action@v1
+      with:
+        key: ${{ runner.os }}-build-main-ccache
     - name: configure
       run: >
-        mkdir build2 && cd build2 &&
-        cmake -G "Xcode" -DBUILD_GEN=ON  -DBUILD_TEST=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON 
+        cmake -G "Unix Makefiles" -DBUILD_GEN=ON  -DBUILD_TEST=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON 
         -DBoost_USE_STATIC_LIBS=ON -DCMAKE_BUILD_TYPE=Release 
         -DBUILD_JAVA=ON -DBUILD_NET=ON -DPACKAGE_SWIG_SOURCE_ALL=ON 
         -DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=ON -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl
         -DOPENSSL_USE_STATIC_LIBS=ON -DPYTHON_EXECUTABLE="${{ env.PYTHON2_EXE }}"
         -DPYTHON3_EXECUTABLE="${{ env.PYTHON3_EXE }}" -DROBOTRACONTEUR_VERSION_SUFFIX="${{ env.version_suffix }}"
-        ../robotraconteur
+        -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache
+        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
+        -S robotraconteur -B build2
     - name: build
+      working-directory: build2
       run: |        
-        cd build2
         cmake --build . --config Release -j 4
     - name: test
+      working-directory: build2
       run: |
-        cd build2
         ctest . -C Release --output-on-failure
     - name: move out
       run: |
@@ -228,6 +285,14 @@ jobs:
       with:
         name: 'out-osx'
         path: out/*
+    - name: build artifacts
+      if: failure()
+      uses: actions/upload-artifact@v2
+      with:
+        name: 'build-artifacts-osx'
+        path: build2/*
+        retention-days: 2  
+    
   build-matlab:
 
     runs-on: ubuntu-18.04
@@ -248,6 +313,13 @@ jobs:
       uses: matlab-actions/setup-matlab@v1
       with:
         release: R2020a
+    - name: cache-vcpkg-archives
+      if: ${{ github.event_name != 'created' }}
+      id: cache-vcpkg-archives
+      uses: actions/cache@v2
+      with:
+        path: /home/runner/.cache/vcpkg/archives
+        key: ${{ runner.os }}-matlab-vcpkg-main
     - name: vcpkg
       working-directory: ${{ env.VCPKG_INSTALLATION_ROOT }}
       run: >
@@ -257,11 +329,19 @@ jobs:
         boost-intrusive boost-lexical-cast boost-locale boost-random boost-range boost-regex
         boost-scope-exit boost-signals2 boost-thread boost-tuple boost-unordered 
         boost-utility boost-uuid boost-program-options
+    - name: cache-build
+      if: ${{ github.event_name != 'created' }}
+      id: cache-build
+      uses: hendrikmuhs/ccache-action@v1
+      with:
+        key: ${{ runner.os }}-matlab-build-main-ccache
     - name: configure
       run: >
         cmake -G "Unix Makefiles" -DBUILD_GEN=ON  -DBUILD_TEST=ON 
         -DBoost_USE_STATIC_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DBUILD_MATLAB_MEX=ON
         -DCMAKE_TOOLCHAIN_FILE=$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake
+        -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache
+        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
         -S robotraconteur -B build2
     - name: build
       working-directory: build2
@@ -288,5 +368,12 @@ jobs:
       with:
         name: 'out-matlab'
         path: out/*
+    - name: build artifacts
+      if: failure()
+      uses: actions/upload-artifact@v2
+      with:
+        name: 'build-artifacts-matlab'
+        path: build2/*
+        retention-days: 2  
     
       

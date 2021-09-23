@@ -16,6 +16,8 @@
   </PropertyGroup>
   <PropertyGroup>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <OutputPath>bin\$(Configuration)</OutputPath>
   </PropertyGroup>
   
   <PropertyGroup>

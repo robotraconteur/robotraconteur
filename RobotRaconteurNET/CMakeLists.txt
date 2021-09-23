@@ -131,7 +131,7 @@ add_dependencies(RobotRaconteurNETTest_standard RobotRaconteurNET_standard)
 add_custom_command(TARGET RobotRaconteurNET_standard 
 	POST_BUILD COMMAND 
 	COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/$<$<CONFIG:debug>:out_debug>$<$<CONFIG:release>:out>/NET/netstandard
-	COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/netstandard/Lib/bin/$<$<CONFIG:debug>:Debug>$<$<CONFIG:release>:Release>/netstandard2.0/RobotRaconteurNET.dll ${CMAKE_BINARY_DIR}/$<$<CONFIG:debug>:out_debug>$<$<CONFIG:release>:out>/NET/netstandard/.
+	COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/netstandard/Lib/bin/$<$<CONFIG:debug>:Debug>$<$<CONFIG:release>:Release>/RobotRaconteurNET.dll ${CMAKE_BINARY_DIR}/$<$<CONFIG:debug>:out_debug>$<$<CONFIG:release>:out>/NET/netstandard/.
 )
 endif()
 
