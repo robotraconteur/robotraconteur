@@ -271,6 +271,14 @@ jobs:
       working-directory: build2
       run: |
         ctest . -C Release --output-on-failure
+    - name: matlab out tar
+      run: >
+         export RR_VER=`grep -oP '#define ROBOTRACONTEUR_VERSION_TEXT "\K([^"]+)' 
+         robotraconteur/RobotRaconteurCore/include/RobotRaconteur/RobotRaconteurConfig.h` 
+         && tar -cf build2/out/RobotRaconteur-$RR_VER-MATLAB-glnxa64.tar.gz 
+         --transform "flags=r;s|^build2/out/Matlab|RobotRaconteur-$RR_VER-MATLAB-glnxa64|" 
+         --transform "flags=r;s|^robotraconteur|RobotRaconteur-$RR_VER-MATLAB-glnxa64|" 
+         build2/out/Matlab robotraconteur/LICENSE.txt
     - name: move out
       run: |
         cp robotraconteur/LICENSE.txt build2/out/
