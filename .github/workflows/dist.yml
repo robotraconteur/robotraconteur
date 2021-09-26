@@ -23,7 +23,7 @@ jobs:
         commit: ${{ env.COMMIT_SHA }}
         path: artifacts/main
         workflow_conclusion: success
-    - name: Download CI artifacts
+    - name: Download Build Python Version artifacts
       uses: dawidd6/action-download-artifact@v2
       with:
         workflow: build_python_version.yml
