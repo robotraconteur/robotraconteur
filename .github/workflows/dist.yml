@@ -1,0 +1,34 @@
+name: Build Dist
+
+on:
+  push:
+  pull_request:
+  release:
+    types:
+      - created
+
+jobs:
+  build-dist:
+    runs-on: ubuntu-20.04
+    env:
+      COMMIT_SHA: 473b258db9e2f3fd6d203a72f3ad5c87ff09be73
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        path: robotraconteur
+    - name: Download CI artifacts
+      uses: dawidd6/action-download-artifact@v2
+      with:
+        workflow: main.yml
+        commit: ${{ env.COMMIT_SHA }}
+        path: artifacts/main
+        workflow_conclusion: success
+    - name: Download CI artifacts
+      uses: dawidd6/action-download-artifact@v2
+      with:
+        workflow: build_python_version.yml
+        commit: ${{ env.COMMIT_SHA }}
+        path: artifacts/build_python_version
+        workflow_conclusion: success
+    - name: Print Tree
+      run: tree -d artifacts
