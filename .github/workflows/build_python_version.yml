@@ -29,7 +29,7 @@ jobs:
         python-version: '${{ matrix.python_version }}'
         architecture: ${{ matrix.config.arch }}
     - name: cache-vcpkg-archives
-      if: ${{ github.event_name != 'created' }}
+      if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-vcpkg-archives
       uses: actions/cache@v2
       with:
@@ -53,7 +53,7 @@ jobs:
       run: |
         choco install swig -r
     - name: cache-build
-      if: ${{ github.event_name != 'created' }}
+      if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
       uses: mikehardy/buildcache-action@v1
       with:
@@ -122,7 +122,7 @@ jobs:
     - name: env python3
       run: echo "PYTHON3_EXE=${{ env.pythonLocation }}/bin/python" >> $GITHUB_ENV
     - name: cache-build
-      if: ${{ github.event_name != 'created' }}
+      if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
       uses: hendrikmuhs/ccache-action@v1
       with:
