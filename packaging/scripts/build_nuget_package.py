@@ -44,5 +44,6 @@ with tempfile.TemporaryDirectory() as tmpdirname:
 
     subprocess.check_call('nuget pack', cwd=tmpdir, shell=True)
 
-    for file in glob.glob(tmpdir.joinpath('*.nupkg')):
+    for file in glob.glob(str(tmpdir.joinpath('*.nupkg').absolute())):
+        print(file)
         shutil.move(file, 'distfiles/')
