@@ -48,7 +48,7 @@ print(control_file)
 portfile_file = portfile_input.replace("@{VERSION_REF}",ref).replace("@{TARBALL_SHA512}",tarball_sha512)
 print(portfile_file)
 
-Path('vcpkg-robotraconteur').mkdir(exist_ok=True,parents=True)
+Path('vcpkg-robotraconteur/ports/robotraconteur').mkdir(exist_ok=True,parents=True)
 
 with open('vcpkg-robotraconteur/ports/robotraconteur/CONTROL','w') as f:
     f.write(control_file)
