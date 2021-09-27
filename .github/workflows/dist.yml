@@ -16,6 +16,7 @@ jobs:
     - uses: actions/checkout@v2
       with:
         path: robotraconteur
+    - uses: nuget/setup-nuget@v1
     - name: Download CI artifacts
       uses: dawidd6/action-download-artifact@v2
       with:
@@ -30,5 +31,19 @@ jobs:
         commit: ${{ env.COMMIT_SHA }}
         path: artifacts/build_python_version
         workflow_conclusion: success
-    - name: Print Tree
-      run: tree -d artifacts
+    - name: collect source
+      run: python packaging/scripts/collect_source.py
+    - name: collect wheels
+      run: python packaging/scripts/collect_wheels.py
+    - name: collect matlab
+      run: python packaging/scripts/collect_matlab.py
+    - name: build java zip
+      run: python packaging/scripts/build_java_zip.py
+    - name: build nuget package
+      run: python packaging/scripts/build_nuget_package.py
+    - name: archive distfiles
+      uses: actions/upload-artifact@v2
+      with:
+        name: 'distfiles'
+        path: distfiles/*
+    
