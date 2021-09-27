@@ -61,4 +61,7 @@ jobs:
       with:
         name: 'vcpkg-robotraconteur'
         path: vcpkg-robotraconteur/*
+    - name: build vcpkg
+      run: >
+        vcpkg install --triplet x64-windows --overlay-ports=vcpkg-robotraconteur\ports robotraconteur
     
