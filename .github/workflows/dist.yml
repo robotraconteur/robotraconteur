@@ -11,7 +11,7 @@ jobs:
   build-dist:
     runs-on: ubuntu-20.04
     env:
-      COMMIT_SHA: 473b258db9e2f3fd6d203a72f3ad5c87ff09be73
+      COMMIT_SHA: 4e1c4eeb897a331a973a99a2ced79518286528d4
     steps:
     - uses: actions/checkout@v2
       with:
