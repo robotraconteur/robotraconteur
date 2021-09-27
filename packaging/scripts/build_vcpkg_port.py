@@ -17,7 +17,6 @@ if ref1 is not None:
         ref = ref1
         ver = ref_match.group(1)
 
-ver = ref
 print(ver)
 
 token = os.environ["GITHUB_TOKEN"]
