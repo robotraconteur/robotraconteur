@@ -48,6 +48,8 @@ jobs:
         path: distfiles/*
   build-vcpkg-port:
     runs-on: windows-2016
+    env:
+      GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
     steps:
     - uses: actions/checkout@v2
       with:
