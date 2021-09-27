@@ -32,15 +32,15 @@ jobs:
         path: artifacts/build_python_version
         workflow_conclusion: success
     - name: collect source
-      run: python packaging/scripts/collect_source.py
+      run: python robotraconteur/packaging/scripts/collect_source.py
     - name: collect wheels
-      run: python packaging/scripts/collect_wheels.py
+      run: python robotraconteur/packaging/scripts/collect_wheels.py
     - name: collect matlab
-      run: python packaging/scripts/collect_matlab.py
+      run: python robotraconteur/packaging/scripts/collect_matlab.py
     - name: build java zip
-      run: python packaging/scripts/build_java_zip.py
+      run: python robotraconteur/packaging/scripts/build_java_zip.py
     - name: build nuget package
-      run: python packaging/scripts/build_nuget_package.py
+      run: python robotraconteur/packaging/scripts/build_nuget_package.py
     - name: archive distfiles
       uses: actions/upload-artifact@v2
       with:
