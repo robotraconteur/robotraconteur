@@ -46,4 +46,17 @@ jobs:
       with:
         name: 'distfiles'
         path: distfiles/*
+  build-vcpkg-port:
+    runs-on: windows-2016
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        path: robotraconteur
+    - name: config portfile
+      run: robotraconteur/packaging/scripts/build_vcpkg_port.py
+    - name: archive distfiles
+      uses: actions/upload-artifact@v2
+      with:
+        name: 'vcpkg-robotraconteur'
+        path: vcpkg-robotraconteur/*
     

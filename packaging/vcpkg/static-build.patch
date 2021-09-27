@@ -1,0 +1,40 @@
+ RobotRaconteurCore/CMakeLists.txt | 16 +---------------
+ 1 file changed, 1 insertion(+), 15 deletions(-)
+
+diff --git a/RobotRaconteurCore/CMakeLists.txt b/RobotRaconteurCore/CMakeLists.txt
+index 42ef634..33a6f50 100644
+--- a/RobotRaconteurCore/CMakeLists.txt
++++ b/RobotRaconteurCore/CMakeLists.txt
+@@ -174,21 +174,9 @@ IF (${__ANDROID__})
+ set(RobotRaconteurCore_src ${RobotRaconteurCore_src} ${GETIFADDR_SOURCE_FILE} src/HardwareTransport_usbcommon_private.h src/HardwareTransport_usbcommon.cpp src/HardwareTransport_android_private.h src/HardwareTransport_android.cpp)
+ ENDIF()
+ 
+-IF (BUILD_SHARED_LIBS)
+-STRING(REPLACE "." "." RobotRaconteur_LIB_VERSION ${RobotRaconteurVersion})
+-SET(RobotRaconteur_SHARED_CORE_VERSION "${RobotRaconteur_LIB_VERSION}")
+-ENDIF()
+ 
+-IF(BUILD_SHARED_LIBS)
+-set(CMAKE_DEBUG_POSTFIX "d")
+-add_library(RobotRaconteurCore SHARED ${RobotRaconteurCore_src} ${RobotRaconteurCore_header} )
+-SET_TARGET_PROPERTIES(RobotRaconteurCore PROPERTIES VERSION "${RobotRaconteur_SHARED_CORE_VERSION}"
+-    SOVERSION "${RobotRaconteur_SHARED_CORE_VERSION}"
+-	COMPILE_DEFINITIONS "ROBOTRACONTEUR_CORE_EXPORTS")
+-ELSE()
+ add_library(RobotRaconteurCore STATIC ${RobotRaconteurCore_src} ${RobotRaconteurCore_header} )
+ SET_TARGET_PROPERTIES(RobotRaconteurCore PROPERTIES PREFIX lib)
+-ENDIF()
+ 
+ target_link_libraries(RobotRaconteurCore PUBLIC Boost::boost Boost::disable_autolinking 
+ 	Boost::date_time Boost::filesystem Boost::system Boost::regex Boost::chrono Boost::atomic
+@@ -215,9 +203,7 @@ if (WIN32)
+ 		target_compile_options(RobotRaconteurCore PRIVATE "-mthreads")
+ 	endif()
+ 
+-	if(BUILD_SHARED_LIBS)
+-		target_compile_definitions(RobotRaconteurCore PRIVATE ROBOTRACONTEUR_CORE_EXPORTS INTERFACE ROBOTRACONTEUR_CORE_IMPORTS)
+-	endif()
++
+ endif()
+ 
+ if(APPLE)
