@@ -56,4 +56,4 @@ with open('vcpkg-robotraconteur/ports/robotraconteur/CONTROL','w') as f:
 with open('vcpkg-robotraconteur/ports/robotraconteur/portfile.cmake','w') as f:
     f.write(portfile_file)
 
-shutil.copy('robotraconteur/packaging/vcpkg/static-build.patch','vcpkg-robotraconteur/static-build.patch')
+shutil.copy('robotraconteur/packaging/vcpkg/static-build.patch','vcpkg-robotraconteur/ports/robotraconteur/static-build.patch')
