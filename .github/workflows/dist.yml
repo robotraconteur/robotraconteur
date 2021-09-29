@@ -46,22 +46,3 @@ jobs:
       with:
         name: 'distfiles'
         path: distfiles/*
-  build-vcpkg-port:
-    runs-on: windows-2016
-    env:
-      GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        path: robotraconteur
-    - name: config portfile
-      run: python robotraconteur/packaging/scripts/build_vcpkg_port.py
-    - name: archive distfiles
-      uses: actions/upload-artifact@v2
-      with:
-        name: 'vcpkg-robotraconteur'
-        path: vcpkg-robotraconteur/*
-    - name: build vcpkg
-      run: >
-        vcpkg install --triplet x64-windows --overlay-ports=vcpkg-robotraconteur\ports robotraconteur
-    
