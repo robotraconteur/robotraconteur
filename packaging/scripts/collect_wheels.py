@@ -3,7 +3,7 @@
 import shutil
 import pathlib
 
-asset_dirs = ["artifacts/main", "artifacts/build_python_version"]
+asset_dirs = ["artifacts/main"]
 
 pathlib.Path("distfiles").mkdir(exist_ok=True)
 
