@@ -33,9 +33,6 @@ jobs:
       with:
         path: vcpkg
         repository: microsoft/vcpkg
-    - name: bootstrap vcpkg
-      working-directory: vcpkg
-      run: bootstrap-vcpkg.bat
     - name: cache-vcpkg-archives
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-vcpkg-archives
@@ -43,6 +40,9 @@ jobs:
       with:
         path: C:\Users\runneradmin\AppData\Local\vcpkg\archives
         key: ${{ runner.os }}-${{ matrix.config.arch }}-${{ hashFiles('vcpkg/ports/boost-config/*') }}-${{ hashFiles('vcpkg/ports/openssl/*') }}-vcpkg-build-python-version
+    - name: bootstrap vcpkg
+      working-directory: vcpkg
+      run: bootstrap-vcpkg.bat
     - name: vcpkg
       working-directory: vcpkg
       run: >
