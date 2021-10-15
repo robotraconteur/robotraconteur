@@ -576,6 +576,7 @@ jobs:
         workflow: main.yml
         commit: ${{ github.event.pull_request.head.sha || github.sha }}
         path: artifacts/main
+        workflow_conclusion: in_progress
     - name: collect source
       run: python robotraconteur/packaging/scripts/collect_source.py
     - name: collect wheels
