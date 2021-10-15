@@ -75,7 +75,7 @@ jobs:
         -DBoost_USE_STATIC_LIBS=ON
         -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON        
         -DPYTHON3_EXECUTABLE="${{ env.PYTHON3_EXE }}"
-        -DCMAKE_TOOLCHAIN_FILE=./vcpkg/scripts/buildsystems/vcpkg.cmake
+        -DCMAKE_TOOLCHAIN_FILE=${{ env.GITHUB_WORKSPACE }}/vcpkg/scripts/buildsystems/vcpkg.cmake
         -DVCPKG_TARGET_TRIPLET=${{ matrix.config.vcpkg_triplet }}
         -DCMAKE_C_COMPILER_LAUNCHER=buildcache -DCMAKE_CXX_COMPILER_LAUNCHER=buildcache
         -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
