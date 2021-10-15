@@ -10,8 +10,6 @@ on:
 jobs:
   build-dist:
     runs-on: ubuntu-20.04
-    env:
-      COMMIT_SHA: 4e1c4eeb897a331a973a99a2ced79518286528d4
     steps:
     - uses: actions/checkout@v2
       with:
@@ -21,14 +19,12 @@ jobs:
       uses: dawidd6/action-download-artifact@v2
       with:
         workflow: main.yml
-        commit: ${{ env.COMMIT_SHA }}
         path: artifacts/main
         workflow_conclusion: success
     - name: Download Build Python Version artifacts
       uses: dawidd6/action-download-artifact@v2
       with:
         workflow: build_python_version.yml
-        commit: ${{ env.COMMIT_SHA }}
         path: artifacts/build_python_version
         workflow_conclusion: success
     - name: collect source
