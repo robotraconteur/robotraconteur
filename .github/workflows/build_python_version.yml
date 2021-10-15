@@ -28,15 +28,23 @@ jobs:
       with:
         python-version: '${{ matrix.python_version }}'
         architecture: ${{ matrix.config.arch }}
+    - name: checkout vcpkg
+      uses: actions/checkout@v2
+      with:
+        path: vcpkg
+        repository: microsoft/vcpkg
+    - name: bootstrap vcpkg
+      working-directory: vcpkg
+      run: bootstrap-vcpkg.bat
     - name: cache-vcpkg-archives
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-vcpkg-archives
       uses: actions/cache@v2
       with:
         path: C:\Users\runneradmin\AppData\Local\vcpkg\archives
-        key: ${{ runner.os }}-${{ matrix.config.arch }}-vcpkg-build-python-version
+        key: ${{ runner.os }}-${{ matrix.config.arch }}-${{ hashFiles('vcpkg/ports/boost-config/*') }}-${{ hashFiles('vcpkg/ports/openssl/*') }}-vcpkg-build-python-version
     - name: vcpkg
-      working-directory: ${{ env.VCPKG_INSTALLATION_ROOT }}
+      working-directory: vcpkg
       run: >
         vcpkg install --triplet ${{ matrix.config.vcpkg_triplet }} boost-algorithm boost-array boost-asio 
         boost-assign boost-atomic boost-bind boost-config boost-container boost-date-time 
@@ -67,7 +75,7 @@ jobs:
         -DBoost_USE_STATIC_LIBS=ON
         -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON        
         -DPYTHON3_EXECUTABLE="${{ env.PYTHON3_EXE }}"
-        ("-DCMAKE_TOOLCHAIN_FILE=" + $env:VCPKG_INSTALLATION_ROOT + "/scripts/buildsystems/vcpkg.cmake")
+        -DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmake
         -DVCPKG_TARGET_TRIPLET=${{ matrix.config.vcpkg_triplet }}
         -DCMAKE_C_COMPILER_LAUNCHER=buildcache -DCMAKE_CXX_COMPILER_LAUNCHER=buildcache
         -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON

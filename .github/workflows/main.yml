@@ -126,15 +126,23 @@ jobs:
     - uses: actions/checkout@v2
       with:
         path: robotraconteur
+    - name: checkout vcpkg
+      uses: actions/checkout@v2
+      with:
+        path: vcpkg
+        repository: microsoft/vcpkg
+    - name: bootstrap vcpkg
+      working-directory: vcpkg
+      run: bootstrap-vcpkg.bat
     - name: cache-vcpkg-archives
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-vcpkg-archives
       uses: actions/cache@v2
       with:
         path: C:\Users\runneradmin\AppData\Local\vcpkg\archives
-        key: ${{ runner.os }}-${{matrix.config.arch}}-vcpkg-main
+        key: ${{ runner.os }}-${{matrix.config.arch}}-vcpkg-${{ hashFiles('vcpkg/ports/boost-config/*') }}-${{ hashFiles('vcpkg/ports/openssl/*') }}-main
     - name: vcpkg
-      working-directory: ${{ env.VCPKG_INSTALLATION_ROOT }}
+      working-directory: vcpkg
       run: >
         vcpkg install --triplet ${{ matrix.config.vcpkg_triplet }} boost-algorithm boost-array boost-asio 
         boost-assign boost-atomic boost-bind boost-config boost-container boost-date-time 
@@ -184,7 +192,7 @@ jobs:
         -DBUILD_PYTHON_WHEEL=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON -DBUILD_JAVA=ON 
         -DPYTHON_EXECUTABLE="${{ env.PYTHON2_EXE }}"
         -DPYTHON3_EXECUTABLE="${{ env.PYTHON3_EXE }}" -DROBOTRACONTEUR_VERSION_SUFFIX="${{ env.version_suffix }}"
-        ("-DCMAKE_TOOLCHAIN_FILE=" + $env:VCPKG_INSTALLATION_ROOT + "/scripts/buildsystems/vcpkg.cmake")
+        -DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmake
         -DVCPKG_TARGET_TRIPLET=${{ matrix.config.vcpkg_triplet }}
         -DCMAKE_C_COMPILER_LAUNCHER=buildcache -DCMAKE_CXX_COMPILER_LAUNCHER=buildcache
         -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
@@ -316,15 +324,23 @@ jobs:
       uses: matlab-actions/setup-matlab@v1
       with:
         release: R2020a
+    - name: checkout vcpkg
+      uses: actions/checkout@v2
+      with:
+        path: vcpkg
+        repository: microsoft/vcpkg
+    - name: bootstrap vcpkg
+      working-directory: vcpkg
+      run: ./bootstrap-vcpkg.sh
     - name: cache-vcpkg-archives
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-vcpkg-archives
       uses: actions/cache@v2
       with:
         path: /home/runner/.cache/vcpkg/archives
-        key: ${{ runner.os }}-matlab-vcpkg-main
+        key: ${{ runner.os }}-matlab-vcpkg-${{ hashFiles('vcpkg/ports/boost-config/*') }}-${{ hashFiles('vcpkg/ports/openssl/*') }}-main
     - name: vcpkg
-      working-directory: ${{ env.VCPKG_INSTALLATION_ROOT }}
+      working-directory: vcpkg
       run: >
         vcpkg install boost-algorithm boost-array boost-asio boost-assign boost-atomic
         boost-bind boost-config boost-container boost-date-time boost-smart-ptr 
@@ -342,7 +358,7 @@ jobs:
       run: >
         cmake -G "Unix Makefiles" -DBUILD_GEN=ON  -DBUILD_TEST=ON 
         -DBoost_USE_STATIC_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DBUILD_MATLAB_MEX=ON
-        -DCMAKE_TOOLCHAIN_FILE=$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake
+        -DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmake
         -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache
         -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
         -S robotraconteur -B build2
