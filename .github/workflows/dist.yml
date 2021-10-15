@@ -19,12 +19,14 @@ jobs:
       uses: dawidd6/action-download-artifact@v2
       with:
         workflow: main.yml
+        commit: ${{ github.event.pull_request.head.sha || github.sha }}
         path: artifacts/main
         workflow_conclusion: success
     - name: Download Build Python Version artifacts
       uses: dawidd6/action-download-artifact@v2
       with:
         workflow: build_python_version.yml
+        commit: ${{ github.event.pull_request.head.sha || github.sha }}
         path: artifacts/build_python_version
         workflow_conclusion: success
     - name: collect source
