@@ -70,14 +70,19 @@ jobs:
       uses: hendrikmuhs/ccache-action@v1
       with:
         key: ${{ runner.os }}-${{ matrix.os }}-build-main-ccache
+    - name: cmake cache args
+      id: cmake-cache-args
+      if: startsWith(github.ref, 'refs/tags/v') != true
+      run: >
+        echo "CMAKE_CACHE_ARGS=-DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON" >> $GITHUB_ENV
     - name: configure
       run: >
         cmake -G "Unix Makefiles" -DBUILD_GEN=ON  -DBUILD_TEST=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON 
         -DBoost_USE_STATIC_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DPYTHON3_EXECUTABLE=/usr/bin/python3 
         -DBUILD_JAVA=ON -DBUILD_NET=ON -DPACKAGE_SWIG_SOURCE_ALL=ON -DJAVA_HOME=/usr/lib/jvm/default-java 
         -DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=OFF -DROBOTRACONTEUR_VERSION_SUFFIX="${{ env.version_suffix }}"
-        -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache
-        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
+        ${{ env.CMAKE_CACHE_ARGS }}
         -S robotraconteur -B build2
     - name: build
       working-directory: build2
@@ -182,6 +187,13 @@ jobs:
       uses: mikehardy/buildcache-action@v1
       with:
         cache_key: ${{ runner.os }}-${{ matrix.config.arch }}-build-main-buildcache
+    - name: cmake cache args
+      id: cmake-cache-args
+      if: startsWith(github.ref, 'refs/tags/v') != true
+      run: >
+        echo "CMAKE_CACHE_ARGS=-DCMAKE_C_COMPILER_LAUNCHER=buildcache -DCMAKE_CXX_COMPILER_LAUNCHER=buildcache
+        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON" | Out-File -FilePath $env:GITHUB_ENV 
+        -Encoding utf8 -Append
     - uses: ilammy/msvc-dev-cmd@v1
       with:
         arch: ${{ matrix.config.arch }}
@@ -194,8 +206,7 @@ jobs:
         -DPYTHON3_EXECUTABLE="${{ env.PYTHON3_EXE }}" -DROBOTRACONTEUR_VERSION_SUFFIX="${{ env.version_suffix }}"
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
         -DVCPKG_TARGET_TRIPLET=${{ matrix.config.vcpkg_triplet }}
-        -DCMAKE_C_COMPILER_LAUNCHER=buildcache -DCMAKE_CXX_COMPILER_LAUNCHER=buildcache
-        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
+        ${{ env.CMAKE_CACHE_ARGS }}
         -DCMAKE_BUILD_TYPE=Release
         -S robotraconteur -B build2
     - name: build
@@ -267,6 +278,12 @@ jobs:
       uses: hendrikmuhs/ccache-action@v1
       with:
         key: ${{ runner.os }}-build-main-ccache
+    - name: cmake cache args
+      id: cmake-cache-args
+      if: startsWith(github.ref, 'refs/tags/v') != true
+      run: >
+        echo "CMAKE_CACHE_ARGS=-DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON" >> $GITHUB_ENV
     - name: configure
       run: >
         cmake -G "Unix Makefiles" -DBUILD_GEN=ON  -DBUILD_TEST=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON 
@@ -275,8 +292,7 @@ jobs:
         -DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=ON -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl
         -DOPENSSL_USE_STATIC_LIBS=ON -DPYTHON_EXECUTABLE="${{ env.PYTHON2_EXE }}"
         -DPYTHON3_EXECUTABLE="${{ env.PYTHON3_EXE }}" -DROBOTRACONTEUR_VERSION_SUFFIX="${{ env.version_suffix }}"
-        -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache
-        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
+        ${{ env.CMAKE_CACHE_ARGS }}
         -S robotraconteur -B build2
     - name: build
       working-directory: build2
@@ -354,13 +370,18 @@ jobs:
       uses: hendrikmuhs/ccache-action@v1
       with:
         key: ${{ runner.os }}-matlab-build-main-ccache
+    - name: cmake cache args
+      id: cmake-cache-args
+      if: startsWith(github.ref, 'refs/tags/v') != true
+      run: >
+        echo "CMAKE_CACHE_ARGS=-DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON" >> $GITHUB_ENV
     - name: configure
       run: >
         cmake -G "Unix Makefiles" -DBUILD_GEN=ON  -DBUILD_TEST=ON 
         -DBoost_USE_STATIC_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DBUILD_MATLAB_MEX=ON
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
-        -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache
-        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
+        ${{ env.CMAKE_CACHE_ARGS }}
         -S robotraconteur -B build2
     - name: build
       working-directory: build2
@@ -453,6 +474,13 @@ jobs:
       uses: mikehardy/buildcache-action@v1
       with:
         cache_key: ${{ runner.os }}-${{ matrix.config.arch }}-build-python-version-${{ matrix.python_version }}-buildcache
+    - name: cmake cache args
+      id: cmake-cache-args
+      if: startsWith(github.ref, 'refs/tags/v') != true
+      run: >
+        echo "CMAKE_CACHE_ARGS=-DCMAKE_C_COMPILER_LAUNCHER=buildcache -DCMAKE_CXX_COMPILER_LAUNCHER=buildcache
+        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON" | Out-File -FilePath $env:GITHUB_ENV 
+        -Encoding utf8 -Append
     - uses: ilammy/msvc-dev-cmd@v1
       with:
         arch: ${{ matrix.config.arch }}
@@ -464,8 +492,7 @@ jobs:
         -DPYTHON3_EXECUTABLE="${{ env.PYTHON3_EXE }}"
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
         -DVCPKG_TARGET_TRIPLET=${{ matrix.config.vcpkg_triplet }}
-        -DCMAKE_C_COMPILER_LAUNCHER=buildcache -DCMAKE_CXX_COMPILER_LAUNCHER=buildcache
-        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
+        ${{ env.CMAKE_CACHE_ARGS }}
         -DCMAKE_BUILD_TYPE=Release
         -S robotraconteur -B build2
     - name: build
@@ -522,6 +549,12 @@ jobs:
       uses: hendrikmuhs/ccache-action@v1
       with:
         key: ${{ runner.os }}-build-python-version-${{ matrix.python_version }}-ccache
+    - name: cmake cache args
+      id: cmake-cache-args
+      if: startsWith(github.ref, 'refs/tags/v') != true
+      run: >
+        echo "CMAKE_CACHE_ARGS=-DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON" >> $GITHUB_ENV
     - name: configure
       run: >
         cmake -G "Xcode" -DBUILD_GEN=ON  -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON 
@@ -529,8 +562,7 @@ jobs:
         -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl
         -DOPENSSL_USE_STATIC_LIBS=ON
         -DPYTHON3_EXECUTABLE="${{ env.PYTHON3_EXE }}"
-        -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache
-        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
+        ${{ env.CMAKE_CACHE_ARGS }}
         -S robotraconteur -B build2
     - name: build
       working-directory: build2
