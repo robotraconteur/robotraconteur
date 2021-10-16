@@ -18,7 +18,7 @@ def main():
 
     args = parser.parse_args()
 
-    config_header = Path("RobotRaconteurCore\include\RobotRaconteur\RobotRaconteurConfig.h").absolute()
+    config_header = Path("RobotRaconteurCore/include/RobotRaconteur/RobotRaconteurConfig.h").absolute()
     assert config_header.is_file()
 
     if args.semver_full is not None:
@@ -45,21 +45,26 @@ def main():
 
     vcpkg_path = Path("vcpkg").absolute()
     if not args.no_vcpkg:        
-        if vcpkg_path.is_dir():
-            shutil.rmtree(str(vcpkg_path))
 
-        subprocess.check_call("git clone --depth=1 https://github.com/microsoft/vcpkg.git", shell=True)
+        vcpkg_libs = "boost-algorithm " \
+                     "boost-array boost-asio "\
+                     "boost-assign boost-atomic boost-bind boost-config boost-container boost-date-time " \
+                     "boost-smart-ptr boost-filesystem boost-foreach boost-format boost-function boost-interprocess " \
+                     "boost-intrusive boost-lexical-cast boost-locale boost-random boost-range boost-regex " \
+                     "boost-scope-exit boost-signals2 boost-thread boost-tuple boost-unordered " \
+                     "boost-utility boost-uuid boost-program-options"
+
+        if vcpkg_path.is_dir():
+            assert vcpkg_path.joinpath(".git").is_dir()
+            subprocess.check_call("git pull", shell=True)
+        else:
+            subprocess.check_call("git clone --depth=1 https://github.com/microsoft/vcpkg.git", shell=True)
         if sys.platform == "win32":
             subprocess.check_call("bootstrap-vcpkg.bat", shell=True, cwd=vcpkg_path)
+            subprocess.check_call(f"vcpkg install --triplet {vcpkg_triplet} {vcpkg_libs}" , shell=True, cwd=vcpkg_path)
         else:
             subprocess.check_call("./bootstrap-vcpkg.sh", shell=True, cwd=vcpkg_path)
-        subprocess.check_call(f"vcpkg install --triplet {vcpkg_triplet} boost-algorithm " \
-            "boost-array boost-asio "\
-            "boost-assign boost-atomic boost-bind boost-config boost-container boost-date-time " \
-            "boost-smart-ptr boost-filesystem boost-foreach boost-format boost-function boost-interprocess " \
-            "boost-intrusive boost-lexical-cast boost-locale boost-random boost-range boost-regex " \
-            "boost-scope-exit boost-signals2 boost-thread boost-tuple boost-unordered " \
-            "boost-utility boost-uuid boost-program-options", shell=True, cwd=vcpkg_path)
+            subprocess.check_call(f"./vcpkg install --triplet {vcpkg_triplet} {vcpkg_libs}" , shell=True, cwd=vcpkg_path)
 
     matlab_root = None
 
@@ -88,11 +93,12 @@ def main():
 
     vcpkg_toolchain_file = vcpkg_path.joinpath("scripts/buildsystems/vcpkg.cmake").absolute()
     assert vcpkg_toolchain_file.exists()
-
+    
     subprocess.check_call("cmake -G \"Ninja\" -DBUILD_GEN=ON -DBUILD_TEST=ON -DBoost_USE_STATIC_LIBS=ON " \
-      "-DCMAKE_BUILD_TYPE=Release -DBUILD_MATLAB_MEX=ON " \
+      "-DCMAKE_BUILD_TYPE=Release -DBUILD_MATLAB_MEX=ON Boost_NO_SYSTEM_PATHS=ON " \
       f"-DVCPKG_TARGET_TRIPLET={vcpkg_triplet} " \
-      f"-DCMAKE_TOOLCHAIN_FILE={vcpkg_toolchain_file} -S . -B build", shell=True)
+      f"-DCMAKE_TOOLCHAIN_FILE={vcpkg_toolchain_file} " \
+      "-S . -B build", shell=True)
 
     subprocess.check_call("cmake --build . --config Release", shell=True, cwd=build_path)
     
