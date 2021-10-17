@@ -56,7 +56,7 @@ def main():
 
         if vcpkg_path.is_dir():
             assert vcpkg_path.joinpath(".git").is_dir()
-            subprocess.check_call("git pull", shell=True)
+            subprocess.check_call("git pull", shell=True, cwd=vcpkg_path)
         else:
             subprocess.check_call("git clone --depth=1 https://github.com/microsoft/vcpkg.git", shell=True)
         if sys.platform == "win32":
