@@ -101,7 +101,7 @@ def main():
 
     shutil.copy("robotraconteur/packaging/matlab/logo-icon.png",build_dir)
 
-    subprocess.check_call(f"{matlab_exe} -wait -nodesktop -r \"matlab.addons.toolbox.packageToolbox('RobotRaconteurMatlab.prj','RobotRaconteurMatlab'); exit\"", shell=True, cwd=build_dir)
+    subprocess.check_call(f"{matlab_exe} -nodesktop -batch \"matlab.addons.toolbox.packageToolbox('RobotRaconteurMatlab.prj','RobotRaconteurMatlab'); exit\"", shell=True, cwd=build_dir)
 
     shutil.move(f"{build_dir}/RobotRaconteurMatlab.mltbx", f"{build_dir}/RobotRaconteurMatlab-{toolbox_ver}.mltbx")
 
