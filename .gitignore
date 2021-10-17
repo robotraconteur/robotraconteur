@@ -355,3 +355,5 @@ generated_src/
 generated_src
 
 *.asv
+
+vcpkg
