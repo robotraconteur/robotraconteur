@@ -21,4 +21,4 @@ jobs:
     - name: build matlab toolbox
       env:
         BOT_GITHUB_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}
-      run: python robotraconteur/packaging/scripts/build_matlab_toolbox.py
+      run: python3 robotraconteur/packaging/scripts/build_matlab_toolbox.py
