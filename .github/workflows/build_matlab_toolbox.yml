@@ -18,6 +18,8 @@ jobs:
       uses: matlab-actions/setup-matlab@v1
       with:
         release: R2020a
+    - name: pip
+      run: python3 -m pip install pygithub
     - name: build matlab toolbox
       env:
         BOT_GITHUB_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}
