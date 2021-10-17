@@ -1,0 +1,24 @@
+name: Build Matlab Toolbox
+
+on: 
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'tag name of draft release'
+        required: true
+
+jobs:
+  build-matlab-toolbox:
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        path: robotraconteur
+    - name: Set up MATLAB
+      uses: matlab-actions/setup-matlab@v1
+      with:
+        release: R2020a
+    - name: build matlab toolbox
+      env:
+        BOT_GITHUB_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}
+      run: python robotraconteur/packaging/scripts/build_matlab_toolbox.py
