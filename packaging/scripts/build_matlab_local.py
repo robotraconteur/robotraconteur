@@ -9,7 +9,7 @@ import argparse
 
 def main():
 
-    parser = argparse.ArgumentParser(descriptions="Build MATLAB locally")
+    parser = argparse.ArgumentParser(description="Build MATLAB locally")
     parser.add_argument("--matlab-version", type=str, default="R2020a", help="MATLAB version to use")
     parser.add_argument("--matlab-root", type=str, default=None, help="MATLAB root location (default is searched)")
     parser.add_argument("--semver-full", type=str, default=None, help="Full semver of release")
