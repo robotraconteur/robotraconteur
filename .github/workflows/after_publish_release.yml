@@ -1,0 +1,47 @@
+name: After publish release
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  publish-files:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: robinraju/release-downloader@v1.1
+      with:
+        repository: ${{ github.repository }}
+        tag: ${{ github.event.release.tag_name }}
+        fileName: "*"
+        out-file-path: files
+    - name: pip
+      run: python3 -m pip install --user twine
+    - uses: nuget/setup-nuget@v1
+      with:
+        nuget-api-key: ${{ secrets.NuGetAPIKey }}
+    - name: twine upload
+      if: always()
+      run: python3 -m twine files/*.whl
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.TWINE_TOKEN }}
+    - name: nuget upload
+      if: always()
+      run: nuget push files/*.nupkg -Source https://api.nuget.org/v3/index.json
+    - name: update vcpkg
+      uses: benc-uk/workflow-dispatch@v1
+      with:
+        workflow: update_port.yml
+        repo: ${{ github.repository_owner }}/vcpkg-robotraconteur
+        token: ${{ secrets.BOT_GITHUB_TOKEN }}
+        inputs: '{ "port": "robotraconteur", "source_repository": "${{ github.repository }}", "tag_name": "${{ github.event.release.tag_name }}" }'
+    - name: update homebrew
+      uses: benc-uk/workflow-dispatch@v1
+      with:
+        workflow: update_formula.yml
+        repo: ${{ github.repository_owner }}/homebrew-robotraconteur
+        token: ${{ secrets.BOT_GITHUB_TOKEN }}
+        inputs: '{ "formula": "robotraconteur", "source_repository": "${{ github.repository }}", "tag_name": "${{ github.event.release.tag_name }}" }'
+    
+        
