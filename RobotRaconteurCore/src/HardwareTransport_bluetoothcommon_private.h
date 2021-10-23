@@ -261,7 +261,7 @@ public:
 				}
 				
 				boost::asio::generic::stream_protocol protocol(family, proto);
-				#if BOOST_ASIO_VERSION < 101200
+				#if BOOST_ASIO_VERSION < 101400
 					RR_BOOST_ASIO_IO_CONTEXT& ex = parent->GetNode()->GetThreadPool()->get_io_context();
 				#else
 					const boost::asio::generic::stream_protocol::socket::executor_type& ex = parent->GetNode()->GetThreadPool()->get_io_context().get_executor();
