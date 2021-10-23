@@ -619,8 +619,100 @@ jobs:
       with:
         name: 'build-artifacts-osx-python-${{ matrix.python_version }}'
         path: build2/*
-        retention-days: 2  
+        retention-days: 2
   
+  build-conda-win:
+    runs-on: windows-2019
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        path: robotraconteur
+    - uses: conda-incubator/setup-miniconda@v2
+      with:
+        miniconda-version: "latest"
+        channels: conda-forge,robotraconteur
+    - name: conda install
+      run: >
+        conda install git cmake boost-cpp python swig numpy ninja pip vs2017_win-64 vs2015_runtime
+    - name: configure
+      run: >
+        cmake -GNinja -DBUILD_GEN=ON -DBUILD_PYTHON3=ON -DCMAKE_BUILD_TYPE:STRING=Release
+        -S robotraconteur -B build2
+      shell: cmd /C call {0}
+    - name: build
+      working-directory: build2
+      run: cmake --build . --config Release -j 4
+      shell: cmd /C call {0}
+    - name: test
+      working-directory: build2
+      run: |
+        ctest . -C Release --output-on-failure
+      shell: cmd /C call {0}
+  
+  build-conda-linux:
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        path: robotraconteur
+    - name: remove-swig      
+      run: |
+        sudo apt remove swig -qq || true
+        sudo rm -f /usr/bin/swig*
+        sudo rm -rf /usr/share/swig*
+    - uses: conda-incubator/setup-miniconda@v2
+      with:
+        miniconda-version: "latest"
+        channels: conda-forge,robotraconteur
+    - name: conda install
+      run: >
+        conda install git cmake boost-cpp python swig numpy pip dbus make zlib openssl libusb libbluetooth-headers gcc_linux-64 gcc_impl_linux-64
+    - name: printenv
+      run: printenv    
+    - name: configure
+      run: >
+        cmake -DBUILD_GEN=ON -DBUILD_PYTHON3=ON -DRR_NET_BUILD_NATIVE_ONLY=ON 
+        -DCMAKE_BUILD_TYPE:STRING=Release -DPYTHON3_EXECUTABLE=$CONDA_PREFIX/bin/python
+        -S robotraconteur -B build2
+    - name: build
+      working-directory: build2
+      run: cmake --build . --config Release -j 4
+    - name: test
+      working-directory: build2
+      run: |
+        ctest . -C Release --output-on-failure
+
+  build-conda-osx:
+    runs-on: macos-10.15
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        path: robotraconteur
+    - uses: conda-incubator/setup-miniconda@v2
+      with:
+        miniconda-version: "latest"
+        channels: conda-forge,robotraconteur
+    - name: conda install
+      run: >
+        conda install git cmake boost-cpp python swig numpy pip dbus clang clangxx compiler-rt openssl
+    - name: configure
+      run: >
+        cmake -DBUILD_GEN=ON -DBUILD_PYTHON3=ON -DRR_NET_BUILD_NATIVE_ONLY=ON -DCMAKE_BUILD_TYPE:STRING=Release 
+        -DPYTHON3_EXECUTABLE=$CONDA_PREFIX/bin/python -DOPENSSL_ROOT_DIR=$CONDA_PREFIX -S robotraconteur -B build2
+    - name: build
+      working-directory: build2
+      run: cmake --build . --config Release -j 4
+    - name: test
+      working-directory: build2
+      run: |
+        ctest . -C Release --output-on-failure
+
   build-dist:
     needs:
     - build-ubuntu
