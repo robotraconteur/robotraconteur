@@ -479,7 +479,7 @@ jobs:
         path: robotraconteur
     - uses: actions/setup-python@v2
       with:
-        python-version: '${{ matrix.python_version }}'
+        python-version: '${{ matrix.config.python_version }}'
         architecture: ${{ matrix.config.arch }}
     - name: checkout vcpkg
       uses: actions/checkout@v2
@@ -518,7 +518,7 @@ jobs:
       id: cache-build
       uses: mikehardy/buildcache-action@v1
       with:
-        cache_key: ${{ runner.os }}-${{ matrix.config.arch }}-build-python-version-${{ matrix.python_version }}-buildcache
+        cache_key: ${{ runner.os }}-${{ matrix.config.arch }}-build-python-version-${{ matrix.config.python_version }}-buildcache
     - name: cmake cache args
       id: cmake-cache-args
       if: startsWith(github.ref, 'refs/tags/v') != true
@@ -554,13 +554,13 @@ jobs:
     - name: archive out
       uses: actions/upload-artifact@v2
       with:
-        name: 'out-win-${{ matrix.config.arch }}-python-${{ matrix.python_version }}'
+        name: 'out-win-${{ matrix.config.arch }}-python-${{ matrix.config.python_version }}'
         path: out/*
     - name: build artifacts
       if: failure()
       uses: actions/upload-artifact@v2
       with:
-        name: 'build-artifacts-win-${{ matrix.config.arch }}-python-${{ matrix.python_version }}'
+        name: 'build-artifacts-win-${{ matrix.config.arch }}-python-${{ matrix.config.python_version }}'
         path: build2/*
         retention-days: 2 
 
