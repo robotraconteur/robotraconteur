@@ -456,10 +456,23 @@ jobs:
           - arch: x64
             vcpkg_triplet: x64-windows-static-md
             cmake_arch: x64
+            python_version: 3.7
           - arch: x86
             vcpkg_triplet: x86-windows-static-md
             cmake_arch: Win32
-        python_version: [3.7,3.9]
+            python_version: 3.7
+          - arch: x64
+            vcpkg_triplet: x64-windows-static-md
+            cmake_arch: x64
+            python_version: 3.9
+          - arch: x86
+            vcpkg_triplet: x86-windows-static-md
+            cmake_arch: Win32
+            python_version: 3.9
+          - arch: x64
+            vcpkg_triplet: x64-windows-static-md
+            cmake_arch: x64
+            python_version: 3.10
     steps:
     - uses: actions/checkout@v2
       with:
@@ -559,7 +572,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python_version: [3.7,3.9]
+        python_version: [3.7,3.9,3.10]
     steps:
     - uses: actions/checkout@v2
       with:
