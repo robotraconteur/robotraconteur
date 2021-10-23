@@ -18,6 +18,8 @@ MESSAGE(STATUS "Robot Raconteur version: ${RobotRaconteurVersion}")
 
 set(ROBOTRACONTEUR_VERSION_SUFFIX "" CACHE STRING "Version suffix for library")
 
+configure_file(${CMAKE_SOURCE_DIR}/cmake/rrversion.txt.in ${CMAKE_BINARY_DIR}/rrversion.txt @ONLY)
+
 include(GNUInstallDirs)
 
 find_package(Doxygen)
