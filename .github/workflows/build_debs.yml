@@ -94,6 +94,9 @@ jobs:
     - build-source-debs
     - build-debian-buster
     steps:
+    - uses: actions/checkout@v2
+      with:
+        path: robotraconteur_debian_build
     - name: download CI artifacts
       uses: actions/download-artifact@v2
       with:
