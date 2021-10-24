@@ -1,0 +1,138 @@
+robotraconteur (0.15.2-1~xenial) xenial; urgency=medium
+
+  * Version 0.15.2 beta release
+
+ -- John Wason <wason@wasontech.com>  Thu, 08 Apr 2021 15:00:59 -0400
+
+robotraconteur (0.15.1-1~xenial) xenial; urgency=medium
+
+  * Version 0.15.1 beta release
+
+ -- John Wason <wason@wasontech.com>  Fri, 19 Mar 2021 18:46:19 -0400
+
+robotraconteur (0.15.0-1~xenial) xenial; urgency=medium
+
+  * Version 0.15.0 beta release
+
+ -- John Wason <wason@wasontech.com>  Sat, 06 Mar 2021 03:29:10 -0500
+
+robotraconteur (0.14.3-1~xenial) xenial; urgency=medium
+
+  * Version 0.14.3 beta release
+
+ -- John Wason <wason@wasontech.com>  Wed, 17 Feb 2021 01:03:09 -0500
+
+robotraconteur (0.14.2-1~xenial) xenial; urgency=medium
+
+  * Version 0.14.2 beta release
+
+ -- John Wason <wason@wasontech.com>  Tue, 29 Dec 2020 22:33:39 -0500
+
+robotraconteur (0.14.1-1~xenial) xenial; urgency=medium
+
+  * Version 0.14.1 beta release
+
+ -- John Wason <wason@wasontech.com>  Thu, 03 Dec 2020 21:19:24 -0500
+
+robotraconteur (0.14.0-1~xenial) xenial; urgency=medium
+
+  * Version 0.14.0 beta release
+
+ -- John Wason <wason@wasontech.com>  Tue, 01 Dec 2020 02:01:41 -0500
+
+robotraconteur (0.13.0-1~xenial) xenial; urgency=medium
+
+  * Version 0.13.0 beta release
+
+ -- John Wason <wason@wasontech.com>  Thu, 12 Nov 2020 00:12:08 -0500
+
+robotraconteur (0.12.1-2~xenial) xenial; urgency=medium
+
+  * Version 0.12.1 beta release
+
+ -- John Wason <wason@wasontech.com>  Wed, 14 Oct 2020 22:26:52 -0400
+
+robotraconteur (0.12.0-1~xenial) xenial; urgency=medium
+
+  * Version 0.12.0 beta release
+
+ -- John Wason <wason@wasontech.com>  Mon, 05 Oct 2020 01:51:51 -0400
+
+robotraconteur (0.11.0-1~xenial) xenial; urgency=medium
+
+  * Version 0.11.0 beta release
+
+ -- John Wason <wason@wasontech.com>  Fri, 04 Sep 2020 02:03:38 -0400
+
+robotraconteur (0.10.0-1~xenial) xenial; urgency=medium
+
+  * Version 0.10.0 beta release
+
+ -- John Wason <wason@wasontech.com>  Tue, 28 Jul 2020 17:50:57 -0400
+
+robotraconteur (0.9.3-2~xenial) xenial; urgency=medium
+
+  * Version 0.9.3 beta patch Python threads flag
+
+ -- John Wason <wason@wasontech.com>  Thu, 11 Jun 2020 00:02:04 -0400
+
+robotraconteur (0.9.3-1~xenial) xenial; urgency=medium
+
+  * Version 0.9.3 beta release
+
+ -- John Wason <wason@wasontech.com>  Thu, 04 Jun 2020 02:47:44 -0400
+
+robotraconteur (0.9.2-1~xenial) xenial; urgency=medium
+
+  * Version 0.9.2 beta release
+
+ -- John Wason <wason@wasontech.com>  Thu, 13 Feb 2020 15:07:54 -0500
+
+robotraconteur (0.9.1-1~xenial) xenial; urgency=medium
+
+  * Version 0.9.1 beta release
+
+ -- John Wason <wason@wasontech.com>  Thu, 10 Oct 2019 00:48:45 -0400
+
+robotraconteur (0.9.0r4-ppa10~xenial) xenial; urgency=medium
+
+  * Version 0.9.0 official release control file fix
+
+ -- John Wason <wason@wasontech.com>  Sun, 16 Jun 2019 03:02:11 -0400
+
+robotraconteur (0.9.0r4-ppa9~xenial) xenial; urgency=medium
+
+  * Version 0.9.0 official release
+
+ -- John Wason <wason@wasontech.com>  Sun, 16 Jun 2019 00:07:59 -0400
+
+robotraconteur (0.9.0r3-ppa8~xenial) xenial; urgency=medium
+
+  * Test version 0.9.0 prerelease
+
+ -- John Wason <wason@wasontech.com>  Sat, 15 Jun 2019 16:33:31 -0400
+
+robotraconteur (0.9.0-ppa4~xenial) xenial; urgency=medium
+
+  * Use distro specific versioning
+
+ -- John Wason <wason@wasontech.com>  Sun, 09 Dec 2018 19:12:21 -0500
+
+robotraconteur (0.9.0-3) xenial; urgency=medium
+
+  * Fix cmake build issue
+
+ -- John Wason <wason@wasontech.com>  Sun, 09 Dec 2018 19:12:21 -0500
+
+robotraconteur (0.9.0-2) xenial; urgency=medium
+
+  * Fix build dep issue
+
+ -- John Wason <wason@wasontech.com>  Sun, 09 Dec 2018 18:07:24 -0500
+
+robotraconteur (0.9.0-1) xenial; urgency=medium
+
+  * Initial release
+
+ -- John Wason <wason@wasontech.com>  Sat, 08 Dec 2018 20:36:11 -0500
+

@@ -1,0 +1,4 @@
+# robotraconteur uses Apache 2.0 license...
+
+python3-robotraconteur: possible-gpl-code-linked-with-openssl
+python3-robotraconteur: missing-dependency-on-numpy-abi

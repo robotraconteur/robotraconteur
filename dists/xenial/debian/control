@@ -1,0 +1,46 @@
+Source: robotraconteur
+Section: contrib/misc
+Priority: optional
+Maintainer: John Wason <wason@wasontech.com>
+Build-Depends: cmake (>=3.5.1),
+               debhelper (>=9),
+               libbluetooth-dev,
+               libboost-all-dev (>=1.58.0),
+               libdbus-1-dev,
+               libssl-dev (>=1),
+               libusb-1.0-0-dev (>=1),
+               zlib1g-dev,
+               python-dev (>=2.7),
+               python-numpy,
+               python-setuptools,
+               python3-dev,
+               python3-numpy,
+               python3-setuptools
+Standards-Version: 3.9.7
+Homepage: http://robotraconteur.com
+
+Package: robotraconteur-dev
+Architecture: any
+Section: contrib/libs
+Depends: ${misc:Depends}, ${shlibs:Depends}, libbluetooth3, libdbus-1-3, libusb-1.0-0,
+         libboost-all-dev (>=1.58.0), libssl-dev (>=1)
+Description: Robot Raconteur static library, header files, and tools
+ Robot Raconteur static library, header files, and tools. Use with 
+ cmake projects.
+
+Package: python-robotraconteur
+Architecture: any
+Section: contrib/python
+Depends: ${misc:Depends}, ${shlibs:Depends}, libbluetooth3, 
+         libdbus-1-3, libusb-1.0-0, python-numpy
+Description: Robot Raconteur Python module
+ Robot Raconteur Python module. Use with python 2.7
+
+Package: python3-robotraconteur
+Architecture: any
+Section: contrib/python
+Depends: ${misc:Depends}, ${shlibs:Depends}, libbluetooth3, 
+         libdbus-1-3, libusb-1.0-0, python3-numpy
+Description: Robot Raconteur Python module
+ Robot Raconteur Python module. Use with python 3
+

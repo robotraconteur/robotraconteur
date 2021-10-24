@@ -1,0 +1,114 @@
+robotraconteur (0.15.2-1~focal) focal; urgency=medium
+
+  * Version 0.15.2 beta release
+
+ -- John Wason <wason@wasontech.com>  Thu, 08 Apr 2021 15:00:47 -0400
+
+robotraconteur (0.15.1-1~focal) focal; urgency=medium
+
+  * Version 0.15.1 beta release
+
+ -- John Wason <wason@wasontech.com>  Fri, 19 Mar 2021 18:46:12 -0400
+
+robotraconteur (0.15.0-1~focal) focal; urgency=medium
+
+  * Version 0.15.0 beta release
+
+ -- John Wason <wason@wasontech.com>  Sat, 06 Mar 2021 03:28:58 -0500
+
+robotraconteur (0.14.3-1~focal) focal; urgency=medium
+
+  * Version 0.14.3 beta release
+
+ -- John Wason <wason@wasontech.com>  Wed, 17 Feb 2021 01:03:02 -0500
+
+robotraconteur (0.14.2-1~focal) focal; urgency=medium
+
+  * Version 0.14.2 beta release
+
+ -- John Wason <wason@wasontech.com>  Tue, 29 Dec 2020 22:33:31 -0500
+
+robotraconteur (0.14.1-1~focal) focal; urgency=medium
+
+  * Version 0.14.1 beta release
+
+ -- John Wason <wason@wasontech.com>  Thu, 03 Dec 2020 21:19:16 -0500
+
+robotraconteur (0.14.0-1~focal) focal; urgency=medium
+
+  * Version 0.14.0 beta release
+
+ -- John Wason <wason@wasontech.com>  Tue, 01 Dec 2020 02:00:48 -0500
+
+robotraconteur (0.13.0-1~focal) focal; urgency=medium
+
+  * Version 0.13.0 beta release
+
+ -- John Wason <wason@wasontech.com>  Thu, 12 Nov 2020 00:11:44 -0500
+
+robotraconteur (0.12.1-2~focal) focal; urgency=medium
+
+  * Version 0.12.1 beta release
+
+ -- John Wason <wason@wasontech.com>  Wed, 14 Oct 2020 22:26:52 -0400
+
+robotraconteur (0.12.0-1~focal) focal; urgency=medium
+
+  * Version 0.12.0 beta release
+
+ -- John Wason <wason@wasontech.com>  Mon, 05 Oct 2020 01:46:12 -0400
+
+robotraconteur (0.11.0-2~focal) focal; urgency=medium
+
+  * Disable parallel build
+
+ -- John Wason <wason@wasontech.com>  Fri, 04 Sep 2020 03:09:00 -0400
+
+robotraconteur (0.11.0-1~focal) focal; urgency=medium
+
+  * Version 0.11.0 beta release
+
+ -- John Wason <wason@wasontech.com>  Fri, 04 Sep 2020 00:38:02 -0400
+
+robotraconteur (0.10.0-3~focal) focal; urgency=medium
+
+  * Add librobotraconteur-net-native package
+
+ -- John Wason <wason@wasontech.com>  Wed, 29 Jul 2020 12:58:27 -0400
+
+robotraconteur (0.10.0-2~focal) focal; urgency=medium
+
+  * Add librobotraconteur-net-native package
+
+ -- John Wason <wason@wasontech.com>  Tue, 28 Jul 2020 17:50:57 -0400
+
+robotraconteur (0.10.0-1~focal) focal; urgency=medium
+
+  * Version 0.10.0 beta release
+
+ -- John Wason <wason@wasontech.com>  Tue, 28 Jul 2020 17:50:57 -0400
+
+robotraconteur (0.9.3-2~focal) focal; urgency=medium
+
+  * Version 0.9.3 beta patch Python threads flag
+
+ -- John Wason <wason@wasontech.com>  Thu, 11 Jun 2020 00:02:04 -0400
+
+robotraconteur (0.9.3-1~focal) focal; urgency=medium
+
+  * Version 0.9.3 beta release
+
+ -- John Wason <wason@wasontech.com>  Thu, 04 Jun 2020 02:47:44 -0400
+
+robotraconteur (0.9.2-2~focal) focal; urgency=medium
+
+  * Version 0.9.2 beta release
+
+ -- John Wason <wason@wasontech.com>  Tue, 26 May 2020 00:02:25 -0400
+
+robotraconteur (0.9.2-1~focal) focal; urgency=medium
+
+  * Version 0.9.2 beta release
+
+ -- John Wason <wason@wasontech.com>  Thu, 13 Feb 2020 00:59:08 -0500
+

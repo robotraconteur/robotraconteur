@@ -2,14 +2,34 @@ name: build_debs
 
 on:
   push:
-  pull_request:
-  release:
-    types:
-      - created
 
 jobs:
+
+  build-source-debs:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        path: robotraconteur_debian_build
+    - name: apt update
+      run: sudo apt update
+    - name: apt
+      run: >
+        sudo apt-get install 
+        pbuilder debootstrap devscripts git-buildpackage 
+        debian-keyring  debian-archive-keyring dh-make -qq
+    - name: build source debs
+      run: python3 robotraconteur_debian_build/scripts/build_src_deb.py
+    - name: archive out
+      uses: actions/upload-artifact@v2
+      with:
+        name: 'source-debs'
+        path: out/*
+
   build-debian-buster:    
     runs-on: ubuntu-20.04
+    needs: build-source-debs
+    timeout-minutes: 720
     strategy:
       matrix:
         config:
@@ -27,6 +47,12 @@ jobs:
             dist: buster
     steps:
     - uses: actions/checkout@v2
+      with:
+        path: robotraconteur_debian_build
+    - name: Download CI artifacts
+      uses: actions/download-artifact@v2
+      with:
+        path: source-debs
     - name: apt update
       run: sudo apt update
     - name: apt
@@ -42,17 +68,18 @@ jobs:
         sudo dpkg -i raspbian-archive-keyring_20120528.2_all.deb
     - name: cp pbuilderrc
       run: |
-        cp pbuilderrc $HOME/.pbuilderrc
-        sudo cp pbuilderrc /root/.pbuilderrc
+        cp robotraconteur_debian_build/pbuilderrc $HOME/.pbuilderrc
+        sudo cp robotraconteur_debian_build/pbuilderrc /root/.pbuilderrc
     - name: pbuilder-create
       run: |
         sudo mkdir -p /var/cache/pbuilder/${{ matrix.config.os }}-${{ matrix.config.dist }}-${{ matrix.config.arch }}/aptcache/
         sudo OS=${{ matrix.config.os }} DIST=${{ matrix.config.dist }} ARCH=${{ matrix.config.arch }} pbuilder --create
     - name: extact-source-deb
       run: |
-        dpkg-source -x robotraconteur_*~buster.dsc src_deb
+        dpkg-source -x source-debs/source-debs/${{ matrix.config.dist }}/robotraconteur_*~${{ matrix.config.dist }}.dsc src_deb
     - name: pbuilder-build
       working-directory: src_deb
+      timeout-minutes: 720
       run: |
         OS=${{ matrix.config.os }} DIST=${{ matrix.config.dist }} ARCH=${{ matrix.config.arch }} pdebuild
     - name: archive result

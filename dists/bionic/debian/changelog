@@ -1,0 +1,162 @@
+robotraconteur (0.15.2-1~bionic) bionic; urgency=medium
+
+  * Version 0.15.2 beta release
+
+ -- John Wason <wason@wasontech.com>  Thu, 08 Apr 2021 15:00:31 -0400
+
+robotraconteur (0.15.1-1~bionic) bionic; urgency=medium
+
+  * Version 0.15.1 beta release
+
+ -- John Wason <wason@wasontech.com>  Fri, 19 Mar 2021 18:46:00 -0400
+
+robotraconteur (0.15.0-1~bionic) bionic; urgency=medium
+
+  * Version 0.15.0 beta release
+
+ -- John Wason <wason@wasontech.com>  Sat, 06 Mar 2021 03:28:40 -0500
+
+robotraconteur (0.14.3-1~bionic) bionic; urgency=medium
+
+  * Version 0.14.3 beta release
+
+ -- John Wason <wason@wasontech.com>  Wed, 17 Feb 2021 01:02:48 -0500
+
+robotraconteur (0.14.2-1~bionic) bionic; urgency=medium
+
+  * Version 0.14.2 beta release
+
+ -- John Wason <wason@wasontech.com>  Tue, 29 Dec 2020 22:33:21 -0500
+
+robotraconteur (0.14.1-1~bionic) bionic; urgency=medium
+
+  * Version 0.14.1 beta release
+
+ -- John Wason <wason@wasontech.com>  Thu, 03 Dec 2020 21:17:41 -0500
+
+robotraconteur (0.14.0-1~bionic) bionic; urgency=medium
+
+  * Version 0.14.0 beta release
+
+ -- John Wason <wason@wasontech.com>  Tue, 01 Dec 2020 02:00:25 -0500
+
+robotraconteur (0.13.0-1~bionic) bionic; urgency=medium
+
+  * Version 0.13.0 beta release
+
+ -- John Wason <wason@wasontech.com>  Wed, 11 Nov 2020 23:29:17 -0500
+
+robotraconteur (0.12.1-2~bionic) bionic; urgency=medium
+
+  * Version 0.12.1 beta release
+
+ -- John Wason <wason@wasontech.com>  Wed, 14 Oct 2020 22:26:52 -0400
+
+robotraconteur (0.12.0-1~bionic) bionic; urgency=medium
+
+  * Version 0.12.0 beta release
+
+ -- John Wason <wason@wasontech.com>  Mon, 05 Oct 2020 01:49:27 -0400
+
+robotraconteur (0.11.0-2~bionic) bionic; urgency=medium
+
+  * Disable parallel build
+
+ -- John Wason <wason@wasontech.com>  Fri, 04 Sep 2020 13:50:58 -0400
+
+robotraconteur (0.11.0-1~bionic) bionic; urgency=medium
+
+  * Version 0.11.0 beta release
+
+ -- John Wason <wason@wasontech.com>  Fri, 04 Sep 2020 02:01:06 -0400
+
+robotraconteur (0.10.0-3~bionic) bionic; urgency=medium
+
+  * Add librobotraconteur-net-native package
+
+ -- John Wason <wason@wasontech.com>  Wed, 29 Jul 2020 12:58:27 -0400
+
+robotraconteur (0.10.0-2~bionic) bionic; urgency=medium
+
+  * Add librobotraconteur-net-native package
+
+ -- John Wason <wason@wasontech.com>  Tue, 28 Jul 2020 17:50:57 -0400
+
+robotraconteur (0.10.0-1~bionic) bionic; urgency=medium
+
+  * Version 0.10.0 beta release
+
+ -- John Wason <wason@wasontech.com>  Tue, 28 Jul 2020 17:50:57 -0400
+
+robotraconteur (0.9.3-2~bionic) bionic; urgency=medium
+
+  * Version 0.9.3 beta patch Python threads flag
+
+ -- John Wason <wason@wasontech.com>  Thu, 04 Jun 2020 02:47:44 -0400
+
+robotraconteur (0.9.3-1~bionic) bionic; urgency=medium
+
+  * Version 0.9.3 beta release
+
+ -- John Wason <wason@wasontech.com>  Thu, 04 Jun 2020 02:47:44 -0400
+
+robotraconteur (0.9.2-1~bionic) bionic; urgency=medium
+
+  * Version 0.9.2 beta release
+
+ -- John Wason <wason@wasontech.com>  Thu, 13 Feb 2020 00:59:08 -0500
+
+robotraconteur (0.9.1-1~bionic) bionic; urgency=medium
+
+  * Version 0.9.1 beta release
+
+ -- John Wason <wason@wasontech.com>  Thu, 10 Oct 2019 00:48:45 -0400
+
+robotraconteur (0.9.0r4-ppa9~bionic) bionic; urgency=medium
+
+  * Test version 0.9.0 official release
+
+ -- John Wason <wason@wasontech.com>  Sun, 16 Jun 2019 00:07:59 -0400
+
+robotraconteur (0.9.0r3-ppa8~bionic) bionic; urgency=medium
+
+  * Test version 0.9.0 prerelease
+
+ -- John Wason <wason@wasontech.com>  Sat, 15 Jun 2019 16:33:31 -0400
+
+robotraconteur (0.9.0r2-ppa6~bionic) bionic; urgency=medium
+
+  * Fix bionic compile errors
+
+ -- John Wason <wason@wasontech.com>  Mon, 10 Dec 2018 23:35:29 -0500
+
+robotraconteur (0.9.0r1-ppa5~bionic) bionic; urgency=medium
+
+  * Bump orig version
+
+ -- John Wason <wason@wasontech.com>  Mon, 10 Dec 2018 17:41:19 -0500
+
+robotraconteur (0.9.0-ppa4~xenial) xenial; urgency=medium
+
+  * Use distro specific versioning
+
+ -- John Wason <wason@wasontech.com>  Sun, 09 Dec 2018 19:12:21 -0500
+
+robotraconteur (0.9.0-3) xenial; urgency=medium
+
+  * Fix cmake build issue
+
+ -- John Wason <wason@wasontech.com>  Sun, 09 Dec 2018 19:12:21 -0500
+
+robotraconteur (0.9.0-2) xenial; urgency=medium
+
+  * Fix build dep issue
+
+ -- John Wason <wason@wasontech.com>  Sun, 09 Dec 2018 18:07:24 -0500
+
+robotraconteur (0.9.0-1) xenial; urgency=medium
+
+  * Initial release
+
+ -- John Wason <wason@wasontech.com>  Sat, 08 Dec 2018 20:36:11 -0500
+

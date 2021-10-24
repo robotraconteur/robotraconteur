@@ -1,0 +1,35 @@
+#!/usr/bin/make -f
+# See debhelper(7) (uncomment to enable)
+# output every command that modifies files on the build system.
+#export DH_VERBOSE = 1
+
+
+# see FEATURE AREAS in dpkg-buildflags(1)
+#export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+# see ENVIRONMENT in dpkg-buildflags(1)
+# package maintainers to append CFLAGS
+#export DEB_CFLAGS_MAINT_APPEND  = -Wall -pedantic
+# package maintainers to append LDFLAGS
+#export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
+
+
+%:
+	dh $@ --parallel  --builddirectory=build
+
+
+override_dh_auto_configure:
+	dh_auto_configure -- \
+		-DCMAKE_LIBRARY_ARCHITECTURE="$(DEB_HOST_MULTIARCH)" -DBUILD_GEN=ON -DBUILD_PYTHON=ON -DBUILD_PYTHON3=ON -DBUILD_NET=ON -DRR_NET_INSTALL_NATIVE_LIB=ON -DRR_NET_BUILD_NATIVE_ONLY=ON -DUSE_PREGENERATED_SOURCE=ON -DPREGENERATED_SOURCE_DIR:PATH=$(CURDIR)/generated_src
+
+override_dh_makeshlibs:
+	dh_makeshlibs -- -c4
+
+override_dh_auto_install:
+	dh_auto_install
+	( cd build/out/Python && python setup.py install --root=$(CURDIR)/debian/tmp --install-layout=deb --single-version-externally-managed )
+	( cd build/out/Python3 && python3 setup.py install --root=$(CURDIR)/debian/tmp --install-layout=deb --single-version-externally-managed )
+
+#override_dh_install:
+#	dh_install --list-missing
+
