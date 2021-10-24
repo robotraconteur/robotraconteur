@@ -643,7 +643,7 @@ namespace RobotRaconteur
 
 			PyAutoPtr<PyObject> data2(PyArray_Flatten((PyArrayObject*)data, NPY_FORTRANORDER));
 
-			for (ssize_t i = 0; i < PySequence_Length(data2.get()); i++)
+			for (Py_ssize_t i = 0; i < PySequence_Length(data2.get()); i++)
 			{
 
 				PyAutoPtr<PyObject> a(PySequence_GetItem(data2.get(), i));
@@ -1172,7 +1172,7 @@ namespace RobotRaconteur
 #else
 				if (PyUnicode_Check(data))
 				{
-					ssize_t str_len;
+					Py_ssize_t str_len;
 					const char* str_dat = PyUnicode_AsUTF8AndSize(data, &str_len);
 					if (!str_dat)
 					{

@@ -456,17 +456,30 @@ jobs:
           - arch: x64
             vcpkg_triplet: x64-windows-static-md
             cmake_arch: x64
+            python_version: "3.7"
           - arch: x86
             vcpkg_triplet: x86-windows-static-md
             cmake_arch: Win32
-        python_version: [3.7,3.9]
+            python_version: "3.7"
+          - arch: x64
+            vcpkg_triplet: x64-windows-static-md
+            cmake_arch: x64
+            python_version: "3.9"
+          - arch: x86
+            vcpkg_triplet: x86-windows-static-md
+            cmake_arch: Win32
+            python_version: "3.9"
+          - arch: x64
+            vcpkg_triplet: x64-windows-static-md
+            cmake_arch: x64
+            python_version: "3.10"
     steps:
     - uses: actions/checkout@v2
       with:
         path: robotraconteur
     - uses: actions/setup-python@v2
       with:
-        python-version: '${{ matrix.python_version }}'
+        python-version: '${{ matrix.config.python_version }}'
         architecture: ${{ matrix.config.arch }}
     - name: checkout vcpkg
       uses: actions/checkout@v2
@@ -505,7 +518,7 @@ jobs:
       id: cache-build
       uses: mikehardy/buildcache-action@v1
       with:
-        cache_key: ${{ runner.os }}-${{ matrix.config.arch }}-build-python-version-${{ matrix.python_version }}-buildcache
+        cache_key: ${{ runner.os }}-${{ matrix.config.arch }}-build-python-version-${{ matrix.config.python_version }}-buildcache
     - name: cmake cache args
       id: cmake-cache-args
       if: startsWith(github.ref, 'refs/tags/v') != true
@@ -541,13 +554,13 @@ jobs:
     - name: archive out
       uses: actions/upload-artifact@v2
       with:
-        name: 'out-win-${{ matrix.config.arch }}-python-${{ matrix.python_version }}'
+        name: 'out-win-${{ matrix.config.arch }}-python-${{ matrix.config.python_version }}'
         path: out/*
     - name: build artifacts
       if: failure()
       uses: actions/upload-artifact@v2
       with:
-        name: 'build-artifacts-win-${{ matrix.config.arch }}-python-${{ matrix.python_version }}'
+        name: 'build-artifacts-win-${{ matrix.config.arch }}-python-${{ matrix.config.python_version }}'
         path: build2/*
         retention-days: 2 
 
@@ -559,7 +572,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python_version: [3.7,3.9]
+        python_version: ["3.7","3.9","3.10"]
     steps:
     - uses: actions/checkout@v2
       with:
