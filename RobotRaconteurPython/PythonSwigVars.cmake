@@ -1,6 +1,6 @@
 # Fix for undefined symbols on OSX
 # https://stackoverflow.com/questions/25421479/clang-and-undefined-symbols-when-building-a-library
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
+if(APPLE)
 set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -undefined dynamic_lookup")
 endif()
 

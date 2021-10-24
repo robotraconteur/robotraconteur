@@ -28,6 +28,10 @@ IF (MSVC)
 target_compile_options(${SWIG_MODULE_RobotRaconteurNETNative_REAL_NAME} PRIVATE "/bigobj")
 ENDIF()
 
+if (APPLE)
+set_target_properties(${SWIG_MODULE_RobotRaconteurNETNative_REAL_NAME} PROPERTIES SUFFIX ".dylib")
+endif()
+
 target_compile_definitions(${SWIG_MODULE_RobotRaconteurNETNative_REAL_NAME} PRIVATE SWIG_TYPE_TABLE=robotraconteur_net)
 
 RRSetTargetDirs(${SWIG_MODULE_RobotRaconteurNETNative_REAL_NAME} "NET/Native" "NET/Native")
