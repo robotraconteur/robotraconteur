@@ -107,6 +107,7 @@ jobs:
         tar cf srcdebs.tar.gz srcdebs
         mkdir -p debs
         cp -r artifacts/result-* debs
+        find debs -name *dbgsym* -exec rm {} \;
         tar cf debs.tar.gz debs
     - name: tag name env
       run: echo TAG_NAME=`cat robotraconteur_debian_build/upstream_tag_name`-`date +'%Y%m%d'`-unsigned >> $GITHUB_ENV
