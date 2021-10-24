@@ -87,3 +87,32 @@ jobs:
       with:
         name: 'result-${{ matrix.config.os }}-${{ matrix.config.dist }}-${{ matrix.config.arch }}'
         path: result/*
+  build-release:
+    #if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-20.04
+    needs:
+    - build-source-debs
+    - build-debian-buster
+    steps:
+    - name: download CI artifacts
+      uses: actions/download-artifact@v2
+      with:
+        path: artifacts
+    - name: make archives
+      run: |
+        cp -r artifacts/source-debs srcdebs
+        tar cf srcdebs.tar.gz srcdebs
+        mkdir -p debs
+        cp -r artifacts/result-* debs
+        tar cf debs.tar.gz debs
+    - name: tag name env
+      run: echo TAG_NAME=`cat robotraconteur_debian_build/upstream_tag_name`-`date +'%Y%m%d'`-unsigned >> $GITHUB_ENV
+    - name: make release
+      uses: softprops/action-gh-release@v1
+      with:
+        token: ${{ secrets.BOT_GITHUB_TOKEN }}
+        tag_name: ${{ env.TAG_NAME }}
+        files: |
+          srcdebs.tar.gz
+          debs.tar.gz
+    

@@ -80,6 +80,9 @@ def main():
 
     download_asset(a.url, a.name, f"robotraconteur_{orig_ver}.orig.tar.gz", token)
 
+    with open("upstream_tag_name", "w") as f:
+        f.write(tag_name)
+
     dists_dir = Path("dists")
 
     for d in dists_dir.iterdir():
