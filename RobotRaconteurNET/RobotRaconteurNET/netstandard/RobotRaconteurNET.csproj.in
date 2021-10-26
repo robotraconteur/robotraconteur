@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>RobotRaconteurNET</PackageId>
-    <Version>@RobotRaconteurVersion@</Version>
+    <Version>@ROBOTRACONTEUR_VERSION@</Version>
     <Authors>John Wason</Authors>
     <Company>Wason Technology, LLC</Company>
     <Product>RobotRaconteurNET C# Library</Product>

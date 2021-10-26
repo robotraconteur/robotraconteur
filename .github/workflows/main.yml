@@ -7,9 +7,6 @@ on:
     types:
       - created
 
-env:
-  version_suffix:
-
 jobs:
   build-ubuntu:
 
@@ -41,9 +38,11 @@ jobs:
       if: ${{ matrix.config.container != '' }}
       run: |
         apt update 
-        apt install sudo tzdata -y
+        apt install sudo tzdata python3 -y
         ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
         dpkg-reconfigure --frontend noninteractive tzdata
+    - name: semver
+      run: python3 robotraconteur/packaging/scripts/actions_semver.py --github-env
     - name: apt update
       run: sudo apt update
     - name: apt
@@ -105,7 +104,8 @@ jobs:
         cmake -G "Unix Makefiles" -DBUILD_GEN=ON  -DBUILD_TEST=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON 
         -DBoost_USE_STATIC_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DPYTHON3_EXECUTABLE=/usr/bin/python3 
         -DBUILD_JAVA=ON -DBUILD_NET=ON -DPACKAGE_SWIG_SOURCE_ALL=ON -DJAVA_HOME=/usr/lib/jvm/default-java 
-        -DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=OFF -DROBOTRACONTEUR_VERSION_SUFFIX="${{ env.version_suffix }}"
+        -DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=OFF
+        -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
         ${{ env.CMAKE_CACHE_ARGS }}
         ../robotraconteur
     - name: build
@@ -162,6 +162,8 @@ jobs:
     - uses: actions/checkout@v2
       with:
         path: robotraconteur
+    - name: semver
+      run: python robotraconteur/packaging/scripts/actions_semver.py --github-env
     - name: checkout vcpkg
       uses: actions/checkout@v2
       with:
@@ -234,7 +236,8 @@ jobs:
         -DBUILD_NET=ON -DBoost_USE_STATIC_LIBS=ON -DBUILD_PYTHON=ON 
         -DBUILD_PYTHON_WHEEL=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON -DBUILD_JAVA=ON 
         -DPYTHON_EXECUTABLE="${{ env.PYTHON2_EXE }}"
-        -DPYTHON3_EXECUTABLE="${{ env.PYTHON3_EXE }}" -DROBOTRACONTEUR_VERSION_SUFFIX="${{ env.version_suffix }}"
+        -DPYTHON3_EXECUTABLE="${{ env.PYTHON3_EXE }}" 
+        -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
         -DVCPKG_TARGET_TRIPLET=${{ matrix.config.vcpkg_triplet }}
         ${{ env.CMAKE_CACHE_ARGS }}
@@ -281,6 +284,8 @@ jobs:
     - uses: actions/checkout@v2
       with:
         path: robotraconteur
+    - name: semver
+      run: python3 robotraconteur/packaging/scripts/actions_semver.py --github-env
     - name: brew
       run: |
         brew update
@@ -322,7 +327,8 @@ jobs:
         -DBUILD_JAVA=ON -DBUILD_NET=ON -DPACKAGE_SWIG_SOURCE_ALL=ON 
         -DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=ON -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl
         -DOPENSSL_USE_STATIC_LIBS=ON -DPYTHON_EXECUTABLE="${{ env.PYTHON2_EXE }}"
-        -DPYTHON3_EXECUTABLE="${{ env.PYTHON3_EXE }}" -DROBOTRACONTEUR_VERSION_SUFFIX="${{ env.version_suffix }}"
+        -DPYTHON3_EXECUTABLE="${{ env.PYTHON3_EXE }}"
+        -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
         ${{ env.CMAKE_CACHE_ARGS }}
         -S robotraconteur -B build2
     - name: build
@@ -360,6 +366,8 @@ jobs:
     - uses: actions/checkout@v2
       with:
         path: robotraconteur
+    - name: semver
+      run: python3 robotraconteur/packaging/scripts/actions_semver.py --github-env
     - name: apt update
       run: sudo apt update
     - name: apt
@@ -411,6 +419,7 @@ jobs:
       run: >
         cmake -G "Unix Makefiles" -DBUILD_GEN=ON  -DBUILD_TEST=ON 
         -DBoost_USE_STATIC_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DBUILD_MATLAB_MEX=ON
+        -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
         ${{ env.CMAKE_CACHE_ARGS }}
         -S robotraconteur -B build2
@@ -477,6 +486,8 @@ jobs:
     - uses: actions/checkout@v2
       with:
         path: robotraconteur
+    - name: semver
+      run: python robotraconteur/packaging/scripts/actions_semver.py --github-env
     - uses: actions/setup-python@v2
       with:
         python-version: '${{ matrix.config.python_version }}'
@@ -535,6 +546,7 @@ jobs:
         -DBoost_USE_STATIC_LIBS=ON
         -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON        
         -DPYTHON3_EXECUTABLE="${{ env.PYTHON3_EXE }}"
+        -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
         -DVCPKG_TARGET_TRIPLET=${{ matrix.config.vcpkg_triplet }}
         ${{ env.CMAKE_CACHE_ARGS }}
@@ -577,6 +589,8 @@ jobs:
     - uses: actions/checkout@v2
       with:
         path: robotraconteur
+    - name: semver
+      run: python3 robotraconteur/packaging/scripts/actions_semver.py --github-env
     - name: brew
       run: |
         brew install swig boost openssl
@@ -608,6 +622,7 @@ jobs:
         -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl
         -DOPENSSL_USE_STATIC_LIBS=ON
         -DPYTHON3_EXECUTABLE="${{ env.PYTHON3_EXE }}"
+        -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
         ${{ env.CMAKE_CACHE_ARGS }}
         -S robotraconteur -B build2
     - name: build
@@ -640,6 +655,8 @@ jobs:
     - uses: actions/checkout@v2
       with:
         path: robotraconteur
+    - name: semver
+      run: python robotraconteur/packaging/scripts/actions_semver.py --github-env
     - uses: conda-incubator/setup-miniconda@v2
       with:
         miniconda-version: "latest"
@@ -650,6 +667,7 @@ jobs:
     - name: configure
       run: >
         cmake -GNinja -DBUILD_GEN=ON -DBUILD_PYTHON3=ON -DCMAKE_BUILD_TYPE:STRING=Release
+        -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
         -S robotraconteur -B build2
       shell: cmd /C call {0}
     - name: build
@@ -671,6 +689,8 @@ jobs:
     - uses: actions/checkout@v2
       with:
         path: robotraconteur
+    - name: semver
+      run: python3 robotraconteur/packaging/scripts/actions_semver.py --github-env
     - name: remove-swig      
       run: |
         sudo apt remove swig -qq || true
@@ -689,6 +709,7 @@ jobs:
       run: >
         cmake -DBUILD_GEN=ON -DBUILD_PYTHON3=ON -DRR_NET_BUILD_NATIVE_ONLY=ON 
         -DCMAKE_BUILD_TYPE:STRING=Release -DPYTHON3_EXECUTABLE=$CONDA_PREFIX/bin/python
+        -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
         -S robotraconteur -B build2
     - name: build
       working-directory: build2
@@ -707,6 +728,8 @@ jobs:
     - uses: actions/checkout@v2
       with:
         path: robotraconteur
+    - name: semver
+      run: python3 robotraconteur/packaging/scripts/actions_semver.py --github-env
     - uses: conda-incubator/setup-miniconda@v2
       with:
         miniconda-version: "latest"
@@ -716,7 +739,8 @@ jobs:
         conda install git cmake boost-cpp python swig numpy pip dbus clang clangxx compiler-rt openssl
     - name: configure
       run: >
-        cmake -DBUILD_GEN=ON -DBUILD_PYTHON3=ON -DRR_NET_BUILD_NATIVE_ONLY=ON -DCMAKE_BUILD_TYPE:STRING=Release 
+        cmake -DBUILD_GEN=ON -DBUILD_PYTHON3=ON -DRR_NET_BUILD_NATIVE_ONLY=ON -DCMAKE_BUILD_TYPE:STRING=Release
+        -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
         -DPYTHON3_EXECUTABLE=$CONDA_PREFIX/bin/python -DOPENSSL_ROOT_DIR=$CONDA_PREFIX -S robotraconteur -B build2
     - name: build
       working-directory: build2

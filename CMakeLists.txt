@@ -9,14 +9,21 @@ check_type_size("long int" SIZEOF_LONG_INT BUILTIN_TYPES_ONLY)
 
 CONFIGURE_FILE("${CMAKE_SOURCE_DIR}/RobotRaconteurCore/include/RobotRaconteur/RobotRaconteurConfig.h" "${CMAKE_BINARY_DIR}/RobotRaconteurConfig.h" COPYONLY)
 
-FILE (STRINGS "${CMAKE_SOURCE_DIR}/RobotRaconteurCore/include/RobotRaconteur/RobotRaconteurConfig.h" RobotRaconteurConfigVersion REGEX "#define +ROBOTRACONTEUR_VERSION_TEXT +\"[0-9]+\\.[0-9]+\\.[0-9]+\"")
-IF ("${RobotRaconteurConfigVersion}" STREQUAL "" )
+FILE (STRINGS "${CMAKE_SOURCE_DIR}/RobotRaconteurCore/include/RobotRaconteur/RobotRaconteurConfig.h" ROBOTRACONTEUR_CONFIG_VERSION REGEX "#define +ROBOTRACONTEUR_VERSION_TEXT +\"[0-9]+\\.[0-9]+\\.[0-9]+\"")
+IF ("${ROBOTRACONTEUR_CONFIG_VERSION}" STREQUAL "" )
 MESSAGE(FATAL_ERROR "Could not read Robot Raconteur version.")
 ENDIF()
-STRING (REGEX REPLACE "#define ROBOTRACONTEUR_VERSION_TEXT \"([0-9]+\\.[0-9]+\\.[0-9]+)\"" "\\1" RobotRaconteurVersion ${RobotRaconteurConfigVersion})
-MESSAGE(STATUS "Robot Raconteur version: ${RobotRaconteurVersion}")
+STRING (REGEX REPLACE "#define ROBOTRACONTEUR_VERSION_TEXT \"([0-9]+\\.[0-9]+\\.[0-9]+)\"" "\\1" ROBOTRACONTEUR_VERSION ${ROBOTRACONTEUR_CONFIG_VERSION})
+MESSAGE(STATUS "Robot Raconteur version: ${ROBOTRACONTEUR_VERSION}")
 
-set(ROBOTRACONTEUR_VERSION_SUFFIX "" CACHE STRING "Version suffix for library")
+if(NOT ROBOTRACONTEUR_VERSION_SEMVER)
+set(ROBOTRACONTEUR_VERSION_SEMVER ${ROBOTRACONTEUR_VERSION})
+endif()
+
+STRING (REGEX REPLACE "^([0-9]+\\.[0-9]+\\.[0-9]+)" "\\1" ROBOTRACONTEUR_VERSION_S ${ROBOTRACONTEUR_VERSION_SEMVER})
+if (NOT ${ROBOTRACONTEUR_VERSION} VERSION_EQUAL ${ROBOTRACONTEUR_VERSION_S})
+message(FATAL_ERROR "Supplied semver ${ROBOTRACONTEUR_VERSION_SEMVER} does not equal config version ${ROBOTRACONTEUR_VERSION}")
+endif()
 
 configure_file(${CMAKE_SOURCE_DIR}/cmake/rrversion.txt.in ${CMAKE_BINARY_DIR}/rrversion.txt @ONLY)
 
@@ -115,7 +122,7 @@ configure_package_config_file(
   CMAKE_INSTALL_BINDIR  
 )
 write_basic_package_version_file("${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake" 
-    VERSION ${RobotRaconteurVersion} COMPATIBILITY AnyNewerVersion)
+    VERSION ${ROBOTRACONTEUR_VERSION} COMPATIBILITY AnyNewerVersion)
 
 install(FILES
         ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
@@ -135,7 +142,7 @@ list(APPEND CPACK_SOURCE_IGNORE_FILES "/\.gitignore")
 list(APPEND CPACK_SOURCE_IGNORE_FILES "/\.travis.yml")
 list(APPEND CPACK_SOURCE_IGNORE_FILES "/\.clang-format")
 
-set(CPACK_PACKAGE_VERSION ${RobotRaconteurVersion}${ROBOTRACONTEUR_VERSION_SUFFIX})
+set(CPACK_PACKAGE_VERSION ${ROBOTRACONTEUR_VERSION_SEMVER})
 
 set(CPACK_SOURCE_INSTALLED_DIRECTORIES "${CMAKE_SOURCE_DIR};/;${CMAKE_BINARY_DIR}/generated_src;/generated_src" )
 set(CPACK_SOURCE_TBZ2 OFF CACHE BOOL "" FORCE)

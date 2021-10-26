@@ -22,6 +22,8 @@ endif()
 
 message(STATUS "NumPy Include Directory: ${NUMPY_INCLUDE_DIR}")
 
+include(PythonPackageVersion.cmake)
+
 GET_FILENAME_COMPONENT(PYTHON_LINK_DIRS "${PYTHON_LIBRARIES}" DIRECTORY)
 LINK_DIRECTORIES(${PYTHON_LINK_DIRS})
 

@@ -1,10 +1,10 @@
 
-set(PACKAGE_VERSION "@RobotRaconteurVersion@")
+set(PACKAGE_VERSION "@ROBOTRACONTEUR_VERSION@")
 
-if("@RobotRaconteurVersion@" MATCHES "^([0-9]+\\.[0-9]+\\.[0-9]+)\\.") # strip the tweak version
+if("@ROBOTRACONTEUR_VERSION@" MATCHES "^([0-9]+\\.[0-9]+\\.[0-9]+)\\.") # strip the tweak version
   set(CVF_VERSION_NO_TWEAK "${CMAKE_MATCH_1}")
 else()
-  set(CVF_VERSION_NO_TWEAK "@RobotRaconteurVersion@")
+  set(CVF_VERSION_NO_TWEAK "@ROBOTRACONTEUR_VERSION@")
 endif()
 
 if("${PACKAGE_FIND_VERSION}" MATCHES "^([0-9]+\\.[0-9]+\\.[0-9]+)\\.") # strip the tweak version

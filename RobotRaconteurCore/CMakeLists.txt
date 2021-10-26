@@ -175,7 +175,7 @@ set(RobotRaconteurCore_src ${RobotRaconteurCore_src} ${GETIFADDR_SOURCE_FILE} sr
 ENDIF()
 
 IF (BUILD_SHARED_LIBS)
-STRING(REPLACE "." "." RobotRaconteur_LIB_VERSION ${RobotRaconteurVersion})
+STRING(REPLACE "." "." RobotRaconteur_LIB_VERSION ${ROBOTRACONTEUR_VERSION})
 SET(RobotRaconteur_SHARED_CORE_VERSION "${RobotRaconteur_LIB_VERSION}")
 ENDIF()
 

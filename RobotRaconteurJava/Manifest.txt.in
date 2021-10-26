@@ -1,7 +1,7 @@
 Name: com/robotraconteur
 Specification-Title: Robot Raconteur
-Specification-Version: @RobotRaconteurVersion@
+Specification-Version: @ROBOTRACONTEUR_VERSION@
 Specification-Vendor: Wason Technology, LLC
 Implementation-Title: com.robotraconteur
-Implementation-Version: @RobotRaconteurVersion@
+Implementation-Version: @ROBOTRACONTEUR_VERSION@
 Implementation-Vendor: Wason Technology, LLC

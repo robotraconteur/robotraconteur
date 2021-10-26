@@ -15,7 +15,7 @@ class BinaryDistribution(Distribution):
         return True
 
 setup(name='RobotRaconteur',
-      version='@RobotRaconteurVersion@@ROBOTRACONTEUR_VERSION_SUFFIX@',
+      version='@ROBOTRACONTEUR_VERSION_PY@',
       description='Robot Raconteur Python Library',
       author='John Wason',
       author_email='wason@wasontech.com',

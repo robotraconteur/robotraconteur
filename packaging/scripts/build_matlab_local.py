@@ -23,6 +23,9 @@ def main():
 
     if args.semver_full is not None:
         ver_str = args.semver_full
+        semver_tag_regex = r"^(((?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*))(-(?:alpha|beta|rc)\d+)?)"
+        m = re.match(semver_tag_regex,ver_str)
+        assert m, f"Invalid semver-full {ver_str}"
     else:
         with open(config_header) as f:
             f1 = f.read()
@@ -98,6 +101,7 @@ def main():
       "-DCMAKE_BUILD_TYPE=Release -DBUILD_MATLAB_MEX=ON Boost_NO_SYSTEM_PATHS=ON " \
       f"-DVCPKG_TARGET_TRIPLET={vcpkg_triplet} " \
       f"-DCMAKE_TOOLCHAIN_FILE={vcpkg_toolchain_file} " \
+      f"-DROBOTRACONTEUR_VERSION_SEMVER=\"{ver_str}\" "\
       "-S . -B build", shell=True)
 
     subprocess.check_call("cmake --build . --config Release", shell=True, cwd=build_path)
