@@ -288,7 +288,7 @@ jobs:
       run: python3 robotraconteur/packaging/scripts/actions_semver.py --github-env
     - name: brew
       run: |
-        brew update
+        brew update || true
         brew install swig boost openssl
     - name: install pip
       run: |
