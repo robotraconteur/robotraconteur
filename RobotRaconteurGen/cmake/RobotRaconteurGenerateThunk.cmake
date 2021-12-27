@@ -134,10 +134,14 @@ function(ROBOTRACONTEUR_GENERATE_THUNK SRCS )
 		set(GEN_AUTO_IMPORT_ARGS "--auto-import")
 	endif()
 
+	if(NOT RobotRaconteurGen_EXECUTABLE)
+		set(RobotRaconteurGen_EXECUTABLE RobotRaconteurGen)
+	endif()
+
 	add_custom_command(
 	  OUTPUT ${THUNK_SRCS} ${THUNK_HDRS}
 	  COMMAND ${CMAKE_COMMAND} -E make_directory ${RR_GEN_OUTDIR}
-      COMMAND RobotRaconteurGen
+      COMMAND ${RobotRaconteurGen_EXECUTABLE}
       ARGS "--thunksource" "--lang=${RR_GEN_LANG}" ${RR_GEN_MASTER_HEADER_CMD} ${GEN_INCLUDE_DIRS_ARGS} ${RR_GEN_OUTDIR_ARGS} ${GEN_IMPORT_ARGS} ${GEN_AUTO_IMPORT_ARGS} ${GEN_CPP_EXTRA_INCLUDE_ARGS} ${RR_GEN_FILES}
       DEPENDS ${RR_GEN_FILES} RobotRaconteurGen
       COMMENT "Running RobotRaconteurGen for ${RR_SERVICE_NAMES}"
