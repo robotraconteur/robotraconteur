@@ -57,6 +57,12 @@ class RobotRaconteurNativeLoader {
 				return;
 				
 			}
+
+			if (arch.indexOf("aarch64") >=0 || arch.indexOf("arm64") >=0)
+			{
+				System.loadLibrary("RobotRaconteurJavaNative-linux-arm64");
+				return;				
+			}
 			
 		}
 		
