@@ -67,7 +67,7 @@ public abstract class NamedArrayStub<T,U> implements INamedArrayStub2<T>
 
     public T unpackNamedArrayFromArray(MessageElementNestedElementList s2)
     {
-        if (!s2.getType().equals(getTypeName())) throw new DataTypeException("namedarray type mismatch");
+        if (!s2.getTypeString().equals(getTypeName())) throw new DataTypeException("namedarray type mismatch");
         vectorptr_messageelement cdataElements = s2.getElements();
         {
             if (cdataElements.size() != 1) throw new DataTypeException("namedarray type mismatch");
@@ -80,7 +80,10 @@ public abstract class NamedArrayStub<T,U> implements INamedArrayStub2<T>
 
     public T[] unpackNamedArray(MessageElementNestedElementList s2)
     {    	
-        if (!s2.getType().equals(getTypeName())) throw new DataTypeException("namedarray type mismatch");
+        if (!s2.getTypeString().equals(getTypeName())) 
+        {
+            throw new DataTypeException("namedarray type mismatch");
+        }
         vectorptr_messageelement cdataElements = s2.getElements();
         try
         {
@@ -98,7 +101,7 @@ public abstract class NamedArrayStub<T,U> implements INamedArrayStub2<T>
 
     public NamedMultiDimArray unpackNamedMultiDimArray(MessageElementNestedElementList s3)
     {
-        if (!s3.getType().equals(getTypeName())) throw new DataTypeException("namedarray type mismatch");
+        //if (!s3.getTypeString().equals(getTypeName())) throw new DataTypeException("namedarray type mismatch");
         NamedMultiDimArray o = new NamedMultiDimArray();
         vectorptr_messageelement marrayElements = s3.getElements();
         try        
