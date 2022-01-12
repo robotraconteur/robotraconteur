@@ -351,8 +351,8 @@ Temporary Items
 
 #Extra directories to ignore
 build/
-generated_src/
-generated_src
+# generated_src/
+# generated_src
 
 *.asv
 
