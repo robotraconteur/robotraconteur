@@ -19,9 +19,7 @@
   <depend>libdbus-dev</depend>
   <depend>libbluetooth-dev</depend>
   <depend>zlib</depend>
-  <depend>python</depend>
-  <depend>python-numpy</depend>
-  <depend>python3</depend>
+  <depend>python3-dev</depend>
   <depend>python3-numpy</depend>
   <depend>roslib</depend>
     
