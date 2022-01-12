@@ -45,10 +45,34 @@ find_package(RobotRaconteur REQUIRED)
 set(RobotRaconteur_CORE_LIBRARY RobotRaconteurCore)
 endif()
 
-set (ROBOTRACONTEUR_ROS "" CACHE BOOL "Build Robot Raconteur for ROS workspace")
+# if (EXISTS ${CMAKE_SOURCE_DIR}/generated_src)
+# set(USE_PREGENERATED_SOURCE ON CACHE BOOL ON)
+# else()
+# set(USE_PREGENERATED_SOURCE OFF CACHE BOOL OFF)
+# endif()
+
+# Use pregenerated source with ROS package
+set(USE_PREGENERATED_SOURCE ON CACHE BOOL ON)
+
+# if(BUILD_PYTHON OR BUILD_NET OR BUILD_JAVA)
+# if(USE_PREGENERATED_SOURCE)	
+set(PREGENERATED_SOURCE_DIR ${CMAKE_SOURCE_DIR}/generated_src CACHE PATH "generated_src directory location")
+# if(NOT EXISTS ${PREGENERATED_SOURCE_DIR}/Python/swigwordsize32/RobotRaconteurPythonPYTHON_wrap.cxx
+#    OR NOT EXISTS ${PREGENERATED_SOURCE_DIR}/Python3/swigwordsize32/RobotRaconteurPythonPYTHON_wrap.cxx
+#    OR NOT EXISTS ${PREGENERATED_SOURCE_DIR}/Java/swigwordsize32/com/robotraconteur/RobotRaconteurJavaJAVA_wrap.cxx
+#    OR NOT EXISTS ${PREGENERATED_SOURCE_DIR}/NET/swigwordsize32/RobotRaconteurNETCSHARP_wrap.cxx)
+#    message(FATAL_ERROR "Invalid PREGENERATED_SOURCE_DIR")
+# endif()
+# else()
+include(${CMAKE_SOURCE_DIR}/cmake/package_source_swig.cmake)
+# endif()
+# endif()
+
+# Build ROS configuration
+set (ROBOTRACONTEUR_ROS true CACHE BOOL "Build Robot Raconteur for ROS workspace")
 if(ROBOTRACONTEUR_ROS)
 set(BUILD_GEN true CACHE BOOL "Build RobotRaconteurGen")
-set(BUILD_TEST true CACHE BOOL "Build RobotRaconteurTest")
+# set(BUILD_TEST true CACHE BOOL "Build RobotRaconteurTest")
 if ($ENV{ROS_PYTHON_VERSION} LESS 3)
 set(BUILD_PYTHON true CACHE BOOL "Build Python wrappers")
 else()
@@ -91,25 +115,6 @@ IF (BUILD_MATLAB_MEX)
 add_subdirectory(RobotRaconteurMex)
 ENDIF()
 
-if (EXISTS ${CMAKE_SOURCE_DIR}/generated_src)
-set(USE_PREGENERATED_SOURCE ON CACHE BOOL ON)
-else()
-set(USE_PREGENERATED_SOURCE OFF CACHE BOOL OFF)
-endif()
-
-if(BUILD_PYTHON OR BUILD_NET OR BUILD_JAVA)
-if(USE_PREGENERATED_SOURCE)	
-set(PREGENERATED_SOURCE_DIR ${CMAKE_SOURCE_DIR}/generated_src CACHE PATH "generated_src directory location")
-if(NOT EXISTS ${PREGENERATED_SOURCE_DIR}/Python/swigwordsize32/RobotRaconteurPythonPYTHON_wrap.cxx
-   OR NOT EXISTS ${PREGENERATED_SOURCE_DIR}/Python3/swigwordsize32/RobotRaconteurPythonPYTHON_wrap.cxx
-   OR NOT EXISTS ${PREGENERATED_SOURCE_DIR}/Java/swigwordsize32/com/robotraconteur/RobotRaconteurJavaJAVA_wrap.cxx
-   OR NOT EXISTS ${PREGENERATED_SOURCE_DIR}/NET/swigwordsize32/RobotRaconteurNETCSHARP_wrap.cxx)
-   message(FATAL_ERROR "Invalid PREGENERATED_SOURCE_DIR")
-endif()
-else()
-include(${CMAKE_SOURCE_DIR}/cmake/package_source_swig.cmake)
-endif()
-endif()
 
 include(CMakePackageConfigHelpers)
 configure_package_config_file(
