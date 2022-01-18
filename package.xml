@@ -21,7 +21,7 @@
   <depend>zlib</depend>
   <depend>python3-dev</depend>
   <depend>python3-numpy</depend>
-  <depend>roslib</depend>
+  <!-- <depend>roslib</depend> -->
     
   <export>    
     <build_type>cmake</build_type>
