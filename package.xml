@@ -15,6 +15,7 @@
   <buildtool_depend>catkin</buildtool_depend>
   <depend>boost</depend>
   <depend>openssl</depend>
+  <depend>libssl-dev</depend>
   <depend>libusb-1.0-dev</depend>
   <depend>libdbus-dev</depend>
   <depend>libbluetooth-dev</depend>
