@@ -271,6 +271,8 @@ int PullServiceDefinition(string url)
 			return 6009;
 		}
 	}
+
+	return 0;
 }
 
 int main(int argc, char* argv[])

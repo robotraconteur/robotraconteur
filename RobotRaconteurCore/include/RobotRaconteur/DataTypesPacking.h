@@ -93,11 +93,13 @@ namespace packing
 		static RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackMapType(RobotRaconteurNode* node, const RR_INTRUSIVE_PTR<RRValue> set)
 		{
 			BOOST_STATIC_ASSERT(sizeof(T) == 0);
+			return NULL;
 		}
 
 		static RR_INTRUSIVE_PTR<RRValue> UnpackMapType(RobotRaconteurNode* node, const RR_INTRUSIVE_PTR<MessageElementNestedElementList> mset)
 		{
 			BOOST_STATIC_ASSERT(sizeof(T) == 0);
+			return NULL;
 		}
 
 	};
