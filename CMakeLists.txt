@@ -64,7 +64,7 @@ set(PREGENERATED_SOURCE_DIR ${CMAKE_SOURCE_DIR}/generated_src CACHE PATH "genera
 #    message(FATAL_ERROR "Invalid PREGENERATED_SOURCE_DIR")
 # endif()
 # else()
-include(${CMAKE_SOURCE_DIR}/cmake/package_source_swig.cmake)
+#include(${CMAKE_SOURCE_DIR}/cmake/package_source_swig.cmake)
 # endif()
 # endif()
 
