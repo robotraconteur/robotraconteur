@@ -573,6 +573,7 @@ namespace RobotRaconteurGen
 		default:
 			throw DataTypeException("Invalid container type");
 		}
+		throw DataTypeException("Unknown type");
 	}
 
 	std::string JavaServiceLangGen::str_unpack_message_element(const std::string &varname, const RR_SHARED_PTR<TypeDefinition> &t, const std::string &packer)
