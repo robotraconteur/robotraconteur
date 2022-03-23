@@ -78,6 +78,8 @@ set(BUILD_PYTHON true CACHE BOOL "Build Python wrappers")
 else()
 set(BUILD_PYTHON3 true CACHE BOOL "Build Python 3 wrappers")
 endif()
+# Install catkin package.xml
+install(FILES package.xml DESTINATION share/robotraconteur)
 endif()
 
 set (BUILD_GEN "" CACHE BOOL "Build RobotRaconteurGen")

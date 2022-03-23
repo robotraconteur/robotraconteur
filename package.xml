@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>robotraconteur</name>
-  <version>0.15.4</version>
+  <version>0.15.5</version>
   <description>Robot Raconteur ROS Package</description>
 
   <maintainer email="wason@wasontech.com">John Wason</maintainer>
