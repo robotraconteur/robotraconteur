@@ -5,7 +5,7 @@ file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/test)
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/exceptionsrc)
 
-if (NOT(${__ANDROID__}))
+if (NOT ANDROID)
 INCLUDE(FindJava)
 FIND_PACKAGE(Java COMPONENTS Development)
 INCLUDE (UseJava)
@@ -18,8 +18,8 @@ INCLUDE(FindJava)
 FIND_PACKAGE(Java COMPONENTS Development)
 endif()
 
-if (__ANDROID__)
-set(GETIFADDR_SOURCE_FILE "" CACHE FILEPATH "Path to ifaddrs.c for android")
+if (ANDROID)
+set(GETIFADDR_DIR "" CACHE PATH "Path to ifaddrs.c for android")
 set(LIBUSB_INCLUDE_DIR "" CACHE PATH "Path to libusb.h for android")
 endif()
 
@@ -32,7 +32,7 @@ INCLUDE(${CMAKE_SOURCE_DIR}/cmake/RRUseSwig.cmake)
 include(JavaSwigVars.cmake)
 set(CMAKE_SWIG_OUTDIR ${CMAKE_CURRENT_BINARY_DIR}/swigsrc/com/robotraconteur)
 include_directories(${CMAKE_SOURCE_DIR}/RobotRaconteurCore/include)
-RR_SWIG_ADD_MODULE(RobotRaconteurJavaNative java RobotRaconteurJava.i  ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.cpp ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.h ${GETIFADDR_SOURCE_FILE} )
+RR_SWIG_ADD_MODULE(RobotRaconteurJavaNative java RobotRaconteurJava.i  ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.cpp ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.h ${GETIFADDR_DIR}/ifaddrs.c )
 
 SWIG_LINK_LIBRARIES(RobotRaconteurJavaNative RobotRaconteurCore)
 
@@ -45,7 +45,7 @@ else()
 set(CMAKE_SWIG_OUTDIR ${PREGENERATED_SOURCE_DIR}/Java/swigwordsize32/com/robotraconteur)
 endif()
 include_directories(${CMAKE_SOURCE_DIR}/SWIG ${CMAKE_SWIG_OUTDIR})
-add_library(RobotRaconteurJavaNative MODULE ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.cpp ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.h ${CMAKE_SWIG_OUTDIR}/RobotRaconteurJavaJAVA_wrap.cxx ${GETIFADDR_SOURCE_FILE})
+add_library(RobotRaconteurJavaNative MODULE ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.cpp ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.h ${CMAKE_SWIG_OUTDIR}/RobotRaconteurJavaJAVA_wrap.cxx ${GETIFADDR_SRC}/ifaddrs.c)
 target_link_libraries(RobotRaconteurJavaNative RobotRaconteurCore)
 
 endif()
@@ -63,12 +63,12 @@ if ((WIN32 AND MINGW) OR CYGWIN OR CMAKE_SYSTEM_NAME STREQUAL MSYS)
     set_target_properties(RobotRaconteurJavaNative PROPERTIES PREFIX "")
 endif()
 
-if (NOT(${__ANDROID__}))
+if (NOT ANDROID)
 add_custom_target(RobotRaconteurJava ALL "${Java_JAVAC_EXECUTABLE}" -encoding UTF8 -g:none -target 7 -source 7 -Xlint:none com/robotraconteur/*.java ${CMAKE_SWIG_OUTDIR}/*.java ${CMAKE_CURRENT_BINARY_DIR}/exceptionsrc/com/robotraconteur/*.java -d "${CMAKE_CURRENT_BINARY_DIR}/bin"  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/src")
 add_custom_command(TARGET RobotRaconteurJava POST_BUILD COMMAND "${Java_JAR_EXECUTABLE}" cf "$<TARGET_FILE_DIR:RobotRaconteurJavaNative>/RobotRaconteur.jar" * WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin")
 else()
 set(ANDROID_JAR "" CACHE FILEPATH "Android system Jar file")
-add_custom_target(RobotRaconteurJava ALL "${Java_JAVAC_EXECUTABLE}" -encoding UTF8 -g:none -target 7 -source 7 -Xlint:none com/robotraconteur/*.java ../androidsrc/com/robotraconteur/*.java ${CMAKE_SWIG_OUTDIR}/*.java ${CMAKE_CURRENT_BINARY_DIR}/exceptionsrc/com/robotraconteur/*.java -d "${CMAKE_CURRENT_BINARY_DIR}/bin" -cp "${ANDROID_JAR}"  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/src")
+add_custom_target(RobotRaconteurJava ALL "${Java_JAVAC_EXECUTABLE}" -encoding UTF8 -g:none -target 7 -source 7 -Xlint:none com/robotraconteur/*.java ${CMAKE_SWIG_OUTDIR}/*.java ${CMAKE_CURRENT_BINARY_DIR}/exceptionsrc/com/robotraconteur/*.java -d "${CMAKE_CURRENT_BINARY_DIR}/bin" -cp "${ANDROID_JAR}"  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/src")
 add_custom_command(TARGET RobotRaconteurJava POST_BUILD COMMAND "${Java_JAR_EXECUTABLE}" cf "$<TARGET_FILE_DIR:RobotRaconteurJavaNative>/RobotRaconteurAndroid.jar" * WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin")
 endif()
 
@@ -139,6 +139,12 @@ endif()
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
 	set_target_properties(RobotRaconteurJavaNative PROPERTIES OUTPUT_NAME "RobotRaconteurJavaNative-darwin")
+
+endif()
+
+if (ANDROID)
+
+	set_target_properties(RobotRaconteurJavaNative PROPERTIES OUTPUT_NAME "RobotRaconteurJavaNative-android")
 
 endif()
 

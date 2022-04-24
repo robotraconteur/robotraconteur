@@ -49,6 +49,10 @@
 #include <Security/Security.h>
 #endif
 
+#ifdef ROBOTRACONTEUR_ANDROID
+#include <ifaddrs.h>
+#endif
+
 #include <boost/range/adaptors.hpp>
 #include <boost/range/algorithm.hpp>
 #include <boost/foreach.hpp>
