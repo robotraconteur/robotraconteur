@@ -1131,7 +1131,7 @@ void LocalTransport::EnableNodeDiscoveryListening()
 	try { discovery->Refresh(); } catch (std::exception&) {}
 #endif
 
-#ifdef ROBOTRACONTEUR_LINUX
+#if defined(ROBOTRACONTEUR_LINUX) && !defined(ROBOTRACONTEUR_ANDROID)
 	discovery = RR_MAKE_SHARED<detail::LinuxLocalTransportDiscovery>(GetNode());
 	discovery->Init();
 	try { discovery->Refresh(); } catch (std::exception&) {}
@@ -1903,11 +1903,13 @@ namespace detail
 			}			
 #else
 
+#ifndef ROBOTRACONTEUR_ANDROID
 			mode_t old_mode=umask(~(S_IRUSR | S_IWUSR | S_IRGRP));
 
 			BOOST_SCOPE_EXIT(old_mode) {
 				umask(old_mode);
 			} BOOST_SCOPE_EXIT_END
+#endif
 
 			RR_SHARED_PTR<LocalTransportFD> fd = RR_MAKE_SHARED<LocalTransportFD>();
 
@@ -1962,11 +1964,14 @@ namespace detail
 				throw SystemResourcePermissionDeniedException("Could not initialize server");
 			}
 #else
+
+#ifndef ROBOTRACONTEUR_ANDROID
 			mode_t old_mode=umask(~(S_IRUSR | S_IWUSR | S_IRGRP));
 
 			BOOST_SCOPE_EXIT(old_mode) {
 				umask(old_mode);
 			} BOOST_SCOPE_EXIT_END
+#endif
 
 			RR_SHARED_PTR<LocalTransportFD> fd = RR_MAKE_SHARED<LocalTransportFD>();
 

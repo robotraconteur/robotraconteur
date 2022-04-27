@@ -71,7 +71,7 @@
 #define ROBOTRACONTEUR_WINDOWS
 #elif defined(__linux__)
 #define ROBOTRACONTEUR_LINUX
-#ifdef __ANDROID__
+#ifdef ANDROID
 #define ROBOTRACONTEUR_ANDROID
 #endif
 #elif defined(__APPLE__)

@@ -1,6 +1,6 @@
-#ifdef __ANDROID__
+#ifdef ANDROID
 %{
-#include "HardwareTransport_android_private.h"
+//#include "HardwareTransport_android_private.h"
 %}
 
 %shared_ptr(RobotRaconteur::detail::AndroidBluetoothConnector_params);

@@ -748,7 +748,143 @@ jobs:
       working-directory: build2
       run: |
         ctest . -C Release --output-on-failure
+  build-android:
 
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - android_abi: x86_64
+          swig_args: -DSWIGWORDSIZE64
+          openssl_arch: android-x86_64
+        - android_abi: x86
+          openssl_arch: android-x86
+        - android_abi: arm64-v8a
+          openssl_arch: android-arm64
+          swig_args: -DSWIGWORDSIZE64
+        - android_abi: armeabi-v7a
+          openssl_arch: android-arm
+    env:
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        path: robotraconteur
+    - name: semver
+      run: python3 robotraconteur/packaging/scripts/actions_semver.py --github-env
+    - name: apt update
+      run: sudo apt update
+    - name: apt
+      run: >
+        sudo apt-get install
+        zlib1g zlib1g-dev libssl-dev libusb-1.0-0 
+        libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev 
+        git cmake g++ make libboost-all-dev autoconf 
+        automake libtool bison libpcre3-dev default-jdk default-jdk-headless default-jre 
+        default-jre-headless -qq
+    - name: build-swig
+      if: steps.cache-swig.outputs.cache-hit != 'true'
+      run: |
+        sudo apt remove swig -qq || true
+        sudo rm -f /usr/bin/swig*
+        sudo rm -rf /usr/share/swig*
+        rm -rf swig_build_dir
+        mkdir -p swig_build_dir
+        cd swig_build_dir
+        curl -s -L https://github.com/swig/swig/archive/refs/tags/v4.0.2.tar.gz --output swig-4.0.2.tar.gz
+        tar xf swig-4.0.2.tar.gz
+        cd swig-4.0.2
+        ./autogen.sh
+        ./configure
+        make
+        sudo make install
+    - name: install-swig
+      if: steps.cache-swig.outputs.cache-hit == 'true'
+      working-directory: swig_build_dir/swig-4.0.2
+      run: |
+        sudo apt remove swig -qq
+        sudo rm -f /usr/bin/swig*
+        sudo rm -rf /usr/share/swig*
+        sudo make install
+    - name: mkdir build2_host
+      run: mkdir -p build2_host
+    - name: configure_host
+      working-directory: build2_host
+      run: >
+        cmake -G "Unix Makefiles" -DBUILD_GEN=ON 
+        -DBoost_USE_STATIC_LIBS=OFF -DCMAKE_BUILD_TYPE=Release
+        -DCMAKE_C_FLAGS_RELEASE="-DNDEBUG -O0"
+        -DCMAKE_CXX_FLAGS_RELEASE="-DNDEBUG -O0"
+        ../robotraconteur
+    - name: build_host
+      working-directory: build2_host
+      run: |
+        cmake --build . --config Release -- -j 4    
+    - name: build_boost
+      run: |
+        git clone --depth=1 https://github.com/moritz-wundke/Boost-for-Android.git boost_android
+        cd boost_android
+        ./build-android.sh $ANDROID_NDK_LATEST_HOME --arch=${{ matrix.config.android_abi }} --with-libraries=date_time,filesystem,system,regex,chrono,atomic,thread,random,program_options --boost=1.74.0 
+    - name: build_openssl
+      run: |
+        git clone --branch OpenSSL_1_1_1n https://github.com/openssl/openssl.git
+        cd openssl
+        export PATH=$ANDROID_NDK_LATEST_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH 
+        export ANDROID_NDK_HOME=$ANDROID_NDK_LATEST_HOME
+        ./Configure ${{ matrix.config.openssl_arch }} --prefix=$GITHUB_WORKSPACE/openssl_install_${{ matrix.config.android_abi }}
+        make -j4
+        make install_sw
+    - name: mkdir build2
+      run: mkdir -p build2
+    - name: configure
+      working-directory: build2
+      run: >
+        cmake -G "Unix Makefiles" -DBUILD_GEN=OFF  -DBUILD_TEST=OFF
+        -DBoost_USE_STATIC_LIBS=ON -DCMAKE_BUILD_TYPE=Release 
+        -DBUILD_JAVA=ON -DJAVA_HOME=/usr/lib/jvm/default-java 
+        -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
+        ${{ env.CMAKE_CACHE_ARGS }}
+        -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_LATEST_HOME/build/cmake/android.toolchain.cmake 
+        -DANDROID_PLATFORM=android-24
+        -DBUILD_JAVA=ON 
+        -DBOOST_ROOT:PATH=$GITHUB_WORKSPACE/boost_android/build/out/${{ matrix.config.android_abi }}/ 
+        -DBoost_DEBUG=ON 
+        -DBoost_VERBOSE=ON 
+        -DBoost_USE_STATIC_LIBS=ON 
+        -DBoost_COMPILER=-clang
+        -DCMAKE_FIND_ROOT_PATH=$GITHUB_WORKSPACE 
+        -DANDROID_ABI=${{ matrix.config.android_abi }} 
+        -DOPENSSL_ROOT_DIR=$GITHUB_WORKSPACE/openssl_install_${{ matrix.config.android_abi }} 
+        -DOPENSSL_USE_STATIC_LIBS=ON
+        -DSWIG_EXECUTABLE=/usr/local/bin/swig 
+        -DSWIG_DIR=/usr/local/share/swig/4.0.2 
+        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON 
+        -DRobotRaconteurGen_EXECUTABLE=$GITHUB_WORKSPACE/build2_host/out/bin/RobotRaconteurGen 
+        -DSWIG_JAVA_EXTRA_ARGS_OVERRIDE=${{ matrix.config.swig_args }} 
+        -DANDROID_JAR=$ANDROID_HOME/platforms/android-24/Android.jar 
+        ../robotraconteur
+    - name: build
+      working-directory: build2
+      run: |
+        cmake --build . --config Release -- -j 4
+    - name: move out
+      run: |
+        cp build2/rrversion.txt build2/out/
+        cp robotraconteur/LICENSE.txt build2/out/
+        mv build2/out .
+    - name: archive out
+      uses: actions/upload-artifact@v2
+      with:
+        name: 'out-android-${{ matrix.config.android_abi }}'
+        path: out/*
+    - name: build artifacts
+      if: failure()
+      uses: actions/upload-artifact@v2
+      with:
+        name: 'build-artifacts-android-${{ matrix.config.android_abi }}'
+        path: build2/*
+        retention-days: 2
   build-dist:
     needs:
     - build-ubuntu
