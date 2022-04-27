@@ -171,9 +171,7 @@ else()
 endif()
 
 IF (ANDROID)
-set(GETIFADDR_DIR "" CACHE PATH "Path to ifaddrs.c for android")
-include_directories(${GETIFADDR_DIR})
-set(RobotRaconteurCore_src ${RobotRaconteurCore_src} ${GETIFADDR_DIR}/ifaddrs.c) # src/HardwareTransport_usbcommon_private.h src/HardwareTransport_usbcommon.cpp src/HardwareTransport_android_private.h src/HardwareTransport_android.cpp)
+set(RobotRaconteurCore_src ${RobotRaconteurCore_src}) # src/HardwareTransport_usbcommon_private.h src/HardwareTransport_usbcommon.cpp src/HardwareTransport_android_private.h src/HardwareTransport_android.cpp)
 ENDIF()
 
 IF (BUILD_SHARED_LIBS)

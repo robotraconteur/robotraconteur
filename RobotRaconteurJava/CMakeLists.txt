@@ -19,9 +19,7 @@ FIND_PACKAGE(Java COMPONENTS Development)
 endif()
 
 if (ANDROID)
-set(GETIFADDR_DIR "" CACHE PATH "Path to ifaddrs.c for android")
 set(LIBUSB_INCLUDE_DIR "" CACHE PATH "Path to libusb.h for android")
-set(GETIFADDR_SRC ${GETIFADDR_DIR}/ifaddrs.c)
 endif()
 
 if (NOT USE_PREGENERATED_SOURCE)
@@ -33,7 +31,7 @@ INCLUDE(${CMAKE_SOURCE_DIR}/cmake/RRUseSwig.cmake)
 include(JavaSwigVars.cmake)
 set(CMAKE_SWIG_OUTDIR ${CMAKE_CURRENT_BINARY_DIR}/swigsrc/com/robotraconteur)
 include_directories(${CMAKE_SOURCE_DIR}/RobotRaconteurCore/include)
-RR_SWIG_ADD_MODULE(RobotRaconteurJavaNative java RobotRaconteurJava.i  ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.cpp ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.h ${GETIFADDR_SRC} )
+RR_SWIG_ADD_MODULE(RobotRaconteurJavaNative java RobotRaconteurJava.i  ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.cpp ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.h )
 
 SWIG_LINK_LIBRARIES(RobotRaconteurJavaNative RobotRaconteurCore)
 
@@ -46,7 +44,7 @@ else()
 set(CMAKE_SWIG_OUTDIR ${PREGENERATED_SOURCE_DIR}/Java/swigwordsize32/com/robotraconteur)
 endif()
 include_directories(${CMAKE_SOURCE_DIR}/SWIG ${CMAKE_SWIG_OUTDIR})
-add_library(RobotRaconteurJavaNative MODULE ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.cpp ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.h ${CMAKE_SWIG_OUTDIR}/RobotRaconteurJavaJAVA_wrap.cxx ${GETIFADDR_SRC}/ifaddrs.c)
+add_library(RobotRaconteurJavaNative MODULE ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.cpp ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.h ${CMAKE_SWIG_OUTDIR}/RobotRaconteurJavaJAVA_wrap.cxx )
 target_link_libraries(RobotRaconteurJavaNative RobotRaconteurCore)
 
 endif()
