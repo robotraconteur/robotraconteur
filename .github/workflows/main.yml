@@ -913,6 +913,8 @@ jobs:
       run: python robotraconteur/packaging/scripts/build_java_zip.py
     - name: build nuget package
       run: python robotraconteur/packaging/scripts/build_nuget_package.py
+    - name: build android package
+      run: python robotraconteur/packaging/scripts/build_android_package.py
     - name: archive distfiles
       uses: actions/upload-artifact@v2
       with:
