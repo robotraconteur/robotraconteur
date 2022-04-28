@@ -336,6 +336,7 @@ namespace detail
 
 	void OpenSSLAuthContext::LoadPKCS12FromFile(boost::string_ref fname)
 	{
+#ifndef OPENSSL_NO_STDIO
 		boost::mutex::scoped_lock lock(mylock);
 		if (server_context) throw InvalidOperationException("Certificate already loaded");
 		
@@ -437,7 +438,9 @@ namespace detail
 		//p12_key.reset(pkey,EVP_PKEY_free);
 
 		if (error) throw ResourceNotFoundException("Could not load certificate file");
-
+#else
+		throw ResourceNotFoundException("Could not load certificate file");
+#endif
 
 	}
 
