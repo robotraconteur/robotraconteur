@@ -886,7 +886,7 @@ jobs:
         path: build2/*
         retention-days: 2
   build-ios:
-    runs-on: macos-12
+    runs-on: macos-11
     steps:
     - uses: actions/checkout@v2
       with:
