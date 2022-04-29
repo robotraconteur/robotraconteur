@@ -885,6 +885,59 @@ jobs:
         name: 'build-artifacts-android-${{ matrix.config.android_abi }}'
         path: build2/*
         retention-days: 2
+  build-ios:
+    runs-on: macos-11
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        path: robotraconteur
+    - name: checkout vcpkg
+      uses: actions/checkout@v2
+      with:
+        path: vcpkg
+        repository: microsoft/vcpkg
+        fetch-depth: 1
+    - name: bootstrap vcpkg
+      working-directory: vcpkg
+      run: ./bootstrap-vcpkg.sh
+    - name: vcpkg
+      working-directory: vcpkg
+      run: >
+        ./vcpkg install --triplet arm64-ios openssl
+        boost-algorithm boost-array boost-asio
+        boost-assign boost-atomic boost-bind boost-config boost-container boost-date-time
+        boost-smart-ptr boost-filesystem boost-foreach boost-format boost-function boost-interprocess
+        boost-intrusive boost-lexical-cast boost-locale boost-random boost-range boost-regex
+        boost-scope-exit boost-signals2 boost-thread boost-tuple boost-unordered
+        boost-utility boost-uuid boost-program-options
+    - name: configure
+      run: >
+        cmake -DBUILD_TEST=OFF -DBUILD_GEN=OFF -S robotraconteur -B build2
+        -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 
+        -DCMAKE_OSX_ARCHITECTURES=arm64 -DCMAKE_SYSTEM_PROCESSOR=aarch64
+        -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
+        -DVCPKG_TARGET_TRIPLET=arm64-ios
+    - name: build
+      working-directory: build2
+      run: |
+        cmake --build . --config Release -j 4
+    - name: move out
+      run: |
+        cp robotraconteur/LICENSE.txt build2/out/
+        cp build2/rrversion.txt build2/out/
+        mv build2/out .
+    - name: archive out
+      uses: actions/upload-artifact@v2
+      with:
+        name: 'out-ios-arm64'
+        path: out/*
+    - name: build artifacts
+      if: failure()
+      uses: actions/upload-artifact@v2
+      with:
+        name: 'build-artifacts-ios-arm64'
+        path: build2/*
+        retention-days: 2 
   build-dist:
     needs:
     - build-ubuntu
