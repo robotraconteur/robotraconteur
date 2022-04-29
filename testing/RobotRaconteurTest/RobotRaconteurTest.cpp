@@ -35,6 +35,8 @@
 
 #include "boost/foreach.hpp"
 
+#define RR_NO_BACKTRACE
+
 #ifndef RR_NO_BACKTRACE
 #ifndef _WIN32
 #include <execinfo.h>
@@ -158,7 +160,7 @@ void servicetest3(std::string url1, RR_SHARED_PTR<RRObject> obj, RR_SHARED_PTR<R
 
 void servicetest4(std::string url1)
 {
-	RobotRaconteurNode::s()->AsyncConnectService(url1,"",RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >(),NULL,"",boost::bind(&servicetest3,url1,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));
+	RobotRaconteurNode::s()->AsyncConnectService(url1,"",RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >(),RR_NULL_FN,"",boost::bind(&servicetest3,url1,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));
 }
 
 void servicetest3(std::string url1, RR_SHARED_PTR<RRObject> obj, RR_SHARED_PTR<RobotRaconteurException> exp)
@@ -1086,7 +1088,7 @@ return 0;
 		//RobotRaconteurNode::s()->AsyncConnectService(url1,"",RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >(),NULL,"",&servicetest1);
 		//RobotRaconteurNode::s()->AsyncConnectService(url1,"",RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >(),NULL,"",boost::bind(&servicetest3,url1,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));
 
-		RR_SHARED_PTR<RRObject> obj=RobotRaconteurNode::s()->ConnectService(url1,"",RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >(),NULL,"");
+		RR_SHARED_PTR<RRObject> obj=RobotRaconteurNode::s()->ConnectService(url1,"",RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >(),RR_NULL_FN,"");
 		RR_SHARED_PTR<async_testroot> o=rr_cast<async_testroot>(obj);
 		RR_SHARED_PTR<testroot> o2=rr_cast<testroot>(obj);
 		o->async_func3(1,2,boost::bind(&servicetest2,o,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));
@@ -1142,7 +1144,7 @@ return 0;
 		//RobotRaconteurNode::s()->AsyncConnectService(url1,"",RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >(),NULL,"",&servicetest1);
 		//RobotRaconteurNode::s()->AsyncConnectService(url1,"",RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >(),NULL,"",boost::bind(&servicetest3,url1,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));
 
-		RR_SHARED_PTR<RRObject> obj=RobotRaconteurNode::s()->ConnectService(url1,"",RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >(),NULL,"");
+		RR_SHARED_PTR<RRObject> obj=RobotRaconteurNode::s()->ConnectService(url1,"",RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >(),RR_NULL_FN,"");
 		RR_SHARED_PTR<async_testroot> o=rr_cast<async_testroot>(obj);
 		RR_SHARED_PTR<testroot> o2=rr_cast<testroot>(obj);
 
@@ -1308,7 +1310,7 @@ return 0;
 		RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<com__robotraconteur__testing__TestService2Factory>());
 		
 		
-		RR_SHARED_PTR<RRObject> obj = RobotRaconteurNode::s()->ConnectService(url1, "", RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(), NULL, "");
+		RR_SHARED_PTR<RRObject> obj = RobotRaconteurNode::s()->ConnectService(url1, "", RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(), RR_NULL_FN, "");
 		RR_SHARED_PTR<testroot> o = rr_cast<testroot>(obj);
 		o->get_d1();
 				

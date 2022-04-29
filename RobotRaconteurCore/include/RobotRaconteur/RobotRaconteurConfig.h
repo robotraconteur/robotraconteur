@@ -138,3 +138,5 @@
 #else
 #define RR_BOOST_PLACEHOLDERS(arg) boost::placeholders::arg
 #endif
+
+#define	RR_NULL_FN	0

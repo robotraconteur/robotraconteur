@@ -600,7 +600,7 @@ namespace RobotRaconteur
 						key = active_count;
 
 						ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Discovery, -1, "FindServiceByType connecting to node using candidate URLs " << boost::join(e,", "));
-						node->AsyncConnectService(e, "", (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()), NULL, "", boost::bind(&Discovery_findservicebytype::connect_callback, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), e.front(), key), timeout);
+						node->AsyncConnectService(e, "", (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()), RR_NULL_FN, "", boost::bind(&Discovery_findservicebytype::connect_callback, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), e.front(), key), timeout);
 
 						active.push_back(key);
 					}
@@ -904,7 +904,7 @@ namespace RobotRaconteur
 			{
 				ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Discovery, -1, "UpdateServiceInfo connecting to remote node " << this->remote_nodeid.ToString()
 					<< " using candidate URLs " << boost::join(urls,", "));
-				n->AsyncConnectService(urls, "", RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(), NULL, "",
+				n->AsyncConnectService(urls, "", RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(), RR_NULL_FN, "",
 					boost::bind(&Discovery_updateserviceinfo::connect_handler, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)), 15000);
 			}
 			catch (RobotRaconteurException& err)

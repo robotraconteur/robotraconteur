@@ -1467,7 +1467,7 @@ namespace RobotRaconteurTest
 	{
 		RR_INTRUSIVE_PTR<RRMap<string,RRValue> > cred1=AllocateEmptyRRMap<string,RRValue>();
 		cred1->insert(make_pair("password",stringToRRArray("testpass1")));
-		RobotRaconteurNode::s()->AsyncConnectService(url,"testuser1",cred1,NULL,"",boost::bind(&ServiceTestClient::TestAsync1,this,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));
+		RobotRaconteurNode::s()->AsyncConnectService(url,"testuser1",cred1,RR_NULL_FN,"",boost::bind(&ServiceTestClient::TestAsync1,this,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));
 
 		async_wait.WaitOne();
 		boost::mutex::scoped_lock lock(async_err_lock);
@@ -1620,7 +1620,7 @@ namespace RobotRaconteurTest
 	void ServiceTestClient::RunSingleThreadTest(string url, RR_BOOST_ASIO_IO_CONTEXT& io_context)
 	{
 		IOContextThreadPool_AsyncResultAdapter<RR_SHARED_PTR<RRObject> > connect_res(io_context);
-		RobotRaconteurNode::s()->AsyncConnectService(url, "", RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >(), NULL, "", connect_res, 5000);
+		RobotRaconteurNode::s()->AsyncConnectService(url, "", RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >(), RR_NULL_FN, "", connect_res, 5000);
 		RR_SHARED_PTR<RRObject> c1 = connect_res.GetResult();
 		RR_SHARED_PTR<async_testroot> c = rr_cast<async_testroot>(c1);
 

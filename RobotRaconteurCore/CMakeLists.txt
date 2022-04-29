@@ -241,6 +241,10 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 	target_compile_options(RobotRaconteurCore PRIVATE "-fPIC" )
 endif()
 
+if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+	target_compile_options(RobotRaconteurCore PRIVATE "-fPIC" )
+endif()
+
 IF (MSVC)
 	target_compile_options(RobotRaconteurCore PRIVATE "/wd4251" "/wd4275" "/bigobj")
 ENDIF()

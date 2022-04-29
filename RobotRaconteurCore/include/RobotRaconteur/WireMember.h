@@ -1029,7 +1029,7 @@ namespace RobotRaconteur
 	{
 	public:
 
-		WireClient(boost::string_ref name, RR_SHARED_PTR<ServiceStub> stub, MemberDefinition_Direction direction = MemberDefinition_Direction_both, boost::function<void(RR_INTRUSIVE_PTR<RRValue>&)> verify = NULL) : WireClientBase(name, stub, direction), Wire<T>(verify)
+		WireClient(boost::string_ref name, RR_SHARED_PTR<ServiceStub> stub, MemberDefinition_Direction direction = MemberDefinition_Direction_both, boost::function<void(RR_INTRUSIVE_PTR<RRValue>&)> verify = RR_NULL_FN) : WireClientBase(name, stub, direction), Wire<T>(verify)
 		{
 			if (boost::is_same<T, RR_INTRUSIVE_PTR<MessageElement> >::value)
 			{
@@ -1224,7 +1224,7 @@ namespace RobotRaconteur
 
 	public:
 
-		WireServer(boost::string_ref name, RR_SHARED_PTR<ServiceSkel> skel, MemberDefinition_Direction direction = MemberDefinition_Direction_both, boost::function<void(RR_INTRUSIVE_PTR<RRValue>&)> verify = NULL) : WireServerBase(name, skel, direction), Wire<T>(verify)
+		WireServer(boost::string_ref name, RR_SHARED_PTR<ServiceSkel> skel, MemberDefinition_Direction direction = MemberDefinition_Direction_both, boost::function<void(RR_INTRUSIVE_PTR<RRValue>&)> verify = RR_NULL_FN) : WireServerBase(name, skel, direction), Wire<T>(verify)
 		{
 			if (boost::is_same<T, RR_INTRUSIVE_PTR<MessageElement> >::value)
 			{

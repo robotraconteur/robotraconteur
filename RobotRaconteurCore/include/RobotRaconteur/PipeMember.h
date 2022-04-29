@@ -859,7 +859,7 @@ namespace RobotRaconteur
 			return t->end();
 		}
 
-		PipeClient(boost::string_ref name, RR_SHARED_PTR<ServiceStub> stub, bool unreliable=false, MemberDefinition_Direction direction = MemberDefinition_Direction_both, boost::function<void(RR_INTRUSIVE_PTR<RRValue>&)> verify=NULL) : PipeClientBase(name,stub,unreliable,direction), Pipe<T>(verify)
+		PipeClient(boost::string_ref name, RR_SHARED_PTR<ServiceStub> stub, bool unreliable=false, MemberDefinition_Direction direction = MemberDefinition_Direction_both, boost::function<void(RR_INTRUSIVE_PTR<RRValue>&)> verify=RR_NULL_FN) : PipeClientBase(name,stub,unreliable,direction), Pipe<T>(verify)
 		{
 			if (boost::is_same<T,RR_INTRUSIVE_PTR<MessageElement> >::value)
 			{
@@ -1004,7 +1004,7 @@ namespace RobotRaconteur
 			throw InvalidOperationException("Not valid for server");
 		}
 
-		PipeServer(boost::string_ref name, RR_SHARED_PTR<ServiceSkel> skel, bool unreliable=false, MemberDefinition_Direction direction=MemberDefinition_Direction_both, boost::function<void(RR_INTRUSIVE_PTR<RRValue>&)> verify = NULL) : PipeServerBase(name,skel,unreliable,direction), Pipe<T>(verify)
+		PipeServer(boost::string_ref name, RR_SHARED_PTR<ServiceSkel> skel, bool unreliable=false, MemberDefinition_Direction direction=MemberDefinition_Direction_both, boost::function<void(RR_INTRUSIVE_PTR<RRValue>&)> verify = RR_NULL_FN) : PipeServerBase(name,skel,unreliable,direction), Pipe<T>(verify)
 		{
 			if (boost::is_same<T, RR_INTRUSIVE_PTR<MessageElement> >::value)
 			{
