@@ -896,10 +896,12 @@ jobs:
       with:
         path: vcpkg
         repository: microsoft/vcpkg
+        fetch-depth: 1
     - name: bootstrap vcpkg
       working-directory: vcpkg
-      run: ./bootstrap-vcpkg.bat
+      run: ./bootstrap-vcpkg.sh
     - name: vcpkg
+      working-directory: vcpkg
       run: >
         ./vcpkg install --triplet arm64-ios openssl
         boost-algorithm boost-array boost-asio
@@ -911,7 +913,7 @@ jobs:
     - name: configure
       run: >
         cmake -DBUILD_TEST=OFF -DBUILD_GEN=OFF -S robotraconteur -B build2
-        -GNinja -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 
+        -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 
         -DCMAKE_OSX_ARCHITECTURES=arm64 -DCMAKE_SYSTEM_PROCESSOR=aarch64
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
         -DVCPKG_TARGET_TRIPLET=arm64-ios
