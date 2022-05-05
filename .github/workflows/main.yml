@@ -982,3 +982,22 @@ jobs:
         draft: true
         files: |
           distfiles/*
+  check-formatting:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        path: robotraconteur
+    - name: pip
+      run: sudo python3 -m pip install autopep8 cmakelang
+    - name: clang-format-14
+      run: |
+        wget https://apt.llvm.org/llvm.sh
+        chmod +x llvm.sh
+        sudo ./llvm.sh 14 tools
+    - name: run formatting
+      run: ./tools/formatting/run-all-formatting
+      working-directory: robotraconteur
+    - name: git diff for changes
+      run: git diff --name-only --exit-code
+      working-directory: robotraconteur
