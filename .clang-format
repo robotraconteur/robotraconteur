@@ -10,3 +10,9 @@ AllowShortFunctionsOnASingleLine: true
 ---
 Language: Cpp
 Standard: Cpp03
+---
+Language: CSharp
+AllowShortFunctionsOnASingleLine: false
+---
+Language: Java
+AllowShortFunctionsOnASingleLine: false
