@@ -13,4 +13,4 @@ for asset_dir in asset_dirs:
             continue
         print(fname)
         dest = pathlib.Path(fname)
-        shutil.copy(str(fname),"distfiles/" + dest.name)
+        shutil.copy(str(fname), "distfiles/" + dest.name)

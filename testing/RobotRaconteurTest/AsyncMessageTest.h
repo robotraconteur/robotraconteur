@@ -5,35 +5,34 @@
 
 namespace RobotRaconteur
 {
-	class Message;
+class Message;
 }
 
 namespace RobotRaconteurTest
 {
-	class AsyncMessageReaderTest
-	{
-	public:
-		static void Test();
-		static void Test1();
+class AsyncMessageReaderTest
+{
+  public:
+    static void Test();
+    static void Test1();
 
-		static void DoTest(RR_INTRUSIVE_PTR<RobotRaconteur::Message> m, uint16_t version, boost::random::mt19937& rng);
-		static void RandomTest(size_t n);
-		static void RandomTest4(size_t n);
-		static void LoadRandomTest();
+    static void DoTest(RR_INTRUSIVE_PTR<RobotRaconteur::Message> m, uint16_t version, boost::random::mt19937& rng);
+    static void RandomTest(size_t n);
+    static void RandomTest4(size_t n);
+    static void LoadRandomTest();
+};
 
-	};
+class AsyncMessageWriterTest
+{
+  public:
+    static void Test();
+    static void Test1();
 
-	class AsyncMessageWriterTest
-	{
-	public:
-		static void Test();
-		static void Test1();
+    static void DoTest(RR_INTRUSIVE_PTR<RobotRaconteur::Message> m, uint16_t version, boost::random::mt19937& rng);
+    static void RandomTest(size_t n);
+    static void RandomTest4(size_t n);
 
-		static void DoTest(RR_INTRUSIVE_PTR<RobotRaconteur::Message> m, uint16_t version, boost::random::mt19937& rng);
-		static void RandomTest(size_t n);
-		static void RandomTest4(size_t n);
-
-		static void WriteMessage(RR_INTRUSIVE_PTR<RobotRaconteur::Message> m, uint16_t version);
-		static void LoadRandomTest();
-	};
-}
+    static void WriteMessage(RR_INTRUSIVE_PTR<RobotRaconteur::Message> m, uint16_t version);
+    static void LoadRandomTest();
+};
+} // namespace RobotRaconteurTest

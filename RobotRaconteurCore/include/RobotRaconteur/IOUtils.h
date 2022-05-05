@@ -1,8 +1,8 @@
-/** 
+/**
  * @file IOUtils.h
- * 
+ *
  * @author John Wason, PhD
- * 
+ *
  * @copyright Copyright 2011-2020 Wason Technology, LLC
  *
  * @par License
@@ -23,154 +23,144 @@
 
 #pragma once
 
-
-
 #include "RobotRaconteur/DataTypes.h"
 #include <boost/predef/other/endian.h>
 #include <stack>
 
-
 namespace RobotRaconteur
 
 {
-	class ROBOTRACONTEUR_CORE_API ArrayBinaryReader : private boost::noncopyable
-	{
-	public:
-		ArrayBinaryReader(const uint8_t* buffer, size_t start_position, size_t length, bool nativeorder=false);
+class ROBOTRACONTEUR_CORE_API ArrayBinaryReader : private boost::noncopyable
+{
+  public:
+    ArrayBinaryReader(const uint8_t* buffer, size_t start_position, size_t length, bool nativeorder = false);
 
-		size_t Length();
+    size_t Length();
 
-		virtual size_t Position();
-		virtual void Seek(size_t position);
+    virtual size_t Position();
+    virtual void Seek(size_t position);
 
-		virtual size_t Read(void* buffer, size_t index, size_t length);
-		
-		template <typename T> 
-		T ReadNumber()
-		{
-			T out;
-			Read(reinterpret_cast<uint8_t*>(&out),0,sizeof(T));
+    virtual size_t Read(void* buffer, size_t index, size_t length);
+
+    template <typename T>
+    T ReadNumber()
+    {
+        T out;
+        Read(reinterpret_cast<uint8_t*>(&out), 0, sizeof(T));
 #if BOOST_ENDIAN_BIG_BYTE
-			if (!nativeorder) std::reverse(reinterpret_cast<uint8_t*>(&out),(reinterpret_cast<uint8_t*>(&out))+sizeof(T));
+        if (!nativeorder)
+            std::reverse(reinterpret_cast<uint8_t*>(&out), (reinterpret_cast<uint8_t*>(&out)) + sizeof(T));
 #endif
-			return out;
+        return out;
+    }
 
-		}
-		
-		
-		void ReadArray(RR_INTRUSIVE_PTR<RRBaseArray>& arr);
+    void ReadArray(RR_INTRUSIVE_PTR<RRBaseArray>& arr);
 
-		MessageStringPtr ReadString8(size_t length);
+    MessageStringPtr ReadString8(size_t length);
 
-		uint32_t ReadUintX();		
-		uint64_t ReadUintX2();
+    uint32_t ReadUintX();
+    uint64_t ReadUintX2();
 
-		int32_t ReadIntX();
-		int64_t ReadIntX2();
+    int32_t ReadIntX();
+    int64_t ReadIntX2();
 
-		//A stack to set local limits on the
-		//length of reads.  This will detect errors
-		//in binary messages.
+    // A stack to set local limits on the
+    // length of reads.  This will detect errors
+    // in binary messages.
 
-		virtual size_t CurrentLimit();
+    virtual size_t CurrentLimit();
 
-		virtual void PushRelativeLimit(size_t limit);
-		
-		virtual void PushAbsoluteLimit(size_t limit);
+    virtual void PushRelativeLimit(size_t limit);
 
-		virtual void PopLimit();
+    virtual void PushAbsoluteLimit(size_t limit);
 
-		virtual int32_t DistanceFromLimit();
+    virtual void PopLimit();
 
-	private:
-		const uint8_t* buffer;
-		size_t position;
-		size_t length;
-		bool nativeorder;
+    virtual int32_t DistanceFromLimit();
+
+  private:
+    const uint8_t* buffer;
+    size_t position;
+    size_t length;
+    bool nativeorder;
 
 #ifdef ROBOTRACONTEUR_USE_SMALL_VECTOR
-		boost::container::small_vector<size_t, 8> limits;
-#else		
-		std::vector<size_t> limits;
+    boost::container::small_vector<size_t, 8> limits;
+#else
+    std::vector<size_t> limits;
 #endif
+};
 
+class ROBOTRACONTEUR_CORE_API ArrayBinaryWriter : private boost::noncopyable
+{
+  public:
+    ArrayBinaryWriter(uint8_t* buffer, size_t start_position, size_t length, bool nativeorder = false);
 
-	};
+    virtual size_t Length();
 
-	class ROBOTRACONTEUR_CORE_API ArrayBinaryWriter : private boost::noncopyable
-	{
-	public:
-		ArrayBinaryWriter(uint8_t* buffer, size_t start_position, size_t length, bool nativeorder=false);
+    virtual size_t Position();
+    virtual void Seek(size_t position);
 
-		virtual size_t Length();
+    virtual size_t Write(const void* buffer, size_t index, size_t length);
 
-		virtual size_t Position();
-		virtual void Seek(size_t position);
-
-		virtual size_t Write(const void* buffer, size_t index, size_t length);
-		
-		template <typename T> 
-		void WriteNumber(T number)
-		{
-			void* n1=static_cast<void*>(&number);
+    template <typename T>
+    void WriteNumber(T number)
+    {
+        void* n1 = static_cast<void*>(&number);
 #if BOOST_ENDIAN_BIG_BYTE
-			if (!nativeorder) std::reverse(static_cast<uint8_t*>(n1),(static_cast<uint8_t*>(n1))+sizeof(T));
+        if (!nativeorder)
+            std::reverse(static_cast<uint8_t*>(n1), (static_cast<uint8_t*>(n1)) + sizeof(T));
 #endif
-			Write(static_cast<uint8_t*>(n1),0,sizeof(T));
-			
+        Write(static_cast<uint8_t*>(n1), 0, sizeof(T));
+    }
 
-		}
+    void WriteArray(RR_INTRUSIVE_PTR<RRBaseArray>& arr);
 
-		
-		void WriteArray(RR_INTRUSIVE_PTR<RRBaseArray>& arr);
+    void WriteString8(MessageStringRef str);
+    void WriteString8WithXLen(MessageStringRef str);
 
-		void WriteString8(MessageStringRef str);
-		void WriteString8WithXLen(MessageStringRef str);
+    void WriteUintX(uint32_t v);
+    void WriteUintX2(uint64_t v);
 
-		void WriteUintX(uint32_t v);
-		void WriteUintX2(uint64_t v);
+    void WriteIntX(int32_t v);
+    void WriteIntX2(int64_t v);
 
-		void WriteIntX(int32_t v);
-		void WriteIntX2(int64_t v);
+    static size_t GetStringByteCount8(MessageStringRef str);
+    static size_t GetStringByteCount8WithXLen(MessageStringRef str);
 
-		static size_t GetStringByteCount8(MessageStringRef str);
-		static size_t GetStringByteCount8WithXLen(MessageStringRef str);
-		
-		static size_t GetUintXByteCount(uint32_t v);
-		static size_t GetUintX2ByteCount(uint64_t v);
-		
-		static size_t GetSizePlusUintX(size_t s);
+    static size_t GetUintXByteCount(uint32_t v);
+    static size_t GetUintX2ByteCount(uint64_t v);
 
-		static size_t GetIntXByteCount(int32_t v);
-		static size_t GetIntX2ByteCount(int64_t v);
+    static size_t GetSizePlusUintX(size_t s);
 
-		//A stack to set local limits on the
-		//length of reads.  This will detect errors
-		//in binary messages.
+    static size_t GetIntXByteCount(int32_t v);
+    static size_t GetIntX2ByteCount(int64_t v);
 
-		virtual size_t CurrentLimit();
+    // A stack to set local limits on the
+    // length of reads.  This will detect errors
+    // in binary messages.
 
-		virtual void PushRelativeLimit(size_t limit);
-		
-		virtual void PushAbsoluteLimit(size_t limit);
+    virtual size_t CurrentLimit();
 
-		virtual void PopLimit();
+    virtual void PushRelativeLimit(size_t limit);
 
-		virtual int32_t DistanceFromLimit();
+    virtual void PushAbsoluteLimit(size_t limit);
 
-	private:
-		uint8_t* buffer;
-		size_t position;
-		size_t length;
-		bool nativeorder;
+    virtual void PopLimit();
+
+    virtual int32_t DistanceFromLimit();
+
+  private:
+    uint8_t* buffer;
+    size_t position;
+    size_t length;
+    bool nativeorder;
 
 #ifdef ROBOTRACONTEUR_USE_SMALL_VECTOR
-		boost::container::small_vector<size_t, 8> limits;
-#else		
-		std::vector<size_t> limits;
+    boost::container::small_vector<size_t, 8> limits;
+#else
+    std::vector<size_t> limits;
 #endif
+};
 
-
-	};
-
-}
+} // namespace RobotRaconteur

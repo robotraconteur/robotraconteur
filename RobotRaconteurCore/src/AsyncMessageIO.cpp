@@ -22,17 +22,17 @@
 
 namespace RobotRaconteur
 {
-	RR_SHARED_PTR<AsyncMessageReader> AsyncMessageReader::CreateInstance()
-	{
-		return RR_MAKE_SHARED<AsyncMessageReaderImpl>();
-	}
-    
-    AsyncMessageReader::~AsyncMessageReader() {}
-
-	RR_SHARED_PTR<AsyncMessageWriter> AsyncMessageWriter::CreateInstance()
-	{
-		return RR_MAKE_SHARED<AsyncMessageWriterImpl>();
-	}
-    
-    AsyncMessageWriter::~AsyncMessageWriter() {}
+RR_SHARED_PTR<AsyncMessageReader> AsyncMessageReader::CreateInstance()
+{
+    return RR_MAKE_SHARED<AsyncMessageReaderImpl>();
 }
+
+AsyncMessageReader::~AsyncMessageReader() {}
+
+RR_SHARED_PTR<AsyncMessageWriter> AsyncMessageWriter::CreateInstance()
+{
+    return RR_MAKE_SHARED<AsyncMessageWriterImpl>();
+}
+
+AsyncMessageWriter::~AsyncMessageWriter() {}
+} // namespace RobotRaconteur

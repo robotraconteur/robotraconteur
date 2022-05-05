@@ -18,73 +18,70 @@
 
 namespace RobotRaconteur
 {
-    class ROBOTRACONTEUR_CORE_API IntraTransportConnection : public ITransportConnection, public boost::enable_shared_from_this<IntraTransportConnection>
-	{
-	public:
+class ROBOTRACONTEUR_CORE_API IntraTransportConnection : public ITransportConnection,
+                                                         public boost::enable_shared_from_this<IntraTransportConnection>
+{
+  public:
+    IntraTransportConnection(RR_SHARED_PTR<IntraTransport> parent, bool server, uint32_t local_endpoint);
 
-		IntraTransportConnection(RR_SHARED_PTR<IntraTransport> parent, bool server, uint32_t local_endpoint);
-		
-		virtual void MessageReceived(RR_INTRUSIVE_PTR<Message> m);	
+    virtual void MessageReceived(RR_INTRUSIVE_PTR<Message> m);
 
-        virtual void AcceptMessage(RR_INTRUSIVE_PTR<Message> m);	
-				
-	public:
+    virtual void AcceptMessage(RR_INTRUSIVE_PTR<Message> m);
 
-        virtual void SendMessage(RR_INTRUSIVE_PTR<Message> m);
+  public:
+    virtual void SendMessage(RR_INTRUSIVE_PTR<Message> m);
 
-		virtual void AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& handler);
+    virtual void AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m,
+                                  boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& handler);
 
-		virtual void Close();
+    virtual void Close();
 
-		virtual  uint32_t GetLocalEndpoint();
+    virtual uint32_t GetLocalEndpoint();
 
-		virtual  uint32_t GetRemoteEndpoint();
+    virtual uint32_t GetRemoteEndpoint();
 
-        virtual  NodeID GetRemoteNodeID();
+    virtual NodeID GetRemoteNodeID();
 
-        virtual RR_SHARED_PTR<RobotRaconteurNode> GetNode();
+    virtual RR_SHARED_PTR<RobotRaconteurNode> GetNode();
 
-		virtual void CheckConnection(uint32_t endpoint);
+    virtual void CheckConnection(uint32_t endpoint);
 
-        virtual bool CheckCapabilityActive(uint32_t flag);
+    virtual bool CheckCapabilityActive(uint32_t flag);
 
-        void SetPeer(RR_SHARED_PTR<IntraTransportConnection> peer);
+    void SetPeer(RR_SHARED_PTR<IntraTransportConnection> peer);
 
-        bool IsConnected();
+    bool IsConnected();
 
-        virtual RR_SHARED_PTR<Transport> GetTransport();
+    virtual RR_SHARED_PTR<Transport> GetTransport();
 
-	protected:
+  protected:
+    static void ProcessNextRecvMessage(RR_WEAK_PTR<IntraTransportConnection> c);
 
-        static void ProcessNextRecvMessage(RR_WEAK_PTR<IntraTransportConnection> c);
+    void SimpleAsyncEndSendMessage(RR_SHARED_PTR<RobotRaconteurException> err);
 
-        void SimpleAsyncEndSendMessage(RR_SHARED_PTR<RobotRaconteurException> err);
+    void RemoteClose();
 
-        void RemoteClose();
+    static void RemoteClose1(RR_WEAK_PTR<IntraTransportConnection> c);
 
-        static void RemoteClose1(RR_WEAK_PTR<IntraTransportConnection> c);
+    bool server;
 
-		bool server;
+    RR_WEAK_PTR<IntraTransport> parent;
+    RR_WEAK_PTR<RobotRaconteurNode> node;
 
-		RR_WEAK_PTR<IntraTransport> parent;
-        RR_WEAK_PTR<RobotRaconteurNode> node;
+    uint32_t m_RemoteEndpoint;
+    uint32_t m_LocalEndpoint;
+    NodeID RemoteNodeID;
+    boost::shared_mutex RemoteNodeID_lock;
 
-		uint32_t m_RemoteEndpoint;
-		uint32_t m_LocalEndpoint;
-        NodeID RemoteNodeID;
-		boost::shared_mutex RemoteNodeID_lock;
+    boost::recursive_mutex close_lock;
 
-		boost::recursive_mutex close_lock;
+    RR_WEAK_PTR<IntraTransportConnection> peer;
+    RR_SHARED_PTR<IntraTransportConnection> peer_storage;
 
-        RR_WEAK_PTR<IntraTransportConnection> peer;
-        RR_SHARED_PTR<IntraTransportConnection> peer_storage;
+    boost::atomic<bool> connected;
 
-        boost::atomic<bool> connected;
-
-        boost::mutex recv_queue_lock;
-        std::list<RR_INTRUSIVE_PTR<Message> > recv_queue;
-        bool recv_queue_post_requested;
-		
-	};
-}
-
+    boost::mutex recv_queue_lock;
+    std::list<RR_INTRUSIVE_PTR<Message> > recv_queue;
+    bool recv_queue_post_requested;
+};
+} // namespace RobotRaconteur

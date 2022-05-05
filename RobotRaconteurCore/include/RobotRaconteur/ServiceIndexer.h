@@ -1,8 +1,8 @@
-/** 
+/**
  * @file ServiceIndexer.h
- * 
+ *
  * @author John Wason, PhD
- * 
+ *
  * @copyright Copyright 2011-2020 Wason Technology, LLC
  *
  * @par License
@@ -25,28 +25,27 @@
 
 #pragma once
 
-
 namespace RobotRaconteur
 {
-	class ServiceIndexer : public virtual RobotRaconteurServiceIndex::ServiceIndex
-	{
-		RR_WEAK_PTR<RobotRaconteurNode> node;
+class ServiceIndexer : public virtual RobotRaconteurServiceIndex::ServiceIndex
+{
+    RR_WEAK_PTR<RobotRaconteurNode> node;
 
-	public:
-		
-		ServiceIndexer(RR_SHARED_PTR<RobotRaconteurNode> node);
+  public:
+    ServiceIndexer(RR_SHARED_PTR<RobotRaconteurNode> node);
 
-		RR_SHARED_PTR<RobotRaconteurNode> GetNode();
+    RR_SHARED_PTR<RobotRaconteurNode> GetNode();
 
-		virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteurServiceIndex::ServiceInfo> > GetLocalNodeServices();
+    virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteurServiceIndex::ServiceInfo> >
+    GetLocalNodeServices();
 
-		virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteurServiceIndex::NodeInfo> > GetRoutedNodes();
+    virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteurServiceIndex::NodeInfo> > GetRoutedNodes();
 
-		virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteurServiceIndex::NodeInfo> > GetDetectedNodes();
+    virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteurServiceIndex::NodeInfo> > GetDetectedNodes();
 
-		virtual boost::signals2::signal<void ()>& get_LocalNodeServicesChanged();
-	private:
-		 boost::signals2::signal<void ()> ev;
+    virtual boost::signals2::signal<void()>& get_LocalNodeServicesChanged();
 
-	};
-}
+  private:
+    boost::signals2::signal<void()> ev;
+};
+} // namespace RobotRaconteur

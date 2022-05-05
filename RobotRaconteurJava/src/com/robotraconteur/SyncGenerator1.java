@@ -34,7 +34,7 @@ public abstract class SyncGenerator1<ReturnType, ParamType> implements Generator
         }
         return;
     }
-    
+
     public void asyncNext(ParamType param, Action2<ReturnType, RuntimeException> handler, int timeout)
     {
         try
@@ -44,10 +44,9 @@ public abstract class SyncGenerator1<ReturnType, ParamType> implements Generator
         }
         catch (RuntimeException e)
         {
-            handler.action(null,e);
+            handler.action(null, e);
             return;
         }
         return;
     }
-    
 }

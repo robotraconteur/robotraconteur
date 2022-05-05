@@ -20,16 +20,14 @@
 
 namespace RobotRaconteur
 {
-	StructureStub::StructureStub(RR_SHARED_PTR<RobotRaconteurNode> node)
-	{
-		this->node = node;
-	}
+StructureStub::StructureStub(RR_SHARED_PTR<RobotRaconteurNode> node) { this->node = node; }
 
-	RR_SHARED_PTR<RobotRaconteurNode> StructureStub::GetNode()
-	{
-		RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
-		if (!n) throw InvalidOperationException("Node has been released");
-		return n;
-	}
-		
+RR_SHARED_PTR<RobotRaconteurNode> StructureStub::GetNode()
+{
+    RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
+    if (!n)
+        throw InvalidOperationException("Node has been released");
+    return n;
 }
+
+} // namespace RobotRaconteur

@@ -26,115 +26,116 @@ using namespace RobotRaconteur;
 
 namespace RobotRaconteurGen
 {
-	class JavaServiceLangGen
-	{
-	public:
+class JavaServiceLangGen
+{
+  public:
+    static std::string fix_name(const std::string& name);
 
-		static std::string fix_name(const std::string& name);
+    static std::string fix_qualified_name(const std::string& name);
 
-		static std::string fix_qualified_name(const std::string& name);
+    struct convert_type_result
+    {
+        std::string name;
+        std::string java_type;
+        std::string java_arr_type;
+    };
 
-		struct convert_type_result
-		{
-			std::string name;
-			std::string java_type;
-			std::string java_arr_type;
-		};
+    static convert_type_result convert_type(const TypeDefinition& tdef, bool reftypes = false);
 
-		static convert_type_result convert_type(const TypeDefinition& tdef, bool reftypes=false);
+    static convert_type_result convert_type_array(TypeDefinition tdef);
 
-		static convert_type_result convert_type_array(TypeDefinition tdef);
+    static string str_pack_delegate(const std::vector<RR_SHARED_PTR<TypeDefinition> >& l,
+                                    boost::shared_ptr<TypeDefinition> rettype = boost::shared_ptr<TypeDefinition>());
 
-		static string str_pack_delegate(const std::vector<RR_SHARED_PTR<TypeDefinition> >& l, boost::shared_ptr<TypeDefinition> rettype=boost::shared_ptr<TypeDefinition>());
+    static string str_pack_parameters(const std::vector<RR_SHARED_PTR<TypeDefinition> >& l, bool inclass);
 
-		static string str_pack_parameters(const std::vector<RR_SHARED_PTR<TypeDefinition> >& l, bool inclass);
+    static std::string str_pack_parameters_delegate(const std::vector<RR_SHARED_PTR<TypeDefinition> >& l, bool inclass);
 
-		static std::string str_pack_parameters_delegate(const std::vector<RR_SHARED_PTR<TypeDefinition> >& l, bool inclass);
+    static std::string str_pack_message_element(const std::string& elementname, const std::string& varname,
+                                                const RR_SHARED_PTR<TypeDefinition>& t,
+                                                const std::string& packer = "context");
 
-		static std::string str_pack_message_element(const std::string &elementname, const std::string &varname, const RR_SHARED_PTR<TypeDefinition> &t, const std::string &packer = "context");
+    static std::string str_unpack_message_element(const std::string& varname, const RR_SHARED_PTR<TypeDefinition>& t,
+                                                  const std::string& packer = "context");
 
-		static std::string str_unpack_message_element(const std::string &varname, const RR_SHARED_PTR<TypeDefinition> &t, const std::string &packer = "context");
+    static std::string convert_constant(ConstantDefinition* constant,
+                                        std::vector<RR_SHARED_PTR<ConstantDefinition> >& c2, ServiceDefinition* def);
 
-		static std::string convert_constant(ConstantDefinition* constant, std::vector<RR_SHARED_PTR<ConstantDefinition> >& c2, ServiceDefinition* def);
+    struct convert_generator_result
+    {
+        std::string generator_java_type;
+        std::string generator_java_base_type;
+        std::string generator_java_template_params;
+        std::vector<RR_SHARED_PTR<TypeDefinition> > params;
+    };
 
-		struct convert_generator_result
-		{
-			std::string generator_java_type;
-			std::string generator_java_base_type;
-			std::string generator_java_template_params;
-			std::vector<RR_SHARED_PTR<TypeDefinition> > params;
-		};
+    static convert_generator_result convert_generator(FunctionDefinition* f);
 
-		static convert_generator_result convert_generator(FunctionDefinition* f);
+    static bool GetObjRefIndType(RR_SHARED_PTR<ObjRefDefinition>& m, std::string& indtype);
 
+    static void GenerateStructure(ServiceEntryDefinition* e, ostream* w);
 
-		static bool GetObjRefIndType(RR_SHARED_PTR<ObjRefDefinition>& m, std::string& indtype);
+    static void GeneratePod(ServiceEntryDefinition* e, ostream* w);
 
-		static void GenerateStructure(ServiceEntryDefinition* e, ostream* w);
+    static void GenerateNamedArray(RR_SHARED_PTR<ServiceEntryDefinition> e, ostream* w);
 
-		static void GeneratePod(ServiceEntryDefinition* e, ostream* w);
+    static void GenerateInterface(ServiceEntryDefinition* e, ostream* w);
 
-		static void GenerateNamedArray(RR_SHARED_PTR<ServiceEntryDefinition> e, ostream* w);
+    static void GenerateAsyncInterface(ServiceEntryDefinition* e, ostream* w);
 
-		static void GenerateInterface(ServiceEntryDefinition* e, ostream* w);
+    static void GenerateServiceFactory(ServiceDefinition* d, std::string defstring, ostream* w);
 
-		static void GenerateAsyncInterface(ServiceEntryDefinition* e, ostream* w);
+    static void GenerateStructureStub(ServiceEntryDefinition* e, ostream* w);
 
-		static void GenerateServiceFactory(ServiceDefinition* d, std::string defstring, ostream* w);
+    static void GeneratePodStub(ServiceEntryDefinition* e, ostream* w);
 
-		static void GenerateStructureStub(ServiceEntryDefinition* e, ostream * w);
+    static void GenerateNamedArrayStub(RR_SHARED_PTR<ServiceEntryDefinition> e, ostream* w);
 
-		static void GeneratePodStub(ServiceEntryDefinition* e, ostream * w);
+    static void GenerateStub(ServiceEntryDefinition* e, ostream* w);
 
-		static void GenerateNamedArrayStub(RR_SHARED_PTR<ServiceEntryDefinition> e, ostream * w);
+    static void GenerateSkel(ServiceEntryDefinition* e, ostream* w);
 
-		static void GenerateStub(ServiceEntryDefinition* e, ostream * w);
+    static void GenerateDefaultImpl(ServiceEntryDefinition* e, ostream* w);
 
-		static void GenerateSkel(ServiceEntryDefinition* e, ostream * w);
+    static void GenerateConstants(ServiceDefinition* d, ostream* w);
 
-		static void GenerateDefaultImpl(ServiceEntryDefinition* e, ostream * w);
+    static std::string GetDefaultValue(const TypeDefinition& tdef);
 
-		static void GenerateConstants(ServiceDefinition*d, ostream* w);
+    static void GenerateDocString(const std::string& docstring, const std::string& prefix, ostream* w);
 
-		static std::string GetDefaultValue(const TypeDefinition& tdef);
+    // File generators
 
-		static void GenerateDocString(const std::string& docstring, const std::string& prefix, ostream* w);
-		
-		//File generators
+    static void GenerateExceptionFile(ExceptionDefinition* exp, ServiceDefinition* d, ostream* w);
 
-		static void GenerateExceptionFile(ExceptionDefinition* exp, ServiceDefinition*d, ostream* w);
+    static void GenerateEnumFile(EnumDefinition* e, ServiceDefinition* d, ostream* w);
 
-		static void GenerateEnumFile(EnumDefinition* e, ServiceDefinition*d, ostream* w);
+    static void GenerateServiceFactoryFile(ServiceDefinition* d, std::string defstring, ostream* w);
 
-		static void GenerateServiceFactoryFile(ServiceDefinition* d, std::string defstring, ostream* w);
-		
-		static void GenerateInterfaceFile(ServiceEntryDefinition* d, ostream* w);
+    static void GenerateInterfaceFile(ServiceEntryDefinition* d, ostream* w);
 
-		static void GenerateAsyncInterfaceFile(ServiceEntryDefinition* d, ostream* w);
-		
-		static void GenerateStructureFile(ServiceEntryDefinition* d, ostream* w);
+    static void GenerateAsyncInterfaceFile(ServiceEntryDefinition* d, ostream* w);
 
-		static void GenerateStructureStubFile(ServiceEntryDefinition* d, ostream* w);
+    static void GenerateStructureFile(ServiceEntryDefinition* d, ostream* w);
 
-		static void GeneratePodFile(ServiceEntryDefinition* d, ostream* w);
+    static void GenerateStructureStubFile(ServiceEntryDefinition* d, ostream* w);
 
-		static void GenerateNamedArrayFile(RR_SHARED_PTR<ServiceEntryDefinition> d, ostream* w);
+    static void GeneratePodFile(ServiceEntryDefinition* d, ostream* w);
 
-		static void GeneratePodStubFile(ServiceEntryDefinition* d, ostream* w);
+    static void GenerateNamedArrayFile(RR_SHARED_PTR<ServiceEntryDefinition> d, ostream* w);
 
-		static void GenerateNamedArrayStubFile(RR_SHARED_PTR<ServiceEntryDefinition> d, ostream* w);
-		
-		static void GenerateStubFile(ServiceEntryDefinition* d, ostream* w);
+    static void GeneratePodStubFile(ServiceEntryDefinition* d, ostream* w);
 
-		static void GenerateSkelFile(ServiceEntryDefinition* d, ostream* w);
+    static void GenerateNamedArrayStubFile(RR_SHARED_PTR<ServiceEntryDefinition> d, ostream* w);
 
-		static void GenerateDefaultImplFile(ServiceEntryDefinition* d, ostream* w);
+    static void GenerateStubFile(ServiceEntryDefinition* d, ostream* w);
 
-		static void GenerateConstantsFile(ServiceDefinition* d, ostream* w);
+    static void GenerateSkelFile(ServiceEntryDefinition* d, ostream* w);
 
-		static void GenerateFiles(RR_SHARED_PTR<ServiceDefinition> d, std::string servicedef, std::string path=".");
-	};
+    static void GenerateDefaultImplFile(ServiceEntryDefinition* d, ostream* w);
 
+    static void GenerateConstantsFile(ServiceDefinition* d, ostream* w);
 
+    static void GenerateFiles(RR_SHARED_PTR<ServiceDefinition> d, std::string servicedef, std::string path = ".");
+};
 
-}
+} // namespace RobotRaconteurGen

@@ -8,19 +8,18 @@
 
 using namespace RobotRaconteur;
 
-
 namespace RobotRaconteurTest
 {
-	class MessageSerializationTest4
-	{
-	public:
-		static RR_INTRUSIVE_PTR<Message> NewRandomTestMessage4(boost::random::mt19937& rng);
+class MessageSerializationTest4
+{
+  public:
+    static RR_INTRUSIVE_PTR<Message> NewRandomTestMessage4(boost::random::mt19937& rng);
 
-		static void Test();
-		static void Test1();
-		static void Test2(bool use_string_table);
-		static void Test3();
+    static void Test();
+    static void Test1();
+    static void Test2(bool use_string_table);
+    static void Test3();
 
-		static void RandomTest(size_t iterations);
-	};
-}
+    static void RandomTest(size_t iterations);
+};
+} // namespace RobotRaconteurTest

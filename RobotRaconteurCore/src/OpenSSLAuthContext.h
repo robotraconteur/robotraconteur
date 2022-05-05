@@ -24,36 +24,34 @@ namespace RobotRaconteur
 {
 namespace detail
 {
-	class OpenSSLAuthContext : boost::noncopyable
-	{
-	protected:
-		boost::shared_ptr<boost::asio::ssl::context> client_context;
-		boost::shared_ptr<boost::asio::ssl::context> server_context;
-		boost::mutex mylock;
-		NodeID nodeid;
+class OpenSSLAuthContext : boost::noncopyable
+{
+  protected:
+    boost::shared_ptr<boost::asio::ssl::context> client_context;
+    boost::shared_ptr<boost::asio::ssl::context> server_context;
+    boost::mutex mylock;
+    NodeID nodeid;
 
+    boost::shared_ptr<void> p12_ca;
+    boost::shared_ptr<X509> p12_cert;
+    boost::shared_ptr<EVP_PKEY> p12_key;
 
-		boost::shared_ptr<void> p12_ca;
-		boost::shared_ptr<X509> p12_cert;
-		boost::shared_ptr<EVP_PKEY> p12_key;
+    static void InitCA(boost::shared_ptr<boost::asio::ssl::context> context);
 
-        static void InitCA(boost::shared_ptr<boost::asio::ssl::context> context);
-        
-	public:
-		OpenSSLAuthContext(const NodeID& nodeid);
+  public:
+    OpenSSLAuthContext(const NodeID& nodeid);
 
-		void LoadPKCS12FromBuffer(boost::asio::mutable_buffer& buf);
+    void LoadPKCS12FromBuffer(boost::asio::mutable_buffer& buf);
 
-		void LoadPKCS12FromFile(boost::string_ref fname);
+    void LoadPKCS12FromFile(boost::string_ref fname);
 
-		boost::shared_ptr<boost::asio::ssl::context> GetServerCredentials();
+    boost::shared_ptr<boost::asio::ssl::context> GetServerCredentials();
 
-		boost::shared_ptr<boost::asio::ssl::context> GetClientCredentials();
-		
-		bool IsCertificateLoaded();
+    boost::shared_ptr<boost::asio::ssl::context> GetClientCredentials();
 
-		bool VerifyRemoteNodeCertificate(SSL * connection, const NodeID& remote_node);
+    bool IsCertificateLoaded();
 
-	};
-}
-}
+    bool VerifyRemoteNodeCertificate(SSL* connection, const NodeID& remote_node);
+};
+} // namespace detail
+} // namespace RobotRaconteur

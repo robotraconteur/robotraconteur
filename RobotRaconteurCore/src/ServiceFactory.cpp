@@ -24,34 +24,30 @@
 namespace RobotRaconteur
 {
 
-
 RR_SHARED_PTR<RobotRaconteurNode> ServiceFactory::GetNode()
 {
-	RR_SHARED_PTR<RobotRaconteurNode> n=node.lock();
-	if (!n) throw InvalidOperationException("Node has been released");
-	return n;
+    RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
+    if (!n)
+        throw InvalidOperationException("Node has been released");
+    return n;
 }
 
 void ServiceFactory::SetNode(RR_SHARED_PTR<RobotRaconteurNode> node)
 {
-	if (!this->node.expired()) throw InvalidOperationException("Factory already registered");
-	this->node=node;
+    if (!this->node.expired())
+        throw InvalidOperationException("Factory already registered");
+    this->node = node;
 }
 
 RR_SHARED_PTR<ServiceDefinition> ServiceFactory::ServiceDef()
 {
-	if (sdef == 0)
-	{
-		sdef = RR_MAKE_SHARED<ServiceDefinition>();
-		sdef->FromString(DefString());
-	}
-	return sdef;
+    if (sdef == 0)
+    {
+        sdef = RR_MAKE_SHARED<ServiceDefinition>();
+        sdef->FromString(DefString());
+    }
+    return sdef;
 }
 
-std::string ServiceFactory::RemovePath(boost::string_ref path)
-{
-	
-	return SplitQualifiedName(path).get<1>().to_string();
-}
-}
-
+std::string ServiceFactory::RemovePath(boost::string_ref path) { return SplitQualifiedName(path).get<1>().to_string(); }
+} // namespace RobotRaconteur

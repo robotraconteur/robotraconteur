@@ -1,8 +1,8 @@
-/** 
+/**
  * @file PeriodicCleanupTask.h
- * 
+ *
  * @author John Wason, PhD
- * 
+ *
  * @copyright Copyright 2011-2020 Wason Technology, LLC
  *
  * @par License
@@ -26,10 +26,10 @@
 namespace RobotRaconteur
 {
 
-	class IPeriodicCleanupTask
-	{
+class IPeriodicCleanupTask
+{
 
-	public:
-		virtual void PeriodicCleanupTask() = 0;
+  public:
+    virtual void PeriodicCleanupTask() = 0;
 };
-}
+} // namespace RobotRaconteur
