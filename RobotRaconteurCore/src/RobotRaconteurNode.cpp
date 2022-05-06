@@ -237,11 +237,11 @@ RR_SHARED_PTR<ServiceFactory> RobotRaconteurNode::GetServiceType(boost::string_r
     return e1->second;
 }
 
-bool RobotRaconteurNode::IsServiceTypeRegistered(boost::string_ref servicename)
+bool RobotRaconteurNode::IsServiceTypeRegistered(boost::string_ref servicetype)
 {
     boost::shared_lock<boost::shared_mutex> lock(service_factories_lock);
     RR_UNORDERED_MAP<std::string, RR_SHARED_PTR<ServiceFactory> >::iterator e1 =
-        service_factories.find(servicename.to_string());
+        service_factories.find(servicetype.to_string());
     return e1 != service_factories.end();
 }
 

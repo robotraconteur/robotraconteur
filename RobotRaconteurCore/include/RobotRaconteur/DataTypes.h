@@ -1258,7 +1258,7 @@ static boost::array<Y, N> RRArrayToArray(const RR_INTRUSIVE_PTR<RRArray<U> >& in
         throw NullValueException("Unexpected null array");
     if (in->size() != N)
         throw OutOfRangeException("Array is incorrect size");
-    boost::array<Y, N> out;
+    boost::array<Y, N> out; // NOLINT
     for (size_t i = 0; i < N; i++)
         out[i] = boost::numeric_cast<Y>((*in)[i]);
     return out;
@@ -1825,7 +1825,7 @@ RR_INTRUSIVE_PTR<RRMap<K, T> > AllocateEmptyRRMap()
 template <typename K, typename T, typename U>
 RR_INTRUSIVE_PTR<RRMap<K, T> > AllocateRRMap(const U& c)
 {
-    return new RRMap<K, T>(c);
+    return new RRMap<K, T>(c); // NOLINT
 }
 
 /**
@@ -2150,7 +2150,7 @@ static T RRPodArrayToScalar(const RR_INTRUSIVE_PTR<RRPodArray<T> >& value)
 template <typename T>
 static RR_INTRUSIVE_PTR<RRPodArray<T> > AllocateEmptyRRPodArray(size_t length)
 {
-    return new RRPodArray<T>(length);
+    return new RRPodArray<T>(length); // NOLINT
 }
 
 /**

@@ -117,7 +117,6 @@ class ROBOTRACONTEUR_CORE_API LocalTransport : public Transport, public RR_ENABL
 
     virtual ~LocalTransport();
 
-  public:
     virtual bool IsServer() const;
 
     virtual bool IsClient() const;

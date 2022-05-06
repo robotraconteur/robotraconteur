@@ -157,10 +157,10 @@ bool verify_callback(bool preverified, boost::asio::ssl::verify_context& ctx)
                 ASN1_OBJECT* obj = ::X509_EXTENSION_get_object(e);
                 if (!obj)
                     return false;
-                char buf[64];
+                boost::array<char,64> buf;
 
-                OBJ_obj2txt(buf, 64, obj, 1);
-                std::string oid(buf);
+                OBJ_obj2txt(buf.data(), 64, obj, 1);
+                std::string oid(buf.data());
                 if (oid == "2.5.29.15" || oid == "2.5.29.14" || oid == "2.5.29.19" || oid == "2.5.29.35" ||
                     oid == "2.5.29.32")
                 {
@@ -215,6 +215,7 @@ static boost::shared_array<uint8_t> unmask_certificate(const uint8_t* masked_cer
 {
     boost::shared_array<uint8_t> b2(new uint8_t[cert_len]);
 
+    // NOLINTBEGIN
     const uint8_t mask1[] = {0xbb, 0x1b, 0x38, 0x3b};
     const uint8_t mask2[] = {0x99, 0x84, 0xe2, 0xe7};
     const uint8_t mask3[] = {0xe3, 0x51, 0xb5, 0x7};
@@ -223,6 +224,7 @@ static boost::shared_array<uint8_t> unmask_certificate(const uint8_t* masked_cer
     const uint8_t mask6[] = {0x30, 0x26, 0x90, 0xa1};
     const uint8_t mask7[] = {0x45, 0xec, 0x81, 0x42};
     const uint8_t mask8[] = {0x3d, 0xbd, 0x8e, 0x2b};
+    // NOLINTEND
 
     for (size_t i = 0; i < cert_len; i++)
     {
@@ -351,12 +353,12 @@ void OpenSSLAuthContext::LoadPKCS12FromFile(boost::string_ref fname)
     if (server_context)
         throw InvalidOperationException("Certificate already loaded");
 
-    FILE* fp;
-    EVP_PKEY* pkey;
-    X509* cert;
+    FILE* fp = NULL;
+    EVP_PKEY* pkey = NULL;
+    X509* cert = NULL;
     STACK_OF(X509)* ca = NULL;
-    PKCS12* p12;
-    int i;
+    PKCS12* p12 = NULL;
+    int i = 0;
     std::string fname1 = fname.to_string();
     if (!(fp = fopen(fname1.c_str(), "rb")))
     {

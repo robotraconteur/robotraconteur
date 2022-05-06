@@ -218,7 +218,6 @@ class ROBOTRACONTEUR_CORE_API PipeEndpointBase : public RR_ENABLE_SHARED_FROM_TH
 
     void Shutdown();
 
-  protected:
     virtual void fire_PipeEndpointClosedCallback() = 0;
 
     virtual void fire_PacketReceivedEvent() = 0;
@@ -227,7 +226,6 @@ class ROBOTRACONTEUR_CORE_API PipeEndpointBase : public RR_ENABLE_SHARED_FROM_TH
 
     RR_SHARED_PTR<PipeBase> GetParent();
 
-  protected:
     bool closed;
 
     uint32_t send_packet_number;

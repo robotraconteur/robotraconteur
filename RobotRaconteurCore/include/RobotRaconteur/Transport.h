@@ -128,22 +128,18 @@ class ROBOTRACONTEUR_CORE_API Transport : public IPeriodicCleanupTask, boost::no
   public:
     Transport(const RR_SHARED_PTR<RobotRaconteurNode>& node);
 
-    static boost::thread_specific_ptr<std::string> m_CurrentThreadTransportConnectionURL;
+    static boost::thread_specific_ptr<std::string> m_CurrentThreadTransportConnectionURL; // NOLINT
 
     static std::string GetCurrentTransportConnectionURL();
 
-  public:
-    static boost::thread_specific_ptr<RR_SHARED_PTR<ITransportConnection> > m_CurrentThreadTransport;
+    static boost::thread_specific_ptr<RR_SHARED_PTR<ITransportConnection> > m_CurrentThreadTransport; // NOLINT
 
-  public:
     static RR_SHARED_PTR<ITransportConnection> GetCurrentThreadTransport();
 
     //		public event MessageHandler MessageReceivedEvent;
 
-  public:
     uint32_t TransportID;
 
-  public:
     virtual void CheckConnection(uint32_t endpoint) = 0;
 
     virtual bool IsClient() const = 0;
@@ -171,12 +167,10 @@ class ROBOTRACONTEUR_CORE_API Transport : public IPeriodicCleanupTask, boost::no
     virtual void AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
                                   boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) = 0;
 
-  public:
     virtual void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) = 0;
 
     RR_INTRUSIVE_PTR<Message> SpecialRequest(const RR_INTRUSIVE_PTR<Message>& m, const RR_SHARED_PTR<ITransportConnection>& tc);
 
-  public:
     virtual void Close();
 
     virtual void PeriodicCleanupTask();

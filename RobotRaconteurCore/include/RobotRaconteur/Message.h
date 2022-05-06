@@ -120,7 +120,6 @@ class ROBOTRACONTEUR_CORE_API MessageHeader : public RRValue
 
     virtual std::string RRType() { return "RobotRaconteur::MessageHeader"; }
 
-  public:
     MessageHeader();
 };
 

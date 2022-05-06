@@ -76,7 +76,6 @@ class ROBOTRACONTEUR_CORE_API HardwareTransport : public Transport, public RR_EN
 
     virtual ~HardwareTransport();
 
-  public:
     virtual bool IsServer() const;
 
     virtual bool IsClient() const;

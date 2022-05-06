@@ -490,7 +490,6 @@ class ROBOTRACONTEUR_CORE_API ClientContext : public Endpoint, public RR_ENABLE_
 
     void MonitorExit(const RR_SHARED_PTR<RRObject>& obj);
 
-  public:
     virtual void PeriodicCleanupTask();
 
     uint32_t CheckServiceCapability(boost::string_ref name);

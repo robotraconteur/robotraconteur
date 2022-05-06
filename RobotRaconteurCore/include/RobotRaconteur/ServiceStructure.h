@@ -358,7 +358,7 @@ void PodStub_UnpackPodFromArray(T& v, const RR_INTRUSIVE_PTR<MessageElementNeste
         throw DataTypeException("Invalid pod scalar array format");
 
     RR_INTRUSIVE_PTR<MessageElement> m = a->Elements.at(0);
-    int32_t key;
+    int32_t key; // NOLINT
     if (!MessageElement_GetElementNumber(m, key))
     {
         throw DataTypeException("Invalid pod scalar array format");
@@ -623,7 +623,7 @@ RR_INTRUSIVE_PTR<RRNamedArray<T> > NamedArrayStub_UnpackNamedArray(const RR_INTR
         throw DataTypeException("Invalid namedarray type");
     typename RR_INTRUSIVE_PTR<RRArray<element_type> > a2 =
         MessageElement::FindElement(a->Elements, "array")->CastData<RRArray<element_type> >();
-    return new RRNamedArray<T>(a2);
+    return new RRNamedArray<T>(a2); // NOLINT
 }
 
 template <typename T>

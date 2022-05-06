@@ -128,10 +128,10 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
     boost::mutex shutdown_lock;
     boost::signals2::signal<void()> shutdown_listeners;
 
-    static bool is_init;
+    static bool is_init; // NOLINT
 
     bool instance_is_init;
-    static boost::mutex init_lock;
+    static boost::mutex init_lock; // NOLINT
 
   public:
     friend class detail::Discovery;
@@ -276,11 +276,11 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
     /**
      * @brief Check if a service type has been registered
      *
-     * @param type The name of the service to check
+     * @param servicetype The name of the service to check
      * @return true
      * @return false
      */
-    bool IsServiceTypeRegistered(boost::string_ref type);
+    bool IsServiceTypeRegistered(boost::string_ref servicetype);
 
     /**
      * @brief Register a service type
@@ -545,7 +545,6 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      */
     RR_INTRUSIVE_PTR<RRValue> UnpackVarType(const RR_INTRUSIVE_PTR<MessageElement>& mvardata);
 
-  public:
     /**
      * @internal
      *
@@ -618,7 +617,6 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
         return detail::packing::UnpackListType<T>(list, this);
     }
 
-  public:
     /**
      * @internal
      *
@@ -984,7 +982,6 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      */
     RR_SHARED_PTR<ServerContext> GetService(boost::string_ref name);
 
-  public:
     /**
      * @internal
      *
@@ -1227,9 +1224,9 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
     boost::shared_mutex transport_lock;
     boost::mutex endpoint_lock;
 
-    static RobotRaconteurNode m_s;
-    static RR_SHARED_PTR<RobotRaconteurNode> m_sp;
-    static RR_WEAK_PTR<RobotRaconteurNode> m_weak_sp;
+    static RobotRaconteurNode m_s; // NOLINT
+    static RR_SHARED_PTR<RobotRaconteurNode> m_sp; // NOLINT
+    static RR_WEAK_PTR<RobotRaconteurNode> m_weak_sp; // NOLINT
 
     RobotRaconteur::NodeID m_NodeID;
     std::string m_NodeName;
@@ -1633,7 +1630,6 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
                              boost::function<void(const RR_SHARED_PTR<std::vector<NodeInfo2> >&)> handler,
                              int32_t timeout = 5000);
 
-  public:
     /**
      * @brief Request an exclusive access lock to a service object
      *
@@ -1819,7 +1815,6 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      */
     void RemovePeriodicCleanupTask(const RR_SHARED_PTR<IPeriodicCleanupTask>& task);
 
-  public:
     /**
      * @brief Returns an objref as a specific type
      *

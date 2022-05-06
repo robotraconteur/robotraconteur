@@ -1,7 +1,3 @@
-
-# set(CMAKE_CXX_CLANG_TIDY "clang-tidy-14")
-
-
 set(BUILD_SHARED_LIBS FALSE CACHE BOOL "Build using shared Robot Raconteur core library")
 
 set(RobotRaconteur_DISABLE_MESSAGE4 FALSE CACHE BOOL "Disable Robot Raconteur message version 3 by default")

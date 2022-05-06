@@ -463,14 +463,15 @@ class ROBOTRACONTEUR_CORE_API GeneratorServerBase : private boost::noncopyable
                           const RR_SHARED_PTR<ServerEndpoint>& ep)
     {
         RR_SHARED_PTR<ServiceSkel> skel1 = skel.lock();
+        RR_SHARED_PTR<RobotRaconteurException> err2 = err;
         // TODO: Improve null handling
-        if (!skel1 && !err)
+        if (!skel1 && !err2)
         {
-            err = RR_MAKE_SHARED<InvalidOperationException>("Service skel released");
+            err2 = RR_MAKE_SHARED<InvalidOperationException>("Service skel released");
         }
-        if (err)
+        if (err2)
         {
-            GeneratorServerBase::EndAsyncCallNext(skel, RR_INTRUSIVE_PTR<MessageElement>(), err, index, m, ep);
+            GeneratorServerBase::EndAsyncCallNext(skel, RR_INTRUSIVE_PTR<MessageElement>(), err2, index, m, ep);
         }
 
         RR_INTRUSIVE_PTR<MessageElement> v3 =

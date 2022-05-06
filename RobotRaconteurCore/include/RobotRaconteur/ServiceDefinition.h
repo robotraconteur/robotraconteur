@@ -479,6 +479,7 @@ class ROBOTRACONTEUR_CORE_API NamedTypeDefinition
      * of the type, or throw an exception if it is unable.
      */
     virtual std::string ResolveQualifiedName() = 0;
+    virtual ~NamedTypeDefinition() {}
 };
 
 /**

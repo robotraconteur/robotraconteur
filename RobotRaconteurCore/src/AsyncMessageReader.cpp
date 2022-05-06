@@ -32,8 +32,8 @@ AsyncMessageReaderImpl::state_data::state_data()
 
 AsyncMessageReaderImpl::AsyncMessageReaderImpl()
 {
-    Reset();
-    buf.reset(new uint8_t[128]);
+    Reset(); // NOLINT
+    buf.reset(new uint8_t[128]); // NOLINT
     buf_len = 128;
 }
 
@@ -227,7 +227,7 @@ bool AsyncMessageReaderImpl::peek_byte(uint8_t& b)
 bool AsyncMessageReaderImpl::read_uint_x(uint32_t& num)
 {
 
-    uint8_t b1;
+    uint8_t b1; // NOLINT
     if (!peek_byte(b1))
         return false;
     if (b1 <= 252)
@@ -242,7 +242,7 @@ bool AsyncMessageReaderImpl::read_uint_x(uint32_t& num)
         if (a1 < 3)
             return false;
         read_number(b1);
-        uint16_t num2;
+        uint16_t num2; // NOLINT
         read_number(num2);
         num = num2;
         return true;
@@ -261,7 +261,7 @@ bool AsyncMessageReaderImpl::read_uint_x(uint32_t& num)
 
 bool AsyncMessageReaderImpl::read_uint_x2(uint64_t& num)
 {
-    uint8_t b1;
+    uint8_t b1; // NOLINT
     if (!peek_byte(b1))
         return false;
     if (b1 <= 252)
@@ -276,7 +276,7 @@ bool AsyncMessageReaderImpl::read_uint_x2(uint64_t& num)
         if (a1 < 3)
             return false;
         read_number(b1);
-        uint16_t num2;
+        uint16_t num2; // NOLINT
         read_number(num2);
         num = num2;
         return true;
@@ -287,7 +287,7 @@ bool AsyncMessageReaderImpl::read_uint_x2(uint64_t& num)
         if (a1 < 5)
             return false;
         read_number(b1);
-        uint32_t num2;
+        uint32_t num2; // NOLINT
         read_number(num2);
         num = num2;
         return true;
@@ -307,10 +307,10 @@ bool AsyncMessageReaderImpl::read_uint_x2(uint64_t& num)
 bool AsyncMessageReaderImpl::read_int_x(int32_t& num)
 {
 
-    uint8_t b1_1;
+    uint8_t b1_1; // NOLINT
     if (!peek_byte(b1_1))
         return false;
-    int8_t b1 = *reinterpret_cast<int8_t*>(&b1_1);
+    int8_t b1 = *reinterpret_cast<int8_t*>(&b1_1); // NOLINT
     if (b1 <= 124)
     {
         read_number(b1);
@@ -323,7 +323,7 @@ bool AsyncMessageReaderImpl::read_int_x(int32_t& num)
         if (a1 < 3)
             return false;
         read_number(b1);
-        int16_t num2;
+        int16_t num2; // NOLINT
         read_number(num2);
         num = num2;
         return true;
@@ -342,10 +342,10 @@ bool AsyncMessageReaderImpl::read_int_x(int32_t& num)
 
 bool AsyncMessageReaderImpl::read_int_x2(int64_t& num)
 {
-    uint8_t b1_1;
+    uint8_t b1_1; // NOLINT
     if (!peek_byte(b1_1))
         return false;
-    int8_t b1 = *reinterpret_cast<int8_t*>(&b1_1);
+    int8_t b1 = *reinterpret_cast<int8_t*>(&b1_1); // NOLINT
     if (b1 <= 124)
     {
         read_number(b1);
@@ -358,7 +358,7 @@ bool AsyncMessageReaderImpl::read_int_x2(int64_t& num)
         if (a1 < 3)
             return false;
         read_number(b1);
-        int16_t num2;
+        int16_t num2; // NOLINT
         read_number(num2);
         num = num2;
         return true;

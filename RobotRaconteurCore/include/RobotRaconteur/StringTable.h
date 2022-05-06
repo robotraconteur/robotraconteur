@@ -60,7 +60,6 @@ class ROBOTRACONTEUR_CORE_API StringTable : private boost::noncopyable
     bool AddCode(uint32_t code, MessageStringRef str, const std::vector<uint32_t>& table_flags);
     void AddCodesCSV(const std::string& csv, const std::vector<uint32_t>& table_flags);
 
-  public:
     void MessageReplaceStringsWithCodes(const RR_INTRUSIVE_PTR<Message>& m);
     void MessageReplaceCodesWithStrings(const RR_INTRUSIVE_PTR<Message>& m);
 

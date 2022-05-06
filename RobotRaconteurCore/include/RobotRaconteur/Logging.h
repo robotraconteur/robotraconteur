@@ -135,6 +135,7 @@ class ROBOTRACONTEUR_CORE_API LogRecordHandler
      * @param record The log record
      */
     virtual void HandleLogRecord(const RRLogRecord& record) = 0;
+    virtual ~LogRecordHandler() {}
 };
 
 /**

@@ -160,6 +160,7 @@ class IServiceSubscription
 
   public:
     virtual void Close() = 0;
+    virtual ~IServiceSubscription();
 };
 
 /**

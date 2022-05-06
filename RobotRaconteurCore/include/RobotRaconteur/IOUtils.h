@@ -35,9 +35,9 @@ class ROBOTRACONTEUR_CORE_API ArrayBinaryReader : private boost::noncopyable
   public:
     ArrayBinaryReader(const uint8_t* buffer, size_t start_position, size_t length, bool nativeorder = false);
 
-    size_t Length();
+    size_t Length() const;
 
-    size_t Position();
+    size_t Position() const;
     void Seek(size_t position);
 
     size_t Read(void* buffer, size_t index, size_t length);
@@ -96,12 +96,12 @@ class ROBOTRACONTEUR_CORE_API ArrayBinaryWriter : private boost::noncopyable
   public:
     ArrayBinaryWriter(uint8_t* buffer, size_t start_position, size_t length, bool nativeorder = false);
 
-    virtual size_t Length();
+    size_t Length() const;
 
-    virtual size_t Position();
-    virtual void Seek(size_t position);
+    size_t Position() const;
+    void Seek(size_t position);
 
-    virtual size_t Write(const void* buffer, size_t index, size_t length);
+    size_t Write(const void* buffer, size_t index, size_t length);
 
     template <typename T>
     void WriteNumber(T number)

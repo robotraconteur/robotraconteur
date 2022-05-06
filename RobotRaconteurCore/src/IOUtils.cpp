@@ -32,9 +32,9 @@ ArrayBinaryReader::ArrayBinaryReader(const uint8_t* buffer, size_t start_positio
     this->nativeorder = nativeorder;
 }
 
-size_t ArrayBinaryReader::Length() { return length; }
+size_t ArrayBinaryReader::Length() const { return length; }
 
-size_t ArrayBinaryReader::Position() { return position; }
+size_t ArrayBinaryReader::Position() const { return position; }
 
 void ArrayBinaryReader::Seek(size_t position)
 {
@@ -284,9 +284,9 @@ ArrayBinaryWriter::ArrayBinaryWriter(uint8_t* buffer, size_t start_position, siz
     this->nativeorder = nativeorder;
 }
 
-size_t ArrayBinaryWriter::Length() { return length; }
+size_t ArrayBinaryWriter::Length() const { return length; }
 
-size_t ArrayBinaryWriter::Position() { return position; }
+size_t ArrayBinaryWriter::Position() const { return position; }
 
 void ArrayBinaryWriter::Seek(size_t position)
 {

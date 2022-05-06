@@ -161,7 +161,6 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
 
     virtual ~TcpTransport();
 
-  public:
     virtual bool IsServer() const;
     virtual bool IsClient() const;
 
@@ -642,7 +641,6 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
   protected:
     virtual void LocalNodeServicesChanged();
 
-  protected:
     boost::mutex node_discovery_lock;
     RR_SHARED_PTR<void> node_discovery;
 

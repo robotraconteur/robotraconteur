@@ -2787,8 +2787,7 @@ RR_SHARED_PTR<RRObject> ASIOStreamBaseTransport::UnpackStreamOpResponse(const RR
             }
         }
 
-        NodeID* n = new NodeID(header->SenderNodeID);
-        RR_SHARED_PTR<NodeID> ret = RR_SHARED_PTR<NodeID>(n);
+        RR_SHARED_PTR<NodeID> ret = RR_MAKE_SHARED<NodeID>(header->SenderNodeID);
         return ret;
     }
     else

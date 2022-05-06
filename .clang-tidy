@@ -31,6 +31,7 @@ Checks: >
     -readability-identifier-length,
     -readability-else-after-return,
     -readability-const-return-type,
+    -readability-implicit-bool-conversion,
     -cppcoreguidelines-special-member-functions,
     -bugprone-easily-swappable-parameters,
     -hicpp-*,
@@ -45,3 +46,5 @@ CheckOptions:
     value:           '1'
   - key:             cppcoreguidelines-special-member-functions.AllowSoleDefaultDtor
     value:           '1'
+  - key: performance-unnecessary-value-param.AllowedTypes
+    value: MessageStringRef
