@@ -26,15 +26,17 @@ using namespace RobotRaconteur;
 
 namespace RobotRaconteurGen
 {
-    std::set<std::string> GenerateStringTable(std::vector<RR_SHARED_PTR<ServiceDefinition> > gen_defs, std::vector<RR_SHARED_PTR<ServiceDefinition> > all_defs);
+std::set<std::string> GenerateStringTable(std::vector<RR_SHARED_PTR<ServiceDefinition> > gen_defs,
+                                          std::vector<RR_SHARED_PTR<ServiceDefinition> > all_defs);
 
-    std::set<std::string> GetServiceDefStrings(RR_SHARED_PTR<ServiceDefinition> def);
+std::set<std::string> GetServiceDefStrings(RR_SHARED_PTR<ServiceDefinition> def);
 
-    std::set<std::string> GetServiceEntryDefStrings(RR_SHARED_PTR<ServiceEntryDefinition> def, const std::string& def_name);
+std::set<std::string> GetServiceEntryDefStrings(RR_SHARED_PTR<ServiceEntryDefinition> def, const std::string& def_name);
 
-    std::set<std::string> GetServiceEntriesDefStrings(std::vector<RR_SHARED_PTR<ServiceEntryDefinition> > def, const std::string& def_name);
+std::set<std::string> GetServiceEntriesDefStrings(std::vector<RR_SHARED_PTR<ServiceEntryDefinition> > def,
+                                                  const std::string& def_name);
 
-    std::set<std::string> GetMemberStrings(RR_SHARED_PTR<MemberDefinition> m);
-    
-    std::set<std::string> GetMembersStrings(std::vector<RR_SHARED_PTR<MemberDefinition> > m);
-}
+std::set<std::string> GetMemberStrings(RR_SHARED_PTR<MemberDefinition> m);
+
+std::set<std::string> GetMembersStrings(std::vector<RR_SHARED_PTR<MemberDefinition> > m);
+} // namespace RobotRaconteurGen

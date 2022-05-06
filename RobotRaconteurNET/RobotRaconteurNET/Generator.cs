@@ -19,609 +19,614 @@ using System.Threading.Tasks;
 
 namespace RobotRaconteur
 {
-    public interface Generator1<ReturnType, ParamType>
+public interface Generator1<ReturnType, ParamType>
+{
+    ReturnType Next(ParamType param);
+    Task<ReturnType> AsyncNext(ParamType param, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void Abort();
+    Task AsyncAbort(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void Close();
+    Task AsyncClose(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+}
+
+public interface Generator2<ReturnType>
+{
+    ReturnType Next();
+    Task<ReturnType> AsyncNext(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void Abort();
+    Task AsyncAbort(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void Close();
+    Task AsyncClose(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    ReturnType[] NextAll();
+}
+
+public interface Generator3<ParamType>
+{
+    void Next(ParamType param);
+    Task AsyncNext(ParamType param, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void Abort();
+    Task AsyncAbort(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    void Close();
+    Task AsyncClose(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+}
+
+public abstract class SyncGenerator1<ReturnType, ParamType> : Generator1<ReturnType, ParamType>
+{
+    public abstract void Abort();
+    public abstract void Close();
+    public abstract ReturnType Next(ParamType param);
+
+    public Task AsyncAbort(int timeout = -1)
     {
-        ReturnType Next(ParamType param);
-        Task<ReturnType> AsyncNext(ParamType param, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-        void Abort();
-        Task AsyncAbort(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-        void Close();
-        Task AsyncClose(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+        Abort();
+        return Task.FromResult(0);
     }
 
-    public interface Generator2<ReturnType>
+    public Task AsyncClose(int timeout = -1)
     {
-        ReturnType Next();
-        Task<ReturnType> AsyncNext(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-        void Abort();
-        Task AsyncAbort(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-        void Close();
-        Task AsyncClose(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-        ReturnType[] NextAll();
+        Close();
+        return Task.FromResult(0);
     }
 
-    public interface Generator3<ParamType>
+    public Task<ReturnType> AsyncNext(ParamType param, int timeout = -1)
     {
-        void Next(ParamType param);
-        Task AsyncNext(ParamType param, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-        void Abort();
-        Task AsyncAbort(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
-        void Close();
-        Task AsyncClose(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+        ReturnType r = Next(param);
+        return Task.FromResult(r);
+    }
+}
+
+public abstract class SyncGenerator2<ReturnType> : Generator2<ReturnType>
+{
+    public abstract void Abort();
+    public abstract void Close();
+    public abstract ReturnType Next();
+
+    public Task AsyncAbort(int timeout = -1)
+    {
+        Abort();
+        return Task.FromResult(0);
     }
 
-    public abstract class SyncGenerator1<ReturnType, ParamType> : Generator1<ReturnType, ParamType>
+    public Task AsyncClose(int timeout = -1)
     {
-        public abstract void Abort();
-        public abstract void Close();
-        public abstract ReturnType Next(ParamType param);
-
-        public Task AsyncAbort(int timeout = -1)
-        {            
-            Abort();
-            return Task.FromResult(0);
-        }
-
-        public Task AsyncClose(int timeout = -1)
-        {
-            Close();
-            return Task.FromResult(0);
-        }
-
-        public Task<ReturnType> AsyncNext(ParamType param, int timeout = -1)
-        {            
-            ReturnType r = Next(param);
-            return Task.FromResult(r);                     
-        }
+        Close();
+        return Task.FromResult(0);
     }
 
-    public abstract class SyncGenerator2<ReturnType> : Generator2<ReturnType>
+    public Task<ReturnType> AsyncNext(int timeout = -1)
     {
-        public abstract void Abort();
-        public abstract void Close();
-        public abstract ReturnType Next();
+        ReturnType r = Next();
+        return Task.FromResult(r);
+    }
 
-        public Task AsyncAbort(int timeout = -1)
+    public ReturnType[] NextAll()
+    {
+        List<ReturnType> o = new List<ReturnType>();
+        try
         {
-            Abort();
-            return Task.FromResult(0);
-        }
-
-        public Task AsyncClose(int timeout = -1)
-        {           
-            Close();
-            return Task.FromResult(0);
-        }
-
-        public Task<ReturnType> AsyncNext(int timeout = -1)
-        {
-            ReturnType r = Next();
-            return Task.FromResult(r);
-        }
-
-        public ReturnType[] NextAll()
-        {
-            List<ReturnType> o = new List<ReturnType>();
-            try
+            while (true)
             {
-                while (true)
-                {
-                    o.Add(Next());
-                }
-            }
-            catch (StopIterationException) { }
-            return o.ToArray();
-        }
-    }
-
-    public abstract class SyncGenerator3<ParamType> : Generator3<ParamType>
-    {
-        public abstract void Abort();
-        public abstract void Close();
-        public abstract void Next(ParamType param);
-
-        public Task AsyncAbort(int timeout = -1)
-        {
-            Abort();
-            return Task.FromResult(0);
-        }
-
-        public Task AsyncClose(int timeout = -1)
-        {
-            Close();
-            return Task.FromResult(0);
-        }
-
-        public Task AsyncNext(ParamType param, int timeout = -1)
-        {
-            Next(param);
-            return Task.FromResult(0);
-        }
-    }
-
-    public class EnumeratorGenerator<T> : SyncGenerator2<T>
-    {
-        bool aborted = false;
-        bool closed = false;
-        IEnumerator<T> enumerator;
-
-        public EnumeratorGenerator(IEnumerable<T> enumerable)
-            : this(enumerable.GetEnumerator())
-        { }
-
-        public EnumeratorGenerator(IEnumerator<T> enumerator)
-        {
-            this.enumerator = enumerator;
-        }
-
-        public override void Abort()
-        {
-            lock (this)
-            {
-                aborted = true;
-            }
-
-        }
-
-        public override void Close()
-        {
-            lock (this)
-            {
-                closed = true;
-            }
-
-        }
-
-        public override T Next()
-        {
-            lock (this)
-            {
-                if (aborted) throw new OperationAbortedException("Generator aborted");
-                if (closed) throw new StopIterationException("");
-                if (!enumerator.MoveNext()) throw new StopIterationException("");
-                return enumerator.Current;
+                o.Add(Next());
             }
         }
+        catch (StopIterationException)
+        {}
+        return o.ToArray();
+    }
+}
+
+public abstract class SyncGenerator3<ParamType> : Generator3<ParamType>
+{
+    public abstract void Abort();
+    public abstract void Close();
+    public abstract void Next(ParamType param);
+
+    public Task AsyncAbort(int timeout = -1)
+    {
+        Abort();
+        return Task.FromResult(0);
     }
 
-    public class Generator1Client<ReturnType, ParamType> : Generator1<ReturnType, ParamType>
+    public Task AsyncClose(int timeout = -1)
     {
-        protected WrappedGeneratorClient inner_gen;
+        Close();
+        return Task.FromResult(0);
+    }
 
-        public Generator1Client(WrappedGeneratorClient inner_gen)
-        {
-            this.inner_gen = inner_gen;
-        }
+    public Task AsyncNext(ParamType param, int timeout = -1)
+    {
+        Next(param);
+        return Task.FromResult(0);
+    }
+}
 
-        public ReturnType Next(ParamType param)
-        {
-            using(MessageElement m = RobotRaconteurNode.s.PackAnyType<ParamType>("parameter", ref param))
-            {
-                
-                using (MessageElement m2 = inner_gen.Next(m))
-                {
-                    return RobotRaconteurNode.s.UnpackAnyType<ReturnType>(m2);
-                }
-                
-            }            
-        }
-        public async Task<ReturnType> AsyncNext(ParamType param, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-        {
-            using(MessageElement m= RobotRaconteurNode.s.PackAnyType<ParamType>("parameter", ref param))
-            {
-                
-                    AsyncRequestDirectorImpl d = new AsyncRequestDirectorImpl();
-                    int id = RRObjectHeap.AddObject(d);
-                    inner_gen.AsyncNext(m, timeout, d, id);
-                    var mret = await d.Task;
-                    return RobotRaconteurNode.s.UnpackAnyType<ReturnType>(mret);                
-            }
-            
-        }
+public class EnumeratorGenerator<T> : SyncGenerator2<T>
+{
+    bool aborted = false;
+    bool closed = false;
+    IEnumerator<T> enumerator;
 
-                public void Abort()
-        {
-            inner_gen.Abort();
-        }
-        public async Task AsyncAbort(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-        {
-            AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl();
-            int id = RRObjectHeap.AddObject(h);
-            inner_gen.AsyncAbort(timeout, h, id);
-            await h.Task;
-        }
+    public EnumeratorGenerator(IEnumerable<T> enumerable) : this(enumerable.GetEnumerator())
+    {}
 
-        public void Close()
+    public EnumeratorGenerator(IEnumerator<T> enumerator)
+    {
+        this.enumerator = enumerator;
+    }
+
+    public override void Abort()
+    {
+        lock (this)
         {
-            inner_gen.Close();
-        }
-        public async Task AsyncClose(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-        {
-            AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl();
-            int id = RRObjectHeap.AddObject(h);
-            inner_gen.AsyncClose(timeout, h, id);
-            await h.Task;
+            aborted = true;
         }
     }
 
-    public class Generator2Client<ReturnType> : Generator2<ReturnType>
+    public override void Close()
     {
-        protected WrappedGeneratorClient inner_gen;
-
-        public Generator2Client(WrappedGeneratorClient inner_gen)
+        lock (this)
         {
-            this.inner_gen = inner_gen;
+            closed = true;
         }
+    }
 
-        public ReturnType Next()
+    public override T Next()
+    {
+        lock (this)
         {
-            using (MessageElement m2 = inner_gen.Next(null))
+            if (aborted)
+                throw new OperationAbortedException("Generator aborted");
+            if (closed)
+                throw new StopIterationException("");
+            if (!enumerator.MoveNext())
+                throw new StopIterationException("");
+            return enumerator.Current;
+        }
+    }
+}
+
+public class Generator1Client<ReturnType, ParamType> : Generator1<ReturnType, ParamType>
+{
+    protected WrappedGeneratorClient inner_gen;
+
+    public Generator1Client(WrappedGeneratorClient inner_gen)
+    {
+        this.inner_gen = inner_gen;
+    }
+
+    public ReturnType Next(ParamType param)
+    {
+        using (MessageElement m = RobotRaconteurNode.s.PackAnyType<ParamType>("parameter", ref param))
+        {
+
+            using (MessageElement m2 = inner_gen.Next(m))
             {
                 return RobotRaconteurNode.s.UnpackAnyType<ReturnType>(m2);
             }
         }
-        public async Task<ReturnType> AsyncNext(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    }
+    public async Task<ReturnType> AsyncNext(ParamType param, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+        using (MessageElement m = RobotRaconteurNode.s.PackAnyType<ParamType>("parameter", ref param))
         {
+
             AsyncRequestDirectorImpl d = new AsyncRequestDirectorImpl();
             int id = RRObjectHeap.AddObject(d);
-            inner_gen.AsyncNext(null, timeout, d, id);
+            inner_gen.AsyncNext(m, timeout, d, id);
             var mret = await d.Task;
             return RobotRaconteurNode.s.UnpackAnyType<ReturnType>(mret);
         }
+    }
 
-        
-        public void Abort()
-        {
-            inner_gen.Abort();
-        }
-        public async Task AsyncAbort(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-        {
-            AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl();
-            int id = RRObjectHeap.AddObject(h);
-            inner_gen.AsyncAbort(timeout, h, id);
-            await h.Task;
-        }
+    public void Abort()
+    {
+        inner_gen.Abort();
+    }
+    public async Task AsyncAbort(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+        AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl();
+        int id = RRObjectHeap.AddObject(h);
+        inner_gen.AsyncAbort(timeout, h, id);
+        await h.Task;
+    }
 
-        public void Close()
-        {
-            inner_gen.Close();
-        }
-        public async Task AsyncClose(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-        {
-            AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl();
-            int id = RRObjectHeap.AddObject(h);
-            inner_gen.AsyncClose(timeout, h, id);
-            await h.Task;
-        }
+    public void Close()
+    {
+        inner_gen.Close();
+    }
+    public async Task AsyncClose(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+        AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl();
+        int id = RRObjectHeap.AddObject(h);
+        inner_gen.AsyncClose(timeout, h, id);
+        await h.Task;
+    }
+}
 
-        public ReturnType[] NextAll()
+public class Generator2Client<ReturnType> : Generator2<ReturnType>
+{
+    protected WrappedGeneratorClient inner_gen;
+
+    public Generator2Client(WrappedGeneratorClient inner_gen)
+    {
+        this.inner_gen = inner_gen;
+    }
+
+    public ReturnType Next()
+    {
+        using (MessageElement m2 = inner_gen.Next(null))
         {
-            List<ReturnType> o = new List<ReturnType>();
-            try
+            return RobotRaconteurNode.s.UnpackAnyType<ReturnType>(m2);
+        }
+    }
+    public async Task<ReturnType> AsyncNext(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+        AsyncRequestDirectorImpl d = new AsyncRequestDirectorImpl();
+        int id = RRObjectHeap.AddObject(d);
+        inner_gen.AsyncNext(null, timeout, d, id);
+        var mret = await d.Task;
+        return RobotRaconteurNode.s.UnpackAnyType<ReturnType>(mret);
+    }
+
+    public void Abort()
+    {
+        inner_gen.Abort();
+    }
+    public async Task AsyncAbort(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+        AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl();
+        int id = RRObjectHeap.AddObject(h);
+        inner_gen.AsyncAbort(timeout, h, id);
+        await h.Task;
+    }
+
+    public void Close()
+    {
+        inner_gen.Close();
+    }
+    public async Task AsyncClose(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+        AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl();
+        int id = RRObjectHeap.AddObject(h);
+        inner_gen.AsyncClose(timeout, h, id);
+        await h.Task;
+    }
+
+    public ReturnType[] NextAll()
+    {
+        List<ReturnType> o = new List<ReturnType>();
+        try
+        {
+            while (true)
             {
-                while (true)
-                {
-                    o.Add(Next());
-                }
+                o.Add(Next());
             }
-            catch (StopIterationException) { }
-            return o.ToArray();
+        }
+        catch (StopIterationException)
+        {}
+        return o.ToArray();
+    }
+}
+
+public class Generator3Client<ParamType> : Generator3<ParamType>
+{
+    protected WrappedGeneratorClient inner_gen;
+
+    public Generator3Client(WrappedGeneratorClient inner_gen)
+    {
+        this.inner_gen = inner_gen;
+    }
+
+    public void Next(ParamType param)
+    {
+        using (MessageElement m = RobotRaconteurNode.s.PackAnyType<ParamType>("parameter", ref param))
+        {
+            inner_gen.Next(m);
+        }
+    }
+    public async Task AsyncNext(ParamType param, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+        using (MessageElement m = RobotRaconteurNode.s.PackAnyType<ParamType>("parameter", ref param))
+        {
+
+            AsyncRequestDirectorImpl d = new AsyncRequestDirectorImpl();
+            int id = RRObjectHeap.AddObject(d);
+            inner_gen.AsyncNext(m, timeout, d, id);
+            var mret = await d.Task;
         }
     }
 
-    public class Generator3Client<ParamType> : Generator3<ParamType>
+    private static void EndAsyncNext(MessageElement m, Exception err, object p)
     {
-        protected WrappedGeneratorClient inner_gen;
-
-        public Generator3Client(WrappedGeneratorClient inner_gen)
-        {
-            this.inner_gen = inner_gen;
-        }
-
-        public void Next(ParamType param)
-        {
-            using(MessageElement m = RobotRaconteurNode.s.PackAnyType<ParamType>("parameter", ref param))
-            {            
-                inner_gen.Next(m);
-            }
-                
-        }
-        public async Task AsyncNext(ParamType param, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-        {
-            using(MessageElement m = RobotRaconteurNode.s.PackAnyType<ParamType>("parameter", ref param))            
-            {
-                
-                AsyncRequestDirectorImpl d = new AsyncRequestDirectorImpl();
-                int id = RRObjectHeap.AddObject(d);
-                inner_gen.AsyncNext(m, timeout, d, id);
-                var mret = await d.Task;      
-                
-            }
-            
-        }
-
-        private static void EndAsyncNext(MessageElement m, Exception err, object p)
-        {
-            Action<Exception> h = (Action<Exception>)p;
-            h(err);
-        }
-
-        public void Abort()
-        {
-            inner_gen.Abort();
-        }
-        public async Task AsyncAbort(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-        {
-            AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl();
-            int id = RRObjectHeap.AddObject(h);
-            inner_gen.AsyncAbort(timeout, h, id);
-            await h.Task;
-        }
-
-        public void Close()
-        {
-            inner_gen.Close();
-        }
-        public async Task AsyncClose(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
-        {
-            AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl();
-            int id = RRObjectHeap.AddObject(h);
-            inner_gen.AsyncClose(timeout, h, id);
-            await h.Task;
-        }
+        Action<Exception> h = (Action<Exception>)p;
+        h(err);
     }
 
-    public class WrappedGenerator1ServerDirectorNET<ReturnType, ParamType> : WrappedGeneratorServerDirector
+    public void Abort()
     {
-        Generator1<ReturnType, ParamType> generator;
-        public WrappedGenerator1ServerDirectorNET(Generator1<ReturnType, ParamType> generator)
-        {
-            if (generator == null) throw new NullReferenceException("Generator must not be null");
-            this.generator = generator;
-            this.objectheapid = RRObjectHeap.AddObject(this);
-        }
+        inner_gen.Abort();
+    }
+    public async Task AsyncAbort(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+        AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl();
+        int id = RRObjectHeap.AddObject(h);
+        inner_gen.AsyncAbort(timeout, h, id);
+        await h.Task;
+    }
 
-        public override MessageElement Next(MessageElement m, WrappedServiceSkelAsyncAdapter async_adapter)
-        {
-            using (m)
-            {
-                try
-                {
-                    async_adapter.MakeAsync();
-                    ParamType p = RobotRaconteurNode.s.UnpackAnyType<ParamType>(m);
-                    generator.AsyncNext(p).ContinueWith(t => async_adapter.EndTask<ReturnType>(t, async_ret => RobotRaconteurNode.s.PackAnyType<ReturnType>("return", ref async_ret)));
-                    return null;              
-                }
-                catch (Exception e)
-                {
-                    using (MessageEntry merr = new MessageEntry())
-                    {
-                        RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                        RRDirectorExceptionHelper.SetError(merr,e.ToString());
-                        return null;
-                    }
-                }
-            }
-        }
+    public void Close()
+    {
+        inner_gen.Close();
+    }
+    public async Task AsyncClose(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
+    {
+        AsyncVoidReturnDirectorImpl h = new AsyncVoidReturnDirectorImpl();
+        int id = RRObjectHeap.AddObject(h);
+        inner_gen.AsyncClose(timeout, h, id);
+        await h.Task;
+    }
+}
 
-        public override void Abort(WrappedServiceSkelAsyncAdapter async_adapter)
+public class WrappedGenerator1ServerDirectorNET<ReturnType, ParamType> : WrappedGeneratorServerDirector
+{
+    Generator1<ReturnType, ParamType> generator;
+    public WrappedGenerator1ServerDirectorNET(Generator1<ReturnType, ParamType> generator)
+    {
+        if (generator == null)
+            throw new NullReferenceException("Generator must not be null");
+        this.generator = generator;
+        this.objectheapid = RRObjectHeap.AddObject(this);
+    }
+
+    public override MessageElement Next(MessageElement m, WrappedServiceSkelAsyncAdapter async_adapter)
+    {
+        using (m)
         {
             try
             {
                 async_adapter.MakeAsync();
-                generator.AsyncAbort().ContinueWith(t => async_adapter.EndTask(t));
+                ParamType p = RobotRaconteurNode.s.UnpackAnyType<ParamType>(m);
+                generator.AsyncNext(p).ContinueWith(
+                    t => async_adapter.EndTask<ReturnType>(
+                        t, async_ret => RobotRaconteurNode.s.PackAnyType<ReturnType>("return", ref async_ret)));
+                return null;
             }
             catch (Exception e)
             {
                 using (MessageEntry merr = new MessageEntry())
                 {
                     RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr,e.ToString());
-                    return;
-                }
-            }
-        }
-
-        public override void Close(WrappedServiceSkelAsyncAdapter async_adapter)
-        {
-            try
-            {
-                async_adapter.MakeAsync();
-                generator.AsyncClose().ContinueWith(t => async_adapter.EndTask(t));
-            }
-            catch (Exception e)
-            {
-                using (MessageEntry merr = new MessageEntry())
-                {
-                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr,e.ToString());
-                    return;
-                }
-            }
-        }
-    }
-
-    public class WrappedGenerator2ServerDirectorNET<ReturnType> : WrappedGeneratorServerDirector
-    {
-        Generator2<ReturnType> generator;
-        public WrappedGenerator2ServerDirectorNET(Generator2<ReturnType> generator)
-        {
-            if (generator == null) throw new NullReferenceException("Generator must not be null");
-            this.generator = generator;
-            this.objectheapid = RRObjectHeap.AddObject(this);
-        }
-
-        public override MessageElement Next(MessageElement m, WrappedServiceSkelAsyncAdapter async_adapter)
-        {
-            using (m)
-            {
-                try
-                {
-                    async_adapter.MakeAsync();                    
-                    generator.AsyncNext().ContinueWith(t => async_adapter.EndTask<ReturnType>(t, async_ret => RobotRaconteurNode.s.PackAnyType<ReturnType>("return", ref async_ret)));
+                    RRDirectorExceptionHelper.SetError(merr, e.ToString());
                     return null;
                 }
-                catch (Exception e)
-                {
-                    using (MessageEntry merr = new MessageEntry())
-                    {
-                        RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                        RRDirectorExceptionHelper.SetError(merr,e.ToString());
-                        return null;
-                    }
-                }
-            }
-        }
-
-        public override void Abort(WrappedServiceSkelAsyncAdapter async_adapter)
-        {
-            try
-            {
-                async_adapter.MakeAsync();
-                generator.AsyncAbort().ContinueWith(t => async_adapter.EndTask(t));
-            }
-            catch (Exception e)
-            {
-                using (MessageEntry merr = new MessageEntry())
-                {
-                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr,e.ToString());
-                    return;
-                }
-            }
-        }
-
-        public override void Close(WrappedServiceSkelAsyncAdapter async_adapter)
-        {
-            try
-            {
-                async_adapter.MakeAsync();
-                generator.AsyncClose().ContinueWith(t => async_adapter.EndTask(t));
-            }
-            catch (Exception e)
-            {
-                using (MessageEntry merr = new MessageEntry())
-                {
-                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr,e.ToString());
-                    return;
-                }
             }
         }
     }
 
-    public class WrappedGenerator3ServerDirectorNET<ParamType> : WrappedGeneratorServerDirector
+    public override void Abort(WrappedServiceSkelAsyncAdapter async_adapter)
     {
-        Generator3<ParamType> generator;
-        public WrappedGenerator3ServerDirectorNET(Generator3<ParamType> generator)
+        try
         {
-            if (generator == null) throw new NullReferenceException("Generator must not be null");
-            this.generator = generator;
-            this.objectheapid = RRObjectHeap.AddObject(this);
+            async_adapter.MakeAsync();
+            generator.AsyncAbort().ContinueWith(t => async_adapter.EndTask(t));
         }
-
-        public override MessageElement Next(MessageElement m,WrappedServiceSkelAsyncAdapter async_adapter)
+        catch (Exception e)
         {
-            using (m)
+            using (MessageEntry merr = new MessageEntry())
             {
-                try
+                RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
+                RRDirectorExceptionHelper.SetError(merr, e.ToString());
+                return;
+            }
+        }
+    }
+
+    public override void Close(WrappedServiceSkelAsyncAdapter async_adapter)
+    {
+        try
+        {
+            async_adapter.MakeAsync();
+            generator.AsyncClose().ContinueWith(t => async_adapter.EndTask(t));
+        }
+        catch (Exception e)
+        {
+            using (MessageEntry merr = new MessageEntry())
+            {
+                RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
+                RRDirectorExceptionHelper.SetError(merr, e.ToString());
+                return;
+            }
+        }
+    }
+}
+
+public class WrappedGenerator2ServerDirectorNET<ReturnType> : WrappedGeneratorServerDirector
+{
+    Generator2<ReturnType> generator;
+    public WrappedGenerator2ServerDirectorNET(Generator2<ReturnType> generator)
+    {
+        if (generator == null)
+            throw new NullReferenceException("Generator must not be null");
+        this.generator = generator;
+        this.objectheapid = RRObjectHeap.AddObject(this);
+    }
+
+    public override MessageElement Next(MessageElement m, WrappedServiceSkelAsyncAdapter async_adapter)
+    {
+        using (m)
+        {
+            try
+            {
+                async_adapter.MakeAsync();
+                generator.AsyncNext().ContinueWith(
+                    t => async_adapter.EndTask<ReturnType>(
+                        t, async_ret => RobotRaconteurNode.s.PackAnyType<ReturnType>("return", ref async_ret)));
+                return null;
+            }
+            catch (Exception e)
+            {
+                using (MessageEntry merr = new MessageEntry())
                 {
-                    async_adapter.MakeAsync();                
-                    ParamType p = RobotRaconteurNode.s.UnpackAnyType<ParamType>(m);
-                    generator.AsyncNext(p).ContinueWith(t => async_adapter.EndTask(t));
+                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
+                    RRDirectorExceptionHelper.SetError(merr, e.ToString());
                     return null;
                 }
-                catch (Exception e)
-                {
-                    using (MessageEntry merr = new MessageEntry())
-                    {
-                        RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                        RRDirectorExceptionHelper.SetError(merr,e.ToString());
-                        return null;
-                    }
-                }
             }
         }
+    }
 
-        public override void Abort(WrappedServiceSkelAsyncAdapter async_adapter)
+    public override void Abort(WrappedServiceSkelAsyncAdapter async_adapter)
+    {
+        try
+        {
+            async_adapter.MakeAsync();
+            generator.AsyncAbort().ContinueWith(t => async_adapter.EndTask(t));
+        }
+        catch (Exception e)
+        {
+            using (MessageEntry merr = new MessageEntry())
+            {
+                RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
+                RRDirectorExceptionHelper.SetError(merr, e.ToString());
+                return;
+            }
+        }
+    }
+
+    public override void Close(WrappedServiceSkelAsyncAdapter async_adapter)
+    {
+        try
+        {
+            async_adapter.MakeAsync();
+            generator.AsyncClose().ContinueWith(t => async_adapter.EndTask(t));
+        }
+        catch (Exception e)
+        {
+            using (MessageEntry merr = new MessageEntry())
+            {
+                RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
+                RRDirectorExceptionHelper.SetError(merr, e.ToString());
+                return;
+            }
+        }
+    }
+}
+
+public class WrappedGenerator3ServerDirectorNET<ParamType> : WrappedGeneratorServerDirector
+{
+    Generator3<ParamType> generator;
+    public WrappedGenerator3ServerDirectorNET(Generator3<ParamType> generator)
+    {
+        if (generator == null)
+            throw new NullReferenceException("Generator must not be null");
+        this.generator = generator;
+        this.objectheapid = RRObjectHeap.AddObject(this);
+    }
+
+    public override MessageElement Next(MessageElement m, WrappedServiceSkelAsyncAdapter async_adapter)
+    {
+        using (m)
         {
             try
             {
                 async_adapter.MakeAsync();
-                generator.AsyncAbort().ContinueWith(t => async_adapter.EndTask(t));
+                ParamType p = RobotRaconteurNode.s.UnpackAnyType<ParamType>(m);
+                generator.AsyncNext(p).ContinueWith(t => async_adapter.EndTask(t));
+                return null;
             }
             catch (Exception e)
             {
                 using (MessageEntry merr = new MessageEntry())
                 {
                     RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr,e.ToString());
-                    return;
+                    RRDirectorExceptionHelper.SetError(merr, e.ToString());
+                    return null;
                 }
             }
         }
+    }
 
-        public override void Close(WrappedServiceSkelAsyncAdapter async_adapter)
+    public override void Abort(WrappedServiceSkelAsyncAdapter async_adapter)
+    {
+        try
+        {
+            async_adapter.MakeAsync();
+            generator.AsyncAbort().ContinueWith(t => async_adapter.EndTask(t));
+        }
+        catch (Exception e)
+        {
+            using (MessageEntry merr = new MessageEntry())
+            {
+                RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
+                RRDirectorExceptionHelper.SetError(merr, e.ToString());
+                return;
+            }
+        }
+    }
+
+    public override void Close(WrappedServiceSkelAsyncAdapter async_adapter)
+    {
+        try
+        {
+            async_adapter.MakeAsync();
+            generator.AsyncClose().ContinueWith(t => async_adapter.EndTask(t));
+        }
+        catch (Exception e)
+        {
+            using (MessageEntry merr = new MessageEntry())
+            {
+                RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
+                RRDirectorExceptionHelper.SetError(merr, e.ToString());
+                return;
+            }
+        }
+    }
+}
+
+internal class AsyncGeneratorClientReturnDirectorImpl : AsyncGeneratorClientReturnDirector
+{
+    protected TaskCompletionSource<WrappedGeneratorClient> handler_task =
+        new TaskCompletionSource<WrappedGeneratorClient>(TaskContinuationOptions.ExecuteSynchronously);
+
+    public Task<WrappedGeneratorClient> Task
+    {
+        get {
+            return handler_task.Task;
+        }
+    }
+
+    public AsyncGeneratorClientReturnDirectorImpl()
+    {}
+
+    public override void handler(WrappedGeneratorClient m, HandlerErrorInfo error)
+    {
+        // using (m)
         {
             try
             {
-                async_adapter.MakeAsync();
-                generator.AsyncClose().ContinueWith(t => async_adapter.EndTask(t));
+                this.Dispose();
+
+                if (error.error_code != 0)
+                {
+                    using (MessageEntry merr = new MessageEntry())
+                    {
+
+                        handler_task.SetException(RobotRaconteurExceptionUtil.ErrorInfoToException(error));
+                        return;
+                    }
+                }
+
+                handler_task.SetResult(m);
             }
             catch (Exception e)
             {
                 using (MessageEntry merr = new MessageEntry())
                 {
                     RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                    RRDirectorExceptionHelper.SetError(merr,e.ToString());
-                    return;
+                    RRDirectorExceptionHelper.SetError(merr, e.ToString());
                 }
             }
         }
     }
-
-    internal class AsyncGeneratorClientReturnDirectorImpl : AsyncGeneratorClientReturnDirector
-    {        
-        protected TaskCompletionSource<WrappedGeneratorClient> handler_task = new TaskCompletionSource<WrappedGeneratorClient>(TaskContinuationOptions.ExecuteSynchronously);
-
-        public Task<WrappedGeneratorClient> Task { get { return handler_task.Task; } }
-
-        public AsyncGeneratorClientReturnDirectorImpl()
-        {
-            
-        }
-
-        public override void handler(WrappedGeneratorClient m, HandlerErrorInfo error)
-        {
-            //using (m)
-            {
-                try
-                {
-                    this.Dispose();
-
-                    if (error.error_code != 0)
-                    {
-                        using (MessageEntry merr = new MessageEntry())
-                        {
-
-                            handler_task.SetException(RobotRaconteurExceptionUtil.ErrorInfoToException(error));
-                            return;
-                        }
-                    }
-
-                    handler_task.SetResult(m);
-
-                }
-                catch (Exception e)
-                {
-                    using (MessageEntry merr = new MessageEntry())
-                    {
-                        RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
-                        RRDirectorExceptionHelper.SetError(merr,e.ToString());
-                    }
-                }
-            }
-
-        }
-    }
+}
 }

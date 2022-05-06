@@ -1,8 +1,8 @@
-/** 
+/**
  * @file Endpoint.h
- * 
+ *
  * @author John Wason, PhD
- * 
+ *
  * @copyright Copyright 2011-2020 Wason Technology, LLC
  *
  * @par License
@@ -31,7 +31,7 @@
 #include <boost/date_time.hpp>
 #include <boost/atomic.hpp>
 
-//Workaround for Windows headers
+// Workaround for Windows headers
 #ifdef SendMessage
 #undef SendMessage
 #endif
@@ -39,87 +39,84 @@
 namespace RobotRaconteur
 {
 
-	class ROBOTRACONTEUR_CORE_API RobotRaconteurNode;
-	class ROBOTRACONTEUR_CORE_API ITransportConnection;
+class ROBOTRACONTEUR_CORE_API RobotRaconteurNode;
+class ROBOTRACONTEUR_CORE_API ITransportConnection;
 
-	class ROBOTRACONTEUR_CORE_API Endpoint : private boost::noncopyable
-	{
-	private:		
-		boost::atomic<uint32_t> m_LocalEndpoint;
-		boost::atomic<uint32_t> m_RemoteEndpoint;
-		boost::shared_mutex m_RemoteNodeName_lock;
-		std::string m_RemoteNodeName;
-		boost::shared_mutex m_RemoteNodeID_lock;
-		NodeID m_RemoteNodeID;
-		boost::atomic<uint32_t> m_transport;
+class ROBOTRACONTEUR_CORE_API Endpoint : private boost::noncopyable
+{
+  private:
+    boost::atomic<uint32_t> m_LocalEndpoint;
+    boost::atomic<uint32_t> m_RemoteEndpoint;
+    boost::shared_mutex m_RemoteNodeName_lock;
+    std::string m_RemoteNodeName;
+    boost::shared_mutex m_RemoteNodeID_lock;
+    NodeID m_RemoteNodeID;
+    boost::atomic<uint32_t> m_transport;
 
-		boost::mutex m_TransportConnection_lock;
-		RR_WEAK_PTR<ITransportConnection> m_TransportConnection;
+    boost::mutex m_TransportConnection_lock;
+    RR_WEAK_PTR<ITransportConnection> m_TransportConnection;
 
-		boost::atomic<boost::posix_time::ptime> m_LastMessageReceivedTime;
-		boost::atomic<boost::posix_time::ptime> m_LastMessageSentTime;
+    boost::atomic<boost::posix_time::ptime> m_LastMessageReceivedTime;
+    boost::atomic<boost::posix_time::ptime> m_LastMessageSentTime;
 
-		boost::atomic<uint16_t> MessageNumber;
+    boost::atomic<uint16_t> MessageNumber;
 
-	public:
-		uint32_t GetLocalEndpoint();
-		void SetLocalEndpoint(uint32_t endpoint);	
-	
-		uint32_t GetRemoteEndpoint();
-		void SetRemoteEndpoint(uint32_t endpoint);
+  public:
+    uint32_t GetLocalEndpoint();
+    void SetLocalEndpoint(uint32_t endpoint);
 
-		std::string GetRemoteNodeName();
-		void SetRemoteNodeName(boost::string_ref name);	
+    uint32_t GetRemoteEndpoint();
+    void SetRemoteEndpoint(uint32_t endpoint);
 
-		NodeID GetRemoteNodeID();
-		void SetRemoteNodeID(NodeID id);
+    std::string GetRemoteNodeName();
+    void SetRemoteNodeName(boost::string_ref name);
 
-		uint32_t GetTransport();
-		void SetTransport(uint32_t transport);
+    NodeID GetRemoteNodeID();
+    void SetRemoteNodeID(NodeID id);
 
-		virtual RR_SHARED_PTR<ITransportConnection> GetTransportConnection();
-		virtual void SetTransportConnection(RR_SHARED_PTR<ITransportConnection> c);	
+    uint32_t GetTransport();
+    void SetTransport(uint32_t transport);
 
-		boost::posix_time::ptime GetLastMessageReceivedTime();
-		void SetLastMessageReceivedTime(boost::posix_time::ptime time);
-	
-		boost::posix_time::ptime GetLastMessageSentTime();
-		void SetLastMessageSentTime(boost::posix_time::ptime time);		
-	
-		virtual void SendMessage(RR_INTRUSIVE_PTR<Message> m);
+    virtual RR_SHARED_PTR<ITransportConnection> GetTransportConnection();
+    virtual void SetTransportConnection(RR_SHARED_PTR<ITransportConnection> c);
 
-		virtual void AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& callback);
-				
-		virtual void MessageReceived(RR_INTRUSIVE_PTR<Message> m) = 0;
+    boost::posix_time::ptime GetLastMessageReceivedTime();
+    void SetLastMessageReceivedTime(boost::posix_time::ptime time);
 
-		virtual void PeriodicCleanupTask();
-		
-		virtual void TransportConnectionClosed(uint32_t endpoint);
+    boost::posix_time::ptime GetLastMessageSentTime();
+    void SetLastMessageSentTime(boost::posix_time::ptime time);
 
-	protected:
-		virtual void CheckEndpointCapabilityMessage(RR_INTRUSIVE_PTR<Message> m);
+    virtual void SendMessage(RR_INTRUSIVE_PTR<Message> m);
 
-	public:
-		virtual uint32_t EndpointCapability(boost::string_ref name);
-	
-	public:
-		Endpoint(RR_SHARED_PTR<RobotRaconteurNode> node);
-		
+    virtual void AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m,
+                                  boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
 
-		virtual ~Endpoint() {}
+    virtual void MessageReceived(RR_INTRUSIVE_PTR<Message> m) = 0;
 
-		RR_SHARED_PTR<RobotRaconteurNode> GetNode();
+    virtual void PeriodicCleanupTask();
 
-	protected:
-		RR_WEAK_PTR<RobotRaconteurNode> node;
+    virtual void TransportConnectionClosed(uint32_t endpoint);
 
-	};
+  protected:
+    virtual void CheckEndpointCapabilityMessage(RR_INTRUSIVE_PTR<Message> m);
 
+  public:
+    virtual uint32_t EndpointCapability(boost::string_ref name);
+
+  public:
+    Endpoint(RR_SHARED_PTR<RobotRaconteurNode> node);
+
+    virtual ~Endpoint() {}
+
+    RR_SHARED_PTR<RobotRaconteurNode> GetNode();
+
+  protected:
+    RR_WEAK_PTR<RobotRaconteurNode> node;
+};
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
-	using EndpointPtr = RR_SHARED_PTR<Endpoint>;
-	using EndpointConstPtr = RR_SHARED_PTR<const Endpoint>;
+using EndpointPtr = RR_SHARED_PTR<Endpoint>;
+using EndpointConstPtr = RR_SHARED_PTR<const Endpoint>;
 #endif
-	
 
-}
+} // namespace RobotRaconteur

@@ -18,77 +18,79 @@
 
 namespace RobotRaconteur
 {
-	class ROBOTRACONTEUR_CORE_API  ServerContext_ObjectLock : public RR_ENABLE_SHARED_FROM_THIS<ServerContext_ObjectLock>
-	{
+class ROBOTRACONTEUR_CORE_API ServerContext_ObjectLock : public RR_ENABLE_SHARED_FROM_THIS<ServerContext_ObjectLock>
+{
 
-	private:
-		bool m_Locked;
-		std::string m_Username;
-		std::vector<RR_WEAK_PTR<ServiceSkel> > skels;
-		RR_WEAK_PTR<ServiceSkel> m_RootSkel;
-		uint32_t m_Endpoint;
+  private:
+    bool m_Locked;
+    std::string m_Username;
+    std::vector<RR_WEAK_PTR<ServiceSkel> > skels;
+    RR_WEAK_PTR<ServiceSkel> m_RootSkel;
+    uint32_t m_Endpoint;
 
-		std::string m_RootServicePath;
-		boost::mutex skels_lock;
+    std::string m_RootServicePath;
+    boost::mutex skels_lock;
 
-	public:
-		ServerContext_ObjectLock(boost::string_ref username, const RR_SHARED_PTR<ServiceSkel> &root_skel, uint32_t endpoint = 0);
+  public:
+    ServerContext_ObjectLock(boost::string_ref username, const RR_SHARED_PTR<ServiceSkel>& root_skel,
+                             uint32_t endpoint = 0);
 
-		std::string GetUsername() const;
-		bool IsLocked() const;
-		std::string GetRootServicePath() const;
-		uint32_t GetEndpoint() const;
+    std::string GetUsername() const;
+    bool IsLocked() const;
+    std::string GetRootServicePath() const;
+    uint32_t GetEndpoint() const;
 
-		void AddSkel(RR_SHARED_PTR<ServiceSkel> skel);
+    void AddSkel(RR_SHARED_PTR<ServiceSkel> skel);
 
-		void ReleaseSkel(RR_SHARED_PTR<ServiceSkel> skel);
+    void ReleaseSkel(RR_SHARED_PTR<ServiceSkel> skel);
 
-		void ReleaseLock();
+    void ReleaseLock();
 
-	private:
-		void InitializeInstanceFields();
-	};
+  private:
+    void InitializeInstanceFields();
+};
 
-	class ROBOTRACONTEUR_CORE_API  ServerContext_MonitorObjectSkel : public RR_ENABLE_SHARED_FROM_THIS<ServerContext_MonitorObjectSkel>
-	{
-	private:
-		//RR_SHARED_PTR<boost::thread> wait_thread;
-		RR_SHARED_PTR<AutoResetEvent> wait_event;
-		bool wait_started;
-		RR_WEAK_PTR<IRobotRaconteurMonitorObject> obj;
-		uint32_t local_endpoint;
-		int32_t timeout;
-		RR_SHARED_PTR<std::exception> monitor_acquire_exception;
-		bool monitor_acquired;
-		RR_SHARED_PTR<AutoResetEvent> monitor_thread_event;
-		bool maintain_lock;
-		RR_WEAK_PTR<ServiceSkel> skel;
-		//boost::mutex monitorlocks_lock;
+class ROBOTRACONTEUR_CORE_API ServerContext_MonitorObjectSkel
+    : public RR_ENABLE_SHARED_FROM_THIS<ServerContext_MonitorObjectSkel>
+{
+  private:
+    // RR_SHARED_PTR<boost::thread> wait_thread;
+    RR_SHARED_PTR<AutoResetEvent> wait_event;
+    bool wait_started;
+    RR_WEAK_PTR<IRobotRaconteurMonitorObject> obj;
+    uint32_t local_endpoint;
+    int32_t timeout;
+    RR_SHARED_PTR<std::exception> monitor_acquire_exception;
+    bool monitor_acquired;
+    RR_SHARED_PTR<AutoResetEvent> monitor_thread_event;
+    bool maintain_lock;
+    RR_WEAK_PTR<ServiceSkel> skel;
+    // boost::mutex monitorlocks_lock;
 
-	public:
-		uint32_t GetLocalEndpoint() const;
+  public:
+    uint32_t GetLocalEndpoint() const;
 
-		bool IsLocked() const;
+    bool IsLocked() const;
 
-		ServerContext_MonitorObjectSkel(RR_SHARED_PTR<ServiceSkel> skel);
+    ServerContext_MonitorObjectSkel(RR_SHARED_PTR<ServiceSkel> skel);
 
-		std::string MonitorEnter(uint32_t local_endpoint, int32_t timeout);
+    std::string MonitorEnter(uint32_t local_endpoint, int32_t timeout);
 
-		std::string MonitorContinueEnter(uint32_t localendpoint);
+    std::string MonitorContinueEnter(uint32_t localendpoint);
 
-		void MonitorRefresh(uint32_t localendpoint);
+    void MonitorRefresh(uint32_t localendpoint);
 
-		std::string MonitorExit(uint32_t local_endpoint);
+    std::string MonitorExit(uint32_t local_endpoint);
 
-		void Shutdown();
+    void Shutdown();
 
-	private:
-		void thread_func();
+  private:
+    void thread_func();
 
-		boost::mutex close_lock;
+    boost::mutex close_lock;
 
-	private:
-		void InitializeInstanceFields();
-	};
+  private:
+    void InitializeInstanceFields();
+};
 
-}
+} // namespace RobotRaconteur

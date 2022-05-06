@@ -1,0 +1,3 @@
+#!/bin/sh
+
+find . -not \( -path ./RobotRaconteurPython/test -prune \) -type f -regex '.*\.\(py\)' -exec autopep8 --in-place --ignore E402 {} \;

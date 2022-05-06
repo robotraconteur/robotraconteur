@@ -20,31 +20,29 @@
 
 #pragma once
 
-
-
 namespace RobotRaconteur
 {
 namespace detail
 {
-	
+
 #ifdef ROBOTRACONTEUR_OSX
-	class DarwinLocalTransportDiscovery : public LocalTransportDiscovery, public RR_ENABLE_SHARED_FROM_THIS<DarwinLocalTransportDiscovery>
-	{
-	public:
-		DarwinLocalTransportDiscovery(RR_SHARED_PTR<RobotRaconteurNode> node);
-		virtual void Init();
-		virtual void Shutdown();
-		virtual ~DarwinLocalTransportDiscovery();
-		
-		void run();
-	
-	protected:
-		void* runloop;
-		boost::mutex runloop_lock;
-		bool running;
+class DarwinLocalTransportDiscovery : public LocalTransportDiscovery,
+                                      public RR_ENABLE_SHARED_FROM_THIS<DarwinLocalTransportDiscovery>
+{
+  public:
+    DarwinLocalTransportDiscovery(RR_SHARED_PTR<RobotRaconteurNode> node);
+    virtual void Init();
+    virtual void Shutdown();
+    virtual ~DarwinLocalTransportDiscovery();
+
+    void run();
+
+  protected:
+    void* runloop;
+    boost::mutex runloop_lock;
+    bool running;
 #endif
-		
-	};
-	
-}
-}
+};
+
+} // namespace detail
+} // namespace RobotRaconteur

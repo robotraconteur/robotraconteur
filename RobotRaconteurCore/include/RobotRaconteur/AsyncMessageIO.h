@@ -1,8 +1,8 @@
-/** 
+/**
  * @file AsyncMessageIO.h
- * 
+ *
  * @author John Wason, PhD
- * 
+ *
  * @copyright Copyright 2011-2020 Wason Technology, LLC
  *
  * @par License
@@ -27,52 +27,53 @@
 
 namespace RobotRaconteur
 {
-	class ROBOTRACONTEUR_CORE_API AsyncMessageReader : private boost::noncopyable
-	{
-	public:
+class ROBOTRACONTEUR_CORE_API AsyncMessageReader : private boost::noncopyable
+{
+  public:
+    enum return_type
+    {
+        ReadReturn_done = 0,
+        ReadReturn_continue_nobuffers,
+        ReadReturn_continue_buffers
+    };
 
-		enum return_type
-		{
-			ReadReturn_done = 0,
-			ReadReturn_continue_nobuffers,
-			ReadReturn_continue_buffers
-		};
+    virtual void Reset() = 0;
+    virtual return_type Read(const const_buffers& other_bufs, size_t& other_bufs_used, size_t continue_read_len,
+                             mutable_buffers& next_continue_read_bufs) = 0;
+    virtual return_type Read4(const const_buffers& other_bufs, size_t& other_bufs_used, size_t continue_read_len,
+                              mutable_buffers& next_continue_read_bufs) = 0;
 
-		virtual void Reset() = 0;
-		virtual return_type Read(const const_buffers& other_bufs, size_t& other_bufs_used, size_t continue_read_len, mutable_buffers& next_continue_read_bufs) = 0;
-		virtual return_type Read4(const const_buffers& other_bufs, size_t& other_bufs_used, size_t continue_read_len, mutable_buffers& next_continue_read_bufs) = 0;
+    virtual bool MessageReady() = 0;
+    virtual RR_INTRUSIVE_PTR<Message> GetNextMessage() = 0;
 
-		virtual bool MessageReady() = 0;
-		virtual RR_INTRUSIVE_PTR<Message> GetNextMessage() = 0;
+    static RR_SHARED_PTR<AsyncMessageReader> CreateInstance();
 
-		static RR_SHARED_PTR<AsyncMessageReader> CreateInstance();
-        
-        virtual ~AsyncMessageReader();
+    virtual ~AsyncMessageReader();
+};
 
-	};
+class ROBOTRACONTEUR_CORE_API AsyncMessageWriter : private boost::noncopyable
+{
+  public:
+    enum return_type
+    {
+        WriteReturn_done = 0,
+        WriteReturn_continue,
+        WriteReturn_last,
+    };
 
-	class ROBOTRACONTEUR_CORE_API AsyncMessageWriter : private boost::noncopyable
-	{
-	public:
+    virtual void Reset() = 0;
+    virtual void BeginWrite(RR_INTRUSIVE_PTR<Message> m, uint16_t version) = 0;
 
-		enum return_type
-		{
-			WriteReturn_done = 0,
-			WriteReturn_continue,
-			WriteReturn_last,
-		};
+    virtual return_type Write(size_t write_quota, mutable_buffers& work_bufs, size_t& work_bufs_used,
+                              const_buffers& write_bufs) = 0;
+    virtual return_type Write4(size_t write_quota, mutable_buffers& work_bufs, size_t& work_bufs_used,
+                               const_buffers& write_bufs) = 0;
 
-		virtual void Reset() = 0;
-		virtual void BeginWrite(RR_INTRUSIVE_PTR<Message> m, uint16_t version) = 0;
+    virtual size_t WriteRemaining() = 0;
 
-		virtual return_type Write(size_t write_quota, mutable_buffers& work_bufs, size_t& work_bufs_used, const_buffers& write_bufs) = 0;
-		virtual return_type Write4(size_t write_quota, mutable_buffers& work_bufs, size_t& work_bufs_used, const_buffers& write_bufs) = 0;
+    static RR_SHARED_PTR<AsyncMessageWriter> CreateInstance();
 
-		virtual size_t WriteRemaining() = 0;
+    virtual ~AsyncMessageWriter();
+};
 
-		static RR_SHARED_PTR<AsyncMessageWriter> CreateInstance();
-        
-        virtual ~AsyncMessageWriter();
-	};
-
-}
+} // namespace RobotRaconteur

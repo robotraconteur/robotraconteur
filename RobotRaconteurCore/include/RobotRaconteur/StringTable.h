@@ -1,8 +1,8 @@
-/** 
+/**
  * @file StringTable.h
- * 
+ *
  * @author John Wason, PhD
- * 
+ *
  * @copyright Copyright 2011-2020 Wason Technology, LLC
  *
  * @par License
@@ -28,77 +28,80 @@
 
 namespace RobotRaconteur
 {
-	class Message;
-	class MessageEntry;
-	class MessageElement;
+class Message;
+class MessageEntry;
+class MessageElement;
 
-	namespace detail
-	{
-		class ROBOTRACONTEUR_CORE_API StringTableEntry
-		{
-		public:
+namespace detail
+{
+class ROBOTRACONTEUR_CORE_API StringTableEntry
+{
+  public:
+    StringTableEntry();
 
-			StringTableEntry();
+    MessageStringPtr value;
+    uint32_t code;
+    bool confirmed;
+    std::vector<uint32_t> table_flags;
+};
 
-			MessageStringPtr value;
-			uint32_t code;
-			bool confirmed;
-			std::vector<uint32_t> table_flags;	
-		};
+class ROBOTRACONTEUR_CORE_API StringTable : private boost::noncopyable
+{
+  public:
+    StringTable(bool server);
+    virtual ~StringTable();
 
-		class ROBOTRACONTEUR_CORE_API StringTable : private boost::noncopyable
-		{
-		public:
+    uint32_t GetCodeForString(MessageStringRef str);
+    bool GetStringForCode(uint32_t code, MessageStringPtr& str);
 
-			StringTable(bool server);
-			virtual ~StringTable();
+    RR_SHARED_PTR<const StringTableEntry> GetEntryForString(MessageStringRef str);
+    RR_SHARED_PTR<const StringTableEntry> GetEntryForCode(uint32_t code);
 
-			uint32_t GetCodeForString(MessageStringRef str);
-			bool GetStringForCode(uint32_t code, MessageStringPtr& str);
+    bool AddCode(uint32_t code, MessageStringRef str, const std::vector<uint32_t>& table_flags);
+    void AddCodesCSV(const std::string& csv, const std::vector<uint32_t>& table_flags);
 
-			RR_SHARED_PTR<const StringTableEntry> GetEntryForString(MessageStringRef str);
-			RR_SHARED_PTR<const StringTableEntry> GetEntryForCode(uint32_t code);
+  public:
+    void MessageReplaceStringsWithCodes(RR_INTRUSIVE_PTR<Message> m);
+    void MessageReplaceCodesWithStrings(RR_INTRUSIVE_PTR<Message> m);
 
-			bool AddCode(uint32_t code, MessageStringRef str, const std::vector<uint32_t>& table_flags);
-			void AddCodesCSV(const std::string& csv, const std::vector<uint32_t>& table_flags);
+    std::vector<uint32_t> GetTableFlags();
+    void SetTableFlags(std::vector<uint32_t> flags);
 
-		public:
+  protected:
+    void MessageEntryReplaceStringsWithCodes(RR_INTRUSIVE_PTR<MessageEntry> e,
+                                             boost::unordered_map<MessageStringPtr, uint32_t>& local_table,
+                                             uint32_t& next_local_code, uint32_t& table_size);
+    void MessageElementReplaceStringsWithCodes(RR_INTRUSIVE_PTR<MessageElement> e,
+                                               boost::unordered_map<MessageStringPtr, uint32_t>& local_table,
+                                               uint32_t& next_local_code, uint32_t& table_size);
+    void MessageEntryReplaceCodesWithStrings(RR_INTRUSIVE_PTR<MessageEntry> e,
+                                             boost::unordered_map<uint32_t, MessageStringPtr>& local_table);
+    void MessageElementReplaceCodesWithStrings(RR_INTRUSIVE_PTR<MessageElement> e,
+                                               boost::unordered_map<uint32_t, MessageStringPtr>& local_table);
 
-			void MessageReplaceStringsWithCodes(RR_INTRUSIVE_PTR<Message> m);
-			void MessageReplaceCodesWithStrings(RR_INTRUSIVE_PTR<Message> m);
+    void DoReplaceString(MessageStringPtr& str, uint32_t& code, uint8_t& flags, uint32_t flag_str, uint32_t flag_code,
+                         boost::unordered_map<MessageStringPtr, uint32_t>& local_table, uint32_t& next_local_code,
+                         uint32_t& table_size);
+    void DoReplaceCode(MessageStringPtr& str, uint32_t& code, uint8_t& flags, uint32_t flag_str, uint32_t flag_code,
+                       boost::unordered_map<uint32_t, MessageStringPtr>& local_table);
 
-			std::vector<uint32_t> GetTableFlags();
-			void SetTableFlags(std::vector<uint32_t> flags);
+    bool _AddCode(uint32_t code, MessageStringRef str, const std::vector<uint32_t>& table_flags);
+    void _AddCodesCSV(const std::string& csv, const std::vector<uint32_t>& table_flags);
 
-		protected:
+  protected:
+    bool server;
 
-			void MessageEntryReplaceStringsWithCodes(RR_INTRUSIVE_PTR<MessageEntry> e, boost::unordered_map<MessageStringPtr, uint32_t>& local_table, uint32_t& next_local_code, uint32_t& table_size);
-			void MessageElementReplaceStringsWithCodes(RR_INTRUSIVE_PTR<MessageElement> e, boost::unordered_map<MessageStringPtr, uint32_t>& local_table, uint32_t& next_local_code, uint32_t& table_size);
-			void MessageEntryReplaceCodesWithStrings(RR_INTRUSIVE_PTR<MessageEntry> e, boost::unordered_map<uint32_t, MessageStringPtr>& local_table);
-			void MessageElementReplaceCodesWithStrings(RR_INTRUSIVE_PTR<MessageElement> e, boost::unordered_map<uint32_t, MessageStringPtr>& local_table);
+    size_t max_entry_count;
+    size_t max_str_len;
+    uint32_t next_code;
 
-			void DoReplaceString(MessageStringPtr& str, uint32_t& code, uint8_t& flags, uint32_t flag_str, uint32_t flag_code, boost::unordered_map<MessageStringPtr, uint32_t>& local_table, uint32_t& next_local_code, uint32_t& table_size);
-			void DoReplaceCode(MessageStringPtr& str, uint32_t& code, uint8_t& flags, uint32_t flag_str, uint32_t flag_code, boost::unordered_map<uint32_t, MessageStringPtr>& local_table);
+    boost::mutex this_lock;
 
-			bool _AddCode(uint32_t code, MessageStringRef str, const std::vector<uint32_t>& table_flags);
-			void _AddCodesCSV(const std::string& csv, const std::vector<uint32_t>& table_flags);
+    RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<StringTableEntry> > code_table;
+    RR_UNORDERED_MAP<MessageStringPtr, RR_SHARED_PTR<StringTableEntry> > string_table;
 
-		protected:
+    uint32_t flags;
+};
 
-			bool server;
-
-			size_t max_entry_count;
-			size_t max_str_len;
-			uint32_t next_code;
-
-			boost::mutex this_lock;
-
-			RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<StringTableEntry> > code_table;
-			RR_UNORDERED_MAP<MessageStringPtr, RR_SHARED_PTR<StringTableEntry> > string_table;
-
-			uint32_t flags;
-						
-		};
-
-	}
-}
+} // namespace detail
+} // namespace RobotRaconteur

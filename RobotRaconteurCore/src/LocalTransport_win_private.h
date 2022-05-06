@@ -25,31 +25,23 @@
 
 #pragma once
 
-//Workaround for missing definition in MinGW.
+// Workaround for missing definition in MinGW.
 #ifdef __MINGW32__
 
-BOOL
-WINAPI
-ConvertStringSecurityDescriptorToSecurityDescriptorA(
-	_In_  LPCSTR StringSecurityDescriptor,
-	_In_  DWORD StringSDRevision,
-	_Outptr_ PSECURITY_DESCRIPTOR  *SecurityDescriptor,
-	_Out_opt_ PULONG  SecurityDescriptorSize
-);
+BOOL WINAPI ConvertStringSecurityDescriptorToSecurityDescriptorA(_In_ LPCSTR StringSecurityDescriptor,
+                                                                 _In_ DWORD StringSDRevision,
+                                                                 _Outptr_ PSECURITY_DESCRIPTOR* SecurityDescriptor,
+                                                                 _Out_opt_ PULONG SecurityDescriptorSize);
 
-BOOL
-WINAPI
-ConvertStringSecurityDescriptorToSecurityDescriptorW(
-	_In_ LPCWSTR StringSecurityDescriptor,
-	_In_ DWORD StringSDRevision,
-	_Outptr_ PSECURITY_DESCRIPTOR * SecurityDescriptor,
-	_Out_opt_ PULONG SecurityDescriptorSize
-);
+BOOL WINAPI ConvertStringSecurityDescriptorToSecurityDescriptorW(_In_ LPCWSTR StringSecurityDescriptor,
+                                                                 _In_ DWORD StringSDRevision,
+                                                                 _Outptr_ PSECURITY_DESCRIPTOR* SecurityDescriptor,
+                                                                 _Out_opt_ PULONG SecurityDescriptorSize);
 
 #ifdef UNICODE
-#define ConvertStringSecurityDescriptorToSecurityDescriptor  ConvertStringSecurityDescriptorToSecurityDescriptorW
+#define ConvertStringSecurityDescriptorToSecurityDescriptor ConvertStringSecurityDescriptorToSecurityDescriptorW
 #else
-#define ConvertStringSecurityDescriptorToSecurityDescriptor  ConvertStringSecurityDescriptorToSecurityDescriptorA
+#define ConvertStringSecurityDescriptorToSecurityDescriptor ConvertStringSecurityDescriptorToSecurityDescriptorA
 #endif // !UNICODE
 
 #endif
@@ -57,44 +49,44 @@ ConvertStringSecurityDescriptorToSecurityDescriptorW(
 namespace RobotRaconteur
 {
 
-	namespace detail
-	{
-		namespace LocalTransportUtil
-		{
-			std::wstring GetSIDStringForProcessId(DWORD process);
-			std::string GetUserNameForProcessId(DWORD process);
-			boost::optional<std::wstring> GetSIDStringForName(std::wstring name);
+namespace detail
+{
+namespace LocalTransportUtil
+{
+std::wstring GetSIDStringForProcessId(DWORD process);
+std::string GetUserNameForProcessId(DWORD process);
+boost::optional<std::wstring> GetSIDStringForName(std::wstring name);
 
-			bool IsPipeSameUserOrService(HANDLE pipe, bool allow_service);
-			BOOL GetNamedPipeServerProcessId(HANDLE pipe, PULONG pid, PBOOL available);
-			bool IsPipeUser(HANDLE pipe, std::string username);
+bool IsPipeSameUserOrService(HANDLE pipe, bool allow_service);
+BOOL GetNamedPipeServerProcessId(HANDLE pipe, PULONG pid, PBOOL available);
+bool IsPipeUser(HANDLE pipe, std::string username);
 
-			RR_SHARED_PTR<std::ifstream> HandleToIStream(HANDLE h);
-			RR_SHARED_PTR<std::ofstream> HandleToOStream(HANDLE h);
-			RR_SHARED_PTR<std::fstream> HandleToStream(HANDLE h);
+RR_SHARED_PTR<std::ifstream> HandleToIStream(HANDLE h);
+RR_SHARED_PTR<std::ofstream> HandleToOStream(HANDLE h);
+RR_SHARED_PTR<std::fstream> HandleToStream(HANDLE h);
 
-			bool SetWindowsSocketPermissions(const std::string& socket_fname, bool public_);
-		}
+bool SetWindowsSocketPermissions(const std::string& socket_fname, bool public_);
+} // namespace LocalTransportUtil
 
-	}
+} // namespace detail
 
-	namespace detail
-	{
-		class WinLocalTransportDiscovery : public LocalTransportDiscovery, public RR_ENABLE_SHARED_FROM_THIS<WinLocalTransportDiscovery>
-		{
-		public:
-			WinLocalTransportDiscovery(RR_SHARED_PTR<RobotRaconteurNode> node);
-			virtual void Init();
-			virtual void Shutdown();
-			virtual ~WinLocalTransportDiscovery();
+namespace detail
+{
+class WinLocalTransportDiscovery : public LocalTransportDiscovery,
+                                   public RR_ENABLE_SHARED_FROM_THIS<WinLocalTransportDiscovery>
+{
+  public:
+    WinLocalTransportDiscovery(RR_SHARED_PTR<RobotRaconteurNode> node);
+    virtual void Init();
+    virtual void Shutdown();
+    virtual ~WinLocalTransportDiscovery();
 
-			void run();
+    void run();
 
-		protected:			
-			RR_SHARED_PTR<void> shutdown_evt;
-			RR_SHARED_PTR<void> private_evt;
-			RR_SHARED_PTR<void> public_evt;		
-
-		};
-	}
-}
+  protected:
+    RR_SHARED_PTR<void> shutdown_evt;
+    RR_SHARED_PTR<void> private_evt;
+    RR_SHARED_PTR<void> public_evt;
+};
+} // namespace detail
+} // namespace RobotRaconteur

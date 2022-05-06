@@ -1,8 +1,18 @@
----
 # We'll use defaults from the LLVM style, but with 4 columns indentation.
-BasedOnStyle: LLVM
+BasedOnStyle: Microsoft
 IndentWidth: 4
+SortIncludes: false
+PointerAlignment: Left
+AlwaysBreakTemplateDeclarations: Yes
+BraceWrapping:
+  SplitEmptyFunction: No
+AllowShortFunctionsOnASingleLine: true
 ---
 Language: Cpp
 Standard: Cpp03
 ---
+Language: CSharp
+AllowShortFunctionsOnASingleLine: false
+---
+Language: Java
+AllowShortFunctionsOnASingleLine: false

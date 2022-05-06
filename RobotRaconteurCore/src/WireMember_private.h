@@ -18,11 +18,12 @@
 
 namespace RobotRaconteur
 {
-	class ROBOTRACONTEUR_CORE_API WireConnectionBaseListener
-	{
-	public:
-		virtual void WireConnectionClosed(RR_SHARED_PTR<WireConnectionBase> connection) = 0;
-		virtual void WireValueChanged(RR_SHARED_PTR<WireConnectionBase> connection, RR_INTRUSIVE_PTR<RRValue> value, const TimeSpec& time) = 0;
-		virtual ~WireConnectionBaseListener() {}
-	};
-}
+class ROBOTRACONTEUR_CORE_API WireConnectionBaseListener
+{
+  public:
+    virtual void WireConnectionClosed(RR_SHARED_PTR<WireConnectionBase> connection) = 0;
+    virtual void WireValueChanged(RR_SHARED_PTR<WireConnectionBase> connection, RR_INTRUSIVE_PTR<RRValue> value,
+                                  const TimeSpec& time) = 0;
+    virtual ~WireConnectionBaseListener() {}
+};
+} // namespace RobotRaconteur

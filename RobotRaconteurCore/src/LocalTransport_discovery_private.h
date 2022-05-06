@@ -21,21 +21,20 @@ namespace RobotRaconteur
 namespace detail
 {
 
-	class LocalTransportDiscovery
-	{
-	public:
-		LocalTransportDiscovery(RR_SHARED_PTR<RobotRaconteurNode> node);
-		virtual void Init() = 0;
-		virtual void Shutdown() = 0;
-		virtual ~LocalTransportDiscovery() {}
-		virtual void Refresh();
+class LocalTransportDiscovery
+{
+  public:
+    LocalTransportDiscovery(RR_SHARED_PTR<RobotRaconteurNode> node);
+    virtual void Init() = 0;
+    virtual void Shutdown() = 0;
+    virtual ~LocalTransportDiscovery() {}
+    virtual void Refresh();
 
-	protected:
-		RR_WEAK_PTR<RobotRaconteurNode> node;
+  protected:
+    RR_WEAK_PTR<RobotRaconteurNode> node;
 
-		boost::optional<boost::filesystem::path> private_path;
-		boost::optional<boost::filesystem::path> public_path;
-
-	};
-}
-}
+    boost::optional<boost::filesystem::path> private_path;
+    boost::optional<boost::filesystem::path> public_path;
+};
+} // namespace detail
+} // namespace RobotRaconteur

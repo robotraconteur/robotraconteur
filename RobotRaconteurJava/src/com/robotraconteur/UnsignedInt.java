@@ -1,22 +1,21 @@
 package com.robotraconteur;
 
-public class UnsignedInt {
-public int value;
-
-public UnsignedInt()
+public class UnsignedInt
 {
-	this.value=0;
-}
+    public int value;
 
-public UnsignedInt(int value)
-{
-	this.value=value;		
-}
+    public UnsignedInt()
+    {
+        this.value = 0;
+    }
 
-public UnsignedInts array()
-{
-	return new UnsignedInts(new int[] {value});
-	
-}
+    public UnsignedInt(int value)
+    {
+        this.value = value;
+    }
 
+    public UnsignedInts array()
+    {
+        return new UnsignedInts(new int[] {value});
+    }
 }

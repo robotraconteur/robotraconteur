@@ -12,19 +12,18 @@ using namespace com::robotraconteur::testing::TestService5;
 
 namespace RobotRaconteurTest
 {
-	class ServiceTestClient3
-	{
-	public:
+class ServiceTestClient3
+{
+  public:
+    void RunFullTest(const std::string& url);
 
-		void RunFullTest(const std::string& url);
+    void Connect(const std::string& url);
+    void Disconnect();
 
-		void Connect(const std::string& url);
-		void Disconnect();
+    void TestProperties();
 
-        void TestProperties();
+    void TestFunctions();
 
-        void TestFunctions();
-
-        RR_SHARED_PTR<asynctestroot> r;
-    };
-}
+    RR_SHARED_PTR<asynctestroot> r;
+};
+} // namespace RobotRaconteurTest

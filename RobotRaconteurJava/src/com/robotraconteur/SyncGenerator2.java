@@ -37,7 +37,7 @@ public abstract class SyncGenerator2<ReturnType> implements Generator2<ReturnTyp
         }
         return;
     }
-    
+
     public void asyncNext(Action2<ReturnType, RuntimeException> handler, int timeout)
     {
         try
@@ -63,7 +63,8 @@ public abstract class SyncGenerator2<ReturnType> implements Generator2<ReturnTyp
                 o.add(next());
             }
         }
-        catch (StopIterationException e) { }
+        catch (StopIterationException e)
+        {}
         return o;
     }
 }

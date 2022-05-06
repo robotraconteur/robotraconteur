@@ -44,7 +44,7 @@
 #include <boost/shared_array.hpp>
 
 #ifdef ROBOTRACONTEUR_USE_SCHANNEL
-#define CERT_CHAIN_PARA_HAS_EXTRA_FIELDS 
+#define CERT_CHAIN_PARA_HAS_EXTRA_FIELDS
 #include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -62,243 +62,258 @@ namespace RobotRaconteur
 {
 namespace detail
 {
-	class TlsSchannelAsyncStreamAdapter;
+class TlsSchannelAsyncStreamAdapter;
 
-	class TlsSchannelAsyncStreamAdapterContext : boost::noncopyable
-	{
-	private:
+class TlsSchannelAsyncStreamAdapterContext : boost::noncopyable
+{
+  private:
 #ifdef ROBOTRACONTEUR_USE_SCHANNEL
-		
-		HCERTSTORE activestore;
-		PCCERT_CONTEXT activecertificate;
-		CredHandle server_credentials;
-		CredHandle client_credentials;
-		std::vector<HCERTSTORE> stores;
-		HCERTSTORE store;
-		PCCERT_CONTEXT rootcertificate2015;
-		PCCERT_CONTEXT rootcertificate2020;
-		bool use_root_cert_2015;
-		bool use_root_cert_2020;
-		
+
+    HCERTSTORE activestore;
+    PCCERT_CONTEXT activecertificate;
+    CredHandle server_credentials;
+    CredHandle client_credentials;
+    std::vector<HCERTSTORE> stores;
+    HCERTSTORE store;
+    PCCERT_CONTEXT rootcertificate2015;
+    PCCERT_CONTEXT rootcertificate2020;
+    bool use_root_cert_2015;
+    bool use_root_cert_2020;
+
 #endif
-		boost::mutex mylock;
-		NodeID nodeid;
+    boost::mutex mylock;
+    NodeID nodeid;
 
-	public:
-		friend TlsSchannelAsyncStreamAdapter;
+  public:
+    friend TlsSchannelAsyncStreamAdapter;
 
-		TlsSchannelAsyncStreamAdapterContext(const NodeID& nodeid);
-		~TlsSchannelAsyncStreamAdapterContext();
+    TlsSchannelAsyncStreamAdapterContext(const NodeID& nodeid);
+    ~TlsSchannelAsyncStreamAdapterContext();
 
-		
-		CredHandle GetServerCredentials();
+    CredHandle GetServerCredentials();
 
-		CredHandle GetClientCredentials();
-		
-		bool IsCertificateLoaded();
+    CredHandle GetClientCredentials();
 
-		bool VerifyRemoteNodeCertificate(PCCERT_CONTEXT cert, const NodeID& remote_node);
+    bool IsCertificateLoaded();
 
-		bool VerifyRemoteHostnameCertificate(PCCERT_CONTEXT cert, boost::string_ref hostname);
+    bool VerifyRemoteNodeCertificate(PCCERT_CONTEXT cert, const NodeID& remote_node);
 
-		void LoadCertificateFromMyStore();
+    bool VerifyRemoteHostnameCertificate(PCCERT_CONTEXT cert, boost::string_ref hostname);
 
-	protected:
+    void LoadCertificateFromMyStore();
 
-		bool VerifyCertificateOIDExtension(PCERT_INFO cert1, boost::string_ref searchoid);
+  protected:
+    bool VerifyCertificateOIDExtension(PCERT_INFO cert1, boost::string_ref searchoid);
+};
 
-	};
+class TlsSchannelAsyncStreamAdapter;
 
-	class TlsSchannelAsyncStreamAdapter;
+// This class is necessary due to the infurating behavior of ASIO templates
+class TlsSchannelAsyncStreamAdapter_ASIO_adapter
+{
+    TlsSchannelAsyncStreamAdapter& next_layer_;
 
-	//This class is necessary due to the infurating behavior of ASIO templates
-	class TlsSchannelAsyncStreamAdapter_ASIO_adapter
-	{
-		TlsSchannelAsyncStreamAdapter& next_layer_;
+    template <typename Handler>
+    class handler_wrapper
+    {
+      public:
+        handler_wrapper(Handler& handler) : handler_(handler) {}
 
-		template<typename Handler>
-		class handler_wrapper
-		{
-		public:
+        void do_complete(const boost::system::error_code& ec, const std::size_t& bytes_transferred)
+        {
+            // boost::asio::detail::binder2<Handler, boost::system::error_code, std::size_t>
+            // handler1(handler_, ec, bytes_transferred);
+            // boost_asio_handler_invoke_helpers::invoke(handler1, handler1.handler_);
 
-			handler_wrapper(Handler& handler) : handler_(handler)
-			{
-			}
+            handler_(ec, bytes_transferred);
+        }
 
-			void do_complete(const boost::system::error_code& ec, const std::size_t& bytes_transferred)
-			{
-				//boost::asio::detail::binder2<Handler, boost::system::error_code, std::size_t>
-				//handler1(handler_, ec, bytes_transferred);
-				//boost_asio_handler_invoke_helpers::invoke(handler1, handler1.handler_);
-								
-				handler_(ec, bytes_transferred);
-			}
-			
+      private:
+        Handler handler_;
+    };
 
-		private:
-			Handler handler_;
+  public:
+    TlsSchannelAsyncStreamAdapter_ASIO_adapter(TlsSchannelAsyncStreamAdapter& next_layer) : next_layer_(next_layer) {}
 
-		};
+    template <typename MutableBufferSequence, typename Handler>
+    void async_read_some(const MutableBufferSequence& buffers, BOOST_ASIO_MOVE_ARG(Handler) handler)
+    {
 
-	public:
-		
-		TlsSchannelAsyncStreamAdapter_ASIO_adapter(TlsSchannelAsyncStreamAdapter& next_layer) : next_layer_(next_layer) {}
+        // TODO: Don't allocate here
+        boost::shared_ptr<handler_wrapper<Handler> > handler2 =
+            boost::make_shared<handler_wrapper<Handler> >(boost::ref(handler));
 
-		template <typename MutableBufferSequence, typename Handler>
-		void async_read_some(const MutableBufferSequence& buffers, BOOST_ASIO_MOVE_ARG(Handler) handler)
-		{		
-			
-			//TODO: Don't allocate here
-			boost::shared_ptr<handler_wrapper<Handler> > handler2 = boost::make_shared<handler_wrapper<Handler> >(boost::ref(handler));
+        // TODO: use more than just first buffer
+        mutable_buffers b;
+        b.push_back(
+            boost::asio::detail::buffer_sequence_adapter<boost::asio::mutable_buffer, MutableBufferSequence>::first(
+                buffers));
+        next_layer_.async_read_some(b, boost::bind(&handler_wrapper<Handler>::do_complete, handler2,
+                                                   RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)));
+        return;
+    }
 
-			//TODO: use more than just first buffer
-			mutable_buffers b;
-			b.push_back(boost::asio::detail::buffer_sequence_adapter<boost::asio::mutable_buffer, MutableBufferSequence >::first(buffers));
-			next_layer_.async_read_some(b, boost::bind(&handler_wrapper<Handler>::do_complete, handler2, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)));
-			return;			
-		}
+    template <typename ConstBufferSequence, typename Handler>
+    void async_write_some(const ConstBufferSequence& buffers, BOOST_ASIO_MOVE_ARG(Handler) handler)
+    {
+        // TODO: Don't allocate here
+        boost::shared_ptr<handler_wrapper<Handler> > handler2 = boost::make_shared<handler_wrapper<Handler> >(handler);
+        // TODO: use more than just first buffer
+        const_buffers b;
+        b.push_back(boost::asio::detail::buffer_sequence_adapter<boost::asio::const_buffer, ConstBufferSequence>::first(
+            buffers));
+        next_layer_.async_write_some(b, boost::bind(&handler_wrapper<Handler>::do_complete, handler2,
+                                                    RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)));
+        return;
+    }
 
-		template <typename ConstBufferSequence, typename Handler>
-		void async_write_some(const ConstBufferSequence& buffers, BOOST_ASIO_MOVE_ARG(Handler) handler)
-		{
-			//TODO: Don't allocate here
-			boost::shared_ptr<handler_wrapper<Handler> > handler2 = boost::make_shared<handler_wrapper<Handler> >(handler);
-			//TODO: use more than just first buffer
-			const_buffers b;
-			b.push_back(boost::asio::detail::buffer_sequence_adapter<boost::asio::const_buffer, ConstBufferSequence >::first(buffers));
-			next_layer_.async_write_some(b, boost::bind(&handler_wrapper<Handler>::do_complete, handler2, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)));
-			return;
-		}
+    void close();
 
-		void close();
+    TlsSchannelAsyncStreamAdapter& lowest_layer() { return next_layer_; }
+};
 
-		TlsSchannelAsyncStreamAdapter& lowest_layer()
-		{
-			return next_layer_;
-		}
+class TlsSchannelAsyncStreamAdapter : public boost::enable_shared_from_this<TlsSchannelAsyncStreamAdapter>,
+                                      boost::noncopyable
+{
 
-	};
+  public:
+    enum direction_type
+    {
+        null,
+        client,
+        server
+    };
 
-	class TlsSchannelAsyncStreamAdapter : public boost::enable_shared_from_this<TlsSchannelAsyncStreamAdapter>, boost::noncopyable
-	{
+    enum
+    {
+        max_tls_record_size = 24 * 1024
+    };
 
-	public:
-		enum direction_type
-		{
-			null,
-			client,
-			server
-		};
+  protected:
+    boost::function<void(const_buffers&,
+                         boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>)>
+        _async_write_some;
 
-		enum { max_tls_record_size = 24 * 1024 };
+    boost::function<void(mutable_buffers&,
+                         boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>)>
+        _async_read_some;
 
-	protected:
-		boost::function<void (const_buffers&, boost::function<void (const boost::system::error_code& error, size_t bytes_transferred)>)> _async_write_some;
+    boost::function<void()> _close;
 
-		boost::function<void (mutable_buffers&, boost::function<void (const boost::system::error_code& error, size_t bytes_transferred)>)> _async_read_some;
-		
-		boost::function<void()> _close;
+    boost::mutex stream_lock;
 
-		boost::mutex stream_lock;
+    bool open;
 
-		bool open;		
-				
-		direction_type direction;
+    direction_type direction;
 
-		RR_BOOST_ASIO_IO_CONTEXT& _io_context;
+    RR_BOOST_ASIO_IO_CONTEXT& _io_context;
 
-		std::string servername;
+    std::string servername;
 
-		boost::shared_array<uint8_t> recv_buffer;
-		boost::shared_array<uint8_t> send_buffer;
-				
-		uint32_t send_buffer_end_pos;
-		uint32_t recv_buffer_end_pos;
-		uint32_t send_buffer_transfer_pos;
-		//uint32_t recv_buffer_transfer_pos;
-		
-		bool reading;
-		bool writing;
+    boost::shared_array<uint8_t> recv_buffer;
+    boost::shared_array<uint8_t> send_buffer;
 
-		bool request_shutdown;
-		bool request_renegotiate;
+    uint32_t send_buffer_end_pos;
+    uint32_t recv_buffer_end_pos;
+    uint32_t send_buffer_transfer_pos;
+    // uint32_t recv_buffer_transfer_pos;
 
-		bool handshaking;
-		bool shutingdown;
+    bool reading;
+    bool writing;
 
-		bool mutual_auth;
+    bool request_shutdown;
+    bool request_renegotiate;
 
-		TlsSchannelAsyncStreamAdapter_ASIO_adapter asio_adapter;
+    bool handshaking;
+    bool shutingdown;
+
+    bool mutual_auth;
+
+    TlsSchannelAsyncStreamAdapter_ASIO_adapter asio_adapter;
 
 #ifdef ROBOTRACONTEUR_USE_SCHANNEL
-		
-		boost::shared_ptr<CredHandle> hCreds;
-		boost::shared_ptr<CtxtHandle> hContext;
-		SecPkgContext_StreamSizes TlsStreamSizes;
-		boost::shared_array<uint8_t> recv_buffer_un;
-		uint32_t recv_buffer_un_end_pos;
 
-		boost::shared_ptr<TlsSchannelAsyncStreamAdapterContext> context;
-				
-		static void release_context(PCtxtHandle phContext);
-		static void release_credentials(PCredHandle phContext);
-		
+    boost::shared_ptr<CredHandle> hCreds;
+    boost::shared_ptr<CtxtHandle> hContext;
+    SecPkgContext_StreamSizes TlsStreamSizes;
+    boost::shared_array<uint8_t> recv_buffer_un;
+    uint32_t recv_buffer_un_end_pos;
 
-		void do_handshake1(const boost::system::error_code& error, size_t bytes_transferred, boost::function<void (const boost::system::error_code&)> handler);
-		void do_handshake2(const boost::system::error_code& error, size_t bytes_transferred, boost::function<void (const boost::system::error_code&)> handler, bool doread);
-		void do_handshake3(const boost::system::error_code& error, size_t bytes_transferred, boost::function<void (const boost::system::error_code&)> handler, bool doread);
-		void do_handshake4(const boost::system::error_code& error, size_t bytes_transferred, boost::function<void (const boost::system::error_code&)> handler);
-		void do_handshake5(boost::function<void (const boost::system::error_code&)> handler);
-		void do_handshake6(const boost::system::error_code& error,boost::function<void (const boost::system::error_code&)> handler);
+    boost::shared_ptr<TlsSchannelAsyncStreamAdapterContext> context;
 
-		void async_write_some1(const boost::system::error_code& error, size_t bytes_transferred, size_t len, boost::function<void (const boost::system::error_code&, size_t)> handler);
-		void async_write_some2(const boost::system::error_code& error, boost::function<void (const boost::system::error_code&, size_t)> handler);
+    static void release_context(PCtxtHandle phContext);
+    static void release_credentials(PCredHandle phContext);
 
-		void async_read_some1(boost::asio::mutable_buffer& b, const boost::system::error_code& error, size_t bytes_transferred, boost::function<void (const boost::system::error_code&, size_t)> handler) ;
-	
-		void async_read_some2(const boost::system::error_code& error, boost::asio::mutable_buffer& b, boost::function<void (const boost::system::error_code&, size_t)> handler) ;	
-		
-		void do_shutdown1();
-		void do_shutdown2(const boost::system::error_code& error, size_t bytes_transferred);
-		void do_shutdown3(const boost::system::error_code& error);
+    void do_handshake1(const boost::system::error_code& error, size_t bytes_transferred,
+                       boost::function<void(const boost::system::error_code&)> handler);
+    void do_handshake2(const boost::system::error_code& error, size_t bytes_transferred,
+                       boost::function<void(const boost::system::error_code&)> handler, bool doread);
+    void do_handshake3(const boost::system::error_code& error, size_t bytes_transferred,
+                       boost::function<void(const boost::system::error_code&)> handler, bool doread);
+    void do_handshake4(const boost::system::error_code& error, size_t bytes_transferred,
+                       boost::function<void(const boost::system::error_code&)> handler);
+    void do_handshake5(boost::function<void(const boost::system::error_code&)> handler);
+    void do_handshake6(const boost::system::error_code& error,
+                       boost::function<void(const boost::system::error_code&)> handler);
 
-		boost::function<void (const boost::system::error_code&)> async_shutdown_handler_op;
-		boost::function<void ()> async_shutdown_handler_rd;
-		boost::function<void ()> async_write_op;
-		boost::function<void (const boost::system::error_code&)> async_handshake_handler_op;
+    void async_write_some1(const boost::system::error_code& error, size_t bytes_transferred, size_t len,
+                           boost::function<void(const boost::system::error_code&, size_t)> handler);
+    void async_write_some2(const boost::system::error_code& error,
+                           boost::function<void(const boost::system::error_code&, size_t)> handler);
 
-		
+    void async_read_some1(boost::asio::mutable_buffer& b, const boost::system::error_code& error,
+                          size_t bytes_transferred,
+                          boost::function<void(const boost::system::error_code&, size_t)> handler);
+
+    void async_read_some2(const boost::system::error_code& error, boost::asio::mutable_buffer& b,
+                          boost::function<void(const boost::system::error_code&, size_t)> handler);
+
+    void do_shutdown1();
+    void do_shutdown2(const boost::system::error_code& error, size_t bytes_transferred);
+    void do_shutdown3(const boost::system::error_code& error);
+
+    boost::function<void(const boost::system::error_code&)> async_shutdown_handler_op;
+    boost::function<void()> async_shutdown_handler_rd;
+    boost::function<void()> async_write_op;
+    boost::function<void(const boost::system::error_code&)> async_handshake_handler_op;
+
 #endif
 
-	public:
-		TlsSchannelAsyncStreamAdapter(RR_BOOST_ASIO_IO_CONTEXT& _io_context, boost::shared_ptr<TlsSchannelAsyncStreamAdapterContext> context, direction_type direction, boost::string_ref servername, boost::function<void(mutable_buffers&, boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>)> async_read_some, boost::function<void(const_buffers&, boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>)> async_write_some, boost::function<void()> close);
-		~TlsSchannelAsyncStreamAdapter();
+  public:
+    TlsSchannelAsyncStreamAdapter(
+        RR_BOOST_ASIO_IO_CONTEXT& _io_context, boost::shared_ptr<TlsSchannelAsyncStreamAdapterContext> context,
+        direction_type direction, boost::string_ref servername,
+        boost::function<void(mutable_buffers&,
+                             boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>)>
+            async_read_some,
+        boost::function<void(const_buffers&,
+                             boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>)>
+            async_write_some,
+        boost::function<void()> close);
+    ~TlsSchannelAsyncStreamAdapter();
 
-		virtual void async_handshake(boost::function<void (const boost::system::error_code&)> handler);
+    virtual void async_handshake(boost::function<void(const boost::system::error_code&)> handler);
 
-		virtual void async_write_some(const_buffers& b, boost::function<void (const boost::system::error_code&, size_t)> handler);
+    virtual void async_write_some(const_buffers& b,
+                                  boost::function<void(const boost::system::error_code&, size_t)> handler);
 
-		virtual void async_read_some(mutable_buffers& b, boost::function<void (const boost::system::error_code&, size_t)> handler) ;
-				
+    virtual void async_read_some(mutable_buffers& b,
+                                 boost::function<void(const boost::system::error_code&, size_t)> handler);
 
-		virtual void async_shutdown(boost::function<void (const boost::system::error_code&)> handler);
+    virtual void async_shutdown(boost::function<void(const boost::system::error_code&)> handler);
 
-		virtual void close();
+    virtual void close();
 
-		virtual bool VerifyRemoteNodeCertificate(const NodeID& remote_node);
+    virtual bool VerifyRemoteNodeCertificate(const NodeID& remote_node);
 
-		virtual bool VerifyRemoteHostnameCertificate(boost::string_ref hostname);
+    virtual bool VerifyRemoteHostnameCertificate(boost::string_ref hostname);
 
-		virtual boost::tuple<std::string,std::string> GetTlsPublicKeys();
+    virtual boost::tuple<std::string, std::string> GetTlsPublicKeys();
 
-		bool get_mutual_auth();
-		void set_mutual_auth(bool mutual_auth);
+    bool get_mutual_auth();
+    void set_mutual_auth(bool mutual_auth);
 
-		TlsSchannelAsyncStreamAdapter_ASIO_adapter& get_asio_adapter()
-		{
-			return asio_adapter;
-		}
-				
-	};
-}
-}
+    TlsSchannelAsyncStreamAdapter_ASIO_adapter& get_asio_adapter() { return asio_adapter; }
+};
+} // namespace detail
+} // namespace RobotRaconteur

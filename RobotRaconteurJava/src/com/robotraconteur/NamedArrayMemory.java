@@ -2,21 +2,21 @@ package com.robotraconteur;
 
 import java.lang.reflect.Array;
 
-public class NamedArrayMemory<T> extends ArrayMemory<T> {
+public class NamedArrayMemory<T> extends ArrayMemory<T>
+{
 
-	public NamedArrayMemory()
+    public NamedArrayMemory()
     {
-		super();
+        super();
     }
 
     public NamedArrayMemory(T memory)
     {
-    	 super(memory);
+        super(memory);
     }
-    
-    @Override
-    public long length()
+
+    @Override public long length()
     {
-    	return Array.getLength(memory);
+        return Array.getLength(memory);
     }
 }

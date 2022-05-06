@@ -1,8 +1,8 @@
-/** 
+/**
  * @file Transport.h
- * 
+ *
  * @author John Wason, PhD
- * 
+ *
  * @copyright Copyright 2011-2020 Wason Technology, LLC
  *
  * @par License
@@ -31,8 +31,8 @@
 
 #include "RobotRaconteur/Timer.h"
 
-#pragma warning(push) 
-#pragma warning(disable:4996) 
+#pragma warning(push)
+#pragma warning(disable : 4996)
 #include <boost/signals2.hpp>
 
 #ifdef ROBOTRACONTEUR_WINDOWS
@@ -42,189 +42,192 @@
 namespace RobotRaconteur
 {
 
-	enum TransportListenerEventType
-	{
-		TransportListenerEventType_TransportClosed = 1,
-		TransportListenerEventType_TransportConnectionClosed
-	};
+enum TransportListenerEventType
+{
+    TransportListenerEventType_TransportClosed = 1,
+    TransportListenerEventType_TransportConnectionClosed
+};
 
-	class ROBOTRACONTEUR_CORE_API RobotRaconteurNode;
-	class ROBOTRACONTEUR_CORE_API Timer;
-	struct ROBOTRACONTEUR_CORE_API TimerEvent;
-	class ROBOTRACONTEUR_CORE_API AutoResetEvent;
-	class ROBOTRACONTEUR_CORE_API Transport;
+class ROBOTRACONTEUR_CORE_API RobotRaconteurNode;
+class ROBOTRACONTEUR_CORE_API Timer;
+struct ROBOTRACONTEUR_CORE_API TimerEvent;
+class ROBOTRACONTEUR_CORE_API AutoResetEvent;
+class ROBOTRACONTEUR_CORE_API Transport;
 
-	class ROBOTRACONTEUR_CORE_API ITransportTimeProvider
-	{
-	public:
-		virtual boost::posix_time::ptime NowUTC()=0;
+class ROBOTRACONTEUR_CORE_API ITransportTimeProvider
+{
+  public:
+    virtual boost::posix_time::ptime NowUTC() = 0;
 
-		virtual TimeSpec NowTimeSpec()=0;
+    virtual TimeSpec NowTimeSpec() = 0;
 
-		virtual boost::posix_time::ptime NowNodeTime() = 0;
+    virtual boost::posix_time::ptime NowNodeTime() = 0;
 
-		virtual boost::posix_time::ptime NodeSyncTimeUTC() = 0;
+    virtual boost::posix_time::ptime NodeSyncTimeUTC() = 0;
 
-		virtual TimeSpec NodeSyncTimeSpec() = 0;
+    virtual TimeSpec NodeSyncTimeSpec() = 0;
 
-		virtual RR_SHARED_PTR<Timer> CreateTimer(const boost::posix_time::time_duration& duration, boost::function<void(const TimerEvent&)>& handler, bool oneshot=false)=0;
+    virtual RR_SHARED_PTR<Timer> CreateTimer(const boost::posix_time::time_duration& duration,
+                                             boost::function<void(const TimerEvent&)>& handler,
+                                             bool oneshot = false) = 0;
 
-		virtual RR_SHARED_PTR<Rate> CreateRate(double frequency)=0;
+    virtual RR_SHARED_PTR<Rate> CreateRate(double frequency) = 0;
 
-		virtual void Sleep(const boost::posix_time::time_duration& duration)=0;
+    virtual void Sleep(const boost::posix_time::time_duration& duration) = 0;
 
-		virtual RR_SHARED_PTR<AutoResetEvent> CreateAutoResetEvent()=0;
+    virtual RR_SHARED_PTR<AutoResetEvent> CreateAutoResetEvent() = 0;
 
-		virtual ~ITransportTimeProvider() {}
-	};
+    virtual ~ITransportTimeProvider() {}
+};
 
+class ROBOTRACONTEUR_CORE_API ITransportConnection : boost::noncopyable
+{
+  public:
+    virtual ~ITransportConnection() {}
 
-	class ROBOTRACONTEUR_CORE_API ITransportConnection : boost::noncopyable
-	{
-	 public:
+    virtual void SendMessage(RR_INTRUSIVE_PTR<Message> m) = 0;
 
-		virtual ~ITransportConnection() {}
+    virtual void AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m,
+                                  boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& handler) = 0;
 
-		virtual void SendMessage(RR_INTRUSIVE_PTR<Message> m) = 0;
+    virtual void Close() = 0;
 
-		virtual void AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& handler) = 0;
+    virtual void CheckConnection(uint32_t endpoint) = 0;
 
-		virtual void Close() = 0;
+    virtual uint32_t GetLocalEndpoint() = 0;
 
-		virtual void CheckConnection(uint32_t endpoint) = 0;
+    virtual uint32_t GetRemoteEndpoint() = 0;
 
-		virtual  uint32_t GetLocalEndpoint() = 0;
+    virtual NodeID GetRemoteNodeID() = 0;
 
-		virtual  uint32_t GetRemoteEndpoint() = 0;
+    virtual RR_SHARED_PTR<RobotRaconteurNode> GetNode() = 0;
 
-		virtual  NodeID GetRemoteNodeID() = 0;
+    virtual bool CheckCapabilityActive(uint32_t flag) = 0;
 
-		virtual RR_SHARED_PTR<RobotRaconteurNode> GetNode() = 0;
+    virtual RR_SHARED_PTR<Transport> GetTransport() = 0;
+};
 
-		virtual bool CheckCapabilityActive(uint32_t flag) = 0;
+class ROBOTRACONTEUR_CORE_API NodeDiscoveryInfo;
 
-		virtual RR_SHARED_PTR<Transport> GetTransport() = 0;
-	};
+/**
+ * @brief Base class for transports
+ *
+ * Transports are used to create connections and pass messages between nodes.
+ *
+ */
+class ROBOTRACONTEUR_CORE_API Transport : public IPeriodicCleanupTask, boost::noncopyable
+{
+  public:
+    friend class RobotRaconteurNode;
+    friend class ITransport;
+    virtual ~Transport() {}
 
+  protected:
+    RR_WEAK_PTR<RobotRaconteurNode> node;
 
-	class ROBOTRACONTEUR_CORE_API NodeDiscoveryInfo;
+  public:
+    Transport(RR_SHARED_PTR<RobotRaconteurNode> node);
 
-	/**
-	 * @brief Base class for transports
-	 * 
-	 * Transports are used to create connections and pass messages between nodes.
-	 * 
-	 */
-	class ROBOTRACONTEUR_CORE_API Transport : public IPeriodicCleanupTask, boost::noncopyable
-	{
-	public:
-		friend class RobotRaconteurNode;
-		friend class ITransport;
-		virtual ~Transport() {}
+    static boost::thread_specific_ptr<std::string> m_CurrentThreadTransportConnectionURL;
 
-	protected:
+    static std::string GetCurrentTransportConnectionURL();
 
-		RR_WEAK_PTR<RobotRaconteurNode> node;
+  public:
+    static boost::thread_specific_ptr<RR_SHARED_PTR<ITransportConnection> > m_CurrentThreadTransport;
 
-	public:
+  public:
+    static RR_SHARED_PTR<ITransportConnection> GetCurrentThreadTransport();
 
-		Transport(RR_SHARED_PTR<RobotRaconteurNode> node);
-		
-		static boost::thread_specific_ptr<std::string> m_CurrentThreadTransportConnectionURL;
-	
-		static std::string GetCurrentTransportConnectionURL();
-		
-	public:
+    //		public event MessageHandler MessageReceivedEvent;
 
-		static boost::thread_specific_ptr<RR_SHARED_PTR<ITransportConnection> > m_CurrentThreadTransport;
+  public:
+    uint32_t TransportID;
 
-	public:
-	   static RR_SHARED_PTR<ITransportConnection> GetCurrentThreadTransport();
+  public:
+    virtual void CheckConnection(uint32_t endpoint) = 0;
 
-//		public event MessageHandler MessageReceivedEvent;
+    virtual bool IsClient() const = 0;
 
-	public:
-		uint32_t TransportID;
+    virtual bool IsServer() const = 0;
 
-	public:
-		virtual void CheckConnection(uint32_t endpoint)=0;
+    virtual std::string GetUrlSchemeString() const = 0;
 
-		virtual bool IsClient() const = 0;
+    // public abstract string Scheme { get; }
 
-		virtual bool IsServer() const = 0;
+    virtual bool CanConnectService(boost::string_ref url) = 0;
 
-		virtual std::string GetUrlSchemeString() const = 0;
+    virtual RR_SHARED_PTR<ITransportConnection> CreateTransportConnection(boost::string_ref url,
+                                                                          RR_SHARED_PTR<Endpoint> e) = 0;
 
-		//public abstract string Scheme { get; }
+    virtual void AsyncCreateTransportConnection(
+        boost::string_ref url, RR_SHARED_PTR<Endpoint> e,
+        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)>&
+            handler) = 0;
 
-		virtual bool CanConnectService(boost::string_ref url) = 0;
+    virtual void CloseTransportConnection(RR_SHARED_PTR<Endpoint> e) = 0;
 
-		virtual RR_SHARED_PTR<ITransportConnection> CreateTransportConnection(boost::string_ref url, RR_SHARED_PTR<Endpoint> e) = 0;
+    virtual void SendMessage(RR_INTRUSIVE_PTR<Message> m) = 0;
 
-		virtual void AsyncCreateTransportConnection(boost::string_ref url, RR_SHARED_PTR<Endpoint> e, boost::function<void (RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException> ) >& handler)=0;
+    virtual void AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m,
+                                  boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& handler) = 0;
 
-		virtual void CloseTransportConnection(RR_SHARED_PTR<Endpoint> e) = 0;
+  public:
+    virtual void MessageReceived(RR_INTRUSIVE_PTR<Message> m) = 0;
 
-	
-		virtual void SendMessage(RR_INTRUSIVE_PTR<Message> m)=0;
+    RR_INTRUSIVE_PTR<Message> SpecialRequest(RR_INTRUSIVE_PTR<Message> m, RR_SHARED_PTR<ITransportConnection> tc);
 
-		virtual void AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& handler) = 0;
+  public:
+    virtual void Close();
 
-	public:
-		virtual void MessageReceived(RR_INTRUSIVE_PTR<Message> m)=0;
+    virtual void PeriodicCleanupTask();
 
-		RR_INTRUSIVE_PTR<Message> SpecialRequest(RR_INTRUSIVE_PTR<Message> m, RR_SHARED_PTR<ITransportConnection> tc);
+    virtual uint32_t TransportCapability(boost::string_ref name);
 
-	public:
-		virtual void Close();
+    // typedef void (*TransportListenerDelegate)(const RR_SHARED_PTR<Transport> &transport, TransportListenerEventType
+    // ev, const RR_SHARED_PTR<void> &parameter);
 
+    boost::signals2::signal<void(RR_SHARED_PTR<Transport> transport, TransportListenerEventType ev,
+                                 RR_SHARED_PTR<void> parameter)>
+        TransportListeners;
 
-		virtual void PeriodicCleanupTask();
+    virtual RR_SHARED_PTR<RobotRaconteurNode> GetNode();
 
+    virtual std::vector<NodeDiscoveryInfo> GetDetectedNodes(const std::vector<std::string>& schemes);
 
-		virtual uint32_t TransportCapability(boost::string_ref name);
+    virtual void AsyncGetDetectedNodes(const std::vector<std::string>& schemes,
+                                       boost::function<void(RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >)>& handler,
+                                       int32_t timeout = RR_TIMEOUT_INFINITE);
 
-		//typedef void (*TransportListenerDelegate)(const RR_SHARED_PTR<Transport> &transport, TransportListenerEventType ev, const RR_SHARED_PTR<void> &parameter);
+  protected:
+    virtual void LocalNodeServicesChanged();
 
-		boost::signals2::signal<void (RR_SHARED_PTR<Transport> transport, TransportListenerEventType ev, RR_SHARED_PTR<void> parameter   )> TransportListeners;
+    void FireTransportEventListener(RR_SHARED_PTR<Transport> shared_this, TransportListenerEventType ev,
+                                    RR_SHARED_PTR<void> parameter);
 
-		virtual RR_SHARED_PTR<RobotRaconteurNode> GetNode();
+    void TransportConnectionClosed(uint32_t endpoint);
+};
 
-		virtual std::vector<NodeDiscoveryInfo> GetDetectedNodes(const std::vector<std::string>& schemes);
+struct ROBOTRACONTEUR_CORE_API ParseConnectionURLResult
+{
+    ParseConnectionURLResult() : port(0) {}
 
-		virtual void AsyncGetDetectedNodes(const std::vector<std::string>& schemes, boost::function<void(RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >)>& handler, int32_t timeout=RR_TIMEOUT_INFINITE);
+    std::string scheme;
+    std::string host;
+    int32_t port;
+    std::string path;
+    NodeID nodeid;
+    std::string nodename;
+    std::string service;
+};
 
-		
-	protected:
-
-		virtual void LocalNodeServicesChanged();
-
-		void FireTransportEventListener(RR_SHARED_PTR<Transport> shared_this, TransportListenerEventType ev, RR_SHARED_PTR<void> parameter);
-
-		void TransportConnectionClosed(uint32_t endpoint);
-	};
-
-	struct ROBOTRACONTEUR_CORE_API ParseConnectionURLResult
-	{
-		ParseConnectionURLResult() : port(0) {}
-
-		std::string scheme;
-		std::string host;
-		int32_t port;
-		std::string path;
-		NodeID nodeid;
-		std::string nodename;
-		std::string service;
-	};
-
-	ROBOTRACONTEUR_CORE_API ParseConnectionURLResult ParseConnectionURL(boost::string_ref url);
+ROBOTRACONTEUR_CORE_API ParseConnectionURLResult ParseConnectionURL(boost::string_ref url);
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
-	/** @brief Convenience alias for Transport shared_ptr */
-	using TransportPtr = RR_SHARED_PTR<Transport>;
-	using ITransportConnectionPtr = RR_SHARED_PTR<ITransportConnection>;
+/** @brief Convenience alias for Transport shared_ptr */
+using TransportPtr = RR_SHARED_PTR<Transport>;
+using ITransportConnectionPtr = RR_SHARED_PTR<ITransportConnection>;
 #endif
 
-}
+} // namespace RobotRaconteur
 
 #pragma warning(pop)

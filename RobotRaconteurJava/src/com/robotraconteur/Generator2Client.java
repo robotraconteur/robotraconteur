@@ -15,41 +15,41 @@ public class Generator2Client<ReturnType> implements Generator2<ReturnType>
     }
 
     public ReturnType next()
-    {        
-        
+    {
+
         MessageElement m2 = null;
         try
         {
-            m2 = inner_gen.next(null);                
-            return (ReturnType)RobotRaconteurNode.s().unpackVarType(m2);                
+            m2 = inner_gen.next(null);
+            return (ReturnType)RobotRaconteurNode.s().unpackVarType(m2);
         }
         finally
-        {        	
-        	if (m2 != null) m2.finalize();            	
+        {
+            if (m2 != null)
+                m2.finalize();
         }
     }
-    
-    
+
     public void asyncNext(Action2<ReturnType, RuntimeException> handler, int timeout)
-    {    	                                
+    {
         AsyncRequestDirectorImpl d = new AsyncRequestDirectorImpl(new endAsyncNext(), handler);
         int id = RRObjectHeap.addObject(d);
-        inner_gen.asyncNext(null, timeout, d, id);         	         
+        inner_gen.asyncNext(null, timeout, d, id);
     }
 
     protected class endAsyncNext implements Action3<MessageElement, RuntimeException, Object>
     {
-    public void action(MessageElement m, RuntimeException err, Object p)
-    {
-        Action2<ReturnType, RuntimeException> h = (Action2<ReturnType, RuntimeException>)p;
-        if (err!=null)
+        public void action(MessageElement m, RuntimeException err, Object p)
         {
-            h.action(null, err);
-            return;
+            Action2<ReturnType, RuntimeException> h = (Action2<ReturnType, RuntimeException>)p;
+            if (err != null)
+            {
+                h.action(null, err);
+                return;
+            }
+
+            h.action((ReturnType)RobotRaconteurNode.s().unpackVarType(m), null);
         }
-        
-        h.action((ReturnType)RobotRaconteurNode.s().unpackVarType(m),null);   
-    }
     }
 
     public void abort()
@@ -62,7 +62,7 @@ public class Generator2Client<ReturnType> implements Generator2<ReturnType>
         int id = RRObjectHeap.addObject(h);
         inner_gen.asyncAbort(timeout, h, id);
     }
-    
+
     public void close()
     {
         inner_gen.close();
@@ -74,9 +74,9 @@ public class Generator2Client<ReturnType> implements Generator2<ReturnType>
         inner_gen.asyncClose(timeout, h, id);
     }
 
-	@Override
-	public List<ReturnType> nextAll() {
-		ArrayList<ReturnType> o=new ArrayList<ReturnType>();
+    @Override public List<ReturnType> nextAll()
+    {
+        ArrayList<ReturnType> o = new ArrayList<ReturnType>();
         try
         {
             while (true)
@@ -84,7 +84,8 @@ public class Generator2Client<ReturnType> implements Generator2<ReturnType>
                 o.add(next());
             }
         }
-        catch (StopIterationException e) { }
+        catch (StopIterationException e)
+        {}
         return o;
-	}
+    }
 }
