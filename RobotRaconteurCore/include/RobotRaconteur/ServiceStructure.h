@@ -36,7 +36,7 @@ namespace RobotRaconteur
 class ROBOTRACONTEUR_CORE_API StructureStub
 {
   public:
-    virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackStructure(RR_INTRUSIVE_PTR<RRValue> s) = 0;
+    virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackStructure(const RR_INTRUSIVE_PTR<RRValue>& s) = 0;
 
     virtual RR_INTRUSIVE_PTR<RRStructure> UnpackStructure(const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& m) = 0;
 
@@ -379,7 +379,7 @@ T PodStub_UnpackPodFromArray(const RR_INTRUSIVE_PTR<MessageElementNestedElementL
 }
 
 template <typename T>
-RR_INTRUSIVE_PTR<MessageElementNestedElementList> PodStub_PackPodArray(RR_INTRUSIVE_PTR<RRPodArray<T> > a)
+RR_INTRUSIVE_PTR<MessageElementNestedElementList> PodStub_PackPodArray(const RR_INTRUSIVE_PTR<RRPodArray<T> >& a)
 {
     if (!a)
         return RR_INTRUSIVE_PTR<MessageElementNestedElementList>();
@@ -423,7 +423,7 @@ RR_INTRUSIVE_PTR<RRPodArray<T> > PodStub_UnpackPodArray(const RR_INTRUSIVE_PTR<M
 
 template <typename T>
 RR_INTRUSIVE_PTR<MessageElementNestedElementList> PodStub_PackPodMultiDimArray(
-    RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > a)
+    const RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> >& a)
 {
     if (!a)
         return RR_INTRUSIVE_PTR<MessageElementNestedElementList>();
@@ -510,7 +510,7 @@ RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > MessageElement_UnpackPodMultiDimArray(
 }
 
 template <typename T>
-static RR_INTRUSIVE_PTR<RRPodArray<T> > VerifyRRArrayLength(RR_INTRUSIVE_PTR<RRPodArray<T> > a, size_t len,
+static RR_INTRUSIVE_PTR<RRPodArray<T> > VerifyRRArrayLength(const RR_INTRUSIVE_PTR<RRPodArray<T> >& a, size_t len,
                                                             bool varlength)
 {
     if (!a)
@@ -530,7 +530,7 @@ static RR_INTRUSIVE_PTR<RRPodArray<T> > VerifyRRArrayLength(RR_INTRUSIVE_PTR<RRP
 }
 
 template <size_t Ndims, typename T>
-static RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > VerifyRRMultiDimArrayLength(RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > a,
+static RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > VerifyRRMultiDimArrayLength(const RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> >& a,
                                                                             size_t n_elems,
                                                                             boost::array<uint32_t, Ndims> dims)
 {
@@ -601,7 +601,7 @@ T NamedArrayStub_UnpackNamedArrayFromArray(const RR_INTRUSIVE_PTR<MessageElement
 }
 
 template <typename T>
-RR_INTRUSIVE_PTR<MessageElementNestedElementList> NamedArrayStub_PackNamedArray(RR_INTRUSIVE_PTR<RRNamedArray<T> > a)
+RR_INTRUSIVE_PTR<MessageElementNestedElementList> NamedArrayStub_PackNamedArray(const RR_INTRUSIVE_PTR<RRNamedArray<T> >& a)
 {
     if (!a)
         return RR_INTRUSIVE_PTR<MessageElementNestedElementList>();
@@ -628,7 +628,7 @@ RR_INTRUSIVE_PTR<RRNamedArray<T> > NamedArrayStub_UnpackNamedArray(const RR_INTR
 
 template <typename T>
 RR_INTRUSIVE_PTR<MessageElementNestedElementList> NamedArrayStub_PackNamedMultiDimArray(
-    RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > a)
+    const RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> >& a)
 {
     if (!a)
         return RR_INTRUSIVE_PTR<MessageElementNestedElementList>();
@@ -716,7 +716,7 @@ RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > MessageElement_UnpackNamedMultiDimArr
 }
 
 template <typename T>
-static RR_INTRUSIVE_PTR<RRNamedArray<T> > VerifyRRArrayLength(RR_INTRUSIVE_PTR<RRNamedArray<T> > a, size_t len,
+static RR_INTRUSIVE_PTR<RRNamedArray<T> > VerifyRRArrayLength(const RR_INTRUSIVE_PTR<RRNamedArray<T> >& a, size_t len,
                                                               bool varlength)
 {
     if (!a)
@@ -737,7 +737,7 @@ static RR_INTRUSIVE_PTR<RRNamedArray<T> > VerifyRRArrayLength(RR_INTRUSIVE_PTR<R
 
 template <size_t Ndims, typename T>
 static RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > VerifyRRMultiDimArrayLength(
-    RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > a, size_t n_elems, boost::array<uint32_t, Ndims> dims)
+    const RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> >& a, size_t n_elems, boost::array<uint32_t, Ndims> dims)
 {
     if (!a)
         throw NullValueException("Arrays must not be null");

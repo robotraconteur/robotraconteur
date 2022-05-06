@@ -45,7 +45,7 @@ static std::vector<Y> ConvertVectorType(std::vector<U> in)
 }
 
 template <typename Y, typename U>
-static RR_INTRUSIVE_PTR<RRArray<Y> > ConvertRRArrayType(RR_INTRUSIVE_PTR<RRArray<U> > in)
+static RR_INTRUSIVE_PTR<RRArray<Y> > ConvertRRArrayType(const RR_INTRUSIVE_PTR<RRArray<U> >& in)
 {
     RR_INTRUSIVE_PTR<RRArray<Y> > out = AllocateRRArray<Y>(in->size());
     for (size_t i = 0; i < in->size(); i++)
@@ -126,14 +126,14 @@ class ArrayMemory : public virtual ArrayMemoryBase
      *
      * @param memory The array to attach
      */
-    ArrayMemory(RR_INTRUSIVE_PTR<RRArray<T> > memory) { this->memory = memory; }
+    ArrayMemory(const RR_INTRUSIVE_PTR<RRArray<T> >& memory) { this->memory = memory; }
 
     /**
      * @brief Attach ArrayMemory instance to an RRArrayPtr<T>
      *
      * @param memory The array to attach
      */
-    virtual void Attach(RR_INTRUSIVE_PTR<RRArray<T> > memory)
+    virtual void Attach(const RR_INTRUSIVE_PTR<RRArray<T> >& memory)
     {
         boost::mutex::scoped_lock lock(memory_lock);
         this->memory = memory;
@@ -167,7 +167,7 @@ class ArrayMemory : public virtual ArrayMemoryBase
      * @param bufferpos The start index in the buffer to write the data
      * @param count The number of array elements to read
      */
-    virtual void Read(uint64_t memorypos, RR_INTRUSIVE_PTR<RRArray<T> > buffer, uint64_t bufferpos, uint64_t count)
+    virtual void Read(uint64_t memorypos,const RR_INTRUSIVE_PTR<RRArray<T> >& buffer, uint64_t bufferpos, uint64_t count)
     {
         boost::mutex::scoped_lock lock(memory_lock);
         if (memorypos + count > memory->size())
@@ -192,7 +192,7 @@ class ArrayMemory : public virtual ArrayMemoryBase
      * @param bufferpos The start index in the buffer to read the data
      * @param count The number of array elements to write
      */
-    virtual void Write(uint64_t memorypos, RR_INTRUSIVE_PTR<RRArray<T> > buffer, uint64_t bufferpos, uint64_t count)
+    virtual void Write(uint64_t memorypos,const RR_INTRUSIVE_PTR<RRArray<T> >& buffer, uint64_t bufferpos, uint64_t count)
     {
         boost::mutex::scoped_lock lock(memory_lock);
         if (memorypos + count > memory->size())
@@ -272,7 +272,7 @@ class MultiDimArrayMemory : public virtual MultiDimArrayMemoryBase
      *
      * @param multimemory The array to attach
      */
-    MultiDimArrayMemory(RR_INTRUSIVE_PTR<RRMultiDimArray<T> > multimemory) { this->multimemory = multimemory; }
+    MultiDimArrayMemory(const RR_INTRUSIVE_PTR<RRMultiDimArray<T> >& multimemory) { this->multimemory = multimemory; }
 
     virtual ~MultiDimArrayMemory() {}
 
@@ -281,7 +281,7 @@ class MultiDimArrayMemory : public virtual MultiDimArrayMemoryBase
      *
      * @param multimemory The array to attach
      */
-    virtual void Attach(RR_INTRUSIVE_PTR<RRMultiDimArray<T> > multimemory)
+    virtual void Attach(const RR_INTRUSIVE_PTR<RRMultiDimArray<T> >& multimemory)
     {
         boost::mutex::scoped_lock lock(memory_lock);
         this->multimemory = multimemory;
@@ -338,7 +338,7 @@ class MultiDimArrayMemory : public virtual MultiDimArrayMemoryBase
      * @param bufferpos The start position in the buffer to write the data
      * @param count The count of array elements to read
      */
-    virtual void Read(const std::vector<uint64_t>& memorypos, RR_INTRUSIVE_PTR<RRMultiDimArray<T> > buffer,
+    virtual void Read(const std::vector<uint64_t>& memorypos, const RR_INTRUSIVE_PTR<RRMultiDimArray<T> >& buffer,
                       const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
     {
         boost::mutex::scoped_lock lock(memory_lock);
@@ -362,7 +362,7 @@ class MultiDimArrayMemory : public virtual MultiDimArrayMemoryBase
      * @param bufferpos The start position in the buffer to read the data
      * @param count The count of array elements to write
      */
-    virtual void Write(const std::vector<uint64_t>& memorypos, RR_INTRUSIVE_PTR<RRMultiDimArray<T> > buffer,
+    virtual void Write(const std::vector<uint64_t>& memorypos, const RR_INTRUSIVE_PTR<RRMultiDimArray<T> >& buffer,
                        const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
     {
         boost::mutex::scoped_lock lock(memory_lock);
@@ -550,16 +550,16 @@ class ArrayMemoryClient : public virtual ArrayMemoryClientBase, public virtual A
         : ArrayMemoryClientBase(membername, stub, RRPrimUtil<T>::GetTypeID(), sizeof(T), direction)
     {}
 
-    virtual void Attach(RR_INTRUSIVE_PTR<RRArray<T> > memory) { RR_UNUSED(memory); throw InvalidOperationException("Invalid for client"); }
+    virtual void Attach(const RR_INTRUSIVE_PTR<RRArray<T> >& memory) { RR_UNUSED(memory); throw InvalidOperationException("Invalid for client"); }
 
-    virtual void Read(uint64_t memorypos, RR_INTRUSIVE_PTR<RRArray<T> > buffer, uint64_t bufferpos, uint64_t count)
+    virtual void Read(uint64_t memorypos,const RR_INTRUSIVE_PTR<RRArray<T> >& buffer, uint64_t bufferpos, uint64_t count)
     {
         if (!buffer)
             throw NullValueException("Buffer must not be null");
         ReadBase(memorypos, &buffer, bufferpos, count);
     }
 
-    virtual void Write(uint64_t memorypos, RR_INTRUSIVE_PTR<RRArray<T> > buffer, uint64_t bufferpos, uint64_t count)
+    virtual void Write(uint64_t memorypos,const RR_INTRUSIVE_PTR<RRArray<T> >& buffer, uint64_t bufferpos, uint64_t count)
     {
         if (!buffer)
             throw NullValueException("Buffer must not be null");
@@ -657,7 +657,7 @@ class MultiDimArrayMemoryClient : public virtual MultiDimArrayMemory<T>, public 
         : MultiDimArrayMemoryClientBase(membername, stub, RRPrimUtil<T>::GetTypeID(), sizeof(T), direction)
     {}
 
-    virtual void Attach(RR_INTRUSIVE_PTR<RRMultiDimArray<T> > memory)
+    virtual void Attach(const RR_INTRUSIVE_PTR<RRMultiDimArray<T> >& memory)
     {
         RR_UNUSED(memory);
         throw InvalidOperationException("Not valid for client");
@@ -667,7 +667,7 @@ class MultiDimArrayMemoryClient : public virtual MultiDimArrayMemory<T>, public 
 
     virtual uint64_t DimCount() { return MultiDimArrayMemoryClientBase::DimCount(); }
 
-    virtual void Read(const std::vector<uint64_t>& memorypos, RR_INTRUSIVE_PTR<RRMultiDimArray<T> > buffer,
+    virtual void Read(const std::vector<uint64_t>& memorypos, const RR_INTRUSIVE_PTR<RRMultiDimArray<T> >& buffer,
                       const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
     {
         if (!buffer)
@@ -675,7 +675,7 @@ class MultiDimArrayMemoryClient : public virtual MultiDimArrayMemory<T>, public 
         ReadBase(memorypos, &buffer, bufferpos, count);
     }
 
-    virtual void Write(const std::vector<uint64_t>& memorypos, RR_INTRUSIVE_PTR<RRMultiDimArray<T> > buffer,
+    virtual void Write(const std::vector<uint64_t>& memorypos, const RR_INTRUSIVE_PTR<RRMultiDimArray<T> >& buffer,
                        const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
     {
         if (!buffer)
@@ -783,14 +783,14 @@ class PodArrayMemory : public virtual ArrayMemoryBase
      *
      * @param memory The array to attach
      */
-    PodArrayMemory(RR_INTRUSIVE_PTR<RRPodArray<T> > memory) { this->memory = memory; }
+    PodArrayMemory(const RR_INTRUSIVE_PTR<RRPodArray<T> >& memory) { this->memory = memory; }
 
     /**
      * @brief Attach PodArrayMemory instance to an RRPodArrayPtr<T>
      *
      * @param memory The array to attach
      */
-    virtual void Attach(RR_INTRUSIVE_PTR<RRPodArray<T> > memory)
+    virtual void Attach(const RR_INTRUSIVE_PTR<RRPodArray<T> >& memory)
     {
         boost::mutex::scoped_lock lock(memory_lock);
         this->memory = memory;
@@ -804,7 +804,7 @@ class PodArrayMemory : public virtual ArrayMemoryBase
     }
 
     /** @copydoc ArrayMemory::Read() */
-    virtual void Read(uint64_t memorypos, RR_INTRUSIVE_PTR<RRPodArray<T> > buffer, uint64_t bufferpos, uint64_t count)
+    virtual void Read(uint64_t memorypos, const RR_INTRUSIVE_PTR<RRPodArray<T> >& buffer, uint64_t bufferpos, uint64_t count)
     {
         boost::mutex::scoped_lock lock(memory_lock);
         if (memorypos + count > memory->size())
@@ -820,7 +820,7 @@ class PodArrayMemory : public virtual ArrayMemoryBase
     }
 
     /** @copydoc ArrayMemory::Write() */
-    virtual void Write(uint64_t memorypos, RR_INTRUSIVE_PTR<RRPodArray<T> > buffer, uint64_t bufferpos, uint64_t count)
+    virtual void Write(uint64_t memorypos, const RR_INTRUSIVE_PTR<RRPodArray<T> >& buffer, uint64_t bufferpos, uint64_t count)
     {
         boost::mutex::scoped_lock lock(memory_lock);
         if (memorypos + count > memory->size())
@@ -876,20 +876,20 @@ class PodArrayMemoryClient : public virtual ArrayMemoryClientBase, public virtua
         : ArrayMemoryClientBase(membername, stub, RRPrimUtil<T>::GetTypeID(), element_size, direction)
     {}
 
-    virtual void Attach(RR_INTRUSIVE_PTR<RRPodArray<T> > memory)
+    virtual void Attach(const RR_INTRUSIVE_PTR<RRPodArray<T> >& memory)
     {
         RR_UNUSED(memory);
         throw InvalidOperationException("Invalid for client");
     }
 
-    virtual void Read(uint64_t memorypos, RR_INTRUSIVE_PTR<RRPodArray<T> > buffer, uint64_t bufferpos, uint64_t count)
+    virtual void Read(uint64_t memorypos, const RR_INTRUSIVE_PTR<RRPodArray<T> >& buffer, uint64_t bufferpos, uint64_t count)
     {
         if (!buffer)
             throw NullValueException("Buffer must not be null");
         ReadBase(memorypos, &buffer, bufferpos, count);
     }
 
-    virtual void Write(uint64_t memorypos, RR_INTRUSIVE_PTR<RRPodArray<T> > buffer, uint64_t bufferpos, uint64_t count)
+    virtual void Write(uint64_t memorypos, const RR_INTRUSIVE_PTR<RRPodArray<T> >& buffer, uint64_t bufferpos, uint64_t count)
     {
         if (!buffer)
             throw NullValueException("Buffer must not be null");
@@ -982,7 +982,7 @@ class PodMultiDimArrayMemory : public virtual MultiDimArrayMemoryBase
      *
      * @param multimemory The array to attach
      */
-    PodMultiDimArrayMemory(RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > multimemory) { this->multimemory = multimemory; }
+    PodMultiDimArrayMemory(const RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> >& multimemory) { this->multimemory = multimemory; }
 
     virtual ~PodMultiDimArrayMemory() {}
 
@@ -991,7 +991,7 @@ class PodMultiDimArrayMemory : public virtual MultiDimArrayMemoryBase
      *
      * @param multimemory The array to attach
      */
-    virtual void Attach(RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > multimemory)
+    virtual void Attach(const RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> >& multimemory)
     {
         boost::mutex::scoped_lock lock(memory_lock);
         this->multimemory = multimemory;
@@ -1019,7 +1019,7 @@ class PodMultiDimArrayMemory : public virtual MultiDimArrayMemoryBase
     }
 
     /** @copydoc MultiDimArrayMemory::Read() */
-    virtual void Read(const std::vector<uint64_t>& memorypos, RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > buffer,
+    virtual void Read(const std::vector<uint64_t>& memorypos, const RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> >& buffer,
                       const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
     {
         boost::mutex::scoped_lock lock(memory_lock);
@@ -1029,7 +1029,7 @@ class PodMultiDimArrayMemory : public virtual MultiDimArrayMemoryBase
     }
 
     /** @copydoc MultiDimArrayMemory::Write() */
-    virtual void Write(const std::vector<uint64_t>& memorypos, RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > buffer,
+    virtual void Write(const std::vector<uint64_t>& memorypos, const RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> >& buffer,
                        const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
     {
         boost::mutex::scoped_lock lock(memory_lock);
@@ -1051,7 +1051,7 @@ class PodMultiDimArrayMemoryClient : public virtual PodMultiDimArrayMemory<T>,
         : MultiDimArrayMemoryClientBase(membername, stub, DataTypes_pod_t, element_size, direction)
     {}
 
-    virtual void Attach(RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > memory)
+    virtual void Attach(const RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> >& memory)
     {
         RR_UNUSED(memory);
         throw InvalidOperationException("Not valid for client");
@@ -1061,7 +1061,7 @@ class PodMultiDimArrayMemoryClient : public virtual PodMultiDimArrayMemory<T>,
 
     virtual uint64_t DimCount() { return MultiDimArrayMemoryClientBase::DimCount(); }
 
-    virtual void Read(const std::vector<uint64_t>& memorypos, RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > buffer,
+    virtual void Read(const std::vector<uint64_t>& memorypos, const RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> >& buffer,
                       const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
     {
         if (!buffer)
@@ -1069,7 +1069,7 @@ class PodMultiDimArrayMemoryClient : public virtual PodMultiDimArrayMemory<T>,
         ReadBase(memorypos, &buffer, bufferpos, count);
     }
 
-    virtual void Write(const std::vector<uint64_t>& memorypos, RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > buffer,
+    virtual void Write(const std::vector<uint64_t>& memorypos, const RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> >& buffer,
                        const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
     {
         if (!buffer)
@@ -1197,14 +1197,14 @@ class NamedArrayMemory : public virtual ArrayMemoryBase
      *
      * @param memory The array to attach
      */
-    NamedArrayMemory(RR_INTRUSIVE_PTR<RRNamedArray<T> > memory) { this->memory = memory; }
+    NamedArrayMemory(const RR_INTRUSIVE_PTR<RRNamedArray<T> >& memory) { this->memory = memory; }
 
     /**
      * @brief Attach NamedArrayMemory instance to an RRNamedArrayPtr<T>
      *
      * @param memory The array to attach
      */
-    virtual void Attach(RR_INTRUSIVE_PTR<RRNamedArray<T> > memory)
+    virtual void Attach(const RR_INTRUSIVE_PTR<RRNamedArray<T> >& memory)
     {
         boost::mutex::scoped_lock lock(memory_lock);
         this->memory = memory;
@@ -1218,7 +1218,7 @@ class NamedArrayMemory : public virtual ArrayMemoryBase
     }
 
     /** @copydoc ArrayMemory::Read() */
-    virtual void Read(uint64_t memorypos, RR_INTRUSIVE_PTR<RRNamedArray<T> > buffer, uint64_t bufferpos, uint64_t count)
+    virtual void Read(uint64_t memorypos, const RR_INTRUSIVE_PTR<RRNamedArray<T> >& buffer, uint64_t bufferpos, uint64_t count)
     {
         boost::mutex::scoped_lock lock(memory_lock);
         if (memorypos + count > memory->size())
@@ -1234,7 +1234,7 @@ class NamedArrayMemory : public virtual ArrayMemoryBase
     }
 
     /** @copydoc ArrayMemory::Write() */
-    virtual void Write(uint64_t memorypos, RR_INTRUSIVE_PTR<RRNamedArray<T> > buffer, uint64_t bufferpos,
+    virtual void Write(uint64_t memorypos, const RR_INTRUSIVE_PTR<RRNamedArray<T> >& buffer, uint64_t bufferpos,
                        uint64_t count)
     {
         boost::mutex::scoped_lock lock(memory_lock);
@@ -1291,20 +1291,20 @@ class NamedArrayMemoryClient : public virtual ArrayMemoryClientBase, public virt
         : ArrayMemoryClientBase(membername, stub, RRPrimUtil<T>::GetTypeID(), element_size, direction)
     {}
 
-    virtual void Attach(RR_INTRUSIVE_PTR<RRNamedArray<T> > memory)
+    virtual void Attach(const RR_INTRUSIVE_PTR<RRNamedArray<T> >& memory)
     {
         RR_UNUSED(memory);
         throw InvalidOperationException("Invalid for client");
     }
 
-    virtual void Read(uint64_t memorypos, RR_INTRUSIVE_PTR<RRNamedArray<T> > buffer, uint64_t bufferpos, uint64_t count)
+    virtual void Read(uint64_t memorypos, const RR_INTRUSIVE_PTR<RRNamedArray<T> >& buffer, uint64_t bufferpos, uint64_t count)
     {
         if (!buffer)
             throw NullValueException("Buffer must not be null");
         ReadBase(memorypos, &buffer, bufferpos, count);
     }
 
-    virtual void Write(uint64_t memorypos, RR_INTRUSIVE_PTR<RRNamedArray<T> > buffer, uint64_t bufferpos,
+    virtual void Write(uint64_t memorypos, const RR_INTRUSIVE_PTR<RRNamedArray<T> >& buffer, uint64_t bufferpos,
                        uint64_t count)
     {
         if (!buffer)
@@ -1398,7 +1398,7 @@ class NamedMultiDimArrayMemory : public virtual MultiDimArrayMemoryBase
      *
      * @param multimemory The array to attach
      */
-    NamedMultiDimArrayMemory(RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > multimemory)
+    NamedMultiDimArrayMemory(const RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> >& multimemory)
     {
         this->multimemory = multimemory;
     }
@@ -1410,7 +1410,7 @@ class NamedMultiDimArrayMemory : public virtual MultiDimArrayMemoryBase
      *
      * @param multimemory The array to attach
      */
-    virtual void Attach(RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > multimemory)
+    virtual void Attach(const RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> >& multimemory)
     {
         boost::mutex::scoped_lock lock(memory_lock);
         this->multimemory = multimemory;
@@ -1438,7 +1438,7 @@ class NamedMultiDimArrayMemory : public virtual MultiDimArrayMemoryBase
     }
 
     /** @copydoc MultiDimArrayMemory::Read() */
-    virtual void Read(const std::vector<uint64_t>& memorypos, RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > buffer,
+    virtual void Read(const std::vector<uint64_t>& memorypos, const RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> >& buffer,
                       const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
     {
         boost::mutex::scoped_lock lock(memory_lock);
@@ -1448,7 +1448,7 @@ class NamedMultiDimArrayMemory : public virtual MultiDimArrayMemoryBase
     }
 
     /** @copydoc MultiDimArrayMemory::Write() */
-    virtual void Write(const std::vector<uint64_t>& memorypos, RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > buffer,
+    virtual void Write(const std::vector<uint64_t>& memorypos, const RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> >& buffer,
                        const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
     {
         boost::mutex::scoped_lock lock(memory_lock);
@@ -1470,7 +1470,7 @@ class NamedMultiDimArrayMemoryClient : public virtual NamedMultiDimArrayMemory<T
         : MultiDimArrayMemoryClientBase(membername, stub, DataTypes_pod_t, element_size, direction)
     {}
 
-    virtual void Attach(RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > memory)
+    virtual void Attach(const RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> >& memory)
     {
         RR_UNUSED(memory);
         throw InvalidOperationException("Not valid for client");
@@ -1480,7 +1480,7 @@ class NamedMultiDimArrayMemoryClient : public virtual NamedMultiDimArrayMemory<T
 
     virtual uint64_t DimCount() { return MultiDimArrayMemoryClientBase::DimCount(); }
 
-    virtual void Read(const std::vector<uint64_t>& memorypos, RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > buffer,
+    virtual void Read(const std::vector<uint64_t>& memorypos, const RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> >& buffer,
                       const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
     {
         if (!buffer)
@@ -1488,7 +1488,7 @@ class NamedMultiDimArrayMemoryClient : public virtual NamedMultiDimArrayMemory<T
         ReadBase(memorypos, &buffer, bufferpos, count);
     }
 
-    virtual void Write(const std::vector<uint64_t>& memorypos, RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > buffer,
+    virtual void Write(const std::vector<uint64_t>& memorypos, const RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> >& buffer,
                        const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
     {
         if (!buffer)

@@ -1862,7 +1862,7 @@ void WireSubscriptionBase::WireConnectionClosed(RR_SHARED_PTR<detail::WireSubscr
     // connections.erase(wire);
 }
 void WireSubscriptionBase::WireValueChanged(RR_SHARED_PTR<detail::WireSubscription_connection> wire,
-                                            RR_INTRUSIVE_PTR<RRValue> value, const TimeSpec& time)
+                                           const RR_INTRUSIVE_PTR<RRValue>& value, const TimeSpec& time)
 {
     RR_SHARED_PTR<WireConnectionBase> connection = wire->connection.lock();
     if (!connection)
@@ -1898,7 +1898,7 @@ void WireSubscriptionBase::WireValueChanged(RR_SHARED_PTR<detail::WireSubscripti
     }
 }
 
-void WireSubscriptionBase::fire_WireValueChanged(RR_INTRUSIVE_PTR<RRValue> value, const TimeSpec& time,
+void WireSubscriptionBase::fire_WireValueChanged(const RR_INTRUSIVE_PTR<RRValue>& value, const TimeSpec& time,
                                                  const RR_SHARED_PTR<WireConnectionBase>& connection)
 {}
 
@@ -2034,7 +2034,7 @@ void WireSubscription_connection::WireConnectionClosed(const RR_SHARED_PTR<WireC
 }
 
 void WireSubscription_connection::WireValueChanged(const RR_SHARED_PTR<WireConnectionBase>& connection,
-                                                   RR_INTRUSIVE_PTR<RRValue> value, const TimeSpec& time)
+                                                  const RR_INTRUSIVE_PTR<RRValue>& value, const TimeSpec& time)
 {
     RR_UNUSED(connection);
     RR_SHARED_PTR<WireSubscriptionBase> p = parent.lock();
@@ -2416,7 +2416,7 @@ void PipeSubscriptionBase::ClientDisconnected(const ServiceSubscriptionClientID&
 
 void PipeSubscriptionBase::PipeEndpointClosed(RR_SHARED_PTR<detail::PipeSubscription_connection> pipe) {}
 void PipeSubscriptionBase::PipeEndpointPacketReceived(RR_SHARED_PTR<detail::PipeSubscription_connection> pipe,
-                                                      RR_INTRUSIVE_PTR<RRValue> value)
+                                                     const RR_INTRUSIVE_PTR<RRValue>& value)
 {
     // RR_SHARED_PTR<RRObject> client = wire->client.lock();
     // if (!client) return;

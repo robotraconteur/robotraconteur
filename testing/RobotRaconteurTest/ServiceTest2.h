@@ -147,7 +147,7 @@ class testroot3_impl : public virtual com::robotraconteur::testing::TestService3
 
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble> > > get_c5();
     virtual void set_c5(
-        RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble> > > value);
+const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble> > >& value);
 
     virtual RobotRaconteur::cfloat get_c7();
     virtual void set_c7(RobotRaconteur::cfloat value);
@@ -175,11 +175,11 @@ class testroot3_impl : public virtual com::robotraconteur::testing::TestService3
 
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool> > > get_b4();
     virtual void set_b4(
-        RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool> > > value);
+const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool> > >& value);
 
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool> > > get_b5();
     virtual void set_b5(
-        RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool> > > value);
+const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool> > >& value);
 
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool> > >
     get_b6();
@@ -297,7 +297,7 @@ ServiceTest2_fill_testpod1_multidimarray(size_t m, size_t n, uint32_t seed);
 void ServiceTest2_verify_testpod1_multidimarray(
     RR_INTRUSIVE_PTR<RRPodMultiDimArray<com::robotraconteur::testing::TestService3::testpod1> > v, size_t m, size_t n,
     uint32_t seed);
-void ServiceTest2_verify_testpod1_multidimarray(RR_INTRUSIVE_PTR<RRValue> v, size_t m, size_t n, uint32_t seed);
+void ServiceTest2_verify_testpod1_multidimarray(const RR_INTRUSIVE_PTR<RRValue>& v, size_t m, size_t n, uint32_t seed);
 
 void ServiceTest2_fill_transform(com::robotraconteur::testing::TestService3::transform& v, uint32_t seed);
 void ServiceTest2_verify_transform(const com::robotraconteur::testing::TestService3::transform& v, uint32_t seed);
@@ -310,5 +310,5 @@ ServiceTest2_fill_transform_multidimarray(size_t m, size_t n, uint32_t seed);
 void ServiceTest2_verify_transform_multidimarray(
     RR_INTRUSIVE_PTR<RRNamedMultiDimArray<com::robotraconteur::testing::TestService3::transform> > v, size_t m,
     size_t n, uint32_t seed);
-void ServiceTest2_verify_transform_multidimarray(RR_INTRUSIVE_PTR<RRValue> v, size_t m, size_t n, uint32_t seed);
+void ServiceTest2_verify_transform_multidimarray(const RR_INTRUSIVE_PTR<RRValue>& v, size_t m, size_t n, uint32_t seed);
 } // namespace RobotRaconteurTest

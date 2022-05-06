@@ -34,7 +34,7 @@ static RobotRaconteurNode* check_node_null(RobotRaconteurNode* node)
     return node;
 }
 
-RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackStructure(RR_INTRUSIVE_PTR<RRStructure> structure,
+RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackStructure(const RR_INTRUSIVE_PTR<RRStructure>& structure,
                                                                 RobotRaconteurNode* node)
 {
 
@@ -70,7 +70,7 @@ RR_INTRUSIVE_PTR<RRStructure> UnpackStructure(const RR_INTRUSIVE_PTR<MessageElem
     return rr_cast<RRStructure>(factory->UnpackStructure(structure));
 }
 
-RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackPodArray(RR_INTRUSIVE_PTR<RRPodBaseArray> a,
+RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackPodArray(const RR_INTRUSIVE_PTR<RRPodBaseArray>& a,
                                                                RobotRaconteurNode* node)
 {
 
@@ -104,7 +104,7 @@ RR_INTRUSIVE_PTR<RRPodBaseArray> UnpackPodArray(const RR_INTRUSIVE_PTR<MessageEl
     return rr_cast<RRPodBaseArray>(factory->UnpackPodArray(a));
 }
 
-RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackPodMultiDimArray(RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> a,
+RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackPodMultiDimArray(const RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray>& a,
                                                                        RobotRaconteurNode* node)
 {
 
@@ -138,7 +138,7 @@ RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> UnpackPodMultiDimArray(const RR_INTRUSI
     return rr_cast<RRPodBaseMultiDimArray>(factory->UnpackPodMultiDimArray(a));
 }
 
-RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackNamedArray(RR_INTRUSIVE_PTR<RRNamedBaseArray> a,
+RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackNamedArray(const RR_INTRUSIVE_PTR<RRNamedBaseArray>& a,
                                                                  RobotRaconteurNode* node)
 {
 
@@ -173,7 +173,7 @@ RR_INTRUSIVE_PTR<RRNamedBaseArray> UnpackNamedArray(const RR_INTRUSIVE_PTR<Messa
     return rr_cast<RRNamedBaseArray>(factory->UnpackNamedArray(a));
 }
 
-RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackNamedMultiDimArray(RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> a,
+RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackNamedMultiDimArray(const RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray>& a,
                                                                          RobotRaconteurNode* node)
 {
 
@@ -208,7 +208,7 @@ RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> UnpackNamedMultiDimArray(const RR_INT
     return rr_cast<RRNamedBaseMultiDimArray>(factory->UnpackNamedMultiDimArray(a));
 }
 
-RR_INTRUSIVE_PTR<MessageElementData> PackVarType(RR_INTRUSIVE_PTR<RRValue> vardata, RobotRaconteurNode* node)
+RR_INTRUSIVE_PTR<MessageElementData> PackVarType(const RR_INTRUSIVE_PTR<RRValue>& vardata, RobotRaconteurNode* node)
 {
 
     if (!vardata)

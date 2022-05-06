@@ -150,7 +150,7 @@ void PipeEndpointBase::RemoteClose()
 }
 
 void PipeEndpointBase::AsyncSendPacketBase(
-    RR_INTRUSIVE_PTR<RRValue> packet,
+   const RR_INTRUSIVE_PTR<RRValue>& packet,
     RR_MOVE_ARG(boost::function<void(uint32_t, const RR_SHARED_PTR<RobotRaconteurException>&)>) handler)
 {
     if (direction == MemberDefinition_Direction_readonly)
@@ -271,7 +271,7 @@ static bool PipeEndpointBase_PipePacketReceived_recvpacket(std::deque<RR_INTRUSI
     return true;
 }
 
-void PipeEndpointBase::PipePacketReceived(RR_INTRUSIVE_PTR<RRValue> packet, uint32_t packetnum)
+void PipeEndpointBase::PipePacketReceived(const RR_INTRUSIVE_PTR<RRValue>& packet, uint32_t packetnum)
 {
     if (direction == MemberDefinition_Direction_writeonly)
     {
@@ -500,7 +500,7 @@ bool PipeBase::DispatchPacket(const RR_INTRUSIVE_PTR<MessageElement>& me, const 
     return false;
 }
 
-RR_INTRUSIVE_PTR<MessageElement> PipeBase::PackPacket(RR_INTRUSIVE_PTR<RRValue> data, int32_t index,
+RR_INTRUSIVE_PTR<MessageElement> PipeBase::PackPacket(const RR_INTRUSIVE_PTR<RRValue>& data, int32_t index,
                                                       uint32_t packetnumber, bool requestack)
 {
     // Use message 2
@@ -760,7 +760,7 @@ void PipeClientBase::Shutdown()
 }
 
 void PipeClientBase::AsyncSendPipePacket(
-    RR_INTRUSIVE_PTR<RRValue> data, int32_t index, uint32_t packetnumber, bool requestack, uint32_t endpoint,
+   const RR_INTRUSIVE_PTR<RRValue>& data, int32_t index, uint32_t packetnumber, bool requestack, uint32_t endpoint,
     bool unreliable, RR_MOVE_ARG(boost::function<void(uint32_t, const RR_SHARED_PTR<RobotRaconteurException>&)>) handler)
 {
     RR_UNUSED(endpoint);
@@ -1145,7 +1145,7 @@ void PipeServerBase::Shutdown()
 }
 
 void PipeServerBase::AsyncSendPipePacket(
-    RR_INTRUSIVE_PTR<RRValue> data, int32_t index, uint32_t packetnumber, bool requestack, uint32_t e, bool unreliable,
+   const RR_INTRUSIVE_PTR<RRValue>& data, int32_t index, uint32_t packetnumber, bool requestack, uint32_t e, bool unreliable,
     RR_MOVE_ARG(boost::function<void(uint32_t, const RR_SHARED_PTR<RobotRaconteurException>&)>) handler)
 {
 
@@ -1555,7 +1555,7 @@ void PipeBroadcasterBase::handle_send(int32_t id, const RR_SHARED_PTR<RobotRacon
     detail::InvokeHandler(node, handler);
 }
 
-void PipeBroadcasterBase::SendPacketBase(RR_INTRUSIVE_PTR<RRValue> packet)
+void PipeBroadcasterBase::SendPacketBase(const RR_INTRUSIVE_PTR<RRValue>& packet)
 {
     ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
 
@@ -1564,7 +1564,7 @@ void PipeBroadcasterBase::SendPacketBase(RR_INTRUSIVE_PTR<RRValue> packet)
     t->end_void();
 }
 
-void PipeBroadcasterBase::AsyncSendPacketBase(RR_INTRUSIVE_PTR<RRValue> packet,
+void PipeBroadcasterBase::AsyncSendPacketBase(const RR_INTRUSIVE_PTR<RRValue>& packet,
                                               RR_MOVE_ARG(boost::function<void()>) handler)
 {
 

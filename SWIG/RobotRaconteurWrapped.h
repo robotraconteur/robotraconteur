@@ -234,23 +234,23 @@ class WrappedServiceFactory : public virtual RobotRaconteur::ServiceFactory
     virtual RR_SHARED_PTR<ServiceDefinition> ServiceDef();
     virtual RR_SHARED_PTR<RobotRaconteur::StructureStub> FindStructureStub(boost::string_ref s);
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackStructure(
-        RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> structin);
+       const RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure>& structin);
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> UnpackStructure(
         const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& mstructin);
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackPodArray(
-        RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> structure);
+       const RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray>& structure);
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> UnpackPodArray(
         const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& structure);
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackPodMultiDimArray(
-        RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> structure);
+       const RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray>& structure);
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> UnpackPodMultiDimArray(
         const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& structure);
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackNamedArray(
-        RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> structure);
+       const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray>& structure);
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> UnpackNamedArray(
         const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& structure);
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackNamedMultiDimArray(
-        RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> structure);
+       const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray>& structure);
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> UnpackNamedMultiDimArray(
         const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& structure);
     virtual RR_SHARED_PTR<RobotRaconteur::ServiceStub> CreateStub(boost::string_ref objecttype, boost::string_ref path,
@@ -751,7 +751,7 @@ class WrappedWireConnection : public virtual WireConnectionBase
     WrappedWireConnection(const RR_SHARED_PTR<WireBase>& parent, uint32_t endpoint, const RR_SHARED_PTR<TypeDefinition>& Type,
                           MemberDefinition_Direction direction);
 
-    virtual void fire_WireValueChanged(RR_INTRUSIVE_PTR<RRValue> value, TimeSpec time);
+    virtual void fire_WireValueChanged(const RR_INTRUSIVE_PTR<RRValue>& value, TimeSpec time);
     virtual void fire_WireClosedCallback();
 
     RR_SHARED_PTR<TypeDefinition> Type;
@@ -1054,7 +1054,7 @@ class WrappedArrayMemoryClientUtil
   public:
     static RR_INTRUSIVE_PTR<RRBaseArray> Read(const RR_SHARED_PTR<ArrayMemoryBase>& mem, uint64_t memorypos, uint64_t count);
 
-    static void Write(const RR_SHARED_PTR<ArrayMemoryBase>& mem, uint64_t memorypos, RR_INTRUSIVE_PTR<RRBaseArray> buffer,
+    static void Write(const RR_SHARED_PTR<ArrayMemoryBase>& mem, uint64_t memorypos,const RR_INTRUSIVE_PTR<RRBaseArray>& buffer,
                       uint64_t bufferpos, uint64_t count);
 
     static MemberDefinition_Direction Direction(const RR_SHARED_PTR<ArrayMemoryBase>& mem);
@@ -1426,9 +1426,9 @@ class WrappedArrayMemoryDirector
 
     virtual ~WrappedArrayMemoryDirector() {}
     virtual uint64_t Length() { return 0; }
-    virtual void Read(uint64_t memorypos, boost::intrusive_ptr<RRBaseArray> buffer, uint64_t bufferpos, uint64_t count)
+    virtual void Read(uint64_t memorypos,const boost::intrusive_ptr<RRBaseArray>& buffer, uint64_t bufferpos, uint64_t count)
     {}
-    virtual void Write(uint64_t memorypos, boost::intrusive_ptr<RRBaseArray> buffer, uint64_t bufferpos, uint64_t count)
+    virtual void Write(uint64_t memorypos,const boost::intrusive_ptr<RRBaseArray>& buffer, uint64_t bufferpos, uint64_t count)
     {}
 
     int32_t objectheapid;
@@ -1461,14 +1461,14 @@ class WrappedArrayMemory : public virtual ArrayMemory<T>
         DIRECTOR_CALL(WrappedArrayMemoryDirector, len = RR_Director2->Length());
         return len;
     }
-    virtual void Read(uint64_t memorypos, boost::intrusive_ptr<RRArray<T> > buffer, uint64_t bufferpos, uint64_t count)
+    virtual void Read(uint64_t memorypos,const boost::intrusive_ptr<RRArray<T> >& buffer, uint64_t bufferpos, uint64_t count)
     {
         if (!RR_Director)
             throw InvalidOperationException("Director not set");
         boost::intrusive_ptr<RRBaseArray> buffer2 = rr_cast<RRBaseArray>(buffer);
         DIRECTOR_CALL(WrappedArrayMemoryDirector, RR_Director2->Read(memorypos, buffer2, bufferpos, count));
     }
-    virtual void Write(uint64_t memorypos, boost::intrusive_ptr<RRArray<T> > buffer, uint64_t bufferpos, uint64_t count)
+    virtual void Write(uint64_t memorypos,const boost::intrusive_ptr<RRArray<T> >& buffer, uint64_t bufferpos, uint64_t count)
     {
         if (!RR_Director)
             throw InvalidOperationException("Director not set");
@@ -1548,7 +1548,7 @@ class WrappedMultiDimArrayMemory : public virtual MultiDimArrayMemory<T>
         return c;
     }
 
-    virtual void Read(const std::vector<uint64_t>& memorypos, RR_INTRUSIVE_PTR<RRMultiDimArray<T> > buffer,
+    virtual void Read(const std::vector<uint64_t>& memorypos, const RR_INTRUSIVE_PTR<RRMultiDimArray<T> >& buffer,
                       const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
     {
         if (!RR_Director)
@@ -1566,7 +1566,7 @@ class WrappedMultiDimArrayMemory : public virtual MultiDimArrayMemory<T>
         DIRECTOR_CALL(WrappedMultiDimArrayMemoryDirector, RR_Director2->Read(&p))
     }
 
-    virtual void Write(const std::vector<uint64_t>& memorypos, RR_INTRUSIVE_PTR<RRMultiDimArray<T> > buffer,
+    virtual void Write(const std::vector<uint64_t>& memorypos, const RR_INTRUSIVE_PTR<RRMultiDimArray<T> >& buffer,
                        const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
     {
         if (!RR_Director)
@@ -2033,7 +2033,7 @@ class WrappedWireSubscription : public WireSubscriptionBase
     void SetRRDirector(WrappedWireSubscriptionDirector* director, int32_t id);
 
   protected:
-    virtual void fire_WireValueChanged(RR_INTRUSIVE_PTR<RRValue> value, const TimeSpec& time,
+    virtual void fire_WireValueChanged(const RR_INTRUSIVE_PTR<RRValue>& value, const TimeSpec& time,
                                        const RR_SHARED_PTR<WireConnectionBase>& connection);
     RR_SHARED_PTR<WrappedWireSubscriptionDirector> RR_Director;
     boost::shared_mutex RR_Director_lock;

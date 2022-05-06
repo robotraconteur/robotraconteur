@@ -67,7 +67,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurException : public std::runtime_erro
      * @param param An optional exception parameter
      */
     RobotRaconteurException(MessageErrorType ErrorCode, const std::string& error, const std::string& message,
-                            std::string sub_name, RR_INTRUSIVE_PTR<RRValue> param);
+                            std::string sub_name,const RR_INTRUSIVE_PTR<RRValue>& param);
 
     /**
      * @brief Construct a RobotRaconteurException based on an existing exception
@@ -191,7 +191,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurException : public std::runtime_erro
     {                                                                                                                  \
       public:                                                                                                          \
         exp_cpp_type(const std::string& message, std::string sub_name = "",                                            \
-                     RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());                                  \
+                     const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());                                  \
     };
 
 #define RR_EXCEPTION_DECL_2(exp_cpp_type, exp_code)                                                                    \
@@ -199,7 +199,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurException : public std::runtime_erro
     {                                                                                                                  \
       public:                                                                                                          \
         exp_cpp_type(const std::string& error, const std::string& message, std::string sub_name = "",                  \
-                     RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());                                  \
+                     const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());                                  \
         exp_cpp_type(std::exception& innerexception);                                                                  \
     };
 
@@ -229,7 +229,7 @@ class ConnectionException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     ConnectionException(const std::string& message, std::string sub_name = "",
-                        RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                        const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -250,7 +250,7 @@ class ProtocolException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     ProtocolException(const std::string& message, std::string sub_name = "",
-                      RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                      const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -271,7 +271,7 @@ class ServiceNotFoundException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     ServiceNotFoundException(const std::string& message, std::string sub_name = "",
-                             RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                             const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -297,7 +297,7 @@ class ObjectNotFoundException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     ObjectNotFoundException(const std::string& message, std::string sub_name = "",
-                            RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                            const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -325,7 +325,7 @@ class InvalidEndpointException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     InvalidEndpointException(const std::string& message, std::string sub_name = "",
-                             RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                             const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -352,7 +352,7 @@ class EndpointCommunicationFatalException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     EndpointCommunicationFatalException(const std::string& message, std::string sub_name = "",
-                                        RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                                        const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -376,7 +376,7 @@ class NodeNotFoundException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     NodeNotFoundException(const std::string& message, std::string sub_name = "",
-                          RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                          const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -400,7 +400,7 @@ class ServiceException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     ServiceException(const std::string& message, std::string sub_name = "",
-                     RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                     const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -425,7 +425,7 @@ class MemberNotFoundException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     MemberNotFoundException(const std::string& message, std::string sub_name = "",
-                            RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                            const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -447,7 +447,7 @@ class MemberFormatMismatchException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     MemberFormatMismatchException(const std::string& message, std::string sub_name = "",
-                                  RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                                  const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -470,7 +470,7 @@ class DataTypeMismatchException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     DataTypeMismatchException(const std::string& message, std::string sub_name = "",
-                              RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                              const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -496,7 +496,7 @@ class DataTypeException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     DataTypeException(const std::string& message, std::string sub_name = "",
-                      RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                      const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -522,7 +522,7 @@ class DataSerializationException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     DataSerializationException(const std::string& message, std::string sub_name = "",
-                               RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                               const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -543,7 +543,7 @@ class MessageEntryNotFoundException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     MessageEntryNotFoundException(const std::string& message, std::string sub_name = "",
-                                  RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                                  const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -567,7 +567,7 @@ class MessageElementNotFoundException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     MessageElementNotFoundException(const std::string& message, std::string sub_name = "",
-                                    RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                                    const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -592,7 +592,7 @@ class UnknownException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     UnknownException(const std::string& error, const std::string& message, std::string sub_name = "",
-                     RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                     const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -612,7 +612,7 @@ class InvalidOperationException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     InvalidOperationException(const std::string& message, std::string sub_name = "",
-                              RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                              const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -632,7 +632,7 @@ class InvalidArgumentException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     InvalidArgumentException(const std::string& message, std::string sub_name = "",
-                             RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                             const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -652,7 +652,7 @@ class OperationFailedException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     OperationFailedException(const std::string& message, std::string sub_name = "",
-                             RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                             const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -672,7 +672,7 @@ class NullValueException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     NullValueException(const std::string& message, std::string sub_name = "",
-                       RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                       const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -692,7 +692,7 @@ class InternalErrorException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     InternalErrorException(const std::string& message, std::string sub_name = "",
-                           RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                           const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -712,7 +712,7 @@ class PermissionDeniedException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     PermissionDeniedException(const std::string& message, std::string sub_name = "",
-                              RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                              const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -732,7 +732,7 @@ class SystemResourcePermissionDeniedException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     SystemResourcePermissionDeniedException(const std::string& message, std::string sub_name = "",
-                                            RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                                            const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -752,7 +752,7 @@ class OutOfSystemResourceException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     OutOfSystemResourceException(const std::string& message, std::string sub_name = "",
-                                 RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                                 const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -772,7 +772,7 @@ class SystemResourceException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     SystemResourceException(const std::string& message, std::string sub_name = "",
-                            RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                            const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -792,7 +792,7 @@ class ResourceNotFoundException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     ResourceNotFoundException(const std::string& message, std::string sub_name = "",
-                              RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                              const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -812,7 +812,7 @@ class IOException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     IOException(const std::string& message, std::string sub_name = "",
-                RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -836,7 +836,7 @@ class BufferLimitViolationException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     BufferLimitViolationException(const std::string& message, std::string sub_name = "",
-                                  RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                                  const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -857,7 +857,7 @@ class ServiceDefinitionException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     ServiceDefinitionException(const std::string& message, std::string sub_name = "",
-                               RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                               const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -878,7 +878,7 @@ class OutOfRangeException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     OutOfRangeException(const std::string& message, std::string sub_name = "",
-                        RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                        const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -899,7 +899,7 @@ class KeyNotFoundException : public RobotRaconteurException
      */
 
     KeyNotFoundException(const std::string& message, std::string sub_name = "",
-                         RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                         const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -920,7 +920,7 @@ class InvalidConfigurationException : public RobotRaconteurException
      */
 
     InvalidConfigurationException(const std::string& message, std::string sub_name = "",
-                                  RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                                  const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -941,7 +941,7 @@ class InvalidStateException : public RobotRaconteurException
      */
 
     InvalidStateException(const std::string& message, std::string sub_name = "",
-                          RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                          const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -969,7 +969,7 @@ class RobotRaconteurRemoteException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     RobotRaconteurRemoteException(const std::string& error, const std::string& message, std::string sub_name = "",
-                                  RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                                  const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 
     /**
      * @brief Construct a RobotRaconteurRemoteException from an existing exception
@@ -1002,7 +1002,7 @@ class RequestTimeoutException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     RequestTimeoutException(const std::string& message, std::string sub_name = "",
-                            RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                            const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -1022,7 +1022,7 @@ class ReadOnlyMemberException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     ReadOnlyMemberException(const std::string& message, std::string sub_name = "",
-                            RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                            const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -1042,7 +1042,7 @@ class WriteOnlyMemberException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     WriteOnlyMemberException(const std::string& message, std::string sub_name = "",
-                             RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                             const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -1062,7 +1062,7 @@ class NotImplementedException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     NotImplementedException(const std::string& message, std::string sub_name = "",
-                            RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                            const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -1082,7 +1082,7 @@ class MemberBusyException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     MemberBusyException(const std::string& message, std::string sub_name = "",
-                        RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                        const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -1106,7 +1106,7 @@ class ValueNotSetException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     ValueNotSetException(const std::string& message, std::string sub_name = "",
-                         RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                         const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -1127,7 +1127,7 @@ class AuthenticationException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     AuthenticationException(const std::string& message, std::string sub_name = "",
-                            RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                            const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -1152,7 +1152,7 @@ class ObjectLockedException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     ObjectLockedException(const std::string& message, std::string sub_name = "",
-                          RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                          const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -1174,7 +1174,7 @@ class AbortOperationException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     AbortOperationException(const std::string& message, std::string sub_name = "",
-                            RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                            const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -1202,7 +1202,7 @@ class OperationAbortedException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     OperationAbortedException(const std::string& message, std::string sub_name = "",
-                              RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                              const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -1227,7 +1227,7 @@ class StopIterationException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     StopIterationException(const std::string& message, std::string sub_name = "",
-                           RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                           const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -1248,7 +1248,7 @@ class OperationTimeoutException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     OperationTimeoutException(const std::string& message, std::string sub_name = "",
-                              RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                              const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 /**
@@ -1269,7 +1269,7 @@ class OperationCancelledException : public RobotRaconteurException
      * @param param_ Optional error param
      */
     OperationCancelledException(const std::string& message, std::string sub_name = "",
-                                RR_INTRUSIVE_PTR<RRValue> param_ = RR_INTRUSIVE_PTR<RRValue>());
+                                const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES

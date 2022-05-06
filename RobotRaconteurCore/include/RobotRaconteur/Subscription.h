@@ -847,7 +847,7 @@ class ROBOTRACONTEUR_CORE_API WireSubscriptionBase : public RR_ENABLE_SHARED_FRO
     void ClientDisconnected(const ServiceSubscriptionClientID& client_id, const RR_SHARED_PTR<RRObject>& client);
 
     void WireConnectionClosed(RR_SHARED_PTR<detail::WireSubscription_connection> wire);
-    void WireValueChanged(RR_SHARED_PTR<detail::WireSubscription_connection> wire, RR_INTRUSIVE_PTR<RRValue> value,
+    void WireValueChanged(RR_SHARED_PTR<detail::WireSubscription_connection> wire,const RR_INTRUSIVE_PTR<RRValue>& value,
                           const TimeSpec& time);
 
     boost::mutex this_lock;
@@ -870,7 +870,7 @@ class ROBOTRACONTEUR_CORE_API WireSubscriptionBase : public RR_ENABLE_SHARED_FRO
     std::string membername;
     std::string servicepath;
 
-    virtual void fire_WireValueChanged(RR_INTRUSIVE_PTR<RRValue> value, const TimeSpec& time,
+    virtual void fire_WireValueChanged(const RR_INTRUSIVE_PTR<RRValue>& value, const TimeSpec& time,
                                        const RR_SHARED_PTR<WireConnectionBase>& connection);
     virtual bool isempty_WireValueChanged();
     RR_SHARED_PTR<detail::async_signal_pool_semaphore> wire_value_changed_semaphore;
@@ -985,7 +985,7 @@ class WireSubscription : public WireSubscriptionBase
   protected:
     boost::signals2::signal<void(RR_SHARED_PTR<WireSubscription<T> >, const T&, const TimeSpec&)> wire_value_changed;
 
-    virtual void fire_WireValueChanged(RR_INTRUSIVE_PTR<RRValue> value, const TimeSpec& time,
+    virtual void fire_WireValueChanged(const RR_INTRUSIVE_PTR<RRValue>& value, const TimeSpec& time,
                                        const RR_SHARED_PTR<WireConnectionBase>& connection)
     {
       RR_UNUSED(connection);
@@ -1076,7 +1076,7 @@ class ROBOTRACONTEUR_CORE_API PipeSubscriptionBase : public RR_ENABLE_SHARED_FRO
 
     void PipeEndpointClosed(RR_SHARED_PTR<detail::PipeSubscription_connection> pipe);
     void PipeEndpointPacketReceived(RR_SHARED_PTR<detail::PipeSubscription_connection> pipe,
-                                    RR_INTRUSIVE_PTR<RRValue> packet);
+                                   const RR_INTRUSIVE_PTR<RRValue>& packet);
 
     boost::mutex this_lock;
     boost::unordered_map<ServiceSubscriptionClientID, RR_SHARED_PTR<detail::PipeSubscription_connection> > connections;

@@ -45,16 +45,16 @@ class asynctestroot_impl : public virtual com::robotraconteur::testing::TestServ
                                                    const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)>
                                   rr_handler,
                               int32_t rr_timeout = RR_TIMEOUT_INFINITE);
-    virtual void async_set_d2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > value,
+    virtual void async_set_d2(const RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> >& value,
                               boost::function<void(const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> rr_handler,
                               int32_t rr_timeout = RR_TIMEOUT_INFINITE);
 
     virtual void async_get_s2(
-        boost::function<void(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char> > >,
+        boost::function<void(const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char> > >&,
                              const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)>
             rr_handler,
         int32_t rr_timeout = RR_TIMEOUT_INFINITE);
-    virtual void async_set_s2(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char> > > value,
+    virtual void async_set_s2(const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char> > >& value,
                               boost::function<void(const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> rr_handler,
                               int32_t rr_timeout = RR_TIMEOUT_INFINITE);
 

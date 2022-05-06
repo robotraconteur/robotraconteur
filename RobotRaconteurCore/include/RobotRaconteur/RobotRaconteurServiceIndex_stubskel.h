@@ -13,23 +13,23 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurServiceIndexFactory : public virtual
     virtual std::string DefString();
     virtual RR_SHARED_PTR<RobotRaconteur::StructureStub> FindStructureStub(boost::string_ref s);
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackStructure(
-        RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> structin);
+       const RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure>& structin);
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> UnpackStructure(
         const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& mstructin);
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackPodArray(
-        RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> structure);
+       const RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray>& structure);
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> UnpackPodArray(
         const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& structure);
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackPodMultiDimArray(
-        RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> structure);
+       const RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray>& structure);
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> UnpackPodMultiDimArray(
         const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& structure);
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackNamedArray(
-        RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> structure);
+       const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray>& structure);
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> UnpackNamedArray(
         const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& structure);
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackNamedMultiDimArray(
-        RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> structure);
+       const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray>& structure);
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> UnpackNamedMultiDimArray(
         const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& structure);
     virtual RR_SHARED_PTR<RobotRaconteur::ServiceStub> CreateStub(boost::string_ref objecttype, boost::string_ref path,
@@ -50,7 +50,7 @@ class NodeInfo_stub : public virtual RobotRaconteur::StructureStub
   public:
     NodeInfo_stub(const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurNode>& node) : RobotRaconteur::StructureStub(node) {}
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackStructure(
-        RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> s);
+       const RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>& s);
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> UnpackStructure(
         const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& m);
 };
@@ -60,7 +60,7 @@ class ServiceInfo_stub : public virtual RobotRaconteur::StructureStub
   public:
     ServiceInfo_stub(const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurNode>& node) : RobotRaconteur::StructureStub(node) {}
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackStructure(
-        RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> s);
+       const RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>& s);
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> UnpackStructure(
         const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& m);
 };
@@ -69,18 +69,18 @@ class async_ServiceIndex
 {
   public:
     virtual void async_GetLocalNodeServices(
-        boost::function<void(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, ServiceInfo> >,
+        boost::function<void(const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, ServiceInfo> >&,
                              const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)>
             rr_handler,
         int32_t rr_timeout = RR_TIMEOUT_INFINITE) = 0;
 
-    virtual void async_GetRoutedNodes(boost::function<void(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, NodeInfo> >,
+    virtual void async_GetRoutedNodes(boost::function<void(const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, NodeInfo> >&,
                                                            const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)>
                                           rr_handler,
                                       int32_t rr_timeout = RR_TIMEOUT_INFINITE) = 0;
 
     virtual void async_GetDetectedNodes(
-        boost::function<void(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, NodeInfo> >,
+        boost::function<void(const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, NodeInfo> >&,
                              const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)>
             rr_handler,
         int32_t rr_timeout = RR_TIMEOUT_INFINITE) = 0;
@@ -112,7 +112,7 @@ class ServiceIndex_stub : public virtual ServiceIndex,
     boost::signals2::signal<void()> rrvar_LocalNodeServicesChanged;
 
     virtual void async_GetLocalNodeServices(
-        boost::function<void(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, ServiceInfo> >,
+        boost::function<void(const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, ServiceInfo> >&,
                              const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)>
             rr_handler,
         int32_t rr_timeout = RR_TIMEOUT_INFINITE);
@@ -120,12 +120,12 @@ class ServiceIndex_stub : public virtual ServiceIndex,
   protected:
     virtual void rrend_GetLocalNodeServices(
         const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m, const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>& err,
-        boost::function<void(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, ServiceInfo> >,
+        boost::function<void(const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, ServiceInfo> >&,
                              const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)>
             handler);
 
   public:
-    virtual void async_GetRoutedNodes(boost::function<void(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, NodeInfo> >,
+    virtual void async_GetRoutedNodes(boost::function<void(const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, NodeInfo> >&,
                                                            const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)>
                                           rr_handler,
                                       int32_t rr_timeout = RR_TIMEOUT_INFINITE);
@@ -133,13 +133,13 @@ class ServiceIndex_stub : public virtual ServiceIndex,
   protected:
     virtual void rrend_GetRoutedNodes(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m,
                                       const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>& err,
-                                      boost::function<void(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, NodeInfo> >,
+                                      boost::function<void(const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, NodeInfo> >&,
                                                            const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)>
                                           handler);
 
   public:
     virtual void async_GetDetectedNodes(
-        boost::function<void(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, NodeInfo> >,
+        boost::function<void(const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, NodeInfo> >&,
                              const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)>
             rr_handler,
         int32_t rr_timeout = RR_TIMEOUT_INFINITE);
@@ -147,7 +147,7 @@ class ServiceIndex_stub : public virtual ServiceIndex,
   protected:
     virtual void rrend_GetDetectedNodes(
         const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m, const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>& err,
-        boost::function<void(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, NodeInfo> >,
+        boost::function<void(const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, NodeInfo> >&,
                              const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)>
             handler);
 

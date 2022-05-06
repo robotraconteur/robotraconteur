@@ -757,12 +757,12 @@ void Discovery_updateserviceinfo::handle_error(const RR_SHARED_PTR<RobotRaconteu
 void Discovery_updateserviceinfo::rr_empty_handler() {}
 
 static std::vector<std::string> Discovery_updateserviceinfo_convertmap(
-    RR_INTRUSIVE_PTR<RRMap<int32_t, RRArray<char> > > d)
+    const RR_INTRUSIVE_PTR<RRMap<int32_t, RRArray<char> > >& d)
 {
     RR_NULL_CHECK(d);
     std::vector<std::string> o;
     o.reserve(d->size());
-    BOOST_FOREACH (RR_INTRUSIVE_PTR<RRArray<char> > d2, *d | boost::adaptors::map_values)
+    BOOST_FOREACH (const RR_INTRUSIVE_PTR<RRArray<char> >& d2, *d | boost::adaptors::map_values)
     {
         o.push_back(RRArrayToString(d2));
     }

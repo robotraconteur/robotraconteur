@@ -64,7 +64,7 @@ RR_RELEASE_GIL()
 public:
 	static boost::intrusive_ptr<RRBaseArray> Read(const boost::shared_ptr<ArrayMemoryBase>& mem, uint64_t memorypos, uint64_t count);
 
-	static void Write(const boost::shared_ptr<ArrayMemoryBase>& mem, uint64_t memorypos, boost::intrusive_ptr<RRBaseArray> buffer, uint64_t bufferpos, uint64_t count);
+	static void Write(const boost::shared_ptr<ArrayMemoryBase>& mem, uint64_t memorypos,const boost::intrusive_ptr<RRBaseArray>& buffer, uint64_t bufferpos, uint64_t count);
 
 	static MemberDefinition_Direction Direction(const boost::shared_ptr<ArrayMemoryBase>& mem);
 RR_KEEP_GIL()
@@ -130,8 +130,8 @@ class WrappedArrayMemoryDirector
 public:
 	virtual ~WrappedArrayMemoryDirector() {}
 	virtual uint64_t Length();
-	virtual void Read(uint64_t memorypos, boost::intrusive_ptr<RRBaseArray> buffer, uint64_t bufferpos, uint64_t count);
-	virtual void Write(uint64_t memorypos, boost::intrusive_ptr<RRBaseArray> buffer, uint64_t bufferpos, uint64_t count);
+	virtual void Read(uint64_t memorypos,const boost::intrusive_ptr<RRBaseArray>& buffer, uint64_t bufferpos, uint64_t count);
+	virtual void Write(uint64_t memorypos,const boost::intrusive_ptr<RRBaseArray>& buffer, uint64_t bufferpos, uint64_t count);
 	int32_t objectheapid;
 };
 

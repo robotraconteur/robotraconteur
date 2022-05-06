@@ -270,7 +270,7 @@ void subscribertest_waitwire(RR_SHARED_PTR<WireSubscription<RR_INTRUSIVE_PTR<Rob
 
 void subscribertest_wirechanged(
     RR_SHARED_PTR<WireSubscription<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > > > w1,
-    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > val, const TimeSpec& time)
+const RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> >& val, const TimeSpec& time)
 {
     // cout << "Wire value: " << RRArrayToScalar(val) << endl;
 }

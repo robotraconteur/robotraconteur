@@ -32,7 +32,7 @@ RobotRaconteurException::RobotRaconteurException() : std::runtime_error("")
 
 RobotRaconteurException::RobotRaconteurException(MessageErrorType ErrorCode, const std::string& error,
                                                  const std::string& message, std::string sub_name,
-                                                 RR_INTRUSIVE_PTR<RRValue> param_)
+                                                const RR_INTRUSIVE_PTR<RRValue>& param_)
     : std::runtime_error((error + " " + message).c_str())
 {
     InitializeInstanceFields();
@@ -62,13 +62,13 @@ void RobotRaconteurException::InitializeInstanceFields()
 }
 
 #define RR_EXCEPTION_DEF_1(exp_cpp_type, exp_code, exp_type_str)                                                       \
-    exp_cpp_type::exp_cpp_type(const std::string& message, std::string sub_type, RR_INTRUSIVE_PTR<RRValue> param_)     \
+    exp_cpp_type::exp_cpp_type(const std::string& message, std::string sub_type,const RR_INTRUSIVE_PTR<RRValue>& param_)     \
         : RobotRaconteurException(exp_code, exp_type_str, message, sub_type, param_)                                   \
     {}
 
 #define RR_EXCEPTION_DEF_2(exp_cpp_type, exp_code)                                                                     \
     exp_cpp_type::exp_cpp_type(const std::string& error, const std::string& message, std::string sub_type,             \
-                               RR_INTRUSIVE_PTR<RRValue> param_)                                                       \
+                              const RR_INTRUSIVE_PTR<RRValue>& param_)                                                       \
         : RobotRaconteurException(exp_code, error, message, sub_type, param_)                                          \
     {}                                                                                                                 \
     exp_cpp_type::exp_cpp_type(std::exception& innerexception)                                                         \

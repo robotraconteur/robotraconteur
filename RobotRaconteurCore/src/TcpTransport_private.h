@@ -86,11 +86,11 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
     void do_starttls5_1(const RR_SHARED_PTR<RRObject>& parameter, const RR_SHARED_PTR<RobotRaconteurException>& err,
                         boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
-    void do_starttls6(const boost::system::error_code& error, RR_INTRUSIVE_PTR<Message> request);
+    void do_starttls6(const boost::system::error_code& error,const RR_INTRUSIVE_PTR<Message>& request);
 
-    void do_starttls7(const boost::system::error_code& error, RR_INTRUSIVE_PTR<Message> request);
+    void do_starttls7(const boost::system::error_code& error,const RR_INTRUSIVE_PTR<Message>& request);
 
-    void do_starttls8(const RR_SHARED_PTR<RobotRaconteurException>& error, RR_INTRUSIVE_PTR<Message> request);
+    void do_starttls8(const RR_SHARED_PTR<RobotRaconteurException>& error,const RR_INTRUSIVE_PTR<Message>& request);
 
     void do_starttls9(const boost::system::error_code& error);
 

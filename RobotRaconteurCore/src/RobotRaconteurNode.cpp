@@ -322,7 +322,7 @@ uint32_t RobotRaconteurNode::RegisterTransport(const RR_SHARED_PTR<Transport>& t
 }
 
 RR_INTRUSIVE_PTR<MessageElementNestedElementList> RobotRaconteurNode::PackStructure(
-    RR_INTRUSIVE_PTR<RRStructure> structure)
+   const RR_INTRUSIVE_PTR<RRStructure>& structure)
 {
     return detail::packing::PackStructure(structure, this);
 }
@@ -333,7 +333,7 @@ RR_INTRUSIVE_PTR<RRStructure> RobotRaconteurNode::UnpackStructure(
     return detail::packing::UnpackStructure(structure, this);
 }
 
-RR_INTRUSIVE_PTR<MessageElementNestedElementList> RobotRaconteurNode::PackPodArray(RR_INTRUSIVE_PTR<RRPodBaseArray> a)
+RR_INTRUSIVE_PTR<MessageElementNestedElementList> RobotRaconteurNode::PackPodArray(const RR_INTRUSIVE_PTR<RRPodBaseArray>& a)
 {
     return detail::packing::PackPodArray(a, this);
 }
@@ -344,7 +344,7 @@ RR_INTRUSIVE_PTR<RRPodBaseArray> RobotRaconteurNode::UnpackPodArray(const RR_INT
 }
 
 RR_INTRUSIVE_PTR<MessageElementNestedElementList> RobotRaconteurNode::PackPodMultiDimArray(
-    RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> a)
+   const RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray>& a)
 {
     return detail::packing::PackPodMultiDimArray(a, this);
 }
@@ -356,7 +356,7 @@ RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> RobotRaconteurNode::UnpackPodMultiDimAr
 }
 
 RR_INTRUSIVE_PTR<MessageElementNestedElementList> RobotRaconteurNode::PackNamedArray(
-    RR_INTRUSIVE_PTR<RRNamedBaseArray> a)
+   const RR_INTRUSIVE_PTR<RRNamedBaseArray>& a)
 {
     return detail::packing::PackNamedArray(a, this);
 }
@@ -368,7 +368,7 @@ RR_INTRUSIVE_PTR<RRNamedBaseArray> RobotRaconteurNode::UnpackNamedArray(
 }
 
 RR_INTRUSIVE_PTR<MessageElementNestedElementList> RobotRaconteurNode::PackNamedMultiDimArray(
-    RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> a)
+   const RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray>& a)
 {
     return detail::packing::PackNamedMultiDimArray(a, this);
 }
@@ -379,7 +379,7 @@ RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> RobotRaconteurNode::UnpackNamedMultiD
     return detail::packing::UnpackNamedMultiDimArray(a, this);
 }
 
-RR_INTRUSIVE_PTR<MessageElementData> RobotRaconteurNode::PackVarType(RR_INTRUSIVE_PTR<RRValue> vardata)
+RR_INTRUSIVE_PTR<MessageElementData> RobotRaconteurNode::PackVarType(const RR_INTRUSIVE_PTR<RRValue>& vardata)
 {
     return detail::packing::PackVarType(vardata, this);
 }

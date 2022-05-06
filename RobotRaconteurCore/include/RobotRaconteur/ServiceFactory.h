@@ -78,30 +78,30 @@ class ROBOTRACONTEUR_CORE_API ServiceFactory
 
     virtual RR_SHARED_PTR<StructureStub> FindStructureStub(boost::string_ref s) = 0;
 
-    virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackStructure(RR_INTRUSIVE_PTR<RRStructure> structin) = 0;
+    virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackStructure(const RR_INTRUSIVE_PTR<RRStructure>& structin) = 0;
 
     virtual RR_INTRUSIVE_PTR<RRValue> UnpackStructure(const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& mstructin) = 0;
 
     virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackPodArray(
-        RR_INTRUSIVE_PTR<RRPodBaseArray> structure) = 0;
+       const RR_INTRUSIVE_PTR<RRPodBaseArray>& structure) = 0;
 
     virtual RR_INTRUSIVE_PTR<RRPodBaseArray> UnpackPodArray(
         const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& structure) = 0;
 
     virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackPodMultiDimArray(
-        RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> structure) = 0;
+       const RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray>& structure) = 0;
 
     virtual RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> UnpackPodMultiDimArray(
         const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& structure) = 0;
 
     virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackNamedArray(
-        RR_INTRUSIVE_PTR<RRNamedBaseArray> structure) = 0;
+       const RR_INTRUSIVE_PTR<RRNamedBaseArray>& structure) = 0;
 
     virtual RR_INTRUSIVE_PTR<RRNamedBaseArray> UnpackNamedArray(
         const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& structure) = 0;
 
     virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackNamedMultiDimArray(
-        RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> structure) = 0;
+       const RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray>& structure) = 0;
 
     virtual RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> UnpackNamedMultiDimArray(
         const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& structure) = 0;

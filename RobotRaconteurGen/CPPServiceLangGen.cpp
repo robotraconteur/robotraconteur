@@ -1644,7 +1644,7 @@ void CPPServiceLangGen::GenerateServiceFactoryHeader(ServiceDefinition* d, ostre
     w2 << "virtual RR_SHARED_PTR<RobotRaconteur::StructureStub> FindStructureStub(boost::string_ref s);" << endl;
 
     w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> "
-          "PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> structin);"
+          "PackStructure(const RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure>& structin);"
        << endl;
 
     w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> "
@@ -1652,7 +1652,7 @@ void CPPServiceLangGen::GenerateServiceFactoryHeader(ServiceDefinition* d, ostre
        << endl;
 
     w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> "
-          "PackPodArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> structure);"
+          "PackPodArray(const RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray>& structure);"
        << endl;
 
     w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> "
@@ -1660,7 +1660,7 @@ void CPPServiceLangGen::GenerateServiceFactoryHeader(ServiceDefinition* d, ostre
        << endl;
 
     w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> "
-          "PackPodMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> structure);"
+          "PackPodMultiDimArray(const RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray>& structure);"
        << endl;
 
     w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> "
@@ -1668,7 +1668,7 @@ void CPPServiceLangGen::GenerateServiceFactoryHeader(ServiceDefinition* d, ostre
        << endl;
 
     w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> "
-          "PackNamedArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> structure);"
+          "PackNamedArray(const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray>& structure);"
        << endl;
 
     w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> "
@@ -1676,7 +1676,7 @@ void CPPServiceLangGen::GenerateServiceFactoryHeader(ServiceDefinition* d, ostre
        << endl;
 
     w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> "
-          "PackNamedMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> structure);"
+          "PackNamedMultiDimArray(const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray>& structure);"
        << endl;
 
     w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> "
@@ -1746,7 +1746,7 @@ void CPPServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, ostream* w,
     w2 << "}" << endl;
 
     w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> " << factory_name
-       << "::PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> structin)" << endl
+       << "::PackStructure(const RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure>& structin)" << endl
        << "{" << endl;
     w2 << "std::string type=structin->RRType();";
     w2 << "boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
@@ -1776,7 +1776,7 @@ void CPPServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, ostream* w,
     w2 << "}" << endl;
 
     w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> " << factory_name
-       << "::PackPodArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> structin)" << endl
+       << "::PackPodArray(const RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray>& structin)" << endl
        << "{" << endl;
     w2 << "boost::string_ref type=structin->RRElementTypeString();" << endl;
     w2 << "boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
@@ -1813,7 +1813,7 @@ void CPPServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, ostream* w,
     w2 << "}" << endl;
 
     w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> " << factory_name
-       << "::PackPodMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> structin)" << endl
+       << "::PackPodMultiDimArray(const RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray>& structin)" << endl
        << "{" << endl;
     w2 << "boost::string_ref type=structin->RRElementTypeString();" << endl;
     w2 << "boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
@@ -1851,7 +1851,7 @@ void CPPServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, ostream* w,
     w2 << "}" << endl;
 
     w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> " << factory_name
-       << "::PackNamedArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> structin)" << endl
+       << "::PackNamedArray(const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray>& structin)" << endl
        << "{" << endl;
     w2 << "boost::string_ref type=structin->RRElementTypeString();" << endl;
     w2 << "boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
@@ -1889,7 +1889,7 @@ void CPPServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, ostream* w,
     w2 << "}" << endl;
 
     w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> " << factory_name
-       << "::PackNamedMultiDimArray(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> structin)" << endl
+       << "::PackNamedMultiDimArray(const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray>& structin)" << endl
        << "{" << endl;
     w2 << "boost::string_ref type=structin->RRElementTypeString();" << endl;
     w2 << "boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type);" << endl;
@@ -2029,7 +2029,7 @@ void CPPServiceLangGen::GenerateStubHeader(ServiceDefinition* d,
            << "_stub(const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurNode>& node) : RobotRaconteur::StructureStub(node) {}"
            << endl;
         w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> "
-              "PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> s);"
+              "PackStructure(const RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>& s);"
            << endl;
         w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> "
               "UnpackStructure(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& m);"
@@ -2522,7 +2522,7 @@ void CPPServiceLangGen::GenerateStubDefinition(ServiceDefinition* d,
          e != d->Structures.end(); ++e)
     {
         w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> " << fix_name((*e)->Name)
-           << "_stub::PackStructure(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> s)" << endl
+           << "_stub::PackStructure(const RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>& s)" << endl
            << "{" << endl;
         w2 << "RR_INTRUSIVE_PTR<" << fix_qualified_name((*e)->Name) << " > s2=RobotRaconteur::rr_cast<"
            << fix_qualified_name((*e)->Name) << " >(s);" << endl;

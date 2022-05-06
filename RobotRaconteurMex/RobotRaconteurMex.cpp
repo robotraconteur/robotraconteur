@@ -1729,7 +1729,7 @@ RR_INTRUSIVE_PTR<RRBaseArray> GetRRArrayFromMxArray(const mxArray* pa)
     }
 }
 
-mxArray* GetMxArrayFromRRArray(RR_INTRUSIVE_PTR<RRBaseArray> array_, std::vector<mwSize> dims)
+mxArray* GetMxArrayFromRRArray(const RR_INTRUSIVE_PTR<RRBaseArray>& array_, std::vector<mwSize> dims)
 {
     mwSize ndims = 1;
 
@@ -3554,7 +3554,7 @@ RR_SHARED_PTR<RobotRaconteur::StructureStub> MexServiceFactory::FindStructureStu
 }
 
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> MexServiceFactory::PackStructure(
-    RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> structin)
+   const RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure>& structin)
 {
     throw ServiceException("Invalid for wrapped service type");
 }
@@ -3565,7 +3565,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> MexServiceFactory::UnpackStructure(
     throw ServiceException("Invalid for wrapped service type");
 }
 RR_INTRUSIVE_PTR<MessageElementNestedElementList> MexServiceFactory::PackPodArray(
-    RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> structure)
+   const RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray>& structure)
 {
     throw ServiceException("Invalid for wrapped service type");
 }
@@ -3575,7 +3575,7 @@ RR_INTRUSIVE_PTR<RRPodBaseArray> MexServiceFactory::UnpackPodArray(
     throw ServiceException("Invalid for wrapped service type");
 }
 RR_INTRUSIVE_PTR<MessageElementNestedElementList> MexServiceFactory::PackPodMultiDimArray(
-    RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> structure)
+   const RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray>& structure)
 {
     throw ServiceException("Invalid for wrapped service type");
 }
@@ -3585,7 +3585,7 @@ RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> MexServiceFactory::UnpackPodMultiDimArr
     throw ServiceException("Invalid for wrapped service type");
 }
 RR_INTRUSIVE_PTR<MessageElementNestedElementList> MexServiceFactory::PackNamedArray(
-    RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> structure)
+   const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray>& structure)
 {
     throw ServiceException("Invalid for wrapped service type");
 }
@@ -3595,7 +3595,7 @@ RR_INTRUSIVE_PTR<RRNamedBaseArray> MexServiceFactory::UnpackNamedArray(
     throw ServiceException("Invalid for wrapped service type");
 }
 RR_INTRUSIVE_PTR<MessageElementNestedElementList> MexServiceFactory::PackNamedMultiDimArray(
-    RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> structure)
+   const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray>& structure)
 {
     throw ServiceException("Invalid for wrapped service type");
 }
@@ -6123,7 +6123,7 @@ MexWireConnection::MexWireConnection(const RR_SHARED_PTR<WireBase>& parent, uint
     this->wireconnectionid = 0;
 }
 
-void MexWireConnection::fire_WireValueChanged(RR_INTRUSIVE_PTR<RRValue> value, TimeSpec time) {}
+void MexWireConnection::fire_WireValueChanged(const RR_INTRUSIVE_PTR<RRValue>& value, TimeSpec time) {}
 
 void MexWireConnection::fire_WireClosedCallback()
 {

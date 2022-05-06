@@ -4361,7 +4361,7 @@ void TcpTransportConnection::do_starttls5_1(const RR_SHARED_PTR<RRObject>& param
     }
 }
 
-void TcpTransportConnection::do_starttls6(const boost::system::error_code& error, RR_INTRUSIVE_PTR<Message> request)
+void TcpTransportConnection::do_starttls6(const boost::system::error_code& error,const RR_INTRUSIVE_PTR<Message>& request)
 {
     if (error)
     {
@@ -4377,7 +4377,7 @@ void TcpTransportConnection::do_starttls6(const boost::system::error_code& error
     AsyncPauseSend(h);
 }
 
-void TcpTransportConnection::do_starttls7(const boost::system::error_code& error, RR_INTRUSIVE_PTR<Message> request)
+void TcpTransportConnection::do_starttls7(const boost::system::error_code& error,const RR_INTRUSIVE_PTR<Message>& request)
 {
     if (error)
     {
@@ -4436,7 +4436,7 @@ void TcpTransportConnection::do_starttls7(const boost::system::error_code& error
 }
 
 void TcpTransportConnection::do_starttls8(const RR_SHARED_PTR<RobotRaconteurException>& error,
-                                          RR_INTRUSIVE_PTR<Message> request)
+                                         const RR_INTRUSIVE_PTR<Message>& request)
 {
     RR_UNUSED(request);
     if (error)

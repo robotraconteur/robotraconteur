@@ -2486,7 +2486,7 @@ void ClientContext::AsyncPullServiceDefinition1(
                             extra_imports->CastDataToNestedList(DataTypes_list_t)));
                     if (extra_imports1)
                     {
-                        BOOST_FOREACH (RR_INTRUSIVE_PTR<RRArray<char> > import_, *extra_imports1)
+                        BOOST_FOREACH (const RR_INTRUSIVE_PTR<RRArray<char> >& import_, *extra_imports1)
                         {
                             ret->extra_imports.insert(RRArrayToString(import_));
                         }
@@ -2658,7 +2658,7 @@ const std::string ClientContext::GetAuthenticatedUsername()
     return m_AuthenticatedUsername;
 }
 
-std::string ClientContext::AuthenticateUser(boost::string_ref username, RR_INTRUSIVE_PTR<RRValue> credentials)
+std::string ClientContext::AuthenticateUser(boost::string_ref username,const RR_INTRUSIVE_PTR<RRValue>& credentials)
 {
     ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
 
@@ -2671,7 +2671,7 @@ std::string ClientContext::AuthenticateUser(boost::string_ref username, RR_INTRU
 }
 
 void ClientContext::AsyncAuthenticateUser(
-    boost::string_ref username, RR_INTRUSIVE_PTR<RRValue> credentials,
+    boost::string_ref username,const RR_INTRUSIVE_PTR<RRValue>& credentials,
     RR_MOVE_ARG(boost::function<void(const RR_SHARED_PTR<std::string>&, const RR_SHARED_PTR<RobotRaconteurException>&)>) handler,
     int32_t timeout)
 {

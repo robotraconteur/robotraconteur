@@ -451,10 +451,10 @@ class ROBOTRACONTEUR_CORE_API ClientContext : public Endpoint, public RR_ENABLE_
   public:
     const std::string GetAuthenticatedUsername();
 
-    std::string AuthenticateUser(boost::string_ref username, RR_INTRUSIVE_PTR<RRValue> credentials);
+    std::string AuthenticateUser(boost::string_ref username,const RR_INTRUSIVE_PTR<RRValue>& credentials);
 
     void AsyncAuthenticateUser(
-        boost::string_ref username, RR_INTRUSIVE_PTR<RRValue> credentials,
+        boost::string_ref username,const RR_INTRUSIVE_PTR<RRValue>& credentials,
         RR_MOVE_ARG(boost::function<void(const RR_SHARED_PTR<std::string>&, const RR_SHARED_PTR<RobotRaconteurException>&)>) handler,
         int32_t timeout = RR_TIMEOUT_INFINITE);
 

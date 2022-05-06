@@ -2368,7 +2368,7 @@ void ServiceTestClient::TestEvents()
 
 void ServiceTestClient::ev1_cb() { ev1_event.Set(); }
 
-void ServiceTestClient::ev2_cb(double d, RR_INTRUSIVE_PTR<teststruct2> s)
+void ServiceTestClient::ev2_cb(double d,const RR_INTRUSIVE_PTR<teststruct2>& s)
 {
     if (d == 27.3 && (*s->mydat)[0] == 98.23)
     {
@@ -2766,21 +2766,21 @@ void ServiceTestClient::TestWires()
 }
 
 void ServiceTestClient::w1_changed(RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<RRArray<double> > > > c,
-                                   RR_INTRUSIVE_PTR<RRArray<double> > value, TimeSpec t)
+const RR_INTRUSIVE_PTR<RRArray<double> >& value, TimeSpec t)
 {
     w1_called = true;
     we1.Set();
 }
 
 void ServiceTestClient::w2_changed(RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<teststruct2> > > c,
-                                   RR_INTRUSIVE_PTR<teststruct2> value, TimeSpec t)
+                                  const RR_INTRUSIVE_PTR<teststruct2>& value, TimeSpec t)
 {
     w2_called = true;
     we2.Set();
 }
 
 void ServiceTestClient::w3_changed(RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<RRMultiDimArray<int32_t> > > > c,
-                                   RR_INTRUSIVE_PTR<RRMultiDimArray<int32_t> > value, TimeSpec t)
+                                   const RR_INTRUSIVE_PTR<RRMultiDimArray<int32_t> >& value, TimeSpec t)
 {
     w3_called = true;
     we3.Set();
@@ -3261,7 +3261,7 @@ void ServiceTestClient::TestAsync1(const RR_SHARED_PTR<RRObject>& r, const RR_SH
         boost::bind(&ServiceTestClient::TestAsync2, this, r1, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2))););
 }
 
-void ServiceTestClient::TestAsync2(const RR_SHARED_PTR<async_testroot>& r, RR_INTRUSIVE_PTR<RRArray<double> > ret,
+void ServiceTestClient::TestAsync2(const RR_SHARED_PTR<async_testroot>& r,const RR_INTRUSIVE_PTR<RRArray<double> >& ret,
                                    const RR_SHARED_PTR<RobotRaconteurException>& exp)
 {
     if (exp)

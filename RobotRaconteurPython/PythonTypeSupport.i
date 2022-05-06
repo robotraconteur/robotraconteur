@@ -27,10 +27,10 @@ PyObject* UnpackMessageElement(const boost::intrusive_ptr<MessageElement>& eleme
 PyObject* UnpackMessageElement(const boost::intrusive_ptr<MessageElement>& element, const boost::shared_ptr<TypeDefinition>& type1, const boost::shared_ptr<ServerContext>& obj, const boost::shared_ptr<RobotRaconteurNode>& node);
 
 %rename(_PackToRRArray) PackToRRArray;
-boost::intrusive_ptr<RRBaseArray> PackToRRArray(PyObject* array_, const boost::shared_ptr<TypeDefinition>& type1, boost::intrusive_ptr<RRBaseArray> destrrarray);
+boost::intrusive_ptr<RRBaseArray> PackToRRArray(PyObject* array_, const boost::shared_ptr<TypeDefinition>& type1,const boost::intrusive_ptr<RRBaseArray>& destrrarray);
 
 %rename(_UnpackFromRRArray) UnpackFromRRArray;
-PyObject* UnpackFromRRArray(boost::intrusive_ptr<RRBaseArray> rrarray, const boost::shared_ptr<TypeDefinition>& type1);
+PyObject* UnpackFromRRArray(const boost::intrusive_ptr<RRBaseArray>& rrarray, const boost::shared_ptr<TypeDefinition>& type1);
 
 /*
 %rename(_PackToRRArray_numpy) PackToRRArray_numpy;

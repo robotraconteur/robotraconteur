@@ -56,7 +56,7 @@ RR_SHARED_PTR<RobotRaconteur::StructureStub> WrappedServiceFactory::FindStructur
 }
 
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> WrappedServiceFactory::PackStructure(
-    RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> structin)
+   const RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure>& structin)
 {
     throw ServiceException("Invalid for wrapped service type");
 }
@@ -68,7 +68,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> WrappedServiceFactory::UnpackStructure
 }
 
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> WrappedServiceFactory::PackPodArray(
-    RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> structure)
+   const RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray>& structure)
 {
     throw ServiceException("Invalid for wrapped service type");
 }
@@ -78,7 +78,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> WrappedServiceFactory::UnpackPo
     throw ServiceException("Invalid for wrapped service type");
 }
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> WrappedServiceFactory::PackPodMultiDimArray(
-    RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> structure)
+   const RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray>& structure)
 {
     throw ServiceException("Invalid for wrapped service type");
 }
@@ -89,7 +89,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> WrappedServiceFactory::
 }
 
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> WrappedServiceFactory::PackNamedArray(
-    RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> structure)
+   const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray>& structure)
 {
     throw ServiceException("Invalid for wrapped service type");
 }
@@ -99,7 +99,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> WrappedServiceFactory::Unpack
     throw ServiceException("Invalid for wrapped service type");
 }
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> WrappedServiceFactory::PackNamedMultiDimArray(
-    RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> structure)
+   const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray>& structure)
 {
     throw ServiceException("Invalid for wrapped service type");
 }
@@ -1310,7 +1310,7 @@ WrappedWireConnection::WrappedWireConnection(const RR_SHARED_PTR<WireBase>& pare
     // this->objectheapid=0;
 }
 
-void WrappedWireConnection::fire_WireValueChanged(RR_INTRUSIVE_PTR<RRValue> value, TimeSpec time)
+void WrappedWireConnection::fire_WireValueChanged(const RR_INTRUSIVE_PTR<RRValue>& value, TimeSpec time)
 {
 
     RR_SHARED_PTR<WrappedWireUnicastReceiver> r = unicast_receiver.lock();
@@ -2150,7 +2150,7 @@ RR_INTRUSIVE_PTR<RRBaseArray> WrappedArrayMemoryClientUtil::Read(const RR_SHARED
     }
 
 void WrappedArrayMemoryClientUtil::Write(const RR_SHARED_PTR<ArrayMemoryBase>& mem, uint64_t memorypos,
-                                         RR_INTRUSIVE_PTR<RRBaseArray> buffer, uint64_t bufferpos, uint64_t count)
+                                        const RR_INTRUSIVE_PTR<RRBaseArray>& buffer, uint64_t bufferpos, uint64_t count)
 {
     /*RR_SHARED_PTR<ArrayMemory<int8_t> > i8=rr_cast<ArrayMemory<int8_t> >(mem);
     if (i8)
@@ -4094,7 +4094,7 @@ void WrappedWireSubscription::SetRRDirector(WrappedWireSubscriptionDirector* dir
                       boost::bind(&ReleaseDirector<WrappedWireSubscriptionDirector>, RR_BOOST_PLACEHOLDERS(_1), id));
 }
 
-void WrappedWireSubscription::fire_WireValueChanged(RR_INTRUSIVE_PTR<RRValue> value, const TimeSpec& time,
+void WrappedWireSubscription::fire_WireValueChanged(const RR_INTRUSIVE_PTR<RRValue>& value, const TimeSpec& time,
                                                     const RR_SHARED_PTR<WireConnectionBase>& connection)
 {
     WrappedService_typed_packet val;

@@ -133,7 +133,7 @@ RR_SHARED_PTR<RobotRaconteurNode> WireConnectionBase::GetNode()
     return n;
 }
 
-void WireConnectionBase::WirePacketReceived(TimeSpec timespec, RR_INTRUSIVE_PTR<RRValue> packet)
+void WireConnectionBase::WirePacketReceived(TimeSpec timespec,const RR_INTRUSIVE_PTR<RRValue>& packet)
 {
     {
         boost::mutex::scoped_lock lock(recvlock);
@@ -295,7 +295,7 @@ RR_INTRUSIVE_PTR<RRValue> WireConnectionBase::GetOutValueBase()
     return val;
 }
 
-void WireConnectionBase::SetOutValueBase(RR_INTRUSIVE_PTR<RRValue> value)
+void WireConnectionBase::SetOutValueBase(const RR_INTRUSIVE_PTR<RRValue>& value)
 {
     if (direction == MemberDefinition_Direction_readonly)
     {
@@ -545,7 +545,7 @@ void WireBase::DispatchPacket(const RR_INTRUSIVE_PTR<MessageEntry>& me, const RR
     e->WirePacketReceived(timespec, data);
 }
 
-RR_INTRUSIVE_PTR<MessageEntry> WireBase::PackPacket(RR_INTRUSIVE_PTR<RRValue> data, TimeSpec time)
+RR_INTRUSIVE_PTR<MessageEntry> WireBase::PackPacket(const RR_INTRUSIVE_PTR<RRValue>& data, TimeSpec time)
 {
     std::vector<RR_INTRUSIVE_PTR<MessageElement> > timespec1;
     timespec1.push_back(CreateMessageElement("seconds", ScalarToRRArray(time.seconds)));
@@ -672,7 +672,7 @@ RR_SHARED_PTR<ServiceStub> WireClientBase::GetStub()
     return out;
 }
 
-void WireClientBase::SendWirePacket(RR_INTRUSIVE_PTR<RRValue> packet, TimeSpec time, uint32_t endpoint)
+void WireClientBase::SendWirePacket(const RR_INTRUSIVE_PTR<RRValue>& packet, TimeSpec time, uint32_t endpoint)
 {
     RR_UNUSED(endpoint);
     RR_INTRUSIVE_PTR<MessageEntry> m = PackPacket(packet, time);
@@ -811,7 +811,7 @@ RR_INTRUSIVE_PTR<RRValue> WireClientBase::PeekOutValueBase(TimeSpec& ts)
     return UnpackPacket(mr, ts);
 }
 
-void WireClientBase::PokeOutValueBase(RR_INTRUSIVE_PTR<RRValue> value)
+void WireClientBase::PokeOutValueBase(const RR_INTRUSIVE_PTR<RRValue>& value)
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName,
                                             "Requesting PokeOutValue");
@@ -1035,7 +1035,7 @@ RR_SHARED_PTR<ServiceSkel> WireServerBase::GetSkel()
     return out;
 }
 
-void WireServerBase::SendWirePacket(RR_INTRUSIVE_PTR<RRValue> packet, TimeSpec time, uint32_t e)
+void WireServerBase::SendWirePacket(const RR_INTRUSIVE_PTR<RRValue>& packet, TimeSpec time, uint32_t e)
 {
     {
         boost::mutex::scoped_lock lock(connections_lock);
@@ -1340,7 +1340,7 @@ void WireBroadcasterBase::ConnectionConnectedBase(const RR_SHARED_PTR<WireConnec
                                             "WireBroadcaster wire connected");
 }
 
-void WireBroadcasterBase::SetOutValueBase(RR_INTRUSIVE_PTR<RRValue> value)
+void WireBroadcasterBase::SetOutValueBase(const RR_INTRUSIVE_PTR<RRValue>& value)
 {
     RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
     boost::mutex::scoped_lock lock(connected_wires_lock);

@@ -95,7 +95,7 @@ class WireSubscription_connection : public RR_ENABLE_SHARED_FROM_THIS<WireSubscr
     void ClientConnected2(const RR_SHARED_PTR<WireConnectionBase>& connection, const RR_SHARED_PTR<RobotRaconteurException>& err);
 
     void WireConnectionClosed(const RR_SHARED_PTR<WireConnectionBase>& connection);
-    void WireValueChanged(const RR_SHARED_PTR<WireConnectionBase>& connection, RR_INTRUSIVE_PTR<RRValue> value,
+    void WireValueChanged(const RR_SHARED_PTR<WireConnectionBase>& connection,const RR_INTRUSIVE_PTR<RRValue>& value,
                           const TimeSpec& time);
     ~WireSubscription_connection();
 

@@ -47,7 +47,7 @@ class ServiceTestClient
 
     void ev1_cb();
 
-    void ev2_cb(double d, RR_INTRUSIVE_PTR<teststruct2> s);
+    void ev2_cb(double d,const RR_INTRUSIVE_PTR<teststruct2>& s);
 
     void TestPipes();
 
@@ -78,11 +78,11 @@ class ServiceTestClient
     void TestWires();
 
     void w1_changed(RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<RRArray<double> > > > c,
-                    RR_INTRUSIVE_PTR<RRArray<double> > value, TimeSpec t);
+const RR_INTRUSIVE_PTR<RRArray<double> >& value, TimeSpec t);
     void w2_changed(RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<teststruct2> > > c,
-                    RR_INTRUSIVE_PTR<teststruct2> value, TimeSpec t);
+                   const RR_INTRUSIVE_PTR<teststruct2>& value, TimeSpec t);
     void w3_changed(RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<RRMultiDimArray<int32_t> > > > c,
-                    RR_INTRUSIVE_PTR<RRMultiDimArray<int32_t> > value, TimeSpec t);
+                    const RR_INTRUSIVE_PTR<RRMultiDimArray<int32_t> >& value, TimeSpec t);
 
     bool w1_called;
     bool w2_called;
@@ -140,7 +140,7 @@ class ServiceTestClient
 
     void TestAsync1(const RR_SHARED_PTR<RRObject>& r, const RR_SHARED_PTR<RobotRaconteurException>& exp);
 
-    void TestAsync2(const RR_SHARED_PTR<async_testroot>& r, RR_INTRUSIVE_PTR<RRArray<double> > ret,
+    void TestAsync2(const RR_SHARED_PTR<async_testroot>& r,const RR_INTRUSIVE_PTR<RRArray<double> >& ret,
                     const RR_SHARED_PTR<RobotRaconteurException>& exp);
 
     void TestAsync3(const RR_SHARED_PTR<async_testroot>& r, const RR_SHARED_PTR<RobotRaconteurException>& exp);

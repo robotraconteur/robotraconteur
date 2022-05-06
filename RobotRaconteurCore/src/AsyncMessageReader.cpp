@@ -61,7 +61,7 @@ void AsyncMessageReaderImpl::pop_state()
 }
 void AsyncMessageReaderImpl::push_state(AsyncMessageReaderImpl::state_type new_state,
                                         AsyncMessageReaderImpl::state_type pop_state, size_t relative_limit,
-                                        RR_INTRUSIVE_PTR<RRValue> data, size_t param1, size_t param2)
+                                       const RR_INTRUSIVE_PTR<RRValue>& data, size_t param1, size_t param2)
 {
     state_data d;
     d.state = new_state;

@@ -321,7 +321,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param structure
      * @return RR_INTRUSIVE_PTR<MessageElementNestedElementList>
      */
-    RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackStructure(RR_INTRUSIVE_PTR<RRStructure> structure);
+    RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackStructure(const RR_INTRUSIVE_PTR<RRStructure>& structure);
 
     /**
      * @internal
@@ -357,7 +357,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param pod_array
      * @return RR_INTRUSIVE_PTR<MessageElementNestedElementList>
      */
-    RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackPodArray(RR_INTRUSIVE_PTR<RRPodBaseArray> pod_array);
+    RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackPodArray(const RR_INTRUSIVE_PTR<RRPodBaseArray>& pod_array);
 
     /**
      * @internal
@@ -392,7 +392,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @return RR_INTRUSIVE_PTR<MessageElementNestedElementList>
      */
     RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackPodMultiDimArray(
-        RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> pod_multiarray);
+       const RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray>& pod_multiarray);
 
     /**
      * @internal
@@ -429,7 +429,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param namedarray
      * @return RR_INTRUSIVE_PTR<MessageElementNestedElementList>
      */
-    RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackNamedArray(RR_INTRUSIVE_PTR<RRNamedBaseArray> namedarray);
+    RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackNamedArray(const RR_INTRUSIVE_PTR<RRNamedBaseArray>& namedarray);
 
     /**
      * @internal
@@ -464,7 +464,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @return RR_INTRUSIVE_PTR<MessageElementNestedElementList>
      */
     RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackNamedMultiDimArray(
-        RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> named_multiarray);
+       const RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray>& named_multiarray);
 
     /**
      * @internal
@@ -494,7 +494,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @return RR_INTRUSIVE_PTR<MessageElementNestedElementList>
      */
     template <typename T>
-    RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackMultiDimArray(RR_INTRUSIVE_PTR<RRMultiDimArray<T> > arr)
+    RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackMultiDimArray(const RR_INTRUSIVE_PTR<RRMultiDimArray<T> >& arr)
     {
         return detail::packing::PackMultiDimArray<T>(arr);
     }
@@ -528,7 +528,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param vardata
      * @return RR_INTRUSIVE_PTR<MessageElementData>
      */
-    RR_INTRUSIVE_PTR<MessageElementData> PackVarType(RR_INTRUSIVE_PTR<RRValue> vardata);
+    RR_INTRUSIVE_PTR<MessageElementData> PackVarType(const RR_INTRUSIVE_PTR<RRValue>& vardata);
 
     /**
      * @internal

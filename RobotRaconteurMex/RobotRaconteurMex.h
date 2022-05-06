@@ -37,7 +37,7 @@ DataTypes mxClassIDToRRDataType(mxClassID type);
 mxClassID rrDataTypeToMxClassID(DataTypes type);
 
 RR_INTRUSIVE_PTR<RRBaseArray> GetRRArrayFromMxArray(const mxArray* pa);
-mxArray* GetMxArrayFromRRArray(RR_INTRUSIVE_PTR<RRBaseArray> real, std::vector<mwSize> dims = std::vector<mwSize>());
+mxArray* GetMxArrayFromRRArray(const RR_INTRUSIVE_PTR<RRBaseArray>& real, std::vector<mwSize> dims = std::vector<mwSize>());
 
 RR_INTRUSIVE_PTR<MessageElement> PackMxArrayToMessageElement(const mxArray* pm, const boost::shared_ptr<TypeDefinition>& tdef,
                                                              const RR_SHARED_PTR<ServiceStub>& stub, bool allow_null = true);
@@ -57,23 +57,23 @@ class MexServiceFactory : public virtual RobotRaconteur::ServiceFactory
     virtual RR_SHARED_PTR<ServiceDefinition> ServiceDef();
     virtual RR_SHARED_PTR<RobotRaconteur::StructureStub> FindStructureStub(boost::string_ref s);
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackStructure(
-        RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> structin);
+       const RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure>& structin);
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> UnpackStructure(
         const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& mstructin);
     virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackPodArray(
-        RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> structure);
+       const RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray>& structure);
     virtual RR_INTRUSIVE_PTR<RRPodBaseArray> UnpackPodArray(
         const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& structure);
     virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackPodMultiDimArray(
-        RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> structure);
+       const RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray>& structure);
     virtual RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> UnpackPodMultiDimArray(
         const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& structure);
     virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackNamedArray(
-        RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> structure);
+       const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray>& structure);
     virtual RR_INTRUSIVE_PTR<RRNamedBaseArray> UnpackNamedArray(
         const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& structure);
     virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackNamedMultiDimArray(
-        RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> structure);
+       const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray>& structure);
     virtual RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> UnpackNamedMultiDimArray(
         const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& structure);
 
@@ -305,7 +305,7 @@ class MexWireConnection : public virtual WireConnectionBase
     MexWireConnection(const RR_SHARED_PTR<WireBase>& parent, uint32_t endpoint, const RR_SHARED_PTR<TypeDefinition>& Type,
                       MemberDefinition_Direction direction);
 
-    virtual void fire_WireValueChanged(RR_INTRUSIVE_PTR<RRValue> value, TimeSpec time);
+    virtual void fire_WireValueChanged(const RR_INTRUSIVE_PTR<RRValue>& value, TimeSpec time);
     virtual void fire_WireClosedCallback();
 
     RR_SHARED_PTR<TypeDefinition> Type;

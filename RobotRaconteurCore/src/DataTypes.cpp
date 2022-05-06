@@ -34,7 +34,7 @@ ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRArray<char> > stringToRRArray(boost::
     return ret;
 }
 
-ROBOTRACONTEUR_CORE_API std::string RRArrayToString(RR_INTRUSIVE_PTR<RRArray<char> > arr)
+ROBOTRACONTEUR_CORE_API std::string RRArrayToString(const RR_INTRUSIVE_PTR<RRArray<char> >& arr)
 {
     if (!arr)
     {
@@ -583,11 +583,11 @@ RR_INTRUSIVE_PTR<RRList<RRArray<char> > > stringVectorToRRList(const std::vector
     return o;
 }
 
-std::vector<std::string> RRListToStringVector(RR_INTRUSIVE_PTR<RRList<RRArray<char> > > list)
+std::vector<std::string> RRListToStringVector(const RR_INTRUSIVE_PTR<RRList<RRArray<char> > >& list)
 {
     rr_null_check(list, "Unexected null string list");
     std::vector<std::string> o;
-    BOOST_FOREACH (RR_INTRUSIVE_PTR<RRArray<char> > e, *list)
+    BOOST_FOREACH (const RR_INTRUSIVE_PTR<RRArray<char> >& e, *list)
     {
         o.push_back(RRArrayToString(e));
     }

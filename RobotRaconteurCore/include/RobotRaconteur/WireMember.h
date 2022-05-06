@@ -117,7 +117,7 @@ class ROBOTRACONTEUR_CORE_API WireConnectionBase : public RR_ENABLE_SHARED_FROM_
 
     virtual ~WireConnectionBase() {}
 
-    virtual void WirePacketReceived(TimeSpec timespec, RR_INTRUSIVE_PTR<RRValue> packet);
+    virtual void WirePacketReceived(TimeSpec timespec,const RR_INTRUSIVE_PTR<RRValue>& packet);
 
     /**
      * @brief Get if the InValue is valid
@@ -289,12 +289,12 @@ class ROBOTRACONTEUR_CORE_API WireConnectionBase : public RR_ENABLE_SHARED_FROM_
 
     RR_INTRUSIVE_PTR<RRValue> GetOutValueBase();
 
-    void SetOutValueBase(RR_INTRUSIVE_PTR<RRValue> value);
+    void SetOutValueBase(const RR_INTRUSIVE_PTR<RRValue>& value);
 
     bool TryGetInValueBase(RR_INTRUSIVE_PTR<RRValue>& value, TimeSpec& time);
     bool TryGetOutValueBase(RR_INTRUSIVE_PTR<RRValue>& value, TimeSpec& time);
 
-    virtual void fire_WireValueChanged(RR_INTRUSIVE_PTR<RRValue> value, TimeSpec time) = 0;
+    virtual void fire_WireValueChanged(const RR_INTRUSIVE_PTR<RRValue>& value, TimeSpec time) = 0;
 
     virtual void fire_WireClosedCallback() = 0;
 
@@ -473,7 +473,7 @@ class WireConnection : public WireConnectionBase
     {}
 
   protected:
-    virtual void fire_WireValueChanged(RR_INTRUSIVE_PTR<RRValue> value, TimeSpec time)
+    virtual void fire_WireValueChanged(const RR_INTRUSIVE_PTR<RRValue>& value, TimeSpec time)
     {
         WireValueChanged(RR_STATIC_POINTER_CAST<WireConnection<T> >(shared_from_this()),
                          RRPrimUtil<T>::PreUnpack(value), time);
@@ -568,7 +568,7 @@ class ROBOTRACONTEUR_CORE_API WireBase : public RR_ENABLE_SHARED_FROM_THIS<WireB
                             int32_t timeout) = 0;
 
   protected:
-    virtual void SendWirePacket(RR_INTRUSIVE_PTR<RRValue> data, TimeSpec time, uint32_t endpoint) = 0;
+    virtual void SendWirePacket(const RR_INTRUSIVE_PTR<RRValue>& data, TimeSpec time, uint32_t endpoint) = 0;
 
     bool rawelements;
 
@@ -576,9 +576,9 @@ class ROBOTRACONTEUR_CORE_API WireBase : public RR_ENABLE_SHARED_FROM_THIS<WireB
 
     RR_INTRUSIVE_PTR<RRValue> UnpackPacket(const RR_INTRUSIVE_PTR<MessageEntry>& me, TimeSpec& ts);
 
-    RR_INTRUSIVE_PTR<MessageEntry> PackPacket(RR_INTRUSIVE_PTR<RRValue> data, TimeSpec time);
+    RR_INTRUSIVE_PTR<MessageEntry> PackPacket(const RR_INTRUSIVE_PTR<RRValue>& data, TimeSpec time);
 
-    virtual RR_INTRUSIVE_PTR<MessageElementData> PackData(RR_INTRUSIVE_PTR<RRValue> data)
+    virtual RR_INTRUSIVE_PTR<MessageElementData> PackData(const RR_INTRUSIVE_PTR<RRValue>& data)
     {
         return GetNode()->PackVarType(data);
     }
@@ -929,7 +929,7 @@ class Wire : public virtual WireBase
         boost::function<void(const T&, const TimeSpec&, const uint32_t&)> function) = 0;
 
   protected:
-    virtual RR_INTRUSIVE_PTR<MessageElementData> PackData(RR_INTRUSIVE_PTR<RRValue> data)
+    virtual RR_INTRUSIVE_PTR<MessageElementData> PackData(const RR_INTRUSIVE_PTR<RRValue>& data)
     {
         if (verify)
         {
@@ -952,7 +952,7 @@ class Wire : public virtual WireBase
         }
     }
 
-    boost::function<void(RR_INTRUSIVE_PTR<RRValue>&)> verify;
+    boost::function<void(const RR_INTRUSIVE_PTR<RRValue>&)> verify;
 };
 
 class ROBOTRACONTEUR_CORE_API ServiceStub;
@@ -981,7 +981,7 @@ class ROBOTRACONTEUR_CORE_API WireClientBase : public virtual WireBase
     RR_SHARED_PTR<ServiceStub> GetStub();
 
   protected:
-    virtual void SendWirePacket(RR_INTRUSIVE_PTR<RRValue> packet, TimeSpec time, uint32_t endpoint);
+    virtual void SendWirePacket(const RR_INTRUSIVE_PTR<RRValue>& packet, TimeSpec time, uint32_t endpoint);
 
     std::string m_MemberName;
     std::string service_path;
@@ -1007,7 +1007,7 @@ class ROBOTRACONTEUR_CORE_API WireClientBase : public virtual WireBase
 
     RR_INTRUSIVE_PTR<RRValue> PeekInValueBase(TimeSpec& ts);
     RR_INTRUSIVE_PTR<RRValue> PeekOutValueBase(TimeSpec& ts);
-    void PokeOutValueBase(RR_INTRUSIVE_PTR<RRValue> value);
+    void PokeOutValueBase(const RR_INTRUSIVE_PTR<RRValue>& value);
 
     void AsyncPeekInValueBase(RR_MOVE_ARG(boost::function<void(const RR_INTRUSIVE_PTR<RRValue>&, const TimeSpec&,
                                                                const RR_SHARED_PTR<RobotRaconteurException>&)>) handler,
@@ -1219,7 +1219,7 @@ class ROBOTRACONTEUR_CORE_API WireServerBase : public virtual WireBase
     RR_SHARED_PTR<ServiceSkel> GetSkel();
 
   protected:
-    virtual void SendWirePacket(RR_INTRUSIVE_PTR<RRValue> data, TimeSpec time, uint32_t endpoint);
+    virtual void SendWirePacket(const RR_INTRUSIVE_PTR<RRValue>& data, TimeSpec time, uint32_t endpoint);
 
     std::string m_MemberName;
     std::string service_path;
@@ -1497,7 +1497,7 @@ class ROBOTRACONTEUR_CORE_API WireBroadcasterBase : public RR_ENABLE_SHARED_FROM
 
     void ConnectionConnectedBase(const RR_SHARED_PTR<WireConnectionBase>& ep);
 
-    void SetOutValueBase(RR_INTRUSIVE_PTR<RRValue> value);
+    void SetOutValueBase(const RR_INTRUSIVE_PTR<RRValue>& value);
 
     virtual void AttachWireServerEvents(const RR_SHARED_PTR<WireServerBase>& w);
 

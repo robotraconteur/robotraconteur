@@ -395,7 +395,7 @@ static RR_INTRUSIVE_PTR<RRArray<T> > ScalarToRRArray(T value);
  * @return T The scalar value of the first element in the array
  */
 template <typename T>
-static T RRArrayToScalar(RR_INTRUSIVE_PTR<RRArray<T> > value);
+static T RRArrayToScalar(const RR_INTRUSIVE_PTR<RRArray<T> >& value);
 
 /**
  * @brief Convert a string to an array of characters
@@ -415,7 +415,7 @@ ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRArray<char> > stringToRRArray(boost::
  * @param arr The array of characters
  * @return std::string
  */
-ROBOTRACONTEUR_CORE_API std::string RRArrayToString(RR_INTRUSIVE_PTR<RRArray<char> > arr);
+ROBOTRACONTEUR_CORE_API std::string RRArrayToString(const RR_INTRUSIVE_PTR<RRArray<char> >& arr);
 
 template <typename T>
 class RRPrimUtil
@@ -1182,7 +1182,7 @@ static RR_INTRUSIVE_PTR<RRArray<T> > ScalarToRRArray(T value)
  * @return T The scalar value of the first element in the array
  */
 template <typename T>
-static T RRArrayToScalar(RR_INTRUSIVE_PTR<RRArray<T> > value)
+static T RRArrayToScalar(const RR_INTRUSIVE_PTR<RRArray<T> >& value)
 {
     if (!value)
     {
@@ -1209,7 +1209,7 @@ static T RRArrayToScalar(RR_INTRUSIVE_PTR<RRArray<T> > value)
  * from in
  */
 template <typename Y, typename U>
-static std::vector<Y> RRArrayToVector(RR_INTRUSIVE_PTR<RRArray<U> > in)
+static std::vector<Y> RRArrayToVector(const RR_INTRUSIVE_PTR<RRArray<U> >& in)
 {
     if (!in)
         throw NullValueException("Unexpected null array");
@@ -1252,7 +1252,7 @@ static RR_INTRUSIVE_PTR<RRArray<Y> > VectorToRRArray(std::vector<U> in)
  * converted from in
  */
 template <typename Y, std::size_t N, typename U>
-static boost::array<Y, N> RRArrayToArray(RR_INTRUSIVE_PTR<RRArray<U> > in)
+static boost::array<Y, N> RRArrayToArray(const RR_INTRUSIVE_PTR<RRArray<U> >& in)
 {
     if (!in)
         throw NullValueException("Unexpected null array");
@@ -1276,7 +1276,7 @@ static boost::array<Y, N> RRArrayToArray(RR_INTRUSIVE_PTR<RRArray<U> > in)
  * @param out The target boost::array for converted elements
  */
 template <typename Y, std::size_t N, typename U>
-static void RRArrayToArray(boost::array<Y, N>& out, RR_INTRUSIVE_PTR<RRArray<U> > in)
+static void RRArrayToArray(boost::array<Y, N>& out,const RR_INTRUSIVE_PTR<RRArray<U> >& in)
 {
     if (!in)
         throw NullValueException("Unexpected null array");
@@ -1322,7 +1322,7 @@ static RR_INTRUSIVE_PTR<RRArray<Y> > ArrayToRRArray(boost::array<U, N> in)
  * boost::container::static_vector with values converted from in
  */
 template <typename Y, std::size_t N, typename U>
-static boost::container::static_vector<Y, N> RRArrayToStaticVector(RR_INTRUSIVE_PTR<RRArray<U> > in)
+static boost::container::static_vector<Y, N> RRArrayToStaticVector(const RR_INTRUSIVE_PTR<RRArray<U> >& in)
 {
     if (!in)
         throw NullValueException("Unexpected null array");
@@ -1349,7 +1349,7 @@ static boost::container::static_vector<Y, N> RRArrayToStaticVector(RR_INTRUSIVE_
  * @param in The input RRArray to be converted
  */
 template <typename Y, std::size_t N, typename U>
-static void RRArrayToStaticVector(boost::container::static_vector<Y, N>& out, RR_INTRUSIVE_PTR<RRArray<U> > in)
+static void RRArrayToStaticVector(boost::container::static_vector<Y, N>& out,const RR_INTRUSIVE_PTR<RRArray<U> >& in)
 {
     if (!in)
         throw NullValueException("Unexpected null array");
@@ -1401,7 +1401,7 @@ RR_INTRUSIVE_PTR<RRList<RRArray<char> > > stringVectorToRRList(const std::vector
  * @param list The input RRList to be converted
  * @return std::vector<std::string> The converted string vector
  */
-std::vector<std::string> RRListToStringVector(RR_INTRUSIVE_PTR<RRList<RRArray<char> > > list);
+std::vector<std::string> RRListToStringVector(const RR_INTRUSIVE_PTR<RRList<RRArray<char> > >& list);
 
 /**
  * @brief Checks if a value RR_INTRUSIVE_PTR is null
@@ -1494,7 +1494,7 @@ const RR_INTRUSIVE_PTR<T>& rr_null_check(const RR_INTRUSIVE_PTR<T>& ptr, const c
 #define RR_NULL_CHECK rr_null_check
 
 template <typename T>
-static RR_INTRUSIVE_PTR<RRArray<T> > VerifyRRArrayLength(RR_INTRUSIVE_PTR<RRArray<T> > a, size_t len, bool varlength)
+static RR_INTRUSIVE_PTR<RRArray<T> > VerifyRRArrayLength(const RR_INTRUSIVE_PTR<RRArray<T> >& a, size_t len, bool varlength)
 {
     if (!a)
         throw NullValueException("Arrays must not be null");
@@ -1513,7 +1513,7 @@ static RR_INTRUSIVE_PTR<RRArray<T> > VerifyRRArrayLength(RR_INTRUSIVE_PTR<RRArra
 }
 
 template <typename T>
-static RR_INTRUSIVE_PTR<RRList<T> > VerifyRRArrayLength(RR_INTRUSIVE_PTR<RRList<T> > a, size_t len, bool varlength)
+static RR_INTRUSIVE_PTR<RRList<T> > VerifyRRArrayLength(const RR_INTRUSIVE_PTR<RRList<T> >& a, size_t len, bool varlength)
 {
     if (!a)
         return a;
@@ -1525,11 +1525,11 @@ static RR_INTRUSIVE_PTR<RRList<T> > VerifyRRArrayLength(RR_INTRUSIVE_PTR<RRList<
 }
 
 template <typename K, typename T>
-static RR_INTRUSIVE_PTR<RRMap<K, T> > VerifyRRArrayLength(RR_INTRUSIVE_PTR<RRMap<K, T> > a, size_t len, bool varlength)
+static RR_INTRUSIVE_PTR<RRMap<K, T> > VerifyRRArrayLength(const RR_INTRUSIVE_PTR<RRMap<K, T> >& a, size_t len, bool varlength)
 {
     if (!a)
         return a;
-    BOOST_FOREACH (RR_INTRUSIVE_PTR<T>& aa, *a | boost::adaptors::map_values)
+    BOOST_FOREACH (const RR_INTRUSIVE_PTR<T>& aa, *a | boost::adaptors::map_values)
     {
         VerifyRRArrayLength(aa, len, varlength);
     }
@@ -1702,7 +1702,7 @@ static RR_INTRUSIVE_PTR<RRList<T> > VerifyRRMultiDimArrayLength(const RR_INTRUSI
         throw NullValueException("Arrays must not be null");
     else
     {
-        BOOST_FOREACH (RR_INTRUSIVE_PTR<T>& aa, (*a))
+        BOOST_FOREACH (const RR_INTRUSIVE_PTR<T>& aa, (*a))
         {
             VerifyRRMultiDimArrayLength<Ndims>(aa, n_elems, dims);
         }
@@ -1718,7 +1718,7 @@ static RR_INTRUSIVE_PTR<RRMap<K, T> > VerifyRRMultiDimArrayLength(const RR_INTRU
         throw NullValueException("Arrays must not be null");
     else
     {
-        BOOST_FOREACH (RR_INTRUSIVE_PTR<T>& aa, *a | boost::adaptors::map_values)
+        BOOST_FOREACH (const RR_INTRUSIVE_PTR<T>& aa, *a | boost::adaptors::map_values)
         {
             VerifyRRMultiDimArrayLength<Ndims>(aa, n_elems, dims);
         }

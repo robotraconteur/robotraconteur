@@ -327,7 +327,7 @@ RR_INTRUSIVE_PTR<RRArray<cdouble> > testroot3_impl::get_c2()
                        -1.662061e+02, -2.392954e+03};
     return AttachRRArrayCopy<cdouble>((cdouble*)c2_1_1, 16);
 }
-void testroot3_impl::set_c2(RR_INTRUSIVE_PTR<RRArray<cdouble> > value)
+void testroot3_impl::set_c2(const RR_INTRUSIVE_PTR<RRArray<cdouble> >& value)
 {
     double c2_2_1[] = {4.925965e-03,  5.695254e+13,  -4.576890e-14, -6.056342e-07, -4.918571e-08, -1.940684e-10,
                        1.549104e-02,  -1.954145e+04, -2.499019e-16, 4.010614e+09,  -1.906811e-08, 3.297924e-10,
@@ -348,7 +348,7 @@ RR_INTRUSIVE_PTR<RRMultiDimArray<cdouble> > testroot3_impl::get_c3()
                        -1.061541e+12, -3.660854e-12, -4.969930e-03, 1.988428e+07,  1.860782e-16};
     return AllocateRRMultiDimArray<cdouble>(AttachRRArrayCopy(c3_1_1, 2), AttachRRArrayCopy((cdouble*)c3_1_2, 10));
 }
-void testroot3_impl::set_c3(RR_INTRUSIVE_PTR<RRMultiDimArray<cdouble> > value)
+void testroot3_impl::set_c3(const RR_INTRUSIVE_PTR<RRMultiDimArray<cdouble> >& value)
 {
     uint32_t c3_2_1[] = {3, 4};
     double c3_2_2[] = {4.435180e+04,  5.198060e-18,  -1.316737e-13, -4.821771e-03, -4.077550e-19, -1.659105e-09,
@@ -369,7 +369,7 @@ RR_INTRUSIVE_PTR<RRList<RRArray<cdouble> > > testroot3_impl::get_c5()
     c5_1->push_back(AttachRRArrayCopy((cdouble*)c5_1_1, 8));
     return c5_1;
 }
-void testroot3_impl::set_c5(RR_INTRUSIVE_PTR<RRList<RRArray<cdouble> > > value)
+void testroot3_impl::set_c5(const RR_INTRUSIVE_PTR<RRList<RRArray<cdouble> > >& value)
 {
     if (!value)
         throw NullValueException("");
@@ -396,7 +396,7 @@ RR_INTRUSIVE_PTR<RRArray<cfloat> > testroot3_impl::get_c8()
                       -4.809047e-10, -4.911772e-13};
     return AttachRRArrayCopy<cfloat>((cfloat*)c8_1_1, 16);
 }
-void testroot3_impl::set_c8(RR_INTRUSIVE_PTR<RRArray<cfloat> > value)
+void testroot3_impl::set_c8(const RR_INTRUSIVE_PTR<RRArray<cfloat> >& value)
 {
     float c8_2_1[] = {1.324498e+06,  1.341746e-04,  4.292993e-04,  -3.844509e+15, -3.804802e+10, 3.785305e-12,
                       2.628285e-19,  -1.664089e+15, -4.246472e-10, -3.334943e+03, -3.305796e-01, 1.878648e-03,
@@ -417,7 +417,7 @@ RR_INTRUSIVE_PTR<RRMultiDimArray<cfloat> > testroot3_impl::get_c9()
 
     return AllocateRRMultiDimArray<cfloat>(AttachRRArrayCopy(c9_1_1, 2), AttachRRArrayCopy((cfloat*)c9_1_2, 8));
 }
-void testroot3_impl::set_c9(RR_INTRUSIVE_PTR<RRMultiDimArray<cfloat> > value)
+void testroot3_impl::set_c9(const RR_INTRUSIVE_PTR<RRMultiDimArray<cfloat> >& value)
 {
     uint32_t c9_2_1[] = {2, 2, 2};
     float c9_2_2[] = {2.138322e-03,  4.036979e-21,  1.345236e+10, -1.348460e-12, -3.615340e+12, -2.911340e-21,
@@ -445,7 +445,7 @@ RR_INTRUSIVE_PTR<RRArray<rr_bool> > testroot3_impl::get_b2()
     rr_bool v[] = {1, 0, 1, 1, 0, 1, 0};
     return AttachRRArrayCopy<rr_bool>(v, 7);
 }
-void testroot3_impl::set_b2(RR_INTRUSIVE_PTR<RRArray<rr_bool> > value)
+void testroot3_impl::set_b2(const RR_INTRUSIVE_PTR<RRArray<rr_bool> >& value)
 {
     if (value->size() != 8)
         throw std::runtime_error("");
@@ -466,7 +466,7 @@ RR_INTRUSIVE_PTR<RRMultiDimArray<rr_bool> > testroot3_impl::get_b3()
 
     return AllocateRRMultiDimArray(AttachRRArrayCopy(dims, 2), AttachRRArrayCopy(v, 4));
 }
-void testroot3_impl::set_b3(RR_INTRUSIVE_PTR<RRMultiDimArray<rr_bool> > value)
+void testroot3_impl::set_b3(const RR_INTRUSIVE_PTR<RRMultiDimArray<rr_bool> >& value)
 {
     if (value->Dims->size() != 2)
         throw std::runtime_error("");
@@ -488,7 +488,7 @@ RR_INTRUSIVE_PTR<RRList<RRArray<rr_bool> > > testroot3_impl::get_b4()
     o->push_back(ScalarToRRArray<rr_bool>(1));
     return o;
 }
-void testroot3_impl::set_b4(RR_INTRUSIVE_PTR<RRList<RRArray<rr_bool> > > value)
+void testroot3_impl::set_b4(const RR_INTRUSIVE_PTR<RRList<RRArray<rr_bool> > >& value)
 {
     if (!value)
         throw std::runtime_error("");
@@ -507,7 +507,7 @@ RR_INTRUSIVE_PTR<RRList<RRArray<rr_bool> > > testroot3_impl::get_b5()
     o->push_back(AttachRRArrayCopy(v, 4));
     return o;
 }
-void testroot3_impl::set_b5(RR_INTRUSIVE_PTR<RRList<RRArray<rr_bool> > > value)
+void testroot3_impl::set_b5(const RR_INTRUSIVE_PTR<RRList<RRArray<rr_bool> > >& value)
 {
     if (!value)
         throw std::runtime_error("");
@@ -3865,7 +3865,7 @@ void ServiceTest2_verify_testpod1_multidimarray(
     ServiceTest2_verify_testpod1_array(v->PodArray, m * n, seed);
 }
 
-void ServiceTest2_verify_testpod1_multidimarray(RR_INTRUSIVE_PTR<RRValue> v, size_t m, size_t n, uint32_t seed)
+void ServiceTest2_verify_testpod1_multidimarray(const RR_INTRUSIVE_PTR<RRValue>& v, size_t m, size_t n, uint32_t seed)
 {
     RR_INTRUSIVE_PTR<RRPodArray<com::robotraconteur::testing::TestService3::testpod1> > v1 =
         RR_DYNAMIC_POINTER_CAST<RRPodArray<com::robotraconteur::testing::TestService3::testpod1> >(v);
@@ -3954,7 +3954,7 @@ void ServiceTest2_verify_transform_multidimarray(
     ServiceTest2_verify_transform_array(v->NamedArray, m * n, seed);
 }
 
-void ServiceTest2_verify_transform_multidimarray(RR_INTRUSIVE_PTR<RRValue> v, size_t m, size_t n, uint32_t seed)
+void ServiceTest2_verify_transform_multidimarray(const RR_INTRUSIVE_PTR<RRValue>& v, size_t m, size_t n, uint32_t seed)
 {
     RR_INTRUSIVE_PTR<RRNamedArray<com::robotraconteur::testing::TestService3::transform> > v1 =
         RR_DYNAMIC_POINTER_CAST<RRNamedArray<com::robotraconteur::testing::TestService3::transform> >(v);
